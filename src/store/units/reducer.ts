@@ -1,12 +1,6 @@
 import { Reducer } from 'redux'
+import { getDefaultDefinitions } from './data'
 import { UnitsState, UnitDefinition, UnitType } from './types'
-
-
-const getDefaultDefinitions = (): Map<UnitType, UnitDefinition> => {
-    let defitinion = new Map<UnitType, UnitDefinition>();
-    // TODO: Init values.
-    return defitinion;
-}
 
 const initialState: UnitsState = {
     attacker: getDefaultDefinitions(),

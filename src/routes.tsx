@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Route, Switch } from 'react-router-dom'
 
-import IndexPage from './pages/index'
+import IndexPage from './pages/Index'
 
 // If your app is big + you have routes with a lot of components, you should consider
 // code-splitting your routes! If you bundle stuff up with Webpack, I recommend `react-loadable`.

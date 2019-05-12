@@ -12,8 +12,7 @@ Land battle:
 - Turn counter
 - Back/forward buttons to scroll through the battle
 - Defender terrain
-- Dice roll
-- Luck: worst, best, average, random
+- Dice roll, random/manual
 
 Siege:
 - Time to capture

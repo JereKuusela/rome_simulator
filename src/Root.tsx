@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Provider } from 'react-redux'
 import { Store } from 'redux'
 import { BrowserRouter, Route } from 'react-router-dom'
-import IndexPage from './pages/index'
+import IndexPage from './pages/Index'
 import { AppState } from './store/'
 
 // Any additional component props go here.
