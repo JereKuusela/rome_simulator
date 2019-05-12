@@ -1,6 +1,6 @@
 import { Reducer } from 'redux'
 import { getDefaultDefinitions } from './data'
-import { UnitsState, UnitDefinition, UnitType } from './types'
+import { UnitsState } from './types'
 
 const initialState: UnitsState = {
     attacker: getDefaultDefinitions(),
