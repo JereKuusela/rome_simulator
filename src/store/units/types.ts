@@ -2,15 +2,12 @@
 import { Map } from 'immutable'
 
 export enum UnitActionTypes {
-    SET_ATTACKER_BASE_VALUE = '@@unit/SET_ATTACKER_BASE_VALUE',
-    SET_ATTACKER_MODIFIER_VALUE = '@@unit/SET_ATTACKER_MODIFIER_VALUE',
-    SET_DEFENDER_BASE_VALUE = '@@unit/SET_DEFENDER_BASE_VALUE',
-    SET_DEFENDER_MODIFIER_VALUE = '@@unit/SET_DEFENDER_MODIFIER_VALUE'
+    SET_BASE_VALUE = '@@unit/SET_BASE_VALUE',
+    SET_MODIFIER_VALUE = '@@unit/SET_MODIFIER_VALUE'
 }
 
 export interface UnitsState {
-    readonly attacker: Map<UnitType, UnitDefinition>
-    readonly defender: Map<UnitType, UnitDefinition>
+    readonly units: Map<ArmyType, Map<UnitType, UnitDefinition>>
 }
 
 export interface UnitDefinitionA {
@@ -143,6 +140,11 @@ export class UnitDefinition {
             return 0
         return value
     }
+}
+
+export enum ArmyType {
+    Attacker = 'Attacker',
+    Defender = 'Defender'
 }
 
 

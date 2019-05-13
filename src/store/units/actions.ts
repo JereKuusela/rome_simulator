@@ -1,12 +1,12 @@
 import { action } from 'typesafe-actions'
 
-import { UnitType, UnitCalc } from '../units'
+import { UnitType, UnitCalc, ArmyType } from '../units'
 import { UnitActionTypes } from './types'
 
-export const setAttackerBaseValue = (type: UnitType, value_type: UnitType | UnitCalc, key: string, value: number) => {
-    return action(UnitActionTypes.SET_ATTACKER_BASE_VALUE, {type, value_type, key, value})
+export const setBaseValue = (army: ArmyType, type: UnitType, value_type: UnitType | UnitCalc, key: string, value: number) => {
+    return action(UnitActionTypes.SET_BASE_VALUE, {army, type, value_type, key, value})
 }
 
-export const setAttackerModifierValue = (type: UnitType, value_type: UnitType | UnitCalc, key: string, value: number) => {
-    return action(UnitActionTypes.SET_ATTACKER_MODIFIER_VALUE, {type, value_type, key, value})
+export const setModifierValue = (army: ArmyType, type: UnitType, value_type: UnitType | UnitCalc, key: string, value: number) => {
+    return action(UnitActionTypes.SET_MODIFIER_VALUE, {army, type, value_type, key, value})
 }

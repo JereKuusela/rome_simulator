@@ -1,6 +1,6 @@
 import { action } from 'typesafe-actions'
 
-import { UnitDefinition } from '../units'
+import { ArmyType, UnitDefinition } from '../units'
 import { LayoutActionTypes } from './types'
 
 // Here we use the `action` helper function provided by `typesafe-actions`.
@@ -10,4 +10,4 @@ import { LayoutActionTypes } from './types'
 // Remember, you can also pass parameters into an action creator. Make sure to
 // type them properly as well.
 
-export const setUnitModal = (unit: UnitDefinition | null) => action(LayoutActionTypes.SET_UNIT_MODAL, unit)
+export const setUnitModal = (army: ArmyType | null, unit: UnitDefinition | null) => action(LayoutActionTypes.SET_UNIT_MODAL, {army, unit})
