@@ -1,6 +1,7 @@
 import { action } from 'typesafe-actions'
 
-import { LayoutActionTypes, ThemeColors } from './types'
+import { UnitDefinition } from '../units'
+import { LayoutActionTypes } from './types'
 
 // Here we use the `action` helper function provided by `typesafe-actions`.
 // This library provides really useful helpers for writing Redux actions in a type-safe manner.
@@ -9,4 +10,4 @@ import { LayoutActionTypes, ThemeColors } from './types'
 // Remember, you can also pass parameters into an action creator. Make sure to
 // type them properly as well.
 
-export const setTheme = (theme: ThemeColors) => action(LayoutActionTypes.SET_THEME, theme)
+export const setUnitModal = (unit: UnitDefinition | null) => action(LayoutActionTypes.SET_UNIT_MODAL, unit)

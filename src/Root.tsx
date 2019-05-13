@@ -3,6 +3,7 @@ import { Provider } from 'react-redux'
 import { Store } from 'redux'
 import { BrowserRouter, Route } from 'react-router-dom'
 import IndexPage from './pages/Index'
+import UnitModal from './components/UnitModal'
 import { AppState } from './store/'
 
 // Any additional component props go here.
@@ -14,6 +15,7 @@ interface MainProps {
 const Root = ({ store }: MainProps) => {
   return (
     <Provider store={store}>
+      <UnitModal />
       <BrowserRouter>
         <Route path='/' component={IndexPage} />
       </BrowserRouter>

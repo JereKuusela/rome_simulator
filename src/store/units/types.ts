@@ -1,4 +1,13 @@
 
+import { Map } from 'immutable'
+
+export enum UnitActionTypes {
+    SET_ATTACKER_BASE_VALUE = '@@unit/SET_ATTACKER_BASE_VALUE',
+    SET_ATTACKER_MODIFIER_VALUE = '@@unit/SET_ATTACKER_MODIFIER_VALUE',
+    SET_DEFENDER_BASE_VALUE = '@@unit/SET_DEFENDER_BASE_VALUE',
+    SET_DEFENDER_MODIFIER_VALUE = '@@unit/SET_DEFENDER_MODIFIER_VALUE'
+  }
+
 export interface UnitsState {
     readonly attacker: Map<UnitType, UnitDefinition>
     readonly defender: Map<UnitType, UnitDefinition>
@@ -26,16 +35,35 @@ export interface UnitDefinitionA {
 }
 
 
+export enum UnitCalc {
+    Morale = 'Morale',
+    Discipline = 'Discipline',
+    Manpower = 'Manpower',
+    Offense = 'Offense',
+    Defense = 'Defense',
+    MoraleDamageTaken = 'Morale damage taken',
+    StrengthDamageTaken = 'Strength damage taken',
+    MovementSpeed = 'Movement speed',
+    Maneuver = 'Maneuver',
+    RecruitTime = 'Recruit time',
+    Cost = 'Cost',
+    Upkeep = 'Upkeep',
+    AttritionWeight = 'Attrition weight'
+
+}
+
 export class UnitDefinition {
     
     constructor(public type: UnitType, public image: string, public requirements: string, public can_assault: boolean, ) {
 
     }
 
-    base_values = new Map<UnitCalc, Map<string, number>>()
-    base_modifiers = new Map<UnitCalc, Map<string, number>>()
+    base_values = Map<UnitCalc | UnitType, Map<string, number>>()
+    base_modifiers = Map<UnitCalc | UnitType, Map<string, number>>()
 
-    calculate = (type: UnitCalc) => {
+    toPercent = (number: number) => +(number * 100).toFixed(2) + '%'
+
+    calculate = (type: UnitCalc | UnitType) => {
         let base = 0
         const value_base = this.base_values.get(type)
         if (value_base)
@@ -44,50 +72,69 @@ export class UnitDefinition {
         const value_modifier = this.base_modifiers.get(type)
         if (value_modifier)
             value_modifier.forEach(value => modifier += value)
-        return base * modifier
+        switch (type){
+            case UnitCalc.Cost:
+            case UnitCalc.Maneuver:
+            case UnitCalc.Manpower:
+            case UnitCalc.Morale:
+            case UnitCalc.MovementSpeed:
+            case UnitCalc.RecruitTime:
+            case UnitCalc.Upkeep:
+                return base * modifier
+            default:
+                return this.toPercent(base * modifier)
+        }
     }
 
-    add_base_value = (type: UnitCalc, key: string, value: number) => {
+    explain = (type: UnitCalc | UnitType) => {
+        let base = 0
+        const value_base = this.base_values.get(type)
+        if (value_base)
+            value_base.forEach(value => base += value)
+        let explanation = 'Base value ' + base
+        if (value_base) {
+            explanation += ' ('
+            value_base.forEach((value, key) => explanation += key + ': ' + value + ',')
+            explanation = explanation.substring(0, explanation.length - 1) + ')'
+        }
+        let modifier = 1.0
+        const value_modifier = this.base_modifiers.get(type)
+        if (value_modifier)
+            value_modifier.forEach(value => modifier += value)
+        explanation += ' multiplied by ' + this.toPercent(modifier)
+        if (value_modifier && value_modifier.size > 0) {
+            explanation += ' ('
+            value_modifier.forEach((value, key) => explanation += key + ': ' + this.toPercent(value) + ',')
+            explanation = explanation.substring(0, explanation.length - 1) + ')'
+        }
+        return explanation
+    }
+
+    add_base_value = (type: UnitCalc | UnitType, key: string, value: number) => {
         if (!this.base_values.has(type))
-            this.base_values.set(type, new Map<string, number>())
+            this.base_values = this.base_values.set(type, Map<string, number>())
         const value_base = this.base_values.get(type)
         if (!value_base)
             return
         if (value === 0 && value_base.has(key))
-            value_base.delete(key)
+            this.base_values = this.base_values.set(type, value_base.delete(key))
         else
-            value_base.set(key, value)
+            this.base_values = this.base_values.set(type, value_base.set(key, value))
     }
 
-    add_modifier_value = (type: UnitCalc, key: string, value: number) => {
+    add_modifier_value = (type: UnitCalc | UnitType, key: string, value: number) => {
         if (!this.base_modifiers.has(type))
-            this.base_modifiers.set(type, new Map<string, number>())
+            this.base_modifiers = this.base_modifiers.set(type, Map<string, number>())
         const value_modifier = this.base_modifiers.get(type)
         if (!value_modifier)
             return
         if (value === 0 && value_modifier.has(key))
-        value_modifier.delete(key)
+            this.base_modifiers = this.base_modifiers.set(type, value_modifier.delete(key))
         else
-        value_modifier.set(key, value)
+            this.base_modifiers = this.base_modifiers.set(type, value_modifier.set(key, value))
     }
 }
 
-export enum UnitCalc {
-    Morale,
-    Discipline,
-    Manpower,
-    Offense,
-    Defense,
-    MoraleDamageTaken,
-    StrengthDamageTaken,
-    MovementSpeed,
-    Maneuver,
-    RecruitTime,
-    Cost,
-    Upkeep,
-    AttritionWeight
-
-}
 
 export enum UnitType {
     WarElephant = 'War Elephant',
@@ -96,7 +143,7 @@ export enum UnitType {
     HorseArcher = 'Horse Archer',
     HeavyInfantry = 'Heavy Infantry',
     Chariot = 'Chariot',
-    Cavalry = 'Cavalry',
+    HeavyCavalry = 'Heavy Cavalry',
     CamelCavalry = 'Camel Cavalry',
     Archer = 'Archer'
 }

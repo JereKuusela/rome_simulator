@@ -1,8 +1,10 @@
+import { Map } from 'immutable'
 import React, { Component } from 'react'
 import { Table, Image, Container } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from './../store/index'
 import { UnitType, UnitDefinition, UnitCalc } from '../store/units/types'
+import { setUnitModal } from '../store/layout'
 import IconYes from '../images/yes.png'
 import IconNo from '../images/no.png'
 import IconDiscipline from '../images/discipline.png'
@@ -17,12 +19,10 @@ interface IndexProps {
 
 class Index extends Component<IndexProps> {
 
-  toPercent = (number: number) => Math.round(number * 100) + '%'
-
   render() {
     return (
       <Container>
-        <Table celled>
+        <Table celled selectable>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>
@@ -44,25 +44,34 @@ class Index extends Component<IndexProps> {
               </Table.HeaderCell>
               <Table.HeaderCell>
                 Assault?
-          </Table.HeaderCell>
+              </Table.HeaderCell>
               <Table.HeaderCell>
                 Speed
-          </Table.HeaderCell>
+              </Table.HeaderCell>
               <Table.HeaderCell>
                 Maneuver
-          </Table.HeaderCell>
+              </Table.HeaderCell>
               <Table.HeaderCell>
                 Morale damage
-          </Table.HeaderCell>
+              </Table.HeaderCell>
               <Table.HeaderCell>
                 Strength damage
-          </Table.HeaderCell>
+              </Table.HeaderCell>
+              {
+                Array.from(this.props.attacker).map((value) => {
+                  return (
+                    <Table.HeaderCell key={value[0]}>
+                      <Image src={value[1].image} avatar />
+                    </Table.HeaderCell>
+                  )
+                })
+              }
             </Table.Row>
           </Table.Header>
           <Table.Body>
             {
               Array.from(this.props.attacker).map((value) => {
-                return this.renderRow(value[1])
+                return this.renderRow(value[1], this.props.attacker)
               })
             }
           </Table.Body>
@@ -71,9 +80,9 @@ class Index extends Component<IndexProps> {
     )
   }
 
-  renderRow = (unit: UnitDefinition) => {
+  renderRow = (unit: UnitDefinition, units: Map<UnitType, UnitDefinition>) => {
     return (
-      <Table.Row key={unit.type}>
+      <Table.Row key={unit.type} onClick={() => (this.props as any).editUnit(unit)}>
         <Table.Cell>
           <Image src={unit.image} avatar />
           {unit.type}</Table.Cell>
@@ -84,13 +93,13 @@ class Index extends Component<IndexProps> {
           {unit.calculate(UnitCalc.Manpower)}
         </Table.Cell>
         <Table.Cell>
-          {this.toPercent(unit.calculate(UnitCalc.Discipline))}
+          {unit.calculate(UnitCalc.Discipline)}
         </Table.Cell>
         <Table.Cell>
-          {this.toPercent(unit.calculate(UnitCalc.Offense))}
+          {unit.calculate(UnitCalc.Offense)}
         </Table.Cell>
         <Table.Cell>
-          {this.toPercent(unit.calculate(UnitCalc.Defense))}
+          {unit.calculate(UnitCalc.Defense)}
         </Table.Cell>
         <Table.Cell>
           {unit.can_assault ? <Image src={IconYes} avatar /> : <Image src={IconNo} avatar />}
@@ -102,11 +111,20 @@ class Index extends Component<IndexProps> {
           {unit.calculate(UnitCalc.Maneuver)}
         </Table.Cell>
         <Table.Cell>
-          {this.toPercent(unit.calculate(UnitCalc.Morale))}
+          {unit.calculate(UnitCalc.MoraleDamageTaken)}
         </Table.Cell>
         <Table.Cell>
-          {this.toPercent(unit.calculate(UnitCalc.StrengthDamageTaken))}
+          {unit.calculate(UnitCalc.StrengthDamageTaken)}
         </Table.Cell>
+        {
+          Array.from(this.props.attacker).map((value) => {
+            return (
+              <Table.Cell key={value[0]}>
+                {unit.calculate(value[0])}
+              </Table.Cell>
+            )
+          })
+        }
       </Table.Row>
     )
   }
@@ -117,7 +135,7 @@ const mapStateToProps = (state: AppState): IndexProps => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-
+  editUnit: (unit: UnitDefinition) => dispatch(setUnitModal(unit))
 })
 
 
