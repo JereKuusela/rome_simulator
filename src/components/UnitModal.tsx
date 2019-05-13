@@ -1,13 +1,21 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal, Table, Input } from 'semantic-ui-react'
-import { UnitDefinition, UnitCalc } from '../store/units/types'
+import { UnitType, UnitDefinition, UnitCalc, setAttackerBaseValue, setAttackerModifierValue } from '../store/units'
 import { AppState } from '../store/'
 import { setUnitModal } from '../store/layout'
 
-interface UnitModalProps { unit: UnitDefinition | null }
+interface IStateFromProps { unit: UnitDefinition | null }
+interface IDispatchFromProps {
+    close: () => void,
+    setAttackerBaseValue: (type: UnitType, value_type: UnitType | UnitCalc, key: string, value: number) => void,
+    setAttackerModifierValue: (type: UnitType, value_type: UnitType | UnitCalc, key: string, value: number) => void
+}
+interface IProps extends IStateFromProps, IDispatchFromProps {}
 
-class UnitModal extends Component<UnitModalProps, {}> {
+const CUSTOM_VALUE_KEY = 'custom'
+
+class UnitModal extends Component<IProps> {
 
     handleClose = () => (this.props as any).close()
 
@@ -57,6 +65,9 @@ class UnitModal extends Component<UnitModalProps, {}> {
     }
 
     renderRow = (unit: UnitDefinition, attribute: UnitCalc) => {
+        let base_value = unit.get_base_value(attribute, CUSTOM_VALUE_KEY)
+        let modifier_value = unit.get_modifier_value(attribute, CUSTOM_VALUE_KEY)
+
         return (
             <Table.Row key={attribute}>
                 <Table.Cell>
@@ -69,23 +80,34 @@ class UnitModal extends Component<UnitModalProps, {}> {
                     {unit.explain(attribute)}
                 </Table.Cell>
                 <Table.Cell>
-                    <Input />
+                    <Input
+                        defaultValue={base_value}
+                        onChange={(_, data) => this.props.setAttackerBaseValue(unit.type, attribute, CUSTOM_VALUE_KEY, Number(data.value))}
+                    />
                 </Table.Cell>
                 <Table.Cell>
-                    {attribute}
+                    <Input
+                        defaultValue={modifier_value}
+                        onChange={(_, data) => this.props.setAttackerModifierValue(unit.type, attribute, CUSTOM_VALUE_KEY, Number(data.value))}
+                    />
                 </Table.Cell>
             </Table.Row>
         )
     }
 }
 
-
-const mapStateToProps = (state: AppState): UnitModalProps => ({
+const mapStateToProps = (state: AppState): IStateFromProps => ({
     unit: state.layout.unit_modal
 })
 
-const mapDispatchToProps = (dispatch: any) => ({
-    close: () => dispatch(setUnitModal(null))
+const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({
+    close: () => dispatch(setUnitModal(null)),
+    setAttackerBaseValue: (type: UnitType, value_type: UnitType | UnitCalc, key: string, value: number) => (
+        !Number.isNaN(value) && dispatch(setAttackerBaseValue(type, value_type, key, value))
+    ),
+    setAttackerModifierValue: (type: UnitType, value_type: UnitType | UnitCalc, key: string, value: number) => (
+        !Number.isNaN(value) && dispatch(setAttackerModifierValue(type, value_type, key, value))
+    )
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(UnitModal)

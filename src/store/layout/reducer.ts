@@ -1,5 +1,6 @@
 import { Reducer } from 'redux'
 import { LayoutState, LayoutActionTypes } from './types'
+import { UnitActionTypes } from '../units'
 
 // Type-safe initialState!
 export const initialState: LayoutState = {
@@ -8,10 +9,20 @@ export const initialState: LayoutState = {
 
 // Thanks to Redux 4's much simpler typings, we can take away a lot of typings on the reducer side,
 // everything will remain type-safe.
-const reducer: Reducer<LayoutState> = (state = initialState, action) => {
+const reducer: Reducer<LayoutState> = (state = initialState, action): LayoutState => {
   switch (action.type) {
     case LayoutActionTypes.SET_UNIT_MODAL: {
       return { ...state, unit_modal: action.payload }
+    }
+    case UnitActionTypes.SET_ATTACKER_BASE_VALUE: {
+      if (state.unit_modal)
+        return { ...state, unit_modal: state.unit_modal.add_base_value(action.payload.value_type, action.payload.key, action.payload.value) }
+      return state
+    }
+    case UnitActionTypes.SET_ATTACKER_MODIFIER_VALUE: {
+      if (state.unit_modal)
+        return { ...state, unit_modal: state.unit_modal.add_modifier_value(action.payload.value_type, action.payload.key, action.payload.value) }
+      return state
     }
     default: {
       return state

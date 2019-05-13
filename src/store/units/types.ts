@@ -6,7 +6,7 @@ export enum UnitActionTypes {
     SET_ATTACKER_MODIFIER_VALUE = '@@unit/SET_ATTACKER_MODIFIER_VALUE',
     SET_DEFENDER_BASE_VALUE = '@@unit/SET_DEFENDER_BASE_VALUE',
     SET_DEFENDER_MODIFIER_VALUE = '@@unit/SET_DEFENDER_MODIFIER_VALUE'
-  }
+}
 
 export interface UnitsState {
     readonly attacker: Map<UnitType, UnitDefinition>
@@ -53,13 +53,11 @@ export enum UnitCalc {
 }
 
 export class UnitDefinition {
-    
-    constructor(public type: UnitType, public image: string, public requirements: string, public can_assault: boolean, ) {
+
+    constructor(public readonly type: UnitType, public readonly image: string, public readonly requirements: string, public readonly can_assault: boolean,
+        public readonly base_values: Map<UnitCalc | UnitType, Map<string, number>>, public readonly modifier_values: Map<UnitCalc | UnitType, Map<string, number>>) {
 
     }
-
-    base_values = Map<UnitCalc | UnitType, Map<string, number>>()
-    base_modifiers = Map<UnitCalc | UnitType, Map<string, number>>()
 
     toPercent = (number: number) => +(number * 100).toFixed(2) + '%'
 
@@ -69,10 +67,10 @@ export class UnitDefinition {
         if (value_base)
             value_base.forEach(value => base += value)
         let modifier = 1.0
-        const value_modifier = this.base_modifiers.get(type)
+        const value_modifier = this.modifier_values.get(type)
         if (value_modifier)
             value_modifier.forEach(value => modifier += value)
-        switch (type){
+        switch (type) {
             case UnitCalc.Cost:
             case UnitCalc.Maneuver:
             case UnitCalc.Manpower:
@@ -98,7 +96,7 @@ export class UnitDefinition {
             explanation = explanation.substring(0, explanation.length - 1) + ')'
         }
         let modifier = 1.0
-        const value_modifier = this.base_modifiers.get(type)
+        const value_modifier = this.modifier_values.get(type)
         if (value_modifier)
             value_modifier.forEach(value => modifier += value)
         explanation += ' multiplied by ' + this.toPercent(modifier)
@@ -110,28 +108,40 @@ export class UnitDefinition {
         return explanation
     }
 
-    add_base_value = (type: UnitCalc | UnitType, key: string, value: number) => {
-        if (!this.base_values.has(type))
-            this.base_values = this.base_values.set(type, Map<string, number>())
-        const value_base = this.base_values.get(type)
-        if (!value_base)
-            return
-        if (value === 0 && value_base.has(key))
-            this.base_values = this.base_values.set(type, value_base.delete(key))
-        else
-            this.base_values = this.base_values.set(type, value_base.set(key, value))
+    add_base_value = (type: UnitCalc | UnitType, key: string, value: number): UnitDefinition => {
+        const new_values = this.add_value(this.base_values, type, key, value)
+        return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, new_values, this.modifier_values)
     }
 
-    add_modifier_value = (type: UnitCalc | UnitType, key: string, value: number) => {
-        if (!this.base_modifiers.has(type))
-            this.base_modifiers = this.base_modifiers.set(type, Map<string, number>())
-        const value_modifier = this.base_modifiers.get(type)
-        if (!value_modifier)
-            return
-        if (value === 0 && value_modifier.has(key))
-            this.base_modifiers = this.base_modifiers.set(type, value_modifier.delete(key))
+    add_modifier_value = (type: UnitCalc | UnitType, key: string, value: number): UnitDefinition => {
+        const new_values = this.add_value(this.modifier_values, type, key, value)
+        return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, this.base_values, new_values)
+    }
+
+    private add_value = (container: Map<UnitCalc | UnitType, Map<string, number>>, type: UnitCalc | UnitType, key: string, value: number): Map<UnitCalc | UnitType, Map<string, number>> => {
+        let new_values = container.has(type) ? container : container.set(type, Map<string, number>())
+        const values = new_values.get(type)
+        if (!values)
+            return new_values
+        if (value === 0 && values.has(key))
+            new_values = new_values.set(type, values.delete(key))
         else
-            this.base_modifiers = this.base_modifiers.set(type, value_modifier.set(key, value))
+            new_values = new_values.set(type, values.set(key, value))
+        return new_values
+    }
+
+    get_base_value = (type: UnitCalc | UnitType, key: string): number => this.get_value(this.base_values, type, key)
+
+    get_modifier_value = (type: UnitCalc | UnitType, key: string): number => this.get_value(this.modifier_values, type, key)
+
+    private get_value = (container: Map<UnitCalc | UnitType, Map<string, number>>, type: UnitCalc | UnitType, key: string): number => {
+        const values = container.get(type)
+        if (!values)
+            return 0
+        const value = values.get(key)
+        if (!value)
+            return 0
+        return value
     }
 }
 
