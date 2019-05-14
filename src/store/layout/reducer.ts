@@ -1,36 +1,21 @@
-import { Reducer } from 'redux'
-import { LayoutState, LayoutActionTypes } from './types'
-import { UnitActionTypes } from '../units'
+import { createReducer } from 'typesafe-actions'
+import { setBaseValue, setModifierValue, UnitDefinition, ArmyType } from '../units'
+import { setUnitModal } from './actions'
 
-// Type-safe initialState!
-export const initialState: LayoutState = {
-  unit_modal: null,
-  army: null
+export const initialState = {
+  unit_modal: null as (UnitDefinition | null),
+  army: null as (ArmyType | null)
 }
 
-// Thanks to Redux 4's much simpler typings, we can take away a lot of typings on the reducer side,
-// everything will remain type-safe.
-const reducer: Reducer<LayoutState> = (state = initialState, action): LayoutState => {
-  switch (action.type) {
-    case LayoutActionTypes.SET_UNIT_MODAL: {
-      return { ...state, unit_modal: action.payload.unit, army: action.payload.army }
-    }
-    case UnitActionTypes.SET_BASE_VALUE: {
-      if (state.unit_modal)
-        return { ...state, unit_modal: state.unit_modal.add_base_value(action.payload.value_type, action.payload.key, action.payload.value) }
-      return state
-    }
-    case UnitActionTypes.SET_MODIFIER_VALUE: {
-      if (state.unit_modal)
-        return { ...state, unit_modal: state.unit_modal.add_modifier_value(action.payload.value_type, action.payload.key, action.payload.value) }
-      return state
-    }
-    default: {
-      return state
-    }
-  }
-}
-
-// Instead of using default export, we use named exports. That way we can group these exports
-// inside the `index.js` folder.
-export { reducer as layoutReducer }
+export const layoutReducer = createReducer(initialState)
+  .handleAction(setUnitModal, (state, action: ReturnType<typeof setUnitModal>) => ({ ...state, unit_modal: action.payload.unit, army: action.payload.army }))
+  .handleAction(setBaseValue, (state, action: ReturnType<typeof setBaseValue>) => {
+    if (state.unit_modal)
+      return { ...state, unit_modal: state.unit_modal.add_base_value(action.payload.key, action.payload.value_type, action.payload.value) }
+    return state
+  })
+  .handleAction(setModifierValue, (state, action: ReturnType<typeof setModifierValue>) => {
+    if (state.unit_modal)
+      return { ...state, unit_modal: state.unit_modal.add_modifier_value(action.payload.key, action.payload.value_type, action.payload.value) }
+    return state
+  })

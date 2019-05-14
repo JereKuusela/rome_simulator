@@ -1,37 +1,6 @@
 
 import { Map } from 'immutable'
 
-export enum UnitActionTypes {
-    SET_BASE_VALUE = '@@unit/SET_BASE_VALUE',
-    SET_MODIFIER_VALUE = '@@unit/SET_MODIFIER_VALUE'
-}
-
-export interface UnitsState {
-    readonly units: Map<ArmyType, Map<UnitType, UnitDefinition>>
-}
-
-export interface UnitDefinitionA {
-    type: UnitType
-    discipline: number
-    manpower: number
-    offense: number
-    defense: number
-    morale: number
-    morale_damage_taken: number
-    strength_damage_taken: number
-    attrition_weight: number
-    damage_multipliers: Map<UnitType, number>
-    movement_speed: number
-    can_assault: boolean
-    cost: number
-    maneuver: number
-    recruit_time: number
-    upkeep: number
-    requirements: string
-    image: string
-}
-
-
 export enum UnitCalc {
     Morale = 'Morale',
     Discipline = 'Discipline',
