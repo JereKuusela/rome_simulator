@@ -86,40 +86,40 @@ export class TableUnitDefinitions extends Component<IProps> {
           <Image src={unit.image} avatar />
           {unit.type}</Table.Cell>
         <Table.Cell>
-          {unit.calculate(UnitCalc.Morale)}
+          {unit.valueToString(UnitCalc.Morale)}
         </Table.Cell>
         <Table.Cell>
-          {unit.calculate(UnitCalc.Manpower)}
+          {unit.valueToString(UnitCalc.Manpower)}
         </Table.Cell>
         <Table.Cell>
-          {unit.calculate(UnitCalc.Discipline)}
+          {unit.valueToString(UnitCalc.Discipline)}
         </Table.Cell>
         <Table.Cell>
-          {unit.calculate(UnitCalc.Offense)}
+          {unit.valueToString(UnitCalc.Offense)}
         </Table.Cell>
         <Table.Cell>
-          {unit.calculate(UnitCalc.Defense)}
+          {unit.valueToString(UnitCalc.Defense)}
         </Table.Cell>
         <Table.Cell>
           {unit.can_assault ? <Image src={IconYes} avatar /> : <Image src={IconNo} avatar />}
         </Table.Cell>
         <Table.Cell>
-          {unit.calculate(UnitCalc.MovementSpeed)}
+          {unit.valueToString(UnitCalc.MovementSpeed)}
         </Table.Cell>
         <Table.Cell>
-          {unit.calculate(UnitCalc.Maneuver)}
+          {unit.valueToString(UnitCalc.Maneuver)}
         </Table.Cell>
         <Table.Cell>
-          {unit.calculate(UnitCalc.MoraleDamageTaken)}
+          {unit.valueToString(UnitCalc.MoraleDamageTaken)}
         </Table.Cell>
         <Table.Cell>
-          {unit.calculate(UnitCalc.StrengthDamageTaken)}
+          {unit.valueToString(UnitCalc.StrengthDamageTaken)}
         </Table.Cell>
         {
           this.props.units.map((value) => {
             return (
               <Table.Cell key={value.type}>
-                {unit.calculate(value.type)}
+                {unit.valueToString(value.type)}
               </Table.Cell>
             )
           })

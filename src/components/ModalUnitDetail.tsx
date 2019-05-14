@@ -63,7 +63,7 @@ export class ModalUnitDetail extends Component<IProps> {
                     {attribute}
                 </Table.Cell>
                 <Table.Cell>
-                    {unit.calculate(attribute)}
+                    {unit.valueToString(attribute)}
                 </Table.Cell>
                 <Table.Cell>
                     {unit.explain(attribute)}

@@ -14,7 +14,8 @@ export enum UnitCalc {
     RecruitTime = 'Recruit time',
     Cost = 'Cost',
     Upkeep = 'Upkeep',
-    AttritionWeight = 'Attrition weight'
+    AttritionWeight = 'Attrition weight',
+    Experience = 'Experience'
 
 }
 
@@ -27,7 +28,7 @@ export class UnitDefinition {
 
     toPercent = (number: number) => +(number * 100).toFixed(2) + '%'
 
-    calculate = (type: UnitCalc | UnitType) => {
+    calculateValue = (type: UnitCalc | UnitType): number => {
         let base = 0
         const value_base = this.base_values.get(type)
         if (value_base)
@@ -36,6 +37,11 @@ export class UnitDefinition {
         const value_modifier = this.modifier_values.get(type)
         if (value_modifier)
             value_modifier.forEach(value => modifier += value)
+        return base * modifier
+    }
+
+    valueToString = (type: UnitCalc | UnitType): string => {
+        const value = this.calculateValue(type)
         switch (type) {
             case UnitCalc.Cost:
             case UnitCalc.Maneuver:
@@ -44,9 +50,9 @@ export class UnitDefinition {
             case UnitCalc.MovementSpeed:
             case UnitCalc.RecruitTime:
             case UnitCalc.Upkeep:
-                return base * modifier
+                return String(value)
             default:
-                return this.toPercent(base * modifier)
+                return this.toPercent(value)
         }
     }
 

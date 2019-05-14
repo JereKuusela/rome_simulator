@@ -30,7 +30,8 @@ const setBaseValues = (unit: UnitDefinition): UnitDefinition => {
         [UnitCalc.Manpower, 1000],
         [UnitCalc.Morale, 3],
         [UnitCalc.MoraleDamageTaken, 1],
-        [UnitCalc.StrengthDamageTaken, 1]
+        [UnitCalc.StrengthDamageTaken, 1],
+        [UnitCalc.Experience, 0]
     ]
     const units = Object.keys(UnitType).map(k => UnitType[k as any]) as UnitType[]
     const unit_values: [UnitType, number][] = units.map(value => [value, 1])

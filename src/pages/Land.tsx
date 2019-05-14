@@ -2,10 +2,10 @@ import { Map } from 'immutable'
 import React, { Component } from 'react'
 import { Container, Header } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { AppState } from './../store/index'
+import { AppState } from '../store/index'
 import { UnitType, UnitDefinition, ArmyType } from '../store/units/types'
 import { setUnitModal } from '../store/layout'
-import { TableUnitDefinitions } from '../components/TableUnitDefinitions'
+import { TableLandBattle } from '../components/TableLandBattle'
 
 
 interface IStateFromProps {
@@ -16,7 +16,7 @@ interface IDispatchFromProps {
 }
 interface IProps extends IStateFromProps, IDispatchFromProps { }
 
-class Index extends Component<IProps> {
+class Land extends Component<IProps> {
 
   render() {
     return (
@@ -33,10 +33,7 @@ class Index extends Component<IProps> {
     return (
       <div key={army}>
         <Header>{army}</Header>
-        <TableUnitDefinitions
-          army={army}
-          units={units.toList()}
-          onRowClick={(unit) => this.props.editUnit(army, unit)}
+        <TableLandBattle
         />
       </div>
     )
@@ -52,4 +49,4 @@ const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({
 })
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Index)
+export default connect(mapStateToProps, mapDispatchToProps)(Land)
