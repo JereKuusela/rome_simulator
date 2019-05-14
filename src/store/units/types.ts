@@ -135,7 +135,7 @@ export enum UnitType {
     WarElephants = 'War Elephants',
     LightInfantry = 'Light Infantry',
     LightCavalry = 'Light Cavalry',
-    HorseArchers = 'Horse Archer',
+    HorseArchers = 'Horse Archers',
     HeavyInfantry = 'Heavy Infantry',
     Chariots = 'Chariots',
     HeavyCavalry = 'Heavy Cavalry',

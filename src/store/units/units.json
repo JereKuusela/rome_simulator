@@ -111,7 +111,7 @@
             "war_elephants": 0
         },
         {
-            "type": "Horse archers",
+            "type": "Horse Archers",
             "cost": 10,
             "recruit_time": 60,
             "upkeep": 0.54,
