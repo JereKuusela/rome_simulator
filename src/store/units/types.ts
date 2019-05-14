@@ -52,7 +52,7 @@ export enum UnitCalc {
 export class UnitDefinition {
 
     constructor(public readonly type: UnitType, public readonly image: string, public readonly requirements: string, public readonly can_assault: boolean,
-        public readonly base_values: Map<UnitCalc | UnitType, Map<string, number>>, public readonly modifier_values: Map<UnitCalc | UnitType, Map<string, number>>) {
+        public readonly base_values: Map<UnitCalc | UnitType, Map<string, number>> = Map(), public readonly modifier_values: Map<UnitCalc | UnitType, Map<string, number>> = Map()) {
 
     }
 
@@ -105,25 +105,38 @@ export class UnitDefinition {
         return explanation
     }
 
-    add_base_value = (type: UnitCalc | UnitType, key: string, value: number): UnitDefinition => {
-        const new_values = this.add_value(this.base_values, type, key, value)
+    add_base_values = (key: string, values: [UnitCalc | UnitType, number][]): UnitDefinition => {
+        const new_values = this.add_values(this.base_values, key, values)
         return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, new_values, this.modifier_values)
     }
 
-    add_modifier_value = (type: UnitCalc | UnitType, key: string, value: number): UnitDefinition => {
-        const new_values = this.add_value(this.modifier_values, type, key, value)
+    add_base_value = (key: string, type: UnitCalc | UnitType, value: number): UnitDefinition => {
+        const new_values = this.add_values(this.base_values, key, [[type, value]])
+        return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, new_values, this.modifier_values)
+    }
+
+    add_modifier_values = (key: string, values: [UnitCalc | UnitType, number][]): UnitDefinition => {
+        const new_values = this.add_values(this.modifier_values, key, values)
         return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, this.base_values, new_values)
     }
 
-    private add_value = (container: Map<UnitCalc | UnitType, Map<string, number>>, type: UnitCalc | UnitType, key: string, value: number): Map<UnitCalc | UnitType, Map<string, number>> => {
-        let new_values = container.has(type) ? container : container.set(type, Map<string, number>())
-        const values = new_values.get(type)
-        if (!values)
-            return new_values
-        if (value === 0 && values.has(key))
-            new_values = new_values.set(type, values.delete(key))
-        else
-            new_values = new_values.set(type, values.set(key, value))
+    add_modifier_value = (key: string, type: UnitCalc | UnitType, value: number): UnitDefinition => {
+        const new_values = this.add_values(this.modifier_values, key, [[type, value]])
+        return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, this.base_values, new_values)
+    }
+
+    private add_values = (container: Map<UnitCalc | UnitType, Map<string, number>>, key: string, values: [UnitCalc | UnitType, number][]): Map<UnitCalc | UnitType, Map<string, number>> => {
+        let new_values = container
+        for (const [type, value] of values) {
+            new_values = new_values.has(type) ? new_values : new_values.set(type, Map<string, number>())
+            const type_values = new_values.get(type)
+            if (!type_values)
+                return new_values
+            if (value === 0 && type_values.has(key))
+                new_values = new_values.set(type, type_values.delete(key))
+            else
+                new_values = new_values.set(type, type_values.set(key, value))
+        }
         return new_values
     }
 
@@ -149,15 +162,15 @@ export enum ArmyType {
 
 
 export enum UnitType {
-    WarElephant = 'War Elephant',
+    Archers = 'Archers',
+    WarElephants = 'War Elephants',
     LightInfantry = 'Light Infantry',
     LightCavalry = 'Light Cavalry',
-    HorseArcher = 'Horse Archer',
+    HorseArchers = 'Horse Archer',
     HeavyInfantry = 'Heavy Infantry',
-    Chariot = 'Chariot',
+    Chariots = 'Chariots',
     HeavyCavalry = 'Heavy Cavalry',
-    CamelCavalry = 'Camel Cavalry',
-    Archer = 'Archer'
+    CamelCavalry = 'Camel Cavalry'
 }
 
 

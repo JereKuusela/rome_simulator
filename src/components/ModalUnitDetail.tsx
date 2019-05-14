@@ -16,7 +16,7 @@ export class ModalUnitDetail extends Component<IProps> {
 
     render() {
         const attributes = Object.keys(UnitCalc).map(k => UnitCalc[k as any]) as UnitCalc[]
-        const units = Object.keys(UnitType).map(k => UnitType[k as any]) as UnitType[]
+        const units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
         const headers = ['Attribute', 'Value', 'Explained', 'Custom base', 'Custom modifier']
         return (
             <Modal basic onClose={this.props.onClose} open>

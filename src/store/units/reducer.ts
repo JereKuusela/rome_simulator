@@ -13,13 +13,13 @@ const reducer: Reducer<UnitsState> = (state = initialState, action): UnitsState 
     case UnitActionTypes.SET_BASE_VALUE: {
       const army = state.units.get(action.payload.army)!
       const unit = army.get(action.payload.type)!
-      const new_unit = unit.add_base_value(action.payload.value_type, action.payload.key, action.payload.value)
+      const new_unit = unit.add_base_value(action.payload.key, action.payload.value_type, action.payload.value)
       return { ...state, units: state.units.set(action.payload.army, army.set(action.payload.type, new_unit)) }
     }
     case UnitActionTypes.SET_MODIFIER_VALUE: {
       const army = state.units.get(action.payload.army)!
       const unit = army.get(action.payload.type)!
-      const new_unit = unit.add_modifier_value(action.payload.value_type, action.payload.key, action.payload.value)
+      const new_unit = unit.add_modifier_value(action.payload.key, action.payload.value_type, action.payload.value)
       return { ...state, units: state.units.set(action.payload.army, army.set(action.payload.type, new_unit)) }
     }
     default: {
