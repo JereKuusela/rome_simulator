@@ -22,7 +22,8 @@ export enum UnitCalc {
 export class UnitDefinition {
 
     constructor(public readonly type: UnitType, public readonly image: string, public readonly requirements: string, public readonly can_assault: boolean,
-        public readonly base_values: Map<UnitCalc | UnitType, Map<string, number>> = Map(), public readonly modifier_values: Map<UnitCalc | UnitType, Map<string, number>> = Map()) {
+        public readonly base_values: Map<UnitCalc | UnitType, Map<string, number>> = Map(), public readonly modifier_values: Map<UnitCalc | UnitType, Map<string, number>> = Map(),
+        public readonly loss_values: Map<UnitCalc | UnitType, Map<string, number>> = Map()) {
 
     }
 
@@ -37,7 +38,11 @@ export class UnitDefinition {
         const value_modifier = this.modifier_values.get(type)
         if (value_modifier)
             value_modifier.forEach(value => modifier += value)
-        return base * modifier
+        let loss = 0
+        const value_loss = this.loss_values.get(type)
+        if (value_loss)
+        value_loss.forEach(value => loss += value)
+        return base * modifier - loss
     }
 
     valueToString = (type: UnitCalc | UnitType): string => {
@@ -77,27 +82,47 @@ export class UnitDefinition {
             value_modifier.forEach((value, key) => explanation += key + ': ' + this.toPercent(value) + ',')
             explanation = explanation.substring(0, explanation.length - 1) + ')'
         }
+        let loss = 0
+        const value_loss = this.loss_values.get(type)
+        if (value_loss)
+            value_loss.forEach(value => loss += value)
+        if (value_loss && value_loss.size > 0) {
+            explanation += ' reduced by losses ' + loss
+            explanation += ' ('
+            value_loss.forEach((value, key) => explanation += key + ': ' + value + ',')
+            explanation = explanation.substring(0, explanation.length - 1) + ')'
+        }
         return explanation
     }
 
     add_base_values = (key: string, values: [UnitCalc | UnitType, number][]): UnitDefinition => {
         const new_values = this.add_values(this.base_values, key, values)
-        return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, new_values, this.modifier_values)
+        return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, new_values, this.modifier_values, this.loss_values)
     }
 
     add_base_value = (key: string, type: UnitCalc | UnitType, value: number): UnitDefinition => {
         const new_values = this.add_values(this.base_values, key, [[type, value]])
-        return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, new_values, this.modifier_values)
+        return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, new_values, this.modifier_values, this.loss_values)
     }
 
     add_modifier_values = (key: string, values: [UnitCalc | UnitType, number][]): UnitDefinition => {
         const new_values = this.add_values(this.modifier_values, key, values)
-        return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, this.base_values, new_values)
+        return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, this.base_values, new_values, this.loss_values)
     }
 
     add_modifier_value = (key: string, type: UnitCalc | UnitType, value: number): UnitDefinition => {
         const new_values = this.add_values(this.modifier_values, key, [[type, value]])
-        return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, this.base_values, new_values)
+        return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, this.base_values, new_values, this.loss_values)
+    }
+
+    add_loss_values = (key: string, values: [UnitCalc | UnitType, number][]): UnitDefinition => {
+        const new_values = this.add_values(this.loss_values, key, values)
+        return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, this.base_values, this.modifier_values, new_values)
+    }
+
+    add_loss_value = (key: string, type: UnitCalc | UnitType, value: number): UnitDefinition => {
+        const new_values = this.add_values(this.loss_values, key, [[type, value]])
+        return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, this.base_values, this.modifier_values, new_values)
     }
 
     private add_values = (container: Map<UnitCalc | UnitType, Map<string, number>>, key: string, values: [UnitCalc | UnitType, number][]): Map<UnitCalc | UnitType, Map<string, number>> => {
