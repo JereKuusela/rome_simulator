@@ -92,33 +92,34 @@ const battle = (attacker_army: Army, defender_army: Army): [Army, Army] => {
     return [attacker_army, defender_army]
 }
 
-const attack = (attacker_army: Army, defender_army: Army) => {
+const attack = (attacker_frontline: FrontLine, defender_frontline: FrontLine, previous_results: List<AttackResult>, roll: number) => {
     // Units attack mainly units on front of them. If not, then a closest target is searched within maneuver.
     // Assumption: Right side searched first (shouldn't affect results because gaps get reinforced).
-    const attacker_frontline = attacker_army.get(0)!
-    const defender_frontline = defender_army.get(0)!
     for (let unit_index = 0; unit_index < attacker_frontline.size; unit_index++) {
         const attacker = attacker_frontline.get(unit_index)
         if (!attacker)
             continue
         const defender = defender_frontline.get(unit_index)
+        if (defender) {
+            const damage = calculateDamage(attacker, defender, previous_results.get(unit_index)!, roll)
+        }
     }
 }
 
 /**
  * Calculates both manpower and morale damage caused by a given attacker to a given defender.
  */
-const calculateDamage = (attacker: Unit, defender: Unit, roll: number): [number, number] => {
+const calculateDamage = (attacker: Unit, defender: Unit, previous_result: AttackResult, roll: number): [number, number] => {
     const base_damage = BASE_DAMAGE + BASE_DAMAGE_PER_ROLL * roll
     // Terrain bonus and tactic missing.
     const damage = base_damage
          * attacker.calculateValue(UnitCalc.Discipline)
-         * attacker.calculateValue(UnitCalc.Manpower)
+         * previous_result.manpower
          * attacker.calculateValue(defender.type)
          * attacker.calculateValue(UnitCalc.Offense)
          / defender.calculateValue(UnitCalc.Defense)
          * (1 - DAMAGE_REDUCTION_PER_EXPERIENCE * defender.calculateValue(UnitCalc.Experience))
     const manpower_lost = damage * MANPOWER_LOST_MULTIPLIER
-    const morale_lost = damage * MORALE_LOST_MULTIPLIER * attacker.calculateValue(UnitCalc.Morale)
+    const morale_lost = damage * MORALE_LOST_MULTIPLIER * previous_result.morale
     return [Math.floor(manpower_lost), Math.floor(100.0 * morale_lost) / 100.0]
 }
