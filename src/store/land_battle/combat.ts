@@ -2,6 +2,7 @@ import { List } from 'immutable'
 import { UnitDefinition, UnitCalc } from '../units'
 
 type Unit = UnitDefinition
+type FrontLine = List<UnitDefinition | null>
 type Army = List<List<UnitDefinition | null>>
 
 const DAMAGE_REDUCTION_PER_EXPERIENCE = 0.3
@@ -64,28 +65,43 @@ const reinforce = (army: Army): Army => {
     return army
 }
 
+interface AttackResult {
+    morale: number
+    manpower: number
+    manpower_depleted: number
+    morale_depleted: number
+}
+
+const get_initial_result_from_army = (army: Army): List<AttackResult> => army.get(0)!.map((unit) => ({
+    morale: unit ? unit.calculateValue(UnitCalc.Morale) : 0,
+    manpower: unit ? unit.calculateValue(UnitCalc.Manpower) : 0,
+    manpower_depleted : 0,
+    morale_depleted: 0
+}))
+
 /**
  * Makes given armies attack each other.
  */
-const battle = (army1: Army, army2: Army): [Army, Army] => {
+const battle = (attacker_army: Army, defender_army: Army): [Army, Army] => {
+    attacker_army = reinforce(attacker_army)
+    defender_army = reinforce(defender_army)
     // Killed manpower won't deal any damage so the right solution has to be searched iteratively.
-    let previous_damages1 = army1.map((row) => row.map((unit) => [0, 0]))
-    let previous_damages2 = army2.map((row) => row.map((unit) => [0, 0]))
+    let attacker_previous_result = get_initial_result_from_army(attacker_army)
+    let defender_previous_result = get_initial_result_from_army(defender_army)
     
-    return [army1, army2]
+    return [attacker_army, defender_army]
 }
 
-const attack= (attacker: Army, defender: Army) => {
+const attack = (attacker_army: Army, defender_army: Army) => {
     // Units attack mainly units on front of them. If not, then a closest target is searched within maneuver.
     // Assumption: Right side searched first (shouldn't affect results because gaps get reinforced).
-    for (let row_index = 0; row_index < attacker.size; row_index++) {
-        const row = attacker.get(row_index)!
-        for (let unit_index = 0; unit_index < row.size; unit_index++) {
-            const unit = row.get(unit_index)
-            if (!unit)
-                continue
-            
-        }
+    const attacker_frontline = attacker_army.get(0)!
+    const defender_frontline = defender_army.get(0)!
+    for (let unit_index = 0; unit_index < attacker_frontline.size; unit_index++) {
+        const attacker = attacker_frontline.get(unit_index)
+        if (!attacker)
+            continue
+        const defender = defender_frontline.get(unit_index)
     }
 }
 
