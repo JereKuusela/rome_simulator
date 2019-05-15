@@ -1,0 +1,123 @@
+{
+    "tactics": [
+        {
+            "type": "Bottleneck",
+            "archers": 0.5,
+            "heavy_cavalry": 0.8,
+            "heavy_infantry": 1,
+            "light_infantry": 0.25,
+            "shock_action": 0.2,
+            "hit_and_run": 0.2,
+            "skirmishing": -0.2,
+            "cavalry_skirmish": -0.1
+        },
+        {
+            "type": "Cavalry Skirmish",
+            "camel_cavalry": 0.5,
+            "heavy_cavalry": 0.5,
+            "horse_archers": 1.5,
+            "light_cavalry": 1.5,
+            "bottleneck": 0.25,
+            "padma_vyuha": 0.25,
+            "skirmishing": -0.1,
+            "phalanx": -0.1,
+            "casualties": -0.1
+        },
+        {
+            "type": "Deception",
+            "camel_cavalry": 1,
+            "chariots": 1,
+            "horse_archers": 1.5,
+            "light_cavalry": 1.5,
+            "skirmishing": 0.2,
+            "triplex_acies": 0.2,
+            "envelopment": -0.1,
+            "hit_and_run": -0.1
+        },
+        {
+            "type": "Envelopment",
+            "camel_cavalry": 1,
+            "chariots": 0.5,
+            "heavy_cavalry": 0.5,
+            "horse_archers": 0.5,
+            "light_cavalry": 1,
+            "deception": 0.2,
+            "phalanx": 0.2,
+            "shock_action": -0.1,
+            "padma_vyuha": -0.1
+        },
+        {
+            "type": "Hit-and-Run",
+            "archers": 0.5,
+            "camel_cavalry": 0.5,
+            "chariots": 0.5,
+            "horse_archers": 1,
+            "light_cavalry": 1,
+            "light_infantry": 1,
+            "deception": 0.25,
+            "triplex_acies": 0.25,
+            "bottleneck": -0.1,
+            "padma_vyuha": -0.1,
+            "casualties": -0.1
+        },
+        {
+            "type": "Padma Vyuha",
+            "archers": 1,
+            "chariots": 0.5,
+            "heavy_infantry": 0.75,
+            "light_cavalry": 0.5,
+            "war_elephants": 1,
+            "envelopment": 0.25,
+            "hit_and_run": 0.25,
+            "shock_action": -0.1,
+            "cavalry_skirmish": -0.1,
+            "casualties": -0.1
+        },
+        {
+            "type": "Phalanx",
+            "war_elephants": 1,
+            "heavy_infantry": 1,
+            "light_cavalry": 0.75,
+            "light_infantry": 0.75,
+            "shock_action": 0.25,
+            "cavalry_skirmish": 0.25,
+            "envelopment": -0.1,
+            "triplex_acies": -0.1,
+            "casualties": -0.1
+        },
+        {
+            "type": "Shock Action",
+            "heavy_cavalry": 1,
+            "heavy_infantry": 1,
+            "war_elephants": 2,
+            "envelopment": 0.2,
+            "padma_vyuha": 0.2,
+            "bottleneck": -0.1,
+            "phalanx": -0.1,
+            "casualties": 0.1
+        },
+        {
+            "type": "Skirmishing",
+            "archers": 0.5,
+            "camel_cavalry": 0.25,
+            "horse_archers": 0.25,
+            "light_cavalry": 0.25,
+            "light_infantry": 1,
+            "bottleneck": 0.2,
+            "cavalry_skirmish": 0.2,
+            "deception": -0.1,
+            "triplex_acies": -0.1,
+            "casualties": -0.25
+        },
+        {
+            "type": "Triplex Acies",
+            "heavy_infantry": 1,
+            "light_cavalry": 0.6,
+            "light_infantry": 1,
+            "skirmishing": 0.25,
+            "phalanx": 0.25,
+            "deception": -0.1,
+            "hit_and_run": -0.1
+        }
+    ]
+}

@@ -19,6 +19,10 @@ export enum UnitCalc {
 
 }
 
+type ValueType = UnitCalc | UnitType
+type MapValues = Map<ValueType, Map<string, number>>
+
+
 export class UnitDefinition {
 
     constructor(public readonly type: UnitType, public readonly image: string, public readonly requirements: string, public readonly can_assault: boolean,
@@ -29,7 +33,7 @@ export class UnitDefinition {
 
     toPercent = (number: number) => +(number * 100).toFixed(2) + '%'
 
-    calculateValue = (type: UnitCalc | UnitType): number => {
+    calculateValue = (type: ValueType): number => {
         let base = 0
         const value_base = this.base_values.get(type)
         if (value_base)
@@ -45,7 +49,7 @@ export class UnitDefinition {
         return base * modifier - loss
     }
 
-    valueToString = (type: UnitCalc | UnitType): string => {
+    valueToString = (type: ValueType): string => {
         const value = this.calculateValue(type)
         switch (type) {
             case UnitCalc.Cost:
@@ -61,7 +65,7 @@ export class UnitDefinition {
         }
     }
 
-    explain = (type: UnitCalc | UnitType) => {
+    explain = (type: ValueType) => {
         let base = 0
         const value_base = this.base_values.get(type)
         if (value_base)
@@ -95,37 +99,37 @@ export class UnitDefinition {
         return explanation
     }
 
-    add_base_values = (key: string, values: [UnitCalc | UnitType, number][]): UnitDefinition => {
+    add_base_values = (key: string, values: [ValueType, number][]): UnitDefinition => {
         const new_values = this.add_values(this.base_values, key, values)
         return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, new_values, this.modifier_values, this.loss_values)
     }
 
-    add_base_value = (key: string, type: UnitCalc | UnitType, value: number): UnitDefinition => {
+    add_base_value = (key: string, type: ValueType, value: number): UnitDefinition => {
         const new_values = this.add_values(this.base_values, key, [[type, value]])
         return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, new_values, this.modifier_values, this.loss_values)
     }
 
-    add_modifier_values = (key: string, values: [UnitCalc | UnitType, number][]): UnitDefinition => {
+    add_modifier_values = (key: string, values: [ValueType, number][]): UnitDefinition => {
         const new_values = this.add_values(this.modifier_values, key, values)
         return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, this.base_values, new_values, this.loss_values)
     }
 
-    add_modifier_value = (key: string, type: UnitCalc | UnitType, value: number): UnitDefinition => {
+    add_modifier_value = (key: string, type: ValueType, value: number): UnitDefinition => {
         const new_values = this.add_values(this.modifier_values, key, [[type, value]])
         return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, this.base_values, new_values, this.loss_values)
     }
 
-    add_loss_values = (key: string, values: [UnitCalc | UnitType, number][]): UnitDefinition => {
+    add_loss_values = (key: string, values: [ValueType, number][]): UnitDefinition => {
         const new_values = this.add_values(this.loss_values, key, values)
         return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, this.base_values, this.modifier_values, new_values)
     }
 
-    add_loss_value = (key: string, type: UnitCalc | UnitType, value: number): UnitDefinition => {
+    add_loss_value = (key: string, type: ValueType, value: number): UnitDefinition => {
         const new_values = this.add_values(this.loss_values, key, [[type, value]])
         return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, this.base_values, this.modifier_values, new_values)
     }
 
-    private add_values = (container: Map<UnitCalc | UnitType, Map<string, number>>, key: string, values: [UnitCalc | UnitType, number][]): Map<UnitCalc | UnitType, Map<string, number>> => {
+    private add_values = (container: MapValues, key: string, values: [ValueType, number][]): MapValues => {
         let new_values = container
         for (const [type, value] of values) {
             new_values = new_values.has(type) ? new_values : new_values.set(type, Map<string, number>())
@@ -140,11 +144,11 @@ export class UnitDefinition {
         return new_values
     }
 
-    get_base_value = (type: UnitCalc | UnitType, key: string): number => this.get_value(this.base_values, type, key)
+    get_base_value = (type: ValueType, key: string): number => this.get_value(this.base_values, type, key)
 
-    get_modifier_value = (type: UnitCalc | UnitType, key: string): number => this.get_value(this.modifier_values, type, key)
+    get_modifier_value = (type: ValueType, key: string): number => this.get_value(this.modifier_values, type, key)
 
-    private get_value = (container: Map<UnitCalc | UnitType, Map<string, number>>, type: UnitCalc | UnitType, key: string): number => {
+    private get_value = (container: MapValues, type: ValueType, key: string): number => {
         const values = container.get(type)
         if (!values)
             return 0

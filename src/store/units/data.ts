@@ -61,18 +61,18 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
         [UnitCalc.Maneuver, data.maneuver]    
     ]
     const modifier_values: [UnitCalc | UnitType, number][] = [
-        [UnitCalc.AttritionWeight, data.attrition_weight],
-        [UnitCalc.MoraleDamageTaken, data.morale_damage_taken],
-        [UnitCalc.StrengthDamageTaken, data.strength_damage_taken],
-        [UnitType.Archers, data.archers],
-        [UnitType.CamelCavalry, data.camel_cavalry],
-        [UnitType.Chariots, data.chariots],
-        [UnitType.HeavyCavalry, data.heavy_cavalry],
-        [UnitType.HeavyInfantry, data.heavy_infantry],
-        [UnitType.HorseArchers, data.horse_archers],
-        [UnitType.LightCavalry, data.light_cavalry],
-        [UnitType.LightInfantry, data.light_infantry],
-        [UnitType.WarElephants, data.war_elephants]
+        [UnitCalc.AttritionWeight, data.attrition_weight || 0],
+        [UnitCalc.MoraleDamageTaken, data.morale_damage_taken || 0],
+        [UnitCalc.StrengthDamageTaken, data.strength_damage_taken || 0],
+        [UnitType.Archers, data.archers || 0],
+        [UnitType.CamelCavalry, data.camel_cavalry || 0],
+        [UnitType.Chariots, data.chariots || 0],
+        [UnitType.HeavyCavalry, data.heavy_cavalry || 0],
+        [UnitType.HeavyInfantry, data.heavy_infantry || 0],
+        [UnitType.HorseArchers, data.horse_archers || 0],
+        [UnitType.LightCavalry, data.light_cavalry || 0],
+        [UnitType.LightInfantry, data.light_infantry || 0],
+        [UnitType.WarElephants, data.war_elephants || 0]
         
     ]
     unit = unit.add_base_values(unit.type, base_values)
@@ -89,16 +89,16 @@ interface UnitData {
     can_assault: boolean
     movement_speed: number
     maneuver: number
-    morale_damage_taken: number
-    strength_damage_taken: number
-    attrition_weight: number
-    archers: number
-    camel_cavalry: number
-    chariots: number
-    heavy_cavalry: number
-    heavy_infantry: number
-    horse_archers: number
-    light_cavalry: number
-    light_infantry: number
-    war_elephants: number
+    morale_damage_taken?: number
+    strength_damage_taken?: number
+    attrition_weight?: number
+    archers?: number
+    camel_cavalry?: number
+    chariots?: number
+    heavy_cavalry?: number
+    heavy_infantry?: number
+    horse_archers?: number
+    light_cavalry?: number
+    light_infantry?: number
+    war_elephants?: number
 }
