@@ -169,7 +169,7 @@ const attack = (source_row: FrontLine, target_row: FrontLine, source_losses: Los
     if (target_index === null)
       return
     const target = target_row.get(source_index)!
-    const losses = calculateLosses(source, target, source_losses[source_index], roll)
+    const losses = calculateLosses(source, target, source_losses[source_index], roll, border_terrain, tile_terrain)
     target_losses[target_index].manpower += losses.manpower
     target_losses[target_index].morale += losses.morale
   })
