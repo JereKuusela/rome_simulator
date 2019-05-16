@@ -19,7 +19,7 @@ export enum UnitCalc {
 
 }
 
-type ValueType = UnitCalc | UnitType
+export type ValueType = UnitCalc | UnitType
 type MapValues = Map<ValueType, Map<string, number>>
 
 
@@ -147,6 +147,8 @@ export class UnitDefinition {
   get_base_value = (type: ValueType, key: string): number => this.get_value(this.base_values, type, key)
 
   get_modifier_value = (type: ValueType, key: string): number => this.get_value(this.modifier_values, type, key)
+
+  get_loss_value = (type: ValueType, key: string): number => this.get_value(this.loss_values, type, key)
 
   private get_value = (container: MapValues, type: ValueType, key: string): number => {
     const values = container.get(type)

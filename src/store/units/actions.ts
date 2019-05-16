@@ -8,3 +8,7 @@ export const setBaseValue = createAction('@@units/SET_BASE_VALUE', action => {
 export const setModifierValue = createAction('@@units/SET_MODIFIER_VALUE', action => {
   return (army: ArmyType, type: UnitType, value_type: UnitType | UnitCalc, key: string, value: number) => action({ army, type, value_type, key, value })
 })
+
+export const setLossValue = createAction('@@units/SET_LOSS_VALUE', action => {
+  return (army: ArmyType, type: UnitType, value_type: UnitType | UnitCalc, key: string, value: number) => action({ army, type, value_type, key, value })
+})

@@ -11,7 +11,7 @@ import IconLightInfantry from '../../images/light_infantry.png'
 import IconWarElephants from '../../images/war_elephants.png'
 import * as data from './units.json';
 
-const unit_to_icon = Map<UnitType, string>()
+export const unit_to_icon = Map<UnitType, string>()
   .set(UnitType.Archers, IconArcher)
   .set(UnitType.CamelCavalry, IconCamelCavalry)
   .set(UnitType.Chariots, IconChariots)

@@ -22,7 +22,7 @@ class Units extends Component<IProps> {
     return (
       <Container>
         {
-          Array.from(this.props.units).map((value) => {
+          Array.from(this.props.units).map(value => {
             return this.renderArmy(value[0], value[1])
           })
         }
@@ -36,7 +36,7 @@ class Units extends Component<IProps> {
         <TableUnitDefinitions
           army={army}
           units={units.toList()}
-          onRowClick={(unit) => this.props.editUnit(army, unit)}
+          onRowClick={unit => this.props.editUnit(army, unit)}
         />
       </div>
     )
@@ -48,7 +48,7 @@ const mapStateToProps = (state: AppState): IStateFromProps => ({
 })
 
 const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({
-  editUnit: (army: ArmyType, unit: UnitDefinition) => dispatch(setUnitModal(army, unit))
+  editUnit: (army, unit) => dispatch(setUnitModal(army, unit))
 })
 
 

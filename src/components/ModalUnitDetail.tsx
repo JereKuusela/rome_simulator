@@ -1,23 +1,26 @@
 import React, { Component } from 'react'
 import { Modal, Table, Input } from 'semantic-ui-react'
-import { UnitType, UnitDefinition, UnitCalc, ArmyType } from '../store/units'
+import { UnitType, UnitDefinition, UnitCalc, ArmyType, ValueType } from '../store/units'
 
 interface IProps {
   army: ArmyType
-  custom_value_key: string,
-  unit: UnitDefinition,
-  onClose: () => void,
-  onCustomBaseValueChange: (army: ArmyType, type: UnitType, attribute: UnitCalc | UnitType, key: string, value: number) => void,
-  onCustomModifierValueChange: (army: ArmyType, type: UnitType, attribute: UnitCalc | UnitType, key: string, value: number) => void,
+  custom_value_key: string
+  unit: UnitDefinition
+  onClose: () => void
+  onCustomBaseValueChange: (army: ArmyType, type: UnitType, attribute: ValueType, key: string, value: number) => void
+  onCustomModifierValueChange: (army: ArmyType, type: UnitType, attribute: ValueType, key: string, value: number) => void
+  onCustomLossValueChange: (army: ArmyType, type: UnitType, attribute: ValueType, key: string, value: number) => void
 }
 
 // Display component for showing and changing unit details.
 export class ModalUnitDetail extends Component<IProps> {
 
+  readonly attributes = Object.keys(UnitCalc).map(k => UnitCalc[k as any]) as UnitCalc[]
+  readonly units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
+  readonly headers = ['Attribute', 'Value', 'Explained', 'Custom base', 'Custom modifier', 'Custom losses']
+
   render() {
-    const attributes = Object.keys(UnitCalc).map(k => UnitCalc[k as any]) as UnitCalc[]
-    const units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
-    const headers = ['Attribute', 'Value', 'Explained', 'Custom base', 'Custom modifier']
+    
     return (
       <Modal basic onClose={this.props.onClose} open>
         <Modal.Content>
@@ -25,26 +28,20 @@ export class ModalUnitDetail extends Component<IProps> {
             <Table.Header>
               <Table.Row>
                 {
-                  Array.from(headers).map((value) => {
-                    return (
-                      <Table.HeaderCell key={value}>
-                        {value}
-                      </Table.HeaderCell>
-                    )
-                  })
+                  Array.from(this.headers).map((value) => (
+                    <Table.HeaderCell key={value}>
+                      {value}
+                    </Table.HeaderCell>
+                  ))
                 }
               </Table.Row>
             </Table.Header>
             <Table.Body>
               {
-                Array.from(attributes).map((value) => {
-                  return this.renderRow(this.props.unit, value)
-                })
+                this.attributes.map((value) => this.renderRow(this.props.unit, value))
               }
               {
-                Array.from(units).map((value) => {
-                  return this.renderRow(this.props.unit, value)
-                })
+                this.units.map((value) => this.renderRow(this.props.unit, value))
               }
             </Table.Body>
           </Table>
@@ -53,9 +50,10 @@ export class ModalUnitDetail extends Component<IProps> {
     )
   }
 
-  renderRow = (unit: UnitDefinition, attribute: UnitCalc | UnitType) => {
+  renderRow = (unit: UnitDefinition, attribute: ValueType) => {
     let base_value = unit.get_base_value(attribute, this.props.custom_value_key)
     let modifier_value = unit.get_modifier_value(attribute, this.props.custom_value_key)
+    let loss_value = unit.get_loss_value(attribute, this.props.custom_value_key)
 
     return (
       <Table.Row key={attribute}>
@@ -79,6 +77,12 @@ export class ModalUnitDetail extends Component<IProps> {
           <Input
             defaultValue={modifier_value}
             onChange={(_, data) => this.props.onCustomModifierValueChange(this.props.army, unit.type, attribute, this.props.custom_value_key, Number(data.value))}
+          />
+        </Table.Cell>
+        <Table.Cell>
+          <Input
+            defaultValue={loss_value}
+            onChange={(_, data) => this.props.onCustomLossValueChange(this.props.army, unit.type, attribute, this.props.custom_value_key, Number(data.value))}
           />
         </Table.Cell>
       </Table.Row>

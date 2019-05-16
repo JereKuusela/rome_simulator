@@ -4,7 +4,9 @@ import { Store } from 'redux'
 import { BrowserRouter, Route } from 'react-router-dom'
 import UnitPage from './pages/Units'
 import LandPage from './pages/Land'
+import TacticPage from './pages/Tactics'
 import ModalUnitDetail from './containers/ModalUnitDetail'
+import ModalTacticDetail from './containers/ModalTacticDetail'
 import { AppState } from './store/'
 
 // Any additional component props go here.
@@ -17,9 +19,11 @@ const Root = ({ store }: MainProps) => {
   return (
     <Provider store={store}>
       <ModalUnitDetail />
+      <ModalTacticDetail />
       <BrowserRouter>
-        <Route path='/' component={LandPage} />
+        <Route path='/' exact component={LandPage} />
         <Route path='/Units' component={UnitPage} />
+        <Route path='/Tactics' component={TacticPage} />
       </BrowserRouter>
     </Provider>
   )

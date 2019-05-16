@@ -22,9 +22,7 @@ export class TableLandBattle extends Component<IProps> {
       <Table celled>
         <Table.Body>
           {
-            range.map((value) => {
-              return this.renderRow(value, 10)
-            })
+            range.map((value) => this.renderRow(value, 10))
           }
         </Table.Body>
       </Table>
@@ -37,14 +35,12 @@ export class TableLandBattle extends Component<IProps> {
     return (
       <Table.Row key={row}>
         {
-            range.map((value) => {
-              return (
-                <Table.Cell key={value} selectable>
-                  
-                </Table.Cell>
-              )
-            })
-          }
+          range.map((value) => (
+            <Table.Cell key={value} selectable>
+
+            </Table.Cell>
+          ))
+        }
       </Table.Row>
     )
   }

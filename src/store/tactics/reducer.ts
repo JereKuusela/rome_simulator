@@ -1,4 +1,3 @@
-import { Map } from 'immutable'
 import { createReducer } from 'typesafe-actions'
 import { getDefaultDefinitions } from './data'
 import { setBaseValue } from './actions'

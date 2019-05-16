@@ -57,21 +57,18 @@ export class TableUnitDefinitions extends Component<IProps> {
               Strength damage
               </Table.HeaderCell>
             {
-              this.props.units.map((value) => {
-                return (
-                  <Table.HeaderCell key={value.type}>
-                    <Image src={value.image} avatar />
-                  </Table.HeaderCell>
-                )
-              })
+              this.props.units.map((value) => (
+                <Table.HeaderCell key={value.type}>
+                  <Image src={value.image} avatar />
+                </Table.HeaderCell>
+              )
+              )
             }
           </Table.Row>
         </Table.Header>
         <Table.Body>
           {
-            this.props.units.map((value) => {
-              return this.renderRow(value)
-            })
+            this.props.units.map((value) => this.renderRow(value))
           }
         </Table.Body>
       </Table>
@@ -116,13 +113,12 @@ export class TableUnitDefinitions extends Component<IProps> {
           {unit.valueToString(UnitCalc.StrengthDamageTaken)}
         </Table.Cell>
         {
-          this.props.units.map((value) => {
-            return (
-              <Table.Cell key={value.type}>
-                {unit.valueToString(value.type)}
-              </Table.Cell>
-            )
-          })
+          this.props.units.map((value) => (
+            <Table.Cell key={value.type}>
+              {unit.valueToString(value.type)}
+            </Table.Cell>
+          )
+          )
         }
       </Table.Row>
     )

@@ -1,7 +1,7 @@
 import { Map } from 'immutable'
 import { createReducer } from 'typesafe-actions'
 import { getDefaultDefinitions } from './data'
-import { setBaseValue, setModifierValue } from './actions'
+import { setBaseValue, setModifierValue, setLossValue } from './actions'
 import { UnitType, UnitDefinition, ArmyType } from './types'
 
 const initialState = {
@@ -17,5 +17,10 @@ export const unitsReducer = createReducer(initialState)
   .handleAction(setModifierValue, (state, action: ReturnType<typeof setModifierValue>) => (
     { ...state, units: state.units.updateIn([action.payload.army, action.payload.type], (unit: UnitDefinition) => (
       unit.add_modifier_value(action.payload.key, action.payload.value_type, action.payload.value)
+    ))}
+  ))
+  .handleAction(setLossValue, (state, action: ReturnType<typeof setLossValue>) => (
+    { ...state, units: state.units.updateIn([action.payload.army, action.payload.type], (unit: UnitDefinition) => (
+      unit.add_loss_value(action.payload.key, action.payload.value_type, action.payload.value)
     ))}
   ))
