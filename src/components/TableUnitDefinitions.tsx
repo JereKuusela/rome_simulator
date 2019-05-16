@@ -1,7 +1,8 @@
-import { List } from 'immutable'
+import { List as ImmutableList } from 'immutable'
 import React, { Component } from 'react'
-import { Image, Table } from 'semantic-ui-react'
+import { Image, Table, List } from 'semantic-ui-react'
 import { UnitDefinition, UnitCalc, ArmyType } from '../store/units'
+import { TerrainType } from '../store/terrains'
 import IconYes from '../images/yes.png'
 import IconNo from '../images/no.png'
 import IconDiscipline from '../images/discipline.png'
@@ -12,12 +13,14 @@ import IconMorale from '../images/morale.png'
 
 interface IProps {
   readonly army: ArmyType
-  readonly units: List<UnitDefinition>
+  readonly units: ImmutableList<UnitDefinition>
   readonly onRowClick: (unit: UnitDefinition) => void
 }
 
 // Display component for showing unit definitions for an army.
 export class TableUnitDefinitions extends Component<IProps> {
+
+  readonly terrains = Object.keys(TerrainType).map(k => TerrainType[k as any]) as TerrainType[]
 
   render() {
     return (
@@ -64,6 +67,9 @@ export class TableUnitDefinitions extends Component<IProps> {
               )
               )
             }
+            <Table.HeaderCell>
+              Terrain
+            </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -120,6 +126,17 @@ export class TableUnitDefinitions extends Component<IProps> {
           )
           )
         }
+        <Table.Cell>
+          <List>
+            {
+              this.terrains.filter(type => unit.calculateValue(type) !== 1).map(type => (
+                <List.Item key={type}>
+                  {type + ': ' + unit.valueToString(type)}
+                </List.Item>
+              ))
+            }
+          </List>
+        </Table.Cell>
       </Table.Row>
     )
   }

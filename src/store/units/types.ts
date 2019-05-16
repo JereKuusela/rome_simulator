@@ -1,6 +1,7 @@
 
 import { Map } from 'immutable'
 import { BaseDefinition } from '../../utils'
+import { TerrainType } from '../terrains'
 
 export enum UnitCalc {
   Morale = 'Morale',
@@ -20,7 +21,7 @@ export enum UnitCalc {
 
 }
 
-export type ValueType = UnitCalc | UnitType
+export type ValueType = UnitCalc | UnitType | TerrainType
 type MapValues = Map<ValueType, Map<string, number>>
 
 
@@ -43,7 +44,7 @@ export class UnitDefinition extends BaseDefinition<UnitType, ValueType> {
       case UnitCalc.Upkeep:
         return String(value)
       default:
-        return this.toPercent(value)
+        return this.toRelativePercent(value)
     }
   }
 

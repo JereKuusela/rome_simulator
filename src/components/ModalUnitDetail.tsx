@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Modal, Table, Input } from 'semantic-ui-react'
 import { UnitType, UnitDefinition, UnitCalc, ArmyType, ValueType } from '../store/units'
+import { TerrainType } from '../store/terrains'
 
 interface IProps {
   army: ArmyType
@@ -17,6 +18,7 @@ export class ModalUnitDetail extends Component<IProps> {
 
   readonly attributes = Object.keys(UnitCalc).map(k => UnitCalc[k as any]) as UnitCalc[]
   readonly units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
+  readonly terrains = Object.keys(TerrainType).map(k => TerrainType[k as any]).sort() as TerrainType[]
   readonly headers = ['Attribute', 'Value', 'Explained', 'Custom base', 'Custom modifier', 'Custom losses']
 
   render() {
@@ -42,6 +44,9 @@ export class ModalUnitDetail extends Component<IProps> {
               }
               {
                 this.units.map((value) => this.renderRow(this.props.unit, value))
+              }
+              {
+                this.terrains.map((value) => this.renderRow(this.props.unit, value))
               }
             </Table.Body>
           </Table>

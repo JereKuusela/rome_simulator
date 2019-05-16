@@ -1,12 +1,23 @@
 import { Map } from 'immutable'
 
+
+
 export class BaseDefinition<T, S> {
-    constructor(public readonly type: T, protected readonly base_values: Map<S, Map<string, number>> = Map(), protected readonly modifier_values: Map<S, Map<string, number>> = Map(),
+  constructor(public readonly type: T, protected readonly base_values: Map<S, Map<string, number>> = Map(), protected readonly modifier_values: Map<S, Map<string, number>> = Map(),
     protected readonly loss_values: Map<S, Map<string, number>> = Map()) {
 
   }
 
   toPercent = (number: number) => +(number * 100).toFixed(2) + '%'
+
+  toRelativePercent = (number: number) => {
+    const relative = +(number * 100).toFixed(2) - 100
+    if (relative > 0)
+      return '+' + relative + '%'
+    if (relative < 0)
+      return relative + '%'
+    return ''
+  }
 
   calculateValue = (type: S): number => {
     let base = 0
