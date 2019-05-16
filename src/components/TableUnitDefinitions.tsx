@@ -11,74 +11,74 @@ import IconManpower from '../images/manpower.png'
 import IconMorale from '../images/morale.png'
 
 interface IProps {
-    readonly army: ArmyType
-    readonly units: List<UnitDefinition>
-    readonly onRowClick: (unit: UnitDefinition) => void
+  readonly army: ArmyType
+  readonly units: List<UnitDefinition>
+  readonly onRowClick: (unit: UnitDefinition) => void
 }
 
 // Display component for showing unit definitions for an army.
 export class TableUnitDefinitions extends Component<IProps> {
 
-    render() {
-        return (
-            <Table celled selectable>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>
+  render() {
+    return (
+      <Table celled selectable>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <Image src={IconMorale} avatar />
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <Image src={IconManpower} avatar />
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <Image src={IconDiscipline} avatar />
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <Image src={IconOffense} avatar />
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <Image src={IconDefense} avatar />
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              Assault?
               </Table.HeaderCell>
-              <Table.HeaderCell>
-                <Image src={IconMorale} avatar />
+            <Table.HeaderCell>
+              Speed
               </Table.HeaderCell>
-              <Table.HeaderCell>
-                <Image src={IconManpower} avatar />
+            <Table.HeaderCell>
+              Maneuver
               </Table.HeaderCell>
-              <Table.HeaderCell>
-                <Image src={IconDiscipline} avatar />
+            <Table.HeaderCell>
+              Morale damage
               </Table.HeaderCell>
-              <Table.HeaderCell>
-                <Image src={IconOffense} avatar />
+            <Table.HeaderCell>
+              Strength damage
               </Table.HeaderCell>
-              <Table.HeaderCell>
-                <Image src={IconDefense} avatar />
-              </Table.HeaderCell>
-              <Table.HeaderCell>
-                Assault?
-              </Table.HeaderCell>
-              <Table.HeaderCell>
-                Speed
-              </Table.HeaderCell>
-              <Table.HeaderCell>
-                Maneuver
-              </Table.HeaderCell>
-              <Table.HeaderCell>
-                Morale damage
-              </Table.HeaderCell>
-              <Table.HeaderCell>
-                Strength damage
-              </Table.HeaderCell>
-              {
-                this.props.units.map((value) => {
-                  return (
-                    <Table.HeaderCell key={value.type}>
-                      <Image src={value.image} avatar />
-                    </Table.HeaderCell>
-                  )
-                })
-              }
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
             {
               this.props.units.map((value) => {
-                return this.renderRow(value)
+                return (
+                  <Table.HeaderCell key={value.type}>
+                    <Image src={value.image} avatar />
+                  </Table.HeaderCell>
+                )
               })
             }
-          </Table.Body>
-        </Table>
-        )
-    }
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {
+            this.props.units.map((value) => {
+              return this.renderRow(value)
+            })
+          }
+        </Table.Body>
+      </Table>
+    )
+  }
 
-    
+
   renderRow = (unit: UnitDefinition) => {
     return (
       <Table.Row key={unit.type} onClick={() => this.props.onRowClick(unit)}>
