@@ -1,5 +1,5 @@
 import { Map, OrderedMap } from 'immutable'
-import { UnitType , UnitDefinition, UnitCalc} from '../units/types'
+import { UnitType } from '../units/types'
 import IconBottleneck from '../../images/bottleneck.png'
 import IconCavalrySkirmish from '../../images/cavalry_skirmish.png'
 import IconDeception from '../../images/deception.png'
@@ -50,7 +50,7 @@ export const getDefaultDefinitions = (): Map<TacticType, TacticDefinition> => {
     return map
 }
 
-type ValueType = UnitType | TacticCalc | TacticType
+export type ValueType = UnitType | TacticCalc | TacticType
 type MapValues = Map<ValueType, Map<string, number>>
 
 export class TacticDefinition {
