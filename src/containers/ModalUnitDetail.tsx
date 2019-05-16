@@ -21,7 +21,7 @@ const CUSTOM_VALUE_KEY = 'custom'
 
 class ModalUnitDetail extends Component<IProps> {
   render() {
-    if (this.props.unit === null || this.props.army === null)
+    if (this.props.unit === null || this.props.army === null || this.props.unit.type as String === '')
       return null
     return (
       <DisplayComponent

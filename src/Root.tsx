@@ -9,6 +9,7 @@ import TerrainPage from './pages/Terrains'
 import ModalUnitDetail from './containers/ModalUnitDetail'
 import ModalTacticDetail from './containers/ModalTacticDetail'
 import ModalTerrainDetail from './containers/ModalTerrainDetail'
+import ModalGlobalStatsDetail from './containers/ModalGlobalStatsDetail'
 import { AppState } from './store/'
 
 // Any additional component props go here.
@@ -23,6 +24,7 @@ const Root = ({ store }: MainProps) => {
       <ModalUnitDetail />
       <ModalTacticDetail />
       <ModalTerrainDetail />
+      <ModalGlobalStatsDetail />
       <BrowserRouter>
         <Route path='/' exact component={LandPage} />
         <Route path='/Units' component={UnitPage} />

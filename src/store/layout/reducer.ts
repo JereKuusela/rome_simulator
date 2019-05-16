@@ -1,5 +1,5 @@
 import { createReducer } from 'typesafe-actions'
-import { setBaseValue as setUnitBaseValue, setModifierValue, setLossValue, UnitDefinition, ArmyType } from '../units'
+import { setBaseValue as setUnitBaseValue, setModifierValue, setLossValue, UnitDefinition, ArmyType, setGlobalBaseValue, setGlobalLossValue, setGlobalModifierValue } from '../units'
 import { setUnitModal, setTacticModal, setTerrainModal } from './actions'
 import { TacticDefinition, setBaseValue as setTacticBaseValue } from '../tactics'
 import { TerrainDefinition, setBaseValue as setTerrainBaseValue, LocationType } from '../terrains'
@@ -19,6 +19,21 @@ export const layoutReducer = createReducer(initialState)
   .handleAction(setUnitBaseValue, (state, action: ReturnType<typeof setUnitBaseValue>) => {
     if (state.unit_modal)
       return { ...state, unit_modal: state.unit_modal.add_base_value(action.payload.key, action.payload.value_type, action.payload.value) }
+    return state
+  })
+  .handleAction(setGlobalBaseValue, (state, action: ReturnType<typeof setGlobalBaseValue>) => {
+    if (state.unit_modal)
+      return { ...state, unit_modal: state.unit_modal.add_base_value(action.payload.key, action.payload.value_type, action.payload.value) }
+    return state
+  })
+  .handleAction(setGlobalLossValue, (state, action: ReturnType<typeof setGlobalLossValue>) => {
+    if (state.unit_modal)
+      return { ...state, unit_modal: state.unit_modal.add_modifier_value(action.payload.key, action.payload.value_type, action.payload.value) }
+    return state
+  })
+  .handleAction(setGlobalModifierValue, (state, action: ReturnType<typeof setGlobalModifierValue>) => {
+    if (state.unit_modal)
+      return { ...state, unit_modal: state.unit_modal.add_loss_value(action.payload.key, action.payload.value_type, action.payload.value) }
     return state
   })
   .handleAction(setModifierValue, (state, action: ReturnType<typeof setModifierValue>) => {

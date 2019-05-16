@@ -10,6 +10,7 @@ import { TableUnitDefinitions } from '../components/TableUnitDefinitions'
 
 interface IStateFromProps {
   readonly units: Map<ArmyType, Map<UnitType, UnitDefinition>>
+  readonly global_stats: Map<ArmyType, UnitDefinition>
 }
 interface IDispatchFromProps {
   editUnit: (army: ArmyType, unit: UnitDefinition) => void
@@ -23,18 +24,19 @@ class Units extends Component<IProps> {
       <Container>
         {
           Array.from(this.props.units).map(value => {
-            return this.renderArmy(value[0], value[1])
+            return this.renderArmy(value[0], value[1], this.props.global_stats.get(value[0]))
           })
         }
       </Container>
     )
   }
-  renderArmy = (army: ArmyType, units: Map<UnitType, UnitDefinition>) => {
+  renderArmy = (army: ArmyType, units: Map<UnitType, UnitDefinition>, global_stats: UnitDefinition | undefined) => {
     return (
       <div key={army}>
         <Header>{army}</Header>
         <TableUnitDefinitions
           army={army}
+          global_stats={global_stats}
           units={units.toList()}
           onRowClick={unit => this.props.editUnit(army, unit)}
         />
@@ -44,7 +46,8 @@ class Units extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState): IStateFromProps => ({
-  units: state.units.units
+  units: state.units.units,
+  global_stats: state.units.global_stats
 })
 
 const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({

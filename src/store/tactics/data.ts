@@ -62,7 +62,7 @@ export class TacticDefinition extends BaseDefinition<TacticType, ValueType> {
 
   valueToString = (type: ValueType): string => {
     const value = this.calculateValue(type)
-    return this.toPercent(value)
+    return this.toPercent(value, true)
   }
 
   add_base_values = (key: string, values: [ValueType, number][]): TacticDefinition => {

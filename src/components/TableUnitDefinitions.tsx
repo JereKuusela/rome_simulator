@@ -14,6 +14,7 @@ import IconMorale from '../images/morale.png'
 interface IProps {
   readonly army: ArmyType
   readonly units: ImmutableList<UnitDefinition>
+  readonly global_stats: UnitDefinition | undefined
   readonly onRowClick: (unit: UnitDefinition) => void
 }
 
@@ -74,6 +75,9 @@ export class TableUnitDefinitions extends Component<IProps> {
         </Table.Header>
         <Table.Body>
           {
+            this.props.global_stats && this.renderGlobalStats(this.props.global_stats)
+          }
+          {
             this.props.units.map((value) => this.renderRow(value))
           }
         </Table.Body>
@@ -132,6 +136,64 @@ export class TableUnitDefinitions extends Component<IProps> {
               this.terrains.filter(type => unit.calculateValue(type) !== 1).map(type => (
                 <List.Item key={type}>
                   {type + ': ' + unit.valueToString(type)}
+                </List.Item>
+              ))
+            }
+          </List>
+        </Table.Cell>
+      </Table.Row>
+    )
+  }
+
+  renderGlobalStats = (unit: UnitDefinition) => {
+    return (
+      <Table.Row key={unit.type} onClick={() => this.props.onRowClick(unit)}>
+        <Table.Cell>
+          <Image src={unit.image} avatar />
+          Global stats</Table.Cell>
+        <Table.Cell>
+          {unit.valueToRelativeNumber(UnitCalc.Morale, false)}
+        </Table.Cell>
+        <Table.Cell>
+          {unit.valueToRelativeNumber(UnitCalc.Manpower, false)}
+        </Table.Cell>
+        <Table.Cell>
+          {unit.valueToRelativeZeroPercent(UnitCalc.Discipline, false)}
+        </Table.Cell>
+        <Table.Cell>
+          {unit.valueToRelativeZeroPercent(UnitCalc.Offense, false)}
+        </Table.Cell>
+        <Table.Cell>
+          {unit.valueToRelativeZeroPercent(UnitCalc.Defense, false)}
+        </Table.Cell>
+        <Table.Cell>
+        </Table.Cell>
+        <Table.Cell>
+          {unit.valueToRelativeNumber(UnitCalc.MovementSpeed, false)}
+        </Table.Cell>
+        <Table.Cell>
+          {unit.valueToRelativeNumber(UnitCalc.Maneuver, false)}
+        </Table.Cell>
+        <Table.Cell>
+          {unit.valueToRelativeZeroPercent(UnitCalc.MoraleDamageTaken, false)}
+        </Table.Cell>
+        <Table.Cell>
+          {unit.valueToRelativeZeroPercent(UnitCalc.StrengthDamageTaken, false)}
+        </Table.Cell>
+        {
+          this.props.units.map((value) => (
+            <Table.Cell key={value.type}>
+              {unit.valueToRelativeZeroPercent(value.type, false)}
+            </Table.Cell>
+          )
+          )
+        }
+        <Table.Cell>
+          <List>
+            {
+              this.terrains.filter(type => unit.calculateValue(type) !== 0).map(type => (
+                <List.Item key={type}>
+                  {type + ': ' + unit.valueToRelativeZeroPercent(type, false)}
                 </List.Item>
               ))
             }

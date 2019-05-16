@@ -44,7 +44,7 @@ export class UnitDefinition extends BaseDefinition<UnitType, ValueType> {
       case UnitCalc.Upkeep:
         return String(value)
       default:
-        return this.toRelativePercent(value)
+        return this.toRelativePercent(value, false)
     }
   }
 

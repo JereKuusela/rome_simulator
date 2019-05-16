@@ -10,6 +10,7 @@ import IconHorseArchers from '../../images/horse_archers.png'
 import IconLightCavalry from '../../images/light_cavalry.png'
 import IconLightInfantry from '../../images/light_infantry.png'
 import IconWarElephants from '../../images/war_elephants.png'
+import IconMilitaryPower from '../../images/military_power.png'
 import * as data from './units.json';
 
 export const unit_to_icon = Map<UnitType, string>()
@@ -53,6 +54,10 @@ export const getDefaultDefinitions = (): Map<UnitType, UnitDefinition> => {
     map = map.set(unit.type, unit)
   }
   return map
+}
+
+export const getDefaultGlobalDefinition = (): UnitDefinition => {
+  return new UnitDefinition('' as UnitType, IconMilitaryPower, '', false)
 }
 
 const createUnitFromJson = (data: UnitData): UnitDefinition => {

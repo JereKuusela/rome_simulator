@@ -8,15 +8,29 @@ export class BaseDefinition<T, S> {
 
   }
 
-  toPercent = (number: number) => +(number * 100).toFixed(2) + '%'
+  toPercent = (number: number, show_zero: boolean) => {
+    const value = +(number * 100).toFixed(2)
+    if (value === 0 && !show_zero)
+      return ''
+    return String(value) + '%'
+  }
 
-  toRelativePercent = (number: number) => {
-    const relative = +(number * 100).toFixed(2) - 100
-    if (relative > 0)
-      return '+' + relative + '%'
-    if (relative < 0)
-      return relative + '%'
-    return ''
+  toRelativePercent = (number: number, show_zero: boolean) => {
+    const value = +(number * 100).toFixed(2) - 100
+    if (value > 0)
+      return '+' + String(value) + '%'
+    if (value === 0 && !show_zero)
+      return ''
+    return String(value) + '%'
+  }
+
+  toRelativeZeroPercent = (number: number, show_zero: boolean) => {
+    const value = +(number * 100).toFixed(2)
+    if (value > 0)
+      return '+' + String(value) + '%'
+    if (value === 0 && !show_zero)
+      return ''
+    return String(value) + '%'
   }
 
   calculateValue = (type: S): number => {
@@ -37,6 +51,28 @@ export class BaseDefinition<T, S> {
 
   valueToString = (type: S): string => String(this.calculateValue(type))
 
+  valueToPercent = (type: S, show_zero: boolean) => this.toPercent(this.calculateValue(type), show_zero)
+
+  valueToRelativePercent = (type: S, show_zero: boolean) => this.toRelativePercent(this.calculateValue(type), show_zero)
+
+  valueToRelativeZeroPercent = (type: S, show_zero: boolean) => this.toRelativeZeroPercent(this.calculateValue(type), show_zero)
+
+  valueToNumber = (type: S, show_zero: boolean) => {
+    const value = this.calculateValue(type)
+    if (value === 0 && !show_zero)
+      return ''
+    return String(value)
+  }
+
+  valueToRelativeNumber = (type: S, show_zero: boolean) => {
+    const value = this.calculateValue(type)
+    if (value > 0)
+      return '+' + String(value)
+    if (value === 0 && !show_zero)
+      return ''
+    return String(value)
+  }
+
   explain = (type: S) => {
     let base = 0
     const value_base = this.base_values.get(type)
@@ -52,10 +88,10 @@ export class BaseDefinition<T, S> {
     const value_modifier = this.modifier_values.get(type)
     if (value_modifier)
       value_modifier.forEach(value => modifier += value)
-    explanation += ' multiplied by ' + this.toPercent(modifier)
+    explanation += ' multiplied by ' + this.toPercent(modifier, true)
     if (value_modifier && value_modifier.size > 0) {
       explanation += ' ('
-      value_modifier.forEach((value, key) => explanation += key + ': ' + this.toPercent(value) + ',')
+      value_modifier.forEach((value, key) => explanation += key + ': ' + this.toPercent(value, true) + ',')
       explanation = explanation.substring(0, explanation.length - 1) + ')'
     }
     let loss = 0
