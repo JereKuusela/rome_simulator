@@ -1,0 +1,59 @@
+{
+  "terrain": [
+    {
+      "type": "Desert",
+      "location": "Tile",
+      "roll": 0
+    },
+    {
+      "type": "Farmland",
+      "location": "Tile",
+      "roll": 0
+    },
+    {
+      "type": "Forest",
+      "location": "Tile",
+      "roll": -1
+    },
+    {
+      "type": "Hills",
+      "location": "Tile",
+      "roll": -1
+    },
+    {
+      "type": "Jungle",
+      "location": "Tile",
+      "roll": 0
+    },
+    {
+      "type": "Marsh",
+      "location": "Tile",
+      "roll": 0
+    },
+    {
+      "type": "Mountain",
+      "location": "Tile",
+      "roll": -2
+    },
+    {
+      "type": "Naval",
+      "location": "Border",
+      "roll": -2
+    },
+    {
+      "type": "None",
+      "location": "Border",
+      "roll": 0
+    },
+    {
+      "type": "Plains",
+      "location": "Tile",
+      "roll": 0
+    },
+    {
+      "type": "River",
+      "location": "Border",
+      "roll": -1
+    }
+  ]
+}

@@ -5,7 +5,9 @@ import { AppState } from '../store/'
 import { setTacticModal } from '../store/layout'
 import { ModalTacticDetail as DisplayComponent } from '../components/ModalTacticDetail'
 
-interface IStateFromProps { tactic: TacticDefinition | null }
+interface IStateFromProps {
+  tactic: TacticDefinition | null
+}
 interface IDispatchFromProps {
   close: () => void
   setBaseValue: (type: TacticType, value_type: ValueType, key: string, value: number) => void

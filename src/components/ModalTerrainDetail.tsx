@@ -1,21 +1,19 @@
 import React, { Component } from 'react'
 import { Modal, Table, Input } from 'semantic-ui-react'
-import { UnitType } from '../store/units'
-import { TacticDefinition, ValueType, TacticType, TacticCalc } from '../store/tactics'
+import { TerrainDefinition, ValueType, TerrainType, TerrainCalc, LocationType } from '../store/terrains'
 
 interface IProps {
+  location: LocationType
   custom_value_key: string
-  tactic: TacticDefinition
+  terrain: TerrainDefinition
   onClose: () => void
-  onCustomBaseValueChange: (type: TacticType, attribute: ValueType, key: string, value: number) => void
+  onCustomBaseValueChange: (location: LocationType, type: TerrainType, attribute: ValueType, key: string, value: number) => void
 }
 
-// Display component for showing and changing tactic details.
-export class ModalTacticDetail extends Component<IProps> {
+// Display component for showing and changing terrain details.
+export class ModalTerrainDetail extends Component<IProps> {
 
-  readonly attributes = Object.keys(TacticCalc).map(k => TacticCalc[k as any]) as TacticCalc[]
-  readonly tactics = Object.keys(TacticType).map(k => TacticType[k as any]) as TacticType[]
-  readonly units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
+  readonly attributes = Object.keys(TerrainCalc).map(k => TerrainCalc[k as any]) as TerrainCalc[]
   readonly headers = ['Attribute', 'Value', 'Explained', 'Custom base']
 
   render() {
@@ -37,13 +35,7 @@ export class ModalTacticDetail extends Component<IProps> {
             </Table.Header>
             <Table.Body>
               {
-                this.units.map((value) => this.renderRow(this.props.tactic, value))
-              }
-              {
-                this.tactics.map((value) => this.renderRow(this.props.tactic, value))
-              }
-              {
-                this.attributes.map((value) => this.renderRow(this.props.tactic, value))
+                this.attributes.map((value) => this.renderRow(this.props.terrain, value))
               }
             </Table.Body>
           </Table>
@@ -52,7 +44,7 @@ export class ModalTacticDetail extends Component<IProps> {
     )
   }
 
-  renderRow = (tactic: TacticDefinition, attribute: ValueType) => {
+  renderRow = (tactic: TerrainDefinition, attribute: ValueType) => {
     let base_value = tactic.get_base_value(attribute, this.props.custom_value_key)
 
     return (
@@ -69,7 +61,7 @@ export class ModalTacticDetail extends Component<IProps> {
         <Table.Cell>
           <Input
             defaultValue={base_value}
-            onChange={(_, data) => this.props.onCustomBaseValueChange(tactic.type, attribute, this.props.custom_value_key, Number(data.value))
+            onChange={(_, data) => this.props.onCustomBaseValueChange(this.props.location, tactic.type, attribute, this.props.custom_value_key, Number(data.value))
             }
           />
         </Table.Cell>

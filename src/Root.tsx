@@ -5,8 +5,10 @@ import { BrowserRouter, Route } from 'react-router-dom'
 import UnitPage from './pages/Units'
 import LandPage from './pages/Land'
 import TacticPage from './pages/Tactics'
+import TerrainPage from './pages/Terrains'
 import ModalUnitDetail from './containers/ModalUnitDetail'
 import ModalTacticDetail from './containers/ModalTacticDetail'
+import ModalTerrainDetail from './containers/ModalTerrainDetail'
 import { AppState } from './store/'
 
 // Any additional component props go here.
@@ -20,10 +22,12 @@ const Root = ({ store }: MainProps) => {
     <Provider store={store}>
       <ModalUnitDetail />
       <ModalTacticDetail />
+      <ModalTerrainDetail />
       <BrowserRouter>
         <Route path='/' exact component={LandPage} />
         <Route path='/Units' component={UnitPage} />
         <Route path='/Tactics' component={TacticPage} />
+        <Route path='/Terrains' component={TerrainPage} />
       </BrowserRouter>
     </Provider>
   )

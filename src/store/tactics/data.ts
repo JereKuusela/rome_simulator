@@ -1,4 +1,5 @@
 import { Map, OrderedMap } from 'immutable'
+import { BaseDefinition } from '../../utils'
 import { UnitType } from '../units/types'
 import IconBottleneck from '../../images/bottleneck.png'
 import IconCavalrySkirmish from '../../images/cavalry_skirmish.png'
@@ -10,7 +11,7 @@ import IconPhalanx from '../../images/phalanx.png'
 import IconShockAction from '../../images/shock_action.png'
 import IconSkirmishing from '../../images/skirmishing.png'
 import IconTriplexAcies from '../../images/triplex_acies.png'
-import * as data from './tactics.json';
+import * as data from './tactics.json'
 
 export enum TacticCalc {
   Casualties = 'Casualties'
@@ -53,38 +54,15 @@ export const getDefaultDefinitions = (): Map<TacticType, TacticDefinition> => {
 export type ValueType = UnitType | TacticCalc | TacticType
 type MapValues = Map<ValueType, Map<string, number>>
 
-export class TacticDefinition {
+export class TacticDefinition extends BaseDefinition<TacticType, ValueType> {
 
-  constructor(public readonly type: TacticType, public readonly image: string,
-    public readonly base_values: MapValues = Map()) { }
-
-  toPercent = (number: number) => +(number * 100).toFixed(2) + '%'
-
-  calculateValue = (type: ValueType): number => {
-    let base = 0
-    const value_base = this.base_values.get(type)
-    if (value_base)
-      value_base.forEach(value => base += value)
-    return base
+  constructor(type: TacticType, public readonly image: string, base_values: MapValues = Map()) {
+    super(type, base_values)
   }
 
   valueToString = (type: ValueType): string => {
     const value = this.calculateValue(type)
     return this.toPercent(value)
-  }
-
-  explain = (type: ValueType) => {
-    let base = 0
-    const value_base = this.base_values.get(type)
-    if (value_base)
-      value_base.forEach(value => base += value)
-    let explanation = 'Base value ' + this.toPercent(base)
-    if (value_base) {
-      explanation += ' ('
-      value_base.forEach((value, key) => explanation += key + ': ' + this.toPercent(value) + ',')
-      explanation = explanation.substring(0, explanation.length - 1) + ')'
-    }
-    return explanation
   }
 
   add_base_values = (key: string, values: [ValueType, number][]): TacticDefinition => {
@@ -95,33 +73,6 @@ export class TacticDefinition {
   add_base_value = (key: string, type: ValueType, value: number): TacticDefinition => {
     const new_values = this.add_values(this.base_values, key, [[type, value]])
     return new TacticDefinition(this.type, this.image, new_values)
-  }
-
-  private add_values = (container: MapValues, key: string, values: [ValueType, number][]): MapValues => {
-    let new_values = container
-    for (const [type, value] of values) {
-      new_values = new_values.has(type) ? new_values : new_values.set(type, Map<string, number>())
-      const type_values = new_values.get(type)
-      if (!type_values)
-        return new_values
-      if (value === 0 && type_values.has(key))
-        new_values = new_values.set(type, type_values.delete(key))
-      else
-        new_values = new_values.set(type, type_values.set(key, value))
-    }
-    return new_values
-  }
-
-  get_base_value = (type: ValueType, key: string): number => this.get_value(this.base_values, type, key)
-
-  private get_value = (container: MapValues, type: ValueType, key: string): number => {
-    const values = container.get(type)
-    if (!values)
-      return 0
-    const value = values.get(key)
-    if (!value)
-      return 0
-    return value
   }
 }
 

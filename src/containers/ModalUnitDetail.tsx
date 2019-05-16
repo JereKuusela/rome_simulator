@@ -5,7 +5,10 @@ import { AppState } from '../store/'
 import { setUnitModal } from '../store/layout'
 import { ModalUnitDetail as DisplayComponent } from '../components/ModalUnitDetail'
 
-interface IStateFromProps { unit: UnitDefinition | null, army: ArmyType | null }
+interface IStateFromProps {
+  unit: UnitDefinition | null
+  army: ArmyType | null
+}
 interface IDispatchFromProps {
   close: () => void
   setBaseValue: (army: ArmyType, type: UnitType, value_type: ValueType, key: string, value: number) => void
