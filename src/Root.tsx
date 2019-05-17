@@ -6,10 +6,6 @@ import UnitPage from './pages/Units'
 import LandPage from './pages/Land'
 import TacticPage from './pages/Tactics'
 import TerrainPage from './pages/Terrains'
-import ModalUnitDetail from './containers/ModalUnitDetail'
-import ModalTacticDetail from './containers/ModalTacticDetail'
-import ModalTerrainDetail from './containers/ModalTerrainDetail'
-import ModalGlobalStatsDetail from './containers/ModalGlobalStatsDetail'
 import { AppState } from './store/'
 
 // Any additional component props go here.
@@ -21,10 +17,6 @@ interface MainProps {
 const Root = ({ store }: MainProps) => {
   return (
     <Provider store={store}>
-      <ModalUnitDetail />
-      <ModalTacticDetail />
-      <ModalTerrainDetail />
-      <ModalGlobalStatsDetail />
       <BrowserRouter>
         <Route path='/' exact component={LandPage} />
         <Route path='/Units' component={UnitPage} />

@@ -9,7 +9,7 @@ const initialState = {
 
 export const terrainsReducer = createReducer(initialState)
   .handleAction(setBaseValue, (state, action: ReturnType<typeof setBaseValue>) => (
-    { ...state, tactics: state.terrains.updateIn([action.payload.location, action.payload.terrain], (terrain: TerrainDefinition) => (
-      terrain.add_base_value(action.payload.key, action.payload.value_type, action.payload.value)
+    { ...state, terrains: state.terrains.updateIn([action.payload.location, action.payload.terrain], (terrain: TerrainDefinition) => (
+      terrain.add_base_value(action.payload.key, action.payload.attribute, action.payload.value)
     ))}
   ))

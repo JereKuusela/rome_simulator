@@ -88,8 +88,8 @@ export class BaseDefinition<T, S> {
     const value_modifier = this.modifier_values.get(type)
     if (value_modifier)
       value_modifier.forEach(value => modifier += value)
-    explanation += ' multiplied by ' + this.toPercent(modifier, true)
     if (value_modifier && value_modifier.size > 0) {
+      explanation += ' multiplied by ' + this.toPercent(modifier, true)
       explanation += ' ('
       value_modifier.forEach((value, key) => explanation += key + ': ' + this.toPercent(value, true) + ',')
       explanation = explanation.substring(0, explanation.length - 1) + ')'

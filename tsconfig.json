@@ -19,7 +19,8 @@
     "noEmit": true,
     "jsx": "preserve",
     "downlevelIteration": true,
-    "noImplicitReturns": true
+    "noImplicitReturns": true,
+    "incremental": true
   },
   "include": [
     "src"

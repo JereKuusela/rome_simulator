@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { UnitType, UnitDefinition, setBaseValue, setModifierValue, setLossValue, ArmyType, ValueType } from '../store/units'
 import { AppState } from '../store/'
-import { setUnitModal } from '../store/layout'
 import { selectUnit} from '../store/land_battle'
 import { ModalUnitSelector as DisplayComponent } from '../components/ModalUnitSelector'
 
@@ -12,10 +11,11 @@ interface IStateFromProps {
   column: number
 }
 interface IDispatchFromProps {
-  close: () => void
   selectUnit: (army: ArmyType, row: number, column: number, unit: UnitType) => void
 }
-interface IProps extends IStateFromProps, IDispatchFromProps { }
+interface IProps extends IStateFromProps, IDispatchFromProps {
+  onClose: () => void
+ }
 
 class ModalUnitSelector extends Component<IProps> {
   render() {
@@ -23,7 +23,7 @@ class ModalUnitSelector extends Component<IProps> {
       return null
     return (
       <DisplayComponent
-        onClose={this.props.close}
+        onClose={this.props.onClose}
         onUnitSelection={this.selectUnit}
       />
     )
@@ -33,11 +33,9 @@ class ModalUnitSelector extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState): any => ({
-  unit: state.layout.unit_modal
 })
 
 const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({
-  close: () => dispatch(setUnitModal(null, null)),
   selectUnit: (army, row, column, unit) => dispatch(selectUnit(army, row, column, unit))
 })
 

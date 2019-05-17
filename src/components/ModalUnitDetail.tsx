@@ -8,9 +8,9 @@ interface IProps {
   custom_value_key: string
   unit: UnitDefinition
   onClose: () => void
-  onCustomBaseValueChange: (army: ArmyType, type: UnitType, attribute: ValueType, key: string, value: number) => void
-  onCustomModifierValueChange: (army: ArmyType, type: UnitType, attribute: ValueType, key: string, value: number) => void
-  onCustomLossValueChange: (army: ArmyType, type: UnitType, attribute: ValueType, key: string, value: number) => void
+  onCustomBaseValueChange: (army: ArmyType, type: UnitType, key: string, attribute: ValueType, value: number) => void
+  onCustomModifierValueChange: (army: ArmyType, type: UnitType, key: string, attribute: ValueType, value: number) => void
+  onCustomLossValueChange: (army: ArmyType, type: UnitType, key: string, attribute: ValueType, value: number) => void
 }
 
 // Display component for showing and changing unit details.
@@ -74,20 +74,20 @@ export class ModalUnitDetail extends Component<IProps> {
         <Table.Cell>
           <Input
             defaultValue={base_value}
-            onChange={(_, data) => this.props.onCustomBaseValueChange(this.props.army, unit.type, attribute, this.props.custom_value_key, Number(data.value))
+            onChange={(_, data) => this.props.onCustomBaseValueChange(this.props.army, unit.type, this.props.custom_value_key,attribute, Number(data.value))
             }
           />
         </Table.Cell>
         <Table.Cell>
           <Input
             defaultValue={modifier_value}
-            onChange={(_, data) => this.props.onCustomModifierValueChange(this.props.army, unit.type, attribute, this.props.custom_value_key, Number(data.value))}
+            onChange={(_, data) => this.props.onCustomModifierValueChange(this.props.army, unit.type, this.props.custom_value_key,attribute, Number(data.value))}
           />
         </Table.Cell>
         <Table.Cell>
           <Input
             defaultValue={loss_value}
-            onChange={(_, data) => this.props.onCustomLossValueChange(this.props.army, unit.type, attribute, this.props.custom_value_key, Number(data.value))}
+            onChange={(_, data) => this.props.onCustomLossValueChange(this.props.army, unit.type, this.props.custom_value_key,attribute, Number(data.value))}
           />
         </Table.Cell>
       </Table.Row>

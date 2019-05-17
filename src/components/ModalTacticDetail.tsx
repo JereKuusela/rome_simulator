@@ -5,9 +5,9 @@ import { TacticDefinition, ValueType, TacticType, TacticCalc } from '../store/ta
 
 interface IProps {
   custom_value_key: string
-  tactic: TacticDefinition
+  tactic: TacticDefinition | undefined
   onClose: () => void
-  onCustomBaseValueChange: (type: TacticType, attribute: ValueType, key: string, value: number) => void
+  onCustomBaseValueChange: (type: TacticType, key: string, attribute: ValueType,  value: number) => void
 }
 
 // Display component for showing and changing tactic details.
@@ -19,7 +19,9 @@ export class ModalTacticDetail extends Component<IProps> {
   readonly headers = ['Attribute', 'Value', 'Explained', 'Custom base']
 
   render() {
-    
+    if (this.props.tactic === undefined)
+      return null
+    const tactic = this.props.tactic
     return (
       <Modal basic onClose={this.props.onClose} open>
         <Modal.Content>
@@ -37,13 +39,13 @@ export class ModalTacticDetail extends Component<IProps> {
             </Table.Header>
             <Table.Body>
               {
-                this.units.map((value) => this.renderRow(this.props.tactic, value))
+                this.units.map((value) => this.renderRow(tactic, value))
               }
               {
-                this.tactics.map((value) => this.renderRow(this.props.tactic, value))
+                this.tactics.map((value) => this.renderRow(tactic, value))
               }
               {
-                this.attributes.map((value) => this.renderRow(this.props.tactic, value))
+                this.attributes.map((value) => this.renderRow(tactic, value))
               }
             </Table.Body>
           </Table>
@@ -69,7 +71,7 @@ export class ModalTacticDetail extends Component<IProps> {
         <Table.Cell>
           <Input
             defaultValue={base_value}
-            onChange={(_, data) => this.props.onCustomBaseValueChange(tactic.type, attribute, this.props.custom_value_key, Number(data.value))
+            onChange={(_, data) => this.props.onCustomBaseValueChange(tactic.type, this.props.custom_value_key, attribute, Number(data.value))
             }
           />
         </Table.Cell>

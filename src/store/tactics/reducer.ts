@@ -9,6 +9,6 @@ const initialState = {
 export const tacticsReducer = createReducer(initialState)
   .handleAction(setBaseValue, (state, action: ReturnType<typeof setBaseValue>) => (
     { ...state, tactics: state.tactics.update(action.payload.tactic, tactic => (
-      tactic.add_base_value(action.payload.key, action.payload.value_type, action.payload.value)
+      tactic.add_base_value(action.payload.key, action.payload.attribute, action.payload.value)
     ))}
   ))

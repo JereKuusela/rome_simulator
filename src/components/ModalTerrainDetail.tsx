@@ -7,7 +7,7 @@ interface IProps {
   custom_value_key: string
   terrain: TerrainDefinition
   onClose: () => void
-  onCustomBaseValueChange: (location: LocationType, type: TerrainType, attribute: ValueType, key: string, value: number) => void
+  onCustomBaseValueChange: (location: LocationType, type: TerrainType, key: string, attribute: ValueType, value: number) => void
 }
 
 // Display component for showing and changing terrain details.
@@ -61,7 +61,7 @@ export class ModalTerrainDetail extends Component<IProps> {
         <Table.Cell>
           <Input
             defaultValue={base_value}
-            onChange={(_, data) => this.props.onCustomBaseValueChange(this.props.location, tactic.type, attribute, this.props.custom_value_key, Number(data.value))
+            onChange={(_, data) => this.props.onCustomBaseValueChange(this.props.location, tactic.type, this.props.custom_value_key, attribute, Number(data.value))
             }
           />
         </Table.Cell>

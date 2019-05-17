@@ -1,30 +1,32 @@
 import React, { Component } from 'react'
+import { Map } from 'immutable'
 import { connect } from 'react-redux'
 import { setBaseValue, ValueType, TacticType, TacticDefinition } from '../store/tactics'
 import { AppState } from '../store/'
-import { setTacticModal } from '../store/layout'
 import { ModalTacticDetail as DisplayComponent } from '../components/ModalTacticDetail'
 
 interface IStateFromProps {
-  tactic: TacticDefinition | null
+  readonly tactics: Map<TacticType, TacticDefinition>
 }
 interface IDispatchFromProps {
-  close: () => void
-  setBaseValue: (type: TacticType, value_type: ValueType, key: string, value: number) => void
+  setBaseValue: (type: TacticType,  key: string, attribute: ValueType, value: number) => void
 }
-interface IProps extends IStateFromProps, IDispatchFromProps { }
+interface IProps extends IStateFromProps, IDispatchFromProps {
+  tactic: TacticType | null
+  onClose: () => void
+ }
 
-const CUSTOM_VALUE_KEY = 'custom'
+const CUSTOM_VALUE_KEY = 'Custom'
 
 class ModalTacticDetail extends Component<IProps> {
   render() {
-    if (this.props.tactic === null)
+    if (!this.props.tactic)
       return null
     return (
       <DisplayComponent
         custom_value_key={CUSTOM_VALUE_KEY}
-        tactic={this.props.tactic}
-        onClose={this.props.close}
+        tactic={this.props.tactics.get(this.props.tactic)}
+        onClose={this.props.onClose}
         onCustomBaseValueChange={this.props.setBaseValue}
       />
     )
@@ -32,13 +34,12 @@ class ModalTacticDetail extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState): IStateFromProps => ({
-  tactic: state.layout.tactic_modal
+  tactics: state.tactics.tactics
 })
 
 const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({
-  close: () => dispatch(setTacticModal(null)),
-  setBaseValue: (type: TacticType, value_type: ValueType, key: string, value: number) => (
-    !Number.isNaN(value) && dispatch(setBaseValue(type, value_type, key, value))
+  setBaseValue: (type, key, attribute, value) => (
+    !Number.isNaN(value) && dispatch(setBaseValue(type, key, attribute, value))
   )
 })
 

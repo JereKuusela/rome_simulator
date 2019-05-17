@@ -1,21 +1,23 @@
 import React, { Component } from 'react'
+import { Map } from 'immutable'
 import { connect } from 'react-redux'
 import { setBaseValue, ValueType, TerrainType, TerrainDefinition, LocationType } from '../store/terrains'
 import { AppState } from '../store/'
-import { setTerrainModal } from '../store/layout'
 import { ModalTerrainDetail as DisplayComponent } from '../components/ModalTerrainDetail'
 
 interface IStateFromProps {
-  location: LocationType | null
-  terrain: TerrainDefinition | null
+  readonly terrains: Map<LocationType, Map<TerrainType, TerrainDefinition>>
 }
 interface IDispatchFromProps {
-  close: () => void
-  setBaseValue: (location: LocationType, type: TerrainType, value_type: ValueType, key: string, value: number) => void
+  setBaseValue: (location: LocationType, terrain: TerrainType, key: string, attribute: ValueType, value: number) => void
 }
-interface IProps extends IStateFromProps, IDispatchFromProps { }
+interface IProps extends IStateFromProps, IDispatchFromProps {
+  location: LocationType | null
+  terrain: TerrainType | null
+  onClose: () => void
+ }
 
-const CUSTOM_VALUE_KEY = 'custom'
+const CUSTOM_VALUE_KEY = 'Custom'
 
 class ModalTerrainDetail extends Component<IProps> {
   render() {
@@ -25,8 +27,8 @@ class ModalTerrainDetail extends Component<IProps> {
       <DisplayComponent
         location={this.props.location}
         custom_value_key={CUSTOM_VALUE_KEY}
-        terrain={this.props.terrain}
-        onClose={this.props.close}
+        terrain={this.props.terrains.getIn([this.props.location, this.props.terrain])}
+        onClose={this.props.onClose}
         onCustomBaseValueChange={this.props.setBaseValue}
       />
     )
@@ -34,14 +36,12 @@ class ModalTerrainDetail extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState): IStateFromProps => ({
-  terrain: state.layout.terrain_modal,
-  location: state.layout.location
+  terrains: state.terrains.terrains
 })
 
 const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({
-  close: () => dispatch(setTerrainModal(null, null)),
-  setBaseValue: (location: LocationType, type: TerrainType, value_type: ValueType, key: string, value: number) => (
-    !Number.isNaN(value) && dispatch(setBaseValue(location, type, value_type, key, value))
+  setBaseValue: (location, type, key, attribute, value) => (
+    !Number.isNaN(value) && dispatch(setBaseValue(location, type, key, attribute, value))
   )
 })
 

@@ -2,8 +2,7 @@ import React, { Component } from 'react'
 import { Container, Header } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
-import { UnitDefinition, ArmyType } from '../store/units/types'
-import { setUnitModal } from '../store/layout'
+import { ArmyType } from '../store/units/types'
 import { TableLandBattle } from '../components/TableLandBattle'
 import { ParticipantState } from '../store/land_battle'
 
@@ -13,7 +12,6 @@ interface IStateFromProps {
   readonly defender: ParticipantState
 }
 interface IDispatchFromProps {
-  editUnit: (army: ArmyType, unit: UnitDefinition) => void
 }
 interface IProps extends IStateFromProps, IDispatchFromProps { }
 
@@ -50,7 +48,6 @@ const mapStateToProps = (state: AppState): IStateFromProps => ({
 })
 
 const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({
-  editUnit: (army: ArmyType, unit: UnitDefinition) => dispatch(setUnitModal(army, unit))
 })
 
 

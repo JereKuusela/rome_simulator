@@ -6,7 +6,7 @@ import { TacticDefinition, TacticType, TacticCalc, tactic_to_icon } from '../sto
 
 interface IProps {
   readonly tactics: ImmutableList<TacticDefinition>
-  readonly onRowClick: (unit: TacticDefinition) => void
+  readonly onRowClick: (tactic: TacticType) => void
 }
 
 // Display component for showing unit definitions for an army.
@@ -46,7 +46,7 @@ export class TableTacticDefinitions extends Component<IProps> {
   renderRow = (tactic: TacticDefinition) => {
 
     return (
-      <Table.Row key={tactic.type} onClick={() => this.props.onRowClick(tactic)}>
+      <Table.Row key={tactic.type} onClick={() => this.props.onRowClick(tactic.type)}>
         <Table.Cell>
           <Image src={tactic.image} avatar />
           {tactic.type}</Table.Cell>

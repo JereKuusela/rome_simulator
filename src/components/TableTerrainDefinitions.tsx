@@ -1,11 +1,11 @@
 import { List as ImmutableList } from 'immutable'
 import React, { Component } from 'react'
 import { Table } from 'semantic-ui-react'
-import { TerrainCalc, TerrainDefinition } from '../store/terrains';
+import { TerrainCalc, TerrainDefinition, TerrainType } from '../store/terrains';
 
 interface IProps {
   readonly terrains: ImmutableList<TerrainDefinition>
-  readonly onRowClick: (terrain: TerrainDefinition) => void
+  readonly onRowClick: (terrain: TerrainType) => void
 }
 
 // Display component for showing unit definitions for an army.
@@ -38,7 +38,7 @@ export class TableTerrainDefinitions extends Component<IProps> {
   renderRow = (terrain: TerrainDefinition) => {
 
     return (
-      <Table.Row key={terrain.type} onClick={() => this.props.onRowClick(terrain)}>
+      <Table.Row key={terrain.type} onClick={() => this.props.onRowClick(terrain.type)}>
         <Table.Cell>
           {terrain.type}
         </Table.Cell>

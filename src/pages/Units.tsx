@@ -2,9 +2,9 @@ import { Map } from 'immutable'
 import React, { Component } from 'react'
 import { Container, Header } from 'semantic-ui-react'
 import { connect } from 'react-redux'
+import ModalUnitDetail from '../containers/ModalUnitDetail'
 import { AppState } from '../store/index'
 import { UnitType, UnitDefinition, ArmyType } from '../store/units/types'
-import { setUnitModal } from '../store/layout'
 import { TableUnitDefinitions } from '../components/TableUnitDefinitions'
 
 
@@ -13,15 +13,33 @@ interface IStateFromProps {
   readonly global_stats: Map<ArmyType, UnitDefinition>
 }
 interface IDispatchFromProps {
-  editUnit: (army: ArmyType, unit: UnitDefinition) => void
 }
 interface IProps extends IStateFromProps, IDispatchFromProps { }
 
-class Units extends Component<IProps> {
+interface IState {
+  modal_army: ArmyType | null
+  modal_unit: UnitType | null
+}
+
+class Units extends Component<IProps, IState> {
+
+  constructor(props: IProps) {
+    super(props)
+    this.state = { modal_army: null, modal_unit: null };
+  }
+
+  closeModal = () => this.setState({modal_army: null, modal_unit: null})
+
+  openModal = (army: ArmyType, unit: UnitType) => this.setState({modal_army: army, modal_unit: unit})
 
   render() {
     return (
       <Container>
+        <ModalUnitDetail
+          onClose={this.closeModal}
+          army={this.state.modal_army}
+          unit={this.state.modal_unit}
+        />
         {
           Array.from(this.props.units).map(value => {
             return this.renderArmy(value[0], value[1], this.props.global_stats.get(value[0]))
@@ -38,7 +56,7 @@ class Units extends Component<IProps> {
           army={army}
           global_stats={global_stats}
           units={units.toList()}
-          onRowClick={unit => this.props.editUnit(army, unit)}
+          onRowClick={unit => this.openModal(army, unit.type)}
         />
       </div>
     )
@@ -51,7 +69,6 @@ const mapStateToProps = (state: AppState): IStateFromProps => ({
 })
 
 const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({
-  editUnit: (army, unit) => dispatch(setUnitModal(army, unit))
 })
 
 
