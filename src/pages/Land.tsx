@@ -1,15 +1,16 @@
-import { Map } from 'immutable'
 import React, { Component } from 'react'
 import { Container, Header } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
-import { UnitType, UnitDefinition, ArmyType } from '../store/units/types'
+import { UnitDefinition, ArmyType } from '../store/units/types'
 import { setUnitModal } from '../store/layout'
 import { TableLandBattle } from '../components/TableLandBattle'
+import { ParticipantState } from '../store/land_battle'
 
 
 interface IStateFromProps {
-  readonly units: Map<ArmyType, Map<UnitType, UnitDefinition>>
+  readonly attacker: ParticipantState
+  readonly defender: ParticipantState
 }
 interface IDispatchFromProps {
   editUnit: (army: ArmyType, unit: UnitDefinition) => void
@@ -22,18 +23,21 @@ class Land extends Component<IProps> {
     return (
       <Container>
         {
-          Array.from(this.props.units).map((value) => {
-            return this.renderArmy(value[0], value[1])
-          })
+          this.renderArmy(ArmyType.Attacker, this.props.attacker)
+        }
+        {
+          this.renderArmy(ArmyType.Defender, this.props.defender)
         }
       </Container>
     )
   }
-  renderArmy = (army: ArmyType, units: Map<UnitType, UnitDefinition>) => {
+  renderArmy = (army: ArmyType, units: ParticipantState) => {
     return (
       <div key={army}>
         <Header>{army}</Header>
         <TableLandBattle
+         units = {units.army}
+         reverse = {army === ArmyType.Attacker}
         />
       </div>
     )
@@ -41,7 +45,8 @@ class Land extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState): IStateFromProps => ({
-  units: state.units.units
+  attacker: state.land.attacker,
+  defender: state.land.defender
 })
 
 const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({

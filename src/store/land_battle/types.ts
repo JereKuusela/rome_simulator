@@ -1,24 +1,11 @@
-export interface LandBattleState {
-  readonly attacker: IParticipantState;
-  readonly defender: IParticipantState;
-  readonly terrain: string;
-  readonly day: number;
+import { TerrainType } from '../terrains'
+import { UnitDefinition } from '../units'
+
+export interface ParticipantState {
+  readonly army: (UnitDefinition | null)[][];
+  readonly general: number
 }
 
-interface IParticipantState {
-  readonly frontline: IUnitState[];
-  readonly backline: IUnitState[];
-  readonly strategos: number;
-  readonly general: number;
-  readonly discipline: number;
+export const getInitialTerrains = (): TerrainType[] => [TerrainType.None, TerrainType.Farmland]
 
-}
-
-interface IUnitState {
-  readonly type: string;
-  readonly morale: number;
-  readonly max_morale: number;
-  readonly manpower: number;
-  readonly discipline: number;
-  readonly is_loyal: boolean;
-}
+export const getInitialArmy = (): ParticipantState => ({ army: Array(2).fill(Array(30).fill(null)), general: 0})

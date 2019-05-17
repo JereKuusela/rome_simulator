@@ -150,7 +150,8 @@ export class TableUnitDefinitions extends Component<IProps> {
       <Table.Row key={unit.type} onClick={() => this.props.onRowClick(unit)}>
         <Table.Cell>
           <Image src={unit.image} avatar />
-          Global stats</Table.Cell>
+          Global stats
+        </Table.Cell>
         <Table.Cell>
           {unit.valueToRelativeNumber(UnitCalc.Morale, false)}
         </Table.Cell>
