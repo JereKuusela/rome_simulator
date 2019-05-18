@@ -5,6 +5,7 @@ import { AppState } from '../store/index'
 import { ArmyType } from '../store/units/types'
 import { TableLandBattle } from '../components/TableLandBattle'
 import { ParticipantState } from '../store/land_battle'
+import ModalUnitSelector, { ModalInfo } from '../containers/ModalUnitSelector'
 
 
 interface IStateFromProps {
@@ -15,11 +16,29 @@ interface IDispatchFromProps {
 }
 interface IProps extends IStateFromProps, IDispatchFromProps { }
 
-class Land extends Component<IProps> {
+interface IState {
+  modal_info: ModalInfo | null
+}
+
+class Land extends Component<IProps, IState> {
+
+  constructor(props: IProps) {
+    super(props)
+    this.state = { modal_info: null };
+  }
+
+
+  closeModal = () => this.setState({modal_info: null})
+  
+  openModal = (army: ArmyType, row: number, column: number) => this.setState({modal_info: {army, row, column}})
 
   render() {
     return (
       <Container>
+        <ModalUnitSelector
+          info={this.state.modal_info}
+          onClose={this.closeModal}
+        />
         {
           this.renderArmy(ArmyType.Attacker, this.props.attacker)
         }
@@ -34,8 +53,9 @@ class Land extends Component<IProps> {
       <div key={army}>
         <Header>{army}</Header>
         <TableLandBattle
-         units = {units.army}
-         reverse = {army === ArmyType.Attacker}
+          onClick={(row, column) => this.openModal(army, row, column)}
+          units={units.army}
+          reverse={army === ArmyType.Attacker}
         />
       </div>
     )
