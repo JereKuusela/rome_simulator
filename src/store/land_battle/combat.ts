@@ -25,10 +25,9 @@ const MORALE_LOST_MULTIPLIER = 1.5 / 2000.0
  * @param attacker_roll Dice roll for attackers. Affects damage dealt. 
  * @param defender_roll Dice roll for defenders. Affects damage dealt. 
  * @param round Turn number to distinguish different rounds.
- * @param border_terrain Terrain of the border between attackers, may affect amount of damage inflicted.
- * @param tile_terrain Terrain of the tile where the battle happens, may affect amount of damage inflicted.
+ * @param terrains Terrains of the battle, may affect amount of damage inflicted.
  */
-export const battle = (attacker_army: Army, defender_army: Army, attacker_roll: number, defender_roll: number, round: number, border_terrain: TerrainType, tile_terrain: TerrainType): [Army, Army] => {
+export const battle = (attacker_army: Army, defender_army: Army, attacker_roll: number, defender_roll: number, round: number, terrains: TerrainType[]): [Army, Army] => {
   attacker_army = reinforce(attacker_army)
   defender_army = reinforce(defender_army)
   let attacker_frontline = attacker_army.get(0)!
@@ -41,8 +40,8 @@ export const battle = (attacker_army: Army, defender_army: Army, attacker_roll: 
 
   for (let iteration = 0; iteration < 100; ++iteration) {
     // Current loses are used to check when the solution is found, and to calculate damange on the next iteration.
-    let defender_losses = attack(attacker_frontline, defender_frontline, attacker_previous_losses, attacker_roll, border_terrain, tile_terrain)
-    let attacker_losses = attack(defender_frontline, attacker_frontline, defender_previous_losses, defender_roll, border_terrain, tile_terrain)
+    let defender_losses = attack(attacker_frontline, defender_frontline, attacker_previous_losses, attacker_roll, terrains)
+    let attacker_losses = attack(defender_frontline, attacker_frontline, defender_previous_losses, defender_roll, terrains)
     if (arraysEqual(attacker_previous_losses, attacker_losses) && arraysEqual(defender_previous_losses, defender_losses))
       break
     attacker_previous_losses = attacker_losses
@@ -131,13 +130,13 @@ const applyLosses = (row: FrontLine, losses: Loss[], round: number): FrontLine =
  * @param a 
  * @param b 
  */
-const arraysEqual = (a: any[], b: any[]) => {
+const arraysEqual = (a: Loss[], b: Loss[]) => {
   if (a === b)
     return true
   if (a.length !== b.length)
     return false
   for (let i = 0; i < a.length; ++i) {
-    if (a[i] !== b[i])
+    if (a[i].morale !== b[i].morale || a[i].manpower !== b[i].manpower)
       return false
   }
   return true
@@ -149,13 +148,14 @@ const arraysEqual = (a: any[], b: any[]) => {
  * @param target_row A row of defenders receiving damage from source_row.
  * @param source_losses Current losses for attackers to exclude dead men.
  * @param roll Dice roll, affects amount of damage inflicted.
- * @param border_terrain Terrain of the border between attackers, may affect amount of damage inflicted.
- * @param tile_terrain Terrain of the tile where the battle happens, may affect amount of damage inflicted.
+ * @param terrains Terrains of the battle, may affect amount of damage inflicted.
  */
-const attack = (source_row: FrontLine, target_row: FrontLine, source_losses: Loss[], roll: number, border_terrain: TerrainType, tile_terrain: TerrainType): Loss[] => {
+const attack = (source_row: FrontLine, target_row: FrontLine, source_losses: Loss[], roll: number, terrains: TerrainType[]): Loss[] => {
   // Units attack mainly units on front of them. If not, then a closest target is searched within maneuver.
   // Assumption: Right side searched first (shouldn't affect results because gaps get reinforced).
-  let target_losses = Array<Loss>(target_row.size).fill({ morale: 0, manpower: 0 })
+  let target_losses = Array<Loss>(target_row.size)
+  for (var i = 0; i < target_row.size; ++i)
+    target_losses[i] = { morale: 0, manpower: 0 };
   source_row.forEach((source, source_index) => {
     if (!source)
       return
@@ -169,7 +169,7 @@ const attack = (source_row: FrontLine, target_row: FrontLine, source_losses: Los
     if (target_index === null)
       return
     const target = target_row.get(source_index)!
-    const losses = calculateLosses(source, target, source_losses[source_index], roll, border_terrain, tile_terrain)
+    const losses = calculateLosses(source, target, source_losses[source_index], roll, terrains)
     target_losses[target_index].manpower += losses.manpower
     target_losses[target_index].morale += losses.morale
   })
@@ -182,10 +182,9 @@ const attack = (source_row: FrontLine, target_row: FrontLine, source_losses: Los
  * @param target A defender receiving damage from source.
  * @param source_loss Current loss for the attacker to exclude dead men.
  * @param roll Dice roll, affects amount of damage inflicted.
- * @param border_terrain Terrain of the border between attackers, may affect amount of damage inflicted.
- * @param tile_terrain Terrain of the tile where the battle happens, may affect amount of damage inflicted.
+ * @param terrains Terrains of the battle, may affect amount of damage inflicted.
  */
-const calculateLosses = (source: Unit, target: Unit, source_loss: Loss, roll: number, border_terrain: TerrainType, tile_terrain: TerrainType): Loss => {
+const calculateLosses = (source: Unit, target: Unit, source_loss: Loss, roll: number, terrains: TerrainType[]): Loss => {
   const base_damage = BASE_DAMAGE + BASE_DAMAGE_PER_ROLL * roll
   // Terrain bonus and tactic missing.
   const damage = base_damage
@@ -193,8 +192,7 @@ const calculateLosses = (source: Unit, target: Unit, source_loss: Loss, roll: nu
     * Math.max(0, source.calculateValue(UnitCalc.Manpower) - source_loss.manpower)
     * source.calculateValue(target.type)
     * source.calculateValue(UnitCalc.Offense)
-    * source.calculateValue(border_terrain)
-    * source.calculateValue(tile_terrain)
+    * terrains.map(terrain => source.calculateValue(terrain)).reduce((previous, current) => previous + current)
     / target.calculateValue(UnitCalc.Defense)
     * (1 - DAMAGE_REDUCTION_PER_EXPERIENCE * target.calculateValue(UnitCalc.Experience))
   const manpower_lost = damage * MANPOWER_LOST_MULTIPLIER * target.calculateValue(UnitCalc.StrengthDamageTaken)

@@ -34,6 +34,15 @@ export class BaseDefinition<T, S> {
   }
 
   calculateValue = (type: S): number => {
+    let value = this.calculateValueWithoutLoss(type)
+    let loss = 0
+    const value_loss = this.loss_values.get(type)
+    if (value_loss)
+      value_loss.forEach(value => loss += value)
+    return value - loss
+  }
+
+  calculateValueWithoutLoss = (type: S): number => {
     let base = 0
     const value_base = this.base_values.get(type)
     if (value_base)
@@ -42,11 +51,7 @@ export class BaseDefinition<T, S> {
     const value_modifier = this.modifier_values.get(type)
     if (value_modifier)
       value_modifier.forEach(value => modifier += value)
-    let loss = 0
-    const value_loss = this.loss_values.get(type)
-    if (value_loss)
-      value_loss.forEach(value => loss += value)
-    return base * modifier - loss
+    return base * modifier
   }
 
   valueToString = (type: S): string => String(this.calculateValue(type))

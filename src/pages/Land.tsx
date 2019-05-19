@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { Container, Header } from 'semantic-ui-react'
+import { Container, Header, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { ArmyType } from '../store/units/types'
 import { TableLandBattle } from '../components/TableLandBattle'
+import { battle } from '../store/land_battle'
 import { ParticipantState } from '../store/land_battle'
 import ModalUnitSelector, { ModalInfo } from '../containers/ModalUnitSelector'
 
@@ -13,6 +14,7 @@ interface IStateFromProps {
   readonly defender: ParticipantState
 }
 interface IDispatchFromProps {
+  battle: () => void
 }
 interface IProps extends IStateFromProps, IDispatchFromProps { }
 
@@ -39,6 +41,7 @@ class Land extends Component<IProps, IState> {
           info={this.state.modal_info}
           onClose={this.closeModal}
         />
+        <Button onClick={this.props.battle}>FIGHT</Button>
         {
           this.renderArmy(ArmyType.Attacker, this.props.attacker)
         }
@@ -68,6 +71,7 @@ const mapStateToProps = (state: AppState): IStateFromProps => ({
 })
 
 const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({
+  battle: () => dispatch(battle())
 })
 
 
