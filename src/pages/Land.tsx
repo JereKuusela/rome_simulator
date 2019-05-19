@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { ActionCreators } from 'redux-undo'
 import { Container, Header, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
@@ -7,14 +8,19 @@ import { TableLandBattle } from '../components/TableLandBattle'
 import { battle } from '../store/land_battle'
 import { ParticipantState } from '../store/land_battle'
 import ModalUnitSelector, { ModalInfo } from '../containers/ModalUnitSelector'
+import { arrayPattern } from '@babel/types';
 
 
 interface IStateFromProps {
   readonly attacker: ParticipantState
   readonly defender: ParticipantState
+  readonly is_undo: boolean
+  readonly is_redo: boolean
 }
 interface IDispatchFromProps {
   battle: () => void
+  undo: () => void
+  redo: () => void
 }
 interface IProps extends IStateFromProps, IDispatchFromProps { }
 
@@ -30,9 +36,9 @@ class Land extends Component<IProps, IState> {
   }
 
 
-  closeModal = () => this.setState({modal_info: null})
-  
-  openModal = (army: ArmyType, row: number, column: number) => this.setState({modal_info: {army, row, column}})
+  closeModal = () => this.setState({ modal_info: null })
+
+  openModal = (army: ArmyType, row: number, column: number) => this.setState({ modal_info: { army, row, column } })
 
   render() {
     return (
@@ -41,7 +47,15 @@ class Land extends Component<IProps, IState> {
           info={this.state.modal_info}
           onClose={this.closeModal}
         />
-        <Button onClick={this.props.battle}>FIGHT</Button>
+        <Button disabled={!this.props.is_undo} onClick={this.props.undo}>
+          {'<'}
+        </Button>
+        <Button onClick={this.props.battle}>
+          FIGHT
+        </Button>
+        <Button disabled={!this.props.is_redo} onClick={this.props.redo}>
+          {'>'}
+        </Button>
         {
           this.renderArmy(ArmyType.Attacker, this.props.attacker)
         }
@@ -66,12 +80,16 @@ class Land extends Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: AppState): IStateFromProps => ({
-  attacker: state.land.attacker,
-  defender: state.land.defender
+  attacker: state.land.present.attacker,
+  defender: state.land.present.defender,
+  is_undo: state.land.past.length > 0,
+  is_redo: state.land.future.length > 0
 })
 
 const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({
-  battle: () => dispatch(battle())
+  battle: () => dispatch(battle()),
+  undo: () => dispatch(ActionCreators.undo()),
+  redo: () => dispatch(ActionCreators.redo())
 })
 
 

@@ -18,6 +18,7 @@
     "react-router-dom": "^5.0.0",
     "react-scripts": "3.0.1",
     "redux-logger": "^3.0.6",
+    "redux-undo": "^1.0.0-beta9-9-7",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.87.1",
     "typesafe-actions": "^4.2.1",
