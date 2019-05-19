@@ -27,9 +27,9 @@ type MapValues = Map<ValueType, Map<string, number>>
 
 export class UnitDefinition extends BaseDefinition<UnitType, ValueType> {
 
-  constructor(readonly type: UnitType, public readonly image: string, public readonly requirements: string, public readonly can_assault: boolean,
+  constructor(readonly type: UnitType, image: string | null, public readonly requirements: string, public readonly can_assault: boolean,
     readonly base_values: MapValues = Map(), readonly modifier_values: MapValues = Map(),  readonly loss_values: MapValues = Map()) {
-      super(type, base_values, modifier_values, loss_values)
+      super(type, image, base_values, modifier_values, loss_values)
   }
 
   valueToString = (type: ValueType): string => {

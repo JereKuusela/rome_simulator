@@ -1,9 +1,7 @@
 import { Map } from 'immutable'
 
-
-
 export class BaseDefinition<T, S> {
-  constructor(public readonly type: T, protected readonly base_values: Map<S, Map<string, number>> = Map(), protected readonly modifier_values: Map<S, Map<string, number>> = Map(),
+  constructor(public readonly type: T, public readonly image: string | null, protected readonly base_values: Map<S, Map<string, number>> = Map(), protected readonly modifier_values: Map<S, Map<string, number>> = Map(),
     protected readonly loss_values: Map<S, Map<string, number>> = Map()) {
 
   }

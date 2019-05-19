@@ -56,8 +56,8 @@ type MapValues = Map<ValueType, Map<string, number>>
 
 export class TacticDefinition extends BaseDefinition<TacticType, ValueType> {
 
-  constructor(type: TacticType, public readonly image: string, base_values: MapValues = Map()) {
-    super(type, base_values)
+  constructor(type: TacticType, image: string | null, base_values: MapValues = Map()) {
+    super(type, image, base_values)
   }
 
   valueToString = (type: ValueType): string => {

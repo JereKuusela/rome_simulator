@@ -42,7 +42,7 @@ type MapValues = Map<ValueType, Map<string, number>>
 export class TerrainDefinition extends BaseDefinition<TerrainType, ValueType> {
 
   constructor(type: TerrainType, base_values: MapValues = Map()) {
-    super(type, base_values)
+    super(type, null, base_values)
   }
 
   valueToString = (type: ValueType): string => {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { ActionCreators } from 'redux-undo'
-import { Container, Header, Button } from 'semantic-ui-react'
+import { Container, Header, Button, Grid } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { ArmyType } from '../store/units/types'
@@ -8,7 +8,6 @@ import { TableLandBattle } from '../components/TableLandBattle'
 import { battle } from '../store/land_battle'
 import { ParticipantState } from '../store/land_battle'
 import ModalUnitSelector, { ModalInfo } from '../containers/ModalUnitSelector'
-import { arrayPattern } from '@babel/types';
 
 
 interface IStateFromProps {
@@ -16,6 +15,7 @@ interface IStateFromProps {
   readonly defender: ParticipantState
   readonly is_undo: boolean
   readonly is_redo: boolean
+  readonly round: number
 }
 interface IDispatchFromProps {
   battle: () => void
@@ -47,22 +47,38 @@ class Land extends Component<IProps, IState> {
           info={this.state.modal_info}
           onClose={this.closeModal}
         />
-        <Button disabled={!this.props.is_undo} onClick={this.props.undo}>
-          {'<'}
-        </Button>
-        <Button onClick={this.props.battle}>
-          FIGHT
-        </Button>
-        <Button disabled={!this.props.is_redo} onClick={this.props.redo}>
-          {'>'}
-        </Button>
-        {
-          this.renderArmy(ArmyType.Attacker, this.props.attacker)
-        }
-        {
-          this.renderArmy(ArmyType.Defender, this.props.defender)
-        }
-      </Container>
+        <Grid verticalAlign='middle'>
+          <Grid.Row columns={3}>
+            <Grid.Column>
+              <Button disabled={!this.props.is_undo} onClick={this.props.undo}>
+                {'<'}
+              </Button>
+              <Button onClick={this.props.battle}>
+                FIGHT
+              </Button>
+              <Button disabled={!this.props.is_redo} onClick={this.props.redo}>
+                {'>'}
+              </Button>
+            </Grid.Column>
+            <Grid.Column></Grid.Column>
+            <Grid.Column><Header>{'Round: ' + this.props.round}</Header></Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns={1}>
+            <Grid.Column>
+              {
+                this.renderArmy(ArmyType.Attacker, this.props.attacker)
+              }
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns={1}>
+            <Grid.Column>
+              {
+                this.renderArmy(ArmyType.Defender, this.props.defender)
+              }
+            </Grid.Column>
+          </Grid.Row>
+        </Grid >
+      </Container >
     )
   }
   renderArmy = (army: ArmyType, units: ParticipantState) => {
@@ -83,7 +99,8 @@ const mapStateToProps = (state: AppState): IStateFromProps => ({
   attacker: state.land.present.attacker,
   defender: state.land.present.defender,
   is_undo: state.land.past.length > 0,
-  is_redo: state.land.future.length > 0
+  is_redo: state.land.future.length > 0,
+  round: state.land.present.day
 })
 
 const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({
