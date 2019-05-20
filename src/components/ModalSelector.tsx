@@ -4,9 +4,10 @@ import { Modal, Table, Image } from 'semantic-ui-react'
 import { TerrainType, TerrainCalc } from '../store/terrains'
 import { UnitType, UnitCalc } from '../store/units'
 import { BaseDefinition } from '../utils'
+import { TacticType, TacticCalc } from '../store/tactics'
 
-type ItemType = UnitType | TerrainType
-type ItemAttribute = UnitCalc | TerrainCalc | UnitType | TerrainType
+type ItemType = UnitType | TerrainType | TacticType
+type ItemAttribute = UnitCalc | TerrainCalc | UnitType | TerrainType | TacticCalc | TacticType
 
 interface IProps<T extends ItemType, S extends ItemAttribute> {
   onClose: () => void

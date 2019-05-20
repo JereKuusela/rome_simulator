@@ -1,15 +1,17 @@
 import React, { Component } from 'react'
 import { ActionCreators } from 'redux-undo'
 import { Map, List } from 'immutable'
-import { Container, Header, Button, Grid } from 'semantic-ui-react'
+import { Container, Header, Button, Grid, Image } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { ArmyType } from '../store/units/types'
 import { TableLandBattle } from '../components/TableLandBattle'
-import { battle, ParticipantState, selectTerrain } from '../store/land_battle'
-import { TerrainDefinition, TerrainType, LocationType } from '../store/terrains'
+import { battle, ParticipantState, selectTerrain, selectTactic } from '../store/land_battle'
+import { TerrainDefinition, TerrainType } from '../store/terrains'
+import { TacticDefinition, TacticType } from '../store/tactics'
 import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from '../containers/ModalUnitSelector'
 import ModalTerrainSelector, { ModalInfo as ModalTerrainInfo } from '../containers/ModalTerrainSelector'
+import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers/ModalTacticSelector'
 
 
 interface IStateFromProps {
@@ -20,48 +22,57 @@ interface IStateFromProps {
   readonly round: number
   readonly terrains: List<TerrainDefinition>
   readonly available_terrains: Map<TerrainType, TerrainDefinition>
+  readonly available_tactics: Map<TacticType, TacticDefinition>
 }
 interface IDispatchFromProps {
   battle: () => void
   undo: () => void
   redo: () => void
   selectTerrain: (index: number, terrain: TerrainDefinition) => void
+  selectTactic: (army: ArmyType, tactic: TacticDefinition) => void
 }
 interface IProps extends IStateFromProps, IDispatchFromProps { }
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
   modal_terrain_info: ModalTerrainInfo | null
+  modal_tactic_info: ModalTacticInfo | null
 }
 
 class Land extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    this.state = { modal_unit_info: null, modal_terrain_info: null };
+    this.state = { modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null }
     this.props.selectTerrain(0, this.props.available_terrains.get(TerrainType.None)!)
     this.props.selectTerrain(1, this.props.available_terrains.get(TerrainType.Plains)!)
+    this.props.selectTactic(ArmyType.Attacker, this.props.available_tactics.get(TacticType.ShockAction)!)
+    this.props.selectTactic(ArmyType.Defender, this.props.available_tactics.get(TacticType.ShockAction)!)
   }
 
 
-  closeUnitModal = () => this.setState({ modal_unit_info: null })
+  closeModal = () => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null })
 
-  openUnitModal = (army: ArmyType, row: number, column: number) => this.setState({ modal_unit_info: { army, row, column }})
+  openUnitModal = (army: ArmyType, row: number, column: number) => this.setState({ modal_unit_info: { army, row, column } })
 
-  closeTerrainModal = () => this.setState({ modal_terrain_info: null })
+  openTerrainModal = (index: number) => this.setState({ modal_terrain_info: { index, location: this.props.terrains.get(index)!.location } })
 
-  openTerrainModal = (index: number) => this.setState({ modal_terrain_info: { index, location: this.props.terrains.get(index)!.location }})
+  openTacticModal = (army: ArmyType) => this.setState({ modal_tactic_info: { army } })
 
   render() {
     return (
       <Container>
         <ModalUnitSelector
           info={this.state.modal_unit_info}
-          onClose={this.closeUnitModal}
+          onClose={this.closeModal}
         />
         <ModalTerrainSelector
           info={this.state.modal_terrain_info}
-          onClose={this.closeTerrainModal}
+          onClose={this.closeModal}
+        />
+        <ModalTacticSelector
+          info={this.state.modal_tactic_info}
+          onClose={this.closeModal}
         />
         <Grid verticalAlign='middle'>
           <Grid.Row columns={3}>
@@ -79,24 +90,34 @@ class Land extends Component<IProps, IState> {
             <Grid.Column></Grid.Column>
             <Grid.Column><Header>{'Round: ' + this.props.round}</Header></Grid.Column>
           </Grid.Row>
-          <Grid.Row columns={1}>
+          <Grid.Row columns={2}>
+          <Grid.Column>
+              {
+                this.renderTactic(this.props.attacker.tactic, ArmyType.Attacker)
+              }
+            </Grid.Column>
             <Grid.Column>
               {
                 this.renderArmy(ArmyType.Attacker, this.props.attacker)
               }
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row columns={1}>
+          <Grid.Row columns={2}>
+          <Grid.Column>
+              {
+                this.renderTactic(this.props.defender.tactic, ArmyType.Defender)
+              }
+            </Grid.Column>
             <Grid.Column>
               {
                 this.renderArmy(ArmyType.Defender, this.props.defender)
               }
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row columns={2}>   
-              {
-                this.props.terrains.map((terrain, index) => this.renderTerrain(terrain, index))
-              }
+          <Grid.Row columns={2}>
+            {
+              this.props.terrains.map((terrain, index) => this.renderTerrain(terrain, index))
+            }
           </Grid.Row>
         </Grid >
       </Container >
@@ -126,6 +147,18 @@ class Land extends Component<IProps, IState> {
       </Grid.Column>
     )
   }
+
+  renderTactic = (tactic: TacticDefinition | null, army: ArmyType) => {
+    return (
+      <Grid.Column key={army} onClick={() => this.openTacticModal(army)}>
+        <Header>{army}</Header>
+        <div>
+          {tactic && tactic.image ? <Image src={tactic.image} avatar /> : null}
+          {tactic && tactic.type}
+        </div>
+      </Grid.Column>
+    )
+  }
 }
 
 const mapStateToProps = (state: AppState): IStateFromProps => ({
@@ -135,14 +168,15 @@ const mapStateToProps = (state: AppState): IStateFromProps => ({
   is_redo: state.land.future.length > 0,
   round: state.land.present.day,
   terrains: state.land.present.terrains,
-  available_terrains: state.terrains.terrains
+  available_terrains: state.terrains.terrains,
+  available_tactics: state.tactics.tactics
 })
 
 const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({
   battle: () => dispatch(battle()),
   undo: () => dispatch(ActionCreators.undo()),
   redo: () => dispatch(ActionCreators.redo()),
-  
+  selectTactic: (army, tactic) => dispatch(selectTactic(army, tactic)),
   selectTerrain: (index, terrain) => dispatch(selectTerrain(index, terrain))
 })
 
