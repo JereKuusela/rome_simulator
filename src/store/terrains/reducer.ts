@@ -1,15 +1,14 @@
 import { createReducer } from 'typesafe-actions'
-import { Map } from 'immutable'
-import { getDefaultDefinitions, LocationType, TerrainType, TerrainDefinition } from './data'
+import { getDefaultDefinitions } from './data'
 import { setBaseValue } from './actions'
 
 const initialState = {
-  terrains: Map<LocationType, Map<TerrainType, TerrainDefinition>>().set(LocationType.Border, getDefaultDefinitions(LocationType.Border)).set(LocationType.Tile, getDefaultDefinitions(LocationType.Tile))
+  terrains: getDefaultDefinitions()
 }
 
 export const terrainsReducer = createReducer(initialState)
   .handleAction(setBaseValue, (state, action: ReturnType<typeof setBaseValue>) => (
-    { ...state, terrains: state.terrains.updateIn([action.payload.location, action.payload.terrain], (terrain: TerrainDefinition) => (
+    { ...state, terrains: state.terrains.update(action.payload.terrain, terrain => (
       terrain.add_base_value(action.payload.key, action.payload.attribute, action.payload.value)
     ))}
   ))

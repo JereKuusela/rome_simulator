@@ -25,11 +25,9 @@ export enum TerrainCalc {
   Roll = 'Roll'
 }
 
-export const getDefaultDefinitions = (type: LocationType): Map<TerrainType, TerrainDefinition> => {
+export const getDefaultDefinitions = (): Map<TerrainType, TerrainDefinition> => {
   let map = OrderedMap<TerrainType, TerrainDefinition>()
   for (const value of data.terrain) {
-    if (value.location as LocationType !== type)
-      continue
     const terrain = createTerrainFromJson(value)
     map = map.set(terrain.type, terrain)
   }
@@ -41,7 +39,7 @@ type MapValues = Map<ValueType, Map<string, number>>
 
 export class TerrainDefinition extends BaseDefinition<TerrainType, ValueType> {
 
-  constructor(type: TerrainType, base_values: MapValues = Map()) {
+  constructor(type: TerrainType, public readonly location: LocationType, base_values: MapValues = Map()) {
     super(type, null, base_values)
   }
 
@@ -52,17 +50,17 @@ export class TerrainDefinition extends BaseDefinition<TerrainType, ValueType> {
 
   add_base_values = (key: string, values: [ValueType, number][]): TerrainDefinition => {
     const new_values = this.add_values(this.base_values, key, values)
-    return new TerrainDefinition(this.type, new_values)
+    return new TerrainDefinition(this.type, this.location, new_values)
   }
 
   add_base_value = (key: string, type: ValueType, value: number): TerrainDefinition => {
     const new_values = this.add_values(this.base_values, key, [[type, value]])
-    return new TerrainDefinition(this.type, new_values)
+    return new TerrainDefinition(this.type, this.location, new_values)
   }
 }
 
 const createTerrainFromJson = (data: TerrainData): TerrainDefinition => {
-  let terrain = new TerrainDefinition(data.type as TerrainType)
+  let terrain = new TerrainDefinition(data.type as TerrainType, data.location as LocationType)
   const base_values: [ValueType, number][] = [
     [TerrainCalc.Roll, data.roll]
   ]

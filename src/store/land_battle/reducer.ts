@@ -1,6 +1,6 @@
 import { createReducer } from 'typesafe-actions'
 import { getInitialArmy, getInitialTerrains } from './types'
-import { selectUnit, battle } from './actions'
+import { selectUnit, selectTerrain, battle } from './actions'
 import { ArmyType } from '../units'
 import { battle as fight } from './combat'
 
@@ -17,6 +17,12 @@ export const landBattleReducer = createReducer(initialState)
       ...state,
       attacker: { ...state.attacker, army: action.payload.army === ArmyType.Attacker ? state.attacker.army.setIn([action.payload.row, action.payload.column], action.payload.unit) : state.attacker.army },
       defender: { ...state.defender, army: action.payload.army === ArmyType.Defender ? state.defender.army.setIn([action.payload.row, action.payload.column], action.payload.unit) : state.defender.army }
+    }
+  ))
+  .handleAction(selectTerrain, (state, action: ReturnType<typeof selectTerrain>) => (
+    {
+      ...state,
+      terrains: state.terrains.set(action.payload.index, action.payload.terrain)
     }
   ))
   .handleAction(battle, (state, action: ReturnType<typeof battle>) => {

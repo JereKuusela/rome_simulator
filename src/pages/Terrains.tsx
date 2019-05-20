@@ -1,6 +1,6 @@
 import { Map } from 'immutable'
 import React, { Component } from 'react'
-import { Container, Header } from 'semantic-ui-react'
+import { Container } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import ModalTerrainDetail from '../containers/ModalTerrainDetail'
 import { AppState } from '../store/index'
@@ -9,7 +9,7 @@ import { TerrainDefinition, TerrainType, LocationType } from '../store/terrains'
 
 
 interface IStateFromProps {
-  readonly terrains: Map<LocationType, Map<TerrainType, TerrainDefinition>>
+  readonly terrains: Map<TerrainType, TerrainDefinition>
 }
 interface IDispatchFromProps {
 }
@@ -24,12 +24,12 @@ class Terrains extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    this.state = { modal_location: null, modal_terrain: null };
+    this.state = { modal_location: null, modal_terrain: null }
   }
 
   closeModal = () => this.setState({modal_location: null, modal_terrain: null})
   
-  openModal = (location: LocationType, terrain: TerrainType) => this.setState({modal_location: location, modal_terrain: terrain})
+  openModal = (terrain: TerrainType) => this.setState({modal_terrain: terrain})
   
 
   render() {
@@ -37,26 +37,15 @@ class Terrains extends Component<IProps, IState> {
       <Container>
         <ModalTerrainDetail
           onClose={this.closeModal}
-          location={this.state.modal_location}
           terrain={this.state.modal_terrain}
         />
         {
-          Array.from(this.props.terrains).map(value => {
-            return this.renderLocation(value[0], value[1])
-          })
+          <TableTerrainDefinitions
+          terrains={this.props.terrains.toList()}
+          onRowClick={terrain => this.openModal(terrain)}
+        />
         }
       </Container>
-    )
-  }
-  renderLocation = (location: LocationType, terrains: Map<TerrainType, TerrainDefinition>) => {
-    return (
-      <div key={location}>
-        <Header>{location}</Header>
-        <TableTerrainDefinitions
-          terrains={terrains.toList()}
-          onRowClick={terrain => this.openModal(location, terrain)}
-        />
-      </div>
     )
   }
 }

@@ -50,7 +50,11 @@ export class ModalSelector<S extends ItemAttribute, T extends ItemType> extends 
           {item.type}
         </Table.Cell>
         {
-          this.props.attributes.map(attribute => item.valueToRelativeNumber(attribute, false))
+          this.props.attributes.map(attribute => (
+            <Table.Cell>
+              {item.valueToRelativeNumber(attribute, false)}
+            </Table.Cell>
+            ))
         }
       </Table.Row>
     )

@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import { Modal, Table, Input } from 'semantic-ui-react'
-import { TerrainDefinition, ValueType, TerrainType, TerrainCalc, LocationType } from '../store/terrains'
+import { TerrainDefinition, ValueType, TerrainType, TerrainCalc } from '../store/terrains'
 
 interface IProps {
-  location: LocationType
   custom_value_key: string
   terrain: TerrainDefinition
   onClose: () => void
-  onCustomBaseValueChange: (location: LocationType, type: TerrainType, key: string, attribute: ValueType, value: number) => void
+  onCustomBaseValueChange: (type: TerrainType, key: string, attribute: ValueType, value: number) => void
 }
 
 // Display component for showing and changing terrain details.
@@ -61,7 +60,7 @@ export class ModalTerrainDetail extends Component<IProps> {
         <Table.Cell>
           <Input
             defaultValue={base_value}
-            onChange={(_, data) => this.props.onCustomBaseValueChange(this.props.location, tactic.type, this.props.custom_value_key, attribute, Number(data.value))
+            onChange={(_, data) => this.props.onCustomBaseValueChange(tactic.type, this.props.custom_value_key, attribute, Number(data.value))
             }
           />
         </Table.Cell>
