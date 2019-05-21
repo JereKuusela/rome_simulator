@@ -35,10 +35,12 @@ export const battle = (attacker_army: Army, defender_army: Army, attacker_roll: 
   // 2. Attacker picks targets.
   // 3. Defender reinforces.
   // 4. Defender picks targets.
-  // Note: This leads to asymmetric behavior. A defender reinforcing gets a free attack on the attacker.
+  // Note: This leads to asymmetric behavior because defenders may move after attacker has selected them. Also a reinforced defender gets a free attack on the attacker.
   
-  attacker_army = reinforce(attacker_army)
-  defender_army = reinforce(defender_army)
+  attacker_army = reinforce(attacker_army, undefined)
+  const defender_to_attacker = pickTargets(attacker_army.get(0)!, defender_army.get(0)!)
+  defender_army = reinforce(defender_army, defender_to_attacker)
+  const attacker_to_defender = pickTargets(defender_army.get(0)!, attacker_army.get(0)!)
   let attacker_frontline = attacker_army.get(0)!
   let defender_frontline = defender_army.get(0)!
   // Killed manpower won't deal any damage so the right solution has to be searched iteratively.
@@ -55,8 +57,8 @@ export const battle = (attacker_army: Army, defender_army: Army, attacker_roll: 
 
   for (let iteration = 0; iteration < 100; ++iteration) {
     // Current loses are used to check when the solution is found, and to calculate damange on the next iteration.
-    let defender_losses = attack(attacker_frontline, defender_frontline, attacker_previous_losses, attacker_roll, terrains, tactic_effects.attacker, tactic_effects.casualties)
-    let attacker_losses = attack(defender_frontline, attacker_frontline, defender_previous_losses, defender_roll, terrains, tactic_effects.defender, tactic_effects.casualties)
+    let defender_losses = attack(attacker_frontline, defender_frontline, defender_to_attacker, attacker_previous_losses, attacker_roll, terrains, tactic_effects.attacker, tactic_effects.casualties)
+    let attacker_losses = attack(defender_frontline, attacker_frontline, attacker_to_defender, defender_previous_losses, defender_roll, terrains, tactic_effects.defender, tactic_effects.casualties)
     if (arraysEqual(attacker_previous_losses, attacker_losses) && arraysEqual(defender_previous_losses, defender_losses))
       break
     attacker_previous_losses = attacker_losses
@@ -71,8 +73,9 @@ export const battle = (attacker_army: Army, defender_army: Army, attacker_roll: 
  * Reinforces a given army based on reinforcement rules.
  * First priority is to move units from backlines. Then from sides.
  * @param army Army to reinforce.
+ * @param defender_to_attacker Selected targets as reinforcement may move units.
  */
-const reinforce = (army: Army): Army => {
+const reinforce = (army: Army, defender_to_attacker: (number | null)[] | undefined): Army => {
   // 1: Empty spots get filled by back row.
   // 2: If still holes, units move towards center.
   for (let row_index = 0; row_index < army.size; ++row_index) {
@@ -98,6 +101,8 @@ const reinforce = (army: Army): Army => {
       if (unit_on_left) {
         army = army.setIn([row_index, unit_index], unit_on_left)
         army = army.setIn([row_index, unit_index - 1], null)
+        if (defender_to_attacker)
+          [defender_to_attacker[unit_index - 1], defender_to_attacker[unit_index]] = [defender_to_attacker[unit_index], defender_to_attacker[unit_index - 1]]
         continue
       }
     }
@@ -110,11 +115,46 @@ const reinforce = (army: Army): Army => {
       if (unit_on_right) {
         army = army.setIn([row_index, unit_index], unit_on_right)
         army = army.setIn([row_index, unit_index + 1], null)
+        if (defender_to_attacker)
+          [defender_to_attacker[unit_index + 1], defender_to_attacker[unit_index]] = [defender_to_attacker[unit_index], defender_to_attacker[unit_index + 1]]
         continue
       }
     }
   }
   return army
+}
+
+/**
+ * Selects targets for a given source_row from a given target_row.
+ * Returns an array which maps defender to attacker because this is needed for reinforcement.
+ * @param source_row Attackers.
+ * @param target_row Defenders.
+ */
+const pickTargets = (source_row: FrontLine, target_row: FrontLine) => {
+    // Units attack mainly units on front of them. If not then first target from left to right.
+  const defender_to_attacker = Array<number | null>(target_row.size)
+  for (let i = 0; i < target_row.size; ++i)
+    defender_to_attacker[i] = null
+  source_row.forEach((source, source_index) => {
+    if (!source)
+      return
+    let target_index: number | null = null
+    if (target_row.get(source_index))
+      target_index = source_index
+    else {
+      const maneuver = source.calculateValue(UnitCalc.Maneuver)
+      for (let index = source_index - maneuver; index <= source_index + maneuver; ++index) {
+        if (index >= 0 && index < source_row.size && target_row.get(index)) {
+          target_index = index
+          break
+        }
+      }
+    }
+    if (target_index === null)
+      return
+    defender_to_attacker[target_index] = source_index
+  })
+  return defender_to_attacker
 }
 
 /**
@@ -184,29 +224,20 @@ const arraysEqual = (a: Loss[], b: Loss[]) => {
  * Calculates losses when a given source row attacks a given target row.
  * @param source_row A row of attackers inflicting daamge on target_row.
  * @param target_row A row of defenders receiving damage from source_row.
+ * @param target_to_source Selected targets for attackers.
  * @param source_losses Current losses for attackers to exclude dead men.
  * @param roll Dice roll, affects amount of damage inflicted.
  * @param terrains Terrains of the battle, may affect amount of damage inflicted.
  */
-const attack = (source_row: FrontLine, target_row: FrontLine, source_losses: Loss[], roll: number, terrains: Terrains, tactic_damage_multiplier: number, casualties_multiplier: number): Loss[] => {
-  // Units attack mainly units on front of them. If not, then a closest target is searched within maneuver.
-  // Assumption: Right side searched first (shouldn't affect results because gaps get reinforced).
+const attack = (source_row: FrontLine, target_row: FrontLine, target_to_source: (number | null)[], source_losses: Loss[], roll: number, terrains: Terrains, tactic_damage_multiplier: number, casualties_multiplier: number): Loss[] => {
   let target_losses = Array<Loss>(target_row.size)
   for (var i = 0; i < target_row.size; ++i)
-    target_losses[i] = { morale: 0, manpower: 0 };
-  source_row.forEach((source, source_index) => {
-    if (!source)
+    target_losses[i] = { morale: 0, manpower: 0 }
+    target_row.forEach((target, target_index) => {
+    const source_index = target_to_source[target_index]
+    if (!target || source_index === null)
       return
-    let target_index: number | null = null
-    if (target_row.get(source_index))
-      target_index = source_index
-    else if (source_index + 1 < source_row.size && target_row.get(source_index + 1))
-      target_index = source_index + 1
-    else if (source_index > 0 && target_row.get(source_index - 1))
-      target_index = source_index - 1
-    if (target_index === null)
-      return
-    const target = target_row.get(source_index)!
+    const source = source_row.get(source_index)!
     const losses = calculateLosses(source, target, source_losses[source_index], roll, terrains, tactic_damage_multiplier, casualties_multiplier)
     target_losses[target_index].manpower += losses.manpower
     target_losses[target_index].morale += losses.morale
