@@ -8,13 +8,13 @@ const CUSTOM_VALUE_KEY = 'Custom'
 
 class ModalUnitDetail extends Component<IProps> {
   render() {
-    if (!this.props.army ||!this.props.unit)
+    if (!this.props.army)
       return null
     return (
       <DisplayComponent
         army={this.props.army}
         custom_value_key={CUSTOM_VALUE_KEY}
-        unit={this.props.units.getIn([this.props.army, this.props.unit])}
+        unit={this.props.unit ? this.props.units.getIn([this.props.army, this.props.unit]) : this.props.global_stats.get(this.props.army)!}
         onClose={this.props.onClose}
         onCustomBaseValueChange={this.props.setBaseValue}
         onCustomModifierValueChange={this.props.setModifierValue}
@@ -25,7 +25,8 @@ class ModalUnitDetail extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  units: state.units.units
+  units: state.units.units,
+  global_stats: state.units.global_stats
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
