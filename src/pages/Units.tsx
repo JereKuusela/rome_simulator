@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { Container, Header } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import ModalUnitDetail from '../containers/ModalUnitDetail'
+import ModalGlobalStatsDetail from '../containers/ModalGlobalStatsDetail'
 import { AppState } from '../store/index'
 import { UnitType, UnitDefinition, ArmyType } from '../store/units/types'
 import { TableUnitDefinitions } from '../components/TableUnitDefinitions'
@@ -27,6 +28,11 @@ class Units extends Component<IProps, IState> {
     return (
       <Container>
         <ModalUnitDetail
+          onClose={this.closeModal}
+          army={this.state.modal_army}
+          unit={this.state.modal_unit}
+        />
+        <ModalGlobalStatsDetail
           onClose={this.closeModal}
           army={this.state.modal_army}
           unit={this.state.modal_unit}
