@@ -15,6 +15,7 @@ Land battle:
 - Back/forward buttons to scroll through the battle
 - Defender terrain
 - Dice roll, random/manual
+- Defeated units included somehow, tactic effectiveness probably shouldn't update during fight
 
 Unit definitions:
 - Special unit for global stats and global modifiers

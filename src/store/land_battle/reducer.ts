@@ -35,7 +35,7 @@ export const landBattleReducer = createReducer(initialState)
     }
   ))
   .handleAction(battle, (state, action: ReturnType<typeof battle>) => {
-    let [attacker, defender] = fight(state.attacker.army, state.defender.army, 3, 3, state.day, state.terrains)
+    let [attacker, defender] = fight(state.attacker.army, state.defender.army, 3, 3, state.attacker.tactic, state.defender.tactic, state.day, state.terrains)
     return {
       ...state,
       attacker: { ...state.attacker, army: attacker},
