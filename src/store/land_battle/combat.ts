@@ -30,6 +30,13 @@ const MORALE_LOST_MULTIPLIER = 1.5 / 2000.0
  * @param terrains Terrains of the battle, may affect amount of damage inflicted.
  */
 export const battle = (attacker_army: Army, defender_army: Army, attacker_roll: number, defender_roll: number, attacker_tactic: TacticDefinition | null, defender_tactic: TacticDefinition | null, round: number, terrains: Terrains): [Army, Army] => {
+  // General flow:
+  // 1. Attacker reinforces.
+  // 2. Attacker picks targets.
+  // 3. Defender reinforces.
+  // 4. Defender picks targets.
+  // Note: This leads to asymmetric behavior. A defender reinforcing gets a free attack on the attacker.
+  
   attacker_army = reinforce(attacker_army)
   defender_army = reinforce(defender_army)
   let attacker_frontline = attacker_army.get(0)!
@@ -62,48 +69,43 @@ export const battle = (attacker_army: Army, defender_army: Army, attacker_roll: 
 
 /**
  * Reinforces a given army based on reinforcement rules.
- * First priority is to move units from backlines. Then from right side if not at edge.
+ * First priority is to move units from backlines. Then from sides.
  * @param army Army to reinforce.
  */
 const reinforce = (army: Army): Army => {
-  // 1st assumption: Empty spots get filled by back row (not tested but makes sense).
-  // 2nd assumption: If at edge, no reinforcement (tested both left and right side).
-  // 3rd assumption: If not at edge, filled by unit on right (tested once, not sure if always happens).
-  // Another possibility is that center is considered at index 13 (when 30 width) and reinforces towards that.
+  // 1: Empty spots get filled by back row.
+  // 2: If still holes, units move towards center.
   for (let row_index = 0; row_index < army.size; ++row_index) {
     const row = army.get(row_index)!
+    // Backrow.
     for (let unit_index = 0; unit_index < row.size; ++unit_index) {
       const unit = row.get(unit_index)
-      if (unit) {
-        // No need to reinforce
+      if (unit)
         continue
-      }
       const unit_behind = row_index + 1 < army.size && army.get(row_index + 1)!.get(unit_index)
       if (unit_behind) {
         army = army.setIn([row_index, unit_index], unit_behind)
         army = army.setIn([row_index + 1, unit_index], null)
         continue
       }
-      let is_on_edge = true
-      for (let edge_index = 0; edge_index < unit_index; edge_index++) {
-        if (row.get(edge_index)) {
-          is_on_edge = false
-          break
-        }
-      }
-      if (!is_on_edge) {
-        for (let edge_index = unit_index + 1; edge_index < row.size; edge_index++) {
-          if (row.get(edge_index)) {
-            is_on_edge = false
-            break
-          }
-        }
-      }
-      if (is_on_edge) {
-        // No need to reinforce from sides.
+    }
+    // From center to left.
+    for (let unit_index = Math.floor(row.size / 2.0); unit_index >= 0; --unit_index) {
+      const unit = row.get(unit_index)
+      if (unit)
+        continue
+      const unit_on_left = unit_index > 1 && row.get(unit_index - 1)
+      if (unit_on_left) {
+        army = army.setIn([row_index, unit_index], unit_on_left)
+        army = army.setIn([row_index, unit_index - 1], null)
         continue
       }
-      // Right side maybe has a higher priority.
+    }
+    // From center to right.
+    for (let unit_index = Math.ceil(row.size / 2.0); unit_index < row.size; ++unit_index) {
+      const unit = row.get(unit_index)
+      if (unit)
+        continue
       const unit_on_right = unit_index + 1 < row.size && row.get(unit_index + 1)
       if (unit_on_right) {
         army = army.setIn([row_index, unit_index], unit_on_right)
