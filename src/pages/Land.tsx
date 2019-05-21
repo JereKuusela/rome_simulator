@@ -59,10 +59,10 @@ class Land extends Component<IProps, IState> {
               <Button disabled={!this.props.is_undo} onClick={() => this.props.undo(1)}>
                 {'<'}
               </Button>
-              <Button onClick={() => this.props.battle(1)}>
+              <Button disabled={this.props.fight_over} onClick={() => this.props.battle(1)}>
                 {'>'}
               </Button>
-              <Button onClick={() => this.props.battle(10)}>
+              <Button disabled={this.props.fight_over} onClick={() => this.props.battle(10)}>
                 {'>>'}
               </Button>
             </Grid.Column>
@@ -176,7 +176,8 @@ const mapStateToProps = (state: AppState) => ({
   defender: state.land.defender,
   is_undo: state.land.day > 0,
   round: state.land.day,
-  terrains: state.land.terrains
+  terrains: state.land.terrains,
+  fight_over: state.land.fight_over
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

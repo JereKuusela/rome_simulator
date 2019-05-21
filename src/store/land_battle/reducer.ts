@@ -11,7 +11,8 @@ export const initialState = {
   attacker: getInitialArmy(),
   defender: getInitialArmy(),
   terrains: getInitialTerrains(),
-  day: 0
+  day: 0,
+  fight_over: true
 }
 
 const updateBaseValue = (army_type: ArmyType, army: List<List<UnitDefinition | null>>, payload: { army: ArmyType, unit: UnitType, key: string, attribute: ValueType, value: number }) => {
@@ -33,14 +34,30 @@ const updateGlobalLossValue = (army_type: ArmyType, army: List<List<UnitDefiniti
   return army.map(row => row.map(unit => payload.army === army_type && unit ? unit.add_loss_value(payload.key, payload.attribute, payload.value) : unit))
 }
 
-export const landBattleReducer = createReducer(initialState)
-  .handleAction(selectUnit, (state, action: ReturnType<typeof selectUnit>) => (
-    {
-      ...state,
-      attacker: { ...state.attacker, army: action.payload.army === ArmyType.Attacker ? state.attacker.army.setIn([action.payload.row, action.payload.column], action.payload.unit) : state.attacker.army },
-      defender: { ...state.defender, army: action.payload.army === ArmyType.Defender ? state.defender.army.setIn([action.payload.row, action.payload.column], action.payload.unit) : state.defender.army }
+const checkFight = (attacker: List<List<UnitDefinition | null>>, defender: List<List<UnitDefinition | null>>) => checkArmy(attacker) && checkArmy(defender)
+
+const checkArmy = (army: List<List<UnitDefinition | null>>) => {
+  for (let row of army) {
+    for (let unit of row) {
+      if (unit)
+        return true
     }
-  ))
+  }
+  return false
+}
+
+
+export const landBattleReducer = createReducer(initialState)
+  .handleAction(selectUnit, (state, action: ReturnType<typeof selectUnit>) => {
+    const new_attacker = action.payload.army === ArmyType.Attacker ? state.attacker.army.setIn([action.payload.row, action.payload.column], action.payload.unit) : state.attacker.army
+    const new_defender = action.payload.army === ArmyType.Defender ? state.defender.army.setIn([action.payload.row, action.payload.column], action.payload.unit) : state.defender.army
+    return {
+      ...state,
+      attacker: { ...state.attacker, army: new_attacker },
+      defender: { ...state.defender, army: new_defender },
+      fight_over: !checkFight(new_attacker, new_defender)
+    }
+  })
   .handleAction(selectDefeatedUnit, (state, action: ReturnType<typeof selectDefeatedUnit>) => (
     {
       ...state,
@@ -63,7 +80,7 @@ export const landBattleReducer = createReducer(initialState)
   ))
   .handleAction(battle, (state, action: ReturnType<typeof battle>) => {
     let next = state
-    for (let step = 0; step < action.payload.steps; ++step) {
+    for (let step = 0; step < action.payload.steps && !next.fight_over; ++step) {
       let [attacker, defender, attacker_defeated_army, defender_defeated_army] = fight(next.attacker.army, next.defender.army, next.attacker.defeated_army, next.defender.defeated_army, 3, 3, next.attacker.tactic, next.defender.tactic, next.day, next.terrains)
       next = {
         ...next,
@@ -79,7 +96,8 @@ export const landBattleReducer = createReducer(initialState)
           defeated_army: defender_defeated_army,
           past: next.defender.past.push({ army: next.defender.army, defeated_army: next.defender.defeated_army })
         },
-        day: next.day + 1
+        day: next.day + 1,
+        fight_over: !checkFight(attacker, defender)
       }
     }
     return next
@@ -104,7 +122,8 @@ export const landBattleReducer = createReducer(initialState)
           defeated_army: defender_past ? defender_past.defeated_army : next.defender.defeated_army,
           past: next.defender.past.pop()
         },
-        day: next.day - 1
+        day: next.day - 1,
+        fight_over: !(attacker_past && defender_past && checkFight(attacker_past.army, defender_past.army))
       }
     }
     return next
