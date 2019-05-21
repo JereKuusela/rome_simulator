@@ -28,8 +28,10 @@ class Land extends Component<IProps, IState> {
 
   closeModal = () => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null })
 
-  openUnitModal = (army: ArmyType, row: number, column: number) => this.setState({ modal_unit_info: { army, row, column } })
+  openUnitModal = (army: ArmyType, row: number, column: number) => this.setState({ modal_unit_info: { army, row, column, is_defeated: false } })
 
+  openDefeatedUnitModal = (army: ArmyType, row: number, column: number) => this.setState({ modal_unit_info: { army, row, column, is_defeated: true } })
+  
   openTerrainModal = (index: number) => this.setState({ modal_terrain_info: { index, location: this.props.terrains.get(index)!.location } })
 
   openTacticModal = (army: ArmyType) => this.setState({ modal_tactic_info: { army } })
@@ -94,6 +96,24 @@ class Land extends Component<IProps, IState> {
               this.props.terrains.map((terrain, index) => this.renderTerrain(terrain, index))
             }
           </Grid.Row>
+          <Grid.Row columns={2}>
+          <Grid.Column>
+            </Grid.Column>
+            <Grid.Column>
+              {
+                this.renderDefeatedArmy(ArmyType.Attacker, this.props.attacker)
+              }
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns={2}>
+          <Grid.Column>
+            </Grid.Column>
+            <Grid.Column>
+              {
+                this.renderDefeatedArmy(ArmyType.Defender, this.props.defender)
+              }
+            </Grid.Column>
+          </Grid.Row>
         </Grid >
       </Container >
     )
@@ -107,6 +127,19 @@ class Land extends Component<IProps, IState> {
           onClick={(row, column) => this.openUnitModal(army, row, column)}
           units={units.army}
           reverse={army === ArmyType.Attacker}
+        />
+      </div>
+    )
+  }
+
+  renderDefeatedArmy = (army: ArmyType, units: ParticipantState) => {
+    return (
+      <div key={army}>
+        <Header>{army}</Header>
+        <TableLandBattle
+          onClick={(row, column) => this.openDefeatedUnitModal(army, row, column)}
+          units={units.defeated_army}
+          reverse={false}
         />
       </div>
     )

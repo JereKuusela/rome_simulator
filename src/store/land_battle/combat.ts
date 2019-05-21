@@ -1,7 +1,7 @@
 import { List } from 'immutable'
 import { UnitDefinition, UnitCalc } from '../units'
 import { TerrainDefinition } from '../terrains'
-import { TacticDefinition, TacticCalc} from '../tactics'
+import { TacticDefinition, TacticCalc } from '../tactics'
 
 type Unit = UnitDefinition
 type FrontLine = List<UnitDefinition | null>
@@ -24,19 +24,21 @@ const MORALE_LOST_MULTIPLIER = 1.5 / 2000.0
  * Makes given armies attach each other.
  * @param attacker_army Attackers.
  * @param defender_army Defenders.
+ * @param attacker_defeated_army Defeated attackers.
+ * @param defender_defeated_army Defeated defenders.
  * @param attacker_roll Dice roll for attackers. Affects damage dealt. 
  * @param defender_roll Dice roll for defenders. Affects damage dealt. 
  * @param round Turn number to distinguish different rounds.
  * @param terrains Terrains of the battle, may affect amount of damage inflicted.
  */
-export const battle = (attacker_army: Army, defender_army: Army, attacker_roll: number, defender_roll: number, attacker_tactic: TacticDefinition | null, defender_tactic: TacticDefinition | null, round: number, terrains: Terrains): [Army, Army] => {
+export const battle = (attacker_army: Army, defender_army: Army, attacker_defeated_army: Army, defender_defeated_army: Army, attacker_roll: number, defender_roll: number, attacker_tactic: TacticDefinition | null, defender_tactic: TacticDefinition | null, round: number, terrains: Terrains): [Army, Army, Army, Army] => {
   // General flow:
   // 1. Attacker reinforces.
   // 2. Attacker picks targets.
   // 3. Defender reinforces.
   // 4. Defender picks targets.
   // Note: This leads to asymmetric behavior because defenders may move after attacker has selected them. Also a reinforced defender gets a free attack on the attacker.
-  
+
   attacker_army = reinforce(attacker_army, undefined)
   const defender_to_attacker = pickTargets(attacker_army.get(0)!, defender_army.get(0)!)
   defender_army = reinforce(defender_army, defender_to_attacker)
@@ -46,8 +48,8 @@ export const battle = (attacker_army: Army, defender_army: Army, attacker_roll: 
   // Killed manpower won't deal any damage so the right solution has to be searched iteratively.
 
   const tactic_effects = {
-    attacker: calculateTactic(attacker_tactic, attacker_army, defender_tactic),
-    defender: calculateTactic(defender_tactic, defender_army, attacker_tactic),
+    attacker: calculateTactic(attacker_tactic, attacker_army, attacker_defeated_army, defender_tactic),
+    defender: calculateTactic(defender_tactic, defender_army, defender_defeated_army, attacker_tactic),
     casualties: 1.0 + (attacker_tactic ? attacker_tactic.calculateValue(TacticCalc.Casualties) : 0) + (defender_tactic ? defender_tactic.calculateValue(TacticCalc.Casualties) : 0)
   }
 
@@ -66,7 +68,11 @@ export const battle = (attacker_army: Army, defender_army: Army, attacker_roll: 
   }
   attacker_army = attacker_army.update(0, row => applyLosses(row, attacker_previous_losses, round))
   defender_army = defender_army.update(0, row => applyLosses(row, defender_previous_losses, round))
-  return [attacker_army, defender_army]
+  attacker_defeated_army = copyDefeated(attacker_army, attacker_defeated_army)
+  defender_defeated_army = copyDefeated(defender_army, defender_defeated_army)
+  attacker_army = removeDefeated(attacker_army)
+  defender_army = removeDefeated(defender_army)
+  return [attacker_army, defender_army, attacker_defeated_army, defender_defeated_army]
 }
 
 /**
@@ -93,11 +99,11 @@ const reinforce = (army: Army, defender_to_attacker: (number | null)[] | undefin
       }
     }
     // From center to left.
-    for (let unit_index = Math.floor(row.size / 2.0); unit_index >= 0; --unit_index) {
+    for (let unit_index = Math.ceil(row.size / 2.0) - 1; unit_index > 0; --unit_index) {
       const unit = row.get(unit_index)
       if (unit)
         continue
-      const unit_on_left = unit_index > 1 && row.get(unit_index - 1)
+      const unit_on_left = row.get(unit_index - 1)
       if (unit_on_left) {
         army = army.setIn([row_index, unit_index], unit_on_left)
         army = army.setIn([row_index, unit_index - 1], null)
@@ -107,11 +113,11 @@ const reinforce = (army: Army, defender_to_attacker: (number | null)[] | undefin
       }
     }
     // From center to right.
-    for (let unit_index = Math.ceil(row.size / 2.0); unit_index < row.size; ++unit_index) {
+    for (let unit_index = Math.ceil(row.size / 2.0); unit_index < row.size - 1; ++unit_index) {
       const unit = row.get(unit_index)
       if (unit)
         continue
-      const unit_on_right = unit_index + 1 < row.size && row.get(unit_index + 1)
+      const unit_on_right = row.get(unit_index + 1)
       if (unit_on_right) {
         army = army.setIn([row_index, unit_index], unit_on_right)
         army = army.setIn([row_index, unit_index + 1], null)
@@ -131,7 +137,7 @@ const reinforce = (army: Army, defender_to_attacker: (number | null)[] | undefin
  * @param target_row Defenders.
  */
 const pickTargets = (source_row: FrontLine, target_row: FrontLine) => {
-    // Units attack mainly units on front of them. If not then first target from left to right.
+  // Units attack mainly units on front of them. If not then first target from left to right.
   const defender_to_attacker = Array<number | null>(target_row.size)
   for (let i = 0; i < target_row.size; ++i)
     defender_to_attacker[i] = null
@@ -161,10 +167,11 @@ const pickTargets = (source_row: FrontLine, target_row: FrontLine) => {
  * Calculates effectiveness of a tactic against another tactic with a given army.
  * @param tactic Tactic to calculate.
  * @param army Units affecting positive bonus.
+ * @param defeted_army Units affecting positive bonus.
  * @param counter_tactic Opposing tactic, can counter or get countered.
  */
-const calculateTactic = (tactic: TacticDefinition | null, army: Army, counter_tactic: TacticDefinition | null): number => {
-  if (!tactic || ! counter_tactic)
+const calculateTactic = (tactic: TacticDefinition | null, army: Army, defeted_army: Army, counter_tactic: TacticDefinition | null): number => {
+  if (!tactic || !counter_tactic)
     return 1.0
   const effectiveness = tactic.calculateValue(counter_tactic.type)
   let unit_modifier = 1.0
@@ -172,6 +179,14 @@ const calculateTactic = (tactic: TacticDefinition | null, army: Army, counter_ta
     let units = 0
     let weight = 0.0
     for (const row of army) {
+      for (const unit of row) {
+        if (!unit)
+          continue
+        units += 1
+        weight += tactic.calculateValue(unit.type)
+      }
+    }
+    for (const row of defeted_army) {
       for (const unit of row) {
         if (!unit)
           continue
@@ -200,6 +215,32 @@ const applyLosses = (row: FrontLine, losses: Loss[], round: number): FrontLine =
     }
   }
   return row
+}
+
+const copyDefeated = (army: Army, defeated_army: Army): Army => {
+  army.get(0)!.forEach(unit => {
+    if (!unit)
+      return
+    if (unit.calculateValue(UnitCalc.Manpower) > 0 && unit.calculateValue(UnitCalc.Morale) > 0) 
+      return
+      defeated_army = addDefeated(unit, defeated_army)
+  })
+  return defeated_army
+}
+
+const removeDefeated = (army: Army): Army => {
+  return army.set(0, army.get(0)!.map(unit => unit && unit.calculateValue(UnitCalc.Manpower) > 0 && unit.calculateValue(UnitCalc.Morale) > 0 ? unit : null))
+}
+
+const addDefeated = (unit: UnitDefinition, defeated_army: Army): Army => {
+  let row = 0
+  let index = -1
+  for (row = 0; row < defeated_army.size; ++row) {
+    index = defeated_army.get(row)!.findIndex(unit => !unit)
+    if (index > -1)
+      return defeated_army.setIn([row, index], unit)
+  }
+  return defeated_army
 }
 
 // TODO: Move to utils.
@@ -233,7 +274,7 @@ const attack = (source_row: FrontLine, target_row: FrontLine, target_to_source: 
   let target_losses = Array<Loss>(target_row.size)
   for (var i = 0; i < target_row.size; ++i)
     target_losses[i] = { morale: 0, manpower: 0 }
-    target_row.forEach((target, target_index) => {
+  target_row.forEach((target, target_index) => {
     const source_index = target_to_source[target_index]
     if (!target || source_index === null)
       return

@@ -2,13 +2,14 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { UnitType,  ArmyType, UnitDefinition } from '../store/units'
 import { AppState } from '../store/'
-import { selectUnit} from '../store/land_battle'
+import { selectUnit, selectDefeatedUnit} from '../store/land_battle'
 import { ModalSelector } from '../components/ModalSelector'
 
 export interface ModalInfo {
   army: ArmyType 
   row: number 
   column: number 
+  is_defeated: boolean
 }
 
 class ModalUnitSelector extends Component<IProps> {
@@ -27,7 +28,9 @@ class ModalUnitSelector extends Component<IProps> {
   }
 
   selectUnit = (unit: UnitType | null) => (
-    this.props.info && this.props.selectUnit(this.props.info.army, this.props.info.row, this.props.info.column, unit ? this.props.units.getIn([this.props.info.army, unit]): null)
+    this.props.info && (this.props.info.is_defeated ?
+     this.props.selectDefeatedUnit(this.props.info.army, this.props.info.row, this.props.info.column, unit ? this.props.units.getIn([this.props.info.army, unit]): null) : 
+     this.props.selectUnit(this.props.info.army, this.props.info.row, this.props.info.column, unit ? this.props.units.getIn([this.props.info.army, unit]): null))
   )
 }
 
@@ -38,6 +41,9 @@ const mapStateToProps = (state: AppState) => ({
 const mapDispatchToProps = (dispatch: any) => ({
   selectUnit: (army: ArmyType, row: number, column: number, unit: UnitDefinition | null) => (
     dispatch(selectUnit(army, row, column, unit))
+  ),
+  selectDefeatedUnit: (army: ArmyType, row: number, column: number, unit: UnitDefinition | null) => (
+    dispatch(selectDefeatedUnit(army, row, column, unit))
   )
 })
 
