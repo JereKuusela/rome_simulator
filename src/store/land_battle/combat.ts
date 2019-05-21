@@ -195,9 +195,9 @@ const calculateTactic = (tactic: TacticDefinition | null, army: Army, defeted_ar
       }
     }
     if (units)
-      unit_modifier += weight / units
+      unit_modifier = weight / units
   }
-  return 1.0 + effectiveness * unit_modifier
+  return 1.0 + effectiveness * Math.min(1.0, unit_modifier)
 }
 
 
@@ -221,7 +221,7 @@ const copyDefeated = (army: Army, defeated_army: Army): Army => {
   army.get(0)!.forEach(unit => {
     if (!unit)
       return
-    if (unit.calculateValue(UnitCalc.Manpower) > 0 && unit.calculateValue(UnitCalc.Morale) > 0) 
+    if (unit.calculateValue(UnitCalc.Manpower) > 0 && unit.calculateValue(UnitCalc.Morale) > 0.25) 
       return
       defeated_army = addDefeated(unit, defeated_army)
   })
@@ -229,7 +229,7 @@ const copyDefeated = (army: Army, defeated_army: Army): Army => {
 }
 
 const removeDefeated = (army: Army): Army => {
-  return army.set(0, army.get(0)!.map(unit => unit && unit.calculateValue(UnitCalc.Manpower) > 0 && unit.calculateValue(UnitCalc.Morale) > 0 ? unit : null))
+  return army.set(0, army.get(0)!.map(unit => unit && unit.calculateValue(UnitCalc.Manpower) > 0 && unit.calculateValue(UnitCalc.Morale) > 0.25 ? unit : null))
 }
 
 const addDefeated = (unit: UnitDefinition, defeated_army: Army): Army => {
@@ -243,7 +243,6 @@ const addDefeated = (unit: UnitDefinition, defeated_army: Army): Army => {
   return defeated_army
 }
 
-// TODO: Move to utils.
 /**
  * Returns true if given arrays have same values.
  * @param a 
