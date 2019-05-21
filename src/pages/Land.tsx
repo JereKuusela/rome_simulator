@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-import { ActionCreators } from 'redux-undo'
 import { Container, Header, Button, Grid, Image } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { ArmyType } from '../store/units/types'
 import { TableLandBattle } from '../components/TableLandBattle'
-import { battle, ParticipantState } from '../store/land_battle'
+import { battle, undo, ParticipantState } from '../store/land_battle'
 import { TerrainDefinition } from '../store/terrains'
 import { TacticDefinition } from '../store/tactics'
 import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from '../containers/ModalUnitSelector'
@@ -31,7 +30,7 @@ class Land extends Component<IProps, IState> {
   openUnitModal = (army: ArmyType, row: number, column: number) => this.setState({ modal_unit_info: { army, row, column, is_defeated: false } })
 
   openDefeatedUnitModal = (army: ArmyType, row: number, column: number) => this.setState({ modal_unit_info: { army, row, column, is_defeated: true } })
-  
+
   openTerrainModal = (index: number) => this.setState({ modal_terrain_info: { index, location: this.props.terrains.get(index)!.location } })
 
   openTacticModal = (army: ArmyType) => this.setState({ modal_tactic_info: { army } })
@@ -54,21 +53,24 @@ class Land extends Component<IProps, IState> {
         <Grid verticalAlign='middle'>
           <Grid.Row columns={3}>
             <Grid.Column>
-              <Button disabled={!this.props.is_undo} onClick={this.props.undo}>
+              <Button disabled={!this.props.is_undo} onClick={() => this.props.undo(10)}>
+                {'<<'}
+              </Button>
+              <Button disabled={!this.props.is_undo} onClick={() => this.props.undo(1)}>
                 {'<'}
               </Button>
-              <Button onClick={this.props.battle}>
-                FIGHT
-              </Button>
-              <Button disabled={!this.props.is_redo} onClick={this.props.redo}>
+              <Button onClick={() => this.props.battle(1)}>
                 {'>'}
+              </Button>
+              <Button onClick={() => this.props.battle(10)}>
+                {'>>'}
               </Button>
             </Grid.Column>
             <Grid.Column></Grid.Column>
             <Grid.Column><Header>{'Round: ' + this.props.round}</Header></Grid.Column>
           </Grid.Row>
           <Grid.Row columns={2}>
-          <Grid.Column>
+            <Grid.Column>
               {
                 this.renderTactic(this.props.attacker.tactic, ArmyType.Attacker)
               }
@@ -80,7 +82,7 @@ class Land extends Component<IProps, IState> {
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={2}>
-          <Grid.Column>
+            <Grid.Column>
               {
                 this.renderTactic(this.props.defender.tactic, ArmyType.Defender)
               }
@@ -97,7 +99,7 @@ class Land extends Component<IProps, IState> {
             }
           </Grid.Row>
           <Grid.Row columns={2}>
-          <Grid.Column>
+            <Grid.Column>
             </Grid.Column>
             <Grid.Column>
               {
@@ -106,7 +108,7 @@ class Land extends Component<IProps, IState> {
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={2}>
-          <Grid.Column>
+            <Grid.Column>
             </Grid.Column>
             <Grid.Column>
               {
@@ -170,18 +172,16 @@ class Land extends Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  attacker: state.land.present.attacker,
-  defender: state.land.present.defender,
-  is_undo: state.land.past.length > 0,
-  is_redo: state.land.future.length > 0,
-  round: state.land.present.day,
-  terrains: state.land.present.terrains
+  attacker: state.land.attacker,
+  defender: state.land.defender,
+  is_undo: state.land.day > 0,
+  round: state.land.day,
+  terrains: state.land.terrains
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  battle: () => dispatch(battle()),
-  undo: () => dispatch(ActionCreators.undo()),
-  redo: () => dispatch(ActionCreators.redo())
+  battle: (steps: number) => dispatch(battle(steps)),
+  undo: (steps: number) => dispatch(undo(steps))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

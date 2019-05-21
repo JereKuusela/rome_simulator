@@ -20,5 +20,9 @@ export const selectTactic = createAction('@@land_battle/SELECT_TACTIC', action =
 })
 
 export const battle = createAction('@@land_battle/BATTLE', action => {
-  return () => action({})
+  return (steps: number) => action({steps})
+})
+
+export const undo = createAction('@@land_battle/UNDO', action => {
+  return (steps: number) => action({steps})
 })

@@ -1,10 +1,10 @@
 import { createReducer } from 'typesafe-actions'
 import { getInitialArmy, getInitialTerrains } from './types'
-import { selectUnit, selectDefeatedUnit, selectTerrain, battle, selectTactic } from './actions'
+import { selectUnit, selectDefeatedUnit, selectTerrain, battle, selectTactic, undo } from './actions'
 import { ArmyType, setBaseValue as setUnitBaseValue, setModifierValue, setLossValue, setGlobalBaseValue, setGlobalModifierValue, setGlobalLossValue } from '../units'
 import { battle as fight } from './combat'
-import { setBaseValue as setTacticBaseValue} from '../tactics'
-import { setBaseValue as setTerrainBaseValue} from '../terrains'
+import { setBaseValue as setTacticBaseValue } from '../tactics'
+import { setBaseValue as setTerrainBaseValue } from '../terrains'
 
 export const initialState = {
   attacker: getInitialArmy(),
@@ -42,13 +42,52 @@ export const landBattleReducer = createReducer(initialState)
     }
   ))
   .handleAction(battle, (state, action: ReturnType<typeof battle>) => {
-    let [attacker, defender, attacker_defeated_army, defender_defeated_army] = fight(state.attacker.army, state.defender.army, state.attacker.defeated_army, state.defender.defeated_army, 3, 3, state.attacker.tactic, state.defender.tactic, state.day, state.terrains)
-    return {
-      ...state,
-      attacker: { ...state.attacker, army: attacker, defeated_army: attacker_defeated_army},
-      defender: { ...state.defender, army: defender, defeated_army: defender_defeated_army},
-      day: state.day + 1
+    let next = state
+    for (let step = 0; step < action.payload.steps; ++step) {
+      let [attacker, defender, attacker_defeated_army, defender_defeated_army] = fight(next.attacker.army, next.defender.army, next.attacker.defeated_army, next.defender.defeated_army, 3, 3, next.attacker.tactic, next.defender.tactic, next.day, next.terrains)
+      next = {
+        ...next,
+        attacker: {
+          ...next.attacker,
+          army: attacker,
+          defeated_army: attacker_defeated_army,
+          past: next.attacker.past.push({ army: next.attacker.army, defeated_army: next.attacker.defeated_army })
+        },
+        defender: {
+          ...next.defender,
+          army: defender,
+          defeated_army: defender_defeated_army,
+          past: next.defender.past.push({ army: next.defender.army, defeated_army: next.defender.defeated_army })
+        },
+        day: next.day + 1
+      }
     }
+    return next
+  }
+  )
+  .handleAction(undo, (state, action: ReturnType<typeof undo>) => {
+    let next = state
+    for (let step = 0; step < action.payload.steps && next.day > 0; ++step) {
+      const attacker_past = next.attacker.past.get(-1)
+      const defender_past = next.defender.past.get(-1)
+      next = {
+        ...next,
+        attacker: {
+          ...next.attacker,
+          army: attacker_past ? attacker_past.army : next.attacker.army,
+          defeated_army: attacker_past ? attacker_past.defeated_army : next.attacker.defeated_army,
+          past: next.attacker.past.pop()
+        },
+        defender: {
+          ...next.defender,
+          army: defender_past ? defender_past.army : next.defender.army,
+          defeated_army: defender_past ? defender_past.defeated_army : next.defender.defeated_army,
+          past: next.defender.past.pop()
+        },
+        day: next.day - 1
+      }
+    }
+    return next
   }
   )
   .handleAction(setTacticBaseValue, (state, action: ReturnType<typeof setTacticBaseValue>) => (
