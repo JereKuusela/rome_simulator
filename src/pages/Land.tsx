@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import { ActionCreators } from 'redux-undo'
-import { Map, List } from 'immutable'
+import { List } from 'immutable'
 import { Container, Header, Button, Grid, Image } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { ArmyType } from '../store/units/types'
 import { TableLandBattle } from '../components/TableLandBattle'
-import { battle, ParticipantState, selectTerrain, selectTactic } from '../store/land_battle'
-import { TerrainDefinition, TerrainType } from '../store/terrains'
-import { TacticDefinition, TacticType } from '../store/tactics'
+import { battle, ParticipantState } from '../store/land_battle'
+import { TerrainDefinition } from '../store/terrains'
+import { TacticDefinition } from '../store/tactics'
 import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from '../containers/ModalUnitSelector'
 import ModalTerrainSelector, { ModalInfo as ModalTerrainInfo } from '../containers/ModalTerrainSelector'
 import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers/ModalTacticSelector'
@@ -21,15 +21,11 @@ interface IStateFromProps {
   readonly is_redo: boolean
   readonly round: number
   readonly terrains: List<TerrainDefinition>
-  readonly available_terrains: Map<TerrainType, TerrainDefinition>
-  readonly available_tactics: Map<TacticType, TacticDefinition>
 }
 interface IDispatchFromProps {
   battle: () => void
   undo: () => void
   redo: () => void
-  selectTerrain: (index: number, terrain: TerrainDefinition) => void
-  selectTactic: (army: ArmyType, tactic: TacticDefinition) => void
 }
 interface IProps extends IStateFromProps, IDispatchFromProps { }
 
@@ -44,10 +40,6 @@ class Land extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = { modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null }
-    this.props.selectTerrain(0, this.props.available_terrains.get(TerrainType.None)!)
-    this.props.selectTerrain(1, this.props.available_terrains.get(TerrainType.Plains)!)
-    this.props.selectTactic(ArmyType.Attacker, this.props.available_tactics.get(TacticType.ShockAction)!)
-    this.props.selectTactic(ArmyType.Defender, this.props.available_tactics.get(TacticType.ShockAction)!)
   }
 
 
@@ -167,17 +159,13 @@ const mapStateToProps = (state: AppState): IStateFromProps => ({
   is_undo: state.land.past.length > 0,
   is_redo: state.land.future.length > 0,
   round: state.land.present.day,
-  terrains: state.land.present.terrains,
-  available_terrains: state.terrains.terrains,
-  available_tactics: state.tactics.tactics
+  terrains: state.land.present.terrains
 })
 
 const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({
   battle: () => dispatch(battle()),
   undo: () => dispatch(ActionCreators.undo()),
-  redo: () => dispatch(ActionCreators.redo()),
-  selectTactic: (army, tactic) => dispatch(selectTactic(army, tactic)),
-  selectTerrain: (index, terrain) => dispatch(selectTerrain(index, terrain))
+  redo: () => dispatch(ActionCreators.redo())
 })
 
 

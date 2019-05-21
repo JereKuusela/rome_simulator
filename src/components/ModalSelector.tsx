@@ -52,7 +52,7 @@ export class ModalSelector<S extends ItemAttribute, T extends ItemType> extends 
         </Table.Cell>
         {
           this.props.attributes.map(attribute => (
-            <Table.Cell>
+            <Table.Cell key={attribute}>
               {item.valueToRelativeNumber(attribute, false)}
             </Table.Cell>
             ))

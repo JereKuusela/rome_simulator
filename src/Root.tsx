@@ -6,6 +6,8 @@ import UnitPage from './pages/Units'
 import LandPage from './pages/Land'
 import TacticPage from './pages/Tactics'
 import TerrainPage from './pages/Terrains'
+import Navigation from './pages/Navigation'
+import Initializer from './pages/Initializer'
 import { AppState } from './store/'
 
 // Any additional component props go here.
@@ -17,7 +19,9 @@ interface MainProps {
 const Root = ({ store }: MainProps) => {
   return (
     <Provider store={store}>
+      <Initializer /> 
       <BrowserRouter>
+        <Navigation />
         <Route path='/' exact component={LandPage} />
         <Route path='/Units' component={UnitPage} />
         <Route path='/Tactics' component={TacticPage} />
