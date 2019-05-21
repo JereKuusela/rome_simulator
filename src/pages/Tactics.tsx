@@ -1,19 +1,10 @@
-import { Map } from 'immutable'
 import React, { Component } from 'react'
 import { Container } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import ModalTacticDetail from '../containers/ModalTacticDetail'
 import { AppState } from '../store/index'
 import { TableTacticDefinitions } from '../components/TableTacticDefinitions'
-import { TacticDefinition, TacticType } from '../store/tactics'
-
-
-interface IStateFromProps {
-  readonly tactics: Map<TacticType, TacticDefinition>
-}
-interface IDispatchFromProps {
-}
-interface IProps extends IStateFromProps, IDispatchFromProps { }
+import { TacticType } from '../store/tactics'
 
 interface IState {
   modal_tactic: TacticType | null
@@ -48,11 +39,13 @@ class Tactics extends Component<IProps, IState> {
   }
 }
 
-const mapStateToProps = (state: AppState): IStateFromProps => ({
+const mapStateToProps = (state: AppState) => ({
   tactics: state.tactics.tactics
 })
 
-const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
 })
+
+interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tactics)

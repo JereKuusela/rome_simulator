@@ -1,21 +1,10 @@
 import React, { Component } from 'react'
-import { Map } from 'immutable'
 import { connect } from 'react-redux'
 import { AppState } from '../store/'
 import { selectTerrain} from '../store/land_battle'
 import { ModalSelector } from '../components/ModalSelector'
 import { TerrainType, TerrainCalc, TerrainDefinition, LocationType } from '../store/terrains';
 
-interface IStateFromProps {
-  terrains : Map<TerrainType, TerrainDefinition>
-}
-interface IDispatchFromProps {
-  selectTerrain: (index: number, terrain: TerrainDefinition) => void
-}
-interface IProps extends IStateFromProps, IDispatchFromProps {
-  info: ModalInfo | null
-  onClose: () => void
- }
 export interface ModalInfo {
   index: number
   location: LocationType
@@ -41,12 +30,17 @@ class ModalTerrainSelector extends Component<IProps> {
   )
 }
 
-const mapStateToProps = (state: AppState): IStateFromProps => ({
+const mapStateToProps = (state: AppState) => ({
   terrains: state.terrains.terrains
 })
 
-const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({
-  selectTerrain: (index, terrain) => dispatch(selectTerrain(index, terrain))
+const mapDispatchToProps = (dispatch: any) => ({
+  selectTerrain: (index: number, terrain: TerrainDefinition) => dispatch(selectTerrain(index, terrain))
 })
+
+interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {
+  info: ModalInfo | null
+  onClose: () => void
+ }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModalTerrainSelector)

@@ -1,20 +1,9 @@
 import React, { Component } from 'react'
-import { Map } from 'immutable'
 import { connect } from 'react-redux'
-import { setBaseValue, ValueType, TerrainType, TerrainDefinition } from '../store/terrains'
+import { setBaseValue, ValueType, TerrainType } from '../store/terrains'
 import { AppState } from '../store/'
 import { ModalTerrainDetail as DisplayComponent } from '../components/ModalTerrainDetail'
 
-interface IStateFromProps {
-  readonly terrains: Map<TerrainType, TerrainDefinition>
-}
-interface IDispatchFromProps {
-  setBaseValue: (terrain: TerrainType, key: string, attribute: ValueType, value: number) => void
-}
-interface IProps extends IStateFromProps, IDispatchFromProps {
-  terrain: TerrainType | null
-  onClose: () => void
- }
 
 const CUSTOM_VALUE_KEY = 'Custom'
 
@@ -33,14 +22,19 @@ class ModalTerrainDetail extends Component<IProps> {
   }
 }
 
-const mapStateToProps = (state: AppState): IStateFromProps => ({
+const mapStateToProps = (state: AppState) => ({
   terrains: state.terrains.terrains
 })
 
-const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({
-  setBaseValue: (type, key, attribute, value) => (
-    !Number.isNaN(value) && dispatch(setBaseValue(type, key, attribute, value))
+const mapDispatchToProps = (dispatch: any) => ({
+  setBaseValue: (terrain: TerrainType, key: string, attribute: ValueType, value: number) => (
+    !Number.isNaN(value) && dispatch(setBaseValue(terrain, key, attribute, value))
   )
 })
+
+interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {
+  terrain: TerrainType | null
+  onClose: () => void
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModalTerrainDetail)

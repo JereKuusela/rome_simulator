@@ -1,20 +1,8 @@
 import React, { Component } from 'react'
-import { Map } from 'immutable'
 import { connect } from 'react-redux'
-import { setBaseValue, ValueType, TacticType, TacticDefinition } from '../store/tactics'
+import { setBaseValue, ValueType, TacticType } from '../store/tactics'
 import { AppState } from '../store/'
 import { ModalTacticDetail as DisplayComponent } from '../components/ModalTacticDetail'
-
-interface IStateFromProps {
-  readonly tactics: Map<TacticType, TacticDefinition>
-}
-interface IDispatchFromProps {
-  setBaseValue: (type: TacticType,  key: string, attribute: ValueType, value: number) => void
-}
-interface IProps extends IStateFromProps, IDispatchFromProps {
-  tactic: TacticType | null
-  onClose: () => void
- }
 
 const CUSTOM_VALUE_KEY = 'Custom'
 
@@ -33,14 +21,19 @@ class ModalTacticDetail extends Component<IProps> {
   }
 }
 
-const mapStateToProps = (state: AppState): IStateFromProps => ({
+const mapStateToProps = (state: AppState) => ({
   tactics: state.tactics.tactics
 })
 
-const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({
-  setBaseValue: (type, key, attribute, value) => (
-    !Number.isNaN(value) && dispatch(setBaseValue(type, key, attribute, value))
+const mapDispatchToProps = (dispatch: any) => ({
+  setBaseValue: (tactic: TacticType,  key: string, attribute: ValueType, value: number) => (
+    !Number.isNaN(value) && dispatch(setBaseValue(tactic, key, attribute, value))
   )
 })
+
+interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {
+  tactic: TacticType | null
+  onClose: () => void
+ }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModalTacticDetail)

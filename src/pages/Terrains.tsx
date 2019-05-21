@@ -1,19 +1,10 @@
-import { Map } from 'immutable'
 import React, { Component } from 'react'
 import { Container } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import ModalTerrainDetail from '../containers/ModalTerrainDetail'
 import { AppState } from '../store/index'
 import { TableTerrainDefinitions } from '../components/TableTerrainDefinitions'
-import { TerrainDefinition, TerrainType, LocationType } from '../store/terrains'
-
-
-interface IStateFromProps {
-  readonly terrains: Map<TerrainType, TerrainDefinition>
-}
-interface IDispatchFromProps {
-}
-interface IProps extends IStateFromProps, IDispatchFromProps { }
+import { TerrainType, LocationType } from '../store/terrains'
 
 interface IState {
   modal_location: LocationType | null
@@ -50,11 +41,13 @@ class Terrains extends Component<IProps, IState> {
   }
 }
 
-const mapStateToProps = (state: AppState): IStateFromProps => ({
+const mapStateToProps = (state: AppState) => ({
   terrains: state.terrains.terrains
 })
 
-const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
 })
+
+interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Terrains)

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { ActionCreators } from 'redux-undo'
-import { List } from 'immutable'
 import { Container, Header, Button, Grid, Image } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
@@ -12,22 +11,6 @@ import { TacticDefinition } from '../store/tactics'
 import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from '../containers/ModalUnitSelector'
 import ModalTerrainSelector, { ModalInfo as ModalTerrainInfo } from '../containers/ModalTerrainSelector'
 import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers/ModalTacticSelector'
-
-
-interface IStateFromProps {
-  readonly attacker: ParticipantState
-  readonly defender: ParticipantState
-  readonly is_undo: boolean
-  readonly is_redo: boolean
-  readonly round: number
-  readonly terrains: List<TerrainDefinition>
-}
-interface IDispatchFromProps {
-  battle: () => void
-  undo: () => void
-  redo: () => void
-}
-interface IProps extends IStateFromProps, IDispatchFromProps { }
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
@@ -153,7 +136,7 @@ class Land extends Component<IProps, IState> {
   }
 }
 
-const mapStateToProps = (state: AppState): IStateFromProps => ({
+const mapStateToProps = (state: AppState) => ({
   attacker: state.land.present.attacker,
   defender: state.land.present.defender,
   is_undo: state.land.past.length > 0,
@@ -162,11 +145,12 @@ const mapStateToProps = (state: AppState): IStateFromProps => ({
   terrains: state.land.present.terrains
 })
 
-const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   battle: () => dispatch(battle()),
   undo: () => dispatch(ActionCreators.undo()),
   redo: () => dispatch(ActionCreators.redo())
 })
 
+interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Land)

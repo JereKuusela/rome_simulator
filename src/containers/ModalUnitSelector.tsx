@@ -1,21 +1,10 @@
 import React, { Component } from 'react'
-import { Map } from 'immutable'
 import { connect } from 'react-redux'
 import { UnitType,  ArmyType, UnitDefinition } from '../store/units'
 import { AppState } from '../store/'
 import { selectUnit} from '../store/land_battle'
 import { ModalSelector } from '../components/ModalSelector'
 
-interface IStateFromProps {
-  units: Map<ArmyType, Map<UnitType, UnitDefinition>>
-}
-interface IDispatchFromProps {
-  selectUnit: (army: ArmyType, row: number, column: number, unit: UnitDefinition | null) => void
-}
-interface IProps extends IStateFromProps, IDispatchFromProps {
-  info: ModalInfo | null
-  onClose: () => void
- }
 export interface ModalInfo {
   army: ArmyType 
   row: number 
@@ -42,12 +31,19 @@ class ModalUnitSelector extends Component<IProps> {
   )
 }
 
-const mapStateToProps = (state: AppState): IStateFromProps => ({
+const mapStateToProps = (state: AppState) => ({
   units: state.units.units
 })
 
-const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({
-  selectUnit: (army, row, column, unit) => dispatch(selectUnit(army, row, column, unit))
+const mapDispatchToProps = (dispatch: any) => ({
+  selectUnit: (army: ArmyType, row: number, column: number, unit: UnitDefinition | null) => (
+    dispatch(selectUnit(army, row, column, unit))
+  )
 })
+
+interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {
+  info: ModalInfo | null
+  onClose: () => void
+ }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModalUnitSelector)

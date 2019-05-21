@@ -7,15 +7,6 @@ import { AppState } from '../store/index'
 import { UnitType, UnitDefinition, ArmyType } from '../store/units/types'
 import { TableUnitDefinitions } from '../components/TableUnitDefinitions'
 
-
-interface IStateFromProps {
-  readonly units: Map<ArmyType, Map<UnitType, UnitDefinition>>
-  readonly global_stats: Map<ArmyType, UnitDefinition>
-}
-interface IDispatchFromProps {
-}
-interface IProps extends IStateFromProps, IDispatchFromProps { }
-
 interface IState {
   modal_army: ArmyType | null
   modal_unit: UnitType | null
@@ -63,13 +54,14 @@ class Units extends Component<IProps, IState> {
   }
 }
 
-const mapStateToProps = (state: AppState): IStateFromProps => ({
+const mapStateToProps = (state: AppState) => ({
   units: state.units.units,
   global_stats: state.units.global_stats
 })
 
-const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
 })
 
+interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Units)

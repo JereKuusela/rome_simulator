@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Map } from 'immutable'
 import { connect } from 'react-redux'
 import { AppState } from '../store/'
 import { selectTactic } from '../store/land_battle'
@@ -7,16 +6,6 @@ import { ModalSelector } from '../components/ModalSelector'
 import { ArmyType } from '../store/units'
 import { TacticType, TacticDefinition } from '../store/tactics'
 
-interface IStateFromProps {
-  tactics : Map<TacticType, TacticDefinition>
-}
-interface IDispatchFromProps {
-  selectTactic: (army: ArmyType, tactic: TacticDefinition) => void
-}
-interface IProps extends IStateFromProps, IDispatchFromProps {
-  info: ModalInfo | null
-  onClose: () => void
- }
 export interface ModalInfo {
   army: ArmyType
 }
@@ -41,12 +30,17 @@ class ModalTacticSelector extends Component<IProps> {
   )
 }
 
-const mapStateToProps = (state: AppState): IStateFromProps => ({
+const mapStateToProps = (state: AppState) => ({
   tactics: state.tactics.tactics
 })
 
-const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({
-  selectTactic: (army, tactic) => dispatch(selectTactic(army, tactic))
+const mapDispatchToProps = (dispatch: any) => ({
+  selectTactic: (army: ArmyType, tactic: TacticDefinition) => dispatch(selectTactic(army, tactic))
 })
+
+interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {
+  info: ModalInfo | null
+  onClose: () => void
+ }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModalTacticSelector)

@@ -5,20 +5,6 @@ import { UnitType, UnitDefinition, setGlobalBaseValue, setGlobalModifierValue, s
 import { AppState } from '../store/'
 import { ModalUnitDetail as DisplayComponent } from '../components/ModalUnitDetail'
 
-interface IStateFromProps {
-  units: Map<ArmyType, Map<UnitType, UnitDefinition>>
-}
-interface IDispatchFromProps {
-  setGlobalBaseValue: (army: ArmyType, type: UnitType, key: string, attribute: ValueType, value: number) => void
-  setGlobalModifierValue: (army: ArmyType, type: UnitType, key: string, attribute: ValueType, value: number) => void
-  setGlobalLossValue: (army: ArmyType, type: UnitType, key: string, attribute: ValueType, value: number) => void
-}
-interface IProps extends IStateFromProps, IDispatchFromProps {
-  army: ArmyType | null
-  unit: UnitType | null
-  onClose: () => void
- }
-
 const CUSTOM_VALUE_KEY = 'Global'
 
 class ModalGlobalStatsDetail extends Component<IProps> {
@@ -39,20 +25,26 @@ class ModalGlobalStatsDetail extends Component<IProps> {
   }
 }
 
-const mapStateToProps = (state: AppState): IStateFromProps => ({
+const mapStateToProps = (state: AppState) => ({
   units: state.units.units
 })
 
-const mapDispatchToProps = (dispatch: any): IDispatchFromProps => ({
-  setGlobalBaseValue: (army, _, key, attribute, value) => (
+const mapDispatchToProps = (dispatch: any) => ({
+  setGlobalBaseValue: (army: ArmyType, _: UnitType, key: string, attribute: ValueType, value: number) => (
     !Number.isNaN(value) && dispatch(setGlobalBaseValue(army, key, attribute, value))
   ),
-  setGlobalModifierValue: (army, _, key, attribute, value) => (
+  setGlobalModifierValue: (army: ArmyType, _: UnitType, key: string, attribute: ValueType, value: number) => (
     !Number.isNaN(value) && dispatch(setGlobalModifierValue(army, key, attribute, value))
   ),
-  setGlobalLossValue: (army, _, key, attribute, value) => (
+  setGlobalLossValue: (army: ArmyType, _: UnitType, key: string, attribute: ValueType, value: number) => (
     !Number.isNaN(value) && dispatch(setGlobalLossValue(army, key, attribute, value))
   )
 })
+
+interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {
+  army: ArmyType | null
+  unit: UnitType | null
+  onClose: () => void
+ }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModalGlobalStatsDetail)
