@@ -5,8 +5,8 @@ import { TerrainType } from '../terrains'
 
 export enum UnitCalc {
   Morale = 'Morale',
-  Discipline = 'Discipline',
   Manpower = 'Manpower',
+  Discipline = 'Discipline',
   Offense = 'Offense',
   Defense = 'Defense',
   MoraleDamageTaken = 'Morale damage taken',
@@ -43,8 +43,13 @@ export class UnitDefinition extends BaseDefinition<UnitType, ValueType> {
       case UnitCalc.RecruitTime:
       case UnitCalc.Upkeep:
         return String(value)
+      case UnitCalc.Discipline:
+      case UnitCalc.Offense:
+      case UnitCalc.Defense:
+      case UnitCalc.Experience:
+        return this.toPercent(value, true)
       default:
-        return this.toRelativePercent(value, false)
+        return this.toRelativeZeroPercent(value, true)
     }
   }
 

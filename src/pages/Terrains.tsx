@@ -18,10 +18,10 @@ class Terrains extends Component<IProps, IState> {
     this.state = { modal_location: null, modal_terrain: null }
   }
 
-  closeModal = () => this.setState({modal_location: null, modal_terrain: null})
-  
-  openModal = (terrain: TerrainType) => this.setState({modal_terrain: terrain})
-  
+  closeModal = () => this.setState({ modal_location: null, modal_terrain: null })
+
+  openModal = (terrain: TerrainType) => this.setState({ modal_terrain: terrain })
+
 
   render() {
     return (
@@ -32,9 +32,9 @@ class Terrains extends Component<IProps, IState> {
         />
         {
           <TableTerrainDefinitions
-          terrains={this.props.terrains.toList()}
-          onRowClick={terrain => this.openModal(terrain)}
-        />
+            terrains={this.props.terrains.toList()}
+            onRowClick={terrain => this.openModal(terrain)}
+          />
         }
       </Container>
     )

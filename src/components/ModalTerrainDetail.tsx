@@ -13,14 +13,14 @@ interface IProps {
 export class ModalTerrainDetail extends Component<IProps> {
 
   readonly attributes = Object.keys(TerrainCalc).map(k => TerrainCalc[k as any]) as TerrainCalc[]
-  readonly headers = ['Attribute', 'Value', 'Explained', 'Custom base']
+  readonly headers = ['Attribute', 'Value', 'Custom value', 'Explained']
 
   render() {
     
     return (
       <Modal basic onClose={this.props.onClose} open>
         <Modal.Content>
-          <Table celled selectable>
+          <Table celled>
             <Table.Header>
               <Table.Row>
                 {
@@ -48,21 +48,22 @@ export class ModalTerrainDetail extends Component<IProps> {
 
     return (
       <Table.Row key={attribute}>
-        <Table.Cell>
+        <Table.Cell collapsing>
           {attribute}
         </Table.Cell>
-        <Table.Cell>
+        <Table.Cell collapsing>
           {tactic.valueToString(attribute)}
         </Table.Cell>
-        <Table.Cell>
-          {tactic.explain(attribute)}
-        </Table.Cell>
-        <Table.Cell>
+        <Table.Cell collapsing>
           <Input
+            size='mini'
             defaultValue={base_value}
             onChange={(_, data) => this.props.onCustomBaseValueChange(tactic.type, this.props.custom_value_key, attribute, Number(data.value))
             }
           />
+        </Table.Cell>
+        <Table.Cell>
+          {tactic.explain_short(attribute)}
         </Table.Cell>
       </Table.Row>
     )

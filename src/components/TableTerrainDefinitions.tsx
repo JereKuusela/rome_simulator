@@ -12,17 +12,20 @@ interface IProps {
 export class TableTerrainDefinitions extends Component<IProps> {
 
   readonly attributes = Object.keys(TerrainCalc).map(k => TerrainCalc[k as any]) as TerrainCalc[]
+  readonly headers = ['Terrain', 'Roll']
 
   render() {
     return (
       <Table celled selectable>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              Roll
-            </Table.HeaderCell>
+            {
+              Array.from(this.headers).map((value) => (
+                <Table.HeaderCell key={value}>
+                  {value}
+                </Table.HeaderCell>
+              ))
+            }
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -45,7 +48,7 @@ export class TableTerrainDefinitions extends Component<IProps> {
         {
           this.attributes.map(type => (
             <Table.Cell key={type}>
-              {terrain.valueToString(type)}
+              {terrain.valueToRelativeNumber(type, false)}
             </Table.Cell>
           ))
         }

@@ -1,6 +1,6 @@
 import { Map } from 'immutable'
 import React, { Component } from 'react'
-import { Container, Header } from 'semantic-ui-react'
+import { Container } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import ModalUnitDetail from '../containers/ModalUnitDetail'
 import ModalGlobalStatsDetail from '../containers/ModalGlobalStatsDetail'
@@ -20,9 +20,9 @@ class Units extends Component<IProps, IState> {
     this.state = { modal_army: null, modal_unit: null };
   }
 
-  closeModal = () => this.setState({modal_army: null, modal_unit: null})
+  closeModal = () => this.setState({ modal_army: null, modal_unit: null })
 
-  openModal = (army: ArmyType, unit: UnitType) => this.setState({modal_army: army, modal_unit: unit})
+  openModal = (army: ArmyType, unit: UnitType) => this.setState({ modal_army: army, modal_unit: unit })
 
   render() {
     return (
@@ -48,13 +48,13 @@ class Units extends Component<IProps, IState> {
   renderArmy = (army: ArmyType, units: Map<UnitType, UnitDefinition>, global_stats: UnitDefinition | undefined) => {
     return (
       <div key={army}>
-        <Header>{army}</Header>
         <TableUnitDefinitions
           army={army}
           global_stats={global_stats}
           units={units.toList()}
           onRowClick={unit => this.openModal(army, unit.type)}
         />
+        <br/>
       </div>
     )
   }

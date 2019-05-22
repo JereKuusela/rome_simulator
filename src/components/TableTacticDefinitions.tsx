@@ -23,7 +23,7 @@ export class TableTacticDefinitions extends Component<IProps> {
           <Table.Row>
             {
               Array.from(this.headers).map((value) => (
-                <Table.HeaderCell key={value} textAlign='center'>
+                <Table.HeaderCell key={value}>
                   {value}
                 </Table.HeaderCell>
               ))
@@ -51,7 +51,7 @@ export class TableTacticDefinitions extends Component<IProps> {
           <List horizontal>
             {
               this.units.filter(type => tactic.calculateValue(type)).map(type => (
-                <List.Item key={type}>
+                <List.Item key={type} style={{ marginLeft: 0, marginRight: '1em' }}>
                   <Image src={unit_to_icon.get(type)} avatar />
                   {tactic.valueToString(type)}
                 </List.Item>
@@ -63,7 +63,7 @@ export class TableTacticDefinitions extends Component<IProps> {
           <List horizontal>
             {
               this.tactics.filter(type => tactic.calculateValue(type)).map(type => (
-                <List.Item key={type}>
+                <List.Item key={type} style={{ marginLeft: 0, marginRight: '1em' }}>
                   <Image src={tactic_to_icon.get(type)} avatar />
                   {tactic.valueToRelativeZeroPercent(type, true)}
                 </List.Item>

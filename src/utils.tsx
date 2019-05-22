@@ -19,6 +19,8 @@ export class BaseDefinition<T, S> {
       return '+' + String(value) + '%'
     if (value === 0 && !show_zero)
       return ''
+    if (value === 0 && show_zero)
+      return '+0%'
     return String(value) + '%'
   }
 
@@ -28,28 +30,29 @@ export class BaseDefinition<T, S> {
       return '+' + String(value) + '%'
     if (value === 0 && !show_zero)
       return ''
+    if (value === 0 && show_zero)
+      return '+0%'
     return String(value) + '%'
   }
 
+  calculateBase = (type: S): number => this.calculateValueSub(this.base_values, type, 0)
+  calculateModifier = (type: S): number => this.calculateValueSub(this.modifier_values, type, 1.0)
+  calculateLoss = (type: S): number => this.calculateValueSub(this.loss_values, type, 0)
+
+  private calculateValueSub = (container: Map<S, Map<string, number>>, type: S, initial: number): number => {
+    let result = initial
+    const values = container.get(type)
+    if (values)
+      values.forEach(value => result += value)
+    return result
+  }
+
   calculateValue = (type: S): number => {
-    let value = this.calculateValueWithoutLoss(type)
-    let loss = 0
-    const value_loss = this.loss_values.get(type)
-    if (value_loss)
-      value_loss.forEach(value => loss += value)
-    return value - loss
+    return this.calculateBase(type) * this.calculateModifier(type) - this.calculateLoss(type)
   }
 
   calculateValueWithoutLoss = (type: S): number => {
-    let base = 0
-    const value_base = this.base_values.get(type)
-    if (value_base)
-      value_base.forEach(value => base += value)
-    let modifier = 1.0
-    const value_modifier = this.modifier_values.get(type)
-    if (value_modifier)
-      value_modifier.forEach(value => modifier += value)
-    return base * modifier
+    return this.calculateBase(type) * this.calculateModifier(type)
   }
 
   valueToString = (type: S): string => String(this.calculateValue(type))
@@ -77,18 +80,27 @@ export class BaseDefinition<T, S> {
   }
 
   explain = (type: S) => {
+    const value_modifier = this.modifier_values.get(type)
+    const value_loss = this.loss_values.get(type)
+    if ((!value_modifier || value_modifier.size === 0) && (!value_loss || value_loss.size === 0))
+      return this.explain_short(type)
+    let explanation = ''
     let base = 0
     const value_base = this.base_values.get(type)
-    if (value_base)
-      value_base.forEach(value => base += value)
-    let explanation = 'Base value ' + base
     if (value_base) {
-      explanation += ' ('
+      value_base.forEach(value => base += value)
+      if (value_base.size === 0)
+        explanation += 'Base value 0'
+      else if (value_base.size === 1)
+        explanation += ''
+      else
+        explanation += 'Base value ' + base + '('
       value_base.forEach((value, key) => explanation += key + ': ' + value + ', ')
-      explanation = explanation.substring(0, explanation.length - 2) + ')'
+      explanation = explanation.substring(0, explanation.length - 2)
+      if (value_base.size > 1)
+        explanation += ')'
     }
     let modifier = 1.0
-    const value_modifier = this.modifier_values.get(type)
     if (value_modifier)
       value_modifier.forEach(value => modifier += value)
     if (value_modifier && value_modifier.size > 0) {
@@ -98,7 +110,6 @@ export class BaseDefinition<T, S> {
       explanation = explanation.substring(0, explanation.length - 2) + ')'
     }
     let loss = 0
-    const value_loss = this.loss_values.get(type)
     if (value_loss)
       value_loss.forEach(value => loss += value)
     if (value_loss && value_loss.size > 0) {

@@ -30,7 +30,7 @@ export class ModalTacticDetail extends Component<IProps> {
               <Table.Row>
                 {
                   Array.from(this.headers).map((value) => (
-                    <Table.HeaderCell key={value} textAlign='center'>
+                    <Table.HeaderCell key={value}>
                       {value}
                     </Table.HeaderCell>
                   ))

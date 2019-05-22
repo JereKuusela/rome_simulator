@@ -1,7 +1,7 @@
 import { List as ImmutableList } from 'immutable'
 import React, { Component } from 'react'
 import { Image, Table, List } from 'semantic-ui-react'
-import { UnitDefinition, UnitCalc, ArmyType } from '../store/units'
+import { UnitType, UnitDefinition, UnitCalc, ArmyType, unit_to_icon, ValueType } from '../store/units'
 import { TerrainType } from '../store/terrains'
 import IconYes from '../images/yes.png'
 import IconNo from '../images/no.png'
@@ -22,6 +22,7 @@ interface IProps {
 export class TableUnitDefinitions extends Component<IProps> {
 
   readonly terrains = Object.keys(TerrainType).map(k => TerrainType[k as any]) as TerrainType[]
+  readonly units = Object.keys(UnitType).map(k => UnitType[k as any]) as UnitType[]
 
   render() {
     return (
@@ -29,6 +30,7 @@ export class TableUnitDefinitions extends Component<IProps> {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>
+              {this.props.army}
             </Table.HeaderCell>
             <Table.HeaderCell>
               <Image src={IconMorale} avatar />
@@ -59,15 +61,10 @@ export class TableUnitDefinitions extends Component<IProps> {
               </Table.HeaderCell>
             <Table.HeaderCell>
               Strength damage
-              </Table.HeaderCell>
-            {
-              this.props.units.map((value) => (
-                <Table.HeaderCell key={value.type}>
-                  <Image src={value.image} avatar />
-                </Table.HeaderCell>
-              )
-              )
-            }
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              Units
+            </Table.HeaderCell>
             <Table.HeaderCell>
               Terrain
             </Table.HeaderCell>
@@ -89,51 +86,55 @@ export class TableUnitDefinitions extends Component<IProps> {
   renderRow = (unit: UnitDefinition) => {
     return (
       <Table.Row key={unit.type} onClick={() => this.props.onRowClick(unit)}>
-        <Table.Cell>
+        <Table.Cell singleLine>
           <Image src={unit.image} avatar />
           {unit.type}</Table.Cell>
         <Table.Cell>
-          {unit.valueToString(UnitCalc.Morale)}
+          {unit.valueToNumber(UnitCalc.Morale, false)}
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToString(UnitCalc.Manpower)}
+          {unit.valueToNumber(UnitCalc.Manpower, false)}
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToString(UnitCalc.Discipline)}
+          {unit.valueToRelativePercent(UnitCalc.Discipline, false)}
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToString(UnitCalc.Offense)}
+          {unit.valueToRelativePercent(UnitCalc.Offense, false)}
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToString(UnitCalc.Defense)}
+          {unit.valueToRelativePercent(UnitCalc.Defense, false)}
         </Table.Cell>
         <Table.Cell>
           {unit.can_assault ? <Image src={IconYes} avatar /> : <Image src={IconNo} avatar />}
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToString(UnitCalc.MovementSpeed)}
+          {unit.valueToNumber(UnitCalc.MovementSpeed, false)}
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToString(UnitCalc.Maneuver)}
+          {unit.valueToNumber(UnitCalc.Maneuver, false)}
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToString(UnitCalc.MoraleDamageTaken)}
+          {unit.valueToRelativeZeroPercent(UnitCalc.MoraleDamageTaken, false)}
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToString(UnitCalc.StrengthDamageTaken)}
+          {unit.valueToRelativeZeroPercent(UnitCalc.StrengthDamageTaken, false)}
         </Table.Cell>
-        {
-          this.props.units.map((value) => (
-            <Table.Cell key={value.type}>
-              {unit.valueToString(value.type)}
-            </Table.Cell>
-          )
-          )
-        }
+        <Table.Cell>
+          <List horizontal>
+            {
+              this.units.filter(type => unit.calculateValue(type) !== 0).map(type => (
+                <List.Item key={type} style={{ marginLeft: 0, marginRight: '1em' }}>
+                  <Image src={unit_to_icon.get(type)} avatar />
+                  {unit.valueToString(type)}
+                </List.Item>
+              ))
+            }
+          </List>
+        </Table.Cell>
         <Table.Cell>
           <List>
             {
-              this.terrains.filter(type => unit.calculateValue(type) !== 1).map(type => (
+              this.terrains.filter(type => unit.calculateValue(type) !== 0).map(type => (
                 <List.Item key={type}>
                   {type + ': ' + unit.valueToString(type)}
                 </List.Item>
@@ -148,51 +149,55 @@ export class TableUnitDefinitions extends Component<IProps> {
   renderGlobalStats = (unit: UnitDefinition) => {
     return (
       <Table.Row key={unit.type} onClick={() => this.props.onRowClick(unit)}>
-        <Table.Cell>
+        <Table.Cell singleLine>
           <Image src={unit.image} avatar />
           Global stats
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToRelativeNumber(UnitCalc.Morale, false)}
+          {this.renderAttributeList(unit, UnitCalc.Morale)}
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToRelativeNumber(UnitCalc.Manpower, false)}
+          {this.renderAttributeList(unit, UnitCalc.Manpower)}
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToRelativeZeroPercent(UnitCalc.Discipline, false)}
+          {this.renderAttributeList(unit, UnitCalc.Discipline)}
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToRelativeZeroPercent(UnitCalc.Offense, false)}
+          {this.renderAttributeList(unit, UnitCalc.Offense)}
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToRelativeZeroPercent(UnitCalc.Defense, false)}
+          {this.renderAttributeList(unit, UnitCalc.Defense)}
         </Table.Cell>
         <Table.Cell>
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToRelativeNumber(UnitCalc.MovementSpeed, false)}
+          {this.renderAttributeList(unit, UnitCalc.MovementSpeed)}
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToRelativeNumber(UnitCalc.Maneuver, false)}
+          {this.renderAttributeList(unit, UnitCalc.Maneuver)}
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToRelativeZeroPercent(UnitCalc.MoraleDamageTaken, false)}
+          {this.renderAttributeList(unit, UnitCalc.MoraleDamageTaken)}
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToRelativeZeroPercent(UnitCalc.StrengthDamageTaken, false)}
+          {this.renderAttributeList(unit, UnitCalc.StrengthDamageTaken)}
         </Table.Cell>
-        {
-          this.props.units.map((value) => (
-            <Table.Cell key={value.type}>
-              {unit.valueToRelativeZeroPercent(value.type, false)}
-            </Table.Cell>
-          )
-          )
-        }
+        <Table.Cell>
+          <List horizontal>
+            {
+              this.units.filter(type => unit.calculateValue(type) !== 0).map(type => (
+                <List.Item key={type} style={{ marginLeft: 0, marginRight: '1em' }}>
+                  <Image src={unit_to_icon.get(type)} avatar />
+                  {unit.valueToString(type)}
+                </List.Item>
+              ))
+            }
+          </List>
+        </Table.Cell>
         <Table.Cell>
           <List>
             {
-              this.terrains.filter(type => unit.calculateValue(type) !== 0).map(type => (
+              this.terrains.filter(type => unit.calculateValue(type) !== 0.0).map(type => (
                 <List.Item key={type}>
                   {type + ': ' + unit.valueToRelativeZeroPercent(type, false)}
                 </List.Item>
@@ -201,6 +206,34 @@ export class TableUnitDefinitions extends Component<IProps> {
           </List>
         </Table.Cell>
       </Table.Row>
+    )
+  }
+
+  renderAttributeList = (unit: UnitDefinition, attribute: ValueType) => {
+    const base = unit.calculateBase(attribute)
+    const modifier = unit.calculateModifier(attribute)
+    const loss = unit.calculateLoss(attribute)
+    return (
+      <List>
+        {
+          base !== 0 &&
+          <List.Item style={{ whiteSpace: 'nowrap' }}>
+            {'Base: ' + base}
+          </List.Item>
+        }
+        {
+          modifier !== 1.0 &&
+          <List.Item style={{ whiteSpace: 'nowrap' }}>
+            {'Mod: ' + modifier}
+          </List.Item>
+        }
+        {
+          loss !== 0 &&
+          <List.Item style={{ whiteSpace: 'nowrap' }}>
+            {'Loss: ' + loss}
+          </List.Item>
+        }
+      </List>
     )
   }
 }

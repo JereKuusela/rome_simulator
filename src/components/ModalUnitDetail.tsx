@@ -19,10 +19,10 @@ export class ModalUnitDetail extends Component<IProps> {
   readonly attributes = Object.keys(UnitCalc).map(k => UnitCalc[k as any]) as UnitCalc[]
   readonly units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
   readonly terrains = Object.keys(TerrainType).map(k => TerrainType[k as any]).sort() as TerrainType[]
-  readonly headers = ['Attribute', 'Value', 'Explained', 'Custom base', 'Custom modifier', 'Custom losses']
+  readonly headers = ['Attribute', 'Value', 'Custom base', 'Custom modifier', 'Custom losses', 'Explained']
 
   render() {
-    
+
     return (
       <Modal basic onClose={this.props.onClose} open>
         <Modal.Content>
@@ -56,39 +56,47 @@ export class ModalUnitDetail extends Component<IProps> {
   }
 
   renderRow = (unit: UnitDefinition, attribute: ValueType) => {
+    if (attribute === UnitCalc.MovementSpeed || attribute === UnitCalc.Upkeep || attribute === UnitCalc.Cost)
+      return null
     let base_value = unit.get_base_value(attribute, this.props.custom_value_key)
     let modifier_value = unit.get_modifier_value(attribute, this.props.custom_value_key)
     let loss_value = unit.get_loss_value(attribute, this.props.custom_value_key)
 
     return (
       <Table.Row key={attribute}>
-        <Table.Cell>
+        <Table.Cell collapsing>
           {attribute}
         </Table.Cell>
-        <Table.Cell>
+        <Table.Cell collapsing>
           {unit.valueToString(attribute)}
         </Table.Cell>
-        <Table.Cell>
-          {unit.explain(attribute)}
-        </Table.Cell>
-        <Table.Cell>
+        <Table.Cell collapsing>
           <Input
+            size='mini'
+            style={{width:50}}
             defaultValue={base_value}
-            onChange={(_, data) => this.props.onCustomBaseValueChange(this.props.army, unit.type, this.props.custom_value_key,attribute, Number(data.value))
+            onChange={(_, data) => this.props.onCustomBaseValueChange(this.props.army, unit.type, this.props.custom_value_key, attribute, Number(data.value))
             }
           />
         </Table.Cell>
-        <Table.Cell>
+        <Table.Cell collapsing>
           <Input
+            size='mini'
+            style={{width:50}}
             defaultValue={modifier_value}
-            onChange={(_, data) => this.props.onCustomModifierValueChange(this.props.army, unit.type, this.props.custom_value_key,attribute, Number(data.value))}
+            onChange={(_, data) => this.props.onCustomModifierValueChange(this.props.army, unit.type, this.props.custom_value_key, attribute, Number(data.value))}
+          />
+        </Table.Cell>
+        <Table.Cell collapsing>
+          <Input
+            size='mini'
+            style={{width:50}}
+            defaultValue={loss_value}
+            onChange={(_, data) => this.props.onCustomLossValueChange(this.props.army, unit.type, this.props.custom_value_key, attribute, Number(data.value))}
           />
         </Table.Cell>
         <Table.Cell>
-          <Input
-            defaultValue={loss_value}
-            onChange={(_, data) => this.props.onCustomLossValueChange(this.props.army, unit.type, this.props.custom_value_key,attribute, Number(data.value))}
-          />
+          {unit.explain(attribute)}
         </Table.Cell>
       </Table.Row>
     )

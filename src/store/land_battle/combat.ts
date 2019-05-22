@@ -305,13 +305,13 @@ const calculateLosses = (source: Unit, target: Unit, source_loss: Loss, roll: nu
   const damage = base_damage
     * source.calculateValue(UnitCalc.Discipline)
     * Math.max(0, source.calculateValue(UnitCalc.Manpower) - source_loss.manpower)
-    * source.calculateValue(target.type)
+    * (1.0 + source.calculateValue(target.type))
     * source.calculateValue(UnitCalc.Offense)
     * tactic_damage_multiplier
-    * terrains.map(terrain => source.calculateValue(terrain.type)).reduce((previous, current) => previous + current, 0)
+    * (1.0 + terrains.map(terrain => source.calculateValue(terrain.type)).reduce((previous, current) => previous + current, 0))
     / target.calculateValue(UnitCalc.Defense)
     * (1 - DAMAGE_REDUCTION_PER_EXPERIENCE * target.calculateValue(UnitCalc.Experience))
-  const manpower_lost = damage * MANPOWER_LOST_MULTIPLIER * target.calculateValue(UnitCalc.StrengthDamageTaken) * casualties_multiplier
-  const morale_lost = damage * MORALE_LOST_MULTIPLIER * Math.max(0, source.calculateValue(UnitCalc.Morale) - source_loss.morale) * target.calculateValue(UnitCalc.MoraleDamageTaken)
+  const manpower_lost = damage * MANPOWER_LOST_MULTIPLIER * (1.0 + target.calculateValue(UnitCalc.StrengthDamageTaken)) * casualties_multiplier
+  const morale_lost = damage * MORALE_LOST_MULTIPLIER * Math.max(0, source.calculateValue(UnitCalc.Morale) - source_loss.morale) * (1.0 + target.calculateValue(UnitCalc.MoraleDamageTaken))
   return { manpower: Math.floor(manpower_lost), morale: Math.floor(100.0 * morale_lost) / 100.0 }
 }
