@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { Container, Header, Button, Grid, Image } from 'semantic-ui-react'
+import { Container, Header, Button, Grid, Image, Checkbox, Input } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { ArmyType } from '../store/units/types'
 import { TableLandBattle } from '../components/TableLandBattle'
-import { battle, undo, ParticipantState } from '../store/land_battle'
+import { battle, undo, ParticipantState, toggleRandomRoll, setRoll } from '../store/land_battle'
 import { TerrainDefinition } from '../store/terrains'
 import { TacticDefinition } from '../store/tactics'
 import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from '../containers/ModalUnitSelector'
@@ -83,7 +83,7 @@ class Land extends Component<IProps, IState> {
               }
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row columns={4}>
+          <Grid.Row columns={6}>
             <Grid.Column>
               {
                 this.renderTactic(this.props.attacker.tactic, ArmyType.Attacker)
@@ -91,7 +91,12 @@ class Land extends Component<IProps, IState> {
             </Grid.Column>
             <Grid.Column>
               {
-                this.renderRoll(ArmyType.Attacker, this.props.attacker.roll)
+                this.renderIsRollRandom(ArmyType.Attacker, this.props.attacker.randomize_roll)
+              }
+            </Grid.Column>
+            <Grid.Column>
+              {
+                this.renderRoll(ArmyType.Attacker, this.props.attacker.roll, this.props.attacker.randomize_roll)
               }
             </Grid.Column>
             <Grid.Column>
@@ -101,7 +106,12 @@ class Land extends Component<IProps, IState> {
             </Grid.Column>
             <Grid.Column>
               {
-                this.renderRoll(ArmyType.Defender, this.props.defender.roll)
+                this.renderIsRollRandom(ArmyType.Defender, this.props.defender.randomize_roll)
+              }
+            </Grid.Column>
+            <Grid.Column>
+              {
+                this.renderRoll(ArmyType.Defender, this.props.defender.roll, this.props.defender.randomize_roll)
               }
             </Grid.Column>
           </Grid.Row>
@@ -142,11 +152,20 @@ class Land extends Component<IProps, IState> {
     )
   }
 
-  renderRoll = (army: ArmyType, roll: number) => {
+  renderRoll = (army: ArmyType, roll: number, is_random: boolean) => {
     return (
       <div key={army}>
         <Header>{army +  ' roll'}</Header>
-        {roll}
+        {is_random ? roll: <Input type='number' value={roll}onChange={(_, data) => this.props.setRoll(army, Number(data.value)) } />}
+      </div>
+    )
+  }
+
+  renderIsRollRandom = (army: ArmyType, is_random: boolean) => {
+    return (
+      <div key={army}>
+        <Header>{army +  ' roll'}</Header>
+        <Checkbox checked={is_random} label='Randomize' onClick={() => this.props.toggleRandomRoll(army)}/>
       </div>
     )
   }
@@ -199,7 +218,9 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchToProps = (dispatch: any) => ({
   battle: (steps: number) => dispatch(battle(steps)),
-  undo: (steps: number) => dispatch(undo(steps))
+  undo: (steps: number) => dispatch(undo(steps)),
+  toggleRandomRoll: (army: ArmyType) => dispatch(toggleRandomRoll(army)),
+  setRoll: (army: ArmyType, roll: number) => dispatch(setRoll(army, roll))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

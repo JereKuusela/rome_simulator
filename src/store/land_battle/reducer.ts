@@ -1,7 +1,7 @@
 import { createReducer } from 'typesafe-actions'
 import { List } from 'immutable'
 import { getInitialArmy, getInitialTerrains } from './types'
-import { selectUnit, selectDefeatedUnit, selectTerrain, battle, selectTactic, undo } from './actions'
+import { selectUnit, selectDefeatedUnit, selectTerrain, battle, selectTactic, undo, toggleRandomRoll, setRoll } from './actions'
 import { ArmyType, setBaseValue as setUnitBaseValue, setModifierValue, setLossValue, setGlobalBaseValue, setGlobalModifierValue, setGlobalLossValue, UnitDefinition, UnitType, ValueType } from '../units'
 import { battle as fight } from './combat'
 import { setBaseValue as setTacticBaseValue } from '../tactics'
@@ -48,6 +48,20 @@ const checkArmy = (army: List<List<UnitDefinition | null>>) => {
 
 
 export const landBattleReducer = createReducer(initialState)
+  .handleAction(toggleRandomRoll, (state, action: ReturnType<typeof toggleRandomRoll>) => (
+    {
+      ...state,
+      attacker: { ...state.attacker, randomize_roll: action.payload.army === ArmyType.Attacker ? !state.attacker.randomize_roll : state.attacker.randomize_roll },
+      defender: { ...state.defender, randomize_roll: action.payload.army === ArmyType.Defender ? !state.defender.randomize_roll : state.defender.randomize_roll }
+    }
+  ))
+  .handleAction(setRoll, (state, action: ReturnType<typeof setRoll>) => (
+    {
+      ...state,
+      attacker: { ...state.attacker, roll: action.payload.army === ArmyType.Attacker ? action.payload.roll : state.attacker.roll },
+      defender: { ...state.defender, roll: action.payload.army === ArmyType.Defender ? action.payload.roll : state.defender.roll }
+    }
+  ))
   .handleAction(selectUnit, (state, action: ReturnType<typeof selectUnit>) => {
     const new_attacker = action.payload.army === ArmyType.Attacker ? state.attacker.army.setIn([action.payload.row, action.payload.column], action.payload.unit) : state.attacker.army
     const new_defender = action.payload.army === ArmyType.Defender ? state.defender.army.setIn([action.payload.row, action.payload.column], action.payload.unit) : state.defender.army
@@ -86,11 +100,11 @@ export const landBattleReducer = createReducer(initialState)
           ...next,
           attacker: {
             ...next.attacker,
-            roll: 1 + Math.round(Math.random() * 5)
+            roll: next.attacker.randomize_roll ? 1 + Math.round(Math.random() * 5) : next.attacker.roll
           },
           defender: {
             ...next.defender,
-            roll: 1 + Math.round(Math.random() * 5)
+            roll: next.defender.randomize_roll ? 1 + Math.round(Math.random() * 5) : next.defender.roll
           }
         }
       }

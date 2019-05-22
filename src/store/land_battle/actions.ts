@@ -26,3 +26,11 @@ export const battle = createAction('@@land_battle/BATTLE', action => {
 export const undo = createAction('@@land_battle/UNDO', action => {
   return (steps: number) => action({steps})
 })
+
+export const toggleRandomRoll = createAction('@@land_battle/TOGGLE_RANDOM_ROLL', action => {
+  return (army: ArmyType) => action({army})
+})
+
+export const setRoll = createAction('@@land_battle/SET_ROLL', action => {
+  return (army: ArmyType, roll: number) => action({army, roll})
+})

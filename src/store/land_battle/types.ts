@@ -9,6 +9,7 @@ export interface ParticipantState {
   readonly past: List<{ army: List<List<(UnitDefinition | null)>>, defeated_army: List<List<(UnitDefinition | null)>> }>
   readonly tactic: TacticDefinition | null
   readonly roll: number
+  readonly randomize_roll: boolean
   readonly general: number
 }
 
@@ -20,5 +21,6 @@ export const getInitialArmy = (): ParticipantState => ({
     general: 0,
     tactic: null,
     roll: 0,
+    randomize_roll: true,
     past: List<{ army: List<List<(UnitDefinition | null)>>, defeated_army: List<List<(UnitDefinition | null)>> }>()
   })
