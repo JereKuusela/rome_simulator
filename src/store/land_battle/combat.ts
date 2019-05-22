@@ -77,7 +77,7 @@ export const battle = (attacker: ParticipantState, defender: ParticipantState, r
 
 const modifyRoll = (roll: number, terrains: Terrains, general: number, opposing_general: number) => {
   const terrain_effect = terrains.map(terrain => terrain.calculateValue(TerrainCalc.Roll)).reduce((previous, current) => previous + current, 0)
-  const general_effect = Math.max(0, Math.ceil(general - opposing_general) / 3)
+  const general_effect = Math.max(0, Math.floor((general - opposing_general) / 2.0))
   return roll + terrain_effect + general_effect
 }
 

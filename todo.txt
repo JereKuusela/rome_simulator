@@ -2,29 +2,11 @@ https://github.com/resir014/react-redux-typescript-example
 
 Release 1:
 
-Navigation:
-- Tab based
 
 Land battle:
 - Visually mimics in game screen.
-- Battle field: attacker, defender, frontrow, backrow
-- Unit editing
-- Battle engine
-- Tactics
-- Turn counter
-- Back/forward buttons to scroll through the battle
-- Defender terrain
-- Dice roll, random/manual
-- Defeated units included somehow, tactic effectiveness probably shouldn't update during fight
-
-Unit definitions:
-- Special unit for global stats and global modifiers
-- Lists available units for battlefield and their default stats
-- All base stats zero -> "events" affect them -> calculate total -> allows detailed view what causes everything
-- Main screen shows all stats
-- Further inspection what causes these values
-- Allows editing stats
-- Allows adding new units
+- Loyalty gives +10% discipline, include or not?
+- Show unit details. modify them...
 
 Release 2:
 
