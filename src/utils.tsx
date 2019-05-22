@@ -143,7 +143,7 @@ export class BaseDefinition<T, S> {
         return new_values
       if (value === 0 && type_values.has(key))
         new_values = new_values.set(type, type_values.delete(key))
-      else
+      else if (value !== 0)
         new_values = new_values.set(type, type_values.set(key, value))
     }
     return new_values

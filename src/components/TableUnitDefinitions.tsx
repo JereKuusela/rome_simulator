@@ -1,10 +1,8 @@
 import { List as ImmutableList } from 'immutable'
 import React, { Component } from 'react'
-import { Image, Table, List } from 'semantic-ui-react'
+import { Image, Table, List, Icon } from 'semantic-ui-react'
 import { UnitType, UnitDefinition, UnitCalc, ArmyType, unit_to_icon, ValueType } from '../store/units'
 import { TerrainType } from '../store/terrains'
-import IconYes from '../images/yes.png'
-import IconNo from '../images/no.png'
 import IconDiscipline from '../images/discipline.png'
 import IconOffense from '../images/offense.png'
 import IconDefense from '../images/defense.png'
@@ -48,19 +46,16 @@ export class TableUnitDefinitions extends Component<IProps> {
               <Image src={IconDefense} avatar />
             </Table.HeaderCell>
             <Table.HeaderCell>
-              Assault?
-              </Table.HeaderCell>
-            <Table.HeaderCell>
-              Speed
-              </Table.HeaderCell>
-            <Table.HeaderCell>
-              Maneuver
-              </Table.HeaderCell>
+              <Icon name='arrows alternate horizontal' size='big' />
+            </Table.HeaderCell>
             <Table.HeaderCell>
               Morale damage
               </Table.HeaderCell>
             <Table.HeaderCell>
               Strength damage
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              Experience
             </Table.HeaderCell>
             <Table.HeaderCell>
               Units
@@ -105,12 +100,6 @@ export class TableUnitDefinitions extends Component<IProps> {
           {unit.valueToRelativePercent(UnitCalc.Defense, false)}
         </Table.Cell>
         <Table.Cell>
-          {unit.can_assault ? <Image src={IconYes} avatar /> : <Image src={IconNo} avatar />}
-        </Table.Cell>
-        <Table.Cell>
-          {unit.valueToNumber(UnitCalc.MovementSpeed, false)}
-        </Table.Cell>
-        <Table.Cell>
           {unit.valueToNumber(UnitCalc.Maneuver, false)}
         </Table.Cell>
         <Table.Cell>
@@ -118,6 +107,9 @@ export class TableUnitDefinitions extends Component<IProps> {
         </Table.Cell>
         <Table.Cell>
           {unit.valueToRelativeZeroPercent(UnitCalc.StrengthDamageTaken, false)}
+        </Table.Cell>
+        <Table.Cell>
+          {unit.valueToPercent(UnitCalc.Experience, false)}
         </Table.Cell>
         <Table.Cell>
           <List horizontal>
@@ -169,11 +161,6 @@ export class TableUnitDefinitions extends Component<IProps> {
           {this.renderAttributeList(unit, UnitCalc.Defense)}
         </Table.Cell>
         <Table.Cell>
-        </Table.Cell>
-        <Table.Cell>
-          {this.renderAttributeList(unit, UnitCalc.MovementSpeed)}
-        </Table.Cell>
-        <Table.Cell>
           {this.renderAttributeList(unit, UnitCalc.Maneuver)}
         </Table.Cell>
         <Table.Cell>
@@ -181,6 +168,9 @@ export class TableUnitDefinitions extends Component<IProps> {
         </Table.Cell>
         <Table.Cell>
           {this.renderAttributeList(unit, UnitCalc.StrengthDamageTaken)}
+        </Table.Cell>
+        <Table.Cell>
+          {this.renderAttributeList(unit, UnitCalc.Experience)}
         </Table.Cell>
         <Table.Cell>
           <List horizontal>

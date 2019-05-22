@@ -56,7 +56,7 @@ export class ModalUnitDetail extends Component<IProps> {
   }
 
   renderRow = (unit: UnitDefinition, attribute: ValueType) => {
-    if (attribute === UnitCalc.MovementSpeed || attribute === UnitCalc.Upkeep || attribute === UnitCalc.Cost)
+    if (attribute === UnitCalc.MovementSpeed || attribute === UnitCalc.Upkeep || attribute === UnitCalc.Cost || attribute === UnitCalc.RecruitTime || attribute === UnitCalc.AttritionWeight)
       return null
     let base_value = unit.get_base_value(attribute, this.props.custom_value_key)
     let modifier_value = unit.get_modifier_value(attribute, this.props.custom_value_key)
@@ -73,27 +73,33 @@ export class ModalUnitDetail extends Component<IProps> {
         <Table.Cell collapsing>
           <Input
             size='mini'
-            style={{width:50}}
+            style={{ width: 50 }}
             defaultValue={base_value}
             onChange={(_, data) => this.props.onCustomBaseValueChange(this.props.army, unit.type, this.props.custom_value_key, attribute, Number(data.value))
             }
           />
         </Table.Cell>
         <Table.Cell collapsing>
-          <Input
-            size='mini'
-            style={{width:50}}
-            defaultValue={modifier_value}
-            onChange={(_, data) => this.props.onCustomModifierValueChange(this.props.army, unit.type, this.props.custom_value_key, attribute, Number(data.value))}
-          />
+          {
+            (attribute === UnitCalc.Morale || attribute === UnitCalc.Manpower) &&
+            <Input
+              size='mini'
+              style={{ width: 50 }}
+              defaultValue={modifier_value}
+              onChange={(_, data) => this.props.onCustomModifierValueChange(this.props.army, unit.type, this.props.custom_value_key, attribute, Number(data.value))}
+            />
+          }
         </Table.Cell>
         <Table.Cell collapsing>
-          <Input
-            size='mini'
-            style={{width:50}}
-            defaultValue={loss_value}
-            onChange={(_, data) => this.props.onCustomLossValueChange(this.props.army, unit.type, this.props.custom_value_key, attribute, Number(data.value))}
-          />
+          {
+            (attribute === UnitCalc.Morale || attribute === UnitCalc.Manpower) &&
+            <Input
+              size='mini'
+              style={{ width: 50 }}
+              defaultValue={loss_value}
+              onChange={(_, data) => this.props.onCustomLossValueChange(this.props.army, unit.type, this.props.custom_value_key, attribute, Number(data.value))}
+            />
+          }
         </Table.Cell>
         <Table.Cell>
           {unit.explain(attribute)}
