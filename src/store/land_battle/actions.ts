@@ -34,3 +34,7 @@ export const toggleRandomRoll = createAction('@@land_battle/TOGGLE_RANDOM_ROLL',
 export const setRoll = createAction('@@land_battle/SET_ROLL', action => {
   return (army: ArmyType, roll: number) => action({army, roll})
 })
+
+export const setGeneral = createAction('@@land_battle/SET_GENERAL', action => {
+  return (army: ArmyType, skill: number) => action({army, skill})
+})

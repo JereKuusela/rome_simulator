@@ -1,7 +1,7 @@
 import { createReducer } from 'typesafe-actions'
 import { List } from 'immutable'
 import { getInitialArmy, getInitialTerrains } from './types'
-import { selectUnit, selectDefeatedUnit, selectTerrain, battle, selectTactic, undo, toggleRandomRoll, setRoll } from './actions'
+import { selectUnit, selectDefeatedUnit, selectTerrain, battle, selectTactic, undo, toggleRandomRoll, setRoll, setGeneral } from './actions'
 import { ArmyType, setBaseValue as setUnitBaseValue, setModifierValue, setLossValue, setGlobalBaseValue, setGlobalModifierValue, setGlobalLossValue, UnitDefinition, UnitType, ValueType } from '../units'
 import { battle as fight } from './combat'
 import { setBaseValue as setTacticBaseValue } from '../tactics'
@@ -53,6 +53,13 @@ export const landBattleReducer = createReducer(initialState)
       ...state,
       attacker: { ...state.attacker, randomize_roll: action.payload.army === ArmyType.Attacker ? !state.attacker.randomize_roll : state.attacker.randomize_roll },
       defender: { ...state.defender, randomize_roll: action.payload.army === ArmyType.Defender ? !state.defender.randomize_roll : state.defender.randomize_roll }
+    }
+  ))
+  .handleAction(setGeneral, (state, action: ReturnType<typeof setGeneral>) => (
+    {
+      ...state,
+      attacker: { ...state.attacker, general: action.payload.army === ArmyType.Attacker ? action.payload.skill : state.attacker.general },
+      defender: { ...state.defender, general: action.payload.army === ArmyType.Defender ? action.payload.skill : state.defender.general }
     }
   ))
   .handleAction(setRoll, (state, action: ReturnType<typeof setRoll>) => (

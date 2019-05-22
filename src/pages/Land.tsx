@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
-import { Container, Header, Button, Grid, Image, Checkbox, Input } from 'semantic-ui-react'
+import { Container, Header, Button, Grid, Image, Checkbox, Input, Table } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { ArmyType } from '../store/units/types'
 import { TableLandBattle } from '../components/TableLandBattle'
-import { battle, undo, ParticipantState, toggleRandomRoll, setRoll } from '../store/land_battle'
+import { battle, undo, ParticipantState, toggleRandomRoll, setRoll, setGeneral } from '../store/land_battle'
 import { TerrainDefinition } from '../store/terrains'
 import { TacticDefinition } from '../store/tactics'
+import IconDice from '../images/chance.png'
 import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from '../containers/ModalUnitSelector'
 import ModalTerrainSelector, { ModalInfo as ModalTerrainInfo } from '../containers/ModalTerrainSelector'
 import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers/ModalTacticSelector'
@@ -51,23 +52,16 @@ class Land extends Component<IProps, IState> {
           onClose={this.closeModal}
         />
         <Grid verticalAlign='middle'>
-          <Grid.Row columns={3}>
-            <Grid.Column>
-              <Button disabled={!this.props.is_undo} onClick={() => this.props.undo(10)}>
-                {'<<'}
-              </Button>
-              <Button disabled={!this.props.is_undo} onClick={() => this.props.undo(1)}>
-                {'<'}
-              </Button>
-              <Button disabled={this.props.fight_over} onClick={() => this.props.battle(1)}>
-                {'>'}
-              </Button>
-              <Button disabled={this.props.fight_over} onClick={() => this.props.battle(10)}>
-                {'>>'}
-              </Button>
+          <Grid.Row columns={3} >
+            <Grid.Column floated='left'><Header>{'Round: ' + this.props.round}</Header></Grid.Column>
+            <Grid.Column />
+            <Grid.Column floated='right' textAlign='right'>
+              <Button circular icon='angle double left' color='black' size='huge' disabled={!this.props.is_undo} onClick={() => this.props.undo(10)} />
+              <Button circular icon='angle left' color='black' size='huge' disabled={!this.props.is_undo} onClick={() => this.props.undo(1)} />
+              <Button circular icon='angle right' color='black' size='huge' disabled={this.props.fight_over} onClick={() => this.props.battle(1)} />
+              <Button circular icon='angle double right' color='black' size='huge' disabled={this.props.fight_over} onClick={() => this.props.battle(10)} />
             </Grid.Column>
-            <Grid.Column></Grid.Column>
-            <Grid.Column><Header>{'Round: ' + this.props.round}</Header></Grid.Column>
+
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
@@ -83,39 +77,35 @@ class Land extends Component<IProps, IState> {
               }
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row columns={6}>
+          <Grid.Row columns={1}>
             <Grid.Column>
-              {
-                this.renderTactic(this.props.attacker.tactic, ArmyType.Attacker)
-              }
-            </Grid.Column>
-            <Grid.Column>
-              {
-                this.renderIsRollRandom(ArmyType.Attacker, this.props.attacker.randomize_roll)
-              }
-            </Grid.Column>
-            <Grid.Column>
-              {
-                this.renderRoll(ArmyType.Attacker, this.props.attacker.roll, this.props.attacker.randomize_roll)
-              }
-            </Grid.Column>
-            <Grid.Column>
-              {
-                this.renderTactic(this.props.defender.tactic, ArmyType.Defender)
-              }
-            </Grid.Column>
-            <Grid.Column>
-              {
-                this.renderIsRollRandom(ArmyType.Defender, this.props.defender.randomize_roll)
-              }
-            </Grid.Column>
-            <Grid.Column>
-              {
-                this.renderRoll(ArmyType.Defender, this.props.defender.roll, this.props.defender.randomize_roll)
-              }
+              <Table celled>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell>
+                    </Table.HeaderCell>
+                    <Table.HeaderCell>
+                      General
+                    </Table.HeaderCell>
+                    <Table.HeaderCell>
+                      Tactic
+                    </Table.HeaderCell>
+                    <Table.HeaderCell>
+                      Dice
+                    </Table.HeaderCell>
+                    <Table.HeaderCell>
+                      Randomize
+                    </Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                  {this.renderArmyInfo(ArmyType.Attacker, this.props.attacker)}
+                  {this.renderArmyInfo(ArmyType.Defender, this.props.defender)}
+                </Table.Body>
+              </Table>
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row columns={2}>
+          <Grid.Row columns={6}>
             {
               this.props.terrains.map((terrain, index) => this.renderTerrain(terrain, index))
             }
@@ -155,18 +145,15 @@ class Land extends Component<IProps, IState> {
   renderRoll = (army: ArmyType, roll: number, is_random: boolean) => {
     return (
       <div key={army}>
-        <Header>{army +  ' roll'}</Header>
-        {is_random ? roll: <Input type='number' value={roll}onChange={(_, data) => this.props.setRoll(army, Number(data.value)) } />}
+        <Image src={IconDice} avatar />
+        {is_random ? roll : <Input size='mini' style={{width: 100}} type='number' value={roll} onChange={(_, data) => this.props.setRoll(army, Number(data.value))} />}
       </div>
     )
   }
 
   renderIsRollRandom = (army: ArmyType, is_random: boolean) => {
     return (
-      <div key={army}>
-        <Header>{army +  ' roll'}</Header>
-        <Checkbox checked={is_random} label='Randomize' onClick={() => this.props.toggleRandomRoll(army)}/>
-      </div>
+      <Checkbox toggle checked={is_random} onClick={() => this.props.toggleRandomRoll(army)} />
     )
   }
 
@@ -194,15 +181,34 @@ class Land extends Component<IProps, IState> {
     )
   }
 
-  renderTactic = (tactic: TacticDefinition | null, army: ArmyType) => {
+  renderTactic = (army: ArmyType, tactic: TacticDefinition | null) => {
     return (
-      <Grid.Column key={army} onClick={() => this.openTacticModal(army)}>
-        <Header>{army}</Header>
-        <div>
-          {tactic && tactic.image ? <Image src={tactic.image} avatar /> : null}
-          {tactic && tactic.type}
-        </div>
-      </Grid.Column>
+      <div key={army} onClick={() => this.openTacticModal(army)}>
+        {tactic && tactic.image ? <Image src={tactic.image} avatar /> : null}
+        {tactic && tactic.type}
+      </div >
+    )
+  }
+
+  renderArmyInfo = (army_type: ArmyType, info: ParticipantState) => {
+    return (
+      <Table.Row key={army_type}>
+        <Table.Cell collapsing>
+          {army_type}
+        </Table.Cell>
+        <Table.Cell collapsing>
+          <Input size='mini' style={{width: 100}} type='number' value={info.general} onChange={(_, data) => this.props.setGeneral(army_type, Number(data.value))} />
+        </Table.Cell>
+        <Table.Cell collapsing>
+          {this.renderTactic(army_type, info.tactic)}
+        </Table.Cell>
+        <Table.Cell>
+          {this.renderRoll(army_type, info.roll, info.randomize_roll)}
+        </Table.Cell>
+        <Table.Cell collapsing>
+          {this.renderIsRollRandom(army_type, info.randomize_roll)}
+        </Table.Cell>
+      </Table.Row>
     )
   }
 }
@@ -220,7 +226,8 @@ const mapDispatchToProps = (dispatch: any) => ({
   battle: (steps: number) => dispatch(battle(steps)),
   undo: (steps: number) => dispatch(undo(steps)),
   toggleRandomRoll: (army: ArmyType) => dispatch(toggleRandomRoll(army)),
-  setRoll: (army: ArmyType, roll: number) => dispatch(setRoll(army, roll))
+  setRoll: (army: ArmyType, roll: number) => dispatch(setRoll(army, roll)),
+  setGeneral: (army: ArmyType, skill: number) => dispatch(setGeneral(army, skill))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }
