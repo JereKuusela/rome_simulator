@@ -81,7 +81,20 @@ export const landBattleReducer = createReducer(initialState)
   .handleAction(battle, (state, action: ReturnType<typeof battle>) => {
     let next = state
     for (let step = 0; step < action.payload.steps && !next.fight_over; ++step) {
-      let [attacker, defender, attacker_defeated_army, defender_defeated_army] = fight(next.attacker.army, next.defender.army, next.attacker.defeated_army, next.defender.defeated_army, 3, 3, next.attacker.tactic, next.defender.tactic, next.day, next.terrains)
+      if (next.day % 5 === 0) {
+        next = {
+          ...next,
+          attacker: {
+            ...next.attacker,
+            roll: 1 + Math.round(Math.random() * 5)
+          },
+          defender: {
+            ...next.defender,
+            roll: 1 + Math.round(Math.random() * 5)
+          }
+        }
+      }
+      let [attacker, defender, attacker_defeated_army, defender_defeated_army] = fight(next.attacker, next.defender, next.day, next.terrains)
       next = {
         ...next,
         attacker: {

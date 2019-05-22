@@ -1,7 +1,8 @@
 import { List } from 'immutable'
 import { UnitDefinition, UnitCalc } from '../units'
-import { TerrainDefinition } from '../terrains'
+import { TerrainDefinition, TerrainCalc } from '../terrains'
 import { TacticDefinition, TacticCalc } from '../tactics'
+import { ParticipantState } from './types'
 
 type Unit = UnitDefinition
 type FrontLine = List<UnitDefinition | null>
@@ -22,16 +23,12 @@ const MORALE_LOST_MULTIPLIER = 1.5 / 2000.0
 
 /**
  * Makes given armies attach each other.
- * @param attacker_army Attackers.
- * @param defender_army Defenders.
- * @param attacker_defeated_army Defeated attackers.
- * @param defender_defeated_army Defeated defenders.
- * @param attacker_roll Dice roll for attackers. Affects damage dealt. 
- * @param defender_roll Dice roll for defenders. Affects damage dealt. 
+ * @param attacker Attackers.
+ * @param defender Defenders.
  * @param round Turn number to distinguish different rounds.
  * @param terrains Terrains of the battle, may affect amount of damage inflicted.
  */
-export const battle = (attacker_army: Army, defender_army: Army, attacker_defeated_army: Army, defender_defeated_army: Army, attacker_roll: number, defender_roll: number, attacker_tactic: TacticDefinition | null, defender_tactic: TacticDefinition | null, round: number, terrains: Terrains): [Army, Army, Army, Army] => {
+export const battle = (attacker: ParticipantState, defender: ParticipantState, round: number, terrains: Terrains): [Army, Army, Army, Army] => {
   // General flow:
   // 1. Attacker reinforces.
   // 2. Attacker picks targets.
@@ -39,20 +36,23 @@ export const battle = (attacker_army: Army, defender_army: Army, attacker_defeat
   // 4. Defender picks targets.
   // Note: This leads to asymmetric behavior because defenders may move after attacker has selected them. Also a reinforced defender gets a free attack on the attacker.
 
-  attacker_army = reinforce(attacker_army, undefined)
-  const defender_to_attacker = pickTargets(attacker_army.get(0)!, defender_army.get(0)!)
-  defender_army = reinforce(defender_army, defender_to_attacker)
-  const attacker_to_defender = pickTargets(defender_army.get(0)!, attacker_army.get(0)!)
+  let attacker_army = reinforce(attacker.army, undefined)
+  let defender_to_attacker = pickTargets(attacker_army.get(0)!, defender.army.get(0)!)
+  let defender_army = reinforce(defender.army, defender_to_attacker)
+  let attacker_to_defender = pickTargets(defender_army.get(0)!, attacker_army.get(0)!)
+
   let attacker_frontline = attacker_army.get(0)!
   let defender_frontline = defender_army.get(0)!
   // Killed manpower won't deal any damage so the right solution has to be searched iteratively.
 
   const tactic_effects = {
-    attacker: calculateTactic(attacker_tactic, attacker_army, attacker_defeated_army, defender_tactic),
-    defender: calculateTactic(defender_tactic, defender_army, defender_defeated_army, attacker_tactic),
-    casualties: 1.0 + (attacker_tactic ? attacker_tactic.calculateValue(TacticCalc.Casualties) : 0) + (defender_tactic ? defender_tactic.calculateValue(TacticCalc.Casualties) : 0)
+    attacker: calculateTactic(attacker.tactic, attacker_army, attacker.defeated_army, defender.tactic),
+    defender: calculateTactic(defender.tactic, defender_army, defender.defeated_army, attacker.tactic),
+    casualties: 1.0 + (attacker.tactic ? attacker.tactic.calculateValue(TacticCalc.Casualties) : 0) + (defender.tactic ? defender.tactic.calculateValue(TacticCalc.Casualties) : 0)
   }
 
+  const attacker_roll = modifyRoll(attacker.roll, terrains, attacker.general, defender.general)
+  const defender_roll = modifyRoll(defender.roll, List(), defender.general, attacker.general)
   // Previous losses are used to calculate attack damage.
   let attacker_previous_losses = Array<Loss>(attacker_frontline.size).fill({ morale: 0, manpower: 0 })
   let defender_previous_losses = Array<Loss>(defender_frontline.size).fill({ morale: 0, manpower: 0 })
@@ -68,11 +68,17 @@ export const battle = (attacker_army: Army, defender_army: Army, attacker_defeat
   }
   attacker_army = attacker_army.update(0, row => applyLosses(row, attacker_previous_losses, round))
   defender_army = defender_army.update(0, row => applyLosses(row, defender_previous_losses, round))
-  attacker_defeated_army = copyDefeated(attacker_army, attacker_defeated_army)
-  defender_defeated_army = copyDefeated(defender_army, defender_defeated_army)
+  let attacker_defeated_army = copyDefeated(attacker_army, attacker.defeated_army)
+  let defender_defeated_army = copyDefeated(defender_army, defender.defeated_army)
   attacker_army = removeDefeated(attacker_army)
   defender_army = removeDefeated(defender_army)
   return [attacker_army, defender_army, attacker_defeated_army, defender_defeated_army]
+}
+
+const modifyRoll = (roll: number, terrains: Terrains, general: number, opposing_general: number) => {
+  const terrain_effect = terrains.map(terrain => terrain.calculateValue(TerrainCalc.Roll)).reduce((previous, current) => previous + current, 0)
+  const general_effect = Math.max(0, Math.ceil(general - opposing_general) / 3)
+  return roll + terrain_effect + general_effect
 }
 
 /**

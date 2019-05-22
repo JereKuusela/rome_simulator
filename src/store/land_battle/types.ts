@@ -8,6 +8,7 @@ export interface ParticipantState {
   readonly defeated_army: List<List<(UnitDefinition | null)>>
   readonly past: List<{ army: List<List<(UnitDefinition | null)>>, defeated_army: List<List<(UnitDefinition | null)>> }>
   readonly tactic: TacticDefinition | null
+  readonly roll: number
   readonly general: number
 }
 
@@ -15,6 +16,9 @@ export const getInitialTerrains = (): List<TerrainDefinition> => List<TerrainDef
 
 export const getInitialArmy = (): ParticipantState => ({
     army: fromJS(Array(2).fill(Array(30).fill(null))),
-    defeated_army: fromJS(Array(2).fill(Array(30).fill(null))), general: 0, tactic: null,
+    defeated_army: fromJS(Array(2).fill(Array(30).fill(null))),
+    general: 0,
+    tactic: null,
+    roll: 0,
     past: List<{ army: List<List<(UnitDefinition | null)>>, defeated_army: List<List<(UnitDefinition | null)>> }>()
   })

@@ -69,7 +69,21 @@ class Land extends Component<IProps, IState> {
             <Grid.Column></Grid.Column>
             <Grid.Column><Header>{'Round: ' + this.props.round}</Header></Grid.Column>
           </Grid.Row>
-          <Grid.Row columns={2}>
+          <Grid.Row columns={1}>
+            <Grid.Column>
+              {
+                this.renderArmy(ArmyType.Attacker, this.props.attacker)
+              }
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns={1}>
+            <Grid.Column>
+              {
+                this.renderArmy(ArmyType.Defender, this.props.defender)
+              }
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns={4}>
             <Grid.Column>
               {
                 this.renderTactic(this.props.attacker.tactic, ArmyType.Attacker)
@@ -77,11 +91,9 @@ class Land extends Component<IProps, IState> {
             </Grid.Column>
             <Grid.Column>
               {
-                this.renderArmy(ArmyType.Attacker, this.props.attacker)
+                this.renderRoll(ArmyType.Attacker, this.props.attacker.roll)
               }
             </Grid.Column>
-          </Grid.Row>
-          <Grid.Row columns={2}>
             <Grid.Column>
               {
                 this.renderTactic(this.props.defender.tactic, ArmyType.Defender)
@@ -89,7 +101,7 @@ class Land extends Component<IProps, IState> {
             </Grid.Column>
             <Grid.Column>
               {
-                this.renderArmy(ArmyType.Defender, this.props.defender)
+                this.renderRoll(ArmyType.Defender, this.props.defender.roll)
               }
             </Grid.Column>
           </Grid.Row>
@@ -98,18 +110,14 @@ class Land extends Component<IProps, IState> {
               this.props.terrains.map((terrain, index) => this.renderTerrain(terrain, index))
             }
           </Grid.Row>
-          <Grid.Row columns={2}>
-            <Grid.Column>
-            </Grid.Column>
+          <Grid.Row columns={1}>
             <Grid.Column>
               {
                 this.renderDefeatedArmy(ArmyType.Attacker, this.props.attacker)
               }
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row columns={2}>
-            <Grid.Column>
-            </Grid.Column>
+          <Grid.Row columns={1}>
             <Grid.Column>
               {
                 this.renderDefeatedArmy(ArmyType.Defender, this.props.defender)
@@ -130,6 +138,15 @@ class Land extends Component<IProps, IState> {
           units={units.army}
           reverse={army === ArmyType.Attacker}
         />
+      </div>
+    )
+  }
+
+  renderRoll = (army: ArmyType, roll: number) => {
+    return (
+      <div key={army}>
+        <Header>{army +  ' roll'}</Header>
+        {roll}
       </div>
     )
   }
