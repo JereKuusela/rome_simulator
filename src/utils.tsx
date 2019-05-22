@@ -84,8 +84,8 @@ export class BaseDefinition<T, S> {
     let explanation = 'Base value ' + base
     if (value_base) {
       explanation += ' ('
-      value_base.forEach((value, key) => explanation += key + ': ' + value + ',')
-      explanation = explanation.substring(0, explanation.length - 1) + ')'
+      value_base.forEach((value, key) => explanation += key + ': ' + value + ', ')
+      explanation = explanation.substring(0, explanation.length - 2) + ')'
     }
     let modifier = 1.0
     const value_modifier = this.modifier_values.get(type)
@@ -94,8 +94,8 @@ export class BaseDefinition<T, S> {
     if (value_modifier && value_modifier.size > 0) {
       explanation += ' multiplied by ' + this.toPercent(modifier, true)
       explanation += ' ('
-      value_modifier.forEach((value, key) => explanation += key + ': ' + this.toPercent(value, true) + ',')
-      explanation = explanation.substring(0, explanation.length - 1) + ')'
+      value_modifier.forEach((value, key) => explanation += key + ': ' + this.toPercent(value, true) + ', ')
+      explanation = explanation.substring(0, explanation.length - 2) + ')'
     }
     let loss = 0
     const value_loss = this.loss_values.get(type)
@@ -104,8 +104,21 @@ export class BaseDefinition<T, S> {
     if (value_loss && value_loss.size > 0) {
       explanation += ' reduced by losses ' + loss
       explanation += ' ('
-      value_loss.forEach((value, key) => explanation += key + ': ' + value + ',')
-      explanation = explanation.substring(0, explanation.length - 1) + ')'
+      value_loss.forEach((value, key) => explanation += key + ': ' + value + ', ')
+      explanation = explanation.substring(0, explanation.length - 2) + ')'
+    }
+    return explanation
+  }
+
+  explain_short = (type: S) => {
+    let base = 0
+    const value_base = this.base_values.get(type)
+    if (value_base)
+      value_base.forEach(value => base += value)
+    let explanation = ''
+    if (value_base) {
+      value_base.forEach((value, key) => explanation += key + ': ' + value + ', ')
+      explanation = explanation.substring(0, explanation.length - 2)
     }
     return explanation
   }

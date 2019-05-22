@@ -14,23 +14,20 @@ export class TableTacticDefinitions extends Component<IProps> {
 
   readonly tactics = Object.keys(TacticType).map(k => TacticType[k as any]) as TacticType[]
   readonly units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
+  readonly headers = ['Tactic', 'Unit effectiveness', 'Against other tactics', 'Casualties']
 
   render() {
     return (
       <Table celled selectable>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              Unit effectiveness
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              Against other tactics
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              Casualties
-            </Table.HeaderCell>
+            {
+              Array.from(this.headers).map((value) => (
+                <Table.HeaderCell key={value} textAlign='center'>
+                  {value}
+                </Table.HeaderCell>
+              ))
+            }
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -51,7 +48,7 @@ export class TableTacticDefinitions extends Component<IProps> {
           <Image src={tactic.image} avatar />
           {tactic.type}</Table.Cell>
         <Table.Cell>
-          <List>
+          <List horizontal>
             {
               this.units.filter(type => tactic.calculateValue(type)).map(type => (
                 <List.Item key={type}>
@@ -62,20 +59,20 @@ export class TableTacticDefinitions extends Component<IProps> {
             }
           </List>
         </Table.Cell>
-        <Table.Cell>
-          <List>
+        <Table.Cell singleLine>
+          <List horizontal>
             {
               this.tactics.filter(type => tactic.calculateValue(type)).map(type => (
                 <List.Item key={type}>
                   <Image src={tactic_to_icon.get(type)} avatar />
-                  {tactic.valueToString(type)}
+                  {tactic.valueToRelativeZeroPercent(type, true)}
                 </List.Item>
               ))
             }
           </List>
         </Table.Cell>
         <Table.Cell>
-        {tactic.valueToString(TacticCalc.Casualties)}
+          {tactic.valueToRelativeZeroPercent(TacticCalc.Casualties, false)}
         </Table.Cell>
       </Table.Row>
     )

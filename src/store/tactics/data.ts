@@ -101,7 +101,6 @@ const createTacticFromJson = (data: TacticData): TacticDefinition => {
     [TacticType.TriplexAcies, data.triplex_acies || 0]
 
   ]
-  tactic = tactic.add_base_value('Base', TacticCalc.Casualties, 1)
   return tactic.add_base_values(tactic.type, base_values)
 }
 

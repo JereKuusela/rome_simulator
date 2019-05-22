@@ -21,7 +21,7 @@ const Root = ({ store }: MainProps) => {
     <Provider store={store}>
       <Initializer /> 
       <BrowserRouter>
-        <Navigation />
+        <Route path='/' component={Navigation} />
         <Route path='/' exact component={LandPage} />
         <Route path='/Units' component={UnitPage} />
         <Route path='/Tactics' component={TacticPage} />
