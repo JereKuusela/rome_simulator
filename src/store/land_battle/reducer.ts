@@ -95,6 +95,7 @@ export const landBattleReducer = createReducer(initialState)
   .handleAction(battle, (state, action: ReturnType<typeof battle>) => {
     let next = state
     for (let step = 0; step < action.payload.steps && !next.fight_over; ++step) {
+      const old_rolls = [next.attacker.roll, next.defender.roll]
       if (next.day % 5 === 0) {
         next = {
           ...next,
@@ -115,13 +116,13 @@ export const landBattleReducer = createReducer(initialState)
           ...next.attacker,
           army: attacker,
           defeated_army: attacker_defeated_army,
-          past: next.attacker.past.push({ army: next.attacker.army, defeated_army: next.attacker.defeated_army })
+          past: next.attacker.past.push({ army: next.attacker.army, defeated_army: next.attacker.defeated_army, roll: old_rolls[0] })
         },
         defender: {
           ...next.defender,
           army: defender,
           defeated_army: defender_defeated_army,
-          past: next.defender.past.push({ army: next.defender.army, defeated_army: next.defender.defeated_army })
+          past: next.defender.past.push({ army: next.defender.army, defeated_army: next.defender.defeated_army, roll: old_rolls[1] })
         },
         day: next.day + 1,
         fight_over: !checkFight(attacker, defender)
@@ -141,12 +142,14 @@ export const landBattleReducer = createReducer(initialState)
           ...next.attacker,
           army: attacker_past ? attacker_past.army : next.attacker.army,
           defeated_army: attacker_past ? attacker_past.defeated_army : next.attacker.defeated_army,
+          roll: attacker_past ? attacker_past.roll : next.attacker.roll,
           past: next.attacker.past.pop()
         },
         defender: {
           ...next.defender,
           army: defender_past ? defender_past.army : next.defender.army,
           defeated_army: defender_past ? defender_past.defeated_army : next.defender.defeated_army,
+          roll: defender_past ? defender_past.roll : next.defender.roll,
           past: next.defender.past.pop()
         },
         day: next.day - 1,
@@ -182,13 +185,13 @@ export const landBattleReducer = createReducer(initialState)
         ...state.attacker,
         army: updateBaseValue(ArmyType.Attacker, state.attacker.army, action.payload),
         defeated_army: updateBaseValue(ArmyType.Attacker, state.attacker.defeated_army, action.payload),
-        past: state.attacker.past.map(armies => ({ army: updateBaseValue(ArmyType.Attacker, armies.army, action.payload), defeated_army: updateBaseValue(ArmyType.Attacker, armies.defeated_army, action.payload) }))
+        past: state.attacker.past.map(armies => ({ ...armies, army: updateBaseValue(ArmyType.Attacker, armies.army, action.payload), defeated_army: updateBaseValue(ArmyType.Attacker, armies.defeated_army, action.payload) }))
       },
       defender: {
         ...state.defender,
         army: updateBaseValue(ArmyType.Defender, state.defender.army, action.payload),
         defeated_army: updateBaseValue(ArmyType.Defender, state.defender.defeated_army, action.payload),
-        past: state.defender.past.map(armies => ({ army: updateBaseValue(ArmyType.Defender, armies.army, action.payload), defeated_army: updateBaseValue(ArmyType.Defender, armies.defeated_army, action.payload) }))
+        past: state.defender.past.map(armies => ({ ...armies, army: updateBaseValue(ArmyType.Defender, armies.army, action.payload), defeated_army: updateBaseValue(ArmyType.Defender, armies.defeated_army, action.payload) }))
       }
     }
   ))
@@ -199,13 +202,13 @@ export const landBattleReducer = createReducer(initialState)
         ...state.attacker,
         army: updateModifierValue(ArmyType.Attacker, state.attacker.army, action.payload),
         defeated_army: updateModifierValue(ArmyType.Attacker, state.attacker.defeated_army, action.payload),
-        past: state.attacker.past.map(armies => ({ army: updateModifierValue(ArmyType.Attacker, armies.army, action.payload), defeated_army: updateModifierValue(ArmyType.Attacker, armies.defeated_army, action.payload) }))
+        past: state.attacker.past.map(armies => ({ ...armies, army: updateModifierValue(ArmyType.Attacker, armies.army, action.payload), defeated_army: updateModifierValue(ArmyType.Attacker, armies.defeated_army, action.payload) }))
       },
       defender: {
         ...state.defender,
         army: updateModifierValue(ArmyType.Defender, state.defender.army, action.payload),
         defeated_army: updateModifierValue(ArmyType.Defender, state.defender.defeated_army, action.payload),
-        past: state.defender.past.map(armies => ({ army: updateModifierValue(ArmyType.Defender, armies.army, action.payload), defeated_army: updateModifierValue(ArmyType.Defender, armies.defeated_army, action.payload) }))
+        past: state.defender.past.map(armies => ({ ...armies, army: updateModifierValue(ArmyType.Defender, armies.army, action.payload), defeated_army: updateModifierValue(ArmyType.Defender, armies.defeated_army, action.payload) }))
       }
     }
   ))
@@ -216,13 +219,13 @@ export const landBattleReducer = createReducer(initialState)
         ...state.attacker,
         army: updateLossValue(ArmyType.Attacker, state.attacker.army, action.payload),
         defeated_army: updateLossValue(ArmyType.Attacker, state.attacker.defeated_army, action.payload),
-        past: state.attacker.past.map(armies => ({ army: updateLossValue(ArmyType.Attacker, armies.army, action.payload), defeated_army: updateLossValue(ArmyType.Attacker, armies.defeated_army, action.payload) }))
+        past: state.attacker.past.map(armies => ({ ...armies, army: updateLossValue(ArmyType.Attacker, armies.army, action.payload), defeated_army: updateLossValue(ArmyType.Attacker, armies.defeated_army, action.payload) }))
       },
       defender: {
         ...state.defender,
         army: updateLossValue(ArmyType.Defender, state.defender.army, action.payload),
         defeated_army: updateLossValue(ArmyType.Defender, state.defender.defeated_army, action.payload),
-        past: state.defender.past.map(armies => ({ army: updateLossValue(ArmyType.Defender, armies.army, action.payload), defeated_army: updateLossValue(ArmyType.Defender, armies.defeated_army, action.payload) }))
+        past: state.defender.past.map(armies => ({ ...armies, army: updateLossValue(ArmyType.Defender, armies.army, action.payload), defeated_army: updateLossValue(ArmyType.Defender, armies.defeated_army, action.payload) }))
       }
     }
   ))
@@ -233,13 +236,13 @@ export const landBattleReducer = createReducer(initialState)
         ...state.attacker,
         army: updateGlobalBaseValue(ArmyType.Attacker, state.attacker.army, action.payload),
         defeated_army: updateGlobalBaseValue(ArmyType.Attacker, state.attacker.defeated_army, action.payload),
-        past: state.attacker.past.map(armies => ({ army: updateGlobalBaseValue(ArmyType.Attacker, armies.army, action.payload), defeated_army: updateGlobalBaseValue(ArmyType.Attacker, armies.defeated_army, action.payload) }))
+        past: state.attacker.past.map(armies => ({ ...armies, army: updateGlobalBaseValue(ArmyType.Attacker, armies.army, action.payload), defeated_army: updateGlobalBaseValue(ArmyType.Attacker, armies.defeated_army, action.payload) }))
       },
       defender: {
         ...state.defender,
         army: updateGlobalBaseValue(ArmyType.Defender, state.defender.army, action.payload),
         defeated_army: updateGlobalBaseValue(ArmyType.Defender, state.defender.defeated_army, action.payload),
-        past: state.defender.past.map(armies => ({ army: updateGlobalBaseValue(ArmyType.Defender, armies.army, action.payload), defeated_army: updateGlobalBaseValue(ArmyType.Defender, armies.defeated_army, action.payload) }))
+        past: state.defender.past.map(armies => ({ ...armies, army: updateGlobalBaseValue(ArmyType.Defender, armies.army, action.payload), defeated_army: updateGlobalBaseValue(ArmyType.Defender, armies.defeated_army, action.payload) }))
       }
     }
   ))
@@ -250,13 +253,13 @@ export const landBattleReducer = createReducer(initialState)
         ...state.attacker,
         army: updateGlobalModifierValue(ArmyType.Attacker, state.attacker.army, action.payload),
         defeated_army: updateGlobalModifierValue(ArmyType.Attacker, state.attacker.defeated_army, action.payload),
-        past: state.attacker.past.map(armies => ({ army: updateGlobalModifierValue(ArmyType.Attacker, armies.army, action.payload), defeated_army: updateGlobalModifierValue(ArmyType.Attacker, armies.defeated_army, action.payload) }))
+        past: state.attacker.past.map(armies => ({ ...armies, army: updateGlobalModifierValue(ArmyType.Attacker, armies.army, action.payload), defeated_army: updateGlobalModifierValue(ArmyType.Attacker, armies.defeated_army, action.payload) }))
       },
       defender: {
         ...state.defender,
         army: updateGlobalModifierValue(ArmyType.Defender, state.defender.army, action.payload),
         defeated_army: updateGlobalModifierValue(ArmyType.Defender, state.defender.defeated_army, action.payload),
-        past: state.defender.past.map(armies => ({ army: updateGlobalModifierValue(ArmyType.Defender, armies.army, action.payload), defeated_army: updateGlobalModifierValue(ArmyType.Defender, armies.defeated_army, action.payload) }))
+        past: state.defender.past.map(armies => ({ ...armies, army: updateGlobalModifierValue(ArmyType.Defender, armies.army, action.payload), defeated_army: updateGlobalModifierValue(ArmyType.Defender, armies.defeated_army, action.payload) }))
       }
     }
   ))
@@ -267,13 +270,13 @@ export const landBattleReducer = createReducer(initialState)
         ...state.attacker,
         army: updateGlobalLossValue(ArmyType.Attacker, state.attacker.army, action.payload),
         defeated_army: updateGlobalLossValue(ArmyType.Attacker, state.attacker.defeated_army, action.payload),
-        past: state.attacker.past.map(armies => ({ army: updateGlobalLossValue(ArmyType.Attacker, armies.army, action.payload), defeated_army: updateGlobalLossValue(ArmyType.Attacker, armies.defeated_army, action.payload) }))
+        past: state.attacker.past.map(armies => ({ ...armies, army: updateGlobalLossValue(ArmyType.Attacker, armies.army, action.payload), defeated_army: updateGlobalLossValue(ArmyType.Attacker, armies.defeated_army, action.payload) }))
       },
       defender: {
         ...state.defender,
         army: updateGlobalLossValue(ArmyType.Defender, state.defender.army, action.payload),
         defeated_army: updateGlobalLossValue(ArmyType.Defender, state.defender.defeated_army, action.payload),
-        past: state.defender.past.map(armies => ({ army: updateGlobalLossValue(ArmyType.Defender, armies.army, action.payload), defeated_army: updateGlobalLossValue(ArmyType.Defender, armies.defeated_army, action.payload) }))
+        past: state.defender.past.map(armies => ({ ...armies, army: updateGlobalLossValue(ArmyType.Defender, armies.army, action.payload), defeated_army: updateGlobalLossValue(ArmyType.Defender, armies.defeated_army, action.payload) }))
       }
     }
   ))

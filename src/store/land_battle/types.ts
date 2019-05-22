@@ -6,7 +6,7 @@ import { TacticDefinition } from '../tactics'
 export interface ParticipantState {
   readonly army: List<List<(UnitDefinition | null)>>
   readonly defeated_army: List<List<(UnitDefinition | null)>>
-  readonly past: List<{ army: List<List<(UnitDefinition | null)>>, defeated_army: List<List<(UnitDefinition | null)>> }>
+  readonly past: List<{ army: List<List<(UnitDefinition | null)>>, defeated_army: List<List<(UnitDefinition | null)>>, roll: number }>
   readonly tactic: TacticDefinition | null
   readonly roll: number
   readonly randomize_roll: boolean
@@ -22,5 +22,5 @@ export const getInitialArmy = (): ParticipantState => ({
     tactic: null,
     roll: 0,
     randomize_roll: true,
-    past: List<{ army: List<List<(UnitDefinition | null)>>, defeated_army: List<List<(UnitDefinition | null)>> }>()
+    past: List<{ army: List<List<(UnitDefinition | null)>>, defeated_army: List<List<(UnitDefinition | null)>>, roll: number }>()
   })
