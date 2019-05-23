@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { Container, Header, Button, Grid, Image, Checkbox, Input, Table } from 'semantic-ui-react'
+import { Container, Header, Button, Grid, Image, Checkbox, Input, Table, Divider } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { ArmyType, UnitDefinition } from '../store/units/types'
 import UnitArmy from '../components/UnitArmy'
 import { battle, undo, ParticipantState, toggleRandomRoll, setRoll, setGeneral } from '../store/land_battle'
-import { TerrainDefinition } from '../store/terrains'
+import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import { TacticDefinition } from '../store/tactics'
 import IconDice from '../images/chance.png'
 import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from '../containers/ModalUnitSelector'
@@ -47,7 +47,7 @@ class Land extends Component<IProps, IState> {
   openUnitSelector = (army: ArmyType, row: number, column: number, unit: UnitDefinition | null) => this.setState({ modal_unit_info: { army, row, column, is_defeated: false, unit } })
 
   openDefeatedUnitSelector = (army: ArmyType, row: number, column: number, unit: UnitDefinition | null) => this.setState({ modal_unit_info: { army, row, column, is_defeated: true, unit } })
-  
+
   openArmyUnitModal = (army: ArmyType, row: number, column: number, unit: UnitDefinition) => this.setState({ modal_army_unit_info: { army, row, column, is_defeated: false, unit } })
 
   openArmyDefeatedUnitModal = (army: ArmyType, row: number, column: number, unit: UnitDefinition) => this.setState({ modal_army_unit_info: { army, row, column, is_defeated: true, unit } })
@@ -101,6 +101,7 @@ class Land extends Component<IProps, IState> {
               }
             </Grid.Column>
           </Grid.Row>
+          <Divider />
           <Grid.Row columns={1}>
             <Grid.Column>
               <Table celled>
@@ -108,8 +109,8 @@ class Land extends Component<IProps, IState> {
                   <Table.Row>
                     <Table.HeaderCell>
                     </Table.HeaderCell>
-                    <Table.HeaderCell>
-                      General
+                    <Table.HeaderCell collapsing>
+                      General skill
                     </Table.HeaderCell>
                     <Table.HeaderCell>
                       Tactic
@@ -129,11 +130,31 @@ class Land extends Component<IProps, IState> {
               </Table>
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row columns={6}>
-            {
-              this.props.terrains.map((terrain, index) => this.renderTerrain(terrain, index))
-            }
+          <Grid.Row columns={1}>
+            <Grid.Column>
+              <Table celled>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell>
+                      Location
+                  </Table.HeaderCell>
+                    <Table.HeaderCell>
+                      Terrain
+                    </Table.HeaderCell>
+                    <Table.HeaderCell>
+                      Roll
+                  </Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                  {
+                    this.props.terrains.map((terrain, index) => this.renderTerrain(terrain, index))
+                  }
+                </Table.Body>
+              </Table>
+            </Grid.Column>
           </Grid.Row>
+          <Divider />
           <Grid.Row columns={1}>
             <Grid.Column>
               {
@@ -156,12 +177,14 @@ class Land extends Component<IProps, IState> {
   renderArmy = (army: ArmyType, units: ParticipantState) => {
     return (
       <div key={army}>
-        <Header>{army}</Header>
+        {army === ArmyType.Attacker && <Header>{army + '\'s army'}</Header>}
         <UnitArmy
           onClick={(row, column, unit) => this.openUnitModal(army, row, column, unit)}
           units={units.army}
           reverse={army === ArmyType.Attacker}
+          row_names={true}
         />
+        {army === ArmyType.Defender && <Header>{army + '\'s army'}</Header>}
       </div>
     )
   }
@@ -170,7 +193,7 @@ class Land extends Component<IProps, IState> {
     return (
       <div key={army}>
         <Image src={IconDice} avatar />
-        {is_random ? roll : <Input size='mini' style={{width: 100}} type='number' value={roll} onChange={(_, data) => this.props.setRoll(army, Number(data.value))} />}
+        {is_random ? roll : <Input size='mini' style={{ width: 100 }} type='number' value={roll} onChange={(_, data) => this.props.setRoll(army, Number(data.value))} />}
       </div>
     )
   }
@@ -184,11 +207,12 @@ class Land extends Component<IProps, IState> {
   renderDefeatedArmy = (army: ArmyType, units: ParticipantState) => {
     return (
       <div key={army}>
-        <Header>{army}</Header>
+        <Header>{army + '\'s defeated units'}</Header>
         <UnitArmy
           onClick={(row, column, unit) => this.openDefeatedUnitSelector(army, row, column, unit)}
           units={units.defeated_army}
           reverse={false}
+          row_names={false}
         />
       </div>
     )
@@ -196,12 +220,18 @@ class Land extends Component<IProps, IState> {
 
   renderTerrain = (terrain: TerrainDefinition, index: number) => {
     return (
-      <Grid.Column key={terrain.location} onClick={() => this.openTerrainModal(index)}>
-        <Header>{terrain.location}</Header>
-        <div>
+      <Table.Row key={terrain.location} onClick={() => this.openTerrainModal(index)}>
+        <Table.Cell>
+          {terrain.location}
+        </Table.Cell>
+        <Table.Cell>
           {terrain.type}
-        </div>
-      </Grid.Column>
+        </Table.Cell>
+        <Table.Cell>
+          <Image src={IconDice} avatar />
+          {terrain.calculateValue(TerrainCalc.Roll)}
+        </Table.Cell>
+      </Table.Row>
     )
   }
 
@@ -221,7 +251,7 @@ class Land extends Component<IProps, IState> {
           {army_type}
         </Table.Cell>
         <Table.Cell collapsing>
-          <Input size='mini' style={{width: 100}} type='number' value={info.general} onChange={(_, data) => this.props.setGeneral(army_type, Number(data.value))} />
+          <Input size='mini' style={{ width: 100 }} type='number' value={info.general} onChange={(_, data) => this.props.setGeneral(army_type, Number(data.value))} />
         </Table.Cell>
         <Table.Cell collapsing>
           {this.renderTactic(army_type, info.tactic)}

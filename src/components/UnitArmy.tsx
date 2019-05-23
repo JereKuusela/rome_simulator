@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { List } from 'immutable'
-import { Table, Image } from 'semantic-ui-react'
+import { Table, Image, Icon } from 'semantic-ui-react'
 import { UnitDefinition, UnitCalc } from '../store/units'
 import IconEmpty from '../images/empty.png'
 
@@ -9,6 +9,7 @@ interface IProps {
   units: List<List<(UnitDefinition | null)>>
   reverse: boolean
   onClick: (row: number, column: number, unit: UnitDefinition | null) => void
+  row_names: boolean
 }
 
 const MORALE_COLOR = 'rgba(200,55,55,0.60)'
@@ -20,7 +21,7 @@ export default class UnitArmy extends Component<IProps> {
 
   render() {
     return (
-      <Table celled>
+      <Table compact celled definition>
         <Table.Body>
           {
             (this.props.reverse ? this.props.units.reverse() : this.props.units).map((row, index) => this.renderRow(this.props.reverse ? this.props.units.size - 1 - index : index, row))
@@ -34,6 +35,9 @@ export default class UnitArmy extends Component<IProps> {
   renderRow = (row: number, units: List<(UnitDefinition | null)>) => {
     return (
       <Table.Row key={row}>
+        <Table.Cell>
+          <Icon fitted size='small' name={this.props.row_names ? this.props.reverse ? 'arrow down' : 'arrow up' : 'heartbeat'}></Icon>
+        </Table.Cell>
         {
           units.map((unit, index) => (
             <Table.Cell key={index} selectable onClick={() => this.props.onClick(row, index, unit)}>
