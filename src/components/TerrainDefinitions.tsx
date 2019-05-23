@@ -9,10 +9,10 @@ interface IProps {
 }
 
 // Display component for showing unit definitions for an army.
-export class TableTerrainDefinitions extends Component<IProps> {
+export default class TerrainDefinitions extends Component<IProps> {
 
   readonly attributes = Object.keys(TerrainCalc).map(k => TerrainCalc[k as any]) as TerrainCalc[]
-  readonly headers = ['Terrain', 'Roll']
+  readonly headers = ['Terrain', 'Location', 'Roll']
 
   render() {
     return (
@@ -44,6 +44,9 @@ export class TableTerrainDefinitions extends Component<IProps> {
       <Table.Row key={terrain.type} onClick={() => this.props.onRowClick(terrain.type)}>
         <Table.Cell>
           {terrain.type}
+        </Table.Cell>
+        <Table.Cell>
+          {terrain.location}
         </Table.Cell>
         {
           this.attributes.map(type => (

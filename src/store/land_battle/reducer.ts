@@ -116,7 +116,7 @@ export const landBattleReducer = createReducer(initialState)
           }
         }
       }
-      let [attacker, defender, attacker_defeated_army, defender_defeated_army] = fight(next.attacker, next.defender, next.day, next.terrains)
+      let [attacker, defender, attacker_defeated_army, defender_defeated_army] = fight(next.attacker, next.defender, next.day + 1, next.terrains)
       next = {
         ...next,
         attacker: {

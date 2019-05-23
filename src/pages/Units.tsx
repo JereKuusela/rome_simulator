@@ -1,12 +1,12 @@
 import { Map } from 'immutable'
 import React, { Component } from 'react'
-import { Container } from 'semantic-ui-react'
+import { Container, Modal } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import ModalUnitDetail from '../containers/ModalUnitDetail'
 import ModalGlobalStatsDetail from '../containers/ModalGlobalStatsDetail'
 import { AppState } from '../store/index'
 import { UnitType, UnitDefinition, ArmyType } from '../store/units/types'
-import { TableUnitDefinitions } from '../components/TableUnitDefinitions'
+import UnitDefinitions from '../components/UnitDefinitions'
 
 interface IState {
   modal_army: ArmyType | null
@@ -27,16 +27,18 @@ class Units extends Component<IProps, IState> {
   render() {
     return (
       <Container>
-        <ModalUnitDetail
-          onClose={this.closeModal}
-          army={this.state.modal_army}
-          unit={this.state.modal_unit}
-        />
-        <ModalGlobalStatsDetail
-          onClose={this.closeModal}
-          army={this.state.modal_army}
-          unit={this.state.modal_unit}
-        />
+        <Modal basic onClose={this.closeModal} open={this.state.modal_army !== null}>
+          <Modal.Content>
+            <ModalUnitDetail
+              army={this.state.modal_army}
+              unit={this.state.modal_unit}
+            />
+            <ModalGlobalStatsDetail
+              army={this.state.modal_army}
+              unit={this.state.modal_unit}
+            />
+          </Modal.Content>
+        </Modal>
         {
           Array.from(this.props.units).map(value => {
             return this.renderArmy(value[0], value[1], this.props.global_stats.get(value[0]))
@@ -48,13 +50,13 @@ class Units extends Component<IProps, IState> {
   renderArmy = (army: ArmyType, units: Map<UnitType, UnitDefinition>, global_stats: UnitDefinition | undefined) => {
     return (
       <div key={army}>
-        <TableUnitDefinitions
+        <UnitDefinitions
           army={army}
           global_stats={global_stats}
           units={units.toList()}
           onRowClick={unit => this.openModal(army, unit.type)}
         />
-        <br/>
+        <br />
       </div>
     )
   }

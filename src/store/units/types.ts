@@ -58,8 +58,8 @@ export class UnitDefinition extends BaseDefinition<UnitType, ValueType> {
     return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, new_values, this.modifier_values, this.loss_values)
   }
 
-  add_base_value = (key: string, type: ValueType, value: number): UnitDefinition => {
-    const new_values = this.add_values(this.base_values, key, [[type, value]])
+  add_base_value = (key: string, attribute: ValueType, value: number): UnitDefinition => {
+    const new_values = this.add_values(this.base_values, key, [[attribute, value]])
     return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, new_values, this.modifier_values, this.loss_values)
   }
 
@@ -68,8 +68,8 @@ export class UnitDefinition extends BaseDefinition<UnitType, ValueType> {
     return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, this.base_values, new_values, this.loss_values)
   }
 
-  add_modifier_value = (key: string, type: ValueType, value: number): UnitDefinition => {
-    const new_values = this.add_values(this.modifier_values, key, [[type, value]])
+  add_modifier_value = (key: string, attribute: ValueType, value: number): UnitDefinition => {
+    const new_values = this.add_values(this.modifier_values, key, [[attribute, value]])
     return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, this.base_values, new_values, this.loss_values)
   }
 
@@ -78,8 +78,8 @@ export class UnitDefinition extends BaseDefinition<UnitType, ValueType> {
     return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, this.base_values, this.modifier_values, new_values)
   }
 
-  add_loss_value = (key: string, type: ValueType, value: number): UnitDefinition => {
-    const new_values = this.add_values(this.loss_values, key, [[type, value]])
+  add_loss_value = (key: string, attribute: ValueType, value: number): UnitDefinition => {
+    const new_values = this.add_values(this.loss_values, key, [[attribute, value]])
     return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, this.base_values, this.modifier_values, new_values)
   }
 }

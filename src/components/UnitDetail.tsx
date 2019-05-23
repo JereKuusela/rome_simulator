@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Modal, Table, Input } from 'semantic-ui-react'
+import { Table, Input } from 'semantic-ui-react'
 import { UnitType, UnitDefinition, UnitCalc, ArmyType, ValueType } from '../store/units'
 import { TerrainType } from '../store/terrains'
 
@@ -7,14 +7,13 @@ interface IProps {
   army: ArmyType
   custom_value_key: string
   unit: UnitDefinition
-  onClose: () => void
   onCustomBaseValueChange: (army: ArmyType, type: UnitType, key: string, attribute: ValueType, value: number) => void
   onCustomModifierValueChange: (army: ArmyType, type: UnitType, key: string, attribute: ValueType, value: number) => void
   onCustomLossValueChange: (army: ArmyType, type: UnitType, key: string, attribute: ValueType, value: number) => void
 }
 
 // Display component for showing and changing unit details.
-export class ModalUnitDetail extends Component<IProps> {
+export default class UnitDetail extends Component<IProps> {
 
   readonly attributes = Object.keys(UnitCalc).map(k => UnitCalc[k as any]) as UnitCalc[]
   readonly units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
@@ -24,34 +23,30 @@ export class ModalUnitDetail extends Component<IProps> {
   render() {
 
     return (
-      <Modal basic onClose={this.props.onClose} open>
-        <Modal.Content>
-          <Table celled selectable>
-            <Table.Header>
-              <Table.Row>
-                {
-                  Array.from(this.headers).map((value) => (
-                    <Table.HeaderCell key={value}>
-                      {value}
-                    </Table.HeaderCell>
-                  ))
-                }
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {
-                this.attributes.map((value) => this.renderRow(this.props.unit, value))
-              }
-              {
-                this.units.map((value) => this.renderRow(this.props.unit, value))
-              }
-              {
-                this.terrains.map((value) => this.renderRow(this.props.unit, value))
-              }
-            </Table.Body>
-          </Table>
-        </Modal.Content>
-      </Modal>
+      <Table celled selectable>
+        <Table.Header>
+          <Table.Row>
+            {
+              Array.from(this.headers).map((value) => (
+                <Table.HeaderCell key={value}>
+                  {value}
+                </Table.HeaderCell>
+              ))
+            }
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {
+            this.attributes.map((value) => this.renderRow(this.props.unit, value))
+          }
+          {
+            this.units.map((value) => this.renderRow(this.props.unit, value))
+          }
+          {
+            this.terrains.map((value) => this.renderRow(this.props.unit, value))
+          }
+        </Table.Body>
+      </Table>
     )
   }
 

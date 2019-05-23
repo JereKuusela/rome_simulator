@@ -1,17 +1,16 @@
 import React, { Component } from 'react'
-import { Modal, Table, Input, Image } from 'semantic-ui-react'
+import { Table, Input, Image } from 'semantic-ui-react'
 import { UnitType, unit_to_icon } from '../store/units'
 import { TacticDefinition, ValueType, TacticType, TacticCalc, tactic_to_icon } from '../store/tactics'
 
 interface IProps {
   custom_value_key: string
   tactic: TacticDefinition | undefined
-  onClose: () => void
   onCustomBaseValueChange: (type: TacticType, key: string, attribute: ValueType, value: number) => void
 }
 
 // Display component for showing and changing tactic details.
-export class ModalTacticDetail extends Component<IProps> {
+export default class TacticDetail extends Component<IProps> {
 
   readonly attributes = Object.keys(TacticCalc).map(k => TacticCalc[k as any]) as TacticCalc[]
   readonly tactics = Object.keys(TacticType).map(k => TacticType[k as any]) as TacticType[]
@@ -23,34 +22,30 @@ export class ModalTacticDetail extends Component<IProps> {
       return null
     const tactic = this.props.tactic
     return (
-      <Modal basic onClose={this.props.onClose} open>
-        <Modal.Content>
-          <Table celled>
-            <Table.Header>
-              <Table.Row>
-                {
-                  Array.from(this.headers).map((value) => (
-                    <Table.HeaderCell key={value}>
-                      {value}
-                    </Table.HeaderCell>
-                  ))
-                }
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {
-                this.units.map((value) => this.renderRow(tactic, value, false, unit_to_icon.get(value)))
-              }
-              {
-                this.tactics.map((value) => this.renderRow(tactic, value, true, tactic_to_icon.get(value)))
-              }
-              {
-                this.attributes.map((value) => this.renderRow(tactic, value, true, undefined))
-              }
-            </Table.Body>
-          </Table>
-        </Modal.Content>
-      </Modal>
+      <Table celled>
+        <Table.Header>
+          <Table.Row>
+            {
+              Array.from(this.headers).map((value) => (
+                <Table.HeaderCell key={value}>
+                  {value}
+                </Table.HeaderCell>
+              ))
+            }
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {
+            this.units.map((value) => this.renderRow(tactic, value, false, unit_to_icon.get(value)))
+          }
+          {
+            this.tactics.map((value) => this.renderRow(tactic, value, true, tactic_to_icon.get(value)))
+          }
+          {
+            this.attributes.map((value) => this.renderRow(tactic, value, true, undefined))
+          }
+        </Table.Body>
+      </Table>
     )
   }
 

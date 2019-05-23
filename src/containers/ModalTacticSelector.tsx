@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/'
 import { selectTactic } from '../store/land_battle'
-import { ModalSelector } from '../components/ModalSelector'
+import ItemSelector from '../components/ItemSelector'
 import { ArmyType } from '../store/units'
 import { TacticType, TacticDefinition } from '../store/tactics'
 
@@ -15,12 +15,13 @@ class ModalTacticSelector extends Component<IProps> {
     if (!this.props.info)
       return null
     return (
-      <ModalSelector
+      <ItemSelector
         onClose={this.props.onClose}
         onSelection={this.selectTactic}
         items={this.props.tactics.toList()}
         attributes={[]}
         can_remove={false}
+        can_select={true}
       />
     )
   }

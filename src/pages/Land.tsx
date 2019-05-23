@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { Container, Header, Button, Grid, Image, Checkbox, Input, Table } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
-import { ArmyType } from '../store/units/types'
-import { TableLandBattle } from '../components/TableLandBattle'
+import { ArmyType, UnitDefinition } from '../store/units/types'
+import UnitArmy from '../components/UnitArmy'
 import { battle, undo, ParticipantState, toggleRandomRoll, setRoll, setGeneral } from '../store/land_battle'
 import { TerrainDefinition } from '../store/terrains'
 import { TacticDefinition } from '../store/tactics'
@@ -11,26 +11,46 @@ import IconDice from '../images/chance.png'
 import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from '../containers/ModalUnitSelector'
 import ModalTerrainSelector, { ModalInfo as ModalTerrainInfo } from '../containers/ModalTerrainSelector'
 import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers/ModalTacticSelector'
+import ModalArmyUnitDetail, { ModalInfo as ModalArmyUnitInfo } from '../containers/ModalArmyUnitDetail'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
   modal_terrain_info: ModalTerrainInfo | null
   modal_tactic_info: ModalTacticInfo | null
+  modal_army_unit_info: ModalArmyUnitInfo | null
 }
 
 class Land extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    this.state = { modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null }
+    this.state = { modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null }
   }
 
 
-  closeModal = () => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null })
+  closeModal = () => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null })
 
-  openUnitModal = (army: ArmyType, row: number, column: number) => this.setState({ modal_unit_info: { army, row, column, is_defeated: false } })
+  openUnitModal = (army: ArmyType, row: number, column: number, unit: UnitDefinition | null) => {
+    if (unit)
+      this.openArmyUnitModal(army, row, column, unit)
+    else
+      this.openUnitSelector(army, row, column, unit)
+  }
 
-  openDefeatedUnitModal = (army: ArmyType, row: number, column: number) => this.setState({ modal_unit_info: { army, row, column, is_defeated: true } })
+  openDefeatedUnitModal = (army: ArmyType, row: number, column: number, unit: UnitDefinition | null) => {
+    if (unit)
+      this.openArmyDefeatedUnitModal(army, row, column, unit)
+    else
+      this.openDefeatedUnitSelector(army, row, column, unit)
+  }
+
+  openUnitSelector = (army: ArmyType, row: number, column: number, unit: UnitDefinition | null) => this.setState({ modal_unit_info: { army, row, column, is_defeated: false, unit } })
+
+  openDefeatedUnitSelector = (army: ArmyType, row: number, column: number, unit: UnitDefinition | null) => this.setState({ modal_unit_info: { army, row, column, is_defeated: true, unit } })
+  
+  openArmyUnitModal = (army: ArmyType, row: number, column: number, unit: UnitDefinition) => this.setState({ modal_army_unit_info: { army, row, column, is_defeated: false, unit } })
+
+  openArmyDefeatedUnitModal = (army: ArmyType, row: number, column: number, unit: UnitDefinition) => this.setState({ modal_army_unit_info: { army, row, column, is_defeated: true, unit } })
 
   openTerrainModal = (index: number) => this.setState({ modal_terrain_info: { index, location: this.props.terrains.get(index)!.location } })
 
@@ -41,6 +61,10 @@ class Land extends Component<IProps, IState> {
       <Container>
         <ModalUnitSelector
           info={this.state.modal_unit_info}
+          onClose={this.closeModal}
+        />
+        <ModalArmyUnitDetail
+          info={this.state.modal_army_unit_info}
           onClose={this.closeModal}
         />
         <ModalTerrainSelector
@@ -133,8 +157,8 @@ class Land extends Component<IProps, IState> {
     return (
       <div key={army}>
         <Header>{army}</Header>
-        <TableLandBattle
-          onClick={(row, column) => this.openUnitModal(army, row, column)}
+        <UnitArmy
+          onClick={(row, column, unit) => this.openUnitModal(army, row, column, unit)}
           units={units.army}
           reverse={army === ArmyType.Attacker}
         />
@@ -161,8 +185,8 @@ class Land extends Component<IProps, IState> {
     return (
       <div key={army}>
         <Header>{army}</Header>
-        <TableLandBattle
-          onClick={(row, column) => this.openDefeatedUnitModal(army, row, column)}
+        <UnitArmy
+          onClick={(row, column, unit) => this.openDefeatedUnitSelector(army, row, column, unit)}
           units={units.defeated_army}
           reverse={false}
         />

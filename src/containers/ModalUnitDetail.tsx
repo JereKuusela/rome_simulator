@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { UnitType, setBaseValue, setModifierValue, setLossValue, ArmyType, ValueType } from '../store/units'
 import { AppState } from '../store/'
-import { ModalUnitDetail as DisplayComponent } from '../components/ModalUnitDetail'
+import UnitDetail from '../components/UnitDetail'
 
 const CUSTOM_VALUE_KEY = 'Custom'
 
@@ -11,11 +11,10 @@ class ModalUnitDetail extends Component<IProps> {
     if (!this.props.army || !this.props.unit)
       return null
     return (
-      <DisplayComponent
+      <UnitDetail
         army={this.props.army}
         custom_value_key={CUSTOM_VALUE_KEY}
         unit={this.props.units.getIn([this.props.army, this.props.unit])}
-        onClose={this.props.onClose}
         onCustomBaseValueChange={this.props.setBaseValue}
         onCustomModifierValueChange={this.props.setModifierValue}
         onCustomLossValueChange={this.props.setLossValue}
@@ -43,7 +42,6 @@ const mapDispatchToProps = (dispatch: any) => ({
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {
   army: ArmyType | null
   unit: UnitType | null
-  onClose: () => void
  }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModalUnitDetail)

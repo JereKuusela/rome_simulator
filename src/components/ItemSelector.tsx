@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { List } from 'immutable'
-import { Modal, Table, Image } from 'semantic-ui-react'
+import { Table, Image } from 'semantic-ui-react'
 import { TerrainType, TerrainCalc } from '../store/terrains'
 import { UnitType, UnitCalc } from '../store/units'
 import { BaseDefinition } from '../utils'
@@ -15,15 +15,14 @@ interface IProps<T extends ItemType, S extends ItemAttribute> {
   onSelection: (type: T | null) => void
   attributes: S[]
   can_remove: boolean
+  can_select: boolean
 }
 
-export class ModalSelector<S extends ItemAttribute, T extends ItemType> extends Component<IProps<T, S>> {
+export default class ItemSelector<S extends ItemAttribute, T extends ItemType> extends Component<IProps<T, S>> {
 
   render() {
 
     return (
-      <Modal basic onClose={this.props.onClose} open>
-        <Modal.Content>
           <Table celled selectable>
             <Table.Body>
               {this.props.can_remove ? (
@@ -34,12 +33,11 @@ export class ModalSelector<S extends ItemAttribute, T extends ItemType> extends 
                 </Table.Row>
               ) : null}
               {
-                this.props.items.map(terrain => this.renderRow(terrain))
+                this.props.can_select && this.props.items.map(terrain => this.renderRow(terrain))
               }
             </Table.Body>
           </Table>
-        </Modal.Content>
-      </Modal>
+        
     )
   }
 

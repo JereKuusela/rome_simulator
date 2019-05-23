@@ -44,7 +44,7 @@ export class BaseDefinition<T, S> {
     const values = container.get(type)
     if (values)
       values.forEach(value => result += value)
-    return result
+    return Math.round(result * 100) / 100
   }
 
   calculateValue = (type: S): number => {

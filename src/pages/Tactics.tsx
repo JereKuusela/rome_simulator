@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { Container } from 'semantic-ui-react'
+import { Container, Modal } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import ModalTacticDetail from '../containers/ModalTacticDetail'
 import { AppState } from '../store/index'
-import { TableTacticDefinitions } from '../components/TableTacticDefinitions'
+import TacticDefinitions from '../components/TacticDefinitions'
 import { TacticType } from '../store/tactics'
 
 interface IState {
@@ -17,19 +17,22 @@ class Tactics extends Component<IProps, IState> {
     this.state = { modal_tactic: null };
   }
 
-  closeModal = () => this.setState({modal_tactic: null})
-  
-  openModal = (tactic: TacticType) => this.setState({modal_tactic: tactic})
+  closeModal = () => this.setState({ modal_tactic: null })
+
+  openModal = (tactic: TacticType) => this.setState({ modal_tactic: tactic })
 
   render() {
     return (
       <Container>
-        <ModalTacticDetail
-          onClose={this.closeModal}
-          tactic={this.state.modal_tactic}
-        />
+        <Modal basic onClose={this.closeModal} open={this.state.modal_tactic !== null}>
+          <Modal.Content>
+            <ModalTacticDetail
+              tactic={this.state.modal_tactic}
+            />
+          </Modal.Content>
+        </Modal>
         {
-          <TableTacticDefinitions
+          <TacticDefinitions
             tactics={this.props.tactics.toList()}
             onRowClick={tactic => this.openModal(tactic)}
           />

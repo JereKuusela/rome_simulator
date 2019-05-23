@@ -17,7 +17,7 @@ interface IProps {
 }
 
 // Display component for showing unit definitions for an army.
-export class TableUnitDefinitions extends Component<IProps> {
+export default class UnitDefinitions extends Component<IProps> {
 
   readonly terrains = Object.keys(TerrainType).map(k => TerrainType[k as any]) as TerrainType[]
   readonly units = Object.keys(UnitType).map(k => UnitType[k as any]) as UnitType[]
