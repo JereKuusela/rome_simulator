@@ -18,6 +18,7 @@ class ModalGlobalStatsDetail extends Component<IProps> {
         onCustomBaseValueChange={this.props.setGlobalBaseValue}
         onCustomModifierValueChange={this.props.setGlobalModifierValue}
         onCustomLossValueChange={this.props.setGlobalLossValue}
+        show_statistics={false}
       />
     )
   }

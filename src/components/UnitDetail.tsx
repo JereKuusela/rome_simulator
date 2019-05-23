@@ -7,6 +7,7 @@ interface IProps {
   army: ArmyType
   custom_value_key: string
   unit: UnitDefinition
+  show_statistics: boolean
   onCustomBaseValueChange: (army: ArmyType, type: UnitType, key: string, attribute: ValueType, value: number) => void
   onCustomModifierValueChange: (army: ArmyType, type: UnitType, key: string, attribute: ValueType, value: number) => void
   onCustomLossValueChange: (army: ArmyType, type: UnitType, key: string, attribute: ValueType, value: number) => void
@@ -52,6 +53,8 @@ export default class UnitDetail extends Component<IProps> {
 
   renderRow = (unit: UnitDefinition, attribute: ValueType) => {
     if (attribute === UnitCalc.MovementSpeed || attribute === UnitCalc.Upkeep || attribute === UnitCalc.Cost || attribute === UnitCalc.RecruitTime || attribute === UnitCalc.AttritionWeight)
+      return null
+    if (!this.props.show_statistics && (attribute === UnitCalc.ManpowerDepleted || attribute === UnitCalc.MoraleDepleted))
       return null
     let base_value = unit.get_base_value(attribute, this.props.custom_value_key)
     let modifier_value = unit.get_modifier_value(attribute, this.props.custom_value_key)

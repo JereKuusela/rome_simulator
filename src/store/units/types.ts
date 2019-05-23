@@ -1,9 +1,11 @@
 
-import { Map } from 'immutable'
+import { Map, OrderedMap } from 'immutable'
 import { BaseDefinition } from '../../utils'
 import { TerrainType } from '../terrains'
 
 export enum UnitCalc {
+  ManpowerDepleted = 'Manpower killed',
+  MoraleDepleted = 'Morale depleted',
   Morale = 'Morale',
   Manpower = 'Manpower',
   Discipline = 'Discipline',
@@ -18,11 +20,10 @@ export enum UnitCalc {
   Upkeep = 'Upkeep',
   AttritionWeight = 'Attrition weight',
   Experience = 'Experience'
-
 }
 
 export type ValueType = UnitCalc | UnitType | TerrainType
-type MapValues = Map<ValueType, Map<string, number>>
+type MapValues = Map<ValueType, OrderedMap<string, number>>
 
 
 export class UnitDefinition extends BaseDefinition<UnitType, ValueType> {
@@ -38,11 +39,13 @@ export class UnitDefinition extends BaseDefinition<UnitType, ValueType> {
       case UnitCalc.Cost:
       case UnitCalc.Maneuver:
       case UnitCalc.Manpower:
+      case UnitCalc.ManpowerDepleted:
       case UnitCalc.Morale:
+      case UnitCalc.MoraleDepleted:
       case UnitCalc.MovementSpeed:
       case UnitCalc.RecruitTime:
       case UnitCalc.Upkeep:
-        return String(value)
+        return (+(this.calculateValue(type).toFixed(2))).toString()
       case UnitCalc.Discipline:
       case UnitCalc.Offense:
       case UnitCalc.Defense:

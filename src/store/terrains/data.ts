@@ -35,7 +35,7 @@ export const getDefaultDefinitions = (): Map<TerrainType, TerrainDefinition> => 
 }
 
 export type ValueType = TerrainCalc
-type MapValues = Map<ValueType, Map<string, number>>
+type MapValues = Map<ValueType, OrderedMap<string, number>>
 
 export class TerrainDefinition extends BaseDefinition<TerrainType, ValueType> {
 

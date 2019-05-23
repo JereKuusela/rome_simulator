@@ -14,6 +14,11 @@ interface Loss {
   manpower: number
 }
 
+interface Kill {
+  morale: number
+  manpower: number
+}
+
 const DAMAGE_REDUCTION_PER_EXPERIENCE = 0.3
 const BASE_DAMAGE = 0.08
 const BASE_DAMAGE_PER_ROLL = 0.02
@@ -56,18 +61,24 @@ export const battle = (attacker: ParticipantState, defender: ParticipantState, r
   // Previous losses are used to calculate attack damage.
   let attacker_previous_losses = Array<Loss>(attacker_frontline.size).fill({ morale: 0, manpower: 0 })
   let defender_previous_losses = Array<Loss>(defender_frontline.size).fill({ morale: 0, manpower: 0 })
+  let attacker_previous_kills = Array<Kill>(attacker_frontline.size).fill({ morale: 0, manpower: 0 })
+  let defender_previous_kills = Array<Kill>(defender_frontline.size).fill({ morale: 0, manpower: 0 })
 
   for (let iteration = 0; iteration < 100; ++iteration) {
     // Current loses are used to check when the solution is found, and to calculate damange on the next iteration.
-    let defender_losses = attack(attacker_frontline, defender_frontline, defender_to_attacker, attacker_previous_losses, attacker_roll, terrains, tactic_effects.attacker, tactic_effects.casualties)
-    let attacker_losses = attack(defender_frontline, attacker_frontline, attacker_to_defender, defender_previous_losses, defender_roll, terrains, tactic_effects.defender, tactic_effects.casualties)
+    let [defender_losses, attacker_kills] = attack(attacker_frontline, defender_frontline, defender_to_attacker, attacker_previous_losses, attacker_roll, terrains, tactic_effects.attacker, tactic_effects.casualties)
+    let [attacker_losses, defender_kills] = attack(defender_frontline, attacker_frontline, attacker_to_defender, defender_previous_losses, defender_roll, terrains, tactic_effects.defender, tactic_effects.casualties)
     if (arraysEqual(attacker_previous_losses, attacker_losses) && arraysEqual(defender_previous_losses, defender_losses))
       break
     attacker_previous_losses = attacker_losses
     defender_previous_losses = defender_losses
+    attacker_previous_kills = attacker_kills
+    defender_previous_kills = defender_kills
   }
   attacker_army = attacker_army.update(0, row => applyLosses(row, attacker_previous_losses, round))
   defender_army = defender_army.update(0, row => applyLosses(row, defender_previous_losses, round))
+  attacker_army = attacker_army.update(0, row => applyKills(row, attacker_previous_kills, round))
+  defender_army = defender_army.update(0, row => applyKills(row, defender_previous_kills, round))
   let attacker_defeated_army = copyDefeated(attacker_army, attacker.defeated_army)
   let defender_defeated_army = copyDefeated(defender_army, defender.defeated_army)
   attacker_army = removeDefeated(attacker_army)
@@ -173,10 +184,10 @@ const pickTargets = (source_row: FrontLine, target_row: FrontLine) => {
  * Calculates effectiveness of a tactic against another tactic with a given army.
  * @param tactic Tactic to calculate.
  * @param army Units affecting positive bonus.
- * @param defeted_army Units affecting positive bonus.
+ * @param defeated_army Units affecting positive bonus.
  * @param counter_tactic Opposing tactic, can counter or get countered.
  */
-const calculateTactic = (tactic: TacticDefinition | null, army: Army, defeted_army: Army, counter_tactic: TacticDefinition | null): number => {
+export const calculateTactic = (tactic: TacticDefinition | null, army: Army, defeated_army: Army, counter_tactic: TacticDefinition | null): number => {
   if (!tactic || !counter_tactic)
     return 1.0
   const effectiveness = tactic.calculateValue(counter_tactic.type)
@@ -192,7 +203,7 @@ const calculateTactic = (tactic: TacticDefinition | null, army: Army, defeted_ar
         weight += tactic.calculateValue(unit.type)
       }
     }
-    for (const row of defeted_army) {
+    for (const row of defeated_army) {
       for (const unit of row) {
         if (!unit)
           continue
@@ -223,13 +234,23 @@ const applyLosses = (row: FrontLine, losses: Loss[], round: number): FrontLine =
   return row
 }
 
+const applyKills = (row: FrontLine, kills: Kill[], round: number): FrontLine => {
+  for (let i = 0; i < row.size; ++i) {
+    if (row.get(i)) {
+      const kill_values: [UnitCalc, number][] = [[UnitCalc.MoraleDepleted, kills[i].morale], [UnitCalc.ManpowerDepleted, kills[i].manpower]]
+      row = row.update(i, unit => unit && unit.add_base_values('Round ' + round, kill_values))
+    }
+  }
+  return row
+}
+
 const copyDefeated = (army: Army, defeated_army: Army): Army => {
   army.get(0)!.forEach(unit => {
     if (!unit)
       return
-    if (unit.calculateValue(UnitCalc.Manpower) > 0 && unit.calculateValue(UnitCalc.Morale) > 0.25) 
+    if (unit.calculateValue(UnitCalc.Manpower) > 0 && unit.calculateValue(UnitCalc.Morale) > 0.25)
       return
-      defeated_army = addDefeated(unit, defeated_army)
+    defeated_army = addDefeated(unit, defeated_army)
   })
   return defeated_army
 }
@@ -275,10 +296,13 @@ const arraysEqual = (a: Loss[], b: Loss[]) => {
  * @param roll Dice roll, affects amount of damage inflicted.
  * @param terrains Terrains of the battle, may affect amount of damage inflicted.
  */
-const attack = (source_row: FrontLine, target_row: FrontLine, target_to_source: (number | null)[], source_losses: Loss[], roll: number, terrains: Terrains, tactic_damage_multiplier: number, casualties_multiplier: number): Loss[] => {
-  let target_losses = Array<Loss>(target_row.size)
-  for (var i = 0; i < target_row.size; ++i)
+const attack = (source_row: FrontLine, target_row: FrontLine, target_to_source: (number | null)[], source_losses: Loss[], roll: number, terrains: Terrains, tactic_damage_multiplier: number, casualties_multiplier: number): [Loss[], Kill[]] => {
+  const target_losses = Array<Loss>(target_row.size)
+  for (let i = 0; i < target_row.size; ++i)
     target_losses[i] = { morale: 0, manpower: 0 }
+  const source_kills = Array<Kill>(source_row.size)
+  for (let i = 0; i < source_row.size; ++i)
+    source_kills[i] = { morale: 0, manpower: 0 }
   target_row.forEach((target, target_index) => {
     const source_index = target_to_source[target_index]
     if (!target || source_index === null)
@@ -287,8 +311,10 @@ const attack = (source_row: FrontLine, target_row: FrontLine, target_to_source: 
     const losses = calculateLosses(source, target, source_losses[source_index], roll, terrains, tactic_damage_multiplier, casualties_multiplier)
     target_losses[target_index].manpower += losses.manpower
     target_losses[target_index].morale += losses.morale
+    source_kills[source_index].manpower += losses.manpower
+    source_kills[source_index].morale += losses.morale
   })
-  return target_losses
+  return [target_losses, source_kills]
 }
 
 /**

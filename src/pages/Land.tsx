@@ -5,6 +5,7 @@ import { AppState } from '../store/index'
 import { ArmyType, UnitDefinition } from '../store/units/types'
 import UnitArmy from '../components/UnitArmy'
 import { battle, undo, ParticipantState, toggleRandomRoll, setRoll, setGeneral } from '../store/land_battle'
+import { calculateTactic} from '../store/land_battle/combat'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import { TacticDefinition } from '../store/tactics'
 import IconDice from '../images/chance.png'
@@ -124,8 +125,8 @@ class Land extends Component<IProps, IState> {
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {this.renderArmyInfo(ArmyType.Attacker, this.props.attacker)}
-                  {this.renderArmyInfo(ArmyType.Defender, this.props.defender)}
+                  {this.renderArmyInfo(ArmyType.Attacker, this.props.attacker, this.props.defender.tactic)}
+                  {this.renderArmyInfo(ArmyType.Defender, this.props.defender, this.props.attacker.tactic)}
                 </Table.Body>
               </Table>
             </Grid.Column>
@@ -209,7 +210,7 @@ class Land extends Component<IProps, IState> {
       <div key={army}>
         <Header>{army + '\'s defeated units'}</Header>
         <UnitArmy
-          onClick={(row, column, unit) => this.openDefeatedUnitSelector(army, row, column, unit)}
+          onClick={(row, column, unit) => this.openDefeatedUnitModal(army, row, column, unit)}
           units={units.defeated_army}
           reverse={false}
           row_names={false}
@@ -235,16 +236,29 @@ class Land extends Component<IProps, IState> {
     )
   }
 
-  renderTactic = (army: ArmyType, tactic: TacticDefinition | null) => {
+  renderTactic = (army: ArmyType, info: ParticipantState, counter: TacticDefinition | null) => {
+    const tactic = info.tactic
     return (
       <div key={army} onClick={() => this.openTacticModal(army)}>
         {tactic && tactic.image ? <Image src={tactic.image} avatar /> : null}
         {tactic && tactic.type}
+        {tactic && ' (' + this.toRelativePercent(calculateTactic(tactic, info.army, info.defeated_army, counter), true) + ')'}
       </div >
     )
   }
 
-  renderArmyInfo = (army_type: ArmyType, info: ParticipantState) => {
+  toRelativePercent = (number: number, show_zero: boolean) => {
+    const value = +(number * 100.0 - 100.0).toFixed(2)
+    if (value > 0)
+      return '+' + String(value) + '%'
+    if (value === 0 && !show_zero)
+      return ''
+    if (value === 0 && show_zero)
+      return '+0%'
+    return String(value) + '%'
+  }
+
+  renderArmyInfo = (army_type: ArmyType, info: ParticipantState, counter_tactic: TacticDefinition | null) => {
     return (
       <Table.Row key={army_type}>
         <Table.Cell collapsing>
@@ -254,7 +268,7 @@ class Land extends Component<IProps, IState> {
           <Input size='mini' style={{ width: 100 }} type='number' value={info.general} onChange={(_, data) => this.props.setGeneral(army_type, Number(data.value))} />
         </Table.Cell>
         <Table.Cell collapsing>
-          {this.renderTactic(army_type, info.tactic)}
+          {this.renderTactic(army_type, info, counter_tactic)}
         </Table.Cell>
         <Table.Cell>
           {this.renderRoll(army_type, info.roll, info.randomize_roll)}

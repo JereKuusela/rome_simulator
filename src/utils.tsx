@@ -1,20 +1,20 @@
-import { Map } from 'immutable'
+import { Map, OrderedMap } from 'immutable'
 
 export class BaseDefinition<T, S> {
-  constructor(public readonly type: T, public readonly image: string | null, protected readonly base_values: Map<S, Map<string, number>> = Map(), protected readonly modifier_values: Map<S, Map<string, number>> = Map(),
-    protected readonly loss_values: Map<S, Map<string, number>> = Map()) {
+  constructor(public readonly type: T, public readonly image: string | null, protected readonly base_values: Map<S, OrderedMap<string, number>> = Map(), protected readonly modifier_values: Map<S, OrderedMap<string, number>> = Map(),
+    protected readonly loss_values: Map<S, OrderedMap<string, number>> = Map()) {
 
   }
 
   toPercent = (number: number, show_zero: boolean) => {
-    const value = +(number * 100).toFixed(2)
+    const value = +(number * 100.0).toFixed(2)
     if (value === 0 && !show_zero)
       return ''
     return String(value) + '%'
   }
 
   toRelativePercent = (number: number, show_zero: boolean) => {
-    const value = +(number * 100).toFixed(2) - 100
+    const value = +(number * 100.0 - 100.0).toFixed(2)
     if (value > 0)
       return '+' + String(value) + '%'
     if (value === 0 && !show_zero)
@@ -25,7 +25,7 @@ export class BaseDefinition<T, S> {
   }
 
   toRelativeZeroPercent = (number: number, show_zero: boolean) => {
-    const value = +(number * 100).toFixed(2)
+    const value = +(number * 100.0).toFixed(2)
     if (value > 0)
       return '+' + String(value) + '%'
     if (value === 0 && !show_zero)
@@ -39,12 +39,12 @@ export class BaseDefinition<T, S> {
   calculateModifier = (type: S): number => this.calculateValueSub(this.modifier_values, type, 1.0)
   calculateLoss = (type: S): number => this.calculateValueSub(this.loss_values, type, 0)
 
-  private calculateValueSub = (container: Map<S, Map<string, number>>, type: S, initial: number): number => {
+  private calculateValueSub = (container: Map<S, OrderedMap<string, number>>, type: S, initial: number): number => {
     let result = initial
     const values = container.get(type)
     if (values)
       values.forEach(value => result += value)
-    return Math.round(result * 100) / 100
+    return Math.round(result * 100.0) / 100.0
   }
 
   calculateValue = (type: S): number => {
@@ -55,7 +55,7 @@ export class BaseDefinition<T, S> {
     return this.calculateBase(type) * this.calculateModifier(type)
   }
 
-  valueToString = (type: S): string => String(this.calculateValue(type))
+  valueToString = (type: S): string => (+(this.calculateValue(type).toFixed(2))).toString()
 
   valueToPercent = (type: S, show_zero: boolean) => this.toPercent(this.calculateValue(type), show_zero)
 
@@ -67,7 +67,7 @@ export class BaseDefinition<T, S> {
     const value = this.calculateValue(type)
     if (value === 0 && !show_zero)
       return ''
-    return String(value)
+    return +(value).toFixed(2)
   }
 
   valueToRelativeNumber = (type: S, show_zero: boolean) => {
@@ -76,7 +76,7 @@ export class BaseDefinition<T, S> {
       return '+' + String(value)
     if (value === 0 && !show_zero)
       return ''
-    return String(value)
+    return +(value).toFixed(2)
   }
 
   explain = (type: S) => {
@@ -94,7 +94,7 @@ export class BaseDefinition<T, S> {
       else if (value_base.size === 1)
         explanation += ''
       else
-        explanation += 'Base value ' + base + '('
+        explanation += 'Base value ' + +(base).toFixed(2) + '('
       value_base.forEach((value, key) => explanation += key + ': ' + value + ', ')
       explanation = explanation.substring(0, explanation.length - 2)
       if (value_base.size > 1)
@@ -113,7 +113,7 @@ export class BaseDefinition<T, S> {
     if (value_loss)
       value_loss.forEach(value => loss += value)
     if (value_loss && value_loss.size > 0) {
-      explanation += ' reduced by losses ' + loss
+      explanation += ' reduced by losses ' + +(loss).toFixed(2)
       explanation += ' ('
       value_loss.forEach((value, key) => explanation += key + ': ' + value + ', ')
       explanation = explanation.substring(0, explanation.length - 2) + ')'
@@ -134,10 +134,10 @@ export class BaseDefinition<T, S> {
     return explanation
   }
 
-  protected add_values = (container: Map<S, Map<string, number>>, key: string, values: [S, number][]): Map<S, Map<string, number>> => {
+  protected add_values = (container: Map<S, OrderedMap<string, number>>, key: string, values: [S, number][]): Map<S, OrderedMap<string, number>> => {
     let new_values = container
     for (const [type, value] of values) {
-      new_values = new_values.has(type) ? new_values : new_values.set(type, Map<string, number>())
+      new_values = new_values.has(type) ? new_values : new_values.set(type, OrderedMap<string, number>())
       const type_values = new_values.get(type)
       if (!type_values)
         return new_values
@@ -155,7 +155,7 @@ export class BaseDefinition<T, S> {
 
   get_loss_value = (type: S, key: string): number => this.get_value(this.loss_values, type, key)
 
-  private get_value = (container: Map<S, Map<string, number>>, type: S, key: string): number => {
+  private get_value = (container: Map<S, OrderedMap<string, number>>, type: S, key: string): number => {
     const values = container.get(type)
     if (!values)
       return 0

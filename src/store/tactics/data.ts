@@ -52,7 +52,7 @@ export const getDefaultDefinitions = (): Map<TacticType, TacticDefinition> => {
 }
 
 export type ValueType = UnitType | TacticCalc | TacticType
-type MapValues = Map<ValueType, Map<string, number>>
+type MapValues = Map<ValueType, OrderedMap<string, number>>
 
 export class TacticDefinition extends BaseDefinition<TacticType, ValueType> {
 

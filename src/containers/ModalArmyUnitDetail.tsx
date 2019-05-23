@@ -7,7 +7,7 @@ import { AppState } from '../store/'
 import ItemSelector from '../components/ItemSelector'
 import UnitDetail from '../components/UnitDetail'
 
-const CUSTOM_VALUE_KEY = 'Custom'
+const CUSTOM_VALUE_KEY = 'Unit'
 
 export interface ModalInfo {
   army: ArmyType
@@ -38,6 +38,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
             onCustomBaseValueChange={this.setBaseValue}
             onCustomModifierValueChange={this.setModifierValue}
             onCustomLossValueChange={this.setLossValue}
+            show_statistics={true}
           />
         </Modal.Content>
       </Modal>
@@ -81,10 +82,18 @@ class ModalArmyUnitDetail extends Component<IProps> {
   }
 
   getUnit = (info: ModalInfo): UnitDefinition => {
-    if (info.army === ArmyType.Attacker)
+    if (info.is_defeated) {
+      if (info.army === ArmyType.Attacker)
+      return this.props.attacker.defeated_army.getIn([info.row, info.column])
+    else
+      return this.props.defender.defeated_army.getIn([info.row, info.column])
+    }
+    else {
+      if (info.army === ArmyType.Attacker)
       return this.props.attacker.army.getIn([info.row, info.column])
     else
       return this.props.defender.army.getIn([info.row, info.column])
+    }
   }
 }
 

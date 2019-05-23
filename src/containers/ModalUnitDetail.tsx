@@ -18,6 +18,7 @@ class ModalUnitDetail extends Component<IProps> {
         onCustomBaseValueChange={this.props.setBaseValue}
         onCustomModifierValueChange={this.props.setModifierValue}
         onCustomLossValueChange={this.props.setLossValue}
+        show_statistics={false}
       />
     )
   }
