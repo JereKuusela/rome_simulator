@@ -21,7 +21,7 @@ export default class UnitArmy extends Component<IProps> {
 
   render() {
     return (
-      <Table compact celled definition>
+      <Table compact celled definition unstackable>
         <Table.Body>
           {
             (this.props.reverse ? this.props.units.reverse() : this.props.units).map((row, index) => this.renderRow(this.props.reverse ? this.props.units.size - 1 - index : index, row))

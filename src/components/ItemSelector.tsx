@@ -23,7 +23,7 @@ export default class ItemSelector<S extends ItemAttribute, T extends ItemType> e
   render() {
 
     return (
-          <Table celled selectable>
+          <Table celled selectable unstackable>
             <Table.Body>
               {this.props.can_remove ? (
                 <Table.Row onClick={() => this.onClick(null)}>

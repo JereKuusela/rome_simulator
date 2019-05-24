@@ -17,7 +17,7 @@ export default class TerrainDetail extends Component<IProps> {
   render() {
 
     return (
-      <Table celled>
+      <Table celled unstackable>
         <Table.Header>
           <Table.Row>
             {

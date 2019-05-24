@@ -16,7 +16,7 @@ export default class TerrainDefinitions extends Component<IProps> {
 
   render() {
     return (
-      <Table celled selectable>
+      <Table celled selectable unstackable>
         <Table.Header>
           <Table.Row>
             {

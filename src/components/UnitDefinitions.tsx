@@ -24,7 +24,7 @@ export default class UnitDefinitions extends Component<IProps> {
 
   render() {
     return (
-      <Table celled selectable>
+      <Table celled selectable unstackable>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>

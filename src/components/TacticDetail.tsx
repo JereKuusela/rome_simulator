@@ -22,7 +22,7 @@ export default class TacticDetail extends Component<IProps> {
       return null
     const tactic = this.props.tactic
     return (
-      <Table celled>
+      <Table celled unstackable>
         <Table.Header>
           <Table.Row>
             {

@@ -18,7 +18,7 @@ export default class TacticDefinitions extends Component<IProps> {
 
   render() {
     return (
-      <Table celled selectable>
+      <Table celled selectable unstackable>
         <Table.Header>
           <Table.Row>
             {

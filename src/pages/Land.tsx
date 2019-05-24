@@ -105,7 +105,7 @@ class Land extends Component<IProps, IState> {
           <Divider />
           <Grid.Row columns={1}>
             <Grid.Column>
-              <Table celled>
+              <Table celled unstackable>
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell>
@@ -133,7 +133,7 @@ class Land extends Component<IProps, IState> {
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
-              <Table celled>
+              <Table celled unstackable>
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell>
