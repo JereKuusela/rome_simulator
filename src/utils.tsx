@@ -44,12 +44,14 @@ export class BaseDefinition<T, S> {
     const values = container.get(type)
     if (values)
       values.forEach(value => result += value)
-    return Math.round(result * 100.0) / 100.0
+    return Math.round(result * 1000.0) / 1000.0
+    
+  }
+  calculateValue = (type: S): number => {
+    return this.round(this.calculateBase(type) * this.calculateModifier(type) - this.calculateLoss(type))
   }
 
-  calculateValue = (type: S): number => {
-    return this.calculateBase(type) * this.calculateModifier(type) - this.calculateLoss(type)
-  }
+  round = (number : number) => +(Math.round(10000.0 * number) / 10000.0).toFixed(3)
 
   calculateValueWithoutLoss = (type: S): number => {
     return this.calculateBase(type) * this.calculateModifier(type)

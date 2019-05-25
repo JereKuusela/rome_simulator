@@ -40,12 +40,14 @@ export const battle = (attacker: ParticipantState, defender: ParticipantState, r
   // 3. Defender reinforces.
   // 4. Defender picks targets.
   // Note: This leads to asymmetric behavior because defenders may move after attacker has selected them. Also a reinforced defender gets a free attack on the attacker.
-
+  //console.log('')
+  //console.log('********** ROUND ' + round + '*********')
+  //console.log('')
   let attacker_army = reinforce(attacker.army, undefined)
-  let defender_to_attacker = pickTargets(attacker_army.get(0)!, defender.army.get(0)!)
-  let defender_army = reinforce(defender.army, defender_to_attacker)
-  let attacker_to_defender = pickTargets(defender_army.get(0)!, attacker_army.get(0)!)
-
+  let attacker_to_defender = pickTargets(attacker_army.get(0)!, defender.army.get(0)!)
+  let defender_army = reinforce(defender.army, attacker_to_defender)
+  let defender_to_attacker = pickTargets(defender_army.get(0)!, attacker_army.get(0)!)
+  //console.log('Targets: A ' + attacker_to_defender + ' D ' + defender_to_attacker)
   let attacker_frontline = attacker_army.get(0)!
   let defender_frontline = defender_army.get(0)!
   // Killed manpower won't deal any damage so the right solution has to be searched iteratively.
@@ -53,21 +55,24 @@ export const battle = (attacker: ParticipantState, defender: ParticipantState, r
   const tactic_effects = {
     attacker: calculateTactic(attacker.tactic, attacker_army, attacker.defeated_army, defender.tactic),
     defender: calculateTactic(defender.tactic, defender_army, defender.defeated_army, attacker.tactic),
-    casualties: 1.0 + (attacker.tactic ? attacker.tactic.calculateValue(TacticCalc.Casualties) : 0) + (defender.tactic ? defender.tactic.calculateValue(TacticCalc.Casualties) : 0)
+    casualties: (attacker.tactic ? attacker.tactic.calculateValue(TacticCalc.Casualties) : 0) + (defender.tactic ? defender.tactic.calculateValue(TacticCalc.Casualties) : 0)
   }
+  //console.log('Tactics: A ' + tactic_effects.attacker + ' D ' + tactic_effects.defender + ' C ' + tactic_effects.casualties)
 
   const attacker_roll = modifyRoll(attacker.roll, terrains, attacker.general, defender.general)
   const defender_roll = modifyRoll(defender.roll, List(), defender.general, attacker.general)
+
+  //console.log('Rolls: A ' + attacker_roll + ' D ' + defender_roll)
   // Previous losses are used to calculate attack damage.
   let attacker_previous_losses = Array<Loss>(attacker_frontline.size).fill({ morale: 0, manpower: 0 })
   let defender_previous_losses = Array<Loss>(defender_frontline.size).fill({ morale: 0, manpower: 0 })
   let attacker_previous_kills = Array<Kill>(attacker_frontline.size).fill({ morale: 0, manpower: 0 })
   let defender_previous_kills = Array<Kill>(defender_frontline.size).fill({ morale: 0, manpower: 0 })
 
-  for (let iteration = 0; iteration < 100; ++iteration) {
+  for (let iteration = 0; iteration < 1; ++iteration) {
     // Current loses are used to check when the solution is found, and to calculate damange on the next iteration.
-    let [defender_losses, attacker_kills] = attack(attacker_frontline, defender_frontline, defender_to_attacker, attacker_previous_losses, attacker_roll, terrains, tactic_effects.attacker, tactic_effects.casualties)
-    let [attacker_losses, defender_kills] = attack(defender_frontline, attacker_frontline, attacker_to_defender, defender_previous_losses, defender_roll, terrains, tactic_effects.defender, tactic_effects.casualties)
+    let [defender_losses, attacker_kills] = attack(attacker_frontline, defender_frontline, attacker_to_defender, attacker_previous_losses, attacker_roll, terrains, tactic_effects.attacker, tactic_effects.casualties)
+    let [attacker_losses, defender_kills] = attack(defender_frontline, attacker_frontline, defender_to_attacker, defender_previous_losses, defender_roll, terrains, tactic_effects.defender, tactic_effects.casualties)
     if (arraysEqual(attacker_previous_losses, attacker_losses) && arraysEqual(defender_previous_losses, defender_losses))
       break
     attacker_previous_losses = attacker_losses
@@ -96,9 +101,9 @@ const modifyRoll = (roll: number, terrains: Terrains, general: number, opposing_
  * Reinforces a given army based on reinforcement rules.
  * First priority is to move units from backlines. Then from sides.
  * @param army Army to reinforce.
- * @param defender_to_attacker Selected targets as reinforcement may move units.
+ * @param attacker_to_defender Selected targets as reinforcement may move units.
  */
-const reinforce = (army: Army, defender_to_attacker: (number | null)[] | undefined): Army => {
+const reinforce = (army: Army, attacker_to_defender: (number | null)[] | undefined): Army => {
   // 1: Empty spots get filled by back row.
   // 2: If still holes, units move towards center.
   for (let row_index = 0; row_index < army.size; ++row_index) {
@@ -124,8 +129,8 @@ const reinforce = (army: Army, defender_to_attacker: (number | null)[] | undefin
       if (unit_on_left) {
         army = army.setIn([row_index, unit_index], unit_on_left)
         army = army.setIn([row_index, unit_index - 1], null)
-        if (defender_to_attacker)
-          [defender_to_attacker[unit_index - 1], defender_to_attacker[unit_index]] = [defender_to_attacker[unit_index], defender_to_attacker[unit_index - 1]]
+        if (attacker_to_defender)
+          attacker_to_defender = attacker_to_defender.map(target => target === unit_index - 1 ? unit_index : target)
         continue
       }
     }
@@ -138,8 +143,8 @@ const reinforce = (army: Army, defender_to_attacker: (number | null)[] | undefin
       if (unit_on_right) {
         army = army.setIn([row_index, unit_index], unit_on_right)
         army = army.setIn([row_index, unit_index + 1], null)
-        if (defender_to_attacker)
-          [defender_to_attacker[unit_index + 1], defender_to_attacker[unit_index]] = [defender_to_attacker[unit_index], defender_to_attacker[unit_index + 1]]
+        if (attacker_to_defender)
+          attacker_to_defender = attacker_to_defender.map(target => target === unit_index + 1 ? unit_index : target)
         continue
       }
     }
@@ -149,15 +154,15 @@ const reinforce = (army: Army, defender_to_attacker: (number | null)[] | undefin
 
 /**
  * Selects targets for a given source_row from a given target_row.
- * Returns an array which maps defender to attacker because this is needed for reinforcement.
+ * Returns an array which maps attacker to defender.
  * @param source_row Attackers.
  * @param target_row Defenders.
  */
 const pickTargets = (source_row: FrontLine, target_row: FrontLine) => {
   // Units attack mainly units on front of them. If not then first target from left to right.
-  const defender_to_attacker = Array<number | null>(target_row.size)
+  const attacker_to_defender = Array<number | null>(target_row.size)
   for (let i = 0; i < target_row.size; ++i)
-    defender_to_attacker[i] = null
+    attacker_to_defender[i] = null
   source_row.forEach((source, source_index) => {
     if (!source)
       return
@@ -175,9 +180,9 @@ const pickTargets = (source_row: FrontLine, target_row: FrontLine) => {
     }
     if (target_index === null)
       return
-    defender_to_attacker[target_index] = source_index
+    attacker_to_defender[source_index] = target_index
   })
-  return defender_to_attacker
+  return attacker_to_defender
 }
 
 /**
@@ -227,6 +232,7 @@ export const calculateTactic = (tactic: TacticDefinition | null, army: Army, def
 const applyLosses = (row: FrontLine, losses: Loss[], round: number): FrontLine => {
   for (let i = 0; i < row.size; ++i) {
     if (row.get(i)) {
+      //console.log('Losses: MP ' + losses[i].manpower + ' M ' + losses[i].morale)
       const loss_values: [UnitCalc, number][] = [[UnitCalc.Morale, losses[i].morale], [UnitCalc.Manpower, losses[i].manpower]]
       row = row.update(i, unit => unit && unit.add_loss_values('Round ' + round, loss_values))
     }
@@ -237,6 +243,7 @@ const applyLosses = (row: FrontLine, losses: Loss[], round: number): FrontLine =
 const applyKills = (row: FrontLine, kills: Kill[], round: number): FrontLine => {
   for (let i = 0; i < row.size; ++i) {
     if (row.get(i)) {
+      //console.log('Kills: MP ' + kills[i].manpower + ' M ' + kills[i].morale)
       const kill_values: [UnitCalc, number][] = [[UnitCalc.MoraleDepleted, kills[i].morale], [UnitCalc.ManpowerDepleted, kills[i].manpower]]
       row = row.update(i, unit => unit && unit.add_base_values('Round ' + round, kill_values))
     }
@@ -291,23 +298,23 @@ const arraysEqual = (a: Loss[], b: Loss[]) => {
  * Calculates losses when a given source row attacks a given target row.
  * @param source_row A row of attackers inflicting daamge on target_row.
  * @param target_row A row of defenders receiving damage from source_row.
- * @param target_to_source Selected targets for attackers.
+ * @param source_to_target Selected targets for attackers.
  * @param source_losses Current losses for attackers to exclude dead men.
  * @param roll Dice roll, affects amount of damage inflicted.
  * @param terrains Terrains of the battle, may affect amount of damage inflicted.
  */
-const attack = (source_row: FrontLine, target_row: FrontLine, target_to_source: (number | null)[], source_losses: Loss[], roll: number, terrains: Terrains, tactic_damage_multiplier: number, casualties_multiplier: number): [Loss[], Kill[]] => {
+const attack = (source_row: FrontLine, target_row: FrontLine, source_to_target: (number | null)[], source_losses: Loss[], roll: number, terrains: Terrains, tactic_damage_multiplier: number, casualties_multiplier: number): [Loss[], Kill[]] => {
   const target_losses = Array<Loss>(target_row.size)
   for (let i = 0; i < target_row.size; ++i)
     target_losses[i] = { morale: 0, manpower: 0 }
   const source_kills = Array<Kill>(source_row.size)
   for (let i = 0; i < source_row.size; ++i)
     source_kills[i] = { morale: 0, manpower: 0 }
-  target_row.forEach((target, target_index) => {
-    const source_index = target_to_source[target_index]
-    if (!target || source_index === null)
+  source_row.forEach((source, source_index) => {
+    const target_index = source_to_target[source_index]
+    if (!source || target_index === null)
       return
-    const source = source_row.get(source_index)!
+    const target = target_row.get(target_index)!
     const losses = calculateLosses(source, target, source_losses[source_index], roll, terrains, tactic_damage_multiplier, casualties_multiplier)
     target_losses[target_index].manpower += losses.manpower
     target_losses[target_index].morale += losses.morale
@@ -328,16 +335,18 @@ const attack = (source_row: FrontLine, target_row: FrontLine, target_to_source: 
 const calculateLosses = (source: Unit, target: Unit, source_loss: Loss, roll: number, terrains: Terrains, tactic_damage_multiplier: number, casualties_multiplier: number): Loss => {
   const base_damage = BASE_DAMAGE + BASE_DAMAGE_PER_ROLL * roll
   // Terrain bonus and tactic missing.
-  const damage = base_damage
+  let damage = base_damage
     * source.calculateValue(UnitCalc.Discipline)
-    * Math.max(0, source.calculateValue(UnitCalc.Manpower) - source_loss.manpower)
     * (1.0 + source.calculateValue(target.type))
     * source.calculateValue(UnitCalc.Offense)
     * tactic_damage_multiplier
     * (1.0 + terrains.map(terrain => source.calculateValue(terrain.type)).reduce((previous, current) => previous + current, 0))
     / target.calculateValue(UnitCalc.Defense)
     * (1 - DAMAGE_REDUCTION_PER_EXPERIENCE * target.calculateValue(UnitCalc.Experience))
-  const manpower_lost = damage * MANPOWER_LOST_MULTIPLIER * (1.0 + target.calculateValue(UnitCalc.StrengthDamageTaken)) * casualties_multiplier
-  const morale_lost = damage * MORALE_LOST_MULTIPLIER * Math.max(0, source.calculateValue(UnitCalc.Morale) - source_loss.morale) * (1.0 + target.calculateValue(UnitCalc.MoraleDamageTaken))
-  return { manpower: Math.floor(manpower_lost), morale: Math.floor(100.0 * morale_lost) / 100.0 }
+  damage = damage * source.calculateValue(UnitCalc.Manpower)
+  let manpower_lost = Math.floor(damage * MANPOWER_LOST_MULTIPLIER)
+  manpower_lost = manpower_lost + Math.floor(manpower_lost * casualties_multiplier) + Math.floor(manpower_lost * target.calculateValue(UnitCalc.StrengthDamageTaken))
+  let morale_lost = Math.floor(Math.floor(Math.floor(damage) * Math.max(0, source.calculateValue(UnitCalc.Morale)) / 2.0 )* 1.5)
+  morale_lost = morale_lost + Math.floor(morale_lost * target.calculateValue(UnitCalc.MoraleDamageTaken))
+  return { manpower: Math.floor(manpower_lost), morale: morale_lost / 1000.0 }
 }
