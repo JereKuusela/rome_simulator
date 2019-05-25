@@ -23,7 +23,6 @@ const DAMAGE_REDUCTION_PER_EXPERIENCE = 0.3
 const BASE_DAMAGE = 0.08
 const BASE_DAMAGE_PER_ROLL = 0.02
 const MANPOWER_LOST_MULTIPLIER = 0.2
-const MORALE_LOST_MULTIPLIER = 1.5 / 2000.0
 
 
 /**
@@ -63,27 +62,12 @@ export const battle = (attacker: ParticipantState, defender: ParticipantState, r
   const defender_roll = modifyRoll(defender.roll, List(), defender.general, attacker.general)
 
   //console.log('Rolls: A ' + attacker_roll + ' D ' + defender_roll)
-  // Previous losses are used to calculate attack damage.
-  let attacker_previous_losses = Array<Loss>(attacker_frontline.size).fill({ morale: 0, manpower: 0 })
-  let defender_previous_losses = Array<Loss>(defender_frontline.size).fill({ morale: 0, manpower: 0 })
-  let attacker_previous_kills = Array<Kill>(attacker_frontline.size).fill({ morale: 0, manpower: 0 })
-  let defender_previous_kills = Array<Kill>(defender_frontline.size).fill({ morale: 0, manpower: 0 })
-
-  for (let iteration = 0; iteration < 1; ++iteration) {
-    // Current loses are used to check when the solution is found, and to calculate damange on the next iteration.
-    let [defender_losses, attacker_kills] = attack(attacker_frontline, defender_frontline, attacker_to_defender, attacker_previous_losses, attacker_roll, terrains, tactic_effects.attacker, tactic_effects.casualties)
-    let [attacker_losses, defender_kills] = attack(defender_frontline, attacker_frontline, defender_to_attacker, defender_previous_losses, defender_roll, terrains, tactic_effects.defender, tactic_effects.casualties)
-    if (arraysEqual(attacker_previous_losses, attacker_losses) && arraysEqual(defender_previous_losses, defender_losses))
-      break
-    attacker_previous_losses = attacker_losses
-    defender_previous_losses = defender_losses
-    attacker_previous_kills = attacker_kills
-    defender_previous_kills = defender_kills
-  }
-  attacker_army = attacker_army.update(0, row => applyLosses(row, attacker_previous_losses, round))
-  defender_army = defender_army.update(0, row => applyLosses(row, defender_previous_losses, round))
-  attacker_army = attacker_army.update(0, row => applyKills(row, attacker_previous_kills, round))
-  defender_army = defender_army.update(0, row => applyKills(row, defender_previous_kills, round))
+  let [defender_losses, attacker_kills] = attack(attacker_frontline, defender_frontline, attacker_to_defender, attacker_roll, terrains, tactic_effects.attacker, tactic_effects.casualties)
+  let [attacker_losses, defender_kills] = attack(defender_frontline, attacker_frontline, defender_to_attacker, defender_roll, terrains, tactic_effects.defender, tactic_effects.casualties)
+  attacker_army = attacker_army.update(0, row => applyLosses(row, attacker_losses, round))
+  defender_army = defender_army.update(0, row => applyLosses(row, defender_losses, round))
+  attacker_army = attacker_army.update(0, row => applyKills(row, attacker_kills, round))
+  defender_army = defender_army.update(0, row => applyKills(row, defender_kills, round))
   let attacker_defeated_army = copyDefeated(attacker_army, attacker.defeated_army)
   let defender_defeated_army = copyDefeated(defender_army, defender.defeated_army)
   attacker_army = removeDefeated(attacker_army)
@@ -278,32 +262,14 @@ const addDefeated = (unit: UnitDefinition, defeated_army: Army): Army => {
 }
 
 /**
- * Returns true if given arrays have same values.
- * @param a 
- * @param b 
- */
-const arraysEqual = (a: Loss[], b: Loss[]) => {
-  if (a === b)
-    return true
-  if (a.length !== b.length)
-    return false
-  for (let i = 0; i < a.length; ++i) {
-    if (a[i].morale !== b[i].morale || a[i].manpower !== b[i].manpower)
-      return false
-  }
-  return true
-}
-
-/**
  * Calculates losses when a given source row attacks a given target row.
  * @param source_row A row of attackers inflicting daamge on target_row.
  * @param target_row A row of defenders receiving damage from source_row.
  * @param source_to_target Selected targets for attackers.
- * @param source_losses Current losses for attackers to exclude dead men.
  * @param roll Dice roll, affects amount of damage inflicted.
  * @param terrains Terrains of the battle, may affect amount of damage inflicted.
  */
-const attack = (source_row: FrontLine, target_row: FrontLine, source_to_target: (number | null)[], source_losses: Loss[], roll: number, terrains: Terrains, tactic_damage_multiplier: number, casualties_multiplier: number): [Loss[], Kill[]] => {
+const attack = (source_row: FrontLine, target_row: FrontLine, source_to_target: (number | null)[], roll: number, terrains: Terrains, tactic_damage_multiplier: number, casualties_multiplier: number): [Loss[], Kill[]] => {
   const target_losses = Array<Loss>(target_row.size)
   for (let i = 0; i < target_row.size; ++i)
     target_losses[i] = { morale: 0, manpower: 0 }
@@ -315,7 +281,7 @@ const attack = (source_row: FrontLine, target_row: FrontLine, source_to_target: 
     if (!source || target_index === null)
       return
     const target = target_row.get(target_index)!
-    const losses = calculateLosses(source, target, source_losses[source_index], roll, terrains, tactic_damage_multiplier, casualties_multiplier)
+    const losses = calculateLosses(source, target, roll, terrains, tactic_damage_multiplier, casualties_multiplier)
     target_losses[target_index].manpower += losses.manpower
     target_losses[target_index].morale += losses.morale
     source_kills[source_index].manpower += losses.manpower
@@ -328,11 +294,10 @@ const attack = (source_row: FrontLine, target_row: FrontLine, source_to_target: 
  * Calculates both manpower and morale losses caused by a given attacker to a given defender.
  * @param source An attacker inflicting damange on target.
  * @param target A defender receiving damage from source.
- * @param source_loss Current loss for the attacker to exclude dead men.
  * @param roll Dice roll, affects amount of damage inflicted.
  * @param terrains Terrains of the battle, may affect amount of damage inflicted.
  */
-const calculateLosses = (source: Unit, target: Unit, source_loss: Loss, roll: number, terrains: Terrains, tactic_damage_multiplier: number, casualties_multiplier: number): Loss => {
+const calculateLosses = (source: Unit, target: Unit, roll: number, terrains: Terrains, tactic_damage_multiplier: number, casualties_multiplier: number): Loss => {
   const base_damage = BASE_DAMAGE + BASE_DAMAGE_PER_ROLL * roll
   // Terrain bonus and tactic missing.
   let damage = base_damage
