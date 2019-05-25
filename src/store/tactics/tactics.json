@@ -8,7 +8,7 @@
       "light_infantry": 0.25,
       "shock_action": 0.2,
       "hit_and_run": 0.2,
-      "skirmishing": -0.2,
+      "skirmishing": -0.1,
       "cavalry_skirmish": -0.1
     },
     {

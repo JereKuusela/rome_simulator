@@ -6,151 +6,134 @@ import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, Ter
 import { getDefaultDefinitions as getDefaultUnitDefinitions, UnitType, UnitCalc, UnitDefinition } from '../../units'
 
 describe('1 vs 1', () => {
-  const verify = (unit: UnitDefinition | undefined, manpower: number, morale: number) => {
+  const tactics = getDefaultTacticDefinitions()
+  const terrains = getDefaultTerrainDefinitions()
+  const units = getDefaultUnitDefinitions()
+  const unit = units.get(UnitType.Archers)!.add_modifier_value('Initial', UnitCalc.Morale, -0.2)
+
+  let attacker: ParticipantState
+  let defender: ParticipantState
+  let terrain: List<TerrainDefinition>
+  let round: number
+
+  beforeEach(() => {
+    attacker = getInitialArmy()
+    defender = getInitialArmy()
+    terrain = getInitialTerrains().push(terrains.get(TerrainType.Forest)!)
+    setTactics(TacticType.Envelopment, TacticType.Envelopment)
+    setUnits(unit, unit)
+    round = 0
+  })
+  const verifySub = (unit: UnitDefinition | undefined, manpower: number, morale: number) => {
     expect(unit).toBeTruthy()
     if (!unit)
       return
     expect(unit.calculateValue(UnitCalc.Manpower)).toEqual(manpower)
-    expect(Math.abs(unit.calculateValue(UnitCalc.Morale)- morale)).toBeLessThan(0.005)
+    expect(unit.calculateValue(UnitCalc.Morale)).toEqual(morale)
   }
-  const round = (attacker: ParticipantState, defender: ParticipantState, terrains: List<TerrainDefinition>, round: number): [ParticipantState, ParticipantState] => {
-    const [attacker_new_army, defender_new_army] = battle(attacker, defender, round, terrains)
-    return [{ ...attacker, army: attacker_new_army }, { ...defender, army: defender_new_army }]
+  const verify = (manpower_a: number, morale_a: number, manpower_d: number, morale_d: number) => {
+    verifySub(attacker.army.getIn([0, 15]), manpower_a, morale_a)
+    verifySub(defender.army.getIn([0, 15]), manpower_d, morale_d)
+  }
+  const doRound = () => {
+    round++
+    const [attacker_new_army, defender_new_army] = battle(attacker, defender, round, terrain)
+    attacker = { ...attacker, army: attacker_new_army }
+    defender = { ...defender, army: defender_new_army }
+  }
+  const setRolls = (roll_a: number, roll_d: number) => {
+    attacker = { ...attacker, roll: roll_a }
+    defender = { ...defender, roll: roll_d }
+  }
+  const setTactics = (tactic_a: TacticType, tactic_d: TacticType) => {
+    attacker = { ...attacker, tactic: tactics.get(tactic_a)! }
+    defender = { ...defender, tactic: tactics.get(tactic_d)! }
+  }
+  const setUnits = (unit_a: UnitDefinition, unit_b: UnitDefinition) => {
+    attacker = { ...attacker, army: attacker.army.setIn([0, 15], unit_a) }
+    defender = { ...defender, army: defender.army.setIn([0, 15], unit_b) }
   }
 
   it('should work without modifiers', () => {
-    const tactics = getDefaultTacticDefinitions()
-    const terrains = getDefaultTerrainDefinitions()
-    const units = getDefaultUnitDefinitions()
-    const unit = units.get(UnitType.Archers)!
-      .add_modifier_value('Initial', UnitCalc.Morale, -0.2)
-      .add_base_value('Test', UnitCalc.MoraleDamageTaken, -0.25)
-    const terrain = getInitialTerrains().push(terrains.get(TerrainType.Forest)!)
-
-    let attacker = getInitialArmy()
-    attacker = {
-      ...attacker,
-      tactic: tactics.get(TacticType.Envelopment)!,
-      general: 0,
-      roll: 1,
-      army: attacker.army.setIn([0, 15], unit)
-    }
-
-    let defender = getInitialArmy()
-    defender = {
-      ...defender,
-      tactic: tactics.get(TacticType.Envelopment)!,
-      general: 0,
-      roll: 3,
-      army: defender.army.setIn([0, 15], unit)
-    }
-      ;[attacker, defender] = round(attacker, defender, terrain, 1)
-    verify(attacker.army.getIn([0, 15]), 972, 2.148)
-    verify(defender.army.getIn([0, 15]), 984, 2.256)
-      ;[attacker, defender] = round(attacker, defender, terrain, 2)
-    verify(attacker.army.getIn([0, 15]), 945, 1.917)
-    verify(defender.army.getIn([0, 15]), 969, 2.133)
-      ;[attacker, defender] = round(attacker, defender, terrain, 3)
-    verify(attacker.army.getIn([0, 15]), 918, 1.703)
-    verify(defender.army.getIn([0, 15]), 954, 2.027)
+    const test_unit = unit.add_base_value('Test', UnitCalc.MoraleDamageTaken, -0.25)
+    setUnits(test_unit, test_unit)
+    setRolls(1, 3)
+    doRound()
+    verify(972, 2.148, 984, 2.256)
+    doRound()
+    verify(945, 1.917, 969, 2.133)
+    doRound()
+    verify(918, 1.703, 954, 2.027)
   })
 
   it('should work with extra morale damage taken', () => {
-    const tactics = getDefaultTacticDefinitions()
-    const terrains = getDefaultTerrainDefinitions()
-    const units = getDefaultUnitDefinitions()
-    const unit = units.get(UnitType.Archers)!
-      .add_modifier_value('Initial', UnitCalc.Morale, -0.2)
-    const terrain = getInitialTerrains().push(terrains.get(TerrainType.Forest)!)
-
-    let attacker = getInitialArmy()
-    attacker = {
-      ...attacker,
-      tactic: tactics.get(TacticType.Envelopment)!,
-      general: 0,
-      roll: 1,
-      army: attacker.army.setIn([0, 15], unit)
-    }
-
-    let defender = getInitialArmy()
-    defender = {
-      ...defender,
-      tactic: tactics.get(TacticType.Envelopment)!,
-      general: 0,
-      roll: 3,
-      army: defender.army.setIn([0, 15], unit)
-    }
-      ;[attacker, defender] = round(attacker, defender, terrain, 1)
-    verify(attacker.army.getIn([0, 15]), 972, 2.085)
-    verify(defender.army.getIn([0, 15]), 984, 2.220)
-      ;[attacker, defender] = round(attacker, defender, terrain, 2)
-    verify(attacker.army.getIn([0, 15]), 945, 1.800)
-    verify(defender.army.getIn([0, 15]), 969, 2.070)
-      ;[attacker, defender] = round(attacker, defender, terrain, 3)
-    verify(attacker.army.getIn([0, 15]), 918, 1.540)
-    verify(defender.army.getIn([0, 15]), 954, 1.945)
-      ;[attacker, defender] = round(attacker, defender, terrain, 4)
-    verify(attacker.army.getIn([0, 15]), 892, 1.299)
-    verify(defender.army.getIn([0, 15]), 940, 1.840)
-      ;[attacker, defender] = round(attacker, defender, terrain, 5)
-    verify(attacker.army.getIn([0, 15]), 866, 1.074)
-    verify(defender.army.getIn([0, 15]), 926, 1.754)
-    attacker = { ...attacker, roll: 1 }
-    defender = { ...defender, roll: 5 }
-      ;[attacker, defender] = round(attacker, defender, terrain, 6)
-    verify(attacker.army.getIn([0, 15]), 833, 0.803)
-    verify(defender.army.getIn([0, 15]), 913, 1.686)
-      ;[attacker, defender] = round(attacker, defender, terrain, 7)
-    verify(attacker.army.getIn([0, 15]), 801, 0.545)
-    verify(defender.army.getIn([0, 15]), 900, 1.638)
-      ;[attacker, defender] = round(attacker, defender, terrain, 8)
-    verify(attacker.army.getIn([0, 15]), 769, 0.298)
-    verify(defender.army.getIn([0, 15]), 888, 1.607)
+    setRolls(1, 3)
+    doRound()
+    verify(972, 2.085, 984, 2.220)
+    doRound()
+    verify(945, 1.800, 969, 2.070)
+    doRound()
+    verify(918, 1.540, 954, 1.945)
+    doRound()
+    verify(892, 1.299, 940, 1.840)
+    doRound()
+    verify(866, 1.074, 926, 1.754)
+    setRolls(1, 5)
+    doRound()
+    verify(833, 0.803, 913, 1.686)
+    doRound()
+    verify(801, 0.545, 900, 1.638)
+    doRound()
+    verify(769, 0.298, 888, 1.607)
   })
 
   it('should work with extra strength damage taken', () => {
-    const tactics = getDefaultTacticDefinitions()
-    const terrains = getDefaultTerrainDefinitions()
-    const units = getDefaultUnitDefinitions()
-    const unit = units.get(UnitType.Archers)!
-      .add_modifier_value('Initial', UnitCalc.Morale, -0.2)
+    const test_unit = unit
       .add_base_value('Test', UnitCalc.MoraleDamageTaken, -0.25)
       .add_base_value('Test', UnitCalc.StrengthDamageTaken, 0.25)
-    const terrain = getInitialTerrains().push(terrains.get(TerrainType.Forest)!)
-
-    let attacker = getInitialArmy()
-    attacker = {
-      ...attacker,
-      tactic: tactics.get(TacticType.Envelopment)!,
-      general: 0,
-      roll: 3,
-      army: attacker.army.setIn([0, 15], unit)
-    }
-
-    let defender = getInitialArmy()
-    defender = {
-      ...defender,
-      tactic: tactics.get(TacticType.Envelopment)!,
-      general: 0,
-      roll: 4,
-      army: defender.army.setIn([0, 15], unit)
-    }
-      ;[attacker, defender] = round(attacker, defender, terrain, 1)
-    verify(attacker.army.getIn([0, 15]), 960, 2.112)
-    verify(defender.army.getIn([0, 15]), 970, 2.184)
-      ;[attacker, defender] = round(attacker, defender, terrain, 2)
-    verify(attacker.army.getIn([0, 15]), 922, 1.859)
-    verify(defender.army.getIn([0, 15]), 942, 2.003)
-      ;[attacker, defender] = round(attacker, defender, terrain, 3)
-    verify(attacker.army.getIn([0, 15]), 885, 1.634)
-    verify(defender.army.getIn([0, 15]), 915, 1.850)
-      ;[attacker, defender] = round(attacker, defender, terrain, 4)
-    verify(attacker.army.getIn([0, 15]), 849, 1.432)
-    verify(defender.army.getIn([0, 15]), 889, 1.721)
-      ;[attacker, defender] = round(attacker, defender, terrain, 5)
-    verify(attacker.army.getIn([0, 15]), 814, 1.249)
-    verify(defender.army.getIn([0, 15]), 864, 1.613)
+    setUnits(test_unit, test_unit)
+    setRolls(3, 4)
+    doRound()
+    verify(960, 2.112, 970, 2.184)
+    doRound()
+    verify(922, 1.859, 942, 2.003)
+    doRound()
+    verify(885, 1.634, 915, 1.850)
+    doRound()
+    verify(849, 1.432, 889, 1.721)
+    doRound()
+    verify(814, 1.249, 864, 1.613)
   })
+
+  it('should work with versus damage', () => {
+    const test_unit = unit
+      .add_base_value('Test', UnitCalc.MoraleDamageTaken, -0.25)
+      .add_base_value('Test', UnitType.Archers, 0.25)
+    setUnits(test_unit, test_unit)
+    setRolls(5, 1)
+    doRound()
+    verify(975, 2.175, 960, 2.040)
+    doRound()
+    verify(951, 1.992, 921, 1.724)
+    doRound()
+    verify(928, 1.844, 883, 1.440)
+    doRound()
+    verify(906, 1.726, 846, 1.186)
+    doRound()
+    verify(885, 1.632, 810, 0.952)
+    setRolls(1, 3)
+    doRound()
+    verify(857, 1.532, 793, 0.846)
+    doRound()
+    verify(830, 1.446, 776, 0.748)
+    doRound()
+    verify(803, 1.370, 760, 0.658)
+    doRound()
+    verify(777, 1.306, 744, 0.578)
+    doRound()
+    verify(751, 1.252, 729, 0.502)
+  })
+
 
   /*it('should work with discipline', () => {
     const tactics = getDefaultTacticDefinitions()
@@ -213,71 +196,6 @@ describe('1 vs 1', () => {
     verify(attacker.army.getIn([0, 15]), 697, 0.316)
     verify(defender.army.getIn([0, 15]), 802, 1.374)
   })*/
-
-  it('should work with versus damage', () => {
-    const tactics = getDefaultTacticDefinitions()
-    const terrains = getDefaultTerrainDefinitions()
-    const units = getDefaultUnitDefinitions()
-    const attacker_unit = units.get(UnitType.Archers)!
-      .add_modifier_value('Initial', UnitCalc.Morale, -0.2)
-      .add_base_value('Test', UnitCalc.MoraleDamageTaken, -0.25)
-      .add_base_value('Test', UnitType.Archers, 0.25)
-    const defender_unit = units.get(UnitType.Archers)!
-      .add_modifier_value('Initial', UnitCalc.Morale, -0.2)
-      .add_base_value('Test', UnitCalc.MoraleDamageTaken, -0.25)
-      .add_base_value('Test', UnitType.Archers, 0.25)
-    const terrain = getInitialTerrains().push(terrains.get(TerrainType.Forest)!)
-
-    let attacker = getInitialArmy()
-    attacker = {
-      ...attacker,
-      tactic: tactics.get(TacticType.Envelopment)!,
-      general: 0,
-      roll: 5,
-      army: attacker.army.setIn([0, 15], attacker_unit)
-    }
-
-    let defender = getInitialArmy()
-    defender = {
-      ...defender,
-      tactic: tactics.get(TacticType.Envelopment)!,
-      general: 0,
-      roll: 1,
-      army: defender.army.setIn([0, 15], defender_unit)
-    }
-      ;[attacker, defender] = round(attacker, defender, terrain, 1)
-    verify(attacker.army.getIn([0, 15]), 975, 2.175)
-    verify(defender.army.getIn([0, 15]), 960, 2.040)
-      ;[attacker, defender] = round(attacker, defender, terrain, 2)
-    verify(attacker.army.getIn([0, 15]), 951, 1.992)
-    verify(defender.army.getIn([0, 15]), 921, 1.724)
-    ;[attacker, defender] = round(attacker, defender, terrain, 3)
-  verify(attacker.army.getIn([0, 15]), 928, 1.844)
-  verify(defender.army.getIn([0, 15]), 883, 1.440)
-  ;[attacker, defender] = round(attacker, defender, terrain, 4)
-verify(attacker.army.getIn([0, 15]), 906, 1.726)
-verify(defender.army.getIn([0, 15]), 846, 1.186)
-;[attacker, defender] = round(attacker, defender, terrain, 5)
-verify(attacker.army.getIn([0, 15]), 885, 1.632)
-verify(defender.army.getIn([0, 15]), 810, 0.952)
-attacker = { ...attacker, roll: 1 }
-    defender = { ...defender, roll: 3 }
-;[attacker, defender] = round(attacker, defender, terrain, 6)
-verify(attacker.army.getIn([0, 15]), 857, 1.532)
-verify(defender.army.getIn([0, 15]), 793, 0.846)
-;[attacker, defender] = round(attacker, defender, terrain, 7)
-verify(attacker.army.getIn([0, 15]), 830, 1.446)
-verify(defender.army.getIn([0, 15]), 776, 0.748)
-;[attacker, defender] = round(attacker, defender, terrain, 8)
-verify(attacker.army.getIn([0, 15]), 803, 1.370)
-verify(defender.army.getIn([0, 15]), 760, 0.658)
-;[attacker, defender] = round(attacker, defender, terrain, 9)
-verify(attacker.army.getIn([0, 15]), 777, 1.306)
-verify(defender.army.getIn([0, 15]), 744, 0.578)
-;[attacker, defender] = round(attacker, defender, terrain, 10)
-verify(attacker.army.getIn([0, 15]), 751, 1.252)
-verify(defender.army.getIn([0, 15]), 729, 0.502)
-  })
 
   /*it('fake without modifiers', () => {
     // Morale multiplier and base set to 1.0
