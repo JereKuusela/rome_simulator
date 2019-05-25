@@ -337,8 +337,8 @@ const calculateLosses = (source: Unit, target: Unit, source_loss: Loss, roll: nu
   // Terrain bonus and tactic missing.
   let damage = base_damage
     * source.calculateValue(UnitCalc.Discipline)
-    * (1.0 + source.calculateValue(target.type))
     * source.calculateValue(UnitCalc.Offense)
+    * (1.0 + source.calculateValue(target.type))
     * tactic_damage_multiplier
     * (1.0 + terrains.map(terrain => source.calculateValue(terrain.type)).reduce((previous, current) => previous + current, 0))
     / target.calculateValue(UnitCalc.Defense)
@@ -346,7 +346,8 @@ const calculateLosses = (source: Unit, target: Unit, source_loss: Loss, roll: nu
   damage = damage * source.calculateValue(UnitCalc.Manpower)
   let manpower_lost = Math.floor(damage * MANPOWER_LOST_MULTIPLIER)
   manpower_lost = manpower_lost + Math.floor(manpower_lost * casualties_multiplier) + Math.floor(manpower_lost * target.calculateValue(UnitCalc.StrengthDamageTaken))
-  let morale_lost = Math.floor(Math.floor(Math.floor(damage) * Math.max(0, source.calculateValue(UnitCalc.Morale)) / 2.0 )* 1.5)
+  let morale_lost = Math.floor(Math.floor(Math.floor(Math.floor(damage) * Math.max(0, source.calculateValue(UnitCalc.Morale) )) / 2.0 )* 1.5)
   morale_lost = morale_lost + Math.floor(morale_lost * target.calculateValue(UnitCalc.MoraleDamageTaken))
+  morale_lost = Math.round(morale_lost)
   return { manpower: Math.floor(manpower_lost), morale: morale_lost / 1000.0 }
 }

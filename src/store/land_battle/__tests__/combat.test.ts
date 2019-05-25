@@ -11,7 +11,7 @@ describe('1 vs 1', () => {
     if (!unit)
       return
     expect(unit.calculateValue(UnitCalc.Manpower)).toEqual(manpower)
-    expect(unit.calculateValue(UnitCalc.Morale)).toEqual(morale)
+    expect(Math.abs(unit.calculateValue(UnitCalc.Morale)- morale)).toBeLessThan(0.005)
   }
   const round = (attacker: ParticipantState, defender: ParticipantState, terrains: List<TerrainDefinition>, round: number): [ParticipantState, ParticipantState] => {
     const [attacker_new_army, defender_new_army] = battle(attacker, defender, round, terrains)
@@ -152,7 +152,7 @@ describe('1 vs 1', () => {
     verify(defender.army.getIn([0, 15]), 864, 1.613)
   })
 
-  it('should work with discipline', () => {
+  /*it('should work with discipline', () => {
     const tactics = getDefaultTacticDefinitions()
     const terrains = getDefaultTerrainDefinitions()
     const units = getDefaultUnitDefinitions()
@@ -212,6 +212,71 @@ describe('1 vs 1', () => {
     ;[attacker, defender] = round(attacker, defender, terrain, 9)
     verify(attacker.army.getIn([0, 15]), 697, 0.316)
     verify(defender.army.getIn([0, 15]), 802, 1.374)
+  })*/
+
+  it('should work with versus damage', () => {
+    const tactics = getDefaultTacticDefinitions()
+    const terrains = getDefaultTerrainDefinitions()
+    const units = getDefaultUnitDefinitions()
+    const attacker_unit = units.get(UnitType.Archers)!
+      .add_modifier_value('Initial', UnitCalc.Morale, -0.2)
+      .add_base_value('Test', UnitCalc.MoraleDamageTaken, -0.25)
+      .add_base_value('Test', UnitType.Archers, 0.25)
+    const defender_unit = units.get(UnitType.Archers)!
+      .add_modifier_value('Initial', UnitCalc.Morale, -0.2)
+      .add_base_value('Test', UnitCalc.MoraleDamageTaken, -0.25)
+      .add_base_value('Test', UnitType.Archers, 0.25)
+    const terrain = getInitialTerrains().push(terrains.get(TerrainType.Forest)!)
+
+    let attacker = getInitialArmy()
+    attacker = {
+      ...attacker,
+      tactic: tactics.get(TacticType.Envelopment)!,
+      general: 0,
+      roll: 5,
+      army: attacker.army.setIn([0, 15], attacker_unit)
+    }
+
+    let defender = getInitialArmy()
+    defender = {
+      ...defender,
+      tactic: tactics.get(TacticType.Envelopment)!,
+      general: 0,
+      roll: 1,
+      army: defender.army.setIn([0, 15], defender_unit)
+    }
+      ;[attacker, defender] = round(attacker, defender, terrain, 1)
+    verify(attacker.army.getIn([0, 15]), 975, 2.175)
+    verify(defender.army.getIn([0, 15]), 960, 2.040)
+      ;[attacker, defender] = round(attacker, defender, terrain, 2)
+    verify(attacker.army.getIn([0, 15]), 951, 1.992)
+    verify(defender.army.getIn([0, 15]), 921, 1.724)
+    ;[attacker, defender] = round(attacker, defender, terrain, 3)
+  verify(attacker.army.getIn([0, 15]), 928, 1.844)
+  verify(defender.army.getIn([0, 15]), 883, 1.440)
+  ;[attacker, defender] = round(attacker, defender, terrain, 4)
+verify(attacker.army.getIn([0, 15]), 906, 1.726)
+verify(defender.army.getIn([0, 15]), 846, 1.186)
+;[attacker, defender] = round(attacker, defender, terrain, 5)
+verify(attacker.army.getIn([0, 15]), 885, 1.632)
+verify(defender.army.getIn([0, 15]), 810, 0.952)
+attacker = { ...attacker, roll: 1 }
+    defender = { ...defender, roll: 3 }
+;[attacker, defender] = round(attacker, defender, terrain, 6)
+verify(attacker.army.getIn([0, 15]), 857, 1.532)
+verify(defender.army.getIn([0, 15]), 793, 0.846)
+;[attacker, defender] = round(attacker, defender, terrain, 7)
+verify(attacker.army.getIn([0, 15]), 830, 1.446)
+verify(defender.army.getIn([0, 15]), 776, 0.748)
+;[attacker, defender] = round(attacker, defender, terrain, 8)
+verify(attacker.army.getIn([0, 15]), 803, 1.370)
+verify(defender.army.getIn([0, 15]), 760, 0.658)
+;[attacker, defender] = round(attacker, defender, terrain, 9)
+verify(attacker.army.getIn([0, 15]), 777, 1.306)
+verify(defender.army.getIn([0, 15]), 744, 0.578)
+;[attacker, defender] = round(attacker, defender, terrain, 10)
+verify(attacker.army.getIn([0, 15]), 751, 1.252)
+verify(defender.army.getIn([0, 15]), 729, 0.502)
   })
 
   /*it('fake without modifiers', () => {
