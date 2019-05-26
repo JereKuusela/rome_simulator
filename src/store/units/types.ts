@@ -1,5 +1,5 @@
 
-import { Map, OrderedMap } from 'immutable'
+import { Map, OrderedMap, fromJS } from 'immutable'
 import { BaseDefinition } from '../../utils'
 import { TerrainType } from '../terrains'
 
@@ -21,6 +21,16 @@ export enum UnitCalc {
   AttritionWeight = 'Attrition weight',
   Experience = 'Experience'
 }
+
+export const unitFromJS = (object: Map<string, any>) => {
+  if (!object)
+    return null
+  let base = fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value)))
+  let modifier = fromJS(object.get('modifier_values')!.map((value: OrderedMap<string, number>) => fromJS(value)))
+  let loss = fromJS(object.get('loss_values')!.map((value: OrderedMap<string, number>) => fromJS(value)))
+  return new UnitDefinition(object.get('type') as UnitType, object.get('image'), object.get('requirements'), object.get('can_assault'), base, modifier, loss)
+}
+
 
 export type ValueType = UnitCalc | UnitType | TerrainType
 type MapValues = Map<ValueType, OrderedMap<string, number>>

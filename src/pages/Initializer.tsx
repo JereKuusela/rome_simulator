@@ -14,10 +14,10 @@ class Initializer extends Component<IProps> {
 
   constructor(props: IProps) {
     super(props)
-    this.props.selectTerrain(0, this.props.terrains.get(TerrainType.None)!)
-    this.props.selectTerrain(1, this.props.terrains.get(TerrainType.Plains)!)
-    this.props.selectTactic(ArmyType.Attacker, this.props.tactics.get(TacticType.ShockAction)!)
-    this.props.selectTactic(ArmyType.Defender, this.props.tactics.get(TacticType.ShockAction)!)
+    this.props.selected_terrains.get(0) || this.props.selectTerrain(0, this.props.terrains.get(TerrainType.None)!)
+    this.props.selected_terrains.get(1) || this.props.selectTerrain(1, this.props.terrains.get(TerrainType.Plains)!)
+    this.props.attacker.tactic || this.props.selectTactic(ArmyType.Attacker, this.props.tactics.get(TacticType.ShockAction)!)
+    this.props.defender.tactic || this.props.selectTactic(ArmyType.Defender, this.props.tactics.get(TacticType.ShockAction)!)
   }
 
   render() {
@@ -27,7 +27,10 @@ class Initializer extends Component<IProps> {
 
 const mapStateToProps = (state: AppState) => ({
   terrains: state.terrains.terrains,
-  tactics: state.tactics.tactics
+  tactics: state.tactics.tactics,
+  attacker: state.land.attacker,
+  defender: state.land.defender,
+  selected_terrains: state.land.terrains
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

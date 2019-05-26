@@ -1,8 +1,8 @@
 import { Map, OrderedMap } from 'immutable'
 
 export class BaseDefinition<T, S> {
-  constructor(public readonly type: T, public readonly image: string | null, protected readonly base_values: Map<S, OrderedMap<string, number>> = Map(), protected readonly modifier_values: Map<S, OrderedMap<string, number>> = Map(),
-    protected readonly loss_values: Map<S, OrderedMap<string, number>> = Map()) {
+  constructor(public readonly type: T, public readonly image: string | null, public readonly base_values: Map<S, OrderedMap<string, number>> = Map(), public readonly modifier_values: Map<S, OrderedMap<string, number>> = Map(),
+  public readonly loss_values: Map<S, OrderedMap<string, number>> = Map()) {
 
   }
 

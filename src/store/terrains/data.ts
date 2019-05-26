@@ -1,4 +1,4 @@
-import { Map, OrderedMap } from 'immutable'
+import { Map, OrderedMap, fromJS } from 'immutable'
 import { BaseDefinition } from '../../utils'
 import * as data from './terrains.json'
 
@@ -34,6 +34,14 @@ export const getDefaultDefinitions = (): Map<TerrainType, TerrainDefinition> => 
   return map
 }
 
+export const terrainFromJS = (object: Map<string, any>) => {
+  if (!object)
+    return null
+  let base = fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value)))
+  return new TerrainDefinition(object.get('type') as TerrainType, object.get('location') as LocationType, base)
+}
+
+
 export type ValueType = TerrainCalc
 type MapValues = Map<ValueType, OrderedMap<string, number>>
 
@@ -56,6 +64,14 @@ export class TerrainDefinition extends BaseDefinition<TerrainType, ValueType> {
   add_base_value = (key: string, type: ValueType, value: number): TerrainDefinition => {
     const new_values = this.add_values(this.base_values, key, [[type, value]])
     return new TerrainDefinition(this.type, this.location, new_values)
+  }
+
+  toJS = () => {
+    return {
+      type: this.type,
+      location: this.location,
+      base_values: this.base_values.map(value => value.toJS()).toJS()
+    }
   }
 }
 

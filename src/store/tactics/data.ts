@@ -1,4 +1,4 @@
-import { Map, OrderedMap } from 'immutable'
+import { Map, OrderedMap, fromJS } from 'immutable'
 import { BaseDefinition } from '../../utils'
 import { UnitType } from '../units/types'
 import IconBottleneck from '../../images/bottleneck.png'
@@ -53,6 +53,13 @@ export const getDefaultDefinitions = (): Map<TacticType, TacticDefinition> => {
 
 export type ValueType = UnitType | TacticCalc | TacticType
 type MapValues = Map<ValueType, OrderedMap<string, number>>
+
+export const tacticFromJS = (object: Map<string, any>) => {
+  if (!object)
+    return null
+  let base = fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value)))
+  return new TacticDefinition(object.get('type') as TacticType, object.get('image'), base)
+}
 
 export class TacticDefinition extends BaseDefinition<TacticType, ValueType> {
 
