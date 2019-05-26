@@ -18,7 +18,7 @@ class ModalUnitSelector extends Component<IProps> {
     if (!this.props.info)
       return null
     return (
-      <Modal basic onClose={this.props.onClose} open>
+      <Modal basic onClose={this.props.onClose} open centered={false}>
         <Modal.Content>
           <ItemSelector
             onClose={this.props.onClose}

@@ -208,7 +208,6 @@ export const calculateTactic = (tactic: TacticDefinition | null, front: FrontLin
 const applyLosses = (row: FrontLine, losses: Loss[], round: number): FrontLine => {
   for (let i = 0; i < row.size; ++i) {
     if (row.get(i)) {
-      //console.log('Losses: MP ' + losses[i].manpower + ' M ' + losses[i].morale)
       const loss_values: [UnitCalc, number][] = [[UnitCalc.Morale, losses[i].morale], [UnitCalc.Manpower, losses[i].manpower]]
       row = row.update(i, unit => unit && unit.add_loss_values('Round ' + round, loss_values))
     }
@@ -219,7 +218,6 @@ const applyLosses = (row: FrontLine, losses: Loss[], round: number): FrontLine =
 const applyKills = (row: FrontLine, kills: Kill[], round: number): FrontLine => {
   for (let i = 0; i < row.size; ++i) {
     if (row.get(i)) {
-      //console.log('Kills: MP ' + kills[i].manpower + ' M ' + kills[i].morale)
       const kill_values: [UnitCalc, number][] = [[UnitCalc.MoraleDepleted, kills[i].morale], [UnitCalc.ManpowerDepleted, kills[i].manpower]]
       row = row.update(i, unit => unit && unit.add_base_values('Round ' + round, kill_values))
     }

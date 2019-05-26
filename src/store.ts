@@ -57,7 +57,7 @@ const LandTransform = createTransform(
       return {
         ...participant,
         army: army,
-        defeated: defeated,
+        defeated_army: defeated,
         past: past2,
         tactic: tacticFromJS(fromJS(participant.tactic))
       }

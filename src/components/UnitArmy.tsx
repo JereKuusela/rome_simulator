@@ -13,7 +13,7 @@ interface IProps {
 }
 
 const MORALE_COLOR = 'rgba(200,55,55,0.60)'
-const MANPOWER_COLOR = 'rgba(50,43,43,0.60)'
+const MANPOWER_COLOR = 'rgba(0,0,0,0.90)'
 const WHITE_COLOR = 'rgba(255,255,255,0)'
 
 // Display component for showing unit definitions for an army.

@@ -143,7 +143,7 @@ class Land extends Component<IProps, IState> {
                       Terrain
                     </Table.HeaderCell>
                     <Table.HeaderCell>
-                      Roll
+                      Roll modifier
                   </Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
