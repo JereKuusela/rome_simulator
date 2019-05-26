@@ -116,7 +116,7 @@ const reinforce = (army: Army, attacker_to_defender: (number | null)[] | undefin
         army = army.setIn([row_index, unit_index - 1], null)
         row = army.get(row_index)!
         if (attacker_to_defender)
-          attacker_to_defender = attacker_to_defender.map(target => target === unit_index - 1 ? unit_index : target)
+          attacker_to_defender.forEach((target, index) => attacker_to_defender[index] = target === unit_index - 1 ? unit_index : target)
         continue
       }
     }
@@ -131,7 +131,7 @@ const reinforce = (army: Army, attacker_to_defender: (number | null)[] | undefin
         army = army.setIn([row_index, unit_index + 1], null)
         row = army.get(row_index)!
         if (attacker_to_defender)
-          attacker_to_defender = attacker_to_defender.map(target => target === unit_index + 1 ? unit_index : target)
+          attacker_to_defender.forEach((target, index) => attacker_to_defender[index] = target === unit_index + 1 ? unit_index : target)
         continue
       }
     }
