@@ -50,8 +50,10 @@ const LandTransform = createTransform(
     const serializeParticipant = (participant: any) => {
       let army = serializeUnits(fromJS(participant.army))
       let defeated = serializeUnits(fromJS(participant.defeated_army))
-      let past: List<{ army: List<List<any>>, defeated_army: List<List<any>>, roll: number }> = fromJS(participant.past)
-      let past2 = past.map(value => ({army: serializeUnits(value.army), defeated: serializeUnits(value.defeated_army), roll: value.roll}))
+      let past: List<Map<string, any>> = fromJS(participant.past)
+      let past3 = past.map(value => ({ army: value.get('army') as List<List<any>>, defeated_army: value.get('defeated_army') as List<List<any>>, roll: value.get('roll') as number}))
+      let past2 = past3.map(value => ({army: serializeUnits(value.army), defeated_army: serializeUnits(value.defeated_army), roll: value.roll}))
+      console.log(past2)
       return {
         ...participant,
         army: army,
