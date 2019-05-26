@@ -242,7 +242,7 @@ class Land extends Component<IProps, IState> {
       <div key={army} onClick={() => this.openTacticModal(army)}>
         {tactic && tactic.image ? <Image src={tactic.image} avatar /> : null}
         {tactic && tactic.type}
-        {tactic && ' (' + this.toRelativePercent(calculateTactic(tactic, info.army, info.defeated_army, counter), true) + ')'}
+        {tactic && ' (' + this.toRelativePercent(calculateTactic(tactic, info.army.get(0)!, counter), true) + ')'}
       </div >
     )
   }

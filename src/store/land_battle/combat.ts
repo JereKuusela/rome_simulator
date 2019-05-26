@@ -52,8 +52,8 @@ export const battle = (attacker: ParticipantState, defender: ParticipantState, r
   // Killed manpower won't deal any damage so the right solution has to be searched iteratively.
 
   const tactic_effects = {
-    attacker: calculateTactic(attacker.tactic, attacker_army, attacker.defeated_army, defender.tactic),
-    defender: calculateTactic(defender.tactic, defender_army, defender.defeated_army, attacker.tactic),
+    attacker: calculateTactic(attacker.tactic, attacker_frontline, defender.tactic),
+    defender: calculateTactic(defender.tactic, defender_frontline, attacker.tactic),
     casualties: (attacker.tactic ? attacker.tactic.calculateValue(TacticCalc.Casualties) : 0) + (defender.tactic ? defender.tactic.calculateValue(TacticCalc.Casualties) : 0)
   }
   //console.log('Tactics: A ' + tactic_effects.attacker + ' D ' + tactic_effects.defender + ' C ' + tactic_effects.casualties)
@@ -91,7 +91,7 @@ const reinforce = (army: Army, attacker_to_defender: (number | null)[] | undefin
   // 1: Empty spots get filled by back row.
   // 2: If still holes, units move towards center.
   for (let row_index = 0; row_index < army.size; ++row_index) {
-    const row = army.get(row_index)!
+    let row = army.get(row_index)!
     // Backrow.
     for (let unit_index = 0; unit_index < row.size; ++unit_index) {
       const unit = row.get(unit_index)
@@ -101,6 +101,7 @@ const reinforce = (army: Army, attacker_to_defender: (number | null)[] | undefin
       if (unit_behind) {
         army = army.setIn([row_index, unit_index], unit_behind)
         army = army.setIn([row_index + 1, unit_index], null)
+        row = army.get(row_index)!
         continue
       }
     }
@@ -113,6 +114,7 @@ const reinforce = (army: Army, attacker_to_defender: (number | null)[] | undefin
       if (unit_on_left) {
         army = army.setIn([row_index, unit_index], unit_on_left)
         army = army.setIn([row_index, unit_index - 1], null)
+        row = army.get(row_index)!
         if (attacker_to_defender)
           attacker_to_defender = attacker_to_defender.map(target => target === unit_index - 1 ? unit_index : target)
         continue
@@ -127,6 +129,7 @@ const reinforce = (army: Army, attacker_to_defender: (number | null)[] | undefin
       if (unit_on_right) {
         army = army.setIn([row_index, unit_index], unit_on_right)
         army = army.setIn([row_index, unit_index + 1], null)
+        row = army.get(row_index)!
         if (attacker_to_defender)
           attacker_to_defender = attacker_to_defender.map(target => target === unit_index + 1 ? unit_index : target)
         continue
@@ -172,11 +175,10 @@ const pickTargets = (source_row: FrontLine, target_row: FrontLine) => {
 /**
  * Calculates effectiveness of a tactic against another tactic with a given army.
  * @param tactic Tactic to calculate.
- * @param army Units affecting positive bonus.
- * @param defeated_army Units affecting positive bonus.
+ * @param front Units affecting positive bonus.
  * @param counter_tactic Opposing tactic, can counter or get countered.
  */
-export const calculateTactic = (tactic: TacticDefinition | null, army: Army, defeated_army: Army, counter_tactic: TacticDefinition | null): number => {
+export const calculateTactic = (tactic: TacticDefinition | null, front: FrontLine, counter_tactic: TacticDefinition | null): number => {
   if (!tactic || !counter_tactic)
     return 1.0
   const effectiveness = tactic.calculateValue(counter_tactic.type)
@@ -184,21 +186,11 @@ export const calculateTactic = (tactic: TacticDefinition | null, army: Army, def
   if (effectiveness > 0) {
     let units = 0
     let weight = 0.0
-    for (const row of army) {
-      for (const unit of row) {
-        if (!unit)
-          continue
-        units += 1
-        weight += tactic.calculateValue(unit.type)
-      }
-    }
-    for (const row of defeated_army) {
-      for (const unit of row) {
-        if (!unit)
-          continue
-        units += 1
-        weight += tactic.calculateValue(unit.type)
-      }
+    for (const unit of front) {
+      if (!unit)
+        continue
+      units += 1
+      weight += tactic.calculateValue(unit.type)
     }
     if (units)
       unit_modifier = weight / units
@@ -301,17 +293,17 @@ const calculateLosses = (source: Unit, target: Unit, roll: number, terrains: Ter
   const base_damage = BASE_DAMAGE + BASE_DAMAGE_PER_ROLL * roll
   // Terrain bonus and tactic missing.
   let damage = base_damage
-    * source.calculateValue(UnitCalc.Discipline)
     * source.calculateValue(UnitCalc.Offense)
+    * source.calculateValue(UnitCalc.Discipline)
     * (1.0 + source.calculateValue(target.type))
     * tactic_damage_multiplier
     * (1.0 + terrains.map(terrain => source.calculateValue(terrain.type)).reduce((previous, current) => previous + current, 0))
     / target.calculateValue(UnitCalc.Defense)
     * (1 - DAMAGE_REDUCTION_PER_EXPERIENCE * target.calculateValue(UnitCalc.Experience))
-  damage = damage * source.calculateValue(UnitCalc.Manpower)
-  const manpower_lost = Math.floor(damage) * MANPOWER_LOST_MULTIPLIER * (1.0 + casualties_multiplier) * (1.0 + target.calculateValue(UnitCalc.StrengthDamageTaken))
-  let morale_lost = Math.floor(Math.floor(Math.floor(Math.floor(damage) * Math.max(0, source.calculateValue(UnitCalc.Morale) )) / 2.0 )* 1.5)
+  damage = Math.floor(damage * source.calculateValue(UnitCalc.Manpower))
+  const manpower_lost = damage * MANPOWER_LOST_MULTIPLIER * (1.0 + casualties_multiplier) * (1.0 + target.calculateValue(UnitCalc.StrengthDamageTaken))
+  const morale_multiplier = Math.floor(1000.0 * Math.max(0, source.calculateValue(UnitCalc.Morale)) / 2.0) / 1000.0
+  let morale_lost = Math.floor(Math.floor(damage * morale_multiplier) * 1.5)
   morale_lost = morale_lost + Math.floor(morale_lost * target.calculateValue(UnitCalc.MoraleDamageTaken))
-  morale_lost = Math.round(morale_lost)
   return { manpower: Math.floor(manpower_lost), morale: morale_lost / 1000.0 }
 }

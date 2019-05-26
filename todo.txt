@@ -1,14 +1,11 @@
 https://github.com/resir014/react-redux-typescript-example
 
-Release 1:
+Release 2:
 
 
 Land battle:
 - Visually mimics in game screen.
 - Loyalty gives +10% discipline, include or not?
-- Show unit details. modify them...
-
-Release 2:
 
 Siege:
 - Time to capture

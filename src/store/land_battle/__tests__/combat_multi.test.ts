@@ -10,8 +10,13 @@ describe('multi', () => {
     expect(unit).toBeTruthy()
     if (!unit)
       return
-    expect(Math.abs(unit.calculateValue(UnitCalc.Manpower) - manpower)).toBeLessThan(5)
-    expect(Math.abs(unit.calculateValue(UnitCalc.Morale) - morale)).toBeLessThan(0.005)
+    expect(unit.calculateValue(UnitCalc.Manpower)).toEqual(manpower)
+    try {
+      expect(Math.abs(unit.calculateValue(UnitCalc.Morale) - morale)).toBeLessThan(0.002)
+    }
+    catch (e) {
+      throw new Error('Morale ' + unit.calculateValue(UnitCalc.Morale) + ' is not ' + morale);
+    }
   }
   const round = (attacker: ParticipantState, defender: ParticipantState, terrains: List<TerrainDefinition>, round: number): [ParticipantState, ParticipantState] => {
     const [attacker_new_army, defender_new_army] = battle(attacker, defender, round, terrains)
@@ -75,8 +80,8 @@ describe('multi', () => {
     verify(attacker.army.getIn([0, 14]), 956, 0.782)
     verify(attacker.army.getIn([0, 15]), 956, 0.782)
     verify(attacker.army.getIn([0, 16]), 956, 0.782)
-    verify(attacker.army.getIn([0, 17]), 947, 0.570)
-    */
+    verify(attacker.army.getIn([0, 17]), 947, 0.570)*/
+
   })
 })
 
