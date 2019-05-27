@@ -4,11 +4,11 @@ import { Modal } from 'semantic-ui-react'
 import { AppState } from '../store/'
 import { selectTactic } from '../store/land_battle'
 import ItemSelector from '../components/ItemSelector'
-import { ArmyType } from '../store/units'
+import { ArmyName } from '../store/units'
 import { TacticType, TacticDefinition } from '../store/tactics'
 
 export interface ModalInfo {
-  army: ArmyType
+  army: ArmyName
 }
 
 class ModalTacticSelector extends Component<IProps> {
@@ -41,7 +41,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  selectTactic: (army: ArmyType, tactic: TacticDefinition) => dispatch(selectTactic(army, tactic))
+  selectTactic: (army: ArmyName, tactic: TacticDefinition) => dispatch(selectTactic(army, tactic))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {

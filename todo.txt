@@ -48,7 +48,6 @@ Religion
 Release 4:
 
 Navigation:
-- Allow saving configuration locally
 - Simulation
 - Graphs
 - Extra info

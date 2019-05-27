@@ -5,11 +5,11 @@ import { connect } from 'react-redux'
 import ModalUnitDetail from '../containers/ModalUnitDetail'
 import ModalGlobalStatsDetail from '../containers/ModalGlobalStatsDetail'
 import { AppState } from '../store/index'
-import { UnitType, UnitDefinition, ArmyType } from '../store/units/types'
+import { UnitType, UnitDefinition, ArmyName } from '../store/units/types'
 import UnitDefinitions from '../components/UnitDefinitions'
 
 interface IState {
-  modal_army: ArmyType | null
+  modal_army: ArmyName | null
   modal_unit: UnitType | null
 }
 
@@ -22,7 +22,7 @@ class Units extends Component<IProps, IState> {
 
   closeModal = () => this.setState({ modal_army: null, modal_unit: null })
 
-  openModal = (army: ArmyType, unit: UnitType) => this.setState({ modal_army: army, modal_unit: unit })
+  openModal = (army: ArmyName, unit: UnitType) => this.setState({ modal_army: army, modal_unit: unit })
 
   render() {
     return (
@@ -47,7 +47,7 @@ class Units extends Component<IProps, IState> {
       </Container>
     )
   }
-  renderArmy = (army: ArmyType, units: Map<UnitType, UnitDefinition>, global_stats: UnitDefinition | undefined) => {
+  renderArmy = (army: ArmyName, units: Map<UnitType, UnitDefinition>, global_stats: UnitDefinition | undefined) => {
     return (
       <div key={army}>
         <UnitDefinitions

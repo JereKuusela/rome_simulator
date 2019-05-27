@@ -1,6 +1,6 @@
 
 import { Map, OrderedMap, fromJS } from 'immutable'
-import { BaseDefinition } from '../../utils'
+import { BaseDefinition, ValuesType } from '../../utils'
 import { TerrainType } from '../terrains'
 
 export enum UnitCalc {
@@ -95,11 +95,27 @@ export class UnitDefinition extends BaseDefinition<UnitType, ValueType> {
     const new_values = this.add_values(this.loss_values, key, [[attribute, value]])
     return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, this.base_values, this.modifier_values, new_values)
   }
+
+  add_value = (type: ValuesType, key: string, attribute: ValueType, value: number): UnitDefinition => {
+    if (type === ValuesType.Base)
+      return this.add_base_value(key, attribute, value)
+    if (type === ValuesType.Loss)
+      return this.add_loss_value(key, attribute, value)
+    if (type === ValuesType.Modifier)
+      return this.add_modifier_value(key, attribute, value)
+    return this
+  }
+}
+
+export enum ArmyName {
+  Attacker = 'Attacker',
+  Defender = 'Defender'
 }
 
 export enum ArmyType {
-  Attacker = 'Attacker',
-  Defender = 'Defender'
+  Main = 'Main',
+  Reserve = 'Reserve',
+  Defeated = 'Defeated'
 }
 
 

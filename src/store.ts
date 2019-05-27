@@ -6,7 +6,7 @@ import { persistStore, persistReducer, createTransform } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
 import { tacticFromJS, TacticType } from './store/tactics'
 import { terrainFromJS, TerrainType } from './store/terrains'
-import { unitFromJS, ArmyType, UnitType } from './store/units'
+import { unitFromJS, ArmyName, UnitType } from './store/units'
 
 const TacticsTransform = createTransform(
   (inboundState, _key) => inboundState,
@@ -31,9 +31,9 @@ const TerrainsTransform = createTransform(
 const UnitsTransform = createTransform(
   (inboundState, _key) => inboundState,
   (outboundState: any, key) => {
-    let unit: Map<ArmyType, Map<UnitType, any>> = fromJS(outboundState.units)
+    let unit: Map<ArmyName, Map<UnitType, any>> = fromJS(outboundState.units)
     let unit2 = unit.map(value => value.map(value2 => unitFromJS(value2)!))
-    let global: Map<ArmyType, any> = fromJS(outboundState.global_stats)
+    let global: Map<ArmyName, any> = fromJS(outboundState.global_stats)
     let global2 = global.map(value => unitFromJS(value)!)
     return { ...outboundState, units: unit2, global_stats: global2 }
   },
@@ -48,16 +48,22 @@ const LandTransform = createTransform(
     const serializeUnits = (raw: List<List<any>>) => raw.map(value => value.map(value => unitFromJS(value)))
 
     const serializeParticipant = (participant: any) => {
-      let army = serializeUnits(fromJS(participant.army))
-      let defeated = serializeUnits(fromJS(participant.defeated_army))
+      let army = serializeUnits(fromJS(participant.army)).take(1)
+      let reserve = serializeUnits(fromJS(participant.reserve))
+      let defeated = serializeUnits(fromJS(participant.defeated))
       let past: List<Map<string, any>> = fromJS(participant.past)
-      let past3 = past.map(value => ({ army: value.get('army') as List<List<any>>, defeated_army: value.get('defeated_army') as List<List<any>>, roll: value.get('roll') as number}))
-      let past2 = past3.map(value => ({army: serializeUnits(value.army), defeated_army: serializeUnits(value.defeated_army), roll: value.roll}))
-      console.log(past2)
+      let past3 = past.map(value => ({
+        army: value.get('army') as List<List<any>>,
+        reserve: value.get('reserve') as List<List<any>>,
+        defeated: value.get('defeated') as List<List<any>>,
+        roll: value.get('roll') as number
+      }))
+      let past2 = past3.map(value => ({ army: serializeUnits(value.army).take(1), reserve: serializeUnits(value.reserve), defeated: serializeUnits(value.defeated), roll: value.roll }))
       return {
         ...participant,
         army: army,
-        defeated_army: defeated,
+        reserve: reserve,
+        defeated: defeated,
         past: past2,
         tactic: tacticFromJS(fromJS(participant.tactic))
       }

@@ -1,7 +1,7 @@
 import { List as ImmutableList } from 'immutable'
 import React, { Component } from 'react'
 import { Image, Table, List, Icon } from 'semantic-ui-react'
-import { UnitType, UnitDefinition, UnitCalc, ArmyType, unit_to_icon, ValueType } from '../store/units'
+import { UnitType, UnitDefinition, UnitCalc, ArmyName, unit_to_icon, ValueType } from '../store/units'
 import { TerrainType } from '../store/terrains'
 import IconDiscipline from '../images/discipline.png'
 import IconOffense from '../images/offense.png'
@@ -10,7 +10,7 @@ import IconManpower from '../images/manpower.png'
 import IconMorale from '../images/morale.png'
 
 interface IProps {
-  readonly army: ArmyType
+  readonly army: ArmyName
   readonly units: ImmutableList<UnitDefinition>
   readonly global_stats: UnitDefinition | undefined
   readonly onRowClick: (unit: UnitDefinition) => void

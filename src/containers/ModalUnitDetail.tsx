@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { UnitType, setBaseValue, setModifierValue, setLossValue, ArmyType, ValueType } from '../store/units'
+import { UnitType, ArmyName, ValueType, setValue } from '../store/units'
 import { AppState } from '../store/'
+import { ValuesType } from '../utils'
 import UnitDetail from '../components/UnitDetail'
 
 const CUSTOM_VALUE_KEY = 'Custom'
@@ -29,19 +30,19 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setBaseValue: (army: ArmyType, unit: UnitType, key: string, attribute: ValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setBaseValue(army, unit, key, attribute,value))
+  setBaseValue: (army: ArmyName, unit: UnitType, key: string, attribute: ValueType, value: number) => (
+    !Number.isNaN(value) && dispatch(setValue(army, ValuesType.Base, unit, key, attribute,value))
   ),
-  setModifierValue: (army: ArmyType, unit: UnitType, key: string, attribute: ValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setModifierValue(army, unit, key, attribute, value))
+  setModifierValue: (army: ArmyName, unit: UnitType, key: string, attribute: ValueType, value: number) => (
+    !Number.isNaN(value) && dispatch(setValue(army, ValuesType.Modifier, unit, key, attribute, value))
   ),
-  setLossValue: (army: ArmyType, unit: UnitType, key: string, attribute: ValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setLossValue(army, unit, key, attribute, value))
+  setLossValue: (army: ArmyName, unit: UnitType, key: string, attribute: ValueType, value: number) => (
+    !Number.isNaN(value) && dispatch(setValue(army, ValuesType.Loss, unit, key, attribute, value))
   )
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {
-  army: ArmyType | null
+  army: ArmyName | null
   unit: UnitType | null
  }
 

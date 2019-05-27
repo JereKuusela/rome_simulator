@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
-import { ArmyType } from '../store/units/types'
+import { ArmyName } from '../store/units/types'
 import { selectTerrain, selectTactic } from '../store/land_battle'
 import { TerrainDefinition, TerrainType } from '../store/terrains'
 import { TacticDefinition, TacticType } from '../store/tactics'
@@ -16,8 +16,8 @@ class Initializer extends Component<IProps> {
     super(props)
     this.props.selected_terrains.get(0) || this.props.selectTerrain(0, this.props.terrains.get(TerrainType.None)!)
     this.props.selected_terrains.get(1) || this.props.selectTerrain(1, this.props.terrains.get(TerrainType.Plains)!)
-    this.props.attacker.tactic || this.props.selectTactic(ArmyType.Attacker, this.props.tactics.get(TacticType.ShockAction)!)
-    this.props.defender.tactic || this.props.selectTactic(ArmyType.Defender, this.props.tactics.get(TacticType.ShockAction)!)
+    this.props.attacker.tactic || this.props.selectTactic(ArmyName.Attacker, this.props.tactics.get(TacticType.ShockAction)!)
+    this.props.defender.tactic || this.props.selectTactic(ArmyName.Defender, this.props.tactics.get(TacticType.ShockAction)!)
   }
 
   render() {
@@ -34,7 +34,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  selectTactic: (army: ArmyType, tactic: TacticDefinition) => dispatch(selectTactic(army, tactic)),
+  selectTactic: (army: ArmyName, tactic: TacticDefinition) => dispatch(selectTactic(army, tactic)),
   selectTerrain: (index: number, terrain: TerrainDefinition) => dispatch(selectTerrain(index, terrain))
 })
 

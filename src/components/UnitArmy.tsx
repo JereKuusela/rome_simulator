@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { List } from 'immutable'
 import { Table, Image, Icon } from 'semantic-ui-react'
-import { UnitDefinition, UnitCalc } from '../store/units'
+import { UnitDefinition, UnitCalc, ArmyType } from '../store/units'
 import IconEmpty from '../images/empty.png'
 
 
@@ -9,7 +9,7 @@ interface IProps {
   units: List<List<(UnitDefinition | null)>>
   reverse: boolean
   onClick: (row: number, column: number, unit: UnitDefinition | null) => void
-  row_names: boolean
+  type: ArmyType
 }
 
 const MORALE_COLOR = 'rgba(200,55,55,0.60)'
@@ -31,12 +31,21 @@ export default class UnitArmy extends Component<IProps> {
     )
   }
 
+  getIcon = () => {
+    if (this.props.type === ArmyType.Main)
+      return this.props.reverse ? 'arrow down' : 'arrow up'
+    if (this.props.type === ArmyType.Reserve)
+      return 'home'
+    if (this.props.type === ArmyType.Defeated)
+      return 'heartbeat'
+    return 'square full'
+  }
 
   renderRow = (row: number, units: List<(UnitDefinition | null)>) => {
     return (
       <Table.Row key={row}>
         <Table.Cell>
-          <Icon fitted size='small' name={this.props.row_names ? this.props.reverse ? 'arrow down' : 'arrow up' : 'heartbeat'}></Icon>
+          <Icon fitted size='small' name={this.getIcon()}></Icon>
         </Table.Cell>
         {
           units.map((unit, index) => (

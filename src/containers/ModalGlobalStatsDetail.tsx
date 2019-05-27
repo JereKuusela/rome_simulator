@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { UnitType, setGlobalBaseValue, setGlobalModifierValue, setGlobalLossValue, ArmyType, ValueType } from '../store/units'
+import { UnitType, setGlobalValue, ArmyName, ValueType } from '../store/units'
 import { AppState } from '../store/'
+import { ValuesType } from '../utils'
 import UnitDetail from '../components/UnitDetail'
 
 const CUSTOM_VALUE_KEY = 'Global'
@@ -29,19 +30,19 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setGlobalBaseValue: (army: ArmyType, _: UnitType, key: string, attribute: ValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setGlobalBaseValue(army, key, attribute, value))
+  setGlobalBaseValue: (army: ArmyName, _: UnitType, key: string, attribute: ValueType, value: number) => (
+    !Number.isNaN(value) && dispatch(setGlobalValue(army, ValuesType.Base, key, attribute, value))
   ),
-  setGlobalModifierValue: (army: ArmyType, _: UnitType, key: string, attribute: ValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setGlobalModifierValue(army, key, attribute, value))
+  setGlobalModifierValue: (army: ArmyName, _: UnitType, key: string, attribute: ValueType, value: number) => (
+    !Number.isNaN(value) && dispatch(setGlobalValue(army, ValuesType.Modifier, key, attribute, value))
   ),
-  setGlobalLossValue: (army: ArmyType, _: UnitType, key: string, attribute: ValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setGlobalLossValue(army, key, attribute, value))
+  setGlobalLossValue: (army: ArmyName, _: UnitType, key: string, attribute: ValueType, value: number) => (
+    !Number.isNaN(value) && dispatch(setGlobalValue(army, ValuesType.Loss, key, attribute, value))
   )
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {
-  army: ArmyType | null
+  army: ArmyName | null
   unit: UnitType | null
  }
 

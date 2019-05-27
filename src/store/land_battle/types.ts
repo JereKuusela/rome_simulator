@@ -3,10 +3,18 @@ import { TerrainDefinition } from '../terrains'
 import { UnitDefinition } from '../units'
 import { TacticDefinition } from '../tactics'
 
+export interface PastState {
+  army: List<List<(UnitDefinition | null)>>
+  reserve: List<List<(UnitDefinition | null)>>
+  defeated: List<List<(UnitDefinition | null)>>
+  roll: number
+}
+
 export interface ParticipantState {
   readonly army: List<List<(UnitDefinition | null)>>
-  readonly defeated_army: List<List<(UnitDefinition | null)>>
-  readonly past: List<{ army: List<List<(UnitDefinition | null)>>, defeated_army: List<List<(UnitDefinition | null)>>, roll: number }>
+  readonly reserve: List<List<(UnitDefinition | null)>>
+  readonly defeated: List<List<(UnitDefinition | null)>>
+  readonly past: List<PastState>
   readonly tactic: TacticDefinition | null
   readonly roll: number
   readonly randomize_roll: boolean
@@ -16,11 +24,12 @@ export interface ParticipantState {
 export const getInitialTerrains = (): List<TerrainDefinition> => List<TerrainDefinition>()
 
 export const getInitialArmy = (): ParticipantState => ({
-    army: fromJS(Array(2).fill(Array(30).fill(null))),
-    defeated_army: fromJS(Array(2).fill(Array(30).fill(null))),
+    army: fromJS(Array(1).fill(Array(30).fill(null))),
+    reserve: fromJS(Array(1).fill(Array(30).fill(null))),
+    defeated: fromJS(Array(1).fill(Array(30).fill(null))),
     general: 0,
     tactic: null,
     roll: 0,
     randomize_roll: true,
-    past: List<{ army: List<List<(UnitDefinition | null)>>, defeated_army: List<List<(UnitDefinition | null)>>, roll: number }>()
+    past: List<{ army: List<List<(UnitDefinition | null)>>, reserve: List<List<(UnitDefinition | null)>>, defeated: List<List<(UnitDefinition | null)>>, roll: number }>()
   })

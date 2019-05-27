@@ -1,60 +1,28 @@
 import { Map } from 'immutable'
 import { createReducer } from 'typesafe-actions'
 import { getDefaultDefinitions, getDefaultGlobalDefinition } from './data'
-import { setBaseValue, setModifierValue, setLossValue, setGlobalBaseValue, setGlobalModifierValue, setGlobalLossValue } from './actions'
-import { UnitType, UnitDefinition, ArmyType } from './types'
+import { setValue, setGlobalValue } from './actions'
+import { UnitType, UnitDefinition, ArmyName } from './types'
 
 const initialState = {
-  units: Map<ArmyType, Map<UnitType, UnitDefinition>>().set(ArmyType.Attacker, getDefaultDefinitions()).set(ArmyType.Defender, getDefaultDefinitions()),
-  global_stats: Map<ArmyType, UnitDefinition>().set(ArmyType.Attacker, getDefaultGlobalDefinition()).set(ArmyType.Defender, getDefaultGlobalDefinition())
+  units: Map<ArmyName, Map<UnitType, UnitDefinition>>().set(ArmyName.Attacker, getDefaultDefinitions()).set(ArmyName.Defender, getDefaultDefinitions()),
+  global_stats: Map<ArmyName, UnitDefinition>().set(ArmyName.Attacker, getDefaultGlobalDefinition()).set(ArmyName.Defender, getDefaultGlobalDefinition())
 }
 
 export const unitsReducer = createReducer(initialState)
-  .handleAction(setBaseValue, (state, action: ReturnType<typeof setBaseValue>) => (
+  .handleAction(setValue, (state, action: ReturnType<typeof setValue>) => (
     {
       ...state, units: state.units.updateIn([action.payload.army, action.payload.unit], (unit: UnitDefinition) => (
-        unit.add_base_value(action.payload.key, action.payload.attribute, action.payload.value)
+        unit.add_value(action.payload.type, action.payload.key, action.payload.attribute, action.payload.value)
       ))
     }
   ))
-  .handleAction(setModifierValue, (state, action: ReturnType<typeof setModifierValue>) => (
-    {
-      ...state, units: state.units.updateIn([action.payload.army, action.payload.unit], (unit: UnitDefinition) => (
-        unit.add_modifier_value(action.payload.key, action.payload.attribute, action.payload.value)
-      ))
-    }
-  ))
-  .handleAction(setLossValue, (state, action: ReturnType<typeof setLossValue>) => ({
-    ...state,
-    units: state.units.updateIn([action.payload.army, action.payload.unit], (unit: UnitDefinition) => (
-      unit.add_loss_value(action.payload.key, action.payload.attribute, action.payload.value)
-    ))
-  }
-  ))
-  .handleAction(setGlobalBaseValue, (state, action: ReturnType<typeof setGlobalBaseValue>) => (
+  .handleAction(setGlobalValue, (state, action: ReturnType<typeof setGlobalValue>) => (
     {
       ...state,
-      global_stats: state.global_stats.update(action.payload.army, unit => unit.add_base_value(action.payload.key, action.payload.attribute, action.payload.value)),
+      global_stats: state.global_stats.update(action.payload.army, unit => unit.add_value(action.payload.type, action.payload.key, action.payload.attribute, action.payload.value)),
       units: state.units.update(action.payload.army, units => units.withMutations(units =>
-        units.map(unit => unit.add_base_value(action.payload.key, action.payload.attribute, action.payload.value))
-      ))
-    }
-  ))
-  .handleAction(setGlobalModifierValue, (state, action: ReturnType<typeof setGlobalModifierValue>) => (
-    {
-      ...state,
-      global_stats: state.global_stats.update(action.payload.army, unit => unit.add_modifier_value(action.payload.key, action.payload.attribute, action.payload.value)),
-      units: state.units.update(action.payload.army, units => units.withMutations(units =>
-        units.map(unit => unit.add_modifier_value(action.payload.key, action.payload.attribute, action.payload.value))
-      ))
-    }
-  ))
-  .handleAction(setGlobalLossValue, (state, action: ReturnType<typeof setGlobalLossValue>) => (
-    {
-      ...state,
-      global_stats: state.global_stats.update(action.payload.army, unit => unit.add_loss_value(action.payload.key, action.payload.attribute, action.payload.value)),
-      units: state.units.update(action.payload.army, units => units.withMutations(units =>
-        units.map(unit => unit.add_loss_value(action.payload.key, action.payload.attribute, action.payload.value))
+        units.map(unit => unit.add_value(action.payload.type, action.payload.key, action.payload.attribute, action.payload.value))
       ))
     }
   ))

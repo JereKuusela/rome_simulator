@@ -1,5 +1,12 @@
 import { Map, OrderedMap } from 'immutable'
 
+export enum ValuesType {
+  Base,
+  Modifier,
+  Loss,
+  Mo
+}
+
 export class BaseDefinition<T, S> {
   constructor(public readonly type: T, public readonly image: string | null, public readonly base_values: Map<S, OrderedMap<string, number>> = Map(), public readonly modifier_values: Map<S, OrderedMap<string, number>> = Map(),
   public readonly loss_values: Map<S, OrderedMap<string, number>> = Map()) {

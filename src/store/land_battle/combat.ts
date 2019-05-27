@@ -32,7 +32,7 @@ const MANPOWER_LOST_MULTIPLIER = 0.2
  * @param round Turn number to distinguish different rounds.
  * @param terrains Terrains of the battle, may affect amount of damage inflicted.
  */
-export const battle = (attacker: ParticipantState, defender: ParticipantState, round: number, terrains: Terrains): [Army, Army, Army, Army] => {
+export const battle = (attacker: ParticipantState, defender: ParticipantState, round: number, terrains: Terrains): [Army, Army, Army, Army, Army, Army] => {
   // General flow:
   // 1. Attacker reinforces.
   // 2. Attacker picks targets.
@@ -47,7 +47,7 @@ export const battle = (attacker: ParticipantState, defender: ParticipantState, r
   let defender_army = reinforce(defender.army, attacker_to_defender)
   let defender_to_attacker = pickTargets(defender_army.get(0)!, attacker_army.get(0)!)
   if (round < 1)
-    return [attacker_army, defender_army, attacker.defeated_army, defender.defeated_army]
+    return [attacker_army, defender_army, attacker.reserve, defender.reserve, attacker.defeated, defender.defeated]
   //console.log('Targets: A ' + attacker_to_defender + ' D ' + defender_to_attacker)
   let attacker_frontline = attacker_army.get(0)!
   let defender_frontline = defender_army.get(0)!
@@ -70,11 +70,11 @@ export const battle = (attacker: ParticipantState, defender: ParticipantState, r
   defender_army = defender_army.update(0, row => applyLosses(row, defender_losses, round))
   attacker_army = attacker_army.update(0, row => applyKills(row, attacker_kills, round))
   defender_army = defender_army.update(0, row => applyKills(row, defender_kills, round))
-  let attacker_defeated_army = copyDefeated(attacker_army, attacker.defeated_army)
-  let defender_defeated_army = copyDefeated(defender_army, defender.defeated_army)
+  let attacker_defeated_army = copyDefeated(attacker_army, attacker.defeated)
+  let defender_defeated_army = copyDefeated(defender_army, defender.defeated)
   attacker_army = removeDefeated(attacker_army)
   defender_army = removeDefeated(defender_army)
-  return [attacker_army, defender_army, attacker_defeated_army, defender_defeated_army]
+  return [attacker_army, defender_army, attacker.reserve, defender.reserve, attacker_defeated_army, defender_defeated_army]
 }
 
 const modifyRoll = (roll: number, terrains: Terrains, general: number, opposing_general: number) => {

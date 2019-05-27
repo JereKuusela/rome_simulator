@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
-import { UnitType, ArmyType, UnitDefinition } from '../store/units'
+import { UnitType, ArmyName, UnitDefinition, ArmyType } from '../store/units'
 import { AppState } from '../store/'
-import { selectUnit, selectDefeatedUnit } from '../store/land_battle'
+import { selectUnit } from '../store/land_battle'
 import ItemSelector from '../components/ItemSelector'
 
 export interface ModalInfo {
-  army: ArmyType
+  army: ArmyName
   row: number
   column: number
-  is_defeated: boolean
+  type: ArmyType
 }
 
 class ModalUnitSelector extends Component<IProps> {
@@ -34,9 +34,8 @@ class ModalUnitSelector extends Component<IProps> {
   }
 
   selectUnit = (unit: UnitType | null) => (
-    this.props.info && (this.props.info.is_defeated ?
-      this.props.selectDefeatedUnit(this.props.info.army, this.props.info.row, this.props.info.column, unit ? this.props.units.getIn([this.props.info.army, unit]) : null) :
-      this.props.selectUnit(this.props.info.army, this.props.info.row, this.props.info.column, unit ? this.props.units.getIn([this.props.info.army, unit]) : null))
+    this.props.info &&
+    this.props.selectUnit(this.props.info.army, this.props.info.type, this.props.info.row, this.props.info.column, unit ? this.props.units.getIn([this.props.info.army, unit]) : null)
   )
 }
 
@@ -45,11 +44,8 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  selectUnit: (army: ArmyType, row: number, column: number, unit: UnitDefinition | null) => (
-    dispatch(selectUnit(army, row, column, unit))
-  ),
-  selectDefeatedUnit: (army: ArmyType, row: number, column: number, unit: UnitDefinition | null) => (
-    dispatch(selectDefeatedUnit(army, row, column, unit))
+  selectUnit: (army: ArmyName, type: ArmyType, row: number, column: number, unit: UnitDefinition | null) => (
+    dispatch(selectUnit(army, type, row, column, unit))
   )
 })
 

@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 import { Table, Input } from 'semantic-ui-react'
-import { UnitType, UnitDefinition, UnitCalc, ArmyType, ValueType } from '../store/units'
+import { UnitType, UnitDefinition, UnitCalc, ArmyName, ValueType } from '../store/units'
 import { TerrainType } from '../store/terrains'
 
 interface IProps {
-  army: ArmyType
+  army: ArmyName
   custom_value_key: string
   unit: UnitDefinition
   show_statistics: boolean
-  onCustomBaseValueChange: (army: ArmyType, type: UnitType, key: string, attribute: ValueType, value: number) => void
-  onCustomModifierValueChange: (army: ArmyType, type: UnitType, key: string, attribute: ValueType, value: number) => void
-  onCustomLossValueChange: (army: ArmyType, type: UnitType, key: string, attribute: ValueType, value: number) => void
+  onCustomBaseValueChange: (army: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
+  onCustomModifierValueChange: (army: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
+  onCustomLossValueChange: (army: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
 }
 
 // Display component for showing and changing unit details.
