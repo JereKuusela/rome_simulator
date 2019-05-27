@@ -11,8 +11,7 @@ const CUSTOM_VALUE_KEY = 'Unit'
 
 export interface ModalInfo {
   army: ArmyName
-  row: number
-  column: number
+  index: number
   type: ArmyType
 }
 
@@ -45,50 +44,50 @@ class ModalArmyUnitDetail extends Component<IProps> {
     )
   }
 
-  selectUnit = (unit: UnitType | null) => (
+  selectUnit = (unit: UnitType | undefined) => (
     this.props.info &&
-    this.props.selectUnit(this.props.info.army, this.props.info.type, this.props.info.row, this.props.info.column, unit ? this.props.units.getIn([this.props.info.army, unit]) : null)
+    this.props.selectUnit(this.props.info.army, this.props.info.type, this.props.info.index, unit ? this.props.units.getIn([this.props.info.army, unit]) : null)
   )
 
   setBaseValue = (army: ArmyName, _type: UnitType, key: string, attribute: ValueType, value: number) => {
     if (!this.props.info)
       return
     const unit = this.getUnit(this.props.info).add_base_value(key, attribute, value)
-    this.props.selectUnit(army, this.props.info.type, this.props.info.row, this.props.info.column, unit)
+    this.props.selectUnit(army, this.props.info.type, this.props.info.index, unit)
   }
 
   setModifierValue = (army: ArmyName, _type: UnitType, key: string, attribute: ValueType, value: number) => {
     if (!this.props.info)
       return
     const unit = this.getUnit(this.props.info).add_modifier_value(key, attribute, value)
-    this.props.selectUnit(army, this.props.info.type, this.props.info.row, this.props.info.column, unit)
+    this.props.selectUnit(army, this.props.info.type, this.props.info.index, unit)
   }
 
   setLossValue = (army: ArmyName, _type: UnitType, key: string, attribute: ValueType, value: number) => {
     if (!this.props.info)
       return
     const unit = this.getUnit(this.props.info).add_loss_value(key, attribute, value)
-    this.props.selectUnit(army, this.props.info.type, this.props.info.row, this.props.info.column, unit)
+    this.props.selectUnit(army, this.props.info.type, this.props.info.index, unit)
   }
 
   getUnit = (info: ModalInfo): UnitDefinition => {
     if (info.type === ArmyType.Main) {
       if (info.army === ArmyName.Attacker)
-        return this.props.attacker.army.getIn([info.row, info.column])
+        return this.props.attacker.army.get(info.index)!
       else
-        return this.props.defender.army.getIn([info.row, info.column])
+        return this.props.defender.army.get(info.index)!
     }
     else if (info.type === ArmyType.Reserve) {
       if (info.army === ArmyName.Attacker)
-        return this.props.attacker.reserve.getIn([info.row, info.column])
+        return this.props.attacker.reserve.get(info.index)!
       else
-        return this.props.defender.reserve.getIn([info.row, info.column])
+        return this.props.defender.reserve.get(info.index)!
     }
     else {
       if (info.army === ArmyName.Attacker)
-        return this.props.attacker.defeated.getIn([info.row, info.column])
+        return this.props.attacker.defeated.get(info.index)!
       else
-        return this.props.defender.defeated.getIn([info.row, info.column])
+        return this.props.defender.defeated.get(info.index)!
     }
   }
 }
@@ -100,8 +99,8 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  selectUnit: (army: ArmyName, type: ArmyType, row: number, column: number, unit: UnitDefinition | null) => (
-    dispatch(selectUnit(army, type, row, column, unit))
+  selectUnit: (army: ArmyName, type: ArmyType, column: number, unit: UnitDefinition | undefined) => (
+    dispatch(selectUnit(army, type, column, unit))
   )
 })
 

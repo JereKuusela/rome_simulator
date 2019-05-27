@@ -45,20 +45,20 @@ const LandTransform = createTransform(
   (outboundState: any, key) => {
     const terrains = fromJS(outboundState.terrains).map((value: any) => terrainFromJS(value)!)
 
-    const serializeUnits = (raw: List<List<any>>) => raw.map(value => value.map(value => unitFromJS(value)))
+    const serializeUnits = (raw: List<any>) => raw.map(value => unitFromJS(value))
 
     const serializeParticipant = (participant: any) => {
-      let army = serializeUnits(fromJS(participant.army)).take(1)
-      let reserve = serializeUnits(fromJS(participant.reserve))
-      let defeated = serializeUnits(fromJS(participant.defeated))
+      let army = serializeUnits(fromJS(participant.army)).setSize(30)
+      let reserve = serializeUnits(fromJS(participant.reserve)).filter(value => value)
+      let defeated = serializeUnits(fromJS(participant.defeated)).filter(value => value)
       let past: List<Map<string, any>> = fromJS(participant.past)
       let past3 = past.map(value => ({
-        army: value.get('army') as List<List<any>>,
-        reserve: value.get('reserve') as List<List<any>>,
-        defeated: value.get('defeated') as List<List<any>>,
+        army: value.get('army') as List<any>,
+        reserve: value.get('reserve') as List<any>,
+        defeated: value.get('defeated') as List<any>,
         roll: value.get('roll') as number
       }))
-      let past2 = past3.map(value => ({ army: serializeUnits(value.army).take(1), reserve: serializeUnits(value.reserve), defeated: serializeUnits(value.defeated), roll: value.roll }))
+      let past2 = past3.map(value => ({ army: serializeUnits(value.army).setSize(30), reserve: serializeUnits(value.reserve).filter(value => value), defeated: serializeUnits(value.defeated).filter(value => value), roll: value.roll }))
       return {
         ...participant,
         army: army,

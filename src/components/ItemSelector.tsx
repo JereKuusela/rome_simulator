@@ -12,7 +12,7 @@ type ItemAttribute = UnitCalc | TerrainCalc | UnitType | TerrainType | TacticCal
 interface IProps<T extends ItemType, S extends ItemAttribute> {
   onClose: () => void
   items: List<BaseDefinition<T, S>>
-  onSelection: (type: T | null) => void
+  onSelection: (type: T | undefined) => void
   attributes: S[]
   can_remove: boolean
   can_select: boolean
@@ -26,7 +26,7 @@ export default class ItemSelector<S extends ItemAttribute, T extends ItemType> e
           <Table celled selectable unstackable>
             <Table.Body>
               {this.props.can_remove ? (
-                <Table.Row onClick={() => this.onClick(null)}>
+                <Table.Row onClick={() => this.onClick(undefined)}>
                   <Table.Cell>
                     Remove
                   </Table.Cell>
@@ -59,7 +59,7 @@ export default class ItemSelector<S extends ItemAttribute, T extends ItemType> e
     )
   }
 
-  onClick = (type: T | null) => {
+  onClick = (type: T | undefined) => {
     this.props.onSelection(type)
     this.props.onClose()
   }

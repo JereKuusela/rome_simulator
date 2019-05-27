@@ -56,7 +56,7 @@ type MapValues = Map<ValueType, OrderedMap<string, number>>
 
 export const tacticFromJS = (object: Map<string, any>) => {
   if (!object)
-    return null
+    return undefined
   let base = fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value)))
   return new TacticDefinition(object.get('type') as TacticType, object.get('image'), base)
 }

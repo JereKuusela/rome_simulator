@@ -29,12 +29,7 @@ class ModalFastPlanner extends Component<IProps> {
 
   }
 
-  countUnits = (reserve: List<List<UnitDefinition | null>>, unit: UnitType) => {
-    return reserve.reduce((previous, current) => (
-      previous + current.reduce((previous, current) => previous + (current && current.type === unit ? 1 : 0), 0)
-    ), 0)
-  }
-
+  countUnits = (reserve: List<UnitDefinition>, unit: UnitType) => reserve.reduce((previous, current) => previous + (current && current.type === unit ? 1 : 0), 0)
 }
 
 const mapStateToProps = (state: AppState) => ({

@@ -31,7 +31,7 @@ class ModalTerrainSelector extends Component<IProps> {
     )
   }
 
-  selectTerrain = (type: TerrainType | null) => (
+  selectTerrain = (type: TerrainType | undefined) => (
     this.props.info && type && this.props.selectTerrain(this.props.info.index, this.props.terrains.get(type)!)
   )
 }

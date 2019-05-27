@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Map } from 'immutable'
 import { Table, Input, Image } from 'semantic-ui-react'
-import { UnitType, unit_to_icon, UnitDefinition, ArmyName } from '../store/units'
+import { UnitType, unit_to_icon, ArmyName } from '../store/units'
 
 interface IProps {
   reserve_a: Map<UnitType, number>

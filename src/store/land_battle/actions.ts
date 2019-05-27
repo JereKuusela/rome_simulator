@@ -4,7 +4,7 @@ import { TerrainDefinition } from '../terrains'
 import { TacticDefinition } from '../tactics'
 
 export const selectUnit = createAction('@@land_battle/SELECT_UNIT', action => {
-  return (army: ArmyName, type: ArmyType, row: number, column: number, unit: UnitDefinition | null) => action({ army, type, row, column, unit })
+  return (army: ArmyName, type: ArmyType, index: number, unit: UnitDefinition | undefined) => action({ army, type, index, unit })
 })
 
 export const selectTerrain = createAction('@@land_battle/SELECT_TERRAIN', action => {

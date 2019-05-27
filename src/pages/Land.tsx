@@ -33,16 +33,16 @@ class Land extends Component<IProps, IState> {
 
   closeModal = () => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null, modal_fast_planner_open: false })
 
-  openUnitModal = (army: ArmyName, type: ArmyType, row: number, column: number, unit: UnitDefinition | null) => {
+  openUnitModal = (army: ArmyName, type: ArmyType, column: number, unit: UnitDefinition | undefined) => {
     if (unit)
-      this.openArmyUnitModal(army, type, row, column, unit)
+      this.openArmyUnitModal(army, type, column, unit)
     else
-      this.openUnitSelector(army, type, row, column, unit)
+      this.openUnitSelector(army, type, column, unit)
   }
 
-  openUnitSelector = (army: ArmyName, type: ArmyType, row: number, column: number, unit: UnitDefinition | null) => this.setState({ modal_unit_info: { army, type, row, column, unit } })
+  openUnitSelector = (army: ArmyName, type: ArmyType, index: number, unit: UnitDefinition | undefined) => this.setState({ modal_unit_info: { army, type, index, unit } })
 
-  openArmyUnitModal = (army: ArmyName, type: ArmyType, row: number, column: number, unit: UnitDefinition) => this.setState({ modal_army_unit_info: { army, type, row, column, unit } })
+  openArmyUnitModal = (army: ArmyName, type: ArmyType, index: number, unit: UnitDefinition) => this.setState({ modal_army_unit_info: { army, type, index, unit } })
 
   openTerrainModal = (index: number) => this.setState({ modal_terrain_info: { index, location: this.props.terrains.get(index)!.location } })
 
@@ -202,7 +202,7 @@ class Land extends Component<IProps, IState> {
       <div key={army}>
         {army === ArmyName.Attacker && <Header>{army + '\'s army'}</Header>}
         <UnitArmy
-          onClick={(row, column, unit) => this.openUnitModal(army, ArmyType.Main, row, column, unit)}
+          onClick={(column, unit) => this.openUnitModal(army, ArmyType.Main, column, unit)}
           units={units.army}
           reverse={army === ArmyName.Attacker}
           type={ArmyType.Main}
@@ -232,7 +232,7 @@ class Land extends Component<IProps, IState> {
       <div key={army}>
         <Header>{army + '\'s reserve'}</Header>
         <UnitArmy
-          onClick={(row, column, unit) => this.openUnitModal(army, ArmyType.Reserve, row, column, unit)}
+          onClick={(column, unit) => this.openUnitModal(army, ArmyType.Reserve, column, unit)}
           units={units.reserve}
           reverse={false}
           type={ArmyType.Reserve}
@@ -246,7 +246,7 @@ class Land extends Component<IProps, IState> {
       <div key={army}>
         <Header>{army + '\'s defeated units'}</Header>
         <UnitArmy
-          onClick={(row, column, unit) => this.openUnitModal(army, ArmyType.Defeated, row, column, unit)}
+          onClick={(column, unit) => this.openUnitModal(army, ArmyType.Defeated, column, unit)}
           units={units.defeated}
           reverse={false}
           type={ArmyType.Defeated}
@@ -272,13 +272,13 @@ class Land extends Component<IProps, IState> {
     )
   }
 
-  renderTactic = (army: ArmyName, info: ParticipantState, counter: TacticDefinition | null) => {
+  renderTactic = (army: ArmyName, info: ParticipantState, counter: TacticDefinition | undefined) => {
     const tactic = info.tactic
     return (
       <div key={army} onClick={() => this.openTacticModal(army)}>
         {tactic && tactic.image ? <Image src={tactic.image} avatar /> : null}
         {tactic && tactic.type}
-        {tactic && ' (' + this.toRelativePercent(calculateTactic(tactic, info.army.get(0)!, counter), true) + ')'}
+        {tactic && ' (' + this.toRelativePercent(calculateTactic(tactic, info.army, counter), true) + ')'}
       </div >
     )
   }
@@ -294,7 +294,7 @@ class Land extends Component<IProps, IState> {
     return String(value) + '%'
   }
 
-  renderArmyInfo = (army_type: ArmyName, info: ParticipantState, counter_tactic: TacticDefinition | null) => {
+  renderArmyInfo = (army_type: ArmyName, info: ParticipantState, counter_tactic: TacticDefinition | undefined) => {
     return (
       <Table.Row key={army_type}>
         <Table.Cell collapsing>

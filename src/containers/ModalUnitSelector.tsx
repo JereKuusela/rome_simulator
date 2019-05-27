@@ -8,8 +8,7 @@ import ItemSelector from '../components/ItemSelector'
 
 export interface ModalInfo {
   army: ArmyName
-  row: number
-  column: number
+  index: number
   type: ArmyType
 }
 
@@ -25,7 +24,7 @@ class ModalUnitSelector extends Component<IProps> {
             onSelection={this.selectUnit}
             items={this.props.units.get(this.props.info.army)!.toList()}
             attributes={[]}
-            can_remove={true}
+            can_remove={false}
             can_select={true}
           />
         </Modal.Content>
@@ -33,9 +32,9 @@ class ModalUnitSelector extends Component<IProps> {
     )
   }
 
-  selectUnit = (unit: UnitType | null) => (
+  selectUnit = (unit: UnitType | undefined) => (
     this.props.info &&
-    this.props.selectUnit(this.props.info.army, this.props.info.type, this.props.info.row, this.props.info.column, unit ? this.props.units.getIn([this.props.info.army, unit]) : null)
+    this.props.selectUnit(this.props.info.army, this.props.info.type, this.props.info.index, unit ? this.props.units.getIn([this.props.info.army, unit]) : null)
   )
 }
 
@@ -44,8 +43,8 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  selectUnit: (army: ArmyName, type: ArmyType, row: number, column: number, unit: UnitDefinition | null) => (
-    dispatch(selectUnit(army, type, row, column, unit))
+  selectUnit: (army: ArmyName, type: ArmyType, column: number, unit: UnitDefinition | undefined) => (
+    dispatch(selectUnit(army, type, column, unit))
   )
 })
 

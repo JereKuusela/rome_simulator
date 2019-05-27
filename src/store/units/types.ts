@@ -24,7 +24,7 @@ export enum UnitCalc {
 
 export const unitFromJS = (object: Map<string, any>) => {
   if (!object)
-    return null
+    return undefined
   let base = fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value)))
   let modifier = fromJS(object.get('modifier_values')!.map((value: OrderedMap<string, number>) => fromJS(value)))
   let loss = fromJS(object.get('loss_values')!.map((value: OrderedMap<string, number>) => fromJS(value)))

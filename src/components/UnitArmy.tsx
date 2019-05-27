@@ -6,9 +6,9 @@ import IconEmpty from '../images/empty.png'
 
 
 interface IProps {
-  units: List<List<(UnitDefinition | null)>>
+  units: List<UnitDefinition | undefined>
   reverse: boolean
-  onClick: (row: number, column: number, unit: UnitDefinition | null) => void
+  onClick: (index: number, unit: UnitDefinition | undefined) => void
   type: ArmyType
 }
 
@@ -19,12 +19,39 @@ const WHITE_COLOR = 'rgba(255,255,255,0)'
 // Display component for showing unit definitions for an army.
 export default class UnitArmy extends Component<IProps> {
 
+  readonly ROW_LENGTH = 30.0
+
   render() {
+    const row_count = Math.ceil((this.props.units.size + (this.props.type === ArmyType.Main ? 0 : 1)) / this.ROW_LENGTH)
+    const rows = Array(row_count).fill(0).map((_, index) => index)
+    const columns = Array(this.ROW_LENGTH).fill(0).map((_, index) => index)
     return (
       <Table compact celled definition unstackable>
         <Table.Body>
           {
-            (this.props.reverse ? this.props.units.reverse() : this.props.units).map((row, index) => this.renderRow(this.props.reverse ? this.props.units.size - 1 - index : index, row))
+            rows.map(row => (
+              <Table.Row key={row}>
+                <Table.Cell>
+                  <Icon fitted size='small' name={this.getIcon()}></Icon>
+                </Table.Cell>
+                {
+                  columns.map(column => {
+                    const unit = this.props.units.get(row * this.ROW_LENGTH + column)
+                    return (
+                      <Table.Cell key={column} selectable onClick={() => this.props.onClick(row * this.ROW_LENGTH + column, unit)}>
+                        {
+                          <div style={{ background: this.gradient(unit, MANPOWER_COLOR, UnitCalc.Manpower) }}>
+                            <div style={{ background: this.gradient(unit, MORALE_COLOR, UnitCalc.Morale) }}>
+                              <Image src={unit === undefined ? IconEmpty : unit.image} avatar />
+                            </div>
+                          </div>
+                        }
+                      </Table.Cell>
+                    )
+                  })
+                }
+              </Table.Row>
+            ))
           }
         </Table.Body>
       </Table>
@@ -41,34 +68,11 @@ export default class UnitArmy extends Component<IProps> {
     return 'square full'
   }
 
-  renderRow = (row: number, units: List<(UnitDefinition | null)>) => {
-    return (
-      <Table.Row key={row}>
-        <Table.Cell>
-          <Icon fitted size='small' name={this.getIcon()}></Icon>
-        </Table.Cell>
-        {
-          units.map((unit, index) => (
-            <Table.Cell key={index} selectable onClick={() => this.props.onClick(row, index, unit)}>
-              {
-                <div style={{ background: this.gradient(unit, MANPOWER_COLOR, UnitCalc.Manpower) }}>
-                  <div style={{ background: this.gradient(unit, MORALE_COLOR, UnitCalc.Morale) }}>
-                    <Image src={unit === null ? IconEmpty : unit.image} avatar />
-                  </div>
-                </div>
-              }
-            </Table.Cell>
-          ))
-        }
-      </Table.Row>
-    )
-  }
-
-  gradient = (unit: UnitDefinition | null, color: string, attribute: UnitCalc): string => {
+  gradient = (unit: UnitDefinition | undefined, color: string, attribute: UnitCalc): string => {
     return 'linear-gradient(0deg, ' + color + ' 0%, ' + color + ' ' + this.percent(unit, attribute) + '%, ' + WHITE_COLOR + ' ' + this.percent(unit, attribute) + '%, ' + WHITE_COLOR + ' 100%)'
   }
 
-  percent = (unit: UnitDefinition | null, attribute: UnitCalc): number => {
+  percent = (unit: UnitDefinition | undefined, attribute: UnitCalc): number => {
     if (!unit)
       return 0
     return 100.0 - 100.0 * unit.calculateValue(attribute) / unit.calculateValueWithoutLoss(attribute)
