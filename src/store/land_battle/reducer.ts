@@ -1,7 +1,7 @@
 import { createReducer } from 'typesafe-actions'
 import { List } from 'immutable'
 import { getInitialArmy, getInitialTerrains, ParticipantState, PastState } from './types'
-import { selectUnit, selectTerrain, battle, selectTactic, undo, toggleRandomRoll, setRoll, setGeneral, setRowType } from './actions'
+import { selectUnit, selectTerrain, battle, selectTactic, undo, toggleRandomRoll, setRoll, setGeneral, setRowType, removeReserveUnits, addReserveUnits } from './actions'
 import { ArmyName, setGlobalValue, setValue, UnitDefinition, UnitType, ValueType, ArmyType } from '../units'
 import { battle as fight } from './combat'
 import { ValuesType } from '../../utils'
@@ -176,8 +176,40 @@ export const landBattleReducer = createReducer(initialState)
       }
     }
     return next
-  }
-  )
+  })
+  .handleAction(removeReserveUnits, (state, action: ReturnType<typeof removeReserveUnits>) => {
+    let reserve = action.payload.army === ArmyName.Attacker ? state.attacker.reserve : state.defender.reserve
+    for (const type of action.payload.types)
+      reserve = reserve.delete(reserve.findLastIndex(value => value.type === type))
+
+    return {
+      ...state,
+      attacker: {
+        ...state.attacker,
+        reserve: action.payload.army === ArmyName.Attacker ? reserve : state.attacker.reserve
+      },
+      defender: {
+        ...state.defender,
+        reserve: action.payload.army === ArmyName.Defender ? reserve : state.defender.reserve
+      }
+    }
+  })
+  .handleAction(addReserveUnits, (state, action: ReturnType<typeof addReserveUnits>) => {
+    let reserve = action.payload.army === ArmyName.Attacker ? state.attacker.reserve : state.defender.reserve
+    reserve = reserve.merge(action.payload.units)
+
+    return {
+      ...state,
+      attacker: {
+        ...state.attacker,
+        reserve: action.payload.army === ArmyName.Attacker ? reserve : state.attacker.reserve
+      },
+      defender: {
+        ...state.defender,
+        reserve: action.payload.army === ArmyName.Defender ? reserve : state.defender.reserve
+      }
+    }
+  })
   .handleAction(setTacticBaseValue, (state, action: ReturnType<typeof setTacticBaseValue>) => (
     {
       ...state,

@@ -8,6 +8,14 @@ export const selectUnit = createAction('@@land_battle/SELECT_UNIT', action => {
   return (army: ArmyName, type: ArmyType, index: number, unit: UnitDefinition | undefined) => action({ army, type, index, unit })
 })
 
+export const removeReserveUnits = createAction('@@land_battle/REMOVE_RESERVE_UNITS', action => {
+  return (army: ArmyName, types: UnitType[]) => action({ army, types })
+})
+
+export const addReserveUnits = createAction('@@land_battle/ADD_RESERVE_UNITS', action => {
+  return (army: ArmyName, units: UnitDefinition[]) => action({ army, units })
+})
+
 export const selectTerrain = createAction('@@land_battle/SELECT_TERRAIN', action => {
   return (index: number, terrain: TerrainDefinition) => action({ index, terrain })
 })

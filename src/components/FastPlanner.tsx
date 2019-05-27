@@ -51,7 +51,7 @@ export default class FastPlanner extends Component<IProps> {
           type='number'
           size='mini'
           defaultValue={this.props.reserve_a.get(unit)}
-          onChange={(_, data) => this.props.onValueChange(ArmyName.Attacker, unit, Math.round(Number(data.value)))
+          onChange={(_, data) => this.props.onValueChange(ArmyName.Attacker, unit, Math.max(0, Math.round(Number(data.value))))
           }
         />
       </Table.Cell>
@@ -60,7 +60,7 @@ export default class FastPlanner extends Component<IProps> {
           type='number'
           size='mini'
           defaultValue={this.props.reserve_b.get(unit)}
-          onChange={(_, data) => this.props.onValueChange(ArmyName.Attacker, unit, Math.round(Number(data.value)))
+          onChange={(_, data) => this.props.onValueChange(ArmyName.Defender, unit, Math.max(0, Math.round(Number(data.value))))
           }
         />
       </Table.Cell>

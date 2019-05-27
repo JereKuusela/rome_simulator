@@ -86,9 +86,9 @@ class Land extends Component<IProps, IState> {
         <Grid verticalAlign='middle'>
           <Grid.Row columns={3} >
             <Grid.Column floated='left'><Header>{'Round: ' + this.roundName(this.props.round)}</Header></Grid.Column>
-            <Grid.Column>
-              <Button primary onClick={this.openFastPlanner}>
-                Fast planner
+            <Grid.Column textAlign='center'>
+              <Button primary size='large' onClick={this.openFastPlanner}>
+                Create units
                 </Button>
             </Grid.Column>
             <Grid.Column floated='right' textAlign='right'>
@@ -187,7 +187,7 @@ class Land extends Component<IProps, IState> {
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell>
-                      Preferred unit types
+                      Preferred unit types (Not very accurate yet!)
                     </Table.HeaderCell>
                     <Table.HeaderCell>
                       {RowType.Front}
