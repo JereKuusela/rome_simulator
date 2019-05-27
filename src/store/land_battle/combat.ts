@@ -46,6 +46,8 @@ export const battle = (attacker: ParticipantState, defender: ParticipantState, r
   let attacker_to_defender = pickTargets(attacker_army.get(0)!, defender.army.get(0)!)
   let defender_army = reinforce(defender.army, attacker_to_defender)
   let defender_to_attacker = pickTargets(defender_army.get(0)!, attacker_army.get(0)!)
+  if (round < 1)
+    return [attacker_army, defender_army, attacker.defeated_army, defender.defeated_army]
   //console.log('Targets: A ' + attacker_to_defender + ' D ' + defender_to_attacker)
   let attacker_frontline = attacker_army.get(0)!
   let defender_frontline = defender_army.get(0)!

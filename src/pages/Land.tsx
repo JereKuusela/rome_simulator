@@ -78,7 +78,7 @@ class Land extends Component<IProps, IState> {
         />
         <Grid verticalAlign='middle'>
           <Grid.Row columns={3} >
-            <Grid.Column floated='left'><Header>{'Round: ' + this.props.round}</Header></Grid.Column>
+            <Grid.Column floated='left'><Header>{'Round: ' + this.roundName(this.props.round)}</Header></Grid.Column>
             <Grid.Column />
             <Grid.Column floated='right' textAlign='right'>
               <Button circular icon='angle double left' color='black' size='huge' disabled={!this.props.is_undo} onClick={() => this.props.undo(10)} />
@@ -173,6 +173,12 @@ class Land extends Component<IProps, IState> {
         </Grid >
       </Container >
     )
+  }
+
+  roundName = (round: number) => {
+    if (round < 0)
+      return 'Before combat'
+    return String(round)
   }
 
   renderArmy = (army: ArmyType, units: ParticipantState) => {
@@ -284,7 +290,7 @@ class Land extends Component<IProps, IState> {
 const mapStateToProps = (state: AppState) => ({
   attacker: state.land.attacker,
   defender: state.land.defender,
-  is_undo: state.land.day > 0,
+  is_undo: state.land.day > -1,
   round: state.land.day,
   terrains: state.land.terrains,
   fight_over: state.land.fight_over
