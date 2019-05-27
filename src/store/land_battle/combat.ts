@@ -1,8 +1,8 @@
-import { List } from 'immutable'
-import { UnitDefinition, UnitCalc } from '../units'
+import { List, Map } from 'immutable'
+import { UnitDefinition, UnitCalc, UnitType } from '../units'
 import { TerrainDefinition, TerrainCalc } from '../terrains'
 import { TacticDefinition, TacticCalc } from '../tactics'
-import { ParticipantState } from './types'
+import { ParticipantState, RowType } from './types'
 
 type Unit = UnitDefinition
 type Army = List<UnitDefinition | undefined>
@@ -43,12 +43,12 @@ export const battle = (attacker: ParticipantState, defender: ParticipantState, r
   //console.log('')
   //console.log('********** ROUND ' + round + '*********')
   //console.log('')
-  let attacker_army = reinforce(attacker.army, undefined)
+  let [attacker_army, attacker_reserve] = reinforce(attacker.army, attacker.reserve, attacker.row_types, undefined)
   let attacker_to_defender = pickTargets(attacker_army, defender.army)
-  let defender_army = reinforce(defender.army, attacker_to_defender)
+  let [defender_army, defender_reserve] = reinforce(defender.army, defender.reserve, defender.row_types, attacker_to_defender)
   let defender_to_attacker = pickTargets(defender_army, attacker_army)
   if (round < 1)
-    return [attacker_army, defender_army, attacker.reserve, defender.reserve, attacker.defeated, defender.defeated]
+    return [attacker_army, defender_army, attacker_reserve, defender_reserve, attacker.defeated, defender.defeated]
   //console.log('Targets: A ' + attacker_to_defender + ' D ' + defender_to_attacker)
   // Killed manpower won't deal any damage so the right solution has to be searched iteratively.
 
@@ -73,7 +73,7 @@ export const battle = (attacker: ParticipantState, defender: ParticipantState, r
   let defender_defeated_army = copyDefeated(defender_army, defender.defeated)
   attacker_army = removeDefeated(attacker_army)
   defender_army = removeDefeated(defender_army)
-  return [attacker_army, defender_army, attacker.reserve, defender.reserve, attacker_defeated_army, defender_defeated_army]
+  return [attacker_army, defender_army, attacker_reserve, defender_reserve, attacker_defeated_army, defender_defeated_army]
 }
 
 const modifyRoll = (roll: number, terrains: Terrains, general: number, opposing_general: number) => {
@@ -86,12 +86,39 @@ const modifyRoll = (roll: number, terrains: Terrains, general: number, opposing_
  * Reinforces a given army based on reinforcement rules.
  * First priority is to move units from backlines. Then from sides.
  * @param army Army to reinforce.
+ * @param Reserve Reserve which reinforces army.
  * @param attacker_to_defender Selected targets as reinforcement may move units.
  */
-const reinforce = (army: Army, attacker_to_defender: (number | null)[] | undefined): Army => {
+const reinforce = (army: Army, reserve: Reserve, row_types: Map<RowType, UnitType>, attacker_to_defender: (number | null)[] | undefined): [Army, Reserve] => {
   // 1: Empty spots get filled by back row.
   // 2: If still holes, units move towards center.
   // Backrow.
+  const half = Math.floor(army.size / 2)
+
+  const nextIndex = (index: number) => index < half ? index + 2 * (half - index) : index - 2 * (index - half) - 1
+
+  // Determine if enough units to fill front.
+  const free_spots = army.reduce((previous, current) => previous + (current ? 0: 1), 0)
+  if (free_spots > reserve.size) {
+    for (let index = half; index >= 0 && index < army.size && reserve.size > 0; index = nextIndex(index)) {
+      console.log(index)
+      if (army.get(index))
+        continue
+      let unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Front))
+      if (unit_index === -1)
+        unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Back))
+      if (unit_index === -1)
+        unit_index = reserve.findIndex(value => value.type !== row_types.get(RowType.Flank))
+      if (unit_index === -1)
+        unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Flank))
+      if (unit_index === -1)
+        continue
+      army = army.set(index, reserve.get(unit_index))
+      reserve = reserve.delete(unit_index)
+    }
+    // Prioritize middle. Front unit, back units and then flank units.
+    // Actual logic seems quite arbitrary...
+  }
   /*for (let unit_index = 0; unit_index < row.size; ++unit_index) {
     const unit = row.get(unit_index)
     if (unit)
@@ -103,6 +130,14 @@ const reinforce = (army: Army, attacker_to_defender: (number | null)[] | undefin
       row = army.get(row_index)!
       continue
     }
+    // Unit selection like:
+    0: If not enough troops, then front, back, flank
+    1: Flank filled first
+    2. Then front
+    3: Then backrow, consumes like 30 units?
+    
+    3: Flank priority: Ligth Cav, Archer (filling near center, probably right side)
+    4: Front priority: Heavy Cav, Heavy Inf, Light Inf, Archer, Light Cav (filling right side of center)
   }*/
   // From center to left.
   for (let unit_index = Math.ceil(army.size / 2.0) - 1; unit_index > 0; --unit_index) {
@@ -132,7 +167,7 @@ const reinforce = (army: Army, attacker_to_defender: (number | null)[] | undefin
       continue
     }
   }
-  return army
+  return [army, reserve]
 }
 
 /**
