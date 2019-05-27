@@ -101,9 +101,9 @@ const reinforce = (army: Army, reserve: Reserve, row_types: Map<RowType, UnitTyp
   const free_spots = army.reduce((previous, current) => previous + (current ? 0: 1), 0)
   if (free_spots > reserve.size) {
     for (let index = half; index >= 0 && index < army.size && reserve.size > 0; index = nextIndex(index)) {
-      console.log(index)
       if (army.get(index))
         continue
+      // Not accurate, actual logic seems quite arbitrary...
       let unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Front))
       if (unit_index === -1)
         unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Back))
@@ -116,21 +116,26 @@ const reinforce = (army: Army, reserve: Reserve, row_types: Map<RowType, UnitTyp
       army = army.set(index, reserve.get(unit_index))
       reserve = reserve.delete(unit_index)
     }
-    // Prioritize middle. Front unit, back units and then flank units.
-    // Actual logic seems quite arbitrary...
   }
-  /*for (let unit_index = 0; unit_index < row.size; ++unit_index) {
-    const unit = row.get(unit_index)
-    if (unit)
-      continue
-    const unit_behind = row_index + 1 < army.size && army.get(row_index + 1)!.get(unit_index)
-    if (unit_behind) {
-      army = army.setIn([row_index, unit_index], unit_behind)
-      army = army.setIn([row_index + 1, unit_index], null)
-      row = army.get(row_index)!
-      continue
+  else {
+    const flank_size = 5
+    for (let index = army.size - flank_size - 1; index >= 0 && index < army.size && reserve.size > 0; index = nextIndex(index)) {
+      if (army.get(index))
+        continue
+      // Not accurate, actual logic seems quite arbitrary...
+      let unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Flank))
+      if (unit_index === -1)
+        unit_index = reserve.findIndex(value => value.type !== row_types.get(RowType.Back) && value.type !== row_types.get(RowType.Front))
+      if (unit_index === -1)
+        unit_index = reserve.findIndex(value => value.type !== row_types.get(RowType.Back))
+      if (unit_index === -1)
+        unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Front))
+      if (unit_index === -1)
+        continue
+      army = army.set(index, reserve.get(unit_index))
+      reserve = reserve.delete(unit_index)
     }
-    // Unit selection like:
+    /* Unit selection like:
     0: If not enough troops, then front, back, flank
     1: Flank filled first
     2. Then front
@@ -138,7 +143,24 @@ const reinforce = (army: Army, reserve: Reserve, row_types: Map<RowType, UnitTyp
     
     3: Flank priority: Ligth Cav, Archer (filling near center, probably right side)
     4: Front priority: Heavy Cav, Heavy Inf, Light Inf, Archer, Light Cav (filling right side of center)
-  }*/
+    */
+    for (let index = half; index >= 0 && index < army.size && reserve.size > 0; index = nextIndex(index)) {
+      if (army.get(index))
+        continue
+      // Not accurate, actual logic seems quite arbitrary...
+      let unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Front))
+      if (unit_index === -1)
+        unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Back) && value.type !== row_types.get(RowType.Flank))
+      if (unit_index === -1)
+        unit_index = reserve.findIndex(value => value.type !== row_types.get(RowType.Back))
+      if (unit_index === -1)
+        unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Flank))
+      if (unit_index === -1)
+        continue
+      army = army.set(index, reserve.get(unit_index))
+      reserve = reserve.delete(unit_index)
+    }
+  }
   // From center to left.
   for (let unit_index = Math.ceil(army.size / 2.0) - 1; unit_index > 0; --unit_index) {
     const unit = army.get(unit_index)
