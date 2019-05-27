@@ -43,9 +43,9 @@ export const battle = (attacker: ParticipantState, defender: ParticipantState, r
   //console.log('')
   //console.log('********** ROUND ' + round + '*********')
   //console.log('')
-  let [attacker_army, attacker_reserve] = reinforce(attacker.army, attacker.reserve, attacker.row_types, undefined)
+  let [attacker_army, attacker_reserve] = reinforce(attacker.army, attacker.reserve, attacker.row_types, attacker.flank_size, undefined)
   let attacker_to_defender = pickTargets(attacker_army, defender.army)
-  let [defender_army, defender_reserve] = reinforce(defender.army, defender.reserve, defender.row_types, attacker_to_defender)
+  let [defender_army, defender_reserve] = reinforce(defender.army, defender.reserve, defender.row_types, defender.flank_size, attacker_to_defender)
   let defender_to_attacker = pickTargets(defender_army, attacker_army)
   if (round < 1)
     return [attacker_army, defender_army, attacker_reserve, defender_reserve, attacker.defeated, defender.defeated]
@@ -86,17 +86,19 @@ const modifyRoll = (roll: number, terrains: Terrains, general: number, opposing_
  * Reinforces a given army based on reinforcement rules.
  * First priority is to move units from backlines. Then from sides.
  * @param army Army to reinforce.
- * @param Reserve Reserve which reinforces army.
+ * @param reserve Reserve which reinforces army.
+ * @param row_types Preferred unit types.
+ * @param flank_size Size of flank.
  * @param attacker_to_defender Selected targets as reinforcement may move units.
  */
-const reinforce = (army: Army, reserve: Reserve, row_types: Map<RowType, UnitType>, attacker_to_defender: (number | null)[] | undefined): [Army, Reserve] => {
+const reinforce = (army: Army, reserve: Reserve, row_types: Map<RowType, UnitType>, flank_size: number, attacker_to_defender: (number | null)[] | undefined): [Army, Reserve] => {
   // 1: Empty spots get filled by back row.
   // 2: If still holes, units move towards center.
   // Backrow.
   const half = Math.floor(army.size / 2)
 
   const nextIndex = (index: number) => index < half ? index + 2 * (half - index) : index - 2 * (index - half) - 1
-
+  
   // Determine if enough units to fill front.
   const free_spots = army.reduce((previous, current) => previous + (current ? 0: 1), 0)
   if (free_spots > reserve.size) {
@@ -118,8 +120,7 @@ const reinforce = (army: Army, reserve: Reserve, row_types: Map<RowType, UnitTyp
     }
   }
   else {
-    const flank_size = 5
-    for (let index = army.size - flank_size - 1; index >= 0 && index < army.size && reserve.size > 0; index = nextIndex(index)) {
+    for (let index = army.size - flank_size; index >= 0 && index < army.size && reserve.size > 0; index = nextIndex(index)) {
       if (army.get(index))
         continue
       // Not accurate, actual logic seems quite arbitrary...
@@ -127,7 +128,7 @@ const reinforce = (army: Army, reserve: Reserve, row_types: Map<RowType, UnitTyp
       if (unit_index === -1)
         unit_index = reserve.findIndex(value => value.type !== row_types.get(RowType.Back) && value.type !== row_types.get(RowType.Front))
       if (unit_index === -1)
-        unit_index = reserve.findIndex(value => value.type !== row_types.get(RowType.Back))
+        unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Back))
       if (unit_index === -1)
         unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Front))
       if (unit_index === -1)
@@ -150,9 +151,9 @@ const reinforce = (army: Army, reserve: Reserve, row_types: Map<RowType, UnitTyp
       // Not accurate, actual logic seems quite arbitrary...
       let unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Front))
       if (unit_index === -1)
-        unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Back) && value.type !== row_types.get(RowType.Flank))
+        unit_index = reserve.findIndex(value => value.type !== row_types.get(RowType.Back) && value.type !== row_types.get(RowType.Flank))
       if (unit_index === -1)
-        unit_index = reserve.findIndex(value => value.type !== row_types.get(RowType.Back))
+        unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Back))
       if (unit_index === -1)
         unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Flank))
       if (unit_index === -1)

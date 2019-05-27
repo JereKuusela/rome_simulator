@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { ArmyName, UnitDefinition, ArmyType, UnitType } from '../store/units/types'
 import UnitArmy from '../components/UnitArmy'
-import { battle, undo, ParticipantState, toggleRandomRoll, setRoll, setGeneral, RowType } from '../store/land_battle'
+import { battle, undo, ParticipantState, toggleRandomRoll, setRoll, setGeneral, RowType, setFlankSize } from '../store/land_battle'
 import { calculateTactic } from '../store/land_battle/combat'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import { TacticDefinition } from '../store/tactics'
@@ -198,11 +198,14 @@ class Land extends Component<IProps, IState> {
                     <Table.HeaderCell>
                       {RowType.Flank}
                     </Table.HeaderCell>
+                    <Table.HeaderCell>
+                      Flank size
+                    </Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {this.renderRowTypes(ArmyName.Attacker, this.props.attacker.row_types)}
-                  {this.renderRowTypes(ArmyName.Defender, this.props.defender.row_types)}
+                  {this.renderRowTypes(ArmyName.Attacker, this.props.attacker.row_types, this.props.attacker.flank_size)}
+                  {this.renderRowTypes(ArmyName.Defender, this.props.defender.row_types, this.props.defender.flank_size)}
                 </Table.Body>
               </Table>
             </Grid.Column>
@@ -352,7 +355,7 @@ class Land extends Component<IProps, IState> {
     )
   }
 
-  renderRowTypes = (army_type: ArmyName, row_types: Map<RowType, UnitType>) => {
+  renderRowTypes = (army_type: ArmyName, row_types: Map<RowType, UnitType>, flank_size: number) => {
     return (
       <Table.Row key={army_type}>
         <Table.Cell>
@@ -366,6 +369,9 @@ class Land extends Component<IProps, IState> {
         </Table.Cell>
         <Table.Cell selectable onClick={() => this.openRowModal(army_type, RowType.Flank)}>
           <Image src={unit_to_icon.get(row_types.get(RowType.Flank)!)} avatar />
+        </Table.Cell>
+        <Table.Cell collapsing>
+          <Input size='mini' style={{ width: 100 }} type='number' value={flank_size} onChange={(_, data) => this.props.setFlankSize(army_type, Number(data.value))} />
         </Table.Cell>
       </Table.Row>
     )
@@ -386,7 +392,8 @@ const mapDispatchToProps = (dispatch: any) => ({
   undo: (steps: number) => dispatch(undo(steps)),
   toggleRandomRoll: (army: ArmyName) => dispatch(toggleRandomRoll(army)),
   setRoll: (army: ArmyName, roll: number) => dispatch(setRoll(army, roll)),
-  setGeneral: (army: ArmyName, skill: number) => dispatch(setGeneral(army, skill))
+  setGeneral: (army: ArmyName, skill: number) => dispatch(setGeneral(army, skill)),
+  setFlankSize: (army: ArmyName, size: number) => dispatch(setFlankSize(army, size))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

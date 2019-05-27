@@ -26,6 +26,7 @@ export interface ParticipantState {
   readonly randomize_roll: boolean
   readonly general: number
   readonly row_types: Map<RowType, UnitType>
+  readonly flank_size: number
 }
 
 export const getInitialTerrains = (): List<TerrainDefinition> => List<TerrainDefinition>()
@@ -39,5 +40,6 @@ export const getInitialArmy = (): ParticipantState => ({
     roll: 0,
     randomize_roll: true,
     past: List<PastState>(),
-    row_types: Map<RowType, UnitType>().set(RowType.Front, UnitType.Archers).set(RowType.Back, UnitType.HeavyInfantry).set(RowType.Flank, UnitType.LightCavalry)
+    row_types: Map<RowType, UnitType>().set(RowType.Front, UnitType.Archers).set(RowType.Back, UnitType.HeavyInfantry).set(RowType.Flank, UnitType.LightCavalry),
+    flank_size: 5
   })

@@ -47,3 +47,7 @@ export const setRoll = createAction('@@land_battle/SET_ROLL', action => {
 export const setGeneral = createAction('@@land_battle/SET_GENERAL', action => {
   return (army: ArmyName, skill: number) => action({army, skill})
 })
+
+export const setFlankSize = createAction('@@land_battle/SET_FLANK_SIZE', action => {
+  return (army: ArmyName, size: number) => action({army, size})
+})
