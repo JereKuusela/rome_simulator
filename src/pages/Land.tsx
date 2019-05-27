@@ -1,25 +1,29 @@
 import React, { Component } from 'react'
+import { Map } from 'immutable'
 import { Container, Header, Button, Grid, Image, Checkbox, Input, Table, Divider } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
-import { ArmyName, UnitDefinition, ArmyType } from '../store/units/types'
+import { ArmyName, UnitDefinition, ArmyType, UnitType } from '../store/units/types'
 import UnitArmy from '../components/UnitArmy'
-import { battle, undo, ParticipantState, toggleRandomRoll, setRoll, setGeneral } from '../store/land_battle'
+import { battle, undo, ParticipantState, toggleRandomRoll, setRoll, setGeneral, RowType } from '../store/land_battle'
 import { calculateTactic } from '../store/land_battle/combat'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import { TacticDefinition } from '../store/tactics'
 import IconDice from '../images/chance.png'
 import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from '../containers/ModalUnitSelector'
+import ModalRowTypeSelector, { ModalInfo as ModalRowInfo } from '../containers/ModalRowTypeSelector'
 import ModalTerrainSelector, { ModalInfo as ModalTerrainInfo } from '../containers/ModalTerrainSelector'
 import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers/ModalTacticSelector'
 import ModalArmyUnitDetail, { ModalInfo as ModalArmyUnitInfo } from '../containers/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/ModalFastPlanner'
+import { unit_to_icon } from '../store/units'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
   modal_terrain_info: ModalTerrainInfo | null
   modal_tactic_info: ModalTacticInfo | null
   modal_army_unit_info: ModalArmyUnitInfo | null
+  modal_row_info: ModalRowInfo | null
   modal_fast_planner_open: boolean
 }
 
@@ -27,11 +31,11 @@ class Land extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    this.state = { modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null, modal_fast_planner_open: false }
+    this.state = { modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null, modal_fast_planner_open: false, modal_row_info: null }
   }
 
 
-  closeModal = () => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null, modal_fast_planner_open: false })
+  closeModal = () => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null, modal_fast_planner_open: false, modal_row_info: null })
 
   openUnitModal = (army: ArmyName, type: ArmyType, column: number, unit: UnitDefinition | undefined) => {
     if (unit)
@@ -50,11 +54,17 @@ class Land extends Component<IProps, IState> {
 
   openFastPlanner = () => this.setState({ modal_fast_planner_open: true })
 
+  openRowModal = (army: ArmyName, type: RowType) => this.setState({ modal_row_info: {army, type} })
+
   render() {
     return (
       <Container>
         <ModalUnitSelector
           info={this.state.modal_unit_info}
+          onClose={this.closeModal}
+        />
+        <ModalRowTypeSelector
+          info={this.state.modal_row_info}
           onClose={this.closeModal}
         />
         <ModalFastPlanner
@@ -169,6 +179,32 @@ class Land extends Component<IProps, IState> {
               {
                 this.renderReserve(ArmyName.Defender, this.props.defender)
               }
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns={1}>
+            <Grid.Column>
+              <Table celled unstackable>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell>
+                      Preferred unit types
+                    </Table.HeaderCell>
+                    <Table.HeaderCell>
+                      {RowType.Front}
+                    </Table.HeaderCell>
+                    <Table.HeaderCell>
+                      {RowType.Back}
+                    </Table.HeaderCell>
+                    <Table.HeaderCell>
+                      {RowType.Flank}
+                    </Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                  {this.renderRowTypes(ArmyName.Attacker, this.props.attacker.row_types)}
+                  {this.renderRowTypes(ArmyName.Defender, this.props.defender.row_types)}
+                </Table.Body>
+              </Table>
             </Grid.Column>
           </Grid.Row>
           <Divider />
@@ -311,6 +347,25 @@ class Land extends Component<IProps, IState> {
         </Table.Cell>
         <Table.Cell collapsing>
           {this.renderIsRollRandom(army_type, info.randomize_roll)}
+        </Table.Cell>
+      </Table.Row>
+    )
+  }
+
+  renderRowTypes = (army_type: ArmyName, row_types: Map<RowType, UnitType>) => {
+    return (
+      <Table.Row key={army_type}>
+        <Table.Cell>
+          {army_type}
+        </Table.Cell>
+        <Table.Cell selectable onClick={() => this.openRowModal(army_type, RowType.Front)}>
+          <Image src={unit_to_icon.get(row_types.get(RowType.Front)!)} avatar />
+        </Table.Cell>
+        <Table.Cell selectable onClick={() => this.openRowModal(army_type, RowType.Back)}>
+          <Image src={unit_to_icon.get(row_types.get(RowType.Back)!)} avatar />
+        </Table.Cell>
+        <Table.Cell selectable onClick={() => this.openRowModal(army_type, RowType.Flank)}>
+          <Image src={unit_to_icon.get(row_types.get(RowType.Flank)!)} avatar />
         </Table.Cell>
       </Table.Row>
     )

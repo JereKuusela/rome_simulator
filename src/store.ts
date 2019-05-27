@@ -7,6 +7,7 @@ import storage from 'redux-persist/lib/storage' // defaults to localStorage for 
 import { tacticFromJS, TacticType } from './store/tactics'
 import { terrainFromJS, TerrainType } from './store/terrains'
 import { unitFromJS, ArmyName, UnitType } from './store/units'
+import { RowType } from './store/land_battle';
 
 const TacticsTransform = createTransform(
   (inboundState, _key) => inboundState,
@@ -58,6 +59,11 @@ const LandTransform = createTransform(
         defeated: value.get('defeated') as List<any>,
         roll: value.get('roll') as number
       }))
+      let row_types: Map<RowType, UnitType>
+      if (participant.row_types)
+        row_types = fromJS(participant.row_types)
+      else
+        row_types = Map<RowType, UnitType>().set(RowType.Front, UnitType.Archers).set(RowType.Back, UnitType.HeavyInfantry).set(RowType.Flank, UnitType.LightCavalry)
       let past2 = past3.map(value => ({ army: serializeUnits(value.army).setSize(30), reserve: serializeUnits(value.reserve).filter(value => value), defeated: serializeUnits(value.defeated).filter(value => value), roll: value.roll }))
       return {
         ...participant,
@@ -65,6 +71,7 @@ const LandTransform = createTransform(
         reserve: reserve,
         defeated: defeated,
         past: past2,
+        row_types: row_types,
         tactic: tacticFromJS(fromJS(participant.tactic))
       }
     }

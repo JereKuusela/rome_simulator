@@ -1,7 +1,7 @@
 import { createReducer } from 'typesafe-actions'
 import { List } from 'immutable'
 import { getInitialArmy, getInitialTerrains, ParticipantState, PastState } from './types'
-import { selectUnit, selectTerrain, battle, selectTactic, undo, toggleRandomRoll, setRoll, setGeneral } from './actions'
+import { selectUnit, selectTerrain, battle, selectTactic, undo, toggleRandomRoll, setRoll, setGeneral, setRowType } from './actions'
 import { ArmyName, setGlobalValue, setValue, UnitDefinition, UnitType, ValueType, ArmyType } from '../units'
 import { battle as fight } from './combat'
 import { ValuesType } from '../../utils'
@@ -95,6 +95,13 @@ export const landBattleReducer = createReducer(initialState)
     {
       ...state,
       terrains: state.terrains.set(action.payload.index, action.payload.terrain)
+    }
+  ))
+  .handleAction(setRowType, (state, action: ReturnType<typeof setRowType>) => (
+    {
+      ...state,
+      attacker: { ...state.attacker, row_types: action.payload.army === ArmyName.Attacker ? state.attacker.row_types.set(action.payload.row_type, action.payload.unit) : state.attacker.row_types },
+      defender: { ...state.defender, row_types: action.payload.army === ArmyName.Defender ? state.defender.row_types.set(action.payload.row_type, action.payload.unit) : state.defender.row_types }
     }
   ))
   .handleAction(selectTactic, (state, action: ReturnType<typeof selectTactic>) => (
