@@ -5,7 +5,7 @@ import { AppState } from '../store/index'
 import { ArmyName, UnitDefinition, ArmyType } from '../store/units/types'
 import UnitArmy from '../components/UnitArmy'
 import { battle, undo, ParticipantState, toggleRandomRoll, setRoll, setGeneral } from '../store/land_battle'
-import { calculateTactic} from '../store/land_battle/combat'
+import { calculateTactic } from '../store/land_battle/combat'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import { TacticDefinition } from '../store/tactics'
 import IconDice from '../images/chance.png'
@@ -13,23 +13,25 @@ import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from '../containers/Mod
 import ModalTerrainSelector, { ModalInfo as ModalTerrainInfo } from '../containers/ModalTerrainSelector'
 import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers/ModalTacticSelector'
 import ModalArmyUnitDetail, { ModalInfo as ModalArmyUnitInfo } from '../containers/ModalArmyUnitDetail'
+import ModalFastPlanner from '../containers/ModalFastPlanner'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
   modal_terrain_info: ModalTerrainInfo | null
   modal_tactic_info: ModalTacticInfo | null
   modal_army_unit_info: ModalArmyUnitInfo | null
+  modal_fast_planner_open: boolean
 }
 
 class Land extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    this.state = { modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null }
+    this.state = { modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null, modal_fast_planner_open: false }
   }
 
 
-  closeModal = () => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null })
+  closeModal = () => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null, modal_fast_planner_open: false })
 
   openUnitModal = (army: ArmyName, type: ArmyType, row: number, column: number, unit: UnitDefinition | null) => {
     if (unit)
@@ -46,11 +48,17 @@ class Land extends Component<IProps, IState> {
 
   openTacticModal = (army: ArmyName) => this.setState({ modal_tactic_info: { army } })
 
+  openFastPlanner = () => this.setState({ modal_fast_planner_open: true })
+
   render() {
     return (
       <Container>
         <ModalUnitSelector
           info={this.state.modal_unit_info}
+          onClose={this.closeModal}
+        />
+        <ModalFastPlanner
+          open={this.state.modal_fast_planner_open}
           onClose={this.closeModal}
         />
         <ModalArmyUnitDetail
@@ -68,7 +76,11 @@ class Land extends Component<IProps, IState> {
         <Grid verticalAlign='middle'>
           <Grid.Row columns={3} >
             <Grid.Column floated='left'><Header>{'Round: ' + this.roundName(this.props.round)}</Header></Grid.Column>
-            <Grid.Column />
+            <Grid.Column>
+              <Button primary onClick={this.openFastPlanner}>
+                Fast planner
+                </Button>
+            </Grid.Column>
             <Grid.Column floated='right' textAlign='right'>
               <Button circular icon='angle double left' color='black' size='huge' disabled={!this.props.is_undo} onClick={() => this.props.undo(10)} />
               <Button circular icon='angle left' color='black' size='huge' disabled={!this.props.is_undo} onClick={() => this.props.undo(1)} />
