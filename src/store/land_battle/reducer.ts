@@ -167,7 +167,7 @@ export const landBattleReducer = createReducer(initialState)
       const handleArmy = (current: ParticipantState, past: PastState | undefined) => ({
         ...current,
         army: past ? past.army : current.army,
-        reserve: past ? past.reserve: current.reserve,
+        reserve: past ? past.reserve : current.reserve,
         defeated: past ? past.defeated : current.defeated,
         roll: past ? past.roll : current.roll,
         past: current.past.pop()
@@ -188,33 +188,37 @@ export const landBattleReducer = createReducer(initialState)
     let reserve = action.payload.army === ArmyName.Attacker ? state.attacker.reserve : state.defender.reserve
     for (const type of action.payload.types)
       reserve = reserve.delete(reserve.findLastIndex(value => value.type === type))
-
+    const new_attacker = {
+      ...state.attacker,
+      reserve: action.payload.army === ArmyName.Attacker ? reserve : state.attacker.reserve
+    }
+    const new_defender = {
+      ...state.defender,
+      reserve: action.payload.army === ArmyName.Defender ? reserve : state.defender.reserve
+    }
     return {
       ...state,
-      attacker: {
-        ...state.attacker,
-        reserve: action.payload.army === ArmyName.Attacker ? reserve : state.attacker.reserve
-      },
-      defender: {
-        ...state.defender,
-        reserve: action.payload.army === ArmyName.Defender ? reserve : state.defender.reserve
-      }
+      attacker: new_attacker,
+      defender: new_defender,
+      fight_over: !(checkFight(new_attacker, new_defender))
     }
   })
   .handleAction(addReserveUnits, (state, action: ReturnType<typeof addReserveUnits>) => {
     let reserve = action.payload.army === ArmyName.Attacker ? state.attacker.reserve : state.defender.reserve
     reserve = reserve.merge(action.payload.units)
-
+    const new_attacker = {
+      ...state.attacker,
+      reserve: action.payload.army === ArmyName.Attacker ? reserve : state.attacker.reserve
+    }
+    const new_defender = {
+      ...state.defender,
+      reserve: action.payload.army === ArmyName.Defender ? reserve : state.defender.reserve
+    }
     return {
       ...state,
-      attacker: {
-        ...state.attacker,
-        reserve: action.payload.army === ArmyName.Attacker ? reserve : state.attacker.reserve
-      },
-      defender: {
-        ...state.defender,
-        reserve: action.payload.army === ArmyName.Defender ? reserve : state.defender.reserve
-      }
+      attacker: new_attacker,
+      defender: new_defender,
+      fight_over: !(checkFight(new_attacker, new_defender))
     }
   })
   .handleAction(setTacticBaseValue, (state, action: ReturnType<typeof setTacticBaseValue>) => (

@@ -8,7 +8,7 @@ import { getDefaultDefinitions as getDefaultUnitDefinitions, UnitType, UnitCalc,
 describe('1 vs 1', () => {
   // Test case with two of all units except of Chariot
   it('works', () => {
-    // No preference: Unit order: Elephant, Heavy Cav, Heavy Inf, Light Inf, Archer, Horse Archer, Camel, Light Cav
+    // No preference: Unit order by build cost: Elephant, Heavy Cav, Heavy Inf, Light Inf, Archer, Horse Archer, Camel, Light Cav
     // Setting flank moves the unit before Horse Archer.
     // Setting front moves the unit before Elephant.
     // Setting flank overrides front. Front overrides second.

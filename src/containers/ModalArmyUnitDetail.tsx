@@ -46,7 +46,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
 
   selectUnit = (unit: UnitType | undefined) => (
     this.props.info &&
-    this.props.selectUnit(this.props.info.army, this.props.info.type, this.props.info.index, unit ? this.props.units.getIn([this.props.info.army, unit]) : null)
+    this.props.selectUnit(this.props.info.army, this.props.info.type, this.props.info.index, unit ? this.props.units.getIn([this.props.info.army, unit]) : undefined)
   )
 
   setBaseValue = (army: ArmyName, _type: UnitType, key: string, attribute: ValueType, value: number) => {
