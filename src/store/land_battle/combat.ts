@@ -26,6 +26,7 @@ const BASE_DAMAGE_PER_ROLL = 0.02
 const MANPOWER_LOST_MULTIPLIER = 0.2
 
 
+
 /**
  * Makes given armies attach each other.
  * @param attacker Attackers.
@@ -43,9 +44,9 @@ export const battle = (attacker: ParticipantState, defender: ParticipantState, r
   //console.log('')
   //console.log('********** ROUND ' + round + '*********')
   //console.log('')
-  let [attacker_army, attacker_reserve] = reinforce(attacker.army, attacker.reserve, attacker.row_types, attacker.flank_size, undefined)
+  let [attacker_army, attacker_reserve] = reinforce(attacker.army, attacker.reserve, attacker.row_types, attacker.flank_size, countArmySize(defender.army, defender.reserve, defender.defeated), undefined)
   let attacker_to_defender = pickTargets(attacker_army, defender.army)
-  let [defender_army, defender_reserve] = reinforce(defender.army, defender.reserve, defender.row_types, defender.flank_size, attacker_to_defender)
+  let [defender_army, defender_reserve] = reinforce(defender.army, defender.reserve, defender.row_types, defender.flank_size, countArmySize(attacker.army, attacker.reserve, attacker.defeated), attacker_to_defender)
   let defender_to_attacker = pickTargets(defender_army, attacker_army)
   if (round < 1)
     return [attacker_army, defender_army, attacker_reserve, defender_reserve, attacker.defeated, defender.defeated]
@@ -82,6 +83,9 @@ const modifyRoll = (roll: number, terrains: Terrains, general: number, opposing_
   return roll + terrain_effect + general_effect
 }
 
+const countArmySize = (army: Army, reserve: Reserve, defeated: Defeated) => army.reduce((previous, current) => previous + (current ? 1 : 0), 0) + reserve.size + defeated.size
+
+
 /**
  * Reinforces a given army based on reinforcement rules.
  * First priority is to move units from backlines. Then from sides.
@@ -89,77 +93,78 @@ const modifyRoll = (roll: number, terrains: Terrains, general: number, opposing_
  * @param reserve Reserve which reinforces army.
  * @param row_types Preferred unit types.
  * @param flank_size Size of flank.
+ * @param enemy_size Army size of the enemy
  * @param attacker_to_defender Selected targets as reinforcement may move units.
  */
-const reinforce = (army: Army, reserve: Reserve, row_types: Map<RowType, UnitType>, flank_size: number, attacker_to_defender: (number | null)[] | undefined): [Army, Reserve] => {
+const reinforce = (army: Army, reserve: Reserve, row_types: Map<RowType, UnitType>, flank_size: number, enemy_size: number, attacker_to_defender: (number | null)[] | undefined): [Army, Reserve] => {
   // 1: Empty spots get filled by back row.
   // 2: If still holes, units move towards center.
   // Backrow.
   const half = Math.floor(army.size / 2)
 
   const nextIndex = (index: number) => index < half ? index + 2 * (half - index) : index - 2 * (index - half) - 1
-  
-  // Determine if enough units to fill front.
-  const free_spots = army.reduce((previous, current) => previous + (current ? 0: 1), 0)
-  if (free_spots > reserve.size) {
-    for (let index = half; index >= 0 && index < army.size && reserve.size > 0; index = nextIndex(index)) {
-      if (army.get(index))
-        continue
-      // Not accurate, actual logic seems quite arbitrary...
-      let unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Front))
-      if (unit_index === -1)
-        unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Back))
-      if (unit_index === -1)
-        unit_index = reserve.findIndex(value => value.type !== row_types.get(RowType.Flank))
-      if (unit_index === -1)
-        unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Flank))
-      if (unit_index === -1)
-        continue
-      army = army.set(index, reserve.get(unit_index))
-      reserve = reserve.delete(unit_index)
-    }
+
+  const isFlankUnit = (unit: UnitDefinition) => {
+    if (unit.type === row_types.get(RowType.Flank))
+      return true
+    if (unit.type === row_types.get(RowType.Front) || unit.type === row_types.get(RowType.Back))
+      return false
+    return unit.calculateValue(UnitCalc.Maneuver) > 2
   }
-  else {
-    for (let index = army.size - flank_size; index >= 0 && index < army.size && reserve.size > 0; index = nextIndex(index)) {
-      if (army.get(index))
-        continue
-      // Not accurate, actual logic seems quite arbitrary...
-      let unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Flank))
-      if (unit_index === -1)
-        unit_index = reserve.findIndex(value => value.type !== row_types.get(RowType.Back) && value.type !== row_types.get(RowType.Front))
-      if (unit_index === -1)
-        unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Back))
-      if (unit_index === -1)
-        unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Front))
-      if (unit_index === -1)
-        continue
-      army = army.set(index, reserve.get(unit_index))
-      reserve = reserve.delete(unit_index)
+
+  const mainReserve = reserve.filter(value => !isFlankUnit(value))
+  const flankReserve = reserve.filter(value => isFlankUnit(value))
+  // Higher cost or maneuver has priority, lower index has smaller priority.
+  let orderedMainReserve = mainReserve.sortBy((value, key) => value.calculateValue(UnitCalc.Cost) * 10000 - key + (value.type ===  row_types.get(RowType.Front) ? 1000000 : 0) + (value.type ===  row_types.get(RowType.Back) ? -1000000 : 0))
+  let orderedFlankReserve = flankReserve.sortBy((value, key) => value.calculateValue(UnitCalc.Maneuver) * 10000 - key + (value.type ===  row_types.get(RowType.Flank) ? 1000000 : 0))
+  // Algo 2.0
+  /*
+  1: Calculate flank (preference (if 33 stacks) or unit count difference, whichever higher)
+  2: Check preferences to calculate order.
+  3: Fill front (main + flankers)
+  4: Fill flankers
+
+  Front: Moves unit to start of main group, removes from flankers
+  Back: Moves to unit to end of main group, removes from flankers
+  Flanker: Moves to start of flanker, removes from main
+
+  */
+
+  // Determine whether flank size has an effect.
+  const free_spots = army.reduce((previous, current) => previous + (current ? 0 : 1), 0)
+  // Optimization to not drag units which have no chance to get picked.
+  orderedMainReserve = orderedMainReserve.take(free_spots)
+  orderedFlankReserve = orderedFlankReserve.take(free_spots)
+  const army_size = army.size - free_spots + reserve.size
+  flank_size = army_size > 32 ? flank_size : 0
+  const left_flank_size = Math.max(flank_size, Math.ceil((30 - enemy_size) / 2.0))
+  const right_flank_size = Math.max(flank_size, Math.floor((30 - enemy_size) / 2.0))
+  for (let index = half; index >= left_flank_size && index + right_flank_size < army.size && reserve.size > 0; index = nextIndex(index)) {
+    if (army.get(index))
+      continue
+    if (orderedMainReserve.size > 0) {
+      reserve = reserve.delete(reserve.indexOf(orderedMainReserve.last()))
+      army = army.set(index, orderedMainReserve.last())
+      orderedMainReserve = orderedMainReserve.pop()
     }
-    /* Unit selection like:
-    0: If not enough troops, then front, back, flank
-    1: Flank filled first
-    2. Then front
-    3: Then backrow, consumes like 30 units?
-    
-    3: Flank priority: Ligth Cav, Archer (filling near center, probably right side)
-    4: Front priority: Heavy Cav, Heavy Inf, Light Inf, Archer, Light Cav (filling right side of center)
-    */
-    for (let index = half; index >= 0 && index < army.size && reserve.size > 0; index = nextIndex(index)) {
-      if (army.get(index))
-        continue
-      // Not accurate, actual logic seems quite arbitrary...
-      let unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Front))
-      if (unit_index === -1)
-        unit_index = reserve.findIndex(value => value.type !== row_types.get(RowType.Back) && value.type !== row_types.get(RowType.Flank))
-      if (unit_index === -1)
-        unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Back))
-      if (unit_index === -1)
-        unit_index = reserve.findIndex(value => value.type === row_types.get(RowType.Flank))
-      if (unit_index === -1)
-        continue
-      army = army.set(index, reserve.get(unit_index))
-      reserve = reserve.delete(unit_index)
+    else if (orderedFlankReserve.size > 0) {
+      reserve = reserve.delete(reserve.indexOf(orderedFlankReserve.last()))
+      army = army.set(index, orderedFlankReserve.last())
+      orderedFlankReserve = orderedFlankReserve.pop()
+    } 
+  }
+  for (let index = army.size - right_flank_size; index >= 0 && index < army.size && reserve.size > 0; index = nextIndex(index)) {
+    if (army.get(index))
+      continue
+    if (orderedFlankReserve.size > 0) {
+      reserve = reserve.delete(reserve.indexOf(orderedFlankReserve.last()))
+      army = army.set(index, orderedFlankReserve.last())
+      orderedFlankReserve = orderedFlankReserve.pop()
+    } 
+    else if (orderedMainReserve.size > 0) {
+      reserve = reserve.delete(reserve.indexOf(orderedMainReserve.last()))
+      army = army.set(index, orderedMainReserve.last())
+      orderedMainReserve = orderedMainReserve.pop()
     }
   }
   // From center to left.
@@ -285,7 +290,7 @@ const copyDefeated = (army: Army, defeated_army: Defeated): Defeated => {
       return
     if (unit.calculateValue(UnitCalc.Manpower) > 0 && unit.calculateValue(UnitCalc.Morale) > 0.25)
       return
-      defeated_army = defeated_army.push(unit)
+    defeated_army = defeated_army.push(unit)
   })
   return defeated_army
 }

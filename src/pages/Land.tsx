@@ -187,7 +187,7 @@ class Land extends Component<IProps, IState> {
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell>
-                      Preferred unit types (Not very accurate yet!)
+                      Preferred unit types
                     </Table.HeaderCell>
                     <Table.HeaderCell>
                       {RowType.Front}
