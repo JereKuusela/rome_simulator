@@ -44,9 +44,9 @@ export const battle = (attacker: ParticipantState, defender: ParticipantState, r
   //console.log('')
   //console.log('********** ROUND ' + round + '*********')
   //console.log('')
-  let [attacker_army, attacker_reserve] = reinforce(attacker.army, attacker.reserve, attacker.row_types, attacker.flank_size, countArmySize(defender.army, defender.reserve, defender.defeated), undefined)
+  let [attacker_army, attacker_reserve] = reinforce(round, attacker.army, attacker.reserve, attacker.row_types, attacker.flank_size, countArmySize(defender.army, defender.reserve, defender.defeated), undefined)
   let attacker_to_defender = pickTargets(attacker_army, defender.army)
-  let [defender_army, defender_reserve] = reinforce(defender.army, defender.reserve, defender.row_types, defender.flank_size, countArmySize(attacker.army, attacker.reserve, attacker.defeated), attacker_to_defender)
+  let [defender_army, defender_reserve] = reinforce(round, defender.army, defender.reserve, defender.row_types, defender.flank_size, countArmySize(attacker.army, attacker.reserve, attacker.defeated), attacker_to_defender)
   let defender_to_attacker = pickTargets(defender_army, attacker_army)
   if (round < 1)
     return [attacker_army, defender_army, attacker_reserve, defender_reserve, attacker.defeated, defender.defeated]
@@ -89,6 +89,7 @@ const countArmySize = (army: Army, reserve: Reserve, defeated: Defeated) => army
 /**
  * Reinforces a given army based on reinforcement rules.
  * First priority is to move units from backlines. Then from sides.
+ * @param round Round number affects whether initial deployment or reinforcing is used.
  * @param army Army to reinforce.
  * @param reserve Reserve which reinforces army.
  * @param row_types Preferred unit types.
@@ -96,7 +97,7 @@ const countArmySize = (army: Army, reserve: Reserve, defeated: Defeated) => army
  * @param enemy_size Army size of the enemy
  * @param attacker_to_defender Selected targets as reinforcement may move units.
  */
-const reinforce = (army: Army, reserve: Reserve, row_types: Map<RowType, UnitType>, flank_size: number, enemy_size: number, attacker_to_defender: (number | null)[] | undefined): [Army, Reserve] => {
+const reinforce = (round: number, army: Army, reserve: Reserve, row_types: Map<RowType, UnitType>, flank_size: number, enemy_size: number, attacker_to_defender: (number | null)[] | undefined): [Army, Reserve] => {
   // 1: Empty spots get filled by back row.
   // 2: If still holes, units move towards center.
   // Backrow.
@@ -114,9 +115,8 @@ const reinforce = (army: Army, reserve: Reserve, row_types: Map<RowType, UnitTyp
 
   const mainReserve = reserve.filter(value => !isFlankUnit(value))
   const flankReserve = reserve.filter(value => isFlankUnit(value))
-  // Higher cost or maneuver has priority, lower index has smaller priority.
-  let orderedMainReserve = mainReserve.sortBy((value, key) => value.calculateValue(UnitCalc.Cost) * 10000 - key + (value.type ===  row_types.get(RowType.Front) ? 1000000 : 0) + (value.type ===  row_types.get(RowType.Back) ? -1000000 : 0))
-  let orderedFlankReserve = flankReserve.sortBy((value, key) => value.calculateValue(UnitCalc.Maneuver) * 10000 - key + (value.type ===  row_types.get(RowType.Flank) ? 1000000 : 0))
+  let orderedMainReserve = mainReserve.sortBy((value, key) => -value.calculateValue(UnitCalc.Cost) * 10000 + key - (value.type ===  row_types.get(RowType.Front) ? 2000000 : 0) - (value.type ===  row_types.get(RowType.Back) ? -1000000 : 0))
+  let orderedFlankReserve = flankReserve.sortBy((value, key) => -value.calculateValue(UnitCalc.Maneuver) * 10000 + key - (value.type ===  row_types.get(RowType.Flank) ? 1000000 : 0))
   // Algo 2.0
   /*
   1: Calculate flank (preference (if 33 stacks) or unit count difference, whichever higher)
@@ -137,8 +137,19 @@ const reinforce = (army: Army, reserve: Reserve, row_types: Map<RowType, UnitTyp
   orderedFlankReserve = orderedFlankReserve.take(free_spots)
   const army_size = army.size - free_spots + reserve.size
   flank_size = army_size > 32 ? flank_size : 0
-  const left_flank_size = Math.max(flank_size, Math.ceil((30 - enemy_size) / 2.0))
-  const right_flank_size = Math.max(flank_size, Math.floor((30 - enemy_size) / 2.0))
+  let left_flank_size = Math.max(flank_size, Math.ceil((30 - enemy_size) / 2.0))
+  let right_flank_size = Math.max(flank_size, Math.floor((30 - enemy_size) / 2.0))
+
+  if (round === 0) {
+    // Initial deployment uses reversed order (so Primary unit is first and Secondary last).
+    orderedMainReserve = orderedMainReserve.reverse()
+    orderedFlankReserve = orderedFlankReserve.reverse()
+  }
+  else {
+    // Reinforcement ignores flank sizes.
+    left_flank_size = 0
+    right_flank_size = 0
+  }
   for (let index = half; index >= left_flank_size && index + right_flank_size < army.size && reserve.size > 0; index = nextIndex(index)) {
     if (army.get(index))
       continue
