@@ -9,7 +9,7 @@ export enum ValuesType {
 
 export class BaseDefinition<T, S> {
   constructor(public readonly type: T, public readonly image: string | null, public readonly base_values: Map<S, OrderedMap<string, number>> = Map(), public readonly modifier_values: Map<S, OrderedMap<string, number>> = Map(),
-  public readonly loss_values: Map<S, OrderedMap<string, number>> = Map()) {
+    public readonly loss_values: Map<S, OrderedMap<string, number>> = Map()) {
 
   }
 
@@ -52,13 +52,13 @@ export class BaseDefinition<T, S> {
     if (values)
       values.forEach(value => result += value)
     return Math.round(result * 1000.0) / 1000.0
-    
+
   }
   calculateValue = (type: S): number => {
     return this.round(this.calculateBase(type) * this.calculateModifier(type) - this.calculateLoss(type))
   }
 
-  round = (number : number) => +(Math.round(1000.0 * number) / 1000.0).toFixed(3)
+  round = (number: number) => +(Math.round(1000.0 * number) / 1000.0).toFixed(3)
 
   calculateValueWithoutLoss = (type: S): number => {
     return this.calculateBase(type) * this.calculateModifier(type)
@@ -177,7 +177,7 @@ export class BaseDefinition<T, S> {
 
 export function mapRange<T>(length: number, func: (number: number) => T): T[] {
   const array: T[] = Array(length)
-  for(let i = 0; i < length; i++) {
+  for (let i = 0; i < length; i++) {
     array[i] = func(i)
   }
   return array

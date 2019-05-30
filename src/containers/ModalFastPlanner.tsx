@@ -4,15 +4,27 @@ import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { AppState } from '../store/'
 import FastPlanner from '../components/FastPlanner'
+import ArmyCosts from '../components/ArmyCosts'
 import { ArmyName, UnitType, UnitDefinition } from '../store/units'
-import { removeReserveUnits, addReserveUnits } from '../store/land_battle'
+import { removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits } from '../store/land_battle'
 import { mapRange } from '../utils';
 
-class ModalFastPlanner extends Component<IProps> {
+type Units = Map<UnitType, number>
+
+interface IState {
+  changes_a: Units
+  changes_d: Units
+}
+
+class ModalFastPlanner extends Component<IProps, IState> {
+
+  constructor(props: IProps) {
+    super(props)
+    this.state = { changes_a: Map<UnitType, number>(), changes_d: Map<UnitType, number>() }
+  }
+
   readonly units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
 
-  changes_a = Map<UnitType, number>()
-  changes_d = Map<UnitType, number>()
 
   originals_a = Map<UnitType, number>()
   originals_d = Map<UnitType, number>()
@@ -20,47 +32,75 @@ class ModalFastPlanner extends Component<IProps> {
   render() {
     if (!this.props.open)
       return null
-    this.originals_a = this.units.reduce((map, value) => map.set(value, this.countUnits(this.props.reserve_a, value)), Map<UnitType, number>())
-    this.originals_d = this.units.reduce((map, value) => map.set(value, this.countUnits(this.props.reserve_b, value)), Map<UnitType, number>())
+    this.originals_a = this.units.reduce((map, value) => map.set(value, this.countUnits(this.props.attacker.reserve, value)), Map<UnitType, number>())
+    this.originals_d = this.units.reduce((map, value) => map.set(value, this.countUnits(this.props.defender.reserve, value)), Map<UnitType, number>())
     return (
       <Modal basic onClose={this.onClose} open centered={false}>
         <Modal.Content>
           <FastPlanner
             reserve_a={this.originals_a}
-            reserve_b={this.originals_d}
+            reserve_d={this.originals_d}
             onValueChange={this.onValueChange}
+            attached
           />
+          <ArmyCosts
+            army_a={this.props.attacker.army}
+            army_d={this.props.defender.army}
+            reserve_a={this.editReserve(this.props.attacker.reserve, this.originals_a, this.state.changes_a)}
+            reserve_d={this.editReserve(this.props.defender.reserve, this.originals_d, this.state.changes_d)}
+            defeated_a={this.props.attacker.defeated}
+            defeated_d={this.props.defender.defeated}
+            attached
+           />
         </Modal.Content>
       </Modal>
     )
   }
 
-  onValueChange = (name: ArmyName, unit: UnitType, value: number) => {
-    if (name === ArmyName.Attacker)
-      this.changes_a = this.changes_a.set(unit, value)
-    if (name === ArmyName.Defender)
-      this.changes_d = this.changes_d.set(unit, value)
+  editReserve = (reserve: List<UnitDefinition>, originals: Units, changes: Units) => {
+    const units = this.getUnitsToAdd(changes, originals)
+    const types = this.getTypesToRemove(changes, originals)
+    return doRemoveReserveUnits(doAddReserveUnits(reserve, units), types)
   }
 
-  updateReserve = (army: ArmyName, changes: Map<UnitType, number>, originals: Map<UnitType, number>) => {
+  onValueChange = (name: ArmyName, unit: UnitType, value: number) => {
+    if (name === ArmyName.Attacker)
+      this.setState({changes_a: this.state.changes_a.set(unit, value)})
+    if (name === ArmyName.Defender)
+      this.setState({changes_d: this.state.changes_d.set(unit, value)})
+  }
+
+  getUnitsToAdd = (changes: Units, originals: Units) => {
     let units: UnitDefinition[] = []
-    let types: UnitType[] = []
     changes.forEach((value, key) => {
       const original = originals.get(key, 0)
       if (value > original)
         units = units.concat(mapRange(value - original, _ => this.props.units.get(ArmyName.Attacker)!.get(key)!))
-      else
+    })
+    return units
+  }
+
+  getTypesToRemove = (changes: Units, originals: Units) => {
+    let types: UnitType[] = []
+    changes.forEach((value, key) => {
+      const original = originals.get(key, 0)
+      if (value < original)
         types = types.concat(mapRange(original - value, _ => key))
     })
+    return types
+  }
+
+  updateReserve = (army: ArmyName, changes: Units, originals: Units) => {
+    const units = this.getUnitsToAdd(changes, originals)
+    const types = this.getTypesToRemove(changes, originals)
     units.length > 0 && this.props.addReserveUnits(army, units)
     types.length > 0 && this.props.removeReserveUnits(army, types)
   }
 
   onClose = () => {
-    this.updateReserve(ArmyName.Attacker, this.changes_a, this.originals_a)
-    this.updateReserve(ArmyName.Defender, this.changes_d, this.originals_d)
-    this.changes_a.clear()
-    this.changes_d.clear()
+    this.updateReserve(ArmyName.Attacker, this.state.changes_a, this.originals_a)
+    this.updateReserve(ArmyName.Defender, this.state.changes_d, this.originals_d)
+    this.setState({ changes_a: Map<UnitType, number>(), changes_d: Map<UnitType, number>() })
     this.props.onClose()
   }
 
@@ -68,8 +108,8 @@ class ModalFastPlanner extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  reserve_a: state.land.attacker.reserve,
-  reserve_b: state.land.defender.reserve,
+  attacker: state.land.attacker,
+  defender: state.land.defender,
   units: state.units.units
 })
 

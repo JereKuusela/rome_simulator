@@ -40,6 +40,14 @@ const checkArmy = (army: List<UnitDefinition | undefined>) => {
   return false
 }
 
+export const doRemoveReserveUnits = (reserve: List<UnitDefinition>, types: UnitType[]) => {
+  for (const type of types)
+    reserve = reserve.delete(reserve.findLastIndex(value => value.type === type))
+  return reserve
+}
+
+export const doAddReserveUnits = (reserve: List<UnitDefinition>, units: UnitDefinition[]) => reserve.merge(units)
+
 export const landBattleReducer = createReducer(initialState)
   .handleAction(toggleRandomRoll, (state, action: ReturnType<typeof toggleRandomRoll>) => (
     {
@@ -186,8 +194,7 @@ export const landBattleReducer = createReducer(initialState)
   })
   .handleAction(removeReserveUnits, (state, action: ReturnType<typeof removeReserveUnits>) => {
     let reserve = action.payload.army === ArmyName.Attacker ? state.attacker.reserve : state.defender.reserve
-    for (const type of action.payload.types)
-      reserve = reserve.delete(reserve.findLastIndex(value => value.type === type))
+    reserve = doRemoveReserveUnits(reserve, action.payload.types)
     const new_attacker = {
       ...state.attacker,
       reserve: action.payload.army === ArmyName.Attacker ? reserve : state.attacker.reserve
@@ -205,7 +212,7 @@ export const landBattleReducer = createReducer(initialState)
   })
   .handleAction(addReserveUnits, (state, action: ReturnType<typeof addReserveUnits>) => {
     let reserve = action.payload.army === ArmyName.Attacker ? state.attacker.reserve : state.defender.reserve
-    reserve = reserve.merge(action.payload.units)
+    reserve = doAddReserveUnits(reserve, action.payload.units)
     const new_attacker = {
       ...state.attacker,
       reserve: action.payload.army === ArmyName.Attacker ? reserve : state.attacker.reserve

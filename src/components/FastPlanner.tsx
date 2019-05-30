@@ -5,8 +5,9 @@ import { UnitType, unit_to_icon, ArmyName } from '../store/units'
 
 interface IProps {
   reserve_a: Map<UnitType, number>
-  reserve_b: Map<UnitType, number>
+  reserve_d: Map<UnitType, number>
   onValueChange: (army: ArmyName, unit: UnitType, value: number) => void
+  attached?: boolean
 }
 
 // Display component for showing and changing tactic details.
@@ -17,7 +18,7 @@ export default class FastPlanner extends Component<IProps> {
 
   render() {
     return (
-      <Table celled unstackable>
+      <Table celled unstackable attached={this.props.attached}>
         <Table.Header>
           <Table.Row>
             {
@@ -59,7 +60,7 @@ export default class FastPlanner extends Component<IProps> {
         <Input
           type='number'
           size='mini'
-          defaultValue={this.props.reserve_b.get(unit)}
+          defaultValue={this.props.reserve_d.get(unit)}
           onChange={(_, data) => this.props.onValueChange(ArmyName.Defender, unit, Math.max(0, Math.round(Number(data.value))))
           }
         />
