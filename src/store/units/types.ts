@@ -55,7 +55,7 @@ export class UnitDefinition extends BaseDefinition<UnitType, ValueType> {
       case UnitCalc.MovementSpeed:
       case UnitCalc.RecruitTime:
       case UnitCalc.Upkeep:
-        return (+(this.calculateValue(type).toFixed(2))).toString()
+        return (+(Math.max(0, this.calculateValue(type)).toFixed(2))).toString()
       case UnitCalc.Discipline:
       case UnitCalc.Offense:
       case UnitCalc.Defense:

@@ -9,6 +9,7 @@ import TacticPage from './pages/Tactics'
 import TerrainPage from './pages/Terrains'
 import Navigation from './pages/Navigation'
 import Initializer from './pages/Initializer'
+import Stats from './pages/Stats'
 import { AppState } from './store/'
 
 // Any additional component props go here.
@@ -29,6 +30,7 @@ const Root = ({ store, persistor }: MainProps) => {
         <Route path='/Units' component={UnitPage} />
         <Route path='/Tactics' component={TacticPage} />
         <Route path='/Terrains' component={TerrainPage} />
+        <Route path='/Stats' component={Stats} />
       </BrowserRouter>
       </PersistGate>
     </Provider>

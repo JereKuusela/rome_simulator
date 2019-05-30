@@ -24,9 +24,12 @@ export default class Navigation extends Component {
           <Menu.Item active={path === '/tactics'} onClick={() => history.push('/tactics')}>
             Tactics
           </Menu.Item>
-          <div style={{ padding: '0.5rem', width: '100%', textAlign: 'right' }}>Site version 0.1.1</div>
+          <Menu.Item active={path === '/stats'} onClick={() => history.push('/stats')}>
+            Stats
+          </Menu.Item>
+          <div style={{ padding: '0.5rem', width: '100%', textAlign: 'right' }}>Site version 0.1.2</div>
         </Menu>
-        
+
         <br />
       </Container>
     )

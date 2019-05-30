@@ -70,7 +70,7 @@ export default class UnitDefinitions extends Component<IProps> {
             this.props.global_stats && this.renderGlobalStats(this.props.global_stats)
           }
           {
-            this.props.units.map((value) => this.renderRow(value))
+            this.props.units.map(value => this.renderRow(value))
           }
         </Table.Body>
       </Table>
