@@ -3,11 +3,12 @@ import { fromJS, Map, List } from 'immutable'
 import { AppState, rootReducer } from './store/'
 import logger from 'redux-logger'
 import { persistStore, persistReducer, createTransform } from 'redux-persist'
-import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
+import localForage from 'localforage'
 import { tacticFromJS, TacticType } from './store/tactics'
 import { terrainFromJS, TerrainType } from './store/terrains'
 import { unitFromJS, ArmyName, UnitType } from './store/units'
 import { RowType } from './store/land_battle';
+
 
 const TacticsTransform = createTransform(
   (inboundState, _key) => inboundState,
@@ -82,10 +83,9 @@ const LandTransform = createTransform(
   { whitelist: ['land'] }
 )
 
-
 const persistConfig = {
   key: 'primary',
-  storage,
+  storage: localForage,
   transforms: [TacticsTransform, TerrainsTransform, LandTransform, UnitsTransform]
 }
 
