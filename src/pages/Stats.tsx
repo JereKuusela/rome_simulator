@@ -57,6 +57,8 @@ class Stats extends Component<IProps> {
 
   renderRow = (participant: ParticipantState, type: UnitType) => {
     const count = this.countUnits(participant, type)
+    if (count === 0)
+      return null
     return (
       <Table.Row key={type}>
         <Table.Cell width='4'>
