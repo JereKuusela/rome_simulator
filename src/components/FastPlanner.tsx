@@ -43,11 +43,11 @@ export default class FastPlanner extends Component<IProps> {
 
   renderRow = (unit: UnitType) => (
     <Table.Row key={unit}>
-      <Table.Cell collapsing>
+      <Table.Cell width='6'>
         <Image src={unit_to_icon.get(unit)} avatar />
         {unit}
       </Table.Cell>
-      <Table.Cell collapsing>
+      <Table.Cell width='5'>
         <Input
           type='number'
           size='mini'
@@ -56,7 +56,7 @@ export default class FastPlanner extends Component<IProps> {
           }
         />
       </Table.Cell>
-      <Table.Cell collapsing>
+      <Table.Cell width='5'>
         <Input
           type='number'
           size='mini'

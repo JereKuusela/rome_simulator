@@ -64,16 +64,16 @@ export default class ArmyCosts extends Component<IProps> {
 
   renderRow = (name: string, image: string, attribute: UnitCalc, base: number) => (
     <Table.Row key={name}>
-      <Table.Cell collapsing>
+      <Table.Cell width='6'>
         <Image src={image} avatar />
         {name}
       </Table.Cell>
-      <Table.Cell collapsing>
+      <Table.Cell width='5'>
         {
           +this.calculateTotal(this.props.army_a, this.props.reserve_a, this.props.defeated_a, attribute, base).toFixed(2)
         }
       </Table.Cell>
-      <Table.Cell collapsing>
+      <Table.Cell width='5'>
         {
           +this.calculateTotal(this.props.army_d, this.props.reserve_d, this.props.defeated_d, attribute, base).toFixed(2)
         }
