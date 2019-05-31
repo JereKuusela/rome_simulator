@@ -1,7 +1,7 @@
 
 import { Map, OrderedMap, fromJS } from 'immutable'
-import { BaseDefinition, ValuesType } from '../../utils'
 import { TerrainType } from '../terrains'
+import { calculateValue, BaseDefinition, toPercent, toRelativeZeroPercent } from '../../base_definition'
 
 export enum UnitCalc {
   ManpowerDepleted = 'Manpower killed',
@@ -22,88 +22,44 @@ export enum UnitCalc {
   Experience = 'Experience'
 }
 
-export const unitFromJS = (object: Map<string, any>) => {
+export type ValueType = UnitCalc | UnitType | TerrainType
+
+export interface UnitDefinition extends BaseDefinition<UnitType, ValueType> {
+  readonly requirements: string
+  readonly can_assault: boolean
+}
+
+export const unitFromJS = (object: Map<string, any>): UnitDefinition | undefined => {
   if (!object)
     return undefined
-  let base = fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value)))
-  let modifier = fromJS(object.get('modifier_values')!.map((value: OrderedMap<string, number>) => fromJS(value)))
-  let loss = fromJS(object.get('loss_values')!.map((value: OrderedMap<string, number>) => fromJS(value)))
-  return new UnitDefinition(object.get('type') as UnitType, object.get('image'), object.get('requirements'), object.get('can_assault'), base, modifier, loss)
+  let base_values = fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value)))
+  let modifier_values = fromJS(object.get('modifier_values')!.map((value: OrderedMap<string, number>) => fromJS(value)))
+  let loss_values = fromJS(object.get('loss_values')!.map((value: OrderedMap<string, number>) => fromJS(value)))
+  return { type: object.get('type') as UnitType, image: object.get('image'), requirements: object.get('requirements'), can_assault: object.get('can_assault'), base_values,  modifier_values, loss_values }
 }
 
 
-export type ValueType = UnitCalc | UnitType | TerrainType
-type MapValues = Map<ValueType, OrderedMap<string, number>>
 
-
-export class UnitDefinition extends BaseDefinition<UnitType, ValueType> {
-
-  constructor(readonly type: UnitType, image: string | null, public readonly requirements: string, public readonly can_assault: boolean,
-    readonly base_values: MapValues = Map(), readonly modifier_values: MapValues = Map(),  readonly loss_values: MapValues = Map()) {
-      super(type, image, base_values, modifier_values, loss_values)
-  }
-
-  valueToString = (type: ValueType): string => {
-    const value = this.calculateValue(type)
-    switch (type) {
-      case UnitCalc.Cost:
-      case UnitCalc.Maneuver:
-      case UnitCalc.Manpower:
-      case UnitCalc.ManpowerDepleted:
-      case UnitCalc.Morale:
-      case UnitCalc.MoraleDepleted:
-      case UnitCalc.MovementSpeed:
-      case UnitCalc.RecruitTime:
-      case UnitCalc.Upkeep:
-        return (+(Math.max(0, this.calculateValue(type)).toFixed(2))).toString()
-      case UnitCalc.Discipline:
-      case UnitCalc.Offense:
-      case UnitCalc.Defense:
-      case UnitCalc.Experience:
-        return this.toPercent(value, true)
-      default:
-        return this.toRelativeZeroPercent(value, true)
-    }
-  }
-
-  add_base_values = (key: string, values: [ValueType, number][]): UnitDefinition => {
-    const new_values = this.add_values(this.base_values, key, values)
-    return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, new_values, this.modifier_values, this.loss_values)
-  }
-
-  add_base_value = (key: string, attribute: ValueType, value: number): UnitDefinition => {
-    const new_values = this.add_values(this.base_values, key, [[attribute, value]])
-    return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, new_values, this.modifier_values, this.loss_values)
-  }
-
-  add_modifier_values = (key: string, values: [ValueType, number][]): UnitDefinition => {
-    const new_values = this.add_values(this.modifier_values, key, values)
-    return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, this.base_values, new_values, this.loss_values)
-  }
-
-  add_modifier_value = (key: string, attribute: ValueType, value: number): UnitDefinition => {
-    const new_values = this.add_values(this.modifier_values, key, [[attribute, value]])
-    return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, this.base_values, new_values, this.loss_values)
-  }
-
-  add_loss_values = (key: string, values: [ValueType, number][]): UnitDefinition => {
-    const new_values = this.add_values(this.loss_values, key, values)
-    return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, this.base_values, this.modifier_values, new_values)
-  }
-
-  add_loss_value = (key: string, attribute: ValueType, value: number): UnitDefinition => {
-    const new_values = this.add_values(this.loss_values, key, [[attribute, value]])
-    return new UnitDefinition(this.type, this.image, this.requirements, this.can_assault, this.base_values, this.modifier_values, new_values)
-  }
-
-  add_value = (type: ValuesType, key: string, attribute: ValueType, value: number): UnitDefinition => {
-    if (type === ValuesType.Base)
-      return this.add_base_value(key, attribute, value)
-    if (type === ValuesType.Loss)
-      return this.add_loss_value(key, attribute, value)
-    if (type === ValuesType.Modifier)
-      return this.add_modifier_value(key, attribute, value)
-    return this
+export const valueToString = (definition: UnitDefinition, type: ValueType): string => {
+  const value = calculateValue(definition, type)
+  switch (type) {
+    case UnitCalc.Cost:
+    case UnitCalc.Maneuver:
+    case UnitCalc.Manpower:
+    case UnitCalc.ManpowerDepleted:
+    case UnitCalc.Morale:
+    case UnitCalc.MoraleDepleted:
+    case UnitCalc.MovementSpeed:
+    case UnitCalc.RecruitTime:
+    case UnitCalc.Upkeep:
+      return (+(Math.max(0, calculateValue(definition, type)).toFixed(2))).toString()
+    case UnitCalc.Discipline:
+    case UnitCalc.Offense:
+    case UnitCalc.Defense:
+    case UnitCalc.Experience:
+      return toPercent(value, true)
+    default:
+      return toRelativeZeroPercent(value, true)
   }
 }
 

@@ -2,7 +2,8 @@ import { List as ImmutableList } from 'immutable'
 import React, { Component } from 'react'
 import { Image, Table, List } from 'semantic-ui-react'
 import { UnitType, unit_to_icon } from '../store/units'
-import { TacticDefinition, TacticType, TacticCalc, tactic_to_icon } from '../store/tactics';
+import { TacticDefinition, TacticType, TacticCalc, tactic_to_icon, valueToString } from '../store/tactics'
+import { calculateValue, valueToRelativeZeroPercent,  } from '../base_definition'
 
 interface IProps {
   readonly tactics: ImmutableList<TacticDefinition>
@@ -50,10 +51,10 @@ export default class TacticDefinitions extends Component<IProps> {
         <Table.Cell>
           <List horizontal>
             {
-              this.units.filter(type => tactic.calculateValue(type)).map(type => (
+              this.units.filter(type => calculateValue(tactic, type)).map(type => (
                 <List.Item key={type} style={{ marginLeft: 0, marginRight: '1em' }}>
                   <Image src={unit_to_icon.get(type)} avatar />
-                  {tactic.valueToString(type)}
+                  {valueToString(tactic, type)}
                 </List.Item>
               ))
             }
@@ -62,17 +63,17 @@ export default class TacticDefinitions extends Component<IProps> {
         <Table.Cell singleLine>
           <List horizontal>
             {
-              this.tactics.filter(type => tactic.calculateValue(type)).map(type => (
+              this.tactics.filter(type => calculateValue(tactic, type)).map(type => (
                 <List.Item key={type} style={{ marginLeft: 0, marginRight: '1em' }}>
                   <Image src={tactic_to_icon.get(type)} avatar />
-                  {tactic.valueToRelativeZeroPercent(type, true)}
+                  {valueToRelativeZeroPercent(tactic, type, true)}
                 </List.Item>
               ))
             }
           </List>
         </Table.Cell>
         <Table.Cell>
-          {tactic.valueToRelativeZeroPercent(TacticCalc.Casualties, false)}
+          {valueToRelativeZeroPercent(tactic, TacticCalc.Casualties, false)}
         </Table.Cell>
       </Table.Row>
     )

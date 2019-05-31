@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { List } from 'immutable'
 import { Table, Image } from 'semantic-ui-react'
 import { UnitCalc, UnitDefinition } from '../store/units'
+import { calculateValueWithoutLoss} from '../base_definition'
 import IconCost from '../images/cost.png'
 import IconSupplyLimit from '../images/supply_limit.png'
 import IconManpower from '../images/manpower.png'
@@ -55,9 +56,9 @@ export default class ArmyCosts extends Component<IProps> {
   }
 
   calculateTotal = (army: List<UnitDefinition | undefined>, reserve: List<UnitDefinition>, defeated: List<UnitDefinition>, attribute: UnitCalc, base: number) => {
-    return army.reduce((previous, current) => previous + (current ? current.calculateValueWithoutLoss(attribute) + base : 0), 0)
-      + reserve.reduce((previous, current) => previous + current.calculateValueWithoutLoss(attribute) + base, 0)
-      + defeated.reduce((previous, current) => previous + current.calculateValueWithoutLoss(attribute) + base, 0)
+    return army.reduce((previous, current) => previous + (current ? calculateValueWithoutLoss(current, attribute) + base : 0), 0)
+      + reserve.reduce((previous, current) => previous + calculateValueWithoutLoss(current, attribute) + base, 0)
+      + defeated.reduce((previous, current) => previous + calculateValueWithoutLoss(current, attribute) + base, 0)
   }
 
   // <div className='ui avatar image' />

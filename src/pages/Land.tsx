@@ -17,6 +17,7 @@ import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers
 import ModalArmyUnitDetail, { ModalInfo as ModalArmyUnitInfo } from '../containers/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/ModalFastPlanner'
 import { unit_to_icon } from '../store/units'
+import { calculateValue } from '../base_definition'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
@@ -305,7 +306,7 @@ class Land extends Component<IProps, IState> {
         </Table.Cell>
         <Table.Cell>
           <Image src={IconDice} avatar />
-          {terrain.calculateValue(TerrainCalc.Roll)}
+          {calculateValue(terrain, TerrainCalc.Roll)}
         </Table.Cell>
       </Table.Row>
     )

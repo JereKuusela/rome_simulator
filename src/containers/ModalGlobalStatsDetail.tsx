@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { UnitType, setGlobalValue, ArmyName, ValueType } from '../store/units'
 import { AppState } from '../store/'
-import { ValuesType } from '../utils'
+import { ValuesType } from '../base_definition'
 import UnitDetail from '../components/UnitDetail'
 
 const CUSTOM_VALUE_KEY = 'Global'

@@ -1,7 +1,8 @@
 import { List as ImmutableList } from 'immutable'
 import React, { Component } from 'react'
 import { Table } from 'semantic-ui-react'
-import { TerrainCalc, TerrainDefinition, TerrainType } from '../store/terrains';
+import { TerrainCalc, TerrainDefinition, TerrainType } from '../store/terrains'
+import { valueToRelativeNumber} from '../base_definition'
 
 interface IProps {
   readonly terrains: ImmutableList<TerrainDefinition>
@@ -51,7 +52,7 @@ export default class TerrainDefinitions extends Component<IProps> {
         {
           this.attributes.map(type => (
             <Table.Cell key={type}>
-              {terrain.valueToRelativeNumber(type, false)}
+              {valueToRelativeNumber(terrain, type, false)}
             </Table.Cell>
           ))
         }

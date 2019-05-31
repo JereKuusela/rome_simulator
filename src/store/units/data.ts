@@ -1,5 +1,6 @@
 import { Map, OrderedMap } from 'immutable'
 import { UnitType, UnitDefinition, UnitCalc, ValueType } from './types'
+import { add_base_values } from '../../base_definition'
 import IconArcher from '../../images/archers.png'
 import IconCamelCavalry from '../../images/camel_cavalry.png'
 import IconChariots from '../../images/chariots.png'
@@ -32,7 +33,7 @@ const setBaseValues = (unit: UnitDefinition): UnitDefinition => {
     [UnitCalc.Morale, 3],
     [UnitCalc.Experience, 0]
   ]
-  unit = unit.add_base_values('Base', values)
+  unit = add_base_values(unit, 'Base', values)
   return unit
 }
 
@@ -46,11 +47,11 @@ export const getDefaultDefinitions = (): Map<UnitType, UnitDefinition> => {
 }
 
 export const getDefaultGlobalDefinition = (): UnitDefinition => {
-  return new UnitDefinition('' as UnitType, IconMilitaryPower, '', false)
+  return { type: '' as UnitType, image: IconMilitaryPower, requirements: '', can_assault: false }
 }
 
 const createUnitFromJson = (data: UnitData): UnitDefinition => {
-  let unit = new UnitDefinition(data.type as UnitType, unit_to_icon.get(data.type as UnitType)!, data.requirements, data.can_assault)
+  let unit: UnitDefinition = { type: data.type as UnitType, image: unit_to_icon.get(data.type as UnitType)!, requirements: data.requirements, can_assault: data.can_assault }
   unit = setBaseValues(unit)
   const base_values: [ValueType, number][] = [
     [UnitCalc.AttritionWeight, data.attrition_weight || 0],
@@ -71,7 +72,7 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
     [UnitType.LightInfantry, data.light_infantry || 0],
     [UnitType.WarElephants, data.war_elephants || 0]
   ]
-  unit = unit.add_base_values(unit.type, base_values)
+  unit = add_base_values(unit, unit.type, base_values)
   return unit
 }
 

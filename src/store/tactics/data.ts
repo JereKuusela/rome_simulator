@@ -1,5 +1,5 @@
 import { Map, OrderedMap, fromJS } from 'immutable'
-import { BaseDefinition } from '../../utils'
+import { calculateValue, BaseValuesDefinition, toPercent, add_base_values } from '../../base_definition'
 import { UnitType } from '../units/types'
 import IconBottleneck from '../../images/bottleneck.png'
 import IconCavalrySkirmish from '../../images/cavalry_skirmish.png'
@@ -54,37 +54,23 @@ export const getDefaultDefinitions = (): Map<TacticType, TacticDefinition> => {
 export type ValueType = UnitType | TacticCalc | TacticType
 type MapValues = Map<ValueType, OrderedMap<string, number>>
 
-export const tacticFromJS = (object: Map<string, any>) => {
+export const tacticFromJS = (object: Map<string, any>): TacticDefinition | undefined => {
   if (!object)
     return undefined
-  let base = fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value)))
-  return new TacticDefinition(object.get('type') as TacticType, object.get('image'), base)
+  let base_values = fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value)))
+  return { type: object.get('type') as TacticType, image: object.get('image'), base_values }
 }
 
-export class TacticDefinition extends BaseDefinition<TacticType, ValueType> {
+export interface TacticDefinition extends BaseValuesDefinition<TacticType, ValueType> {
+}
 
-  constructor(type: TacticType, image: string | null, base_values: MapValues = Map()) {
-    super(type, image, base_values)
-  }
-
-  valueToString = (type: ValueType): string => {
-    const value = this.calculateValue(type)
-    return this.toPercent(value, true)
-  }
-
-  add_base_values = (key: string, values: [ValueType, number][]): TacticDefinition => {
-    const new_values = this.add_values(this.base_values, key, values)
-    return new TacticDefinition(this.type, this.image, new_values)
-  }
-
-  add_base_value = (key: string, type: ValueType, value: number): TacticDefinition => {
-    const new_values = this.add_values(this.base_values, key, [[type, value]])
-    return new TacticDefinition(this.type, this.image, new_values)
-  }
+export const valueToString = (definition: TacticDefinition, type: ValueType): string => {
+  const value = calculateValue(definition, type)
+  return toPercent(value, true)
 }
 
 const createTacticFromJson = (data: TacticData): TacticDefinition => {
-  let tactic = new TacticDefinition(data.type as TacticType, tactic_to_icon.get(data.type as TacticType)!)
+  let tactic: TacticDefinition = { type: data.type as TacticType, image: tactic_to_icon.get(data.type as TacticType) }
   const base_values: [ValueType, number][] = [
     [UnitType.Archers, data.archers || 0],
     [UnitType.CamelCavalry, data.camel_cavalry || 0],
@@ -108,7 +94,7 @@ const createTacticFromJson = (data: TacticData): TacticDefinition => {
     [TacticType.TriplexAcies, data.triplex_acies || 0]
 
   ]
-  return tactic.add_base_values(tactic.type, base_values)
+  return add_base_values(tactic, tactic.type, base_values)
 }
 
 interface TacticData {

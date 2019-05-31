@@ -2,8 +2,8 @@ import { battle } from '../combat'
 import { List } from 'immutable'
 import { getInitialArmy, getInitialTerrains, ParticipantState } from '../types'
 import { getDefaultDefinitions as getDefaultTacticDefinitions, TacticType } from '../../tactics'
-import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, TerrainDefinition } from '../../terrains'
-import { getDefaultDefinitions as getDefaultUnitDefinitions, UnitType, UnitCalc, UnitDefinition } from '../../units'
+import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, } from '../../terrains'
+import { getDefaultDefinitions as getDefaultUnitDefinitions, UnitType, UnitCalc } from '../../units'
 
 describe('1 vs 1', () => {
   // Test case with two of all units except of Chariot

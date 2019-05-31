@@ -4,53 +4,47 @@ import { getInitialArmy, getInitialTerrains, ParticipantState } from '../types'
 import { getDefaultDefinitions as getDefaultTacticDefinitions, TacticType } from '../../tactics'
 import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, TerrainDefinition } from '../../terrains'
 import { getDefaultDefinitions as getDefaultUnitDefinitions, UnitType, UnitCalc, UnitDefinition } from '../../units'
+import { add_base_value, add_modifier_value, add_loss_value, calculateValue} from '../../../base_definition'
 
 describe('multi', () => {
+  const tactics = getDefaultTacticDefinitions()
+  const terrains = getDefaultTerrainDefinitions()
+  const units = getDefaultUnitDefinitions()
+
   const verify = (unit: UnitDefinition | undefined, manpower: number, morale: number) => {
     expect(unit).toBeTruthy()
     if (!unit)
       return
-    expect(unit.calculateValue(UnitCalc.Manpower)).toEqual(manpower)
+    expect(calculateValue(unit, UnitCalc.Manpower)).toEqual(manpower)
     try {
-      expect(Math.abs(unit.calculateValue(UnitCalc.Morale) - morale)).toBeLessThan(0.002)
+      expect(Math.abs(calculateValue(unit, UnitCalc.Morale) - morale)).toBeLessThan(0.002)
     }
     catch (e) {
-      throw new Error('Morale ' + unit.calculateValue(UnitCalc.Morale) + ' is not ' + morale);
+      throw new Error('Morale ' + calculateValue(unit, UnitCalc.Morale) + ' is not ' + morale);
     }
   }
   const round = (attacker: ParticipantState, defender: ParticipantState, terrains: List<TerrainDefinition>, round: number): [ParticipantState, ParticipantState] => {
-    const [attacker_new_army, defender_new_army] = battle(attacker, defender, round, terrains)
+    const [attacker_new_army, defender_new_army] = battle({...attacker, tactic: tactics.get(attacker.tactic)!}, {...defender, tactic: tactics.get(defender.tactic)!}, round, terrains)
     return [{ ...attacker, army: attacker_new_army }, { ...defender, army: defender_new_army }]
   }
 
   it('should work without modifiers', () => {
-    const tactics = getDefaultTacticDefinitions()
-    const terrains = getDefaultTerrainDefinitions()
-    const units = getDefaultUnitDefinitions()
-    const unit = units.get(UnitType.Archers)!
-      .add_modifier_value('Initial', UnitCalc.Morale, -0.2)
-      .add_base_value('Test', UnitCalc.MoraleDamageTaken, -0.25)
-    const terrain = getInitialTerrains().push(terrains.get(TerrainType.Forest)!)
+    const unit = add_base_value(add_modifier_value(units.get(UnitType.Archers)!, 'Initial', UnitCalc.Morale, -0.2), 'Test', UnitCalc.MoraleDamageTaken, -0.25)
+    const terrain = getInitialTerrains().push(TerrainType.Forest).map(type => terrains.get(type)!)
 
 
     const getAttacker = (type: UnitType, morale: number) => {
-      return units.get(type)!
-        .add_base_value('Test', UnitCalc.Discipline, 0.109)
-        .add_modifier_value('Test', UnitCalc.Morale, 0.05)
-        .add_loss_value('Test', UnitCalc.Morale, 3.15 - morale)
+      return add_loss_value(add_base_value(add_modifier_value(units.get(type)!, 'Initial', UnitCalc.Morale, 0.05), 'Test', UnitCalc.Discipline, 0.109), 'Test', UnitCalc.Morale, 3.15 - morale)
     }
 
     const getDefender = (type: UnitType, morale: number) => {
-      return units.get(type)!
-        .add_base_value('Test', UnitCalc.Discipline, 0.03)
-        .add_modifier_value('Test', UnitCalc.Morale, 0.05)
-        .add_loss_value('Test', UnitCalc.Morale, 3.15 - morale)
+      return add_loss_value(add_base_value(add_modifier_value(units.get(type)!, 'Initial', UnitCalc.Morale, 0.05), 'Test', UnitCalc.Discipline, 0.03), 'Test', UnitCalc.Morale, 3.15 - morale)
     }
 
     let attacker = getInitialArmy()
     attacker = {
       ...attacker,
-      tactic: tactics.get(TacticType.Bottleneck)!,
+      tactic: TacticType.Bottleneck,
       general: 4,
       roll: 6,
       army: attacker.army
@@ -64,7 +58,7 @@ describe('multi', () => {
     let defender = getInitialArmy()
     defender = {
       ...defender,
-      tactic: tactics.get(TacticType.ShockAction)!,
+      tactic: TacticType.ShockAction,
       general: 7,
       roll: 6,
       army: defender.army

@@ -3,7 +3,7 @@ import { List } from 'immutable'
 import { Table, Image } from 'semantic-ui-react'
 import { TerrainType, TerrainCalc } from '../store/terrains'
 import { UnitType, UnitCalc } from '../store/units'
-import { BaseDefinition } from '../utils'
+import { BaseValuesDefinition, BaseDefinition, valueToRelativeNumber } from '../base_definition'
 import { TacticType, TacticCalc } from '../store/tactics'
 
 type ItemType = UnitType | TerrainType | TacticType
@@ -11,7 +11,7 @@ type ItemAttribute = UnitCalc | TerrainCalc | UnitType | TerrainType | TacticCal
 
 interface IProps<T extends ItemType, S extends ItemAttribute> {
   onClose: () => void
-  items: List<BaseDefinition<T, S>>
+  items: List<BaseDefinition<T, S>| BaseValuesDefinition<T, S>>
   onSelection: (type: T | undefined) => void
   attributes: S[]
   can_remove: boolean
@@ -41,7 +41,7 @@ export default class ItemSelector<S extends ItemAttribute, T extends ItemType> e
     )
   }
 
-  renderRow = (item: BaseDefinition<T, S>) => {
+  renderRow = (item: BaseDefinition<T, S> | BaseValuesDefinition<T, S>) => {
     return (
       <Table.Row key={item.type} onClick={() => this.onClick(item.type)}>
         <Table.Cell>
@@ -51,7 +51,7 @@ export default class ItemSelector<S extends ItemAttribute, T extends ItemType> e
         {
           this.props.attributes.map(attribute => (
             <Table.Cell key={attribute}>
-              {item.valueToRelativeNumber(attribute, false)}
+              {valueToRelativeNumber(item, attribute, false)}
             </Table.Cell>
             ))
         }

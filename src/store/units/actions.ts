@@ -1,6 +1,6 @@
 import { createAction } from 'typesafe-actions'
 import { UnitType, ArmyName, ValueType } from '../units'
-import { ValuesType } from '../../utils'
+import { ValuesType } from '../../base_definition'
 
 export const setValue = createAction('@@units/SET_VALUE', action => {
   return (army: ArmyName, type: ValuesType, unit: UnitType, key: string, attribute: ValueType, value: number) => action({ army,type,  unit, key, attribute, value })

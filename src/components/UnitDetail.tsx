@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { Table, Input } from 'semantic-ui-react'
-import { UnitType, UnitDefinition, UnitCalc, ArmyName, ValueType } from '../store/units'
+import { UnitType, UnitDefinition, UnitCalc, ArmyName, ValueType, valueToString } from '../store/units'
 import { TerrainType } from '../store/terrains'
+import { get_base_value, get_loss_value, get_modifier_value, explain } from '../base_definition'
 
 interface IProps {
   army: ArmyName
@@ -56,9 +57,9 @@ export default class UnitDetail extends Component<IProps> {
       return null
     if (!this.props.show_statistics && (attribute === UnitCalc.ManpowerDepleted || attribute === UnitCalc.MoraleDepleted))
       return null
-    let base_value = unit.get_base_value(attribute, this.props.custom_value_key)
-    let modifier_value = unit.get_modifier_value(attribute, this.props.custom_value_key)
-    let loss_value = unit.get_loss_value(attribute, this.props.custom_value_key)
+    let base_value = get_base_value(unit, attribute, this.props.custom_value_key)
+    let modifier_value = get_modifier_value(unit, attribute, this.props.custom_value_key)
+    let loss_value = get_loss_value(unit, attribute, this.props.custom_value_key)
 
     return (
       <Table.Row key={attribute}>
@@ -66,7 +67,7 @@ export default class UnitDetail extends Component<IProps> {
           {attribute}
         </Table.Cell>
         <Table.Cell collapsing>
-          {unit.valueToString(attribute)}
+          {valueToString(unit, attribute)}
         </Table.Cell>
         <Table.Cell collapsing>
           <Input
@@ -100,7 +101,7 @@ export default class UnitDetail extends Component<IProps> {
           }
         </Table.Cell>
         <Table.Cell>
-          {unit.explain(attribute)}
+          {explain(unit, attribute)}
         </Table.Cell>
       </Table.Row>
     )

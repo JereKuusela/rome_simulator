@@ -1,15 +1,16 @@
 import { battle } from '../combat'
 import { List } from 'immutable'
-import { getInitialArmy, getInitialTerrains, ParticipantState } from '../types'
+import { getInitialArmy, ParticipantState } from '../types'
 import { getDefaultDefinitions as getDefaultTacticDefinitions, TacticType } from '../../tactics'
 import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, TerrainDefinition } from '../../terrains'
 import { getDefaultDefinitions as getDefaultUnitDefinitions, UnitType, UnitCalc, UnitDefinition } from '../../units'
+import { add_modifier_value, calculateValue} from '../../../base_definition'
 
 describe('1 vs 1', () => {
   const tactics = getDefaultTacticDefinitions()
   const terrains = getDefaultTerrainDefinitions()
   const units = getDefaultUnitDefinitions()
-  const unit = units.get(UnitType.Archers)!.add_modifier_value('Initial', UnitCalc.Morale, -0.2)
+  const unit = add_modifier_value(units.get(UnitType.Archers)!, 'Initial', UnitCalc.Morale, -0.2)
 
   let attacker: ParticipantState
   let defender: ParticipantState
@@ -19,7 +20,7 @@ describe('1 vs 1', () => {
   beforeEach(() => {
     attacker = getInitialArmy()
     defender = getInitialArmy()
-    terrain = getInitialTerrains().push(terrains.get(TerrainType.Forest)!)
+    terrain = List<TerrainDefinition>().push(terrains.get(TerrainType.Forest)!)
     setUnits(unit, unit)
     round = 0
   })
@@ -27,12 +28,12 @@ describe('1 vs 1', () => {
     expect(unit).toBeTruthy()
     if (!unit)
       return
-    expect(unit.calculateValue(UnitCalc.Manpower)).toEqual(manpower)
+    expect(calculateValue(unit, UnitCalc.Manpower)).toEqual(manpower)
     try {
-      expect(Math.abs(unit.calculateValue(UnitCalc.Morale) - morale)).toBeLessThan(0.002)
+      expect(Math.abs(calculateValue(unit, UnitCalc.Morale) - morale)).toBeLessThan(0.002)
     }
     catch (e) {
-      throw new Error('Morale ' + unit.calculateValue(UnitCalc.Morale) + ' is not ' + morale);
+      throw new Error('Morale ' + calculateValue(unit, UnitCalc.Morale) + ' is not ' + morale);
     }
   }
   const verify = (manpower_a: number, morale_a: number, manpower_d: number, morale_d: number) => {
@@ -41,7 +42,7 @@ describe('1 vs 1', () => {
   }
   const doRound = () => {
     round++
-    const [attacker_new_army, defender_new_army] = battle(attacker, defender, round, terrain)
+    const [attacker_new_army, defender_new_army] = battle({...attacker, tactic: tactics.get(attacker.tactic)!}, {...defender, tactic: tactics.get(defender.tactic)!}, round, terrain)
     attacker = { ...attacker, army: attacker_new_army }
     defender = { ...defender, army: defender_new_army }
   }
@@ -50,8 +51,8 @@ describe('1 vs 1', () => {
     defender = { ...defender, roll: roll_d }
   }
   const setTactics = (tactic_a: TacticType, tactic_d: TacticType) => {
-    attacker = { ...attacker, tactic: tactics.get(tactic_a)! }
-    defender = { ...defender, tactic: tactics.get(tactic_d)! }
+    attacker = { ...attacker, tactic: tactic_a }
+    defender = { ...defender, tactic: tactic_d }
   }
   const setUnits = (unit_a: UnitDefinition, unit_b: UnitDefinition) => {
     attacker = { ...attacker, army: attacker.army.setIn([0, 15], unit_a) }

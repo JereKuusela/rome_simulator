@@ -3,7 +3,7 @@ import { List } from 'immutable'
 import { getInitialArmy, getInitialTerrains, ParticipantState, PastState } from './types'
 import { selectUnit, selectTerrain, selectTactic, undo, toggleRandomRoll, setRoll, setGeneral, setRowType, removeReserveUnits, addReserveUnits, setFlankSize } from './actions'
 import { ArmyName, setGlobalValue, setValue, UnitDefinition, UnitType, ValueType, ArmyType } from '../units'
-import { ValuesType } from '../../utils'
+import { add_value, ValuesType } from '../../base_definition'
 
 export const initialState = {
   attacker: getInitialArmy(),
@@ -14,18 +14,18 @@ export const initialState = {
 }
 
 const updateValue = (army_type: ArmyName, army: List<UnitDefinition | undefined>, payload: { army: ArmyName, type: ValuesType, unit: UnitType, key: string, attribute: ValueType, value: number }) => {
-  return army.map(unit => payload.army === army_type && unit && unit.type === payload.unit ? unit.add_value(payload.type, payload.key, payload.attribute, payload.value) : unit)
+  return army.map(unit => payload.army === army_type && unit && unit.type === payload.unit ? add_value(unit, payload.type, payload.key, payload.attribute, payload.value) : unit)
 }
 
 const updateValue2 = (army_type: ArmyName, army: List<UnitDefinition>, payload: { army: ArmyName, type: ValuesType, unit: UnitType, key: string, attribute: ValueType, value: number }) => {
-  return army.map(unit => payload.army === army_type && unit && unit.type === payload.unit ? unit.add_value(payload.type, payload.key, payload.attribute, payload.value) : unit)
+  return army.map(unit => payload.army === army_type && unit && unit.type === payload.unit ? add_value(unit, payload.type, payload.key, payload.attribute, payload.value) : unit)
 }
 
 const updateGlobalValue = (army_type: ArmyName, army: List<UnitDefinition | undefined>, payload: { army: ArmyName, type: ValuesType, key: string, attribute: ValueType, value: number }) => {
-  return army.map(unit => payload.army === army_type && unit ? unit.add_value(payload.type, payload.key, payload.attribute, payload.value) : unit)
+  return army.map(unit => payload.army === army_type && unit ? add_value(unit, payload.type, payload.key, payload.attribute, payload.value) : unit)
 }
 const updateGlobalValue2 = (army_type: ArmyName, army: List<UnitDefinition>, payload: { army: ArmyName, type: ValuesType, key: string, attribute: ValueType, value: number }) => {
-  return army.map(unit => payload.army === army_type && unit ? unit.add_value(payload.type, payload.key, payload.attribute, payload.value) : unit)
+  return army.map(unit => payload.army === army_type && unit ? add_value(unit, payload.type, payload.key, payload.attribute, payload.value) : unit)
 }
 export const checkFight = (attacker: ParticipantState, defender: ParticipantState) => (checkArmy(attacker.army) || checkArmy(attacker.reserve)) && (checkArmy(defender.army) || checkArmy(defender.reserve))
 

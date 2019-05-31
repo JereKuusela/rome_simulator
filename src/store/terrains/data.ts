@@ -1,5 +1,5 @@
 import { Map, OrderedMap, fromJS } from 'immutable'
-import { BaseDefinition } from '../../utils'
+import { calculateValue, BaseValuesDefinition, add_base_values } from '../../base_definition'
 import * as data from './terrains.json'
 
 export enum TerrainType {
@@ -34,53 +34,31 @@ export const getDefaultDefinitions = (): Map<TerrainType, TerrainDefinition> => 
   return map
 }
 
-export const terrainFromJS = (object: Map<string, any>) => {
+export const terrainFromJS = (object: Map<string, any>): TerrainDefinition | undefined => {
   if (!object)
     return undefined
-  let base = fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value)))
-  return new TerrainDefinition(object.get('type') as TerrainType, object.get('location') as LocationType, base)
+  let base_values = fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value)))
+  return { type: object.get('type') as TerrainType, location: object.get('location') as LocationType, base_values }
 }
 
 
 export type ValueType = TerrainCalc
-type MapValues = Map<ValueType, OrderedMap<string, number>>
 
-export class TerrainDefinition extends BaseDefinition<TerrainType, ValueType> {
+export interface TerrainDefinition extends BaseValuesDefinition<TerrainType, ValueType> {
+  readonly location: LocationType
+}
 
-  constructor(type: TerrainType, public readonly location: LocationType, base_values: MapValues = Map()) {
-    super(type, null, base_values)
-  }
-
-  valueToString = (type: ValueType): string => {
-    const value = this.calculateValue(type)
-    return String(value)
-  }
-
-  add_base_values = (key: string, values: [ValueType, number][]): TerrainDefinition => {
-    const new_values = this.add_values(this.base_values, key, values)
-    return new TerrainDefinition(this.type, this.location, new_values)
-  }
-
-  add_base_value = (key: string, type: ValueType, value: number): TerrainDefinition => {
-    const new_values = this.add_values(this.base_values, key, [[type, value]])
-    return new TerrainDefinition(this.type, this.location, new_values)
-  }
-
-  toJS = () => {
-    return {
-      type: this.type,
-      location: this.location,
-      base_values: this.base_values.map(value => value.toJS()).toJS()
-    }
-  }
+export const valueToString = (definition: TerrainDefinition, type: ValueType): string => {
+  const value = calculateValue(definition, type)
+  return String(value)
 }
 
 const createTerrainFromJson = (data: TerrainData): TerrainDefinition => {
-  let terrain = new TerrainDefinition(data.type as TerrainType, data.location as LocationType)
+  let terrain: TerrainDefinition = {type: data.type as TerrainType, location: data.location as LocationType}
   const base_values: [ValueType, number][] = [
     [TerrainCalc.Roll, data.roll]
   ]
-  return terrain.add_base_values(terrain.type, base_values)
+  return add_base_values(terrain, terrain.type, base_values)
 }
 
 interface TerrainData {

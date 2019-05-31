@@ -1,13 +1,14 @@
 import { List as ImmutableList } from 'immutable'
 import React, { Component } from 'react'
 import { Image, Table, List, Icon } from 'semantic-ui-react'
-import { UnitType, UnitDefinition, UnitCalc, ArmyName, unit_to_icon, ValueType } from '../store/units'
+import { UnitType, UnitDefinition, UnitCalc, ArmyName, unit_to_icon, ValueType, valueToString} from '../store/units'
 import { TerrainType } from '../store/terrains'
 import IconDiscipline from '../images/discipline.png'
 import IconOffense from '../images/offense.png'
 import IconDefense from '../images/defense.png'
 import IconManpower from '../images/manpower.png'
 import IconMorale from '../images/morale.png'
+import { calculateValue, calculateBase, calculateModifier, calculateLoss, valueToNumber, valueToPercent, valueToRelativePercent, valueToRelativeZeroPercent } from  '../base_definition'
 
 interface IProps {
   readonly army: ArmyName
@@ -85,39 +86,39 @@ export default class UnitDefinitions extends Component<IProps> {
           <Image src={unit.image} avatar />
           {unit.type}</Table.Cell>
         <Table.Cell>
-          {unit.valueToNumber(UnitCalc.Morale, false)}
+          {valueToNumber(unit, UnitCalc.Morale, false)}
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToNumber(UnitCalc.Manpower, false)}
+          {valueToNumber(unit, UnitCalc.Manpower, false)}
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToRelativePercent(UnitCalc.Discipline, false)}
+          {valueToRelativePercent(unit, UnitCalc.Discipline, false)}
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToRelativePercent(UnitCalc.Offense, false)}
+          {valueToRelativePercent(unit, UnitCalc.Offense, false)}
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToRelativePercent(UnitCalc.Defense, false)}
+          {valueToRelativePercent(unit, UnitCalc.Defense, false)}
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToNumber(UnitCalc.Maneuver, false)}
+          {valueToNumber(unit, UnitCalc.Maneuver, false)}
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToRelativeZeroPercent(UnitCalc.MoraleDamageTaken, false)}
+          {valueToRelativeZeroPercent(unit, UnitCalc.MoraleDamageTaken, false)}
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToRelativeZeroPercent(UnitCalc.StrengthDamageTaken, false)}
+          {valueToRelativeZeroPercent(unit, UnitCalc.StrengthDamageTaken, false)}
         </Table.Cell>
         <Table.Cell>
-          {unit.valueToPercent(UnitCalc.Experience, false)}
+          {valueToPercent(unit, UnitCalc.Experience, false)}
         </Table.Cell>
         <Table.Cell>
           <List horizontal>
             {
-              this.units.filter(type => unit.calculateValue(type) !== 0).map(type => (
+              this.units.filter(type => calculateValue(unit, type) !== 0).map(type => (
                 <List.Item key={type} style={{ marginLeft: 0, marginRight: '1em' }}>
                   <Image src={unit_to_icon.get(type)} avatar />
-                  {unit.valueToString(type)}
+                  {valueToString(unit, type)}
                 </List.Item>
               ))
             }
@@ -126,9 +127,9 @@ export default class UnitDefinitions extends Component<IProps> {
         <Table.Cell>
           <List>
             {
-              this.terrains.filter(type => unit.calculateValue(type) !== 0).map(type => (
+              this.terrains.filter(type => calculateValue(unit, type) !== 0).map(type => (
                 <List.Item key={type}>
-                  {type + ': ' + unit.valueToString(type)}
+                  {type + ': ' + valueToString(unit, type)}
                 </List.Item>
               ))
             }
@@ -175,10 +176,10 @@ export default class UnitDefinitions extends Component<IProps> {
         <Table.Cell>
           <List horizontal>
             {
-              this.units.filter(type => unit.calculateValue(type) !== 0).map(type => (
+              this.units.filter(type => calculateValue(unit, type) !== 0).map(type => (
                 <List.Item key={type} style={{ marginLeft: 0, marginRight: '1em' }}>
                   <Image src={unit_to_icon.get(type)} avatar />
-                  {unit.valueToString(type)}
+                  {valueToString(unit, type)}
                 </List.Item>
               ))
             }
@@ -187,9 +188,9 @@ export default class UnitDefinitions extends Component<IProps> {
         <Table.Cell>
           <List>
             {
-              this.terrains.filter(type => unit.calculateValue(type) !== 0.0).map(type => (
+              this.terrains.filter(type => calculateValue(unit, type) !== 0.0).map(type => (
                 <List.Item key={type}>
-                  {type + ': ' + unit.valueToRelativeZeroPercent(type, false)}
+                  {type + ': ' + valueToRelativeZeroPercent(unit, type, false)}
                 </List.Item>
               ))
             }
@@ -200,9 +201,9 @@ export default class UnitDefinitions extends Component<IProps> {
   }
 
   renderAttributeList = (unit: UnitDefinition, attribute: ValueType) => {
-    const base = unit.calculateBase(attribute)
-    const modifier = unit.calculateModifier(attribute)
-    const loss = unit.calculateLoss(attribute)
+    const base = calculateBase(unit, attribute)
+    const modifier = calculateModifier(unit, attribute)
+    const loss = calculateLoss(unit, attribute)
     return (
       <List>
         {

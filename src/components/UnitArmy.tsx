@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { List } from 'immutable'
 import { Table, Image, Icon } from 'semantic-ui-react'
 import { UnitDefinition, UnitCalc, ArmyType } from '../store/units'
+import { calculateValue, calculateValueWithoutLoss } from '../base_definition'
 import IconEmpty from '../images/empty.png'
 
 
@@ -75,6 +76,6 @@ export default class UnitArmy extends Component<IProps> {
   percent = (unit: UnitDefinition | undefined, attribute: UnitCalc): number => {
     if (!unit)
       return 0
-    return 100.0 - 100.0 * unit.calculateValue(attribute) / unit.calculateValueWithoutLoss(attribute)
+    return 100.0 - 100.0 * calculateValue(unit, attribute) / calculateValueWithoutLoss(unit, attribute)
   }
 }

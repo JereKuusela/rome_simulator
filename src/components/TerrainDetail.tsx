@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Table, Input } from 'semantic-ui-react'
-import { TerrainDefinition, ValueType, TerrainType, TerrainCalc } from '../store/terrains'
+import { TerrainDefinition, ValueType, TerrainType, TerrainCalc, valueToString } from '../store/terrains'
+import { get_base_value, explain_short } from '../base_definition'
 
 interface IProps {
   custom_value_key: string
@@ -39,7 +40,7 @@ export default class TerrainDetail extends Component<IProps> {
   }
 
   renderRow = (tactic: TerrainDefinition, attribute: ValueType) => {
-    let base_value = tactic.get_base_value(attribute, this.props.custom_value_key)
+    let base_value = get_base_value(tactic, attribute, this.props.custom_value_key)
 
     return (
       <Table.Row key={attribute}>
@@ -47,7 +48,7 @@ export default class TerrainDetail extends Component<IProps> {
           {attribute}
         </Table.Cell>
         <Table.Cell collapsing>
-          {tactic.valueToString(attribute)}
+          {valueToString(tactic, attribute)}
         </Table.Cell>
         <Table.Cell collapsing>
           <Input
@@ -58,7 +59,7 @@ export default class TerrainDetail extends Component<IProps> {
           />
         </Table.Cell>
         <Table.Cell>
-          {tactic.explain_short(attribute)}
+          {explain_short(tactic, attribute)}
         </Table.Cell>
       </Table.Row>
     )

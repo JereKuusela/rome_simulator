@@ -8,6 +8,7 @@ import { ParticipantState } from '../store/land_battle'
 import IconManpower from '../images/manpower.png'
 import IconMorale from '../images/morale.png'
 import { unit_to_icon } from '../store/units'
+import { calculateValue, calculateValueWithoutLoss } from '../base_definition'
 
 class Stats extends Component<IProps> {
   readonly units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
@@ -85,7 +86,7 @@ class Stats extends Component<IProps> {
   }
 
   calculateValueSub = (army: List<UnitDefinition | undefined>, type: UnitType, attribute: UnitCalc) => {
-    return army.reduce((previous, current) => previous + (current && current.type === type ? Math.max(0, current.calculateValue(attribute)) : 0), 0)
+    return army.reduce((previous, current) => previous + (current && current.type === type ? Math.max(0, calculateValue(current, attribute)) : 0), 0)
   }
 
   calculateValueWithoutLoss = (participant: ParticipantState, type: UnitType, attribute: UnitCalc) => {
@@ -93,7 +94,7 @@ class Stats extends Component<IProps> {
   }
 
   calculateValueWithoutLossSub = (army: List<UnitDefinition | undefined>, type: UnitType, attribute: UnitCalc) => {
-    return army.reduce((previous, current) => previous + (current && current.type === type ? current.calculateValueWithoutLoss(attribute) : 0), 0)
+    return army.reduce((previous, current) => previous + (current && current.type === type ? calculateValueWithoutLoss(current, attribute) : 0), 0)
   }
 
   countUnits = (army: ParticipantState, type: UnitType) => {

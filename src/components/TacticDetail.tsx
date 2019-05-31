@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Table, Input, Image } from 'semantic-ui-react'
 import { UnitType, unit_to_icon } from '../store/units'
 import { TacticDefinition, ValueType, TacticType, TacticCalc, tactic_to_icon } from '../store/tactics'
+import { get_base_value, valueToRelativeZeroPercent, valueToPercent, explain_short } from '../base_definition'
 
 interface IProps {
   custom_value_key: string
@@ -50,7 +51,7 @@ export default class TacticDetail extends Component<IProps> {
   }
 
   renderRow = (tactic: TacticDefinition, attribute: ValueType, relative: boolean, image: string | undefined) => {
-    let base_value = tactic.get_base_value(attribute, this.props.custom_value_key)
+    let base_value = get_base_value(tactic, attribute, this.props.custom_value_key)
 
     return (
       <Table.Row key={attribute}>
@@ -59,7 +60,7 @@ export default class TacticDetail extends Component<IProps> {
           {attribute}
         </Table.Cell>
         <Table.Cell collapsing>
-          {relative ? tactic.valueToRelativeZeroPercent(attribute, true) : tactic.valueToPercent(attribute, true)}
+          {relative ? valueToRelativeZeroPercent(tactic, attribute, true) : valueToPercent(tactic, attribute, true)}
         </Table.Cell>
         <Table.Cell collapsing>
           <Input
@@ -70,7 +71,7 @@ export default class TacticDetail extends Component<IProps> {
           />
         </Table.Cell>
         <Table.Cell>
-          {tactic.explain_short(attribute)}
+          {explain_short(tactic, attribute)}
         </Table.Cell>
       </Table.Row>
     )
