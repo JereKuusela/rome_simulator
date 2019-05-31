@@ -48,7 +48,7 @@ class Land extends Component<IProps, IState> {
 
   openArmyUnitModal = (army: ArmyName, type: ArmyType, index: number, unit: UnitDefinition) => this.setState({ modal_army_unit_info: { army, type, index, unit } })
 
-  openTerrainModal = (index: number) => this.setState({ modal_terrain_info: { index, location: this.props.terrains.get(index)!.location } })
+  openTerrainModal = (index: number) => this.setState({ modal_terrain_info: { index, location: this.props.terrains.get(this.props.selected_terrains.get(index)!)!.location } })
 
   openTacticModal = (army: ArmyName) => this.setState({ modal_tactic_info: { army } })
 
@@ -136,8 +136,8 @@ class Land extends Component<IProps, IState> {
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {this.renderArmyInfo(ArmyName.Attacker, this.props.attacker, this.props.defender.tactic)}
-                  {this.renderArmyInfo(ArmyName.Defender, this.props.defender, this.props.attacker.tactic)}
+                  {this.renderArmyInfo(ArmyName.Attacker, this.props.attacker, this.props.tactics.get(this.props.defender.tactic)!)}
+                  {this.renderArmyInfo(ArmyName.Defender, this.props.defender, this.props.tactics.get(this.props.attacker.tactic)!)}
                 </Table.Body>
               </Table>
             </Grid.Column>
@@ -160,7 +160,7 @@ class Land extends Component<IProps, IState> {
                 </Table.Header>
                 <Table.Body>
                   {
-                    this.props.terrains.map((terrain, index) => this.renderTerrain(terrain, index))
+                    this.props.selected_terrains.map((terrain, index) => this.renderTerrain(this.props.terrains.get(terrain)!, index))
                   }
                 </Table.Body>
               </Table>
@@ -311,13 +311,13 @@ class Land extends Component<IProps, IState> {
     )
   }
 
-  renderTactic = (army: ArmyName, info: ParticipantState, counter: TacticDefinition | undefined) => {
-    const tactic = info.tactic
+  renderTactic = (army: ArmyName, info: ParticipantState, counter: TacticDefinition) => {
+    const tactic = this.props.tactics.get(info.tactic)!
     return (
       <div key={army} onClick={() => this.openTacticModal(army)}>
-        {tactic && tactic.image ? <Image src={tactic.image} avatar /> : null}
-        {tactic && tactic.type}
-        {tactic && ' (' + this.toRelativePercent(calculateTactic(tactic, info.army, counter), true) + ')'}
+        {tactic.image ? <Image src={tactic.image} avatar /> : null}
+        {tactic.type}
+        {' (' + this.toRelativePercent(calculateTactic(tactic, info.army, counter), true) + ')'}
       </div >
     )
   }
@@ -333,7 +333,7 @@ class Land extends Component<IProps, IState> {
     return String(value) + '%'
   }
 
-  renderArmyInfo = (army_type: ArmyName, info: ParticipantState, counter_tactic: TacticDefinition | undefined) => {
+  renderArmyInfo = (army_type: ArmyName, info: ParticipantState, counter_tactic: TacticDefinition) => {
     return (
       <Table.Row key={army_type}>
         <Table.Cell collapsing>
@@ -383,7 +383,9 @@ const mapStateToProps = (state: AppState) => ({
   defender: state.land.defender,
   is_undo: state.land.day > -1,
   round: state.land.day,
-  terrains: state.land.terrains,
+  selected_terrains: state.land.terrains,
+  terrains: state.terrains.terrains,
+  tactics: state.tactics.tactics,
   fight_over: state.land.fight_over
 })
 

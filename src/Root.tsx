@@ -8,7 +8,6 @@ import LandPage from './pages/Land'
 import TacticPage from './pages/Tactics'
 import TerrainPage from './pages/Terrains'
 import Navigation from './pages/Navigation'
-import Initializer from './pages/Initializer'
 import Stats from './pages/Stats'
 import { AppState } from './store/'
 
@@ -23,7 +22,6 @@ const Root = ({ store, persistor }: MainProps) => {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-      <Initializer /> 
       <BrowserRouter>
         <Route path='/' component={Navigation} />
         <Route path='/' exact component={LandPage} />

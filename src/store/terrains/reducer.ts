@@ -2,7 +2,7 @@ import { createReducer } from 'typesafe-actions'
 import { getDefaultDefinitions } from './data'
 import { setBaseValue } from './actions'
 
-const initialState = {
+export const initialState = {
   terrains: getDefaultDefinitions()
 }
 

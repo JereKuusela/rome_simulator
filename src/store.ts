@@ -1,13 +1,13 @@
 import { applyMiddleware, createStore } from 'redux'
 import { fromJS, Map, List } from 'immutable'
-import { AppState, rootReducer } from './store/'
+import { rootReducer } from './store/'
 import logger from 'redux-logger'
 import { persistStore, persistReducer, createTransform } from 'redux-persist'
 import localForage from 'localforage'
 import { tacticFromJS, TacticType } from './store/tactics'
 import { terrainFromJS, TerrainType } from './store/terrains'
 import { unitFromJS, ArmyName, UnitType } from './store/units'
-import { RowType } from './store/land_battle';
+import { RowType, getInitialTerrains } from './store/land_battle'
 
 
 const TacticsTransform = createTransform(
@@ -45,7 +45,13 @@ const UnitsTransform = createTransform(
 const LandTransform = createTransform(
   (inboundState, _key) => inboundState,
   (outboundState: any, key) => {
-    const terrains = fromJS(outboundState.terrains).map((value: any) => terrainFromJS(value)!)
+    // Terrain can be null (corrupted), TerrainDefinition (old) or TerrainType.
+    let terrains_raw: List<any> = fromJS(outboundState.terrains)
+    let terrains: List<TerrainType>
+    if (terrains_raw.contains(null))
+      terrains = getInitialTerrains()
+    else
+      terrains = terrains_raw.map((value: any) => typeof value === 'string' ? value : value.type)
 
     const serializeUnits = (raw: List<any>) => raw.map(value => unitFromJS(value))
 
@@ -53,8 +59,8 @@ const LandTransform = createTransform(
       let army = serializeUnits(fromJS(participant.army)).setSize(30)
       let reserve = serializeUnits(fromJS(participant.reserve)).filter(value => value)
       let defeated = serializeUnits(fromJS(participant.defeated)).filter(value => value)
-      let past: List<Map<string, any>> = fromJS(participant.past)
-      let past3 = past.map(value => ({
+      let past4: List<Map<string, any>> = fromJS(participant.past)
+      let past3 = past4.map(value => ({
         army: value.get('army') as List<any>,
         reserve: value.get('reserve') as List<any>,
         defeated: value.get('defeated') as List<any>,
@@ -65,15 +71,21 @@ const LandTransform = createTransform(
         row_types = fromJS(participant.row_types)
       else
         row_types = Map<RowType, UnitType>().set(RowType.Front, UnitType.Archers).set(RowType.Back, UnitType.HeavyInfantry).set(RowType.Flank, UnitType.LightCavalry)
-      let past2 = past3.map(value => ({ army: serializeUnits(value.army).setSize(30), reserve: serializeUnits(value.reserve).filter(value => value), defeated: serializeUnits(value.defeated).filter(value => value), roll: value.roll }))
+      let past = past3.map(value => ({ army: serializeUnits(value.army).setSize(30), reserve: serializeUnits(value.reserve).filter(value => value), defeated: serializeUnits(value.defeated).filter(value => value), roll: value.roll }))
+      let tactic = participant.tactic
+      // Tactic can be null (corrupted), TacticDefition (old) or TacticType.
+      if (!tactic)
+        tactic = TacticType.ShockAction
+      if (typeof tactic !== 'string')
+        tactic = tactic.type
       return {
         ...participant,
-        army: army,
-        reserve: reserve,
-        defeated: defeated,
-        past: past2,
-        row_types: row_types,
-        tactic: tacticFromJS(fromJS(participant.tactic))
+        army,
+        reserve,
+        defeated,
+        past,
+        row_types,
+        tactic
       }
     }
     const attacker = serializeParticipant(outboundState.attacker)
@@ -91,10 +103,9 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
-export default function configureStore(initialState: AppState) {
+export default function configureStore() {
   const store = createStore(
     persistedReducer,
-    initialState,
     applyMiddleware(logger)
   )
   let persistor = persistStore(store)

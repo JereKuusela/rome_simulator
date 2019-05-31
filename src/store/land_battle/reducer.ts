@@ -1,12 +1,9 @@
 import { createReducer } from 'typesafe-actions'
 import { List } from 'immutable'
 import { getInitialArmy, getInitialTerrains, ParticipantState, PastState } from './types'
-import { selectUnit, selectTerrain, battle, selectTactic, undo, toggleRandomRoll, setRoll, setGeneral, setRowType, removeReserveUnits, addReserveUnits, setFlankSize } from './actions'
+import { selectUnit, selectTerrain, selectTactic, undo, toggleRandomRoll, setRoll, setGeneral, setRowType, removeReserveUnits, addReserveUnits, setFlankSize } from './actions'
 import { ArmyName, setGlobalValue, setValue, UnitDefinition, UnitType, ValueType, ArmyType } from '../units'
-import { battle as fight } from './combat'
 import { ValuesType } from '../../utils'
-import { setBaseValue as setTacticBaseValue } from '../tactics'
-import { setBaseValue as setTerrainBaseValue } from '../terrains'
 
 export const initialState = {
   attacker: getInitialArmy(),
@@ -30,7 +27,7 @@ const updateGlobalValue = (army_type: ArmyName, army: List<UnitDefinition | unde
 const updateGlobalValue2 = (army_type: ArmyName, army: List<UnitDefinition>, payload: { army: ArmyName, type: ValuesType, key: string, attribute: ValueType, value: number }) => {
   return army.map(unit => payload.army === army_type && unit ? unit.add_value(payload.type, payload.key, payload.attribute, payload.value) : unit)
 }
-const checkFight = (attacker: ParticipantState, defender: ParticipantState) => (checkArmy(attacker.army) || checkArmy(attacker.reserve)) && (checkArmy(defender.army) || checkArmy(defender.reserve))
+export const checkFight = (attacker: ParticipantState, defender: ParticipantState) => (checkArmy(attacker.army) || checkArmy(attacker.reserve)) && (checkArmy(defender.army) || checkArmy(defender.reserve))
 
 const checkArmy = (army: List<UnitDefinition | undefined>) => {
   for (let unit of army) {
@@ -126,49 +123,6 @@ export const landBattleReducer = createReducer(initialState)
       defender: { ...state.defender, tactic: action.payload.army === ArmyName.Defender ? action.payload.tactic : state.defender.tactic }
     }
   ))
-  .handleAction(battle, (state, action: ReturnType<typeof battle>) => {
-    let next = state
-    for (let step = 0; step < action.payload.steps && !next.fight_over; ++step) {
-      const old_rolls = [next.attacker.roll, next.defender.roll]
-      if (next.day % 5 === 0) {
-        next = {
-          ...next,
-          attacker: {
-            ...next.attacker,
-            roll: next.attacker.randomize_roll ? 1 + Math.round(Math.random() * 5) : next.attacker.roll
-          },
-          defender: {
-            ...next.defender,
-            roll: next.defender.randomize_roll ? 1 + Math.round(Math.random() * 5) : next.defender.roll
-          }
-        }
-      }
-      let [army_a, army_d, reserve_a, reserve_d, defeated_a, defeated_d] = fight(next.attacker, next.defender, next.day + 1, next.terrains)
-      const new_attacker = {
-        ...next.attacker,
-        army: army_a,
-        reserve: reserve_a,
-        defeated: defeated_a,
-        past: next.attacker.past.push({ army: next.attacker.army, reserve: next.attacker.reserve, defeated: next.attacker.defeated, roll: old_rolls[0] })
-      }
-      const new_defender = {
-        ...next.defender,
-        army: army_d,
-        reserve: reserve_d,
-        defeated: defeated_d,
-        past: next.defender.past.push({ army: next.defender.army, reserve: next.defender.reserve, defeated: next.defender.defeated, roll: old_rolls[1] })
-      }
-      next = {
-        ...next,
-        attacker: new_attacker,
-        defender: new_defender,
-        day: next.day + 1,
-        fight_over: !checkFight(new_attacker, new_defender)
-      }
-    }
-    return next
-  }
-  )
   .handleAction(undo, (state, action: ReturnType<typeof undo>) => {
     let next = state
     for (let step = 0; step < action.payload.steps && next.day > -1; ++step) {
@@ -228,25 +182,6 @@ export const landBattleReducer = createReducer(initialState)
       fight_over: !(checkFight(new_attacker, new_defender))
     }
   })
-  .handleAction(setTacticBaseValue, (state, action: ReturnType<typeof setTacticBaseValue>) => (
-    {
-      ...state,
-      attacker: {
-        ...state.attacker,
-        tactic: state.attacker.tactic && action.payload.tactic === state.attacker.tactic.type ? state.attacker.tactic.add_base_value(action.payload.key, action.payload.attribute, action.payload.value) : state.attacker.tactic
-      },
-      defender: {
-        ...state.defender,
-        tactic: state.defender.tactic && action.payload.tactic === state.defender.tactic.type ? state.defender.tactic.add_base_value(action.payload.key, action.payload.attribute, action.payload.value) : state.defender.tactic
-      }
-    }
-  ))
-  .handleAction(setTerrainBaseValue, (state, action: ReturnType<typeof setTerrainBaseValue>) => (
-    {
-      ...state,
-      terrains: state.terrains.map(terrain => terrain.type === action.payload.terrain ? terrain.add_base_value(action.payload.key, action.payload.attribute, action.payload.value) : terrain)
-    }
-  ))
   .handleAction(setValue, (state, action: ReturnType<typeof setValue>) => (
     {
       ...state,

@@ -4,7 +4,7 @@ import { getDefaultDefinitions, getDefaultGlobalDefinition } from './data'
 import { setValue, setGlobalValue } from './actions'
 import { UnitType, UnitDefinition, ArmyName } from './types'
 
-const initialState = {
+export const initialState = {
   units: Map<ArmyName, Map<UnitType, UnitDefinition>>().set(ArmyName.Attacker, getDefaultDefinitions()).set(ArmyName.Defender, getDefaultDefinitions()),
   global_stats: Map<ArmyName, UnitDefinition>().set(ArmyName.Attacker, getDefaultGlobalDefinition()).set(ArmyName.Defender, getDefaultGlobalDefinition())
 }

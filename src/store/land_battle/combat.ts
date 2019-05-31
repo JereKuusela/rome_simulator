@@ -2,7 +2,7 @@ import { List, Map } from 'immutable'
 import { UnitDefinition, UnitCalc, UnitType } from '../units'
 import { TerrainDefinition, TerrainCalc } from '../terrains'
 import { TacticDefinition, TacticCalc } from '../tactics'
-import { ParticipantState, RowType } from './types'
+import { RowType } from './types'
 
 type Unit = UnitDefinition
 type Army = List<UnitDefinition | undefined>
@@ -25,7 +25,16 @@ const BASE_DAMAGE = 0.08
 const BASE_DAMAGE_PER_ROLL = 0.02
 const MANPOWER_LOST_MULTIPLIER = 0.2
 
-
+export interface ParticipantState {
+  readonly army: List<UnitDefinition | undefined>
+  readonly reserve: List<UnitDefinition>
+  readonly defeated: List<UnitDefinition>
+  readonly tactic: TacticDefinition
+  readonly roll: number
+  readonly general: number
+  readonly row_types: Map<RowType, UnitType>
+  readonly flank_size: number
+}
 
 /**
  * Makes given armies attach each other.
@@ -248,9 +257,7 @@ const pickTargets = (source_row: Army, target_row: Army) => {
  * @param front Units affecting positive bonus.
  * @param counter_tactic Opposing tactic, can counter or get countered.
  */
-export const calculateTactic = (tactic: TacticDefinition | undefined, front: Army, counter_tactic: TacticDefinition | undefined): number => {
-  if (!tactic || !counter_tactic)
-    return 1.0
+export const calculateTactic = (tactic: TacticDefinition, front: Army, counter_tactic: TacticDefinition): number => {
   const effectiveness = tactic.calculateValue(counter_tactic.type)
   let unit_modifier = 1.0
   if (effectiveness > 0) {

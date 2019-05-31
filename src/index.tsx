@@ -6,8 +6,7 @@ import Main from './Root';
 import configureStore from './store'
 import * as serviceWorker from './serviceWorker';
 
-const initialState = (window as any).initialReduxState;
-const store = configureStore(initialState)
+const store = configureStore()
 
 ReactDOM.render(<Main store={store.store} persistor={store.persistor}/>, document.getElementById('root'))
 
