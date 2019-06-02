@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
-import { UnitType, ArmyName, ArmyType, ValueType, UnitDefinition } from '../store/units'
+import { UnitType, ArmyName, ArmyType, ValueType, Unit, UnitDefinition } from '../store/units'
 import { selectUnit } from '../store/land_battle'
 import { AppState } from '../store/'
-import { add_base_value, add_modifier_value, add_loss_value } from '../base_definition'
+import { add_base_value, add_modifier_value, add_loss_value, merge_values } from '../base_definition'
 import ItemSelector from '../components/ItemSelector'
 import UnitDetail from '../components/UnitDetail'
 
@@ -13,8 +13,7 @@ const CUSTOM_VALUE_KEY = 'Unit'
 export interface ModalInfo {
   army: ArmyName
   index: number
-  type: ArmyType,
-  unit: UnitDefinition
+  type: ArmyType
 }
 
 class ModalArmyUnitDetail extends Component<IProps> {
@@ -35,7 +34,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
           <UnitDetail
             army={this.props.info.army}
             custom_value_key={CUSTOM_VALUE_KEY}
-            unit={this.props.info.unit}
+            unit={this.getUnitDefinition(this.props.info)}
             onCustomBaseValueChange={this.setBaseValue}
             onCustomModifierValueChange={this.setModifierValue}
             onCustomLossValueChange={this.setLossValue}
@@ -72,7 +71,13 @@ class ModalArmyUnitDetail extends Component<IProps> {
     this.props.selectUnit(army, this.props.info.type, this.props.info.index, unit)
   }
 
-  getUnit = (info: ModalInfo): UnitDefinition => {
+  getUnitDefinition = (info: ModalInfo): UnitDefinition => (this.mergeAllValues(info.army, this.getUnit(info)))
+
+  mergeAllValues = (name: ArmyName, unit: Unit): UnitDefinition => {
+    return merge_values(merge_values(this.props.units.getIn([name, unit.type]), unit), this.props.global_stats.get(name)!)
+  }
+
+  getUnit = (info: ModalInfo): Unit => {
     if (info.type === ArmyType.Main) {
       if (info.army === ArmyName.Attacker)
         return this.props.attacker.army.get(info.index)!
@@ -97,11 +102,12 @@ class ModalArmyUnitDetail extends Component<IProps> {
 const mapStateToProps = (state: AppState) => ({
   attacker: state.land.attacker,
   defender: state.land.defender,
-  units: state.units.units
+  units: state.units.units,
+  global_stats: state.units.global_stats
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  selectUnit: (army: ArmyName, type: ArmyType, column: number, unit: UnitDefinition | undefined) => (
+  selectUnit: (army: ArmyName, type: ArmyType, column: number, unit: Unit | undefined) => (
     dispatch(selectUnit(army, type, column, unit))
   )
 })

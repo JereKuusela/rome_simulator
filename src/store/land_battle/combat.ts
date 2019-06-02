@@ -1,14 +1,13 @@
 import { List, Map } from 'immutable'
-import { UnitDefinition, UnitCalc, UnitType, ArmyName } from '../units'
+import { Unit, UnitDefinition, UnitCalc, UnitType, ArmyName } from '../units'
 import { TerrainDefinition, TerrainCalc } from '../terrains'
 import { TacticDefinition, TacticCalc } from '../tactics'
 import { RowType } from './types'
 import { calculateValue, add_base_values, add_loss_values, merge_values } from '../../base_definition'
 
-type Unit = UnitDefinition
-type Army = List<UnitDefinition | undefined>
-type Reserve = List<UnitDefinition>
-type Defeated = List<UnitDefinition>
+type Army = List<Unit | undefined>
+type Reserve = List<Unit>
+type Defeated = List<Unit>
 type Terrains = List<TerrainDefinition>
 type Definitions = Map<ArmyName, Map<UnitType, UnitDefinition>>
 
@@ -122,7 +121,7 @@ const reinforce = (round: number, army: Army, reserve: Reserve, row_types: Map<R
 
   const nextIndex = (index: number) => index < half ? index + 2 * (half - index) : index - 2 * (index - half) - 1
 
-  const isFlankUnit = (unit: UnitDefinition) => {
+  const isFlankUnit = (unit: Unit) => {
     if (unit.type === row_types.get(RowType.Flank))
       return true
     if (unit.type === row_types.get(RowType.Front) || unit.type === row_types.get(RowType.Back))

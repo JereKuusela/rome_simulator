@@ -7,7 +7,7 @@ import storage from 'redux-persist/lib/storage'
 //import localForage from 'localforage'
 import { tacticFromJS, TacticType } from './store/tactics'
 import { terrainFromJS, TerrainType } from './store/terrains'
-import { unitFromJS, ArmyName, UnitType } from './store/units'
+import { unitDefinitionFromJS, unitFromJS,  ArmyName, UnitType } from './store/units'
 import { RowType, getInitialTerrains } from './store/land_battle'
 
 
@@ -35,9 +35,9 @@ const UnitsTransform = createTransform(
   (inboundState, _key) => inboundState,
   (outboundState: any, key) => {
     let units_raw: Map<ArmyName, Map<UnitType, any>> = fromJS(outboundState.units)
-    let units = units_raw.map(value => value.map(value => unitFromJS(value)!))
+    let units = units_raw.map(value => value.map(value => unitDefinitionFromJS(value)!))
     let global_stats_raw: Map<ArmyName, any> = fromJS(outboundState.global_stats)
-    let global_stats = global_stats_raw.map(value => unitFromJS(value)!)
+    let global_stats = global_stats_raw.map(value => unitDefinitionFromJS(value)!)
     return { ...outboundState, units, global_stats }
   },
   { whitelist: ['units'] }
@@ -79,7 +79,6 @@ const LandTransform = createTransform(
         tactic = TacticType.ShockAction
       if (typeof tactic !== 'string')
         tactic = tactic.type
-      console.log(defeated)
       return {
         ...participant,
         army,

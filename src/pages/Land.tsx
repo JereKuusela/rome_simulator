@@ -3,9 +3,9 @@ import { Map, List } from 'immutable'
 import { Container, Header, Button, Grid, Image, Checkbox, Input, Table, Divider } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
-import { ArmyName, UnitDefinition, ArmyType, UnitType } from '../store/units/types'
+import { ArmyName, UnitDefinition, ArmyType, Unit, UnitType } from '../store/units/types'
 import UnitArmy from '../components/UnitArmy'
-import { battle, undo, ParticipantState, toggleRandomRoll, setRoll, setGeneral, RowType, setFlankSize } from '../store/land_battle'
+import { battle, undo, Participant, toggleRandomRoll, setRoll, setGeneral, RowType, setFlankSize } from '../store/land_battle'
 import { calculateTactic } from '../store/land_battle/combat'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import { TacticDefinition } from '../store/tactics'
@@ -237,7 +237,7 @@ class Land extends Component<IProps, IState> {
     return String(round)
   }
 
-  renderArmy = (army: ArmyName, units: ParticipantState) => {
+  renderArmy = (army: ArmyName, units: Participant) => {
     return (
       <div key={army}>
         {army === ArmyName.Attacker && <Header>{army + '\'s army'}</Header>}
@@ -267,7 +267,7 @@ class Land extends Component<IProps, IState> {
     )
   }
 
-  renderReserve = (army: ArmyName, units: ParticipantState) => {
+  renderReserve = (army: ArmyName, units: Participant) => {
     return (
       <div key={army}>
         <Header>{army + '\'s reserve'}</Header>
@@ -281,7 +281,7 @@ class Land extends Component<IProps, IState> {
     )
   }
 
-  renderDefeatedArmy = (army: ArmyName, units: ParticipantState) => {
+  renderDefeatedArmy = (army: ArmyName, units: Participant) => {
     return (
       <div key={army}>
         <Header>{army + '\'s defeated units'}</Header>
@@ -312,7 +312,7 @@ class Land extends Component<IProps, IState> {
     )
   }
 
-  renderTactic = (army: ArmyName, info: ParticipantState, counter: TacticDefinition) => {
+  renderTactic = (army: ArmyName, info: Participant, counter: TacticDefinition) => {
     const tactic = this.props.tactics.get(info.tactic)!
     return (
       <div key={army} onClick={() => this.openTacticModal(army)}>
@@ -334,7 +334,7 @@ class Land extends Component<IProps, IState> {
     return String(value) + '%'
   }
 
-  renderArmyInfo = (army_type: ArmyName, info: ParticipantState, counter_tactic: TacticDefinition) => {
+  renderArmyInfo = (army_type: ArmyName, info: Participant, counter_tactic: TacticDefinition) => {
     return (
       <Table.Row key={army_type}>
         <Table.Cell collapsing>
@@ -378,8 +378,8 @@ class Land extends Component<IProps, IState> {
     )
   }
 
-  mergeAllValues = (name: ArmyName, army: List<UnitDefinition | undefined>) => {
-    return army.map(value => value && merge_values(merge_values(value, this.props.units.getIn([name, value.type])), this.props.global_stats.get(name)!))
+  mergeAllValues = (name: ArmyName, army: List<Unit | undefined>): List<UnitDefinition | undefined> => {
+    return army.map(value => value && merge_values(merge_values(this.props.units.getIn([name, value.type]), value), this.props.global_stats.get(name)!))
   }
 }
 

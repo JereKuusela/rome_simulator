@@ -23,11 +23,6 @@ export interface BaseValuesDefinition<T, S> {
   readonly base_values?: Map<S, OrderedMap<string, number>>
 }
 
-export const clear_values = <Definition extends AnyBaseDefinition>
-(definition: Definition) => ({
-  ...definition, base_values: undefined, modifier_values: undefined, loss_values: undefined
-})
-
 export const merge_base_values = <Definition extends AnyDefinition>
   (definition: Definition, to_merge: Definition) => {
   let new_base_values = Map<any, OrderedMap<any, number>>()

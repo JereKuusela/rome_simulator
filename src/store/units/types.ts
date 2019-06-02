@@ -24,12 +24,24 @@ export enum UnitCalc {
 
 export type ValueType = UnitCalc | UnitType | TerrainType
 
+export interface Unit extends BaseDefinition<UnitType, ValueType> {
+}
+
 export interface UnitDefinition extends BaseDefinition<UnitType, ValueType> {
   readonly requirements: string
   readonly can_assault: boolean
 }
 
-export const unitFromJS = (object: Map<string, any>): UnitDefinition | undefined => {
+export const unitFromJS = (object: Map<string, any>): Unit | undefined => {
+  if (!object)
+    return undefined
+  let base_values = object.has('base_values') ? fromJS(object.get('base_values').map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
+  let modifier_values = object.has('modifier_values') ? fromJS(object.get('modifier_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
+  let loss_values = object.has('loss_values') ? fromJS(object.get('loss_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
+  return { type: object.get('type') as UnitType, image: undefined, base_values,  modifier_values, loss_values }
+}
+
+export const unitDefinitionFromJS = (object: Map<string, any>): UnitDefinition | undefined => {
   if (!object)
     return undefined
   let base_values = object.has('base_values') ? fromJS(object.get('base_values').map((value: OrderedMap<string, number>) => fromJS(value))) : undefined

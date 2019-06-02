@@ -5,10 +5,10 @@ import { Modal } from 'semantic-ui-react'
 import { AppState } from '../store/'
 import FastPlanner from '../components/FastPlanner'
 import ArmyCosts from '../components/ArmyCosts'
-import { ArmyName, UnitType, UnitDefinition } from '../store/units'
+import { ArmyName, UnitType, Unit, UnitDefinition } from '../store/units'
 import { removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits } from '../store/land_battle'
 import { mapRange } from '../utils'
-import { clear_values} from '../base_definition'
+import { merge_values} from '../base_definition'
 
 type Units = Map<UnitType, number>
 
@@ -45,12 +45,12 @@ class ModalFastPlanner extends Component<IProps, IState> {
             attached
           />
           <ArmyCosts
-            army_a={this.props.attacker.army}
-            army_d={this.props.defender.army}
-            reserve_a={this.editReserve(this.props.attacker.reserve, this.originals_a, this.state.changes_a)}
-            reserve_d={this.editReserve(this.props.defender.reserve, this.originals_d, this.state.changes_d)}
-            defeated_a={this.props.attacker.defeated}
-            defeated_d={this.props.defender.defeated}
+            army_a={this.mergeAllValues(ArmyName.Attacker, this.props.attacker.army)}
+            army_d={this.mergeAllValues(ArmyName.Defender, this.props.defender.army)}
+            reserve_a={this.mergeAllValues(ArmyName.Defender, this.editReserve(this.props.attacker.reserve, this.originals_a, this.state.changes_a))}
+            reserve_d={this.mergeAllValues(ArmyName.Defender, this.editReserve(this.props.defender.reserve, this.originals_d, this.state.changes_d))}
+            defeated_a={this.mergeAllValues(ArmyName.Defender, this.props.attacker.defeated)}
+            defeated_d={this.mergeAllValues(ArmyName.Defender, this.props.defender.defeated)}
             attached
            />
         </Modal.Content>
@@ -58,7 +58,11 @@ class ModalFastPlanner extends Component<IProps, IState> {
     )
   }
 
-  editReserve = (reserve: List<UnitDefinition>, originals: Units, changes: Units) => {
+  mergeAllValues = (name: ArmyName, army: List<Unit | undefined>) => {
+    return army.map(value => value && merge_values(merge_values(this.props.units.getIn([name, value.type]), value), this.props.global_stats.get(name)!))
+  }
+
+  editReserve = (reserve: List<Unit>, originals: Units, changes: Units) => {
     const units = this.getUnitsToAdd(changes, originals)
     const types = this.getTypesToRemove(changes, originals)
     return doRemoveReserveUnits(doAddReserveUnits(reserve, units), types)
@@ -72,11 +76,11 @@ class ModalFastPlanner extends Component<IProps, IState> {
   }
 
   getUnitsToAdd = (changes: Units, originals: Units) => {
-    let units: UnitDefinition[] = []
+    let units: Unit[] = []
     changes.forEach((value, key) => {
       const original = originals.get(key, 0)
       if (value > original)
-        units = units.concat(mapRange(value - original, _ => clear_values(this.props.units.get(ArmyName.Attacker)!.get(key)!)))
+        units = units.concat(mapRange(value - original, _ => ({ type: key })))
     })
     return units
   }
@@ -105,17 +109,18 @@ class ModalFastPlanner extends Component<IProps, IState> {
     this.props.onClose()
   }
 
-  countUnits = (reserve: List<UnitDefinition>, unit: UnitType) => reserve.reduce((previous, current) => previous + (current && current.type === unit ? 1 : 0), 0)
+  countUnits = (reserve: List<Unit>, unit: UnitType) => reserve.reduce((previous, current) => previous + (current && current.type === unit ? 1 : 0), 0)
 }
 
 const mapStateToProps = (state: AppState) => ({
   attacker: state.land.attacker,
   defender: state.land.defender,
-  units: state.units.units
+  units: state.units.units,
+  global_stats: state.units.global_stats
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  addReserveUnits: (army: ArmyName, units: UnitDefinition[]) => dispatch(addReserveUnits(army, units)),
+  addReserveUnits: (army: ArmyName, units: Unit[]) => dispatch(addReserveUnits(army, units)),
   removeReserveUnits: (army: ArmyName, types: UnitType[]) => dispatch(removeReserveUnits(army, types))
 })
 

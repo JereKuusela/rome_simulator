@@ -1,11 +1,11 @@
 import { createAction } from 'typesafe-actions'
-import { ArmyName, UnitDefinition, ArmyType, UnitType } from '../units'
+import { ArmyName, Unit, ArmyType, UnitType } from '../units'
 import { TerrainType } from '../terrains'
 import { TacticType } from '../tactics'
 import { RowType } from './types'
 
 export const selectUnit = createAction('@@land_battle/SELECT_UNIT', action => {
-  return (army: ArmyName, type: ArmyType, index: number, unit: UnitDefinition | undefined) => action({ army, type, index, unit })
+  return (army: ArmyName, type: ArmyType, index: number, unit: Unit | undefined) => action({ army, type, index, unit })
 })
 
 export const removeReserveUnits = createAction('@@land_battle/REMOVE_RESERVE_UNITS', action => {
@@ -13,7 +13,7 @@ export const removeReserveUnits = createAction('@@land_battle/REMOVE_RESERVE_UNI
 })
 
 export const addReserveUnits = createAction('@@land_battle/ADD_RESERVE_UNITS', action => {
-  return (army: ArmyName, units: UnitDefinition[]) => action({ army, units })
+  return (army: ArmyName, units: Unit[]) => action({ army, units })
 })
 
 export const selectTerrain = createAction('@@land_battle/SELECT_TERRAIN', action => {

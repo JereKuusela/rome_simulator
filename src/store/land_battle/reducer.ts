@@ -1,8 +1,8 @@
 import { createReducer } from 'typesafe-actions'
 import { List } from 'immutable'
-import { getInitialArmy, getInitialTerrains, ParticipantState, PastState } from './types'
+import { getInitialArmy, getInitialTerrains, Participant, PastState } from './types'
 import { selectUnit, selectTerrain, selectTactic, undo, toggleRandomRoll, setRoll, setGeneral, setRowType, removeReserveUnits, addReserveUnits, setFlankSize } from './actions'
-import { ArmyName, UnitDefinition, UnitType, ArmyType } from '../units'
+import { ArmyName, Unit, UnitType, ArmyType } from '../units'
 
 export const initialState = {
   attacker: getInitialArmy(),
@@ -12,9 +12,9 @@ export const initialState = {
   fight_over: true
 }
 
-export const checkFight = (attacker: ParticipantState, defender: ParticipantState) => (checkArmy(attacker.army) || checkArmy(attacker.reserve)) && (checkArmy(defender.army) || checkArmy(defender.reserve))
+export const checkFight = (attacker: Participant, defender: Participant) => (checkArmy(attacker.army) || checkArmy(attacker.reserve)) && (checkArmy(defender.army) || checkArmy(defender.reserve))
 
-const checkArmy = (army: List<UnitDefinition | undefined>) => {
+const checkArmy = (army: List<Unit | undefined>) => {
   for (let unit of army) {
     if (unit)
       return true
@@ -22,13 +22,13 @@ const checkArmy = (army: List<UnitDefinition | undefined>) => {
   return false
 }
 
-export const doRemoveReserveUnits = (reserve: List<UnitDefinition>, types: UnitType[]) => {
+export const doRemoveReserveUnits = (reserve: List<Unit>, types: UnitType[]) => {
   for (const type of types)
     reserve = reserve.delete(reserve.findLastIndex(value => value.type === type))
   return reserve
 }
 
-export const doAddReserveUnits = (reserve: List<UnitDefinition>, units: UnitDefinition[]) => reserve.merge(units)
+export const doAddReserveUnits = (reserve: List<Unit>, units: Unit[]) => reserve.merge(units)
 
 export const landBattleReducer = createReducer(initialState)
   .handleAction(toggleRandomRoll, (state, action: ReturnType<typeof toggleRandomRoll>) => (
@@ -63,15 +63,15 @@ export const landBattleReducer = createReducer(initialState)
     let new_attacker = state.attacker
     let new_defender = state.defender
 
-    const handleArmy = (participant: ParticipantState) => {
+    const handleArmy = (participant: Participant) => {
       if (action.payload.type === ArmyType.Main)
         return { ...participant, army: participant.army.set(action.payload.index, action.payload.unit) }
       if (action.payload.type === ArmyType.Reserve && action.payload.unit)
-        return { ...participant, reserve: participant.reserve.push(action.payload.unit) }
+        return { ...participant, reserve: participant.reserve.set(action.payload.index, action.payload.unit) }
       if (action.payload.type === ArmyType.Reserve && !action.payload.unit)
         return { ...participant, reserve: participant.reserve.delete(action.payload.index) }
       if (action.payload.type === ArmyType.Defeated && action.payload.unit)
-        return { ...participant, defeated: participant.defeated.push(action.payload.unit) }
+        return { ...participant, defeated: participant.defeated.set(action.payload.index, action.payload.unit) }
       if (action.payload.type === ArmyType.Defeated && !action.payload.unit)
         return { ...participant, defeated: participant.defeated.delete(action.payload.index) }
       return participant
@@ -111,7 +111,7 @@ export const landBattleReducer = createReducer(initialState)
   .handleAction(undo, (state, action: ReturnType<typeof undo>) => {
     let next = state
     for (let step = 0; step < action.payload.steps && next.day > -1; ++step) {
-      const handleArmy = (current: ParticipantState, past: PastState | undefined) => ({
+      const handleArmy = (current: Participant, past: PastState | undefined) => ({
         ...current,
         army: past ? past.army : current.army,
         reserve: past ? past.reserve : current.reserve,

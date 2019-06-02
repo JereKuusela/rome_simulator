@@ -1,9 +1,9 @@
 import { battle } from '../combat'
-import { List } from 'immutable'
-import { getInitialArmy, ParticipantState } from '../types'
+import { List, Map } from 'immutable'
+import { getInitialArmy, Participant } from '../types'
 import { getDefaultDefinitions as getDefaultTacticDefinitions, TacticType } from '../../tactics'
 import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, TerrainDefinition } from '../../terrains'
-import { getDefaultDefinitions as getDefaultUnitDefinitions, UnitType, UnitCalc, UnitDefinition } from '../../units'
+import { getDefaultDefinitions as getDefaultUnitDefinitions, UnitType, UnitCalc, UnitDefinition, ArmyName } from '../../units'
 import { add_base_values, add_base_value, add_modifier_value, calculateValue} from '../../../base_definition'
 
 describe('1 vs 1', () => {
@@ -11,9 +11,10 @@ describe('1 vs 1', () => {
   const terrains = getDefaultTerrainDefinitions()
   const units = getDefaultUnitDefinitions()
   const unit = add_modifier_value(units.get(UnitType.Archers)!, 'Initial', UnitCalc.Morale, -0.2)
+  const definitions = Map<ArmyName, Map<UnitType, UnitDefinition>>().set(ArmyName.Attacker, units).set(ArmyName.Defender, units)
 
-  let attacker: ParticipantState
-  let defender: ParticipantState
+  let attacker: Participant
+  let defender: Participant
   let terrain: List<TerrainDefinition>
   let round: number
 
@@ -43,7 +44,7 @@ describe('1 vs 1', () => {
   }
   const doRound = () => {
     round++
-    const [attacker_new_army, defender_new_army] = battle({...attacker, tactic: tactics.get(attacker.tactic)!}, {...defender, tactic: tactics.get(defender.tactic)!}, round, terrain)
+    const [attacker_new_army, defender_new_army] = battle(definitions, {...attacker, tactic: tactics.get(attacker.tactic)!}, {...defender, tactic: tactics.get(defender.tactic)!}, round, terrain)
     attacker = { ...attacker, army: attacker_new_army }
     defender = { ...defender, army: defender_new_army }
   }

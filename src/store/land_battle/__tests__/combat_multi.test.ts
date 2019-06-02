@@ -1,15 +1,16 @@
 import { battle } from '../combat'
-import { List } from 'immutable'
-import { getInitialArmy, getInitialTerrains, ParticipantState } from '../types'
+import { List, Map } from 'immutable'
+import { getInitialArmy, getInitialTerrains, Participant } from '../types'
 import { getDefaultDefinitions as getDefaultTacticDefinitions, TacticType } from '../../tactics'
 import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, TerrainDefinition } from '../../terrains'
-import { getDefaultDefinitions as getDefaultUnitDefinitions, UnitType, UnitCalc, UnitDefinition } from '../../units'
+import { getDefaultDefinitions as getDefaultUnitDefinitions, UnitType, UnitCalc, UnitDefinition, ArmyName } from '../../units'
 import { add_base_value, add_modifier_value, add_loss_value, calculateValue} from '../../../base_definition'
 
 describe('multi', () => {
   const tactics = getDefaultTacticDefinitions()
   const terrains = getDefaultTerrainDefinitions()
   const units = getDefaultUnitDefinitions()
+  const definitions = Map<ArmyName, Map<UnitType, UnitDefinition>>().set(ArmyName.Attacker, units).set(ArmyName.Defender, units)
 
   const verify = (unit: UnitDefinition | undefined, manpower: number, morale: number) => {
     expect(unit).toBeTruthy()
@@ -23,8 +24,8 @@ describe('multi', () => {
       throw new Error('Morale ' + calculateValue(unit, UnitCalc.Morale) + ' is not ' + morale);
     }
   }
-  const round = (attacker: ParticipantState, defender: ParticipantState, terrains: List<TerrainDefinition>, round: number): [ParticipantState, ParticipantState] => {
-    const [attacker_new_army, defender_new_army] = battle({...attacker, tactic: tactics.get(attacker.tactic)!}, {...defender, tactic: tactics.get(defender.tactic)!}, round, terrains)
+  const round = (attacker: Participant, defender: Participant, terrains: List<TerrainDefinition>, round: number): [Participant, Participant] => {
+    const [attacker_new_army, defender_new_army] = battle(definitions, {...attacker, tactic: tactics.get(attacker.tactic)!}, {...defender, tactic: tactics.get(defender.tactic)!}, round, terrains)
     return [{ ...attacker, army: attacker_new_army }, { ...defender, army: defender_new_army }]
   }
 
