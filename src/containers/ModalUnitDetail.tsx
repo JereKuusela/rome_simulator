@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { UnitType, ArmyName, ValueType, setValue } from '../store/units'
 import { AppState } from '../store/'
-import { ValuesType } from '../base_definition'
+import { ValuesType, merge_values } from '../base_definition'
 import UnitDetail from '../components/UnitDetail'
 
 const CUSTOM_VALUE_KEY = 'Custom'
@@ -15,7 +15,7 @@ class ModalUnitDetail extends Component<IProps> {
       <UnitDetail
         army={this.props.army}
         custom_value_key={CUSTOM_VALUE_KEY}
-        unit={this.props.units.getIn([this.props.army, this.props.unit])}
+        unit={merge_values(this.props.units.getIn([this.props.army, this.props.unit]), this.props.global_stats.get(this.props.army)!)}
         onCustomBaseValueChange={this.props.setBaseValue}
         onCustomModifierValueChange={this.props.setModifierValue}
         onCustomLossValueChange={this.props.setLossValue}
@@ -26,7 +26,8 @@ class ModalUnitDetail extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  units: state.units.units
+  units: state.units.units,
+  global_stats: state.units.global_stats
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

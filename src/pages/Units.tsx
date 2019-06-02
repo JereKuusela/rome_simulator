@@ -41,13 +41,13 @@ class Units extends Component<IProps, IState> {
         </Modal>
         {
           Array.from(this.props.units).map(value => {
-            return this.renderArmy(value[0], value[1], this.props.global_stats.get(value[0]))
+            return this.renderArmy(value[0], value[1], this.props.global_stats.get(value[0])!)
           })
         }
       </Container>
     )
   }
-  renderArmy = (army: ArmyName, units: Map<UnitType, UnitDefinition>, global_stats: UnitDefinition | undefined) => {
+  renderArmy = (army: ArmyName, units: Map<UnitType, UnitDefinition>, global_stats: UnitDefinition) => {
     return (
       <div key={army}>
         <UnitDefinitions

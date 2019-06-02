@@ -5,6 +5,7 @@ import { UnitType, ArmyName, UnitDefinition, ArmyType } from '../store/units'
 import { AppState } from '../store/'
 import { selectUnit } from '../store/land_battle'
 import ItemSelector from '../components/ItemSelector'
+import { clear_values } from '../base_definition'
 
 export interface ModalInfo {
   army: ArmyName
@@ -34,7 +35,7 @@ class ModalUnitSelector extends Component<IProps> {
 
   selectUnit = (unit: UnitType | undefined) => (
     this.props.info &&
-    this.props.selectUnit(this.props.info.army, this.props.info.type, this.props.info.index, unit ? this.props.units.getIn([this.props.info.army, unit]) : undefined)
+    this.props.selectUnit(this.props.info.army, this.props.info.type, this.props.info.index, unit ? clear_values(this.props.units.getIn([this.props.info.army, unit])) : undefined)
   )
 }
 

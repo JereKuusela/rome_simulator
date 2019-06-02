@@ -32,13 +32,11 @@ export interface UnitDefinition extends BaseDefinition<UnitType, ValueType> {
 export const unitFromJS = (object: Map<string, any>): UnitDefinition | undefined => {
   if (!object)
     return undefined
-  let base_values = fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value)))
-  let modifier_values = fromJS(object.get('modifier_values')!.map((value: OrderedMap<string, number>) => fromJS(value)))
-  let loss_values = fromJS(object.get('loss_values')!.map((value: OrderedMap<string, number>) => fromJS(value)))
+  let base_values = object.has('base_values') ? fromJS(object.get('base_values').map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
+  let modifier_values = object.has('modifier_values') ? fromJS(object.get('modifier_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
+  let loss_values = object.has('loss_values') ? fromJS(object.get('loss_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
   return { type: object.get('type') as UnitType, image: object.get('image'), requirements: object.get('requirements'), can_assault: object.get('can_assault'), base_values,  modifier_values, loss_values }
 }
-
-
 
 export const valueToString = (definition: UnitDefinition, type: ValueType): string => {
   const value = calculateValue(definition, type)

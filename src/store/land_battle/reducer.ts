@@ -2,8 +2,7 @@ import { createReducer } from 'typesafe-actions'
 import { List } from 'immutable'
 import { getInitialArmy, getInitialTerrains, ParticipantState, PastState } from './types'
 import { selectUnit, selectTerrain, selectTactic, undo, toggleRandomRoll, setRoll, setGeneral, setRowType, removeReserveUnits, addReserveUnits, setFlankSize } from './actions'
-import { ArmyName, setGlobalValue, setValue, UnitDefinition, UnitType, ValueType, ArmyType } from '../units'
-import { add_value, ValuesType } from '../../base_definition'
+import { ArmyName, UnitDefinition, UnitType, ArmyType } from '../units'
 
 export const initialState = {
   attacker: getInitialArmy(),
@@ -13,20 +12,6 @@ export const initialState = {
   fight_over: true
 }
 
-const updateValue = (army_type: ArmyName, army: List<UnitDefinition | undefined>, payload: { army: ArmyName, type: ValuesType, unit: UnitType, key: string, attribute: ValueType, value: number }) => {
-  return army.map(unit => payload.army === army_type && unit && unit.type === payload.unit ? add_value(unit, payload.type, payload.key, payload.attribute, payload.value) : unit)
-}
-
-const updateValue2 = (army_type: ArmyName, army: List<UnitDefinition>, payload: { army: ArmyName, type: ValuesType, unit: UnitType, key: string, attribute: ValueType, value: number }) => {
-  return army.map(unit => payload.army === army_type && unit && unit.type === payload.unit ? add_value(unit, payload.type, payload.key, payload.attribute, payload.value) : unit)
-}
-
-const updateGlobalValue = (army_type: ArmyName, army: List<UnitDefinition | undefined>, payload: { army: ArmyName, type: ValuesType, key: string, attribute: ValueType, value: number }) => {
-  return army.map(unit => payload.army === army_type && unit ? add_value(unit, payload.type, payload.key, payload.attribute, payload.value) : unit)
-}
-const updateGlobalValue2 = (army_type: ArmyName, army: List<UnitDefinition>, payload: { army: ArmyName, type: ValuesType, key: string, attribute: ValueType, value: number }) => {
-  return army.map(unit => payload.army === army_type && unit ? add_value(unit, payload.type, payload.key, payload.attribute, payload.value) : unit)
-}
 export const checkFight = (attacker: ParticipantState, defender: ParticipantState) => (checkArmy(attacker.army) || checkArmy(attacker.reserve)) && (checkArmy(defender.army) || checkArmy(defender.reserve))
 
 const checkArmy = (army: List<UnitDefinition | undefined>) => {
@@ -182,41 +167,3 @@ export const landBattleReducer = createReducer(initialState)
       fight_over: !(checkFight(new_attacker, new_defender))
     }
   })
-  .handleAction(setValue, (state, action: ReturnType<typeof setValue>) => (
-    {
-      ...state,
-      attacker: {
-        ...state.attacker,
-        army: updateValue(ArmyName.Attacker, state.attacker.army, action.payload),
-        reserve: updateValue2(ArmyName.Attacker, state.attacker.reserve, action.payload),
-        defeated: updateValue2(ArmyName.Attacker, state.attacker.defeated, action.payload),
-        past: state.attacker.past.map(armies => ({ ...armies, army: updateValue(ArmyName.Attacker, armies.army, action.payload), reserve: updateValue2(ArmyName.Attacker, armies.reserve, action.payload), defeated: updateValue2(ArmyName.Attacker, armies.defeated, action.payload) }))
-      },
-      defender: {
-        ...state.defender,
-        army: updateValue(ArmyName.Defender, state.defender.army, action.payload),
-        reserve: updateValue2(ArmyName.Defender, state.attacker.reserve, action.payload),
-        defeated: updateValue2(ArmyName.Defender, state.defender.defeated, action.payload),
-        past: state.defender.past.map(armies => ({ ...armies, army: updateValue(ArmyName.Defender, armies.army, action.payload), reserve: updateValue2(ArmyName.Defender, armies.reserve, action.payload), defeated: updateValue2(ArmyName.Defender, armies.defeated, action.payload) }))
-      }
-    }
-  ))
-  .handleAction(setGlobalValue, (state, action: ReturnType<typeof setGlobalValue>) => (
-    {
-      ...state,
-      attacker: {
-        ...state.attacker,
-        army: updateGlobalValue(ArmyName.Attacker, state.attacker.army, action.payload),
-        reserve: updateGlobalValue2(ArmyName.Attacker, state.attacker.reserve, action.payload),
-        defeated: updateGlobalValue2(ArmyName.Attacker, state.attacker.defeated, action.payload),
-        past: state.attacker.past.map(armies => ({ ...armies, army: updateGlobalValue(ArmyName.Attacker, armies.army, action.payload), reserve: updateGlobalValue2(ArmyName.Attacker, armies.reserve, action.payload), defeated: updateGlobalValue2(ArmyName.Attacker, armies.defeated, action.payload) }))
-      },
-      defender: {
-        ...state.defender,
-        army: updateGlobalValue(ArmyName.Defender, state.defender.army, action.payload),
-        reserve: updateGlobalValue2(ArmyName.Defender, state.attacker.reserve, action.payload),
-        defeated: updateGlobalValue2(ArmyName.Defender, state.defender.defeated, action.payload),
-        past: state.defender.past.map(armies => ({ ...armies, army: updateGlobalValue(ArmyName.Defender, armies.army, action.payload), reserve: updateGlobalValue2(ArmyName.Defender, armies.reserve, action.payload), defeated: updateGlobalValue2(ArmyName.Defender, armies.defeated, action.payload) }))
-      }
-    }
-  ))

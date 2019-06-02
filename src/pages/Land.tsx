@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Map } from 'immutable'
+import { Map, List } from 'immutable'
 import { Container, Header, Button, Grid, Image, Checkbox, Input, Table, Divider } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
@@ -17,7 +17,7 @@ import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers
 import ModalArmyUnitDetail, { ModalInfo as ModalArmyUnitInfo } from '../containers/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/ModalFastPlanner'
 import { unit_to_icon } from '../store/units'
-import { calculateValue } from '../base_definition'
+import { calculateValue, merge_values } from '../base_definition'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
@@ -243,7 +243,7 @@ class Land extends Component<IProps, IState> {
         {army === ArmyName.Attacker && <Header>{army + '\'s army'}</Header>}
         <UnitArmy
           onClick={(column, unit) => this.openUnitModal(army, ArmyType.Main, column, unit)}
-          units={units.army}
+          units={this.mergeAllValues(army, units.army)}
           reverse={army === ArmyName.Attacker}
           type={ArmyType.Main}
         />
@@ -273,7 +273,7 @@ class Land extends Component<IProps, IState> {
         <Header>{army + '\'s reserve'}</Header>
         <UnitArmy
           onClick={(column, unit) => this.openUnitModal(army, ArmyType.Reserve, column, unit)}
-          units={units.reserve}
+          units={this.mergeAllValues(army, units.reserve)}
           reverse={false}
           type={ArmyType.Reserve}
         />
@@ -287,7 +287,7 @@ class Land extends Component<IProps, IState> {
         <Header>{army + '\'s defeated units'}</Header>
         <UnitArmy
           onClick={(column, unit) => this.openUnitModal(army, ArmyType.Defeated, column, unit)}
-          units={units.defeated}
+          units={this.mergeAllValues(army, units.defeated)}
           reverse={false}
           type={ArmyType.Defeated}
         />
@@ -377,6 +377,10 @@ class Land extends Component<IProps, IState> {
       </Table.Row>
     )
   }
+
+  mergeAllValues = (name: ArmyName, army: List<UnitDefinition | undefined>) => {
+    return army.map(value => value && merge_values(merge_values(value, this.props.units.getIn([name, value.type])), this.props.global_stats.get(name)!))
+  }
 }
 
 const mapStateToProps = (state: AppState) => ({
@@ -387,7 +391,9 @@ const mapStateToProps = (state: AppState) => ({
   selected_terrains: state.land.terrains,
   terrains: state.terrains.terrains,
   tactics: state.tactics.tactics,
-  fight_over: state.land.fight_over
+  fight_over: state.land.fight_over,
+  units: state.units.units,
+  global_stats: state.units.global_stats
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

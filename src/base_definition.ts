@@ -23,6 +23,41 @@ export interface BaseValuesDefinition<T, S> {
   readonly base_values?: Map<S, OrderedMap<string, number>>
 }
 
+export const clear_values = <Definition extends AnyBaseDefinition>
+(definition: Definition) => ({
+  ...definition, base_values: undefined, modifier_values: undefined, loss_values: undefined
+})
+
+export const merge_base_values = <Definition extends AnyDefinition>
+  (definition: Definition, to_merge: Definition) => {
+  let new_base_values = Map<any, OrderedMap<any, number>>()
+  if (definition.base_values)
+    new_base_values = new_base_values.mergeDeep(definition.base_values)
+  if (to_merge.base_values)
+    new_base_values = new_base_values.mergeDeep(to_merge.base_values)
+  return { ...definition, base_values: new_base_values }
+}
+
+export const merge_values = <Definition extends AnyBaseDefinition>
+  (definition: Definition, to_merge: Definition) => {
+  let new_base_values = Map<any, OrderedMap<string, number>>()
+  if (definition.base_values)
+    new_base_values = new_base_values.mergeDeep(definition.base_values)
+  if (to_merge.base_values)
+    new_base_values = new_base_values.mergeDeep(to_merge.base_values)
+  let new_modifier_values = Map<any, OrderedMap<string, number>>()
+  if (definition.modifier_values)
+    new_modifier_values = new_modifier_values.mergeDeep(definition.modifier_values)
+  if (to_merge.modifier_values)
+    new_modifier_values = new_modifier_values.mergeDeep(to_merge.modifier_values)
+  let new_loss_values = Map<any, OrderedMap<string, number>>()
+  if (definition.loss_values)
+    new_loss_values = new_loss_values.mergeDeep(definition.loss_values)
+  if (to_merge.loss_values)
+    new_loss_values = new_loss_values.mergeDeep(to_merge.loss_values)
+  return { ...definition, base_values: new_base_values, modifier_values: new_modifier_values, loss_values: new_loss_values }
+}
+
 export const add_base_value = <Definition extends AnyDefinition, Attribute>
   (definition: Definition, key: string, attribute: Attribute, value: number) => {
   const new_values = add_values(definition.base_values, key, [[attribute, value]])
@@ -101,9 +136,9 @@ export const calculateLoss = <Definition extends AnyBaseDefinition, Attribute>
   (definition: Definition, type: Attribute): number => calculateValueSub(definition.loss_values, type, 0)
 
 const calculateValueSub = <Attribute>(container: Map<Attribute, OrderedMap<string, number>> | undefined, type: Attribute, initial: number): number => {
-  if (!container)
-    return 0.0
   let result = initial
+  if (!container)
+    return result
   const values = container.get(type)
   if (values)
     values.forEach(value => result += value)
@@ -201,7 +236,7 @@ export const valueToRelativeNumber = <Definition extends AnyDefinition, Attribut
 }
 
 export const valueToNumber = <Definition extends AnyDefinition, Attribute>
-(definition: Definition, type: Attribute, show_zero: boolean) => {
+  (definition: Definition, type: Attribute, show_zero: boolean) => {
   const value = calculateValue(definition, type)
   if (value === 0 && !show_zero)
     return ''
@@ -212,7 +247,7 @@ export const valueToPercent = <Definition extends AnyDefinition, Attribute>
   (definition: Definition, type: Attribute, show_zero: boolean) => toPercent(calculateValue(definition, type), show_zero)
 
 export const valueToRelativePercent = <Definition extends AnyDefinition, Attribute>
-(definition: Definition, type: Attribute, show_zero: boolean) =>  toRelativePercent(calculateValue(definition, type), show_zero)
+  (definition: Definition, type: Attribute, show_zero: boolean) => toRelativePercent(calculateValue(definition, type), show_zero)
 
 export const valueToRelativeZeroPercent = <Definition extends AnyDefinition, Attribute>
   (definition: Definition, type: Attribute, show_zero: boolean) => toRelativeZeroPercent(calculateValue(definition, type), show_zero)

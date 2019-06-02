@@ -21,9 +21,6 @@ export const unitsReducer = createReducer(initialState)
   .handleAction(setGlobalValue, (state, action: ReturnType<typeof setGlobalValue>) => (
     {
       ...state,
-      global_stats: state.global_stats.update(action.payload.army, unit => add_value(unit, action.payload.type, action.payload.key, action.payload.attribute, action.payload.value)),
-      units: state.units.update(action.payload.army, units => units.withMutations(units =>
-        units.map(unit => add_value(unit, action.payload.type, action.payload.key, action.payload.attribute, action.payload.value))
-      ))
+      global_stats: state.global_stats.update(action.payload.army, unit => add_value(unit, action.payload.type, action.payload.key, action.payload.attribute, action.payload.value))
     }
   ))

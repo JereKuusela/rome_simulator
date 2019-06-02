@@ -13,7 +13,8 @@ const CUSTOM_VALUE_KEY = 'Unit'
 export interface ModalInfo {
   army: ArmyName
   index: number
-  type: ArmyType
+  type: ArmyType,
+  unit: UnitDefinition
 }
 
 class ModalArmyUnitDetail extends Component<IProps> {
@@ -34,7 +35,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
           <UnitDetail
             army={this.props.info.army}
             custom_value_key={CUSTOM_VALUE_KEY}
-            unit={this.getUnit(this.props.info)}
+            unit={this.props.info.unit}
             onCustomBaseValueChange={this.setBaseValue}
             onCustomModifierValueChange={this.setModifierValue}
             onCustomLossValueChange={this.setLossValue}

@@ -3,7 +3,8 @@ import { fromJS, Map, List } from 'immutable'
 import { rootReducer } from './store/'
 import logger from 'redux-logger'
 import { persistStore, persistReducer, createTransform } from 'redux-persist'
-import localForage from 'localforage'
+import storage from 'redux-persist/lib/storage'
+//import localForage from 'localforage'
 import { tacticFromJS, TacticType } from './store/tactics'
 import { terrainFromJS, TerrainType } from './store/terrains'
 import { unitFromJS, ArmyName, UnitType } from './store/units'
@@ -13,9 +14,9 @@ import { RowType, getInitialTerrains } from './store/land_battle'
 const TacticsTransform = createTransform(
   (inboundState, _key) => inboundState,
   (outboundState: any, key) => {
-    let tactics: Map<TacticType, any> = fromJS(outboundState.tactics)
-    let tactics2 = tactics.map(value => tacticFromJS(value)!)
-    return { ...outboundState, tactics: tactics2 }
+    let tactics_raw: Map<TacticType, any> = fromJS(outboundState.tactics)
+    let tactics = tactics_raw.map(value => tacticFromJS(value)!)
+    return { ...outboundState, tactics }
   },
   { whitelist: ['tactics'] }
 )
@@ -23,9 +24,9 @@ const TacticsTransform = createTransform(
 const TerrainsTransform = createTransform(
   (inboundState, _key) => inboundState,
   (outboundState: any, key) => {
-    let terrains: Map<TerrainType, any> = fromJS(outboundState.terrains)
-    let terrains2 = terrains.map(value => terrainFromJS(value)!)
-    return { ...outboundState, terrains: terrains2 }
+    let terrains_raw: Map<TerrainType, any> = fromJS(outboundState.terrains)
+    let terrains = terrains_raw.map(value => terrainFromJS(value)!)
+    return { ...outboundState, terrains }
   },
   { whitelist: ['terrains'] }
 )
@@ -33,11 +34,11 @@ const TerrainsTransform = createTransform(
 const UnitsTransform = createTransform(
   (inboundState, _key) => inboundState,
   (outboundState: any, key) => {
-    let unit: Map<ArmyName, Map<UnitType, any>> = fromJS(outboundState.units)
-    let unit2 = unit.map(value => value.map(value2 => unitFromJS(value2)!))
-    let global: Map<ArmyName, any> = fromJS(outboundState.global_stats)
-    let global2 = global.map(value => unitFromJS(value)!)
-    return { ...outboundState, units: unit2, global_stats: global2 }
+    let units_raw: Map<ArmyName, Map<UnitType, any>> = fromJS(outboundState.units)
+    let units = units_raw.map(value => value.map(value => unitFromJS(value)!))
+    let global_stats_raw: Map<ArmyName, any> = fromJS(outboundState.global_stats)
+    let global_stats = global_stats_raw.map(value => unitFromJS(value)!)
+    return { ...outboundState, units, global_stats }
   },
   { whitelist: ['units'] }
 )
@@ -78,6 +79,7 @@ const LandTransform = createTransform(
         tactic = TacticType.ShockAction
       if (typeof tactic !== 'string')
         tactic = tactic.type
+      console.log(defeated)
       return {
         ...participant,
         army,
@@ -97,7 +99,7 @@ const LandTransform = createTransform(
 
 const persistConfig = {
   key: 'primary',
-  storage: localForage,
+  storage: storage,
   transforms: [TacticsTransform, TerrainsTransform, LandTransform, UnitsTransform]
 }
 

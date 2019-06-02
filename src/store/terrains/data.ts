@@ -37,7 +37,7 @@ export const getDefaultDefinitions = (): Map<TerrainType, TerrainDefinition> => 
 export const terrainFromJS = (object: Map<string, any>): TerrainDefinition | undefined => {
   if (!object)
     return undefined
-  let base_values = fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value)))
+  let base_values = object.has('base_values') ? fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
   return { type: object.get('type') as TerrainType, location: object.get('location') as LocationType, base_values }
 }
 

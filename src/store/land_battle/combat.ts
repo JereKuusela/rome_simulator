@@ -1,15 +1,16 @@
 import { List, Map } from 'immutable'
-import { UnitDefinition, UnitCalc, UnitType } from '../units'
+import { UnitDefinition, UnitCalc, UnitType, ArmyName } from '../units'
 import { TerrainDefinition, TerrainCalc } from '../terrains'
 import { TacticDefinition, TacticCalc } from '../tactics'
 import { RowType } from './types'
-import { calculateValue, add_base_values, add_loss_values } from '../../base_definition'
+import { calculateValue, add_base_values, add_loss_values, merge_values } from '../../base_definition'
 
 type Unit = UnitDefinition
 type Army = List<UnitDefinition | undefined>
 type Reserve = List<UnitDefinition>
 type Defeated = List<UnitDefinition>
 type Terrains = List<TerrainDefinition>
+type Definitions = Map<ArmyName, Map<UnitType, UnitDefinition>>
 
 interface Loss {
   morale: number
@@ -44,7 +45,7 @@ export interface ParticipantState {
  * @param round Turn number to distinguish different rounds.
  * @param terrains Terrains of the battle, may affect amount of damage inflicted.
  */
-export const battle = (attacker: ParticipantState, defender: ParticipantState, round: number, terrains: Terrains): [Army, Army, Reserve, Reserve, Defeated, Defeated] => {
+export const battle = (definitions: Definitions, attacker: ParticipantState, defender: ParticipantState, round: number, terrains: Terrains): [Army, Army, Reserve, Reserve, Defeated, Defeated] => {
   // General flow:
   // 1. Attacker reinforces.
   // 2. Attacker picks targets.
@@ -54,18 +55,18 @@ export const battle = (attacker: ParticipantState, defender: ParticipantState, r
   //console.log('')
   //console.log('********** ROUND ' + round + '*********')
   //console.log('')
-  let [attacker_army, attacker_reserve] = reinforce(round, attacker.army, attacker.reserve, attacker.row_types, attacker.flank_size, countArmySize(defender.army, defender.reserve, defender.defeated), undefined)
-  let attacker_to_defender = pickTargets(attacker_army, defender.army)
-  let [defender_army, defender_reserve] = reinforce(round, defender.army, defender.reserve, defender.row_types, defender.flank_size, countArmySize(attacker.army, attacker.reserve, attacker.defeated), attacker_to_defender)
-  let defender_to_attacker = pickTargets(defender_army, attacker_army)
+  let [army_a, reserve_a] = reinforce(round, attacker.army, attacker.reserve, attacker.row_types, attacker.flank_size, countArmySize(defender.army, defender.reserve, defender.defeated), undefined)
+  let a_to_d = pickTargets(army_a, defender.army)
+  let [army_d, reserve_d] = reinforce(round, defender.army, defender.reserve, defender.row_types, defender.flank_size, countArmySize(attacker.army, attacker.reserve, attacker.defeated), a_to_d)
+  let d_to_a = pickTargets(army_d, army_a)
   if (round < 1)
-    return [attacker_army, defender_army, attacker_reserve, defender_reserve, attacker.defeated, defender.defeated]
+    return [army_a, army_d, reserve_a, reserve_d, attacker.defeated, defender.defeated]
   //console.log('Targets: A ' + attacker_to_defender + ' D ' + defender_to_attacker)
   // Killed manpower won't deal any damage so the right solution has to be searched iteratively.
 
   const tactic_effects = {
-    attacker: calculateTactic(attacker.tactic, attacker_army, defender.tactic),
-    defender: calculateTactic(defender.tactic, defender_army, attacker.tactic),
+    attacker: calculateTactic(attacker.tactic, army_a, defender.tactic),
+    defender: calculateTactic(defender.tactic, army_d, attacker.tactic),
     casualties: calculateValue(attacker.tactic, TacticCalc.Casualties) + calculateValue(defender.tactic, TacticCalc.Casualties) 
   }
   //console.log('Tactics: A ' + tactic_effects.attacker + ' D ' + tactic_effects.defender + ' C ' + tactic_effects.casualties)
@@ -74,17 +75,23 @@ export const battle = (attacker: ParticipantState, defender: ParticipantState, r
   const defender_roll = modifyRoll(defender.roll, List(), defender.general, attacker.general)
 
   //console.log('Rolls: A ' + attacker_roll + ' D ' + defender_roll)
-  let [defender_losses, attacker_kills] = attack(attacker_army, defender_army, attacker_to_defender, attacker_roll, terrains, tactic_effects.attacker, tactic_effects.casualties)
-  let [attacker_losses, defender_kills] = attack(defender_army, attacker_army, defender_to_attacker, defender_roll, terrains, tactic_effects.defender, tactic_effects.casualties)
-  attacker_army = applyLosses(attacker_army, attacker_losses, round)
-  defender_army = applyLosses(defender_army, defender_losses, round)
-  attacker_army = applyKills(attacker_army, attacker_kills, round)
-  defender_army = applyKills(defender_army, defender_kills, round)
-  let attacker_defeated_army = copyDefeated(attacker_army, attacker.defeated)
-  let defender_defeated_army = copyDefeated(defender_army, defender.defeated)
-  attacker_army = removeDefeated(attacker_army)
-  defender_army = removeDefeated(defender_army)
-  return [attacker_army, defender_army, attacker_reserve, defender_reserve, attacker_defeated_army, defender_defeated_army]
+  let definitions_a: Army = army_a.map(value => value && merge_values(value, definitions.getIn([ArmyName.Attacker, value.type])))
+  let definitions_d: Army = army_d.map(value => value && merge_values(value, definitions.getIn([ArmyName.Defender, value.type])))
+
+  let [losses_d, kills_a] = attack(definitions_a, definitions_d, a_to_d, attacker_roll, terrains, tactic_effects.attacker, tactic_effects.casualties)
+  let [losses_a, kills_d] = attack(definitions_d, definitions_a, d_to_a, defender_roll, terrains, tactic_effects.defender, tactic_effects.casualties)
+  army_a = applyLosses(army_a, losses_a, round)
+  army_d = applyLosses(army_d, losses_d, round)
+  army_a = applyKills(army_a, kills_a, round)
+  army_d = applyKills(army_d, kills_d, round)
+  // Definition contain the actual manpower and morale values so they must be used to check defeated.
+  definitions_a = applyLosses(definitions_a, losses_a, round)
+  definitions_d = applyLosses(definitions_d, losses_d, round)
+  let defeated_a = copyDefeated(army_a, attacker.defeated, definitions_a)
+  let defeated_d = copyDefeated(army_d, defender.defeated, definitions_d)
+  army_a = removeDefeated(army_a, definitions_a)
+  army_d = removeDefeated(army_d, definitions_d)
+  return [army_a, army_d, reserve_a, reserve_d, defeated_a, defeated_d]
 }
 
 const modifyRoll = (roll: number, terrains: Terrains, general: number, opposing_general: number) => {
@@ -303,19 +310,19 @@ const applyKills = (row: Army, kills: Kill[], round: number): Army => {
   return row
 }
 
-const copyDefeated = (army: Army, defeated_army: Defeated): Defeated => {
-  army.forEach(unit => {
+const copyDefeated = (army: Army, defeated: Defeated, definitions: Army): Defeated => {
+  definitions.forEach((unit, index) => {
     if (!unit)
       return
     if (calculateValue(unit, UnitCalc.Manpower) > 0 && calculateValue(unit, UnitCalc.Morale) > 0.25)
       return
-    defeated_army = defeated_army.push(unit)
+    defeated = defeated.push(army.get(index)!)
   })
-  return defeated_army
+  return defeated
 }
 
-const removeDefeated = (army: Army): Army => {
-  return army.map(unit => unit && calculateValue(unit, UnitCalc.Manpower) > 0 && calculateValue(unit, UnitCalc.Morale) > 0.25 ? unit : undefined)
+const removeDefeated = (army: Army, definitions: Army): Army => {
+  return definitions.map((unit, index) => unit && calculateValue(unit, UnitCalc.Manpower) > 0 && calculateValue(unit, UnitCalc.Morale) > 0.25 ? army.get(index) : undefined)
 }
 
 /**
