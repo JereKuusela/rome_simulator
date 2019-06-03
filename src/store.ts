@@ -43,6 +43,15 @@ const UnitsTransform = createTransform(
   { whitelist: ['units'] }
 )
 
+const SettingsTransform = createTransform(
+  (inboundState, _key) => inboundState,
+  (outboundState: any, key) => {
+    const export_keys = fromJS(outboundState.export_keys || {})
+    return { export_keys }
+  },
+  { whitelist: ['settings'] }
+)
+
 const LandTransform = createTransform(
   (inboundState, _key) => inboundState,
   (outboundState: any, key) => {
@@ -99,7 +108,7 @@ const LandTransform = createTransform(
 const persistConfig = {
   key: 'primary',
   storage: storage,
-  transforms: [TacticsTransform, TerrainsTransform, LandTransform, UnitsTransform]
+  transforms: [TacticsTransform, TerrainsTransform, LandTransform, UnitsTransform, SettingsTransform]
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
