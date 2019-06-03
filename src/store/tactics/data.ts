@@ -52,13 +52,12 @@ export const getDefaultDefinitions = (): Map<TacticType, TacticDefinition> => {
 }
 
 export type ValueType = UnitType | TacticCalc | TacticType
-type MapValues = Map<ValueType, OrderedMap<string, number>>
 
 export const tacticFromJS = (object: Map<string, any>): TacticDefinition | undefined => {
   if (!object)
     return undefined
   let base_values = object.has('base_values') ? fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
-  return { type: object.get('type') as TacticType, image: object.get('image'), base_values }
+  return { type: object.get('type') as TacticType, base_values }
 }
 
 export interface TacticDefinition extends BaseValuesDefinition<TacticType, ValueType> {
@@ -70,7 +69,7 @@ export const valueToString = (definition: TacticDefinition, type: ValueType): st
 }
 
 const createTacticFromJson = (data: TacticData): TacticDefinition => {
-  let tactic: TacticDefinition = { type: data.type as TacticType, image: tactic_to_icon.get(data.type as TacticType) }
+  let tactic: TacticDefinition = { type: data.type as TacticType }
   const base_values: [ValueType, number][] = [
     [UnitType.Archers, data.archers || 0],
     [UnitType.CamelCavalry, data.camel_cavalry || 0],

@@ -46,7 +46,7 @@ export default class TacticDefinitions extends Component<IProps> {
     return (
       <Table.Row key={tactic.type} onClick={() => this.props.onRowClick(tactic.type)}>
         <Table.Cell>
-          <Image src={tactic.image} avatar />
+          <Image src={tactic_to_icon.get(tactic.type)} avatar />
           {tactic.type}</Table.Cell>
         <Table.Cell>
           <List horizontal>

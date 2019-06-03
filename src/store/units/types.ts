@@ -38,7 +38,7 @@ export const unitFromJS = (object: Map<string, any>): Unit | undefined => {
   let base_values = object.has('base_values') ? fromJS(object.get('base_values').map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
   let modifier_values = object.has('modifier_values') ? fromJS(object.get('modifier_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
   let loss_values = object.has('loss_values') ? fromJS(object.get('loss_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
-  return { type: object.get('type') as UnitType, image: undefined, base_values,  modifier_values, loss_values }
+  return { type: object.get('type') as UnitType, base_values,  modifier_values, loss_values }
 }
 
 export const unitDefinitionFromJS = (object: Map<string, any>): UnitDefinition | undefined => {
@@ -47,7 +47,7 @@ export const unitDefinitionFromJS = (object: Map<string, any>): UnitDefinition |
   let base_values = object.has('base_values') ? fromJS(object.get('base_values').map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
   let modifier_values = object.has('modifier_values') ? fromJS(object.get('modifier_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
   let loss_values = object.has('loss_values') ? fromJS(object.get('loss_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
-  return { type: object.get('type') as UnitType, image: object.get('image'), requirements: object.get('requirements'), can_assault: object.get('can_assault'), base_values,  modifier_values, loss_values }
+  return { type: object.get('type') as UnitType, requirements: object.get('requirements'), can_assault: object.get('can_assault'), base_values,  modifier_values, loss_values }
 }
 
 export const valueToString = (definition: UnitDefinition, type: ValueType): string => {

@@ -83,7 +83,7 @@ export default class UnitDefinitions extends Component<IProps> {
     return (
       <Table.Row key={unit.type} onClick={() => this.props.onRowClick(unit)}>
         <Table.Cell singleLine>
-          <Image src={unit.image} avatar />
+          <Image src={unit_to_icon.get(unit.type)} avatar />
           {unit.type}</Table.Cell>
         <Table.Cell>
           {valueToNumber(unit, UnitCalc.Morale, false)}
@@ -143,7 +143,7 @@ export default class UnitDefinitions extends Component<IProps> {
     return (
       <Table.Row key={unit.type} onClick={() => this.props.onRowClick(unit)}>
         <Table.Cell singleLine>
-          <Image src={unit.image} avatar />
+          <Image src={unit_to_icon.get(unit.type)} avatar />
           Global stats
         </Table.Cell>
         <Table.Cell>

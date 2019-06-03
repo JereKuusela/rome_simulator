@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { List } from 'immutable'
 import { Table, Image } from 'semantic-ui-react'
 import { TerrainType, TerrainCalc } from '../store/terrains'
-import { UnitType, UnitCalc } from '../store/units'
+import { UnitType, UnitCalc, unit_to_icon } from '../store/units'
 import { BaseValuesDefinition, BaseDefinition, valueToRelativeNumber } from '../base_definition'
-import { TacticType, TacticCalc } from '../store/tactics'
+import { TacticType, TacticCalc, tactic_to_icon } from '../store/tactics'
 
 type ItemType = UnitType | TerrainType | TacticType
 type ItemAttribute = UnitCalc | TerrainCalc | UnitType | TerrainType | TacticCalc | TacticType
@@ -42,10 +42,15 @@ export default class ItemSelector<S extends ItemAttribute, T extends ItemType> e
   }
 
   renderRow = (item: BaseDefinition<T, S> | BaseValuesDefinition<T, S>) => {
+    let image = null
+    if (!image)
+      image = unit_to_icon.get(item.type as UnitType)
+    if (!image)
+      image = tactic_to_icon.get(item.type as TacticType)
     return (
       <Table.Row key={item.type} onClick={() => this.onClick(item.type)}>
         <Table.Cell>
-          {item.image ? <Image src={item.image} avatar /> : null}
+          {image ? <Image src={image} avatar /> : null}
           {item.type}
         </Table.Cell>
         {

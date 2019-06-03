@@ -23,6 +23,7 @@ export const unit_to_icon = Map<UnitType, string>()
   .set(UnitType.LightCavalry, IconLightCavalry)
   .set(UnitType.LightInfantry, IconLightInfantry)
   .set(UnitType.WarElephants, IconWarElephants)
+  .set('' as UnitType, IconMilitaryPower)
 
 const setBaseValues = (unit: UnitDefinition): UnitDefinition => {
   const values: [UnitCalc, number][] = [
@@ -47,11 +48,11 @@ export const getDefaultDefinitions = (): Map<UnitType, UnitDefinition> => {
 }
 
 export const getDefaultGlobalDefinition = (): UnitDefinition => {
-  return { type: '' as UnitType, image: IconMilitaryPower, requirements: '', can_assault: false }
+  return { type: '' as UnitType, requirements: '', can_assault: false }
 }
 
 const createUnitFromJson = (data: UnitData): UnitDefinition => {
-  let unit: UnitDefinition = { type: data.type as UnitType, image: unit_to_icon.get(data.type as UnitType)!, requirements: data.requirements, can_assault: data.can_assault }
+  let unit: UnitDefinition = { type: data.type as UnitType, requirements: data.requirements, can_assault: data.can_assault }
   unit = setBaseValues(unit)
   const base_values: [ValueType, number][] = [
     [UnitCalc.AttritionWeight, data.attrition_weight || 0],
