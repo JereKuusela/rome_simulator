@@ -12,3 +12,7 @@ export enum ExportKey {
 export const setExportKey = createAction('@@settings/SET_EXPORT_KEY', action => {
   return (key: ExportKey, value: boolean) => action({ key, value })
 })
+
+export const setResetMissing = createAction('@@settings/SET_RESET_MISSING', action => {
+  return (value: boolean) => action({ value })
+})

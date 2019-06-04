@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Grid, TextArea, Checkbox, List } from 'semantic-ui-react'
+import { Container, Grid, TextArea, Checkbox, List, Header } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { ExportKey, setExportKey } from '../store/settings'
@@ -8,7 +8,6 @@ class Transfer extends Component<IProps> {
 
   readonly attributes = Object.keys(ExportKey).map(k => ExportKey[k as any]) as ExportKey[]
 
-
   render() {
     const json = JSON.stringify(this.props.state, this.filterKeys, 2)
     return (
@@ -16,8 +15,15 @@ class Transfer extends Component<IProps> {
         <Grid>
           <Grid.Row columns='2'>
             <Grid.Column>
+              <Header>Export</Header>
               <List>
+                <List.Item>
+                  1. Select which parts to import
+                </List.Item>
                 {this.attributes.map(value => this.renderCheckbox(value))}
+                <List.Item>
+                  2. Copy paste the data from the text box
+                </List.Item>
               </List>
             </Grid.Column>
             <Grid.Column >
@@ -25,21 +31,21 @@ class Transfer extends Component<IProps> {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-      </Container >
+      </Container>
     )
   }
 
   renderCheckbox = (key: ExportKey) => {
     return (
-    <List.Item>
-      <Checkbox
-      key={key}
-      toggle
-      label={key}
-      disabled={key === ExportKey.History}
-      checked={this.props.export_keys.get(key)}
-      onChange={() => this.props.setExportKey(key, !this.props.export_keys.get(key))}
-      />
+      <List.Item>
+        <Checkbox
+          key={key}
+          toggle
+          label={key}
+          disabled={key === ExportKey.History}
+          checked={this.props.export_keys.get(key)}
+          onChange={() => this.props.setExportKey(key, !this.props.export_keys.get(key))}
+        />
       </List.Item>)
   }
 
@@ -62,7 +68,8 @@ class Transfer extends Component<IProps> {
 
 const mapStateToProps = (state: AppState) => ({
   state: state,
-  export_keys: state.settings.export_keys
+  export_keys: state.settings.export_keys,
+  reset_missing: state.settings.reset_missing
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
