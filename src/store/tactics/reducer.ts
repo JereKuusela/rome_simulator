@@ -1,12 +1,11 @@
 import { createReducer } from 'typesafe-actions'
 import { List } from 'immutable'
-import { getDefaultDefinitions } from './data'
+import { getDefaultDefinitions, TacticType } from './data'
 import { setBaseValue } from './actions'
 import { add_base_value } from '../../base_definition'
-import { TerrainType } from '../terrains';
 
 export const tacticsState = {
-  types: List<TerrainType>(),
+  types: List<TacticType>(),
   definitions: getDefaultDefinitions()
 }
 

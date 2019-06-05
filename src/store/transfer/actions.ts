@@ -5,7 +5,8 @@ export enum ExportKey {
   Terrains = 'Terrain Definitions',
   Tactics = 'Tactic Definitions',
   Army = 'Armies',
-  History = 'Previous Rounds'
+  History = 'Previous Rounds',
+  InitialOnly = 'Initial setup only'
 }
 
 export const setExportKey = createAction('@@settings/SET_EXPORT_KEY', action => {

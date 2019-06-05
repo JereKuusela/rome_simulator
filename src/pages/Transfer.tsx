@@ -2,10 +2,9 @@ import React, { Component } from 'react'
 import { Container, Grid, TextArea, Checkbox, List, Header, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
-import { ExportKey, setResetMissing, setExportKey } from '../store/transfer'
-import { importState } from '../store/transfer'
+import { importState, ExportKey, setResetMissing, setExportKey } from '../store/transfer'
 import { transformGlobalStats, transformLand, transformTactics, transformTerrains, transformUnits } from '../store/transforms'
-
+import { checkFight } from '../store/land_battle'
 
 interface IState {
   data: string
@@ -85,15 +84,27 @@ class Transfer extends Component<IProps, IState> {
           key={key}
           toggle
           label={key}
-          disabled={key === ExportKey.History}
+          disabled={this.checkDisabled(key)}
           checked={this.props.export_keys.get(key)}
           onChange={() => this.props.setExportKey(key, !this.props.export_keys.get(key))}
         />
       </List.Item>)
   }
 
+  checkDisabled = (key: ExportKey) => {
+    if (key === ExportKey.History && !this.props.export_keys.get(ExportKey.Army))
+      return true
+    if (key === ExportKey.History && this.props.export_keys.get(ExportKey.InitialOnly))
+      return true
+    if (key === ExportKey.InitialOnly && !this.props.export_keys.get(ExportKey.Army))
+      return true
+    if (key === ExportKey.InitialOnly && this.props.export_keys.get(ExportKey.History))
+      return true
+    return false
+  }
+
   filterKeys = (state: AppState) => {
-    let new_state: any = { ...state }
+    const new_state: any = { ...state }
     new_state._persist = undefined
     new_state.transfer = undefined
     if (!this.props.export_keys.get(ExportKey.Units))
@@ -106,6 +117,34 @@ class Transfer extends Component<IProps, IState> {
       new_state.tactics = undefined
     if (!this.props.export_keys.get(ExportKey.Army))
       new_state.land = undefined
+    else if (this.props.export_keys.get(ExportKey.InitialOnly)) {
+      const past_a = new_state.land.attacker.past && new_state.land.attacker.past.get(0)
+      if (state.land.day > -1 && past_a) {
+        new_state.land = {
+          ...new_state.land,
+          attacker: {...new_state.land.attacker, army: past_a.army, reserve: past_a.reserve, defeated: past_a.defeated, past: undefined }
+        }
+      }
+      const past_d = new_state.land.defender.past && new_state.land.defender.past.get(0)
+      if (state.land.day > -1 && past_d) {
+        new_state.land = {
+          ...new_state.land,
+          defender: {...new_state.land.defender, army: past_d.army, reserve: past_d.reserve, defeated: past_d.defeated, past: undefined }
+        }
+      }
+      new_state.land = {
+        ...new_state.land,
+        day: -1,
+        fight_over: !checkFight(new_state.land.attacker, new_state.land.defender)
+      }
+    }
+    else if (!this.props.export_keys.get(ExportKey.History)) {
+      new_state.land = {
+        ...new_state.land,
+        attacker: {...new_state.land.attacker, past: undefined },
+        defender: {...new_state.land.defender, past: undefined }
+      }
+    }
     return new_state
   }
 }
