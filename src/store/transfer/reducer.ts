@@ -32,7 +32,7 @@ export const transferReducer = createReducer(transferState)
 export const importReducer = createReducer(initialState)
   .handleAction(importState, (state, action: ReturnType<typeof importState>) => {
     if (action.payload.reset_missing)
-      return { ...state, ...transferState, settings: state.transfer, ...action.payload.state }
+      return { ...state, ...initialState, transfer: state.transfer, ...action.payload.state }
     else
       return { ...state, ...action.payload.state }
   }

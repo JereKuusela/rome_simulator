@@ -4,7 +4,8 @@ import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { ExportKey, setResetMissing, setExportKey } from '../store/transfer'
 import { importState } from '../store/transfer'
-import { transformLand, transformTactics, transformTerrains, transformUnits } from '../store'
+import { transformGlobalStats, transformLand, transformTactics, transformTerrains, transformUnits } from '../store/transforms'
+
 
 interface IState {
   data: string
@@ -14,7 +15,7 @@ class Transfer extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    this.state = { data: JSON.stringify(this.props.state, this.filterKeys, 2) }
+    this.state = { data: '' }
   }
 
   last_data = ''
@@ -22,7 +23,7 @@ class Transfer extends Component<IProps, IState> {
   readonly attributes = Object.keys(ExportKey).map(k => ExportKey[k as any]) as ExportKey[]
 
   render() {
-    const json = JSON.stringify(this.props.state, this.filterKeys, 2)
+    const json = JSON.stringify(this.filterKeys(this.props.state), undefined, 2)
     if (this.last_data !== json) {
       this.last_data = json
       this.setState({ data: json })
@@ -91,20 +92,21 @@ class Transfer extends Component<IProps, IState> {
       </List.Item>)
   }
 
-  filterKeys = (key: string, value: any) => {
-    if (key === '_persist' || key === 'transfer')
-      return undefined
-    if (key === 'units' && !this.props.export_keys.get(ExportKey.Units))
-      return undefined
-    if (key === 'global_stats' && !this.props.export_keys.get(ExportKey.Units))
-      return undefined
-    if (key === 'terrains' && !this.props.export_keys.get(ExportKey.Terrains))
-      return undefined
-    if (key === 'tactics' && !this.props.export_keys.get(ExportKey.Tactics))
-      return undefined
-    if (key === 'land' && !this.props.export_keys.get(ExportKey.Army))
-      return undefined
-    return value
+  filterKeys = (state: AppState) => {
+    let new_state: any = { ...state }
+    new_state._persist = undefined
+    new_state.transfer = undefined
+    if (!this.props.export_keys.get(ExportKey.Units))
+      new_state.units = undefined
+    if (!this.props.export_keys.get(ExportKey.Units))
+      new_state.global_stats = undefined
+    if (!this.props.export_keys.get(ExportKey.Terrains))
+      new_state.terrains = undefined
+    if (!this.props.export_keys.get(ExportKey.Tactics))
+      new_state.tactics = undefined
+    if (!this.props.export_keys.get(ExportKey.Army))
+      new_state.land = undefined
+    return new_state
   }
 }
 
@@ -125,6 +127,7 @@ const mapDispatchToProps = (dispatch: any) => ({
       json.tactics = json.tactics && transformTactics(json.tactics)
       json.terrains = json.terrains && transformTerrains(json.terrains)
       json.units = json.units && transformUnits(json.units)
+      json.global_stats = json.global_stats && transformGlobalStats(json.global_stats)
       Object.keys(json).filter(key => json[key] === undefined).forEach(key => delete json[key])
       dispatch(importState(json, reset_missing))
     }
