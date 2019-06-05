@@ -22,7 +22,7 @@ class ModalTerrainDetail extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  terrains: state.terrains
+  terrains: state.terrains.definitions
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

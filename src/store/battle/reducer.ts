@@ -18,7 +18,7 @@ export const initialState = {
 
 export const battleReducer = createReducer(initialState)
 .handleAction(battle, (state, action: ReturnType<typeof battle>) => {
-  const definitions = state.units.map((value, key) => value.map(value => merge_values(value, state.global_stats.get(key)!)))
+  const definitions = state.units.definitions.map((value, key) => value.map(value => merge_values(value, state.global_stats.get(key)!)))
   let next = state.land
   for (let step = 0; step < action.payload.steps && !next.fight_over; ++step) {
     const old_rolls = [next.attacker.roll, next.defender.roll]
@@ -35,9 +35,9 @@ export const battleReducer = createReducer(initialState)
         }
       }
     }
-    const attacker = { ...next.attacker, tactic: state.tactics.get(next.attacker.tactic)! }
-    const defender = { ...next.defender, tactic: state.tactics.get(next.defender.tactic)! }
-    let [army_a, army_d, reserve_a, reserve_d, defeated_a, defeated_d] = fight(definitions, attacker, defender, next.day + 1, next.terrains.map(type => state.terrains.get(type)!))
+    const attacker = { ...next.attacker, tactic: state.tactics.definitions.get(next.attacker.tactic)! }
+    const defender = { ...next.defender, tactic: state.tactics.definitions.get(next.defender.tactic)! }
+    let [army_a, army_d, reserve_a, reserve_d, defeated_a, defeated_d] = fight(definitions, attacker, defender, next.day + 1, next.terrains.map(type => state.terrains.definitions.get(type)!))
     const new_attacker = {
       ...next.attacker,
       army: army_a,

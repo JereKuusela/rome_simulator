@@ -43,7 +43,7 @@ class Tactics extends Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  tactics: state.tactics
+  tactics: state.tactics.definitions
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

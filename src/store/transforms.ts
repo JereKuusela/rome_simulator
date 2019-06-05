@@ -2,30 +2,39 @@ import { fromJS, Map, List } from 'immutable'
 import { tacticFromJS, TacticType, tacticsState } from './tactics'
 import { terrainFromJS, TerrainType, terrainState } from './terrains'
 import { unitDefinitionFromJS, unitFromJS, ArmyName, UnitType, unitsState, globalStatsState } from './units'
-import { RowType, getInitialTerrains, initialState } from './land_battle'
+import { RowType, initialState } from './land_battle'
 
 export const transformTactics = (state_raw: any) => {
   if (!state_raw)
     return tacticsState
-  let tactics_raw: Map<TacticType, any> = fromJS(state_raw)
-  let tactics = tactics_raw.map(value => tacticFromJS(value)!)
-  return tactics
+  let definitions = tacticsState.definitions
+  if (state_raw.definitions) {
+    let definitions_raw: Map<TacticType, any> = fromJS(state_raw.definitions)
+    definitions = definitions_raw.map(value => tacticFromJS(value)!).filter(value => value)
+  }
+  return { definitions }
 }
 
 export const transformTerrains = (state_raw: any) => {
   if (!state_raw)
     return terrainState
-  let terrains_raw: Map<TerrainType, any> = fromJS(state_raw)
-  let terrains = terrains_raw.map(value => terrainFromJS(value)!)
-  return terrains
+  let definitions = terrainState.definitions
+  if (state_raw.definitions) {
+    let definitions_raw: Map<TerrainType, any> = fromJS(state_raw.definitions)
+    definitions = definitions_raw.map(value => terrainFromJS(value)!).filter(value => value)
+  }
+  return { definitions }
 }
 
 export const transformUnits = (state_raw: any) => {
   if (!state_raw)
     return unitsState
-  let units_raw: Map<ArmyName, Map<UnitType, any>> = fromJS(state_raw)
-  let units = units_raw.map(value => value.map(value => unitDefinitionFromJS(value)!))
-  return units
+  let definitions = unitsState.definitions
+  if (state_raw.definitions) {
+    let definitions_raw: Map<ArmyName, Map<UnitType, any>> = fromJS(state_raw.definitions)
+    definitions = definitions_raw.filter(value => value).map(value => value.map(value => unitDefinitionFromJS(value)!).filter(value => value))
+  }
+  return { definitions }
 }
 
 export const transformGlobalStats = (state_raw: any) => {
@@ -42,8 +51,8 @@ export const transformLand = (state_raw: any) => {
   // Terrain can be null (corrupted), TerrainDefinition (old) or TerrainType.
   let terrains_raw: List<any> = fromJS(state_raw.terrains)
   let terrains: List<TerrainType>
-  if (terrains_raw.contains(null))
-    terrains = getInitialTerrains()
+  if (!terrains_raw || terrains_raw.contains(null))
+    terrains = initialState.terrains
   else
     terrains = terrains_raw.map((value: any) => typeof value === 'string' ? value : value.type)
 

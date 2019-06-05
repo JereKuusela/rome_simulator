@@ -26,7 +26,7 @@ class ModalUnitDetail extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  units: state.units,
+  units: state.units.definitions,
   global_stats: state.global_stats
 })
 

@@ -38,7 +38,7 @@ class ModalRowTypeSelector extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  units: state.units
+  units: state.units.definitions
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

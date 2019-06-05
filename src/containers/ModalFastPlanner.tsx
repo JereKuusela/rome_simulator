@@ -115,7 +115,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
 const mapStateToProps = (state: AppState) => ({
   attacker: state.land.attacker,
   defender: state.land.defender,
-  units: state.units,
+  units: state.units.definitions,
   global_stats: state.global_stats
 })
 
