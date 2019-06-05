@@ -12,23 +12,27 @@ import { RowType, getInitialTerrains } from './store/land_battle'
 
 
 export const transformTactics = (state_raw: any) => {
-  let tactics_raw: Map<TacticType, any> = fromJS(state_raw.tactics)
+  let tactics_raw: Map<TacticType, any> = fromJS(state_raw)
   let tactics = tactics_raw.map(value => tacticFromJS(value)!)
-  return { ...state_raw, tactics }
+  return tactics
 }
 
 export const transformTerrains = (state_raw: any) => {
-  let terrains_raw: Map<TerrainType, any> = fromJS(state_raw.terrains)
+  let terrains_raw: Map<TerrainType, any> = fromJS(state_raw)
   let terrains = terrains_raw.map(value => terrainFromJS(value)!)
-  return { ...state_raw, terrains }
+  return terrains
 }
 
 export const transformUnits = (state_raw: any) => {
-  let units_raw: Map<ArmyName, Map<UnitType, any>> = fromJS(state_raw.units)
+  let units_raw: Map<ArmyName, Map<UnitType, any>> = fromJS(state_raw)
   let units = units_raw.map(value => value.map(value => unitDefinitionFromJS(value)!))
-  let global_stats_raw: Map<ArmyName, any> = fromJS(state_raw.global_stats)
+  return units
+}
+
+export const transformGlobalStats = (state_raw: any) => {
+  let global_stats_raw: Map<ArmyName, any> = fromJS(state_raw)
   let global_stats = global_stats_raw.map(value => unitDefinitionFromJS(value)!)
-  return { ...state_raw, units, global_stats }
+  return global_stats
 }
 
 export const transformLand = (state_raw: any) => {
@@ -104,6 +108,12 @@ const UnitsTransform = createTransform(
   { whitelist: ['units'] }
 )
 
+const GlobalStatsTransform = createTransform(
+  (inboundState) => inboundState,
+  (outboundState: any) => transformGlobalStats(outboundState),
+  { whitelist: ['global_stats'] }
+)
+
 const TransferTransform = createTransform(
   (inboundState) => inboundState,
   (outboundState: any) => transfromTransfer(outboundState),
@@ -119,7 +129,7 @@ const LandTransform = createTransform(
 const persistConfig = {
   key: 'primary',
   storage: storage,
-  transforms: [TacticsTransform, TerrainsTransform, LandTransform, UnitsTransform, TransferTransform]
+  transforms: [TacticsTransform, TerrainsTransform, LandTransform, UnitsTransform, TransferTransform, GlobalStatsTransform]
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

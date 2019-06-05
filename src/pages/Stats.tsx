@@ -114,8 +114,8 @@ class Stats extends Component<IProps> {
 const mapStateToProps = (state: AppState) => ({
   attacker: state.land.attacker,
   defender: state.land.defender,
-  units: state.units.units,
-  global_stats: state.units.global_stats
+  units: state.units,
+  global_stats: state.global_stats
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

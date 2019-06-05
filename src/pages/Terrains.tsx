@@ -44,7 +44,7 @@ class Terrains extends Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  terrains: state.terrains.terrains
+  terrains: state.terrains
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

@@ -26,7 +26,7 @@ class ModalGlobalStatsDetail extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  global_stats: state.units.global_stats
+  global_stats: state.global_stats
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

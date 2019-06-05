@@ -3,13 +3,11 @@ import { getDefaultDefinitions } from './data'
 import { setBaseValue } from './actions'
 import { add_base_value } from '../../base_definition'
 
-export const initialState = {
-  terrains: getDefaultDefinitions()
-}
+export const terrainState = getDefaultDefinitions()
 
-export const terrainsReducer = createReducer(initialState)
+export const terrainsReducer = createReducer(terrainState)
   .handleAction(setBaseValue, (state, action: ReturnType<typeof setBaseValue>) => (
-    { ...state, terrains: state.terrains.update(action.payload.terrain, terrain => (
+    state.update(action.payload.terrain, terrain => (
       add_base_value(terrain, action.payload.key, action.payload.attribute, action.payload.value)
-    ))}
+    ))
   ))

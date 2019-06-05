@@ -96,6 +96,8 @@ class Transfer extends Component<IProps, IState> {
       return undefined
     if (key === 'units' && !this.props.export_keys.get(ExportKey.Units))
       return undefined
+    if (key === 'global_stats' && !this.props.export_keys.get(ExportKey.Units))
+      return undefined
     if (key === 'terrains' && !this.props.export_keys.get(ExportKey.Terrains))
       return undefined
     if (key === 'tactics' && !this.props.export_keys.get(ExportKey.Tactics))

@@ -63,8 +63,8 @@ class Units extends Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  units: state.units.units,
-  global_stats: state.units.global_stats
+  units: state.units,
+  global_stats: state.global_stats
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

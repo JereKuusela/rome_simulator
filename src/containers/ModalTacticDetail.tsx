@@ -21,7 +21,7 @@ class ModalTacticDetail extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  tactics: state.tactics.tactics
+  tactics: state.tactics
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

@@ -37,7 +37,7 @@ class ModalTerrainSelector extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  terrains: state.terrains.terrains
+  terrains: state.terrains
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

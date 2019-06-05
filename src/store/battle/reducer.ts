@@ -1,23 +1,24 @@
 import { createReducer } from 'typesafe-actions'
 import { battle, checkFight, initialState as initialStateBattle } from '../land_battle'
-import { initialState as initialStateTactics } from '../tactics'
-import { initialState as initialStateTerrains } from '../terrains'
-import { initialState as initialStateUnits } from '../units'
-import { initialState as initialStateTransfer } from '../transfer'
+import { tacticsState } from '../tactics'
+import { terrainState } from '../terrains'
+import { globalStatsState, unitsState } from '../units'
+import { transferState } from '../transfer'
 import { battle as fight } from '../land_battle/combat'
 import { merge_values } from '../../base_definition'
 
 export const initialState = {
-  tactics: initialStateTactics,
-  terrains: initialStateTerrains,
-  units: initialStateUnits,
+  tactics: tacticsState,
+  terrains: terrainState,
+  units: unitsState,
+  global_stats: globalStatsState,
   land: initialStateBattle,
-  transfer: initialStateTransfer
+  transfer: transferState
 }
 
 export const battleReducer = createReducer(initialState)
 .handleAction(battle, (state, action: ReturnType<typeof battle>) => {
-  const definitions = state.units.units.map((value, key) => value.map(value => merge_values(value, state.units.global_stats.get(key)!)))
+  const definitions = state.units.map((value, key) => value.map(value => merge_values(value, state.global_stats.get(key)!)))
   let next = state.land
   for (let step = 0; step < action.payload.steps && !next.fight_over; ++step) {
     const old_rolls = [next.attacker.roll, next.defender.roll]
@@ -34,9 +35,9 @@ export const battleReducer = createReducer(initialState)
         }
       }
     }
-    const attacker = { ...next.attacker, tactic: state.tactics.tactics.get(next.attacker.tactic)! }
-    const defender = { ...next.defender, tactic: state.tactics.tactics.get(next.defender.tactic)! }
-    let [army_a, army_d, reserve_a, reserve_d, defeated_a, defeated_d] = fight(definitions, attacker, defender, next.day + 1, next.terrains.map(type => state.terrains.terrains.get(type)!))
+    const attacker = { ...next.attacker, tactic: state.tactics.get(next.attacker.tactic)! }
+    const defender = { ...next.defender, tactic: state.tactics.get(next.defender.tactic)! }
+    let [army_a, army_d, reserve_a, reserve_d, defeated_a, defeated_d] = fight(definitions, attacker, defender, next.day + 1, next.terrains.map(type => state.terrains.get(type)!))
     const new_attacker = {
       ...next.attacker,
       army: army_a,

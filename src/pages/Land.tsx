@@ -389,11 +389,11 @@ const mapStateToProps = (state: AppState) => ({
   is_undo: state.land.day > -1,
   round: state.land.day,
   selected_terrains: state.land.terrains,
-  terrains: state.terrains.terrains,
-  tactics: state.tactics.tactics,
+  terrains: state.terrains,
+  tactics: state.tactics,
   fight_over: state.land.fight_over,
-  units: state.units.units,
-  global_stats: state.units.global_stats
+  units: state.units,
+  global_stats: state.global_stats
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
