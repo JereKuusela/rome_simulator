@@ -80,7 +80,7 @@ export const transformLand = (state_raw: any) => {
   return { ...state_raw, terrains, attacker, defender }
 }
 
-export const transformSettings = (state_raw: any) => {
+export const transfromTransfer = (state_raw: any) => {
   const export_keys = fromJS(state_raw.export_keys || {})
   const reset_missing = state_raw.reset_missing
   return { reset_missing, export_keys }
@@ -104,10 +104,10 @@ const UnitsTransform = createTransform(
   { whitelist: ['units'] }
 )
 
-const SettingsTransform = createTransform(
+const TransferTransform = createTransform(
   (inboundState) => inboundState,
-  (outboundState: any) => transformSettings(outboundState),
-  { whitelist: ['settings'] }
+  (outboundState: any) => transfromTransfer(outboundState),
+  { whitelist: ['transfer'] }
 )
 
 const LandTransform = createTransform(
@@ -119,7 +119,7 @@ const LandTransform = createTransform(
 const persistConfig = {
   key: 'primary',
   storage: storage,
-  transforms: [TacticsTransform, TerrainsTransform, LandTransform, UnitsTransform, SettingsTransform]
+  transforms: [TacticsTransform, TerrainsTransform, LandTransform, UnitsTransform, TransferTransform]
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

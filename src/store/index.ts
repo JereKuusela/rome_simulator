@@ -5,17 +5,16 @@ import { tacticsReducer } from './tactics'
 import { terrainsReducer } from './terrains'
 import { landBattleReducer } from './land_battle'
 import { battleReducer } from './battle'
-import { settingsReducer } from './settings'
-import { transferReducer } from './transfer'
+import { transferReducer, importReducer } from './transfer'
 
 const combined = combineReducers({
   units: unitsReducer,
   tactics: tacticsReducer,
   terrains: terrainsReducer,
   land: landBattleReducer,
-  settings: settingsReducer
+  transfer: transferReducer
 })
 
-export const rootReducer:Reducer<AppState, AnyAction> = reduceReducers(combined, battleReducer, transferReducer) as Reducer<AppState, AnyAction>
+export const rootReducer:Reducer<AppState, AnyAction> = reduceReducers(combined, battleReducer, importReducer) as Reducer<AppState, AnyAction>
 
 export type AppState = ReturnType<typeof combined>

@@ -3,7 +3,7 @@ import { battle, checkFight, initialState as initialStateBattle } from '../land_
 import { initialState as initialStateTactics } from '../tactics'
 import { initialState as initialStateTerrains } from '../terrains'
 import { initialState as initialStateUnits } from '../units'
-import { initialState as initialStateSettings } from '../settings'
+import { initialState as initialStateTransfer } from '../transfer'
 import { battle as fight } from '../land_battle/combat'
 import { merge_values } from '../../base_definition'
 
@@ -12,7 +12,7 @@ export const initialState = {
   terrains: initialStateTerrains,
   units: initialStateUnits,
   land: initialStateBattle,
-  settings: initialStateSettings
+  transfer: initialStateTransfer
 }
 
 export const battleReducer = createReducer(initialState)
