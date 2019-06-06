@@ -34,6 +34,23 @@ export const importReducer = createReducer(initialState)
     if (action.payload.reset_missing)
       return { ...state, ...initialState, transfer: state.transfer, ...action.payload.state }
     else
-      return { ...state, ...action.payload.state }
+      // Bit complicated logic needed to allow adding and partially updating definitions.
+      return {
+        ...state,
+        ...action.payload.state,
+        tactics: {
+          ...state.tactics,
+          definitions: action.payload.state.tactics && action.payload.state.tactics.definitions ? state.tactics.definitions.merge(action.payload.state.tactics.definitions) : state.tactics.definitions
+        },
+        terrains: {
+          ...state.terrains,
+          definitions: action.payload.state.terrains && action.payload.state.terrains.definitions ? state.terrains.definitions.merge(action.payload.state.terrains.definitions) : state.terrains.definitions
+        },
+        global_stats: action.payload.state.global_stats ? state.global_stats.merge(action.payload.state.global_stats) : state.global_stats,
+        units: {
+          ...state.units,
+          definitions: action.payload.state.units && action.payload.state.units.definitions ? state.units.definitions.map((value, key) => value.merge(action.payload.state.units.definitions.get(key))) : state.units.definitions
+        }
+      }
   }
   )
