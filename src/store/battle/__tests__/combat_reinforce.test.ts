@@ -1,6 +1,6 @@
 import { battle } from '../combat'
 import { List } from 'immutable'
-import { getInitialArmy, getInitialTerrains, Participant } from '../types'
+import { getInitialArmy, getInitialTerrains, Participant } from '../../land_battle/types'
 import { getDefaultDefinitions as getDefaultTacticDefinitions, TacticType } from '../../tactics'
 import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, } from '../../terrains'
 import { getDefaultDefinitions as getDefaultUnitDefinitions, UnitType, UnitCalc } from '../../units'

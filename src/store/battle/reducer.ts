@@ -4,7 +4,7 @@ import { tacticsState } from '../tactics'
 import { terrainState } from '../terrains'
 import { globalStatsState, unitsState } from '../units'
 import { transferState } from '../transfer'
-import { battle as fight } from '../land_battle/combat'
+import { battle as fight } from './combat'
 import { merge_values } from '../../base_definition'
 
 export const initialState = {

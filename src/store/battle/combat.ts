@@ -2,7 +2,7 @@ import { List, Map } from 'immutable'
 import { Unit, UnitDefinition, UnitCalc, UnitType, ArmyName } from '../units'
 import { TerrainDefinition, TerrainCalc } from '../terrains'
 import { TacticDefinition, TacticCalc } from '../tactics'
-import { RowType } from './types'
+import { RowType } from '../land_battle/types'
 import { calculateValue, add_base_values, add_loss_values, merge_values } from '../../base_definition'
 
 type Army = List<Unit | undefined>
@@ -55,9 +55,11 @@ export const battle = (definitions: Definitions, attacker: ParticipantState, def
   //console.log('********** ROUND ' + round + '*********')
   //console.log('')
   let [army_a, reserve_a] = reinforce(round, attacker.army, attacker.reserve, attacker.row_types, attacker.flank_size, countArmySize(defender.army, defender.reserve, defender.defeated), undefined)
-  let a_to_d = pickTargets(army_a, defender.army)
+  let definitions_a: Army = army_a.map(value => value && merge_values(value, definitions.getIn([ArmyName.Attacker, value.type])))
+  let a_to_d = pickTargets(definitions_a, defender.army)
   let [army_d, reserve_d] = reinforce(round, defender.army, defender.reserve, defender.row_types, defender.flank_size, countArmySize(attacker.army, attacker.reserve, attacker.defeated), a_to_d)
-  let d_to_a = pickTargets(army_d, army_a)
+  let definitions_d: Army = army_d.map(value => value && merge_values(value, definitions.getIn([ArmyName.Defender, value.type])))
+  let d_to_a = pickTargets(definitions_d, army_a)
   if (round < 1)
     return [army_a, army_d, reserve_a, reserve_d, attacker.defeated, defender.defeated]
   //console.log('Targets: A ' + attacker_to_defender + ' D ' + defender_to_attacker)
@@ -74,8 +76,6 @@ export const battle = (definitions: Definitions, attacker: ParticipantState, def
   const defender_roll = modifyRoll(defender.roll, List(), defender.general, attacker.general)
 
   //console.log('Rolls: A ' + attacker_roll + ' D ' + defender_roll)
-  let definitions_a: Army = army_a.map(value => value && merge_values(value, definitions.getIn([ArmyName.Attacker, value.type])))
-  let definitions_d: Army = army_d.map(value => value && merge_values(value, definitions.getIn([ArmyName.Defender, value.type])))
 
   let [losses_d, kills_a] = attack(definitions_a, definitions_d, a_to_d, attacker_roll, terrains, tactic_effects.attacker, tactic_effects.casualties)
   let [losses_a, kills_d] = attack(definitions_d, definitions_a, d_to_a, defender_roll, terrains, tactic_effects.defender, tactic_effects.casualties)
