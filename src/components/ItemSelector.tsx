@@ -11,11 +11,9 @@ type ItemAttribute = UnitCalc | TerrainCalc | UnitType | TerrainType | TacticCal
 
 interface IProps<T extends ItemType, S extends ItemAttribute> {
   onClose: () => void
-  items: List<BaseDefinition<T, S>| BaseValuesDefinition<T, S>>
+  items: List<BaseDefinition<T, S> | BaseValuesDefinition<T, S>>
   onSelection: (type: T | undefined) => void
-  attributes: S[]
-  can_remove: boolean
-  can_select: boolean
+  attributes?: S[]
 }
 
 export default class ItemSelector<S extends ItemAttribute, T extends ItemType> extends Component<IProps<T, S>> {
@@ -23,21 +21,14 @@ export default class ItemSelector<S extends ItemAttribute, T extends ItemType> e
   render() {
 
     return (
-          <Table celled selectable unstackable>
-            <Table.Body>
-              {this.props.can_remove ? (
-                <Table.Row onClick={() => this.onClick(undefined)}>
-                  <Table.Cell>
-                    Remove
-                  </Table.Cell>
-                </Table.Row>
-              ) : null}
-              {
-                this.props.can_select && this.props.items.map(terrain => this.renderRow(terrain))
-              }
-            </Table.Body>
-          </Table>
-        
+      <Table celled selectable unstackable>
+        <Table.Body>
+          {
+            this.props.items.map(terrain => this.renderRow(terrain))
+          }
+        </Table.Body>
+      </Table>
+
     )
   }
 
@@ -54,11 +45,11 @@ export default class ItemSelector<S extends ItemAttribute, T extends ItemType> e
           {item.type}
         </Table.Cell>
         {
-          this.props.attributes.map(attribute => (
+          this.props.attributes && this.props.attributes.map(attribute => (
             <Table.Cell key={attribute}>
               {valueToRelativeNumber(item, attribute, false)}
             </Table.Cell>
-            ))
+          ))
         }
       </Table.Row>
     )

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { List } from 'immutable'
 import { Table, Input } from 'semantic-ui-react'
 import { UnitType, UnitDefinition, UnitCalc, ArmyName, ValueType, valueToString } from '../store/units'
 import { TerrainType } from '../store/terrains'
@@ -9,6 +10,7 @@ interface IProps {
   custom_value_key: string
   unit: UnitDefinition
   show_statistics: boolean
+  terrains: List<TerrainType>
   onCustomBaseValueChange: (army: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
   onCustomModifierValueChange: (army: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
   onCustomLossValueChange: (army: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
@@ -19,7 +21,6 @@ export default class UnitDetail extends Component<IProps> {
 
   readonly attributes = Object.keys(UnitCalc).map(k => UnitCalc[k as any]) as UnitCalc[]
   readonly units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
-  readonly terrains = Object.keys(TerrainType).map(k => TerrainType[k as any]).sort() as TerrainType[]
   readonly headers = ['Attribute', 'Value', 'Custom base', 'Custom modifier', 'Custom losses', 'Explained']
 
   render() {
@@ -45,7 +46,7 @@ export default class UnitDetail extends Component<IProps> {
             this.units.map((value) => this.renderRow(this.props.unit, value))
           }
           {
-            this.terrains.map((value) => this.renderRow(this.props.unit, value))
+            this.props.terrains.map((value) => this.renderRow(this.props.unit, value))
           }
         </Table.Body>
       </Table>

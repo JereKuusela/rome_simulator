@@ -1,4 +1,4 @@
-import { Map, OrderedMap, fromJS } from 'immutable'
+import { Map, List, OrderedMap, fromJS } from 'immutable'
 import { calculateValue, BaseValuesDefinition, add_base_values } from '../../base_definition'
 import * as data from './terrains.json'
 
@@ -32,6 +32,11 @@ export const getDefaultDefinitions = (): Map<TerrainType, TerrainDefinition> => 
     map = map.set(terrain.type, terrain)
   }
   return map
+}
+
+export const getDefaultTypes = (): List<TerrainType> => {
+  const terrains = Object.keys(TerrainType).map(k => TerrainType[k as any]) as TerrainType[]
+  return List<TerrainType>(terrains)
 }
 
 export const terrainFromJS = (object: Map<string, any>): TerrainDefinition | undefined => {

@@ -52,6 +52,7 @@ class Units extends Component<IProps, IState> {
       <div key={army}>
         <UnitDefinitions
           army={army}
+          terrains={this.props.terrains}
           global_stats={global_stats}
           units={units.toList()}
           onRowClick={unit => this.openModal(army, unit.type)}
@@ -64,6 +65,7 @@ class Units extends Component<IProps, IState> {
 
 const mapStateToProps = (state: AppState) => ({
   units: state.units.definitions,
+  terrains: state.terrains.types,
   global_stats: state.global_stats
 })
 

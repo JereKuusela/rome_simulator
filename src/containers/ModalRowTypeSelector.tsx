@@ -23,8 +23,6 @@ class ModalRowTypeSelector extends Component<IProps> {
             onSelection={this.selectUnit}
             items={this.props.units.get(this.props.info.army)!.toList()}
             attributes={[]}
-            can_remove={false}
-            can_select={true}
           />
         </Modal.Content>
       </Modal>

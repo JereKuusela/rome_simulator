@@ -4,7 +4,8 @@ import { connect } from 'react-redux'
 import ModalTerrainDetail from '../containers/ModalTerrainDetail'
 import { AppState } from '../store/index'
 import TerrainDefinitions from '../components/TerrainDefinitions'
-import { TerrainType } from '../store/terrains'
+import ItemRemover from '../components/ItemRemover'
+import { TerrainType, deleteTerrain } from '../store/terrains'
 
 interface IState {
   modal_terrain: TerrainType | null
@@ -27,6 +28,12 @@ class Terrains extends Component<IProps, IState> {
       <Container>
         <Modal basic onClose={this.closeModal} open={this.state.modal_terrain !== null}>
           <Modal.Content>
+            <ItemRemover
+              onClose={this.closeModal}
+              onRemove={this.onRemove}
+              confirm_remove={true}
+              item={'terrain definition ' + String(this.state.modal_terrain)}
+            />
             <ModalTerrainDetail
               terrain={this.state.modal_terrain}
             />
@@ -41,6 +48,8 @@ class Terrains extends Component<IProps, IState> {
       </Container>
     )
   }
+
+  onRemove = () => this.state.modal_terrain && this.props.deleteTerrain(this.state.modal_terrain)
 }
 
 const mapStateToProps = (state: AppState) => ({
@@ -48,6 +57,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
+  deleteTerrain: (type: TerrainType) => dispatch(deleteTerrain(type))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

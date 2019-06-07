@@ -13,6 +13,7 @@ import { calculateValue, calculateBase, calculateModifier, calculateLoss, valueT
 interface IProps {
   readonly army: ArmyName
   readonly units: ImmutableList<UnitDefinition>
+  readonly terrains: ImmutableList<TerrainType>
   readonly global_stats: UnitDefinition
   readonly onRowClick: (unit: UnitDefinition) => void
 }
@@ -20,7 +21,6 @@ interface IProps {
 // Display component for showing unit definitions for an army.
 export default class UnitDefinitions extends Component<IProps> {
 
-  readonly terrains = Object.keys(TerrainType).map(k => TerrainType[k as any]) as TerrainType[]
   readonly units = Object.keys(UnitType).map(k => UnitType[k as any]) as UnitType[]
 
   render() {
@@ -127,7 +127,7 @@ export default class UnitDefinitions extends Component<IProps> {
         <Table.Cell>
           <List>
             {
-              this.terrains.filter(type => calculateValue(unit, type) !== 0).map(type => (
+              this.props.terrains.filter(type => calculateValue(unit, type) !== 0).map(type => (
                 <List.Item key={type}>
                   {type + ': ' + valueToString(unit, type)}
                 </List.Item>
@@ -188,7 +188,7 @@ export default class UnitDefinitions extends Component<IProps> {
         <Table.Cell>
           <List>
             {
-              this.terrains.filter(type => calculateValue(unit, type) !== 0.0).map(type => (
+              this.props.terrains.filter(type => calculateValue(unit, type) !== 0.0).map(type => (
                 <List.Item key={type}>
                   {type + ': ' + valueToRelativeZeroPercent(unit, type, false)}
                 </List.Item>

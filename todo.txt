@@ -2,10 +2,21 @@ https://github.com/resir014/react-redux-typescript-example
 
 Release 2:
 
+Adding / Deleting definitions
+- list of types
+- definitions: allow changing type name (string)
+- army definitions: allow changing type (dropdown)
+- delete for a definition, army based definitions? (should work ok, merging just wont happen)
+- test whether image can be dynamic, or somehow hardcoded / icon
 
-Land battle:
-- Visually mimics in game screen.
-- Loyalty gives +10% discipline, include or not?
+Damage calculation values to settings
+
+Multiple armies?
+- add new army to unit definitions
+- dropdown to select attacker / defender
+
+
+Release 3:
 
 Siege:
 - Time to capture
@@ -18,7 +29,8 @@ Naval battle:
 - Amount of ships?
 - Coordination?
 
-Release 3:
+Land battle:
+- Loyalty gives +10% discipline, include or not?
 
 Government/Commander:
 - Strategos skill level

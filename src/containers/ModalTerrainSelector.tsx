@@ -23,8 +23,6 @@ class ModalTerrainSelector extends Component<IProps> {
             onSelection={this.selectTerrain}
             items={this.props.terrains.toList().filter(terrain => this.props.info && terrain.location === this.props.info.location)}
             attributes={[TerrainCalc.Roll]}
-            can_remove={false}
-            can_select={true}
           />
         </Modal.Content>
       </Modal>

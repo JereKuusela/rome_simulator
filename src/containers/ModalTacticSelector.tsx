@@ -23,8 +23,6 @@ class ModalTacticSelector extends Component<IProps> {
             onSelection={this.selectTactic}
             items={this.props.tactics.toList()}
             attributes={[]}
-            can_remove={false}
-            can_select={true}
           />
         </Modal.Content>
       </Modal>

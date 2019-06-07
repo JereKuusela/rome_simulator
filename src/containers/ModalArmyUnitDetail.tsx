@@ -5,7 +5,7 @@ import { UnitType, ArmyName, ArmyType, ValueType, Unit, UnitDefinition } from '.
 import { selectUnit } from '../store/land_battle'
 import { AppState } from '../store/'
 import { add_base_value, add_modifier_value, add_loss_value, merge_values } from '../base_definition'
-import ItemSelector from '../components/ItemSelector'
+import ItemRemover from '../components/ItemRemover'
 import UnitDetail from '../components/UnitDetail'
 
 const CUSTOM_VALUE_KEY = 'Unit'
@@ -23,16 +23,13 @@ class ModalArmyUnitDetail extends Component<IProps> {
     return (
       <Modal basic onClose={this.props.onClose} open>
         <Modal.Content>
-          <ItemSelector
+          <ItemRemover
             onClose={this.props.onClose}
-            onSelection={this.selectUnit}
-            items={this.props.units.get(this.props.info.army)!.toList()}
-            attributes={[]}
-            can_remove={true}
-            can_select={false}
+            onRemove={() => this.selectUnit(undefined)}
           />
           <UnitDetail
             army={this.props.info.army}
+            terrains={this.props.terrains}
             custom_value_key={CUSTOM_VALUE_KEY}
             unit={this.getUnitDefinition(this.props.info)}
             onCustomBaseValueChange={this.setBaseValue}
@@ -103,7 +100,8 @@ const mapStateToProps = (state: AppState) => ({
   attacker: state.land.attacker,
   defender: state.land.defender,
   units: state.units.definitions,
-  global_stats: state.global_stats
+  global_stats: state.global_stats,
+  terrains: state.terrains.types
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

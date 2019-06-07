@@ -24,7 +24,10 @@ export const transformTerrains = (state_raw: any): typeof terrainState => {
     let definitions_raw: Map<TerrainType, any> = fromJS(state_raw.definitions)
     definitions = definitions_raw.map(value => terrainFromJS(value)!).filter(value => value)
   }
-  return { definitions, types: terrainState.types }
+  let types = terrainState.types
+  if (state_raw.types)
+    types = fromJS(state_raw.types)
+  return { definitions, types }
 }
 
 export const transformUnits = (state_raw: any): typeof unitsState => {
