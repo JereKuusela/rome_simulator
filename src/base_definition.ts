@@ -1,4 +1,5 @@
 import { Map, OrderedMap } from 'immutable'
+import EmptyIcon from './images/empty.png'
 
 export enum ValuesType {
   Base,
@@ -11,6 +12,7 @@ type AnyBaseDefinition = BaseDefinition<any, any>
 
 export interface BaseDefinition<T, S> {
   readonly type: T
+  image?: string
   readonly base_values?: Map<S, OrderedMap<string, number>>
   readonly modifier_values?: Map<S, OrderedMap<string, number>>
   readonly loss_values?: Map<S, OrderedMap<string, number>>
@@ -18,8 +20,12 @@ export interface BaseDefinition<T, S> {
 
 export interface BaseValuesDefinition<T, S> {
   readonly type: T
+  image?: string
   readonly base_values?: Map<S, OrderedMap<string, number>>
 }
+
+export const getImage = <Definition extends AnyDefinition>
+(definition?: Definition) => (definition && definition.image) || EmptyIcon
 
 export const merge_base_values = <Definition extends AnyDefinition>
   (definition: Definition, to_merge: Definition) => {

@@ -2,8 +2,8 @@ import { List as ImmutableList } from 'immutable'
 import React, { Component } from 'react'
 import { Image, Table, List } from 'semantic-ui-react'
 import { UnitType, unit_to_icon } from '../store/units'
-import { TacticDefinition, TacticType, TacticCalc, tactic_to_icon, valueToString } from '../store/tactics'
-import { calculateValue, valueToRelativeZeroPercent,  } from '../base_definition'
+import { TacticDefinition, TacticType, TacticCalc, valueToString } from '../store/tactics'
+import { calculateValue, valueToRelativeZeroPercent, getImage } from '../base_definition'
 
 interface IProps {
   readonly tactics: ImmutableList<TacticDefinition>
@@ -40,13 +40,12 @@ export default class TacticDefinitions extends Component<IProps> {
     )
   }
 
-
   renderRow = (tactic: TacticDefinition) => {
 
     return (
       <Table.Row key={tactic.type} onClick={() => this.props.onRowClick(tactic.type)}>
         <Table.Cell>
-          <Image src={tactic_to_icon.get(tactic.type)} avatar />
+          <Image src={getImage(tactic)} avatar />
           {tactic.type}</Table.Cell>
         <Table.Cell>
           <List horizontal>
@@ -65,7 +64,7 @@ export default class TacticDefinitions extends Component<IProps> {
             {
               this.tactics.filter(type => calculateValue(tactic, type)).map(type => (
                 <List.Item key={type} style={{ marginLeft: 0, marginRight: '1em' }}>
-                  <Image src={tactic_to_icon.get(type)} avatar />
+                  <Image src={getImage(this.props.tactics.find(value => value.type === type))} avatar />
                   {valueToRelativeZeroPercent(tactic, type, true)}
                 </List.Item>
               ))

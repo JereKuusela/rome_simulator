@@ -8,7 +8,10 @@ import { transformGlobalStats, transformLand, transformTactics, transformTerrain
 
 
 const TacticsTransform = createTransform(
-  (inboundState) => inboundState,
+  (inboundState) => {
+    console.log(inboundState)
+    return inboundState
+  },
   (outboundState: any) => transformTactics(outboundState),
   { whitelist: ['tactics'] }
 )

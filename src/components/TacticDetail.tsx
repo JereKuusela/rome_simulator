@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Table, Input, Image } from 'semantic-ui-react'
 import { UnitType, unit_to_icon } from '../store/units'
-import { TacticDefinition, ValueType, TacticType, TacticCalc, tactic_to_icon } from '../store/tactics'
-import { get_base_value, valueToRelativeZeroPercent, valueToPercent, explain_short } from '../base_definition'
+import { TacticDefinition, ValueType, TacticType, TacticCalc } from '../store/tactics'
+import { get_base_value, valueToRelativeZeroPercent, valueToPercent, explain_short, getImage } from '../base_definition'
 
 interface IProps {
   custom_value_key: string
@@ -37,13 +37,13 @@ export default class TacticDetail extends Component<IProps> {
         </Table.Header>
         <Table.Body>
           {
-            this.units.map((value) => this.renderRow(tactic, value, false, unit_to_icon.get(value)))
+            this.units.map(value => this.renderRow(tactic, value, false, unit_to_icon.get(value)))
           }
           {
-            this.tactics.map((value) => this.renderRow(tactic, value, true, tactic_to_icon.get(value)))
+            this.tactics.map(value => this.renderRow(tactic, value, true, getImage(tactic)))
           }
           {
-            this.attributes.map((value) => this.renderRow(tactic, value, true, undefined))
+            this.attributes.map(value => this.renderRow(tactic, value, true, undefined))
           }
         </Table.Body>
       </Table>

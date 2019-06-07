@@ -8,7 +8,7 @@ import UnitArmy from '../components/UnitArmy'
 import { battle, undo, Participant, toggleRandomRoll, setRoll, setGeneral, RowType, setFlankSize } from '../store/land_battle'
 import { calculateTactic } from '../store/land_battle/combat'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
-import { TacticDefinition, tactic_to_icon } from '../store/tactics'
+import { TacticDefinition } from '../store/tactics'
 import IconDice from '../images/chance.png'
 import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from '../containers/ModalUnitSelector'
 import ModalRowTypeSelector, { ModalInfo as ModalRowInfo } from '../containers/ModalRowTypeSelector'
@@ -17,7 +17,7 @@ import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers
 import ModalArmyUnitDetail, { ModalInfo as ModalArmyUnitInfo } from '../containers/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/ModalFastPlanner'
 import { unit_to_icon } from '../store/units'
-import { calculateValue, merge_values } from '../base_definition'
+import { calculateValue, merge_values, getImage } from '../base_definition'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
@@ -316,7 +316,7 @@ class Land extends Component<IProps, IState> {
     const tactic = this.props.tactics.get(info.tactic)!
     return (
       <div key={army} onClick={() => this.openTacticModal(army)}>
-        {<Image src={tactic_to_icon.get(tactic.type)} avatar />}
+        {<Image src={getImage(tactic)} avatar />}
         {tactic.type}
         {' (' + this.toRelativePercent(calculateTactic(tactic, info.army, counter), true) + ')'}
       </div >

@@ -30,7 +30,7 @@ export enum TacticType {
   TriplexAcies = 'Triplex Acies'
 }
 
-export const tactic_to_icon = Map<TacticType, string>()
+const tactic_to_icon = Map<TacticType, string>()
   .set(TacticType.Bottleneck, IconBottleneck)
   .set(TacticType.CavalrySkirmish, IconCavalrySkirmish)
   .set(TacticType.Deception, IconDeception)
@@ -57,7 +57,11 @@ export const tacticFromJS = (object: Map<string, any>): TacticDefinition | undef
   if (!object)
     return undefined
   let base_values = object.has('base_values') ? fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
-  return { type: object.get('type') as TacticType, base_values }
+  const type = object.get('type') as TacticType
+  let image = object.get('image')
+  if (!image)
+    image = tactic_to_icon.get(type)
+  return { type, image, base_values }
 }
 
 export interface TacticDefinition extends BaseValuesDefinition<TacticType, ValueType> {
@@ -69,7 +73,7 @@ export const valueToString = (definition: TacticDefinition, type: ValueType): st
 }
 
 const createTacticFromJson = (data: TacticData): TacticDefinition => {
-  let tactic: TacticDefinition = { type: data.type as TacticType }
+  let tactic: TacticDefinition = { type: data.type as TacticType, image: tactic_to_icon.get(data.type as TacticType) }
   const base_values: [ValueType, number][] = [
     [UnitType.Archers, data.archers || 0],
     [UnitType.CamelCavalry, data.camel_cavalry || 0],
