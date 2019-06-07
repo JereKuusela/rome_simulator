@@ -16,6 +16,8 @@ export const transformTactics = (state_raw: any): typeof tacticsState => {
   let types = tacticsState.types
   if (state_raw.types)
     types = fromJS(state_raw.types)
+  if (types.size === 0)
+    types = tacticsState.types
   return { definitions, types }
 }
 
@@ -30,6 +32,8 @@ export const transformTerrains = (state_raw: any): typeof terrainState => {
   let types = terrainState.types
   if (state_raw.types)
     types = fromJS(state_raw.types)
+  if (types.size === 0)
+    types = terrainState.types
   return { definitions, types }
 }
 
