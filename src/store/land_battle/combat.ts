@@ -30,7 +30,7 @@ export interface ParticipantState {
   readonly army: Army
   readonly reserve: Reserve
   readonly defeated: Defeated
-  readonly tactic: TacticDefinition
+  readonly tactic?: TacticDefinition
   readonly roll: number
   readonly general: number
   readonly row_types: Map<RowType, UnitType>
@@ -64,8 +64,8 @@ export const battle = (definitions: Definitions, attacker: ParticipantState, def
   // Killed manpower won't deal any damage so the right solution has to be searched iteratively.
 
   const tactic_effects = {
-    attacker: calculateTactic(attacker.tactic, army_a, defender.tactic),
-    defender: calculateTactic(defender.tactic, army_d, attacker.tactic),
+    attacker: calculateTactic(army_a, attacker.tactic, defender.tactic),
+    defender: calculateTactic(army_d, defender.tactic, attacker.tactic),
     casualties: calculateValue(attacker.tactic, TacticCalc.Casualties) + calculateValue(defender.tactic, TacticCalc.Casualties) 
   }
   //console.log('Tactics: A ' + tactic_effects.attacker + ' D ' + tactic_effects.defender + ' C ' + tactic_effects.casualties)
@@ -264,10 +264,10 @@ const pickTargets = (source_row: Army, target_row: Army) => {
  * @param front Units affecting positive bonus.
  * @param counter_tactic Opposing tactic, can counter or get countered.
  */
-export const calculateTactic = (tactic: TacticDefinition, front: Army, counter_tactic: TacticDefinition): number => {
-  const effectiveness = calculateValue(tactic, counter_tactic.type)
+export const calculateTactic = (front: Army, tactic?: TacticDefinition, counter_tactic?: TacticDefinition): number => {
+  const effectiveness = (tactic && counter_tactic) ? calculateValue(tactic, counter_tactic.type) : 0.0
   let unit_modifier = 1.0
-  if (effectiveness > 0) {
+  if (effectiveness > 0 && tactic) {
     let units = 0
     let weight = 0.0
     for (const unit of front) {

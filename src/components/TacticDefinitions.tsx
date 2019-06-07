@@ -1,47 +1,76 @@
-import { List as ImmutableList } from 'immutable'
+import { List as ImmutableList, Map } from 'immutable'
 import React, { Component } from 'react'
-import { Image, Table, List } from 'semantic-ui-react'
+import { Image, Table, List, Button } from 'semantic-ui-react'
 import { UnitType, unit_to_icon } from '../store/units'
 import { TacticDefinition, TacticType, TacticCalc, valueToString } from '../store/tactics'
 import { calculateValue, valueToRelativeZeroPercent, getImage } from '../base_definition'
+import NewDefinition from './NewDefinition'
 
 interface IProps {
-  readonly tactics: ImmutableList<TacticDefinition>
-  readonly onRowClick: (tactic: TacticType) => void
+  readonly tactics: Map<TacticType, TacticDefinition>
+  readonly types: ImmutableList<TacticType>
+  readonly onRowClick: (type: TacticType) => void
+  readonly onCreateNew: (type: TacticType) => void
+}
+
+interface IState {
+  open_create: boolean
 }
 
 // Display component for showing unit definitions for an army.
-export default class TacticDefinitions extends Component<IProps> {
+export default class TacticDefinitions extends Component<IProps, IState> {
 
-  readonly tactics = Object.keys(TacticType).map(k => TacticType[k as any]) as TacticType[]
+  constructor(props: IProps) {
+    super(props)
+    this.state = { open_create: false }
+  }
+
   readonly units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
   readonly headers = ['Tactic', 'Unit effectiveness', 'Against other tactics', 'Casualties']
 
   render() {
     return (
-      <Table celled selectable unstackable>
-        <Table.Header>
-          <Table.Row>
+      <div>
+        <Table celled selectable unstackable>
+          <NewDefinition
+            open={this.state.open_create}
+            onCreate={this.onCreate}
+            onClose={this.onClose}
+            message='New tactic type'
+          />
+          <Table.Header>
+            <Table.Row>
+              {
+                Array.from(this.headers).map((value) => (
+                  <Table.HeaderCell key={value}>
+                    {value}
+                  </Table.HeaderCell>
+                ))
+              }
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
             {
-              Array.from(this.headers).map((value) => (
-                <Table.HeaderCell key={value}>
-                  {value}
-                </Table.HeaderCell>
-              ))
+              this.props.types.map(value => this.renderRow(this.props.tactics.get(value)))
             }
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {
-            this.props.tactics.map(value => this.renderRow(value))
-          }
-        </Table.Body>
-      </Table>
+          </Table.Body>
+        </Table>
+        <Button primary onClick={this.newOnClick}>
+          Create new
+        </Button>
+      </div>
     )
   }
 
-  renderRow = (tactic: TacticDefinition) => {
+  newOnClick = () => this.setState({ open_create: true })
 
+  onCreate = (type: string) => this.props.onCreateNew(type as TacticType)
+
+  onClose = () => this.setState({ open_create: false })
+
+  renderRow = (tactic: TacticDefinition | undefined) => {
+    if (!tactic)
+      return null
     return (
       <Table.Row key={tactic.type} onClick={() => this.props.onRowClick(tactic.type)}>
         <Table.Cell>
@@ -62,7 +91,7 @@ export default class TacticDefinitions extends Component<IProps> {
         <Table.Cell singleLine>
           <List horizontal>
             {
-              this.tactics.filter(type => calculateValue(tactic, type)).map(type => (
+              this.props.types.filter(type => calculateValue(tactic, type) && this.props.tactics.get(type)).map(type => (
                 <List.Item key={type} style={{ marginLeft: 0, marginRight: '1em' }}>
                   <Image src={getImage(this.props.tactics.find(value => value.type === type))} avatar />
                   {valueToRelativeZeroPercent(tactic, type, true)}

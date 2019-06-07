@@ -13,7 +13,10 @@ export const transformTactics = (state_raw: any): typeof tacticsState => {
     let definitions_raw: Map<TacticType, any> = fromJS(state_raw.definitions)
     definitions = definitions_raw.map(value => tacticFromJS(value)!).filter(value => value)
   }
-  return { definitions, types: tacticsState.types }
+  let types = tacticsState.types
+  if (state_raw.types)
+    types = fromJS(state_raw.types)
+  return { definitions, types }
 }
 
 export const transformTerrains = (state_raw: any): typeof terrainState => {

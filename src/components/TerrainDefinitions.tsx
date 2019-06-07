@@ -1,4 +1,4 @@
-import { List as ImmutableList } from 'immutable'
+import { List as ImmutableList, Map } from 'immutable'
 import React, { Component } from 'react'
 import { Table, Button } from 'semantic-ui-react'
 import { TerrainCalc, TerrainDefinition, TerrainType } from '../store/terrains'
@@ -6,9 +6,10 @@ import { valueToRelativeNumber } from '../base_definition'
 import NewDefinition from './NewDefinition'
 
 interface IProps {
-  readonly terrains: ImmutableList<TerrainDefinition>
-  readonly onRowClick: (terrain: TerrainType) => void
-  readonly onCreateNew: (terrain: TerrainType) => void
+  readonly terrains: Map<TerrainType, TerrainDefinition>
+  readonly types: ImmutableList<TerrainType>
+  readonly onRowClick: (type: TerrainType) => void
+  readonly onCreateNew: (type: TerrainType) => void
 }
 
 interface IState {
@@ -49,7 +50,7 @@ export default class TerrainDefinitions extends Component<IProps, IState> {
           </Table.Header>
           <Table.Body>
             {
-              this.props.terrains.map(value => this.renderRow(value))
+              this.props.types.map(value => this.renderRow(this.props.terrains.get(value)))
             }
           </Table.Body>
         </Table>
@@ -66,8 +67,9 @@ export default class TerrainDefinitions extends Component<IProps, IState> {
 
   onClose = () => this.setState({ open_create: false })
 
-  renderRow = (terrain: TerrainDefinition) => {
-
+  renderRow = (terrain: TerrainDefinition | undefined) => {
+    if (!terrain)
+      return null
     return (
       <Table.Row key={terrain.type} onClick={() => this.props.onRowClick(terrain.type)}>
         <Table.Cell>

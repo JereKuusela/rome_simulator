@@ -313,12 +313,12 @@ class Land extends Component<IProps, IState> {
   }
 
   renderTactic = (army: ArmyName, info: Participant, counter: TacticDefinition) => {
-    const tactic = this.props.tactics.get(info.tactic)!
+    const tactic = this.props.tactics.get(info.tactic)
     return (
       <div key={army} onClick={() => this.openTacticModal(army)}>
         {<Image src={getImage(tactic)} avatar />}
-        {tactic.type}
-        {' (' + this.toRelativePercent(calculateTactic(tactic, info.army, counter), true) + ')'}
+        {(tactic && tactic.type) || 'None'}
+        {' (' + this.toRelativePercent(calculateTactic(info.army, tactic, counter), true) + ')'}
       </div >
     )
   }

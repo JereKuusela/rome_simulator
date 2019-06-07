@@ -1,4 +1,4 @@
-import { Map, OrderedMap, fromJS } from 'immutable'
+import { Map, OrderedMap, List, fromJS } from 'immutable'
 import { calculateValue, BaseValuesDefinition, toPercent, add_base_values } from '../../base_definition'
 import { UnitType } from '../units/types'
 import IconBottleneck from '../../images/bottleneck.png'
@@ -52,6 +52,12 @@ export const getDefaultDefinitions = (): Map<TacticType, TacticDefinition> => {
 }
 
 export type ValueType = UnitType | TacticCalc | TacticType
+
+
+export const getDefaultTypes = (): List<TacticType> => {
+  const tactics = Object.keys(TacticType).map(k => TacticType[k as any]) as TacticType[]
+  return List<TacticType>(tactics)
+}
 
 export const tacticFromJS = (object: Map<string, any>): TacticDefinition | undefined => {
   if (!object)

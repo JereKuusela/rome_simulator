@@ -42,7 +42,8 @@ class Terrains extends Component<IProps, IState> {
         </Modal>
         {
           <TerrainDefinitions
-            terrains={this.props.types.map(type => this.props.terrains.get(type)!).filter(value => value)}
+            terrains={this.props.terrains}
+            types={this.props.types}
             onRowClick={terrain => this.openModal(terrain)}
             onCreateNew={this.props.addTerrain}
           />

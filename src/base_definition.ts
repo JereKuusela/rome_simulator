@@ -109,7 +109,9 @@ const add_values = <Attribute>(container: Map<Attribute, OrderedMap<string, numb
 }
 
 export const calculateValue = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, type: Attribute): number => {
+  (definition: Definition | undefined, type: Attribute): number => {
+  if (!definition)
+    return 0.0
   let value = calculateBase(definition, type)
   if (isBaseDefinition(definition))
     value = value * calculateModifier(definition, type) - calculateLoss(definition, type)
