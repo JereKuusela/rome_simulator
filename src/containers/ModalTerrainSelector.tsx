@@ -8,7 +8,7 @@ import { TerrainType, TerrainCalc, LocationType } from '../store/terrains';
 
 export interface ModalInfo {
   index: number
-  location: LocationType
+  location?: LocationType
 }
 
 class ModalTerrainSelector extends Component<IProps> {
@@ -21,7 +21,7 @@ class ModalTerrainSelector extends Component<IProps> {
           <ItemSelector
             onClose={this.props.onClose}
             onSelection={this.selectTerrain}
-            items={this.props.terrains.toList().filter(terrain => this.props.info && terrain.location === this.props.info.location)}
+            items={this.props.terrains.toList().filter(terrain => this.props.info && (!this.props.info.location || terrain.location === this.props.info.location))}
             attributes={[TerrainCalc.Roll]}
           />
         </Modal.Content>

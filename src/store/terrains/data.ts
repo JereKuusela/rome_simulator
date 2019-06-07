@@ -50,7 +50,7 @@ export const terrainFromJS = (object: Map<string, any>): TerrainDefinition | und
 export type ValueType = TerrainCalc
 
 export interface TerrainDefinition extends BaseValuesDefinition<TerrainType, ValueType> {
-  readonly location: LocationType
+  readonly location?: LocationType
 }
 
 export const valueToString = (definition: TerrainDefinition, type: ValueType): string => {

@@ -1,46 +1,47 @@
 import React, { Component } from 'react'
-import { Modal, Input, Grid } from 'semantic-ui-react'
+import { Modal, Input, Grid, Button } from 'semantic-ui-react'
 
 interface IProps {
-  onConfirm: () => void
+  onCreate: (type: string) => void
   onClose: () => void
   message: string
   open: boolean
 }
 
 interface IState {
-  confirmation: string
+  type: string
 }
 
 
-export default class Confirmation extends Component<IProps, IState> {
-
-  CONFIRM = 'yes'
+export default class NewDefinition extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    this.state = { confirmation: '' }
+    this.state = { type: '' }
   }
 
   render() {
-    if (this.state.confirmation === this.CONFIRM) {
-      this.props.onConfirm()
-      this.props.onClose()
-    }
     return (
       <Modal onClose={this.props.onClose} open={this.props.open}>
         <Modal.Header>{this.props.message}</Modal.Header>
         <Modal.Content style={{ paddingLeft: '5em' }}>
           <Grid>
             <Grid.Row>
-              Write&nbsp;<i>yes</i>&nbsp;to confirm
-              </Grid.Row>
+              <Input label='Type' value={this.state.type} onChange={(_, event) => this.setState({ type: event.value })} />
+            </Grid.Row>
             <Grid.Row>
-              <Input value={this.state.confirmation} onChange={(_, event) => this.setState({ confirmation: event.value })} autoFocus />
+              <Button onClick={this.onCreate}>
+                Create
+              </Button>
             </Grid.Row>
           </Grid>
         </Modal.Content>
       </Modal>
     )
+  }
+
+  onCreate = () => {
+    this.props.onCreate(this.state.type)
+    this.props.onClose()
   }
 }
