@@ -4,7 +4,7 @@ import { Container, Image, Table } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { ArmyName, Unit, UnitType, UnitCalc } from '../store/units/types'
-import { Armies } from '../store/land_battle'
+import { Participant, ParticipantType, Armies } from '../store/land_battle'
 import IconManpower from '../images/manpower.png'
 import IconMorale from '../images/morale.png'
 import { calculateValue, calculateValueWithoutLoss, mergeValues, getImage } from '../base_definition'
@@ -13,22 +13,25 @@ class Stats extends Component<IProps> {
   render() {
     return (
       <Container>
-        {this.renderArmy(ArmyName.Attacker, this.props.attacker)}
-        {this.renderArmy(ArmyName.Defender, this.props.defender)}
+        {this.renderArmy(ParticipantType.Attacker, this.props.attacker)}
+        {this.renderArmy(ParticipantType.Defender, this.props.defender)}
       </Container >
     )
   }
 
 
-  renderArmy = (army: ArmyName, armies: Armies) => {
-    armies = { army: this.mergeAllValues(army, armies.army), reserve: this.mergeAllValues(army, armies.reserve), defeated: this.mergeAllValues(army, armies.defeated)}
-    const units = this.props.units.get(army)!
+  renderArmy = (type: ParticipantType, participant: Participant) => {
+    const info = { army: this.mergeAllValues(participant.name, participant.army), reserve: this.mergeAllValues(participant.name, participant.reserve), defeated: this.mergeAllValues(participant.name, participant.defeated)}
+    const units = this.props.units.get(participant.name)
+    const types = this.props.types.get(participant.name)
+    if (!units || !types)
+      return null
     return (
-        <Table celled selectable unstackable key={army}>
+        <Table celled selectable unstackable key={type}>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>
-                {army}
+                {type}
               </Table.HeaderCell>
               <Table.HeaderCell>
                 <Image src={IconManpower} avatar />
@@ -46,7 +49,7 @@ class Stats extends Component<IProps> {
           </Table.Header>
           <Table.Body>
             {
-              this.props.types.get(army)!.map(type => this.renderRow(armies, type, getImage(units.get(type))))
+              types.map(type => this.renderRow(info, type, getImage(units.get(type))))
             }
           </Table.Body>
         </Table>

@@ -11,7 +11,7 @@ type ItemAttribute = UnitCalc | TerrainCalc | UnitType | TerrainType | TacticCal
 
 interface IProps<T extends ItemType, S extends ItemAttribute> {
   onClose: () => void
-  items: List<BaseDefinition<T, S> | BaseValuesDefinition<T, S>>
+  items: List<BaseDefinition<T, S> | BaseValuesDefinition<T, S> | undefined>
   onSelection: (type: T | undefined) => void
   attributes?: S[]
 }
@@ -24,7 +24,7 @@ export default class ItemSelector<S extends ItemAttribute, T extends ItemType> e
       <Table celled selectable unstackable>
         <Table.Body>
           {
-            this.props.items.map(terrain => this.renderRow(terrain))
+            this.props.items.map(item => this.renderRow(item))
           }
         </Table.Body>
       </Table>
@@ -32,7 +32,9 @@ export default class ItemSelector<S extends ItemAttribute, T extends ItemType> e
     )
   }
 
-  renderRow = (item: BaseDefinition<T, S> | BaseValuesDefinition<T, S>) => {
+  renderRow = (item: BaseDefinition<T, S> | BaseValuesDefinition<T, S> | undefined) => {
+    if (!item)
+      return null
     return (
       <Table.Row key={item.type} onClick={() => this.onClick(item.type)}>
         <Table.Cell>

@@ -9,7 +9,8 @@ import IconDefense from '../images/defense.png'
 import IconManpower from '../images/manpower.png'
 import IconMorale from '../images/morale.png'
 import { getImage, calculateValue, calculateBase, calculateModifier, calculateLoss, valueToNumber, valueToPercent, valueToRelativePercent, valueToRelativeZeroPercent, mergeValues } from '../base_definition'
-import NewDefinition from './NewDefinition'
+import ValueModal from './ValueModal'
+import Confirmation from './Confirmation'
 
 interface IProps {
   readonly army: ArmyName
@@ -19,10 +20,14 @@ interface IProps {
   readonly global_stats: UnitDefinition
   readonly onRowClick: (unit: UnitDefinition) => void
   readonly onCreateNew: (type: UnitType) => void
+  readonly onChangeName: (old_name: ArmyName, new_name: ArmyName) => void
+  readonly onDelete: (name: ArmyName) => void
 }
 
 interface IState {
   open_create: boolean
+  open_edit: boolean
+  open_confirm: boolean
 }
 
 // Display component for showing unit definitions for an army.
@@ -30,17 +35,32 @@ export default class UnitDefinitions extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    this.state = { open_create: false }
+    this.state = { open_create: false, open_edit: false, open_confirm: false}
   }
 
   render() {
     return (
       <div>
-        <NewDefinition
+        <ValueModal
           open={this.state.open_create}
-          onCreate={this.onCreate}
+          onSuccess={this.onCreate}
           onClose={this.onClose}
           message='New unit type'
+          button_message='Create'
+        />
+        <ValueModal
+          open={this.state.open_edit}
+          onSuccess={this.onEdit}
+          onClose={this.onClose}
+          message='Edit name'
+          button_message='Edit'
+          initial={this.props.army}
+        />
+        <Confirmation
+          onClose={this.onClose}
+          onConfirm={this.onConfirm}
+          open={this.state.open_confirm}
+          message={'Are you sure you want to remove army ' + this.props.army + ' ?'}
         />
         <Table celled selectable unstackable>
           <Table.Header>
@@ -95,15 +115,29 @@ export default class UnitDefinitions extends Component<IProps, IState> {
         <Button primary onClick={this.newOnClick}>
           Create new unit
         </Button>
+        <Button primary onClick={this.editOnClick}>
+          Change army name
+        </Button>
+        <Button primary onClick={this.confirmOnClick}>
+          Delete army
+        </Button>
       </div>
     )
   }
 
   newOnClick = () => this.setState({ open_create: true })
 
+  onConfirm = () => this.props.onDelete(this.props.army)
+
+  confirmOnClick = () => this.setState({ open_confirm: true })
+
   onCreate = (type: string) => this.props.onCreateNew(type as UnitType)
 
-  onClose = () => this.setState({ open_create: false })
+  onClose = () => this.setState({ open_create: false, open_edit: false })
+
+  onEdit = (name: string) => this.props.onChangeName(this.props.army, name as ArmyName)
+
+  editOnClick = () => this.setState({ open_edit: true })
 
   renderRow = (definition?: UnitDefinition) => {
     if (!definition)

@@ -2,22 +2,24 @@ import React, { Component } from 'react'
 import { Modal, Input, Grid, Button } from 'semantic-ui-react'
 
 interface IProps {
-  onCreate: (type: string) => void
+  onSuccess: (type: string) => void
   onClose: () => void
   message: string
+  button_message: string
   open: boolean
+  initial?: string
 }
 
 interface IState {
-  type: string
+  value?: string
 }
 
 
-export default class NewDefinition extends Component<IProps, IState> {
+export default class ValueModal extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    this.state = { type: '' }
+    this.state = { value: this.props.initial }
   }
 
   render() {
@@ -27,11 +29,11 @@ export default class NewDefinition extends Component<IProps, IState> {
         <Modal.Content style={{ paddingLeft: '5em' }}>
           <Grid>
             <Grid.Row>
-              <Input label='Type' value={this.state.type} onChange={(_, event) => this.setState({ type: event.value })} />
+              <Input value={this.state.value} onChange={(_, event) => this.setState({ value: event.value })} />
             </Grid.Row>
             <Grid.Row>
-              <Button onClick={this.onCreate}>
-                Create
+              <Button onClick={this.onSuccess} disabled={!this.state.value}>
+                {this.props.button_message}
               </Button>
             </Grid.Row>
           </Grid>
@@ -40,8 +42,9 @@ export default class NewDefinition extends Component<IProps, IState> {
     )
   }
 
-  onCreate = () => {
-    this.props.onCreate(this.state.type)
+  onSuccess = () => {
+    if (this.state.value)
+      this.props.onSuccess(this.state.value)
     this.props.onClose()
   }
 }

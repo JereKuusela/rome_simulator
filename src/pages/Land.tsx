@@ -382,20 +382,20 @@ class Land extends Component<IProps, IState> {
   }
 
   renderRowTypes = (type: ParticipantType, name: ArmyName, row_types: Map<RowType, UnitType>, flank_size: number) => {
-    const units = this.props.units.get(name)!
+    const units = this.props.units.get(name)
     return (
       <Table.Row key={type}>
         <Table.Cell>
           {type}
         </Table.Cell>
         <Table.Cell selectable onClick={() => this.openRowModal(type, name, RowType.Front)}>
-          <Image src={getImage(units.get(row_types.get(RowType.Front)!))} avatar />
+          <Image src={getImage(units && units.get(row_types.get(RowType.Front)!))} avatar />
         </Table.Cell>
         <Table.Cell selectable onClick={() => this.openRowModal(type, name, RowType.Back)}>
-          <Image src={getImage(units.get(row_types.get(RowType.Back)!))} avatar />
+          <Image src={getImage(units && units.get(row_types.get(RowType.Back)!))} avatar />
         </Table.Cell>
         <Table.Cell selectable onClick={() => this.openRowModal(type, name, RowType.Flank)}>
-          <Image src={getImage(units.get(row_types.get(RowType.Flank)!))} avatar />
+          <Image src={getImage(units && units.get(row_types.get(RowType.Flank)!))} avatar />
         </Table.Cell>
         <Table.Cell collapsing>
           <Input size='mini' style={{ width: 100 }} type='number' value={flank_size} onChange={(_, data) => this.props.setFlankSize(type, Number(data.value))} />

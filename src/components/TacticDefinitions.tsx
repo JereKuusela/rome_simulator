@@ -4,7 +4,7 @@ import { Image, Table, List, Button } from 'semantic-ui-react'
 import { UnitType, UnitDefinition } from '../store/units'
 import { TacticDefinition, TacticType, TacticCalc, valueToString } from '../store/tactics'
 import { calculateValue, valueToRelativeZeroPercent, getImage } from '../base_definition'
-import NewDefinition from './NewDefinition'
+import ValueModal from './ValueModal'
 import { renderImages } from './utils'
 
 interface IProps {
@@ -33,11 +33,12 @@ export default class TacticDefinitions extends Component<IProps, IState> {
   render() {
     return (
       <div>
-        <NewDefinition
+        <ValueModal
             open={this.state.open_create}
-            onCreate={this.onCreate}
+            onSuccess={this.onCreate}
             onClose={this.onClose}
             message='New tactic type'
+            button_message='Create'
           />
         <Table celled selectable unstackable>
           <Table.Header>

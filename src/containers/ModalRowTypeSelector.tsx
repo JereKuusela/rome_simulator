@@ -17,13 +17,17 @@ class ModalRowTypeSelector extends Component<IProps> {
     if (!this.props.info)
       return null
     const name = this.props.info.name
+    const types = this.props.types.get(name)
+    const units = this.props.units.get(this.props.info.name)
+    if (!types || !units)
+      return null
     return (
       <Modal basic onClose={this.props.onClose} open centered={false}>
         <Modal.Content>
           <ItemSelector
             onClose={this.props.onClose}
             onSelection={this.selectUnit}
-            items={this.props.types.get(name)!.map(value => this.props.units.getIn([name, value])).toList()}
+            items={types.map(value => units.get(value)).toList()}
             attributes={[]}
           />
         </Modal.Content>

@@ -25,3 +25,15 @@ export const changeType = createAction('@@units/CHANGE_TYPE', action => {
 export const changeImage = createAction('@@units/CHANGE_IMAGE', action => {
   return (army: ArmyName, type: UnitType, image: string) => action({ army, type, image })
 })
+
+export const deleteArmy = createAction('@@units/DELETE_ARMY', action => {
+  return (army: ArmyName) => action({ army })
+})
+
+export const createArmy = createAction('@@units/CREATE_ARMY', action => {
+  return (army: ArmyName) => action({ army })
+})
+
+export const changeName = createAction('@@units/CHANGE_NAME', action => {
+  return (old_army: ArmyName, new_army: ArmyName) => action({ old_army, new_army })
+})

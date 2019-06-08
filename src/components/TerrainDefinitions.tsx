@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { Table, Button } from 'semantic-ui-react'
 import { TerrainCalc, TerrainDefinition, TerrainType } from '../store/terrains'
 import { valueToRelativeNumber } from '../base_definition'
-import NewDefinition from './NewDefinition'
+import ValueModal from './ValueModal'
 
 interface IProps {
   readonly terrains: Map<TerrainType, TerrainDefinition>
@@ -30,11 +30,12 @@ export default class TerrainDefinitions extends Component<IProps, IState> {
   render() {
     return (
       <div>
-        <NewDefinition
+        <ValueModal
           open={this.state.open_create}
-          onCreate={this.onCreate}
+          onSuccess={this.onCreate}
           onClose={this.onClose}
           message='New terrain type'
+          button_message='Create'
         />
         <Table celled selectable unstackable>
           <Table.Header>

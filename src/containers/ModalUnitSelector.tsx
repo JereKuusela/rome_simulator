@@ -17,13 +17,17 @@ class ModalUnitSelector extends Component<IProps> {
   render() {
     if (!this.props.info)
       return null
+    const types = this.props.types.get(this.props.info.name)
+    const units = this.props.units.get(this.props.info.name)
+    if (!types || !units)
+      return null
     return (
       <Modal basic onClose={this.props.onClose} open centered={false}>
         <Modal.Content>
           <ItemSelector
             onClose={this.props.onClose}
             onSelection={this.selectUnit}
-            items={this.props.units.get(this.props.info.name)!.toList()}
+            items={types.map(value => units.get(value)).toList()}
             attributes={[]}
           />
         </Modal.Content>
@@ -38,7 +42,8 @@ class ModalUnitSelector extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  units: state.units.definitions
+  units: state.units.definitions,
+  types: state.units.types
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

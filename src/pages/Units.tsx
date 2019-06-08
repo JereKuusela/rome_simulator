@@ -1,33 +1,46 @@
 import { Map } from 'immutable'
 import React, { Component } from 'react'
-import { Container, Modal } from 'semantic-ui-react'
+import { Container, Modal, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import ModalUnitDetail from '../containers/ModalUnitDetail'
 import ModalGlobalStatsDetail from '../containers/ModalGlobalStatsDetail'
 import { AppState } from '../store/index'
-import { UnitType, UnitDefinition, ArmyName, addUnit, deleteUnit, changeType } from '../store/units'
+import { UnitType, UnitDefinition, ArmyName, addUnit, deleteUnit, changeType, createArmy, changeName, deleteArmy } from '../store/units'
 import UnitDefinitions from '../components/UnitDefinitions'
 import ItemRemover from '../components/ItemRemover'
+import ValueModal from '../components/ValueModal'
 
 interface IState {
   modal_army: ArmyName | null
   modal_unit: UnitType | null
+  open_create: boolean
 }
 
 class Units extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    this.state = { modal_army: null, modal_unit: null };
+    this.state = { modal_army: null, modal_unit: null, open_create : false};
   }
 
-  closeModal = () => this.setState({ modal_army: null, modal_unit: null })
+  closeModal = () => this.setState({ modal_army: null, modal_unit: null, open_create : false  })
 
   openModal = (army: ArmyName, unit: UnitType) => this.setState({ modal_army: army, modal_unit: unit })
+
+  newOnClick = () => this.setState({ open_create: true })
+
+  onCreate = (name: string) => this.props.createArmy(name as ArmyName)
 
   render() {
     return (
       <Container>
+        <ValueModal
+          open={this.state.open_create}
+          onSuccess={this.onCreate}
+          onClose={this.closeModal}
+          message='New army'
+          button_message='Create'
+        />
         <Modal basic onClose={this.closeModal} open={this.state.modal_army !== null}>
           <Modal.Content>
             {
@@ -51,6 +64,12 @@ class Units extends Component<IProps, IState> {
             />
           </Modal.Content>
         </Modal>
+        <Button primary onClick={this.newOnClick}>
+          Create new army
+        </Button>
+        <br/>
+        <br/>
+        <br/>
         {
           Array.from(this.props.units).map(value => {
             return this.renderArmy(value[0], value[1], this.props.global_stats.get(value[0])!)
@@ -70,6 +89,8 @@ class Units extends Component<IProps, IState> {
           units={units}
           onRowClick={unit => this.openModal(army, unit.type)}
           onCreateNew={type => this.props.addUnit(army, type)}
+          onChangeName={(old_name, new_name) => this.props.changeName(old_name, new_name)}
+          onDelete={this.props.deleteArmy}
         />
         <br />
         <br />
@@ -95,7 +116,10 @@ const mapStateToProps = (state: AppState) => ({
 const mapDispatchToProps = (dispatch: any) => ({
   deleteUnit: (army: ArmyName, type: UnitType) => dispatch(deleteUnit(army, type)),
   addUnit: (army: ArmyName, type: UnitType) => dispatch(addUnit(army, type)),
-  changeType: (army: ArmyName, old_type: UnitType, new_type: UnitType) => dispatch(changeType(army, old_type, new_type))
+  changeType: (army: ArmyName, old_type: UnitType, new_type: UnitType) => dispatch(changeType(army, old_type, new_type)),
+  createArmy: (army: ArmyName) => dispatch(createArmy(army)),
+  changeName: (old_name: ArmyName, new_name: ArmyName) => dispatch(changeName(old_name, new_name)),
+  deleteArmy: (army: ArmyName) => dispatch(deleteArmy(army))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

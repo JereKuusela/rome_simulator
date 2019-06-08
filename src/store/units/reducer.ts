@@ -1,7 +1,7 @@
 import { Map, OrderedSet } from 'immutable'
 import { createReducer } from 'typesafe-actions'
 import { getDefaultDefinitions, getDefaultTypes, getDefaultGlobalDefinition } from './data'
-import { setValue, setGlobalValue, deleteUnit, addUnit, changeImage, changeType } from './actions'
+import { setValue, setGlobalValue, deleteUnit, addUnit, changeImage, changeType, deleteArmy, createArmy, changeName } from './actions'
 import { UnitType, UnitDefinition, ArmyName } from './types'
 import { addValue } from '../../base_definition'
 
@@ -47,8 +47,38 @@ export const unitsReducer = createReducer(unitsState)
       types: state.types.update(action.payload.army, value => value.toList().map(value => value === action.payload.old_type ? action.payload.new_type : value).toOrderedSet())
     }
   ))
+  .handleAction(createArmy, (state, action: ReturnType<typeof createArmy>) => (
+    {
+      ...state,
+      definitions: state.definitions.set(action.payload.army, getDefaultDefinitions()),
+      types: state.types.set(action.payload.army, getDefaultTypes())
+    }
+  ))
+  .handleAction(deleteArmy, (state, action: ReturnType<typeof deleteArmy>) => (
+    {
+      ...state,
+      definitions: state.definitions.delete(action.payload.army),
+      types: state.types.delete(action.payload.army)
+    }
+  ))
+  .handleAction(changeName, (state, action: ReturnType<typeof changeName>) => (
+    {
+      ...state,
+      definitions: state.definitions.mapKeys(key => key === action.payload.old_army ? action.payload.new_army : key),
+      types: state.types.mapKeys(key => key === action.payload.old_army ? action.payload.new_army : key)
+    }
+  ))
 
 export const globalStatsReducer = createReducer(globalStatsState)
   .handleAction(setGlobalValue, (state, action: ReturnType<typeof setGlobalValue>) => (
     state.update(action.payload.army, unit => addValue(unit, action.payload.type, action.payload.key, action.payload.attribute, action.payload.value))
+  ))
+  .handleAction(createArmy, (state, action: ReturnType<typeof createArmy>) => (
+    state.set(action.payload.army, getDefaultGlobalDefinition())
+  ))
+  .handleAction(deleteArmy, (state, action: ReturnType<typeof deleteArmy>) => (
+    state.delete(action.payload.army)
+  ))
+  .handleAction(changeName, (state, action: ReturnType<typeof changeName>) => (
+    state.mapKeys(key => key === action.payload.old_army ? action.payload.new_army : key)
   ))
