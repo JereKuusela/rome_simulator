@@ -12,7 +12,7 @@ type AnyBaseDefinition = BaseDefinition<any, any>
 
 export interface BaseDefinition<T, S> {
   readonly type: T
-  image?: string
+  readonly image?: string
   readonly base_values?: Map<S, OrderedMap<string, number>>
   readonly modifier_values?: Map<S, OrderedMap<string, number>>
   readonly loss_values?: Map<S, OrderedMap<string, number>>
@@ -20,7 +20,7 @@ export interface BaseDefinition<T, S> {
 
 export interface BaseValuesDefinition<T, S> {
   readonly type: T
-  image?: string
+  readonly image?: string
   readonly base_values?: Map<S, OrderedMap<string, number>>
 }
 

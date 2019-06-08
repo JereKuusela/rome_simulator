@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
-import { Map, List } from 'immutable'
+import { Map, OrderedSet } from 'immutable'
 import { Table, Input } from 'semantic-ui-react'
 import { UnitType, ArmyName, UnitDefinition } from '../store/units'
 import { renderImages } from './utils'
 import { getImage } from '../base_definition'
 
 interface IProps {
-  readonly types_a: List<UnitType>
+  readonly types_a: OrderedSet<UnitType>
   readonly units: Map<any, Map<UnitType, UnitDefinition>>
-  readonly types_d: List<UnitType>
+  readonly types_d: OrderedSet<UnitType>
   readonly reserve_a: Map<UnitType, number>
   readonly reserve_d: Map<UnitType, number>
   readonly onValueChange: (army: ArmyName, unit: UnitType, value: number) => void
@@ -21,7 +21,7 @@ export default class FastPlanner extends Component<IProps> {
   readonly headers = ['Units in reserve', 'Attacker', 'Defender']
 
   render() {
-    const types = this.props.types_a.toOrderedSet().merge(this.props.types_d.toOrderedSet()).toList()
+    const types = this.props.types_a.merge(this.props.types_d)
     return (
       <Table celled unstackable attached={this.props.attached}>
         <Table.Header>

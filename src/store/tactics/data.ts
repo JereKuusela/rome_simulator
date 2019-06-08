@@ -1,4 +1,4 @@
-import { Map, OrderedMap, List, fromJS } from 'immutable'
+import { Map, OrderedMap, OrderedSet, fromJS } from 'immutable'
 import { calculateValue, BaseValuesDefinition, toPercent, addBaseValues } from '../../base_definition'
 import { UnitType } from '../units/types'
 import IconBottleneck from '../../images/bottleneck.png'
@@ -42,7 +42,7 @@ const tactic_to_icon = Map<TacticType, string>()
   .set(TacticType.Skirmishing, IconSkirmishing)
   .set(TacticType.TriplexAcies, IconTriplexAcies)
 
-export const getDefaultDefinitions = (): Map<TacticType, TacticDefinition> => {
+export const getDefaultDefinitions = () => {
   let map = OrderedMap<TacticType, TacticDefinition>()
   for (const value of data.tactics) {
     const tactic = createTacticFromJson(value)
@@ -54,9 +54,9 @@ export const getDefaultDefinitions = (): Map<TacticType, TacticDefinition> => {
 export type ValueType = UnitType | TacticCalc | TacticType
 
 
-export const getDefaultTypes = (): List<TacticType> => {
+export const getDefaultTypes = () => {
   const tactics = Object.keys(TacticType).map(k => TacticType[k as any]) as TacticType[]
-  return List<TacticType>(tactics)
+  return OrderedSet<TacticType>(tactics)
 }
 
 export const tacticFromJS = (object: Map<string, any>): TacticDefinition | undefined => {
@@ -65,7 +65,7 @@ export const tacticFromJS = (object: Map<string, any>): TacticDefinition | undef
   const type = object.get('type') as TacticType
   let image = object.get('image')
   if (!image)
-    image = tactic_to_icon.get(type)
+    image = tactic_to_icon.get(type) || ''
   let base_values = object.has('base_values') ? fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined 
   return { type, image, base_values }
 }
@@ -79,7 +79,7 @@ export const valueToString = (definition: TacticDefinition, type: ValueType): st
 }
 
 const createTacticFromJson = (data: TacticData): TacticDefinition => {
-  let tactic: TacticDefinition = { type: data.type as TacticType, image: tactic_to_icon.get(data.type as TacticType) }
+  let tactic: TacticDefinition = { type: data.type as TacticType, image: tactic_to_icon.get(data.type as TacticType) || '' }
   const base_values: [ValueType, number][] = [
     [UnitType.Archers, data.archers || 0],
     [UnitType.CamelCavalry, data.camel_cavalry || 0],

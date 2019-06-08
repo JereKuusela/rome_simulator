@@ -1,9 +1,18 @@
-import { fromJS, Map, List } from 'immutable'
+import { fromJS, Map, List, OrderedSet } from 'immutable'
 import { tacticFromJS, TacticType, tacticsState } from './tactics'
 import { terrainFromJS, TerrainType, terrainState } from './terrains'
 import { unitDefinitionFromJS, unitFromJS, ArmyName, UnitType, unitsState, globalStatsState, Unit } from './units'
 import { RowType, initialState, PastState, Participant } from './land_battle'
 import { transferState } from './transfer'
+
+const readTypes = <T>(types_raw: any, initial: OrderedSet<T>) => {
+  let types = initial
+  if (types_raw)
+    types = fromJS(types_raw).toOrderedSet()
+  if (types.size === 0)
+    types = initial
+  return types
+}
 
 export const transformTactics = (state_raw: any): typeof tacticsState => {
   if (!state_raw)
@@ -13,11 +22,7 @@ export const transformTactics = (state_raw: any): typeof tacticsState => {
     let definitions_raw: Map<TacticType, any> = fromJS(state_raw.definitions)
     definitions = definitions_raw.map(value => tacticFromJS(value)!).filter(value => value)
   }
-  let types = tacticsState.types
-  if (state_raw.types)
-    types = fromJS(state_raw.types)
-  if (types.size === 0)
-    types = tacticsState.types
+  const types = readTypes(state_raw.types, tacticsState.types)
   return { definitions, types }
 }
 
@@ -29,11 +34,7 @@ export const transformTerrains = (state_raw: any): typeof terrainState => {
     let definitions_raw: Map<TerrainType, any> = fromJS(state_raw.definitions)
     definitions = definitions_raw.map(value => terrainFromJS(value)!).filter(value => value)
   }
-  let types = terrainState.types
-  if (state_raw.types)
-    types = fromJS(state_raw.types)
-  if (types.size === 0)
-    types = terrainState.types
+  const types = readTypes(state_raw.types, terrainState.types)
   return { definitions, types }
 }
 
@@ -45,7 +46,13 @@ export const transformUnits = (state_raw: any): typeof unitsState => {
     let definitions_raw: Map<ArmyName, Map<UnitType, any>> = fromJS(state_raw.definitions)
     definitions = definitions_raw.filter(value => value).map(value => value.map(value => unitDefinitionFromJS(value)!).filter(value => value))
   }
-  return { definitions, types: unitsState.types }
+  let types = unitsState.types
+  if (state_raw.types)
+    types = fromJS(state_raw.types)
+  if (types.size === 0)
+    types = unitsState.types
+  types = types.map(value => readTypes(value, unitsState.types.get(ArmyName.Attacker)!))
+  return { definitions, types }
 }
 
 export const transformGlobalStats = (state_raw: any): typeof globalStatsState => {

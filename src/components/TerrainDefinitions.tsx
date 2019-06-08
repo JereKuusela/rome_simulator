@@ -1,4 +1,4 @@
-import { List as ImmutableList, Map } from 'immutable'
+import { OrderedSet, Map } from 'immutable'
 import React, { Component } from 'react'
 import { Table, Button } from 'semantic-ui-react'
 import { TerrainCalc, TerrainDefinition, TerrainType } from '../store/terrains'
@@ -7,7 +7,7 @@ import NewDefinition from './NewDefinition'
 
 interface IProps {
   readonly terrains: Map<TerrainType, TerrainDefinition>
-  readonly types: ImmutableList<TerrainType>
+  readonly types: OrderedSet<TerrainType>
   readonly onRowClick: (type: TerrainType) => void
   readonly onCreateNew: (type: TerrainType) => void
 }

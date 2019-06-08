@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { List, OrderedSet, Map } from 'immutable'
+import { OrderedSet, Map } from 'immutable'
 import { Table, Input } from 'semantic-ui-react'
 import { UnitType, UnitDefinition, UnitCalc, ArmyName, ValueType, valueToString } from '../store/units'
 import { TerrainType } from '../store/terrains'
@@ -12,7 +12,7 @@ interface IProps {
   readonly unit_types: OrderedSet<UnitType>
   readonly units: Map<any, Map<UnitType, UnitDefinition>>
   readonly show_statistics: boolean
-  readonly terrains: List<TerrainType>
+  readonly terrains: OrderedSet<TerrainType>
   readonly onCustomBaseValueChange: (army: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
   readonly onCustomModifierValueChange: (army: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
   readonly onCustomLossValueChange: (army: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
@@ -98,7 +98,7 @@ export default class UnitDetail extends Component<IProps> {
   }
 
   renderRow = (unit: UnitDefinition, attribute: ValueType) => {
-    if (attribute === UnitCalc.MovementSpeed || attribute === UnitCalc.Upkeep || attribute === UnitCalc.Cost || attribute === UnitCalc.RecruitTime || attribute === UnitCalc.AttritionWeight)
+    if (attribute === UnitCalc.MovementSpeed || attribute === UnitCalc.Upkeep || attribute === UnitCalc.RecruitTime)
       return null
     if (!this.props.show_statistics && (attribute === UnitCalc.ManpowerDepleted || attribute === UnitCalc.MoraleDepleted))
       return null

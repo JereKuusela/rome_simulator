@@ -1,4 +1,4 @@
-import { Map, List, OrderedMap, fromJS } from 'immutable'
+import { Map, OrderedSet, OrderedMap, fromJS } from 'immutable'
 import { calculateValue, BaseValuesDefinition, addBaseValues } from '../../base_definition'
 import * as data from './terrains.json'
 
@@ -25,7 +25,7 @@ export enum TerrainCalc {
   Roll = 'Roll'
 }
 
-export const getDefaultDefinitions = (): Map<TerrainType, TerrainDefinition> => {
+export const getDefaultDefinitions = () => {
   let map = OrderedMap<TerrainType, TerrainDefinition>()
   for (const value of data.terrain) {
     const terrain = createTerrainFromJson(value)
@@ -34,16 +34,16 @@ export const getDefaultDefinitions = (): Map<TerrainType, TerrainDefinition> => 
   return map
 }
 
-export const getDefaultTypes = (): List<TerrainType> => {
+export const getDefaultTypes = () => {
   const terrains = Object.keys(TerrainType).map(k => TerrainType[k as any]) as TerrainType[]
-  return List<TerrainType>(terrains)
+  return OrderedSet<TerrainType>(terrains)
 }
 
 export const terrainFromJS = (object: Map<string, any>): TerrainDefinition | undefined => {
   if (!object)
     return undefined
   let base_values = object.has('base_values') ? fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
-  return { type: object.get('type') as TerrainType, location: object.get('location') as LocationType, base_values }
+  return { type: object.get('type') as TerrainType, image: '', location: object.get('location') as LocationType, base_values }
 }
 
 
@@ -59,7 +59,7 @@ export const valueToString = (definition: TerrainDefinition, type: ValueType): s
 }
 
 const createTerrainFromJson = (data: TerrainData): TerrainDefinition => {
-  let terrain: TerrainDefinition = {type: data.type as TerrainType, location: data.location as LocationType}
+  let terrain: TerrainDefinition = {type: data.type as TerrainType, image: '', location: data.location as LocationType}
   const base_values: [ValueType, number][] = [
     [TerrainCalc.Roll, data.roll]
   ]

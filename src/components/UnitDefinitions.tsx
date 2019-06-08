@@ -1,4 +1,4 @@
-import { List as ImmutableList, Map } from 'immutable'
+import { Map, OrderedSet } from 'immutable'
 import React, { Component } from 'react'
 import { Image, Table, List, Icon, Button } from 'semantic-ui-react'
 import { UnitType, UnitDefinition, UnitCalc, ArmyName, ValueType, valueToString } from '../store/units'
@@ -14,8 +14,8 @@ import NewDefinition from './NewDefinition'
 interface IProps {
   readonly army: ArmyName
   readonly units: Map<UnitType, UnitDefinition>
-  readonly types: ImmutableList<UnitType>
-  readonly terrains: ImmutableList<TerrainType>
+  readonly types: OrderedSet<UnitType>
+  readonly terrains: OrderedSet<TerrainType>
   readonly global_stats: UnitDefinition
   readonly onRowClick: (unit: UnitDefinition) => void
   readonly onCreateNew: (type: UnitType) => void

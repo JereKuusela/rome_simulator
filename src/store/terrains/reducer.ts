@@ -21,14 +21,14 @@ export const terrainsReducer = createReducer(terrainState)
     {
       ...state,
       definitions: state.definitions.delete(action.payload.type),
-      types: state.types.delete(state.types.findIndex(value => value === action.payload.type))
+      types: state.types.delete(action.payload.type)
     }
   ))
   .handleAction(addTerrain, (state, action: ReturnType<typeof addTerrain>) => (
     {
       ...state,
-      definitions: state.definitions.set(action.payload.type, { type: action.payload.type }),
-      types: state.types.push(action.payload.type)
+      definitions: state.definitions.set(action.payload.type, { type: action.payload.type, image: '' }),
+      types: state.types.add(action.payload.type)
     }
   ))
   .handleAction(changeLocation, (state, action: ReturnType<typeof changeLocation>) => (

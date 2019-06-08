@@ -1,4 +1,4 @@
-import { Map, List } from 'immutable'
+import { Map, OrderedSet } from 'immutable'
 import { createReducer } from 'typesafe-actions'
 import { getDefaultDefinitions, getDefaultTypes, getDefaultGlobalDefinition } from './data'
 import { setValue, setGlobalValue, deleteUnit, addUnit, changeImage, changeType } from './actions'
@@ -6,19 +6,10 @@ import { UnitType, UnitDefinition, ArmyName } from './types'
 import { addValue } from '../../base_definition'
 
 export const unitsState = {
-  types: Map<ArmyName, List<UnitType>>().set(ArmyName.Attacker, getDefaultTypes()).set(ArmyName.Defender, getDefaultTypes()),
+  types: Map<ArmyName, OrderedSet<UnitType>>().set(ArmyName.Attacker, getDefaultTypes()).set(ArmyName.Defender, getDefaultTypes()),
   definitions: Map<ArmyName, Map<UnitType, UnitDefinition>>().set(ArmyName.Attacker, getDefaultDefinitions()).set(ArmyName.Defender, getDefaultDefinitions())
 }
 export const globalStatsState = Map<ArmyName, UnitDefinition>().set(ArmyName.Attacker, getDefaultGlobalDefinition()).set(ArmyName.Defender, getDefaultGlobalDefinition())
-
-// Generic way to modify types. Same could also be used for definitions but API already has functionality.
-const map = <T>(types: Map<ArmyName, List<UnitType>>, army: ArmyName, payload: T, modifier: (types: List<UnitType>, payload: T) => List<UnitType>) => {
-  return types.map((value, key) => key === army ? modifier(value, payload) : value)
-}
-
-const deleter = (types: List<UnitType>, payload: { type: UnitType }) => types.delete(types.findIndex(value => value === payload.type))
-const adder = (types: List<UnitType>, payload: { type: UnitType }) => types.push(payload.type)
-const changer = (types: List<UnitType>, payload: { old_type: UnitType, new_type: UnitType }) => types.map(value => value === payload.old_type ? payload.new_type : value)
 
 export const unitsReducer = createReducer(unitsState)
   .handleAction(setValue, (state, action: ReturnType<typeof setValue>) => (
@@ -33,14 +24,14 @@ export const unitsReducer = createReducer(unitsState)
     {
       ...state,
       definitions: state.definitions.deleteIn([action.payload.army, action.payload.type]),
-      types: map(state.types, action.payload.army, action.payload, deleter)
+      types: state.types.deleteIn([action.payload.army, action.payload.type])
     }
   ))
   .handleAction(addUnit, (state, action: ReturnType<typeof addUnit>) => (
     {
       ...state,
-      definitions: state.definitions.setIn([action.payload.army, action.payload.type], { type: action.payload.type }),
-      types: map(state.types, action.payload.army, action.payload, adder)
+      definitions: state.definitions.setIn([action.payload.army, action.payload.type], { type: action.payload.type, image: '' }),
+      types: state.types.update(action.payload.army, value => value.add(action.payload.type))
     }
   ))
   .handleAction(changeImage, (state, action: ReturnType<typeof changeImage>) => (
@@ -53,7 +44,7 @@ export const unitsReducer = createReducer(unitsState)
     {
       ...state,
       definitions: state.definitions.setIn([action.payload.army, action.payload.new_type], { ...state.definitions.getIn([action.payload.army, action.payload.old_type]), type: action.payload.new_type }).deleteIn([action.payload.army, action.payload.old_type]),
-      types: map(state.types, action.payload.army, action.payload, changer)
+      types: state.types.update(action.payload.army, value => value.toList().map(value => value === action.payload.old_type ? action.payload.new_type : value).toOrderedSet())
     }
   ))
 

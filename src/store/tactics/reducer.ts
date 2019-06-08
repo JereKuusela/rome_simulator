@@ -20,14 +20,14 @@ export const tacticsReducer = createReducer(tacticsState)
     {
       ...state,
       definitions: state.definitions.delete(action.payload.type),
-      types: state.types.delete(state.types.findIndex(value => value === action.payload.type))
+      types: state.types.delete(action.payload.type)
     }
   ))
   .handleAction(addTactic, (state, action: ReturnType<typeof addTactic>) => (
     {
       ...state,
-      definitions: state.definitions.set(action.payload.type, { type: action.payload.type }),
-      types: state.types.push(action.payload.type)
+      definitions: state.definitions.set(action.payload.type, { type: action.payload.type, image: '' }),
+      types: state.types.add(action.payload.type)
     }
   ))
   .handleAction(changeImage, (state, action: ReturnType<typeof changeImage>) => (

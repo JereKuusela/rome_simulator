@@ -24,17 +24,14 @@ class ModalFastPlanner extends Component<IProps, IState> {
     this.state = { changes_a: Map<UnitType, number>(), changes_d: Map<UnitType, number>() }
   }
 
-  readonly units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
-
-
   originals_a = Map<UnitType, number>()
   originals_d = Map<UnitType, number>()
 
   render() {
     if (!this.props.open)
       return null
-    this.originals_a = this.units.reduce((map, value) => map.set(value, this.countUnits(this.props.attacker.reserve, value)), Map<UnitType, number>())
-    this.originals_d = this.units.reduce((map, value) => map.set(value, this.countUnits(this.props.defender.reserve, value)), Map<UnitType, number>())
+    this.originals_a = this.props.types.get(ArmyName.Attacker)!.reduce((map, value) => map.set(value, this.countUnits(this.props.attacker.reserve, value)), Map<UnitType, number>())
+    this.originals_d = this.props.types.get(ArmyName.Defender)!.reduce((map, value) => map.set(value, this.countUnits(this.props.defender.reserve, value)), Map<UnitType, number>())
     return (
       <Modal basic onClose={this.onClose} open centered={false}>
         <Modal.Content>
@@ -50,9 +47,9 @@ class ModalFastPlanner extends Component<IProps, IState> {
           <ArmyCosts
             army_a={this.mergeAllValues(ArmyName.Attacker, this.props.attacker.army)}
             army_d={this.mergeAllValues(ArmyName.Defender, this.props.defender.army)}
-            reserve_a={this.mergeAllValues(ArmyName.Defender, this.editReserve(this.props.attacker.reserve, this.originals_a, this.state.changes_a))}
+            reserve_a={this.mergeAllValues(ArmyName.Attacker, this.editReserve(this.props.attacker.reserve, this.originals_a, this.state.changes_a))}
             reserve_d={this.mergeAllValues(ArmyName.Defender, this.editReserve(this.props.defender.reserve, this.originals_d, this.state.changes_d))}
-            defeated_a={this.mergeAllValues(ArmyName.Defender, this.props.attacker.defeated)}
+            defeated_a={this.mergeAllValues(ArmyName.Attacker, this.props.attacker.defeated)}
             defeated_d={this.mergeAllValues(ArmyName.Defender, this.props.defender.defeated)}
             attached
            />
@@ -83,7 +80,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
     changes.forEach((value, key) => {
       const original = originals.get(key, 0)
       if (value > original)
-        units = units.concat(mapRange(value - original, _ => ({ type: key })))
+        units = units.concat(mapRange(value - original, _ => ({ type: key, image: '' })))
     })
     return units
   }
