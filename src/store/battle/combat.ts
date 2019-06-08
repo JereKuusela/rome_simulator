@@ -92,13 +92,13 @@ export const battle = (definitions: Definitions, attacker: ParticipantState, def
   return [army_a, army_d, reserve_a, reserve_d, defeated_a, defeated_d]
 }
 
-const modifyRoll = (roll: number, terrains: Terrains, general: number, opposing_general: number) => {
+const modifyRoll = (roll: number, terrains: Terrains, general: number, opposing_general: number): number => {
   const terrain_effect = terrains.map(terrain => calculateValue(terrain, TerrainCalc.Roll)).reduce((previous, current) => previous + current, 0)
   const general_effect = Math.max(0, Math.floor((general - opposing_general) / 2.0))
   return roll + terrain_effect + general_effect
 }
 
-const countArmySize = (army: Army, reserve: Reserve, defeated: Defeated) => army.reduce((previous, current) => previous + (current ? 1 : 0), 0) + reserve.size + defeated.size
+const countArmySize = (army: Army, reserve: Reserve, defeated: Defeated): number => army.reduce((previous, current) => previous + (current ? 1 : 0), 0) + reserve.size + defeated.size
 
 
 /**
@@ -230,7 +230,7 @@ const reinforce = (round: number, army: Army, reserve: Reserve, row_types: Map<R
  * @param source_row Attackers.
  * @param target_row Defenders.
  */
-const pickTargets = (source_row: Army, target_row: Army) => {
+const pickTargets = (source_row: Army, target_row: Army): Array<number | null> => {
   // Units attack mainly units on front of them. If not then first target from left to right.
   const attacker_to_defender = Array<number | null>(target_row.size)
   for (let i = 0; i < target_row.size; ++i)

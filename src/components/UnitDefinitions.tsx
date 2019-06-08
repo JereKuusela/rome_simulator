@@ -38,7 +38,7 @@ export default class UnitDefinitions extends Component<IProps, IState> {
     this.state = { open_create: false, open_edit: false, open_confirm: false}
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <div>
         <ValueModal
@@ -125,21 +125,21 @@ export default class UnitDefinitions extends Component<IProps, IState> {
     )
   }
 
-  newOnClick = () => this.setState({ open_create: true })
+  newOnClick = (): void => this.setState({ open_create: true })
 
-  onConfirm = () => this.props.onDelete(this.props.army)
+  onConfirm = (): void => this.props.onDelete(this.props.army)
 
-  confirmOnClick = () => this.setState({ open_confirm: true })
+  confirmOnClick = (): void => this.setState({ open_confirm: true })
 
-  onCreate = (type: string) => this.props.onCreateNew(type as UnitType)
+  onCreate = (type: string): void => this.props.onCreateNew(type as UnitType)
 
-  onClose = () => this.setState({ open_create: false, open_edit: false })
+  onClose = (): void => this.setState({ open_create: false, open_edit: false })
 
-  onEdit = (name: string) => this.props.onChangeName(this.props.army, name as ArmyName)
+  onEdit = (name: string): void => this.props.onChangeName(this.props.army, name as ArmyName)
 
-  editOnClick = () => this.setState({ open_edit: true })
+  editOnClick = (): void => this.setState({ open_edit: true })
 
-  renderRow = (definition?: UnitDefinition) => {
+  renderRow = (definition?: UnitDefinition): JSX.Element | null => {
     if (!definition)
       return null
     const unit = mergeValues(definition, this.props.global_stats)
@@ -202,7 +202,7 @@ export default class UnitDefinitions extends Component<IProps, IState> {
     )
   }
 
-  renderGlobalStats = (unit: UnitDefinition) => {
+  renderGlobalStats = (unit: UnitDefinition): JSX.Element => {
     return (
       <Table.Row key={unit.type} onClick={() => this.props.onRowClick(unit)}>
         <Table.Cell singleLine>
@@ -263,7 +263,7 @@ export default class UnitDefinitions extends Component<IProps, IState> {
     )
   }
 
-  renderAttributeList = (unit: UnitDefinition, attribute: ValueType) => {
+  renderAttributeList = (unit: UnitDefinition, attribute: ValueType): JSX.Element => {
     const base = calculateBase(unit, attribute)
     const modifier = calculateModifier(unit, attribute)
     const loss = calculateLoss(unit, attribute)

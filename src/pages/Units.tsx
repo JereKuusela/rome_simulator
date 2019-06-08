@@ -23,15 +23,15 @@ class Units extends Component<IProps, IState> {
     this.state = { modal_army: null, modal_unit: null, open_create : false};
   }
 
-  closeModal = () => this.setState({ modal_army: null, modal_unit: null, open_create : false  })
+  closeModal = (): void => this.setState({ modal_army: null, modal_unit: null, open_create : false  })
 
-  openModal = (army: ArmyName, unit: UnitType) => this.setState({ modal_army: army, modal_unit: unit })
+  openModal = (army: ArmyName, unit: UnitType): void => this.setState({ modal_army: army, modal_unit: unit })
 
-  newOnClick = () => this.setState({ open_create: true })
+  newOnClick = (): void => this.setState({ open_create: true })
 
-  onCreate = (name: string) => this.props.createArmy(name as ArmyName)
+  onCreate = (name: string): void => this.props.createArmy(name as ArmyName)
 
-  render() {
+  render(): JSX.Element {
     return (
       <Container>
         <ValueModal
@@ -78,7 +78,7 @@ class Units extends Component<IProps, IState> {
       </Container>
     )
   }
-  renderArmy = (army: ArmyName, units: Map<UnitType, UnitDefinition>, global_stats: UnitDefinition) => {
+  renderArmy = (army: ArmyName, units: Map<UnitType, UnitDefinition>, global_stats: UnitDefinition): JSX.Element => {
     return (
       <div key={army}>
         <UnitDefinitions
@@ -98,9 +98,9 @@ class Units extends Component<IProps, IState> {
     )
   }
 
-  onRemove = () => this.state.modal_army && this.state.modal_unit && this.props.deleteUnit(this.state.modal_army, this.state.modal_unit)
+  onRemove = (): void => this.state.modal_army && this.state.modal_unit && this.props.deleteUnit(this.state.modal_army, this.state.modal_unit)
 
-  onChangeType = (army: ArmyName, old_type: UnitType, new_type: UnitType) => {
+  onChangeType = (army: ArmyName, old_type: UnitType, new_type: UnitType): void => {
     this.props.changeType(army, old_type, new_type)
     this.setState({ modal_unit: new_type })
   }

@@ -9,7 +9,7 @@ import UnitDetail from '../components/UnitDetail'
 const CUSTOM_VALUE_KEY = 'Global'
 
 class ModalGlobalStatsDetail extends Component<IProps> {
-  render() {
+  render(): JSX.Element | null {
     if (!this.props.army || this.props.unit)
       return null
     const unit_types = this.props.unit_types.reduce((previous, current) => previous.merge(current.toOrderedSet()), OrderedSet<UnitType>())

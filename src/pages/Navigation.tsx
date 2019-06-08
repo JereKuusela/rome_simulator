@@ -6,7 +6,7 @@ import { Container, Menu } from 'semantic-ui-react'
  */
 export default class Navigation extends Component {
 
-  render() {
+  render(): JSX.Element {
     const path = (this.props as any).location.pathname
     const history = (this.props as any).history
     return (

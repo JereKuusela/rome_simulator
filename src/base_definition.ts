@@ -26,10 +26,10 @@ export interface BaseValuesDefinition<T, S> {
 }
 
 export const getImage = <Definition extends AnyDefinition>
-  (definition?: Definition) => (definition && definition.image) || (definition ? UnknownIcon : EmptyIcon)
+  (definition?: Definition): string => (definition && definition.image) || (definition ? UnknownIcon : EmptyIcon)
 
 export const mergeBaseValues = <Definition extends AnyDefinition | undefined>
-  (definition: Definition, to_merge: Definition) => {
+  (definition: Definition, to_merge: Definition): Definition => {
   let new_base_values = Map<any, OrderedMap<any, number>>()
   if (definition && definition.base_values)
     new_base_values = new_base_values.mergeDeep(definition.base_values)
@@ -39,7 +39,7 @@ export const mergeBaseValues = <Definition extends AnyDefinition | undefined>
 }
 
 export const mergeValues = <Definition extends AnyBaseDefinition | undefined>
-  (definition: Definition, to_merge: Definition) => {
+  (definition: Definition, to_merge: Definition): Definition => {
   let new_base_values = Map<any, OrderedMap<string, number>>()
   if (definition && definition.base_values)
     new_base_values = new_base_values.mergeDeep(definition.base_values)
@@ -62,7 +62,7 @@ export const mergeValues = <Definition extends AnyBaseDefinition | undefined>
 }
 
 export const addBaseValue = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, key: string, attribute: Attribute, value: number) => {
+  (definition: Definition, key: string, attribute: Attribute, value: number): Definition => {
   const new_values = addValues(definition.base_values, key, [[attribute, value]])
   return { ...definition, base_values: new_values }
 }
@@ -74,7 +74,7 @@ export const addBaseValues = <Definition extends AnyDefinition, Attribute>
 }
 
 export const addModifierValue = <Definition extends AnyBaseDefinition, Attribute>
-  (definition: Definition, key: string, attribute: Attribute, value: number) => {
+  (definition: Definition, key: string, attribute: Attribute, value: number): Definition => {
   const new_values = addValues(definition.modifier_values, key, [[attribute, value]])
   return { ...definition, modifier_values: new_values }
 }
@@ -86,7 +86,7 @@ export const addModifierValues = <Definition extends AnyBaseDefinition, Attribut
 }
 
 export const addLossValue = <Definition extends AnyBaseDefinition, Attribute>
-  (definition: Definition, key: string, attribute: Attribute, value: number) => {
+  (definition: Definition, key: string, attribute: Attribute, value: number): Definition => {
   const new_values = addValues(definition.loss_values, key, [[attribute, value]])
   return { ...definition, loss_values: new_values }
 }
@@ -97,7 +97,7 @@ export const addLossValues = <Definition extends AnyBaseDefinition, Attribute>
   return { ...definition, loss_values: new_values }
 }
 
-const addValues = <Attribute>(container: Map<Attribute, OrderedMap<string, number>> | undefined, key: string, values: [Attribute, number][]) => {
+const addValues = <Attribute>(container: Map<Attribute, OrderedMap<string, number>> | undefined, key: string, values: [Attribute, number][]): Map<Attribute, OrderedMap<string, number>> => {
   let new_values = container ? container : Map<Attribute, OrderedMap<string, number>>()
   for (const [type, value] of values) {
     new_values = new_values.has(type) ? new_values : new_values.set(type, OrderedMap<string, number>())
@@ -130,7 +130,7 @@ export const calculateValueWithoutLoss = <Definition extends AnyDefinition, Attr
   return round(value)
 }
 
-const round = (number: number) => +(Math.round(1000.0 * number) / 1000.0).toFixed(3)
+const round = (number: number): number => +(Math.round(1000.0 * number) / 1000.0).toFixed(3)
 
 
 export const calculateBase = <Definition extends AnyDefinition, Attribute>
@@ -172,7 +172,7 @@ const getValue = <Attribute>(container: Map<Attribute, OrderedMap<string, number
 }
 
 export const explainShort = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, type: Attribute) => {
+  (definition: Definition, type: Attribute): string => {
   if (!definition.base_values)
     return ''
   let base = 0
@@ -188,7 +188,7 @@ export const explainShort = <Definition extends AnyDefinition, Attribute>
 }
 
 export const explain = <Definition extends AnyBaseDefinition, Attribute>
-  (definition: Definition, type: Attribute) => {
+  (definition: Definition, type: Attribute): string => {
   const value_modifier = definition.modifier_values ? definition.modifier_values.get(type) : undefined
   const value_loss = definition.loss_values ? definition.loss_values.get(type) : undefined
   if ((!value_modifier || value_modifier.size === 0) && (!value_loss || value_loss.size === 0))
@@ -231,34 +231,34 @@ export const explain = <Definition extends AnyBaseDefinition, Attribute>
 }
 
 export const valueToRelativeNumber = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, type: Attribute, show_zero: boolean) => {
+  (definition: Definition, type: Attribute, show_zero: boolean): string => {
   const value = calculateValue(definition, type)
   if (value > 0)
     return '+' + String(value)
   if (value === 0 && !show_zero)
     return ''
-  return +(value).toFixed(2)
+  return String(+(value).toFixed(2))
 }
 
 export const valueToNumber = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, type: Attribute, show_zero: boolean) => {
+  (definition: Definition, type: Attribute, show_zero: boolean): string => {
   const value = calculateValue(definition, type)
   if (value === 0 && !show_zero)
     return ''
-  return +(value).toFixed(2)
+  return String(+(value).toFixed(2))
 }
 
 export const valueToPercent = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, type: Attribute, show_zero: boolean) => toPercent(calculateValue(definition, type), show_zero)
+  (definition: Definition, type: Attribute, show_zero: boolean): string => toPercent(calculateValue(definition, type), show_zero)
 
 export const valueToRelativePercent = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, type: Attribute, show_zero: boolean) => toRelativePercent(calculateValue(definition, type), show_zero)
+  (definition: Definition, type: Attribute, show_zero: boolean): string => toRelativePercent(calculateValue(definition, type), show_zero)
 
 export const valueToRelativeZeroPercent = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, type: Attribute, show_zero: boolean) => toRelativeZeroPercent(calculateValue(definition, type), show_zero)
+  (definition: Definition, type: Attribute, show_zero: boolean): string => toRelativeZeroPercent(calculateValue(definition, type), show_zero)
 
 export const addValue = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, type: ValuesType, key: string, attribute: Attribute, value: number) => {
+  (definition: Definition, type: ValuesType, key: string, attribute: Attribute, value: number): Definition => {
   if (type === ValuesType.Base)
     return addBaseValue(definition, key, attribute, value)
   if (type === ValuesType.Loss)
@@ -268,14 +268,14 @@ export const addValue = <Definition extends AnyDefinition, Attribute>
   return definition
 }
 
-export const toPercent = (number: number, show_zero: boolean) => {
+export const toPercent = (number: number, show_zero: boolean): string => {
   const value = +(number * 100.0).toFixed(2)
   if (value === 0 && !show_zero)
     return ''
   return String(value) + '%'
 }
 
-export const toRelativePercent = (number: number, show_zero: boolean) => {
+export const toRelativePercent = (number: number, show_zero: boolean): string => {
   const value = +(number * 100.0 - 100.0).toFixed(2)
   if (value > 0)
     return '+' + String(value) + '%'
@@ -286,7 +286,7 @@ export const toRelativePercent = (number: number, show_zero: boolean) => {
   return String(value) + '%'
 }
 
-export const toRelativeZeroPercent = (number: number, show_zero: boolean) => {
+export const toRelativeZeroPercent = (number: number, show_zero: boolean): string => {
   const value = +(number * 100.0).toFixed(2)
   if (value > 0)
     return '+' + String(value) + '%'

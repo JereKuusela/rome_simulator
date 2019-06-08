@@ -20,11 +20,11 @@ class Tactics extends Component<IProps, IState> {
     this.state = { modal_tactic: null };
   }
 
-  closeModal = () => this.setState({ modal_tactic: null })
+  closeModal = (): void => this.setState({ modal_tactic: null })
 
-  openModal = (tactic: TacticType) => this.setState({ modal_tactic: tactic })
+  openModal = (tactic: TacticType): void => this.setState({ modal_tactic: tactic })
 
-  render() {
+  render(): JSX.Element {
     const unit_types = this.props.unit_types.reduce((previous, current) => previous.merge(current.toOrderedSet()), OrderedSet<UnitType>())
     return (
       <Container>
@@ -56,9 +56,9 @@ class Tactics extends Component<IProps, IState> {
     )
   }
   
-  onRemove = () => this.state.modal_tactic && this.props.deleteTactic(this.state.modal_tactic)
+  onRemove = (): void => this.state.modal_tactic && this.props.deleteTactic(this.state.modal_tactic)
 
-  onChangeType = (old_type: TacticType, new_type: TacticType) => {
+  onChangeType = (old_type: TacticType, new_type: TacticType): void => {
     this.props.changeType(old_type, new_type)
     this.setState({ modal_tactic: new_type })
   }

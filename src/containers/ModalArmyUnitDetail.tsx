@@ -19,7 +19,7 @@ export interface ModalInfo {
 }
 
 class ModalArmyUnitDetail extends Component<IProps> {
-  render() {
+  render(): JSX.Element | null {
     if (!this.props.info)
       return null
     const unit_types = this.props.unit_types.reduce((previous, current) => previous.merge(current.toOrderedSet()), OrderedSet<UnitType>())
@@ -47,26 +47,26 @@ class ModalArmyUnitDetail extends Component<IProps> {
     )
   }
 
-  selectUnit = (unit: UnitType | undefined) => (
+  selectUnit = (unit: UnitType | undefined): void => (
     this.props.info &&
     this.props.selectUnit(this.props.info.participant, this.props.info.type, this.props.info.index, unit ? this.props.units.getIn([this.props.info.name, unit]) : undefined)
   )
 
-  setBaseValue = (participant: ParticipantType, _type: UnitType, key: string, attribute: ValueType, value: number) => {
+  setBaseValue = (participant: ParticipantType, _type: UnitType, key: string, attribute: ValueType, value: number): void => {
     if (!this.props.info)
       return
     const unit = addBaseValue(this.getUnit(this.props.info), key, attribute, value)
     this.props.selectUnit(participant, this.props.info.type, this.props.info.index, unit)
   }
 
-  setModifierValue = (participant: ParticipantType, _type: UnitType, key: string, attribute: ValueType, value: number) => {
+  setModifierValue = (participant: ParticipantType, _type: UnitType, key: string, attribute: ValueType, value: number): void => {
     if (!this.props.info)
       return
     const unit = addModifierValue(this.getUnit(this.props.info), key, attribute, value)
     this.props.selectUnit(participant, this.props.info.type, this.props.info.index, unit)
   }
 
-  setLossValue = (participant: ParticipantType, _type: UnitType, key: string, attribute: ValueType, value: number) => {
+  setLossValue = (participant: ParticipantType, _type: UnitType, key: string, attribute: ValueType, value: number): void => {
     if (!this.props.info)
       return
     const unit = addLossValue(this.getUnit(this.props.info), key, attribute, value)

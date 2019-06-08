@@ -35,7 +35,7 @@ export enum ParticipantType {
   Defender = 'Defender'
 }
 
-export const getInitialTerrains = () => List<TerrainType>().push(TerrainType.None).push(TerrainType.Plains)
+export const getInitialTerrains = (): List<TerrainType> => List<TerrainType>().push(TerrainType.None).push(TerrainType.Plains)
 
 export const getInitialArmy = (attacker: boolean): Participant => ({
     army: fromJS(Array(30).fill(undefined)),

@@ -42,7 +42,7 @@ const tactic_to_icon = Map<TacticType, string>()
   .set(TacticType.Skirmishing, IconSkirmishing)
   .set(TacticType.TriplexAcies, IconTriplexAcies)
 
-export const getDefaultDefinitions = () => {
+export const getDefaultDefinitions = (): OrderedMap<TacticType, TacticDefinition> => {
   let map = OrderedMap<TacticType, TacticDefinition>()
   for (const value of data.tactics) {
     const tactic = createTacticFromJson(value)
@@ -54,7 +54,7 @@ export const getDefaultDefinitions = () => {
 export type ValueType = UnitType | TacticCalc | TacticType
 
 
-export const getDefaultTypes = () => {
+export const getDefaultTypes = (): OrderedSet<TacticType> => {
   const tactics = Object.keys(TacticType).map(k => TacticType[k as any]) as TacticType[]
   return OrderedSet<TacticType>(tactics)
 }

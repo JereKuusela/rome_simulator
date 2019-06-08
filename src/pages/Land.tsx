@@ -35,28 +35,28 @@ class Land extends Component<IProps, IState> {
   }
 
 
-  closeModal = () => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null, modal_fast_planner_open: false, modal_row_info: null })
+  closeModal = (): void => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null, modal_fast_planner_open: false, modal_row_info: null })
 
-  openUnitModal = (participant: ParticipantType, name: ArmyName, type: ArmyType, column: number, unit: UnitDefinition | undefined) => {
+  openUnitModal = (participant: ParticipantType, name: ArmyName, type: ArmyType, column: number, unit: UnitDefinition | undefined): void => {
     if (unit)
       this.openArmyUnitModal(participant, name, type, column)
     else
       this.openUnitSelector(participant, name, type, column)
   }
 
-  openUnitSelector = (participant: ParticipantType, name: ArmyName, type: ArmyType, index: number) => this.setState({ modal_unit_info: { participant, name, type, index } })
+  openUnitSelector = (participant: ParticipantType, name: ArmyName, type: ArmyType, index: number): void => this.setState({ modal_unit_info: { participant, name, type, index } })
 
-  openArmyUnitModal = (participant: ParticipantType, name: ArmyName, type: ArmyType, index: number) => this.setState({ modal_army_unit_info: { participant, name, type, index } })
+  openArmyUnitModal = (participant: ParticipantType, name: ArmyName, type: ArmyType, index: number): void => this.setState({ modal_army_unit_info: { participant, name, type, index } })
 
-  openTerrainModal = (index: number) => this.setState({ modal_terrain_info: { index, location: this.props.terrains.get(this.props.selected_terrains.get(index)!)!.location } })
+  openTerrainModal = (index: number): void => this.setState({ modal_terrain_info: { index, location: this.props.terrains.get(this.props.selected_terrains.get(index)!)!.location } })
 
-  openTacticModal = (participant: ParticipantType) => this.setState({ modal_tactic_info: { participant } })
+  openTacticModal = (participant: ParticipantType): void => this.setState({ modal_tactic_info: { participant } })
 
-  openFastPlanner = () => this.setState({ modal_fast_planner_open: true })
+  openFastPlanner = (): void => this.setState({ modal_fast_planner_open: true })
 
-  openRowModal = (participant: ParticipantType, name: ArmyName, type: RowType) => this.setState({ modal_row_info: { participant, name, type } })
+  openRowModal = (participant: ParticipantType, name: ArmyName, type: RowType): void => this.setState({ modal_row_info: { participant, name, type } })
 
-  render() {
+  render(): JSX.Element {
     return (
       <Container>
         <ModalUnitSelector
@@ -233,13 +233,13 @@ class Land extends Component<IProps, IState> {
     )
   }
 
-  roundName = (round: number) => {
+  roundName = (round: number): string => {
     if (round < 0)
       return 'Before combat'
     return String(round)
   }
 
-  renderArmy = (type: ParticipantType, participant: Participant) => {
+  renderArmy = (type: ParticipantType, participant: Participant): JSX.Element => {
     return (
       <div key={type}>
         {type === ParticipantType.Attacker && <Header>{type + '\'s army'}</Header>}
@@ -254,7 +254,7 @@ class Land extends Component<IProps, IState> {
     )
   }
 
-  renderRoll = (type: ParticipantType, roll: number, is_random: boolean) => {
+  renderRoll = (type: ParticipantType, roll: number, is_random: boolean): JSX.Element => {
     return (
       <div key={type}>
         <Image src={IconDice} avatar />
@@ -263,13 +263,13 @@ class Land extends Component<IProps, IState> {
     )
   }
 
-  renderIsRollRandom = (type: ParticipantType, is_random: boolean) => {
+  renderIsRollRandom = (type: ParticipantType, is_random: boolean): JSX.Element => {
     return (
       <Checkbox toggle checked={is_random} onClick={() => this.props.toggleRandomRoll(type)} />
     )
   }
 
-  renderReserve = (type: ParticipantType, participant: Participant) => {
+  renderReserve = (type: ParticipantType, participant: Participant): JSX.Element => {
     return (
       <div key={type}>
         <Header>{type + '\'s reserve'}</Header>
@@ -283,7 +283,7 @@ class Land extends Component<IProps, IState> {
     )
   }
 
-  renderDefeatedArmy = (type: ParticipantType, participant: Participant) => {
+  renderDefeatedArmy = (type: ParticipantType, participant: Participant): JSX.Element => {
     return (
       <div key={type}>
         <Header>{type + '\'s defeated units'}</Header>
@@ -297,7 +297,7 @@ class Land extends Component<IProps, IState> {
     )
   }
 
-  renderTerrain = (terrain: TerrainDefinition, index: number) => {
+  renderTerrain = (terrain: TerrainDefinition, index: number): JSX.Element => {
     return (
       <Table.Row key={terrain.location} onClick={() => this.openTerrainModal(index)}>
         <Table.Cell>
@@ -314,7 +314,7 @@ class Land extends Component<IProps, IState> {
     )
   }
 
-  renderTactic = (type: ParticipantType, participant: Participant, counter: TacticDefinition) => {
+  renderTactic = (type: ParticipantType, participant: Participant, counter: TacticDefinition): JSX.Element => {
     const tactic = this.props.tactics.get(participant.tactic)
     return (
       <div key={type} onClick={() => this.openTacticModal(type)}>
@@ -325,7 +325,7 @@ class Land extends Component<IProps, IState> {
     )
   }
 
-  toRelativePercent = (number: number, show_zero: boolean) => {
+  toRelativePercent = (number: number, show_zero: boolean): string => {
     const value = +(number * 100.0 - 100.0).toFixed(2)
     if (value > 0)
       return '+' + String(value) + '%'
@@ -336,7 +336,7 @@ class Land extends Component<IProps, IState> {
     return String(value) + '%'
   }
 
-  renderArmyNameDropdown = (type: ParticipantType, name: ArmyName) => {
+  renderArmyNameDropdown = (type: ParticipantType, name: ArmyName): JSX.Element => {
     return (
       <Dropdown
         text={name}
@@ -356,7 +356,7 @@ class Land extends Component<IProps, IState> {
     )
   }
 
-  renderArmyInfo = (type: ParticipantType, participant: Participant, counter_tactic: TacticDefinition) => {
+  renderArmyInfo = (type: ParticipantType, participant: Participant, counter_tactic: TacticDefinition): JSX.Element => {
     return (
       <Table.Row key={type}>
         <Table.Cell collapsing>
@@ -381,7 +381,7 @@ class Land extends Component<IProps, IState> {
     )
   }
 
-  renderRowTypes = (type: ParticipantType, name: ArmyName, row_types: Map<RowType, UnitType>, flank_size: number) => {
+  renderRowTypes = (type: ParticipantType, name: ArmyName, row_types: Map<RowType, UnitType>, flank_size: number): JSX.Element => {
     const units = this.props.units.get(name)
     return (
       <Table.Row key={type}>

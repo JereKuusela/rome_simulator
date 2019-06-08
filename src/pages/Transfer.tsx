@@ -21,7 +21,7 @@ class Transfer extends Component<IProps, IState> {
 
   readonly attributes = Object.keys(ExportKey).map(k => ExportKey[k as any]) as ExportKey[]
 
-  render() {
+  render(): JSX.Element {
     const json = JSON.stringify(this.filterKeys(this.props.state), undefined, 2)
     if (this.last_data !== json) {
       this.last_data = json
@@ -77,7 +77,7 @@ class Transfer extends Component<IProps, IState> {
     )
   }
 
-  renderCheckbox = (key: ExportKey) => {
+  renderCheckbox = (key: ExportKey): JSX.Element => {
     return (
       <List.Item>
         <Checkbox
@@ -91,7 +91,7 @@ class Transfer extends Component<IProps, IState> {
       </List.Item>)
   }
 
-  checkDisabled = (key: ExportKey) => {
+  checkDisabled = (key: ExportKey): boolean => {
     if (key === ExportKey.History && !this.props.export_keys.get(ExportKey.Army))
       return true
     if (key === ExportKey.History && this.props.export_keys.get(ExportKey.InitialOnly))
@@ -103,7 +103,7 @@ class Transfer extends Component<IProps, IState> {
     return false
   }
 
-  filterKeys = (state: AppState) => {
+  filterKeys = (state: AppState): any => {
     const new_state: any = { ...state }
     new_state._persist = undefined
     new_state.transfer = undefined

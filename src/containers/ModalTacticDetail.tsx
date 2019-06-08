@@ -9,7 +9,7 @@ import { UnitType } from '../store/units'
 const CUSTOM_VALUE_KEY = 'Custom'
 
 class ModalTacticDetail extends Component<IProps> {
-  render() {
+  render(): JSX.Element | null {
     if (!this.props.tactic)
       return null
     const unit_types = this.props.unit_types.reduce((previous, current) => previous.merge(current.toOrderedSet()), OrderedSet<UnitType>())

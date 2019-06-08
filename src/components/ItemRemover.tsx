@@ -20,7 +20,7 @@ export default class ItemRemover extends Component<IProps, IState> {
     this.state = { is_confirm: false }
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <Table celled selectable unstackable>
         <Confirmation
@@ -41,16 +41,16 @@ export default class ItemRemover extends Component<IProps, IState> {
     )
   }
 
-  remove = () => {
+  remove = (): void => {
     this.props.onRemove()
     this.props.onClose()
   }
 
-  confirmOnClose = () => this.setState({ is_confirm: false })
+  confirmOnClose = (): void => this.setState({ is_confirm: false })
 
-  confirmOnConfirm = () => this.remove()
+  confirmOnConfirm = (): void => this.remove()
 
-  onClick = () => {
+  onClick = (): void => {
     if (this.props.confirm_remove)
       this.setState({ is_confirm: true })
     else

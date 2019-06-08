@@ -13,7 +13,7 @@ export interface ModalInfo {
 }
 
 class ModalRowTypeSelector extends Component<IProps> {
-  render() {
+  render(): JSX.Element | null {
     if (!this.props.info)
       return null
     const name = this.props.info.name
@@ -35,7 +35,7 @@ class ModalRowTypeSelector extends Component<IProps> {
     )
   }
 
-  selectUnit = (unit: UnitType | undefined) => (
+  selectUnit = (unit: UnitType | undefined): void => (
     this.props.info && unit && 
     this.props.setRowType(this.props.info.participant, this.props.info.type, unit)
   )

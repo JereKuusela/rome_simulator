@@ -24,7 +24,7 @@ export default class TacticDetail extends Component<IProps> {
   readonly attributes = Object.keys(TacticCalc).map(k => TacticCalc[k as any]) as TacticCalc[]
   readonly headers = ['Attribute', 'Value', 'Custom value', 'Explained']
 
-  render() {
+  render(): JSX.Element | null {
     if (this.props.tactic === undefined)
       return null
     const tactic = this.props.tactic
@@ -89,7 +89,7 @@ export default class TacticDetail extends Component<IProps> {
     )
   }
 
-  renderRow = (tactic: TacticDefinition, attribute: ValueType, relative: boolean, images: OrderedSet<string>) => {
+  renderRow = (tactic: TacticDefinition, attribute: ValueType, relative: boolean, images: OrderedSet<string>): JSX.Element => {
     let base_value = getBaseValue(tactic, attribute, this.props.custom_value_key)
 
     return (

@@ -37,12 +37,12 @@ const setBaseValues = (unit: UnitDefinition): UnitDefinition => {
   return unit
 }
 
-export const getDefaultTypes = ()=> {
+export const getDefaultTypes = (): OrderedSet<UnitType> => {
   const units = Object.keys(UnitType).map(k => UnitType[k as any]) as UnitType[]
   return OrderedSet<UnitType>(units)
 }
 
-export const getDefaultDefinitions = () => {
+export const getDefaultDefinitions = (): OrderedMap<UnitType, UnitDefinition> => {
   let map = OrderedMap<UnitType, UnitDefinition>()
   for (const value of data.units) {
     const unit = createUnitFromJson(value)

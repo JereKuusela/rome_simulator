@@ -23,7 +23,7 @@ export default class ArmyCosts extends Component<IProps> {
 
   readonly headers = ['Costs for all units', 'Attacker', 'Defender']
 
-  render() {
+  render(): JSX.Element {
     return (
       <Table celled unstackable attached={this.props.attached}>
         <Table.Header>
@@ -55,15 +55,13 @@ export default class ArmyCosts extends Component<IProps> {
     )
   }
 
-  calculateTotal = (army: List<UnitDefinition | undefined>, reserve: List<UnitDefinition>, defeated: List<UnitDefinition>, attribute: UnitCalc, base: number) => {
+  calculateTotal = (army: List<UnitDefinition | undefined>, reserve: List<UnitDefinition>, defeated: List<UnitDefinition>, attribute: UnitCalc, base: number): number => {
     return army.reduce((previous, current) => previous + (current ? calculateValueWithoutLoss(current, attribute) + base : 0), 0)
       + reserve.reduce((previous, current) => previous + calculateValueWithoutLoss(current, attribute) + base, 0)
       + defeated.reduce((previous, current) => previous + calculateValueWithoutLoss(current, attribute) + base, 0)
   }
 
-  // <div className='ui avatar image' />
-
-  renderRow = (name: string, image: string, attribute: UnitCalc, base: number) => (
+  renderRow = (name: string, image: string, attribute: UnitCalc, base: number): JSX.Element => (
     <Table.Row key={name}>
       <Table.Cell width='6'>
         <Image src={image} avatar />

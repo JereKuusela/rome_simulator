@@ -20,7 +20,7 @@ export default class FastPlanner extends Component<IProps> {
 
   readonly headers = ['Units in reserve', 'Attacker', 'Defender']
 
-  render() {
+  render(): JSX.Element {
     let types = OrderedSet<UnitType>()
     if (this.props.types_a)
       types = types.merge(this.props.types_a)
@@ -48,12 +48,12 @@ export default class FastPlanner extends Component<IProps> {
     )
   }
 
-  renderImages = (type: UnitType) => {
+  renderImages = (type: UnitType): OrderedSet<JSX.Element> => {
     const images = this.props.units.filter(value => value.get(type)).map(value => getImage(value.get(type))).toOrderedSet()
     return renderImages(images)
   }
 
-  renderRow = (type: UnitType) => (
+  renderRow = (type: UnitType): JSX.Element => (
     <Table.Row key={type}>
       <Table.Cell width='6'>
         {this.renderImages(type)}

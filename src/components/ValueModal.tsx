@@ -22,7 +22,7 @@ export default class ValueModal extends Component<IProps, IState> {
     this.state = { value: this.props.initial }
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <Modal onClose={this.props.onClose} open={this.props.open}>
         <Modal.Header>{this.props.message}</Modal.Header>
@@ -42,7 +42,7 @@ export default class ValueModal extends Component<IProps, IState> {
     )
   }
 
-  onSuccess = () => {
+  onSuccess = (): void => {
     if (this.state.value)
       this.props.onSuccess(this.state.value)
     this.props.onClose()

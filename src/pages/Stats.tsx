@@ -10,7 +10,7 @@ import IconMorale from '../images/morale.png'
 import { calculateValue, calculateValueWithoutLoss, mergeValues, getImage } from '../base_definition'
 
 class Stats extends Component<IProps> {
-  render() {
+  render(): JSX.Element {
     return (
       <Container>
         {this.renderArmy(ParticipantType.Attacker, this.props.attacker)}
@@ -20,7 +20,7 @@ class Stats extends Component<IProps> {
   }
 
 
-  renderArmy = (type: ParticipantType, participant: Participant) => {
+  renderArmy = (type: ParticipantType, participant: Participant): JSX.Element | null => {
     const info = { army: this.mergeAllValues(participant.name, participant.army), reserve: this.mergeAllValues(participant.name, participant.reserve), defeated: this.mergeAllValues(participant.name, participant.defeated)}
     const units = this.props.units.get(participant.name)
     const types = this.props.types.get(participant.name)
@@ -56,9 +56,9 @@ class Stats extends Component<IProps> {
     )
   }
 
-  round = (number: number) => +(number).toFixed(2)
+  round = (number: number): number => +(number).toFixed(2)
 
-  renderRow = (armies: Armies, type: UnitType, image: string) => {
+  renderRow = (armies: Armies, type: UnitType, image: string): JSX.Element | null => {
     const count = this.countUnits(armies, type)
 
     if (count === 0)
@@ -85,31 +85,31 @@ class Stats extends Component<IProps> {
   }
 
   
-  mergeAllValues = (name: ArmyName, army: List<Unit | undefined>) => {
+  mergeAllValues = (name: ArmyName, army: List<Unit | undefined>): List<any> => {
     return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats.get(name)!))
   }
 
-  calculateValue = (participant: Armies, type: UnitType, attribute: UnitCalc) => {
+  calculateValue = (participant: Armies, type: UnitType, attribute: UnitCalc): number => {
     return this.calculateValueSub(participant.army, type, attribute) + this.calculateValueSub(participant.reserve, type, attribute) + this.calculateValueSub(participant.defeated, type, attribute)
   }
 
-  calculateValueSub = (army: List<Unit | undefined>, type: UnitType, attribute: UnitCalc) => {
+  calculateValueSub = (army: List<Unit | undefined>, type: UnitType, attribute: UnitCalc): number => {
     return army.reduce((previous, current) => previous + (current && current.type === type ? Math.max(0, calculateValue(current, attribute)) : 0), 0)
   }
 
-  calculateValueWithoutLoss = (participant: Armies, type: UnitType, attribute: UnitCalc) => {
+  calculateValueWithoutLoss = (participant: Armies, type: UnitType, attribute: UnitCalc): number => {
     return this.calculateValueWithoutLossSub(participant.army, type, attribute) + this.calculateValueWithoutLossSub(participant.reserve, type, attribute) + this.calculateValueWithoutLossSub(participant.defeated, type, attribute)
   }
 
-  calculateValueWithoutLossSub = (army: List<Unit | undefined>, type: UnitType, attribute: UnitCalc) => {
+  calculateValueWithoutLossSub = (army: List<Unit | undefined>, type: UnitType, attribute: UnitCalc): number => {
     return army.reduce((previous, current) => previous + (current && current.type === type ? calculateValueWithoutLoss(current, attribute) : 0), 0)
   }
 
-  countUnits = (army: Armies, type: UnitType) => {
+  countUnits = (army: Armies, type: UnitType): number => {
     return this.countUnitsSub(army.army, type) + this.countUnitsSub(army.reserve, type) + this.countUnitsSub(army.defeated, type)
   }
 
-  countUnitsSub = (army: List<Unit | undefined>, type: UnitType) => army.reduce((previous, current) => previous + (current && current.type === type ? 1 : 0), 0)
+  countUnitsSub = (army: List<Unit | undefined>, type: UnitType): number => army.reduce((previous, current) => previous + (current && current.type === type ? 1 : 0), 0)
 }
 
 const mapStateToProps = (state: AppState) => ({

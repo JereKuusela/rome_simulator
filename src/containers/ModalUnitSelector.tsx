@@ -14,7 +14,7 @@ export interface ModalInfo {
 }
 
 class ModalUnitSelector extends Component<IProps> {
-  render() {
+  render(): JSX.Element | null {
     if (!this.props.info)
       return null
     const types = this.props.types.get(this.props.info.name)
@@ -35,7 +35,7 @@ class ModalUnitSelector extends Component<IProps> {
     )
   }
 
-  selectUnit = (unit: UnitType | undefined) => (
+  selectUnit = (unit: UnitType | undefined): void => (
     this.props.info &&
     this.props.selectUnit(this.props.info.participant, this.props.info.type, this.props.info.index, unit ? { type: this.props.units.getIn([this.props.info.name, unit]).type } : undefined)
   )

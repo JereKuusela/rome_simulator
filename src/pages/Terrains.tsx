@@ -18,12 +18,12 @@ class Terrains extends Component<IProps, IState> {
     this.state = { modal_terrain: null }
   }
 
-  closeModal = () => this.setState({ modal_terrain: null })
+  closeModal = (): void => this.setState({ modal_terrain: null })
 
-  openModal = (terrain: TerrainType) => this.setState({ modal_terrain: terrain })
+  openModal = (terrain: TerrainType): void => this.setState({ modal_terrain: terrain })
 
 
-  render() {
+  render(): JSX.Element {
     return (
       <Container>
         <Modal basic onClose={this.closeModal} open={this.state.modal_terrain !== null}>
@@ -52,9 +52,9 @@ class Terrains extends Component<IProps, IState> {
     )
   }
 
-  onRemove = () => this.state.modal_terrain && this.props.deleteTerrain(this.state.modal_terrain)
+  onRemove = (): void => this.state.modal_terrain && this.props.deleteTerrain(this.state.modal_terrain)
 
-  onChangeType = (old_type: TerrainType, new_type: TerrainType) => {
+  onChangeType = (old_type: TerrainType, new_type: TerrainType): void => {
     this.props.changeType(old_type, new_type)
     this.setState({ modal_terrain: new_type })
   }

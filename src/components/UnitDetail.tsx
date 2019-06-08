@@ -28,7 +28,7 @@ export default class UnitDetail<T extends ParticipantType | ArmyName> extends Co
   readonly units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
   readonly headers = ['Attribute', 'Value', 'Custom base', 'Custom modifier', 'Custom losses', 'Explained']
 
-  render() {
+  render(): JSX.Element {
 
     return (
       <Table celled selectable unstackable>
@@ -98,7 +98,7 @@ export default class UnitDetail<T extends ParticipantType | ArmyName> extends Co
     )
   }
 
-  renderRow = (unit: UnitDefinition, attribute: ValueType) => {
+  renderRow = (unit: UnitDefinition, attribute: ValueType): JSX.Element | null => {
     if (attribute === UnitCalc.MovementSpeed || attribute === UnitCalc.Upkeep || attribute === UnitCalc.RecruitTime)
       return null
     if (!this.props.show_statistics && (attribute === UnitCalc.ManpowerDepleted || attribute === UnitCalc.MoraleDepleted))

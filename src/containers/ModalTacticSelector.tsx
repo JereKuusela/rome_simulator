@@ -11,7 +11,7 @@ export interface ModalInfo {
 }
 
 class ModalTacticSelector extends Component<IProps> {
-  render() {
+  render(): JSX.Element | null {
     if (!this.props.info)
       return null
     return (
@@ -28,7 +28,7 @@ class ModalTacticSelector extends Component<IProps> {
     )
   }
 
-  selectTactic = (type: TacticType | undefined) => (
+  selectTactic = (type: TacticType | undefined): void => (
     this.props.info && type && this.props.selectTactic(this.props.info.participant, type)
   )
 }

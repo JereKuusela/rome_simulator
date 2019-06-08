@@ -27,7 +27,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
   originals_a? = Map<UnitType, number>()
   originals_d? = Map<UnitType, number>()
 
-  render() {
+  render(): JSX.Element | null {
     if (!this.props.open)
       return null
     const types_a = this.props.types.get(this.props.attacker.name)
@@ -60,24 +60,24 @@ class ModalFastPlanner extends Component<IProps, IState> {
     )
   }
 
-  mergeAllValues = (name: ArmyName, army: List<Unit | undefined>) => {
+  mergeAllValues = (name: ArmyName, army: List<Unit | undefined>): List<any> => {
     return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats.get(name)!))
   }
 
-  editReserve = (reserve: List<Unit>, changes: Units, originals?: Units) => {
+  editReserve = (reserve: List<Unit>, changes: Units, originals?: Units): List<Unit> => {
     const units = this.getUnitsToAdd(changes, originals)
     const types = this.getTypesToRemove(changes, originals)
     return doRemoveReserveUnits(doAddReserveUnits(reserve, units), types)
   }
 
-  onValueChange = (name: ArmyName, unit: UnitType, value: number) => {
+  onValueChange = (name: ArmyName, unit: UnitType, value: number): void => {
     if (name === ArmyName.Attacker)
       this.setState({changes_a: this.state.changes_a.set(unit, value)})
     if (name === ArmyName.Defender)
       this.setState({changes_d: this.state.changes_d.set(unit, value)})
   }
 
-  getUnitsToAdd = (changes: Units, originals?: Units) => {
+  getUnitsToAdd = (changes: Units, originals?: Units): Unit[] => {
     let units: Unit[] = []
     changes.forEach((value, key) => {
       const original = originals ? originals.get(key, 0) : 0
@@ -87,7 +87,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
     return units
   }
 
-  getTypesToRemove = (changes: Units, originals?: Units) => {
+  getTypesToRemove = (changes: Units, originals?: Units): UnitType[] => {
     let types: UnitType[] = []
     changes.forEach((value, key) => {
       const original = originals ? originals.get(key, 0) : 0
@@ -97,21 +97,21 @@ class ModalFastPlanner extends Component<IProps, IState> {
     return types
   }
 
-  updateReserve = (participant: ParticipantType, changes: Units, originals?: Units) => {
+  updateReserve = (participant: ParticipantType, changes: Units, originals?: Units): void => {
     const units = this.getUnitsToAdd(changes, originals)
     const types = this.getTypesToRemove(changes, originals)
     units.length > 0 && this.props.addReserveUnits(participant, units)
     types.length > 0 && this.props.removeReserveUnits(participant, types)
   }
 
-  onClose = () => {
+  onClose = (): void => {
     this.updateReserve(ParticipantType.Attacker, this.state.changes_a, this.originals_a)
     this.updateReserve(ParticipantType.Defender, this.state.changes_d, this.originals_d)
     this.setState({ changes_a: Map<UnitType, number>(), changes_d: Map<UnitType, number>() })
     this.props.onClose()
   }
 
-  countUnits = (reserve: List<Unit>, unit: UnitType) => reserve.reduce((previous, current) => previous + (current && current.type === unit ? 1 : 0), 0)
+  countUnits = (reserve: List<Unit>, unit: UnitType): number => reserve.reduce((previous, current) => previous + (current && current.type === unit ? 1 : 0), 0)
 }
 
 const mapStateToProps = (state: AppState) => ({

@@ -12,7 +12,7 @@ export interface ModalInfo {
 }
 
 class ModalTerrainSelector extends Component<IProps> {
-  render() {
+  render(): JSX.Element | null {
     if (!this.props.info)
       return null
     return (
@@ -29,7 +29,7 @@ class ModalTerrainSelector extends Component<IProps> {
     )
   }
 
-  selectTerrain = (type: TerrainType | undefined) => (
+  selectTerrain = (type: TerrainType | undefined): void => (
     this.props.info && type && this.props.selectTerrain(this.props.info.index, type)
   )
 }

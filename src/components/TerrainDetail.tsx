@@ -18,8 +18,7 @@ export default class TerrainDetail extends Component<IProps> {
   readonly locations = Object.keys(LocationType).map(k => LocationType[k as any]) as LocationType[]
   readonly headers = ['Attribute', 'Value', 'Custom value', 'Explained']
 
-  render() {
-
+  render(): JSX.Element {
     return (
       <Table celled unstackable>
         <Table.Header>
@@ -66,7 +65,7 @@ export default class TerrainDetail extends Component<IProps> {
     )
   }
 
-  renderLocationDropdown = () => {
+  renderLocationDropdown = (): JSX.Element => {
     return (
       <Dropdown
         text={this.props.terrain.location}
@@ -86,7 +85,7 @@ export default class TerrainDetail extends Component<IProps> {
     )
   }
 
-  renderRow = (tactic: TerrainDefinition, attribute: ValueType) => {
+  renderRow = (tactic: TerrainDefinition, attribute: ValueType): JSX.Element => {
     let base_value = getBaseValue(tactic, attribute, this.props.custom_value_key)
 
     return (

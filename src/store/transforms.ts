@@ -6,7 +6,7 @@ import { RowType, initialState, PastState, Participant } from './land_battle'
 import { transferState } from './transfer'
 import { settingsState } from './settings'
 
-const readTypes = <T>(types_raw: any, initial: OrderedSet<T>) => {
+const readTypes = <T>(types_raw: any, initial: OrderedSet<T>): OrderedSet<T> => {
   let types = initial
   if (types_raw)
     types = fromJS(types_raw).toOrderedSet()
@@ -75,7 +75,7 @@ export const transformLand = (state_raw: any): typeof initialState => {
       terrains = terrains_raw.map((value: any) => typeof value === 'string' ? value : value.type)
   }
 
-  const serializeUnits = (raw: List<any>) => raw.map(value => unitFromJS(value))
+  const serializeUnits = (raw: List<any>):List<Unit | undefined> => raw.map(value => unitFromJS(value))
 
   const serializeParticipant = (participant: any, attacker: boolean): Participant => {
     const initial = attacker ? initialState.attacker : initialState.defender

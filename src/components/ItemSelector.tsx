@@ -18,8 +18,7 @@ interface IProps<T extends ItemType, S extends ItemAttribute> {
 
 export default class ItemSelector<S extends ItemAttribute, T extends ItemType> extends Component<IProps<T, S>> {
 
-  render() {
-
+  render(): JSX.Element {
     return (
       <Table celled selectable unstackable>
         <Table.Body>
@@ -28,11 +27,10 @@ export default class ItemSelector<S extends ItemAttribute, T extends ItemType> e
           }
         </Table.Body>
       </Table>
-
     )
   }
 
-  renderRow = (item: BaseDefinition<T, S> | BaseValuesDefinition<T, S> | undefined) => {
+  renderRow = (item: BaseDefinition<T, S> | BaseValuesDefinition<T, S> | undefined): JSX.Element | null => {
     if (!item)
       return null
     return (
@@ -52,7 +50,7 @@ export default class ItemSelector<S extends ItemAttribute, T extends ItemType> e
     )
   }
 
-  onClick = (type: T | undefined) => {
+  onClick = (type: T | undefined): void => {
     this.props.onSelection(type)
     this.props.onClose()
   }

@@ -25,7 +25,7 @@ export enum TerrainCalc {
   Roll = 'Roll'
 }
 
-export const getDefaultDefinitions = () => {
+export const getDefaultDefinitions = (): OrderedMap<TerrainType, TerrainDefinition> => {
   let map = OrderedMap<TerrainType, TerrainDefinition>()
   for (const value of data.terrain) {
     const terrain = createTerrainFromJson(value)
@@ -34,7 +34,7 @@ export const getDefaultDefinitions = () => {
   return map
 }
 
-export const getDefaultTypes = () => {
+export const getDefaultTypes = (): OrderedSet<TerrainType> => {
   const terrains = Object.keys(TerrainType).map(k => TerrainType[k as any]) as TerrainType[]
   return OrderedSet<TerrainType>(terrains)
 }

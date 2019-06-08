@@ -21,7 +21,7 @@ export default class UnitArmy extends Component<IProps> {
 
   readonly ROW_LENGTH = 30.0
 
-  render() {
+  render(): JSX.Element {
     const row_count = Math.ceil((this.props.units.size + (this.props.type === ArmyType.Main ? 0 : 1)) / this.ROW_LENGTH)
     const rows = Array(row_count).fill(0).map((_, index) => index)
     const columns = Array(this.ROW_LENGTH).fill(0).map((_, index) => index)

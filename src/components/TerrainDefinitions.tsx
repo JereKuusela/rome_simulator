@@ -27,7 +27,7 @@ export default class TerrainDefinitions extends Component<IProps, IState> {
   readonly attributes = Object.keys(TerrainCalc).map(k => TerrainCalc[k as any]) as TerrainCalc[]
   readonly headers = ['Terrain', 'Location', 'Roll']
 
-  render() {
+  render(): JSX.Element {
     return (
       <div>
         <ValueModal
@@ -62,13 +62,13 @@ export default class TerrainDefinitions extends Component<IProps, IState> {
     )
   }
 
-  newOnClick = () => this.setState({ open_create: true })
+  newOnClick = (): void => this.setState({ open_create: true })
 
-  onCreate = (type: string) => this.props.onCreateNew(type as TerrainType)
+  onCreate = (type: string): void => this.props.onCreateNew(type as TerrainType)
 
-  onClose = () => this.setState({ open_create: false })
+  onClose = (): void => this.setState({ open_create: false })
 
-  renderRow = (terrain: TerrainDefinition | undefined) => {
+  renderRow = (terrain?: TerrainDefinition): JSX.Element | null => {
     if (!terrain)
       return null
     return (

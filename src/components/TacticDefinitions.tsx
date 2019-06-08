@@ -30,7 +30,7 @@ export default class TacticDefinitions extends Component<IProps, IState> {
 
   readonly headers = ['Tactic', 'Unit effectiveness', 'Against other tactics', 'Casualties']
 
-  render() {
+  render(): JSX.Element {
     return (
       <div>
         <ValueModal
@@ -65,13 +65,13 @@ export default class TacticDefinitions extends Component<IProps, IState> {
     )
   }
 
-  newOnClick = () => this.setState({ open_create: true })
+  newOnClick = (): void => this.setState({ open_create: true })
 
-  onCreate = (type: string) => this.props.onCreateNew(type as TacticType)
+  onCreate = (type: string): void => this.props.onCreateNew(type as TacticType)
 
-  onClose = () => this.setState({ open_create: false })
+  onClose = (): void => this.setState({ open_create: false })
 
-  renderRow = (tactic: TacticDefinition | undefined) => {
+  renderRow = (tactic: TacticDefinition | undefined): JSX.Element | null => {
     if (!tactic)
       return null
     return (

@@ -8,7 +8,7 @@ import TerrainDetail from '../components/TerrainDetail'
 const CUSTOM_VALUE_KEY = 'Custom'
 
 class ModalTerrainDetail extends Component<IProps> {
-  render() {
+  render(): JSX.Element | null {
     if (this.props.terrain === null)
       return null
     const terrain = this.props.terrains.get(this.props.terrain)
