@@ -4,6 +4,7 @@ import { terrainFromJS, TerrainType, terrainState } from './terrains'
 import { unitDefinitionFromJS, unitFromJS, ArmyName, UnitType, unitsState, globalStatsState, Unit } from './units'
 import { RowType, initialState, PastState, Participant } from './land_battle'
 import { transferState } from './transfer'
+import { settingsState } from './settings'
 
 const readTypes = <T>(types_raw: any, initial: OrderedSet<T>) => {
   let types = initial
@@ -140,7 +141,16 @@ export const transformLand = (state_raw: any): typeof initialState => {
 }
 
 export const transfromTransfer = (state_raw: any): typeof transferState => {
-  const export_keys = fromJS(state_raw.export_keys || {})
-  const reset_missing = state_raw.reset_missing
+  if (!state_raw)
+    return transferState
+  const export_keys = state_raw.export_keys ? fromJS(state_raw.export_keys) : transferState.export_keys
+  const reset_missing = state_raw.reset_missing || transferState.reset_missing
   return { reset_missing, export_keys }
+}
+
+export const transformSettings = (state_raw: any): typeof settingsState => {
+  if (!state_raw)
+    return settingsState
+  const combat = state_raw.combat ? fromJS(state_raw.combat) : settingsState.combat
+  return { combat }
 }

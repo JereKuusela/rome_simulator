@@ -3,7 +3,7 @@ import { Container, Grid, TextArea, Checkbox, List, Header, Button } from 'seman
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { importState, ExportKey, setResetMissing, setExportKey } from '../store/transfer'
-import { transformGlobalStats, transformLand, transformTactics, transformTerrains, transformUnits } from '../store/transforms'
+import { transformGlobalStats, transformLand, transformTactics, transformTerrains, transformUnits, transformSettings } from '../store/transforms'
 import { checkFight } from '../store/land_battle'
 
 interface IState {
@@ -115,6 +115,8 @@ class Transfer extends Component<IProps, IState> {
       new_state.terrains = undefined
     if (!this.props.export_keys.get(ExportKey.Tactics))
       new_state.tactics = undefined
+    if (!this.props.export_keys.get(ExportKey.Settings))
+      new_state.settings = undefined
     if (!this.props.export_keys.get(ExportKey.Army))
       new_state.land = undefined
     else if (this.props.export_keys.get(ExportKey.InitialOnly)) {
@@ -166,6 +168,7 @@ const mapDispatchToProps = (dispatch: any) => ({
       json.tactics = json.tactics && transformTactics(json.tactics)
       json.terrains = json.terrains && transformTerrains(json.terrains)
       json.units = json.units && transformUnits(json.units)
+      json.settings = json.settings && transformSettings(json.settings)
       json.global_stats = json.global_stats && transformGlobalStats(json.global_stats)
       Object.keys(json).filter(key => json[key] === undefined).forEach(key => delete json[key])
       dispatch(importState(json, reset_missing))

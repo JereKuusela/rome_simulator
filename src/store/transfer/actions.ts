@@ -6,14 +6,15 @@ export enum ExportKey {
   Tactics = 'Tactic Definitions',
   Army = 'Armies',
   History = 'Previous Rounds',
-  InitialOnly = 'Initial setup only'
+  InitialOnly = 'Initial setup only',
+  Settings = 'Settings'
 }
 
-export const setExportKey = createAction('@@settings/SET_EXPORT_KEY', action => {
+export const setExportKey = createAction('@@transfer/SET_EXPORT_KEY', action => {
   return (key: ExportKey, value: boolean) => action({ key, value })
 })
 
-export const setResetMissing = createAction('@@settings/SET_RESET_MISSING', action => {
+export const setResetMissing = createAction('@@transfer/SET_RESET_MISSING', action => {
   return (value: boolean) => action({ value })
 })
 

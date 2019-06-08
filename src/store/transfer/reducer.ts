@@ -6,6 +6,7 @@ import { initialState as initialStateBattle } from '../land_battle'
 import { tacticsState } from '../tactics'
 import { terrainState } from '../terrains'
 import { globalStatsState, unitsState } from '../units'
+import { settingsState } from '../settings'
 
 export const transferState = {
   export_keys: Map<ExportKey, boolean>(),
@@ -18,7 +19,8 @@ const initialState = {
   units: unitsState,
   global_stats: globalStatsState,
   land: initialStateBattle,
-  transfer: transferState
+  transfer: transferState,
+  settings: settingsState
 }
 
 export const transferReducer = createReducer(transferState)
