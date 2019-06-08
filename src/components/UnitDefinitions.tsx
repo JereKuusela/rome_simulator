@@ -1,89 +1,118 @@
-import { List as ImmutableList } from 'immutable'
+import { List as ImmutableList, Map } from 'immutable'
 import React, { Component } from 'react'
-import { Image, Table, List, Icon } from 'semantic-ui-react'
-import { UnitType, UnitDefinition, UnitCalc, ArmyName, unit_to_icon, ValueType, valueToString} from '../store/units'
+import { Image, Table, List, Icon, Button } from 'semantic-ui-react'
+import { UnitType, UnitDefinition, UnitCalc, ArmyName, ValueType, valueToString } from '../store/units'
 import { TerrainType } from '../store/terrains'
 import IconDiscipline from '../images/discipline.png'
 import IconOffense from '../images/offense.png'
 import IconDefense from '../images/defense.png'
 import IconManpower from '../images/manpower.png'
 import IconMorale from '../images/morale.png'
-import { calculateValue, calculateBase, calculateModifier, calculateLoss, valueToNumber, valueToPercent, valueToRelativePercent, valueToRelativeZeroPercent, mergeValues } from  '../base_definition'
+import { getImage, calculateValue, calculateBase, calculateModifier, calculateLoss, valueToNumber, valueToPercent, valueToRelativePercent, valueToRelativeZeroPercent, mergeValues } from '../base_definition'
+import NewDefinition from './NewDefinition'
 
 interface IProps {
   readonly army: ArmyName
-  readonly units: ImmutableList<UnitDefinition>
+  readonly units: Map<UnitType, UnitDefinition>
+  readonly types: ImmutableList<UnitType>
   readonly terrains: ImmutableList<TerrainType>
   readonly global_stats: UnitDefinition
   readonly onRowClick: (unit: UnitDefinition) => void
+  readonly onCreateNew: (type: UnitType) => void
+}
+
+interface IState {
+  open_create: boolean
 }
 
 // Display component for showing unit definitions for an army.
-export default class UnitDefinitions extends Component<IProps> {
+export default class UnitDefinitions extends Component<IProps, IState> {
 
-  readonly units = Object.keys(UnitType).map(k => UnitType[k as any]) as UnitType[]
+  constructor(props: IProps) {
+    super(props)
+    this.state = { open_create: false }
+  }
 
   render() {
     return (
-      <Table celled selectable unstackable>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>
-              {this.props.army}
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <Image src={IconMorale} avatar />
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <Image src={IconManpower} avatar />
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <Image src={IconDiscipline} avatar />
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <Image src={IconOffense} avatar />
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <Image src={IconDefense} avatar />
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <Icon name='arrows alternate horizontal' size='big' />
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              Morale damage
+      <div>
+        <NewDefinition
+          open={this.state.open_create}
+          onCreate={this.onCreate}
+          onClose={this.onClose}
+          message='New unit type'
+        />
+        <Table celled selectable unstackable>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>
+                {this.props.army}
               </Table.HeaderCell>
-            <Table.HeaderCell>
-              Strength damage
+              <Table.HeaderCell>
+                <Image src={IconMorale} avatar />
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <Image src={IconManpower} avatar />
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <Image src={IconDiscipline} avatar />
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <Image src={IconOffense} avatar />
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <Image src={IconDefense} avatar />
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <Icon name='arrows alternate horizontal' size='big' />
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                Morale damage
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                Strength damage
             </Table.HeaderCell>
-            <Table.HeaderCell>
-              Experience
+              <Table.HeaderCell>
+                Experience
             </Table.HeaderCell>
-            <Table.HeaderCell>
-              Units
+              <Table.HeaderCell>
+                Units
             </Table.HeaderCell>
-            <Table.HeaderCell>
-              Terrain
+              <Table.HeaderCell>
+                Terrain
             </Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {
-            this.renderGlobalStats(this.props.global_stats)
-          }
-          {
-            this.props.units.map(value => this.renderRow(mergeValues(value, this.props.global_stats)))
-          }
-        </Table.Body>
-      </Table>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {
+              this.renderGlobalStats(this.props.global_stats)
+            }
+            {
+              this.props.types.map(value => this.renderRow(this.props.units.get(value)))
+            }
+          </Table.Body>
+        </Table>
+        <Button primary onClick={this.newOnClick}>
+          Create new
+        </Button>
+      </div>
     )
   }
 
+  newOnClick = () => this.setState({ open_create: true })
 
-  renderRow = (unit: UnitDefinition) => {
+  onCreate = (type: string) => this.props.onCreateNew(type as UnitType)
+
+  onClose = () => this.setState({ open_create: false })
+
+  renderRow = (definition?: UnitDefinition) => {
+    if (!definition)
+      return null
+    const unit = mergeValues(definition, this.props.global_stats)
     return (
       <Table.Row key={unit.type} onClick={() => this.props.onRowClick(unit)}>
         <Table.Cell singleLine>
-          <Image src={unit_to_icon.get(unit.type)} avatar />
+          <Image src={getImage(unit)} avatar />
           {unit.type}</Table.Cell>
         <Table.Cell>
           {valueToNumber(unit, UnitCalc.Morale, false)}
@@ -115,9 +144,9 @@ export default class UnitDefinitions extends Component<IProps> {
         <Table.Cell>
           <List horizontal>
             {
-              this.units.filter(type => calculateValue(unit, type) !== 0).map(type => (
+              this.props.types.filter(type => calculateValue(unit, type) !== 0).map(type => (
                 <List.Item key={type} style={{ marginLeft: 0, marginRight: '1em' }}>
-                  <Image src={unit_to_icon.get(type)} avatar />
+                  <Image src={getImage(this.props.units.get(type))} avatar />
                   {valueToString(unit, type)}
                 </List.Item>
               ))
@@ -143,7 +172,7 @@ export default class UnitDefinitions extends Component<IProps> {
     return (
       <Table.Row key={unit.type} onClick={() => this.props.onRowClick(unit)}>
         <Table.Cell singleLine>
-          <Image src={unit_to_icon.get(unit.type)} avatar />
+          <Image src={getImage(unit)} avatar />
           Global stats
         </Table.Cell>
         <Table.Cell>
@@ -176,9 +205,9 @@ export default class UnitDefinitions extends Component<IProps> {
         <Table.Cell>
           <List horizontal>
             {
-              this.units.filter(type => calculateValue(unit, type) !== 0).map(type => (
+              this.props.types.filter(type => calculateValue(unit, type) !== 0).map(type => (
                 <List.Item key={type} style={{ marginLeft: 0, marginRight: '1em' }}>
-                  <Image src={unit_to_icon.get(type)} avatar />
+                  <Image src={this.props.units.get(type)} avatar />
                   {valueToString(unit, type)}
                 </List.Item>
               ))

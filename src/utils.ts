@@ -6,3 +6,4 @@ export function mapRange<T>(length: number, func: (number: number) => T): T[] {
   }
   return array
 }
+

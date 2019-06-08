@@ -4,7 +4,8 @@ import { Modal } from 'semantic-ui-react'
 import { UnitType, ArmyName, ArmyType, ValueType, Unit, UnitDefinition } from '../store/units'
 import { selectUnit } from '../store/land_battle'
 import { AppState } from '../store/'
-import { addBaseValues, addModifierValue, addLossValue, mergeValues } from '../base_definition'
+import { addBaseValue, addModifierValue, addLossValue, mergeValues } from '../base_definition'
+import { OrderedSet } from 'immutable'
 import ItemRemover from '../components/ItemRemover'
 import UnitDetail from '../components/UnitDetail'
 
@@ -20,6 +21,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
   render() {
     if (!this.props.info)
       return null
+    const unit_types = this.props.unit_types.reduce((previous, current) => previous.merge(current.toOrderedSet()), OrderedSet<UnitType>())
     return (
       <Modal basic onClose={this.props.onClose} open>
         <Modal.Content>
@@ -32,6 +34,8 @@ class ModalArmyUnitDetail extends Component<IProps> {
             terrains={this.props.terrains}
             custom_value_key={CUSTOM_VALUE_KEY}
             unit={this.getUnitDefinition(this.props.info)}
+            units={this.props.units}
+            unit_types={unit_types}
             onCustomBaseValueChange={this.setBaseValue}
             onCustomModifierValueChange={this.setModifierValue}
             onCustomLossValueChange={this.setLossValue}
@@ -50,7 +54,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
   setBaseValue = (army: ArmyName, _type: UnitType, key: string, attribute: ValueType, value: number) => {
     if (!this.props.info)
       return
-    const unit = addBaseValues(this.getUnit(this.props.info), key, attribute, value)
+    const unit = addBaseValue(this.getUnit(this.props.info), key, attribute, value)
     this.props.selectUnit(army, this.props.info.type, this.props.info.index, unit)
   }
 
@@ -100,6 +104,7 @@ const mapStateToProps = (state: AppState) => ({
   attacker: state.land.attacker,
   defender: state.land.defender,
   units: state.units.definitions,
+  unit_types: state.units.types,
   global_stats: state.global_stats,
   terrains: state.terrains.types
 })

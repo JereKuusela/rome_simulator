@@ -6,6 +6,8 @@ import { AppState } from '../store/index'
 import TacticDefinitions from '../components/TacticDefinitions'
 import ItemRemover from '../components/ItemRemover'
 import { TacticType, deleteTactic, addTactic, changeType } from '../store/tactics'
+import { OrderedSet } from 'immutable'
+import { UnitType } from '../store/units' 
 
 interface IState {
   modal_tactic: TacticType | null
@@ -23,6 +25,7 @@ class Tactics extends Component<IProps, IState> {
   openModal = (tactic: TacticType) => this.setState({ modal_tactic: tactic })
 
   render() {
+    const unit_types = this.props.unit_types.reduce((previous, current) => previous.merge(current.toOrderedSet()), OrderedSet<UnitType>())
     return (
       <Container>
         <Modal basic onClose={this.closeModal} open={this.state.modal_tactic !== null}>
@@ -42,7 +45,9 @@ class Tactics extends Component<IProps, IState> {
         {
           <TacticDefinitions
             tactics={this.props.tactics}
-            types={this.props.types}
+            tactic_types={this.props.tactic_types}
+            unit_types={unit_types}
+            units={this.props.units}
             onRowClick={tactic => this.openModal(tactic)}
             onCreateNew={this.props.addTactic}
           />
@@ -61,7 +66,9 @@ class Tactics extends Component<IProps, IState> {
 
 const mapStateToProps = (state: AppState) => ({
   tactics: state.tactics.definitions,
-  types: state.tactics.types
+  tactic_types: state.tactics.types.toOrderedSet(),
+  units: state.units.definitions,
+  unit_types: state.units.types
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

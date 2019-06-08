@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { List } from 'immutable'
 import { Table, Image } from 'semantic-ui-react'
 import { TerrainType, TerrainCalc } from '../store/terrains'
-import { UnitType, UnitCalc, unit_to_icon } from '../store/units'
-import { BaseValuesDefinition, BaseDefinition, valueToRelativeNumber } from '../base_definition'
+import { UnitType, UnitCalc } from '../store/units'
+import { BaseValuesDefinition, BaseDefinition, valueToRelativeNumber, getImage } from '../base_definition'
 import { TacticType, TacticCalc } from '../store/tactics'
 
 type ItemType = UnitType | TerrainType | TacticType
@@ -33,15 +33,10 @@ export default class ItemSelector<S extends ItemAttribute, T extends ItemType> e
   }
 
   renderRow = (item: BaseDefinition<T, S> | BaseValuesDefinition<T, S>) => {
-    let image = null
-    if (!image)
-      image = unit_to_icon.get(item.type as UnitType)
-    if (!image)
-      image = item.image
     return (
       <Table.Row key={item.type} onClick={() => this.onClick(item.type)}>
         <Table.Cell>
-          {image ? <Image src={image} avatar /> : null}
+          {<Image src={getImage(item)} avatar />}
           {item.type}
         </Table.Cell>
         {

@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import { List } from 'immutable'
 import { Table, Image, Icon } from 'semantic-ui-react'
-import { UnitDefinition, UnitCalc, ArmyType, unit_to_icon } from '../store/units'
-import { calculateValue, calculateValueWithoutLoss } from '../base_definition'
-import IconEmpty from '../images/empty.png'
+import { UnitDefinition, UnitCalc, ArmyType } from '../store/units'
+import { calculateValue, calculateValueWithoutLoss, getImage } from '../base_definition'
 
 
 interface IProps {
@@ -43,7 +42,7 @@ export default class UnitArmy extends Component<IProps> {
                         {
                           <div style={{ background: this.gradient(unit, MANPOWER_COLOR, UnitCalc.Manpower) }}>
                             <div style={{ background: this.gradient(unit, MORALE_COLOR, UnitCalc.Morale) }}>
-                              <Image src={unit === undefined ? IconEmpty : unit_to_icon.get(unit.type)} avatar />
+                              <Image src={getImage(unit)} avatar />
                             </div>
                           </div>
                         }

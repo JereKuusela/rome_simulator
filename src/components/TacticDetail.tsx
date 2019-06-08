@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
-import { Map, List } from 'immutable'
+import { Map, OrderedSet } from 'immutable'
 import { Table, Input, Image } from 'semantic-ui-react'
-import { UnitType, unit_to_icon } from '../store/units'
+import { UnitType, UnitDefinition } from '../store/units'
 import { TacticDefinition, ValueType, TacticType, TacticCalc } from '../store/tactics'
 import { getBaseValue, valueToRelativeZeroPercent, valueToPercent, explainShort, getImage } from '../base_definition'
+import { renderImages } from './utils'
 
 interface IProps {
-  readonly types: List<TacticType>
+  readonly tactic_types: OrderedSet<TacticType>
   readonly tactics: Map<TacticType, TacticDefinition>
+  readonly unit_types: OrderedSet<UnitType>
+  readonly units: Map<any, Map<UnitType, UnitDefinition>>
   readonly custom_value_key: string
   readonly tactic: TacticDefinition
   readonly onCustomBaseValueChange: (type: TacticType, key: string, attribute: ValueType, value: number) => void
@@ -19,7 +22,6 @@ interface IProps {
 export default class TacticDetail extends Component<IProps> {
 
   readonly attributes = Object.keys(TacticCalc).map(k => TacticCalc[k as any]) as TacticCalc[]
-  readonly units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
   readonly headers = ['Attribute', 'Value', 'Custom value', 'Explained']
 
   render() {
@@ -71,26 +73,29 @@ export default class TacticDetail extends Component<IProps> {
             <Table.Cell />
           </Table.Row>
           {
-            this.units.map(value => this.renderRow(tactic, value, false, unit_to_icon.get(value)!))
+            this.props.unit_types.map(type => {
+              const images = this.props.units.filter(value => value.get(type)).map(value => getImage(value.get(type))).toOrderedSet()
+              return this.renderRow(tactic, type, false, images)
+            })
           }
           {
-            this.props.types.map(value => this.renderRow(tactic, value, true, getImage(this.props.tactics.get(value))))
+            this.props.tactic_types.map(value => this.renderRow(tactic, value, true, OrderedSet<string>().add(getImage(this.props.tactics.get(value)))))
           }
           {
-            this.attributes.map(value => this.renderRow(tactic, value, true, getImage(undefined)))
+            this.attributes.map(value => this.renderRow(tactic, value, true, OrderedSet<string>().add(getImage(undefined))))
           }
         </Table.Body>
       </Table>
     )
   }
 
-  renderRow = (tactic: TacticDefinition, attribute: ValueType, relative: boolean, image: string) => {
+  renderRow = (tactic: TacticDefinition, attribute: ValueType, relative: boolean, images: OrderedSet<string>) => {
     let base_value = getBaseValue(tactic, attribute, this.props.custom_value_key)
 
     return (
       <Table.Row key={attribute}>
         <Table.Cell collapsing>
-          {<Image src={image} avatar />}
+          {renderImages(images)}
           {attribute}
         </Table.Cell>
         <Table.Cell collapsing>

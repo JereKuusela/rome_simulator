@@ -16,7 +16,6 @@ import ModalTerrainSelector, { ModalInfo as ModalTerrainInfo } from '../containe
 import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers/ModalTacticSelector'
 import ModalArmyUnitDetail, { ModalInfo as ModalArmyUnitInfo } from '../containers/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/ModalFastPlanner'
-import { unit_to_icon } from '../store/units'
 import { calculateValue, mergeValues, getImage } from '../base_definition'
 
 interface IState {
@@ -357,19 +356,20 @@ class Land extends Component<IProps, IState> {
   }
 
   renderRowTypes = (army_type: ArmyName, row_types: Map<RowType, UnitType>, flank_size: number) => {
+    const units = this.props.units.get(army_type)!
     return (
       <Table.Row key={army_type}>
         <Table.Cell>
           {army_type}
         </Table.Cell>
         <Table.Cell selectable onClick={() => this.openRowModal(army_type, RowType.Front)}>
-          <Image src={unit_to_icon.get(row_types.get(RowType.Front)!)} avatar />
+          <Image src={getImage(units.get(row_types.get(RowType.Front)!))} avatar />
         </Table.Cell>
         <Table.Cell selectable onClick={() => this.openRowModal(army_type, RowType.Back)}>
-          <Image src={unit_to_icon.get(row_types.get(RowType.Back)!)} avatar />
+          <Image src={getImage(units.get(row_types.get(RowType.Back)!))} avatar />
         </Table.Cell>
         <Table.Cell selectable onClick={() => this.openRowModal(army_type, RowType.Flank)}>
-          <Image src={unit_to_icon.get(row_types.get(RowType.Flank)!)} avatar />
+          <Image src={getImage(units.get(row_types.get(RowType.Flank)!))} avatar />
         </Table.Cell>
         <Table.Cell collapsing>
           <Input size='mini' style={{ width: 100 }} type='number' value={flank_size} onChange={(_, data) => this.props.setFlankSize(army_type, Number(data.value))} />

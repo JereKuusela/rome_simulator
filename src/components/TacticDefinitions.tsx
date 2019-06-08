@@ -1,14 +1,17 @@
-import { List as ImmutableList, Map } from 'immutable'
+import { OrderedSet, Map } from 'immutable'
 import React, { Component } from 'react'
 import { Image, Table, List, Button } from 'semantic-ui-react'
-import { UnitType, unit_to_icon } from '../store/units'
+import { UnitType, UnitDefinition } from '../store/units'
 import { TacticDefinition, TacticType, TacticCalc, valueToString } from '../store/tactics'
 import { calculateValue, valueToRelativeZeroPercent, getImage } from '../base_definition'
 import NewDefinition from './NewDefinition'
+import { renderImages } from './utils'
 
 interface IProps {
   readonly tactics: Map<TacticType, TacticDefinition>
-  readonly types: ImmutableList<TacticType>
+  readonly tactic_types: OrderedSet<TacticType>
+  readonly units: Map<any, Map<UnitType, UnitDefinition>>
+  readonly unit_types: OrderedSet<UnitType>
   readonly onRowClick: (type: TacticType) => void
   readonly onCreateNew: (type: TacticType) => void
 }
@@ -25,19 +28,18 @@ export default class TacticDefinitions extends Component<IProps, IState> {
     this.state = { open_create: false }
   }
 
-  readonly units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
   readonly headers = ['Tactic', 'Unit effectiveness', 'Against other tactics', 'Casualties']
 
   render() {
     return (
       <div>
-        <Table celled selectable unstackable>
-          <NewDefinition
+        <NewDefinition
             open={this.state.open_create}
             onCreate={this.onCreate}
             onClose={this.onClose}
             message='New tactic type'
           />
+        <Table celled selectable unstackable>
           <Table.Header>
             <Table.Row>
               {
@@ -51,7 +53,7 @@ export default class TacticDefinitions extends Component<IProps, IState> {
           </Table.Header>
           <Table.Body>
             {
-              this.props.types.map(value => this.renderRow(this.props.tactics.get(value)))
+              this.props.tactic_types.map(value => this.renderRow(this.props.tactics.get(value)))
             }
           </Table.Body>
         </Table>
@@ -79,9 +81,9 @@ export default class TacticDefinitions extends Component<IProps, IState> {
         <Table.Cell>
           <List horizontal>
             {
-              this.units.filter(type => calculateValue(tactic, type)).map(type => (
+              this.props.unit_types.filter(type => calculateValue(tactic, type)).map(type => (
                 <List.Item key={type} style={{ marginLeft: 0, marginRight: '1em' }}>
-                  <Image src={unit_to_icon.get(type)} avatar />
+                  {renderImages(this.props.units.filter(value => value.get(type)).map(value => getImage(value.get(type))).toOrderedSet())}
                   {valueToString(tactic, type)}
                 </List.Item>
               ))
@@ -91,7 +93,7 @@ export default class TacticDefinitions extends Component<IProps, IState> {
         <Table.Cell singleLine>
           <List horizontal>
             {
-              this.props.types.filter(type => calculateValue(tactic, type) && this.props.tactics.get(type)).map(type => (
+              this.props.tactic_types.filter(type => calculateValue(tactic, type) && this.props.tactics.get(type)).map(type => (
                 <List.Item key={type} style={{ marginLeft: 0, marginRight: '1em' }}>
                   <Image src={getImage(this.props.tactics.find(value => value.type === type))} avatar />
                   {valueToRelativeZeroPercent(tactic, type, true)}

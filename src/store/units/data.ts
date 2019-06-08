@@ -1,29 +1,8 @@
-import { Map, OrderedMap } from 'immutable'
+import { Map, OrderedMap, List } from 'immutable'
 import { UnitType, UnitDefinition, UnitCalc, ValueType } from './types'
 import { addBaseValues } from '../../base_definition'
-import IconArcher from '../../images/archers.png'
-import IconCamelCavalry from '../../images/camel_cavalry.png'
-import IconChariots from '../../images/chariots.png'
-import IconHeavyCavalry from '../../images/heavy_cavalry.png'
-import IconHeavyInfantry from '../../images/heavy_infantry.png'
-import IconHorseArchers from '../../images/horse_archers.png'
-import IconLightCavalry from '../../images/light_cavalry.png'
-import IconLightInfantry from '../../images/light_infantry.png'
-import IconWarElephants from '../../images/war_elephants.png'
-import IconMilitaryPower from '../../images/military_power.png'
-import * as data from './units.json';
 
-export const unit_to_icon = Map<UnitType, string>()
-  .set(UnitType.Archers, IconArcher)
-  .set(UnitType.CamelCavalry, IconCamelCavalry)
-  .set(UnitType.Chariots, IconChariots)
-  .set(UnitType.HeavyCavalry, IconHeavyCavalry)
-  .set(UnitType.HeavyInfantry, IconHeavyInfantry)
-  .set(UnitType.HorseArchers, IconHorseArchers)
-  .set(UnitType.LightCavalry, IconLightCavalry)
-  .set(UnitType.LightInfantry, IconLightInfantry)
-  .set(UnitType.WarElephants, IconWarElephants)
-  .set('' as UnitType, IconMilitaryPower)
+import * as data from './units.json';
 
 const setBaseValues = (unit: UnitDefinition): UnitDefinition => {
   const values: [UnitCalc, number][] = [
@@ -36,6 +15,11 @@ const setBaseValues = (unit: UnitDefinition): UnitDefinition => {
   ]
   unit = addBaseValues(unit, 'Base', values)
   return unit
+}
+
+export const getDefaultTypes = (): List<UnitType> => {
+  const units = Object.keys(UnitType).map(k => UnitType[k as any]) as UnitType[]
+  return List<UnitType>(units)
 }
 
 export const getDefaultDefinitions = (): Map<UnitType, UnitDefinition> => {

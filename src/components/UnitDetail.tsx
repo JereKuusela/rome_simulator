@@ -1,19 +1,23 @@
 import React, { Component } from 'react'
-import { List } from 'immutable'
+import { List, OrderedSet, Map } from 'immutable'
 import { Table, Input } from 'semantic-ui-react'
 import { UnitType, UnitDefinition, UnitCalc, ArmyName, ValueType, valueToString } from '../store/units'
 import { TerrainType } from '../store/terrains'
 import { getBaseValue, getLossValue, getModifierValue, explain } from '../base_definition'
 
 interface IProps {
-  army: ArmyName
-  custom_value_key: string
-  unit: UnitDefinition
-  show_statistics: boolean
-  terrains: List<TerrainType>
-  onCustomBaseValueChange: (army: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
-  onCustomModifierValueChange: (army: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
-  onCustomLossValueChange: (army: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
+  readonly army: ArmyName
+  readonly custom_value_key: string
+  readonly unit: UnitDefinition
+  readonly unit_types: OrderedSet<UnitType>
+  readonly units: Map<any, Map<UnitType, UnitDefinition>>
+  readonly show_statistics: boolean
+  readonly terrains: List<TerrainType>
+  readonly onCustomBaseValueChange: (army: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
+  readonly onCustomModifierValueChange: (army: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
+  readonly onCustomLossValueChange: (army: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
+  readonly onTypeChange?: (army: ArmyName, old_type: UnitType, new_type: UnitType) => void
+  readonly onImageChange?: (army: ArmyName, type: UnitType, image: string) => void
 }
 
 // Display component for showing and changing unit details.
@@ -40,13 +44,53 @@ export default class UnitDetail extends Component<IProps> {
         </Table.Header>
         <Table.Body>
           {
-            this.attributes.map((value) => this.renderRow(this.props.unit, value))
+            this.props.onTypeChange ?
+              <Table.Row>
+                <Table.Cell>
+                  Type
+                </Table.Cell>
+                <Table.Cell collapsing>
+                  <Input
+                    size='mini'
+                    defaultValue={this.props.unit.type}
+                    onChange={(_, data) => this.props.onTypeChange && this.props.onTypeChange(this.props.army, this.props.unit.type, data.value as UnitType)}
+                  />
+                </Table.Cell>
+                <Table.Cell />
+                <Table.Cell />
+                <Table.Cell />
+                <Table.Cell />
+              </Table.Row>
+              : null
           }
           {
-            this.units.map((value) => this.renderRow(this.props.unit, value))
+            this.props.onImageChange ?
+              <Table.Row>
+                <Table.Cell>
+                  Image
+                </Table.Cell>
+                <Table.Cell collapsing>
+                  <Input
+                    size='mini'
+                    defaultValue={this.props.unit.image}
+                    onChange={(_, data) => this.props.onImageChange && this.props.onImageChange(this.props.army, this.props.unit.type, data.value)}
+                  />
+                </Table.Cell>
+                <Table.Cell />
+                <Table.Cell />
+                <Table.Cell />
+                <Table.Cell />
+              </Table.Row>
+              : null
           }
           {
-            this.props.terrains.map((value) => this.renderRow(this.props.unit, value))
+            this.attributes.map(value => this.renderRow(this.props.unit, value))
+          }
+          {
+            this.props.unit_types.map(value => this.renderRow(this.props.unit, value))
+          }
+          {
+            this.props.terrains.map(value => this.renderRow(this.props.unit, value))
           }
         </Table.Body>
       </Table>

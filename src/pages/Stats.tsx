@@ -7,12 +7,9 @@ import { ArmyName, Unit, UnitType, UnitCalc } from '../store/units/types'
 import { Armies } from '../store/land_battle'
 import IconManpower from '../images/manpower.png'
 import IconMorale from '../images/morale.png'
-import { unit_to_icon } from '../store/units'
-import { calculateValue, calculateValueWithoutLoss, mergeValues } from '../base_definition'
+import { calculateValue, calculateValueWithoutLoss, mergeValues, getImage } from '../base_definition'
 
 class Stats extends Component<IProps> {
-  readonly units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
-
   render() {
     return (
       <Container>
@@ -25,6 +22,7 @@ class Stats extends Component<IProps> {
 
   renderArmy = (army: ArmyName, armies: Armies) => {
     armies = { army: this.mergeAllValues(army, armies.army), reserve: this.mergeAllValues(army, armies.reserve), defeated: this.mergeAllValues(army, armies.defeated)}
+    const units = this.props.units.get(army)!
     return (
         <Table celled selectable unstackable key={army}>
           <Table.Header>
@@ -48,7 +46,7 @@ class Stats extends Component<IProps> {
           </Table.Header>
           <Table.Body>
             {
-              this.units.map(type => this.renderRow(armies, type))
+              this.props.types.get(army)!.map(type => this.renderRow(armies, type, getImage(units.get(type))))
             }
           </Table.Body>
         </Table>
@@ -57,7 +55,7 @@ class Stats extends Component<IProps> {
 
   round = (number: number) => +(number).toFixed(2)
 
-  renderRow = (armies: Armies, type: UnitType) => {
+  renderRow = (armies: Armies, type: UnitType, image: string) => {
     const count = this.countUnits(armies, type)
 
     if (count === 0)
@@ -65,7 +63,7 @@ class Stats extends Component<IProps> {
     return (
       <Table.Row key={type}>
         <Table.Cell width='4'>
-          <Image src={unit_to_icon.get(type)} avatar />
+          <Image src={image} avatar />
           {type + ' (x ' + count + ')'}</Table.Cell>
         <Table.Cell width='3'>
           {this.calculateValue(armies, type, UnitCalc.Manpower)} / {this.calculateValueWithoutLoss(armies, type, UnitCalc.Manpower)}
@@ -115,6 +113,7 @@ const mapStateToProps = (state: AppState) => ({
   attacker: state.land.attacker,
   defender: state.land.defender,
   units: state.units.definitions,
+  types: state.units.types,
   global_stats: state.global_stats
 })
 

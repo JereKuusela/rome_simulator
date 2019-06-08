@@ -30,13 +30,13 @@ export default class TerrainDefinitions extends Component<IProps, IState> {
   render() {
     return (
       <div>
+        <NewDefinition
+          open={this.state.open_create}
+          onCreate={this.onCreate}
+          onClose={this.onClose}
+          message='New terrain type'
+        />
         <Table celled selectable unstackable>
-          <NewDefinition
-            open={this.state.open_create}
-            onCreate={this.onCreate}
-            onClose={this.onClose}
-            message='New terrain type'
-          />
           <Table.Header>
             <Table.Row>
               {

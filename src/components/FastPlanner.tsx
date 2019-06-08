@@ -1,22 +1,27 @@
 import React, { Component } from 'react'
-import { Map } from 'immutable'
-import { Table, Input, Image } from 'semantic-ui-react'
-import { UnitType, unit_to_icon, ArmyName } from '../store/units'
+import { Map, List } from 'immutable'
+import { Table, Input } from 'semantic-ui-react'
+import { UnitType, ArmyName, UnitDefinition } from '../store/units'
+import { renderImages } from './utils'
+import { getImage } from '../base_definition'
 
 interface IProps {
-  reserve_a: Map<UnitType, number>
-  reserve_d: Map<UnitType, number>
-  onValueChange: (army: ArmyName, unit: UnitType, value: number) => void
-  attached?: boolean
+  readonly types_a: List<UnitType>
+  readonly units: Map<any, Map<UnitType, UnitDefinition>>
+  readonly types_d: List<UnitType>
+  readonly reserve_a: Map<UnitType, number>
+  readonly reserve_d: Map<UnitType, number>
+  readonly onValueChange: (army: ArmyName, unit: UnitType, value: number) => void
+  readonly attached?: boolean
 }
 
 // Display component for showing and changing tactic details.
 export default class FastPlanner extends Component<IProps> {
 
-  readonly units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
   readonly headers = ['Units in reserve', 'Attacker', 'Defender']
 
   render() {
+    const types = this.props.types_a.toOrderedSet().merge(this.props.types_d.toOrderedSet()).toList()
     return (
       <Table celled unstackable attached={this.props.attached}>
         <Table.Header>
@@ -32,38 +37,49 @@ export default class FastPlanner extends Component<IProps> {
         </Table.Header>
         <Table.Body>
           {
-            this.units.map(value => this.renderRow(value))
+            types.map(value => this.renderRow(value))
           }
         </Table.Body>
       </Table>
     )
   }
 
-  // <div className='ui avatar image' />
+  renderImages = (type: UnitType) => {
+    const images = this.props.units.filter(value => value.get(type)).map(value => getImage(value.get(type))).toOrderedSet()
+    return renderImages(images)
+  }
 
-  renderRow = (unit: UnitType) => (
-    <Table.Row key={unit}>
+  renderRow = (type: UnitType) => (
+    <Table.Row key={type}>
       <Table.Cell width='6'>
-        <Image src={unit_to_icon.get(unit)} avatar />
-        {unit}
+        {this.renderImages(type)}
+        {type}
       </Table.Cell>
       <Table.Cell width='5'>
-        <Input
-          type='number'
-          size='mini'
-          defaultValue={this.props.reserve_a.get(unit)}
-          onChange={(_, data) => this.props.onValueChange(ArmyName.Attacker, unit, Math.max(0, Math.round(Number(data.value))))
-          }
-        />
+        {
+          this.props.types_a.contains(type) ?
+            <Input
+              type='number'
+              size='mini'
+              defaultValue={this.props.reserve_a.get(type)}
+              onChange={(_, data) => this.props.onValueChange(ArmyName.Attacker, type, Math.max(0, Math.round(Number(data.value))))
+              }
+            />
+            : null
+        }
       </Table.Cell>
       <Table.Cell width='5'>
-        <Input
-          type='number'
-          size='mini'
-          defaultValue={this.props.reserve_d.get(unit)}
-          onChange={(_, data) => this.props.onValueChange(ArmyName.Defender, unit, Math.max(0, Math.round(Number(data.value))))
-          }
-        />
+        {
+          this.props.types_d.contains(type) ?
+            <Input
+              type='number'
+              size='mini'
+              defaultValue={this.props.reserve_d.get(type)}
+              onChange={(_, data) => this.props.onValueChange(ArmyName.Defender, type, Math.max(0, Math.round(Number(data.value))))
+              }
+            />
+            : null
+        }
       </Table.Cell>
     </Table.Row>
   )

@@ -4,7 +4,7 @@ import { getInitialArmy, Participant } from '../../land_battle/types'
 import { getDefaultDefinitions as getDefaultTacticDefinitions, TacticType } from '../../tactics'
 import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, TerrainDefinition } from '../../terrains'
 import { getDefaultDefinitions as getDefaultUnitDefinitions, UnitType, UnitCalc, UnitDefinition, ArmyName } from '../../units'
-import { addBaseValues, addBaseValues, addModifierValue, calculateValue} from '../../../base_definition'
+import { addBaseValue, addBaseValues, addModifierValue, calculateValue} from '../../../base_definition'
 
 describe('1 vs 1', () => {
   const tactics = getDefaultTacticDefinitions()
@@ -62,7 +62,7 @@ describe('1 vs 1', () => {
   }
 
   it('should work without modifiers', () => {
-    const test_unit = addBaseValues(unit, 'Test', UnitCalc.MoraleDamageTaken, -0.25)
+    const test_unit = addBaseValue(unit, 'Test', UnitCalc.MoraleDamageTaken, -0.25)
     setUnits(test_unit, test_unit)
     setRolls(1, 3)
     doRound()

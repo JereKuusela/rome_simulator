@@ -8,7 +8,7 @@ import ArmyCosts from '../components/ArmyCosts'
 import { ArmyName, UnitType, Unit } from '../store/units'
 import { removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits } from '../store/land_battle'
 import { mapRange } from '../utils'
-import { mergeValues} from '../base_definition'
+import { mergeValues } from '../base_definition'
 
 type Units = Map<UnitType, number>
 
@@ -40,7 +40,10 @@ class ModalFastPlanner extends Component<IProps, IState> {
         <Modal.Content>
           <FastPlanner
             reserve_a={this.originals_a}
+            units={this.props.units}
+            types_a={this.props.types.get(ArmyName.Attacker)!}
             reserve_d={this.originals_d}
+            types_d={this.props.types.get(ArmyName.Defender)!}
             onValueChange={this.onValueChange}
             attached
           />
@@ -116,6 +119,7 @@ const mapStateToProps = (state: AppState) => ({
   attacker: state.land.attacker,
   defender: state.land.defender,
   units: state.units.definitions,
+  types: state.units.types,
   global_stats: state.global_stats
 })
 

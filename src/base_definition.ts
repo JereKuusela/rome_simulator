@@ -27,34 +27,34 @@ export interface BaseValuesDefinition<T, S> {
 export const getImage = <Definition extends AnyDefinition>
 (definition?: Definition) => (definition && definition.image) || EmptyIcon
 
-export const mergeBaseValues = <Definition extends AnyDefinition>
+export const mergeBaseValues = <Definition extends AnyDefinition | undefined>
   (definition: Definition, to_merge: Definition) => {
   let new_base_values = Map<any, OrderedMap<any, number>>()
-  if (definition.base_values)
+  if (definition && definition.base_values)
     new_base_values = new_base_values.mergeDeep(definition.base_values)
-  if (to_merge.base_values)
+  if (to_merge && to_merge.base_values)
     new_base_values = new_base_values.mergeDeep(to_merge.base_values)
-  return { ...definition, base_values: new_base_values }
+  return { ...to_merge, ...definition, base_values: new_base_values }
 }
 
-export const mergeValues = <Definition extends AnyBaseDefinition>
+export const mergeValues = <Definition extends AnyBaseDefinition | undefined>
   (definition: Definition, to_merge: Definition) => {
   let new_base_values = Map<any, OrderedMap<string, number>>()
-  if (definition.base_values)
+  if (definition && definition.base_values)
     new_base_values = new_base_values.mergeDeep(definition.base_values)
-  if (to_merge.base_values)
+  if (to_merge && to_merge.base_values)
     new_base_values = new_base_values.mergeDeep(to_merge.base_values)
   let new_modifier_values = Map<any, OrderedMap<string, number>>()
-  if (definition.modifier_values)
+  if (definition && definition.modifier_values)
     new_modifier_values = new_modifier_values.mergeDeep(definition.modifier_values)
-  if (to_merge.modifier_values)
+  if (to_merge && to_merge.modifier_values)
     new_modifier_values = new_modifier_values.mergeDeep(to_merge.modifier_values)
   let new_loss_values = Map<any, OrderedMap<string, number>>()
-  if (definition.loss_values)
+  if (definition && definition.loss_values)
     new_loss_values = new_loss_values.mergeDeep(definition.loss_values)
-  if (to_merge.loss_values)
+  if (to_merge && to_merge.loss_values)
     new_loss_values = new_loss_values.mergeDeep(to_merge.loss_values)
-  return { ...definition, base_values: new_base_values, modifier_values: new_modifier_values, loss_values: new_loss_values }
+  return { ...to_merge, ...definition, base_values: new_base_values, modifier_values: new_modifier_values, loss_values: new_loss_values }
 }
 
 export const addBaseValue = <Definition extends AnyDefinition, Attribute>
