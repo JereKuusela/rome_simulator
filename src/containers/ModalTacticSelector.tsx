@@ -2,13 +2,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { AppState } from '../store/'
-import { selectTactic } from '../store/land_battle'
+import { selectTactic, ParticipantType } from '../store/land_battle'
 import ItemSelector from '../components/ItemSelector'
-import { ArmyName } from '../store/units'
 import { TacticType } from '../store/tactics'
 
 export interface ModalInfo {
-  army: ArmyName
+  participant: ParticipantType
 }
 
 class ModalTacticSelector extends Component<IProps> {
@@ -30,7 +29,7 @@ class ModalTacticSelector extends Component<IProps> {
   }
 
   selectTactic = (type: TacticType | undefined) => (
-    this.props.info && type && this.props.selectTactic(this.props.info.army, type)
+    this.props.info && type && this.props.selectTactic(this.props.info.participant, type)
   )
 }
 
@@ -39,7 +38,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  selectTactic: (army: ArmyName, type: TacticType) => dispatch(selectTactic(army, type))
+  selectTactic: (participant: ParticipantType, type: TacticType) => dispatch(selectTactic(participant, type))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {

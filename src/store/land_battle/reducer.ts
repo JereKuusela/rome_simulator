@@ -1,12 +1,12 @@
 import { createReducer } from 'typesafe-actions'
 import { List } from 'immutable'
-import { getInitialArmy, getInitialTerrains, Participant, PastState } from './types'
-import { selectUnit, selectTerrain, selectTactic, undo, toggleRandomRoll, setRoll, setGeneral, setRowType, removeReserveUnits, addReserveUnits, setFlankSize } from './actions'
-import { ArmyName, Unit, UnitType, ArmyType } from '../units'
+import { getInitialArmy, getInitialTerrains, Participant, PastState, ParticipantType } from './types'
+import { selectUnit, selectTerrain, selectTactic, undo, toggleRandomRoll, setRoll, setGeneral, setRowType, removeReserveUnits, addReserveUnits, setFlankSize, setArmyName } from './actions'
+import { Unit, UnitType, ArmyType } from '../units'
 
 export const initialState = {
-  attacker: getInitialArmy(),
-  defender: getInitialArmy(),
+  attacker: getInitialArmy(true),
+  defender: getInitialArmy(false),
   terrains: getInitialTerrains(),
   day: -1,
   fight_over: true
@@ -34,29 +34,29 @@ export const landBattleReducer = createReducer(initialState)
   .handleAction(toggleRandomRoll, (state, action: ReturnType<typeof toggleRandomRoll>) => (
     {
       ...state,
-      attacker: { ...state.attacker, randomize_roll: action.payload.army === ArmyName.Attacker ? !state.attacker.randomize_roll : state.attacker.randomize_roll },
-      defender: { ...state.defender, randomize_roll: action.payload.army === ArmyName.Defender ? !state.defender.randomize_roll : state.defender.randomize_roll }
+      attacker: { ...state.attacker, randomize_roll: action.payload.participant === ParticipantType.Attacker ? !state.attacker.randomize_roll : state.attacker.randomize_roll },
+      defender: { ...state.defender, randomize_roll: action.payload.participant === ParticipantType.Defender ? !state.defender.randomize_roll : state.defender.randomize_roll }
     }
   ))
   .handleAction(setGeneral, (state, action: ReturnType<typeof setGeneral>) => (
     {
       ...state,
-      attacker: { ...state.attacker, general: action.payload.army === ArmyName.Attacker ? action.payload.skill : state.attacker.general },
-      defender: { ...state.defender, general: action.payload.army === ArmyName.Defender ? action.payload.skill : state.defender.general }
+      attacker: { ...state.attacker, general: action.payload.participant === ParticipantType.Attacker ? action.payload.skill : state.attacker.general },
+      defender: { ...state.defender, general: action.payload.participant === ParticipantType.Defender ? action.payload.skill : state.defender.general }
     }
   ))
   .handleAction(setFlankSize, (state, action: ReturnType<typeof setFlankSize>) => (
     {
       ...state,
-      attacker: { ...state.attacker, flank_size: action.payload.army === ArmyName.Attacker ? action.payload.size : state.attacker.flank_size },
-      defender: { ...state.defender, flank_size: action.payload.army === ArmyName.Defender ? action.payload.size : state.defender.flank_size }
+      attacker: { ...state.attacker, flank_size: action.payload.participant === ParticipantType.Attacker ? action.payload.size : state.attacker.flank_size },
+      defender: { ...state.defender, flank_size: action.payload.participant === ParticipantType.Defender ? action.payload.size : state.defender.flank_size }
     }
   ))
   .handleAction(setRoll, (state, action: ReturnType<typeof setRoll>) => (
     {
       ...state,
-      attacker: { ...state.attacker, roll: action.payload.army === ArmyName.Attacker ? action.payload.roll : state.attacker.roll },
-      defender: { ...state.defender, roll: action.payload.army === ArmyName.Defender ? action.payload.roll : state.defender.roll }
+      attacker: { ...state.attacker, roll: action.payload.participant === ParticipantType.Attacker ? action.payload.roll : state.attacker.roll },
+      defender: { ...state.defender, roll: action.payload.participant === ParticipantType.Defender ? action.payload.roll : state.defender.roll }
     }
   ))
   .handleAction(selectUnit, (state, action: ReturnType<typeof selectUnit>) => {
@@ -77,9 +77,9 @@ export const landBattleReducer = createReducer(initialState)
       return participant
     }
 
-    if (action.payload.army === ArmyName.Attacker)
+    if (action.payload.participant === ParticipantType.Attacker)
       new_attacker = handleArmy(new_attacker)
-    if (action.payload.army === ArmyName.Defender)
+    if (action.payload.participant === ParticipantType.Defender)
       new_defender = handleArmy(new_defender)
     return {
       ...state,
@@ -97,15 +97,15 @@ export const landBattleReducer = createReducer(initialState)
   .handleAction(setRowType, (state, action: ReturnType<typeof setRowType>) => (
     {
       ...state,
-      attacker: { ...state.attacker, row_types: action.payload.army === ArmyName.Attacker ? state.attacker.row_types.set(action.payload.row_type, action.payload.unit) : state.attacker.row_types },
-      defender: { ...state.defender, row_types: action.payload.army === ArmyName.Defender ? state.defender.row_types.set(action.payload.row_type, action.payload.unit) : state.defender.row_types }
+      attacker: { ...state.attacker, row_types: action.payload.participant === ParticipantType.Attacker ? state.attacker.row_types.set(action.payload.row_type, action.payload.unit) : state.attacker.row_types },
+      defender: { ...state.defender, row_types: action.payload.participant === ParticipantType.Defender ? state.defender.row_types.set(action.payload.row_type, action.payload.unit) : state.defender.row_types }
     }
   ))
   .handleAction(selectTactic, (state, action: ReturnType<typeof selectTactic>) => (
     {
       ...state,
-      attacker: { ...state.attacker, tactic: action.payload.army === ArmyName.Attacker ? action.payload.tactic : state.attacker.tactic },
-      defender: { ...state.defender, tactic: action.payload.army === ArmyName.Defender ? action.payload.tactic : state.defender.tactic }
+      attacker: { ...state.attacker, tactic: action.payload.participant === ParticipantType.Attacker ? action.payload.tactic : state.attacker.tactic },
+      defender: { ...state.defender, tactic: action.payload.participant === ParticipantType.Defender ? action.payload.tactic : state.defender.tactic }
     }
   ))
   .handleAction(undo, (state, action: ReturnType<typeof undo>) => {
@@ -132,15 +132,15 @@ export const landBattleReducer = createReducer(initialState)
     return next
   })
   .handleAction(removeReserveUnits, (state, action: ReturnType<typeof removeReserveUnits>) => {
-    let reserve = action.payload.army === ArmyName.Attacker ? state.attacker.reserve : state.defender.reserve
+    let reserve = action.payload.participant === ParticipantType.Attacker ? state.attacker.reserve : state.defender.reserve
     reserve = doRemoveReserveUnits(reserve, action.payload.types)
     const new_attacker = {
       ...state.attacker,
-      reserve: action.payload.army === ArmyName.Attacker ? reserve : state.attacker.reserve
+      reserve: action.payload.participant === ParticipantType.Attacker ? reserve : state.attacker.reserve
     }
     const new_defender = {
       ...state.defender,
-      reserve: action.payload.army === ArmyName.Defender ? reserve : state.defender.reserve
+      reserve: action.payload.participant === ParticipantType.Defender ? reserve : state.defender.reserve
     }
     return {
       ...state,
@@ -150,15 +150,15 @@ export const landBattleReducer = createReducer(initialState)
     }
   })
   .handleAction(addReserveUnits, (state, action: ReturnType<typeof addReserveUnits>) => {
-    let reserve = action.payload.army === ArmyName.Attacker ? state.attacker.reserve : state.defender.reserve
+    let reserve = action.payload.participant === ParticipantType.Attacker ? state.attacker.reserve : state.defender.reserve
     reserve = doAddReserveUnits(reserve, action.payload.units)
     const new_attacker = {
       ...state.attacker,
-      reserve: action.payload.army === ArmyName.Attacker ? reserve : state.attacker.reserve
+      reserve: action.payload.participant === ParticipantType.Attacker ? reserve : state.attacker.reserve
     }
     const new_defender = {
       ...state.defender,
-      reserve: action.payload.army === ArmyName.Defender ? reserve : state.defender.reserve
+      reserve: action.payload.participant === ParticipantType.Defender ? reserve : state.defender.reserve
     }
     return {
       ...state,
@@ -167,3 +167,10 @@ export const landBattleReducer = createReducer(initialState)
       fight_over: !(checkFight(new_attacker, new_defender))
     }
   })
+  .handleAction(setArmyName, (state, action: ReturnType<typeof setArmyName>) => (
+    {
+      ...state,
+      attacker: { ...state.attacker, name: action.payload.participant === ParticipantType.Attacker ? action.payload.name : state.attacker.name },
+      defender: { ...state.defender, name: action.payload.participant === ParticipantType.Defender ? action.payload.name : state.defender.name }
+    }
+  ))

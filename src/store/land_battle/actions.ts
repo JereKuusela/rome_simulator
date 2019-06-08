@@ -1,19 +1,19 @@
 import { createAction } from 'typesafe-actions'
-import { ArmyName, Unit, ArmyType, UnitType } from '../units'
+import { Unit, ArmyType, UnitType, ArmyName } from '../units'
 import { TerrainType } from '../terrains'
 import { TacticType } from '../tactics'
-import { RowType } from './types'
+import { RowType, ParticipantType } from './types'
 
 export const selectUnit = createAction('@@land_battle/SELECT_UNIT', action => {
-  return (army: ArmyName, type: ArmyType, index: number, unit: Unit | undefined) => action({ army, type, index, unit })
+  return (participant: ParticipantType, type: ArmyType, index: number, unit: Unit | undefined) => action({ participant, type, index, unit })
 })
 
 export const removeReserveUnits = createAction('@@land_battle/REMOVE_RESERVE_UNITS', action => {
-  return (army: ArmyName, types: UnitType[]) => action({ army, types })
+  return (participant: ParticipantType, types: UnitType[]) => action({ participant, types })
 })
 
 export const addReserveUnits = createAction('@@land_battle/ADD_RESERVE_UNITS', action => {
-  return (army: ArmyName, units: Unit[]) => action({ army, units })
+  return (participant: ParticipantType, units: Unit[]) => action({ participant, units })
 })
 
 export const selectTerrain = createAction('@@land_battle/SELECT_TERRAIN', action => {
@@ -21,11 +21,11 @@ export const selectTerrain = createAction('@@land_battle/SELECT_TERRAIN', action
 })
 
 export const selectTactic = createAction('@@land_battle/SELECT_TACTIC', action => {
-  return (army: ArmyName, type: TacticType) => action({ army, tactic: type })
+  return (participant: ParticipantType, type: TacticType) => action({ participant, tactic: type })
 })
 
 export const setRowType = createAction('@@land_battle/SELECT_ROW_TYPE', action => {
-  return (army: ArmyName, row_type: RowType, unit: UnitType) => action({ army, row_type, unit })
+  return (participant: ParticipantType, row_type: RowType, unit: UnitType) => action({ participant, row_type, unit })
 })
 
 export const battle = createAction('@@land_battle/BATTLE', action => {
@@ -37,17 +37,21 @@ export const undo = createAction('@@land_battle/UNDO', action => {
 })
 
 export const toggleRandomRoll = createAction('@@land_battle/TOGGLE_RANDOM_ROLL', action => {
-  return (army: ArmyName) => action({army})
+  return (participant: ParticipantType) => action({participant})
 })
 
 export const setRoll = createAction('@@land_battle/SET_ROLL', action => {
-  return (army: ArmyName, roll: number) => action({army, roll})
+  return (participant: ParticipantType, roll: number) => action({participant, roll})
 })
 
 export const setGeneral = createAction('@@land_battle/SET_GENERAL', action => {
-  return (army: ArmyName, skill: number) => action({army, skill})
+  return (participant: ParticipantType, skill: number) => action({participant, skill})
 })
 
 export const setFlankSize = createAction('@@land_battle/SET_FLANK_SIZE', action => {
-  return (army: ArmyName, size: number) => action({army, size})
+  return (participant: ParticipantType, size: number) => action({participant, size})
+})
+
+export const setArmyName = createAction('@@land_battle/SET_ARMY_NAME', action => {
+  return (participant: ParticipantType, name: ArmyName) => action({participant, name})
 })

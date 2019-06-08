@@ -3,25 +3,26 @@ import { OrderedSet, Map } from 'immutable'
 import { Table, Input } from 'semantic-ui-react'
 import { UnitType, UnitDefinition, UnitCalc, ArmyName, ValueType, valueToString } from '../store/units'
 import { TerrainType } from '../store/terrains'
+import { ParticipantType } from '../store/land_battle'
 import { getBaseValue, getLossValue, getModifierValue, explain } from '../base_definition'
 
-interface IProps {
-  readonly army: ArmyName
+interface IProps<T extends ParticipantType | ArmyName> {
+  readonly identifier: T
   readonly custom_value_key: string
   readonly unit: UnitDefinition
   readonly unit_types: OrderedSet<UnitType>
   readonly units: Map<any, Map<UnitType, UnitDefinition>>
   readonly show_statistics: boolean
   readonly terrains: OrderedSet<TerrainType>
-  readonly onCustomBaseValueChange: (army: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
-  readonly onCustomModifierValueChange: (army: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
-  readonly onCustomLossValueChange: (army: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
-  readonly onTypeChange?: (army: ArmyName, old_type: UnitType, new_type: UnitType) => void
-  readonly onImageChange?: (army: ArmyName, type: UnitType, image: string) => void
+  readonly onCustomBaseValueChange: (identifier: T, type: UnitType, key: string, attribute: ValueType, value: number) => void
+  readonly onCustomModifierValueChange: (identifier: T, type: UnitType, key: string, attribute: ValueType, value: number) => void
+  readonly onCustomLossValueChange: (identifier: T, type: UnitType, key: string, attribute: ValueType, value: number) => void
+  readonly onTypeChange?: (identifier: T, old_type: UnitType, new_type: UnitType) => void
+  readonly onImageChange?: (identifier: T, type: UnitType, image: string) => void
 }
 
 // Display component for showing and changing unit details.
-export default class UnitDetail extends Component<IProps> {
+export default class UnitDetail<T extends ParticipantType | ArmyName> extends Component<IProps<T>> {
 
   readonly attributes = Object.keys(UnitCalc).map(k => UnitCalc[k as any]) as UnitCalc[]
   readonly units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
@@ -53,7 +54,7 @@ export default class UnitDetail extends Component<IProps> {
                   <Input
                     size='mini'
                     defaultValue={this.props.unit.type}
-                    onChange={(_, data) => this.props.onTypeChange && this.props.onTypeChange(this.props.army, this.props.unit.type, data.value as UnitType)}
+                    onChange={(_, data) => this.props.onTypeChange && this.props.onTypeChange(this.props.identifier, this.props.unit.type, data.value as UnitType)}
                   />
                 </Table.Cell>
                 <Table.Cell />
@@ -73,7 +74,7 @@ export default class UnitDetail extends Component<IProps> {
                   <Input
                     size='mini'
                     defaultValue={this.props.unit.image}
-                    onChange={(_, data) => this.props.onImageChange && this.props.onImageChange(this.props.army, this.props.unit.type, data.value)}
+                    onChange={(_, data) => this.props.onImageChange && this.props.onImageChange(this.props.identifier, this.props.unit.type, data.value)}
                   />
                 </Table.Cell>
                 <Table.Cell />
@@ -119,7 +120,7 @@ export default class UnitDetail extends Component<IProps> {
             size='mini'
             style={{ width: 50 }}
             defaultValue={base_value}
-            onChange={(_, data) => this.props.onCustomBaseValueChange(this.props.army, unit.type, this.props.custom_value_key, attribute, Number(data.value))
+            onChange={(_, data) => this.props.onCustomBaseValueChange(this.props.identifier, unit.type, this.props.custom_value_key, attribute, Number(data.value))
             }
           />
         </Table.Cell>
@@ -130,7 +131,7 @@ export default class UnitDetail extends Component<IProps> {
               size='mini'
               style={{ width: 50 }}
               defaultValue={modifier_value}
-              onChange={(_, data) => this.props.onCustomModifierValueChange(this.props.army, unit.type, this.props.custom_value_key, attribute, Number(data.value))}
+              onChange={(_, data) => this.props.onCustomModifierValueChange(this.props.identifier, unit.type, this.props.custom_value_key, attribute, Number(data.value))}
             />
           }
         </Table.Cell>
@@ -141,7 +142,7 @@ export default class UnitDetail extends Component<IProps> {
               size='mini'
               style={{ width: 50 }}
               defaultValue={loss_value}
-              onChange={(_, data) => this.props.onCustomLossValueChange(this.props.army, unit.type, this.props.custom_value_key, attribute, Number(data.value))}
+              onChange={(_, data) => this.props.onCustomLossValueChange(this.props.identifier, unit.type, this.props.custom_value_key, attribute, Number(data.value))}
             />
           }
         </Table.Cell>

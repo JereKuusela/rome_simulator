@@ -76,17 +76,18 @@ export const transformLand = (state_raw: any): typeof initialState => {
 
   const serializeUnits = (raw: List<any>) => raw.map(value => unitFromJS(value))
 
-  const serializeParticipant = (participant: any): Participant => {
-    let army = initialState.attacker.army
+  const serializeParticipant = (participant: any, attacker: boolean): Participant => {
+    const initial = attacker ? initialState.attacker : initialState.defender
+    let army = initial.army
     if (participant.army)
       army = serializeUnits(fromJS(participant.army)).setSize(30)
-    let reserve = initialState.attacker.reserve
+    let reserve = initial.reserve
     if (participant.reserve)
       reserve = serializeUnits(fromJS(participant.reserve)).filter(value => value) as List<Unit>
-    let defeated = initialState.attacker.defeated
+    let defeated = initial.defeated
     if (participant.defeated)
       defeated = serializeUnits(fromJS(participant.defeated)).filter(value => value) as List<Unit>
-    let past = initialState.attacker.past
+    let past = initial.past
     if (participant.past) {
       let past4: List<Map<string, any>> = fromJS(participant.past)
       let past3 = past4.map(value => ({
@@ -101,18 +102,20 @@ export const transformLand = (state_raw: any): typeof initialState => {
     if (participant.row_types)
       row_types = fromJS(participant.row_types)
     else
-      row_types = initialState.attacker.row_types
+      row_types = initial.row_types
     let tactic = participant.tactic
     // Tactic can be null (corrupted), TacticDefition (old) or TacticType.
     if (!tactic)
-      tactic = initialState.attacker.tactic
+      tactic = initial.tactic
     if (typeof tactic !== 'string')
       tactic = tactic.type
-    const general = participant.general || initialState.attacker.general
-    const flank_size = participant.flank_size || initialState.attacker.flank_size
-    const roll = participant.roll || initialState.attacker.roll
-    const randomize_roll = participant.randomize_roll || initialState.attacker.randomize_roll
+    const name = participant.name || initial.name
+    const general = participant.general || initial.general
+    const flank_size = participant.flank_size || initial.flank_size
+    const roll = participant.roll || initial.roll
+    const randomize_roll = participant.randomize_roll || initial.randomize_roll
     return {
+      name,
       general,
       flank_size,
       roll,
@@ -127,10 +130,10 @@ export const transformLand = (state_raw: any): typeof initialState => {
   }
   let attacker = initialState.attacker
   if (state_raw.attacker)
-    attacker = serializeParticipant(state_raw.attacker)
+    attacker = serializeParticipant(state_raw.attacker, true)
   let defender = initialState.defender
   if (state_raw.defender)
-    defender = serializeParticipant(state_raw.defender)
+    defender = serializeParticipant(state_raw.defender, false)
   const day = state_raw.day || initialState.day
   const fight_over = state_raw.fight_over || initialState.fight_over
   return { day, fight_over, terrains, attacker, defender }

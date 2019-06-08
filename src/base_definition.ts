@@ -1,5 +1,6 @@
 import { Map, OrderedMap } from 'immutable'
 import EmptyIcon from './images/empty.png'
+import UnknownIcon from './images/unknown.png'
 
 export enum ValuesType {
   Base,
@@ -25,7 +26,7 @@ export interface BaseValuesDefinition<T, S> {
 }
 
 export const getImage = <Definition extends AnyDefinition>
-(definition?: Definition) => (definition && definition.image) || EmptyIcon
+  (definition?: Definition) => (definition && definition.image) || (definition ? UnknownIcon : EmptyIcon)
 
 export const mergeBaseValues = <Definition extends AnyDefinition | undefined>
   (definition: Definition, to_merge: Definition) => {
@@ -54,7 +55,10 @@ export const mergeValues = <Definition extends AnyBaseDefinition | undefined>
     new_loss_values = new_loss_values.mergeDeep(definition.loss_values)
   if (to_merge && to_merge.loss_values)
     new_loss_values = new_loss_values.mergeDeep(to_merge.loss_values)
-  return { ...to_merge, ...definition, base_values: new_base_values, modifier_values: new_modifier_values, loss_values: new_loss_values }
+  if (definition)
+    return { ...definition, base_values: new_base_values, modifier_values: new_modifier_values, loss_values: new_loss_values }
+  else
+    return { ...to_merge, base_values: new_base_values, modifier_values: new_modifier_values, loss_values: new_loss_values }
 }
 
 export const addBaseValue = <Definition extends AnyDefinition, Attribute>

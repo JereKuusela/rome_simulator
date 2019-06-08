@@ -66,8 +66,8 @@ export const valueToString = (definition: UnitDefinition, type: ValueType): stri
 }
 
 export enum ArmyName {
-  Attacker = 'Attacker',
-  Defender = 'Defender'
+  Attacker = 'Army 1',
+  Defender = 'Army 2'
 }
 
 export enum ArmyType {

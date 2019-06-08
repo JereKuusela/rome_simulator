@@ -72,6 +72,7 @@ class Units extends Component<IProps, IState> {
           onCreateNew={type => this.props.addUnit(army, type)}
         />
         <br />
+        <br />
       </div>
     )
   }

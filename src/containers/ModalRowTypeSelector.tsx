@@ -3,11 +3,12 @@ import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { UnitType, ArmyName } from '../store/units'
 import { AppState } from '../store/'
-import { setRowType, RowType } from '../store/land_battle'
+import { setRowType, RowType, ParticipantType } from '../store/land_battle'
 import ItemSelector from '../components/ItemSelector'
 
 export interface ModalInfo {
-  army: ArmyName
+  participant: ParticipantType
+  name: ArmyName
   type: RowType
 }
 
@@ -15,13 +16,14 @@ class ModalRowTypeSelector extends Component<IProps> {
   render() {
     if (!this.props.info)
       return null
+    const name = this.props.info.name
     return (
       <Modal basic onClose={this.props.onClose} open centered={false}>
         <Modal.Content>
           <ItemSelector
             onClose={this.props.onClose}
             onSelection={this.selectUnit}
-            items={this.props.units.get(this.props.info.army)!.toList()}
+            items={this.props.types.get(name)!.map(value => this.props.units.getIn([name, value])).toList()}
             attributes={[]}
           />
         </Modal.Content>
@@ -31,17 +33,18 @@ class ModalRowTypeSelector extends Component<IProps> {
 
   selectUnit = (unit: UnitType | undefined) => (
     this.props.info && unit && 
-    this.props.setRowType(this.props.info.army, this.props.info.type, unit)
+    this.props.setRowType(this.props.info.participant, this.props.info.type, unit)
   )
 }
 
 const mapStateToProps = (state: AppState) => ({
-  units: state.units.definitions
+  units: state.units.definitions,
+  types: state.units.types
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setRowType: (army: ArmyName, type: RowType, unit: UnitType) => (
-    dispatch(setRowType(army, type, unit))
+  setRowType: (participant: ParticipantType, type: RowType, unit: UnitType) => (
+    dispatch(setRowType(participant, type, unit))
   )
 })
 

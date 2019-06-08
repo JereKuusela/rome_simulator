@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { UnitType, ArmyName, ArmyType, ValueType, Unit, UnitDefinition } from '../store/units'
-import { selectUnit } from '../store/land_battle'
+import { selectUnit, ParticipantType} from '../store/land_battle'
 import { AppState } from '../store/'
 import { addBaseValue, addModifierValue, addLossValue, mergeValues } from '../base_definition'
 import { OrderedSet } from 'immutable'
@@ -12,7 +12,8 @@ import UnitDetail from '../components/UnitDetail'
 const CUSTOM_VALUE_KEY = 'Unit'
 
 export interface ModalInfo {
-  army: ArmyName
+  participant: ParticipantType
+  name: ArmyName
   index: number
   type: ArmyType
 }
@@ -30,7 +31,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
             onRemove={() => this.selectUnit(undefined)}
           />
           <UnitDetail
-            army={this.props.info.army}
+            identifier={this.props.info.participant}
             terrains={this.props.terrains}
             custom_value_key={CUSTOM_VALUE_KEY}
             unit={this.getUnitDefinition(this.props.info)}
@@ -48,31 +49,31 @@ class ModalArmyUnitDetail extends Component<IProps> {
 
   selectUnit = (unit: UnitType | undefined) => (
     this.props.info &&
-    this.props.selectUnit(this.props.info.army, this.props.info.type, this.props.info.index, unit ? this.props.units.getIn([this.props.info.army, unit]) : undefined)
+    this.props.selectUnit(this.props.info.participant, this.props.info.type, this.props.info.index, unit ? this.props.units.getIn([this.props.info.name, unit]) : undefined)
   )
 
-  setBaseValue = (army: ArmyName, _type: UnitType, key: string, attribute: ValueType, value: number) => {
+  setBaseValue = (participant: ParticipantType, _type: UnitType, key: string, attribute: ValueType, value: number) => {
     if (!this.props.info)
       return
     const unit = addBaseValue(this.getUnit(this.props.info), key, attribute, value)
-    this.props.selectUnit(army, this.props.info.type, this.props.info.index, unit)
+    this.props.selectUnit(participant, this.props.info.type, this.props.info.index, unit)
   }
 
-  setModifierValue = (army: ArmyName, _type: UnitType, key: string, attribute: ValueType, value: number) => {
+  setModifierValue = (participant: ParticipantType, _type: UnitType, key: string, attribute: ValueType, value: number) => {
     if (!this.props.info)
       return
     const unit = addModifierValue(this.getUnit(this.props.info), key, attribute, value)
-    this.props.selectUnit(army, this.props.info.type, this.props.info.index, unit)
+    this.props.selectUnit(participant, this.props.info.type, this.props.info.index, unit)
   }
 
-  setLossValue = (army: ArmyName, _type: UnitType, key: string, attribute: ValueType, value: number) => {
+  setLossValue = (participant: ParticipantType, _type: UnitType, key: string, attribute: ValueType, value: number) => {
     if (!this.props.info)
       return
     const unit = addLossValue(this.getUnit(this.props.info), key, attribute, value)
-    this.props.selectUnit(army, this.props.info.type, this.props.info.index, unit)
+    this.props.selectUnit(participant, this.props.info.type, this.props.info.index, unit)
   }
 
-  getUnitDefinition = (info: ModalInfo): UnitDefinition => (this.mergeAllValues(info.army, this.getUnit(info)))
+  getUnitDefinition = (info: ModalInfo): UnitDefinition => (this.mergeAllValues(info.name, this.getUnit(info)))
 
   mergeAllValues = (name: ArmyName, unit: Unit): UnitDefinition => {
     return mergeValues(mergeValues(this.props.units.getIn([name, unit.type]), unit), this.props.global_stats.get(name)!)
@@ -80,19 +81,19 @@ class ModalArmyUnitDetail extends Component<IProps> {
 
   getUnit = (info: ModalInfo): Unit => {
     if (info.type === ArmyType.Main) {
-      if (info.army === ArmyName.Attacker)
+      if (info.participant === ParticipantType.Attacker)
         return this.props.attacker.army.get(info.index)!
       else
         return this.props.defender.army.get(info.index)!
     }
     else if (info.type === ArmyType.Reserve) {
-      if (info.army === ArmyName.Attacker)
+      if (info.participant === ParticipantType.Attacker)
         return this.props.attacker.reserve.get(info.index)!
       else
         return this.props.defender.reserve.get(info.index)!
     }
     else {
-      if (info.army === ArmyName.Attacker)
+      if (info.participant === ParticipantType.Attacker)
         return this.props.attacker.defeated.get(info.index)!
       else
         return this.props.defender.defeated.get(info.index)!
@@ -110,8 +111,8 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  selectUnit: (army: ArmyName, type: ArmyType, column: number, unit: Unit | undefined) => (
-    dispatch(selectUnit(army, type, column, unit))
+  selectUnit: (participant: ParticipantType, type: ArmyType, column: number, unit: Unit | undefined) => (
+    dispatch(selectUnit(participant, type, column, unit))
   )
 })
 

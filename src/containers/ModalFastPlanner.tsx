@@ -6,7 +6,7 @@ import { AppState } from '../store/'
 import FastPlanner from '../components/FastPlanner'
 import ArmyCosts from '../components/ArmyCosts'
 import { ArmyName, UnitType, Unit } from '../store/units'
-import { removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits } from '../store/land_battle'
+import { removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits, ParticipantType } from '../store/land_battle'
 import { mapRange } from '../utils'
 import { mergeValues } from '../base_definition'
 
@@ -30,27 +30,27 @@ class ModalFastPlanner extends Component<IProps, IState> {
   render() {
     if (!this.props.open)
       return null
-    this.originals_a = this.props.types.get(ArmyName.Attacker)!.reduce((map, value) => map.set(value, this.countUnits(this.props.attacker.reserve, value)), Map<UnitType, number>())
-    this.originals_d = this.props.types.get(ArmyName.Defender)!.reduce((map, value) => map.set(value, this.countUnits(this.props.defender.reserve, value)), Map<UnitType, number>())
+    this.originals_a = this.props.types.get(this.props.attacker.name)!.reduce((map, value) => map.set(value, this.countUnits(this.props.attacker.reserve, value)), Map<UnitType, number>())
+    this.originals_d = this.props.types.get(this.props.defender.name)!.reduce((map, value) => map.set(value, this.countUnits(this.props.defender.reserve, value)), Map<UnitType, number>())
     return (
       <Modal basic onClose={this.onClose} open centered={false}>
         <Modal.Content>
           <FastPlanner
             reserve_a={this.originals_a}
             units={this.props.units}
-            types_a={this.props.types.get(ArmyName.Attacker)!}
+            types_a={this.props.types.get(this.props.attacker.name)!}
             reserve_d={this.originals_d}
-            types_d={this.props.types.get(ArmyName.Defender)!}
+            types_d={this.props.types.get(this.props.defender.name)!}
             onValueChange={this.onValueChange}
             attached
           />
           <ArmyCosts
-            army_a={this.mergeAllValues(ArmyName.Attacker, this.props.attacker.army)}
-            army_d={this.mergeAllValues(ArmyName.Defender, this.props.defender.army)}
-            reserve_a={this.mergeAllValues(ArmyName.Attacker, this.editReserve(this.props.attacker.reserve, this.originals_a, this.state.changes_a))}
-            reserve_d={this.mergeAllValues(ArmyName.Defender, this.editReserve(this.props.defender.reserve, this.originals_d, this.state.changes_d))}
-            defeated_a={this.mergeAllValues(ArmyName.Attacker, this.props.attacker.defeated)}
-            defeated_d={this.mergeAllValues(ArmyName.Defender, this.props.defender.defeated)}
+            army_a={this.mergeAllValues(this.props.attacker.name, this.props.attacker.army)}
+            army_d={this.mergeAllValues(this.props.defender.name, this.props.defender.army)}
+            reserve_a={this.mergeAllValues(this.props.attacker.name, this.editReserve(this.props.attacker.reserve, this.originals_a, this.state.changes_a))}
+            reserve_d={this.mergeAllValues(this.props.defender.name, this.editReserve(this.props.defender.reserve, this.originals_d, this.state.changes_d))}
+            defeated_a={this.mergeAllValues(this.props.attacker.name, this.props.attacker.defeated)}
+            defeated_d={this.mergeAllValues(this.props.defender.name, this.props.defender.defeated)}
             attached
            />
         </Modal.Content>
@@ -95,16 +95,16 @@ class ModalFastPlanner extends Component<IProps, IState> {
     return types
   }
 
-  updateReserve = (army: ArmyName, changes: Units, originals: Units) => {
+  updateReserve = (participant: ParticipantType, changes: Units, originals: Units) => {
     const units = this.getUnitsToAdd(changes, originals)
     const types = this.getTypesToRemove(changes, originals)
-    units.length > 0 && this.props.addReserveUnits(army, units)
-    types.length > 0 && this.props.removeReserveUnits(army, types)
+    units.length > 0 && this.props.addReserveUnits(participant, units)
+    types.length > 0 && this.props.removeReserveUnits(participant, types)
   }
 
   onClose = () => {
-    this.updateReserve(ArmyName.Attacker, this.state.changes_a, this.originals_a)
-    this.updateReserve(ArmyName.Defender, this.state.changes_d, this.originals_d)
+    this.updateReserve(ParticipantType.Attacker, this.state.changes_a, this.originals_a)
+    this.updateReserve(ParticipantType.Defender, this.state.changes_d, this.originals_d)
     this.setState({ changes_a: Map<UnitType, number>(), changes_d: Map<UnitType, number>() })
     this.props.onClose()
   }
@@ -121,8 +121,8 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  addReserveUnits: (army: ArmyName, units: Unit[]) => dispatch(addReserveUnits(army, units)),
-  removeReserveUnits: (army: ArmyName, types: UnitType[]) => dispatch(removeReserveUnits(army, types))
+  addReserveUnits: (participant: ParticipantType, units: Unit[]) => dispatch(addReserveUnits(participant, units)),
+  removeReserveUnits: (participant: ParticipantType, types: UnitType[]) => dispatch(removeReserveUnits(participant, types))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {

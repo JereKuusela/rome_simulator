@@ -93,7 +93,7 @@ export default class UnitDefinitions extends Component<IProps, IState> {
           </Table.Body>
         </Table>
         <Button primary onClick={this.newOnClick}>
-          Create new
+          Create new unit
         </Button>
       </div>
     )

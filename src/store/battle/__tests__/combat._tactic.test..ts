@@ -19,8 +19,8 @@ describe('1 vs 1', () => {
   let round: number
 
   beforeEach(() => {
-    attacker = getInitialArmy()
-    defender = getInitialArmy()
+    attacker = getInitialArmy(true)
+    defender = getInitialArmy(false)
     terrain = List<TerrainDefinition>().push(terrains.get(TerrainType.Forest)!)
     setUnits(unit, unit)
     round = 0
