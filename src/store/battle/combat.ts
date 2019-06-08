@@ -3,7 +3,7 @@ import { Unit, UnitDefinition, UnitCalc, UnitType, ArmyName } from '../units'
 import { TerrainDefinition, TerrainCalc } from '../terrains'
 import { TacticDefinition, TacticCalc } from '../tactics'
 import { RowType } from '../land_battle/types'
-import { calculateValue, add_base_values, add_loss_values, merge_values } from '../../base_definition'
+import { calculateValue, addBaseValues, addLossValues, mergeValues } from '../../base_definition'
 
 type Army = List<Unit | undefined>
 type Reserve = List<Unit>
@@ -55,10 +55,10 @@ export const battle = (definitions: Definitions, attacker: ParticipantState, def
   //console.log('********** ROUND ' + round + '*********')
   //console.log('')
   let [army_a, reserve_a] = reinforce(round, attacker.army, attacker.reserve, attacker.row_types, attacker.flank_size, countArmySize(defender.army, defender.reserve, defender.defeated), undefined)
-  let definitions_a: Army = army_a.map(value => value && merge_values(value, definitions.getIn([ArmyName.Attacker, value.type])))
+  let definitions_a: Army = army_a.map(value => value && mergeValues(value, definitions.getIn([ArmyName.Attacker, value.type])))
   let a_to_d = pickTargets(definitions_a, defender.army)
   let [army_d, reserve_d] = reinforce(round, defender.army, defender.reserve, defender.row_types, defender.flank_size, countArmySize(attacker.army, attacker.reserve, attacker.defeated), a_to_d)
-  let definitions_d: Army = army_d.map(value => value && merge_values(value, definitions.getIn([ArmyName.Defender, value.type])))
+  let definitions_d: Army = army_d.map(value => value && mergeValues(value, definitions.getIn([ArmyName.Defender, value.type])))
   let d_to_a = pickTargets(definitions_d, army_a)
   if (round < 1)
     return [army_a, army_d, reserve_a, reserve_d, attacker.defeated, defender.defeated]
@@ -293,7 +293,7 @@ const applyLosses = (row: Army, losses: Loss[], round: number): Army => {
   for (let i = 0; i < row.size; ++i) {
     if (row.get(i)) {
       const loss_values: [UnitCalc, number][] = [[UnitCalc.Morale, losses[i].morale], [UnitCalc.Manpower, losses[i].manpower]]
-      row = row.update(i, unit => unit && add_loss_values(unit, 'Round ' + round, loss_values))
+      row = row.update(i, unit => unit && addLossValues(unit, 'Round ' + round, loss_values))
     }
   }
   return row
@@ -303,7 +303,7 @@ const applyKills = (row: Army, kills: Kill[], round: number): Army => {
   for (let i = 0; i < row.size; ++i) {
     if (row.get(i)) {
       const kill_values: [UnitCalc, number][] = [[UnitCalc.MoraleDepleted, kills[i].morale], [UnitCalc.ManpowerDepleted, kills[i].manpower]]
-      row = row.update(i, unit => unit && add_base_values(unit, 'Round ' + round, kill_values))
+      row = row.update(i, unit => unit && addBaseValues(unit, 'Round ' + round, kill_values))
     }
   }
   return row

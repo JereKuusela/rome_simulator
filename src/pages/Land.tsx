@@ -17,7 +17,7 @@ import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers
 import ModalArmyUnitDetail, { ModalInfo as ModalArmyUnitInfo } from '../containers/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/ModalFastPlanner'
 import { unit_to_icon } from '../store/units'
-import { calculateValue, merge_values, getImage } from '../base_definition'
+import { calculateValue, mergeValues, getImage } from '../base_definition'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
@@ -379,7 +379,7 @@ class Land extends Component<IProps, IState> {
   }
 
   mergeAllValues = (name: ArmyName, army: List<Unit | undefined>): List<UnitDefinition | undefined> => {
-    return army.map(value => value && merge_values(merge_values(this.props.units.getIn([name, value.type]), value), this.props.global_stats.get(name)!))
+    return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats.get(name)!))
   }
 }
 

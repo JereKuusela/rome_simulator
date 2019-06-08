@@ -1,5 +1,5 @@
 import { Map, List, OrderedMap, fromJS } from 'immutable'
-import { calculateValue, BaseValuesDefinition, add_base_values } from '../../base_definition'
+import { calculateValue, BaseValuesDefinition, addBaseValues } from '../../base_definition'
 import * as data from './terrains.json'
 
 export enum TerrainType {
@@ -63,7 +63,7 @@ const createTerrainFromJson = (data: TerrainData): TerrainDefinition => {
   const base_values: [ValueType, number][] = [
     [TerrainCalc.Roll, data.roll]
   ]
-  return add_base_values(terrain, terrain.type, base_values)
+  return addBaseValues(terrain, terrain.type, base_values)
 }
 
 interface TerrainData {

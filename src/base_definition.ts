@@ -27,7 +27,7 @@ export interface BaseValuesDefinition<T, S> {
 export const getImage = <Definition extends AnyDefinition>
 (definition?: Definition) => (definition && definition.image) || EmptyIcon
 
-export const merge_base_values = <Definition extends AnyDefinition>
+export const mergeBaseValues = <Definition extends AnyDefinition>
   (definition: Definition, to_merge: Definition) => {
   let new_base_values = Map<any, OrderedMap<any, number>>()
   if (definition.base_values)
@@ -37,7 +37,7 @@ export const merge_base_values = <Definition extends AnyDefinition>
   return { ...definition, base_values: new_base_values }
 }
 
-export const merge_values = <Definition extends AnyBaseDefinition>
+export const mergeValues = <Definition extends AnyBaseDefinition>
   (definition: Definition, to_merge: Definition) => {
   let new_base_values = Map<any, OrderedMap<string, number>>()
   if (definition.base_values)
@@ -57,43 +57,43 @@ export const merge_values = <Definition extends AnyBaseDefinition>
   return { ...definition, base_values: new_base_values, modifier_values: new_modifier_values, loss_values: new_loss_values }
 }
 
-export const add_base_value = <Definition extends AnyDefinition, Attribute>
+export const addBaseValue = <Definition extends AnyDefinition, Attribute>
   (definition: Definition, key: string, attribute: Attribute, value: number) => {
-  const new_values = add_values(definition.base_values, key, [[attribute, value]])
+  const new_values = addValues(definition.base_values, key, [[attribute, value]])
   return { ...definition, base_values: new_values }
 }
 
-export const add_base_values = <Definition extends AnyDefinition, Attribute>
+export const addBaseValues = <Definition extends AnyDefinition, Attribute>
   (definition: Definition, key: string, values: [Attribute, number][]): Definition => {
-  const new_values = add_values(definition.base_values, key, values)
+  const new_values = addValues(definition.base_values, key, values)
   return { ...definition, base_values: new_values }
 }
 
-export const add_modifier_value = <Definition extends AnyBaseDefinition, Attribute>
+export const addModifierValue = <Definition extends AnyBaseDefinition, Attribute>
   (definition: Definition, key: string, attribute: Attribute, value: number) => {
-  const new_values = add_values(definition.modifier_values, key, [[attribute, value]])
+  const new_values = addValues(definition.modifier_values, key, [[attribute, value]])
   return { ...definition, modifier_values: new_values }
 }
 
-export const add_modifier_values = <Definition extends AnyBaseDefinition, Attribute>
+export const addModifierValues = <Definition extends AnyBaseDefinition, Attribute>
   (definition: Definition, key: string, values: [Attribute, number][]): Definition => {
-  const new_values = add_values(definition.modifier_values, key, values)
+  const new_values = addValues(definition.modifier_values, key, values)
   return { ...definition, modifier_values: new_values }
 }
 
-export const add_loss_value = <Definition extends AnyBaseDefinition, Attribute>
+export const addLossValue = <Definition extends AnyBaseDefinition, Attribute>
   (definition: Definition, key: string, attribute: Attribute, value: number) => {
-  const new_values = add_values(definition.loss_values, key, [[attribute, value]])
+  const new_values = addValues(definition.loss_values, key, [[attribute, value]])
   return { ...definition, loss_values: new_values }
 }
 
-export const add_loss_values = <Definition extends AnyBaseDefinition, Attribute>
+export const addLossValues = <Definition extends AnyBaseDefinition, Attribute>
   (definition: Definition, key: string, values: [Attribute, number][]): Definition => {
-  const new_values = add_values(definition.loss_values, key, values)
+  const new_values = addValues(definition.loss_values, key, values)
   return { ...definition, loss_values: new_values }
 }
 
-const add_values = <Attribute>(container: Map<Attribute, OrderedMap<string, number>> | undefined, key: string, values: [Attribute, number][]) => {
+const addValues = <Attribute>(container: Map<Attribute, OrderedMap<string, number>> | undefined, key: string, values: [Attribute, number][]) => {
   let new_values = container ? container : Map<Attribute, OrderedMap<string, number>>()
   for (const [type, value] of values) {
     new_values = new_values.has(type) ? new_values : new_values.set(type, OrderedMap<string, number>())
@@ -146,16 +146,16 @@ const calculateValueSub = <Attribute>(container: Map<Attribute, OrderedMap<strin
   return Math.round(result * 1000.0) / 1000.0
 }
 
-export const get_base_value = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, type: Attribute, key: string): number => get_value(definition.base_values, type, key)
+export const getBaseValue = <Definition extends AnyDefinition, Attribute>
+  (definition: Definition, type: Attribute, key: string): number => getValue(definition.base_values, type, key)
 
-export const get_modifier_value = <Definition extends AnyBaseDefinition, Attribute>
-  (definition: Definition, type: Attribute, key: string): number => get_value(definition.modifier_values, type, key)
+export const getModifierValue = <Definition extends AnyBaseDefinition, Attribute>
+  (definition: Definition, type: Attribute, key: string): number => getValue(definition.modifier_values, type, key)
 
-export const get_loss_value = <Definition extends AnyBaseDefinition, Attribute>
-  (definition: Definition, type: Attribute, key: string): number => get_value(definition.loss_values, type, key)
+export const getLossValue = <Definition extends AnyBaseDefinition, Attribute>
+  (definition: Definition, type: Attribute, key: string): number => getValue(definition.loss_values, type, key)
 
-const get_value = <Attribute>(container: Map<Attribute, OrderedMap<string, number>> | undefined, type: Attribute, key: string): number => {
+const getValue = <Attribute>(container: Map<Attribute, OrderedMap<string, number>> | undefined, type: Attribute, key: string): number => {
   if (!container)
     return 0.0
   const values = container.get(type)
@@ -167,7 +167,7 @@ const get_value = <Attribute>(container: Map<Attribute, OrderedMap<string, numbe
   return value
 }
 
-export const explain_short = <Definition extends AnyDefinition, Attribute>
+export const explainShort = <Definition extends AnyDefinition, Attribute>
   (definition: Definition, type: Attribute) => {
   if (!definition.base_values)
     return ''
@@ -188,7 +188,7 @@ export const explain = <Definition extends AnyBaseDefinition, Attribute>
   const value_modifier = definition.modifier_values ? definition.modifier_values.get(type) : undefined
   const value_loss = definition.loss_values ? definition.loss_values.get(type) : undefined
   if ((!value_modifier || value_modifier.size === 0) && (!value_loss || value_loss.size === 0))
-    return explain_short(definition, type)
+    return explainShort(definition, type)
   let explanation = ''
   let base = 0
   const value_base = definition.base_values ? definition.base_values.get(type) : undefined
@@ -253,14 +253,14 @@ export const valueToRelativePercent = <Definition extends AnyDefinition, Attribu
 export const valueToRelativeZeroPercent = <Definition extends AnyDefinition, Attribute>
   (definition: Definition, type: Attribute, show_zero: boolean) => toRelativeZeroPercent(calculateValue(definition, type), show_zero)
 
-export const add_value = <Definition extends AnyDefinition, Attribute>
+export const addValue = <Definition extends AnyDefinition, Attribute>
   (definition: Definition, type: ValuesType, key: string, attribute: Attribute, value: number) => {
   if (type === ValuesType.Base)
-    return add_base_value(definition, key, attribute, value)
+    return addBaseValue(definition, key, attribute, value)
   if (type === ValuesType.Loss)
-    return add_loss_value(definition, key, attribute, value)
+    return addLossValue(definition, key, attribute, value)
   if (type === ValuesType.Modifier)
-    return add_modifier_value(definition, key, attribute, value)
+    return addModifierValue(definition, key, attribute, value)
   return definition
 }
 

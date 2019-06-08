@@ -3,7 +3,7 @@ import { List } from 'immutable'
 import { Table, Input } from 'semantic-ui-react'
 import { UnitType, UnitDefinition, UnitCalc, ArmyName, ValueType, valueToString } from '../store/units'
 import { TerrainType } from '../store/terrains'
-import { get_base_value, get_loss_value, get_modifier_value, explain } from '../base_definition'
+import { getBaseValue, getLossValue, getModifierValue, explain } from '../base_definition'
 
 interface IProps {
   army: ArmyName
@@ -58,9 +58,9 @@ export default class UnitDetail extends Component<IProps> {
       return null
     if (!this.props.show_statistics && (attribute === UnitCalc.ManpowerDepleted || attribute === UnitCalc.MoraleDepleted))
       return null
-    let base_value = get_base_value(unit, attribute, this.props.custom_value_key)
-    let modifier_value = get_modifier_value(unit, attribute, this.props.custom_value_key)
-    let loss_value = get_loss_value(unit, attribute, this.props.custom_value_key)
+    let base_value = getBaseValue(unit, attribute, this.props.custom_value_key)
+    let modifier_value = getModifierValue(unit, attribute, this.props.custom_value_key)
+    let loss_value = getLossValue(unit, attribute, this.props.custom_value_key)
 
     return (
       <Table.Row key={attribute}>

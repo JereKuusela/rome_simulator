@@ -3,7 +3,7 @@ import { Map, List } from 'immutable'
 import { Table, Input, Image } from 'semantic-ui-react'
 import { UnitType, unit_to_icon } from '../store/units'
 import { TacticDefinition, ValueType, TacticType, TacticCalc } from '../store/tactics'
-import { get_base_value, valueToRelativeZeroPercent, valueToPercent, explain_short, getImage } from '../base_definition'
+import { getBaseValue, valueToRelativeZeroPercent, valueToPercent, explainShort, getImage } from '../base_definition'
 
 interface IProps {
   readonly types: List<TacticType>
@@ -85,7 +85,7 @@ export default class TacticDetail extends Component<IProps> {
   }
 
   renderRow = (tactic: TacticDefinition, attribute: ValueType, relative: boolean, image: string) => {
-    let base_value = get_base_value(tactic, attribute, this.props.custom_value_key)
+    let base_value = getBaseValue(tactic, attribute, this.props.custom_value_key)
 
     return (
       <Table.Row key={attribute}>
@@ -105,7 +105,7 @@ export default class TacticDetail extends Component<IProps> {
           />
         </Table.Cell>
         <Table.Cell>
-          {explain_short(tactic, attribute)}
+          {explainShort(tactic, attribute)}
         </Table.Cell>
       </Table.Row>
     )

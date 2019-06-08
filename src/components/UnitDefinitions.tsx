@@ -8,7 +8,7 @@ import IconOffense from '../images/offense.png'
 import IconDefense from '../images/defense.png'
 import IconManpower from '../images/manpower.png'
 import IconMorale from '../images/morale.png'
-import { calculateValue, calculateBase, calculateModifier, calculateLoss, valueToNumber, valueToPercent, valueToRelativePercent, valueToRelativeZeroPercent, merge_values } from  '../base_definition'
+import { calculateValue, calculateBase, calculateModifier, calculateLoss, valueToNumber, valueToPercent, valueToRelativePercent, valueToRelativeZeroPercent, mergeValues } from  '../base_definition'
 
 interface IProps {
   readonly army: ArmyName
@@ -71,7 +71,7 @@ export default class UnitDefinitions extends Component<IProps> {
             this.renderGlobalStats(this.props.global_stats)
           }
           {
-            this.props.units.map(value => this.renderRow(merge_values(value, this.props.global_stats)))
+            this.props.units.map(value => this.renderRow(mergeValues(value, this.props.global_stats)))
           }
         </Table.Body>
       </Table>

@@ -5,7 +5,7 @@ import { terrainState } from '../terrains'
 import { globalStatsState, unitsState } from '../units'
 import { transferState } from '../transfer'
 import { battle as fight } from './combat'
-import { merge_values } from '../../base_definition'
+import { mergeValues } from '../../base_definition'
 
 export const initialState = {
   tactics: tacticsState,
@@ -18,7 +18,7 @@ export const initialState = {
 
 export const battleReducer = createReducer(initialState)
 .handleAction(battle, (state, action: ReturnType<typeof battle>) => {
-  const definitions = state.units.definitions.map((value, key) => value.map(value => merge_values(value, state.global_stats.get(key)!)))
+  const definitions = state.units.definitions.map((value, key) => value.map(value => mergeValues(value, state.global_stats.get(key)!)))
   let next = state.land
   for (let step = 0; step < action.payload.steps && !next.fight_over; ++step) {
     const old_rolls = [next.attacker.roll, next.defender.roll]

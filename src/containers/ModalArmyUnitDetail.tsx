@@ -4,7 +4,7 @@ import { Modal } from 'semantic-ui-react'
 import { UnitType, ArmyName, ArmyType, ValueType, Unit, UnitDefinition } from '../store/units'
 import { selectUnit } from '../store/land_battle'
 import { AppState } from '../store/'
-import { add_base_value, add_modifier_value, add_loss_value, merge_values } from '../base_definition'
+import { addBaseValues, addModifierValue, addLossValue, mergeValues } from '../base_definition'
 import ItemRemover from '../components/ItemRemover'
 import UnitDetail from '../components/UnitDetail'
 
@@ -50,28 +50,28 @@ class ModalArmyUnitDetail extends Component<IProps> {
   setBaseValue = (army: ArmyName, _type: UnitType, key: string, attribute: ValueType, value: number) => {
     if (!this.props.info)
       return
-    const unit = add_base_value(this.getUnit(this.props.info), key, attribute, value)
+    const unit = addBaseValues(this.getUnit(this.props.info), key, attribute, value)
     this.props.selectUnit(army, this.props.info.type, this.props.info.index, unit)
   }
 
   setModifierValue = (army: ArmyName, _type: UnitType, key: string, attribute: ValueType, value: number) => {
     if (!this.props.info)
       return
-    const unit = add_modifier_value(this.getUnit(this.props.info), key, attribute, value)
+    const unit = addModifierValue(this.getUnit(this.props.info), key, attribute, value)
     this.props.selectUnit(army, this.props.info.type, this.props.info.index, unit)
   }
 
   setLossValue = (army: ArmyName, _type: UnitType, key: string, attribute: ValueType, value: number) => {
     if (!this.props.info)
       return
-    const unit = add_loss_value(this.getUnit(this.props.info), key, attribute, value)
+    const unit = addLossValue(this.getUnit(this.props.info), key, attribute, value)
     this.props.selectUnit(army, this.props.info.type, this.props.info.index, unit)
   }
 
   getUnitDefinition = (info: ModalInfo): UnitDefinition => (this.mergeAllValues(info.army, this.getUnit(info)))
 
   mergeAllValues = (name: ArmyName, unit: Unit): UnitDefinition => {
-    return merge_values(merge_values(this.props.units.getIn([name, unit.type]), unit), this.props.global_stats.get(name)!)
+    return mergeValues(mergeValues(this.props.units.getIn([name, unit.type]), unit), this.props.global_stats.get(name)!)
   }
 
   getUnit = (info: ModalInfo): Unit => {

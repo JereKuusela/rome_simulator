@@ -4,13 +4,13 @@ import { getInitialArmy, Participant } from '../../land_battle/types'
 import { getDefaultDefinitions as getDefaultTacticDefinitions, TacticType } from '../../tactics'
 import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, TerrainDefinition } from '../../terrains'
 import { getDefaultDefinitions as getDefaultUnitDefinitions, UnitType, UnitCalc, UnitDefinition, ArmyName } from '../../units'
-import { add_modifier_value, calculateValue} from '../../../base_definition'
+import { addModifierValue, calculateValue} from '../../../base_definition'
 
 describe('1 vs 1', () => {
   const tactics = getDefaultTacticDefinitions()
   const terrains = getDefaultTerrainDefinitions()
   const units = getDefaultUnitDefinitions()
-  const unit = add_modifier_value(units.get(UnitType.Archers)!, 'Initial', UnitCalc.Morale, -0.2)
+  const unit = addModifierValue(units.get(UnitType.Archers)!, 'Initial', UnitCalc.Morale, -0.2)
   const definitions = Map<ArmyName, Map<UnitType, UnitDefinition>>().set(ArmyName.Attacker, units).set(ArmyName.Defender, units)
 
   let attacker: Participant

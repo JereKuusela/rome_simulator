@@ -8,7 +8,7 @@ import ArmyCosts from '../components/ArmyCosts'
 import { ArmyName, UnitType, Unit } from '../store/units'
 import { removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits } from '../store/land_battle'
 import { mapRange } from '../utils'
-import { merge_values} from '../base_definition'
+import { mergeValues} from '../base_definition'
 
 type Units = Map<UnitType, number>
 
@@ -59,7 +59,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
   }
 
   mergeAllValues = (name: ArmyName, army: List<Unit | undefined>) => {
-    return army.map(value => value && merge_values(merge_values(this.props.units.getIn([name, value.type]), value), this.props.global_stats.get(name)!))
+    return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats.get(name)!))
   }
 
   editReserve = (reserve: List<Unit>, originals: Units, changes: Units) => {

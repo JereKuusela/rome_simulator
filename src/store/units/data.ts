@@ -1,6 +1,6 @@
 import { Map, OrderedMap } from 'immutable'
 import { UnitType, UnitDefinition, UnitCalc, ValueType } from './types'
-import { add_base_values } from '../../base_definition'
+import { addBaseValues } from '../../base_definition'
 import IconArcher from '../../images/archers.png'
 import IconCamelCavalry from '../../images/camel_cavalry.png'
 import IconChariots from '../../images/chariots.png'
@@ -34,7 +34,7 @@ const setBaseValues = (unit: UnitDefinition): UnitDefinition => {
     [UnitCalc.Morale, 3],
     [UnitCalc.Experience, 0]
   ]
-  unit = add_base_values(unit, 'Base', values)
+  unit = addBaseValues(unit, 'Base', values)
   return unit
 }
 
@@ -73,7 +73,7 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
     [UnitType.LightInfantry, data.light_infantry || 0],
     [UnitType.WarElephants, data.war_elephants || 0]
   ]
-  unit = add_base_values(unit, unit.type, base_values)
+  unit = addBaseValues(unit, unit.type, base_values)
   return unit
 }
 

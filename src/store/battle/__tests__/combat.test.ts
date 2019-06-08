@@ -4,13 +4,13 @@ import { getInitialArmy, Participant } from '../../land_battle/types'
 import { getDefaultDefinitions as getDefaultTacticDefinitions, TacticType } from '../../tactics'
 import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, TerrainDefinition } from '../../terrains'
 import { getDefaultDefinitions as getDefaultUnitDefinitions, UnitType, UnitCalc, UnitDefinition, ArmyName } from '../../units'
-import { add_base_values, add_base_value, add_modifier_value, calculateValue} from '../../../base_definition'
+import { addBaseValues, addBaseValues, addModifierValue, calculateValue} from '../../../base_definition'
 
 describe('1 vs 1', () => {
   const tactics = getDefaultTacticDefinitions()
   const terrains = getDefaultTerrainDefinitions()
   const units = getDefaultUnitDefinitions()
-  const unit = add_modifier_value(units.get(UnitType.Archers)!, 'Initial', UnitCalc.Morale, -0.2)
+  const unit = addModifierValue(units.get(UnitType.Archers)!, 'Initial', UnitCalc.Morale, -0.2)
   const definitions = Map<ArmyName, Map<UnitType, UnitDefinition>>().set(ArmyName.Attacker, units).set(ArmyName.Defender, units)
 
   let attacker: Participant
@@ -62,7 +62,7 @@ describe('1 vs 1', () => {
   }
 
   it('should work without modifiers', () => {
-    const test_unit = add_base_value(unit, 'Test', UnitCalc.MoraleDamageTaken, -0.25)
+    const test_unit = addBaseValues(unit, 'Test', UnitCalc.MoraleDamageTaken, -0.25)
     setUnits(test_unit, test_unit)
     setRolls(1, 3)
     doRound()
@@ -95,7 +95,7 @@ describe('1 vs 1', () => {
   })
 
   it('should work with extra strength damage taken', () => {
-    const test_unit = add_base_values(unit, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitCalc.StrengthDamageTaken, 0.25]])
+    const test_unit = addBaseValues(unit, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitCalc.StrengthDamageTaken, 0.25]])
     setUnits(test_unit, test_unit)
     setRolls(3, 4)
     doRound()
@@ -111,7 +111,7 @@ describe('1 vs 1', () => {
   })
 
   it('should work with versus damage', () => {
-    const test_unit = add_base_values(unit, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitType.Archers, 0.25]] as [UnitCalc | UnitType, number][])
+    const test_unit = addBaseValues(unit, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitType.Archers, 0.25]] as [UnitCalc | UnitType, number][])
     setUnits(test_unit, test_unit)
     setRolls(5, 1)
     doRound()
@@ -139,8 +139,8 @@ describe('1 vs 1', () => {
 
 
   it('should work with discipline', () => {
-    const unit_a = add_base_values(unit, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitCalc.Discipline, 0.01]])
-    const unit_d = add_base_values(unit, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitCalc.Discipline, 0.045]])
+    const unit_a = addBaseValues(unit, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitCalc.Discipline, 0.01]])
+    const unit_d = addBaseValues(unit, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitCalc.Discipline, 0.045]])
     setUnits(unit_a, unit_d)
     setRolls(6, 4)
     doRound()

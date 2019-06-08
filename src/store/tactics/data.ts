@@ -1,5 +1,5 @@
 import { Map, OrderedMap, List, fromJS } from 'immutable'
-import { calculateValue, BaseValuesDefinition, toPercent, add_base_values } from '../../base_definition'
+import { calculateValue, BaseValuesDefinition, toPercent, addBaseValues } from '../../base_definition'
 import { UnitType } from '../units/types'
 import IconBottleneck from '../../images/bottleneck.png'
 import IconCavalrySkirmish from '../../images/cavalry_skirmish.png'
@@ -62,11 +62,11 @@ export const getDefaultTypes = (): List<TacticType> => {
 export const tacticFromJS = (object: Map<string, any>): TacticDefinition | undefined => {
   if (!object)
     return undefined
-  let base_values = object.has('base_values') ? fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
   const type = object.get('type') as TacticType
   let image = object.get('image')
   if (!image)
     image = tactic_to_icon.get(type)
+  let base_values = object.has('base_values') ? fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined 
   return { type, image, base_values }
 }
 
@@ -103,7 +103,7 @@ const createTacticFromJson = (data: TacticData): TacticDefinition => {
     [TacticType.TriplexAcies, data.triplex_acies || 0]
 
   ]
-  return add_base_values(tactic, tactic.type, base_values)
+  return addBaseValues(tactic, tactic.type, base_values)
 }
 
 interface TacticData {

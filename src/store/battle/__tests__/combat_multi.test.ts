@@ -4,7 +4,7 @@ import { getInitialArmy, getInitialTerrains, Participant } from '../../land_batt
 import { getDefaultDefinitions as getDefaultTacticDefinitions, TacticType } from '../../tactics'
 import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, TerrainDefinition } from '../../terrains'
 import { getDefaultDefinitions as getDefaultUnitDefinitions, UnitType, UnitCalc, UnitDefinition, ArmyName } from '../../units'
-import { add_base_value, add_modifier_value, add_loss_value, calculateValue} from '../../../base_definition'
+import { addBaseValues, addModifierValue, addLossValue, calculateValue} from '../../../base_definition'
 
 describe('multi', () => {
   const tactics = getDefaultTacticDefinitions()
@@ -30,16 +30,16 @@ describe('multi', () => {
   }
 
   it('should work without modifiers', () => {
-    const unit = add_base_value(add_modifier_value(units.get(UnitType.Archers)!, 'Initial', UnitCalc.Morale, -0.2), 'Test', UnitCalc.MoraleDamageTaken, -0.25)
+    const unit = addBaseValues(addModifierValue(units.get(UnitType.Archers)!, 'Initial', UnitCalc.Morale, -0.2), 'Test', UnitCalc.MoraleDamageTaken, -0.25)
     const terrain = getInitialTerrains().push(TerrainType.Forest).map(type => terrains.get(type)!)
 
 
     const getAttacker = (type: UnitType, morale: number) => {
-      return add_loss_value(add_base_value(add_modifier_value(units.get(type)!, 'Initial', UnitCalc.Morale, 0.05), 'Test', UnitCalc.Discipline, 0.109), 'Test', UnitCalc.Morale, 3.15 - morale)
+      return addLossValue(addBaseValues(addModifierValue(units.get(type)!, 'Initial', UnitCalc.Morale, 0.05), 'Test', UnitCalc.Discipline, 0.109), 'Test', UnitCalc.Morale, 3.15 - morale)
     }
 
     const getDefender = (type: UnitType, morale: number) => {
-      return add_loss_value(add_base_value(add_modifier_value(units.get(type)!, 'Initial', UnitCalc.Morale, 0.05), 'Test', UnitCalc.Discipline, 0.03), 'Test', UnitCalc.Morale, 3.15 - morale)
+      return addLossValue(addBaseValues(addModifierValue(units.get(type)!, 'Initial', UnitCalc.Morale, 0.05), 'Test', UnitCalc.Discipline, 0.03), 'Test', UnitCalc.Morale, 3.15 - morale)
     }
 
     let attacker = getInitialArmy()

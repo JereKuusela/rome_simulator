@@ -8,7 +8,7 @@ import { Armies } from '../store/land_battle'
 import IconManpower from '../images/manpower.png'
 import IconMorale from '../images/morale.png'
 import { unit_to_icon } from '../store/units'
-import { calculateValue, calculateValueWithoutLoss, merge_values } from '../base_definition'
+import { calculateValue, calculateValueWithoutLoss, mergeValues } from '../base_definition'
 
 class Stats extends Component<IProps> {
   readonly units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
@@ -85,7 +85,7 @@ class Stats extends Component<IProps> {
 
   
   mergeAllValues = (name: ArmyName, army: List<Unit | undefined>) => {
-    return army.map(value => value && merge_values(merge_values(this.props.units.getIn([name, value.type]), value), this.props.global_stats.get(name)!))
+    return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats.get(name)!))
   }
 
   calculateValue = (participant: Armies, type: UnitType, attribute: UnitCalc) => {
