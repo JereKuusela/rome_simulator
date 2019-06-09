@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { List } from 'immutable'
-import { Container, Header, Button, Grid, Image, Checkbox, Input, Table, Divider, Dropdown} from 'semantic-ui-react'
+import { Container, Header, Button, Grid, Image, Checkbox, Input, Table, Divider, Dropdown } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { ArmyName, UnitDefinition, ArmyType, Unit } from '../store/units/types'
 import UnitArmy from '../components/UnitArmy'
 import { battle, undo, Participant, ParticipantType, toggleRandomRoll, setRoll, setGeneral, RowType, setFlankSize, selectArmy } from '../store/land_battle'
-import { calculateTactic } from '../store/battle/combat'
+import { calculateTactic, calculateTerrainEffect, calculateGeneralEffect, calculateBaseDamage } from '../store/battle/combat'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import { TacticDefinition } from '../store/tactics'
 import IconDice from '../images/chance.png'
@@ -17,6 +17,8 @@ import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers
 import ModalArmyUnitDetail, { ModalInfo as ModalArmyUnitInfo } from '../containers/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/ModalFastPlanner'
 import { calculateValue, mergeValues, getImage } from '../base_definition'
+import IconTerrain from '../images/terrain.png'
+import IconGeneral from '../images/military_power.png'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
@@ -133,7 +135,7 @@ class Land extends Component<IProps, IState> {
                       Tactic
                     </Table.HeaderCell>
                     <Table.HeaderCell>
-                      Dice
+                      Base damage
                     </Table.HeaderCell>
                     <Table.HeaderCell>
                       Randomize
@@ -141,8 +143,8 @@ class Land extends Component<IProps, IState> {
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {this.renderArmyInfo(ParticipantType.Attacker, this.props.attacker, attacker, defender && this.props.tactics.get(defender.tactic))}
-                  {this.renderArmyInfo(ParticipantType.Defender, this.props.defender, defender, attacker && this.props.tactics.get(attacker.tactic))}
+                  {this.renderArmyInfo(ParticipantType.Attacker, this.props.attacker, attacker, defender)}
+                  {this.renderArmyInfo(ParticipantType.Defender, this.props.defender, defender, attacker)}
                 </Table.Body>
               </Table>
             </Grid.Column>
@@ -256,11 +258,18 @@ class Land extends Component<IProps, IState> {
     )
   }
 
-  renderRoll = (name: ArmyName, roll: number, is_random: boolean): JSX.Element => {
+  renderRoll = (type: ParticipantType, name: ArmyName, roll: number, is_random: boolean, general: number, opposing_general: number): JSX.Element => {
+    const terrain_effect = type === ParticipantType.Attacker ? calculateTerrainEffect(this.props.selected_terrains.map(value => this.props.terrains.get(value))) : 0
+    const general_effect = calculateGeneralEffect(general, opposing_general)
+    const total = terrain_effect + general_effect + roll
+    const base_damage = calculateBaseDamage(total, this.props.settings)
     return (
       <div key={name}>
-        <Image src={IconDice} avatar />
+        {base_damage.toFixed(2)} :
+        <span style={{paddingLeft: '1em'}}/><Image src={IconDice} avatar />
         {is_random ? roll : <Input size='mini' style={{ width: 100 }} type='number' value={roll} onChange={(_, data) => this.props.setRoll(name, Number(data.value))} />}
+        {general_effect !== 0 ? <span style={{paddingLeft: '1em'}}><Image src={IconGeneral} avatar />{general_effect}</span> : null}
+        {terrain_effect !== 0 ? <span style={{paddingLeft: '1em'}}><Image src={IconTerrain} avatar />{terrain_effect}</span> : null}
       </div>
     )
   }
@@ -349,7 +358,7 @@ class Land extends Component<IProps, IState> {
           {
             this.props.units.keySeq().map(key => (
               <Dropdown.Item value={key} text={key} key={key} active={name === key}
-              onClick={() => this.props.selectArmy(type, key)}
+                onClick={() => this.props.selectArmy(type, key)}
               />
             ))
           }
@@ -358,7 +367,7 @@ class Land extends Component<IProps, IState> {
     )
   }
 
-  renderArmyInfo = (type: ParticipantType, name: ArmyName, participant?: Participant, counter_tactic?: TacticDefinition): JSX.Element => {
+  renderArmyInfo = (type: ParticipantType, name: ArmyName, participant?: Participant, enemy?: Participant): JSX.Element => {
     return (
       <Table.Row key={type}>
         <Table.Cell collapsing>
@@ -371,13 +380,13 @@ class Land extends Component<IProps, IState> {
           <Input size='mini' style={{ width: 100 }} type='number' value={participant && participant.general} onChange={(_, data) => this.props.setGeneral(name, Number(data.value))} />
         </Table.Cell>
         <Table.Cell collapsing>
-          {this.renderTactic(name, participant, counter_tactic)}
+          {this.renderTactic(name, participant, enemy && this.props.tactics.get(enemy.tactic))}
         </Table.Cell>
         <Table.Cell>
-          {this.renderRoll(name, participant ? participant.roll : 0, participant ? participant.randomize_roll : true)}
+          {this.renderRoll(type, name, participant ? participant.roll : 0, participant ? participant.randomize_roll : true, participant ? participant.general : 0, enemy ? enemy.general : 0)}
         </Table.Cell>
         <Table.Cell collapsing>
-          {this.renderIsRollRandom(name, participant ? participant.randomize_roll: true)}
+          {this.renderIsRollRandom(name, participant ? participant.randomize_roll : true)}
         </Table.Cell>
       </Table.Row>
     )
@@ -423,7 +432,8 @@ const mapStateToProps = (state: AppState) => ({
   tactics: state.tactics.definitions,
   fight_over: state.land.fight_over,
   units: state.units.definitions,
-  global_stats: state.global_stats
+  global_stats: state.global_stats,
+  settings: state.settings.combat
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

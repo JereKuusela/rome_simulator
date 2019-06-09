@@ -9,7 +9,7 @@ import { calculateValue, addBaseValues, addLossValues, mergeValues } from '../..
 type Army = List<Unit | undefined>
 type Reserve = List<Unit>
 type Defeated = List<Unit>
-type Terrains = List<TerrainDefinition>
+type Terrains = List<TerrainDefinition | undefined>
 type Definitions = Map<ArmyName, Map<UnitType, UnitDefinition>>
 type Settings = Map<CombatParameter, number>
 
@@ -92,9 +92,12 @@ export const battle = (definitions: Definitions, attacker: ParticipantState, def
   return [army_a, army_d, reserve_a, reserve_d, defeated_a, defeated_d]
 }
 
+export const calculateGeneralEffect = (general: number, opposing_general: number): number => Math.max(0, Math.floor((general - opposing_general) / 2.0))
+export const calculateTerrainEffect = (terrains: Terrains): number => terrains.map(terrain => calculateValue(terrain, TerrainCalc.Roll)).reduce((previous, current) => previous + current, 0)
+
 const modifyRoll = (roll: number, terrains: Terrains, general: number, opposing_general: number): number => {
-  const terrain_effect = terrains.map(terrain => calculateValue(terrain, TerrainCalc.Roll)).reduce((previous, current) => previous + current, 0)
-  const general_effect = Math.max(0, Math.floor((general - opposing_general) / 2.0))
+  const terrain_effect = calculateTerrainEffect(terrains)
+  const general_effect = calculateGeneralEffect(general, opposing_general)
   return roll + terrain_effect + general_effect
 }
 
@@ -352,6 +355,12 @@ const attack = (source_row: Army, target_row: Army, source_to_target: (number | 
   return [target_losses, source_kills]
 }
 
+export const calculateBaseDamage = (roll: number, settings: Settings): number => {
+  const base_damage = settings.get(CombatParameter.BaseDamage) || 0.08
+  const roll_damage = settings.get(CombatParameter.RollDamage) || 0.02
+  return base_damage + roll_damage * roll
+}
+
 /**
  * Calculates both manpower and morale losses caused by a given attacker to a given defender.
  * @param source An attacker inflicting damange on target.
@@ -360,20 +369,17 @@ const attack = (source_row: Army, target_row: Army, source_to_target: (number | 
  * @param terrains Terrains of the battle, may affect amount of damage inflicted.
  */
 const calculateLosses = (source: Unit, target: Unit, roll: number, terrains: Terrains, tactic_damage_multiplier: number, casualties_multiplier: number, settings: Settings): Loss => {
-  const base_damage = settings.get(CombatParameter.BaseDamage) || 0.08
-  const roll_damage = settings.get(CombatParameter.RollDamage) || 0.02
   const damage_reduction_per_experience = settings.get(CombatParameter.ExperienceDamageReduction) || 0.3
   const manpower_lost_multiplier = settings.get(CombatParameter.ManpowerLostMultiplier) || 0.2
   const morale_lost_multiplier = settings.get(CombatParameter.MoraleLostMultiplier) || 1.5
   const morale_base_damage = settings.get(CombatParameter.MoraleDamageBase) || 2.0
-  let damage = base_damage + roll_damage * roll
-  // Terrain bonus and tactic missing.
-  damage = base_damage
+  let damage = calculateBaseDamage(roll, settings)
+  damage = damage
     * calculateValue(source, UnitCalc.Offense)
     * calculateValue(source, UnitCalc.Discipline)
     * (1.0 + calculateValue(source, target.type))
     * tactic_damage_multiplier
-    * (1.0 + terrains.map(terrain => calculateValue(source, terrain.type)).reduce((previous, current) => previous + current, 0))
+    * (1.0 + terrains.map(terrain => terrain ? calculateValue(source, terrain.type) : 0).reduce((previous, current) => previous + current, 0))
     / calculateValue(target, UnitCalc.Defense)
     * (1.0 - damage_reduction_per_experience * calculateValue(target, UnitCalc.Experience))
   damage = Math.floor(damage * calculateValue(source, UnitCalc.Manpower))

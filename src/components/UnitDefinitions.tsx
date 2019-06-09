@@ -163,7 +163,8 @@ export default class UnitDefinitions extends Component<IProps, IState> {
       <Table.Row key={unit.type} onClick={() => this.props.onRowClick(unit)}>
         <Table.Cell singleLine>
           <Image src={getImage(unit)} avatar />
-          {unit.type}</Table.Cell>
+          {unit.type}
+          </Table.Cell>
         <Table.Cell>
           {valueToNumber(unit, UnitCalc.Morale, false)}
         </Table.Cell>

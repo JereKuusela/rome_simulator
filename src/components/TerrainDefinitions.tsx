@@ -1,8 +1,8 @@
 import { OrderedSet, Map } from 'immutable'
 import React, { Component } from 'react'
-import { Table, Button } from 'semantic-ui-react'
+import { Table, Button, Image } from 'semantic-ui-react'
 import { TerrainCalc, TerrainDefinition, TerrainType } from '../store/terrains'
-import { valueToRelativeNumber } from '../base_definition'
+import { valueToRelativeNumber, getImage } from '../base_definition'
 import ValueModal from './ValueModal'
 
 interface IProps {
@@ -74,6 +74,7 @@ export default class TerrainDefinitions extends Component<IProps, IState> {
     return (
       <Table.Row key={terrain.type} onClick={() => this.props.onRowClick(terrain.type)}>
         <Table.Cell>
+        <Image src={getImage(terrain)} avatar />
           {terrain.type}
         </Table.Cell>
         <Table.Cell>

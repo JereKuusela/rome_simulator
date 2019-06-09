@@ -20,3 +20,7 @@ export const changeType = createAction('@@terrains/CHANGE_TYPE', action => {
 export const changeLocation = createAction('@@terrains/CHANGE_LOCATION', action => {
   return (type: TerrainType, location: LocationType) => action({ type, location })
 })
+
+export const changeImage = createAction('@@terrains/CHANGE_IMAGE', action => {
+  return (type: TerrainType, image: string) => action({ type, image })
+})

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { setBaseValue, ValueType, TerrainType, LocationType, changeLocation } from '../store/terrains'
+import { setBaseValue, ValueType, TerrainType, LocationType, changeLocation, changeImage } from '../store/terrains'
 import { AppState } from '../store/'
 import TerrainDetail from '../components/TerrainDetail'
 
@@ -21,6 +21,7 @@ class ModalTerrainDetail extends Component<IProps> {
         onCustomBaseValueChange={this.props.setBaseValue}
         onTypeChange={this.props.changeType}
         onLocationChange={this.props.changeLocation}
+        onImageChange={this.props.changeImage}
       />
     )
   }
@@ -34,7 +35,8 @@ const mapDispatchToProps = (dispatch: any) => ({
   setBaseValue: (type: TerrainType, key: string, attribute: ValueType, value: number) => (
     !Number.isNaN(value) && dispatch(setBaseValue(type, key, attribute, value))
   ),
-  changeLocation: (type: TerrainType, location: LocationType) => dispatch(changeLocation(type, location))
+  changeLocation: (type: TerrainType, location: LocationType) => dispatch(changeLocation(type, location)),
+  changeImage: (type: TerrainType, image: string) => dispatch(changeImage(type, image))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {

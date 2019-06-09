@@ -4,11 +4,12 @@ import { TerrainDefinition, ValueType, TerrainType, TerrainCalc, valueToString, 
 import { getBaseValue, explainShort } from '../base_definition'
 
 interface IProps {
-  custom_value_key: string
-  terrain: TerrainDefinition
-  onCustomBaseValueChange: (type: TerrainType, key: string, attribute: ValueType, value: number) => void
-  onTypeChange: (old_type: TerrainType, new_type: TerrainType) => void
-  onLocationChange: (type: TerrainType, location: LocationType) => void
+  readonly custom_value_key: string
+  readonly terrain: TerrainDefinition
+  readonly onCustomBaseValueChange: (type: TerrainType, key: string, attribute: ValueType, value: number) => void
+  readonly onTypeChange: (old_type: TerrainType, new_type: TerrainType) => void
+  readonly onLocationChange: (type: TerrainType, location: LocationType) => void
+  readonly onImageChange: (type: TerrainType, image: string) => void
 }
 
 // Display component for showing and changing terrain details.
@@ -42,6 +43,20 @@ export default class TerrainDetail extends Component<IProps> {
                 size='mini'
                 defaultValue={this.props.terrain.type}
                 onChange={(_, data) => this.props.onTypeChange(this.props.terrain.type, data.value as TerrainType)}
+              />
+            </Table.Cell>
+            <Table.Cell />
+            <Table.Cell />
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>
+              Image
+            </Table.Cell>
+            <Table.Cell collapsing>
+              <Input
+                size='mini'
+                defaultValue={this.props.terrain.image}
+                onChange={(_, data) => this.props.onImageChange(this.props.terrain.type, data.value)}
               />
             </Table.Cell>
             <Table.Cell />
