@@ -2,6 +2,11 @@ https://github.com/resir014/react-redux-typescript-example
 
 Release 2:
 
+Store units per army???
+History should not be stored
+Playback to get history on page load?
+Duplicate army button
+
 Adding / Deleting definitions
 - list of types
 - definitions: allow changing type name (string)

@@ -30,6 +30,9 @@ export default class Navigation extends Component {
           <Menu.Item active={path === '/transfer'} onClick={() => history.push('/transfer')}>
             Transfer
           </Menu.Item>
+          <Menu.Item active={path === '/instructions'} onClick={() => history.push('/instructions')}>
+            Instructions
+          </Menu.Item>
           <div style={{ padding: '0.5rem', width: '100%', textAlign: 'right' }}>Site version 0.1.4</div>
         </Menu>
         <br />

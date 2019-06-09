@@ -10,6 +10,7 @@ import TerrainPage from './pages/Terrains'
 import Navigation from './pages/Navigation'
 import Stats from './pages/Stats'
 import Transfer from './pages/Transfer'
+import Instructions from './pages/Instructions'
 import { AppState } from './store/'
 
 // Any additional component props go here.
@@ -31,6 +32,7 @@ const Root = ({ store, persistor }: MainProps) => {
         <Route path='/Terrains' component={TerrainPage} />
         <Route path='/Stats' component={Stats} />
         <Route path='/Transfer' component={Transfer} />
+        <Route path='/Instructions' component={Instructions} />
       </BrowserRouter>
       </PersistGate>
     </Provider>
