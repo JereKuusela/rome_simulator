@@ -135,7 +135,6 @@ export const transformLand = (state_raw: any): typeof initialState => {
   let armies = initialState.armies
   if (state_raw.armies) {
     let armies_raw: Map<ArmyName, any> = fromJS(state_raw.armies)
-    console.log(armies_raw)
     armies = armies_raw.filter(value => value).map(value => serializeParticipant(value.toJS()))
   }
   let attacker = state_raw.attacker
@@ -145,7 +144,7 @@ export const transformLand = (state_raw: any): typeof initialState => {
   if (!defender || typeof defender !== 'string')
     defender = initialState.defender
   const round = state_raw.round === undefined ? initialState.round : state_raw.round
-  const attacker_past = serializePast(state_raw.attacker_past ,round)
+  const attacker_past = serializePast(state_raw.attacker_past, round)
   const defender_past = serializePast(state_raw.defender_past, round)
   const fight_over = state_raw.fight_over === undefined ? initialState.fight_over : state_raw.fight_over
   return { round, fight_over, armies, terrains, attacker, defender, attacker_past, defender_past }

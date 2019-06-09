@@ -13,7 +13,7 @@ export const transferState = {
   reset_missing: false
 }
 
-const initialState = {
+export const initialState = {
   tactics: tacticsState,
   terrains: terrainState,
   units: unitsState,

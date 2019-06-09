@@ -1,11 +1,11 @@
 import { applyMiddleware, createStore } from 'redux'
 import { rootReducer } from './store/'
 import logger from 'redux-logger'
-import { persistStore, persistReducer, createTransform } from 'redux-persist'
+import { persistStore, persistReducer, createTransform, createMigrate } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 //import localForage from 'localforage'
 import { transformSettings, transformGlobalStats, transformLand, transformTactics, transformTerrains, transformUnits, transfromTransfer } from './store/transforms'
-
+import { initialState } from './store/transfer'
 
 const TacticsTransform = createTransform(
   (inboundState) => inboundState,
@@ -49,9 +49,15 @@ const LandTransform = createTransform(
   { whitelist: ['land'] }
 )
 
+const migrations = {
+  0: (_: any) => (initialState as any)
+}
+
 const persistConfig = {
   key: 'primary',
   storage: storage,
+  version: 0,
+  migrate: createMigrate(migrations, { debug: false }),
   transforms: [SettingsTransform, TacticsTransform, TerrainsTransform, LandTransform, UnitsTransform, TransferTransform, GlobalStatsTransform]
 }
 

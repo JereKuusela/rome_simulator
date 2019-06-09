@@ -356,7 +356,7 @@ class Land extends Component<IProps, IState> {
       >
         <Dropdown.Menu>
           {
-            this.props.units.keySeq().map(key => (
+            this.props.armies.keySeq().map(key => (
               <Dropdown.Item value={key} text={key} key={key} active={name === key}
                 onClick={() => this.props.selectArmy(type, key)}
               />
