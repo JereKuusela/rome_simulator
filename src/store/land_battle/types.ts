@@ -1,6 +1,6 @@
 import { List, Map, fromJS } from 'immutable'
 import { TerrainType } from '../terrains'
-import { Unit, UnitType, ArmyName } from '../units'
+import { Unit, UnitType } from '../units'
 import { TacticType } from '../tactics'
 
 export interface PastState extends Armies {
@@ -26,7 +26,6 @@ export interface Participant extends Armies {
   readonly general: number
   readonly row_types: Map<RowType, UnitType>
   readonly flank_size: number
-  readonly name: ArmyName
 }
 
 export enum ParticipantType {
@@ -36,7 +35,7 @@ export enum ParticipantType {
 
 export const getInitialTerrains = (): List<TerrainType> => List<TerrainType>().push(TerrainType.None).push(TerrainType.Plains)
 
-export const getInitialArmy = (attacker: boolean): Participant => ({
+export const getInitialArmy = (): Participant => ({
     army: fromJS(Array(30).fill(undefined)),
     reserve: List<Unit>(),
     defeated: List<Unit>(),
@@ -45,6 +44,5 @@ export const getInitialArmy = (attacker: boolean): Participant => ({
     roll: 0,
     randomize_roll: true,
     row_types: Map<RowType, UnitType>().set(RowType.Front, UnitType.Archers).set(RowType.Back, UnitType.HeavyInfantry).set(RowType.Flank, UnitType.LightCavalry),
-    flank_size: 5,
-    name: attacker ? ArmyName.Attacker : ArmyName.Defender
+    flank_size: 5
   })

@@ -9,12 +9,12 @@ import IconManpower from '../images/manpower.png'
 
 
 interface IProps {
-  army_a: List<UnitDefinition | undefined>
-  army_d: List<UnitDefinition | undefined>
-  reserve_a: List<UnitDefinition>
-  reserve_d: List<UnitDefinition>
-  defeated_a: List<UnitDefinition>
-  defeated_d: List<UnitDefinition>
+  army_a?: List<UnitDefinition | undefined>
+  army_d?: List<UnitDefinition | undefined>
+  reserve_a?: List<UnitDefinition>
+  reserve_d?: List<UnitDefinition>
+  defeated_a?: List<UnitDefinition>
+  defeated_d?: List<UnitDefinition>
   attached?: boolean
 }
 
@@ -55,10 +55,10 @@ export default class ArmyCosts extends Component<IProps> {
     )
   }
 
-  calculateTotal = (army: List<UnitDefinition | undefined>, reserve: List<UnitDefinition>, defeated: List<UnitDefinition>, attribute: UnitCalc, base: number): number => {
-    return army.reduce((previous, current) => previous + (current ? calculateValueWithoutLoss(current, attribute) + base : 0), 0)
-      + reserve.reduce((previous, current) => previous + calculateValueWithoutLoss(current, attribute) + base, 0)
-      + defeated.reduce((previous, current) => previous + calculateValueWithoutLoss(current, attribute) + base, 0)
+  calculateTotal = (attribute: UnitCalc, base: number, army?: List<UnitDefinition | undefined>, reserve?: List<UnitDefinition>, defeated?: List<UnitDefinition>): number => {
+    return (army ? army.reduce((previous, current) => previous + (current ? calculateValueWithoutLoss(current, attribute) + base : 0), 0) : 0)
+      + (reserve ? reserve.reduce((previous, current) => previous + calculateValueWithoutLoss(current, attribute) + base, 0) : 0)
+      + (defeated ? defeated.reduce((previous, current) => previous + calculateValueWithoutLoss(current, attribute) + base, 0) : 0)
   }
 
   renderRow = (name: string, image: string, attribute: UnitCalc, base: number): JSX.Element => (
@@ -69,12 +69,12 @@ export default class ArmyCosts extends Component<IProps> {
       </Table.Cell>
       <Table.Cell width='5'>
         {
-          +this.calculateTotal(this.props.army_a, this.props.reserve_a, this.props.defeated_a, attribute, base).toFixed(2)
+          +this.calculateTotal(attribute, base, this.props.army_a, this.props.reserve_a, this.props.defeated_a).toFixed(2)
         }
       </Table.Cell>
       <Table.Cell width='5'>
         {
-          +this.calculateTotal(this.props.army_d, this.props.reserve_d, this.props.defeated_d, attribute, base).toFixed(2)
+          +this.calculateTotal(attribute, base, this.props.army_d, this.props.reserve_d, this.props.defeated_d).toFixed(2)
         }
       </Table.Cell>
     </Table.Row>

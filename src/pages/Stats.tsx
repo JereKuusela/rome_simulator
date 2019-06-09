@@ -13,17 +13,20 @@ class Stats extends Component<IProps> {
   render(): JSX.Element {
     return (
       <Container>
-        {this.renderArmy(ParticipantType.Attacker, this.props.attacker)}
-        {this.renderArmy(ParticipantType.Defender, this.props.defender)}
+        {this.renderArmy(ParticipantType.Attacker, this.props.attacker, this.props.armies.get(this.props.attacker))}
+        {this.renderArmy(ParticipantType.Defender, this.props.defender, this.props.armies.get(this.props.defender))}
       </Container >
     )
   }
 
 
-  renderArmy = (type: ParticipantType, participant: Participant): JSX.Element | null => {
-    const info = { army: this.mergeAllValues(participant.name, participant.army), reserve: this.mergeAllValues(participant.name, participant.reserve), defeated: this.mergeAllValues(participant.name, participant.defeated)}
-    const units = this.props.units.get(participant.name)
-    const types = this.props.types.get(participant.name)
+  renderArmy = (type: ParticipantType, name: ArmyName, participant?: Participant): JSX.Element | null => {
+    const info = participant && {
+      army: this.mergeAllValues(name, participant.army),
+      reserve: this.mergeAllValues(name, participant.reserve),
+      defeated: this.mergeAllValues(name, participant.defeated)}
+    const units = this.props.units.get(name)
+    const types = this.props.types.get(name)
     if (!units || !types)
       return null
     return (
@@ -49,7 +52,7 @@ class Stats extends Component<IProps> {
           </Table.Header>
           <Table.Body>
             {
-              types.map(type => this.renderRow(info, type, getImage(units.get(type))))
+              info && types.map(type => this.renderRow(info, type, getImage(units.get(type))))
             }
           </Table.Body>
         </Table>
@@ -115,6 +118,7 @@ class Stats extends Component<IProps> {
 const mapStateToProps = (state: AppState) => ({
   attacker: state.land.attacker,
   defender: state.land.defender,
+  armies: state.land.armies,
   units: state.units.definitions,
   types: state.units.types,
   global_stats: state.global_stats

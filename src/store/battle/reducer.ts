@@ -19,52 +19,54 @@ export const initialState = {
 }
 
 export const battleReducer = createReducer(initialState)
-.handleAction(battle, (state, action: ReturnType<typeof battle>) => {
-  const definitions = state.units.definitions.map((value, key) => value.map(value => mergeValues(value, state.global_stats.get(key)!)))
-  let next = state.land
-  const minimum_roll = state.settings.combat.get(CombatParameter.DiceMinimum) || 1
-  const maximum_roll = state.settings.combat.get(CombatParameter.DiceMaximum) || 6
-  const roll_frequency = state.settings.combat.get(CombatParameter.RollFrequency) || 5
-  for (let step = 0; step < action.payload.steps && !next.fight_over; ++step) {
-    const old_rolls = [next.attacker.roll, next.defender.roll]
-    if (next.day % roll_frequency === 0) {
-      next = {
-        ...next,
-        attacker: {
-          ...next.attacker,
-          roll: next.attacker.randomize_roll ? minimum_roll + Math.round(Math.random() * (maximum_roll - minimum_roll)) : next.attacker.roll
-        },
-        defender: {
-          ...next.defender,
-          roll: next.defender.randomize_roll ? 1 + Math.round(Math.random() * 5) : next.defender.roll
+  .handleAction(battle, (state, action: ReturnType<typeof battle>) => {
+    const definitions = state.units.definitions.map((value, key) => value.map(value => mergeValues(value, state.global_stats.get(key)!)))
+    let next = state.land
+    let attacker = next.armies.get(next.attacker)
+    let defender = next.armies.get(next.defender)
+    const minimum_roll = state.settings.combat.get(CombatParameter.DiceMinimum) || 1
+    const maximum_roll = state.settings.combat.get(CombatParameter.DiceMaximum) || 6
+    const roll_frequency = state.settings.combat.get(CombatParameter.RollFrequency) || 5
+    for (let step = 0; step < action.payload.steps && !next.fight_over; ++step) {
+      if (!attacker || !defender)
+        continue
+      const old_rolls = [attacker.roll, defender.roll]
+      if (next.day % roll_frequency === 0) {
+        attacker = {
+          ...attacker,
+          roll: attacker.randomize_roll ? minimum_roll + Math.round(Math.random() * (maximum_roll - minimum_roll)) : attacker.roll
+        }
+        defender = {
+          ...defender,
+          roll: defender.randomize_roll ? minimum_roll + Math.round(Math.random() * (maximum_roll - minimum_roll)) : defender.roll
         }
       }
+      const attacker_info = { ...attacker, tactic: state.tactics.definitions.get(attacker.tactic) }
+      const defender_info = { ...defender, tactic: state.tactics.definitions.get(defender.tactic) }
+      let [army_a, army_d, reserve_a, reserve_d, defeated_a, defeated_d] = fight(definitions, attacker_info, defender_info, next.day + 1, next.terrains.map(type => state.terrains.definitions.get(type)!), state.settings.combat)
+      const new_attacker = {
+        ...attacker,
+        army: army_a,
+        reserve: reserve_a,
+        defeated: defeated_a
+      }
+      const new_defender = {
+        ...defender,
+        army: army_d,
+        reserve: reserve_d,
+        defeated: defeated_d
+      }
+      next = {
+        ...next,
+        armies: next.armies.set(next.attacker, new_attacker).set(next.defender, new_defender),
+        attacker_past: next.attacker_past.push({ army: attacker.army, reserve: attacker.reserve, defeated: attacker.defeated, roll: old_rolls[0] }),
+        defender_past: next.defender_past.push({ army: defender.army, reserve: defender.reserve, defeated: defender.defeated, roll: old_rolls[1] }),
+        day: next.day + 1,
+        fight_over: !checkFight(new_attacker, new_defender)
+      }
+      attacker = next.armies.get(next.attacker)
+      defender = next.armies.get(next.defender)
     }
-    const attacker = { ...next.attacker, tactic: state.tactics.definitions.get(next.attacker.tactic) }
-    const defender = { ...next.defender, tactic: state.tactics.definitions.get(next.defender.tactic) }
-    let [army_a, army_d, reserve_a, reserve_d, defeated_a, defeated_d] = fight(definitions, attacker, defender, next.day + 1, next.terrains.map(type => state.terrains.definitions.get(type)!), state.settings.combat)
-    const new_attacker = {
-      ...next.attacker,
-      army: army_a,
-      reserve: reserve_a,
-      defeated: defeated_a
-    }
-    const new_defender = {
-      ...next.defender,
-      army: army_d,
-      reserve: reserve_d,
-      defeated: defeated_d
-    }
-    next = {
-      ...next,
-      attacker: new_attacker,
-      defender: new_defender,
-      attacker_past: next.attacker_past.push({ army: next.attacker.army, reserve: next.attacker.reserve, defeated: next.attacker.defeated, roll: old_rolls[0] }),
-      defender_past: next.defender_past.push({ army: next.defender.army, reserve: next.defender.reserve, defeated: next.defender.defeated, roll: old_rolls[1] }),
-      day: next.day + 1,
-      fight_over: !checkFight(new_attacker, new_defender)
-    }
+    return { ...state, land: next }
   }
-  return { ...state, land: next}
-}
-)
+  )

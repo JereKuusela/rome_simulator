@@ -1,12 +1,13 @@
 import { createReducer } from 'typesafe-actions'
-import { List } from 'immutable'
+import { List, Map } from 'immutable'
 import { getInitialArmy, getInitialTerrains, Participant, PastState, ParticipantType } from './types'
-import { selectUnit, selectTerrain, selectTactic, undo, toggleRandomRoll, setRoll, setGeneral, setRowType, removeReserveUnits, addReserveUnits, setFlankSize, setArmyName } from './actions'
-import { Unit, UnitType, ArmyType } from '../units'
+import { selectUnit, selectTerrain, selectTactic, undo, toggleRandomRoll, setRoll, setGeneral, setRowType, removeReserveUnits, addReserveUnits, setFlankSize, selectArmy } from './actions'
+import { Unit, UnitType, ArmyType, ArmyName, deleteArmy, createArmy, changeName, duplicateArmy } from '../units'
 
 export const initialState = {
-  attacker: getInitialArmy(true),
-  defender: getInitialArmy(false),
+  armies: Map<ArmyName, Participant>().set(ArmyName.Attacker, getInitialArmy()).set(ArmyName.Defender, getInitialArmy()),
+  attacker: ArmyName.Attacker,
+  defender: ArmyName.Defender,
   terrains: getInitialTerrains(),
   attacker_past: List<PastState>(),
   defender_past: List<PastState>(),
@@ -14,7 +15,7 @@ export const initialState = {
   fight_over: true
 }
 
-export const checkFight = (attacker: Participant, defender: Participant) => (checkArmy(attacker.army) || checkArmy(attacker.reserve)) && (checkArmy(defender.army) || checkArmy(defender.reserve))
+export const checkFight = (attacker?: Participant, defender?: Participant) => attacker && defender && (checkArmy(attacker.army) || checkArmy(attacker.reserve)) && (checkArmy(defender.army) || checkArmy(defender.reserve))
 
 const checkArmy = (army: List<Unit | undefined>) => {
   for (let unit of army) {
@@ -36,36 +37,29 @@ export const landBattleReducer = createReducer(initialState)
   .handleAction(toggleRandomRoll, (state, action: ReturnType<typeof toggleRandomRoll>) => (
     {
       ...state,
-      attacker: { ...state.attacker, randomize_roll: action.payload.participant === ParticipantType.Attacker ? !state.attacker.randomize_roll : state.attacker.randomize_roll },
-      defender: { ...state.defender, randomize_roll: action.payload.participant === ParticipantType.Defender ? !state.defender.randomize_roll : state.defender.randomize_roll }
+      armies: state.armies.update(action.payload.name, value => ({ ...value, randomize_roll: !value.randomize_roll }))
     }
   ))
   .handleAction(setGeneral, (state, action: ReturnType<typeof setGeneral>) => (
     {
       ...state,
-      attacker: { ...state.attacker, general: action.payload.participant === ParticipantType.Attacker ? action.payload.skill : state.attacker.general },
-      defender: { ...state.defender, general: action.payload.participant === ParticipantType.Defender ? action.payload.skill : state.defender.general }
+      armies: state.armies.update(action.payload.name, value => ({ ...value, general: action.payload.skill }))
     }
   ))
   .handleAction(setFlankSize, (state, action: ReturnType<typeof setFlankSize>) => (
     {
       ...state,
-      attacker: { ...state.attacker, flank_size: action.payload.participant === ParticipantType.Attacker ? action.payload.size : state.attacker.flank_size },
-      defender: { ...state.defender, flank_size: action.payload.participant === ParticipantType.Defender ? action.payload.size : state.defender.flank_size }
+      armies: state.armies.update(action.payload.name, value => ({ ...value, flank_size: action.payload.size }))
     }
   ))
   .handleAction(setRoll, (state, action: ReturnType<typeof setRoll>) => (
     {
       ...state,
-      attacker: { ...state.attacker, roll: action.payload.participant === ParticipantType.Attacker ? action.payload.roll : state.attacker.roll },
-      defender: { ...state.defender, roll: action.payload.participant === ParticipantType.Defender ? action.payload.roll : state.defender.roll }
+      armies: state.armies.update(action.payload.name, value => ({ ...value, roll: action.payload.roll }))
     }
   ))
   .handleAction(selectUnit, (state, action: ReturnType<typeof selectUnit>) => {
-    let new_attacker = state.attacker
-    let new_defender = state.defender
-
-    const handleArmy = (participant: Participant) => {
+    const handleArmy = (participant: Participant): Participant => {
       if (action.payload.type === ArmyType.Main)
         return { ...participant, army: participant.army.set(action.payload.index, action.payload.unit) }
       if (action.payload.type === ArmyType.Reserve && action.payload.unit)
@@ -78,16 +72,11 @@ export const landBattleReducer = createReducer(initialState)
         return { ...participant, defeated: participant.defeated.delete(action.payload.index) }
       return participant
     }
-
-    if (action.payload.participant === ParticipantType.Attacker)
-      new_attacker = handleArmy(new_attacker)
-    if (action.payload.participant === ParticipantType.Defender)
-      new_defender = handleArmy(new_defender)
+    const armies = state.armies.update(action.payload.name, value => handleArmy(value))
     return {
       ...state,
-      attacker: new_attacker,
-      defender: new_defender,
-      fight_over: !checkFight(new_attacker, new_defender)
+      armies,
+      fight_over: !checkFight(armies.get(state.attacker), armies.get(state.defender))
     }
   })
   .handleAction(selectTerrain, (state, action: ReturnType<typeof selectTerrain>) => (
@@ -99,35 +88,37 @@ export const landBattleReducer = createReducer(initialState)
   .handleAction(setRowType, (state, action: ReturnType<typeof setRowType>) => (
     {
       ...state,
-      attacker: { ...state.attacker, row_types: action.payload.participant === ParticipantType.Attacker ? state.attacker.row_types.set(action.payload.row_type, action.payload.unit) : state.attacker.row_types },
-      defender: { ...state.defender, row_types: action.payload.participant === ParticipantType.Defender ? state.defender.row_types.set(action.payload.row_type, action.payload.unit) : state.defender.row_types }
+      armies: state.armies.update(action.payload.name, value => ({ ...value, row_types: value.row_types.set(action.payload.row_type, action.payload.unit)}))
     }
   ))
   .handleAction(selectTactic, (state, action: ReturnType<typeof selectTactic>) => (
     {
       ...state,
-      attacker: { ...state.attacker, tactic: action.payload.participant === ParticipantType.Attacker ? action.payload.tactic : state.attacker.tactic },
-      defender: { ...state.defender, tactic: action.payload.participant === ParticipantType.Defender ? action.payload.tactic : state.defender.tactic }
+      armies: state.armies.update(action.payload.name, value => ({ ...value, tactic: action.payload.tactic }))
     }
   ))
   .handleAction(undo, (state, action: ReturnType<typeof undo>) => {
     let next = state
     for (let step = 0; step < action.payload.steps && next.day > -1; ++step) {
-      const handleArmy = (current: Participant, past: PastState | undefined) => ({
+      const handleArmy = (current?: Participant, past?: PastState): Participant | undefined => current && ({
         ...current,
         army: past ? past.army : current.army,
         reserve: past ? past.reserve : current.reserve,
         defeated: past ? past.defeated : current.defeated,
         roll: past ? past.roll : current.roll
       })
-      const new_attacker = handleArmy(next.attacker, next.attacker_past.get(-1))
+      let armies = next.armies
+      const new_attacker = handleArmy(next.armies.get(next.attacker), next.attacker_past.get(-1))
+      if (new_attacker)
+        armies = armies.set(next.attacker, new_attacker)
       const attacker_past = next.attacker_past.pop()
-      const new_defender = handleArmy(next.defender, next.defender_past.get(-1))
+      const new_defender = handleArmy(next.armies.get(next.defender), next.defender_past.get(-1))
+      if (new_defender)
+        armies = armies.set(next.defender, new_defender)
       const defender_past = next.defender_past.pop()
       next = {
         ...next,
-        attacker: new_attacker,
-        defender: new_defender,
+        armies,
         attacker_past,
         defender_past,
         day: next.day - 1,
@@ -137,45 +128,56 @@ export const landBattleReducer = createReducer(initialState)
     return next
   })
   .handleAction(removeReserveUnits, (state, action: ReturnType<typeof removeReserveUnits>) => {
-    let reserve = action.payload.participant === ParticipantType.Attacker ? state.attacker.reserve : state.defender.reserve
-    reserve = doRemoveReserveUnits(reserve, action.payload.types)
-    const new_attacker = {
-      ...state.attacker,
-      reserve: action.payload.participant === ParticipantType.Attacker ? reserve : state.attacker.reserve
-    }
-    const new_defender = {
-      ...state.defender,
-      reserve: action.payload.participant === ParticipantType.Defender ? reserve : state.defender.reserve
-    }
+    const armies = state.armies.update(action.payload.name, value => ({ ...value, reserve: doRemoveReserveUnits(value.reserve, action.payload.types) }))
     return {
       ...state,
-      attacker: new_attacker,
-      defender: new_defender,
-      fight_over: !(checkFight(new_attacker, new_defender))
+      armies,
+      fight_over: !(checkFight(armies.get(state.attacker), armies.get(state.defender)))
     }
   })
   .handleAction(addReserveUnits, (state, action: ReturnType<typeof addReserveUnits>) => {
-    let reserve = action.payload.participant === ParticipantType.Attacker ? state.attacker.reserve : state.defender.reserve
-    reserve = doAddReserveUnits(reserve, action.payload.units)
-    const new_attacker = {
-      ...state.attacker,
-      reserve: action.payload.participant === ParticipantType.Attacker ? reserve : state.attacker.reserve
-    }
-    const new_defender = {
-      ...state.defender,
-      reserve: action.payload.participant === ParticipantType.Defender ? reserve : state.defender.reserve
-    }
+    const armies = state.armies.update(action.payload.name, value => ({ ...value, reserve: doAddReserveUnits(value.reserve, action.payload.units) }))
     return {
       ...state,
-      attacker: new_attacker,
-      defender: new_defender,
-      fight_over: !(checkFight(new_attacker, new_defender))
+      armies,
+      fight_over: !(checkFight(armies.get(state.attacker), armies.get(state.defender)))
     }
   })
-  .handleAction(setArmyName, (state, action: ReturnType<typeof setArmyName>) => (
+  .handleAction(selectArmy, (state, action: ReturnType<typeof selectArmy>) => {
+    const attacker = action.payload.type === ParticipantType.Attacker ? action.payload.name : (action.payload.name === state.attacker ? state.defender : state.attacker)
+    const defender = action.payload.type === ParticipantType.Defender ? action.payload.name : (action.payload.name === state.defender ? state.attacker : state.defender)
+    return {
+      ...state,
+      attacker: attacker,
+      defender: defender,
+      attacker_past: state.attacker_past.clear(),
+      defender_past: state.attacker_past.clear(),
+      round: -1,
+      fight_over: !(checkFight(state.armies.get(attacker), state.armies.get(defender)))
+    }
+  })
+  .handleAction(createArmy, (state, action: ReturnType<typeof createArmy>) => (
     {
       ...state,
-      attacker: { ...state.attacker, name: action.payload.participant === ParticipantType.Attacker ? action.payload.name : state.attacker.name },
-      defender: { ...state.defender, name: action.payload.participant === ParticipantType.Defender ? action.payload.name : state.defender.name }
+      armies: state.armies.set(action.payload.army, getInitialArmy())
     }
   ))
+  .handleAction(duplicateArmy, (state, action: ReturnType<typeof duplicateArmy>) => (
+    {
+      ...state,
+      armies: state.armies.set(action.payload.army, state.armies.get(action.payload.source) || getInitialArmy())
+    }
+  ))
+  .handleAction(deleteArmy, (state, action: ReturnType<typeof deleteArmy>) => (
+    {
+      ...state,
+      armies: state.armies.delete(action.payload.army)
+    }
+  ))
+  .handleAction(changeName, (state, action: ReturnType<typeof changeName>) => (
+    {
+      ...state,
+      armies: state.armies.mapKeys(key => key === action.payload.old_army ? action.payload.new_army : key)
+    }
+  ))
+

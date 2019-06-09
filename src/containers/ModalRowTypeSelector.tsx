@@ -3,11 +3,10 @@ import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { UnitType, ArmyName } from '../store/units'
 import { AppState } from '../store/'
-import { setRowType, RowType, ParticipantType } from '../store/land_battle'
+import { setRowType, RowType, } from '../store/land_battle'
 import ItemSelector from '../components/ItemSelector'
 
 export interface ModalInfo {
-  participant: ParticipantType
   name: ArmyName
   type: RowType
 }
@@ -37,7 +36,7 @@ class ModalRowTypeSelector extends Component<IProps> {
 
   selectUnit = (unit: UnitType | undefined): void => (
     this.props.info && unit && 
-    this.props.setRowType(this.props.info.participant, this.props.info.type, unit)
+    this.props.setRowType(this.props.info.name, this.props.info.type, unit)
   )
 }
 
@@ -47,8 +46,8 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setRowType: (participant: ParticipantType, type: RowType, unit: UnitType) => (
-    dispatch(setRowType(participant, type, unit))
+  setRowType: (name: ArmyName, type: RowType, unit: UnitType) => (
+    dispatch(setRowType(name, type, unit))
   )
 })
 

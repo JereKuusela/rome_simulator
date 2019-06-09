@@ -6,7 +6,7 @@ import { calculateValue, calculateValueWithoutLoss, getImage } from '../base_def
 
 
 interface IProps {
-  units: List<UnitDefinition | undefined>
+  units?: List<UnitDefinition | undefined>
   reverse: boolean
   onClick: (index: number, unit: UnitDefinition | undefined) => void
   type: ArmyType
@@ -22,7 +22,8 @@ export default class UnitArmy extends Component<IProps> {
   readonly ROW_LENGTH = 30.0
 
   render(): JSX.Element {
-    const row_count = Math.ceil((this.props.units.size + (this.props.type === ArmyType.Main ? 0 : 1)) / this.ROW_LENGTH)
+    const size = this.props.units ? this.props.units.size : 0
+    const row_count = Math.ceil((size + (this.props.type === ArmyType.Main ? 0 : 1)) / this.ROW_LENGTH)
     const rows = Array(row_count).fill(0).map((_, index) => index)
     const columns = Array(this.ROW_LENGTH).fill(0).map((_, index) => index)
     return (
@@ -36,7 +37,7 @@ export default class UnitArmy extends Component<IProps> {
                 </Table.Cell>
                 {
                   columns.map(column => {
-                    const unit = this.props.units.get(row * this.ROW_LENGTH + column)
+                    const unit = this.props.units && this.props.units.get(row * this.ROW_LENGTH + column)
                     return (
                       <Table.Cell key={column} selectable onClick={() => this.props.onClick(row * this.ROW_LENGTH + column, unit)}>
                         {

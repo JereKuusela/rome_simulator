@@ -2,26 +2,15 @@ https://github.com/resir014/react-redux-typescript-example
 
 Release 2:
 
-Store units per army???
-History should not be stored
-Playback to get history on page load?
-Duplicate army button
-
-Adding / Deleting definitions
-- list of types
-- definitions: allow changing type name (string)
-- army definitions: allow changing type (dropdown)
-- delete for a definition, army based definitions? (should work ok, merging just wont happen)
-- test whether image can be dynamic, or somehow hardcoded / icon
+Roll modifier shown on roll + total roll
 
 Damage calculation values to settings
 
-Multiple armies?
-- add new army to unit definitions
-- dropdown to select attacker / defender
-
-
 Release 3:
+
+- Immutable reviver to simplify fromJS calls when transforming data?
+- History should not be stored (except dices)
+- Playback to get history on page load?
 
 Siege:
 - Time to capture
