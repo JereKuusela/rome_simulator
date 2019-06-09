@@ -54,6 +54,11 @@
       "type": "River",
       "location": "Border",
       "roll": -1
+    },
+    {
+      "type": "Strait",
+      "location": "Border",
+      "roll": -2
     }
   ]
 }

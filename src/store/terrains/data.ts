@@ -13,7 +13,8 @@ export enum TerrainType {
   Naval = 'Naval',
   None = 'None',
   Plains = 'Plains',
-  River = 'River'
+  River = 'River',
+  Strait = 'Strait'
 }
 
 export enum LocationType {
