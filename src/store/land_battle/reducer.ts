@@ -1,7 +1,7 @@
 import { createReducer } from 'typesafe-actions'
 import { List, Map } from 'immutable'
 import { getInitialArmy, getInitialTerrains, Participant, PastState, ParticipantType } from './types'
-import { selectUnit, selectTerrain, selectTactic, undo, toggleRandomRoll, setRoll, setGeneral, setRowType, removeReserveUnits, addReserveUnits, setFlankSize, selectArmy } from './actions'
+import { clearUnits, selectUnit, selectTerrain, selectTactic, undo, toggleRandomRoll, setRoll, setGeneral, setRowType, removeReserveUnits, addReserveUnits, setFlankSize, selectArmy } from './actions'
 import { Unit, UnitType, ArmyType, ArmyName, deleteArmy, createArmy, changeName, duplicateArmy } from '../units'
 
 export const initialState = {
@@ -146,9 +146,9 @@ export const landBattleReducer = createReducer(initialState)
   .handleAction(selectArmy, (state, action: ReturnType<typeof selectArmy>) => {
     let armies = state.armies
     if (state.attacker_past.size > 0)
-      armies = armies.update(state.attacker, value => ({ ...value, ...state.attacker_past.get(0)}))
+      armies = armies.update(state.attacker, value => ({ ...value, ...state.attacker_past.get(0) }))
     if (state.defender_past.size > 0)
-      armies = armies.update(state.defender, value => ({ ...value, ...state.defender_past.get(0)}))
+      armies = armies.update(state.defender, value => ({ ...value, ...state.defender_past.get(0) }))
     const attacker = action.payload.type === ParticipantType.Attacker ? action.payload.name : (action.payload.name === state.attacker ? state.defender : state.attacker)
     const defender = action.payload.type === ParticipantType.Defender ? action.payload.name : (action.payload.name === state.defender ? state.attacker : state.defender)
     return {
@@ -186,4 +186,19 @@ export const landBattleReducer = createReducer(initialState)
       armies: state.armies.mapKeys(key => key === action.payload.old_army ? action.payload.new_army : key)
     }
   ))
+  .handleAction(clearUnits, (state, action: ReturnType<typeof clearUnits>) => {
+    let armies = state.armies
+    if (armies.has(state.attacker))
+      armies = armies.update(state.attacker, value => ({ ...value, army: getInitialArmy().army, reserve: value.reserve.clear(), defeated: value.defeated.clear() }))
+    if (armies.has(state.defender))
+      armies = armies.update(state.defender, value => ({ ...value, army: getInitialArmy().army, reserve: value.reserve.clear(), defeated: value.defeated.clear() }))
+    return {
+      ...state,
+      armies,
+      attacker_past: state.attacker_past.clear(),
+      defender_past: state.defender_past.clear(),
+      round: -1,
+      fight_over: true
+    }
+  })
 

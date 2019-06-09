@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { ArmyName, UnitDefinition, ArmyType, Unit } from '../store/units/types'
 import UnitArmy from '../components/UnitArmy'
-import { battle, undo, Participant, ParticipantType, toggleRandomRoll, setRoll, setGeneral, RowType, setFlankSize, selectArmy } from '../store/land_battle'
+import { clearUnits, battle, undo, Participant, ParticipantType, toggleRandomRoll, setRoll, setGeneral, RowType, setFlankSize, selectArmy } from '../store/land_battle'
 import { calculateTactic, calculateTerrainEffect, calculateGeneralEffect, calculateBaseDamage } from '../store/battle/combat'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import { TacticDefinition } from '../store/tactics'
@@ -93,7 +93,10 @@ class Land extends Component<IProps, IState> {
             <Grid.Column textAlign='center'>
               <Button primary size='large' onClick={this.openFastPlanner}>
                 Create units
-                </Button>
+              </Button>
+              <Button primary size='large' onClick={this.props.clearUnits}>
+                Clear units
+              </Button>
             </Grid.Column>
             <Grid.Column floated='right' textAlign='right'>
               <Button circular icon='angle double left' color='black' size='huge' disabled={!this.props.is_undo} onClick={() => this.props.undo(10)} />
@@ -266,10 +269,10 @@ class Land extends Component<IProps, IState> {
     return (
       <div key={name}>
         {base_damage.toFixed(2)} :
-        <span style={{paddingLeft: '1em'}}/><Image src={IconDice} avatar />
+        <span style={{ paddingLeft: '1em' }} /><Image src={IconDice} avatar />
         {is_random ? roll : <Input size='mini' style={{ width: 100 }} type='number' value={roll} onChange={(_, data) => this.props.setRoll(name, Number(data.value))} />}
-        {general_effect !== 0 ? <span style={{paddingLeft: '1em'}}><Image src={IconGeneral} avatar />{general_effect}</span> : null}
-        {terrain_effect !== 0 ? <span style={{paddingLeft: '1em'}}><Image src={IconTerrain} avatar />{terrain_effect}</span> : null}
+        {general_effect !== 0 ? <span style={{ paddingLeft: '1em' }}><Image src={IconGeneral} avatar />{general_effect}</span> : null}
+        {terrain_effect !== 0 ? <span style={{ paddingLeft: '1em' }}><Image src={IconTerrain} avatar />{terrain_effect}</span> : null}
       </div>
     )
   }
@@ -443,7 +446,8 @@ const mapDispatchToProps = (dispatch: any) => ({
   setRoll: (name: ArmyName, roll: number) => dispatch(setRoll(name, roll)),
   setGeneral: (name: ArmyName, skill: number) => dispatch(setGeneral(name, skill)),
   setFlankSize: (name: ArmyName, size: number) => dispatch(setFlankSize(name, size)),
-  selectArmy: (type: ParticipantType, name: ArmyName) => dispatch(selectArmy(type, name))
+  selectArmy: (type: ParticipantType, name: ArmyName) => dispatch(selectArmy(type, name)),
+  clearUnits: () => dispatch(clearUnits())
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

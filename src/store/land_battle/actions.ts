@@ -55,3 +55,7 @@ export const setFlankSize = createAction('@@land_battle/SET_FLANK_SIZE', action 
 export const selectArmy = createAction('@@land_battle/SELECT_ARMY', action => {
   return (type: ParticipantType, name: ArmyName) => action({type, name})
 })
+
+export const clearUnits = createAction('@@land_battle/CLEAR_UNITS', action => {
+  return () => action({})
+})
