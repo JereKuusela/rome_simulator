@@ -8,6 +8,8 @@ export const initialState = {
   attacker: getInitialArmy(true),
   defender: getInitialArmy(false),
   terrains: getInitialTerrains(),
+  attacker_past: List<PastState>(),
+  defender_past: List<PastState>(),
   day: -1,
   fight_over: true
 }
@@ -116,15 +118,18 @@ export const landBattleReducer = createReducer(initialState)
         army: past ? past.army : current.army,
         reserve: past ? past.reserve : current.reserve,
         defeated: past ? past.defeated : current.defeated,
-        roll: past ? past.roll : current.roll,
-        past: current.past.pop()
+        roll: past ? past.roll : current.roll
       })
-      const new_attacker = handleArmy(next.attacker, next.attacker.past.get(-1))
-      const new_defender = handleArmy(next.defender, next.defender.past.get(-1))
+      const new_attacker = handleArmy(next.attacker, next.attacker_past.get(-1))
+      const attacker_past = next.attacker_past.pop()
+      const new_defender = handleArmy(next.defender, next.defender_past.get(-1))
+      const defender_past = next.defender_past.pop()
       next = {
         ...next,
         attacker: new_attacker,
         defender: new_defender,
+        attacker_past,
+        defender_past,
         day: next.day - 1,
         fight_over: !(checkFight(new_attacker, new_defender))
       }

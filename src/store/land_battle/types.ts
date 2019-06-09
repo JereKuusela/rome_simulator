@@ -20,7 +20,6 @@ export interface Armies {
 }
 
 export interface Participant extends Armies {
-  readonly past: List<PastState>
   readonly tactic: TacticType
   readonly roll: number
   readonly randomize_roll: boolean
@@ -45,7 +44,6 @@ export const getInitialArmy = (attacker: boolean): Participant => ({
     tactic: TacticType.ShockAction,
     roll: 0,
     randomize_roll: true,
-    past: List<PastState>(),
     row_types: Map<RowType, UnitType>().set(RowType.Front, UnitType.Archers).set(RowType.Back, UnitType.HeavyInfantry).set(RowType.Flank, UnitType.LightCavalry),
     flank_size: 5,
     name: attacker ? ArmyName.Attacker : ArmyName.Defender

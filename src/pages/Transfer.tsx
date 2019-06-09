@@ -162,6 +162,8 @@ const mapDispatchToProps = (dispatch: any) => ({
   setResetMissing: (value: boolean) => dispatch(setResetMissing(value)),
   importState: (data: string, reset_missing: boolean) => {
     try {
+      if (!data)
+        data = '{}'
       let json = JSON.parse(data)
       json.transfer = undefined
       json.land = json.land && transformLand(json.land)

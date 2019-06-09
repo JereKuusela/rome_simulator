@@ -77,6 +77,21 @@ export const transformLand = (state_raw: any): typeof initialState => {
 
   const serializeUnits = (raw: List<any>):List<Unit | undefined> => raw.map(value => unitFromJS(value))
 
+  const serializePast = (past_raw: any): List<PastState> =>  {
+    let past = List<PastState>()
+    if (past_raw) {
+      let past4: List<Map<string, any>> = fromJS(past_raw)
+      let past3 = past4.map(value => ({
+        army: value.get('army') as List<any>,
+        reserve: value.get('reserve') as List<any>,
+        defeated: value.get('defeated') as List<any>,
+        roll: value.get('roll') as number
+      }))
+      past = past3.map(value => ({ army: serializeUnits(value.army).setSize(30), reserve: serializeUnits(value.reserve).filter(value => value), defeated: serializeUnits(value.defeated).filter(value => value), roll: value.roll } as PastState))
+    }
+    return past
+  }
+
   const serializeParticipant = (participant: any, attacker: boolean): Participant => {
     const initial = attacker ? initialState.attacker : initialState.defender
     let army = initial.army
@@ -88,17 +103,6 @@ export const transformLand = (state_raw: any): typeof initialState => {
     let defeated = initial.defeated
     if (participant.defeated)
       defeated = serializeUnits(fromJS(participant.defeated)).filter(value => value) as List<Unit>
-    let past = initial.past
-    if (participant.past) {
-      let past4: List<Map<string, any>> = fromJS(participant.past)
-      let past3 = past4.map(value => ({
-        army: value.get('army') as List<any>,
-        reserve: value.get('reserve') as List<any>,
-        defeated: value.get('defeated') as List<any>,
-        roll: value.get('roll') as number
-      }))
-      past = past3.map(value => ({ army: serializeUnits(value.army).setSize(30), reserve: serializeUnits(value.reserve).filter(value => value), defeated: serializeUnits(value.defeated).filter(value => value), roll: value.roll } as PastState))
-    }
     let row_types: Map<RowType, UnitType>
     if (participant.row_types)
       row_types = fromJS(participant.row_types)
@@ -124,7 +128,6 @@ export const transformLand = (state_raw: any): typeof initialState => {
       army,
       reserve,
       defeated,
-      past,
       row_types,
       tactic
     }
@@ -132,12 +135,14 @@ export const transformLand = (state_raw: any): typeof initialState => {
   let attacker = initialState.attacker
   if (state_raw.attacker)
     attacker = serializeParticipant(state_raw.attacker, true)
+  const attacker_past = serializePast(state_raw.attacker_past)
   let defender = initialState.defender
   if (state_raw.defender)
     defender = serializeParticipant(state_raw.defender, false)
+  const defender_past = serializePast(state_raw.defender_past)
   const day = state_raw.day || initialState.day
   const fight_over = state_raw.fight_over || initialState.fight_over
-  return { day, fight_over, terrains, attacker, defender }
+  return { day, fight_over, terrains, attacker, defender, attacker_past, defender_past }
 }
 
 export const transfromTransfer = (state_raw: any): typeof transferState => {
