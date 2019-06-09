@@ -2,6 +2,7 @@ https://github.com/resir014/react-redux-typescript-example
 
 Release 2:
 
+
 Roll modifier shown on roll + total roll
 
 Damage calculation values to settings

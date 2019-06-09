@@ -152,7 +152,7 @@ export const landBattleReducer = createReducer(initialState)
       defender: defender,
       attacker_past: state.attacker_past.clear(),
       defender_past: state.attacker_past.clear(),
-      round: -1,
+      day: -1,
       fight_over: !(checkFight(state.armies.get(attacker), state.armies.get(defender)))
     }
   })
