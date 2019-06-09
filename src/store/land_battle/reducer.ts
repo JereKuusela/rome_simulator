@@ -88,7 +88,7 @@ export const landBattleReducer = createReducer(initialState)
   .handleAction(setRowType, (state, action: ReturnType<typeof setRowType>) => (
     {
       ...state,
-      armies: state.armies.update(action.payload.name, value => ({ ...value, row_types: value.row_types.set(action.payload.row_type, action.payload.unit)}))
+      armies: state.armies.update(action.payload.name, value => ({ ...value, row_types: value.row_types.set(action.payload.row_type, action.payload.unit) }))
     }
   ))
   .handleAction(selectTactic, (state, action: ReturnType<typeof selectTactic>) => (
@@ -144,16 +144,22 @@ export const landBattleReducer = createReducer(initialState)
     }
   })
   .handleAction(selectArmy, (state, action: ReturnType<typeof selectArmy>) => {
+    let armies = state.armies
+    if (state.attacker_past.size > 0)
+      armies = armies.update(state.attacker, value => ({ ...value, ...state.attacker_past.get(0)}))
+    if (state.defender_past.size > 0)
+      armies = armies.update(state.defender, value => ({ ...value, ...state.defender_past.get(0)}))
     const attacker = action.payload.type === ParticipantType.Attacker ? action.payload.name : (action.payload.name === state.attacker ? state.defender : state.attacker)
     const defender = action.payload.type === ParticipantType.Defender ? action.payload.name : (action.payload.name === state.defender ? state.attacker : state.defender)
     return {
       ...state,
+      armies,
       attacker: attacker,
       defender: defender,
       attacker_past: state.attacker_past.clear(),
       defender_past: state.attacker_past.clear(),
       round: -1,
-      fight_over: !(checkFight(state.armies.get(attacker), state.armies.get(defender)))
+      fight_over: !(checkFight(armies.get(attacker), armies.get(defender)))
     }
   })
   .handleAction(createArmy, (state, action: ReturnType<typeof createArmy>) => (
