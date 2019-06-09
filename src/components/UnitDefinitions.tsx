@@ -22,10 +22,12 @@ interface IProps {
   readonly onCreateNew: (type: UnitType) => void
   readonly onChangeName: (old_name: ArmyName, new_name: ArmyName) => void
   readonly onDelete: (name: ArmyName) => void
+  readonly onDuplicate: (source: ArmyName, name: ArmyName) => void
 }
 
 interface IState {
   open_create: boolean
+  open_duplicate: boolean
   open_edit: boolean
   open_confirm: boolean
 }
@@ -35,7 +37,7 @@ export default class UnitDefinitions extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    this.state = { open_create: false, open_edit: false, open_confirm: false}
+    this.state = { open_create: false, open_edit: false, open_confirm: false, open_duplicate: false}
   }
 
   render(): JSX.Element {
@@ -47,6 +49,13 @@ export default class UnitDefinitions extends Component<IProps, IState> {
           onClose={this.onClose}
           message='New unit type'
           button_message='Create'
+        />
+        <ValueModal
+          open={this.state.open_duplicate}
+          onSuccess={this.onDuplicate}
+          onClose={this.onClose}
+          message='New unit type'
+          button_message='Duplicate'
         />
         <ValueModal
           open={this.state.open_edit}
@@ -121,6 +130,9 @@ export default class UnitDefinitions extends Component<IProps, IState> {
         <Button primary onClick={this.confirmOnClick}>
           Delete army
         </Button>
+        <Button primary onClick={this.duplicateOnClick}>
+          Duplicate army
+        </Button>
       </div>
     )
   }
@@ -131,9 +143,13 @@ export default class UnitDefinitions extends Component<IProps, IState> {
 
   confirmOnClick = (): void => this.setState({ open_confirm: true })
 
+  duplicateOnClick = (): void => this.setState({ open_duplicate: true })
+
   onCreate = (type: string): void => this.props.onCreateNew(type as UnitType)
 
-  onClose = (): void => this.setState({ open_create: false, open_edit: false })
+  onDuplicate = (name: string): void => this.props.onDuplicate(this.props.army, name as ArmyName)
+
+  onClose = (): void => this.setState({ open_create: false, open_edit: false, open_confirm: false, open_duplicate: false })
 
   onEdit = (name: string): void => this.props.onChangeName(this.props.army, name as ArmyName)
 

@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import ModalUnitDetail from '../containers/ModalUnitDetail'
 import ModalGlobalStatsDetail from '../containers/ModalGlobalStatsDetail'
 import { AppState } from '../store/index'
-import { UnitType, UnitDefinition, ArmyName, addUnit, deleteUnit, changeType, createArmy, changeName, deleteArmy } from '../store/units'
+import { UnitType, UnitDefinition, ArmyName, addUnit, deleteUnit, changeType, createArmy, changeName, deleteArmy, duplicateArmy } from '../store/units'
 import UnitDefinitions from '../components/UnitDefinitions'
 import ItemRemover from '../components/ItemRemover'
 import ValueModal from '../components/ValueModal'
@@ -91,6 +91,7 @@ class Units extends Component<IProps, IState> {
           onCreateNew={type => this.props.addUnit(army, type)}
           onChangeName={(old_name, new_name) => this.props.changeName(old_name, new_name)}
           onDelete={this.props.deleteArmy}
+          onDuplicate={this.props.duplicateArmy}
         />
         <br />
         <br />
@@ -119,6 +120,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   changeType: (army: ArmyName, old_type: UnitType, new_type: UnitType) => dispatch(changeType(army, old_type, new_type)),
   createArmy: (army: ArmyName) => dispatch(createArmy(army)),
   changeName: (old_name: ArmyName, new_name: ArmyName) => dispatch(changeName(old_name, new_name)),
+  duplicateArmy: (source: ArmyName, army: ArmyName) => dispatch(duplicateArmy(source, army)),
   deleteArmy: (army: ArmyName) => dispatch(deleteArmy(army))
 })
 

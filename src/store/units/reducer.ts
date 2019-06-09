@@ -1,7 +1,7 @@
 import { Map, OrderedSet } from 'immutable'
 import { createReducer } from 'typesafe-actions'
 import { getDefaultDefinitions, getDefaultTypes, getDefaultGlobalDefinition } from './data'
-import { setValue, setGlobalValue, deleteUnit, addUnit, changeImage, changeType, deleteArmy, createArmy, changeName } from './actions'
+import { setValue, setGlobalValue, deleteUnit, addUnit, changeImage, changeType, deleteArmy, createArmy, changeName, duplicateArmy } from './actions'
 import { UnitType, UnitDefinition, ArmyName } from './types'
 import { addValue } from '../../base_definition'
 
@@ -54,6 +54,13 @@ export const unitsReducer = createReducer(unitsState)
       types: state.types.set(action.payload.army, getDefaultTypes())
     }
   ))
+  .handleAction(duplicateArmy, (state, action: ReturnType<typeof duplicateArmy>) => (
+    {
+      ...state,
+      definitions: state.definitions.set(action.payload.army, state.definitions.get(action.payload.source) || getDefaultDefinitions()),
+      types: state.types.set(action.payload.army, state.types.get(action.payload.source) || getDefaultTypes())
+    }
+  ))
   .handleAction(deleteArmy, (state, action: ReturnType<typeof deleteArmy>) => (
     {
       ...state,
@@ -75,6 +82,9 @@ export const globalStatsReducer = createReducer(globalStatsState)
   ))
   .handleAction(createArmy, (state, action: ReturnType<typeof createArmy>) => (
     state.set(action.payload.army, getDefaultGlobalDefinition())
+  ))
+  .handleAction(duplicateArmy, (state, action: ReturnType<typeof duplicateArmy>) => (
+    state.set(action.payload.army, state.get(action.payload.source) || getDefaultGlobalDefinition())
   ))
   .handleAction(deleteArmy, (state, action: ReturnType<typeof deleteArmy>) => (
     state.delete(action.payload.army)

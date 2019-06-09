@@ -34,6 +34,10 @@ export const createArmy = createAction('@@units/CREATE_ARMY', action => {
   return (army: ArmyName) => action({ army })
 })
 
+export const duplicateArmy = createAction('@@units/DUPLICATE_ARMY', action => {
+  return (source: ArmyName, army: ArmyName) => action({ source, army })
+})
+
 export const changeName = createAction('@@units/CHANGE_NAME', action => {
   return (old_army: ArmyName, new_army: ArmyName) => action({ old_army, new_army })
 })
