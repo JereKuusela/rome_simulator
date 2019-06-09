@@ -3,7 +3,7 @@ import { Container, Grid, Header } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 
-class Instrucctions extends Component<IProps> {
+class Instructions extends Component<IProps> {
   render(): JSX.Element {
     return (
       <Container>
@@ -22,7 +22,7 @@ class Instrucctions extends Component<IProps> {
               <p><b>Army dropdown</b>: Allows changing the army. Affects available units and their combat modifiers.</p>
               <p><b>General skill</b>: Martial level for the general. Affects dice roll.</p>
               <p><b>Tactic</b>: Tactic in the combat. Percentage gets affected by units in the battle field and opponent's tactic</p>
-              <p><b>Dice</b>: Current dice roll.</p>
+              <p><b>Base damage</b>: Current base damage with current dice roll and other modifiers.</p>
               <p><b>Randomize</b>: Whether the dice roll is randomized. Turn this off for controlled results.</p>
               <p><b>Location</b>: Terrains in the battle. Affects mainly the dice roll.</p>
               <p><b>Attacker's / Defender's reserve</b>: Units in the reserve. Units are deployed automatically. Different rules are used before the combat and during the combat.</p>
@@ -126,6 +126,20 @@ class Instrucctions extends Component<IProps> {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column>
+              <Header>Settings page</Header>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column>
+              Allows changing constant values for combat simulation.
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column>
               <Header>Transfer page</Header>
             </Grid.Column>
           </Grid.Row>
@@ -158,4 +172,4 @@ const mapDispatchToProps = (dispatch: any) => ({
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Instrucctions)
+export default connect(mapStateToProps, mapDispatchToProps)(Instructions)

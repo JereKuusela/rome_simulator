@@ -26,6 +26,8 @@ export default class Navigation extends Component {
           </Menu.Item>
           <Menu.Item active={path === '/stats'} onClick={() => history.push('/stats')}>
             Stats
+          </Menu.Item><Menu.Item active={path === '/settings'} onClick={() => history.push('/settings')}>
+            Settings
           </Menu.Item>
           <Menu.Item active={path === '/transfer'} onClick={() => history.push('/transfer')}>
             Transfer

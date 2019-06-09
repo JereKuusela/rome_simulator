@@ -11,6 +11,7 @@ import Navigation from './pages/Navigation'
 import Stats from './pages/Stats'
 import Transfer from './pages/Transfer'
 import Instructions from './pages/Instructions'
+import Settings from './pages/Settings'
 import { AppState } from './store/'
 
 // Any additional component props go here.
@@ -33,6 +34,7 @@ const Root = ({ store, persistor }: MainProps) => {
         <Route path='/Stats' component={Stats} />
         <Route path='/Transfer' component={Transfer} />
         <Route path='/Instructions' component={Instructions} />
+        <Route path='/Settings' component={Settings} />
       </BrowserRouter>
       </PersistGate>
     </Provider>
