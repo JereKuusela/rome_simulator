@@ -11,7 +11,7 @@ export const initialState = {
   terrains: getInitialTerrains(),
   attacker_past: List<PastState>(),
   defender_past: List<PastState>(),
-  day: -1,
+  round: -1,
   fight_over: true
 }
 
@@ -99,7 +99,7 @@ export const landBattleReducer = createReducer(initialState)
   ))
   .handleAction(undo, (state, action: ReturnType<typeof undo>) => {
     let next = state
-    for (let step = 0; step < action.payload.steps && next.day > -1; ++step) {
+    for (let step = 0; step < action.payload.steps && next.round > -1; ++step) {
       const handleArmy = (current?: Participant, past?: PastState): Participant | undefined => current && ({
         ...current,
         army: past ? past.army : current.army,
@@ -121,7 +121,7 @@ export const landBattleReducer = createReducer(initialState)
         armies,
         attacker_past,
         defender_past,
-        day: next.day - 1,
+        round: next.round - 1,
         fight_over: !(checkFight(new_attacker, new_defender))
       }
     }
@@ -152,7 +152,7 @@ export const landBattleReducer = createReducer(initialState)
       defender: defender,
       attacker_past: state.attacker_past.clear(),
       defender_past: state.attacker_past.clear(),
-      day: -1,
+      round: -1,
       fight_over: !(checkFight(state.armies.get(attacker), state.armies.get(defender)))
     }
   })

@@ -121,14 +121,14 @@ class Transfer extends Component<IProps, IState> {
       new_state.land = undefined
     else if (this.props.export_keys.get(ExportKey.InitialOnly)) {
       const past_a = new_state.land.attacker.past && new_state.land.attacker.past.get(0)
-      if (state.land.day > -1 && past_a) {
+      if (state.land.round > -1 && past_a) {
         new_state.land = {
           ...new_state.land,
           attacker: {...new_state.land.attacker, army: past_a.army, reserve: past_a.reserve, defeated: past_a.defeated, past: undefined }
         }
       }
       const past_d = new_state.land.defender.past && new_state.land.defender.past.get(0)
-      if (state.land.day > -1 && past_d) {
+      if (state.land.round > -1 && past_d) {
         new_state.land = {
           ...new_state.land,
           defender: {...new_state.land.defender, army: past_d.army, reserve: past_d.reserve, defeated: past_d.defeated, past: undefined }

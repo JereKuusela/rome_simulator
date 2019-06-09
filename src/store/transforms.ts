@@ -77,7 +77,7 @@ export const transformLand = (state_raw: any): typeof initialState => {
 
   const serializeUnits = (raw: List<any>): List<Unit | undefined> => raw.map(value => unitFromJS(value))
 
-  const serializePast = (past_raw: any): List<PastState> => {
+  const serializePast = (past_raw: any, round: number): List<PastState> => {
     let past = List<PastState>()
     if (past_raw) {
       let past4: List<Map<string, any>> = fromJS(past_raw)
@@ -89,7 +89,8 @@ export const transformLand = (state_raw: any): typeof initialState => {
       }))
       past = past3.map(value => ({ army: serializeUnits(value.army).setSize(30), reserve: serializeUnits(value.reserve).filter(value => value), defeated: serializeUnits(value.defeated).filter(value => value), roll: value.roll } as PastState))
     }
-    return past
+    // Prevent history and index (round number) getting out of sync.
+    return past.setSize(Math.max(0, round))
   }
 
   const serializeParticipant = (participant: any): Participant => {
@@ -143,11 +144,11 @@ export const transformLand = (state_raw: any): typeof initialState => {
   let defender = state_raw.defender
   if (!defender || typeof defender !== 'string')
     defender = initialState.defender
-  const attacker_past = serializePast(state_raw.attacker_past)
-  const defender_past = serializePast(state_raw.defender_past)
-  const day = state_raw.day || initialState.day
+  const round = state_raw.round || initialState.round
+  const attacker_past = serializePast(state_raw.attacker_past ,round)
+  const defender_past = serializePast(state_raw.defender_past, round)
   const fight_over = state_raw.fight_over || initialState.fight_over
-  return { day, fight_over, armies, terrains, attacker, defender, attacker_past, defender_past }
+  return { round, fight_over, armies, terrains, attacker, defender, attacker_past, defender_past }
 }
 
 export const transfromTransfer = (state_raw: any): typeof transferState => {

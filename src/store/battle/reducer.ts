@@ -31,7 +31,7 @@ export const battleReducer = createReducer(initialState)
       if (!attacker || !defender)
         continue
       const old_rolls = [attacker.roll, defender.roll]
-      if (next.day % roll_frequency === 0) {
+      if (next.round % roll_frequency === 0) {
         attacker = {
           ...attacker,
           roll: attacker.randomize_roll ? minimum_roll + Math.round(Math.random() * (maximum_roll - minimum_roll)) : attacker.roll
@@ -43,7 +43,7 @@ export const battleReducer = createReducer(initialState)
       }
       const attacker_info = { ...attacker, tactic: state.tactics.definitions.get(attacker.tactic) }
       const defender_info = { ...defender, tactic: state.tactics.definitions.get(defender.tactic) }
-      let [army_a, army_d, reserve_a, reserve_d, defeated_a, defeated_d] = fight(definitions, attacker_info, defender_info, next.day + 1, next.terrains.map(type => state.terrains.definitions.get(type)!), state.settings.combat)
+      let [army_a, army_d, reserve_a, reserve_d, defeated_a, defeated_d] = fight(definitions, attacker_info, defender_info, next.round + 1, next.terrains.map(type => state.terrains.definitions.get(type)!), state.settings.combat)
       const new_attacker = {
         ...attacker,
         army: army_a,
@@ -61,7 +61,7 @@ export const battleReducer = createReducer(initialState)
         armies: next.armies.set(next.attacker, new_attacker).set(next.defender, new_defender),
         attacker_past: next.attacker_past.push({ army: attacker.army, reserve: attacker.reserve, defeated: attacker.defeated, roll: old_rolls[0] }),
         defender_past: next.defender_past.push({ army: defender.army, reserve: defender.reserve, defeated: defender.defeated, roll: old_rolls[1] }),
-        day: next.day + 1,
+        round: next.round + 1,
         fight_over: !checkFight(new_attacker, new_defender)
       }
       attacker = next.armies.get(next.attacker)
