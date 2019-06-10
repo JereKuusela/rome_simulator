@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { ArmyName, UnitDefinition, ArmyType, Unit } from '../store/units/types'
 import UnitArmy from '../components/UnitArmy'
-import { clearUnits, battle, undo, Participant, ParticipantType, toggleRandomRoll, setRoll, setGeneral, RowType, setFlankSize, selectArmy } from '../store/land_battle'
+import { battle, undo, Participant, ParticipantType, toggleRandomRoll, setRoll, setGeneral, RowType, setFlankSize, selectArmy } from '../store/land_battle'
 import { calculateTactic, calculateTerrainEffect, calculateGeneralEffect, calculateBaseDamage } from '../store/battle/combat'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import { TacticDefinition } from '../store/tactics'
@@ -92,10 +92,7 @@ class Land extends Component<IProps, IState> {
             <Grid.Column floated='left'><Header>{'Round: ' + this.roundName(this.props.round)}</Header></Grid.Column>
             <Grid.Column textAlign='center'>
               <Button primary size='large' onClick={this.openFastPlanner}>
-                Create units
-              </Button>
-              <Button primary size='large' onClick={this.props.clearUnits}>
-                Clear units
+                Create and remove units
               </Button>
             </Grid.Column>
             <Grid.Column floated='right' textAlign='right'>
@@ -446,8 +443,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   setRoll: (name: ArmyName, roll: number) => dispatch(setRoll(name, roll)),
   setGeneral: (name: ArmyName, skill: number) => dispatch(setGeneral(name, skill)),
   setFlankSize: (name: ArmyName, size: number) => dispatch(setFlankSize(name, size)),
-  selectArmy: (type: ParticipantType, name: ArmyName) => dispatch(selectArmy(type, name)),
-  clearUnits: () => dispatch(clearUnits())
+  selectArmy: (type: ParticipantType, name: ArmyName) => dispatch(selectArmy(type, name))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

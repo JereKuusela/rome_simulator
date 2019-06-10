@@ -13,6 +13,8 @@ interface IProps {
   readonly reserve_d?: Map<UnitType, number>
   readonly onValueChange: (army: ArmyName, unit: UnitType, value: number) => void
   readonly attached?: boolean
+  readonly changes_a: Map<UnitType, number>
+  readonly changes_d: Map<UnitType, number>
 }
 
 // Display component for showing and changing tactic details.
@@ -65,7 +67,7 @@ export default class FastPlanner extends Component<IProps> {
             <Input
               type='number'
               size='mini'
-              defaultValue={this.props.reserve_a && this.props.reserve_a.get(type)}
+              value={this.props.changes_a.has(type) ? this.props.changes_a.get(type) : this.props.reserve_a && this.props.reserve_a.get(type)}
               onChange={(_, data) => this.props.onValueChange(ArmyName.Attacker, type, Math.max(0, Math.round(Number(data.value))))
               }
             />
@@ -78,7 +80,7 @@ export default class FastPlanner extends Component<IProps> {
             <Input
               type='number'
               size='mini'
-              defaultValue={this.props.reserve_d && this.props.reserve_d.get(type)}
+              defaultValue={this.props.changes_d.has(type) ? this.props.changes_d.get(type) : this.props.reserve_d && this.props.reserve_d.get(type)}
               onChange={(_, data) => this.props.onValueChange(ArmyName.Defender, type, Math.max(0, Math.round(Number(data.value))))
               }
             />

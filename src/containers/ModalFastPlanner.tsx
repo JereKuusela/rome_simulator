@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { List, Map } from 'immutable'
 import { connect } from 'react-redux'
-import { Modal } from 'semantic-ui-react'
+import { Modal, Button } from 'semantic-ui-react'
 import { AppState } from '../store/'
 import FastPlanner from '../components/FastPlanner'
 import ArmyCosts from '../components/ArmyCosts'
 import { ArmyName, UnitType, Unit } from '../store/units'
-import { removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits } from '../store/land_battle'
+import { clearUnits, removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits } from '../store/land_battle'
 import { mapRange } from '../utils'
 import { mergeValues } from '../base_definition'
 
@@ -24,8 +24,8 @@ class ModalFastPlanner extends Component<IProps, IState> {
     this.state = { changes_a: Map<UnitType, number>(), changes_d: Map<UnitType, number>() }
   }
 
-  originals_a? = Map<UnitType, number>()
-  originals_d? = Map<UnitType, number>()
+  originals_a?= Map<UnitType, number>()
+  originals_d?= Map<UnitType, number>()
 
   render(): JSX.Element | null {
     if (!this.props.open)
@@ -40,9 +40,11 @@ class ModalFastPlanner extends Component<IProps, IState> {
       <Modal basic onClose={this.onClose} open centered={false}>
         <Modal.Content>
           <FastPlanner
+            changes_a={this.state.changes_a}
             reserve_a={this.originals_a}
             units={this.props.units}
             types_a={types_a}
+            changes_d={this.state.changes_d}
             reserve_d={this.originals_d}
             types_d={types_d}
             onValueChange={this.onValueChange}
@@ -56,7 +58,12 @@ class ModalFastPlanner extends Component<IProps, IState> {
             defeated_a={attacker && this.mergeAllValues(this.props.attacker, attacker.defeated)}
             defeated_d={defender && this.mergeAllValues(this.props.defender, defender.defeated)}
             attached
-           />
+          />
+          <br/>
+          <Button primary size='large' onClick={this.clearUnits} style={{width: '50%', marginLeft: '25%'}}>
+            Clear all units
+          </Button>
+          
         </Modal.Content>
       </Modal>
     )
@@ -74,9 +81,9 @@ class ModalFastPlanner extends Component<IProps, IState> {
 
   onValueChange = (name: ArmyName, unit: UnitType, value: number): void => {
     if (name === ArmyName.Attacker)
-      this.setState({changes_a: this.state.changes_a.set(unit, value)})
+      this.setState({ changes_a: this.state.changes_a.set(unit, value) })
     if (name === ArmyName.Defender)
-      this.setState({changes_d: this.state.changes_d.set(unit, value)})
+      this.setState({ changes_d: this.state.changes_d.set(unit, value) })
   }
 
   getUnitsToAdd = (changes: Units, originals?: Units): Unit[] => {
@@ -114,6 +121,11 @@ class ModalFastPlanner extends Component<IProps, IState> {
   }
 
   countUnits = (reserve: List<Unit>, unit: UnitType): number => reserve.reduce((previous, current) => previous + (current && current.type === unit ? 1 : 0), 0)
+
+  clearUnits = (): void => {
+    this.setState({ changes_a: Map<UnitType, number>(), changes_d: Map<UnitType, number>() })
+    this.props.clearUnits()
+  }
 }
 
 const mapStateToProps = (state: AppState) => ({
@@ -127,7 +139,8 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchToProps = (dispatch: any) => ({
   addReserveUnits: (name: ArmyName, units: Unit[]) => dispatch(addReserveUnits(name, units)),
-  removeReserveUnits: (name: ArmyName, types: UnitType[]) => dispatch(removeReserveUnits(name, types))
+  removeReserveUnits: (name: ArmyName, types: UnitType[]) => dispatch(removeReserveUnits(name, types)),
+  clearUnits: () => dispatch(clearUnits())
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {
