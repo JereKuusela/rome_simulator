@@ -5,12 +5,14 @@ import { getDefaultDefinitions as getDefaultTacticDefinitions, TacticType } from
 import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, TerrainDefinition } from '../../terrains'
 import { getDefaultDefinitions as getDefaultUnitDefinitions, UnitType, UnitCalc, UnitDefinition, ArmyName } from '../../units'
 import { addBaseValue, addModifierValue, addLossValue, calculateValue} from '../../../base_definition'
+import { settingsState } from '../../settings'
 
 describe('multi', () => {
   const tactics = getDefaultTacticDefinitions()
   const terrains = getDefaultTerrainDefinitions()
   const units = getDefaultUnitDefinitions()
   const definitions = Map<ArmyName, Map<UnitType, UnitDefinition>>().set(ArmyName.Attacker, units).set(ArmyName.Defender, units)
+  const settings = settingsState.combat
 
   const verify = (unit: UnitDefinition | undefined, manpower: number, morale: number) => {
     expect(unit).toBeTruthy()
@@ -25,7 +27,7 @@ describe('multi', () => {
     }
   }
   const round = (attacker: Participant, defender: Participant, terrains: List<TerrainDefinition>, round: number): [Participant, Participant] => {
-    const [attacker_new_army, defender_new_army] = battle(definitions, {...attacker, tactic: tactics.get(attacker.tactic)!}, {...defender, tactic: tactics.get(defender.tactic)!}, round, terrains)
+    const [attacker_new_army, defender_new_army] = battle(definitions, {...attacker, tactic: tactics.get(attacker.tactic)!}, {...defender, tactic: tactics.get(defender.tactic)!}, round, terrains, settings)
     return [{ ...attacker, army: attacker_new_army }, { ...defender, army: defender_new_army }]
   }
 
@@ -49,11 +51,11 @@ describe('multi', () => {
       general: 4,
       roll: 6,
       army: attacker.army
-        .setIn([0, 13], getAttacker(UnitType.LightInfantry, 1.31))
-        .setIn([0, 14], getAttacker(UnitType.Archers, 1.38))
-        .setIn([0, 15], getAttacker(UnitType.Archers, 1.38))
-        .setIn([0, 16], getAttacker(UnitType.Archers, 1.38))
-        .setIn([0, 17], getAttacker(UnitType.LightInfantry, 1.00))
+        .set(13, getAttacker(UnitType.LightInfantry, 1.31))
+        .set(14, getAttacker(UnitType.Archers, 1.38))
+        .set(15, getAttacker(UnitType.Archers, 1.38))
+        .set(16, getAttacker(UnitType.Archers, 1.38))
+        .set(17, getAttacker(UnitType.LightInfantry, 1.00))
     }
 
     let defender = getInitialArmy()
@@ -63,12 +65,12 @@ describe('multi', () => {
       general: 7,
       roll: 6,
       army: defender.army
-        .setIn([0, 12], getDefender(UnitType.HeavyInfantry, 3.15))
-        .setIn([0, 13], getDefender(UnitType.HeavyInfantry, 3.15))
-        .setIn([0, 14], getDefender(UnitType.Archers, 3.15))
-        .setIn([0, 15], getDefender(UnitType.Archers, 3.15))
-        .setIn([0, 16], getDefender(UnitType.Archers, 3.15))
-        .setIn([0, 17], getDefender(UnitType.HeavyInfantry, 3.15))
+        .set(12, getDefender(UnitType.HeavyInfantry, 3.15))
+        .set(13, getDefender(UnitType.HeavyInfantry, 3.15))
+        .set(14, getDefender(UnitType.Archers, 3.15))
+        .set(15, getDefender(UnitType.Archers, 3.15))
+        .set(16, getDefender(UnitType.Archers, 3.15))
+        .set(17, getDefender(UnitType.HeavyInfantry, 3.15))
     }
       ;[attacker, defender] = round(attacker, defender, terrain, 1)
     /*verify(attacker.army.getIn([0, 13]), 894, 0.456)

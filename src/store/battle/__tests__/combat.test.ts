@@ -3,156 +3,135 @@ import { List, Map } from 'immutable'
 import { getInitialArmy, Participant } from '../../land_battle/types'
 import { getDefaultDefinitions as getDefaultTacticDefinitions, TacticType } from '../../tactics'
 import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, TerrainDefinition } from '../../terrains'
-import { getDefaultDefinitions as getDefaultUnitDefinitions, UnitType, UnitCalc, UnitDefinition, ArmyName } from '../../units'
-import { addBaseValue, addBaseValues, addModifierValue, calculateValue} from '../../../base_definition'
+import { getDefaultDefinitions as getDefaultUnitDefinitions, getDefaultGlobalDefinition, UnitType, UnitCalc, UnitDefinition, ArmyName } from '../../units'
+import { addBaseValue, addBaseValues, addModifierValue, mergeValues } from '../../../base_definition'
+import { settingsState } from '../../settings'
+import { verifyCenterUnits, setRolls, setTactics, setCenterUnits } from './utils'
 
 describe('1 vs 1', () => {
+  const global_stats = getDefaultGlobalDefinition()
   const tactics = getDefaultTacticDefinitions()
   const terrains = getDefaultTerrainDefinitions()
-  const units = getDefaultUnitDefinitions()
+  const units = getDefaultUnitDefinitions().map(unit => mergeValues(unit, global_stats))
   const unit = addModifierValue(units.get(UnitType.Archers)!, 'Initial', UnitCalc.Morale, -0.2)
   const definitions = Map<ArmyName, Map<UnitType, UnitDefinition>>().set(ArmyName.Attacker, units).set(ArmyName.Defender, units)
+  const settings = settingsState.combat
 
-  let attacker: Participant
-  let defender: Participant
+  let info = {
+    attacker: null as any as Participant,
+    defender: null as any as Participant
+  }
   let terrain: List<TerrainDefinition>
   let round: number
 
   beforeEach(() => {
-    attacker = getInitialArmy()
-    defender = getInitialArmy()
+    info.attacker = getInitialArmy()
+    info.defender = getInitialArmy()
     terrain = List<TerrainDefinition>().push(terrains.get(TerrainType.Forest)!)
-    setTactics(TacticType.Envelopment, TacticType.Envelopment)
-    setUnits(unit, unit)
+    setTactics(info, TacticType.Envelopment, TacticType.Envelopment)
+    setCenterUnits(info, unit, unit)
     round = 0
   })
-  const verifySub = (unit: UnitDefinition | undefined, manpower: number, morale: number) => {
-    expect(unit).toBeTruthy()
-    if (!unit)
-      return
-    expect(calculateValue(unit, UnitCalc.Manpower)).toEqual(manpower)
-    try {
-      expect(Math.abs(calculateValue(unit, UnitCalc.Morale) - morale)).toBeLessThan(0.002)
-    }
-    catch (e) {
-      throw new Error('Morale ' + calculateValue(unit, UnitCalc.Morale) + ' is not ' + morale);
-    }
-  }
-  const verify = (manpower_a: number, morale_a: number, manpower_d: number, morale_d: number) => {
-    verifySub(attacker.army.getIn([0, 15]), manpower_a, morale_a)
-    verifySub(defender.army.getIn([0, 15]), manpower_d, morale_d)
-  }
+
   const doRound = () => {
     round++
-    const [attacker_new_army, defender_new_army] = battle(definitions, {...attacker, tactic: tactics.get(attacker.tactic)!}, {...defender, tactic: tactics.get(defender.tactic)!}, round, terrain)
-    attacker = { ...attacker, army: attacker_new_army }
-    defender = { ...defender, army: defender_new_army }
-  }
-  const setRolls = (roll_a: number, roll_d: number) => {
-    attacker = { ...attacker, roll: roll_a }
-    defender = { ...defender, roll: roll_d }
-  }
-  const setTactics = (tactic_a: TacticType, tactic_d: TacticType) => {
-    attacker = { ...attacker, tactic: tactic_a }
-    defender = { ...defender, tactic: tactic_d }
-  }
-  const setUnits = (unit_a: UnitDefinition, unit_b: UnitDefinition) => {
-    attacker = { ...attacker, army: attacker.army.setIn([0, 15], unit_a) }
-    defender = { ...defender, army: defender.army.setIn([0, 15], unit_b) }
+    const [attacker_new_army, defender_new_army] = battle(definitions, { ...info.attacker, tactic: tactics.get(info.attacker.tactic)! }, { ...info.defender, tactic: tactics.get(info.defender.tactic)! }, round, terrain, settings)
+    info.attacker = { ...info.attacker, army: attacker_new_army }
+    info.defender = { ...info.defender, army: defender_new_army }
   }
 
   it('should work without modifiers', () => {
     const test_unit = addBaseValue(unit, 'Test', UnitCalc.MoraleDamageTaken, -0.25)
-    setUnits(test_unit, test_unit)
-    setRolls(1, 3)
+    setCenterUnits(info, test_unit, test_unit)
+    setRolls(info, 1, 3)
     doRound()
-    verify(972, 2.148, 984, 2.256)
+    verifyCenterUnits(info, 972, 2.148, 984, 2.256)
     doRound()
-    verify(945, 1.916, 969, 2.132)
+    verifyCenterUnits(info, 945, 1.916, 969, 2.132)
     doRound()
-    verify(918, 1.702, 954, 2.026)
+    verifyCenterUnits(info, 918, 1.702, 954, 2.026)
   })
 
   it('should work with extra morale damage taken', () => {
-    setRolls(1, 3)
+    setRolls(info, 1, 3)
     doRound()
-    verify(972, 2.084, 984, 2.220)
+    verifyCenterUnits(info, 972, 2.084, 984, 2.220)
     doRound()
-    verify(945, 1.800, 969, 2.070)
+    verifyCenterUnits(info, 945, 1.800, 969, 2.070)
     doRound()
-    verify(918, 1.540, 954, 1.944)
+    verifyCenterUnits(info, 918, 1.540, 954, 1.944)
     doRound()
-    verify(892, 1.298, 940, 1.840)
+    verifyCenterUnits(info, 892, 1.298, 940, 1.840)
     doRound()
-    verify(866, 1.074, 926, 1.754)
-    setRolls(1, 5)
+    verifyCenterUnits(info, 866, 1.074, 926, 1.754)
+    setRolls(info, 1, 5)
     doRound()
-    verify(833, 0.802, 913, 1.686)
+    verifyCenterUnits(info, 833, 0.802, 913, 1.686)
     doRound()
-    verify(801, 0.544, 900, 1.638)
+    verifyCenterUnits(info, 801, 0.544, 900, 1.638)
     doRound()
-    verify(769, 0.298, 888, 1.606)
+    verifyCenterUnits(info, 769, 0.298, 888, 1.606)
   })
 
   it('should work with extra strength damage taken', () => {
     const test_unit = addBaseValues(unit, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitCalc.StrengthDamageTaken, 0.25]])
-    setUnits(test_unit, test_unit)
-    setRolls(3, 4)
+    setCenterUnits(info, test_unit, test_unit)
+    setRolls(info, 3, 4)
     doRound()
-    verify(960, 2.112, 970, 2.184)
+    verifyCenterUnits(info, 960, 2.112, 970, 2.184)
     doRound()
-    verify(922, 1.858, 942, 2.002)
+    verifyCenterUnits(info, 922, 1.858, 942, 2.002)
     doRound()
-    verify(885, 1.634, 915, 1.850)
+    verifyCenterUnits(info, 885, 1.634, 915, 1.850)
     doRound()
-    verify(849, 1.432, 889, 1.720)
+    verifyCenterUnits(info, 849, 1.432, 889, 1.720)
     doRound()
-    verify(814, 1.248, 864, 1.612)
+    verifyCenterUnits(info, 814, 1.248, 864, 1.612)
   })
 
   it('should work with versus damage', () => {
     const test_unit = addBaseValues(unit, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitType.Archers, 0.25]] as [UnitCalc | UnitType, number][])
-    setUnits(test_unit, test_unit)
-    setRolls(5, 1)
+    setCenterUnits(info, test_unit, test_unit)
+    setRolls(info, 5, 1)
     doRound()
-    verify(975, 2.174, 960, 2.040)
+    verifyCenterUnits(info, 975, 2.174, 960, 2.040)
     doRound()
-    verify(951, 1.992, 921, 1.724)
+    verifyCenterUnits(info, 951, 1.992, 921, 1.724)
     doRound()
-    verify(928, 1.844, 883, 1.440)
+    verifyCenterUnits(info, 928, 1.844, 883, 1.440)
     doRound()
-    verify(906, 1.726, 846, 1.186)
+    verifyCenterUnits(info, 906, 1.726, 846, 1.186)
     doRound()
-    verify(885, 1.632, 810, 0.952)
-    setRolls(1, 3)
+    verifyCenterUnits(info, 885, 1.632, 810, 0.952)
+    setRolls(info, 1, 3)
     doRound()
-    verify(857, 1.532, 793, 0.846)
+    verifyCenterUnits(info, 857, 1.532, 793, 0.846)
     doRound()
-    verify(830, 1.446, 776, 0.748)
+    verifyCenterUnits(info, 830, 1.446, 776, 0.748)
     doRound()
-    verify(803, 1.370, 760, 0.658)
+    verifyCenterUnits(info, 803, 1.370, 760, 0.658)
     doRound()
-    verify(777, 1.306, 744, 0.578)
+    verifyCenterUnits(info, 777, 1.306, 744, 0.578)
     doRound()
-    verify(751, 1.252, 729, 0.502)
+    verifyCenterUnits(info, 751, 1.252, 729, 0.502)
   })
 
 
   it('should work with discipline', () => {
     const unit_a = addBaseValues(unit, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitCalc.Discipline, 0.01]])
     const unit_d = addBaseValues(unit, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitCalc.Discipline, 0.045]])
-    setUnits(unit_a, unit_d)
-    setRolls(6, 4)
+    setCenterUnits(info, unit_a, unit_d)
+    setRolls(info, 6, 4)
     doRound()
-    verify(967, 2.100, 964, 2.074)
+    verifyCenterUnits(info, 967, 2.100, 964, 2.074)
     doRound()
-    verify(935, 1.852, 929, 1.800)
+    verifyCenterUnits(info, 935, 1.852, 929, 1.800)
     doRound()
-    verify(904, 1.644, 896, 1.566)
+    verifyCenterUnits(info, 904, 1.644, 896, 1.566)
     doRound()
-    //verify(875, 1.470, 864, 1.368)
+    //verifyCenterUnits(info,875, 1.470, 864, 1.368)
     doRound()
-    //verify(847, 1.324, 833, 1.194)
+    //verifyCenterUnits(info,847, 1.324, 833, 1.194)
   })
 
   /*it('fake without modifiers', () => {
