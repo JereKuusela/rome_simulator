@@ -45,14 +45,14 @@ export default class UnitArmy extends Component<IProps> {
                 </Table.Cell>
                 {
                   columns.map(column => {
-                    const unit = column > -1 && this.props.units ? this.props.units.get(row * width + column) : undefined
+                    const unit = column > -1 && this.props.units ? this.props.units.get(row * this.props.row_width + column) : undefined
                     return (
                       <Table.Cell
                       key={column}
                       disabled={column < 0}
                       selectable
                       style={{backgroundColor: column < 0 ? '#DDDDDD' : 'white'}}
-                      onClick={() => this.props.onClick(row * width + column, unit)}
+                      onClick={() => this.props.onClick(row * this.props.row_width + column, unit)}
                       >
                         {
                           <div style={{ background: this.gradient(unit, MANPOWER_COLOR, UnitCalc.Manpower) }}>

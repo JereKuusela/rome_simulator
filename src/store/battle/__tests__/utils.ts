@@ -1,6 +1,7 @@
+import { List, Map } from 'immutable'
 import { Participant } from '../../land_battle/types'
 import { TacticType } from '../../tactics'
-import { Unit, UnitCalc, UnitDefinition } from '../../units'
+import { Unit, UnitCalc, UnitDefinition, UnitType } from '../../units'
 import { calculateValue,} from '../../../base_definition'
 
 export interface TestInfo {
@@ -24,7 +25,10 @@ export const verifyCenterUnits = (info: TestInfo, manpower_a: number, morale_a: 
   verifySub(info.attacker.army.get(15), manpower_a, morale_a)
   verifySub(info.defender.army.get(15), manpower_d, morale_d)
 }
-
+export const verifyType = (unit: Unit | undefined, type: UnitType, message: string = '') => {
+  expect(unit).toBeTruthy()
+  expect(unit!.type + message).toEqual(type + message)
+}
 export const setRolls = (info: TestInfo, roll_a: number, roll_d: number) => {
   info.attacker = { ...info.attacker, roll: roll_a }
   info.defender = { ...info.defender, roll: roll_d }

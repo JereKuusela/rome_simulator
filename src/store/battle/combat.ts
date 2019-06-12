@@ -175,7 +175,7 @@ const reinforce = (armies: Armies, definitions: Definition, round: number, row_t
   let left_flank_size = Math.max(flank_size, Math.ceil((army.size - enemy_size) / 2.0))
   left_flank_size = Math.min(Math.floor(army.size / 2.0), left_flank_size)
   let right_flank_size = Math.max(flank_size, Math.floor((army.size - enemy_size) / 2.0))
-  right_flank_size = Math.min(Math.ceil(army.size / 2.0), left_flank_size)
+  right_flank_size = Math.min(Math.ceil(army.size / 2.0), right_flank_size)
 
   if (round === 0) {
     // Initial deployment uses reversed order (so Primary unit is first and Secondary last).
@@ -190,7 +190,8 @@ const reinforce = (armies: Armies, definitions: Definition, round: number, row_t
   // Optimization to not drag units which have no chance to get picked.
   orderedMainReserve = orderedMainReserve.takeLast(free_spots)
   orderedFlankReserve = orderedFlankReserve.takeLast(free_spots)
-  for (let index = half; index >= left_flank_size && index + right_flank_size < army.size && reserve.size > 0; index = nextIndex(index)) {
+  let index = half
+  for (; index >= left_flank_size && index + right_flank_size < army.size && reserve.size > 0; index = nextIndex(index)) {
     if (army.get(index))
       continue
     if (orderedMainReserve.size > 0) {
@@ -204,7 +205,7 @@ const reinforce = (armies: Armies, definitions: Definition, round: number, row_t
       orderedFlankReserve = orderedFlankReserve.pop()
     }
   }
-  for (let index = army.size - right_flank_size; index >= 0 && index < army.size && reserve.size > 0; index = nextIndex(index)) {
+  for (; index >= 0 && index < army.size && reserve.size > 0; index = nextIndex(index)) {
     if (army.get(index))
       continue
     if (orderedFlankReserve.size > 0) {
