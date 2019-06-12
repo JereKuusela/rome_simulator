@@ -10,7 +10,8 @@ type Army = List<Unit | undefined>
 type Reserve = List<Unit>
 type Defeated = List<Unit>
 type Terrains = List<TerrainDefinition | undefined>
-type Definitions = Map<ArmyName, Map<UnitType, UnitDefinition>>
+type Definition = Map<UnitType, UnitDefinition>
+type Definitions = Map<ArmyName, Definition>
 type Settings = Map<CombatParameter, number>
 
 interface Loss {
@@ -24,6 +25,7 @@ interface Kill {
 }
 
 export interface ParticipantState {
+  readonly name: ArmyName
   readonly army: Army
   readonly reserve: Reserve
   readonly defeated: Defeated
@@ -49,13 +51,13 @@ export const battle = (definitions: Definitions, attacker: ParticipantState, def
 
   a = removeOutOfBounds(a, combat_width)
   d = removeOutOfBounds(d, combat_width)
-  a = reinforce(a, round, attacker.row_types, attacker.flank_size, countArmySize(d), undefined)
+  a = reinforce(a, definitions.get(attacker.name)!, round, attacker.row_types, attacker.flank_size, countArmySize(d), undefined)
   let definitions_a: Army = a.army.map(value => value && mergeValues(value, definitions.getIn([ArmyName.Attacker, value.type])))
   if (settings.get(CombatParameter.ReinforceFirst))
-    d = reinforce(d, round, defender.row_types, defender.flank_size, countArmySize(a), undefined)
+    d = reinforce(d, definitions.get(defender.name)!, round, defender.row_types, defender.flank_size, countArmySize(a), undefined)
   let a_to_d = pickTargets(definitions_a, d.army, !!settings.get(CombatParameter.FlankTargetsOwnEdge))
   if (!settings.get(CombatParameter.ReinforceFirst))
-    d = reinforce(d, round, defender.row_types, defender.flank_size, countArmySize(a), a_to_d)
+    d = reinforce(d, definitions.get(defender.name)!, round, defender.row_types, defender.flank_size, countArmySize(a), a_to_d)
   let definitions_d: Army = d.army.map(value => value && mergeValues(value, definitions.getIn([ArmyName.Defender, value.type])))
   let d_to_a = pickTargets(definitions_d, a.army, !!settings.get(CombatParameter.FlankTargetsOwnEdge))
   if (round < 1)
@@ -95,10 +97,10 @@ const removeOutOfBounds = (armies: Armies, combat_width: number): Armies => {
       return unit
     if (index >= 0 && index < combat_width)
       return unit
-      defeated = defeated.push(unit)
+    defeated = defeated.push(unit)
     return undefined
   }).setSize(combat_width)
-  return {army, reserve: armies.reserve, defeated}
+  return { army, reserve: armies.reserve, defeated }
 }
 
 export const calculateGeneralEffect = (general: number, opposing_general: number): number => Math.max(0, Math.floor((general - opposing_general) / 2.0))
@@ -124,7 +126,7 @@ const countArmySize = (armies: Armies): number => armies.army.reduce((previous, 
  * @param enemy_size Army size of the enemy
  * @param attacker_to_defender Selected targets as reinforcement may move units.
  */
-const reinforce = (armies: Armies, round: number, row_types: Map<RowType, UnitType>, flank_size: number, enemy_size: number, attacker_to_defender: (number | null)[] | undefined): Armies => {
+const reinforce = (armies: Armies, definitions: Definition, round: number, row_types: Map<RowType, UnitType>, flank_size: number, enemy_size: number, attacker_to_defender: (number | null)[] | undefined): Armies => {
   // 1: Empty spots get filled by back row.
   // 2: If still holes, units move towards center.
   // Backrow.
@@ -143,10 +145,16 @@ const reinforce = (armies: Armies, round: number, row_types: Map<RowType, UnitTy
     return calculateValue(unit, UnitCalc.Maneuver) > 2
   }
 
-  const mainReserve = reserve.filter(value => !isFlankUnit(value))
-  const flankReserve = reserve.filter(value => isFlankUnit(value))
-  let orderedMainReserve = mainReserve.sortBy((value, key) => -calculateValue(value, UnitCalc.Cost) * 10000 + key - (value.type === row_types.get(RowType.Front) ? 2000000 : 0) - (value.type === row_types.get(RowType.Back) ? -1000000 : 0))
-  let orderedFlankReserve = flankReserve.sortBy((value, key) => -calculateValue(value, UnitCalc.Maneuver) * 10000 + key - (value.type === row_types.get(RowType.Flank) ? 1000000 : 0))
+  const mainReserve = reserve.filter(value => !isFlankUnit(mergeValues(value, definitions.get(value.type)!)))
+  const flankReserve = reserve.filter(value => isFlankUnit(mergeValues(value, definitions.get(value.type)!)))
+  let orderedMainReserve = mainReserve.sortBy((value, key) => {
+    value = mergeValues(value, definitions.get(value.type)!)
+    return -calculateValue(value, UnitCalc.Cost) * 10000 + key - (value.type === row_types.get(RowType.Front) ? 2000000 : 0) - (value.type === row_types.get(RowType.Back) ? -1000000 : 0)
+  })
+  let orderedFlankReserve = flankReserve.sortBy((value, key) => {
+    value = mergeValues(value, definitions.get(value.type)!)
+    return -calculateValue(value, UnitCalc.Maneuver) * 10000 + key - (value.type === row_types.get(RowType.Flank) ? 1000000 : 0)
+  })
   // Algo 2.0
   /*
   1: Calculate flank (preference (if 33 stacks) or unit count difference, whichever higher)
@@ -162,9 +170,6 @@ const reinforce = (armies: Armies, round: number, row_types: Map<RowType, UnitTy
 
   // Determine whether flank size has an effect.
   const free_spots = army.filter((_, index) => index < army.size).reduce((previous, current) => previous + (current ? 0 : 1), 0)
-  // Optimization to not drag units which have no chance to get picked.
-  orderedMainReserve = orderedMainReserve.take(free_spots)
-  orderedFlankReserve = orderedFlankReserve.take(free_spots)
   const army_size = army.size - free_spots + reserve.size
   flank_size = army_size > army.size + 2 ? flank_size : 0
   let left_flank_size = Math.max(flank_size, Math.ceil((army.size - enemy_size) / 2.0))
@@ -182,6 +187,9 @@ const reinforce = (armies: Armies, round: number, row_types: Map<RowType, UnitTy
     left_flank_size = 0
     right_flank_size = 0
   }
+  // Optimization to not drag units which have no chance to get picked.
+  orderedMainReserve = orderedMainReserve.take(free_spots)
+  orderedFlankReserve = orderedFlankReserve.take(free_spots)
   for (let index = half; index >= left_flank_size && index + right_flank_size < army.size && reserve.size > 0; index = nextIndex(index)) {
     if (army.get(index))
       continue

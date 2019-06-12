@@ -41,8 +41,8 @@ export const battleReducer = createReducer(initialState)
           roll: defender.randomize_roll ? minimum_roll + Math.round(Math.random() * (maximum_roll - minimum_roll)) : defender.roll
         }
       }
-      const attacker_info = { ...attacker, tactic: state.tactics.definitions.get(attacker.tactic) }
-      const defender_info = { ...defender, tactic: state.tactics.definitions.get(defender.tactic) }
+      const attacker_info = { ...attacker, tactic: state.tactics.definitions.get(attacker.tactic), name: next.attacker }
+      const defender_info = { ...defender, tactic: state.tactics.definitions.get(defender.tactic), name: next.defender }
       const [a, d] = fight(definitions, attacker_info, defender_info, next.round + 1, next.terrains.map(type => state.terrains.definitions.get(type)!), state.settings.combat)
       const new_attacker = {
         ...attacker,
