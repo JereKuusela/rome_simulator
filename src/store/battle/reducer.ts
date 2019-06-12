@@ -43,18 +43,14 @@ export const battleReducer = createReducer(initialState)
       }
       const attacker_info = { ...attacker, tactic: state.tactics.definitions.get(attacker.tactic) }
       const defender_info = { ...defender, tactic: state.tactics.definitions.get(defender.tactic) }
-      let [army_a, army_d, reserve_a, reserve_d, defeated_a, defeated_d] = fight(definitions, attacker_info, defender_info, next.round + 1, next.terrains.map(type => state.terrains.definitions.get(type)!), state.settings.combat)
+      const [a, d] = fight(definitions, attacker_info, defender_info, next.round + 1, next.terrains.map(type => state.terrains.definitions.get(type)!), state.settings.combat)
       const new_attacker = {
         ...attacker,
-        army: army_a,
-        reserve: reserve_a,
-        defeated: defeated_a
+        ...a
       }
       const new_defender = {
         ...defender,
-        army: army_d,
-        reserve: reserve_d,
-        defeated: defeated_d
+        ...d
       }
       next = {
         ...next,

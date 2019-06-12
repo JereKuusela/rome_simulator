@@ -7,6 +7,7 @@ import { calculateValue, calculateValueWithoutLoss, getImage } from '../base_def
 
 interface IProps {
   units?: List<UnitDefinition | undefined>
+  row_width: number
   reverse: boolean
   onClick: (index: number, unit: UnitDefinition | undefined) => void
   type: ArmyType
@@ -18,14 +19,21 @@ const WHITE_COLOR = 'rgba(255,255,255,0)'
 
 // Display component for showing unit definitions for an army.
 export default class UnitArmy extends Component<IProps> {
-
-  readonly ROW_LENGTH = 30.0
-
   render(): JSX.Element {
-    const size = this.props.units ? this.props.units.size : 0
-    const row_count = Math.ceil((size + (this.props.type === ArmyType.Main ? 0 : 1)) / this.ROW_LENGTH)
+    const width = this.props.units ? this.props.units.size : 0
+    const row_count = Math.ceil(width / this.props.row_width)
     const rows = Array(row_count).fill(0).map((_, index) => index)
-    const columns = Array(this.ROW_LENGTH).fill(0).map((_, index) => index)
+    const columns = Array(this.props.row_width)
+    const delta = Math.max(0, this.props.row_width - width)
+    const low_limit = Math.ceil(delta / 2.0)
+    const up_limit = this.props.row_width - Math.floor(delta / 2.0)
+    for (let i = 0; i < this.props.row_width; i++) {
+      columns[i] = i - low_limit
+      if (i < low_limit)
+        columns[i] = -1
+      if (i >= up_limit)
+        columns[i] = -1
+    }
     return (
       <Table compact celled definition unstackable>
         <Table.Body>
@@ -37,9 +45,15 @@ export default class UnitArmy extends Component<IProps> {
                 </Table.Cell>
                 {
                   columns.map(column => {
-                    const unit = this.props.units && this.props.units.get(row * this.ROW_LENGTH + column)
+                    const unit = column > -1 && this.props.units ? this.props.units.get(row * width + column) : undefined
                     return (
-                      <Table.Cell key={column} selectable onClick={() => this.props.onClick(row * this.ROW_LENGTH + column, unit)}>
+                      <Table.Cell
+                      key={column}
+                      disabled={column < 0}
+                      selectable
+                      style={{backgroundColor: column < 0 ? '#DDDDDD' : 'white'}}
+                      onClick={() => this.props.onClick(row * width + column, unit)}
+                      >
                         {
                           <div style={{ background: this.gradient(unit, MANPOWER_COLOR, UnitCalc.Manpower) }}>
                             <div style={{ background: this.gradient(unit, MORALE_COLOR, UnitCalc.Morale) }}>

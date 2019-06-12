@@ -35,9 +35,9 @@ describe('1 vs 1', () => {
 
   const doRound = () => {
     round++
-    const [attacker_new_army, defender_new_army] = battle(definitions, { ...info.attacker, tactic: tactics.get(info.attacker.tactic)! }, { ...info.defender, tactic: tactics.get(info.defender.tactic)! }, round, terrain, settings)
-    info.attacker = { ...info.attacker, army: attacker_new_army }
-    info.defender = { ...info.defender, army: defender_new_army }
+    const [a, d] = battle(definitions, { ...info.attacker, tactic: tactics.get(info.attacker.tactic)! }, { ...info.defender, tactic: tactics.get(info.defender.tactic)! }, round, terrain, settings)
+    info.attacker = { ...info.attacker, ...a }
+    info.defender = { ...info.defender, ...d }
   }
 
   it('should work without modifiers', () => {

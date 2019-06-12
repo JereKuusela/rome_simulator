@@ -15,6 +15,7 @@ export const settingsState = {
     .set(CombatParameter.MinimumMorale, 0.25)
     .set(CombatParameter.MinimumManpower, 0)
     .set(CombatParameter.RollFrequency, 5)
+    .set(CombatParameter.CombatWidth, 30)
 }
 
 

@@ -11,7 +11,8 @@ export enum CombatParameter {
   RollDamage = 'Extra damage per roll',
   MinimumMorale = 'Minimum morale required for combat',
   MinimumManpower = 'Minimum manpower required for combat',
-  RollFrequency = 'How often the dice is rolled'
+  RollFrequency = 'How often the dice is rolled',
+  CombatWidth = 'Width of the battlefield'
 
 }
 

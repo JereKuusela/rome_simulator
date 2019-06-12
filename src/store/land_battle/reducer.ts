@@ -62,12 +62,16 @@ export const landBattleReducer = createReducer(initialState)
     const handleArmy = (participant: Participant): Participant => {
       if (action.payload.type === ArmyType.Main)
         return { ...participant, army: participant.army.set(action.payload.index, action.payload.unit) }
+      if (action.payload.type === ArmyType.Reserve && action.payload.unit && action.payload.index > participant.reserve.size)
+        return { ...participant, reserve: participant.reserve.push(action.payload.unit) }
       if (action.payload.type === ArmyType.Reserve && action.payload.unit)
         return { ...participant, reserve: participant.reserve.set(action.payload.index, action.payload.unit) }
       if (action.payload.type === ArmyType.Reserve && !action.payload.unit)
         return { ...participant, reserve: participant.reserve.delete(action.payload.index) }
       if (action.payload.type === ArmyType.Defeated && action.payload.unit)
         return { ...participant, defeated: participant.defeated.set(action.payload.index, action.payload.unit) }
+      if (action.payload.type === ArmyType.Defeated && action.payload.unit && action.payload.index > participant.defeated.size)
+        return { ...participant, defeated: participant.defeated.push(action.payload.unit) }
       if (action.payload.type === ArmyType.Defeated && !action.payload.unit)
         return { ...participant, defeated: participant.defeated.delete(action.payload.index) }
       return participant

@@ -17,6 +17,7 @@ import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers
 import ModalArmyUnitDetail, { ModalInfo as ModalArmyUnitInfo } from '../containers/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/ModalFastPlanner'
 import { calculateValue, mergeValues, getImage } from '../base_definition'
+import { CombatParameter } from '../store/settings'
 import IconTerrain from '../images/terrain.png'
 import IconGeneral from '../images/military_power.png'
 
@@ -244,12 +245,14 @@ class Land extends Component<IProps, IState> {
   }
 
   renderArmy = (type: ParticipantType, name: ArmyName, participant?: Participant): JSX.Element => {
+    const combat_width = this.props.settings.get(CombatParameter.CombatWidth) || 30
     return (
       <div key={type}>
         {type === ParticipantType.Attacker && <Header>{type + '\'s army'}</Header>}
         <UnitArmy
           onClick={(column, unit) => this.openUnitModal(name, ArmyType.Main, column, unit)}
-          units={participant && this.mergeAllValues(name, participant.army)}
+          units={participant && this.mergeAllValues(name, participant.army).setSize(combat_width)}
+          row_width={Math.max(30, combat_width)}
           reverse={type === ParticipantType.Attacker}
           type={ArmyType.Main}
         />
@@ -281,12 +284,17 @@ class Land extends Component<IProps, IState> {
   }
 
   renderReserve = (type: ParticipantType, name: ArmyName, participant?: Participant): JSX.Element => {
+    const units = participant && this.mergeAllValues(name, participant.reserve)
+    // + 1 ensures that the user can always select an empty space.
+    // ceil ensures full rows for a cleaner UI.
+    const size = units && Math.ceil((units.size + 1) / 30.0) * 30
     return (
       <div key={type}>
         <Header>{type + '\'s reserve'}</Header>
         <UnitArmy
           onClick={(column, unit) => this.openUnitModal(name, ArmyType.Reserve, column, unit)}
-          units={participant && this.mergeAllValues(name, participant.reserve)}
+          units={units && units.setSize(size || 0)}
+          row_width={30}
           reverse={false}
           type={ArmyType.Reserve}
         />
@@ -295,12 +303,17 @@ class Land extends Component<IProps, IState> {
   }
 
   renderDefeatedArmy = (type: ParticipantType, name: ArmyName, participant?: Participant): JSX.Element => {
+    const units = participant && this.mergeAllValues(name, participant.defeated)
+    // + 1 ensures that the user can always select an empty space.
+    // ceil ensures full rows for a cleaner UI.
+    const size = units && Math.ceil((units.size + 1) / 30.0) * 30
     return (
       <div key={type}>
         <Header>{type + '\'s defeated units'}</Header>
         <UnitArmy
           onClick={(column, unit) => this.openUnitModal(name, ArmyType.Defeated, column, unit)}
-          units={participant && this.mergeAllValues(name, participant.defeated)}
+          units={units && units.setSize(size || 0)}
+          row_width={30}
           reverse={false}
           type={ArmyType.Defeated}
         />
