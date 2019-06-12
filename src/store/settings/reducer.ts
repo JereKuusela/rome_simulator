@@ -1,21 +1,23 @@
 import { createReducer } from 'typesafe-actions'
-import { Map } from 'immutable'
+import { OrderedMap } from 'immutable'
 import { CombatParameter, changeParamater } from './actions'
 
 export const settingsState = {
-  combat: Map<CombatParameter, number>()
+  combat: OrderedMap<CombatParameter, number>()
     .set(CombatParameter.BaseDamage, 0.08)
-    .set(CombatParameter.DiceMaximum, 6)
+    .set(CombatParameter.RollDamage, 0.02)
     .set(CombatParameter.DiceMinimum, 1)
+    .set(CombatParameter.DiceMaximum, 6)
+    .set(CombatParameter.RollFrequency, 5)
+    .set(CombatParameter.CombatWidth, 30)
     .set(CombatParameter.ExperienceDamageReduction, 0.3)
     .set(CombatParameter.ManpowerLostMultiplier, 0.2)
     .set(CombatParameter.MoraleDamageBase, 2.0)
     .set(CombatParameter.MoraleLostMultiplier,  1.5)
-    .set(CombatParameter.RollDamage, 0.02)
     .set(CombatParameter.MinimumMorale, 0.25)
     .set(CombatParameter.MinimumManpower, 0)
-    .set(CombatParameter.RollFrequency, 5)
-    .set(CombatParameter.CombatWidth, 30)
+    .set(CombatParameter.FlankTargetsOwnEdge, 0)
+    .set(CombatParameter.ReinforceFirst, 0)
 }
 
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { Container, Grid, Input } from 'semantic-ui-react'
-import { changeParamater, CombatParameter } from '../store/settings'
+import { Container, Grid, Input, Table } from 'semantic-ui-react'
+import { changeParamater, CombatParameter, parameterToDescription } from '../store/settings'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 
@@ -8,21 +8,27 @@ class Settings extends Component<IProps> {
   render(): JSX.Element {
     return (
       <Container>
-        <Grid padded>
-          <Grid.Row columns='3'>
+        <Grid padded celled>
+          <Grid.Row columns='2'>
             {
               this.props.combat.map((value, key) => {
                 return (
                   <Grid.Column key={key}>
-                    {key}
-                    <div style={{float:'right'}}>
-                    <Input
-                      size='mini'
-                      style={{ width: 50 }}
-                      defaultValue={value}
-                      onChange={(_, data) => Number(data.value) && this.props.changeParamater(key, Number(data.value))}
-                    />
-                    </div>
+                    <Table basic='very'>
+                      <Table.Row>
+                        <Table.Cell key={key + '_input'} collapsing >
+                          <Input
+                            size='mini'
+                            style={{ width: 50 }}
+                            defaultValue={value}
+                            onChange={(_, data) => Number(data.value) && this.props.changeParamater(key, Number(data.value))}
+                          />
+                        </Table.Cell>
+                        <Table.Cell key={key + '_description'} style={{ whiteSpace: 'pre-line' }} >
+                          {parameterToDescription(key)}
+                        </Table.Cell>
+                      </Table.Row>
+                    </Table>
                   </Grid.Column>
                 )
               }).toList()

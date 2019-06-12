@@ -49,13 +49,15 @@ export const battle = (definitions: Definitions, attacker: ParticipantState, def
 
   a = removeOutOfBounds(a, combat_width)
   d = removeOutOfBounds(d, combat_width)
-  // Asymmetric behavior...
   a = reinforce(a, round, attacker.row_types, attacker.flank_size, countArmySize(d), undefined)
   let definitions_a: Army = a.army.map(value => value && mergeValues(value, definitions.getIn([ArmyName.Attacker, value.type])))
-  let a_to_d = pickTargets(definitions_a, d.army)
-  d = reinforce(d, round, defender.row_types, defender.flank_size, countArmySize(a), a_to_d)
+  if (settings.get(CombatParameter.ReinforceFirst))
+    d = reinforce(d, round, defender.row_types, defender.flank_size, countArmySize(a), undefined)
+  let a_to_d = pickTargets(definitions_a, d.army, !!settings.get(CombatParameter.FlankTargetsOwnEdge))
+  if (!settings.get(CombatParameter.ReinforceFirst))
+    d = reinforce(d, round, defender.row_types, defender.flank_size, countArmySize(a), a_to_d)
   let definitions_d: Army = d.army.map(value => value && mergeValues(value, definitions.getIn([ArmyName.Defender, value.type])))
-  let d_to_a = pickTargets(definitions_d, a.army)
+  let d_to_a = pickTargets(definitions_d, a.army, !!settings.get(CombatParameter.FlankTargetsOwnEdge))
   if (round < 1)
     return [a, d]
 
@@ -244,8 +246,9 @@ const reinforce = (armies: Armies, round: number, row_types: Map<RowType, UnitTy
  * Returns an array which maps attacker to defender.
  * @param source_row Attackers.
  * @param target_row Defenders.
+ * @param flank_targets_near_own_edge Flanks pick targets near their edge.
  */
-const pickTargets = (source_row: Army, target_row: Army): Array<number | null> => {
+const pickTargets = (source_row: Army, target_row: Army, flank_targets_near_own_edge: boolean): Array<number | null> => {
   // Units attack mainly units on front of them. If not then first target from left to right.
   const attacker_to_defender = Array<number | null>(source_row.size)
   for (let i = 0; i < source_row.size; ++i)
@@ -258,10 +261,20 @@ const pickTargets = (source_row: Army, target_row: Army): Array<number | null> =
       target_index = source_index
     else {
       const maneuver = calculateValue(source, UnitCalc.Maneuver)
-      for (let index = source_index - maneuver; index <= source_index + maneuver; ++index) {
-        if (index >= 0 && index < source_row.size && target_row.get(index)) {
-          target_index = index
-          break
+      if (flank_targets_near_own_edge && source_index > source_row.size / 2) {
+        for (let index = source_index + maneuver; index >= source_index - maneuver; --index) {
+          if (index >= 0 && index < source_row.size && target_row.get(index)) {
+            target_index = index
+            break
+          }
+        }
+      }
+      else {
+        for (let index = source_index - maneuver; index <= source_index + maneuver; ++index) {
+          if (index >= 0 && index < source_row.size && target_row.get(index)) {
+            target_index = index
+            break
+          }
         }
       }
     }

@@ -1,4 +1,4 @@
-import { fromJS, Map, List, OrderedSet } from 'immutable'
+import { fromJS, Map, List, OrderedSet, OrderedMap } from 'immutable'
 import { tacticFromJS, TacticType, tacticsState } from './tactics'
 import { terrainFromJS, TerrainType, terrainState } from './terrains'
 import { unitDefinitionFromJS, unitFromJS, ArmyName, UnitType, unitsState, globalStatsState, Unit } from './units'
@@ -158,9 +158,12 @@ export const transfromTransfer = (state_raw: any): typeof transferState => {
   return { reset_missing, export_keys }
 }
 
+const settings = Object.keys(CombatParameter).map(k => CombatParameter[k as any]) as CombatParameter[]
+
 export const transformSettings = (state_raw: any): typeof settingsState => {
   if (!state_raw)
     return settingsState
-  const combat = state_raw.combat ? settingsState.combat.merge(fromJS(state_raw.combat) as Map<CombatParameter, number>) : settingsState.combat
+  let combat = state_raw.combat ? settingsState.combat.merge(fromJS(state_raw.combat).toOrderedMap() as OrderedMap<CombatParameter, number>) : settingsState.combat
+  combat = combat.filter((_, key) => settings.includes(key))
   return { combat }
 }
