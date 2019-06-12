@@ -1,17 +1,39 @@
-https://github.com/resir014/react-redux-typescript-example
-
-Release 2:
-
-
-Roll modifier shown on roll + total roll
-
-Damage calculation values to settings
-
 Release 3:
+
+Tests (high priority):
+- Combat width test for deployment
+- Reinforcement tests, similar to deployment
+- base_definition functions tested
+
+Refactor (high priority):
+- Actions, data and types similarly in all stores.
+- Documentation for combat.
+- Documentation for base_definition.
+
+Armies page:
+- List of armies
+- Standard operations: add, duplicate, rename, remove
+- Also choose unit definitions from a list (removes risk of definitons getting out of sync + allows reuse of definitions)
+- Probably something similar for modifiers...
+- Also settings that are in the main page (general, roll, tactic)
+
+Battle:
+- Tactic selector should show efficieny for all tactics
+- Unit detail should have dropdown to change type
+- Row type: None available as option
+- Create and remove: Clear button seems like ok button -> at least color to red and perhaps move somewhere else...
+
+Release 4:
 
 - Immutable reviver to simplify fromJS calls when transforming data?
 - History should not be stored (except dices)
 - Playback to get history on page load?
+
+Settings:
+- Better descriptions
+- Show list of "Increase value to ...", "Decrease value too", green and red colors for increase and decrease.
+- Gives a better idea how the attribute affects the result.
+
 
 Siege:
 - Time to capture
@@ -52,7 +74,7 @@ Trade:
 Religion
 - Omens, necessary?
 
-Release 4:
+Release 5:
 
 Navigation:
 - Simulation
