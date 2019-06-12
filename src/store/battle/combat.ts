@@ -188,8 +188,8 @@ const reinforce = (armies: Armies, definitions: Definition, round: number, row_t
     right_flank_size = 0
   }
   // Optimization to not drag units which have no chance to get picked.
-  orderedMainReserve = orderedMainReserve.take(free_spots)
-  orderedFlankReserve = orderedFlankReserve.take(free_spots)
+  orderedMainReserve = orderedMainReserve.takeLast(free_spots)
+  orderedFlankReserve = orderedFlankReserve.takeLast(free_spots)
   for (let index = half; index >= left_flank_size && index + right_flank_size < army.size && reserve.size > 0; index = nextIndex(index)) {
     if (army.get(index))
       continue
