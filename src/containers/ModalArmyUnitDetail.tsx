@@ -4,7 +4,7 @@ import { Modal } from 'semantic-ui-react'
 import { UnitType, ArmyName, ArmyType, ValueType, Unit, UnitDefinition } from '../store/units'
 import { selectUnit } from '../store/land_battle'
 import { AppState } from '../store/'
-import { addBaseValue, addModifierValue, addLossValue, mergeValues } from '../base_definition'
+import { addValues, mergeValues, ValuesType } from '../base_definition'
 import { OrderedSet } from 'immutable'
 import ItemRemover from '../components/ItemRemover'
 import UnitDetail from '../components/UnitDetail'
@@ -58,21 +58,21 @@ class ModalArmyUnitDetail extends Component<IProps> {
   setBaseValue = (name: ArmyName, _type: UnitType, key: string, attribute: ValueType, value: number): void => {
     if (!this.props.info)
       return
-    const unit = addBaseValue(this.unit, key, attribute, value)
+    const unit = addValues(this.unit, ValuesType.Base, key, [[attribute, value]])
     this.props.selectUnit(name, this.props.info.type, this.props.info.index, unit)
   }
 
   setModifierValue = (name: ArmyName, _type: UnitType, key: string, attribute: ValueType, value: number): void => {
     if (!this.props.info)
       return
-    const unit = addModifierValue(this.unit, key, attribute, value)
+    const unit = addValues(this.unit, ValuesType.Modifier, key, [[attribute, value]])
     this.props.selectUnit(name, this.props.info.type, this.props.info.index, unit)
   }
 
   setLossValue = (name: ArmyName, _type: UnitType, key: string, attribute: ValueType, value: number): void => {
     if (!this.props.info)
       return
-    const unit = addLossValue(this.unit, key, attribute, value)
+    const unit = addValues(this.unit, ValuesType.Loss, key, [[attribute, value]])
     this.props.selectUnit(name, this.props.info.type, this.props.info.index, unit)
   }
 

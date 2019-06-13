@@ -1,6 +1,6 @@
 import { OrderedMap, Map, OrderedSet, fromJS } from 'immutable'
 import { UnitType, UnitDefinition, UnitCalc, ValueType, Unit } from './types'
-import { addBaseValues } from '../../base_definition'
+import { addValues, ValuesType } from '../../base_definition'
 import IconArcher from '../../images/archers.png'
 import IconCamelCavalry from '../../images/camel_cavalry.png'
 import IconChariots from '../../images/chariots.png'
@@ -24,18 +24,6 @@ const unit_to_icon = Map<UnitType, string>()
   .set(UnitType.LightCavalry, IconLightCavalry)
   .set(UnitType.LightInfantry, IconLightInfantry)
   .set(UnitType.WarElephants, IconWarElephants)
-
-const setBaseValues = (unit: UnitDefinition): UnitDefinition => {
-  const values: [UnitCalc, number][] = [
-    [UnitCalc.Offense, 1],
-    [UnitCalc.Defense, 1],
-    [UnitCalc.Discipline, 1],
-    [UnitCalc.Manpower, 1000],
-    [UnitCalc.Morale, 3]
-  ]
-  unit = addBaseValues(unit, 'Base', values)
-  return unit
-}
 
 export const getDefaultTypes = (): OrderedSet<UnitType> => {
   const units = Object.keys(UnitType).map(k => UnitType[k as any]) as UnitType[]
@@ -77,8 +65,15 @@ export const unitDefinitionFromJS = (object: Map<string, any>): UnitDefinition |
 
 
 export const getDefaultGlobalDefinition = (): UnitDefinition => {
-  let unit = { type: '' as UnitType, image: IconMilitaryPower, requirements: '', can_assault: false }
-  return setBaseValues(unit)
+  const unit = { type: '' as UnitType, image: IconMilitaryPower, requirements: '', can_assault: false }
+  const values: [UnitCalc, number][] = [
+    [UnitCalc.Offense, 1],
+    [UnitCalc.Defense, 1],
+    [UnitCalc.Discipline, 1],
+    [UnitCalc.Manpower, 1000],
+    [UnitCalc.Morale, 3]
+  ]
+  return addValues(unit, ValuesType.Base, 'Base', values)
 }
 
 const createUnitFromJson = (data: UnitData): UnitDefinition => {
@@ -102,7 +97,7 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
     [UnitType.LightInfantry, data.light_infantry || 0],
     [UnitType.WarElephants, data.war_elephants || 0]
   ]
-  unit = addBaseValues(unit, unit.type, base_values)
+  unit = addValues(unit, ValuesType.Base, unit.type, base_values)
   return unit
 }
 

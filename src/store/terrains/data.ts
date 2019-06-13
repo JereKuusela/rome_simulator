@@ -1,5 +1,5 @@
 import { Map, OrderedSet, OrderedMap, fromJS } from 'immutable'
-import { calculateValue, BaseValuesDefinition, addBaseValues } from '../../base_definition'
+import { calculateValue, BaseValuesDefinition, addValues, ValuesType } from '../../base_definition'
 import * as data from './terrains.json'
 import IconTerrain from '../../images/terrain.png'
 
@@ -66,7 +66,7 @@ const createTerrainFromJson = (data: TerrainData): TerrainDefinition => {
   const base_values: [ValueType, number][] = [
     [TerrainCalc.Roll, data.roll]
   ]
-  return addBaseValues(terrain, terrain.type, base_values)
+  return addValues(terrain, ValuesType.Base, terrain.type, base_values)
 }
 
 interface TerrainData {

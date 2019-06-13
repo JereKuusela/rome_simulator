@@ -1,5 +1,5 @@
 import { Map, OrderedMap, OrderedSet, fromJS } from 'immutable'
-import { calculateValue, BaseValuesDefinition, toPercent, addBaseValues } from '../../base_definition'
+import { calculateValue, BaseValuesDefinition, toPercent, addValues, ValuesType } from '../../base_definition'
 import { UnitType } from '../units/types'
 import IconBottleneck from '../../images/bottleneck.png'
 import IconCavalrySkirmish from '../../images/cavalry_skirmish.png'
@@ -103,7 +103,7 @@ const createTacticFromJson = (data: TacticData): TacticDefinition => {
     [TacticType.TriplexAcies, data.triplex_acies || 0]
 
   ]
-  return addBaseValues(tactic, tactic.type, base_values)
+  return addValues(tactic, ValuesType.Base, tactic.type, base_values)
 }
 
 interface TacticData {

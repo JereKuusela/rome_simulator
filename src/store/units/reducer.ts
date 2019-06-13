@@ -3,7 +3,7 @@ import { createReducer } from 'typesafe-actions'
 import { getDefaultDefinitions, getDefaultTypes, getDefaultGlobalDefinition } from './data'
 import { setValue, setGlobalValue, deleteUnit, addUnit, changeImage, changeType, deleteArmy, createArmy, changeName, duplicateArmy } from './actions'
 import { UnitType, UnitDefinition, ArmyName } from './types'
-import { addValue } from '../../base_definition'
+import { addValues } from '../../base_definition'
 
 export const unitsState = {
   types: Map<ArmyName, OrderedSet<UnitType>>().set(ArmyName.Attacker, getDefaultTypes()).set(ArmyName.Defender, getDefaultTypes()),
@@ -16,7 +16,7 @@ export const unitsReducer = createReducer(unitsState)
     {
       ...state,
       definitions: state.definitions.updateIn([action.payload.army, action.payload.unit], (unit: UnitDefinition) => (
-        addValue(unit, action.payload.type, action.payload.key, action.payload.attribute, action.payload.value)
+        addValues(unit, action.payload.type, action.payload.key, [[action.payload.attribute, action.payload.value]])
       ))
     }
   ))
@@ -78,7 +78,7 @@ export const unitsReducer = createReducer(unitsState)
 
 export const globalStatsReducer = createReducer(globalStatsState)
   .handleAction(setGlobalValue, (state, action: ReturnType<typeof setGlobalValue>) => (
-    state.update(action.payload.army, unit => addValue(unit, action.payload.type, action.payload.key, action.payload.attribute, action.payload.value))
+    state.update(action.payload.army, unit => addValues(unit, action.payload.type, action.payload.key, [[action.payload.attribute, action.payload.value]]))
   ))
   .handleAction(createArmy, (state, action: ReturnType<typeof createArmy>) => (
     state.set(action.payload.army, getDefaultGlobalDefinition())

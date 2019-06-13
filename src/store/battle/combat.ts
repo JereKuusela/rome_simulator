@@ -4,7 +4,7 @@ import { TerrainDefinition, TerrainCalc } from '../terrains'
 import { TacticDefinition, TacticCalc } from '../tactics'
 import { RowType, Armies } from '../land_battle'
 import { CombatParameter } from '../settings'
-import { calculateValue, addBaseValues, addLossValues, mergeValues } from '../../base_definition'
+import { calculateValue, addValues, mergeValues, ValuesType } from '../../base_definition'
 
 type Army = List<Unit | undefined>
 type Reserve = List<Unit>
@@ -329,7 +329,7 @@ const applyLosses = (row: Army, losses: Loss[], round: number): Army => {
   for (let i = 0; i < row.size; ++i) {
     if (row.get(i)) {
       const loss_values: [UnitCalc, number][] = [[UnitCalc.Morale, losses[i].morale], [UnitCalc.Manpower, losses[i].manpower]]
-      row = row.update(i, unit => unit && addLossValues(unit, 'Round ' + round, loss_values))
+      row = row.update(i, unit => unit && addValues(unit, ValuesType.Loss, 'Round ' + round, loss_values))
     }
   }
   return row
@@ -339,7 +339,7 @@ const applyKills = (row: Army, kills: Kill[], round: number): Army => {
   for (let i = 0; i < row.size; ++i) {
     if (row.get(i)) {
       const kill_values: [UnitCalc, number][] = [[UnitCalc.MoraleDepleted, kills[i].morale], [UnitCalc.ManpowerDepleted, kills[i].manpower]]
-      row = row.update(i, unit => unit && addBaseValues(unit, 'Round ' + round, kill_values))
+      row = row.update(i, unit => unit && addValues(unit, ValuesType.Base, 'Round ' + round, kill_values))
     }
   }
   return row
