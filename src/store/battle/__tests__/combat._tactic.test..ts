@@ -4,7 +4,7 @@ import { getInitialArmy, Participant } from '../../land_battle/types'
 import { getDefaultDefinitions as getDefaultTacticDefinitions, TacticType } from '../../tactics'
 import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, TerrainDefinition } from '../../terrains'
 import { getDefaultDefinitions as getDefaultUnitDefinitions, getDefaultGlobalDefinition, UnitType, UnitCalc, UnitDefinition, ArmyName } from '../../units'
-import { addModifierValue, mergeValues } from '../../../base_definition'
+import { addValues, ValuesType, mergeValues } from '../../../base_definition'
 import { settingsState } from '../../settings'
 import { verifyCenterUnits, setRolls, setTactics, setCenterUnits } from './utils'
 
@@ -13,7 +13,7 @@ describe('1 vs 1', () => {
   const tactics = getDefaultTacticDefinitions()
   const terrains = getDefaultTerrainDefinitions()
   const units = getDefaultUnitDefinitions().map(unit => mergeValues(unit, global_stats))
-  const unit = addModifierValue(units.get(UnitType.Archers)!, 'Initial', UnitCalc.Morale, -0.2)
+  const unit = addValues(units.get(UnitType.Archers)!, ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.2]])
   const definitions = Map<ArmyName, Map<UnitType, UnitDefinition>>().set(ArmyName.Attacker, units).set(ArmyName.Defender, units)
   const settings = settingsState.combat
 

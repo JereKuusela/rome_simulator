@@ -4,7 +4,7 @@ import { getInitialArmy, getInitialTerrains, Participant } from '../../land_batt
 import { getDefaultDefinitions as getDefaultTacticDefinitions, TacticType } from '../../tactics'
 import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, TerrainDefinition } from '../../terrains'
 import { getDefaultDefinitions as getDefaultUnitDefinitions, UnitType, UnitCalc, UnitDefinition, ArmyName } from '../../units'
-import { addBaseValue, addModifierValue, addLossValue, calculateValue} from '../../../base_definition'
+import { addValues, ValuesType, calculateValue} from '../../../base_definition'
 import { settingsState } from '../../settings'
 
 describe('multi', () => {
@@ -27,21 +27,21 @@ describe('multi', () => {
     }
   }
   const round = (attacker: Participant, defender: Participant, terrains: List<TerrainDefinition>, round: number): [Participant, Participant] => {
-    const [attacker_new_army, defender_new_army] = battle(definitions, {...attacker, tactic: tactics.get(attacker.tactic)!}, {...defender, tactic: tactics.get(defender.tactic)!}, round, terrains, settings)
-    return [{ ...attacker, army: attacker_new_army }, { ...defender, army: defender_new_army }]
+    const [a, d] = battle(definitions, {...attacker, tactic: tactics.get(attacker.tactic)!, name: ArmyName.Attacker}, {...defender, tactic: tactics.get(defender.tactic)!, name: ArmyName.Defender}, round, terrains, settings)
+    return [{ ...attacker, ...a }, { ...defender, ...d }]
   }
 
   it('should work without modifiers', () => {
-    const unit = addBaseValue(addModifierValue(units.get(UnitType.Archers)!, 'Initial', UnitCalc.Morale, -0.2), 'Test', UnitCalc.MoraleDamageTaken, -0.25)
+    const unit = addValues(addValues(units.get(UnitType.Archers)!, ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.2]]), ValuesType.Loss, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25]])
     const terrain = getInitialTerrains().push(TerrainType.Forest).map(type => terrains.get(type)!)
 
 
     const getAttacker = (type: UnitType, morale: number) => {
-      return addLossValue(addBaseValue(addModifierValue(units.get(type)!, 'Initial', UnitCalc.Morale, 0.05), 'Test', UnitCalc.Discipline, 0.109), 'Test', UnitCalc.Morale, 3.15 - morale)
+      return addValues(addValues(addValues(units.get(type)!, ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, 0.05]]), ValuesType.Base, 'Test', [[UnitCalc.Discipline, 0.109]]), ValuesType.Loss, 'Test', [[UnitCalc.Morale, 3.15 - morale]])
     }
 
     const getDefender = (type: UnitType, morale: number) => {
-      return addLossValue(addBaseValue(addModifierValue(units.get(type)!, 'Initial', UnitCalc.Morale, 0.05), 'Test', UnitCalc.Discipline, 0.03), 'Test', UnitCalc.Morale, 3.15 - morale)
+      return addValues(addValues(addValues(units.get(type)!, ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, 0.05]]), ValuesType.Base, 'Test', [[UnitCalc.Discipline, 0.03]]), ValuesType.Loss, 'Test', [[UnitCalc.Morale, 3.15 - morale]])
     }
 
     let attacker = getInitialArmy()

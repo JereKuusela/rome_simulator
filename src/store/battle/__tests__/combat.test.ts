@@ -4,7 +4,7 @@ import { getInitialArmy, Participant } from '../../land_battle/types'
 import { getDefaultDefinitions as getDefaultTacticDefinitions, TacticType } from '../../tactics'
 import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, TerrainDefinition } from '../../terrains'
 import { getDefaultDefinitions as getDefaultUnitDefinitions, getDefaultGlobalDefinition, UnitType, UnitCalc, UnitDefinition, ArmyName } from '../../units'
-import { addBaseValue, addBaseValues, addModifierValue, mergeValues } from '../../../base_definition'
+import { addValues, ValuesType, mergeValues } from '../../../base_definition'
 import { settingsState } from '../../settings'
 import { verifyCenterUnits, setRolls, setTactics, setCenterUnits } from './utils'
 
@@ -13,7 +13,7 @@ describe('1 vs 1', () => {
   const tactics = getDefaultTacticDefinitions()
   const terrains = getDefaultTerrainDefinitions()
   const units = getDefaultUnitDefinitions().map(unit => mergeValues(unit, global_stats))
-  const unit = addModifierValue(units.get(UnitType.Archers)!, 'Initial', UnitCalc.Morale, -0.2)
+  const unit = addValues(units.get(UnitType.Archers)!, ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.2]])
   const definitions = Map<ArmyName, Map<UnitType, UnitDefinition>>().set(ArmyName.Attacker, units).set(ArmyName.Defender, units)
   const settings = settingsState.combat
 
@@ -41,7 +41,7 @@ describe('1 vs 1', () => {
   }
 
   it('should work without modifiers', () => {
-    const test_unit = addBaseValue(unit, 'Test', UnitCalc.MoraleDamageTaken, -0.25)
+    const test_unit = addValues(unit, ValuesType.Base, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25]])
     setCenterUnits(info, test_unit, test_unit)
     setRolls(info, 1, 3)
     doRound()
@@ -74,7 +74,7 @@ describe('1 vs 1', () => {
   })
 
   it('should work with extra strength damage taken', () => {
-    const test_unit = addBaseValues(unit, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitCalc.StrengthDamageTaken, 0.25]])
+    const test_unit = addValues(unit, ValuesType.Base, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitCalc.StrengthDamageTaken, 0.25]])
     setCenterUnits(info, test_unit, test_unit)
     setRolls(info, 3, 4)
     doRound()
@@ -90,7 +90,7 @@ describe('1 vs 1', () => {
   })
 
   it('should work with versus damage', () => {
-    const test_unit = addBaseValues(unit, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitType.Archers, 0.25]] as [UnitCalc | UnitType, number][])
+    const test_unit = addValues(unit, ValuesType.Base, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitType.Archers, 0.25]] as [UnitCalc | UnitType, number][])
     setCenterUnits(info, test_unit, test_unit)
     setRolls(info, 5, 1)
     doRound()
@@ -118,8 +118,8 @@ describe('1 vs 1', () => {
 
 
   it('should work with discipline', () => {
-    const unit_a = addBaseValues(unit, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitCalc.Discipline, 0.01]])
-    const unit_d = addBaseValues(unit, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitCalc.Discipline, 0.045]])
+    const unit_a = addValues(unit, ValuesType.Base, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitCalc.Discipline, 0.01]])
+    const unit_d = addValues(unit, ValuesType.Base, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitCalc.Discipline, 0.045]])
     setCenterUnits(info, unit_a, unit_d)
     setRolls(info, 6, 4)
     doRound()
