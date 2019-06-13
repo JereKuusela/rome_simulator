@@ -1,18 +1,17 @@
 import { battle } from '../combat'
 import { List, Map } from 'immutable'
 import { getInitialArmy, Participant, RowType } from '../../land_battle'
-import { getDefaultDefinitions as getDefaultTacticDefinitions, TacticType } from '../../tactics'
-import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, TerrainDefinition } from '../../terrains'
-import { getDefaultDefinitions as getDefaultUnitDefinitions, getDefaultGlobalDefinition, UnitType, UnitCalc, UnitDefinition, ArmyName } from '../../units'
-import { addModifierValue, mergeValues } from '../../../base_definition'
-import { settingsState } from '../../settings'
-import { verifyCenterUnits, setRolls, setTactics, setCenterUnits, verifyType } from './utils'
+import { TerrainDefinition } from '../../terrains'
+import { getDefaultDefinitions as getDefaultUnitDefinitions, getDefaultGlobalDefinition, UnitType, UnitDefinition, ArmyName } from '../../units'
+import { mergeValues } from '../../../base_definition'
+import { settingsState, CombatParameter } from '../../settings'
+import { verifyType } from './utils'
 
 describe('initial deployment', () => {
   const global_stats = getDefaultGlobalDefinition()
   const units = getDefaultUnitDefinitions().map(unit => mergeValues(unit, global_stats))
   const definitions = Map<ArmyName, Map<UnitType, UnitDefinition>>().set(ArmyName.Attacker, units).set(ArmyName.Defender, units)
-  const settings = settingsState.combat
+  let settings = settingsState.combat
   const row_types = Map<RowType, UnitType>().set(RowType.Front, '' as UnitType).set(RowType.Back, '' as UnitType).set(RowType.Flank, '' as UnitType)
   const every_type = [UnitType.Archers, UnitType.CamelCavalry, UnitType.Chariots, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.HorseArchers, UnitType.LightCavalry, UnitType.LightInfantry, UnitType.WarElephants]
 
@@ -26,6 +25,7 @@ describe('initial deployment', () => {
     info.attacker = { ...info.attacker, row_types }
     info.defender = getInitialArmy()
     info.defender = { ...info.defender, row_types }
+    settings = settingsState.combat
   })
   const getUnit = (type: UnitType) => units.get(type)!
   const setAttacker = (types: UnitType[]) => (info.attacker = { ...info.attacker, reserve: info.attacker.reserve.merge(types.map(type => getUnit(type))) })
@@ -39,13 +39,14 @@ describe('initial deployment', () => {
     info.attacker = { ...info.attacker, ...a }
     info.defender = { ...info.defender, ...d }
   }
-  const nextIndex = (index: number) => index < 15 ? index + 2 * (15 - index) : index - 2 * (index - 15) - 1
+  const nextIndex = (index: number, half: number) => index < half ? index + 2 * (half - index) : index - 2 * (index - half) - 1
 
   const verify = (types: UnitType[]) => {
-    let index = 15
+    const half = Math.floor(settings.get(CombatParameter.CombatWidth)! / 2.0)
+    let index = half
     for (const type of types) {
       verifyType(info.attacker.army.get(index), type, ' at index ' + index)
-      index = nextIndex(index)
+      index = nextIndex(index, half)
     }
   }
 
@@ -151,6 +152,19 @@ describe('initial deployment', () => {
     doRound()
     verify(result)
     expect(info.attacker.reserve.size).toEqual(3)
+  })
+  it('works with reduce combat width', () => {
+    settings = settings.set(CombatParameter.CombatWidth, 5)
+    setAttacker([UnitType.HorseArchers, UnitType.HorseArchers, UnitType.HorseArchers])
+    fillAttacker(UnitType.Archers)
+    fillDefender(UnitType.Archers)
+    const result = Array(5).fill(UnitType.Archers)
+    result[0] = UnitType.HorseArchers
+    result[1] = UnitType.HorseArchers
+    result[2] = UnitType.HorseArchers
+    doRound()
+    verify(result)
+    expect(info.attacker.reserve.size).toEqual(28)
   })
 })
 
