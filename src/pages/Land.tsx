@@ -40,7 +40,7 @@ class Land extends Component<IProps, IState> {
 
   closeModal = (): void => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null, modal_fast_planner_open: false, modal_row_info: null })
 
-  openUnitModal = (name: ArmyName, type: ArmyType, column: number, unit: UnitDefinition | undefined): void => {
+  openUnitModal = (name: ArmyName, type: ArmyType, column: number, unit: Unit | undefined): void => {
     if (unit)
       this.openArmyUnitModal(name, type, column)
     else

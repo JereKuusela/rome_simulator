@@ -97,7 +97,7 @@ class Stats extends Component<IProps> {
   }
 
   calculateValueSub = (army: List<Unit | undefined>, type: UnitType, attribute: UnitCalc): number => {
-    return army.reduce((previous, current) => previous + (current && current.type === type ? Math.max(0, calculateValue(current, attribute)) : 0), 0)
+    return army.reduce((previous, current) => previous + (current && !current.is_defeated && current.type === type ? Math.max(0, calculateValue(current, attribute)) : 0), 0)
   }
 
   calculateValueWithoutLoss = (participant: Armies, type: UnitType, attribute: UnitCalc): number => {
@@ -105,14 +105,14 @@ class Stats extends Component<IProps> {
   }
 
   calculateValueWithoutLossSub = (army: List<Unit | undefined>, type: UnitType, attribute: UnitCalc): number => {
-    return army.reduce((previous, current) => previous + (current && current.type === type ? calculateValueWithoutLoss(current, attribute) : 0), 0)
+    return army.reduce((previous, current) => previous + (current && !current.is_defeated && current.type === type ? calculateValueWithoutLoss(current, attribute) : 0), 0)
   }
 
   countUnits = (army: Armies, type: UnitType): number => {
     return this.countUnitsSub(army.army, type) + this.countUnitsSub(army.reserve, type) + this.countUnitsSub(army.defeated, type)
   }
 
-  countUnitsSub = (army: List<Unit | undefined>, type: UnitType): number => army.reduce((previous, current) => previous + (current && current.type === type ? 1 : 0), 0)
+  countUnitsSub = (army: List<Unit | undefined>, type: UnitType): number => army.reduce((previous, current) => previous + (current && !current.is_defeated && current.type === type ? 1 : 0), 0)
 }
 
 const mapStateToProps = (state: AppState) => ({

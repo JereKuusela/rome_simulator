@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { List } from 'immutable'
 import { Table, Image } from 'semantic-ui-react'
-import { UnitCalc, UnitDefinition } from '../store/units'
+import { UnitCalc, Unit } from '../store/units'
 import { calculateValueWithoutLoss} from '../base_definition'
 import IconCost from '../images/cost.png'
 import IconSupplyLimit from '../images/supply_limit.png'
@@ -9,12 +9,12 @@ import IconManpower from '../images/manpower.png'
 
 
 interface IProps {
-  army_a?: List<UnitDefinition | undefined>
-  army_d?: List<UnitDefinition | undefined>
-  reserve_a?: List<UnitDefinition>
-  reserve_d?: List<UnitDefinition>
-  defeated_a?: List<UnitDefinition>
-  defeated_d?: List<UnitDefinition>
+  army_a?: List<Unit | undefined>
+  army_d?: List<Unit | undefined>
+  reserve_a?: List<Unit>
+  reserve_d?: List<Unit>
+  defeated_a?: List<Unit>
+  defeated_d?: List<Unit>
   attached?: boolean
 }
 
@@ -55,8 +55,8 @@ export default class ArmyCosts extends Component<IProps> {
     )
   }
 
-  calculateTotal = (attribute: UnitCalc, base: number, army?: List<UnitDefinition | undefined>, reserve?: List<UnitDefinition>, defeated?: List<UnitDefinition>): number => {
-    return (army ? army.reduce((previous, current) => previous + (current ? calculateValueWithoutLoss(current, attribute) + base : 0), 0) : 0)
+  calculateTotal = (attribute: UnitCalc, base: number, army?: List<Unit | undefined>, reserve?: List<Unit>, defeated?: List<Unit>): number => {
+    return (army ? army.reduce((previous, current) => previous + (current && !current.is_defeated ? calculateValueWithoutLoss(current, attribute) + base : 0), 0) : 0)
       + (reserve ? reserve.reduce((previous, current) => previous + calculateValueWithoutLoss(current, attribute) + base, 0) : 0)
       + (defeated ? defeated.reduce((previous, current) => previous + calculateValueWithoutLoss(current, attribute) + base, 0) : 0)
   }

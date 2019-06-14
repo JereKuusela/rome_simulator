@@ -46,11 +46,7 @@ export const mergeBaseValues = <Definition extends AnyDefinition | undefined>
     base_values = base_values.mergeDeep(definition.base_values)
   if (to_merge && to_merge.base_values)
     base_values = base_values.mergeDeep(to_merge.base_values)
-  // Other properties can't be merged because some can be undefined on purpose.
-  if (definition)
-    return { ...definition, base_values }
-  else
-    return { ...to_merge, base_values }
+  return { ...to_merge, ...definition, base_values }
 }
 
 /**
@@ -75,11 +71,7 @@ export const mergeValues = <Definition extends AnyBaseDefinition | undefined>
     loss_values = loss_values.mergeDeep(definition.loss_values)
   if (to_merge && to_merge.loss_values)
     loss_values = loss_values.mergeDeep(to_merge.loss_values)
-  // Other properties can't be merged because some can be undefined on purpose.
-  if (definition)
-    return { ...definition, base_values, modifier_values, loss_values }
-  else
-    return { ...to_merge, base_values, modifier_values, loss_values }
+  return { ...to_merge, ...definition,  base_values, modifier_values, loss_values }
 }
 
 export const addValues = <Definition extends AnyDefinition, Attribute>

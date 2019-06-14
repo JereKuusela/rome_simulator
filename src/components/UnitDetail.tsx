@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import { OrderedSet, Map } from 'immutable'
 import { Table, Input } from 'semantic-ui-react'
-import { UnitType, UnitDefinition, UnitCalc, ArmyName, ValueType, valueToString } from '../store/units'
+import { UnitType, Unit, UnitDefinition, UnitCalc, ArmyName, ValueType, valueToString } from '../store/units'
 import { TerrainType } from '../store/terrains'
 import { getBaseValue, getLossValue, getModifierValue, explain } from '../base_definition'
 
 interface IProps {
   readonly name: ArmyName
   readonly custom_value_key: string
-  readonly unit: UnitDefinition
+  readonly unit: Unit
   readonly unit_types: OrderedSet<UnitType>
   readonly units: Map<any, Map<UnitType, UnitDefinition>>
   readonly show_statistics: boolean
@@ -97,7 +97,7 @@ export default class UnitDetail extends Component<IProps> {
     )
   }
 
-  renderRow = (unit: UnitDefinition, attribute: ValueType): JSX.Element | null => {
+  renderRow = (unit: Unit, attribute: ValueType): JSX.Element | null => {
     if (attribute === UnitCalc.MovementSpeed || attribute === UnitCalc.Upkeep || attribute === UnitCalc.RecruitTime)
       return null
     if (!this.props.show_statistics && (attribute === UnitCalc.ManpowerDepleted || attribute === UnitCalc.MoraleDepleted))
@@ -119,6 +119,7 @@ export default class UnitDetail extends Component<IProps> {
             size='mini'
             style={{ width: 50 }}
             defaultValue={base_value}
+            disabled={unit.is_defeated}
             onChange={(_, data) => this.props.onCustomBaseValueChange(this.props.name, unit.type, this.props.custom_value_key, attribute, Number(data.value))
             }
           />
@@ -130,6 +131,7 @@ export default class UnitDetail extends Component<IProps> {
               size='mini'
               style={{ width: 50 }}
               defaultValue={modifier_value}
+              disabled={unit.is_defeated}
               onChange={(_, data) => this.props.onCustomModifierValueChange(this.props.name, unit.type, this.props.custom_value_key, attribute, Number(data.value))}
             />
           }
@@ -141,6 +143,7 @@ export default class UnitDetail extends Component<IProps> {
               size='mini'
               style={{ width: 50 }}
               defaultValue={loss_value}
+              disabled={unit.is_defeated}
               onChange={(_, data) => this.props.onCustomLossValueChange(this.props.name, unit.type, this.props.custom_value_key, attribute, Number(data.value))}
             />
           }

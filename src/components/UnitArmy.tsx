@@ -1,15 +1,16 @@
 import React, { Component } from 'react'
 import { List } from 'immutable'
 import { Table, Image, Icon } from 'semantic-ui-react'
-import { UnitDefinition, UnitCalc, ArmyType } from '../store/units'
+import { Unit, UnitCalc, ArmyType } from '../store/units'
 import { calculateValue, calculateValueWithoutLoss, getImage } from '../base_definition'
+import IconDefeated from '../images/attrition.png'
 
 
 interface IProps {
-  units?: List<UnitDefinition | undefined>
+  units?: List< Unit | undefined>
   row_width: number
   reverse: boolean
-  onClick: (index: number, unit: UnitDefinition | undefined) => void
+  onClick: (index: number, unit: Unit | undefined) => void
   type: ArmyType
 }
 
@@ -39,7 +40,7 @@ export default class UnitArmy extends Component<IProps> {
         <Table.Body>
           {
             rows.map(row => (
-              <Table.Row key={row}>
+              <Table.Row key={row} textAlign='center'>
                 <Table.Cell>
                   <Icon fitted size='small' name={this.getIcon()}></Icon>
                 </Table.Cell>
@@ -47,7 +48,7 @@ export default class UnitArmy extends Component<IProps> {
                   columns.map(column => {
                     const unit = column > -1 && this.props.units ? this.props.units.get(row * this.props.row_width + column) : undefined
                     return (
-                      <Table.Cell
+                      <Table.Cell textAlign='center'
                       key={column}
                       disabled={column < 0}
                       selectable
@@ -57,7 +58,7 @@ export default class UnitArmy extends Component<IProps> {
                         {
                           <div style={{ background: this.gradient(unit, MANPOWER_COLOR, UnitCalc.Manpower) }}>
                             <div style={{ background: this.gradient(unit, MORALE_COLOR, UnitCalc.Morale) }}>
-                              <Image src={getImage(unit)} avatar />
+                              <Image src={unit && unit.is_defeated ? IconDefeated : getImage(unit)} avatar style={{margin: 0}}/>
                             </div>
                           </div>
                         }
@@ -83,12 +84,12 @@ export default class UnitArmy extends Component<IProps> {
     return 'square full'
   }
 
-  gradient = (unit: UnitDefinition | undefined, color: string, attribute: UnitCalc): string => {
+  gradient = (unit: Unit | undefined, color: string, attribute: UnitCalc): string => {
     return 'linear-gradient(0deg, ' + color + ' 0%, ' + color + ' ' + this.percent(unit, attribute) + '%, ' + WHITE_COLOR + ' ' + this.percent(unit, attribute) + '%, ' + WHITE_COLOR + ' 100%)'
   }
 
-  percent = (unit: UnitDefinition | undefined, attribute: UnitCalc): number => {
-    if (!unit)
+  percent = (unit: Unit | undefined, attribute: UnitCalc): number => {
+    if (!unit || unit.is_defeated)
       return 0
     return 100.0 - 100.0 * calculateValue(unit, attribute) / calculateValueWithoutLoss(unit, attribute)
   }

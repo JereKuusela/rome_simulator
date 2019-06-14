@@ -35,6 +35,7 @@ export enum UnitCalc {
 export type ValueType = UnitCalc | UnitType | TerrainType
 
 export interface Unit extends BaseDefinition<UnitType, ValueType> {
+  readonly is_defeated?: boolean
 }
 
 export interface UnitDefinition extends BaseDefinition<UnitType, ValueType> {
@@ -42,7 +43,7 @@ export interface UnitDefinition extends BaseDefinition<UnitType, ValueType> {
   readonly can_assault: boolean
 }
 
-export const valueToString = (definition: UnitDefinition, type: ValueType): string => {
+export const valueToString = (definition: BaseDefinition<UnitType, ValueType>, type: ValueType): string => {
   const value = calculateValue(definition, type)
   switch (type) {
     case UnitCalc.Cost:
