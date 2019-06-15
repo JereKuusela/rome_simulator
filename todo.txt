@@ -21,7 +21,6 @@ Armies page:
 
 Battle:
 - Tactic selector should show efficieny for all tactics
-- Unit detail should have dropdown to change type
 - Row type: None available as option
 - Create and remove: Clear button seems like ok button -> at least color to red and perhaps move somewhere else...
 - Arrows to show which unit attacked which one
