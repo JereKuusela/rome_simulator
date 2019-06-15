@@ -1,5 +1,9 @@
 Release 3:
 
+Navigation?
+- Toggle for simple mode, enabled by default: disables army page, disabled army selectio, unit / terrain / tactic management
+- Proper footer with copyright stuff for PDX?
+
 Tests (high priority):
 - base_definition functions tested
 
@@ -21,7 +25,6 @@ Battle:
 - Row type: None available as option
 - Create and remove: Clear button seems like ok button -> at least color to red and perhaps move somewhere else...
 - Arrows to show which unit attacked which one
-- Death icons for one turn (like in-game?), perhaps link to the unit so dead units would be removed at start of combat
 
 Release 4:
 

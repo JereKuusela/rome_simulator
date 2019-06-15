@@ -1,8 +1,10 @@
 import { Map, OrderedSet } from 'immutable'
 import { createReducer } from 'typesafe-actions'
 import { getDefaultDefinitions, getDefaultTypes, getDefaultGlobalDefinition } from './data'
-import { setValue, setGlobalValue, deleteUnit, addUnit, changeImage, changeType, deleteArmy, createArmy, changeName, duplicateArmy } from './actions'
-import { UnitType, UnitDefinition, ArmyName } from './types'
+import { 
+  UnitType, UnitDefinition, ArmyName,
+  setValue, setGlobalValue, deleteUnit, addUnit, changeImage, changeType, deleteArmy, createArmy, changeName, duplicateArmy
+} from './actions'
 import { addValues } from '../../base_definition'
 
 export const unitsState = {

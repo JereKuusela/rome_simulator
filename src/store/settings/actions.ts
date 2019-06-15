@@ -15,7 +15,6 @@ export enum CombatParameter {
   CombatWidth = 'CombatWidth',
   FlankTargetsOwnEdge = 'FlankTargetsOwnEdge',
   ReinforceFirst = 'ReinforceFirst'
-
 }
 
 export const parameterToDescription = (parameter: CombatParameter): string => {

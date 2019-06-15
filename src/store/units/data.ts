@@ -1,5 +1,5 @@
 import { OrderedMap, Map, OrderedSet, fromJS } from 'immutable'
-import { UnitType, UnitDefinition, UnitCalc, ValueType, Unit } from './types'
+import { UnitType, UnitDefinition, UnitCalc, ValueType, Unit } from './actions'
 import { addValues, ValuesType } from '../../base_definition'
 import IconArcher from '../../images/archers.png'
 import IconCamelCavalry from '../../images/camel_cavalry.png'
@@ -39,7 +39,6 @@ export const getDefaultDefinitions = (): OrderedMap<UnitType, UnitDefinition> =>
   return map
 }
 
-
 export const unitFromJS = (object: Map<string, any>): Unit | undefined => {
   if (!object)
     return undefined
@@ -63,7 +62,6 @@ export const unitDefinitionFromJS = (object: Map<string, any>): UnitDefinition |
   const loss_values = object.has('loss_values') ? fromJS(object.get('loss_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
   return { type, image, requirements: object.get('requirements'), can_assault: object.get('can_assault'), base_values, modifier_values, loss_values }
 }
-
 
 export const getDefaultGlobalDefinition = (): UnitDefinition => {
   const unit = { type: '' as UnitType, image: IconMilitaryPower, requirements: '', can_assault: false }

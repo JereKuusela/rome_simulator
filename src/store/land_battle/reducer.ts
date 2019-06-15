@@ -1,7 +1,9 @@
 import { createReducer } from 'typesafe-actions'
 import { List, Map } from 'immutable'
-import { getInitialArmy, getInitialTerrains, Participant, PastState, ParticipantType } from './types'
-import { clearUnits, selectUnit, selectTerrain, selectTactic, undo, toggleRandomRoll, setRoll, setGeneral, setRowType, removeReserveUnits, addReserveUnits, setFlankSize, selectArmy } from './actions'
+import {
+  getInitialArmy, getInitialTerrains, Participant, PastState, ParticipantType,
+  clearUnits, selectUnit, selectTerrain, selectTactic, undo, toggleRandomRoll, setRoll, setGeneral, setRowType, removeReserveUnits, addReserveUnits, setFlankSize, selectArmy
+} from './actions'
 import { Unit, UnitType, ArmyType, ArmyName, deleteArmy, createArmy, changeName, duplicateArmy } from '../units'
 
 export const initialState = {

@@ -1,6 +1,7 @@
 import { Map, OrderedMap, OrderedSet, fromJS } from 'immutable'
-import { calculateValue, BaseValuesDefinition, toPercent, addValues, ValuesType } from '../../base_definition'
-import { UnitType } from '../units/types'
+import { TacticType, TacticCalc, TacticDefinition, ValueType } from './actions'
+import { addValues, ValuesType } from '../../base_definition'
+import { UnitType } from '../units/'
 import IconBottleneck from '../../images/bottleneck.png'
 import IconCavalrySkirmish from '../../images/cavalry_skirmish.png'
 import IconDeception from '../../images/deception.png'
@@ -12,23 +13,6 @@ import IconShockAction from '../../images/shock_action.png'
 import IconSkirmishing from '../../images/skirmishing.png'
 import IconTriplexAcies from '../../images/triplex_acies.png'
 import * as data from './tactics.json'
-
-export enum TacticCalc {
-  Casualties = 'Casualties'
-}
-
-export enum TacticType {
-  Bottleneck = 'Bottleneck',
-  CavalrySkirmish = 'Cavalry Skirmish',
-  Deception = 'Deception',
-  Envelopment = 'Envelopment',
-  HitAndRun = 'Hit-and-Run',
-  PadmaVyuha = 'Padma Vyuha',
-  Phalanx = 'Phalanx',
-  ShockAction = 'Shock Action',
-  Skirmishing = 'Skirmishing',
-  TriplexAcies = 'Triplex Acies'
-}
 
 const tactic_to_icon = Map<TacticType, string>()
   .set(TacticType.Bottleneck, IconBottleneck)
@@ -51,9 +35,6 @@ export const getDefaultDefinitions = (): OrderedMap<TacticType, TacticDefinition
   return map
 }
 
-export type ValueType = UnitType | TacticCalc | TacticType
-
-
 export const getDefaultTypes = (): OrderedSet<TacticType> => {
   const tactics = Object.keys(TacticType).map(k => TacticType[k as any]) as TacticType[]
   return OrderedSet<TacticType>(tactics)
@@ -68,14 +49,6 @@ export const tacticFromJS = (object: Map<string, any>): TacticDefinition | undef
     image = tactic_to_icon.get(type) || ''
   let base_values = object.has('base_values') ? fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined 
   return { type, image, base_values }
-}
-
-export interface TacticDefinition extends BaseValuesDefinition<TacticType, ValueType> {
-}
-
-export const valueToString = (definition: TacticDefinition, type: ValueType): string => {
-  const value = calculateValue(definition, type)
-  return toPercent(value, true)
 }
 
 const createTacticFromJson = (data: TacticData): TacticDefinition => {
@@ -128,5 +101,4 @@ interface TacticData {
   skirmishing?: number,
   triplex_acies?: number,
   casualties?: number
-
 }
