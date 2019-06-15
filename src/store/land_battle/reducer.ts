@@ -207,4 +207,3 @@ export const landBattleReducer = createReducer(initialState)
       fight_over: true
     }
   })
-

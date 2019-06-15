@@ -54,13 +54,13 @@ export const battle = (definitions: Definitions, attacker: ParticipantState, def
   a = removeDefeated(a)
   d = removeDefeated(d)
   a = reinforce(a, definitions.get(attacker.name)!, round, attacker.row_types, attacker.flank_size, countArmySize(d), undefined)
-  let definitions_a: Army = a.army.map(value => value && mergeValues(value, definitions.getIn([ArmyName.Attacker, value.type])))
+  let definitions_a: Army = a.army.map(value => value && mergeValues(value, definitions.getIn([attacker.name, value.type])))
   if (settings.get(CombatParameter.ReinforceFirst))
     d = reinforce(d, definitions.get(defender.name)!, round, defender.row_types, defender.flank_size, countArmySize(a), undefined)
   let a_to_d = pickTargets(definitions_a, d.army, !!settings.get(CombatParameter.FlankTargetsOwnEdge))
   if (!settings.get(CombatParameter.ReinforceFirst))
     d = reinforce(d, definitions.get(defender.name)!, round, defender.row_types, defender.flank_size, countArmySize(a), a_to_d)
-  let definitions_d: Army = d.army.map(value => value && mergeValues(value, definitions.getIn([ArmyName.Defender, value.type])))
+  let definitions_d: Army = d.army.map(value => value && mergeValues(value, definitions.getIn([defender.name, value.type])))
   let d_to_a = pickTargets(definitions_d, a.army, !!settings.get(CombatParameter.FlankTargetsOwnEdge))
   if (round < 1)
     return [a, d]
@@ -272,7 +272,7 @@ const pickTargets = (source_row: Army, target_row: Army, flank_targets_near_own_
     if (!source)
       return
     let target_index: number | null = null
-    if (target_row.get(source_index) )
+    if (target_row.get(source_index))
       target_index = source_index
     else {
       const maneuver = calculateValue(source, UnitCalc.Maneuver)
@@ -333,10 +333,8 @@ export const calculateTactic = (front: Army, tactic?: TacticDefinition, counter_
  */
 const applyLosses = (row: Army, losses: Loss[], round: number): Army => {
   for (let i = 0; i < row.size; ++i) {
-    if (row.get(i)) {
-      const loss_values: [UnitCalc, number][] = [[UnitCalc.Morale, losses[i].morale], [UnitCalc.Manpower, losses[i].manpower]]
-      row = row.update(i, unit => unit && addValues(unit, ValuesType.Loss, 'Round ' + round, loss_values))
-    }
+    const loss_values: [UnitCalc, number][] = [[UnitCalc.Morale, losses[i].morale], [UnitCalc.Manpower, losses[i].manpower]]
+    row = row.update(i, unit => unit && addValues(unit, ValuesType.Loss, 'Round ' + round, loss_values))
   }
   return row
 }
@@ -358,11 +356,11 @@ const removeDefeated = (armies: Armies): Armies => {
 
 const copyDefeated = (armies: Armies, definitions: Army, minimum_morale: number, minimum_manpower: number): Armies => {
   let defeated = armies.defeated
-  const army = armies.army.map((_, index) => {
-    const unit = definitions.get(index)
-    if (!unit)
+  const army = armies.army.map((unit, index) => {
+    const definition = definitions.get(index)
+    if (!definition || !unit)
       return undefined
-    if (calculateValue(unit, UnitCalc.Manpower) > minimum_manpower && calculateValue(unit, UnitCalc.Morale) > minimum_morale)
+    if (calculateValue(definition, UnitCalc.Manpower) > minimum_manpower && calculateValue(definition, UnitCalc.Morale) > minimum_morale)
       return unit
     defeated = defeated.push(unit)
     return { ...unit, is_defeated: true }

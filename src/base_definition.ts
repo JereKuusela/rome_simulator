@@ -71,20 +71,18 @@ export const mergeValues = <Definition extends AnyBaseDefinition | undefined>
     loss_values = loss_values.mergeDeep(definition.loss_values)
   if (to_merge && to_merge.loss_values)
     loss_values = loss_values.mergeDeep(to_merge.loss_values)
-  return { ...to_merge, ...definition,  base_values, modifier_values, loss_values }
+  return { ...to_merge, ...definition, base_values, modifier_values, loss_values }
 }
 
 export const addValues = <Definition extends AnyDefinition, Attribute>
   (definition: Definition, type: ValuesType, key: string, values: [Attribute, number][]): Definition => {
   if (type === ValuesType.Base)
     return { ...definition, base_values: subAddValues(definition.base_values, key, values) }
-  if (isBaseDefinition(definition)) {
-    const any = definition as any
-    if (type === ValuesType.Modifier)
-      return { ...definition, modifier_values: subAddValues(any.modifier_values, key, values) }
-    if (type === ValuesType.Loss)
-      return { ...definition, loss_values: subAddValues(any.loss_values, key, values) }
-  }
+  const any = definition as any
+  if (type === ValuesType.Modifier)
+    return { ...definition, modifier_values: subAddValues(any.modifier_values, key, values) }
+  if (type === ValuesType.Loss)
+    return { ...definition, loss_values: subAddValues(any.loss_values, key, values) }
   return definition
 }
 
@@ -116,9 +114,7 @@ export const calculateValue = <Definition extends AnyDefinition, Attribute>
   (definition: Definition | undefined, attribute: Attribute): number => {
   if (!definition)
     return 0.0
-  let value = calculateBase(definition, attribute)
-  if (isBaseDefinition(definition))
-    value = value * calculateModifier(definition, attribute) - calculateLoss(definition, attribute)
+  let value = calculateBase(definition, attribute) * calculateModifier(definition, attribute) - calculateLoss(definition, attribute)
   return round(value)
 }
 
@@ -131,9 +127,7 @@ export const calculateValueWithoutLoss = <Definition extends AnyDefinition, Attr
   (definition: Definition | undefined, attribute: Attribute): number => {
   if (!definition)
     return 0.0
-  let value = calculateBase(definition, attribute)
-  if (isBaseDefinition(definition))
-    value = value * calculateModifier(definition, attribute)
+  let value = calculateBase(definition, attribute) * calculateModifier(definition, attribute)
   return round(value)
 }
 
@@ -353,12 +347,4 @@ export const toRelativeZeroPercent = (number: number, show_zero: boolean): strin
   if (value === 0 && show_zero)
     return '+0%'
   return String(value) + '%'
-}
-
-/**
- * A type guard to handle differently definitions with only base values.
- * @param definition 
- */
-const isBaseDefinition = (definition: AnyDefinition): definition is BaseDefinition<any, any> => {
-  return (definition as BaseDefinition<any, any>).modifier_values !== undefined
 }

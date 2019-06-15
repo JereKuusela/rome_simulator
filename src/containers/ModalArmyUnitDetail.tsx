@@ -40,6 +40,8 @@ class ModalArmyUnitDetail extends Component<IProps> {
             unit={this.getUnitDefinition(this.props.info)}
             units={this.props.units}
             unit_types={unit_types}
+            unit_types_as_dropdown={true}
+            onTypeChange={this.changeType}
             onCustomBaseValueChange={this.setBaseValue}
             onCustomModifierValueChange={this.setModifierValue}
             onCustomLossValueChange={this.setLossValue}
@@ -73,6 +75,13 @@ class ModalArmyUnitDetail extends Component<IProps> {
     if (!this.props.info)
       return
     const unit = addValues(this.unit, ValuesType.Loss, key, [[attribute, value]])
+    this.props.selectUnit(name, this.props.info.type, this.props.info.index, unit)
+  }
+
+  changeType = (name: ArmyName, old_type: UnitType, new_type: UnitType): void => {
+    if (!this.props.info)
+      return
+    const unit = { ...this.unit, type: new_type }
     this.props.selectUnit(name, this.props.info.type, this.props.info.index, unit)
   }
 

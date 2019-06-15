@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { OrderedSet, Map } from 'immutable'
-import { Table, Input } from 'semantic-ui-react'
+import { Table, Input, Dropdown } from 'semantic-ui-react'
 import { UnitType, Unit, UnitDefinition, UnitCalc, ArmyName, ValueType, valueToString } from '../store/units'
 import { TerrainType } from '../store/terrains'
 import { getBaseValue, getLossValue, getModifierValue, explain } from '../base_definition'
@@ -13,6 +13,7 @@ interface IProps {
   readonly units: Map<any, Map<UnitType, UnitDefinition>>
   readonly show_statistics: boolean
   readonly terrains: OrderedSet<TerrainType>
+  readonly unit_types_as_dropdown?: boolean
   readonly onCustomBaseValueChange: (identnameifier: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
   readonly onCustomModifierValueChange: (name: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
   readonly onCustomLossValueChange: (name: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
@@ -26,6 +27,27 @@ export default class UnitDetail extends Component<IProps> {
   readonly attributes = Object.keys(UnitCalc).map(k => UnitCalc[k as any]) as UnitCalc[]
   readonly units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
   readonly headers = ['Attribute', 'Value', 'Custom base', 'Custom modifier', 'Custom losses', 'Explained']
+
+  renderUnitTypeDropdown = (name: ArmyName, type: UnitType): JSX.Element => {
+    return (
+      <Dropdown
+        text={type}
+        selection
+        value={type}
+        disabled={this.props.unit.is_defeated}
+      >
+        <Dropdown.Menu>
+          {
+            this.props.unit_types.map(key => (
+              <Dropdown.Item value={key} text={key} key={key} active={type === key}
+                onClick={() => this.props.onTypeChange && this.props.onTypeChange(name, type, key)}
+              />
+            ))
+          }
+        </Dropdown.Menu>
+      </Dropdown>
+    )
+  }
 
   render(): JSX.Element {
 
@@ -50,11 +72,15 @@ export default class UnitDetail extends Component<IProps> {
                   Type
                 </Table.Cell>
                 <Table.Cell collapsing>
-                  <Input
-                    size='mini'
-                    defaultValue={this.props.unit.type}
-                    onChange={(_, data) => this.props.onTypeChange && this.props.onTypeChange(this.props.name, this.props.unit.type, data.value as UnitType)}
-                  />
+                  {this.props.unit_types_as_dropdown ?
+                    this.renderUnitTypeDropdown(this.props.name, this.props.unit.type) :
+                    <Input
+                      size='mini'
+                      disabled={this.props.unit.is_defeated}
+                      defaultValue={this.props.unit.type}
+                      onChange={(_, data) => this.props.onTypeChange && this.props.onTypeChange(this.props.name, this.props.unit.type, data.value as UnitType)}
+                    />
+                  }
                 </Table.Cell>
                 <Table.Cell />
                 <Table.Cell />
@@ -72,6 +98,7 @@ export default class UnitDetail extends Component<IProps> {
                 <Table.Cell collapsing>
                   <Input
                     size='mini'
+                    disabled={this.props.unit.is_defeated}
                     defaultValue={this.props.unit.image}
                     onChange={(_, data) => this.props.onImageChange && this.props.onImageChange(this.props.name, this.props.unit.type, data.value)}
                   />
