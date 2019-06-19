@@ -5,6 +5,7 @@ import { UnitType, ArmyName } from '../store/units'
 import { AppState } from '../store/'
 import { setRowType, RowType, } from '../store/land_battle'
 import ItemSelector from '../components/ItemSelector'
+import ItemRemover from '../components/ItemRemover'
 
 export interface ModalInfo {
   name: ArmyName
@@ -23,6 +24,10 @@ class ModalRowTypeSelector extends Component<IProps> {
     return (
       <Modal basic onClose={this.props.onClose} open centered={false}>
         <Modal.Content>
+          <ItemRemover
+            onClose={this.props.onClose}
+            onRemove={() => this.selectUnit(undefined)}
+          />
           <ItemSelector
             onClose={this.props.onClose}
             onSelection={this.selectUnit}
@@ -35,7 +40,7 @@ class ModalRowTypeSelector extends Component<IProps> {
   }
 
   selectUnit = (unit: UnitType | undefined): void => (
-    this.props.info && unit && 
+    this.props.info && 
     this.props.setRowType(this.props.info.name, this.props.info.type, unit)
   )
 }
@@ -46,7 +51,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setRowType: (name: ArmyName, type: RowType, unit: UnitType) => (
+  setRowType: (name: ArmyName, type: RowType, unit: UnitType | undefined) => (
     dispatch(setRowType(name, type, unit))
   )
 })

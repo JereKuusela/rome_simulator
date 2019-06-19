@@ -32,7 +32,7 @@ export interface ParticipantState {
   readonly tactic?: TacticDefinition
   readonly roll: number
   readonly general: number
-  readonly row_types: Map<RowType, UnitType>
+  readonly row_types: Map<RowType, UnitType | undefined>
   readonly flank_size: number
 }
 
@@ -132,7 +132,7 @@ const countArmySize = (armies: Armies): number => armies.army.reduce((previous, 
  * @param enemy_size Army size of the enemy
  * @param attacker_to_defender Selected targets as reinforcement may move units.
  */
-const reinforce = (armies: Armies, definitions: Definition, round: number, row_types: Map<RowType, UnitType>, flank_size: number, enemy_size: number, attacker_to_defender: (number | null)[] | undefined): Armies => {
+const reinforce = (armies: Armies, definitions: Definition, round: number, row_types: Map<RowType, UnitType | undefined>, flank_size: number, enemy_size: number, attacker_to_defender: (number | null)[] | undefined): Armies => {
   // 1: Empty spots get filled by back row.
   // 2: If still holes, units move towards center.
   // Backrow.

@@ -25,7 +25,7 @@ export interface Participant extends Armies {
   readonly roll: number
   readonly randomize_roll: boolean
   readonly general: number
-  readonly row_types: Map<RowType, UnitType>
+  readonly row_types: Map<RowType, UnitType | undefined>
   readonly flank_size: number
 }
 
@@ -44,7 +44,7 @@ export const getInitialArmy = (): Participant => ({
   tactic: TacticType.ShockAction,
   roll: 0,
   randomize_roll: true,
-  row_types: Map<RowType, UnitType>().set(RowType.Front, UnitType.Archers).set(RowType.Back, UnitType.HeavyInfantry).set(RowType.Flank, UnitType.LightCavalry),
+  row_types: Map<RowType, UnitType | undefined>().set(RowType.Front, UnitType.Archers).set(RowType.Back, UnitType.HeavyInfantry).set(RowType.Flank, UnitType.LightCavalry),
   flank_size: 5
 })
 
@@ -69,7 +69,7 @@ export const selectTactic = createAction('@@land_battle/SELECT_TACTIC', action =
 })
 
 export const setRowType = createAction('@@land_battle/SELECT_ROW_TYPE', action => {
-  return (name: ArmyName, row_type: RowType, unit: UnitType) => action({ name, row_type, unit })
+  return (name: ArmyName, row_type: RowType, unit: UnitType | undefined) => action({ name, row_type, unit })
 })
 
 export const battle = createAction('@@land_battle/BATTLE', action => {

@@ -105,7 +105,7 @@ export const transformLand = (state_raw: any): typeof initialState => {
     let defeated = initial.defeated
     if (participant.defeated)
       defeated = serializeUnits(fromJS(participant.defeated)).filter(value => value) as List<Unit>
-    let row_types: Map<RowType, UnitType>
+    let row_types: Map<RowType, UnitType | undefined>
     if (participant.row_types)
       row_types = fromJS(participant.row_types)
     else
