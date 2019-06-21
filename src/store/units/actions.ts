@@ -25,10 +25,10 @@ export enum UnitCalc {
   Offense = 'Offense',
   Defense = 'Defense',
   Maneuver = 'Maneuver',
-  MoraleDamageTaken = 'Morale damage taken',
-  StrengthDamageTaken = 'Strength damage taken',
   MoraleDamageDone = 'Morale damage done',
+  MoraleDamageTaken = 'Morale damage taken',
   StrengthDamageDone = 'Strength damage done',
+  StrengthDamageTaken = 'Strength damage taken',
   MovementSpeed = 'Movement speed',
   RecruitTime = 'Recruit time',
   Cost = 'Cost',
@@ -61,9 +61,6 @@ export const valueToString = (definition: BaseDefinition<UnitType, ValueType>, t
     case UnitCalc.RecruitTime:
     case UnitCalc.Upkeep:
       return (+(Math.max(0, calculateValue(definition, type)).toFixed(2))).toString()
-    case UnitCalc.Discipline:
-    case UnitCalc.Offense:
-    case UnitCalc.Defense:
     case UnitCalc.Experience:
       return toPercent(value, true)
     default:

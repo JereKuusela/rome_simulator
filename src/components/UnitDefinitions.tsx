@@ -8,6 +8,7 @@ import IconOffense from '../images/offense.png'
 import IconDefense from '../images/defense.png'
 import IconManpower from '../images/manpower.png'
 import IconMorale from '../images/morale.png'
+import IconAttrition from '../images/attrition.png'
 import { getImage, calculateValue, calculateBase, calculateModifier, calculateLoss, valueToNumber, valueToPercent, valueToRelativePercent, valueToRelativeZeroPercent, mergeValues } from '../base_definition'
 import ValueModal from './ValueModal'
 import Confirmation from './Confirmation'
@@ -96,11 +97,21 @@ export default class UnitDefinitions extends Component<IProps, IState> {
                 <Icon name='arrows alternate horizontal' size='big' />
               </Table.HeaderCell>
               <Table.HeaderCell>
-                Morale damage
+                <Image src={IconOffense} avatar />
+                <Image src={IconMorale} avatar />
               </Table.HeaderCell>
               <Table.HeaderCell>
-                Strength damage
-            </Table.HeaderCell>
+                <Image src={IconAttrition} avatar />
+                <Image src={IconMorale} avatar />
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <Image src={IconOffense} avatar />
+                <Image src={IconManpower} avatar />
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <Image src={IconAttrition} avatar />
+                <Image src={IconManpower} avatar />
+              </Table.HeaderCell>
               <Table.HeaderCell>
                 Experience
             </Table.HeaderCell>
@@ -172,28 +183,28 @@ export default class UnitDefinitions extends Component<IProps, IState> {
           {valueToNumber(unit, UnitCalc.Manpower, false)}
         </Table.Cell>
         <Table.Cell>
-          {valueToRelativePercent(unit, UnitCalc.Discipline, false)}
+          {valueToRelativeZeroPercent(unit, UnitCalc.Discipline, false)}
         </Table.Cell>
         <Table.Cell>
-          {valueToRelativePercent(unit, UnitCalc.Offense, false)}
+          {valueToRelativeZeroPercent(unit, UnitCalc.Offense, false)}
         </Table.Cell>
         <Table.Cell>
-          {valueToRelativePercent(unit, UnitCalc.Defense, false)}
+          {valueToRelativeZeroPercent(unit, UnitCalc.Defense, false)}
         </Table.Cell>
         <Table.Cell>
           {valueToNumber(unit, UnitCalc.Maneuver, false)}
         </Table.Cell>
         <Table.Cell>
-          {valueToRelativeZeroPercent(unit, UnitCalc.MoraleDamageTaken, false)}
-        </Table.Cell>
-        <Table.Cell>
-          {valueToRelativeZeroPercent(unit, UnitCalc.StrengthDamageTaken, false)}
-        </Table.Cell>
-        <Table.Cell>
           {valueToRelativeZeroPercent(unit, UnitCalc.MoraleDamageDone, false)}
         </Table.Cell>
         <Table.Cell>
+          {valueToRelativeZeroPercent(unit, UnitCalc.MoraleDamageTaken, false)}
+        </Table.Cell>
+        <Table.Cell>
           {valueToRelativeZeroPercent(unit, UnitCalc.StrengthDamageDone, false)}
+        </Table.Cell>
+        <Table.Cell>
+          {valueToRelativeZeroPercent(unit, UnitCalc.StrengthDamageTaken, false)}
         </Table.Cell>
         <Table.Cell>
           {valueToPercent(unit, UnitCalc.Experience, false)}
@@ -251,13 +262,13 @@ export default class UnitDefinitions extends Component<IProps, IState> {
           {this.renderAttributeList(unit, UnitCalc.Maneuver)}
         </Table.Cell>
         <Table.Cell>
+          {this.renderAttributeList(unit, UnitCalc.MoraleDamageDone)}
+        </Table.Cell>
+        <Table.Cell>
           {this.renderAttributeList(unit, UnitCalc.MoraleDamageTaken)}
         </Table.Cell>
         <Table.Cell>
           {this.renderAttributeList(unit, UnitCalc.StrengthDamageDone)}
-        </Table.Cell>
-        <Table.Cell>
-          {this.renderAttributeList(unit, UnitCalc.MoraleDamageDone)}
         </Table.Cell>
         <Table.Cell>
           {this.renderAttributeList(unit, UnitCalc.StrengthDamageTaken)}

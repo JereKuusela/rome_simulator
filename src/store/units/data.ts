@@ -66,9 +66,6 @@ export const unitDefinitionFromJS = (object: Map<string, any>): UnitDefinition |
 export const getDefaultGlobalDefinition = (): UnitDefinition => {
   const unit = { type: '' as UnitType, image: IconMilitaryPower, requirements: '', can_assault: false }
   const values: [UnitCalc, number][] = [
-    [UnitCalc.Offense, 1],
-    [UnitCalc.Defense, 1],
-    [UnitCalc.Discipline, 1],
     [UnitCalc.Manpower, 1000],
     [UnitCalc.Morale, 3]
   ]
