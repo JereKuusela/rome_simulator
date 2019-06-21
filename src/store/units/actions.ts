@@ -27,6 +27,8 @@ export enum UnitCalc {
   Maneuver = 'Maneuver',
   MoraleDamageTaken = 'Morale damage taken',
   StrengthDamageTaken = 'Strength damage taken',
+  MoraleDamageDone = 'Morale damage done',
+  StrengthDamageDone = 'Strength damage done',
   MovementSpeed = 'Movement speed',
   RecruitTime = 'Recruit time',
   Cost = 'Cost',

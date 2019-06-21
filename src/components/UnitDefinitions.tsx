@@ -190,6 +190,12 @@ export default class UnitDefinitions extends Component<IProps, IState> {
           {valueToRelativeZeroPercent(unit, UnitCalc.StrengthDamageTaken, false)}
         </Table.Cell>
         <Table.Cell>
+          {valueToRelativeZeroPercent(unit, UnitCalc.MoraleDamageDone, false)}
+        </Table.Cell>
+        <Table.Cell>
+          {valueToRelativeZeroPercent(unit, UnitCalc.StrengthDamageDone, false)}
+        </Table.Cell>
+        <Table.Cell>
           {valueToPercent(unit, UnitCalc.Experience, false)}
         </Table.Cell>
         <Table.Cell>
@@ -246,6 +252,12 @@ export default class UnitDefinitions extends Component<IProps, IState> {
         </Table.Cell>
         <Table.Cell>
           {this.renderAttributeList(unit, UnitCalc.MoraleDamageTaken)}
+        </Table.Cell>
+        <Table.Cell>
+          {this.renderAttributeList(unit, UnitCalc.StrengthDamageDone)}
+        </Table.Cell>
+        <Table.Cell>
+          {this.renderAttributeList(unit, UnitCalc.MoraleDamageDone)}
         </Table.Cell>
         <Table.Cell>
           {this.renderAttributeList(unit, UnitCalc.StrengthDamageTaken)}
