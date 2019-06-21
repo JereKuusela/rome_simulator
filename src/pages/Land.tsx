@@ -250,11 +250,11 @@ class Land extends Component<IProps, IState> {
       <div key={type}>
         {type === ParticipantType.Attacker && <Header>{type + '\'s army'}</Header>}
         <UnitArmy
-          onClick={(column, unit) => this.openUnitModal(name, ArmyType.Main, column, unit)}
+          onClick={(column, unit) => this.openUnitModal(name, ArmyType.Frontline, column, unit)}
           units={participant && this.mergeAllValues(name, participant.frontline).setSize(combat_width)}
           row_width={Math.max(30, combat_width)}
           reverse={type === ParticipantType.Attacker}
-          type={ArmyType.Main}
+          type={ArmyType.Frontline}
         />
         {type === ParticipantType.Defender && <Header>{type + '\'s army'}</Header>}
       </div>

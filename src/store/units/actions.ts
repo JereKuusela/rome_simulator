@@ -74,7 +74,7 @@ export enum ArmyName {
 }
 
 export enum ArmyType {
-  Main = 'Main',
+  Frontline = 'Frontline',
   Reserve = 'Reserve',
   Defeated = 'Defeated'
 }

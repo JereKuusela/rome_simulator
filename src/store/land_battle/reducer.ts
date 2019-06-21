@@ -62,7 +62,7 @@ export const landBattleReducer = createReducer(initialState)
   ))
   .handleAction(selectUnit, (state, action: ReturnType<typeof selectUnit>) => {
     const handleArmy = (participant: Participant): Participant => {
-      if (action.payload.type === ArmyType.Main)
+      if (action.payload.type === ArmyType.Frontline)
         return { ...participant, frontline: participant.frontline.set(action.payload.index, action.payload.unit) }
       if (action.payload.type === ArmyType.Reserve && action.payload.unit && action.payload.index > participant.reserve.size)
         return { ...participant, reserve: participant.reserve.push(action.payload.unit) }

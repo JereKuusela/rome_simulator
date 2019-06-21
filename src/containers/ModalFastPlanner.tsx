@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { List, Map } from 'immutable'
 import { connect } from 'react-redux'
-import { Modal, Button } from 'semantic-ui-react'
+import { Modal, Button, Grid } from 'semantic-ui-react'
 import { AppState } from '../store/'
 import FastPlanner from '../components/FastPlanner'
 import ArmyCosts from '../components/ArmyCosts'
@@ -60,10 +60,20 @@ class ModalFastPlanner extends Component<IProps, IState> {
             attached
           />
           <br/>
-          <Button primary size='large' onClick={this.clearUnits} style={{width: '50%', marginLeft: '25%'}}>
-            Clear all units
-          </Button>
-          
+          <Grid>
+            <Grid.Row columns='2'>
+              <Grid.Column>
+                <Button primary size='large' onClick={this.onClose} style={{width: '100%'}}>
+                  Close
+                </Button>
+              </Grid.Column>
+              <Grid.Column>
+                <Button negative size='large' onClick={this.clearUnits} style={{width: '100%'}}>
+                  Clear all units
+                </Button>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>  
         </Modal.Content>
       </Modal>
     )

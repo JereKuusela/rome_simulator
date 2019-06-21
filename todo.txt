@@ -7,11 +7,6 @@ Navigation?
 Tests (high priority):
 - base_definition functions tested
 
-Refactor (high priority):
-- Actions, data and types similarly in all stores.
-- Documentation for combat.
-- Documentation for base_definition.
-
 Armies page:
 - List of armies
 - Standard operations: add, duplicate, rename, remove
@@ -21,7 +16,6 @@ Armies page:
 
 Battle:
 - Tactic selector should show efficieny for all tactics
-- Create and remove: Clear button seems like ok button -> at least color to red and perhaps move somewhere else...
 - Arrows to show which unit attacked which one
 
 Release 4:

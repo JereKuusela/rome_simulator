@@ -75,7 +75,7 @@ export default class UnitArmy extends Component<IProps> {
   }
 
   getIcon = () => {
-    if (this.props.type === ArmyType.Main)
+    if (this.props.type === ArmyType.Frontline)
       return this.props.reverse ? 'arrow down' : 'arrow up'
     if (this.props.type === ArmyType.Reserve)
       return 'home'
