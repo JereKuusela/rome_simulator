@@ -51,8 +51,8 @@ class ModalFastPlanner extends Component<IProps, IState> {
             attached
           />
           <ArmyCosts
-            army_a={attacker && this.mergeAllValues(this.props.attacker, attacker.army)}
-            army_d={defender && this.mergeAllValues(this.props.defender, defender.army)}
+            army_a={attacker && this.mergeAllValues(this.props.attacker, attacker.frontline)}
+            army_d={defender && this.mergeAllValues(this.props.defender, defender.frontline)}
             reserve_a={attacker && this.mergeAllValues(this.props.attacker, this.editReserve(attacker.reserve, this.state.changes_a, this.originals_a))}
             reserve_d={defender && this.mergeAllValues(this.props.defender, this.editReserve(defender.reserve, this.state.changes_d, this.originals_d))}
             defeated_a={attacker && this.mergeAllValues(this.props.attacker, attacker.defeated)}

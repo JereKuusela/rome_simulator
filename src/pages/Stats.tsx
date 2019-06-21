@@ -4,7 +4,7 @@ import { Container, Image, Table } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { ArmyName, Unit, UnitType, UnitCalc } from '../store/units'
-import { Participant, ParticipantType, Armies } from '../store/land_battle'
+import { Participant, ParticipantType, Army } from '../store/land_battle'
 import IconManpower from '../images/manpower.png'
 import IconMorale from '../images/morale.png'
 import { calculateValue, calculateValueWithoutLoss, mergeValues, getImage } from '../base_definition'
@@ -22,7 +22,7 @@ class Stats extends Component<IProps> {
 
   renderArmy = (type: ParticipantType, name: ArmyName, participant?: Participant): JSX.Element | null => {
     const info = participant && {
-      army: this.mergeAllValues(name, participant.army),
+      frontline: this.mergeAllValues(name, participant.frontline),
       reserve: this.mergeAllValues(name, participant.reserve),
       defeated: this.mergeAllValues(name, participant.defeated)}
     const units = this.props.units.get(name)
@@ -61,7 +61,7 @@ class Stats extends Component<IProps> {
 
   round = (number: number): number => +(number).toFixed(2)
 
-  renderRow = (armies: Armies, type: UnitType, image: string): JSX.Element | null => {
+  renderRow = (armies: Army, type: UnitType, image: string): JSX.Element | null => {
     const count = this.countUnits(armies, type)
 
     if (count === 0)
@@ -92,24 +92,24 @@ class Stats extends Component<IProps> {
     return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats.get(name)!))
   }
 
-  calculateValue = (participant: Armies, type: UnitType, attribute: UnitCalc): number => {
-    return this.calculateValueSub(participant.army, type, attribute) + this.calculateValueSub(participant.reserve, type, attribute) + this.calculateValueSub(participant.defeated, type, attribute)
+  calculateValue = (participant: Army, type: UnitType, attribute: UnitCalc): number => {
+    return this.calculateValueSub(participant.frontline, type, attribute) + this.calculateValueSub(participant.reserve, type, attribute) + this.calculateValueSub(participant.defeated, type, attribute)
   }
 
   calculateValueSub = (army: List<Unit | undefined>, type: UnitType, attribute: UnitCalc): number => {
     return army.reduce((previous, current) => previous + (current && !current.is_defeated && current.type === type ? Math.max(0, calculateValue(current, attribute)) : 0), 0)
   }
 
-  calculateValueWithoutLoss = (participant: Armies, type: UnitType, attribute: UnitCalc): number => {
-    return this.calculateValueWithoutLossSub(participant.army, type, attribute) + this.calculateValueWithoutLossSub(participant.reserve, type, attribute) + this.calculateValueWithoutLossSub(participant.defeated, type, attribute)
+  calculateValueWithoutLoss = (participant: Army, type: UnitType, attribute: UnitCalc): number => {
+    return this.calculateValueWithoutLossSub(participant.frontline, type, attribute) + this.calculateValueWithoutLossSub(participant.reserve, type, attribute) + this.calculateValueWithoutLossSub(participant.defeated, type, attribute)
   }
 
   calculateValueWithoutLossSub = (army: List<Unit | undefined>, type: UnitType, attribute: UnitCalc): number => {
     return army.reduce((previous, current) => previous + (current && !current.is_defeated && current.type === type ? calculateValueWithoutLoss(current, attribute) : 0), 0)
   }
 
-  countUnits = (army: Armies, type: UnitType): number => {
-    return this.countUnitsSub(army.army, type) + this.countUnitsSub(army.reserve, type) + this.countUnitsSub(army.defeated, type)
+  countUnits = (army: Army, type: UnitType): number => {
+    return this.countUnitsSub(army.frontline, type) + this.countUnitsSub(army.reserve, type) + this.countUnitsSub(army.defeated, type)
   }
 
   countUnitsSub = (army: List<Unit | undefined>, type: UnitType): number => army.reduce((previous, current) => previous + (current && !current.is_defeated && current.type === type ? 1 : 0), 0)

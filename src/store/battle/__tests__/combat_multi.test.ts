@@ -50,7 +50,7 @@ describe('multi', () => {
       tactic: TacticType.Bottleneck,
       general: 4,
       roll: 6,
-      army: attacker.army
+      frontline: attacker.frontline
         .set(13, getAttacker(UnitType.LightInfantry, 1.31))
         .set(14, getAttacker(UnitType.Archers, 1.38))
         .set(15, getAttacker(UnitType.Archers, 1.38))
@@ -64,7 +64,7 @@ describe('multi', () => {
       tactic: TacticType.ShockAction,
       general: 7,
       roll: 6,
-      army: defender.army
+      frontline: defender.frontline
         .set(12, getDefender(UnitType.HeavyInfantry, 3.15))
         .set(13, getDefender(UnitType.HeavyInfantry, 3.15))
         .set(14, getDefender(UnitType.Archers, 3.15))

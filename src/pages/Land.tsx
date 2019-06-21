@@ -6,7 +6,7 @@ import { AppState } from '../store/index'
 import { ArmyName, UnitDefinition, ArmyType, Unit } from '../store/units'
 import UnitArmy from '../components/UnitArmy'
 import { battle, undo, Participant, ParticipantType, toggleRandomRoll, setRoll, setGeneral, RowType, setFlankSize, selectArmy } from '../store/land_battle'
-import { calculateTactic, calculateTerrainEffect, calculateGeneralEffect, calculateBaseDamage } from '../store/battle/combat'
+import { calculateTactic, calculateRollModifierFromTerrains, calculateRollModifierFromGenerals, calculateBaseDamage } from '../store/battle/combat'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import { TacticDefinition } from '../store/tactics'
 import IconDice from '../images/chance.png'
@@ -251,7 +251,7 @@ class Land extends Component<IProps, IState> {
         {type === ParticipantType.Attacker && <Header>{type + '\'s army'}</Header>}
         <UnitArmy
           onClick={(column, unit) => this.openUnitModal(name, ArmyType.Main, column, unit)}
-          units={participant && this.mergeAllValues(name, participant.army).setSize(combat_width)}
+          units={participant && this.mergeAllValues(name, participant.frontline).setSize(combat_width)}
           row_width={Math.max(30, combat_width)}
           reverse={type === ParticipantType.Attacker}
           type={ArmyType.Main}
@@ -262,8 +262,8 @@ class Land extends Component<IProps, IState> {
   }
 
   renderRoll = (type: ParticipantType, name: ArmyName, roll: number, is_random: boolean, general: number, opposing_general: number): JSX.Element => {
-    const terrain_effect = type === ParticipantType.Attacker ? calculateTerrainEffect(this.props.selected_terrains.map(value => this.props.terrains.get(value))) : 0
-    const general_effect = calculateGeneralEffect(general, opposing_general)
+    const terrain_effect = type === ParticipantType.Attacker ? calculateRollModifierFromTerrains(this.props.selected_terrains.map(value => this.props.terrains.get(value))) : 0
+    const general_effect = calculateRollModifierFromGenerals(general, opposing_general)
     const total = terrain_effect + general_effect + roll
     const base_damage = calculateBaseDamage(total, this.props.settings)
     return (
@@ -344,7 +344,7 @@ class Land extends Component<IProps, IState> {
       <div key={name} onClick={() => this.openTacticModal(name)}>
         {<Image src={getImage(tactic)} avatar />}
         {(tactic && tactic.type) || 'None'}
-        {participant && ' (' + this.toRelativePercent(calculateTactic(participant.army, tactic, counter), true) + ')'}
+        {participant && ' (' + this.toRelativePercent(calculateTactic(participant.frontline, tactic, counter), true) + ')'}
       </div >
     )
   }

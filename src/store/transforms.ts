@@ -87,18 +87,20 @@ export const transformLand = (state_raw: any): typeof initialState => {
         defeated: value.get('defeated') as List<any>,
         roll: value.get('roll') as number
       }))
-      past = past3.map(value => ({ army: serializeUnits(value.army).setSize(30), reserve: serializeUnits(value.reserve).filter(value => value), defeated: serializeUnits(value.defeated).filter(value => value), roll: value.roll } as PastState))
+      past = past3.map(value => ({ frontline: serializeUnits(value.army).setSize(30), reserve: serializeUnits(value.reserve).filter(value => value), defeated: serializeUnits(value.defeated).filter(value => value), roll: value.roll } as PastState))
     }
     // Prevent history and index (round number) getting out of sync.
     return past.setSize(round + 1)
   }
 
   const serializeParticipant = (participant: any): Participant => {
-    console.log(participant)
     const initial = getInitialArmy()
-    let army = initial.army
-    if (participant.army)
-      army = serializeUnits(fromJS(participant.army)).setSize(30)
+    let frontline = initial.frontline
+    // Legacy conversion, can be removed at some point (added 2019-06-21).
+    if (participant.army && !participant.frontline)
+      participant.frontline = participant.army
+    if (participant.frontline)
+      frontline = serializeUnits(fromJS(participant.frontline)).setSize(30)
     let reserve = initial.reserve
     if (participant.reserve)
       reserve = serializeUnits(fromJS(participant.reserve)).filter(value => value) as List<Unit>
@@ -125,7 +127,7 @@ export const transformLand = (state_raw: any): typeof initialState => {
       flank_size,
       roll,
       randomize_roll,
-      army,
+      frontline: frontline,
       reserve,
       defeated,
       row_types,

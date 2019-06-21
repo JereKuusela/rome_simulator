@@ -45,7 +45,7 @@ describe('reinforcement', () => {
     const half = Math.floor(settings.get(CombatParameter.CombatWidth)! / 2.0)
     let index = half
     for (const type of types) {
-      verifyType(info.attacker.army.get(index), type, ' at index ' + index)
+      verifyType(info.attacker.frontline.get(index), type, ' at index ' + index)
       index = nextIndex(index, half)
     }
   }
@@ -53,16 +53,16 @@ describe('reinforcement', () => {
   it('works with a single unit', () => {
     setAttacker([UnitType.Archers])
     doRound()
-    verifyType(info.attacker.army.get(15), UnitType.Archers)
+    verifyType(info.attacker.frontline.get(15), UnitType.Archers)
     expect(info.attacker.reserve.size).toEqual(0)
   })
   it('works with both sides', () => {
     setAttacker([UnitType.Archers])
     setDefender([UnitType.Chariots])
     doRound()
-    verifyType(info.attacker.army.get(15), UnitType.Archers)
+    verifyType(info.attacker.frontline.get(15), UnitType.Archers)
     expect(info.attacker.reserve.size).toEqual(0)
-    verifyType(info.defender.army.get(15), UnitType.Chariots)
+    verifyType(info.defender.frontline.get(15), UnitType.Chariots)
     expect(info.defender.reserve.size).toEqual(0)
   })
   it('works with main front and default priorities', () => {

@@ -1,5 +1,5 @@
 import { List, Map } from 'immutable'
-import { Participant } from '../../land_battle/types'
+import { Participant } from '../../land_battle'
 import { TacticType } from '../../tactics'
 import { Unit, UnitCalc, UnitDefinition, UnitType } from '../../units'
 import { calculateValue,} from '../../../base_definition'
@@ -22,8 +22,8 @@ const verifySub = (unit: Unit | undefined, manpower: number, morale: number) => 
   }
 }
 export const verifyCenterUnits = (info: TestInfo, manpower_a: number, morale_a: number, manpower_d: number, morale_d: number) => {
-  verifySub(info.attacker.army.get(15), manpower_a, morale_a)
-  verifySub(info.defender.army.get(15), manpower_d, morale_d)
+  verifySub(info.attacker.frontline.get(15), manpower_a, morale_a)
+  verifySub(info.defender.frontline.get(15), manpower_d, morale_d)
 }
 export const verifyType = (unit: Unit | undefined, type: UnitType, message: string = '') => {
   expect(unit).toBeTruthy()
@@ -38,8 +38,8 @@ export const setTactics = (info: TestInfo, tactic_a: TacticType, tactic_d: Tacti
   info.defender = { ...info.defender, tactic: tactic_d }
 }
 export const setCenterUnits = (info: TestInfo, unit_a: UnitDefinition, unit_b: UnitDefinition)=> {
-  info.attacker = { ...info.attacker, army: info.attacker.army.set(15, unit_a) }
-  info.defender = { ...info.defender, army: info.defender.army.set(15, unit_b) }
+  info.attacker = { ...info.attacker, frontline: info.attacker.frontline.set(15, unit_a) }
+  info.defender = { ...info.defender, frontline: info.defender.frontline.set(15, unit_b) }
 }
 
 describe('utils', () => {

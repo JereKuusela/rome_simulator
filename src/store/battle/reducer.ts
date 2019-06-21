@@ -55,8 +55,8 @@ export const battleReducer = createReducer(initialState)
       next = {
         ...next,
         armies: next.armies.set(next.attacker, new_attacker).set(next.defender, new_defender),
-        attacker_past: next.attacker_past.push({ army: attacker.army, reserve: attacker.reserve, defeated: attacker.defeated, roll: old_rolls[0] }),
-        defender_past: next.defender_past.push({ army: defender.army, reserve: defender.reserve, defeated: defender.defeated, roll: old_rolls[1] }),
+        attacker_past: next.attacker_past.push({ frontline: attacker.frontline, reserve: attacker.reserve, defeated: attacker.defeated, roll: old_rolls[0] }),
+        defender_past: next.defender_past.push({ frontline: defender.frontline, reserve: defender.reserve, defeated: defender.defeated, roll: old_rolls[1] }),
         round: next.round + 1,
         fight_over: !checkFight(new_attacker, new_defender)
       }

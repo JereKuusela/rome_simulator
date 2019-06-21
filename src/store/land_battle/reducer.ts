@@ -17,7 +17,7 @@ export const initialState = {
   fight_over: true
 }
 
-export const checkFight = (attacker?: Participant, defender?: Participant) => attacker && defender && (checkArmy(attacker.army) || checkArmy(attacker.reserve)) && (checkArmy(defender.army) || checkArmy(defender.reserve))
+export const checkFight = (attacker?: Participant, defender?: Participant) => attacker && defender && (checkArmy(attacker.frontline) || checkArmy(attacker.reserve)) && (checkArmy(defender.frontline) || checkArmy(defender.reserve))
 
 const checkArmy = (army: List<Unit | undefined>) => {
   for (let unit of army) {
@@ -63,7 +63,7 @@ export const landBattleReducer = createReducer(initialState)
   .handleAction(selectUnit, (state, action: ReturnType<typeof selectUnit>) => {
     const handleArmy = (participant: Participant): Participant => {
       if (action.payload.type === ArmyType.Main)
-        return { ...participant, army: participant.army.set(action.payload.index, action.payload.unit) }
+        return { ...participant, frontline: participant.frontline.set(action.payload.index, action.payload.unit) }
       if (action.payload.type === ArmyType.Reserve && action.payload.unit && action.payload.index > participant.reserve.size)
         return { ...participant, reserve: participant.reserve.push(action.payload.unit) }
       if (action.payload.type === ArmyType.Reserve && action.payload.unit)
@@ -108,7 +108,7 @@ export const landBattleReducer = createReducer(initialState)
     for (let step = 0; step < action.payload.steps && next.round > -1; ++step) {
       const handleArmy = (current?: Participant, past?: PastState): Participant | undefined => current && ({
         ...current,
-        army: past ? past.army : current.army,
+        frontline: past ? past.frontline : current.frontline,
         reserve: past ? past.reserve : current.reserve,
         defeated: past ? past.defeated : current.defeated,
         roll: past ? past.roll : current.roll
@@ -195,9 +195,9 @@ export const landBattleReducer = createReducer(initialState)
   .handleAction(clearUnits, (state, action: ReturnType<typeof clearUnits>) => {
     let armies = state.armies
     if (armies.has(state.attacker))
-      armies = armies.update(state.attacker, value => ({ ...value, army: getInitialArmy().army, reserve: value.reserve.clear(), defeated: value.defeated.clear() }))
+      armies = armies.update(state.attacker, value => ({ ...value, frontline: getInitialArmy().frontline, reserve: value.reserve.clear(), defeated: value.defeated.clear() }))
     if (armies.has(state.defender))
-      armies = armies.update(state.defender, value => ({ ...value, army: getInitialArmy().army, reserve: value.reserve.clear(), defeated: value.defeated.clear() }))
+      armies = armies.update(state.defender, value => ({ ...value, frontline: getInitialArmy().frontline, reserve: value.reserve.clear(), defeated: value.defeated.clear() }))
     return {
       ...state,
       armies,

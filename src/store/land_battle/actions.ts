@@ -4,7 +4,7 @@ import { Unit, ArmyType, UnitType, ArmyName } from '../units'
 import { TerrainType } from '../terrains'
 import { TacticType } from '../tactics'
 
-export interface PastState extends Armies {
+export interface PastState extends Army {
   roll: number
 }
 
@@ -14,13 +14,13 @@ export enum RowType {
   Flank = 'Flank'
 }
 
-export interface Armies {
-  readonly army: List<Unit | undefined>
+export interface Army {
+  readonly frontline: List<Unit | undefined>
   readonly reserve: List<Unit>
   readonly defeated: List<Unit>
 }
 
-export interface Participant extends Armies {
+export interface Participant extends Army {
   readonly tactic: TacticType
   readonly roll: number
   readonly randomize_roll: boolean
@@ -37,7 +37,7 @@ export enum ParticipantType {
 export const getInitialTerrains = (): List<TerrainType> => List<TerrainType>().push(TerrainType.None).push(TerrainType.Plains)
 
 export const getInitialArmy = (): Participant => ({
-  army: fromJS(Array(30).fill(undefined)),
+  frontline: fromJS(Array(30).fill(undefined)),
   reserve: List<Unit>(),
   defeated: List<Unit>(),
   general: 0,

@@ -94,7 +94,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
   getUnit = (info: ModalInfo): Unit => {
     const army = this.props.armies.get(info.name)!
     if (info.type === ArmyType.Main)
-      return army.army.get(info.index)!
+      return army.frontline.get(info.index)!
     else if (info.type === ArmyType.Reserve)
       return army.reserve.get(info.index)!
     else
