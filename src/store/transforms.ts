@@ -167,5 +167,6 @@ export const transformSettings = (state_raw: any): typeof settingsState => {
     return settingsState
   let combat = state_raw.combat ? settingsState.combat.merge(fromJS(state_raw.combat).toOrderedMap() as OrderedMap<CombatParameter, number>) : settingsState.combat
   combat = combat.filter((_, key) => settings.includes(key))
-  return { combat }
+  const simple_mode = state_raw.simple_mode || settingsState.simple_mode 
+  return { combat, simple_mode }
 }

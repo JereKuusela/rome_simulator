@@ -10,7 +10,7 @@ interface IProps {
   units?: List< Unit | undefined>
   row_width: number
   reverse: boolean
-  onClick: (index: number, unit: Unit | undefined) => void
+  onClick?: (index: number, unit: Unit | undefined) => void
   type: ArmyType
 }
 
@@ -51,9 +51,9 @@ export default class UnitArmy extends Component<IProps> {
                       <Table.Cell textAlign='center'
                       key={column}
                       disabled={column < 0}
-                      selectable
-                      style={{backgroundColor: column < 0 ? '#DDDDDD' : 'white'}}
-                      onClick={() => this.props.onClick(row * this.props.row_width + column, unit)}
+                      selectable={!!this.props.onClick}
+                      style={{backgroundColor: column < 0 ? '#DDDDDD' : 'white', padding: 0}}
+                      onClick={() => this.props.onClick && this.props.onClick(row * this.props.row_width + column, unit)}
                       >
                         {
                           <div style={{ background: this.gradient(unit, MANPOWER_COLOR, UnitCalc.Manpower) }}>

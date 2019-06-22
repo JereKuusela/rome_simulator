@@ -1,6 +1,6 @@
 import { createReducer } from 'typesafe-actions'
 import { OrderedMap } from 'immutable'
-import { CombatParameter, changeParamater } from './actions'
+import { CombatParameter, changeParamater, toggleSimpleMode } from './actions'
 
 export const settingsState = {
   combat: OrderedMap<CombatParameter, number>()
@@ -17,11 +17,15 @@ export const settingsState = {
     .set(CombatParameter.MinimumMorale, 0.25)
     .set(CombatParameter.MinimumManpower, 0)
     .set(CombatParameter.FlankTargetsOwnEdge, 0)
-    .set(CombatParameter.ReinforceFirst, 0)
+    .set(CombatParameter.ReinforceFirst, 0),
+    simple_mode: true
 }
 
 
 export const settingsReducer = createReducer(settingsState)
   .handleAction(changeParamater, (state, action: ReturnType<typeof changeParamater>) => (
     { ...state, combat: state.combat.set(action.payload.key, action.payload.value) }
+  ))
+  .handleAction(toggleSimpleMode, (state, action: ReturnType<typeof toggleSimpleMode>) => (
+    { ...state, simple_mode: !state.simple_mode }
   ))

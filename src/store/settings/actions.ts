@@ -56,3 +56,6 @@ export const changeParamater = createAction('@@settings/CHANGE_PARAMETER', actio
   return (key: CombatParameter, value: number) => action({ key, value })
 })
 
+export const toggleSimpleMode = createAction('@@settings/TOGGLE_SIMPLE_MODE', action => {
+  return () => action({})
+})

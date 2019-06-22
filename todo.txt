@@ -1,9 +1,5 @@
 Release 3:
 
-Navigation?
-- Toggle for simple mode, enabled by default: disables army page, disabled army selectio, unit / terrain / tactic management
-- Proper footer with copyright stuff for PDX?
-
 Tests (high priority):
 - base_definition functions tested
 
@@ -22,6 +18,9 @@ Release 4:
 - Immutable reviver to simplify fromJS calls when transforming data?
 - History should not be stored (except dices)
 - Playback to get history on page load?
+
+Navigation?
+- Toggle for simple mode, enabled by default: disables army page, disabled army selectio, unit / terrain / tactic management
 
 Settings:
 - Better descriptions
