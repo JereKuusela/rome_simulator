@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { List } from 'immutable'
+import { List, Map } from 'immutable'
 import { Table, Image } from 'semantic-ui-react'
 import { TerrainType, TerrainCalc } from '../store/terrains'
 import { UnitType, UnitCalc } from '../store/units'
@@ -14,6 +14,7 @@ interface IProps<T extends ItemType, S extends ItemAttribute> {
   items: List<BaseDefinition<T, S> | BaseValuesDefinition<T, S> | undefined>
   onSelection: (type: T | undefined) => void
   attributes?: S[]
+  custom_values?: Map<string, Map<T, number | string>>
 }
 
 export default class ItemSelector<S extends ItemAttribute, T extends ItemType> extends Component<IProps<T, S>> {
@@ -45,6 +46,13 @@ export default class ItemSelector<S extends ItemAttribute, T extends ItemType> e
               {valueToRelativeNumber(item, attribute, false)}
             </Table.Cell>
           ))
+        }
+        {
+          this.props.custom_values && this.props.custom_values.map((values, key) => (
+            <Table.Cell key={key}>
+              {values.get(item.type) + ' ' + key}
+            </Table.Cell>
+          )).toList()
         }
       </Table.Row>
     )

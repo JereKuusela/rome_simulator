@@ -62,7 +62,7 @@ export const valueToString = (definition: BaseDefinition<UnitType, ValueType>, t
     case UnitCalc.Upkeep:
       return (+(Math.max(0, calculateValue(definition, type)).toFixed(2))).toString()
     case UnitCalc.Experience:
-      return toPercent(value, true)
+      return toPercent(value)
     default:
       return toRelativeZeroPercent(value, true)
   }

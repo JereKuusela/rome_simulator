@@ -15,7 +15,6 @@ Armies page:
 - Also settings that are in the main page (general, roll, tactic)
 
 Battle:
-- Tactic selector should show efficieny for all tactics
 - Arrows to show which unit attacked which one
 
 Release 4:

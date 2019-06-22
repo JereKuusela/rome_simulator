@@ -26,7 +26,7 @@ export interface TacticDefinition extends BaseValuesDefinition<TacticType, Value
 
 export const valueToString = (definition: TacticDefinition, type: ValueType): string => {
   const value = calculateValue(definition, type)
-  return toPercent(value, true)
+  return toPercent(value)
 }
 
 export const setBaseValue = createAction('@@tactics/SET_BASE_VALUE', action => {

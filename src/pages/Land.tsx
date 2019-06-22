@@ -8,7 +8,7 @@ import UnitArmy from '../components/UnitArmy'
 import { battle, undo, Participant, ParticipantType, toggleRandomRoll, setRoll, setGeneral, RowType, setFlankSize, selectArmy } from '../store/land_battle'
 import { calculateTactic, calculateRollModifierFromTerrains, calculateRollModifierFromGenerals, calculateBaseDamage } from '../store/battle/combat'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
-import { TacticDefinition } from '../store/tactics'
+import { TacticType } from '../store/tactics'
 import IconDice from '../images/chance.png'
 import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from '../containers/ModalUnitSelector'
 import ModalRowTypeSelector, { ModalInfo as ModalRowInfo } from '../containers/ModalRowTypeSelector'
@@ -16,7 +16,7 @@ import ModalTerrainSelector, { ModalInfo as ModalTerrainInfo } from '../containe
 import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers/ModalTacticSelector'
 import ModalArmyUnitDetail, { ModalInfo as ModalArmyUnitInfo } from '../containers/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/ModalFastPlanner'
-import { calculateValue, mergeValues, getImage } from '../base_definition'
+import { calculateValue, mergeValues, getImage, toRelativePercent } from '../base_definition'
 import { CombatParameter } from '../store/settings'
 import IconTerrain from '../images/terrain.png'
 import IconGeneral from '../images/military_power.png'
@@ -53,7 +53,7 @@ class Land extends Component<IProps, IState> {
 
   openTerrainModal = (index: number): void => this.setState({ modal_terrain_info: { index, location: this.props.terrains.get(this.props.selected_terrains.get(index)!)!.location } })
 
-  openTacticModal = (name: ArmyName): void => this.setState({ modal_tactic_info: { name } })
+  openTacticModal = (name: ArmyName, counter?: TacticType): void => this.setState({ modal_tactic_info: { name, counter } })
 
   openFastPlanner = (): void => this.setState({ modal_fast_planner_open: true })
 
@@ -338,26 +338,15 @@ class Land extends Component<IProps, IState> {
     )
   }
 
-  renderTactic = (name: ArmyName, participant?: Participant, counter?: TacticDefinition): JSX.Element => {
+  renderTactic = (name: ArmyName, participant?: Participant, counter?: TacticType): JSX.Element => {
     const tactic = participant && this.props.tactics.get(participant.tactic)
     return (
-      <div key={name} onClick={() => this.openTacticModal(name)}>
+      <div key={name} onClick={() => this.openTacticModal(name, counter)}>
         {<Image src={getImage(tactic)} avatar />}
         {(tactic && tactic.type) || 'None'}
-        {participant && ' (' + this.toRelativePercent(calculateTactic(participant.frontline, tactic, counter), true) + ')'}
+        {participant && ' (' + toRelativePercent(calculateTactic(participant.frontline, tactic, counter), true) + ')'}
       </div >
     )
-  }
-
-  toRelativePercent = (number: number, show_zero: boolean): string => {
-    const value = +(number * 100.0 - 100.0).toFixed(2)
-    if (value > 0)
-      return '+' + String(value) + '%'
-    if (value === 0 && !show_zero)
-      return ''
-    if (value === 0 && show_zero)
-      return '+0%'
-    return String(value) + '%'
   }
 
   renderArmyNameDropdown = (type: ParticipantType, name: ArmyName): JSX.Element => {
@@ -393,7 +382,7 @@ class Land extends Component<IProps, IState> {
           <Input size='mini' style={{ width: 100 }} type='number' value={participant && participant.general} onChange={(_, data) => this.props.setGeneral(name, Number(data.value))} />
         </Table.Cell>
         <Table.Cell collapsing>
-          {this.renderTactic(name, participant, enemy && this.props.tactics.get(enemy.tactic))}
+          {this.renderTactic(name, participant, enemy && enemy.tactic)}
         </Table.Cell>
         <Table.Cell>
           {this.renderRoll(type, name, participant ? participant.roll : 0, participant ? participant.randomize_roll : true, participant ? participant.general : 0, enemy ? enemy.general : 0)}

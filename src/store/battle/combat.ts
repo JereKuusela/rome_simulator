@@ -1,7 +1,7 @@
 import { List, Map } from 'immutable'
 import { Unit, UnitDefinition, UnitCalc, UnitType, ArmyName } from '../units'
 import { TerrainDefinition, TerrainCalc } from '../terrains'
-import { TacticDefinition, TacticCalc } from '../tactics'
+import { TacticDefinition, TacticCalc, TacticType } from '../tactics'
 import { RowType, Army } from '../land_battle'
 import { CombatParameter } from '../settings'
 import { calculateValue, addValues, mergeValues, ValuesType } from '../../base_definition'
@@ -67,8 +67,8 @@ export const battle = (definitions: Definitions, attacker: ParticipantState, def
     return [a, d]
 
   const tactic_effects = {
-    attacker: calculateTactic(attacker.frontline, attacker.tactic, defender.tactic),
-    defender: calculateTactic(defender.frontline, defender.tactic, attacker.tactic),
+    attacker: calculateTactic(attacker.frontline, attacker.tactic, defender.tactic && defender.tactic.type),
+    defender: calculateTactic(defender.frontline, defender.tactic, attacker.tactic && attacker.tactic.type),
     casualties: calculateValue(attacker.tactic, TacticCalc.Casualties) + calculateValue(defender.tactic, TacticCalc.Casualties)
   }
 
@@ -195,10 +195,10 @@ const calculateArmySize = (army: Army): number => army.frontline.reduce((previou
  * @param tactic Tactic to calculate.
  * @param counter_tactic Opposing tactic, can counter or get countered.
  */
-export const calculateTactic = (frontline: Frontline, tactic?: TacticDefinition, counter_tactic?: TacticDefinition): number => {
-  const effectiveness = (tactic && counter_tactic) ? calculateValue(tactic, counter_tactic.type) : 0.0
+export const calculateTactic = (frontline?: Frontline, tactic?: TacticDefinition, counter_tactic?: TacticType): number => {
+  const effectiveness = (tactic && counter_tactic) ? calculateValue(tactic, counter_tactic) : tactic ? 1.0 : 0.0
   let unit_modifier = 1.0
-  if (effectiveness > 0 && tactic) {
+  if (effectiveness > 0 && tactic && frontline) {
     let units = 0
     let weight = 0.0
     for (const unit of frontline) {
