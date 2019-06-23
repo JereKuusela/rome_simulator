@@ -43,8 +43,8 @@ export const unitFromJS = (object?: Map<string, any>): Unit | undefined => {
   if (!object)
     return undefined
   const type = object.get('type') as UnitType
-  const is_defeated = object.get('is_defeated')
-  const target = object.get('target')
+  const is_defeated = object.has('is_defeated') ? object.get('is_defeated') : undefined
+  const target = object.has('target') ? object.get('target') : undefined
   const base_values = object.has('base_values') ? fromJS(object.get('base_values').map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
   const modifier_values = object.has('modifier_values') ? fromJS(object.get('modifier_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
   const loss_values = object.has('loss_values') ? fromJS(object.get('loss_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined

@@ -64,5 +64,5 @@ declare module '*.module.sass' {
 }
 
 declare module 'react-lineto' {
-  class LineTo extends React.Component<any, any> {}
+  export default class LineTo extends React.Component<any, any> {}
 }

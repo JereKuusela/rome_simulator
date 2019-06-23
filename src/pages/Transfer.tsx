@@ -143,8 +143,8 @@ class Transfer extends Component<IProps, IState> {
     else if (!this.props.export_keys.get(ExportKey.History)) {
       new_state.land = {
         ...new_state.land,
-        attacker: {...new_state.land.attacker, past: undefined },
-        defender: {...new_state.land.defender, past: undefined }
+        attacker_past: undefined,
+        defender_past: undefined
       }
     }
     return new_state

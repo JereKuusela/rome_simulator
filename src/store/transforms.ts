@@ -82,12 +82,12 @@ export const transformLand = (state_raw: any): typeof initialState => {
     if (past_raw) {
       let past4: List<Map<string, any>> = fromJS(past_raw)
       let past3 = past4.map(value => ({
-        army: value.get('army') as List<any>,
+        frontline: value.has('frontline') ? value.get('frontline') as List<any> : value.get('army') as List<any>,
         reserve: value.get('reserve') as List<any>,
         defeated: value.get('defeated') as List<any>,
-        roll: value.get('roll') as number
+        roll: value.has('roll') ? value.get('roll') as number : 0
       }))
-      past = past3.map(value => ({ frontline: serializeUnits(value.army).setSize(30), reserve: serializeUnits(value.reserve).filter(value => value), defeated: serializeUnits(value.defeated).filter(value => value), roll: value.roll } as PastState))
+      past = past3.map(value => ({ frontline: serializeUnits(value.frontline).setSize(30), reserve: serializeUnits(value.reserve).filter(value => value), defeated: serializeUnits(value.defeated).filter(value => value), roll: value.roll } as PastState))
     }
     // Prevent history and index (round number) getting out of sync.
     return past.setSize(round + 1)
@@ -121,7 +121,7 @@ export const transformLand = (state_raw: any): typeof initialState => {
     const general = participant.general || initial.general
     const flank_size = participant.flank_size || initial.flank_size
     const roll = participant.roll || initial.roll
-    const randomize_roll = participant.randomize_roll || initial.randomize_roll
+    const randomize_roll = participant.randomize_roll
     return {
       general,
       flank_size,

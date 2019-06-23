@@ -14,6 +14,7 @@ interface IProps {
   reverse: boolean
   onClick?: (index: number, unit: Unit | undefined) => void
   type: ArmyType
+  color: string
 }
 
 const MORALE_COLOR = 'rgba(200,55,55,0.60)'
@@ -44,7 +45,7 @@ export default class UnitArmy extends Component<IProps> {
             rows.map(row => (
               <Table.Row key={row} textAlign='center'>
                 <Table.Cell>
-                  <Icon fitted size='small' name={this.getIcon()}></Icon>
+                  <Icon fitted size='small' name={this.getIcon()} style={{color: this.props.color}}></Icon>
                 </Table.Cell>
                 {
                   columns.map(column => {

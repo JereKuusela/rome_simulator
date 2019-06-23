@@ -31,6 +31,9 @@ interface IState {
   modal_fast_planner_open: boolean
 }
 
+const ATTACKER_COLOR = '#FFAA00AA'
+const DEFENDER_COLOR = '#00AAFFAA'
+
 class Land extends Component<IProps, IState> {
 
   constructor(props: IProps) {
@@ -110,6 +113,16 @@ class Land extends Component<IProps, IState> {
               {
                 this.renderArmy(ParticipantType.Attacker, this.props.attacker, attacker)
               }
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns={1} style={{padding: 0}}>
+            <Grid.Column>
+              <TargetArrows
+                attacker={this.props.fight_over ? undefined : attacker && attacker.frontline}
+                defender={this.props.fight_over ? undefined : defender && defender.frontline}
+                attacker_color={ATTACKER_COLOR}
+                defender_color={DEFENDER_COLOR}
+              />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>
@@ -251,6 +264,7 @@ class Land extends Component<IProps, IState> {
       <div key={type}>
         {type === ParticipantType.Attacker && <Header>{type + '\'s army'}</Header>}
         <UnitArmy
+          color={type === ParticipantType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={type}
           onClick={(column, unit) => this.openUnitModal(name, ArmyType.Frontline, column, unit)}
           units={participant && this.mergeAllValues(name, participant.frontline).setSize(combat_width)}
@@ -294,6 +308,7 @@ class Land extends Component<IProps, IState> {
       <div key={type}>
         <Header>{type + '\'s reserve'}</Header>
         <UnitArmy
+          color={type === ParticipantType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={type}
           onClick={(column, unit) => this.openUnitModal(name, ArmyType.Reserve, column, unit)}
           units={units && units.setSize(size || 0)}
@@ -314,6 +329,7 @@ class Land extends Component<IProps, IState> {
       <div key={type}>
         <Header>{type + '\'s defeated units'}</Header>
         <UnitArmy
+          color={type === ParticipantType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={type}
           onClick={(column, unit) => this.openUnitModal(name, ArmyType.Defeated, column, unit)}
           units={units && units.setSize(size || 0)}
