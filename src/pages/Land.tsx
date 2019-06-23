@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { ArmyName, UnitDefinition, ArmyType, Unit } from '../store/units'
 import UnitArmy from '../components/UnitArmy'
+import TargetArrows from '../components/TargetArrows'
 import { battle, undo, Participant, ParticipantType, toggleRandomRoll, setRoll, setGeneral, RowType, setFlankSize, selectArmy } from '../store/land_battle'
 import { calculateTactic, calculateRollModifierFromTerrains, calculateRollModifierFromGenerals, calculateBaseDamage } from '../store/battle/combat'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
@@ -250,6 +251,7 @@ class Land extends Component<IProps, IState> {
       <div key={type}>
         {type === ParticipantType.Attacker && <Header>{type + '\'s army'}</Header>}
         <UnitArmy
+          side={type}
           onClick={(column, unit) => this.openUnitModal(name, ArmyType.Frontline, column, unit)}
           units={participant && this.mergeAllValues(name, participant.frontline).setSize(combat_width)}
           row_width={Math.max(30, combat_width)}
@@ -292,6 +294,7 @@ class Land extends Component<IProps, IState> {
       <div key={type}>
         <Header>{type + '\'s reserve'}</Header>
         <UnitArmy
+          side={type}
           onClick={(column, unit) => this.openUnitModal(name, ArmyType.Reserve, column, unit)}
           units={units && units.setSize(size || 0)}
           row_width={30}
@@ -311,6 +314,7 @@ class Land extends Component<IProps, IState> {
       <div key={type}>
         <Header>{type + '\'s defeated units'}</Header>
         <UnitArmy
+          side={type}
           onClick={(column, unit) => this.openUnitModal(name, ArmyType.Defeated, column, unit)}
           units={units && units.setSize(size || 0)}
           row_width={30}

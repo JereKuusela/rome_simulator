@@ -62,3 +62,7 @@ declare module '*.module.sass' {
   const classes: { [key: string]: string };
   export default classes;
 }
+
+declare module 'react-lineto' {
+  class LineTo extends React.Component<any, any> {}
+}

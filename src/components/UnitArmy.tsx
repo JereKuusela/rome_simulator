@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { List } from 'immutable'
+import { ParticipantType } from '../store/land_battle'
 import { Table, Image, Icon } from 'semantic-ui-react'
 import { Unit, UnitCalc, ArmyType } from '../store/units'
 import { calculateValue, calculateValueWithoutLoss, getImage } from '../base_definition'
@@ -7,6 +8,7 @@ import IconDefeated from '../images/attrition.png'
 
 
 interface IProps {
+  side: ParticipantType
   units?: List< Unit | undefined>
   row_width: number
   reverse: boolean
@@ -48,7 +50,9 @@ export default class UnitArmy extends Component<IProps> {
                   columns.map(column => {
                     const unit = column > -1 && this.props.units ? this.props.units.get(row * this.props.row_width + column) : undefined
                     return (
-                      <Table.Cell textAlign='center'
+                      <Table.Cell
+                      className={this.props.side + '-' + this.props.type + '-' + column}
+                      textAlign='center'
                       key={column}
                       disabled={column < 0}
                       selectable={!!this.props.onClick}

@@ -84,6 +84,8 @@ export const battle = (definitions: Definitions, attacker: ParticipantState, def
   // Definitions contain the actual manpower and morale values so they must be used to check defeated.
   definitions_a = applyLosses(definitions_a, losses_a, round)
   definitions_d = applyLosses(definitions_d, losses_d, round)
+  a = saveTargets(a, a_to_d)
+  d = saveTargets(d, d_to_a)
   const minimum_morale = settings.get(CombatParameter.MinimumMorale) || 0.25
   const minimum_manpower = settings.get(CombatParameter.MinimumManpower) || 0
   a = copyDefeated(a, definitions_a, minimum_morale, minimum_manpower)
@@ -93,6 +95,20 @@ export const battle = (definitions: Definitions, attacker: ParticipantState, def
   if (d.frontline.findIndex(unit => !!(unit && !unit.is_defeated)) === -1)
     d = removeDefeated(d)
   return [a, d]
+}
+
+/**
+ * Saves targeting information for display purposes.
+ * @param army Frontline.
+ * @param targets List of targets.
+ */
+const saveTargets = (army: Army, targets: Array<number | null>): Army => {
+  const frontline = army.frontline.map((unit, index): (Unit | undefined) => {
+    if (!unit)
+      return unit
+    return { ...unit, target: targets[index]}
+  })
+  return { ...army, frontline }
 }
 
 /**
@@ -111,7 +127,7 @@ const removeOutOfBounds = (army: Army, combat_width: number): Army => {
     defeated = defeated.push(unit)
     return undefined
   }).setSize(combat_width)
-  return { frontline, reserve: army.reserve, defeated }
+  return { ...army, frontline, defeated }
 }
 
 /**

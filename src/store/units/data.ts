@@ -39,18 +39,19 @@ export const getDefaultDefinitions = (): OrderedMap<UnitType, UnitDefinition> =>
   return map
 }
 
-export const unitFromJS = (object: Map<string, any>): Unit | undefined => {
+export const unitFromJS = (object?: Map<string, any>): Unit | undefined => {
   if (!object)
     return undefined
   const type = object.get('type') as UnitType
   const is_defeated = object.get('is_defeated')
+  const target = object.get('target')
   const base_values = object.has('base_values') ? fromJS(object.get('base_values').map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
   const modifier_values = object.has('modifier_values') ? fromJS(object.get('modifier_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
   const loss_values = object.has('loss_values') ? fromJS(object.get('loss_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
-  return { type, is_defeated, base_values, modifier_values, loss_values }
+  return { type, is_defeated, target, base_values, modifier_values, loss_values }
 }
 
-export const unitDefinitionFromJS = (object: Map<string, any>): UnitDefinition | undefined => {
+export const unitDefinitionFromJS = (object?: Map<string, any>): UnitDefinition | undefined => {
   if (!object)
     return undefined
   const type = object.get('type') as UnitType
