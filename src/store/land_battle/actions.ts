@@ -3,6 +3,7 @@ import { List, Map, fromJS } from 'immutable'
 import { Unit, ArmyType, UnitType, ArmyName } from '../units'
 import { TerrainType } from '../terrains'
 import { TacticType } from '../tactics'
+import { DefinitionType } from '../../base_definition'
 
 export interface PastState extends Army {
   roll: number
@@ -73,7 +74,7 @@ export const setRowType = createAction('@@land_battle/SELECT_ROW_TYPE', action =
 })
 
 export const battle = createAction('@@land_battle/BATTLE', action => {
-  return (steps: number) => action({steps})
+  return (mode: DefinitionType, steps: number) => action({mode, steps})
 })
 
 export const undo = createAction('@@land_battle/UNDO', action => {

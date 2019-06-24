@@ -20,7 +20,7 @@ export const initialState = {
 
 export const battleReducer = createReducer(initialState)
   .handleAction(battle, (state, action: ReturnType<typeof battle>) => {
-    const definitions = state.units.definitions.map((value, key) => value.map(value => mergeValues(value, state.global_stats.get(key)!)))
+    const definitions = state.units.definitions.map((value, key) => value.map(value => mergeValues(value, state.global_stats.getIn([key, action.payload.mode]))))
     let next = state.land
     let attacker = next.armies.get(next.attacker)
     let defender = next.armies.get(next.defender)

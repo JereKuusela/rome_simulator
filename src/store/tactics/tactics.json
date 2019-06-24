@@ -2,6 +2,7 @@
   "tactics": [
     {
       "type": "Bottleneck",
+      "mode": "Land",
       "archers": 0.5,
       "heavy_cavalry": 0.8,
       "heavy_infantry": 1,
@@ -13,6 +14,7 @@
     },
     {
       "type": "Cavalry Skirmish",
+      "mode": "Land",
       "camel_cavalry": 0.5,
       "heavy_cavalry": 0.5,
       "horse_archers": 1.5,
@@ -25,6 +27,7 @@
     },
     {
       "type": "Deception",
+      "mode": "Land",
       "camel_cavalry": 1,
       "chariots": 1,
       "horse_archers": 1.5,
@@ -36,6 +39,7 @@
     },
     {
       "type": "Envelopment",
+      "mode": "Land",
       "camel_cavalry": 1,
       "chariots": 0.5,
       "heavy_cavalry": 0.5,
@@ -48,6 +52,7 @@
     },
     {
       "type": "Hit-and-Run",
+      "mode": "Land",
       "archers": 0.5,
       "camel_cavalry": 0.5,
       "chariots": 0.5,
@@ -62,6 +67,7 @@
     },
     {
       "type": "Padma Vyuha",
+      "mode": "Land",
       "archers": 1,
       "chariots": 0.5,
       "heavy_infantry": 0.75,
@@ -75,6 +81,7 @@
     },
     {
       "type": "Phalanx",
+      "mode": "Land",
       "war_elephants": 1,
       "heavy_infantry": 1,
       "light_cavalry": 0.75,
@@ -87,6 +94,7 @@
     },
     {
       "type": "Shock Action",
+      "mode": "Land",
       "heavy_cavalry": 1,
       "heavy_infantry": 1,
       "war_elephants": 2,
@@ -98,6 +106,7 @@
     },
     {
       "type": "Skirmishing",
+      "mode": "Land",
       "archers": 0.5,
       "camel_cavalry": 0.25,
       "horse_archers": 0.25,
@@ -111,6 +120,7 @@
     },
     {
       "type": "Triplex Acies",
+      "mode": "Land",
       "heavy_infantry": 1,
       "light_cavalry": 0.6,
       "light_infantry": 1,
@@ -118,6 +128,53 @@
       "phalanx": 0.25,
       "deception": -0.1,
       "hit_and_run": -0.1
+    },
+    {
+      "type": "Frontal Assault",
+      "mode": "Naval",
+      "liburnian": 0.5,
+      "trireme": 1,
+      "octere": 1,
+      "mega_galley": 2,
+      "harassment": 0.2,
+      "close_ranks": -0.1
+    },
+    {
+      "type": "Naval Envelopment",
+      "mode": "Naval",
+      "trireme": 1,
+      "hexere": 1,
+      "mega_galley": 1,
+      "close_ranks": 0.2,
+      "probing_attack": -0.1
+    },
+    {
+      "type": "Close Ranks",
+      "mode": "Naval",
+      "trireme": 0.5,
+      "hexere": 1,
+      "octere": 1,
+      "mega_galley": 1,
+      "frontal_assault": 0.2,
+      "naval_envelopment": -0.1
+    },
+    {
+      "type": "Harassment",
+      "mode": "Naval",
+      "liburnian": 1,
+      "trireme": 1,
+      "octere": 1,
+      "probing_attack": 0.2,
+      "frontal_assault": -0.1
+    },
+    {
+      "type": "Probing Attack",
+      "mode": "Naval",
+      "liburnian": 1,
+      "tetrere": 1,
+      "hexere": 1,
+      "naval_envelopment": 0.2,
+      "harassment": -0.1
     }
   ]
 }

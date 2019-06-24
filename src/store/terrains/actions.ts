@@ -1,5 +1,5 @@
 import { createAction } from 'typesafe-actions'
-import { calculateValue, BaseValuesDefinition } from '../../base_definition'
+import { calculateValue, BaseValuesDefinition, DefinitionType } from '../../base_definition'
 
 export enum TerrainType {
   Desert = 'Desert',
@@ -45,7 +45,7 @@ export const deleteTerrain = createAction('@@terrains/DELETE_TERRAIN', action =>
 })
 
 export const addTerrain = createAction('@@terrains/ADD_TERRAIN', action => {
-  return (type: TerrainType) => action({ type })
+  return (type: TerrainType, mode: DefinitionType) => action({ type, mode })
 })
 
 export const changeType = createAction('@@terrains/CHANGE_TYPE', action => {
@@ -58,4 +58,8 @@ export const changeLocation = createAction('@@terrains/CHANGE_LOCATION', action 
 
 export const changeImage = createAction('@@terrains/CHANGE_IMAGE', action => {
   return (type: TerrainType, image: string) => action({ type, image })
+})
+
+export const changeMode = createAction('@@terrains/CHANGE_MODE', action => {
+  return (type: TerrainType, mode: DefinitionType) => action({ type, mode })
 })

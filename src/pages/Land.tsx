@@ -17,7 +17,7 @@ import ModalTerrainSelector, { ModalInfo as ModalTerrainInfo } from '../containe
 import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers/ModalTacticSelector'
 import ModalArmyUnitDetail, { ModalInfo as ModalArmyUnitInfo } from '../containers/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/ModalFastPlanner'
-import { calculateValue, mergeValues, getImage, toRelativePercent } from '../base_definition'
+import { calculateValue, mergeValues, getImage, toRelativePercent, DefinitionType } from '../base_definition'
 import { CombatParameter } from '../store/settings'
 import IconTerrain from '../images/terrain.png'
 import IconGeneral from '../images/military_power.png'
@@ -103,8 +103,8 @@ class Land extends Component<IProps, IState> {
             <Grid.Column floated='right' textAlign='right'>
               <Button circular icon='angle double left' color='black' size='huge' disabled={!this.props.is_undo} onClick={() => this.props.undo(10)} />
               <Button circular icon='angle left' color='black' size='huge' disabled={!this.props.is_undo} onClick={() => this.props.undo(1)} />
-              <Button circular icon='angle right' color='black' size='huge' disabled={this.props.fight_over} onClick={() => this.props.battle(1)} />
-              <Button circular icon='angle double right' color='black' size='huge' disabled={this.props.fight_over} onClick={() => this.props.battle(10)} />
+              <Button circular icon='angle right' color='black' size='huge' disabled={this.props.fight_over} onClick={() => this.props.battle(this.props.mode, 1)} />
+              <Button circular icon='angle double right' color='black' size='huge' disabled={this.props.fight_over} onClick={() => this.props.battle(this.props.mode, 10)} />
             </Grid.Column>
 
           </Grid.Row>
@@ -439,7 +439,7 @@ class Land extends Component<IProps, IState> {
   }
 
   mergeAllValues = (name: ArmyName, army: List<Unit | undefined>): List<UnitDefinition | undefined> => {
-    return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats.get(name)!))
+    return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats.getIn([name, this.props.mode])))
   }
 }
 
@@ -455,11 +455,12 @@ const mapStateToProps = (state: AppState) => ({
   fight_over: state.land.fight_over,
   units: state.units.definitions,
   global_stats: state.global_stats,
-  settings: state.settings.combat
+  settings: state.settings.combat,
+  mode: state.settings.mode
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  battle: (steps: number) => dispatch(battle(steps)),
+  battle: (mode: DefinitionType, steps: number) => dispatch(battle(mode, steps)),
   undo: (steps: number) => dispatch(undo(steps)),
   toggleRandomRoll: (name: ArmyName) => dispatch(toggleRandomRoll(name)),
   setRoll: (name: ArmyName, roll: number) => dispatch(setRoll(name, roll)),

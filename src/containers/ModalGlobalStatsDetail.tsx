@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { UnitType, setGlobalValue, ArmyName, ValueType } from '../store/units'
 import { AppState } from '../store/'
-import { ValuesType } from '../base_definition'
+import { ValuesType, DefinitionType } from '../base_definition'
 import { OrderedSet } from 'immutable'
 import UnitDetail from '../components/UnitDetail'
 
@@ -18,15 +18,27 @@ class ModalGlobalStatsDetail extends Component<IProps> {
         name={this.props.army}
         terrains={this.props.terrains}
         custom_value_key={CUSTOM_VALUE_KEY}
-        unit={this.props.global_stats.get(this.props.army)!}
+        unit={this.props.global_stats.getIn([this.props.army, this.props.mode])}
         units={this.props.units}
         unit_types={unit_types}
-        onCustomBaseValueChange={this.props.setGlobalBaseValue}
-        onCustomModifierValueChange={this.props.setGlobalModifierValue}
-        onCustomLossValueChange={this.props.setGlobalLossValue}
+        onCustomBaseValueChange={this.setGlobalBaseValue}
+        onCustomModifierValueChange={this.setGlobalModifierValue}
+        onCustomLossValueChange={this.setGlobalLossValue}
         show_statistics={false}
       />
     )
+  }
+
+  setGlobalBaseValue = (army: ArmyName, _: UnitType, key: string, attribute: ValueType, value: number) => {
+    !Number.isNaN(value) && this.props.setGlobalValue(army, this.props.mode, ValuesType.Base, key, attribute, value)
+  }
+
+  setGlobalModifierValue = (army: ArmyName, _: UnitType, key: string, attribute: ValueType, value: number) => {
+    !Number.isNaN(value) && this.props.setGlobalValue(army, this.props.mode, ValuesType.Modifier, key, attribute, value)
+  }
+
+  setGlobalLossValue = (army: ArmyName, _: UnitType, key: string, attribute: ValueType, value: number) => {
+    !Number.isNaN(value) && this.props.setGlobalValue(army, this.props.mode, ValuesType.Loss, key, attribute, value)
   }
 }
 
@@ -35,17 +47,12 @@ const mapStateToProps = (state: AppState) => ({
   terrains: state.terrains.types,
   units: state.units.definitions,
   unit_types: state.units.types,
+  mode: state.settings.mode
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setGlobalBaseValue: (army: ArmyName, _: UnitType, key: string, attribute: ValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setGlobalValue(army, ValuesType.Base, key, attribute, value))
-  ),
-  setGlobalModifierValue: (army: ArmyName, _: UnitType, key: string, attribute: ValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setGlobalValue(army, ValuesType.Modifier, key, attribute, value))
-  ),
-  setGlobalLossValue: (army: ArmyName, _: UnitType, key: string, attribute: ValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setGlobalValue(army, ValuesType.Loss, key, attribute, value))
+  setGlobalValue: (army: ArmyName, mode: DefinitionType, type: ValuesType, key: string, attribute: ValueType, value: number) => (
+    dispatch(setGlobalValue(army, mode, type, key, attribute, value))
   )
 })
 

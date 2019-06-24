@@ -4,7 +4,8 @@ import { Modal } from 'semantic-ui-react'
 import { AppState } from '../store/'
 import { selectTerrain } from '../store/land_battle'
 import ItemSelector from '../components/ItemSelector'
-import { TerrainType, TerrainCalc, LocationType } from '../store/terrains';
+import { TerrainType, TerrainCalc, LocationType } from '../store/terrains'
+import { DefinitionType } from '../base_definition'
 
 export interface ModalInfo {
   index: number
@@ -21,7 +22,7 @@ class ModalTerrainSelector extends Component<IProps> {
           <ItemSelector
             onClose={this.props.onClose}
             onSelection={this.selectTerrain}
-            items={this.props.terrains.toList().filter(terrain => this.props.info && (!this.props.info.location || terrain.location === this.props.info.location))}
+            items={this.props.terrains.toList().filter(terrain => (terrain.mode === this.props.mode || terrain.mode === DefinitionType.Any) && this.props.info && (!this.props.info.location || terrain.location === this.props.info.location))}
             attributes={[TerrainCalc.Roll]}
           />
         </Modal.Content>
@@ -35,7 +36,8 @@ class ModalTerrainSelector extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  terrains: state.terrains.definitions
+  terrains: state.terrains.definitions,
+  mode: state.settings.mode
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

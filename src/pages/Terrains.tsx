@@ -6,6 +6,7 @@ import { AppState } from '../store/index'
 import TerrainDefinitions from '../components/TerrainDefinitions'
 import ItemRemover from '../components/ItemRemover'
 import { TerrainType, deleteTerrain, addTerrain, changeType } from '../store/terrains'
+import { DefinitionType } from '../base_definition'
 
 interface IState {
   modal_terrain: TerrainType | null
@@ -42,10 +43,10 @@ class Terrains extends Component<IProps, IState> {
         </Modal>
         {
           <TerrainDefinitions
-            terrains={this.props.terrains}
+            terrains={this.props.terrains.filter(terrain => terrain.mode === this.props.mode || terrain.mode === DefinitionType.Any)}
             types={this.props.types}
             onRowClick={terrain => this.openModal(terrain)}
-            onCreateNew={this.props.addTerrain}
+            onCreateNew={type => this.props.addTerrain(type, this.props.mode)}
           />
         }
       </Container>
@@ -62,12 +63,13 @@ class Terrains extends Component<IProps, IState> {
 
 const mapStateToProps = (state: AppState) => ({
   terrains: state.terrains.definitions,
-  types: state.terrains.types
+  types: state.terrains.types,
+  mode: state.settings.mode
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
   deleteTerrain: (type: TerrainType) => dispatch(deleteTerrain(type)),
-  addTerrain: (type: TerrainType) => dispatch(addTerrain(type)),
+  addTerrain: (type: TerrainType, mode: DefinitionType) => dispatch(addTerrain(type, mode)),
   changeType: (old_type: TerrainType, new_type: TerrainType) => dispatch(changeType(old_type, new_type))
 })
 

@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import ModalUnitDetail from '../containers/ModalUnitDetail'
 import ModalGlobalStatsDetail from '../containers/ModalGlobalStatsDetail'
 import { AppState } from '../store/index'
+import { DefinitionType } from '../base_definition'
 import { UnitType, UnitDefinition, ArmyName, addUnit, deleteUnit, changeType, createArmy, changeName, deleteArmy, duplicateArmy } from '../store/units'
 import UnitDefinitions from '../components/UnitDefinitions'
 import ItemRemover from '../components/ItemRemover'
@@ -72,7 +73,7 @@ class Units extends Component<IProps, IState> {
         <br/>
         {
           Array.from(this.props.units).map(value => {
-            return this.renderArmy(value[0], value[1], this.props.global_stats.get(value[0])!)
+            return this.renderArmy(value[0], value[1], this.props.global_stats.getIn([value[0], this.props.mode]))
           })
         }
       </Container>
@@ -86,9 +87,9 @@ class Units extends Component<IProps, IState> {
           types={this.props.types.get(army)!}
           terrains={this.props.terrains}
           global_stats={global_stats}
-          units={units}
+          units={units.filter(unit => unit.mode === this.props.mode || unit.mode === DefinitionType.Any)}
           onRowClick={unit => this.openModal(army, unit.type)}
-          onCreateNew={type => this.props.addUnit(army, type)}
+          onCreateNew={type => this.props.addUnit(army, this.props.mode, type)}
           onChangeName={(old_name, new_name) => this.props.changeName(old_name, new_name)}
           onDelete={this.props.deleteArmy}
           onDuplicate={this.props.duplicateArmy}
@@ -111,12 +112,13 @@ const mapStateToProps = (state: AppState) => ({
   units: state.units.definitions,
   terrains: state.terrains.types,
   types: state.units.types,
-  global_stats: state.global_stats
+  global_stats: state.global_stats,
+  mode: state.settings.mode
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
   deleteUnit: (army: ArmyName, type: UnitType) => dispatch(deleteUnit(army, type)),
-  addUnit: (army: ArmyName, type: UnitType) => dispatch(addUnit(army, type)),
+  addUnit: (army: ArmyName, mode: DefinitionType, type: UnitType) => dispatch(addUnit(army, mode, type)),
   changeType: (army: ArmyName, old_type: UnitType, new_type: UnitType) => dispatch(changeType(army, old_type, new_type)),
   createArmy: (army: ArmyName) => dispatch(createArmy(army)),
   changeName: (old_name: ArmyName, new_name: ArmyName) => dispatch(changeName(old_name, new_name)),

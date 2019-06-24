@@ -89,7 +89,7 @@ class Stats extends Component<IProps> {
 
   
   mergeAllValues = (name: ArmyName, army: List<Unit | undefined>): List<any> => {
-    return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats.get(name)!))
+    return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats.getIn([name, this.props.mode])))
   }
 
   calculateValue = (participant: Army, type: UnitType, attribute: UnitCalc): number => {
@@ -121,7 +121,8 @@ const mapStateToProps = (state: AppState) => ({
   armies: state.land.armies,
   units: state.units.definitions,
   types: state.units.types,
-  global_stats: state.global_stats
+  global_stats: state.global_stats,
+  mode: state.settings.mode
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

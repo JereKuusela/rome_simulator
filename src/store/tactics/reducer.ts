@@ -1,6 +1,6 @@
 import { createReducer } from 'typesafe-actions'
 import { getDefaultDefinitions, getDefaultTypes } from './data'
-import { setBaseValue, deleteTactic, addTactic, changeImage, changeType } from './actions'
+import { setBaseValue, deleteTactic, addTactic, changeImage, changeType, changeMode } from './actions'
 import { addValues, ValuesType } from '../../base_definition'
 
 export const tacticsState = {
@@ -26,14 +26,20 @@ export const tacticsReducer = createReducer(tacticsState)
   .handleAction(addTactic, (state, action: ReturnType<typeof addTactic>) => (
     {
       ...state,
-      definitions: state.definitions.set(action.payload.type, { type: action.payload.type, image: '' }),
+      definitions: state.definitions.set(action.payload.type, { type: action.payload.type, mode: action.payload.mode, image: '' }),
       types: state.types.add(action.payload.type)
     }
   ))
   .handleAction(changeImage, (state, action: ReturnType<typeof changeImage>) => (
     {
       ...state,
-      definitions: state.definitions.update(action.payload.type, tactic => ({ ...tactic, image: action.payload.image}))
+      definitions: state.definitions.update(action.payload.type, tactic => ({ ...tactic, image: action.payload.image }))
+    }
+  ))
+  .handleAction(changeMode, (state, action: ReturnType<typeof changeMode>) => (
+    {
+      ...state,
+      definitions: state.definitions.update(action.payload.type, tactic => ({ ...tactic, mode: action.payload.mode }))
     }
   ))
   .handleAction(changeType, (state, action: ReturnType<typeof changeType>) => (

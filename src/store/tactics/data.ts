@@ -1,6 +1,6 @@
 import { Map, OrderedMap, OrderedSet, fromJS } from 'immutable'
 import { TacticType, TacticCalc, TacticDefinition, ValueType } from './actions'
-import { addValues, ValuesType } from '../../base_definition'
+import { addValues, ValuesType, DefinitionType } from '../../base_definition'
 import { UnitType } from '../units/'
 import IconBottleneck from '../../images/bottleneck.png'
 import IconCavalrySkirmish from '../../images/cavalry_skirmish.png'
@@ -44,15 +44,16 @@ export const tacticFromJS = (object: Map<string, any>): TacticDefinition | undef
   if (!object)
     return undefined
   const type = object.get('type') as TacticType
+  const mode = object.get('mode') as DefinitionType || DefinitionType.Any
   let image = object.get('image')
   if (!image)
     image = tactic_to_icon.get(type) || ''
   let base_values = object.has('base_values') ? fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined 
-  return { type, image, base_values }
+  return { type, mode, image, base_values }
 }
 
 const createTacticFromJson = (data: TacticData): TacticDefinition => {
-  let tactic: TacticDefinition = { type: data.type as TacticType, image: tactic_to_icon.get(data.type as TacticType) || '' }
+  let tactic: TacticDefinition = { type: data.type as TacticType, mode: data.mode as DefinitionType, image: tactic_to_icon.get(data.type as TacticType) || '' }
   const base_values: [ValueType, number][] = [
     [UnitType.Archers, data.archers || 0],
     [UnitType.CamelCavalry, data.camel_cavalry || 0],
@@ -63,6 +64,12 @@ const createTacticFromJson = (data: TacticData): TacticDefinition => {
     [UnitType.LightCavalry, data.light_cavalry || 0],
     [UnitType.LightInfantry, data.light_infantry || 0],
     [UnitType.WarElephants, data.war_elephants || 0],
+    [UnitType.Liburnian, data.liburnian || 0],
+    [UnitType.Trireme, data.trireme || 0],
+    [UnitType.Tetrere, data.tetrere || 0],
+    [UnitType.Hexere, data.hexere || 0],
+    [UnitType.Octere, data.octere || 0],
+    [UnitType.MegaGalley, data.mega_galley || 0],
     [TacticCalc.Casualties, data.casualties || 0],
     [TacticType.Bottleneck, data.bottleneck || 0],
     [TacticType.CavalrySkirmish, data.cavalry_skirmish || 0],
@@ -73,7 +80,12 @@ const createTacticFromJson = (data: TacticData): TacticDefinition => {
     [TacticType.Phalanx, data.phalanx || 0],
     [TacticType.ShockAction, data.shock_action || 0],
     [TacticType.Skirmishing, data.skirmishing || 0],
-    [TacticType.TriplexAcies, data.triplex_acies || 0]
+    [TacticType.TriplexAcies, data.triplex_acies || 0],
+    [TacticType.FrontalAssault, data.frontal_assault || 0],
+    [TacticType.NavalEnvelopment, data.naval_envelopment || 0],
+    [TacticType.CloseRanks, data.close_ranks || 0],
+    [TacticType.Harassment, data.harassment || 0],
+    [TacticType.ProbingAttack, data.probing_attack || 0]
 
   ]
   return addValues(tactic, ValuesType.Base, tactic.type, base_values)
@@ -81,6 +93,7 @@ const createTacticFromJson = (data: TacticData): TacticDefinition => {
 
 interface TacticData {
   type: string
+  mode: string
   archers?: number
   camel_cavalry?: number
   chariots?: number
@@ -90,15 +103,26 @@ interface TacticData {
   light_cavalry?: number
   light_infantry?: number
   war_elephants?: number
+  liburnian?: number
+  trireme?: number
+  tetrere?: number
+  hexere?: number
+  octere?: number
+  mega_galley?: number
   bottleneck?: number
   cavalry_skirmish?: number
   deception?: number
   envelopment?: number
-  hit_and_run?: number,
-  padma_vyuha?: number,
-  phalanx?: number,
-  shock_action?: number,
-  skirmishing?: number,
-  triplex_acies?: number,
+  hit_and_run?: number
+  padma_vyuha?: number
+  phalanx?: number
+  shock_action?: number
+  skirmishing?: number
+  triplex_acies?: number
   casualties?: number
+  frontal_assault?: number
+  naval_envelopment?: number
+  close_ranks?: number
+  harassment?: number
+  probing_attack?: number
 }

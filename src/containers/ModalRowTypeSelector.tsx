@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
-import { UnitType, ArmyName } from '../store/units'
+import { UnitType, ArmyName, UnitDefinition } from '../store/units'
 import { AppState } from '../store/'
 import { setRowType, RowType, } from '../store/land_battle'
+import { DefinitionType } from '../base_definition'
 import ItemSelector from '../components/ItemSelector'
 import ItemRemover from '../components/ItemRemover'
 
@@ -17,7 +18,12 @@ class ModalRowTypeSelector extends Component<IProps> {
     if (!this.props.info)
       return null
     const name = this.props.info.name
-    const types = this.props.types.get(name)
+    const types = this.props.types.get(name)!.filter(type => {
+      const unit = this.props.units.getIn([name, type]) as UnitDefinition | undefined
+      if (!unit)
+        return false
+      return unit.mode === this.props.mode || unit.mode === DefinitionType.Any
+    })
     const units = this.props.units.get(this.props.info.name)
     if (!types || !units)
       return null
@@ -47,7 +53,8 @@ class ModalRowTypeSelector extends Component<IProps> {
 
 const mapStateToProps = (state: AppState) => ({
   units: state.units.definitions,
-  types: state.units.types
+  types: state.units.types,
+  mode: state.settings.mode
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

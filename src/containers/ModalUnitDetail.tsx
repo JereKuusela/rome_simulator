@@ -18,7 +18,7 @@ class ModalUnitDetail extends Component<IProps> {
         name={this.props.army}
         terrains={this.props.terrains}
         custom_value_key={CUSTOM_VALUE_KEY}
-        unit={mergeValues(this.props.units.getIn([this.props.army, this.props.unit]), this.props.global_stats.get(this.props.army)!)}
+        unit={mergeValues(this.props.units.getIn([this.props.army, this.props.unit]), this.props.global_stats.getIn([this.props.army, this.props.mode]))}
         units={this.props.units}
         unit_types={unit_types}
         onCustomBaseValueChange={this.props.setBaseValue}
@@ -36,7 +36,8 @@ const mapStateToProps = (state: AppState) => ({
   units: state.units.definitions,
   global_stats: state.global_stats,
   unit_types: state.units.types,
-  terrains: state.terrains.types
+  terrains: state.terrains.types,
+  mode: state.settings.mode
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

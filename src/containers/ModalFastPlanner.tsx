@@ -5,10 +5,10 @@ import { Modal, Button, Grid } from 'semantic-ui-react'
 import { AppState } from '../store/'
 import FastPlanner from '../components/FastPlanner'
 import ArmyCosts from '../components/ArmyCosts'
-import { ArmyName, UnitType, Unit } from '../store/units'
+import { ArmyName, UnitType, Unit, UnitDefinition } from '../store/units'
 import { clearUnits, removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits } from '../store/land_battle'
 import { mapRange } from '../utils'
-import { mergeValues } from '../base_definition'
+import { mergeValues, DefinitionType } from '../base_definition'
 
 type Units = Map<UnitType, number>
 
@@ -30,8 +30,8 @@ class ModalFastPlanner extends Component<IProps, IState> {
   render(): JSX.Element | null {
     if (!this.props.open)
       return null
-    const types_a = this.props.types.get(this.props.attacker)
-    const types_d = this.props.types.get(this.props.defender)
+    const types_a = this.filterTypes(this.props.attacker)
+    const types_d = this.filterTypes(this.props.defender)
     const attacker = this.props.armies.get(this.props.attacker)
     const defender = this.props.armies.get(this.props.defender)
     this.originals_a = attacker && types_a && types_a.reduce((map, value) => map.set(value, this.countUnits(attacker.reserve, value)), Map<UnitType, number>())
@@ -59,28 +59,37 @@ class ModalFastPlanner extends Component<IProps, IState> {
             defeated_d={defender && this.mergeAllValues(this.props.defender, defender.defeated)}
             attached
           />
-          <br/>
+          <br />
           <Grid>
             <Grid.Row columns='2'>
               <Grid.Column>
-                <Button primary size='large' onClick={this.onClose} style={{width: '100%'}}>
+                <Button primary size='large' onClick={this.onClose} style={{ width: '100%' }}>
                   Close
                 </Button>
               </Grid.Column>
               <Grid.Column>
-                <Button negative size='large' onClick={this.clearUnits} style={{width: '100%'}}>
+                <Button negative size='large' onClick={this.clearUnits} style={{ width: '100%' }}>
                   Clear all units
                 </Button>
               </Grid.Column>
             </Grid.Row>
-          </Grid>  
+          </Grid>
         </Modal.Content>
       </Modal>
     )
   }
 
+  filterTypes = (name: ArmyName) => {
+    return this.props.types.get(name)!.filter(type => {
+      const unit = this.props.units.getIn([name, type]) as UnitDefinition | undefined
+      if (!unit)
+        return false
+      return unit.mode === this.props.mode || unit.mode === DefinitionType.Any
+    })
+  }
+
   mergeAllValues = (name: ArmyName, army: List<Unit | undefined>): List<any> => {
-    return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats.get(name)!))
+    return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats.getIn([name, this.props.mode])))
   }
 
   editReserve = (reserve: List<Unit>, changes: Units, originals?: Units): List<Unit> => {
@@ -101,7 +110,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
     changes.forEach((value, key) => {
       const original = originals ? originals.get(key, 0) : 0
       if (value > original)
-        units = units.concat(mapRange(value - original, _ => ({ type: key, image: '' })))
+        units = units.concat(mapRange(value - original, _ => ({ type: key })))
     })
     return units
   }
@@ -144,7 +153,8 @@ const mapStateToProps = (state: AppState) => ({
   armies: state.land.armies,
   units: state.units.definitions,
   types: state.units.types,
-  global_stats: state.global_stats
+  global_stats: state.global_stats,
+  mode: state.settings.mode
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

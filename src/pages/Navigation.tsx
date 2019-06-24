@@ -1,10 +1,16 @@
 import React, { Component } from 'react'
-import { Container, Menu } from 'semantic-ui-react'
+import { connect } from 'react-redux'
+import { AppState } from '../store/index'
+import { toggleMode } from '../store/settings'
+import { Container, Menu, Image, Button } from 'semantic-ui-react'
+import IconLand from '../images/land_combat.png'
+import IconNaval from '../images/naval_combat.png'
+import { DefinitionType } from '../base_definition';
 
 /**
  * Navigation menu for different pages.
  */
-export default class Navigation extends Component {
+class Navigation extends Component<IProps> {
 
   render(): JSX.Element {
     const path = (this.props as any).location.pathname
@@ -35,10 +41,31 @@ export default class Navigation extends Component {
           <Menu.Item active={path === '/instructions'} onClick={() => history.push('/instructions')}>
             Instructions
           </Menu.Item>
-          <div style={{ padding: '0.5rem', width: '100%', textAlign: 'right' }}>Site version 0.2.3</div>
+          <div style={{ width: '100%', textAlign: 'right', padding: '0.25rem' }}>
+            <Button active={this.props.mode === DefinitionType.Land} compact icon basic circular size='tiny' onClick={this.props.toggleMode}>
+              <Image src={IconLand} avatar style={{ marginRight: 0 }} />
+            </Button>
+            <Button active={this.props.mode === DefinitionType.Naval} compact icon basic circular size='tiny' onClick={this.props.toggleMode}>
+              <Image src={IconNaval} avatar style={{ marginRight: 0 }} />
+            </Button>
+            <span>Site version 0.2.4</span>
+          </div>
+
         </Menu>
         <br />
       </Container>
     )
   }
 }
+
+const mapStateToProps = (state: AppState) => ({
+  mode: state.settings.mode
+})
+
+const mapDispatchToProps = (dispatch: any) => ({
+  toggleMode: () => dispatch(toggleMode())
+})
+
+interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navigation)

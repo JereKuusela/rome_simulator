@@ -4,6 +4,7 @@ import { Modal } from 'semantic-ui-react'
 import { UnitType, ArmyName, Unit, ArmyType } from '../store/units'
 import { AppState } from '../store/'
 import { selectUnit } from '../store/land_battle'
+import { DefinitionType } from '../base_definition'
 import ItemSelector from '../components/ItemSelector'
 
 export interface ModalInfo {
@@ -26,7 +27,7 @@ class ModalUnitSelector extends Component<IProps> {
           <ItemSelector
             onClose={this.props.onClose}
             onSelection={this.selectUnit}
-            items={types.map(value => units.get(value)).toList()}
+            items={types.map(value => units.get(value)).filter(unit => unit && (unit.mode === this.props.mode || unit.mode === DefinitionType.Any)).toList()}
             attributes={[]}
           />
         </Modal.Content>
@@ -42,7 +43,8 @@ class ModalUnitSelector extends Component<IProps> {
 
 const mapStateToProps = (state: AppState) => ({
   units: state.units.definitions,
-  types: state.units.types
+  types: state.units.types,
+  mode: state.settings.mode
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

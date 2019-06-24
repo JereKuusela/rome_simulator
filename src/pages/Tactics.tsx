@@ -8,6 +8,7 @@ import ItemRemover from '../components/ItemRemover'
 import { TacticType, deleteTactic, addTactic, changeType } from '../store/tactics'
 import { OrderedSet } from 'immutable'
 import { UnitType } from '../store/units' 
+import { DefinitionType } from '../base_definition'
 
 interface IState {
   modal_tactic: TacticType | null
@@ -44,12 +45,12 @@ class Tactics extends Component<IProps, IState> {
         </Modal>
         {
           <TacticDefinitions
-            tactics={this.props.tactics}
+            tactics={this.props.tactics.filter(tactic => tactic.mode === this.props.mode || tactic.mode === DefinitionType.Any)}
             tactic_types={this.props.tactic_types}
             unit_types={unit_types}
             units={this.props.units}
             onRowClick={tactic => this.openModal(tactic)}
-            onCreateNew={this.props.addTactic}
+            onCreateNew={type => this.props.addTactic(type, this.props.mode)}
           />
         }
       </Container>
@@ -68,12 +69,13 @@ const mapStateToProps = (state: AppState) => ({
   tactics: state.tactics.definitions,
   tactic_types: state.tactics.types.toOrderedSet(),
   units: state.units.definitions,
-  unit_types: state.units.types
+  unit_types: state.units.types,
+  mode: state.settings.mode
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
   deleteTactic: (type: TacticType) => dispatch(deleteTactic(type)),
-  addTactic: (type: TacticType) => dispatch(addTactic(type)),
+  addTactic: (type: TacticType, mode: DefinitionType) => dispatch(addTactic(type, mode)),
   changeType: (old_type: TacticType, new_type: TacticType) => dispatch(changeType(old_type, new_type))
 })
 

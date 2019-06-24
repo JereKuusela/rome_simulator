@@ -2,63 +2,93 @@
   "terrain": [
     {
       "type": "Desert",
+      "mode": "Land",
       "location": "Tile",
       "roll": 0
     },
     {
       "type": "Farmland",
+      "mode": "Land",
       "location": "Tile",
       "roll": 0
     },
     {
       "type": "Forest",
+      "mode": "Land",
       "location": "Tile",
       "roll": -1
     },
     {
       "type": "Hills",
+      "mode": "Land",
       "location": "Tile",
       "roll": -1
     },
     {
       "type": "Jungle",
+      "mode": "Land",
       "location": "Tile",
       "roll": 0
     },
     {
       "type": "Marsh",
+      "mode": "Land",
       "location": "Tile",
       "roll": 0
     },
     {
       "type": "Mountain",
+      "mode": "Land",
       "location": "Tile",
       "roll": -2
     },
     {
       "type": "Naval",
+      "mode": "Land",
       "location": "Border",
       "roll": -2
     },
     {
       "type": "None",
+      "mode": "Any",
       "location": "Border",
       "roll": 0
     },
     { 
       "type": "Plains",
+      "mode": "Land",
       "location": "Tile",
       "roll": 0
     },
     {
       "type": "River",
+      "mode": "Land",
       "location": "Border",
       "roll": -1
     },
     {
       "type": "Strait",
+      "mode": "Land",
       "location": "Border",
       "roll": -2
+    },
+    {
+      "type": "Ocean",
+      "mode": "Naval",
+      "location": "Tile",
+      "roll": 0
+    },
+    {
+      "type": "Coastal",
+      "mode": "Naval",
+      "location": "Tile",
+      "roll": 0
+    },
+    {
+      "type": "River",
+      "mode": "Naval",
+      "location": "Tile",
+      "roll": -1
     }
   ]
 }

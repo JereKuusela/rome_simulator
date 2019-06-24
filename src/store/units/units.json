@@ -2,6 +2,7 @@
   "units": [
     {
       "type": "Archers",
+      "mode": "Land",
       "cost": 4,
       "recruit_time": 45,
       "upkeep": 0.21,
@@ -18,6 +19,7 @@
     },
     {
       "type": "Camel Cavalry",
+      "mode": "Land",
       "cost": 10,
       "recruit_time": 40,
       "upkeep": 0.54,
@@ -35,6 +37,7 @@
     },
     {
       "type": "Chariots",
+      "mode": "Land",
       "cost": 8,
       "recruit_time": 45,
       "upkeep": 0.43,
@@ -52,6 +55,7 @@
     },
     {
       "type": "Heavy Cavalry",
+      "mode": "Land",
       "cost": 15,
       "recruit_time": 60,
       "upkeep": 0.81,
@@ -70,6 +74,7 @@
     },
     {
       "type": "Heavy Infantry",
+      "mode": "Land",
       "cost": 10,
       "recruit_time": 60,
       "upkeep": 0.54,
@@ -88,6 +93,7 @@
     },
     {
       "type": "Horse Archers",
+      "mode": "Land",
       "cost": 10,
       "recruit_time": 60,
       "upkeep": 0.54,
@@ -106,6 +112,7 @@
     },
     {
       "type": "Light Cavalry",
+      "mode": "Land",
       "cost": 6,
       "recruit_time": 45,
       "upkeep": 0.32,
@@ -123,6 +130,7 @@
     },
     {
       "type": "Light Infantry",
+      "mode": "Land",
       "cost": 4,
       "recruit_time": 30,
       "upkeep": 0.21,
@@ -141,6 +149,7 @@
     },
     {
       "type": "War Elephants",
+      "mode": "Land",
       "cost": 20,
       "recruit_time": 365,
       "upkeep": 1.08,
@@ -157,6 +166,109 @@
       "heavy_infantry": 0.3,
       "horse_archers": -0.1,
       "light_cavalry": -0.1
+    },
+    {
+      "type": "Liburnian",
+      "mode": "Naval",
+      "cost": 5,
+      "recruit_time": 120,
+      "upkeep": 0.27,
+      "requirements": "None",
+      "can_assault": false,
+      "movement_speed": 13,
+      "maneuver": 4,
+      "morale_damage_done": 0.15,
+      "trireme": -0.15,
+      "tetrere": -0.2,
+      "hexere": -0.3,
+      "octere": -0.3,
+      "mega_galley": -0.4
+    },
+    {
+      "type": "Trireme",
+      "mode": "Naval",
+      "cost": 8,
+      "recruit_time": 180,
+      "upkeep": 0.43,
+      "requirements": "None",
+      "can_assault": false,
+      "movement_speed": 13,
+      "maneuver": 3,
+      "strength_damage_taken": -0.1,
+      "liburnian": 0.15,
+      "tetrere": -0.1,
+      "hexere": -0.1,
+      "octere": -0.2,
+      "mega_galley": -0.2
+    },
+    {
+      "type": "Tetrere",
+      "mode": "Naval",
+      "cost": 10,
+      "recruit_time": 180,
+      "upkeep": 0.54,
+      "requirements": "None",
+      "can_assault": false,
+      "movement_speed": 12,
+      "maneuver": 2,
+      "strength_damage_taken": -0.1,
+      "liburnian": 0.2,
+      "trireme": 0.1,
+      "octere": -0.1,
+      "mega_galley": -0.1
+    },
+    {
+      "type": "Hexere",
+      "mode": "Naval",
+      "cost": 15,
+      "recruit_time": 180,
+      "upkeep": 0.81,
+      "requirements": "None",
+      "can_assault": false,
+      "movement_speed": 11,
+      "maneuver": 1,
+      "strength_damage_done": 0.1,
+      "liburnian": 0.3,
+      "trireme": 0.1,
+      "tetrere": 0.05,
+      "octere": -0.1,
+      "mega_galley": -0.1
+    },
+    {
+      "type": "Octere",
+      "mode": "Naval",
+      "cost": 25,
+      "recruit_time": 180,
+      "upkeep": 1.35,
+      "requirements": "None",
+      "can_assault": false,
+      "movement_speed": 9,
+      "maneuver": 0,
+      "strength_damage_done": 0.15,
+      "strength_damage_taken": -0.25,
+      "liburnian": 0.3,
+      "trireme": 0.2,
+      "tetrere": 0.1,
+      "hexere": 0.1,
+      "mega_galley": -0.1
+    },
+    {
+      "type": "Mega Galley",
+      "mode": "Naval",
+      "cost": 32,
+      "recruit_time": 365,
+      "upkeep": 1.72,
+      "requirements": "None",
+      "can_assault": false,
+      "movement_speed": 7,
+      "maneuver": 0,
+      "strength_damage_done": 0.4,
+      "strength_damage_taken": -0.5,
+      "liburnian": 0.4,
+      "trireme": 0.3,
+      "tetrere": 0.2,
+      "hexere": 0.2,
+      "octere": 0.1
     }
   ]
 }

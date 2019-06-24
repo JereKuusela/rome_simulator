@@ -1,19 +1,25 @@
 import { createAction } from 'typesafe-actions'
-import { ValuesType } from '../../base_definition'
+import { ValuesType, DefinitionType } from '../../base_definition'
 
 import { TerrainType } from '../terrains'
 import { calculateValue, BaseDefinition, toPercent, toRelativeZeroPercent } from '../../base_definition'
 
 export enum UnitType {
   Archers = 'Archers',
-  WarElephants = 'War Elephants',
-  LightInfantry = 'Light Infantry',
-  LightCavalry = 'Light Cavalry',
-  HorseArchers = 'Horse Archers',
-  HeavyInfantry = 'Heavy Infantry',
+  CamelCavalry = 'Camel Cavalry',
   Chariots = 'Chariots',
   HeavyCavalry = 'Heavy Cavalry',
-  CamelCavalry = 'Camel Cavalry'
+  HeavyInfantry = 'Heavy Infantry',
+  HorseArchers = 'Horse Archers',
+  LightCavalry = 'Light Cavalry',
+  LightInfantry = 'Light Infantry',
+  WarElephants = 'War Elephants',
+  Liburnian = 'Liburnian',
+  Trireme = 'Trireme',
+  Tetrere = 'Tetrere',
+  Hexere = 'Hexere',
+  Octere = 'Octere',
+  MegaGalley = 'Mega Galley'
 }
 
 export enum UnitCalc {
@@ -47,6 +53,7 @@ export interface Unit extends BaseDefinition<UnitType, ValueType> {
 export interface UnitDefinition extends BaseDefinition<UnitType, ValueType> {
   readonly requirements: string
   readonly can_assault: boolean
+  readonly mode: DefinitionType
 }
 
 export const valueToString = (definition: BaseDefinition<UnitType, ValueType>, type: ValueType): string => {
@@ -85,7 +92,7 @@ export const setValue = createAction('@@units/SET_VALUE', action => {
 })
 
 export const setGlobalValue = createAction('@@units/SET_GLOBAL_VALUE', action => {
-  return (army: ArmyName, type: ValuesType, key: string, attribute: ValueType, value: number) => action({ army, type, key, attribute, value })
+  return (army: ArmyName, mode: DefinitionType, type: ValuesType, key: string, attribute: ValueType, value: number) => action({ army, mode, type, key, attribute, value })
 })
 
 export const deleteUnit = createAction('@@units/DELETE_UNIT', action => {
@@ -93,7 +100,7 @@ export const deleteUnit = createAction('@@units/DELETE_UNIT', action => {
 })
 
 export const addUnit = createAction('@@units/ADD_UNIT', action => {
-  return (army: ArmyName, type: UnitType) => action({ army, type })
+  return (army: ArmyName, mode: DefinitionType, type: UnitType) => action({ army, mode, type })
 })
 
 export const changeType = createAction('@@units/CHANGE_TYPE', action => {
@@ -102,6 +109,10 @@ export const changeType = createAction('@@units/CHANGE_TYPE', action => {
 
 export const changeImage = createAction('@@units/CHANGE_IMAGE', action => {
   return (army: ArmyName, type: UnitType, image: string) => action({ army, type, image })
+})
+
+export const changeMode = createAction('@@units/CHANGE_MODE', action => {
+  return (army: ArmyName, mode: DefinitionType, type: UnitType, image: string) => action({ army, mode, type, image })
 })
 
 export const deleteArmy = createAction('@@units/DELETE_ARMY', action => {

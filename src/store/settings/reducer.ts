@@ -1,6 +1,7 @@
 import { createReducer } from 'typesafe-actions'
 import { OrderedMap } from 'immutable'
-import { CombatParameter, changeParamater, toggleSimpleMode } from './actions'
+import { CombatParameter, changeParamater, toggleSimpleMode, toggleMode } from './actions'
+import { DefinitionType } from '../../base_definition'
 
 export const settingsState = {
   combat: OrderedMap<CombatParameter, number>()
@@ -18,7 +19,8 @@ export const settingsState = {
     .set(CombatParameter.MinimumManpower, 0)
     .set(CombatParameter.FlankTargetsOwnEdge, 0)
     .set(CombatParameter.ReinforceFirst, 0),
-    simple_mode: true
+    simple_mode: true,
+    mode: DefinitionType.Land
 }
 
 
@@ -28,4 +30,7 @@ export const settingsReducer = createReducer(settingsState)
   ))
   .handleAction(toggleSimpleMode, (state, action: ReturnType<typeof toggleSimpleMode>) => (
     { ...state, simple_mode: !state.simple_mode }
+  ))
+  .handleAction(toggleMode, (state, action: ReturnType<typeof toggleMode>) => (
+    { ...state, mode: state.mode === DefinitionType.Land ? DefinitionType.Naval : DefinitionType.Land }
   ))

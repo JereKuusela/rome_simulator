@@ -1,6 +1,6 @@
 import { OrderedMap, Map, OrderedSet, fromJS } from 'immutable'
 import { UnitType, UnitDefinition, UnitCalc, ValueType, Unit } from './actions'
-import { addValues, ValuesType } from '../../base_definition'
+import { addValues, ValuesType, DefinitionType } from '../../base_definition'
 import IconArcher from '../../images/archers.png'
 import IconCamelCavalry from '../../images/camel_cavalry.png'
 import IconChariots from '../../images/chariots.png'
@@ -55,26 +55,31 @@ export const unitDefinitionFromJS = (object?: Map<string, any>): UnitDefinition 
   if (!object)
     return undefined
   const type = object.get('type') as UnitType
+  const mode = object.get('mode') as DefinitionType || DefinitionType.Any
   let image = object.get('image')
   if (!image)
     image = unit_to_icon.get(type) || ''
   const base_values = object.has('base_values') ? fromJS(object.get('base_values').map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
   const modifier_values = object.has('modifier_values') ? fromJS(object.get('modifier_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
   const loss_values = object.has('loss_values') ? fromJS(object.get('loss_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
-  return { type, image, requirements: object.get('requirements'), can_assault: object.get('can_assault'), base_values, modifier_values, loss_values }
+  return { type, mode, image, requirements: object.get('requirements'), can_assault: object.get('can_assault'), base_values, modifier_values, loss_values }
 }
 
-export const getDefaultGlobalDefinition = (): UnitDefinition => {
-  const unit = { type: '' as UnitType, image: IconMilitaryPower, requirements: '', can_assault: false }
+export const getDefaultGlobalDefinition = (): Map<DefinitionType, UnitDefinition> => {
+  let definitions = Map<DefinitionType, UnitDefinition>()
+  const land = { type: '' as UnitType, mode: DefinitionType.Land, image: IconMilitaryPower, requirements: '', can_assault: false }
+  const naval = { type: '' as UnitType, mode: DefinitionType.Naval, image: IconMilitaryPower, requirements: '', can_assault: false }
   const values: [UnitCalc, number][] = [
     [UnitCalc.Manpower, 1000],
     [UnitCalc.Morale, 3]
   ]
-  return addValues(unit, ValuesType.Base, 'Base', values)
+  definitions = definitions.set(DefinitionType.Land, addValues(land, ValuesType.Base, 'Base', values))
+  definitions = definitions.set(DefinitionType.Naval, addValues(naval, ValuesType.Base, 'Base', values))
+  return definitions
 }
 
 const createUnitFromJson = (data: UnitData): UnitDefinition => {
-  let unit = { type: data.type as UnitType, image: unit_to_icon.get(data.type as UnitType) || '', requirements: data.requirements, can_assault: data.can_assault }
+  let unit = { type: data.type as UnitType, mode: data.mode as DefinitionType, image: unit_to_icon.get(data.type as UnitType) || '', requirements: data.requirements, can_assault: data.can_assault }
   const base_values: [ValueType, number][] = [
     [UnitCalc.AttritionWeight, data.attrition_weight || 0],
     [UnitCalc.Cost, data.cost],
@@ -94,7 +99,13 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
     [UnitType.HorseArchers, data.horse_archers || 0],
     [UnitType.LightCavalry, data.light_cavalry || 0],
     [UnitType.LightInfantry, data.light_infantry || 0],
-    [UnitType.WarElephants, data.war_elephants || 0]
+    [UnitType.WarElephants, data.war_elephants || 0],
+    [UnitType.Liburnian, data.liburnian || 0],
+    [UnitType.Trireme, data.trireme || 0],
+    [UnitType.Tetrere, data.tetrere || 0],
+    [UnitType.Hexere, data.hexere || 0],
+    [UnitType.Octere, data.octere || 0],
+    [UnitType.MegaGalley, data.mega_galley || 0]
   ]
   unit = addValues(unit, ValuesType.Base, unit.type, base_values)
   return unit
@@ -102,6 +113,7 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
 
 interface UnitData {
   type: string
+  mode: string
   cost: number
   recruit_time: number
   upkeep: number
@@ -123,4 +135,10 @@ interface UnitData {
   light_cavalry?: number
   light_infantry?: number
   war_elephants?: number
+  liburnian?: number
+  trireme?: number
+  tetrere?: number
+  hexere?: number
+  octere?: number
+  mega_galley?: number
 }

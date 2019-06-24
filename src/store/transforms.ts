@@ -3,6 +3,7 @@ import { tacticFromJS, TacticType, tacticsState } from './tactics'
 import { terrainFromJS, TerrainType, terrainState } from './terrains'
 import { unitDefinitionFromJS, unitFromJS, ArmyName, UnitType, unitsState, globalStatsState, Unit } from './units'
 import { RowType, initialState, PastState, Participant, getInitialArmy } from './land_battle'
+import { DefinitionType } from '../base_definition'
 import { transferState } from './transfer'
 import { settingsState, CombatParameter } from './settings'
 
@@ -59,8 +60,8 @@ export const transformUnits = (state_raw: any): typeof unitsState => {
 export const transformGlobalStats = (state_raw: any): typeof globalStatsState => {
   if (!state_raw)
     return globalStatsState
-  let global_stats_raw: Map<ArmyName, any> = fromJS(state_raw)
-  let global_stats = global_stats_raw.map(value => unitDefinitionFromJS(value)!)
+  let global_stats_raw: Map<ArmyName, Map<DefinitionType, any>> = fromJS(state_raw)
+  let global_stats = global_stats_raw.filter(value => value).map(value => value.map(value => unitDefinitionFromJS(value)!).filter(value => value))
   return global_stats
 }
 
@@ -167,6 +168,7 @@ export const transformSettings = (state_raw: any): typeof settingsState => {
     return settingsState
   let combat = state_raw.combat ? settingsState.combat.merge(fromJS(state_raw.combat).toOrderedMap() as OrderedMap<CombatParameter, number>) : settingsState.combat
   combat = combat.filter((_, key) => settings.includes(key))
-  const simple_mode = state_raw.simple_mode || settingsState.simple_mode 
-  return { combat, simple_mode }
+  const simple_mode = state_raw.simple_mode
+  const mode = state_raw.mode || settingsState.mode
+  return { combat, simple_mode, mode }
 }

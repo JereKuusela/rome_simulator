@@ -59,3 +59,7 @@ export const changeParamater = createAction('@@settings/CHANGE_PARAMETER', actio
 export const toggleSimpleMode = createAction('@@settings/TOGGLE_SIMPLE_MODE', action => {
   return () => action({})
 })
+
+export const toggleMode = createAction('@@settings/TOGGLE_MODE', action => {
+  return () => action({})
+})

@@ -1,6 +1,6 @@
 import { createReducer } from 'typesafe-actions'
 import { getDefaultDefinitions, getDefaultTypes } from './data'
-import { setBaseValue, deleteTerrain, addTerrain, changeLocation, changeImage, changeType } from './actions'
+import { setBaseValue, deleteTerrain, addTerrain, changeLocation, changeImage, changeType, changeMode } from './actions'
 import { addValues, ValuesType } from '../../base_definition'
 
 export const terrainState = {
@@ -27,7 +27,7 @@ export const terrainsReducer = createReducer(terrainState)
   .handleAction(addTerrain, (state, action: ReturnType<typeof addTerrain>) => (
     {
       ...state,
-      definitions: state.definitions.set(action.payload.type, { type: action.payload.type, image: '' }),
+      definitions: state.definitions.set(action.payload.type, { type: action.payload.type, mode: action.payload.mode, image: '' }),
       types: state.types.add(action.payload.type)
     }
   ))
@@ -41,6 +41,12 @@ export const terrainsReducer = createReducer(terrainState)
     {
       ...state,
       definitions: state.definitions.update(action.payload.type, terrain => ({ ...terrain, image: action.payload.image}))
+    }
+  ))
+  .handleAction(changeMode, (state, action: ReturnType<typeof changeMode>) => (
+    {
+      ...state,
+      definitions: state.definitions.update(action.payload.type, terrain => ({ ...terrain, mode: action.payload.mode}))
     }
   ))
   .handleAction(changeType, (state, action: ReturnType<typeof changeType>) => (

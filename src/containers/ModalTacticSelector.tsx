@@ -8,7 +8,7 @@ import { calculateTactic } from '../store/battle'
 import ItemSelector from '../components/ItemSelector'
 import { TacticType } from '../store/tactics'
 import { ArmyName } from '../store/units'
-import { toRelativePercent, toPercent } from '../base_definition'
+import { toRelativePercent, toPercent, DefinitionType } from '../base_definition'
 
 export interface ModalInfo {
   name: ArmyName
@@ -34,7 +34,7 @@ class ModalTacticSelector extends Component<IProps> {
         <ItemSelector
           onClose={this.props.onClose}
           onSelection={this.selectTactic}
-          items={this.props.tactics.toList()}
+          items={this.props.tactics.filter(tactic => (tactic.mode === this.props.mode || tactic.mode === DefinitionType.Any)).toList()}
           attributes={[]}
           custom_values={custom_values}
         />
@@ -50,7 +50,8 @@ class ModalTacticSelector extends Component<IProps> {
 
 const mapStateToProps = (state: AppState) => ({
   tactics: state.tactics.definitions,
-  armies: state.land.armies
+  armies: state.land.armies,
+  mode: state.settings.mode
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

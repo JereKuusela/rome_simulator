@@ -4,8 +4,7 @@ import { Modal } from 'semantic-ui-react'
 import { UnitType, ArmyName, ArmyType, ValueType, Unit, UnitDefinition } from '../store/units'
 import { selectUnit } from '../store/land_battle'
 import { AppState } from '../store/'
-import { addValues, mergeValues, ValuesType } from '../base_definition'
-import { OrderedSet } from 'immutable'
+import { addValues, mergeValues, ValuesType, DefinitionType } from '../base_definition'
 import ItemRemover from '../components/ItemRemover'
 import UnitDetail from '../components/UnitDetail'
 
@@ -25,7 +24,12 @@ class ModalArmyUnitDetail extends Component<IProps> {
     if (!this.props.info)
       return null
     this.unit = this.getUnit(this.props.info)
-    const unit_types = this.props.unit_types.reduce((previous, current) => previous.merge(current.toOrderedSet()), OrderedSet<UnitType>())
+    const unit_types = this.props.unit_types.get(this.props.info.name)!.filter(type => {
+      const unit = this.props.units.getIn([this.props.info!.name, type]) as UnitDefinition | undefined
+      if (!unit)
+        return false
+      return unit.mode === this.props.mode || unit.mode === DefinitionType.Any
+    })
     return (
       <Modal basic onClose={this.props.onClose} open>
         <Modal.Content>
@@ -88,7 +92,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
   getUnitDefinition = (info: ModalInfo): UnitDefinition => (this.mergeAllValues(info.name, this.getUnit(info)))
 
   mergeAllValues = (name: ArmyName, unit: Unit): UnitDefinition => {
-    return mergeValues(mergeValues(this.props.units.getIn([name, unit.type]), unit), this.props.global_stats.get(name)!)
+    return mergeValues(mergeValues(this.props.units.getIn([name, unit.type]), unit), this.props.global_stats.getIn([name, this.props.mode]))
   }
 
   getUnit = (info: ModalInfo): Unit => {
@@ -107,7 +111,8 @@ const mapStateToProps = (state: AppState) => ({
   units: state.units.definitions,
   unit_types: state.units.types,
   global_stats: state.global_stats,
-  terrains: state.terrains.types
+  terrains: state.terrains.types,
+  mode: state.settings.mode
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

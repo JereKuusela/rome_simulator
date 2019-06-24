@@ -8,6 +8,12 @@ export enum ValuesType {
   Loss
 }
 
+export enum DefinitionType {
+  Land = 'Land',
+  Naval = 'Naval',
+  Any = 'Any'
+}
+
 type AnyDefinition = AnyBaseDefinition | BaseValuesDefinition<any, any>
 type AnyBaseDefinition = BaseDefinition<any, any>
 
@@ -21,6 +27,7 @@ export interface BaseDefinition<T, S> {
 
 export interface BaseValuesDefinition<T, S> {
   readonly type: T
+  readonly mode: DefinitionType
   readonly image?: string
   readonly base_values?: Map<S, OrderedMap<string, number>>
 }
