@@ -83,6 +83,7 @@ class Units extends Component<IProps, IState> {
     return (
       <div key={army}>
         <UnitDefinitions
+          mode={this.props.mode}
           army={army}
           types={this.props.types.get(army)!}
           terrains={this.props.terrains}

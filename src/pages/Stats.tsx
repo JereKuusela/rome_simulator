@@ -6,9 +6,10 @@ import { AppState } from '../store/index'
 import { ArmyName, Unit, UnitType, UnitCalc } from '../store/units'
 import { Participant, ParticipantType, Army } from '../store/battle'
 import IconManpower from '../images/manpower.png'
+import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
 import { getBattle } from '../utils'
-import { calculateValue, calculateValueWithoutLoss, mergeValues, getImage } from '../base_definition'
+import { calculateValue, calculateValueWithoutLoss, mergeValues, getImage, DefinitionType } from '../base_definition'
 
 class Stats extends Component<IProps> {
   render(): JSX.Element {
@@ -38,13 +39,13 @@ class Stats extends Component<IProps> {
                 {type}
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <Image src={IconManpower} avatar />
+                <Image src={this.props.mode === DefinitionType.Naval ? IconStrength: IconManpower} avatar />
               </Table.HeaderCell>
               <Table.HeaderCell>
                 <Image src={IconMorale} avatar />
               </Table.HeaderCell>
               <Table.HeaderCell>
-                Enemies killed
+                Strength depleted
               </Table.HeaderCell>
               <Table.HeaderCell>
                 Morale depleted
@@ -73,19 +74,25 @@ class Stats extends Component<IProps> {
           <Image src={image} avatar />
           {type + ' (x ' + count + ')'}</Table.Cell>
         <Table.Cell width='3'>
-          {this.calculateValue(armies, type, UnitCalc.Manpower)} / {this.calculateValueWithoutLoss(armies, type, UnitCalc.Manpower)}
+          {this.finalize(this.calculateValue(armies, type, UnitCalc.Strength))} / {this.finalize(this.calculateValueWithoutLoss(armies, type, UnitCalc.Strength))}
         </Table.Cell>
         <Table.Cell width='3'>
           {this.round(this.calculateValue(armies, type, UnitCalc.Morale))} / {this.round(this.calculateValueWithoutLoss(armies, type, UnitCalc.Morale))}
         </Table.Cell>
         <Table.Cell width='3'>
-          {this.calculateValue(armies, type, UnitCalc.ManpowerDepleted)}
+          {this.finalize(this.calculateValue(armies, type, UnitCalc.StrengthDepleted))}
         </Table.Cell>
         <Table.Cell width='3'>
           {this.round(this.calculateValue(armies, type, UnitCalc.MoraleDepleted))}
         </Table.Cell>
       </Table.Row>
     )
+  }
+
+  finalize = (value: number): string => {
+    if (this.props.mode === DefinitionType.Naval)
+      return (value / 10.0) + '%'
+    return String(value)
   }
 
   

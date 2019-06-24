@@ -23,7 +23,7 @@ export const modeState = (mode: DefinitionType): Armies => ({
   armies: Map<ArmyName, Participant>().set(ArmyName.Attacker, getInitialArmy(mode)).set(ArmyName.Defender, getInitialArmy(mode)),
   attacker: ArmyName.Attacker,
   defender: ArmyName.Defender,
-  terrains: getInitialTerrains(),
+  terrains: getInitialTerrains(mode),
   attacker_past: List<PastState>(),
   defender_past: List<PastState>(),
   round: -1,

@@ -35,7 +35,14 @@ export enum ParticipantType {
   Defender = 'Defender'
 }
 
-export const getInitialTerrains = (): List<TerrainType> => List<TerrainType>().push(TerrainType.None).push(TerrainType.Plains)
+export const getInitialTerrains = (mode: DefinitionType): List<TerrainType> => {
+  if (mode === DefinitionType.Naval) {
+    return List<TerrainType>().push(TerrainType.Ocean)
+  }
+  else {
+    return List<TerrainType>().push(TerrainType.None).push(TerrainType.Plains)
+  }
+} 
 
 const getInitialTactic = (mode: DefinitionType): TacticType => mode === DefinitionType.Land ? TacticType.ShockAction : TacticType.FrontalAssault
 

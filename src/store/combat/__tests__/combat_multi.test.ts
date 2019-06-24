@@ -18,7 +18,7 @@ describe('multi', () => {
     expect(unit).toBeTruthy()
     if (!unit)
       return
-    expect(calculateValue(unit, UnitCalc.Manpower)).toEqual(manpower)
+    expect(calculateValue(unit, UnitCalc.Strength)).toEqual(manpower)
     try {
       expect(Math.abs(calculateValue(unit, UnitCalc.Morale) - morale)).toBeLessThan(0.002)
     }
@@ -44,7 +44,7 @@ describe('multi', () => {
       return addValues(addValues(addValues(units.get(type)!, ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, 0.05]]), ValuesType.Base, 'Test', [[UnitCalc.Discipline, 0.03]]), ValuesType.Loss, 'Test', [[UnitCalc.Morale, 3.15 - morale]])
     }
 
-    let attacker = getInitialArmy()
+    let attacker = getInitialArmy(DefinitionType.Land)
     attacker = {
       ...attacker,
       tactic: TacticType.Bottleneck,
@@ -58,7 +58,7 @@ describe('multi', () => {
         .set(17, getAttacker(UnitType.LightInfantry, 1.00))
     }
 
-    let defender = getInitialArmy()
+    let defender = getInitialArmy(DefinitionType.Land)
     defender = {
       ...defender,
       tactic: TacticType.ShockAction,

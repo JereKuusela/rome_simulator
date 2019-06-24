@@ -23,10 +23,10 @@ export enum UnitType {
 }
 
 export enum UnitCalc {
-  ManpowerDepleted = 'Manpower killed',
+  StrengthDepleted = 'Strength depleted',
   MoraleDepleted = 'Morale depleted',
   Morale = 'Morale',
-  Manpower = 'Manpower',
+  Strength = 'Strength',
   Discipline = 'Discipline',
   Offense = 'Offense',
   Defense = 'Defense',
@@ -61,8 +61,8 @@ export const valueToString = (definition: BaseDefinition<UnitType, ValueType>, t
   switch (type) {
     case UnitCalc.Cost:
     case UnitCalc.Maneuver:
-    case UnitCalc.Manpower:
-    case UnitCalc.ManpowerDepleted:
+    case UnitCalc.Strength:
+    case UnitCalc.StrengthDepleted:
     case UnitCalc.Morale:
     case UnitCalc.MoraleDepleted:
     case UnitCalc.MovementSpeed:

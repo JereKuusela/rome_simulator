@@ -127,7 +127,7 @@ export default class UnitDetail extends Component<IProps> {
   renderRow = (unit: Unit, attribute: ValueType): JSX.Element | null => {
     if (attribute === UnitCalc.MovementSpeed || attribute === UnitCalc.Upkeep || attribute === UnitCalc.RecruitTime)
       return null
-    if (!this.props.show_statistics && (attribute === UnitCalc.ManpowerDepleted || attribute === UnitCalc.MoraleDepleted))
+    if (!this.props.show_statistics && (attribute === UnitCalc.StrengthDepleted || attribute === UnitCalc.MoraleDepleted))
       return null
     let base_value = getBaseValue(unit, attribute, this.props.custom_value_key)
     let modifier_value = getModifierValue(unit, attribute, this.props.custom_value_key)
@@ -153,7 +153,7 @@ export default class UnitDetail extends Component<IProps> {
         </Table.Cell>
         <Table.Cell collapsing>
           {
-            (attribute === UnitCalc.Morale || attribute === UnitCalc.Manpower) &&
+            (attribute === UnitCalc.Morale || attribute === UnitCalc.Strength) &&
             <Input
               size='mini'
               style={{ width: 50 }}
@@ -165,7 +165,7 @@ export default class UnitDetail extends Component<IProps> {
         </Table.Cell>
         <Table.Cell collapsing>
           {
-            (attribute === UnitCalc.Morale || attribute === UnitCalc.Manpower) &&
+            (attribute === UnitCalc.Morale || attribute === UnitCalc.Strength) &&
             <Input
               size='mini'
               style={{ width: 50 }}

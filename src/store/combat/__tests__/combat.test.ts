@@ -24,8 +24,8 @@ describe('1 vs 1', () => {
   let round: number
 
   beforeEach(() => {
-    info.attacker = getInitialArmy()
-    info.defender = getInitialArmy()
+    info.attacker = getInitialArmy(DefinitionType.Land)
+    info.defender = getInitialArmy(DefinitionType.Land)
     terrain = List<TerrainDefinition>().push(terrains.get(TerrainType.Forest)!)
     setTactics(info, TacticType.Envelopment, TacticType.Envelopment)
     setCenterUnits(info, unit, unit)

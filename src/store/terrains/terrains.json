@@ -85,7 +85,7 @@
       "roll": 0
     },
     {
-      "type": "River",
+      "type": "Riverine",
       "mode": "Naval",
       "location": "Tile",
       "roll": -1

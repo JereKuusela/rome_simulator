@@ -61,7 +61,7 @@ export default class UnitArmy extends Component<IProps> {
                       onClick={() => this.props.onClick && this.props.onClick(row * this.props.row_width + column, unit)}
                       >
                         {
-                          <div style={{ background: this.gradient(unit, MANPOWER_COLOR, UnitCalc.Manpower) }}>
+                          <div style={{ background: this.gradient(unit, MANPOWER_COLOR, UnitCalc.Strength) }}>
                             <div style={{ background: this.gradient(unit, MORALE_COLOR, UnitCalc.Morale) }}>
                               <Image src={unit && unit.is_defeated ? IconDefeated : getImage(unit)} avatar style={{margin: 0}}/>
                             </div>

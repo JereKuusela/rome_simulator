@@ -39,7 +39,7 @@ export default class ArmyCosts extends Component<IProps> {
         </Table.Header>
         <Table.Body>
           {
-            this.renderRow('Manpower', IconManpower, UnitCalc.Manpower, 0)
+            this.renderRow('Manpower', IconManpower, UnitCalc.Strength, 0)
           }
           {
             this.renderRow('Cost', IconCost, UnitCalc.Cost, 0)

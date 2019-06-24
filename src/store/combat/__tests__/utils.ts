@@ -14,7 +14,7 @@ const verifySub = (unit: Unit | undefined, manpower: number, morale: number) => 
   expect(unit).toBeTruthy()
   if (!unit)
     return
-  expect(calculateValue(unit, UnitCalc.Manpower)).toEqual(manpower)
+  expect(calculateValue(unit, UnitCalc.Strength)).toEqual(manpower)
   try {
     expect(Math.abs(calculateValue(unit, UnitCalc.Morale) - morale)).toBeLessThan(0.002)
   }

@@ -117,7 +117,7 @@ class Transfer extends Component<IProps, IState> {
     if (!this.props.export_keys.get(ExportKey.Settings))
       new_state.settings = undefined
     if (!this.props.export_keys.get(ExportKey.Land))
-      new_state.land = undefined
+      new_state.battle = undefined
     /*else if (this.props.export_keys.get(ExportKey.InitialOnly)) {
       const past_a = new_state.land.attacker.past && new_state.land.attacker.past.get(0)
       if (state.land.round > -1 && past_a) {
@@ -147,7 +147,7 @@ class Transfer extends Component<IProps, IState> {
       }
     }*/
     if (!this.props.export_keys.get(ExportKey.Naval))
-      new_state.naval = undefined
+      new_state.battle = undefined
     return new_state
   }
 }

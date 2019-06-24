@@ -7,13 +7,15 @@ import IconDiscipline from '../images/discipline.png'
 import IconOffense from '../images/offense.png'
 import IconDefense from '../images/defense.png'
 import IconManpower from '../images/manpower.png'
+import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
 import IconAttrition from '../images/attrition.png'
-import { getImage, calculateValue, calculateBase, calculateModifier, calculateLoss, valueToNumber, valueToPercent, valueToRelativeZeroPercent, mergeValues } from '../base_definition'
+import { getImage, calculateValue, calculateBase, calculateModifier, calculateLoss, valueToNumber, valueToPercent, valueToRelativeZeroPercent, mergeValues, valueToStrength, DefinitionType } from '../base_definition'
 import ValueModal from './ValueModal'
 import Confirmation from './Confirmation'
 
 interface IProps {
+  readonly mode: DefinitionType
   readonly army: ArmyName
   readonly units: Map<UnitType, UnitDefinition>
   readonly types: OrderedSet<UnitType>
@@ -82,7 +84,7 @@ export default class UnitDefinitions extends Component<IProps, IState> {
                 <Image src={IconMorale} avatar />
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <Image src={IconManpower} avatar />
+                <Image src={this.props.mode === DefinitionType.Naval ? IconStrength: IconManpower} avatar />
               </Table.HeaderCell>
               <Table.HeaderCell>
                 <Image src={IconDiscipline} avatar />
@@ -106,11 +108,11 @@ export default class UnitDefinitions extends Component<IProps, IState> {
               </Table.HeaderCell>
               <Table.HeaderCell>
                 <Image src={IconOffense} avatar />
-                <Image src={IconManpower} avatar />
+                <Image src={this.props.mode === DefinitionType.Naval ? IconStrength: IconManpower} avatar />
               </Table.HeaderCell>
               <Table.HeaderCell>
                 <Image src={IconAttrition} avatar />
-                <Image src={IconManpower} avatar />
+                <Image src={this.props.mode === DefinitionType.Naval ? IconStrength: IconManpower} avatar />
               </Table.HeaderCell>
               <Table.HeaderCell>
                 Experience
@@ -180,7 +182,7 @@ export default class UnitDefinitions extends Component<IProps, IState> {
           {valueToNumber(unit, UnitCalc.Morale, false)}
         </Table.Cell>
         <Table.Cell>
-          {valueToNumber(unit, UnitCalc.Manpower, false)}
+          {this.props.mode === DefinitionType.Naval ? valueToStrength(unit, UnitCalc.Strength, false) : valueToNumber(unit, UnitCalc.Strength, false)}
         </Table.Cell>
         <Table.Cell>
           {valueToRelativeZeroPercent(unit, UnitCalc.Discipline, false)}
@@ -247,7 +249,7 @@ export default class UnitDefinitions extends Component<IProps, IState> {
           {this.renderAttributeList(unit, UnitCalc.Morale)}
         </Table.Cell>
         <Table.Cell>
-          {this.renderAttributeList(unit, UnitCalc.Manpower)}
+          {this.renderAttributeList(unit, UnitCalc.Strength)}
         </Table.Cell>
         <Table.Cell>
           {this.renderAttributeList(unit, UnitCalc.Discipline)}
@@ -305,6 +307,9 @@ export default class UnitDefinitions extends Component<IProps, IState> {
 
   renderAttributeList = (unit: UnitDefinition, attribute: ValueType): JSX.Element => {
     const base = calculateBase(unit, attribute)
+    let base_str = String(base)
+    if (this.props.mode === DefinitionType.Naval && attribute === UnitCalc.Strength)
+      base_str = base / 10.0 + '%'
     const modifier = calculateModifier(unit, attribute)
     const loss = calculateLoss(unit, attribute)
     return (
@@ -312,7 +317,7 @@ export default class UnitDefinitions extends Component<IProps, IState> {
         {
           base !== 0 &&
           <List.Item style={{ whiteSpace: 'nowrap' }}>
-            {'Base: ' + base}
+            {'Base: ' + base_str}
           </List.Item>
         }
         {

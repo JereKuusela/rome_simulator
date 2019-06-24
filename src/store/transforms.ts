@@ -148,8 +148,8 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {
 export const transformBattle = (state_raw: any): typeof initialState => {
   if (!state_raw)
     return initialState
-  let battle: Map<DefinitionType, Armies> = fromJS(state_raw)
-  return battle.map((value, key) => handleArmies(value, key))
+  let battle: Map<DefinitionType, any> = fromJS(state_raw) 
+  return battle.map((value, key) => handleArmies(value.toJS(), key))
 }
 
 export const transfromTransfer = (state_raw: any): typeof transferState => {

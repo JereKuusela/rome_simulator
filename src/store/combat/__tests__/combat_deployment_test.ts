@@ -21,9 +21,9 @@ describe('initial deployment', () => {
   }
 
   beforeEach(() => {
-    info.attacker = getInitialArmy()
+    info.attacker = getInitialArmy(DefinitionType.Land)
     info.attacker = { ...info.attacker, row_types }
-    info.defender = getInitialArmy()
+    info.defender = getInitialArmy(DefinitionType.Land)
     info.defender = { ...info.defender, row_types }
     settings = getSettings(DefinitionType.Land)
   })
