@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { List } from 'immutable'
 import LineTo from 'react-lineto'
-import { ParticipantType } from '../store/land_battle'
+import { ParticipantType } from '../store/battle'
 import { Unit, ArmyType } from '../store/units'
 
 

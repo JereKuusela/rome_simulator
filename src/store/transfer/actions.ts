@@ -4,7 +4,8 @@ export enum ExportKey {
   Units = 'Unit Definitions',
   Terrains = 'Terrain Definitions',
   Tactics = 'Tactic Definitions',
-  Army = 'Armies',
+  Land = 'Land',
+  Naval = 'Naval',
   History = 'Previous Rounds',
   InitialOnly = 'Initial setup only',
   Settings = 'Settings'

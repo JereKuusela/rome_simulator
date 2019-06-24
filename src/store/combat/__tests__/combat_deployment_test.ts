@@ -1,17 +1,17 @@
 import { battle } from '../combat'
 import { List, Map } from 'immutable'
-import { getInitialArmy, Participant, RowType } from '../../land_battle'
+import { getInitialArmy, Participant, RowType } from '../../battle'
 import { TerrainDefinition } from '../../terrains'
 import { getDefaultDefinitions as getDefaultUnitDefinitions, getDefaultGlobalDefinition, UnitType, UnitDefinition, ArmyName } from '../../units'
-import { mergeValues } from '../../../base_definition'
-import { settingsState, CombatParameter } from '../../settings'
-import { verifyType } from './utils'
+import { mergeValues, DefinitionType } from '../../../base_definition'
+import { CombatParameter } from '../../settings'
+import { verifyType, getSettings } from './utils'
 
-describe('reinforcement', () => {
-  const global_stats = getDefaultGlobalDefinition()
+describe('initial deployment', () => {
+  const global_stats = getDefaultGlobalDefinition().get(DefinitionType.Land)!
   const units = getDefaultUnitDefinitions().map(unit => mergeValues(unit, global_stats))
   const definitions = Map<ArmyName, Map<UnitType, UnitDefinition>>().set(ArmyName.Attacker, units).set(ArmyName.Defender, units)
-  let settings = settingsState.combat
+  let settings = getSettings(DefinitionType.Land)
   const row_types = Map<RowType, UnitType>().set(RowType.Front, '' as UnitType).set(RowType.Back, '' as UnitType).set(RowType.Flank, '' as UnitType)
   const every_type = [UnitType.Archers, UnitType.CamelCavalry, UnitType.Chariots, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.HorseArchers, UnitType.LightCavalry, UnitType.LightInfantry, UnitType.WarElephants]
 
@@ -25,7 +25,7 @@ describe('reinforcement', () => {
     info.attacker = { ...info.attacker, row_types }
     info.defender = getInitialArmy()
     info.defender = { ...info.defender, row_types }
-    settings = settingsState.combat
+    settings = getSettings(DefinitionType.Land)
   })
   const getUnit = (type: UnitType) => units.get(type)!
   const setAttacker = (types: UnitType[]) => (info.attacker = { ...info.attacker, reserve: info.attacker.reserve.merge(types.map(type => getUnit(type))) })
@@ -35,7 +35,7 @@ describe('reinforcement', () => {
 
 
   const doRound = () => {
-    const [a, d] = battle(definitions, { ...info.attacker, tactic: undefined, name: ArmyName.Attacker }, { ...info.defender, tactic: undefined, name: ArmyName.Defender }, 1, List<TerrainDefinition>(), settings)
+    const [a, d] = battle(definitions, { ...info.attacker, tactic: undefined, name: ArmyName.Attacker }, { ...info.defender, tactic: undefined, name: ArmyName.Defender }, 0, List<TerrainDefinition>(), settings)
     info.attacker = { ...info.attacker, ...a }
     info.defender = { ...info.defender, ...d }
   }
@@ -67,7 +67,7 @@ describe('reinforcement', () => {
   })
   it('works with main front and default priorities', () => {
     setAttacker(every_type)
-    const result = [UnitType.LightInfantry, UnitType.Archers, UnitType.Chariots, UnitType.HeavyInfantry, UnitType.HeavyCavalry, UnitType.WarElephants, UnitType.LightCavalry, UnitType.CamelCavalry, UnitType.HorseArchers]
+    const result = [UnitType.WarElephants, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.Chariots, UnitType.Archers, UnitType.LightInfantry, UnitType.HorseArchers, UnitType.CamelCavalry, UnitType.LightCavalry]
     fillDefender(UnitType.Archers)
     doRound()
     verify(result)
@@ -75,7 +75,7 @@ describe('reinforcement', () => {
   })
   it('works with flank only and default priorities', () => {
     setAttacker(every_type)
-    const result = [UnitType.LightInfantry, UnitType.Archers, UnitType.Chariots, UnitType.HeavyInfantry, UnitType.HeavyCavalry, UnitType.WarElephants, UnitType.LightCavalry, UnitType.CamelCavalry, UnitType.HorseArchers]
+    const result = [UnitType.HorseArchers, UnitType.CamelCavalry, UnitType.LightCavalry, UnitType.WarElephants, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.Chariots, UnitType.Archers, UnitType.LightInfantry]
     doRound()
     verify(result)
     expect(info.attacker.reserve.size).toEqual(0)
@@ -83,7 +83,7 @@ describe('reinforcement', () => {
   it('works with mixed field and default priorities, uneven', () => {
     setAttacker(every_type)
     setDefender([UnitType.Archers, UnitType.Archers, UnitType.Archers])
-    const result = [UnitType.LightInfantry, UnitType.Archers, UnitType.Chariots, UnitType.HeavyInfantry, UnitType.HeavyCavalry, UnitType.WarElephants, UnitType.LightCavalry, UnitType.CamelCavalry, UnitType.HorseArchers]
+    const result = [UnitType.WarElephants, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.HorseArchers, UnitType.CamelCavalry, UnitType.LightCavalry, UnitType.Chariots, UnitType.Archers, UnitType.LightInfantry]
     doRound()
     verify(result)
     expect(info.attacker.reserve.size).toEqual(0)
@@ -91,7 +91,7 @@ describe('reinforcement', () => {
   it('works with mixed field and default priorities, even', () => {
     setAttacker(every_type)
     setDefender([UnitType.Archers, UnitType.Archers, UnitType.Archers, UnitType.Archers])
-    const result = [UnitType.LightInfantry, UnitType.Archers, UnitType.Chariots, UnitType.HeavyInfantry, UnitType.HeavyCavalry, UnitType.WarElephants, UnitType.LightCavalry, UnitType.CamelCavalry, UnitType.HorseArchers]
+    const result = [UnitType.WarElephants, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.Chariots, UnitType.HorseArchers, UnitType.CamelCavalry, UnitType.LightCavalry, UnitType.Archers, UnitType.LightInfantry]
     doRound()
     verify(result)
     expect(info.attacker.reserve.size).toEqual(0)
@@ -100,7 +100,7 @@ describe('reinforcement', () => {
     info.attacker = { ...info.attacker, row_types: row_types.set(RowType.Front, UnitType.Archers).set(RowType.Back, UnitType.Archers) }
     setAttacker(every_type)
     setDefender([UnitType.Archers, UnitType.Archers, UnitType.Archers, UnitType.Archers])
-    const result = [UnitType.LightInfantry, UnitType.Chariots, UnitType.HeavyInfantry, UnitType.HeavyCavalry, UnitType.WarElephants, UnitType.Archers, UnitType.LightCavalry, UnitType.CamelCavalry, UnitType.HorseArchers]
+    const result = [UnitType.Archers, UnitType.WarElephants, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.HorseArchers, UnitType.CamelCavalry, UnitType.LightCavalry, UnitType.Chariots, UnitType.LightInfantry]
     doRound()
     verify(result)
     expect(info.attacker.reserve.size).toEqual(0)
@@ -109,7 +109,7 @@ describe('reinforcement', () => {
     info.attacker = { ...info.attacker, row_types: row_types.set(RowType.Back, UnitType.Archers) }
     setAttacker(every_type)
     setDefender([UnitType.Archers, UnitType.Archers, UnitType.Archers, UnitType.Archers])
-    const result = [UnitType.Archers, UnitType.LightInfantry, UnitType.Chariots, UnitType.HeavyInfantry, UnitType.HeavyCavalry, UnitType.WarElephants, UnitType.LightCavalry, UnitType.CamelCavalry, UnitType.HorseArchers]
+    const result = [UnitType.WarElephants, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.Chariots, UnitType.HorseArchers, UnitType.CamelCavalry, UnitType.LightCavalry, UnitType.LightInfantry, UnitType.Archers]
     doRound()
     verify(result)
     expect(info.attacker.reserve.size).toEqual(0)
@@ -118,7 +118,7 @@ describe('reinforcement', () => {
     info.attacker = { ...info.attacker, row_types: row_types.set(RowType.Flank, UnitType.Archers).set(RowType.Back, UnitType.Archers).set(RowType.Front, UnitType.Archers) }
     setAttacker(every_type)
     setDefender([UnitType.Archers, UnitType.Archers, UnitType.Archers, UnitType.Archers])
-    const result = [UnitType.LightInfantry, UnitType.Chariots, UnitType.HeavyInfantry, UnitType.HeavyCavalry, UnitType.WarElephants, UnitType.LightCavalry, UnitType.CamelCavalry, UnitType.HorseArchers, UnitType.Archers]
+    const result = [UnitType.WarElephants, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.Chariots, UnitType.Archers, UnitType.HorseArchers, UnitType.CamelCavalry, UnitType.LightCavalry, UnitType.LightInfantry]
     doRound()
     verify(result)
     expect(info.attacker.reserve.size).toEqual(0)
@@ -127,7 +127,7 @@ describe('reinforcement', () => {
     info.attacker = { ...info.attacker, row_types: row_types.set(RowType.Flank, UnitType.Archers).set(RowType.Back, UnitType.HorseArchers).set(RowType.Front, UnitType.HeavyInfantry) }
     setAttacker(every_type)
     setDefender([UnitType.Archers, UnitType.Archers, UnitType.Archers, UnitType.Archers])
-    const result = [UnitType.HorseArchers, UnitType.LightInfantry, UnitType.Chariots, UnitType.HeavyCavalry, UnitType.WarElephants, UnitType.HeavyInfantry, UnitType.LightCavalry, UnitType.CamelCavalry, UnitType.Archers]
+    const result = [UnitType.HeavyInfantry, UnitType.WarElephants, UnitType.HeavyCavalry, UnitType.Chariots, UnitType.Archers, UnitType.CamelCavalry, UnitType.LightCavalry, UnitType.LightInfantry, UnitType.HorseArchers,]
     doRound()
     verify(result)
     expect(info.attacker.reserve.size).toEqual(0)
@@ -146,6 +146,9 @@ describe('reinforcement', () => {
     fillAttacker(UnitType.Archers)
     fillDefender(UnitType.Archers)
     const result = Array(30).fill(UnitType.Archers)
+    result[20] = UnitType.HorseArchers
+    result[21] = UnitType.HorseArchers
+    result[22] = UnitType.HorseArchers
     doRound()
     verify(result)
     expect(info.attacker.reserve.size).toEqual(3)
@@ -156,6 +159,9 @@ describe('reinforcement', () => {
     fillAttacker(UnitType.Archers)
     fillDefender(UnitType.Archers)
     const result = Array(5).fill(UnitType.Archers)
+    result[0] = UnitType.HorseArchers
+    result[1] = UnitType.HorseArchers
+    result[2] = UnitType.HorseArchers
     doRound()
     verify(result)
     expect(info.attacker.reserve.size).toEqual(28)

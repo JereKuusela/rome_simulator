@@ -1,6 +1,6 @@
 import { Map } from 'immutable'
 import { Unit, UnitCalc, UnitType, UnitDefinition } from '../units'
-import { RowType, Army } from '../land_battle'
+import { RowType, Army } from '../battle'
 import { CombatParameter } from '../settings'
 import { calculateValue, mergeValues } from '../../base_definition'
 type Definition = Map<UnitType, UnitDefinition>
@@ -86,7 +86,7 @@ export const reinforce = (army: Army, definitions: Definition, round: number, ro
     })
     let orderedFlankReserve = flankReserve.sortBy((value, key) => {
         value = mergeValues(value, definitions.get(value.type)!)
-        return (settings.get(CombatParameter.ReinforceFlankSign) ? 1 : -1) * calculateValue(value, settings.get(CombatParameter.ReinforceMainAttribute, UnitCalc.Maneuver)) * 10000 + key - (value.type === row_types.get(RowType.Flank) ? 1000000 : 0)
+        return (settings.get(CombatParameter.ReinforceFlankSign) ? 1 : -1) * calculateValue(value, settings.get(CombatParameter.ReinforceFlankAttribute, UnitCalc.Maneuver)) * 10000 + key - (value.type === row_types.get(RowType.Flank) ? 1000000 : 0)
     })
 
     const free_spots = frontline.filter((_, index) => index < frontline.size).reduce((previous, current) => previous + (current ? 0 : 1), 0)

@@ -4,9 +4,10 @@ import { Container, Image, Table } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { ArmyName, Unit, UnitType, UnitCalc } from '../store/units'
-import { Participant, ParticipantType, Army } from '../store/land_battle'
+import { Participant, ParticipantType, Army } from '../store/battle'
 import IconManpower from '../images/manpower.png'
 import IconMorale from '../images/morale.png'
+import { getBattle } from '../utils'
 import { calculateValue, calculateValueWithoutLoss, mergeValues, getImage } from '../base_definition'
 
 class Stats extends Component<IProps> {
@@ -116,9 +117,9 @@ class Stats extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  attacker: state.land.attacker,
-  defender: state.land.defender,
-  armies: state.land.armies,
+  attacker: getBattle(state).attacker,
+  defender: getBattle(state).defender,
+  armies: getBattle(state).armies,
   units: state.units.definitions,
   types: state.units.types,
   global_stats: state.global_stats,

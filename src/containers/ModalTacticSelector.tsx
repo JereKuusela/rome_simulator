@@ -3,11 +3,12 @@ import { Map } from 'immutable'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { AppState } from '../store/'
-import { selectTactic } from '../store/land_battle'
-import { calculateTactic } from '../store/battle'
+import { selectTactic } from '../store/battle'
+import { calculateTactic } from '../store/combat'
 import ItemSelector from '../components/ItemSelector'
 import { TacticType } from '../store/tactics'
 import { ArmyName } from '../store/units'
+import { getBattle } from '../utils'
 import { toRelativePercent, toPercent, DefinitionType } from '../base_definition'
 
 export interface ModalInfo {
@@ -44,18 +45,18 @@ class ModalTacticSelector extends Component<IProps> {
   }
 
   selectTactic = (type: TacticType | undefined): void => (
-    this.props.info && type && this.props.selectTactic(this.props.info.name, type)
+    this.props.info && type && this.props.selectTactic(this.props.mode, this.props.info.name, type)
   )
 }
 
 const mapStateToProps = (state: AppState) => ({
   tactics: state.tactics.definitions,
-  armies: state.land.armies,
+  armies: getBattle(state).armies,
   mode: state.settings.mode
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  selectTactic: (name: ArmyName, type: TacticType) => dispatch(selectTactic(name, type))
+  selectTactic: (mode: DefinitionType, name: ArmyName, type: TacticType) => dispatch(selectTactic(mode, name, type))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {

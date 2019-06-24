@@ -6,8 +6,8 @@ import { AppState } from '../store/'
 import FastPlanner from '../components/FastPlanner'
 import ArmyCosts from '../components/ArmyCosts'
 import { ArmyName, UnitType, Unit, UnitDefinition } from '../store/units'
-import { clearUnits, removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits } from '../store/land_battle'
-import { mapRange } from '../utils'
+import { clearUnits, removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits } from '../store/battle'
+import { mapRange, getBattle } from '../utils'
 import { mergeValues, DefinitionType } from '../base_definition'
 
 type Units = Map<UnitType, number>
@@ -128,8 +128,8 @@ class ModalFastPlanner extends Component<IProps, IState> {
   updateReserve = (name: ArmyName, changes: Units, originals?: Units): void => {
     const units = this.getUnitsToAdd(changes, originals)
     const types = this.getTypesToRemove(changes, originals)
-    units.length > 0 && this.props.addReserveUnits(name, units)
-    types.length > 0 && this.props.removeReserveUnits(name, types)
+    units.length > 0 && this.props.addReserveUnits(this.props.mode, name, units)
+    types.length > 0 && this.props.removeReserveUnits(this.props.mode, name, types)
   }
 
   onClose = (): void => {
@@ -143,14 +143,14 @@ class ModalFastPlanner extends Component<IProps, IState> {
 
   clearUnits = (): void => {
     this.setState({ changes_a: Map<UnitType, number>(), changes_d: Map<UnitType, number>() })
-    this.props.clearUnits()
+    this.props.clearUnits(this.props.mode)
   }
 }
 
 const mapStateToProps = (state: AppState) => ({
-  attacker: state.land.attacker,
-  defender: state.land.defender,
-  armies: state.land.armies,
+  attacker: getBattle(state).attacker,
+  defender: getBattle(state).defender,
+  armies: getBattle(state).armies,
   units: state.units.definitions,
   types: state.units.types,
   global_stats: state.global_stats,
@@ -158,9 +158,9 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  addReserveUnits: (name: ArmyName, units: Unit[]) => dispatch(addReserveUnits(name, units)),
-  removeReserveUnits: (name: ArmyName, types: UnitType[]) => dispatch(removeReserveUnits(name, types)),
-  clearUnits: () => dispatch(clearUnits())
+  addReserveUnits: (mode: DefinitionType, name: ArmyName, units: Unit[]) => dispatch(addReserveUnits(mode, name, units)),
+  removeReserveUnits: (mode: DefinitionType, name: ArmyName, types: UnitType[]) => dispatch(removeReserveUnits(mode, name, types)),
+  clearUnits: (mode: DefinitionType) => dispatch(clearUnits(mode))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {

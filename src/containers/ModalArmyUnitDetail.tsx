@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { UnitType, ArmyName, ArmyType, ValueType, Unit, UnitDefinition } from '../store/units'
-import { selectUnit } from '../store/land_battle'
+import { selectUnit } from '../store/battle'
 import { AppState } from '../store/'
+import { getBattle } from '../utils'
 import { addValues, mergeValues, ValuesType, DefinitionType } from '../base_definition'
 import ItemRemover from '../components/ItemRemover'
 import UnitDetail from '../components/UnitDetail'
@@ -58,35 +59,35 @@ class ModalArmyUnitDetail extends Component<IProps> {
 
   selectUnit = (unit: UnitType | undefined): void => (
     this.props.info &&
-    this.props.selectUnit(this.props.info.name, this.props.info.type, this.props.info.index, unit ? this.props.units.getIn([this.props.info.name, unit]) : undefined)
+    this.props.selectUnit(this.props.mode, this.props.info.name, this.props.info.type, this.props.info.index, unit ? this.props.units.getIn([this.props.info.name, unit]) : undefined)
   )
 
   setBaseValue = (name: ArmyName, _type: UnitType, key: string, attribute: ValueType, value: number): void => {
     if (!this.props.info)
       return
     const unit = addValues(this.unit, ValuesType.Base, key, [[attribute, value]])
-    this.props.selectUnit(name, this.props.info.type, this.props.info.index, unit)
+    this.props.selectUnit(this.props.mode, name, this.props.info.type, this.props.info.index, unit)
   }
 
   setModifierValue = (name: ArmyName, _type: UnitType, key: string, attribute: ValueType, value: number): void => {
     if (!this.props.info)
       return
     const unit = addValues(this.unit, ValuesType.Modifier, key, [[attribute, value]])
-    this.props.selectUnit(name, this.props.info.type, this.props.info.index, unit)
+    this.props.selectUnit(this.props.mode, name, this.props.info.type, this.props.info.index, unit)
   }
 
   setLossValue = (name: ArmyName, _type: UnitType, key: string, attribute: ValueType, value: number): void => {
     if (!this.props.info)
       return
     const unit = addValues(this.unit, ValuesType.Loss, key, [[attribute, value]])
-    this.props.selectUnit(name, this.props.info.type, this.props.info.index, unit)
+    this.props.selectUnit(this.props.mode, name, this.props.info.type, this.props.info.index, unit)
   }
 
   changeType = (name: ArmyName, old_type: UnitType, new_type: UnitType): void => {
     if (!this.props.info)
       return
     const unit = { ...this.unit, type: new_type }
-    this.props.selectUnit(name, this.props.info.type, this.props.info.index, unit)
+    this.props.selectUnit(this.props.mode, name, this.props.info.type, this.props.info.index, unit)
   }
 
   getUnitDefinition = (info: ModalInfo): UnitDefinition => (this.mergeAllValues(info.name, this.getUnit(info)))
@@ -107,7 +108,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  armies: state.land.armies,
+  armies: getBattle(state).armies,
   units: state.units.definitions,
   unit_types: state.units.types,
   global_stats: state.global_stats,
@@ -116,8 +117,8 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  selectUnit: (name: ArmyName, type: ArmyType, column: number, unit: Unit | undefined) => (
-    dispatch(selectUnit(name, type, column, unit))
+  selectUnit: (mode: DefinitionType, name: ArmyName, type: ArmyType, column: number, unit: Unit | undefined) => (
+    dispatch(selectUnit(mode, name, type, column, unit))
   )
 })
 

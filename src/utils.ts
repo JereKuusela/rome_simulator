@@ -2,8 +2,9 @@ import { OrderedMap } from 'immutable'
 import { CombatParameter } from './store/settings'
 import { DefinitionType } from './base_definition'
 import { AppState } from './store/index'
+import { Armies, modeState } from './store/battle'
 
-export function mapRange<T>(length: number, func: (number: number) => T): T[] {
+export const mapRange = <T>(length: number, func: (number: number) => T): T[] => {
   const array: T[] = Array(length)
   for (let i = 0; i < length; i++) {
     array[i] = func(i)
@@ -11,7 +12,7 @@ export function mapRange<T>(length: number, func: (number: number) => T): T[] {
   return array
 }
 
-export function mergeSettings(state: AppState): OrderedMap<CombatParameter, number> {
+export const mergeSettings = (state: AppState): OrderedMap<CombatParameter, number> => {
   const base = state.settings.combat.get(DefinitionType.Any)
   const specific = state.settings.combat.get(state.settings.mode)
   if (base && !specific)
@@ -22,3 +23,5 @@ export function mergeSettings(state: AppState): OrderedMap<CombatParameter, numb
     return base.merge(specific)
   return OrderedMap<CombatParameter, number>()
 }
+
+export const getBattle = (state: AppState): Armies => state.battle.get(state.settings.mode, modeState(state.settings.mode))

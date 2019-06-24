@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { List } from 'immutable'
-import { ParticipantType } from '../store/land_battle'
+import { ParticipantType } from '../store/battle'
 import { Table, Image, Icon } from 'semantic-ui-react'
 import { Unit, UnitCalc, ArmyType } from '../store/units'
 import { calculateValue, calculateValueWithoutLoss, getImage } from '../base_definition'

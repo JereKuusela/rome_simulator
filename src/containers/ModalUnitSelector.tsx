@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { UnitType, ArmyName, Unit, ArmyType } from '../store/units'
 import { AppState } from '../store/'
-import { selectUnit } from '../store/land_battle'
+import { selectUnit } from '../store/battle'
 import { DefinitionType } from '../base_definition'
 import ItemSelector from '../components/ItemSelector'
 
@@ -37,7 +37,7 @@ class ModalUnitSelector extends Component<IProps> {
 
   selectUnit = (unit: UnitType | undefined): void => (
     this.props.info &&
-    this.props.selectUnit(this.props.info.name, this.props.info.type, this.props.info.index, unit ? { type: this.props.units.getIn([this.props.info.name, unit]).type } : undefined)
+    this.props.selectUnit(this.props.mode, this.props.info.name, this.props.info.type, this.props.info.index, unit ? { type: this.props.units.getIn([this.props.info.name, unit]).type } : undefined)
   )
 }
 
@@ -48,8 +48,8 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  selectUnit: (name: ArmyName, type: ArmyType, column: number, unit: Unit | undefined) => (
-    dispatch(selectUnit(name, type, column, unit))
+  selectUnit: (mode: DefinitionType, name: ArmyName, type: ArmyType, column: number, unit: Unit | undefined) => (
+    dispatch(selectUnit(mode, name, type, column, unit))
   )
 })
 

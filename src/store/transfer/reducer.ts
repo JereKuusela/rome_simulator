@@ -2,7 +2,7 @@ import { createReducer } from 'typesafe-actions'
 import { importState } from './actions'
 import { Map } from 'immutable'
 import { setExportKey, ExportKey, setResetMissing } from './actions'
-import { initialState as initialStateBattle } from '../land_battle'
+import { initialState as initialStateBattle } from '../battle'
 import { tacticsState } from '../tactics'
 import { terrainState } from '../terrains'
 import { globalStatsState, unitsState } from '../units'
@@ -18,7 +18,7 @@ export const initialState = {
   terrains: terrainState,
   units: unitsState,
   global_stats: globalStatsState,
-  land: initialStateBattle,
+  battle: initialStateBattle,
   transfer: transferState,
   settings: settingsState
 }

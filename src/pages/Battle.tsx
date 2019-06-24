@@ -6,8 +6,8 @@ import { AppState } from '../store/index'
 import { ArmyName, UnitDefinition, ArmyType, Unit } from '../store/units'
 import UnitArmy from '../components/UnitArmy'
 import TargetArrows from '../components/TargetArrows'
-import { battle, undo, Participant, ParticipantType, toggleRandomRoll, setRoll, setGeneral, RowType, setFlankSize, selectArmy } from '../store/land_battle'
-import { calculateTactic, calculateRollModifierFromTerrains, calculateRollModifierFromGenerals, calculateBaseDamage } from '../store/battle/combat'
+import { battle, undo, Participant, ParticipantType, toggleRandomRoll, setRoll, setGeneral, RowType, setFlankSize, selectArmy } from '../store/battle'
+import { calculateTactic, calculateRollModifierFromTerrains, calculateRollModifierFromGenerals, calculateBaseDamage } from '../store/combat/combat'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import { TacticType } from '../store/tactics'
 import IconDice from '../images/chance.png'
@@ -18,7 +18,7 @@ import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers
 import ModalArmyUnitDetail, { ModalInfo as ModalArmyUnitInfo } from '../containers/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/ModalFastPlanner'
 import { calculateValue, mergeValues, getImage, toRelativePercent, DefinitionType } from '../base_definition'
-import { mergeSettings } from '../utils'
+import { mergeSettings, getBattle } from '../utils'
 import { CombatParameter } from '../store/settings'
 import IconTerrain from '../images/terrain.png'
 import IconGeneral from '../images/military_power.png'
@@ -35,7 +35,7 @@ interface IState {
 const ATTACKER_COLOR = '#FFAA00AA'
 const DEFENDER_COLOR = '#00AAFFAA'
 
-class Land extends Component<IProps, IState> {
+class Battle extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
@@ -102,8 +102,8 @@ class Land extends Component<IProps, IState> {
               </Button>
             </Grid.Column>
             <Grid.Column floated='right' textAlign='right'>
-              <Button circular icon='angle double left' color='black' size='huge' disabled={!this.props.is_undo} onClick={() => this.props.undo(10)} />
-              <Button circular icon='angle left' color='black' size='huge' disabled={!this.props.is_undo} onClick={() => this.props.undo(1)} />
+              <Button circular icon='angle double left' color='black' size='huge' disabled={!this.props.is_undo} onClick={() => this.props.undo(this.props.mode, 10)} />
+              <Button circular icon='angle left' color='black' size='huge' disabled={!this.props.is_undo} onClick={() => this.props.undo(this.props.mode, 1)} />
               <Button circular icon='angle right' color='black' size='huge' disabled={this.props.fight_over} onClick={() => this.props.battle(this.props.mode, 1)} />
               <Button circular icon='angle double right' color='black' size='huge' disabled={this.props.fight_over} onClick={() => this.props.battle(this.props.mode, 10)} />
             </Grid.Column>
@@ -287,7 +287,7 @@ class Land extends Component<IProps, IState> {
       <div key={name}>
         {base_damage.toFixed(2)} :
         <span style={{ paddingLeft: '1em' }} /><Image src={IconDice} avatar />
-        {is_random ? roll : <Input size='mini' style={{ width: 100 }} type='number' value={roll} onChange={(_, data) => this.props.setRoll(name, Number(data.value))} />}
+        {is_random ? roll : <Input size='mini' style={{ width: 100 }} type='number' value={roll} onChange={(_, data) => this.props.setRoll(this.props.mode, name, Number(data.value))} />}
         {general_effect !== 0 ? <span style={{ paddingLeft: '1em' }}><Image src={IconGeneral} avatar />{general_effect}</span> : null}
         {terrain_effect !== 0 ? <span style={{ paddingLeft: '1em' }}><Image src={IconTerrain} avatar />{terrain_effect}</span> : null}
       </div>
@@ -296,7 +296,7 @@ class Land extends Component<IProps, IState> {
 
   renderIsRollRandom = (name: ArmyName, is_random: boolean): JSX.Element => {
     return (
-      <Checkbox toggle checked={is_random} onClick={() => this.props.toggleRandomRoll(name)} />
+      <Checkbox toggle checked={is_random} onClick={() => this.props.toggleRandomRoll(this.props.mode, name)} />
     )
   }
 
@@ -381,7 +381,7 @@ class Land extends Component<IProps, IState> {
           {
             this.props.armies.keySeq().map(key => (
               <Dropdown.Item value={key} text={key} key={key} active={name === key}
-                onClick={() => this.props.selectArmy(type, key)}
+                onClick={() => this.props.selectArmy(this.props.mode, type, key)}
               />
             ))
           }
@@ -400,7 +400,7 @@ class Land extends Component<IProps, IState> {
           {this.renderArmyNameDropdown(type, name)}
         </Table.Cell>
         <Table.Cell collapsing>
-          <Input size='mini' style={{ width: 100 }} type='number' value={participant && participant.general} onChange={(_, data) => this.props.setGeneral(name, Number(data.value))} />
+          <Input size='mini' style={{ width: 100 }} type='number' value={participant && participant.general} onChange={(_, data) => this.props.setGeneral(this.props.mode, name, Number(data.value))} />
         </Table.Cell>
         <Table.Cell collapsing>
           {this.renderTactic(name, participant, enemy && enemy.tactic)}
@@ -433,7 +433,7 @@ class Land extends Component<IProps, IState> {
           <Image src={getImage(units && row_types && units.get(row_types.get(RowType.Flank)!))} avatar />
         </Table.Cell>
         <Table.Cell collapsing>
-          <Input size='mini' style={{ width: 100 }} type='number' value={participant && participant.flank_size} onChange={(_, data) => this.props.setFlankSize(name, Number(data.value))} />
+          <Input size='mini' style={{ width: 100 }} type='number' value={participant && participant.flank_size} onChange={(_, data) => this.props.setFlankSize(this.props.mode, name, Number(data.value))} />
         </Table.Cell>
       </Table.Row>
     )
@@ -445,15 +445,15 @@ class Land extends Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  attacker: state.land.attacker,
-  defender: state.land.defender,
-  armies: state.land.armies,
-  is_undo: state.land.round > -1,
-  round: state.land.round,
-  selected_terrains: state.land.terrains,
+  attacker: getBattle(state).attacker,
+  defender: getBattle(state).defender,
+  armies: getBattle(state).armies,
+  is_undo: getBattle(state).round > -1,
+  round: getBattle(state).round,
+  selected_terrains: getBattle(state).terrains,
   terrains: state.terrains.definitions,
   tactics: state.tactics.definitions,
-  fight_over: state.land.fight_over,
+  fight_over: getBattle(state).fight_over,
   units: state.units.definitions,
   global_stats: state.global_stats,
   combat: mergeSettings(state),
@@ -462,14 +462,14 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchToProps = (dispatch: any) => ({
   battle: (mode: DefinitionType, steps: number) => dispatch(battle(mode, steps)),
-  undo: (steps: number) => dispatch(undo(steps)),
-  toggleRandomRoll: (name: ArmyName) => dispatch(toggleRandomRoll(name)),
-  setRoll: (name: ArmyName, roll: number) => dispatch(setRoll(name, roll)),
-  setGeneral: (name: ArmyName, skill: number) => dispatch(setGeneral(name, skill)),
-  setFlankSize: (name: ArmyName, size: number) => dispatch(setFlankSize(name, size)),
-  selectArmy: (type: ParticipantType, name: ArmyName) => dispatch(selectArmy(type, name))
+  undo: (mode: DefinitionType, steps: number) => dispatch(undo(mode, steps)),
+  toggleRandomRoll: (mode: DefinitionType, name: ArmyName) => dispatch(toggleRandomRoll(mode, name)),
+  setRoll: (mode: DefinitionType, name: ArmyName, roll: number) => dispatch(setRoll(mode, name, roll)),
+  setGeneral: (mode: DefinitionType, name: ArmyName, skill: number) => dispatch(setGeneral(mode, name, skill)),
+  setFlankSize: (mode: DefinitionType, name: ArmyName, size: number) => dispatch(setFlankSize(mode, name, size)),
+  selectArmy: (mode: DefinitionType, type: ParticipantType, name: ArmyName) => dispatch(selectArmy(mode, type, name))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Land)
+export default connect(mapStateToProps, mapDispatchToProps)(Battle)

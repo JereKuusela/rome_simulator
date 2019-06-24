@@ -1,21 +1,20 @@
 import { battle } from '../combat'
 import { List, Map } from 'immutable'
-import { getInitialArmy, Participant } from '../../land_battle'
+import { getInitialArmy, Participant } from '../../battle'
 import { getDefaultDefinitions as getDefaultTacticDefinitions, TacticType } from '../../tactics'
 import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, TerrainDefinition } from '../../terrains'
 import { getDefaultDefinitions as getDefaultUnitDefinitions, getDefaultGlobalDefinition, UnitType, UnitCalc, UnitDefinition, ArmyName } from '../../units'
-import { addValues, ValuesType, mergeValues } from '../../../base_definition'
-import { settingsState } from '../../settings'
-import { verifyCenterUnits, setRolls, setTactics, setCenterUnits } from './utils'
+import { addValues, ValuesType, mergeValues, DefinitionType } from '../../../base_definition'
+import { verifyCenterUnits, setRolls, setTactics, setCenterUnits, getSettings } from './utils'
 
 describe('1 vs 1', () => {
-  const global_stats = getDefaultGlobalDefinition()
+  const global_stats = getDefaultGlobalDefinition().get(DefinitionType.Land)!
   const tactics = getDefaultTacticDefinitions()
   const terrains = getDefaultTerrainDefinitions()
   const units = getDefaultUnitDefinitions().map(unit => mergeValues(unit, global_stats))
   const unit = addValues(units.get(UnitType.Archers)!, ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.2]])
   const definitions = Map<ArmyName, Map<UnitType, UnitDefinition>>().set(ArmyName.Attacker, units).set(ArmyName.Defender, units)
-  const settings = settingsState.combat
+  const settings = getSettings(DefinitionType.Land)
 
   let info = {
     attacker: null as any as Participant,

@@ -2,7 +2,7 @@ import { fromJS, Map, List, OrderedSet, OrderedMap } from 'immutable'
 import { tacticFromJS, TacticType, tacticsState } from './tactics'
 import { terrainFromJS, TerrainType, terrainState } from './terrains'
 import { unitDefinitionFromJS, unitFromJS, ArmyName, UnitType, unitsState, globalStatsState, Unit } from './units'
-import { RowType, initialState, PastState, Participant, getInitialArmy } from './land_battle'
+import { RowType, initialState, PastState, Participant, getInitialArmy, Armies, modeState } from './battle'
 import { DefinitionType } from '../base_definition'
 import { transferState } from './transfer'
 import { settingsState, CombatParameter } from './settings'
@@ -65,15 +65,13 @@ export const transformGlobalStats = (state_raw: any): typeof globalStatsState =>
   return global_stats
 }
 
-export const transformLand = (state_raw: any): typeof initialState => {
-  if (!state_raw)
-    return initialState
-  // Terrain can be null (corrupted), TerrainDefinition (old) or TerrainType.
-  let terrains = initialState.terrains
+const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {
+  const initial = modeState(mode)
+  let terrains = initial.terrains
   if (state_raw.terrains) {
     const terrains_raw = fromJS(state_raw.terrains)
     if (!terrains_raw.contains(null))
-      terrains = terrains_raw.map((value: any) => typeof value === 'string' ? value : value.type)
+      terrains = terrains_raw
   }
 
   const serializeUnits = (raw: List<any>): List<Unit | undefined> => raw.map(value => unitFromJS(value))
@@ -83,25 +81,22 @@ export const transformLand = (state_raw: any): typeof initialState => {
     if (past_raw) {
       let past4: List<Map<string, any>> = fromJS(past_raw)
       let past3 = past4.map(value => ({
-        frontline: value.has('frontline') ? value.get('frontline') as List<any> : value.get('army') as List<any>,
+        frontline: value.get('frontline') as List<any>,
         reserve: value.get('reserve') as List<any>,
         defeated: value.get('defeated') as List<any>,
         roll: value.has('roll') ? value.get('roll') as number : 0
       }))
-      past = past3.map(value => ({ frontline: serializeUnits(value.frontline).setSize(30), reserve: serializeUnits(value.reserve).filter(value => value), defeated: serializeUnits(value.defeated).filter(value => value), roll: value.roll } as PastState))
+      past = past3.map(value => ({ frontline: serializeUnits(value.frontline), reserve: serializeUnits(value.reserve).filter(value => value), defeated: serializeUnits(value.defeated).filter(value => value), roll: value.roll } as PastState))
     }
     // Prevent history and index (round number) getting out of sync.
     return past.setSize(round + 1)
   }
 
   const serializeParticipant = (participant: any): Participant => {
-    const initial = getInitialArmy()
+    const initial = getInitialArmy(mode)
     let frontline = initial.frontline
-    // Legacy conversion, can be removed at some point (added 2019-06-21).
-    if (participant.army && !participant.frontline)
-      participant.frontline = participant.army
     if (participant.frontline)
-      frontline = serializeUnits(fromJS(participant.frontline)).setSize(30)
+      frontline = serializeUnits(fromJS(participant.frontline))
     let reserve = initial.reserve
     if (participant.reserve)
       reserve = serializeUnits(fromJS(participant.reserve)).filter(value => value) as List<Unit>
@@ -114,11 +109,8 @@ export const transformLand = (state_raw: any): typeof initialState => {
     else
       row_types = initial.row_types
     let tactic = participant.tactic
-    // Tactic can be null (corrupted), TacticDefition (old) or TacticType.
     if (!tactic)
       tactic = initial.tactic
-    if (typeof tactic !== 'string')
-      tactic = tactic.type
     const general = participant.general || initial.general
     const flank_size = participant.flank_size || initial.flank_size
     const roll = participant.roll || initial.roll
@@ -128,29 +120,36 @@ export const transformLand = (state_raw: any): typeof initialState => {
       flank_size,
       roll,
       randomize_roll,
-      frontline: frontline,
+      frontline,
       reserve,
       defeated,
       row_types,
       tactic
     }
   }
-  let armies = initialState.armies
+  let armies = initial.armies
   if (state_raw.armies) {
     let armies_raw: Map<ArmyName, any> = fromJS(state_raw.armies)
     armies = armies_raw.filter(value => value).map(value => serializeParticipant(value.toJS()))
   }
   let attacker = state_raw.attacker
   if (!attacker || typeof attacker !== 'string')
-    attacker = initialState.attacker
+    attacker = initial.attacker
   let defender = state_raw.defender
   if (!defender || typeof defender !== 'string')
-    defender = initialState.defender
-  const round = state_raw.round === undefined ? initialState.round : state_raw.round
+    defender = initial.defender
+  const round = state_raw.round === undefined ? initial.round : state_raw.round
   const attacker_past = serializePast(state_raw.attacker_past, round)
   const defender_past = serializePast(state_raw.defender_past, round)
-  const fight_over = state_raw.fight_over === undefined ? initialState.fight_over : state_raw.fight_over
+  const fight_over = state_raw.fight_over === undefined ? initial.fight_over : state_raw.fight_over
   return { round, fight_over, armies, terrains, attacker, defender, attacker_past, defender_past }
+}
+
+export const transformBattle = (state_raw: any): typeof initialState => {
+  if (!state_raw)
+    return initialState
+  let battle: Map<DefinitionType, Armies> = fromJS(state_raw)
+  return battle.map((value, key) => handleArmies(value, key))
 }
 
 export const transfromTransfer = (state_raw: any): typeof transferState => {

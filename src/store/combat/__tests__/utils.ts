@@ -1,8 +1,9 @@
-import { List, Map } from 'immutable'
-import { Participant } from '../../land_battle'
+import { OrderedMap } from 'immutable'
+import { Participant } from '../../battle'
 import { TacticType } from '../../tactics'
 import { Unit, UnitCalc, UnitDefinition, UnitType } from '../../units'
-import { calculateValue,} from '../../../base_definition'
+import { calculateValue, DefinitionType} from '../../../base_definition'
+import { settingsState, CombatParameter  } from '../../settings'
 
 export interface TestInfo {
   attacker: Participant
@@ -40,6 +41,18 @@ export const setTactics = (info: TestInfo, tactic_a: TacticType, tactic_d: Tacti
 export const setCenterUnits = (info: TestInfo, unit_a: UnitDefinition, unit_b: UnitDefinition)=> {
   info.attacker = { ...info.attacker, frontline: info.attacker.frontline.set(15, unit_a) }
   info.defender = { ...info.defender, frontline: info.defender.frontline.set(15, unit_b) }
+}
+
+export const getSettings = (mode: DefinitionType): OrderedMap<CombatParameter, number> => {
+  const base = settingsState.combat.get(DefinitionType.Any)
+  const specific = settingsState.combat.get(mode)
+  if (base && !specific)
+    return base
+  if (!base && specific)
+    return specific
+  if (base && specific)
+    return base.merge(specific)
+  return OrderedMap<CombatParameter, number>()
 }
 
 describe('utils', () => {

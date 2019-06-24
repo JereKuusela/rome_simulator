@@ -1,18 +1,18 @@
 import { battle } from '../combat'
 import { List, Map } from 'immutable'
-import { getInitialArmy, getInitialTerrains, Participant } from '../../land_battle'
+import { getInitialArmy, getInitialTerrains, Participant } from '../../battle'
 import { getDefaultDefinitions as getDefaultTacticDefinitions, TacticType } from '../../tactics'
 import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, TerrainDefinition } from '../../terrains'
 import { getDefaultDefinitions as getDefaultUnitDefinitions, UnitType, UnitCalc, UnitDefinition, ArmyName } from '../../units'
-import { addValues, ValuesType, calculateValue} from '../../../base_definition'
-import { settingsState } from '../../settings'
+import { addValues, ValuesType, calculateValue, DefinitionType } from '../../../base_definition'
+import { getSettings } from './utils'
 
 describe('multi', () => {
   const tactics = getDefaultTacticDefinitions()
   const terrains = getDefaultTerrainDefinitions()
   const units = getDefaultUnitDefinitions()
   const definitions = Map<ArmyName, Map<UnitType, UnitDefinition>>().set(ArmyName.Attacker, units).set(ArmyName.Defender, units)
-  const settings = settingsState.combat
+  const settings = getSettings(DefinitionType.Land)
 
   const verify = (unit: UnitDefinition | undefined, manpower: number, morale: number) => {
     expect(unit).toBeTruthy()

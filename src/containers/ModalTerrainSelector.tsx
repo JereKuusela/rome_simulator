@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { AppState } from '../store/'
-import { selectTerrain } from '../store/land_battle'
+import { selectTerrain } from '../store/battle'
 import ItemSelector from '../components/ItemSelector'
 import { TerrainType, TerrainCalc, LocationType } from '../store/terrains'
 import { DefinitionType } from '../base_definition'
@@ -31,7 +31,7 @@ class ModalTerrainSelector extends Component<IProps> {
   }
 
   selectTerrain = (type: TerrainType | undefined): void => (
-    this.props.info && type && this.props.selectTerrain(this.props.info.index, type)
+    this.props.info && type && this.props.selectTerrain(this.props.mode, this.props.info.index, type)
   )
 }
 
@@ -41,7 +41,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  selectTerrain: (index: number, type: TerrainType) => dispatch(selectTerrain(index, type))
+  selectTerrain: (mode: DefinitionType, index: number, type: TerrainType) => dispatch(selectTerrain(mode, index, type))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {

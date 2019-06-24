@@ -3,8 +3,7 @@ import { Container, Grid, TextArea, Checkbox, List, Header, Button } from 'seman
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { importState, ExportKey, setResetMissing, setExportKey } from '../store/transfer'
-import { transformGlobalStats, transformLand, transformTactics, transformTerrains, transformUnits, transformSettings } from '../store/transforms'
-import { checkFight } from '../store/land_battle'
+import { transformGlobalStats, transformBattle, transformTactics, transformTerrains, transformUnits, transformSettings } from '../store/transforms'
 
 interface IState {
   data: string
@@ -92,11 +91,11 @@ class Transfer extends Component<IProps, IState> {
   }
 
   checkDisabled = (key: ExportKey): boolean => {
-    if (key === ExportKey.History && !this.props.export_keys.get(ExportKey.Army))
+    if (key === ExportKey.History && (!this.props.export_keys.get(ExportKey.Land) || !this.props.export_keys.get(ExportKey.Naval)))
       return true
     if (key === ExportKey.History && this.props.export_keys.get(ExportKey.InitialOnly))
       return true
-    if (key === ExportKey.InitialOnly && !this.props.export_keys.get(ExportKey.Army))
+    if (key === ExportKey.InitialOnly && (!this.props.export_keys.get(ExportKey.Land) || !this.props.export_keys.get(ExportKey.Naval)))
       return true
     if (key === ExportKey.InitialOnly && this.props.export_keys.get(ExportKey.History))
       return true
@@ -117,21 +116,21 @@ class Transfer extends Component<IProps, IState> {
       new_state.tactics = undefined
     if (!this.props.export_keys.get(ExportKey.Settings))
       new_state.settings = undefined
-    if (!this.props.export_keys.get(ExportKey.Army))
+    if (!this.props.export_keys.get(ExportKey.Land))
       new_state.land = undefined
-    else if (this.props.export_keys.get(ExportKey.InitialOnly)) {
+    /*else if (this.props.export_keys.get(ExportKey.InitialOnly)) {
       const past_a = new_state.land.attacker.past && new_state.land.attacker.past.get(0)
       if (state.land.round > -1 && past_a) {
         new_state.land = {
           ...new_state.land,
-          attacker: {...new_state.land.attacker, army: past_a.army, reserve: past_a.reserve, defeated: past_a.defeated, past: undefined }
+          attacker: { ...new_state.land.attacker, army: past_a.army, reserve: past_a.reserve, defeated: past_a.defeated, past: undefined }
         }
       }
       const past_d = new_state.land.defender.past && new_state.land.defender.past.get(0)
       if (state.land.round > -1 && past_d) {
         new_state.land = {
           ...new_state.land,
-          defender: {...new_state.land.defender, army: past_d.army, reserve: past_d.reserve, defeated: past_d.defeated, past: undefined }
+          defender: { ...new_state.land.defender, army: past_d.army, reserve: past_d.reserve, defeated: past_d.defeated, past: undefined }
         }
       }
       new_state.land = {
@@ -146,7 +145,9 @@ class Transfer extends Component<IProps, IState> {
         attacker_past: undefined,
         defender_past: undefined
       }
-    }
+    }*/
+    if (!this.props.export_keys.get(ExportKey.Naval))
+      new_state.naval = undefined
     return new_state
   }
 }
@@ -166,7 +167,7 @@ const mapDispatchToProps = (dispatch: any) => ({
         data = '{}'
       let json = JSON.parse(data)
       json.transfer = undefined
-      json.land = json.land && transformLand(json.land)
+      json.battle = json.battle && transformBattle(json.battle)
       json.tactics = json.tactics && transformTactics(json.tactics)
       json.terrains = json.terrains && transformTerrains(json.terrains)
       json.units = json.units && transformUnits(json.units)
