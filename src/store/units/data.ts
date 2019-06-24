@@ -11,6 +11,12 @@ import IconLightCavalry from '../../images/light_cavalry.png'
 import IconLightInfantry from '../../images/light_infantry.png'
 import IconWarElephants from '../../images/war_elephants.png'
 import IconMilitaryPower from '../../images/military_power.png'
+import IconLiburnian from '../../images/liburnian.png'
+import IconTrireme from '../../images/trireme.png'
+import IconTetrere from '../../images/tetrere.png'
+import IconHexere from '../../images/hexere.png'
+import IconOctere from '../../images/octere.png'
+import IconMegaGalley from '../../images/mega_galley.png'
 
 import * as data from './units.json';
 
@@ -24,6 +30,12 @@ const unit_to_icon = Map<UnitType, string>()
   .set(UnitType.LightCavalry, IconLightCavalry)
   .set(UnitType.LightInfantry, IconLightInfantry)
   .set(UnitType.WarElephants, IconWarElephants)
+  .set(UnitType.Liburnian, IconLiburnian)
+  .set(UnitType.Trireme, IconTrireme)
+  .set(UnitType.Tetrere, IconTetrere)
+  .set(UnitType.Hexere, IconHexere)
+  .set(UnitType.Octere, IconOctere)
+  .set(UnitType.MegaGalley, IconMegaGalley)
 
 export const getDefaultTypes = (): OrderedSet<UnitType> => {
   const units = Object.keys(UnitType).map(k => UnitType[k as any]) as UnitType[]

@@ -12,6 +12,11 @@ import IconPhalanx from '../../images/phalanx.png'
 import IconShockAction from '../../images/shock_action.png'
 import IconSkirmishing from '../../images/skirmishing.png'
 import IconTriplexAcies from '../../images/triplex_acies.png'
+import IconFrontalAssault from '../../images/frontal_assault.png'
+import IconNavalEnvelopment from '../../images/naval_envelopment.png'
+import IconHarassment from '../../images/harassment.png'
+import IconProbingAttack from '../../images/probing_attack.png'
+import IconCloseRanks from '../../images/close_ranks.png'
 import * as data from './tactics.json'
 
 const tactic_to_icon = Map<TacticType, string>()
@@ -25,6 +30,11 @@ const tactic_to_icon = Map<TacticType, string>()
   .set(TacticType.ShockAction, IconShockAction)
   .set(TacticType.Skirmishing, IconSkirmishing)
   .set(TacticType.TriplexAcies, IconTriplexAcies)
+  .set(TacticType.FrontalAssault, IconFrontalAssault)
+  .set(TacticType.NavalEnvelopment, IconNavalEnvelopment)
+  .set(TacticType.Harassment, IconHarassment)
+  .set(TacticType.ProbingAttack, IconProbingAttack)
+  .set(TacticType.CloseRanks, IconCloseRanks)
 
 export const getDefaultDefinitions = (): OrderedMap<TacticType, TacticDefinition> => {
   let map = OrderedMap<TacticType, TacticDefinition>()
