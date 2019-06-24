@@ -1,9 +1,11 @@
 import { Map } from 'immutable'
 import { Unit, UnitCalc, UnitType, UnitDefinition } from '../units'
 import { RowType, Army } from '../land_battle'
+import { CombatParameter } from '../settings'
 import { calculateValue, mergeValues } from '../../base_definition'
 type Definition = Map<UnitType, UnitDefinition>
 type RowTypes = Map<RowType, UnitType | undefined>
+type Settings = Map<CombatParameter, number>
 
 /**
  * Calculates the next index when the order is from center to edges.
@@ -14,17 +16,23 @@ export const nextIndex = (index: number, center: number) => index < center ? ind
  * Returns whether a given unit is a flanker.
  * Units with more than 2 maneuver are considered flankers, unless overridden by preferences.
  */
-const isFlankUnit = (row_types: RowTypes, unit: Unit) => {
+const isFlankUnit = (settings: Settings, row_types: RowTypes, unit: Unit) => {
     if (unit.type === row_types.get(RowType.Flank))
         return true
     if (unit.type === row_types.get(RowType.Front) || unit.type === row_types.get(RowType.Back))
         return false
-    return calculateValue(unit, UnitCalc.Maneuver) > 2
+    const value = calculateValue(unit, settings.get(CombatParameter.FlankCriteriaAttribute, UnitCalc.Maneuver))
+    const limit = settings.get(CombatParameter.FlankCriteriaValue, 2)
+    if (settings.get(CombatParameter.FlankCriteriaSign, true))
+        return value > limit
+    else
+        return value < limit
 }
 
 /**
  * Calculates left and right flank sizes.
  * By default, flank starts where the enemy frontline ends. Preference can override this.
+ * @param settings Settings
  * @param round Flank only works for the initial deployment.
  * @param flank_size Minimum preferred flank size. Doesn't work with small armies.
  * @param front_size Size of the front line.
@@ -32,9 +40,11 @@ const isFlankUnit = (row_types: RowTypes, unit: Unit) => {
  * @param free_spots Amount of free spots in the frontline.
  * @param enemy_size Size of the enemy army.
  */
-const calculateFlankSizes = (round: number, flank_size: number, front_size: number, reserve_size: number, free_spots : number, enemy_size: number): [number, number] => {
+const calculateFlankSizes = (settings: Settings, round: number, flank_size: number, front_size: number, reserve_size: number, free_spots : number, enemy_size: number): [number, number] => {
     if (round > 0)
         return [0, 0]
+    if (!settings.get(CombatParameter.FixFlank))
+        return [Math.floor(front_size / 2.0), Math.ceil(front_size / 2.0)]
     const army_size = front_size - free_spots + reserve_size
     // Determine whether the preferred flank size has any effect.
     // Note: Only tested with combat width of 30. +2 might be a bug in the game.
@@ -57,29 +67,30 @@ const calculateFlankSizes = (round: number, flank_size: number, front_size: numb
  * @param row_types Preferred unit types.
  * @param flank_size Minimum size of flanks. Only works for the initial deployment and if enough unit.
  * @param enemy_size Army size of the enemy. Affects size of flanks.
+ * @param settings Parameters for reinforcement.
  * @param attacker_to_defender Output. Reinforcement may move units so this must be updated also.
  */
-export const reinforce = (army: Army, definitions: Definition, round: number, row_types: RowTypes, flank_size: number, enemy_size: number, attacker_to_defender: (number | null)[] | undefined): Army => {
+export const reinforce = (army: Army, definitions: Definition, round: number, row_types: RowTypes, flank_size: number, enemy_size: number, settings: Settings, attacker_to_defender: (number | null)[] | undefined): Army => {
     let frontline = army.frontline
     let reserve = army.reserve
 
     const center = Math.floor(frontline.size / 2.0)
 
     // Separate reserve to main and flank groups.
-    const mainReserve = reserve.filter(value => !isFlankUnit(row_types, mergeValues(value, definitions.get(value.type)!)))
-    const flankReserve = reserve.filter(value => isFlankUnit(row_types, mergeValues(value, definitions.get(value.type)!)))
+    const mainReserve = reserve.filter(value => !isFlankUnit(settings, row_types, mergeValues(value, definitions.get(value.type)!)))
+    const flankReserve = reserve.filter(value => isFlankUnit(settings, row_types, mergeValues(value, definitions.get(value.type)!)))
     // Calculate priorities (mostly based on unit type, ties are resolved with index numbers).
     let orderedMainReserve = mainReserve.sortBy((value, key) => {
         value = mergeValues(value, definitions.get(value.type)!)
-        return -calculateValue(value, UnitCalc.Cost) * 10000 + key - (value.type === row_types.get(RowType.Front) ? 2000000 : 0) - (value.type === row_types.get(RowType.Back) ? -1000000 : 0)
+        return (settings.get(CombatParameter.ReinforceMainSign) ? 1 : -1) * calculateValue(value, settings.get(CombatParameter.ReinforceMainAttribute, UnitCalc.Cost)) * 10000 + key - (value.type === row_types.get(RowType.Front) ? 2000000 : 0) - (value.type === row_types.get(RowType.Back) ? -1000000 : 0)
     })
     let orderedFlankReserve = flankReserve.sortBy((value, key) => {
         value = mergeValues(value, definitions.get(value.type)!)
-        return -calculateValue(value, UnitCalc.Maneuver) * 10000 + key - (value.type === row_types.get(RowType.Flank) ? 1000000 : 0)
+        return (settings.get(CombatParameter.ReinforceFlankSign) ? 1 : -1) * calculateValue(value, settings.get(CombatParameter.ReinforceMainAttribute, UnitCalc.Maneuver)) * 10000 + key - (value.type === row_types.get(RowType.Flank) ? 1000000 : 0)
     })
 
     const free_spots = frontline.filter((_, index) => index < frontline.size).reduce((previous, current) => previous + (current ? 0 : 1), 0)
-    const [left_flank_size, right_flank_size] = calculateFlankSizes(round, flank_size, frontline.size, reserve.size, free_spots, enemy_size)
+    const [left_flank_size, right_flank_size] = calculateFlankSizes(settings, round, flank_size, frontline.size, reserve.size, free_spots, enemy_size)
 
     if (round === 0) {
         // Initial deployment uses reversed order (so Primary unit is first and Secondary last).

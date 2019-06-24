@@ -48,19 +48,19 @@ export const battle = (definitions: Definitions, attacker: ParticipantState, def
   let a: Army = { frontline: attacker.frontline, reserve: attacker.reserve, defeated: attacker.defeated }
   let d: Army = { frontline: defender.frontline, reserve: defender.reserve, defeated: defender.defeated }
   // Simplifies later code because armies can be assumed to be the correct size.
-  const combat_width = settings.get(CombatParameter.CombatWidth) || 30
+  const combat_width = settings.get(CombatParameter.CombatWidth, 30)
 
   a = removeOutOfBounds(a, combat_width)
   d = removeOutOfBounds(d, combat_width)
   a = removeDefeated(a)
   d = removeDefeated(d)
-  a = reinforce(a, definitions.get(attacker.name)!, round, attacker.row_types, attacker.flank_size, calculateArmySize(d), undefined)
+  a = reinforce(a, definitions.get(attacker.name)!, round, attacker.row_types, attacker.flank_size, calculateArmySize(d), settings, undefined)
   let definitions_a: Frontline = a.frontline.map(value => value && mergeValues(value, definitions.getIn([attacker.name, value.type])))
   if (settings.get(CombatParameter.ReinforceFirst))
-    d = reinforce(d, definitions.get(defender.name)!, round, defender.row_types, defender.flank_size, calculateArmySize(a), undefined)
+    d = reinforce(d, definitions.get(defender.name)!, round, defender.row_types, defender.flank_size, calculateArmySize(a), settings, undefined)
   let a_to_d = pickTargets(definitions_a, d.frontline, !!settings.get(CombatParameter.FlankTargetsOwnEdge))
   if (!settings.get(CombatParameter.ReinforceFirst))
-    d = reinforce(d, definitions.get(defender.name)!, round, defender.row_types, defender.flank_size, calculateArmySize(a), a_to_d)
+    d = reinforce(d, definitions.get(defender.name)!, round, defender.row_types, defender.flank_size, calculateArmySize(a), settings, a_to_d)
   let definitions_d: Frontline = d.frontline.map(value => value && mergeValues(value, definitions.getIn([defender.name, value.type])))
   let d_to_a = pickTargets(definitions_d, a.frontline, !!settings.get(CombatParameter.FlankTargetsOwnEdge))
   if (round < 1)
@@ -324,8 +324,8 @@ const attack = (source_row: Frontline, target_row: Frontline, source_to_target: 
  * @param settings Combat parameters.
  */
 export const calculateBaseDamage = (roll: number, settings: Settings): number => {
-  const base_damage = settings.get(CombatParameter.BaseDamage) || 0.08
-  const roll_damage = settings.get(CombatParameter.RollDamage) || 0.02
+  const base_damage = settings.get(CombatParameter.BaseDamage, 0.08)
+  const roll_damage = settings.get(CombatParameter.RollDamage, 0.02)
   return base_damage + roll_damage * roll
 }
 
@@ -341,10 +341,10 @@ export const calculateBaseDamage = (roll: number, settings: Settings): number =>
  * @param settings Combat parameters.
  */
 const calculateLosses = (source: Unit, target: Unit, roll: number, terrains: Terrains, tactic_damage_multiplier: number, casualties_multiplier: number, settings: Settings): Loss => {
-  const damage_reduction_per_experience = settings.get(CombatParameter.ExperienceDamageReduction) || 0.3
-  const manpower_lost_multiplier = settings.get(CombatParameter.StrengthLostMultiplier) || 0.2
-  const morale_lost_multiplier = settings.get(CombatParameter.MoraleLostMultiplier) || 1.5
-  const morale_base_damage = settings.get(CombatParameter.MoraleDamageBase) || 2.0
+  const damage_reduction_per_experience = settings.get(CombatParameter.ExperienceDamageReduction, 0.3)
+  const manpower_lost_multiplier = settings.get(CombatParameter.StrengthLostMultiplier, 0.2) 
+  const morale_lost_multiplier = settings.get(CombatParameter.MoraleLostMultiplier, 1.5)
+  const morale_base_damage = settings.get(CombatParameter.MoraleDamageBase, 2.0)
   let damage = calculateBaseDamage(roll, settings)
   damage = damage
     * (1.0 + calculateValue(source, UnitCalc.Offense))

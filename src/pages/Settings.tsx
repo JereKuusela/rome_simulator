@@ -15,6 +15,10 @@ class Settings extends Component<IProps> {
           <Grid.Row columns='2'>
             {
               this.props.combat.map((value, key) => {
+                if (key === CombatParameter.FlankCriteriaAttribute || key === CombatParameter.FlankCriteriaSign
+                  || key === CombatParameter.ReinforceMainAttribute || key === CombatParameter.ReinforceMainSign
+                  || key === CombatParameter.ReinforceFlankAttribute || key === CombatParameter.ReinforceFlankSign)
+                  return null
                 return (
                   <Grid.Column key={this.props.mode + '_' + key}>
                     <Table basic='very'>

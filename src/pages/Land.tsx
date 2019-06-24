@@ -260,7 +260,7 @@ class Land extends Component<IProps, IState> {
   }
 
   renderArmy = (type: ParticipantType, name: ArmyName, participant?: Participant): JSX.Element => {
-    const combat_width = this.props.combat.get(CombatParameter.CombatWidth) || 30
+    const combat_width = this.props.combat.get(CombatParameter.CombatWidth, 30)
     return (
       <div key={type}>
         {type === ParticipantType.Attacker && <Header>{type + '\'s army'}</Header>}
