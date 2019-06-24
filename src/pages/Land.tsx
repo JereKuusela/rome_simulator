@@ -18,6 +18,7 @@ import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers
 import ModalArmyUnitDetail, { ModalInfo as ModalArmyUnitInfo } from '../containers/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/ModalFastPlanner'
 import { calculateValue, mergeValues, getImage, toRelativePercent, DefinitionType } from '../base_definition'
+import { mergeSettings } from '../utils'
 import { CombatParameter } from '../store/settings'
 import IconTerrain from '../images/terrain.png'
 import IconGeneral from '../images/military_power.png'
@@ -259,7 +260,7 @@ class Land extends Component<IProps, IState> {
   }
 
   renderArmy = (type: ParticipantType, name: ArmyName, participant?: Participant): JSX.Element => {
-    const combat_width = this.props.settings.get(CombatParameter.CombatWidth) || 30
+    const combat_width = this.props.combat.get(CombatParameter.CombatWidth) || 30
     return (
       <div key={type}>
         {type === ParticipantType.Attacker && <Header>{type + '\'s army'}</Header>}
@@ -281,7 +282,7 @@ class Land extends Component<IProps, IState> {
     const terrain_effect = type === ParticipantType.Attacker ? calculateRollModifierFromTerrains(this.props.selected_terrains.map(value => this.props.terrains.get(value))) : 0
     const general_effect = calculateRollModifierFromGenerals(general, opposing_general)
     const total = terrain_effect + general_effect + roll
-    const base_damage = calculateBaseDamage(total, this.props.settings)
+    const base_damage = calculateBaseDamage(total, this.props.combat)
     return (
       <div key={name}>
         {base_damage.toFixed(2)} :
@@ -455,7 +456,7 @@ const mapStateToProps = (state: AppState) => ({
   fight_over: state.land.fight_over,
   units: state.units.definitions,
   global_stats: state.global_stats,
-  settings: state.settings.combat,
+  combat: mergeSettings(state),
   mode: state.settings.mode
 })
 

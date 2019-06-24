@@ -1,7 +1,8 @@
 import { createAction } from 'typesafe-actions'
+import { DefinitionType } from '../../base_definition'
 
 export enum CombatParameter {
-  ManpowerLostMultiplier = 'ManpowerLostMultiplier',
+  StrengthLostMultiplier = 'StrengthLostMultiplier',
   MoraleLostMultiplier = 'MoraleLostMultiplier',
   MoraleDamageBase = 'MoraleDamageBase',
   ExperienceDamageReduction = 'ExperienceDamageReduction',
@@ -10,7 +11,7 @@ export enum CombatParameter {
   BaseDamage = 'BaseDamage',
   RollDamage = 'RollDamage',
   MinimumMorale = 'MinimumMorale',
-  MinimumManpower = 'MinimumManpower',
+  MinimumStrength = 'MinimumStrength',
   RollFrequency = 'RollFrequency',
   CombatWidth = 'CombatWidth',
   FlankTargetsOwnEdge = 'FlankTargetsOwnEdge',
@@ -29,10 +30,10 @@ export const parameterToDescription = (parameter: CombatParameter): string => {
       return 'Minimum roll for the dice.'
     case CombatParameter.ExperienceDamageReduction:
       return 'Damage reduction given by 100% experience.'
-    case CombatParameter.ManpowerLostMultiplier:
-      return 'Multiplier for manpower lost.'
-    case CombatParameter.MinimumManpower:
-      return 'Minimum manpower required for combat.'
+    case CombatParameter.StrengthLostMultiplier:
+      return 'Multiplier for strength lost.'
+    case CombatParameter.MinimumStrength:
+      return 'Minimum strength required for combat.'
     case CombatParameter.MinimumMorale:
       return 'Minimum morale required for combat.'
     case CombatParameter.MoraleDamageBase:
@@ -52,8 +53,8 @@ export const parameterToDescription = (parameter: CombatParameter): string => {
   }
 }
 
-export const changeParamater = createAction('@@settings/CHANGE_PARAMETER', action => {
-  return (key: CombatParameter, value: number) => action({ key, value })
+export const changeParameter = createAction('@@settings/CHANGE_PARAMETER', action => {
+  return (mode: DefinitionType, key: CombatParameter, value: number) => action({ mode, key, value })
 })
 
 export const toggleSimpleMode = createAction('@@settings/TOGGLE_SIMPLE_MODE', action => {

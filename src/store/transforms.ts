@@ -166,8 +166,11 @@ const settings = Object.keys(CombatParameter).map(k => CombatParameter[k as any]
 export const transformSettings = (state_raw: any): typeof settingsState => {
   if (!state_raw)
     return settingsState
-  let combat = state_raw.combat ? settingsState.combat.merge(fromJS(state_raw.combat).toOrderedMap() as OrderedMap<CombatParameter, number>) : settingsState.combat
-  combat = combat.filter((_, key) => settings.includes(key))
+  let combat = settingsState.combat
+  if (state_raw.combat) {
+    let combat_raw: Map<DefinitionType, OrderedMap<CombatParameter, number>> = fromJS(state_raw.combat)
+    combat = combat.map((value, key) => combat_raw.has(key) ? value.merge(combat_raw.get(key)!).filter((_, key) => settings.includes(key)) : value)
+  }
   const simple_mode = state_raw.simple_mode
   const mode = state_raw.mode || settingsState.mode
   return { combat, simple_mode, mode }

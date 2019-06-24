@@ -7,6 +7,7 @@ import { transferState } from '../transfer'
 import { battle as fight } from './combat'
 import { mergeValues } from '../../base_definition'
 import { settingsState, CombatParameter } from '../settings'
+import { mergeSettings } from '../../utils'
 
 export const initialState = {
   tactics: tacticsState,
@@ -24,9 +25,10 @@ export const battleReducer = createReducer(initialState)
     let next = state.land
     let attacker = next.armies.get(next.attacker)
     let defender = next.armies.get(next.defender)
-    const minimum_roll = state.settings.combat.get(CombatParameter.DiceMinimum) || 1
-    const maximum_roll = state.settings.combat.get(CombatParameter.DiceMaximum) || 6
-    const roll_frequency = state.settings.combat.get(CombatParameter.RollFrequency) || 5
+    const combat = mergeSettings(state)
+    const minimum_roll = combat.get(CombatParameter.DiceMinimum) || 1
+    const maximum_roll = combat.get(CombatParameter.DiceMaximum) || 6
+    const roll_frequency = combat.get(CombatParameter.RollFrequency) || 5
     for (let step = 0; step < action.payload.steps && !next.fight_over; ++step) {
       if (!attacker || !defender)
         continue
@@ -43,7 +45,7 @@ export const battleReducer = createReducer(initialState)
       }
       const attacker_info = { ...attacker, tactic: state.tactics.definitions.get(attacker.tactic), name: next.attacker }
       const defender_info = { ...defender, tactic: state.tactics.definitions.get(defender.tactic), name: next.defender }
-      const [a, d] = fight(definitions, attacker_info, defender_info, next.round + 1, next.terrains.map(type => state.terrains.definitions.get(type)!), state.settings.combat)
+      const [a, d] = fight(definitions, attacker_info, defender_info, next.round + 1, next.terrains.map(type => state.terrains.definitions.get(type)!), combat)
       const new_attacker = {
         ...attacker,
         ...a

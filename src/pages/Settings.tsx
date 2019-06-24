@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
 import { Container, Grid, Input, Table } from 'semantic-ui-react'
-import { changeParamater, CombatParameter, parameterToDescription } from '../store/settings'
+import { changeParameter, CombatParameter, parameterToDescription } from '../store/settings'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
+import { DefinitionType } from '../base_definition'
+import { mergeSettings } from '../utils'
 
 class Settings extends Component<IProps> {
+
   render(): JSX.Element {
     return (
       <Container>
@@ -13,15 +16,15 @@ class Settings extends Component<IProps> {
             {
               this.props.combat.map((value, key) => {
                 return (
-                  <Grid.Column key={key}>
+                  <Grid.Column key={this.props.mode + '_' + key}>
                     <Table basic='very'>
                       <Table.Row>
-                        <Table.Cell key={key + '_input'} collapsing >
+                        <Table.Cell collapsing >
                           <Input
                             size='mini'
                             style={{ width: 50 }}
                             defaultValue={value}
-                            onChange={(_, data) => Number(data.value) && this.props.changeParamater(key, Number(data.value))}
+                            onChange={(_, data) => this.onChange(key, data.value)}
                           />
                         </Table.Cell>
                         <Table.Cell key={key + '_description'} style={{ whiteSpace: 'pre-line' }} >
@@ -38,14 +41,17 @@ class Settings extends Component<IProps> {
       </Container>
     )
   }
+
+  onChange = (key: CombatParameter, value: string) => Number(value) && this.props.changeParameter(this.props.mode, key, Number(value))
 }
 
 const mapStateToProps = (state: AppState) => ({
-  combat: state.settings.combat
+  combat: mergeSettings(state),
+  mode: state.settings.mode
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  changeParamater: (key: CombatParameter, value: number) => dispatch(changeParamater(key, value))
+  changeParameter: (mode: DefinitionType, key: CombatParameter, value: number) => dispatch(changeParameter(mode, key, value))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

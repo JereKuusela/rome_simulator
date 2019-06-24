@@ -48,13 +48,13 @@ export default class UnitArmy extends Component<IProps> {
                   <Icon fitted size='small' name={this.getIcon()} style={{color: this.props.color}}></Icon>
                 </Table.Cell>
                 {
-                  columns.map(column => {
+                  columns.map((column, index) => {
                     const unit = column > -1 && this.props.units ? this.props.units.get(row * this.props.row_width + column) : undefined
                     return (
                       <Table.Cell
                       className={this.props.side + '-' + this.props.type + '-' + column}
                       textAlign='center'
-                      key={column}
+                      key={index}
                       disabled={column < 0}
                       selectable={!!this.props.onClick}
                       style={{backgroundColor: column < 0 ? '#DDDDDD' : 'white', padding: 0}}

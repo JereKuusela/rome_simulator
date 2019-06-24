@@ -87,7 +87,7 @@ export const battle = (definitions: Definitions, attacker: ParticipantState, def
   a = saveTargets(a, a_to_d)
   d = saveTargets(d, d_to_a)
   const minimum_morale = settings.get(CombatParameter.MinimumMorale) || 0.25
-  const minimum_manpower = settings.get(CombatParameter.MinimumManpower) || 0
+  const minimum_manpower = settings.get(CombatParameter.MinimumStrength) || 0
   a = copyDefeated(a, definitions_a, minimum_morale, minimum_manpower)
   d = copyDefeated(d, definitions_d, minimum_morale, minimum_manpower)
   if (a.frontline.findIndex(unit => !!(unit && !unit.is_defeated)) === -1)
@@ -342,7 +342,7 @@ export const calculateBaseDamage = (roll: number, settings: Settings): number =>
  */
 const calculateLosses = (source: Unit, target: Unit, roll: number, terrains: Terrains, tactic_damage_multiplier: number, casualties_multiplier: number, settings: Settings): Loss => {
   const damage_reduction_per_experience = settings.get(CombatParameter.ExperienceDamageReduction) || 0.3
-  const manpower_lost_multiplier = settings.get(CombatParameter.ManpowerLostMultiplier) || 0.2
+  const manpower_lost_multiplier = settings.get(CombatParameter.StrengthLostMultiplier) || 0.2
   const morale_lost_multiplier = settings.get(CombatParameter.MoraleLostMultiplier) || 1.5
   const morale_base_damage = settings.get(CombatParameter.MoraleDamageBase) || 2.0
   let damage = calculateBaseDamage(roll, settings)
