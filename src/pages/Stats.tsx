@@ -35,19 +35,19 @@ class Stats extends Component<IProps> {
         <Table celled selectable unstackable key={type}>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>
+              <Table.HeaderCell width='4'>
                 {type}
               </Table.HeaderCell>
-              <Table.HeaderCell>
+              <Table.HeaderCell width='3'>
                 <Image src={this.props.mode === DefinitionType.Naval ? IconStrength: IconManpower} avatar />
               </Table.HeaderCell>
-              <Table.HeaderCell>
+              <Table.HeaderCell width='3'>
                 <Image src={IconMorale} avatar />
               </Table.HeaderCell>
-              <Table.HeaderCell>
+              <Table.HeaderCell width='3'>
                 Strength depleted
               </Table.HeaderCell>
-              <Table.HeaderCell>
+              <Table.HeaderCell width='3'>
                 Morale depleted
               </Table.HeaderCell>
             </Table.Row>
