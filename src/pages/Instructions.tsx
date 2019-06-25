@@ -18,17 +18,17 @@ class Instructions extends Component<IProps> {
               <p><b>Round</b>: Day of the battle. Recommended to only add units on 'Before combat' phase to get accurate deployment.</p>
               <p><b>Create units</b>: Quickly add or remove units in the reserve. Also shows some stats for all units in the army.</p>
               <p><b>Arrows</b>: Changes the day of the battle. Double arrows change 10 days. You can only move forward if both sides have units left.</p>
-              <p><b>Attacker's / Defender's army</b>: Units in the battle field.</p>
+              <p><b>Attacker's / Defender's army</b>: Units in the battle field. Left click to add or edit units. Right click to remove units.</p>
               <p><b>Army dropdown</b>: Allows changing the army. Affects available units and their combat modifiers.</p>
               <p><b>General skill</b>: Martial level for the general. Affects dice roll.</p>
               <p><b>Tactic</b>: Tactic in the combat. Percentage gets affected by units in the battle field and opponent's tactic</p>
               <p><b>Base damage</b>: Current base damage with current dice roll and other modifiers.</p>
               <p><b>Randomize</b>: Whether the dice roll is randomized. Turn this off for controlled results.</p>
               <p><b>Location</b>: Terrains in the battle. Affects mainly the dice roll.</p>
-              <p><b>Attacker's / Defender's reserve</b>: Units in the reserve. Units are deployed automatically. Different rules are used before the combat and during the combat.</p>
+              <p><b>Attacker's / Defender's reserve</b>: Units in the reserve. Units are deployed automatically. Different rules are used before the combat and during the combat. Left click to add or edit units. Right click to remove units.</p>
               <p><b>Preferred unit types</b>: Preferences for deployment. Front units are prioritized before combat. Back units are prioritized during combat. Flank units are prioritized for flanks.</p>
               <p><b>Flank size</b>: Minimum flank size, only works when the army has at least 32 units. Actual flank size depends on amount of enemy units.</p>
-              <p><b>Attacker's / Defender's defeated units</b>: Defeated units which can no longer participate in the fight.</p>
+              <p><b>Attacker's / Defender's defeated units</b>: Defeated units which can no longer participate in the fight. Left click to add or edit units. Right click to remove units.</p>
               <br />
               <br />
               <br />

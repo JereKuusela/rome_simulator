@@ -13,6 +13,7 @@ interface IProps {
   row_width: number
   reverse: boolean
   onClick?: (index: number, unit: Unit | undefined) => void
+  onRemove?: (index: number) => void
   type: ArmyType
   color: string
 }
@@ -59,6 +60,7 @@ export default class UnitArmy extends Component<IProps> {
                       selectable={!!this.props.onClick}
                       style={{backgroundColor: column < 0 ? '#DDDDDD' : 'white', padding: 0}}
                       onClick={() => this.props.onClick && this.props.onClick(row * this.props.row_width + column, unit)}
+                      onContextMenu={(e: any) => e.preventDefault() || (this.props.onRemove && this.props.onRemove(row * this.props.row_width + column))}
                       >
                         {
                           <div style={{ background: this.gradient(unit, MANPOWER_COLOR, UnitCalc.Strength) }}>

@@ -6,7 +6,7 @@ import { AppState } from '../store/index'
 import { ArmyName, UnitDefinition, ArmyType, Unit } from '../store/units'
 import UnitArmy from '../components/UnitArmy'
 import TargetArrows from '../components/TargetArrows'
-import { battle, undo, Participant, ParticipantType, toggleRandomRoll, setRoll, setGeneral, RowType, setFlankSize, selectArmy } from '../store/battle'
+import { battle, undo, Participant, ParticipantType, toggleRandomRoll, setRoll, setGeneral, RowType, setFlankSize, selectArmy, selectUnit } from '../store/battle'
 import { calculateTactic, calculateRollModifierFromTerrains, calculateRollModifierFromGenerals, calculateBaseDamage } from '../store/combat/combat'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import { TacticType } from '../store/tactics'
@@ -268,6 +268,7 @@ class Battle extends Component<IProps, IState> {
           color={type === ParticipantType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={type}
           onClick={(column, unit) => this.openUnitModal(name, ArmyType.Frontline, column, unit)}
+          onRemove={column => this.props.removeUnit(this.props.mode, name, ArmyType.Frontline, column)}
           units={participant && this.mergeAllValues(name, participant.frontline).setSize(combat_width)}
           row_width={Math.max(30, combat_width)}
           reverse={type === ParticipantType.Attacker}
@@ -312,6 +313,7 @@ class Battle extends Component<IProps, IState> {
           color={type === ParticipantType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={type}
           onClick={(column, unit) => this.openUnitModal(name, ArmyType.Reserve, column, unit)}
+          onRemove={column => this.props.removeUnit(this.props.mode, name, ArmyType.Reserve, column)}
           units={units && units.setSize(size || 0)}
           row_width={30}
           reverse={false}
@@ -333,6 +335,7 @@ class Battle extends Component<IProps, IState> {
           color={type === ParticipantType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={type}
           onClick={(column, unit) => this.openUnitModal(name, ArmyType.Defeated, column, unit)}
+          onRemove={column => this.props.removeUnit(this.props.mode, name, ArmyType.Defeated, column)}
           units={units && units.setSize(size || 0)}
           row_width={30}
           reverse={false}
@@ -467,7 +470,10 @@ const mapDispatchToProps = (dispatch: any) => ({
   setRoll: (mode: DefinitionType, name: ArmyName, roll: number) => dispatch(setRoll(mode, name, roll)),
   setGeneral: (mode: DefinitionType, name: ArmyName, skill: number) => dispatch(setGeneral(mode, name, skill)),
   setFlankSize: (mode: DefinitionType, name: ArmyName, size: number) => dispatch(setFlankSize(mode, name, size)),
-  selectArmy: (mode: DefinitionType, type: ParticipantType, name: ArmyName) => dispatch(selectArmy(mode, type, name))
+  selectArmy: (mode: DefinitionType, type: ParticipantType, name: ArmyName) => dispatch(selectArmy(mode, type, name)),
+  removeUnit: (mode: DefinitionType, name: ArmyName, type: ArmyType, column: number) => (
+    dispatch(selectUnit(mode, name, type, column, undefined))
+  )
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }
