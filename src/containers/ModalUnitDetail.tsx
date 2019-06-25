@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { UnitType, ArmyName, ValueType, setValue, changeImage } from '../store/units'
+import { UnitType, ArmyName, ValueType, setValue, changeImage, changeMode } from '../store/units'
 import { AppState } from '../store/'
-import { ValuesType, mergeValues } from '../base_definition'
+import { ValuesType, mergeValues, DefinitionType } from '../base_definition'
 import { OrderedSet } from 'immutable'
 import UnitDetail from '../components/UnitDetail'
 
@@ -28,6 +28,7 @@ class ModalUnitDetail extends Component<IProps> {
         show_statistics={false}
         onTypeChange={this.props.changeType}
         onImageChange={this.props.changeImage}
+        onModeChange={this.props.changeMode}
       />
     )
   }
@@ -51,7 +52,8 @@ const mapDispatchToProps = (dispatch: any) => ({
   setLossValue: (army: ArmyName, unit: UnitType, key: string, attribute: ValueType, value: number) => (
     !Number.isNaN(value) && dispatch(setValue(army, ValuesType.Loss, unit, key, attribute, value))
   ),
-  changeImage: (army: ArmyName, type: UnitType, image: string) => dispatch(changeImage(army, type, image))
+  changeImage: (army: ArmyName, type: UnitType, image: string) => dispatch(changeImage(army, type, image)),
+  changeMode: (army: ArmyName, type: UnitType, mode: DefinitionType) => dispatch(changeMode(army, type, mode))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {

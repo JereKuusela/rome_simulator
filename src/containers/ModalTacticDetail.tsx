@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { setBaseValue, ValueType, TacticType, changeImage } from '../store/tactics'
+import { setBaseValue, ValueType, TacticType, changeImage, changeMode } from '../store/tactics'
 import { AppState } from '../store/'
 import TacticDetail from '../components/TacticDetail'
 import { OrderedSet } from 'immutable'
 import { UnitType } from '../store/units'
+import { DefinitionType } from '../base_definition';
 
 const CUSTOM_VALUE_KEY = 'Custom'
 
@@ -24,6 +25,7 @@ class ModalTacticDetail extends Component<IProps> {
         onCustomBaseValueChange={this.props.setBaseValue}
         onTypeChange={this.props.changeType}
         onImageChange={this.props.changeImage}
+        onModeChange={this.props.changeMode}
       />
     )
   }
@@ -40,7 +42,8 @@ const mapDispatchToProps = (dispatch: any) => ({
   setBaseValue: (tactic: TacticType,  key: string, attribute: ValueType, value: number) => (
     !Number.isNaN(value) && dispatch(setBaseValue(tactic, key, attribute, value))
   ),
-  changeImage: (type: TacticType, image: string) => dispatch(changeImage(type, image))
+  changeImage: (type: TacticType, image: string) => dispatch(changeImage(type, image)),
+  changeMode: (type: TacticType, mode: DefinitionType) => dispatch(changeMode(type, mode))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {

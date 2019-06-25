@@ -9,7 +9,7 @@ interface IProps {
   readonly mode: DefinitionType
   readonly name: ArmyName
   readonly custom_value_key: string
-  readonly unit: Unit
+  readonly unit: Unit & UnitDefinition
   readonly unit_types: OrderedSet<UnitType>
   readonly units: Map<any, Map<UnitType, UnitDefinition>>
   readonly show_statistics: boolean
@@ -19,6 +19,7 @@ interface IProps {
   readonly onCustomModifierValueChange: (name: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
   readonly onCustomLossValueChange: (name: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
   readonly onTypeChange?: (name: ArmyName, old_type: UnitType, new_type: UnitType) => void
+  readonly onModeChange?: (name: ArmyName, type: UnitType, mode: DefinitionType) => void
   readonly onImageChange?: (name: ArmyName, type: UnitType, image: string) => void
 }
 
@@ -27,6 +28,7 @@ export default class UnitDetail extends Component<IProps> {
 
   readonly attributes = Object.keys(UnitCalc).map(k => UnitCalc[k as any]) as UnitCalc[]
   readonly units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
+  readonly modes = Object.keys(DefinitionType).map(k => DefinitionType[k as any]).sort() as DefinitionType[]
   readonly headers = ['Attribute', 'Value', 'Custom base', 'Custom modifier', 'Custom losses', 'Explained']
 
   renderUnitTypeDropdown = (name: ArmyName, type: UnitType): JSX.Element => {
@@ -42,6 +44,27 @@ export default class UnitDetail extends Component<IProps> {
             this.props.unit_types.map(key => (
               <Dropdown.Item value={key} text={key} key={key} active={type === key}
                 onClick={() => this.props.onTypeChange && this.props.onTypeChange(name, type, key)}
+              />
+            ))
+          }
+        </Dropdown.Menu>
+      </Dropdown>
+    )
+  }
+
+  renderModeDropdown = (name: ArmyName, type: UnitType, mode: DefinitionType): JSX.Element => {
+    return (
+      <Dropdown
+        text={mode}
+        selection
+        value={mode}
+        disabled={this.props.unit.is_defeated}
+      >
+        <Dropdown.Menu>
+          {
+            this.modes.map(key => (
+              <Dropdown.Item value={key} text={key} key={key} active={mode === key}
+                onClick={() => this.props.onModeChange && this.props.onModeChange(name, type, key)}
               />
             ))
           }
@@ -82,6 +105,22 @@ export default class UnitDetail extends Component<IProps> {
                       onChange={(_, data) => this.props.onTypeChange && this.props.onTypeChange(this.props.name, this.props.unit.type, data.value as UnitType)}
                     />
                   }
+                </Table.Cell>
+                <Table.Cell />
+                <Table.Cell />
+                <Table.Cell />
+                <Table.Cell />
+              </Table.Row>
+              : null
+          }
+          {
+            this.props.onModeChange ?
+              <Table.Row>
+                <Table.Cell>
+                  Image
+                </Table.Cell>
+                <Table.Cell collapsing>
+                  {this.renderModeDropdown(this.props.name, this.props.unit.type, this.props.unit.mode)}
                 </Table.Cell>
                 <Table.Cell />
                 <Table.Cell />

@@ -112,7 +112,7 @@ export const changeImage = createAction('@@units/CHANGE_IMAGE', action => {
 })
 
 export const changeMode = createAction('@@units/CHANGE_MODE', action => {
-  return (army: ArmyName, mode: DefinitionType, type: UnitType, image: string) => action({ army, mode, type, image })
+  return (army: ArmyName, type: UnitType, mode: DefinitionType) => action({ army, type, mode })
 })
 
 export const deleteArmy = createAction('@@units/DELETE_ARMY', action => {

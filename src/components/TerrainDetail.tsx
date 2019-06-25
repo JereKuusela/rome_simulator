@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Table, Input, Dropdown } from 'semantic-ui-react'
 import { TerrainDefinition, ValueType, TerrainType, TerrainCalc, valueToString, LocationType } from '../store/terrains'
-import { getBaseValue, explainShort } from '../base_definition'
+import { getBaseValue, explainShort, DefinitionType } from '../base_definition'
 
 interface IProps {
   readonly custom_value_key: string
@@ -10,6 +10,7 @@ interface IProps {
   readonly onTypeChange: (old_type: TerrainType, new_type: TerrainType) => void
   readonly onLocationChange: (type: TerrainType, location: LocationType) => void
   readonly onImageChange: (type: TerrainType, image: string) => void
+  readonly onModeChange: (type: TerrainType, mode: DefinitionType) => void
 }
 
 // Display component for showing and changing terrain details.
@@ -17,7 +18,28 @@ export default class TerrainDetail extends Component<IProps> {
 
   readonly attributes = Object.keys(TerrainCalc).map(k => TerrainCalc[k as any]) as TerrainCalc[]
   readonly locations = Object.keys(LocationType).map(k => LocationType[k as any]) as LocationType[]
+  readonly modes = Object.keys(DefinitionType).map(k => DefinitionType[k as any]).sort() as DefinitionType[]
   readonly headers = ['Attribute', 'Value', 'Custom value', 'Explained']
+
+  renderModeDropdown = (type: TerrainType, mode: DefinitionType): JSX.Element => {
+    return (
+      <Dropdown
+        text={mode}
+        selection
+        value={mode}
+      >
+        <Dropdown.Menu>
+          {
+            this.modes.map(key => (
+              <Dropdown.Item value={key} text={key} key={key} active={mode === key}
+                onClick={() => this.props.onModeChange && this.props.onModeChange(type, key)}
+              />
+            ))
+          }
+        </Dropdown.Menu>
+      </Dropdown>
+    )
+  }
 
   render(): JSX.Element {
     return (
@@ -45,6 +67,18 @@ export default class TerrainDetail extends Component<IProps> {
                 onChange={(_, data) => this.props.onTypeChange(this.props.terrain.type, data.value as TerrainType)}
               />
             </Table.Cell>
+            <Table.Cell />
+            <Table.Cell />
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>
+              Mode
+            </Table.Cell>
+            <Table.Cell collapsing>
+              {this.renderModeDropdown(this.props.terrain.type, this.props.terrain.mode)}
+            </Table.Cell>
+            <Table.Cell />
+            <Table.Cell />
             <Table.Cell />
             <Table.Cell />
           </Table.Row>
@@ -91,7 +125,7 @@ export default class TerrainDetail extends Component<IProps> {
           {
             this.locations.map(value => (
               <Dropdown.Item value={value} text={value} key={value} active={this.props.terrain.location === value}
-              onClick={() => this.props.onLocationChange(this.props.terrain.type, value)}
+                onClick={() => this.props.onLocationChange(this.props.terrain.type, value)}
               />
             ))
           }
