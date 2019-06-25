@@ -2,13 +2,15 @@ import React, { Component } from 'react'
 import { List } from 'immutable'
 import { Table, Image } from 'semantic-ui-react'
 import { UnitCalc, Unit } from '../store/units'
-import { calculateValueWithoutLoss} from '../base_definition'
+import { calculateValueWithoutLoss, DefinitionType} from '../base_definition'
 import IconCost from '../images/cost.png'
 import IconSupplyLimit from '../images/supply_limit.png'
 import IconManpower from '../images/manpower.png'
+import IconStrength from '../images/naval_combat.png'
 
 
 interface IProps {
+  mode: DefinitionType
   army_a?: List<Unit | undefined>
   army_d?: List<Unit | undefined>
   reserve_a?: List<Unit>
@@ -39,7 +41,7 @@ export default class ArmyCosts extends Component<IProps> {
         </Table.Header>
         <Table.Body>
           {
-            this.renderRow('Manpower', IconManpower, UnitCalc.Strength, 0)
+            this.renderRow('Strength', this.props.mode === DefinitionType.Naval ? IconStrength : IconManpower, UnitCalc.Strength, 0)
           }
           {
             this.renderRow('Cost', IconCost, UnitCalc.Cost, 0)
@@ -61,6 +63,12 @@ export default class ArmyCosts extends Component<IProps> {
       + (defeated ? defeated.reduce((previous, current) => previous + calculateValueWithoutLoss(current, attribute) + base, 0) : 0)
   }
 
+  finalize = (attribute: UnitCalc, value: number): string => {
+    if (attribute === UnitCalc.Strength && this.props.mode === DefinitionType.Naval)
+      return (value / 10.0) + '%'
+    return String(+value.toFixed(2))
+  }
+
   renderRow = (name: string, image: string, attribute: UnitCalc, base: number): JSX.Element => (
     <Table.Row key={name}>
       <Table.Cell width='6'>
@@ -69,12 +77,12 @@ export default class ArmyCosts extends Component<IProps> {
       </Table.Cell>
       <Table.Cell width='5'>
         {
-          +this.calculateTotal(attribute, base, this.props.army_a, this.props.reserve_a, this.props.defeated_a).toFixed(2)
+          this.finalize(attribute, this.calculateTotal(attribute, base, this.props.army_a, this.props.reserve_a, this.props.defeated_a))
         }
       </Table.Cell>
       <Table.Cell width='5'>
         {
-          +this.calculateTotal(attribute, base, this.props.army_d, this.props.reserve_d, this.props.defeated_d).toFixed(2)
+          this.finalize(attribute, this.calculateTotal(attribute, base, this.props.army_d, this.props.reserve_d, this.props.defeated_d))
         }
       </Table.Cell>
     </Table.Row>

@@ -312,6 +312,9 @@ export default class UnitDefinitions extends Component<IProps, IState> {
       base_str = base / 10.0 + '%'
     const modifier = calculateModifier(unit, attribute)
     const loss = calculateLoss(unit, attribute)
+    let loss_str = String(base)
+    if (this.props.mode === DefinitionType.Naval && attribute === UnitCalc.Strength)
+      loss_str = loss / 10.0 + '%'
     return (
       <List>
         {
@@ -329,7 +332,7 @@ export default class UnitDefinitions extends Component<IProps, IState> {
         {
           loss !== 0 &&
           <List.Item style={{ whiteSpace: 'nowrap' }}>
-            {'Loss: ' + loss}
+            {'Loss: ' + loss_str}
           </List.Item>
         }
       </List>

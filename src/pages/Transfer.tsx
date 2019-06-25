@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { importState, ExportKey, setResetMissing, setExportKey } from '../store/transfer'
 import { transformGlobalStats, transformBattle, transformTactics, transformTerrains, transformUnits, transformSettings } from '../store/transforms'
+import { Armies, checkFight } from '../store/battle'
+import { DefinitionType } from '../base_definition'
 
 interface IState {
   data: string
@@ -91,15 +93,54 @@ class Transfer extends Component<IProps, IState> {
   }
 
   checkDisabled = (key: ExportKey): boolean => {
-    if (key === ExportKey.History && (!this.props.export_keys.get(ExportKey.Land) || !this.props.export_keys.get(ExportKey.Naval)))
+    if (key === ExportKey.History && !this.props.export_keys.get(ExportKey.Land) && !this.props.export_keys.get(ExportKey.Naval))
       return true
     if (key === ExportKey.History && this.props.export_keys.get(ExportKey.InitialOnly))
       return true
-    if (key === ExportKey.InitialOnly && (!this.props.export_keys.get(ExportKey.Land) || !this.props.export_keys.get(ExportKey.Naval)))
+    if (key === ExportKey.InitialOnly && !this.props.export_keys.get(ExportKey.Land) && !this.props.export_keys.get(ExportKey.Naval))
       return true
     if (key === ExportKey.InitialOnly && this.props.export_keys.get(ExportKey.History))
       return true
     return false
+  }
+
+  /**
+   * Restores the initial state of armies and removes history.
+   */
+  getInitialOnly = (mode: Armies): Armies => {
+    const past_a = mode.attacker_past && mode.attacker_past.get(0)
+      if (mode.round > -1 && past_a) {
+       mode = {
+          ...mode,
+          armies: mode.armies.update(mode.attacker, value => ({ ...value, ...past_a})),
+          attacker_past: mode.attacker_past.clear()
+        } 
+      }
+      const past_d = mode.defender_past && mode.defender_past.get(0)
+      if (mode.round > -1 && past_d) {
+        mode = {
+          ...mode,
+          armies: mode.armies.update(mode.defender, value => ({ ...value, ...past_d})),
+          attacker_past: mode.defender_past.clear()
+        } 
+      }
+      return {
+        ...mode,
+        round: -1,
+        fight_over: !checkFight(mode.armies.get(mode.attacker), mode.armies.get(mode.defender))
+      }
+  }
+
+  /**
+   * Removes history information.
+   */
+  removeHistory = (mode: Armies): Armies => {
+    return {
+      ...mode,
+        attacker_past: mode.attacker_past.clear(),
+        defender_past: mode.defender_past.clear(),
+        round: -1
+    }
   }
 
   filterKeys = (state: AppState): any => {
@@ -117,36 +158,18 @@ class Transfer extends Component<IProps, IState> {
     if (!this.props.export_keys.get(ExportKey.Settings))
       new_state.settings = undefined
     if (!this.props.export_keys.get(ExportKey.Land))
-      new_state.battle = undefined
-    /*else if (this.props.export_keys.get(ExportKey.InitialOnly)) {
-      const past_a = new_state.land.attacker.past && new_state.land.attacker.past.get(0)
-      if (state.land.round > -1 && past_a) {
-        new_state.land = {
-          ...new_state.land,
-          attacker: { ...new_state.land.attacker, army: past_a.army, reserve: past_a.reserve, defeated: past_a.defeated, past: undefined }
-        }
-      }
-      const past_d = new_state.land.defender.past && new_state.land.defender.past.get(0)
-      if (state.land.round > -1 && past_d) {
-        new_state.land = {
-          ...new_state.land,
-          defender: { ...new_state.land.defender, army: past_d.army, reserve: past_d.reserve, defeated: past_d.defeated, past: undefined }
-        }
-      }
-      new_state.land = {
-        ...new_state.land,
-        day: -1,
-        fight_over: !checkFight(new_state.land.attacker, new_state.land.defender)
-      }
-    }
-    else if (!this.props.export_keys.get(ExportKey.History)) {
-      new_state.land = {
-        ...new_state.land,
-        attacker_past: undefined,
-        defender_past: undefined
-      }
-    }*/
+      new_state.battle = new_state.battle.delete(DefinitionType.Land)
+    else if (this.props.export_keys.get(ExportKey.InitialOnly))
+      new_state.battle = new_state.battle.update(DefinitionType.Land, this.getInitialOnly)
+    else if (!this.props.export_keys.get(ExportKey.History))
+      new_state.battle = new_state.battle.update(DefinitionType.Land, this.removeHistory)
     if (!this.props.export_keys.get(ExportKey.Naval))
+      new_state.battle = new_state.battle.delete(DefinitionType.Naval)
+    else if (this.props.export_keys.get(ExportKey.InitialOnly))
+      new_state.battle = new_state.battle.update(DefinitionType.Naval, this.getInitialOnly)
+    else if (!this.props.export_keys.get(ExportKey.History))
+      new_state.battle = new_state.battle.update(DefinitionType.Naval, this.removeHistory)
+    if (!this.props.export_keys.get(ExportKey.Land) && !this.props.export_keys.get(ExportKey.Naval))
       new_state.battle = undefined
     return new_state
   }

@@ -39,6 +39,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
             onRemove={() => this.selectUnit(undefined)}
           />
           <UnitDetail
+            mode={this.props.mode}
             name={this.props.info.name}
             terrains={this.props.terrains}
             custom_value_key={CUSTOM_VALUE_KEY}

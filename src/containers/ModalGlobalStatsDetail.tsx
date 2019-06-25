@@ -15,6 +15,7 @@ class ModalGlobalStatsDetail extends Component<IProps> {
     const unit_types = this.props.unit_types.reduce((previous, current) => previous.merge(current.toOrderedSet()), OrderedSet<UnitType>())
     return (
       <UnitDetail
+        mode={this.props.mode}
         name={this.props.army}
         terrains={this.props.terrains}
         custom_value_key={CUSTOM_VALUE_KEY}
