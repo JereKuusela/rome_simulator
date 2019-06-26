@@ -263,7 +263,7 @@ class Battle extends Component<IProps, IState> {
     const combat_width = this.props.combat.get(CombatParameter.CombatWidth, 30)
     return (
       <div key={type}>
-        {type === ParticipantType.Attacker && <Header>{type + '\'s army'}</Header>}
+        {type === ParticipantType.Attacker && <Header>{type + '\'s frontline'}</Header>}
         <UnitArmy
           color={type === ParticipantType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={type}
@@ -274,7 +274,7 @@ class Battle extends Component<IProps, IState> {
           reverse={type === ParticipantType.Attacker}
           type={ArmyType.Frontline}
         />
-        {type === ParticipantType.Defender && <Header>{type + '\'s army'}</Header>}
+        {type === ParticipantType.Defender && <Header>{type + '\'s frontline'}</Header>}
       </div>
     )
   }

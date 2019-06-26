@@ -1,26 +1,60 @@
-Release 3:
+Release 4:
 
 Tests (high priority):
 - base_definition functions tested
 
 Armies page:
-- List of armies
+- Motivation is that armies, definitions and goverment modifiers would be separated, to enable mix-match
+- Battle page would edit the army units and other things, separate pages for defitinitions (already exists) and modifiers
+- Select which unit definitions to use
+- Select which goverment modifiers to use
 - Standard operations: add, duplicate, rename, remove
-- Also choose unit definitions from a list (removes risk of definitons getting out of sync + allows reuse of definitions)
-- Probably something similar for modifiers...
-- Also settings that are in the main page (general, roll, tactic)
+- Maybe also settings that are in the main page (general, roll, tactic)
 
-Battle:
-- Arrows to show which unit attacked which one
-
-Release 4:
+Release 5+:
 
 - Immutable reviver to simplify fromJS calls when transforming data?
-- History should not be stored (except dices)
-- Playback to get history on page load?
 
-Navigation?
-- Toggle for simple mode, enabled by default: disables army page, disabled army selectio, unit / terrain / tactic management
+History refactor:
+- Lots of data now stored, large scale battles not possible
+- Could store instead the initial state + seed for random
+- Next states only stored locally
+- Must prevent adding units during combat (shouldn't be a big deal because even now it doesn't work that well)
+- Changing modifiers, tactic, etc. should replay the combat (perhaps only when in the battle page?)
+- On state load, playback to current round
+
+Navigation:
+- Toggle for simple mode, enabled by default: disables army page, disabled army selection, unit / terrain / tactic management
+
+Goverment page:
+  - Single page would be the best
+
+  - Government/Commander:
+    * Strategos skill level
+    * Commander skill level
+    * Commander traits (Click to enable/disable)
+    * Custom modifiers
+    * Heritages?
+
+  - Research:
+    * Martial level (affects morale)
+    * List of inventions
+    * Toggle enabled (Click to enable/disable)
+    * Affects unit definitions
+
+  - Military traditions:
+    * For both attack and defender
+    * Country selector (Dropdown)
+    *  List traditions (Name + Tier + Effect) based on Country
+    * Toggle enabled (Click to enable/disable)
+    * Affects unit definitions
+
+  - Trade:
+    * Surplus things
+
+  - Religion
+    * Omens, necessary?
+
 
 Settings:
 - Better descriptions
@@ -41,33 +75,6 @@ Naval battle:
 
 Land battle:
 - Loyalty gives +10% discipline, include or not?
-
-Government/Commander:
-- Strategos skill level
-- Commander skill level
-- Commander traits (Click to enable/disable)
-- Custom modifiers
-
-Research:
-- Martial level (affects morale)
-- List of inventions
-- Toggle enabled (Click to enable/disable)
-- Affects unit definitions
-
-Military traditions:
-- For both attack and defender
-- Country selector (Dropdown)
-- List traditions (Name + Tier + Effect) based on Country
-- Toggle enabled (Click to enable/disable)
-- Affects unit definitions
-
-Trade:
-- Surplus things
-
-Religion
-- Omens, necessary?
-
-Release 5:
 
 Navigation:
 - Simulation

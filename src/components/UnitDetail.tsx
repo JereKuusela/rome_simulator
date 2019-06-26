@@ -117,7 +117,7 @@ export default class UnitDetail extends Component<IProps> {
             this.props.onModeChange ?
               <Table.Row>
                 <Table.Cell>
-                  Image
+                  Mode
                 </Table.Cell>
                 <Table.Cell collapsing>
                   {this.renderModeDropdown(this.props.name, this.props.unit.type, this.props.unit.mode)}
