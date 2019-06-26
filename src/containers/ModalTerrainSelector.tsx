@@ -22,7 +22,7 @@ class ModalTerrainSelector extends Component<IProps> {
           <ItemSelector
             onClose={this.props.onClose}
             onSelection={this.selectTerrain}
-            items={this.props.terrains.toList().filter(terrain => (terrain.mode === this.props.mode || terrain.mode === DefinitionType.Any) && this.props.info && (!this.props.info.location || terrain.location === this.props.info.location))}
+            items={this.props.terrains.toList().filter(terrain => (terrain.mode === this.props.mode || terrain.mode === DefinitionType.Global) && this.props.info && (!this.props.info.location || terrain.location === this.props.info.location))}
             attributes={[TerrainCalc.Roll]}
           />
         </Modal.Content>

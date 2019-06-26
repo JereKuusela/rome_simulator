@@ -11,7 +11,7 @@ export enum ValuesType {
 export enum DefinitionType {
   Land = 'Land',
   Naval = 'Naval',
-  Any = 'Any'
+  Global = 'Global'
 }
 
 type AnyDefinition = AnyBaseDefinition | BaseValuesDefinition<any, any>

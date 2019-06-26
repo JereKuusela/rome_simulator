@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { UnitType, ArmyName, ValueType, setValue, changeImage, changeMode, UnitDefinition } from '../store/units'
+import { UnitType, ArmyName, ValueType, setValue, changeImage, changeMode } from '../store/units'
 import { AppState } from '../store/'
 import { ValuesType, mergeValues, DefinitionType } from '../base_definition'
-import { OrderedSet } from 'immutable'
 import UnitDetail from '../components/UnitDetail'
 import { mergeUnitTypes, filterTerrainTypes } from '../utils'
 

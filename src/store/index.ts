@@ -7,6 +7,7 @@ import { battleReducer } from './battle'
 import { combatReducer } from './combat'
 import { transferReducer, importReducer } from './transfer'
 import { settingsReducer } from './settings'
+import { governmentReducer } from './governments'
 
 const combined = combineReducers({
   units: unitsReducer,
@@ -15,6 +16,7 @@ const combined = combineReducers({
   battle: battleReducer,
   transfer: transferReducer,
   global_stats: globalStatsReducer,
+  governments: governmentReducer,
   settings: settingsReducer
 })
 

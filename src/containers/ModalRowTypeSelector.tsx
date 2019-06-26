@@ -22,7 +22,7 @@ class ModalRowTypeSelector extends Component<IProps> {
       const unit = this.props.units.getIn([name, type]) as UnitDefinition | undefined
       if (!unit)
         return false
-      return unit.mode === this.props.mode || unit.mode === DefinitionType.Any
+      return unit.mode === this.props.mode || unit.mode === DefinitionType.Global
     })
     const units = this.props.units.get(this.props.info.name)
     if (!types || !units)

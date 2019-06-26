@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { UnitType, setGlobalValue, ArmyName, ValueType, UnitDefinition } from '../store/units'
+import { UnitType, setGlobalValue, ArmyName, ValueType } from '../store/units'
 import { AppState } from '../store/'
 import { ValuesType, DefinitionType } from '../base_definition'
 import { mergeUnitTypes, filterTerrainTypes } from '../utils'

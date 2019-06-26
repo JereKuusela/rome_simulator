@@ -45,7 +45,7 @@ class Tactics extends Component<IProps, IState> {
         </Modal>
         {
           <TacticDefinitions
-            tactics={this.props.tactics.filter(tactic => tactic.mode === this.props.mode || tactic.mode === DefinitionType.Any)}
+            tactics={this.props.tactics.filter(tactic => tactic.mode === this.props.mode || tactic.mode === DefinitionType.Global)}
             tactic_types={this.props.tactic_types}
             unit_types={unit_types}
             units={this.props.units}

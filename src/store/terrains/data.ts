@@ -22,7 +22,7 @@ export const terrainFromJS = (object: Map<string, any>): TerrainDefinition | und
   if (!object)
     return undefined
   const image = object.get('image') || IconTerrain
-  const mode = object.get('mode') as DefinitionType || DefinitionType.Any
+  const mode = object.get('mode') as DefinitionType || DefinitionType.Global
   let base_values = object.has('base_values') ? fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
   return { type: object.get('type') as TerrainType, mode, image, location: object.get('location') as LocationType, base_values }
 }

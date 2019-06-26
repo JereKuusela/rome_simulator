@@ -27,7 +27,7 @@ class ModalUnitSelector extends Component<IProps> {
           <ItemSelector
             onClose={this.props.onClose}
             onSelection={this.selectUnit}
-            items={types.map(value => units.get(value)).filter(unit => unit && (unit.mode === this.props.mode || unit.mode === DefinitionType.Any)).toList()}
+            items={types.map(value => units.get(value)).filter(unit => unit && (unit.mode === this.props.mode || unit.mode === DefinitionType.Global)).toList()}
             attributes={[]}
           />
         </Modal.Content>

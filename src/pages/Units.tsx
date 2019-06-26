@@ -88,7 +88,7 @@ class Units extends Component<IProps, IState> {
           types={this.props.types.get(army)!}
           terrains={this.props.terrains}
           global_stats={global_stats}
-          units={units.filter(unit => unit.mode === this.props.mode || unit.mode === DefinitionType.Any)}
+          units={units.filter(unit => unit.mode === this.props.mode || unit.mode === DefinitionType.Global)}
           onRowClick={unit => this.openModal(army, unit.type)}
           onCreateNew={type => this.props.addUnit(army, this.props.mode, type)}
           onChangeName={(old_name, new_name) => this.props.changeName(old_name, new_name)}

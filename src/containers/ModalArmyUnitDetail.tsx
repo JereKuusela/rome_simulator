@@ -29,7 +29,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
       const unit = this.props.units.getIn([this.props.info!.name, type]) as UnitDefinition | undefined
       if (!unit)
         return false
-      return unit.mode === this.props.mode || unit.mode === DefinitionType.Any
+      return unit.mode === this.props.mode || unit.mode === DefinitionType.Global
     })
     return (
       <Modal basic onClose={this.props.onClose} open>

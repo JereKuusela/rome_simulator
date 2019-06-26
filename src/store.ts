@@ -4,7 +4,7 @@ import logger from 'redux-logger'
 import { persistStore, persistReducer, createTransform, createMigrate } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 //import localForage from 'localforage'
-import { transformSettings, transformGlobalStats, transformBattle, transformTactics, transformTerrains, transformUnits, transfromTransfer } from './store/transforms'
+import { transformGovernments, transformSettings, transformGlobalStats, transformBattle, transformTactics, transformTerrains, transformUnits, transfromTransfer } from './store/transforms'
 import { initialState } from './store/transfer'
 
 const TacticsTransform = createTransform(
@@ -49,6 +49,12 @@ const LandTransform = createTransform(
   { whitelist: ['battle'] }
 )
 
+const GovernmentsTransform = createTransform(
+  (inboundState) => inboundState,
+  (outboundState: any) => transformGovernments(outboundState),
+  { whitelist: ['governments'] }
+)
+
 const migrations = {
   1: (_: any) => (initialState as any)
 }
@@ -58,7 +64,7 @@ const persistConfig = {
   storage: storage,
   version: 1,
   migrate: createMigrate(migrations, { debug: false }),
-  transforms: [SettingsTransform, TacticsTransform, TerrainsTransform, LandTransform, UnitsTransform, TransferTransform, GlobalStatsTransform]
+  transforms: [GovernmentsTransform, SettingsTransform, TacticsTransform, TerrainsTransform, LandTransform, UnitsTransform, TransferTransform, GlobalStatsTransform]
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

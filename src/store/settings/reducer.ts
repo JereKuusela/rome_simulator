@@ -6,7 +6,7 @@ import { DefinitionType } from '../../base_definition'
 
 export const settingsState = {
   combat: Map<DefinitionType, OrderedMap<CombatParameter, number>>()
-    .set(DefinitionType.Any, getDefaultAnySettings())
+    .set(DefinitionType.Global, getDefaultAnySettings())
     .set(DefinitionType.Land, getDefaultLandSettings())
     .set(DefinitionType.Naval, getDefaultNavalSettings()),
     simple_mode: true,

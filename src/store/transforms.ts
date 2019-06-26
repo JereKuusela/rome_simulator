@@ -5,6 +5,7 @@ import { unitDefinitionFromJS, unitFromJS, ArmyName, UnitType, unitsState, globa
 import { RowType, initialState, PastState, Participant, getInitialArmy, Armies, modeState } from './battle'
 import { DefinitionType } from '../base_definition'
 import { transferState } from './transfer'
+import { governmentsState } from './governments'
 import { settingsState, CombatParameter } from './settings'
 
 const readTypes = <T>(types_raw: any, initial: OrderedSet<T>): OrderedSet<T> => {
@@ -158,6 +159,10 @@ export const transfromTransfer = (state_raw: any): typeof transferState => {
   const export_keys = state_raw.export_keys ? fromJS(state_raw.export_keys) : transferState.export_keys
   const reset_missing = state_raw.reset_missing || transferState.reset_missing
   return { reset_missing, export_keys }
+}
+
+export const transformGovernments = (state_raw: any): typeof governmentsState => {
+  return governmentsState
 }
 
 const settings = Object.keys(CombatParameter).map(k => CombatParameter[k as any]) as CombatParameter[]

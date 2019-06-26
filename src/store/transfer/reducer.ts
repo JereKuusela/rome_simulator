@@ -6,6 +6,7 @@ import { initialState as initialStateBattle } from '../battle'
 import { tacticsState } from '../tactics'
 import { terrainState } from '../terrains'
 import { globalStatsState, unitsState } from '../units'
+import { governmentsState } from '../governments'
 import { settingsState } from '../settings'
 
 export const transferState = {
@@ -20,6 +21,7 @@ export const initialState = {
   global_stats: globalStatsState,
   battle: initialStateBattle,
   transfer: transferState,
+  governments: governmentsState,
   settings: settingsState
 }
 

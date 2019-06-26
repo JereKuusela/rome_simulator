@@ -12,3 +12,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.positive {
+  color: green;
+  font-weight: bold;
+}
+.negative {
+  color: red;
+  font-weight: bold;
+}
+.info {
+  color: blue;
+  font-weight: bold;
+}

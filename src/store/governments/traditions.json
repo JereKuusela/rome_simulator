@@ -1,0 +1,299 @@
+{
+  "traditions": [
+    {
+      "type": "Greek",
+      "paths": [
+        {
+          "name": "Seleucid",
+          "traditions": [
+            {
+              "name": "Agema",
+              "modifiers": [
+                {
+                  "type": "Heavy Cavalry",
+                  "attribute": "Maintenance",
+                  "value": -0.15
+                }
+              ]
+            },
+            {
+              "name": "Arms for Hire",
+              "modifiers": [
+                {
+                  "type": "Land",
+                  "attribute": "Morale",
+                  "value": 0.05
+                },
+                {
+                  "type": "Text",
+                  "attribute": "Recruit Mercenary Cost",
+                  "value": -0.15
+                }
+              ]
+            },
+            {
+              "name": "Phoenician Sailors",
+              "modifiers": [
+                {
+                  "type": "Naval",
+                  "attribute": "Damage Done",
+                  "value": 0.05
+                }
+              ]
+            },
+            {
+              "name": "The Companion Cavalry",
+              "modifiers": [
+                {
+                  "type": "Text",
+                  "attribute": "Enables the 'Cavalry Skirmish' tactic",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "name": "Kataphraktoi",
+              "modifiers": [
+                {
+                  "type": "Heavy Cavalry",
+                  "attribute": "Discipline",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "Thyreophoroi",
+              "modifiers": [
+                {
+                  "type": "Light Infantry",
+                  "attribute": "Morale",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "The Hipparchos",
+              "modifiers": [
+                {
+                  "type": "Heavy Cavalry",
+                  "attribute": "Morale",
+                  "value": 0.1
+                },
+                {
+                  "type": "Light Cavalry",
+                  "attribute": "Morale",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "Deep Coffers",
+              "modifiers": [
+                {
+                  "type": "Text",
+                  "attribute": "Mercenary Army Maintenance",
+                  "value": -0.15
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "States",
+          "traditions": [
+            {
+              "name": "The Sarissa",
+              "modifiers": [
+                {
+                  "type": "Heavy Infantry",
+                  "attribute": "Morale",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "Veterans of the Great Campaign",
+              "modifiers": [
+                {
+                  "type": "Global",
+                  "attribute": "Experience",
+                  "value": 0.1
+                },
+                {
+                  "type": "Text",
+                  "attribute": "Experience Decay",
+                  "value": -0.15
+                }
+              ]
+            },
+            {
+              "name": "Tarentine Advance",
+              "modifiers": [
+                {
+                  "type": "Light Cavalry",
+                  "attribute": "Discipline",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "Military Colonies",
+              "modifiers": [
+                {
+                  "type": "Text",
+                  "attribute": "Enables the 'Military Colonies' ability",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "name": "The Nobility Ride",
+              "modifiers": [
+                {
+                  "type": "Light Cavalry",
+                  "attribute": "Offense",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "City State Fortifications",
+              "modifiers": [
+                {
+                  "type": "Fort",
+                  "attribute": "Defense",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "Centuries of War",
+              "modifiers": [
+                {
+                  "type": "Heavy Infantry",
+                  "attribute": "Maintenance",
+                  "value": -0.1
+                }
+              ]
+            },
+            {
+              "name": "The Silver Shields",
+              "modifiers": [
+                {
+                  "type": "Heavy Infantry",
+                  "attribute": "Discipline",
+                  "value": 0.1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Antigonid",
+          "traditions": [
+            {
+              "name": "Proud Shipwrights",
+              "modifiers": [
+                {
+                  "type": "Naval",
+                  "attribute": "Cost",
+                  "value": -0.15
+                },
+                {
+                  "type": "Naval",
+                  "attribute": "Maintenance",
+                  "value": -0.15
+                }
+              ]
+            },
+            {
+              "name": "Mine's Bigger Than Yours",
+              "modifiers": [
+                {
+                  "type": "Text",
+                  "attribute": "Allows 'Mega-Polyreme' units",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "name": "Peltasts",
+              "modifiers": [
+                {
+                  "type": "Light Infantry",
+                  "attribute": "Offense",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "The Victor's Spoils",
+              "modifiers": [
+                {
+                  "type": "Text",
+                  "attribute": "Enables the 'Slave Raid' ability",
+                  "value": 0
+                },
+                {
+                  "type": "Text",
+                  "attribute": "Enslavement Efficiency",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "Siegecraft",
+              "modifiers": [
+                {
+                  "type": "Siege",
+                  "attribute": "Ability",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "Specialist Infantry",
+              "modifiers": [
+                {
+                  "type": "Archers",
+                  "attribute": "Discipline",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "Mastery of the Mountains",
+              "modifiers": [
+                {
+                  "type": "Archers",
+                  "attribute": "Hills",
+                  "value": 0.15
+                },
+                {
+                  "type": "Heavy Infantry",
+                  "attribute": "Hills",
+                  "value": 0.15
+                },
+                {
+                  "type": "Light Infantry",
+                  "attribute": "Hills",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "Combined Arms",
+              "modifiers": [
+                {
+                  "type": "Light Infantry",
+                  "attribute": "Discipline",
+                  "value": 0.1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

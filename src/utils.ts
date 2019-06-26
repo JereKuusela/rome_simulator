@@ -25,7 +25,7 @@ export const mapRange = <T>(length: number, func: (number: number) => T): T[] =>
  * @param state Application state.
  */
 export const mergeSettings = (state: AppState): OrderedMap<CombatParameter, number> => {
-  const base = state.settings.combat.get(DefinitionType.Any)
+  const base = state.settings.combat.get(DefinitionType.Global)
   const specific = state.settings.combat.get(state.settings.mode)
   if (base && !specific)
     return base
@@ -52,7 +52,7 @@ export const mergeUnitTypes = (state: AppState): OrderedSet<UnitType> => {
       const unit = state.units.definitions.getIn([key, type]) as UnitDefinition | undefined
       if (!unit)
         return false
-      return unit.mode === state.settings.mode || unit.mode === DefinitionType.Any
+      return unit.mode === state.settings.mode || unit.mode === DefinitionType.Global
     }))
   }, OrderedSet<UnitType>())
 }
@@ -66,7 +66,7 @@ export const filterTerrainTypes = (state: AppState): OrderedSet<TerrainType> => 
     const terrain = state.terrains.definitions.get(type)
     if (!terrain)
       return false
-    return terrain.mode === state.settings.mode || terrain.mode === DefinitionType.Any
+    return terrain.mode === state.settings.mode || terrain.mode === DefinitionType.Global
   })
 }
 
@@ -79,6 +79,6 @@ export const filterTacticTypes = (state: AppState): OrderedSet<TacticType> => {
     const tactic = state.tactics.definitions.get(type)
     if (!tactic)
       return false
-    return tactic.mode === state.settings.mode || tactic.mode === DefinitionType.Any
+    return tactic.mode === state.settings.mode || tactic.mode === DefinitionType.Global
   })
 }

@@ -1,4 +1,4 @@
-import { Map, OrderedMap, OrderedSet, fromJS } from 'immutable'
+import { Map, OrderedSet, OrderedMap, fromJS } from 'immutable'
 import { TacticType, TacticCalc, TacticDefinition, ValueType } from './actions'
 import { addValues, ValuesType, DefinitionType } from '../../base_definition'
 import { UnitType } from '../units/'
@@ -36,8 +36,8 @@ const tactic_to_icon = Map<TacticType, string>()
   .set(TacticType.ProbingAttack, IconProbingAttack)
   .set(TacticType.CloseRanks, IconCloseRanks)
 
-export const getDefaultDefinitions = (): OrderedMap<TacticType, TacticDefinition> => {
-  let map = OrderedMap<TacticType, TacticDefinition>()
+export const getDefaultDefinitions = (): Map<TacticType, TacticDefinition> => {
+  let map = Map<TacticType, TacticDefinition>()
   for (const value of data.tactics) {
     const tactic = createTacticFromJson(value)
     map = map.set(tactic.type, tactic)
@@ -54,7 +54,7 @@ export const tacticFromJS = (object: Map<string, any>): TacticDefinition | undef
   if (!object)
     return undefined
   const type = object.get('type') as TacticType
-  const mode = object.get('mode') as DefinitionType || DefinitionType.Any
+  const mode = object.get('mode') as DefinitionType || DefinitionType.Global
   let image = object.get('image')
   if (!image)
     image = tactic_to_icon.get(type) || ''

@@ -35,7 +35,7 @@ class ModalTacticSelector extends Component<IProps> {
         <ItemSelector
           onClose={this.props.onClose}
           onSelection={this.selectTactic}
-          items={this.props.tactics.filter(tactic => (tactic.mode === this.props.mode || tactic.mode === DefinitionType.Any)).toList()}
+          items={this.props.tactics.filter(tactic => (tactic.mode === this.props.mode || tactic.mode === DefinitionType.Global)).toList()}
           attributes={[]}
           custom_values={custom_values}
         />

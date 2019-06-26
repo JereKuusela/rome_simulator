@@ -67,7 +67,7 @@ export const unitDefinitionFromJS = (object?: Map<string, any>): UnitDefinition 
   if (!object)
     return undefined
   const type = object.get('type') as UnitType
-  const mode = object.get('mode') as DefinitionType || DefinitionType.Any
+  const mode = object.get('mode') as DefinitionType || DefinitionType.Global
   let image = object.get('image')
   if (!image)
     image = unit_to_icon.get(type) || ''

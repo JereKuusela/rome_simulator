@@ -85,7 +85,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
       const unit = this.props.units.getIn([name, type]) as UnitDefinition | undefined
       if (!unit)
         return false
-      return unit.mode === this.props.mode || unit.mode === DefinitionType.Any
+      return unit.mode === this.props.mode || unit.mode === DefinitionType.Global
     })
   }
 

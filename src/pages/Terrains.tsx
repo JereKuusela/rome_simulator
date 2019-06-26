@@ -43,7 +43,7 @@ class Terrains extends Component<IProps, IState> {
         </Modal>
         {
           <TerrainDefinitions
-            terrains={this.props.terrains.filter(terrain => terrain.mode === this.props.mode || terrain.mode === DefinitionType.Any)}
+            terrains={this.props.terrains.filter(terrain => terrain.mode === this.props.mode || terrain.mode === DefinitionType.Global)}
             types={this.props.types}
             onRowClick={terrain => this.openModal(terrain)}
             onCreateNew={type => this.props.addTerrain(type, this.props.mode)}

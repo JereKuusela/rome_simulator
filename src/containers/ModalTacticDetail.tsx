@@ -3,8 +3,6 @@ import { connect } from 'react-redux'
 import { setBaseValue, ValueType, TacticType, changeImage, changeMode } from '../store/tactics'
 import { AppState } from '../store/'
 import TacticDetail from '../components/TacticDetail'
-import { OrderedSet } from 'immutable'
-import { UnitType } from '../store/units'
 import { DefinitionType } from '../base_definition'
 import { mergeUnitTypes, filterTacticTypes } from '../utils'
 

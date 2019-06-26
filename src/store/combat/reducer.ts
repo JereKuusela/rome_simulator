@@ -7,6 +7,7 @@ import { transferState } from '../transfer'
 import { battle as fight } from './combat'
 import { mergeValues } from '../../base_definition'
 import { settingsState, CombatParameter } from '../settings'
+import { governmentsState } from '../governments'
 import { mergeSettings, getBattle } from '../../utils'
 
 export const initialState = {
@@ -16,6 +17,7 @@ export const initialState = {
   global_stats: globalStatsState,
   battle: initialStateBattle,
   transfer: transferState,
+  governments: governmentsState,
   settings: settingsState
 }
 

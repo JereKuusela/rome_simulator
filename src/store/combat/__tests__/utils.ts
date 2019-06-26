@@ -44,7 +44,7 @@ export const setCenterUnits = (info: TestInfo, unit_a: UnitDefinition, unit_b: U
 }
 
 export const getSettings = (mode: DefinitionType): OrderedMap<CombatParameter, number> => {
-  const base = settingsState.combat.get(DefinitionType.Any)
+  const base = settingsState.combat.get(DefinitionType.Global)
   const specific = settingsState.combat.get(mode)
   if (base && !specific)
     return base
