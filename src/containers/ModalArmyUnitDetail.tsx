@@ -4,7 +4,7 @@ import { Modal } from 'semantic-ui-react'
 import { UnitType, ArmyName, ArmyType, ValueType, Unit, UnitDefinition } from '../store/units'
 import { selectUnit } from '../store/battle'
 import { AppState } from '../store/'
-import { getBattle } from '../utils'
+import { getBattle, filterTerrainTypes } from '../utils'
 import { addValues, mergeValues, ValuesType, DefinitionType } from '../base_definition'
 import ItemRemover from '../components/ItemRemover'
 import UnitDetail from '../components/UnitDetail'
@@ -41,7 +41,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
           <UnitDetail
             mode={this.props.mode}
             name={this.props.info.name}
-            terrains={this.props.terrains}
+            terrain_types={this.props.terrain_types}
             custom_value_key={CUSTOM_VALUE_KEY}
             unit={this.getUnitDefinition(this.props.info)}
             units={this.props.units}
@@ -113,7 +113,7 @@ const mapStateToProps = (state: AppState) => ({
   units: state.units.definitions,
   unit_types: state.units.types,
   global_stats: state.global_stats,
-  terrains: state.terrains.types,
+  terrain_types: filterTerrainTypes(state),
   mode: state.settings.mode
 })
 

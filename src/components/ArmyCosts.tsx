@@ -47,7 +47,7 @@ export default class ArmyCosts extends Component<IProps> {
             this.renderRow('Cost', IconCost, UnitCalc.Cost, 0)
           }
           {
-            this.renderRow('Upkeep', IconCost, UnitCalc.Upkeep, 0)
+            this.renderRow('Maintenance', IconCost, UnitCalc.Maintenance, 0)
           }
           {
             this.renderRow('Supply', IconSupplyLimit, UnitCalc.AttritionWeight, 1)

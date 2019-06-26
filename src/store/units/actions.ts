@@ -35,10 +35,12 @@ export enum UnitCalc {
   MoraleDamageTaken = 'Morale damage taken',
   StrengthDamageDone = 'Strength damage done',
   StrengthDamageTaken = 'Strength damage taken',
+  DamageDone = 'Damage done',
+  DamageTaken = 'Damage taken',
   MovementSpeed = 'Movement speed',
   RecruitTime = 'Recruit time',
   Cost = 'Cost',
-  Upkeep = 'Upkeep',
+  Maintenance = 'Maintenance',
   AttritionWeight = 'Attrition weight',
   Experience = 'Experience'
 }
@@ -67,7 +69,7 @@ export const valueToString = (definition: BaseDefinition<UnitType, ValueType>, t
     case UnitCalc.MoraleDepleted:
     case UnitCalc.MovementSpeed:
     case UnitCalc.RecruitTime:
-    case UnitCalc.Upkeep:
+    case UnitCalc.Maintenance:
       return (+(Math.max(0, calculateValue(definition, type)).toFixed(2))).toString()
     case UnitCalc.Experience:
       return toPercent(value)

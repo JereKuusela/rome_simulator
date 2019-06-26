@@ -5,7 +5,8 @@ import { AppState } from '../store/'
 import TacticDetail from '../components/TacticDetail'
 import { OrderedSet } from 'immutable'
 import { UnitType } from '../store/units'
-import { DefinitionType } from '../base_definition';
+import { DefinitionType } from '../base_definition'
+import { mergeUnitTypes, filterTacticTypes } from '../utils'
 
 const CUSTOM_VALUE_KEY = 'Custom'
 
@@ -13,12 +14,11 @@ class ModalTacticDetail extends Component<IProps> {
   render(): JSX.Element | null {
     if (!this.props.tactic)
       return null
-    const unit_types = this.props.unit_types.reduce((previous, current) => previous.merge(current.toOrderedSet()), OrderedSet<UnitType>())
     return (
       <TacticDetail
-        tactic_types={this.props.tactic_types}
         tactics={this.props.tactics}
-        unit_types={unit_types}
+        tactic_types={this.props.tactic_types}
+        unit_types={this.props.unit_types}
         units={this.props.units}
         custom_value_key={CUSTOM_VALUE_KEY}
         tactic={this.props.tactics.get(this.props.tactic)!}
@@ -33,9 +33,9 @@ class ModalTacticDetail extends Component<IProps> {
 
 const mapStateToProps = (state: AppState) => ({
   tactics: state.tactics.definitions,
-  tactic_types: state.tactics.types.toOrderedSet(),
+  tactic_types: filterTacticTypes(state),
   units: state.units.definitions,
-  unit_types: state.units.types
+  unit_types: mergeUnitTypes(state)
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

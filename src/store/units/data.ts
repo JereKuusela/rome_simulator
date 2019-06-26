@@ -96,13 +96,15 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
     [UnitCalc.AttritionWeight, data.attrition_weight || 0],
     [UnitCalc.Cost, data.cost],
     [UnitCalc.RecruitTime, data.recruit_time],
-    [UnitCalc.Upkeep, data.upkeep],
+    [UnitCalc.Maintenance, data.maintenance],
     [UnitCalc.MovementSpeed, data.movement_speed],
     [UnitCalc.Maneuver, data.maneuver],
     [UnitCalc.MoraleDamageTaken, data.morale_damage_taken || 0],
     [UnitCalc.StrengthDamageTaken, data.strength_damage_taken || 0],
     [UnitCalc.MoraleDamageDone, data.morale_damage_done || 0],
     [UnitCalc.StrengthDamageDone, data.strength_damage_done || 0],
+    [UnitCalc.DamageDone, data.damage_done || 0],
+    [UnitCalc.DamageDone, data.damage_done || 0],
     [UnitType.Archers, data.archers || 0],
     [UnitType.CamelCavalry, data.camel_cavalry || 0],
     [UnitType.Chariots, data.chariots || 0],
@@ -128,15 +130,17 @@ interface UnitData {
   mode: string
   cost: number
   recruit_time: number
-  upkeep: number
+  maintenance: number
   requirements: string
   can_assault: boolean
   movement_speed: number
   maneuver: number
   morale_damage_taken?: number
   strength_damage_taken?: number
+  damage_taken?: number
   morale_damage_done?: number
   strength_damage_done?: number
+  damage_done?: number
   attrition_weight?: number
   archers?: number
   camel_cavalry?: number

@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { UnitType, ArmyName, ValueType, setValue, changeImage, changeMode } from '../store/units'
+import { UnitType, ArmyName, ValueType, setValue, changeImage, changeMode, UnitDefinition } from '../store/units'
 import { AppState } from '../store/'
 import { ValuesType, mergeValues, DefinitionType } from '../base_definition'
 import { OrderedSet } from 'immutable'
 import UnitDetail from '../components/UnitDetail'
+import { mergeUnitTypes, filterTerrainTypes } from '../utils'
 
 const CUSTOM_VALUE_KEY = 'Custom'
 
@@ -12,16 +13,15 @@ class ModalUnitDetail extends Component<IProps> {
   render(): JSX.Element | null {
     if (!this.props.army || !this.props.unit)
       return null
-    const unit_types = this.props.unit_types.reduce((previous, current) => previous.merge(current.toOrderedSet()), OrderedSet<UnitType>())
     return (
       <UnitDetail
         mode={this.props.mode}
         name={this.props.army}
-        terrains={this.props.terrains}
+        terrain_types={this.props.terrain_types}
         custom_value_key={CUSTOM_VALUE_KEY}
         unit={mergeValues(this.props.units.getIn([this.props.army, this.props.unit]), this.props.global_stats.getIn([this.props.army, this.props.mode]))}
         units={this.props.units}
-        unit_types={unit_types}
+        unit_types={this.props.unit_types}
         onCustomBaseValueChange={this.props.setBaseValue}
         onCustomModifierValueChange={this.props.setModifierValue}
         onCustomLossValueChange={this.props.setLossValue}
@@ -37,8 +37,8 @@ class ModalUnitDetail extends Component<IProps> {
 const mapStateToProps = (state: AppState) => ({
   units: state.units.definitions,
   global_stats: state.global_stats,
-  unit_types: state.units.types,
-  terrains: state.terrains.types,
+  unit_types: mergeUnitTypes(state),
+  terrain_types: filterTerrainTypes(state),
   mode: state.settings.mode
 })
 

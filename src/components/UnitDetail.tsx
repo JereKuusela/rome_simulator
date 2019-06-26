@@ -13,7 +13,7 @@ interface IProps {
   readonly unit_types: OrderedSet<UnitType>
   readonly units: Map<any, Map<UnitType, UnitDefinition>>
   readonly show_statistics: boolean
-  readonly terrains: OrderedSet<TerrainType>
+  readonly terrain_types: OrderedSet<TerrainType>
   readonly unit_types_as_dropdown?: boolean
   readonly onCustomBaseValueChange: (identnameifier: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
   readonly onCustomModifierValueChange: (name: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
@@ -157,7 +157,7 @@ export default class UnitDetail extends Component<IProps> {
             this.props.unit_types.map(value => this.renderRow(this.props.unit, value))
           }
           {
-            this.props.terrains.map(value => this.renderRow(this.props.unit, value))
+            this.props.terrain_types.map(value => this.renderRow(this.props.unit, value))
           }
         </Table.Body>
       </Table>
@@ -165,7 +165,7 @@ export default class UnitDetail extends Component<IProps> {
   }
 
   renderRow = (unit: Unit, attribute: ValueType): JSX.Element | null => {
-    if (attribute === UnitCalc.MovementSpeed || attribute === UnitCalc.Upkeep || attribute === UnitCalc.RecruitTime)
+    if (attribute === UnitCalc.MovementSpeed || attribute === UnitCalc.RecruitTime)
       return null
     if (!this.props.show_statistics && (attribute === UnitCalc.StrengthDepleted || attribute === UnitCalc.MoraleDepleted))
       return null

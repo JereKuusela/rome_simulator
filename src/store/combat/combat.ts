@@ -348,12 +348,14 @@ const calculateLosses = (source: Unit, target: Unit, roll: number, terrains: Ter
   let damage = calculateBaseDamage(roll, settings)
   damage = damage
     * (1.0 + calculateValue(source, UnitCalc.Offense))
+    * (1.0 + calculateValue(source, UnitCalc.DamageDone))
     * (1.0 + calculateValue(source, UnitCalc.Discipline))
     * (1.0 + calculateValue(source, target.type))
     * tactic_damage_multiplier
     * (1.0 + terrains.map(terrain => terrain ? calculateValue(source, terrain.type) : 0).reduce((previous, current) => previous + current, 0))
     / (1.0 + calculateValue(target, UnitCalc.Defense))
     * (1.0 - damage_reduction_per_experience * calculateValue(target, UnitCalc.Experience))
+    * (1.0 + calculateValue(target, UnitCalc.DamageTaken))
   damage = Math.floor(damage * calculateValue(source, UnitCalc.Strength))
   const manpower_lost = damage * manpower_lost_multiplier * (1.0 + casualties_multiplier) * (1.0 + calculateValue(target, UnitCalc.StrengthDamageTaken)) * (1.0 + calculateValue(source, UnitCalc.StrengthDamageDone))
   const morale_multiplier = Math.floor(1000.0 * Math.max(0, calculateValue(source, UnitCalc.Morale)) / morale_base_damage) / 1000.0

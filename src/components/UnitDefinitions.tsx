@@ -93,7 +93,7 @@ export default class UnitDefinitions extends Component<IProps, IState> {
                 <Image src={IconOffense} avatar />
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <Image src={IconDefense} avatar />
+                <Image src={this.props.mode === DefinitionType.Naval ? IconAttrition: IconDefense} avatar />
               </Table.HeaderCell>
               <Table.HeaderCell>
                 <Icon name='arrows alternate horizontal' size='big' />
@@ -188,10 +188,10 @@ export default class UnitDefinitions extends Component<IProps, IState> {
           {valueToRelativeZeroPercent(unit, UnitCalc.Discipline, false)}
         </Table.Cell>
         <Table.Cell>
-          {valueToRelativeZeroPercent(unit, UnitCalc.Offense, false)}
+          {valueToRelativeZeroPercent(unit, this.props.mode === DefinitionType.Naval ? UnitCalc.DamageDone : UnitCalc.Offense, false)}
         </Table.Cell>
         <Table.Cell>
-          {valueToRelativeZeroPercent(unit, UnitCalc.Defense, false)}
+          {valueToRelativeZeroPercent(unit, this.props.mode === DefinitionType.Naval ? UnitCalc.DamageTaken : UnitCalc.Defense, false)}
         </Table.Cell>
         <Table.Cell>
           {valueToNumber(unit, UnitCalc.Maneuver, false)}
@@ -255,10 +255,10 @@ export default class UnitDefinitions extends Component<IProps, IState> {
           {this.renderAttributeList(unit, UnitCalc.Discipline)}
         </Table.Cell>
         <Table.Cell>
-          {this.renderAttributeList(unit, UnitCalc.Offense)}
+          {this.renderAttributeList(unit, this.props.mode === DefinitionType.Naval ? UnitCalc.DamageDone : UnitCalc.Offense)}
         </Table.Cell>
         <Table.Cell>
-          {this.renderAttributeList(unit, UnitCalc.Defense)}
+          {this.renderAttributeList(unit, this.props.mode === DefinitionType.Naval ? UnitCalc.DamageTaken : UnitCalc.Defense)}
         </Table.Cell>
         <Table.Cell>
           {this.renderAttributeList(unit, UnitCalc.Maneuver)}

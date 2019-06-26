@@ -48,6 +48,8 @@ Goverment page:
     *  List traditions (Name + Tier + Effect) based on Country
     * Toggle enabled (Click to enable/disable)
     * Affects unit definitions
+    * Traditions may change -> removing a tradition should clear effect on all attributes!
+    * Also on a load full reload is needed to prevent things getting out of sync
 
   - Trade:
     * Surplus things
