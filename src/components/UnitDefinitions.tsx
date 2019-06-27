@@ -40,7 +40,7 @@ export default class UnitDefinitions extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    this.state = { open_create: false, open_edit: false, open_confirm: false, open_duplicate: false}
+    this.state = { open_create: false, open_edit: false, open_confirm: false, open_duplicate: false }
   }
 
   render(): JSX.Element {
@@ -84,16 +84,19 @@ export default class UnitDefinitions extends Component<IProps, IState> {
                 <Image src={IconMorale} avatar />
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <Image src={this.props.mode === DefinitionType.Naval ? IconStrength: IconManpower} avatar />
+                <Image src={this.props.mode === DefinitionType.Naval ? IconStrength : IconManpower} avatar />
               </Table.HeaderCell>
-              <Table.HeaderCell>
-                <Image src={IconDiscipline} avatar />
-              </Table.HeaderCell>
+              {
+                this.props.mode === DefinitionType.Naval ? null :
+                  <Table.HeaderCell>
+                    <Image src={IconDiscipline} avatar />
+                  </Table.HeaderCell>
+              }
               <Table.HeaderCell>
                 <Image src={IconOffense} avatar />
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <Image src={this.props.mode === DefinitionType.Naval ? IconAttrition: IconDefense} avatar />
+                <Image src={this.props.mode === DefinitionType.Naval ? IconAttrition : IconDefense} avatar />
               </Table.HeaderCell>
               <Table.HeaderCell>
                 <Icon name='arrows alternate horizontal' size='big' />
@@ -108,11 +111,11 @@ export default class UnitDefinitions extends Component<IProps, IState> {
               </Table.HeaderCell>
               <Table.HeaderCell>
                 <Image src={IconOffense} avatar />
-                <Image src={this.props.mode === DefinitionType.Naval ? IconStrength: IconManpower} avatar />
+                <Image src={this.props.mode === DefinitionType.Naval ? IconStrength : IconManpower} avatar />
               </Table.HeaderCell>
               <Table.HeaderCell>
                 <Image src={IconAttrition} avatar />
-                <Image src={this.props.mode === DefinitionType.Naval ? IconStrength: IconManpower} avatar />
+                <Image src={this.props.mode === DefinitionType.Naval ? IconStrength : IconManpower} avatar />
               </Table.HeaderCell>
               <Table.HeaderCell>
                 Experience
@@ -177,16 +180,19 @@ export default class UnitDefinitions extends Component<IProps, IState> {
         <Table.Cell singleLine>
           <Image src={getImage(unit)} avatar />
           {unit.type}
-          </Table.Cell>
+        </Table.Cell>
         <Table.Cell>
           {valueToNumber(unit, UnitCalc.Morale, false)}
         </Table.Cell>
         <Table.Cell>
           {this.props.mode === DefinitionType.Naval ? valueToStrength(unit, UnitCalc.Strength, false) : valueToNumber(unit, UnitCalc.Strength, false)}
         </Table.Cell>
-        <Table.Cell>
-          {valueToRelativeZeroPercent(unit, UnitCalc.Discipline, false)}
-        </Table.Cell>
+        {
+          this.props.mode === DefinitionType.Naval ? null :
+            <Table.Cell>
+              {valueToRelativeZeroPercent(unit, UnitCalc.Discipline, false)}
+            </Table.Cell>
+        }
         <Table.Cell>
           {valueToRelativeZeroPercent(unit, this.props.mode === DefinitionType.Naval ? UnitCalc.DamageDone : UnitCalc.Offense, false)}
         </Table.Cell>
@@ -251,9 +257,12 @@ export default class UnitDefinitions extends Component<IProps, IState> {
         <Table.Cell>
           {this.renderAttributeList(unit, UnitCalc.Strength)}
         </Table.Cell>
-        <Table.Cell>
-          {this.renderAttributeList(unit, UnitCalc.Discipline)}
-        </Table.Cell>
+        {
+          this.props.mode === DefinitionType.Naval ? null :
+            <Table.Cell>
+              {this.renderAttributeList(unit, UnitCalc.Discipline)}
+            </Table.Cell>
+        }
         <Table.Cell>
           {this.renderAttributeList(unit, this.props.mode === DefinitionType.Naval ? UnitCalc.DamageDone : UnitCalc.Offense)}
         </Table.Cell>

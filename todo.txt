@@ -11,6 +11,7 @@ Armies page:
 - Standard operations: add, duplicate, rename, remove
 - Maybe also settings that are in the main page (general, roll, tactic)
 
+
 Release 5+:
 
 - Immutable reviver to simplify fromJS calls when transforming data?
@@ -31,6 +32,8 @@ Goverment page:
 
   - Government/Commander:
     * Strategos skill level
+    * Religion skill level
+    * Army/Naval wages
     * Commander skill level
     * Commander traits (Click to enable/disable)
     * Custom modifiers
@@ -55,7 +58,31 @@ Goverment page:
     * Surplus things
 
   - Religion
-    * Omens, necessary?
+    * 22 religions with different omens + some tag specific, each probably have 1-2 combat bonuses
+    * Directly scales with Omen Power: 0 Power -> 0 Effect.
+    * Power comes from Government (2 * Zeal * Loyal = 0-30%) + Religional unity (0-100%) (some countries have really weak) + 2.5% from tech + 15% theocratic_republic / theocratic_monarchy / imperial_cult
+    * At top sources of Omen Power explained, single input for the value.
+     - Religional unity: (0 - 100%)
+     - Office: 2 * Zeal * Loyalty (0 - 30%)
+     - Tech: level 2.5 * Tech (0 - 50%)
+     - Inventions: 5 + 5 + 5 + 5 + 10 (0 - 30%)
+     - Government: 15 for Theocratic Repulics, Theocratic Monarchies and Imperial Cults (0 - 15%)
+     - Ideas: 20 for Mandated Observance (0 - 20%)
+     - Total: (0 - 245%)
+
+  - Heritages
+    * Lots of, but not many affect military. Still a table / list with single selection.
+    * Note: global_defensive is fort defense.
+    * Note: discipline only affects land units
+
+  - Governemnt ideas
+    * 5 Military ones + 1 to increase Omen Power
+
+  - Tech
+    * Military adds morale, Religion adds Omen Power
+    * Religion has: 5 Omen Power
+    * Military has lots of useful, full table?
+
 
 
 Settings:
