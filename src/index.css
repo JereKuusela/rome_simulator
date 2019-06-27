@@ -13,15 +13,18 @@ code {
     monospace;
 }
 
-.positive {
+.value-positive {
   color: green;
   font-weight: bold;
 }
-.negative {
+.value-negative {
   color: red;
   font-weight: bold;
 }
-.info {
+.value-info {
   color: blue;
   font-weight: bold;
+}
+.selectable {
+  cursor: pointer;
 }
