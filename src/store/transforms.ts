@@ -1,12 +1,17 @@
 import { fromJS, Map, List, OrderedSet, OrderedMap } from 'immutable'
-import { tacticFromJS, TacticType, tacticsState } from './tactics'
-import { terrainFromJS, TerrainType, terrainState } from './terrains'
-import { unitDefinitionFromJS, unitFromJS, ArmyName, UnitType, unitsState, globalStatsState, Unit } from './units'
-import { RowType, initialState, PastState, Participant, getInitialArmy, Armies, modeState } from './battle'
+import { tacticFromJS, TacticType, tacticsReducer } from './tactics'
+import { terrainFromJS, TerrainType, terrainsReducer } from './terrains'
+import { unitDefinitionFromJS, unitFromJS, ArmyName, UnitType, unitsReducer, globalStatsReducer, Unit } from './units'
+import { RowType, battleReducer, PastState, Participant, getInitialArmy, Armies, modeState } from './battle'
 import { DefinitionType } from '../base_definition'
-import { transferState } from './transfer'
-import { governmentsState } from './governments'
-import { settingsState, CombatParameter } from './settings'
+import { transferReducer } from './transfer'
+import { countriesReducer } from './countries'
+import { CombatParameter, settingsReducer } from './settings'
+
+const dummyAction = {
+  type: ''
+}
+
 
 const readTypes = <T>(types_raw: any, initial: OrderedSet<T>): OrderedSet<T> => {
   let types = initial
@@ -17,50 +22,54 @@ const readTypes = <T>(types_raw: any, initial: OrderedSet<T>): OrderedSet<T> => 
   return types
 }
 
-export const transformTactics = (state_raw: any): typeof tacticsState => {
+export const transformTactics = (state_raw: any): ReturnType<typeof tacticsReducer> => {
+  const initial = tacticsReducer(undefined, dummyAction)
   if (!state_raw)
-    return tacticsState
-  let definitions = tacticsState.definitions
+    return initial
+  let definitions = initial.definitions
   if (state_raw.definitions) {
     let definitions_raw: Map<TacticType, any> = fromJS(state_raw.definitions)
     definitions = definitions_raw.map(value => tacticFromJS(value)!).filter(value => value)
   }
-  const types = readTypes(state_raw.types, tacticsState.types)
+  const types = readTypes(state_raw.types, initial.types)
   return { definitions, types }
 }
 
-export const transformTerrains = (state_raw: any): typeof terrainState => {
+export const transformTerrains = (state_raw: any): ReturnType<typeof terrainsReducer> => {
+  const initial = terrainsReducer(undefined, dummyAction)
   if (!state_raw)
-    return terrainState
-  let definitions = terrainState.definitions
+    return initial
+  let definitions = initial.definitions
   if (state_raw.definitions) {
     let definitions_raw: Map<TerrainType, any> = fromJS(state_raw.definitions)
     definitions = definitions_raw.map(value => terrainFromJS(value)!).filter(value => value)
   }
-  const types = readTypes(state_raw.types, terrainState.types)
+  const types = readTypes(state_raw.types, initial.types)
   return { definitions, types }
 }
 
-export const transformUnits = (state_raw: any): typeof unitsState => {
+export const transformUnits = (state_raw: any): ReturnType<typeof unitsReducer> => {
+  const initial = unitsReducer(undefined, dummyAction)
   if (!state_raw)
-    return unitsState
-  let definitions = unitsState.definitions
+    return initial
+  let definitions = initial.definitions
   if (state_raw.definitions) {
     let definitions_raw: Map<ArmyName, Map<UnitType, any>> = fromJS(state_raw.definitions)
     definitions = definitions_raw.filter(value => value).map(value => value.map(value => unitDefinitionFromJS(value)!).filter(value => value))
   }
-  let types = unitsState.types
+  let types = initial.types
   if (state_raw.types)
     types = fromJS(state_raw.types)
   if (types.size === 0)
-    types = unitsState.types
-  types = types.map(value => readTypes(value, unitsState.types.get(ArmyName.Attacker)!))
+    types = initial.types
+  types = types.map(value => readTypes(value, initial.types.get(ArmyName.Attacker)!))
   return { definitions, types }
 }
 
-export const transformGlobalStats = (state_raw: any): typeof globalStatsState => {
+export const transformGlobalStats = (state_raw: any): ReturnType<typeof globalStatsReducer> => {
+  const initial = globalStatsReducer(undefined, dummyAction)
   if (!state_raw)
-    return globalStatsState
+    return initial
   let global_stats_raw: Map<ArmyName, Map<DefinitionType, any>> = fromJS(state_raw)
   let global_stats = global_stats_raw.filter(value => value).map(value => value.map(value => unitDefinitionFromJS(value)!).filter(value => value))
   return global_stats
@@ -146,36 +155,40 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {
   return { round, fight_over, armies, terrains, attacker, defender, attacker_past, defender_past }
 }
 
-export const transformBattle = (state_raw: any): typeof initialState => {
+export const transformBattle = (state_raw: any): ReturnType<typeof battleReducer> => {
+  const initial = battleReducer(undefined, dummyAction)
   if (!state_raw)
-    return initialState
+    return initial
   let battle: Map<DefinitionType, any> = fromJS(state_raw) 
   return battle.map((value, key) => handleArmies(value.toJS(), key))
 }
 
-export const transfromTransfer = (state_raw: any): typeof transferState => {
+export const transfromTransfer = (state_raw: any): ReturnType<typeof transferReducer> => {
+  const initial = transferReducer(undefined, undefined)
   if (!state_raw)
-    return transferState
-  const export_keys = state_raw.export_keys ? fromJS(state_raw.export_keys) : transferState.export_keys
-  const reset_missing = state_raw.reset_missing || transferState.reset_missing
+    return initial
+  const export_keys = state_raw.export_keys ? fromJS(state_raw.export_keys) : initial.export_keys
+  const reset_missing = state_raw.reset_missing || initial.reset_missing
   return { reset_missing, export_keys }
 }
 
-export const transformGovernments = (state_raw: any): typeof governmentsState => {
-  return governmentsState
+export const transformCountries = (state_raw: any): ReturnType<typeof countriesReducer> => {
+  return countriesReducer(undefined, dummyAction)
 }
 
 const settings = Object.keys(CombatParameter).map(k => CombatParameter[k as any]) as CombatParameter[]
 
-export const transformSettings = (state_raw: any): typeof settingsState => {
+export const transformSettings = (state_raw: any): ReturnType<typeof settingsReducer> => {
+  const initial = settingsReducer(undefined, dummyAction)
   if (!state_raw)
-    return settingsState
-  let combat = settingsState.combat
+    return initial
+  let combat = initial.combat
   if (state_raw.combat) {
     let combat_raw: Map<DefinitionType, OrderedMap<CombatParameter, number>> = fromJS(state_raw.combat)
     combat = combat.map((value, key) => combat_raw.has(key) ? value.merge(combat_raw.get(key)!).filter((_, key) => settings.includes(key)) : value)
   }
   const simple_mode = state_raw.simple_mode
-  const mode = state_raw.mode || settingsState.mode
-  return { combat, simple_mode, mode }
+  const mode = state_raw.mode || initial.mode
+  const country = state_raw.country || initial.country
+  return { combat, simple_mode, mode, country }
 }

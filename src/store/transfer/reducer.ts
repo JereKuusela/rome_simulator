@@ -1,28 +1,12 @@
 import { createReducer } from 'typesafe-actions'
 import { importState } from './actions'
 import { Map } from 'immutable'
+import { AppState } from '../'
 import { setExportKey, ExportKey, setResetMissing } from './actions'
-import { initialState as initialStateBattle } from '../battle'
-import { tacticsState } from '../tactics'
-import { terrainState } from '../terrains'
-import { globalStatsState, unitsState } from '../units'
-import { governmentsState } from '../governments'
-import { settingsState } from '../settings'
 
 export const transferState = {
   export_keys: Map<ExportKey, boolean>(),
   reset_missing: false
-}
-
-export const initialState = {
-  tactics: tacticsState,
-  terrains: terrainState,
-  units: unitsState,
-  global_stats: globalStatsState,
-  battle: initialStateBattle,
-  transfer: transferState,
-  governments: governmentsState,
-  settings: settingsState
 }
 
 export const transferReducer = createReducer(transferState)
@@ -33,10 +17,10 @@ export const transferReducer = createReducer(transferState)
     { ...state, reset_missing: action.payload.value }
   ))
 
-export const importReducer = createReducer(initialState)
+export const importReducer = createReducer<AppState>({} as any)
   .handleAction(importState, (state, action: ReturnType<typeof importState>) => {
     if (action.payload.reset_missing)
-      return { ...state, ...initialState, transfer: state.transfer, ...action.payload.state }
+      return { ...state, transfer: state.transfer, ...action.payload.state }
     else
       // Bit complicated logic needed to allow adding and partially updating definitions.
       return {

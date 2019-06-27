@@ -1,27 +1,12 @@
 import { createReducer } from 'typesafe-actions'
-import { battle, checkFight, initialState as initialStateBattle } from '../battle'
-import { tacticsState } from '../tactics'
-import { terrainState } from '../terrains'
-import { globalStatsState, unitsState } from '../units'
-import { transferState } from '../transfer'
+import { battle, checkFight } from '../battle'
 import { battle as fight } from './combat'
 import { mergeValues } from '../../base_definition'
-import { settingsState, CombatParameter } from '../settings'
-import { governmentsState } from '../governments'
+import { CombatParameter } from '../settings'
+import { AppState } from '../'
 import { mergeSettings, getBattle } from '../../utils'
 
-export const initialState = {
-  tactics: tacticsState,
-  terrains: terrainState,
-  units: unitsState,
-  global_stats: globalStatsState,
-  battle: initialStateBattle,
-  transfer: transferState,
-  governments: governmentsState,
-  settings: settingsState
-}
-
-export const combatReducer = createReducer(initialState)
+export const combatReducer = createReducer<AppState>({} as any)
   .handleAction(battle, (state, action: ReturnType<typeof battle>) => {
     const definitions = state.units.definitions.map((value, key) => value.map(value => mergeValues(value, state.global_stats.getIn([key, action.payload.mode]))))
     let next = getBattle(state)

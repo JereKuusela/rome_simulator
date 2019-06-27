@@ -1,15 +1,16 @@
 import { Map, OrderedSet } from 'immutable'
 import { createReducer } from 'typesafe-actions'
 import { getDefaultDefinitions, getDefaultTypes, getDefaultGlobalDefinition } from './data'
-import { 
+import {
   UnitType, UnitDefinition, ArmyName,
-  setValue, setGlobalValue, deleteUnit, addUnit, changeImage, changeType, deleteArmy, createArmy, changeName, changeMode, duplicateArmy
+  setValue, setGlobalValue, deleteUnit, addUnit, changeImage, changeType, deleteArmy, createArmy, changeName, changeMode, duplicateArmy,
+  enableTradition, clearTradition, ValueType
 } from './actions'
-import { addValues, DefinitionType } from '../../base_definition'
+import { addValues, DefinitionType, ValuesType, regenerateValues, clearValues } from '../../base_definition'
 
 export const unitsState = {
   types: Map<ArmyName, OrderedSet<UnitType>>().set(ArmyName.Attacker, getDefaultTypes()).set(ArmyName.Defender, getDefaultTypes()),
-  definitions: Map<ArmyName, Map<UnitType, UnitDefinition>>().set(ArmyName.Attacker, getDefaultDefinitions()).set(ArmyName.Defender, getDefaultDefinitions())
+  definitions: Map<ArmyName, Map<UnitType, UnitDefinition>>().set(ArmyName.Attacker, getDefaultDefinitions()).set(ArmyName.Defender, getDefaultDefinitions()),
 }
 export const globalStatsState = Map<ArmyName, Map<DefinitionType, UnitDefinition>>().set(ArmyName.Attacker, getDefaultGlobalDefinition()).set(ArmyName.Defender, getDefaultGlobalDefinition())
 
@@ -65,8 +66,8 @@ export const unitsReducer = createReducer(unitsState)
   .handleAction(duplicateArmy, (state, action: ReturnType<typeof duplicateArmy>) => (
     {
       ...state,
-      definitions: state.definitions.set(action.payload.army, state.definitions.get(action.payload.source) || getDefaultDefinitions()),
-      types: state.types.set(action.payload.army, state.types.get(action.payload.source) || getDefaultTypes())
+      definitions: state.definitions.set(action.payload.army, state.definitions.get(action.payload.source, getDefaultDefinitions())),
+      types: state.types.set(action.payload.army, state.types.get(action.payload.source, getDefaultTypes()))
     }
   ))
   .handleAction(deleteArmy, (state, action: ReturnType<typeof deleteArmy>) => (
@@ -83,6 +84,24 @@ export const unitsReducer = createReducer(unitsState)
       types: state.types.mapKeys(key => key === action.payload.old_army ? action.payload.new_army : key)
     }
   ))
+  .handleAction(enableTradition, (state, action: ReturnType<typeof enableTradition>) => {
+    let next = state.definitions.get(action.payload.army)!
+    if (!next)
+      return state
+    next = next.map((unit, type) => {
+      const values = action.payload.tradition.modifiers.filter(value => value.type === type)
+        .map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
+      return regenerateValues(unit, ValuesType.Modifier, action.payload.key, values)
+    })
+    return { ...state, definitions: state.definitions.set(action.payload.army, next) }
+  })
+  .handleAction(clearTradition, (state, action: ReturnType<typeof clearTradition>) => {
+    let next = state.definitions.get(action.payload.army)!
+    if (!next)
+      return state
+    next = next.map(unit => clearValues(unit, ValuesType.Modifier, action.payload.key))
+    return { ...state, definitions: state.definitions.set(action.payload.army, next) }
+  })
 
 export const globalStatsReducer = createReducer(globalStatsState)
   .handleAction(setGlobalValue, (state, action: ReturnType<typeof setGlobalValue>) => (
@@ -92,7 +111,7 @@ export const globalStatsReducer = createReducer(globalStatsState)
     state.set(action.payload.army, getDefaultGlobalDefinition())
   ))
   .handleAction(duplicateArmy, (state, action: ReturnType<typeof duplicateArmy>) => (
-    state.set(action.payload.army, state.get(action.payload.source) || getDefaultGlobalDefinition())
+    state.set(action.payload.army, state.get(action.payload.source, getDefaultGlobalDefinition()))
   ))
   .handleAction(deleteArmy, (state, action: ReturnType<typeof deleteArmy>) => (
     state.delete(action.payload.army)
@@ -100,3 +119,25 @@ export const globalStatsReducer = createReducer(globalStatsState)
   .handleAction(changeName, (state, action: ReturnType<typeof changeName>) => (
     state.mapKeys(key => key === action.payload.old_army ? action.payload.new_army : key)
   ))
+  .handleAction(enableTradition, (state, action: ReturnType<typeof enableTradition>) => {
+    let next = state.get(action.payload.army)!
+    if (!next)
+      return state
+    const landValues = action.payload.tradition.modifiers
+      .filter(value => value.type === DefinitionType.Land || value.type === DefinitionType.Global)
+      .map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
+    const navalValues = action.payload.tradition.modifiers
+      .filter(value => value.type === DefinitionType.Naval || value.type === DefinitionType.Global)
+      .map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
+    next = next.update(DefinitionType.Land, stats => regenerateValues(stats, ValuesType.Modifier, action.payload.key, landValues))
+    next = next.update(DefinitionType.Naval, stats => regenerateValues(stats, ValuesType.Modifier, action.payload.key, navalValues))
+    return state.set(action.payload.army, next)
+  })
+  .handleAction(clearTradition, (state, action: ReturnType<typeof clearTradition>) => {
+    let next = state.get(action.payload.army)!
+    if (!next)
+      return state
+    next = next.update(DefinitionType.Land, stats => clearValues(stats, ValuesType.Modifier, action.payload.key))
+    next = next.update(DefinitionType.Naval, stats => clearValues(stats, ValuesType.Modifier, action.payload.key))
+    return state.set(action.payload.army, next)
+  })

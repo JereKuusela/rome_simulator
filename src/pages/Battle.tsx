@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { List } from 'immutable'
-import { Container, Header, Button, Grid, Image, Checkbox, Input, Table, Divider, Dropdown } from 'semantic-ui-react'
+import { Container, Header, Button, Grid, Image, Checkbox, Input, Table, Divider } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { ArmyName, UnitDefinition, ArmyType, Unit } from '../store/units'
@@ -11,6 +11,7 @@ import { calculateTactic, calculateRollModifierFromTerrains, calculateRollModifi
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import { TacticType } from '../store/tactics'
 import IconDice from '../images/chance.png'
+import DropdownSelector from '../components/DropdownSelector'
 import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from '../containers/ModalUnitSelector'
 import ModalRowTypeSelector, { ModalInfo as ModalRowInfo } from '../containers/ModalRowTypeSelector'
 import ModalTerrainSelector, { ModalInfo as ModalTerrainInfo } from '../containers/ModalTerrainSelector'
@@ -373,26 +374,6 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderArmyNameDropdown = (type: ParticipantType, name: ArmyName): JSX.Element => {
-    return (
-      <Dropdown
-        text={name}
-        selection
-        value={name}
-      >
-        <Dropdown.Menu>
-          {
-            this.props.armies.keySeq().map(key => (
-              <Dropdown.Item value={key} text={key} key={key} active={name === key}
-                onClick={() => this.props.selectArmy(this.props.mode, type, key)}
-              />
-            ))
-          }
-        </Dropdown.Menu>
-      </Dropdown>
-    )
-  }
-
   renderArmyInfo = (type: ParticipantType, name: ArmyName, participant?: Participant, enemy?: Participant): JSX.Element => {
     return (
       <Table.Row key={type}>
@@ -400,7 +381,11 @@ class Battle extends Component<IProps, IState> {
           {type}
         </Table.Cell>
         <Table.Cell collapsing>
-          {this.renderArmyNameDropdown(type, name)}
+          <DropdownSelector
+            items={this.props.armies.keySeq()}
+            active={name}
+            onSelect={name => this.props.selectArmy(this.props.mode, type, name)}
+          />
         </Table.Cell>
         <Table.Cell collapsing>
           <Input size='mini' style={{ width: 100 }} type='number' value={participant && participant.general} onChange={(_, data) => this.props.setGeneral(this.props.mode, name, Number(data.value))} />

@@ -81,6 +81,9 @@ export const mergeValues = <Definition extends AnyBaseDefinition | undefined>
   return { ...to_merge, ...definition, base_values, modifier_values, loss_values }
 }
 
+/**
+ * Adds base, modifier or loss values.
+ */
 export const addValues = <Definition extends AnyDefinition, Attribute>
   (definition: Definition, type: ValuesType, key: string, values: [Attribute, number][]): Definition => {
   if (type === ValuesType.Base)
@@ -110,6 +113,41 @@ const subAddValues = <Attribute>(container: Map<Attribute, OrderedMap<string, nu
       new_values = new_values.set(attribute, attribute_values.set(key, value))
   }
   return new_values
+}
+
+/**
+ * Clears base, modifier or loss values with a given key.
+ */
+export const clearValues = <Definition extends AnyDefinition>
+  (definition: Definition, type: ValuesType, key: string): Definition => {
+  if (type === ValuesType.Base)
+    return { ...definition, base_values: subClearValues(definition.base_values, key) }
+  const any = definition as any
+  if (type === ValuesType.Modifier)
+    return { ...definition, modifier_values: subClearValues(any.modifier_values, key) }
+  if (type === ValuesType.Loss)
+    return { ...definition, loss_values: subClearValues(any.loss_values, key) }
+  return definition
+}
+
+
+/**
+ * Shared implementation for clearing base, modifier or loss values.
+ * @param container Base, modifier or loss values.
+ * @param key Identifier for the values to remove.
+ */
+const subClearValues = <Attribute>(container: Map<Attribute, OrderedMap<string, number>> | undefined, key: string): Map<Attribute, OrderedMap<string, number>> => {
+  if (container)
+    return container.map(attribute => attribute.filter((_, attribute_key) => attribute_key !==key))
+  return Map<Attribute, OrderedMap<string, number>>()
+}
+
+/**
+ * Adds base, modifier or loss values while clearing previous ones.
+ */
+export const regenerateValues = <Definition extends AnyDefinition, Attribute>
+  (definition: Definition, type: ValuesType, key: string, values: [Attribute, number][]): Definition => {
+  return addValues(clearValues(definition, type, key), type, key, values)
 }
 
 /**

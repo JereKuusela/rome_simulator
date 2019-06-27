@@ -11,7 +11,7 @@ import Navigation from './pages/Navigation'
 import Stats from './pages/Stats'
 import Transfer from './pages/Transfer'
 import Instructions from './pages/Instructions'
-import Governments from './pages/Governments'
+import Countries from './pages/Countries'
 import Settings from './pages/Settings'
 import { AppState } from './store/'
 
@@ -35,7 +35,7 @@ const Root = ({ store, persistor }: MainProps) => {
         <Route path='/Stats' component={Stats} />
         <Route path='/Transfer' component={Transfer} />
         <Route path='/Instructions' component={Instructions} />
-        <Route path='/Governments' component={Governments} />
+        <Route path='/Countries' component={Countries} />
         <Route path='/Settings' component={Settings} />
       </BrowserRouter>
       </PersistGate>

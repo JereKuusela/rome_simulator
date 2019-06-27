@@ -147,6 +147,7 @@ class Transfer extends Component<IProps, IState> {
     const new_state: any = { ...state }
     new_state._persist = undefined
     new_state.transfer = undefined
+    new_state.countries = undefined
     if (!this.props.export_keys.get(ExportKey.Units))
       new_state.units = undefined
     if (!this.props.export_keys.get(ExportKey.Units))
@@ -190,13 +191,13 @@ const mapDispatchToProps = (dispatch: any) => ({
         data = '{}'
       let json = JSON.parse(data)
       json.transfer = undefined
-      json.battle = json.battle && transformBattle(json.battle)
-      json.tactics = json.tactics && transformTactics(json.tactics)
-      json.terrains = json.terrains && transformTerrains(json.terrains)
-      json.units = json.units && transformUnits(json.units)
-      json.settings = json.settings && transformSettings(json.settings)
-      json.global_stats = json.global_stats && transformGlobalStats(json.global_stats)
-      Object.keys(json).filter(key => json[key] === undefined).forEach(key => delete json[key])
+      json.battle = (json.battle || reset_missing) && transformBattle(json.battle)
+      json.tactics = (json.tactics || reset_missing) && transformTactics(json.tactics)
+      json.terrains = (json.terrains || reset_missing) && transformTerrains(json.terrains)
+      json.units = (json.units || reset_missing) && transformUnits(json.units)
+      json.settings = (json.settings || reset_missing) && transformSettings(json.settings)
+      json.global_stats = (json.global_stats || reset_missing) && transformGlobalStats(json.global_stats)
+      Object.keys(json).filter(key => !json[key]).forEach(key => delete json[key])
       dispatch(importState(json, reset_missing))
     }
     catch (err) {

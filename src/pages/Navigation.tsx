@@ -41,8 +41,8 @@ class Navigation extends Component<IProps> {
           <Menu.Item active={path === '/instructions'} onClick={() => history.push('/instructions')}>
             Instructions
           </Menu.Item>
-          <Menu.Item active={path === '/governments'} onClick={() => history.push('/governments')}>
-            Governments
+          <Menu.Item active={path === '/countries'} onClick={() => history.push('/countries')}>
+            Countries
           </Menu.Item>
           <div style={{ width: '100%', textAlign: 'right', padding: '0.25rem' }}>
             <Button active={this.props.mode === DefinitionType.Land} compact icon basic circular size='tiny' onClick={this.props.toggleMode}>

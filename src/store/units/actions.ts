@@ -2,6 +2,7 @@ import { createAction } from 'typesafe-actions'
 import { ValuesType, DefinitionType } from '../../base_definition'
 
 import { TerrainType } from '../terrains'
+import { Tradition } from '../countries'
 import { calculateValue, BaseDefinition, toPercent, toRelativeZeroPercent } from '../../base_definition'
 
 export enum UnitType {
@@ -83,6 +84,12 @@ export enum ArmyName {
   Defender = 'Army 2'
 }
 
+
+export enum Country {
+  Country1 = 'Army 1',
+  Country2 = 'Army 2'
+}
+
 export enum ArmyType {
   Frontline = 'Frontline',
   Reserve = 'Reserve',
@@ -131,4 +138,12 @@ export const duplicateArmy = createAction('@@units/DUPLICATE_ARMY', action => {
 
 export const changeName = createAction('@@units/CHANGE_NAME', action => {
   return (old_army: ArmyName, new_army: ArmyName) => action({ old_army, new_army })
+})
+
+export const enableTradition = createAction('@@units/ENABLE_TRADITION', action => {
+  return (army: ArmyName, key: string, tradition: Tradition) => action({ army, key, tradition })
+})
+
+export const clearTradition = createAction('@@units/CLEAR_TRADITION', action => {
+  return (army: ArmyName, key: string) => action({ army, key })
 })

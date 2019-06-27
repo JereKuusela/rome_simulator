@@ -1,7 +1,8 @@
 import { createReducer } from 'typesafe-actions'
 import { OrderedMap, Map } from 'immutable'
-import { CombatParameter, changeParameter, toggleSimpleMode, toggleMode } from './actions'
+import { CombatParameter, changeParameter, toggleSimpleMode, toggleMode, selectCountry } from './actions'
 import { getDefaultLandSettings, getDefaultNavalSettings, getDefaultAnySettings } from './data'
+import { CountryName } from '../countries'
 import { DefinitionType } from '../../base_definition'
 
 export const settingsState = {
@@ -10,7 +11,8 @@ export const settingsState = {
     .set(DefinitionType.Land, getDefaultLandSettings())
     .set(DefinitionType.Naval, getDefaultNavalSettings()),
     simple_mode: true,
-    mode: DefinitionType.Land
+    mode: DefinitionType.Land,
+    country: CountryName.Country1
 }
 
 
@@ -23,4 +25,7 @@ export const settingsReducer = createReducer(settingsState)
   ))
   .handleAction(toggleMode, (state, action: ReturnType<typeof toggleMode>) => (
     { ...state, mode: state.mode === DefinitionType.Land ? DefinitionType.Naval : DefinitionType.Land }
+  ))
+  .handleAction(selectCountry, (state, action: ReturnType<typeof selectCountry>) => (
+    { ...state, country: action.payload.country }
   ))

@@ -3,9 +3,9 @@ import { Container, Grid, Table, List, Header } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { mapRange } from '../utils'
-import { ModifierType, Modifier } from '../store/governments'
+import { ModifierType, Modifier } from '../store/countries'
 
-class Governments extends Component<IProps> {
+class Countries extends Component<IProps> {
 
   render(): JSX.Element {
     return (
@@ -91,8 +91,9 @@ class Governments extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  traditions: state.governments.traditions.definitions,
-  tradition_types: state.governments.traditions.types,
+  traditions: state.countries.traditions.definitions,
+  tradition_types: state.countries.traditions.types,
+  selections: state.countries.selections,
   mode: state.settings.mode
 })
 
@@ -101,4 +102,4 @@ const mapDispatchToProps = (dispatch: any) => ({
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Governments)
+export default connect(mapStateToProps, mapDispatchToProps)(Countries)
