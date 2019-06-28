@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
-import { UnitType, ArmyName, Unit, ArmyType } from '../store/units'
+import { UnitType, Unit } from '../store/units'
 import { AppState } from '../store/'
-import { selectUnit } from '../store/battle'
+import { selectUnit, ArmyName, ArmyType } from '../store/battle'
+import { CountryName } from '../store/countries'
 import { DefinitionType } from '../base_definition'
 import ItemSelector from '../components/ItemSelector'
 
 export interface ModalInfo {
   name: ArmyName
+  country: CountryName
   index: number
   type: ArmyType
 }
@@ -17,8 +19,8 @@ class ModalUnitSelector extends Component<IProps> {
   render(): JSX.Element | null {
     if (!this.props.info)
       return null
-    const types = this.props.types.get(this.props.info.name)
-    const units = this.props.units.get(this.props.info.name)
+    const types = this.props.types.get(this.props.info.country)
+    const units = this.props.units.get(this.props.info.country)
     if (!types || !units)
       return null
     return (

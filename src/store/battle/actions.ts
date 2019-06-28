@@ -1,8 +1,9 @@
 import { createAction } from 'typesafe-actions'
 import { List, Map, fromJS } from 'immutable'
-import { Unit, ArmyType, UnitType, ArmyName } from '../units'
+import { Unit, UnitType } from '../units'
 import { TerrainType } from '../terrains'
 import { TacticType } from '../tactics'
+import { CountryName } from '../countries'
 import { DefinitionType } from '../../base_definition'
 
 export interface PastState extends Army {
@@ -28,11 +29,23 @@ export interface Participant extends Army {
   readonly general: number
   readonly row_types: Map<RowType, UnitType | undefined>
   readonly flank_size: number
+  readonly country: CountryName
 }
 
 export enum ParticipantType {
   Attacker = 'Attacker',
   Defender = 'Defender'
+}
+
+export enum ArmyType {
+  Frontline = 'Frontline',
+  Reserve = 'Reserve',
+  Defeated = 'Defeated'
+}
+
+export enum ArmyName {
+  Attacker = 'Army 1',
+  Defender = 'Army 2'
 }
 
 export const getInitialTerrains = (mode: DefinitionType): List<TerrainType> => {
@@ -61,7 +74,7 @@ const getInitialRowTypes = (mode: DefinitionType): Map<RowType, UnitType | undef
   }
 }
 
-export const getInitialArmy = (mode: DefinitionType): Participant => ({
+export const getInitialArmy = (mode: DefinitionType, country: CountryName): Participant => ({
   frontline: fromJS(Array(30).fill(undefined)),
   reserve: List<Unit>(),
   defeated: List<Unit>(),
@@ -70,7 +83,8 @@ export const getInitialArmy = (mode: DefinitionType): Participant => ({
   roll: 0,
   randomize_roll: true,
   row_types: getInitialRowTypes(mode),
-  flank_size: 5
+  flank_size: 5,
+  country: country
 })
 
 export const selectUnit = createAction('@@battle/SELECT_UNIT', action => {
@@ -127,4 +141,20 @@ export const selectArmy = createAction('@@battle/SELECT_ARMY', action => {
 
 export const clearUnits = createAction('@@battle/CLEAR_UNITS', action => {
   return (mode: DefinitionType, ) => action({ mode })
+})
+
+export const deleteArmy = createAction('@@battle/DELETE_ARMY', action => {
+  return (army: ArmyName) => action({ army })
+})
+
+export const createArmy = createAction('@@battle/CREATE_ARMY', action => {
+  return (army: ArmyName) => action({ army })
+})
+
+export const duplicateArmy = createAction('@@battle/DUPLICATE_ARMY', action => {
+  return (source: ArmyName, army: ArmyName) => action({ source, army })
+})
+
+export const changeName = createAction('@@battle/CHANGE_NAME', action => {
+  return (old_army: ArmyName, new_army: ArmyName) => action({ old_army, new_army })
 })

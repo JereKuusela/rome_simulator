@@ -3,10 +3,10 @@ import { List } from 'immutable'
 import { Container, Header, Button, Grid, Image, Checkbox, Input, Table, Divider } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
-import { ArmyName, UnitDefinition, ArmyType, Unit } from '../store/units'
+import { UnitDefinition, Unit } from '../store/units'
 import UnitArmy from '../components/UnitArmy'
 import TargetArrows from '../components/TargetArrows'
-import { battle, undo, Participant, ParticipantType, toggleRandomRoll, setRoll, setGeneral, RowType, setFlankSize, selectArmy, selectUnit } from '../store/battle'
+import { ArmyName, ArmyType, battle, undo, Participant, ParticipantType, toggleRandomRoll, setRoll, setGeneral, RowType, setFlankSize, selectArmy, selectUnit } from '../store/battle'
 import { calculateTactic, calculateRollModifierFromTerrains, calculateRollModifierFromGenerals, calculateBaseDamage } from '../store/combat/combat'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import { TacticType } from '../store/tactics'
@@ -20,6 +20,7 @@ import ModalArmyUnitDetail, { ModalInfo as ModalArmyUnitInfo } from '../containe
 import ModalFastPlanner from '../containers/ModalFastPlanner'
 import { calculateValue, mergeValues, getImage, toRelativePercent, DefinitionType } from '../base_definition'
 import { mergeSettings, getBattle } from '../utils'
+import { CountryName } from '../store/countries'
 import { CombatParameter } from '../store/settings'
 import IconTerrain from '../images/terrain.png'
 import IconGeneral from '../images/military_power.png'
@@ -46,16 +47,16 @@ class Battle extends Component<IProps, IState> {
 
   closeModal = (): void => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null, modal_fast_planner_open: false, modal_row_info: null })
 
-  openUnitModal = (name: ArmyName, type: ArmyType, column: number, unit: Unit | undefined): void => {
+  openUnitModal = (name: ArmyName, type: ArmyType, country: CountryName, column: number, unit: Unit | undefined): void => {
     if (unit)
-      this.openArmyUnitModal(name, type, column)
+      this.openArmyUnitModal(name, type, country, column)
     else
-      this.openUnitSelector(name, type, column)
+      this.openUnitSelector(name, type, country, column)
   }
 
-  openUnitSelector = (name: ArmyName, type: ArmyType, index: number): void => this.setState({ modal_unit_info: { name, type, index } })
+  openUnitSelector = (name: ArmyName, type: ArmyType, country: CountryName, index: number): void => this.setState({ modal_unit_info: { name, type, country, index } })
 
-  openArmyUnitModal = (name: ArmyName, type: ArmyType, index: number): void => this.setState({ modal_army_unit_info: { name, type, index } })
+  openArmyUnitModal = (name: ArmyName, type: ArmyType, country: CountryName, index: number): void => this.setState({ modal_army_unit_info: { name, type, country, index } })
 
   openTerrainModal = (index: number): void => this.setState({ modal_terrain_info: { index, location: this.props.terrains.get(this.props.selected_terrains.get(index)!)!.location } })
 
@@ -63,7 +64,7 @@ class Battle extends Component<IProps, IState> {
 
   openFastPlanner = (): void => this.setState({ modal_fast_planner_open: true })
 
-  openRowModal = (name: ArmyName, type: RowType): void => this.setState({ modal_row_info: { name, type } })
+  openRowModal = (name: ArmyName, country: CountryName, type: RowType): void => this.setState({ modal_row_info: { name, country, type } })
 
   render(): JSX.Element {
     const attacker = this.props.armies.get(this.props.attacker)
@@ -113,7 +114,7 @@ class Battle extends Component<IProps, IState> {
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderArmy(ParticipantType.Attacker, this.props.attacker, attacker)
+                attacker && this.renderArmy(ParticipantType.Attacker, this.props.attacker, attacker)
               }
             </Grid.Column>
           </Grid.Row>
@@ -130,7 +131,7 @@ class Battle extends Component<IProps, IState> {
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderArmy(ParticipantType.Defender, this.props.defender, defender)
+                defender && this.renderArmy(ParticipantType.Defender, this.props.defender, defender)
               }
             </Grid.Column>
           </Grid.Row>
@@ -194,14 +195,14 @@ class Battle extends Component<IProps, IState> {
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderReserve(ParticipantType.Attacker, this.props.attacker, attacker)
+                attacker && this.renderReserve(ParticipantType.Attacker, this.props.attacker, attacker)
               }
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderReserve(ParticipantType.Defender, this.props.defender, defender)
+                defender && this.renderReserve(ParticipantType.Defender, this.props.defender, defender)
               }
             </Grid.Column>
           </Grid.Row>
@@ -228,8 +229,8 @@ class Battle extends Component<IProps, IState> {
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {this.renderRowTypes(ParticipantType.Attacker, this.props.attacker, attacker)}
-                  {this.renderRowTypes(ParticipantType.Defender, this.props.defender, defender)}
+                  {attacker && this.renderRowTypes(ParticipantType.Attacker, this.props.attacker, attacker)}
+                  {defender && this.renderRowTypes(ParticipantType.Defender, this.props.defender, defender)}
                 </Table.Body>
               </Table>
             </Grid.Column>
@@ -238,14 +239,14 @@ class Battle extends Component<IProps, IState> {
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderDefeatedArmy(ParticipantType.Attacker, this.props.attacker, attacker)
+                attacker && this.renderDefeatedArmy(ParticipantType.Attacker, this.props.attacker, attacker)
               }
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderDefeatedArmy(ParticipantType.Defender, this.props.defender, defender)
+                defender && this.renderDefeatedArmy(ParticipantType.Defender, this.props.defender, defender)
               }
             </Grid.Column>
           </Grid.Row>
@@ -260,7 +261,7 @@ class Battle extends Component<IProps, IState> {
     return String(round)
   }
 
-  renderArmy = (type: ParticipantType, name: ArmyName, participant?: Participant): JSX.Element => {
+  renderArmy = (type: ParticipantType, name: ArmyName, participant: Participant): JSX.Element => {
     const combat_width = this.props.combat.get(CombatParameter.CombatWidth, 30)
     return (
       <div key={type}>
@@ -268,9 +269,9 @@ class Battle extends Component<IProps, IState> {
         <UnitArmy
           color={type === ParticipantType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={type}
-          onClick={(column, unit) => this.openUnitModal(name, ArmyType.Frontline, column, unit)}
+          onClick={(column, unit) => this.openUnitModal(name, ArmyType.Frontline, participant.country, column, unit)}
           onRemove={column => this.props.removeUnit(this.props.mode, name, ArmyType.Frontline, column)}
-          units={participant && this.mergeAllValues(name, participant.frontline).setSize(combat_width)}
+          units={this.mergeAllValues(name, participant.frontline).setSize(combat_width)}
           row_width={Math.max(30, combat_width)}
           reverse={type === ParticipantType.Attacker}
           type={ArmyType.Frontline}
@@ -302,20 +303,20 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderReserve = (type: ParticipantType, name: ArmyName, participant?: Participant): JSX.Element => {
-    const units = participant && this.mergeAllValues(name, participant.reserve)
+  renderReserve = (type: ParticipantType, name: ArmyName, participant: Participant): JSX.Element => {
+    const units = this.mergeAllValues(name, participant.reserve)
     // + 1 ensures that the user can always select an empty space.
     // ceil ensures full rows for a cleaner UI.
-    const size = units && Math.ceil((units.size + 1) / 30.0) * 30
+    const size = Math.ceil((units.size + 1) / 30.0) * 30
     return (
       <div key={type}>
         <Header>{type + '\'s reserve'}</Header>
         <UnitArmy
           color={type === ParticipantType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={type}
-          onClick={(column, unit) => this.openUnitModal(name, ArmyType.Reserve, column, unit)}
+          onClick={(column, unit) => this.openUnitModal(name, ArmyType.Reserve, participant.country, column, unit)}
           onRemove={column => this.props.removeUnit(this.props.mode, name, ArmyType.Reserve, column)}
-          units={units && units.setSize(size || 0)}
+          units={units.setSize(size)}
           row_width={30}
           reverse={false}
           type={ArmyType.Reserve}
@@ -324,20 +325,20 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderDefeatedArmy = (type: ParticipantType, name: ArmyName, participant?: Participant): JSX.Element => {
-    const units = participant && this.mergeAllValues(name, participant.defeated)
+  renderDefeatedArmy = (type: ParticipantType, name: ArmyName, participant: Participant): JSX.Element => {
+    const units = this.mergeAllValues(name, participant.defeated)
     // + 1 ensures that the user can always select an empty space.
     // ceil ensures full rows for a cleaner UI.
-    const size = units && Math.ceil((units.size + 1) / 30.0) * 30
+    const size = Math.ceil((units.size + 1) / 30.0) * 30
     return (
       <div key={type}>
         <Header>{type + '\'s defeated units'}</Header>
         <UnitArmy
           color={type === ParticipantType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={type}
-          onClick={(column, unit) => this.openUnitModal(name, ArmyType.Defeated, column, unit)}
+          onClick={(column, unit) => this.openUnitModal(name, ArmyType.Defeated, participant.country, column, unit)}
           onRemove={column => this.props.removeUnit(this.props.mode, name, ArmyType.Defeated, column)}
-          units={units && units.setSize(size || 0)}
+          units={units.setSize(size)}
           row_width={30}
           reverse={false}
           type={ArmyType.Defeated}
@@ -403,22 +404,23 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderRowTypes = (type: ParticipantType, name: ArmyName, participant?: Participant): JSX.Element => {
-    const units = this.props.units.get(name)
-    const row_types = participant && participant.row_types
+  renderRowTypes = (type: ParticipantType, name: ArmyName, participant: Participant): JSX.Element => {
+    const country = participant.country
+    const units = this.props.units.get(country)
+    const row_types = participant.row_types
     return (
       <Table.Row key={type}>
         <Table.Cell>
           {type}
         </Table.Cell>
-        <Table.Cell selectable onClick={() => this.openRowModal(name, RowType.Front)}>
-          <Image src={getImage(units && row_types && units.get(row_types.get(RowType.Front)!))} avatar />
+        <Table.Cell selectable onClick={() => this.openRowModal(name, country, RowType.Front)}>
+          <Image src={getImage(units && units.get(row_types.get(RowType.Front)!))} avatar />
         </Table.Cell>
-        <Table.Cell selectable onClick={() => this.openRowModal(name, RowType.Back)}>
-          <Image src={getImage(units && row_types && units.get(row_types.get(RowType.Back)!))} avatar />
+        <Table.Cell selectable onClick={() => this.openRowModal(name, country, RowType.Back)}>
+          <Image src={getImage(units && units.get(row_types.get(RowType.Back)!))} avatar />
         </Table.Cell>
-        <Table.Cell selectable onClick={() => this.openRowModal(name, RowType.Flank)}>
-          <Image src={getImage(units && row_types && units.get(row_types.get(RowType.Flank)!))} avatar />
+        <Table.Cell selectable onClick={() => this.openRowModal(name, country, RowType.Flank)}>
+          <Image src={getImage(units && units.get(row_types.get(RowType.Flank)!))} avatar />
         </Table.Cell>
         <Table.Cell collapsing>
           <Input size='mini' style={{ width: 100 }} type='number' value={participant && participant.flank_size} onChange={(_, data) => this.props.setFlankSize(this.props.mode, name, Number(data.value))} />

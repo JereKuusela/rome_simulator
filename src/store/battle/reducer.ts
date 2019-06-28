@@ -2,11 +2,13 @@ import { createReducer } from 'typesafe-actions'
 import { List, Map } from 'immutable'
 import {
   getInitialArmy, getInitialTerrains, Participant, PastState, ParticipantType,
-  clearUnits, selectUnit, selectTerrain, selectTactic, undo, toggleRandomRoll, setRoll, setGeneral, setRowType, removeReserveUnits, addReserveUnits, setFlankSize, selectArmy
+  clearUnits, selectUnit, selectTerrain, selectTactic, undo, toggleRandomRoll, setRoll, setGeneral, setRowType, removeReserveUnits, addReserveUnits, setFlankSize, selectArmy,
+  deleteArmy, createArmy, changeName, duplicateArmy, ArmyName, ArmyType
 } from './actions'
-import { Unit, UnitType, ArmyType, ArmyName, deleteArmy, createArmy, changeName, duplicateArmy } from '../units'
+import { Unit, UnitType  } from '../units'
 import { TerrainType } from '../terrains'
 import { DefinitionType } from '../../base_definition'
+import { CountryName } from '../countries'
 
 export interface Armies {
   readonly armies: Map<ArmyName, Participant>
@@ -20,7 +22,7 @@ export interface Armies {
 }
 
 export const modeState = (mode: DefinitionType): Armies => ({
-  armies: Map<ArmyName, Participant>().set(ArmyName.Attacker, getInitialArmy(mode)).set(ArmyName.Defender, getInitialArmy(mode)),
+  armies: Map<ArmyName, Participant>().set(ArmyName.Attacker, getInitialArmy(mode, CountryName.Country1)).set(ArmyName.Defender, getInitialArmy(mode, CountryName.Country2)),
   attacker: ArmyName.Attacker,
   defender: ArmyName.Defender,
   terrains: getInitialTerrains(mode),
@@ -173,12 +175,12 @@ export const battleReducer = createReducer(initialState)
   })
   .handleAction(createArmy, (state, action: ReturnType<typeof createArmy>) => (
     state.map((mode, key) => {
-      return { ...mode, armies: mode.armies.set(action.payload.army, getInitialArmy(key)) }
+      return { ...mode, armies: mode.armies.set(action.payload.army, getInitialArmy(key, CountryName.Country1)) }
     })
   ))
   .handleAction(duplicateArmy, (state, action: ReturnType<typeof duplicateArmy>) => (
     state.map((mode, key) => {
-      return { ...mode, armies: mode.armies.set(action.payload.army, mode.armies.get(action.payload.source, getInitialArmy(key))) }
+      return { ...mode, armies: mode.armies.set(action.payload.army, mode.armies.get(action.payload.source, getInitialArmy(key, CountryName.Country1))) }
     })
   ))
   .handleAction(deleteArmy, (state, action: ReturnType<typeof deleteArmy>) => (
@@ -197,9 +199,9 @@ export const battleReducer = createReducer(initialState)
       return state
     let armies = next.armies
     if (armies.has(next.attacker))
-      armies = armies.update(next.attacker, value => ({ ...value, frontline: getInitialArmy(action.payload.mode).frontline, reserve: value.reserve.clear(), defeated: value.defeated.clear() }))
+      armies = armies.update(next.attacker, value => ({ ...value, frontline: getInitialArmy(action.payload.mode, CountryName.Country1).frontline, reserve: value.reserve.clear(), defeated: value.defeated.clear() }))
     if (armies.has(next.defender))
-      armies = armies.update(next.defender, value => ({ ...value, frontline: getInitialArmy(action.payload.mode).frontline, reserve: value.reserve.clear(), defeated: value.defeated.clear() }))
+      armies = armies.update(next.defender, value => ({ ...value, frontline: getInitialArmy(action.payload.mode, CountryName.Country2).frontline, reserve: value.reserve.clear(), defeated: value.defeated.clear() }))
     next = {
       ...next,
       armies,

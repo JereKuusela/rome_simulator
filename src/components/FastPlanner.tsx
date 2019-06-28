@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { Map, OrderedSet } from 'immutable'
 import { Table, Input } from 'semantic-ui-react'
-import { UnitType, ArmyName, UnitDefinition } from '../store/units'
+import { UnitType, UnitDefinition } from '../store/units'
+import { ArmyName } from '../store/battle'
 import { renderImages } from './utils'
 import { getImage } from '../base_definition'
 

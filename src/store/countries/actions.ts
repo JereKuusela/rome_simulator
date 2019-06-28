@@ -54,7 +54,7 @@ export const createCountry = createAction('@@countries/CREATE_COUNTRY', action =
 })
 
 export const duplicateCountry = createAction('@@countries/DUPLICATE_COUNTRY', action => {
-  return (old_country: CountryName, country: CountryName) => action({ old_country, country })
+  return (source_country: CountryName, country: CountryName) => action({ source_country, country })
 })
 
 export const changeCountryName = createAction('@@countries/CHANGE_COUNTRY_NAME', action => {

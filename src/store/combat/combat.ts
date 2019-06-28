@@ -1,18 +1,19 @@
 import { List, Map } from 'immutable'
-import { Unit, UnitDefinition, UnitCalc, UnitType, ArmyName } from '../units'
+import { Unit, UnitDefinition, UnitCalc, UnitType } from '../units'
 import { TerrainDefinition, TerrainCalc } from '../terrains'
 import { TacticDefinition, TacticCalc, TacticType } from '../tactics'
-import { RowType, Army } from '../battle'
+import { RowType, Army, ArmyName } from '../battle'
 import { CombatParameter } from '../settings'
 import { calculateValue, addValues, mergeValues, ValuesType } from '../../base_definition'
 import { reinforce } from './reinforcement'
+import { CountryName } from '../countries'
 
 type Frontline = List<Unit | undefined>
 type Reserve = List<Unit>
 type Defeated = List<Unit>
 type Terrains = List<TerrainDefinition | undefined>
 type Definition = Map<UnitType, UnitDefinition>
-type Definitions = Map<ArmyName, Definition>
+type Definitions = Map<CountryName, Definition>
 type Settings = Map<CombatParameter, number>
 
 interface Loss {
@@ -27,6 +28,7 @@ interface Kill {
 
 export interface ParticipantState {
   readonly name: ArmyName
+  readonly country: CountryName
   readonly frontline: Frontline
   readonly reserve: Reserve
   readonly defeated: Defeated
@@ -54,14 +56,14 @@ export const battle = (definitions: Definitions, attacker: ParticipantState, def
   d = removeOutOfBounds(d, combat_width)
   a = removeDefeated(a)
   d = removeDefeated(d)
-  a = reinforce(a, definitions.get(attacker.name)!, round, attacker.row_types, attacker.flank_size, calculateArmySize(d), settings, undefined)
-  let definitions_a: Frontline = a.frontline.map(value => value && mergeValues(value, definitions.getIn([attacker.name, value.type])))
+  a = reinforce(a, definitions.get(attacker.country)!, round, attacker.row_types, attacker.flank_size, calculateArmySize(d), settings, undefined)
+  let definitions_a: Frontline = a.frontline.map(value => value && mergeValues(value, definitions.getIn([attacker.country, value.type])))
   if (settings.get(CombatParameter.ReinforceFirst))
-    d = reinforce(d, definitions.get(defender.name)!, round, defender.row_types, defender.flank_size, calculateArmySize(a), settings, undefined)
+    d = reinforce(d, definitions.get(defender.country)!, round, defender.row_types, defender.flank_size, calculateArmySize(a), settings, undefined)
   let a_to_d = pickTargets(definitions_a, d.frontline, !!settings.get(CombatParameter.FlankTargetsOwnEdge))
   if (!settings.get(CombatParameter.ReinforceFirst))
-    d = reinforce(d, definitions.get(defender.name)!, round, defender.row_types, defender.flank_size, calculateArmySize(a), settings, a_to_d)
-  let definitions_d: Frontline = d.frontline.map(value => value && mergeValues(value, definitions.getIn([defender.name, value.type])))
+    d = reinforce(d, definitions.get(defender.country)!, round, defender.row_types, defender.flank_size, calculateArmySize(a), settings, a_to_d)
+  let definitions_d: Frontline = d.frontline.map(value => value && mergeValues(value, definitions.getIn([defender.country, value.type])))
   let d_to_a = pickTargets(definitions_d, a.frontline, !!settings.get(CombatParameter.FlankTargetsOwnEdge))
   if (round < 1)
     return [a, d]

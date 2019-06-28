@@ -1,47 +1,47 @@
 import React, { Component } from 'react'
 import { OrderedSet, Map } from 'immutable'
 import { Table, Input, Dropdown } from 'semantic-ui-react'
-import { UnitType, Unit, UnitDefinition, UnitCalc, ArmyName, ValueType, valueToString } from '../store/units'
+import { UnitType, Unit, UnitDefinition, UnitCalc, ValueType, valueToString } from '../store/units'
 import { TerrainType } from '../store/terrains'
 import { getBaseValue, getLossValue, getModifierValue, explain, DefinitionType } from '../base_definition'
 
-interface IProps {
+interface IProps<T extends string> {
   readonly mode: DefinitionType
-  readonly name: ArmyName
+  readonly name: T
   readonly custom_value_key: string
   readonly unit: Unit & UnitDefinition
-  readonly unit_types: OrderedSet<UnitType>
+  readonly unit_types?: OrderedSet<UnitType>
   readonly units: Map<any, Map<UnitType, UnitDefinition>>
   readonly show_statistics: boolean
   readonly terrain_types: OrderedSet<TerrainType>
   readonly unit_types_as_dropdown?: boolean
-  readonly onCustomBaseValueChange: (identnameifier: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
-  readonly onCustomModifierValueChange: (name: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
-  readonly onCustomLossValueChange: (name: ArmyName, type: UnitType, key: string, attribute: ValueType, value: number) => void
-  readonly onTypeChange?: (name: ArmyName, old_type: UnitType, new_type: UnitType) => void
-  readonly onModeChange?: (name: ArmyName, type: UnitType, mode: DefinitionType) => void
-  readonly onImageChange?: (name: ArmyName, type: UnitType, image: string) => void
+  readonly onCustomBaseValueChange: (name: T, type: UnitType, key: string, attribute: ValueType, value: number) => void
+  readonly onCustomModifierValueChange: (name: T, type: UnitType, key: string, attribute: ValueType, value: number) => void
+  readonly onCustomLossValueChange: (name: T, type: UnitType, key: string, attribute: ValueType, value: number) => void
+  readonly onTypeChange?: (name: T, old_type: UnitType, new_type: UnitType) => void
+  readonly onModeChange?: (name: T, type: UnitType, mode: DefinitionType) => void
+  readonly onImageChange?: (name: T, type: UnitType, image: string) => void
 }
 
 // Display component for showing and changing unit details.
-export default class UnitDetail extends Component<IProps> {
+export default class UnitDetail<T extends string> extends Component<IProps<T>> {
 
   readonly attributes = Object.keys(UnitCalc).map(k => UnitCalc[k as any]) as UnitCalc[]
   readonly units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
   readonly modes = Object.keys(DefinitionType).map(k => DefinitionType[k as any]).sort() as DefinitionType[]
   readonly headers = ['Attribute', 'Value', 'Custom base', 'Custom modifier', 'Custom losses', 'Explained']
 
-  renderUnitTypeDropdown = (name: ArmyName, type: UnitType): JSX.Element => {
+  renderUnitTypeDropdown = (name: T, type: UnitType): JSX.Element => {
     return (
       <Dropdown
         text={type}
         selection
         value={type}
-        disabled={this.props.unit.is_defeated}
+        disabled={this.props.unit.is_defeated || !this.props.unit_types}
       >
         <Dropdown.Menu>
           {
-            this.props.unit_types.map(key => (
+            this.props.unit_types && this.props.unit_types.map(key => (
               <Dropdown.Item value={key} text={key} key={key} active={type === key}
                 onClick={() => this.props.onTypeChange && this.props.onTypeChange(name, type, key)}
               />
@@ -52,7 +52,7 @@ export default class UnitDetail extends Component<IProps> {
     )
   }
 
-  renderModeDropdown = (name: ArmyName, type: UnitType, mode: DefinitionType): JSX.Element => {
+  renderModeDropdown = (name: T, type: UnitType, mode: DefinitionType): JSX.Element => {
     return (
       <Dropdown
         text={mode}
@@ -154,7 +154,7 @@ export default class UnitDetail extends Component<IProps> {
             this.attributes.map(value => this.renderRow(this.props.unit, value))
           }
           {
-            this.props.unit_types.map(value => this.renderRow(this.props.unit, value))
+            this.props.unit_types && this.props.unit_types.map(value => this.renderRow(this.props.unit, value))
           }
           {
             this.props.terrain_types.map(value => this.renderRow(this.props.unit, value))
@@ -193,7 +193,7 @@ export default class UnitDetail extends Component<IProps> {
         </Table.Cell>
         <Table.Cell collapsing>
           {
-            (attribute === UnitCalc.Morale || attribute === UnitCalc.Strength) &&
+            (attribute === UnitCalc.Morale || attribute === UnitCalc.Strength || attribute === UnitCalc.Maintenance || attribute === UnitCalc.Cost) &&
             <Input
               size='mini'
               style={{ width: 50 }}

@@ -2,7 +2,7 @@ import { createAction } from 'typesafe-actions'
 import { ValuesType, DefinitionType } from '../../base_definition'
 
 import { TerrainType } from '../terrains'
-import { Tradition } from '../countries'
+import { CountryName } from '../countries'
 import { calculateValue, BaseDefinition, toPercent, toRelativeZeroPercent } from '../../base_definition'
 
 export enum UnitType {
@@ -79,71 +79,31 @@ export const valueToString = (definition: BaseDefinition<UnitType, ValueType>, t
   }
 }
 
-export enum ArmyName {
-  Attacker = 'Army 1',
-  Defender = 'Army 2'
-}
-
-
-export enum Country {
-  Country1 = 'Army 1',
-  Country2 = 'Army 2'
-}
-
-export enum ArmyType {
-  Frontline = 'Frontline',
-  Reserve = 'Reserve',
-  Defeated = 'Defeated'
-}
-
 export const setValue = createAction('@@units/SET_VALUE', action => {
-  return (army: ArmyName, type: ValuesType, unit: UnitType, key: string, attribute: ValueType, value: number) => action({ army,type,  unit, key, attribute, value })
+  return (country: CountryName, type: ValuesType, unit: UnitType, key: string, attribute: ValueType, value: number) => action({ country, type, unit, key, attribute, value })
 })
 
 export const setGlobalValue = createAction('@@units/SET_GLOBAL_VALUE', action => {
-  return (army: ArmyName, mode: DefinitionType, type: ValuesType, key: string, attribute: ValueType, value: number) => action({ army, mode, type, key, attribute, value })
+  return (country: CountryName, mode: DefinitionType, type: ValuesType, key: string, attribute: ValueType, value: number) => action({ country, mode, type, key, attribute, value })
 })
 
 export const deleteUnit = createAction('@@units/DELETE_UNIT', action => {
-  return (army: ArmyName, type: UnitType) => action({ army, type })
+  return (country: CountryName, type: UnitType) => action({ country, type })
 })
 
 export const addUnit = createAction('@@units/ADD_UNIT', action => {
-  return (army: ArmyName, mode: DefinitionType, type: UnitType) => action({ army, mode, type })
+  return (country: CountryName, mode: DefinitionType, type: UnitType) => action({ country, mode, type })
 })
 
 export const changeType = createAction('@@units/CHANGE_TYPE', action => {
-  return (army: ArmyName, old_type: UnitType, new_type: UnitType) => action({ army, old_type, new_type })
+  return (country: CountryName, old_type: UnitType, new_type: UnitType) => action({ country, old_type, new_type })
 })
 
 export const changeImage = createAction('@@units/CHANGE_IMAGE', action => {
-  return (army: ArmyName, type: UnitType, image: string) => action({ army, type, image })
+  return (country: CountryName, type: UnitType, image: string) => action({ country, type, image })
 })
 
 export const changeMode = createAction('@@units/CHANGE_MODE', action => {
-  return (army: ArmyName, type: UnitType, mode: DefinitionType) => action({ army, type, mode })
+  return (country: CountryName, type: UnitType, mode: DefinitionType) => action({ country, type, mode })
 })
 
-export const deleteArmy = createAction('@@units/DELETE_ARMY', action => {
-  return (army: ArmyName) => action({ army })
-})
-
-export const createArmy = createAction('@@units/CREATE_ARMY', action => {
-  return (army: ArmyName) => action({ army })
-})
-
-export const duplicateArmy = createAction('@@units/DUPLICATE_ARMY', action => {
-  return (source: ArmyName, army: ArmyName) => action({ source, army })
-})
-
-export const changeName = createAction('@@units/CHANGE_NAME', action => {
-  return (old_army: ArmyName, new_army: ArmyName) => action({ old_army, new_army })
-})
-
-export const enableTradition = createAction('@@units/ENABLE_TRADITION', action => {
-  return (army: ArmyName, key: string, tradition: Tradition) => action({ army, key, tradition })
-})
-
-export const clearTradition = createAction('@@units/CLEAR_TRADITION', action => {
-  return (army: ArmyName, key: string) => action({ army, key })
-})

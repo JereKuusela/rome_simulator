@@ -1,18 +1,20 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
-import { UnitType, ArmyName, ArmyType, ValueType, Unit, UnitDefinition } from '../store/units'
-import { selectUnit } from '../store/battle'
+import { UnitType, ValueType, Unit, UnitDefinition } from '../store/units'
+import { ArmyName, ArmyType, selectUnit } from '../store/battle'
 import { AppState } from '../store/'
 import { getBattle, filterTerrainTypes } from '../utils'
 import { addValues, mergeValues, ValuesType, DefinitionType } from '../base_definition'
 import ItemRemover from '../components/ItemRemover'
 import UnitDetail from '../components/UnitDetail'
+import { CountryName } from '../store/countries'
 
 const CUSTOM_VALUE_KEY = 'Unit'
 
 export interface ModalInfo {
   name: ArmyName
+  country: CountryName
   index: number
   type: ArmyType
 }
@@ -25,7 +27,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
     if (!this.props.info)
       return null
     this.unit = this.getUnit(this.props.info)
-    const unit_types = this.props.unit_types.get(this.props.info.name)!.filter(type => {
+    const unit_types = this.props.unit_types.get(this.props.info.country)!.filter(type => {
       const unit = this.props.units.getIn([this.props.info!.name, type]) as UnitDefinition | undefined
       if (!unit)
         return false

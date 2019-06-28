@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { List } from 'immutable'
 import LineTo from 'react-lineto'
-import { ParticipantType } from '../store/battle'
-import { Unit, ArmyType } from '../store/units'
+import { ParticipantType, ArmyType } from '../store/battle'
+import { Unit } from '../store/units'
 
 
 interface IProps {

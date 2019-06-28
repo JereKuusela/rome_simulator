@@ -3,8 +3,8 @@ import { List } from 'immutable'
 import { Container, Image, Table } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
-import { ArmyName, Unit, UnitType, UnitCalc } from '../store/units'
-import { Participant, ParticipantType, Army } from '../store/battle'
+import { Unit, UnitType, UnitCalc } from '../store/units'
+import { ArmyName, Participant, ParticipantType, Army } from '../store/battle'
 import IconManpower from '../images/manpower.png'
 import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
@@ -23,12 +23,14 @@ class Stats extends Component<IProps> {
 
 
   renderArmy = (type: ParticipantType, name: ArmyName, participant?: Participant): JSX.Element | null => {
-    const info = participant && {
+    if (!participant)
+      return null
+    const info = {
       frontline: this.mergeAllValues(name, participant.frontline),
       reserve: this.mergeAllValues(name, participant.reserve),
       defeated: this.mergeAllValues(name, participant.defeated)}
-    const units = this.props.units.get(name)
-    const types = this.props.types.get(name)
+    const units = this.props.units.get(participant.country)
+    const types = this.props.types.get(participant.country)
     if (!units || !types)
       return null
     return (

@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { UnitType, ArmyName, ValueType, setValue, changeImage, changeMode } from '../store/units'
+import { UnitType, ValueType, setValue, changeImage, changeMode } from '../store/units'
 import { AppState } from '../store/'
+import { CountryName } from '../store/countries'
 import { ValuesType, mergeValues, DefinitionType } from '../base_definition'
 import UnitDetail from '../components/UnitDetail'
 import { mergeUnitTypes, filterTerrainTypes } from '../utils'
@@ -10,15 +11,15 @@ const CUSTOM_VALUE_KEY = 'Custom'
 
 class ModalUnitDetail extends Component<IProps> {
   render(): JSX.Element | null {
-    if (!this.props.army || !this.props.unit)
+    if (!this.props.country || !this.props.unit)
       return null
     return (
       <UnitDetail
         mode={this.props.mode}
-        name={this.props.army}
+        name={this.props.country}
         terrain_types={this.props.terrain_types}
         custom_value_key={CUSTOM_VALUE_KEY}
-        unit={mergeValues(this.props.units.getIn([this.props.army, this.props.unit]), this.props.global_stats.getIn([this.props.army, this.props.mode]))}
+        unit={mergeValues(this.props.units.getIn([this.props.country, this.props.unit]), this.props.global_stats.getIn([this.props.country, this.props.mode]))}
         units={this.props.units}
         unit_types={this.props.unit_types}
         onCustomBaseValueChange={this.props.setBaseValue}
@@ -42,23 +43,23 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setBaseValue: (army: ArmyName, unit: UnitType, key: string, attribute: ValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setValue(army, ValuesType.Base, unit, key, attribute, value))
+  setBaseValue: (country: CountryName, unit: UnitType, key: string, attribute: ValueType, value: number) => (
+    !Number.isNaN(value) && dispatch(setValue(country, ValuesType.Base, unit, key, attribute, value))
   ),
-  setModifierValue: (army: ArmyName, unit: UnitType, key: string, attribute: ValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setValue(army, ValuesType.Modifier, unit, key, attribute, value))
+  setModifierValue: (country: CountryName, unit: UnitType, key: string, attribute: ValueType, value: number) => (
+    !Number.isNaN(value) && dispatch(setValue(country, ValuesType.Modifier, unit, key, attribute, value))
   ),
-  setLossValue: (army: ArmyName, unit: UnitType, key: string, attribute: ValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setValue(army, ValuesType.Loss, unit, key, attribute, value))
+  setLossValue: (country: CountryName, unit: UnitType, key: string, attribute: ValueType, value: number) => (
+    !Number.isNaN(value) && dispatch(setValue(country, ValuesType.Loss, unit, key, attribute, value))
   ),
-  changeImage: (army: ArmyName, type: UnitType, image: string) => dispatch(changeImage(army, type, image)),
-  changeMode: (army: ArmyName, type: UnitType, mode: DefinitionType) => dispatch(changeMode(army, type, mode))
+  changeImage: (country: CountryName, type: UnitType, image: string) => dispatch(changeImage(country, type, image)),
+  changeMode: (country: CountryName, type: UnitType, mode: DefinitionType) => dispatch(changeMode(country, type, mode))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {
-  army: ArmyName | null
+  country: CountryName | null
   unit: UnitType | null
-  changeType: (army: ArmyName, old_type: UnitType, new_type: UnitType) => void
+  changeType: (country: CountryName, old_type: UnitType, new_type: UnitType) => void
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModalUnitDetail)

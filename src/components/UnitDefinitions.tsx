@@ -1,7 +1,7 @@
 import { Map, OrderedSet } from 'immutable'
 import React, { Component } from 'react'
 import { Image, Table, List, Icon, Button } from 'semantic-ui-react'
-import { UnitType, UnitDefinition, UnitCalc, ArmyName, ValueType, valueToString } from '../store/units'
+import { UnitType, UnitDefinition, UnitCalc, ValueType, valueToString } from '../store/units'
 import { TerrainType } from '../store/terrains'
 import IconDiscipline from '../images/discipline.png'
 import IconOffense from '../images/offense.png'
@@ -12,20 +12,21 @@ import IconMorale from '../images/morale.png'
 import IconAttrition from '../images/attrition.png'
 import { getImage, calculateValue, calculateBase, calculateModifier, calculateLoss, valueToNumber, valueToPercent, valueToRelativeZeroPercent, mergeValues, valueToStrength, DefinitionType } from '../base_definition'
 import ValueModal from './ValueModal'
+import { CountryName } from '../store/countries'
 import Confirmation from './Confirmation'
 
 interface IProps {
   readonly mode: DefinitionType
-  readonly army: ArmyName
+  readonly country: CountryName
   readonly units: Map<UnitType, UnitDefinition>
   readonly types: OrderedSet<UnitType>
   readonly terrains: OrderedSet<TerrainType>
   readonly global_stats: UnitDefinition
   readonly onRowClick: (unit: UnitDefinition) => void
   readonly onCreateNew: (type: UnitType) => void
-  readonly onChangeName: (old_name: ArmyName, new_name: ArmyName) => void
-  readonly onDelete: (name: ArmyName) => void
-  readonly onDuplicate: (source: ArmyName, name: ArmyName) => void
+  readonly onChangeName: (old_country: CountryName, country: CountryName) => void
+  readonly onDelete: (country: CountryName) => void
+  readonly onDuplicate: (source_country: CountryName, country: CountryName) => void
 }
 
 interface IState {
@@ -66,19 +67,19 @@ export default class UnitDefinitions extends Component<IProps, IState> {
           onClose={this.onClose}
           message='Edit name'
           button_message='Edit'
-          initial={this.props.army}
+          initial={this.props.country}
         />
         <Confirmation
           onClose={this.onClose}
           onConfirm={this.onConfirm}
           open={this.state.open_confirm}
-          message={'Are you sure you want to remove army ' + this.props.army + ' ?'}
+          message={'Are you sure you want to remove army ' + this.props.country + ' ?'}
         />
         <Table celled selectable unstackable>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>
-                {this.props.army}
+                {this.props.country}
               </Table.HeaderCell>
               <Table.HeaderCell>
                 <Image src={IconMorale} avatar />
@@ -155,7 +156,7 @@ export default class UnitDefinitions extends Component<IProps, IState> {
 
   newOnClick = (): void => this.setState({ open_create: true })
 
-  onConfirm = (): void => this.props.onDelete(this.props.army)
+  onConfirm = (): void => this.props.onDelete(this.props.country)
 
   confirmOnClick = (): void => this.setState({ open_confirm: true })
 
@@ -163,11 +164,11 @@ export default class UnitDefinitions extends Component<IProps, IState> {
 
   onCreate = (type: string): void => this.props.onCreateNew(type as UnitType)
 
-  onDuplicate = (name: string): void => this.props.onDuplicate(this.props.army, name as ArmyName)
+  onDuplicate = (name: string): void => this.props.onDuplicate(this.props.country, name as CountryName)
 
   onClose = (): void => this.setState({ open_create: false, open_edit: false, open_confirm: false, open_duplicate: false })
 
-  onEdit = (name: string): void => this.props.onChangeName(this.props.army, name as ArmyName)
+  onEdit = (name: string): void => this.props.onChangeName(this.props.country, name as CountryName)
 
   editOnClick = (): void => this.setState({ open_edit: true })
 

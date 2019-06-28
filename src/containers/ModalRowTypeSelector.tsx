@@ -1,15 +1,17 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
-import { UnitType, ArmyName, UnitDefinition } from '../store/units'
+import { UnitType, UnitDefinition } from '../store/units'
 import { AppState } from '../store/'
-import { setRowType, RowType, } from '../store/battle'
+import { setRowType, RowType, ArmyName } from '../store/battle'
 import { DefinitionType } from '../base_definition'
 import ItemSelector from '../components/ItemSelector'
 import ItemRemover from '../components/ItemRemover'
+import { CountryName } from '../store/countries'
 
 export interface ModalInfo {
   name: ArmyName
+  country: CountryName
   type: RowType
 }
 
@@ -17,14 +19,14 @@ class ModalRowTypeSelector extends Component<IProps> {
   render(): JSX.Element | null {
     if (!this.props.info)
       return null
-    const name = this.props.info.name
-    const types = this.props.types.get(name)!.filter(type => {
-      const unit = this.props.units.getIn([name, type]) as UnitDefinition | undefined
+    const country = this.props.info.country
+    const types = this.props.types.get(country)!.filter(type => {
+      const unit = this.props.units.getIn([country, type]) as UnitDefinition | undefined
       if (!unit)
         return false
       return unit.mode === this.props.mode || unit.mode === DefinitionType.Global
     })
-    const units = this.props.units.get(this.props.info.name)
+    const units = this.props.units.get(country)
     if (!types || !units)
       return null
     return (

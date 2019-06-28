@@ -1,11 +1,11 @@
 import { fromJS, Map, List, OrderedSet, OrderedMap } from 'immutable'
 import { tacticFromJS, TacticType, tacticsReducer } from './tactics'
 import { terrainFromJS, TerrainType, terrainsReducer } from './terrains'
-import { unitDefinitionFromJS, unitFromJS, ArmyName, UnitType, unitsReducer, globalStatsReducer, Unit } from './units'
-import { RowType, battleReducer, PastState, Participant, getInitialArmy, Armies, modeState } from './battle'
+import { unitDefinitionFromJS, unitFromJS, UnitType, unitsReducer, globalStatsReducer, Unit } from './units'
+import { RowType, battleReducer, PastState, Participant, getInitialArmy, Armies, modeState, ArmyName } from './battle'
 import { DefinitionType } from '../base_definition'
 import { transferReducer } from './transfer'
-import { countriesReducer } from './countries'
+import { countriesReducer, CountryName } from './countries'
 import { CombatParameter, settingsReducer } from './settings'
 
 const dummyAction = {
@@ -54,7 +54,7 @@ export const transformUnits = (state_raw: any): ReturnType<typeof unitsReducer> 
     return initial
   let definitions = initial.definitions
   if (state_raw.definitions) {
-    let definitions_raw: Map<ArmyName, Map<UnitType, any>> = fromJS(state_raw.definitions)
+    let definitions_raw: Map<CountryName, Map<UnitType, any>> = fromJS(state_raw.definitions)
     definitions = definitions_raw.filter(value => value).map(value => value.map(value => unitDefinitionFromJS(value)!).filter(value => value))
   }
   let types = initial.types
@@ -62,7 +62,7 @@ export const transformUnits = (state_raw: any): ReturnType<typeof unitsReducer> 
     types = fromJS(state_raw.types)
   if (types.size === 0)
     types = initial.types
-  types = types.map(value => readTypes(value, initial.types.get(ArmyName.Attacker)!))
+  types = types.map(value => readTypes(value, initial.types.get(CountryName.Country1)!))
   return { definitions, types }
 }
 
@@ -70,7 +70,7 @@ export const transformGlobalStats = (state_raw: any): ReturnType<typeof globalSt
   const initial = globalStatsReducer(undefined, dummyAction)
   if (!state_raw)
     return initial
-  let global_stats_raw: Map<ArmyName, Map<DefinitionType, any>> = fromJS(state_raw)
+  let global_stats_raw: Map<CountryName, Map<DefinitionType, any>> = fromJS(state_raw)
   let global_stats = global_stats_raw.filter(value => value).map(value => value.map(value => unitDefinitionFromJS(value)!).filter(value => value))
   return global_stats
 }
@@ -103,7 +103,7 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {
   }
 
   const serializeParticipant = (participant: any): Participant => {
-    const initial = getInitialArmy(mode)
+    const initial = getInitialArmy(mode, CountryName.Country1)
     let frontline = initial.frontline
     if (participant.frontline)
       frontline = serializeUnits(fromJS(participant.frontline))
@@ -125,6 +125,7 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {
     const flank_size = participant.flank_size || initial.flank_size
     const roll = participant.roll || initial.roll
     const randomize_roll = participant.randomize_roll
+    const country = participant.country || initial.country
     return {
       general,
       flank_size,
@@ -134,7 +135,8 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {
       reserve,
       defeated,
       row_types,
-      tactic
+      tactic,
+      country
     }
   }
   let armies = initial.armies

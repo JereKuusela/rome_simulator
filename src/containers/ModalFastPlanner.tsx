@@ -5,9 +5,10 @@ import { Modal, Button, Grid } from 'semantic-ui-react'
 import { AppState } from '../store/'
 import FastPlanner from '../components/FastPlanner'
 import ArmyCosts from '../components/ArmyCosts'
-import { ArmyName, UnitType, Unit, UnitDefinition } from '../store/units'
-import { clearUnits, removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits } from '../store/battle'
+import { UnitType, Unit, UnitDefinition } from '../store/units'
+import { clearUnits, removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits, ArmyName } from '../store/battle'
 import { mapRange, getBattle } from '../utils'
+import { CountryName } from '../store/countries'
 import { mergeValues, DefinitionType } from '../base_definition'
 
 type Units = Map<UnitType, number>
@@ -30,10 +31,10 @@ class ModalFastPlanner extends Component<IProps, IState> {
   render(): JSX.Element | null {
     if (!this.props.open)
       return null
-    const types_a = this.filterTypes(this.props.attacker)
-    const types_d = this.filterTypes(this.props.defender)
     const attacker = this.props.armies.get(this.props.attacker)
     const defender = this.props.armies.get(this.props.defender)
+    const types_a = attacker && this.filterTypes(attacker.country)
+    const types_d = defender && this.filterTypes(defender.country)
     this.originals_a = attacker && types_a && types_a.reduce((map, value) => map.set(value, this.countUnits(attacker.reserve, value)), Map<UnitType, number>())
     this.originals_d = defender && types_d && types_d.reduce((map, value) => map.set(value, this.countUnits(defender.reserve, value)), Map<UnitType, number>())
     return (
@@ -52,12 +53,12 @@ class ModalFastPlanner extends Component<IProps, IState> {
           />
           <ArmyCosts
             mode={this.props.mode}
-            army_a={attacker && this.mergeAllValues(this.props.attacker, attacker.frontline)}
-            army_d={defender && this.mergeAllValues(this.props.defender, defender.frontline)}
-            reserve_a={attacker && this.mergeAllValues(this.props.attacker, this.editReserve(attacker.reserve, this.state.changes_a, this.originals_a))}
-            reserve_d={defender && this.mergeAllValues(this.props.defender, this.editReserve(defender.reserve, this.state.changes_d, this.originals_d))}
-            defeated_a={attacker && this.mergeAllValues(this.props.attacker, attacker.defeated)}
-            defeated_d={defender && this.mergeAllValues(this.props.defender, defender.defeated)}
+            army_a={attacker && this.mergeAllValues(attacker.country, attacker.frontline)}
+            army_d={defender && this.mergeAllValues(defender.country, defender.frontline)}
+            reserve_a={attacker && this.mergeAllValues(attacker.country, this.editReserve(attacker.reserve, this.state.changes_a, this.originals_a))}
+            reserve_d={defender && this.mergeAllValues(defender.country, this.editReserve(defender.reserve, this.state.changes_d, this.originals_d))}
+            defeated_a={attacker && this.mergeAllValues(attacker.country, attacker.defeated)}
+            defeated_d={defender && this.mergeAllValues(defender.country, defender.defeated)}
             attached
           />
           <br />
@@ -80,17 +81,17 @@ class ModalFastPlanner extends Component<IProps, IState> {
     )
   }
 
-  filterTypes = (name: ArmyName) => {
-    return this.props.types.get(name)!.filter(type => {
-      const unit = this.props.units.getIn([name, type]) as UnitDefinition | undefined
+  filterTypes = (country: CountryName) => {
+    return this.props.types.get(country)!.filter(type => {
+      const unit = this.props.units.getIn([country, type]) as UnitDefinition | undefined
       if (!unit)
         return false
       return unit.mode === this.props.mode || unit.mode === DefinitionType.Global
     })
   }
 
-  mergeAllValues = (name: ArmyName, army: List<Unit | undefined>): List<any> => {
-    return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats.getIn([name, this.props.mode])))
+  mergeAllValues = (country: CountryName, army: List<Unit | undefined>): List<any> => {
+    return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([country, value.type]), value), this.props.global_stats.getIn([country, this.props.mode])))
   }
 
   editReserve = (reserve: List<Unit>, changes: Units, originals?: Units): List<Unit> => {

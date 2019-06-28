@@ -29,7 +29,7 @@ const selectionsReducer = createReducer(selectionsState)
     state.set(action.payload.country, getDefaultSelections())
   ))
   .handleAction(duplicateCountry, (state, action: ReturnType<typeof duplicateCountry>) => (
-    state.set(action.payload.country, state.get(action.payload.old_country, getDefaultSelections()))
+    state.set(action.payload.country, state.get(action.payload.source_country, getDefaultSelections()))
   ))
   .handleAction(deleteCountry, (state, action: ReturnType<typeof deleteCountry>) => (
     state.delete(action.payload.country)
