@@ -9,6 +9,7 @@ import IconManpower from '../images/manpower.png'
 import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
 import { getBattle } from '../utils'
+import { CountryName } from '../store/countries'
 import { calculateValue, calculateValueWithoutLoss, mergeValues, getImage, DefinitionType } from '../base_definition'
 
 class Stats extends Component<IProps> {
@@ -26,9 +27,9 @@ class Stats extends Component<IProps> {
     if (!participant)
       return null
     const info = {
-      frontline: this.mergeAllValues(name, participant.frontline),
-      reserve: this.mergeAllValues(name, participant.reserve),
-      defeated: this.mergeAllValues(name, participant.defeated)}
+      frontline: this.mergeAllValues(participant.country, participant.frontline),
+      reserve: this.mergeAllValues(participant.country, participant.reserve),
+      defeated: this.mergeAllValues(participant.country, participant.defeated)}
     const units = this.props.units.get(participant.country)
     const types = this.props.types.get(participant.country)
     if (!units || !types)
@@ -98,7 +99,7 @@ class Stats extends Component<IProps> {
   }
 
   
-  mergeAllValues = (name: ArmyName, army: List<Unit | undefined>): List<any> => {
+  mergeAllValues = (name: CountryName, army: List<Unit | undefined>): List<any> => {
     return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats.getIn([name, this.props.mode])))
   }
 

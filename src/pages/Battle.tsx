@@ -271,7 +271,7 @@ class Battle extends Component<IProps, IState> {
           side={type}
           onClick={(column, unit) => this.openUnitModal(name, ArmyType.Frontline, participant.country, column, unit)}
           onRemove={column => this.props.removeUnit(this.props.mode, name, ArmyType.Frontline, column)}
-          units={this.mergeAllValues(name, participant.frontline).setSize(combat_width)}
+          units={this.mergeAllValues(participant.country, participant.frontline).setSize(combat_width)}
           row_width={Math.max(30, combat_width)}
           reverse={type === ParticipantType.Attacker}
           type={ArmyType.Frontline}
@@ -304,7 +304,7 @@ class Battle extends Component<IProps, IState> {
   }
 
   renderReserve = (type: ParticipantType, name: ArmyName, participant: Participant): JSX.Element => {
-    const units = this.mergeAllValues(name, participant.reserve)
+    const units = this.mergeAllValues(participant.country, participant.reserve)
     // + 1 ensures that the user can always select an empty space.
     // ceil ensures full rows for a cleaner UI.
     const size = Math.ceil((units.size + 1) / 30.0) * 30
@@ -326,7 +326,7 @@ class Battle extends Component<IProps, IState> {
   }
 
   renderDefeatedArmy = (type: ParticipantType, name: ArmyName, participant: Participant): JSX.Element => {
-    const units = this.mergeAllValues(name, participant.defeated)
+    const units = this.mergeAllValues(participant.country, participant.defeated)
     // + 1 ensures that the user can always select an empty space.
     // ceil ensures full rows for a cleaner UI.
     const size = Math.ceil((units.size + 1) / 30.0) * 30
@@ -429,7 +429,7 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  mergeAllValues = (name: ArmyName, army: List<Unit | undefined>): List<UnitDefinition | undefined> => {
+  mergeAllValues = (name: CountryName, army: List<Unit | undefined>): List<UnitDefinition | undefined> => {
     return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats.getIn([name, this.props.mode])))
   }
 }
