@@ -7,7 +7,7 @@ import {
   ValueType,
   UnitCalc
 } from './actions'
-import { CountryName, enableTradition, clearTradition, createCountry, deleteCountry, changeCountryName, duplicateCountry } from '../countries'
+import { CountryName, enableTradition, clearTradition, createCountry, deleteCountry, changeCountryName } from '../countries'
 import { addValues, DefinitionType, ValuesType, regenerateValues, clearValues } from '../../base_definition'
 
 export const unitsState = {
@@ -65,15 +65,8 @@ export const unitsReducer = createReducer(unitsState)
   .handleAction(createCountry, (state, action: ReturnType<typeof createCountry>) => (
     {
       ...state,
-      definitions: state.definitions.set(action.payload.country, getDefaultDefinitions()),
-      types: state.types.set(action.payload.country, getDefaultTypes())
-    }
-  ))
-  .handleAction(duplicateCountry, (state, action: ReturnType<typeof duplicateCountry>) => (
-    {
-      ...state,
-      definitions: state.definitions.set(action.payload.country, state.definitions.get(action.payload.source_country, getDefaultDefinitions())),
-      types: state.types.set(action.payload.country, state.types.get(action.payload.source_country, getDefaultTypes()))
+      definitions: state.definitions.set(action.payload.country, state.definitions.get(action.payload.source_country!, getDefaultDefinitions())),
+      types: state.types.set(action.payload.country, state.types.get(action.payload.source_country!, getDefaultTypes()))
     }
   ))
   .handleAction(deleteCountry, (state, action: ReturnType<typeof deleteCountry>) => (
@@ -115,10 +108,7 @@ export const globalStatsReducer = createReducer(globalStatsState)
     state.updateIn([action.payload.country, action.payload.mode], (unit: UnitDefinition) => addValues(unit, action.payload.type, action.payload.key, [[action.payload.attribute, action.payload.value]]))
   ))
   .handleAction(createCountry, (state, action: ReturnType<typeof createCountry>) => (
-    state.set(action.payload.country, getDefaultGlobalDefinition())
-  ))
-  .handleAction(duplicateCountry, (state, action: ReturnType<typeof duplicateCountry>) => (
-    state.set(action.payload.country, state.get(action.payload.source_country, getDefaultGlobalDefinition()))
+    state.set(action.payload.country, state.get(action.payload.source_country!, getDefaultGlobalDefinition()))
   ))
   .handleAction(deleteCountry, (state, action: ReturnType<typeof deleteCountry>) => (
     state.delete(action.payload.country)

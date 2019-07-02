@@ -2,15 +2,23 @@ import { createReducer } from 'typesafe-actions'
 import { combineReducers } from 'redux'
 import { Set, Map } from 'immutable'
 import { getDefaultDefinitions, getDefaultTypes } from './data'
-import { CountryName, deleteCountry, createCountry, duplicateCountry, changeCountryName, enableTradition, clearTradition } from './actions'
+import {
+  GovermentType, CountryName,
+  deleteCountry, createCountry, changeCountryName, enableTradition, clearTradition,
+  selectGovernment, selectReligion, ReligionType
+} from './actions'
 
 interface Selections {
-  traditions: Set<string>
+  traditions: Set<string>,
+  government: GovermentType,
+  religion: ReligionType
 }
 
 const getDefaultSelections = () => (
   {
-    traditions: Set<string>()
+    traditions: Set<string>(),
+    government: GovermentType.Republic,
+    religion: ReligionType.Greek
   }
 )
 
@@ -26,10 +34,7 @@ const traditionsReducer = createReducer(traditionsState)
 
 const selectionsReducer = createReducer(selectionsState)
   .handleAction(createCountry, (state, action: ReturnType<typeof createCountry>) => (
-    state.set(action.payload.country, getDefaultSelections())
-  ))
-  .handleAction(duplicateCountry, (state, action: ReturnType<typeof duplicateCountry>) => (
-    state.set(action.payload.country, state.get(action.payload.source_country, getDefaultSelections()))
+    state.set(action.payload.country, state.get(action.payload.source_country!, getDefaultSelections()))
   ))
   .handleAction(deleteCountry, (state, action: ReturnType<typeof deleteCountry>) => (
     state.delete(action.payload.country)
@@ -42,6 +47,12 @@ const selectionsReducer = createReducer(selectionsState)
   ))
   .handleAction(clearTradition, (state, action: ReturnType<typeof clearTradition>) => (
     state.update(action.payload.country, value => ({ ...value, traditions: value.traditions.remove(action.payload.key) }))
+  ))
+  .handleAction(selectGovernment, (state, action: ReturnType<typeof selectGovernment>) => (
+    state.update(action.payload.country, value => ({ ...value, government: action.payload.government }))
+  ))
+  .handleAction(selectReligion, (state, action: ReturnType<typeof selectReligion>) => (
+    state.update(action.payload.country, value => ({ ...value, religion: action.payload.religion }))
   ))
 
   export const countriesReducer = combineReducers({

@@ -1,6 +1,6 @@
 import { Map, OrderedSet } from 'immutable'
 import React, { Component } from 'react'
-import { Image, Table, List, Icon, Button } from 'semantic-ui-react'
+import { Image, Table, List, Icon } from 'semantic-ui-react'
 import { UnitType, UnitDefinition, UnitCalc, ValueType, valueToString } from '../store/units'
 import { TerrainType } from '../store/terrains'
 import IconDiscipline from '../images/discipline.png'
@@ -11,9 +11,7 @@ import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
 import IconAttrition from '../images/attrition.png'
 import { getImage, calculateValue, calculateBase, calculateModifier, calculateLoss, valueToNumber, valueToPercent, valueToRelativeZeroPercent, mergeValues, valueToStrength, DefinitionType } from '../base_definition'
-import ValueModal from './ValueModal'
 import { CountryName } from '../store/countries'
-import Confirmation from './Confirmation'
 
 interface IProps {
   readonly mode: DefinitionType
@@ -23,154 +21,84 @@ interface IProps {
   readonly terrains: OrderedSet<TerrainType>
   readonly global_stats: UnitDefinition
   readonly onRowClick: (unit: UnitDefinition) => void
-  readonly onCreateNew: (type: UnitType) => void
-  readonly onChangeName: (old_country: CountryName, country: CountryName) => void
-  readonly onDelete: (country: CountryName) => void
-  readonly onDuplicate: (source_country: CountryName, country: CountryName) => void
-}
-
-interface IState {
-  open_create: boolean
-  open_duplicate: boolean
-  open_edit: boolean
-  open_confirm: boolean
 }
 
 // Display component for showing unit definitions for an army.
-export default class UnitDefinitions extends Component<IProps, IState> {
-
-  constructor(props: IProps) {
-    super(props)
-    this.state = { open_create: false, open_edit: false, open_confirm: false, open_duplicate: false }
-  }
+export default class UnitDefinitions extends Component<IProps> {
 
   render(): JSX.Element {
     return (
-      <div>
-        <ValueModal
-          open={this.state.open_create}
-          onSuccess={this.onCreate}
-          onClose={this.onClose}
-          message='New unit type'
-          button_message='Create'
-        />
-        <ValueModal
-          open={this.state.open_duplicate}
-          onSuccess={this.onDuplicate}
-          onClose={this.onClose}
-          message='New unit type'
-          button_message='Duplicate'
-        />
-        <ValueModal
-          open={this.state.open_edit}
-          onSuccess={this.onEdit}
-          onClose={this.onClose}
-          message='Edit name'
-          button_message='Edit'
-          initial={this.props.country}
-        />
-        <Confirmation
-          onClose={this.onClose}
-          onConfirm={this.onConfirm}
-          open={this.state.open_confirm}
-          message={'Are you sure you want to remove army ' + this.props.country + ' ?'}
-        />
-        <Table celled selectable unstackable>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>
-                {this.props.country}
-              </Table.HeaderCell>
-              <Table.HeaderCell>
-                <Image src={IconMorale} avatar />
-              </Table.HeaderCell>
-              <Table.HeaderCell>
-                <Image src={this.props.mode === DefinitionType.Naval ? IconStrength : IconManpower} avatar />
-              </Table.HeaderCell>
-              {
-                this.props.mode === DefinitionType.Naval ? null :
-                  <Table.HeaderCell>
-                    <Image src={IconDiscipline} avatar />
-                  </Table.HeaderCell>
-              }
-              <Table.HeaderCell>
-                <Image src={IconOffense} avatar />
-              </Table.HeaderCell>
-              <Table.HeaderCell>
-                <Image src={this.props.mode === DefinitionType.Naval ? IconAttrition : IconDefense} avatar />
-              </Table.HeaderCell>
-              <Table.HeaderCell>
-                <Icon name='arrows alternate horizontal' size='big' />
-              </Table.HeaderCell>
-              <Table.HeaderCell>
-                <Image src={IconOffense} avatar />
-                <Image src={IconMorale} avatar />
-              </Table.HeaderCell>
-              <Table.HeaderCell>
-                <Image src={IconAttrition} avatar />
-                <Image src={IconMorale} avatar />
-              </Table.HeaderCell>
-              <Table.HeaderCell>
-                <Image src={IconOffense} avatar />
-                <Image src={this.props.mode === DefinitionType.Naval ? IconStrength : IconManpower} avatar />
-              </Table.HeaderCell>
-              <Table.HeaderCell>
-                <Image src={IconAttrition} avatar />
-                <Image src={this.props.mode === DefinitionType.Naval ? IconStrength : IconManpower} avatar />
-              </Table.HeaderCell>
-              <Table.HeaderCell>
-                Experience
+      <Table celled selectable unstackable>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>
+              {this.props.country}
             </Table.HeaderCell>
-              <Table.HeaderCell>
-                Units
+            <Table.HeaderCell>
+              <Image src={IconMorale} avatar />
             </Table.HeaderCell>
-              <Table.HeaderCell>
-                Terrain
+            <Table.HeaderCell>
+              <Image src={this.props.mode === DefinitionType.Naval ? IconStrength : IconManpower} avatar />
             </Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
             {
-              this.renderGlobalStats(this.props.global_stats)
+              this.props.mode === DefinitionType.Naval ? null :
+                <Table.HeaderCell>
+                  <Image src={IconDiscipline} avatar />
+                </Table.HeaderCell>
             }
+            <Table.HeaderCell>
+              <Image src={IconOffense} avatar />
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <Image src={this.props.mode === DefinitionType.Naval ? IconAttrition : IconDefense} avatar />
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <Icon name='arrows alternate horizontal' size='big' />
+            </Table.HeaderCell>
             {
-              this.props.types.map(value => this.renderRow(this.props.units.get(value)))
+              this.props.mode !== DefinitionType.Naval ? null :
+                <Table.HeaderCell>
+                  <Image src={IconOffense} avatar />
+                  <Image src={IconMorale} avatar />
+                </Table.HeaderCell>
             }
-          </Table.Body>
-        </Table>
-        <Button primary onClick={this.newOnClick}>
-          Create new unit
-        </Button>
-        <Button primary onClick={this.editOnClick}>
-          Change army name
-        </Button>
-        <Button primary onClick={this.confirmOnClick}>
-          Delete army
-        </Button>
-        <Button primary onClick={this.duplicateOnClick}>
-          Duplicate army
-        </Button>
-      </div>
+            <Table.HeaderCell>
+              <Image src={IconAttrition} avatar />
+              <Image src={IconMorale} avatar />
+            </Table.HeaderCell>
+            {
+              this.props.mode !== DefinitionType.Naval ? null :
+                <Table.HeaderCell>
+                  <Image src={IconOffense} avatar />
+                  <Image src={IconStrength} avatar />
+                </Table.HeaderCell>
+            }
+            <Table.HeaderCell>
+              <Image src={IconAttrition} avatar />
+              <Image src={this.props.mode === DefinitionType.Naval ? IconStrength : IconManpower} avatar />
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              Starting Experience
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              Units
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              Terrain
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {
+            this.renderGlobalStats(this.props.global_stats)
+          }
+          {
+            this.props.types.map(value => this.renderRow(this.props.units.get(value)))
+          }
+        </Table.Body>
+      </Table>
     )
   }
-
-  newOnClick = (): void => this.setState({ open_create: true })
-
-  onConfirm = (): void => this.props.onDelete(this.props.country)
-
-  confirmOnClick = (): void => this.setState({ open_confirm: true })
-
-  duplicateOnClick = (): void => this.setState({ open_duplicate: true })
-
-  onCreate = (type: string): void => this.props.onCreateNew(type as UnitType)
-
-  onDuplicate = (name: string): void => this.props.onDuplicate(this.props.country, name as CountryName)
-
-  onClose = (): void => this.setState({ open_create: false, open_edit: false, open_confirm: false, open_duplicate: false })
-
-  onEdit = (name: string): void => this.props.onChangeName(this.props.country, name as CountryName)
-
-  editOnClick = (): void => this.setState({ open_edit: true })
 
   renderRow = (definition?: UnitDefinition): JSX.Element | null => {
     if (!definition)
@@ -203,15 +131,21 @@ export default class UnitDefinitions extends Component<IProps, IState> {
         <Table.Cell>
           {valueToNumber(unit, UnitCalc.Maneuver, false)}
         </Table.Cell>
-        <Table.Cell>
-          {valueToRelativeZeroPercent(unit, UnitCalc.MoraleDamageDone, false)}
-        </Table.Cell>
+        {
+          this.props.mode !== DefinitionType.Naval ? null :
+            <Table.Cell>
+              {valueToRelativeZeroPercent(unit, UnitCalc.MoraleDamageDone, false)}
+            </Table.Cell>
+        }
         <Table.Cell>
           {valueToRelativeZeroPercent(unit, UnitCalc.MoraleDamageTaken, false)}
         </Table.Cell>
-        <Table.Cell>
-          {valueToRelativeZeroPercent(unit, UnitCalc.StrengthDamageDone, false)}
-        </Table.Cell>
+        {
+          this.props.mode !== DefinitionType.Naval ? null :
+            <Table.Cell>
+              {valueToRelativeZeroPercent(unit, UnitCalc.StrengthDamageDone, false)}
+            </Table.Cell>
+        }
         <Table.Cell>
           {valueToRelativeZeroPercent(unit, UnitCalc.StrengthDamageTaken, false)}
         </Table.Cell>
@@ -273,15 +207,21 @@ export default class UnitDefinitions extends Component<IProps, IState> {
         <Table.Cell>
           {this.renderAttributeList(unit, UnitCalc.Maneuver)}
         </Table.Cell>
-        <Table.Cell>
-          {this.renderAttributeList(unit, UnitCalc.MoraleDamageDone)}
-        </Table.Cell>
+        {
+          this.props.mode !== DefinitionType.Naval ? null :
+            <Table.Cell>
+              {this.renderAttributeList(unit, UnitCalc.MoraleDamageDone)}
+            </Table.Cell>
+        }
         <Table.Cell>
           {this.renderAttributeList(unit, UnitCalc.MoraleDamageTaken)}
         </Table.Cell>
-        <Table.Cell>
-          {this.renderAttributeList(unit, UnitCalc.StrengthDamageDone)}
-        </Table.Cell>
+        {
+          this.props.mode !== DefinitionType.Naval ? null :
+            <Table.Cell>
+              {this.renderAttributeList(unit, UnitCalc.StrengthDamageDone)}
+            </Table.Cell>
+        }
         <Table.Cell>
           {this.renderAttributeList(unit, UnitCalc.StrengthDamageTaken)}
         </Table.Cell>

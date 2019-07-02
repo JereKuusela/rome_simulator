@@ -1,4 +1,3 @@
-import { Map } from 'immutable'
 import React, { Component } from 'react'
 import { Container, Modal, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
@@ -6,42 +5,53 @@ import ModalUnitDetail from '../containers/ModalUnitDetail'
 import ModalGlobalStatsDetail from '../containers/ModalGlobalStatsDetail'
 import { AppState } from '../store/index'
 import { DefinitionType } from '../base_definition'
-import { UnitType, UnitDefinition, addUnit, deleteUnit, changeType } from '../store/units'
+import { UnitType, addUnit, deleteUnit, changeType } from '../store/units'
 import UnitDefinitions from '../components/UnitDefinitions'
 import ItemRemover from '../components/ItemRemover'
 import ValueModal from '../components/ValueModal'
-import { CountryName, createCountry, changeCountryName, deleteCountry, duplicateCountry } from '../store/countries'
+import ValueDropdownModal from '../components/ValueDropdownModal'
+import { CountryName, createCountry, changeCountryName, deleteCountry } from '../store/countries'
+import CountrySelector from '../containers/CountrySelector'
+import Confirmation from '../components/Confirmation'
 
 interface IState {
   modal_country: CountryName | null
   modal_unit: UnitType | null
-  open_create: boolean
+  open_create_country: boolean
+  open_create_unit: boolean
+  open_edit: boolean
+  open_confirm: boolean
 }
 
 class Units extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    this.state = { modal_country: null, modal_unit: null, open_create : false};
+    this.state = { modal_country: null, modal_unit: null, open_create_country: false, open_confirm: false, open_edit: false, open_create_unit: false };
   }
 
-  closeModal = (): void => this.setState({ modal_country: null, modal_unit: null, open_create : false  })
-
-  openModal = (country: CountryName, unit: UnitType): void => this.setState({ modal_country: country, modal_unit: unit })
-
-  newOnClick = (): void => this.setState({ open_create: true })
-
-  onCreate = (name: string): void => this.props.createCountry(name as CountryName)
-
-  render(): JSX.Element {
+  render(): JSX.Element | null {
+    let units = this.props.units.get(this.props.country)
+    const global = this.props.global_stats.getIn([this.props.country, this.props.mode])
+    const types = this.props.types.get(this.props.country)
+    if (!units || !global || !types)
+      return null
+    units = units.filter(unit => unit.mode === this.props.mode || unit.mode === DefinitionType.Global)
     return (
       <Container>
         <ValueModal
-          open={this.state.open_create}
-          onSuccess={this.onCreate}
+          open={this.state.open_edit}
+          onSuccess={this.onEdit}
           onClose={this.closeModal}
-          message='New army'
-          button_message='Create'
+          message='Edit name'
+          button_message='Edit'
+          initial={this.props.country}
+        />
+        <Confirmation
+          onClose={this.closeModal}
+          onConfirm={this.onConfirm}
+          open={this.state.open_confirm}
+          message={'Are you sure you want to remove army ' + this.props.country + ' ?'}
         />
         <Modal basic onClose={this.closeModal} open={this.state.modal_country !== null}>
           <Modal.Content>
@@ -66,41 +76,40 @@ class Units extends Component<IProps, IState> {
             />
           </Modal.Content>
         </Modal>
+        <CountrySelector />
         <Button primary onClick={this.newOnClick}>
           Create new army
         </Button>
-        <br/>
-        <br/>
-        <br/>
-        {
-          Array.from(this.props.units).map(value => {
-            return this.renderArmy(value[0], value[1], this.props.global_stats.getIn([value[0], this.props.mode]))
-          })
-        }
+        <Button primary onClick={this.newOnClick}>
+          Create new unit
+        </Button>
+        <Button primary onClick={this.editOnClick}>
+          Change army name
+        </Button>
+        <Button primary onClick={this.confirmOnClick}>
+          Delete army
+        </Button>
+        <br />
+        <br />
+        <br />
+        <UnitDefinitions
+          mode={this.props.mode}
+          country={this.props.country}
+          types={types}
+          terrains={this.props.terrains}
+          global_stats={global}
+          units={units}
+          onRowClick={unit => this.openModal(this.props.country, unit.type)}
+        />
       </Container>
     )
   }
-  renderArmy = (country: CountryName, units: Map<UnitType, UnitDefinition>, global_stats: UnitDefinition): JSX.Element => {
-    return (
-      <div key={country}>
-        <UnitDefinitions
-          mode={this.props.mode}
-          country={country}
-          types={this.props.types.get(country)!}
-          terrains={this.props.terrains}
-          global_stats={global_stats}
-          units={units.filter(unit => unit.mode === this.props.mode || unit.mode === DefinitionType.Global)}
-          onRowClick={unit => this.openModal(country, unit.type)}
-          onCreateNew={type => this.props.addUnit(country, this.props.mode, type)}
-          onChangeName={(old_name, new_name) => this.props.changeCountryName(old_name, new_name)}
-          onDelete={this.props.deleteCountry}
-          onDuplicate={this.props.duplicateCountry}
-        />
-        <br />
-        <br />
-      </div>
-    )
-  }
+
+  closeModal = (): void => this.setState({ modal_country: null, modal_unit: null, open_create_country: false, open_confirm: false, open_edit: false, open_create_unit: false  })
+
+  openModal = (country: CountryName, unit: UnitType): void => this.setState({ modal_country: country, modal_unit: unit })
+
+  newOnClick = (): void => this.setState({ open_create_country: true })
 
   onRemove = (): void => this.state.modal_country && this.state.modal_unit && this.props.deleteUnit(this.state.modal_country, this.state.modal_unit)
 
@@ -108,6 +117,15 @@ class Units extends Component<IProps, IState> {
     this.props.changeType(country, old_type, new_type)
     this.setState({ modal_unit: new_type })
   }
+
+  onConfirm = (): void => this.props.deleteCountry(this.props.country)
+
+  confirmOnClick = (): void => this.setState({ open_confirm: true })
+
+  onEdit = (name: string): void => this.props.changeCountryName(this.props.country, name as CountryName)
+
+  editOnClick = (): void => this.setState({ open_edit: true })
+
 }
 
 const mapStateToProps = (state: AppState) => ({
@@ -115,16 +133,15 @@ const mapStateToProps = (state: AppState) => ({
   terrains: state.terrains.types,
   types: state.units.types,
   global_stats: state.global_stats,
-  mode: state.settings.mode
+  mode: state.settings.mode,
+  country: state.settings.country
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
   deleteUnit: (country: CountryName, type: UnitType) => dispatch(deleteUnit(country, type)),
   addUnit: (country: CountryName, mode: DefinitionType, type: UnitType) => dispatch(addUnit(country, mode, type)),
   changeType: (country: CountryName, old_type: UnitType, new_type: UnitType) => dispatch(changeType(country, old_type, new_type)),
-  createCountry: (country: CountryName) => dispatch(createCountry(country)),
   changeCountryName: (old_country: CountryName, country: CountryName) => dispatch(changeCountryName(old_country, country)),
-  duplicateCountry: (source_country: CountryName, country: CountryName) => dispatch(duplicateCountry(source_country, country)),
   deleteCountry: (country: CountryName) => dispatch(deleteCountry(country))
 })
 

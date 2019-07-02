@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Modal, Input, Grid, Button } from 'semantic-ui-react'
 
 interface IProps {
-  onSuccess: (type: string) => void
+  onSuccess: (value: string) => void
   onClose: () => void
   message: string
   button_message: string

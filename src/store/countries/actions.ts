@@ -9,6 +9,17 @@ export enum ModifierType {
   Fort = 'Fort'
 }
 
+export enum GovermentType {
+  Republic = 'Republic',
+  Monarch = 'Monarch',
+  Tribe = 'Tribe'
+}
+
+export enum ReligionType {
+  Greek = 'Greek',
+  Etc = 'Etc'
+}
+
 export enum TraditionType {
   Celtic = 'Celtic',
   Greek = 'Greek',
@@ -50,11 +61,7 @@ export const deleteCountry = createAction('@@countries/DELETE_COUNTRY', action =
 })
 
 export const createCountry = createAction('@@countries/CREATE_COUNTRY', action => {
-  return (country: CountryName) => action({ country })
-})
-
-export const duplicateCountry = createAction('@@countries/DUPLICATE_COUNTRY', action => {
-  return (source_country: CountryName, country: CountryName) => action({ source_country, country })
+  return (country: CountryName, source_country?: CountryName) => action({ country, source_country })
 })
 
 export const changeCountryName = createAction('@@countries/CHANGE_COUNTRY_NAME', action => {
@@ -67,4 +74,12 @@ export const enableTradition = createAction('@@countries/ENABLE_TRADITION', acti
 
 export const clearTradition = createAction('@@countries/CLEAR_TRADITION', action => {
   return (country: CountryName, key: string) => action({ country, key })
+})
+
+export const selectGovernment = createAction('@@countries/SELECT_GOVERNMENT', action => {
+  return (country: CountryName, government: GovermentType) => action({ country, government })
+})
+
+export const selectReligion = createAction('@@countries/SELECT_RELIGION', action => {
+  return (country: CountryName, religion: ReligionType) => action({ country, religion })
 })
