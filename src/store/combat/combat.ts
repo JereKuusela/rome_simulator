@@ -343,7 +343,10 @@ export const calculateBaseDamage = (roll: number, settings: Settings): number =>
  * @param settings Combat parameters.
  */
 const calculateLosses = (source: Unit, target: Unit, roll: number, terrains: Terrains, tactic_damage_multiplier: number, casualties_multiplier: number, settings: Settings): Loss => {
-  const damage_reduction_per_experience = settings.get(CombatParameter.ExperienceDamageReduction, 0.3)
+  let damage_reduction_per_experience = settings.get(CombatParameter.ExperienceDamageReduction, 0.3)
+  // Bug in game which makes morale damage taken and strength damage taken affect damage reduction from experience.
+  if (!settings.get(CombatParameter.FixExperience))
+    damage_reduction_per_experience *= (2.0 + calculateValue(target, UnitCalc.MoraleDamageTaken) + calculateValue(target, UnitCalc.StrengthDamageTaken)) * 0.5
   const manpower_lost_multiplier = settings.get(CombatParameter.StrengthLostMultiplier, 0.2) 
   const morale_lost_multiplier = settings.get(CombatParameter.MoraleLostMultiplier, 1.5)
   const morale_base_damage = settings.get(CombatParameter.MoraleDamageBase, 2.0)

@@ -27,6 +27,7 @@ export const getDefaultAnySettings = (): OrderedMap<CombatParameter, number> => 
   .set(CombatParameter.RollFrequency, 5)
   .set(CombatParameter.CombatWidth, 30)
   .set(CombatParameter.ExperienceDamageReduction, 0.3)
+  .set(CombatParameter.FixExperience, 0)
   .set(CombatParameter.StrengthLostMultiplier, 0.2)
   .set(CombatParameter.MoraleLostMultiplier,  1.5)
   .set(CombatParameter.MoraleDamageBase, 2.0)

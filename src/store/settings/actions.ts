@@ -7,6 +7,7 @@ export enum CombatParameter {
   MoraleLostMultiplier = 'MoraleLostMultiplier',
   MoraleDamageBase = 'MoraleDamageBase',
   ExperienceDamageReduction = 'ExperienceDamageReduction',
+  FixExperience = 'FixExperience',
   DiceMinimum = 'DiceMinimum',
   DiceMaximum = 'DiceMaximum',
   BaseDamage = 'BaseDamage',
@@ -39,6 +40,8 @@ export const parameterToDescription = (parameter: CombatParameter): string => {
       return 'Minimum roll for the dice.'
     case CombatParameter.ExperienceDamageReduction:
       return 'Damage reduction given by 100% experience.'
+    case CombatParameter.FixExperience:
+      return 'Morale damage taken and strength damage taken affect damage reduction from experience.\nThis is probably a bug in the game. Set 1 to fix this.'
     case CombatParameter.StrengthLostMultiplier:
       return 'Multiplier for strength lost.'
     case CombatParameter.MinimumStrength:
