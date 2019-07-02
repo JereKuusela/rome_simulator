@@ -62,7 +62,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
 
   selectUnit = (unit: UnitType | undefined): void => (
     this.props.info &&
-    this.props.selectUnit(this.props.mode, this.props.info.name, this.props.info.type, this.props.info.index, unit ? this.props.units.getIn([this.props.info.name, unit]) : undefined)
+    this.props.selectUnit(this.props.mode, this.props.info.name, this.props.info.type, this.props.info.index, unit ? this.props.units.getIn([this.props.info.country, unit]) : undefined)
   )
 
   setBaseValue = (name: ArmyName, _type: UnitType, key: string, attribute: ValueType, value: number): void => {
@@ -93,9 +93,9 @@ class ModalArmyUnitDetail extends Component<IProps> {
     this.props.selectUnit(this.props.mode, name, this.props.info.type, this.props.info.index, unit)
   }
 
-  getUnitDefinition = (info: ModalInfo): UnitDefinition => (this.mergeAllValues(info.name, this.getUnit(info)))
+  getUnitDefinition = (info: ModalInfo): UnitDefinition => (this.mergeAllValues(info.country, this.getUnit(info)))
 
-  mergeAllValues = (name: ArmyName, unit: Unit): UnitDefinition => {
+  mergeAllValues = (name: CountryName, unit: Unit): UnitDefinition => {
     return mergeValues(mergeValues(this.props.units.getIn([name, unit.type]), unit), this.props.global_stats.getIn([name, this.props.mode]))
   }
 

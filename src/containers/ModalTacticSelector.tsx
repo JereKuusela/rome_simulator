@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Map } from 'immutable'
+import { Map, List } from 'immutable'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { AppState } from '../store/'
@@ -8,7 +8,9 @@ import { calculateTactic } from '../store/combat'
 import ItemSelector from '../components/ItemSelector'
 import { TacticType } from '../store/tactics'
 import { getBattle } from '../utils'
-import { toRelativePercent, toPercent, DefinitionType } from '../base_definition'
+import { toRelativePercent, toPercent, DefinitionType, mergeValues } from '../base_definition'
+import { UnitDefinition, Unit } from '../store/units'
+import { CountryName } from '../store/countries'
 
 export interface ModalInfo {
   name: ArmyName
@@ -19,14 +21,18 @@ class ModalTacticSelector extends Component<IProps> {
   render(): JSX.Element | null {
     if (!this.props.info)
       return null
-    const army = this.props.armies.get(this.props.info.name)
-    const frontline = army && army.frontline
+    const participant = this.props.armies.get(this.props.info.name)
+    const army = participant && {
+      frontline: this.mergeAllValues(participant.country, participant.frontline),
+      reserve: this.mergeAllValues(participant.country, participant.reserve) as List<UnitDefinition>,
+      defeated: this.mergeAllValues(participant.country, participant.defeated) as List<UnitDefinition>
+    }
     let custom_values = Map<string, Map<TacticType, string>>()
     custom_values = custom_values.set('effect', this.props.tactics.map(value => {
-      return toPercent(calculateTactic(frontline, value), 100, true, false)
+      return toPercent(calculateTactic(army, value), 100, true, false)
     }))
     custom_values = custom_values.set('damage', this.props.tactics.map(value => {
-      return toRelativePercent(calculateTactic(frontline, value, this.props.info!.counter), true)
+      return toRelativePercent(calculateTactic(army, value, this.props.info!.counter), true)
     }))
     return (
     <Modal basic onClose={this.props.onClose} open>
@@ -46,12 +52,19 @@ class ModalTacticSelector extends Component<IProps> {
   selectTactic = (type: TacticType | undefined): void => (
     this.props.info && type && this.props.selectTactic(this.props.mode, this.props.info.name, type)
   )
+
+  
+  mergeAllValues = (name: CountryName, army: List<Unit | undefined>): List<UnitDefinition | undefined> => {
+    return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats.getIn([name, this.props.mode])))
+  }
 }
 
 const mapStateToProps = (state: AppState) => ({
   tactics: state.tactics.definitions,
   armies: getBattle(state).armies,
-  mode: state.settings.mode
+  mode: state.settings.mode,
+  units: state.units.definitions,
+  global_stats: state.global_stats
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

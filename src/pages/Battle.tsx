@@ -366,11 +366,16 @@ class Battle extends Component<IProps, IState> {
 
   renderTactic = (name: ArmyName, participant?: Participant, counter?: TacticType): JSX.Element => {
     const tactic = participant && this.props.tactics.get(participant.tactic)
+    const army = participant && {
+      frontline: this.mergeAllValues(participant.country, participant.frontline),
+      reserve: this.mergeAllValues(participant.country, participant.reserve) as List<UnitDefinition>,
+      defeated: this.mergeAllValues(participant.country, participant.defeated) as List<UnitDefinition>
+    }
     return (
       <div key={name} onClick={() => this.openTacticModal(name, counter)}>
         {<Image src={getImage(tactic)} avatar />}
         {(tactic && tactic.type) || 'None'}
-        {participant && ' (' + toRelativePercent(calculateTactic(participant.frontline, tactic, counter), true) + ')'}
+        {participant && ' (' + toRelativePercent(calculateTactic(army, tactic, counter), true) + ')'}
       </div >
     )
   }

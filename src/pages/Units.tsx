@@ -33,14 +33,14 @@ class Units extends Component<IProps, IState> {
     const types = this.props.types.get(this.props.country)
     return (
       <Container>
-                    <ValueModal
-              open={this.state.open_create_unit}
-              onSuccess={type => this.props.addUnit(this.props.country, this.props.mode, type)}
-              onClose={this.closeModal}
-              message='Create unit'
-              button_message='Create'
-              initial={'' as UnitType}
-            />
+        <ValueModal
+          open={this.state.open_create_unit}
+          onSuccess={type => this.props.addUnit(this.props.country, this.props.mode, type)}
+          onClose={this.closeModal}
+          message='Create unit'
+          button_message='Create'
+          initial={'' as UnitType}
+        />
         <Modal basic onClose={this.closeModal} open={this.state.modal_country !== null}>
           <Modal.Content>
             {

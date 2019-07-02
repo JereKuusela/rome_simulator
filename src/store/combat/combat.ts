@@ -69,8 +69,8 @@ export const battle = (definitions: Definitions, attacker: ParticipantState, def
     return [a, d]
 
   const tactic_effects = {
-    attacker: calculateTactic(attacker.frontline, attacker.tactic, defender.tactic && defender.tactic.type),
-    defender: calculateTactic(defender.frontline, defender.tactic, attacker.tactic && attacker.tactic.type),
+    attacker: calculateTactic(attacker, attacker.tactic, defender.tactic && defender.tactic.type),
+    defender: calculateTactic(defender, defender.tactic, attacker.tactic && attacker.tactic.type),
     casualties: calculateValue(attacker.tactic, TacticCalc.Casualties) + calculateValue(defender.tactic, TacticCalc.Casualties)
   }
 
@@ -213,17 +213,19 @@ const calculateArmySize = (army: Army): number => army.frontline.reduce((previou
  * @param tactic Tactic to calculate.
  * @param counter_tactic Opposing tactic, can counter or get countered.
  */
-export const calculateTactic = (frontline?: Frontline, tactic?: TacticDefinition, counter_tactic?: TacticType): number => {
+export const calculateTactic = (army?: Army, tactic?: TacticDefinition, counter_tactic?: TacticType): number => {
   const effectiveness = (tactic && counter_tactic) ? calculateValue(tactic, counter_tactic) : tactic ? 1.0 : 0.0
   let unit_modifier = 1.0
-  if (effectiveness > 0 && tactic && frontline) {
+  if (effectiveness > 0 && tactic && army) {
     let units = 0
     let weight = 0.0
-    for (const unit of frontline) {
+    for (const unit of List<Unit |undefined>().concat(army.frontline).concat(army.reserve).concat(army.defeated)) {
       if (!unit)
         continue
-      units += 1
-      weight += calculateValue(tactic, unit.type)
+      const manpower = calculateValue(unit, UnitCalc.Strength)
+      console.log(manpower)
+      units += manpower
+      weight += calculateValue(tactic, unit.type) * manpower
     }
     if (units)
       unit_modifier = weight / units

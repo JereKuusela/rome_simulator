@@ -107,10 +107,6 @@ Naval battle:
 
 Land battle:
 - Loyalty gives +10% discipline, include or not?
-- Experience seems to give different reduction for different unit types?
-  - Morale damage taken affects with 50% ratio, also to test elephants
-  - Make elephants? immune and get 100% experience to test if only affects tooltip
-- Experience * (strength damage taken + morale damage taken) / 2
 
 Navigation:
 - Simulation
