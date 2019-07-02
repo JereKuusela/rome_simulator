@@ -66,7 +66,8 @@ Goverment page:
      - Ideas: 20 for Mandated Observance (0 - 20%)
      - Trade: 10 for exporting Incense (0 - 10%)
      - Laws: 10 for Republican, 10/-15 for Tribe (-15% - 10%)
-     - Total: (-15% - 265%)
+     - Ruler trait -5/5 (-5% - 5%)
+     - Total: (-20% - 270%)
 
   - Heritages
     * Lots of, but not many affect military. Still a table / list with single selection.
@@ -80,6 +81,10 @@ Goverment page:
   - Tech
     * Military adds moral
     * Military has lots of useful, full table?
+
+  - General
+    * Skill level
+    * 7 military traits have effect, 6 have effect related to sieges
 
 
 
@@ -102,6 +107,9 @@ Naval battle:
 
 Land battle:
 - Loyalty gives +10% discipline, include or not?
+- Experience seems to give different reduction for different unit types?
+  - Morale damage taken affects with 50% ratio, also to test elephants
+  - Make elephants? immune and get 100% experience to test if only affects tooltip
 
 Navigation:
 - Simulation

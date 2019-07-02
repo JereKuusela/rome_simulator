@@ -35,10 +35,11 @@ export default class TacticDefinitions extends Component<IProps, IState> {
       <div>
         <ValueModal
             open={this.state.open_create}
-            onSuccess={this.onCreate}
+            onSuccess={this.props.onCreateNew}
             onClose={this.onClose}
             message='New tactic type'
             button_message='Create'
+            initial={'' as TacticType}
           />
         <Table celled selectable unstackable>
           <Table.Header>
@@ -58,16 +59,12 @@ export default class TacticDefinitions extends Component<IProps, IState> {
             }
           </Table.Body>
         </Table>
-        <Button primary onClick={this.newOnClick}>
+        <Button primary onClick={() => this.setState({ open_create: true })}>
           Create new
         </Button>
       </div>
     )
   }
-
-  newOnClick = (): void => this.setState({ open_create: true })
-
-  onCreate = (type: string): void => this.props.onCreateNew(type as TacticType)
 
   onClose = (): void => this.setState({ open_create: false })
 

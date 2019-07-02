@@ -32,10 +32,11 @@ export default class TerrainDefinitions extends Component<IProps, IState> {
       <div>
         <ValueModal
           open={this.state.open_create}
-          onSuccess={this.onCreate}
+          onSuccess={this.props.onCreateNew}
           onClose={this.onClose}
           message='New terrain type'
           button_message='Create'
+          initial={'' as TerrainType}
         />
         <Table celled selectable unstackable>
           <Table.Header>
@@ -55,17 +56,12 @@ export default class TerrainDefinitions extends Component<IProps, IState> {
             }
           </Table.Body>
         </Table>
-        <Button primary onClick={this.newOnClick}>
+        <Button primary onClick={() => this.setState({ open_create: true })}>
           Create new
         </Button>
       </div>
     )
   }
-
-  newOnClick = (): void => this.setState({ open_create: true })
-
-  onCreate = (type: string): void => this.props.onCreateNew(type as TerrainType)
-
   onClose = (): void => this.setState({ open_create: false })
 
   renderRow = (terrain?: TerrainDefinition): JSX.Element | null => {

@@ -7,6 +7,8 @@ interface IProps<T, S> {
   readonly onSuccess: (value: T, selected: S) => void
   readonly onClose: () => void
   readonly message: string
+  readonly value_label?: string
+  readonly dropdown_label?: string
   readonly button_message: string
   readonly open: boolean
   readonly value: T
@@ -32,17 +34,22 @@ export default class ValueDropdownModal<T extends string, S extends string> exte
         <Modal.Header>{this.props.message}</Modal.Header>
         <Modal.Content style={{ paddingLeft: '5em' }}>
           <Grid>
-            <Grid.Row>
+            <Grid.Row columns='2'>
               <Grid.Column>
                 <Input
                   value={this.state.value}
+                  placeholder={this.props.value_label}
                   onChange={(_, event) => this.setState({ value: event.value as T })}
                 />
               </Grid.Column>
               <Grid.Column>
+                {
+                  this.props.dropdown_label
+                }
                 <DropDownSelector
                   active={this.state.selected}
                   items={this.props.items}
+                  clearable
                   onSelect={item => this.setState({selected: item})}
                 />
               </Grid.Column>

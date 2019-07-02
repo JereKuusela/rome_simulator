@@ -6,6 +6,7 @@ interface IProps<T> {
   readonly items: Collection<any, T>
   readonly active: T
   readonly onSelect: (item: T) => void
+  readonly clearable?: boolean
 }
 
 /**
@@ -19,13 +20,15 @@ export default class DropdownSelector<T extends string> extends Component<IProps
       <Dropdown
         text={name}
         selection
+        clearable={this.props.clearable}
         value={name}
+        onChange={(_, { value }) => this.props.onSelect(value as T)}
       >
         <Dropdown.Menu>
           {
             this.props.items.map(item => (
               <Dropdown.Item value={item} text={item} key={item} active={name === item}
-                onClick={() => this.props.onSelect(item)}
+              onClick={() => this.props.onSelect(item)}
               />
             ))
           }

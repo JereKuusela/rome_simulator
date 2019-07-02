@@ -2,7 +2,7 @@ import { createReducer } from 'typesafe-actions'
 import { OrderedMap, Map } from 'immutable'
 import { CombatParameter, changeParameter, toggleSimpleMode, toggleMode, selectCountry } from './actions'
 import { getDefaultLandSettings, getDefaultNavalSettings, getDefaultAnySettings } from './data'
-import { CountryName } from '../countries'
+import { CountryName, changeCountryName, createCountry, deleteCountry } from '../countries'
 import { DefinitionType } from '../../base_definition'
 
 export const settingsState = {
@@ -28,4 +28,13 @@ export const settingsReducer = createReducer(settingsState)
   ))
   .handleAction(selectCountry, (state, action: ReturnType<typeof selectCountry>) => (
     { ...state, country: action.payload.country }
+  ))
+  .handleAction(changeCountryName, (state, action: ReturnType<typeof changeCountryName>) => (
+    { ...state, country: state.country === action.payload.old_country ? action.payload.country : state.country }
+  ))
+  .handleAction(createCountry, (state, action: ReturnType<typeof createCountry>) => (
+    { ...state, country: action.payload.country }
+  ))
+  .handleAction(deleteCountry, (state, action: ReturnType<typeof deleteCountry>) => (
+    { ...state, country: state.country === action.payload.country ? '' as CountryName : state.country }
   ))

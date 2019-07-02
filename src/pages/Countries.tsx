@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { mapRange } from '../utils'
 import { ModifierType, Modifier, Tradition, enableTradition, clearTradition, CountryName } from '../store/countries'
-import CountrySelector from '../containers/CountrySelector'
+import CountryManager from '../containers/CountryManager'
 
 class Countries extends Component<IProps> {
 
@@ -15,7 +15,7 @@ class Countries extends Component<IProps> {
         <Grid>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <CountrySelector />
+              <CountryManager />
             </Grid.Column>
           </Grid.Row>
           {

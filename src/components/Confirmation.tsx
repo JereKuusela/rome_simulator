@@ -24,6 +24,7 @@ export default class Confirmation extends Component<IProps, IState> {
 
   render(): JSX.Element {
     if (this.state.confirmation === this.CONFIRM) {
+      this.setState({ confirmation: '' })
       this.props.onConfirm()
       this.props.onClose()
     }
