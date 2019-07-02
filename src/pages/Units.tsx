@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Modal } from 'semantic-ui-react'
+import { Container, Modal, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import ModalUnitDetail from '../containers/ModalUnitDetail'
 import ModalGlobalStatsDetail from '../containers/ModalGlobalStatsDetail'
@@ -8,6 +8,7 @@ import { DefinitionType } from '../base_definition'
 import { UnitType, addUnit, deleteUnit, changeType } from '../store/units'
 import UnitDefinitions from '../components/UnitDefinitions'
 import ItemRemover from '../components/ItemRemover'
+import ValueModal from '../components/ValueModal'
 import { CountryName } from '../store/countries'
 import CountryManager from '../containers/CountryManager'
 
@@ -32,6 +33,14 @@ class Units extends Component<IProps, IState> {
     const types = this.props.types.get(this.props.country)
     return (
       <Container>
+                    <ValueModal
+              open={this.state.open_create_unit}
+              onSuccess={type => this.props.addUnit(this.props.country, this.props.mode, type)}
+              onClose={this.closeModal}
+              message='Create unit'
+              button_message='Create'
+              initial={'' as UnitType}
+            />
         <Modal basic onClose={this.closeModal} open={this.state.modal_country !== null}>
           <Modal.Content>
             {
@@ -55,9 +64,14 @@ class Units extends Component<IProps, IState> {
             />
           </Modal.Content>
         </Modal>
-        <CountryManager />
-        <br />
-        <br />
+        <CountryManager>
+          {
+            units && global && types &&
+            <Button primary onClick={() => this.setState({ open_create_unit: true })}>
+              New unit
+                </Button>
+          }
+        </CountryManager>
         <br />
         {
           units && global && types &&
@@ -71,7 +85,12 @@ class Units extends Component<IProps, IState> {
             onRowClick={unit => this.openModal(this.props.country, unit.type)}
           />
         }
-
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
       </Container>
     )
   }
@@ -79,8 +98,6 @@ class Units extends Component<IProps, IState> {
   closeModal = (): void => this.setState(this.initialState)
 
   openModal = (country: CountryName, unit: UnitType): void => this.setState({ modal_country: country, modal_unit: unit })
-
-  newOnClick = (): void => this.setState({ open_create_unit: true })
 
   onRemove = (): void => this.state.modal_country && this.state.modal_unit && this.props.deleteUnit(this.state.modal_country, this.state.modal_unit)
 

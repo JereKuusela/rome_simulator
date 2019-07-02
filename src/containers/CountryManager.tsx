@@ -82,6 +82,13 @@ class CountryManager extends Component<IProps, IState> {
             </Button>
             </Grid.Column>
           }
+          {
+            React.Children.map(this.props.children, elem => (
+              <Grid.Column>
+                {elem}
+              </Grid.Column>
+            ))
+          }
         </Grid.Row>
 
       </Grid>

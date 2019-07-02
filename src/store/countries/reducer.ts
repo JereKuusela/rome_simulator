@@ -24,7 +24,7 @@ const getDefaultSelections = () => (
 
 const traditionsState = {
   types: getDefaultTypes(),
-    definitions: getDefaultDefinitions()
+  definitions: getDefaultDefinitions()
 }
 
 const selectionsState = Map<CountryName, Selections>().set(CountryName.Country1, getDefaultSelections()).set(CountryName.Country2, getDefaultSelections())
@@ -55,8 +55,7 @@ const selectionsReducer = createReducer(selectionsState)
     state.update(action.payload.country, value => ({ ...value, religion: action.payload.religion }))
   ))
 
-  export const countriesReducer = combineReducers({
-    selections: selectionsReducer,
-    traditions: traditionsReducer
-  })
-  
+export const countriesReducer = combineReducers({
+  selections: selectionsReducer,
+  traditions: traditionsReducer
+})
