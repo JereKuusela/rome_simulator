@@ -3,9 +3,9 @@ import EmptyIcon from './images/empty.png'
 import UnknownIcon from './images/unknown.png'
 
 export enum ValuesType {
-  Base,
-  Modifier,
-  Loss
+  Base = 'Base',
+  Modifier = 'Modifier',
+  Loss = 'Loss'
 }
 
 export enum DefinitionType {

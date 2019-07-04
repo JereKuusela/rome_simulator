@@ -4,10 +4,9 @@ import { getDefaultDefinitions, getDefaultTypes, getDefaultGlobalDefinition } fr
 import {
   UnitType, UnitDefinition,
   setValue, setGlobalValue, deleteUnit, addUnit, changeImage, changeType, changeMode,
-  ValueType,
-  UnitCalc
+  ValueType
 } from './actions'
-import { CountryName, enableTradition, clearTradition, createCountry, deleteCountry, changeCountryName } from '../countries'
+import { CountryName, enableModifiers, clearModifiers, createCountry, deleteCountry, changeCountryName } from '../countries'
 import { addValues, DefinitionType, ValuesType, regenerateValues, clearValues } from '../../base_definition'
 
 export const unitsState = {
@@ -15,10 +14,6 @@ export const unitsState = {
   definitions: Map<CountryName, Map<UnitType, UnitDefinition>>().set(CountryName.Country1, getDefaultDefinitions()).set(CountryName.Country2, getDefaultDefinitions()),
 }
 export const globalStatsState = Map<CountryName, Map<DefinitionType, UnitDefinition>>().set(CountryName.Country1, getDefaultGlobalDefinition()).set(CountryName.Country2, getDefaultGlobalDefinition())
-
-const isModifier = (attribute: string) => {
-  return attribute === UnitCalc.Morale || attribute === UnitCalc.Strength || attribute === UnitCalc.Maintenance || attribute === UnitCalc.Cost
-}
 
 export const unitsReducer = createReducer(unitsState)
   .handleAction(setValue, (state, action: ReturnType<typeof setValue>) => (
@@ -83,23 +78,23 @@ export const unitsReducer = createReducer(unitsState)
       types: state.types.mapKeys(key => key === action.payload.old_country ? action.payload.country : key)
     }
   ))
-  .handleAction(enableTradition, (state, action: ReturnType<typeof enableTradition>) => {
+  .handleAction(enableModifiers, (state, action: ReturnType<typeof enableModifiers>) => {
     let next = state.definitions.get(action.payload.country)!
     if (!next)
       return state
     next = next.map((unit, type) => {
-      const values = action.payload.tradition.modifiers.filter(value => value.type === type)
-      const base_values = values.filter(value => !isModifier(value.attribute)).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
-      const modifier_values = values.filter(value => isModifier(value.attribute)).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
+      const values = action.payload.modifiers.filter(value => value.target === type)
+      const base_values = values.filter(value => value.type !== ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
+      const modifier_values = values.filter(value => value.type === ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
       return regenerateValues(regenerateValues(unit, ValuesType.Base, action.payload.key, base_values), ValuesType.Modifier, action.payload.key, modifier_values)
     })
     return { ...state, definitions: state.definitions.set(action.payload.country, next) }
   })
-  .handleAction(clearTradition, (state, action: ReturnType<typeof clearTradition>) => {
+  .handleAction(clearModifiers, (state, action: ReturnType<typeof clearModifiers>) => {
     let next = state.definitions.get(action.payload.country)!
     if (!next)
       return state
-    next = next.map(unit => clearValues(unit, ValuesType.Modifier, action.payload.key))
+    next = next.map(unit => clearValues(clearValues(unit, ValuesType.Base, action.payload.key), ValuesType.Modifier, action.payload.key))
     return { ...state, definitions: state.definitions.set(action.payload.country, next) }
   })
 
@@ -116,27 +111,27 @@ export const globalStatsReducer = createReducer(globalStatsState)
   .handleAction(changeCountryName, (state, action: ReturnType<typeof changeCountryName>) => (
     state.mapKeys(key => key === action.payload.old_country ? action.payload.country : key)
   ))
-  .handleAction(enableTradition, (state, action: ReturnType<typeof enableTradition>) => {
+  .handleAction(enableModifiers, (state, action: ReturnType<typeof enableModifiers>) => {
     let next = state.get(action.payload.country)!
     if (!next)
       return state
-    const landValues = action.payload.tradition.modifiers.filter(value => value.type === DefinitionType.Land || value.type === DefinitionType.Global)
-    const baseLandValues = landValues.filter(value => !isModifier(value.attribute)).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
-    const modifierLandValues = landValues.filter(value => isModifier(value.attribute)).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
-    const navalValues = action.payload.tradition.modifiers.filter(value => value.type === DefinitionType.Naval || value.type === DefinitionType.Global)
-    const baseNavalValues = navalValues.filter(value => !isModifier(value.attribute)).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
-    const modifierNavalValues = navalValues.filter(value => isModifier(value.attribute)).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
+    const landValues = action.payload.modifiers.filter(value => value.target === DefinitionType.Land || value.target === DefinitionType.Global)
+    const baseLandValues = landValues.filter(value => value.type !== ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
+    const modifierLandValues = landValues.filter(value => value.type === ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
+    const navalValues = action.payload.modifiers.filter(value => value.target === DefinitionType.Naval || value.target === DefinitionType.Global)
+    const baseNavalValues = navalValues.filter(value => value.type !== ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
+    const modifierNavalValues = navalValues.filter(value => value.type === ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
     next = next.update(DefinitionType.Land, stats => regenerateValues(stats, ValuesType.Base, action.payload.key, baseLandValues))
     next = next.update(DefinitionType.Land, stats => regenerateValues(stats, ValuesType.Modifier, action.payload.key, modifierLandValues))
     next = next.update(DefinitionType.Naval, stats => regenerateValues(stats, ValuesType.Base, action.payload.key, baseNavalValues))
     next = next.update(DefinitionType.Naval, stats => regenerateValues(stats, ValuesType.Modifier, action.payload.key, modifierNavalValues))
     return state.set(action.payload.country, next)
   })
-  .handleAction(clearTradition, (state, action: ReturnType<typeof clearTradition>) => {
+  .handleAction(clearModifiers, (state, action: ReturnType<typeof clearModifiers>) => {
     let next = state.get(action.payload.country)!
     if (!next)
       return state
-    next = next.update(DefinitionType.Land, stats => clearValues(stats, ValuesType.Modifier, action.payload.key))
-    next = next.update(DefinitionType.Naval, stats => clearValues(stats, ValuesType.Modifier, action.payload.key))
+    next = next.update(DefinitionType.Land, stats => clearValues(clearValues(stats, ValuesType.Base, action.payload.key), ValuesType.Modifier, action.payload.key))
+    next = next.update(DefinitionType.Naval, stats => clearValues(clearValues(stats, ValuesType.Base, action.payload.key), ValuesType.Modifier, action.payload.key))
     return state.set(action.payload.country, next)
   })

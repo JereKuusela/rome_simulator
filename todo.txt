@@ -101,12 +101,10 @@ Siege:
 - Commander martial + traits
 - Research bonuses
 
-Naval battle:
-- Amount of ships?
-- Coordination?
-
 Land battle:
 - Loyalty gives +10% discipline, include or not?
+- Deployment order based also on manpower!! (before index)
+- With multiple armies: preferred flank size is halved (not always, sometimes also unit jumps directly to middle...), filled first (reverse index order), then from middle
 
 Navigation:
 - Simulation

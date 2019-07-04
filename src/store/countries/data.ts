@@ -1,27 +1,24 @@
-import { TraditionType, TraditionDefinition, Path } from './actions'
-import { Map, OrderedSet, List, fromJS, Seq } from 'immutable'
+import { TraditionType, TraditionDefinition, TradeDefinition, TradeType } from './actions'
+import { ValuesType } from '../../base_definition'
+import { OrderedMap, List, fromJS, Seq } from 'immutable'
 
-import * as data from './traditions.json'
+import * as traditionData from './traditions.json'
+import * as tradeData from './trade.json'
 
-export const getDefaultDefinitions = (): Map<TraditionType, TraditionDefinition> => {
-  let map = Map<TraditionType, TraditionDefinition>()
-  for (const value of data.traditions) {
+export const getTraditionDefinitions = (): OrderedMap<TraditionType, TraditionDefinition> => {
+  let map = OrderedMap<TraditionType, TraditionDefinition>()
+  for (const value of traditionData.traditions) {
     const tradition = createTraditionFromJson(value)
     map = map.set(tradition.type, tradition)
   }
-  return map
+  return map.sortBy((_, key) => key)
 }
 
-export const getDefaultTypes = (): OrderedSet<TraditionType> => {
-  const traditions = Object.keys(TraditionType).map(k => TraditionType[k as any]) as TraditionType[]
-  return OrderedSet<TraditionType>(traditions)
-}
-
-export const traditionFromJS = (object: Map<string, any>): TraditionDefinition | undefined => {
-  if (!object)
-    return undefined
-  const type = object.get('type') as TraditionType
-  return { type, paths: List<Path>()}
+export const getTradeDefinitions = (): List<TradeDefinition> => {
+  let trades = List<TradeDefinition>()
+  for (const value of tradeData.trade)
+    trades = trades.push(createTradeFromJson(value))
+  return trades.sortBy(value => value.name)
 }
 
 const createTraditionFromJson = (data: TraditionData): TraditionDefinition => {
@@ -30,8 +27,17 @@ const createTraditionFromJson = (data: TraditionData): TraditionDefinition => {
       return sequence.toList()
     return sequence.toObject()
   })
-  let tradition: TraditionDefinition = { type: data.type as TraditionType, paths }
-  return tradition
+  return { type: data.type as TraditionType, paths }
+}
+
+const createTradeFromJson = (data: TradeData): TradeDefinition => {
+  const modifier = {
+    target: data.modifier.target as any,
+    attribute: data.modifier.attribute,
+    type: data.modifier.type as ValuesType | undefined,
+    value: data.modifier.value
+  }
+  return { name: data.name, type: data.type as TradeType, modifier }
 }
 
 interface TraditionData {
@@ -41,10 +47,22 @@ interface TraditionData {
     traditions: {
       name: string
       modifiers: {
-        type: string
+        target: string
         attribute: string
+        type?: string
         value: number
       }[]
     }[]
   }[]
+}
+
+interface TradeData {
+  name: string
+  type: string
+  modifier: {
+    target: string
+    attribute: string
+    type?: string
+    value: number
+  }
 }

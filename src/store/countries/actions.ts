@@ -1,7 +1,7 @@
 import { createAction } from 'typesafe-actions'
 import { List } from 'immutable'
 import { UnitType } from '../units'
-import { DefinitionType } from '../../base_definition'
+import { DefinitionType, ValuesType } from '../../base_definition'
 
 export enum ModifierType {
   Text = 'Text',
@@ -30,6 +30,13 @@ export enum TraditionType {
   Persian = 'Persian'
 }
 
+export enum TradeType {
+  Country = 'Country',
+  Export = 'Export',
+  Province = 'Province',
+  Capital = 'Capital'
+}
+
 export enum CountryName {
   Country1 = 'Country 1',
   Country2 = 'Country 2'
@@ -37,8 +44,9 @@ export enum CountryName {
 
 
 export interface Modifier {
-  readonly type: UnitType | DefinitionType | ModifierType
+  readonly target: UnitType | DefinitionType | ModifierType
   readonly attribute: string
+  readonly type?: ValuesType
   readonly value: number
 }
 export interface Tradition {
@@ -53,7 +61,11 @@ export interface TraditionDefinition {
   readonly type: TraditionType
   readonly paths: List<Path>
 }
-
+export interface TradeDefinition {
+  readonly name: string
+  readonly type: TradeType
+  readonly modifier: Modifier
+}
 
 
 export const deleteCountry = createAction('@@countries/DELETE_COUNTRY', action => {
@@ -68,11 +80,11 @@ export const changeCountryName = createAction('@@countries/CHANGE_COUNTRY_NAME',
   return (old_country: CountryName, country: CountryName) => action({ old_country, country })
 })
 
-export const enableTradition = createAction('@@countries/ENABLE_TRADITION', action => {
-  return (country: CountryName, key: string, tradition: Tradition) => action({ country, key, tradition })
+export const enableModifiers = createAction('@@countries/ENABLE_MODIFIERS', action => {
+  return (country: CountryName, key: string, modifiers: List<Modifier>) => action({ country, key, modifiers })
 })
 
-export const clearTradition = createAction('@@countries/CLEAR_TRADITION', action => {
+export const clearModifiers = createAction('@@countries/CLEAR_MODIFIERS', action => {
   return (country: CountryName, key: string) => action({ country, key })
 })
 

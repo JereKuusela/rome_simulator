@@ -1,0 +1,242 @@
+{
+  "trade": [
+    {
+      "name": "Salt",
+      "type": "Country",
+      "modifier": {
+        "target": "Global",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.05
+      }
+    },
+    {
+      "name": "Salt",
+      "type": "Export",
+      "modifier": {
+        "target": "Global",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.025
+      }
+    },
+    {
+      "name": "Wine",
+      "type": "Country",
+      "modifier": {
+        "target": "Global",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.05
+      }
+    },
+    {
+      "name": "Wine",
+      "type": "Export",
+      "modifier": {
+        "target": "Global",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.025
+      }
+    },
+    {
+      "name": "Iron",
+      "type": "Country",
+      "modifier": {
+        "target": "Heavy Infantry",
+        "attribute": "Discipline",
+        "value": 0.1
+      }
+    },
+    {
+      "name": "Iron",
+      "type": "Export",
+      "modifier": {
+        "target": "Heavy Infantry",
+        "attribute": "Discipline",
+        "value": 0.05
+      }
+    },
+    {
+      "name": "Horses",
+      "type": "Country",
+      "modifier": {
+        "target": "Light Cavalry",
+        "attribute": "Discipline",
+        "value": 0.1
+      }
+    },
+    {
+      "name": "Horses",
+      "type": "Export",
+      "modifier": {
+        "target": "Light Cavalry",
+        "attribute": "Discipline",
+        "value": 0.05
+      }
+    },
+    {
+      "name": "Elephants",
+      "type": "Country",
+      "modifier": {
+        "target": "War Elephants",
+        "attribute": "Discipline",
+        "value": 0.1
+      }
+    },
+    {
+      "name": "Elephants",
+      "type": "Export",
+      "modifier": {
+        "target": "War Elephants",
+        "attribute": "Discipline",
+        "value": 0.05
+      }
+    },
+    {
+      "name": "Wild Game",
+      "type": "Country",
+      "modifier": {
+        "target": "Archers",
+        "attribute": "Discipline",
+        "value": 0.1
+      }
+    },
+    {
+      "name": "Wild Game",
+      "type": "Export",
+      "modifier": {
+        "target": "Archers",
+        "attribute": "Discipline",
+        "value": 0.05
+      }
+    },
+    {
+      "name": "Steppe Horses",
+      "type": "Country",
+      "modifier": {
+        "target": "Horse Archers",
+        "attribute": "Discipline",
+        "value": 0.1
+      }
+    },
+    {
+      "name": "Steppe Horses",
+      "type": "Export",
+      "modifier": {
+        "target": "Horse Archers",
+        "attribute": "Discipline",
+        "value": 0.05
+      }
+    },
+    {
+      "name": "Fur",
+      "type": "Province",
+      "modifier": {
+        "target": "Global",
+        "attribute": "Experience",
+        "value": 0.1
+      }
+    },
+    {
+      "name": "Fur",
+      "type": "Capital",
+      "modifier": {
+        "target": "Global",
+        "attribute": "Experience",
+        "value": 0.05
+      }
+    },
+    {
+      "name": "Fur",
+      "type": "Country",
+      "modifier": {
+        "target": "Global",
+        "attribute": "Experience",
+        "value": 0.1
+      }
+    },
+    {
+      "name": "Fur",
+      "type": "Export",
+      "modifier": {
+        "target": "Global",
+        "attribute": "Experience",
+        "value": 0.05
+      }
+    },
+    {
+      "name": "Leather",
+      "type": "Country",
+      "modifier": {
+        "target": "Light Infantry",
+        "attribute": "Defense",
+        "value": 0.1
+      }
+    },
+    {
+      "name": "Leather",
+      "type": "Export",
+      "modifier": {
+        "target": "Light Infantry",
+        "attribute": "Defense",
+        "value": 0.05
+      }
+    },
+    {
+      "name": "Base Metals",
+      "type": "Country",
+      "modifier": {
+        "target": "Light Infantry",
+        "attribute": "Offense",
+        "value": 0.1
+      }
+    },
+    {
+      "name": "Base Metals",
+      "type": "Export",
+      "modifier": {
+        "target": "Light Infantry",
+        "attribute": "Offense",
+        "value": 0.05
+      }
+    },
+    {
+      "name": "Hemp",
+      "type": "Country",
+      "modifier": {
+        "target": "Naval",
+        "attribute": "Damage done",
+        "value": 0.1
+      }
+    },
+    {
+      "name": "Hemp",
+      "type": "Export",
+      "modifier": {
+        "target": "Naval",
+        "attribute": "Damage done",
+        "value": 0.05
+      }
+    },
+    {
+      "name": "Camel",
+      "type": "Country",
+      "modifier": {
+        "target": "Camels",
+        "attribute": "Discipline",
+        "value": 0.1
+      }
+    },
+    {
+      "name": "Camel",
+      "type": "Export",
+      "modifier": {
+        "target": "Camels",
+        "attribute": "Discipline",
+        "value": 0.05
+      }
+    }
+  ]
+}
