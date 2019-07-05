@@ -1,8 +1,8 @@
 import { createAction } from 'typesafe-actions'
 import { List, Map, fromJS } from 'immutable'
-import { Unit, UnitType } from '../units'
-import { TerrainType } from '../terrains'
-import { TacticType } from '../tactics'
+import { Unit, UnitType } from '../units/actions'
+import { TerrainType } from '../terrains/actions'
+import { TacticType } from '../tactics/actions'
 import { CountryName } from '../countries'
 import { DefinitionType } from '../../base_definition'
 

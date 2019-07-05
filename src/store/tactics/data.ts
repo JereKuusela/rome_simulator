@@ -1,7 +1,7 @@
 import { Map, OrderedSet, OrderedMap, fromJS } from 'immutable'
 import { TacticType, TacticCalc, TacticDefinition, ValueType } from './actions'
 import { addValues, ValuesType, DefinitionType } from '../../base_definition'
-import { UnitType } from '../units/'
+import { UnitType } from '../units/actions'
 import IconBottleneck from '../../images/bottleneck.png'
 import IconCavalrySkirmish from '../../images/cavalry_skirmish.png'
 import IconDeception from '../../images/deception.png'

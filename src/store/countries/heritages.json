@@ -1,0 +1,796 @@
+{
+  "heritages": [
+    {
+      "name": "Hellenistic",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Wrong culture group happiness",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Monthly civilization",
+          "value": 0.01
+        },
+        {
+          "target": "Text",
+          "attribute": "Assimilate pop cost",
+          "negative": true,
+          "value": 0.15
+        }
+      ]
+    },
+    {
+      "name": "Pirate",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Pirate Maintenance",
+          "value": -0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Naval range",
+          "value": 0.1
+        },
+        {
+          "target": "Land",
+          "attribute": "Maintenance",
+          "negative": true,
+          "type": "Modifier",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Seafaring",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Naval range",
+          "value": 0.25
+        },
+        {
+          "target": "Text",
+          "attribute": "Land movement",
+          "negative": true,
+          "value": -0.1
+        }
+      ]
+    },
+    {
+      "name": "Coastal",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Export commerce",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Oratory investment cost",
+          "value": -0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Fort cost",
+          "negative": true,
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "River",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Population capacity",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Manpower recovery",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Fort defense",
+          "negative": true,
+          "value": -0.1
+        }
+      ]
+    },
+    {
+      "name": "Steppe",
+      "modifiers": [
+        {
+          "target": "Light Cavalry",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Enslavement",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Attrition weight (TODO)",
+          "negative": true,
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Rural",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Roads cost",
+          "value": -0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Military investment cost",
+          "value": -0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Tribeman happiness",
+          "negative": true,
+          "value": -0.05
+        }
+      ]
+    },
+    {
+      "name": "Montane",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Fort maintenance",
+          "value": -0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Fort defense",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Improve relations",
+          "negative": true,
+          "value": -0.1
+        }
+      ]
+    },
+    {
+      "name": "Desert",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Enslavement",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Attrition weight (TODO)",
+          "value": -0.1
+        },
+        {
+          "target": "Naval",
+          "attribute": "Morale",
+          "negative": true,
+          "type": "Modifier",
+          "value": -0.05
+        }
+      ]
+    },
+    {
+      "name": "Jungle",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Hostile attrition",
+          "value": 0.1
+        },
+        {
+          "target": "War Elephants",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.1
+        },
+        {
+          "target": "Naval",
+          "attribute": "Maintenance",
+          "negative": true,
+          "type": "Modifier",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Forest",
+      "modifiers": [
+        {
+          "target": "Archers",
+          "attribute": "Offense",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Tribeman happiness",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Build cost",
+          "type": "Modifier",
+          "negative": true,
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Marshland",
+      "modifiers": [
+        {
+          "target": "Light Infantry",
+          "attribute": "Defense",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Tax",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Manpower recovery",
+          "negative": true,
+          "value": -0.05
+        }
+      ]
+    },
+    {
+      "name": "Highland",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Fort cost",
+          "value": -0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Civic investment cost",
+          "value": -0.05
+        },
+        {
+          "target": "Naval",
+          "attribute": "Damage taken",
+          "negative": true,
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Roman",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Manpower recovery",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Integration speed",
+          "value": 0.1
+        },
+        {
+          "target": "Naval",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "negative": true,
+          "value": -0.05
+        }
+      ]
+    },
+    {
+      "name": "Spartan",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.05
+        },
+        {
+          "target": "Land",
+          "attribute": "Discipline",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Slave output",
+          "negative": true,
+          "value": -0.05
+        }
+      ]
+    },
+    {
+      "name": "Carthaginian",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Export commerce",
+          "value": 0.1
+        },
+        {
+          "target": "Naval",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Loyalty chance",
+          "negative": true,
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Antigonid",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Siege",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Reputation",
+          "value": 2
+        },
+        {
+          "target": "Text",
+          "attribute": "Fort defense",
+          "negative": true,
+          "value": -0.1
+        }
+      ]
+    },
+    {
+      "name": "Cassanders",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Relations",
+          "value": 2
+        },
+        {
+          "target": "Text",
+          "attribute": "Manpower",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Reputation",
+          "negative": true,
+          "value": -2
+        }
+      ]
+    },
+    {
+      "name": "Ptolemys",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Same religion happiness",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Population growth",
+          "value": 0.02
+        },
+        {
+          "target": "Text",
+          "attribute": "Reputation",
+          "negative": true,
+          "value": -2
+        }
+      ]
+    },
+    {
+      "name": "Seleucus",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Wrong culture group happiness",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Popularity gain",
+          "value": 0.02
+        },
+        {
+          "target": "Text",
+          "attribute": "Assimilate pop cost",
+          "negative": true,
+          "value": -0.15
+        }
+      ]
+    },
+    {
+      "name": "Maurya",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Population capacity",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Religous tech",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Aggressive expansion impact",
+          "negative": true,
+          "value": 0.15
+        }
+      ]
+    },
+    {
+      "name": "Judea",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Fort defense",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Religous tech",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Convert pop cost",
+          "negative": true,
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Tartessian",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Export commerce",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Civic tech",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Build cost",
+          "negative": true,
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Byblos",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Oratory investment cost",
+          "value": -0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Trade route cost",
+          "value": -0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Manpower recovery",
+          "negative": true,
+          "value": -0.1
+        }
+      ]
+    },
+    {
+      "name": "Armenian",
+      "modifiers": [
+        {
+          "target": "Light Cavalry",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Hostile attrition",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Siege",
+          "negative": true,
+          "value": -0.1
+        }
+      ]
+    },
+    {
+      "name": "Epirote",
+      "modifiers": [
+        {
+          "target": "Light Cavalry",
+          "attribute": "Discipline",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "War exhaustion",
+          "value": -0.01
+        },
+        {
+          "target": "Text",
+          "attribute": "Relations",
+          "negative": true,
+          "value": -1
+        }
+      ]
+    },
+    {
+      "name": "Thrace",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "War score cost",
+          "value": -0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Civic investment cost",
+          "value": -0.01
+        },
+        {
+          "target": "Text",
+          "attribute": "Subject opinion",
+          "negative": true,
+          "value": -10
+        }
+      ]
+    },
+    {
+      "name": "Rhodian",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Fort defense",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Fort maintenance",
+          "negative": true,
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Athenian",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Damage taken",
+          "value": -0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Monhtly tyranny",
+          "value": -0.02
+        },
+        {
+          "target": "Text",
+          "attribute": "Law cost",
+          "negative": true,
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Etruscan",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Religious investment cost",
+          "value": -0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Monthly civilization",
+          "value": 0.02
+        },
+        {
+          "target": "Text",
+          "attribute": "Military investment cost",
+          "negative": true,
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Syracusan",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Mercenary maintenance",
+          "value": -0.1
+        },
+        {
+          "target": "Naval",
+          "attribute": "Damage taken",
+          "value": -0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Citizen happiness",
+          "negative": true,
+          "value": -0.05
+        }
+      ]
+    },
+    {
+      "name": "Icenian",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Civilization",
+          "value": 5
+        },
+        {
+          "target": "Text",
+          "attribute": "Tax",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Improve relations",
+          "negative": true,
+          "value": -0.1
+        }
+      ]
+    },
+    {
+      "name": "Arvernia",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Relations",
+          "value": 2
+        },
+        {
+          "target": "Text",
+          "attribute": "Goods from slaves",
+          "value": -1
+        },
+        {
+          "target": "Text",
+          "attribute": "Enslavement",
+          "negative": true,
+          "value": -0.1
+        }
+      ]
+    },
+    {
+      "name": "Atropatenian",
+      "modifiers": [
+        {
+          "target": "Heavy Infantry",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Citizen output",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Slave happiness",
+          "negative": true,
+          "value": -0.05
+        }
+      ]
+    },
+    {
+      "name": "Tarentine",
+      "modifiers": [
+        {
+          "target": "Light Cavalry",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Improve relations",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Import commerce",
+          "negative": true,
+          "value": -0.05
+        }
+      ]
+    },
+    {
+      "name": "Theban",
+      "modifiers": [
+        {
+          "target": "Heavy Infantry",
+          "attribute": "Discipline",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Freeman happiness",
+          "value": 0.05
+        },
+        {
+          "target": "Heavy Infantry",
+          "attribute": "Maintenance",
+          "negative": true,
+          "type": "Modifier",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Theban",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Popularity gain",
+          "value": 0.02
+        },
+        {
+          "target": "Land",
+          "attribute": "Discipline",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Fort defense",
+          "negative": true,
+          "value": -0.1
+        }
+      ]
+    }
+  ]
+}

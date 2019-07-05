@@ -8,7 +8,7 @@ import {
 import { Unit, UnitType  } from '../units'
 import { TerrainType } from '../terrains'
 import { DefinitionType } from '../../base_definition'
-import { CountryName } from '../countries'
+import { CountryName } from '../countries/actions'
 
 export interface Armies {
   readonly armies: Map<ArmyName, Participant>

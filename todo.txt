@@ -15,6 +15,10 @@ Armies page:
 Release 5+:
 
 - Immutable reviver to simplify fromJS calls when transforming data?
+- Index files don't really work with circular references (some types are used everywhere)
+   * Own files for types?
+   * Get rid of index files?
+   * Fix problems one by one when they appear?
 
 History refactor:
 - Lots of data now stored, large scale battles not possible

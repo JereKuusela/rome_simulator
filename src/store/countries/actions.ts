@@ -46,6 +46,7 @@ export enum CountryName {
 export interface Modifier {
   readonly target: UnitType | DefinitionType | ModifierType
   readonly attribute: string
+  readonly negative?: boolean
   readonly type?: ValuesType
   readonly value: number
 }
@@ -66,7 +67,10 @@ export interface TradeDefinition {
   readonly type: TradeType
   readonly modifier: Modifier
 }
-
+export interface HeritageDefinition {
+  readonly name: string
+  readonly modifiers: List<Modifier>
+}
 
 export const deleteCountry = createAction('@@countries/DELETE_COUNTRY', action => {
   return (country: CountryName) => action({ country })

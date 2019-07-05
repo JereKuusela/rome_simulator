@@ -1,14 +1,15 @@
-import { TraditionType, TraditionDefinition, TradeDefinition, TradeType } from './actions'
-import { ValuesType } from '../../base_definition'
-import { OrderedMap, List, fromJS, Seq } from 'immutable'
+import { TraditionType, TraditionDefinition, TradeDefinition, HeritageDefinition } from './actions'
+import { OrderedMap, List } from 'immutable'
+import { listFromJS } from '../../utils'
 
 import * as traditionData from './traditions.json'
-import * as tradeData from './trade.json'
+import * as tradeData from './trades.json'
+import * as heritageData from './heritages.json'
 
 export const getTraditionDefinitions = (): OrderedMap<TraditionType, TraditionDefinition> => {
   let map = OrderedMap<TraditionType, TraditionDefinition>()
   for (const value of traditionData.traditions) {
-    const tradition = createTraditionFromJson(value)
+    const tradition = listFromJS<TraditionData>(value)
     map = map.set(tradition.type, tradition)
   }
   return map.sortBy((_, key) => key)
@@ -16,28 +17,16 @@ export const getTraditionDefinitions = (): OrderedMap<TraditionType, TraditionDe
 
 export const getTradeDefinitions = (): List<TradeDefinition> => {
   let trades = List<TradeDefinition>()
-  for (const value of tradeData.trade)
-    trades = trades.push(createTradeFromJson(value))
+  for (const value of tradeData.trades)
+    trades = trades.push(listFromJS<TradeData>(value))
   return trades.sortBy(value => value.name)
 }
 
-const createTraditionFromJson = (data: TraditionData): TraditionDefinition => {
-  const paths = fromJS(data.paths, (_, sequence) => {
-    if (sequence instanceof Seq.Indexed)
-      return sequence.toList()
-    return sequence.toObject()
-  })
-  return { type: data.type as TraditionType, paths }
-}
-
-const createTradeFromJson = (data: TradeData): TradeDefinition => {
-  const modifier = {
-    target: data.modifier.target as any,
-    attribute: data.modifier.attribute,
-    type: data.modifier.type as ValuesType | undefined,
-    value: data.modifier.value
-  }
-  return { name: data.name, type: data.type as TradeType, modifier }
+export const getHeritageDefinitions = (): List<HeritageDefinition> => {
+  let heritages = List<HeritageDefinition>()
+  for (const value of heritageData.heritages)
+    heritages = heritages.push(listFromJS<HeritageData>(value))
+  return heritages.sortBy(value => value.name)
 }
 
 interface TraditionData {
@@ -65,4 +54,15 @@ interface TradeData {
     type?: string
     value: number
   }
+}
+
+interface HeritageData {
+  name: string
+  modifiers: {
+    target: string
+    attribute: string
+    type?: string
+    negative?: boolean
+    value: number
+  }[]
 }

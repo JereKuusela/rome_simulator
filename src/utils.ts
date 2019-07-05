@@ -1,4 +1,4 @@
-import { OrderedMap, OrderedSet } from 'immutable'
+import { OrderedMap, OrderedSet, fromJS, Seq } from 'immutable'
 import { CombatParameter } from './store/settings'
 import { DefinitionType } from './base_definition'
 import { AppState } from './store/index'
@@ -80,5 +80,18 @@ export const filterTacticTypes = (state: AppState): OrderedSet<TacticType> => {
     if (!tactic)
       return false
     return tactic.mode === state.settings.mode || tactic.mode === DefinitionType.Global
+  })
+}
+
+/**
+ * Converts JS structure to immutable Lists and objects.
+ * Default implementation converts objects to Maps.
+ * @param data Data to convert.
+ */
+export const listFromJS = <T>(data: T) => {
+  return fromJS(data, (_, sequence) => {
+    if (sequence instanceof Seq.Indexed)
+      return sequence.toList()
+    return sequence.toObject()
   })
 }

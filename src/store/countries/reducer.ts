@@ -1,7 +1,7 @@
 import { createReducer } from 'typesafe-actions'
 import { combineReducers } from 'redux'
 import { Set, Map } from 'immutable'
-import { getTraditionDefinitions, getTradeDefinitions } from './data'
+import { getTraditionDefinitions, getTradeDefinitions, getHeritageDefinitions } from './data'
 import {
   GovermentType, CountryName,
   deleteCountry, createCountry, changeCountryName, enableModifiers, clearModifiers,
@@ -53,5 +53,6 @@ const selectionsReducer = createReducer(selectionsState)
 export const countriesReducer = combineReducers({
   selections: selectionsReducer,
   traditions: createReducer(getTraditionDefinitions()),
-  trades: createReducer(getTradeDefinitions())
+  trades: createReducer(getTradeDefinitions()),
+  heritages: createReducer(getHeritageDefinitions())
 })
