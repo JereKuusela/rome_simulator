@@ -48,6 +48,7 @@ export interface Modifier {
   readonly attribute: string
   readonly negative?: boolean
   readonly type?: ValuesType
+  readonly no_percent?: boolean
   readonly value: number
 }
 export interface Tradition {
@@ -71,6 +72,11 @@ export interface HeritageDefinition {
   readonly name: string
   readonly modifiers: List<Modifier>
 }
+export interface InventionDefinition {
+  readonly name: string
+  readonly inventions: List<List<Modifier>>
+}
+
 
 export const deleteCountry = createAction('@@countries/DELETE_COUNTRY', action => {
   return (country: CountryName) => action({ country })

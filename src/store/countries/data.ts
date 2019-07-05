@@ -1,10 +1,11 @@
-import { TraditionType, TraditionDefinition, TradeDefinition, HeritageDefinition } from './actions'
+import { TraditionType, TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition } from './actions'
 import { OrderedMap, List } from 'immutable'
 import { listFromJS } from '../../utils'
 
 import * as traditionData from './traditions.json'
 import * as tradeData from './trades.json'
 import * as heritageData from './heritages.json'
+import * as inventionData from './inventions.json'
 
 export const getTraditionDefinitions = (): OrderedMap<TraditionType, TraditionDefinition> => {
   let map = OrderedMap<TraditionType, TraditionDefinition>()
@@ -29,6 +30,13 @@ export const getHeritageDefinitions = (): List<HeritageDefinition> => {
   return heritages.sortBy(value => value.name)
 }
 
+export const getInventionDefinitions = (): List<InventionDefinition> => {
+  let inventions = List<InventionDefinition>()
+  for (const value of inventionData.levels)
+    inventions = inventions.push(listFromJS<InventionData>(value))
+  return inventions
+}
+
 interface TraditionData {
   type: string
   paths: {
@@ -38,7 +46,6 @@ interface TraditionData {
       modifiers: {
         target: string
         attribute: string
-        type?: string
         value: number
       }[]
     }[]
@@ -51,7 +58,6 @@ interface TradeData {
   modifier: {
     target: string
     attribute: string
-    type?: string
     value: number
   }
 }
@@ -61,8 +67,16 @@ interface HeritageData {
   modifiers: {
     target: string
     attribute: string
-    type?: string
     negative?: boolean
     value: number
   }[]
+}
+
+interface InventionData {
+  name: string
+  inventions: {
+    target: string
+    attribute: string
+    value: number
+  }[][]
 }

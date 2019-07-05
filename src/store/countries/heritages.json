@@ -11,6 +11,7 @@
         {
           "target": "Text",
           "attribute": "Monthly civilization",
+          "no_percent": true,
           "value": 0.01
         },
         {
@@ -372,7 +373,7 @@
       "modifiers": [
         {
           "target": "Text",
-          "attribute": "Relations",
+          "attribute": "Diplomatic relations",
           "value": 2
         },
         {
@@ -399,6 +400,7 @@
         {
           "target": "Text",
           "attribute": "Population growth",
+          "no_percent": true,
           "value": 0.02
         },
         {
@@ -420,6 +422,7 @@
         {
           "target": "Text",
           "attribute": "Popularity gain",
+          "no_percent": true,
           "value": 0.02
         },
         {
@@ -547,11 +550,12 @@
         {
           "target": "Text",
           "attribute": "War exhaustion",
+          "no_percent": true,
           "value": -0.01
         },
         {
           "target": "Text",
-          "attribute": "Relations",
+          "attribute": "Diplomatic relations",
           "negative": true,
           "value": -1
         }
@@ -610,12 +614,13 @@
         },
         {
           "target": "Text",
-          "attribute": "Monhtly tyranny",
+          "attribute": "Monthly tyranny",
+          "no_percent": true,
           "value": -0.02
         },
         {
           "target": "Text",
-          "attribute": "Law cost",
+          "attribute": "Change law cost",
           "negative": true,
           "value": 0.1
         }
@@ -632,6 +637,7 @@
         {
           "target": "Text",
           "attribute": "Monthly civilization",
+          "no_percent": true,
           "value": 0.02
         },
         {
@@ -689,7 +695,7 @@
       "modifiers": [
         {
           "target": "Text",
-          "attribute": "Relations",
+          "attribute": "Diplomatic relations",
           "value": 2
         },
         {
@@ -777,6 +783,7 @@
         {
           "target": "Text",
           "attribute": "Popularity gain",
+          "no_percent": true,
           "value": 0.02
         },
         {

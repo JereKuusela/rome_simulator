@@ -29,7 +29,7 @@ History refactor:
 - On state load, playback to current round
 
 Navigation:
-- Toggle for simple mode, enabled by default: disables army page, disabled army selection, unit / terrain / tactic management
+- Toggle for simple mode, enabled by default: disables army management, disabled army selection, unit / terrain / tactic management
 
 Goverment page:
   - Single page would be the best
