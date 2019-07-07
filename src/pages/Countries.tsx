@@ -142,7 +142,19 @@ class Countries extends Component<IProps, IState> {
                   </Header>
                 </Accordion.Title>
                 <Accordion.Content active={this.state.omens_open}>
-                  <Input type='number' value={selections.omen_power} onChange={(_, { value }) => omen && this.setOmenPower(value, modifiers, omen)} />
+                  Omen power: <Input type='number' value={selections.omen_power} onChange={(_, { value }) => omen && this.setOmenPower(value, modifiers, omen)} />
+                  <List bulleted style={{ marginLeft: '2rem' }}>
+                    <List.Item>Religional unity: 0 - 100</List.Item>
+                    <List.Item>Tech level: 0 - 50</List.Item>
+                    <List.Item>Inventions: 0 - 30</List.Item>
+                    <List.Item>Office: 0 - 30</List.Item>
+                    <List.Item>Mandated Observance: 20</List.Item>
+                    <List.Item>Exporting Incense: 10</List.Item>
+                    <List.Item>Laws: -15 / 10</List.Item>
+                    <List.Item>Ruler: -5 / 5)</List.Item>
+                    <List.Item><b>Total: From -20 to 270</b></List.Item>
+                  </List>
+
                   {
                     omen && this.renderOmens(omen, modifiers, selections.omen_power)
                   }
@@ -595,7 +607,7 @@ class Countries extends Component<IProps, IState> {
       return null
     const sign = modifier.value > 0 ? '+' : '-'
     const value = Math.abs(modifier.value)
-    const str = modifier.no_percent ? value + padding : value * 100 + ' %'
+    const str = modifier.no_percent ? value + padding : +(value * 100).toFixed(2) + ' %'
     return <span className={modifier.negative ? 'value-negative' : 'value-positive'} style={{ float: 'right' }}>{sign + str}</span>
   }
 
