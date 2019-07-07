@@ -1,26 +1,28 @@
 import { createReducer } from 'typesafe-actions'
 import { combineReducers } from 'redux'
 import { Set, Map } from 'immutable'
-import { getTraditionDefinitions, getTradeDefinitions, getHeritageDefinitions, getInventionDefinitions } from './data'
+import { getTraditionDefinitions, getTradeDefinitions, getHeritageDefinitions, getInventionDefinitions, getOmenDefinitions } from './data'
 import {
   GovermentType, CountryName,
   deleteCountry, createCountry, changeCountryName, enableModifiers, clearModifiers,
-  selectGovernment, selectReligion, ReligionType, TraditionType
+  selectGovernment, selectReligion, ReligionType, CultureType, setOmenPower, selectCulture
 } from './actions'
 
-interface Selections {
+export interface Selections {
   selections: Set<string>,
-  tradition: TraditionType,
+  culture: CultureType,
   government: GovermentType,
-  religion: ReligionType
+  religion: ReligionType,
+  omen_power: number
 }
 
 const getDefaultSelections = () => (
   {
     selections: Set<string>(),
     government: GovermentType.Republic,
-    religion: ReligionType.Greek,
-    tradition: TraditionType.Greek
+    religion: 'Hellenic' as ReligionType,
+    culture: CultureType.Greek,
+    omen_power: 100
   }
 )
 
@@ -48,6 +50,12 @@ const selectionsReducer = createReducer(selectionsState)
   ))
   .handleAction(selectReligion, (state, action: ReturnType<typeof selectReligion>) => (
     state.update(action.payload.country, value => ({ ...value, religion: action.payload.religion }))
+  )) 
+  .handleAction(selectCulture, (state, action: ReturnType<typeof selectCulture>) => (
+    state.update(action.payload.country, value => ({ ...value, culture: action.payload.culture }))
+  )) 
+  .handleAction(setOmenPower, (state, action: ReturnType<typeof setOmenPower>) => (
+    state.update(action.payload.country, value => ({ ...value, omen_power: action.payload.power }))
   ))
 
 export const countriesReducer = combineReducers({
@@ -55,5 +63,6 @@ export const countriesReducer = combineReducers({
   traditions: createReducer(getTraditionDefinitions()),
   trades: createReducer(getTradeDefinitions()),
   heritages: createReducer(getHeritageDefinitions()),
-  inventions: createReducer(getInventionDefinitions())
+  inventions: createReducer(getInventionDefinitions()),
+  omens: createReducer(getOmenDefinitions())
 })

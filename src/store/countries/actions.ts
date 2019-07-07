@@ -16,11 +16,10 @@ export enum GovermentType {
 }
 
 export enum ReligionType {
-  Greek = 'Greek',
-  Etc = 'Etc'
+  Dummy = 'Dummy'
 }
 
-export enum TraditionType {
+export enum CultureType {
   Celtic = 'Celtic',
   Greek = 'Greek',
   Latin = 'Latin',
@@ -60,7 +59,7 @@ export interface Path {
   readonly traditions: List<Tradition>
 }
 export interface TraditionDefinition {
-  readonly type: TraditionType
+  readonly type: CultureType
   readonly paths: List<Path>
 }
 export interface TradeDefinition {
@@ -76,7 +75,10 @@ export interface InventionDefinition {
   readonly name: string
   readonly inventions: List<List<Modifier>>
 }
-
+export interface OmenDefinition {
+  readonly name: string
+  readonly modifier: Modifier
+}
 
 export const deleteCountry = createAction('@@countries/DELETE_COUNTRY', action => {
   return (country: CountryName) => action({ country })
@@ -104,4 +106,12 @@ export const selectGovernment = createAction('@@countries/SELECT_GOVERNMENT', ac
 
 export const selectReligion = createAction('@@countries/SELECT_RELIGION', action => {
   return (country: CountryName, religion: ReligionType) => action({ country, religion })
+})
+
+export const selectCulture = createAction('@@countries/SELECT_CULTURE', action => {
+  return (country: CountryName, culture: CultureType) => action({ country, culture })
+})
+
+export const setOmenPower = createAction('@@countries/SET_OMEN_POWER', action => {
+  return (country: CountryName, power: number) => action({ country, power })
 })

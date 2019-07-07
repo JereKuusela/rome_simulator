@@ -1,62 +1,153 @@
 import React, { Component } from 'react'
 import { Set, List as ImmutableList } from 'immutable'
-import { Container, Grid, Table, List, Header } from 'semantic-ui-react'
+import { Container, Grid, Table, List, Header, Accordion, Icon, Input } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
-import { mapRange } from '../utils'
-import { ModifierType, Modifier, enableModifiers, clearModifiers, CountryName, TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition, Tradition } from '../store/countries'
+import { mapRange, toList } from '../utils'
+import {
+  ModifierType, Modifier, enableModifiers, clearModifiers, CountryName, Tradition, CultureType,
+  OmenDefinition, TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition,
+  selectGovernment, selectReligion, selectCulture, GovermentType, ReligionType, setOmenPower
+} from '../store/countries'
 import CountryManager from '../containers/CountryManager'
 import DropdownSelector from '../components/DropdownSelector'
 
-class Countries extends Component<IProps> {
+interface IState {
+  traditions_open: boolean,
+  trade_open: boolean,
+  heritage_open: boolean,
+  research_open: boolean,
+  omens_open: boolean
+}
+
+const TRADE_COLUMNS = 4.0
+const HERITAGE_COLUMNS = 4.0
+const OMEN_COLUMNS = 4.0
+
+const TRADE_KEY = 'trade_'
+const TRADITION_KEY = 'tradition_'
+const HERITAGE_KEY = 'heritage_'
+const OMEN_KEY = 'omen_'
+const INVENTION_KEY = 'invention_'
+
+const padding = '.78571429em .78571429em'
+
+class Countries extends Component<IProps, IState> {
+
+  constructor(props: IProps) {
+    super(props)
+    this.state = { traditions_open: false, trade_open: false, heritage_open: false, research_open: false, omens_open: false }
+  }
 
   render(): JSX.Element {
     const selections = this.props.selections.get(this.props.country)!
     const modifiers = selections.selections
-    const tradition = this.props.traditions.get(selections.tradition)
+    const tradition = this.props.traditions.get(selections.culture)
+    const omen = this.props.omens.get(selections.religion)
     return (
       <Container>
         <CountryManager />
         <Grid>
-          <Grid.Row columns='1'>
+          <Grid.Row columns='3'>
             <Grid.Column>
               <DropdownSelector
                 items={this.props.traditions.keySeq()}
-                active={selections.tradition}
-                onSelect={item => { }}
+                active={selections.culture}
+                onSelect={item => this.props.selectCulture(this.props.country, item)}
+              />
+            </Grid.Column>
+            <Grid.Column>
+              <DropdownSelector
+                items={this.props.omens.keySeq()}
+                active={selections.religion}
+                onSelect={item => this.selectReligion(item, selections.omen_power, modifiers)}
               />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <Header>{selections.tradition + ' traditions'}</Header>
-              {
-                tradition && this.renderTraditions(tradition, modifiers)
-              }
+              <Accordion>
+                <Accordion.Title active={this.state.traditions_open} onClick={() => this.setState({ traditions_open: !this.state.traditions_open })}>
+                  <Header>
+                    <Icon name='dropdown' />
+                    {'Traditions (' + selections.culture + ')'}
+                  </Header>
+                </Accordion.Title>
+                <Accordion.Content active={this.state.traditions_open}>
+                  {
+                    tradition && this.renderTraditions(tradition, modifiers)
+                  }
+                </Accordion.Content>
+              </Accordion>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <Header>Trade</Header>
-              {
-                this.renderTrades(this.props.trades, modifiers)
-              }
+              <Accordion>
+                <Accordion.Title active={this.state.traditions_open} onClick={() => this.setState({ trade_open: !this.state.trade_open })}>
+                  <Header>
+                    <Icon name='dropdown' />
+                    Trade
+                  </Header>
+                </Accordion.Title>
+                <Accordion.Content active={this.state.trade_open}>
+                  {
+                    this.renderTrades(this.props.trades, modifiers)
+                  }
+                </Accordion.Content>
+              </Accordion>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <Header>Heritage</Header>
-              {
-                this.renderHeritages(this.props.heritages, modifiers)
-              }
+              <Accordion>
+                <Accordion.Title active={this.state.heritage_open} onClick={() => this.setState({ heritage_open: !this.state.heritage_open })}>
+                  <Header>
+                    <Icon name='dropdown' />
+                    Heritage
+                  </Header>
+                </Accordion.Title>
+                <Accordion.Content active={this.state.heritage_open}>
+                  {
+                    this.renderHeritages(this.props.heritages, modifiers)
+                  }
+                </Accordion.Content>
+              </Accordion>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <Header>Technology & Inventions</Header>
-              {
-                this.renderInventions(this.props.inventions, modifiers)
-              }
+              <Accordion>
+                <Accordion.Title active={this.state.research_open} onClick={() => this.setState({ research_open: !this.state.research_open })}>
+                  <Header>
+                    <Icon name='dropdown' />
+                    Technology & Inventions
+                  </Header>
+                </Accordion.Title>
+                <Accordion.Content active={this.state.research_open}>
+                  {
+                    this.renderInventions(this.props.inventions, modifiers)
+                  }
+                </Accordion.Content>
+              </Accordion>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns='1'>
+            <Grid.Column>
+              <Accordion>
+                <Accordion.Title active={this.state.omens_open} onClick={() => this.setState({ omens_open: !this.state.omens_open })}>
+                  <Header>
+                    <Icon name='dropdown' />
+                    {'Omens (' + selections.religion + ')'}
+                  </Header>
+                </Accordion.Title>
+                <Accordion.Content active={this.state.omens_open}>
+                  <Input type='number' value={selections.omen_power} onChange={(_, { value }) => omen && this.setOmenPower(value, modifiers, omen)} />
+                  {
+                    omen && this.renderOmens(omen, modifiers, selections.omen_power)
+                  }
+                </Accordion.Content>
+              </Accordion>
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -67,8 +158,7 @@ class Countries extends Component<IProps> {
   renderTraditions = (tradition: TraditionDefinition, selections: Set<string>) => {
     const rows = tradition.paths.reduce((max, path) => Math.max(max, path.traditions.size), 0)
     return (
-
-      <Table celled unstackable>
+      <Table celled unstackable fixed>
         <Table.Header>
           <Table.Row>
             {
@@ -89,7 +179,7 @@ class Countries extends Component<IProps> {
                     const tradition = path.traditions.get(row)
                     if (!tradition)
                       return null
-                    const key = 'tradition_' + column + '_' + row
+                    const key = TRADITION_KEY + column + '_' + row
                     return (
                       <Table.Cell
                         key={row + '_' + path.name}
@@ -100,7 +190,7 @@ class Countries extends Component<IProps> {
                             ? () => this.enableTradition(path.traditions, column, row - 1, selections)
                             : () => this.enableTradition(path.traditions, column, row, selections)
                         }
-                        style={{ padding: '.78571429em .78571429em' }}
+                        style={{ padding }}
                       >
                         <List>
                           {
@@ -128,21 +218,19 @@ class Countries extends Component<IProps> {
     )
   }
 
-  TRADE_COLUMNS = 4.0
-
   renderTrades = (trades: ImmutableList<TradeDefinition>, selections: Set<string>) => {
-    const rows = Math.ceil(trades.count() / this.TRADE_COLUMNS)
+    const rows = Math.ceil(trades.count() / TRADE_COLUMNS)
     return (
-      <Table celled unstackable>
+      <Table celled unstackable fixed>
         <Table.Body>
           {
             mapRange(rows, number => number).map(row => (
               <Table.Row key={row}>
                 {
-                  mapRange(this.TRADE_COLUMNS, number => number).map(column => {
-                    const index = row * this.TRADE_COLUMNS + column
+                  mapRange(TRADE_COLUMNS, number => number).map(column => {
+                    const index = row * TRADE_COLUMNS + column
                     const trade = trades.get(index)
-                    const key = 'trade_' + index
+                    const key = TRADE_KEY + index
                     if (!trade)
                       return (<Table.Cell key={key}></Table.Cell>)
                     const modifier = trade.modifier
@@ -154,15 +242,17 @@ class Countries extends Component<IProps> {
                         onClick={
                           selections.has(key)
                             ? () => this.props.clearModifiers(this.props.country, key)
-                            : () => this.props.enableModifiers(this.props.country, key, ImmutableList<Modifier>().push(modifier))
+                            : () => this.props.enableModifiers(this.props.country, key, toList(modifier))
                         }
-                        style={{ padding: '.78571429em .78571429em' }}
+                        style={{ padding }}
                       >
                         <List>
                           <List.Item>
-                            {
-                              trade.type + ' ' + trade.name + ': '
-                            }
+                            <List.Header>
+                              {trade.type + ' ' + trade.name}
+                            </List.Header>
+                          </List.Item>
+                          <List.Item>
                             {
                               this.getText(modifier)
                             }
@@ -183,21 +273,19 @@ class Countries extends Component<IProps> {
     )
   }
 
-  HERITAGE_COLUMNS = 4.0
-
   renderHeritages = (heritages: ImmutableList<HeritageDefinition>, selections: Set<string>) => {
-    const rows = Math.ceil(heritages.count() / this.HERITAGE_COLUMNS)
+    const rows = Math.ceil(heritages.count() / HERITAGE_COLUMNS)
     return (
-      <Table celled unstackable>
+      <Table celled unstackable fixed>
         <Table.Body>
           {
             mapRange(rows, number => number).map(row => (
               <Table.Row key={row}>
                 {
-                  mapRange(this.HERITAGE_COLUMNS, number => number).map(column => {
-                    const index = row * this.HERITAGE_COLUMNS + column
+                  mapRange(HERITAGE_COLUMNS, number => number).map(column => {
+                    const index = row * HERITAGE_COLUMNS + column
                     const heritage = heritages.get(index)
-                    const key = 'heritage_' + index
+                    const key = HERITAGE_KEY + index
                     if (!heritage)
                       return (<Table.Cell key={key}></Table.Cell>)
                     const modifiers = heritage.modifiers
@@ -211,7 +299,7 @@ class Countries extends Component<IProps> {
                             ? () => this.props.clearModifiers(this.props.country, key)
                             : () => this.enableHeritage(key, modifiers, selections)
                         }
-                        style={{ padding: '.78571429em .78571429em' }}
+                        style={{ padding }}
                       >
                         <List>
                           <List.Item>
@@ -246,7 +334,7 @@ class Countries extends Component<IProps> {
 
   renderInventions = (inventions: ImmutableList<InventionDefinition>, selections: Set<string>) => {
     return (
-      <Table celled unstackable definition>
+      <Table celled unstackable definition fixed>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>
@@ -274,7 +362,7 @@ class Countries extends Component<IProps> {
                 </Table.Cell>
                 {
                   definition.inventions.map((invention, column) => {
-                    const key = 'invention_' + row + '_' + column
+                    const key = INVENTION_KEY + row + '_' + column
                     return (
                       <Table.Cell
                         key={key}
@@ -285,7 +373,7 @@ class Countries extends Component<IProps> {
                             ? () => this.clearInvention(key, selections)
                             : () => this.enableInvention(inventions, key, invention, selections)
                         }
-                        style={{ padding: '.78571429em .78571429em' }}
+                        style={{ padding }}
                       >
                         <List>
                           {
@@ -313,18 +401,66 @@ class Countries extends Component<IProps> {
     )
   }
 
-  /**
-   * Clears all heritages.
-   */
-  clearHeritages = (selections: Set<string>) => {
-    selections.filter(value => value.startsWith('heritage_')).forEach(value => this.props.clearModifiers(this.props.country, value))
+  renderOmens = (omens: ImmutableList<OmenDefinition>, selections: Set<string>, power: number) => {
+    const rows = Math.ceil(omens.count() / OMEN_COLUMNS)
+    return (
+      <Table celled unstackable fixed>
+        <Table.Body>
+          {
+            mapRange(rows, number => number).map(row => (
+              <Table.Row key={row}>
+                {
+                  mapRange(OMEN_COLUMNS, number => number).map(column => {
+                    const index = row * OMEN_COLUMNS + column
+                    const omen = omens.get(index)
+                    const key = OMEN_KEY + index
+                    if (!omen)
+                      return (<Table.Cell key={key}></Table.Cell>)
+                    const modifier = { ...omen.modifier, value: omen.modifier.value * power / 100.0 }
+                    return (
+                      <Table.Cell
+                        key={key}
+                        positive={selections.has(key)}
+                        selectable
+                        onClick={
+                          selections.has(key)
+                            ? () => this.props.clearModifiers(this.props.country, key)
+                            : () => this.enableOmen(key, modifier, selections)
+                        }
+                        style={{ padding }}
+                      >
+                        <List>
+                          <List.Item>
+                            <List.Header>
+                              {omen.name}
+                            </List.Header>
+                          </List.Item>
+                          <List.Item>
+                            {
+                              this.getText(modifier)
+                            }
+                            {
+                              this.getValue(modifier)
+                            }
+                          </List.Item>
+                        </List>
+                      </Table.Cell>
+                    )
+                  })
+                }
+              </Table.Row>
+            ))
+          }
+        </Table.Body>
+      </Table >
+    )
   }
 
   /**
    * Clears traditions from a given column above a given row.
    */
   clearTraditions = (column: number, row: number, selections: Set<string>) => {
-    const key = 'tradition_' + column
+    const key = TRADITION_KEY + column
     selections.filter(value => value.startsWith(key) && this.getNumberFromKey(value, 2) > row)
       .forEach(value => this.props.clearModifiers(this.props.country, value))
   }
@@ -333,8 +469,8 @@ class Countries extends Component<IProps> {
    * Enables traditions from a given column up to a given row.
    */
   enableTraditions = (traditions: ImmutableList<Tradition>, column: number, row: number, selections: Set<string>) => {
-    mapRange(row + 1, number => number).filter(value => !selections.has('tradition_' + column + '_' + value))
-      .forEach(value => this.props.enableModifiers(this.props.country, 'tradition_' + column + '_' + value, traditions.get(value)!.modifiers))
+    mapRange(row + 1, number => number).filter(value => !selections.has(TRADITION_KEY + column + '_' + value))
+      .forEach(value => this.props.enableModifiers(this.props.country, TRADITION_KEY + column + '_' + value, traditions.get(value)!.modifiers))
   }
 
   /**
@@ -346,6 +482,13 @@ class Countries extends Component<IProps> {
   }
 
   /**
+   * Clears all heritages.
+   */
+  clearHeritages = (selections: Set<string>) => {
+    selections.filter(value => value.startsWith(HERITAGE_KEY)).forEach(value => this.props.clearModifiers(this.props.country, value))
+  }
+
+  /**
    * Enables a heritage and clears any existing heritages.
    */
   enableHeritage = (key: string, modifiers: ImmutableList<Modifier>, selections: Set<string>) => {
@@ -354,10 +497,67 @@ class Countries extends Component<IProps> {
   }
 
   /**
+   * Clears all omens.
+   */
+  clearOmens = (selections: Set<string>) => {
+    selections.filter(value => value.startsWith(OMEN_KEY)).forEach(value => this.props.clearModifiers(this.props.country, value))
+  }
+
+  /**
+   * Enables a omen and clears any existing omens.
+   */
+  enableOmen = (key: string, modifier: Modifier, selections: Set<string>) => {
+    this.clearOmens(selections)
+    this.props.enableModifiers(this.props.country, key, toList(modifier))
+  }
+
+  /**
+   * Refreshes active omens to update their buff.
+   */
+  refreshOmens = (selections: Set<string>, power: number, omens?: ImmutableList<OmenDefinition>) => {
+    if (!omens)
+      return
+    selections.filter(value => value.startsWith(OMEN_KEY)).forEach(value => {
+      const index = this.getNumberFromKey(value, 1)
+      const omen = omens.get(index)
+      if (omen)
+        this.props.enableModifiers(this.props.country, value, toList(this.scaleModifier(omen.modifier, power)))
+      else
+        this.props.clearModifiers(this.props.country, value)
+    })
+  }
+
+  /**
+   * Sets omen power while also re-enabling current omen.
+   */
+  setOmenPower = (value: string, selections: Set<string>, omens?: ImmutableList<OmenDefinition>) => {
+    const power = Number(value)
+    if (isNaN(power))
+      return
+    this.props.setOmenPower(this.props.country, power)
+    this.refreshOmens(selections, power, omens)
+  }
+
+  /**
+   * Selects religion while also re-enabling current omen.
+   */
+  selectReligion = (value: ReligionType, power: number, selections: Set<string>) => {
+    this.props.selectReligion(this.props.country, value)
+    const omens = this.props.omens.get(value)
+    this.refreshOmens(selections, power, omens)
+  }
+
+  /**
+   * Scales modifier with a given power.
+   */
+  scaleModifier = (modifier: Modifier, power: number) => ({ ...modifier, value: modifier.value * power / 100.0 })
+
+
+  /**
    * Clears inventions above a given tech level.
    */
   clearInventions = (level: number, selections: Set<string>) => {
-    selections.filter(value => value.startsWith('invention_') && this.getNumberFromKey(value, 1) >= level)
+    selections.filter(value => value.startsWith(INVENTION_KEY) && this.getNumberFromKey(value, 1) >= level)
       .forEach(value => this.props.clearModifiers(this.props.country, value))
   }
 
@@ -365,8 +565,8 @@ class Countries extends Component<IProps> {
    * Enables tech levels to allow invention from a given level.
    */
   enableTech = (inventions: ImmutableList<InventionDefinition>, level: number, selections: Set<string>) => {
-    mapRange(level + 1, number => number).filter(value => !selections.has('invention_' + value + '_0'))
-      .forEach(value => this.props.enableModifiers(this.props.country, 'invention_' + value + '_0', inventions.get(value)!.inventions.get(0)!))
+    mapRange(level + 1, number => number).filter(value => !selections.has(INVENTION_KEY + value + '_0'))
+      .forEach(value => this.props.enableModifiers(this.props.country, INVENTION_KEY + value + '_0', inventions.get(value)!.inventions.get(0)!))
   }
 
   /**
@@ -395,7 +595,7 @@ class Countries extends Component<IProps> {
       return null
     const sign = modifier.value > 0 ? '+' : '-'
     const value = Math.abs(modifier.value)
-    const str = value >= 1 || modifier.no_percent ? value + padding : value * 100 + ' %'
+    const str = modifier.no_percent ? value + padding : value * 100 + ' %'
     return <span className={modifier.negative ? 'value-negative' : 'value-positive'} style={{ float: 'right' }}>{sign + str}</span>
   }
 
@@ -412,6 +612,7 @@ const mapStateToProps = (state: AppState) => ({
   trades: state.countries.trades,
   heritages: state.countries.heritages,
   inventions: state.countries.inventions,
+  omens: state.countries.omens,
   selections: state.countries.selections,
   country: state.settings.country,
   mode: state.settings.mode
@@ -419,7 +620,11 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchToProps = (dispatch: any) => ({
   enableModifiers: (country: CountryName, key: string, modifiers: ImmutableList<Modifier>) => (dispatch(enableModifiers(country, key, modifiers))),
-  clearModifiers: (country: CountryName, key: string) => (dispatch(clearModifiers(country, key)))
+  clearModifiers: (country: CountryName, key: string) => (dispatch(clearModifiers(country, key))),
+  selectCulture: (country: CountryName, culture: CultureType) => (dispatch(selectCulture(country, culture))),
+  selectReligion: (country: CountryName, religion: ReligionType) => (dispatch(selectReligion(country, religion))),
+  selectGovernment: (country: CountryName, government: GovermentType) => (dispatch(selectGovernment(country, government))),
+  setOmenPower: (country: CountryName, power: number) => (dispatch(setOmenPower(country, power)))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

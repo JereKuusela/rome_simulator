@@ -1,4 +1,4 @@
-import { OrderedMap, OrderedSet, fromJS, Seq } from 'immutable'
+import { OrderedMap, OrderedSet, fromJS, Seq, List } from 'immutable'
 import { CombatParameter } from './store/settings'
 import { DefinitionType } from './base_definition'
 import { AppState } from './store/index'
@@ -95,3 +95,5 @@ export const listFromJS = <T>(data: T) => {
     return sequence.toObject()
   })
 }
+
+export const toList = <T>(item: T) => List<T>().push(item)

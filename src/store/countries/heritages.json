@@ -358,6 +358,7 @@
         {
           "target": "Text",
           "attribute": "Reputation",
+          "no_percent": true,
           "value": 2
         },
         {
@@ -374,6 +375,7 @@
         {
           "target": "Text",
           "attribute": "Diplomatic relations",
+          "no_percent": true,
           "value": 2
         },
         {
@@ -384,6 +386,7 @@
         {
           "target": "Text",
           "attribute": "Reputation",
+          "no_percent": true,
           "negative": true,
           "value": -2
         }
@@ -406,6 +409,7 @@
         {
           "target": "Text",
           "attribute": "Reputation",
+          "no_percent": true,
           "negative": true,
           "value": -2
         }
@@ -556,6 +560,7 @@
         {
           "target": "Text",
           "attribute": "Diplomatic relations",
+          "no_percent": true,
           "negative": true,
           "value": -1
         }
@@ -578,6 +583,7 @@
           "target": "Text",
           "attribute": "Subject opinion",
           "negative": true,
+          "no_percent": true,
           "value": -10
         }
       ]
@@ -675,6 +681,7 @@
         {
           "target": "Text",
           "attribute": "Civilization",
+          "no_percent": true,
           "value": 5
         },
         {
@@ -696,11 +703,13 @@
         {
           "target": "Text",
           "attribute": "Diplomatic relations",
+          "no_percent": true,
           "value": 2
         },
         {
           "target": "Text",
           "attribute": "Goods from slaves",
+          "no_percent": true,
           "value": -1
         },
         {

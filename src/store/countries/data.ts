@@ -1,4 +1,4 @@
-import { TraditionType, TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition } from './actions'
+import { CultureType, TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, ReligionType } from './actions'
 import { OrderedMap, List } from 'immutable'
 import { listFromJS } from '../../utils'
 
@@ -6,9 +6,10 @@ import * as traditionData from './traditions.json'
 import * as tradeData from './trades.json'
 import * as heritageData from './heritages.json'
 import * as inventionData from './inventions.json'
+import * as omenData from './omens.json'
 
-export const getTraditionDefinitions = (): OrderedMap<TraditionType, TraditionDefinition> => {
-  let map = OrderedMap<TraditionType, TraditionDefinition>()
+export const getTraditionDefinitions = (): OrderedMap<CultureType, TraditionDefinition> => {
+  let map = OrderedMap<CultureType, TraditionDefinition>()
   for (const value of traditionData.traditions) {
     const tradition = listFromJS<TraditionData>(value)
     map = map.set(tradition.type, tradition)
@@ -35,6 +36,15 @@ export const getInventionDefinitions = (): List<InventionDefinition> => {
   for (const value of inventionData.levels)
     inventions = inventions.push(listFromJS<InventionData>(value))
   return inventions
+}
+
+export const getOmenDefinitions = (): OrderedMap<ReligionType, List<OmenDefinition>> => {
+  let omens = OrderedMap<ReligionType, List<OmenDefinition>>()
+  for (const value of omenData.religions) {
+    const religion = listFromJS<OmenData>(value)
+    omens = omens.set(religion.type, religion.omens)
+  }
+  return omens.sortBy((_, key) => key)
 }
 
 interface TraditionData {
@@ -67,7 +77,6 @@ interface HeritageData {
   modifiers: {
     target: string
     attribute: string
-    negative?: boolean
     value: number
   }[]
 }
@@ -79,4 +88,16 @@ interface InventionData {
     attribute: string
     value: number
   }[][]
+}
+
+interface OmenData {
+  type: string
+  omens: {
+    name: string
+    modifier: {
+      target: string
+      attribute: string
+      value: number
+    }
+  }[]
 }
