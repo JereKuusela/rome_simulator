@@ -149,10 +149,11 @@ class Countries extends Component<IProps, IState> {
                     <List.Item>Inventions: 0 - 30</List.Item>
                     <List.Item>Office: 0 - 30</List.Item>
                     <List.Item>Mandated Observance: 20</List.Item>
+                    <List.Item>Latin tradition: 15</List.Item>
                     <List.Item>Exporting Incense: 10</List.Item>
                     <List.Item>Laws: -15 / 10</List.Item>
                     <List.Item>Ruler: -5 / 5)</List.Item>
-                    <List.Item><b>Total: From -20 to 270</b></List.Item>
+                    <List.Item><b>Total: From -20 to 285</b></List.Item>
                   </List>
 
                   {

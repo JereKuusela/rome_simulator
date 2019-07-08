@@ -1,16 +1,17 @@
 import { battle } from '../combat'
 import { List, Map } from 'immutable'
-import { getInitialArmy, Participant, RowType } from '../../battle'
+import { getInitialArmy, Participant, RowType, ArmyName  } from '../../battle'
 import { TerrainDefinition } from '../../terrains'
-import { getDefaultDefinitions as getDefaultUnitDefinitions, getDefaultGlobalDefinition, UnitType, UnitDefinition, ArmyName } from '../../units'
+import { getDefaultDefinitions as getDefaultUnitDefinitions, getDefaultGlobalDefinition, UnitType, UnitDefinition} from '../../units'
 import { mergeValues, DefinitionType } from '../../../base_definition'
 import { CombatParameter } from '../../settings'
 import { verifyType, getSettings } from './utils'
+import { CountryName } from '../../countries'
 
 describe('reinforcement', () => {
   const global_stats = getDefaultGlobalDefinition().get(DefinitionType.Land)!
   const units = getDefaultUnitDefinitions().map(unit => mergeValues(unit, global_stats))
-  const definitions = Map<ArmyName, Map<UnitType, UnitDefinition>>().set(ArmyName.Attacker, units).set(ArmyName.Defender, units)
+  const definitions = Map<CountryName, Map<UnitType, UnitDefinition>>().set(CountryName.Country1, units).set(CountryName.Country2, units)
   let settings = getSettings(DefinitionType.Land)
   const row_types = Map<RowType, UnitType>().set(RowType.Front, '' as UnitType).set(RowType.Back, '' as UnitType).set(RowType.Flank, '' as UnitType)
   const every_type = [UnitType.Archers, UnitType.CamelCavalry, UnitType.Chariots, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.HorseArchers, UnitType.LightCavalry, UnitType.LightInfantry, UnitType.WarElephants]
@@ -21,9 +22,9 @@ describe('reinforcement', () => {
   }
 
   beforeEach(() => {
-    info.attacker = getInitialArmy(DefinitionType.Land)
+    info.attacker = getInitialArmy(DefinitionType.Land, CountryName.Country1)
     info.attacker = { ...info.attacker, row_types }
-    info.defender = getInitialArmy(DefinitionType.Land)
+    info.defender = getInitialArmy(DefinitionType.Land, CountryName.Country2)
     info.defender = { ...info.defender, row_types }
     settings = getSettings(DefinitionType.Land)
   })

@@ -1,7 +1,348 @@
 {
   "traditions": [
     {
+      "type": "Celtic",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Enables the 'Chariots'",
+          "value": 0
+        }
+      ],
+      "paths": [
+        {
+          "name": "Britannic",
+          "traditions": [
+            {
+              "name": "Agema",
+              "modifiers": [
+                {
+                  "target": "Chariots",
+                  "attribute": "Offense",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "Arms for Hire",
+              "modifiers": [
+                {
+                  "target": "LightInfantry",
+                  "attribute": "Defense",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "Phoenician Sailors",
+              "modifiers": [
+                {
+                  "target": "Text",
+                  "attribute": "Land Attrition",
+                  "value": -0.15
+                }
+              ]
+            },
+            {
+              "name": "The Companion Cavalry",
+              "modifiers": [
+                {
+                  "target": "Text",
+                  "attribute": "Manpower recovery",
+                  "value": 0.05
+                }
+              ]
+            },
+            {
+              "name": "Kataphraktoi",
+              "modifiers": [
+                {
+                  "target": "Chariots",
+                  "attribute": "Morale",
+                  "type": "Modifier",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "Thyreophoroi",
+              "modifiers": [
+                {
+                  "target": "Light Cavalry",
+                  "attribute": "Cost",
+                  "type": "Modifier",
+                  "value": -0.15
+                },
+                {
+                  "target": "Light Cavalry",
+                  "attribute": "Maintenance",
+                  "type": "Modifier",
+                  "value": -0.15
+                }
+              ]
+            },
+            {
+              "name": "The Hipparchos",
+              "modifiers": [
+                {
+                  "target": "Archers",
+                  "attribute": "Morale",
+                  "type": "Modifier",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "Deep Coffers",
+              "modifiers": [
+                {
+                  "target": "Light Cavalry",
+                  "attribute": "Discipline",
+                  "value": 0.1
+                },
+                {
+                  "target": "Chariots",
+                  "attribute": "Discipline",
+                  "value": 0.1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Germanic",
+          "traditions": [
+            {
+              "name": "The Sarissa",
+              "modifiers": [
+                {
+                  "target": "Light Infantry",
+                  "attribute": "Morale",
+                  "type": "Modifier",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "Veterans of the Great Campaign",
+              "modifiers": [
+                {
+                  "target": "Light Cavalry",
+                  "attribute": "Cost",
+                  "type": "Modifier",
+                  "value": -0.1
+                },
+                {
+                  "target": "Light Cavalry",
+                  "attribute": "Maintenance",
+                  "type": "Modifier",
+                  "value": -0.1
+                },
+                {
+                  "target": "Chariots",
+                  "attribute": "Cost",
+                  "type": "Modifier",
+                  "value": -0.1
+                },
+                {
+                  "target": "Chariots",
+                  "attribute": "Maintenance",
+                  "type": "Modifier",
+                  "value": -0.1
+                }
+              ]
+            },
+            {
+              "name": "Tarentine Advance",
+              "modifiers": [
+                {
+                  "target": "Text",
+                  "attribute": "Enslavement",
+                  "value": 0.2
+                },
+                {
+                  "target": "Text",
+                  "attribute": "Slave output",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "City State Fortifications",
+              "modifiers": [
+                {
+                  "target": "Text",
+                  "attribute": "Allow the 'Hit and Run' tactic",
+                  "value": 0
+                },
+                {
+                  "target": "Light Infantry",
+                  "attribute": "Forest",
+                  "value": 0.15
+                },
+                {
+                  "target": "Archers",
+                  "attribute": "Forest",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "Military Colonies",
+              "modifiers": [
+                {
+                  "target": "Heavy Infantry",
+                  "attribute": "Defense",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "The Nobility Ride",
+              "modifiers": [
+                {
+                  "target": "Light Infantry",
+                  "attribute": "Cost",
+                  "type": "Modifier",
+                  "value": -0.15
+                },
+                {
+                  "target": "Light Infantry",
+                  "attribute": "Maintenance",
+                  "type": "Modifier",
+                  "value": -0.15
+                }
+              ]
+            },
+            {
+              "name": "Centuries of War",
+              "modifiers": [
+                {
+                  "target": "Archers",
+                  "attribute": "Defense",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "The Silver Shields",
+              "modifiers": [
+                {
+                  "target": "Light Infantry",
+                  "attribute": "Discipline",
+                  "value": 0.1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Gallic",
+          "traditions": [
+            {
+              "name": "Proud Shipwrights",
+              "modifiers": [
+                {
+                  "target": "Archers",
+                  "attribute": "Offense",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "Mine's Bigger Than Yours",
+              "modifiers": [
+                {
+                  "target": "Text",
+                  "attribute": "Manpower",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "Peltasts",
+              "modifiers": [
+                {
+                  "target": "Light Infantry",
+                  "attribute": "Plains",
+                  "value": 0.15
+                },
+                {
+                  "target": "Chariots",
+                  "attribute": "Plains",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "The Victor's Spoils",
+              "modifiers": [
+                {
+                  "target": "Text",
+                  "attribute": "Enables the 'Levies' ability",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "name": "Siegecraft",
+              "modifiers": [
+                {
+                  "target": "Text",
+                  "attribute": "Recruit speed",
+                  "value": 0.25
+                },
+                {
+                  "target": "Text",
+                  "attribute": "Wrong culture happiness",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "Specialist Infantry",
+              "modifiers": [
+                {
+                  "target": "Heavy Infantry",
+                  "attribute": "Offense",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "Mastery of the Mountains",
+              "modifiers": [
+                {
+                  "target": "Siege",
+                  "attribute": "Ability",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "Combined Arms",
+              "modifiers": [
+                {
+                  "target": "Land",
+                  "attribute": "Morale",
+                  "type": "Modifier",
+                  "value": 0.1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
       "type": "Greek",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Allow the 'Greek Phalanx' tactic",
+          "value": 0
+        }
+      ],
       "paths": [
         {
           "name": "Seleucid",
@@ -295,6 +636,666 @@
               "modifiers": [
                 {
                   "target": "Light Infantry",
+                  "attribute": "Discipline",
+                  "value": 0.1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Latin",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Fort defense",
+          "value": 0.15
+        }
+      ],
+      "paths": [
+        {
+          "name": "Tribal",
+          "traditions": [
+            {
+              "name": "Agema",
+              "modifiers": [
+                {
+                  "target": "Light Infantry",
+                  "attribute": "Defense",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "Arms for Hire",
+              "modifiers": [
+                {
+                  "target": "Light Cavalry",
+                  "attribute": "Offense",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "Phoenician Sailors",
+              "modifiers": [
+                {
+                  "target": "Text",
+                  "attribute": "Omen power",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "The Companion Cavalry",
+              "modifiers": [
+                {
+                  "target": "Text",
+                  "attribute": "Enslavement",
+                  "value": 0.2
+                },
+                {
+                  "target": "Text",
+                  "attribute": "Slave output",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "Kataphraktoi",
+              "modifiers": [
+                {
+                  "target": "Light infantry",
+                  "attribute": "Morale",
+                  "type": "Modifier",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "Thyreophoroi",
+              "modifiers": [
+                {
+                  "target": "Naval",
+                  "attribute": "Maintenance",
+                  "type": "Modifier",
+                  "value": -0.1
+                }
+              ]
+            },
+            {
+              "name": "The Hipparchos",
+              "modifiers": [
+                {
+                  "target": "Text",
+                  "attribute": "Manpower",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "Deep Coffers",
+              "modifiers": [
+                {
+                  "target": "Light Infantry",
+                  "attribute": "Hills",
+                  "value": 0.15
+                },
+                {
+                  "target": "Archers",
+                  "attribute": "Hills",
+                  "value": 0.15
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Support",
+          "traditions": [
+            {
+              "name": "The Sarissa",
+              "modifiers": [
+                {
+                  "target": "Naval",
+                  "attribute": "Morale",
+                  "type": "Modifier",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "Veterans of the Great Campaign",
+              "modifiers": [
+                {
+                  "target": "Siege",
+                  "attribute": "Skill",
+                  "no_percent": true,
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "name": "Tarentine Advance",
+              "modifiers": [
+                {
+                  "target": "Siege",
+                  "attribute": "Ability",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "Military Colonies",
+              "modifiers": [
+                {
+                  "target": "Text",
+                  "attribute": "Enables the 'Border forts' ability",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "name": "The Nobility Ride",
+              "modifiers": [
+                {
+                  "target": "Light Infantry",
+                  "attribute": "Cost",
+                  "type": "Modifier",
+                  "value": -0.15
+                },
+                {
+                  "target": "Light Infantry",
+                  "attribute": "Maintenance",
+                  "type": "Modifier",
+                  "value": -0.15
+                },
+                {
+                  "target": "Heavy Infantry",
+                  "attribute": "Cost",
+                  "type": "Modifier",
+                  "value": -0.15
+                },
+                {
+                  "target": "Heavy Cavalry",
+                  "attribute": "Infantry",
+                  "type": "Modifier",
+                  "value": -0.15
+                },
+                {
+                  "target": "Archers",
+                  "attribute": "Cost",
+                  "type": "Modifier",
+                  "value": -0.15
+                },
+                {
+                  "target": "Archers",
+                  "attribute": "Infantry",
+                  "type": "Modifier",
+                  "value": -0.15
+                }
+              ]
+            },
+            {
+              "name": "City State Fortifications",
+              "modifiers": [
+                {
+                  "target": "Heavy Infantry",
+                  "attribute": "Defense",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "Centuries of War",
+              "modifiers": [
+                {
+                  "target": "Light Cavalry",
+                  "attribute": "Discipline",
+                  "value": 0.1
+                },
+                {
+                  "target": "Horse Archers",
+                  "attribute": "Discipline",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "The Silver Shields",
+              "modifiers": [
+                {
+                  "target": "Text",
+                  "attribute": "Hold triumph cost",
+                  "value": -0.5
+                },
+                {
+                  "target": "Text",
+                  "attribute": "Monthly general loyalty",
+                  "no_percent": true,
+                  "value": 0.03
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Roman",
+          "traditions": [
+            {
+              "name": "Proud Shipwrights",
+              "modifiers": [
+                {
+                  "target": "Heavy Infantry",
+                  "attribute": "Discipline",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "Mine's Bigger Than Yours",
+              "modifiers": [
+                {
+                  "target": "Text",
+                  "attribute": "Allow the 'Triplex Acies' tactic",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "name": "Peltasts",
+              "modifiers": [
+                {
+                  "target": "Heavy Infantry",
+                  "attribute": "Offense",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "The Victor's Spoils",
+              "modifiers": [
+                {
+                  "target": "Text",
+                  "attribute": "Enables the 'Road Building' ability",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "name": "Siegecraft",
+              "modifiers": [
+                {
+                  "target": "Text",
+                  "attribute": "War Exhaustion",
+                  "no_percent": true,
+                  "value": -0.01
+                }
+              ]
+            },
+            {
+              "name": "Specialist Infantry",
+              "modifiers": [
+                {
+                  "target": "Light Infantry",
+                  "attribute": "Offense",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "Mastery of the Mountains",
+              "modifiers": [
+                {
+                  "target": "Text",
+                  "attribute": "Manpower recovery",
+                  "value": 0.05
+                }
+              ]
+            },
+            {
+              "name": "Combined Arms",
+              "modifiers": [
+                {
+                  "target": "Land",
+                  "attribute": "Morale",
+                  "type": "Modifier",
+                  "value": 0.1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Levantine",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Land attrition",
+          "value": -0.15
+        }
+      ],
+      "paths": [
+        {
+          "name": "Arabian",
+          "traditions": [
+            {
+              "name": "Agema",
+              "modifiers": [
+                {
+                  "target": "Text",
+                  "attribute": "Hostile attrition",
+                  "no_percent": true,
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "name": "Arms for Hire",
+              "modifiers": [
+                {
+                  "target": "Naval",
+                  "attribute": "Cost",
+                  "type": "Modifier",
+                  "value": -0.15
+                },
+                {
+                  "target": "Naval",
+                  "attribute": "Maintenance",
+                  "type": "Modifier",
+                  "value": -0.15
+                }
+              ]
+            },
+            {
+              "name": "Phoenician Sailors",
+              "modifiers": [
+                {
+                  "target": "Camels",
+                  "attribute": "Offense",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "The Companion Cavalry",
+              "modifiers": [
+                {
+                  "target": "Naval",
+                  "attribute": "Damage taken",
+                  "value": -0.1
+                },
+                {
+                  "target": "Text",
+                  "attribute": "Allow the 'Octere' unit",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "name": "Kataphraktoi",
+              "modifiers": [
+                {
+                  "target": "Camels",
+                  "attribute": "Desert",
+                  "value": 0.15
+                },
+                {
+                  "target": "Light Cavalry",
+                  "attribute": "Desert",
+                  "value": 0.15
+                },
+                {
+                  "target": "Heavy Cavalry",
+                  "attribute": "Desert",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "Thyreophoroi",
+              "modifiers": [
+                {
+                  "target": "Text",
+                  "attribute": "Build cost",
+                  "value": -0.15
+                }
+              ]
+            },
+            {
+              "name": "The Hipparchos",
+              "modifiers": [
+                {
+                  "target": "Light Cavalry",
+                  "attribute": "Cost",
+                  "type": "Modifier",
+                  "value": -0.15
+                },
+                {
+                  "target": "Light Cavalry",
+                  "attribute": "Maintenance",
+                  "type": "Modifier",
+                  "value": -0.15
+                },
+                {
+                  "target": "Camels",
+                  "attribute": "Cost",
+                  "type": "Modifier",
+                  "value": -0.15
+                },
+                {
+                  "target": "Camels",
+                  "attribute": "Maintenance",
+                  "type": "Modifier",
+                  "value": -0.15
+                },
+                {
+                  "target": "Heavy Cavalry",
+                  "attribute": "Cost",
+                  "type": "Modifier",
+                  "value": -0.15
+                },
+                {
+                  "target": "Heavy Cavalry",
+                  "attribute": "Maintenance",
+                  "type": "Modifier",
+                  "value": -0.15
+                }
+              ]
+            },
+            {
+              "name": "Deep Coffers",
+              "modifiers": [
+                {
+                  "target": "Camels",
+                  "attribute": "Discipline",
+                  "value": 0.1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Egyptian",
+          "traditions": [
+            {
+              "name": "The Sarissa",
+              "modifiers": [
+                {
+                  "target": "Light Infantry",
+                  "attribute": "Defense",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "Veterans of the Great Campaign",
+              "modifiers": [
+                {
+                  "target": "Trireme",
+                  "attribute": "Discipline",
+                  "value": 0.1
+                },
+                {
+                  "target": "Liburnian",
+                  "attribute": "Discipline",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "Tarentine Advance",
+              "modifiers": [
+                {
+                  "target": "Fort",
+                  "attribute": "Defense",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "Military Colonies",
+              "modifiers": [
+                {
+                  "target": "Text",
+                  "attribute": "Enables the 'Military Colonies' ability",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "name": "The Nobility Ride",
+              "modifiers": [
+                {
+                  "target": "Naval",
+                  "attribute": "Morale",
+                  "type": "Modifier",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "City State Fortifications",
+              "modifiers": [
+                {
+                  "target": "Camels",
+                  "attribute": "Defense",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "Centuries of War",
+              "modifiers": [
+                {
+                  "target": "Text",
+                  "attribute": "Manpower",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "The Silver Shields",
+              "modifiers": [
+                {
+                  "target": "Light Infantry",
+                  "attribute": "Discipline",
+                  "value": 0.1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Greco",
+          "traditions": [
+            {
+              "name": "Proud Shipwrights",
+              "modifiers": [
+                {
+                  "target": "Heavy Infantry",
+                  "attribute": "Cost",
+                  "type": "Modifier",
+                  "value": -0.15
+                },
+                {
+                  "target": "Heavy Infantry",
+                  "attribute": "Maintenance",
+                  "type": "Modifier",
+                  "value": -0.15
+                }
+              ]
+            },
+            {
+              "name": "Mine's Bigger Than Yours",
+              "modifiers": [
+                {
+                  "target": "Light Infantry",
+                  "attribute": "Offense",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "Peltasts",
+              "modifiers": [
+                {
+                  "target": "Heavy Infantry",
+                  "attribute": "Offense",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "The Victor's Spoils",
+              "modifiers": [
+                {
+                  "target": "Text",
+                  "attribute": "Enables the 'Greek Phalanx' tactic",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "name": "Siegecraft",
+              "modifiers": [
+                {
+                  "target": "Text",
+                  "attribute": "Mercenary Maintenance",
+                  "value": -0.15
+                }
+              ]
+            },
+            {
+              "name": "Specialist Infantry",
+              "modifiers": [
+                {
+                  "target": "Naval",
+                  "attribute": "Damage done",
+                  "value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "Mastery of the Mountains",
+              "modifiers": [
+                {
+                  "target": "Text",
+                  "attribute": "Monthly general loyalty",
+                  "no_percent": true,
+                  "value": 0.03
+                }
+              ]
+            },
+            {
+              "name": "Combined Arms",
+              "modifiers": [
+                {
+                  "target": "Heavy Infantry",
                   "attribute": "Discipline",
                   "value": 0.1
                 }

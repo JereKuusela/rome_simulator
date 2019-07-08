@@ -1,11 +1,12 @@
 import { battle } from '../combat'
 import { List, Map } from 'immutable'
-import { getInitialArmy, Participant } from '../../battle'
+import { getInitialArmy, Participant, ArmyName } from '../../battle'
 import { getDefaultDefinitions as getDefaultTacticDefinitions, TacticType } from '../../tactics'
 import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, TerrainDefinition } from '../../terrains'
-import { getDefaultDefinitions as getDefaultUnitDefinitions, getDefaultGlobalDefinition, UnitType, UnitCalc, UnitDefinition, ArmyName } from '../../units'
+import { getDefaultDefinitions as getDefaultUnitDefinitions, getDefaultGlobalDefinition, UnitType, UnitCalc, UnitDefinition } from '../../units'
 import { addValues, ValuesType, mergeValues, DefinitionType } from '../../../base_definition'
 import { verifyCenterUnits, setRolls, setTactics, setCenterUnits, getSettings } from './utils'
+import { CountryName } from '../../countries'
 
 describe('1 vs 1', () => {
   const global_stats = getDefaultGlobalDefinition().get(DefinitionType.Land)!
@@ -13,7 +14,7 @@ describe('1 vs 1', () => {
   const terrains = getDefaultTerrainDefinitions()
   const units = getDefaultUnitDefinitions().map(unit => mergeValues(unit, global_stats))
   const unit = addValues(units.get(UnitType.Archers)!, ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.2]])
-  const definitions = Map<ArmyName, Map<UnitType, UnitDefinition>>().set(ArmyName.Attacker, units).set(ArmyName.Defender, units)
+  const definitions = Map<CountryName, Map<UnitType, UnitDefinition>>().set(CountryName.Country1, units).set(CountryName.Country2, units)
   const settings = getSettings(DefinitionType.Land)
 
   let info = {
@@ -24,8 +25,8 @@ describe('1 vs 1', () => {
   let round: number
 
   beforeEach(() => {
-    info.attacker = getInitialArmy(DefinitionType.Land)
-    info.defender = getInitialArmy(DefinitionType.Land)
+    info.attacker = getInitialArmy(DefinitionType.Land, CountryName.Country1)
+    info.defender = getInitialArmy(DefinitionType.Land, CountryName.Country2)
     terrain = List<TerrainDefinition>().push(terrains.get(TerrainType.Forest)!)
     setTactics(info, TacticType.Envelopment, TacticType.Envelopment)
     setCenterUnits(info, unit, unit)

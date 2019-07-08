@@ -1,17 +1,18 @@
 import { battle } from '../combat'
 import { List, Map } from 'immutable'
-import { getInitialArmy, getInitialTerrains, Participant } from '../../battle'
+import { getInitialArmy, getInitialTerrains, Participant, ArmyName } from '../../battle'
 import { getDefaultDefinitions as getDefaultTacticDefinitions, TacticType } from '../../tactics'
 import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, TerrainDefinition } from '../../terrains'
-import { getDefaultDefinitions as getDefaultUnitDefinitions, UnitType, UnitCalc, UnitDefinition, ArmyName } from '../../units'
+import { getDefaultDefinitions as getDefaultUnitDefinitions, UnitType, UnitCalc, UnitDefinition } from '../../units'
 import { addValues, ValuesType, calculateValue, DefinitionType } from '../../../base_definition'
 import { getSettings } from './utils'
+import { CountryName } from '../../countries'
 
 describe('multi', () => {
   const tactics = getDefaultTacticDefinitions()
   const terrains = getDefaultTerrainDefinitions()
   const units = getDefaultUnitDefinitions()
-  const definitions = Map<ArmyName, Map<UnitType, UnitDefinition>>().set(ArmyName.Attacker, units).set(ArmyName.Defender, units)
+  const definitions = Map<CountryName, Map<UnitType, UnitDefinition>>().set(CountryName.Country1, units).set(CountryName.Country2, units)
   const settings = getSettings(DefinitionType.Land)
 
   const verify = (unit: UnitDefinition | undefined, manpower: number, morale: number) => {
@@ -33,7 +34,7 @@ describe('multi', () => {
 
   it('should work without modifiers', () => {
     const unit = addValues(addValues(units.get(UnitType.Archers)!, ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.2]]), ValuesType.Loss, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25]])
-    const terrain = getInitialTerrains().push(TerrainType.Forest).map(type => terrains.get(type)!)
+    const terrain = getInitialTerrains(DefinitionType.Land).push(TerrainType.Forest).map(type => terrains.get(type)!)
 
 
     const getAttacker = (type: UnitType, morale: number) => {
@@ -44,7 +45,7 @@ describe('multi', () => {
       return addValues(addValues(addValues(units.get(type)!, ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, 0.05]]), ValuesType.Base, 'Test', [[UnitCalc.Discipline, 0.03]]), ValuesType.Loss, 'Test', [[UnitCalc.Morale, 3.15 - morale]])
     }
 
-    let attacker = getInitialArmy(DefinitionType.Land)
+    let attacker = getInitialArmy(DefinitionType.Land, CountryName.Country1)
     attacker = {
       ...attacker,
       tactic: TacticType.Bottleneck,
@@ -58,7 +59,7 @@ describe('multi', () => {
         .set(17, getAttacker(UnitType.LightInfantry, 1.00))
     }
 
-    let defender = getInitialArmy(DefinitionType.Land)
+    let defender = getInitialArmy(DefinitionType.Land, CountryName.Country2)
     defender = {
       ...defender,
       tactic: TacticType.ShockAction,
