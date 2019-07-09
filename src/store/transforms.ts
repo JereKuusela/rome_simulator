@@ -5,7 +5,7 @@ import { unitDefinitionFromJS, unitFromJS, UnitType, unitsReducer, globalStatsRe
 import { RowType, battleReducer, PastState, Participant, getInitialArmy, Armies, modeState, ArmyName } from './battle'
 import { DefinitionType } from '../base_definition'
 import { transferReducer } from './transfer'
-import { countriesReducer, CountryName } from './countries'
+import { selectionsReducer, CountryName, Selections } from './countries'
 import { CombatParameter, settingsReducer } from './settings'
 
 const dummyAction = {
@@ -126,6 +126,7 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {
     const roll = participant.roll || initial.roll
     const randomize_roll = participant.randomize_roll
     const country = participant.country || initial.country
+    const selections = participant.selections ? fromJS(participant.selections).toSet() : initial.selections
     return {
       general,
       flank_size,
@@ -136,7 +137,8 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {
       defeated,
       row_types,
       tactic,
-      country
+      country,
+      selections
     }
   }
   let armies = initial.armies
@@ -174,8 +176,12 @@ export const transfromTransfer = (state_raw: any): ReturnType<typeof transferRed
   return { reset_missing, export_keys }
 }
 
-export const transformCountries = (state_raw: any): ReturnType<typeof countriesReducer> => {
-  return countriesReducer(undefined, dummyAction)
+export const transformCountries = (state_raw: any): ReturnType<typeof selectionsReducer> => {
+  const initial = selectionsReducer(undefined, dummyAction)
+  if (!state_raw)
+    return initial
+  const countries: Map<CountryName, Selections> = fromJS(state_raw)
+  return countries.map(value => ({ ...value, selections: value.selections.toSet()}))
 }
 
 const settings = Object.keys(CombatParameter).map(k => CombatParameter[k as any]) as CombatParameter[]
@@ -192,5 +198,6 @@ export const transformSettings = (state_raw: any): ReturnType<typeof settingsRed
   const simple_mode = state_raw.simple_mode
   const mode = state_raw.mode || initial.mode
   const country = state_raw.country || initial.country
-  return { combat, simple_mode, mode, country }
+  const army = state_raw.army || initial.army
+  return { combat, simple_mode, mode, country, army }
 }

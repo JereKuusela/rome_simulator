@@ -3,7 +3,7 @@ import { Container, Grid, TextArea, Checkbox, List, Header, Button } from 'seman
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { importState, ExportKey, setResetMissing, setExportKey } from '../store/transfer'
-import { transformGlobalStats, transformBattle, transformTactics, transformTerrains, transformUnits, transformSettings } from '../store/transforms'
+import { transformGlobalStats, transformBattle, transformTactics, transformTerrains, transformUnits, transformSettings, transformCountries } from '../store/transforms'
 import { Armies, checkFight } from '../store/battle'
 import { DefinitionType } from '../base_definition'
 
@@ -147,13 +147,15 @@ class Transfer extends Component<IProps, IState> {
     const new_state: any = { ...state }
     new_state._persist = undefined
     new_state.transfer = undefined
-    new_state.countries = undefined
-    if (!this.props.export_keys.get(ExportKey.Units))
-      new_state.units = undefined
+    new_state.data = undefined
+    if (!this.props.export_keys.get(ExportKey.Countries))
+      new_state.countries = undefined
     if (!this.props.export_keys.get(ExportKey.Units))
       new_state.global_stats = undefined
     if (!this.props.export_keys.get(ExportKey.Terrains))
       new_state.terrains = undefined
+    if (!this.props.export_keys.get(ExportKey.Tactics))
+      new_state.tactics = undefined
     if (!this.props.export_keys.get(ExportKey.Tactics))
       new_state.tactics = undefined
     if (!this.props.export_keys.get(ExportKey.Settings))
@@ -196,6 +198,7 @@ const mapDispatchToProps = (dispatch: any) => ({
       json.terrains = (json.terrains || reset_missing) && transformTerrains(json.terrains)
       json.units = (json.units || reset_missing) && transformUnits(json.units)
       json.settings = (json.settings || reset_missing) && transformSettings(json.settings)
+      json.countries = (json.countries || reset_missing) && transformCountries(json.countries)
       json.global_stats = (json.global_stats || reset_missing) && transformGlobalStats(json.global_stats)
       Object.keys(json).filter(key => !json[key]).forEach(key => delete json[key])
       dispatch(importState(json, reset_missing))

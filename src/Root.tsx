@@ -3,10 +3,11 @@ import { Provider } from 'react-redux'
 import { Store } from 'redux'
 import { BrowserRouter, Route } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
-import UnitPage from './pages/Units'
-import LandPage from './pages/Battle'
-import TacticPage from './pages/Tactics'
-import TerrainPage from './pages/Terrains'
+import Units from './pages/Units'
+import Armies from './pages/Armies'
+import Battle from './pages/Battle'
+import Tactics from './pages/Tactics'
+import Terrains from './pages/Terrains'
 import Navigation from './pages/Navigation'
 import Stats from './pages/Stats'
 import Transfer from './pages/Transfer'
@@ -28,10 +29,11 @@ const Root = ({ store, persistor }: MainProps) => {
       <PersistGate loading={null} persistor={persistor}>
       <BrowserRouter>
         <Route path='/' component={Navigation} />
-        <Route path='/' exact component={LandPage} />
-        <Route path='/Units' component={UnitPage} />
-        <Route path='/Tactics' component={TacticPage} />
-        <Route path='/Terrains' component={TerrainPage} />
+        <Route path='/' exact component={Battle} />
+        <Route path='/Armies' component={Armies} />
+        <Route path='/Units' component={Units} />
+        <Route path='/Tactics' component={Tactics} />
+        <Route path='/Terrains' component={Terrains} />
         <Route path='/Stats' component={Stats} />
         <Route path='/Transfer' component={Transfer} />
         <Route path='/Instructions' component={Instructions} />

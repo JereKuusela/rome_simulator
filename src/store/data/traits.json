@@ -1,0 +1,198 @@
+{
+  "traits": [
+    {
+      "name": "Aggressive",
+      "martial": 1,
+      "modifiers": [
+        {
+          "target": "Heavy Infantry",
+          "attribute": "Discipline",
+          "value": 0.05
+        },
+        {
+          "target": "War Elephants",
+          "attribute": "Discipline",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Brave",
+      "martial": 1,
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Loyalty chance",
+          "negative": true,
+          "value": 0.02
+        }
+      ]
+    },
+    {
+      "name": "Coastal Raider",
+      "martial": 0,
+      "modifiers": [
+        {
+          "target": "Liburnian",
+          "attribute": "Discipline",
+          "value": 0.05
+        },
+        {
+          "target": "Trireme",
+          "attribute": "Discipline",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Confident",
+      "martial": 1,
+      "modifiers": [
+        {
+          "target": "Heavy Cavalry",
+          "attribute": "Discipline",
+          "value": 0.05
+        },
+        {
+          "target": "Chariots",
+          "attribute": "Discipline",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Coward",
+      "martial": -1,
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "negative": true,
+          "value": -0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Loyalty chance",
+          "value": -0.02
+        }
+      ]
+    },
+    {
+      "name": "Discipline",
+      "martial": 1,
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Discipline",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Oarmaster",
+      "martial": 1,
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Naval speed",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Original Thinker",
+      "martial": 1,
+      "modifiers": [
+        {
+          "target": "Siege",
+          "attribute": "Ability",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Princeps",
+      "martial": 0,
+      "finesse": 1,
+      "modifiers": [
+        {
+          "target": "Octareme",
+          "attribute": "Discipline",
+          "value": 0.05
+        },
+        {
+          "target": "Mega Galley",
+          "attribute": "Discipline",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Sea Dog",
+      "martial": 1,
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Ship capture",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Tactically Inflexible",
+      "martial": -1,
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Reinforcement speed",
+          "negative": true,
+          "value": -0.1
+        }
+      ]
+    },
+    {
+      "name": "Tactician",
+      "martial": 1,
+      "modifiers": [
+        {
+          "target": "Archers",
+          "attribute": "Discipline",
+          "value": 0.05
+        },
+        {
+          "target": "Light Infantry",
+          "attribute": "Discipline",
+          "value": 0.05
+        },
+        {
+          "target": "Horse Archers",
+          "attribute": "Discipline",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Steadfast",
+      "martial": 1,
+      "modifiers": [
+        {
+          "target": "Heavy Infantry",
+          "attribute": "Discipline",
+          "value": 0.05
+        },
+        {
+          "target": "War Elephants",
+          "attribute": "Discipline",
+          "value": 0.05
+        }
+      ]
+    }
+  ]
+}

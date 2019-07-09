@@ -48,10 +48,16 @@ const LandTransform = createTransform(
   { whitelist: ['battle'] }
 )
 
-const GovernmentsTransform = createTransform(
+const CountriesTransform = createTransform(
   (inboundState) => inboundState,
   (outboundState: any) => transformCountries(outboundState),
-  { whitelist: ['governments'] }
+  { whitelist: ['countries'] }
+)
+
+const DataTransform = createTransform(
+  (inboundState) => undefined,
+  (outboundState) => ({}),
+  { whitelist: ['data'] }
 )
 
 const migrations = {
@@ -63,7 +69,17 @@ const persistConfig = {
   storage: storage,
   version: 2,
   migrate: createMigrate(migrations, { debug: false }),
-  transforms: [GovernmentsTransform, SettingsTransform, TacticsTransform, TerrainsTransform, LandTransform, UnitsTransform, TransferTransform, GlobalStatsTransform]
+  transforms: [
+    CountriesTransform,
+    SettingsTransform,
+    TacticsTransform,
+    TerrainsTransform,
+    LandTransform,
+    UnitsTransform,
+    TransferTransform,
+    GlobalStatsTransform,
+    DataTransform
+  ]
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

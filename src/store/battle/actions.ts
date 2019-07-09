@@ -1,5 +1,5 @@
 import { createAction } from 'typesafe-actions'
-import { List, Map, fromJS } from 'immutable'
+import { List, Map, fromJS, Set } from 'immutable'
 import { Unit, UnitType } from '../units/actions'
 import { TerrainType } from '../terrains/actions'
 import { TacticType } from '../tactics/actions'
@@ -30,6 +30,7 @@ export interface Participant extends Army {
   readonly row_types: Map<RowType, UnitType | undefined>
   readonly flank_size: number
   readonly country: CountryName
+  readonly selections: Set<string>
 }
 
 export enum ParticipantType {
@@ -84,31 +85,32 @@ export const getInitialArmy = (mode: DefinitionType, country: CountryName): Part
   randomize_roll: true,
   row_types: getInitialRowTypes(mode),
   flank_size: 5,
-  country: country
+  country: country,
+  selections: Set<string>()
 })
 
 export const selectUnit = createAction('@@battle/SELECT_UNIT', action => {
-  return (mode: DefinitionType, name: ArmyName, type: ArmyType, index: number, unit: Unit | undefined) => action({ mode, name, type, index, unit })
+  return (mode: DefinitionType, army: ArmyName, type: ArmyType, index: number, unit: Unit | undefined) => action({ mode, army, type, index, unit })
 })
 
 export const removeReserveUnits = createAction('@@battle/REMOVE_RESERVE_UNITS', action => {
-  return (mode: DefinitionType, name: ArmyName, types: UnitType[]) => action({ mode, name, types })
+  return (mode: DefinitionType, army: ArmyName, types: UnitType[]) => action({ mode, army, types })
 })
 
 export const addReserveUnits = createAction('@@battle/ADD_RESERVE_UNITS', action => {
-  return (mode: DefinitionType, name: ArmyName, units: Unit[]) => action({ mode, name, units })
+  return (mode: DefinitionType, army: ArmyName, units: Unit[]) => action({ mode, army, units })
 })
 
 export const selectTerrain = createAction('@@battle/SELECT_TERRAIN', action => {
-  return (mode: DefinitionType, index: number, type: TerrainType) => action({ mode, index, terrain: type })
+  return (mode: DefinitionType, index: number, terrain: TerrainType) => action({ mode, index, terrain })
 })
 
 export const selectTactic = createAction('@@battle/SELECT_TACTIC', action => {
-  return (mode: DefinitionType, name: ArmyName, type: TacticType) => action({ mode, name, tactic: type })
+  return (mode: DefinitionType, army: ArmyName, tactic: TacticType) => action({ mode, army, tactic })
 })
 
 export const setRowType = createAction('@@battle/SELECT_ROW_TYPE', action => {
-  return (mode: DefinitionType, name: ArmyName, row_type: RowType, unit: UnitType | undefined) => action({ mode, name, row_type, unit })
+  return (mode: DefinitionType, army: ArmyName, row_type: RowType, unit: UnitType | undefined) => action({ mode, army, row_type, unit })
 })
 
 export const battle = createAction('@@battle/BATTLE', action => {
@@ -120,41 +122,25 @@ export const undo = createAction('@@battle/UNDO', action => {
 })
 
 export const toggleRandomRoll = createAction('@@battle/TOGGLE_RANDOM_ROLL', action => {
-  return (mode: DefinitionType, name: ArmyName) => action({ mode, name })
+  return (mode: DefinitionType, army: ArmyName) => action({ mode, army })
 })
 
 export const setRoll = createAction('@@battle/SET_ROLL', action => {
-  return (mode: DefinitionType, name: ArmyName, roll: number) => action({ mode, name, roll })
+  return (mode: DefinitionType, army: ArmyName, roll: number) => action({ mode, army, roll })
 })
 
 export const setGeneral = createAction('@@battle/SET_GENERAL', action => {
-  return (mode: DefinitionType, name: ArmyName, skill: number) => action({ mode, name, skill })
+  return (mode: DefinitionType, army: ArmyName, skill: number) => action({ mode, army, skill })
 })
 
 export const setFlankSize = createAction('@@battle/SET_FLANK_SIZE', action => {
-  return (mode: DefinitionType, name: ArmyName, size: number) => action({ mode, name, size })
+  return (mode: DefinitionType, army: ArmyName, size: number) => action({ mode, army, size })
 })
 
 export const selectArmy = createAction('@@battle/SELECT_ARMY', action => {
-  return (mode: DefinitionType, type: ParticipantType, name: ArmyName) => action({ mode, type, name })
+  return (mode: DefinitionType, type: ParticipantType, army: ArmyName) => action({ mode, type, army })
 })
 
 export const clearUnits = createAction('@@battle/CLEAR_UNITS', action => {
   return (mode: DefinitionType, ) => action({ mode })
-})
-
-export const deleteArmy = createAction('@@battle/DELETE_ARMY', action => {
-  return (army: ArmyName) => action({ army })
-})
-
-export const createArmy = createAction('@@battle/CREATE_ARMY', action => {
-  return (army: ArmyName) => action({ army })
-})
-
-export const duplicateArmy = createAction('@@battle/DUPLICATE_ARMY', action => {
-  return (source: ArmyName, army: ArmyName) => action({ source, army })
-})
-
-export const changeName = createAction('@@battle/CHANGE_NAME', action => {
-  return (old_army: ArmyName, new_army: ArmyName) => action({ old_army, new_army })
 })

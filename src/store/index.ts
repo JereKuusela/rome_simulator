@@ -6,17 +6,22 @@ import { terrainsReducer } from './terrains'
 import { battleReducer } from './battle'
 import { combatReducer } from './combat'
 import { transferReducer, importReducer } from './transfer'
+import { armiesReducer } from './armies'
 import { settingsReducer } from './settings'
-import { countriesReducer } from './countries'
+import { selectionsReducer } from './countries'
+import { dataReducer } from './data'
+
+const armyReducer = reduceReducers(battleReducer, armiesReducer) as Reducer<any, AnyAction>
 
 const combined = combineReducers({
   units: unitsReducer,
   tactics: tacticsReducer,
   terrains: terrainsReducer,
-  battle: battleReducer,
+  battle: armyReducer,
   transfer: transferReducer,
   global_stats: globalStatsReducer,
-  countries: countriesReducer,
+  countries: selectionsReducer,
+  data: dataReducer,
   settings: settingsReducer
 })
 

@@ -5,9 +5,12 @@ import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { mapRange, toList } from '../utils'
 import {
-  ModifierType, Modifier, enableModifiers, clearModifiers, CountryName, Tradition, CultureType,
+  ModifierType, Modifier, Tradition, CultureType,
   OmenDefinition, TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition,
-  selectGovernment, selectReligion, selectCulture, GovermentType, ReligionType, setOmenPower
+  GovermentType, ReligionType
+} from '../store/data'
+import {
+  enableModifiers, clearModifiers, CountryName, selectGovernment, selectReligion, selectCulture, setOmenPower
 } from '../store/countries'
 import CountryManager from '../containers/CountryManager'
 import DropdownSelector from '../components/DropdownSelector'
@@ -40,10 +43,10 @@ class Countries extends Component<IProps, IState> {
   }
 
   render(): JSX.Element {
-    const selections = this.props.selections.get(this.props.country)!
-    const modifiers = selections.selections
-    const tradition = this.props.traditions.get(selections.culture)
-    const omen = this.props.omens.get(selections.religion)
+    const country = this.props.countries.get(this.props.country)!
+    const selections = country.selections
+    const tradition = this.props.traditions.get(country.culture)
+    const omen = this.props.omens.get(country.religion)
     return (
       <Container>
         <CountryManager />
@@ -52,15 +55,15 @@ class Countries extends Component<IProps, IState> {
             <Grid.Column>
               <DropdownSelector
                 items={this.props.traditions.keySeq()}
-                active={selections.culture}
+                active={country.culture}
                 onSelect={item => this.props.selectCulture(this.props.country, item)}
               />
             </Grid.Column>
             <Grid.Column>
               <DropdownSelector
                 items={this.props.omens.keySeq()}
-                active={selections.religion}
-                onSelect={item => this.selectReligion(item, selections.omen_power, modifiers)}
+                active={country.religion}
+                onSelect={item => this.selectReligion(item, country.omen_power, selections)}
               />
             </Grid.Column>
           </Grid.Row>
@@ -70,12 +73,12 @@ class Countries extends Component<IProps, IState> {
                 <Accordion.Title active={this.state.traditions_open} onClick={() => this.setState({ traditions_open: !this.state.traditions_open })}>
                   <Header>
                     <Icon name='dropdown' />
-                    {'Traditions (' + selections.culture + ')'}
+                    {'Traditions (' + country.culture + ')'}
                   </Header>
                 </Accordion.Title>
                 <Accordion.Content active={this.state.traditions_open}>
                   {
-                    tradition && this.renderTraditions(tradition, modifiers)
+                    tradition && this.renderTraditions(tradition, selections)
                   }
                 </Accordion.Content>
               </Accordion>
@@ -92,7 +95,7 @@ class Countries extends Component<IProps, IState> {
                 </Accordion.Title>
                 <Accordion.Content active={this.state.trade_open}>
                   {
-                    this.renderTrades(this.props.trades, modifiers)
+                    this.renderTrades(this.props.trades, selections)
                   }
                 </Accordion.Content>
               </Accordion>
@@ -109,7 +112,7 @@ class Countries extends Component<IProps, IState> {
                 </Accordion.Title>
                 <Accordion.Content active={this.state.heritage_open}>
                   {
-                    this.renderHeritages(this.props.heritages, modifiers)
+                    this.renderHeritages(this.props.heritages, selections)
                   }
                 </Accordion.Content>
               </Accordion>
@@ -126,7 +129,7 @@ class Countries extends Component<IProps, IState> {
                 </Accordion.Title>
                 <Accordion.Content active={this.state.research_open}>
                   {
-                    this.renderInventions(this.props.inventions, modifiers)
+                    this.renderInventions(this.props.inventions, selections)
                   }
                 </Accordion.Content>
               </Accordion>
@@ -138,11 +141,11 @@ class Countries extends Component<IProps, IState> {
                 <Accordion.Title active={this.state.omens_open} onClick={() => this.setState({ omens_open: !this.state.omens_open })}>
                   <Header>
                     <Icon name='dropdown' />
-                    {'Omens (' + selections.religion + ')'}
+                    {'Omens (' + country.religion + ')'}
                   </Header>
                 </Accordion.Title>
                 <Accordion.Content active={this.state.omens_open}>
-                  Omen power: <Input type='number' value={selections.omen_power} onChange={(_, { value }) => omen && this.setOmenPower(value, modifiers, omen)} />
+                  Omen power: <Input type='number' value={country.omen_power} onChange={(_, { value }) => omen && this.setOmenPower(value, selections, omen)} />
                   <List bulleted style={{ marginLeft: '2rem' }}>
                     <List.Item>Religional unity: 0 - 100</List.Item>
                     <List.Item>Tech level: 0 - 50</List.Item>
@@ -157,7 +160,7 @@ class Countries extends Component<IProps, IState> {
                   </List>
 
                   {
-                    omen && this.renderOmens(omen, modifiers, selections.omen_power)
+                    omen && this.renderOmens(omen, selections, country.omen_power)
                   }
                 </Accordion.Content>
               </Accordion>
@@ -621,12 +624,12 @@ class Countries extends Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  traditions: state.countries.traditions,
-  trades: state.countries.trades,
-  heritages: state.countries.heritages,
-  inventions: state.countries.inventions,
-  omens: state.countries.omens,
-  selections: state.countries.selections,
+  traditions: state.data.traditions,
+  trades: state.data.trades,
+  heritages: state.data.heritages,
+  inventions: state.data.inventions,
+  omens: state.data.omens,
+  countries: state.countries,
   country: state.settings.country,
   mode: state.settings.mode
 })

@@ -19,21 +19,21 @@ describe('1 vs 1', () => {
 
   let info = {
     attacker: null as any as Participant,
-    defender: null as any as Participant
+    defender: null as any as Participant,
+    round: 0
   }
   let terrain: List<TerrainDefinition>
-  let round: number
 
   beforeEach(() => {
     info.attacker = getInitialArmy(DefinitionType.Land, CountryName.Country1)
     info.defender = getInitialArmy(DefinitionType.Land, CountryName.Country2)
     terrain = List<TerrainDefinition>().push(terrains.get(TerrainType.Forest)!)
     setCenterUnits(info, unit, unit)
-    round = 0
+    info.round = 0
   })
   const doRound = () => {
-    round++
-    const [a, d] = battle(definitions, { ...info.attacker, tactic: tactics.get(info.attacker.tactic)!, name: ArmyName.Attacker  }, { ...info.defender, tactic: tactics.get(info.defender.tactic)!, name: ArmyName.Defender  }, round, terrain, settings)
+    info.round = info.round + 1
+    const [a, d] = battle(definitions, { ...info.attacker, tactic: tactics.get(info.attacker.tactic)!, name: ArmyName.Attacker  }, { ...info.defender, tactic: tactics.get(info.defender.tactic)!, name: ArmyName.Defender  }, info.round, terrain, settings)
     info.attacker = { ...info.attacker, ...a }
     info.defender = { ...info.defender, ...d }
   }

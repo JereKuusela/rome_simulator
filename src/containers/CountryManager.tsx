@@ -41,23 +41,23 @@ class CountryManager extends Component<IProps, IState> {
         />
         <ValueModal
           open={this.state.open_edit_country}
-          onSuccess={name => this.props.changeCountryName(this.props.country, name)}
+          onSuccess={name => this.props.changeCountryName(this.props.selected_country, name)}
           onClose={this.onClose}
           message='Rename country'
           button_message='Edit'
-          initial={this.props.country}
+          initial={this.props.selected_country}
         />
         <Confirmation
           open={this.state.open_delete_country}
           onClose={this.onClose}
-          onConfirm={() => this.props.deleteCountry(this.props.country)}
-          message={'Are you sure you want to remove country ' + this.props.country + ' ?'}
+          onConfirm={() => this.props.deleteCountry(this.props.selected_country)}
+          message={'Are you sure you want to remove country ' + this.props.selected_country + ' ?'}
         />
         <Grid.Row columns='5'>
           <Grid.Column>
             <DropdownSelector
               items={this.props.countries.keySeq()}
-              active={this.props.country}
+              active={this.props.selected_country}
               onSelect={this.props.selectCountry}
             />
           </Grid.Column>
@@ -67,7 +67,7 @@ class CountryManager extends Component<IProps, IState> {
             </Button>
           </Grid.Column>
           {
-            this.props.country &&
+            this.props.selected_country &&
             <Grid.Column>
               <Button primary onClick={() => this.setState({ open_edit_country: true })}>
                 Rename country
@@ -75,7 +75,7 @@ class CountryManager extends Component<IProps, IState> {
             </Grid.Column>
           }
           {
-            this.props.country &&
+            this.props.selected_country &&
             <Grid.Column>
               <Button primary onClick={() => this.setState({ open_delete_country: true })}>
                 Delete country
@@ -98,8 +98,8 @@ class CountryManager extends Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  country: state.settings.country,
-  countries: state.countries.selections
+  selected_country: state.settings.country,
+  countries: state.countries
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

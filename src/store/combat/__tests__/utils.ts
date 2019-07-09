@@ -7,10 +7,11 @@ import { settingsState, CombatParameter  } from '../../settings'
 
 export interface TestInfo {
   attacker: Participant
-  defender: Participant
+  defender: Participant,
+  round: number
 }
 
-const verifySub = (unit: Unit | undefined, manpower: number, morale: number) => {
+const verifySub = (round: number, unit: Unit | undefined, manpower: number, morale: number) => {
   expect(unit).toBeTruthy()
   if (!unit)
     return
@@ -19,12 +20,12 @@ const verifySub = (unit: Unit | undefined, manpower: number, morale: number) => 
     expect(Math.abs(calculateValue(unit, UnitCalc.Morale) - morale)).toBeLessThan(0.002)
   }
   catch (e) {
-    throw new Error('Morale ' + calculateValue(unit, UnitCalc.Morale) + ' is not ' + morale);
+    throw new Error('Round ' + round + ': Morale ' + calculateValue(unit, UnitCalc.Morale) + ' is not ' + morale);
   }
 }
 export const verifyCenterUnits = (info: TestInfo, manpower_a: number, morale_a: number, manpower_d: number, morale_d: number) => {
-  verifySub(info.attacker.frontline.get(15), manpower_a, morale_a)
-  verifySub(info.defender.frontline.get(15), manpower_d, morale_d)
+  verifySub(info.round, info.attacker.frontline.get(15), manpower_a, morale_a)
+  verifySub(info.round, info.defender.frontline.get(15), manpower_d, morale_d)
 }
 export const verifyType = (unit: Unit | undefined, type: UnitType, message: string = '') => {
   expect(unit).toBeTruthy()

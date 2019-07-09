@@ -1,5 +1,8 @@
 Release 4:
 
+- Accordion state to settings (very annoying that they keep closing)
+- 
+
 Tests (high priority):
 - base_definition functions tested
 

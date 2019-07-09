@@ -21,6 +21,9 @@ class Navigation extends Component<IProps> {
           <Menu.Item active={path === '/'} onClick={() => history.push('/')}>
             Battle
           </Menu.Item>
+          <Menu.Item active={path === '/armies'} onClick={() => history.push('/armies')}>
+            Armies
+          </Menu.Item>
           <Menu.Item active={path === '/units'} onClick={() => history.push('/units')}>
             Units
           </Menu.Item>
@@ -51,7 +54,7 @@ class Navigation extends Component<IProps> {
             <Button active={this.props.mode === DefinitionType.Naval} compact icon basic circular size='tiny' onClick={this.props.toggleMode}>
               <Image src={IconNaval} avatar style={{ marginRight: 0 }} />
             </Button>
-            <span>Site version 0.3.1</span>
+            <span>Site version 0.4.0</span>
           </div>
 
         </Menu>

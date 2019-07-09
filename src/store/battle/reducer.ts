@@ -2,8 +2,8 @@ import { createReducer } from 'typesafe-actions'
 import { List, Map } from 'immutable'
 import {
   getInitialArmy, getInitialTerrains, Participant, PastState, ParticipantType,
-  clearUnits, selectUnit, selectTerrain, selectTactic, undo, toggleRandomRoll, setRoll, setGeneral, setRowType, removeReserveUnits, addReserveUnits, setFlankSize, selectArmy,
-  deleteArmy, createArmy, changeName, duplicateArmy, ArmyName, ArmyType
+  clearUnits, selectUnit, selectTerrain, selectTactic, undo, toggleRandomRoll, setRoll, setGeneral, setRowType, removeReserveUnits, addReserveUnits, setFlankSize,
+  selectArmy, ArmyName, ArmyType
 } from './actions'
 import { Unit, UnitType  } from '../units'
 import { TerrainType } from '../terrains'
@@ -18,7 +18,7 @@ export interface Armies {
   readonly attacker_past: List<PastState>,
   readonly defender_past: List<PastState>,
   readonly round: number,
-  readonly fight_over: boolean
+  readonly fight_over: boolean,
 }
 
 export const modeState = (mode: DefinitionType): Armies => ({
@@ -55,9 +55,9 @@ export const doRemoveReserveUnits = (reserve: List<Unit>, types: UnitType[]) => 
 
 export const doAddReserveUnits = (reserve: List<Unit>, units: Unit[]) => reserve.merge(units)
 
-const update = (state: Map<DefinitionType, Armies>, payload: { mode: DefinitionType, name: ArmyName }, updater: (participant: Participant) => Participant): Map<DefinitionType, Armies> => {
+const update = (state: Map<DefinitionType, Armies>, payload: { mode: DefinitionType, army: ArmyName }, updater: (participant: Participant) => Participant): Map<DefinitionType, Armies> => {
   return state.update(payload.mode, mode => {
-    return { ...mode, armies: mode.armies.update(payload.name, updater) }
+    return { ...mode, armies: mode.armies.update(payload.army, updater) }
   })
 }
 
@@ -160,8 +160,8 @@ export const battleReducer = createReducer(initialState)
       armies = armies.update(next.attacker, value => ({ ...value, ...next!.attacker_past.get(0) }))
     if (next.defender_past.size > 0)
       armies = armies.update(next.defender, value => ({ ...value, ...next!.defender_past.get(0) }))
-    const attacker = action.payload.type === ParticipantType.Attacker ? action.payload.name : (action.payload.name === next.attacker ? next.defender : next.attacker)
-    const defender = action.payload.type === ParticipantType.Defender ? action.payload.name : (action.payload.name === next.defender ? next.attacker : next.defender)
+    const attacker = action.payload.type === ParticipantType.Attacker ? action.payload.army : (action.payload.army === next.attacker ? next.defender : next.attacker)
+    const defender = action.payload.type === ParticipantType.Defender ? action.payload.army : (action.payload.army === next.defender ? next.attacker : next.defender)
     next = {
       ...next,
       armies,
@@ -173,26 +173,6 @@ export const battleReducer = createReducer(initialState)
     }
     return fightOver(state.set(action.payload.mode, next), action.payload)
   })
-  .handleAction(createArmy, (state, action: ReturnType<typeof createArmy>) => (
-    state.map((mode, key) => {
-      return { ...mode, armies: mode.armies.set(action.payload.army, getInitialArmy(key, CountryName.Country1)) }
-    })
-  ))
-  .handleAction(duplicateArmy, (state, action: ReturnType<typeof duplicateArmy>) => (
-    state.map((mode, key) => {
-      return { ...mode, armies: mode.armies.set(action.payload.army, mode.armies.get(action.payload.source, getInitialArmy(key, CountryName.Country1))) }
-    })
-  ))
-  .handleAction(deleteArmy, (state, action: ReturnType<typeof deleteArmy>) => (
-    state.map(mode => {
-      return { ...mode, armies: mode.armies.delete(action.payload.army) }
-    })
-  ))
-  .handleAction(changeName, (state, action: ReturnType<typeof changeName>) => (
-    state.map(mode => {
-      return { ...mode, armies: mode.armies.mapKeys(key => key === action.payload.old_army ? action.payload.new_army : key )}
-    })
-  ))
   .handleAction(clearUnits, (state, action: ReturnType<typeof clearUnits>) => {
     let next = state.get(action.payload.mode)
     if (!next)

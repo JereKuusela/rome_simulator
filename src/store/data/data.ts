@@ -1,12 +1,17 @@
-import { CultureType, TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, ReligionType } from './actions'
+
 import { OrderedMap, List } from 'immutable'
 import { listFromJS } from '../../utils'
+import {
+  CultureType, ReligionType,
+  TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition
+} from './types'
 
 import * as traditionData from './traditions.json'
 import * as tradeData from './trades.json'
 import * as heritageData from './heritages.json'
 import * as inventionData from './inventions.json'
 import * as omenData from './omens.json'
+import * as traitData from './traits.json'
 
 export const getTraditionDefinitions = (): OrderedMap<CultureType, TraditionDefinition> => {
   let map = OrderedMap<CultureType, TraditionDefinition>()
@@ -45,6 +50,13 @@ export const getOmenDefinitions = (): OrderedMap<ReligionType, List<OmenDefiniti
     omens = omens.set(religion.type, religion.omens)
   }
   return omens.sortBy((_, key) => key)
+}
+
+export const getTraitDefinitions = (): List<TraitDefinition> => {
+  let traits = List<TraitDefinition>()
+  for (const value of traitData.traits)
+    traits = traits.push(listFromJS<TraitData>(value))
+  return traits.sortBy((_, key) => key)
 }
 
 interface TraditionData {
@@ -99,5 +111,15 @@ interface OmenData {
       attribute: string
       value: number
     }
+  }[]
+}
+
+interface TraitData {
+  name: string,
+  martial: number,
+  modifiers: {
+    target: string
+    attribute: string
+    value: number
   }[]
 }
