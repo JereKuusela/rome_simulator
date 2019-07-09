@@ -101,3 +101,7 @@ export const selectCountry = createAction('@@settings/SELECT_COUNTRY', action =>
 export const selectArmy = createAction('@@settings/SELECT_ARMY', action => {
   return (army: ArmyName) => action({ army })
 })
+
+export const toggleAccordion = createAction('@@settings/TOGGLE_ACCORDION', action => {
+  return (key: string) => action({ key })
+})

@@ -168,7 +168,7 @@ export const transformBattle = (state_raw: any): ReturnType<typeof battleReducer
 }
 
 export const transfromTransfer = (state_raw: any): ReturnType<typeof transferReducer> => {
-  const initial = transferReducer(undefined, undefined)
+  const initial = transferReducer(undefined, dummyAction)
   if (!state_raw)
     return initial
   const export_keys = state_raw.export_keys ? fromJS(state_raw.export_keys) : initial.export_keys
@@ -180,8 +180,9 @@ export const transformCountries = (state_raw: any): ReturnType<typeof selections
   const initial = selectionsReducer(undefined, dummyAction)
   if (!state_raw)
     return initial
-  const countries: Map<CountryName, Selections> = fromJS(state_raw)
-  return countries.map(value => ({ ...value, selections: value.selections.toSet()}))
+  const countries_raw: Map<CountryName, any> = fromJS(state_raw)
+  const countries: Map<CountryName, Selections> = countries_raw.map(value => value.toJS())
+  return countries.map(value => ({ ...value, selections: fromJS(value.selections).toSet()}))
 }
 
 const settings = Object.keys(CombatParameter).map(k => CombatParameter[k as any]) as CombatParameter[]
@@ -199,5 +200,6 @@ export const transformSettings = (state_raw: any): ReturnType<typeof settingsRed
   const mode = state_raw.mode || initial.mode
   const country = state_raw.country || initial.country
   const army = state_raw.army || initial.army
-  return { combat, simple_mode, mode, country, army }
+  const accordions = state_raw.accordions ? fromJS(state_raw.accordions).toSet() : initial.accordions
+  return { combat, simple_mode, mode, country, army, accordions }
 }

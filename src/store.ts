@@ -70,14 +70,14 @@ const persistConfig = {
   version: 2,
   migrate: createMigrate(migrations, { debug: false }),
   transforms: [
-    CountriesTransform,
     SettingsTransform,
     TacticsTransform,
     TerrainsTransform,
     LandTransform,
     UnitsTransform,
-    TransferTransform,
     GlobalStatsTransform,
+    TransferTransform,
+    CountriesTransform,
     DataTransform
   ]
 }

@@ -1,18 +1,12 @@
 Release 4:
 
-- Accordion state to settings (very annoying that they keep closing)
-- 
+- Laws / Economy / Ideas / Strategos
+- Modifier refresh working in all cases? For example tradition switch
+- Missing traditions
+- Accordions to more places??
 
 Tests (high priority):
 - base_definition functions tested
-
-Armies page:
-- Motivation is that armies, definitions and goverment modifiers would be separated, to enable mix-match
-- Battle page would edit the army units and other things, separate pages for defitinitions (already exists) and modifiers
-- Select which unit definitions to use
-- Select which goverment modifiers to use
-- Standard operations: add, duplicate, rename, remove
-- Maybe also settings that are in the main page (general, roll, tactic)
 
 
 Release 5+:
@@ -46,52 +40,9 @@ Goverment page:
     * Custom modifiers
     * Heritages?
 
-  - Military traditions:
-    * For both attack and defender
-    * Country selector (Dropdown)
-    *  List traditions (Name + Tier + Effect) based on Country
-    * Toggle enabled (Click to enable/disable)
-    * Affects unit definitions
-    * Traditions may change -> removing a tradition should clear effect on all attributes!
-    * Also on a load full reload is needed to prevent things getting out of sync
-
-  - Trade:
-    * About half trade goods have a military bonus for capital + export
-    * Only Furs have a stacking bonus (for experience), probably not worth modeling
-    * A list turned in a table (4 columns?, so 2 goods per row, except furs take whole row.)
-
-  - Religion
-    * 22 religions with different omens + some tag specific, each probably have 1-2 combat bonuses
-    * Directly scales with Omen Power: 0 Power -> 0 Effect.
-    * Power comes from Government (2 * Zeal * Loyal = 0-30%) + Religional unity (0-100%) (some countries have really weak) + 2.5% from tech + 15% theocratic_republic / theocratic_monarchy / imperial_cult
-    * At top sources of Omen Power explained, single input for the value.
-     - Religional unity: (0 - 100%)
-     - Office: 2 * Zeal * Loyalty (0 - 30%)
-     - Tech: level 2.5 * Tech (0 - 50%)
-     - Inventions: 5 + 5 + 5 + 5 + 10 (0 - 30%)
-     - Government: 15 for Theocratic Repulics, Theocratic Monarchies and Imperial Cults (0 - 15%)
-     - Ideas: 20 for Mandated Observance (0 - 20%)
-     - Trade: 10 for exporting Incense (0 - 10%)
-     - Laws: 10 for Republican, 10/-15 for Tribe (-15% - 10%)
-     - Ruler trait -5/5 (-5% - 5%)
-     - Total: (-20% - 270%)
-
-  - Heritages
-    * Lots of, but not many affect military. Still a table / list with single selection.
-    * Note: global_defensive is fort defense.
-    * Note: discipline only affects land units
-
   - Governemnt
     * Ideas: 5 Military ones
     * Laws: Republican: 2 Military, Monarch: 1 Military, Tribe: 0 Military, Rome has technically same as Republican
-
-  - Tech
-    * Military adds moral
-    * Military has lots of useful, full table?
-
-  - General
-    * Skill level
-    * 7 military traits have effect, 6 have effect related to sieges
 
 
 

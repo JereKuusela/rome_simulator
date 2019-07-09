@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Set, List as ImmutableList } from 'immutable'
-import { Container, Grid, Table, List, Header, Accordion, Icon } from 'semantic-ui-react'
+import { Container, Grid, Table, List } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { mapRange, getBattle } from '../utils'
@@ -10,27 +10,17 @@ import {
 import {
   CountryName
 } from '../store/countries'
+import AccordionToggle from '../containers/AccordionToggle'
 import { ArmyName } from '../store/battle'
 import { enableModifiers, clearModifiers, selectCountry } from '../store/armies'
 import ArmyManager from '../containers/ArmyManager'
 import DropdownSelector from '../components/DropdownSelector'
 
-interface IState {
-  traits_open: boolean
-}
-
 const TRAIT_COLUMNS = 4.0
-
 const TRAIT_KEY = 'trait_'
-
 const padding = '.78571429em .78571429em'
 
-class Armies extends Component<IProps, IState> {
-
-  constructor(props: IProps) {
-    super(props)
-    this.state = { traits_open: false }
-  }
+class Armies extends Component<IProps> {
 
   render(): JSX.Element {
     const army = this.props.armies.get(this.props.selected_army)!
@@ -50,19 +40,11 @@ class Armies extends Component<IProps, IState> {
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <Accordion>
-                <Accordion.Title active={this.state.traits_open} onClick={() => this.setState({ traits_open: !this.state.traits_open })}>
-                  <Header>
-                    <Icon name='dropdown' />
-                    {'General'}
-                  </Header>
-                </Accordion.Title>
-                <Accordion.Content active={this.state.traits_open}>
-                  {
-                    this.renderTraits(this.props.traits, selections)
-                  }
-                </Accordion.Content>
-              </Accordion>
+              <AccordionToggle title='General' identifier='armies_traits'>
+                {
+                  this.renderTraits(this.props.traits, selections)
+                }
+              </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -161,9 +143,9 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  enableModifiers: (army: ArmyName, key: string, modifiers: ImmutableList<Modifier>) => (dispatch(enableModifiers(army, key, modifiers))),
-  clearModifiers: (army: ArmyName, key: string) => (dispatch(clearModifiers(army, key))),
-  selectCountry: (army: ArmyName, country: CountryName) => (dispatch(selectCountry(army, country)))
+  enableModifiers: (army: ArmyName, key: string, modifiers: ImmutableList<Modifier>) => dispatch(enableModifiers(army, key, modifiers)),
+  clearModifiers: (army: ArmyName, key: string) => dispatch(clearModifiers(army, key)),
+  selectCountry: (army: ArmyName, country: CountryName) => dispatch(selectCountry(army, country))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

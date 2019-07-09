@@ -1,6 +1,6 @@
 import { createReducer } from 'typesafe-actions'
-import { OrderedMap, Map } from 'immutable'
-import { CombatParameter, changeParameter, toggleSimpleMode, toggleMode, selectCountry, selectArmy } from './actions'
+import { OrderedMap, Map, Set } from 'immutable'
+import { CombatParameter, changeParameter, toggleSimpleMode, toggleMode, selectCountry, selectArmy, toggleAccordion } from './actions'
 import { getDefaultLandSettings, getDefaultNavalSettings, getDefaultAnySettings } from './data'
 import { CountryName, changeCountryName, createCountry, deleteCountry } from '../countries'
 import { ArmyName } from '../battle'
@@ -15,7 +15,8 @@ export const settingsState = {
     simple_mode: true,
     mode: DefinitionType.Land,
     army: ArmyName.Attacker,
-    country: CountryName.Country1
+    country: CountryName.Country1,
+    accordions: Set<string>()
 }
 
 
@@ -52,4 +53,7 @@ export const settingsReducer = createReducer(settingsState)
   ))
   .handleAction(deleteArmy, (state, action: ReturnType<typeof deleteArmy>) => (
     { ...state, army: state.army === action.payload.army ? '' as ArmyName : state.army }
+  ))
+  .handleAction(toggleAccordion, (state, action: ReturnType<typeof toggleAccordion>) => (
+    { ...state, accordions: state.accordions.has(action.payload.key) ? state.accordions.remove(action.payload.key) : state.accordions.add(action.payload.key) }
   ))

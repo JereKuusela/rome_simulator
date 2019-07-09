@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Set, List as ImmutableList } from 'immutable'
-import { Container, Grid, Table, List, Header, Accordion, Icon, Input } from 'semantic-ui-react'
+import { Container, Grid, Table, List, Input } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { mapRange, toList } from '../utils'
@@ -12,6 +12,7 @@ import {
 import {
   enableModifiers, clearModifiers, CountryName, selectGovernment, selectReligion, selectCulture, setOmenPower
 } from '../store/countries'
+import AccordionToggle from '../containers/AccordionToggle'
 import CountryManager from '../containers/CountryManager'
 import DropdownSelector from '../components/DropdownSelector'
 
@@ -69,101 +70,61 @@ class Countries extends Component<IProps, IState> {
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <Accordion>
-                <Accordion.Title active={this.state.traditions_open} onClick={() => this.setState({ traditions_open: !this.state.traditions_open })}>
-                  <Header>
-                    <Icon name='dropdown' />
-                    {'Traditions (' + country.culture + ')'}
-                  </Header>
-                </Accordion.Title>
-                <Accordion.Content active={this.state.traditions_open}>
-                  {
-                    tradition && this.renderTraditions(tradition, selections)
-                  }
-                </Accordion.Content>
-              </Accordion>
+              <AccordionToggle title={'Traditions (' + country.culture + ')'} identifier='countries_tradition'>
+                {
+                  tradition && this.renderTraditions(tradition, selections)
+                }
+              </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <Accordion>
-                <Accordion.Title active={this.state.traditions_open} onClick={() => this.setState({ trade_open: !this.state.trade_open })}>
-                  <Header>
-                    <Icon name='dropdown' />
-                    Trade
-                  </Header>
-                </Accordion.Title>
-                <Accordion.Content active={this.state.trade_open}>
-                  {
-                    this.renderTrades(this.props.trades, selections)
-                  }
-                </Accordion.Content>
-              </Accordion>
+              <AccordionToggle title='Trade' identifier='countries_trade'>
+                {
+                  this.renderTrades(this.props.trades, selections)
+                }
+              </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <Accordion>
-                <Accordion.Title active={this.state.heritage_open} onClick={() => this.setState({ heritage_open: !this.state.heritage_open })}>
-                  <Header>
-                    <Icon name='dropdown' />
-                    Heritage
-                  </Header>
-                </Accordion.Title>
-                <Accordion.Content active={this.state.heritage_open}>
-                  {
-                    this.renderHeritages(this.props.heritages, selections)
-                  }
-                </Accordion.Content>
-              </Accordion>
+              <AccordionToggle title='Heritage' identifier='countries_heritage'>
+                {
+                  this.renderTrades(this.props.trades, selections)
+                }
+              </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <Accordion>
-                <Accordion.Title active={this.state.research_open} onClick={() => this.setState({ research_open: !this.state.research_open })}>
-                  <Header>
-                    <Icon name='dropdown' />
-                    Technology & Inventions
-                  </Header>
-                </Accordion.Title>
-                <Accordion.Content active={this.state.research_open}>
-                  {
-                    this.renderInventions(this.props.inventions, selections)
-                  }
-                </Accordion.Content>
-              </Accordion>
+              <AccordionToggle title='Technology & Inventions' identifier='countries_invention'>
+                {
+                  this.renderTrades(this.props.trades, selections)
+                }
+              </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <Accordion>
-                <Accordion.Title active={this.state.omens_open} onClick={() => this.setState({ omens_open: !this.state.omens_open })}>
-                  <Header>
-                    <Icon name='dropdown' />
-                    {'Omens (' + country.religion + ')'}
-                  </Header>
-                </Accordion.Title>
-                <Accordion.Content active={this.state.omens_open}>
-                  Omen power: <Input type='number' value={country.omen_power} onChange={(_, { value }) => omen && this.setOmenPower(value, selections, omen)} />
-                  <List bulleted style={{ marginLeft: '2rem' }}>
-                    <List.Item>Religional unity: 0 - 100</List.Item>
-                    <List.Item>Tech level: 0 - 50</List.Item>
-                    <List.Item>Inventions: 0 - 30</List.Item>
-                    <List.Item>Office: 0 - 30</List.Item>
-                    <List.Item>Mandated Observance: 20</List.Item>
-                    <List.Item>Latin tradition: 15</List.Item>
-                    <List.Item>Exporting Incense: 10</List.Item>
-                    <List.Item>Laws: -15 / 10</List.Item>
-                    <List.Item>Ruler: -5 / 5)</List.Item>
-                    <List.Item><b>Total: From -20 to 285</b></List.Item>
-                  </List>
+              <AccordionToggle title={'Omens (' + country.religion + ')'} identifier='countries_omen'>
+                Omen power: <Input type='number' value={country.omen_power} onChange={(_, { value }) => omen && this.setOmenPower(value, selections, omen)} />
+                <List bulleted style={{ marginLeft: '2rem' }}>
+                  <List.Item>Religional unity: 0 - 100</List.Item>
+                  <List.Item>Tech level: 0 - 50</List.Item>
+                  <List.Item>Inventions: 0 - 30</List.Item>
+                  <List.Item>Office: 0 - 30</List.Item>
+                  <List.Item>Mandated Observance: 20</List.Item>
+                  <List.Item>Latin tradition: 15</List.Item>
+                  <List.Item>Exporting Incense: 10</List.Item>
+                  <List.Item>Laws: -15 / 10</List.Item>
+                  <List.Item>Ruler: -5 / 5)</List.Item>
+                  <List.Item><b>Total: From -20 to 285</b></List.Item>
+                </List>
 
-                  {
-                    omen && this.renderOmens(omen, selections, country.omen_power)
-                  }
-                </Accordion.Content>
-              </Accordion>
+                {
+                  omen && this.renderOmens(omen, selections, country.omen_power)
+                }
+              </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
         </Grid>
