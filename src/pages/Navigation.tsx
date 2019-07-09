@@ -16,7 +16,7 @@ class Navigation extends Component<IProps> {
     const path = (this.props as any).location.pathname
     const history = (this.props as any).history
     return (
-      <Container>
+      <Container id='navigation'>
         <Menu>
           <Menu.Item active={path === '/'} onClick={() => history.push('/')}>
             Battle
@@ -47,16 +47,15 @@ class Navigation extends Component<IProps> {
           <Menu.Item active={path === '/countries'} onClick={() => history.push('/countries')}>
             Countries
           </Menu.Item>
-          <div style={{ width: '100%', textAlign: 'right', padding: '0.25rem' }}>
+          <div id='menu-info'>
             <Button active={this.props.mode === DefinitionType.Land} compact icon basic circular size='tiny' onClick={this.props.toggleMode}>
               <Image src={IconLand} avatar style={{ marginRight: 0 }} />
             </Button>
             <Button active={this.props.mode === DefinitionType.Naval} compact icon basic circular size='tiny' onClick={this.props.toggleMode}>
               <Image src={IconNaval} avatar style={{ marginRight: 0 }} />
             </Button>
-            <span>Site version 0.4.0</span>
+            <div id='version'><div>Site version 0.4.0</div><div>Game version 1.1.1</div></div>
           </div>
-
         </Menu>
         <br />
       </Container>

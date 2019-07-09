@@ -28,3 +28,15 @@ code {
 .selectable {
   cursor: pointer;
 }
+
+#navigation #menu-info {
+  width: 100%;
+  text-align: right;
+  padding: 0.25rem;
+}
+#navigation #menu-info button {
+  vertical-align: top;
+}
+#navigation #menu-info #version {
+  display: inline-block;
+}
