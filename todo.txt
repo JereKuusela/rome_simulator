@@ -1,9 +1,15 @@
 Release 4:
 
 - Laws / Economy / Ideas / Strategos
-- Modifier refresh working in all cases? For example tradition switch
 - Missing traditions
 - Accordions to more places??
+
+- Robustness:
+ - Getters to get countries / armies / etc -> if missing return initial
+ - Also for reducers to automatically heal up
+ - Country modifiers without distinct order shoould use names (like trade, heritages) -> works even when order changes
+ - Modifier refresh working in all cases? For example tradition switch
+ - Sanity check on load? Remove modifiers which dont exist
 
 Tests (high priority):
 - base_definition functions tested
@@ -61,6 +67,7 @@ Siege:
 
 Land battle:
 - Loyalty gives +10% discipline, include or not?
+- Weight modifiers based on unit's value (so unit's value should be made base)
 - Maintenance is calculated from cost, currently cost reduction also applied to maintenance, this probably gives wrong values when stacking different kind of buffs
 - Deployment order based also on manpower!! (before index)
 - With multiple armies: preferred flank size is halved (not always, sometimes also unit jumps directly to middle...), filled first (reverse index order), then from middle
