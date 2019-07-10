@@ -1,6 +1,6 @@
 import { battle } from '../combat'
 import { List, Map } from 'immutable'
-import { getInitialArmy, Participant, ArmyName } from '../../battle'
+import { getInitialArmy, Participant } from '../../battle'
 import { getDefaultDefinitions as getDefaultTacticDefinitions, TacticType } from '../../tactics'
 import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, TerrainDefinition } from '../../terrains'
 import { getDefaultDefinitions as getDefaultUnitDefinitions, getDefaultGlobalDefinition, UnitType, UnitCalc, UnitDefinition } from '../../units'
@@ -25,15 +25,15 @@ describe('1 vs 1', () => {
   let terrain: List<TerrainDefinition>
 
   beforeEach(() => {
-    info.attacker = getInitialArmy(DefinitionType.Land, CountryName.Country1)
-    info.defender = getInitialArmy(DefinitionType.Land, CountryName.Country2)
+    info.attacker = getInitialArmy(DefinitionType.Land)
+    info.defender = getInitialArmy(DefinitionType.Land)
     terrain = List<TerrainDefinition>().push(terrains.get(TerrainType.Forest)!)
     setCenterUnits(info, unit, unit)
     info.round = 0
   })
   const doRound = () => {
     info.round = info.round + 1
-    const [a, d] = battle(definitions, { ...info.attacker, tactic: tactics.get(info.attacker.tactic)!, name: ArmyName.Attacker  }, { ...info.defender, tactic: tactics.get(info.defender.tactic)!, name: ArmyName.Defender  }, info.round, terrain, settings)
+    const [a, d] = battle(definitions, { ...info.attacker, tactic: tactics.get(info.attacker.tactic)!, country: CountryName.Country1 }, { ...info.defender, tactic: tactics.get(info.defender.tactic)!, country: CountryName.Country2  }, info.round, terrain, settings)
     info.attacker = { ...info.attacker, ...a }
     info.defender = { ...info.defender, ...d }
   }

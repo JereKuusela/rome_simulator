@@ -1,7 +1,6 @@
 import { createAction } from 'typesafe-actions'
 import { DefinitionType } from '../../base_definition'
 import { CountryName } from '../countries'
-import { ArmyName } from '../battle'
 
 export enum CombatParameter {
   StrengthLostMultiplier = 'StrengthLostMultiplier',
@@ -96,10 +95,6 @@ export const toggleMode = createAction('@@settings/TOGGLE_MODE', action => {
 
 export const selectCountry = createAction('@@settings/SELECT_COUNTRY', action => {
   return (country: CountryName) => action({ country })
-})
-
-export const selectArmy = createAction('@@settings/SELECT_ARMY', action => {
-  return (army: ArmyName) => action({ army })
 })
 
 export const toggleAccordion = createAction('@@settings/TOGGLE_ACCORDION', action => {

@@ -4,7 +4,6 @@ import { Store } from 'redux'
 import { BrowserRouter, Route } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
 import Units from './pages/Units'
-import Armies from './pages/Armies'
 import Battle from './pages/Battle'
 import Tactics from './pages/Tactics'
 import Terrains from './pages/Terrains'
@@ -30,7 +29,6 @@ const Root = ({ store, persistor }: MainProps) => {
       <BrowserRouter>
         <Route path='/' component={Navigation} />
         <Route path='/' exact component={Battle} />
-        <Route path='/Armies' component={Armies} />
         <Route path='/Units' component={Units} />
         <Route path='/Tactics' component={Tactics} />
         <Route path='/Terrains' component={Terrains} />

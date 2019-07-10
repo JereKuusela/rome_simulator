@@ -3,14 +3,14 @@ import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { UnitType, UnitDefinition } from '../store/units'
 import { AppState } from '../store/'
-import { setRowType, RowType, ArmyName } from '../store/battle'
+import { setRowType, RowType } from '../store/battle'
 import { DefinitionType } from '../base_definition'
 import ItemSelector from '../components/ItemSelector'
 import ItemRemover from '../components/ItemRemover'
 import { CountryName } from '../store/countries'
 
 export interface ModalInfo {
-  name: ArmyName
+  name: CountryName
   country: CountryName
   type: RowType
 }
@@ -60,7 +60,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setRowType: (mode: DefinitionType, name: ArmyName, type: RowType, unit: UnitType | undefined) => (
+  setRowType: (mode: DefinitionType, name: CountryName, type: RowType, unit: UnitType | undefined) => (
     dispatch(setRowType(mode, name, type, unit))
   )
 })

@@ -1,6 +1,6 @@
 import { battle } from '../combat'
 import { List, Map } from 'immutable'
-import { getInitialArmy, Participant, RowType, ArmyName  } from '../../battle'
+import { getInitialArmy, Participant, RowType  } from '../../battle'
 import { TerrainDefinition } from '../../terrains'
 import { getDefaultDefinitions as getDefaultUnitDefinitions, getDefaultGlobalDefinition, UnitType, UnitDefinition} from '../../units'
 import { mergeValues, DefinitionType } from '../../../base_definition'
@@ -22,9 +22,9 @@ describe('reinforcement', () => {
   }
 
   beforeEach(() => {
-    info.attacker = getInitialArmy(DefinitionType.Land, CountryName.Country1)
+    info.attacker = getInitialArmy(DefinitionType.Land)
     info.attacker = { ...info.attacker, row_types }
-    info.defender = getInitialArmy(DefinitionType.Land, CountryName.Country2)
+    info.defender = getInitialArmy(DefinitionType.Land)
     info.defender = { ...info.defender, row_types }
     settings = getSettings(DefinitionType.Land)
   })
@@ -36,7 +36,7 @@ describe('reinforcement', () => {
 
 
   const doRound = () => {
-    const [a, d] = battle(definitions, { ...info.attacker, tactic: undefined, name: ArmyName.Attacker }, { ...info.defender, tactic: undefined, name: ArmyName.Defender }, 1, List<TerrainDefinition>(), settings)
+    const [a, d] = battle(definitions, { ...info.attacker, tactic: undefined, country: CountryName.Country1 }, { ...info.defender, tactic: undefined, country: CountryName.Country2 }, 1, List<TerrainDefinition>(), settings)
     info.attacker = { ...info.attacker, ...a }
     info.defender = { ...info.defender, ...d }
   }

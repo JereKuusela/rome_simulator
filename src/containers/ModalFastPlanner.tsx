@@ -6,7 +6,7 @@ import { AppState } from '../store/'
 import FastPlanner from '../components/FastPlanner'
 import ArmyCosts from '../components/ArmyCosts'
 import { UnitType, Unit, UnitDefinition } from '../store/units'
-import { clearUnits, removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits, ArmyName } from '../store/battle'
+import { clearUnits, removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits } from '../store/battle'
 import { mapRange, getBattle } from '../utils'
 import { CountryName } from '../store/countries'
 import { mergeValues, DefinitionType } from '../base_definition'
@@ -31,16 +31,20 @@ class ModalFastPlanner extends Component<IProps, IState> {
   render(): JSX.Element | null {
     if (!this.props.open)
       return null
-    const attacker = this.props.armies.get(this.props.attacker)
-    const defender = this.props.armies.get(this.props.defender)
-    const types_a = attacker && this.filterTypes(attacker.country)
-    const types_d = defender && this.filterTypes(defender.country)
+    const country_a = this.props.attacker
+    const country_d = this.props.defender
+    const attacker = this.props.armies.get(country_a)
+    const defender = this.props.armies.get(country_d)
+    const types_a = attacker && this.filterTypes(country_a)
+    const types_d = defender && this.filterTypes(country_d)
     this.originals_a = attacker && types_a && types_a.reduce((map, value) => map.set(value, this.countUnits(attacker.reserve, value)), Map<UnitType, number>())
     this.originals_d = defender && types_d && types_d.reduce((map, value) => map.set(value, this.countUnits(defender.reserve, value)), Map<UnitType, number>())
     return (
       <Modal basic onClose={this.onClose} open centered={false}>
         <Modal.Content>
           <FastPlanner
+            attacker={country_a}
+            defender={country_d}
             changes_a={this.state.changes_a}
             reserve_a={this.originals_a}
             units={this.props.units}
@@ -53,12 +57,12 @@ class ModalFastPlanner extends Component<IProps, IState> {
           />
           <ArmyCosts
             mode={this.props.mode}
-            army_a={attacker && this.mergeAllValues(attacker.country, attacker.frontline)}
-            army_d={defender && this.mergeAllValues(defender.country, defender.frontline)}
-            reserve_a={attacker && this.mergeAllValues(attacker.country, this.editReserve(attacker.reserve, this.state.changes_a, this.originals_a))}
-            reserve_d={defender && this.mergeAllValues(defender.country, this.editReserve(defender.reserve, this.state.changes_d, this.originals_d))}
-            defeated_a={attacker && this.mergeAllValues(attacker.country, attacker.defeated)}
-            defeated_d={defender && this.mergeAllValues(defender.country, defender.defeated)}
+            army_a={attacker && this.mergeAllValues(country_a, attacker.frontline)}
+            army_d={defender && this.mergeAllValues(country_d, defender.frontline)}
+            reserve_a={attacker && this.mergeAllValues(country_a, this.editReserve(attacker.reserve, this.state.changes_a, this.originals_a))}
+            reserve_d={defender && this.mergeAllValues(country_d, this.editReserve(defender.reserve, this.state.changes_d, this.originals_d))}
+            defeated_a={attacker && this.mergeAllValues(country_a, attacker.defeated)}
+            defeated_d={defender && this.mergeAllValues(country_d, defender.defeated)}
             attached
           />
           <br />
@@ -100,10 +104,10 @@ class ModalFastPlanner extends Component<IProps, IState> {
     return doRemoveReserveUnits(doAddReserveUnits(reserve, units), types)
   }
 
-  onValueChange = (name: ArmyName, unit: UnitType, value: number): void => {
-    if (name === ArmyName.Attacker)
+  onValueChange = (country: CountryName, unit: UnitType, value: number): void => {
+    if (country === this.props.attacker)
       this.setState({ changes_a: this.state.changes_a.set(unit, value) })
-    if (name === ArmyName.Defender)
+    if (country === this.props.defender)
       this.setState({ changes_d: this.state.changes_d.set(unit, value) })
   }
 
@@ -127,7 +131,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
     return types
   }
 
-  updateReserve = (name: ArmyName, changes: Units, originals?: Units): void => {
+  updateReserve = (name: CountryName, changes: Units, originals?: Units): void => {
     const units = this.getUnitsToAdd(changes, originals)
     const types = this.getTypesToRemove(changes, originals)
     units.length > 0 && this.props.addReserveUnits(this.props.mode, name, units)
@@ -160,8 +164,8 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  addReserveUnits: (mode: DefinitionType, name: ArmyName, units: Unit[]) => dispatch(addReserveUnits(mode, name, units)),
-  removeReserveUnits: (mode: DefinitionType, name: ArmyName, types: UnitType[]) => dispatch(removeReserveUnits(mode, name, types)),
+  addReserveUnits: (mode: DefinitionType, name: CountryName, units: Unit[]) => dispatch(addReserveUnits(mode, name, units)),
+  removeReserveUnits: (mode: DefinitionType, name: CountryName, types: UnitType[]) => dispatch(removeReserveUnits(mode, name, types)),
   clearUnits: (mode: DefinitionType) => dispatch(clearUnits(mode))
 })
 

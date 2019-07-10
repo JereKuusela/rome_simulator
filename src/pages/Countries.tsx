@@ -7,7 +7,7 @@ import { mapRange, toList } from '../utils'
 import {
   ModifierType, Modifier, Tradition, CultureType,
   OmenDefinition, TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition,
-  GovermentType, ReligionType
+  GovermentType, ReligionType, TraitDefinition
 } from '../store/data'
 import {
   enableModifiers, clearModifiers, CountryName, selectGovernment, selectReligion, selectCulture, setOmenPower
@@ -27,7 +27,9 @@ interface IState {
 const TRADE_COLUMNS = 4.0
 const HERITAGE_COLUMNS = 4.0
 const OMEN_COLUMNS = 4.0
+const TRAIT_COLUMNS = 4.0
 
+const TRAIT_KEY = 'trait_'
 const TRADE_KEY = 'trade_'
 const TRADITION_KEY = 'tradition_'
 const HERITAGE_KEY = 'heritage_'
@@ -123,6 +125,15 @@ class Countries extends Component<IProps, IState> {
 
                 {
                   omen && this.renderOmens(omen, selections, country.omen_power)
+                }
+              </AccordionToggle>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns='1'>
+            <Grid.Column>
+              <AccordionToggle title='General' identifier='countries_traits'>
+                {
+                  this.renderTraits(this.props.traits, selections)
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -433,6 +444,66 @@ class Countries extends Component<IProps, IState> {
     )
   }
 
+  
+  renderTraits = (traits: ImmutableList<TraitDefinition>, selections: Set<string>) => {
+    const rows = Math.ceil(traits.count() / TRAIT_COLUMNS)
+    return (
+      <Table celled unstackable fixed>
+        <Table.Body>
+          {
+            mapRange(rows, number => number).map(row => (
+              <Table.Row key={row}>
+                {
+                  mapRange(TRAIT_COLUMNS, number => number).map(column => {
+                    const index = row * TRAIT_COLUMNS + column
+                    const trait = traits.get(index)
+                    const key = TRAIT_KEY + index
+                    if (!trait)
+                      return (<Table.Cell key={key}></Table.Cell>)
+                    const modifiers = trait.modifiers
+                    return (
+                      <Table.Cell
+                        key={key}
+                        positive={selections.has(key)}
+                        selectable
+                        onClick={
+                          selections.has(key)
+                            ? () => this.props.clearModifiers(this.props.country, key)
+                            : () => this.props.enableModifiers(this.props.country, key, modifiers)
+                        }
+                        style={{ padding }}
+                      >
+                        <List>
+                          <List.Item>
+                            <List.Header>
+                              {trait.name}
+                            </List.Header>
+                          </List.Item>
+                          {
+                            modifiers.map(modifier => (
+                              <List.Item>
+                                {
+                                  this.getText(modifier)
+                                }
+                                {
+                                  this.getValue(modifier)
+                                }
+                              </List.Item>
+                            ))
+                          }
+                        </List>
+                      </Table.Cell>
+                    )
+                  })
+                }
+              </Table.Row>
+            ))
+          }
+        </Table.Body>
+      </Table >
+    )
+  }
+
   /**
    * Clears traditions from a given column above a given row.
    */
@@ -592,7 +663,8 @@ const mapStateToProps = (state: AppState) => ({
   omens: state.data.omens,
   countries: state.countries,
   country: state.settings.country,
-  mode: state.settings.mode
+  mode: state.settings.mode,
+  traits: state.data.traits
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

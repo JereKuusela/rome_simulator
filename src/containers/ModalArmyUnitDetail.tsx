@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { UnitType, ValueType, Unit, UnitDefinition } from '../store/units'
-import { ArmyName, ArmyType, selectUnit } from '../store/battle'
+import { ArmyType, selectUnit } from '../store/battle'
 import { AppState } from '../store/'
 import { getBattle, filterTerrainTypes } from '../utils'
 import { addValues, mergeValues, ValuesType, DefinitionType } from '../base_definition'
@@ -13,7 +13,6 @@ import { CountryName } from '../store/countries'
 const CUSTOM_VALUE_KEY = 'Unit'
 
 export interface ModalInfo {
-  name: ArmyName
   country: CountryName
   index: number
   type: ArmyType
@@ -26,9 +25,10 @@ class ModalArmyUnitDetail extends Component<IProps> {
   render(): JSX.Element | null {
     if (!this.props.info)
       return null
+    const country = this.props.info.country
     this.unit = this.getUnit(this.props.info)
-    const unit_types = this.props.unit_types.get(this.props.info.country)!.filter(type => {
-      const unit = this.props.units.getIn([this.props.info!.name, type]) as UnitDefinition | undefined
+    const unit_types = this.props.unit_types.get(country)!.filter(type => {
+      const unit = this.props.units.getIn([country, type]) as UnitDefinition | undefined
       if (!unit)
         return false
       return unit.mode === this.props.mode || unit.mode === DefinitionType.Global
@@ -42,7 +42,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
           />
           <UnitDetail
             mode={this.props.mode}
-            name={this.props.info.name}
+            name={country}
             terrain_types={this.props.terrain_types}
             custom_value_key={CUSTOM_VALUE_KEY}
             unit={this.getUnitDefinition(this.props.info)}
@@ -62,35 +62,35 @@ class ModalArmyUnitDetail extends Component<IProps> {
 
   selectUnit = (unit: UnitType | undefined): void => (
     this.props.info &&
-    this.props.selectUnit(this.props.mode, this.props.info.name, this.props.info.type, this.props.info.index, unit ? this.props.units.getIn([this.props.info.country, unit]) : undefined)
+    this.props.selectUnit(this.props.mode, this.props.info.country, this.props.info.type, this.props.info.index, unit ? this.props.units.getIn([this.props.info.country, unit]) : undefined)
   )
 
-  setBaseValue = (name: ArmyName, _type: UnitType, key: string, attribute: ValueType, value: number): void => {
+  setBaseValue = (country: CountryName, _type: UnitType, key: string, attribute: ValueType, value: number): void => {
     if (!this.props.info)
       return
     const unit = addValues(this.unit, ValuesType.Base, key, [[attribute, value]])
-    this.props.selectUnit(this.props.mode, name, this.props.info.type, this.props.info.index, unit)
+    this.props.selectUnit(this.props.mode, country, this.props.info.type, this.props.info.index, unit)
   }
 
-  setModifierValue = (name: ArmyName, _type: UnitType, key: string, attribute: ValueType, value: number): void => {
+  setModifierValue = (country: CountryName, _type: UnitType, key: string, attribute: ValueType, value: number): void => {
     if (!this.props.info)
       return
     const unit = addValues(this.unit, ValuesType.Modifier, key, [[attribute, value]])
-    this.props.selectUnit(this.props.mode, name, this.props.info.type, this.props.info.index, unit)
+    this.props.selectUnit(this.props.mode, country, this.props.info.type, this.props.info.index, unit)
   }
 
-  setLossValue = (name: ArmyName, _type: UnitType, key: string, attribute: ValueType, value: number): void => {
+  setLossValue = (country: CountryName, _type: UnitType, key: string, attribute: ValueType, value: number): void => {
     if (!this.props.info)
       return
     const unit = addValues(this.unit, ValuesType.Loss, key, [[attribute, value]])
-    this.props.selectUnit(this.props.mode, name, this.props.info.type, this.props.info.index, unit)
+    this.props.selectUnit(this.props.mode, country, this.props.info.type, this.props.info.index, unit)
   }
 
-  changeType = (name: ArmyName, old_type: UnitType, new_type: UnitType): void => {
+  changeType = (country: CountryName, _old_type: UnitType, new_type: UnitType): void => {
     if (!this.props.info)
       return
     const unit = { ...this.unit, type: new_type }
-    this.props.selectUnit(this.props.mode, name, this.props.info.type, this.props.info.index, unit)
+    this.props.selectUnit(this.props.mode, country, this.props.info.type, this.props.info.index, unit)
   }
 
   getUnitDefinition = (info: ModalInfo): UnitDefinition => (this.mergeAllValues(info.country, this.getUnit(info)))
@@ -100,7 +100,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
   }
 
   getUnit = (info: ModalInfo): Unit => {
-    const army = this.props.armies.get(info.name)!
+    const army = this.props.armies.get(info.country)!
     if (info.type === ArmyType.Frontline)
       return army.frontline.get(info.index)!
     else if (info.type === ArmyType.Reserve)
@@ -120,8 +120,8 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  selectUnit: (mode: DefinitionType, name: ArmyName, type: ArmyType, column: number, unit: Unit | undefined) => (
-    dispatch(selectUnit(mode, name, type, column, unit))
+  selectUnit: (mode: DefinitionType, country: CountryName, type: ArmyType, column: number, unit: Unit | undefined) => (
+    dispatch(selectUnit(mode, country, type, column, unit))
   )
 })
 

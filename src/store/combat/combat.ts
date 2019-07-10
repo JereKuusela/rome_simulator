@@ -2,7 +2,7 @@ import { List, Map } from 'immutable'
 import { Unit, UnitDefinition, UnitCalc, UnitType } from '../units'
 import { TerrainDefinition, TerrainCalc } from '../terrains'
 import { TacticDefinition, TacticCalc, TacticType } from '../tactics'
-import { RowType, Army, ArmyName } from '../battle'
+import { RowType, Army } from '../battle'
 import { CombatParameter } from '../settings'
 import { calculateValue, addValues, mergeValues, ValuesType } from '../../base_definition'
 import { reinforce } from './reinforcement'
@@ -27,7 +27,6 @@ interface Kill {
 }
 
 export interface ParticipantState {
-  readonly name: ArmyName
   readonly country: CountryName
   readonly frontline: Frontline
   readonly reserve: Reserve
@@ -223,7 +222,6 @@ export const calculateTactic = (army?: Army, tactic?: TacticDefinition, counter_
       if (!unit)
         continue
       const manpower = calculateValue(unit, UnitCalc.Strength)
-      console.log(manpower)
       units += manpower
       weight += calculateValue(tactic, unit.type) * manpower
     }
@@ -352,21 +350,27 @@ const calculateLosses = (source: Unit, target: Unit, roll: number, terrains: Ter
   const manpower_lost_multiplier = settings.get(CombatParameter.StrengthLostMultiplier, 0.2) 
   const morale_lost_multiplier = settings.get(CombatParameter.MoraleLostMultiplier, 1.5)
   const morale_base_damage = settings.get(CombatParameter.MoraleDamageBase, 2.0)
-  let damage = calculateBaseDamage(roll, settings)
-  damage = damage
-    * (1.0 + calculateValue(source, UnitCalc.Offense) - calculateValue(target, UnitCalc.Defense))
-    * (1.0 + calculateValue(source, UnitCalc.DamageDone))
-    * (1.0 + calculateValue(source, UnitCalc.Discipline))
-    * (1.0 + calculateValue(source, target.type))
-    * tactic_damage_multiplier
-    * (1.0 + terrains.map(terrain => terrain ? calculateValue(source, terrain.type) : 0).reduce((previous, current) => previous + current, 0))
-    * (1.0 - damage_reduction_per_experience * calculateValue(target, UnitCalc.Experience))
-    * (1.0 + calculateValue(target, UnitCalc.DamageTaken))
-  damage = Math.floor(damage * calculateValue(source, UnitCalc.Strength))
-  const manpower_lost = damage * manpower_lost_multiplier * (1.0 + casualties_multiplier) * (1.0 + calculateValue(target, UnitCalc.StrengthDamageTaken)) * (1.0 + calculateValue(source, UnitCalc.StrengthDamageDone))
-  const morale_multiplier = Math.floor(1000.0 * Math.max(0, calculateValue(source, UnitCalc.Morale)) / morale_base_damage) / 1000.0
-  let morale_lost = Math.floor(Math.floor(damage * morale_multiplier) * morale_lost_multiplier)
-  morale_lost = morale_lost + Math.floor(morale_lost * calculateValue(source, UnitCalc.MoraleDamageDone))
-  morale_lost = morale_lost + Math.floor(morale_lost * calculateValue(target, UnitCalc.MoraleDamageTaken))
-  return { manpower: Math.floor(manpower_lost), morale: morale_lost / 1000.0 }
+  let damage = 100000.0 * calculateBaseDamage(roll, settings)
+  damage = calculate(damage, 1.0 + calculateValue(source, UnitCalc.Discipline))
+  damage = calculate(damage, 1.0 + calculateValue(source, UnitCalc.DamageDone))
+  damage = calculate(damage, 1.0 + calculateValue(target, UnitCalc.DamageTaken))
+  damage = calculate(damage, 1.0 + terrains.reduce((previous, current) => previous + (current ? calculateValue(source, current.type) : 0), 0))
+  damage = calculate(damage, 1.0 + calculateValue(target, target.type))
+  damage = calculate(damage, tactic_damage_multiplier)
+  damage = calculate(damage, 1.0 + calculateValue(target, 1.0 + calculateValue(source, UnitCalc.Offense) - calculateValue(target, UnitCalc.Defense)))
+  damage = calculate(damage, 1.0 + calculateValue(target, 1.0 - damage_reduction_per_experience * calculateValue(target, UnitCalc.Experience)))
+  damage = calculate(damage, calculateValue(source, UnitCalc.Strength))
+  let manpower_lost = damage
+  manpower_lost = calculate(manpower_lost, 1.0 + casualties_multiplier)
+  manpower_lost = calculate(manpower_lost, manpower_lost_multiplier)
+  manpower_lost = calculate(manpower_lost, 1.0 + calculateValue(source, UnitCalc.StrengthDamageDone))
+  manpower_lost = calculate(manpower_lost, 1.0 + calculateValue(target, UnitCalc.StrengthDamageTaken))
+  let morale_lost = calculate(damage, 0.001)
+  morale_lost = calculate(morale_lost, Math.max(0, calculateValue(source, UnitCalc.Morale)) / morale_base_damage)
+  morale_lost = calculate(morale_lost, morale_lost_multiplier)
+  morale_lost = calculate(morale_lost, 1.0 + calculateValue(source, UnitCalc.MoraleDamageDone))
+  morale_lost = calculate(morale_lost, 1.0 + calculateValue(target, UnitCalc.MoraleDamageTaken))
+  return { manpower: Math.floor(manpower_lost / 100000.0), morale: morale_lost / 100000.0 }
 }
+
+const calculate = (value1: number, value2: number) => Math.floor(value1 * value2)

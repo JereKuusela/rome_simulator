@@ -3,7 +3,7 @@ import { Map, List } from 'immutable'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { AppState } from '../store/'
-import { selectTactic, ArmyName } from '../store/battle'
+import { selectTactic } from '../store/battle'
 import { calculateTactic } from '../store/combat'
 import ItemSelector from '../components/ItemSelector'
 import { TacticType } from '../store/tactics'
@@ -13,7 +13,7 @@ import { UnitDefinition, Unit } from '../store/units'
 import { CountryName } from '../store/countries'
 
 export interface ModalInfo {
-  name: ArmyName
+  country: CountryName
   counter?: TacticType
 }
 
@@ -21,11 +21,12 @@ class ModalTacticSelector extends Component<IProps> {
   render(): JSX.Element | null {
     if (!this.props.info)
       return null
-    const participant = this.props.armies.get(this.props.info.name)
+    const country = this.props.info.country
+    const participant = this.props.armies.get(country)
     const army = participant && {
-      frontline: this.mergeAllValues(participant.country, participant.frontline),
-      reserve: this.mergeAllValues(participant.country, participant.reserve) as List<UnitDefinition>,
-      defeated: this.mergeAllValues(participant.country, participant.defeated) as List<UnitDefinition>
+      frontline: this.mergeAllValues(country, participant.frontline),
+      reserve: this.mergeAllValues(country, participant.reserve) as List<UnitDefinition>,
+      defeated: this.mergeAllValues(country, participant.defeated) as List<UnitDefinition>
     }
     let custom_values = Map<string, Map<TacticType, string>>()
     custom_values = custom_values.set('effect', this.props.tactics.map(value => {
@@ -50,7 +51,7 @@ class ModalTacticSelector extends Component<IProps> {
   }
 
   selectTactic = (type: TacticType | undefined): void => (
-    this.props.info && type && this.props.selectTactic(this.props.mode, this.props.info.name, type)
+    this.props.info && type && this.props.selectTactic(this.props.mode, this.props.info.country, type)
   )
 
   
@@ -68,7 +69,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  selectTactic: (mode: DefinitionType, name: ArmyName, type: TacticType) => dispatch(selectTactic(mode, name, type))
+  selectTactic: (mode: DefinitionType, name: CountryName, type: TacticType) => dispatch(selectTactic(mode, name, type))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {

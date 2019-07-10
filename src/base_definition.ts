@@ -221,7 +221,7 @@ const calculateValueSub = <Attribute>(container: Map<Attribute, OrderedMap<strin
  * Shared round function for easier changes. This precision is required for accurate morale calculations.
  * @param number 
  */
-const round = (number: number): number => Math.round(1000.0 * number) / 1000.0
+const round = (number: number): number => Math.round(100000.0 * number) / 100000.0
 
 /**
  * Returns a base value of a given attribute with a given identifier.

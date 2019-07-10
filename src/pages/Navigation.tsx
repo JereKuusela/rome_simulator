@@ -21,9 +21,6 @@ class Navigation extends Component<IProps> {
           <Menu.Item active={path === '/'} onClick={() => history.push('/')}>
             Battle
           </Menu.Item>
-          <Menu.Item active={path === '/armies'} onClick={() => history.push('/armies')}>
-            Armies
-          </Menu.Item>
           <Menu.Item active={path === '/units'} onClick={() => history.push('/units')}>
             Units
           </Menu.Item>

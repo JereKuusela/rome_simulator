@@ -2,7 +2,7 @@ import { fromJS, Map, List, OrderedSet, OrderedMap } from 'immutable'
 import { tacticFromJS, TacticType, tacticsReducer } from './tactics'
 import { terrainFromJS, TerrainType, terrainsReducer } from './terrains'
 import { unitDefinitionFromJS, unitFromJS, UnitType, unitsReducer, globalStatsReducer, Unit } from './units'
-import { RowType, battleReducer, PastState, Participant, getInitialArmy, Armies, modeState, ArmyName } from './battle'
+import { RowType, battleReducer, PastState, Participant, getInitialArmy, Armies, modeState } from './battle'
 import { DefinitionType } from '../base_definition'
 import { transferReducer } from './transfer'
 import { selectionsReducer, CountryName, Selections } from './countries'
@@ -103,7 +103,7 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {
   }
 
   const serializeParticipant = (participant: any): Participant => {
-    const initial = getInitialArmy(mode, CountryName.Country1)
+    const initial = getInitialArmy(mode)
     let frontline = initial.frontline
     if (participant.frontline)
       frontline = serializeUnits(fromJS(participant.frontline))
@@ -125,7 +125,6 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {
     const flank_size = participant.flank_size || initial.flank_size
     const roll = participant.roll || initial.roll
     const randomize_roll = participant.randomize_roll
-    const country = participant.country || initial.country
     const selections = participant.selections ? fromJS(participant.selections).toSet() : initial.selections
     return {
       general,
@@ -137,13 +136,12 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {
       defeated,
       row_types,
       tactic,
-      country,
       selections
     }
   }
   let armies = initial.armies
   if (state_raw.armies) {
-    let armies_raw: Map<ArmyName, any> = fromJS(state_raw.armies)
+    let armies_raw: Map<CountryName, any> = fromJS(state_raw.armies)
     armies = armies_raw.filter(value => value).map(value => serializeParticipant(value.toJS()))
   }
   let attacker = state_raw.attacker
@@ -199,7 +197,6 @@ export const transformSettings = (state_raw: any): ReturnType<typeof settingsRed
   const simple_mode = state_raw.simple_mode
   const mode = state_raw.mode || initial.mode
   const country = state_raw.country || initial.country
-  const army = state_raw.army || initial.army
   const accordions = state_raw.accordions ? fromJS(state_raw.accordions).toSet() : initial.accordions
-  return { combat, simple_mode, mode, country, army, accordions }
+  return { combat, simple_mode, mode, country, accordions }
 }
