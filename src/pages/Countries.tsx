@@ -92,7 +92,7 @@ class Countries extends Component<IProps, IState> {
             <Grid.Column>
               <AccordionToggle title='Heritage' identifier='countries_heritage'>
                 {
-                  this.renderTrades(this.props.trades, selections)
+                  this.renderHeritages(this.props.heritages, selections)
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -101,7 +101,7 @@ class Countries extends Component<IProps, IState> {
             <Grid.Column>
               <AccordionToggle title='Technology & Inventions' identifier='countries_invention'>
                 {
-                  this.renderTrades(this.props.trades, selections)
+                  this.renderInventions(this.props.inventions, selections)
                 }
               </AccordionToggle>
             </Grid.Column>
