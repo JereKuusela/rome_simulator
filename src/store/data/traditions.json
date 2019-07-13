@@ -819,8 +819,8 @@
                   "value": -0.15
                 },
                 {
-                  "target": "Heavy Cavalry",
-                  "attribute": "Infantry",
+                  "target": "Heavy Infantry",
+                  "attribute": "Maintenance",
                   "type": "Modifier",
                   "value": -0.15
                 },
@@ -832,7 +832,7 @@
                 },
                 {
                   "target": "Archers",
-                  "attribute": "Infantry",
+                  "attribute": "Maintenance",
                   "type": "Modifier",
                   "value": -0.15
                 }

@@ -75,8 +75,8 @@ export const getInitialArmy = (mode: DefinitionType): Participant => ({
   defeated: List<Unit>(),
   general: 0,
   tactic: getInitialTactic(mode),
-  roll: 0,
-  randomize_roll: true,
+  roll: 3,
+  randomize_roll: false,
   row_types: getInitialRowTypes(mode),
   flank_size: 5,
   selections: Set<string>()

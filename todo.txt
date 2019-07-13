@@ -1,7 +1,6 @@
 Release 4:
 
 - Laws / Economy / Ideas / Strategos
-- Missing traditions
 - Accordions to more places??
 
 - Robustness:
