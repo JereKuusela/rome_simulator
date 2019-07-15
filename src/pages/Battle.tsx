@@ -144,7 +144,7 @@ class Battle extends Component<IProps, IState> {
                     <Table.HeaderCell>
                     </Table.HeaderCell>
                     <Table.HeaderCell>
-                      Army
+                      Country
                     </Table.HeaderCell>
                     <Table.HeaderCell collapsing>
                       General skill

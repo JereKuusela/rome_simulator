@@ -61,13 +61,13 @@ const DataTransform = createTransform(
 )
 
 const migrations = {
-  2: (_: any) => ({})
+  3: (_: any) => ({})
 }
 
 const persistConfig = {
   key: 'primary',
   storage: storage,
-  version: 2,
+  version: 3,
   migrate: createMigrate(migrations, { debug: false }),
   transforms: [
     SettingsTransform,
