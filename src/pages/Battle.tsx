@@ -6,7 +6,7 @@ import { AppState } from '../store/index'
 import { UnitDefinition, Unit } from '../store/units'
 import UnitArmy from '../components/UnitArmy'
 import TargetArrows from '../components/TargetArrows'
-import { ArmyType, battle, undo, Participant, ParticipantType, toggleRandomRoll, setRoll, setGeneral, RowType, setFlankSize, selectArmy, selectUnit } from '../store/battle'
+import { ArmyType, battle, undo, Participant, ParticipantType, toggleRandomRoll, setRoll, RowType, setFlankSize, selectArmy, selectUnit } from '../store/battle'
 import { calculateTactic, calculateRollModifierFromTerrains, calculateRollModifierFromGenerals, calculateBaseDamage } from '../store/combat/combat'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import { TacticType } from '../store/tactics'
@@ -20,7 +20,7 @@ import ModalArmyUnitDetail, { ModalInfo as ModalArmyUnitInfo } from '../containe
 import ModalFastPlanner from '../containers/ModalFastPlanner'
 import { calculateValue, mergeValues, getImage, toRelativePercent, DefinitionType } from '../base_definition'
 import { mergeSettings, getBattle } from '../utils'
-import { CountryName } from '../store/countries'
+import { CountryName, setGeneralMartial } from '../store/countries'
 import { CombatParameter } from '../store/settings'
 import IconTerrain from '../images/terrain.png'
 import IconGeneral from '../images/military_power.png'
@@ -161,8 +161,8 @@ class Battle extends Component<IProps, IState> {
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {this.renderArmyInfo(ParticipantType.Attacker, this.props.attacker, attacker, defender)}
-                  {this.renderArmyInfo(ParticipantType.Defender, this.props.defender, defender, attacker)}
+                  {this.renderArmyInfo(ParticipantType.Attacker, this.props.attacker, attacker, defender, this.props.attacker)}
+                  {this.renderArmyInfo(ParticipantType.Defender, this.props.defender, defender, attacker, this.props.defender)}
                 </Table.Body>
               </Table>
             </Grid.Column>
@@ -380,7 +380,9 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderArmyInfo = (type: ParticipantType, name: CountryName, participant?: Participant, enemy?: Participant): JSX.Element => {
+  renderArmyInfo = (type: ParticipantType, name: CountryName, participant?: Participant, enemy?: Participant, enemy_name?: CountryName): JSX.Element => {
+    const country = this.props.countries.get(name)
+    const enemy_country = enemy_name && this.props.countries.get(enemy_name)
     return (
       <Table.Row key={type}>
         <Table.Cell collapsing>
@@ -394,13 +396,13 @@ class Battle extends Component<IProps, IState> {
           />
         </Table.Cell>
         <Table.Cell collapsing>
-          <Input size='mini' style={{ width: 100 }} type='number' value={participant && participant.general} onChange={(_, data) => this.props.setGeneral(this.props.mode, name, Number(data.value))} />
+          <Input size='mini' style={{ width: 100 }} type='number' value={country && country.general_martial} onChange={(_, data) => this.props.setGeneralMartial(name, Number(data.value))} />
         </Table.Cell>
         <Table.Cell collapsing>
           {this.renderTactic(name, participant, enemy && enemy.tactic)}
         </Table.Cell>
         <Table.Cell>
-          {this.renderRoll(type, name, participant ? participant.roll : 0, participant ? participant.randomize_roll : true, participant ? participant.general : 0, enemy ? enemy.general : 0)}
+          {this.renderRoll(type, name, participant ? participant.roll : 0, participant ? participant.randomize_roll : true, country ? country.general_martial : 0, enemy_country ? enemy_country.general_martial : 0)}
         </Table.Cell>
         <Table.Cell collapsing>
           {this.renderIsRollRandom(name, participant ? participant.randomize_roll : true)}
@@ -451,7 +453,8 @@ const mapStateToProps = (state: AppState) => ({
   units: state.units.definitions,
   global_stats: state.global_stats,
   combat: mergeSettings(state),
-  mode: state.settings.mode
+  mode: state.settings.mode,
+  countries: state.countries
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
@@ -459,7 +462,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   undo: (mode: DefinitionType, steps: number) => dispatch(undo(mode, steps)),
   toggleRandomRoll: (mode: DefinitionType, name: CountryName) => dispatch(toggleRandomRoll(mode, name)),
   setRoll: (mode: DefinitionType, name: CountryName, roll: number) => dispatch(setRoll(mode, name, roll)),
-  setGeneral: (mode: DefinitionType, name: CountryName, skill: number) => dispatch(setGeneral(mode, name, skill)),
+  setGeneralMartial: (name: CountryName, skill: number) => dispatch(setGeneralMartial(name, skill)),
   setFlankSize: (mode: DefinitionType, name: CountryName, size: number) => dispatch(setFlankSize(mode, name, size)),
   selectArmy: (mode: DefinitionType, type: ParticipantType, name: CountryName) => dispatch(selectArmy(mode, type, name)),
   removeUnit: (mode: DefinitionType, name: CountryName, type: ArmyType, column: number) => (

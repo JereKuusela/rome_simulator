@@ -26,7 +26,6 @@ export interface Participant extends Army {
   readonly tactic: TacticType
   readonly roll: number
   readonly randomize_roll: boolean
-  readonly general: number
   readonly row_types: Map<RowType, UnitType | undefined>
   readonly flank_size: number
   readonly selections: Set<string>
@@ -73,7 +72,6 @@ export const getInitialArmy = (mode: DefinitionType): Participant => ({
   frontline: fromJS(Array(30).fill(undefined)),
   reserve: List<Unit>(),
   defeated: List<Unit>(),
-  general: 0,
   tactic: getInitialTactic(mode),
   roll: 3,
   randomize_roll: false,
@@ -120,10 +118,6 @@ export const toggleRandomRoll = createAction('@@battle/TOGGLE_RANDOM_ROLL', acti
 
 export const setRoll = createAction('@@battle/SET_ROLL', action => {
   return (mode: DefinitionType, country: CountryName, roll: number) => action({ mode, country, roll })
-})
-
-export const setGeneral = createAction('@@battle/SET_GENERAL', action => {
-  return (mode: DefinitionType, country: CountryName, skill: number) => action({ mode, country, skill })
 })
 
 export const setFlankSize = createAction('@@battle/SET_FLANK_SIZE', action => {

@@ -7,7 +7,7 @@ import { mapRange, toList } from '../utils'
 import {
   ModifierType, Modifier, Tradition, CultureType,
   OmenDefinition, TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition,
-  GovermentType, ReligionType, TraitDefinition
+  GovermentType, ReligionType, TraitDefinition, EconomyDefinition, LawDefinition
 } from '../store/data'
 import {
   enableModifiers, clearModifiers, CountryName, selectGovernment, selectReligion, selectCulture, setOmenPower, setGeneralMartial
@@ -35,8 +35,10 @@ const TRADITION_KEY = 'tradition_'
 const HERITAGE_KEY = 'heritage_'
 const OMEN_KEY = 'omen_'
 const INVENTION_KEY = 'invention_'
+const ECONOMY_KEY = 'economy_'
+const LAW_KEY = 'law_'
 
-const padding = '.78571429em .78571429em'
+const CELL_PADDING = '.78571429em .78571429em'
 
 class Countries extends Component<IProps, IState> {
 
@@ -132,9 +134,21 @@ class Countries extends Component<IProps, IState> {
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title='General' identifier='countries_traits'>
-                General base martial: <Input type='number' value={country.general_martial} onChange={(_, { value }) => omen && this.setGeneralMartial(value)} /> with {country.trait_martial} from traits
+                General base martial: <Input type='number' value={country.general_martial} onChange={(_, { value }) => omen && this.setGeneralMartial(value)} />
                 {
                   this.renderTraits(this.props.traits, selections)
+                }
+              </AccordionToggle>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns='1'>
+            <Grid.Column>
+              <AccordionToggle title='Government & Economy' identifier='countries_government'>
+                {
+                  this.renderLaws(this.props.laws, selections)
+                }
+                {
+                  this.renderEconomy(this.props.economy, selections)
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -169,34 +183,9 @@ class Countries extends Component<IProps, IState> {
                     if (!tradition)
                       return null
                     const key = TRADITION_KEY + column + '_' + row
-                    return (
-                      <Table.Cell
-                        key={row + '_' + path.name}
-                        positive={selections.has(key)}
-                        selectable
-                        onClick={
-                          selections.has(key)
-                            ? () => this.enableTradition(path.traditions, column, row - 1, selections)
-                            : () => this.enableTradition(path.traditions, column, row, selections)
-                        }
-                        style={{ padding }}
-                      >
-                        <List>
-                          {
-                            tradition.modifiers.map(modifier => (
-                              <List.Item>
-                                {
-                                  this.getText(modifier)
-                                }
-                                {
-                                  this.getValue(modifier)
-                                }
-                              </List.Item>
-                            ))
-                          }
-                        </List>
-                      </Table.Cell>
-                    )
+                    const modifiers =  tradition.modifiers
+                    return this.renderCell(key, null, selections, modifiers,
+                      () => this.enableTradition(path.traditions, column, row, selections), () => this.enableTradition(path.traditions, column, row - 1, selections))
                   })
                 }
               </Table.Row>
@@ -222,36 +211,8 @@ class Countries extends Component<IProps, IState> {
                     const key = TRADE_KEY + index
                     if (!trade)
                       return (<Table.Cell key={key}></Table.Cell>)
-                    const modifier = trade.modifier
-                    return (
-                      <Table.Cell
-                        key={key}
-                        positive={selections.has(key)}
-                        selectable
-                        onClick={
-                          selections.has(key)
-                            ? () => this.props.clearModifiers(this.props.country, key)
-                            : () => this.props.enableModifiers(this.props.country, key, toList(modifier))
-                        }
-                        style={{ padding }}
-                      >
-                        <List>
-                          <List.Item>
-                            <List.Header>
-                              {trade.type + ' ' + trade.name}
-                            </List.Header>
-                          </List.Item>
-                          <List.Item>
-                            {
-                              this.getText(modifier)
-                            }
-                            {
-                              this.getValue(modifier)
-                            }
-                          </List.Item>
-                        </List>
-                      </Table.Cell>
-                    )
+                    const modifiers = toList(trade.modifier)
+                    return this.renderCell(key, trade.type + ' ' + trade.name, selections, modifiers)
                   })
                 }
               </Table.Row>
@@ -278,39 +239,8 @@ class Countries extends Component<IProps, IState> {
                     if (!heritage)
                       return (<Table.Cell key={key}></Table.Cell>)
                     const modifiers = heritage.modifiers
-                    return (
-                      <Table.Cell
-                        key={key}
-                        positive={selections.has(key)}
-                        selectable
-                        onClick={
-                          selections.has(key)
-                            ? () => this.props.clearModifiers(this.props.country, key)
-                            : () => this.enableHeritage(key, modifiers, selections)
-                        }
-                        style={{ padding }}
-                      >
-                        <List>
-                          <List.Item>
-                            <List.Header>
-                              {heritage.name}
-                            </List.Header>
-                          </List.Item>
-                          {
-                            modifiers.map(modifier => (
-                              <List.Item>
-                                {
-                                  this.getText(modifier)
-                                }
-                                {
-                                  this.getValue(modifier, '\u00a0\u00a0\u00a0\u00a0')
-                                }
-                              </List.Item>
-                            ))
-                          }
-                        </List>
-                      </Table.Cell>
-                    )
+                    return this.renderCell(key, heritage.name, selections, modifiers,
+                      () => this.enableHeritage(key, modifiers, selections), undefined, '\u00a0\u00a0\u00a0\u00a0')
                   })
                 }
               </Table.Row>
@@ -352,34 +282,8 @@ class Countries extends Component<IProps, IState> {
                 {
                   definition.inventions.map((invention, column) => {
                     const key = INVENTION_KEY + row + '_' + column
-                    return (
-                      <Table.Cell
-                        key={key}
-                        positive={selections.has(key)}
-                        selectable
-                        onClick={
-                          selections.has(key)
-                            ? () => this.clearInvention(key, selections)
-                            : () => this.enableInvention(inventions, key, invention, selections)
-                        }
-                        style={{ padding }}
-                      >
-                        <List>
-                          {
-                            invention.map(modifier => (
-                              <List.Item>
-                                {
-                                  this.getText(modifier)
-                                }
-                                {
-                                  this.getValue(modifier)
-                                }
-                              </List.Item>
-                            ))
-                          }
-                        </List>
-                      </Table.Cell>
-                    )
+                    return this.renderCell(key, null, selections, invention,
+                      () => this.enableInvention(inventions, key, invention, selections), () => this.clearInvention(key, selections))
                   })
                 }
               </Table.Row>
@@ -405,36 +309,8 @@ class Countries extends Component<IProps, IState> {
                     const key = OMEN_KEY + index
                     if (!omen)
                       return (<Table.Cell key={key}></Table.Cell>)
-                    const modifier = { ...omen.modifier, value: omen.modifier.value * power / 100.0 }
-                    return (
-                      <Table.Cell
-                        key={key}
-                        positive={selections.has(key)}
-                        selectable
-                        onClick={
-                          selections.has(key)
-                            ? () => this.props.clearModifiers(this.props.country, key)
-                            : () => this.enableOmen(key, modifier, selections)
-                        }
-                        style={{ padding }}
-                      >
-                        <List>
-                          <List.Item>
-                            <List.Header>
-                              {omen.name}
-                            </List.Header>
-                          </List.Item>
-                          <List.Item>
-                            {
-                              this.getText(modifier)
-                            }
-                            {
-                              this.getValue(modifier)
-                            }
-                          </List.Item>
-                        </List>
-                      </Table.Cell>
-                    )
+                    const modifiers = toList({ ...omen.modifier, value: omen.modifier.value * power / 100.0 })
+                    return this.renderCell(key, omen.name, selections, modifiers, () => this.enableOmen(key, modifiers, selections))
                   })
                 }
               </Table.Row>
@@ -445,7 +321,7 @@ class Countries extends Component<IProps, IState> {
     )
   }
 
-  
+
   renderTraits = (traits: ImmutableList<TraitDefinition>, selections: Set<string>) => {
     const rows = Math.ceil(traits.count() / TRAIT_COLUMNS)
     return (
@@ -462,39 +338,7 @@ class Countries extends Component<IProps, IState> {
                     if (!trait)
                       return (<Table.Cell key={key}></Table.Cell>)
                     const modifiers = trait.modifiers
-                    return (
-                      <Table.Cell
-                        key={key}
-                        positive={selections.has(key)}
-                        selectable
-                        onClick={
-                          selections.has(key)
-                            ? () => this.props.clearModifiers(this.props.country, key)
-                            : () => this.props.enableModifiers(this.props.country, key, modifiers)
-                        }
-                        style={{ padding }}
-                      >
-                        <List>
-                          <List.Item>
-                            <List.Header>
-                              {trait.name}
-                            </List.Header>
-                          </List.Item>
-                          {
-                            modifiers.map(modifier => (
-                              <List.Item>
-                                {
-                                  this.getText(modifier)
-                                }
-                                {
-                                  this.getValue(modifier)
-                                }
-                              </List.Item>
-                            ))
-                          }
-                        </List>
-                      </Table.Cell>
-                    )
+                    return this.renderCell(key, trait.name, selections, modifiers)
                   })
                 }
               </Table.Row>
@@ -504,6 +348,69 @@ class Countries extends Component<IProps, IState> {
       </Table >
     )
   }
+
+  renderEconomy = (economy: ImmutableList<EconomyDefinition>, selections: Set<string>) => this.renderEconomyOrLaw(ECONOMY_KEY, economy, selections)
+
+  renderLaws = (laws: ImmutableList<LawDefinition>, selections: Set<string>) => this.renderEconomyOrLaw(LAW_KEY, laws, selections)
+
+  renderEconomyOrLaw = (modifier_key: string, economy: ImmutableList<EconomyDefinition | LawDefinition>, selections: Set<string>) => {
+    return (
+      <Table celled unstackable fixed>
+        <Table.Body>
+          {
+            economy.map(options => (
+              <Table.Row key={options.name}>
+                {
+                  options.options.map(option => {
+                    const key = modifier_key + options.name + '_' + option.name
+                    const modifiers = option.modifiers
+                    return this.renderCell(key, option.name, selections, modifiers,
+                      () => this.enableOption(key, modifiers, selections), () => this.props.clearModifiers(this.props.country, key))
+                  })
+                }
+              </Table.Row>
+            ))
+          }
+        </Table.Body>
+      </Table >
+    )
+  }
+
+  renderCell = (key: string, name: string | null, selections: Set<string>, modifiers: ImmutableList<Modifier>, enable?: (() => void), clear?: (() => void), padding?: string) => (
+    <Table.Cell
+      key={key}
+      positive={selections.has(key)}
+      selectable
+      onClick={
+        selections.has(key)
+          ? (clear ? clear : () => this.props.clearModifiers(this.props.country, key))
+          : (enable ? enable : () => this.props.enableModifiers(this.props.country, key, modifiers))
+      }
+      style={{ padding: CELL_PADDING }}
+    >
+      <List>
+        {name &&
+          <List.Item>
+            <List.Header>
+              {name}
+            </List.Header>
+          </List.Item>
+        }
+        {
+          modifiers.map(modifier => (
+            <List.Item>
+              {
+                this.getText(modifier)
+              }
+              {
+                this.getValue(modifier, padding)
+              }
+            </List.Item>
+          ))
+        }
+      </List>
+    </Table.Cell>
+  )
 
   /**
    * Clears traditions from a given column above a given row.
@@ -531,33 +438,34 @@ class Countries extends Component<IProps, IState> {
   }
 
   /**
-   * Clears all heritages.
-   */
-  clearHeritages = (selections: Set<string>) => {
-    selections.filter(value => value.startsWith(HERITAGE_KEY)).forEach(value => this.props.clearModifiers(this.props.country, value))
-  }
-
-  /**
    * Enables a heritage and clears any existing heritages.
    */
   enableHeritage = (key: string, modifiers: ImmutableList<Modifier>, selections: Set<string>) => {
-    this.clearHeritages(selections)
+    this.clearModifiers(HERITAGE_KEY, selections)
     this.props.enableModifiers(this.props.country, key, modifiers)
   }
 
   /**
-   * Clears all omens.
+   * Clears modifiers starting with a given key.
    */
-  clearOmens = (selections: Set<string>) => {
-    selections.filter(value => value.startsWith(OMEN_KEY)).forEach(value => this.props.clearModifiers(this.props.country, value))
+  clearModifiers = (key: string, selections: Set<string>) => {
+    selections.filter(value => value.startsWith(key)).forEach(value => this.props.clearModifiers(this.props.country, value))
+  }
+
+  /**
+   * Enables an option and clears any existing options.
+   */
+  enableOption = (key: string, modifiers: ImmutableList<Modifier>, selections: Set<string>) => {
+    this.clearModifiers(this.getUpperKey(key) + '_', selections)
+    this.props.enableModifiers(this.props.country, key, modifiers)
   }
 
   /**
    * Enables a omen and clears any existing omens.
    */
-  enableOmen = (key: string, modifier: Modifier, selections: Set<string>) => {
-    this.clearOmens(selections)
-    this.props.enableModifiers(this.props.country, key, toList(modifier))
+  enableOmen = (key: string, modifiers: ImmutableList<Modifier>, selections: Set<string>) => {
+    this.clearModifiers(OMEN_KEY, selections)
+    this.props.enableModifiers(this.props.country, key, modifiers)
   }
 
   /**
@@ -665,6 +573,16 @@ class Countries extends Component<IProps, IState> {
       return Number(split[index])
     return -1
   }
+
+  /**
+   * Returns the given key without last prefix.
+   */
+  getUpperKey = (key: string) => {
+    const index = key.lastIndexOf('_')
+    if (index < 0)
+      return ''
+    return key.substring(0, index)
+  }
 }
 
 const mapStateToProps = (state: AppState) => ({
@@ -675,6 +593,8 @@ const mapStateToProps = (state: AppState) => ({
   omens: state.data.omens,
   countries: state.countries,
   country: state.settings.country,
+  laws: state.data.laws,
+  economy: state.data.economy,
   mode: state.settings.mode,
   traits: state.data.traits
 })

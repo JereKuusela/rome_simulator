@@ -1,0 +1,73 @@
+{
+  "laws": [
+    {
+      "name": "Military (Republic)",
+      "options": [
+        {
+          "name": "None",
+          "modifiers": [
+            {
+              "target": "Text",
+              "attribute": "(No effect)",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "name": "Noble Elite",
+          "modifiers": [
+            {
+              "target": "Land",
+              "attribute": "Morale",
+              "type": "Modifier",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "name": "Provisioning Act",
+          "modifiers": [
+            {
+              "target": "Global",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "value": -0.1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Maritime (Monarchy)",
+      "options": [
+        {
+          "name": "None",
+          "modifiers": [
+            {
+              "target": "Text",
+              "attribute": "(No effect)",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "name": "Professional Oarsmen",
+          "modifiers": [
+            {
+              "target": "Text",
+              "attribute": "National Tax",
+              "negative": true,
+              "value": -0.05
+            },
+            {
+              "target": "Naval",
+              "attribute": "Morale",
+              "type": "Modifier",
+              "value": 0.1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

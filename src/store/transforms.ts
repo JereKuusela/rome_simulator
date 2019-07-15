@@ -5,7 +5,7 @@ import { unitDefinitionFromJS, unitFromJS, UnitType, unitsReducer, globalStatsRe
 import { RowType, battleReducer, PastState, Participant, getInitialArmy, Armies, modeState } from './battle'
 import { DefinitionType } from '../base_definition'
 import { transferReducer } from './transfer'
-import { selectionsReducer, CountryName, Selections } from './countries'
+import { selectionsReducer, CountryName, Country } from './countries'
 import { CombatParameter, settingsReducer } from './settings'
 
 const dummyAction = {
@@ -121,13 +121,11 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {
     let tactic = participant.tactic
     if (!tactic)
       tactic = initial.tactic
-    const general = participant.general || initial.general
     const flank_size = participant.flank_size || initial.flank_size
     const roll = participant.roll || initial.roll
     const randomize_roll = participant.randomize_roll
     const selections = participant.selections ? fromJS(participant.selections).toSet() : initial.selections
     return {
-      general,
       flank_size,
       roll,
       randomize_roll,
@@ -179,7 +177,7 @@ export const transformCountries = (state_raw: any): ReturnType<typeof selections
   if (!state_raw)
     return initial
   const countries_raw: Map<CountryName, any> = fromJS(state_raw)
-  const countries: Map<CountryName, Selections> = countries_raw.map(value => value.toJS())
+  const countries: Map<CountryName, Country> = countries_raw.map(value => value.toJS())
   return countries.map(value => ({ ...value, selections: fromJS(value.selections).toSet()}))
 }
 

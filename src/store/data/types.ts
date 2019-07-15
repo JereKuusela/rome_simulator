@@ -76,3 +76,17 @@ export interface TraitDefinition {
   readonly name: string
   readonly modifiers: List<Modifier>
 }
+export interface LawDefinition {
+  readonly name: string
+  readonly options: List<{
+    readonly name: string
+    readonly modifiers: List<Modifier>
+  }>
+}
+export interface EconomyDefinition {
+  readonly name: string
+  readonly options: List<{
+    readonly name: string
+    readonly modifiers: List<Modifier>
+  }>
+}

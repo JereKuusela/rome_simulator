@@ -2,7 +2,7 @@ import { createReducer } from 'typesafe-actions'
 import { List, Map } from 'immutable'
 import {
   getInitialArmy, getInitialTerrains, Participant, PastState, ParticipantType,
-  clearUnits, selectUnit, selectTerrain, selectTactic, undo, toggleRandomRoll, setRoll, setGeneral, setRowType, removeReserveUnits, addReserveUnits, setFlankSize,
+  clearUnits, selectUnit, selectTerrain, selectTactic, undo, toggleRandomRoll, setRoll, setRowType, removeReserveUnits, addReserveUnits, setFlankSize,
   selectArmy, ArmyType
 } from './actions'
 import { Unit, UnitType  } from '../units'
@@ -70,9 +70,6 @@ const fightOver = (state: Map<DefinitionType, Armies>, payload: { mode: Definiti
 export const battleReducer = createReducer(initialState)
   .handleAction(toggleRandomRoll, (state, action: ReturnType<typeof toggleRandomRoll>) => (
     update(state, action.payload, (value: Participant) => ({ ...value, randomize_roll: !value.randomize_roll }))
-  ))
-  .handleAction(setGeneral, (state, action: ReturnType<typeof setGeneral>) => (
-    update(state, action.payload, (value: Participant) => ({ ...value, general: action.payload.skill }))
   ))
   .handleAction(setFlankSize, (state, action: ReturnType<typeof setFlankSize>) => (
     update(state, action.payload, (value: Participant) => ({ ...value, flank_size: action.payload.size }))

@@ -2,7 +2,7 @@
 import { OrderedMap, List } from 'immutable'
 import { listFromJS } from '../../utils'
 import {
-  CultureType, ReligionType,
+  CultureType, ReligionType, LawDefinition, EconomyDefinition,
   TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition
 } from './types'
 
@@ -12,6 +12,8 @@ import * as heritageData from './heritages.json'
 import * as inventionData from './inventions.json'
 import * as omenData from './omens.json'
 import * as traitData from './traits.json'
+import * as lawData from './laws.json'
+import * as economyData from './economy.json'
 
 export const getTraditionDefinitions = (): OrderedMap<CultureType, TraditionDefinition> => {
   let map = OrderedMap<CultureType, TraditionDefinition>()
@@ -59,17 +61,33 @@ export const getTraitDefinitions = (): List<TraitDefinition> => {
   return traits.sortBy((_, key) => key)
 }
 
+export const getLawDefinitions = (): List<LawDefinition> => {
+  let laws = List<LawDefinition>()
+  for (const value of lawData.laws)
+    laws = laws.push(listFromJS<LawData>(value))
+  return laws.sortBy((_, key) => key)
+}
+
+export const getEconomyDefinitions = (): List<EconomyDefinition> => {
+  let options = List<EconomyDefinition>()
+  for (const value of economyData.economy)
+    options = options.push(listFromJS<EconomyData>(value))
+  return options.sortBy((_, key) => key)
+}
+
+interface ModifierData {
+  target: string
+        attribute: string
+        value: number
+}
+
 interface TraditionData {
   type: string
   paths: {
     name: string
     traditions: {
       name: string
-      modifiers: {
-        target: string
-        attribute: string
-        value: number
-      }[]
+      modifiers: ModifierData[]
     }[]
   }[]
 }
@@ -77,48 +95,44 @@ interface TraditionData {
 interface TradeData {
   name: string
   type: string
-  modifier: {
-    target: string
-    attribute: string
-    value: number
-  }
+  modifier: ModifierData
 }
 
 interface HeritageData {
   name: string
-  modifiers: {
-    target: string
-    attribute: string
-    value: number
-  }[]
+  modifiers: ModifierData[]
 }
 
 interface InventionData {
   name: string
-  inventions: {
-    target: string
-    attribute: string
-    value: number
-  }[][]
+  inventions: ModifierData[][]
 }
 
 interface OmenData {
   type: string
   omens: {
     name: string
-    modifier: {
-      target: string
-      attribute: string
-      value: number
-    }
+    modifier: ModifierData
   }[]
 }
 
 interface TraitData {
   name: string,
-  modifiers: {
-    target: string
-    attribute: string
-    value: number
+  modifiers: ModifierData[]
+}
+
+interface LawData {
+  name: string,
+  options: {
+    name: string,
+    modifiers: ModifierData[]
+  }[]
+}
+
+interface EconomyData {
+  name: string,
+  options: {
+    name: string,
+    modifiers: ModifierData[]
   }[]
 }

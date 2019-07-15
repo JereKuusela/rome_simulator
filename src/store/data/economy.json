@@ -1,0 +1,164 @@
+{
+  "economy": [
+    {
+      "name": "Army Maintenance",
+      "options": [
+        {
+          "name": "Decreased Pay",
+          "modifiers": [
+            {
+              "target": "Land",
+              "attribute": "Morale",
+              "type": "Modifier",
+              "negative": true,
+              "value": -0.8
+            },
+            {
+              "target": "Land",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "value": -0.33
+            }
+          ]
+        },
+        {
+          "name": "Default",
+          "modifiers": [
+            {
+              "target": "Text",
+              "attribute": "(No effect)",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "name": "Increased Pay",
+          "modifiers": [
+            {
+              "target": "Land",
+              "attribute": "Morale",
+              "type": "Modifier",
+              "value": 0.1
+            },
+            {
+              "target": "Land",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "negative": true,
+              "value": 0.5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Fleet Maintenance",
+      "options": [
+        {
+          "name": "Decreased Pay",
+          "modifiers": [
+            {
+              "target": "Naval",
+              "attribute": "Morale",
+              "type": "Modifier",
+              "negative": true,
+              "value": -0.8
+            },
+            {
+              "target": "Naval",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "value": -0.33
+            }
+          ]
+        },
+        {
+          "name": "Default",
+          "modifiers": [
+            {
+              "target": "Text",
+              "attribute": "(No effect)",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "name": "Increased Pay",
+          "modifiers": [
+            {
+              "target": "Naval",
+              "attribute": "Morale",
+              "type": "Modifier",
+              "value": 0.1
+            },
+            {
+              "target": "Naval",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "negative": true,
+              "value": 0.5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Fort Maintenance",
+      "options": [
+        {
+          "name": "Ignored Garrisons",
+          "modifiers": [
+            {
+              "target": "Text",
+              "attribute": "Garrison Size",
+              "negative": true,
+              "value": -0.5
+            },
+            {
+              "target": "Text",
+              "attribute": "Fort Defense",
+              "negative": true,
+              "value": -0.5
+            },
+            {
+              "target": "Text",
+              "attribute": "Fort Maintenance",
+              "value": -0.25
+            }
+          ]
+        },
+        {
+          "name": "Paid Garrisons",
+          "modifiers": [
+            {
+              "target": "Text",
+              "attribute": "(No effect)",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "name": "Improved Fortifications",
+          "modifiers": [
+            {
+              "target": "Text",
+              "attribute": "Garrison Size",
+              "value": 0.1
+            },
+            {
+              "target": "Text",
+              "attribute": "Fort Defense",
+              "value": 0.1
+            },
+            {
+              "target": "Text",
+              "attribute": "Fort Maintenance",
+              "negative": true,
+              "value": 0.25
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

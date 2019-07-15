@@ -7,7 +7,7 @@ import {
 } from './actions'
 import { GovermentType, ReligionType, CultureType } from '../data'
 
-export interface Selections {
+export interface Country {
   selections: Set<string>,
   culture: CultureType,
   government: GovermentType,
@@ -31,7 +31,7 @@ const getDefaultSelections = () => (
   }
 )
 
-const selectionsState = Map<CountryName, Selections>().set(CountryName.Country1, getDefaultSelections()).set(CountryName.Country2, getDefaultSelections())
+const selectionsState = Map<CountryName, Country>().set(CountryName.Country1, getDefaultSelections()).set(CountryName.Country2, getDefaultSelections())
 
 
 export const selectionsReducer = createReducer(selectionsState)
@@ -68,19 +68,3 @@ export const selectionsReducer = createReducer(selectionsState)
   .handleAction(toggleHasGeneral, (state, action: ReturnType<typeof toggleHasGeneral>) => (
     state.update(action.payload.country, value => ({ ...value, has_general: !value.has_general }))
   ))
-  .handleAction(enableModifiers, (state, action: ReturnType<typeof enableModifiers>) => {
-    let next = state.get(action.payload.country)!
-    if (!next)
-      return state
-    /*const change = action.payload.modifiers.filter(value => value.target === DefinitionType.Land || value.target === DefinitionType.Global)
-    const baseLandValues = landValues.filter(value => value.type !== ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
-    const modifierLandValues = landValues.filter(value => value.type === ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
-    const navalValues = action.payload.modifiers.filter(value => value.target === DefinitionType.Naval || value.target === DefinitionType.Global)
-    const baseNavalValues = navalValues.filter(value => value.type !== ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
-    const modifierNavalValues = navalValues.filter(value => value.type === ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
-    next = next.update(DefinitionType.Land, stats => regenerateValues(stats, ValuesType.Base, action.payload.key, baseLandValues))
-    next = next.update(DefinitionType.Land, stats => regenerateValues(stats, ValuesType.Modifier, action.payload.key, modifierLandValues))
-    next = next.update(DefinitionType.Naval, stats => regenerateValues(stats, ValuesType.Base, action.payload.key, baseNavalValues))
-    next = next.update(DefinitionType.Naval, stats => regenerateValues(stats, ValuesType.Modifier, action.payload.key, modifierNavalValues))*/
-    return state.set(action.payload.country, next)
-  })
