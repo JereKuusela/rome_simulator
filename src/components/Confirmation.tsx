@@ -23,11 +23,6 @@ export default class Confirmation extends Component<IProps, IState> {
   }
 
   render(): JSX.Element {
-    if (this.state.confirmation === this.CONFIRM) {
-      this.setState({ confirmation: '' })
-      this.props.onConfirm()
-      this.props.onClose()
-    }
     return (
       <Modal onClose={this.props.onClose} open={this.props.open}>
         <Modal.Header>{this.props.message}</Modal.Header>
@@ -37,11 +32,22 @@ export default class Confirmation extends Component<IProps, IState> {
               Write&nbsp;<i>yes</i>&nbsp;to confirm
               </Grid.Row>
             <Grid.Row>
-              <Input value={this.state.confirmation} onChange={(_, event) => this.setState({ confirmation: event.value })} autoFocus />
+              <Input value={this.state.confirmation} onChange={(_, {value}) => this.checkConfirm(value)} autoFocus />
             </Grid.Row>
           </Grid>
         </Modal.Content>
       </Modal>
     )
+  }
+  checkConfirm = (value: string) => {
+    if (value === this.CONFIRM) {
+      this.setState({ confirmation: '' })
+      this.props.onConfirm()
+      // Prevents nasty scroll down.
+      setTimeout(() => this.props.onClose(), 0)
+    }
+    else {
+      this.setState({ confirmation: value })
+    }
   }
 }

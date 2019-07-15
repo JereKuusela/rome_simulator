@@ -15,14 +15,7 @@ import {
 import AccordionToggle from '../containers/AccordionToggle'
 import CountryManager from '../containers/CountryManager'
 import DropdownSelector from '../components/DropdownSelector'
-
-interface IState {
-  traditions_open: boolean,
-  trade_open: boolean,
-  heritage_open: boolean,
-  research_open: boolean,
-  omens_open: boolean
-}
+import ConfirmationButton from '../components/ConfirmationButton'
 
 const TRADE_COLUMNS = 4.0
 const HERITAGE_COLUMNS = 4.0
@@ -38,14 +31,11 @@ const INVENTION_KEY = 'invention_'
 const ECONOMY_KEY = 'economy_'
 const LAW_KEY = 'law_'
 
+const KEYS = [TRAIT_KEY, TRADE_KEY, TRADITION_KEY, HERITAGE_KEY, OMEN_KEY, INVENTION_KEY, ECONOMY_KEY, LAW_KEY]
+
 const CELL_PADDING = '.78571429em .78571429em'
 
-class Countries extends Component<IProps, IState> {
-
-  constructor(props: IProps) {
-    super(props)
-    this.state = { traditions_open: false, trade_open: false, heritage_open: false, research_open: false, omens_open: false }
-  }
+class Countries extends Component<IProps> {
 
   render(): JSX.Element {
     const country = this.props.countries.get(this.props.country)!
@@ -54,7 +44,13 @@ class Countries extends Component<IProps, IState> {
     const omen = this.props.omens.get(country.religion)
     return (
       <Container>
-        <CountryManager />
+        <CountryManager>
+          <ConfirmationButton
+            message={'Are you sure you want to clear all selections from country ' + this.props.country + '?'}
+            negative
+            text='Clear selections'
+            onConfirm={() => this.clearAll(selections)} />
+        </CountryManager>
         <Grid>
           <Grid.Row columns='3'>
             <Grid.Column>
@@ -183,7 +179,7 @@ class Countries extends Component<IProps, IState> {
                     if (!tradition)
                       return null
                     const key = TRADITION_KEY + column + '_' + row
-                    const modifiers =  tradition.modifiers
+                    const modifiers = tradition.modifiers
                     return this.renderCell(key, null, selections, modifiers,
                       () => this.enableTradition(path.traditions, column, row, selections), () => this.enableTradition(path.traditions, column, row - 1, selections))
                   })
@@ -532,6 +528,15 @@ class Countries extends Component<IProps, IState> {
   enableInvention = (inventions: ImmutableList<InventionDefinition>, key: string, modifiers: ImmutableList<Modifier>, selections: Set<string>) => {
     this.enableTech(inventions, this.getNumberFromKey(key, 1), selections)
     this.props.enableModifiers(this.props.country, key, modifiers)
+  }
+
+  /**
+   * Clears all selections.
+   */
+  clearAll = (selections: Set<string>) => {
+    KEYS.forEach(key => this.clearModifiers(key, selections))
+    this.props.setOmenPower(this.props.country, 100)
+    this.props.setGeneralMartial(this.props.country, 0)
   }
 
 

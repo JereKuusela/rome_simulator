@@ -71,7 +71,7 @@ class CountryManager extends Component<IProps, IState> {
             <Grid.Column>
               <Button primary onClick={() => this.setState({ open_edit_country: true })}>
                 Rename country
-            </Button>
+              </Button>
             </Grid.Column>
           }
           {
@@ -79,7 +79,7 @@ class CountryManager extends Component<IProps, IState> {
             <Grid.Column>
               <Button primary onClick={() => this.setState({ open_delete_country: true })}>
                 Delete country
-            </Button>
+              </Button>
             </Grid.Column>
           }
           {
