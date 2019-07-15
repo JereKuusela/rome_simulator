@@ -2,8 +2,8 @@ import { OrderedMap } from 'immutable'
 import { Participant } from '../../battle'
 import { TacticType } from '../../tactics'
 import { Unit, UnitCalc, UnitDefinition, UnitType } from '../../units'
-import { calculateValue, DefinitionType} from '../../../base_definition'
-import { settingsState, CombatParameter  } from '../../settings'
+import { calculateValue, DefinitionType } from '../../../base_definition'
+import { settingsState, CombatParameter } from '../../settings'
 
 export interface TestInfo {
   attacker: Participant
@@ -11,16 +11,21 @@ export interface TestInfo {
   round: number
 }
 
-const verifySub = (round: number, unit: Unit | undefined, manpower: number, morale: number) => {
+const verifySub = (round: number, unit: Unit | undefined, strength: number, morale: number) => {
   expect(unit).toBeTruthy()
   if (!unit)
     return
-  expect(calculateValue(unit, UnitCalc.Strength)).toEqual(manpower)
   try {
-    expect(Math.abs(calculateValue(unit, UnitCalc.Morale) - morale)).toBeLessThan(0.002)
+    expect(Math.floor(1000 * calculateValue(unit, UnitCalc.Strength))).toEqual(strength)
   }
   catch (e) {
-    throw new Error('Round ' + round + ': Morale ' + calculateValue(unit, UnitCalc.Morale) + ' is not ' + morale);
+    throw new Error('Round ' + round + ': Strength ' + 1000 * calculateValue(unit, UnitCalc.Strength) + ' is not ' + strength);
+  }
+  try {
+    expect(Math.abs(calculateValue(unit, UnitCalc.Morale) - 2 * morale)).toBeLessThan(0.002)
+  }
+  catch (e) {
+    throw new Error('Round ' + round + ': Morale ' + calculateValue(unit, UnitCalc.Morale) + ' is not ' + 2 * morale);
   }
 }
 export const verifyCenterUnits = (info: TestInfo, manpower_a: number, morale_a: number, manpower_d: number, morale_d: number) => {
@@ -39,7 +44,7 @@ export const setTactics = (info: TestInfo, tactic_a: TacticType, tactic_d: Tacti
   info.attacker = { ...info.attacker, tactic: tactic_a }
   info.defender = { ...info.defender, tactic: tactic_d }
 }
-export const setCenterUnits = (info: TestInfo, unit_a: UnitDefinition, unit_b: UnitDefinition)=> {
+export const setCenterUnits = (info: TestInfo, unit_a: UnitDefinition, unit_b: UnitDefinition) => {
   info.attacker = { ...info.attacker, frontline: info.attacker.frontline.set(15, unit_a) }
   info.defender = { ...info.defender, frontline: info.defender.frontline.set(15, unit_b) }
 }
@@ -57,5 +62,5 @@ export const getSettings = (mode: DefinitionType): OrderedMap<CombatParameter, n
 }
 
 describe('utils', () => {
-  it('works', () => {})
+  it('works', () => { })
 })

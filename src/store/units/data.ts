@@ -82,7 +82,7 @@ export const getDefaultGlobalDefinition = (): Map<DefinitionType, UnitDefinition
   const land = { type: '' as UnitType, mode: DefinitionType.Land, image: IconMilitaryPower, requirements: '', can_assault: false }
   const naval = { type: '' as UnitType, mode: DefinitionType.Naval, image: IconMilitaryPower, requirements: '', can_assault: false }
   const values: [UnitCalc, number][] = [
-    [UnitCalc.Strength, 1000],
+    [UnitCalc.Strength, 1],
     [UnitCalc.Morale, 3]
   ]
   definitions = definitions.set(DefinitionType.Land, addValues(land, ValuesType.Base, 'Base', values))

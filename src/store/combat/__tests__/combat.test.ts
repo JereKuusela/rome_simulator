@@ -43,16 +43,31 @@ describe('1 vs 1', () => {
   it('should work without modifiers', () => {
     const test_unit = addValues(unit, ValuesType.Base, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25]])
     setCenterUnits(info, test_unit, test_unit)
-    setRolls(info, 1, 3)
+    setRolls(info, 1, 2)
     doRound()
-    verifyCenterUnits(info, 972, 2.148, 984, 2.256)
+    verifyCenterUnits(info, 976, 1.0920, 984, 1.1280)
     doRound()
-    verifyCenterUnits(info, 945, 1.916, 969, 2.132)
+    verifyCenterUnits(info, 952, 0.9921, 968, 1.0640)
     doRound()
-    verifyCenterUnits(info, 918, 1.702, 954, 2.026)
+    verifyCenterUnits(info, 929, 0.8993, 953, 1.0073)
+    doRound()
+    verifyCenterUnits(info, 906, 0.8129, 938, 0.9572)
+    doRound()
+    verifyCenterUnits(info, 883, 0.7321, 923, 0.9130)
+    setRolls(info, 4, 2)
+    doRound()
+    verifyCenterUnits(info, 861, 0.6562, 899, 0.8450)
+    doRound()
+    verifyCenterUnits(info, 840, 0.5878, 874, 0.7857)
+    doRound()
+    verifyCenterUnits(info, 819, 0.5260, 851, 0.7338)
+    doRound()
+    verifyCenterUnits(info, 798, 0.4697, 828, 0.6886)
+    doRound()
+    verifyCenterUnits(info, 778, 0.4184, 806, 0.6492)
   })
 
-  it('should work with extra morale damage taken', () => {
+  /*it('should work with extra morale damage taken', () => {
     setRolls(info, 1, 3)
     doRound()
     verifyCenterUnits(info, 972, 2.084, 984, 2.220)
@@ -71,9 +86,9 @@ describe('1 vs 1', () => {
     verifyCenterUnits(info, 801, 0.544, 900, 1.638)
     doRound()
     verifyCenterUnits(info, 769, 0.298, 888, 1.606)
-  })
+  })*/
 
-  it('should work with extra strength damage taken', () => {
+  /*it('should work with extra strength damage taken', () => {
     const test_unit = addValues(unit, ValuesType.Base, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitCalc.StrengthDamageTaken, 0.25]])
     setCenterUnits(info, test_unit, test_unit)
     setRolls(info, 3, 4)
@@ -87,9 +102,9 @@ describe('1 vs 1', () => {
     verifyCenterUnits(info, 849, 1.432, 889, 1.720)
     doRound()
     verifyCenterUnits(info, 814, 1.248, 864, 1.612)
-  })
+  })*/
 
-  it('should work with versus damage', () => {
+  /*it('should work with versus damage', () => {
     const test_unit = addValues(unit, ValuesType.Base, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitType.Archers, 0.25]] as [UnitCalc | UnitType, number][])
     setCenterUnits(info, test_unit, test_unit)
     setRolls(info, 5, 1)
@@ -114,10 +129,26 @@ describe('1 vs 1', () => {
     verifyCenterUnits(info, 777, 1.306, 744, 0.578)
     doRound()
     verifyCenterUnits(info, 751, 1.252, 729, 0.502)
-  })
-
+  })*/
 
   it('should work with discipline', () => {
+    const unit_a = addValues(unit, ValuesType.Base, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitCalc.Discipline, 0.0262]])
+    const unit_d = addValues(unit, ValuesType.Base, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitCalc.Discipline, 0.0299]])
+    setCenterUnits(info, unit_a, unit_d)
+    setRolls(info, 2, 4)
+    doRound()
+    verifyCenterUnits(info, 967, 1.0516, 979, 1.1076)
+    doRound()
+    verifyCenterUnits(info, 934, 0.9176, 959, 1.0293)
+    doRound()
+    verifyCenterUnits(info, 903, 0.7955, 940, 0.9633)
+    doRound()
+    verifyCenterUnits(info, 872, 0.6835, 921, 0.9080)
+    doRound()
+    verifyCenterUnits(info, 841, 0.5801, 904, 0.8622)
+  })
+
+  /*it('should work with discipline', () => {
     const unit_a = addValues(unit, ValuesType.Base, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitCalc.Discipline, 0.01]])
     const unit_d = addValues(unit, ValuesType.Base, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25], [UnitCalc.Discipline, 0.045]])
     setCenterUnits(info, unit_a, unit_d)
@@ -132,7 +163,7 @@ describe('1 vs 1', () => {
     //verifyCenterUnits(info,875, 1.470, 864, 1.368)
     doRound()
     //verifyCenterUnits(info,847, 1.324, 833, 1.194)
-  })
+  })*/
 
   /*it('fake without modifiers', () => {
     // Morale multiplier and base set to 1.0

@@ -38,7 +38,7 @@ describe('1 vs 1', () => {
     info.defender = { ...info.defender, ...d }
   }
 
-  it('should work with extra casualties 1', () => {
+  /*it('should work with extra casualties 1', () => {
     setTactics(info, TacticType.ShockAction, TacticType.ShockAction)
     setRolls(info, 1, 5)
     doRound()
@@ -54,8 +54,8 @@ describe('1 vs 1', () => {
     setRolls(info, 1, 6)
     doRound()
     verifyCenterUnits(info, 751, 0.378, 900, 1.790)
-  })
-  it('should work with extra casualties 2', () => {
+  })*/
+  /*it('should work with extra casualties 2', () => {
     setTactics(info, TacticType.ShockAction, TacticType.ShockAction)
     setRolls(info, 6, 2)
     doRound()
@@ -75,8 +75,8 @@ describe('1 vs 1', () => {
     verifyCenterUnits(info, 827, 1.400, 734, 0.454)
     doRound()
     verifyCenterUnits(info, 806, 1.364, 703, 0.282)
-  })
-  it('should work with counters', () => {
+  })*/
+  /*it('should work with counters', () => {
     setTactics(info, TacticType.Skirmishing, TacticType.Bottleneck)
     setRolls(info, 5, 2)
     doRound()
@@ -98,7 +98,7 @@ describe('1 vs 1', () => {
     verifyCenterUnits(info, 872, 1.362, 832, 0.394)
     doRound()
     verifyCenterUnits(info, 855, 1.320, 818, 0.274)
-  })
+  })*/
 })
 
 

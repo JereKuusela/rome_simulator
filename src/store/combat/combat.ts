@@ -365,12 +365,12 @@ const calculateLosses = (source: Unit, target: Unit, roll: number, terrains: Ter
   manpower_lost = calculate(manpower_lost, manpower_lost_multiplier)
   manpower_lost = calculate(manpower_lost, 1.0 + calculateValue(source, UnitCalc.StrengthDamageDone))
   manpower_lost = calculate(manpower_lost, 1.0 + calculateValue(target, UnitCalc.StrengthDamageTaken))
-  let morale_lost = calculate(damage, 0.001)
+  let morale_lost = damage
   morale_lost = calculate(morale_lost, Math.max(0, calculateValue(source, UnitCalc.Morale)) / morale_base_damage)
   morale_lost = calculate(morale_lost, morale_lost_multiplier)
   morale_lost = calculate(morale_lost, 1.0 + calculateValue(source, UnitCalc.MoraleDamageDone))
   morale_lost = calculate(morale_lost, 1.0 + calculateValue(target, UnitCalc.MoraleDamageTaken))
-  return { manpower: Math.floor(manpower_lost / 100000.0), morale: morale_lost / 100000.0 }
+  return { manpower: manpower_lost / 100000.0, morale: morale_lost / 100000.0 }
 }
 
 const calculate = (value1: number, value2: number) => Math.floor(value1 * value2)
