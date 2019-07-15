@@ -109,26 +109,26 @@ class Transfer extends Component<IProps, IState> {
    */
   getInitialOnly = (mode: Armies): Armies => {
     const past_a = mode.attacker_past && mode.attacker_past.get(0)
-      if (mode.round > -1 && past_a) {
-       mode = {
-          ...mode,
-          armies: mode.armies.update(mode.attacker, value => ({ ...value, ...past_a})),
-          attacker_past: mode.attacker_past.clear()
-        } 
-      }
-      const past_d = mode.defender_past && mode.defender_past.get(0)
-      if (mode.round > -1 && past_d) {
-        mode = {
-          ...mode,
-          armies: mode.armies.update(mode.defender, value => ({ ...value, ...past_d})),
-          attacker_past: mode.defender_past.clear()
-        } 
-      }
-      return {
+    if (mode.round > -1 && past_a) {
+      mode = {
         ...mode,
-        round: -1,
-        fight_over: !checkFight(mode.armies.get(mode.attacker), mode.armies.get(mode.defender))
+        armies: mode.armies.update(mode.attacker, value => ({ ...value, ...past_a })),
+        attacker_past: mode.attacker_past.clear()
       }
+    }
+    const past_d = mode.defender_past && mode.defender_past.get(0)
+    if (mode.round > -1 && past_d) {
+      mode = {
+        ...mode,
+        armies: mode.armies.update(mode.defender, value => ({ ...value, ...past_d })),
+        attacker_past: mode.defender_past.clear()
+      }
+    }
+    return {
+      ...mode,
+      round: -1,
+      fight_over: !checkFight(mode.armies.get(mode.attacker), mode.armies.get(mode.defender))
+    }
   }
 
   /**
@@ -137,9 +137,9 @@ class Transfer extends Component<IProps, IState> {
   removeHistory = (mode: Armies): Armies => {
     return {
       ...mode,
-        attacker_past: mode.attacker_past.clear(),
-        defender_past: mode.defender_past.clear(),
-        round: -1
+      attacker_past: mode.attacker_past.clear(),
+      defender_past: mode.defender_past.clear(),
+      round: -1
     }
   }
 
@@ -150,6 +150,8 @@ class Transfer extends Component<IProps, IState> {
     new_state.data = undefined
     if (!this.props.export_keys.get(ExportKey.Countries))
       new_state.countries = undefined
+    if (!this.props.export_keys.get(ExportKey.Units))
+      new_state.units = undefined
     if (!this.props.export_keys.get(ExportKey.Units))
       new_state.global_stats = undefined
     if (!this.props.export_keys.get(ExportKey.Terrains))

@@ -2,7 +2,6 @@
   "traits": [
     {
       "name": "Aggressive",
-      "martial": 1,
       "modifiers": [
         {
           "target": "Heavy Infantry",
@@ -13,12 +12,17 @@
           "target": "War Elephants",
           "attribute": "Discipline",
           "value": 0.05
+        },
+        {
+          "target": "General",
+          "attribute": "Martial",
+          "no_percent": true,
+          "value": 1
         }
       ]
     },
     {
       "name": "Brave",
-      "martial": 1,
       "modifiers": [
         {
           "target": "Land",
@@ -31,12 +35,17 @@
           "attribute": "Loyalty chance",
           "negative": true,
           "value": 0.02
+        },
+        {
+          "target": "General",
+          "attribute": "Martial",
+          "no_percent": true,
+          "value": 1
         }
       ]
     },
     {
       "name": "Coastal Raider",
-      "martial": 0,
       "modifiers": [
         {
           "target": "Liburnian",
@@ -52,7 +61,6 @@
     },
     {
       "name": "Confident",
-      "martial": 1,
       "modifiers": [
         {
           "target": "Heavy Cavalry",
@@ -63,12 +71,17 @@
           "target": "Chariots",
           "attribute": "Discipline",
           "value": 0.05
+        },
+        {
+          "target": "General",
+          "attribute": "Martial",
+          "no_percent": true,
+          "value": 1
         }
       ]
     },
     {
       "name": "Coward",
-      "martial": -1,
       "modifiers": [
         {
           "target": "Land",
@@ -81,46 +94,65 @@
           "target": "Text",
           "attribute": "Loyalty chance",
           "value": -0.02
+        },
+        {
+          "target": "General",
+          "attribute": "Martial",
+          "no_percent": true,
+          "value": 1
         }
       ]
     },
     {
       "name": "Discipline",
-      "martial": 1,
       "modifiers": [
         {
           "target": "Land",
           "attribute": "Discipline",
           "value": 0.05
+        },
+        {
+          "target": "General",
+          "attribute": "Martial",
+          "no_percent": true,
+          "value": 1
         }
       ]
     },
     {
       "name": "Oarmaster",
-      "martial": 1,
       "modifiers": [
         {
           "target": "Text",
           "attribute": "Naval speed",
           "value": 0.1
+        },
+        {
+          "target": "General",
+          "attribute": "Martial",
+          "no_percent": true,
+          "value": 1
         }
       ]
     },
     {
       "name": "Original Thinker",
-      "martial": 1,
       "modifiers": [
         {
           "target": "Siege",
           "attribute": "Ability",
           "value": 0.1
+        },
+        {
+          "target": "General",
+          "attribute": "Martial",
+          "no_percent": true,
+          "value": 1
         }
       ]
     },
     {
       "name": "Princeps",
-      "martial": 0,
-      "finesse": 1,
       "modifiers": [
         {
           "target": "Octareme",
@@ -131,35 +163,50 @@
           "target": "Mega Galley",
           "attribute": "Discipline",
           "value": 0.05
+        },
+        {
+          "target": "General",
+          "attribute": "Finesse",
+          "no_percent": true,
+          "value": 1
         }
       ]
     },
     {
       "name": "Sea Dog",
-      "martial": 1,
       "modifiers": [
         {
           "target": "Text",
           "attribute": "Ship capture",
           "value": 0.1
+        },
+        {
+          "target": "General",
+          "attribute": "Martial",
+          "no_percent": true,
+          "value": 1
         }
       ]
     },
     {
       "name": "Tactically Inflexible",
-      "martial": -1,
       "modifiers": [
         {
           "target": "Text",
           "attribute": "Reinforcement speed",
           "negative": true,
           "value": -0.1
+        },
+        {
+          "target": "General",
+          "attribute": "Martial",
+          "no_percent": true,
+          "value": -1
         }
       ]
     },
     {
       "name": "Tactician",
-      "martial": 1,
       "modifiers": [
         {
           "target": "Archers",
@@ -175,12 +222,17 @@
           "target": "Horse Archers",
           "attribute": "Discipline",
           "value": 0.05
+        },
+        {
+          "target": "General",
+          "attribute": "Martial",
+          "no_percent": true,
+          "value": 1
         }
       ]
     },
     {
       "name": "Steadfast",
-      "martial": 1,
       "modifiers": [
         {
           "target": "Heavy Infantry",
@@ -191,6 +243,12 @@
           "target": "War Elephants",
           "attribute": "Discipline",
           "value": 0.05
+        },
+        {
+          "target": "General",
+          "attribute": "Martial",
+          "no_percent": true,
+          "value": 1
         }
       ]
     }

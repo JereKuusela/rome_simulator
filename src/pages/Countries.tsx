@@ -10,7 +10,7 @@ import {
   GovermentType, ReligionType, TraitDefinition
 } from '../store/data'
 import {
-  enableModifiers, clearModifiers, CountryName, selectGovernment, selectReligion, selectCulture, setOmenPower
+  enableModifiers, clearModifiers, CountryName, selectGovernment, selectReligion, selectCulture, setOmenPower, setGeneralMartial
 } from '../store/countries'
 import AccordionToggle from '../containers/AccordionToggle'
 import CountryManager from '../containers/CountryManager'
@@ -132,6 +132,7 @@ class Countries extends Component<IProps, IState> {
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title='General' identifier='countries_traits'>
+                General base martial: <Input type='number' value={country.general_martial} onChange={(_, { value }) => omen && this.setGeneralMartial(value)} /> with {country.trait_martial} from traits
                 {
                   this.renderTraits(this.props.traits, selections)
                 }
@@ -625,6 +626,17 @@ class Countries extends Component<IProps, IState> {
     this.props.enableModifiers(this.props.country, key, modifiers)
   }
 
+
+  /**
+   * Sets generals martial skill level.
+   */
+  setGeneralMartial = (value: string) => {
+    const skill = Number(value)
+    if (isNaN(skill))
+      return
+    this.props.setGeneralMartial(this.props.country, skill)
+  }
+
   clearInvention = (key: string, selections: Set<string>) => {
     const column = this.getNumberFromKey(key, 2)
     if (column === 0)
@@ -668,12 +680,13 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  enableModifiers: (country: CountryName, key: string, modifiers: ImmutableList<Modifier>) => (dispatch(enableModifiers(country, key, modifiers))),
-  clearModifiers: (country: CountryName, key: string) => (dispatch(clearModifiers(country, key))),
-  selectCulture: (country: CountryName, culture: CultureType) => (dispatch(selectCulture(country, culture))),
-  selectReligion: (country: CountryName, religion: ReligionType) => (dispatch(selectReligion(country, religion))),
-  selectGovernment: (country: CountryName, government: GovermentType) => (dispatch(selectGovernment(country, government))),
-  setOmenPower: (country: CountryName, power: number) => (dispatch(setOmenPower(country, power)))
+  enableModifiers: (country: CountryName, key: string, modifiers: ImmutableList<Modifier>) => dispatch(enableModifiers(country, key, modifiers)),
+  clearModifiers: (country: CountryName, key: string) => dispatch(clearModifiers(country, key)),
+  selectCulture: (country: CountryName, culture: CultureType) => dispatch(selectCulture(country, culture)),
+  selectReligion: (country: CountryName, religion: ReligionType) => dispatch(selectReligion(country, religion)),
+  selectGovernment: (country: CountryName, government: GovermentType) => dispatch(selectGovernment(country, government)),
+  setOmenPower: (country: CountryName, power: number) => dispatch(setOmenPower(country, power)),
+  setGeneralMartial: (country: CountryName, skill: number) => dispatch(setGeneralMartial(country, skill))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

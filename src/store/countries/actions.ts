@@ -43,3 +43,11 @@ export const selectCulture = createAction('@@countries/SELECT_CULTURE', action =
 export const setOmenPower = createAction('@@countries/SET_OMEN_POWER', action => {
   return (country: CountryName, power: number) => action({ country, power })
 })
+
+export const setGeneralMartial = createAction('@@countries/SET_GENERAL_MARTIAL', action => {
+  return (country: CountryName, skill: number) => action({ country, skill })
+})
+
+export const toggleHasGeneral = createAction('@@countries/TOGGLE_HAS_GENERAL', action => {
+  return (country: CountryName) => action({ country })
+})

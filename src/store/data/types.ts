@@ -74,6 +74,5 @@ export interface OmenDefinition {
 }
 export interface TraitDefinition {
   readonly name: string
-  readonly martial: number
   readonly modifiers: List<Modifier>
 }

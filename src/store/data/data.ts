@@ -116,7 +116,6 @@ interface OmenData {
 
 interface TraitData {
   name: string,
-  martial: number,
   modifiers: {
     target: string
     attribute: string
