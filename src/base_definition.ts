@@ -355,12 +355,12 @@ export const valueToNumber = <Definition extends AnyDefinition, Attribute>
   return String(+(value).toFixed(2))
 }
 
-export const valueToStrength = <Definition extends AnyDefinition, Attribute>
+export const valueToManpower = <Definition extends AnyDefinition, Attribute>
   (definition: Definition, type: Attribute, show_zero: boolean): string => {
-  const value = calculateValue(definition, type) / 10.0
+  const value = calculateValue(definition, type) * 1000
   if (value === 0 && !show_zero)
     return ''
-  return String(+(value).toFixed(1)) + '%'
+  return String(value)
 }
 
 export const valueToPercent = <Definition extends AnyDefinition, Attribute>

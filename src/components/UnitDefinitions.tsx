@@ -10,7 +10,7 @@ import IconManpower from '../images/manpower.png'
 import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
 import IconAttrition from '../images/attrition.png'
-import { getImage, calculateValue, calculateBase, calculateModifier, calculateLoss, valueToNumber, valueToPercent, valueToRelativeZeroPercent, mergeValues, valueToStrength, DefinitionType } from '../base_definition'
+import { getImage, calculateValue, calculateBase, calculateModifier, calculateLoss, valueToNumber, valueToPercent, valueToRelativeZeroPercent, mergeValues, valueToManpower, DefinitionType } from '../base_definition'
 import { CountryName } from '../store/countries'
 
 interface IProps {
@@ -114,7 +114,7 @@ export default class UnitDefinitions extends Component<IProps> {
           {valueToNumber(unit, UnitCalc.Morale, false)}
         </Table.Cell>
         <Table.Cell>
-          {this.props.mode === DefinitionType.Naval ? valueToStrength(unit, UnitCalc.Strength, false) : valueToNumber(unit, UnitCalc.Strength, false)}
+          {this.props.mode === DefinitionType.Naval ? valueToPercent(unit, UnitCalc.Strength, false) : valueToManpower(unit, UnitCalc.Strength, false)}
         </Table.Cell>
         {
           this.props.mode === DefinitionType.Naval ? null :
@@ -259,12 +259,16 @@ export default class UnitDefinitions extends Component<IProps> {
     const base = calculateBase(unit, attribute)
     let base_str = String(base)
     if (this.props.mode === DefinitionType.Naval && attribute === UnitCalc.Strength)
-      base_str = base / 10.0 + '%'
+      base_str = String(base * 100) + '%'
+    if (this.props.mode !== DefinitionType.Naval && attribute === UnitCalc.Strength)
+      base_str = String(base * 1000)
     const modifier = calculateModifier(unit, attribute)
     const loss = calculateLoss(unit, attribute)
     let loss_str = String(base)
     if (this.props.mode === DefinitionType.Naval && attribute === UnitCalc.Strength)
-      loss_str = loss / 10.0 + '%'
+      loss_str = String(loss * 100)  + '%'
+    if (this.props.mode !== DefinitionType.Naval && attribute === UnitCalc.Strength)
+      loss_str = String(loss * 1000)
     return (
       <List>
         {

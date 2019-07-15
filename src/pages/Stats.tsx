@@ -94,8 +94,8 @@ class Stats extends Component<IProps> {
 
   finalize = (value: number): string => {
     if (this.props.mode === DefinitionType.Naval)
-      return (value / 10.0) + '%'
-    return String(value)
+      return Math.floor(value * 100) + '%'
+    return String(Math.floor(value * 1000))
   }
 
   
