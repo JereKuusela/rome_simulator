@@ -1,7 +1,8 @@
-import { fromJS, Seq, List } from 'immutable'
+import { fromJS, Seq, List, OrderedMap, OrderedSet } from 'immutable'
 import { Participant } from './store/utils';
-import { Unit } from './store/units/actions';
-import { mergeValues } from './base_definition';
+import { Unit, UnitDefinition, UnitType } from './store/units/actions'
+import { mergeValues, DefinitionType } from './base_definition'
+import { getDefaultUnits } from './store/units/data';
 
 /**
  * Maps a range to a list.
@@ -33,4 +34,13 @@ export const toList = <T>(item: T) => List<T>().push(item)
 
 export const mergeArmy = (participant: Participant, army: List<Unit | undefined>): List<any> => {
   return army.map(value => value && mergeValues(mergeValues(participant.units.get(value.type), value), participant.global))
+}
+
+export const filterUnits = (mode: DefinitionType, units?: OrderedMap<UnitType, UnitDefinition>): OrderedMap<UnitType, UnitDefinition> => {
+  units = units || getDefaultUnits()
+  return units.filter(unit => unit.mode === DefinitionType.Global || unit.mode === mode)
+}
+
+export const getTypes = (units: OrderedMap<UnitType, UnitDefinition>): OrderedSet<UnitType> => {
+  return units.keySeq().toOrderedSet()
 }

@@ -1,16 +1,17 @@
-import { OrderedSet, Map } from 'immutable'
+import { OrderedSet, Map, OrderedMap } from 'immutable'
 import React, { Component } from 'react'
 import { Image, Table, List, Button } from 'semantic-ui-react'
 import { UnitType, UnitDefinition } from '../store/units'
-import { TacticDefinition, TacticType, TacticCalc, valueToString } from '../store/tactics'
+import { TacticDefinition, TacticType, TacticCalc } from '../store/tactics'
 import { calculateValue, valueToRelativeZeroPercent, getImage } from '../base_definition'
 import ValueModal from './ValueModal'
-import { renderImages } from './utils'
+import { CountryName } from '../store/countries'
+import VersusList from './VersusList'
 
 interface IProps {
   readonly tactics: Map<TacticType, TacticDefinition>
   readonly tactic_types: OrderedSet<TacticType>
-  readonly units: Map<any, Map<UnitType, UnitDefinition>>
+  readonly units: Map<CountryName, OrderedMap<UnitType, UnitDefinition>>
   readonly unit_types: OrderedSet<UnitType>
   readonly onRowClick: (type: TacticType) => void
   readonly onCreateNew: (type: TacticType) => void
@@ -77,16 +78,11 @@ export default class TacticDefinitions extends Component<IProps, IState> {
           <Image src={getImage(tactic)} avatar />
           {tactic.type}</Table.Cell>
         <Table.Cell>
-          <List horizontal>
-            {
-              this.props.unit_types.filter(type => calculateValue(tactic, type)).map(type => (
-                <List.Item key={type} style={{ marginLeft: 0, marginRight: '1em' }}>
-                  {renderImages(this.props.units.filter(value => value.get(type)).map(value => getImage(value.get(type))).toOrderedSet())}
-                  {valueToString(tactic, type)}
-                </List.Item>
-              ))
-            }
-          </List>
+          <VersusList
+            item={tactic}
+            units={this.props.units}
+            unit_types={this.props.unit_types}
+          />
         </Table.Cell>
         <Table.Cell singleLine>
           <List horizontal>

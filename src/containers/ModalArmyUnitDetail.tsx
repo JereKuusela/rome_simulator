@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
-import { UnitType, ValueType, Unit, UnitDefinition } from '../store/units'
+import { UnitType, ValueType, Unit, UnitDefinition, getDefaultUnits } from '../store/units'
 import { ArmyType, selectUnit } from '../store/battle'
 import { AppState } from '../store/'
 import { getBattle, filterTerrainTypes } from '../store/utils'
@@ -26,13 +26,8 @@ class ModalArmyUnitDetail extends Component<IProps> {
     if (!this.props.info)
       return null
     const country = this.props.info.country
+    const unit_types = this.props.units.get(country, getDefaultUnits()).keySeq().toOrderedSet()
     this.unit = this.getUnit(this.props.info)
-    const unit_types = this.props.unit_types.get(country)!.filter(type => {
-      const unit = this.props.units.getIn([country, type]) as UnitDefinition | undefined
-      if (!unit)
-        return false
-      return unit.mode === this.props.mode || unit.mode === DefinitionType.Global
-    })
     return (
       <Modal basic onClose={this.props.onClose} open>
         <Modal.Content>
@@ -112,8 +107,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
 
 const mapStateToProps = (state: AppState) => ({
   armies: getBattle(state).armies,
-  units: state.units.definitions,
-  unit_types: state.units.types,
+  units: state.units,
   global_stats: state.global_stats,
   terrain_types: filterTerrainTypes(state),
   mode: state.settings.mode

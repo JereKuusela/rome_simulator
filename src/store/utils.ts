@@ -1,5 +1,6 @@
 import { AppState } from "./index"
 import { OrderedSet, OrderedMap } from "immutable"
+import { filterUnits } from '../utils'
 import { TacticType } from "./tactics/actions"
 import { DefinitionType } from "../base_definition"
 import { TerrainType } from "./terrains/actions"
@@ -7,8 +8,8 @@ import { UnitType, UnitDefinition } from "./units/actions"
 import { Armies, modeState } from "./battle/reducer"
 import { getDefault as getDefaultArmy, Participant as BaseParticipant } from "./battle/actions"
 import { CombatParameter } from "./settings/actions"
-import { defaultCountry } from "./countries/reducer";
-import { CountryName } from "./countries/actions";
+import { defaultCountry } from "./countries/reducer"
+import { CountryName } from "./countries/actions"
 import { getDefaultGlobal, getDefaultUnits } from "./units/data"
 
 /**
@@ -38,13 +39,10 @@ export const mergeSettings = (state: AppState): OrderedMap<CombatParameter, numb
    * @param state Application state.
    */
   export const mergeUnitTypes = (state: AppState): OrderedSet<UnitType> => {
-    return state.units.types.reduce((previous, current, key) => {
-      return previous.merge(current.filter(type => {
-        const unit = state.units.definitions.getIn([key, type]) as UnitDefinition | undefined
-        if (!unit)
-          return false
+    return state.units.reduce((previous, current) => {
+      return previous.merge(current.filter(unit => {
         return unit.mode === state.settings.mode || unit.mode === DefinitionType.Global
-      }))
+      }).map(unit => unit.type).toOrderedSet())
     }, OrderedSet<UnitType>())
   }
   
@@ -77,7 +75,7 @@ export const mergeSettings = (state: AppState): OrderedMap<CombatParameter, numb
   const getParticipant = (state: AppState, battle: Armies, name: CountryName): Participant => {
     const army = battle.armies.get(name, getDefaultArmy(state.settings.mode))
     const country = state.countries.get(name, defaultCountry)
-    const units = state.units.definitions.get(name, getDefaultUnits())
+    const units = filterUnits(state.settings.mode, state.units.get(name, getDefaultUnits()))
     const global = state.global_stats.get(name, getDefaultGlobal()).get(state.settings.mode)!
     return { ...army, general: country.general_martial, name, units, global}
   }
@@ -90,6 +88,11 @@ export const mergeSettings = (state: AppState): OrderedMap<CombatParameter, numb
   export const getDefender = (state: AppState): Participant => {
     const battle = getBattle(state)
     return getParticipant(state, battle, battle.defender)
+  }
+
+  export const getSelected = (state: AppState): Participant => {
+    const battle = getBattle(state)
+    return getParticipant(state, battle, state.settings.country)
   }
 
   export interface Participant extends BaseParticipant {

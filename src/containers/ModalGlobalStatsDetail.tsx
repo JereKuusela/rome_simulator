@@ -46,7 +46,7 @@ class ModalGlobalStatsDetail extends Component<IProps> {
 const mapStateToProps = (state: AppState) => ({
   global_stats: state.global_stats,
   terrain_types: filterTerrainTypes(state),
-  units: state.units.definitions,
+  units: state.units,
   unit_types: mergeUnitTypes(state),
   mode: state.settings.mode
 })

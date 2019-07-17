@@ -7,13 +7,13 @@ import { renderImages } from './utils'
 import { getImage } from '../base_definition'
 
 interface IProps {
+  readonly units: Map<any, Map<UnitType, UnitDefinition>>
   readonly attacker: CountryName
   readonly defender: CountryName
-  readonly types_a?: OrderedSet<UnitType>
-  readonly units: Map<any, Map<UnitType, UnitDefinition>>
-  readonly types_d?: OrderedSet<UnitType>
-  readonly reserve_a?: Map<UnitType, number>
-  readonly reserve_d?: Map<UnitType, number>
+  readonly types_a: OrderedSet<UnitType>
+  readonly types_d: OrderedSet<UnitType>
+  readonly reserve_a: Map<UnitType, number>
+  readonly reserve_d: Map<UnitType, number>
   readonly onValueChange: (country: CountryName, unit: UnitType, value: number) => void
   readonly attached?: boolean
   readonly changes_a: Map<UnitType, number>
@@ -26,11 +26,7 @@ export default class FastPlanner extends Component<IProps> {
   readonly headers = ['Units in reserve', 'Attacker', 'Defender']
 
   render(): JSX.Element {
-    let types = OrderedSet<UnitType>()
-    if (this.props.types_a)
-      types = types.merge(this.props.types_a)
-    if (this.props.types_d)
-      types = types.merge(this.props.types_d)
+    const types = this.props.types_a.merge(this.props.types_d)
     return (
       <Table celled unstackable attached={this.props.attached}>
         <Table.Header>
@@ -66,11 +62,11 @@ export default class FastPlanner extends Component<IProps> {
       </Table.Cell>
       <Table.Cell width='5'>
         {
-          this.props.types_a && this.props.types_a.contains(type) ?
+          this.props.types_a.contains(type) ?
             <Input
               type='number'
               size='mini'
-              value={this.props.changes_a.has(type) ? this.props.changes_a.get(type) : this.props.reserve_a && this.props.reserve_a.get(type)}
+              value={this.props.changes_a.has(type) ? this.props.changes_a.get(type) : this.props.reserve_a.get(type)}
               onChange={(_, data) => this.props.onValueChange(this.props.attacker, type, Math.max(0, Math.round(Number(data.value))))
               }
             />
@@ -79,11 +75,11 @@ export default class FastPlanner extends Component<IProps> {
       </Table.Cell>
       <Table.Cell width='5'>
         {
-          this.props.types_d && this.props.types_d.contains(type) ?
+          this.props.types_d.contains(type) ?
             <Input
               type='number'
               size='mini'
-              defaultValue={this.props.changes_d.has(type) ? this.props.changes_d.get(type) : this.props.reserve_d && this.props.reserve_d.get(type)}
+              defaultValue={this.props.changes_d.has(type) ? this.props.changes_d.get(type) : this.props.reserve_d.get(type)}
               onChange={(_, data) => this.props.onValueChange(this.props.defender, type, Math.max(0, Math.round(Number(data.value))))
               }
             />

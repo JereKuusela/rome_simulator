@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
-import { UnitType, UnitDefinition } from '../store/units'
+import { UnitType } from '../store/units'
 import { AppState } from '../store/'
 import { setRowType, RowType } from '../store/battle'
 import { DefinitionType } from '../base_definition'
 import ItemSelector from '../components/ItemSelector'
 import ItemRemover from '../components/ItemRemover'
 import { CountryName } from '../store/countries'
+import { filterUnits } from '../utils'
 
 export interface ModalInfo {
   name: CountryName
@@ -19,16 +20,7 @@ class ModalRowTypeSelector extends Component<IProps> {
   render(): JSX.Element | null {
     if (!this.props.info)
       return null
-    const country = this.props.info.country
-    const types = this.props.types.get(country)!.filter(type => {
-      const unit = this.props.units.getIn([country, type]) as UnitDefinition | undefined
-      if (!unit)
-        return false
-      return unit.mode === this.props.mode || unit.mode === DefinitionType.Global
-    })
-    const units = this.props.units.get(country)
-    if (!types || !units)
-      return null
+    const units = filterUnits(this.props.mode, this.props.units.get(this.props.info.country))
     return (
       <Modal basic onClose={this.props.onClose} open centered={false}>
         <Modal.Content>
@@ -39,7 +31,7 @@ class ModalRowTypeSelector extends Component<IProps> {
           <ItemSelector
             onClose={this.props.onClose}
             onSelection={this.selectUnit}
-            items={types.map(value => units.get(value)).toList()}
+            items={units.toList()}
             attributes={[]}
           />
         </Modal.Content>
@@ -54,8 +46,7 @@ class ModalRowTypeSelector extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  units: state.units.definitions,
-  types: state.units.types,
+  units: state.units,
   mode: state.settings.mode
 })
 

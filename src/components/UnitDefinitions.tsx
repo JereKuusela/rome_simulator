@@ -1,4 +1,4 @@
-import { Map, OrderedSet } from 'immutable'
+import { OrderedSet, OrderedMap, Map } from 'immutable'
 import React, { Component } from 'react'
 import { Image, Table, List, Icon } from 'semantic-ui-react'
 import { UnitType, UnitDefinition, UnitCalc, ValueType, valueToString } from '../store/units'
@@ -12,12 +12,14 @@ import IconMorale from '../images/morale.png'
 import IconAttrition from '../images/attrition.png'
 import { getImage, calculateValue, calculateBase, calculateModifier, calculateLoss, valueToNumber, valueToPercent, valueToRelativeZeroPercent, mergeValues, valueToManpower, DefinitionType } from '../base_definition'
 import { CountryName } from '../store/countries'
+import { filterUnits } from '../utils'
+import VersusList from './VersusList'
 
 interface IProps {
   readonly mode: DefinitionType
   readonly country: CountryName
-  readonly units: Map<UnitType, UnitDefinition>
-  readonly types: OrderedSet<UnitType>
+  readonly units: Map<CountryName, OrderedMap<UnitType, UnitDefinition>>
+  readonly unit_types: OrderedSet<UnitType>
   readonly terrains: OrderedSet<TerrainType>
   readonly global_stats: UnitDefinition
   readonly onRowClick: (unit: UnitDefinition) => void
@@ -27,6 +29,7 @@ interface IProps {
 export default class UnitDefinitions extends Component<IProps> {
 
   render(): JSX.Element {
+    const units = filterUnits(this.props.mode, this.props.units.get(this.props.country))
     return (
       <Table celled selectable unstackable>
         <Table.Header>
@@ -93,16 +96,14 @@ export default class UnitDefinitions extends Component<IProps> {
             this.renderGlobalStats(this.props.global_stats)
           }
           {
-            this.props.types.map(value => this.renderRow(this.props.units.get(value)))
+            units.map(unit => this.renderRow(unit)).toList()
           }
         </Table.Body>
       </Table>
     )
   }
 
-  renderRow = (definition?: UnitDefinition): JSX.Element | null => {
-    if (!definition)
-      return null
+  renderRow = (definition: UnitDefinition): JSX.Element => {
     const unit = mergeValues(definition, this.props.global_stats)
     return (
       <Table.Row key={unit.type} onClick={() => this.props.onRowClick(unit)}>
@@ -153,16 +154,11 @@ export default class UnitDefinitions extends Component<IProps> {
           {valueToPercent(unit, UnitCalc.Experience, false)}
         </Table.Cell>
         <Table.Cell>
-          <List horizontal>
-            {
-              this.props.types.filter(type => calculateValue(unit, type) !== 0).map(type => (
-                <List.Item key={type} style={{ marginLeft: 0, marginRight: '1em' }}>
-                  <Image src={getImage(this.props.units.get(type))} avatar />
-                  {valueToString(unit, type)}
-                </List.Item>
-              ))
-            }
-          </List>
+          <VersusList
+            item={unit}
+            units={this.props.units}
+            unit_types={this.props.unit_types}
+          />
         </Table.Cell>
         <Table.Cell>
           <List>
@@ -229,16 +225,11 @@ export default class UnitDefinitions extends Component<IProps> {
           {this.renderAttributeList(unit, UnitCalc.Experience)}
         </Table.Cell>
         <Table.Cell>
-          <List horizontal>
-            {
-              this.props.types.filter(type => calculateValue(unit, type) !== 0).map(type => (
-                <List.Item key={type} style={{ marginLeft: 0, marginRight: '1em' }}>
-                  <Image src={this.props.units.get(type)} avatar />
-                  {valueToString(unit, type)}
-                </List.Item>
-              ))
-            }
-          </List>
+          <VersusList
+            item={unit}
+            units={this.props.units}
+            unit_types={this.props.unit_types}
+          />
         </Table.Cell>
         <Table.Cell>
           <List>
@@ -266,7 +257,7 @@ export default class UnitDefinitions extends Component<IProps> {
     const loss = calculateLoss(unit, attribute)
     let loss_str = String(base)
     if (this.props.mode === DefinitionType.Naval && attribute === UnitCalc.Strength)
-      loss_str = String(loss * 100)  + '%'
+      loss_str = String(loss * 100) + '%'
     if (this.props.mode !== DefinitionType.Naval && attribute === UnitCalc.Strength)
       loss_str = String(loss * 1000)
     return (

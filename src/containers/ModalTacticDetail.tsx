@@ -32,7 +32,7 @@ class ModalTacticDetail extends Component<IProps> {
 const mapStateToProps = (state: AppState) => ({
   tactics: state.tactics.definitions,
   tactic_types: filterTacticTypes(state),
-  units: state.units.definitions,
+  units: state.units,
   unit_types: mergeUnitTypes(state)
 })
 

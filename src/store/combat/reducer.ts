@@ -9,7 +9,7 @@ import { defaultCountry } from '../countries/reducer';
 
 export const combatReducer = createReducer<AppState>({} as any)
   .handleAction(battle, (state, action: ReturnType<typeof battle>) => {
-    const definitions = state.units.definitions.map((value, key) => value.map(value => mergeValues(value, state.global_stats.getIn([key, action.payload.mode]))))
+    const definitions = state.units.map((value, key) => value.map(value => mergeValues(value, state.global_stats.getIn([key, action.payload.mode]))))
     let next = getBattle(state)
     const attacker_country = state.countries.get(next.attacker, defaultCountry)
     const defender_country = state.countries.get(next.defender, defaultCountry)

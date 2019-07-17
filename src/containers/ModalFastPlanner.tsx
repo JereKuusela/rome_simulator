@@ -5,7 +5,7 @@ import { Modal, Button, Grid } from 'semantic-ui-react'
 import { AppState } from '../store/'
 import FastPlanner from '../components/FastPlanner'
 import ArmyCosts from '../components/ArmyCosts'
-import { UnitType, Unit, UnitDefinition } from '../store/units'
+import { UnitType, Unit } from '../store/units'
 import { clearUnits, removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits } from '../store/battle'
 import { getAttacker, getDefender } from '../store/utils'
 import { mapRange, mergeArmy } from '../utils'
@@ -36,10 +36,10 @@ class ModalFastPlanner extends Component<IProps, IState> {
     const country_d = this.props.defender.name
     const attacker = this.props.attacker
     const defender = this.props.defender
-    const types_a = this.filterTypes(country_a)
-    const types_d = this.filterTypes(country_d)
-    this.originals_a = types_a && types_a.reduce((map, value) => map.set(value, this.countUnits(attacker.reserve, value)), Map<UnitType, number>())
-    this.originals_d = types_d && types_d.reduce((map, value) => map.set(value, this.countUnits(defender.reserve, value)), Map<UnitType, number>())
+    const types_a = attacker.units.keySeq().toOrderedSet()
+    const types_d = defender.units.keySeq().toOrderedSet()
+    this.originals_a = types_a.reduce((map, value) => map.set(value, this.countUnits(attacker.reserve, value)), Map<UnitType, number>())
+    this.originals_d = types_d.reduce((map, value) => map.set(value, this.countUnits(defender.reserve, value)), Map<UnitType, number>())
     return (
       <Modal basic onClose={this.onClose} open centered={false}>
         <Modal.Content>
@@ -84,15 +84,6 @@ class ModalFastPlanner extends Component<IProps, IState> {
         </Modal.Content>
       </Modal>
     )
-  }
-
-  filterTypes = (country: CountryName) => {
-    return this.props.types.get(country)!.filter(type => {
-      const unit = this.props.units.getIn([country, type]) as UnitDefinition | undefined
-      if (!unit)
-        return false
-      return unit.mode === this.props.mode || unit.mode === DefinitionType.Global
-    })
   }
 
   editReserve = (reserve: List<Unit>, changes: Units, originals?: Units): List<Unit> => {
@@ -153,8 +144,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
 const mapStateToProps = (state: AppState) => ({
   attacker: getAttacker(state),
   defender: getDefender(state),
-  units: state.units.definitions,
-  types: state.units.types,
+  units: state.units,
   global_stats: state.global_stats,
   mode: state.settings.mode
 })

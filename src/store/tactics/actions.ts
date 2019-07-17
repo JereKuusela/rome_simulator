@@ -1,6 +1,6 @@
 import { createAction } from 'typesafe-actions'
 import { UnitType } from '../units/'
-import { calculateValue, BaseValuesDefinition, toPercent, DefinitionType } from '../../base_definition'
+import { BaseValuesDefinition, DefinitionType } from '../../base_definition'
 
 export enum TacticCalc {
   Casualties = 'Casualties'
@@ -27,11 +27,6 @@ export enum TacticType {
 export type ValueType = UnitType | TacticCalc | TacticType
 
 export interface TacticDefinition extends BaseValuesDefinition<TacticType, ValueType> {
-}
-
-export const valueToString = (definition: TacticDefinition, type: ValueType): string => {
-  const value = calculateValue(definition, type)
-  return toPercent(value)
 }
 
 export const setBaseValue = createAction('@@tactics/SET_BASE_VALUE', action => {

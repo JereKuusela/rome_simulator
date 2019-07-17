@@ -52,18 +52,9 @@ export const transformUnits = (state_raw: any): ReturnType<typeof unitsReducer> 
   const initial = unitsReducer(undefined, dummyAction)
   if (!state_raw)
     return initial
-  let definitions = initial.definitions
-  if (state_raw.definitions) {
-    let definitions_raw: Map<CountryName, Map<UnitType, any>> = fromJS(state_raw.definitions)
-    definitions = definitions_raw.filter(value => value).map(value => value.map(value => unitDefinitionFromJS(value)!).filter(value => value))
-  }
-  let types = initial.types
-  if (state_raw.types)
-    types = fromJS(state_raw.types)
-  if (types.size === 0)
-    types = initial.types
-  types = types.map(value => readTypes(value, initial.types.get(CountryName.Country1)!))
-  return { definitions, types }
+  let definitions_raw: Map<CountryName, Map<UnitType, any>> = fromJS(state_raw.definitions)
+  const definitions = definitions_raw.filter(value => value).map(value => value.map(value => unitDefinitionFromJS(value)!).filter(value => value).toOrderedMap())
+  return definitions
 }
 
 export const transformGlobalStats = (state_raw: any): ReturnType<typeof globalStatsReducer> => {
@@ -159,7 +150,7 @@ export const transformBattle = (state_raw: any): ReturnType<typeof battleReducer
   const initial = battleReducer(undefined, dummyAction)
   if (!state_raw)
     return initial
-  let battle: Map<DefinitionType, any> = fromJS(state_raw) 
+  let battle: Map<DefinitionType, any> = fromJS(state_raw)
   return battle.map((value, key) => handleArmies(value.toJS(), key))
 }
 
@@ -178,7 +169,7 @@ export const transformCountries = (state_raw: any): ReturnType<typeof selections
     return initial
   const countries_raw: Map<CountryName, any> = fromJS(state_raw)
   const countries: Map<CountryName, Country> = countries_raw.map(value => value.toJS())
-  return countries.map(value => ({ ...value, selections: fromJS(value.selections).toSet()}))
+  return countries.map(value => ({ ...value, selections: fromJS(value.selections).toSet() }))
 }
 
 const settings = Object.keys(CombatParameter).map(k => CombatParameter[k as any]) as CombatParameter[]

@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import ModalUnitDetail from '../containers/ModalUnitDetail'
 import ModalGlobalStatsDetail from '../containers/ModalGlobalStatsDetail'
 import { AppState } from '../store/index'
+import { getSelected, mergeUnitTypes } from '../store/utils'
 import { DefinitionType } from '../base_definition'
 import { UnitType, addUnit, deleteUnit, changeType } from '../store/units'
 import UnitDefinitions from '../components/UnitDefinitions'
@@ -27,10 +28,7 @@ class Units extends Component<IProps, IState> {
 
   initialState = { modal_country: null, modal_unit: null, open_create_unit: false }
 
-  render(): JSX.Element | null {
-    let units = this.props.units.get(this.props.country)
-    const global = this.props.global_stats.getIn([this.props.country, this.props.mode])
-    const types = this.props.types.get(this.props.country)
+  render(): JSX.Element {
     return (
       <Container>
         <ValueModal
@@ -65,26 +63,20 @@ class Units extends Component<IProps, IState> {
           </Modal.Content>
         </Modal>
         <CountryManager>
-          {
-            units && global && types &&
-            <Button primary onClick={() => this.setState({ open_create_unit: true })}>
-              New unit
-                </Button>
-          }
+          <Button primary onClick={() => this.setState({ open_create_unit: true })}>
+            New unit
+            </Button>
         </CountryManager>
         <br />
-        {
-          units && global && types &&
-          <UnitDefinitions
-            mode={this.props.mode}
-            country={this.props.country}
-            types={types}
-            terrains={this.props.terrains}
-            global_stats={global}
-            units={units.filter(unit => unit.mode === this.props.mode || unit.mode === DefinitionType.Global)}
-            onRowClick={unit => this.openModal(this.props.country, unit.type)}
-          />
-        }
+        <UnitDefinitions
+          mode={this.props.mode}
+          country={this.props.country}
+          terrains={this.props.terrains}
+          global_stats={this.props.selected.global}
+          units={this.props.units}
+          unit_types={this.props.unit_types}
+          onRowClick={unit => this.openModal(this.props.country, unit.type)}
+        />
         <br />
         <br />
         <br />
@@ -109,9 +101,10 @@ class Units extends Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  units: state.units.definitions,
+  selected: getSelected(state),
+  units: state.units,
+  unit_types: mergeUnitTypes(state),
   terrains: state.terrains.types,
-  types: state.units.types,
   global_stats: state.global_stats,
   mode: state.settings.mode,
   country: state.settings.country

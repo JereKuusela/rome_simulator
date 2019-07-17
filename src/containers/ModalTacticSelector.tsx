@@ -64,7 +64,7 @@ const mapStateToProps = (state: AppState) => ({
   tactics: state.tactics.definitions,
   armies: getBattle(state).armies,
   mode: state.settings.mode,
-  units: state.units.definitions,
+  units: state.units,
   global_stats: state.global_stats
 })
 

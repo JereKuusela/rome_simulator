@@ -450,7 +450,7 @@ const mapStateToProps = (state: AppState) => ({
   terrains: state.terrains.definitions,
   tactics: state.tactics.definitions,
   fight_over: getBattle(state).fight_over,
-  units: state.units.definitions,
+  units: state.units,
   global_stats: state.global_stats,
   combat: mergeSettings(state),
   mode: state.settings.mode,

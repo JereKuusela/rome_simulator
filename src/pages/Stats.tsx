@@ -28,9 +28,6 @@ class Stats extends Component<IProps> {
       reserve: mergeArmy(participant, participant.reserve),
       defeated: mergeArmy(participant, participant.defeated)
     }
-    const types = this.props.types.get(participant.name)
-    if (!types)
-      return null
     return (
         <Table celled selectable unstackable key={type}>
           <Table.Header>
@@ -54,7 +51,7 @@ class Stats extends Component<IProps> {
           </Table.Header>
           <Table.Body>
             {
-              info && types.map(type => this.renderRow(info, type, getImage(participant.units.get(type))))
+              participant.units.map(unit => this.renderRow(info, unit.type, getImage(unit))).toList()
             }
           </Table.Body>
         </Table>
@@ -115,9 +112,6 @@ class Stats extends Component<IProps> {
 const mapStateToProps = (state: AppState) => ({
   attacker: getAttacker(state),
   defender: getDefender(state),
-  units: state.units.definitions,
-  types: state.units.types,
-  global_stats: state.global_stats,
   mode: state.settings.mode
 })
 

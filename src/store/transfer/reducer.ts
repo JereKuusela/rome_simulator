@@ -35,10 +35,7 @@ export const importReducer = createReducer<AppState>({} as any)
           definitions: action.payload.state.terrains && action.payload.state.terrains.definitions ? state.terrains.definitions.merge(action.payload.state.terrains.definitions) : state.terrains.definitions
         },
         global_stats: action.payload.state.global_stats ? state.global_stats.merge(action.payload.state.global_stats) : state.global_stats,
-        units: {
-          ...state.units,
-          definitions: action.payload.state.units && action.payload.state.units.definitions ? state.units.definitions.map((value, key) => value.merge(action.payload.state.units.definitions.get(key))) : state.units.definitions
-        }
+        units: action.payload.state.units ? state.units.map((value, key) => value.merge(action.payload.state.units.get(key))) : state.units
       }
   }
   )
