@@ -4,35 +4,32 @@ import { Container, Image, Table } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { Unit, UnitType, UnitCalc } from '../store/units'
-import { Participant, ParticipantType, Army } from '../store/battle'
+import { ParticipantType, Army } from '../store/battle'
 import IconManpower from '../images/manpower.png'
 import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
-import { getBattle } from '../store/utils'
-import { CountryName } from '../store/countries'
-import { calculateValue, calculateValueWithoutLoss, mergeValues, getImage, DefinitionType } from '../base_definition'
+import { getAttacker, getDefender, Participant } from '../store/utils'
+import { mergeArmy } from '../utils'
+import { calculateValue, calculateValueWithoutLoss, getImage, DefinitionType, strengthToValue } from '../base_definition'
 
 class Stats extends Component<IProps> {
   render(): JSX.Element {
     return (
       <Container>
-        {this.renderArmy(ParticipantType.Attacker, this.props.attacker, this.props.armies.get(this.props.attacker))}
-        {this.renderArmy(ParticipantType.Defender, this.props.defender, this.props.armies.get(this.props.defender))}
+        {this.renderArmy(ParticipantType.Attacker, this.props.attacker)}
+        {this.renderArmy(ParticipantType.Defender, this.props.defender)}
       </Container >
     )
   }
 
-
-  renderArmy = (type: ParticipantType, country: CountryName, participant?: Participant): JSX.Element | null => {
-    if (!participant)
-      return null
+  renderArmy = (type: ParticipantType, participant: Participant) => {
     const info = {
-      frontline: this.mergeAllValues(country, participant.frontline),
-      reserve: this.mergeAllValues(country, participant.reserve),
-      defeated: this.mergeAllValues(country, participant.defeated)}
-    const units = this.props.units.get(country)
-    const types = this.props.types.get(country)
-    if (!units || !types)
+      frontline: mergeArmy(participant, participant.frontline),
+      reserve: mergeArmy(participant, participant.reserve),
+      defeated: mergeArmy(participant, participant.defeated)
+    }
+    const types = this.props.types.get(participant.name)
+    if (!types)
       return null
     return (
         <Table celled selectable unstackable key={type}>
@@ -57,7 +54,7 @@ class Stats extends Component<IProps> {
           </Table.Header>
           <Table.Body>
             {
-              info && types.map(type => this.renderRow(info, type, getImage(units.get(type))))
+              info && types.map(type => this.renderRow(info, type, getImage(participant.units.get(type))))
             }
           </Table.Body>
         </Table>
@@ -77,30 +74,19 @@ class Stats extends Component<IProps> {
           <Image src={image} avatar />
           {type + ' (x ' + count + ')'}</Table.Cell>
         <Table.Cell width='3'>
-          {this.finalize(this.calculateValue(armies, type, UnitCalc.Strength))} / {this.finalize(this.calculateValueWithoutLoss(armies, type, UnitCalc.Strength))}
+          {strengthToValue(this.props.mode, this.calculateValue(armies, type, UnitCalc.Strength))} / {strengthToValue(this.props.mode, this.calculateValueWithoutLoss(armies, type, UnitCalc.Strength))}
         </Table.Cell>
         <Table.Cell width='3'>
           {this.round(this.calculateValue(armies, type, UnitCalc.Morale))} / {this.round(this.calculateValueWithoutLoss(armies, type, UnitCalc.Morale))}
         </Table.Cell>
         <Table.Cell width='3'>
-          {this.finalize(this.calculateValue(armies, type, UnitCalc.StrengthDepleted))}
+          {strengthToValue(this.props.mode, this.calculateValue(armies, type, UnitCalc.StrengthDepleted))}
         </Table.Cell>
         <Table.Cell width='3'>
           {this.round(this.calculateValue(armies, type, UnitCalc.MoraleDepleted))}
         </Table.Cell>
       </Table.Row>
     )
-  }
-
-  finalize = (value: number): string => {
-    if (this.props.mode === DefinitionType.Naval)
-      return Math.floor(value * 100) + '%'
-    return String(Math.floor(value * 1000))
-  }
-
-  
-  mergeAllValues = (name: CountryName, army: List<Unit | undefined>): List<any> => {
-    return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats.getIn([name, this.props.mode])))
   }
 
   calculateValue = (participant: Army, type: UnitType, attribute: UnitCalc): number => {
@@ -127,9 +113,8 @@ class Stats extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  attacker: getBattle(state).attacker,
-  defender: getBattle(state).defender,
-  armies: getBattle(state).armies,
+  attacker: getAttacker(state),
+  defender: getDefender(state),
   units: state.units.definitions,
   types: state.units.types,
   global_stats: state.global_stats,

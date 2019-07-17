@@ -37,12 +37,48 @@ const unit_to_icon = Map<UnitType, string>()
   .set(UnitType.Octere, IconOctere)
   .set(UnitType.MegaGalley, IconMegaGalley)
 
+
+  const createUnitFromJson = (data: UnitData): UnitDefinition => {
+    let unit = { type: data.type as UnitType, mode: data.mode as DefinitionType, image: unit_to_icon.get(data.type as UnitType) || '', requirements: data.requirements, can_assault: data.can_assault }
+    const base_values: [ValueType, number][] = [
+      [UnitCalc.AttritionWeight, data.attrition_weight || 0],
+      [UnitCalc.Cost, data.cost],
+      [UnitCalc.RecruitTime, data.recruit_time],
+      [UnitCalc.Maintenance, data.maintenance],
+      [UnitCalc.MovementSpeed, data.movement_speed],
+      [UnitCalc.Maneuver, data.maneuver],
+      [UnitCalc.MoraleDamageTaken, data.morale_damage_taken || 0],
+      [UnitCalc.StrengthDamageTaken, data.strength_damage_taken || 0],
+      [UnitCalc.MoraleDamageDone, data.morale_damage_done || 0],
+      [UnitCalc.StrengthDamageDone, data.strength_damage_done || 0],
+      [UnitCalc.DamageDone, data.damage_done || 0],
+      [UnitCalc.DamageDone, data.damage_done || 0],
+      [UnitType.Archers, data.archers || 0],
+      [UnitType.CamelCavalry, data.camel_cavalry || 0],
+      [UnitType.Chariots, data.chariots || 0],
+      [UnitType.HeavyCavalry, data.heavy_cavalry || 0],
+      [UnitType.HeavyInfantry, data.heavy_infantry || 0],
+      [UnitType.HorseArchers, data.horse_archers || 0],
+      [UnitType.LightCavalry, data.light_cavalry || 0],
+      [UnitType.LightInfantry, data.light_infantry || 0],
+      [UnitType.WarElephants, data.war_elephants || 0],
+      [UnitType.Liburnian, data.liburnian || 0],
+      [UnitType.Trireme, data.trireme || 0],
+      [UnitType.Tetrere, data.tetrere || 0],
+      [UnitType.Hexere, data.hexere || 0],
+      [UnitType.Octere, data.octere || 0],
+      [UnitType.MegaGalley, data.mega_galley || 0]
+    ]
+    unit = addValues(unit, ValuesType.Base, unit.type, base_values)
+    return unit
+  }
+
 export const getDefaultTypes = (): OrderedSet<UnitType> => {
   const units = Object.keys(UnitType).map(k => UnitType[k as any]) as UnitType[]
   return OrderedSet<UnitType>(units)
 }
 
-export const getDefaultDefinitions = (): OrderedMap<UnitType, UnitDefinition> => {
+const initializeDefaultUnits = (): OrderedMap<UnitType, UnitDefinition> => {
   let map = OrderedMap<UnitType, UnitDefinition>()
   for (const value of data.units) {
     const unit = createUnitFromJson(value)
@@ -50,6 +86,25 @@ export const getDefaultDefinitions = (): OrderedMap<UnitType, UnitDefinition> =>
   }
   return map
 }
+
+const initializeDefaultGlobal = (): Map<DefinitionType, UnitDefinition> => {
+  let definitions = Map<DefinitionType, UnitDefinition>()
+  const land = { type: '' as UnitType, mode: DefinitionType.Land, image: IconMilitaryPower, requirements: '', can_assault: false }
+  const naval = { type: '' as UnitType, mode: DefinitionType.Naval, image: IconMilitaryPower, requirements: '', can_assault: false }
+  const values: [UnitCalc, number][] = [
+    [UnitCalc.Strength, 1],
+    [UnitCalc.Morale, 3]
+  ]
+  definitions = definitions.set(DefinitionType.Land, addValues(land, ValuesType.Base, 'Base', values))
+  definitions = definitions.set(DefinitionType.Naval, addValues(naval, ValuesType.Base, 'Base', values))
+  return definitions
+}
+
+const defaultUnits = initializeDefaultUnits()
+const defaultGlobal = initializeDefaultGlobal()
+
+export const getDefaultUnits = (): OrderedMap<UnitType, UnitDefinition> => defaultUnits
+export const getDefaultGlobal = (): OrderedMap<DefinitionType, UnitDefinition> => defaultGlobal
 
 export const unitFromJS = (object?: Map<string, any>): Unit | undefined => {
   if (!object)
@@ -75,54 +130,6 @@ export const unitDefinitionFromJS = (object?: Map<string, any>): UnitDefinition 
   const modifier_values = object.has('modifier_values') ? fromJS(object.get('modifier_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
   const loss_values = object.has('loss_values') ? fromJS(object.get('loss_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
   return { type, mode, image, requirements: object.get('requirements'), can_assault: object.get('can_assault'), base_values, modifier_values, loss_values }
-}
-
-export const getDefaultGlobalDefinition = (): Map<DefinitionType, UnitDefinition> => {
-  let definitions = Map<DefinitionType, UnitDefinition>()
-  const land = { type: '' as UnitType, mode: DefinitionType.Land, image: IconMilitaryPower, requirements: '', can_assault: false }
-  const naval = { type: '' as UnitType, mode: DefinitionType.Naval, image: IconMilitaryPower, requirements: '', can_assault: false }
-  const values: [UnitCalc, number][] = [
-    [UnitCalc.Strength, 1],
-    [UnitCalc.Morale, 3]
-  ]
-  definitions = definitions.set(DefinitionType.Land, addValues(land, ValuesType.Base, 'Base', values))
-  definitions = definitions.set(DefinitionType.Naval, addValues(naval, ValuesType.Base, 'Base', values))
-  return definitions
-}
-
-const createUnitFromJson = (data: UnitData): UnitDefinition => {
-  let unit = { type: data.type as UnitType, mode: data.mode as DefinitionType, image: unit_to_icon.get(data.type as UnitType) || '', requirements: data.requirements, can_assault: data.can_assault }
-  const base_values: [ValueType, number][] = [
-    [UnitCalc.AttritionWeight, data.attrition_weight || 0],
-    [UnitCalc.Cost, data.cost],
-    [UnitCalc.RecruitTime, data.recruit_time],
-    [UnitCalc.Maintenance, data.maintenance],
-    [UnitCalc.MovementSpeed, data.movement_speed],
-    [UnitCalc.Maneuver, data.maneuver],
-    [UnitCalc.MoraleDamageTaken, data.morale_damage_taken || 0],
-    [UnitCalc.StrengthDamageTaken, data.strength_damage_taken || 0],
-    [UnitCalc.MoraleDamageDone, data.morale_damage_done || 0],
-    [UnitCalc.StrengthDamageDone, data.strength_damage_done || 0],
-    [UnitCalc.DamageDone, data.damage_done || 0],
-    [UnitCalc.DamageDone, data.damage_done || 0],
-    [UnitType.Archers, data.archers || 0],
-    [UnitType.CamelCavalry, data.camel_cavalry || 0],
-    [UnitType.Chariots, data.chariots || 0],
-    [UnitType.HeavyCavalry, data.heavy_cavalry || 0],
-    [UnitType.HeavyInfantry, data.heavy_infantry || 0],
-    [UnitType.HorseArchers, data.horse_archers || 0],
-    [UnitType.LightCavalry, data.light_cavalry || 0],
-    [UnitType.LightInfantry, data.light_infantry || 0],
-    [UnitType.WarElephants, data.war_elephants || 0],
-    [UnitType.Liburnian, data.liburnian || 0],
-    [UnitType.Trireme, data.trireme || 0],
-    [UnitType.Tetrere, data.tetrere || 0],
-    [UnitType.Hexere, data.hexere || 0],
-    [UnitType.Octere, data.octere || 0],
-    [UnitType.MegaGalley, data.mega_galley || 0]
-  ]
-  unit = addValues(unit, ValuesType.Base, unit.type, base_values)
-  return unit
 }
 
 interface UnitData {

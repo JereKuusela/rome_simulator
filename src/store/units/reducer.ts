@@ -1,6 +1,6 @@
-import { Map, OrderedSet } from 'immutable'
+import { Map, OrderedSet, OrderedMap } from 'immutable'
 import { createReducer } from 'typesafe-actions'
-import { getDefaultDefinitions, getDefaultTypes, getDefaultGlobalDefinition } from './data'
+import { getDefaultUnits, getDefaultTypes, getDefaultGlobal } from './data'
 import {
   UnitType, UnitDefinition,
   setValue, setGlobalValue, deleteUnit, addUnit, changeImage, changeType, changeMode,
@@ -11,9 +11,9 @@ import { addValues, DefinitionType, ValuesType, regenerateValues, clearValues } 
 
 export const unitsState = {
   types: Map<CountryName, OrderedSet<UnitType>>().set(CountryName.Country1, getDefaultTypes()).set(CountryName.Country2, getDefaultTypes()),
-  definitions: Map<CountryName, Map<UnitType, UnitDefinition>>().set(CountryName.Country1, getDefaultDefinitions()).set(CountryName.Country2, getDefaultDefinitions()),
+  definitions: Map<CountryName, OrderedMap<UnitType, UnitDefinition>>().set(CountryName.Country1, getDefaultUnits()).set(CountryName.Country2, getDefaultUnits()),
 }
-export const globalStatsState = Map<CountryName, Map<DefinitionType, UnitDefinition>>().set(CountryName.Country1, getDefaultGlobalDefinition()).set(CountryName.Country2, getDefaultGlobalDefinition())
+export const globalStatsState = Map<CountryName, Map<DefinitionType, UnitDefinition>>().set(CountryName.Country1, getDefaultGlobal()).set(CountryName.Country2, getDefaultGlobal())
 
 export const unitsReducer = createReducer(unitsState)
   .handleAction(setValue, (state, action: ReturnType<typeof setValue>) => (
@@ -60,7 +60,7 @@ export const unitsReducer = createReducer(unitsState)
   .handleAction(createCountry, (state, action: ReturnType<typeof createCountry>) => (
     {
       ...state,
-      definitions: state.definitions.set(action.payload.country, state.definitions.get(action.payload.source_country!, getDefaultDefinitions())),
+      definitions: state.definitions.set(action.payload.country, state.definitions.get(action.payload.source_country!, getDefaultUnits())),
       types: state.types.set(action.payload.country, state.types.get(action.payload.source_country!, getDefaultTypes()))
     }
   ))
@@ -103,7 +103,7 @@ export const globalStatsReducer = createReducer(globalStatsState)
     state.updateIn([action.payload.country, action.payload.mode], (unit: UnitDefinition) => addValues(unit, action.payload.type, action.payload.key, [[action.payload.attribute, action.payload.value]]))
   ))
   .handleAction(createCountry, (state, action: ReturnType<typeof createCountry>) => (
-    state.set(action.payload.country, state.get(action.payload.source_country!, getDefaultGlobalDefinition()))
+    state.set(action.payload.country, state.get(action.payload.source_country!, getDefaultGlobal()))
   ))
   .handleAction(deleteCountry, (state, action: ReturnType<typeof deleteCountry>) => (
     state.delete(action.payload.country)

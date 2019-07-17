@@ -5,7 +5,11 @@ import { DefinitionType } from "../base_definition"
 import { TerrainType } from "./terrains/actions"
 import { UnitType, UnitDefinition } from "./units/actions"
 import { Armies, modeState } from "./battle/reducer"
+import { getDefault as getDefaultArmy, Participant as BaseParticipant } from "./battle/actions"
 import { CombatParameter } from "./settings/actions"
+import { defaultCountry } from "./countries/reducer";
+import { CountryName } from "./countries/actions";
+import { getDefaultGlobal, getDefaultUnits } from "./units/data"
 
 /**
  * Returns settings of the current mode.
@@ -69,4 +73,28 @@ export const mergeSettings = (state: AppState): OrderedMap<CombatParameter, numb
       return tactic.mode === state.settings.mode || tactic.mode === DefinitionType.Global
     })
   }
+
+  const getParticipant = (state: AppState, battle: Armies, name: CountryName): Participant => {
+    const army = battle.armies.get(name, getDefaultArmy(state.settings.mode))
+    const country = state.countries.get(name, defaultCountry)
+    const units = state.units.definitions.get(name, getDefaultUnits())
+    const global = state.global_stats.get(name, getDefaultGlobal()).get(state.settings.mode)!
+    return { ...army, general: country.general_martial, name, units, global}
+  }
+
+  export const getAttacker = (state: AppState): Participant => {
+    const battle = getBattle(state)
+    return getParticipant(state, battle, battle.attacker)
+  }
   
+  export const getDefender = (state: AppState): Participant => {
+    const battle = getBattle(state)
+    return getParticipant(state, battle, battle.defender)
+  }
+
+  export interface Participant extends BaseParticipant {
+    general: number
+    name: CountryName
+    units: OrderedMap<UnitType, UnitDefinition>
+    global: UnitDefinition
+  }

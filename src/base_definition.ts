@@ -61,8 +61,8 @@ export const mergeBaseValues = <Definition extends AnyDefinition | undefined>
  * @param definition Returned definition with base values from to_merge.
  * @param to_merge Only returned if other parameter is not defined.
  */
-export const mergeValues = <Definition extends AnyBaseDefinition | undefined>
-  (definition: Definition, to_merge: Definition): Definition => {
+export const mergeValues = <Definition1 extends AnyBaseDefinition | undefined, Definition2 extends AnyBaseDefinition | undefined>
+  (definition: Definition1, to_merge: Definition2): Definition1 | Definition2 => {
   let base_values = Map<any, OrderedMap<string, number>>()
   if (definition && definition.base_values)
     base_values = base_values.mergeDeep(definition.base_values)
@@ -356,12 +356,7 @@ export const valueToNumber = <Definition extends AnyDefinition, Attribute>
 }
 
 export const valueToManpower = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, type: Attribute, show_zero: boolean): string => {
-  const value = calculateValue(definition, type) * 1000
-  if (value === 0 && !show_zero)
-    return ''
-  return String(value)
-}
+  (definition: Definition, type: Attribute, show_zero: boolean): string => toManpower(calculateValue(definition, type), show_zero)
 
 export const valueToPercent = <Definition extends AnyDefinition, Attribute>
   (definition: Definition, type: Attribute, show_zero: boolean): string => toPercent(calculateValue(definition, type), 0.0, show_zero)
@@ -372,6 +367,14 @@ export const valueToRelativePercent = <Definition extends AnyDefinition, Attribu
 export const valueToRelativeZeroPercent = <Definition extends AnyDefinition, Attribute>
   (definition: Definition, type: Attribute, show_zero: boolean): string => toRelativeZeroPercent(calculateValue(definition, type), show_zero)
 
+
+export const strengthToValue = (mode: DefinitionType, number: number) => {
+  if (mode === DefinitionType.Naval)
+    return toPercent(number)
+  return toManpower(number)
+}
+
+export const toManpower = (number: number, show_zero: boolean = true): string => (number === 0 && !show_zero) ? '' : String(Math.floor(1000 * number))
 
 export const toPercent = (number: number, offset: number = 0, show_zero: boolean = true, show_sign: boolean = false): string => {
   const value = +(number * 100.0 - offset).toFixed(2)

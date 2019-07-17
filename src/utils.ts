@@ -1,4 +1,7 @@
 import { fromJS, Seq, List } from 'immutable'
+import { Participant } from './store/utils';
+import { Unit } from './store/units/actions';
+import { mergeValues } from './base_definition';
 
 /**
  * Maps a range to a list.
@@ -27,3 +30,7 @@ export const listFromJS = <T>(data: T) => {
 }
 
 export const toList = <T>(item: T) => List<T>().push(item)
+
+export const mergeArmy = (participant: Participant, army: List<Unit | undefined>): List<any> => {
+  return army.map(value => value && mergeValues(mergeValues(participant.units.get(value.type), value), participant.global))
+}
