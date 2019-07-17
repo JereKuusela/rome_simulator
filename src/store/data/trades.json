@@ -2,7 +2,7 @@
   "trades": [
     {
       "name": "Salt",
-      "type": "Country",
+      "type": "Capital",
       "modifier": {
         "target": "Global",
         "attribute": "Maintenance",
@@ -22,7 +22,7 @@
     },
     {
       "name": "Wine",
-      "type": "Country",
+      "type": "Capital",
       "modifier": {
         "target": "Global",
         "attribute": "Maintenance",
@@ -42,7 +42,7 @@
     },
     {
       "name": "Iron",
-      "type": "Country",
+      "type": "Capital",
       "modifier": {
         "target": "Heavy Infantry",
         "attribute": "Discipline",
@@ -60,7 +60,7 @@
     },
     {
       "name": "Horses",
-      "type": "Country",
+      "type": "Capital",
       "modifier": {
         "target": "Light Cavalry",
         "attribute": "Discipline",
@@ -78,7 +78,7 @@
     },
     {
       "name": "Elephants",
-      "type": "Country",
+      "type": "Capital",
       "modifier": {
         "target": "War Elephants",
         "attribute": "Discipline",
@@ -96,7 +96,7 @@
     },
     {
       "name": "Wild Game",
-      "type": "Country",
+      "type": "Capital",
       "modifier": {
         "target": "Archers",
         "attribute": "Discipline",
@@ -114,7 +114,7 @@
     },
     {
       "name": "Steppe Horses",
-      "type": "Country",
+      "type": "Capital",
       "modifier": {
         "target": "Horse Archers",
         "attribute": "Discipline",
@@ -132,7 +132,7 @@
     },
     {
       "name": "Fur",
-      "type": "Province",
+      "type": "Import",
       "modifier": {
         "target": "Global",
         "attribute": "Experience",
@@ -141,7 +141,7 @@
     },
     {
       "name": "Fur",
-      "type": "Capital",
+      "type": "Province",
       "modifier": {
         "target": "Global",
         "attribute": "Experience",
@@ -150,7 +150,7 @@
     },
     {
       "name": "Fur",
-      "type": "Country",
+      "type": "Capital",
       "modifier": {
         "target": "Global",
         "attribute": "Experience",
@@ -168,7 +168,7 @@
     },
     {
       "name": "Leather",
-      "type": "Country",
+      "type": "Capital",
       "modifier": {
         "target": "Light Infantry",
         "attribute": "Defense",
@@ -186,7 +186,7 @@
     },
     {
       "name": "Base Metals",
-      "type": "Country",
+      "type": "Capital",
       "modifier": {
         "target": "Light Infantry",
         "attribute": "Offense",
@@ -204,7 +204,7 @@
     },
     {
       "name": "Hemp",
-      "type": "Country",
+      "type": "Capital",
       "modifier": {
         "target": "Naval",
         "attribute": "Damage done",
@@ -222,7 +222,7 @@
     },
     {
       "name": "Camel",
-      "type": "Country",
+      "type": "Capital",
       "modifier": {
         "target": "Camels",
         "attribute": "Discipline",

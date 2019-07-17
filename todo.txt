@@ -1,13 +1,9 @@
 Release 4:
 
-- Laws / Economy / Ideas / Strategos
+- Ideas / Strategos
 - Accordions to more places??
 
 - Robustness:
- - Getters to get countries / armies / etc -> if missing return initial
- - Also for reducers to automatically heal up
- - Country modifiers without distinct order shoould use names (like trade, heritages) -> works even when order changes
- - Modifier refresh working in all cases? For example tradition switch
  - Sanity check on load? Remove modifiers which dont exist
 
 Tests (high priority):

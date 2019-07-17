@@ -57,7 +57,7 @@ class Countries extends Component<IProps> {
               <DropdownSelector
                 items={this.props.traditions.keySeq()}
                 active={country.culture}
-                onSelect={item => this.props.selectCulture(this.props.selected_country, item)}
+                onSelect={item => this.selectCulture(item, selections)}
               />
             </Grid.Column>
             <Grid.Column>
@@ -204,11 +204,11 @@ class Countries extends Component<IProps> {
                   mapRange(TRADE_COLUMNS, number => number).map(column => {
                     const index = row * TRADE_COLUMNS + column
                     const trade = trades.get(index)
-                    const key = TRADE_KEY + index
                     if (!trade)
-                      return (<Table.Cell key={key}></Table.Cell>)
+                      return (<Table.Cell key={TRADE_KEY + index}></Table.Cell>)
+                    const key = TRADE_KEY + trade.type + '_' + trade.name
                     const modifiers = toList(trade.modifier)
-                    return this.renderCell(key, trade.type + ' ' + trade.name, selections, modifiers)
+                    return this.renderCell(key, trade.type + ': ' + trade.name, selections, modifiers)
                   })
                 }
               </Table.Row>
@@ -231,10 +231,10 @@ class Countries extends Component<IProps> {
                   mapRange(HERITAGE_COLUMNS, number => number).map(column => {
                     const index = row * HERITAGE_COLUMNS + column
                     const heritage = heritages.get(index)
-                    const key = HERITAGE_KEY + index
                     if (!heritage)
-                      return (<Table.Cell key={key}></Table.Cell>)
+                      return (<Table.Cell key={HERITAGE_KEY + index}></Table.Cell>)
                     const modifiers = heritage.modifiers
+                    const key = HERITAGE_KEY + heritage.name
                     return this.renderCell(key, heritage.name, selections, modifiers,
                       () => this.enableHeritage(key, modifiers, selections), undefined, '\u00a0\u00a0\u00a0\u00a0')
                   })
@@ -330,11 +330,10 @@ class Countries extends Component<IProps> {
                   mapRange(TRAIT_COLUMNS, number => number).map(column => {
                     const index = row * TRAIT_COLUMNS + column
                     const trait = traits.get(index)
-                    const key = TRAIT_KEY + index
                     if (!trait)
-                      return (<Table.Cell key={key}></Table.Cell>)
+                      return (<Table.Cell key={TRAIT_KEY + index}></Table.Cell>)
                     const modifiers = trait.modifiers
-                    return this.renderCell(key, trait.name, selections, modifiers)
+                    return this.renderCell(TRAIT_KEY + trait.name, trait.name, selections, modifiers)
                   })
                 }
               </Table.Row>
@@ -481,6 +480,26 @@ class Countries extends Component<IProps> {
   }
 
   /**
+   * Refreshes active traditions to update their buff.
+   */
+  refreshTraditions = (selections: Set<string>, traditions?: TraditionDefinition) => {
+    if (!traditions)
+      return
+    selections.filter(value => value.startsWith(TRADITION_KEY)).forEach(value => {
+      this.props.clearModifiers(this.props.selected_country, value)
+      const column = this.getNumberFromKey(value, 1)
+      const path = traditions.paths.get(column)
+      if (!path)
+        return
+      const row = this.getNumberFromKey(value, 2)
+      const tradition = path.traditions.get(row)
+      if (!tradition)
+        return
+      this.props.enableModifiers(this.props.selected_country, value, tradition.modifiers)
+    })
+  }
+
+  /**
    * Sets omen power while also re-enabling current omen.
    */
   setOmenPower = (value: string, selections: Set<string>, omens?: ImmutableList<OmenDefinition>) => {
@@ -500,6 +519,13 @@ class Countries extends Component<IProps> {
     this.refreshOmens(selections, power, omens)
   }
 
+  /**
+   * Selects culture while also re-enabling tradition.
+   */
+  selectCulture = (value: CultureType, selections: Set<string>) => {
+    this.props.selectCulture(this.props.selected_country, value)
+    this.refreshTraditions(selections, this.props.traditions.get(value))
+  }
   /**
    * Scales modifier with a given power.
    */

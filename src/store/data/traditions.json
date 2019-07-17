@@ -27,7 +27,7 @@
               "name": "Arms for Hire",
               "modifiers": [
                 {
-                  "target": "LightInfantry",
+                  "target": "Light Infantry",
                   "attribute": "Defense",
                   "value": 0.15
                 }

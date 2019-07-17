@@ -30,6 +30,19 @@ export const listFromJS = <T>(data: T) => {
   })
 }
 
+/**
+ * Converts JS structure to immutable Lists and objects.
+ * Default implementation converts objects to Maps.
+ * @param data Data to convert.
+ */
+export const orderedMapFromJS = <T>(data: T) => {
+  return fromJS(data, (_, sequence) => {
+    if (sequence instanceof Seq.Indexed)
+      return sequence.toList()
+    return sequence.toOrderedMap()
+  })
+}
+
 export const toList = <T>(item: T) => List<T>().push(item)
 
 export const mergeArmy = (participant: Participant, army: List<Unit | undefined>): List<any> => {

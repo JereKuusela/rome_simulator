@@ -7,6 +7,7 @@ import { DefinitionType } from '../base_definition'
 import { transferReducer } from './transfer'
 import { selectionsReducer, CountryName, Country } from './countries'
 import { CombatParameter, settingsReducer } from './settings'
+import { orderedMapFromJS } from '../utils'
 
 const dummyAction = {
   type: ''
@@ -16,24 +17,24 @@ export const transformTactics = (state_raw: any): ReturnType<typeof tacticsReduc
   const initial = tacticsReducer(undefined, dummyAction)
   if (!state_raw)
     return initial
-  const raw: Map<TacticType, any> = fromJS(state_raw)
-  return raw.map(value => tacticFromJS(value)!).filter(value => value).toOrderedMap()
+  const raw: OrderedMap<TacticType, any> = orderedMapFromJS(state_raw)
+  return raw.map(value => tacticFromJS(value)!).filter(value => value)
 }
 
 export const transformTerrains = (state_raw: any): ReturnType<typeof terrainsReducer> => {
   const initial = terrainsReducer(undefined, dummyAction)
   if (!state_raw)
     return initial
-  const raw: Map<TerrainType, any> = fromJS(state_raw)
-  return raw.map(value => terrainFromJS(value)!).filter(value => value).toOrderedMap()
+  const raw: OrderedMap<TerrainType, any> = orderedMapFromJS(state_raw)
+  return raw.map(value => terrainFromJS(value)!).filter(value => value)
 }
 
 export const transformUnits = (state_raw: any): ReturnType<typeof unitsReducer> => {
   const initial = unitsReducer(undefined, dummyAction)
   if (!state_raw)
     return initial
-  let raw: Map<CountryName, Map<UnitType, any>> = fromJS(state_raw)
-  return raw.filter(value => value).map(value => value.map(value => unitDefinitionFromJS(value)!).filter(value => value).toOrderedMap())
+  let raw: Map<CountryName, OrderedMap<UnitType, any>> = orderedMapFromJS(state_raw).toMap()
+  return raw.filter(value => value).map(value => value.map(value => unitDefinitionFromJS(value)!).filter(value => value))
 }
 
 export const transformGlobalStats = (state_raw: any): ReturnType<typeof globalStatsReducer> => {
