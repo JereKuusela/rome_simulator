@@ -6,6 +6,7 @@ import { selectTerrain } from '../store/battle'
 import ItemSelector from '../components/ItemSelector'
 import { TerrainType, TerrainCalc, LocationType } from '../store/terrains'
 import { DefinitionType } from '../base_definition'
+import { filterTerrains } from '../store/utils'
 
 export interface ModalInfo {
   index: number
@@ -22,7 +23,7 @@ class ModalTerrainSelector extends Component<IProps> {
           <ItemSelector
             onClose={this.props.onClose}
             onSelection={this.selectTerrain}
-            items={this.props.terrains.toList().filter(terrain => (terrain.mode === this.props.mode || terrain.mode === DefinitionType.Global) && this.props.info && (!this.props.info.location || terrain.location === this.props.info.location))}
+            items={this.props.terrains.toList().filter(terrain => this.props.info && (!this.props.info.location || terrain.location === this.props.info.location))}
             attributes={[TerrainCalc.Roll]}
           />
         </Modal.Content>
@@ -36,7 +37,7 @@ class ModalTerrainSelector extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  terrains: state.terrains.definitions,
+  terrains: filterTerrains(state),
   mode: state.settings.mode
 })
 

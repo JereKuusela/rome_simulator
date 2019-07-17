@@ -29,7 +29,7 @@ interface IProps {
 export default class UnitDefinitions extends Component<IProps> {
 
   render(): JSX.Element {
-    const units = filterUnits(this.props.mode, this.props.units.get(this.props.country))
+    const units = filterUnits(this.props.mode, this.props.units.get(this.props.country)).toList()
     return (
       <Table celled selectable unstackable>
         <Table.Header>
@@ -96,7 +96,7 @@ export default class UnitDefinitions extends Component<IProps> {
             this.renderGlobalStats(this.props.global_stats)
           }
           {
-            units.map(unit => this.renderRow(unit)).toList()
+            units.map(this.renderRow)
           }
         </Table.Body>
       </Table>

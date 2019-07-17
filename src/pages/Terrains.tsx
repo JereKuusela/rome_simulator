@@ -7,6 +7,7 @@ import TerrainDefinitions from '../components/TerrainDefinitions'
 import ItemRemover from '../components/ItemRemover'
 import { TerrainType, deleteTerrain, addTerrain, changeType } from '../store/terrains'
 import { DefinitionType } from '../base_definition'
+import { filterTerrains } from '../store/utils'
 
 interface IState {
   modal_terrain: TerrainType | null
@@ -43,8 +44,7 @@ class Terrains extends Component<IProps, IState> {
         </Modal>
         {
           <TerrainDefinitions
-            terrains={this.props.terrains.filter(terrain => terrain.mode === this.props.mode || terrain.mode === DefinitionType.Global)}
-            types={this.props.types}
+            terrains={this.props.terrains}
             onRowClick={terrain => this.openModal(terrain)}
             onCreateNew={type => this.props.addTerrain(type, this.props.mode)}
           />
@@ -62,8 +62,7 @@ class Terrains extends Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  terrains: state.terrains.definitions,
-  types: state.terrains.types,
+  terrains: filterTerrains(state),
   mode: state.settings.mode
 })
 

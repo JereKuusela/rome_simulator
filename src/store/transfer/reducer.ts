@@ -26,14 +26,8 @@ export const importReducer = createReducer<AppState>({} as any)
       return {
         ...state,
         ...action.payload.state,
-        tactics: {
-          ...state.tactics,
-          definitions: action.payload.state.tactics && action.payload.state.tactics.definitions ? state.tactics.definitions.merge(action.payload.state.tactics.definitions) : state.tactics.definitions
-        },
-        terrains: {
-          ...state.terrains,
-          definitions: action.payload.state.terrains && action.payload.state.terrains.definitions ? state.terrains.definitions.merge(action.payload.state.terrains.definitions) : state.terrains.definitions
-        },
+        tactics: action.payload.state.tactics ? state.tactics.merge(action.payload.state.tactics) : state.tactics,
+        terrains: action.payload.state.terrains ? state.terrains.merge(action.payload.state.terrains) : state.terrains,
         global_stats: action.payload.state.global_stats ? state.global_stats.merge(action.payload.state.global_stats) : state.global_stats,
         units: action.payload.state.units ? state.units.map((value, key) => value.merge(action.payload.state.units.get(key))) : state.units
       }

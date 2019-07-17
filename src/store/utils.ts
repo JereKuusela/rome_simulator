@@ -1,9 +1,9 @@
 import { AppState } from "./index"
 import { OrderedSet, OrderedMap } from "immutable"
-import { filterUnits } from '../utils'
-import { TacticType } from "./tactics/actions"
+import { filterUnits, filterByMode, getKeys } from '../utils'
+import { TacticType, TacticDefinition } from "./tactics/actions"
 import { DefinitionType } from "../base_definition"
-import { TerrainType } from "./terrains/actions"
+import { TerrainType, TerrainDefinition } from "./terrains/actions"
 import { UnitType, UnitDefinition } from "./units/actions"
 import { Armies, modeState } from "./battle/reducer"
 import { getDefault as getDefaultArmy, Participant as BaseParticipant } from "./battle/actions"
@@ -51,25 +51,31 @@ export const mergeSettings = (state: AppState): OrderedMap<CombatParameter, numb
    * @param state Application state.
    */
   export const filterTerrainTypes = (state: AppState): OrderedSet<TerrainType> => {
-    return state.terrains.types.filter(type => {
-      const terrain = state.terrains.definitions.get(type)
-      if (!terrain)
-        return false
-      return terrain.mode === state.settings.mode || terrain.mode === DefinitionType.Global
-    })
+    return getKeys(filterTerrains(state))
   }
   
+  /**
+   * Returns terrains for the current mode.
+   * @param state Application state.
+   */
+  export const filterTerrains = (state: AppState): OrderedMap<TerrainType, TerrainDefinition> => {
+    return state.terrains.filter(terrain => filterByMode(state.settings.mode, terrain))
+  }
+
   /**
    * Returns tactic types for the current mode.
    * @param state Application state.
    */
   export const filterTacticTypes = (state: AppState): OrderedSet<TacticType> => {
-    return state.tactics.types.filter(type => {
-      const tactic = state.tactics.definitions.get(type)
-      if (!tactic)
-        return false
-      return tactic.mode === state.settings.mode || tactic.mode === DefinitionType.Global
-    })
+    return getKeys(filterTactics(state))
+  }
+  
+  /**
+   * Returns tactics for the current mode.
+   * @param state Application state.
+   */
+  export const filterTactics = (state: AppState): OrderedMap<TacticType, TacticDefinition> => {
+    return state.tactics.filter(tactic => filterByMode(state.settings.mode, tactic))
   }
 
   const getParticipant = (state: AppState, battle: Armies, name: CountryName): Participant => {

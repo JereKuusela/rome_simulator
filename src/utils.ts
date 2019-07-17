@@ -36,11 +36,11 @@ export const mergeArmy = (participant: Participant, army: List<Unit | undefined>
   return army.map(value => value && mergeValues(mergeValues(participant.units.get(value.type), value), participant.global))
 }
 
+export const filterByMode = (mode: DefinitionType, definition: { mode: DefinitionType }) => definition.mode === DefinitionType.Global || definition.mode === mode
+
 export const filterUnits = (mode: DefinitionType, units?: OrderedMap<UnitType, UnitDefinition>): OrderedMap<UnitType, UnitDefinition> => {
   units = units || getDefaultUnits()
-  return units.filter(unit => unit.mode === DefinitionType.Global || unit.mode === mode)
+  return units.filter(unit => filterByMode(mode, unit))
 }
 
-export const getTypes = (units: OrderedMap<UnitType, UnitDefinition>): OrderedSet<UnitType> => {
-  return units.keySeq().toOrderedSet()
-}
+export const getKeys = <T>(map: OrderedMap<T, any>): OrderedSet<T> => map.keySeq().toOrderedSet()

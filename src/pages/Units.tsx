@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import ModalUnitDetail from '../containers/ModalUnitDetail'
 import ModalGlobalStatsDetail from '../containers/ModalGlobalStatsDetail'
 import { AppState } from '../store/index'
-import { getSelected, mergeUnitTypes } from '../store/utils'
+import { getSelected, mergeUnitTypes, filterTerrainTypes } from '../store/utils'
 import { DefinitionType } from '../base_definition'
 import { UnitType, addUnit, deleteUnit, changeType } from '../store/units'
 import UnitDefinitions from '../components/UnitDefinitions'
@@ -104,7 +104,7 @@ const mapStateToProps = (state: AppState) => ({
   selected: getSelected(state),
   units: state.units,
   unit_types: mergeUnitTypes(state),
-  terrains: state.terrains.types,
+  terrains: filterTerrainTypes(state),
   global_stats: state.global_stats,
   mode: state.settings.mode,
   country: state.settings.country

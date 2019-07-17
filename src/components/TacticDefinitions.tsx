@@ -9,8 +9,7 @@ import { CountryName } from '../store/countries'
 import VersusList from './VersusList'
 
 interface IProps {
-  readonly tactics: Map<TacticType, TacticDefinition>
-  readonly tactic_types: OrderedSet<TacticType>
+  readonly tactics: OrderedMap<TacticType, TacticDefinition>
   readonly units: Map<CountryName, OrderedMap<UnitType, UnitDefinition>>
   readonly unit_types: OrderedSet<UnitType>
   readonly onRowClick: (type: TacticType) => void
@@ -56,7 +55,7 @@ export default class TacticDefinitions extends Component<IProps, IState> {
           </Table.Header>
           <Table.Body>
             {
-              this.props.tactic_types.map(value => this.renderRow(this.props.tactics.get(value)))
+              this.props.tactics.map(this.renderRow).toList()
             }
           </Table.Body>
         </Table>
@@ -87,10 +86,10 @@ export default class TacticDefinitions extends Component<IProps, IState> {
         <Table.Cell singleLine>
           <List horizontal>
             {
-              this.props.tactic_types.filter(type => calculateValue(tactic, type) && this.props.tactics.get(type)).map(type => (
-                <List.Item key={type} style={{ marginLeft: 0, marginRight: '1em' }}>
-                  <Image src={getImage(this.props.tactics.find(value => value.type === type))} avatar />
-                  {valueToRelativeZeroPercent(tactic, type, true)}
+              this.props.tactics.filter(vs_tactic => calculateValue(tactic, vs_tactic.type)).map(vs_tactic => (
+                <List.Item key={vs_tactic.type} style={{ marginLeft: 0, marginRight: '1em' }}>
+                  <Image src={getImage(vs_tactic)} avatar />
+                  {valueToRelativeZeroPercent(tactic, vs_tactic.type, true)}
                 </List.Item>
               ))
             }

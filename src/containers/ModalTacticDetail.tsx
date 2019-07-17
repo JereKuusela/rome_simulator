@@ -4,7 +4,7 @@ import { setBaseValue, ValueType, TacticType, changeImage, changeMode } from '..
 import { AppState } from '../store/'
 import TacticDetail from '../components/TacticDetail'
 import { DefinitionType } from '../base_definition'
-import { mergeUnitTypes, filterTacticTypes } from '../store/utils'
+import { mergeUnitTypes, filterTacticTypes, filterTactics } from '../store/utils'
 
 const CUSTOM_VALUE_KEY = 'Custom'
 
@@ -30,7 +30,7 @@ class ModalTacticDetail extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  tactics: state.tactics.definitions,
+  tactics: filterTactics(state),
   tactic_types: filterTacticTypes(state),
   units: state.units,
   unit_types: mergeUnitTypes(state)

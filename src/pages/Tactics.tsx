@@ -6,7 +6,7 @@ import { AppState } from '../store/index'
 import TacticDefinitions from '../components/TacticDefinitions'
 import ItemRemover from '../components/ItemRemover'
 import { TacticType, deleteTactic, addTactic, changeType } from '../store/tactics'
-import { mergeUnitTypes } from '../store/utils'
+import { mergeUnitTypes, filterTactics } from '../store/utils'
 import { DefinitionType } from '../base_definition'
 
 interface IState {
@@ -43,8 +43,7 @@ class Tactics extends Component<IProps, IState> {
         </Modal>
         {
           <TacticDefinitions
-            tactics={this.props.tactics.filter(tactic => tactic.mode === this.props.mode || tactic.mode === DefinitionType.Global)}
-            tactic_types={this.props.tactic_types}
+            tactics={this.props.tactics}
             unit_types={this.props.unit_types}
             units={this.props.units}
             onRowClick={tactic => this.openModal(tactic)}
@@ -64,8 +63,7 @@ class Tactics extends Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  tactics: state.tactics.definitions,
-  tactic_types: state.tactics.types.toOrderedSet(),
+  tactics: filterTactics(state),
   units: state.units,
   unit_types: mergeUnitTypes(state),
   mode: state.settings.mode

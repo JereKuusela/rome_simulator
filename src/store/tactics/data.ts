@@ -1,4 +1,4 @@
-import { Map, OrderedSet, OrderedMap, fromJS } from 'immutable'
+import { Map, OrderedMap, fromJS } from 'immutable'
 import { TacticType, TacticCalc, TacticDefinition, ValueType } from './actions'
 import { addValues, ValuesType, DefinitionType } from '../../base_definition'
 import { UnitType } from '../units/actions'
@@ -35,32 +35,6 @@ const tactic_to_icon = Map<TacticType, string>()
   .set(TacticType.Harassment, IconHarassment)
   .set(TacticType.ProbingAttack, IconProbingAttack)
   .set(TacticType.CloseRanks, IconCloseRanks)
-
-export const getDefaultDefinitions = (): Map<TacticType, TacticDefinition> => {
-  let map = Map<TacticType, TacticDefinition>()
-  for (const value of data.tactics) {
-    const tactic = createTacticFromJson(value)
-    map = map.set(tactic.type, tactic)
-  }
-  return map
-}
-
-export const getDefaultTypes = (): OrderedSet<TacticType> => {
-  const tactics = Object.keys(TacticType).map(k => TacticType[k as any]) as TacticType[]
-  return OrderedSet<TacticType>(tactics)
-}
-
-export const tacticFromJS = (object: Map<string, any>): TacticDefinition | undefined => {
-  if (!object)
-    return undefined
-  const type = object.get('type') as TacticType
-  const mode = object.get('mode') as DefinitionType || DefinitionType.Global
-  let image = object.get('image')
-  if (!image)
-    image = tactic_to_icon.get(type) || ''
-  let base_values = object.has('base_values') ? fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined 
-  return { type, mode, image, base_values }
-}
 
 const createTacticFromJson = (data: TacticData): TacticDefinition => {
   let tactic: TacticDefinition = { type: data.type as TacticType, mode: data.mode as DefinitionType, image: tactic_to_icon.get(data.type as TacticType) || '' }
@@ -99,6 +73,31 @@ const createTacticFromJson = (data: TacticData): TacticDefinition => {
 
   ]
   return addValues(tactic, ValuesType.Base, tactic.type, base_values)
+}
+
+const initializeDefaultTactics = (): OrderedMap<TacticType, TacticDefinition> => {
+  let map = OrderedMap<TacticType, TacticDefinition>()
+  for (const value of data.tactics) {
+    const tactic = createTacticFromJson(value)
+    map = map.set(tactic.type, tactic)
+  }
+  return map
+}
+
+const defaultTactics = initializeDefaultTactics()
+
+export const getDefaultTactics = () => defaultTactics
+
+export const tacticFromJS = (object: Map<string, any>): TacticDefinition | undefined => {
+  if (!object)
+    return undefined
+  const type = object.get('type') as TacticType
+  const mode = object.get('mode') as DefinitionType || DefinitionType.Global
+  let image = object.get('image')
+  if (!image)
+    image = tactic_to_icon.get(type) || ''
+  let base_values = object.has('base_values') ? fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
+  return { type, mode, image, base_values }
 }
 
 interface TacticData {

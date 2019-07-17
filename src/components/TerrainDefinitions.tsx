@@ -1,4 +1,4 @@
-import { OrderedSet, Map } from 'immutable'
+import { OrderedMap } from 'immutable'
 import React, { Component } from 'react'
 import { Table, Button, Image } from 'semantic-ui-react'
 import { TerrainCalc, TerrainDefinition, TerrainType } from '../store/terrains'
@@ -6,8 +6,7 @@ import { valueToRelativeNumber, getImage } from '../base_definition'
 import ValueModal from './ValueModal'
 
 interface IProps {
-  readonly terrains: Map<TerrainType, TerrainDefinition>
-  readonly types: OrderedSet<TerrainType>
+  readonly terrains: OrderedMap<TerrainType, TerrainDefinition>
   readonly onRowClick: (type: TerrainType) => void
   readonly onCreateNew: (type: TerrainType) => void
 }
@@ -52,7 +51,7 @@ export default class TerrainDefinitions extends Component<IProps, IState> {
           </Table.Header>
           <Table.Body>
             {
-              this.props.types.map(value => this.renderRow(this.props.terrains.get(value)))
+              this.props.terrains.map(this.renderRow).toList()
             }
           </Table.Body>
         </Table>

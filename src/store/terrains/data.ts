@@ -1,10 +1,18 @@
-import { Map, OrderedSet, OrderedMap, fromJS } from 'immutable'
+import { Map, OrderedMap, fromJS } from 'immutable'
 import { TerrainType, LocationType, TerrainCalc, TerrainDefinition, ValueType } from './actions'
 import { addValues, ValuesType, DefinitionType } from '../../base_definition'
 import * as data from './terrains.json'
 import IconTerrain from '../../images/terrain.png'
 
-export const getDefaultDefinitions = (): OrderedMap<TerrainType, TerrainDefinition> => {
+const createTerrainFromJson = (data: TerrainData): TerrainDefinition => {
+  let terrain: TerrainDefinition = {type: data.type as TerrainType, mode: data.mode as DefinitionType, image: IconTerrain, location: data.location as LocationType}
+  const base_values: [ValueType, number][] = [
+    [TerrainCalc.Roll, data.roll]
+  ]
+  return addValues(terrain, ValuesType.Base, terrain.type, base_values)
+}
+
+const initializeDefaultTerrains = (): OrderedMap<TerrainType, TerrainDefinition> => {
   let map = OrderedMap<TerrainType, TerrainDefinition>()
   for (const value of data.terrain) {
     const terrain = createTerrainFromJson(value)
@@ -13,10 +21,9 @@ export const getDefaultDefinitions = (): OrderedMap<TerrainType, TerrainDefiniti
   return map
 }
 
-export const getDefaultTypes = (): OrderedSet<TerrainType> => {
-  const terrains = Object.keys(TerrainType).map(k => TerrainType[k as any]) as TerrainType[]
-  return OrderedSet<TerrainType>(terrains)
-}
+const defaultTerrains = initializeDefaultTerrains()
+
+export const getDefaultTerrains = () => defaultTerrains
 
 export const terrainFromJS = (object: Map<string, any>): TerrainDefinition | undefined => {
   if (!object)
@@ -25,14 +32,6 @@ export const terrainFromJS = (object: Map<string, any>): TerrainDefinition | und
   const mode = object.get('mode') as DefinitionType || DefinitionType.Global
   let base_values = object.has('base_values') ? fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
   return { type: object.get('type') as TerrainType, mode, image, location: object.get('location') as LocationType, base_values }
-}
-
-const createTerrainFromJson = (data: TerrainData): TerrainDefinition => {
-  let terrain: TerrainDefinition = {type: data.type as TerrainType, mode: data.mode as DefinitionType, image: IconTerrain, location: data.location as LocationType}
-  const base_values: [ValueType, number][] = [
-    [TerrainCalc.Roll, data.roll]
-  ]
-  return addValues(terrain, ValuesType.Base, terrain.type, base_values)
 }
 
 interface TerrainData {

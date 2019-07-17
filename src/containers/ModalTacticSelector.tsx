@@ -7,7 +7,7 @@ import { selectTactic } from '../store/battle'
 import { calculateTactic } from '../store/combat'
 import ItemSelector from '../components/ItemSelector'
 import { TacticType } from '../store/tactics'
-import { getBattle } from '../store/utils'
+import { getBattle, filterTactics } from '../store/utils'
 import { toRelativePercent, toPercent, DefinitionType, mergeValues } from '../base_definition'
 import { UnitDefinition, Unit } from '../store/units'
 import { CountryName } from '../store/countries'
@@ -41,7 +41,7 @@ class ModalTacticSelector extends Component<IProps> {
         <ItemSelector
           onClose={this.props.onClose}
           onSelection={this.selectTactic}
-          items={this.props.tactics.filter(tactic => (tactic.mode === this.props.mode || tactic.mode === DefinitionType.Global)).toList()}
+          items={this.props.tactics.toList()}
           attributes={[]}
           custom_values={custom_values}
         />
@@ -61,7 +61,7 @@ class ModalTacticSelector extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  tactics: state.tactics.definitions,
+  tactics: filterTactics(state),
   armies: getBattle(state).armies,
   mode: state.settings.mode,
   units: state.units,
