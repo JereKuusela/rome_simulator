@@ -4,7 +4,7 @@ import { changeParameter, CombatParameter, parameterToDescription } from '../sto
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { DefinitionType } from '../base_definition'
-import { mergeSettings } from '../utils'
+import { mergeSettings } from '../store/utils'
 
 class Settings extends Component<IProps> {
 

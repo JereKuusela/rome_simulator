@@ -18,7 +18,7 @@ export interface Country {
   has_general: boolean
 }
 
-const getDefaultSelections = () => (
+export const defaultCountry =
   {
     selections: Set<string>(),
     government: GovermentType.Republic,
@@ -29,14 +29,12 @@ const getDefaultSelections = () => (
     trait_martial: Map<string, OrderedMap<string, number>>(),
     has_general: true
   }
-)
 
-const selectionsState = Map<CountryName, Country>().set(CountryName.Country1, getDefaultSelections()).set(CountryName.Country2, getDefaultSelections())
-
+const selectionsState = Map<CountryName, Country>().set(CountryName.Country1, defaultCountry).set(CountryName.Country2, defaultCountry)
 
 export const selectionsReducer = createReducer(selectionsState)
   .handleAction(createCountry, (state, action: ReturnType<typeof createCountry>) => (
-    state.set(action.payload.country, state.get(action.payload.source_country!, getDefaultSelections()))
+    state.set(action.payload.country, state.get(action.payload.source_country!, defaultCountry))
   ))
   .handleAction(deleteCountry, (state, action: ReturnType<typeof deleteCountry>) => (
     state.delete(action.payload.country)
@@ -45,26 +43,26 @@ export const selectionsReducer = createReducer(selectionsState)
     state.mapKeys(key => key === action.payload.old_country ? action.payload.country : key)
   ))
   .handleAction(enableModifiers, (state, action: ReturnType<typeof enableModifiers>) => (
-    state.update(action.payload.country, value => ({ ...value, selections: value.selections.add(action.payload.key) }))
+    state.update(action.payload.country, defaultCountry, value => ({ ...value, selections: value.selections.add(action.payload.key) }))
   ))
   .handleAction(clearModifiers, (state, action: ReturnType<typeof clearModifiers>) => (
-    state.update(action.payload.country, value => ({ ...value, selections: value.selections.remove(action.payload.key) }))
+    state.update(action.payload.country, defaultCountry, value => ({ ...value, selections: value.selections.remove(action.payload.key) }))
   ))
   .handleAction(selectGovernment, (state, action: ReturnType<typeof selectGovernment>) => (
-    state.update(action.payload.country, value => ({ ...value, government: action.payload.government }))
+    state.update(action.payload.country, defaultCountry, value => ({ ...value, government: action.payload.government }))
   ))
   .handleAction(selectReligion, (state, action: ReturnType<typeof selectReligion>) => (
-    state.update(action.payload.country, value => ({ ...value, religion: action.payload.religion }))
+    state.update(action.payload.country, defaultCountry, value => ({ ...value, religion: action.payload.religion }))
   ))
   .handleAction(selectCulture, (state, action: ReturnType<typeof selectCulture>) => (
-    state.update(action.payload.country, value => ({ ...value, culture: action.payload.culture }))
+    state.update(action.payload.country, defaultCountry, value => ({ ...value, culture: action.payload.culture }))
   ))
   .handleAction(setOmenPower, (state, action: ReturnType<typeof setOmenPower>) => (
-    state.update(action.payload.country, value => ({ ...value, omen_power: action.payload.power }))
+    state.update(action.payload.country, defaultCountry, value => ({ ...value, omen_power: action.payload.power }))
   ))
   .handleAction(setGeneralMartial, (state, action: ReturnType<typeof setGeneralMartial>) => (
-    state.update(action.payload.country, value => ({ ...value, general_martial: action.payload.skill }))
+    state.update(action.payload.country, defaultCountry, value => ({ ...value, general_martial: action.payload.skill }))
   ))
   .handleAction(toggleHasGeneral, (state, action: ReturnType<typeof toggleHasGeneral>) => (
-    state.update(action.payload.country, value => ({ ...value, has_general: !value.has_general }))
+    state.update(action.payload.country, defaultCountry, value => ({ ...value, has_general: !value.has_general }))
   ))

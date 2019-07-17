@@ -28,7 +28,7 @@ describe('multi', () => {
     }
   }
   const round = (attacker: Participant, defender: Participant, terrains: List<TerrainDefinition>, round: number): [Participant, Participant] => {
-    const [a, d] = battle(definitions, {...attacker, tactic: tactics.get(attacker.tactic)!, country: CountryName.Country1}, {...defender, tactic: tactics.get(defender.tactic)!, country: CountryName.Country2}, round, terrains, settings)
+    const [a, d] = battle(definitions, { ...attacker, tactic: tactics.get(attacker.tactic)!, country: CountryName.Country1, general: 0 }, { ...defender, tactic: tactics.get(defender.tactic)!, country: CountryName.Country2, general: 0 }, round, terrains, settings)
     return [{ ...attacker, ...a }, { ...defender, ...d }]
   }
 
@@ -49,7 +49,6 @@ describe('multi', () => {
     attacker = {
       ...attacker,
       tactic: TacticType.Bottleneck,
-      general: 4,
       roll: 6,
       frontline: attacker.frontline
         .set(13, getAttacker(UnitType.LightInfantry, 1.31))
@@ -63,7 +62,6 @@ describe('multi', () => {
     defender = {
       ...defender,
       tactic: TacticType.ShockAction,
-      general: 7,
       roll: 6,
       frontline: defender.frontline
         .set(12, getDefender(UnitType.HeavyInfantry, 3.15))

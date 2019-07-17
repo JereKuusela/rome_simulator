@@ -8,7 +8,7 @@ import { Participant, ParticipantType, Army } from '../store/battle'
 import IconManpower from '../images/manpower.png'
 import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
-import { getBattle } from '../utils'
+import { getBattle } from '../store/utils'
 import { CountryName } from '../store/countries'
 import { calculateValue, calculateValueWithoutLoss, mergeValues, getImage, DefinitionType } from '../base_definition'
 

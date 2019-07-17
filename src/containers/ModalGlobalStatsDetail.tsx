@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { UnitType, setGlobalValue, ValueType } from '../store/units'
 import { AppState } from '../store/'
 import { ValuesType, DefinitionType } from '../base_definition'
-import { mergeUnitTypes, filterTerrainTypes } from '../utils'
+import { mergeUnitTypes, filterTerrainTypes } from '../store/utils'
 import { CountryName } from '../store/countries'
 import UnitDetail from '../components/UnitDetail'
 

@@ -4,14 +4,15 @@ import { battle as fight } from './combat'
 import { mergeValues } from '../../base_definition'
 import { CombatParameter } from '../settings'
 import { AppState } from '../'
-import { mergeSettings, getBattle } from '../../utils'
+import { mergeSettings, getBattle } from '../utils'
+import { defaultCountry } from '../countries/reducer';
 
 export const combatReducer = createReducer<AppState>({} as any)
   .handleAction(battle, (state, action: ReturnType<typeof battle>) => {
     const definitions = state.units.definitions.map((value, key) => value.map(value => mergeValues(value, state.global_stats.getIn([key, action.payload.mode]))))
     let next = getBattle(state)
-    const attacker_country = state.countries.get(next.attacker)
-    const defender_country = state.countries.get(next.defender)
+    const attacker_country = state.countries.get(next.attacker, defaultCountry)
+    const defender_country = state.countries.get(next.defender, defaultCountry)
     let attacker = next.armies.get(next.attacker)
     let defender = next.armies.get(next.defender)
     const combat = mergeSettings(state)
@@ -32,8 +33,8 @@ export const combatReducer = createReducer<AppState>({} as any)
           roll: defender.randomize_roll ? minimum_roll + Math.round(Math.random() * (maximum_roll - minimum_roll)) : defender.roll
         }
       }
-      const attacker_info = { ...attacker, tactic: state.tactics.definitions.get(attacker.tactic), country: next.attacker, general: attacker_country ? attacker_country.general_martial : 0 }
-      const defender_info = { ...defender, tactic: state.tactics.definitions.get(defender.tactic), country: next.defender, general: defender_country ? defender_country.general_martial : 0 }
+      const attacker_info = { ...attacker, tactic: state.tactics.definitions.get(attacker.tactic), country: next.attacker, general: attacker_country.general_martial }
+      const defender_info = { ...defender, tactic: state.tactics.definitions.get(defender.tactic), country: next.defender, general: defender_country.general_martial }
       const [a, d] = fight(definitions, attacker_info, defender_info, next.round + 1, next.terrains.map(type => state.terrains.definitions.get(type)!), combat)
       const new_attacker = {
         ...attacker,

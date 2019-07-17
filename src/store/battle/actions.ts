@@ -68,7 +68,7 @@ const getInitialRowTypes = (mode: DefinitionType): Map<RowType, UnitType | undef
   }
 }
 
-export const getInitialArmy = (mode: DefinitionType): Participant => ({
+const initializeDefaultArmy = (mode: DefinitionType): Participant => ({
   frontline: fromJS(Array(30).fill(undefined)),
   reserve: List<Unit>(),
   defeated: List<Unit>(),
@@ -79,6 +79,14 @@ export const getInitialArmy = (mode: DefinitionType): Participant => ({
   flank_size: 5,
   selections: Set<string>()
 })
+const defaultLandArmy = initializeDefaultArmy(DefinitionType.Land)
+const defaultNavalArmy = initializeDefaultArmy(DefinitionType.Naval)
+
+export const getDefault = (mode: DefinitionType): Participant => {
+  if (mode === DefinitionType.Naval)
+    return defaultNavalArmy
+  return defaultLandArmy
+}
 
 export const selectUnit = createAction('@@battle/SELECT_UNIT', action => {
   return (mode: DefinitionType, country: CountryName, type: ArmyType, index: number, unit: Unit | undefined) => action({ mode, country, type, index, unit })

@@ -2,7 +2,7 @@ import { fromJS, Map, List, OrderedSet, OrderedMap } from 'immutable'
 import { tacticFromJS, TacticType, tacticsReducer } from './tactics'
 import { terrainFromJS, TerrainType, terrainsReducer } from './terrains'
 import { unitDefinitionFromJS, unitFromJS, UnitType, unitsReducer, globalStatsReducer, Unit } from './units'
-import { RowType, battleReducer, PastState, Participant, getInitialArmy, Armies, modeState } from './battle'
+import { RowType, battleReducer, PastState, Participant, getDefault as getDefaultArmy, Armies, modeState } from './battle'
 import { DefinitionType } from '../base_definition'
 import { transferReducer } from './transfer'
 import { selectionsReducer, CountryName, Country } from './countries'
@@ -103,7 +103,7 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {
   }
 
   const serializeParticipant = (participant: any): Participant => {
-    const initial = getInitialArmy(mode)
+    const initial = getDefaultArmy(mode)
     let frontline = initial.frontline
     if (participant.frontline)
       frontline = serializeUnits(fromJS(participant.frontline))

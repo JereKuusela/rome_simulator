@@ -36,7 +36,7 @@ describe('initial deployment', () => {
 
 
   const doRound = () => {
-    const [a, d] = battle(definitions, { ...info.attacker, tactic: undefined, country: CountryName.Country1 }, { ...info.defender, tactic: undefined, country: CountryName.Country2 }, 0, List<TerrainDefinition>(), settings)
+    const [a, d] = battle(definitions, { ...info.attacker, tactic: undefined, country: CountryName.Country1, general: 0 }, { ...info.defender, tactic: undefined, country: CountryName.Country2, general: 0 }, 0, List<TerrainDefinition>(), settings)
     info.attacker = { ...info.attacker, ...a }
     info.defender = { ...info.defender, ...d }
   }

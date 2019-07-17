@@ -5,7 +5,7 @@ import { AppState } from '../store/'
 import { CountryName } from '../store/countries'
 import { ValuesType, mergeValues, DefinitionType } from '../base_definition'
 import UnitDetail from '../components/UnitDetail'
-import { mergeUnitTypes, filterTerrainTypes } from '../utils'
+import { mergeUnitTypes, filterTerrainTypes } from '../store/utils'
 
 const CUSTOM_VALUE_KEY = 'Custom'
 

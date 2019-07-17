@@ -33,7 +33,7 @@ describe('1 vs 1', () => {
   })
   const doRound = () => {
     info.round = info.round + 1
-    const [a, d] = battle(definitions, { ...info.attacker, tactic: tactics.get(info.attacker.tactic)!, country: CountryName.Country1 }, { ...info.defender, tactic: tactics.get(info.defender.tactic)!, country: CountryName.Country2  }, info.round, terrain, settings)
+    const [a, d] = battle(definitions, { ...info.attacker, tactic: tactics.get(info.attacker.tactic)!, country: CountryName.Country1, general: 0 }, { ...info.defender, tactic: tactics.get(info.defender.tactic)!, country: CountryName.Country2, general: 0  }, info.round, terrain, settings)
     info.attacker = { ...info.attacker, ...a }
     info.defender = { ...info.defender, ...d }
   }

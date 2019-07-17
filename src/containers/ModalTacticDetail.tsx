@@ -4,7 +4,7 @@ import { setBaseValue, ValueType, TacticType, changeImage, changeMode } from '..
 import { AppState } from '../store/'
 import TacticDetail from '../components/TacticDetail'
 import { DefinitionType } from '../base_definition'
-import { mergeUnitTypes, filterTacticTypes } from '../utils'
+import { mergeUnitTypes, filterTacticTypes } from '../store/utils'
 
 const CUSTOM_VALUE_KEY = 'Custom'
 
