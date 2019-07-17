@@ -6,9 +6,9 @@ import { AppState } from '../store/'
 import { selectTactic } from '../store/battle'
 import { calculateTactic } from '../store/combat'
 import ItemSelector from '../components/ItemSelector'
-import { TacticType } from '../store/tactics'
+import { TacticType, TacticCalc } from '../store/tactics'
 import { getBattle, filterTactics } from '../store/utils'
-import { toRelativePercent, toPercent, DefinitionType, mergeValues } from '../base_definition'
+import { toRelativePercent, toPercent, DefinitionType, mergeValues, valueToRelativeZeroPercent } from '../base_definition'
 import { UnitDefinition, Unit } from '../store/units'
 import { CountryName } from '../store/countries'
 
@@ -34,6 +34,9 @@ class ModalTacticSelector extends Component<IProps> {
     }))
     custom_values = custom_values.set('damage', this.props.tactics.map(value => {
       return toRelativePercent(calculateTactic(army, value, this.props.info!.counter), true)
+    }))
+    custom_values = custom_values.set('casualties', this.props.tactics.map(value => {
+      return valueToRelativeZeroPercent(value, TacticCalc.Casualties, false)
     }))
     return (
     <Modal basic onClose={this.props.onClose} open>

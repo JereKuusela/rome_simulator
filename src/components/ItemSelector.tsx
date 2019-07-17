@@ -50,7 +50,7 @@ export default class ItemSelector<S extends ItemAttribute, T extends ItemType> e
         {
           this.props.custom_values && this.props.custom_values.map((values, key) => (
             <Table.Cell key={key}>
-              {values.get(item.type) + ' ' + key}
+              {values.get(item.type) ? values.get(item.type) + ' ' + key : ''}
             </Table.Cell>
           )).toList()
         }

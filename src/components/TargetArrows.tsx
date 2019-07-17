@@ -19,7 +19,7 @@ export default class UnitArmy extends Component<IProps> {
       <div>
         {
           this.props.attacker && this.props.attacker.map((value, index) => (
-            value && value.target &&
+            value && value.target !== null && value.target !== undefined  &&
             <LineTo
               borderColor={this.props.attacker_color}
               from={ParticipantType.Attacker + '-' + ArmyType.Frontline + '-' + index}
@@ -33,7 +33,7 @@ export default class UnitArmy extends Component<IProps> {
         }
         {
           this.props.defender && this.props.defender.map((value, index) => (
-            value && value.target &&
+            value && value.target !== null && value.target !== undefined &&
             <LineTo
             borderColor={this.props.defender_color}
               from={ParticipantType.Defender + '-' + ArmyType.Frontline + '-' + index}

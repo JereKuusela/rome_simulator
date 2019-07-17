@@ -1,6 +1,6 @@
-import { applyMiddleware, createStore } from 'redux'
+import { createStore } from 'redux'
+import { devToolsEnhancer } from 'redux-devtools-extension'
 import { rootReducer } from './store/'
-import logger from 'redux-logger'
 import { persistStore, persistReducer, createTransform, createMigrate } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 //import localForage from 'localforage'
@@ -86,8 +86,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export default function configureStore() {
   const store = createStore(
-    persistedReducer,
-    applyMiddleware(logger)
+    persistedReducer, devToolsEnhancer({})
   )
   let persistor = persistStore(store)
   return { store, persistor }
