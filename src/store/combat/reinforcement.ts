@@ -82,11 +82,11 @@ export const reinforce = (army: Army, definitions: Definition, round: number, ro
     // Calculate priorities (mostly based on unit type, ties are resolved with index numbers).
     let orderedMainReserve = mainReserve.sortBy((value, key) => {
         value = mergeValues(value, definitions.get(value.type)!)
-        return (settings.get(CombatParameter.ReinforceMainSign) ? 1 : -1) * calculateValue(value, settings.get(CombatParameter.ReinforceMainAttribute, UnitCalc.Cost)) * 10000 + key - (value.type === row_types.get(RowType.Front) ? 2000000 : 0) - (value.type === row_types.get(RowType.Back) ? -1000000 : 0)
+        return (settings.get(CombatParameter.ReinforceMainSign) ? 1 : -1) * calculateValue(value, settings.get(CombatParameter.ReinforceMainAttribute, UnitCalc.Cost)) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 + key - (value.type === row_types.get(RowType.Front) ? 200000000 : 0) - (value.type === row_types.get(RowType.Back) ? -100000000 : 0)
     })
     let orderedFlankReserve = flankReserve.sortBy((value, key) => {
         value = mergeValues(value, definitions.get(value.type)!)
-        return (settings.get(CombatParameter.ReinforceFlankSign) ? 1 : -1) * calculateValue(value, settings.get(CombatParameter.ReinforceFlankAttribute, UnitCalc.Maneuver)) * 10000 + key - (value.type === row_types.get(RowType.Flank) ? 1000000 : 0)
+        return (settings.get(CombatParameter.ReinforceFlankSign) ? 1 : -1) * calculateValue(value, settings.get(CombatParameter.ReinforceFlankAttribute, UnitCalc.Maneuver)) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 + key - (value.type === row_types.get(RowType.Flank) ? 100000000 : 0)
     })
 
     const free_spots = frontline.filter((_, index) => index < frontline.size).reduce((previous, current) => previous + (current ? 0 : 1), 0)
