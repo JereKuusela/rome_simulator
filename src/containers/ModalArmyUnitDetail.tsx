@@ -4,7 +4,7 @@ import { Modal } from 'semantic-ui-react'
 import { UnitType, ValueType, Unit, UnitDefinition, getDefaultUnits } from '../store/units'
 import { ArmyType, selectUnit } from '../store/battle'
 import { AppState } from '../store/'
-import { getBattle, filterTerrainTypes } from '../store/utils'
+import { getBattle, filterTerrainTypes, mergeUnitTypes } from '../store/utils'
 import { addValues, mergeValues, ValuesType, DefinitionType } from '../base_definition'
 import ItemRemover from '../components/ItemRemover'
 import UnitDetail from '../components/UnitDetail'
@@ -26,7 +26,6 @@ class ModalArmyUnitDetail extends Component<IProps> {
     if (!this.props.info)
       return null
     const country = this.props.info.country
-    const unit_types = this.props.units.get(country, getDefaultUnits()).keySeq().toOrderedSet()
     this.unit = this.getUnit(this.props.info)
     return (
       <Modal basic onClose={this.props.onClose} open>
@@ -42,7 +41,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
             custom_value_key={CUSTOM_VALUE_KEY}
             unit={this.getUnitDefinition(this.props.info)}
             units={this.props.units}
-            unit_types={unit_types}
+            unit_types={this.props.unit_types}
             unit_types_as_dropdown={true}
             onTypeChange={this.changeType}
             onCustomBaseValueChange={this.setBaseValue}
@@ -108,6 +107,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
 const mapStateToProps = (state: AppState) => ({
   armies: getBattle(state).armies,
   units: state.units,
+  unit_types: mergeUnitTypes(state),
   global_stats: state.global_stats,
   terrain_types: filterTerrainTypes(state),
   mode: state.settings.mode

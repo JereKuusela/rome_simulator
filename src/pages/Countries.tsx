@@ -3,7 +3,7 @@ import { Set, List as ImmutableList } from 'immutable'
 import { Container, Grid, Table, List, Input } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
-import { mapRange, toList } from '../utils'
+import { mapRange, toList, sum } from '../utils'
 import {
   ModifierType, Modifier, Tradition, CultureType,
   OmenDefinition, TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition,
@@ -16,20 +16,21 @@ import AccordionToggle from '../containers/AccordionToggle'
 import CountryManager from '../containers/CountryManager'
 import DropdownSelector from '../components/DropdownSelector'
 import ConfirmationButton from '../components/ConfirmationButton'
+import StyledNumber from '../components/StyledNumber'
 
 const TRADE_COLUMNS = 4.0
 const HERITAGE_COLUMNS = 4.0
 const OMEN_COLUMNS = 4.0
 const TRAIT_COLUMNS = 4.0
 
-const TRAIT_KEY = 'trait_'
-const TRADE_KEY = 'trade_'
-const TRADITION_KEY = 'tradition_'
-const HERITAGE_KEY = 'heritage_'
-const OMEN_KEY = 'omen_'
-const INVENTION_KEY = 'invention_'
-const ECONOMY_KEY = 'economy_'
-const LAW_KEY = 'law_'
+const TRAIT_KEY = 'Trait_'
+const TRADE_KEY = 'Trade_'
+const TRADITION_KEY = 'Tradition_'
+const HERITAGE_KEY = 'Heritage_'
+const OMEN_KEY = 'Omen_'
+const INVENTION_KEY = 'Invention_'
+const ECONOMY_KEY = 'Economy_'
+const LAW_KEY = 'Law_'
 
 const KEYS = [TRAIT_KEY, TRADE_KEY, TRADITION_KEY, HERITAGE_KEY, OMEN_KEY, INVENTION_KEY, ECONOMY_KEY, LAW_KEY]
 
@@ -130,7 +131,8 @@ class Countries extends Component<IProps> {
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title='General' identifier='countries_traits'>
-                General base martial: <Input type='number' value={country.general_martial} onChange={(_, { value }) => omen && this.setGeneralMartial(value)} />
+                Base martial: <Input type='number' value={country.general_martial} onChange={(_, { value }) => omen && this.setGeneralMartial(value)} />
+                {' '}with <StyledNumber value={sum(country.trait_martial)} /> from traits
                 {
                   this.renderTraits(this.props.traits, selections)
                 }

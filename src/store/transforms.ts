@@ -149,7 +149,7 @@ export const transformCountries = (state_raw: any): ReturnType<typeof selections
     return initial
   const countries_raw: Map<CountryName, any> = fromJS(state_raw)
   const countries: Map<CountryName, Country> = countries_raw.map(value => value.toJS())
-  return countries.map(value => ({ ...value, selections: fromJS(value.selections).toSet() }))
+  return countries.map(value => ({ ...value, selections: fromJS(value.selections).toSet(), trait_martial: fromJS(value.trait_martial) }))
 }
 
 const settings = Object.keys(CombatParameter).map(k => CombatParameter[k as any]) as CombatParameter[]

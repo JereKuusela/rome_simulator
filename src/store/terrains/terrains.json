@@ -50,7 +50,7 @@
     },
     {
       "type": "None",
-      "mode": "Any",
+      "mode": "Global",
       "location": "Border",
       "roll": 0
     },

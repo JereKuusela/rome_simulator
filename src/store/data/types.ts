@@ -36,7 +36,7 @@ export enum TradeType {
 }
 
 export interface Modifier {
-  readonly target: UnitType | DefinitionType | ModifierType
+  readonly target: UnitType | DefinitionType | ModifierType | 'Text' | 'General'
   readonly attribute: string
   readonly negative?: boolean
   readonly type?: ValuesType

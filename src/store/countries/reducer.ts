@@ -1,5 +1,5 @@
 import { createReducer } from 'typesafe-actions'
-import { Set, Map, OrderedMap } from 'immutable'
+import { Set, Map } from 'immutable'
 import {
   CountryName,
   deleteCountry, createCountry, changeCountryName, enableModifiers, clearModifiers,
@@ -14,21 +14,21 @@ export interface Country {
   religion: ReligionType,
   omen_power: number,
   general_martial: number,
-  trait_martial:  Map<string, OrderedMap<string, number>>,
+  trait_martial: Map<string, number>,
   has_general: boolean
 }
 
 export const defaultCountry =
-  {
-    selections: Set<string>(),
-    government: GovermentType.Republic,
-    religion: 'Hellenic' as ReligionType,
-    culture: CultureType.Greek,
-    omen_power: 100,
-    general_martial: 0,
-    trait_martial: Map<string, OrderedMap<string, number>>(),
-    has_general: true
-  }
+{
+  selections: Set<string>(),
+  government: GovermentType.Republic,
+  religion: 'Hellenic' as ReligionType,
+  culture: CultureType.Greek,
+  omen_power: 100,
+  general_martial: 0,
+  trait_martial: Map<string, number>(),
+  has_general: true
+}
 
 const selectionsState = Map<CountryName, Country>().set(CountryName.Country1, defaultCountry).set(CountryName.Country2, defaultCountry)
 
@@ -42,11 +42,12 @@ export const selectionsReducer = createReducer(selectionsState)
   .handleAction(changeCountryName, (state, action: ReturnType<typeof changeCountryName>) => (
     state.mapKeys(key => key === action.payload.old_country ? action.payload.country : key)
   ))
-  .handleAction(enableModifiers, (state, action: ReturnType<typeof enableModifiers>) => (
-    state.update(action.payload.country, defaultCountry, value => ({ ...value, selections: value.selections.add(action.payload.key) }))
-  ))
+  .handleAction(enableModifiers, (state, action: ReturnType<typeof enableModifiers>) => {
+    const modifiers = action.payload.modifiers.filter(value => value.target === 'General' && value.attribute === 'Martial').toMap().mapEntries(value => [action.payload.key, value[1].value])
+    return state.update(action.payload.country, defaultCountry, value => ({ ...value, selections: value.selections.add(action.payload.key), trait_martial: value.trait_martial.merge(modifiers) }))
+  })
   .handleAction(clearModifiers, (state, action: ReturnType<typeof clearModifiers>) => (
-    state.update(action.payload.country, defaultCountry, value => ({ ...value, selections: value.selections.remove(action.payload.key) }))
+    state.update(action.payload.country, defaultCountry, value => ({ ...value, selections: value.selections.remove(action.payload.key), trait_martial: value.trait_martial.delete(action.payload.key) }))
   ))
   .handleAction(selectGovernment, (state, action: ReturnType<typeof selectGovernment>) => (
     state.update(action.payload.country, defaultCountry, value => ({ ...value, government: action.payload.government }))

@@ -1,6 +1,6 @@
 import { AppState } from "./index"
 import { OrderedSet, OrderedMap } from "immutable"
-import { filterUnits, filterByMode, getKeys } from '../utils'
+import { filterUnits, filterByMode, getKeys, sum } from '../utils'
 import { TacticType, TacticDefinition } from "./tactics/actions"
 import { DefinitionType } from "../base_definition"
 import { TerrainType, TerrainDefinition } from "./terrains/actions"
@@ -83,7 +83,12 @@ export const mergeSettings = (state: AppState): OrderedMap<CombatParameter, numb
     const country = state.countries.get(name, defaultCountry)
     const units = filterUnits(state.settings.mode, state.units.get(name, getDefaultUnits()))
     const global = state.global_stats.get(name, getDefaultGlobal()).get(state.settings.mode)!
-    return { ...army, general: country.general_martial, name, units, global}
+    const general = {
+      total: country.general_martial + sum(country.trait_martial),
+      base: country.general_martial,
+      trait: sum(country.trait_martial)
+    }
+    return { ...army, general, name, units, global}
   }
 
   export const getAttacker = (state: AppState): Participant => {
@@ -102,7 +107,11 @@ export const mergeSettings = (state: AppState): OrderedMap<CombatParameter, numb
   }
 
   export interface Participant extends BaseParticipant {
-    general: number
+    general: {
+      total: number,
+      base: number,
+      trait: number
+    }
     name: CountryName
     units: OrderedMap<UnitType, UnitDefinition>
     global: UnitDefinition

@@ -1,4 +1,4 @@
-import { fromJS, Seq, List, OrderedMap, OrderedSet } from 'immutable'
+import { fromJS, Seq, List, OrderedMap, OrderedSet, Map } from 'immutable'
 import { Participant } from './store/utils';
 import { Unit, UnitDefinition, UnitType } from './store/units/actions'
 import { mergeValues, DefinitionType } from './base_definition'
@@ -57,3 +57,5 @@ export const filterUnits = (mode: DefinitionType, units?: OrderedMap<UnitType, U
 }
 
 export const getKeys = <T>(map: OrderedMap<T, any>): OrderedSet<T> => map.keySeq().toOrderedSet()
+
+export const sum = (map: Map<any, number>): number => map.reduce((previous, current) => previous + current, 0)

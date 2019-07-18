@@ -283,7 +283,7 @@ export const explainShort = <Definition extends AnyDefinition, Attribute>
     value_base.forEach(value => base += value)
   let explanation = ''
   if (value_base) {
-    value_base.forEach((value, key) => explanation += key + ': ' + value + ', ')
+    value_base.forEach((value, key) => explanation += key.replace(/_/g, ' ') + ': ' + value + ', ')
     explanation = explanation.substring(0, explanation.length - 2)
   }
   return explanation
@@ -311,7 +311,7 @@ export const explain = <Definition extends AnyBaseDefinition, Attribute>
       explanation += ''
     else
       explanation += 'Base value ' + +(base).toFixed(2) + '('
-    value_base.forEach((value, key) => explanation += key + ': ' + value + ', ')
+    value_base.forEach((value, key) => explanation += key.replace(/_/g, ' ') + ': ' + value + ', ')
     explanation = explanation.substring(0, explanation.length - 2)
     if (value_base.size > 1)
       explanation += ')'
@@ -322,7 +322,7 @@ export const explain = <Definition extends AnyBaseDefinition, Attribute>
   if (value_modifier && value_modifier.size > 0) {
     explanation += ' multiplied by ' + toPercent(modifier)
     explanation += ' ('
-    value_modifier.forEach((value, key) => explanation += key + ': ' + toPercent(value) + ', ')
+    value_modifier.forEach((value, key) => explanation += key .replace(/_/g, ' ')+ ': ' + toPercent(value) + ', ')
     explanation = explanation.substring(0, explanation.length - 2) + ')'
   }
   let loss = 0
@@ -331,7 +331,7 @@ export const explain = <Definition extends AnyBaseDefinition, Attribute>
   if (value_loss && value_loss.size > 0) {
     explanation += ' reduced by losses ' + +(loss).toFixed(2)
     explanation += ' ('
-    value_loss.forEach((value, key) => explanation += key + ': ' + value + ', ')
+    value_loss.forEach((value, key) => explanation += key.replace(/_/g, ' ') + ': ' + value + ', ')
     explanation = explanation.substring(0, explanation.length - 2) + ')'
   }
   return explanation
