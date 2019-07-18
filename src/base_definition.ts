@@ -350,9 +350,7 @@ export const valueToRelativeNumber = <Definition extends AnyDefinition, Attribut
 export const valueToNumber = <Definition extends AnyDefinition, Attribute>
   (definition: Definition, type: Attribute, show_zero: boolean): string => {
   const value = calculateValue(definition, type)
-  if (value === 0 && !show_zero)
-    return ''
-  return String(+(value).toFixed(2))
+  return toNumber(value, show_zero)
 }
 
 export const valueToManpower = <Definition extends AnyDefinition, Attribute>
@@ -375,6 +373,10 @@ export const strengthToValue = (mode: DefinitionType, number: number) => {
 }
 
 export const toManpower = (number: number, show_zero: boolean = true): string => (number === 0 && !show_zero) ? '' : String(Math.floor(1000 * number))
+
+export const toMaintenance = (number: number, show_zero: boolean = true): string => (number === 0 && !show_zero) ? '' : String(Math.floor(100 * number) / 100.0)
+
+export const toNumber = (number: number, show_zero: boolean = true): string => (number === 0 && !show_zero) ? '' : String(+(number).toFixed(2))
 
 export const toPercent = (number: number, offset: number = 0, show_zero: boolean = true, show_sign: boolean = false): string => {
   const value = +(number * 100.0 - offset).toFixed(2)

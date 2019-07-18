@@ -359,12 +359,6 @@
             "attribute": "Cost",
             "type": "Modifier",
             "value": -0.1
-          },
-          {
-            "target": "Heavy Infantry",
-            "attribute": "Maintenance",
-            "type": "Modifier",
-            "value": -0.1
           }
         ]
       ]

@@ -3,7 +3,7 @@ import { OrderedSet, Map } from 'immutable'
 import { Table, Input, Dropdown } from 'semantic-ui-react'
 import { UnitType, Unit, UnitDefinition, UnitCalc, ValueType, valueToString } from '../store/units'
 import { TerrainType } from '../store/terrains'
-import { getBaseValue, getLossValue, getModifierValue, explain, DefinitionType } from '../base_definition'
+import { getBaseValue, getLossValue, getModifierValue, explain, DefinitionType, calculateValue, toMaintenance } from '../base_definition'
 
 interface IProps<T extends string> {
   readonly mode: DefinitionType
@@ -172,6 +172,9 @@ export default class UnitDetail<T extends string> extends Component<IProps<T>> {
     const base_value = getBaseValue(unit, attribute, this.props.custom_value_key)
     const modifier_value = getModifierValue(unit, attribute, this.props.custom_value_key)
     const loss_value = getLossValue(unit, attribute, this.props.custom_value_key)
+    let value = valueToString(unit, attribute)
+    if (attribute === UnitCalc.Maintenance)
+      value += ' (' + toMaintenance(calculateValue(unit, UnitCalc.Cost) * calculateValue(unit, UnitCalc.Maintenance)) + ')'
 
     return (
       <Table.Row key={attribute}>
@@ -179,7 +182,7 @@ export default class UnitDetail<T extends string> extends Component<IProps<T>> {
           {attribute}
         </Table.Cell>
         <Table.Cell collapsing>
-          {valueToString(unit, attribute)}
+          {value}
         </Table.Cell>
         <Table.Cell collapsing>
           <Input
@@ -187,7 +190,7 @@ export default class UnitDetail<T extends string> extends Component<IProps<T>> {
             style={{ width: 50 }}
             defaultValue={base_value}
             disabled={unit.is_defeated}
-            onChange={(_, data) => this.props.onCustomBaseValueChange(this.props.name, unit.type, this.props.custom_value_key, attribute, Number(data.value))
+            onChange={(_, {value}) => this.props.onCustomBaseValueChange(this.props.name, unit.type, this.props.custom_value_key, attribute, Number(value))
             }
           />
         </Table.Cell>
@@ -199,7 +202,7 @@ export default class UnitDetail<T extends string> extends Component<IProps<T>> {
               style={{ width: 50 }}
               defaultValue={modifier_value}
               disabled={unit.is_defeated}
-              onChange={(_, data) => this.props.onCustomModifierValueChange(this.props.name, unit.type, this.props.custom_value_key, attribute, Number(data.value))}
+              onChange={(_, {value}) => this.props.onCustomModifierValueChange(this.props.name, unit.type, this.props.custom_value_key, attribute, Number(value))}
             />
           }
         </Table.Cell>
@@ -211,7 +214,7 @@ export default class UnitDetail<T extends string> extends Component<IProps<T>> {
               style={{ width: 50 }}
               defaultValue={loss_value}
               disabled={unit.is_defeated}
-              onChange={(_, data) => this.props.onCustomLossValueChange(this.props.name, unit.type, this.props.custom_value_key, attribute, Number(data.value))}
+              onChange={(_, {value}) => this.props.onCustomLossValueChange(this.props.name, unit.type, this.props.custom_value_key, attribute, Number(value))}
             />
           }
         </Table.Cell>

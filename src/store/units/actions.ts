@@ -1,5 +1,5 @@
 import { createAction } from 'typesafe-actions'
-import { ValuesType, DefinitionType } from '../../base_definition'
+import { ValuesType, DefinitionType, toNumber } from '../../base_definition'
 
 import { TerrainType } from '../terrains'
 import { CountryName } from '../countries'
@@ -70,9 +70,9 @@ export const valueToString = (definition: BaseDefinition<UnitType, ValueType>, t
     case UnitCalc.MoraleDepleted:
     case UnitCalc.MovementSpeed:
     case UnitCalc.RecruitTime:
-    case UnitCalc.Maintenance:
-      return (+(Math.max(0, calculateValue(definition, type)).toFixed(2))).toString()
+      return toNumber(value, true)
     case UnitCalc.Experience:
+    case UnitCalc.Maintenance:
       return toPercent(value)
     default:
       return toRelativeZeroPercent(value, true)

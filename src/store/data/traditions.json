@@ -72,12 +72,6 @@
                   "attribute": "Cost",
                   "type": "Modifier",
                   "value": -0.15
-                },
-                {
-                  "target": "Light Cavalry",
-                  "attribute": "Maintenance",
-                  "type": "Modifier",
-                  "value": -0.15
                 }
               ]
             },
@@ -133,20 +127,8 @@
                   "value": -0.1
                 },
                 {
-                  "target": "Light Cavalry",
-                  "attribute": "Maintenance",
-                  "type": "Modifier",
-                  "value": -0.1
-                },
-                {
                   "target": "Chariots",
                   "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.1
-                },
-                {
-                  "target": "Chariots",
-                  "attribute": "Maintenance",
                   "type": "Modifier",
                   "value": -0.1
                 }
@@ -203,12 +185,6 @@
                 {
                   "target": "Light Infantry",
                   "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.15
-                },
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Maintenance",
                   "type": "Modifier",
                   "value": -0.15
                 }
@@ -547,12 +523,6 @@
                   "attribute": "Cost",
                   "type": "Modifier",
                   "value": -0.15
-                },
-                {
-                  "target": "Naval",
-                  "attribute": "Maintenance",
-                  "type": "Modifier",
-                  "value": -0.15
                 }
               ]
             },
@@ -807,32 +777,14 @@
                   "value": -0.15
                 },
                 {
-                  "target": "Light Infantry",
-                  "attribute": "Maintenance",
-                  "type": "Modifier",
-                  "value": -0.15
-                },
-                {
                   "target": "Heavy Infantry",
                   "attribute": "Cost",
                   "type": "Modifier",
                   "value": -0.15
                 },
                 {
-                  "target": "Heavy Infantry",
-                  "attribute": "Maintenance",
-                  "type": "Modifier",
-                  "value": -0.15
-                },
-                {
                   "target": "Archers",
                   "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.15
-                },
-                {
-                  "target": "Archers",
-                  "attribute": "Maintenance",
                   "type": "Modifier",
                   "value": -0.15
                 }
@@ -1002,12 +954,6 @@
                   "attribute": "Cost",
                   "type": "Modifier",
                   "value": -0.15
-                },
-                {
-                  "target": "Naval",
-                  "attribute": "Maintenance",
-                  "type": "Modifier",
-                  "value": -0.15
                 }
               ]
             },
@@ -1076,32 +1022,14 @@
                   "value": -0.15
                 },
                 {
-                  "target": "Light Cavalry",
-                  "attribute": "Maintenance",
-                  "type": "Modifier",
-                  "value": -0.15
-                },
-                {
                   "target": "Camels",
                   "attribute": "Cost",
                   "type": "Modifier",
                   "value": -0.15
                 },
                 {
-                  "target": "Camels",
-                  "attribute": "Maintenance",
-                  "type": "Modifier",
-                  "value": -0.15
-                },
-                {
                   "target": "Heavy Cavalry",
                   "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.15
-                },
-                {
-                  "target": "Heavy Cavalry",
-                  "attribute": "Maintenance",
                   "type": "Modifier",
                   "value": -0.15
                 }
@@ -1219,12 +1147,6 @@
                 {
                   "target": "Heavy Infantry",
                   "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.15
-                },
-                {
-                  "target": "Heavy Infantry",
-                  "attribute": "Maintenance",
                   "type": "Modifier",
                   "value": -0.15
                 }
@@ -1433,12 +1355,6 @@
                   "attribute": "Cost",
                   "type": "Modifier",
                   "value": -0.15
-                },
-                {
-                  "target": "Naval",
-                  "attribute": "Maintenance",
-                  "type": "Modifier",
-                  "value": -0.15
                 }
               ]
             },
@@ -1510,20 +1426,8 @@
                   "value": -0.1
                 },
                 {
-                  "target": "Archers",
-                  "attribute": "Maintenance",
-                  "type": "Modifier",
-                  "value": -0.1
-                },
-                {
                   "target": "Chariots",
                   "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.1
-                },
-                {
-                  "target": "Chariots",
-                  "attribute": "Maintenance",
                   "type": "Modifier",
                   "value": -0.1
                 }
@@ -1607,12 +1511,6 @@
                   "attribute": "Cost",
                   "type": "Modifier",
                   "value": -0.15
-                },
-                {
-                  "target": "War Elephants",
-                  "attribute": "Maintenance",
-                  "type": "Modifier",
-                  "value": -0.15
                 }
               ]
             },
@@ -1647,12 +1545,6 @@
         {
           "target": "Naval",
           "attribute": "Cost",
-          "type": "Modifier",
-          "value": -0.15
-        },
-        {
-          "target": "Naval",
-          "attribute": "Maintenance",
           "type": "Modifier",
           "value": -0.15
         }
@@ -1697,12 +1589,6 @@
                 {
                   "target": "Light Cavalry",
                   "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.15
-                },
-                {
-                  "target": "Light Cavalry",
-                  "attribute": "Maintenance",
                   "type": "Modifier",
                   "value": -0.15
                 }
@@ -1937,12 +1823,6 @@
                   "attribute": "Cost",
                   "type": "Modifier",
                   "value": -0.15
-                },
-                {
-                  "target": "Heavy Cavalry",
-                  "attribute": "Maintenance",
-                  "type": "Modifier",
-                  "value": -0.15
                 }
               ]
             },
@@ -1976,12 +1856,6 @@
         {
           "target": "Horse Archers",
           "attribute": "Cost",
-          "type": "Modifier",
-          "value": -0.15
-        },
-        {
-          "target": "Horse Archers",
-          "attribute": "Maintenance",
           "type": "Modifier",
           "value": -0.15
         }
@@ -2043,12 +1917,6 @@
                 {
                   "target": "Heavy Cavalry",
                   "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.15
-                },
-                {
-                  "target": "Heavy Cavalry",
-                  "attribute": "Maintenance",
                   "type": "Modifier",
                   "value": -0.15
                 }
@@ -2172,12 +2040,6 @@
                 {
                   "target": "Heavy Infantry",
                   "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.15
-                },
-                {
-                  "target": "Heavy Infantry",
-                  "attribute": "Maintenance",
                   "type": "Modifier",
                   "value": -0.15
                 }
