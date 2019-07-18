@@ -41,30 +41,30 @@ export default class ArmyCosts extends Component<IProps> {
         </Table.Header>
         <Table.Body>
           {
-            this.renderRow('Strength', this.props.mode === DefinitionType.Naval ? IconStrength : IconManpower, UnitCalc.Strength, undefined, 0)
+            this.renderRow('Strength', this.props.mode === DefinitionType.Naval ? IconStrength : IconManpower, UnitCalc.Strength, undefined)
           }
           {
-            this.renderRow('Cost', IconCost, UnitCalc.Cost, undefined, 0)
+            this.renderRow('Cost', IconCost, UnitCalc.Cost, undefined)
           }
           {
-            this.renderRow('Maintenance', IconCost, UnitCalc.Maintenance, UnitCalc.Cost, 0)
+            this.renderRow('Maintenance', IconCost, UnitCalc.Maintenance, UnitCalc.Cost)
           }
           {
-            this.renderRow('Supply', IconSupplyLimit, UnitCalc.AttritionWeight, undefined, 1)
+            this.renderRow('Supply', IconSupplyLimit, UnitCalc.AttritionWeight, undefined)
           }
         </Table.Body>
       </Table>
     )
   }
 
-  calculateTotal = (attribute1: UnitCalc, attribute2: UnitCalc | undefined, base: number, army: List<Unit | undefined>, reserve: List<Unit>, defeated: List<Unit>): number => {
-    return army.reduce((previous, current) => previous + (current && !current.is_defeated ?  + this.reduce(current, attribute1, attribute2, base) : 0), 0)
-      + reserve.reduce((previous, current) => previous + this.reduce(current, attribute1, attribute2, base), 0)
-      + defeated.reduce((previous, current) => previous + this.reduce(current, attribute1, attribute2, base), 0)
+  calculateTotal = (attribute1: UnitCalc, attribute2: UnitCalc | undefined, army: List<Unit | undefined>, reserve: List<Unit>, defeated: List<Unit>): number => {
+    return army.reduce((previous, current) => previous + (current && !current.is_defeated ?  + this.reduce(current, attribute1, attribute2) : 0), 0)
+      + reserve.reduce((previous, current) => previous + this.reduce(current, attribute1, attribute2), 0)
+      + defeated.reduce((previous, current) => previous + this.reduce(current, attribute1, attribute2), 0)
   }
 
-  reduce = (current: Unit, attribute1: UnitCalc, attribute2: UnitCalc | undefined, base: number) => (
-    Math.floor(100 * calculateValueWithoutLoss(current, attribute1) * (attribute2 ? calculateValueWithoutLoss(current, attribute2) : 1))/ 100.0 + base
+  reduce = (current: Unit, attribute1: UnitCalc, attribute2: UnitCalc | undefined) => (
+    Math.floor(100 * calculateValueWithoutLoss(current, attribute1) * (attribute2 ? calculateValueWithoutLoss(current, attribute2) : 1))/ 100.0
   )
 
   finalize = (attribute: UnitCalc, value: number): string => {
@@ -73,7 +73,7 @@ export default class ArmyCosts extends Component<IProps> {
     return String(+value.toFixed(2))
   }
 
-  renderRow = (name: string, image: string, attribute1: UnitCalc, attribute2: UnitCalc | undefined, base: number): JSX.Element => (
+  renderRow = (name: string, image: string, attribute1: UnitCalc, attribute2: UnitCalc | undefined): JSX.Element => (
     <Table.Row key={name}>
       <Table.Cell width='6'>
         <Image src={image} avatar />
@@ -81,12 +81,12 @@ export default class ArmyCosts extends Component<IProps> {
       </Table.Cell>
       <Table.Cell width='5'>
         {
-          this.finalize(attribute1, this.calculateTotal(attribute1, attribute2, base, this.props.army_a, this.props.reserve_a, this.props.defeated_a))
+          this.finalize(attribute1, this.calculateTotal(attribute1, attribute2, this.props.army_a, this.props.reserve_a, this.props.defeated_a))
         }
       </Table.Cell>
       <Table.Cell width='5'>
         {
-          this.finalize(attribute1, this.calculateTotal(attribute1, attribute2, base, this.props.army_d, this.props.reserve_d, this.props.defeated_d))
+          this.finalize(attribute1, this.calculateTotal(attribute1, attribute2, this.props.army_d, this.props.reserve_d, this.props.defeated_d))
         }
       </Table.Cell>
     </Table.Row>

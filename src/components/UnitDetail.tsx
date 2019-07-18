@@ -196,7 +196,7 @@ export default class UnitDetail<T extends string> extends Component<IProps<T>> {
         </Table.Cell>
         <Table.Cell collapsing>
           {
-            (attribute === UnitCalc.Morale || attribute === UnitCalc.Strength || attribute === UnitCalc.Maintenance || attribute === UnitCalc.Cost) &&
+            (attribute === UnitCalc.Morale || attribute === UnitCalc.Strength || attribute === UnitCalc.Maintenance || attribute === UnitCalc.Cost || attribute === UnitCalc.AttritionWeight) &&
             <Input
               size='mini'
               style={{ width: 50 }}

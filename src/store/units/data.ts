@@ -88,7 +88,8 @@ const initializeDefaultGlobal = (): Map<DefinitionType, UnitDefinition> => {
   const naval = { type: '' as UnitType, mode: DefinitionType.Naval, image: IconMilitaryPower, requirements: '', can_assault: false }
   const values: [UnitCalc, number][] = [
     [UnitCalc.Strength, 1],
-    [UnitCalc.Morale, 3]
+    [UnitCalc.Morale, 3],
+    [UnitCalc.AttritionWeight, 1]
   ]
   definitions = definitions.set(DefinitionType.Land, addValues(land, ValuesType.Base, 'Base', values))
   definitions = definitions.set(DefinitionType.Naval, addValues(naval, ValuesType.Base, 'Base', values))

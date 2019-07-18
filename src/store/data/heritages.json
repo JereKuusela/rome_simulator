@@ -123,8 +123,9 @@
           "value": 0.05
         },
         {
-          "target": "Text",
-          "attribute": "Attrition weight (TODO)",
+          "target": "Land",
+          "attribute": "Attrition weight",
+          "type": "Modifier",
           "negative": true,
           "value": 0.05
         }
@@ -181,8 +182,9 @@
           "value": 0.05
         },
         {
-          "target": "Text",
-          "attribute": "Attrition weight (TODO)",
+          "target": "Land",
+          "attribute": "Attrition weight",
+          "type": "Modifier",
           "value": -0.1
         },
         {

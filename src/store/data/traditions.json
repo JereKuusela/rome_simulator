@@ -1926,8 +1926,9 @@
               "name": "Thyreophoroi",
               "modifiers": [
                 {
-                  "target": "Text",
-                  "attribute": "Army Weight",
+                  "target": "Land",
+                  "attribute": "Attrition weight",
+                  "type": "Modifier",
                   "value": -0.2
                 }
               ]

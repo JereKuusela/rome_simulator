@@ -73,6 +73,7 @@ export const valueToString = (definition: BaseDefinition<UnitType, ValueType>, t
       return toNumber(value, true)
     case UnitCalc.Experience:
     case UnitCalc.Maintenance:
+    case UnitCalc.AttritionWeight:
       return toPercent(value)
     default:
       return toRelativeZeroPercent(value, true)
