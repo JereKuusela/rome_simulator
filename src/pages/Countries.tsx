@@ -17,6 +17,7 @@ import CountryManager from '../containers/CountryManager'
 import DropdownSelector from '../components/DropdownSelector'
 import ConfirmationButton from '../components/ConfirmationButton'
 import StyledNumber from '../components/StyledNumber'
+import { addSign } from '../formatters'
 
 const TRADE_COLUMNS = 4.0
 const HERITAGE_COLUMNS = 4.0
@@ -132,7 +133,7 @@ class Countries extends Component<IProps> {
             <Grid.Column>
               <AccordionToggle title='General' identifier='countries_traits'>
                 Base martial: <Input type='number' value={country.general_martial} onChange={(_, { value }) => omen && this.setGeneralMartial(value)} />
-                {' '}with <StyledNumber value={sum(country.trait_martial)} /> from traits
+                {' '}with <StyledNumber value={sum(country.trait_martial)} formatter={addSign} /> from traits
                 {
                   this.renderTraits(this.props.traits, selections)
                 }

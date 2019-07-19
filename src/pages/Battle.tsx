@@ -18,8 +18,9 @@ import ModalTerrainSelector, { ModalInfo as ModalTerrainInfo } from '../containe
 import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers/ModalTacticSelector'
 import ModalArmyUnitDetail, { ModalInfo as ModalArmyUnitInfo } from '../containers/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/ModalFastPlanner'
-import { calculateValue, mergeValues, getImage, toRelativePercent, DefinitionType } from '../base_definition'
+import { calculateValue, mergeValues, getImage, DefinitionType } from '../base_definition'
 import { mergeSettings, getBattle, getAttacker, getDefender, Participant } from '../store/utils'
+import { addSign, toRelativeZeroPercent } from '../formatters'
 import { CountryName, setGeneralMartial } from '../store/countries'
 import { CombatParameter } from '../store/settings'
 import IconTerrain from '../images/terrain.png'
@@ -119,7 +120,7 @@ class Battle extends Component<IProps, IState> {
               }
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row columns={1} style={{padding: 0}}>
+          <Grid.Row columns={1} style={{ padding: 0 }}>
             <Grid.Column>
               <TargetArrows
                 attacker={this.props.fight_over ? undefined : attacker.frontline}
@@ -293,8 +294,18 @@ class Battle extends Component<IProps, IState> {
         {base_damage.toFixed(2)} :
         <span style={{ paddingLeft: '1em' }} /><Image src={IconDice} avatar />
         {is_random ? roll : <Input size='mini' style={{ width: 100 }} type='number' value={roll} onChange={(_, data) => this.props.setRoll(this.props.mode, name, Number(data.value))} />}
-        {general_effect !== 0 ? <span style={{ paddingLeft: '1em' }}><Image src={IconGeneral} avatar />{general_effect}</span> : null}
-        {terrain_effect !== 0 ? <span style={{ paddingLeft: '1em' }}><Image src={IconTerrain} avatar />{terrain_effect}</span> : null}
+        {general_effect !== 0 ?
+          <span style={{ paddingLeft: '1em' }}>
+            <Image src={IconGeneral} avatar />
+            <StyledNumber value={general_effect} formatter={addSign} />
+          </span>
+          : null}
+        {terrain_effect !== 0 ?
+          <span style={{ paddingLeft: '1em' }}>
+            <Image src={IconTerrain} avatar />
+            <StyledNumber value={terrain_effect} formatter={addSign} />
+          </span>
+          : null}
       </div>
     )
   }
@@ -362,15 +373,19 @@ class Battle extends Component<IProps, IState> {
         </Table.Cell>
         <Table.Cell>
           <Image src={IconDice} avatar />
-          {calculateValue(terrain, TerrainCalc.Roll)}
+          {calculateValue(terrain, TerrainCalc.Roll) ?
+            <StyledNumber value={calculateValue(terrain, TerrainCalc.Roll)} formatter={addSign} />
+            : 0
+          }
         </Table.Cell>
       </Table.Row>
     )
   }
 
-  renderTactic = (country: CountryName, participant?: Participant, counter?: TacticType): JSX.Element => {
-    const tactic = participant && this.props.tactics.get(participant.tactic)
-    const army = participant && {
+  renderTactic = (participant: Participant, counter?: TacticType): JSX.Element => {
+    const country = participant.name
+    const tactic = this.props.tactics.get(participant.tactic)
+    const army = {
       frontline: this.mergeAllValues(country, participant.frontline),
       reserve: this.mergeAllValues(country, participant.reserve) as List<UnitDefinition>,
       defeated: this.mergeAllValues(country, participant.defeated) as List<UnitDefinition>
@@ -379,7 +394,12 @@ class Battle extends Component<IProps, IState> {
       <div key={country} onClick={() => this.openTacticModal(country, counter)}>
         {<Image src={getImage(tactic)} avatar />}
         {(tactic && tactic.type) || 'None'}
-        {participant && ' (' + toRelativePercent(calculateTactic(army, tactic, counter), true) + ')'}
+        {' ('}
+        <StyledNumber
+          value={calculateTactic(army, tactic, counter)}
+          formatter={toRelativeZeroPercent}
+        />
+        {')'}
       </div >
     )
   }
@@ -399,11 +419,11 @@ class Battle extends Component<IProps, IState> {
           />
         </Table.Cell>
         <Table.Cell collapsing>
-          <Input size='mini' style={{ width: 100 }} type='number' value={participant.general.base} onChange={(_, {value}) => this.props.setGeneralMartial(name, Number(value))} />
-          {' '}<StyledNumber value={participant.general.trait} />
+          <Input size='mini' style={{ width: 100 }} type='number' value={participant.general.base} onChange={(_, { value }) => this.props.setGeneralMartial(name, Number(value))} />
+          {' '}<StyledNumber value={participant.general.trait} formatter={addSign} />
         </Table.Cell>
         <Table.Cell collapsing>
-          {this.renderTactic(name, participant, enemy.tactic)}
+          {this.renderTactic(participant, enemy.tactic)}
         </Table.Cell>
         <Table.Cell>
           {this.renderRoll(type, name, participant.roll, participant.randomize_roll, participant.general.total, enemy.general.total)}

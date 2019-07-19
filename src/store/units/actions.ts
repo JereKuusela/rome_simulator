@@ -1,9 +1,8 @@
 import { createAction } from 'typesafe-actions'
-import { ValuesType, DefinitionType, toNumber } from '../../base_definition'
-
 import { TerrainType } from '../terrains'
 import { CountryName } from '../countries'
-import { calculateValue, BaseDefinition, toPercent, toRelativeZeroPercent } from '../../base_definition'
+import { calculateValue, BaseDefinition, ValuesType, DefinitionType } from '../../base_definition'
+import { toPercent, toRelativeZeroPercent, toNumber } from '../../formatters'
 
 export enum UnitType {
   Archers = 'Archers',
@@ -59,7 +58,7 @@ export interface UnitDefinition extends BaseDefinition<UnitType, ValueType> {
   readonly mode: DefinitionType
 }
 
-export const valueToString = (definition: BaseDefinition<UnitType, ValueType>, type: ValueType): string => {
+export const valueToString = (definition: BaseDefinition<UnitType, ValueType>, type: ValueType, show_zero: boolean = true): string => {
   const value = calculateValue(definition, type)
   switch (type) {
     case UnitCalc.Cost:
@@ -70,13 +69,13 @@ export const valueToString = (definition: BaseDefinition<UnitType, ValueType>, t
     case UnitCalc.MoraleDepleted:
     case UnitCalc.MovementSpeed:
     case UnitCalc.RecruitTime:
-      return toNumber(value, true)
+      return toNumber(value)
     case UnitCalc.Experience:
     case UnitCalc.Maintenance:
     case UnitCalc.AttritionWeight:
       return toPercent(value)
     default:
-      return toRelativeZeroPercent(value, true)
+      return toRelativeZeroPercent(value)
   }
 }
 

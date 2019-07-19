@@ -2,8 +2,10 @@ import { OrderedMap } from 'immutable'
 import React, { Component } from 'react'
 import { Table, Button, Image } from 'semantic-ui-react'
 import { TerrainCalc, TerrainDefinition, TerrainType } from '../store/terrains'
-import { valueToRelativeNumber, getImage } from '../base_definition'
+import { valueToRelativeNumber, getImage, calculateValue } from '../base_definition'
 import ValueModal from './ValueModal'
+import StyledNumber from './StyledNumber'
+import { addSign } from '../formatters'
 
 interface IProps {
   readonly terrains: OrderedMap<TerrainType, TerrainDefinition>
@@ -78,7 +80,7 @@ export default class TerrainDefinitions extends Component<IProps, IState> {
         {
           this.attributes.map(type => (
             <Table.Cell key={type}>
-              {valueToRelativeNumber(terrain, type, false)}
+              <StyledNumber value={calculateValue(terrain, type)} formatter={addSign} hide_zero />
             </Table.Cell>
           ))
         }

@@ -1,6 +1,7 @@
 import { Map, OrderedMap } from 'immutable'
 import EmptyIcon from './images/empty.png'
 import UnknownIcon from './images/unknown.png'
+import { toRelativeZeroPercent, toRelativePercent, toPercent, toManpower, toNumber } from './formatters';
 
 export enum ValuesType {
   Base = 'Base',
@@ -322,7 +323,7 @@ export const explain = <Definition extends AnyBaseDefinition, Attribute>
   if (value_modifier && value_modifier.size > 0) {
     explanation += ' multiplied by ' + toPercent(modifier)
     explanation += ' ('
-    value_modifier.forEach((value, key) => explanation += key .replace(/_/g, ' ')+ ': ' + toPercent(value) + ', ')
+    value_modifier.forEach((value, key) => explanation += key.replace(/_/g, ' ') + ': ' + toPercent(value) + ', ')
     explanation = explanation.substring(0, explanation.length - 2) + ')'
   }
   let loss = 0
@@ -350,62 +351,24 @@ export const valueToRelativeNumber = <Definition extends AnyDefinition, Attribut
 export const valueToNumber = <Definition extends AnyDefinition, Attribute>
   (definition: Definition, type: Attribute, show_zero: boolean): string => {
   const value = calculateValue(definition, type)
-  return toNumber(value, show_zero)
+  return toNumber(value)
 }
 
 export const valueToManpower = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, type: Attribute, show_zero: boolean): string => toManpower(calculateValue(definition, type), show_zero)
+  (definition: Definition, type: Attribute, show_zero: boolean): string => toManpower(calculateValue(definition, type))
 
 export const valueToPercent = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, type: Attribute, show_zero: boolean): string => toPercent(calculateValue(definition, type), 0.0, show_zero)
+  (definition: Definition, type: Attribute, show_zero: boolean): string => toPercent(calculateValue(definition, type))
 
 export const valueToRelativePercent = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, type: Attribute, show_zero: boolean): string => toRelativePercent(calculateValue(definition, type), show_zero)
+  (definition: Definition, type: Attribute, show_zero: boolean): string => toRelativePercent(calculateValue(definition, type))
 
 export const valueToRelativeZeroPercent = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, type: Attribute, show_zero: boolean): string => toRelativeZeroPercent(calculateValue(definition, type), show_zero)
+  (definition: Definition, type: Attribute, show_zero: boolean): string => toRelativeZeroPercent(calculateValue(definition, type))
 
 
 export const strengthToValue = (mode: DefinitionType, number: number) => {
   if (mode === DefinitionType.Naval)
     return toPercent(number)
   return toManpower(number)
-}
-
-export const toManpower = (number: number, show_zero: boolean = true): string => (number === 0 && !show_zero) ? '' : String(Math.floor(1000 * number))
-
-export const toMaintenance = (number: number, show_zero: boolean = true): string => (number === 0 && !show_zero) ? '' : String(Math.floor(100 * number) / 100.0)
-
-export const toNumber = (number: number, show_zero: boolean = true): string => (number === 0 && !show_zero) ? '' : String(+(number).toFixed(2))
-
-export const toPercent = (number: number, offset: number = 0, show_zero: boolean = true, show_sign: boolean = false): string => {
-  const value = +(number * 100.0 - offset).toFixed(2)
-  let percent = String(value) + '%'
-  if (show_sign && value >= 0)
-    percent = '+' + percent
-  if (value === 0 && !show_zero)
-    return ''
-  return percent
-}
-
-export const toRelativePercent = (number: number, show_zero: boolean): string => {
-  const value = +(number * 100.0 - 100.0).toFixed(2)
-  if (value > 0)
-    return '+' + String(value) + '%'
-  if (value === 0 && !show_zero)
-    return ''
-  if (value === 0 && show_zero)
-    return '+0%'
-  return String(value) + '%'
-}
-
-export const toRelativeZeroPercent = (number: number, show_zero: boolean): string => {
-  const value = +(number * 100.0).toFixed(2)
-  if (value > 0)
-    return '+' + String(value) + '%'
-  if (value === 0 && !show_zero)
-    return ''
-  if (value === 0 && show_zero)
-    return '+0%'
-  return String(value) + '%'
 }

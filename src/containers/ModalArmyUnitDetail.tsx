@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
-import { UnitType, ValueType, Unit, UnitDefinition, getDefaultUnits } from '../store/units'
+import { UnitType, ValueType, Unit, UnitDefinition } from '../store/units'
 import { ArmyType, selectUnit } from '../store/battle'
 import { AppState } from '../store/'
 import { getBattle, filterTerrainTypes, mergeUnitTypes } from '../store/utils'

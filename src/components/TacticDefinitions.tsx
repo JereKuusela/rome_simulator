@@ -3,10 +3,12 @@ import React, { Component } from 'react'
 import { Image, Table, List, Button } from 'semantic-ui-react'
 import { UnitType, UnitDefinition } from '../store/units'
 import { TacticDefinition, TacticType, TacticCalc } from '../store/tactics'
-import { calculateValue, valueToRelativeZeroPercent, getImage } from '../base_definition'
+import { calculateValue, getImage } from '../base_definition'
+import { toRelativeZeroPercent } from '../formatters'
 import ValueModal from './ValueModal'
 import { CountryName } from '../store/countries'
 import VersusList from './VersusList'
+import StyledNumber from './StyledNumber'
 
 interface IProps {
   readonly tactics: OrderedMap<TacticType, TacticDefinition>
@@ -89,14 +91,20 @@ export default class TacticDefinitions extends Component<IProps, IState> {
               this.props.tactics.filter(vs_tactic => calculateValue(tactic, vs_tactic.type)).map(vs_tactic => (
                 <List.Item key={vs_tactic.type} style={{ marginLeft: 0, marginRight: '1em' }}>
                   <Image src={getImage(vs_tactic)} avatar />
-                  {valueToRelativeZeroPercent(tactic, vs_tactic.type, true)}
+                  <StyledNumber
+                    value={calculateValue(tactic, vs_tactic.type)}
+                    formatter={toRelativeZeroPercent}
+                  />
                 </List.Item>
               ))
             }
           </List>
         </Table.Cell>
         <Table.Cell>
-          {valueToRelativeZeroPercent(tactic, TacticCalc.Casualties, false)}
+          <StyledNumber
+            value={calculateValue(tactic, TacticCalc.Casualties)}
+            formatter={toRelativeZeroPercent} hide_zero reverse
+          />
         </Table.Cell>
       </Table.Row>
     )

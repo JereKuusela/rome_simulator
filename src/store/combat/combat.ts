@@ -228,7 +228,7 @@ export const calculateTactic = (army?: Army, tactic?: TacticDefinition, counter_
     if (units)
       unit_modifier = weight / units
   }
-  return 1.0 + effectiveness * Math.min(1.0, unit_modifier)
+  return effectiveness * Math.min(1.0, unit_modifier)
 }
 
 /**
@@ -356,7 +356,7 @@ const calculateLosses = (source: Unit, target: Unit, roll: number, terrains: Ter
   damage = calculate(damage, 1.0 + calculateValue(target, UnitCalc.DamageTaken))
   damage = calculate(damage, 1.0 + terrains.reduce((previous, current) => previous + (current ? calculateValue(source, current.type) : 0), 0))
   damage = calculate(damage, 1.0 + calculateValue(source, target.type))
-  damage = calculate(damage, tactic_damage_multiplier)
+  damage = calculate(damage, 1.0 + tactic_damage_multiplier)
   damage = calculate(damage, 1.0 + calculateValue(target, 1.0 + calculateValue(source, UnitCalc.Offense) - calculateValue(target, UnitCalc.Defense)))
   damage = calculate(damage, 1.0 + calculateValue(target, 1.0 - damage_reduction_per_experience * calculateValue(target, UnitCalc.Experience)))
   damage = calculate(damage, calculateValue(source, UnitCalc.Strength))

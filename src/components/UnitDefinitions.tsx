@@ -11,8 +11,10 @@ import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
 import IconAttrition from '../images/attrition.png'
 import { getImage, calculateValue, calculateBase, calculateModifier, calculateLoss, valueToNumber, valueToPercent, valueToRelativeZeroPercent, mergeValues, valueToManpower, DefinitionType } from '../base_definition'
+import { toRelativeZeroPercent, toNumber, hideZero, toPercent } from '../formatters'
 import { CountryName } from '../store/countries'
 import { filterUnits } from '../utils'
+import StyledNumber from './StyledNumber'
 import VersusList from './VersusList'
 
 interface IProps {
@@ -120,44 +122,69 @@ export default class UnitDefinitions extends Component<IProps> {
         {
           this.props.mode === DefinitionType.Naval ? null :
             <Table.Cell>
-              {valueToRelativeZeroPercent(unit, UnitCalc.Discipline, false)}
+              <StyledNumber
+                value={calculateValue(unit, UnitCalc.Discipline)}
+                formatter={toRelativeZeroPercent} hide_zero
+              />
             </Table.Cell>
         }
         <Table.Cell>
-          {valueToRelativeZeroPercent(unit, this.props.mode === DefinitionType.Naval ? UnitCalc.DamageDone : UnitCalc.Offense, false)}
+          <StyledNumber
+            value={calculateValue(unit, this.props.mode === DefinitionType.Naval ? UnitCalc.DamageDone : UnitCalc.Offense)}
+            formatter={toRelativeZeroPercent} hide_zero
+          />
         </Table.Cell>
         <Table.Cell>
-          {valueToRelativeZeroPercent(unit, this.props.mode === DefinitionType.Naval ? UnitCalc.DamageTaken : UnitCalc.Defense, false)}
+          <StyledNumber
+            value={calculateValue(unit, this.props.mode === DefinitionType.Naval ? UnitCalc.DamageTaken : UnitCalc.Defense)}
+            formatter={toRelativeZeroPercent} hide_zero
+            reverse={this.props.mode === DefinitionType.Naval}
+          />
         </Table.Cell>
         <Table.Cell>
-          {valueToNumber(unit, UnitCalc.Maneuver, false)}
+          {toNumber(calculateValue(unit, UnitCalc.Maneuver))}
         </Table.Cell>
         {
           this.props.mode !== DefinitionType.Naval ? null :
             <Table.Cell>
-              {valueToRelativeZeroPercent(unit, UnitCalc.MoraleDamageDone, false)}
+              <StyledNumber
+                value={calculateValue(unit, UnitCalc.MoraleDamageDone)}
+                formatter={toRelativeZeroPercent} hide_zero
+              />
             </Table.Cell>
         }
         <Table.Cell>
-          {valueToRelativeZeroPercent(unit, UnitCalc.MoraleDamageTaken, false)}
+          <StyledNumber
+            value={calculateValue(unit, UnitCalc.MoraleDamageTaken)}
+            formatter={toRelativeZeroPercent} hide_zero
+            reverse
+          />
         </Table.Cell>
         {
           this.props.mode !== DefinitionType.Naval ? null :
             <Table.Cell>
-              {valueToRelativeZeroPercent(unit, UnitCalc.StrengthDamageDone, false)}
+              <StyledNumber
+                value={calculateValue(unit, UnitCalc.StrengthDamageDone)}
+                formatter={toRelativeZeroPercent} hide_zero
+              />
             </Table.Cell>
         }
         <Table.Cell>
-          {valueToRelativeZeroPercent(unit, UnitCalc.StrengthDamageTaken, false)}
+          <StyledNumber
+            value={calculateValue(unit, UnitCalc.StrengthDamageTaken)}
+            formatter={toRelativeZeroPercent} hide_zero
+            reverse
+          />
         </Table.Cell>
         <Table.Cell>
-          {valueToPercent(unit, UnitCalc.Experience, false)}
+          {toPercent(hideZero(calculateValue(unit, UnitCalc.Experience)))}
         </Table.Cell>
         <Table.Cell>
           <VersusList
             item={unit}
             units={this.props.units}
             unit_types={this.props.unit_types}
+            styled
           />
         </Table.Cell>
         <Table.Cell>
@@ -165,7 +192,11 @@ export default class UnitDefinitions extends Component<IProps> {
             {
               this.props.terrains.filter(type => calculateValue(unit, type) !== 0).map(type => (
                 <List.Item key={type}>
-                  {type + ': ' + valueToString(unit, type)}
+                  {type + ': '}
+                  <StyledNumber
+                    value={calculateValue(unit, type)}
+                    formatter={toRelativeZeroPercent}
+                  />
                 </List.Item>
               ))
             }

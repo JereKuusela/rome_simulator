@@ -8,9 +8,11 @@ import { calculateTactic } from '../store/combat'
 import ItemSelector from '../components/ItemSelector'
 import { TacticType, TacticCalc } from '../store/tactics'
 import { getBattle, filterTactics } from '../store/utils'
-import { toRelativePercent, toPercent, DefinitionType, mergeValues, valueToRelativeZeroPercent } from '../base_definition'
+import { DefinitionType, mergeValues, calculateValue } from '../base_definition'
+import { toRelativeZeroPercent, toPercent } from '../formatters'
 import { UnitDefinition, Unit } from '../store/units'
 import { CountryName } from '../store/countries'
+import StyledNumber from '../components/StyledNumber';
 
 export interface ModalInfo {
   country: CountryName
@@ -28,16 +30,26 @@ class ModalTacticSelector extends Component<IProps> {
       reserve: this.mergeAllValues(country, participant.reserve) as List<UnitDefinition>,
       defeated: this.mergeAllValues(country, participant.defeated) as List<UnitDefinition>
     }
-    let custom_values = Map<string, Map<TacticType, string>>()
-    custom_values = custom_values.set('effect', this.props.tactics.map(value => {
-      return toPercent(calculateTactic(army, value), 100, true, false)
-    }))
-    custom_values = custom_values.set('damage', this.props.tactics.map(value => {
-      return toRelativePercent(calculateTactic(army, value, this.props.info!.counter), true)
-    }))
-    custom_values = custom_values.set('casualties', this.props.tactics.map(value => {
-      return valueToRelativeZeroPercent(value, TacticCalc.Casualties, false)
-    }))
+    let custom_values = Map<string, Map<TacticType, JSX.Element>>()
+    custom_values = custom_values.set('effect', this.props.tactics.map(value => (
+        <StyledNumber
+         value={calculateTactic(army, value)}
+         formatter={toPercent}
+        /> 
+    )))
+    custom_values = custom_values.set('damage', this.props.tactics.map(value => (
+       <StyledNumber
+        value={calculateTactic(army, value, this.props.info!.counter)}
+        formatter={toRelativeZeroPercent}
+       /> 
+    )))
+    custom_values = custom_values.set('casualties', this.props.tactics.filter(value => calculateValue(value, TacticCalc.Casualties)).map(value => (
+      <StyledNumber
+        value={calculateValue(value, TacticCalc.Casualties)}
+        formatter={toRelativeZeroPercent}
+        reverse
+       /> 
+    )))
     return (
     <Modal basic onClose={this.props.onClose} open>
       <Modal.Content>

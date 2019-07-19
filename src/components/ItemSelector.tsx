@@ -14,7 +14,7 @@ interface IProps<T extends ItemType, S extends ItemAttribute> {
   items: List<BaseDefinition<T, S> | BaseValuesDefinition<T, S> | undefined>
   onSelection: (type: T | undefined) => void
   attributes?: S[]
-  custom_values?: Map<string, Map<T, number | string>>
+  custom_values?: Map<string, Map<T, number | string | JSX.Element>>
 }
 
 export default class ItemSelector<S extends ItemAttribute, T extends ItemType> extends Component<IProps<T, S>> {
@@ -50,7 +50,8 @@ export default class ItemSelector<S extends ItemAttribute, T extends ItemType> e
         {
           this.props.custom_values && this.props.custom_values.map((values, key) => (
             <Table.Cell key={key}>
-              {values.get(item.type) ? values.get(item.type) + ' ' + key : ''}
+              {values.has(item.type) && values.get(item.type)}
+              {values.has(item.type) && (' ' + key)}
             </Table.Cell>
           )).toList()
         }

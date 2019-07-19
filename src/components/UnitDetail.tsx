@@ -3,14 +3,15 @@ import { OrderedSet, Map } from 'immutable'
 import { Table, Input, Dropdown } from 'semantic-ui-react'
 import { UnitType, Unit, UnitDefinition, UnitCalc, ValueType, valueToString } from '../store/units'
 import { TerrainType } from '../store/terrains'
-import { getBaseValue, getLossValue, getModifierValue, explain, DefinitionType, calculateValue, toMaintenance } from '../base_definition'
+import { getBaseValue, getLossValue, getModifierValue, explain, DefinitionType, calculateValue } from '../base_definition'
+import { toMaintenance } from '../formatters'
 
 interface IProps<T extends string> {
   readonly mode: DefinitionType
   readonly name: T
   readonly custom_value_key: string
   readonly unit: Unit & UnitDefinition
-  readonly unit_types?: OrderedSet<UnitType>
+  readonly unit_types: OrderedSet<UnitType>
   readonly units: Map<any, Map<UnitType, UnitDefinition>>
   readonly show_statistics: boolean
   readonly terrain_types: OrderedSet<TerrainType>
@@ -154,7 +155,7 @@ export default class UnitDetail<T extends string> extends Component<IProps<T>> {
             this.attributes.map(value => this.renderRow(this.props.unit, value))
           }
           {
-            this.props.unit_types && this.props.unit_types.map(value => this.renderRow(this.props.unit, value))
+            this.props.unit_types.map(value => this.renderRow(this.props.unit, value))
           }
           {
             this.props.terrain_types.map(value => this.renderRow(this.props.unit, value))
