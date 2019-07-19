@@ -51,3 +51,7 @@ export const setGeneralMartial = createAction('@@countries/SET_GENERAL_MARTIAL',
 export const toggleHasGeneral = createAction('@@countries/TOGGLE_HAS_GENERAL', action => {
   return (country: CountryName) => action({ country })
 })
+
+export const setMilitaryPower = createAction('@@countries/SET_MILITARY_POWER', action => {
+  return (country: CountryName, power: number) => action({ country, power })
+})

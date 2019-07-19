@@ -11,7 +11,8 @@ import {
 } from '../store/data'
 import {
   enableModifiers, clearModifiers, CountryName, selectGovernment, selectReligion, selectCulture, setOmenPower, setGeneralMartial, defaultCountry,
-  toggleHasGeneral
+  toggleHasGeneral,
+  setMilitaryPower
 } from '../store/countries'
 import { DefinitionType, ValuesType } from '../base_definition'
 import { UnitCalc } from '../store/units'
@@ -35,7 +36,8 @@ const OMEN_KEY = 'Omen_'
 const INVENTION_KEY = 'Invention_'
 const ECONOMY_KEY = 'Economy_'
 const LAW_KEY = 'Law_'
-const NO_GENERAL_KEY ='No general'
+const NO_GENERAL_KEY = 'No general'
+const MILITARY_POWER_KEY = 'Military power'
 
 const KEYS = [TRAIT_KEY, TRADE_KEY, TRADITION_KEY, HERITAGE_KEY, OMEN_KEY, INVENTION_KEY, ECONOMY_KEY, LAW_KEY]
 
@@ -77,6 +79,7 @@ class Countries extends Component<IProps> {
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title={'Traditions (' + country.culture + ')'} identifier='countries_tradition'>
+                Military power: <Input type='number' value={country.military_power} onChange={(_, { value }) => this.setMilitaryPower(value)} />
                 {
                   tradition && this.renderTraditions(tradition, selections)
                 }
@@ -136,12 +139,12 @@ class Countries extends Component<IProps> {
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title='General' identifier='countries_traits'>
-              <Checkbox
+                <Checkbox
                   toggle
                   label='General'
                   checked={country.has_general}
                   onChange={country.has_general ? this.disableGeneral : this.enableGeneral}
-                  style={{float: 'right'}}
+                  style={{ float: 'right' }}
                 />
                 Base martial: <Input disabled={!country.has_general} type='number' value={country.general_martial} onChange={(_, { value }) => omen && this.setGeneralMartial(value)} />
                 {' '}with <StyledNumber value={sum(country.trait_martial)} formatter={addSign} /> from traits
@@ -526,6 +529,22 @@ class Countries extends Component<IProps> {
   }
 
   /**
+   * Sets military power while setting the morale buff.
+   */
+  setMilitaryPower = (value: string) => {
+    const power = Number(value)
+    if (isNaN(power))
+      return
+    this.props.setMilitaryPower(this.props.selected_country, power)
+    this.props.enableModifiers(this.props.selected_country, MILITARY_POWER_KEY, toList({
+      target: DefinitionType.Global,
+      attribute: UnitCalc.Morale,
+      type: ValuesType.Modifier,
+      value: power * 0.001
+    }))
+  }
+
+  /**
    * Selects religion while also re-enabling current omen.
    */
   selectReligion = (value: ReligionType, power: number, selections: Set<string>) => {
@@ -579,7 +598,6 @@ class Countries extends Component<IProps> {
     this.props.setOmenPower(this.props.selected_country, 100)
     this.props.setGeneralMartial(this.props.selected_country, 0)
   }
-
 
   /**
    * Sets generals martial skill level.
@@ -674,7 +692,8 @@ const mapDispatchToProps = (dispatch: any) => ({
   selectGovernment: (country: CountryName, government: GovermentType) => dispatch(selectGovernment(country, government)),
   setOmenPower: (country: CountryName, power: number) => dispatch(setOmenPower(country, power)),
   setGeneralMartial: (country: CountryName, skill: number) => dispatch(setGeneralMartial(country, skill)),
-  toggleHasGeneral: (country: CountryName) => dispatch(toggleHasGeneral(country))
+  toggleHasGeneral: (country: CountryName) => dispatch(toggleHasGeneral(country)),
+  setMilitaryPower: (country: CountryName, power: number) => dispatch(setMilitaryPower(country, power))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

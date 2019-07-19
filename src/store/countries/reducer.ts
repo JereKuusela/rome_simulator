@@ -2,20 +2,21 @@ import { createReducer } from 'typesafe-actions'
 import { Set, Map } from 'immutable'
 import {
   CountryName,
-  deleteCountry, createCountry, changeCountryName, enableModifiers, clearModifiers,
+  deleteCountry, createCountry, changeCountryName, enableModifiers, clearModifiers, setMilitaryPower,
   selectGovernment, selectReligion, setOmenPower, selectCulture, setGeneralMartial, toggleHasGeneral
 } from './actions'
 import { GovermentType, ReligionType, CultureType } from '../data'
 
 export interface Country {
-  selections: Set<string>,
-  culture: CultureType,
-  government: GovermentType,
-  religion: ReligionType,
-  omen_power: number,
-  general_martial: number,
-  trait_martial: Map<string, number>,
-  has_general: boolean
+  readonly selections: Set<string>
+  readonly culture: CultureType
+  readonly government: GovermentType
+  readonly religion: ReligionType
+  readonly omen_power: number
+  readonly general_martial: number
+  readonly trait_martial: Map<string, number>
+  readonly has_general: boolean
+  readonly military_power: number
 }
 
 export const defaultCountry =
@@ -27,7 +28,8 @@ export const defaultCountry =
   omen_power: 100,
   general_martial: 0,
   trait_martial: Map<string, number>(),
-  has_general: true
+  has_general: true,
+  military_power: 0
 }
 
 const selectionsState = Map<CountryName, Country>().set(CountryName.Country1, defaultCountry).set(CountryName.Country2, defaultCountry)
@@ -66,4 +68,7 @@ export const selectionsReducer = createReducer(selectionsState)
   ))
   .handleAction(toggleHasGeneral, (state, action: ReturnType<typeof toggleHasGeneral>) => (
     state.update(action.payload.country, defaultCountry, value => ({ ...value, has_general: !value.has_general }))
+  ))
+  .handleAction(setMilitaryPower, (state, action: ReturnType<typeof setMilitaryPower>) => (
+    state.update(action.payload.country, defaultCountry, value => ({ ...value, military_power: action.payload.power }))
   ))
