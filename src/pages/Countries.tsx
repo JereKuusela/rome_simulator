@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Set, List as ImmutableList } from 'immutable'
-import { Container, Grid, Table, List, Input } from 'semantic-ui-react'
+import { Container, Grid, Table, List, Input, Checkbox } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { mapRange, toList, sum } from '../utils'
@@ -10,8 +10,11 @@ import {
   GovermentType, ReligionType, TraitDefinition, EconomyDefinition, LawDefinition
 } from '../store/data'
 import {
-  enableModifiers, clearModifiers, CountryName, selectGovernment, selectReligion, selectCulture, setOmenPower, setGeneralMartial, defaultCountry
+  enableModifiers, clearModifiers, CountryName, selectGovernment, selectReligion, selectCulture, setOmenPower, setGeneralMartial, defaultCountry,
+  toggleHasGeneral
 } from '../store/countries'
+import { DefinitionType, ValuesType } from '../base_definition'
+import { UnitCalc } from '../store/units'
 import AccordionToggle from '../containers/AccordionToggle'
 import CountryManager from '../containers/CountryManager'
 import DropdownSelector from '../components/DropdownSelector'
@@ -32,6 +35,7 @@ const OMEN_KEY = 'Omen_'
 const INVENTION_KEY = 'Invention_'
 const ECONOMY_KEY = 'Economy_'
 const LAW_KEY = 'Law_'
+const NO_GENERAL_KEY ='No general'
 
 const KEYS = [TRAIT_KEY, TRADE_KEY, TRADITION_KEY, HERITAGE_KEY, OMEN_KEY, INVENTION_KEY, ECONOMY_KEY, LAW_KEY]
 
@@ -132,10 +136,17 @@ class Countries extends Component<IProps> {
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title='General' identifier='countries_traits'>
-                Base martial: <Input type='number' value={country.general_martial} onChange={(_, { value }) => omen && this.setGeneralMartial(value)} />
+              <Checkbox
+                  toggle
+                  label='General'
+                  checked={country.has_general}
+                  onChange={country.has_general ? this.disableGeneral : this.enableGeneral}
+                  style={{float: 'right'}}
+                />
+                Base martial: <Input disabled={!country.has_general} type='number' value={country.general_martial} onChange={(_, { value }) => omen && this.setGeneralMartial(value)} />
                 {' '}with <StyledNumber value={sum(country.trait_martial)} formatter={addSign} /> from traits
                 {
-                  this.renderTraits(this.props.traits, selections)
+                  this.renderTraits(this.props.traits, selections, !country.has_general)
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -321,7 +332,7 @@ class Countries extends Component<IProps> {
   }
 
 
-  renderTraits = (traits: ImmutableList<TraitDefinition>, selections: Set<string>) => {
+  renderTraits = (traits: ImmutableList<TraitDefinition>, selections: Set<string>, disabled: boolean) => {
     const rows = Math.ceil(traits.count() / TRAIT_COLUMNS)
     return (
       <Table celled unstackable fixed>
@@ -336,7 +347,7 @@ class Countries extends Component<IProps> {
                     if (!trait)
                       return (<Table.Cell key={TRAIT_KEY + index}></Table.Cell>)
                     const modifiers = trait.modifiers
-                    return this.renderCell(TRAIT_KEY + trait.name, trait.name, selections, modifiers)
+                    return this.renderCell(TRAIT_KEY + trait.name, trait.name, selections, modifiers, undefined, undefined, undefined, disabled)
                   })
                 }
               </Table.Row>
@@ -374,8 +385,9 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderCell = (key: string, name: string | null, selections: Set<string>, modifiers: ImmutableList<Modifier>, enable?: (() => void), clear?: (() => void), padding?: string) => (
+  renderCell = (key: string, name: string | null, selections: Set<string>, modifiers: ImmutableList<Modifier>, enable?: (() => void), clear?: (() => void), padding?: string, disabled?: boolean) => (
     <Table.Cell
+      disabled={disabled}
       key={key}
       positive={selections.has(key)}
       selectable
@@ -586,6 +598,27 @@ class Countries extends Component<IProps> {
     this.props.clearModifiers(this.props.selected_country, key)
   }
 
+  /**
+   * Toggles has general while removing no general debuff.
+   */
+  enableGeneral = () => {
+    this.props.clearModifiers(this.props.selected_country, NO_GENERAL_KEY)
+    this.props.toggleHasGeneral(this.props.selected_country)
+  }
+
+  /**
+   * Toggles has general while enabling no general debuff.
+   */
+  disableGeneral = () => {
+    this.props.enableModifiers(this.props.selected_country, NO_GENERAL_KEY, toList({
+      target: DefinitionType.Global,
+      attribute: UnitCalc.Morale,
+      type: ValuesType.Modifier,
+      value: -0.25
+    }))
+    this.props.toggleHasGeneral(this.props.selected_country)
+  }
+
   getText = (modifier: Modifier): JSX.Element => {
     if (modifier.target === ModifierType.Text)
       return <span>{modifier.attribute}</span>
@@ -640,7 +673,8 @@ const mapDispatchToProps = (dispatch: any) => ({
   selectReligion: (country: CountryName, religion: ReligionType) => dispatch(selectReligion(country, religion)),
   selectGovernment: (country: CountryName, government: GovermentType) => dispatch(selectGovernment(country, government)),
   setOmenPower: (country: CountryName, power: number) => dispatch(setOmenPower(country, power)),
-  setGeneralMartial: (country: CountryName, skill: number) => dispatch(setGeneralMartial(country, skill))
+  setGeneralMartial: (country: CountryName, skill: number) => dispatch(setGeneralMartial(country, skill)),
+  toggleHasGeneral: (country: CountryName) => dispatch(toggleHasGeneral(country))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

@@ -6,7 +6,7 @@ import { DefinitionType } from "../base_definition"
 import { TerrainType, TerrainDefinition } from "./terrains/actions"
 import { UnitType, UnitDefinition } from "./units/actions"
 import { Armies, modeState } from "./battle/reducer"
-import { getDefaultArmy as getDefaultArmy, Participant as BaseParticipant } from "./battle/actions"
+import { getDefaultArmy, Participant as BaseParticipant } from "./battle/actions"
 import { CombatParameter } from "./settings/actions"
 import { defaultCountry } from "./countries/reducer"
 import { CountryName } from "./countries/actions"
@@ -84,11 +84,12 @@ export const mergeSettings = (state: AppState): OrderedMap<CombatParameter, numb
     const units = filterUnits(state.settings.mode, state.units.get(name, getDefaultUnits()))
     const global = state.global_stats.get(name, getDefaultGlobal()).get(state.settings.mode)!
     const general = {
-      total: country.general_martial + sum(country.trait_martial),
-      base: country.general_martial,
-      trait: sum(country.trait_martial)
+      total: country.has_general ? country.general_martial + sum(country.trait_martial) : 0,
+      base: country.has_general ? country.general_martial : 0,
+      trait: country.has_general ? sum(country.trait_martial) : 0
     }
-    return { ...army, general, name, units, global}
+    const has_general = country.has_general
+    return { ...army, general, name, units, global, has_general}
   }
 
   export const getAttacker = (state: AppState): Participant => {
@@ -114,5 +115,6 @@ export const mergeSettings = (state: AppState): OrderedMap<CombatParameter, numb
     }
     name: CountryName
     units: OrderedMap<UnitType, UnitDefinition>
-    global: UnitDefinition
+    global: UnitDefinition,
+    has_general: boolean
   }

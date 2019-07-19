@@ -419,7 +419,7 @@ class Battle extends Component<IProps, IState> {
           />
         </Table.Cell>
         <Table.Cell collapsing>
-          <Input size='mini' style={{ width: 100 }} type='number' value={participant.general.base} onChange={(_, { value }) => this.props.setGeneralMartial(name, Number(value))} />
+          <Input disabled={!participant.has_general} size='mini' style={{ width: 100 }} type='number' value={participant.general.base} onChange={(_, { value }) => this.props.setGeneralMartial(name, Number(value))} />
           {' '}<StyledNumber value={participant.general.trait} formatter={addSign} />
         </Table.Cell>
         <Table.Cell collapsing>
