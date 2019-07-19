@@ -1,7 +1,7 @@
 Release 4:
 
-- Ideas / Strategos
-- Accordions to more places??
+- Ideas / Strategos / Military Power / No general
+- Accordions to more places?? (unit detail?)
 
 Tests (high priority):
 - base_definition functions tested

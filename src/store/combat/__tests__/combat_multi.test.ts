@@ -1,17 +1,17 @@
 import { battle } from '../combat'
 import { List, Map } from 'immutable'
-import { getInitialArmy, getInitialTerrains, Participant } from '../../battle'
-import { getDefaultDefinitions as getDefaultTacticDefinitions, TacticType } from '../../tactics'
-import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, TerrainDefinition } from '../../terrains'
-import { getDefaultDefinitions as getDefaultUnitDefinitions, UnitType, UnitCalc, UnitDefinition } from '../../units'
+import { getDefaultArmy, getInitialTerrains, Participant } from '../../battle'
+import { getDefaultTactics, TacticType } from '../../tactics'
+import { getDefaultTerrains, TerrainType, TerrainDefinition } from '../../terrains'
+import { getDefaultUnits, UnitType, UnitCalc, UnitDefinition } from '../../units'
 import { addValues, ValuesType, calculateValue, DefinitionType } from '../../../base_definition'
 import { getSettings } from './utils'
 import { CountryName } from '../../countries'
 
 describe('multi', () => {
-  const tactics = getDefaultTacticDefinitions()
-  const terrains = getDefaultTerrainDefinitions()
-  const units = getDefaultUnitDefinitions()
+  const tactics = getDefaultTactics()
+  const terrains = getDefaultTerrains()
+  const units = getDefaultUnits()
   const definitions = Map<CountryName, Map<UnitType, UnitDefinition>>().set(CountryName.Country1, units).set(CountryName.Country2, units)
   const settings = getSettings(DefinitionType.Land)
 
@@ -45,7 +45,7 @@ describe('multi', () => {
       return addValues(addValues(addValues(units.get(type)!, ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, 0.05]]), ValuesType.Base, 'Test', [[UnitCalc.Discipline, 0.03]]), ValuesType.Loss, 'Test', [[UnitCalc.Morale, 3.15 - morale]])
     }
 
-    let attacker = getInitialArmy(DefinitionType.Land)
+    let attacker = getDefaultArmy(DefinitionType.Land)
     attacker = {
       ...attacker,
       tactic: TacticType.Bottleneck,
@@ -58,7 +58,7 @@ describe('multi', () => {
         .set(17, getAttacker(UnitType.LightInfantry, 1.00))
     }
 
-    let defender = getInitialArmy(DefinitionType.Land)
+    let defender = getDefaultArmy(DefinitionType.Land)
     defender = {
       ...defender,
       tactic: TacticType.ShockAction,

@@ -1,18 +1,18 @@
 import { battle } from '../combat'
 import { List, Map } from 'immutable'
-import { getInitialArmy, Participant } from '../../battle'
-import { getDefaultDefinitions as getDefaultTacticDefinitions, TacticType } from '../../tactics'
-import { getDefaultDefinitions as getDefaultTerrainDefinitions, TerrainType, TerrainDefinition } from '../../terrains'
-import { getDefaultDefinitions as getDefaultUnitDefinitions, getDefaultGlobalDefinition, UnitType, UnitCalc, UnitDefinition } from '../../units'
+import { getDefaultArmy, Participant } from '../../battle'
+import { getDefaultTactics, TacticType } from '../../tactics'
+import { getDefaultTerrains, TerrainType, TerrainDefinition } from '../../terrains'
+import { getDefaultUnits, getDefaultGlobal, UnitType, UnitCalc, UnitDefinition } from '../../units'
 import { addValues, ValuesType, mergeValues, DefinitionType } from '../../../base_definition'
 import { verifyCenterUnits, setRolls, setTactics, setCenterUnits, getSettings } from './utils'
 import { CountryName } from '../../countries'
 
 describe('1 vs 1', () => {
-  const global_stats = getDefaultGlobalDefinition().get(DefinitionType.Land)!
-  const tactics = getDefaultTacticDefinitions()
-  const terrains = getDefaultTerrainDefinitions()
-  const units = getDefaultUnitDefinitions().map(unit => mergeValues(unit, global_stats))
+  const global_stats = getDefaultGlobal().get(DefinitionType.Land)!
+  const tactics = getDefaultTactics()
+  const terrains = getDefaultTerrains()
+  const units = getDefaultUnits().map(unit => mergeValues(unit, global_stats))
   const unit = addValues(units.get(UnitType.Archers)!, ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.2]])
   const definitions = Map<CountryName, Map<UnitType, UnitDefinition>>().set(CountryName.Country1, units).set(CountryName.Country2, units)
   const settings = getSettings(DefinitionType.Land)
@@ -25,8 +25,8 @@ describe('1 vs 1', () => {
   let terrain: List<TerrainDefinition>
 
   beforeEach(() => {
-    info.attacker = getInitialArmy(DefinitionType.Land)
-    info.defender = getInitialArmy(DefinitionType.Land)
+    info.attacker = getDefaultArmy(DefinitionType.Land)
+    info.defender = getDefaultArmy(DefinitionType.Land)
     terrain = List<TerrainDefinition>().push(terrains.get(TerrainType.Forest)!)
     setCenterUnits(info, unit, unit)
     info.round = 0

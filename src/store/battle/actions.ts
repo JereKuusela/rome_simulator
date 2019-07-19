@@ -82,7 +82,7 @@ const initializeDefaultArmy = (mode: DefinitionType): Participant => ({
 const defaultLandArmy = initializeDefaultArmy(DefinitionType.Land)
 const defaultNavalArmy = initializeDefaultArmy(DefinitionType.Naval)
 
-export const getDefault = (mode: DefinitionType): Participant => {
+export const getDefaultArmy = (mode: DefinitionType): Participant => {
   if (mode === DefinitionType.Naval)
     return defaultNavalArmy
   return defaultLandArmy

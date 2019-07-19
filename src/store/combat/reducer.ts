@@ -6,7 +6,7 @@ import { CombatParameter } from '../settings'
 import { AppState } from '../'
 import { mergeSettings, getBattle } from '../utils'
 import { sum } from '../../utils'
-import { defaultCountry } from '../countries/reducer';
+import { defaultCountry } from '../countries/reducer'
 
 export const combatReducer = createReducer<AppState>({} as any)
   .handleAction(battle, (state, action: ReturnType<typeof battle>) => {

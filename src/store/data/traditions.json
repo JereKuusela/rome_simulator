@@ -1756,12 +1756,12 @@
               "name": "Proud Shipwrights",
               "modifiers": [
                 {
-                  "target": "Type",
+                  "target": "Text",
                   "attribute": "Mercenary Maintenance",
                   "value": -0.1
                 },
                 {
-                  "target": "Type",
+                  "target": "Text",
                   "attribute": "Mercenary Cost",
                   "value": -0.25
                 }

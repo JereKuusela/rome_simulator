@@ -1,16 +1,16 @@
 import { battle } from '../combat'
 import { List, Map } from 'immutable'
-import { getInitialArmy, Participant, RowType } from '../../battle'
+import { getDefaultArmy, Participant, RowType } from '../../battle'
 import { TerrainDefinition } from '../../terrains'
-import { getDefaultDefinitions as getDefaultUnitDefinitions, getDefaultGlobalDefinition, UnitType, UnitDefinition } from '../../units'
+import { getDefaultUnits, getDefaultGlobal, UnitType, UnitDefinition } from '../../units'
 import { mergeValues, DefinitionType } from '../../../base_definition'
 import { CombatParameter } from '../../settings'
 import { verifyType, getSettings } from './utils'
 import { CountryName } from '../../countries'
 
 describe('initial deployment', () => {
-  const global_stats = getDefaultGlobalDefinition().get(DefinitionType.Land)!
-  const units = getDefaultUnitDefinitions().map(unit => mergeValues(unit, global_stats))
+  const global_stats = getDefaultGlobal().get(DefinitionType.Land)!
+  const units = getDefaultUnits().map(unit => mergeValues(unit, global_stats))
   const definitions = Map<CountryName, Map<UnitType, UnitDefinition>>().set(CountryName.Country1, units).set(CountryName.Country2, units)
   let settings = getSettings(DefinitionType.Land)
   const row_types = Map<RowType, UnitType>().set(RowType.Front, '' as UnitType).set(RowType.Back, '' as UnitType).set(RowType.Flank, '' as UnitType)
@@ -22,9 +22,9 @@ describe('initial deployment', () => {
   }
 
   beforeEach(() => {
-    info.attacker = getInitialArmy(DefinitionType.Land)
+    info.attacker = getDefaultArmy(DefinitionType.Land)
     info.attacker = { ...info.attacker, row_types }
-    info.defender = getInitialArmy(DefinitionType.Land)
+    info.defender = getDefaultArmy(DefinitionType.Land)
     info.defender = { ...info.defender, row_types }
     settings = getSettings(DefinitionType.Land)
   })
