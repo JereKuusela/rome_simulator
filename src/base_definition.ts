@@ -1,7 +1,7 @@
 import { Map, OrderedMap } from 'immutable'
 import EmptyIcon from './images/empty.png'
 import UnknownIcon from './images/unknown.png'
-import { toRelativeZeroPercent, toRelativePercent, toPercent, toManpower, toNumber } from './formatters';
+import { toPercent, toManpower} from './formatters';
 
 export enum ValuesType {
   Base = 'Base',
@@ -337,35 +337,6 @@ export const explain = <Definition extends AnyBaseDefinition, Attribute>
   }
   return explanation
 }
-
-export const valueToRelativeNumber = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, type: Attribute, show_zero: boolean): string => {
-  const value = calculateValue(definition, type)
-  if (value > 0)
-    return '+' + String(value)
-  if (value === 0 && !show_zero)
-    return ''
-  return String(+(value).toFixed(2))
-}
-
-export const valueToNumber = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, type: Attribute, show_zero: boolean): string => {
-  const value = calculateValue(definition, type)
-  return toNumber(value)
-}
-
-export const valueToManpower = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, type: Attribute, show_zero: boolean): string => toManpower(calculateValue(definition, type))
-
-export const valueToPercent = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, type: Attribute, show_zero: boolean): string => toPercent(calculateValue(definition, type))
-
-export const valueToRelativePercent = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, type: Attribute, show_zero: boolean): string => toRelativePercent(calculateValue(definition, type))
-
-export const valueToRelativeZeroPercent = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, type: Attribute, show_zero: boolean): string => toRelativeZeroPercent(calculateValue(definition, type))
-
 
 export const strengthToValue = (mode: DefinitionType, number: number) => {
   if (mode === DefinitionType.Naval)

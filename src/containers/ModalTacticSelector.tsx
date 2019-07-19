@@ -9,7 +9,7 @@ import ItemSelector from '../components/ItemSelector'
 import { TacticType, TacticCalc } from '../store/tactics'
 import { getBattle, filterTactics } from '../store/utils'
 import { DefinitionType, mergeValues, calculateValue } from '../base_definition'
-import { toRelativeZeroPercent, toPercent } from '../formatters'
+import { toSignedPercent, toPercent } from '../formatters'
 import { UnitDefinition, Unit } from '../store/units'
 import { CountryName } from '../store/countries'
 import StyledNumber from '../components/StyledNumber';
@@ -30,23 +30,23 @@ class ModalTacticSelector extends Component<IProps> {
       reserve: this.mergeAllValues(country, participant.reserve) as List<UnitDefinition>,
       defeated: this.mergeAllValues(country, participant.defeated) as List<UnitDefinition>
     }
-    let custom_values = Map<string, Map<TacticType, JSX.Element>>()
-    custom_values = custom_values.set('effect', this.props.tactics.map(value => (
+    let attributes = Map<string, Map<TacticType, JSX.Element>>()
+    attributes = attributes.set('effect', this.props.tactics.map(value => (
         <StyledNumber
          value={calculateTactic(army, value)}
          formatter={toPercent}
         /> 
     )))
-    custom_values = custom_values.set('damage', this.props.tactics.map(value => (
+    attributes = attributes.set('damage', this.props.tactics.map(value => (
        <StyledNumber
         value={calculateTactic(army, value, this.props.info!.counter)}
-        formatter={toRelativeZeroPercent}
+        formatter={toSignedPercent}
        /> 
     )))
-    custom_values = custom_values.set('casualties', this.props.tactics.filter(value => calculateValue(value, TacticCalc.Casualties)).map(value => (
+    attributes = attributes.set('casualties', this.props.tactics.filter(value => calculateValue(value, TacticCalc.Casualties)).map(value => (
       <StyledNumber
         value={calculateValue(value, TacticCalc.Casualties)}
-        formatter={toRelativeZeroPercent}
+        formatter={toSignedPercent}
         reverse
        /> 
     )))
@@ -57,8 +57,7 @@ class ModalTacticSelector extends Component<IProps> {
           onClose={this.props.onClose}
           onSelection={this.selectTactic}
           items={this.props.tactics.toList()}
-          attributes={[]}
-          custom_values={custom_values}
+          attributes={attributes}
         />
       </Modal.Content>
     </Modal>

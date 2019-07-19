@@ -20,8 +20,8 @@ class ModalTerrainSelector extends Component<IProps> {
   render(): JSX.Element | null {
     if (!this.props.info)
       return null
-    let custom_values = Map<string, Map<TerrainType, JSX.Element>>()
-    custom_values = custom_values.set('to attacker\'s roll', this.props.terrains.filter(value => calculateValue(value, TerrainCalc.Roll)).map(value => (
+    let attributes = Map<string, Map<TerrainType, JSX.Element>>()
+    attributes = attributes.set('to attacker\'s roll', this.props.terrains.filter(value => calculateValue(value, TerrainCalc.Roll)).map(value => (
       <StyledNumber
         value={calculateValue(value, TerrainCalc.Roll)}
         formatter={addSign}
@@ -34,7 +34,7 @@ class ModalTerrainSelector extends Component<IProps> {
             onClose={this.props.onClose}
             onSelection={this.selectTerrain}
             items={this.props.terrains.toList().filter(terrain => this.props.info && (!this.props.info.location || terrain.location === this.props.info.location))}
-            custom_values={custom_values}
+            attributes={attributes}
           />
         </Modal.Content>
       </Modal>

@@ -3,7 +3,7 @@ import { List, Map } from 'immutable'
 import { Table, Image } from 'semantic-ui-react'
 import { TerrainType, TerrainCalc } from '../store/terrains'
 import { UnitType, UnitCalc } from '../store/units'
-import { BaseValuesDefinition, BaseDefinition, valueToRelativeNumber, getImage } from '../base_definition'
+import { BaseValuesDefinition, BaseDefinition, getImage } from '../base_definition'
 import { TacticType, TacticCalc } from '../store/tactics'
 
 type ItemType = UnitType | TerrainType | TacticType
@@ -13,8 +13,7 @@ interface IProps<T extends ItemType, S extends ItemAttribute> {
   onClose: () => void
   items: List<BaseDefinition<T, S> | BaseValuesDefinition<T, S> | undefined>
   onSelection: (type: T | undefined) => void
-  attributes?: S[]
-  custom_values?: Map<string, Map<T, number | string | JSX.Element>>
+  attributes?: Map<string, Map<T, number | string | JSX.Element>>
 }
 
 export default class ItemSelector<S extends ItemAttribute, T extends ItemType> extends Component<IProps<T, S>> {
@@ -41,14 +40,7 @@ export default class ItemSelector<S extends ItemAttribute, T extends ItemType> e
           {item.type}
         </Table.Cell>
         {
-          this.props.attributes && this.props.attributes.map(attribute => (
-            <Table.Cell key={attribute}>
-              {valueToRelativeNumber(item, attribute, false)}
-            </Table.Cell>
-          ))
-        }
-        {
-          this.props.custom_values && this.props.custom_values.map((values, key) => (
+          this.props.attributes && this.props.attributes.map((values, key) => (
             <Table.Cell key={key}>
               {values.has(item.type) && values.get(item.type)}
               {values.has(item.type) && (' ' + key)}

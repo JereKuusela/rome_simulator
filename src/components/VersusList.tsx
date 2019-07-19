@@ -7,7 +7,7 @@ import { calculateValue, getImage } from '../base_definition'
 import { CountryName } from '../store/countries'
 import { renderImages } from './utils'
 import StyledNumber from './StyledNumber'
-import { toRelativeZeroPercent } from '../formatters'
+import { toSignedPercent } from '../formatters'
 
 interface IProps {
   readonly units: Map<CountryName, OrderedMap<UnitType, UnitDefinition>>
@@ -28,9 +28,9 @@ export default class VersusList extends Component<IProps> {
               {this.props.styled ?
                 <StyledNumber
                   value={calculateValue(this.props.item, type)}
-                  formatter={toRelativeZeroPercent}
+                  formatter={toSignedPercent}
                 />
-                : toRelativeZeroPercent(calculateValue(this.props.item, type))
+                : toSignedPercent(calculateValue(this.props.item, type))
               }
             </List.Item>
           ))

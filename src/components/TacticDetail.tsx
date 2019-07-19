@@ -3,8 +3,9 @@ import { Map, OrderedSet } from 'immutable'
 import { Table, Input, Image, Dropdown } from 'semantic-ui-react'
 import { UnitType, UnitDefinition } from '../store/units'
 import { TacticDefinition, ValueType, TacticType, TacticCalc } from '../store/tactics'
-import { getBaseValue, valueToRelativeZeroPercent, valueToPercent, explainShort, getImage, DefinitionType } from '../base_definition'
+import { getBaseValue, explainShort, getImage, DefinitionType, calculateValue } from '../base_definition'
 import { renderImages } from './utils'
+import { toSignedPercent, toPercent } from '../formatters';
 
 interface IProps {
   readonly tactic_types: OrderedSet<TacticType>
@@ -125,7 +126,8 @@ export default class TacticDetail extends Component<IProps> {
   }
 
   renderRow = (tactic: TacticDefinition, attribute: ValueType, relative: boolean, images: OrderedSet<string>): JSX.Element => {
-    let base_value = getBaseValue(tactic, attribute, this.props.custom_value_key)
+    const base_value = getBaseValue(tactic, attribute, this.props.custom_value_key)
+    const value = calculateValue(tactic, attribute)
 
     return (
       <Table.Row key={attribute}>
@@ -134,7 +136,7 @@ export default class TacticDetail extends Component<IProps> {
           {attribute}
         </Table.Cell>
         <Table.Cell collapsing>
-          {relative ? valueToRelativeZeroPercent(tactic, attribute, true) : valueToPercent(tactic, attribute, true)}
+          {relative ? toSignedPercent(value) : toPercent(value)}
         </Table.Cell>
         <Table.Cell collapsing>
           <Input

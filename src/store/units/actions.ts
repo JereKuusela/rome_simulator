@@ -2,7 +2,7 @@ import { createAction } from 'typesafe-actions'
 import { TerrainType } from '../terrains'
 import { CountryName } from '../countries'
 import { calculateValue, BaseDefinition, ValuesType, DefinitionType } from '../../base_definition'
-import { toPercent, toRelativeZeroPercent, toNumber } from '../../formatters'
+import { toPercent, toSignedPercent, toNumber } from '../../formatters'
 
 export enum UnitType {
   Archers = 'Archers',
@@ -58,7 +58,7 @@ export interface UnitDefinition extends BaseDefinition<UnitType, ValueType> {
   readonly mode: DefinitionType
 }
 
-export const valueToString = (definition: BaseDefinition<UnitType, ValueType>, type: ValueType, show_zero: boolean = true): string => {
+export const valueToString = (definition: BaseDefinition<UnitType, ValueType>, type: ValueType): string => {
   const value = calculateValue(definition, type)
   switch (type) {
     case UnitCalc.Cost:
@@ -75,7 +75,7 @@ export const valueToString = (definition: BaseDefinition<UnitType, ValueType>, t
     case UnitCalc.AttritionWeight:
       return toPercent(value)
     default:
-      return toRelativeZeroPercent(value)
+      return toSignedPercent(value)
   }
 }
 

@@ -20,7 +20,7 @@ import ModalArmyUnitDetail, { ModalInfo as ModalArmyUnitInfo } from '../containe
 import ModalFastPlanner from '../containers/ModalFastPlanner'
 import { calculateValue, mergeValues, getImage, DefinitionType } from '../base_definition'
 import { mergeSettings, getBattle, getAttacker, getDefender, Participant } from '../store/utils'
-import { addSign, toRelativeZeroPercent } from '../formatters'
+import { addSign, toSignedPercent } from '../formatters'
 import { CountryName, setGeneralMartial } from '../store/countries'
 import { CombatParameter } from '../store/settings'
 import IconTerrain from '../images/terrain.png'
@@ -397,7 +397,7 @@ class Battle extends Component<IProps, IState> {
         {' ('}
         <StyledNumber
           value={calculateTactic(army, tactic, counter)}
-          formatter={toRelativeZeroPercent}
+          formatter={toSignedPercent}
         />
         {')'}
       </div >

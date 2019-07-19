@@ -4,7 +4,7 @@ import { Image, Table, List, Button } from 'semantic-ui-react'
 import { UnitType, UnitDefinition } from '../store/units'
 import { TacticDefinition, TacticType, TacticCalc } from '../store/tactics'
 import { calculateValue, getImage } from '../base_definition'
-import { toRelativeZeroPercent } from '../formatters'
+import { toSignedPercent } from '../formatters'
 import ValueModal from './ValueModal'
 import { CountryName } from '../store/countries'
 import VersusList from './VersusList'
@@ -93,7 +93,7 @@ export default class TacticDefinitions extends Component<IProps, IState> {
                   <Image src={getImage(vs_tactic)} avatar />
                   <StyledNumber
                     value={calculateValue(tactic, vs_tactic.type)}
-                    formatter={toRelativeZeroPercent}
+                    formatter={toSignedPercent}
                   />
                 </List.Item>
               ))
@@ -103,7 +103,7 @@ export default class TacticDefinitions extends Component<IProps, IState> {
         <Table.Cell>
           <StyledNumber
             value={calculateValue(tactic, TacticCalc.Casualties)}
-            formatter={toRelativeZeroPercent} hide_zero reverse
+            formatter={toSignedPercent} hide_zero reverse
           />
         </Table.Cell>
       </Table.Row>

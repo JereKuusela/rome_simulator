@@ -1,7 +1,7 @@
 import { OrderedSet, OrderedMap, Map } from 'immutable'
 import React, { Component } from 'react'
 import { Image, Table, List, Icon } from 'semantic-ui-react'
-import { UnitType, UnitDefinition, UnitCalc, ValueType, valueToString } from '../store/units'
+import { UnitType, UnitDefinition, UnitCalc, ValueType } from '../store/units'
 import { TerrainType } from '../store/terrains'
 import IconDiscipline from '../images/discipline.png'
 import IconOffense from '../images/offense.png'
@@ -10,8 +10,8 @@ import IconManpower from '../images/manpower.png'
 import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
 import IconAttrition from '../images/attrition.png'
-import { getImage, calculateValue, calculateBase, calculateModifier, calculateLoss, valueToNumber, valueToPercent, valueToRelativeZeroPercent, mergeValues, valueToManpower, DefinitionType } from '../base_definition'
-import { toRelativeZeroPercent, toNumber, hideZero, toPercent } from '../formatters'
+import { getImage, calculateValue, calculateBase, calculateModifier, calculateLoss, mergeValues, DefinitionType } from '../base_definition'
+import { toSignedPercent, toNumber, hideZero, toPercent, toManpower } from '../formatters'
 import { CountryName } from '../store/countries'
 import { filterUnits } from '../utils'
 import StyledNumber from './StyledNumber'
@@ -114,30 +114,30 @@ export default class UnitDefinitions extends Component<IProps> {
           {unit.type}
         </Table.Cell>
         <Table.Cell>
-          {valueToNumber(unit, UnitCalc.Morale, false)}
+          {toNumber(calculateValue(unit, UnitCalc.Morale))}
         </Table.Cell>
         <Table.Cell>
-          {this.props.mode === DefinitionType.Naval ? valueToPercent(unit, UnitCalc.Strength, false) : valueToManpower(unit, UnitCalc.Strength, false)}
+          {this.props.mode === DefinitionType.Naval ? toPercent(calculateValue(unit, UnitCalc.Strength)) : toManpower(calculateValue(unit, UnitCalc.Strength))}
         </Table.Cell>
         {
           this.props.mode === DefinitionType.Naval ? null :
             <Table.Cell>
               <StyledNumber
                 value={calculateValue(unit, UnitCalc.Discipline)}
-                formatter={toRelativeZeroPercent} hide_zero
+                formatter={toSignedPercent} hide_zero
               />
             </Table.Cell>
         }
         <Table.Cell>
           <StyledNumber
             value={calculateValue(unit, this.props.mode === DefinitionType.Naval ? UnitCalc.DamageDone : UnitCalc.Offense)}
-            formatter={toRelativeZeroPercent} hide_zero
+            formatter={toSignedPercent} hide_zero
           />
         </Table.Cell>
         <Table.Cell>
           <StyledNumber
             value={calculateValue(unit, this.props.mode === DefinitionType.Naval ? UnitCalc.DamageTaken : UnitCalc.Defense)}
-            formatter={toRelativeZeroPercent} hide_zero
+            formatter={toSignedPercent} hide_zero
             reverse={this.props.mode === DefinitionType.Naval}
           />
         </Table.Cell>
@@ -149,14 +149,14 @@ export default class UnitDefinitions extends Component<IProps> {
             <Table.Cell>
               <StyledNumber
                 value={calculateValue(unit, UnitCalc.MoraleDamageDone)}
-                formatter={toRelativeZeroPercent} hide_zero
+                formatter={toSignedPercent} hide_zero
               />
             </Table.Cell>
         }
         <Table.Cell>
           <StyledNumber
             value={calculateValue(unit, UnitCalc.MoraleDamageTaken)}
-            formatter={toRelativeZeroPercent} hide_zero
+            formatter={toSignedPercent} hide_zero
             reverse
           />
         </Table.Cell>
@@ -165,14 +165,14 @@ export default class UnitDefinitions extends Component<IProps> {
             <Table.Cell>
               <StyledNumber
                 value={calculateValue(unit, UnitCalc.StrengthDamageDone)}
-                formatter={toRelativeZeroPercent} hide_zero
+                formatter={toSignedPercent} hide_zero
               />
             </Table.Cell>
         }
         <Table.Cell>
           <StyledNumber
             value={calculateValue(unit, UnitCalc.StrengthDamageTaken)}
-            formatter={toRelativeZeroPercent} hide_zero
+            formatter={toSignedPercent} hide_zero
             reverse
           />
         </Table.Cell>
@@ -195,7 +195,7 @@ export default class UnitDefinitions extends Component<IProps> {
                   {type + ': '}
                   <StyledNumber
                     value={calculateValue(unit, type)}
-                    formatter={toRelativeZeroPercent}
+                    formatter={toSignedPercent}
                   />
                 </List.Item>
               ))
@@ -267,7 +267,7 @@ export default class UnitDefinitions extends Component<IProps> {
             {
               this.props.terrains.filter(type => calculateValue(unit, type) !== 0.0).map(type => (
                 <List.Item key={type}>
-                  {type + ': ' + valueToRelativeZeroPercent(unit, type, false)}
+                  {type + ': ' + toSignedPercent(calculateValue(unit, type))}
                 </List.Item>
               ))
             }

@@ -32,7 +32,6 @@ class ModalRowTypeSelector extends Component<IProps> {
             onClose={this.props.onClose}
             onSelection={this.selectUnit}
             items={units.toList()}
-            attributes={[]}
           />
         </Modal.Content>
       </Modal>
