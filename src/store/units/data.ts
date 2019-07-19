@@ -44,7 +44,7 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
     [UnitCalc.AttritionWeight, data.attrition_weight || 0],
     [UnitCalc.Cost, data.cost],
     [UnitCalc.RecruitTime, data.recruit_time],
-    [UnitCalc.Maintenance, data.maintenance],
+    [UnitCalc.Maintenance, data.maintenance || 0],
     [UnitCalc.MovementSpeed, data.movement_speed],
     [UnitCalc.Maneuver, data.maneuver],
     [UnitCalc.MoraleDamageTaken, data.morale_damage_taken || 0],
@@ -86,13 +86,20 @@ const initializeDefaultGlobal = (): Map<DefinitionType, UnitDefinition> => {
   let definitions = Map<DefinitionType, UnitDefinition>()
   const land = { type: '' as UnitType, mode: DefinitionType.Land, image: IconMilitaryPower, requirements: '', can_assault: false }
   const naval = { type: '' as UnitType, mode: DefinitionType.Naval, image: IconMilitaryPower, requirements: '', can_assault: false }
-  const values: [UnitCalc, number][] = [
+  const landValues: [UnitCalc, number][] = [
     [UnitCalc.Strength, 1],
     [UnitCalc.Morale, 3],
-    [UnitCalc.AttritionWeight, 1]
+    [UnitCalc.AttritionWeight, 1],
+    [UnitCalc.Maintenance, 0.054]
   ]
-  definitions = definitions.set(DefinitionType.Land, addValues(land, ValuesType.Base, 'Base', values))
-  definitions = definitions.set(DefinitionType.Naval, addValues(naval, ValuesType.Base, 'Base', values))
+  const navalValues: [UnitCalc, number][] = [
+    [UnitCalc.Strength, 1],
+    [UnitCalc.Morale, 3],
+    [UnitCalc.AttritionWeight, 1],
+    [UnitCalc.Maintenance, 0.016]
+  ]
+  definitions = definitions.set(DefinitionType.Land, addValues(land, ValuesType.Base, 'Base', landValues))
+  definitions = definitions.set(DefinitionType.Naval, addValues(naval, ValuesType.Base, 'Base', navalValues))
   return definitions
 }
 
@@ -133,7 +140,7 @@ interface UnitData {
   mode: string
   cost: number
   recruit_time: number
-  maintenance: number
+  maintenance?: number
   requirements: string
   can_assault: boolean
   movement_speed: number
