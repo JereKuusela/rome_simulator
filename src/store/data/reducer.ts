@@ -2,7 +2,7 @@ import { createReducer } from 'typesafe-actions'
 import { combineReducers } from 'redux'
 import {
   getTraditionDefinitions, getTradeDefinitions, getHeritageDefinitions, getInventionDefinitions, getOmenDefinitions, getTraitDefinitions,
-  getEconomyDefinitions, getLawDefinitions, getIdeaDefinitions
+  getEconomyDefinitions, getLawDefinitions, getIdeaDefinitions, getAbilityDefinitions
 } from './data'
 
 export const dataReducer = combineReducers({
@@ -14,5 +14,6 @@ export const dataReducer = combineReducers({
   traits: createReducer(getTraitDefinitions()),
   economy: createReducer(getEconomyDefinitions()),
   laws: createReducer(getLawDefinitions()),
-  ideas: createReducer(getIdeaDefinitions())
+  ideas: createReducer(getIdeaDefinitions()),
+  abilities: createReducer(getAbilityDefinitions())
 })

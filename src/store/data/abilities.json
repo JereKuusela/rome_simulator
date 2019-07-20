@@ -1,0 +1,41 @@
+{
+  "abilities": [
+    {
+      "name": "Naval",
+      "options": [
+        {
+          "name": "Boarding Tactics",
+          "modifiers": [
+            {
+              "target": "Text",
+              "attribute": "Ship Capture Chance",
+              "value": 0.1
+            },
+            {
+              "target": "Naval",
+              "attribute": "Damage done",
+              "negative": true,
+              "value": -0.1
+            }
+          ]
+        },
+        {
+          "name": "Ramming Tactics",
+          "modifiers": [
+            {
+              "target": "Naval",
+              "attribute": "Damage done",
+              "value": 0.1
+            },
+            {
+              "target": "Naval",
+              "attribute": "Damage taken",
+              "negative": true,
+              "value": 0.1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

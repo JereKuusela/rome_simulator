@@ -1,6 +1,6 @@
 Release 4:
 
-- Ideas / Strategos / Naval abilities
+- Strategos, etc.
 - Accordions to more places?? (unit detail?)
 
 Tests (high priority):

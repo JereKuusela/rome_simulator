@@ -7,7 +7,7 @@ import { mapRange, toList, sum } from '../utils'
 import {
   ModifierType, Modifier, Tradition, CultureType,
   OmenDefinition, TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition,
-  GovermentType, ReligionType, TraitDefinition, EconomyDefinition, LawDefinition, IdeaDefinition
+  GovermentType, ReligionType, TraitDefinition, EconomyDefinition, LawDefinition, IdeaDefinition, AbilityDefinition
 } from '../store/data'
 import {
   enableModifiers, clearModifiers, CountryName, selectGovernment, selectReligion, selectCulture, setOmenPower, setGeneralMartial, defaultCountry,
@@ -38,6 +38,7 @@ const INVENTION_KEY = 'Invention_'
 const ECONOMY_KEY = 'Economy_'
 const LAW_KEY = 'Law_'
 const IDEA_KEY = 'Idea_'
+const ABILITY_KEY = 'Ability_'
 const NO_GENERAL_KEY = 'No general'
 const MILITARY_POWER_KEY = 'Military power'
 
@@ -92,6 +93,9 @@ class Countries extends Component<IProps> {
                 {' '}with <StyledNumber value={sum(country.trait_martial)} formatter={addSign} /> from traits
                 {
                   this.renderTraits(this.props.traits, selections, !country.has_general)
+                }
+                {
+                  this.renderAbilities(this.props.abilities, selections)
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -393,11 +397,13 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderEconomy = (economy: ImmutableList<EconomyDefinition>, selections: Set<string>) => this.renderEconomyOrLaw(ECONOMY_KEY, economy, selections)
+  renderEconomy = (economy: ImmutableList<EconomyDefinition>, selections: Set<string>) => this.renderOptions(ECONOMY_KEY, economy, selections)
 
-  renderLaws = (laws: ImmutableList<LawDefinition>, selections: Set<string>) => this.renderEconomyOrLaw(LAW_KEY, laws, selections)
+  renderLaws = (laws: ImmutableList<LawDefinition>, selections: Set<string>) => this.renderOptions(LAW_KEY, laws, selections)
 
-  renderEconomyOrLaw = (modifier_key: string, economy: ImmutableList<EconomyDefinition | LawDefinition>, selections: Set<string>) => {
+  renderAbilities = (abilities: ImmutableList<AbilityDefinition>, selections: Set<string>) => this.renderOptions(ABILITY_KEY, abilities, selections)
+
+  renderOptions = (modifier_key: string, economy: ImmutableList<EconomyDefinition | LawDefinition | AbilityDefinition>, selections: Set<string>) => {
     return (
       <Table celled unstackable fixed>
         <Table.Body>
@@ -716,7 +722,8 @@ const mapStateToProps = (state: AppState) => ({
   economy: state.data.economy,
   mode: state.settings.mode,
   traits: state.data.traits,
-  ideas: state.data.ideas
+  ideas: state.data.ideas,
+  abilities: state.data.abilities
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

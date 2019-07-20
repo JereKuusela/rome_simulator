@@ -94,3 +94,10 @@ export interface IdeaDefinition {
   readonly name: string
   readonly modifiers: List<Modifier>
 }
+export interface AbilityDefinition {
+  readonly name: string
+  readonly options: List<{
+    readonly name: string
+    readonly modifiers: List<Modifier>
+  }>
+}
