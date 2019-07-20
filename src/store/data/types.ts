@@ -90,3 +90,7 @@ export interface EconomyDefinition {
     readonly modifiers: List<Modifier>
   }>
 }
+export interface IdeaDefinition {
+  readonly name: string
+  readonly modifiers: List<Modifier>
+}

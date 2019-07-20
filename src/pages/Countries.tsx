@@ -7,11 +7,11 @@ import { mapRange, toList, sum } from '../utils'
 import {
   ModifierType, Modifier, Tradition, CultureType,
   OmenDefinition, TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition,
-  GovermentType, ReligionType, TraitDefinition, EconomyDefinition, LawDefinition
+  GovermentType, ReligionType, TraitDefinition, EconomyDefinition, LawDefinition, IdeaDefinition
 } from '../store/data'
 import {
   enableModifiers, clearModifiers, CountryName, selectGovernment, selectReligion, selectCulture, setOmenPower, setGeneralMartial, defaultCountry,
-  toggleHasGeneral,
+  setHasGeneral,
   setMilitaryPower
 } from '../store/countries'
 import { DefinitionType, ValuesType } from '../base_definition'
@@ -23,10 +23,11 @@ import ConfirmationButton from '../components/ConfirmationButton'
 import StyledNumber from '../components/StyledNumber'
 import { addSign } from '../formatters'
 
-const TRADE_COLUMNS = 4.0
-const HERITAGE_COLUMNS = 4.0
-const OMEN_COLUMNS = 4.0
-const TRAIT_COLUMNS = 4.0
+const TRADE_COLUMNS = 4
+const HERITAGE_COLUMNS = 4
+const OMEN_COLUMNS = 4
+const TRAIT_COLUMNS = 4
+const IDEA_COLUMNS = 3
 
 const TRAIT_KEY = 'Trait_'
 const TRADE_KEY = 'Trade_'
@@ -36,10 +37,11 @@ const OMEN_KEY = 'Omen_'
 const INVENTION_KEY = 'Invention_'
 const ECONOMY_KEY = 'Economy_'
 const LAW_KEY = 'Law_'
+const IDEA_KEY = 'Idea_'
 const NO_GENERAL_KEY = 'No general'
 const MILITARY_POWER_KEY = 'Military power'
 
-const KEYS = [TRAIT_KEY, TRADE_KEY, TRADITION_KEY, HERITAGE_KEY, OMEN_KEY, INVENTION_KEY, ECONOMY_KEY, LAW_KEY]
+const KEYS = [TRAIT_KEY, TRADE_KEY, TRADITION_KEY, HERITAGE_KEY, OMEN_KEY, INVENTION_KEY, ECONOMY_KEY, LAW_KEY, IDEA_KEY, MILITARY_POWER_KEY, NO_GENERAL_KEY]
 
 const CELL_PADDING = '.78571429em .78571429em'
 
@@ -78,6 +80,24 @@ class Countries extends Component<IProps> {
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
+              <AccordionToggle title='General' identifier='countries_traits'>
+                <Checkbox
+                  toggle
+                  label='General'
+                  checked={country.has_general}
+                  onChange={country.has_general ? this.disableGeneral : this.enableGeneral}
+                  style={{ float: 'right' }}
+                />
+                Base martial: <Input disabled={!country.has_general} type='number' value={country.general_martial} onChange={(_, { value }) => omen && this.setGeneralMartial(value)} />
+                {' '}with <StyledNumber value={sum(country.trait_martial)} formatter={addSign} /> from traits
+                {
+                  this.renderTraits(this.props.traits, selections, !country.has_general)
+                }
+              </AccordionToggle>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns='1'>
+            <Grid.Column>
               <AccordionToggle title={'Traditions (' + country.culture + ')'} identifier='countries_tradition'>
                 Military power: <Input type='number' value={country.military_power} onChange={(_, { value }) => this.setMilitaryPower(value)} />
                 {
@@ -91,15 +111,6 @@ class Countries extends Component<IProps> {
               <AccordionToggle title='Trade' identifier='countries_trade'>
                 {
                   this.renderTrades(this.props.trades, selections)
-                }
-              </AccordionToggle>
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row columns='1'>
-            <Grid.Column>
-              <AccordionToggle title='Heritage' identifier='countries_heritage'>
-                {
-                  this.renderHeritages(this.props.heritages, selections)
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -138,30 +149,24 @@ class Countries extends Component<IProps> {
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <AccordionToggle title='General' identifier='countries_traits'>
-                <Checkbox
-                  toggle
-                  label='General'
-                  checked={country.has_general}
-                  onChange={country.has_general ? this.disableGeneral : this.enableGeneral}
-                  style={{ float: 'right' }}
-                />
-                Base martial: <Input disabled={!country.has_general} type='number' value={country.general_martial} onChange={(_, { value }) => omen && this.setGeneralMartial(value)} />
-                {' '}with <StyledNumber value={sum(country.trait_martial)} formatter={addSign} /> from traits
+              <AccordionToggle title='Government, Economy & Ideas' identifier='countries_government'>
                 {
-                  this.renderTraits(this.props.traits, selections, !country.has_general)
+                  this.renderLaws(this.props.laws, selections)
+                }
+                {
+                  this.renderEconomy(this.props.economy, selections)
+                }
+                {
+                  this.renderIdeas(this.props.ideas, selections)
                 }
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <AccordionToggle title='Government & Economy' identifier='countries_government'>
+              <AccordionToggle title='Heritage' identifier='countries_heritage'>
                 {
-                  this.renderLaws(this.props.laws, selections)
-                }
-                {
-                  this.renderEconomy(this.props.economy, selections)
+                  this.renderHeritages(this.props.heritages, selections)
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -226,6 +231,33 @@ class Countries extends Component<IProps> {
                     const key = TRADE_KEY + trade.type + '_' + trade.name
                     const modifiers = toList(trade.modifier)
                     return this.renderCell(key, trade.type + ': ' + trade.name, selections, modifiers)
+                  })
+                }
+              </Table.Row>
+            ))
+          }
+        </Table.Body>
+      </Table >
+    )
+  }
+
+  renderIdeas = (ideas: ImmutableList<IdeaDefinition>, selections: Set<string>) => {
+    const rows = Math.ceil(ideas.count() / IDEA_COLUMNS)
+    return (
+      <Table celled unstackable fixed>
+        <Table.Body>
+          {
+            mapRange(rows, number => number).map(row => (
+              <Table.Row key={row}>
+                {
+                  mapRange(IDEA_COLUMNS, number => number).map(column => {
+                    const index = row * TRADE_COLUMNS + column
+                    const idea = ideas.get(index)
+                    if (!idea)
+                      return (<Table.Cell key={IDEA_KEY + index}></Table.Cell>)
+                    const key = IDEA_KEY + index
+                    const modifiers = idea.modifiers
+                    return this.renderCell(key, idea.name, selections, modifiers)
                   })
                 }
               </Table.Row>
@@ -597,6 +629,8 @@ class Countries extends Component<IProps> {
     KEYS.forEach(key => this.clearModifiers(key, selections))
     this.props.setOmenPower(this.props.selected_country, 100)
     this.props.setGeneralMartial(this.props.selected_country, 0)
+    this.props.setMilitaryPower(this.props.selected_country, 0)
+    this.props.setHasGeneral(this.props.selected_country, true)
   }
 
   /**
@@ -621,7 +655,7 @@ class Countries extends Component<IProps> {
    */
   enableGeneral = () => {
     this.props.clearModifiers(this.props.selected_country, NO_GENERAL_KEY)
-    this.props.toggleHasGeneral(this.props.selected_country)
+    this.props.setHasGeneral(this.props.selected_country, true)
   }
 
   /**
@@ -634,7 +668,7 @@ class Countries extends Component<IProps> {
       type: ValuesType.Modifier,
       value: -0.25
     }))
-    this.props.toggleHasGeneral(this.props.selected_country)
+    this.props.setHasGeneral(this.props.selected_country, false)
   }
 
   getText = (modifier: Modifier): JSX.Element => {
@@ -681,7 +715,8 @@ const mapStateToProps = (state: AppState) => ({
   laws: state.data.laws,
   economy: state.data.economy,
   mode: state.settings.mode,
-  traits: state.data.traits
+  traits: state.data.traits,
+  ideas: state.data.ideas
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
@@ -692,7 +727,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   selectGovernment: (country: CountryName, government: GovermentType) => dispatch(selectGovernment(country, government)),
   setOmenPower: (country: CountryName, power: number) => dispatch(setOmenPower(country, power)),
   setGeneralMartial: (country: CountryName, skill: number) => dispatch(setGeneralMartial(country, skill)),
-  toggleHasGeneral: (country: CountryName) => dispatch(toggleHasGeneral(country)),
+  setHasGeneral: (country: CountryName, value: boolean) => dispatch(setHasGeneral(country, value)),
   setMilitaryPower: (country: CountryName, power: number) => dispatch(setMilitaryPower(country, power))
 })
 

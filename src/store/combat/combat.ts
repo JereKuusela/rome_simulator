@@ -91,9 +91,9 @@ export const battle = (definitions: Definitions, attacker: ParticipantState, def
   const minimum_manpower = settings.get(CombatParameter.MinimumStrength) || 0
   a = copyDefeated(a, definitions_a, minimum_morale, minimum_manpower)
   d = copyDefeated(d, definitions_d, minimum_morale, minimum_manpower)
-  if (a.frontline.findIndex(unit => !!(unit && !unit.is_defeated)) === -1)
+  if (a.frontline.findIndex(unit => !!(unit && !unit.is_defeated)) === -1 && a.reserve.count() === 0)
     a = removeDefeated(a)
-  if (d.frontline.findIndex(unit => !!(unit && !unit.is_defeated)) === -1)
+  if (d.frontline.findIndex(unit => !!(unit && !unit.is_defeated)) === -1 && d.reserve.count() === 0)
     d = removeDefeated(d)
   return [a, d]
 }

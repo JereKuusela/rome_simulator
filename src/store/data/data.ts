@@ -2,7 +2,7 @@
 import { OrderedMap, List } from 'immutable'
 import { listFromJS } from '../../utils'
 import {
-  CultureType, ReligionType, LawDefinition, EconomyDefinition,
+  CultureType, ReligionType, LawDefinition, EconomyDefinition, IdeaDefinition,
   TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition
 } from './types'
 
@@ -14,6 +14,7 @@ import * as omenData from './omens.json'
 import * as traitData from './traits.json'
 import * as lawData from './laws.json'
 import * as economyData from './economy.json'
+import * as ideaData from './ideas.json'
 
 export const getTraditionDefinitions = (): OrderedMap<CultureType, TraditionDefinition> => {
   let map = OrderedMap<CultureType, TraditionDefinition>()
@@ -72,6 +73,13 @@ export const getEconomyDefinitions = (): List<EconomyDefinition> => {
   let options = List<EconomyDefinition>()
   for (const value of economyData.economy)
     options = options.push(listFromJS<EconomyData>(value))
+  return options.sortBy((_, key) => key)
+}
+
+export const getIdeaDefinitions = (): List<IdeaDefinition> => {
+  let options = List<IdeaDefinition>()
+  for (const value of ideaData.ideas)
+    options = options.push(listFromJS<IdeaData>(value))
   return options.sortBy((_, key) => key)
 }
 
@@ -135,4 +143,9 @@ interface EconomyData {
     name: string,
     modifiers: ModifierData[]
   }[]
+}
+
+interface IdeaData {
+  name: string,
+  modifiers: ModifierData[]
 }

@@ -1,0 +1,103 @@
+{
+  "ideas": [
+    {
+      "name": "Martial Ethos",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Thalassocracy",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.2
+        }
+      ]
+    },
+    {
+      "name": "Elite Soldiery",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Discipline",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Permanent Shipyards",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Cost",
+          "type": "Modifier",
+          "value": -0.25
+        }
+      ]
+    },
+    {
+      "name": "Conscription",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Manpower",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Militarized Society",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.2
+        }
+      ]
+    },
+    {
+      "name": "Ordered Retreat",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Reinforcement Speed",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Land Morale Recovery",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Siege Training",
+      "modifiers": [
+        {
+          "target": "Siege",
+          "attribute": "Ability",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Support of the People",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Experience Decay",
+          "value": -0.15
+        }
+      ]
+    }
+  ]
+}

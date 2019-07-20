@@ -48,8 +48,8 @@ export const setGeneralMartial = createAction('@@countries/SET_GENERAL_MARTIAL',
   return (country: CountryName, skill: number) => action({ country, skill })
 })
 
-export const toggleHasGeneral = createAction('@@countries/TOGGLE_HAS_GENERAL', action => {
-  return (country: CountryName) => action({ country })
+export const setHasGeneral = createAction('@@countries/SET_HAS_GENERAL', action => {
+  return (country: CountryName, value: boolean) => action({ country, value })
 })
 
 export const setMilitaryPower = createAction('@@countries/SET_MILITARY_POWER', action => {

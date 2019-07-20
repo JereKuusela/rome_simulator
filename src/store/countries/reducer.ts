@@ -3,7 +3,7 @@ import { Set, Map } from 'immutable'
 import {
   CountryName,
   deleteCountry, createCountry, changeCountryName, enableModifiers, clearModifiers, setMilitaryPower,
-  selectGovernment, selectReligion, setOmenPower, selectCulture, setGeneralMartial, toggleHasGeneral
+  selectGovernment, selectReligion, setOmenPower, selectCulture, setGeneralMartial, setHasGeneral
 } from './actions'
 import { GovermentType, ReligionType, CultureType } from '../data'
 
@@ -66,8 +66,8 @@ export const selectionsReducer = createReducer(selectionsState)
   .handleAction(setGeneralMartial, (state, action: ReturnType<typeof setGeneralMartial>) => (
     state.update(action.payload.country, defaultCountry, value => ({ ...value, general_martial: action.payload.skill }))
   ))
-  .handleAction(toggleHasGeneral, (state, action: ReturnType<typeof toggleHasGeneral>) => (
-    state.update(action.payload.country, defaultCountry, value => ({ ...value, has_general: !value.has_general }))
+  .handleAction(setHasGeneral, (state, action: ReturnType<typeof setHasGeneral>) => (
+    state.update(action.payload.country, defaultCountry, value => ({ ...value, has_general: action.payload.value }))
   ))
   .handleAction(setMilitaryPower, (state, action: ReturnType<typeof setMilitaryPower>) => (
     state.update(action.payload.country, defaultCountry, value => ({ ...value, military_power: action.payload.power }))
