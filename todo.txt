@@ -1,13 +1,10 @@
-Release 4:
 
-- Strategos, etc.
+Release 5+:
+
 - Accordions to more places?? (unit detail?)
 
 Tests (high priority):
 - base_definition functions tested
-
-
-Release 5+:
 
 - Immutable reviver to simplify fromJS calls when transforming data?
 - Index files don't really work with circular references (some types are used everywhere)

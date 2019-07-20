@@ -1,7 +1,7 @@
 import { createReducer } from 'typesafe-actions'
 import { Set, Map } from 'immutable'
 import {
-  CountryName,
+  CountryName, setOfficeDiscipline, setOfficeMorale,
   deleteCountry, createCountry, changeCountryName, enableModifiers, clearModifiers, setMilitaryPower,
   selectGovernment, selectReligion, setOmenPower, selectCulture, setGeneralMartial, setHasGeneral
 } from './actions'
@@ -17,6 +17,8 @@ export interface Country {
   readonly trait_martial: Map<string, number>
   readonly has_general: boolean
   readonly military_power: number
+  readonly office_discipline: number
+  readonly office_morale: number
 }
 
 export const defaultCountry =
@@ -29,7 +31,9 @@ export const defaultCountry =
   general_martial: 0,
   trait_martial: Map<string, number>(),
   has_general: true,
-  military_power: 0
+  military_power: 0,
+  office_discipline: 0,
+  office_morale: 0
 }
 
 const selectionsState = Map<CountryName, Country>().set(CountryName.Country1, defaultCountry).set(CountryName.Country2, defaultCountry)
@@ -71,4 +75,10 @@ export const selectionsReducer = createReducer(selectionsState)
   ))
   .handleAction(setMilitaryPower, (state, action: ReturnType<typeof setMilitaryPower>) => (
     state.update(action.payload.country, defaultCountry, value => ({ ...value, military_power: action.payload.power }))
+  ))
+  .handleAction(setOfficeDiscipline, (state, action: ReturnType<typeof setOfficeDiscipline>) => (
+    state.update(action.payload.country, defaultCountry, value => ({ ...value, office_discipline: action.payload.value }))
+  ))
+  .handleAction(setOfficeMorale, (state, action: ReturnType<typeof setOfficeMorale>) => (
+    state.update(action.payload.country, defaultCountry, value => ({ ...value, office_morale: action.payload.value }))
   ))

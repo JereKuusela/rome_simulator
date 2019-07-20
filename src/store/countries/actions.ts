@@ -55,3 +55,11 @@ export const setHasGeneral = createAction('@@countries/SET_HAS_GENERAL', action 
 export const setMilitaryPower = createAction('@@countries/SET_MILITARY_POWER', action => {
   return (country: CountryName, power: number) => action({ country, power })
 })
+
+export const setOfficeDiscipline = createAction('@@countries/SET_OFFICE_DISCIPLINE', action => {
+  return (country: CountryName, value: number) => action({ country, value })
+})
+
+export const setOfficeMorale = createAction('@@countries/SET_OFFICE_MORALE', action => {
+  return (country: CountryName, value: number) => action({ country, value })
+})

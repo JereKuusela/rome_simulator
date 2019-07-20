@@ -11,8 +11,7 @@ import {
 } from '../store/data'
 import {
   enableModifiers, clearModifiers, CountryName, selectGovernment, selectReligion, selectCulture, setOmenPower, setGeneralMartial, defaultCountry,
-  setHasGeneral,
-  setMilitaryPower
+  setHasGeneral,  setMilitaryPower, setOfficeDiscipline, setOfficeMorale
 } from '../store/countries'
 import { DefinitionType, ValuesType } from '../base_definition'
 import { UnitCalc } from '../store/units'
@@ -41,6 +40,7 @@ const IDEA_KEY = 'Idea_'
 const ABILITY_KEY = 'Ability_'
 const NO_GENERAL_KEY = 'No general'
 const MILITARY_POWER_KEY = 'Military power'
+const OFFICE_KEY = 'Office_'
 
 const KEYS = [TRAIT_KEY, TRADE_KEY, TRADITION_KEY, HERITAGE_KEY, OMEN_KEY, INVENTION_KEY, ECONOMY_KEY, LAW_KEY, IDEA_KEY, MILITARY_POWER_KEY, NO_GENERAL_KEY]
 
@@ -154,6 +154,17 @@ class Countries extends Component<IProps> {
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title='Government, Economy & Ideas' identifier='countries_government'>
+                <Table fixed singleLine basic='very' style={{paddingLeft: '0.785714em'}}>
+                  <Table.Row>
+                    <Table.Cell>
+                    Republic Land Discipline (0 - 7.5): <Input size='mini' type='number' value={country.office_discipline} onChange={(_, { value }) => this.setOfficeDiscipline(value)} />
+                    </Table.Cell>
+                    <Table.Cell>
+                    Monarch Land Morale (0 - 15): <Input size='mini'type='number' value={country.office_morale} onChange={(_, { value }) => this.setOfficeMorale(value)} />
+                    </Table.Cell>
+                    <Table.Cell />
+                  </Table.Row>
+                </Table>
                 {
                   this.renderLaws(this.props.laws, selections)
                 }
@@ -583,6 +594,37 @@ class Countries extends Component<IProps> {
   }
 
   /**
+   * Sets republic office value while refreshing the discipline buff.
+   */
+  setOfficeDiscipline = (value: string) => {
+    const number = Number(value)
+    if (isNaN(number))
+      return
+    this.props.setOfficeDiscipline(this.props.selected_country, number)
+    this.props.enableModifiers(this.props.selected_country, OFFICE_KEY + 'Discipline', toList({
+      target: DefinitionType.Land,
+      attribute: UnitCalc.Discipline,
+      value: number / 100.0
+    }))
+  }
+  
+  /**
+   * Sets republic office value while refreshing the morale buff.
+   */
+  setOfficeMorale = (value: string) => {
+    const number = Number(value)
+    if (isNaN(number))
+      return
+    this.props.setOfficeMorale(this.props.selected_country, number)
+    this.props.enableModifiers(this.props.selected_country, OFFICE_KEY + 'Morale', toList({
+      target: DefinitionType.Land,
+      attribute: UnitCalc.Morale,
+      type: ValuesType.Modifier,
+      value: number / 100.0
+    }))
+  }
+
+  /**
    * Selects religion while also re-enabling current omen.
    */
   selectReligion = (value: ReligionType, power: number, selections: Set<string>) => {
@@ -735,7 +777,9 @@ const mapDispatchToProps = (dispatch: any) => ({
   setOmenPower: (country: CountryName, power: number) => dispatch(setOmenPower(country, power)),
   setGeneralMartial: (country: CountryName, skill: number) => dispatch(setGeneralMartial(country, skill)),
   setHasGeneral: (country: CountryName, value: boolean) => dispatch(setHasGeneral(country, value)),
-  setMilitaryPower: (country: CountryName, power: number) => dispatch(setMilitaryPower(country, power))
+  setMilitaryPower: (country: CountryName, power: number) => dispatch(setMilitaryPower(country, power)),
+  setOfficeMorale: (country: CountryName, value: number) => dispatch(setOfficeMorale(country, value)),
+  setOfficeDiscipline: (country: CountryName, value: number) => dispatch(setOfficeDiscipline(country, value))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }
