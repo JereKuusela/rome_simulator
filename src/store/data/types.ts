@@ -54,6 +54,7 @@ export interface Path {
 export interface TraditionDefinition {
   readonly type: CultureType
   readonly paths: List<Path>
+  readonly modifiers: List<Modifier>
 }
 export interface TradeDefinition {
   readonly name: string

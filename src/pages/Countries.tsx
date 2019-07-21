@@ -11,7 +11,7 @@ import {
 } from '../store/data'
 import {
   enableModifiers, clearModifiers, CountryName, selectGovernment, selectReligion, selectCulture, setOmenPower, setGeneralMartial, defaultCountry,
-  setHasGeneral,  setMilitaryPower, setOfficeDiscipline, setOfficeMorale
+  setHasGeneral, setMilitaryPower, setOfficeDiscipline, setOfficeMorale
 } from '../store/countries'
 import { DefinitionType, ValuesType } from '../base_definition'
 import { UnitCalc } from '../store/units'
@@ -31,6 +31,7 @@ const IDEA_COLUMNS = 3
 const TRAIT_KEY = 'Trait_'
 const TRADE_KEY = 'Trade_'
 const TRADITION_KEY = 'Tradition_'
+const TRADITION_BASE_KEY = TRADITION_KEY + 'Base'
 const HERITAGE_KEY = 'Heritage_'
 const OMEN_KEY = 'Omen_'
 const INVENTION_KEY = 'Invention_'
@@ -42,7 +43,7 @@ const NO_GENERAL_KEY = 'No general'
 const MILITARY_POWER_KEY = 'Military power'
 const OFFICE_KEY = 'Office_'
 
-const KEYS = [TRAIT_KEY, TRADE_KEY, TRADITION_KEY, HERITAGE_KEY, OMEN_KEY, INVENTION_KEY, ECONOMY_KEY, LAW_KEY, IDEA_KEY, MILITARY_POWER_KEY, NO_GENERAL_KEY]
+const KEYS = [TRAIT_KEY, TRADE_KEY, TRADITION_KEY, HERITAGE_KEY, OMEN_KEY, INVENTION_KEY, ECONOMY_KEY, LAW_KEY, IDEA_KEY, MILITARY_POWER_KEY, NO_GENERAL_KEY, ABILITY_KEY, OFFICE_KEY]
 
 const CELL_PADDING = '.78571429em .78571429em'
 
@@ -154,13 +155,13 @@ class Countries extends Component<IProps> {
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title='Government, Economy & Ideas' identifier='countries_government'>
-                <Table fixed singleLine basic='very' style={{paddingLeft: '0.785714em'}}>
+                <Table fixed singleLine basic='very' style={{ paddingLeft: '0.785714em' }}>
                   <Table.Row>
                     <Table.Cell>
-                    Republic Land Discipline (0 - 7.5): <Input size='mini' type='number' value={country.office_discipline} onChange={(_, { value }) => this.setOfficeDiscipline(value)} />
+                      Republic Land Discipline (0 - 7.5): <Input size='mini' type='number' value={country.office_discipline} onChange={(_, { value }) => this.setOfficeDiscipline(value)} />
                     </Table.Cell>
                     <Table.Cell>
-                    Monarch Land Morale (0 - 15): <Input size='mini'type='number' value={country.office_morale} onChange={(_, { value }) => this.setOfficeMorale(value)} />
+                      Monarch Land Morale (0 - 15): <Input size='mini' type='number' value={country.office_morale} onChange={(_, { value }) => this.setOfficeMorale(value)} />
                     </Table.Cell>
                     <Table.Cell />
                   </Table.Row>
@@ -191,14 +192,14 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderTraditions = (tradition: TraditionDefinition, selections: Set<string>) => {
-    const rows = tradition.paths.reduce((max, path) => Math.max(max, path.traditions.size), 0)
+  renderTraditions = (traditions: TraditionDefinition, selections: Set<string>) => {
+    const rows = traditions.paths.reduce((max, path) => Math.max(max, path.traditions.size), 0)
     return (
       <Table celled unstackable fixed>
         <Table.Header>
           <Table.Row>
             {
-              tradition.paths.map(path => (
+              traditions.paths.map(path => (
                 <Table.HeaderCell>
                   {path.name}
                 </Table.HeaderCell>
@@ -207,18 +208,24 @@ class Countries extends Component<IProps> {
           </Table.Row>
         </Table.Header>
         <Table.Body>
+          <Table.Row key={'base'} textAlign='center'>
+            {
+              this.renderCell(TRADITION_BASE_KEY, null, selections, traditions.modifiers,
+                undefined, () => this.clearModifiers(TRADITION_KEY, selections), undefined, undefined, 3)
+            }
+          </Table.Row>
           {
             mapRange(rows, number => number).map(row => (
               <Table.Row key={row}>
                 {
-                  tradition.paths.map((path, column) => {
+                  traditions.paths.map((path, column) => {
                     const tradition = path.traditions.get(row)
                     if (!tradition)
                       return null
                     const key = TRADITION_KEY + column + '_' + row
                     const modifiers = tradition.modifiers
                     return this.renderCell(key, null, selections, modifiers,
-                      () => this.enableTradition(path.traditions, column, row, selections), () => this.enableTradition(path.traditions, column, row - 1, selections))
+                      () => this.enableTradition(path.traditions, traditions.modifiers, column, row, selections), () => this.enableTradition(path.traditions, traditions.modifiers, column, row - 1, selections))
                   })
                 }
               </Table.Row>
@@ -437,12 +444,13 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderCell = (key: string, name: string | null, selections: Set<string>, modifiers: ImmutableList<Modifier>, enable?: (() => void), clear?: (() => void), padding?: string, disabled?: boolean) => (
+  renderCell = (key: string, name: string | null, selections: Set<string>, modifiers: ImmutableList<Modifier>, enable?: (() => void), clear?: (() => void), padding?: string, disabled?: boolean, width?: number) => (
     <Table.Cell
       disabled={disabled}
       key={key}
       positive={selections.has(key)}
       selectable
+      colSpan={width || 1}
       onClick={
         selections.has(key)
           ? (clear ? clear : () => this.props.clearModifiers(this.props.selected_country, key))
@@ -479,7 +487,7 @@ class Countries extends Component<IProps> {
    */
   clearTraditions = (column: number, row: number, selections: Set<string>) => {
     const key = TRADITION_KEY + column
-    selections.filter(value => value.startsWith(key) && this.getNumberFromKey(value, 2) > row)
+    selections.filter(value => value.startsWith(key) && !value.startsWith(TRADITION_BASE_KEY) && this.getNumberFromKey(value, 2) > row)
       .forEach(value => this.props.clearModifiers(this.props.selected_country, value))
   }
 
@@ -494,8 +502,10 @@ class Countries extends Component<IProps> {
   /**
    * Enables a tradition and enables traditions before it.
    */
-  enableTradition = (traditions: ImmutableList<Tradition>, column: number, row: number, selections: Set<string>) => {
+  enableTradition = (traditions: ImmutableList<Tradition>, base: ImmutableList<Modifier>, column: number, row: number, selections: Set<string>) => {
     this.clearTraditions(column, row, selections)
+    if (!selections.has(TRADITION_BASE_KEY))
+      this.props.enableModifiers(this.props.selected_country, TRADITION_BASE_KEY, base)
     this.enableTraditions(traditions, column, row, selections)
   }
 
@@ -552,7 +562,7 @@ class Countries extends Component<IProps> {
   refreshTraditions = (selections: Set<string>, traditions?: TraditionDefinition) => {
     if (!traditions)
       return
-    selections.filter(value => value.startsWith(TRADITION_KEY)).forEach(value => {
+    selections.filter(value => value.startsWith(TRADITION_KEY) && !value.startsWith(TRADITION_BASE_KEY)).forEach(value => {
       this.props.clearModifiers(this.props.selected_country, value)
       const column = this.getNumberFromKey(value, 1)
       const path = traditions.paths.get(column)
@@ -564,6 +574,8 @@ class Countries extends Component<IProps> {
         return
       this.props.enableModifiers(this.props.selected_country, value, tradition.modifiers)
     })
+    if (selections.has(TRADITION_BASE_KEY))
+      this.props.enableModifiers(this.props.selected_country, TRADITION_BASE_KEY, traditions.modifiers)
   }
 
   /**
@@ -607,7 +619,7 @@ class Countries extends Component<IProps> {
       value: number / 100.0
     }))
   }
-  
+
   /**
    * Sets republic office value while refreshing the morale buff.
    */
