@@ -690,6 +690,8 @@ class Countries extends Component<IProps> {
     this.props.setOmenPower(this.props.selected_country, 100)
     this.props.setGeneralMartial(this.props.selected_country, 0)
     this.props.setMilitaryPower(this.props.selected_country, 0)
+    this.props.setOfficeDiscipline(this.props.selected_country, 0)
+    this.props.setOfficeMorale(this.props.selected_country, 0)
     this.props.setHasGeneral(this.props.selected_country, true)
   }
 
