@@ -1,9 +1,9 @@
 import { fromJS, Map, List, OrderedMap } from 'immutable'
-import { tacticFromJS, TacticType, tacticsReducer } from './tactics'
-import { terrainFromJS, TerrainType, terrainsReducer } from './terrains'
-import { unitDefinitionFromJS, unitFromJS, UnitType, unitsReducer, globalStatsReducer, Unit } from './units'
+import { tacticFromJS, TacticType, tacticsReducer, getDefaultTactics } from './tactics'
+import { terrainFromJS, TerrainType, terrainsReducer, getDefaultTerrains } from './terrains'
+import { unitDefinitionFromJS, unitFromJS, UnitType, unitsReducer, globalStatsReducer, Unit, getDefaultUnits, getDefaultGlobal } from './units'
 import { RowType, battleReducer, PastState, Participant, getDefaultArmy, Armies, modeState } from './battle'
-import { DefinitionType } from '../base_definition'
+import { DefinitionType, clearAllValues, mergeValues } from '../base_definition'
 import { transferReducer } from './transfer'
 import { selectionsReducer, CountryName, Country } from './countries'
 import { CombatParameter, settingsReducer } from './settings'
@@ -18,7 +18,10 @@ export const transformTactics = (state_raw: any): ReturnType<typeof tacticsReduc
   if (!state_raw)
     return initial
   const raw: OrderedMap<TacticType, any> = orderedMapFromJS(state_raw)
-  return raw.map(value => tacticFromJS(value)!).filter(value => value)
+  const tactics = raw.map(value => tacticFromJS(value)!).filter(value => value)
+  const defaultTactics = getDefaultTactics()
+  // Automatically heal up default values.
+  return tactics.map((tactic, type) => clearAllValues(tactic, type)).map((terrain, type) => mergeValues(terrain, defaultTactics.get(type)!))
 }
 
 export const transformTerrains = (state_raw: any): ReturnType<typeof terrainsReducer> => {
@@ -26,24 +29,32 @@ export const transformTerrains = (state_raw: any): ReturnType<typeof terrainsRed
   if (!state_raw)
     return initial
   const raw: OrderedMap<TerrainType, any> = orderedMapFromJS(state_raw)
-  return raw.map(value => terrainFromJS(value)!).filter(value => value)
+  const terrains = raw.map(value => terrainFromJS(value)!).filter(value => value)
+  const defaultTerrains = getDefaultTerrains()
+  // Automatically heal up default values.
+  return terrains.map((terrain, type) => clearAllValues(terrain, type)).map((terrain, type) => mergeValues(terrain, defaultTerrains.get(type)!))
 }
 
 export const transformUnits = (state_raw: any): ReturnType<typeof unitsReducer> => {
   const initial = unitsReducer(undefined, dummyAction)
   if (!state_raw)
     return initial
-  let raw: Map<CountryName, OrderedMap<UnitType, any>> = orderedMapFromJS(state_raw).toMap()
-  return raw.filter(value => value).map(value => value.map(value => unitDefinitionFromJS(value)!).filter(value => value))
+  const raw: Map<CountryName, OrderedMap<UnitType, any>> = orderedMapFromJS(state_raw).toMap()
+  const units = raw.filter(value => value).map(value => value.map(value => unitDefinitionFromJS(value)!).filter(value => value))
+  const defaultUnits = getDefaultUnits()
+  // Automatically heal up default values.
+  return units.map(units => units.map((unit, type) => clearAllValues(unit, type)).map((unit, type) => mergeValues(unit, defaultUnits.get(type)!)))
 }
 
 export const transformGlobalStats = (state_raw: any): ReturnType<typeof globalStatsReducer> => {
   const initial = globalStatsReducer(undefined, dummyAction)
   if (!state_raw)
     return initial
-  let global_stats_raw: Map<CountryName, Map<DefinitionType, any>> = fromJS(state_raw)
-  let global_stats = global_stats_raw.filter(value => value).map(value => value.map(value => unitDefinitionFromJS(value)!).filter(value => value))
-  return global_stats
+  const global_stats_raw: Map<CountryName, Map<DefinitionType, any>> = fromJS(state_raw)
+  const global_stats = global_stats_raw.filter(value => value).map(value => value.map(value => unitDefinitionFromJS(value)!).filter(value => value))
+  const defaultGlobal = getDefaultGlobal()
+  // Automatically heal up default values.
+  return global_stats.map(values => values.map((value, type) => clearAllValues(value, type)).map((value, type) => mergeValues(value, defaultGlobal.get(type)!)))
 }
 
 const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {

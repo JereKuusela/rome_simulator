@@ -117,6 +117,19 @@ const subAddValues = <Attribute>(container: Map<Attribute, OrderedMap<string, nu
 }
 
 /**
+ * Clears base, modifier and loss values with a given key.
+ */
+export const clearAllValues = <Definition extends AnyBaseDefinition>
+  (definition: Definition, key: string): Definition => {
+  return {
+    ...definition,
+    base_values: subClearValues(definition.base_values, key),
+    modifier_values: subClearValues(definition.modifier_values, key),
+    loss_values: subClearValues(definition.loss_values, key)
+  }
+}
+
+/**
  * Clears base, modifier or loss values with a given key.
  */
 export const clearValues = <Definition extends AnyDefinition>
