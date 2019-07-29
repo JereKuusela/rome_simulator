@@ -2,7 +2,7 @@ import { fromJS, Map, List, OrderedMap } from 'immutable'
 import { tacticFromJS, TacticType, tacticsReducer, getDefaultTactics } from './tactics'
 import { terrainFromJS, TerrainType, terrainsReducer, getDefaultTerrains } from './terrains'
 import { unitDefinitionFromJS, unitFromJS, UnitType, unitsReducer, globalStatsReducer, Unit, getDefaultUnits, getDefaultGlobal } from './units'
-import { RowType, battleReducer, PastState, Participant, getDefaultArmy, Armies, modeState } from './battle'
+import { RowType, battleReducer, RoundState, Participant, getDefaultArmy, Armies, modeState } from './battle'
 import { DefinitionType, clearAllValues, mergeValues } from '../base_definition'
 import { transferReducer } from './transfer'
 import { selectionsReducer, CountryName, Country } from './countries'
@@ -68,8 +68,8 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {
 
   const serializeUnits = (raw: List<any>): List<Unit | undefined> => raw.map(value => unitFromJS(value))
 
-  const serializePast = (past_raw: any, round: number): List<PastState> => {
-    let past = List<PastState>()
+  const serializePast = (past_raw: any, round: number): List<RoundState> => {
+    let past = List<RoundState>()
     if (past_raw) {
       let past4: List<Map<string, any>> = fromJS(past_raw)
       let past3 = past4.map(value => ({
@@ -78,7 +78,7 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {
         defeated: value.get('defeated') as List<any>,
         roll: value.has('roll') ? value.get('roll') as number : 0
       }))
-      past = past3.map(value => ({ frontline: serializeUnits(value.frontline), reserve: serializeUnits(value.reserve).filter(value => value), defeated: serializeUnits(value.defeated).filter(value => value), roll: value.roll } as PastState))
+      past = past3.map(value => ({ frontline: serializeUnits(value.frontline), reserve: serializeUnits(value.reserve).filter(value => value), defeated: serializeUnits(value.defeated).filter(value => value), roll: value.roll } as RoundState))
     }
     // Prevent history and index (round number) getting out of sync.
     return past.setSize(round + 1)
@@ -136,7 +136,7 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {
   const fight_over = state_raw.fight_over === undefined ? initial.fight_over : state_raw.fight_over
   const seed = state_raw.seed || initial.seed
   const custom_seed = state_raw.custom_seed || initial.custom_seed
-  return { round, fight_over, armies, terrains, attacker, defender, attacker_past, defender_past, seed, custom_seed }
+  return { round, fight_over, armies, terrains, attacker, defender, attacker_rounds: attacker_past, defender_rounds: defender_past, seed, custom_seed }
 }
 
 export const transformBattle = (state_raw: any): ReturnType<typeof battleReducer> => {

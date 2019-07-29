@@ -6,7 +6,7 @@ import { TacticType } from '../tactics/actions'
 import { DefinitionType } from '../../base_definition'
 import { CountryName } from '../countries'
 
-export interface PastState extends Army {
+export interface RoundState extends Army {
   roll: number
 }
 

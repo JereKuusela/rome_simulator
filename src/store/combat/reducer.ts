@@ -5,7 +5,7 @@ import { battle as fight } from './combat'
 import { mergeValues } from '../../base_definition'
 import { CombatParameter } from '../settings'
 import { AppState } from '../'
-import { mergeSettings, getBattle } from '../utils'
+import { mergeSettings, getBattle, getAttacker, getDefender } from '../utils'
 import { sum } from '../../utils'
 import { defaultCountry } from '../countries/reducer'
 
@@ -15,8 +15,8 @@ export const combatReducer = createReducer<AppState>({} as any)
     let next = getBattle(state)
     const attacker_country = state.countries.get(next.attacker, defaultCountry)
     const defender_country = state.countries.get(next.defender, defaultCountry)
-    let attacker = next.armies.get(next.attacker)
-    let defender = next.armies.get(next.defender)
+    let attacker = getAttacker(state)
+    let defender = getDefender(state)
     const combat = mergeSettings(state)
     const minimum_roll = combat.get(CombatParameter.DiceMinimum) || 1
     const maximum_roll = combat.get(CombatParameter.DiceMaximum) || 6
@@ -27,7 +27,6 @@ export const combatReducer = createReducer<AppState>({} as any)
     for (let step = 0; step < action.payload.steps && !next.fight_over; ++step) {
       if (!attacker || !defender)
         continue
-      const old_rolls = [attacker.roll, defender.roll]
       if (next.round % roll_frequency === 0) {
         attacker = {
           ...attacker,
@@ -61,14 +60,13 @@ export const combatReducer = createReducer<AppState>({} as any)
       }
       next = {
         ...next,
-        armies: next.armies.set(next.attacker, new_attacker).set(next.defender, new_defender),
-        attacker_past: next.attacker_past.push({ frontline: attacker.frontline, reserve: attacker.reserve, defeated: attacker.defeated, roll: old_rolls[0] }),
-        defender_past: next.defender_past.push({ frontline: defender.frontline, reserve: defender.reserve, defeated: defender.defeated, roll: old_rolls[1] }),
+        attacker_rounds: next.attacker_rounds.push({ frontline: new_attacker.frontline, reserve: new_attacker.reserve, defeated: new_attacker.defeated, roll: new_attacker.roll }),
+        defender_rounds: next.defender_rounds.push({ frontline: new_defender.frontline, reserve: new_defender.reserve, defeated: new_defender.defeated, roll: new_defender.roll }),
         round: next.round + 1,
         fight_over: !checkFight(new_attacker, new_defender)
       }
-      attacker = next.armies.get(next.attacker)
-      defender = next.armies.get(next.defender)
+      attacker = new_attacker
+      defender = new_defender
     }
     return { ...state, battle: state.battle.set(state.settings.mode, next) }
   })

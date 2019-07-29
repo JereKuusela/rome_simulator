@@ -4,7 +4,7 @@ import { Modal } from 'semantic-ui-react'
 import { UnitType, ValueType, Unit, UnitDefinition } from '../store/units'
 import { ArmyType, selectUnit } from '../store/battle'
 import { AppState } from '../store/'
-import { getBattle, filterTerrainTypes, mergeUnitTypes } from '../store/utils'
+import { getAttacker, getDefender, filterTerrainTypes, mergeUnitTypes } from '../store/utils'
 import { addValues, mergeValues, ValuesType, DefinitionType } from '../base_definition'
 import ItemRemover from '../components/ItemRemover'
 import UnitDetail from '../components/UnitDetail'
@@ -94,7 +94,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
   }
 
   getUnit = (info: ModalInfo): Unit => {
-    const army = this.props.armies.get(info.country)!
+    const army = info.country === this.props.attacker.name ? this.props.attacker : this.props.defender
     if (info.type === ArmyType.Frontline)
       return army.frontline.get(info.index)!
     else if (info.type === ArmyType.Reserve)
@@ -105,7 +105,8 @@ class ModalArmyUnitDetail extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  armies: getBattle(state).armies,
+  attacker: getAttacker(state),
+  defender: getDefender(state),
   units: state.units,
   unit_types: mergeUnitTypes(state),
   global_stats: state.global_stats,

@@ -1,9 +1,9 @@
 import { createReducer } from 'typesafe-actions'
 import { List, Map } from 'immutable'
 import {
-  getDefaultArmy, getInitialTerrains, Participant, PastState, ParticipantType,
+  getDefaultArmy, getInitialTerrains, Participant, RoundState, ParticipantType,
   clearUnits, selectUnit, selectTerrain, selectTactic, undo, toggleRandomRoll, setRoll, setRowType, removeReserveUnits, addReserveUnits, setFlankSize,
-  selectArmy, ArmyType
+  selectArmy, ArmyType, Army
 } from './actions'
 import { Unit, UnitType  } from '../units'
 import { TerrainType } from '../terrains'
@@ -15,8 +15,8 @@ export interface Armies {
   readonly attacker: CountryName
   readonly defender: CountryName
   readonly terrains: List<TerrainType>,
-  readonly attacker_past: List<PastState>,
-  readonly defender_past: List<PastState>,
+  readonly attacker_rounds: List<RoundState>,
+  readonly defender_rounds: List<RoundState>,
   readonly round: number,
   readonly fight_over: boolean,
   readonly seed: number,
@@ -28,8 +28,8 @@ export const modeState = (mode: DefinitionType): Armies => ({
   attacker: CountryName.Country1,
   defender: CountryName.Country2,
   terrains: getInitialTerrains(mode),
-  attacker_past: List<PastState>(),
-  defender_past: List<PastState>(),
+  attacker_rounds: List<RoundState>(),
+  defender_rounds: List<RoundState>(),
   round: -1,
   fight_over: true,
   seed: 0,
@@ -41,7 +41,7 @@ export const initialState = Map<DefinitionType, Armies>()
   .set(DefinitionType.Naval, modeState(DefinitionType.Naval))
 
 
-export const checkFight = (attacker?: Participant, defender?: Participant) => attacker && defender && (checkArmy(attacker.frontline) || checkArmy(attacker.reserve)) && (checkArmy(defender.frontline) || checkArmy(defender.reserve))
+export const checkFight = (attacker?: Army, defender?: Army) => attacker && defender && (checkArmy(attacker.frontline) || checkArmy(attacker.reserve)) && (checkArmy(defender.frontline) || checkArmy(defender.reserve))
 
 const checkArmy = (army: List<Unit | undefined>) => army.find(value => value !== undefined) !== undefined
 
@@ -115,30 +115,17 @@ export const battleReducer = createReducer(initialState)
     if (!next)
       return state
     for (let step = 0; step < action.payload.steps && next.round > -1; ++step) {
-      const handleArmy = (current: Participant, past?: PastState): Participant => ({
-        ...current,
-        frontline: past ? past.frontline : current.frontline,
-        reserve: past ? past.reserve : current.reserve,
-        defeated: past ? past.defeated : current.defeated,
-        roll: past ? past.roll : current.roll
-      })
-      let armies: Map<CountryName, Participant> = next.armies
-      const new_attacker = handleArmy(next.armies.get(next.attacker, getDefaultArmy(action.payload.mode)), next.attacker_past.get(-1))
-      armies = armies.set(next.attacker, new_attacker)
-      const attacker_past: List<PastState> = next.attacker_past.pop()
-      const new_defender = handleArmy(next.armies.get(next.defender, getDefaultArmy(action.payload.mode)), next.defender_past.get(-1))
-      armies = armies.set(next.defender, new_defender)
-      const defender_past: List<PastState> = next.defender_past.pop()
       let seed: number = next.seed
       if (next.round < 2)
         seed = next.custom_seed ? next.custom_seed : 0
+      const attacker_rounds: List<RoundState> = next.attacker_rounds.pop()
+      const defender_rounds: List<RoundState> = next.defender_rounds.pop()
       next = {
         ...next,
-        armies,
-        attacker_past,
-        defender_past,
+        attacker_rounds,
+        defender_rounds,
         round: next.round - 1,
-        fight_over: !(checkFight(new_attacker, new_defender)),
+        fight_over: !(checkFight(attacker_rounds.get(-1, next.armies.get(next.attacker)), defender_rounds.get(-1, next.armies.get(next.defender)))),
         seed
       }
     }
@@ -157,10 +144,10 @@ export const battleReducer = createReducer(initialState)
     if (!next)
       return state
     let armies = next.armies
-    if (next.attacker_past.size > 0)
-      armies = armies.update(next.attacker, getDefaultArmy(action.payload.mode), value => ({ ...value, ...next!.attacker_past.get(0) }))
-    if (next.defender_past.size > 0)
-      armies = armies.update(next.defender, getDefaultArmy(action.payload.mode), value => ({ ...value, ...next!.defender_past.get(0) }))
+    if (next.attacker_rounds.size > 0)
+      armies = armies.update(next.attacker, getDefaultArmy(action.payload.mode), value => ({ ...value, ...next!.attacker_rounds.get(0) }))
+    if (next.defender_rounds.size > 0)
+      armies = armies.update(next.defender, getDefaultArmy(action.payload.mode), value => ({ ...value, ...next!.defender_rounds.get(0) }))
     const attacker = action.payload.type === ParticipantType.Attacker ? action.payload.country : (action.payload.country === next.attacker ? next.defender : next.attacker)
     const defender = action.payload.type === ParticipantType.Defender ? action.payload.country : (action.payload.country === next.defender ? next.attacker : next.defender)
     next = {
@@ -168,8 +155,8 @@ export const battleReducer = createReducer(initialState)
       armies,
       attacker: attacker,
       defender: defender,
-      attacker_past: next.attacker_past.clear(),
-      defender_past: next.attacker_past.clear(),
+      attacker_rounds: next.attacker_rounds.clear(),
+      defender_rounds: next.attacker_rounds.clear(),
       round: -1
     }
     return fightOver(state.set(action.payload.mode, next), action.payload)
@@ -186,8 +173,8 @@ export const battleReducer = createReducer(initialState)
     next = {
       ...next,
       armies,
-      attacker_past: next.attacker_past.clear(),
-      defender_past: next.defender_past.clear(),
+      attacker_rounds: next.attacker_rounds.clear(),
+      defender_rounds: next.defender_rounds.clear(),
       round: -1,
       fight_over: true
     }

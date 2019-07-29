@@ -108,20 +108,20 @@ class Transfer extends Component<IProps, IState> {
    * Restores the initial state of armies and removes history.
    */
   getInitialOnly = (mode: Armies): Armies => {
-    const past_a = mode.attacker_past && mode.attacker_past.get(0)
+    const past_a = mode.attacker_rounds && mode.attacker_rounds.get(0)
     if (mode.round > -1 && past_a) {
       mode = {
         ...mode,
         armies: mode.armies.update(mode.attacker, value => ({ ...value, ...past_a })),
-        attacker_past: mode.attacker_past.clear()
+        attacker_rounds: mode.attacker_rounds.clear()
       }
     }
-    const past_d = mode.defender_past && mode.defender_past.get(0)
+    const past_d = mode.defender_rounds && mode.defender_rounds.get(0)
     if (mode.round > -1 && past_d) {
       mode = {
         ...mode,
         armies: mode.armies.update(mode.defender, value => ({ ...value, ...past_d })),
-        attacker_past: mode.defender_past.clear()
+        attacker_rounds: mode.defender_rounds.clear()
       }
     }
     return {
@@ -137,8 +137,8 @@ class Transfer extends Component<IProps, IState> {
   removeHistory = (mode: Armies): Armies => {
     return {
       ...mode,
-      attacker_past: mode.attacker_past.clear(),
-      defender_past: mode.defender_past.clear(),
+      attacker_rounds: mode.attacker_rounds.clear(),
+      defender_rounds: mode.defender_rounds.clear(),
       round: -1
     }
   }
