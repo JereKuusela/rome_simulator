@@ -2,7 +2,7 @@ import { fromJS, Map, List, OrderedMap } from 'immutable'
 import { tacticFromJS, TacticType, tacticsReducer, getDefaultTactics } from './tactics'
 import { terrainFromJS, TerrainType, terrainsReducer, getDefaultTerrains } from './terrains'
 import { unitDefinitionFromJS, unitFromJS, UnitType, unitsReducer, globalStatsReducer, Unit, getDefaultUnits, getDefaultGlobal } from './units'
-import { RowType, battleReducer, RoundState, Participant, getDefaultArmy, Armies, modeState } from './battle'
+import { RowType, battleReducer, Participant, getDefaultArmy, Armies, modeState } from './battle'
 import { DefinitionType, clearAllValues, mergeValues } from '../base_definition'
 import { transferReducer } from './transfer'
 import { selectionsReducer, CountryName, Country } from './countries'
@@ -68,22 +68,6 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {
 
   const serializeUnits = (raw: List<any>): List<Unit | undefined> => raw.map(value => unitFromJS(value))
 
-  const serializePast = (past_raw: any, round: number): List<RoundState> => {
-    let past = List<RoundState>()
-    if (past_raw) {
-      let past4: List<Map<string, any>> = fromJS(past_raw)
-      let past3 = past4.map(value => ({
-        frontline: value.get('frontline') as List<any>,
-        reserve: value.get('reserve') as List<any>,
-        defeated: value.get('defeated') as List<any>,
-        roll: value.has('roll') ? value.get('roll') as number : 0
-      }))
-      past = past3.map(value => ({ frontline: serializeUnits(value.frontline), reserve: serializeUnits(value.reserve).filter(value => value), defeated: serializeUnits(value.defeated).filter(value => value), roll: value.roll } as RoundState))
-    }
-    // Prevent history and index (round number) getting out of sync.
-    return past.setSize(round + 1)
-  }
-
   const serializeParticipant = (participant: any): Participant => {
     const initial = getDefaultArmy(mode)
     let frontline = initial.frontline
@@ -131,12 +115,16 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {
   if (!defender || typeof defender !== 'string')
     defender = initial.defender
   const round = state_raw.round === undefined ? initial.round : state_raw.round
-  const attacker_past = serializePast(state_raw.attacker_past, round)
-  const defender_past = serializePast(state_raw.defender_past, round)
-  const fight_over = state_raw.fight_over === undefined ? initial.fight_over : state_raw.fight_over
+  const attacker_rounds = initial.attacker_rounds
+  const defender_rounds = initial.defender_rounds
+  const fight_over = initial.fight_over
   const seed = state_raw.seed || initial.seed
   const custom_seed = state_raw.custom_seed || initial.custom_seed
-  return { round, fight_over, armies, terrains, attacker, defender, attacker_rounds: attacker_past, defender_rounds: defender_past, seed, custom_seed }
+  return { round, fight_over, armies, terrains, attacker, defender, attacker_rounds, defender_rounds, seed, custom_seed }
+}
+
+export const stripRounds = (battle: ReturnType<typeof battleReducer>): any => {
+  return battle.map(value => ({ ...value, attacker_rounds: undefined, defender_rounds: undefined}))
 }
 
 export const transformBattle = (state_raw: any): ReturnType<typeof battleReducer> => {

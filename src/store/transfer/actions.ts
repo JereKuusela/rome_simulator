@@ -7,8 +7,6 @@ export enum ExportKey {
   Countries = 'Countries',
   Land = 'Land Armies',
   Naval = 'Naval Armies',
-  History = 'Previous Rounds',
-  InitialOnly = 'Initial setup only',
   Settings = 'Settings'
 }
 

@@ -3,7 +3,7 @@ import { Container, Grid, TextArea, Checkbox, List, Header, Button } from 'seman
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { importState, ExportKey, setResetMissing, setExportKey } from '../store/transfer'
-import { transformGlobalStats, transformBattle, transformTactics, transformTerrains, transformUnits, transformSettings, transformCountries } from '../store/transforms'
+import { transformGlobalStats, transformBattle, transformTactics, transformTerrains, transformUnits, transformSettings, transformCountries, stripRounds } from '../store/transforms'
 import { Armies, checkFight } from '../store/battle'
 import { DefinitionType } from '../base_definition'
 
@@ -85,23 +85,10 @@ class Transfer extends Component<IProps, IState> {
           key={key}
           toggle
           label={key}
-          disabled={this.checkDisabled(key)}
           checked={this.props.export_keys.get(key)}
           onChange={() => this.props.setExportKey(key, !this.props.export_keys.get(key))}
         />
       </List.Item>)
-  }
-
-  checkDisabled = (key: ExportKey): boolean => {
-    if (key === ExportKey.History && !this.props.export_keys.get(ExportKey.Land) && !this.props.export_keys.get(ExportKey.Naval))
-      return true
-    if (key === ExportKey.History && this.props.export_keys.get(ExportKey.InitialOnly))
-      return true
-    if (key === ExportKey.InitialOnly && !this.props.export_keys.get(ExportKey.Land) && !this.props.export_keys.get(ExportKey.Naval))
-      return true
-    if (key === ExportKey.InitialOnly && this.props.export_keys.get(ExportKey.History))
-      return true
-    return false
   }
 
   /**
@@ -148,6 +135,7 @@ class Transfer extends Component<IProps, IState> {
     new_state._persist = undefined
     new_state.transfer = undefined
     new_state.data = undefined
+    new_state.battle = stripRounds(new_state.battle)
     if (!this.props.export_keys.get(ExportKey.Countries))
       new_state.countries = undefined
     if (!this.props.export_keys.get(ExportKey.Units))
@@ -164,16 +152,8 @@ class Transfer extends Component<IProps, IState> {
       new_state.settings = undefined
     if (!this.props.export_keys.get(ExportKey.Land))
       new_state.battle = new_state.battle.delete(DefinitionType.Land)
-    else if (this.props.export_keys.get(ExportKey.InitialOnly))
-      new_state.battle = new_state.battle.update(DefinitionType.Land, this.getInitialOnly)
-    else if (!this.props.export_keys.get(ExportKey.History))
-      new_state.battle = new_state.battle.update(DefinitionType.Land, this.removeHistory)
     if (!this.props.export_keys.get(ExportKey.Naval))
       new_state.battle = new_state.battle.delete(DefinitionType.Naval)
-    else if (this.props.export_keys.get(ExportKey.InitialOnly))
-      new_state.battle = new_state.battle.update(DefinitionType.Naval, this.getInitialOnly)
-    else if (!this.props.export_keys.get(ExportKey.History))
-      new_state.battle = new_state.battle.update(DefinitionType.Naval, this.removeHistory)
     if (!this.props.export_keys.get(ExportKey.Land) && !this.props.export_keys.get(ExportKey.Naval))
       new_state.battle = undefined
     return new_state

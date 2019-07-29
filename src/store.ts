@@ -2,9 +2,13 @@ import { createStore } from 'redux'
 import { devToolsEnhancer } from 'redux-devtools-extension'
 import { rootReducer } from './store/'
 import { persistStore, persistReducer, createTransform, createMigrate } from 'redux-persist'
+import { refreshBattle } from './store/battle'
 import storage from 'redux-persist/lib/storage'
 //import localForage from 'localforage'
-import { transformCountries, transformSettings, transformGlobalStats, transformBattle, transformTactics, transformTerrains, transformUnits, transfromTransfer } from './store/transforms'
+import {
+  transformCountries, transformSettings, transformGlobalStats, transformBattle, transformTactics, transformTerrains, transformUnits, transfromTransfer,
+  stripRounds
+} from './store/transforms'
 
 const TacticsTransform = createTransform(
   (inboundState) => inboundState,
@@ -42,8 +46,8 @@ const TransferTransform = createTransform(
   { whitelist: ['transfer'] }
 )
 
-const LandTransform = createTransform(
-  (inboundState) => inboundState,
+const BattleTransform = createTransform(
+  (inboundState: any) => stripRounds(inboundState),
   (outboundState: any) => transformBattle(outboundState),
   { whitelist: ['battle'] }
 )
@@ -73,7 +77,7 @@ const persistConfig = {
     SettingsTransform,
     TacticsTransform,
     TerrainsTransform,
-    LandTransform,
+    BattleTransform,
     UnitsTransform,
     GlobalStatsTransform,
     TransferTransform,
@@ -84,10 +88,15 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
+const callback = (store: any) => {
+  store.dispatch(refreshBattle())
+  return 1
+}
+
 export default function configureStore() {
   const store = createStore(
     persistedReducer, devToolsEnhancer({})
   )
-  let persistor = persistStore(store)
+  let persistor = persistStore(store, undefined, () => callback(store))
   return { store, persistor }
 }

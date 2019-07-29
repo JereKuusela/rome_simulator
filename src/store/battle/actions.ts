@@ -116,6 +116,10 @@ export const battle = createAction('@@battle/BATTLE', action => {
   return (mode: DefinitionType, steps: number) => action({ mode, steps })
 })
 
+export const refreshBattle = createAction('@@battle/REFRESH_BATTLE', action => {
+  return () => action({})
+})
+
 export const setSeed = createAction('@@battle/SET_SEED', action => {
   return (mode: DefinitionType, seed?: number) => action({ mode, seed })
 })
