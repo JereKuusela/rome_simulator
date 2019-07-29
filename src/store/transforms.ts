@@ -134,7 +134,9 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {
   const attacker_past = serializePast(state_raw.attacker_past, round)
   const defender_past = serializePast(state_raw.defender_past, round)
   const fight_over = state_raw.fight_over === undefined ? initial.fight_over : state_raw.fight_over
-  return { round, fight_over, armies, terrains, attacker, defender, attacker_past, defender_past }
+  const seed = state_raw.seed || initial.seed
+  const custom_seed = state_raw.custom_seed || initial.custom_seed
+  return { round, fight_over, armies, terrains, attacker, defender, attacker_past, defender_past, seed, custom_seed }
 }
 
 export const transformBattle = (state_raw: any): ReturnType<typeof battleReducer> => {

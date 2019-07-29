@@ -19,6 +19,8 @@ export interface Armies {
   readonly defender_past: List<PastState>,
   readonly round: number,
   readonly fight_over: boolean,
+  readonly seed: number,
+  readonly custom_seed?: number
 }
 
 export const modeState = (mode: DefinitionType): Armies => ({
@@ -29,7 +31,9 @@ export const modeState = (mode: DefinitionType): Armies => ({
   attacker_past: List<PastState>(),
   defender_past: List<PastState>(),
   round: -1,
-  fight_over: true
+  fight_over: true,
+  seed: 0,
+  custom_seed: undefined
 })
 
 export const initialState = Map<DefinitionType, Armies>()
@@ -125,13 +129,17 @@ export const battleReducer = createReducer(initialState)
       const new_defender = handleArmy(next.armies.get(next.defender, getDefaultArmy(action.payload.mode)), next.defender_past.get(-1))
       armies = armies.set(next.defender, new_defender)
       const defender_past: List<PastState> = next.defender_past.pop()
+      let seed: number = next.seed
+      if (next.round < 2)
+        seed = next.custom_seed ? next.custom_seed : 0
       next = {
         ...next,
         armies,
         attacker_past,
         defender_past,
         round: next.round - 1,
-        fight_over: !(checkFight(new_attacker, new_defender))
+        fight_over: !(checkFight(new_attacker, new_defender)),
+        seed
       }
     }
     return state.set(action.payload.mode, next)

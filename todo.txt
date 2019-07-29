@@ -28,6 +28,14 @@ Settings:
 - Show list of "Increase value to ...", "Decrease value too", green and red colors for increase and decrease.
 - Gives a better idea how the attribute affects the result.
 
+Army management:
+- Probably needed for multi-army battles because countries need to have multiple armies
+- General selector to units page, renamed to army?
+- Custom changes for whole country, renamed to country?
+- Accordion for general?
+- Accordion for reserve?
+- Accordion for unit definitions?
+
 
 Siege:
 - Time to capture

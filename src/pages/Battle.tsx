@@ -6,7 +6,7 @@ import { AppState } from '../store/index'
 import { UnitDefinition, Unit } from '../store/units'
 import UnitArmy from '../components/UnitArmy'
 import TargetArrows from '../components/TargetArrows'
-import { ArmyType, battle, undo, ParticipantType, toggleRandomRoll, setRoll, RowType, setFlankSize, selectArmy, selectUnit } from '../store/battle'
+import { ArmyType, battle, undo, ParticipantType, toggleRandomRoll, setRoll, RowType, setFlankSize, selectArmy, selectUnit, setSeed } from '../store/battle'
 import { calculateTactic, calculateRollModifierFromTerrains, calculateRollModifierFromGenerals, calculateBaseDamage } from '../store/combat/combat'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import { TacticType } from '../store/tactics'
@@ -252,6 +252,11 @@ class Battle extends Component<IProps, IState> {
               }
             </Grid.Column>
           </Grid.Row>
+          <Grid.Row>
+            {
+              this.renderSeed()
+            }
+          </Grid.Row>
         </Grid >
       </Container >
     )
@@ -460,6 +465,21 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
+  renderSeed = (): JSX.Element => {
+    return (
+      <Grid.Column>
+        <Input disabled={this.props.round > 0} type='number' value={this.props.seed} label='Seed for random generator'  onChange={(_, {value}) => this.setSeed(value)}/>
+      </Grid.Column>
+    )
+  }
+
+  setSeed = (value: string): void => {
+    if (value === '')
+      this.props.setSeed(this.props.mode, undefined)
+    if (!isNaN(Number(value)))
+      this.props.setSeed(this.props.mode, Number(value))
+  }
+
   mergeAllValues = (name: CountryName, army: List<Unit | undefined>): List<UnitDefinition | undefined> => {
     return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats.getIn([name, this.props.mode])))
   }
@@ -471,6 +491,7 @@ const mapStateToProps = (state: AppState) => ({
   armies: getBattle(state).armies,
   is_undo: getBattle(state).round > -1,
   round: getBattle(state).round,
+  seed: getBattle(state).seed,
   selected_terrains: getBattle(state).terrains,
   terrains: state.terrains,
   tactics: state.tactics,
@@ -492,7 +513,8 @@ const mapDispatchToProps = (dispatch: any) => ({
   selectArmy: (mode: DefinitionType, type: ParticipantType, name: CountryName) => dispatch(selectArmy(mode, type, name)),
   removeUnit: (mode: DefinitionType, name: CountryName, type: ArmyType, column: number) => (
     dispatch(selectUnit(mode, name, type, column, undefined))
-  )
+  ),
+  setSeed: (mode: DefinitionType, seed?: number) => dispatch(setSeed(mode, seed))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

@@ -1,5 +1,6 @@
 import { createReducer } from 'typesafe-actions'
-import { battle, checkFight } from '../battle'
+import { Random, MersenneTwister19937, createEntropy } from 'random-js'
+import { battle, checkFight, setSeed } from '../battle'
 import { battle as fight } from './combat'
 import { mergeValues } from '../../base_definition'
 import { CombatParameter } from '../settings'
@@ -20,6 +21,9 @@ export const combatReducer = createReducer<AppState>({} as any)
     const minimum_roll = combat.get(CombatParameter.DiceMinimum) || 1
     const maximum_roll = combat.get(CombatParameter.DiceMaximum) || 6
     const roll_frequency = combat.get(CombatParameter.RollFrequency) || 5
+    if (!next.seed)
+      next = { ...next, seed: next.custom_seed || createEntropy()[0] }
+    const rng = new Random(MersenneTwister19937.seed(next.seed))
     for (let step = 0; step < action.payload.steps && !next.fight_over; ++step) {
       if (!attacker || !defender)
         continue
@@ -27,11 +31,11 @@ export const combatReducer = createReducer<AppState>({} as any)
       if (next.round % roll_frequency === 0) {
         attacker = {
           ...attacker,
-          roll: attacker.randomize_roll ? minimum_roll + Math.round(Math.random() * (maximum_roll - minimum_roll)) : attacker.roll
+          roll: attacker.randomize_roll ? rng.integer(minimum_roll, maximum_roll) : attacker.roll
         }
         defender = {
           ...defender,
-          roll: defender.randomize_roll ? minimum_roll + Math.round(Math.random() * (maximum_roll - minimum_roll)) : defender.roll
+          roll: defender.randomize_roll ? rng.integer(minimum_roll, maximum_roll) : defender.roll
         }
       }
       const attacker_info = {
@@ -67,5 +71,10 @@ export const combatReducer = createReducer<AppState>({} as any)
       defender = next.armies.get(next.defender)
     }
     return { ...state, battle: state.battle.set(state.settings.mode, next) }
-  }
-  )
+  })
+  .handleAction(setSeed, (state, action: ReturnType<typeof setSeed>) => (
+    {
+      ...state,
+      battle: state.battle.update(state.settings.mode, battle => ({ ...battle, custom_seed: action.payload.seed, seed: action.payload.seed || 0 }))
+    }
+  ))

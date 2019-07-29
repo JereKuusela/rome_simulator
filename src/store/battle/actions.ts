@@ -116,6 +116,10 @@ export const battle = createAction('@@battle/BATTLE', action => {
   return (mode: DefinitionType, steps: number) => action({ mode, steps })
 })
 
+export const setSeed = createAction('@@battle/SET_SEED', action => {
+  return (mode: DefinitionType, seed?: number) => action({ mode, seed })
+})
+
 export const undo = createAction('@@battle/UNDO', action => {
   return (mode: DefinitionType, steps: number) => action({ mode, steps })
 })
