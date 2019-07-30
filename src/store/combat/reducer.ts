@@ -24,7 +24,9 @@ const doBattle = (state: AppState, mode: DefinitionType, steps: number): AppStat
   if (!next.seed)
     next = { ...next, seed: next.custom_seed || createEntropy()[0] }
   next = { ...next, fight_over: !checkFight(attacker, defender), outdated: false}
-  const rng = new Random(MersenneTwister19937.seed(next.seed))
+  const engine = MersenneTwister19937.seed(next.seed)
+  engine.discard(2 * Math.ceil((next.round) / roll_frequency))
+  const rng = new Random(engine)
   for (let step = 0; step < steps && !next.fight_over; ++step) {
     if (!attacker || !defender)
       continue
