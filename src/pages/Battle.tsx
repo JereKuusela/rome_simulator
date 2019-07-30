@@ -6,7 +6,7 @@ import { AppState } from '../store/index'
 import { UnitDefinition, Unit } from '../store/units'
 import UnitArmy from '../components/UnitArmy'
 import TargetArrows from '../components/TargetArrows'
-import { ArmyType, battle, undo, ParticipantType, toggleRandomRoll, setRoll, RowType, setFlankSize, selectArmy, selectUnit, setSeed } from '../store/battle'
+import { invalidate, invalidateCountry, ArmyType, battle, undo, ParticipantType, toggleRandomRoll, setRoll, RowType, setFlankSize, selectArmy, selectUnit, setSeed, refreshBattle } from '../store/battle'
 import { calculateTactic, calculateRollModifierFromTerrains, calculateRollModifierFromGenerals, calculateBaseDamage } from '../store/combat/combat'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import { TacticType } from '../store/tactics'
@@ -25,7 +25,7 @@ import { CountryName, setGeneralMartial } from '../store/countries'
 import { CombatParameter } from '../store/settings'
 import IconTerrain from '../images/terrain.png'
 import IconGeneral from '../images/military_power.png'
-import StyledNumber from '../components/StyledNumber';
+import StyledNumber from '../components/StyledNumber'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
@@ -69,6 +69,8 @@ class Battle extends Component<IProps, IState> {
   openRowModal = (name: CountryName, country: CountryName, type: RowType): void => this.setState({ modal_row_info: { name, country, type } })
 
   render(): JSX.Element {
+    if (this.props.outdated)
+      this.props.refreshBattle(this.props.mode)
     const attacker = this.props.attacker
     const defender = this.props.defender
     return (
@@ -492,6 +494,7 @@ const mapStateToProps = (state: AppState) => ({
   is_undo: getBattle(state).round > -1,
   round: getBattle(state).round,
   seed: getBattle(state).seed,
+  outdated: getBattle(state).outdated,
   selected_terrains: getBattle(state).terrains,
   terrains: state.terrains,
   tactics: state.tactics,
@@ -508,13 +511,14 @@ const mapDispatchToProps = (dispatch: any) => ({
   undo: (mode: DefinitionType, steps: number) => dispatch(undo(mode, steps)),
   toggleRandomRoll: (mode: DefinitionType, name: CountryName) => dispatch(toggleRandomRoll(mode, name)),
   setRoll: (mode: DefinitionType, name: CountryName, roll: number) => dispatch(setRoll(mode, name, roll)),
-  setGeneralMartial: (name: CountryName, skill: number) => dispatch(setGeneralMartial(name, skill)),
-  setFlankSize: (mode: DefinitionType, name: CountryName, size: number) => dispatch(setFlankSize(mode, name, size)),
-  selectArmy: (mode: DefinitionType, type: ParticipantType, name: CountryName) => dispatch(selectArmy(mode, type, name)),
+  setGeneralMartial: (name: CountryName, skill: number) => dispatch(setGeneralMartial(name, skill)) && dispatch(invalidateCountry(name)),
+  setFlankSize: (mode: DefinitionType, name: CountryName, size: number) => dispatch(setFlankSize(mode, name, size)) && dispatch(invalidate(mode)),
+  selectArmy: (mode: DefinitionType, type: ParticipantType, name: CountryName) => dispatch(selectArmy(mode, type, name)) && dispatch(invalidate(mode)),
   removeUnit: (mode: DefinitionType, name: CountryName, type: ArmyType, column: number) => (
     dispatch(selectUnit(mode, name, type, column, undefined))
   ),
-  setSeed: (mode: DefinitionType, seed?: number) => dispatch(setSeed(mode, seed))
+  setSeed: (mode: DefinitionType, seed?: number) => dispatch(setSeed(mode, seed)) && dispatch(invalidate(mode)),
+  refreshBattle: (mode: DefinitionType) => dispatch(refreshBattle(mode))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

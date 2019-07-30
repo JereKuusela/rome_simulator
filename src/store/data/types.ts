@@ -76,7 +76,7 @@ export interface OmenDefinition {
 export interface TraitDefinition {
   readonly name: string
   readonly modifiers: List<Modifier>
-}
+ }
 export interface LawDefinition {
   readonly name: string
   readonly options: List<{

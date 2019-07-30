@@ -120,7 +120,7 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {
   const fight_over = initial.fight_over
   const seed = state_raw.seed || initial.seed
   const custom_seed = state_raw.custom_seed || initial.custom_seed
-  return { round, fight_over, armies, terrains, attacker, defender, attacker_rounds, defender_rounds, seed, custom_seed }
+  return { round, fight_over, armies, terrains, attacker, defender, attacker_rounds, defender_rounds, seed, custom_seed, outdated: true }
 }
 
 export const stripRounds = (battle: ReturnType<typeof battleReducer>): any => {

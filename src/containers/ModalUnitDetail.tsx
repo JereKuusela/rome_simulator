@@ -5,6 +5,7 @@ import { AppState } from '../store/'
 import { CountryName } from '../store/countries'
 import { ValuesType, mergeValues, DefinitionType } from '../base_definition'
 import UnitDetail from '../components/UnitDetail'
+import { invalidateCountry } from '../store/battle'
 import { mergeUnitTypes, filterTerrainTypes } from '../store/utils'
 
 const CUSTOM_VALUE_KEY = 'Custom'
@@ -44,13 +45,13 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchToProps = (dispatch: any) => ({
   setBaseValue: (country: CountryName, unit: UnitType, key: string, attribute: ValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setValue(country, ValuesType.Base, unit, key, attribute, value))
+    !Number.isNaN(value) && dispatch(setValue(country, ValuesType.Base, unit, key, attribute, value)) && dispatch(invalidateCountry(country))
   ),
   setModifierValue: (country: CountryName, unit: UnitType, key: string, attribute: ValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setValue(country, ValuesType.Modifier, unit, key, attribute, value))
+    !Number.isNaN(value) && dispatch(setValue(country, ValuesType.Modifier, unit, key, attribute, value)) && dispatch(invalidateCountry(country))
   ),
   setLossValue: (country: CountryName, unit: UnitType, key: string, attribute: ValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setValue(country, ValuesType.Loss, unit, key, attribute, value))
+    !Number.isNaN(value) && dispatch(setValue(country, ValuesType.Loss, unit, key, attribute, value)) && dispatch(invalidateCountry(country))
   ),
   changeImage: (country: CountryName, type: UnitType, image: string) => dispatch(changeImage(country, type, image)),
   changeMode: (country: CountryName, type: UnitType, mode: DefinitionType) => dispatch(changeMode(country, type, mode))

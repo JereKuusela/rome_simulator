@@ -8,6 +8,7 @@ import { getAttacker, getDefender, filterTerrainTypes, mergeUnitTypes } from '..
 import { addValues, mergeValues, ValuesType, DefinitionType } from '../base_definition'
 import ItemRemover from '../components/ItemRemover'
 import UnitDetail from '../components/UnitDetail'
+import { invalidateCountry } from '../store/battle'
 import { CountryName } from '../store/countries'
 
 const CUSTOM_VALUE_KEY = 'Unit'
@@ -116,7 +117,7 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchToProps = (dispatch: any) => ({
   selectUnit: (mode: DefinitionType, country: CountryName, type: ArmyType, column: number, unit: Unit | undefined) => (
-    dispatch(selectUnit(mode, country, type, column, unit))
+    dispatch(selectUnit(mode, country, type, column, unit)) && dispatch(invalidateCountry(country))
   )
 })
 

@@ -5,6 +5,7 @@ import { AppState } from '../store/'
 import { ValuesType, DefinitionType } from '../base_definition'
 import { mergeUnitTypes, filterTerrainTypes } from '../store/utils'
 import { CountryName } from '../store/countries'
+import { invalidateCountry } from '../store/battle'
 import UnitDetail from '../components/UnitDetail'
 
 const CUSTOM_VALUE_KEY = 'Global'
@@ -53,7 +54,7 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchToProps = (dispatch: any) => ({
   setGlobalValue: (country: CountryName, mode: DefinitionType, type: ValuesType, key: string, attribute: ValueType, value: number) => (
-    dispatch(setGlobalValue(country, mode, type, key, attribute, value))
+    dispatch(setGlobalValue(country, mode, type, key, attribute, value)) && dispatch(invalidateCountry(country))
   )
 })
 

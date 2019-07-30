@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { setBaseValue, ValueType, TerrainType, LocationType, changeLocation, changeImage, changeMode } from '../store/terrains'
 import { AppState } from '../store/'
+import { invalidate } from '../store/battle'
 import { DefinitionType } from '../base_definition'
 import TerrainDetail from '../components/TerrainDetail'
 
@@ -19,7 +20,7 @@ class ModalTerrainDetail extends Component<IProps> {
       <TerrainDetail
         custom_value_key={CUSTOM_VALUE_KEY}
         terrain={terrain}
-        onCustomBaseValueChange={this.props.setBaseValue}
+        onCustomBaseValueChange={(type, key, attribute, value) => this.props.setBaseValue(this.props.mode, type, key, attribute, value)}
         onTypeChange={this.props.changeType}
         onLocationChange={this.props.changeLocation}
         onImageChange={this.props.changeImage}
@@ -30,12 +31,13 @@ class ModalTerrainDetail extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  terrains: state.terrains
+  terrains: state.terrains,
+  mode: state.settings.mode
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setBaseValue: (type: TerrainType, key: string, attribute: ValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setBaseValue(type, key, attribute, value))
+  setBaseValue: (mode: DefinitionType, type: TerrainType, key: string, attribute: ValueType, value: number) => (
+    !Number.isNaN(value) && dispatch(setBaseValue(type, key, attribute, value)) && dispatch(invalidate(mode))
   ),
   changeLocation: (type: TerrainType, location: LocationType) => dispatch(changeLocation(type, location)),
   changeImage: (type: TerrainType, image: string) => dispatch(changeImage(type, image)),

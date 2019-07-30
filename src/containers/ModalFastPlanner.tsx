@@ -6,8 +6,8 @@ import { AppState } from '../store/'
 import FastPlanner from '../components/FastPlanner'
 import ArmyCosts from '../components/ArmyCosts'
 import { UnitType, Unit } from '../store/units'
-import { clearUnits, removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits } from '../store/battle'
-import { getAttacker, getDefender } from '../store/utils'
+import { clearUnits, removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits, invalidate } from '../store/battle'
+import { getAttackerUnits, getDefenderUnits } from '../store/utils'
 import { mapRange, mergeArmy } from '../utils'
 import { CountryName } from '../store/countries'
 import { DefinitionType } from '../base_definition'
@@ -142,16 +142,16 @@ class ModalFastPlanner extends Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  attacker: getAttacker(state),
-  defender: getDefender(state),
+  attacker: getAttackerUnits(state),
+  defender: getDefenderUnits(state),
   units: state.units,
   global_stats: state.global_stats,
   mode: state.settings.mode
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  addReserveUnits: (mode: DefinitionType, name: CountryName, units: Unit[]) => dispatch(addReserveUnits(mode, name, units)),
-  removeReserveUnits: (mode: DefinitionType, name: CountryName, types: UnitType[]) => dispatch(removeReserveUnits(mode, name, types)),
+  addReserveUnits: (mode: DefinitionType, name: CountryName, units: Unit[]) => dispatch(addReserveUnits(mode, name, units)) && dispatch(invalidate(mode)),
+  removeReserveUnits: (mode: DefinitionType, name: CountryName, types: UnitType[]) => dispatch(removeReserveUnits(mode, name, types)) && dispatch(invalidate(mode)),
   clearUnits: (mode: DefinitionType) => dispatch(clearUnits(mode))
 })
 

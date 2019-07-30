@@ -4,6 +4,7 @@ import { Container, Grid, Table, List, Input, Checkbox } from 'semantic-ui-react
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { mapRange, toList, sum } from '../utils'
+import { invalidateCountry } from '../store/battle'
 import {
   ModifierType, Modifier, Tradition, CultureType,
   OmenDefinition, TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition,
@@ -783,13 +784,13 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  enableModifiers: (country: CountryName, key: string, modifiers: ImmutableList<Modifier>) => dispatch(enableModifiers(country, key, modifiers)),
-  clearModifiers: (country: CountryName, key: string) => dispatch(clearModifiers(country, key)),
+  enableModifiers: (country: CountryName, key: string, modifiers: ImmutableList<Modifier>) => dispatch(enableModifiers(country, key, modifiers)) && dispatch(invalidateCountry(country)),
+  clearModifiers: (country: CountryName, key: string) => dispatch(clearModifiers(country, key)) && dispatch(invalidateCountry(country)),
   selectCulture: (country: CountryName, culture: CultureType) => dispatch(selectCulture(country, culture)),
   selectReligion: (country: CountryName, religion: ReligionType) => dispatch(selectReligion(country, religion)),
   selectGovernment: (country: CountryName, government: GovermentType) => dispatch(selectGovernment(country, government)),
   setOmenPower: (country: CountryName, power: number) => dispatch(setOmenPower(country, power)),
-  setGeneralMartial: (country: CountryName, skill: number) => dispatch(setGeneralMartial(country, skill)),
+  setGeneralMartial: (country: CountryName, skill: number) => dispatch(setGeneralMartial(country, skill)) && dispatch(invalidateCountry(country)),
   setHasGeneral: (country: CountryName, value: boolean) => dispatch(setHasGeneral(country, value)),
   setMilitaryPower: (country: CountryName, power: number) => dispatch(setMilitaryPower(country, power)),
   setOfficeMorale: (country: CountryName, value: number) => dispatch(setOfficeMorale(country, value)),

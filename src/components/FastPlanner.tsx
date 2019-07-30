@@ -79,7 +79,7 @@ export default class FastPlanner extends Component<IProps> {
             <Input
               type='number'
               size='mini'
-              defaultValue={this.props.changes_d.has(type) ? this.props.changes_d.get(type) : this.props.reserve_d.get(type)}
+              value={this.props.changes_d.has(type) ? this.props.changes_d.get(type) : this.props.reserve_d.get(type)}
               onChange={(_, data) => this.props.onValueChange(this.props.defender, type, Math.max(0, Math.round(Number(data.value))))
               }
             />

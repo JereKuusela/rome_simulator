@@ -3,7 +3,7 @@ import { Map, List } from 'immutable'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { AppState } from '../store/'
-import { selectTactic } from '../store/battle'
+import { selectTactic, invalidate } from '../store/battle'
 import { calculateTactic } from '../store/combat'
 import ItemSelector from '../components/ItemSelector'
 import { TacticType, TacticCalc } from '../store/tactics'
@@ -83,7 +83,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  selectTactic: (mode: DefinitionType, name: CountryName, type: TacticType) => dispatch(selectTactic(mode, name, type))
+  selectTactic: (mode: DefinitionType, name: CountryName, type: TacticType) => dispatch(selectTactic(mode, name, type)) && dispatch(invalidate(mode))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {

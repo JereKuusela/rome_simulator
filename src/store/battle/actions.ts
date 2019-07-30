@@ -117,7 +117,15 @@ export const battle = createAction('@@battle/BATTLE', action => {
 })
 
 export const refreshBattle = createAction('@@battle/REFRESH_BATTLE', action => {
-  return () => action({})
+  return (mode: DefinitionType) => action({ mode })
+})
+
+export const invalidate = createAction('@@battle/INVALIDATE', action => {
+  return (mode: DefinitionType) => action({ mode })
+})
+
+export const invalidateCountry = createAction('@@battle/INVALIDATE_COUNTRY', action => {
+  return (country: CountryName) => action({ country })
 })
 
 export const setSeed = createAction('@@battle/SET_SEED', action => {

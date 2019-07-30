@@ -3,7 +3,7 @@ import { Map } from 'immutable'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { AppState } from '../store/'
-import { selectTerrain } from '../store/battle'
+import { selectTerrain, invalidate } from '../store/battle'
 import ItemSelector from '../components/ItemSelector'
 import { TerrainType, TerrainCalc, LocationType } from '../store/terrains'
 import { DefinitionType, calculateValue } from '../base_definition'
@@ -52,7 +52,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  selectTerrain: (mode: DefinitionType, index: number, type: TerrainType) => dispatch(selectTerrain(mode, index, type))
+  selectTerrain: (mode: DefinitionType, index: number, type: TerrainType) => dispatch(selectTerrain(mode, index, type)) && dispatch(invalidate(mode))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {

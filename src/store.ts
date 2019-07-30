@@ -2,7 +2,6 @@ import { createStore } from 'redux'
 import { devToolsEnhancer } from 'redux-devtools-extension'
 import { rootReducer } from './store/'
 import { persistStore, persistReducer, createTransform, createMigrate } from 'redux-persist'
-import { refreshBattle } from './store/battle'
 import storage from 'redux-persist/lib/storage'
 //import localForage from 'localforage'
 import {
@@ -88,15 +87,10 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
-const callback = (store: any) => {
-  store.dispatch(refreshBattle())
-  return 1
-}
-
 export default function configureStore() {
   const store = createStore(
     persistedReducer, devToolsEnhancer({})
   )
-  let persistor = persistStore(store, undefined, () => callback(store))
+  let persistor = persistStore(store)
   return { store, persistor }
 }

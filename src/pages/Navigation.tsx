@@ -5,7 +5,6 @@ import { toggleMode } from '../store/settings'
 import { Container, Menu, Image, Button } from 'semantic-ui-react'
 import IconLand from '../images/land_combat.png'
 import IconNaval from '../images/naval_combat.png'
-import { refreshBattle } from '../store/battle'
 import { DefinitionType } from '../base_definition'
 
 /**
@@ -66,7 +65,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  toggleMode: () => dispatch(toggleMode()) && dispatch(refreshBattle())
+  toggleMode: () => dispatch(toggleMode())
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

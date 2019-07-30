@@ -102,6 +102,16 @@ export const mergeSettings = (state: AppState): OrderedMap<CombatParameter, numb
     return { ...getParticipant(state, battle, battle.defender), ...battle.defender_rounds.get(-1) }
   }
 
+  export const getAttackerUnits = (state: AppState): Participant => {
+    const battle = getBattle(state)
+    return getParticipant(state, battle, battle.attacker)
+  }
+  
+  export const getDefenderUnits = (state: AppState): Participant => {
+    const battle = getBattle(state)
+    return getParticipant(state, battle, battle.defender)
+  }
+
   export const getSelected = (state: AppState): Participant => {
     const battle = getBattle(state)
     return getParticipant(state, battle, state.settings.country)

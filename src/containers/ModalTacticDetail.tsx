@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { setBaseValue, ValueType, TacticType, changeImage, changeMode } from '../store/tactics'
 import { AppState } from '../store/'
+import { invalidate } from '../store/battle'
 import TacticDetail from '../components/TacticDetail'
 import { DefinitionType } from '../base_definition'
 import { mergeUnitTypes, filterTacticTypes, filterTactics } from '../store/utils'
@@ -20,7 +21,7 @@ class ModalTacticDetail extends Component<IProps> {
         units={this.props.units}
         custom_value_key={CUSTOM_VALUE_KEY}
         tactic={this.props.tactics.get(this.props.tactic)!}
-        onCustomBaseValueChange={this.props.setBaseValue}
+        onCustomBaseValueChange={(tactic, key, attribute, value) => this.props.setBaseValue(this.props.mode, tactic, key, attribute, value)}
         onTypeChange={this.props.changeType}
         onImageChange={this.props.changeImage}
         onModeChange={this.props.changeMode}
@@ -33,12 +34,13 @@ const mapStateToProps = (state: AppState) => ({
   tactics: filterTactics(state),
   tactic_types: filterTacticTypes(state),
   units: state.units,
-  unit_types: mergeUnitTypes(state)
+  unit_types: mergeUnitTypes(state),
+  mode: state.settings.mode
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setBaseValue: (tactic: TacticType,  key: string, attribute: ValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setBaseValue(tactic, key, attribute, value))
+  setBaseValue: (mode: DefinitionType, tactic: TacticType,  key: string, attribute: ValueType, value: number) => (
+    !Number.isNaN(value) && dispatch(setBaseValue(tactic, key, attribute, value)) && dispatch(invalidate(mode))
   ),
   changeImage: (type: TacticType, image: string) => dispatch(changeImage(type, image)),
   changeMode: (type: TacticType, mode: DefinitionType) => dispatch(changeMode(type, mode))

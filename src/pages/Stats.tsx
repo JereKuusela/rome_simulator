@@ -4,16 +4,18 @@ import { Container, Image, Table } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { Unit, UnitType, UnitCalc } from '../store/units'
-import { ParticipantType, Army } from '../store/battle'
+import { ParticipantType, Army, refreshBattle } from '../store/battle'
 import IconManpower from '../images/manpower.png'
 import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
-import { getAttacker, getDefender, Participant } from '../store/utils'
+import { getAttacker, getDefender, Participant, getBattle } from '../store/utils'
 import { mergeArmy } from '../utils'
 import { calculateValue, calculateValueWithoutLoss, getImage, DefinitionType, strengthToValue } from '../base_definition'
 
 class Stats extends Component<IProps> {
   render(): JSX.Element {
+    if (this.props.outdated)
+      this.props.refreshBattle(this.props.mode)
     return (
       <Container>
         {this.renderArmy(ParticipantType.Attacker, this.props.attacker)}
@@ -61,6 +63,7 @@ class Stats extends Component<IProps> {
   round = (number: number): number => +(number).toFixed(2)
 
   renderRow = (armies: Army, type: UnitType, image: string): JSX.Element | null => {
+
     const count = this.countUnits(armies, type)
 
     if (count === 0)
@@ -112,10 +115,12 @@ class Stats extends Component<IProps> {
 const mapStateToProps = (state: AppState) => ({
   attacker: getAttacker(state),
   defender: getDefender(state),
+  outdated: getBattle(state).outdated,
   mode: state.settings.mode
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
+  refreshBattle: (mode: DefinitionType) => dispatch(refreshBattle(mode))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }
