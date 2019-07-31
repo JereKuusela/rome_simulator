@@ -1,5 +1,5 @@
 import { fromJS, Seq, List, OrderedMap, OrderedSet, Map } from 'immutable'
-import { Participant } from './store/utils';
+import { Army } from './store/utils';
 import { Unit, UnitDefinition, UnitType } from './store/units/actions'
 import { mergeValues, DefinitionType } from './base_definition'
 import { getDefaultUnits } from './store/units/data';
@@ -45,7 +45,7 @@ export const orderedMapFromJS = <T>(data: T) => {
 
 export const toList = <T>(item: T) => List<T>().push(item)
 
-export const mergeArmy = (participant: Participant, army: List<Unit | undefined>): List<any> => {
+export const mergeArmy = (participant: Army, army: List<Unit | undefined>): List<any> => {
   return army.map(value => value && mergeValues(mergeValues(participant.units.get(value.type), value), participant.global))
 }
 

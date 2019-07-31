@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { UnitType, ValueType, Unit, UnitDefinition } from '../store/units'
-import { ArmyType, selectUnit } from '../store/battle'
+import { ArmyType, selectUnit, ParticipantType } from '../store/battle'
 import { AppState } from '../store/'
-import { getAttacker, getDefender, filterTerrainTypes, mergeUnitTypes } from '../store/utils'
+import { getArmy, filterTerrainTypes, mergeUnitTypes } from '../store/utils'
 import { addValues, mergeValues, ValuesType, DefinitionType } from '../base_definition'
 import ItemRemover from '../components/ItemRemover'
 import UnitDetail from '../components/UnitDetail'
@@ -106,8 +106,8 @@ class ModalArmyUnitDetail extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  attacker: getAttacker(state),
-  defender: getDefender(state),
+  attacker: getArmy(state, ParticipantType.Attacker),
+  defender: getArmy(state, ParticipantType.Defender),
   units: state.units,
   unit_types: mergeUnitTypes(state),
   global_stats: state.global_stats,

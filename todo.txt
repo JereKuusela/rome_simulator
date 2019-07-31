@@ -1,32 +1,11 @@
 
-Release 5+:
-
-- Accordions to more places?? (unit detail?)
+Release 5:
 
 Tests (high priority):
 - base_definition functions tested
 
-- Immutable reviver to simplify fromJS calls when transforming data?
-- Index files don't really work with circular references (some types are used everywhere)
-   * Own files for types?
-   * Get rid of index files?
-   * Fix problems one by one when they appear?
-
 History refactor:
-- Lots of data now stored, large scale battles not possible
-- Could store instead the initial state + seed for random
-- Next states only stored locally
 - Must prevent adding units during combat (shouldn't be a big deal because even now it doesn't work that well)
-- Changing modifiers, tactic, etc. should replay the combat (perhaps only when in the battle page?)
-- On state load, playback to current round
-
-Navigation:
-- Toggle for simple mode, enabled by default: disables army management, disabled army selection, unit / terrain / tactic management
-
-Settings:
-- Better descriptions
-- Show list of "Increase value to ...", "Decrease value too", green and red colors for increase and decrease.
-- Gives a better idea how the attribute affects the result.
 
 Army management:
 - Probably needed for multi-army battles because countries need to have multiple armies
@@ -35,6 +14,30 @@ Army management:
 - Accordion for general?
 - Accordion for reserve?
 - Accordion for unit definitions?
+
+Multiarmy:
+- Massive refactoring...
+
+
+Release 6+:
+
+- Accordions to more places?? (unit detail?)
+
+
+- Immutable reviver to simplify fromJS calls when transforming data?
+- Index files don't really work with circular references (some types are used everywhere)
+   * Own files for types?
+   * Get rid of index files?
+   * Fix problems one by one when they appear?
+
+
+Navigation:
+- Toggle for simple mode, enabled by default: disables army management, disabled army selection, unit / terrain / tactic management
+
+Settings:
+- Better descriptions
+- Show list of "Increase value to ...", "Decrease value too", green and red colors for increase and decrease.
+- Gives a better idea how the attribute affects the result.
 
 
 Siege:

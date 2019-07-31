@@ -6,8 +6,8 @@ import { AppState } from '../store/'
 import FastPlanner from '../components/FastPlanner'
 import ArmyCosts from '../components/ArmyCosts'
 import { UnitType, Unit } from '../store/units'
-import { clearUnits, removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits, invalidate } from '../store/battle'
-import { getAttackerUnits, getDefenderUnits } from '../store/utils'
+import { clearUnits, removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits, invalidate, ParticipantType } from '../store/battle'
+import { getUnits } from '../store/utils'
 import { mapRange, mergeArmy } from '../utils'
 import { CountryName } from '../store/countries'
 import { DefinitionType } from '../base_definition'
@@ -142,8 +142,8 @@ class ModalFastPlanner extends Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  attacker: getAttackerUnits(state),
-  defender: getDefenderUnits(state),
+  attacker: getUnits(state, ParticipantType.Attacker),
+  defender: getUnits(state, ParticipantType.Defender),
   units: state.units,
   global_stats: state.global_stats,
   mode: state.settings.mode

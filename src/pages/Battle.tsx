@@ -6,7 +6,7 @@ import { AppState } from '../store/index'
 import { UnitDefinition, Unit } from '../store/units'
 import UnitArmy from '../components/UnitArmy'
 import TargetArrows from '../components/TargetArrows'
-import { invalidate, invalidateCountry, ArmyType, battle, undo, ParticipantType, toggleRandomRoll, setRoll, RowType, setFlankSize, selectArmy, selectUnit, setSeed, refreshBattle } from '../store/battle'
+import { invalidate, invalidateCountry, ArmyType, battle, undo, Participant, ParticipantType, toggleRandomRoll, setRoll, RowType, setFlankSize, selectArmy, selectUnit, setSeed, refreshBattle } from '../store/battle'
 import { calculateTactic, calculateRollModifierFromTerrains, calculateRollModifierFromGenerals, calculateBaseDamage } from '../store/combat/combat'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import { TacticType } from '../store/tactics'
@@ -19,7 +19,7 @@ import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers
 import ModalArmyUnitDetail, { ModalInfo as ModalArmyUnitInfo } from '../containers/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/ModalFastPlanner'
 import { calculateValue, mergeValues, getImage, DefinitionType } from '../base_definition'
-import { mergeSettings, getBattle, getAttacker, getDefender, Participant } from '../store/utils'
+import { mergeSettings, getBattle, getArmy, Army, getParticipant } from '../store/utils'
 import { addSign, toSignedPercent } from '../formatters'
 import { CountryName, setGeneralMartial } from '../store/countries'
 import { CombatParameter } from '../store/settings'
@@ -71,8 +71,8 @@ class Battle extends Component<IProps, IState> {
   render(): JSX.Element {
     if (this.props.outdated)
       this.props.refreshBattle(this.props.mode)
-    const attacker = this.props.attacker
-    const defender = this.props.defender
+    const army_a = this.props.army_a
+    const army_d = this.props.army_d
     return (
       <Container>
         <ModalUnitSelector
@@ -118,15 +118,15 @@ class Battle extends Component<IProps, IState> {
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderArmy(ParticipantType.Attacker, attacker)
+                this.renderArmy(ParticipantType.Attacker, army_a)
               }
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1} style={{ padding: 0 }}>
             <Grid.Column>
               <TargetArrows
-                attacker={this.props.fight_over ? undefined : attacker.frontline}
-                defender={this.props.fight_over ? undefined : defender.frontline}
+                attacker={this.props.fight_over ? undefined : army_a.frontline}
+                defender={this.props.fight_over ? undefined : army_d.frontline}
                 attacker_color={ATTACKER_COLOR}
                 defender_color={DEFENDER_COLOR}
               />
@@ -135,7 +135,7 @@ class Battle extends Component<IProps, IState> {
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderArmy(ParticipantType.Defender, defender)
+                this.renderArmy(ParticipantType.Defender, army_d)
               }
             </Grid.Column>
           </Grid.Row>
@@ -165,8 +165,8 @@ class Battle extends Component<IProps, IState> {
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {this.renderArmyInfo(ParticipantType.Attacker, attacker, defender)}
-                  {this.renderArmyInfo(ParticipantType.Defender, defender, attacker)}
+                  {this.renderArmyInfo(ParticipantType.Attacker, this.props.attacker, army_a, army_d)}
+                  {this.renderArmyInfo(ParticipantType.Defender, this.props.defender, army_d, army_a)}
                 </Table.Body>
               </Table>
             </Grid.Column>
@@ -199,14 +199,14 @@ class Battle extends Component<IProps, IState> {
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderReserve(ParticipantType.Attacker, attacker)
+                this.renderReserve(ParticipantType.Attacker, army_a)
               }
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderReserve(ParticipantType.Defender, defender)
+                this.renderReserve(ParticipantType.Defender, army_d)
               }
             </Grid.Column>
           </Grid.Row>
@@ -233,8 +233,8 @@ class Battle extends Component<IProps, IState> {
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {this.renderRowTypes(ParticipantType.Attacker, attacker)}
-                  {this.renderRowTypes(ParticipantType.Defender, defender)}
+                  {this.renderRowTypes(ParticipantType.Attacker, army_a)}
+                  {this.renderRowTypes(ParticipantType.Defender, army_d)}
                 </Table.Body>
               </Table>
             </Grid.Column>
@@ -243,14 +243,14 @@ class Battle extends Component<IProps, IState> {
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderDefeatedArmy(ParticipantType.Attacker, attacker)
+                this.renderDefeatedArmy(ParticipantType.Attacker, army_a)
               }
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderDefeatedArmy(ParticipantType.Defender, defender)
+                this.renderDefeatedArmy(ParticipantType.Defender, army_d)
               }
             </Grid.Column>
           </Grid.Row>
@@ -270,7 +270,7 @@ class Battle extends Component<IProps, IState> {
     return String(round)
   }
 
-  renderArmy = (type: ParticipantType, participant: Participant): JSX.Element => {
+  renderArmy = (type: ParticipantType, participant: Army): JSX.Element => {
     const country = participant.name
     const combat_width = this.props.combat.get(CombatParameter.CombatWidth, 30)
     return (
@@ -317,13 +317,13 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderIsRollRandom = (name: CountryName, is_random: boolean): JSX.Element => {
+  renderIsRollRandom = (type: ParticipantType, is_random: boolean): JSX.Element => {
     return (
-      <Checkbox toggle checked={is_random} onClick={() => this.props.toggleRandomRoll(this.props.mode, name)} />
+      <Checkbox toggle checked={is_random} onClick={() => this.props.toggleRandomRoll(this.props.mode, type)} />
     )
   }
 
-  renderReserve = (type: ParticipantType, participant: Participant): JSX.Element => {
+  renderReserve = (type: ParticipantType, participant: Army): JSX.Element => {
     const country = participant.name
     const units = this.mergeAllValues(country, participant.reserve)
     // + 1 ensures that the user can always select an empty space.
@@ -346,7 +346,7 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderDefeatedArmy = (type: ParticipantType, participant: Participant): JSX.Element => {
+  renderDefeatedArmy = (type: ParticipantType, participant: Army): JSX.Element => {
     const country = participant.name
     const units = this.mergeAllValues(country, participant.defeated)
     // + 1 ensures that the user can always select an empty space.
@@ -389,7 +389,7 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderTactic = (participant: Participant, counter?: TacticType): JSX.Element => {
+  renderTactic = (participant: Army, counter?: TacticType): JSX.Element => {
     const country = participant.name
     const tactic = this.props.tactics.get(participant.tactic)
     const army = {
@@ -411,8 +411,8 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderArmyInfo = (type: ParticipantType, participant: Participant, enemy: Participant): JSX.Element => {
-    const name = participant.name
+  renderArmyInfo = (type: ParticipantType, participant: Participant, army: Army, enemy: Army): JSX.Element => {
+    const name = army.name
     return (
       <Table.Row key={type}>
         <Table.Cell collapsing>
@@ -426,26 +426,26 @@ class Battle extends Component<IProps, IState> {
           />
         </Table.Cell>
         <Table.Cell collapsing>
-          <Input disabled={!participant.has_general} size='mini' style={{ width: 100 }} type='number' value={participant.general.base} onChange={(_, { value }) => this.props.setGeneralMartial(name, Number(value))} />
-          {' '}<StyledNumber value={participant.general.trait} formatter={addSign} />
+          <Input disabled={!army.has_general} size='mini' style={{ width: 100 }} type='number' value={army.general.base} onChange={(_, { value }) => this.props.setGeneralMartial(name, Number(value))} />
+          {' '}<StyledNumber value={army.general.trait} formatter={addSign} />
         </Table.Cell>
         <Table.Cell collapsing>
-          {this.renderTactic(participant, enemy.tactic)}
+          {this.renderTactic(army, enemy.tactic)}
         </Table.Cell>
         <Table.Cell>
-          {this.renderRoll(type, name, participant.roll, participant.randomize_roll, participant.general.total, enemy.general.total)}
+          {this.renderRoll(type, name, participant.roll, participant.randomize_roll, army.general.total, enemy.general.total)}
         </Table.Cell>
         <Table.Cell collapsing>
-          {this.renderIsRollRandom(name, participant.randomize_roll)}
+          {this.renderIsRollRandom(type, participant.randomize_roll)}
         </Table.Cell>
       </Table.Row>
     )
   }
 
-  renderRowTypes = (type: ParticipantType, participant: Participant): JSX.Element => {
-    const country = participant.name
+  renderRowTypes = (type: ParticipantType, army: Army): JSX.Element => {
+    const country = army.name
     const units = this.props.units.get(country)
-    const row_types = participant.row_types
+    const row_types = army.row_types
     return (
       <Table.Row key={type}>
         <Table.Cell>
@@ -461,7 +461,7 @@ class Battle extends Component<IProps, IState> {
           <Image src={getImage(units && units.get(row_types.get(RowType.Flank)!))} avatar />
         </Table.Cell>
         <Table.Cell collapsing>
-          <Input size='mini' style={{ width: 100 }} type='number' value={participant && participant.flank_size} onChange={(_, data) => this.props.setFlankSize(this.props.mode, country, Number(data.value))} />
+          <Input size='mini' style={{ width: 100 }} type='number' value={army && army.flank_size} onChange={(_, data) => this.props.setFlankSize(this.props.mode, country, Number(data.value))} />
         </Table.Cell>
       </Table.Row>
     )
@@ -488,8 +488,10 @@ class Battle extends Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  attacker: getAttacker(state),
-  defender: getDefender(state),
+  army_a: getArmy(state, ParticipantType.Attacker),
+  army_d: getArmy(state, ParticipantType.Defender),
+  attacker: getParticipant(state, ParticipantType.Attacker),
+  defender: getParticipant(state, ParticipantType.Defender),
   armies: getBattle(state).armies,
   is_undo: getBattle(state).round > -1,
   round: getBattle(state).round,
@@ -509,7 +511,7 @@ const mapStateToProps = (state: AppState) => ({
 const mapDispatchToProps = (dispatch: any) => ({
   battle: (mode: DefinitionType, steps: number) => dispatch(battle(mode, steps)),
   undo: (mode: DefinitionType, steps: number) => dispatch(undo(mode, steps)),
-  toggleRandomRoll: (mode: DefinitionType, name: CountryName) => dispatch(toggleRandomRoll(mode, name)),
+  toggleRandomRoll: (mode: DefinitionType, participant: ParticipantType) => dispatch(toggleRandomRoll(mode, participant)),
   setRoll: (mode: DefinitionType, name: CountryName, roll: number) => dispatch(setRoll(mode, name, roll)),
   setGeneralMartial: (name: CountryName, skill: number) => dispatch(setGeneralMartial(name, skill)) && dispatch(invalidateCountry(name)),
   setFlankSize: (mode: DefinitionType, name: CountryName, size: number) => dispatch(setFlankSize(mode, name, size)) && dispatch(invalidate(mode)),

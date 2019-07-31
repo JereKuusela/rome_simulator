@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { importState, ExportKey, setResetMissing, setExportKey } from '../store/transfer'
 import { transformGlobalStats, transformBattle, transformTactics, transformTerrains, transformUnits, transformSettings, transformCountries, stripRounds } from '../store/transforms'
-import { Armies, checkFight } from '../store/battle'
 import { DefinitionType } from '../base_definition'
 
 interface IState {
@@ -89,45 +88,6 @@ class Transfer extends Component<IProps, IState> {
           onChange={() => this.props.setExportKey(key, !this.props.export_keys.get(key))}
         />
       </List.Item>)
-  }
-
-  /**
-   * Restores the initial state of armies and removes history.
-   */
-  getInitialOnly = (mode: Armies): Armies => {
-    const past_a = mode.attacker_rounds && mode.attacker_rounds.get(0)
-    if (mode.round > -1 && past_a) {
-      mode = {
-        ...mode,
-        armies: mode.armies.update(mode.attacker, value => ({ ...value, ...past_a })),
-        attacker_rounds: mode.attacker_rounds.clear()
-      }
-    }
-    const past_d = mode.defender_rounds && mode.defender_rounds.get(0)
-    if (mode.round > -1 && past_d) {
-      mode = {
-        ...mode,
-        armies: mode.armies.update(mode.defender, value => ({ ...value, ...past_d })),
-        attacker_rounds: mode.defender_rounds.clear()
-      }
-    }
-    return {
-      ...mode,
-      round: -1,
-      fight_over: !checkFight(mode.armies.get(mode.attacker), mode.armies.get(mode.defender))
-    }
-  }
-
-  /**
-   * Removes history information.
-   */
-  removeHistory = (mode: Armies): Armies => {
-    return {
-      ...mode,
-      attacker_rounds: mode.attacker_rounds.clear(),
-      defender_rounds: mode.defender_rounds.clear(),
-      round: -1
-    }
   }
 
   filterKeys = (state: AppState): any => {

@@ -5,8 +5,8 @@ import { TacticType, TacticDefinition } from "./tactics/actions"
 import { DefinitionType } from "../base_definition"
 import { TerrainType, TerrainDefinition } from "./terrains/actions"
 import { UnitType, UnitDefinition } from "./units/actions"
-import { Armies, modeState } from "./battle/reducer"
-import { getDefaultArmy, Participant as BaseParticipant } from "./battle/actions"
+import { Battle, modeState } from "./battle/reducer"
+import { getDefaultArmy, Army as BaseArmy, ParticipantType, getDefaultParticipant, Units, Participant } from "./battle/actions"
 import { CombatParameter } from "./settings/actions"
 import { defaultCountry } from "./countries/reducer"
 import { CountryName } from "./countries/actions"
@@ -27,13 +27,7 @@ export const mergeSettings = (state: AppState): OrderedMap<CombatParameter, numb
       return base.merge(specific)
     return OrderedMap<CombatParameter, number>()
   }
-  
-  /**
-   * Returns armies of the current mode.
-   * @param state Application state.
-   */
-  export const getBattle = (state: AppState): Armies => state.battle.get(state.settings.mode, modeState(state.settings.mode))
-  
+
   /**
    * Returns unit types for the current mode from all armies.
    * @param state Application state.
@@ -77,8 +71,17 @@ export const mergeSettings = (state: AppState): OrderedMap<CombatParameter, numb
   export const filterTactics = (state: AppState): OrderedMap<TacticType, TacticDefinition> => {
     return state.tactics.filter(tactic => filterByMode(state.settings.mode, tactic))
   }
+  
+  /**
+   * Returns armies of the current mode.
+   * @param state Application state.
+   */
+  export const getBattle = (state: AppState): Battle => state.battle.get(state.settings.mode, modeState(state.settings.mode))
+  
+  const getArmyByType = (state: AppState, type: ParticipantType): Army => getArmyByCountry(state, getParticipant(state, type).name)
 
-  const getParticipant = (state: AppState, battle: Armies, name: CountryName): Participant => {
+  const getArmyByCountry = (state: AppState, name: CountryName): Army => {
+    const battle = getBattle(state)
     const army = battle.armies.get(name, getDefaultArmy(state.settings.mode))
     const country = state.countries.get(name, defaultCountry)
     const units = filterUnits(state.settings.mode, state.units.get(name, getDefaultUnits()))
@@ -92,32 +95,21 @@ export const mergeSettings = (state: AppState): OrderedMap<CombatParameter, numb
     return { ...army, general, name, units, global, has_general}
   }
 
-  export const getAttacker = (state: AppState): Participant => {
+  const getRounds = (state: AppState, type: ParticipantType): Units | undefined => {
     const battle = getBattle(state)
-    return { ...getParticipant(state, battle, battle.attacker), ...battle.attacker_rounds.get(-1) }
-  }
-  
-  export const getDefender = (state: AppState): Participant => {
-    const battle = getBattle(state)
-    return { ...getParticipant(state, battle, battle.defender), ...battle.defender_rounds.get(-1) }
+    const participant = battle.participants.get(type, getDefaultParticipant(CountryName.Country1))
+    return participant.rounds.get(-1)
   }
 
-  export const getAttackerUnits = (state: AppState): Participant => {
-    const battle = getBattle(state)
-    return getParticipant(state, battle, battle.attacker)
-  }
-  
-  export const getDefenderUnits = (state: AppState): Participant => {
-    const battle = getBattle(state)
-    return getParticipant(state, battle, battle.defender)
-  }
+  export const getArmy = (state: AppState, type: ParticipantType): Army => ({ ...getArmyByType(state, type), ...getRounds(state, type) })
 
-  export const getSelected = (state: AppState): Participant => {
-    const battle = getBattle(state)
-    return getParticipant(state, battle, state.settings.country)
-  }
+  export const getUnits = (state: AppState, type: ParticipantType): Army => getArmyByType(state, type)
 
-  export interface Participant extends BaseParticipant {
+  export const getParticipant = (state: AppState, type: ParticipantType): Participant => getBattle(state).participants.get(type, getDefaultParticipant(CountryName.Country1))
+
+  export const getSelected = (state: AppState): Army => getArmyByCountry(state, state.settings.country)
+
+  export interface Army extends BaseArmy {
     general: {
       total: number,
       base: number,

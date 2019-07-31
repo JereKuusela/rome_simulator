@@ -6,26 +6,28 @@ import { TacticType } from '../tactics/actions'
 import { DefinitionType } from '../../base_definition'
 import { CountryName } from '../countries'
 
-export interface RoundState extends Army {
-  roll: number
-}
-
 export enum RowType {
   Front = 'Front',
   Back = 'Back',
   Flank = 'Flank'
 }
 
-export interface Army {
+export interface Units {
   readonly frontline: List<Unit | undefined>
   readonly reserve: List<Unit>
   readonly defeated: List<Unit>
 }
 
-export interface Participant extends Army {
-  readonly tactic: TacticType
-  readonly roll: number
+export interface Participant {
+  readonly name: CountryName
+  readonly rounds: List<Units>,
+  readonly rolls: List<number>,
+  readonly roll: number,
   readonly randomize_roll: boolean
+}
+
+export interface Army extends Units {
+  readonly tactic: TacticType
   readonly row_types: Map<RowType, UnitType | undefined>
   readonly flank_size: number
   readonly selections: Set<string>
@@ -68,13 +70,11 @@ const getInitialRowTypes = (mode: DefinitionType): Map<RowType, UnitType | undef
   }
 }
 
-const initializeDefaultArmy = (mode: DefinitionType): Participant => ({
+const initializeDefaultArmy = (mode: DefinitionType): Army => ({
   frontline: fromJS(Array(30).fill(undefined)),
   reserve: List<Unit>(),
   defeated: List<Unit>(),
   tactic: getInitialTactic(mode),
-  roll: 3,
-  randomize_roll: false,
   row_types: getInitialRowTypes(mode),
   flank_size: 5,
   selections: Set<string>()
@@ -82,10 +82,20 @@ const initializeDefaultArmy = (mode: DefinitionType): Participant => ({
 const defaultLandArmy = initializeDefaultArmy(DefinitionType.Land)
 const defaultNavalArmy = initializeDefaultArmy(DefinitionType.Naval)
 
-export const getDefaultArmy = (mode: DefinitionType): Participant => {
+export const getDefaultArmy = (mode: DefinitionType): Army => {
   if (mode === DefinitionType.Naval)
     return defaultNavalArmy
   return defaultLandArmy
+}
+
+export const getDefaultParticipant = (name: CountryName): Participant => {
+  return {
+    name,
+    rounds: List<Units>(),
+    rolls: List<number>(),
+    roll: 3,
+    randomize_roll: false
+  }
 }
 
 export const selectUnit = createAction('@@battle/SELECT_UNIT', action => {
@@ -137,7 +147,7 @@ export const undo = createAction('@@battle/UNDO', action => {
 })
 
 export const toggleRandomRoll = createAction('@@battle/TOGGLE_RANDOM_ROLL', action => {
-  return (mode: DefinitionType, country: CountryName) => action({ mode, country })
+  return (mode: DefinitionType, participant: ParticipantType) => action({ mode, participant })
 })
 
 export const setRoll = createAction('@@battle/SET_ROLL', action => {
@@ -149,7 +159,7 @@ export const setFlankSize = createAction('@@battle/SET_FLANK_SIZE', action => {
 })
 
 export const selectArmy = createAction('@@battle/SELECT_ARMY', action => {
-  return (mode: DefinitionType, type: ParticipantType, country: CountryName) => action({ mode, type, country })
+  return (mode: DefinitionType, participant: ParticipantType, country: CountryName) => action({ mode, participant, country })
 })
 
 export const clearUnits = createAction('@@battle/CLEAR_UNITS', action => {

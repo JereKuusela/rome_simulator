@@ -2,7 +2,7 @@ import { List, Map } from 'immutable'
 import { Unit, UnitDefinition, UnitCalc, UnitType } from '../units'
 import { TerrainDefinition, TerrainCalc } from '../terrains'
 import { TacticDefinition, TacticCalc, TacticType } from '../tactics'
-import { RowType, Army } from '../battle'
+import { RowType, Units } from '../battle'
 import { CombatParameter } from '../settings'
 import { calculateValue, addValues, mergeValues, ValuesType } from '../../base_definition'
 import { reinforce } from './reinforcement'
@@ -45,9 +45,9 @@ export interface ParticipantState {
  * @param round Turn number to distinguish different rounds.
  * @param terrains Terrains of the battle, may affect amount of damage inflicted.
  */
-export const battle = (definitions: Definitions, attacker: ParticipantState, defender: ParticipantState, round: number, terrains: Terrains, settings: Settings): [Army, Army] => {
-  let a: Army = { frontline: attacker.frontline, reserve: attacker.reserve, defeated: attacker.defeated }
-  let d: Army = { frontline: defender.frontline, reserve: defender.reserve, defeated: defender.defeated }
+export const battle = (definitions: Definitions, attacker: ParticipantState, defender: ParticipantState, round: number, terrains: Terrains, settings: Settings): [Units, Units] => {
+  let a: Units = { frontline: attacker.frontline, reserve: attacker.reserve, defeated: attacker.defeated }
+  let d: Units = { frontline: defender.frontline, reserve: defender.reserve, defeated: defender.defeated }
   // Simplifies later code because armies can be assumed to be the correct size.
   const combat_width = settings.get(CombatParameter.CombatWidth, 30)
 
@@ -103,7 +103,7 @@ export const battle = (definitions: Definitions, attacker: ParticipantState, def
  * @param army Frontline.
  * @param targets List of targets.
  */
-const saveTargets = (army: Army, targets: Array<number | null>): Army => {
+const saveTargets = (army: Units, targets: Array<number | null>): Units => {
   const frontline = army.frontline.map((unit, index): (Unit | undefined) => {
     if (!unit)
       return unit
@@ -118,7 +118,7 @@ const saveTargets = (army: Army, targets: Array<number | null>): Army => {
  * @param army Frontline and defeated.
  * @param combat_width Width of the battlefield.
  */
-const removeOutOfBounds = (army: Army, combat_width: number): Army => {
+const removeOutOfBounds = (army: Units, combat_width: number): Units => {
   let defeated = army.defeated
   const frontline = army.frontline.map((unit, index) => {
     if (!unit)
@@ -203,7 +203,7 @@ const modifyRoll = (roll: number, terrains: Terrains, general: number, opposing_
  * Calculates amount of units in an army.
  * @param army Frontline, reserve and defeated.
  */
-const calculateArmySize = (army: Army): number => army.frontline.reduce((previous, current) => previous + (current ? 1 : 0), 0) + army.reserve.size + army.defeated.size
+const calculateArmySize = (army: Units): number => army.frontline.reduce((previous, current) => previous + (current ? 1 : 0), 0) + army.reserve.size + army.defeated.size
 
 
 /**
@@ -212,7 +212,7 @@ const calculateArmySize = (army: Army): number => army.frontline.reduce((previou
  * @param tactic Tactic to calculate.
  * @param counter_tactic Opposing tactic, can counter or get countered.
  */
-export const calculateTactic = (army?: Army, tactic?: TacticDefinition, counter_tactic?: TacticType): number => {
+export const calculateTactic = (army?: Units, tactic?: TacticDefinition, counter_tactic?: TacticType): number => {
   const effectiveness = (tactic && counter_tactic) ? calculateValue(tactic, counter_tactic) : tactic ? 1.0 : 0.0
   let unit_modifier = 1.0
   if (effectiveness > 0 && tactic && army) {
@@ -261,7 +261,7 @@ const applyKills = (frontline: Frontline, kills: Kill[], round: number): Frontli
  * Removes defeated units from a frontline.
  * @param army Frontline. 
  */
-const removeDefeated = (army: Army): Army => {
+const removeDefeated = (army: Units): Units => {
   const frontline = army.frontline.map(unit => unit && !unit.is_defeated ? unit : undefined)
   return { frontline, reserve: army.reserve, defeated: army.defeated }
 }
@@ -274,7 +274,7 @@ const removeDefeated = (army: Army): Army => {
  * @param minimum_morale Minimum morale to stay in the fight.
  * @param minimum_manpower Minimum manpower to stay in the fight.
  */
-const copyDefeated = (army: Army, definitions: Frontline, minimum_morale: number, minimum_manpower: number): Army => {
+const copyDefeated = (army: Units, definitions: Frontline, minimum_morale: number, minimum_manpower: number): Units => {
   let defeated = army.defeated
   const frontline = army.frontline.map((unit, index) => {
     const definition = definitions.get(index)

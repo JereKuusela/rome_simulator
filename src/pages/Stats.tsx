@@ -4,11 +4,11 @@ import { Container, Image, Table } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { Unit, UnitType, UnitCalc } from '../store/units'
-import { ParticipantType, Army, refreshBattle } from '../store/battle'
+import { ParticipantType, Units, refreshBattle } from '../store/battle'
 import IconManpower from '../images/manpower.png'
 import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
-import { getAttacker, getDefender, Participant, getBattle } from '../store/utils'
+import { getArmy, Army, getBattle } from '../store/utils'
 import { mergeArmy } from '../utils'
 import { calculateValue, calculateValueWithoutLoss, getImage, DefinitionType, strengthToValue } from '../base_definition'
 
@@ -24,7 +24,7 @@ class Stats extends Component<IProps> {
     )
   }
 
-  renderArmy = (type: ParticipantType, participant: Participant) => {
+  renderArmy = (type: ParticipantType, participant: Army) => {
     const info = {
       frontline: mergeArmy(participant, participant.frontline),
       reserve: mergeArmy(participant, participant.reserve),
@@ -62,7 +62,7 @@ class Stats extends Component<IProps> {
 
   round = (number: number): number => +(number).toFixed(2)
 
-  renderRow = (armies: Army, type: UnitType, image: string): JSX.Element | null => {
+  renderRow = (armies: Units, type: UnitType, image: string): JSX.Element | null => {
 
     const count = this.countUnits(armies, type)
 
@@ -89,7 +89,7 @@ class Stats extends Component<IProps> {
     )
   }
 
-  calculateValue = (participant: Army, type: UnitType, attribute: UnitCalc): number => {
+  calculateValue = (participant: Units, type: UnitType, attribute: UnitCalc): number => {
     return this.calculateValueSub(participant.frontline, type, attribute) + this.calculateValueSub(participant.reserve, type, attribute) + this.calculateValueSub(participant.defeated, type, attribute)
   }
 
@@ -97,7 +97,7 @@ class Stats extends Component<IProps> {
     return army.reduce((previous, current) => previous + (current && !current.is_defeated && current.type === type ? Math.max(0, calculateValue(current, attribute)) : 0), 0)
   }
 
-  calculateValueWithoutLoss = (participant: Army, type: UnitType, attribute: UnitCalc): number => {
+  calculateValueWithoutLoss = (participant: Units, type: UnitType, attribute: UnitCalc): number => {
     return this.calculateValueWithoutLossSub(participant.frontline, type, attribute) + this.calculateValueWithoutLossSub(participant.reserve, type, attribute) + this.calculateValueWithoutLossSub(participant.defeated, type, attribute)
   }
 
@@ -105,7 +105,7 @@ class Stats extends Component<IProps> {
     return army.reduce((previous, current) => previous + (current && !current.is_defeated && current.type === type ? calculateValueWithoutLoss(current, attribute) : 0), 0)
   }
 
-  countUnits = (army: Army, type: UnitType): number => {
+  countUnits = (army: Units, type: UnitType): number => {
     return this.countUnitsSub(army.frontline, type) + this.countUnitsSub(army.reserve, type) + this.countUnitsSub(army.defeated, type)
   }
 
@@ -113,8 +113,8 @@ class Stats extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  attacker: getAttacker(state),
-  defender: getDefender(state),
+  attacker: getArmy(state, ParticipantType.Attacker),
+  defender: getArmy(state, ParticipantType.Defender),
   outdated: getBattle(state).outdated,
   mode: state.settings.mode
 })

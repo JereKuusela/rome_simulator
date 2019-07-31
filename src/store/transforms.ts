@@ -2,7 +2,7 @@ import { fromJS, Map, List, OrderedMap } from 'immutable'
 import { tacticFromJS, TacticType, tacticsReducer, getDefaultTactics } from './tactics'
 import { terrainFromJS, TerrainType, terrainsReducer, getDefaultTerrains } from './terrains'
 import { unitDefinitionFromJS, unitFromJS, UnitType, unitsReducer, globalStatsReducer, Unit, getDefaultUnits, getDefaultGlobal } from './units'
-import { RowType, battleReducer, Participant, getDefaultArmy, Armies, modeState } from './battle'
+import { RowType, battleReducer, Army, getDefaultArmy, Battle, modeState, getDefaultParticipant, Participant, ParticipantType } from './battle'
 import { DefinitionType, clearAllValues, mergeValues } from '../base_definition'
 import { transferReducer } from './transfer'
 import { selectionsReducer, CountryName, Country } from './countries'
@@ -57,7 +57,7 @@ export const transformGlobalStats = (state_raw: any): ReturnType<typeof globalSt
   return global_stats.map(values => values.map((value, type) => clearAllValues(value, type)).map((value, type) => mergeValues(value, defaultGlobal.get(type)!)))
 }
 
-const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {
+const handleArmies = (state_raw: any, mode: DefinitionType): Battle => {
   const initial = modeState(mode)
   let terrains = initial.terrains
   if (state_raw.terrains) {
@@ -68,33 +68,29 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {
 
   const serializeUnits = (raw: List<any>): List<Unit | undefined> => raw.map(value => unitFromJS(value))
 
-  const serializeParticipant = (participant: any): Participant => {
+  const serializeArmy = (army: any): Army => {
     const initial = getDefaultArmy(mode)
     let frontline = initial.frontline
-    if (participant.frontline)
-      frontline = serializeUnits(fromJS(participant.frontline))
+    if (army.frontline)
+      frontline = serializeUnits(fromJS(army.frontline))
     let reserve = initial.reserve
-    if (participant.reserve)
-      reserve = serializeUnits(fromJS(participant.reserve)).filter(value => value) as List<Unit>
+    if (army.reserve)
+      reserve = serializeUnits(fromJS(army.reserve)).filter(value => value) as List<Unit>
     let defeated = initial.defeated
-    if (participant.defeated)
-      defeated = serializeUnits(fromJS(participant.defeated)).filter(value => value) as List<Unit>
+    if (army.defeated)
+      defeated = serializeUnits(fromJS(army.defeated)).filter(value => value) as List<Unit>
     let row_types: Map<RowType, UnitType | undefined>
-    if (participant.row_types)
-      row_types = fromJS(participant.row_types)
+    if (army.row_types)
+      row_types = fromJS(army.row_types)
     else
       row_types = initial.row_types
-    let tactic = participant.tactic
+    let tactic = army.tactic
     if (!tactic)
       tactic = initial.tactic
-    const flank_size = participant.flank_size || initial.flank_size
-    const roll = participant.roll || initial.roll
-    const randomize_roll = participant.randomize_roll
-    const selections = participant.selections ? fromJS(participant.selections).toSet() : initial.selections
+    const flank_size = army.flank_size || initial.flank_size
+    const selections = army.selections ? fromJS(army.selections).toSet() : initial.selections
     return {
       flank_size,
-      roll,
-      randomize_roll,
       frontline,
       reserve,
       defeated,
@@ -103,28 +99,39 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Armies => {
       selections
     }
   }
+  const serializeParticipant = (participant: any): Participant => {
+    const initial = getDefaultParticipant(CountryName.Country1)
+    const name = participant.name || initial.name
+    const roll = participant.roll || initial.roll
+    const randomize_roll = participant.randomize_roll
+    const rolls = participant.rolls ? fromJS(participant.rolls) : initial.rolls
+    return {
+      name,
+      roll,
+      randomize_roll,
+      rolls,
+      rounds: initial.rounds
+    }
+  }
   let armies = initial.armies
   if (state_raw.armies) {
     let armies_raw: Map<CountryName, any> = fromJS(state_raw.armies)
-    armies = armies_raw.filter(value => value).map(value => serializeParticipant(value.toJS()))
+    armies = armies_raw.filter(value => value).map(value => serializeArmy(value.toJS()))
   }
-  let attacker = state_raw.attacker
-  if (!attacker || typeof attacker !== 'string')
-    attacker = initial.attacker
-  let defender = state_raw.defender
-  if (!defender || typeof defender !== 'string')
-    defender = initial.defender
+  let participants = initial.participants
+  if (state_raw.participants) {
+    let participants_raw: Map<ParticipantType, any> = fromJS(state_raw.participants)
+    participants = participants_raw.filter(value => value).map(value => serializeParticipant(value.toJS()))
+  }
   const round = state_raw.round === undefined ? initial.round : state_raw.round
-  const attacker_rounds = initial.attacker_rounds
-  const defender_rounds = initial.defender_rounds
   const fight_over = initial.fight_over
   const seed = state_raw.seed || initial.seed
   const custom_seed = state_raw.custom_seed || initial.custom_seed
-  return { round, fight_over, armies, terrains, attacker, defender, attacker_rounds, defender_rounds, seed, custom_seed, outdated: true }
+  return { round, fight_over, armies, terrains, participants, seed, custom_seed, outdated: true }
 }
 
 export const stripRounds = (battle: ReturnType<typeof battleReducer>): any => {
-  return battle.map(value => ({ ...value, attacker_rounds: undefined, defender_rounds: undefined}))
+  return battle.map(value => ({ ...value, participants: value.participants.map(value => ({ ...value, rounds: undefined }))}))
 }
 
 export const transformBattle = (state_raw: any): ReturnType<typeof battleReducer> => {

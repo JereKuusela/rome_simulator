@@ -1,6 +1,6 @@
 import { Map } from 'immutable'
 import { Unit, UnitCalc, UnitType, UnitDefinition } from '../units'
-import { RowType, Army } from '../battle'
+import { RowType, Units } from '../battle'
 import { CombatParameter } from '../settings'
 import { calculateValue, mergeValues } from '../../base_definition'
 type Definition = Map<UnitType, UnitDefinition>
@@ -70,7 +70,7 @@ const calculateFlankSizes = (settings: Settings, round: number, flank_size: numb
  * @param settings Parameters for reinforcement.
  * @param attacker_to_defender Output. Reinforcement may move units so this must be updated also.
  */
-export const reinforce = (army: Army, definitions: Definition, round: number, row_types: RowTypes, flank_size: number, enemy_size: number, settings: Settings, attacker_to_defender: (number | null)[] | undefined): Army => {
+export const reinforce = (army: Units, definitions: Definition, round: number, row_types: RowTypes, flank_size: number, enemy_size: number, settings: Settings, attacker_to_defender: (number | null)[] | undefined): Units => {
     let frontline = army.frontline
     let reserve = army.reserve
 
