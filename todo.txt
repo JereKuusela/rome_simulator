@@ -52,6 +52,60 @@ Land battle:
 - Deployment order based also on manpower!! (before index), need to to test whether full strength is prioritized for both deploy and reinforce
 - With multiple armies: preferred flank size is halved (not always, sometimes also unit jumps directly to middle...), filled first (reverse index order), then from middle
 
+Multi army:
+- Two armies attack: First army on initial deployment on day 0, second army does from bottom to top
+- Two armies attack, second one day later: Second army from bottom to top on day 2 (1 day after arrival), two last units of first army get moved to second last and third last spots???
+- When an army joins: two lasts units of current army are given low priority, the last unit of the new army is given even lower priority
+- If last unit in the current army gets defeated right before new army joins, the move is not done. Move is checked before defeated are removed? Weird logic...
+
+Multi army flanking:
+- 20 vs 10 + 10, not happened
+- 10 vs 10 + 10, happened. But first unit of second army goes to index 1??
+- 10 vs 5 + 5, happened, again first unit goes to index 1...
+- Flank size depends on amount of units??
+- 8 vs 10 + 10, 5 units on sides, but edges empty, edges filled filled edge to center, center filled from center to edge.
+- 8 vs 5 + 5, 5 units on sides, but edges empty
+- 6 vs 10 + 10, 5 units on sides
+- 9 vs 10 + 10, flank size 10, 5 units on sides, but edges empty
+- 8 vs 10 + 10, flank size 10, 7 units on sides, but edges empty
+- 7 vs 10 + 10, flank size 10, 10 units on sides, but edges empty
+- 6 vs 10 + 10, flank size 10, 10 units on sides, but edges empty
+- 2 vs 10 + 10, flank size 10, 5 units on sides
+- If units move together, 2 x edges on sides
+
+Findings:
+- Preferred flank is first army sets maximum amount of units put on sides (or the bigger army??).
+- Sides have 1 x empty, but if armies together then 2 x empty.
+- Amount of enemy? units determines flank (10 + 10 own units). 
+  - 20 units: 0 flank but weird shifting
+  - 10 units: 1 flank
+  - 9 units: 5 flank
+  - 8 units: 7 flank
+  - 7 units: 10 flank (capped)
+  - 6 units: 10 flank (capped)
+  - 4 units: 10 flank (capped)
+  - 3 units: 7 flank
+  - 2 units: 5 flank
+  - 1 units: 1 flank
+  - 1 units + 1 + 5: 5 flank
+  - 1 units + 1 + 10: 5 flank
+  - 1 units + 1 + 10: 10 flank
+  - 1 vs 9 + 10: 5 flank -> no flank, only 9 units deploy, 2 shift to edges
+  - 1 vs 9 + 10: 10 flank -> 2 flank
+  - 1 vs 9 + 10: 2 flank -> no flank, only 3 units deploy, 2 shift to edges
+- Set units to flank, no units deploy!! except with 10 flank
+
+Findings 2:
+- 2 reinforcement modes:
+  - Flanking: Some units set to edges
+  - Non-flanking: Shift, not all (flank?) units deploy
+- Flank size may change mode
+- Mode seems to be also affected by amount of units in the filled
+- Amount of units also affects flank size
+
+
+
+
 Navigation:
 - Simulation
 - Graphs

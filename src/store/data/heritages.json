@@ -16,9 +16,30 @@
         },
         {
           "target": "Text",
-          "attribute": "Assimilate pop cost",
+          "attribute": "Assimilation speed",
           "negative": true,
-          "value": 0.15
+          "value": -0.25
+        }
+      ]
+    },
+    {
+      "name": "Arsacid Dahae",
+      "modifiers": [
+        {
+          "target": "Horse Archers",
+          "attribute": "Offense",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Freemen happiness",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Loyalty gain chance",
+          "negative": true,
+          "value": 0.05
         }
       ]
     },
@@ -80,8 +101,8 @@
           "value": -0.05
         },
         {
-          "target": "Text",
-          "attribute": "Fort cost",
+          "target": "Fort",
+          "attribute": "Cost",
           "negative": true,
           "value": 0.1
         }
@@ -101,8 +122,8 @@
           "value": 0.05
         },
         {
-          "target": "Text",
-          "attribute": "Fort defense",
+          "target": "Fort",
+          "attribute": "Defense",
           "negative": true,
           "value": -0.1
         }
@@ -136,7 +157,7 @@
       "modifiers": [
         {
           "target": "Text",
-          "attribute": "Roads cost",
+          "attribute": "Found city cost",
           "value": -0.1
         },
         {
@@ -146,7 +167,7 @@
         },
         {
           "target": "Text",
-          "attribute": "Tribeman happiness",
+          "attribute": "Tribesmen happiness",
           "negative": true,
           "value": -0.05
         }
@@ -156,13 +177,13 @@
       "name": "Montane",
       "modifiers": [
         {
-          "target": "Text",
-          "attribute": "Fort maintenance",
+          "target": "Fort",
+          "attribute": "Maintenance",
           "value": -0.05
         },
         {
-          "target": "Text",
-          "attribute": "Fort defense",
+          "target": "Fort",
+          "attribute": "Defense",
           "value": 0.05
         },
         {
@@ -229,7 +250,7 @@
         },
         {
           "target": "Text",
-          "attribute": "Tribeman happiness",
+          "attribute": "Tribesmen happiness",
           "value": 0.05
         },
         {
@@ -266,8 +287,8 @@
       "name": "Highland",
       "modifiers": [
         {
-          "target": "Text",
-          "attribute": "Fort cost",
+          "target": "Fort",
+          "attribute": "Cost",
           "value": -0.1
         },
         {
@@ -321,7 +342,7 @@
         },
         {
           "target": "Text",
-          "attribute": "Slave output",
+          "attribute": "Slaves output",
           "negative": true,
           "value": -0.05
         }
@@ -343,7 +364,7 @@
         },
         {
           "target": "Text",
-          "attribute": "Loyalty chance",
+          "attribute": "Loyalty gain chance",
           "negative": true,
           "value": 0.05
         }
@@ -353,8 +374,8 @@
       "name": "Antigonid",
       "modifiers": [
         {
-          "target": "Text",
-          "attribute": "Siege",
+          "target": "Siege",
+          "attribute": "Ability",
           "value": 0.05
         },
         {
@@ -364,8 +385,8 @@
           "value": 2
         },
         {
-          "target": "Text",
-          "attribute": "Fort defense",
+          "target": "Fort",
+          "attribute": "Defense",
           "negative": true,
           "value": -0.1
         }
@@ -404,16 +425,14 @@
         },
         {
           "target": "Text",
-          "attribute": "Population growth",
-          "no_percent": true,
+          "attribute": "Population capacity",
           "value": 0.02
         },
         {
           "target": "Text",
-          "attribute": "Reputation",
-          "no_percent": true,
+          "attribute": "Assimilation speed",
           "negative": true,
-          "value": -2
+          "value": -0.25
         }
       ]
     },
@@ -429,13 +448,13 @@
           "target": "Text",
           "attribute": "Popularity gain",
           "no_percent": true,
-          "value": 0.02
+          "value": 0.04
         },
         {
           "target": "Text",
-          "attribute": "Assimilate pop cost",
+          "attribute": "Assimilation speed",
           "negative": true,
-          "value": -0.15
+          "value": -0.25
         }
       ]
     },
@@ -464,8 +483,8 @@
       "name": "Judea",
       "modifiers": [
         {
-          "target": "Text",
-          "attribute": "Fort defense",
+          "target": "Fort",
+          "attribute": "Defense",
           "value": 0.1
         },
         {
@@ -475,9 +494,9 @@
         },
         {
           "target": "Text",
-          "attribute": "Convert pop cost",
+          "attribute": "Conversion speed",
           "negative": true,
-          "value": 0.1
+          "value": -0.25
         }
       ]
     },
@@ -498,7 +517,7 @@
           "target": "Text",
           "attribute": "Build cost",
           "negative": true,
-          "value": 0.1
+          "value": 0.05
         }
       ]
     },
@@ -512,14 +531,14 @@
         },
         {
           "target": "Text",
-          "attribute": "Trade route cost",
-          "value": -0.05
+          "attribute": "Commerce",
+          "value": 0.1
         },
         {
           "target": "Text",
-          "attribute": "Manpower recovery",
+          "attribute": "Assimilation speed",
           "negative": true,
-          "value": -0.1
+          "value": -0.25
         }
       ]
     },
@@ -534,14 +553,15 @@
         },
         {
           "target": "Text",
-          "attribute": "Hostile attrition",
-          "value": 0.1
+          "attribute": "Manpower recovery",
+          "value": 0.05
         },
         {
           "target": "Text",
-          "attribute": "Siege",
+          "attribute": "Subject opinion",
           "negative": true,
-          "value": -0.1
+          "no_percent": true,
+          "value": -10
         }
       ]
     },
@@ -549,7 +569,7 @@
       "name": "Epirote",
       "modifiers": [
         {
-          "target": "Light Cavalry",
+          "target": "Light Infantry",
           "attribute": "Discipline",
           "value": 0.1
         },
@@ -579,7 +599,7 @@
         {
           "target": "Text",
           "attribute": "Civic investment cost",
-          "value": -0.01
+          "value": -0.1
         },
         {
           "target": "Text",
@@ -600,13 +620,13 @@
           "value": -0.1
         },
         {
-          "target": "Text",
-          "attribute": "Fort defense",
+          "target": "Fort",
+          "attribute": "Defense",
           "value": 0.1
         },
         {
-          "target": "Text",
-          "attribute": "Fort maintenance",
+          "target": "Fort",
+          "attribute": "Maintenance",
           "negative": true,
           "value": 0.1
         }
@@ -706,13 +726,13 @@
           "target": "Text",
           "attribute": "Diplomatic relations",
           "no_percent": true,
-          "value": 2
+          "value": 1
         },
         {
-          "target": "Text",
-          "attribute": "Goods from slaves",
-          "no_percent": true,
-          "value": -1
+          "target": "Heavy Infantry",
+          "attribute": "Maintenance",
+          "modifier": true,
+          "value": -0.1
         },
         {
           "target": "Text",
@@ -738,7 +758,7 @@
         },
         {
           "target": "Text",
-          "attribute": "Slave happiness",
+          "attribute": "Slaves happiness",
           "negative": true,
           "value": -0.05
         }
@@ -776,7 +796,7 @@
         },
         {
           "target": "Text",
-          "attribute": "Freeman happiness",
+          "attribute": "Freemen happiness",
           "value": 0.05
         },
         {
@@ -789,7 +809,7 @@
       ]
     },
     {
-      "name": "Theban",
+      "name": "Argive",
       "modifiers": [
         {
           "target": "Text",
@@ -803,10 +823,95 @@
           "value": 0.05
         },
         {
-          "target": "Text",
-          "attribute": "Fort defense",
+          "target": "Fort",
+          "attribute": "Defense",
           "negative": true,
           "value": -0.1
+        }
+      ]
+    },
+    {
+      "name": "Kushite",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Manpower",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Build Cost",
+          "value": -0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Military investment cost",
+          "negative": true,
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Nabatean",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Migration speed",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Commerce",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Conversion speed",
+          "negative": true,
+          "value": -0.05
+        }
+      ]
+    },
+    {
+      "name": "Helot",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Freemen happiness",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Promotion speed",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Commerce",
+          "negative": true,
+          "value": -0.05
+        }
+      ]
+    },
+    {
+      "name": "Kalingan",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Tribesmen happiness",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Assimilation speed",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Diplomatic reputation",
+          "negative": true,
+          "no_percent": true,
+          "value": -2
         }
       ]
     }
