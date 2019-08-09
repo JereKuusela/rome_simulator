@@ -104,7 +104,11 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Battle => {
     const name = participant.name || initial.name
     const roll = participant.roll || initial.roll
     const randomize_roll = participant.randomize_roll
-    const rolls = participant.rolls ? fromJS(participant.rolls) : initial.rolls
+    let rolls = initial.rolls
+    if (participant.rolls) {
+      const rolls_raw: List<any> = fromJS(participant.rolls)
+      rolls = rolls_raw.filter(value => value).map(value => value.toJS())
+    }
     return {
       name,
       roll,

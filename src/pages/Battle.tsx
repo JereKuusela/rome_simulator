@@ -291,16 +291,16 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderRoll = (type: ParticipantType, name: CountryName, roll: number, is_random: boolean, general: number, opposing_general: number): JSX.Element => {
+  renderRoll = (type: ParticipantType, roll: number, is_random: boolean, general: number, opposing_general: number): JSX.Element => {
     const terrain_effect = type === ParticipantType.Attacker ? calculateRollModifierFromTerrains(this.props.selected_terrains.map(value => this.props.terrains.get(value))) : 0
     const general_effect = calculateRollModifierFromGenerals(general, opposing_general)
     const total = terrain_effect + general_effect + roll
     const base_damage = calculateBaseDamage(total, this.props.combat)
     return (
-      <div key={name}>
+      <div key={type}>
         {base_damage.toFixed(2)} :
         <span style={{ paddingLeft: '1em' }} /><Image src={IconDice} avatar />
-        {is_random ? roll : <Input size='mini' style={{ width: 100 }} type='number' value={roll} onChange={(_, data) => this.props.setRoll(this.props.mode, name, Number(data.value))} />}
+        {is_random ? roll : <Input size='mini' style={{ width: 100 }} type='number' value={roll} onChange={(_, data) => this.props.setRoll(this.props.mode, type, Number(data.value))} />}
         {general_effect !== 0 ?
           <span style={{ paddingLeft: '1em' }}>
             <Image src={IconGeneral} avatar />
@@ -433,7 +433,7 @@ class Battle extends Component<IProps, IState> {
           {this.renderTactic(army, enemy.tactic)}
         </Table.Cell>
         <Table.Cell>
-          {this.renderRoll(type, name, participant.roll, participant.randomize_roll, army.general.total, enemy.general.total)}
+          {this.renderRoll(type, participant.roll, participant.randomize_roll, army.general.total, enemy.general.total)}
         </Table.Cell>
         <Table.Cell collapsing>
           {this.renderIsRollRandom(type, participant.randomize_roll)}
@@ -470,7 +470,7 @@ class Battle extends Component<IProps, IState> {
   renderSeed = (): JSX.Element => {
     return (
       <Grid.Column>
-        <Input disabled={this.props.round > 0} type='number' value={this.props.seed} label='Seed for random generator'  onChange={(_, {value}) => this.setSeed(value)}/>
+        <Input type='number' value={this.props.seed} label='Seed for random generator'  onChange={(_, {value}) => this.setSeed(value)}/>
       </Grid.Column>
     )
   }
@@ -512,7 +512,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   battle: (mode: DefinitionType, steps: number) => dispatch(battle(mode, steps)),
   undo: (mode: DefinitionType, steps: number) => dispatch(undo(mode, steps)),
   toggleRandomRoll: (mode: DefinitionType, participant: ParticipantType) => dispatch(toggleRandomRoll(mode, participant)),
-  setRoll: (mode: DefinitionType, name: CountryName, roll: number) => dispatch(setRoll(mode, name, roll)),
+  setRoll: (mode: DefinitionType, participant: ParticipantType, roll: number) => dispatch(setRoll(mode, participant, roll)),
   setGeneralMartial: (name: CountryName, skill: number) => dispatch(setGeneralMartial(name, skill)) && dispatch(invalidateCountry(name)),
   setFlankSize: (mode: DefinitionType, name: CountryName, size: number) => dispatch(setFlankSize(mode, name, size)) && dispatch(invalidate(mode)),
   selectArmy: (mode: DefinitionType, type: ParticipantType, name: CountryName) => dispatch(selectArmy(mode, type, name)) && dispatch(invalidate(mode)),

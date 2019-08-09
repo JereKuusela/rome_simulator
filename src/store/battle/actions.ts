@@ -18,10 +18,15 @@ export interface Units {
   readonly defeated: List<Unit>
 }
 
+interface Rolls {
+  roll: number
+  randomized: boolean
+}
+
 export interface Participant {
   readonly name: CountryName
   readonly rounds: List<Units>,
-  readonly rolls: List<number>,
+  readonly rolls: List<Rolls>,
   readonly roll: number,
   readonly randomize_roll: boolean
 }
@@ -92,7 +97,7 @@ export const getDefaultParticipant = (name: CountryName): Participant => {
   return {
     name,
     rounds: List<Units>(),
-    rolls: List<number>(),
+    rolls: List<Rolls>(),
     roll: 3,
     randomize_roll: false
   }
@@ -151,7 +156,7 @@ export const toggleRandomRoll = createAction('@@battle/TOGGLE_RANDOM_ROLL', acti
 })
 
 export const setRoll = createAction('@@battle/SET_ROLL', action => {
-  return (mode: DefinitionType, country: CountryName, roll: number) => action({ mode, country, roll })
+  return (mode: DefinitionType, participant: ParticipantType, roll: number) => action({ mode, participant, roll })
 })
 
 export const setFlankSize = createAction('@@battle/SET_FLANK_SIZE', action => {

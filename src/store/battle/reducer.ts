@@ -77,13 +77,13 @@ const fightOver = (state: Map<DefinitionType, Battle>, payload: { mode: Definiti
 
 export const battleReducer = createReducer(initialState)
   .handleAction(toggleRandomRoll, (state, action: ReturnType<typeof toggleRandomRoll>) =>
-  updateParticipant(state, action.payload,  value => ({ ...value, randomize_roll: !value.randomize_roll }))
+    updateParticipant(state, action.payload,  value => ({ ...value, randomize_roll: !value.randomize_roll }))
   )
   .handleAction(setFlankSize, (state, action: ReturnType<typeof setFlankSize>) => 
     update(state, action.payload, (value: Army) => ({ ...value, flank_size: action.payload.size }))
   )
   .handleAction(setRoll, (state, action: ReturnType<typeof setRoll>) => 
-    update(state, action.payload, (value: Army) => ({ ...value, roll: action.payload.roll }))
+    updateParticipant(state, action.payload, value => ({ ...value, roll: action.payload.roll }))
   )
   .handleAction(selectUnit, (state, action: ReturnType<typeof selectUnit>) => {
     const handleArmy = (participant: Army): Army => {
@@ -124,7 +124,12 @@ export const battleReducer = createReducer(initialState)
       let seed: number = next.seed
       if (next.round < 2)
         seed = next.custom_seed ? next.custom_seed : 0
-      const participants: Map<ParticipantType, Participant> = next.participants.map(value => ({ ...value, rounds: value.rounds.pop()}))
+      const participants: Map<ParticipantType, Participant> = next.participants.map(value => ({
+        ...value,
+        rounds: value.rounds.pop(),
+        roll: value.rolls.get(-2, { roll: value.roll }).roll,
+        rolls: value.rolls.pop()
+      }))
       next = {
         ...next,
         participants,
