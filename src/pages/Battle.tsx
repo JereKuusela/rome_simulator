@@ -285,6 +285,7 @@ class Battle extends Component<IProps, IState> {
           row_width={Math.max(30, combat_width)}
           reverse={type === ParticipantType.Attacker}
           type={ArmyType.Frontline}
+          disable_add={this.props.round > -1}
         />
         {type === ParticipantType.Defender && <Header>{type + '\'s frontline'}</Header>}
       </div>

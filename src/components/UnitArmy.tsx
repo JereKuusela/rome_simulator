@@ -16,6 +16,7 @@ interface IProps {
   onRemove?: (index: number) => void
   type: ArmyType
   color: string
+  disable_add?: boolean
 }
 
 const MORALE_COLOR = 'rgba(200,55,55,0.60)'
@@ -56,7 +57,7 @@ export default class UnitArmy extends Component<IProps> {
                       className={this.props.side + '-' + this.props.type + '-' + column}
                       textAlign='center'
                       key={index}
-                      disabled={column < 0}
+                      disabled={column < 0 || (this.props.disable_add && !unit)}
                       selectable={!!this.props.onClick}
                       style={{backgroundColor: column < 0 ? '#DDDDDD' : 'white', padding: 0}}
                       onClick={() => this.props.onClick && this.props.onClick(row * this.props.row_width + column, unit)}
