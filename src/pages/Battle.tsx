@@ -3,7 +3,7 @@ import { List } from 'immutable'
 import { Container, Header, Button, Grid, Image, Checkbox, Input, Table, Divider } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
-import { UnitDefinition, Unit } from '../store/units'
+import { Unit, UnitDefinition } from '../store/units'
 import UnitArmy from '../components/UnitArmy'
 import TargetArrows from '../components/TargetArrows'
 import { invalidate, invalidateCountry, ArmyType, battle, undo, Participant, ParticipantType, toggleRandomRoll, setRoll, RowType, setFlankSize, selectArmy, selectUnit, setSeed, refreshBattle } from '../store/battle'
@@ -26,6 +26,7 @@ import { CombatParameter } from '../store/settings'
 import IconTerrain from '../images/terrain.png'
 import IconGeneral from '../images/military_power.png'
 import StyledNumber from '../components/StyledNumber'
+import { findUnitById } from '../utils'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
@@ -51,14 +52,18 @@ class Battle extends Component<IProps, IState> {
 
   openUnitModal = (name: CountryName, type: ArmyType, country: CountryName, column: number, unit: Unit | undefined): void => {
     if (unit)
-      this.openArmyUnitModal(name, type, country, column)
+      this.openArmyUnitModal(country, unit as Unit & UnitDefinition)
     else
       this.openUnitSelector(name, type, country, column)
   }
 
   openUnitSelector = (name: CountryName, type: ArmyType, country: CountryName, index: number): void => this.setState({ modal_unit_info: { name, type, country, index } })
 
-  openArmyUnitModal = (name: CountryName, type: ArmyType, country: CountryName, index: number): void => this.setState({ modal_army_unit_info: { name, type, country, index } })
+  openArmyUnitModal = (country: CountryName, current_unit: Unit & UnitDefinition): void => {
+    const base_unit = findUnitById(this.props.armies.get(country), current_unit.id)
+    if (base_unit)
+      this.setState({ modal_army_unit_info: { country, current_unit, base_unit } })
+  }
 
   openTerrainModal = (index: number): void => this.setState({ modal_terrain_info: { index, location: this.props.terrains.get(this.props.selected_terrains.get(index)!)!.location } })
 
@@ -395,8 +400,8 @@ class Battle extends Component<IProps, IState> {
     const tactic = this.props.tactics.get(participant.tactic)
     const army = {
       frontline: this.mergeAllValues(country, participant.frontline),
-      reserve: this.mergeAllValues(country, participant.reserve) as List<UnitDefinition>,
-      defeated: this.mergeAllValues(country, participant.defeated) as List<UnitDefinition>
+      reserve: this.mergeAllValues(country, participant.reserve) as List<Unit>,
+      defeated: this.mergeAllValues(country, participant.defeated) as List<Unit>
     }
     return (
       <div key={country} onClick={() => this.openTacticModal(country, counter)}>
@@ -483,7 +488,7 @@ class Battle extends Component<IProps, IState> {
       this.props.setSeed(this.props.mode, Number(value))
   }
 
-  mergeAllValues = (name: CountryName, army: List<Unit | undefined>): List<UnitDefinition | undefined> => {
+  mergeAllValues = (name: CountryName, army: List<Unit | undefined>): List<Unit | undefined> => {
     return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats.getIn([name, this.props.mode])))
   }
 }

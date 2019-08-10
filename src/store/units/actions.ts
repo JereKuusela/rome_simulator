@@ -50,6 +50,7 @@ export type ValueType = UnitCalc | UnitType | TerrainType
 export interface Unit extends BaseDefinition<UnitType, ValueType> {
   readonly is_defeated?: boolean
   readonly target?: number | null
+  readonly id: number
 }
 
 export interface UnitDefinition extends BaseDefinition<UnitType, ValueType> {

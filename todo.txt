@@ -4,9 +4,6 @@ Release 5:
 Tests (high priority):
 - base_definition functions tested
 
-History refactor:
-- Must prevent adding units during combat (shouldn't be a big deal because even now it doesn't work that well)
-
 Army management:
 - Probably needed for multi-army battles because countries need to have multiple armies
 - General selector to units page, renamed to army?

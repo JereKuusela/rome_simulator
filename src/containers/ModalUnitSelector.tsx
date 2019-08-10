@@ -7,7 +7,7 @@ import { selectUnit, ArmyType } from '../store/battle'
 import { CountryName } from '../store/countries'
 import { DefinitionType } from '../base_definition'
 import ItemSelector from '../components/ItemSelector'
-import { filterUnits } from '../utils'
+import { filterUnits, getNextId } from '../utils'
 
 export interface ModalInfo {
   name: CountryName
@@ -36,7 +36,7 @@ class ModalUnitSelector extends Component<IProps> {
 
   selectUnit = (unit: UnitType | undefined): void => (
     this.props.info &&
-    this.props.selectUnit(this.props.mode, this.props.info.name, this.props.info.type, this.props.info.index, unit ? { type: this.props.units.getIn([this.props.info.name, unit]).type } : undefined)
+    this.props.selectUnit(this.props.mode, this.props.info.name, this.props.info.type, this.props.info.index, unit ? { id: getNextId(), type: this.props.units.getIn([this.props.info.name, unit]).type } : undefined)
   )
 }
 

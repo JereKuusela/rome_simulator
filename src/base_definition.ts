@@ -63,7 +63,7 @@ export const mergeBaseValues = <Definition extends AnyDefinition | undefined>
  * @param to_merge Only returned if other parameter is not defined.
  */
 export const mergeValues = <Definition1 extends AnyBaseDefinition | undefined, Definition2 extends AnyBaseDefinition | undefined>
-  (definition: Definition1, to_merge: Definition2): Definition1 | Definition2 => {
+  (definition: Definition1, to_merge: Definition2): Definition1 & Definition2 => {
   let base_values = Map<any, OrderedMap<string, number>>()
   if (definition && definition.base_values)
     base_values = base_values.mergeDeep(definition.base_values)

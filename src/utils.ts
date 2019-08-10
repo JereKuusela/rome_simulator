@@ -2,7 +2,8 @@ import { fromJS, Seq, List, OrderedMap, OrderedSet, Map } from 'immutable'
 import { Army } from './store/utils';
 import { Unit, UnitDefinition, UnitType } from './store/units/actions'
 import { mergeValues, DefinitionType } from './base_definition'
-import { getDefaultUnits } from './store/units/data';
+import { getDefaultUnits } from './store/units/data'
+import { Units } from './store/battle';
 
 /**
  * Maps a range to a list.
@@ -59,3 +60,27 @@ export const filterUnits = (mode: DefinitionType, units?: OrderedMap<UnitType, U
 export const getKeys = <T>(map: OrderedMap<T, any>): OrderedSet<T> => map.keySeq().toOrderedSet()
 
 export const sum = (map: Map<any, number>): number => map.reduce((previous, current) => previous + current, 0)
+
+let unit_id = 0
+
+export const getNextId = () => ++unit_id
+
+/**
+ * Finds the base unit with a given id from a given army.
+ * @param units Units to search.
+ * @param id Id to find.
+ */
+export const findUnitById = (units: Units | undefined, id: number): Unit | undefined => {
+  if (!units)
+    return undefined
+  let base_unit = units.reserve.find(unit => unit.id === id)
+  if (base_unit)
+    return base_unit
+    base_unit = units.frontline.find(unit => unit ? unit.id === id : false)
+  if (base_unit)
+    return base_unit
+  base_unit = units.defeated.find(unit => unit.id === id)
+  if (base_unit)
+    return base_unit
+  return undefined
+}

@@ -8,7 +8,7 @@ import ArmyCosts from '../components/ArmyCosts'
 import { UnitType, Unit } from '../store/units'
 import { clearUnits, removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits, invalidate, ParticipantType } from '../store/battle'
 import { getUnits } from '../store/utils'
-import { mapRange, mergeArmy } from '../utils'
+import { mapRange, mergeArmy, getNextId } from '../utils'
 import { CountryName } from '../store/countries'
 import { DefinitionType } from '../base_definition'
 
@@ -104,7 +104,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
     changes.forEach((value, key) => {
       const original = originals ? originals.get(key, 0) : 0
       if (value > original)
-        units = units.concat(mapRange(value - original, _ => ({ type: key })))
+        units = units.concat(mapRange(value - original, _ => ({ id: getNextId(), type: key  })))
     })
     return units
   }

@@ -107,6 +107,14 @@ export const selectUnit = createAction('@@battle/SELECT_UNIT', action => {
   return (mode: DefinitionType, country: CountryName, type: ArmyType, index: number, unit: Unit | undefined) => action({ mode, country, type, index, unit })
 })
 
+export const editUnit = createAction('@@battle/EDIT_UNIT', action => {
+  return (mode: DefinitionType, country: CountryName, unit: Unit) => action({ mode, country, unit })
+})
+
+export const removeUnit = createAction('@@battle/REMOVE_UNIT', action => {
+  return (mode: DefinitionType, country: CountryName, unit: Unit) => action({ mode, country, unit })
+})
+
 export const removeReserveUnits = createAction('@@battle/REMOVE_RESERVE_UNITS', action => {
   return (mode: DefinitionType, country: CountryName, types: UnitType[]) => action({ mode, country, types })
 })

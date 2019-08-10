@@ -1,6 +1,7 @@
 import { OrderedMap, Map, fromJS } from 'immutable'
 import { UnitType, UnitDefinition, UnitCalc, ValueType, Unit } from './actions'
 import { addValues, ValuesType, DefinitionType } from '../../base_definition'
+import { getNextId } from '../../utils'
 import IconArcher from '../../images/archers.png'
 import IconCamelCavalry from '../../images/camel_cavalry.png'
 import IconChariots from '../../images/chariots.png'
@@ -118,7 +119,7 @@ export const unitFromJS = (object?: Map<string, any>): Unit | undefined => {
   const base_values = object.has('base_values') ? fromJS(object.get('base_values').map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
   const modifier_values = object.has('modifier_values') ? fromJS(object.get('modifier_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
   const loss_values = object.has('loss_values') ? fromJS(object.get('loss_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
-  return { type, is_defeated, target, base_values, modifier_values, loss_values }
+  return { id: getNextId(), type, is_defeated, target, base_values, modifier_values, loss_values }
 }
 
 export const unitDefinitionFromJS = (object?: Map<string, any>): UnitDefinition | undefined => {
