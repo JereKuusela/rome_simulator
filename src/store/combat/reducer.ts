@@ -1,6 +1,6 @@
 import { createReducer } from 'typesafe-actions'
 import { Random, MersenneTwister19937, createEntropy } from 'random-js'
-import { battle, checkFight, setSeed, refreshBattle, ParticipantType, Participant } from '../battle'
+import { battle, checkFight, setSeed, refreshBattle, Side, Participant } from '../battle'
 import { battle as fight } from './combat'
 import { mergeValues, DefinitionType } from '../../base_definition'
 import { CombatParameter } from '../settings'
@@ -13,10 +13,10 @@ const doBattle = (state: AppState, mode: DefinitionType, steps: number): AppStat
   const definitions = state.units.map((value, key) => value.map(value => mergeValues(value, state.global_stats.getIn([key, mode]))))
   let next = getBattle(state)
   // Whole logic really messed after so many refactorings
-  let units_a = getArmy(state, ParticipantType.Attacker)
-  let units_d = getArmy(state, ParticipantType.Defender)
-  let participant_a = getParticipant(state, ParticipantType.Attacker)
-  let participant_d = getParticipant(state, ParticipantType.Defender)
+  let units_a = getArmy(state, Side.Attacker)
+  let units_d = getArmy(state, Side.Defender)
+  let participant_a = getParticipant(state, Side.Attacker)
+  let participant_d = getParticipant(state, Side.Defender)
   const country_a = state.countries.get(units_a.name, defaultCountry)
   const country_d = state.countries.get(units_d.name, defaultCountry)
   const combat = mergeSettings(state)
@@ -86,7 +86,7 @@ const doBattle = (state: AppState, mode: DefinitionType, steps: number): AppStat
     }
     next = {
       ...next,
-      participants: next.participants.set(ParticipantType.Attacker, participant_a).set(ParticipantType.Defender, participant_d),
+      participants: next.participants.set(Side.Attacker, participant_a).set(Side.Defender, participant_d),
       round: next.round + 1
     }
     next = {

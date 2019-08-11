@@ -11,8 +11,8 @@ import IconStrength from '../images/naval_combat.png'
 
 interface IProps {
   mode: DefinitionType
-  army_a: List<Unit | undefined>
-  army_d: List<Unit | undefined>
+  frontline_a: List<Unit | undefined>
+  frontline_d: List<Unit | undefined>
   reserve_a: List<Unit>
   reserve_d: List<Unit>
   defeated_a: List<Unit>
@@ -57,8 +57,8 @@ export default class ArmyCosts extends Component<IProps> {
     )
   }
 
-  calculateTotal = (attribute1: UnitCalc, attribute2: UnitCalc | undefined, army: List<Unit | undefined>, reserve: List<Unit>, defeated: List<Unit>): number => {
-    return army.reduce((previous, current) => previous + (current && !current.is_defeated ?  + this.reduce(current, attribute1, attribute2) : 0), 0)
+  calculateTotal = (attribute1: UnitCalc, attribute2: UnitCalc | undefined, frontline: List<Unit | undefined>, reserve: List<Unit>, defeated: List<Unit>): number => {
+    return frontline.reduce((previous, current) => previous + (current && !current.is_defeated ?  + this.reduce(current, attribute1, attribute2) : 0), 0)
       + reserve.reduce((previous, current) => previous + this.reduce(current, attribute1, attribute2), 0)
       + defeated.reduce((previous, current) => previous + this.reduce(current, attribute1, attribute2), 0)
   }
@@ -81,12 +81,12 @@ export default class ArmyCosts extends Component<IProps> {
       </Table.Cell>
       <Table.Cell width='5'>
         {
-          this.finalize(attribute1, this.calculateTotal(attribute1, attribute2, this.props.army_a, this.props.reserve_a, this.props.defeated_a))
+          this.finalize(attribute1, this.calculateTotal(attribute1, attribute2, this.props.frontline_a, this.props.reserve_a, this.props.defeated_a))
         }
       </Table.Cell>
       <Table.Cell width='5'>
         {
-          this.finalize(attribute1, this.calculateTotal(attribute1, attribute2, this.props.army_d, this.props.reserve_d, this.props.defeated_d))
+          this.finalize(attribute1, this.calculateTotal(attribute1, attribute2, this.props.frontline_d, this.props.reserve_d, this.props.defeated_d))
         }
       </Table.Cell>
     </Table.Row>

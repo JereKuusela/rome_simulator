@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { List } from 'immutable'
 import LineTo from 'react-lineto'
-import { ParticipantType, ArmyType } from '../store/battle'
-import { Unit } from '../store/units'
+import { Side, ArmyType } from '../store/battle'
+import { BaseUnit } from '../store/units'
 
 
 interface IProps {
-  attacker?: List< Unit | undefined>
-  defender?: List< Unit | undefined>
+  attacker?: List< BaseUnit | undefined>
+  defender?: List< BaseUnit | undefined>
   attacker_color: string
   defender_color: string
 }
@@ -22,9 +22,9 @@ export default class UnitArmy extends Component<IProps> {
             value && value.target !== null && value.target !== undefined  &&
             <LineTo
               borderColor={this.props.attacker_color}
-              from={ParticipantType.Attacker + '-' + ArmyType.Frontline + '-' + index}
+              from={Side.Attacker + '-' + ArmyType.Frontline + '-' + index}
               fromAnchor='bottom'
-              to={ParticipantType.Defender + '-' + ArmyType.Frontline + '-' + value.target}
+              to={Side.Defender + '-' + ArmyType.Frontline + '-' + value.target}
               toAnchor='top'
               delay={true}
               zIndex={-1}
@@ -36,9 +36,9 @@ export default class UnitArmy extends Component<IProps> {
             value && value.target !== null && value.target !== undefined &&
             <LineTo
             borderColor={this.props.defender_color}
-              from={ParticipantType.Defender + '-' + ArmyType.Frontline + '-' + index}
+              from={Side.Defender + '-' + ArmyType.Frontline + '-' + index}
               fromAnchor='top'
-              to={ParticipantType.Attacker + '-' + ArmyType.Frontline + '-' + value.target}
+              to={Side.Attacker + '-' + ArmyType.Frontline + '-' + value.target}
               toAnchor='bottom'
               delay={true}
               zIndex={-1}

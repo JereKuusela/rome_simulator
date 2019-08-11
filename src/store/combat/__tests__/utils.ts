@@ -1,7 +1,7 @@
 import { OrderedMap } from 'immutable'
 import { Army, Participant } from '../../battle'
 import { TacticType } from '../../tactics'
-import { Unit, UnitCalc, UnitDefinition, UnitType } from '../../units'
+import { BaseUnit, UnitCalc, UnitDefinition, UnitType } from '../../units'
 import { calculateValue, DefinitionType } from '../../../base_definition'
 import { settingsState, CombatParameter } from '../../settings'
 
@@ -13,7 +13,7 @@ export interface TestInfo {
   round: number
 }
 
-const verifySub = (round: number, unit: Unit | undefined, strength: number, morale: number) => {
+const verifySub = (round: number, unit: BaseUnit | undefined, strength: number, morale: number) => {
   expect(unit).toBeTruthy()
   if (!unit)
     return
@@ -34,7 +34,7 @@ export const verifyCenterUnits = (info: TestInfo, manpower_a: number, morale_a: 
   verifySub(info.round, info.army_a.frontline.get(15), manpower_a, morale_a)
   verifySub(info.round, info.army_d.frontline.get(15), manpower_d, morale_d)
 }
-export const verifyType = (unit: Unit | undefined, type: UnitType, message: string = '') => {
+export const verifyType = (unit: BaseUnit | undefined, type: UnitType, message: string = '') => {
   expect(unit).toBeTruthy()
   expect(unit!.type + message).toEqual(type + message)
 }
@@ -46,7 +46,7 @@ export const setTactics = (info: TestInfo, tactic_a: TacticType, tactic_d: Tacti
   info.army_a = { ...info.army_a, tactic: tactic_a }
   info.army_d = { ...info.army_d, tactic: tactic_d }
 }
-export const setCenterUnits = (info: TestInfo, unit_a: UnitDefinition, unit_b: UnitDefinition) => {
+export const setCenterUnits = (info: TestInfo, unit_a: BaseUnit, unit_b: BaseUnit) => {
   info.army_a = { ...info.army_a, frontline: info.army_a.frontline.set(15, unit_a) }
   info.army_d = { ...info.army_d, frontline: info.army_d.frontline.set(15, unit_b) }
 }

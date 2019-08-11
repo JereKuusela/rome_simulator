@@ -1,8 +1,8 @@
 import { fromJS, Map, List, OrderedMap } from 'immutable'
 import { tacticFromJS, TacticType, tacticsReducer, getDefaultTactics } from './tactics'
 import { terrainFromJS, TerrainType, terrainsReducer, getDefaultTerrains } from './terrains'
-import { unitDefinitionFromJS, unitFromJS, UnitType, unitsReducer, globalStatsReducer, Unit, getDefaultUnits, getDefaultGlobal } from './units'
-import { RowType, battleReducer, Army, getDefaultArmy, Battle, modeState, getDefaultParticipant, Participant, ParticipantType } from './battle'
+import { unitDefinitionFromJS, unitFromJS, UnitType, unitsReducer, globalStatsReducer, BaseUnit, getDefaultUnits, getDefaultGlobal } from './units'
+import { RowType, battleReducer, Army, getDefaultArmy, Battle, modeState, getDefaultParticipant, Participant, Side } from './battle'
 import { DefinitionType, clearAllValues, mergeValues } from '../base_definition'
 import { transferReducer } from './transfer'
 import { selectionsReducer, CountryName, Country } from './countries'
@@ -66,7 +66,7 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Battle => {
       terrains = terrains_raw
   }
 
-  const serializeUnits = (raw: List<any>): List<Unit | undefined> => raw.map(value => unitFromJS(value))
+  const serializeUnits = (raw: List<any>): List<BaseUnit | undefined> => raw.map(value => unitFromJS(value))
 
   const serializeArmy = (army: any): Army => {
     const initial = getDefaultArmy(mode)
@@ -75,10 +75,10 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Battle => {
       frontline = serializeUnits(fromJS(army.frontline))
     let reserve = initial.reserve
     if (army.reserve)
-      reserve = serializeUnits(fromJS(army.reserve)).filter(value => value) as List<Unit>
+      reserve = serializeUnits(fromJS(army.reserve)).filter(value => value) as List<BaseUnit>
     let defeated = initial.defeated
     if (army.defeated)
-      defeated = serializeUnits(fromJS(army.defeated)).filter(value => value) as List<Unit>
+      defeated = serializeUnits(fromJS(army.defeated)).filter(value => value) as List<BaseUnit>
     let row_types: Map<RowType, UnitType | undefined>
     if (army.row_types)
       row_types = fromJS(army.row_types)
@@ -124,7 +124,7 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Battle => {
   }
   let participants = initial.participants
   if (state_raw.participants) {
-    let participants_raw: Map<ParticipantType, any> = fromJS(state_raw.participants)
+    let participants_raw: Map<Side, any> = fromJS(state_raw.participants)
     participants = participants_raw.filter(value => value).map(value => serializeParticipant(value.toJS()))
   }
   const round = state_raw.round === undefined ? initial.round : state_raw.round

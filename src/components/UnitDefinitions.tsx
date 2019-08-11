@@ -13,7 +13,7 @@ import IconAttrition from '../images/attrition.png'
 import { getImage, calculateValue, calculateBase, calculateModifier, calculateLoss, mergeValues, DefinitionType } from '../base_definition'
 import { toSignedPercent, toNumber, hideZero, toPercent, toManpower } from '../formatters'
 import { CountryName } from '../store/countries'
-import { filterUnits } from '../utils'
+import { filterUnitDefinitions } from '../utils'
 import StyledNumber from './StyledNumber'
 import VersusList from './VersusList'
 
@@ -31,7 +31,7 @@ interface IProps {
 export default class UnitDefinitions extends Component<IProps> {
 
   render(): JSX.Element {
-    const units = filterUnits(this.props.mode, this.props.units.get(this.props.country)).toList()
+    const units = filterUnitDefinitions(this.props.mode, this.props.units.get(this.props.country)).toList()
     return (
       <Table celled selectable unstackable>
         <Table.Header>

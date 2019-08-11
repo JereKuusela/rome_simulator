@@ -1,11 +1,11 @@
 import { createReducer } from 'typesafe-actions'
 import { List, Map } from 'immutable'
 import {
-  getDefaultArmy, getInitialTerrains, Army, ParticipantType, editUnit, removeUnit,
+  getDefaultArmy, getInitialTerrains, Army, Side, editUnit, removeUnit,
   clearUnits, selectUnit, selectTerrain, selectTactic, undo, toggleRandomRoll, setRoll, setRowType, removeReserveUnits, addReserveUnits, setFlankSize,
-  selectArmy, ArmyType, Units, invalidate, invalidateCountry, Participant, getDefaultParticipant
+  selectArmy, ArmyType, BaseUnits, invalidate, invalidateCountry, Participant, getDefaultParticipant
 } from './actions'
-import { Unit, UnitType } from '../units'
+import { BaseUnit, UnitType } from '../units'
 import { TerrainType } from '../terrains'
 import { DefinitionType } from '../../base_definition'
 import { CountryName } from '../countries/actions'
@@ -13,7 +13,7 @@ import { CountryName } from '../countries/actions'
 export interface Battle {
   readonly armies: Map<CountryName, Army>
   readonly terrains: List<TerrainType>,
-  readonly participants: Map<ParticipantType, Participant>,
+  readonly participants: Map<Side, Participant>,
   readonly round: number,
   readonly fight_over: boolean,
   readonly seed: number,
@@ -23,7 +23,7 @@ export interface Battle {
 
 export const modeState = (mode: DefinitionType): Battle => ({
   armies: Map<CountryName, Army>().set(CountryName.Country1, getDefaultArmy(mode)).set(CountryName.Country2, getDefaultArmy(mode)),
-  participants: Map<ParticipantType, Participant>().set(ParticipantType.Attacker, getDefaultParticipant(CountryName.Country1)).set(ParticipantType.Defender, getDefaultParticipant(CountryName.Country2)),
+  participants: Map<Side, Participant>().set(Side.Attacker, getDefaultParticipant(CountryName.Country1)).set(Side.Defender, getDefaultParticipant(CountryName.Country2)),
   terrains: getInitialTerrains(mode),
   round: -1,
   fight_over: true,
@@ -49,19 +49,19 @@ const findUnit = (participant: Army, id: number): [ArmyType | undefined, number]
   return [undefined, -1]
 }
 
-const checkFightSub = (army?: Units) => army ? (checkArmy(army.frontline) || checkArmy(army.reserve)) : false
+const checkFightSub = (army?: BaseUnits) => army ? (checkArmy(army.frontline) || checkArmy(army.reserve)) : false
 
-export const checkFight = (participants: Map<ParticipantType, Participant>, armies: Map<CountryName, Army>) => participants.every(value => checkFightSub(value.rounds.get(-1, armies.get(value.name))))
+export const checkFight = (participants: Map<Side, Participant>, armies: Map<CountryName, Army>) => participants.every(value => checkFightSub(value.rounds.get(-1, armies.get(value.name))))
 
-const checkArmy = (army: List<Unit | undefined>) => army.find(value => value !== undefined) !== undefined
+const checkArmy = (army: List<BaseUnit | undefined>) => army.find(value => value !== undefined) !== undefined
 
-export const doRemoveReserveUnits = (reserve: List<Unit>, types: UnitType[]) => {
+export const doRemoveReserveUnits = (reserve: List<BaseUnit>, types: UnitType[]) => {
   for (const type of types)
     reserve = reserve.delete(reserve.findLastIndex(value => value.type === type))
   return reserve
 }
 
-export const doAddReserveUnits = (reserve: List<Unit>, units: Unit[]) => reserve.merge(units)
+export const doAddReserveUnits = (reserve: List<BaseUnit>, units: BaseUnit[]) => reserve.merge(units)
 
 const update = (state: Map<DefinitionType, Battle>, payload: { mode: DefinitionType, country: CountryName }, updater: (participant: Army) => Army): Map<DefinitionType, Battle> => {
   if (!state.has(payload.mode))
@@ -71,7 +71,7 @@ const update = (state: Map<DefinitionType, Battle>, payload: { mode: DefinitionT
   })
 }
 
-const updateParticipant = (state: Map<DefinitionType, Battle>, payload: { mode: DefinitionType, participant: ParticipantType }, updater: (participant: Participant) => Participant): Map<DefinitionType, Battle> => {
+const updateParticipant = (state: Map<DefinitionType, Battle>, payload: { mode: DefinitionType, participant: Side }, updater: (participant: Participant) => Participant): Map<DefinitionType, Battle> => {
   if (!state.has(payload.mode))
     state = state.set(payload.mode, modeState(payload.mode))
   return state.update(payload.mode, mode => {
@@ -160,7 +160,7 @@ export const battleReducer = createReducer(initialState)
       let seed: number = next.seed
       if (next.round < 2)
         seed = next.custom_seed ? next.custom_seed : 0
-      const participants: Map<ParticipantType, Participant> = next.participants.map(value => ({
+      const participants: Map<Side, Participant> = next.participants.map(value => ({
         ...value,
         rounds: value.rounds.pop(),
         roll: value.rolls.get(-2, { roll: value.roll }).roll,

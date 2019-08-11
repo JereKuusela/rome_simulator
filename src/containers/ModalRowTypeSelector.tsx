@@ -8,7 +8,7 @@ import { DefinitionType } from '../base_definition'
 import ItemSelector from '../components/ItemSelector'
 import ItemRemover from '../components/ItemRemover'
 import { CountryName } from '../store/countries'
-import { filterUnits } from '../utils'
+import { filterUnitDefinitions } from '../utils'
 
 export interface ModalInfo {
   name: CountryName
@@ -20,7 +20,7 @@ class ModalRowTypeSelector extends Component<IProps> {
   render(): JSX.Element | null {
     if (!this.props.info)
       return null
-    const units = filterUnits(this.props.mode, this.props.units.get(this.props.info.country))
+    const units = filterUnitDefinitions(this.props.mode, this.props.units.get(this.props.info.country))
     return (
       <Modal basic onClose={this.props.onClose} open centered={false}>
         <Modal.Content>

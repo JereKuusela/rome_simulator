@@ -1,18 +1,18 @@
 import React, { Component } from 'react'
 import { List } from 'immutable'
-import { ParticipantType, ArmyType } from '../store/battle'
+import { Side, ArmyType } from '../store/battle'
 import { Table, Image, Icon } from 'semantic-ui-react'
-import { Unit, UnitCalc } from '../store/units'
+import { BaseUnit, UnitCalc } from '../store/units'
 import { calculateValue, calculateValueWithoutLoss, getImage } from '../base_definition'
 import IconDefeated from '../images/attrition.png'
 
 
 interface IProps {
-  side: ParticipantType
-  units?: List< Unit | undefined>
+  side: Side
+  units?: List< BaseUnit | undefined>
   row_width: number
   reverse: boolean
-  onClick?: (index: number, unit: Unit | undefined) => void
+  onClick?: (index: number, unit: BaseUnit | undefined) => void
   onRemove?: (index: number) => void
   type: ArmyType
   color: string
@@ -92,11 +92,11 @@ export default class UnitArmy extends Component<IProps> {
     return 'square full'
   }
 
-  gradient = (unit: Unit | undefined, color: string, attribute: UnitCalc): string => {
+  gradient = (unit: BaseUnit | undefined, color: string, attribute: UnitCalc): string => {
     return 'linear-gradient(0deg, ' + color + ' 0%, ' + color + ' ' + this.percent(unit, attribute) + '%, ' + WHITE_COLOR + ' ' + this.percent(unit, attribute) + '%, ' + WHITE_COLOR + ' 100%)'
   }
 
-  percent = (unit: Unit | undefined, attribute: UnitCalc): number => {
+  percent = (unit: BaseUnit | undefined, attribute: UnitCalc): number => {
     if (!unit || unit.is_defeated)
       return 0
     return 100.0 - 100.0 * calculateValue(unit, attribute) / calculateValueWithoutLoss(unit, attribute)

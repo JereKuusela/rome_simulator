@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
-import { UnitType, Unit } from '../store/units'
+import { UnitType, BaseUnit } from '../store/units'
 import { AppState } from '../store/'
 import { selectUnit, ArmyType } from '../store/battle'
 import { CountryName } from '../store/countries'
 import { DefinitionType } from '../base_definition'
 import ItemSelector from '../components/ItemSelector'
-import { filterUnits, getNextId } from '../utils'
+import { filterUnitDefinitions, getNextId } from '../utils'
 
 export interface ModalInfo {
   name: CountryName
@@ -20,7 +20,7 @@ class ModalUnitSelector extends Component<IProps> {
   render(): JSX.Element | null {
     if (!this.props.info)
       return null
-    const units = filterUnits(this.props.mode, this.props.units.get(this.props.info.country))
+    const units = filterUnitDefinitions(this.props.mode, this.props.units.get(this.props.info.country))
     return (
       <Modal basic onClose={this.props.onClose} open centered={false}>
         <Modal.Content>
@@ -46,7 +46,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  selectUnit: (mode: DefinitionType, name: CountryName, type: ArmyType, column: number, unit: Unit | undefined) => (
+  selectUnit: (mode: DefinitionType, name: CountryName, type: ArmyType, column: number, unit: BaseUnit | undefined) => (
     dispatch(selectUnit(mode, name, type, column, unit))
   )
 })

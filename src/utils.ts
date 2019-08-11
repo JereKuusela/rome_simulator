@@ -1,9 +1,9 @@
 import { fromJS, Seq, List, OrderedMap, OrderedSet, Map } from 'immutable'
 import { Army } from './store/utils';
-import { Unit, UnitDefinition, UnitType } from './store/units/actions'
+import { BaseUnit, UnitDefinition, UnitType, Unit } from './store/units/actions'
 import { mergeValues, DefinitionType } from './base_definition'
 import { getDefaultUnits } from './store/units/data'
-import { Units } from './store/battle';
+import { BaseUnits } from './store/battle'
 
 /**
  * Maps a range to a list.
@@ -44,25 +44,70 @@ export const orderedMapFromJS = <T>(data: T) => {
   })
 }
 
+/**
+ * Converts an item to a list with that item.
+ * @param item 
+ */
 export const toList = <T>(item: T) => List<T>().push(item)
 
-export const mergeArmy = (participant: Army, army: List<Unit | undefined>): List<any> => {
+/**
+ * Merges units to their definitions resulting in current units.
+ * @param participant 
+ * @param army 
+ */
+export const mergeArmy = (participant: Army, army: List<BaseUnit | undefined>): List<Unit | undefined> => {
   return army.map(value => value && mergeValues(mergeValues(participant.units.get(value.type), value), participant.global))
 }
 
-export const filterByMode = (mode: DefinitionType, definition: { mode: DefinitionType }) => definition.mode === DefinitionType.Global || definition.mode === mode
-
-export const filterUnits = (mode: DefinitionType, units?: OrderedMap<UnitType, UnitDefinition>): OrderedMap<UnitType, UnitDefinition> => {
-  units = units || getDefaultUnits()
-  return units.filter(unit => filterByMode(mode, unit))
+export const getFrontline = (participant: Army): List<Unit | undefined> => {
+  return participant.frontline.map(value => value && mergeUnits(participant.units, participant.global, value))
 }
 
+export const getReserve = (participant: Army): List<Unit> => {
+  return participant.reserve.map(value => mergeUnits(participant.units, participant.global, value))
+}
+
+export const getDefeated = (participant: Army): List<Unit> => {
+  return participant.defeated.map(value => mergeUnits(participant.units, participant.global, value))
+}
+
+export const mergeUnits = (units: Map<UnitType, UnitDefinition>, global: UnitDefinition, unit: BaseUnit): Unit => (
+  mergeValues(mergeValues(units.get(unit.type), unit), global) as Unit
+)
+
+/**
+ * Returns whether a given definition belongs to a given battle mode.
+ */
+export const isIncludedInMode = (mode: DefinitionType, definition: { mode: DefinitionType }) => definition.mode === DefinitionType.Global || definition.mode === mode
+
+/**
+ * Returns unit defnitions for current battle mode.
+ * @param mode
+ * @param definitions 
+ */
+export const filterUnitDefinitions = (mode: DefinitionType, definitions?: OrderedMap<UnitType, UnitDefinition>): OrderedMap<UnitType, UnitDefinition> => {
+  definitions = definitions || getDefaultUnits()
+  return definitions.filter(unit => isIncludedInMode(mode, unit))
+}
+
+/**
+ * Returns keys of a map.
+ * @param map 
+ */
 export const getKeys = <T>(map: OrderedMap<T, any>): OrderedSet<T> => map.keySeq().toOrderedSet()
 
+/**
+ * Sums numbers in a map. Keys are ignored.
+ * @param map
+ */
 export const sum = (map: Map<any, number>): number => map.reduce((previous, current) => previous + current, 0)
 
-let unit_id = 0
 
+let unit_id = 0
+/**
+ * Returns a new id.
+ * This is only meant for non-persisted ids because any existing ids are not considered.
+ */
 export const getNextId = () => ++unit_id
 
 /**
@@ -70,7 +115,7 @@ export const getNextId = () => ++unit_id
  * @param units Units to search.
  * @param id Id to find.
  */
-export const findUnitById = (units: Units | undefined, id: number): Unit | undefined => {
+export const findUnitById = (units: BaseUnits | undefined, id: number): BaseUnit | undefined => {
   if (!units)
     return undefined
   let base_unit = units.reserve.find(unit => unit.id === id)

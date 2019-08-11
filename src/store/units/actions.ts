@@ -47,7 +47,7 @@ export enum UnitCalc {
 
 export type ValueType = UnitCalc | UnitType | TerrainType
 
-export interface Unit extends BaseDefinition<UnitType, ValueType> {
+export interface BaseUnit extends BaseDefinition<UnitType, ValueType> {
   readonly is_defeated?: boolean
   readonly target?: number | null
   readonly id: number
@@ -58,6 +58,9 @@ export interface UnitDefinition extends BaseDefinition<UnitType, ValueType> {
   readonly can_assault: boolean
   readonly mode: DefinitionType
 }
+
+export interface Unit extends BaseUnit, UnitDefinition { }
+
 
 export const valueToString = (definition: BaseDefinition<UnitType, ValueType>, type: ValueType): string => {
   const value = calculateValue(definition, type)

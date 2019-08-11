@@ -10,7 +10,7 @@ import { TacticType, TacticCalc } from '../store/tactics'
 import { getBattle, filterTactics } from '../store/utils'
 import { DefinitionType, mergeValues, calculateValue } from '../base_definition'
 import { toSignedPercent, toPercent } from '../formatters'
-import { Unit } from '../store/units'
+import { BaseUnit } from '../store/units'
 import { CountryName } from '../store/countries'
 import StyledNumber from '../components/StyledNumber';
 
@@ -27,8 +27,8 @@ class ModalTacticSelector extends Component<IProps> {
     const participant = this.props.armies.get(country)
     const army = participant && {
       frontline: this.mergeAllValues(country, participant.frontline),
-      reserve: this.mergeAllValues(country, participant.reserve) as List<Unit>,
-      defeated: this.mergeAllValues(country, participant.defeated) as List<Unit>
+      reserve: this.mergeAllValues(country, participant.reserve) as List<BaseUnit>,
+      defeated: this.mergeAllValues(country, participant.defeated) as List<BaseUnit>
     }
     let attributes = Map<string, Map<TacticType, JSX.Element>>()
     attributes = attributes.set('effect', this.props.tactics.map(value => (
@@ -69,7 +69,7 @@ class ModalTacticSelector extends Component<IProps> {
   )
 
   
-  mergeAllValues = (name: CountryName, army: List<Unit | undefined>): List<Unit | undefined> => {
+  mergeAllValues = (name: CountryName, army: List<BaseUnit | undefined>): List<BaseUnit | undefined> => {
     return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats.getIn([name, this.props.mode])))
   }
 }

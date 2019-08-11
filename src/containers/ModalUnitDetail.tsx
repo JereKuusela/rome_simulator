@@ -14,22 +14,24 @@ class ModalUnitDetail extends Component<IProps> {
   render(): JSX.Element | null {
     if (!this.props.country || !this.props.unit)
       return null
+    const country = this.props.country
+    const unit = mergeValues(this.props.units.getIn([this.props.country, this.props.unit]), this.props.global_stats.getIn([this.props.country, this.props.mode]))
+    const type = unit.type
     return (
       <UnitDetail
         mode={this.props.mode}
-        name={this.props.country}
+        name={country}
         terrain_types={this.props.terrain_types}
         custom_value_key={CUSTOM_VALUE_KEY}
-        unit={mergeValues(this.props.units.getIn([this.props.country, this.props.unit]), this.props.global_stats.getIn([this.props.country, this.props.mode]))}
-        units={this.props.units}
+        unit={unit}
         unit_types={this.props.unit_types}
-        onCustomBaseValueChange={this.props.setBaseValue}
-        onCustomModifierValueChange={this.props.setModifierValue}
-        onCustomLossValueChange={this.props.setLossValue}
+        onCustomBaseValueChange={(key, attribute, value) => this.props.setBaseValue(country, type, key, attribute, value)}
+        onCustomModifierValueChange={(key, attribute, value) => this.props.setModifierValue(country, type, key, attribute, value)}
+        onCustomLossValueChange={(key, attribute, value) => this.props.setLossValue(country, type, key, attribute, value)}
         show_statistics={false}
-        onTypeChange={this.props.changeType}
-        onImageChange={this.props.changeImage}
-        onModeChange={this.props.changeMode}
+        onTypeChange={new_type => this.props.changeType(country, type, new_type)}
+        onImageChange={image => this.props.changeImage(country, type, image)}
+        onModeChange={mode => this.props.changeMode(country, type, mode)}
       />
     )
   }

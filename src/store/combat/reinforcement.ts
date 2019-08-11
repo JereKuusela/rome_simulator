@@ -1,6 +1,6 @@
 import { Map } from 'immutable'
-import { Unit, UnitCalc, UnitType, UnitDefinition } from '../units'
-import { RowType, Units } from '../battle'
+import { BaseUnit, UnitCalc, UnitType, UnitDefinition } from '../units'
+import { RowType, BaseUnits } from '../battle'
 import { CombatParameter } from '../settings'
 import { calculateValue, mergeValues } from '../../base_definition'
 type Definition = Map<UnitType, UnitDefinition>
@@ -16,7 +16,7 @@ export const nextIndex = (index: number, center: number) => index < center ? ind
  * Returns whether a given unit is a flanker.
  * Units with more than 2 maneuver are considered flankers, unless overridden by preferences.
  */
-const isFlankUnit = (settings: Settings, row_types: RowTypes, unit: Unit) => {
+const isFlankUnit = (settings: Settings, row_types: RowTypes, unit: BaseUnit) => {
     if (unit.type === row_types.get(RowType.Flank))
         return true
     if (unit.type === row_types.get(RowType.Front) || unit.type === row_types.get(RowType.Back))
@@ -70,7 +70,7 @@ const calculateFlankSizes = (settings: Settings, round: number, flank_size: numb
  * @param settings Parameters for reinforcement.
  * @param attacker_to_defender Output. Reinforcement may move units so this must be updated also.
  */
-export const reinforce = (army: Units, definitions: Definition, round: number, row_types: RowTypes, flank_size: number, enemy_size: number, settings: Settings, attacker_to_defender: (number | null)[] | undefined): Units => {
+export const reinforce = (army: BaseUnits, definitions: Definition, round: number, row_types: RowTypes, flank_size: number, enemy_size: number, settings: Settings, attacker_to_defender: (number | null)[] | undefined): BaseUnits => {
     let frontline = army.frontline
     let reserve = army.reserve
 

@@ -1,5 +1,5 @@
 import { OrderedMap, Map, fromJS } from 'immutable'
-import { UnitType, UnitDefinition, UnitCalc, ValueType, Unit } from './actions'
+import { UnitType, UnitDefinition, UnitCalc, ValueType, BaseUnit } from './actions'
 import { addValues, ValuesType, DefinitionType } from '../../base_definition'
 import { getNextId } from '../../utils'
 import IconArcher from '../../images/archers.png'
@@ -110,7 +110,7 @@ const defaultGlobal = initializeDefaultGlobal()
 export const getDefaultUnits = (): OrderedMap<UnitType, UnitDefinition> => defaultUnits
 export const getDefaultGlobal = (): OrderedMap<DefinitionType, UnitDefinition> => defaultGlobal
 
-export const unitFromJS = (object?: Map<string, any>): Unit | undefined => {
+export const unitFromJS = (object?: Map<string, any>): BaseUnit | undefined => {
   if (!object)
     return undefined
   const type = object.get('type') as UnitType

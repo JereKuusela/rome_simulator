@@ -1,16 +1,16 @@
 import { List, Map } from 'immutable'
-import { Unit, UnitDefinition, UnitCalc, UnitType } from '../units'
+import { BaseUnit, UnitDefinition, UnitCalc, UnitType } from '../units'
 import { TerrainDefinition, TerrainCalc } from '../terrains'
 import { TacticDefinition, TacticCalc, TacticType } from '../tactics'
-import { RowType, Units } from '../battle'
+import { RowType, BaseUnits } from '../battle'
 import { CombatParameter } from '../settings'
 import { calculateValue, addValues, mergeValues, ValuesType } from '../../base_definition'
 import { reinforce } from './reinforcement'
 import { CountryName } from '../countries'
 
-type Frontline = List<Unit | undefined>
-type Reserve = List<Unit>
-type Defeated = List<Unit>
+type Frontline = List<BaseUnit | undefined>
+type Reserve = List<BaseUnit>
+type Defeated = List<BaseUnit>
 type Terrains = List<TerrainDefinition | undefined>
 type Definition = Map<UnitType, UnitDefinition>
 type Definitions = Map<CountryName, Definition>
@@ -45,9 +45,9 @@ export interface ParticipantState {
  * @param round Turn number to distinguish different rounds.
  * @param terrains Terrains of the battle, may affect amount of damage inflicted.
  */
-export const battle = (definitions: Definitions, attacker: ParticipantState, defender: ParticipantState, round: number, terrains: Terrains, settings: Settings): [Units, Units] => {
-  let a: Units = { frontline: attacker.frontline, reserve: attacker.reserve, defeated: attacker.defeated }
-  let d: Units = { frontline: defender.frontline, reserve: defender.reserve, defeated: defender.defeated }
+export const battle = (definitions: Definitions, attacker: ParticipantState, defender: ParticipantState, round: number, terrains: Terrains, settings: Settings): [BaseUnits, BaseUnits] => {
+  let a: BaseUnits = { frontline: attacker.frontline, reserve: attacker.reserve, defeated: attacker.defeated }
+  let d: BaseUnits = { frontline: defender.frontline, reserve: defender.reserve, defeated: defender.defeated }
   // Simplifies later code because armies can be assumed to be the correct size.
   const combat_width = settings.get(CombatParameter.CombatWidth, 30)
 
@@ -103,8 +103,8 @@ export const battle = (definitions: Definitions, attacker: ParticipantState, def
  * @param army Frontline.
  * @param targets List of targets.
  */
-const saveTargets = (army: Units, targets: Array<number | null>): Units => {
-  const frontline = army.frontline.map((unit, index): (Unit | undefined) => {
+const saveTargets = (army: BaseUnits, targets: Array<number | null>): BaseUnits => {
+  const frontline = army.frontline.map((unit, index): (BaseUnit | undefined) => {
     if (!unit)
       return unit
     return { ...unit, target: targets[index]}
@@ -118,7 +118,7 @@ const saveTargets = (army: Units, targets: Array<number | null>): Units => {
  * @param army Frontline and defeated.
  * @param combat_width Width of the battlefield.
  */
-const removeOutOfBounds = (army: Units, combat_width: number): Units => {
+const removeOutOfBounds = (army: BaseUnits, combat_width: number): BaseUnits => {
   let defeated = army.defeated
   const frontline = army.frontline.map((unit, index) => {
     if (!unit)
@@ -203,7 +203,7 @@ const modifyRoll = (roll: number, terrains: Terrains, general: number, opposing_
  * Calculates amount of units in an army.
  * @param army Frontline, reserve and defeated.
  */
-const calculateArmySize = (army: Units): number => army.frontline.reduce((previous, current) => previous + (current ? 1 : 0), 0) + army.reserve.size + army.defeated.size
+const calculateArmySize = (army: BaseUnits): number => army.frontline.reduce((previous, current) => previous + (current ? 1 : 0), 0) + army.reserve.size + army.defeated.size
 
 
 /**
@@ -212,13 +212,13 @@ const calculateArmySize = (army: Units): number => army.frontline.reduce((previo
  * @param tactic Tactic to calculate.
  * @param counter_tactic Opposing tactic, can counter or get countered.
  */
-export const calculateTactic = (army?: Units, tactic?: TacticDefinition, counter_tactic?: TacticType): number => {
+export const calculateTactic = (army?: BaseUnits, tactic?: TacticDefinition, counter_tactic?: TacticType): number => {
   const effectiveness = (tactic && counter_tactic) ? calculateValue(tactic, counter_tactic) : tactic ? 1.0 : 0.0
   let unit_modifier = 1.0
   if (effectiveness > 0 && tactic && army) {
     let units = 0
     let weight = 0.0
-    for (const unit of List<Unit |undefined>().concat(army.frontline).concat(army.reserve).concat(army.defeated)) {
+    for (const unit of List<BaseUnit |undefined>().concat(army.frontline).concat(army.reserve).concat(army.defeated)) {
       if (!unit)
         continue
       const manpower = calculateValue(unit, UnitCalc.Strength)
@@ -261,7 +261,7 @@ const applyKills = (frontline: Frontline, kills: Kill[], round: number): Frontli
  * Removes defeated units from a frontline.
  * @param army Frontline. 
  */
-const removeDefeated = (army: Units): Units => {
+const removeDefeated = (army: BaseUnits): BaseUnits => {
   const frontline = army.frontline.map(unit => unit && !unit.is_defeated ? unit : undefined)
   return { frontline, reserve: army.reserve, defeated: army.defeated }
 }
@@ -274,7 +274,7 @@ const removeDefeated = (army: Units): Units => {
  * @param minimum_morale Minimum morale to stay in the fight.
  * @param minimum_manpower Minimum manpower to stay in the fight.
  */
-const copyDefeated = (army: Units, definitions: Frontline, minimum_morale: number, minimum_manpower: number): Units => {
+const copyDefeated = (army: BaseUnits, definitions: Frontline, minimum_morale: number, minimum_manpower: number): BaseUnits => {
   let defeated = army.defeated
   const frontline = army.frontline.map((unit, index) => {
     const definition = definitions.get(index)
@@ -342,7 +342,7 @@ export const calculateBaseDamage = (roll: number, settings: Settings): number =>
  * @param casualties_multiplier Multiplier for manpower lost from tactics.
  * @param settings Combat parameters.
  */
-const calculateLosses = (source: Unit, target: Unit, roll: number, terrains: Terrains, tactic_damage_multiplier: number, casualties_multiplier: number, settings: Settings): Loss => {
+const calculateLosses = (source: BaseUnit, target: BaseUnit, roll: number, terrains: Terrains, tactic_damage_multiplier: number, casualties_multiplier: number, settings: Settings): Loss => {
   let damage_reduction_per_experience = settings.get(CombatParameter.ExperienceDamageReduction, 0.3)
   // Bug in game which makes morale damage taken and strength damage taken affect damage reduction from experience.
   if (!settings.get(CombatParameter.FixExperience))

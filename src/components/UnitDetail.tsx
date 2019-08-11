@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { OrderedSet, Map } from 'immutable'
+import { OrderedSet } from 'immutable'
 import { Table, Input, Dropdown } from 'semantic-ui-react'
-import { UnitType, Unit, UnitDefinition, UnitCalc, ValueType, valueToString } from '../store/units'
+import { UnitType, Unit, UnitCalc, ValueType, valueToString } from '../store/units'
 import { TerrainType } from '../store/terrains'
 import { getBaseValue, getLossValue, getModifierValue, explain, DefinitionType, calculateValue } from '../base_definition'
 import { toMaintenance } from '../formatters'
@@ -10,18 +10,17 @@ interface IProps<T extends string> {
   readonly mode: DefinitionType
   readonly name: T
   readonly custom_value_key: string
-  readonly unit: Unit & UnitDefinition
+  readonly unit: Unit
   readonly unit_types: OrderedSet<UnitType>
-  readonly units: Map<any, Map<UnitType, UnitDefinition>>
   readonly show_statistics: boolean
   readonly terrain_types: OrderedSet<TerrainType>
   readonly unit_types_as_dropdown?: boolean
-  readonly onCustomBaseValueChange: (name: T, type: UnitType, key: string, attribute: ValueType, value: number) => void
-  readonly onCustomModifierValueChange: (name: T, type: UnitType, key: string, attribute: ValueType, value: number) => void
-  readonly onCustomLossValueChange: (name: T, type: UnitType, key: string, attribute: ValueType, value: number) => void
-  readonly onTypeChange?: (name: T, old_type: UnitType, new_type: UnitType) => void
-  readonly onModeChange?: (name: T, type: UnitType, mode: DefinitionType) => void
-  readonly onImageChange?: (name: T, type: UnitType, image: string) => void
+  readonly onCustomBaseValueChange: (key: string, attribute: ValueType, value: number) => void
+  readonly onCustomModifierValueChange: (key: string, attribute: ValueType, value: number) => void
+  readonly onCustomLossValueChange: (key: string, attribute: ValueType, value: number) => void
+  readonly onTypeChange?: (type: UnitType) => void
+  readonly onModeChange?: (mode: DefinitionType) => void
+  readonly onImageChange?: (image: string) => void
 }
 
 // Display component for showing and changing unit details.
@@ -44,7 +43,7 @@ export default class UnitDetail<T extends string> extends Component<IProps<T>> {
           {
             this.props.unit_types && this.props.unit_types.map(key => (
               <Dropdown.Item value={key} text={key} key={key} active={type === key}
-                onClick={() => this.props.onTypeChange && this.props.onTypeChange(name, type, key)}
+                onClick={() => this.props.onTypeChange && this.props.onTypeChange(key)}
               />
             ))
           }
@@ -53,7 +52,7 @@ export default class UnitDetail<T extends string> extends Component<IProps<T>> {
     )
   }
 
-  renderModeDropdown = (name: T, type: UnitType, mode: DefinitionType): JSX.Element => {
+  renderModeDropdown = (mode: DefinitionType): JSX.Element => {
     return (
       <Dropdown
         text={mode}
@@ -65,7 +64,7 @@ export default class UnitDetail<T extends string> extends Component<IProps<T>> {
           {
             this.modes.map(key => (
               <Dropdown.Item value={key} text={key} key={key} active={mode === key}
-                onClick={() => this.props.onModeChange && this.props.onModeChange(name, type, key)}
+                onClick={() => this.props.onModeChange && this.props.onModeChange(key)}
               />
             ))
           }
@@ -103,7 +102,7 @@ export default class UnitDetail<T extends string> extends Component<IProps<T>> {
                       size='mini'
                       disabled={this.props.unit.is_defeated}
                       defaultValue={this.props.unit.type}
-                      onChange={(_, data) => this.props.onTypeChange && this.props.onTypeChange(this.props.name, this.props.unit.type, data.value as UnitType)}
+                      onChange={(_, data) => this.props.onTypeChange && this.props.onTypeChange(data.value as UnitType)}
                     />
                   }
                 </Table.Cell>
@@ -121,7 +120,7 @@ export default class UnitDetail<T extends string> extends Component<IProps<T>> {
                   Mode
                 </Table.Cell>
                 <Table.Cell collapsing>
-                  {this.renderModeDropdown(this.props.name, this.props.unit.type, this.props.unit.mode)}
+                  {this.renderModeDropdown(this.props.unit.mode)}
                 </Table.Cell>
                 <Table.Cell />
                 <Table.Cell />
@@ -141,7 +140,7 @@ export default class UnitDetail<T extends string> extends Component<IProps<T>> {
                     size='mini'
                     disabled={this.props.unit.is_defeated}
                     defaultValue={this.props.unit.image}
-                    onChange={(_, data) => this.props.onImageChange && this.props.onImageChange(this.props.name, this.props.unit.type, data.value)}
+                    onChange={(_, data) => this.props.onImageChange && this.props.onImageChange(data.value)}
                   />
                 </Table.Cell>
                 <Table.Cell />
@@ -191,7 +190,7 @@ export default class UnitDetail<T extends string> extends Component<IProps<T>> {
             style={{ width: 50 }}
             defaultValue={base_value}
             disabled={unit.is_defeated}
-            onChange={(_, {value}) => this.props.onCustomBaseValueChange(this.props.name, unit.type, this.props.custom_value_key, attribute, Number(value))
+            onChange={(_, {value}) => this.props.onCustomBaseValueChange(this.props.custom_value_key, attribute, Number(value))
             }
           />
         </Table.Cell>
@@ -203,7 +202,7 @@ export default class UnitDetail<T extends string> extends Component<IProps<T>> {
               style={{ width: 50 }}
               defaultValue={modifier_value}
               disabled={unit.is_defeated}
-              onChange={(_, {value}) => this.props.onCustomModifierValueChange(this.props.name, unit.type, this.props.custom_value_key, attribute, Number(value))}
+              onChange={(_, {value}) => this.props.onCustomModifierValueChange(this.props.custom_value_key, attribute, Number(value))}
             />
           }
         </Table.Cell>
@@ -215,7 +214,7 @@ export default class UnitDetail<T extends string> extends Component<IProps<T>> {
               style={{ width: 50 }}
               defaultValue={loss_value}
               disabled={unit.is_defeated}
-              onChange={(_, {value}) => this.props.onCustomLossValueChange(this.props.name, unit.type, this.props.custom_value_key, attribute, Number(value))}
+              onChange={(_, {value}) => this.props.onCustomLossValueChange(this.props.custom_value_key, attribute, Number(value))}
             />
           }
         </Table.Cell>
