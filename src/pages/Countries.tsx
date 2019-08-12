@@ -143,8 +143,8 @@ class Countries extends Component<IProps> {
                   <List.Item>Latin tradition: 15</List.Item>
                   <List.Item>Exporting Incense: 10</List.Item>
                   <List.Item>Laws: -15 / 10</List.Item>
-                  <List.Item>Ruler: -5 / 5)</List.Item>
-                  <List.Item><b>Total: From -20 to 285</b></List.Item>
+                  <List.Item>Ruler: -15 / 7.5)</List.Item>
+                  <List.Item><b>Total: From -30 to 287.5</b></List.Item>
                 </List>
 
                 {

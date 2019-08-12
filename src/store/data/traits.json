@@ -4,12 +4,12 @@
       "name": "Aggressive",
       "modifiers": [
         {
-          "target": "Heavy Infantry",
+          "target": "Light Cavalry",
           "attribute": "Discipline",
           "value": 0.05
         },
         {
-          "target": "War Elephants",
+          "target": "Camel Cavalry",
           "attribute": "Discipline",
           "value": 0.05
         },
@@ -32,7 +32,7 @@
         },
         {
           "target": "Text",
-          "attribute": "Loyalty chance",
+          "attribute": "Loyalty gain chance",
           "negative": true,
           "value": 0.02
         },
@@ -56,6 +56,12 @@
           "target": "Trireme",
           "attribute": "Discipline",
           "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Monthly Wealth",
+          "no_percent": true,
+          "value": 1
         }
       ]
     },
@@ -84,7 +90,7 @@
       "name": "Coward",
       "modifiers": [
         {
-          "target": "Land",
+          "target": "Global",
           "attribute": "Morale",
           "type": "Modifier",
           "negative": true,
@@ -92,7 +98,7 @@
         },
         {
           "target": "Text",
-          "attribute": "Loyalty chance",
+          "attribute": "Loyalty gain chance",
           "value": -0.02
         },
         {
@@ -104,7 +110,23 @@
       ]
     },
     {
-      "name": "Discipline",
+      "name": "Daring",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Damage done",
+          "value": 0.05
+        },
+        {
+          "target": "General",
+          "attribute": "Martial",
+          "no_percent": true,
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "Disciplined",
       "modifiers": [
         {
           "target": "Land",
@@ -120,11 +142,27 @@
       ]
     },
     {
-      "name": "Oarmaster",
+      "name": "Improviser",
       "modifiers": [
         {
           "target": "Text",
-          "attribute": "Naval speed",
+          "attribute": "Ship repair at sea",
+          "value": 0.01
+        },
+        {
+          "target": "General",
+          "attribute": "Zeal",
+          "no_percent": true,
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "Oarmaster",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Movement speed",
           "value": 0.1
         },
         {
@@ -155,7 +193,7 @@
       "name": "Princeps",
       "modifiers": [
         {
-          "target": "Octareme",
+          "target": "Octere",
           "attribute": "Discipline",
           "value": 0.05
         },
@@ -232,6 +270,27 @@
       ]
     },
     {
+      "name": "Squadron Leader",
+      "modifiers": [
+        {
+          "target": "Tetrere",
+          "attribute": "Discipline",
+          "value": 0.05
+        },
+        {
+          "target": "Hexere",
+          "attribute": "Discipline",
+          "value": 0.05
+        },
+        {
+          "target": "General",
+          "attribute": "Charisma",
+          "no_percent": true,
+          "value": 1
+        }
+      ]
+    },
+    {
       "name": "Steadfast",
       "modifiers": [
         {
@@ -243,6 +302,22 @@
           "target": "War Elephants",
           "attribute": "Discipline",
           "value": 0.05
+        },
+        {
+          "target": "General",
+          "attribute": "Martial",
+          "no_percent": true,
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "Tough",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Damage taken",
+          "value": -0.05
         },
         {
           "target": "General",
