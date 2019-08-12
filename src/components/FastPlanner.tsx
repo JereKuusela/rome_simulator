@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Map, OrderedSet } from 'immutable'
 import { Table, Input } from 'semantic-ui-react'
 import { UnitType, UnitDefinition } from '../store/units'
-import { CountryName } from '../store/countries'
 import { renderImages } from './utils'
 import { getImage } from '../base_definition'
 import { Side } from '../store/battle';

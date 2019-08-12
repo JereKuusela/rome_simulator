@@ -1,9 +1,9 @@
 import { fromJS, Seq, List, OrderedMap, OrderedSet, Map } from 'immutable'
 import { Army } from './store/utils';
-import { BaseUnit, UnitDefinition, UnitType, Unit } from './store/units/actions'
+import { BaseUnit, UnitDefinition, UnitType, Unit, UnitDefinitions } from './store/units/actions'
 import { mergeValues, DefinitionType } from './base_definition'
 import { getDefaultUnits } from './store/units/data'
-import { BaseUnits } from './store/battle'
+import { BaseUnits, Units } from './store/battle'
 
 /**
  * Maps a range to a list.
@@ -75,6 +75,18 @@ export const mergeUnits = (units: Map<UnitType, UnitDefinition>, global: UnitDef
   mergeValues(mergeValues(units.get(unit.type), unit), global) as Unit
 )
 
+
+/**
+ * Merges base units with their definitions resulting in real units.
+ * @param units Base units to merge. 
+ * @param definitions Definitions to merge.
+ */
+export const mergeBaseUnitsWithDefinitions = (units: BaseUnits, definitions: UnitDefinitions): Units => ({
+  frontline: units.frontline.map(value => value && mergeValues(definitions.get(value.type), value)),
+  reserve: units.reserve.map(value => value && mergeValues(definitions.get(value.type), value)),
+  defeated: units.defeated.map(value => value && mergeValues(definitions.get(value.type), value))
+})
+
 /**
  * Returns whether a given definition belongs to a given battle mode.
  */
@@ -99,8 +111,17 @@ export const getKeys = <T>(map: OrderedMap<T, any>): OrderedSet<T> => map.keySeq
 /**
  * Sums numbers in a map. Keys are ignored.
  * @param map
+ * @param converter Optional converted to sum complex attributes.
  */
-export const sum = (map: Map<any, number>): number => map.reduce((previous, current) => previous + current, 0)
+export const sumMap = (map: Map<any, any>, converter?: (value: any) => number): number => map.reduce((previous, current) => previous + (converter ? converter(current) : Number(current)), 0)
+
+
+/**
+ * Sums numbers in a list.
+ * @param list
+ * @param converter Optional converted to sum complex attributes.
+ */
+export const sumList = (map: List<any>, converter?: (value: any) => number): number => map.reduce((previous, current) => previous + (converter ? converter(current) : Number(current)), 0)
 
 
 let unit_id = 0
@@ -121,7 +142,7 @@ export const findUnitById = (units: BaseUnits | undefined, id: number): BaseUnit
   let base_unit = units.reserve.find(unit => unit.id === id)
   if (base_unit)
     return base_unit
-    base_unit = units.frontline.find(unit => unit ? unit.id === id : false)
+  base_unit = units.frontline.find(unit => unit ? unit.id === id : false)
   if (base_unit)
     return base_unit
   base_unit = units.defeated.find(unit => unit.id === id)
@@ -129,3 +150,9 @@ export const findUnitById = (units: BaseUnits | undefined, id: number): BaseUnit
     return base_unit
   return undefined
 }
+
+/**
+ * Simple round function.
+ * @param number 
+ */
+export const round = (number: number, precision: number): number => Math.round(precision * number) / precision

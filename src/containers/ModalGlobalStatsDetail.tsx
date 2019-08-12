@@ -21,7 +21,6 @@ class ModalGlobalStatsDetail extends Component<IProps> {
         terrain_types={this.props.terrain_types}
         custom_value_key={CUSTOM_VALUE_KEY}
         unit={this.props.global_stats.getIn([this.props.country, this.props.mode])}
-        units={this.props.units}
         unit_types={this.props.unit_types}
         onCustomBaseValueChange={this.setGlobalBaseValue}
         onCustomModifierValueChange={this.setGlobalModifierValue}
@@ -31,23 +30,22 @@ class ModalGlobalStatsDetail extends Component<IProps> {
     )
   }
 
-  setGlobalBaseValue = (country: CountryName, _: UnitType, key: string, attribute: ValueType, value: number) => {
-    !Number.isNaN(value) && this.props.setGlobalValue(country, this.props.mode, ValuesType.Base, key, attribute, value)
+  setGlobalBaseValue = (key: string, attribute: ValueType, value: number) => {
+    !Number.isNaN(value) && this.props.country && this.props.setGlobalValue(this.props.country, this.props.mode, ValuesType.Base, key, attribute, value)
   }
 
-  setGlobalModifierValue = (country: CountryName, _: UnitType, key: string, attribute: ValueType, value: number) => {
-    !Number.isNaN(value) && this.props.setGlobalValue(country, this.props.mode, ValuesType.Modifier, key, attribute, value)
+  setGlobalModifierValue = (key: string, attribute: ValueType, value: number) => {
+    !Number.isNaN(value) && this.props.country && this.props.setGlobalValue(this.props.country, this.props.mode, ValuesType.Modifier, key, attribute, value)
   }
 
-  setGlobalLossValue = (country: CountryName, _: UnitType, key: string, attribute: ValueType, value: number) => {
-    !Number.isNaN(value) && this.props.setGlobalValue(country, this.props.mode, ValuesType.Loss, key, attribute, value)
+  setGlobalLossValue = (key: string, attribute: ValueType, value: number) => {
+    !Number.isNaN(value) && this.props.country && this.props.setGlobalValue(this.props.country, this.props.mode, ValuesType.Loss, key, attribute, value)
   }
 }
 
 const mapStateToProps = (state: AppState) => ({
   global_stats: state.global_stats,
   terrain_types: filterTerrainTypes(state),
-  units: state.units,
   unit_types: mergeUnitTypes(state),
   mode: state.settings.mode
 })

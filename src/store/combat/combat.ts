@@ -373,4 +373,7 @@ const calculateLosses = (source: BaseUnit, target: BaseUnit, roll: number, terra
   return { manpower: manpower_lost / 100000.0, morale: morale_lost / 100000.0 }
 }
 
+/**
+ * Similar rounding formula like in the game.
+ */
 const calculate = (value1: number, value2: number) => Math.floor(value1 * value2)

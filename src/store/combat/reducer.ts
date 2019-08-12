@@ -6,7 +6,7 @@ import { mergeValues, DefinitionType } from '../../base_definition'
 import { CombatParameter } from '../settings'
 import { AppState } from '../'
 import { mergeSettings, getBattle, getArmy, getParticipant } from '../utils'
-import { sum } from '../../utils'
+import { sumMap } from '../../utils'
 import { defaultCountry } from '../countries/reducer'
 
 const doBattle = (state: AppState, mode: DefinitionType, steps: number): AppState => {
@@ -59,7 +59,7 @@ const doBattle = (state: AppState, mode: DefinitionType, steps: number): AppStat
       flank_size: units_a.flank_size,
       tactic: state.tactics.get(units_a.tactic),
       country: participant_a.name,
-      general: country_a.has_general ? country_a.general_martial + sum(country_a.trait_martial) : 0,
+      general: country_a.has_general ? country_a.general_martial + sumMap(country_a.trait_martial) : 0,
       roll: participant_a.roll
     }
     const defender_info = {
@@ -70,7 +70,7 @@ const doBattle = (state: AppState, mode: DefinitionType, steps: number): AppStat
       flank_size: units_d.flank_size,
       tactic: state.tactics.get(units_d.tactic),
       country: participant_d.name,
-      general: country_d.has_general ? country_d.general_martial + sum(country_d.trait_martial) : 0,
+      general: country_d.has_general ? country_d.general_martial + sumMap(country_d.trait_martial) : 0,
       roll: participant_d.roll
     }
     const [a, d] = fight(definitions, attacker_info, defender_info, next.round + 1, next.terrains.map(type => state.terrains.get(type)!), combat)

@@ -3,7 +3,7 @@ import { Set, List as ImmutableList } from 'immutable'
 import { Container, Grid, Table, List, Input, Checkbox } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
-import { mapRange, toList, sum } from '../utils'
+import { mapRange, toList, sumMap } from '../utils'
 import { invalidateCountry } from '../store/battle'
 import {
   ModifierType, Modifier, Tradition, CultureType,
@@ -92,7 +92,7 @@ class Countries extends Component<IProps> {
                   style={{ float: 'right' }}
                 />
                 Base martial: <Input disabled={!country.has_general} type='number' value={country.general_martial} onChange={(_, { value }) => omen && this.setGeneralMartial(value)} />
-                {' '}with <StyledNumber value={sum(country.trait_martial)} formatter={addSign} /> from traits
+                {' '}with <StyledNumber value={sumMap(country.trait_martial)} formatter={addSign} /> from traits
                 {
                   this.renderTraits(this.props.traits, selections, !country.has_general)
                 }

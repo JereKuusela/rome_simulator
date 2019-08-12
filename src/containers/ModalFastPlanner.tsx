@@ -7,8 +7,8 @@ import FastPlanner from '../components/FastPlanner'
 import ArmyCosts from '../components/ArmyCosts'
 import { UnitType, BaseUnit } from '../store/units'
 import { clearUnits, removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits, invalidate, Side } from '../store/battle'
-import { getBaseUnits, filterUnitTypes, getParticipant } from '../store/utils'
-import { mapRange, getNextId } from '../utils'
+import { getBaseUnits, filterUnitTypes, getParticipant, getUnitDefinitions } from '../store/utils'
+import { mapRange, getNextId, mergeBaseUnitsWithDefinitions } from '../utils'
 import { CountryName } from '../store/countries'
 import { DefinitionType } from '../base_definition'
 
@@ -32,14 +32,20 @@ class ModalFastPlanner extends Component<IProps, IState> {
   render(): JSX.Element | null {
     if (!this.props.open)
       return null
-    let units_a = this.props.units_a
-    let units_d = this.props.units_d
+    //// The logic is bit tricky here.
+    //Base units are needed because there might be custom changes.
+    let base_units_a = this.props.base_units_a
+    let base_units_d = this.props.base_units_d
     const types_a = this.props.types_a
     const types_d = this.props.types_d
-    this.originals_a = types_a.reduce((map, value) => map.set(value, this.countUnits(units_a.reserve, value)), Map<UnitType, number>())
-    this.originals_d = types_d.reduce((map, value) => map.set(value, this.countUnits(units_d.reserve, value)), Map<UnitType, number>())
-    units_a = { ...units_a, reserve: this.editReserve(units_a.reserve, this.state.changes_a, this.originals_a) }
-    units_d = { ...units_d, reserve: this.editReserve(units_d.reserve, this.state.changes_d, this.originals_d) }
+    this.originals_a = types_a.reduce((map, value) => map.set(value, this.countUnits(base_units_a.reserve, value)), Map<UnitType, number>())
+    this.originals_d = types_d.reduce((map, value) => map.set(value, this.countUnits(base_units_d.reserve, value)), Map<UnitType, number>())
+    // Current changes to the reserve must alse be applied.
+    base_units_a = { ...base_units_a, reserve: this.editReserve(base_units_a.reserve, this.state.changes_a, this.originals_a) }
+    base_units_d = { ...base_units_d, reserve: this.editReserve(base_units_d.reserve, this.state.changes_d, this.originals_d) }
+    // And finally both merged with definitions to get real values.
+    const units_a = mergeBaseUnitsWithDefinitions(base_units_a, this.props.definitions_a)
+    const units_d = mergeBaseUnitsWithDefinitions(base_units_d, this.props.definitions_d)
     return (
       <Modal basic onClose={this.onClose} open centered={false}>
         <Modal.Content>
@@ -142,10 +148,12 @@ class ModalFastPlanner extends Component<IProps, IState> {
 const mapStateToProps = (state: AppState) => ({
   attacker: getParticipant(state, Side.Attacker).name,
   defender: getParticipant(state, Side.Defender).name,
-  units_a: getBaseUnits(state, Side.Attacker),
-  units_d: getBaseUnits(state, Side.Defender),
+  base_units_a: getBaseUnits(state, Side.Attacker),
+  base_units_d: getBaseUnits(state, Side.Defender),
   types_a: filterUnitTypes(state, Side.Attacker),
   types_d: filterUnitTypes(state, Side.Defender),
+  definitions_a: getUnitDefinitions(state, Side.Attacker),
+  definitions_d: getUnitDefinitions(state, Side.Defender),
   units: state.units,
   global_stats: state.global_stats,
   mode: state.settings.mode

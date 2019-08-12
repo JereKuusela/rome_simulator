@@ -1,5 +1,5 @@
 import { OrderedMap, Map, fromJS } from 'immutable'
-import { UnitType, UnitDefinition, UnitCalc, ValueType, BaseUnit } from './actions'
+import { UnitType, UnitDefinition, UnitCalc, ValueType, BaseUnit, GlobalDefinitions, UnitDefinitions } from './actions'
 import { addValues, ValuesType, DefinitionType } from '../../base_definition'
 import { getNextId } from '../../utils'
 import IconArcher from '../../images/archers.png'
@@ -74,7 +74,7 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
   return unit
 }
 
-const initializeDefaultUnits = (): OrderedMap<UnitType, UnitDefinition> => {
+const initializeDefaultUnits = (): UnitDefinitions => {
   let map = OrderedMap<UnitType, UnitDefinition>()
   for (const value of data.units) {
     const unit = createUnitFromJson(value)
@@ -83,7 +83,7 @@ const initializeDefaultUnits = (): OrderedMap<UnitType, UnitDefinition> => {
   return map
 }
 
-const initializeDefaultGlobal = (): Map<DefinitionType, UnitDefinition> => {
+const initializeDefaultGlobal = (): GlobalDefinitions => {
   let definitions = Map<DefinitionType, UnitDefinition>()
   const land = { type: '' as UnitType, mode: DefinitionType.Land, image: IconMilitaryPower, requirements: '', can_assault: false }
   const naval = { type: '' as UnitType, mode: DefinitionType.Naval, image: IconMilitaryPower, requirements: '', can_assault: false }
@@ -107,8 +107,8 @@ const initializeDefaultGlobal = (): Map<DefinitionType, UnitDefinition> => {
 const defaultUnits = initializeDefaultUnits()
 const defaultGlobal = initializeDefaultGlobal()
 
-export const getDefaultUnits = (): OrderedMap<UnitType, UnitDefinition> => defaultUnits
-export const getDefaultGlobal = (): OrderedMap<DefinitionType, UnitDefinition> => defaultGlobal
+export const getDefaultUnits = (): UnitDefinitions => defaultUnits
+export const getDefaultGlobal = (): GlobalDefinitions => defaultGlobal
 
 export const unitFromJS = (object?: Map<string, any>): BaseUnit | undefined => {
   if (!object)

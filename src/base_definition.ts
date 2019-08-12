@@ -1,7 +1,8 @@
 import { Map, OrderedMap } from 'immutable'
 import EmptyIcon from './images/empty.png'
 import UnknownIcon from './images/unknown.png'
-import { toPercent, toManpower} from './formatters';
+import { toPercent, toManpower} from './formatters'
+import { round } from './utils'
 
 export enum ValuesType {
   Base = 'Base',
@@ -164,6 +165,9 @@ export const regenerateValues = <Definition extends AnyDefinition, Attribute>
   return addValues(clearValues(definition, type, key), type, key, values)
 }
 
+// This precision is required for accurate morale calculations.
+const PRECISION = 100000.0
+
 /**
  * Calculates the value of an attribute. Includes base, modifier and loss values.
  * @param definition 
@@ -174,7 +178,7 @@ export const calculateValue = <Definition extends AnyDefinition, Attribute>
   if (!definition)
     return 0.0
   let value = calculateBase(definition, attribute) * calculateModifier(definition, attribute) - calculateLoss(definition, attribute)
-  return round(value)
+  return round(value, PRECISION)
 }
 
 /**
@@ -187,7 +191,7 @@ export const calculateValueWithoutLoss = <Definition extends AnyDefinition, Attr
   if (!definition)
     return 0.0
   let value = calculateBase(definition, attribute) * calculateModifier(definition, attribute)
-  return round(value)
+  return round(value, PRECISION)
 }
 
 /**
@@ -227,15 +231,8 @@ const calculateValueSub = <Attribute>(container: Map<Attribute, OrderedMap<strin
   const values = container.get(attribute)
   if (values)
     values.forEach(value => result += value)
-  return round(result)
+  return round(result, PRECISION)
 }
-
-
-/**
- * Shared round function for easier changes. This precision is required for accurate morale calculations.
- * @param number 
- */
-const round = (number: number): number => Math.round(100000.0 * number) / 100000.0
 
 /**
  * Returns a base value of a given attribute with a given identifier.

@@ -1,10 +1,10 @@
 import { AppState } from "./index"
 import { OrderedSet, OrderedMap } from "immutable"
-import { filterUnitDefinitions, isIncludedInMode, getKeys, sum, mergeUnits } from '../utils'
+import { filterUnitDefinitions, isIncludedInMode, getKeys, sumMap, mergeUnits } from '../utils'
 import { TacticType, TacticDefinition } from "./tactics/actions"
-import { DefinitionType } from "../base_definition"
+import { DefinitionType, mergeValues } from "../base_definition"
 import { TerrainType, TerrainDefinition } from "./terrains/actions"
-import { UnitType, UnitDefinition } from "./units/actions"
+import { UnitType, UnitDefinition, UnitDefinitions } from "./units/actions"
 import { Battle, modeState } from "./battle/reducer"
 import { getDefaultArmy, Army as BaseArmy, Side, getDefaultParticipant, BaseUnits, Participant, Units } from "./battle/actions"
 import { CombatParameter } from "./settings/actions"
@@ -99,9 +99,9 @@ export const mergeSettings = (state: AppState): OrderedMap<CombatParameter, numb
     const units = filterUnitDefinitions(state.settings.mode, state.units.get(name, getDefaultUnits()))
     const global = state.global_stats.get(name, getDefaultGlobal()).get(state.settings.mode)!
     const general = {
-      total: country.has_general ? country.general_martial + sum(country.trait_martial) : 0,
+      total: country.has_general ? country.general_martial + sumMap(country.trait_martial) : 0,
       base: country.has_general ? country.general_martial : 0,
-      trait: country.has_general ? sum(country.trait_martial) : 0
+      trait: country.has_general ? sumMap(country.trait_martial) : 0
     }
     const has_general = country.has_general
     return { ...army, general, name, units, global, has_general}
@@ -144,6 +144,18 @@ export const mergeSettings = (state: AppState): OrderedMap<CombatParameter, numb
   export const getParticipant = (state: AppState, type: Side): Participant => getBattle(state).participants.get(type, getDefaultParticipant(CountryName.Country1))
 
   export const getSelected = (state: AppState): Army => getArmyByCountry(state, state.settings.country)
+  
+  /**
+   * Returns unit definitions for the current mode and side. Global definitions have already been merged.
+   * @param state Application state.
+   * @param side Attacker or defender.
+   */
+  export const getUnitDefinitions = (state: AppState, side: Side): UnitDefinitions => {
+    const name = getParticipant(state, side).name
+    const global = state.global_stats.get(name, getDefaultGlobal()).get(state.settings.mode)!
+    const units = filterUnitDefinitions(state.settings.mode, state.units.get(name, getDefaultUnits()))
+    return units.map(definition => mergeValues(definition, global))
+  }
 
   export interface Army extends BaseArmy {
     general: {

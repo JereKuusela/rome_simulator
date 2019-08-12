@@ -1,4 +1,5 @@
 import { createAction } from 'typesafe-actions'
+import { OrderedMap, Map } from 'immutable'
 import { TerrainType } from '../terrains'
 import { CountryName } from '../countries'
 import { calculateValue, BaseDefinition, ValuesType, DefinitionType } from '../../base_definition'
@@ -44,6 +45,9 @@ export enum UnitCalc {
   AttritionWeight = 'Attrition weight',
   Experience = 'Experience'
 }
+
+export type UnitDefinitions = OrderedMap<UnitType, UnitDefinition>
+export type GlobalDefinitions = Map<DefinitionType, UnitDefinition>
 
 export type ValueType = UnitCalc | UnitType | TerrainType
 
