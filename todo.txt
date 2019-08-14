@@ -3,6 +3,8 @@ Release 5:
 
 Tests (high priority):
 - base_definition functions tested
+- utils tested
+- combat tested
 
 Army management:
 - Probably needed for multi-army battles because countries need to have multiple armies
@@ -27,6 +29,9 @@ Release 6+:
    * Get rid of index files?
    * Fix problems one by one when they appear?
 
+Countries:
+- Tag selector for tech (some inventions are tag specific)
+- Tag preset selector for common tags (selects tradition, tag for tech and religion)
 
 Navigation:
 - Toggle for simple mode, enabled by default: disables army management, disabled army selection, unit / terrain / tactic management

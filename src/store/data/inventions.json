@@ -4,18 +4,6 @@
       "name": "Level 0",
       "inventions": [
         [
-          {
-            "target": "Global",
-            "attribute": "Morale",
-            "no_percent": true,
-            "value": 0.1
-          },
-          {
-            "target": "Global",
-            "attribute": "Maintenance",
-            "type": "Modifier",
-            "value": 0.02
-          }
         ],
         [
           {

@@ -99,6 +99,7 @@
       "is_flank": true,
       "movement_speed": 4,
       "maneuver": 5,
+      "morale_damage_taken": 0.25,
       "archers": 0.25,
       "camel_cavalry": -0.1,
       "chariots": 0.25,

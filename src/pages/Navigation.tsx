@@ -51,7 +51,7 @@ class Navigation extends Component<IProps> {
             <Button active={this.props.mode === DefinitionType.Naval} compact icon basic circular size='tiny' onClick={this.props.toggleMode}>
               <Image src={IconNaval} avatar style={{ marginRight: 0 }} />
             </Button>
-            <div id='version'><div>Site version 0.4.6</div><div>Game version 1.2.4B</div></div>
+            <div id='version'><div>Site version 0.4.7</div><div>Game version 1.2.5B</div></div>
           </div>
         </Menu>
         <br />
