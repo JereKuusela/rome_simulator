@@ -85,7 +85,7 @@
         {
           "name": "Daevas",
           "modifier":  {
-            "target": "Land",
+            "target": "Global",
             "attribute": "Discipline",
             "value": 0.06
           }
@@ -176,7 +176,7 @@
         {
           "name": "Tanit",
           "modifier":  {
-            "target": "Land",
+            "target": "Global",
             "attribute": "Discipline",
             "value": 0.06
           }
@@ -197,7 +197,7 @@
         {
           "name": "Attar",
           "modifier":  {
-            "target": "Land",
+            "target": "Global",
             "attribute": "Discipline",
             "value": 0.1
           }
@@ -218,7 +218,7 @@
         {
           "name": "Ashshur",
           "modifier":  {
-            "target": "Land",
+            "target": "Global",
             "attribute": "Discipline",
             "value": 0.06
           }
@@ -254,7 +254,7 @@
         {
           "name": "Agdistis",
           "modifier":  {
-            "target": "Land",
+            "target": "Global",
             "attribute": "Discipline",
             "value": 0.06
           }
@@ -337,7 +337,7 @@
         {
           "name": "Mars",
           "modifier":  {
-            "target": "Land",
+            "target": "Global",
             "attribute": "Discipline",
             "value": 0.06
           }
@@ -359,7 +359,7 @@
         {
           "name": "Ma",
           "modifier":  {
-            "target": "Land",
+            "target": "Global",
             "attribute": "Discipline",
             "value": 0.06
           }
@@ -409,7 +409,7 @@
         {
           "name": "Shiva",
           "modifier":  {
-            "target": "Land",
+            "target": "Global",
             "attribute": "Discipline",
             "value": 0.05
           }
@@ -431,7 +431,7 @@
         {
           "name": "Semnocosus",
           "modifier":  {
-            "target": "Land",
+            "target": "Global",
             "attribute": "Discipline",
             "value": 0.05
           }

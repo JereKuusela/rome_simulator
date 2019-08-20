@@ -18,12 +18,12 @@ type Settings = Map<CombatParameter, number>
 
 interface Loss {
   morale: number
-  manpower: number
+  strength: number
 }
 
 interface Kill {
   morale: number
-  manpower: number
+  strength: number
 }
 
 export interface ParticipantState {
@@ -82,15 +82,15 @@ export const battle = (definitions: Definitions, attacker: ParticipantState, def
   d = { frontline: applyLosses(d.frontline, losses_d, round), reserve: d.reserve, defeated: d.defeated }
   a = { frontline: applyKills(a.frontline, kills_a, round), reserve: a.reserve, defeated: a.defeated }
   d = { frontline: applyKills(d.frontline, kills_d, round), reserve: d.reserve, defeated: d.defeated }
-  // Definitions contain the actual manpower and morale values so they must be used to check defeated.
+  // Definitions contain the actual strength and morale values so they must be used to check defeated.
   definitions_a = applyLosses(definitions_a, losses_a, round)
   definitions_d = applyLosses(definitions_d, losses_d, round)
   a = saveTargets(a, a_to_d)
   d = saveTargets(d, d_to_a)
   const minimum_morale = settings.get(CombatParameter.MinimumMorale) || 0.25
-  const minimum_manpower = settings.get(CombatParameter.MinimumStrength) || 0
-  a = copyDefeated(a, definitions_a, minimum_morale, minimum_manpower)
-  d = copyDefeated(d, definitions_d, minimum_morale, minimum_manpower)
+  const minimum_strength = settings.get(CombatParameter.MinimumStrength) || 0
+  a = copyDefeated(a, definitions_a, minimum_morale, minimum_strength)
+  d = copyDefeated(d, definitions_d, minimum_morale, minimum_strength)
   if (a.frontline.findIndex(unit => !!(unit && !unit.is_defeated)) === -1 && a.reserve.count() === 0)
     a = removeDefeated(a)
   if (d.frontline.findIndex(unit => !!(unit && !unit.is_defeated)) === -1 && d.reserve.count() === 0)
@@ -221,9 +221,9 @@ export const calculateTactic = (army?: BaseUnits, tactic?: TacticDefinition, cou
     for (const unit of List<BaseUnit |undefined>().concat(army.frontline).concat(army.reserve).concat(army.defeated)) {
       if (!unit)
         continue
-      const manpower = calculateValue(unit, UnitCalc.Strength)
-      units += manpower
-      weight += calculateValue(tactic, unit.type) * manpower
+      const strength = calculateValue(unit, UnitCalc.Strength)
+      units += strength
+      weight += calculateValue(tactic, unit.type) * strength
     }
     if (units)
       unit_modifier = weight / units
@@ -239,7 +239,7 @@ export const calculateTactic = (army?: BaseUnits, tactic?: TacticDefinition, cou
  */
 const applyLosses = (frontline: Frontline, losses: Loss[], round: number): Frontline => {
   return frontline.map((unit, index) => {
-    const loss_values: [UnitCalc, number][] = [[UnitCalc.Morale, losses[index].morale], [UnitCalc.Strength, losses[index].manpower]]
+    const loss_values: [UnitCalc, number][] = [[UnitCalc.Morale, losses[index].morale], [UnitCalc.Strength, losses[index].strength]]
     return unit && addValues(unit, ValuesType.Loss, 'Round ' + round, loss_values)
   })
 }
@@ -252,7 +252,7 @@ const applyLosses = (frontline: Frontline, losses: Loss[], round: number): Front
  */
 const applyKills = (frontline: Frontline, kills: Kill[], round: number): Frontline => {
   return frontline.map((unit, index) => {
-    const kill_values: [UnitCalc, number][] = [[UnitCalc.MoraleDepleted, kills[index].morale], [UnitCalc.StrengthDepleted, kills[index].manpower]]
+    const kill_values: [UnitCalc, number][] = [[UnitCalc.MoraleDepleted, kills[index].morale], [UnitCalc.StrengthDepleted, kills[index].strength]]
     return unit && addValues(unit, ValuesType.Base, 'Round ' + round, kill_values)
   })
 }
@@ -272,15 +272,15 @@ const removeDefeated = (army: BaseUnits): BaseUnits => {
  * @param army Frontline and defeated.
  * @param definitions Full definitions for units in the frontline. Needed to check when defeated.
  * @param minimum_morale Minimum morale to stay in the fight.
- * @param minimum_manpower Minimum manpower to stay in the fight.
+ * @param minimum_strength Minimum strength to stay in the fight.
  */
-const copyDefeated = (army: BaseUnits, definitions: Frontline, minimum_morale: number, minimum_manpower: number): BaseUnits => {
+const copyDefeated = (army: BaseUnits, definitions: Frontline, minimum_morale: number, minimum_strength: number): BaseUnits => {
   let defeated = army.defeated
   const frontline = army.frontline.map((unit, index) => {
     const definition = definitions.get(index)
     if (!definition || !unit)
       return undefined
-    if (calculateValue(definition, UnitCalc.Strength) > minimum_manpower && calculateValue(definition, UnitCalc.Morale) > minimum_morale)
+    if (calculateValue(definition, UnitCalc.Strength) > minimum_strength && calculateValue(definition, UnitCalc.Morale) > minimum_morale)
       return unit
     defeated = defeated.push(unit)
     return { ...unit, is_defeated: true }
@@ -296,25 +296,25 @@ const copyDefeated = (army: BaseUnits, definitions: Frontline, minimum_morale: n
  * @param roll Dice roll, affects amount of damage inflicted.
  * @param terrains Terrains of the battle, may affect amount of damage inflicted.
  * @param tactic_damage_multiplier Multiplier for damage from tactics.
- * @param casualties_multiplier Multiplier for manpower lost from tactics.
+ * @param casualties_multiplier Multiplier for strength lost from tactics.
  * @param settings Combat parameters.
  */
 const attack = (source_row: Frontline, target_row: Frontline, source_to_target: (number | null)[], roll: number, terrains: Terrains, tactic_damage_multiplier: number, casualties_multiplier: number, settings: Settings): [Loss[], Kill[]] => {
   const target_losses = Array<Loss>(target_row.size)
   for (let i = 0; i < target_row.size; ++i)
-    target_losses[i] = { morale: 0, manpower: 0 }
+    target_losses[i] = { morale: 0, strength: 0 }
   const source_kills = Array<Kill>(source_row.size)
   for (let i = 0; i < source_row.size; ++i)
-    source_kills[i] = { morale: 0, manpower: 0 }
+    source_kills[i] = { morale: 0, strength: 0 }
   source_row.forEach((source, source_index) => {
     const target_index = source_to_target[source_index]
     if (!source || target_index === null)
       return
     const target = target_row.get(target_index)!
     const losses = calculateLosses(source, target, roll, terrains, tactic_damage_multiplier, casualties_multiplier, settings)
-    target_losses[target_index].manpower += losses.manpower
+    target_losses[target_index].strength += losses.strength
     target_losses[target_index].morale += losses.morale
-    source_kills[source_index].manpower += losses.manpower
+    source_kills[source_index].strength += losses.strength
     source_kills[source_index].morale += losses.morale
   })
   return [target_losses, source_kills]
@@ -328,18 +328,19 @@ const attack = (source_row: Frontline, target_row: Frontline, source_to_target: 
 export const calculateBaseDamage = (roll: number, settings: Settings): number => {
   const base_damage = settings.get(CombatParameter.BaseDamage, 0.08)
   const roll_damage = settings.get(CombatParameter.RollDamage, 0.02)
-  return base_damage + roll_damage * roll
+  const max_damage = settings.get(CombatParameter.MaxBaseDamage, 0.3)
+  return Math.min(max_damage, base_damage + roll_damage * roll)
 }
 
 /**
- * Calculates both manpower and morale losses caused by a given attacker to a given defender.
+ * Calculates both strength and morale losses caused by a given attacker to a given defender.
  * Experimental: Tested with unit tests from in-game results. Not 100% accurate.
  * @param source An attacker inflicting damange on the target.
  * @param target A defender receiving damage from the source.
  * @param roll Dice roll, affects amount of damage inflicted.
  * @param terrains Terrains of the battle, may affect amount of damage inflicted.
  * @param tactic_damage_multiplier Multiplier for damage from tactics.
- * @param casualties_multiplier Multiplier for manpower lost from tactics.
+ * @param casualties_multiplier Multiplier for strength lost from tactics.
  * @param settings Combat parameters.
  */
 const calculateLosses = (source: BaseUnit, target: BaseUnit, roll: number, terrains: Terrains, tactic_damage_multiplier: number, casualties_multiplier: number, settings: Settings): Loss => {
@@ -347,7 +348,7 @@ const calculateLosses = (source: BaseUnit, target: BaseUnit, roll: number, terra
   // Bug in game which makes morale damage taken and strength damage taken affect damage reduction from experience.
   if (!settings.get(CombatParameter.FixExperience))
     damage_reduction_per_experience *= (2.0 + calculateValue(target, UnitCalc.MoraleDamageTaken) + calculateValue(target, UnitCalc.StrengthDamageTaken)) * 0.5
-  const manpower_lost_multiplier = settings.get(CombatParameter.StrengthLostMultiplier, 0.2) 
+  const strength_lost_multiplier = settings.get(CombatParameter.StrengthLostMultiplier, 0.2) 
   const morale_lost_multiplier = settings.get(CombatParameter.MoraleLostMultiplier, 1.5)
   const morale_base_damage = settings.get(CombatParameter.MoraleDamageBase, 2.0)
   let damage = 100000.0 * calculateBaseDamage(roll, settings)
@@ -360,17 +361,17 @@ const calculateLosses = (source: BaseUnit, target: BaseUnit, roll: number, terra
   damage = calculate(damage, 1.0 + calculateValue(source, UnitCalc.Offense) - calculateValue(target, UnitCalc.Defense))
   damage = calculate(damage, 1.0 - damage_reduction_per_experience * calculateValue(target, UnitCalc.Experience))
   damage = calculate(damage, calculateValue(source, UnitCalc.Strength))
-  let manpower_lost = damage
-  manpower_lost = calculate(manpower_lost, 1.0 + casualties_multiplier)
-  manpower_lost = calculate(manpower_lost, manpower_lost_multiplier)
-  manpower_lost = calculate(manpower_lost, 1.0 + calculateValue(source, UnitCalc.StrengthDamageDone))
-  manpower_lost = calculate(manpower_lost, 1.0 + calculateValue(target, UnitCalc.StrengthDamageTaken))
+  let strength_lost = damage
+  strength_lost = calculate(strength_lost, 1.0 + casualties_multiplier)
+  strength_lost = calculate(strength_lost, strength_lost_multiplier)
+  strength_lost = calculate(strength_lost, 1.0 + calculateValue(source, UnitCalc.StrengthDamageDone))
+  strength_lost = calculate(strength_lost, 1.0 + calculateValue(target, UnitCalc.StrengthDamageTaken))
   let morale_lost = damage
   morale_lost = calculate(morale_lost, Math.max(0, calculateValue(source, UnitCalc.Morale)) / morale_base_damage)
   morale_lost = calculate(morale_lost, morale_lost_multiplier)
   morale_lost = calculate(morale_lost, 1.0 + calculateValue(source, UnitCalc.MoraleDamageDone))
   morale_lost = calculate(morale_lost, 1.0 + calculateValue(target, UnitCalc.MoraleDamageTaken))
-  return { manpower: manpower_lost / 100000.0, morale: morale_lost / 100000.0 }
+  return { strength: strength_lost / 100000.0, morale: morale_lost / 100000.0 }
 }
 
 /**

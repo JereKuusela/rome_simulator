@@ -599,7 +599,7 @@ class Countries extends Component<IProps> {
       return
     this.props.setMilitaryPower(this.props.selected_country, power)
     this.props.enableModifiers(this.props.selected_country, MILITARY_POWER_KEY, toList({
-      target: DefinitionType.Global,
+      target: DefinitionType.Land,
       attribute: UnitCalc.Morale,
       type: ValuesType.Modifier,
       value: power * 0.001
@@ -615,7 +615,7 @@ class Countries extends Component<IProps> {
       return
     this.props.setOfficeDiscipline(this.props.selected_country, number)
     this.props.enableModifiers(this.props.selected_country, OFFICE_KEY + 'Discipline', toList({
-      target: DefinitionType.Land,
+      target: DefinitionType.Global,
       attribute: UnitCalc.Discipline,
       value: number / 100.0
     }))

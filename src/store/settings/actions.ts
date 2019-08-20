@@ -12,6 +12,7 @@ export enum CombatParameter {
   DiceMaximum = 'DiceMaximum',
   BaseDamage = 'BaseDamage',
   RollDamage = 'RollDamage',
+  MaxBaseDamage = 'MaxBaseDamage',
   MinimumMorale = 'MinimumMorale',
   MinimumStrength = 'MinimumStrength',
   RollFrequency = 'RollFrequency',
@@ -31,7 +32,9 @@ export enum CombatParameter {
 export const parameterToDescription = (parameter: CombatParameter): string => {
   switch (parameter) {
     case CombatParameter.BaseDamage:
-      return 'Base damage each unit deals.'
+      return 'Initial base damage.'
+    case CombatParameter.MaxBaseDamage:
+      return 'Maximum base damage.'
     case CombatParameter.CombatWidth:
       return 'Width of the battlefield.'
     case CombatParameter.DiceMaximum:
@@ -59,7 +62,7 @@ export const parameterToDescription = (parameter: CombatParameter): string => {
     case CombatParameter.FixFlank:
       return 'Naval combat contains only flank.\nThis makes the preferred flanking unit deploy in the middle.\nThis is probably a bug in the game. Set 1 to fix this.'
     case CombatParameter.RollDamage:
-      return 'Additional damage each unit deals per dice roll and other modifiers.'
+      return 'Additional base damage per dice roll and other modifiers.'
     case CombatParameter.RollFrequency:
       return 'How many rounds dice rolls stay active.'
     case CombatParameter.FlankCriteriaAttribute:

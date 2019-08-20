@@ -336,7 +336,7 @@
           "value": 0.05
         },
         {
-          "target": "Land",
+          "target": "Global",
           "attribute": "Discipline",
           "value": 0.05
         },
@@ -818,7 +818,7 @@
           "value": 0.02
         },
         {
-          "target": "Land",
+          "target": "Global",
           "attribute": "Discipline",
           "value": 0.05
         },

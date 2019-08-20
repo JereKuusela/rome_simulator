@@ -129,7 +129,7 @@
       "name": "Disciplined",
       "modifiers": [
         {
-          "target": "Land",
+          "target": "Global",
           "attribute": "Discipline",
           "value": 0.05
         },
