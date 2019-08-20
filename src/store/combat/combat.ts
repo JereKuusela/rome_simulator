@@ -354,7 +354,10 @@ const calculateLosses = (source: BaseUnit, target: BaseUnit, roll: number, terra
   let damage = 100000.0 * calculateBaseDamage(roll, settings)
   damage = calculate(damage, 1.0 + calculateValue(source, UnitCalc.Discipline))
   damage = calculate(damage, 1.0 + calculateValue(source, UnitCalc.DamageDone))
-  damage = calculate(damage, 1.0 + calculateValue(target, UnitCalc.DamageTaken))
+  if (settings.get(CombatParameter.FixDamageTaken))
+    damage = calculate(damage, 1.0 + calculateValue(target, UnitCalc.DamageTaken))
+  else
+    damage = calculate(damage, 1.0 + calculateValue(source, UnitCalc.DamageDone))
   damage = calculate(damage, 1.0 + terrains.reduce((previous, current) => previous + (current ? calculateValue(source, current.type) : 0), 0))
   damage = calculate(damage, 1.0 + calculateValue(source, target.type))
   damage = calculate(damage, 1.0 + tactic_damage_multiplier)

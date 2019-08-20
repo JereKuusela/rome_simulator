@@ -44,4 +44,5 @@ export const getDefaultAnySettings = (): OrderedMap<CombatParameter, number> => 
   .set(CombatParameter.ReinforceMainSign, 0)
   .set(CombatParameter.ReinforceFlankAttribute, UnitCalc.Maneuver as unknown as number)
   .set(CombatParameter.ReinforceFlankSign, 0)
+  .set(CombatParameter.FixDamageTaken, 0)
 }
