@@ -16,8 +16,8 @@ export enum DefinitionType {
   Global = 'Global'
 }
 
-type AnyDefinition = AnyBaseDefinition | BaseValuesDefinition<any, any>
-type AnyBaseDefinition = BaseDefinition<any, any>
+type BVD = BD | BaseValuesDefinition<any, any>
+type BD = BaseDefinition<any, any>
 
 export interface BaseDefinition<T, S> {
   readonly type: T
@@ -37,34 +37,17 @@ export interface BaseValuesDefinition<T, S> {
 /**
  * Returns the image of a definition while handling missing cases.
  * Question mark is returned for existing definitions without an image.
- * Empty is returnted for non-existing definitions.
+ * Empty is returned for non-existing definitions.
  * @param definition
  */
-export const getImage = <Definition extends AnyDefinition>
-  (definition?: Definition): string => (definition && definition.image) || (definition ? UnknownIcon : EmptyIcon)
-
-/**
- * Merges base values of given definitions. Returns the first definition (if defined), otherwise the second definition.
- * @param definition Returned definition with base values from to_merge.
- * @param to_merge Only returned if other parameter is not defined.
- */
-export const mergeBaseValues = <Definition extends AnyDefinition | undefined>
-  (definition: Definition, to_merge: Definition): Definition => {
-  let base_values = Map<any, OrderedMap<any, number>>()
-  if (definition && definition.base_values)
-    base_values = base_values.mergeDeep(definition.base_values)
-  if (to_merge && to_merge.base_values)
-    base_values = base_values.mergeDeep(to_merge.base_values)
-  return { ...to_merge, ...definition, base_values }
-}
+export const getImage = (definition?: { image?: string}): string => (definition && definition.image) || (definition ? UnknownIcon : EmptyIcon)
 
 /**
  * Merges base, modifier and loss values of given definitions. Returns the first definition (if defined), otherwise the second definition.
  * @param definition Returned definition with base values from to_merge.
  * @param to_merge Only returned if other parameter is not defined.
  */
-export const mergeValues = <Definition1 extends AnyBaseDefinition | undefined, Definition2 extends AnyBaseDefinition | undefined>
-  (definition: Definition1, to_merge: Definition2): Definition1 & Definition2 => {
+export const mergeValues = <D1 extends BD | undefined, D2 extends BD | undefined> (definition: D1, to_merge: D2): D1 & D2 => {
   let base_values = Map<any, OrderedMap<string, number>>()
   if (definition && definition.base_values)
     base_values = base_values.mergeDeep(definition.base_values)
@@ -86,8 +69,7 @@ export const mergeValues = <Definition1 extends AnyBaseDefinition | undefined, D
 /**
  * Adds base, modifier or loss values.
  */
-export const addValues = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, type: ValuesType, key: string, values: [Attribute, number][]): Definition => {
+export const addValues = <D extends BVD, Attribute> (definition: D, type: ValuesType, key: string, values: [Attribute, number][]): D => {
   if (type === ValuesType.Base)
     return { ...definition, base_values: subAddValues(definition.base_values, key, values) }
   const any = definition as any
@@ -98,14 +80,16 @@ export const addValues = <Definition extends AnyDefinition, Attribute>
   return definition
 }
 
+type Values<A> = Map<A, OrderedMap<string, number>>
+
 /**
  * Shared implementation for adding base, modifier or loss values.
  * @param container Base, modifier or loss values.
  * @param key Identifier for the values. Previous values get replaced.
  * @param values A list of [attribute, value] pairs.
  */
-const subAddValues = <Attribute>(container: Map<Attribute, OrderedMap<string, number>> | undefined, key: string, values: [Attribute, number][]): Map<Attribute, OrderedMap<string, number>> => {
-  let new_values = container ? container : Map<Attribute, OrderedMap<string, number>>()
+const subAddValues = <A>(container: Values<A> | undefined, key: string, values: [A, number][]): Values<A> => {
+  let new_values = container ? container : Map<A, OrderedMap<string, number>>()
   for (const [attribute, value] of values) {
     new_values = new_values.has(attribute) ? new_values : new_values.set(attribute, OrderedMap<string, number>())
     const attribute_values = new_values.get(attribute)!
@@ -120,8 +104,7 @@ const subAddValues = <Attribute>(container: Map<Attribute, OrderedMap<string, nu
 /**
  * Clears base, modifier and loss values with a given key.
  */
-export const clearAllValues = <Definition extends AnyBaseDefinition>
-  (definition: Definition, key: string): Definition => {
+export const clearAllValues = <D extends BD> (definition: D, key: string): D => {
   return {
     ...definition,
     base_values: subClearValues(definition.base_values, key),
@@ -133,8 +116,7 @@ export const clearAllValues = <Definition extends AnyBaseDefinition>
 /**
  * Clears base, modifier or loss values with a given key.
  */
-export const clearValues = <Definition extends AnyDefinition>
-  (definition: Definition, type: ValuesType, key: string): Definition => {
+export const clearValues = <D extends BVD> (definition: D, type: ValuesType, key: string): D => {
   if (type === ValuesType.Base)
     return { ...definition, base_values: subClearValues(definition.base_values, key) }
   const any = definition as any
@@ -151,17 +133,16 @@ export const clearValues = <Definition extends AnyDefinition>
  * @param container Base, modifier or loss values.
  * @param key Identifier for the values to remove.
  */
-const subClearValues = <Attribute>(container: Map<Attribute, OrderedMap<string, number>> | undefined, key: string): Map<Attribute, OrderedMap<string, number>> => {
+const subClearValues = <A>(container: Values<A> | undefined, key: string): Values<A> => {
   if (container)
     return container.map(attribute => attribute.filter((_, attribute_key) => attribute_key !==key))
-  return Map<Attribute, OrderedMap<string, number>>()
+  return Map<A, OrderedMap<string, number>>()
 }
 
 /**
  * Adds base, modifier or loss values while clearing previous ones.
  */
-export const regenerateValues = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, type: ValuesType, key: string, values: [Attribute, number][]): Definition => {
+export const regenerateValues = <D extends BVD, A> (definition: D, type: ValuesType, key: string, values: [A, number][]): D => {
   return addValues(clearValues(definition, type, key), type, key, values)
 }
 
@@ -173,8 +154,7 @@ const PRECISION = 100000.0
  * @param definition 
  * @param attribute 
  */
-export const calculateValue = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition | undefined, attribute: Attribute): number => {
+export const calculateValue = <D extends BVD, A> (definition: D | undefined, attribute: A): number => {
   if (!definition)
     return 0.0
   let value = calculateBase(definition, attribute) * calculateModifier(definition, attribute) - calculateLoss(definition, attribute)
@@ -186,8 +166,7 @@ export const calculateValue = <Definition extends AnyDefinition, Attribute>
  * @param definition 
  * @param attribute 
  */
-export const calculateValueWithoutLoss = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition | undefined, attribute: Attribute): number => {
+export const calculateValueWithoutLoss = <D extends BVD, A> (definition: D | undefined, attribute: A): number => {
   if (!definition)
     return 0.0
   let value = calculateBase(definition, attribute) * calculateModifier(definition, attribute)
@@ -199,24 +178,21 @@ export const calculateValueWithoutLoss = <Definition extends AnyDefinition, Attr
  * @param definition 
  * @param attribute 
  */
-export const calculateBase = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, attribute: Attribute): number => calculateValueSub(definition.base_values, attribute, 0)
+export const calculateBase = <D extends BVD, A> (definition: D, attribute: A): number => calculateValueSub(definition.base_values, attribute, 0)
 
 /**
  * Calculates the modifier value of an attribute.
  * @param definition 
  * @param attribute 
  */
-export const calculateModifier = <Definition extends AnyBaseDefinition, Attribute>
-  (definition: Definition, attribute: Attribute): number => calculateValueSub(definition.modifier_values, attribute, 1.0)
+export const calculateModifier = <D extends BD, A> (definition: D, attribute: A): number => calculateValueSub(definition.modifier_values, attribute, 1.0)
 
 /**
  * Calculates the loss value of an attribute.
  * @param definition 
  * @param attribute 
  */
-export const calculateLoss = <Definition extends AnyBaseDefinition, Attribute>
-  (definition: Definition, attribute: Attribute): number => calculateValueSub(definition.loss_values, attribute, 0)
+export const calculateLoss = <D extends BD, A> (definition: D, attribute: A): number => calculateValueSub(definition.loss_values, attribute, 0)
 
 /**
  * Shared implementation for calculating the value of an attribute.
@@ -224,7 +200,7 @@ export const calculateLoss = <Definition extends AnyBaseDefinition, Attribute>
  * @param attribute 
  * @param initial Initial value. For example modifiers have 1.0.
  */
-const calculateValueSub = <Attribute>(container: Map<Attribute, OrderedMap<string, number>> | undefined, attribute: Attribute, initial: number): number => {
+const calculateValueSub = <A>(container: Values<A> | undefined, attribute: A, initial: number): number => {
   let result = initial
   if (!container)
     return result
@@ -240,8 +216,7 @@ const calculateValueSub = <Attribute>(container: Map<Attribute, OrderedMap<strin
  * @param attribute 
  * @param key 
  */
-export const getBaseValue = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, attribute: Attribute, key: string): number => getValue(definition.base_values, attribute, key)
+export const getBaseValue = <D extends BVD, A> (definition: D, attribute: A, key: string): number => getValue(definition.base_values, attribute, key)
 
 /**
  * Returns a modifier of a given attribute with a given identifier.
@@ -249,8 +224,7 @@ export const getBaseValue = <Definition extends AnyDefinition, Attribute>
  * @param attribute 
  * @param key 
  */
-export const getModifierValue = <Definition extends AnyBaseDefinition, Attribute>
-  (definition: Definition, attribute: Attribute, key: string): number => getValue(definition.modifier_values, attribute, key)
+export const getModifierValue = <D extends BD, A> (definition: D, attribute: A, key: string): number => getValue(definition.modifier_values, attribute, key)
 
 /**
  * Returns a loss of a given attribute with a given identifier.
@@ -258,8 +232,7 @@ export const getModifierValue = <Definition extends AnyBaseDefinition, Attribute
  * @param attribute 
  * @param key 
  */
-export const getLossValue = <Definition extends AnyBaseDefinition, Attribute>
-  (definition: Definition, attribute: Attribute, key: string): number => getValue(definition.loss_values, attribute, key)
+export const getLossValue = <D extends BD, A> (definition: D, attribute: A, key: string): number => getValue(definition.loss_values, attribute, key)
 
 /**
  * Shared implementation to get values. Zero is returned for missing values because values with zero are not stored.
@@ -267,7 +240,7 @@ export const getLossValue = <Definition extends AnyBaseDefinition, Attribute>
  * @param attribute 
  * @param key 
  */
-const getValue = <Attribute>(container: Map<Attribute, OrderedMap<string, number>> | undefined, attribute: Attribute, key: string): number => {
+const getValue = <A>(container: Values<A> | undefined, attribute: A, key: string): number => {
   if (!container)
     return 0.0
   const values = container.get(attribute)
@@ -284,8 +257,7 @@ const getValue = <Attribute>(container: Map<Attribute, OrderedMap<string, number
  * @param definition 
  * @param attribute 
  */
-export const explainShort = <Definition extends AnyDefinition, Attribute>
-  (definition: Definition, attribute: Attribute): string => {
+export const explainShort = <D extends BVD, A> (definition: D, attribute: A): string => {
   if (!definition.base_values)
     return ''
   let base = 0
@@ -305,8 +277,7 @@ export const explainShort = <Definition extends AnyDefinition, Attribute>
  * @param definition 
  * @param attribute 
  */
-export const explain = <Definition extends AnyBaseDefinition, Attribute>
-  (definition: Definition, attribute: Attribute): string => {
+export const explain = <D extends BD, A> (definition: D, attribute: A): string => {
   const value_modifier = definition.modifier_values ? definition.modifier_values.get(attribute) : undefined
   const value_loss = definition.loss_values ? definition.loss_values.get(attribute) : undefined
   if ((!value_modifier || value_modifier.size === 0) && (!value_loss || value_loss.size === 0))
