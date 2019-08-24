@@ -2,7 +2,7 @@ import { Map } from 'immutable'
 import { BaseUnit, UnitCalc, UnitType, UnitDefinition } from '../units'
 import { RowType, BaseUnits } from '../battle'
 import { CombatParameter } from '../settings'
-import { calculateValue, mergeValues } from '../../base_definition'
+import { calculateValue, mergeValues, calculateBase } from '../../base_definition'
 type Definition = Map<UnitType, UnitDefinition>
 type RowTypes = Map<RowType, UnitType | undefined>
 type Settings = Map<CombatParameter, number>
@@ -21,7 +21,7 @@ const isFlankUnit = (settings: Settings, row_types: RowTypes, unit: BaseUnit) =>
         return true
     if (unit.type === row_types.get(RowType.Front) || unit.type === row_types.get(RowType.Back))
         return false
-    const value = calculateValue(unit, settings.get(CombatParameter.FlankCriteriaAttribute, UnitCalc.Maneuver))
+    const value = calculateBase(unit, settings.get(CombatParameter.FlankCriteriaAttribute, UnitCalc.Maneuver))
     const limit = settings.get(CombatParameter.FlankCriteriaValue, 2)
     if (settings.get(CombatParameter.FlankCriteriaSign, true))
         return value > limit
@@ -82,11 +82,11 @@ export const reinforce = (army: BaseUnits, definitions: Definition, round: numbe
     // Calculate priorities (mostly based on unit type, ties are resolved with index numbers).
     let orderedMainReserve = mainReserve.sortBy((value, key) => {
         value = mergeValues(value, definitions.get(value.type)!)
-        return (settings.get(CombatParameter.ReinforceMainSign) ? 1 : -1) * calculateValue(value, settings.get(CombatParameter.ReinforceMainAttribute, UnitCalc.Cost)) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 + key - (value.type === row_types.get(RowType.Front) ? 200000000 : 0) - (value.type === row_types.get(RowType.Back) ? -100000000 : 0)
+        return (settings.get(CombatParameter.ReinforceMainSign) ? 1 : -1) * calculateBase(value, settings.get(CombatParameter.ReinforceMainAttribute, UnitCalc.Cost)) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 + key - (value.type === row_types.get(RowType.Front) ? 200000000 : 0) - (value.type === row_types.get(RowType.Back) ? -100000000 : 0)
     })
     let orderedFlankReserve = flankReserve.sortBy((value, key) => {
         value = mergeValues(value, definitions.get(value.type)!)
-        return (settings.get(CombatParameter.ReinforceFlankSign) ? 1 : -1) * calculateValue(value, settings.get(CombatParameter.ReinforceFlankAttribute, UnitCalc.Maneuver)) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 + key - (value.type === row_types.get(RowType.Flank) ? 100000000 : 0)
+        return (settings.get(CombatParameter.ReinforceFlankSign) ? 1 : -1) * calculateBase(value, settings.get(CombatParameter.ReinforceFlankAttribute, UnitCalc.Maneuver)) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 + key - (value.type === row_types.get(RowType.Flank) ? 100000000 : 0)
     })
 
     const free_spots = frontline.filter((_, index) => index < frontline.size).reduce((previous, current) => previous + (current ? 0 : 1), 0)
