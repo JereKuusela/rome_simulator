@@ -1,6 +1,7 @@
 import { AppState } from "./index"
 import { OrderedSet, OrderedMap } from "immutable"
-import { filterUnitDefinitions, isIncludedInMode, getKeys, sumMap, mergeUnits } from '../utils'
+import { getKeys, sumMap } from '../utils'
+import { filterUnitDefinitions, isIncludedInMode, mergeUnits } from '../army_utils'
 import { TacticType, TacticDefinition } from "./tactics/actions"
 import { DefinitionType, mergeValues } from "../base_definition"
 import { TerrainType, TerrainDefinition } from "./terrains/actions"

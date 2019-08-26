@@ -1,7 +1,7 @@
 import { OrderedMap, Map, fromJS } from 'immutable'
 import { UnitType, UnitDefinition, UnitCalc, ValueType, BaseUnit, GlobalDefinitions, UnitDefinitions } from './actions'
 import { addValues, ValuesType, DefinitionType } from '../../base_definition'
-import { getNextId } from '../../utils'
+import { getNextId } from '../../army_utils'
 import IconArcher from '../../images/archers.png'
 import IconCamelCavalry from '../../images/camel_cavalry.png'
 import IconChariots from '../../images/chariots.png'

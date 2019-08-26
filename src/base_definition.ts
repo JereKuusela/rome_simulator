@@ -34,6 +34,8 @@ export interface BaseValuesDefinition<T, S> {
   readonly base_values?: Map<S, OrderedMap<string, number>>
 }
 
+const initValues = <A>() => Map<A, OrderedMap<string, number>>()
+
 /**
  * Returns the image of a definition while handling missing cases.
  * Question mark is returned for existing definitions without an image.
@@ -48,17 +50,17 @@ export const getImage = (definition?: { image?: string}): string => (definition 
  * @param to_merge Only returned if other parameter is not defined.
  */
 export const mergeValues = <D1 extends BD | undefined, D2 extends BD | undefined> (definition: D1, to_merge: D2): D1 & D2 => {
-  let base_values = Map<any, OrderedMap<string, number>>()
+  let base_values = initValues()
   if (definition && definition.base_values)
     base_values = base_values.mergeDeep(definition.base_values)
   if (to_merge && to_merge.base_values)
     base_values = base_values.mergeDeep(to_merge.base_values)
-  let modifier_values = Map<any, OrderedMap<string, number>>()
+  let modifier_values = initValues()
   if (definition && definition.modifier_values)
     modifier_values = modifier_values.mergeDeep(definition.modifier_values)
   if (to_merge && to_merge.modifier_values)
     modifier_values = modifier_values.mergeDeep(to_merge.modifier_values)
-  let loss_values = Map<any, OrderedMap<string, number>>()
+  let loss_values = initValues()
   if (definition && definition.loss_values)
     loss_values = loss_values.mergeDeep(definition.loss_values)
   if (to_merge && to_merge.loss_values)
@@ -89,7 +91,7 @@ type Values<A> = Map<A, OrderedMap<string, number>>
  * @param values A list of [attribute, value] pairs.
  */
 const subAddValues = <A>(container: Values<A> | undefined, key: string, values: [A, number][]): Values<A> => {
-  let new_values = container ? container : Map<A, OrderedMap<string, number>>()
+  let new_values = container ? container : initValues<A>()
   for (const [attribute, value] of values) {
     new_values = new_values.has(attribute) ? new_values : new_values.set(attribute, OrderedMap<string, number>())
     const attribute_values = new_values.get(attribute)!
@@ -136,7 +138,7 @@ export const clearValues = <D extends BVD> (definition: D, type: ValuesType, key
 const subClearValues = <A>(container: Values<A> | undefined, key: string): Values<A> => {
   if (container)
     return container.map(attribute => attribute.filter((_, attribute_key) => attribute_key !==key))
-  return Map<A, OrderedMap<string, number>>()
+  return initValues<A>()
 }
 
 /**
@@ -260,10 +262,7 @@ const getValue = <A>(container: Values<A> | undefined, attribute: A, key: string
 export const explainShort = <D extends BVD, A> (definition: D, attribute: A): string => {
   if (!definition.base_values)
     return ''
-  let base = 0
   const value_base = definition.base_values.get(attribute)
-  if (value_base)
-    value_base.forEach(value => base += value)
   let explanation = ''
   if (value_base) {
     value_base.forEach((value, key) => explanation += key.replace(/_/g, ' ') + ': ' + value + ', ')
@@ -292,9 +291,10 @@ export const explain = <D extends BD, A> (definition: D, attribute: A): string =
     else if (value_base.size === 1)
       explanation += ''
     else
-      explanation += 'Base value ' + +(base).toFixed(2) + '('
+      explanation += 'Base value ' + +(base).toFixed(2) + ' ('
     value_base.forEach((value, key) => explanation += key.replace(/_/g, ' ') + ': ' + value + ', ')
-    explanation = explanation.substring(0, explanation.length - 2)
+    if (value_base.size > 0)
+      explanation = explanation.substring(0, explanation.length - 2)
     if (value_base.size > 1)
       explanation += ')'
   }
