@@ -1,9 +1,9 @@
-import { battle } from '../combat'
+import { doBattle } from '../combat'
 import { List, Map } from 'immutable'
 import { getDefaultArmy, Army, Participant, getDefaultParticipant } from '../../battle'
 import { getDefaultTactics, TacticType } from '../../tactics'
 import { getDefaultTerrains, TerrainType, TerrainDefinition } from '../../terrains'
-import { getDefaultUnits, getDefaultGlobal, UnitType, UnitCalc, UnitDefinition } from '../../units'
+import { getDefaultUnits, getDefaultGlobal, UnitType, UnitCalc, UnitDefinition, BaseUnit } from '../../units'
 import { addValues, ValuesType, mergeValues, DefinitionType } from '../../../base_definition'
 import { verifyCenterUnits, setRolls, setTactics, setCenterUnits, getSettings } from './utils'
 import { CountryName } from '../../countries'
@@ -13,7 +13,7 @@ describe('1 vs 1', () => {
   const tactics = getDefaultTactics()
   const terrains = getDefaultTerrains()
   const units = getDefaultUnits().map(unit => mergeValues(unit, global_stats))
-  const unit = addValues(units.get(UnitType.Archers)!, ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.2]])
+  const unit = addValues(units.get(UnitType.Archers) as any as BaseUnit, ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.2]])
   const definitions = Map<CountryName, Map<UnitType, UnitDefinition>>().set(CountryName.Country1, units).set(CountryName.Country2, units)
   const settings = getSettings(DefinitionType.Land)
 
@@ -37,7 +37,7 @@ describe('1 vs 1', () => {
   })
   const doRound = () => {
     info.round = info.round + 1
-    const [a, d] = battle(definitions, { ...info.attacker, ...info.army_a, tactic: tactics.get(info.army_a.tactic)!, country: CountryName.Country1, general: 0 }, { ...info.defender, ...info.army_d, tactic: tactics.get(info.army_d.tactic)!, country: CountryName.Country2, general: 0  }, info.round, terrain, settings)
+    const [a, d] = doBattle(definitions, { ...info.attacker, ...info.army_a, tactic: tactics.get(info.army_a.tactic)!, country: CountryName.Country1, general: 0 }, { ...info.defender, ...info.army_d, tactic: tactics.get(info.army_d.tactic)!, country: CountryName.Country2, general: 0  }, info.round, terrain, settings)
     info.army_a = { ...info.army_a, ...a }
     info.army_d = { ...info.army_d, ...d }
   }

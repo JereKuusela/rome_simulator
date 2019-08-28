@@ -1,28 +1,46 @@
-import { createReducer } from 'typesafe-actions'
+import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
 import { getDefaultTactics } from './data'
-import { setBaseValue, deleteTactic, addTactic, changeImage, changeType, changeMode } from './actions'
-import { addValues, ValuesType } from '../../base_definition'
+import { TacticType, ValueType } from './actions'
+import { addValues, ValuesType, DefinitionType } from '../../base_definition'
 
 export const tacticsState = getDefaultTactics()
 
-export const tacticsReducer = createReducer(tacticsState)
-  .handleAction(setBaseValue, (state, action: ReturnType<typeof setBaseValue>) => (
-     state.update(action.payload.tactic, tactic => (
-        addValues(tactic, ValuesType.Base, action.payload.key, [[action.payload.attribute, action.payload.value]])
+class TacticsReducer extends ImmerReducer<typeof tacticsState> {
+
+  setBaseValue(tactic: TacticType, key: string, attribute: ValueType, value: number) {
+    this.draftState = this.state.update(tactic, tactic => (
+      addValues(tactic, ValuesType.Base, key, [[attribute, value]])
     ))
-  ))
-  .handleAction(deleteTactic, (state, action: ReturnType<typeof deleteTactic>) => (
-    state.delete(action.payload.type)
-  ))
-  .handleAction(addTactic, (state, action: ReturnType<typeof addTactic>) => (
-    state.set(action.payload.type, { type: action.payload.type, mode: action.payload.mode, image: '' })
-  ))
-  .handleAction(changeImage, (state, action: ReturnType<typeof changeImage>) => (
-    state.update(action.payload.type, tactic => ({ ...tactic, image: action.payload.image }))
-  ))
-  .handleAction(changeMode, (state, action: ReturnType<typeof changeMode>) => (
-    state.update(action.payload.type, tactic => ({ ...tactic, mode: action.payload.mode }))
-  ))
-  .handleAction(changeType, (state, action: ReturnType<typeof changeType>) => (
-    state.set(action.payload.new_type, { ...state.get(action.payload.old_type)!, type: action.payload.new_type }).delete(action.payload.old_type)
-  ))
+  }
+
+  deleteTactic(type: TacticType) {
+    this.draftState = this.state.delete(type)
+  }
+
+  addTactic(type: TacticType, mode: DefinitionType) {
+    this.draftState = this.state.set(type, { type, mode, image: '' })
+  }
+
+  changeType(old_type: TacticType, type: TacticType) {
+    this.draftState = this.state.set(type, { ...this.state.get(old_type)!, type }).delete(old_type)
+  }
+
+  changeImage(type: TacticType, image: string) {
+    this.draftState = this.state.update(type, tactic => ({ ...tactic, image }))
+  }
+
+  changeMode(type: TacticType, mode: DefinitionType) {
+    this.draftState = this.state.update(type, tactic => ({ ...tactic, mode }))
+  }
+}
+
+const actions = createActionCreators(TacticsReducer)
+
+export const setBaseValue = actions.setBaseValue
+export const deleteTactic = actions.deleteTactic
+export const addTactic = actions.addTactic
+export const changeType = actions.changeType
+export const changeImage = actions.changeImage
+export const changeMode = actions.changeMode
+
+export const tacticsReducer = createReducerFunction(TacticsReducer, tacticsState)

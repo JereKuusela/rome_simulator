@@ -2,9 +2,20 @@
 Release 5:
 
 Tests (high priority):
-- base_definition functions tested
 - utils tested
 - combat tested
+
+Rename Mega Galley to Mega-Polyreme
+
+Reducers can probably be split to sub reducers (one handles the data structure, other the actual data)
+
+Pluralization of reducers, state, etc
+
+Combat things to combat reducer. Perhaps state as parameter when needed? Since it only changes same things as battle reducer,
+
+
+
+Release 6+:
 
 Army management:
 - Probably needed for multi-army battles because countries need to have multiple armies
@@ -14,11 +25,6 @@ Army management:
 - Accordion for reserve?
 - Accordion for unit definitions?
 
-Multiarmy:
-- Massive refactoring...
-
-
-Release 6+:
 
 - Accordions to more places?? (unit detail?)
 
@@ -105,21 +111,6 @@ Findings 2:
 - Mode seems to be also affected by amount of units in the filled
 - Amount of units also affects flank size
 
-
-
-
 Navigation:
 - Simulation
 - Graphs
-- Extra info
-- Localization
-
-- Robustness:
- - Sanity check on load? Remove modifiers which dont exist? Perhaps when things actually change
-
-
-
-
-
-
-

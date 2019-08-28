@@ -1,8 +1,6 @@
-import { createAction } from 'typesafe-actions'
 import { OrderedMap, Map } from 'immutable'
 import { TerrainType } from '../terrains'
-import { CountryName } from '../countries'
-import { calculateValue, BaseDefinition, ValuesType, DefinitionType } from '../../base_definition'
+import { calculateValue, BaseDefinition, DefinitionType } from '../../base_definition'
 import { toPercent, toSignedPercent, toNumber } from '../../formatters'
 
 export enum UnitType {
@@ -86,32 +84,3 @@ export const valueToString = (definition: BaseDefinition<UnitType, ValueType>, t
       return toSignedPercent(value)
   }
 }
-
-export const setValue = createAction('@@units/SET_VALUE', action => {
-  return (country: CountryName, type: ValuesType, unit: UnitType, key: string, attribute: ValueType, value: number) => action({ country, type, unit, key, attribute, value })
-})
-
-export const setGlobalValue = createAction('@@units/SET_GLOBAL_VALUE', action => {
-  return (country: CountryName, mode: DefinitionType, type: ValuesType, key: string, attribute: ValueType, value: number) => action({ country, mode, type, key, attribute, value })
-})
-
-export const deleteUnit = createAction('@@units/DELETE_UNIT', action => {
-  return (country: CountryName, type: UnitType) => action({ country, type })
-})
-
-export const addUnit = createAction('@@units/ADD_UNIT', action => {
-  return (country: CountryName, mode: DefinitionType, type: UnitType) => action({ country, mode, type })
-})
-
-export const changeType = createAction('@@units/CHANGE_TYPE', action => {
-  return (country: CountryName, old_type: UnitType, new_type: UnitType) => action({ country, old_type, new_type })
-})
-
-export const changeImage = createAction('@@units/CHANGE_IMAGE', action => {
-  return (country: CountryName, type: UnitType, image: string) => action({ country, type, image })
-})
-
-export const changeMode = createAction('@@units/CHANGE_MODE', action => {
-  return (country: CountryName, type: UnitType, mode: DefinitionType) => action({ country, type, mode })
-})
-

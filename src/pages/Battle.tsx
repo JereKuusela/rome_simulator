@@ -6,7 +6,8 @@ import { AppState } from '../store/index'
 import { BaseUnit, UnitDefinition } from '../store/units'
 import UnitArmy from '../components/UnitArmy'
 import TargetArrows from '../components/TargetArrows'
-import { invalidate, invalidateCountry, ArmyType, battle, undo, Participant, Side, toggleRandomRoll, setRoll, RowType, setFlankSize, selectArmy, selectUnit, setSeed, refreshBattle } from '../store/battle'
+import { invalidate, invalidateCountry, ArmyType, undo, Participant, Side, toggleRandomRoll, setRoll, RowType, setFlankSize, selectArmy, selectUnit } from '../store/battle'
+import { battle, setSeed, refreshBattle } from '../store/combat'
 import { calculateTactic, calculateRollModifierFromTerrains, calculateRollModifierFromGenerals, calculateBaseDamage } from '../store/combat/combat'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import { TacticType } from '../store/tactics'
@@ -26,7 +27,7 @@ import { CombatParameter } from '../store/settings'
 import IconTerrain from '../images/terrain.png'
 import IconGeneral from '../images/military_power.png'
 import StyledNumber from '../components/StyledNumber'
-import { findUnitById } from '../utils'
+import { findUnitById } from '../army_utils'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null

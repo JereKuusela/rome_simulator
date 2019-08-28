@@ -1,4 +1,4 @@
-import { fromJS, Seq, List, OrderedMap, OrderedSet, Map } from 'immutable'
+import { fromJS, Seq, List, OrderedMap, OrderedSet, Set, Map } from 'immutable'
 
 /**
  * Maps a range to a list.
@@ -71,3 +71,10 @@ export const sumList = (map: List<any>, converter?: (value: any) => number): num
  * @param number 
  */
 export const round = (number: number, precision: number): number => Math.round(precision * number) / precision
+
+/**
+ * Toggles a item on a set.
+ * @param set 
+ * @param item
+ */
+export const toggle = (set: Set<string>, item: string): Set<string> => set.has(item) ? set.delete(item) : set.add(item)

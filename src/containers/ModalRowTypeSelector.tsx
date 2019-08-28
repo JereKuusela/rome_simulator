@@ -8,7 +8,7 @@ import { DefinitionType } from '../base_definition'
 import ItemSelector from '../components/ItemSelector'
 import ItemRemover from '../components/ItemRemover'
 import { CountryName } from '../store/countries'
-import { filterUnitDefinitions } from '../utils'
+import { filterUnitDefinitions } from '../army_utils'
 
 export interface ModalInfo {
   name: CountryName

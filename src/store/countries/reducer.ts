@@ -1,11 +1,12 @@
-import { createReducer } from 'typesafe-actions'
-import { Set, Map } from 'immutable'
-import {
-  CountryName, setOfficeDiscipline, setOfficeMorale,
-  deleteCountry, createCountry, changeCountryName, enableModifiers, clearModifiers, setMilitaryPower,
-  selectGovernment, selectReligion, setOmenPower, selectCulture, setGeneralMartial, setHasGeneral
-} from './actions'
-import { GovermentType, ReligionType, CultureType } from '../data'
+
+import { Set, Map, List } from 'immutable'
+import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
+import { GovermentType, ReligionType, CultureType, Modifier } from '../data'
+
+export enum CountryName {
+  Country1 = 'Country 1',
+  Country2 = 'Country 2'
+}
 
 export interface Country {
   readonly selections: Set<string>
@@ -38,47 +39,80 @@ export const defaultCountry =
 
 const selectionsState = Map<CountryName, Country>().set(CountryName.Country1, defaultCountry).set(CountryName.Country2, defaultCountry)
 
-export const selectionsReducer = createReducer(selectionsState)
-  .handleAction(createCountry, (state, action: ReturnType<typeof createCountry>) => (
-    state.set(action.payload.country, state.get(action.payload.source_country!, defaultCountry))
-  ))
-  .handleAction(deleteCountry, (state, action: ReturnType<typeof deleteCountry>) => (
-    state.delete(action.payload.country)
-  ))
-  .handleAction(changeCountryName, (state, action: ReturnType<typeof changeCountryName>) => (
-    state.mapKeys(key => key === action.payload.old_country ? action.payload.country : key)
-  ))
-  .handleAction(enableModifiers, (state, action: ReturnType<typeof enableModifiers>) => {
-    const modifiers = action.payload.modifiers.filter(value => value.target === 'General' && value.attribute === 'Martial').toMap().mapEntries(value => [action.payload.key, value[1].value])
-    return state.update(action.payload.country, defaultCountry, value => ({ ...value, selections: value.selections.add(action.payload.key), trait_martial: value.trait_martial.merge(modifiers) }))
-  })
-  .handleAction(clearModifiers, (state, action: ReturnType<typeof clearModifiers>) => (
-    state.update(action.payload.country, defaultCountry, value => ({ ...value, selections: value.selections.remove(action.payload.key), trait_martial: value.trait_martial.delete(action.payload.key) }))
-  ))
-  .handleAction(selectGovernment, (state, action: ReturnType<typeof selectGovernment>) => (
-    state.update(action.payload.country, defaultCountry, value => ({ ...value, government: action.payload.government }))
-  ))
-  .handleAction(selectReligion, (state, action: ReturnType<typeof selectReligion>) => (
-    state.update(action.payload.country, defaultCountry, value => ({ ...value, religion: action.payload.religion }))
-  ))
-  .handleAction(selectCulture, (state, action: ReturnType<typeof selectCulture>) => (
-    state.update(action.payload.country, defaultCountry, value => ({ ...value, culture: action.payload.culture }))
-  ))
-  .handleAction(setOmenPower, (state, action: ReturnType<typeof setOmenPower>) => (
-    state.update(action.payload.country, defaultCountry, value => ({ ...value, omen_power: action.payload.power }))
-  ))
-  .handleAction(setGeneralMartial, (state, action: ReturnType<typeof setGeneralMartial>) => (
-    state.update(action.payload.country, defaultCountry, value => ({ ...value, general_martial: action.payload.skill }))
-  ))
-  .handleAction(setHasGeneral, (state, action: ReturnType<typeof setHasGeneral>) => (
-    state.update(action.payload.country, defaultCountry, value => ({ ...value, has_general: action.payload.value }))
-  ))
-  .handleAction(setMilitaryPower, (state, action: ReturnType<typeof setMilitaryPower>) => (
-    state.update(action.payload.country, defaultCountry, value => ({ ...value, military_power: action.payload.power }))
-  ))
-  .handleAction(setOfficeDiscipline, (state, action: ReturnType<typeof setOfficeDiscipline>) => (
-    state.update(action.payload.country, defaultCountry, value => ({ ...value, office_discipline: action.payload.value }))
-  ))
-  .handleAction(setOfficeMorale, (state, action: ReturnType<typeof setOfficeMorale>) => (
-    state.update(action.payload.country, defaultCountry, value => ({ ...value, office_morale: action.payload.value }))
-  ))
+class CountriesReducer extends ImmerReducer<typeof selectionsState> {
+
+  createCountry(country: CountryName, source_country?: CountryName) {
+    this.draftState = this.state.set(country, this.state.get(source_country!, defaultCountry))
+  }
+
+  deleteCountry(country: CountryName) {
+    this.draftState = this.state.delete(country)
+  }
+
+  changeCountryName(old_country: CountryName, country: CountryName) {
+    this.draftState = this.state.mapKeys(key => key === old_country ? country : key)
+  }
+
+  enableModifiers(country: CountryName, key: string, modifiers: List<Modifier>) {
+    const general_modifiers = modifiers.filter(value => value.target === 'General' && value.attribute === 'Martial').toMap().mapEntries(value => [key, value[1].value])
+    this.draftState = this.state.update(country, defaultCountry, value => ({ ...value, selections: value.selections.add(key), trait_martial: value.trait_martial.merge(general_modifiers) }))
+  }
+
+  clearModifiers(country: CountryName, key: string) {
+    this.draftState = this.state.update(country, defaultCountry, value => ({ ...value, selections: value.selections.remove(key), trait_martial: value.trait_martial.delete(key) }))
+  }
+
+  selectGovernment(country: CountryName, government: GovermentType) {
+    this.draftState = this.state.update(country, defaultCountry, value => ({ ...value, government }))
+  }
+
+  selectReligion(country: CountryName, religion: ReligionType) {
+    this.draftState = this.state.update(country, defaultCountry, value => ({ ...value, religion }))
+  }
+
+  selectCulture(country: CountryName, culture: CultureType) {
+    this.draftState = this.state.update(country, defaultCountry, value => ({ ...value, culture }))
+  }
+
+  setOmenPower(country: CountryName, omen_power: number) {
+    this.draftState = this.state.update(country, defaultCountry, value => ({ ...value, omen_power }))
+  }
+
+  setGeneralMartial(country: CountryName, general_martial: number) {
+    this.draftState = this.state.update(country, defaultCountry, value => ({ ...value, general_martial }))
+  }
+
+  setHasGeneral(country: CountryName, has_general: boolean) {
+    this.draftState = this.state.update(country, defaultCountry, value => ({ ...value, has_general }))
+  }
+
+  setMilitaryPower(country: CountryName, military_power: number) {
+    this.draftState = this.state.update(country, defaultCountry, value => ({ ...value, military_power }))
+  }
+
+  setOfficeDiscipline(country: CountryName, office_discipline: number) {
+    this.draftState = this.state.update(country, defaultCountry, value => ({ ...value, office_discipline }))
+  }
+
+  setOfficeMorale(country: CountryName, office_morale: number) {
+    this.draftState = this.state.update(country, defaultCountry, value => ({ ...value, office_morale }))
+  }
+}
+const actions = createActionCreators(CountriesReducer)
+
+export const createCountry = actions.createCountry
+export const deleteCountry = actions.deleteCountry
+export const changeCountryName = actions.changeCountryName
+export const enableModifiers = actions.enableModifiers
+export const clearModifiers = actions.clearModifiers
+export const selectGovernment = actions.selectGovernment
+export const selectReligion = actions.selectReligion
+export const selectCulture = actions.selectCulture
+export const setOmenPower = actions.setOmenPower
+export const setGeneralMartial = actions.setGeneralMartial
+export const setHasGeneral = actions.setHasGeneral
+export const setMilitaryPower = actions.setMilitaryPower
+export const setOfficeDiscipline = actions.setOfficeDiscipline
+export const setOfficeMorale = actions.setOfficeMorale
+
+export const selectionsReducer = createReducerFunction(CountriesReducer, selectionsState)

@@ -10,7 +10,7 @@ import { Battle, modeState } from "./battle/reducer"
 import { getDefaultArmy, Army as BaseArmy, Side, getDefaultParticipant, BaseUnits, Participant, Units } from "./battle/actions"
 import { CombatParameter } from "./settings/actions"
 import { defaultCountry } from "./countries/reducer"
-import { CountryName } from "./countries/actions"
+import { CountryName } from "./countries"
 import { getDefaultGlobal, getDefaultUnits } from "./units/data"
 
 /**

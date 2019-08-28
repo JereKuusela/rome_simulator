@@ -45,7 +45,7 @@ export interface ParticipantState {
  * @param round Turn number to distinguish different rounds.
  * @param terrains Terrains of the battle, may affect amount of damage inflicted.
  */
-export const battle = (definitions: Definitions, attacker: ParticipantState, defender: ParticipantState, round: number, terrains: Terrains, settings: Settings): [BaseUnits, BaseUnits] => {
+export const doBattle = (definitions: Definitions, attacker: ParticipantState, defender: ParticipantState, round: number, terrains: Terrains, settings: Settings): [BaseUnits, BaseUnits] => {
   let a: BaseUnits = { frontline: attacker.frontline, reserve: attacker.reserve, defeated: attacker.defeated }
   let d: BaseUnits = { frontline: defender.frontline, reserve: defender.reserve, defeated: defender.defeated }
   // Simplifies later code because armies can be assumed to be the correct size.

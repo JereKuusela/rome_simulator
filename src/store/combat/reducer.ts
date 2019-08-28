@@ -1,7 +1,7 @@
-import { createReducer } from 'typesafe-actions'
+import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
 import { Random, MersenneTwister19937, createEntropy } from 'random-js'
-import { battle, checkFight, setSeed, refreshBattle, Side, Participant } from '../battle'
-import { battle as fight } from './combat'
+import { checkFight, Side, Participant } from '../battle'
+import { doBattle as fight } from './combat'
 import { mergeValues, DefinitionType } from '../../base_definition'
 import { CombatParameter } from '../settings'
 import { AppState } from '../'
@@ -9,7 +9,7 @@ import { mergeSettings, getBattle, getArmy, getParticipant } from '../utils'
 import { sumMap } from '../../utils'
 import { defaultCountry } from '../countries/reducer'
 
-const doBattle = (state: AppState, mode: DefinitionType, steps: number): AppState => {
+const doBattle = (state: AppState, mode: DefinitionType, steps: number) => {
   const definitions = state.units.map((value, key) => value.map(value => mergeValues(value, state.global_stats.getIn([key, mode]))))
   let next = getBattle(state)
   // Whole logic really messed after so many refactorings
@@ -42,7 +42,7 @@ const doBattle = (state: AppState, mode: DefinitionType, steps: number): AppStat
       return { ...participant, roll: rolls.roll }
     return participant
   }
-  
+
   for (let step = 0; step < steps && !next.fight_over; ++step) {
     if (!units_a || !units_d)
       continue
@@ -99,19 +99,28 @@ const doBattle = (state: AppState, mode: DefinitionType, steps: number): AppStat
   return { ...state, battle: state.battle.set(state.settings.mode, next) }
 }
 
+class CombatReducer extends ImmerReducer<AppState> {
 
-export const combatReducer = createReducer<AppState>({} as any)
-  .handleAction(battle, (state, action: ReturnType<typeof battle>) => (
-    doBattle(state, action.payload.mode, action.payload.steps)
-  ))
-  .handleAction(setSeed, (state, action: ReturnType<typeof setSeed>) => (
-    {
-      ...state,
-      battle: state.battle.update(state.settings.mode, battle => ({ ...battle, custom_seed: action.payload.seed, seed: action.payload.seed || 0 }))
-    }
-  ))
-  .handleAction(refreshBattle, (state, action: ReturnType<typeof refreshBattle>) => {
-    const steps = state.battle.get(action.payload.mode)!.round + 1
-    state = { ...state, battle: state.battle.update(action.payload.mode, value => ({ ...value, round: -1, participants: value.participants.map(value => ({ ...value, rounds: value.rounds.clear() })) })) }
-    return doBattle(state, action.payload.mode, steps)
-  })
+  battle(mode: DefinitionType, steps: number) {
+    this.draftState = doBattle(this.state, mode, steps)
+  }
+
+  setSeed(mode: DefinitionType, seed?: number) {
+    this.draftState = { ...this.state, battle: this.state.battle.update(mode, battle => ({ ...battle, custom_seed: seed, seed: seed || 0 }))}
+  }
+
+  refreshBattle(mode: DefinitionType) {
+    const steps = this.state.battle.get(mode)!.round + 1
+    const next = { ...this.state, battle: this.state.battle.update(mode, value => ({ ...value, round: -1, participants: value.participants.map(value => ({ ...value, rounds: value.rounds.clear() })) })) }
+    this.draftState = doBattle(next, mode, steps)
+
+  }
+}
+
+const actions = createActionCreators(CombatReducer)
+
+export const battle = actions.battle
+export const setSeed = actions.setSeed
+export const refreshBattle = actions.refreshBattle
+
+export const combatReducer = createReducerFunction(CombatReducer, {} as any)

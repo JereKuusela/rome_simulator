@@ -1,4 +1,4 @@
-import { battle } from '../combat'
+import { doBattle } from '../combat'
 import { List, Map } from 'immutable'
 import { getDefaultArmy, Army, Participant, getDefaultParticipant } from '../../battle'
 import { getDefaultTactics, TacticType } from '../../tactics'
@@ -41,7 +41,7 @@ describe('1 vs 1', () => {
 
   const doRound = () => {
     info.round = info.round + 1
-    const [a, d] = battle(definitions, { ...info.attacker, ...info.army_a, tactic: tactics.get(info.army_a.tactic)!, country: CountryName.Country1, general: 0 }, { ...info.defender, ...info.army_d, tactic: tactics.get(info.army_d.tactic)!, country: CountryName.Country2, general: 0 }, info.round, terrain, settings)
+    const [a, d] = doBattle(definitions, { ...info.attacker, ...info.army_a, tactic: tactics.get(info.army_a.tactic)!, country: CountryName.Country1, general: 0 }, { ...info.defender, ...info.army_d, tactic: tactics.get(info.army_d.tactic)!, country: CountryName.Country2, general: 0 }, info.round, terrain, settings)
     info.army_a = { ...info.army_a, ...a }
     info.army_d = { ...info.army_d, ...d }
   }

@@ -1,14 +1,14 @@
-import { createReducer } from 'typesafe-actions'
+
+import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
 import { List, Map } from 'immutable'
 import {
-  getDefaultArmy, getInitialTerrains, Army, Side, editUnit, removeUnit,
-  clearUnits, selectUnit, selectTerrain, selectTactic, undo, toggleRandomRoll, setRoll, setRowType, removeReserveUnits, addReserveUnits, setFlankSize,
-  selectArmy, ArmyType, BaseUnits, invalidate, invalidateCountry, Participant, getDefaultParticipant
+  getDefaultArmy, getInitialTerrains, Army, Side, ArmyType, BaseUnits, Participant, getDefaultParticipant, RowType
 } from './actions'
 import { BaseUnit, UnitType } from '../units'
 import { TerrainType } from '../terrains'
 import { DefinitionType } from '../../base_definition'
-import { CountryName } from '../countries/actions'
+import { CountryName } from '../countries'
+import { TacticType } from '../tactics';
 
 export interface Battle {
   readonly armies: Map<CountryName, Army>
@@ -79,134 +79,172 @@ const updateParticipant = (state: Map<DefinitionType, Battle>, payload: { mode: 
   })
 }
 
-export const battleReducer = createReducer(initialState)
-  .handleAction(toggleRandomRoll, (state, action: ReturnType<typeof toggleRandomRoll>) =>
-    updateParticipant(state, action.payload, value => ({ ...value, randomize_roll: !value.randomize_roll }))
-  )
-  .handleAction(setFlankSize, (state, action: ReturnType<typeof setFlankSize>) =>
-    update(state, action.payload, (value: Army) => ({ ...value, flank_size: action.payload.size }))
-  )
-  .handleAction(setRoll, (state, action: ReturnType<typeof setRoll>) =>
-    updateParticipant(state, action.payload, value => ({ ...value, roll: action.payload.roll }))
-  )
-  .handleAction(selectUnit, (state, action: ReturnType<typeof selectUnit>) => {
-    const handleArmy = (participant: Army): Army => {
-      if (action.payload.type === ArmyType.Frontline)
-        return { ...participant, frontline: participant.frontline.set(action.payload.index, action.payload.unit) }
-      if (action.payload.type === ArmyType.Reserve && action.payload.unit && action.payload.index > participant.reserve.size)
-        return { ...participant, reserve: participant.reserve.push(action.payload.unit) }
-      if (action.payload.type === ArmyType.Reserve && action.payload.unit)
-        return { ...participant, reserve: participant.reserve.set(action.payload.index, action.payload.unit) }
-      if (action.payload.type === ArmyType.Reserve && !action.payload.unit)
-        return { ...participant, reserve: participant.reserve.delete(action.payload.index) }
-      if (action.payload.type === ArmyType.Defeated && action.payload.unit)
-        return { ...participant, defeated: participant.defeated.set(action.payload.index, action.payload.unit) }
-      if (action.payload.type === ArmyType.Defeated && action.payload.unit && action.payload.index > participant.defeated.size)
-        return { ...participant, defeated: participant.defeated.push(action.payload.unit) }
-      if (action.payload.type === ArmyType.Defeated && !action.payload.unit)
-        return { ...participant, defeated: participant.defeated.delete(action.payload.index) }
-      return participant
-    }
-    return update(state, action.payload, handleArmy)
-  })
-  .handleAction(editUnit, (state, action: ReturnType<typeof editUnit>) => {
+  class BattleReducer extends ImmerReducer<typeof initialState> {
 
-    const handleArmy = (participant: Army): Army => {
-      const [type, index] = findUnit(participant, action.payload.unit.id)
-      if (!type)
+    selectUnit(mode: DefinitionType, country: CountryName, type: ArmyType, index: number, unit: BaseUnit | undefined) {
+      const handleArmy = (participant: Army): Army => {
+        if (type === ArmyType.Frontline)
+          return { ...participant, frontline: participant.frontline.set(index, unit) }
+        if (type === ArmyType.Reserve && unit && index > participant.reserve.size)
+          return { ...participant, reserve: participant.reserve.push(unit) }
+        if (type === ArmyType.Reserve && unit)
+          return { ...participant, reserve: participant.reserve.set(index, unit) }
+        if (type === ArmyType.Reserve && !unit)
+          return { ...participant, reserve: participant.reserve.delete(index) }
+        if (type === ArmyType.Defeated && unit)
+          return { ...participant, defeated: participant.defeated.set(index, unit) }
+        if (type === ArmyType.Defeated && unit && index > participant.defeated.size)
+          return { ...participant, defeated: participant.defeated.push(unit) }
+        if (type === ArmyType.Defeated && !unit)
+          return { ...participant, defeated: participant.defeated.delete(index) }
         return participant
-      if (type === ArmyType.Frontline)
-        return { ...participant, frontline: participant.frontline.set(index, action.payload.unit) }
-      if (type === ArmyType.Reserve)
-        return { ...participant, reserve: participant.reserve.set(index, action.payload.unit) }
-      if (type === ArmyType.Defeated)
-        return { ...participant, defeated: participant.defeated.set(index, action.payload.unit) }
-      return participant
+      }
+      this.draftState = update(this.state, { mode, country }, handleArmy)
     }
-    return update(state, action.payload, handleArmy)
-  })
-  .handleAction(removeUnit, (state, action: ReturnType<typeof removeUnit>) => {
 
-    const handleArmy = (participant: Army): Army => {
-      const [type, index] = findUnit(participant, action.payload.unit.id)
-      if (!type)
+    editUnit(mode: DefinitionType, country: CountryName, unit: BaseUnit) {
+      const handleArmy = (participant: Army): Army => {
+        const [type, index] = findUnit(participant, unit.id)
+        if (!type)
+          return participant
+        if (type === ArmyType.Frontline)
+          return { ...participant, frontline: participant.frontline.set(index, unit) }
+        if (type === ArmyType.Reserve)
+          return { ...participant, reserve: participant.reserve.set(index, unit) }
+        if (type === ArmyType.Defeated)
+          return { ...participant, defeated: participant.defeated.set(index, unit) }
         return participant
-      if (type === ArmyType.Frontline)
-        return { ...participant, frontline: participant.frontline.set(index, undefined) }
-      if (type === ArmyType.Reserve)
-        return { ...participant, reserve: participant.reserve.delete(index) }
-      if (type === ArmyType.Defeated)
-        return { ...participant, defeated: participant.defeated.delete(index) }
-      return participant
+      }
+      this.draftState = update(this.state, { mode, country }, handleArmy)
     }
-    return update(state, action.payload, handleArmy)
-  })
-  .handleAction(selectTerrain, (state, action: ReturnType<typeof selectTerrain>) =>
-    state.update(action.payload.mode, mode => {
-      return { ...mode, terrains: mode.terrains.set(action.payload.index, action.payload.terrain) }
-    })
-  )
-  .handleAction(setRowType, (state, action: ReturnType<typeof setRowType>) =>
-    update(state, action.payload, (value: Army) => ({ ...value, row_types: value.row_types.set(action.payload.row_type, action.payload.unit) }))
-  )
-  .handleAction(selectTactic, (state, action: ReturnType<typeof selectTactic>) =>
-    update(state, action.payload, (value: Army) => ({ ...value, tactic: action.payload.tactic }))
-  )
-  .handleAction(undo, (state, action: ReturnType<typeof undo>) => {
-    let next = state.get(action.payload.mode)
-    if (!next)
-      return state
-    for (let step = 0; step < action.payload.steps && next.round > -1; ++step) {
-      let seed: number = next.seed
-      if (next.round < 2)
-        seed = next.custom_seed ? next.custom_seed : 0
-      const participants: Map<Side, Participant> = next.participants.map(value => ({
-        ...value,
-        rounds: value.rounds.pop(),
-        roll: value.rolls.get(-2, { roll: value.roll }).roll,
-        rolls: value.rolls.pop()
-      }))
+
+    removeUnit(mode: DefinitionType, country: CountryName, unit: BaseUnit) {
+      const handleArmy = (participant: Army): Army => {
+        const [type, index] = findUnit(participant, unit.id)
+        if (!type)
+          return participant
+        if (type === ArmyType.Frontline)
+          return { ...participant, frontline: participant.frontline.set(index, undefined) }
+        if (type === ArmyType.Reserve)
+          return { ...participant, reserve: participant.reserve.delete(index) }
+        if (type === ArmyType.Defeated)
+          return { ...participant, defeated: participant.defeated.delete(index) }
+        return participant
+      }
+      this.draftState = update(this.state, { mode, country }, handleArmy)
+    }
+
+    removeReserveUnits(mode: DefinitionType, country: CountryName, types: UnitType[]) {
+      this.draftState = update(this.state, { mode, country }, (value: Army) => ({ ...value, reserve: doRemoveReserveUnits(value.reserve, types) }))
+    }
+    
+    addReserveUnits(mode: DefinitionType, country: CountryName, units: BaseUnit[]) {
+      this.draftState = update(this.state, { mode, country }, (value: Army) => ({ ...value, reserve: doAddReserveUnits(value.reserve, units) }))
+    }
+
+    selectTerrain(mode: DefinitionType, index: number, terrain: TerrainType) {
+      this.draftState = this.state.update(mode, mode => {
+        return { ...mode, terrains: mode.terrains.set(index, terrain) }
+      })
+    }
+
+    selectTactic(mode: DefinitionType, country: CountryName, tactic: TacticType) {
+      this.draftState = update(this.state, { mode, country }, (value: Army) => ({ ...value, tactic }))
+    }
+
+    setRowType(mode: DefinitionType, country: CountryName, row_type: RowType, unit: UnitType | undefined) {
+      this.draftState = update(this.state, { mode, country }, (value: Army) => ({ ...value, row_types: value.row_types.set(row_type, unit) }))
+    }
+
+    invalidate(mode: DefinitionType) {
+      this.draftState = this.state.update(mode, value => ({ ...value, outdated: true }))
+    }
+
+    invalidateCountry(country: CountryName) {
+      this.draftState = this.state.map(value => ({ ...value, outdated: value.outdated || value.participants.some(value => value.name === country) }))
+    }
+
+    undo(mode: DefinitionType, steps: number) {
+      let next = this.state.get(mode)
+      if (!next)
+        return
+      for (let step = 0; step < steps && next.round > -1; ++step) {
+        let seed: number = next.seed
+        if (next.round < 2)
+          seed = next.custom_seed ? next.custom_seed : 0
+        const participants: Map<Side, Participant> = next.participants.map(value => ({
+          ...value,
+          rounds: value.rounds.pop(),
+          roll: value.rolls.get(-2, { roll: value.roll }).roll,
+          rolls: value.rolls.pop()
+        }))
+        next = {
+          ...next,
+          participants,
+          round: next.round - 1,
+          fight_over: !checkFight(participants, next.armies),
+          seed
+        }
+      }
+      this.draftState = this.state.set(mode, next)
+    }
+
+    toggleRandomRoll(mode: DefinitionType, participant: Side) {
+      this.draftState = updateParticipant(this.state, { mode, participant }, value => ({ ...value, randomize_roll: !value.randomize_roll }))
+    }
+
+    setRoll(mode: DefinitionType, participant: Side, roll: number) {
+      this.draftState = updateParticipant(this.state, { mode, participant }, value => ({ ...value, roll }))
+    }
+    
+    setFlankSize(mode: DefinitionType, country: CountryName, flank_size: number) {
+      this.draftState = update(this.state, { mode, country }, (value: Army) => ({ ...value, flank_size }))
+    }
+
+    selectArmy(mode: DefinitionType, participant: Side, name: CountryName) {
+      this.draftState = updateParticipant(this.state, { mode, participant }, value => ({ ...value, name }))
+    }
+
+    clearUnits(mode: DefinitionType) {
+      let next = this.state.get(mode)
+      if (!next)
+        return
+      let armies = next.armies
+      let participants = next.participants
+      participants.forEach(value => {
+        armies = armies.update(value.name, getDefaultArmy(mode), value => ({ ...value, frontline: getDefaultArmy(mode).frontline, reserve: value.reserve.clear(), defeated: value.defeated.clear() }))
+      })
+      participants = participants.map(value => ({ ...value, rounds: value.rounds.clear(), rolls: value.rolls.clear() }))
       next = {
         ...next,
+        armies,
         participants,
-        round: next.round - 1,
-        fight_over: !checkFight(participants, next.armies),
-        seed
+        round: -1,
+        fight_over: true
       }
+      this.draftState = this.state.set(mode, next)
     }
-    return state.set(action.payload.mode, next)
-  })
-  .handleAction(removeReserveUnits, (state, action: ReturnType<typeof removeReserveUnits>) =>
-    update(state, action.payload, (value: Army) => ({ ...value, reserve: doRemoveReserveUnits(value.reserve, action.payload.types) }))
-  )
-  .handleAction(addReserveUnits, (state, action: ReturnType<typeof addReserveUnits>) =>
-    update(state, action.payload, (value: Army) => ({ ...value, reserve: doAddReserveUnits(value.reserve, action.payload.units) }))
-  )
-  .handleAction(selectArmy, (state, action: ReturnType<typeof selectArmy>) =>
-    updateParticipant(state, action.payload, value => ({ ...value, name: action.payload.country }))
-  )
-  .handleAction(clearUnits, (state, action: ReturnType<typeof clearUnits>) => {
-    let next = state.get(action.payload.mode)
-    if (!next)
-      return state
-    let armies = next.armies
-    let participants = next.participants
-    participants.forEach(value => {
-      armies = armies.update(value.name, getDefaultArmy(action.payload.mode), value => ({ ...value, frontline: getDefaultArmy(action.payload.mode).frontline, reserve: value.reserve.clear(), defeated: value.defeated.clear() }))
-    })
-    participants = participants.map(value => ({ ...value, rounds: value.rounds.clear(), rolls: value.rolls.clear() }))
-    next = {
-      ...next,
-      armies,
-      participants,
-      round: -1,
-      fight_over: true
-    }
-    return state.set(action.payload.mode, next)
-  })
-  .handleAction(invalidate, (state, action: ReturnType<typeof invalidate>) =>
-    state.update(action.payload.mode, value => ({ ...value, outdated: true }))
-  )
-  .handleAction(invalidateCountry, (state, action: ReturnType<typeof invalidateCountry>) =>
-    state.map(value => ({ ...value, outdated: value.outdated || value.participants.some(value => value.name === action.payload.country) }))
-  )
+  }
+
+  
+const actions = createActionCreators(BattleReducer)
+
+export const selectUnit = actions.selectUnit
+export const editUnit = actions.editUnit
+export const removeUnit = actions.removeUnit
+export const removeReserveUnits = actions.removeReserveUnits
+export const addReserveUnits = actions.addReserveUnits
+export const selectTerrain = actions.selectTerrain
+export const selectTactic = actions.selectTactic
+export const setRowType = actions.setRowType
+export const invalidate = actions.invalidate
+export const invalidateCountry = actions.invalidateCountry
+export const undo = actions.undo
+export const toggleRandomRoll = actions.toggleRandomRoll
+export const setRoll = actions.setRoll
+export const setFlankSize = actions.setFlankSize
+export const selectArmy = actions.selectArmy
+export const clearUnits = actions.clearUnits
+
+
+export const battleReducer = createReducerFunction(BattleReducer, initialState)

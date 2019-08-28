@@ -1,8 +1,8 @@
-import { battle } from '../combat'
+import { doBattle } from '../combat'
 import { List, Map } from 'immutable'
 import { getDefaultArmy, Army, RowType, Participant, getDefaultParticipant } from '../../battle'
 import { TerrainDefinition } from '../../terrains'
-import { getDefaultUnits, getDefaultGlobal, UnitType, UnitDefinition } from '../../units'
+import { getDefaultUnits, getDefaultGlobal, UnitType, UnitDefinition, BaseUnit } from '../../units'
 import { mergeValues, DefinitionType } from '../../../base_definition'
 import { CombatParameter } from '../../settings'
 import { verifyType, getSettings } from './utils'
@@ -33,7 +33,7 @@ describe('initial deployment', () => {
     info.army_d = { ...info.army_d, row_types }
     settings = getSettings(DefinitionType.Land)
   })
-  const getUnit = (type: UnitType) => units.get(type)!
+  const getUnit = (type: UnitType) => units.get(type) as any as BaseUnit
   const setAttacker = (types: UnitType[]) => (info.army_a = { ...info.army_a, reserve: info.army_a.reserve.merge(types.map(type => getUnit(type))) })
   const setDefender = (types: UnitType[]) => (info.army_d = { ...info.army_d, reserve: info.army_d.reserve.merge(types.map(type => getUnit(type))) })
   const fillAttacker = (type: UnitType) => (info.army_a = { ...info.army_a, reserve: info.army_a.reserve.merge(Array(30).fill(type).map(type => getUnit(type))) })
@@ -41,7 +41,7 @@ describe('initial deployment', () => {
 
 
   const doRound = () => {
-    const [a, d] = battle(definitions, { ...info.attacker, ...info.army_a, tactic: undefined, country: CountryName.Country1, general: 0 }, { ...info.defender, ...info.army_d, tactic: undefined, country: CountryName.Country2, general: 0 }, 0, List<TerrainDefinition>(), settings)
+    const [a, d] = doBattle(definitions, { ...info.attacker, ...info.army_a, tactic: undefined, country: CountryName.Country1, general: 0 }, { ...info.defender, ...info.army_d, tactic: undefined, country: CountryName.Country2, general: 0 }, 0, List<TerrainDefinition>(), settings)
     info.army_a = { ...info.army_a, ...a }
     info.army_d = { ...info.army_d, ...d }
   }

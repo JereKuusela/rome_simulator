@@ -1,44 +1,75 @@
-import { createReducer } from 'typesafe-actions'
 import { OrderedMap, Map, Set } from 'immutable'
-import { CombatParameter, changeParameter, toggleSimpleMode, toggleMode, selectCountry, toggleAccordion } from './actions'
+import { ImmerReducer, createActionCreators, createReducerFunction, Actions } from 'immer-reducer'
+import { CombatParameter } from './actions'
 import { getDefaultLandSettings, getDefaultNavalSettings, getDefaultAnySettings } from './data'
-import { CountryName, changeCountryName, createCountry, deleteCountry } from '../countries'
+import { CountryName, createCountry, deleteCountry, changeCountryName } from '../countries'
 import { DefinitionType } from '../../base_definition'
+import { toggle } from '../../utils'
 
 export const settingsState = {
   combat: Map<DefinitionType, OrderedMap<CombatParameter, number>>()
     .set(DefinitionType.Global, getDefaultAnySettings())
     .set(DefinitionType.Land, getDefaultLandSettings())
     .set(DefinitionType.Naval, getDefaultNavalSettings()),
-    simple_mode: true,
-    mode: DefinitionType.Land,
-    country: CountryName.Country1,
-    accordions: Set<string>()
+  simple_mode: true,
+  mode: DefinitionType.Land,
+  country: CountryName.Country1,
+  accordions: Set<string>()
 }
 
+class SettingsReducer extends ImmerReducer<typeof settingsState> {
 
-export const settingsReducer = createReducer(settingsState)
-  .handleAction(changeParameter, (state, action: ReturnType<typeof changeParameter>) => (
-    { ...state, combat: state.combat.setIn([action.payload.mode, action.payload.key], action.payload.value) }
-  ))
-  .handleAction(toggleSimpleMode, (state, action: ReturnType<typeof toggleSimpleMode>) => (
-    { ...state, simple_mode: !state.simple_mode }
-  ))
-  .handleAction(toggleMode, (state, action: ReturnType<typeof toggleMode>) => (
-    { ...state, mode: state.mode === DefinitionType.Land ? DefinitionType.Naval : DefinitionType.Land }
-  ))
-  .handleAction(selectCountry, (state, action: ReturnType<typeof selectCountry>) => (
-    { ...state, country: action.payload.country }
-  ))
-  .handleAction(changeCountryName, (state, action: ReturnType<typeof changeCountryName>) => (
-    { ...state, country: state.country === action.payload.old_country ? action.payload.country : state.country }
-  ))
-  .handleAction(createCountry, (state, action: ReturnType<typeof createCountry>) => (
-    { ...state, country: action.payload.country }
-  ))
-  .handleAction(deleteCountry, (state, action: ReturnType<typeof deleteCountry>) => (
-    { ...state, country: state.country === action.payload.country ? '' as CountryName : state.country }
-  ))
-  .handleAction(toggleAccordion, (state, action: ReturnType<typeof toggleAccordion>) => (
-    { ...state, accordions: state.accordions.has(action.payload.key) ? state.accordions.remove(action.payload.key) : state.accordions.add(action.payload.key) }
-  ))
+  changeParameter(mode: DefinitionType, key: CombatParameter, value: number) {
+    this.draftState.combat = this.state.combat.update(mode, item => item.set(key, value))
+  }
+
+  toggleSimpleMode() {
+    this.draftState.simple_mode = !this.state.simple_mode
+  }
+
+  toggleMode() {
+    this.draftState.mode = this.state.mode === DefinitionType.Land ? DefinitionType.Naval : DefinitionType.Land
+  }
+
+  selectCountry(country: CountryName) {
+    this.draftState.country = country
+  }
+
+  changeCountryName(old_country: CountryName, country: CountryName) {
+    if (this.state.country === old_country)
+      this.selectCountry(country)
+  }
+
+  createCountry(country: CountryName) {
+    this.selectCountry(country)
+  }
+
+  deleteCountry(country: CountryName) {
+    if (this.state.country === country)
+      this.selectCountry('' as CountryName)
+  }
+
+  toggleAccordion(key: string) {
+    this.draftState.accordions = toggle(this.state.accordions, key)
+  }
+}
+
+const actions = createActionCreators(SettingsReducer)
+
+export const changeParameter = actions.changeParameter
+export const selectCountry = actions.selectCountry
+export const toggleAccordion = actions.toggleAccordion
+export const toggleMode = actions.toggleMode
+export const toggleSimpleMode = actions.toggleSimpleMode
+
+export const reducer = createReducerFunction(SettingsReducer, settingsState)
+
+export const settingsReducer = (state = settingsState, action: Actions<typeof SettingsReducer>) => {
+  if (action.type === createCountry.type)
+    return reducer(state, { payload: action.payload, type: actions.createCountry.type })
+  if (action.type === deleteCountry.type)
+    return reducer(state, { payload: action.payload, type: actions.deleteCountry.type })
+  if (action.type === changeCountryName.type)
+    return reducer(state, { payload: action.payload, type: actions.changeCountryName.type })
+  return reducer(state, action)
+}

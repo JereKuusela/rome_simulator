@@ -8,7 +8,8 @@ import { calculateValue, calculateValueWithoutLoss, getImage, DefinitionType, st
 import { getUnits, filterUnitTypes, getBattle } from '../store/utils'
 import { AppState } from '../store/index'
 import { Unit, UnitType, UnitCalc } from '../store/units'
-import { Side, Units, refreshBattle } from '../store/battle'
+import { Side, Units } from '../store/battle'
+import { refreshBattle } from '../store/combat'
 
 import IconManpower from '../images/manpower.png'
 import IconStrength from '../images/naval_combat.png'

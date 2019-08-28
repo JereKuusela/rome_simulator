@@ -1,31 +1,51 @@
-import { createReducer } from 'typesafe-actions'
+import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
 import { getDefaultTerrains } from './data'
-import { setBaseValue, deleteTerrain, addTerrain, changeLocation, changeImage, changeType, changeMode } from './actions'
-import { addValues, ValuesType } from '../../base_definition'
+import { TerrainType, ValueType, LocationType } from './actions'
+import { addValues, ValuesType, DefinitionType } from '../../base_definition'
 
-export const terrainState = getDefaultTerrains()
+export const terrainsState = getDefaultTerrains()
 
-export const terrainsReducer = createReducer(terrainState)
-  .handleAction(setBaseValue, (state, action: ReturnType<typeof setBaseValue>) => (
-    state.update(action.payload.type, terrain => (
-        addValues(terrain, ValuesType.Base, action.payload.key, [[action.payload.attribute, action.payload.value]])
-      ))
-  ))
-  .handleAction(deleteTerrain, (state, action: ReturnType<typeof deleteTerrain>) => (
-    state.delete(action.payload.type)
-  ))
-  .handleAction(addTerrain, (state, action: ReturnType<typeof addTerrain>) => (
-    state.set(action.payload.type, { type: action.payload.type, mode: action.payload.mode, image: '' })
-  ))
-  .handleAction(changeLocation, (state, action: ReturnType<typeof changeLocation>) => (
-    state.update(action.payload.type, terrain => ({ ...terrain, location: action.payload.location}))
-  ))
-  .handleAction(changeImage, (state, action: ReturnType<typeof changeImage>) => (
-    state.update(action.payload.type, terrain => ({ ...terrain, image: action.payload.image}))
-  ))
-  .handleAction(changeMode, (state, action: ReturnType<typeof changeMode>) => (
-    state.update(action.payload.type, terrain => ({ ...terrain, mode: action.payload.mode}))
-  ))
-  .handleAction(changeType, (state, action: ReturnType<typeof changeType>) => (
-    state.set(action.payload.new_type, { ...state.get(action.payload.old_type)!, type: action.payload.new_type }).delete(action.payload.old_type)
-  ))
+class TerrainsReducer extends ImmerReducer<typeof terrainsState> {
+
+  setBaseValue(type: TerrainType, key: string, attribute: ValueType, value: number) {
+    this.draftState = this.state.update(type, terrain => (
+      addValues(terrain, ValuesType.Base, key, [[attribute, value]])
+    ))
+  }
+
+  deleteTerrain(type: TerrainType) {
+    this.draftState = this.state.delete(type)
+  }
+
+  addTerrain(type: TerrainType, mode: DefinitionType) {
+    this.draftState = this.state.set(type, { type, mode, image: '' })
+  }
+
+  changeType(old_type: TerrainType, type: TerrainType) {
+    this.draftState = this.state.set(type, { ...this.state.get(old_type)!, type }).delete(old_type)
+  }
+
+  changeLocation(type: TerrainType, location: LocationType) {
+    this.draftState = this.state.update(type, terrain => ({ ...terrain, location }))
+  }
+
+  changeImage(type: TerrainType, image: string) {
+    this.draftState = this.state.update(type, terrain => ({ ...terrain, image }))
+  }
+
+  changeMode(type: TerrainType, mode: DefinitionType) {
+    this.draftState = this.state.update(type, terrain => ({ ...terrain, mode }))
+  }
+}
+
+const actions = createActionCreators(TerrainsReducer)
+
+export const setBaseValue = actions.setBaseValue
+export const deleteTerrain = actions.deleteTerrain
+export const addTerrain = actions.addTerrain
+export const changeType = actions.changeType
+export const changeLocation = actions.changeLocation
+export const changeImage = actions.changeImage
+export const changeMode = actions.changeMode
+
+export const terrainsReducer = createReducerFunction(TerrainsReducer, terrainsState)

@@ -1,7 +1,3 @@
-import { createAction } from 'typesafe-actions'
-import { DefinitionType } from '../../base_definition'
-import { CountryName } from '../countries'
-
 export enum CombatParameter {
   StrengthLostMultiplier = 'StrengthLostMultiplier',
   MoraleLostMultiplier = 'MoraleLostMultiplier',
@@ -86,23 +82,3 @@ export const parameterToDescription = (parameter: CombatParameter): string => {
       return 'No description.'
   }
 }
-
-export const changeParameter = createAction('@@settings/CHANGE_PARAMETER', action => {
-  return (mode: DefinitionType, key: CombatParameter, value: number) => action({ mode, key, value })
-})
-
-export const toggleSimpleMode = createAction('@@settings/TOGGLE_SIMPLE_MODE', action => {
-  return () => action({})
-})
-
-export const toggleMode = createAction('@@settings/TOGGLE_MODE', action => {
-  return () => action({})
-})
-
-export const selectCountry = createAction('@@settings/SELECT_COUNTRY', action => {
-  return (country: CountryName) => action({ country })
-})
-
-export const toggleAccordion = createAction('@@settings/TOGGLE_ACCORDION', action => {
-  return (key: string) => action({ key })
-})

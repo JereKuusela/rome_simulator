@@ -1,103 +1,167 @@
-import { Map, OrderedMap } from 'immutable'
-import { createReducer } from 'typesafe-actions'
+import { Map, OrderedMap, List } from 'immutable'
 import { getDefaultUnits, getDefaultGlobal } from './data'
 import {
   UnitType, UnitDefinition,
-  setValue, setGlobalValue, deleteUnit, addUnit, changeImage, changeType, changeMode,
   ValueType
 } from './actions'
 import { CountryName, enableModifiers, clearModifiers, createCountry, deleteCountry, changeCountryName } from '../countries'
 import { addValues, DefinitionType, ValuesType, regenerateValues, clearValues } from '../../base_definition'
+import { ImmerReducer, createActionCreators, createReducerFunction, Actions } from 'immer-reducer';
+import { Modifier } from '../data';
 
 export const unitsState = Map<CountryName, OrderedMap<UnitType, UnitDefinition>>().set(CountryName.Country1, getDefaultUnits()).set(CountryName.Country2, getDefaultUnits())
 
 export const globalStatsState = Map<CountryName, Map<DefinitionType, UnitDefinition>>().set(CountryName.Country1, getDefaultGlobal()).set(CountryName.Country2, getDefaultGlobal())
 
-export const unitsReducer = createReducer(unitsState)
-  .handleAction(setValue, (state, action: ReturnType<typeof setValue>) => (
-    state.updateIn([action.payload.country, action.payload.unit], (unit: UnitDefinition) => (
-        addValues(unit, action.payload.type, action.payload.key, [[action.payload.attribute, action.payload.value]])
-      )
-    )
-  ))
-  .handleAction(deleteUnit, (state, action: ReturnType<typeof deleteUnit>) => (
-    state.deleteIn([action.payload.country, action.payload.type])
-  ))
-  .handleAction(addUnit, (state, action: ReturnType<typeof addUnit>) => (
-     state.setIn([action.payload.country, action.payload.type], { type: action.payload.type, mode: action.payload.mode, image: '' })
-  ))
-  .handleAction(changeImage, (state, action: ReturnType<typeof changeImage>) => (
-    state.updateIn([action.payload.country, action.payload.type], unit => ({ ...unit, image: action.payload.image }))
-  ))
-  .handleAction(changeMode, (state, action: ReturnType<typeof changeMode>) => (
-    state.updateIn([action.payload.country, action.payload.type], unit => ({ ...unit, mode: action.payload.mode }))
-  ))
-  .handleAction(changeType, (state, action: ReturnType<typeof changeType>) => (
-    state.setIn([action.payload.country, action.payload.new_type], { ...state.getIn([action.payload.country, action.payload.old_type]), type: action.payload.new_type }).deleteIn([action.payload.country, action.payload.old_type])
-  ))
-  .handleAction(createCountry, (state, action: ReturnType<typeof createCountry>) => (
-    state.set(action.payload.country, state.get(action.payload.source_country!, getDefaultUnits()))
-  ))
-  .handleAction(deleteCountry, (state, action: ReturnType<typeof deleteCountry>) => (
-    state.delete(action.payload.country)
-  ))
-  .handleAction(changeCountryName, (state, action: ReturnType<typeof changeCountryName>) => (
-    state.mapKeys(key => key === action.payload.old_country ? action.payload.country : key)
-  ))
-  .handleAction(enableModifiers, (state, action: ReturnType<typeof enableModifiers>) => {
-    let next = state.get(action.payload.country)!
+
+class UnitsReducer extends ImmerReducer<typeof unitsState> {
+
+  setValue(country: CountryName, type: ValuesType, unit: UnitType, key: string, attribute: ValueType, value: number) {
+    this.draftState = this.state.updateIn([country, unit], (unit: UnitDefinition) => (
+      addValues(unit, type, key, [[attribute, value]])
+    ))
+  }
+
+  deleteUnit(country: CountryName, type: UnitType) {
+    this.draftState = this.state.update(country, value => value.delete(type))
+  }
+
+  addUnit(country: CountryName, mode: DefinitionType, type: UnitType) {
+    this.draftState = this.state.setIn([country, type], { type, mode, image: '' })
+  }
+
+  changeType(country: CountryName, old_type: UnitType, new_type: UnitType) {
+    this.draftState = this.state.setIn([country, new_type], { ...this.state.getIn([country, old_type]), type: new_type }).deleteIn([country, old_type])
+  }
+
+  changeImage(country: CountryName, type: UnitType, image: string) {
+    this.draftState = this.state.updateIn([country, type], unit => ({ ...unit, image }))
+  }
+
+  changeMode(country: CountryName, type: UnitType, mode: DefinitionType) {
+    this.draftState = this.state.updateIn([country, type], unit => ({ ...unit, mode }))
+  }
+
+  createCountry(country: CountryName, source_country?: CountryName) {
+    this.draftState = this.state.set(country, this.state.get(source_country!, getDefaultUnits()))
+  }
+
+  deleteCountry(country: CountryName) {
+    this.draftState = this.state.delete(country)
+  }
+
+  changeCountryName(old_country: CountryName, country: CountryName) {
+    this.draftState = this.state.mapKeys(key => key === old_country ? country : key)
+  }
+
+  enableModifiers(country: CountryName, key: string, modifiers: List<Modifier>) {
+    let next = this.state.get(country)!
     if (!next)
-      return state
+      return
     next = next.map((unit, type) => {
-      const values = action.payload.modifiers.filter(value => value.target === type)
+      const values = modifiers.filter(value => value.target === type)
       const base_values = values.filter(value => value.type !== ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
       const modifier_values = values.filter(value => value.type === ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
-      return regenerateValues(regenerateValues(unit, ValuesType.Base, action.payload.key, base_values), ValuesType.Modifier, action.payload.key, modifier_values)
+      return regenerateValues(regenerateValues(unit, ValuesType.Base, key, base_values), ValuesType.Modifier, key, modifier_values)
     })
-    return state.set(action.payload.country, next)
-  })
-  .handleAction(clearModifiers, (state, action: ReturnType<typeof clearModifiers>) => {
-    let next = state.get(action.payload.country)!
-    if (!next)
-      return state
-    next = next.map(unit => clearValues(clearValues(unit, ValuesType.Base, action.payload.key), ValuesType.Modifier, action.payload.key))
-    return state.set(action.payload.country, next)
-  })
+    this.draftState = this.state.set(country, next)
+  }
 
-export const globalStatsReducer = createReducer(globalStatsState)
-  .handleAction(setGlobalValue, (state, action: ReturnType<typeof setGlobalValue>) => (
-    state.updateIn([action.payload.country, action.payload.mode], (unit: UnitDefinition) => addValues(unit, action.payload.type, action.payload.key, [[action.payload.attribute, action.payload.value]]))
-  ))
-  .handleAction(createCountry, (state, action: ReturnType<typeof createCountry>) => (
-    state.set(action.payload.country, state.get(action.payload.source_country!, getDefaultGlobal()))
-  ))
-  .handleAction(deleteCountry, (state, action: ReturnType<typeof deleteCountry>) => (
-    state.delete(action.payload.country)
-  ))
-  .handleAction(changeCountryName, (state, action: ReturnType<typeof changeCountryName>) => (
-    state.mapKeys(key => key === action.payload.old_country ? action.payload.country : key)
-  ))
-  .handleAction(enableModifiers, (state, action: ReturnType<typeof enableModifiers>) => {
-    let next = state.get(action.payload.country)!
+  clearModifiers(country: CountryName, key: string) {
+    let next = this.state.get(country)!
     if (!next)
-      return state
-    const landValues = action.payload.modifiers.filter(value => value.target === DefinitionType.Land || value.target === DefinitionType.Global)
+      return
+    next = next.map(unit => clearValues(clearValues(unit, ValuesType.Base, key), ValuesType.Modifier, key))
+    this.draftState = this.state.set(country, next)
+  }
+}
+
+class GlobalStatsReducer extends ImmerReducer<typeof globalStatsState> {
+
+  setGlobalValue(country: CountryName, mode: DefinitionType, type: ValuesType, key: string, attribute: ValueType, value: number) {
+    this.draftState = this.state.updateIn([country, mode], (unit: UnitDefinition) => addValues(unit, type, key, [[attribute, value]]))
+  }
+
+  createCountry(country: CountryName, source_country?: CountryName) {
+    this.draftState = this.state.set(country, this.state.get(source_country!, getDefaultGlobal()))
+  }
+
+  deleteCountry(country: CountryName) {
+    this.draftState = this.state.delete(country)
+  }
+
+  changeCountryName(old_country: CountryName, country: CountryName) {
+    this.draftState = this.state.mapKeys(key => key === old_country ? country : key)
+  }
+
+  enableModifiers(country: CountryName, key: string, modifiers: List<Modifier>) {
+    let next = this.state.get(country)!
+    if (!next)
+      return
+    const landValues = modifiers.filter(value => value.target === DefinitionType.Land || value.target === DefinitionType.Global)
     const baseLandValues = landValues.filter(value => value.type !== ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
     const modifierLandValues = landValues.filter(value => value.type === ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
-    const navalValues = action.payload.modifiers.filter(value => value.target === DefinitionType.Naval || value.target === DefinitionType.Global)
+    const navalValues = modifiers.filter(value => value.target === DefinitionType.Naval || value.target === DefinitionType.Global)
     const baseNavalValues = navalValues.filter(value => value.type !== ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
     const modifierNavalValues = navalValues.filter(value => value.type === ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
-    next = next.update(DefinitionType.Land, stats => regenerateValues(stats, ValuesType.Base, action.payload.key, baseLandValues))
-    next = next.update(DefinitionType.Land, stats => regenerateValues(stats, ValuesType.Modifier, action.payload.key, modifierLandValues))
-    next = next.update(DefinitionType.Naval, stats => regenerateValues(stats, ValuesType.Base, action.payload.key, baseNavalValues))
-    next = next.update(DefinitionType.Naval, stats => regenerateValues(stats, ValuesType.Modifier, action.payload.key, modifierNavalValues))
-    return state.set(action.payload.country, next)
-  })
-  .handleAction(clearModifiers, (state, action: ReturnType<typeof clearModifiers>) => {
-    let next = state.get(action.payload.country)!
+    next = next.update(DefinitionType.Land, stats => regenerateValues(stats, ValuesType.Base, key, baseLandValues))
+    next = next.update(DefinitionType.Land, stats => regenerateValues(stats, ValuesType.Modifier, key, modifierLandValues))
+    next = next.update(DefinitionType.Naval, stats => regenerateValues(stats, ValuesType.Base, key, baseNavalValues))
+    next = next.update(DefinitionType.Naval, stats => regenerateValues(stats, ValuesType.Modifier, key, modifierNavalValues))
+    this.draftState = this.state.set(country, next)
+  }
+
+  clearModifiers(country: CountryName, key: string) {
+    let next = this.state.get(country)!
     if (!next)
-      return state
-    next = next.update(DefinitionType.Land, stats => clearValues(clearValues(stats, ValuesType.Base, action.payload.key), ValuesType.Modifier, action.payload.key))
-    next = next.update(DefinitionType.Naval, stats => clearValues(clearValues(stats, ValuesType.Base, action.payload.key), ValuesType.Modifier, action.payload.key))
-    return state.set(action.payload.country, next)
-  })
+      return
+    next = next.update(DefinitionType.Land, stats => clearValues(clearValues(stats, ValuesType.Base, key), ValuesType.Modifier, key))
+    next = next.update(DefinitionType.Naval, stats => clearValues(clearValues(stats, ValuesType.Base, key), ValuesType.Modifier, key))
+    this.draftState = this.state.set(country, next)
+  }
+}
+
+const unitsActions = createActionCreators(UnitsReducer)
+
+export const setValue = unitsActions.setValue
+export const deleteUnit = unitsActions.deleteUnit
+export const addUnit = unitsActions.addUnit
+export const changeType = unitsActions.changeType
+export const changeImage = unitsActions.changeImage
+export const changeMode = unitsActions.changeMode
+
+const unitsBaseReducer = createReducerFunction(UnitsReducer, unitsState)
+
+export const unitsReducer = (state = unitsState, action: Actions<typeof UnitsReducer>) => {
+  if (action.type === createCountry.type)
+    return unitsBaseReducer(state, { payload: action.payload, type: unitsActions.createCountry.type })
+  if (action.type === deleteCountry.type)
+    return unitsBaseReducer(state, { payload: action.payload, type: unitsActions.deleteCountry.type })
+  if (action.type === changeCountryName.type)
+    return unitsBaseReducer(state, { payload: action.payload, type: unitsActions.changeCountryName.type })
+  if (action.type === enableModifiers.type)
+    return unitsBaseReducer(state, { payload: action.payload, type: unitsActions.enableModifiers.type })
+  if (action.type === clearModifiers.type)
+    return unitsBaseReducer(state, { payload: action.payload, type: unitsActions.clearModifiers.type })
+  return unitsBaseReducer(state, action)
+}
+
+const globalStatsActions = createActionCreators(GlobalStatsReducer)
+
+export const setGlobalValue = globalStatsActions.setGlobalValue
+
+const globalStatsBaseReducer = createReducerFunction(GlobalStatsReducer, globalStatsState)
+
+export const globalStatsReducer = (state = globalStatsState, action: Actions<typeof GlobalStatsReducer>) => {
+  if (action.type === createCountry.type)
+    return globalStatsBaseReducer(state, { payload: action.payload, type: globalStatsActions.createCountry.type })
+  if (action.type === deleteCountry.type)
+    return globalStatsBaseReducer(state, { payload: action.payload, type: globalStatsActions.deleteCountry.type })
+  if (action.type === changeCountryName.type)
+    return globalStatsBaseReducer(state, { payload: action.payload, type: globalStatsActions.changeCountryName.type })
+  if (action.type === enableModifiers.type)
+    return globalStatsBaseReducer(state, { payload: action.payload, type: globalStatsActions.enableModifiers.type })
+  if (action.type === clearModifiers.type)
+    return globalStatsBaseReducer(state, { payload: action.payload, type: globalStatsActions.clearModifiers.type })
+  return globalStatsBaseReducer(state, action)
+}

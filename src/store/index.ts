@@ -1,6 +1,5 @@
 import { combineReducers, AnyAction, Reducer } from 'redux'
 import { unitsReducer, globalStatsReducer } from './units'
-import reduceReducers from 'reduce-reducers'
 import { tacticsReducer } from './tactics'
 import { terrainsReducer } from './terrains'
 import { battleReducer } from './battle'
@@ -9,6 +8,7 @@ import { transferReducer, importReducer } from './transfer'
 import { settingsReducer } from './settings'
 import { selectionsReducer } from './countries'
 import { dataReducer } from './data'
+import { composeReducers } from 'immer-reducer'
 
 const combined = combineReducers({
   units: unitsReducer,
@@ -22,6 +22,6 @@ const combined = combineReducers({
   settings: settingsReducer
 })
 
-export const rootReducer:Reducer<AppState, AnyAction> = reduceReducers(combined, combatReducer, importReducer) as Reducer<AppState, AnyAction>
+export const rootReducer:Reducer<AppState, AnyAction> = composeReducers(combined, combatReducer, importReducer) as Reducer<AppState, AnyAction>
 
 export type AppState = ReturnType<typeof combined>

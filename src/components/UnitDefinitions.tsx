@@ -13,7 +13,7 @@ import IconAttrition from '../images/attrition.png'
 import { getImage, calculateValue, calculateBase, calculateModifier, calculateLoss, mergeValues, DefinitionType } from '../base_definition'
 import { toSignedPercent, toNumber, hideZero, toPercent, toManpower } from '../formatters'
 import { CountryName } from '../store/countries'
-import { filterUnitDefinitions } from '../utils'
+import { filterUnitDefinitions } from '../army_utils'
 import StyledNumber from './StyledNumber'
 import VersusList from './VersusList'
 

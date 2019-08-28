@@ -7,7 +7,7 @@ import { selectUnit, ArmyType } from '../store/battle'
 import { CountryName } from '../store/countries'
 import { DefinitionType } from '../base_definition'
 import ItemSelector from '../components/ItemSelector'
-import { filterUnitDefinitions, getNextId } from '../utils'
+import { filterUnitDefinitions, getNextId } from '../army_utils'
 
 export interface ModalInfo {
   name: CountryName

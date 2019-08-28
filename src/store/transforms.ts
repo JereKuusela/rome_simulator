@@ -9,7 +9,7 @@ import { selectionsReducer, CountryName, Country } from './countries'
 import { CombatParameter, settingsReducer } from './settings'
 import { orderedMapFromJS } from '../utils'
 
-const dummyAction = {
+const dummyAction: any = {
   type: ''
 }
 
@@ -167,7 +167,7 @@ export const transformCountries = (state_raw: any): ReturnType<typeof selections
 const settings = Object.keys(CombatParameter).map(k => CombatParameter[k as any]) as CombatParameter[]
 
 export const transformSettings = (state_raw: any): ReturnType<typeof settingsReducer> => {
-  const initial = settingsReducer(undefined, dummyAction)
+  const initial = settingsReducer(undefined, dummyAction as any)
   if (!state_raw)
     return initial
   let combat = initial.combat
