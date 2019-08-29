@@ -3,8 +3,9 @@ import { Container, Grid, TextArea, Checkbox, List, Header, Button } from 'seman
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { importState, ExportKey, setResetMissing, setExportKey } from '../store/transfer'
-import { transformGlobalStats, transformBattle, transformTactics, transformTerrains, transformUnits, transformSettings, transformCountries, stripRounds } from '../store/transforms'
+import { transformGlobalStats, transformBattle, transformTactics, transformTerrains, transformUnits, transformSettings, stripRounds } from '../store/transforms'
 import { DefinitionType } from '../base_definition'
+import { countriesState } from '../store/countries';
 
 interface IState {
   data: string
@@ -140,7 +141,7 @@ const mapDispatchToProps = (dispatch: any) => ({
       json.terrains = (json.terrains || reset_missing) && transformTerrains(json.terrains)
       json.units = (json.units || reset_missing) && transformUnits(json.units)
       json.settings = (json.settings || reset_missing) && transformSettings(json.settings)
-      json.countries = (json.countries || reset_missing) && transformCountries(json.countries)
+      json.countries = json.countries || (reset_missing && countriesState)
       json.global_stats = (json.global_stats || reset_missing) && transformGlobalStats(json.global_stats)
       Object.keys(json).filter(key => !json[key]).forEach(key => delete json[key])
       dispatch(importState(json, reset_missing))

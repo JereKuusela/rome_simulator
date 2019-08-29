@@ -8,6 +8,7 @@ import { CountryName, createCountry, changeCountryName, deleteCountry } from '..
 import { Grid, Button } from 'semantic-ui-react'
 import { selectCountry } from '../store/settings'
 import Confirmation from '../components/Confirmation'
+import { fromJS } from 'immutable';
 
 
 interface IState {
@@ -33,7 +34,7 @@ class CountryManager extends Component<IProps, IState> {
           open={this.state.open_create_country}
           onSuccess={this.props.createCountry}
           onClose={this.onClose}
-          items={this.props.countries.keySeq()}
+          items={fromJS(Object.keys(this.props.countries)) as any}
           message='New country'
           button_message='Create'
           value_label='Name '
@@ -56,7 +57,7 @@ class CountryManager extends Component<IProps, IState> {
         <Grid.Row columns='5'>
           <Grid.Column>
             <DropdownSelector
-              items={this.props.countries.keySeq()}
+              items={fromJS(Object.keys(this.props.countries)) as any}
               active={this.props.selected_country}
               onSelect={this.props.selectCountry}
             />

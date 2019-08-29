@@ -5,7 +5,7 @@ import { unitDefinitionFromJS, unitFromJS, UnitType, unitsReducer, globalStatsRe
 import { RowType, battleReducer, Army, getDefaultArmy, Battle, modeState, getDefaultParticipant, Participant, Side } from './battle'
 import { DefinitionType, clearAllValues, mergeValues } from '../base_definition'
 import { transferReducer } from './transfer'
-import { selectionsReducer, CountryName, Country } from './countries'
+import { CountryName } from './countries'
 import { CombatParameter, settingsReducer } from './settings'
 import { orderedMapFromJS } from '../utils'
 
@@ -153,15 +153,6 @@ export const transfromTransfer = (state_raw: any): ReturnType<typeof transferRed
   const export_keys = state_raw.export_keys ? fromJS(state_raw.export_keys) : initial.export_keys
   const reset_missing = state_raw.reset_missing || initial.reset_missing
   return { reset_missing, export_keys }
-}
-
-export const transformCountries = (state_raw: any): ReturnType<typeof selectionsReducer> => {
-  const initial = selectionsReducer(undefined, dummyAction)
-  if (!state_raw)
-    return initial
-  const countries_raw: Map<CountryName, any> = fromJS(state_raw)
-  const countries: Map<CountryName, Country> = countries_raw.map(value => value.toJS())
-  return countries.map(value => ({ ...value, selections: fromJS(value.selections).toSet(), trait_martial: fromJS(value.trait_martial) }))
 }
 
 const settings = Object.keys(CombatParameter).map(k => CombatParameter[k as any]) as CombatParameter[]

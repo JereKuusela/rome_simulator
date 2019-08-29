@@ -67,6 +67,13 @@ export const sumMap = (map: Map<any, any>, converter?: (value: any) => number): 
 export const sumList = (map: List<any>, converter?: (value: any) => number): number => map.reduce((previous, current) => previous + (converter ? converter(current) : Number(current)), 0)
 
 /**
+ * Sums numbers in a object.
+ * @param sumObj
+ * @param converter Optional converted to sum complex attributes.
+ */
+export const sumObj = (object: { [key: string]: number}, converter?: (value: any) => number): number => Object.values(object).reduce((previous, current) => previous + (converter ? converter(current) : Number(current)), 0)
+
+/**
  * Simple round function.
  * @param number 
  */
@@ -78,3 +85,16 @@ export const round = (number: number, precision: number): number => Math.round(p
  * @param item
  */
 export const toggle = (set: Set<string>, item: string): Set<string> => set.has(item) ? set.delete(item) : set.add(item)
+
+export function objGet<T>(object: { [key: string]: T}, key: string | undefined): T | undefined
+export function objGet<T>(object: { [key: string]: T}, key: string | undefined, initial: T | undefined): T
+export function objGet<T>(object: { [key: string]: T}, key: string | undefined, initial?: T)
+{
+  return key !== undefined && object.hasOwnProperty(key) ? object[key] : initial
+}
+
+export const objMap = <T, R>(object: { [key: string]: T}, callback: (item: T, key: string) => R): { [key:string]: R} => Object.assign({}, ...Object.keys(object).map(k => ({ [k]: callback(object[k], k) })));
+
+export interface ObjSet {
+  [key: string]: boolean
+}

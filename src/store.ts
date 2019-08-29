@@ -5,7 +5,7 @@ import { persistStore, persistReducer, createTransform, createMigrate } from 're
 import storage from 'redux-persist/lib/storage'
 //import localForage from 'localforage'
 import {
-  transformCountries, transformSettings, transformGlobalStats, transformBattle, transformTactics, transformTerrains, transformUnits, transfromTransfer,
+  transformSettings, transformGlobalStats, transformBattle, transformTactics, transformTerrains, transformUnits, transfromTransfer,
   stripRounds
 } from './store/transforms'
 
@@ -51,12 +51,6 @@ const BattleTransform = createTransform(
   { whitelist: ['battle'] }
 )
 
-const CountriesTransform = createTransform(
-  (inboundState) => inboundState,
-  (outboundState: any) => transformCountries(outboundState),
-  { whitelist: ['countries'] }
-)
-
 const DataTransform = createTransform(
   (inboundState) => undefined,
   (outboundState) => ({}),
@@ -80,7 +74,6 @@ const persistConfig = {
     UnitsTransform,
     GlobalStatsTransform,
     TransferTransform,
-    CountriesTransform,
     DataTransform
   ]
 }

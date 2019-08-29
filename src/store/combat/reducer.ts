@@ -6,7 +6,7 @@ import { mergeValues, DefinitionType } from '../../base_definition'
 import { CombatParameter } from '../settings'
 import { AppState } from '../'
 import { mergeSettings, getBattle, getArmy, getParticipant } from '../utils'
-import { sumMap } from '../../utils'
+import { objGet, sumObj } from '../../utils'
 import { defaultCountry } from '../countries/reducer'
 
 const doBattle = (state: AppState, mode: DefinitionType, steps: number) => {
@@ -17,8 +17,8 @@ const doBattle = (state: AppState, mode: DefinitionType, steps: number) => {
   let units_d = getArmy(state, Side.Defender)
   let participant_a = getParticipant(state, Side.Attacker)
   let participant_d = getParticipant(state, Side.Defender)
-  const country_a = state.countries.get(units_a.name, defaultCountry)
-  const country_d = state.countries.get(units_d.name, defaultCountry)
+  const country_a = objGet(state.countries, units_a.name, defaultCountry)
+  const country_d = objGet(state.countries, units_d.name, defaultCountry)
   const combat = mergeSettings(state)
   const minimum_roll = combat.get(CombatParameter.DiceMinimum) || 1
   const maximum_roll = combat.get(CombatParameter.DiceMaximum) || 6
@@ -59,7 +59,7 @@ const doBattle = (state: AppState, mode: DefinitionType, steps: number) => {
       flank_size: units_a.flank_size,
       tactic: state.tactics.get(units_a.tactic),
       country: participant_a.name,
-      general: country_a.has_general ? country_a.general_martial + sumMap(country_a.trait_martial) : 0,
+      general: country_a.has_general ? country_a.general_martial + sumObj(country_a.trait_martial) : 0,
       roll: participant_a.roll
     }
     const defender_info = {
@@ -70,7 +70,7 @@ const doBattle = (state: AppState, mode: DefinitionType, steps: number) => {
       flank_size: units_d.flank_size,
       tactic: state.tactics.get(units_d.tactic),
       country: participant_d.name,
-      general: country_d.has_general ? country_d.general_martial + sumMap(country_d.trait_martial) : 0,
+      general: country_d.has_general ? country_d.general_martial + sumObj(country_d.trait_martial) : 0,
       roll: participant_d.roll
     }
     const [a, d] = fight(definitions, attacker_info, defender_info, next.round + 1, next.terrains.map(type => state.terrains.get(type)!), combat)

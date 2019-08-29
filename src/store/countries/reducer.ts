@@ -1,7 +1,8 @@
 
-import { Set, Map, List } from 'immutable'
+import { List } from 'immutable'
 import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
 import { GovermentType, ReligionType, CultureType, Modifier } from '../data'
+import { objGet, ObjSet } from '../../utils'
 
 export enum CountryName {
   Country1 = 'Country 1',
@@ -9,93 +10,116 @@ export enum CountryName {
 }
 
 export interface Country {
-  readonly selections: Set<string>
+  readonly selections: ObjSet
   readonly culture: CultureType
   readonly government: GovermentType
   readonly religion: ReligionType
   readonly omen_power: number
   readonly general_martial: number
-  readonly trait_martial: Map<string, number>
+  readonly trait_martial: TraitMartial
   readonly has_general: boolean
   readonly military_power: number
   readonly office_discipline: number
   readonly office_morale: number
 }
 
-export const defaultCountry =
+export const defaultCountry: Country =
 {
-  selections: Set<string>(),
+  selections: {},
   government: GovermentType.Republic,
   religion: 'Hellenic' as ReligionType,
   culture: CultureType.Greek,
   omen_power: 100,
   general_martial: 0,
-  trait_martial: Map<string, number>(),
+  trait_martial: {},
   has_general: true,
   military_power: 0,
   office_discipline: 0,
   office_morale: 0
 }
 
-const selectionsState = Map<CountryName, Country>().set(CountryName.Country1, defaultCountry).set(CountryName.Country2, defaultCountry)
+interface TraitMartial {
+  [key: string]: number
+}
 
-class CountriesReducer extends ImmerReducer<typeof selectionsState> {
+interface Countries {
+  [key: string]: Country
+}
+
+export const countriesState: Countries = { }
+countriesState[CountryName.Country1] = defaultCountry
+countriesState[CountryName.Country2] = defaultCountry
+
+class CountriesReducer extends ImmerReducer<typeof countriesState> {
 
   createCountry(country: CountryName, source_country?: CountryName) {
-    this.draftState = this.state.set(country, this.state.get(source_country!, defaultCountry))
+    this.draftState[country] = objGet(this.state, source_country, defaultCountry)
   }
 
   deleteCountry(country: CountryName) {
-    this.draftState = this.state.delete(country)
+    delete this.draftState[country]
   }
 
   changeCountryName(old_country: CountryName, country: CountryName) {
-    this.draftState = this.state.mapKeys(key => key === old_country ? country : key)
+    delete Object.assign(this.draftState, {[country]: this.state[old_country] })[old_country]
   }
 
   enableModifiers(country: CountryName, key: string, modifiers: List<Modifier>) {
     const general_modifiers = modifiers.filter(value => value.target === 'General' && value.attribute === 'Martial').toMap().mapEntries(value => [key, value[1].value])
-    this.draftState = this.state.update(country, defaultCountry, value => ({ ...value, selections: value.selections.add(key), trait_martial: value.trait_martial.merge(general_modifiers) }))
+    createCountry(country, country)
+    this.draftState[country].selections[key] = true
+    this.draftState[country].trait_martial = { ...this.draftState[country].trait_martial, ...general_modifiers.toJS() as any }
   }
 
   clearModifiers(country: CountryName, key: string) {
-    this.draftState = this.state.update(country, defaultCountry, value => ({ ...value, selections: value.selections.remove(key), trait_martial: value.trait_martial.delete(key) }))
+    createCountry(country, country)
+    delete this.draftState[country].selections[key]
+    delete this.draftState[country].trait_martial[key]
   }
 
   selectGovernment(country: CountryName, government: GovermentType) {
-    this.draftState = this.state.update(country, defaultCountry, value => ({ ...value, government }))
+    createCountry(country, country)
+    this.draftState[country].government = government
   }
 
   selectReligion(country: CountryName, religion: ReligionType) {
-    this.draftState = this.state.update(country, defaultCountry, value => ({ ...value, religion }))
+    createCountry(country, country)
+    this.draftState[country].religion = religion
   }
 
   selectCulture(country: CountryName, culture: CultureType) {
-    this.draftState = this.state.update(country, defaultCountry, value => ({ ...value, culture }))
+    createCountry(country, country)
+    this.draftState[country].culture = culture
   }
 
   setOmenPower(country: CountryName, omen_power: number) {
-    this.draftState = this.state.update(country, defaultCountry, value => ({ ...value, omen_power }))
+    createCountry(country, country)
+    this.draftState[country].omen_power = omen_power
   }
 
   setGeneralMartial(country: CountryName, general_martial: number) {
-    this.draftState = this.state.update(country, defaultCountry, value => ({ ...value, general_martial }))
+    createCountry(country, country)
+    this.draftState[country].general_martial = general_martial
   }
 
   setHasGeneral(country: CountryName, has_general: boolean) {
-    this.draftState = this.state.update(country, defaultCountry, value => ({ ...value, has_general }))
+    createCountry(country, country)
+    this.draftState[country].has_general = has_general
   }
 
   setMilitaryPower(country: CountryName, military_power: number) {
-    this.draftState = this.state.update(country, defaultCountry, value => ({ ...value, military_power }))
+    createCountry(country, country)
+    this.draftState[country].military_power = military_power
   }
 
   setOfficeDiscipline(country: CountryName, office_discipline: number) {
-    this.draftState = this.state.update(country, defaultCountry, value => ({ ...value, office_discipline }))
+    createCountry(country, country)
+    this.draftState[country].office_discipline = office_discipline
   }
 
   setOfficeMorale(country: CountryName, office_morale: number) {
-    this.draftState = this.state.update(country, defaultCountry, value => ({ ...value, office_morale }))
+    createCountry(country, country)
+    this.draftState[country].office_morale = office_morale
   }
 }
 const actions = createActionCreators(CountriesReducer)
@@ -115,4 +139,5 @@ export const setMilitaryPower = actions.setMilitaryPower
 export const setOfficeDiscipline = actions.setOfficeDiscipline
 export const setOfficeMorale = actions.setOfficeMorale
 
-export const selectionsReducer = createReducerFunction(CountriesReducer, selectionsState)
+export const selectionsReducer = createReducerFunction(CountriesReducer, countriesState)
+

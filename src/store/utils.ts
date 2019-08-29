@@ -1,6 +1,6 @@
 import { AppState } from "./index"
 import { OrderedSet, OrderedMap } from "immutable"
-import { getKeys, sumMap } from '../utils'
+import { getKeys, objGet, sumObj } from '../utils'
 import { filterUnitDefinitions, isIncludedInMode, mergeUnits } from '../army_utils'
 import { TacticType, TacticDefinition } from "./tactics/actions"
 import { DefinitionType, mergeValues } from "../base_definition"
@@ -96,13 +96,13 @@ export const mergeSettings = (state: AppState): OrderedMap<CombatParameter, numb
   const getArmyByCountry = (state: AppState, name: CountryName): Army => {
     const battle = getBattle(state)
     const army = battle.armies.get(name, getDefaultArmy(state.settings.mode))
-    const country = state.countries.get(name, defaultCountry)
+    const country = objGet(state.countries, name, defaultCountry)
     const units = filterUnitDefinitions(state.settings.mode, state.units.get(name, getDefaultUnits()))
     const global = state.global_stats.get(name, getDefaultGlobal()).get(state.settings.mode)!
     const general = {
-      total: country.has_general ? country.general_martial + sumMap(country.trait_martial) : 0,
+      total: country.has_general ? country.general_martial + sumObj(country.trait_martial) : 0,
       base: country.has_general ? country.general_martial : 0,
-      trait: country.has_general ? sumMap(country.trait_martial) : 0
+      trait: country.has_general ? sumObj(country.trait_martial) : 0
     }
     const has_general = country.has_general
     return { ...army, general, name, units, global, has_general}
