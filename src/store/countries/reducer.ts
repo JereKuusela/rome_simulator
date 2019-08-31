@@ -16,7 +16,7 @@ export interface Country {
   readonly religion: ReligionType
   readonly omen_power: number
   readonly general_martial: number
-  readonly trait_martial: TraitMartial
+  readonly trait_martial: { [key: string]: number }
   readonly has_general: boolean
   readonly military_power: number
   readonly office_discipline: number
@@ -38,17 +38,10 @@ export const defaultCountry: Country =
   office_morale: 0
 }
 
-interface TraitMartial {
-  [key: string]: number
+export const countriesState: { [key in CountryName]: Country } = {
+  [CountryName.Country1]: defaultCountry,
+  [CountryName.Country2]: defaultCountry
 }
-
-interface Countries {
-  [key: string]: Country
-}
-
-export const countriesState: Countries = { }
-countriesState[CountryName.Country1] = defaultCountry
-countriesState[CountryName.Country2] = defaultCountry
 
 class CountriesReducer extends ImmerReducer<typeof countriesState> {
 

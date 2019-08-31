@@ -6,7 +6,7 @@ import { RowType, battleReducer, Army, getDefaultArmy, Battle, modeState, getDef
 import { DefinitionType, clearAllValues, mergeValues } from '../base_definition'
 import { transferReducer } from './transfer'
 import { CountryName } from './countries'
-import { CombatParameter, settingsReducer } from './settings'
+import { settingsReducer } from './settings'
 import { orderedMapFromJS } from '../utils'
 
 const dummyAction: any = {
@@ -155,20 +155,17 @@ export const transfromTransfer = (state_raw: any): ReturnType<typeof transferRed
   return { reset_missing, export_keys }
 }
 
-const settings = Object.keys(CombatParameter).map(k => CombatParameter[k as any]) as CombatParameter[]
-
+// Still required to correct corrupted / missing data.
 export const transformSettings = (state_raw: any): ReturnType<typeof settingsReducer> => {
   const initial = settingsReducer(undefined, dummyAction as any)
   if (!state_raw)
     return initial
   let combat = initial.combat
-  if (state_raw.combat) {
-    let combat_raw: Map<DefinitionType, OrderedMap<CombatParameter, number>> = fromJS(state_raw.combat)
-    combat = combat.map((value, key) => combat_raw.has(key) ? value.merge(combat_raw.get(key)!).filter((_, key) => settings.includes(key)) : value)
-  }
+  if (state_raw.combat)
+    combat = { [DefinitionType.Land]: { ...combat[DefinitionType.Land], ...state_raw.combat[DefinitionType.Land]}, [DefinitionType.Naval]: { ...combat[DefinitionType.Naval], ...state_raw.combat[DefinitionType.Naval] } }
   const simple_mode = state_raw.simple_mode
   const mode = state_raw.mode || initial.mode
   const country = state_raw.country || initial.country
-  const accordions = state_raw.accordions ? fromJS(state_raw.accordions).toSet() : initial.accordions
+  const accordions = state_raw.accordions || initial.accordions
   return { combat, simple_mode, mode, country, accordions }
 }

@@ -1,11 +1,10 @@
 import { Map } from 'immutable'
 import { BaseUnit, UnitCalc, UnitType, UnitDefinition } from '../units'
 import { RowType, BaseUnits } from '../battle'
-import { CombatParameter } from '../settings'
+import { CombatParameter, Settings } from '../settings'
 import { calculateValue, mergeValues, calculateBase } from '../../base_definition'
 type Definition = Map<UnitType, UnitDefinition>
 type RowTypes = Map<RowType, UnitType | undefined>
-type Settings = Map<CombatParameter, number>
 
 /**
  * Calculates the next index when the order is from center to edges.
@@ -21,9 +20,9 @@ const isFlankUnit = (settings: Settings, row_types: RowTypes, unit: BaseUnit) =>
         return true
     if (unit.type === row_types.get(RowType.Front) || unit.type === row_types.get(RowType.Back))
         return false
-    const value = calculateBase(unit, settings.get(CombatParameter.FlankCriteriaAttribute, UnitCalc.Maneuver))
-    const limit = settings.get(CombatParameter.FlankCriteriaValue, 2)
-    if (settings.get(CombatParameter.FlankCriteriaSign, true))
+    const value = calculateBase(unit, settings[CombatParameter.FlankCriteriaAttribute])
+    const limit = settings[CombatParameter.FlankCriteriaValue]
+    if (settings[CombatParameter.FlankCriteriaSign])
         return value > limit
     else
         return value < limit
@@ -43,7 +42,7 @@ const isFlankUnit = (settings: Settings, row_types: RowTypes, unit: BaseUnit) =>
 const calculateFlankSizes = (settings: Settings, round: number, flank_size: number, front_size: number, reserve_size: number, free_spots : number, enemy_size: number): [number, number] => {
     if (round > 0)
         return [0, 0]
-    if (!settings.get(CombatParameter.FixFlank))
+    if (!settings[CombatParameter.FixFlank])
         return [Math.floor(front_size / 2.0), Math.ceil(front_size / 2.0)]
     const army_size = front_size - free_spots + reserve_size
     // Determine whether the preferred flank size has any effect.
@@ -82,11 +81,11 @@ export const reinforce = (army: BaseUnits, definitions: Definition, round: numbe
     // Calculate priorities (mostly based on unit type, ties are resolved with index numbers).
     let orderedMainReserve = mainReserve.sortBy((value, key) => {
         value = mergeValues(value, definitions.get(value.type)!)
-        return (settings.get(CombatParameter.ReinforceMainSign) ? 1 : -1) * calculateBase(value, settings.get(CombatParameter.ReinforceMainAttribute, UnitCalc.Cost)) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 + key - (value.type === row_types.get(RowType.Front) ? 200000000 : 0) - (value.type === row_types.get(RowType.Back) ? -100000000 : 0)
+        return (settings[CombatParameter.ReinforceMainSign] ? 1 : -1) * calculateBase(value, settings[CombatParameter.ReinforceMainAttribute]) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 + key - (value.type === row_types.get(RowType.Front) ? 200000000 : 0) - (value.type === row_types.get(RowType.Back) ? -100000000 : 0)
     })
     let orderedFlankReserve = flankReserve.sortBy((value, key) => {
         value = mergeValues(value, definitions.get(value.type)!)
-        return (settings.get(CombatParameter.ReinforceFlankSign) ? 1 : -1) * calculateBase(value, settings.get(CombatParameter.ReinforceFlankAttribute, UnitCalc.Maneuver)) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 + key - (value.type === row_types.get(RowType.Flank) ? 100000000 : 0)
+        return (settings[CombatParameter.ReinforceFlankSign] ? 1 : -1) * calculateBase(value, settings[CombatParameter.ReinforceFlankAttribute]) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 + key - (value.type === row_types.get(RowType.Flank) ? 100000000 : 0)
     })
 
     const free_spots = frontline.filter((_, index) => index < frontline.size).reduce((previous, current) => previous + (current ? 0 : 1), 0)

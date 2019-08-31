@@ -4,7 +4,8 @@ import { changeParameter, CombatParameter, parameterToDescription } from '../sto
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { DefinitionType } from '../base_definition'
-import { mergeSettings } from '../store/utils'
+import { getSettings } from '../store/utils'
+import { objToList } from '../utils'
 
 class Settings extends Component<IProps> {
 
@@ -14,7 +15,7 @@ class Settings extends Component<IProps> {
         <Grid padded celled>
           <Grid.Row columns='2'>
             {
-              this.props.combat.map((value, key) => {
+              objToList(this.props.combat, (key, value) => {
                 if (key === CombatParameter.FlankCriteriaAttribute || key === CombatParameter.FlankCriteriaSign
                   || key === CombatParameter.ReinforceMainAttribute || key === CombatParameter.ReinforceMainSign
                   || key === CombatParameter.ReinforceFlankAttribute || key === CombatParameter.ReinforceFlankSign)
@@ -38,7 +39,7 @@ class Settings extends Component<IProps> {
                     </Table>
                   </Grid.Column>
                 )
-              }).toList()
+              })
             }
           </Grid.Row>
         </Grid>
@@ -50,12 +51,12 @@ class Settings extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  combat: mergeSettings(state),
+  combat: getSettings(state),
   mode: state.settings.mode
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  changeParameter: (mode: DefinitionType, key: CombatParameter, value: number) => dispatch(changeParameter(mode, key, value))
+  changeParameter: (mode: DefinitionType.Land | DefinitionType.Naval, key: CombatParameter, value: number) => dispatch(changeParameter(mode, key, value))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

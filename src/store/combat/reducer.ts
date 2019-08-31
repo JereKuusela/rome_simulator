@@ -5,7 +5,7 @@ import { doBattle as fight } from './combat'
 import { mergeValues, DefinitionType } from '../../base_definition'
 import { CombatParameter } from '../settings'
 import { AppState } from '../'
-import { mergeSettings, getBattle, getArmy, getParticipant } from '../utils'
+import { getSettings, getBattle, getArmy, getParticipant } from '../utils'
 import { objGet, sumObj } from '../../utils'
 import { defaultCountry } from '../countries/reducer'
 
@@ -19,10 +19,10 @@ const doBattle = (state: AppState, mode: DefinitionType, steps: number) => {
   let participant_d = getParticipant(state, Side.Defender)
   const country_a = objGet(state.countries, units_a.name, defaultCountry)
   const country_d = objGet(state.countries, units_d.name, defaultCountry)
-  const combat = mergeSettings(state)
-  const minimum_roll = combat.get(CombatParameter.DiceMinimum) || 1
-  const maximum_roll = combat.get(CombatParameter.DiceMaximum) || 6
-  const roll_frequency = combat.get(CombatParameter.RollFrequency) || 5
+  const combat = getSettings(state)
+  const minimum_roll = combat[CombatParameter.DiceMinimum]
+  const maximum_roll = combat[CombatParameter.DiceMaximum]
+  const roll_frequency = combat[CombatParameter.RollFrequency]
   if (!next.seed)
     next = { ...next, seed: next.custom_seed || createEntropy()[0] }
   next = { ...next, fight_over: !checkFight(next.participants, next.armies), outdated: false }

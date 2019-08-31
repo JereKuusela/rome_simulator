@@ -1,4 +1,4 @@
-import { fromJS, Seq, List, OrderedMap, OrderedSet, Set, Map } from 'immutable'
+import { fromJS, Seq, List, OrderedMap, OrderedSet, Map } from 'immutable'
 
 /**
  * Maps a range to a list.
@@ -79,21 +79,18 @@ export const sumObj = (object: { [key: string]: number}, converter?: (value: any
  */
 export const round = (number: number, precision: number): number => Math.round(precision * number) / precision
 
-/**
- * Toggles a item on a set.
- * @param set 
- * @param item
- */
-export const toggle = (set: Set<string>, item: string): Set<string> => set.has(item) ? set.delete(item) : set.add(item)
-
-export function objGet<T>(object: { [key: string]: T}, key: string | undefined): T | undefined
-export function objGet<T>(object: { [key: string]: T}, key: string | undefined, initial: T | undefined): T
-export function objGet<T>(object: { [key: string]: T}, key: string | undefined, initial?: T)
+export function objGet<K extends string, V>(object: { [key in K]: V}, key: K | undefined): V | undefined
+export function objGet<K extends string, V>(object: { [key in K]: V}, key: K | undefined, initial: V | undefined): V
+export function objGet<K extends string, V>(object: { [key in K]: V}, key: K | undefined, initial?: V)
 {
-  return key !== undefined && object.hasOwnProperty(key) ? object[key] : initial
+  return key !== undefined && objHas(object, key) ? object[key] : initial
 }
 
-export const objMap = <T, R>(object: { [key: string]: T}, callback: (item: T, key: string) => R): { [key:string]: R} => Object.assign({}, ...Object.keys(object).map(k => ({ [k]: callback(object[k], k) })));
+export const asd = <T, R>(object: { [key: string]: T}, callback: (item: T, key: string) => R): { [key:string]: R} => Object.assign({}, ...Object.keys(object).map(k => ({ [k]: callback(object[k], k) })));
+
+export const objToList = <K extends string, V, R>(object: { [key in K]: V}, callback: (key: K, value: V) => R): R[] => (Object.entries(object) as [K, V][]).map(([key, value]) => callback(key, value))
+
+export const objHas = <K extends string>(object: { [key in K]: any}, key: K ): boolean => object.hasOwnProperty(key)
 
 export interface ObjSet {
   [key: string]: boolean

@@ -1,26 +1,29 @@
-import { OrderedMap, Map, Set } from 'immutable'
 import { ImmerReducer, createActionCreators, createReducerFunction, Actions } from 'immer-reducer'
 import { CombatParameter } from './actions'
-import { getDefaultLandSettings, getDefaultNavalSettings, getDefaultAnySettings } from './data'
+import { getDefaultLandSettings, getDefaultNavalSettings } from './data'
 import { CountryName, createCountry, deleteCountry, changeCountryName } from '../countries'
 import { DefinitionType } from '../../base_definition'
-import { toggle } from '../../utils'
+import { ObjSet, objHas } from '../../utils'
+
+export type Settings = {
+  [key in CombatParameter]: number
+}
 
 export const settingsState = {
-  combat: Map<DefinitionType, OrderedMap<CombatParameter, number>>()
-    .set(DefinitionType.Global, getDefaultAnySettings())
-    .set(DefinitionType.Land, getDefaultLandSettings())
-    .set(DefinitionType.Naval, getDefaultNavalSettings()),
+  combat: {} as { [key in DefinitionType.Land | DefinitionType.Naval]: Settings },
   simple_mode: true,
-  mode: DefinitionType.Land,
+  mode: DefinitionType.Land as DefinitionType.Land | DefinitionType.Naval,
   country: CountryName.Country1,
-  accordions: Set<string>()
+  accordions: {} as ObjSet
 }
+
+settingsState.combat[DefinitionType.Land] = getDefaultLandSettings()
+settingsState.combat[DefinitionType.Naval] = getDefaultNavalSettings()
 
 class SettingsReducer extends ImmerReducer<typeof settingsState> {
 
-  changeParameter(mode: DefinitionType, key: CombatParameter, value: number) {
-    this.draftState.combat = this.state.combat.update(mode, item => item.set(key, value))
+  changeParameter(mode: DefinitionType.Land | DefinitionType.Naval, key: CombatParameter, value: number) {
+    this.draftState.combat[mode][key] = value
   }
 
   toggleSimpleMode() {
@@ -50,7 +53,10 @@ class SettingsReducer extends ImmerReducer<typeof settingsState> {
   }
 
   toggleAccordion(key: string) {
-    this.draftState.accordions = toggle(this.state.accordions, key)
+    if (objHas(this.state.accordions, key))
+      delete this.draftState.accordions[key]
+    else
+      this.draftState.accordions[key] = true
   }
 }
 

@@ -20,7 +20,7 @@ import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers
 import ModalArmyUnitDetail, { ModalInfo as ModalArmyUnitInfo } from '../containers/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/ModalFastPlanner'
 import { calculateValue, mergeValues, getImage, DefinitionType } from '../base_definition'
-import { mergeSettings, getBattle, getArmy, Army, getParticipant } from '../store/utils'
+import { getSettings, getBattle, getArmy, Army, getParticipant } from '../store/utils'
 import { addSign, toSignedPercent } from '../formatters'
 import { CountryName, setGeneralMartial } from '../store/countries'
 import { CombatParameter } from '../store/settings'
@@ -278,7 +278,7 @@ class Battle extends Component<IProps, IState> {
 
   renderArmy = (type: Side, participant: Army): JSX.Element => {
     const country = participant.name
-    const combat_width = this.props.combat.get(CombatParameter.CombatWidth, 30)
+    const combat_width = this.props.combat[CombatParameter.CombatWidth]
     return (
       <div key={type}>
         {type === Side.Attacker && <Header>{type + '\'s frontline'}</Header>}
@@ -510,7 +510,7 @@ const mapStateToProps = (state: AppState) => ({
   fight_over: getBattle(state).fight_over,
   units: state.units,
   global_stats: state.global_stats,
-  combat: mergeSettings(state),
+  combat: getSettings(state),
   mode: state.settings.mode,
   countries: state.countries
 })
