@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { UnitType, setGlobalValue, ValueType } from '../store/units'
+import { UnitType, setGlobalValue, ValueType, Unit } from '../store/units'
 import { AppState } from '../store/'
-import { ValuesType, DefinitionType } from '../base_definition'
+import { ValuesType, Mode } from '../base_definition'
 import { mergeUnitTypes, filterTerrainTypes } from '../store/utils'
 import { CountryName } from '../store/countries'
 import { invalidateCountry } from '../store/battle'
@@ -20,7 +20,7 @@ class ModalGlobalStatsDetail extends Component<IProps> {
         name={this.props.country}
         terrain_types={this.props.terrain_types}
         custom_value_key={CUSTOM_VALUE_KEY}
-        unit={this.props.global_stats.getIn([this.props.country, this.props.mode])}
+        unit={this.props.global_stats[this.props.country][this.props.mode] as Unit}
         unit_types={this.props.unit_types}
         onCustomBaseValueChange={this.setGlobalBaseValue}
         onCustomModifierValueChange={this.setGlobalModifierValue}
@@ -51,7 +51,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setGlobalValue: (country: CountryName, mode: DefinitionType, type: ValuesType, key: string, attribute: ValueType, value: number) => (
+  setGlobalValue: (country: CountryName, mode: Mode, type: ValuesType, key: string, attribute: ValueType, value: number) => (
     dispatch(setGlobalValue(country, mode, type, key, attribute, value)) && dispatch(invalidateCountry(country))
   )
 })

@@ -8,10 +8,14 @@ import { CountryName, enableModifiers, clearModifiers, createCountry, deleteCoun
 import { addValues, DefinitionType, ValuesType, regenerateValues, clearValues } from '../../base_definition'
 import { ImmerReducer, createActionCreators, createReducerFunction, Actions } from 'immer-reducer';
 import { Modifier } from '../data';
+import { objGet } from '../../utils';
+
+export type GlobalStats = { [key in CountryName]: GlobalDefinitions }
+export type GlobalDefinitions = { [key in DefinitionType.Land | DefinitionType.Naval]: UnitDefinition }
 
 export const unitsState = Map<CountryName, OrderedMap<UnitType, UnitDefinition>>().set(CountryName.Country1, getDefaultUnits()).set(CountryName.Country2, getDefaultUnits())
 
-export const globalStatsState = Map<CountryName, Map<DefinitionType, UnitDefinition>>().set(CountryName.Country1, getDefaultGlobal()).set(CountryName.Country2, getDefaultGlobal())
+export const globalStatsState = { [CountryName.Country1]: getDefaultGlobal(), [CountryName.Country2]: getDefaultGlobal() } as GlobalStats
 
 
 class UnitsReducer extends ImmerReducer<typeof unitsState> {
@@ -78,46 +82,42 @@ class UnitsReducer extends ImmerReducer<typeof unitsState> {
 
 class GlobalStatsReducer extends ImmerReducer<typeof globalStatsState> {
 
-  setGlobalValue(country: CountryName, mode: DefinitionType, type: ValuesType, key: string, attribute: ValueType, value: number) {
-    return this.state.updateIn([country, mode], (unit: UnitDefinition) => addValues(unit, type, key, [[attribute, value]]))
+  setGlobalValue(country: CountryName, mode: DefinitionType.Land | DefinitionType.Naval, type: ValuesType, key: string, attribute: ValueType, value: number) {
+    this.draftState[country][mode] = addValues(this.state[country][mode], type, key, [[attribute, value]])
   }
 
   createCountry(country: CountryName, source_country?: CountryName) {
-    return this.state.set(country, this.state.get(source_country!, getDefaultGlobal()))
+    this.draftState[country] = objGet(this.state, source_country!, getDefaultGlobal())
   }
 
   deleteCountry(country: CountryName) {
-    return this.state.delete(country)
+    delete this.draftState[country]
   }
 
   changeCountryName(old_country: CountryName, country: CountryName) {
-    return this.state.mapKeys(key => key === old_country ? country : key)
+    delete Object.assign(this.draftState, {[country]: this.state[old_country] })[old_country]
   }
 
   enableModifiers(country: CountryName, key: string, modifiers: List<Modifier>) {
-    let next = this.state.get(country)!
-    if (!next)
-      return
     const landValues = modifiers.filter(value => value.target === DefinitionType.Land || value.target === DefinitionType.Global)
     const baseLandValues = landValues.filter(value => value.type !== ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
     const modifierLandValues = landValues.filter(value => value.type === ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
     const navalValues = modifiers.filter(value => value.target === DefinitionType.Naval || value.target === DefinitionType.Global)
     const baseNavalValues = navalValues.filter(value => value.type !== ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
     const modifierNavalValues = navalValues.filter(value => value.type === ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
-    next = next.update(DefinitionType.Land, stats => regenerateValues(stats, ValuesType.Base, key, baseLandValues))
-    next = next.update(DefinitionType.Land, stats => regenerateValues(stats, ValuesType.Modifier, key, modifierLandValues))
-    next = next.update(DefinitionType.Naval, stats => regenerateValues(stats, ValuesType.Base, key, baseNavalValues))
-    next = next.update(DefinitionType.Naval, stats => regenerateValues(stats, ValuesType.Modifier, key, modifierNavalValues))
-    return this.state.set(country, next)
+    let definition = this.state[country][DefinitionType.Land]
+    definition = regenerateValues(definition, ValuesType.Base, key, baseLandValues)
+    definition = regenerateValues(definition, ValuesType.Modifier, key, modifierLandValues)
+    this.draftState[country][DefinitionType.Land] = definition
+    definition = this.state[country][DefinitionType.Naval]
+    definition = regenerateValues(definition, ValuesType.Base, key, baseNavalValues)
+    definition = regenerateValues(definition, ValuesType.Modifier, key, modifierNavalValues)
+    this.draftState[country][DefinitionType.Naval] = definition
   }
 
   clearModifiers(country: CountryName, key: string) {
-    let next = this.state.get(country)!
-    if (!next)
-      return
-    next = next.update(DefinitionType.Land, stats => clearValues(clearValues(stats, ValuesType.Base, key), ValuesType.Modifier, key))
-    next = next.update(DefinitionType.Naval, stats => clearValues(clearValues(stats, ValuesType.Base, key), ValuesType.Modifier, key))
-    return this.state.set(country, next)
+    this.draftState[country][DefinitionType.Land] = clearValues(clearValues(this.state[country][DefinitionType.Land], ValuesType.Base, key), ValuesType.Modifier, key)
+    this.draftState[country][DefinitionType.Naval] = clearValues(clearValues(this.state[country][DefinitionType.Naval], ValuesType.Base, key), ValuesType.Modifier, key)
   }
 }
 

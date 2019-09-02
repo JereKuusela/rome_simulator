@@ -16,6 +16,8 @@ export enum DefinitionType {
   Global = 'Global'
 }
 
+export type Mode = DefinitionType.Land | DefinitionType.Naval
+
 type BVD = BD | BaseValuesDefinition<any, any>
 type BD = BaseDefinition<any, any>
 

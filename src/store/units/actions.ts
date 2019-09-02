@@ -1,4 +1,4 @@
-import { OrderedMap, Map } from 'immutable'
+import { OrderedMap } from 'immutable'
 import { TerrainType } from '../terrains'
 import { calculateValue, BaseDefinition, DefinitionType } from '../../base_definition'
 import { toPercent, toSignedPercent, toNumber } from '../../formatters'
@@ -45,7 +45,6 @@ export enum UnitCalc {
 }
 
 export type UnitDefinitions = OrderedMap<UnitType, UnitDefinition>
-export type GlobalDefinitions = Map<DefinitionType, UnitDefinition>
 
 export type ValueType = UnitCalc | UnitType | TerrainType
 

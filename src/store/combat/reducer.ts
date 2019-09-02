@@ -2,15 +2,15 @@ import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer
 import { Random, MersenneTwister19937, createEntropy } from 'random-js'
 import { checkFight, Side, Participant } from '../battle'
 import { doBattle as fight } from './combat'
-import { mergeValues, DefinitionType } from '../../base_definition'
+import { mergeValues, Mode } from '../../base_definition'
 import { CombatParameter } from '../settings'
 import { AppState } from '../'
 import { getSettings, getBattle, getArmy, getParticipant } from '../utils'
 import { objGet, sumObj } from '../../utils'
 import { defaultCountry } from '../countries/reducer'
 
-const doBattle = (state: AppState, mode: DefinitionType, steps: number) => {
-  const definitions = state.units.map((value, key) => value.map(value => mergeValues(value, state.global_stats.getIn([key, mode]))))
+const doBattle = (state: AppState, mode: Mode, steps: number) => {
+  const definitions = state.units.map((value, key) => value.map(value => mergeValues(value, state.global_stats[key][mode])))
   let next = getBattle(state)
   // Whole logic really messed after so many refactorings
   let units_a = getArmy(state, Side.Attacker)
@@ -101,15 +101,15 @@ const doBattle = (state: AppState, mode: DefinitionType, steps: number) => {
 
 class CombatReducer extends ImmerReducer<AppState> {
 
-  battle(mode: DefinitionType, steps: number) {
+  battle(mode: Mode, steps: number) {
     this.draftState = doBattle(this.state, mode, steps)
   }
 
-  setSeed(mode: DefinitionType, seed?: number) {
+  setSeed(mode: Mode, seed?: number) {
     this.draftState = { ...this.state, battle: this.state.battle.update(mode, battle => ({ ...battle, custom_seed: seed, seed: seed || 0 }))}
   }
 
-  refreshBattle(mode: DefinitionType) {
+  refreshBattle(mode: Mode) {
     const steps = this.state.battle.get(mode)!.round + 1
     const next = { ...this.state, battle: this.state.battle.update(mode, value => ({ ...value, round: -1, participants: value.participants.map(value => ({ ...value, rounds: value.rounds.clear() })) })) }
     this.draftState = doBattle(next, mode, steps)

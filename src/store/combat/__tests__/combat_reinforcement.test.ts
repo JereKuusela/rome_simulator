@@ -5,14 +5,15 @@ import { TerrainDefinition } from '../../terrains'
 import { getDefaultUnits, getDefaultGlobal, UnitType, UnitDefinition, BaseUnit} from '../../units'
 import { mergeValues, DefinitionType } from '../../../base_definition'
 import { CombatParameter } from '../../settings'
-import { verifyType, getSettings } from './utils'
+import { verifyType } from './utils'
 import { CountryName } from '../../countries'
+import { getDefaultLandSettings } from '../../settings'
 
 describe('reinforcement', () => {
-  const global_stats = getDefaultGlobal().get(DefinitionType.Land)!
+  const global_stats = getDefaultGlobal()[DefinitionType.Land]
   const units = getDefaultUnits().map(unit => mergeValues(unit, global_stats))
   const definitions = Map<CountryName, Map<UnitType, UnitDefinition>>().set(CountryName.Country1, units).set(CountryName.Country2, units)
-  let settings = getSettings(DefinitionType.Land)
+  let settings = getDefaultLandSettings()
   const row_types = Map<RowType, UnitType>().set(RowType.Front, '' as UnitType).set(RowType.Back, '' as UnitType).set(RowType.Flank, '' as UnitType)
   const every_type = [UnitType.Archers, UnitType.CamelCavalry, UnitType.Chariots, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.HorseArchers, UnitType.LightCavalry, UnitType.LightInfantry, UnitType.WarElephants]
 
@@ -31,7 +32,7 @@ describe('reinforcement', () => {
     info.army_d = getDefaultArmy(DefinitionType.Land)
     info.army_a = { ...info.army_a, row_types }
     info.army_d = { ...info.army_d, row_types }
-    settings = getSettings(DefinitionType.Land)
+    settings = getDefaultLandSettings()
   })
   const getUnit = (type: UnitType) => units.get(type) as any as BaseUnit
   const setAttacker = (types: UnitType[]) => (info.army_a = { ...info.army_a, reserve: info.army_a.reserve.merge(types.map(type => getUnit(type))) })

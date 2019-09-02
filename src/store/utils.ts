@@ -1,5 +1,5 @@
 import { AppState } from "./index"
-import { OrderedSet, OrderedMap } from "immutable"
+import { OrderedSet, OrderedMap, fromJS } from "immutable"
 import { getKeys, objGet, sumObj } from '../utils'
 import { filterUnitDefinitions, isIncludedInMode, mergeUnits } from '../army_utils'
 import { TacticType, TacticDefinition } from "./tactics/actions"
@@ -90,7 +90,7 @@ const getArmyByCountry = (state: AppState, name: CountryName): Army => {
   const army = battle.armies.get(name, getDefaultArmy(state.settings.mode))
   const country = objGet(state.countries, name, defaultCountry)
   const units = filterUnitDefinitions(state.settings.mode, state.units.get(name, getDefaultUnits()))
-  const global = state.global_stats.get(name, getDefaultGlobal()).get(state.settings.mode)!
+  const global = objGet(state.global_stats, name, getDefaultGlobal())[state.settings.mode]
   const general = {
     total: country.has_general ? country.general_martial + sumObj(country.trait_martial) : 0,
     base: country.has_general ? country.general_martial : 0,
@@ -115,10 +115,10 @@ const getUnitsByCountry = (state: AppState, name: CountryName): Units => {
   const battle = getBattle(state)
   const army = battle.armies.get(name, getDefaultArmy(state.settings.mode))
   const units = filterUnitDefinitions(state.settings.mode, state.units.get(name, getDefaultUnits()))
-  const global = state.global_stats.get(name, getDefaultGlobal()).get(state.settings.mode)!
-  const frontline = army.frontline.map(value => value && mergeUnits(units, global, value))
-  const reserve = army.reserve.map(value => mergeUnits(units, global, value))
-  const defeated = army.defeated.map(value => mergeUnits(units, global, value))
+  const global = objGet(state.global_stats, name, getDefaultGlobal())[state.settings.mode]
+  const frontline = army.frontline.map(value => value && mergeUnits(units, fromJS(global), value))
+  const reserve = army.reserve.map(value => mergeUnits(units, fromJS(global), value))
+  const defeated = army.defeated.map(value => mergeUnits(units, fromJS(global), value))
   return { frontline, reserve, defeated }
 }
 
@@ -145,9 +145,9 @@ export const getSelected = (state: AppState): Army => getArmyByCountry(state, st
  */
 export const getUnitDefinitions = (state: AppState, side: Side): UnitDefinitions => {
   const name = getParticipant(state, side).name
-  const global = state.global_stats.get(name, getDefaultGlobal()).get(state.settings.mode)!
+  const global = objGet(state.global_stats, name, getDefaultGlobal())[state.settings.mode]
   const units = filterUnitDefinitions(state.settings.mode, state.units.get(name, getDefaultUnits()))
-  return units.map(definition => mergeValues(definition, global))
+  return units.map(definition => mergeValues(definition, fromJS(global)))
 }
 
 export interface Army extends BaseArmy {

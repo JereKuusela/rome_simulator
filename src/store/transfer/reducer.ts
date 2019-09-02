@@ -39,7 +39,7 @@ class ImportReducer extends ImmerReducer<AppState> {
         ...state,
         tactics: state.tactics ? this.state.tactics.merge(state.tactics) : this.state.tactics,
         terrains: state.terrains ? this.state.terrains.merge(state.terrains) : this.state.terrains,
-        global_stats: state.global_stats ? this.state.global_stats.merge(state.global_stats) : this.state.global_stats,
+        global_stats: state.global_stats ? { ...this.state.global_stats, ...state.global_stats } : this.state.global_stats,
         units: state.units ? this.state.units.map((value, key) => value.merge(state.units.get(key))) : this.state.units
       }
   }

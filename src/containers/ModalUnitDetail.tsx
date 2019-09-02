@@ -15,7 +15,7 @@ class ModalUnitDetail extends Component<IProps> {
     if (!this.props.country || !this.props.unit)
       return null
     const country = this.props.country
-    const unit = mergeValues(this.props.units.getIn([this.props.country, this.props.unit]), this.props.global_stats.getIn([this.props.country, this.props.mode]))
+    const unit = mergeValues(this.props.units.getIn([this.props.country, this.props.unit]), this.props.global_stats[this.props.country][this.props.mode])
     const type = unit.type
     return (
       <UnitDetail

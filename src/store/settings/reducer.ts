@@ -2,17 +2,15 @@ import { ImmerReducer, createActionCreators, createReducerFunction, Actions } fr
 import { CombatParameter } from './actions'
 import { getDefaultLandSettings, getDefaultNavalSettings } from './data'
 import { CountryName, createCountry, deleteCountry, changeCountryName } from '../countries'
-import { DefinitionType } from '../../base_definition'
+import { DefinitionType, Mode } from '../../base_definition'
 import { ObjSet, objHas } from '../../utils'
 
-export type Settings = {
-  [key in CombatParameter]: number
-}
+export type Settings = { [key in CombatParameter]: number }
 
 export const settingsState = {
-  combat: {} as { [key in DefinitionType.Land | DefinitionType.Naval]: Settings },
+  combat: {} as { [key in Mode]: Settings },
   simple_mode: true,
-  mode: DefinitionType.Land as DefinitionType.Land | DefinitionType.Naval,
+  mode: DefinitionType.Land as Mode,
   country: CountryName.Country1,
   accordions: {} as ObjSet
 }
@@ -22,7 +20,7 @@ settingsState.combat[DefinitionType.Naval] = getDefaultNavalSettings()
 
 class SettingsReducer extends ImmerReducer<typeof settingsState> {
 
-  changeParameter(mode: DefinitionType.Land | DefinitionType.Naval, key: CombatParameter, value: number) {
+  changeParameter(mode: Mode, key: CombatParameter, value: number) {
     this.draftState.combat[mode][key] = value
   }
 

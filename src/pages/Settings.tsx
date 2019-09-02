@@ -15,7 +15,7 @@ class Settings extends Component<IProps> {
         <Grid padded celled>
           <Grid.Row columns='2'>
             {
-              objToList(this.props.combat, (key, value) => {
+              objToList(this.props.combat, (value, key) => {
                 if (key === CombatParameter.FlankCriteriaAttribute || key === CombatParameter.FlankCriteriaSign
                   || key === CombatParameter.ReinforceMainAttribute || key === CombatParameter.ReinforceMainSign
                   || key === CombatParameter.ReinforceFlankAttribute || key === CombatParameter.ReinforceFlankSign)

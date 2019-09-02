@@ -1,5 +1,6 @@
 import { OrderedMap, Map, fromJS } from 'immutable'
-import { UnitType, UnitDefinition, UnitCalc, ValueType, BaseUnit, GlobalDefinitions, UnitDefinitions } from './actions'
+import { UnitType, UnitDefinition, UnitCalc, ValueType, BaseUnit, UnitDefinitions } from './actions'
+import { GlobalDefinitions } from './reducer'
 import { addValues, ValuesType, DefinitionType } from '../../base_definition'
 import { getNextId } from '../../army_utils'
 import IconArcher from '../../images/archers.png'
@@ -84,7 +85,6 @@ const initializeDefaultUnits = (): UnitDefinitions => {
 }
 
 const initializeDefaultGlobal = (): GlobalDefinitions => {
-  let definitions = Map<DefinitionType, UnitDefinition>()
   const land = { type: '' as UnitType, mode: DefinitionType.Land, image: IconMilitaryPower, requirements: '', can_assault: false }
   const naval = { type: '' as UnitType, mode: DefinitionType.Naval, image: IconMilitaryPower, requirements: '', can_assault: false }
   const landValues: [UnitCalc, number][] = [
@@ -99,9 +99,10 @@ const initializeDefaultGlobal = (): GlobalDefinitions => {
     [UnitCalc.AttritionWeight, 1],
     [UnitCalc.Maintenance, 0.016]
   ]
-  definitions = definitions.set(DefinitionType.Land, addValues(land, ValuesType.Base, 'Base', landValues))
-  definitions = definitions.set(DefinitionType.Naval, addValues(naval, ValuesType.Base, 'Base', navalValues))
-  return definitions
+  return {
+    [DefinitionType.Land]: addValues(land, ValuesType.Base, 'Base', landValues),
+    [DefinitionType.Naval]: addValues(naval, ValuesType.Base, 'Base', navalValues)
+  }
 }
 
 const defaultUnits = initializeDefaultUnits()

@@ -19,7 +19,7 @@ import ModalTerrainSelector, { ModalInfo as ModalTerrainInfo } from '../containe
 import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers/ModalTacticSelector'
 import ModalArmyUnitDetail, { ModalInfo as ModalArmyUnitInfo } from '../containers/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/ModalFastPlanner'
-import { calculateValue, mergeValues, getImage, DefinitionType } from '../base_definition'
+import { calculateValue, mergeValues, getImage, DefinitionType, Mode } from '../base_definition'
 import { getSettings, getBattle, getArmy, Army, getParticipant } from '../store/utils'
 import { addSign, toSignedPercent } from '../formatters'
 import { CountryName, setGeneralMartial } from '../store/countries'
@@ -490,7 +490,7 @@ class Battle extends Component<IProps, IState> {
   }
 
   mergeAllValues = (name: CountryName, army: List<BaseUnit | undefined>): List<BaseUnit | undefined> => {
-    return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats.getIn([name, this.props.mode])))
+    return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats[name][this.props.mode]))
   }
 }
 
@@ -516,7 +516,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  battle: (mode: DefinitionType, steps: number) => dispatch(battle(mode, steps)),
+  battle: (mode: Mode, steps: number) => dispatch(battle(mode, steps)),
   undo: (mode: DefinitionType, steps: number) => dispatch(undo(mode, steps)),
   toggleRandomRoll: (mode: DefinitionType, participant: Side) => dispatch(toggleRandomRoll(mode, participant)),
   setRoll: (mode: DefinitionType, participant: Side, roll: number) => dispatch(setRoll(mode, participant, roll)),
@@ -526,8 +526,8 @@ const mapDispatchToProps = (dispatch: any) => ({
   removeUnit: (mode: DefinitionType, name: CountryName, type: ArmyType, column: number) => (
     dispatch(selectUnit(mode, name, type, column, undefined))
   ),
-  setSeed: (mode: DefinitionType, seed?: number) => dispatch(setSeed(mode, seed)) && dispatch(invalidate(mode)),
-  refreshBattle: (mode: DefinitionType) => dispatch(refreshBattle(mode))
+  setSeed: (mode: Mode, seed?: number) => dispatch(setSeed(mode, seed)) && dispatch(invalidate(mode)),
+  refreshBattle: (mode: Mode) => dispatch(refreshBattle(mode))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

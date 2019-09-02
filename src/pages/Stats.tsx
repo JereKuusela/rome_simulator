@@ -4,7 +4,7 @@ import { OrderedSet, List } from 'immutable'
 import { Container, Image, Table } from 'semantic-ui-react'
 
 import { sumList, round } from '../utils'
-import { calculateValue, calculateValueWithoutLoss, getImage, DefinitionType, strengthToValue } from '../base_definition'
+import { calculateValue, calculateValueWithoutLoss, getImage, Mode, DefinitionType, strengthToValue } from '../base_definition'
 import { getUnits, filterUnitTypes, getBattle } from '../store/utils'
 import { AppState } from '../store/index'
 import { Unit, UnitType, UnitCalc } from '../store/units'
@@ -105,7 +105,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  refreshBattle: (mode: DefinitionType) => dispatch(refreshBattle(mode))
+  refreshBattle: (mode: Mode) => dispatch(refreshBattle(mode))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }
