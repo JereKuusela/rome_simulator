@@ -1,27 +1,27 @@
-import { fromJS, Map, List, OrderedMap } from 'immutable'
-import { tacticFromJS, TacticType, tacticsReducer, getDefaultTactics } from './tactics'
+import { fromJS, Map, List } from 'immutable'
+import { tacticFromJS, tacticsReducer, TacticDefinitions } from './tactics'
 import { terrainFromJS, terrainsReducer, TerrainDefinitions } from './terrains'
 import { unitDefinitionFromJS, unitFromJS, UnitType, unitsReducer, globalStatsReducer, BaseUnit, GlobalStats, Units } from './units'
 import { RowType, battleReducer, Army, getDefaultArmy, Battle, modeState, getDefaultParticipant, Participant, Side } from './battle'
-import { DefinitionType, clearAllValues, mergeValues } from '../base_definition'
+import { DefinitionType } from '../base_definition'
 import { transferReducer } from './transfer'
 import { CountryName } from './countries'
 import { settingsReducer } from './settings'
-import { orderedMapFromJS, filter, map } from '../utils'
+import { filter, map } from '../utils'
 
 const dummyAction: any = {
   type: ''
 }
 
-export const transformTactics = (state_raw: any): ReturnType<typeof tacticsReducer> => {
+export const transformTactics = (state: TacticDefinitions): TacticDefinitions => {
   const initial = tacticsReducer(undefined, dummyAction)
-  if (!state_raw)
+  if (!state)
     return initial
-  const raw: OrderedMap<TacticType, any> = orderedMapFromJS(state_raw)
-  const tactics = raw.map(value => tacticFromJS(value)!).filter(value => value)
-  const defaultTactics = getDefaultTactics()
+  state = filter(state)
+  state = map(state, tactic => tacticFromJS(fromJS(tactic))!)
   // Automatically heal up default values.
-  return tactics.map((tactic, type) => clearAllValues(tactic, type)).map((terrain, type) => mergeValues(terrain, defaultTactics.get(type)!))
+  return state
+  //return tactics.map((tactic, type) => clearAllValues(tactic, type)).map((terrain, type) => mergeValues(terrain, defaultTactics.get(type)!))
 }
 
 export const transformTerrains = (state: TerrainDefinitions): TerrainDefinitions => {

@@ -1,16 +1,15 @@
 import React, { Component } from 'react'
-import { Map, OrderedSet } from 'immutable'
 import { Table, Input, Image, Dropdown } from 'semantic-ui-react'
 import { UnitType, Units } from '../store/units'
-import { TacticDefinition, ValueType, TacticType, TacticCalc } from '../store/tactics'
+import { TacticDefinition, ValueType, TacticType, TacticCalc, TacticDefinitions } from '../store/tactics'
 import { getBaseValue, explainShort, getImage, DefinitionType, calculateValue, getImages } from '../base_definition'
 import { renderImages } from './utils'
 import { toSignedPercent, toPercent } from '../formatters'
 import { toArr } from '../utils'
 
 interface IProps {
-  readonly tactic_types: OrderedSet<TacticType>
-  readonly tactics: Map<TacticType, TacticDefinition>
+  readonly tactic_types: Set<TacticType>
+  readonly tactics: TacticDefinitions
   readonly unit_types: Set<UnitType>
   readonly units: Units
   readonly custom_value_key: string
@@ -116,7 +115,7 @@ export default class TacticDetail extends Component<IProps> {
             })
           }
           {
-            this.props.tactic_types.map(value => this.renderRow(tactic, value, true, new Set([getImage(this.props.tactics.get(value))])))
+            Array.from(this.props.tactic_types).map(value => this.renderRow(tactic, value, true, new Set([getImage(this.props.tactics[value])])))
           }
           {
             this.attributes.map(value => this.renderRow(tactic, value, true, new Set([getImage(undefined)])))

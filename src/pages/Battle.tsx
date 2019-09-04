@@ -398,7 +398,7 @@ class Battle extends Component<IProps, IState> {
 
   renderTactic = (participant: Army, counter?: TacticType): JSX.Element => {
     const country = participant.name
-    const tactic = this.props.tactics.get(participant.tactic)
+    const tactic = this.props.tactics[participant.tactic]
     const army = {
       frontline: this.mergeAllValues(country, participant.frontline),
       reserve: this.mergeAllValues(country, participant.reserve) as List<BaseUnit>,

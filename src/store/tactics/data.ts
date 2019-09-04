@@ -18,6 +18,7 @@ import IconHarassment from '../../images/harassment.png'
 import IconProbingAttack from '../../images/probing_attack.png'
 import IconCloseRanks from '../../images/close_ranks.png'
 import * as data from './tactics.json'
+import { toObj } from '../../utils';
 
 const tactic_to_icon = Map<TacticType, string>()
   .set(TacticType.Bottleneck, IconBottleneck)
@@ -75,14 +76,9 @@ const createTacticFromJson = (data: TacticData): TacticDefinition => {
   return addValues(tactic, ValuesType.Base, tactic.type, base_values)
 }
 
-const initializeDefaultTactics = (): OrderedMap<TacticType, TacticDefinition> => {
-  let map = OrderedMap<TacticType, TacticDefinition>()
-  for (const value of data.tactics) {
-    const tactic = createTacticFromJson(value)
-    map = map.set(tactic.type, tactic)
-  }
-  return map
-}
+export type TacticDefinitions = { [key in TacticType]: TacticDefinition }
+
+const initializeDefaultTactics = (): TacticDefinitions => toObj(data.tactics.map(createTacticFromJson), unit => unit.type)
 
 const defaultTactics = initializeDefaultTactics()
 

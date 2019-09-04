@@ -7,6 +7,11 @@ Tests (high priority):
 
 Rename Mega Galley to Mega-Polyreme
 
+Refactor:
+- Autoheal working for base data (in transformations).
+- Getting rid of all ImmutableJS code.
+- Getting rid of custom map, reduce, etc functions as much as possible.
+
 Reducers can probably be split to sub reducers (one handles the data structure, other the actual data)
 
 Pluralization of reducers, state, etc

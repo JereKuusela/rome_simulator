@@ -9,7 +9,6 @@ import ItemSelector from '../components/ItemSelector'
 import ItemRemover from '../components/ItemRemover'
 import { CountryName } from '../store/countries'
 import { filterUnitDefinitions } from '../army_utils'
-import { fromJS } from 'immutable'
 import { toArr } from '../utils'
 
 export interface ModalInfo {
@@ -33,7 +32,7 @@ class ModalRowTypeSelector extends Component<IProps> {
           <ItemSelector
             onClose={this.props.onClose}
             onSelection={this.selectUnit}
-            items={fromJS(toArr(units))}
+            items={toArr(units)}
           />
         </Modal.Content>
       </Modal>

@@ -57,7 +57,7 @@ const doBattle = (state: AppState, mode: Mode, steps: number) => {
       defeated: units_a.defeated,
       row_types: units_a.row_types,
       flank_size: units_a.flank_size,
-      tactic: state.tactics.get(units_a.tactic),
+      tactic: state.tactics[units_a.tactic],
       country: participant_a.name,
       general: country_a.has_general ? country_a.general_martial + sumObj(country_a.trait_martial) : 0,
       roll: participant_a.roll
@@ -68,7 +68,7 @@ const doBattle = (state: AppState, mode: Mode, steps: number) => {
       defeated: units_d.defeated,
       row_types: units_d.row_types,
       flank_size: units_d.flank_size,
-      tactic: state.tactics.get(units_d.tactic),
+      tactic: state.tactics[units_d.tactic],
       country: participant_d.name,
       general: country_d.has_general ? country_d.general_martial + sumObj(country_d.trait_martial) : 0,
       roll: participant_d.roll

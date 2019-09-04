@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { Map, List } from 'immutable'
+import { List } from 'immutable'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { AppState } from '../store/'
 import { selectTactic, invalidate } from '../store/battle'
 import { calculateTactic } from '../store/combat'
-import ItemSelector from '../components/ItemSelector'
+import ItemSelector, { SelectorAttributes } from '../components/ItemSelector'
 import { TacticType, TacticCalc } from '../store/tactics'
 import { getBattle, filterTactics } from '../store/utils'
 import { DefinitionType, mergeValues, calculateValue } from '../base_definition'
@@ -13,6 +13,7 @@ import { toSignedPercent, toPercent } from '../formatters'
 import { BaseUnit } from '../store/units'
 import { CountryName } from '../store/countries'
 import StyledNumber from '../components/StyledNumber';
+import { map, filter, toArr } from '../utils';
 
 export interface ModalInfo {
   country: CountryName
@@ -30,33 +31,33 @@ class ModalTacticSelector extends Component<IProps> {
       reserve: this.mergeAllValues(country, participant.reserve) as List<BaseUnit>,
       defeated: this.mergeAllValues(country, participant.defeated) as List<BaseUnit>
     }
-    let attributes = Map<string, Map<TacticType, JSX.Element>>()
-    attributes = attributes.set('effect', this.props.tactics.map(value => (
+    const attributes = {} as SelectorAttributes<TacticType>
+    attributes['effect'] =  map(this.props.tactics, value => (
         <StyledNumber
          value={calculateTactic(army, value)}
          formatter={toPercent}
         /> 
-    )))
-    attributes = attributes.set('damage', this.props.tactics.map(value => (
+    ))
+    attributes['damage'] = map(this.props.tactics, value => (
        <StyledNumber
         value={calculateTactic(army, value, this.props.info!.counter)}
         formatter={toSignedPercent}
        /> 
-    )))
-    attributes = attributes.set('casualties', this.props.tactics.filter(value => calculateValue(value, TacticCalc.Casualties)).map(value => (
+    ))
+    attributes['casualties'] = map(filter(this.props.tactics, value => calculateValue(value, TacticCalc.Casualties)),value => (
       <StyledNumber
         value={calculateValue(value, TacticCalc.Casualties)}
         formatter={toSignedPercent}
         reverse
        /> 
-    )))
+    ))
     return (
     <Modal basic onClose={this.props.onClose} open>
       <Modal.Content>
         <ItemSelector
           onClose={this.props.onClose}
           onSelection={this.selectTactic}
-          items={this.props.tactics.toList()}
+          items={toArr(this.props.tactics)}
           attributes={attributes}
         />
       </Modal.Content>

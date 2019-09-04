@@ -20,7 +20,7 @@ class ModalTacticDetail extends Component<IProps> {
         unit_types={this.props.unit_types}
         units={this.props.units}
         custom_value_key={CUSTOM_VALUE_KEY}
-        tactic={this.props.tactics.get(this.props.tactic)!}
+        tactic={this.props.tactics[this.props.tactic]}
         onCustomBaseValueChange={(tactic, key, attribute, value) => this.props.setBaseValue(this.props.mode, tactic, key, attribute, value)}
         onTypeChange={this.props.changeType}
         onImageChange={this.props.changeImage}

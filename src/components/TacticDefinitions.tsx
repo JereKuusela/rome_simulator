@@ -1,16 +1,16 @@
-import { OrderedMap } from 'immutable'
 import React, { Component } from 'react'
 import { Image, Table, List, Button } from 'semantic-ui-react'
 import { UnitType, Units } from '../store/units'
-import { TacticDefinition, TacticType, TacticCalc } from '../store/tactics'
+import { TacticDefinition, TacticType, TacticCalc, TacticDefinitions as Definitions} from '../store/tactics'
 import { calculateValue, getImage } from '../base_definition'
 import { toSignedPercent } from '../formatters'
 import ValueModal from './ValueModal'
 import VersusList from './VersusList'
 import StyledNumber from './StyledNumber'
+import { toArr } from '../utils';
 
 interface IProps {
-  readonly tactics: OrderedMap<TacticType, TacticDefinition>
+  readonly tactics: Definitions
   readonly units: Units
   readonly unit_types: Set<UnitType>
   readonly onRowClick: (type: TacticType) => void
@@ -56,7 +56,7 @@ export default class TacticDefinitions extends Component<IProps, IState> {
           </Table.Header>
           <Table.Body>
             {
-              this.props.tactics.map(this.renderRow).toList()
+              toArr(this.props.tactics, this.renderRow)
             }
           </Table.Body>
         </Table>
@@ -87,7 +87,7 @@ export default class TacticDefinitions extends Component<IProps, IState> {
         <Table.Cell singleLine>
           <List horizontal>
             {
-              this.props.tactics.filter(vs_tactic => calculateValue(tactic, vs_tactic.type)).map(vs_tactic => (
+              toArr(this.props.tactics).filter(vs_tactic => calculateValue(tactic, vs_tactic.type)).map(vs_tactic => (
                 <List.Item key={vs_tactic.type} style={{ marginLeft: 0, marginRight: '1em' }}>
                   <Image src={getImage(vs_tactic)} avatar />
                   <StyledNumber

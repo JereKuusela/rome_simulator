@@ -1,36 +1,34 @@
 import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
-import { getDefaultTactics } from './data'
+import { getDefaultTactics, TacticDefinitions } from './data'
 import { TacticType, ValueType } from './actions'
 import { addValues, ValuesType, DefinitionType } from '../../base_definition'
 
 export const tacticsState = getDefaultTactics()
 
-class TacticsReducer extends ImmerReducer<typeof tacticsState> {
+class TacticsReducer extends ImmerReducer<TacticDefinitions> {
 
-  setBaseValue(tactic: TacticType, key: string, attribute: ValueType, value: number) {
-    this.draftState = this.state.update(tactic, tactic => (
-      addValues(tactic, ValuesType.Base, key, [[attribute, value]])
-    ))
+  setBaseValue(type: TacticType, key: string, attribute: ValueType, value: number) {
+    this.draftState[type] = addValues(this.state[type], ValuesType.Base, key, [[attribute, value]])
   }
 
   deleteTactic(type: TacticType) {
-    this.draftState = this.state.delete(type)
+    delete this.draftState[type]
   }
 
   addTactic(type: TacticType, mode: DefinitionType) {
-    this.draftState = this.state.set(type, { type, mode, image: '' })
+    this.draftState[type] = { type, mode, image: '' }
   }
 
   changeType(old_type: TacticType, type: TacticType) {
-    this.draftState = this.state.set(type, { ...this.state.get(old_type)!, type }).delete(old_type)
+    delete Object.assign(this.draftState, {[type]: this.draftState[old_type] })[old_type]
   }
 
   changeImage(type: TacticType, image: string) {
-    this.draftState = this.state.update(type, tactic => ({ ...tactic, image }))
+    this.draftState[type].image = image
   }
 
   changeMode(type: TacticType, mode: DefinitionType) {
-    this.draftState = this.state.update(type, tactic => ({ ...tactic, mode }))
+    this.draftState[type].mode = mode
   }
 }
 

@@ -8,7 +8,6 @@ import { CountryName } from '../store/countries'
 import { DefinitionType } from '../base_definition'
 import ItemSelector from '../components/ItemSelector'
 import { filterUnitDefinitions, getNextId } from '../army_utils'
-import { fromJS } from 'immutable'
 import { toArr } from '../utils'
 
 export interface ModalInfo {
@@ -29,7 +28,7 @@ class ModalUnitSelector extends Component<IProps> {
           <ItemSelector
             onClose={this.props.onClose}
             onSelection={this.selectUnit}
-            items={fromJS(toArr(units))}
+            items={toArr(units)}
           />
         </Modal.Content>
       </Modal>

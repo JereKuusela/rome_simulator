@@ -1,8 +1,8 @@
 import { AppState } from "./index"
-import { OrderedSet, OrderedMap, fromJS } from "immutable"
-import { getKeys, objGet, sumObj, map, reduce, toArr, filter } from '../utils'
+import { fromJS } from "immutable"
+import { objGet, sumObj, map, reduce, toArr, filter } from '../utils'
 import { filterUnitDefinitions, isIncludedInMode, mergeUnits } from '../army_utils'
-import { TacticType, TacticDefinition } from "./tactics/actions"
+import { TacticType } from "./tactics/actions"
 import { mergeValues } from "../base_definition"
 import { TerrainType } from "./terrains/actions"
 import { UnitType, UnitDefinition } from "./units/actions"
@@ -14,6 +14,7 @@ import { getDefaultGlobal, getDefaultUnits } from "./units/data"
 import { Settings } from "./settings"
 import { UnitDefinitions } from "./units"
 import { TerrainDefinitions } from "./terrains";
+import { TacticDefinitions } from "./tactics";
 
 /**
  * Returns settings of the current mode.
@@ -55,16 +56,16 @@ export const filterTerrains = (state: AppState): TerrainDefinitions => {
  * Returns tactic types for the current mode.
  * @param state Application state.
  */
-export const filterTacticTypes = (state: AppState): OrderedSet<TacticType> => {
-  return getKeys(filterTactics(state))
+export const filterTacticTypes = (state: AppState): Set<TacticType> => {
+  return new Set(toArr(filterTactics(state), tactic => tactic.type))
 }
 
 /**
  * Returns tactics for the current mode.
  * @param state Application state.
  */
-export const filterTactics = (state: AppState): OrderedMap<TacticType, TacticDefinition> => {
-  return state.tactics.filter(tactic => isIncludedInMode(state.settings.mode, tactic))
+export const filterTactics = (state: AppState): TacticDefinitions => {
+  return filter(state.tactics, tactic => isIncludedInMode(state.settings.mode, tactic))
 }
 
 

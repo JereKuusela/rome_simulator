@@ -1,19 +1,21 @@
 import React, { Component } from 'react'
-import { List, Map } from 'immutable'
 import { Table, Image } from 'semantic-ui-react'
 import { TerrainType, TerrainCalc } from '../store/terrains'
 import { UnitType, UnitCalc } from '../store/units'
 import { BaseValuesDefinition, BaseDefinition, getImage } from '../base_definition'
 import { TacticType, TacticCalc } from '../store/tactics'
+import { toArr, has } from '../utils'
 
 type ItemType = UnitType | TerrainType | TacticType
 type ItemAttribute = UnitCalc | TerrainCalc | UnitType | TerrainType | TacticCalc | TacticType
 
+export type SelectorAttributes<T extends ItemType> = { [key: string]: { [key in T]: number | string | JSX.Element } }
+
 interface IProps<T extends ItemType, S extends ItemAttribute> {
   onClose: () => void
-  items: List<BaseDefinition<T, S> | BaseValuesDefinition<T, S> | undefined>
+  items: (BaseDefinition<T, S> | BaseValuesDefinition<T, S> | undefined)[]
   onSelection: (type: T | undefined) => void
-  attributes?: Map<string, Map<T, number | string | JSX.Element>>
+  attributes?: SelectorAttributes<T>
 }
 
 export default class ItemSelector<S extends ItemAttribute, T extends ItemType> extends Component<IProps<T, S>> {
@@ -40,12 +42,12 @@ export default class ItemSelector<S extends ItemAttribute, T extends ItemType> e
           {item.type}
         </Table.Cell>
         {
-          this.props.attributes && this.props.attributes.map((values, key) => (
+          this.props.attributes && toArr(this.props.attributes, (values, key) => (
             <Table.Cell key={key}>
-              {values.has(item.type) && values.get(item.type)}
-              {values.has(item.type) && (' ' + key)}
+              {has(values, item.type) && values[item.type]}
+              {has(values, item.type) && (' ' + key)}
             </Table.Cell>
-          )).toList()
+          ))
         }
       </Table.Row>
     )
