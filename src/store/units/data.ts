@@ -1,6 +1,6 @@
 import { OrderedMap, Map, fromJS } from 'immutable'
-import { UnitType, UnitDefinition, UnitCalc, ValueType, BaseUnit, UnitDefinitions } from './actions'
-import { GlobalDefinitions } from './reducer'
+import { UnitType, UnitDefinition, UnitCalc, ValueType, BaseUnit } from './actions'
+import { GlobalDefinitions, UnitDefinitions } from './reducer'
 import { addValues, ValuesType, DefinitionType } from '../../base_definition'
 import { getNextId } from '../../army_utils'
 import IconArcher from '../../images/archers.png'
@@ -21,6 +21,7 @@ import IconOctere from '../../images/octere.png'
 import IconMegaGalley from '../../images/mega_galley.png'
 
 import * as data from './units.json';
+import { toObj } from '../../utils';
 
 const unit_to_icon = Map<UnitType, string>()
   .set(UnitType.Archers, IconArcher)
@@ -75,14 +76,7 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
   return unit
 }
 
-const initializeDefaultUnits = (): UnitDefinitions => {
-  let map = OrderedMap<UnitType, UnitDefinition>()
-  for (const value of data.units) {
-    const unit = createUnitFromJson(value)
-    map = map.set(unit.type, unit)
-  }
-  return map
-}
+const initializeDefaultUnits = (): UnitDefinitions => toObj(data.units.map(createUnitFromJson), unit => unit.type)
 
 const initializeDefaultGlobal = (): GlobalDefinitions => {
   const land = { type: '' as UnitType, mode: DefinitionType.Land, image: IconMilitaryPower, requirements: '', can_assault: false }

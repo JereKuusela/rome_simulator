@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { UnitType, ValueType, setValue, changeImage, changeMode } from '../store/units'
+import { UnitType, ValueType, setValue, changeImage, changeMode, Unit } from '../store/units'
 import { AppState } from '../store/'
 import { CountryName } from '../store/countries'
 import { ValuesType, mergeValues, DefinitionType } from '../base_definition'
@@ -15,7 +15,7 @@ class ModalUnitDetail extends Component<IProps> {
     if (!this.props.country || !this.props.unit)
       return null
     const country = this.props.country
-    const unit = mergeValues(this.props.units.getIn([this.props.country, this.props.unit]), this.props.global_stats[this.props.country][this.props.mode])
+    const unit = mergeValues(this.props.units[this.props.country][this.props.unit], this.props.global_stats[this.props.country][this.props.mode])
     const type = unit.type
     return (
       <UnitDetail
@@ -23,7 +23,7 @@ class ModalUnitDetail extends Component<IProps> {
         name={country}
         terrain_types={this.props.terrain_types}
         custom_value_key={CUSTOM_VALUE_KEY}
-        unit={unit}
+        unit={unit as Unit}
         unit_types={this.props.unit_types}
         onCustomBaseValueChange={(key, attribute, value) => this.props.setBaseValue(country, type, key, attribute, value)}
         onCustomModifierValueChange={(key, attribute, value) => this.props.setModifierValue(country, type, key, attribute, value)}

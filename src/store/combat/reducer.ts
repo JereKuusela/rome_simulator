@@ -6,11 +6,11 @@ import { mergeValues, Mode } from '../../base_definition'
 import { CombatParameter } from '../settings'
 import { AppState } from '../'
 import { getSettings, getBattle, getArmy, getParticipant } from '../utils'
-import { objGet, sumObj } from '../../utils'
+import { objGet, sumObj, map } from '../../utils'
 import { defaultCountry } from '../countries/reducer'
 
 const doBattle = (state: AppState, mode: Mode, steps: number) => {
-  const definitions = state.units.map((value, key) => value.map(value => mergeValues(value, state.global_stats[key][mode])))
+  const definitions = map(state.units, (definitions, country) => map(definitions, unit => mergeValues(unit, state.global_stats[country][mode])))
   let next = getBattle(state)
   // Whole logic really messed after so many refactorings
   let units_a = getArmy(state, Side.Attacker)
@@ -73,7 +73,7 @@ const doBattle = (state: AppState, mode: Mode, steps: number) => {
       general: country_d.has_general ? country_d.general_martial + sumObj(country_d.trait_martial) : 0,
       roll: participant_d.roll
     }
-    const [a, d] = fight(definitions, attacker_info, defender_info, next.round + 1, next.terrains.map(type => state.terrains.get(type)!), combat)
+    const [a, d] = fight(definitions, attacker_info, defender_info, next.round + 1, next.terrains.map(type => state.terrains[type]), combat)
     participant_a = {
       ...participant_a,
       rounds: participant_a.rounds.push(a),

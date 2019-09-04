@@ -1,4 +1,3 @@
-import { OrderedMap } from 'immutable'
 import { TerrainType } from '../terrains'
 import { calculateValue, BaseDefinition, DefinitionType } from '../../base_definition'
 import { toPercent, toSignedPercent, toNumber } from '../../formatters'
@@ -43,8 +42,6 @@ export enum UnitCalc {
   AttritionWeight = 'Attrition weight',
   Experience = 'Experience'
 }
-
-export type UnitDefinitions = OrderedMap<UnitType, UnitDefinition>
 
 export type ValueType = UnitCalc | UnitType | TerrainType
 

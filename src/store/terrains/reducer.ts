@@ -1,40 +1,38 @@
 import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
-import { getDefaultTerrains } from './data'
+import { getDefaultTerrains, TerrainDefinitions } from './data'
 import { TerrainType, ValueType, LocationType } from './actions'
 import { addValues, ValuesType, DefinitionType } from '../../base_definition'
 
 export const terrainsState = getDefaultTerrains()
 
-class TerrainsReducer extends ImmerReducer<typeof terrainsState> {
+class TerrainsReducer extends ImmerReducer<TerrainDefinitions> {
 
   setBaseValue(type: TerrainType, key: string, attribute: ValueType, value: number) {
-    this.draftState = this.state.update(type, terrain => (
-      addValues(terrain, ValuesType.Base, key, [[attribute, value]])
-    ))
+    this.draftState[type] = addValues(this.state[type], ValuesType.Base, key, [[attribute, value]])
   }
 
   deleteTerrain(type: TerrainType) {
-    this.draftState = this.state.delete(type)
+    delete this.draftState[type]
   }
 
   addTerrain(type: TerrainType, mode: DefinitionType) {
-    this.draftState = this.state.set(type, { type, mode, image: '' })
+    this.draftState[type] = { type, mode, image: '' }
   }
 
   changeType(old_type: TerrainType, type: TerrainType) {
-    this.draftState = this.state.set(type, { ...this.state.get(old_type)!, type }).delete(old_type)
+    delete Object.assign(this.draftState, {[type]: this.draftState[old_type] })[old_type]
   }
 
   changeLocation(type: TerrainType, location: LocationType) {
-    this.draftState = this.state.update(type, terrain => ({ ...terrain, location }))
+    this.draftState[type].location = location
   }
 
   changeImage(type: TerrainType, image: string) {
-    this.draftState = this.state.update(type, terrain => ({ ...terrain, image }))
+    this.draftState[type].image = image
   }
 
   changeMode(type: TerrainType, mode: DefinitionType) {
-    this.draftState = this.state.update(type, terrain => ({ ...terrain, mode }))
+    this.draftState[type].mode = mode
   }
 }
 

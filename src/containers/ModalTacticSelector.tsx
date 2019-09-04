@@ -70,7 +70,7 @@ class ModalTacticSelector extends Component<IProps> {
 
   
   mergeAllValues = (name: CountryName, army: List<BaseUnit | undefined>): List<BaseUnit | undefined> => {
-    return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats[name][this.props.mode]))
+    return army.map(value => value && mergeValues(mergeValues(this.props.units[name][value.type], value), this.props.global_stats[name][this.props.mode]))
   }
 }
 

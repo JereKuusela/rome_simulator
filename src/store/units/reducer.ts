@@ -1,4 +1,4 @@
-import { Map, OrderedMap, List } from 'immutable'
+import { List } from 'immutable'
 import { getDefaultUnits, getDefaultGlobal } from './data'
 import {
   UnitType, UnitDefinition,
@@ -8,79 +8,74 @@ import { CountryName, enableModifiers, clearModifiers, createCountry, deleteCoun
 import { addValues, DefinitionType, ValuesType, regenerateValues, clearValues } from '../../base_definition'
 import { ImmerReducer, createActionCreators, createReducerFunction, Actions } from 'immer-reducer';
 import { Modifier } from '../data';
-import { objGet } from '../../utils';
+import { objGet, map } from '../../utils';
 
 export type GlobalStats = { [key in CountryName]: GlobalDefinitions }
 export type GlobalDefinitions = { [key in DefinitionType.Land | DefinitionType.Naval]: UnitDefinition }
 
-export const unitsState = Map<CountryName, OrderedMap<UnitType, UnitDefinition>>().set(CountryName.Country1, getDefaultUnits()).set(CountryName.Country2, getDefaultUnits())
+export type Units = { [key in CountryName]: UnitDefinitions }
+export type UnitDefinitions = { [key in UnitType]: UnitDefinition }
+
+export const unitsState = { [CountryName.Country1]: getDefaultUnits(), [CountryName.Country2]: getDefaultUnits() } as Units
 
 export const globalStatsState = { [CountryName.Country1]: getDefaultGlobal(), [CountryName.Country2]: getDefaultGlobal() } as GlobalStats
 
 
-class UnitsReducer extends ImmerReducer<typeof unitsState> {
+class UnitsReducer extends ImmerReducer<Units> {
 
-  setValue(country: CountryName, type: ValuesType, unit: UnitType, key: string, attribute: ValueType, value: number) {
-    return this.state.updateIn([country, unit], (unit: UnitDefinition) => (
-      addValues(unit, type, key, [[attribute, value]])
-    ))
+  setValue(country: CountryName, values_type: ValuesType, type: UnitType, key: string, attribute: ValueType, value: number) {
+    this.draftState[country][type] = addValues(this.state[country][type], values_type, key, [[attribute, value]])
   }
 
   deleteUnit(country: CountryName, type: UnitType) {
-    return this.state.update(country, value => value.delete(type))
+    delete this.draftState[country][type]
   }
 
   addUnit(country: CountryName, mode: DefinitionType, type: UnitType) {
-    return this.state.setIn([country, type], { type, mode, image: '' })
+    this.draftState[country][type] = { type, mode, image: '', can_assault: false, requirements: '' }
   }
 
-  changeType(country: CountryName, old_type: UnitType, new_type: UnitType) {
-    return this.state.setIn([country, new_type], { ...this.state.getIn([country, old_type]), type: new_type }).deleteIn([country, old_type])
+  changeType(country: CountryName, old_type: UnitType, type: UnitType) {
+    delete Object.assign(this.draftState[country], {[type]: this.draftState[country][old_type] })[old_type]
   }
 
   changeImage(country: CountryName, type: UnitType, image: string) {
-    return this.state.updateIn([country, type], unit => ({ ...unit, image }))
+    this.draftState[country][type].image = image
   }
 
   changeMode(country: CountryName, type: UnitType, mode: DefinitionType) {
-    return this.state.updateIn([country, type], unit => ({ ...unit, mode }))
+    this.draftState[country][type].mode = mode
   }
 
   createCountry(country: CountryName, source_country?: CountryName) {
-    return this.state.set(country, this.state.get(source_country!, getDefaultUnits()))
+    this.draftState[country] = objGet(this.state, source_country, getDefaultUnits())
   }
 
   deleteCountry(country: CountryName) {
-    return this.state.delete(country)
+    delete this.draftState[country]
   }
 
   changeCountryName(old_country: CountryName, country: CountryName) {
-    return this.state.mapKeys(key => key === old_country ? country : key)
+    delete Object.assign(this.draftState, {[country]: this.draftState[old_country] })[old_country]
   }
 
   enableModifiers(country: CountryName, key: string, modifiers: List<Modifier>) {
-    let next = this.state.get(country)!
-    if (!next)
-      return
-    next = next.map((unit, type) => {
+    const next = map(this.state[country], (unit, type) => {
       const values = modifiers.filter(value => value.target === type)
       const base_values = values.filter(value => value.type !== ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
       const modifier_values = values.filter(value => value.type === ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
       return regenerateValues(regenerateValues(unit, ValuesType.Base, key, base_values), ValuesType.Modifier, key, modifier_values)
     })
-    return this.state.set(country, next)
+    this.draftState[country] = next
   }
 
   clearModifiers(country: CountryName, key: string) {
-    let next = this.state.get(country)!
-    if (!next)
-      return
-    next = next.map(unit => clearValues(clearValues(unit, ValuesType.Base, key), ValuesType.Modifier, key))
-    return this.state.set(country, next)
+    const next = map(this.state[country], unit => clearValues(clearValues(unit, ValuesType.Base, key), ValuesType.Modifier, key))
+    this.draftState[country] = next
   }
 }
 
-class GlobalStatsReducer extends ImmerReducer<typeof globalStatsState> {
+class GlobalStatsReducer extends ImmerReducer<GlobalStats> {
 
   setGlobalValue(country: CountryName, mode: DefinitionType.Land | DefinitionType.Naval, type: ValuesType, key: string, attribute: ValueType, value: number) {
     this.draftState[country][mode] = addValues(this.state[country][mode], type, key, [[attribute, value]])
@@ -95,7 +90,7 @@ class GlobalStatsReducer extends ImmerReducer<typeof globalStatsState> {
   }
 
   changeCountryName(old_country: CountryName, country: CountryName) {
-    delete Object.assign(this.draftState, {[country]: this.state[old_country] })[old_country]
+    delete Object.assign(this.draftState, {[country]: this.draftState[old_country] })[old_country]
   }
 
   enableModifiers(country: CountryName, key: string, modifiers: List<Modifier>) {

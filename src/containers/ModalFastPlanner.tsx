@@ -39,8 +39,8 @@ class ModalFastPlanner extends Component<IProps, IState> {
     let base_units_d = this.props.base_units_d
     const types_a = this.props.types_a
     const types_d = this.props.types_d
-    this.originals_a = types_a.reduce((map, value) => map.set(value, this.countUnits(base_units_a.reserve, value)), Map<UnitType, number>())
-    this.originals_d = types_d.reduce((map, value) => map.set(value, this.countUnits(base_units_d.reserve, value)), Map<UnitType, number>())
+    this.originals_a = Array.from(types_a).reduce((map, value) => map.set(value, this.countUnits(base_units_a.reserve, value)), Map<UnitType, number>())
+    this.originals_d = Array.from(types_d).reduce((map, value) => map.set(value, this.countUnits(base_units_d.reserve, value)), Map<UnitType, number>())
     // Current changes to the reserve must alse be applied.
     base_units_a = { ...base_units_a, reserve: this.editReserve(base_units_a.reserve, this.state.changes_a, this.originals_a) }
     base_units_d = { ...base_units_d, reserve: this.editReserve(base_units_d.reserve, this.state.changes_d, this.originals_d) }

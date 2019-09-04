@@ -3,7 +3,7 @@ import { CombatParameter } from './actions'
 import { getDefaultLandSettings, getDefaultNavalSettings } from './data'
 import { CountryName, createCountry, deleteCountry, changeCountryName } from '../countries'
 import { DefinitionType, Mode } from '../../base_definition'
-import { ObjSet, objHas } from '../../utils'
+import { ObjSet, has } from '../../utils'
 
 export type Settings = { [key in CombatParameter]: number }
 
@@ -51,7 +51,7 @@ class SettingsReducer extends ImmerReducer<typeof settingsState> {
   }
 
   toggleAccordion(key: string) {
-    if (objHas(this.state.accordions, key))
+    if (has(this.state.accordions, key))
       delete this.draftState.accordions[key]
     else
       this.draftState.accordions[key] = true

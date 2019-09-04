@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { OrderedSet, List } from 'immutable'
+import { List } from 'immutable'
 import { Container, Image, Table } from 'semantic-ui-react'
 
 import { sumList, round } from '../utils'
@@ -27,7 +27,7 @@ class Stats extends Component<IProps> {
     )
   }
 
-  renderArmy = (side: Side, units: Units, unit_types: OrderedSet<UnitType>): JSX.Element => {
+  renderArmy = (side: Side, units: Units, unit_types: Set<UnitType>): JSX.Element => {
     return (
       <Table celled selectable unstackable key={side}>
         <Table.Header>
@@ -51,7 +51,7 @@ class Stats extends Component<IProps> {
         </Table.Header>
         <Table.Body>
           {
-            unit_types.map(type => this.renderRow(units, type))
+            Array.from(unit_types).map(type => this.renderRow(units, type))
           }
         </Table.Body>
       </Table>

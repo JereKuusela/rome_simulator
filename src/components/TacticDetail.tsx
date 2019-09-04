@@ -1,17 +1,18 @@
 import React, { Component } from 'react'
 import { Map, OrderedSet } from 'immutable'
 import { Table, Input, Image, Dropdown } from 'semantic-ui-react'
-import { UnitType, UnitDefinition } from '../store/units'
+import { UnitType, Units } from '../store/units'
 import { TacticDefinition, ValueType, TacticType, TacticCalc } from '../store/tactics'
-import { getBaseValue, explainShort, getImage, DefinitionType, calculateValue } from '../base_definition'
+import { getBaseValue, explainShort, getImage, DefinitionType, calculateValue, getImages } from '../base_definition'
 import { renderImages } from './utils'
-import { toSignedPercent, toPercent } from '../formatters';
+import { toSignedPercent, toPercent } from '../formatters'
+import { toArr } from '../utils'
 
 interface IProps {
   readonly tactic_types: OrderedSet<TacticType>
   readonly tactics: Map<TacticType, TacticDefinition>
-  readonly unit_types: OrderedSet<UnitType>
-  readonly units: Map<any, Map<UnitType, UnitDefinition>>
+  readonly unit_types: Set<UnitType>
+  readonly units: Units
   readonly custom_value_key: string
   readonly tactic: TacticDefinition
   readonly onCustomBaseValueChange: (type: TacticType, key: string, attribute: ValueType, value: number) => void
@@ -109,23 +110,23 @@ export default class TacticDetail extends Component<IProps> {
             <Table.Cell />
           </Table.Row>
           {
-            this.props.unit_types.map(type => {
-              const images = this.props.units.filter(value => value.get(type)).map(value => getImage(value.get(type))).toOrderedSet()
+            Array.from(this.props.unit_types).map(type => {
+              const images = getImages(toArr(this.props.units), type)
               return this.renderRow(tactic, type, false, images)
             })
           }
           {
-            this.props.tactic_types.map(value => this.renderRow(tactic, value, true, OrderedSet<string>().add(getImage(this.props.tactics.get(value)))))
+            this.props.tactic_types.map(value => this.renderRow(tactic, value, true, new Set([getImage(this.props.tactics.get(value))])))
           }
           {
-            this.attributes.map(value => this.renderRow(tactic, value, true, OrderedSet<string>().add(getImage(undefined))))
+            this.attributes.map(value => this.renderRow(tactic, value, true, new Set([getImage(undefined)])))
           }
         </Table.Body>
       </Table>
     )
   }
 
-  renderRow = (tactic: TacticDefinition, attribute: ValueType, relative: boolean, images: OrderedSet<string>): JSX.Element => {
+  renderRow = (tactic: TacticDefinition, attribute: ValueType, relative: boolean, images: Set<string>): JSX.Element => {
     const base_value = getBaseValue(tactic, attribute, this.props.custom_value_key)
     const value = calculateValue(tactic, attribute)
 

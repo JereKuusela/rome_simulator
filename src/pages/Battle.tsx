@@ -66,7 +66,7 @@ class Battle extends Component<IProps, IState> {
       this.setState({ modal_army_unit_info: { country, unit: current_unit, base_unit } })
   }
 
-  openTerrainModal = (index: number): void => this.setState({ modal_terrain_info: { index, location: this.props.terrains.get(this.props.selected_terrains.get(index)!)!.location } })
+  openTerrainModal = (index: number): void => this.setState({ modal_terrain_info: { index, location: this.props.terrains[this.props.selected_terrains.get(index)!].location } })
 
   openTacticModal = (name: CountryName, counter?: TacticType): void => this.setState({ modal_tactic_info: { country: name, counter } })
 
@@ -195,7 +195,7 @@ class Battle extends Component<IProps, IState> {
                 </Table.Header>
                 <Table.Body>
                   {
-                    this.props.selected_terrains.map((terrain, index) => this.renderTerrain(this.props.terrains.get(terrain)!, index))
+                    this.props.selected_terrains.map((terrain, index) => this.renderTerrain(this.props.terrains[terrain], index))
                   }
                 </Table.Body>
               </Table>
@@ -299,7 +299,7 @@ class Battle extends Component<IProps, IState> {
   }
 
   renderRoll = (type: Side, roll: number, is_random: boolean, general: number, opposing_general: number): JSX.Element => {
-    const terrain_effect = type === Side.Attacker ? calculateRollModifierFromTerrains(this.props.selected_terrains.map(value => this.props.terrains.get(value))) : 0
+    const terrain_effect = type === Side.Attacker ? calculateRollModifierFromTerrains(this.props.selected_terrains.map(value => this.props.terrains[value])) : 0
     const general_effect = calculateRollModifierFromGenerals(general, opposing_general)
     const total = terrain_effect + general_effect + roll
     const base_damage = calculateBaseDamage(total, this.props.combat)
@@ -451,7 +451,7 @@ class Battle extends Component<IProps, IState> {
 
   renderRowTypes = (type: Side, army: Army): JSX.Element => {
     const country = army.name
-    const units = this.props.units.get(country)
+    const units = this.props.units[country]
     const row_types = army.row_types
     return (
       <Table.Row key={type}>
@@ -459,13 +459,13 @@ class Battle extends Component<IProps, IState> {
           {type}
         </Table.Cell>
         <Table.Cell selectable onClick={() => this.openRowModal(country, country, RowType.Front)}>
-          <Image src={getImage(units && units.get(row_types.get(RowType.Front)!))} avatar />
+          <Image src={getImage(units && units[row_types.get(RowType.Front)!])} avatar />
         </Table.Cell>
         <Table.Cell selectable onClick={() => this.openRowModal(country, country, RowType.Back)}>
-          <Image src={getImage(units && units.get(row_types.get(RowType.Back)!))} avatar />
+          <Image src={getImage(units && units[row_types.get(RowType.Back)!])} avatar />
         </Table.Cell>
         <Table.Cell selectable onClick={() => this.openRowModal(country, country, RowType.Flank)}>
-          <Image src={getImage(units && units.get(row_types.get(RowType.Flank)!))} avatar />
+          <Image src={getImage(units && units[row_types.get(RowType.Flank)!])} avatar />
         </Table.Cell>
         <Table.Cell collapsing>
           <Input size='mini' style={{ width: 100 }} type='number' value={army && army.flank_size} onChange={(_, data) => this.props.setFlankSize(this.props.mode, country, Number(data.value))} />
@@ -490,7 +490,7 @@ class Battle extends Component<IProps, IState> {
   }
 
   mergeAllValues = (name: CountryName, army: List<BaseUnit | undefined>): List<BaseUnit | undefined> => {
-    return army.map(value => value && mergeValues(mergeValues(this.props.units.getIn([name, value.type]), value), this.props.global_stats[name][this.props.mode]))
+    return army.map(value => value && mergeValues(mergeValues(this.props.units[name][value.type], value), this.props.global_stats[name][this.props.mode]))
   }
 }
 

@@ -1,8 +1,15 @@
-import { OrderedSet, OrderedMap, Map } from 'immutable'
 import React, { Component } from 'react'
 import { Image, Table, List, Icon } from 'semantic-ui-react'
-import { UnitType, UnitDefinition, UnitCalc, ValueType } from '../store/units'
+import { UnitType, UnitDefinition, UnitCalc, ValueType, Units } from '../store/units'
 import { TerrainType } from '../store/terrains'
+import { getImage, calculateValue, calculateBase, calculateModifier, calculateLoss, mergeValues, DefinitionType } from '../base_definition'
+import { toSignedPercent, toNumber, hideZero, toPercent, toManpower } from '../formatters'
+import { CountryName } from '../store/countries'
+import { filterUnitDefinitions } from '../army_utils'
+import StyledNumber from './StyledNumber'
+import VersusList from './VersusList'
+import { toArr } from '../utils'
+
 import IconDiscipline from '../images/discipline.png'
 import IconOffense from '../images/offense.png'
 import IconDefense from '../images/defense.png'
@@ -10,19 +17,13 @@ import IconManpower from '../images/manpower.png'
 import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
 import IconAttrition from '../images/attrition.png'
-import { getImage, calculateValue, calculateBase, calculateModifier, calculateLoss, mergeValues, DefinitionType } from '../base_definition'
-import { toSignedPercent, toNumber, hideZero, toPercent, toManpower } from '../formatters'
-import { CountryName } from '../store/countries'
-import { filterUnitDefinitions } from '../army_utils'
-import StyledNumber from './StyledNumber'
-import VersusList from './VersusList'
 
 interface IProps {
   readonly mode: DefinitionType
   readonly country: CountryName
-  readonly units: Map<CountryName, OrderedMap<UnitType, UnitDefinition>>
-  readonly unit_types: OrderedSet<UnitType>
-  readonly terrains: OrderedSet<TerrainType>
+  readonly units: Units
+  readonly unit_types: Set<UnitType>
+  readonly terrains: Set<TerrainType>
   readonly global_stats: UnitDefinition
   readonly onRowClick: (unit: UnitDefinition) => void
 }
@@ -31,7 +32,7 @@ interface IProps {
 export default class UnitDefinitions extends Component<IProps> {
 
   render(): JSX.Element {
-    const units = filterUnitDefinitions(this.props.mode, this.props.units.get(this.props.country)).toList()
+    const units = toArr(filterUnitDefinitions(this.props.mode, this.props.units[this.props.country]))
     return (
       <Table celled selectable unstackable>
         <Table.Header>
@@ -190,7 +191,7 @@ export default class UnitDefinitions extends Component<IProps> {
         <Table.Cell>
           <List>
             {
-              this.props.terrains.filter(type => calculateValue(unit, type) !== 0).map(type => (
+              Array.from(this.props.terrains).filter(type => calculateValue(unit, type) !== 0).map(type => (
                 <List.Item key={type}>
                   {type + ': '}
                   <StyledNumber
@@ -265,7 +266,7 @@ export default class UnitDefinitions extends Component<IProps> {
         <Table.Cell>
           <List>
             {
-              this.props.terrains.filter(type => calculateValue(unit, type) !== 0.0).map(type => (
+              Array.from(this.props.terrains).filter(type => calculateValue(unit, type) !== 0.0).map(type => (
                 <List.Item key={type}>
                   {type + ': ' + toSignedPercent(calculateValue(unit, type))}
                 </List.Item>

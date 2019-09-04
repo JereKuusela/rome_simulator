@@ -32,7 +32,7 @@ describe('initial deployment', () => {
     info.army_d = getDefaultArmy(DefinitionType.Land)
     info.army_a = { ...info.army_a, row_types }
     info.army_d = { ...info.army_d, row_types }
-    settings = getSettings(DefinitionType.Land)
+    settings = getDefaultLandSettings()
   })
   const getUnit = (type: UnitType) => units.get(type) as any as BaseUnit
   const setAttacker = (types: UnitType[]) => (info.army_a = { ...info.army_a, reserve: info.army_a.reserve.merge(types.map(type => getUnit(type))) })
@@ -49,7 +49,7 @@ describe('initial deployment', () => {
   const nextIndex = (index: number, half: number) => index < half ? index + 2 * (half - index) : index - 2 * (index - half) - 1
 
   const verify = (types: UnitType[]) => {
-    const half = Math.floor(settings.get(CombatParameter.CombatWidth)! / 2.0)
+    const half = Math.floor(settings[CombatParameter.CombatWidth])
     let index = half
     for (const type of types) {
       verifyType(info.army_a.frontline.get(index), type, ' at index ' + index)
@@ -161,7 +161,7 @@ describe('initial deployment', () => {
     expect(info.army_a.reserve.size).toEqual(3)
   })
   it('works with reduce combat width', () => {
-    settings = settings.set(CombatParameter.CombatWidth, 5)
+    settings[CombatParameter.CombatWidth] = 5
     setAttacker([UnitType.HorseArchers, UnitType.HorseArchers, UnitType.HorseArchers])
     fillAttacker(UnitType.Archers)
     fillDefender(UnitType.Archers)

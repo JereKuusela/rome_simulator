@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Map } from 'immutable'
+import { Map, fromJS } from 'immutable'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { AppState } from '../store/'
@@ -10,6 +10,7 @@ import { DefinitionType, calculateValue } from '../base_definition'
 import { filterTerrains } from '../store/utils'
 import StyledNumber from '../components/StyledNumber'
 import { addSign } from '../formatters'
+import { toArr, filter, map } from '../utils'
 
 export interface ModalInfo {
   index: number
@@ -20,8 +21,8 @@ class ModalTerrainSelector extends Component<IProps> {
   render(): JSX.Element | null {
     if (!this.props.info)
       return null
-    let attributes = Map<string, Map<TerrainType, JSX.Element>>()
-    attributes = attributes.set('to attacker\'s roll', this.props.terrains.filter(value => calculateValue(value, TerrainCalc.Roll)).map(value => (
+    let attributes = Map<string, { [key in TerrainType]: JSX.Element }>()
+    attributes = attributes.set('to attacker\'s roll', map(filter(this.props.terrains, value => calculateValue(value, TerrainCalc.Roll)), value => (
       <StyledNumber
         value={calculateValue(value, TerrainCalc.Roll)}
         formatter={addSign}
@@ -33,8 +34,8 @@ class ModalTerrainSelector extends Component<IProps> {
           <ItemSelector
             onClose={this.props.onClose}
             onSelection={this.selectTerrain}
-            items={this.props.terrains.toList().filter(terrain => this.props.info && (!this.props.info.location || terrain.location === this.props.info.location))}
-            attributes={attributes}
+            items={fromJS(toArr(this.props.terrains).filter(terrain => this.props.info && (!this.props.info.location || terrain.location === this.props.info.location)))}
+            attributes={fromJS(attributes)}
           />
         </Modal.Content>
       </Modal>

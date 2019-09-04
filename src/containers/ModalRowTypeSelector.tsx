@@ -9,6 +9,8 @@ import ItemSelector from '../components/ItemSelector'
 import ItemRemover from '../components/ItemRemover'
 import { CountryName } from '../store/countries'
 import { filterUnitDefinitions } from '../army_utils'
+import { fromJS } from 'immutable'
+import { toArr } from '../utils'
 
 export interface ModalInfo {
   name: CountryName
@@ -20,7 +22,7 @@ class ModalRowTypeSelector extends Component<IProps> {
   render(): JSX.Element | null {
     if (!this.props.info)
       return null
-    const units = filterUnitDefinitions(this.props.mode, this.props.units.get(this.props.info.country))
+    const units = filterUnitDefinitions(this.props.mode, this.props.units[this.props.info.country])
     return (
       <Modal basic onClose={this.props.onClose} open centered={false}>
         <Modal.Content>
@@ -31,7 +33,7 @@ class ModalRowTypeSelector extends Component<IProps> {
           <ItemSelector
             onClose={this.props.onClose}
             onSelection={this.selectUnit}
-            items={units.toList()}
+            items={fromJS(toArr(units))}
           />
         </Modal.Content>
       </Modal>

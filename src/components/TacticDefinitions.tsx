@@ -1,19 +1,18 @@
-import { OrderedSet, Map, OrderedMap } from 'immutable'
+import { OrderedMap } from 'immutable'
 import React, { Component } from 'react'
 import { Image, Table, List, Button } from 'semantic-ui-react'
-import { UnitType, UnitDefinition } from '../store/units'
+import { UnitType, Units } from '../store/units'
 import { TacticDefinition, TacticType, TacticCalc } from '../store/tactics'
 import { calculateValue, getImage } from '../base_definition'
 import { toSignedPercent } from '../formatters'
 import ValueModal from './ValueModal'
-import { CountryName } from '../store/countries'
 import VersusList from './VersusList'
 import StyledNumber from './StyledNumber'
 
 interface IProps {
   readonly tactics: OrderedMap<TacticType, TacticDefinition>
-  readonly units: Map<CountryName, OrderedMap<UnitType, UnitDefinition>>
-  readonly unit_types: OrderedSet<UnitType>
+  readonly units: Units
+  readonly unit_types: Set<UnitType>
   readonly onRowClick: (type: TacticType) => void
   readonly onCreateNew: (type: TacticType) => void
 }

@@ -8,6 +8,8 @@ import { CountryName } from '../store/countries'
 import { DefinitionType } from '../base_definition'
 import ItemSelector from '../components/ItemSelector'
 import { filterUnitDefinitions, getNextId } from '../army_utils'
+import { fromJS } from 'immutable'
+import { toArr } from '../utils'
 
 export interface ModalInfo {
   name: CountryName
@@ -20,14 +22,14 @@ class ModalUnitSelector extends Component<IProps> {
   render(): JSX.Element | null {
     if (!this.props.info)
       return null
-    const units = filterUnitDefinitions(this.props.mode, this.props.units.get(this.props.info.country))
+    const units = filterUnitDefinitions(this.props.mode, this.props.units[this.props.info.country])
     return (
       <Modal basic onClose={this.props.onClose} open centered={false}>
         <Modal.Content>
           <ItemSelector
             onClose={this.props.onClose}
             onSelection={this.selectUnit}
-            items={units.toList()}
+            items={fromJS(toArr(units))}
           />
         </Modal.Content>
       </Modal>
@@ -36,7 +38,7 @@ class ModalUnitSelector extends Component<IProps> {
 
   selectUnit = (unit: UnitType | undefined): void => (
     this.props.info &&
-    this.props.selectUnit(this.props.mode, this.props.info.name, this.props.info.type, this.props.info.index, unit ? { id: getNextId(), type: this.props.units.getIn([this.props.info.name, unit]).type } : undefined)
+    this.props.selectUnit(this.props.mode, this.props.info.name, this.props.info.type, this.props.info.index, unit ? { id: getNextId(), type: this.props.units[this.props.info.name][unit].type } : undefined)
   )
 }
 

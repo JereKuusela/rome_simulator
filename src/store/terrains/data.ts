@@ -3,6 +3,7 @@ import { TerrainType, LocationType, TerrainCalc, TerrainDefinition, ValueType } 
 import { addValues, ValuesType, DefinitionType } from '../../base_definition'
 import * as data from './terrains.json'
 import IconTerrain from '../../images/terrain.png'
+import { toObj } from '../../utils';
 
 const createTerrainFromJson = (data: TerrainData): TerrainDefinition => {
   let terrain: TerrainDefinition = {type: data.type as TerrainType, mode: data.mode as DefinitionType, image: IconTerrain, location: data.location as LocationType}
@@ -12,14 +13,9 @@ const createTerrainFromJson = (data: TerrainData): TerrainDefinition => {
   return addValues(terrain, ValuesType.Base, terrain.type, base_values)
 }
 
-const initializeDefaultTerrains = (): OrderedMap<TerrainType, TerrainDefinition> => {
-  let map = OrderedMap<TerrainType, TerrainDefinition>()
-  for (const value of data.terrain) {
-    const terrain = createTerrainFromJson(value)
-    map = map.set(terrain.type, terrain)
-  }
-  return map
-}
+export type TerrainDefinitions = { [key in TerrainType]: TerrainDefinition }
+
+const initializeDefaultTerrains = (): TerrainDefinitions => toObj(data.terrain.map(createTerrainFromJson), unit => unit.type)
 
 const defaultTerrains = initializeDefaultTerrains()
 

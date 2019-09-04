@@ -83,20 +83,55 @@ export function objGet<K extends string, V>(object: { [key in K]: V}, key: K | u
 export function objGet<K extends string, V>(object: { [key in K]: V}, key: K | undefined, initial: V | undefined): V
 export function objGet<K extends string, V>(object: { [key in K]: V}, key: K | undefined, initial?: V)
 {
-  return key !== undefined && objHas(object, key) ? object[key] : initial
+  return key !== undefined && has(object, key) ? object[key] : initial
 }
 
-const objKeys = <K extends string> (object: { [key in K]: any}) => Object.keys(object) as K[]
-const objEntries = <K extends string, V> (object: { [key in K]: V}) => Object.entries(object) as [K, V][]
+export const keys = <K extends string> (object: { [key in K]: any}) => Object.keys(object) as K[]
+const entries = <K extends string, V> (object: { [key in K]: V}) => Object.entries(object) as [K, V][]
+const values = <V> (object: { [key: string]: V}) => Object.values(object) as V[]
 
-export const objMap = <K extends string, V, R>(object: { [key in K]: V}, callback: (item: V, key: string) => R): { [key in K]: R} => Object.assign({}, ...objKeys(object).map(k => ({ [k]: callback(object[k], k) })))
+export const map = <K extends string, V, R>(object: { [key in K]: V}, callback: (item: V, key: K) => R): { [key in K]: R} => Object.assign({}, ...keys(object).map(k => ({ [k]: callback(object[k], k) })))
 
-export const objFilter = <K extends string, V>(object: { [key in K]: V}, callback?: (item: V, key: string) => any): { [key in K]: V} => Object.assign({}, ...objKeys(object).filter(k => callback ? callback(object[k], k) : object[k]).map(k => ({ [k]: object[k] })))
+export const filter = <K extends string, V>(object: { [key in K]: V}, callback?: (item: V, key: K) => any): { [key in K]: V} => Object.assign({}, ...keys(object).filter(k => callback ? callback(object[k], k) : object[k]).map(k => ({ [k]: object[k] })))
+export const filterKeys = <K extends string, V>(object: { [key in K]: V}, callback?: (key: K) => any): { [key in K]: V} => Object.assign({}, ...keys(object).filter(k => callback ? callback(k) : object[k]).map(k => ({ [k]: object[k] })))
 
-export const objToList = <K extends string, V, R>(object: { [key in K]: V}, callback: (value: V, key: K) => R): R[] => objEntries(object).map(([key, value]) => callback(value, key))
 
-export const objHas = <K extends string>(object: { [key in K]: any}, key: K ): boolean => object.hasOwnProperty(key)
+export function toArr<K extends string, V>(object: { [key in K]: V}): V[]
+export function toArr<K extends string, V, R>(object: { [key in K]: V}, callback: (value: V, key: K) => R): R[]
+export function toArr<K extends string, V, R>(object: { [key in K]: V}, callback?: (value: V, key: K) => R): (R | V)[]
+{
+  return entries(object).map(([key, value]) => callback ? callback(value, key) : value)
+}
 
-export interface ObjSet {
-  [key: string]: boolean
+export function mapKeys<K extends string>(object: { [key in K]: any}): K[]
+export function mapKeys<K extends string, R>(object: { [key in K]: any}, callback: (key: K) => R): R[]
+export function mapKeys<K extends string, R>(object: { [key in K]: any}, callback?: (key: K) => R): (K | R)[]
+{
+  return keys(object).map(key => callback ? callback(key) : key)
+}
+
+export function reduce<V>(object: { [key: string]: V }, callback: (previous: V, current: V) => V): V
+export function reduce<V, R>(object: { [key: string]: V }, callback: (previous: R, current: V) => R, initial: R): R
+export function reduce<V, R>(object: { [key: string]: V }, callback: (previous: R, current: V) => R, initial?: R): R
+{
+  return values(object).reduce(callback, initial as R)
+}
+
+export function reduceKeys<K extends string>(object: { [key in K]: any }, callback: (previous: K, current: K) => K): K
+export function reduceKeys<K extends string, R>(object: { [key in K]: any }, callback: (previous: R, current: K) => R, initial: R): R
+export function reduceKeys<K extends string, R>(object: { [key in K]: any }, callback: (previous: R, current: K) => R, initial?: R): R
+{
+  return keys(object).reduce(callback, initial as R)
+}
+
+export const toObj = <K extends string, V>(arr: V[], key: (value: V) => K): { [key in K]: V} => Object.assign({}, ...arr.map(v => ({ [key(v)]: v })))
+
+export const toSet = <V, R extends string>(object: { [key: string]: V}, key: (value: V) => R): { [key in R]: true } => Object.assign({}, ...values(object).map(v => ({ [key(v)]: true })))
+
+export const merge = <K extends string, V>(object1: { [key in K]: V }, object2: { [key in K]: V }): { [key in K]: V} => ({ ...object1, ...object2 })
+
+export const has = <K extends string>(object: { [key in K]: any}, key: K ): boolean => object.hasOwnProperty(key)
+
+export type ObjSet<K extends string = string> = {
+  [key in K]: true
 }

@@ -38,6 +38,8 @@ export interface BaseValuesDefinition<T, S> {
 
 const initValues = <A>() => Map<A, OrderedMap<string, number>>()
 
+export const getImages = <K extends string>(definitions: { [key in K]: BaseDefinition<K, any>}[], type: K): Set<string> => new Set(definitions.filter(value => value[type]).map(value => getImage(value[type])))
+
 /**
  * Returns the image of a definition while handling missing cases.
  * Question mark is returned for existing definitions without an image.

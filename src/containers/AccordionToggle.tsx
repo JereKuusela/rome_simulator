@@ -3,20 +3,20 @@ import { connect } from 'react-redux'
 import { Accordion, Icon, Header } from 'semantic-ui-react'
 import { AppState } from '../store/'
 import { toggleAccordion } from '../store/settings'
-import { objHas } from '../utils'
+import { has } from '../utils'
 
 class AccordionToggle extends Component<IProps> {
 
   render(): JSX.Element {
     return (
       <Accordion>
-        <Accordion.Title active={objHas(this.props.accordions, this.props.identifier)} onClick={() => this.props.toggleAccordion(this.props.identifier)}>
+        <Accordion.Title active={has(this.props.accordions, this.props.identifier)} onClick={() => this.props.toggleAccordion(this.props.identifier)}>
           <Header>
             <Icon name='dropdown' />
             {this.props.title}
           </Header>
         </Accordion.Title>
-        <Accordion.Content active={objHas(this.props.accordions, this.props.identifier)}>
+        <Accordion.Content active={has(this.props.accordions, this.props.identifier)}>
           {
             this.props.children
           }

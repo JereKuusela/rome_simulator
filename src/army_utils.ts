@@ -1,9 +1,11 @@
-import { List, OrderedMap, Map } from 'immutable'
+import { List } from 'immutable'
 import { Army } from './store/utils';
-import { BaseUnit, UnitDefinition, UnitType, Unit, UnitDefinitions } from './store/units/actions'
+import { BaseUnit, UnitDefinition, Unit } from './store/units/actions'
 import { mergeValues, DefinitionType } from './base_definition'
 import { getDefaultUnits } from './store/units/data'
 import { BaseUnits, Units } from './store/battle'
+import { UnitDefinitions } from './store/units'
+import { filter } from './utils';
 
 /**
  * Merges units to their definitions resulting in current units.
@@ -11,7 +13,7 @@ import { BaseUnits, Units } from './store/battle'
  * @param army 
  */
 export const mergeArmy = (participant: Army, army: List<BaseUnit | undefined>): List<Unit | undefined> => {
-  return army.map(value => value && mergeValues(mergeValues(participant.units.get(value.type), value), participant.global))
+  return army.map(value => value && mergeValues(mergeValues(participant.units[value.type], value), participant.global))
 }
 
 export const getFrontline = (participant: Army): List<Unit | undefined> => {
@@ -26,8 +28,8 @@ export const getDefeated = (participant: Army): List<Unit> => {
   return participant.defeated.map(value => mergeUnits(participant.units, participant.global, value))
 }
 
-export const mergeUnits = (units: Map<UnitType, UnitDefinition>, global: UnitDefinition, unit: BaseUnit): Unit => (
-  mergeValues(mergeValues(units.get(unit.type), unit), global) as Unit
+export const mergeUnits = (units: UnitDefinitions, global: UnitDefinition, unit: BaseUnit): Unit => (
+  mergeValues(mergeValues(units[unit.type], unit), global) as Unit
 )
 
 
@@ -37,9 +39,9 @@ export const mergeUnits = (units: Map<UnitType, UnitDefinition>, global: UnitDef
  * @param definitions Definitions to merge.
  */
 export const mergeBaseUnitsWithDefinitions = (units: BaseUnits, definitions: UnitDefinitions): Units => ({
-  frontline: units.frontline.map(value => value && mergeValues(definitions.get(value.type), value)),
-  reserve: units.reserve.map(value => value && mergeValues(definitions.get(value.type), value)),
-  defeated: units.defeated.map(value => value && mergeValues(definitions.get(value.type), value))
+  frontline: units.frontline.map(value => value && mergeValues(definitions[value.type], value)),
+  reserve: units.reserve.map(value => value && mergeValues(definitions[value.type], value)),
+  defeated: units.defeated.map(value => value && mergeValues(definitions[value.type], value))
 })
 
 /**
@@ -48,13 +50,13 @@ export const mergeBaseUnitsWithDefinitions = (units: BaseUnits, definitions: Uni
 export const isIncludedInMode = (mode: DefinitionType, definition: { mode: DefinitionType }) => definition.mode === DefinitionType.Global || definition.mode === mode
 
 /**
- * Returns unit defnitions for current battle mode.
+ * Returns unit definitions for current battle mode.
  * @param mode
  * @param definitions 
  */
-export const filterUnitDefinitions = (mode: DefinitionType, definitions?: OrderedMap<UnitType, UnitDefinition>): OrderedMap<UnitType, UnitDefinition> => {
+export const filterUnitDefinitions = (mode: DefinitionType, definitions?: UnitDefinitions): UnitDefinitions => {
   definitions = definitions || getDefaultUnits()
-  return definitions.filter(unit => isIncludedInMode(mode, unit))
+  return filter(definitions, unit => isIncludedInMode(mode, unit))
 }
 
 let unit_id = 0

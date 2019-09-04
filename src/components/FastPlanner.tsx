@@ -1,15 +1,16 @@
 import React, { Component } from 'react'
-import { Map, OrderedSet } from 'immutable'
+import { Map } from 'immutable'
 import { Table, Input } from 'semantic-ui-react'
-import { UnitType, UnitDefinition } from '../store/units'
+import { UnitType, Units } from '../store/units'
 import { renderImages } from './utils'
-import { getImage } from '../base_definition'
+import { getImages } from '../base_definition'
 import { Side } from '../store/battle';
+import { toArr } from '../utils'
 
 interface IProps {
-  readonly units: Map<any, Map<UnitType, UnitDefinition>>
-  readonly types_a: OrderedSet<UnitType>
-  readonly types_d: OrderedSet<UnitType>
+  readonly units: Units
+  readonly types_a: Set<UnitType>
+  readonly types_d: Set<UnitType>
   readonly reserve_a: Map<UnitType, number>
   readonly reserve_d: Map<UnitType, number>
   readonly onValueChange: (side: Side, unit: UnitType, value: number) => void
@@ -24,7 +25,7 @@ export default class FastPlanner extends Component<IProps> {
   readonly headers = ['Units in reserve', 'Attacker', 'Defender']
 
   render(): JSX.Element {
-    const types = this.props.types_a.merge(this.props.types_d)
+    const types = new Set([...this.props.types_a, ...this.props.types_d])
     return (
       <Table celled unstackable attached={this.props.attached}>
         <Table.Header>
@@ -40,15 +41,15 @@ export default class FastPlanner extends Component<IProps> {
         </Table.Header>
         <Table.Body>
           {
-            types.map(value => this.renderRow(value))
+            Array.from(types).map(this.renderRow)
           }
         </Table.Body>
       </Table>
     )
   }
 
-  renderImages = (type: UnitType): OrderedSet<JSX.Element> => {
-    const images = this.props.units.filter(value => value.get(type)).map(value => getImage(value.get(type))).toOrderedSet()
+  renderImages = (type: UnitType): JSX.Element[] => {
+    const images = getImages(toArr(this.props.units), type)
     return renderImages(images)
   }
 
@@ -60,7 +61,7 @@ export default class FastPlanner extends Component<IProps> {
       </Table.Cell>
       <Table.Cell width='5'>
         {
-          this.props.types_a.contains(type) ?
+          this.props.types_a.has(type) ?
             <Input
               type='number'
               size='mini'
@@ -73,7 +74,7 @@ export default class FastPlanner extends Component<IProps> {
       </Table.Cell>
       <Table.Cell width='5'>
         {
-          this.props.types_d.contains(type) ?
+          this.props.types_d.has(type) ?
             <Input
               type='number'
               size='mini'

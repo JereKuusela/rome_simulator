@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { DefinitionType } from '../base_definition'
 import { getSettings } from '../store/utils'
-import { objToList } from '../utils'
+import { toArr } from '../utils'
 
 class Settings extends Component<IProps> {
 
@@ -15,7 +15,7 @@ class Settings extends Component<IProps> {
         <Grid padded celled>
           <Grid.Row columns='2'>
             {
-              objToList(this.props.combat, (value, key) => {
+              toArr(this.props.combat, (value, key) => {
                 if (key === CombatParameter.FlankCriteriaAttribute || key === CombatParameter.FlankCriteriaSign
                   || key === CombatParameter.ReinforceMainAttribute || key === CombatParameter.ReinforceMainSign
                   || key === CombatParameter.ReinforceFlankAttribute || key === CombatParameter.ReinforceFlankSign)

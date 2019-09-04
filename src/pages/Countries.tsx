@@ -3,7 +3,7 @@ import { List as ImmutableList } from 'immutable'
 import { Container, Grid, Table, List, Input, Checkbox } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
-import { mapRange, toList, objGet, ObjSet, sumObj, objHas } from '../utils'
+import { mapRange, toList, objGet, ObjSet, sumObj, has } from '../utils'
 import { invalidateCountry } from '../store/battle'
 import {
   ModifierType, Modifier, Tradition, CultureType,
@@ -449,11 +449,11 @@ class Countries extends Component<IProps> {
     <Table.Cell
       disabled={disabled}
       key={key}
-      positive={objHas(selections, key)}
+      positive={has(selections, key)}
       selectable
       colSpan={width || 1}
       onClick={
-        objHas(selections, key)
+        has(selections, key)
           ? (clear ? clear : () => this.props.clearModifiers(this.props.selected_country, key))
           : (enable ? enable : () => this.props.enableModifiers(this.props.selected_country, key, modifiers))
       }

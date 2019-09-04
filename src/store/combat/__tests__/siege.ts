@@ -5,7 +5,7 @@ const percentile = require('percentile')
 describe('siege', () => {
   it('works', () => {
     const min = -5
-    const max = -10
+    const max = 10
     const iterations = 1000000
     const seed = createEntropy()[0]
     const engine = MersenneTwister19937.seed(seed)
@@ -55,7 +55,7 @@ describe('siege', () => {
           else if (modded == 1) // Disease
             diseases += 1
           // Status Quo
-          accumulation = Math.min(accumulation, 14)
+          accumulation = Math.min(accumulation, 11)
         }
         results.push(roll)
         total += roll

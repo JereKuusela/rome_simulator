@@ -8,11 +8,12 @@ import { CombatParameter } from '../../settings'
 import { verifyType } from './utils'
 import { CountryName } from '../../countries'
 import { getDefaultLandSettings } from '../../settings'
+import { map } from '../../../utils';
 
 describe('reinforcement', () => {
   const global_stats = getDefaultGlobal()[DefinitionType.Land]
-  const units = getDefaultUnits().map(unit => mergeValues(unit, global_stats))
-  const definitions = Map<CountryName, Map<UnitType, UnitDefinition>>().set(CountryName.Country1, units).set(CountryName.Country2, units)
+  const units = map(getDefaultUnits(), unit => mergeValues(unit, global_stats))
+  const definitions = { [CountryName.Country1]: units, [CountryName.Country2]: units }
   let settings = getDefaultLandSettings()
   const row_types = Map<RowType, UnitType>().set(RowType.Front, '' as UnitType).set(RowType.Back, '' as UnitType).set(RowType.Flank, '' as UnitType)
   const every_type = [UnitType.Archers, UnitType.CamelCavalry, UnitType.Chariots, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.HorseArchers, UnitType.LightCavalry, UnitType.LightInfantry, UnitType.WarElephants]
@@ -34,7 +35,7 @@ describe('reinforcement', () => {
     info.army_d = { ...info.army_d, row_types }
     settings = getDefaultLandSettings()
   })
-  const getUnit = (type: UnitType) => units.get(type) as any as BaseUnit
+  const getUnit = (type: UnitType) => units[type] as any as BaseUnit
   const setAttacker = (types: UnitType[]) => (info.army_a = { ...info.army_a, reserve: info.army_a.reserve.merge(types.map(type => getUnit(type))) })
   const setDefender = (types: UnitType[]) => (info.army_d = { ...info.army_d, reserve: info.army_d.reserve.merge(types.map(type => getUnit(type))) })
   const fillAttacker = (type: UnitType) => (info.army_a = { ...info.army_a, reserve: info.army_a.reserve.merge(Array(30).fill(type).map(type => getUnit(type))) })
@@ -49,7 +50,7 @@ describe('reinforcement', () => {
   const nextIndex = (index: number, half: number) => index < half ? index + 2 * (half - index) : index - 2 * (index - half) - 1
 
   const verify = (types: UnitType[]) => {
-    const half = Math.floor(settings.get(CombatParameter.CombatWidth)! / 2.0)
+    const half = Math.floor(settings[CombatParameter.CombatWidth])
     let index = half
     for (const type of types) {
       verifyType(info.army_a.frontline.get(index), type, ' at index ' + index)
@@ -158,7 +159,7 @@ describe('reinforcement', () => {
     expect(info.army_a.reserve.size).toEqual(3)
   })
   it('works with reduce combat width', () => {
-    settings = settings.set(CombatParameter.CombatWidth, 5)
+    settings[CombatParameter.CombatWidth] = 5
     setAttacker([UnitType.HorseArchers, UnitType.HorseArchers, UnitType.HorseArchers])
     fillAttacker(UnitType.Archers)
     fillDefender(UnitType.Archers)

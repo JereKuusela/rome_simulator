@@ -13,9 +13,7 @@ class ModalTerrainDetail extends Component<IProps> {
   render(): JSX.Element | null {
     if (this.props.terrain === null)
       return null
-    const terrain = this.props.terrains.get(this.props.terrain)
-    if (!terrain)
-      return null
+    const terrain = this.props.terrains[this.props.terrain]
     return (
       <TerrainDetail
         custom_value_key={CUSTOM_VALUE_KEY}

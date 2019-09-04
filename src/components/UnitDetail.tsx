@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { OrderedSet } from 'immutable'
 import { Table, Input, Dropdown } from 'semantic-ui-react'
 import { UnitType, Unit, UnitCalc, ValueType, valueToString } from '../store/units'
 import { TerrainType } from '../store/terrains'
@@ -11,9 +10,9 @@ interface IProps<T extends string> {
   readonly name: T
   readonly custom_value_key: string
   readonly unit: Unit
-  readonly unit_types: OrderedSet<UnitType>
+  readonly unit_types: Set<UnitType>
   readonly show_statistics: boolean
-  readonly terrain_types: OrderedSet<TerrainType>
+  readonly terrain_types: Set<TerrainType>
   readonly unit_types_as_dropdown?: boolean
   readonly onCustomBaseValueChange: (key: string, attribute: ValueType, value: number) => void
   readonly onCustomModifierValueChange: (key: string, attribute: ValueType, value: number) => void
@@ -41,7 +40,7 @@ export default class UnitDetail<T extends string> extends Component<IProps<T>> {
       >
         <Dropdown.Menu>
           {
-            this.props.unit_types && this.props.unit_types.map(key => (
+            Array.from(this.props.unit_types).map(key => (
               <Dropdown.Item value={key} text={key} key={key} active={type === key}
                 onClick={() => this.props.onTypeChange && this.props.onTypeChange(key)}
               />
@@ -154,10 +153,10 @@ export default class UnitDetail<T extends string> extends Component<IProps<T>> {
             this.attributes.map(value => this.renderRow(this.props.unit, value))
           }
           {
-            this.props.unit_types.map(value => this.renderRow(this.props.unit, value))
+            Array.from(this.props.unit_types).map(value => this.renderRow(this.props.unit, value))
           }
           {
-            this.props.terrain_types.map(value => this.renderRow(this.props.unit, value))
+            Array.from(this.props.terrain_types).map(value => this.renderRow(this.props.unit, value))
           }
         </Table.Body>
       </Table>

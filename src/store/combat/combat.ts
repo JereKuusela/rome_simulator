@@ -1,5 +1,5 @@
 import { List, Map } from 'immutable'
-import { BaseUnit, UnitDefinition, UnitCalc, UnitType } from '../units'
+import { BaseUnit, UnitCalc, UnitType, Units } from '../units'
 import { TerrainDefinition, TerrainCalc } from '../terrains'
 import { TacticDefinition, TacticCalc, TacticType } from '../tactics'
 import { RowType, BaseUnits } from '../battle'
@@ -12,8 +12,6 @@ type Frontline = List<BaseUnit | undefined>
 type Reserve = List<BaseUnit>
 type Defeated = List<BaseUnit>
 type Terrains = List<TerrainDefinition | undefined>
-type Definition = Map<UnitType, UnitDefinition>
-type Definitions = Map<CountryName, Definition>
 
 interface Loss {
   morale: number
@@ -44,7 +42,7 @@ export interface ParticipantState {
  * @param round Turn number to distinguish different rounds.
  * @param terrains Terrains of the battle, may affect amount of damage inflicted.
  */
-export const doBattle = (definitions: Definitions, attacker: ParticipantState, defender: ParticipantState, round: number, terrains: Terrains, settings: Settings): [BaseUnits, BaseUnits] => {
+export const doBattle = (definitions: Units, attacker: ParticipantState, defender: ParticipantState, round: number, terrains: Terrains, settings: Settings): [BaseUnits, BaseUnits] => {
   let a: BaseUnits = { frontline: attacker.frontline, reserve: attacker.reserve, defeated: attacker.defeated }
   let d: BaseUnits = { frontline: defender.frontline, reserve: defender.reserve, defeated: defender.defeated }
   // Simplifies later code because armies can be assumed to be the correct size.
@@ -54,14 +52,14 @@ export const doBattle = (definitions: Definitions, attacker: ParticipantState, d
   d = removeOutOfBounds(d, combat_width)
   a = removeDefeated(a)
   d = removeDefeated(d)
-  a = reinforce(a, definitions.get(attacker.country)!, round, attacker.row_types, attacker.flank_size, calculateArmySize(d), settings, undefined)
-  let definitions_a: Frontline = a.frontline.map(value => value && mergeValues(value, definitions.getIn([attacker.country, value.type])))
+  a = reinforce(a, definitions[attacker.country], round, attacker.row_types, attacker.flank_size, calculateArmySize(d), settings, undefined)
+  let definitions_a: Frontline = a.frontline.map(value => value && mergeValues(value, definitions[attacker.country][value.type]))
   if (settings[CombatParameter.ReinforceFirst])
-    d = reinforce(d, definitions.get(defender.country)!, round, defender.row_types, defender.flank_size, calculateArmySize(a), settings, undefined)
+    d = reinforce(d, definitions[defender.country], round, defender.row_types, defender.flank_size, calculateArmySize(a), settings, undefined)
   let a_to_d = pickTargets(definitions_a, d.frontline, !!settings[CombatParameter.FlankTargetsOwnEdge])
   if (!settings[CombatParameter.ReinforceFirst])
-    d = reinforce(d, definitions.get(defender.country)!, round, defender.row_types, defender.flank_size, calculateArmySize(a), settings, a_to_d)
-  let definitions_d: Frontline = d.frontline.map(value => value && mergeValues(value, definitions.getIn([defender.country, value.type])))
+    d = reinforce(d, definitions[defender.country], round, defender.row_types, defender.flank_size, calculateArmySize(a), settings, a_to_d)
+  let definitions_d: Frontline = d.frontline.map(value => value && mergeValues(value, definitions[defender.country][value.type]))
   let d_to_a = pickTargets(definitions_d, a.frontline, !!settings[CombatParameter.FlankTargetsOwnEdge])
   if (round < 1)
     return [a, d]

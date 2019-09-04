@@ -1,17 +1,19 @@
 import { AppState } from "./index"
 import { OrderedSet, OrderedMap, fromJS } from "immutable"
-import { getKeys, objGet, sumObj } from '../utils'
+import { getKeys, objGet, sumObj, map, reduce, toArr, filter } from '../utils'
 import { filterUnitDefinitions, isIncludedInMode, mergeUnits } from '../army_utils'
 import { TacticType, TacticDefinition } from "./tactics/actions"
-import { DefinitionType, mergeValues } from "../base_definition"
-import { TerrainType, TerrainDefinition } from "./terrains/actions"
-import { UnitType, UnitDefinition, UnitDefinitions } from "./units/actions"
+import { mergeValues } from "../base_definition"
+import { TerrainType } from "./terrains/actions"
+import { UnitType, UnitDefinition } from "./units/actions"
 import { Battle, modeState } from "./battle/reducer"
 import { getDefaultArmy, Army as BaseArmy, Side, getDefaultParticipant, BaseUnits, Participant, Units } from "./battle/actions"
 import { defaultCountry } from "./countries/reducer"
 import { CountryName } from "./countries"
 import { getDefaultGlobal, getDefaultUnits } from "./units/data"
 import { Settings } from "./settings"
+import { UnitDefinitions } from "./units"
+import { TerrainDefinitions } from "./terrains";
 
 /**
  * Returns settings of the current mode.
@@ -25,28 +27,28 @@ export const getSettings = (state: AppState): Settings => {
  * Returns unit types for the current mode from all armies.
  * @param state Application state.
  */
-export const mergeUnitTypes = (state: AppState): OrderedSet<UnitType> => {
-  return state.units.reduce((previous, current) => {
-    return previous.merge(current.filter(unit => {
-      return unit.mode === state.settings.mode || unit.mode === DefinitionType.Global
-    }).map(unit => unit.type).toOrderedSet())
-  }, OrderedSet<UnitType>())
+export const mergeUnitTypes = (state: AppState): Set<UnitType> => {
+  return reduce(state.units, (previous, current) => {
+    const arr = toArr(current)
+    arr.filter(unit => isIncludedInMode(state.settings.mode, unit)).forEach(unit => previous.add(unit.type))
+    return previous
+  }, new Set<UnitType>())
 }
 
 /**
  * Returns terrain types for the current mode.
  * @param state Application state.
  */
-export const filterTerrainTypes = (state: AppState): OrderedSet<TerrainType> => {
-  return getKeys(filterTerrains(state))
+export const filterTerrainTypes = (state: AppState): Set<TerrainType> => {
+  return new Set(toArr(filterTerrains(state), terrain => terrain.type))
 }
 
 /**
  * Returns terrains for the current mode.
  * @param state Application state.
  */
-export const filterTerrains = (state: AppState): OrderedMap<TerrainType, TerrainDefinition> => {
-  return state.terrains.filter(terrain => isIncludedInMode(state.settings.mode, terrain))
+export const filterTerrains = (state: AppState): TerrainDefinitions => {
+  return filter(state.terrains, terrain => isIncludedInMode(state.settings.mode, terrain))
 }
 
 /**
@@ -71,10 +73,10 @@ export const filterTactics = (state: AppState): OrderedMap<TacticType, TacticDef
  * @param state Application state.
  * @param side Attacker or defender
  */
-export const filterUnitTypes = (state: AppState, side: Side): OrderedSet<UnitType> => {
+export const filterUnitTypes = (state: AppState, side: Side): Set<UnitType> => {
   const name = getParticipant(state, side).name
-  const units = filterUnitDefinitions(state.settings.mode, state.units.get(name, getDefaultUnits()))
-  return getKeys(units)
+  const units = filterUnitDefinitions(state.settings.mode, objGet(state.units, name, getDefaultUnits()))
+  return new Set(toArr(units).map(unit => unit.type))
 }
 
 /**
@@ -89,7 +91,7 @@ const getArmyByCountry = (state: AppState, name: CountryName): Army => {
   const battle = getBattle(state)
   const army = battle.armies.get(name, getDefaultArmy(state.settings.mode))
   const country = objGet(state.countries, name, defaultCountry)
-  const units = filterUnitDefinitions(state.settings.mode, state.units.get(name, getDefaultUnits()))
+  const units = filterUnitDefinitions(state.settings.mode, objGet(state.units, name, getDefaultUnits()))
   const global = objGet(state.global_stats, name, getDefaultGlobal())[state.settings.mode]
   const general = {
     total: country.has_general ? country.general_martial + sumObj(country.trait_martial) : 0,
@@ -114,7 +116,7 @@ const getUnitsBySide = (state: AppState, side: Side): Units => getUnitsByCountry
 const getUnitsByCountry = (state: AppState, name: CountryName): Units => {
   const battle = getBattle(state)
   const army = battle.armies.get(name, getDefaultArmy(state.settings.mode))
-  const units = filterUnitDefinitions(state.settings.mode, state.units.get(name, getDefaultUnits()))
+  const units = filterUnitDefinitions(state.settings.mode, objGet(state.units, name, getDefaultUnits()))
   const global = objGet(state.global_stats, name, getDefaultGlobal())[state.settings.mode]
   const frontline = army.frontline.map(value => value && mergeUnits(units, fromJS(global), value))
   const reserve = army.reserve.map(value => mergeUnits(units, fromJS(global), value))
@@ -146,18 +148,18 @@ export const getSelected = (state: AppState): Army => getArmyByCountry(state, st
 export const getUnitDefinitions = (state: AppState, side: Side): UnitDefinitions => {
   const name = getParticipant(state, side).name
   const global = objGet(state.global_stats, name, getDefaultGlobal())[state.settings.mode]
-  const units = filterUnitDefinitions(state.settings.mode, state.units.get(name, getDefaultUnits()))
-  return units.map(definition => mergeValues(definition, fromJS(global)))
+  const units = filterUnitDefinitions(state.settings.mode, objGet(state.units, name, getDefaultUnits()))
+  return map(units, definition => mergeValues(definition, global))
 }
 
 export interface Army extends BaseArmy {
   general: {
-    total: number,
-    base: number,
+    total: number
+    base: number
     trait: number
   }
   name: CountryName
-  units: OrderedMap<UnitType, UnitDefinition>
-  global: UnitDefinition,
+  units: UnitDefinitions
+  global: UnitDefinition
   has_general: boolean
 }
