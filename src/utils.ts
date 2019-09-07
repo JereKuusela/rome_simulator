@@ -86,21 +86,41 @@ export function objGet<K extends string, V>(object: { [key in K]: V}, key: K | u
   return key !== undefined && has(object, key) ? object[key] : initial
 }
 
+export function arrGet<V>(arr: V[], index: number): V | undefined
+export function arrGet<V1, V2>(arr: V1[], index: number, initial: V2 | undefined): V1 & V2
+export function arrGet<V1, V2>(arr: V1[], index: number, initial?: V2)
+{
+  if (index < 0)
+    index = arr.length + index
+  if (index >= arr.length)
+    return initial
+  return arr[index]
+}
+
+
+
 export const keys = <K extends string> (object: { [key in K]: any}) => Object.keys(object) as K[]
 const entries = <K extends string, V> (object: { [key in K]: V}) => Object.entries(object) as [K, V][]
 const values = <V> (object: { [key: string]: V}) => Object.values(object) as V[]
 
-export const map = <K extends string, V, R>(object: { [key in K]: V}, callback: (item: V, key: K) => R): { [key in K]: R} => Object.assign({}, ...keys(object).map(k => ({ [k]: callback(object[k], k) })))
+export const map = <K extends string, V, R>(object: { [key in K]: V}, callback: (item: V, key: K) => R): { [key in K]: R} => Object.assign({}, ...entries(object).map(([k ,v]) => ({ [k]: callback(v, k) })))
 
-export const filter = <K extends string, V>(object: { [key in K]: V}, callback?: (item: V, key: K) => any): { [key in K]: V} => Object.assign({}, ...keys(object).filter(k => callback ? callback(object[k], k) : object[k]).map(k => ({ [k]: object[k] })))
-export const filterKeys = <K extends string, V>(object: { [key in K]: V}, callback?: (key: K) => any): { [key in K]: V} => Object.assign({}, ...keys(object).filter(k => callback ? callback(k) : object[k]).map(k => ({ [k]: object[k] })))
+export const forEach = <K extends string, V, R>(object: { [key in K]: V}, callback: (item: V, key: K) => R): void => entries(object).forEach(([k ,v]) => callback(v, k))
+export const every = <K extends string, V, R>(object: { [key in K]: V}, callback: (item: V, key: K) => any): boolean => {
+  let ret = true 
+  entries(object).forEach(([k ,v]) => ret = !!callback(v, k) && ret)
+  return ret
+}
+
+export const filter = <K extends string, V>(object: { [key in K]: V}, callback?: (item: V, key: K) => any): { [key in K]: V} => Object.assign({}, ...entries(object).filter(([k ,v]) => callback ? callback(v, k) : object[k]).map(([k ,v]) => ({ [k]: v })))
+export const filterKeys = <K extends string, V>(object: { [key in K]: V}, callback?: (key: K) => any): { [key in K]: V} => Object.assign({}, ...entries(object).filter(([k ,v]) => callback ? callback(k) : v).map(([k ,v]) => ({ [k]: v })))
 
 
 export function toArr<K extends string, V>(object: { [key in K]: V}): V[]
 export function toArr<K extends string, V, R>(object: { [key in K]: V}, callback: (value: V, key: K) => R): R[]
 export function toArr<K extends string, V, R>(object: { [key in K]: V}, callback?: (value: V, key: K) => R): (R | V)[]
 {
-  return entries(object).map(([key, value]) => callback ? callback(value, key) : value)
+  return entries(object).map(([k, v]) => callback ? callback(v, k) : v)
 }
 
 export function mapKeys<K extends string>(object: { [key in K]: any}): K[]

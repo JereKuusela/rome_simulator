@@ -6,7 +6,7 @@ import { mergeValues, Mode } from '../../base_definition'
 import { CombatParameter } from '../settings'
 import { AppState } from '../'
 import { getSettings, getBattle, getArmy, getParticipant } from '../utils'
-import { objGet, sumObj, map } from '../../utils'
+import { objGet, sumObj, map, arrGet } from '../../utils'
 import { defaultCountry } from '../countries/reducer'
 
 const doBattle = (state: AppState, mode: Mode, steps: number) => {
@@ -37,7 +37,7 @@ const doBattle = (state: AppState, mode: Mode, steps: number) => {
     return { ...participant, roll: rng.integer(minimum_roll, maximum_roll) }
   }
   const checkOldRoll = (participant: Participant): Participant => {
-    const rolls = participant.rolls.get(next.round + 1, { randomized: participant.randomize_roll, roll: participant.roll })
+    const rolls = arrGet(participant.rolls, next.round + 1, { randomized: participant.randomize_roll, roll: participant.roll })
     if (!rolls.randomized)
       return { ...participant, roll: rolls.roll }
     return participant
@@ -74,19 +74,16 @@ const doBattle = (state: AppState, mode: Mode, steps: number) => {
       roll: participant_d.roll
     }
     const [a, d] = fight(definitions, attacker_info, defender_info, next.round + 1, next.terrains.map(type => state.terrains[type]), combat)
-    participant_a = {
-      ...participant_a,
-      rounds: participant_a.rounds.push(a),
-      rolls: participant_a.rolls.count() < next.round + 2 ? participant_a.rolls.push({ roll: participant_a.roll, randomized: participant_a.randomize_roll }) : participant_a.rolls
-    }
-    participant_d = {
-      ...participant_d,
-      rounds: participant_d.rounds.push(d),
-      rolls: participant_d.rolls.count() < next.round + 2 ? participant_d.rolls.push({ roll: participant_d.roll, randomized: participant_d.randomize_roll }) : participant_d.rolls
-    }
+    participant_a.rounds.push(d)
+    if (participant_a.rolls.length < next.round + 2)
+      participant_a.rolls.push({ roll: participant_a.roll, randomized: participant_a.randomize_roll })
+    participant_d.rounds.push(d)
+    if (participant_d.rolls.length < next.round + 2)
+      participant_d.rolls.push({ roll: participant_d.roll, randomized: participant_d.randomize_roll })
+    
     next = {
       ...next,
-      participants: next.participants.set(Side.Attacker, participant_a).set(Side.Defender, participant_d),
+      participants: { [Side.Attacker]: participant_a, [Side.Defender]: participant_d },
       round: next.round + 1
     }
     next = {
@@ -96,24 +93,25 @@ const doBattle = (state: AppState, mode: Mode, steps: number) => {
     units_a = { ...units_a, ...a }
     units_d = { ...units_d, ...d }
   }
-  return { ...state, battle: state.battle.set(state.settings.mode, next) }
+  state.battle[state.settings.mode] = next
 }
 
 class CombatReducer extends ImmerReducer<AppState> {
 
   battle(mode: Mode, steps: number) {
-    this.draftState = doBattle(this.state, mode, steps)
+    doBattle(this.draftState as any, mode, steps)
   }
 
   setSeed(mode: Mode, seed?: number) {
-    this.draftState = { ...this.state, battle: this.state.battle.update(mode, battle => ({ ...battle, custom_seed: seed, seed: seed || 0 }))}
+    this.draftState.battle[mode].custom_seed = seed
+    this.draftState.battle[mode].seed = seed || 0
   }
 
   refreshBattle(mode: Mode) {
-    const steps = this.state.battle.get(mode)!.round + 1
-    const next = { ...this.state, battle: this.state.battle.update(mode, value => ({ ...value, round: -1, participants: value.participants.map(value => ({ ...value, rounds: value.rounds.clear() })) })) }
-    this.draftState = doBattle(next, mode, steps)
-
+    const steps = this.state.battle[mode].round + 1
+    this.draftState.battle[mode].round = -1
+    this.draftState.battle[mode].participants = map(this.state.battle[mode].participants, value => ({ ...value, rounds: [] }))
+    //doBattle(this.draftState as any, mode, steps)
   }
 }
 

@@ -1,6 +1,6 @@
 import { AppState } from "./index"
 import { fromJS } from "immutable"
-import { objGet, sumObj, map, reduce, toArr, filter } from '../utils'
+import { objGet, sumObj, map, reduce, toArr, filter, arrGet } from '../utils'
 import { filterUnitDefinitions, isIncludedInMode, mergeUnits } from '../army_utils'
 import { TacticType } from "./tactics/actions"
 import { mergeValues } from "../base_definition"
@@ -84,13 +84,13 @@ export const filterUnitTypes = (state: AppState, side: Side): Set<UnitType> => {
  * Returns armies of the current mode.
  * @param state Application state.
  */
-export const getBattle = (state: AppState): Battle => state.battle.get(state.settings.mode, modeState(state.settings.mode))
+export const getBattle = (state: AppState): Battle => objGet(state.battle, state.settings.mode, modeState(state.settings.mode))
 
 const getArmyBySide = (state: AppState, side: Side): Army => getArmyByCountry(state, getParticipant(state, side).name)
 
 const getArmyByCountry = (state: AppState, name: CountryName): Army => {
   const battle = getBattle(state)
-  const army = battle.armies.get(name, getDefaultArmy(state.settings.mode))
+  const army = objGet(battle.armies, name, getDefaultArmy(state.settings.mode))
   const country = objGet(state.countries, name, defaultCountry)
   const units = filterUnitDefinitions(state.settings.mode, objGet(state.units, name, getDefaultUnits()))
   const global = objGet(state.global_stats, name, getDefaultGlobal())[state.settings.mode]
@@ -107,7 +107,7 @@ const getBaseUnitsBySide = (state: AppState, side: Side): BaseUnits => getBaseUn
 
 const getBaseUnitsByCountry = (state: AppState, name: CountryName): BaseUnits => {
   const battle = getBattle(state)
-  const army = battle.armies.get(name, getDefaultArmy(state.settings.mode))
+  const army = objGet(battle.armies, name, getDefaultArmy(state.settings.mode))
   return { frontline: army.frontline, reserve: army.reserve, defeated: army.defeated }
 }
 
@@ -116,7 +116,7 @@ const getUnitsBySide = (state: AppState, side: Side): Units => getUnitsByCountry
 
 const getUnitsByCountry = (state: AppState, name: CountryName): Units => {
   const battle = getBattle(state)
-  const army = battle.armies.get(name, getDefaultArmy(state.settings.mode))
+  const army = objGet(battle.armies, name, getDefaultArmy(state.settings.mode))
   const units = filterUnitDefinitions(state.settings.mode, objGet(state.units, name, getDefaultUnits()))
   const global = objGet(state.global_stats, name, getDefaultGlobal())[state.settings.mode]
   const frontline = army.frontline.map(value => value && mergeUnits(units, fromJS(global), value))
@@ -127,8 +127,8 @@ const getUnitsByCountry = (state: AppState, name: CountryName): Units => {
 
 const getRounds = (state: AppState, type: Side): BaseUnits | undefined => {
   const battle = getBattle(state)
-  const participant = battle.participants.get(type, getDefaultParticipant(CountryName.Country1))
-  return participant.rounds.get(-1)
+  const participant = objGet(battle.participants, type, getDefaultParticipant(CountryName.Country1))
+  return arrGet(participant.rounds, -1)
 }
 
 export const getArmy = (state: AppState, type: Side): Army => ({ ...getArmyBySide(state, type), ...getRounds(state, type) })
@@ -137,7 +137,7 @@ export const getBaseUnits = (state: AppState, type: Side): BaseUnits => getBaseU
 
 export const getUnits = (state: AppState, type: Side): Units => getUnitsBySide(state, type)
 
-export const getParticipant = (state: AppState, type: Side): Participant => getBattle(state).participants.get(type, getDefaultParticipant(CountryName.Country1))
+export const getParticipant = (state: AppState, type: Side): Participant => objGet(getBattle(state).participants, type, getDefaultParticipant(CountryName.Country1))
 
 export const getSelected = (state: AppState): Army => getArmyByCountry(state, state.settings.country)
 

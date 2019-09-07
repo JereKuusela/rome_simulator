@@ -2,8 +2,8 @@ import { fromJS, Map, List } from 'immutable'
 import { tacticFromJS, tacticsReducer, TacticDefinitions } from './tactics'
 import { terrainFromJS, terrainsReducer, TerrainDefinitions } from './terrains'
 import { unitDefinitionFromJS, unitFromJS, UnitType, unitsReducer, globalStatsReducer, BaseUnit, GlobalStats, Units } from './units'
-import { RowType, battleReducer, Army, getDefaultArmy, Battle, modeState, getDefaultParticipant, Participant, Side } from './battle'
-import { DefinitionType } from '../base_definition'
+import { RowType, battleReducer, Army, getDefaultArmy, Battle, modeState, getDefaultParticipant, Participant, ModeState } from './battle'
+import { DefinitionType, Mode } from '../base_definition'
 import { transferReducer } from './transfer'
 import { CountryName } from './countries'
 import { settingsReducer } from './settings'
@@ -62,11 +62,11 @@ export const transformGlobalStats = (state: GlobalStats): GlobalStats => {
   //return global_stats.map(values => values.map((value, type) => clearAllValues(value, type)).map((value, type) => mergeValues(value, defaultGlobal.get(type)!)))
 }
 
-const handleArmies = (state_raw: any, mode: DefinitionType): Battle => {
+const handleArmies = (state: Battle, mode: Mode): Battle => {
   const initial = modeState(mode)
   let terrains = initial.terrains
-  if (state_raw.terrains) {
-    const terrains_raw = fromJS(state_raw.terrains)
+  if (state.terrains) {
+    const terrains_raw = fromJS(state.terrains)
     if (!terrains_raw.contains(null))
       terrains = terrains_raw
   }
@@ -104,16 +104,14 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Battle => {
       selections
     }
   }
-  const serializeParticipant = (participant: any): Participant => {
+  const serializeParticipant = (participant: Participant): Participant => {
     const initial = getDefaultParticipant(CountryName.Country1)
     const name = participant.name || initial.name
     const roll = participant.roll || initial.roll
     const randomize_roll = participant.randomize_roll
     let rolls = initial.rolls
-    if (participant.rolls) {
-      const rolls_raw: List<any> = fromJS(participant.rolls)
-      rolls = rolls_raw.filter(value => value).map(value => value.toJS())
-    }
+    if (participant.rolls)
+      rolls = participant.rolls.filter(value => value)
     return {
       name,
       roll,
@@ -123,32 +121,33 @@ const handleArmies = (state_raw: any, mode: DefinitionType): Battle => {
     }
   }
   let armies = initial.armies
-  if (state_raw.armies) {
-    let armies_raw: Map<CountryName, any> = fromJS(state_raw.armies)
-    armies = armies_raw.filter(value => value).map(value => serializeArmy(value.toJS()))
+  if (state.armies) {
+    armies = state.armies
+    armies = filter(armies)
+    armies = map(armies, value => serializeArmy(value))
   }
   let participants = initial.participants
-  if (state_raw.participants) {
-    let participants_raw: Map<Side, any> = fromJS(state_raw.participants)
-    participants = participants_raw.filter(value => value).map(value => serializeParticipant(value.toJS()))
+  if (state.participants) {
+    participants = state.participants
+    participants = filter(participants)
+    participants = map(participants, value => serializeParticipant(value))
   }
-  const round = state_raw.round === undefined ? initial.round : state_raw.round
+  const round = state.round === undefined ? initial.round : state.round
   const fight_over = initial.fight_over
-  const seed = state_raw.seed || initial.seed
-  const custom_seed = state_raw.custom_seed || initial.custom_seed
+  const seed = state.seed || initial.seed
+  const custom_seed = state.custom_seed || initial.custom_seed
   return { round, fight_over, armies, terrains, participants, seed, custom_seed, outdated: true }
 }
 
 export const stripRounds = (battle: ReturnType<typeof battleReducer>): any => {
-  return battle.map(value => ({ ...value, participants: value.participants.map(value => ({ ...value, rounds: undefined })) }))
+  return map(battle, value => ({ ...value, participants: map(value.participants, value => ({ ...value, rounds: undefined })) }))
 }
 
-export const transformBattle = (state_raw: any): ReturnType<typeof battleReducer> => {
+export const transformBattle = (state: ModeState): ModeState => {
   const initial = battleReducer(undefined, dummyAction)
-  if (!state_raw)
+  if (!state)
     return initial
-  let battle: Map<DefinitionType, any> = fromJS(state_raw)
-  return battle.map((value, key) => handleArmies(value.toJS(), key))
+  return map(state, (value, key) => handleArmies(value, key))
 }
 
 export const transfromTransfer = (state_raw: any): ReturnType<typeof transferReducer> => {

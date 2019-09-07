@@ -19,7 +19,7 @@ import ModalTerrainSelector, { ModalInfo as ModalTerrainInfo } from '../containe
 import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers/ModalTacticSelector'
 import ModalArmyUnitDetail, { ModalInfo as ModalArmyUnitInfo } from '../containers/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/ModalFastPlanner'
-import { calculateValue, mergeValues, getImage, DefinitionType, Mode } from '../base_definition'
+import { calculateValue, mergeValues, getImage, Mode } from '../base_definition'
 import { getSettings, getBattle, getArmy, Army, getParticipant } from '../store/utils'
 import { addSign, toSignedPercent } from '../formatters'
 import { CountryName, setGeneralMartial } from '../store/countries'
@@ -28,6 +28,7 @@ import IconTerrain from '../images/terrain.png'
 import IconGeneral from '../images/military_power.png'
 import StyledNumber from '../components/StyledNumber'
 import { findUnitById } from '../army_utils'
+import { keys } from '../utils';
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
@@ -61,12 +62,12 @@ class Battle extends Component<IProps, IState> {
   openUnitSelector = (name: CountryName, type: ArmyType, country: CountryName, index: number): void => this.setState({ modal_unit_info: { name, type, country, index } })
 
   openArmyUnitModal = (country: CountryName, current_unit: BaseUnit & UnitDefinition): void => {
-    const base_unit = findUnitById(this.props.armies.get(country), current_unit.id)
+    const base_unit = findUnitById(this.props.armies[country], current_unit.id)
     if (base_unit)
       this.setState({ modal_army_unit_info: { country, unit: current_unit, base_unit } })
   }
 
-  openTerrainModal = (index: number): void => this.setState({ modal_terrain_info: { index, location: this.props.terrains[this.props.selected_terrains.get(index)!].location } })
+  openTerrainModal = (index: number): void => this.setState({ modal_terrain_info: { index, location: this.props.terrains[this.props.selected_terrains[index]].location } })
 
   openTacticModal = (name: CountryName, counter?: TacticType): void => this.setState({ modal_tactic_info: { country: name, counter } })
 
@@ -427,7 +428,7 @@ class Battle extends Component<IProps, IState> {
         </Table.Cell>
         <Table.Cell collapsing>
           <DropdownSelector
-            items={this.props.armies.keySeq()}
+            items={keys(this.props.armies)}
             active={name}
             onSelect={name => this.props.selectArmy(this.props.mode, type, name)}
           />
@@ -517,13 +518,13 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchToProps = (dispatch: any) => ({
   battle: (mode: Mode, steps: number) => dispatch(battle(mode, steps)),
-  undo: (mode: DefinitionType, steps: number) => dispatch(undo(mode, steps)),
-  toggleRandomRoll: (mode: DefinitionType, participant: Side) => dispatch(toggleRandomRoll(mode, participant)),
-  setRoll: (mode: DefinitionType, participant: Side, roll: number) => dispatch(setRoll(mode, participant, roll)),
+  undo: (mode: Mode, steps: number) => dispatch(undo(mode, steps)),
+  toggleRandomRoll: (mode: Mode, participant: Side) => dispatch(toggleRandomRoll(mode, participant)),
+  setRoll: (mode: Mode, participant: Side, roll: number) => dispatch(setRoll(mode, participant, roll)),
   setGeneralMartial: (name: CountryName, skill: number) => dispatch(setGeneralMartial(name, skill)) && dispatch(invalidateCountry(name)),
-  setFlankSize: (mode: DefinitionType, name: CountryName, size: number) => dispatch(setFlankSize(mode, name, size)) && dispatch(invalidate(mode)),
-  selectArmy: (mode: DefinitionType, type: Side, name: CountryName) => dispatch(selectArmy(mode, type, name)) && dispatch(invalidate(mode)),
-  removeUnit: (mode: DefinitionType, name: CountryName, type: ArmyType, column: number) => (
+  setFlankSize: (mode: Mode, name: CountryName, size: number) => dispatch(setFlankSize(mode, name, size)) && dispatch(invalidate(mode)),
+  selectArmy: (mode: Mode, type: Side, name: CountryName) => dispatch(selectArmy(mode, type, name)) && dispatch(invalidate(mode)),
+  removeUnit: (mode: Mode, name: CountryName, type: ArmyType, column: number) => (
     dispatch(selectUnit(mode, name, type, column, undefined))
   ),
   setSeed: (mode: Mode, seed?: number) => dispatch(setSeed(mode, seed)) && dispatch(invalidate(mode)),

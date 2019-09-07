@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Collection } from 'immutable'
 import { Modal, Input, Grid, Button } from 'semantic-ui-react'
 import DropDownSelector from './DropdownSelector'
 
@@ -13,7 +12,7 @@ interface IProps<T, S> {
   readonly open: boolean
   readonly value: T
   readonly selected: S
-  readonly items: Collection<any, S>
+  readonly items: S[]
 }
 
 interface IState<T, S> {

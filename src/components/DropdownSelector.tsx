@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { Collection } from 'immutable'
 import { Dropdown } from 'semantic-ui-react'
 
 interface IProps<T> {
-  readonly items: Collection<any, T>
+  readonly items: T[]
   readonly active: T
   readonly onSelect: (item: T) => void
   readonly clearable?: boolean

@@ -5,7 +5,7 @@ import { UnitType, BaseUnit } from '../store/units'
 import { AppState } from '../store/'
 import { selectUnit, ArmyType } from '../store/battle'
 import { CountryName } from '../store/countries'
-import { DefinitionType } from '../base_definition'
+import { Mode } from '../base_definition'
 import ItemSelector from '../components/ItemSelector'
 import { filterUnitDefinitions, getNextId } from '../army_utils'
 import { toArr } from '../utils'
@@ -47,7 +47,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  selectUnit: (mode: DefinitionType, name: CountryName, type: ArmyType, column: number, unit: BaseUnit | undefined) => (
+  selectUnit: (mode: Mode, name: CountryName, type: ArmyType, column: number, unit: BaseUnit | undefined) => (
     dispatch(selectUnit(mode, name, type, column, unit))
   )
 })

@@ -11,7 +11,7 @@ import { getBaseUnits, filterUnitTypes, getParticipant, getUnitDefinitions } fro
 import { mapRange } from '../utils'
 import { getNextId, mergeBaseUnitsWithDefinitions } from '../army_utils'
 import { CountryName } from '../store/countries'
-import { DefinitionType } from '../base_definition'
+import { Mode } from '../base_definition'
 
 type Units = Map<UnitType, number>
 
@@ -161,9 +161,9 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  addReserveUnits: (mode: DefinitionType, name: CountryName, units: BaseUnit[]) => dispatch(addReserveUnits(mode, name, units)) && dispatch(invalidate(mode)),
-  removeReserveUnits: (mode: DefinitionType, name: CountryName, types: UnitType[]) => dispatch(removeReserveUnits(mode, name, types)) && dispatch(invalidate(mode)),
-  clearUnits: (mode: DefinitionType) => dispatch(clearUnits(mode))
+  addReserveUnits: (mode: Mode, name: CountryName, units: BaseUnit[]) => dispatch(addReserveUnits(mode, name, units)) && dispatch(invalidate(mode)),
+  removeReserveUnits: (mode: Mode, name: CountryName, types: UnitType[]) => dispatch(removeReserveUnits(mode, name, types)) && dispatch(invalidate(mode)),
+  clearUnits: (mode: Mode) => dispatch(clearUnits(mode))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {

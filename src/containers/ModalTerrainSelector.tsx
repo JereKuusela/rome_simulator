@@ -5,7 +5,7 @@ import { AppState } from '../store/'
 import { selectTerrain, invalidate } from '../store/battle'
 import ItemSelector, { SelectorAttributes } from '../components/ItemSelector'
 import { TerrainType, TerrainCalc, LocationType } from '../store/terrains'
-import { DefinitionType, calculateValue } from '../base_definition'
+import { calculateValue, Mode } from '../base_definition'
 import { filterTerrains } from '../store/utils'
 import StyledNumber from '../components/StyledNumber'
 import { addSign } from '../formatters'
@@ -52,7 +52,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  selectTerrain: (mode: DefinitionType, index: number, type: TerrainType) => dispatch(selectTerrain(mode, index, type)) && dispatch(invalidate(mode))
+  selectTerrain: (mode: Mode, index: number, type: TerrainType) => dispatch(selectTerrain(mode, index, type)) && dispatch(invalidate(mode))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {

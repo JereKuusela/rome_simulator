@@ -1,9 +1,10 @@
-import { List, Map, fromJS, Set } from 'immutable'
+import { List, Map, fromJS } from 'immutable'
 import { BaseUnit, UnitType, Unit } from '../units/actions'
 import { TerrainType } from '../terrains/actions'
 import { TacticType } from '../tactics/actions'
-import { DefinitionType } from '../../base_definition'
+import { DefinitionType, Mode } from '../../base_definition'
 import { CountryName } from '../countries'
+import { ObjSet } from '../../utils'
 
 export enum RowType {
   Front = 'Front',
@@ -30,8 +31,8 @@ interface Rolls {
 
 export interface Participant {
   readonly name: CountryName
-  readonly rounds: List<BaseUnits>,
-  readonly rolls: List<Rolls>,
+  readonly rounds: BaseUnits[],
+  readonly rolls: Rolls[],
   readonly roll: number,
   readonly randomize_roll: boolean
 }
@@ -40,7 +41,7 @@ export interface Army extends BaseUnits {
   readonly tactic: TacticType
   readonly row_types: Map<RowType, UnitType | undefined>
   readonly flank_size: number
-  readonly selections: Set<string>
+  readonly selections: ObjSet
 }
 
 export enum Side {
@@ -54,18 +55,16 @@ export enum ArmyType {
   Defeated = 'Defeated'
 }
 
-export const getInitialTerrains = (mode: DefinitionType): List<TerrainType> => {
-  if (mode === DefinitionType.Naval) {
-    return List<TerrainType>().push(TerrainType.Ocean)
-  }
-  else {
-    return List<TerrainType>().push(TerrainType.None).push(TerrainType.Plains)
-  }
+export const getInitialTerrains = (mode: DefinitionType): TerrainType[] => {
+  if (mode === DefinitionType.Naval)
+    return [TerrainType.Ocean]
+  else
+    return [TerrainType.None, TerrainType.Plains]
 } 
 
-const getInitialTactic = (mode: DefinitionType): TacticType => mode === DefinitionType.Land ? TacticType.ShockAction : TacticType.FrontalAssault
+const getInitialTactic = (mode: Mode): TacticType => mode === DefinitionType.Land ? TacticType.ShockAction : TacticType.FrontalAssault
 
-const getInitialRowTypes = (mode: DefinitionType): Map<RowType, UnitType | undefined> => {
+const getInitialRowTypes = (mode: Mode): Map<RowType, UnitType | undefined> => {
   if (mode === DefinitionType.Naval) {
     return Map<RowType, UnitType | undefined>()
       .set(RowType.Front, UnitType.MegaGalley)
@@ -80,19 +79,19 @@ const getInitialRowTypes = (mode: DefinitionType): Map<RowType, UnitType | undef
   }
 }
 
-const initializeDefaultArmy = (mode: DefinitionType): Army => ({
+const initializeDefaultArmy = (mode: Mode): Army => ({
   frontline: fromJS(Array(30).fill(undefined)),
   reserve: List<BaseUnit>(),
   defeated: List<BaseUnit>(),
   tactic: getInitialTactic(mode),
   row_types: getInitialRowTypes(mode),
   flank_size: 5,
-  selections: Set<string>()
+  selections: {}
 })
 const defaultLandArmy = initializeDefaultArmy(DefinitionType.Land)
 const defaultNavalArmy = initializeDefaultArmy(DefinitionType.Naval)
 
-export const getDefaultArmy = (mode: DefinitionType): Army => {
+export const getDefaultArmy = (mode: Mode): Army => {
   if (mode === DefinitionType.Naval)
     return defaultNavalArmy
   return defaultLandArmy
@@ -101,8 +100,8 @@ export const getDefaultArmy = (mode: DefinitionType): Army => {
 export const getDefaultParticipant = (name: CountryName): Participant => {
   return {
     name,
-    rounds: List<BaseUnits>(),
-    rolls: List<Rolls>(),
+    rounds: [],
+    rolls: [],
     roll: 3,
     randomize_roll: false
   }

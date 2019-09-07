@@ -4,7 +4,7 @@ import { setBaseValue, ValueType, TacticType, changeImage, changeMode } from '..
 import { AppState } from '../store/'
 import { invalidate } from '../store/battle'
 import TacticDetail from '../components/TacticDetail'
-import { DefinitionType } from '../base_definition'
+import { Mode, DefinitionType } from '../base_definition'
 import { mergeUnitTypes, filterTacticTypes, filterTactics } from '../store/utils'
 
 const CUSTOM_VALUE_KEY = 'Custom'
@@ -39,7 +39,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setBaseValue: (mode: DefinitionType, tactic: TacticType,  key: string, attribute: ValueType, value: number) => (
+  setBaseValue: (mode: Mode, tactic: TacticType,  key: string, attribute: ValueType, value: number) => (
     !Number.isNaN(value) && dispatch(setBaseValue(tactic, key, attribute, value)) && dispatch(invalidate(mode))
   ),
   changeImage: (type: TacticType, image: string) => dispatch(changeImage(type, image)),

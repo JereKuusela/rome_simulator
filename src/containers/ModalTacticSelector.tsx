@@ -8,7 +8,7 @@ import { calculateTactic } from '../store/combat'
 import ItemSelector, { SelectorAttributes } from '../components/ItemSelector'
 import { TacticType, TacticCalc } from '../store/tactics'
 import { getBattle, filterTactics } from '../store/utils'
-import { DefinitionType, mergeValues, calculateValue } from '../base_definition'
+import { mergeValues, calculateValue, Mode } from '../base_definition'
 import { toSignedPercent, toPercent } from '../formatters'
 import { BaseUnit } from '../store/units'
 import { CountryName } from '../store/countries'
@@ -25,7 +25,7 @@ class ModalTacticSelector extends Component<IProps> {
     if (!this.props.info)
       return null
     const country = this.props.info.country
-    const participant = this.props.armies.get(country)
+    const participant = this.props.armies[country]
     const army = participant && {
       frontline: this.mergeAllValues(country, participant.frontline),
       reserve: this.mergeAllValues(country, participant.reserve) as List<BaseUnit>,
@@ -84,7 +84,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  selectTactic: (mode: DefinitionType, name: CountryName, type: TacticType) => dispatch(selectTactic(mode, name, type)) && dispatch(invalidate(mode))
+  selectTactic: (mode: Mode, name: CountryName, type: TacticType) => dispatch(selectTactic(mode, name, type)) && dispatch(invalidate(mode))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {

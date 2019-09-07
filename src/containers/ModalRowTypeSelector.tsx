@@ -4,7 +4,7 @@ import { Modal } from 'semantic-ui-react'
 import { UnitType } from '../store/units'
 import { AppState } from '../store/'
 import { setRowType, RowType } from '../store/battle'
-import { DefinitionType } from '../base_definition'
+import { Mode } from '../base_definition'
 import ItemSelector from '../components/ItemSelector'
 import ItemRemover from '../components/ItemRemover'
 import { CountryName } from '../store/countries'
@@ -51,7 +51,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setRowType: (mode: DefinitionType, name: CountryName, type: RowType, unit: UnitType | undefined) => (
+  setRowType: (mode: Mode, name: CountryName, type: RowType, unit: UnitType | undefined) => (
     dispatch(setRowType(mode, name, type, unit))
   )
 })

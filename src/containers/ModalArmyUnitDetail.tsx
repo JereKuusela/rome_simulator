@@ -5,7 +5,7 @@ import { UnitType, ValueType, BaseUnit, Unit } from '../store/units'
 import { editUnit, removeUnit } from '../store/battle'
 import { AppState } from '../store/'
 import { filterTerrainTypes, mergeUnitTypes } from '../store/utils'
-import { addValues, ValuesType, DefinitionType } from '../base_definition'
+import { addValues, ValuesType, Mode } from '../base_definition'
 import ItemRemover from '../components/ItemRemover'
 import UnitDetail from '../components/UnitDetail'
 import { invalidateCountry } from '../store/battle'
@@ -93,10 +93,10 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  editUnit: (mode: DefinitionType, country: CountryName, unit: BaseUnit) => (
+  editUnit: (mode: Mode, country: CountryName, unit: BaseUnit) => (
     dispatch(editUnit(mode, country, unit)) && dispatch(invalidateCountry(country))
   ),
-  removeUnit: (mode: DefinitionType, country: CountryName, unit: BaseUnit) => (
+  removeUnit: (mode: Mode, country: CountryName, unit: BaseUnit) => (
     dispatch(removeUnit(mode, country, unit)) && dispatch(invalidateCountry(country))
   )
 })

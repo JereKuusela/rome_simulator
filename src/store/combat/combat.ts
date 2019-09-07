@@ -1,6 +1,6 @@
 import { List, Map } from 'immutable'
 import { BaseUnit, UnitCalc, UnitType, Units } from '../units'
-import { TerrainDefinition, TerrainCalc } from '../terrains'
+import { TerrainCalc, TerrainDefinition } from '../terrains'
 import { TacticDefinition, TacticCalc, TacticType } from '../tactics'
 import { RowType, BaseUnits } from '../battle'
 import { CombatParameter, Settings } from '../settings'
@@ -11,7 +11,6 @@ import { CountryName } from '../countries'
 type Frontline = List<BaseUnit | undefined>
 type Reserve = List<BaseUnit>
 type Defeated = List<BaseUnit>
-type Terrains = List<TerrainDefinition | undefined>
 
 interface Loss {
   morale: number
@@ -42,7 +41,7 @@ export interface ParticipantState {
  * @param round Turn number to distinguish different rounds.
  * @param terrains Terrains of the battle, may affect amount of damage inflicted.
  */
-export const doBattle = (definitions: Units, attacker: ParticipantState, defender: ParticipantState, round: number, terrains: Terrains, settings: Settings): [BaseUnits, BaseUnits] => {
+export const doBattle = (definitions: Units, attacker: ParticipantState, defender: ParticipantState, round: number, terrains: TerrainDefinition[], settings: Settings): [BaseUnits, BaseUnits] => {
   let a: BaseUnits = { frontline: attacker.frontline, reserve: attacker.reserve, defeated: attacker.defeated }
   let d: BaseUnits = { frontline: defender.frontline, reserve: defender.reserve, defeated: defender.defeated }
   // Simplifies later code because armies can be assumed to be the correct size.
@@ -71,7 +70,7 @@ export const doBattle = (definitions: Units, attacker: ParticipantState, defende
   }
 
   const attacker_roll = modifyRoll(attacker.roll, terrains, attacker.general, defender.general)
-  const defender_roll = modifyRoll(defender.roll, List(), defender.general, attacker.general)
+  const defender_roll = modifyRoll(defender.roll, [], defender.general, attacker.general)
 
   const [losses_d, kills_a] = attack(definitions_a, definitions_d, a_to_d, attacker_roll, terrains, tactic_effects.attacker, tactic_effects.casualties, settings)
   const [losses_a, kills_d] = attack(definitions_d, definitions_a, d_to_a, defender_roll, terrains, tactic_effects.defender, tactic_effects.casualties, settings)
@@ -181,7 +180,7 @@ export const calculateRollModifierFromGenerals = (skill: number, enemy_skill: nu
 /**
  * Calculates the roll modifier from terrains.
  */
-export const calculateRollModifierFromTerrains = (terrains: Terrains): number => terrains.map(terrain => calculateValue(terrain, TerrainCalc.Roll)).reduce((previous, current) => previous + current, 0)
+export const calculateRollModifierFromTerrains = (terrains: TerrainDefinition[]): number => terrains.map(terrain => calculateValue(terrain, TerrainCalc.Roll)).reduce((previous, current) => previous + current, 0)
 
 /**
  * Modifies a dice roll with terrains and general skill levels.
@@ -190,7 +189,7 @@ export const calculateRollModifierFromTerrains = (terrains: Terrains): number =>
  * @param general Skill level of own general.
  * @param opposing_general Skill level of the enemy general.
  */
-const modifyRoll = (roll: number, terrains: Terrains, general: number, opposing_general: number): number => {
+const modifyRoll = (roll: number, terrains: TerrainDefinition[], general: number, opposing_general: number): number => {
   const modifier_terrain = calculateRollModifierFromTerrains(terrains)
   const modifier_effect = calculateRollModifierFromGenerals(general, opposing_general)
   return roll + modifier_terrain + modifier_effect
@@ -296,7 +295,7 @@ const copyDefeated = (army: BaseUnits, definitions: Frontline, minimum_morale: n
  * @param casualties_multiplier Multiplier for strength lost from tactics.
  * @param settings Combat parameters.
  */
-const attack = (source_row: Frontline, target_row: Frontline, source_to_target: (number | null)[], roll: number, terrains: Terrains, tactic_damage_multiplier: number, casualties_multiplier: number, settings: Settings): [Loss[], Kill[]] => {
+const attack = (source_row: Frontline, target_row: Frontline, source_to_target: (number | null)[], roll: number, terrains: TerrainDefinition[], tactic_damage_multiplier: number, casualties_multiplier: number, settings: Settings): [Loss[], Kill[]] => {
   const target_losses = Array<Loss>(target_row.size)
   for (let i = 0; i < target_row.size; ++i)
     target_losses[i] = { morale: 0, strength: 0 }
@@ -340,7 +339,7 @@ export const calculateBaseDamage = (roll: number, settings: Settings): number =>
  * @param casualties_multiplier Multiplier for strength lost from tactics.
  * @param settings Combat parameters.
  */
-const calculateLosses = (source: BaseUnit, target: BaseUnit, roll: number, terrains: Terrains, tactic_damage_multiplier: number, casualties_multiplier: number, settings: Settings): Loss => {
+const calculateLosses = (source: BaseUnit, target: BaseUnit, roll: number, terrains: TerrainDefinition[], tactic_damage_multiplier: number, casualties_multiplier: number, settings: Settings): Loss => {
   let damage_reduction_per_experience = settings[CombatParameter.ExperienceDamageReduction]
   // Bug in game which makes morale damage taken and strength damage taken affect damage reduction from experience.
   if (!settings[CombatParameter.FixExperience])
