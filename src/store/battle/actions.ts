@@ -1,4 +1,3 @@
-import { List, Map, fromJS } from 'immutable'
 import { BaseUnit, UnitType, Unit } from '../units/actions'
 import { TerrainType } from '../terrains/actions'
 import { TacticType } from '../tactics/actions'
@@ -12,16 +11,23 @@ export enum RowType {
   Flank = 'Flank'
 }
 
+export type BaseFrontLine = (BaseUnit | undefined)[]
+export type BaseReserve = BaseUnit[]
+export type BaseDefeated = BaseUnit[]
+export type FrontLine = (Unit | undefined)[]
+export type Reserve = Unit[]
+export type Defeated = Unit[]
+
 export interface BaseUnits {
-  readonly frontline: List<BaseUnit | undefined>
-  readonly reserve: List<BaseUnit>
-  readonly defeated: List<BaseUnit>
+  readonly frontline: BaseFrontLine
+  readonly reserve: BaseReserve
+  readonly defeated: BaseDefeated
 }
 
 export interface Units {
-  readonly frontline: List<Unit | undefined>
-  readonly reserve: List<Unit>
-  readonly defeated: List<Unit>
+  readonly frontline: FrontLine
+  readonly reserve: Reserve
+  readonly defeated: Defeated
 }
 
 interface Rolls {
@@ -37,9 +43,11 @@ export interface Participant {
   readonly randomize_roll: boolean
 }
 
+export type RowTypes = { [key in RowType]: UnitType | undefined }
+
 export interface Army extends BaseUnits {
   readonly tactic: TacticType
-  readonly row_types: Map<RowType, UnitType | undefined>
+  readonly row_types: RowTypes
   readonly flank_size: number
   readonly selections: ObjSet
 }
@@ -64,25 +72,27 @@ export const getInitialTerrains = (mode: DefinitionType): TerrainType[] => {
 
 const getInitialTactic = (mode: Mode): TacticType => mode === DefinitionType.Land ? TacticType.ShockAction : TacticType.FrontalAssault
 
-const getInitialRowTypes = (mode: Mode): Map<RowType, UnitType | undefined> => {
+const getInitialRowTypes = (mode: Mode): RowTypes => {
   if (mode === DefinitionType.Naval) {
-    return Map<RowType, UnitType | undefined>()
-      .set(RowType.Front, UnitType.MegaGalley)
-      .set(RowType.Back, UnitType.MegaGalley)
-      .set(RowType.Flank, UnitType.MegaGalley)
+    return {
+      [RowType.Front]: UnitType.MegaGalley,
+      [RowType.Back]: UnitType.MegaGalley,
+      [RowType.Flank]: UnitType.MegaGalley
+    }
   }
   else {
-    return Map<RowType, UnitType | undefined>()
-      .set(RowType.Front, UnitType.Archers)
-      .set(RowType.Back, UnitType.HeavyInfantry)
-      .set(RowType.Flank, UnitType.LightCavalry)
+    return {
+      [RowType.Front]: UnitType.Archers,
+      [RowType.Back]: UnitType.HeavyInfantry,
+      [RowType.Flank]: UnitType.LightCavalry
+    }
   }
 }
 
 const initializeDefaultArmy = (mode: Mode): Army => ({
-  frontline: fromJS(Array(30).fill(undefined)),
-  reserve: List<BaseUnit>(),
-  defeated: List<BaseUnit>(),
+  frontline: Array(30).fill(undefined),
+  reserve: [],
+  defeated: [],
   tactic: getInitialTactic(mode),
   row_types: getInitialRowTypes(mode),
   flank_size: 5,

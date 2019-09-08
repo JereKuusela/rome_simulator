@@ -1,13 +1,11 @@
 import React, { Component } from 'react'
-import { List } from 'immutable'
 import LineTo from 'react-lineto'
-import { Side, ArmyType } from '../store/battle'
-import { BaseUnit } from '../store/units'
+import { Side, ArmyType, BaseFrontLine } from '../store/battle'
 
 
 interface IProps {
-  attacker?: List< BaseUnit | undefined>
-  defender?: List< BaseUnit | undefined>
+  attacker?: BaseFrontLine
+  defender?: BaseFrontLine
   attacker_color: string
   defender_color: string
 }

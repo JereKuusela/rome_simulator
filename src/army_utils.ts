@@ -1,9 +1,8 @@
-import { List } from 'immutable'
 import { Army } from './store/utils';
 import { BaseUnit, UnitDefinition, Unit } from './store/units/actions'
 import { mergeValues, DefinitionType } from './base_definition'
 import { getDefaultUnits } from './store/units/data'
-import { BaseUnits, Units } from './store/battle'
+import { BaseUnits, Units, BaseFrontLine, FrontLine, Reserve, Defeated } from './store/battle'
 import { UnitDefinitions } from './store/units'
 import { filter } from './utils';
 
@@ -12,19 +11,19 @@ import { filter } from './utils';
  * @param participant 
  * @param army 
  */
-export const mergeArmy = (participant: Army, army: List<BaseUnit | undefined>): List<Unit | undefined> => {
+export const mergeArmy = (participant: Army, army: BaseFrontLine): FrontLine => {
   return army.map(value => value && mergeValues(mergeValues(participant.units[value.type], value), participant.global))
 }
 
-export const getFrontline = (participant: Army): List<Unit | undefined> => {
+export const getFrontline = (participant: Army): FrontLine => {
   return participant.frontline.map(value => value && mergeUnits(participant.units, participant.global, value))
 }
 
-export const getReserve = (participant: Army): List<Unit> => {
+export const getReserve = (participant: Army): Reserve => {
   return participant.reserve.map(value => mergeUnits(participant.units, participant.global, value))
 }
 
-export const getDefeated = (participant: Army): List<Unit> => {
+export const getDefeated = (participant: Army): Defeated => {
   return participant.defeated.map(value => mergeUnits(participant.units, participant.global, value))
 }
 

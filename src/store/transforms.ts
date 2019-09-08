@@ -1,8 +1,8 @@
-import { fromJS, Map, List } from 'immutable'
+import { fromJS } from 'immutable'
 import { tacticFromJS, tacticsReducer, TacticDefinitions } from './tactics'
 import { terrainFromJS, terrainsReducer, TerrainDefinitions } from './terrains'
-import { unitDefinitionFromJS, unitFromJS, UnitType, unitsReducer, globalStatsReducer, BaseUnit, GlobalStats, Units } from './units'
-import { RowType, battleReducer, Army, getDefaultArmy, Battle, modeState, getDefaultParticipant, Participant, ModeState } from './battle'
+import { unitDefinitionFromJS, unitFromJS, unitsReducer, globalStatsReducer, GlobalStats, Units } from './units'
+import { battleReducer, Army, getDefaultArmy, Battle, modeState, getDefaultParticipant, Participant, ModeState, BaseFrontLine, BaseReserve, BaseDefeated } from './battle'
 import { DefinitionType, Mode } from '../base_definition'
 import { transferReducer } from './transfer'
 import { CountryName } from './countries'
@@ -71,24 +71,22 @@ const handleArmies = (state: Battle, mode: Mode): Battle => {
       terrains = terrains_raw
   }
 
-  const serializeUnits = (raw: List<any>): List<BaseUnit | undefined> => raw.map(value => unitFromJS(value))
+  const serializeUnits = (raw: any[]): BaseFrontLine => raw.map(value => unitFromJS(value))
 
-  const serializeArmy = (army: any): Army => {
+  const serializeArmy = (army: Army): Army => {
     const initial = getDefaultArmy(mode)
     let frontline = initial.frontline
     if (army.frontline)
-      frontline = serializeUnits(fromJS(army.frontline))
+      frontline = serializeUnits(army.frontline)
     let reserve = initial.reserve
     if (army.reserve)
-      reserve = serializeUnits(fromJS(army.reserve)).filter(value => value) as List<BaseUnit>
+      reserve = serializeUnits(army.reserve).filter(value => value) as BaseReserve
     let defeated = initial.defeated
     if (army.defeated)
-      defeated = serializeUnits(fromJS(army.defeated)).filter(value => value) as List<BaseUnit>
-    let row_types: Map<RowType, UnitType | undefined>
+      defeated = serializeUnits(army.defeated).filter(value => value) as BaseDefeated
+    let row_types = initial.row_types
     if (army.row_types)
-      row_types = fromJS(army.row_types)
-    else
-      row_types = initial.row_types
+      row_types = army.row_types
     let tactic = army.tactic
     if (!tactic)
       tactic = initial.tactic

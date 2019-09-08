@@ -1,16 +1,13 @@
-import { List, Map } from 'immutable'
-import { BaseUnit, UnitCalc, UnitType, Units } from '../units'
+import { List } from 'immutable'
+import { BaseUnit, UnitCalc, Units } from '../units'
 import { TerrainCalc, TerrainDefinition } from '../terrains'
 import { TacticDefinition, TacticCalc, TacticType } from '../tactics'
-import { RowType, BaseUnits } from '../battle'
+import { BaseUnits, RowTypes, FrontLine, BaseFrontLine } from '../battle'
 import { CombatParameter, Settings } from '../settings'
 import { calculateValue, addValues, mergeValues, ValuesType } from '../../base_definition'
 import { reinforce } from './reinforcement'
 import { CountryName } from '../countries'
-
-type Frontline = List<BaseUnit | undefined>
-type Reserve = List<BaseUnit>
-type Defeated = List<BaseUnit>
+import { resize } from '../../utils';
 
 interface Loss {
   morale: number
@@ -22,15 +19,12 @@ interface Kill {
   strength: number
 }
 
-export interface ParticipantState {
+export interface ParticipantState extends BaseUnits {
   readonly country: CountryName
-  readonly frontline: Frontline
-  readonly reserve: Reserve
-  readonly defeated: Defeated
   readonly tactic?: TacticDefinition
   readonly roll: number
   readonly general: number
-  readonly row_types: Map<RowType, UnitType | undefined>
+  readonly row_types: RowTypes
   readonly flank_size: number
 }
 
@@ -52,13 +46,13 @@ export const doBattle = (definitions: Units, attacker: ParticipantState, defende
   a = removeDefeated(a)
   d = removeDefeated(d)
   a = reinforce(a, definitions[attacker.country], round, attacker.row_types, attacker.flank_size, calculateArmySize(d), settings, undefined)
-  let definitions_a: Frontline = a.frontline.map(value => value && mergeValues(value, definitions[attacker.country][value.type]))
+  let definitions_a: FrontLine = a.frontline.map(value => value && mergeValues(value, definitions[attacker.country][value.type]))
   if (settings[CombatParameter.ReinforceFirst])
     d = reinforce(d, definitions[defender.country], round, defender.row_types, defender.flank_size, calculateArmySize(a), settings, undefined)
   let a_to_d = pickTargets(definitions_a, d.frontline, !!settings[CombatParameter.FlankTargetsOwnEdge])
   if (!settings[CombatParameter.ReinforceFirst])
     d = reinforce(d, definitions[defender.country], round, defender.row_types, defender.flank_size, calculateArmySize(a), settings, a_to_d)
-  let definitions_d: Frontline = d.frontline.map(value => value && mergeValues(value, definitions[defender.country][value.type]))
+  let definitions_d: FrontLine = d.frontline.map(value => value && mergeValues(value, definitions[defender.country][value.type]))
   let d_to_a = pickTargets(definitions_d, a.frontline, !!settings[CombatParameter.FlankTargetsOwnEdge])
   if (round < 1)
     return [a, d]
@@ -79,17 +73,17 @@ export const doBattle = (definitions: Units, attacker: ParticipantState, defende
   a = { frontline: applyKills(a.frontline, kills_a, round), reserve: a.reserve, defeated: a.defeated }
   d = { frontline: applyKills(d.frontline, kills_d, round), reserve: d.reserve, defeated: d.defeated }
   // Definitions contain the actual strength and morale values so they must be used to check defeated.
-  definitions_a = applyLosses(definitions_a, losses_a, round)
-  definitions_d = applyLosses(definitions_d, losses_d, round)
+  definitions_a = applyLosses(definitions_a, losses_a, round) as FrontLine
+  definitions_d = applyLosses(definitions_d, losses_d, round) as FrontLine
   a = saveTargets(a, a_to_d)
   d = saveTargets(d, d_to_a)
   const minimum_morale = settings[CombatParameter.MinimumMorale]
   const minimum_strength = settings[CombatParameter.MinimumStrength]
   a = copyDefeated(a, definitions_a, minimum_morale, minimum_strength)
   d = copyDefeated(d, definitions_d, minimum_morale, minimum_strength)
-  if (a.frontline.findIndex(unit => !!(unit && !unit.is_defeated)) === -1 && a.reserve.count() === 0)
+  if (a.frontline.findIndex(unit => !!(unit && !unit.is_defeated)) === -1 && a.reserve.length === 0)
     a = removeDefeated(a)
-  if (d.frontline.findIndex(unit => !!(unit && !unit.is_defeated)) === -1 && d.reserve.count() === 0)
+  if (d.frontline.findIndex(unit => !!(unit && !unit.is_defeated)) === -1 && d.reserve.length === 0)
     d = removeDefeated(d)
   return [a, d]
 }
@@ -116,14 +110,14 @@ const saveTargets = (army: BaseUnits, targets: Array<number | null>): BaseUnits 
  */
 const removeOutOfBounds = (army: BaseUnits, combat_width: number): BaseUnits => {
   let defeated = army.defeated
-  const frontline = army.frontline.map((unit, index) => {
+  const frontline = resize(army.frontline.map((unit, index) => {
     if (!unit)
       return unit
     if (index >= 0 && index < combat_width)
       return unit
-    defeated = defeated.push(unit)
+    defeated.push(unit)
     return undefined
-  }).setSize(combat_width)
+  }), combat_width)
   return { ...army, frontline, defeated }
 }
 
@@ -134,22 +128,22 @@ const removeOutOfBounds = (army: BaseUnits, combat_width: number): BaseUnits => 
  * @param target_row Defenders.
  * @param flank_targets_near_own_edge Flanks pick targets near their edge.
  */
-const pickTargets = (source_row: Frontline, target_row: Frontline, flank_targets_near_own_edge: boolean): Array<number | null> => {
+const pickTargets = (source_row: FrontLine, target_row: BaseFrontLine, flank_targets_near_own_edge: boolean): Array<number | null> => {
   // Units attack mainly units on front of them. If not then first target from left to right.
-  const attacker_to_defender = Array<number | null>(source_row.size)
-  for (let i = 0; i < source_row.size; ++i)
+  const attacker_to_defender = Array<number | null>(source_row.length)
+  for (let i = 0; i < source_row.length; ++i)
     attacker_to_defender[i] = null
   source_row.forEach((source, source_index) => {
     if (!source)
       return
     let target_index: number | null = null
-    if (target_row.get(source_index))
+    if (target_row[source_index])
       target_index = source_index
     else {
       const maneuver = calculateValue(source, UnitCalc.Maneuver)
-      if (flank_targets_near_own_edge && source_index > source_row.size / 2) {
+      if (flank_targets_near_own_edge && source_index > source_row.length / 2) {
         for (let index = source_index + maneuver; index >= source_index - maneuver; --index) {
-          if (index >= 0 && index < source_row.size && target_row.get(index)) {
+          if (index >= 0 && index < source_row.length && target_row[index]) {
             target_index = index
             break
           }
@@ -157,7 +151,7 @@ const pickTargets = (source_row: Frontline, target_row: Frontline, flank_targets
       }
       else {
         for (let index = source_index - maneuver; index <= source_index + maneuver; ++index) {
-          if (index >= 0 && index < source_row.size && target_row.get(index)) {
+          if (index >= 0 && index < source_row.length && target_row[index]) {
             target_index = index
             break
           }
@@ -199,7 +193,7 @@ const modifyRoll = (roll: number, terrains: TerrainDefinition[], general: number
  * Calculates amount of units in an army.
  * @param army Frontline, reserve and defeated.
  */
-const calculateArmySize = (army: BaseUnits): number => army.frontline.reduce((previous, current) => previous + (current ? 1 : 0), 0) + army.reserve.size + army.defeated.size
+const calculateArmySize = (army: BaseUnits): number => army.frontline.reduce((previous, current) => previous + (current ? 1 : 0), 0) + army.reserve.length + army.defeated.length
 
 
 /**
@@ -233,7 +227,7 @@ export const calculateTactic = (army?: BaseUnits, tactic?: TacticDefinition, cou
  * @param losses Losses added to units. 
  * @param round Turn number to separate losses caused by other rounds.
  */
-const applyLosses = (frontline: Frontline, losses: Loss[], round: number): Frontline => {
+const applyLosses = (frontline: BaseFrontLine, losses: Loss[], round: number): BaseFrontLine => {
   return frontline.map((unit, index) => {
     const loss_values: [UnitCalc, number][] = [[UnitCalc.Morale, losses[index].morale], [UnitCalc.Strength, losses[index].strength]]
     return unit && addValues(unit, ValuesType.Loss, 'Round ' + round, loss_values)
@@ -246,7 +240,7 @@ const applyLosses = (frontline: Frontline, losses: Loss[], round: number): Front
  * @param kills Kill counts added to units.
  * @param round Turn number to seprate kills caused by other rounds.
  */
-const applyKills = (frontline: Frontline, kills: Kill[], round: number): Frontline => {
+const applyKills = (frontline: BaseFrontLine, kills: Kill[], round: number): BaseFrontLine => {
   return frontline.map((unit, index) => {
     const kill_values: [UnitCalc, number][] = [[UnitCalc.MoraleDepleted, kills[index].morale], [UnitCalc.StrengthDepleted, kills[index].strength]]
     return unit && addValues(unit, ValuesType.Base, 'Round ' + round, kill_values)
@@ -270,15 +264,15 @@ const removeDefeated = (army: BaseUnits): BaseUnits => {
  * @param minimum_morale Minimum morale to stay in the fight.
  * @param minimum_strength Minimum strength to stay in the fight.
  */
-const copyDefeated = (army: BaseUnits, definitions: Frontline, minimum_morale: number, minimum_strength: number): BaseUnits => {
+const copyDefeated = (army: BaseUnits, definitions: FrontLine, minimum_morale: number, minimum_strength: number): BaseUnits => {
   let defeated = army.defeated
   const frontline = army.frontline.map((unit, index) => {
-    const definition = definitions.get(index)
+    const definition = definitions[index]
     if (!definition || !unit)
       return undefined
     if (calculateValue(definition, UnitCalc.Strength) > minimum_strength && calculateValue(definition, UnitCalc.Morale) > minimum_morale)
       return unit
-    defeated = defeated.push(unit)
+    defeated.push(unit)
     return { ...unit, is_defeated: true }
   })
   return { frontline, reserve: army.reserve, defeated }
@@ -295,18 +289,18 @@ const copyDefeated = (army: BaseUnits, definitions: Frontline, minimum_morale: n
  * @param casualties_multiplier Multiplier for strength lost from tactics.
  * @param settings Combat parameters.
  */
-const attack = (source_row: Frontline, target_row: Frontline, source_to_target: (number | null)[], roll: number, terrains: TerrainDefinition[], tactic_damage_multiplier: number, casualties_multiplier: number, settings: Settings): [Loss[], Kill[]] => {
-  const target_losses = Array<Loss>(target_row.size)
-  for (let i = 0; i < target_row.size; ++i)
+const attack = (source_row: FrontLine, target_row: FrontLine, source_to_target: (number | null)[], roll: number, terrains: TerrainDefinition[], tactic_damage_multiplier: number, casualties_multiplier: number, settings: Settings): [Loss[], Kill[]] => {
+  const target_losses = Array<Loss>(target_row.length)
+  for (let i = 0; i < target_row.length; ++i)
     target_losses[i] = { morale: 0, strength: 0 }
-  const source_kills = Array<Kill>(source_row.size)
-  for (let i = 0; i < source_row.size; ++i)
+  const source_kills = Array<Kill>(source_row.length)
+  for (let i = 0; i < source_row.length; ++i)
     source_kills[i] = { morale: 0, strength: 0 }
   source_row.forEach((source, source_index) => {
     const target_index = source_to_target[source_index]
     if (!source || target_index === null)
       return
-    const target = target_row.get(target_index)!
+    const target = target_row[target_index]!
     const losses = calculateLosses(source, target, roll, terrains, tactic_damage_multiplier, casualties_multiplier, settings)
     target_losses[target_index].strength += losses.strength
     target_losses[target_index].morale += losses.morale

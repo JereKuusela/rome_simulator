@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { List } from 'immutable'
 import { Table, Image } from 'semantic-ui-react'
 import { UnitCalc, Unit } from '../store/units'
 import { calculateValueWithoutLoss, DefinitionType, strengthToValue } from '../base_definition'
@@ -11,12 +10,12 @@ import IconStrength from '../images/naval_combat.png'
 
 interface IProps {
   mode: DefinitionType
-  frontline_a: List<Unit | undefined>
-  frontline_d: List<Unit | undefined>
-  reserve_a: List<Unit>
-  reserve_d: List<Unit>
-  defeated_a: List<Unit>
-  defeated_d: List<Unit>
+  frontline_a: (Unit | undefined)[]
+  frontline_d: (Unit | undefined)[]
+  reserve_a: Unit[]
+  reserve_d: Unit[]
+  defeated_a: Unit[]
+  defeated_d: Unit[]
   attached?: boolean
 }
 
@@ -57,7 +56,7 @@ export default class ArmyCosts extends Component<IProps> {
     )
   }
 
-  calculateTotal = (attribute1: UnitCalc, attribute2: UnitCalc | undefined, frontline: List<Unit | undefined>, reserve: List<Unit>, defeated: List<Unit>): number => {
+  calculateTotal = (attribute1: UnitCalc, attribute2: UnitCalc | undefined, frontline: (Unit | undefined)[], reserve: Unit[], defeated: Unit[]): number => {
     return frontline.reduce((previous, current) => previous + (current && !current.is_defeated ?  + this.reduce(current, attribute1, attribute2) : 0), 0)
       + reserve.reduce((previous, current) => previous + this.reduce(current, attribute1, attribute2), 0)
       + defeated.reduce((previous, current) => previous + this.reduce(current, attribute1, attribute2), 0)

@@ -64,7 +64,7 @@ export const sumMap = (map: Map<any, any>, converter?: (value: any) => number): 
  * @param list
  * @param converter Optional converted to sum complex attributes.
  */
-export const sumList = (map: List<any>, converter?: (value: any) => number): number => map.reduce((previous, current) => previous + (converter ? converter(current) : Number(current)), 0)
+export const sumArr = (arr: any[], converter?: (value: any) => number): number => arr.reduce((previous, current) => previous + (converter ? converter(current) : Number(current)), 0)
 
 /**
  * Sums numbers in a object.
@@ -144,7 +144,7 @@ export function reduceKeys<K extends string, R>(object: { [key in K]: any }, cal
   return keys(object).reduce(callback, initial as R)
 }
 
-export const toObj = <K extends string, V>(arr: V[], key: (value: V) => K): { [key in K]: V} => Object.assign({}, ...arr.map(v => ({ [key(v)]: v })))
+export const toObj = <K extends string, V>(arr: V[], key: (value: V, index: number) => K): { [key in K]: V} => Object.assign({}, ...arr.map((v, i) => ({ [key(v, i)]: v })))
 
 export const toSet = <V, R extends string>(object: { [key: string]: V}, key: (value: V) => R): { [key in R]: true } => Object.assign({}, ...values(object).map(v => ({ [key(v)]: true })))
 
@@ -154,4 +154,13 @@ export const has = <K extends string>(object: { [key in K]: any}, key: K ): bool
 
 export type ObjSet<K extends string = string> = {
   [key in K]: true
+}
+
+export function resize<V>(arr: (V | undefined)[], size: number): (V | undefined)[]
+export function resize<V>(arr: (V | undefined)[], size: number, defaultValue: V): V[]
+export function resize<V>(arr: (V | undefined)[], size: number, defaultValue?: V): (V | undefined)[] {
+  const ret = arr.slice(0, size)
+  while(size > ret.length)
+    ret.push(defaultValue)
+  return ret
 }

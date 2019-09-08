@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import { List } from 'immutable'
-import { Side, ArmyType } from '../store/battle'
+import { Side, ArmyType, BaseFrontLine } from '../store/battle'
 import { Table, Image, Icon } from 'semantic-ui-react'
 import { BaseUnit, UnitCalc } from '../store/units'
 import { calculateValue, calculateValueWithoutLoss, getImage } from '../base_definition'
@@ -9,7 +8,7 @@ import IconDefeated from '../images/attrition.png'
 
 interface IProps {
   side: Side
-  units?: List< BaseUnit | undefined>
+  units?: BaseFrontLine
   row_width: number
   reverse: boolean
   onClick?: (index: number, unit: BaseUnit | undefined) => void
@@ -26,7 +25,7 @@ const WHITE_COLOR = 'rgba(255,255,255,0)'
 // Display component for showing unit definitions for an army.
 export default class UnitArmy extends Component<IProps> {
   render(): JSX.Element {
-    const width = this.props.units ? this.props.units.size : 0
+    const width = this.props.units ? this.props.units.length : 0
     const row_count = Math.ceil(width / this.props.row_width)
     const rows = Array(row_count).fill(0).map((_, index) => index)
     const columns = Array(this.props.row_width)
@@ -51,7 +50,7 @@ export default class UnitArmy extends Component<IProps> {
                 </Table.Cell>
                 {
                   columns.map((column, index) => {
-                    const unit = column > -1 && this.props.units ? this.props.units.get(row * this.props.row_width + column) : undefined
+                    const unit = column > -1 && this.props.units ? this.props.units[row * this.props.row_width + column] : undefined
                     return (
                       <Table.Cell
                       className={this.props.side + '-' + this.props.type + '-' + column}

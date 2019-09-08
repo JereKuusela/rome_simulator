@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { List } from 'immutable'
 import { Container, Image, Table } from 'semantic-ui-react'
 
-import { sumList, round } from '../utils'
+import { sumArr, round } from '../utils'
 import { calculateValue, calculateValueWithoutLoss, getImage, Mode, DefinitionType, strengthToValue } from '../base_definition'
 import { getUnits, filterUnitTypes, getBattle } from '../store/utils'
 import { AppState } from '../store/index'
@@ -60,10 +59,10 @@ class Stats extends Component<IProps> {
 
   renderRow = (units: Units, type: UnitType): JSX.Element | null => {
     const flatten = this.flatten(units, type)
-    const count = flatten.count()
+    const count = flatten.length
     if (count === 0)
       return null
-    const image = getImage(flatten.get(0))
+    const image = getImage(flatten[0])
     return (
       <Table.Row key={type}>
         <Table.Cell width='4'>
@@ -85,13 +84,13 @@ class Stats extends Component<IProps> {
     )
   }
 
-  sum = (merged: List<Unit>, attribute: UnitCalc): number => sumList(merged, value => Math.max(0, calculateValue(value, attribute)))
+  sum = (merged: Unit[], attribute: UnitCalc): number => sumArr(merged, value => Math.max(0, calculateValue(value, attribute)))
 
-  sumMax = (merged: List<Unit>, attribute: UnitCalc): number => sumList(merged, value => Math.max(0, calculateValueWithoutLoss(value, attribute)))
+  sumMax = (merged: Unit[], attribute: UnitCalc): number => sumArr(merged, value => Math.max(0, calculateValueWithoutLoss(value, attribute)))
 
   // Flattens units to a single list. Also filters temporary "defeated" units because they are copies of another unit.
-  flatten = (units: Units, type: UnitType): List<Unit> => (
-    units.reserve.filter(unit => !unit.is_defeated && unit.type === type).merge(units.defeated.filter(unit => !unit.is_defeated && unit.type === type).merge(units.frontline.filter(unit => unit && !unit.is_defeated && unit.type === type) as List<Unit>))
+  flatten = (units: Units, type: UnitType): Unit[] => (
+    units.reserve.filter(unit => !unit.is_defeated && unit.type === type).concat(units.defeated.filter(unit => !unit.is_defeated && unit.type === type).concat(units.frontline.filter(unit => unit && !unit.is_defeated && unit.type === type) as Unit[]))
   )
 }
 

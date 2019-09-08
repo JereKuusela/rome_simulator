@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import { List, Map } from 'immutable'
+import { Map } from 'immutable'
 import { connect } from 'react-redux'
 import { Modal, Button, Grid } from 'semantic-ui-react'
 import { AppState } from '../store/'
 import FastPlanner from '../components/FastPlanner'
 import ArmyCosts from '../components/ArmyCosts'
 import { UnitType, BaseUnit } from '../store/units'
-import { clearUnits, removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits, invalidate, Side } from '../store/battle'
+import { clearUnits, removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits, invalidate, Side, BaseReserve } from '../store/battle'
 import { getBaseUnits, filterUnitTypes, getParticipant, getUnitDefinitions } from '../store/utils'
 import { mapRange } from '../utils'
 import { getNextId, mergeBaseUnitsWithDefinitions } from '../army_utils'
@@ -91,7 +91,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
     )
   }
 
-  editReserve = (reserve: List<BaseUnit>, changes: Units, originals?: Units): List<BaseUnit> => {
+  editReserve = (reserve: BaseReserve, changes: Units, originals?: Units): BaseReserve => {
     const units = this.getUnitsToAdd(changes, originals)
     const types = this.getTypesToRemove(changes, originals)
     return doRemoveReserveUnits(doAddReserveUnits(reserve, units), types)
@@ -104,8 +104,8 @@ class ModalFastPlanner extends Component<IProps, IState> {
       this.setState({ changes_d: this.state.changes_d.set(unit, value) })
   }
 
-  getUnitsToAdd = (changes: Units, originals?: Units): BaseUnit[] => {
-    let units: BaseUnit[] = []
+  getUnitsToAdd = (changes: Units, originals?: Units): BaseReserve => {
+    let units: BaseReserve = []
     changes.forEach((value, key) => {
       const original = originals ? originals.get(key, 0) : 0
       if (value > original)
@@ -138,7 +138,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
     this.props.onClose()
   }
 
-  countUnits = (reserve: List<BaseUnit>, unit: UnitType): number => reserve.reduce((previous, current) => previous + (current && current.type === unit ? 1 : 0), 0)
+  countUnits = (reserve: BaseUnit[], unit: UnitType): number => reserve.reduce((previous, current) => previous + (current && current.type === unit ? 1 : 0), 0)
 
   clearUnits = (): void => {
     this.setState({ changes_a: Map<UnitType, number>(), changes_d: Map<UnitType, number>() })

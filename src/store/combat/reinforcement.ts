@@ -1,10 +1,8 @@
-import { Map } from 'immutable'
-import { BaseUnit, UnitCalc, UnitType, UnitDefinition, UnitDefinitions } from '../units'
-import { RowType, BaseUnits } from '../battle'
+import { sortBy } from 'lodash'
+import { BaseUnit, UnitCalc, UnitDefinitions } from '../units'
+import { RowType, BaseUnits, RowTypes } from '../battle'
 import { CombatParameter, Settings } from '../settings'
 import { calculateValue, mergeValues, calculateBase } from '../../base_definition'
-type Definition = Map<UnitType, UnitDefinition>
-type RowTypes = Map<RowType, UnitType | undefined>
 
 /**
  * Calculates the next index when the order is from center to edges.
@@ -16,9 +14,9 @@ export const nextIndex = (index: number, center: number) => index < center ? ind
  * Units with more than 2 maneuver are considered flankers, unless overridden by preferences.
  */
 const isFlankUnit = (settings: Settings, row_types: RowTypes, unit: BaseUnit) => {
-    if (unit.type === row_types.get(RowType.Flank))
+    if (unit.type === row_types[RowType.Flank])
         return true
-    if (unit.type === row_types.get(RowType.Front) || unit.type === row_types.get(RowType.Back))
+    if (unit.type === row_types[RowType.Front] || unit.type === row_types[RowType.Back])
         return false
     const value = calculateBase(unit, settings[CombatParameter.FlankCriteriaAttribute])
     const limit = settings[CombatParameter.FlankCriteriaValue]
@@ -39,7 +37,7 @@ const isFlankUnit = (settings: Settings, row_types: RowTypes, unit: BaseUnit) =>
  * @param free_spots Amount of free spots in the frontline.
  * @param enemy_size Size of the enemy army.
  */
-const calculateFlankSizes = (settings: Settings, round: number, flank_size: number, front_size: number, reserve_size: number, free_spots : number, enemy_size: number): [number, number] => {
+const calculateFlankSizes = (settings: Settings, round: number, flank_size: number, front_size: number, reserve_size: number, free_spots: number, enemy_size: number): [number, number] => {
     if (round > 0)
         return [0, 0]
     if (!settings[CombatParameter.FixFlank])
@@ -60,7 +58,7 @@ const calculateFlankSizes = (settings: Settings, round: number, flank_size: numb
  * Reinforces a given army based on reinforcement rules.
  * First priority is to move units from reserve. Then units move towards center.
  * Initial deployment has different rules than reinforcement.
- * @param army Frontline and reserve.
+ * @param army Frontline and reserve. Currently being mutated.
  * @param definitions Definitions to calculate priorities.
  * @param round Round number is used to check for the initial deployment.
  * @param row_types Preferred unit types.
@@ -73,23 +71,23 @@ export const reinforce = (army: BaseUnits, definitions: UnitDefinitions, round: 
     let frontline = army.frontline
     let reserve = army.reserve
 
-    const center = Math.floor(frontline.size / 2.0)
+    const center = Math.floor(frontline.length / 2.0)
 
     // Separate reserve to main and flank groups.
     const mainReserve = reserve.filter(value => !isFlankUnit(settings, row_types, mergeValues(value, definitions[value.type])))
     const flankReserve = reserve.filter(value => isFlankUnit(settings, row_types, mergeValues(value, definitions[value.type])))
     // Calculate priorities (mostly based on unit type, ties are resolved with index numbers).
-    let orderedMainReserve = mainReserve.sortBy((value, key) => {
+    let orderedMainReserve = sortBy(mainReserve, value => {
         value = mergeValues(value, definitions[value.type])
-        return (settings[CombatParameter.ReinforceMainSign] ? 1 : -1) * calculateBase(value, settings[CombatParameter.ReinforceMainAttribute]) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 + key - (value.type === row_types.get(RowType.Front) ? 200000000 : 0) - (value.type === row_types.get(RowType.Back) ? -100000000 : 0)
+        return (settings[CombatParameter.ReinforceMainSign] ? 1 : -1) * calculateBase(value, settings[CombatParameter.ReinforceMainAttribute]) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 - (value.type === row_types[RowType.Front] ? 200000000 : 0) - (value.type === row_types[RowType.Back] ? -100000000 : 0)
     })
-    let orderedFlankReserve = flankReserve.sortBy((value, key) => {
+    let orderedFlankReserve = sortBy(flankReserve, value => {
         value = mergeValues(value, definitions[value.type])
-        return (settings[CombatParameter.ReinforceFlankSign] ? 1 : -1) * calculateBase(value, settings[CombatParameter.ReinforceFlankAttribute]) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 + key - (value.type === row_types.get(RowType.Flank) ? 100000000 : 0)
+        return (settings[CombatParameter.ReinforceFlankSign] ? 1 : -1) * calculateBase(value, settings[CombatParameter.ReinforceFlankAttribute]) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 - (value.type === row_types[RowType.Flank] ? 100000000 : 0)
     })
 
-    const free_spots = frontline.filter((_, index) => index < frontline.size).reduce((previous, current) => previous + (current ? 0 : 1), 0)
-    const [left_flank_size, right_flank_size] = calculateFlankSizes(settings, round, flank_size, frontline.size, reserve.size, free_spots, enemy_size)
+    const free_spots = frontline.filter((_, index) => index < frontline.length).reduce((previous, current) => previous + (current ? 0 : 1), 0)
+    const [left_flank_size, right_flank_size] = calculateFlankSizes(settings, round, flank_size, frontline.length, reserve.length, free_spots, enemy_size)
 
     if (round === 0) {
         // Initial deployment uses reversed order (so Primary unit is first and Secondary last).
@@ -97,62 +95,66 @@ export const reinforce = (army: BaseUnits, definitions: UnitDefinitions, round: 
         orderedFlankReserve = orderedFlankReserve.reverse()
     }
     // Optimization to not drag units in calculations which have no chance to get picked.
-    orderedMainReserve = orderedMainReserve.takeLast(free_spots)
-    orderedFlankReserve = orderedFlankReserve.takeLast(free_spots)
+    orderedMainReserve = orderedMainReserve.slice(-free_spots, free_spots)
+    orderedFlankReserve = orderedFlankReserve.slice(-free_spots, free_spots)
     let index = center
     // Fill main front until flanks are reached.
-    for (; index >= left_flank_size && index + right_flank_size < frontline.size && reserve.size > 0; index = nextIndex(index, center)) {
-        if (frontline.get(index))
+    for (; index >= left_flank_size && index + right_flank_size < frontline.length && reserve.length > 0; index = nextIndex(index, center)) {
+        if (frontline[index])
             continue
-        if (orderedMainReserve.size > 0) {
-            reserve = reserve.delete(reserve.indexOf(orderedMainReserve.last()))
-            frontline = frontline.set(index, orderedMainReserve.last())
-            orderedMainReserve = orderedMainReserve.pop()
+        const main = orderedMainReserve.pop()
+        if (main) {
+            reserve.splice(reserve.indexOf(main), 1)
+            frontline[index] = main
+            continue
         }
-        else if (orderedFlankReserve.size > 0) {
-            reserve = reserve.delete(reserve.indexOf(orderedFlankReserve.last()))
-            frontline = frontline.set(index, orderedFlankReserve.last())
-            orderedFlankReserve = orderedFlankReserve.pop()
+        const flank = orderedFlankReserve.pop()
+        if (flank) {
+            reserve.splice(reserve.indexOf(flank), 1)
+            frontline[index] = flank
+            continue
         }
     }
     // Fill flanks with remaining units.
-    for (; index >= 0 && index < frontline.size && reserve.size > 0; index = nextIndex(index, center)) {
-        if (frontline.get(index))
+    for (; index >= 0 && index < frontline.length && reserve.length > 0; index = nextIndex(index, center)) {
+        if (frontline[index])
             continue
-        if (orderedFlankReserve.size > 0) {
-            reserve = reserve.delete(reserve.indexOf(orderedFlankReserve.last()))
-            frontline = frontline.set(index, orderedFlankReserve.last())
-            orderedFlankReserve = orderedFlankReserve.pop()
+        const flank = orderedFlankReserve.pop()
+        if (flank) {
+            reserve.splice(reserve.indexOf(flank), 1)
+            frontline[index] = flank
+            continue
         }
-        else if (orderedMainReserve.size > 0) {
-            reserve = reserve.delete(reserve.indexOf(orderedMainReserve.last()))
-            frontline = frontline.set(index, orderedMainReserve.last())
-            orderedMainReserve = orderedMainReserve.pop()
+        const main = orderedMainReserve.pop()
+        if (main) {
+            reserve.splice(reserve.indexOf(main), 1)
+            frontline[index] = main
+            continue
         }
     }
     // Move units from left to center.
-    for (let unit_index = Math.ceil(frontline.size / 2.0) - 1; unit_index > 0; --unit_index) {
-        const unit = frontline.get(unit_index)
+    for (let unit_index = Math.ceil(frontline.length / 2.0) - 1; unit_index > 0; --unit_index) {
+        const unit = frontline[unit_index]
         if (unit)
             continue
-        const unit_on_left = frontline.get(unit_index - 1)
+        const unit_on_left = frontline[unit_index - 1]
         if (unit_on_left) {
-            frontline = frontline.set(unit_index, unit_on_left)
-            frontline = frontline.set(unit_index - 1, undefined)
+            frontline[unit_index] = unit_on_left
+            frontline[unit_index - 1] = undefined
             if (attacker_to_defender)
                 attacker_to_defender.forEach((target, index) => attacker_to_defender[index] = target === unit_index - 1 ? unit_index : target)
             continue
         }
     }
     // Move units from right to center.
-    for (let unit_index = Math.ceil(frontline.size / 2.0); unit_index < frontline.size - 1; ++unit_index) {
-        const unit = frontline.get(unit_index)
+    for (let unit_index = Math.ceil(frontline.length / 2.0); unit_index < frontline.length - 1; ++unit_index) {
+        const unit = frontline[unit_index]
         if (unit)
             continue
-        const unit_on_right = frontline.get(unit_index + 1)
+        const unit_on_right = frontline[unit_index + 1]
         if (unit_on_right) {
-            frontline = frontline.set(unit_index, unit_on_right)
-            frontline = frontline.set(unit_index + 1, undefined)
+            frontline[unit_index] = unit_on_right
+            frontline[unit_index + 1] = undefined
             if (attacker_to_defender)
                 attacker_to_defender.forEach((target, index) => attacker_to_defender[index] = target === unit_index + 1 ? unit_index : target)
             continue

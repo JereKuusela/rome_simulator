@@ -12,7 +12,6 @@ import { filterUnitDefinitions } from '../army_utils'
 import { toArr } from '../utils'
 
 export interface ModalInfo {
-  name: CountryName
   country: CountryName
   type: RowType
 }
@@ -41,7 +40,7 @@ class ModalRowTypeSelector extends Component<IProps> {
 
   selectUnit = (unit: UnitType | undefined): void => (
     this.props.info && 
-    this.props.setRowType(this.props.mode, this.props.info.name, this.props.info.type, unit)
+    this.props.setRowType(this.props.mode, this.props.info.country, this.props.info.type, unit)
   )
 }
 

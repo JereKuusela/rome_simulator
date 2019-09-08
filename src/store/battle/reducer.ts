@@ -1,6 +1,5 @@
 
 import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
-import { List } from 'immutable'
 import {
   getDefaultArmy, getInitialTerrains, Army, Side, ArmyType, BaseUnits, Participant, getDefaultParticipant, RowType
 } from './actions'
@@ -9,7 +8,7 @@ import { TerrainType } from '../terrains'
 import { DefinitionType, Mode } from '../../base_definition'
 import { CountryName } from '../countries'
 import { TacticType } from '../tactics';
-import { keys, toArr, map, every, forEach, arrGet } from '../../utils';
+import { keys, toArr, map, every, forEach, arrGet } from '../../utils'
 
 export interface Battle {
   readonly armies: Armies
@@ -57,15 +56,17 @@ const checkFightSub = (army?: BaseUnits) => army ? (checkArmy(army.frontline) ||
 
 export const checkFight = (participants: Participants, armies: Armies) => every(participants, value => checkFightSub(arrGet(value.rounds, -1, armies[value.name])))
 
-const checkArmy = (army: List<BaseUnit | undefined>) => army.find(value => value !== undefined) !== undefined
+const checkArmy = (army: (BaseUnit | undefined)[]) => army.find(value => value !== undefined) !== undefined
 
-export const doRemoveReserveUnits = (reserve: List<BaseUnit>, types: UnitType[]) => {
-  for (const type of types)
-    reserve = reserve.delete(reserve.findLastIndex(value => value.type === type))
+export const doRemoveReserveUnits = (reserve: BaseUnit[], types: UnitType[]) => {
+  for (const type of types) {
+    const index = reserve.length - 1 - reserve.reverse().findIndex(value => value.type === type)
+    reserve.splice(index, 1)
+  }
   return reserve
 }
 
-export const doAddReserveUnits = (reserve: List<BaseUnit>, units: BaseUnit[]) => reserve.merge(units)
+export const doAddReserveUnits = (reserve: BaseUnit[], units: BaseUnit[]) => reserve.splice(reserve.length - 1, 0, ...units)
 
 class BattleReducer extends ImmerReducer<ModeState> {
 
@@ -73,19 +74,19 @@ class BattleReducer extends ImmerReducer<ModeState> {
     const state = this.state[mode].armies[country]
     const draft = this.draftState[mode].armies[country]
     if (type === ArmyType.Frontline)
-      draft.frontline = state.frontline.set(index, unit)
-    else if (type === ArmyType.Reserve && unit && index > state.reserve.size)
-      draft.reserve = state.reserve.push(unit)
+      draft.frontline[index] = unit
+    else if (type === ArmyType.Reserve && unit && index > state.reserve.length)
+      draft.reserve.push(unit)
     else if (type === ArmyType.Reserve && unit)
-      draft.reserve = state.reserve.set(index, unit)
+      draft.reserve[index] = unit
     else if (type === ArmyType.Reserve && !unit)
-      draft.reserve = state.reserve.delete(index)
+      draft.reserve.splice(index, 1)
     else if (type === ArmyType.Defeated && unit)
-      draft.defeated = state.defeated.set(index, unit)
-    else if (type === ArmyType.Defeated && unit && index > state.defeated.size)
-      draft.defeated = state.defeated.push(unit)
+      draft.defeated[index] = unit
+    else if (type === ArmyType.Defeated && unit && index > state.defeated.length)
+      draft.defeated.push(unit)
     else if (type === ArmyType.Defeated && !unit)
-      draft.defeated = state.defeated.delete(index)
+      draft.defeated.splice(index, 1)
   }
 
   editUnit(mode: Mode, country: CountryName, unit: BaseUnit) {
@@ -95,11 +96,11 @@ class BattleReducer extends ImmerReducer<ModeState> {
     if (!type)
       return
     if (type === ArmyType.Frontline)
-      draft.frontline = state.frontline.set(index, unit)
+      draft.frontline[index] = unit
     if (type === ArmyType.Reserve)
-      draft.reserve = state.reserve.set(index, unit)
+      draft.reserve[index] = unit
     if (type === ArmyType.Defeated)
-      draft.defeated = state.defeated.set(index, unit)
+      draft.defeated[index] = unit
   }
 
   removeUnit(mode: Mode, country: CountryName, unit: BaseUnit) {
@@ -109,11 +110,11 @@ class BattleReducer extends ImmerReducer<ModeState> {
     if (!type)
       return
     if (type === ArmyType.Frontline)
-      draft.frontline = state.frontline.set(index, undefined)
+      draft.frontline[index] = undefined
     if (type === ArmyType.Reserve)
-      draft.reserve = state.reserve.delete(index)
+      draft.reserve.splice(index, 1)
     if (type === ArmyType.Defeated)
-      draft.defeated = state.defeated.delete(index)
+      draft.defeated.splice(index, 1)
   }
 
   removeReserveUnits(mode: Mode, country: CountryName, types: UnitType[]) {
@@ -138,9 +139,8 @@ class BattleReducer extends ImmerReducer<ModeState> {
   }
 
   setRowType(mode: Mode, country: CountryName, row_type: RowType, unit: UnitType | undefined) {
-    const state = this.state[mode].armies[country]
     const draft = this.draftState[mode].armies[country]
-    draft.row_types = state.row_types.set(row_type, unit)
+    draft.row_types[row_type] = unit
   }
 
   invalidate(mode: Mode) {
@@ -204,8 +204,8 @@ class BattleReducer extends ImmerReducer<ModeState> {
     let participants = next.participants
     forEach(participants, value => {
       armies[value.name].frontline = getDefaultArmy(mode).frontline
-      armies[value.name].reserve = armies[value.name].reserve.clear()
-      armies[value.name].defeated = armies[value.name].defeated.clear()
+      armies[value.name].reserve = []
+      armies[value.name].defeated = []
     })
     participants = map(participants, value => ({ ...value, rounds: [], rolls: [] }))
     next = {

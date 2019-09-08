@@ -1,16 +1,14 @@
 import React, { Component } from 'react'
-import { List } from 'immutable'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { AppState } from '../store/'
-import { selectTactic, invalidate } from '../store/battle'
+import { selectTactic, invalidate, BaseDefeated, BaseReserve, BaseFrontLine } from '../store/battle'
 import { calculateTactic } from '../store/combat'
 import ItemSelector, { SelectorAttributes } from '../components/ItemSelector'
 import { TacticType, TacticCalc } from '../store/tactics'
 import { getBattle, filterTactics } from '../store/utils'
 import { mergeValues, calculateValue, Mode } from '../base_definition'
 import { toSignedPercent, toPercent } from '../formatters'
-import { BaseUnit } from '../store/units'
 import { CountryName } from '../store/countries'
 import StyledNumber from '../components/StyledNumber';
 import { map, filter, toArr } from '../utils';
@@ -28,8 +26,8 @@ class ModalTacticSelector extends Component<IProps> {
     const participant = this.props.armies[country]
     const army = participant && {
       frontline: this.mergeAllValues(country, participant.frontline),
-      reserve: this.mergeAllValues(country, participant.reserve) as List<BaseUnit>,
-      defeated: this.mergeAllValues(country, participant.defeated) as List<BaseUnit>
+      reserve: this.mergeAllValues(country, participant.reserve) as BaseReserve,
+      defeated: this.mergeAllValues(country, participant.defeated) as BaseDefeated
     }
     const attributes = {} as SelectorAttributes<TacticType>
     attributes['effect'] =  map(this.props.tactics, value => (
@@ -70,7 +68,7 @@ class ModalTacticSelector extends Component<IProps> {
   )
 
   
-  mergeAllValues = (name: CountryName, army: List<BaseUnit | undefined>): List<BaseUnit | undefined> => {
+  mergeAllValues = (name: CountryName, army: BaseFrontLine): BaseFrontLine => {
     return army.map(value => value && mergeValues(mergeValues(this.props.units[name][value.type], value), this.props.global_stats[name][this.props.mode]))
   }
 }
