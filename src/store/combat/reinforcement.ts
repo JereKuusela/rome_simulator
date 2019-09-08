@@ -18,7 +18,7 @@ const isFlankUnit = (settings: Settings, row_types: RowTypes, unit: BaseUnit) =>
         return true
     if (unit.type === row_types[RowType.Front] || unit.type === row_types[RowType.Back])
         return false
-    const value = calculateBase(unit, settings[CombatParameter.FlankCriteriaAttribute])
+    const value = calculateBase(unit, String(settings[CombatParameter.FlankCriteriaAttribute]))
     const limit = settings[CombatParameter.FlankCriteriaValue]
     if (settings[CombatParameter.FlankCriteriaSign])
         return value > limit
@@ -79,11 +79,11 @@ export const reinforce = (army: BaseUnits, definitions: UnitDefinitions, round: 
     // Calculate priorities (mostly based on unit type, ties are resolved with index numbers).
     let orderedMainReserve = sortBy(mainReserve, value => {
         value = mergeValues(value, definitions[value.type])
-        return (settings[CombatParameter.ReinforceMainSign] ? 1 : -1) * calculateBase(value, settings[CombatParameter.ReinforceMainAttribute]) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 - (value.type === row_types[RowType.Front] ? 200000000 : 0) - (value.type === row_types[RowType.Back] ? -100000000 : 0)
+        return (settings[CombatParameter.ReinforceMainSign] ? 1 : -1) * calculateBase(value,  String(settings[CombatParameter.ReinforceMainAttribute])) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 - (value.type === row_types[RowType.Front] ? 200000000 : 0) - (value.type === row_types[RowType.Back] ? -100000000 : 0)
     })
     let orderedFlankReserve = sortBy(flankReserve, value => {
         value = mergeValues(value, definitions[value.type])
-        return (settings[CombatParameter.ReinforceFlankSign] ? 1 : -1) * calculateBase(value, settings[CombatParameter.ReinforceFlankAttribute]) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 - (value.type === row_types[RowType.Flank] ? 100000000 : 0)
+        return (settings[CombatParameter.ReinforceFlankSign] ? 1 : -1) * calculateBase(value,  String(settings[CombatParameter.ReinforceFlankAttribute])) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 - (value.type === row_types[RowType.Flank] ? 100000000 : 0)
     })
 
     const free_spots = frontline.filter((_, index) => index < frontline.length).reduce((previous, current) => previous + (current ? 0 : 1), 0)
