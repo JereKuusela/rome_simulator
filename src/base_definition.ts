@@ -49,7 +49,7 @@ export const getImages = <K extends string>(definitions: { [key in K]: BaseDefin
  * Empty is returned for non-existing definitions.
  * @param definition
  */
-export const getImage = (definition?: { image?: string}): string => (definition && definition.image) || (definition ? UnknownIcon : EmptyIcon)
+export const getImage = (definition: { image?: string} | null): string => (definition && definition.image) || (definition ? UnknownIcon : EmptyIcon)
 
 /**
  * Merges base, modifier and loss values of given definitions. Returns the first definition (if defined), otherwise the second definition.

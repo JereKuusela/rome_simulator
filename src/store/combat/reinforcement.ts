@@ -140,7 +140,7 @@ export const reinforce = (army: BaseUnits, definitions: UnitDefinitions, round: 
         const unit_on_left = frontline[unit_index - 1]
         if (unit_on_left) {
             frontline[unit_index] = unit_on_left
-            frontline[unit_index - 1] = undefined
+            frontline[unit_index - 1] = null
             if (attacker_to_defender)
                 attacker_to_defender.forEach((target, index) => attacker_to_defender[index] = target === unit_index - 1 ? unit_index : target)
             continue
@@ -154,7 +154,7 @@ export const reinforce = (army: BaseUnits, definitions: UnitDefinitions, round: 
         const unit_on_right = frontline[unit_index + 1]
         if (unit_on_right) {
             frontline[unit_index] = unit_on_right
-            frontline[unit_index + 1] = undefined
+            frontline[unit_index + 1] = null
             if (attacker_to_defender)
                 attacker_to_defender.forEach((target, index) => attacker_to_defender[index] = target === unit_index + 1 ? unit_index : target)
             continue

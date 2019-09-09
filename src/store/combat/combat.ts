@@ -93,7 +93,7 @@ export const doBattle = (definitions: Units, attacker: ParticipantState, defende
  * @param targets List of targets.
  */
 const saveTargets = (army: BaseUnits, targets: Array<number | null>): BaseUnits => {
-  const frontline = army.frontline.map((unit, index): (BaseUnit | undefined) => {
+  const frontline = army.frontline.map((unit, index): (BaseUnit | null) => {
     if (!unit)
       return unit
     return { ...unit, target: targets[index]}
@@ -115,8 +115,8 @@ const removeOutOfBounds = (army: BaseUnits, combat_width: number): BaseUnits => 
     if (index >= 0 && index < combat_width)
       return unit
     defeated = [ ...defeated, unit ]
-    return undefined
-  }), combat_width)
+    return null
+  }), combat_width, null)
   return { ...army, frontline, defeated }
 }
 
@@ -251,7 +251,7 @@ const applyKills = (frontline: BaseFrontLine, kills: Kill[], round: number): Bas
  * @param army Frontline. 
  */
 const removeDefeated = (army: BaseUnits): BaseUnits => {
-  const frontline = army.frontline.map(unit => unit && !unit.is_defeated ? unit : undefined)
+  const frontline = army.frontline.map(unit => unit && !unit.is_defeated ? unit : null)
   return { frontline, reserve: army.reserve, defeated: army.defeated }
 }
 
@@ -268,7 +268,7 @@ const copyDefeated = (army: BaseUnits, definitions: FrontLine, minimum_morale: n
   const frontline = army.frontline.map((unit, index) => {
     const definition = definitions[index]
     if (!definition || !unit)
-      return undefined
+      return null
     if (calculateValue(definition, UnitCalc.Strength) > minimum_strength && calculateValue(definition, UnitCalc.Morale) > minimum_morale)
       return unit
     defeated = [ ...defeated, unit]

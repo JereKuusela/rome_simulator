@@ -6,16 +6,17 @@ import IconCost from '../images/cost.png'
 import IconSupplyLimit from '../images/supply_limit.png'
 import IconManpower from '../images/manpower.png'
 import IconStrength from '../images/naval_combat.png'
+import { FrontLine, Reserve, Defeated } from '../store/battle'
 
 
 interface IProps {
   mode: DefinitionType
-  frontline_a: (Unit | undefined)[]
-  frontline_d: (Unit | undefined)[]
-  reserve_a: Unit[]
-  reserve_d: Unit[]
-  defeated_a: Unit[]
-  defeated_d: Unit[]
+  frontline_a: FrontLine
+  frontline_d: FrontLine
+  reserve_a: Reserve
+  reserve_d: Reserve
+  defeated_a: Defeated
+  defeated_d: Defeated
   attached?: boolean
 }
 
@@ -56,7 +57,7 @@ export default class ArmyCosts extends Component<IProps> {
     )
   }
 
-  calculateTotal = (attribute1: UnitCalc, attribute2: UnitCalc | undefined, frontline: (Unit | undefined)[], reserve: Unit[], defeated: Unit[]): number => {
+  calculateTotal = (attribute1: UnitCalc, attribute2: UnitCalc | undefined, frontline: FrontLine, reserve: Reserve, defeated: Reserve): number => {
     return frontline.reduce((previous, current) => previous + (current && !current.is_defeated ?  + this.reduce(current, attribute1, attribute2) : 0), 0)
       + reserve.reduce((previous, current) => previous + this.reduce(current, attribute1, attribute2), 0)
       + defeated.reduce((previous, current) => previous + this.reduce(current, attribute1, attribute2), 0)

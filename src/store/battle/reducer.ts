@@ -57,7 +57,7 @@ const checkFightSub = (army: BaseUnits) => checkArmy(army.frontline) || checkArm
 
 export const isOver = (participants: Participants, armies: Armies) => !every(participants, value => checkFightSub(arrGet(value.rounds, -1, armies[value.name])))
 
-const checkArmy = (army: (BaseUnit | undefined)[]) => some(army, value => value)
+const checkArmy = (army: (BaseUnit | null)[]) => some(army, value => value)
 
 export const doRemoveReserveUnits = (reserve: BaseUnit[], types: UnitType[]) => {
   for (const type of types) {
@@ -71,7 +71,7 @@ export const doAddReserveUnits = (reserve: BaseUnit[], units: BaseUnit[]) => mer
 
 class BattleReducer extends ImmerReducer<ModeState> {
 
-  selectUnit(mode: Mode, country: CountryName, type: ArmyType, index: number, unit: BaseUnit | undefined) {
+  selectUnit(mode: Mode, country: CountryName, type: ArmyType, index: number, unit: BaseUnit | null) {
     const state = this.state[mode].armies[country]
     const draft = this.draftState[mode].armies[country]
     if (type === ArmyType.Frontline)
@@ -112,7 +112,7 @@ class BattleReducer extends ImmerReducer<ModeState> {
     if (!type)
       return
     if (type === ArmyType.Frontline)
-      draft.frontline[index] = undefined
+      draft.frontline[index] = null
     if (type === ArmyType.Reserve)
       draft.reserve.splice(index, 1)
     if (type === ArmyType.Defeated)
@@ -142,7 +142,7 @@ class BattleReducer extends ImmerReducer<ModeState> {
     draft.tactic = tactic
   }
 
-  setRowType(mode: Mode, country: CountryName, row_type: RowType, unit: UnitType | undefined) {
+  setRowType(mode: Mode, country: CountryName, row_type: RowType, unit: UnitType | null) {
     const draft = this.draftState[mode].armies[country]
     draft.row_types[row_type] = unit
   }

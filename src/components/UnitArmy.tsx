@@ -11,7 +11,7 @@ interface IProps {
   units?: BaseFrontLine
   row_width: number
   reverse: boolean
-  onClick?: (index: number, unit: BaseUnit | undefined) => void
+  onClick?: (index: number, unit: BaseUnit | null) => void
   onRemove?: (index: number) => void
   type: ArmyType
   color: string
@@ -50,7 +50,7 @@ export default class UnitArmy extends Component<IProps> {
                 </Table.Cell>
                 {
                   columns.map((column, index) => {
-                    const unit = column > -1 && this.props.units ? this.props.units[row * this.props.row_width + column] : undefined
+                    const unit = column > -1 && this.props.units ? this.props.units[row * this.props.row_width + column] : null
                     return (
                       <Table.Cell
                       className={this.props.side + '-' + this.props.type + '-' + column}
@@ -91,11 +91,11 @@ export default class UnitArmy extends Component<IProps> {
     return 'square full'
   }
 
-  gradient = (unit: BaseUnit | undefined, color: string, attribute: UnitCalc): string => {
+  gradient = (unit: BaseUnit | null, color: string, attribute: UnitCalc): string => {
     return 'linear-gradient(0deg, ' + color + ' 0%, ' + color + ' ' + this.percent(unit, attribute) + '%, ' + WHITE_COLOR + ' ' + this.percent(unit, attribute) + '%, ' + WHITE_COLOR + ' 100%)'
   }
 
-  percent = (unit: BaseUnit | undefined, attribute: UnitCalc): number => {
+  percent = (unit: BaseUnit | null, attribute: UnitCalc): number => {
     if (!unit || unit.is_defeated)
       return 0
     return 100.0 - 100.0 * calculateValue(unit, attribute) / calculateValueWithoutLoss(unit, attribute)

@@ -76,7 +76,7 @@ export const findUnitById = (units: BaseUnits | undefined, id: number): BaseUnit
   let base_unit = units.reserve.find(unit => unit.id === id)
   if (base_unit)
     return base_unit
-  base_unit = units.frontline.find(unit => unit ? unit.id === id : false)
+  base_unit = units.frontline.find(unit => unit ? unit.id === id : false) as BaseUnit | undefined
   if (base_unit)
     return base_unit
   base_unit = units.defeated.find(unit => unit.id === id)

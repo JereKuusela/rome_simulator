@@ -63,7 +63,7 @@ class ModalTacticSelector extends Component<IProps> {
     )
   }
 
-  selectTactic = (type: TacticType | undefined): void => (
+  selectTactic = (type: TacticType | null): void => (
     this.props.info && type && this.props.selectTactic(this.props.mode, this.props.info.country, type)
   )
 

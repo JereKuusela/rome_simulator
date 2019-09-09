@@ -51,7 +51,7 @@ class Battle extends Component<IProps, IState> {
 
   closeModal = (): void => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null, modal_fast_planner_open: false, modal_row_info: null })
 
-  openUnitModal = (name: CountryName, type: ArmyType, country: CountryName, column: number, unit: BaseUnit | undefined): void => {
+  openUnitModal = (name: CountryName, type: ArmyType, country: CountryName, column: number, unit: BaseUnit | null): void => {
     if (unit)
       this.openArmyUnitModal(country, unit as BaseUnit & UnitDefinition)
     else
@@ -287,7 +287,7 @@ class Battle extends Component<IProps, IState> {
           side={type}
           onClick={(column, unit) => this.openUnitModal(country, ArmyType.Frontline, country, column, unit)}
           onRemove={column => this.props.removeUnit(this.props.mode, country, ArmyType.Frontline, column)}
-          units={resize(this.mergeAllValues(country, participant.frontline), combat_width)}
+          units={resize(this.mergeAllValues(country, participant.frontline), combat_width, null)}
           row_width={Math.max(30, combat_width)}
           reverse={type === Side.Attacker}
           type={ArmyType.Frontline}
@@ -344,7 +344,7 @@ class Battle extends Component<IProps, IState> {
           side={type}
           onClick={(column, unit) => this.openUnitModal(country, ArmyType.Reserve, country, column, unit)}
           onRemove={column => this.props.removeUnit(this.props.mode, country, ArmyType.Reserve, column)}
-          units={resize(units, size)}
+          units={resize(units, size, null)}
           row_width={30}
           reverse={false}
           type={ArmyType.Reserve}
@@ -367,7 +367,7 @@ class Battle extends Component<IProps, IState> {
           side={type}
           onClick={(column, unit) => this.openUnitModal(country, ArmyType.Defeated, country, column, unit)}
           onRemove={column => this.props.removeUnit(this.props.mode, country, ArmyType.Defeated, column)}
-          units={resize(units, size)}
+          units={resize(units, size, null)}
           row_width={30}
           reverse={false}
           type={ArmyType.Defeated}
@@ -527,7 +527,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   setFlankSize: (mode: Mode, name: CountryName, size: number) => dispatch(setFlankSize(mode, name, size)) && dispatch(invalidate(mode)),
   selectArmy: (mode: Mode, type: Side, name: CountryName) => dispatch(selectArmy(mode, type, name)) && dispatch(invalidate(mode)),
   removeUnit: (mode: Mode, name: CountryName, type: ArmyType, column: number) => (
-    dispatch(selectUnit(mode, name, type, column, undefined))
+    dispatch(selectUnit(mode, name, type, column, null))
   ),
   setSeed: (mode: Mode, seed?: number) => dispatch(setSeed(mode, seed)) && dispatch(invalidate(mode)),
   refreshBattle: (mode: Mode) => dispatch(refreshBattle(mode))

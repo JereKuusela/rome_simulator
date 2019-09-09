@@ -26,7 +26,7 @@ class ModalRowTypeSelector extends Component<IProps> {
         <Modal.Content>
           <ItemRemover
             onClose={this.props.onClose}
-            onRemove={() => this.selectUnit(undefined)}
+            onRemove={() => this.selectUnit(null)}
           />
           <ItemSelector
             onClose={this.props.onClose}
@@ -38,7 +38,7 @@ class ModalRowTypeSelector extends Component<IProps> {
     )
   }
 
-  selectUnit = (unit: UnitType | undefined): void => (
+  selectUnit = (unit: UnitType | null): void => (
     this.props.info && 
     this.props.setRowType(this.props.mode, this.props.info.country, this.props.info.type, unit)
   )
@@ -50,7 +50,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setRowType: (mode: Mode, name: CountryName, type: RowType, unit: UnitType | undefined) => (
+  setRowType: (mode: Mode, name: CountryName, type: RowType, unit: UnitType | null) => (
     dispatch(setRowType(mode, name, type, unit))
   )
 })

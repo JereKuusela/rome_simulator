@@ -11,10 +11,10 @@ export enum RowType {
   Flank = 'Flank'
 }
 
-export type BaseFrontLine = (BaseUnit | undefined)[]
+export type BaseFrontLine = (BaseUnit | null)[]
 export type BaseReserve = BaseUnit[]
 export type BaseDefeated = BaseUnit[]
-export type FrontLine = (Unit | undefined)[]
+export type FrontLine = (Unit | null)[]
 export type Reserve = Unit[]
 export type Defeated = Unit[]
 
@@ -43,7 +43,7 @@ export interface Participant {
   readonly randomize_roll: boolean
 }
 
-export type RowTypes = { [key in RowType]: UnitType | undefined }
+export type RowTypes = { [key in RowType]: UnitType | null }
 
 export interface Army extends BaseUnits {
   readonly tactic: TacticType

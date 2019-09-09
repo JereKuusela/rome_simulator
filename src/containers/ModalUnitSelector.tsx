@@ -35,9 +35,9 @@ class ModalUnitSelector extends Component<IProps> {
     )
   }
 
-  selectUnit = (unit: UnitType | undefined): void => (
+  selectUnit = (unit: UnitType | null): void => (
     this.props.info &&
-    this.props.selectUnit(this.props.mode, this.props.info.name, this.props.info.type, this.props.info.index, unit ? { id: getNextId(), type: this.props.units[this.props.info.name][unit].type } : undefined)
+    this.props.selectUnit(this.props.mode, this.props.info.name, this.props.info.type, this.props.info.index, unit ? { id: getNextId(), type: this.props.units[this.props.info.name][unit].type } : null)
   )
 }
 
@@ -47,7 +47,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  selectUnit: (mode: Mode, name: CountryName, type: ArmyType, column: number, unit: BaseUnit | undefined) => (
+  selectUnit: (mode: Mode, name: CountryName, type: ArmyType, column: number, unit: BaseUnit | null) => (
     dispatch(selectUnit(mode, name, type, column, unit))
   )
 })

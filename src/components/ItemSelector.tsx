@@ -13,8 +13,8 @@ export type SelectorAttributes<T extends ItemType> = { [key: string]: { [key in 
 
 interface IProps<T extends ItemType, S extends ItemAttribute> {
   onClose: () => void
-  items: (BaseDefinition<T, S> | BaseValuesDefinition<T, S> | undefined)[]
-  onSelection: (type: T | undefined) => void
+  items: (BaseDefinition<T, S> | BaseValuesDefinition<T, S> | null)[]
+  onSelection: (type: T | null) => void
   attributes?: SelectorAttributes<T>
 }
 
@@ -32,7 +32,7 @@ export default class ItemSelector<S extends ItemAttribute, T extends ItemType> e
     )
   }
 
-  renderRow = (item: BaseDefinition<T, S> | BaseValuesDefinition<T, S> | undefined): JSX.Element | null => {
+  renderRow = (item: BaseDefinition<T, S> | BaseValuesDefinition<T, S> | null): JSX.Element | null => {
     if (!item)
       return null
     return (
@@ -53,7 +53,7 @@ export default class ItemSelector<S extends ItemAttribute, T extends ItemType> e
     )
   }
 
-  onClick = (type: T | undefined): void => {
+  onClick = (type: T | null): void => {
     this.props.onSelection(type)
     this.props.onClose()
   }

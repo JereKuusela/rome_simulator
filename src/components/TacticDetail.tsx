@@ -67,7 +67,7 @@ export default class TacticDetail extends Component<IProps> {
         <Table.Body>
           <Table.Row>
             <Table.Cell>
-              <Image src={getImage(undefined)} avatar />
+              <Image src={getImage(null)} avatar />
               Type
             </Table.Cell>
             <Table.Cell collapsing>
@@ -82,7 +82,7 @@ export default class TacticDetail extends Component<IProps> {
           </Table.Row>
           <Table.Row>
             <Table.Cell>
-              <Image src={getImage(undefined)} avatar />
+              <Image src={getImage(null)} avatar />
               Mode
             </Table.Cell>
             <Table.Cell collapsing>
@@ -95,7 +95,7 @@ export default class TacticDetail extends Component<IProps> {
           </Table.Row>
           <Table.Row>
             <Table.Cell>
-              <Image src={getImage(undefined)} avatar />
+              <Image src={getImage(null)} avatar />
               Image
             </Table.Cell>
             <Table.Cell collapsing>
@@ -118,7 +118,7 @@ export default class TacticDetail extends Component<IProps> {
             Array.from(this.props.tactic_types).map(value => this.renderRow(tactic, value, true, new Set([getImage(this.props.tactics[value])])))
           }
           {
-            this.attributes.map(value => this.renderRow(tactic, value, true, new Set([getImage(undefined)])))
+            this.attributes.map(value => this.renderRow(tactic, value, true, new Set([getImage(null)])))
           }
         </Table.Body>
       </Table>
