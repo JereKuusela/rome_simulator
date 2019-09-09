@@ -1,4 +1,3 @@
-import { List } from 'immutable'
 import { getDefaultUnits, getDefaultGlobal } from './data'
 import {
   UnitType, UnitDefinition,
@@ -59,11 +58,11 @@ class UnitsReducer extends ImmerReducer<Units> {
     delete Object.assign(this.draftState, {[country]: this.draftState[old_country] })[old_country]
   }
 
-  enableModifiers(country: CountryName, key: string, modifiers: List<Modifier>) {
+  enableModifiers(country: CountryName, key: string, modifiers: Modifier[]) {
     const next = map(this.state[country], (unit, type) => {
       const values = modifiers.filter(value => value.target === type)
-      const base_values = values.filter(value => value.type !== ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
-      const modifier_values = values.filter(value => value.type === ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
+      const base_values = values.filter(value => value.type !== ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number])
+      const modifier_values = values.filter(value => value.type === ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number])
       return regenerateValues(regenerateValues(unit, ValuesType.Base, key, base_values), ValuesType.Modifier, key, modifier_values)
     })
     this.draftState[country] = next
@@ -93,13 +92,13 @@ class GlobalStatsReducer extends ImmerReducer<GlobalStats> {
     delete Object.assign(this.draftState, {[country]: this.draftState[old_country] })[old_country]
   }
 
-  enableModifiers(country: CountryName, key: string, modifiers: List<Modifier>) {
+  enableModifiers(country: CountryName, key: string, modifiers: Modifier[]) {
     const landValues = modifiers.filter(value => value.target === DefinitionType.Land || value.target === DefinitionType.Global)
-    const baseLandValues = landValues.filter(value => value.type !== ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
-    const modifierLandValues = landValues.filter(value => value.type === ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
+    const baseLandValues = landValues.filter(value => value.type !== ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number])
+    const modifierLandValues = landValues.filter(value => value.type === ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number])
     const navalValues = modifiers.filter(value => value.target === DefinitionType.Naval || value.target === DefinitionType.Global)
-    const baseNavalValues = navalValues.filter(value => value.type !== ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
-    const modifierNavalValues = navalValues.filter(value => value.type === ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number]).toArray()
+    const baseNavalValues = navalValues.filter(value => value.type !== ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number])
+    const modifierNavalValues = navalValues.filter(value => value.type === ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number])
     let definition = this.state[country][DefinitionType.Land]
     definition = regenerateValues(definition, ValuesType.Base, key, baseLandValues)
     definition = regenerateValues(definition, ValuesType.Modifier, key, modifierLandValues)

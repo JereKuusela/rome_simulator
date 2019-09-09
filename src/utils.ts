@@ -1,5 +1,3 @@
-import { fromJS, Seq, List, OrderedMap, OrderedSet, Map } from 'immutable'
-
 /**
  * Maps a range to a list.
  * @param length Length of the range.
@@ -12,52 +10,6 @@ export const mapRange = <T>(length: number, func: (number: number) => T): T[] =>
   }
   return array
 }
-
-/**
- * Converts JS structure to immutable Lists and objects.
- * Default implementation converts objects to Maps.
- * @param data Data to convert.
- */
-export const listFromJS = <T>(data: T) => {
-  return fromJS(data, (_, sequence) => {
-    if (sequence instanceof Seq.Indexed)
-      return sequence.toList()
-    return sequence.toObject()
-  })
-}
-
-/**
- * Converts JS structure to immutable Lists and objects.
- * Default implementation converts objects to Maps.
- * @param data Data to convert.
- */
-export const orderedMapFromJS = <T>(data: T) => {
-  return fromJS(data, (_, sequence) => {
-    if (sequence instanceof Seq.Indexed)
-      return sequence.toList()
-    return sequence.toOrderedMap()
-  })
-}
-
-/**
- * Converts an item to a list with that item.
- * @param item 
- */
-export const toList = <T>(item: T) => List<T>().push(item)
-
-/**
- * Returns keys of a map.
- * @param map 
- */
-export const getKeys = <T>(map: OrderedMap<T, any>): OrderedSet<T> => map.keySeq().toOrderedSet()
-
-/**
- * Sums numbers in a map. Keys are ignored.
- * @param map
- * @param converter Optional converted to sum complex attributes.
- */
-export const sumMap = (map: Map<any, any>, converter?: (value: any) => number): number => map.reduce((previous, current) => previous + (converter ? converter(current) : Number(current)), 0)
-
 
 /**
  * Sums numbers in a list.
@@ -101,7 +53,7 @@ export function arrGet<V1, V2>(arr: V1[], index: number, initial?: V2)
 
 export const keys = <K extends string> (object: { [key in K]: any}) => Object.keys(object) as K[]
 const entries = <K extends string, V> (object: { [key in K]: V}) => Object.entries(object) as [K, V][]
-const values = <V> (object: { [key: string]: V}) => Object.values(object) as V[]
+export const values = <V> (object: { [key: string]: V}) => Object.values(object) as V[]
 
 export const map = <K extends string, V, R>(object: { [key in K]: V}, callback: (item: V, key: K) => R): { [key in K]: R} => Object.assign({}, ...entries(object).map(([k ,v]) => ({ [k]: callback(v, k) })))
 

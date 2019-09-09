@@ -1,8 +1,7 @@
-import { fromJS } from 'immutable'
-import { tacticFromJS, tacticsReducer, TacticDefinitions } from './tactics'
-import { terrainFromJS, terrainsReducer, TerrainDefinitions } from './terrains'
-import { unitDefinitionFromJS, unitFromJS, unitsReducer, globalStatsReducer, GlobalStats, Units } from './units'
-import { battleReducer, Army, getDefaultArmy, Battle, modeState, getDefaultParticipant, Participant, ModeState, BaseFrontLine, BaseReserve, BaseDefeated } from './battle'
+import { tacticsReducer, TacticDefinitions } from './tactics'
+import { terrainsReducer, TerrainDefinitions } from './terrains'
+import { unitsReducer, globalStatsReducer, GlobalStats, Units } from './units'
+import { battleReducer, Army, getDefaultArmy, Battle, modeState, getDefaultParticipant, Participant, ModeState, BaseReserve, BaseDefeated } from './battle'
 import { DefinitionType, Mode } from '../base_definition'
 import { transferReducer } from './transfer'
 import { CountryName } from './countries'
@@ -18,7 +17,6 @@ export const transformTactics = (state: TacticDefinitions): TacticDefinitions =>
   if (!state)
     return initial
   state = filter(state)
-  state = map(state, tactic => tacticFromJS(fromJS(tactic))!)
   // Automatically heal up default values.
   return state
   //return tactics.map((tactic, type) => clearAllValues(tactic, type)).map((terrain, type) => mergeValues(terrain, defaultTactics.get(type)!))
@@ -29,7 +27,6 @@ export const transformTerrains = (state: TerrainDefinitions): TerrainDefinitions
   if (!state)
     return initial
   state = filter(state)
-  state = map(state, terrain => terrainFromJS(fromJS(terrain))!)
   //const defaultTerrains = getDefaultTerrains()
   // Automatically heal up default values.
   return state
@@ -41,7 +38,6 @@ export const transformUnits = (state: Units): Units => {
   if (!state)
     return initial
   state = filter(state)
-  state = map(state, definitions => filter(map(definitions, unit => unitDefinitionFromJS(fromJS(unit))!)))
   //state = objMap(state, definitions => objMap(definitions, (unit, type) => clearAllValues(unit, type)))
   //const defaultUnits = getDefaultUnits()
   // Automatically heal up default values. TODO
@@ -54,7 +50,6 @@ export const transformGlobalStats = (state: GlobalStats): GlobalStats => {
   if (!state)
     return initial
   state = filter(state)
-  state = map(state, global => filter(map(global, unit => unitDefinitionFromJS(fromJS(unit))!)))
   //state = objMap(state, global => objMap(global, (unit, type) => clearAllValues(unit, type)))
   //const defaultGlobal = getDefaultGlobal()
   // Automatically heal up default values. TODO
@@ -66,24 +61,20 @@ const handleArmies = (state: Battle, mode: Mode): Battle => {
   const initial = modeState(mode)
   let terrains = initial.terrains
   if (state.terrains) {
-    const terrains_raw = fromJS(state.terrains)
-    if (!terrains_raw.contains(null))
-      terrains = terrains_raw
+    terrains = state.terrains
   }
-
-  const serializeUnits = (raw: any[]): BaseFrontLine => raw.map(value => unitFromJS(value))
 
   const serializeArmy = (army: Army): Army => {
     const initial = getDefaultArmy(mode)
     let frontline = initial.frontline
     if (army.frontline)
-      frontline = serializeUnits(army.frontline)
+      frontline = army.frontline
     let reserve = initial.reserve
     if (army.reserve)
-      reserve = serializeUnits(army.reserve).filter(value => value) as BaseReserve
+      reserve = army.reserve.filter(value => value) as BaseReserve
     let defeated = initial.defeated
     if (army.defeated)
-      defeated = serializeUnits(army.defeated).filter(value => value) as BaseDefeated
+      defeated = army.defeated.filter(value => value) as BaseDefeated
     let row_types = initial.row_types
     if (army.row_types)
       row_types = army.row_types
@@ -91,7 +82,7 @@ const handleArmies = (state: Battle, mode: Mode): Battle => {
     if (!tactic)
       tactic = initial.tactic
     const flank_size = army.flank_size || initial.flank_size
-    const selections = army.selections ? fromJS(army.selections).toSet() : initial.selections
+    const selections = army.selections || initial.selections
     return {
       flank_size,
       frontline,
@@ -152,7 +143,7 @@ export const transfromTransfer = (state_raw: any): ReturnType<typeof transferRed
   const initial = transferReducer(undefined, dummyAction)
   if (!state_raw)
     return initial
-  const export_keys = state_raw.export_keys ? fromJS(state_raw.export_keys) : initial.export_keys
+  const export_keys = state_raw.export_keys || initial.export_keys
   const reset_missing = state_raw.reset_missing || initial.reset_missing
   return { reset_missing, export_keys }
 }

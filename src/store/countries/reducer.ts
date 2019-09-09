@@ -1,5 +1,3 @@
-
-import { List } from 'immutable'
 import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
 import { GovermentType, ReligionType, CultureType, Modifier } from '../data'
 import { objGet, ObjSet, toObj } from '../../utils'

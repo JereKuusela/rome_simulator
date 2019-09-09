@@ -5,7 +5,7 @@ import { TacticDefinition, ValueType, TacticType, TacticCalc, TacticDefinitions 
 import { getBaseValue, explainShort, getImage, DefinitionType, calculateValue, getImages } from '../base_definition'
 import { renderImages } from './utils'
 import { toSignedPercent, toPercent } from '../formatters'
-import { toArr } from '../utils'
+import { toArr, values } from '../utils'
 
 interface IProps {
   readonly tactic_types: Set<TacticType>
@@ -23,8 +23,8 @@ interface IProps {
 // Display component for showing and changing tactic details.
 export default class TacticDetail extends Component<IProps> {
 
-  readonly attributes = Object.keys(TacticCalc).map(k => TacticCalc[k as any]) as TacticCalc[]
-  readonly modes = Object.keys(DefinitionType).map(k => DefinitionType[k as any]).sort() as DefinitionType[]
+  readonly attributes = values(TacticCalc)
+  readonly modes = values(DefinitionType)
   readonly headers = ['Attribute', 'Value', 'Custom value', 'Explained']
 
   renderModeDropdown = (type: TacticType, mode: DefinitionType): JSX.Element => {

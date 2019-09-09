@@ -4,6 +4,7 @@ import { UnitType, Unit, UnitCalc, ValueType, valueToString } from '../store/uni
 import { TerrainType } from '../store/terrains'
 import { getBaseValue, getLossValue, getModifierValue, explain, DefinitionType, calculateValue } from '../base_definition'
 import { toMaintenance } from '../formatters'
+import { values } from '../utils'
 
 interface IProps<T extends string> {
   readonly mode: DefinitionType
@@ -25,9 +26,9 @@ interface IProps<T extends string> {
 // Display component for showing and changing unit details.
 export default class UnitDetail<T extends string> extends Component<IProps<T>> {
 
-  readonly attributes = Object.keys(UnitCalc).map(k => UnitCalc[k as any]) as UnitCalc[]
-  readonly units = Object.keys(UnitType).map(k => UnitType[k as any]).sort() as UnitType[]
-  readonly modes = Object.keys(DefinitionType).map(k => DefinitionType[k as any]).sort() as DefinitionType[]
+  readonly attributes = values(UnitCalc)
+  readonly units = values(UnitType).sort()
+  readonly modes = values(DefinitionType)
   readonly headers = ['Attribute', 'Value', 'Custom base', 'Custom modifier', 'Custom losses', 'Explained']
 
   renderUnitTypeDropdown = (name: T, type: UnitType): JSX.Element => {

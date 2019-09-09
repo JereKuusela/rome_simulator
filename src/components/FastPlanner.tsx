@@ -1,22 +1,25 @@
 import React, { Component } from 'react'
-import { Map } from 'immutable'
 import { Table, Input } from 'semantic-ui-react'
 import { UnitType, Units } from '../store/units'
 import { renderImages } from './utils'
 import { getImages } from '../base_definition'
-import { Side } from '../store/battle';
+import { Side } from '../store/battle'
 import { toArr } from '../utils'
+import { has } from 'lodash'
+
+export type PlannerUnits = { [key in UnitType]: number }
+
 
 interface IProps {
   readonly units: Units
   readonly types_a: Set<UnitType>
   readonly types_d: Set<UnitType>
-  readonly reserve_a: Map<UnitType, number>
-  readonly reserve_d: Map<UnitType, number>
+  readonly reserve_a: PlannerUnits
+  readonly reserve_d: PlannerUnits
   readonly onValueChange: (side: Side, unit: UnitType, value: number) => void
   readonly attached?: boolean
-  readonly changes_a: Map<UnitType, number>
-  readonly changes_d: Map<UnitType, number>
+  readonly changes_a: PlannerUnits
+  readonly changes_d: PlannerUnits
 }
 
 // Display component for showing and changing tactic details.
@@ -65,7 +68,7 @@ export default class FastPlanner extends Component<IProps> {
             <Input
               type='number'
               size='mini'
-              value={this.props.changes_a.has(type) ? this.props.changes_a.get(type) : this.props.reserve_a.get(type)}
+              value={has(this.props.changes_a, type) ? this.props.changes_a[type] : this.props.reserve_a[type]}
               onChange={(_, data) => this.props.onValueChange(Side.Attacker, type, Math.max(0, Math.round(Number(data.value))))
               }
             />
@@ -78,7 +81,7 @@ export default class FastPlanner extends Component<IProps> {
             <Input
               type='number'
               size='mini'
-              value={this.props.changes_d.has(type) ? this.props.changes_d.get(type) : this.props.reserve_d.get(type)}
+              value={has(this.props.changes_d, type) ? this.props.changes_d[type] : this.props.reserve_d[type]}
               onChange={(_, data) => this.props.onValueChange(Side.Defender, type, Math.max(0, Math.round(Number(data.value))))
               }
             />

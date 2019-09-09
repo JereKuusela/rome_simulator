@@ -10,7 +10,7 @@ import { objGet, sumObj, map, arrGet } from '../../utils'
 import { defaultCountry } from '../countries/reducer'
 
 
-const doBattle = (state: AppState, mode: Mode, steps: number, refresh: boolean) => {
+const doBattle = (state: AppState, mode: Mode, steps: number, refresh: boolean): AppState => {
   const definitions = map(state.units, (definitions, country) => map(definitions, unit => mergeValues(unit, state.global_stats[country][mode])))
   let next = getBattle(state)
   // Whole logic really messed after so many refactorings

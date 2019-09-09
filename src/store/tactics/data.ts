@@ -1,7 +1,9 @@
-import { Map, OrderedMap, fromJS } from 'immutable'
 import { TacticType, TacticCalc, TacticDefinition, ValueType } from './actions'
 import { addValues, ValuesType, DefinitionType } from '../../base_definition'
 import { UnitType } from '../units/actions'
+import { toObj } from '../../utils'
+
+import * as data from './tactics.json'
 import IconBottleneck from '../../images/bottleneck.png'
 import IconCavalrySkirmish from '../../images/cavalry_skirmish.png'
 import IconDeception from '../../images/deception.png'
@@ -17,28 +19,27 @@ import IconNavalEnvelopment from '../../images/naval_envelopment.png'
 import IconHarassment from '../../images/harassment.png'
 import IconProbingAttack from '../../images/probing_attack.png'
 import IconCloseRanks from '../../images/close_ranks.png'
-import * as data from './tactics.json'
-import { toObj } from '../../utils';
 
-const tactic_to_icon = Map<TacticType, string>()
-  .set(TacticType.Bottleneck, IconBottleneck)
-  .set(TacticType.CavalrySkirmish, IconCavalrySkirmish)
-  .set(TacticType.Deception, IconDeception)
-  .set(TacticType.Envelopment, IconEnvelopment)
-  .set(TacticType.HitAndRun, IconHitAndRun)
-  .set(TacticType.PadmaVyuha, IconPadmaVyuha)
-  .set(TacticType.Phalanx, IconPhalanx)
-  .set(TacticType.ShockAction, IconShockAction)
-  .set(TacticType.Skirmishing, IconSkirmishing)
-  .set(TacticType.TriplexAcies, IconTriplexAcies)
-  .set(TacticType.FrontalAssault, IconFrontalAssault)
-  .set(TacticType.NavalEnvelopment, IconNavalEnvelopment)
-  .set(TacticType.Harassment, IconHarassment)
-  .set(TacticType.ProbingAttack, IconProbingAttack)
-  .set(TacticType.CloseRanks, IconCloseRanks)
+const tactic_to_icon: { [ key in TacticType ]: string } = {
+  [TacticType.Bottleneck]: IconBottleneck,
+  [TacticType.CavalrySkirmish]: IconCavalrySkirmish,
+  [TacticType.Deception]: IconDeception,
+  [TacticType.Envelopment]: IconEnvelopment,
+  [TacticType.HitAndRun]: IconHitAndRun,
+  [TacticType.PadmaVyuha]: IconPadmaVyuha,
+  [TacticType.Phalanx]: IconPhalanx,
+  [TacticType.ShockAction]: IconShockAction,
+  [TacticType.Skirmishing]: IconSkirmishing,
+  [TacticType.TriplexAcies]: IconTriplexAcies,
+  [TacticType.FrontalAssault]: IconFrontalAssault,
+  [TacticType.NavalEnvelopment]: IconNavalEnvelopment,
+  [TacticType.Harassment]: IconHarassment,
+  [TacticType.ProbingAttack]: IconProbingAttack,
+  [TacticType.CloseRanks]: IconCloseRanks
+}
 
 const createTacticFromJson = (data: TacticData): TacticDefinition => {
-  let tactic: TacticDefinition = { type: data.type as TacticType, mode: data.mode as DefinitionType, image: tactic_to_icon.get(data.type as TacticType) || '' }
+  let tactic: TacticDefinition = { type: data.type as TacticType, mode: data.mode as DefinitionType, image: tactic_to_icon[data.type as TacticType] || '' }
   const base_values: [ValueType, number][] = [
     [UnitType.Archers, data.archers || 0],
     [UnitType.CamelCavalry, data.camel_cavalry || 0],
@@ -83,18 +84,6 @@ const initializeDefaultTactics = (): TacticDefinitions => toObj(data.tactics.map
 const defaultTactics = initializeDefaultTactics()
 
 export const getDefaultTactics = () => defaultTactics
-
-export const tacticFromJS = (object: Map<string, any>): TacticDefinition | undefined => {
-  if (!object)
-    return undefined
-  const type = object.get('type') as TacticType
-  const mode = object.get('mode') as DefinitionType || DefinitionType.Global
-  let image = object.get('image')
-  if (!image)
-    image = tactic_to_icon.get(type) || ''
-  let base_values = object.has('base_values') ? fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
-  return { type, mode, image, base_values }
-}
 
 interface TacticData {
   type: string

@@ -5,7 +5,8 @@ import { AppState } from '../store/index'
 import { importState, ExportKey, setResetMissing, setExportKey } from '../store/transfer'
 import { transformGlobalStats, transformBattle, transformTactics, transformTerrains, transformUnits, transformSettings, stripRounds } from '../store/transforms'
 import { DefinitionType } from '../base_definition'
-import { countriesState } from '../store/countries';
+import { countriesState } from '../store/countries'
+import { values } from '../utils'
 
 interface IState {
   data: string
@@ -20,7 +21,7 @@ class Transfer extends Component<IProps, IState> {
 
   last_data = ''
 
-  readonly attributes = Object.keys(ExportKey).map(k => ExportKey[k as any]) as ExportKey[]
+  readonly attributes = values(ExportKey)
 
   render(): JSX.Element {
     const json = JSON.stringify(this.filterKeys(this.props.state), undefined, 2)

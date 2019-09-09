@@ -1,4 +1,3 @@
-import { List } from 'immutable'
 import { BaseUnit, UnitCalc, Units } from '../units'
 import { TerrainCalc, TerrainDefinition } from '../terrains'
 import { TacticDefinition, TacticCalc, TacticType } from '../tactics'
@@ -115,7 +114,7 @@ const removeOutOfBounds = (army: BaseUnits, combat_width: number): BaseUnits => 
       return unit
     if (index >= 0 && index < combat_width)
       return unit
-    defeated.push(unit)
+    defeated = [ ...defeated, unit ]
     return undefined
   }), combat_width)
   return { ...army, frontline, defeated }
@@ -208,7 +207,7 @@ export const calculateTactic = (army?: BaseUnits, tactic?: TacticDefinition, cou
   if (effectiveness > 0 && tactic && army) {
     let units = 0
     let weight = 0.0
-    for (const unit of List<BaseUnit |undefined>().concat(army.frontline).concat(army.reserve).concat(army.defeated)) {
+    for (const unit of army.frontline.concat(army.reserve).concat(army.defeated)) {
       if (!unit)
         continue
       const strength = calculateValue(unit, UnitCalc.Strength)
@@ -272,7 +271,7 @@ const copyDefeated = (army: BaseUnits, definitions: FrontLine, minimum_morale: n
       return undefined
     if (calculateValue(definition, UnitCalc.Strength) > minimum_strength && calculateValue(definition, UnitCalc.Morale) > minimum_morale)
       return unit
-    defeated.push(unit)
+    defeated = [ ...defeated, unit]
     return { ...unit, is_defeated: true }
   })
   return { frontline, reserve: army.reserve, defeated }

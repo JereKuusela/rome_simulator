@@ -1,7 +1,5 @@
-
-import { OrderedMap, List } from 'immutable'
 import { sortBy } from 'lodash'
-import { listFromJS, toObj, map } from '../../utils'
+import { toObj, map } from '../../utils'
 import {
   CultureType, ReligionType, LawDefinition, EconomyDefinition, IdeaDefinition, AbilityDefinition,
   TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition
@@ -22,43 +20,43 @@ type Traditions = { [key in CultureType]: TraditionDefinition }
 type Omens = { [key in ReligionType]: OmenDefinition[] }
 
 export const getTraditionDefinitions = () => (
-  toObj(sortBy<TraditionData>(traditionData.traditions, value => value.type), value => value.type) as Traditions
+  toObj(sortBy<TraditionData>(Array.from(traditionData.traditions), value => value.type), value => value.type) as Traditions
 )
 
 export const getTradeDefinitions = () => (
-  sortBy<TradeData>(tradeData.trades, value => value.name) as TradeDefinition[]
+  sortBy<TradeData>(Array.from(tradeData.trades), value => value.name) as TradeDefinition[]
 )
 
 export const getHeritageDefinitions = () => (
-  sortBy<HeritageData>(heritageData.heritages, value => value.name) as HeritageDefinition[]
+  sortBy<HeritageData>(Array.from(heritageData.heritages), value => value.name) as HeritageDefinition[]
 )
 
 export const getInventionDefinitions = () => (
-  sortBy<InventionData>(inventionData.levels, () => 1) as InventionDefinition[]
+  sortBy<InventionData>(Array.from(inventionData.levels), () => 1) as InventionDefinition[]
 )
 
 export const getOmenDefinitions = () => (
-  map(toObj(sortBy<OmenData>(omenData.religions, value => value.type), value => value.type), value => value.omens) as Omens
+  map(toObj(sortBy<OmenData>(Array.from(omenData.religions), value => value.type), value => value.type), value => value.omens) as Omens
 )
 
 export const getTraitDefinitions = () => (
-  sortBy<TraitData>(traitData.traits, value => value.name) as TraitDefinition[]
+  sortBy<TraitData>(Array.from(traitData.traits), value => value.name) as TraitDefinition[]
 )
 
 export const getLawDefinitions = () => (
-  sortBy<LawData>(lawData.laws, () => 1) as LawDefinition[]
+  sortBy<LawData>(Array.from(lawData.laws), () => 1) as LawDefinition[]
 )
 
 export const getEconomyDefinitions = () => (
-  sortBy<EconomyData>(economyData.economy, () => 1) as EconomyDefinition[]
+  sortBy<EconomyData>(Array.from(economyData.economy), () => 1) as EconomyDefinition[]
 )
 
 export const getIdeaDefinitions = () => (
-  sortBy<IdeaData>(ideaData.ideas, () => 1) as IdeaDefinition[]
+  sortBy<IdeaData>(Array.from(ideaData.ideas), () => 1) as IdeaDefinition[]
 )
 
 export const getAbilityDefinitions = () => (
-  sortBy<AbilityData>(abilityData.abilities, () => 1) as AbilityDefinition[]
+  sortBy<AbilityData>(Array.from(abilityData.abilities), () => 1) as AbilityDefinition[]
 )
 
 interface ModifierData {
@@ -69,6 +67,7 @@ interface ModifierData {
 
 interface TraditionData {
   type: string
+  modifiers: ModifierData[]
   paths: {
     name: string
     traditions: {

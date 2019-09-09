@@ -5,7 +5,7 @@ import { getImage, calculateValue } from '../base_definition'
 import ValueModal from './ValueModal'
 import StyledNumber from './StyledNumber'
 import { addSign } from '../formatters'
-import { toArr } from '../utils'
+import { toArr, keys } from '../utils'
 
 interface IProps {
   readonly terrains: Definitions
@@ -25,7 +25,7 @@ export default class TerrainDefinitions extends Component<IProps, IState> {
     this.state = { open_create: false }
   }
 
-  readonly attributes = Object.keys(TerrainCalc).map(k => TerrainCalc[k as any]) as TerrainCalc[]
+  readonly attributes = keys(TerrainCalc).map(k => TerrainCalc[k])
   readonly headers = ['Terrain', 'Location', 'Roll']
 
   render(): JSX.Element {

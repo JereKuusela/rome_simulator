@@ -1,8 +1,9 @@
-import { OrderedMap, Map, fromJS } from 'immutable'
-import { UnitType, UnitDefinition, UnitCalc, ValueType, BaseUnit } from './actions'
+import { UnitType, UnitDefinition, UnitCalc, ValueType } from './actions'
 import { GlobalDefinitions, UnitDefinitions } from './reducer'
 import { addValues, ValuesType, DefinitionType } from '../../base_definition'
-import { getNextId } from '../../army_utils'
+import { toObj } from '../../utils'
+
+import * as data from './units.json'
 import IconArcher from '../../images/archers.png'
 import IconCamelCavalry from '../../images/camel_cavalry.png'
 import IconChariots from '../../images/chariots.png'
@@ -20,29 +21,26 @@ import IconHexere from '../../images/hexere.png'
 import IconOctere from '../../images/octere.png'
 import IconMegaGalley from '../../images/mega_galley.png'
 
-import * as data from './units.json';
-import { toObj } from '../../utils';
-
-const unit_to_icon = Map<UnitType, string>()
-  .set(UnitType.Archers, IconArcher)
-  .set(UnitType.CamelCavalry, IconCamelCavalry)
-  .set(UnitType.Chariots, IconChariots)
-  .set(UnitType.HeavyCavalry, IconHeavyCavalry)
-  .set(UnitType.HeavyInfantry, IconHeavyInfantry)
-  .set(UnitType.HorseArchers, IconHorseArchers)
-  .set(UnitType.LightCavalry, IconLightCavalry)
-  .set(UnitType.LightInfantry, IconLightInfantry)
-  .set(UnitType.WarElephants, IconWarElephants)
-  .set(UnitType.Liburnian, IconLiburnian)
-  .set(UnitType.Trireme, IconTrireme)
-  .set(UnitType.Tetrere, IconTetrere)
-  .set(UnitType.Hexere, IconHexere)
-  .set(UnitType.Octere, IconOctere)
-  .set(UnitType.MegaGalley, IconMegaGalley)
-
+const unit_to_icon: { [key in UnitType]: string } = {
+  [UnitType.Archers]: IconArcher,
+  [UnitType.CamelCavalry]: IconCamelCavalry,
+  [UnitType.Chariots]: IconChariots,
+  [UnitType.HeavyCavalry]: IconHeavyCavalry,
+  [UnitType.HeavyInfantry]: IconHeavyInfantry,
+  [UnitType.HorseArchers]: IconHorseArchers,
+  [UnitType.LightCavalry]: IconLightCavalry,
+  [UnitType.LightInfantry]: IconLightInfantry,
+  [UnitType.WarElephants]: IconWarElephants,
+  [UnitType.Liburnian]: IconLiburnian,
+  [UnitType.Trireme]: IconTrireme,
+  [UnitType.Tetrere]: IconTetrere,
+  [UnitType.Hexere]: IconHexere,
+  [UnitType.Octere]: IconOctere,
+  [UnitType.MegaGalley]: IconMegaGalley
+}
 
 const createUnitFromJson = (data: UnitData): UnitDefinition => {
-  let unit = { type: data.type as UnitType, mode: data.mode as DefinitionType, image: unit_to_icon.get(data.type as UnitType) || '', requirements: data.requirements, can_assault: data.can_assault }
+  let unit = { type: data.type as UnitType, mode: data.mode as DefinitionType, image: unit_to_icon[data.type as UnitType] || '', requirements: data.requirements, can_assault: data.can_assault }
   const base_values: [ValueType, number][] = [
     [UnitCalc.AttritionWeight, data.attrition_weight || 0],
     [UnitCalc.Cost, data.cost],
@@ -104,32 +102,6 @@ const defaultGlobal = initializeDefaultGlobal()
 
 export const getDefaultUnits = (): UnitDefinitions => defaultUnits
 export const getDefaultGlobal = (): GlobalDefinitions => defaultGlobal
-
-export const unitFromJS = (object?: Map<string, any>): BaseUnit | undefined => {
-  if (!object)
-    return undefined
-  const type = object.get('type') as UnitType
-  const is_defeated = object.has('is_defeated') ? object.get('is_defeated') : undefined
-  const target = object.has('target') ? object.get('target') : undefined
-  const base_values = object.has('base_values') ? fromJS(object.get('base_values').map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
-  const modifier_values = object.has('modifier_values') ? fromJS(object.get('modifier_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
-  const loss_values = object.has('loss_values') ? fromJS(object.get('loss_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
-  return { id: getNextId(), type, is_defeated, target, base_values, modifier_values, loss_values }
-}
-
-export const unitDefinitionFromJS = (object?: Map<string, any>): UnitDefinition | undefined => {
-  if (!object)
-    return undefined
-  const type = object.get('type') as UnitType
-  const mode = object.get('mode') as DefinitionType || DefinitionType.Global
-  let image = object.get('image')
-  if (!image)
-    image = unit_to_icon.get(type) || ''
-  const base_values = object.has('base_values') ? fromJS(object.get('base_values').map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
-  const modifier_values = object.has('modifier_values') ? fromJS(object.get('modifier_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
-  const loss_values = object.has('loss_values') ? fromJS(object.get('loss_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
-  return { type, mode, image, requirements: object.get('requirements'), can_assault: object.get('can_assault'), base_values, modifier_values, loss_values }
-}
 
 interface UnitData {
   type: string

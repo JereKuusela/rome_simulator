@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Table, Input, Dropdown } from 'semantic-ui-react'
 import { TerrainDefinition, ValueType, TerrainType, TerrainCalc, valueToString, LocationType } from '../store/terrains'
 import { getBaseValue, explainShort, DefinitionType } from '../base_definition'
+import { values } from '../utils'
 
 interface IProps {
   readonly custom_value_key: string
@@ -16,9 +17,9 @@ interface IProps {
 // Display component for showing and changing terrain details.
 export default class TerrainDetail extends Component<IProps> {
 
-  readonly attributes = Object.keys(TerrainCalc).map(k => TerrainCalc[k as any]) as TerrainCalc[]
-  readonly locations = Object.keys(LocationType).map(k => LocationType[k as any]) as LocationType[]
-  readonly modes = Object.keys(DefinitionType).map(k => DefinitionType[k as any]).sort() as DefinitionType[]
+  readonly attributes = values(TerrainCalc)
+  readonly locations = values(LocationType)
+  readonly modes = values(DefinitionType)
   readonly headers = ['Attribute', 'Value', 'Custom value', 'Explained']
 
   renderModeDropdown = (type: TerrainType, mode: DefinitionType): JSX.Element => {

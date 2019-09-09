@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Map } from 'immutable'
 import { connect } from 'react-redux'
 import { Modal, Button, Grid } from 'semantic-ui-react'
 import { AppState } from '../store/'
@@ -8,12 +7,12 @@ import ArmyCosts from '../components/ArmyCosts'
 import { UnitType, BaseUnit } from '../store/units'
 import { clearUnits, removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits, invalidate, Side, BaseReserve } from '../store/battle'
 import { getBaseUnits, filterUnitTypes, getParticipant, getUnitDefinitions } from '../store/utils'
-import { mapRange } from '../utils'
+import { mapRange, forEach } from '../utils'
 import { getNextId, mergeBaseUnitsWithDefinitions } from '../army_utils'
 import { CountryName } from '../store/countries'
 import { Mode } from '../base_definition'
 
-type Units = Map<UnitType, number>
+type Units = { [key in UnitType]: number }
 
 interface IState {
   changes_a: Units
@@ -24,11 +23,11 @@ class ModalFastPlanner extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    this.state = { changes_a: Map<UnitType, number>(), changes_d: Map<UnitType, number>() }
+    this.state = { changes_a: {} as Units, changes_d: {} as Units }
   }
 
-  originals_a? = Map<UnitType, number>()
-  originals_d? = Map<UnitType, number>()
+  originals_a? = {} as Units
+  originals_d? = {} as Units
 
   render(): JSX.Element | null {
     if (!this.props.open)
@@ -39,8 +38,8 @@ class ModalFastPlanner extends Component<IProps, IState> {
     let base_units_d = { ...this.props.base_units_d }
     const types_a = this.props.types_a
     const types_d = this.props.types_d
-    this.originals_a = Array.from(types_a).reduce((map, value) => map.set(value, this.countUnits(base_units_a.reserve, value)), Map<UnitType, number>())
-    this.originals_d = Array.from(types_d).reduce((map, value) => map.set(value, this.countUnits(base_units_d.reserve, value)), Map<UnitType, number>())
+    this.originals_a = Array.from(types_a).reduce((map, value) => ({ ...map, [value]: this.countUnits(base_units_a.reserve, value) }), {} as Units)
+    this.originals_d = Array.from(types_d).reduce((map, value) => ({ ...map, [value]: this.countUnits(base_units_d.reserve, value) }), {} as Units)
     // Current changes to the reserve must alse be applied.
     base_units_a = { ...base_units_a, reserve: this.editReserve(base_units_a.reserve, this.state.changes_a, this.originals_a) }
     base_units_d = { ...base_units_d, reserve: this.editReserve(base_units_d.reserve, this.state.changes_d, this.originals_d) }
@@ -99,15 +98,15 @@ class ModalFastPlanner extends Component<IProps, IState> {
 
   onValueChange = (side: Side, unit: UnitType, value: number): void => {
     if (side === Side.Attacker)
-      this.setState({ changes_a: this.state.changes_a.set(unit, value) })
+      this.setState({ changes_a: { ...this.state.changes_a, [unit]: value } })
     if (side === Side.Defender)
-      this.setState({ changes_d: this.state.changes_d.set(unit, value) })
+      this.setState({ changes_d: { ...this.state.changes_d, [unit]: value } })
   }
 
   getUnitsToAdd = (changes: Units, originals?: Units): BaseReserve => {
     let units: BaseReserve = []
-    changes.forEach((value, key) => {
-      const original = originals ? originals.get(key, 0) : 0
+    forEach(changes, (value, key) => {
+      const original = originals ? originals[key] || 0 : 0
       if (value > original)
         units = units.concat(mapRange(value - original, _ => ({ id: getNextId(), type: key  })))
     })
@@ -116,8 +115,8 @@ class ModalFastPlanner extends Component<IProps, IState> {
 
   getTypesToRemove = (changes: Units, originals?: Units): UnitType[] => {
     let types: UnitType[] = []
-    changes.forEach((value, key) => {
-      const original = originals ? originals.get(key, 0) : 0
+    forEach(changes, (value, key) => {
+      const original = originals ? originals[key] || 0 : 0
       if (value < original)
         types = types.concat(mapRange(original - value, _ => key))
     })
@@ -134,14 +133,14 @@ class ModalFastPlanner extends Component<IProps, IState> {
   onClose = (): void => {
     this.updateReserve(this.props.attacker, this.state.changes_a, this.originals_a)
     this.updateReserve(this.props.defender, this.state.changes_d, this.originals_d)
-    this.setState({ changes_a: Map<UnitType, number>(), changes_d: Map<UnitType, number>() })
+    this.setState({ changes_a: {} as Units, changes_d: {} as Units })
     this.props.onClose()
   }
 
   countUnits = (reserve: BaseUnit[], unit: UnitType): number => reserve.reduce((previous, current) => previous + (current && current.type === unit ? 1 : 0), 0)
 
   clearUnits = (): void => {
-    this.setState({ changes_a: Map<UnitType, number>(), changes_d: Map<UnitType, number>() })
+    this.setState({ changes_a: {} as Units, changes_d: {} as Units })
     this.props.clearUnits(this.props.mode)
   }
 }

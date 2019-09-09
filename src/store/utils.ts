@@ -1,5 +1,4 @@
 import { AppState } from "./index"
-import { fromJS } from "immutable"
 import { objGet, sumObj, map, reduce, toArr, filter, arrGet } from '../utils'
 import { filterUnitDefinitions, isIncludedInMode, mergeUnits } from '../army_utils'
 import { TacticType } from "./tactics/actions"
@@ -119,9 +118,9 @@ const getUnitsByCountry = (state: AppState, name: CountryName): Units => {
   const army = objGet(battle.armies, name, getDefaultArmy(state.settings.mode))
   const units = filterUnitDefinitions(state.settings.mode, objGet(state.units, name, getDefaultUnits()))
   const global = objGet(state.global_stats, name, getDefaultGlobal())[state.settings.mode]
-  const frontline = army.frontline.map(value => value && mergeUnits(units, fromJS(global), value))
-  const reserve = army.reserve.map(value => mergeUnits(units, fromJS(global), value))
-  const defeated = army.defeated.map(value => mergeUnits(units, fromJS(global), value))
+  const frontline = army.frontline.map(value => value && mergeUnits(units, global, value))
+  const reserve = army.reserve.map(value => mergeUnits(units, global, value))
+  const defeated = army.defeated.map(value => mergeUnits(units, global, value))
   return { frontline, reserve, defeated }
 }
 

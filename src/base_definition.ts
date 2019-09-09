@@ -21,7 +21,8 @@ export type Mode = DefinitionType.Land | DefinitionType.Naval
 type BVD = BD | BaseValuesDefinition<any, any>
 type BD = BaseDefinition<any, any>
 
-type Values<S extends string> = { [key in S]: { [key: string]: number } }
+type ValuesSub = { [key: string]: number }
+type Values<S extends string> = { [key in S]: ValuesSub }
 
 export interface BaseDefinition<T extends string, S extends string> {
   readonly type: T
@@ -102,7 +103,7 @@ const subAddValues = <A extends string>(container: Values<A> | undefined, key: s
     if (value === 0 && has(new_values[attribute], key))
       delete new_values[attribute][key]
     else if (value !== 0)
-      new_values[attribute][key] = value
+      (new_values[attribute] as ValuesSub)[key] = value
   }
   return new_values
 }

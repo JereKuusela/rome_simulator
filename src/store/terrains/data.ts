@@ -1,9 +1,9 @@
-import { Map, OrderedMap, fromJS } from 'immutable'
 import { TerrainType, LocationType, TerrainCalc, TerrainDefinition, ValueType } from './actions'
 import { addValues, ValuesType, DefinitionType } from '../../base_definition'
+import { toObj } from '../../utils'
+
 import * as data from './terrains.json'
 import IconTerrain from '../../images/terrain.png'
-import { toObj } from '../../utils';
 
 const createTerrainFromJson = (data: TerrainData): TerrainDefinition => {
   let terrain: TerrainDefinition = {type: data.type as TerrainType, mode: data.mode as DefinitionType, image: IconTerrain, location: data.location as LocationType}
@@ -20,15 +20,6 @@ const initializeDefaultTerrains = (): TerrainDefinitions => toObj(data.terrain.m
 const defaultTerrains = initializeDefaultTerrains()
 
 export const getDefaultTerrains = () => defaultTerrains
-
-export const terrainFromJS = (object: Map<string, any>): TerrainDefinition | undefined => {
-  if (!object)
-    return undefined
-  const image = object.get('image') || IconTerrain
-  const mode = object.get('mode') as DefinitionType || DefinitionType.Global
-  let base_values = object.has('base_values') ? fromJS(object.get('base_values')!.map((value: OrderedMap<string, number>) => fromJS(value))) : undefined
-  return { type: object.get('type') as TerrainType, mode, image, location: object.get('location') as LocationType, base_values }
-}
 
 interface TerrainData {
   type: string
