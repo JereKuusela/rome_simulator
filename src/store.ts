@@ -3,57 +3,43 @@ import { devToolsEnhancer } from 'redux-devtools-extension'
 import { rootReducer } from './store/'
 import { persistStore, persistReducer, createTransform, createMigrate } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
-//import localForage from 'localforage'
 import {
-  transformSettings, transformGlobalStats, transformBattle, transformTactics, transformTerrains, transformUnits, transfromTransfer,
-  stripRounds
+  restoreBaseGlobalStats, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits, stripRounds
 } from './store/transforms'
 
 const TacticsTransform = createTransform(
   (inboundState) => inboundState,
-  (outboundState: any) => transformTactics(outboundState),
+  (outboundState: any) => restoreBaseTactics(outboundState),
   { whitelist: ['tactics'] }
 )
 
 const TerrainsTransform = createTransform(
   (inboundState) => inboundState,
-  (outboundState: any) => transformTerrains(outboundState),
+  (outboundState: any) => restoreBaseTerrains(outboundState),
   { whitelist: ['terrains'] }
 )
 
 const UnitsTransform = createTransform(
   (inboundState) => inboundState,
-  (outboundState: any) => transformUnits(outboundState),
+  (outboundState: any) => restoreBaseUnits(outboundState),
   { whitelist: ['units'] }
 )
 
 const GlobalStatsTransform = createTransform(
   (inboundState) => inboundState,
-  (outboundState: any) => transformGlobalStats(outboundState),
+  (outboundState: any) => restoreBaseGlobalStats(outboundState),
   { whitelist: ['global_stats'] }
-)
-
-const SettingsTransform = createTransform(
-  (inboundState) => inboundState,
-  (outboundState: any) => transformSettings(outboundState),
-  { whitelist: ['settings'] }
-)
-
-const TransferTransform = createTransform(
-  (inboundState) => inboundState,
-  (outboundState: any) => transfromTransfer(outboundState),
-  { whitelist: ['transfer'] }
 )
 
 const BattleTransform = createTransform(
   (inboundState: any) => stripRounds(inboundState),
-  (outboundState: any) => transformBattle(outboundState),
+  (outboundState: any) => outboundState,
   { whitelist: ['battle'] }
 )
 
 const DataTransform = createTransform(
-  (inboundState) => undefined,
-  (outboundState) => ({}),
+  () => undefined,
+  () => ({}),
   { whitelist: ['data'] }
 )
 
@@ -67,14 +53,12 @@ const persistConfig = {
   version: 4,
   migrate: createMigrate(migrations, { debug: false }),
   transforms: [
-    SettingsTransform,
     TacticsTransform,
     TerrainsTransform,
-    BattleTransform,
     UnitsTransform,
     GlobalStatsTransform,
-    TransferTransform,
-    DataTransform
+    DataTransform,
+    BattleTransform
   ]
 }
 

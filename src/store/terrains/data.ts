@@ -20,6 +20,7 @@ const initializeDefaultTerrains = (): TerrainDefinitions => toObj(data.terrain.m
 const defaultTerrains = initializeDefaultTerrains()
 
 export const getDefaultTerrains = () => defaultTerrains
+export const getDefaultTerrain = (type: TerrainType): TerrainDefinition => defaultTerrains[type]
 
 interface TerrainData {
   type: string

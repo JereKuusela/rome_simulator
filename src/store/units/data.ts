@@ -1,6 +1,6 @@
 import { UnitType, UnitDefinition, UnitCalc, ValueType } from './actions'
 import { GlobalDefinitions, UnitDefinitions } from './reducer'
-import { addValues, ValuesType, DefinitionType } from '../../base_definition'
+import { addValues, ValuesType, DefinitionType, Mode } from '../../base_definition'
 import { toObj } from '../../utils'
 
 import * as data from './units.json'
@@ -38,6 +38,8 @@ const unit_to_icon: { [key in UnitType]: string } = {
   [UnitType.Octere]: IconOctere,
   [UnitType.MegaGalley]: IconMegaGalley
 }
+
+export const GlobalKey = 'Base'
 
 const createUnitFromJson = (data: UnitData): UnitDefinition => {
   let unit = { type: data.type as UnitType, mode: data.mode as DefinitionType, image: unit_to_icon[data.type as UnitType] || '', requirements: data.requirements, can_assault: data.can_assault }
@@ -92,8 +94,8 @@ const initializeDefaultGlobal = (): GlobalDefinitions => {
     [UnitCalc.Maintenance, 0.016]
   ]
   return {
-    [DefinitionType.Land]: addValues(land, ValuesType.Base, 'Base', landValues),
-    [DefinitionType.Naval]: addValues(naval, ValuesType.Base, 'Base', navalValues)
+    [DefinitionType.Land]: addValues(land, ValuesType.Base, GlobalKey, landValues),
+    [DefinitionType.Naval]: addValues(naval, ValuesType.Base, GlobalKey, navalValues)
   }
 }
 
@@ -101,7 +103,9 @@ const defaultUnits = initializeDefaultUnits()
 const defaultGlobal = initializeDefaultGlobal()
 
 export const getDefaultUnits = (): UnitDefinitions => defaultUnits
-export const getDefaultGlobal = (): GlobalDefinitions => defaultGlobal
+export const getDefaultUnit = (type: UnitType): UnitDefinition => defaultUnits[type]
+export const getDefaultGlobals = (): GlobalDefinitions => defaultGlobal
+export const getDefaultGlobal = (mode: Mode): UnitDefinition => defaultGlobal[mode]
 
 interface UnitData {
   type: string

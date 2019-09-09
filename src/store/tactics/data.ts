@@ -84,6 +84,7 @@ const initializeDefaultTactics = (): TacticDefinitions => toObj(data.tactics.map
 const defaultTactics = initializeDefaultTactics()
 
 export const getDefaultTactics = () => defaultTactics
+export const getDefaultTactic = (type: TacticType): TacticDefinition => defaultTactics[type]
 
 interface TacticData {
   type: string

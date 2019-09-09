@@ -2,7 +2,7 @@ import { doBattle } from '../combat'
 import { List, Map } from 'immutable'
 import { getDefaultArmy, Army, RowType, Participant, getDefaultParticipant  } from '../../battle'
 import { TerrainDefinition } from '../../terrains'
-import { getDefaultUnits, getDefaultGlobal, UnitType, UnitDefinition, BaseUnit} from '../../units'
+import { getDefaultUnits, getDefaultGlobals, UnitType, UnitDefinition, BaseUnit} from '../../units'
 import { mergeValues, DefinitionType } from '../../../base_definition'
 import { CombatParameter } from '../../settings'
 import { verifyType } from './utils'
@@ -11,7 +11,7 @@ import { getDefaultLandSettings } from '../../settings'
 import { map } from '../../../utils';
 
 describe('reinforcement', () => {
-  const global_stats = getDefaultGlobal()[DefinitionType.Land]
+  const global_stats = getDefaultGlobals()[DefinitionType.Land]
   const units = map(getDefaultUnits(), unit => mergeValues(unit, global_stats))
   const definitions = { [CountryName.Country1]: units, [CountryName.Country2]: units }
   let settings = getDefaultLandSettings()

@@ -57,7 +57,7 @@ const checkFightSub = (army: BaseUnits) => checkArmy(army.frontline) || checkArm
 
 export const isOver = (participants: Participants, armies: Armies) => !every(participants, value => checkFightSub(arrGet(value.rounds, -1, armies[value.name])))
 
-const checkArmy = (army: (BaseUnit | undefined)[]) => some(army, value => value !== undefined)
+const checkArmy = (army: (BaseUnit | undefined)[]) => some(army, value => value)
 
 export const doRemoveReserveUnits = (reserve: BaseUnit[], types: UnitType[]) => {
   for (const type of types) {

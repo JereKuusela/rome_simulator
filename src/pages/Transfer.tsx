@@ -3,9 +3,8 @@ import { Container, Grid, TextArea, Checkbox, List, Header, Button } from 'seman
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { importState, ExportKey, setResetMissing, setExportKey } from '../store/transfer'
-import { transformGlobalStats, transformBattle, transformTactics, transformTerrains, transformUnits, transformSettings, stripRounds } from '../store/transforms'
+import { restoreBaseGlobalStats, stripRounds } from '../store/transforms'
 import { DefinitionType } from '../base_definition'
-import { countriesState } from '../store/countries'
 import { values } from '../utils'
 
 interface IState {
@@ -135,13 +134,7 @@ const mapDispatchToProps = (dispatch: any) => ({
         data = '{}'
       let json = JSON.parse(data)
       json.transfer = undefined
-      json.battle = (json.battle || reset_missing) && transformBattle(json.battle)
-      json.tactics = (json.tactics || reset_missing) && transformTactics(json.tactics)
-      json.terrains = (json.terrains || reset_missing) && transformTerrains(json.terrains)
-      json.units = (json.units || reset_missing) && transformUnits(json.units)
-      json.settings = (json.settings || reset_missing) && transformSettings(json.settings)
-      json.countries = json.countries || (reset_missing && countriesState)
-      json.global_stats = (json.global_stats || reset_missing) && transformGlobalStats(json.global_stats)
+      json.global_stats = (json.global_stats || reset_missing) && restoreBaseGlobalStats(json.global_stats)
       Object.keys(json).filter(key => !json[key]).forEach(key => delete json[key])
       dispatch(importState(json, reset_missing))
     }
