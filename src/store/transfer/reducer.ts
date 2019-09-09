@@ -1,10 +1,11 @@
-import { Map } from 'immutable'
 import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
 import { AppState } from '../'
 import { ExportKey } from './index'
 
+type ExportKeys = { [key in ExportKey]: boolean }
+
 export const transferState = {
-  export_keys: Map<ExportKey, boolean>(),
+  export_keys: {} as ExportKeys,
   reset_missing: false
 }
 
@@ -12,7 +13,7 @@ export const transferState = {
 class TransferReducer extends ImmerReducer<typeof transferState> {
 
   setExportKey(key: ExportKey, value: boolean) {
-    this.draftState.export_keys = this.state.export_keys.set(key, value)
+    this.draftState.export_keys[key] = value
   }
 
   setResetMissing(value: boolean) {

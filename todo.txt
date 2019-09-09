@@ -11,6 +11,8 @@ Refactor:
 - Autoheal working for base data (in transformations).
 - Getting rid of all ImmutableJS code.
 - Getting rid of custom map, reduce, etc functions as much as possible.
+- Force immutability with freeze, remove usage of clones
+- Fix transfer, fix persist
 
 Reducers can probably be split to sub reducers (one handles the data structure, other the actual data)
 

@@ -1,4 +1,4 @@
-import { sortBy } from 'lodash'
+import { sortBy, clone } from 'lodash'
 import { BaseUnit, UnitCalc, UnitDefinitions } from '../units'
 import { RowType, BaseUnits, RowTypes } from '../battle'
 import { CombatParameter, Settings } from '../settings'
@@ -68,8 +68,8 @@ const calculateFlankSizes = (settings: Settings, round: number, flank_size: numb
  * @param attacker_to_defender Output. Reinforcement may move units so this must be updated also.
  */
 export const reinforce = (army: BaseUnits, definitions: UnitDefinitions, round: number, row_types: RowTypes, flank_size: number, enemy_size: number, settings: Settings, attacker_to_defender: (number | null)[] | undefined): BaseUnits => {
-    let frontline = army.frontline
-    let reserve = army.reserve
+    let frontline = clone(army.frontline)
+    let reserve = clone(army.reserve)
 
     const center = Math.floor(frontline.length / 2.0)
 
@@ -104,13 +104,13 @@ export const reinforce = (army: BaseUnits, definitions: UnitDefinitions, round: 
             continue
         const main = orderedMainReserve.pop()
         if (main) {
-            reserve.splice(reserve.indexOf(main), 1)
+            reserve = reserve.filter(value => value !== main)
             frontline[index] = main
             continue
         }
         const flank = orderedFlankReserve.pop()
         if (flank) {
-            reserve.splice(reserve.indexOf(flank), 1)
+            reserve = reserve.filter(value => value !== flank)
             frontline[index] = flank
             continue
         }
@@ -119,15 +119,15 @@ export const reinforce = (army: BaseUnits, definitions: UnitDefinitions, round: 
     for (; index >= 0 && index < frontline.length && reserve.length > 0; index = nextIndex(index, center)) {
         if (frontline[index])
             continue
-        const flank = orderedFlankReserve.pop()
+            const flank = orderedFlankReserve.pop()
         if (flank) {
-            reserve.splice(reserve.indexOf(flank), 1)
+            reserve = reserve.filter(value => value !== flank)
             frontline[index] = flank
             continue
         }
         const main = orderedMainReserve.pop()
         if (main) {
-            reserve.splice(reserve.indexOf(main), 1)
+            reserve = reserve.filter(value => value !== main)
             frontline[index] = main
             continue
         }

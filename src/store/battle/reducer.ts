@@ -8,7 +8,8 @@ import { TerrainType } from '../terrains'
 import { DefinitionType, Mode } from '../../base_definition'
 import { CountryName } from '../countries'
 import { TacticType } from '../tactics';
-import { keys, toArr, map, every, forEach, arrGet } from '../../utils'
+import { keys, toArr, map, forEach, arrGet } from '../../utils'
+import { merge, findLastIndex, clone, every, some } from 'lodash';
 
 export interface Battle {
   readonly armies: Armies
@@ -52,21 +53,21 @@ const findUnit = (participant: Army, id: number): [ArmyType | undefined, number]
   return [undefined, -1]
 }
 
-const checkFightSub = (army?: BaseUnits) => army ? (checkArmy(army.frontline) || checkArmy(army.reserve)) : false
+const checkFightSub = (army: BaseUnits) => checkArmy(army.frontline) || checkArmy(army.reserve)
 
-export const checkFight = (participants: Participants, armies: Armies) => every(participants, value => checkFightSub(arrGet(value.rounds, -1, armies[value.name])))
+export const isOver = (participants: Participants, armies: Armies) => !every(participants, value => checkFightSub(arrGet(value.rounds, -1, armies[value.name])))
 
-const checkArmy = (army: (BaseUnit | undefined)[]) => army.find(value => value !== undefined) !== undefined
+const checkArmy = (army: (BaseUnit | undefined)[]) => some(army, value => value !== undefined)
 
 export const doRemoveReserveUnits = (reserve: BaseUnit[], types: UnitType[]) => {
   for (const type of types) {
-    const index = reserve.length - 1 - reserve.reverse().findIndex(value => value.type === type)
-    reserve.splice(index, 1)
+    const index = findLastIndex(reserve, value => value.type === type)
+    reserve = reserve.filter((_, i) => i !== index)
   }
   return reserve
 }
 
-export const doAddReserveUnits = (reserve: BaseUnit[], units: BaseUnit[]) => reserve.splice(reserve.length - 1, 0, ...units)
+export const doAddReserveUnits = (reserve: BaseUnit[], units: BaseUnit[]) => merge(clone(reserve), units)
 
 class BattleReducer extends ImmerReducer<ModeState> {
 
@@ -87,6 +88,7 @@ class BattleReducer extends ImmerReducer<ModeState> {
       draft.defeated.push(unit)
     else if (type === ArmyType.Defeated && !unit)
       draft.defeated.splice(index, 1)
+    this.draftState[mode].fight_over = isOver(this.draftState[mode].participants, this.draftState[mode].armies)
   }
 
   editUnit(mode: Mode, country: CountryName, unit: BaseUnit) {
@@ -115,18 +117,20 @@ class BattleReducer extends ImmerReducer<ModeState> {
       draft.reserve.splice(index, 1)
     if (type === ArmyType.Defeated)
       draft.defeated.splice(index, 1)
+    this.draftState[mode].fight_over = isOver(this.draftState[mode].participants, this.draftState[mode].armies)
   }
 
   removeReserveUnits(mode: Mode, country: CountryName, types: UnitType[]) {
     const state = this.state[mode].armies[country]
     const draft = this.draftState[mode].armies[country]
     draft.reserve = doRemoveReserveUnits(state.reserve, types)
+    this.draftState[mode].fight_over = isOver(this.draftState[mode].participants, this.draftState[mode].armies)
   }
 
   addReserveUnits(mode: Mode, country: CountryName, units: BaseUnit[]) {
-    const state = this.state[mode].armies[country]
     const draft = this.draftState[mode].armies[country]
-    draft.reserve = doAddReserveUnits(state.reserve, units)
+    draft.reserve = doAddReserveUnits(draft.reserve, units)
+    this.draftState[mode].fight_over = isOver(this.draftState[mode].participants, this.draftState[mode].armies)
   }
 
   selectTerrain(mode: Mode, index: number, terrain: TerrainType) {
@@ -155,32 +159,27 @@ class BattleReducer extends ImmerReducer<ModeState> {
   }
 
   undo(mode: Mode, steps: number) {
-    let next = this.state[mode]
-    for (let step = 0; step < steps && next.round > -1; ++step) {
-      let seed: number = next.seed
-      if (next.round < 2)
-        seed = next.custom_seed ? next.custom_seed : 0
-      const participants = map(next.participants, value => ({
-        ...value,
-        rounds: value.rounds.splice(-1, 1),
-        roll: arrGet(value.rolls, -2, { roll: value.roll }).roll,
-        rolls: value.rolls.splice(-1, 1)
-      }))
-      next = {
-        ...next,
-        participants,
-        round: next.round - 1,
-        fight_over: !checkFight(participants, next.armies),
-        seed
-      }
+    const state = this.state[mode]
+    const draft = this.draftState[mode]
+    for (let step = 0; step < steps && draft.round > -1; ++step) {
+      let seed: number = draft.seed
+      if (draft.round < 2)
+        seed = draft.custom_seed ? draft.custom_seed : 0
+      forEach(draft.participants, value => {
+        value.rounds.pop()
+        value.roll = arrGet(value.rolls, -2, { roll: value.roll }).roll
+        value.rolls.pop()
+      })
+      draft.round--
+      draft.fight_over = isOver(draft.participants, state.armies)
+      draft.seed = seed
     }
-    this.draftState[mode] = next
   }
 
   toggleRandomRoll(mode: Mode, side: Side) {
     const state = this.state[mode].participants[side]
     const draft = this.draftState[mode].participants[side]
-    draft.randomize_roll = state.randomize_roll
+    draft.randomize_roll = !state.randomize_roll
   }
 
   setRoll(mode: Mode, side: Side, roll: number) {

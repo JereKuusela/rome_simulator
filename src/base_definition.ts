@@ -2,7 +2,7 @@ import EmptyIcon from './images/empty.png'
 import UnknownIcon from './images/unknown.png'
 import { toPercent, toManpower} from './formatters'
 import { round, map, filter, forEach } from './utils'
-import { merge, has, clone,  } from 'lodash';
+import { merge, has, cloneDeep } from 'lodash'
 
 export enum ValuesType {
   Base = 'Base',
@@ -95,7 +95,7 @@ export const addValues = <D extends BVD, A extends string> (definition: D, type:
  * @param values A list of [attribute, value] pairs.
  */
 const subAddValues = <A extends string>(container: Values<A> | undefined, key: string, values: [A, number][]): Values<A> => {
-  let new_values = container ? clone(container) : initValues<A>()
+  let new_values = container ? cloneDeep(container) : initValues<A>()
   for (const [attribute, value] of values) {
     if (!has(new_values, attribute))
       new_values[attribute] = {}

@@ -92,7 +92,7 @@ export function arrGet<V1, V2>(arr: V1[], index: number, initial?: V2)
 {
   if (index < 0)
     index = arr.length + index
-  if (index >= arr.length)
+  if (index < 0 || index >= arr.length)
     return initial
   return arr[index]
 }

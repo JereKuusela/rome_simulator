@@ -85,8 +85,8 @@ class Transfer extends Component<IProps, IState> {
           key={key}
           toggle
           label={key}
-          checked={this.props.export_keys.get(key)}
-          onChange={() => this.props.setExportKey(key, !this.props.export_keys.get(key))}
+          checked={this.props.export_keys[key]}
+          onChange={() => this.props.setExportKey(key, !this.props.export_keys[key])}
         />
       </List.Item>)
   }
@@ -97,25 +97,23 @@ class Transfer extends Component<IProps, IState> {
     new_state.transfer = undefined
     new_state.data = undefined
     new_state.battle = stripRounds(new_state.battle)
-    if (!this.props.export_keys.get(ExportKey.Countries))
+    if (!this.props.export_keys[ExportKey.Countries])
       new_state.countries = undefined
-    if (!this.props.export_keys.get(ExportKey.Units))
+    if (!this.props.export_keys[ExportKey.Units])
       new_state.units = undefined
-    if (!this.props.export_keys.get(ExportKey.Units))
+    if (!this.props.export_keys[ExportKey.Units])
       new_state.global_stats = undefined
-    if (!this.props.export_keys.get(ExportKey.Terrains))
+    if (!this.props.export_keys[ExportKey.Terrains])
       new_state.terrains = undefined
-    if (!this.props.export_keys.get(ExportKey.Tactics))
+    if (!this.props.export_keys[ExportKey.Tactics])
       new_state.tactics = undefined
-    if (!this.props.export_keys.get(ExportKey.Tactics))
-      new_state.tactics = undefined
-    if (!this.props.export_keys.get(ExportKey.Settings))
+    if (!this.props.export_keys[ExportKey.Settings])
       new_state.settings = undefined
-    if (!this.props.export_keys.get(ExportKey.Land))
-      new_state.battle = new_state.battle.delete(DefinitionType.Land)
-    if (!this.props.export_keys.get(ExportKey.Naval))
-      new_state.battle = new_state.battle.delete(DefinitionType.Naval)
-    if (!this.props.export_keys.get(ExportKey.Land) && !this.props.export_keys.get(ExportKey.Naval))
+    if (!this.props.export_keys[ExportKey.Land])
+      delete new_state.battle[DefinitionType.Land]
+    if (!this.props.export_keys[ExportKey.Naval])
+      delete new_state.battle[DefinitionType.Naval]
+    if (!this.props.export_keys[ExportKey.Land] && !this.props.export_keys[ExportKey.Naval])
       new_state.battle = undefined
     return new_state
   }

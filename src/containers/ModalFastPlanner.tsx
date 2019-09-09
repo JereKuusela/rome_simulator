@@ -35,8 +35,8 @@ class ModalFastPlanner extends Component<IProps, IState> {
       return null
     //// The logic is bit tricky here.
     //Base units are needed because there might be custom changes.
-    let base_units_a = this.props.base_units_a
-    let base_units_d = this.props.base_units_d
+    let base_units_a = { ...this.props.base_units_a }
+    let base_units_d = { ...this.props.base_units_d }
     const types_a = this.props.types_a
     const types_d = this.props.types_d
     this.originals_a = Array.from(types_a).reduce((map, value) => map.set(value, this.countUnits(base_units_a.reserve, value)), Map<UnitType, number>())

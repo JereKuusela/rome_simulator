@@ -1,6 +1,6 @@
 import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
 import { Random, MersenneTwister19937, createEntropy } from 'random-js'
-import { checkFight, Side, Participant } from '../battle'
+import { isOver, Side, Participant } from '../battle'
 import { doBattle as fight } from './combat'
 import { mergeValues, Mode } from '../../base_definition'
 import { CombatParameter } from '../settings'
@@ -9,7 +9,8 @@ import { getSettings, getBattle, getArmy, getParticipant } from '../utils'
 import { objGet, sumObj, map, arrGet } from '../../utils'
 import { defaultCountry } from '../countries/reducer'
 
-const doBattle = (state: AppState, mode: Mode, steps: number) => {
+
+const doBattle = (state: AppState, mode: Mode, steps: number, refresh: boolean) => {
   const definitions = map(state.units, (definitions, country) => map(definitions, unit => mergeValues(unit, state.global_stats[country][mode])))
   let next = getBattle(state)
   // Whole logic really messed after so many refactorings
@@ -17,6 +18,11 @@ const doBattle = (state: AppState, mode: Mode, steps: number) => {
   let units_d = getArmy(state, Side.Defender)
   let participant_a = getParticipant(state, Side.Attacker)
   let participant_d = getParticipant(state, Side.Defender)
+  if (refresh) {
+    participant_a = { ...participant_a, rounds: []}
+    participant_d = { ...participant_d, rounds: []}
+    next = { ...next, round: -1}
+  }
   const country_a = objGet(state.countries, units_a.name, defaultCountry)
   const country_d = objGet(state.countries, units_d.name, defaultCountry)
   const combat = getSettings(state)
@@ -25,7 +31,7 @@ const doBattle = (state: AppState, mode: Mode, steps: number) => {
   const roll_frequency = combat[CombatParameter.RollFrequency]
   if (!next.seed)
     next = { ...next, seed: next.custom_seed || createEntropy()[0] }
-  next = { ...next, fight_over: !checkFight(next.participants, next.armies), outdated: false }
+  next = { ...next, fight_over: isOver(next.participants, next.armies), outdated: false }
   const engine = MersenneTwister19937.seed(next.seed)
   engine.discard(2 * Math.ceil((next.round) / roll_frequency))
   const rng = new Random(engine)
@@ -74,12 +80,12 @@ const doBattle = (state: AppState, mode: Mode, steps: number) => {
       roll: participant_d.roll
     }
     const [a, d] = fight(definitions, attacker_info, defender_info, next.round + 1, next.terrains.map(type => state.terrains[type]), combat)
-    participant_a.rounds.push(d)
+    participant_a = { ...participant_a, rounds: [ ...participant_a.rounds, a ] }
     if (participant_a.rolls.length < next.round + 2)
-      participant_a.rolls.push({ roll: participant_a.roll, randomized: participant_a.randomize_roll })
-    participant_d.rounds.push(d)
+      participant_a = { ...participant_a, rolls: [ ...participant_a.rolls, { roll: participant_a.roll, randomized: participant_a.randomize_roll } ] }
+    participant_d = { ...participant_d, rounds: [ ...participant_d.rounds, d ] }
     if (participant_d.rolls.length < next.round + 2)
-      participant_d.rolls.push({ roll: participant_d.roll, randomized: participant_d.randomize_roll })
+      participant_d = { ...participant_d, rolls: [ ...participant_d.rolls, { roll: participant_d.roll, randomized: participant_d.randomize_roll } ] }
     
     next = {
       ...next,
@@ -88,18 +94,18 @@ const doBattle = (state: AppState, mode: Mode, steps: number) => {
     }
     next = {
       ...next,
-      fight_over: !checkFight(next.participants, next.armies)
+      fight_over: isOver(next.participants, next.armies)
     }
     units_a = { ...units_a, ...a }
     units_d = { ...units_d, ...d }
   }
-  state.battle[state.settings.mode] = next
+  return { ...state, battle: { ...state.battle, [mode]: next } }
 }
 
 class CombatReducer extends ImmerReducer<AppState> {
 
   battle(mode: Mode, steps: number) {
-    doBattle(this.draftState as any, mode, steps)
+    this.draftState = doBattle(this.state, mode, steps, false)
   }
 
   setSeed(mode: Mode, seed?: number) {
@@ -109,9 +115,7 @@ class CombatReducer extends ImmerReducer<AppState> {
 
   refreshBattle(mode: Mode) {
     const steps = this.state.battle[mode].round + 1
-    this.draftState.battle[mode].round = -1
-    this.draftState.battle[mode].participants = map(this.state.battle[mode].participants, value => ({ ...value, rounds: [] }))
-    //doBattle(this.draftState as any, mode, steps)
+    this.draftState = doBattle(this.state, mode, steps, true)
   }
 }
 
