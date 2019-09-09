@@ -2,7 +2,7 @@
 import { List } from 'immutable'
 import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
 import { GovermentType, ReligionType, CultureType, Modifier } from '../data'
-import { objGet, ObjSet } from '../../utils'
+import { objGet, ObjSet, toObj } from '../../utils'
 
 export enum CountryName {
   Country1 = 'Country 1',
@@ -57,10 +57,10 @@ class CountriesReducer extends ImmerReducer<typeof countriesState> {
     delete Object.assign(this.draftState, {[country]: this.state[old_country] })[old_country]
   }
 
-  enableModifiers(country: CountryName, key: string, modifiers: List<Modifier>) {
-    const general_modifiers = modifiers.filter(value => value.target === 'General' && value.attribute === 'Martial').toMap().mapEntries(value => [key, value[1].value])
+  enableModifiers(country: CountryName, key: string, modifiers: Modifier[]) {
+    const general_modifiers = toObj(modifiers.filter(value => value.target === 'General' && value.attribute === 'Martial').map(value => value.value), () => key)
     this.draftState[country].selections[key] = true
-    this.draftState[country].trait_martial = { ...this.draftState[country].trait_martial, ...general_modifiers.toJS() as any }
+    this.draftState[country].trait_martial = { ...this.draftState[country].trait_martial, ...general_modifiers }
   }
 
   clearModifiers(country: CountryName, key: string) {

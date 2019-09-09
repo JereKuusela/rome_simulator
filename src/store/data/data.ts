@@ -1,6 +1,7 @@
 
 import { OrderedMap, List } from 'immutable'
-import { listFromJS } from '../../utils'
+import { sortBy } from 'lodash'
+import { listFromJS, toObj, map } from '../../utils'
 import {
   CultureType, ReligionType, LawDefinition, EconomyDefinition, IdeaDefinition, AbilityDefinition,
   TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition
@@ -17,79 +18,48 @@ import * as economyData from './economy.json'
 import * as ideaData from './ideas.json'
 import * as abilityData from './abilities.json'
 
-export const getTraditionDefinitions = (): OrderedMap<CultureType, TraditionDefinition> => {
-  let map = OrderedMap<CultureType, TraditionDefinition>()
-  for (const value of traditionData.traditions) {
-    const tradition = listFromJS<TraditionData>(value)
-    map = map.set(tradition.type, tradition)
-  }
-  return map.sortBy((_, key) => key)
-}
+type Traditions = { [key in CultureType]: TraditionDefinition }
+type Omens = { [key in ReligionType]: OmenDefinition[] }
 
-export const getTradeDefinitions = (): List<TradeDefinition> => {
-  let trades = List<TradeDefinition>()
-  for (const value of tradeData.trades)
-    trades = trades.push(listFromJS<TradeData>(value))
-  return trades.sortBy(value => value.name)
-}
+export const getTraditionDefinitions = () => (
+  toObj(sortBy<TraditionData>(traditionData.traditions, value => value.type), value => value.type) as Traditions
+)
 
-export const getHeritageDefinitions = (): List<HeritageDefinition> => {
-  let heritages = List<HeritageDefinition>()
-  for (const value of heritageData.heritages)
-    heritages = heritages.push(listFromJS<HeritageData>(value))
-  return heritages.sortBy(value => value.name)
-}
+export const getTradeDefinitions = () => (
+  sortBy<TradeData>(tradeData.trades, value => value.name) as TradeDefinition[]
+)
 
-export const getInventionDefinitions = (): List<InventionDefinition> => {
-  let inventions = List<InventionDefinition>()
-  for (const value of inventionData.levels)
-    inventions = inventions.push(listFromJS<InventionData>(value))
-  return inventions
-}
+export const getHeritageDefinitions = () => (
+  sortBy<HeritageData>(heritageData.heritages, value => value.name) as HeritageDefinition[]
+)
 
-export const getOmenDefinitions = (): OrderedMap<ReligionType, List<OmenDefinition>> => {
-  let omens = OrderedMap<ReligionType, List<OmenDefinition>>()
-  for (const value of omenData.religions) {
-    const religion = listFromJS<OmenData>(value)
-    omens = omens.set(religion.type, religion.omens)
-  }
-  return omens.sortBy((_, key) => key)
-}
+export const getInventionDefinitions = () => (
+  sortBy<InventionData>(inventionData.levels, () => 1) as InventionDefinition[]
+)
 
-export const getTraitDefinitions = (): List<TraitDefinition> => {
-  let traits = List<TraitDefinition>()
-  for (const value of traitData.traits)
-    traits = traits.push(listFromJS<TraitData>(value))
-  return traits.sortBy((_, key) => key)
-}
+export const getOmenDefinitions = () => (
+  map(toObj(sortBy<OmenData>(omenData.religions, value => value.type), value => value.type), value => value.omens) as Omens
+)
 
-export const getLawDefinitions = (): List<LawDefinition> => {
-  let laws = List<LawDefinition>()
-  for (const value of lawData.laws)
-    laws = laws.push(listFromJS<LawData>(value))
-  return laws.sortBy((_, key) => key)
-}
+export const getTraitDefinitions = () => (
+  sortBy<TraitData>(traitData.traits, value => value.name) as TraitDefinition[]
+)
 
-export const getEconomyDefinitions = (): List<EconomyDefinition> => {
-  let options = List<EconomyDefinition>()
-  for (const value of economyData.economy)
-    options = options.push(listFromJS<EconomyData>(value))
-  return options.sortBy((_, key) => key)
-}
+export const getLawDefinitions = () => (
+  sortBy<LawData>(lawData.laws, () => 1) as LawDefinition[]
+)
 
-export const getIdeaDefinitions = (): List<IdeaDefinition> => {
-  let options = List<IdeaDefinition>()
-  for (const value of ideaData.ideas)
-    options = options.push(listFromJS<IdeaData>(value))
-  return options.sortBy((_, key) => key)
-}
+export const getEconomyDefinitions = () => (
+  sortBy<EconomyData>(economyData.economy, () => 1) as EconomyDefinition[]
+)
 
-export const getAbilityDefinitions = (): List<AbilityDefinition> => {
-  let options = List<AbilityDefinition>()
-  for (const value of abilityData.abilities)
-    options = options.push(listFromJS<AbilityData>(value))
-  return options.sortBy((_, key) => key)
-}
+export const getIdeaDefinitions = () => (
+  sortBy<IdeaData>(ideaData.ideas, () => 1) as IdeaDefinition[]
+)
+
+export const getAbilityDefinitions = () => (
+  sortBy<AbilityData>(abilityData.abilities, () => 1) as AbilityDefinition[]
+)
 
 interface ModifierData {
   target: string

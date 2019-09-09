@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { List as ImmutableList } from 'immutable'
 import { Container, Grid, Table, List, Input, Checkbox } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
-import { mapRange, toList, objGet, ObjSet, sumObj, has } from '../utils'
+import { mapRange, objGet, ObjSet, sumObj, has, keys } from '../utils'
 import { invalidateCountry } from '../store/battle'
 import {
   ModifierType, Modifier, Tradition, CultureType,
@@ -53,8 +52,8 @@ class Countries extends Component<IProps> {
   render(): JSX.Element {
     const country = objGet(this.props.countries, this.props.selected_country, defaultCountry)
     const selections = country.selections
-    const tradition = this.props.traditions.get(country.culture)
-    const omen = this.props.omens.get(country.religion)
+    const tradition = this.props.traditions[country.culture]
+    const omen = this.props.omens[country.religion]
     return (
       <Container>
         <CountryManager>
@@ -68,14 +67,14 @@ class Countries extends Component<IProps> {
           <Grid.Row columns='3'>
             <Grid.Column>
               <DropdownSelector
-                items={this.props.traditions.keySeq().toArray()}
+                items={keys(this.props.traditions)}
                 active={country.culture}
                 onSelect={item => this.selectCulture(item, selections)}
               />
             </Grid.Column>
             <Grid.Column>
               <DropdownSelector
-                items={this.props.omens.keySeq().toArray()}
+                items={keys(this.props.omens)}
                 active={country.religion}
                 onSelect={item => this.selectReligion(item, country.omen_power, selections)}
               />
@@ -194,7 +193,7 @@ class Countries extends Component<IProps> {
   }
 
   renderTraditions = (traditions: TraditionDefinition, selections: ObjSet) => {
-    const rows = traditions.paths.reduce((max, path) => Math.max(max, path.traditions.size), 0)
+    const rows = traditions.paths.reduce((max, path) => Math.max(max, path.traditions.length), 0)
     return (
       <Table celled unstackable fixed>
         <Table.Header>
@@ -220,7 +219,7 @@ class Countries extends Component<IProps> {
               <Table.Row key={row}>
                 {
                   traditions.paths.map((path, column) => {
-                    const tradition = path.traditions.get(row)
+                    const tradition = path.traditions[row]
                     if (!tradition)
                       return null
                     const key = TRADITION_KEY + column + '_' + row
@@ -237,8 +236,8 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderTrades = (trades: ImmutableList<TradeDefinition>, selections: ObjSet) => {
-    const rows = Math.ceil(trades.count() / TRADE_COLUMNS)
+  renderTrades = (trades: TradeDefinition[], selections: ObjSet) => {
+    const rows = Math.ceil(trades.length / TRADE_COLUMNS)
     return (
       <Table celled unstackable fixed>
         <Table.Body>
@@ -248,11 +247,11 @@ class Countries extends Component<IProps> {
                 {
                   mapRange(TRADE_COLUMNS, number => number).map(column => {
                     const index = row * TRADE_COLUMNS + column
-                    const trade = trades.get(index)
+                    const trade = trades[index]
                     if (!trade)
                       return (<Table.Cell key={TRADE_KEY + index}></Table.Cell>)
                     const key = TRADE_KEY + trade.type + '_' + trade.name
-                    const modifiers = toList(trade.modifier)
+                    const modifiers = [trade.modifier]
                     return this.renderCell(key, trade.type + ': ' + trade.name, selections, modifiers)
                   })
                 }
@@ -264,8 +263,8 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderIdeas = (ideas: ImmutableList<IdeaDefinition>, selections: ObjSet) => {
-    const rows = Math.ceil(ideas.count() / IDEA_COLUMNS)
+  renderIdeas = (ideas: IdeaDefinition[], selections: ObjSet) => {
+    const rows = Math.ceil(ideas.length / IDEA_COLUMNS)
     return (
       <Table celled unstackable fixed>
         <Table.Body>
@@ -275,7 +274,7 @@ class Countries extends Component<IProps> {
                 {
                   mapRange(IDEA_COLUMNS, number => number).map(column => {
                     const index = row * TRADE_COLUMNS + column
-                    const idea = ideas.get(index)
+                    const idea = ideas[index]
                     if (!idea)
                       return (<Table.Cell key={IDEA_KEY + index}></Table.Cell>)
                     const key = IDEA_KEY + index
@@ -291,8 +290,8 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderHeritages = (heritages: ImmutableList<HeritageDefinition>, selections: ObjSet) => {
-    const rows = Math.ceil(heritages.count() / HERITAGE_COLUMNS)
+  renderHeritages = (heritages: HeritageDefinition[], selections: ObjSet) => {
+    const rows = Math.ceil(heritages.length / HERITAGE_COLUMNS)
     return (
       <Table celled unstackable fixed>
         <Table.Body>
@@ -302,7 +301,7 @@ class Countries extends Component<IProps> {
                 {
                   mapRange(HERITAGE_COLUMNS, number => number).map(column => {
                     const index = row * HERITAGE_COLUMNS + column
-                    const heritage = heritages.get(index)
+                    const heritage = heritages[index]
                     if (!heritage)
                       return (<Table.Cell key={HERITAGE_KEY + index}></Table.Cell>)
                     const modifiers = heritage.modifiers
@@ -319,7 +318,7 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderInventions = (inventions: ImmutableList<InventionDefinition>, selections: ObjSet) => {
+  renderInventions = (inventions: InventionDefinition[], selections: ObjSet) => {
     return (
       <Table celled unstackable definition fixed>
         <Table.Header>
@@ -362,8 +361,8 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderOmens = (omens: ImmutableList<OmenDefinition>, selections: ObjSet, power: number) => {
-    const rows = Math.ceil(omens.count() / OMEN_COLUMNS)
+  renderOmens = (omens: OmenDefinition[], selections: ObjSet, power: number) => {
+    const rows = Math.ceil(omens.length / OMEN_COLUMNS)
     return (
       <Table celled unstackable fixed>
         <Table.Body>
@@ -373,11 +372,11 @@ class Countries extends Component<IProps> {
                 {
                   mapRange(OMEN_COLUMNS, number => number).map(column => {
                     const index = row * OMEN_COLUMNS + column
-                    const omen = omens.get(index)
+                    const omen = omens[index]
                     const key = OMEN_KEY + index
                     if (!omen)
                       return (<Table.Cell key={key}></Table.Cell>)
-                    const modifiers = toList({ ...omen.modifier, value: omen.modifier.value * power / 100.0 })
+                    const modifiers = [{ ...omen.modifier, value: omen.modifier.value * power / 100.0 }]
                     return this.renderCell(key, omen.name, selections, modifiers, () => this.enableOmen(key, modifiers, selections))
                   })
                 }
@@ -390,8 +389,8 @@ class Countries extends Component<IProps> {
   }
 
 
-  renderTraits = (traits: ImmutableList<TraitDefinition>, selections: ObjSet, disabled: boolean) => {
-    const rows = Math.ceil(traits.count() / TRAIT_COLUMNS)
+  renderTraits = (traits: TraitDefinition[], selections: ObjSet, disabled: boolean) => {
+    const rows = Math.ceil(traits.length / TRAIT_COLUMNS)
     return (
       <Table celled unstackable fixed>
         <Table.Body>
@@ -401,7 +400,7 @@ class Countries extends Component<IProps> {
                 {
                   mapRange(TRAIT_COLUMNS, number => number).map(column => {
                     const index = row * TRAIT_COLUMNS + column
-                    const trait = traits.get(index)
+                    const trait = traits[index]
                     if (!trait)
                       return (<Table.Cell key={TRAIT_KEY + index}></Table.Cell>)
                     const modifiers = trait.modifiers
@@ -416,13 +415,13 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderEconomy = (economy: ImmutableList<EconomyDefinition>, selections: ObjSet) => this.renderOptions(ECONOMY_KEY, economy, selections)
+  renderEconomy = (economy: EconomyDefinition[], selections: ObjSet) => this.renderOptions(ECONOMY_KEY, economy, selections)
 
-  renderLaws = (laws: ImmutableList<LawDefinition>, selections: ObjSet) => this.renderOptions(LAW_KEY, laws, selections)
+  renderLaws = (laws: LawDefinition[], selections: ObjSet) => this.renderOptions(LAW_KEY, laws, selections)
 
-  renderAbilities = (abilities: ImmutableList<AbilityDefinition>, selections: ObjSet) => this.renderOptions(ABILITY_KEY, abilities, selections)
+  renderAbilities = (abilities: AbilityDefinition[], selections: ObjSet) => this.renderOptions(ABILITY_KEY, abilities, selections)
 
-  renderOptions = (modifier_key: string, economy: ImmutableList<EconomyDefinition | LawDefinition | AbilityDefinition>, selections: ObjSet) => {
+  renderOptions = (modifier_key: string, economy: (EconomyDefinition | LawDefinition | AbilityDefinition)[], selections: ObjSet) => {
     return (
       <Table celled unstackable fixed>
         <Table.Body>
@@ -445,7 +444,7 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderCell = (key: string, name: string | null, selections: ObjSet, modifiers: ImmutableList<Modifier>, enable?: (() => void), clear?: (() => void), padding?: string, disabled?: boolean, width?: number) => (
+  renderCell = (key: string, name: string | null, selections: ObjSet, modifiers: Modifier[], enable?: (() => void), clear?: (() => void), padding?: string, disabled?: boolean, width?: number) => (
     <Table.Cell
       disabled={disabled}
       key={key}
@@ -488,24 +487,24 @@ class Countries extends Component<IProps> {
    */
   clearTraditions = (column: number, row: number, selections: ObjSet) => {
     const key = TRADITION_KEY + column
-    Object.keys(selections).filter(value => value.startsWith(key) && !value.startsWith(TRADITION_BASE_KEY) && this.getNumberFromKey(value, 2) > row)
+    keys(selections).filter(value => value.startsWith(key) && !value.startsWith(TRADITION_BASE_KEY) && this.getNumberFromKey(value, 2) > row)
       .forEach(value => this.props.clearModifiers(this.props.selected_country, value))
   }
 
   /**
    * Enables traditions from a given column up to a given row.
    */
-  enableTraditions = (traditions: ImmutableList<Tradition>, column: number, row: number, selections: ObjSet) => {
-    mapRange(row + 1, number => number).filter(value => !selections.hasOwnProperty(TRADITION_KEY + column + '_' + value))
-      .forEach(value => this.props.enableModifiers(this.props.selected_country, TRADITION_KEY + column + '_' + value, traditions.get(value)!.modifiers))
+  enableTraditions = (traditions: Tradition[], column: number, row: number, selections: ObjSet) => {
+    mapRange(row + 1, number => number).filter(value => !has(selections, TRADITION_KEY + column + '_' + value))
+      .forEach(value => this.props.enableModifiers(this.props.selected_country, TRADITION_KEY + column + '_' + value, traditions[value].modifiers))
   }
 
   /**
    * Enables a tradition and enables traditions before it.
    */
-  enableTradition = (traditions: ImmutableList<Tradition>, base: ImmutableList<Modifier>, column: number, row: number, selections: ObjSet) => {
+  enableTradition = (traditions: Tradition[], base: Modifier[], column: number, row: number, selections: ObjSet) => {
     this.clearTraditions(column, row, selections)
-    if (!selections.hasOwnProperty(TRADITION_BASE_KEY))
+    if (!has(selections, TRADITION_BASE_KEY))
       this.props.enableModifiers(this.props.selected_country, TRADITION_BASE_KEY, base)
     this.enableTraditions(traditions, column, row, selections)
   }
@@ -513,7 +512,7 @@ class Countries extends Component<IProps> {
   /**
    * Enables a heritage and clears any existing heritages.
    */
-  enableHeritage = (key: string, modifiers: ImmutableList<Modifier>, selections: ObjSet) => {
+  enableHeritage = (key: string, modifiers: Modifier[], selections: ObjSet) => {
     this.clearModifiers(HERITAGE_KEY, selections)
     this.props.enableModifiers(this.props.selected_country, key, modifiers)
   }
@@ -528,7 +527,7 @@ class Countries extends Component<IProps> {
   /**
    * Enables an option and clears any existing options.
    */
-  enableOption = (key: string, modifiers: ImmutableList<Modifier>, selections: ObjSet) => {
+  enableOption = (key: string, modifiers: Modifier[], selections: ObjSet) => {
     this.clearModifiers(this.getUpperKey(key) + '_', selections)
     this.props.enableModifiers(this.props.selected_country, key, modifiers)
   }
@@ -536,7 +535,7 @@ class Countries extends Component<IProps> {
   /**
    * Enables a omen and clears any existing omens.
    */
-  enableOmen = (key: string, modifiers: ImmutableList<Modifier>, selections: ObjSet) => {
+  enableOmen = (key: string, modifiers: Modifier[], selections: ObjSet) => {
     this.clearModifiers(OMEN_KEY, selections)
     this.props.enableModifiers(this.props.selected_country, key, modifiers)
   }
@@ -544,14 +543,14 @@ class Countries extends Component<IProps> {
   /**
    * Refreshes active omens to update their buff.
    */
-  refreshOmens = (selections: ObjSet, power: number, omens?: ImmutableList<OmenDefinition>) => {
+  refreshOmens = (selections: ObjSet, power: number, omens?: OmenDefinition[]) => {
     if (!omens)
       return
     Object.keys(selections).filter(value => value.startsWith(OMEN_KEY)).forEach(value => {
       const index = this.getNumberFromKey(value, 1)
-      const omen = omens.get(index)
+      const omen = omens[index]
       if (omen)
-        this.props.enableModifiers(this.props.selected_country, value, toList(this.scaleModifier(omen.modifier, power)))
+        this.props.enableModifiers(this.props.selected_country, value, [this.scaleModifier(omen.modifier, power)])
       else
         this.props.clearModifiers(this.props.selected_country, value)
     })
@@ -566,11 +565,11 @@ class Countries extends Component<IProps> {
     Object.keys(selections).filter(value => value.startsWith(TRADITION_KEY) && !value.startsWith(TRADITION_BASE_KEY)).forEach(value => {
       this.props.clearModifiers(this.props.selected_country, value)
       const column = this.getNumberFromKey(value, 1)
-      const path = traditions.paths.get(column)
+      const path = traditions.paths[column]
       if (!path)
         return
       const row = this.getNumberFromKey(value, 2)
-      const tradition = path.traditions.get(row)
+      const tradition = path.traditions[row]
       if (!tradition)
         return
       this.props.enableModifiers(this.props.selected_country, value, tradition.modifiers)
@@ -582,7 +581,7 @@ class Countries extends Component<IProps> {
   /**
    * Sets omen power while also re-enabling current omen.
    */
-  setOmenPower = (value: string, selections: ObjSet, omens?: ImmutableList<OmenDefinition>) => {
+  setOmenPower = (value: string, selections: ObjSet, omens?: OmenDefinition[]) => {
     const power = Number(value)
     if (isNaN(power))
       return
@@ -598,12 +597,12 @@ class Countries extends Component<IProps> {
     if (isNaN(power))
       return
     this.props.setMilitaryPower(this.props.selected_country, power)
-    this.props.enableModifiers(this.props.selected_country, MILITARY_POWER_KEY, toList({
+    this.props.enableModifiers(this.props.selected_country, MILITARY_POWER_KEY, [{
       target: DefinitionType.Land,
       attribute: UnitCalc.Morale,
       type: ValuesType.Modifier,
       value: power * 0.001
-    }))
+    }])
   }
 
   /**
@@ -614,11 +613,11 @@ class Countries extends Component<IProps> {
     if (isNaN(number))
       return
     this.props.setOfficeDiscipline(this.props.selected_country, number)
-    this.props.enableModifiers(this.props.selected_country, OFFICE_KEY + 'Discipline', toList({
+    this.props.enableModifiers(this.props.selected_country, OFFICE_KEY + 'Discipline', [{
       target: DefinitionType.Global,
       attribute: UnitCalc.Discipline,
       value: number / 100.0
-    }))
+    }])
   }
 
   /**
@@ -629,12 +628,12 @@ class Countries extends Component<IProps> {
     if (isNaN(number))
       return
     this.props.setOfficeMorale(this.props.selected_country, number)
-    this.props.enableModifiers(this.props.selected_country, OFFICE_KEY + 'Morale', toList({
+    this.props.enableModifiers(this.props.selected_country, OFFICE_KEY + 'Morale', [{
       target: DefinitionType.Land,
       attribute: UnitCalc.Morale,
       type: ValuesType.Modifier,
       value: number / 100.0
-    }))
+    }])
   }
 
   /**
@@ -642,7 +641,7 @@ class Countries extends Component<IProps> {
    */
   selectReligion = (value: ReligionType, power: number, selections: ObjSet) => {
     this.props.selectReligion(this.props.selected_country, value)
-    const omens = this.props.omens.get(value)
+    const omens = this.props.omens[value]
     this.refreshOmens(selections, power, omens)
   }
 
@@ -651,7 +650,7 @@ class Countries extends Component<IProps> {
    */
   selectCulture = (value: CultureType, selections: ObjSet) => {
     this.props.selectCulture(this.props.selected_country, value)
-    this.refreshTraditions(selections, this.props.traditions.get(value))
+    this.refreshTraditions(selections, this.props.traditions[value])
   }
   /**
    * Scales modifier with a given power.
@@ -670,15 +669,15 @@ class Countries extends Component<IProps> {
   /**
    * Enables tech levels to allow invention from a given level.
    */
-  enableTech = (inventions: ImmutableList<InventionDefinition>, level: number, selections: ObjSet) => {
-    mapRange(level + 1, number => number).filter(value => !selections.hasOwnProperty(INVENTION_KEY + value + '_0'))
-      .forEach(value => this.props.enableModifiers(this.props.selected_country, INVENTION_KEY + value + '_0', inventions.get(value)!.inventions.get(0)!))
+  enableTech = (inventions: InventionDefinition[], level: number, selections: ObjSet) => {
+    mapRange(level + 1, number => number).filter(value => !has(selections, INVENTION_KEY + value + '_0'))
+      .forEach(value => this.props.enableModifiers(this.props.selected_country, INVENTION_KEY + value + '_0', inventions[value].inventions[0]))
   }
 
   /**
    * Enables an invention and all required tech levels for it.
    */
-  enableInvention = (inventions: ImmutableList<InventionDefinition>, key: string, modifiers: ImmutableList<Modifier>, selections: ObjSet) => {
+  enableInvention = (inventions: InventionDefinition[], key: string, modifiers: Modifier[], selections: ObjSet) => {
     this.enableTech(inventions, this.getNumberFromKey(key, 1), selections)
     this.props.enableModifiers(this.props.selected_country, key, modifiers)
   }
@@ -725,12 +724,12 @@ class Countries extends Component<IProps> {
    * Toggles has general while enabling no general debuff.
    */
   disableGeneral = () => {
-    this.props.enableModifiers(this.props.selected_country, NO_GENERAL_KEY, toList({
+    this.props.enableModifiers(this.props.selected_country, NO_GENERAL_KEY, [{
       target: DefinitionType.Global,
       attribute: UnitCalc.Morale,
       type: ValuesType.Modifier,
       value: -0.25
-    }))
+    }])
     this.props.setHasGeneral(this.props.selected_country, false)
   }
 
@@ -784,7 +783,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  enableModifiers: (country: CountryName, key: string, modifiers: ImmutableList<Modifier>) => dispatch(enableModifiers(country, key, modifiers)) && dispatch(invalidateCountry(country)),
+  enableModifiers: (country: CountryName, key: string, modifiers: Modifier[]) => dispatch(enableModifiers(country, key, modifiers)) && dispatch(invalidateCountry(country)),
   clearModifiers: (country: CountryName, key: string) => dispatch(clearModifiers(country, key)) && dispatch(invalidateCountry(country)),
   selectCulture: (country: CountryName, culture: CultureType) => dispatch(selectCulture(country, culture)),
   selectReligion: (country: CountryName, religion: ReligionType) => dispatch(selectReligion(country, religion)),

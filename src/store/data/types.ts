@@ -1,4 +1,3 @@
-import { List } from 'immutable'
 import { UnitType } from '../units'
 import { DefinitionType, ValuesType } from '../../base_definition'
 
@@ -45,16 +44,16 @@ export interface Modifier {
 }
 export interface Tradition {
   readonly name: string
-  readonly modifiers: List<Modifier>
+  readonly modifiers: Modifier[]
 }
 export interface Path {
   readonly name: string
-  readonly traditions: List<Tradition>
+  readonly traditions: Tradition[]
 }
 export interface TraditionDefinition {
   readonly type: CultureType
-  readonly paths: List<Path>
-  readonly modifiers: List<Modifier>
+  readonly paths: Path[]
+  readonly modifiers: Modifier[]
 }
 export interface TradeDefinition {
   readonly name: string
@@ -63,11 +62,11 @@ export interface TradeDefinition {
 }
 export interface HeritageDefinition {
   readonly name: string
-  readonly modifiers: List<Modifier>
+  readonly modifiers: Modifier[]
 }
 export interface InventionDefinition {
   readonly name: string
-  readonly inventions: List<List<Modifier>>
+  readonly inventions: Modifier[][]
 }
 export interface OmenDefinition {
   readonly name: string
@@ -75,30 +74,30 @@ export interface OmenDefinition {
 }
 export interface TraitDefinition {
   readonly name: string
-  readonly modifiers: List<Modifier>
+  readonly modifiers: Modifier[]
  }
 export interface LawDefinition {
   readonly name: string
-  readonly options: List<{
+  readonly options: {
     readonly name: string
-    readonly modifiers: List<Modifier>
-  }>
+    readonly modifiers: Modifier[]
+  }[]
 }
 export interface EconomyDefinition {
   readonly name: string
-  readonly options: List<{
+  readonly options: {
     readonly name: string
-    readonly modifiers: List<Modifier>
-  }>
+    readonly modifiers: Modifier[]
+  }[]
 }
 export interface IdeaDefinition {
   readonly name: string
-  readonly modifiers: List<Modifier>
+  readonly modifiers: Modifier[]
 }
 export interface AbilityDefinition {
   readonly name: string
-  readonly options: List<{
+  readonly options: {
     readonly name: string
-    readonly modifiers: List<Modifier>
-  }>
+    readonly modifiers: Modifier[]
+  }[]
 }
