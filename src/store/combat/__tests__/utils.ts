@@ -1,7 +1,9 @@
-import { Army, Participant } from '../../battle'
+import { Army, Participant, RowType } from '../../battle'
 import { TacticType } from '../../tactics'
-import { BaseUnit, UnitCalc, UnitType } from '../../units'
-import { calculateValue } from '../../../base_definition'
+import { BaseUnit, UnitCalc, UnitType, getDefaultUnits, getDefaultGlobals } from '../../units'
+import { calculateValue, mergeValues, DefinitionType } from '../../../base_definition'
+import { map } from '../../../utils'
+import { CountryName } from '../../countries'
 
 export interface TestInfo {
   army_a: Army
@@ -11,7 +13,7 @@ export interface TestInfo {
   round: number
 }
 
-const verifySub = (round: number, unit: BaseUnit | undefined, strength: number, morale: number) => {
+const verifySub = (round: number, unit: BaseUnit | null, strength: number, morale: number) => {
   expect(unit).toBeTruthy()
   if (!unit)
     return
@@ -32,7 +34,7 @@ export const verifyCenterUnits = (info: TestInfo, manpower_a: number, morale_a: 
   verifySub(info.round, info.army_a.frontline[15], manpower_a, morale_a)
   verifySub(info.round, info.army_d.frontline[15], manpower_d, morale_d)
 }
-export const verifyType = (unit: BaseUnit | undefined, type: UnitType, message: string = '') => {
+export const verifyType = (unit: BaseUnit | null, type: UnitType, message: string = '') => {
   expect(unit).toBeTruthy()
   expect(unit!.type + message).toEqual(type + message)
 }
@@ -45,11 +47,26 @@ export const setTactics = (info: TestInfo, tactic_a: TacticType, tactic_d: Tacti
   info.army_d = { ...info.army_d, tactic: tactic_d }
 }
 export const setCenterUnits = (info: TestInfo, unit_a: BaseUnit, unit_d: BaseUnit) => {
+  info.army_a = { ...info.army_a, frontline: [ ...info.army_a.frontline ] }
+  info.army_d = { ...info.army_d, frontline: [ ...info.army_d.frontline ] }
   info.army_a.frontline[15] = unit_a
   info.army_d.frontline[15] = unit_d
+}
+export const setFlankSizes = (info: TestInfo, flank_a: number, flank_d: number) => {
+  info.army_a = { ...info.army_a, flank_size: flank_a }
+  info.army_d = { ...info.army_d, flank_size: flank_d }
 }
 
 describe('utils', () => {
   it('works', () => { })
 })
 
+export const getRowTypes = (front: UnitType | null = null, back: UnitType | null = null, flank: UnitType | null = null) => ({ [RowType.Front]: front, [RowType.Back]: back, [RowType.Flank]: flank })
+
+const global_stats = getDefaultGlobals()[DefinitionType.Land]
+const units = map(getDefaultUnits(), unit => mergeValues(unit, global_stats))
+export const getDefinitions = () => ({ [CountryName.Country1]: units, [CountryName.Country2]: units })
+
+export const getUnit = (type: UnitType) => ({ ...units[type] } as any as BaseUnit)
+
+export const every_type = [UnitType.Archers, UnitType.CamelCavalry, UnitType.Chariots, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.HorseArchers, UnitType.LightCavalry, UnitType.LightInfantry, UnitType.WarElephants]

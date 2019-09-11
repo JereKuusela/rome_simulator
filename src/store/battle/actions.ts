@@ -90,7 +90,7 @@ const getInitialRowTypes = (mode: Mode): RowTypes => {
 }
 
 const initializeDefaultArmy = (mode: Mode): Army => ({
-  frontline: Array(30).fill(undefined),
+  frontline: Array(30).fill(null),
   reserve: [],
   defeated: [],
   tactic: getInitialTactic(mode),

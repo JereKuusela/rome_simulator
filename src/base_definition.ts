@@ -2,7 +2,7 @@ import EmptyIcon from './images/empty.png'
 import UnknownIcon from './images/unknown.png'
 import { toPercent, toManpower} from './formatters'
 import { round, map, filter, forEach } from './utils'
-import { merge, has, cloneDeep } from 'lodash'
+import { merge, has, size } from 'lodash'
 
 export enum ValuesType {
   Base = 'Base',
@@ -96,14 +96,14 @@ export const addValues = <D extends BVD, A extends string> (definition: D, type:
  * @param values A list of [attribute, value] pairs.
  */
 const subAddValues = <A extends string>(container: Values<A> | undefined, key: string, values: [A, number][]): Values<A> => {
-  let new_values = container ? cloneDeep(container) : initValues<A>()
+  let new_values = container ? container : initValues<A>()
   for (const [attribute, value] of values) {
     if (!has(new_values, attribute))
-      new_values[attribute] = {}
+      new_values = { ...new_values, [attribute]: {} }
     if (value === 0 && has(new_values[attribute], key))
-      delete new_values[attribute][key]
+      new_values = { ...new_values, [attribute]: filter(new_values[attribute], (_, k) => k !== key) }
     else if (value !== 0)
-      (new_values[attribute] as ValuesSub)[key] = value
+      new_values = { ...new_values, [attribute]: { ...new_values[attribute], [key]: value } }
   }
   return new_values
 }
@@ -284,29 +284,29 @@ export const explainShort = <D extends BVD, A extends string> (definition: D, at
 export const explain = <D extends BD, A extends string> (definition: D, attribute: A): string => {
   const value_modifier = definition.modifier_values ? definition.modifier_values[attribute] : undefined
   const value_loss = definition.loss_values ? definition.loss_values[attribute] : undefined
-  if ((!value_modifier || value_modifier.size === 0) && (!value_loss || value_loss.size === 0))
+  if ((!value_modifier || size(value_modifier) === 0) && (!value_loss || size(value_loss) === 0))
     return explainShort(definition, attribute)
   let explanation = ''
   let base = 0
   const value_base = definition.base_values ? definition.base_values[attribute] : undefined
   if (value_base) {
     forEach(value_base, value => base += value)
-    if (value_base.size === 0)
+    if (size(value_base) === 0)
       explanation += 'Base value 0'
-    else if (value_base.size === 1)
+    else if (size(value_base) === 1)
       explanation += ''
     else
       explanation += 'Base value ' + +(base).toFixed(2) + ' ('
     forEach(value_base, (value, key) => explanation += key.replace(/_/g, ' ') + ': ' + value + ', ')
-    if (value_base.size > 0)
+    if (size(value_base) > 0)
       explanation = explanation.substring(0, explanation.length - 2)
-    if (value_base.size > 1)
+    if (size(value_base) > 1)
       explanation += ')'
   }
   let modifier = 1.0
   if (value_modifier)
     forEach(value_modifier, value => modifier += value)
-  if (value_modifier && value_modifier.size > 0) {
+  if (value_modifier && size(value_modifier) > 0) {
     explanation += ' multiplied by ' + toPercent(modifier)
     explanation += ' ('
     forEach(value_modifier, (value, key) => explanation += key.replace(/_/g, ' ') + ': ' + toPercent(value) + ', ')
@@ -315,7 +315,7 @@ export const explain = <D extends BD, A extends string> (definition: D, attribut
   let loss = 0
   if (value_loss)
     forEach(value_loss, value => loss += value)
-  if (value_loss && value_loss.size > 0) {
+  if (value_loss && size(value_loss) > 0) {
     explanation += ' reduced by losses ' + +(loss).toFixed(2)
     explanation += ' ('
     forEach(value_loss, (value, key) => explanation += key.replace(/_/g, ' ') + ': ' + value + ', ')

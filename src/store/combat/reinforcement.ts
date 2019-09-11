@@ -73,6 +73,7 @@ export const reinforce = (army: BaseUnits, definitions: UnitDefinitions, round: 
 
     const center = Math.floor(frontline.length / 2.0)
 
+    
     // Separate reserve to main and flank groups.
     const mainReserve = reserve.filter(value => !isFlankUnit(settings, row_types, mergeValues(value, definitions[value.type])))
     const flankReserve = reserve.filter(value => isFlankUnit(settings, row_types, mergeValues(value, definitions[value.type])))
@@ -95,8 +96,8 @@ export const reinforce = (army: BaseUnits, definitions: UnitDefinitions, round: 
         orderedFlankReserve = orderedFlankReserve.reverse()
     }
     // Optimization to not drag units in calculations which have no chance to get picked.
-    orderedMainReserve = orderedMainReserve.slice(-free_spots, free_spots)
-    orderedFlankReserve = orderedFlankReserve.slice(-free_spots, free_spots)
+    orderedMainReserve = orderedMainReserve.slice(-free_spots)
+    orderedFlankReserve = orderedFlankReserve.slice(-free_spots)
     let index = center
     // Fill main front until flanks are reached.
     for (; index >= left_flank_size && index + right_flank_size < frontline.length && reserve.length > 0; index = nextIndex(index, center)) {

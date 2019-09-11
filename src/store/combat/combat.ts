@@ -7,6 +7,7 @@ import { calculateValue, addValues, mergeValues, ValuesType } from '../../base_d
 import { reinforce } from './reinforcement'
 import { CountryName } from '../countries'
 import { resize } from '../../utils';
+import { sumBy } from 'lodash'
 
 interface Loss {
   morale: number
@@ -67,6 +68,7 @@ export const doBattle = (definitions: Units, attacker: ParticipantState, defende
 
   const [losses_d, kills_a] = attack(definitions_a, definitions_d, a_to_d, attacker_roll, terrains, tactic_effects.attacker, tactic_effects.casualties, settings)
   const [losses_a, kills_d] = attack(definitions_d, definitions_a, d_to_a, defender_roll, terrains, tactic_effects.defender, tactic_effects.casualties, settings)
+
   a = { frontline: applyLosses(a.frontline, losses_a, round), reserve: a.reserve, defeated: a.defeated }
   d = { frontline: applyLosses(d.frontline, losses_d, round), reserve: d.reserve, defeated: d.defeated }
   a = { frontline: applyKills(a.frontline, kills_a, round), reserve: a.reserve, defeated: a.defeated }
@@ -173,7 +175,7 @@ export const calculateRollModifierFromGenerals = (skill: number, enemy_skill: nu
 /**
  * Calculates the roll modifier from terrains.
  */
-export const calculateRollModifierFromTerrains = (terrains: TerrainDefinition[]): number => terrains.map(terrain => calculateValue(terrain, TerrainCalc.Roll)).reduce((previous, current) => previous + current, 0)
+export const calculateRollModifierFromTerrains = (terrains: TerrainDefinition[]): number => sumBy(terrains, terrain => calculateValue(terrain, TerrainCalc.Roll))
 
 /**
  * Modifies a dice roll with terrains and general skill levels.
@@ -347,7 +349,7 @@ const calculateLosses = (source: BaseUnit, target: BaseUnit, roll: number, terra
     damage = calculate(damage, 1.0 + calculateValue(target, UnitCalc.DamageTaken))
   else
     damage = calculate(damage, 1.0 + calculateValue(source, UnitCalc.DamageDone))
-  damage = calculate(damage, 1.0 + terrains.reduce((previous, current) => previous + (current ? calculateValue(source, current.type) : 0), 0))
+  damage = calculate(damage, 1.0 + sumBy(terrains, terrain => calculateValue(source, terrain.type)))
   damage = calculate(damage, 1.0 + calculateValue(source, target.type))
   damage = calculate(damage, 1.0 + tactic_damage_multiplier)
   damage = calculate(damage, 1.0 + calculateValue(source, UnitCalc.Offense) - calculateValue(target, UnitCalc.Defense))

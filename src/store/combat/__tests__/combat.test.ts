@@ -1,24 +1,22 @@
 import { doBattle } from '../combat'
-import { List, Map } from 'immutable'
 import { getDefaultArmy, Army, Participant, getDefaultParticipant } from '../../battle'
 import { getDefaultTactics, TacticType } from '../../tactics'
 import { getDefaultTerrains, TerrainType, TerrainDefinition } from '../../terrains'
-import { getDefaultUnits, getDefaultGlobals, UnitType, UnitCalc, UnitDefinition, BaseUnit } from '../../units'
-import { addValues, ValuesType, mergeValues, DefinitionType } from '../../../base_definition'
-import { verifyCenterUnits, setRolls, setTactics, setCenterUnits } from './utils'
+import { UnitType, UnitCalc, BaseUnit } from '../../units'
+import { addValues, ValuesType, DefinitionType } from '../../../base_definition'
+import { verifyCenterUnits, setRolls, setTactics, setCenterUnits, getDefinitions, getUnit } from './utils'
 import { CountryName } from '../../countries'
 import { getDefaultLandSettings } from '../../settings'
 
 describe('1 vs 1', () => {
-  const global_stats = getDefaultGlobals()[DefinitionType.Land]
+  const definitions = getDefinitions()
+  const settings = getDefaultLandSettings()
   const tactics = getDefaultTactics()
   const terrains = getDefaultTerrains()
-  const units = getDefaultUnits().map(unit => mergeValues(unit, global_stats))
-  const archer = addValues(units.get(UnitType.Archers)!, ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.2]]) as any as BaseUnit
-  const infantry = addValues(units.get(UnitType.LightInfantry)!, ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.25]]) as any as BaseUnit
-  const cavalry = addValues(units.get(UnitType.LightCavalry)!, ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.2]]) as any as BaseUnit
-  const definitions = Map<CountryName, Map<UnitType, UnitDefinition>>().set(CountryName.Country1, units).set(CountryName.Country2, units)
-  const settings = getDefaultLandSettings()
+
+  const archer = addValues(getUnit(UnitType.Archers), ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.2]]) as any as BaseUnit
+  const infantry = addValues(getUnit(UnitType.LightInfantry), ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.25]]) as any as BaseUnit
+  const cavalry = addValues(getUnit(UnitType.LightCavalry), ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.2]]) as any as BaseUnit
 
   let info = {
     attacker: null as any as Participant,
@@ -27,14 +25,14 @@ describe('1 vs 1', () => {
     army_d: null as any as Army,
     round: 0
   }
-  let terrain: List<TerrainDefinition>
+  let terrain: TerrainDefinition[]
 
   beforeEach(() => {
     info.attacker = getDefaultParticipant(CountryName.Country1)
     info.defender = getDefaultParticipant(CountryName.Country2)
     info.army_a = getDefaultArmy(DefinitionType.Land)
     info.army_d = getDefaultArmy(DefinitionType.Land)
-    terrain = List<TerrainDefinition>().push(terrains.get(TerrainType.Forest)!)
+    terrain = [terrains[TerrainType.Forest]]
     setTactics(info, TacticType.Envelopment, TacticType.Envelopment)
     setCenterUnits(info, archer, archer)
     info.round = 0
@@ -42,7 +40,7 @@ describe('1 vs 1', () => {
 
   const doRound = () => {
     info.round = info.round + 1
-    const [a, d] = doBattle(definitions, { ...info.attacker, ...info.army_a, tactic: tactics.get(info.army_a.tactic)!, country: CountryName.Country1, general: 0 }, { ...info.defender, ...info.army_d, tactic: tactics.get(info.army_d.tactic)!, country: CountryName.Country2, general: 0 }, info.round, terrain, settings)
+    const [a, d] = doBattle(definitions, { ...info.attacker, ...info.army_a, tactic: tactics[info.army_a.tactic], country: CountryName.Country1, general: 0 }, { ...info.defender, ...info.army_d, tactic: tactics[info.army_d.tactic], country: CountryName.Country2, general: 0 }, info.round, terrain, settings)
     info.army_a = { ...info.army_a, ...a }
     info.army_d = { ...info.army_d, ...d }
   }
