@@ -85,7 +85,7 @@ export const filterUnitTypes = (state: AppState, side: Side): Set<UnitType> => {
  */
 export const getBattle = (state: AppState): Battle => objGet(state.battle, state.settings.mode, modeState(state.settings.mode))
 
-const getArmyBySide = (state: AppState, side: Side): Army => getArmyByCountry(state, getParticipant(state, side).name)
+export const getArmyBySide = (state: AppState, side: Side): Army => getArmyByCountry(state, getParticipant(state, side).name)
 
 const getArmyByCountry = (state: AppState, name: CountryName): Army => {
   const battle = getBattle(state)

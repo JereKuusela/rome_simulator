@@ -5,7 +5,7 @@ import { doBattle as fight } from './combat'
 import { mergeValues, Mode } from '../../base_definition'
 import { CombatParameter } from '../settings'
 import { AppState } from '../'
-import { getSettings, getBattle, getArmy, getParticipant } from '../utils'
+import { getSettings, getBattle, getArmy, getParticipant, getArmyBySide } from '../utils'
 import { objGet, sumObj, map, arrGet } from '../../utils'
 import { defaultCountry } from '../countries/reducer'
 
@@ -14,14 +14,14 @@ const doBattle = (state: AppState, mode: Mode, steps: number, refresh: boolean):
   const definitions = map(state.units, (definitions, country) => map(definitions, unit => mergeValues(unit, state.global_stats[country][mode])))
   let next = getBattle(state)
   // Whole logic really messed after so many refactorings
-  let units_a = getArmy(state, Side.Attacker)
-  let units_d = getArmy(state, Side.Defender)
+  let units_a = refresh ? getArmyBySide(state, Side.Attacker) : getArmy(state, Side.Attacker)
+  let units_d = refresh ? getArmyBySide(state, Side.Defender) : getArmy(state, Side.Defender)
   let participant_a = getParticipant(state, Side.Attacker)
   let participant_d = getParticipant(state, Side.Defender)
   if (refresh) {
-    participant_a = { ...participant_a, rounds: []}
-    participant_d = { ...participant_d, rounds: []}
-    next = { ...next, round: -1}
+    participant_a = { ...participant_a, rounds: [] }
+    participant_d = { ...participant_d, rounds: [] }
+    next = { ...next, round: -1, participants: { [Side.Attacker]: participant_a, [Side.Defender]: participant_d }, fight_over: false }
   }
   const country_a = objGet(state.countries, units_a.name, defaultCountry)
   const country_d = objGet(state.countries, units_d.name, defaultCountry)
