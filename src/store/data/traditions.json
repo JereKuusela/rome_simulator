@@ -19,7 +19,7 @@
                 {
                   "target": "Chariots",
                   "attribute": "Offense",
-                  "value": 0.15
+                  "value": 0.2
                 }
               ]
             },
@@ -29,7 +29,7 @@
                 {
                   "target": "Light Infantry",
                   "attribute": "Defense",
-                  "value": 0.15
+                  "value": 0.1
                 }
               ]
             },
@@ -60,7 +60,7 @@
                   "target": "Chariots",
                   "attribute": "Morale",
                   "type": "Modifier",
-                  "value": 0.1
+                  "value": 0.2
                 }
               ]
             },
@@ -91,13 +91,13 @@
               "modifiers": [
                 {
                   "target": "Light Cavalry",
-                  "attribute": "Discipline",
+                  "attribute": "Offense",
                   "value": 0.1
                 },
                 {
                   "target": "Chariots",
-                  "attribute": "Discipline",
-                  "value": 0.1
+                  "attribute": "Defense",
+                  "value": 0.2
                 }
               ]
             }
@@ -113,7 +113,7 @@
                   "target": "Light Infantry",
                   "attribute": "Morale",
                   "type": "Modifier",
-                  "value": 0.1
+                  "value": 0.2
                 }
               ]
             },
@@ -124,13 +124,13 @@
                   "target": "Light Cavalry",
                   "attribute": "Cost",
                   "type": "Modifier",
-                  "value": -0.1
+                  "value": -0.15
                 },
                 {
                   "target": "Chariots",
                   "attribute": "Cost",
                   "type": "Modifier",
-                  "value": -0.1
+                  "value": -0.15
                 }
               ]
             },
@@ -160,12 +160,12 @@
                 {
                   "target": "Light Infantry",
                   "attribute": "Forest",
-                  "value": 0.15
+                  "value": 0.33
                 },
                 {
                   "target": "Archers",
                   "attribute": "Forest",
-                  "value": 0.15
+                  "value": 0.33
                 }
               ]
             },
@@ -175,7 +175,7 @@
                 {
                   "target": "Heavy Infantry",
                   "attribute": "Defense",
-                  "value": 0.15
+                  "value": 0.1
                 }
               ]
             },
@@ -196,7 +196,7 @@
                 {
                   "target": "Archers",
                   "attribute": "Defense",
-                  "value": 0.15
+                  "value": 0.1
                 }
               ]
             },
@@ -281,7 +281,7 @@
                 {
                   "target": "Heavy Infantry",
                   "attribute": "Offense",
-                  "value": 0.15
+                  "value": 0.1
                 }
               ]
             },
@@ -338,15 +338,15 @@
               "name": "Arms for Hire",
               "modifiers": [
                 {
+                  "target": "Text",
+                  "attribute": "Recruit Mercenary Cost",
+                  "value": -0.15
+                },
+                {
                   "target": "Land",
                   "attribute": "Morale",
                   "type": "Modifier",
                   "value": 0.05
-                },
-                {
-                  "target": "Text",
-                  "attribute": "Recruit Mercenary Cost",
-                  "value": -0.15
                 }
               ]
             },
@@ -375,7 +375,7 @@
               "modifiers": [
                 {
                   "target": "Heavy Cavalry",
-                  "attribute": "Discipline",
+                  "attribute": "Offense",
                   "value": 0.1
                 }
               ]
@@ -415,6 +415,11 @@
                   "target": "Text",
                   "attribute": "Mercenary Army Maintenance",
                   "value": -0.15
+                },
+                {
+                  "target": "Heavy Cavalry",
+                  "attribute": "Discipline",
+                  "value": 0.1
                 }
               ]
             }
@@ -445,7 +450,7 @@
                 {
                   "target": "Text",
                   "attribute": "Experience Decay",
-                  "value": -0.15
+                  "value": -0.005
                 }
               ]
             },
@@ -454,7 +459,7 @@
               "modifiers": [
                 {
                   "target": "Light Cavalry",
-                  "attribute": "Discipline",
+                  "attribute": "Defense",
                   "value": 0.1
                 }
               ]
@@ -475,7 +480,7 @@
                 {
                   "target": "Light Cavalry",
                   "attribute": "Offense",
-                  "value": 0.15
+                  "value": 0.1
                 }
               ]
             },
@@ -505,7 +510,7 @@
               "modifiers": [
                 {
                   "target": "Heavy Infantry",
-                  "attribute": "Discipline",
+                  "attribute": "Offense",
                   "value": 0.1
                 }
               ]
@@ -523,6 +528,11 @@
                   "attribute": "Cost",
                   "type": "Modifier",
                   "value": -0.15
+                },
+                {
+                  "target": "Text",
+                  "attribute": "Allows 'Octere' units",
+                  "value": 0
                 }
               ]
             },
@@ -542,7 +552,7 @@
                 {
                   "target": "Light Infantry",
                   "attribute": "Offense",
-                  "value": 0.15
+                  "value": 0.1
                 }
               ]
             },
@@ -557,7 +567,7 @@
                 {
                   "target": "Text",
                   "attribute": "Enslavement Efficiency",
-                  "value": 0.1
+                  "value": 0.2
                 }
               ]
             },
@@ -590,12 +600,12 @@
                   "value": 0.15
                 },
                 {
-                  "target": "Heavy Infantry",
+                  "target": "Light Infantry",
                   "attribute": "Hills",
                   "value": 0.15
                 },
                 {
-                  "target": "Light Infantry",
+                  "target": "Heavy Infantry",
                   "attribute": "Hills",
                   "value": 0.15
                 }
@@ -606,7 +616,12 @@
               "modifiers": [
                 {
                   "target": "Light Infantry",
-                  "attribute": "Discipline",
+                  "attribute": "OFfense",
+                  "value": 0.1
+                },
+                {
+                  "target": "Light Infantry",
+                  "attribute": "Defense",
                   "value": 0.1
                 }
               ]
@@ -634,7 +649,7 @@
                 {
                   "target": "Light Infantry",
                   "attribute": "Defense",
-                  "value": 0.15
+                  "value": 0.1
                 }
               ]
             },
@@ -774,19 +789,19 @@
                   "target": "Light Infantry",
                   "attribute": "Cost",
                   "type": "Modifier",
-                  "value": -0.15
+                  "value": -0.1
                 },
                 {
                   "target": "Heavy Infantry",
                   "attribute": "Cost",
                   "type": "Modifier",
-                  "value": -0.15
+                  "value": -0.1
                 },
                 {
                   "target": "Archers",
                   "attribute": "Cost",
                   "type": "Modifier",
-                  "value": -0.15
+                  "value": -0.1
                 }
               ]
             },
@@ -805,12 +820,12 @@
               "modifiers": [
                 {
                   "target": "Light Cavalry",
-                  "attribute": "Discipline",
+                  "attribute": "Defense",
                   "value": 0.1
                 },
                 {
                   "target": "Horse Archers",
-                  "attribute": "Discipline",
+                  "attribute": "Defense",
                   "value": 0.1
                 }
               ]
@@ -841,7 +856,7 @@
               "modifiers": [
                 {
                   "target": "Heavy Infantry",
-                  "attribute": "Discipline",
+                  "attribute": "Offense",
                   "value": 0.1
                 }
               ]
@@ -861,8 +876,8 @@
               "modifiers": [
                 {
                   "target": "Heavy Infantry",
-                  "attribute": "Offense",
-                  "value": 0.15
+                  "attribute": "Discipline",
+                  "value": 0.1
                 }
               ]
             },
@@ -893,7 +908,7 @@
                 {
                   "target": "Light Infantry",
                   "attribute": "Offense",
-                  "value": 0.15
+                  "value": 0.1
                 }
               ]
             },
@@ -947,6 +962,16 @@
               ]
             },
             {
+              "name": "Phoenician Sailors",
+              "modifiers": [
+                {
+                  "target": "Light Infantry",
+                  "attribute": "Discipline",
+                  "value": 0.1
+                }
+              ]
+            },
+            {
               "name": "Arms for Hire",
               "modifiers": [
                 {
@@ -961,24 +986,9 @@
               "name": "Phoenician Sailors",
               "modifiers": [
                 {
-                  "target": "Camels",
+                  "target": "Camel Cavalry",
                   "attribute": "Offense",
-                  "value": 0.15
-                }
-              ]
-            },
-            {
-              "name": "The Companion Cavalry",
-              "modifiers": [
-                {
-                  "target": "Naval",
-                  "attribute": "Damage taken",
-                  "value": -0.1
-                },
-                {
-                  "target": "Text",
-                  "attribute": "Allow the 'Octere' unit",
-                  "value": 0
+                  "value": 0.1
                 }
               ]
             },
@@ -986,7 +996,7 @@
               "name": "Kataphraktoi",
               "modifiers": [
                 {
-                  "target": "Camels",
+                  "target": "Camel Cavalry",
                   "attribute": "Desert",
                   "value": 0.15
                 },
@@ -1007,8 +1017,9 @@
               "modifiers": [
                 {
                   "target": "Text",
-                  "attribute": "Build cost",
-                  "value": -0.15
+                  "attribute": "Building slots",
+                  "no_percentage": true,
+                  "value": 1
                 }
               ]
             },
@@ -1022,7 +1033,7 @@
                   "value": -0.15
                 },
                 {
-                  "target": "Camels",
+                  "target": "Camel Cavalry",
                   "attribute": "Cost",
                   "type": "Modifier",
                   "value": -0.15
@@ -1039,7 +1050,7 @@
               "name": "Deep Coffers",
               "modifiers": [
                 {
-                  "target": "Camels",
+                  "target": "Camel Cavalry",
                   "attribute": "Discipline",
                   "value": 0.1
                 }
@@ -1051,12 +1062,17 @@
           "name": "Egyptian",
           "traditions": [
             {
-              "name": "The Sarissa",
+              "name": "The Companion Cavalry",
               "modifiers": [
                 {
-                  "target": "Light Infantry",
-                  "attribute": "Defense",
-                  "value": 0.15
+                  "target": "Naval",
+                  "attribute": "Damage taken",
+                  "value": -0.1
+                },
+                {
+                  "target": "Text",
+                  "attribute": "Allow the 'Octere' unit",
+                  "value": 0
                 }
               ]
             },
@@ -1110,9 +1126,9 @@
               "name": "City State Fortifications",
               "modifiers": [
                 {
-                  "target": "Camels",
+                  "target": "Camel Cavalry",
                   "attribute": "Defense",
-                  "value": 0.15
+                  "value": 0.1
                 }
               ]
             },
@@ -1131,7 +1147,12 @@
               "modifiers": [
                 {
                   "target": "Light Infantry",
-                  "attribute": "Discipline",
+                  "attribute": "Offense",
+                  "value": 0.1
+                },
+                {
+                  "target": "Light Infantry",
+                  "attribute": "Defense",
                   "value": 0.1
                 }
               ]
@@ -1158,7 +1179,7 @@
                 {
                   "target": "Light Infantry",
                   "attribute": "Offense",
-                  "value": 0.15
+                  "value": 0.1
                 }
               ]
             },
@@ -1168,7 +1189,7 @@
                 {
                   "target": "Heavy Infantry",
                   "attribute": "Offense",
-                  "value": 0.15
+                  "value": 0.1
                 }
               ]
             },
@@ -1218,7 +1239,12 @@
               "modifiers": [
                 {
                   "target": "Heavy Infantry",
-                  "attribute": "Discipline",
+                  "attribute": "Offense",
+                  "value": 0.1
+                },
+                {
+                  "target": "Heavy Infantry",
+                  "attribute": "Defense",
                   "value": 0.1
                 }
               ]
@@ -1246,7 +1272,7 @@
                 {
                   "target": "Archers",
                   "attribute": "Offense",
-                  "value": 0.15
+                  "value": 0.1
                 }
               ]
             },
@@ -1256,7 +1282,7 @@
                 {
                   "target": "War Elephants",
                   "attribute": "Defense",
-                  "value": 0.15
+                  "value": 0.1
                 }
               ]
             },
@@ -1412,7 +1438,7 @@
                 {
                   "target": "Fort",
                   "attribute": "Defense",
-                  "value": 0.15
+                  "value": 0.1
                 }
               ]
             },
@@ -1479,7 +1505,7 @@
                 {
                   "target": "Archers",
                   "attribute": "Defense",
-                  "value": 0.15
+                  "value": 0.1
                 }
               ]
             },
@@ -1499,7 +1525,7 @@
                 {
                   "target": "Chariots",
                   "attribute": "Discipline",
-                  "value": 0.1
+                  "value": 0.15
                 }
               ]
             },
@@ -1558,7 +1584,7 @@
               "modifiers": [
                 {
                   "target": "Light Cavalry",
-                  "attribute": "Discipline",
+                  "attribute": "Offense",
                   "value": 0.1
                 }
               ]
@@ -1577,7 +1603,7 @@
                   "value": 0.15
                 },
                 {
-                  "target": "Camels Cavalry",
+                  "target": "Camel Cavalry",
                   "attribute": "Plains",
                   "value": 0.15
                 }
@@ -1629,8 +1655,8 @@
               "modifiers": [
                 {
                   "target": "Light Cavalry",
-                  "attribute": "Offense",
-                  "value": 0.15
+                  "attribute": "Discipline",
+                  "value": 0.1
                 }
               ]
             },
@@ -1670,7 +1696,7 @@
                 {
                   "target": "Light Infantry",
                   "attribute": "Defense",
-                  "value": 0.15
+                  "value": 0.1
                 }
               ]
             },
@@ -1783,8 +1809,8 @@
               "modifiers": [
                 {
                   "target": "Heavy Infantry",
-                  "attribute": "Discipline",
-                  "value": 0.15
+                  "attribute": "Offense",
+                  "value": 0.1
                 }
               ]
             },
@@ -1831,7 +1857,7 @@
               "modifiers": [
                 {
                   "target": "War Elephants",
-                  "attribute": "Discipline",
+                  "attribute": "Offense",
                   "value": 0.1
                 }
               ]
@@ -1870,7 +1896,7 @@
                 {
                   "target": "Horse Archers",
                   "attribute": "Offense",
-                  "value": 0.15
+                  "value": 0.1
                 }
               ]
             },
@@ -1918,7 +1944,7 @@
                   "target": "Heavy Cavalry",
                   "attribute": "Cost",
                   "type": "Modifier",
-                  "value": -0.15
+                  "value": -0.2
                 }
               ]
             },
@@ -1938,8 +1964,8 @@
               "modifiers": [
                 {
                   "target": "Light Infantry",
-                  "attribute": "Offense",
-                  "value": 0.15
+                  "attribute": "Defense",
+                  "value": 0.1
                 }
               ]
             },
@@ -1948,7 +1974,7 @@
               "modifiers": [
                 {
                   "target": "Heavy Cavalry",
-                  "attribute": "Discipline",
+                  "attribute": "Offense",
                   "value": 0.1
                 },
                 {
@@ -1979,7 +2005,7 @@
                 {
                   "target": "Heavy Infantry",
                   "attribute": "Defense",
-                  "value": 0.15
+                  "value": 0.1
                 }
               ]
             },
@@ -2031,7 +2057,7 @@
                 {
                   "target": "Archers",
                   "attribute": "Offense",
-                  "value": 0.15
+                  "value": 0.1
                 }
               ]
             },
@@ -2066,7 +2092,7 @@
               "modifiers": [
                 {
                   "target": "Light Cavalry",
-                  "attribute": "Discipline",
+                  "attribute": "Offense",
                   "value": 0.1
                 }
               ]
@@ -2087,7 +2113,7 @@
                 {
                   "target": "Heavy Infantry",
                   "attribute": "Offense",
-                  "value": 0.15
+                  "value": 0.1
                 }
               ]
             },
@@ -2106,7 +2132,7 @@
               "modifiers": [
                 {
                   "target": "War Elephants",
-                  "attribute": "Discipline",
+                  "attribute": "Defense",
                   "value": 0.1
                 }
               ]
@@ -2117,7 +2143,7 @@
                 {
                   "target": "Horse Archers",
                   "attribute": "Defense",
-                  "value": 0.15
+                  "value": 0.1
                 }
               ]
             },
