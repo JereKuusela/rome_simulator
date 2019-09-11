@@ -273,7 +273,7 @@ class Countries extends Component<IProps> {
               <Table.Row key={row}>
                 {
                   mapRange(IDEA_COLUMNS, number => number).map(column => {
-                    const index = row * TRADE_COLUMNS + column
+                    const index = row * IDEA_COLUMNS + column
                     const idea = ideas[index]
                     if (!idea)
                       return (<Table.Cell key={IDEA_KEY + index}></Table.Cell>)

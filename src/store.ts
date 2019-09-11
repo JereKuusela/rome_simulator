@@ -44,13 +44,13 @@ const DataTransform = createTransform(
 )
 
 const migrations = {
-  4: (_: any) => ({})
+  5: (_: any) => ({})
 }
 
 const persistConfig = {
   key: 'primary',
   storage: storage,
-  version: 4,
+  version: 5,
   migrate: createMigrate(migrations, { debug: false }),
   transforms: [
     TacticsTransform,

@@ -85,7 +85,7 @@
         {
           "target": "Siege",
           "attribute": "Ability",
-          "value": 0.1
+          "value": 0.15
         }
       ]
     },
@@ -95,7 +95,7 @@
         {
           "target": "Text",
           "attribute": "Experience Decay",
-          "value": -0.15
+          "value": -0.01
         }
       ]
     }
