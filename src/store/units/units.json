@@ -99,6 +99,7 @@
       "is_flank": true,
       "movement_speed": 4,
       "maneuver": 5,
+      "attrition_weight": 0.5,
       "morale_damage_taken": 0.25,
       "archers": 0.25,
       "camel_cavalry": -0.1,
@@ -119,6 +120,7 @@
       "is_flank": true,
       "movement_speed": 4,
       "maneuver": 3,
+      "attrition_weight": 0.5,
       "archers": 0.25,
       "chariots": 0.25,
       "heavy_cavalry": -0.2,
@@ -142,7 +144,7 @@
       "chariots": -0.1,
       "heavy_cavalry": -0.25,
       "heavy_infantry": -0.25,
-      "horse_archers": -0.25,
+      "horse_archers": -0.5,
       "war_elephants": -0.25
     },
     {
@@ -162,7 +164,8 @@
       "heavy_cavalry": -0.1,
       "heavy_infantry": 0.3,
       "horse_archers": -0.1,
-      "light_cavalry": -0.1
+      "light_cavalry": -0.1,
+      "light_infantry": 0.5
     },
     {
       "type": "Liburnian",
@@ -205,7 +208,6 @@
       "can_assault": false,
       "movement_speed": 12,
       "maneuver": 2,
-      "strength_damage_taken": -0.1,
       "liburnian": 0.25,
       "trireme": 0.1,
       "octere": -0.1,
@@ -237,7 +239,6 @@
       "can_assault": false,
       "movement_speed": 9,
       "maneuver": 0,
-      "strength_damage_done": 0.15,
       "morale_damage_taken": -0.2,
       "liburnian": 0.4,
       "trireme": 0.2,
@@ -255,7 +256,6 @@
       "movement_speed": 7,
       "maneuver": 0,
       "strength_damage_done": 0.4,
-      "strength_damage_taken": -0.5,
       "morale_damage_taken": -0.3,
       "liburnian": 0.5,
       "trireme": 0.3,
