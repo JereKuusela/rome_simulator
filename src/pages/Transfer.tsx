@@ -3,9 +3,15 @@ import { Container, Grid, TextArea, Checkbox, List, Header, Button } from 'seman
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { importState, ExportKey, setResetMissing, setExportKey } from '../store/transfer'
-import { restoreBaseGlobalStats, stripRounds } from '../store/transforms'
+import { restoreBaseGlobalStats, stripRounds, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits } from '../store/transforms'
 import { DefinitionType } from '../base_definition'
 import { values } from '../utils'
+import { globalStatsState, unitsState } from '../store/units'
+import { getDefaultTerrains } from '../store/terrains'
+import { getDefaultTactics } from '../store/tactics'
+import { initialState } from '../store/battle'
+import { settingsState } from '../store/settings'
+import { countriesState } from '../store/countries'
 
 interface IState {
   data: string
@@ -134,7 +140,19 @@ const mapDispatchToProps = (dispatch: any) => ({
         data = '{}'
       let json = JSON.parse(data)
       json.transfer = undefined
-      json.global_stats = (json.global_stats || reset_missing) && restoreBaseGlobalStats(json.global_stats)
+      json.global_stats = json.global_stats && restoreBaseGlobalStats(json.global_stats)
+      json.tactics = json.tactics && restoreBaseTactics(json.tactics)
+      json.terrains = json.terrains && restoreBaseTerrains(json.terrains)
+      json.units = json.units && restoreBaseUnits(json.units)
+      if (reset_missing) {
+        json.global_stats = json.global_stats || globalStatsState
+        json.tactics = json.tactics || getDefaultTactics()
+        json.terrains = json.terrains || getDefaultTerrains()
+        json.units = json.units || unitsState
+        json.battle = json.battle || initialState
+        json.settings = json.settings || settingsState
+        json.countries = json.countries || countriesState
+      } 
       Object.keys(json).filter(key => !json[key]).forEach(key => delete json[key])
       dispatch(importState(json, reset_missing))
     }

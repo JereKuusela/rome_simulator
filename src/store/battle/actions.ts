@@ -75,9 +75,9 @@ const getInitialTactic = (mode: Mode): TacticType => mode === DefinitionType.Lan
 const getInitialRowTypes = (mode: Mode): RowTypes => {
   if (mode === DefinitionType.Naval) {
     return {
-      [RowType.Front]: UnitType.MegaGalley,
-      [RowType.Back]: UnitType.MegaGalley,
-      [RowType.Flank]: UnitType.MegaGalley
+      [RowType.Front]: UnitType.MegaPolyreme,
+      [RowType.Back]: UnitType.MegaPolyreme,
+      [RowType.Flank]: UnitType.MegaPolyreme
     }
   }
   else {

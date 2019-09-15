@@ -135,7 +135,7 @@
       "liburnian": 0.5,
       "trireme": 1,
       "octere": 1,
-      "mega_galley": 2,
+      "mega_polyreme": 2,
       "harassment": 0.2,
       "close_ranks": -0.1
     },
@@ -144,7 +144,7 @@
       "mode": "Naval",
       "trireme": 1,
       "hexere": 1,
-      "mega_galley": 1,
+      "mega_polyreme": 1,
       "close_ranks": 0.2,
       "probing_attack": -0.1
     },
@@ -154,7 +154,7 @@
       "trireme": 0.5,
       "hexere": 1,
       "octere": 1,
-      "mega_galley": 1,
+      "mega_polyreme": 1,
       "frontal_assault": 0.2,
       "naval_envelopment": -0.1
     },

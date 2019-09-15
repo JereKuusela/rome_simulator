@@ -181,7 +181,7 @@
       "tetrere": -0.25,
       "hexere": -0.35,
       "octere": -0.4,
-      "mega_galley": -0.5
+      "mega_polyreme": -0.5
     },
     {
       "type": "Trireme",
@@ -197,7 +197,7 @@
       "tetrere": -0.1,
       "hexere": -0.1,
       "octere": -0.2,
-      "mega_galley": -0.2
+      "mega_polyreme": -0.2
     },
     {
       "type": "Tetrere",
@@ -211,7 +211,7 @@
       "liburnian": 0.25,
       "trireme": 0.1,
       "octere": -0.1,
-      "mega_galley": -0.1
+      "mega_polyreme": -0.1
     },
     {
       "type": "Hexere",
@@ -228,7 +228,7 @@
       "trireme": 0.1,
       "tetrere": 0.05,
       "octere": -0.1,
-      "mega_galley": -0.1
+      "mega_polyreme": -0.1
     },
     {
       "type": "Octere",
@@ -244,10 +244,10 @@
       "trireme": 0.2,
       "tetrere": 0.1,
       "hexere": 0.1,
-      "mega_galley": -0.1
+      "mega_polyreme": -0.1
     },
     {
-      "type": "Mega Galley",
+      "type": "Mega-Polyreme",
       "mode": "Naval",
       "cost": 32,
       "recruit_time": 365,

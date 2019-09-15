@@ -17,7 +17,7 @@ export enum UnitType {
   Tetrere = 'Tetrere',
   Hexere = 'Hexere',
   Octere = 'Octere',
-  MegaGalley = 'Mega Galley'
+  MegaPolyreme = 'Mega-Polyreme'
 }
 
 export enum UnitCalc {

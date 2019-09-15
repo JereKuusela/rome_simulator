@@ -19,7 +19,7 @@ import IconTrireme from '../../images/trireme.png'
 import IconTetrere from '../../images/tetrere.png'
 import IconHexere from '../../images/hexere.png'
 import IconOctere from '../../images/octere.png'
-import IconMegaGalley from '../../images/mega_galley.png'
+import IconMegaPolyreme from '../../images/mega_polyreme.png'
 
 const unit_to_icon: { [key in UnitType]: string } = {
   [UnitType.Archers]: IconArcher,
@@ -36,7 +36,7 @@ const unit_to_icon: { [key in UnitType]: string } = {
   [UnitType.Tetrere]: IconTetrere,
   [UnitType.Hexere]: IconHexere,
   [UnitType.Octere]: IconOctere,
-  [UnitType.MegaGalley]: IconMegaGalley
+  [UnitType.MegaPolyreme]: IconMegaPolyreme
 }
 
 export const GlobalKey = 'Base'
@@ -70,7 +70,7 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
     [UnitType.Tetrere, data.tetrere || 0],
     [UnitType.Hexere, data.hexere || 0],
     [UnitType.Octere, data.octere || 0],
-    [UnitType.MegaGalley, data.mega_galley || 0]
+    [UnitType.MegaPolyreme, data.mega_polyreme || 0]
   ]
   unit = addValues(unit, ValuesType.Base, unit.type, base_values)
   return unit
@@ -138,5 +138,5 @@ interface UnitData {
   tetrere?: number
   hexere?: number
   octere?: number
-  mega_galley?: number
+  mega_polyreme?: number
 }

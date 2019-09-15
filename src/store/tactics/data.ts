@@ -55,7 +55,7 @@ const createTacticFromJson = (data: TacticData): TacticDefinition => {
     [UnitType.Tetrere, data.tetrere || 0],
     [UnitType.Hexere, data.hexere || 0],
     [UnitType.Octere, data.octere || 0],
-    [UnitType.MegaGalley, data.mega_galley || 0],
+    [UnitType.MegaPolyreme, data.mega_polyreme || 0],
     [TacticCalc.Casualties, data.casualties || 0],
     [TacticType.Bottleneck, data.bottleneck || 0],
     [TacticType.CavalrySkirmish, data.cavalry_skirmish || 0],
@@ -103,7 +103,7 @@ interface TacticData {
   tetrere?: number
   hexere?: number
   octere?: number
-  mega_galley?: number
+  mega_polyreme?: number
   bottleneck?: number
   cavalry_skirmish?: number
   deception?: number
