@@ -134,7 +134,6 @@ export const clearValues = <D extends BVD> (definition: D, type: ValuesType, key
   return definition
 }
 
-
 /**
  * Shared implementation for clearing base, modifier or loss values.
  * @param container Base, modifier or loss values.

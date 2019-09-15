@@ -1,8 +1,10 @@
-import { sortBy, clone } from 'lodash'
+import { sortBy } from 'lodash'
 import { BaseUnit, UnitCalc, UnitDefinitions } from '../units'
 import { RowType, BaseUnits, RowTypes } from '../battle'
 import { CombatParameter, Settings } from '../settings'
 import { calculateValue, mergeValues, calculateBase } from '../../base_definition'
+import { DeepReadonly as R } from 'ts-essentials'
+import produce from 'immer'
 
 /**
  * Calculates the next index when the order is from center to edges.
@@ -67,13 +69,12 @@ const calculateFlankSizes = (settings: Settings, round: number, flank_size: numb
  * @param settings Parameters for reinforcement.
  * @param attacker_to_defender Output. Reinforcement may move units so this must be updated also.
  */
-export const reinforce = (army: BaseUnits, definitions: UnitDefinitions, round: number, row_types: RowTypes, flank_size: number, enemy_size: number, settings: Settings, attacker_to_defender: (number | null)[] | undefined): BaseUnits => {
-    let frontline = clone(army.frontline)
-    let reserve = clone(army.reserve)
+export const reinforce = (army: R<BaseUnits>, definitions: R<UnitDefinitions>, round: number, row_types: RowTypes, flank_size: number, enemy_size: number, settings: Settings, attacker_to_defender: (number | null)[] | undefined): R<BaseUnits> => {
+    let frontline = army.frontline
+    let reserve = army.reserve
 
     const center = Math.floor(frontline.length / 2.0)
 
-    
     // Separate reserve to main and flank groups.
     const mainReserve = reserve.filter(value => !isFlankUnit(settings, row_types, mergeValues(value, definitions[value.type])))
     const flankReserve = reserve.filter(value => isFlankUnit(settings, row_types, mergeValues(value, definitions[value.type])))
@@ -100,66 +101,69 @@ export const reinforce = (army: BaseUnits, definitions: UnitDefinitions, round: 
     orderedFlankReserve = orderedFlankReserve.slice(-free_spots)
     let index = center
     // Fill main front until flanks are reached.
-    for (; index >= left_flank_size && index + right_flank_size < frontline.length && reserve.length > 0; index = nextIndex(index, center)) {
-        if (frontline[index])
-            continue
-        const main = orderedMainReserve.pop()
-        if (main) {
-            reserve = reserve.filter(value => value !== main)
-            frontline[index] = main
-            continue
-        }
-        const flank = orderedFlankReserve.pop()
-        if (flank) {
-            reserve = reserve.filter(value => value !== flank)
-            frontline[index] = flank
-            continue
-        }
-    }
-    // Fill flanks with remaining units.
-    for (; index >= 0 && index < frontline.length && reserve.length > 0; index = nextIndex(index, center)) {
-        if (frontline[index])
-            continue
+    frontline = produce(frontline, frontline => {
+        for (; index >= left_flank_size && index + right_flank_size < frontline.length && reserve.length > 0; index = nextIndex(index, center)) {
+            if (frontline[index])
+                continue
+            const main = orderedMainReserve.pop()
+            if (main) {
+                reserve = reserve.filter(value => value !== main)
+                frontline[index] = main
+                continue
+            }
             const flank = orderedFlankReserve.pop()
-        if (flank) {
-            reserve = reserve.filter(value => value !== flank)
-            frontline[index] = flank
-            continue
+            if (flank) {
+                reserve = reserve.filter(value => value !== flank)
+                frontline[index] = flank
+                continue
+            }
         }
-        const main = orderedMainReserve.pop()
-        if (main) {
-            reserve = reserve.filter(value => value !== main)
-            frontline[index] = main
-            continue
+        // Fill flanks with remaining units.
+        for (; index >= 0 && index < frontline.length && reserve.length > 0; index = nextIndex(index, center)) {
+            if (frontline[index])
+                continue
+                const flank = orderedFlankReserve.pop()
+            if (flank) {
+                reserve = reserve.filter(value => value !== flank)
+                frontline[index] = flank
+                continue
+            }
+            const main = orderedMainReserve.pop()
+            if (main) {
+                reserve = reserve.filter(value => value !== main)
+                frontline[index] = main
+                continue
+            }
         }
-    }
-    // Move units from left to center.
-    for (let unit_index = Math.ceil(frontline.length / 2.0) - 1; unit_index > 0; --unit_index) {
-        const unit = frontline[unit_index]
-        if (unit)
-            continue
-        const unit_on_left = frontline[unit_index - 1]
-        if (unit_on_left) {
-            frontline[unit_index] = unit_on_left
-            frontline[unit_index - 1] = null
-            if (attacker_to_defender)
-                attacker_to_defender.forEach((target, index) => attacker_to_defender[index] = target === unit_index - 1 ? unit_index : target)
-            continue
+        // Move units from left to center.
+        for (let unit_index = Math.ceil(frontline.length / 2.0) - 1; unit_index > 0; --unit_index) {
+            const unit = frontline[unit_index]
+            if (unit)
+                continue
+            const unit_on_left = frontline[unit_index - 1]
+            if (unit_on_left) {
+                frontline[unit_index] = unit_on_left
+                    frontline[unit_index - 1] = null
+                if (attacker_to_defender)
+                    attacker_to_defender.forEach((target, index) => attacker_to_defender[index] = target === unit_index - 1 ? unit_index : target)
+                continue
+            }
         }
-    }
-    // Move units from right to center.
-    for (let unit_index = Math.ceil(frontline.length / 2.0); unit_index < frontline.length - 1; ++unit_index) {
-        const unit = frontline[unit_index]
-        if (unit)
-            continue
-        const unit_on_right = frontline[unit_index + 1]
-        if (unit_on_right) {
-            frontline[unit_index] = unit_on_right
-            frontline[unit_index + 1] = null
-            if (attacker_to_defender)
-                attacker_to_defender.forEach((target, index) => attacker_to_defender[index] = target === unit_index + 1 ? unit_index : target)
-            continue
+        // Move units from right to center.
+        for (let unit_index = Math.ceil(frontline.length / 2.0); unit_index < frontline.length - 1; ++unit_index) {
+            const unit = frontline[unit_index]
+            if (unit)
+                continue
+            const unit_on_right = frontline[unit_index + 1]
+            if (unit_on_right) {
+                frontline[unit_index] = unit_on_right
+                    frontline[unit_index + 1] = null
+                if (attacker_to_defender)
+                    attacker_to_defender.forEach((target, index) => attacker_to_defender[index] = target === unit_index + 1 ? unit_index : target)
+                continue
+            }
         }
-    }
+    })
+    
     return { frontline, reserve, defeated: army.defeated }
 }

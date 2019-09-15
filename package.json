@@ -150,6 +150,7 @@
     ]
   },
   "devDependencies": {
-    "redux-devtools-extension": "^2.13.8"
+    "redux-devtools-extension": "^2.13.8",
+    "ts-essentials": "^3.0.2"
   }
 }

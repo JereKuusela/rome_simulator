@@ -12,19 +12,21 @@ Stats to show "No Units" when no units (so doesn't look like broken).
 
 Unit definition creation to automatically set icon.
 
+Reorder tabs (most relevant ones in the left side).
+
 Refactor:
-- Autoheal working for base data (in transformations).
-- Getting rid of all ImmutableJS code.
 - Getting rid of custom map, reduce, etc functions as much as possible.
-- Force immutability with freeze, remove usage of clones
 - Fix transfer, fix persist
 - Data heal up, base info, unit ids?
+- Global error page with auto reset
 
 Reducers can probably be split to sub reducers (one handles the data structure, other the actual data)
 
 Pluralization of reducers, state, etc
 
 Combat things to combat reducer. Perhaps state as parameter when needed? Since it only changes same things as battle reducer,
+
+Deployment changed in latest beta? To be messed up like with multiarmy?
 
 
 
