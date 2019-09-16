@@ -17,6 +17,7 @@ import IconManpower from '../images/manpower.png'
 import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
 import IconAttrition from '../images/attrition.png'
+import { sortBy } from 'lodash'
 
 interface IProps {
   readonly mode: DefinitionType
@@ -32,7 +33,7 @@ interface IProps {
 export default class UnitDefinitions extends Component<IProps> {
 
   render(): JSX.Element {
-    const units = toArr(filterUnitDefinitions(this.props.mode, this.props.units[this.props.country]))
+    const units = sortBy(toArr(filterUnitDefinitions(this.props.mode, this.props.units[this.props.country])), unit => unit.type)
     return (
       <Table celled selectable unstackable>
         <Table.Header>

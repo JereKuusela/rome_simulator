@@ -27,6 +27,8 @@ class Stats extends Component<IProps> {
   }
 
   renderArmy = (side: Side, units: Units, unit_types: Set<UnitType>): JSX.Element => {
+    const types = Array.from(unit_types)
+    const rows = types.map(type => this.renderRow(units, type)).filter(row => row)
     return (
       <Table celled selectable unstackable key={side}>
         <Table.Header>
@@ -50,7 +52,16 @@ class Stats extends Component<IProps> {
         </Table.Header>
         <Table.Body>
           {
-            Array.from(unit_types).map(type => this.renderRow(units, type))
+            rows
+          }
+          {
+            rows.length ? null : (
+              <Table.Row>
+                <Table.Cell>
+                  No units in the army
+                </Table.Cell>
+              </Table.Row>
+            )
           }
         </Table.Body>
       </Table>

@@ -6,17 +6,8 @@ Tests (high priority):
 - combat tested
 - check that reinforcement is stable (higher key ends in right position)
 
-Rename Mega Galley to Mega-Polyreme
-
-Stats to show "No Units" when no units (so doesn't look like broken).
-
-Unit definition creation to automatically set icon.
-
-Reorder tabs (most relevant ones in the left side).
-
 Refactor:
 - Getting rid of custom map, reduce, etc functions as much as possible.
-- Fix transfer, fix persist
 - Data heal up, base info, unit ids?
 - Global error page with auto reset
 
@@ -28,6 +19,9 @@ Combat things to combat reducer. Perhaps state as parameter when needed? Since i
 
 Deployment changed in latest beta? To be messed up like with multiarmy?
 
+Stats to show amount of traditions, trade, etc..
+
+File import/export to transfer
 
 
 Release 6+:

@@ -21,6 +21,12 @@ class Navigation extends Component<IProps> {
           <Menu.Item active={path === '/'} onClick={() => history.push('/')}>
             Battle
           </Menu.Item>
+          <Menu.Item active={path === '/countries'} onClick={() => history.push('/countries')}>
+            Countries
+          </Menu.Item>
+          <Menu.Item active={path === '/stats'} onClick={() => history.push('/stats')}>
+            Stats
+          </Menu.Item>
           <Menu.Item active={path === '/units'} onClick={() => history.push('/units')}>
             Units
           </Menu.Item>
@@ -30,9 +36,7 @@ class Navigation extends Component<IProps> {
           <Menu.Item active={path === '/tactics'} onClick={() => history.push('/tactics')}>
             Tactics
           </Menu.Item>
-          <Menu.Item active={path === '/stats'} onClick={() => history.push('/stats')}>
-            Stats
-          </Menu.Item><Menu.Item active={path === '/settings'} onClick={() => history.push('/settings')}>
+          <Menu.Item active={path === '/settings'} onClick={() => history.push('/settings')}>
             Settings
           </Menu.Item>
           <Menu.Item active={path === '/transfer'} onClick={() => history.push('/transfer')}>
@@ -41,9 +45,7 @@ class Navigation extends Component<IProps> {
           <Menu.Item active={path === '/instructions'} onClick={() => history.push('/instructions')}>
             Instructions
           </Menu.Item>
-          <Menu.Item active={path === '/countries'} onClick={() => history.push('/countries')}>
-            Countries
-          </Menu.Item>
+          
           <div id='menu-info'>
             <Button active={this.props.mode === DefinitionType.Land} compact icon basic circular size='tiny' onClick={this.props.toggleMode}>
               <Image src={IconLand} avatar style={{ marginRight: 0 }} />
@@ -51,7 +53,7 @@ class Navigation extends Component<IProps> {
             <Button active={this.props.mode === DefinitionType.Naval} compact icon basic circular size='tiny' onClick={this.props.toggleMode}>
               <Image src={IconNaval} avatar style={{ marginRight: 0 }} />
             </Button>
-            <div id='version'><div>Site version 0.4.9</div><div>Game version 1.2.6B</div></div>
+            <div id='version'><div>Site version 0.4.10</div><div>Game version 1.2.6B</div></div>
           </div>
         </Menu>
         <br />

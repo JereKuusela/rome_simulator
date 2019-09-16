@@ -2,6 +2,7 @@ import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer
 import { getDefaultTactics, TacticDefinitions } from './data'
 import { TacticType, ValueType } from './actions'
 import { addValues, ValuesType, DefinitionType } from '../../base_definition'
+import { getIcon } from '../tactics'
 
 export const tacticsState = getDefaultTactics()
 
@@ -16,7 +17,7 @@ class TacticsReducer extends ImmerReducer<TacticDefinitions> {
   }
 
   addTactic(type: TacticType, mode: DefinitionType) {
-    this.draftState[type] = { type, mode, image: '' }
+    this.draftState[type] = { type, mode, image: getIcon(type) }
   }
 
   changeType(old_type: TacticType, type: TacticType) {

@@ -1,4 +1,4 @@
-import { getDefaultUnits, getDefaultGlobals } from './data'
+import { getDefaultUnits, getDefaultGlobals, getIcon } from './data'
 import {
   UnitType, UnitDefinition,
   ValueType
@@ -6,7 +6,7 @@ import {
 import { CountryName, enableModifiers, clearModifiers, createCountry, deleteCountry, changeCountryName } from '../countries'
 import { addValues, DefinitionType, ValuesType, regenerateValues, clearValues } from '../../base_definition'
 import { ImmerReducer, createActionCreators, createReducerFunction, Actions } from 'immer-reducer'
-import { Modifier } from '../data';
+import { Modifier } from '../data'
 import { objGet, map } from '../../utils'
 
 export type GlobalStats = { [key in CountryName]: GlobalDefinitions }
@@ -31,7 +31,7 @@ class UnitsReducer extends ImmerReducer<Units> {
   }
 
   addUnit(country: CountryName, mode: DefinitionType, type: UnitType) {
-    this.draftState[country][type] = { type, mode, image: '', can_assault: false, requirements: '' }
+    this.draftState[country][type] = { type, mode, image: getIcon(type), can_assault: false, requirements: '' }
   }
 
   changeType(country: CountryName, old_type: UnitType, type: UnitType) {

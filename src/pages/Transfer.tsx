@@ -5,11 +5,11 @@ import { AppState } from '../store/index'
 import { importState, ExportKey, setResetMissing, setExportKey } from '../store/transfer'
 import { restoreBaseGlobalStats, stripRounds, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits } from '../store/transforms'
 import { DefinitionType } from '../base_definition'
-import { values } from '../utils'
+import { values, keys } from '../utils'
 import { globalStatsState, unitsState } from '../store/units'
 import { getDefaultTerrains } from '../store/terrains'
 import { getDefaultTactics } from '../store/tactics'
-import { initialState } from '../store/battle'
+import { initialState, modeState } from '../store/battle'
 import { settingsState } from '../store/settings'
 import { countriesState } from '../store/countries'
 
@@ -150,10 +150,12 @@ const mapDispatchToProps = (dispatch: any) => ({
         json.terrains = json.terrains || getDefaultTerrains()
         json.units = json.units || unitsState
         json.battle = json.battle || initialState
+        json.battle[DefinitionType.Land] = json.battle[DefinitionType.Land] ||  modeState(DefinitionType.Land)
+        json.battle[DefinitionType.Naval] = json.battle[DefinitionType.Naval] ||  modeState(DefinitionType.Naval)
         json.settings = json.settings || settingsState
         json.countries = json.countries || countriesState
       } 
-      Object.keys(json).filter(key => !json[key]).forEach(key => delete json[key])
+      keys(json).filter(key => !json[key]).forEach(key => delete json[key])
       dispatch(importState(json, reset_missing))
     }
     catch (err) {

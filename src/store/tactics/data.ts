@@ -38,6 +38,8 @@ const tactic_to_icon: { [ key in TacticType ]: string } = {
   [TacticType.CloseRanks]: IconCloseRanks
 }
 
+export const getIcon = (type: TacticType) => tactic_to_icon[type] || ''
+
 const createTacticFromJson = (data: TacticData): TacticDefinition => {
   let tactic: TacticDefinition = { type: data.type as TacticType, mode: data.mode as DefinitionType, image: tactic_to_icon[data.type as TacticType] || '' }
   const base_values: [ValueType, number][] = [

@@ -39,6 +39,8 @@ const unit_to_icon: { [key in UnitType]: string } = {
   [UnitType.MegaPolyreme]: IconMegaPolyreme
 }
 
+export const getIcon = (type: UnitType) => unit_to_icon[type] || ''
+
 export const GlobalKey = 'Base'
 
 const createUnitFromJson = (data: UnitData): UnitDefinition => {
