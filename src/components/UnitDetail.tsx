@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
-import { Table, Input, Dropdown } from 'semantic-ui-react'
+import { Table, Input, Dropdown, Image, Button } from 'semantic-ui-react'
 import { UnitType, Unit, UnitCalc, ValueType, valueToString } from '../store/units'
 import { TerrainType } from '../store/terrains'
 import { getBaseValue, getLossValue, getModifierValue, explain, DefinitionType, calculateValue } from '../base_definition'
 import { toMaintenance } from '../formatters'
 import { values } from '../utils'
+
+import IconYes from '../images/yes.png'
+import IconNo from '../images/no.png'
 
 interface IProps {
   readonly mode: DefinitionType
@@ -20,6 +23,8 @@ interface IProps {
   readonly onTypeChange?: (type: UnitType) => void
   readonly onModeChange?: (mode: DefinitionType) => void
   readonly onImageChange?: (image: string) => void
+  readonly onCanAssaultToggle?: () => void
+  readonly onIsFlankToggle?: () => void
 }
 
 // Display component for showing and changing unit details.
@@ -163,6 +168,38 @@ export default class UnitDetail extends Component<IProps> {
                 <Table.Cell />
               </Table.Row>
               : null
+          }
+          {
+            <Table.Row>
+              <Table.Cell>
+                Is flank?
+            </Table.Cell>
+              <Table.Cell collapsing>
+                <Button size='mini' basic compact disabled={!this.props.onIsFlankToggle} className='no-dim' onClick={this.props.onIsFlankToggle}>
+                  <Image avatar src={this.props.unit.is_flank ? IconYes : IconNo} />
+                </Button>
+              </Table.Cell>
+              <Table.Cell />
+              <Table.Cell />
+              <Table.Cell />
+              <Table.Cell />
+            </Table.Row>
+          }
+          {
+            <Table.Row>
+              <Table.Cell>
+                Can assault?
+            </Table.Cell>
+              <Table.Cell collapsing>
+                <Button size='mini' basic compact disabled={!this.props.onCanAssaultToggle} className='no-dim' onClick={this.props.onCanAssaultToggle}>
+                  <Image avatar src={this.props.unit.can_assault ? IconYes : IconNo} />
+                </Button>
+              </Table.Cell>
+              <Table.Cell />
+              <Table.Cell />
+              <Table.Cell />
+              <Table.Cell />
+            </Table.Row>
           }
           {
             this.attributes.map(value => this.renderRow(this.props.unit, value))

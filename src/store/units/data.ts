@@ -44,7 +44,7 @@ export const getIcon = (type: UnitType) => unit_to_icon[type] || ''
 export const GlobalKey = 'Base'
 
 const createUnitFromJson = (data: UnitData): UnitDefinition => {
-  let unit = { type: data.type as UnitType, mode: data.mode as DefinitionType, image: unit_to_icon[data.type as UnitType] || '', requirements: data.requirements, can_assault: data.can_assault }
+  let unit = { type: data.type as UnitType, mode: data.mode as DefinitionType, image: unit_to_icon[data.type as UnitType] || '', requirements: data.requirements, can_assault: !!data.can_assault, is_flank: !!data.is_flank }
   const base_values: [ValueType, number][] = [
     [UnitCalc.AttritionWeight, data.attrition_weight || 0],
     [UnitCalc.Cost, data.cost],
@@ -57,7 +57,7 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
     [UnitCalc.MoraleDamageDone, data.morale_damage_done || 0],
     [UnitCalc.StrengthDamageDone, data.strength_damage_done || 0],
     [UnitCalc.DamageDone, data.damage_done || 0],
-    [UnitCalc.DamageDone, data.damage_done || 0],
+    [UnitCalc.DamageTaken, data.damage_taken || 0],
     [UnitType.Archers, data.archers || 0],
     [UnitType.CamelCavalry, data.camel_cavalry || 0],
     [UnitType.Chariots, data.chariots || 0],
@@ -81,8 +81,8 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
 const initializeDefaultUnits = (): UnitDefinitions => toObj(data.units.map(createUnitFromJson), unit => unit.type)
 
 const initializeDefaultGlobal = (): GlobalDefinitions => {
-  const land = { type: '' as UnitType, mode: DefinitionType.Land, image: IconMilitaryPower, requirements: '', can_assault: false }
-  const naval = { type: '' as UnitType, mode: DefinitionType.Naval, image: IconMilitaryPower, requirements: '', can_assault: false }
+  const land = { type: '' as UnitType, mode: DefinitionType.Land, image: IconMilitaryPower, requirements: '', can_assault: false, is_flank: false }
+  const naval = { type: '' as UnitType, mode: DefinitionType.Naval, image: IconMilitaryPower, requirements: '', can_assault: false, is_flank: false }
   const landValues: [UnitCalc, number][] = [
     [UnitCalc.Strength, 1],
     [UnitCalc.Morale, 3],
@@ -114,9 +114,10 @@ interface UnitData {
   mode: string
   cost: number
   recruit_time: number
+  is_flank?: boolean
   maintenance?: number
   requirements: string
-  can_assault: boolean
+  can_assault?: boolean
   movement_speed: number
   maneuver: number
   morale_damage_taken?: number

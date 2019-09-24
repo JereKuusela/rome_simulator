@@ -40,3 +40,7 @@ code {
 #navigation #menu-info #version {
   display: inline-block;
 }
+
+.ui.button:disabled.no-dim {
+  opacity: 1!important;
+}

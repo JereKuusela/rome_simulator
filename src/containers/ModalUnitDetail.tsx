@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { UnitType, ValueType, setValue, changeImage, changeMode, Unit } from '../store/units'
+import { UnitType, ValueType, setValue, changeImage, changeMode, Unit, toggleIsFlank, toggleCanAssault } from '../store/units'
 import { AppState } from '../store/'
 import { CountryName } from '../store/countries'
 import { ValuesType, mergeValues, DefinitionType } from '../base_definition'
@@ -31,6 +31,8 @@ class ModalUnitDetail extends Component<IProps> {
         onTypeChange={new_type => this.props.changeType(country, type, new_type)}
         onImageChange={image => this.props.changeImage(country, type, image)}
         onModeChange={mode => this.props.changeMode(country, type, mode)}
+        onCanAssaultToggle={() => this.props.toggleCanAssault(country, type)}
+        onIsFlankToggle={() => this.props.toggleIsFlank(country, type)}
       />
     )
   }
@@ -55,7 +57,9 @@ const mapDispatchToProps = (dispatch: any) => ({
     !Number.isNaN(value) && dispatch(setValue(country, ValuesType.Loss, unit, key, attribute, value)) && dispatch(invalidateCountry(country))
   ),
   changeImage: (country: CountryName, type: UnitType, image: string) => dispatch(changeImage(country, type, image)),
-  changeMode: (country: CountryName, type: UnitType, mode: DefinitionType) => dispatch(changeMode(country, type, mode))
+  changeMode: (country: CountryName, type: UnitType, mode: DefinitionType) => dispatch(changeMode(country, type, mode)),
+  toggleIsFlank: (country: CountryName, type: UnitType) => dispatch(toggleIsFlank(country, type)),
+  toggleCanAssault: (country: CountryName, type: UnitType) => dispatch(toggleCanAssault(country, type))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {

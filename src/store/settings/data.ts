@@ -1,13 +1,11 @@
 import { CombatParameter } from './actions'
-import { UnitCalc } from '../units'
 
 
 export const getDefaultLandSettings = (): { [key in CombatParameter]: number } => {
   return {
     ...getDefaultAnySettings(),
     [CombatParameter.StrengthLostMultiplier]: 0.2,
-    [CombatParameter.MoraleLostMultiplier]: 1.5,
-    [CombatParameter.FlankCriteriaValue]: 2
+    [CombatParameter.MoraleLostMultiplier]: 1.5
   }
 }
 
@@ -15,8 +13,7 @@ export const getDefaultNavalSettings = (): { [key in CombatParameter]: number } 
   return {
     ...getDefaultAnySettings(),
     [CombatParameter.StrengthLostMultiplier]: 0.5,
-    [CombatParameter.MoraleLostMultiplier]: 2.0,
-    [CombatParameter.FlankCriteriaValue]: 100,
+    [CombatParameter.MoraleLostMultiplier]: 2.0
   }
 }
 
@@ -37,13 +34,6 @@ const getDefaultAnySettings = (): { [key in CombatParameter]: number } => {
     [CombatParameter.MinimumMorale]: 0.25,
     [CombatParameter.MinimumStrength]: 0,
     [CombatParameter.ReinforceFirst]: 0,
-    [CombatParameter.FlankCriteriaAttribute]: UnitCalc.Maneuver as unknown as number,
-    [CombatParameter.FlankCriteriaSign]: 1,
-    [CombatParameter.FlankCriteriaValue]: 2,
-    [CombatParameter.ReinforceMainAttribute]: UnitCalc.Cost as unknown as number,
-    [CombatParameter.ReinforceMainSign]: 0,
-    [CombatParameter.ReinforceFlankAttribute]: UnitCalc.Maneuver as unknown as number,
-    [CombatParameter.ReinforceFlankSign]: 0,
     [CombatParameter.FixDamageTaken]: 0
   }
 }

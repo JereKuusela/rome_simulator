@@ -1,7 +1,7 @@
 import { sortBy } from 'lodash'
-import { BaseUnit, UnitCalc, UnitDefinitions } from '../units'
+import { UnitCalc, UnitDefinitions, Unit } from '../units'
 import { RowType, BaseUnits, RowTypes } from '../battle'
-import { CombatParameter, Settings } from '../settings'
+import { Settings } from '../settings'
 import { calculateValue, mergeValues, calculateBase } from '../../base_definition'
 import { DeepReadonly as R } from 'ts-essentials'
 import produce from 'immer'
@@ -13,19 +13,13 @@ export const nextIndex = (index: number, center: number) => index < center ? ind
 
 /**
  * Returns whether a given unit is a flanker.
- * Units with more than 2 maneuver are considered flankers, unless overridden by preferences.
  */
-const isFlankUnit = (settings: Settings, row_types: RowTypes, unit: BaseUnit) => {
+const isFlankUnit = (row_types: RowTypes, unit: Unit) => {
     if (unit.type === row_types[RowType.Flank])
         return true
     if (unit.type === row_types[RowType.Front] || unit.type === row_types[RowType.Back])
         return false
-    const value = calculateBase(unit, String(settings[CombatParameter.FlankCriteriaAttribute]))
-    const limit = settings[CombatParameter.FlankCriteriaValue]
-    if (settings[CombatParameter.FlankCriteriaSign])
-        return value > limit
-    else
-        return value < limit
+    return unit.is_flank
 }
 
 /**
@@ -73,16 +67,16 @@ export const reinforce = (army: R<BaseUnits>, definitions: R<UnitDefinitions>, r
     const center = Math.floor(frontline.length / 2.0)
 
     // Separate reserve to main and flank groups.
-    const mainReserve = reserve.filter(value => !isFlankUnit(settings, row_types, mergeValues(value, definitions[value.type])))
-    const flankReserve = reserve.filter(value => isFlankUnit(settings, row_types, mergeValues(value, definitions[value.type])))
+    const mainReserve = reserve.filter(value => !isFlankUnit(row_types, mergeValues(value, definitions[value.type])))
+    const flankReserve = reserve.filter(value => isFlankUnit(row_types, mergeValues(value, definitions[value.type])))
     // Calculate priorities (mostly based on unit type, ties are resolved with index numbers).
     let orderedMainReserve = sortBy(mainReserve, value => {
         value = mergeValues(value, definitions[value.type])
-        return (settings[CombatParameter.ReinforceMainSign] ? 1 : -1) * calculateBase(value,  String(settings[CombatParameter.ReinforceMainAttribute])) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 - (value.type === row_types[RowType.Front] ? 200000000 : 0) - (value.type === row_types[RowType.Back] ? -100000000 : 0)
+        return -calculateBase(value,  UnitCalc.Cost) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 - (value.type === row_types[RowType.Front] ? 200000000 : 0) - (value.type === row_types[RowType.Back] ? -100000000 : 0)
     })
     let orderedFlankReserve = sortBy(flankReserve, value => {
         value = mergeValues(value, definitions[value.type])
-        return (settings[CombatParameter.ReinforceFlankSign] ? 1 : -1) * calculateBase(value,  String(settings[CombatParameter.ReinforceFlankAttribute])) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 - (value.type === row_types[RowType.Flank] ? 100000000 : 0)
+        return -calculateBase(value,  UnitCalc.Maneuver) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 - (value.type === row_types[RowType.Flank] ? 100000000 : 0)
     })
 
     const free_spots = frontline.filter((_, index) => index < frontline.length).reduce((previous, current) => previous + (current ? 0 : 1), 0)

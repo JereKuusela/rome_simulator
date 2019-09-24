@@ -14,14 +14,7 @@ export enum CombatParameter {
   RollFrequency = 'RollFrequency',
   CombatWidth = 'CombatWidth',
   ReinforceFirst = 'ReinforceFirst',
-  FixDamageTaken = 'FixDamageTaken',
-  FlankCriteriaAttribute = 'FlankCriteriaAttribute',
-  FlankCriteriaValue = 'FlankCriteriaValue',
-  FlankCriteriaSign = 'FlankCriteriaSign',
-  ReinforceMainAttribute = 'ReinforceMainAttribute',
-  ReinforceMainSign = 'ReinforceMainSign',
-  ReinforceFlankAttribute = 'ReinforceFlankAttribute',
-  ReinforceFlankSign = 'ReinforceFlankSign'
+  FixDamageTaken = 'FixDamageTaken'
 }
 
 export const parameterToDescription = (parameter: CombatParameter): string => {
@@ -58,20 +51,6 @@ export const parameterToDescription = (parameter: CombatParameter): string => {
       return 'Additional base damage per dice roll and other modifiers.'
     case CombatParameter.RollFrequency:
       return 'How many rounds dice rolls stay active.'
-    case CombatParameter.FlankCriteriaAttribute:
-      return 'Which attribute is used to determine whether an unit is a flanking unit.'
-    case CombatParameter.FlankCriteriaValue:
-      return 'Limit for the flanking unit check.'
-    case CombatParameter.FlankCriteriaSign:
-      return 'Sign for the flanking unit check. 1: Attribute must be higher than the value. 0: Attribute must be lower than the value.'
-    case CombatParameter.ReinforceMainAttribute:
-      return 'Which attribute is used to sort non-flanking units.'
-    case CombatParameter.ReinforceMainSign:
-      return 'Sign for the sort. 1: Units with a higher attribute have a priority. 0: Units with a lower priority have a priority.'
-    case CombatParameter.ReinforceFlankAttribute:
-      return 'Which attribute is used to sort flanking units.'
-    case CombatParameter.ReinforceFlankSign:
-      return 'Sign for the sort. 1: Units with a higher attribute have a priority. 0: Units with a lower priority have a priority.'
     default:
       return 'No description.'
   }

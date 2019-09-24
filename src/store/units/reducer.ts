@@ -31,7 +31,7 @@ class UnitsReducer extends ImmerReducer<Units> {
   }
 
   addUnit(country: CountryName, mode: DefinitionType, type: UnitType) {
-    this.draftState[country][type] = { type, mode, image: getIcon(type), can_assault: false, requirements: '' }
+    this.draftState[country][type] = { type, mode, image: getIcon(type), can_assault: false, requirements: '', is_flank: false }
   }
 
   changeType(country: CountryName, old_type: UnitType, type: UnitType) {
@@ -40,6 +40,14 @@ class UnitsReducer extends ImmerReducer<Units> {
 
   changeImage(country: CountryName, type: UnitType, image: string) {
     this.draftState[country][type].image = image
+  }
+
+  toggleIsFlank(country: CountryName, type: UnitType) {
+    this.draftState[country][type].is_flank = !this.draftState[country][type].is_flank
+  }
+
+  toggleCanAssault(country: CountryName, type: UnitType) {
+    this.draftState[country][type].can_assault = !this.draftState[country][type].can_assault
   }
 
   changeMode(country: CountryName, type: UnitType, mode: DefinitionType) {
@@ -123,6 +131,8 @@ export const addUnit = unitsActions.addUnit
 export const changeType = unitsActions.changeType
 export const changeImage = unitsActions.changeImage
 export const changeMode = unitsActions.changeMode
+export const toggleIsFlank = unitsActions.toggleIsFlank
+export const toggleCanAssault = unitsActions.toggleCanAssault
 
 const unitsBaseReducer = createReducerFunction(UnitsReducer, unitsState)
 

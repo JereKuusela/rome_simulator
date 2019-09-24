@@ -54,6 +54,7 @@ export interface BaseUnit extends BaseDefinition<UnitType, ValueType> {
 export interface UnitDefinition extends BaseDefinition<UnitType, ValueType> {
   readonly requirements: string
   readonly can_assault: boolean
+  readonly is_flank: boolean
   readonly mode: DefinitionType
 }
 
