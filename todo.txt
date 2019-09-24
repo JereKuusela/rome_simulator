@@ -8,7 +8,7 @@ Tests (high priority):
 
 Refactor:
 - Getting rid of custom map, reduce, etc functions as much as possible.
-- Data heal up, base info, unit ids?
+- Data heal up
 - Global error page with auto reset
 - reducer utils.ts has lots of army/participant functions, some kind of sense? 
 

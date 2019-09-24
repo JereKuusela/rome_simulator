@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Container, Grid, TextArea, Checkbox, List, Header, Button } from 'semantic-ui-react'
+import { saveAs } from 'file-saver'
+import { Container, Grid, TextArea, Checkbox, List, Header, Button, Input } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { importState, ExportKey, setResetMissing, setExportKey } from '../store/transfer'
@@ -42,17 +43,23 @@ class Transfer extends Component<IProps, IState> {
               <Header>Export</Header>
               <List>
                 <List.Item>
-                  1. Select which parts to import (resets any edits)
+                  1. Select which parts to export (resets any manual changes)
                 </List.Item>
                 {this.attributes.map(value => this.renderCheckbox(value))}
                 <List.Item>
-                  2. Copy paste the data from the text box
+                  2a. <Button primary onClick={() => this.saveContent(this.state.data)}>Export to file</Button>
+                </List.Item>
+                <List.Item>
+                  2b. Copy paste the data from the text box
                 </List.Item>
               </List>
               <Header>Import</Header>
               <List>
                 <List.Item>
-                  1. Copy paste the data to the text box
+                  1a. <Input type='file' onChange={event => this.loadContent(event.target.files![0])} />
+                </List.Item>
+                <List.Item>
+                  1b. Copy paste the data to the text box
                 </List.Item>
                 <List.Item>
                   2. Select how to handle missing data
@@ -95,6 +102,20 @@ class Transfer extends Component<IProps, IState> {
           onChange={() => this.props.setExportKey(key, !this.props.export_keys[key])}
         />
       </List.Item>)
+  }
+
+  loadContent = (file: File) => {
+    const blob = file as any
+    blob.text().then((data: string) => this.setState({data}))
+  }
+
+  pad = (value: number) => String(value).padStart(2, '0')
+
+  saveContent = (data: string) => {
+    const blob = new Blob([data], {type: 'text/plain;charset=utf-8'})
+    const date = new Date()
+    const formatted = date.getFullYear() + '-' + this.pad(date.getMonth()) + '-' + this.pad(date.getDate()) + '_' + this.pad(date.getHours()) + '-' + this.pad(date.getMinutes()) + '-' + this.pad(date.getSeconds())
+    saveAs(blob, 'imperator-simulator_' + formatted + '.json');
   }
 
   filterKeys = (state: AppState): any => {
