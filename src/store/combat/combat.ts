@@ -52,11 +52,11 @@ export const doBattle = (definitions: Units, attacker: R<ParticipantState>, defe
   let definitions_a: FrontLine = a.frontline.map(value => value && mergeValues(value, definitions[attacker.country][value.type]))
   if (settings[CombatParameter.ReinforceFirst])
     d = reinforce(d, definitions[defender.country], round, defender.row_types, defender.flank_size, calculateArmySize(a), settings, undefined)
-  let a_to_d = pickTargets(definitions_a, d.frontline, !!settings[CombatParameter.FlankTargetsOwnEdge])
+  let a_to_d = pickTargets(definitions_a, d.frontline)
   if (!settings[CombatParameter.ReinforceFirst])
     d = reinforce(d, definitions[defender.country], round, defender.row_types, defender.flank_size, calculateArmySize(a), settings, a_to_d)
   let definitions_d: FrontLine = d.frontline.map(value => value && mergeValues(value, definitions[defender.country][value.type]))
-  let d_to_a = pickTargets(definitions_d, a.frontline, !!settings[CombatParameter.FlankTargetsOwnEdge])
+  let d_to_a = pickTargets(definitions_d, a.frontline)
   if (round < 1)
     return [a, d] as [BaseUnits, BaseUnits]
 
@@ -130,9 +130,8 @@ const removeOutOfBounds = (army: R<BaseUnits>, combat_width: number): R<BaseUnit
  * Returns an array which maps attacker to defender.
  * @param source_row Attackers.
  * @param target_row Defenders.
- * @param flank_targets_near_own_edge Flanks pick targets near their edge.
  */
-const pickTargets = (source_row: R<FrontLine>, target_row: R<BaseFrontLine>, flank_targets_near_own_edge: boolean): Array<number | null> => {
+const pickTargets = (source_row: R<FrontLine>, target_row: R<BaseFrontLine>): Array<number | null> => {
   // Units attack mainly units on front of them. If not then first target from left to right.
   const attacker_to_defender = Array<number | null>(source_row.length)
   for (let i = 0; i < source_row.length; ++i)
@@ -145,7 +144,7 @@ const pickTargets = (source_row: R<FrontLine>, target_row: R<BaseFrontLine>, fla
       target_index = source_index
     else {
       const maneuver = calculateValue(source, UnitCalc.Maneuver)
-      if (flank_targets_near_own_edge && source_index > source_row.length / 2) {
+      if (source_index > source_row.length / 2) {
         for (let index = source_index + maneuver; index >= source_index - maneuver; --index) {
           if (index >= 0 && index < source_row.length && target_row[index]) {
             target_index = index

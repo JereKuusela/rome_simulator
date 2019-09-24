@@ -13,7 +13,6 @@ export enum CombatParameter {
   MinimumStrength = 'MinimumStrength',
   RollFrequency = 'RollFrequency',
   CombatWidth = 'CombatWidth',
-  FlankTargetsOwnEdge = 'FlankTargetsOwnEdge',
   ReinforceFirst = 'ReinforceFirst',
   FixFlank = 'FixFlank',
   FixDamageTaken = 'FixDamageTaken',
@@ -52,8 +51,6 @@ export const parameterToDescription = (parameter: CombatParameter): string => {
       return 'Base value for morale damage.'
     case CombatParameter.MoraleLostMultiplier:
       return 'Multiplier for morale lost.'
-    case CombatParameter.FlankTargetsOwnEdge:
-      return 'Flanking units target the left-most target.\nThis makes left and right flank behave differently.\nThis is probably a bug in the game. Set 1 to fix this.'
     case CombatParameter.ReinforceFirst:
       return 'Attackers pick targets before defenders reinforce.\nThis makes attacker and defender behave differently.\nThis is probably a bug in the game. Set 1 to fix this.'
     case CombatParameter.FixFlank:
