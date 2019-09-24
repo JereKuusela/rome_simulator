@@ -14,6 +14,8 @@ Refactor:
 
 Reducers can probably be split to sub reducers (one handles the data structure, other the actual data)
 
+Rowtype selectors could show unit priority?
+
 Pluralization of reducers, state, etc
 
 Combat things to combat reducer. Perhaps state as parameter when needed? Since it only changes same things as battle reducer,

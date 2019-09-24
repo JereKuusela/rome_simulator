@@ -452,7 +452,7 @@ class Battle extends Component<IProps, IState> {
   renderCell = (country: CountryName, type: RowType, types: RowTypes, units: UnitDefinitions): JSX.Element => {
     const unit = types[type]
     return (
-      <Table.Cell selectable onClick={() => this.openRowModal(country, RowType.Front)}>
+      <Table.Cell selectable onClick={() => this.openRowModal(country, type)}>
         <Image src={getImage(unit && units[unit])} avatar />
       </Table.Cell>
     )
