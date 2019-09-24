@@ -4,7 +4,7 @@ import { Container, Image, Table } from 'semantic-ui-react'
 
 import { sumArr, round } from '../utils'
 import { calculateValue, calculateValueWithoutLoss, getImage, Mode, DefinitionType, strengthToValue } from '../base_definition'
-import { getUnits, filterUnitTypes, getBattle } from '../store/utils'
+import { filterUnitTypes, getBattle, getCurrentUnits } from '../store/utils'
 import { AppState } from '../store/index'
 import { Unit, UnitType, UnitCalc } from '../store/units'
 import { Side, Units } from '../store/battle'
@@ -106,8 +106,8 @@ class Stats extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  units_a: getUnits(state, Side.Attacker),
-  units_d: getUnits(state, Side.Defender),
+  units_a: getCurrentUnits(state, Side.Attacker),
+  units_d: getCurrentUnits(state, Side.Defender),
   types_a: filterUnitTypes(state, Side.Attacker),
   types_d: filterUnitTypes(state, Side.Defender),
   outdated: getBattle(state).outdated,

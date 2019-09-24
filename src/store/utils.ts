@@ -130,9 +130,22 @@ const getRounds = (state: AppState, type: Side): BaseUnits | undefined => {
   return arrGet(participant.rounds, -1)
 }
 
+const getCurrentUnitsBySide = (state: AppState, side: Side): Units => {
+  const name = getParticipant(state, side).name
+  const army = getArmy(state, side)
+  const units = filterUnitDefinitions(state.settings.mode, objGet(state.units, name, getDefaultUnits()))
+  const global = objGet(state.global_stats, name, getDefaultGlobals())[state.settings.mode]
+  const frontline = army.frontline.map(value => value && mergeUnits(units, global, value))
+  const reserve = army.reserve.map(value => mergeUnits(units, global, value))
+  const defeated = army.defeated.map(value => mergeUnits(units, global, value))
+  return { frontline, reserve, defeated }
+}
+
 export const getArmy = (state: AppState, type: Side): Army => ({ ...getArmyBySide(state, type), ...getRounds(state, type) })
 
 export const getBaseUnits = (state: AppState, type: Side): BaseUnits => getBaseUnitsBySide(state, type)
+
+export const getCurrentUnits = (state: AppState, type: Side): Units => getCurrentUnitsBySide(state, type)
 
 export const getUnits = (state: AppState, type: Side): Units => getUnitsBySide(state, type)
 
@@ -145,12 +158,14 @@ export const getSelected = (state: AppState): Army => getArmyByCountry(state, st
  * @param state Application state.
  * @param side Attacker or defender.
  */
-export const getUnitDefinitions = (state: AppState, side: Side): UnitDefinitions => {
-  const name = getParticipant(state, side).name
+export const getUnitDefinitions = (state: AppState, side: Side): UnitDefinitions => getUnitDefinitionsByCountry(state, getParticipant(state, side).name)
+
+const getUnitDefinitionsByCountry = (state: AppState, name: CountryName): UnitDefinitions => {
   const global = objGet(state.global_stats, name, getDefaultGlobals())[state.settings.mode]
   const units = filterUnitDefinitions(state.settings.mode, objGet(state.units, name, getDefaultUnits()))
   return map(units, definition => mergeValues(definition, global))
 }
+
 
 export interface Army extends BaseArmy {
   general: {
