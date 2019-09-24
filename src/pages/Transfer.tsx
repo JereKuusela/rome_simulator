@@ -3,7 +3,7 @@ import { Container, Grid, TextArea, Checkbox, List, Header, Button } from 'seman
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { importState, ExportKey, setResetMissing, setExportKey } from '../store/transfer'
-import { restoreBaseGlobalStats, stripRounds, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits } from '../store/transforms'
+import { restoreBaseGlobalStats, stripRounds, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits, setIds } from '../store/transforms'
 import { DefinitionType } from '../base_definition'
 import { values, keys } from '../utils'
 import { globalStatsState, unitsState } from '../store/units'
@@ -144,6 +144,7 @@ const mapDispatchToProps = (dispatch: any) => ({
       json.tactics = json.tactics && restoreBaseTactics(json.tactics)
       json.terrains = json.terrains && restoreBaseTerrains(json.terrains)
       json.units = json.units && restoreBaseUnits(json.units)
+      json.battle  = json.battle && setIds(json.battle)
       if (reset_missing) {
         json.global_stats = json.global_stats || globalStatsState
         json.tactics = json.tactics || getDefaultTactics()

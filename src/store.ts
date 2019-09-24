@@ -4,7 +4,7 @@ import { rootReducer } from './store/'
 import { persistStore, persistReducer, createTransform, createMigrate } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import {
-  restoreBaseGlobalStats, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits, stripRounds
+  restoreBaseGlobalStats, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits, stripRounds, setIds
 } from './store/transforms'
 
 const TacticsTransform = createTransform(
@@ -33,7 +33,7 @@ const GlobalStatsTransform = createTransform(
 
 const BattleTransform = createTransform(
   (inboundState: any) => stripRounds(inboundState),
-  (outboundState: any) => outboundState,
+  (outboundState: any) => setIds(outboundState),
   { whitelist: ['battle'] }
 )
 

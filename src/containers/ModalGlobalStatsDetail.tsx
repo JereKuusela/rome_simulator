@@ -17,7 +17,6 @@ class ModalGlobalStatsDetail extends Component<IProps> {
     return (
       <UnitDetail
         mode={this.props.mode}
-        name={this.props.country}
         terrain_types={this.props.terrain_types}
         custom_value_key={CUSTOM_VALUE_KEY}
         unit={this.props.global_stats[this.props.country][this.props.mode] as Unit}

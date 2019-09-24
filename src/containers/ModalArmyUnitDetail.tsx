@@ -24,7 +24,6 @@ class ModalArmyUnitDetail extends Component<IProps> {
   render(): JSX.Element | null {
     if (!this.props.info)
       return null
-    const country = this.props.info.country
     return (
       <Modal basic onClose={this.props.onClose} open>
         <Modal.Content>
@@ -34,7 +33,6 @@ class ModalArmyUnitDetail extends Component<IProps> {
           />
           <UnitDetail
             mode={this.props.mode}
-            name={country}
             terrain_types={this.props.terrain_types}
             custom_value_key={CUSTOM_VALUE_KEY}
             unit={this.props.info.unit}

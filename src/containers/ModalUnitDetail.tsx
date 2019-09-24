@@ -20,7 +20,6 @@ class ModalUnitDetail extends Component<IProps> {
     return (
       <UnitDetail
         mode={this.props.mode}
-        name={country}
         terrain_types={this.props.terrain_types}
         custom_value_key={CUSTOM_VALUE_KEY}
         unit={unit as Unit}

@@ -3,7 +3,9 @@ import { TerrainDefinitions, getDefaultTerrain } from './terrains'
 import { GlobalStats, Units, getDefaultUnit, getDefaultGlobal, GlobalKey } from './units'
 import { ModeState } from './battle'
 import { clearAllValues, mergeValues } from '../base_definition'
-import { map } from '../utils'
+import { map, forEach } from '../utils'
+import produce from 'immer'
+import { getNextId } from '../army_utils'
 
 
 export const restoreBaseTactics = (state: TacticDefinitions): TacticDefinitions => map(state, (tactic, type) => mergeValues(clearAllValues(tactic, type), getDefaultTactic(type)))
@@ -12,3 +14,14 @@ export const restoreBaseUnits = (state: Units): Units => map(state, definitions 
 export const restoreBaseGlobalStats = (state: GlobalStats): GlobalStats => map(state, definitions => map(definitions, (global, type) => mergeValues(clearAllValues(global, GlobalKey), getDefaultGlobal(type))))
 
 export const stripRounds = (battle: ModeState): ModeState => map(battle, value => ({ ...value, outdated: true, participants: map(value.participants, value => ({ ...value, rounds: [] })) }))
+
+export const setIds = (battle: ModeState): ModeState => {
+  return produce(battle, battle => {
+    forEach(battle, mode => forEach(mode.armies, army => {
+      army.frontline.forEach(unit => unit ? unit.id = getNextId() : {})
+      army.reserve.forEach(unit => unit.id = getNextId())
+      army.defeated.forEach(unit => unit.id = getNextId())
+    }))
+  })
+}
+
