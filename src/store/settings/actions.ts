@@ -14,7 +14,6 @@ export enum CombatParameter {
   RollFrequency = 'RollFrequency',
   CombatWidth = 'CombatWidth',
   ReinforceFirst = 'ReinforceFirst',
-  FixFlank = 'FixFlank',
   FixDamageTaken = 'FixDamageTaken',
   FlankCriteriaAttribute = 'FlankCriteriaAttribute',
   FlankCriteriaValue = 'FlankCriteriaValue',
@@ -53,8 +52,6 @@ export const parameterToDescription = (parameter: CombatParameter): string => {
       return 'Multiplier for morale lost.'
     case CombatParameter.ReinforceFirst:
       return 'Attackers pick targets before defenders reinforce.\nThis makes attacker and defender behave differently.\nThis is probably a bug in the game. Set 1 to fix this.'
-    case CombatParameter.FixFlank:
-      return 'Naval combat contains only flank.\nThis makes the preferred flanking unit deploy in the middle.\nThis is probably a bug in the game. Set 1 to fix this.'
     case CombatParameter.FixDamageTaken:
       return 'Damage taken attribute is not used in calculations.\nDamage done attribute is used twice in calculations.\nThis is probably a bug in the game. Set 1 to fix this.'
     case CombatParameter.RollDamage:

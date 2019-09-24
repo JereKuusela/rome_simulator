@@ -31,7 +31,6 @@ const isFlankUnit = (settings: Settings, row_types: RowTypes, unit: BaseUnit) =>
 /**
  * Calculates left and right flank sizes.
  * By default, flank starts where the enemy frontline ends. Preference can override this.
- * @param settings Settings
  * @param round Flank only works for the initial deployment.
  * @param flank_size Minimum preferred flank size. Doesn't work with small armies.
  * @param front_size Size of the front line.
@@ -39,11 +38,9 @@ const isFlankUnit = (settings: Settings, row_types: RowTypes, unit: BaseUnit) =>
  * @param free_spots Amount of free spots in the frontline.
  * @param enemy_size Size of the enemy army.
  */
-const calculateFlankSizes = (settings: Settings, round: number, flank_size: number, front_size: number, reserve_size: number, free_spots: number, enemy_size: number): [number, number] => {
+const calculateFlankSizes = (round: number, flank_size: number, front_size: number, reserve_size: number, free_spots: number, enemy_size: number): [number, number] => {
     if (round > 0)
         return [0, 0]
-    if (!settings[CombatParameter.FixFlank])
-        return [Math.floor(front_size / 2.0), Math.ceil(front_size / 2.0)]
     const army_size = front_size - free_spots + reserve_size
     // Determine whether the preferred flank size has any effect.
     // Note: Only tested with combat width of 30. +2 might be a bug in the game.
@@ -89,7 +86,7 @@ export const reinforce = (army: R<BaseUnits>, definitions: R<UnitDefinitions>, r
     })
 
     const free_spots = frontline.filter((_, index) => index < frontline.length).reduce((previous, current) => previous + (current ? 0 : 1), 0)
-    const [left_flank_size, right_flank_size] = calculateFlankSizes(settings, round, flank_size, frontline.length, reserve.length, free_spots, enemy_size)
+    const [left_flank_size, right_flank_size] = calculateFlankSizes(round, flank_size, frontline.length, reserve.length, free_spots, enemy_size)
 
     if (round === 0) {
         // Initial deployment uses reversed order (so Primary unit is first and Secondary last).

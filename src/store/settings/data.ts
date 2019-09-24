@@ -17,7 +17,6 @@ export const getDefaultNavalSettings = (): { [key in CombatParameter]: number } 
     [CombatParameter.StrengthLostMultiplier]: 0.5,
     [CombatParameter.MoraleLostMultiplier]: 2.0,
     [CombatParameter.FlankCriteriaValue]: 100,
-    [CombatParameter.FixFlank]: 0
   }
 }
 
@@ -38,7 +37,6 @@ const getDefaultAnySettings = (): { [key in CombatParameter]: number } => {
     [CombatParameter.MinimumMorale]: 0.25,
     [CombatParameter.MinimumStrength]: 0,
     [CombatParameter.ReinforceFirst]: 0,
-    [CombatParameter.FixFlank]: 1,
     [CombatParameter.FlankCriteriaAttribute]: UnitCalc.Maneuver as unknown as number,
     [CombatParameter.FlankCriteriaSign]: 1,
     [CombatParameter.FlankCriteriaValue]: 2,
