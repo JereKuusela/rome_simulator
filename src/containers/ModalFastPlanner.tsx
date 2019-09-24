@@ -103,12 +103,12 @@ class ModalFastPlanner extends Component<IProps, IState> {
       this.setState({ changes_d: { ...this.state.changes_d, [unit]: value } })
   }
 
-  getUnitsToAdd = (changes: Units, originals?: Units): BaseReserve => {
+  getUnitsToAdd = (changes: Units, originals?: Units, generateIds?: boolean): BaseReserve => {
     let units: BaseReserve = []
     forEach(changes, (value, key) => {
       const original = originals ? originals[key] || 0 : 0
       if (value > original)
-        units = units.concat(mapRange(value - original, _ => ({ id: getNextId(), type: key  })))
+        units = units.concat(mapRange(value - original, _ => ({ id: generateIds ? getNextId() : 0, type: key  })))
     })
     return units
   }
@@ -124,7 +124,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
   }
 
   updateReserve = (name: CountryName, changes: Units, originals?: Units): void => {
-    const units = this.getUnitsToAdd(changes, originals)
+    const units = this.getUnitsToAdd(changes, originals, true)
     const types = this.getTypesToRemove(changes, originals)
     units.length > 0 && this.props.addReserveUnits(this.props.mode, name, units)
     types.length > 0 && this.props.removeReserveUnits(this.props.mode, name, types)

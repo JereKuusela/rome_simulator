@@ -9,7 +9,7 @@ import { DefinitionType, Mode } from '../../base_definition'
 import { CountryName } from '../countries'
 import { TacticType } from '../tactics';
 import { keys, toArr, map, forEach, arrGet } from '../../utils'
-import { merge, findLastIndex, clone, every, some } from 'lodash';
+import { findLastIndex, every, some } from 'lodash'
 
 export interface Battle {
   readonly armies: Armies
@@ -67,7 +67,7 @@ export const doRemoveReserveUnits = (reserve: BaseUnit[], types: UnitType[]) => 
   return reserve
 }
 
-export const doAddReserveUnits = (reserve: BaseUnit[], units: BaseUnit[]) => merge(clone(reserve), units)
+export const doAddReserveUnits = (reserve: BaseUnit[], units: BaseUnit[]) => reserve.concat(units)
 
 class BattleReducer extends ImmerReducer<ModeState> {
 
