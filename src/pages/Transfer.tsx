@@ -7,12 +7,7 @@ import { importState, ExportKey, setResetMissing, setExportKey } from '../store/
 import { restoreBaseGlobalStats, stripRounds, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits, setIds } from '../store/transforms'
 import { DefinitionType } from '../base_definition'
 import { values, keys } from '../utils'
-import { globalStatsState, unitsState } from '../store/units'
-import { getDefaultTerrains } from '../store/terrains'
-import { getDefaultTactics } from '../store/tactics'
-import { initialState, modeState } from '../store/battle'
-import { settingsState } from '../store/settings'
-import { countriesState } from '../store/countries'
+import { resetMissing } from '../store/utils'
 
 interface IState {
   data: string
@@ -166,17 +161,8 @@ const mapDispatchToProps = (dispatch: any) => ({
       json.terrains = json.terrains && restoreBaseTerrains(json.terrains)
       json.units = json.units && restoreBaseUnits(json.units)
       json.battle  = json.battle && setIds(json.battle)
-      if (reset_missing) {
-        json.global_stats = json.global_stats || globalStatsState
-        json.tactics = json.tactics || getDefaultTactics()
-        json.terrains = json.terrains || getDefaultTerrains()
-        json.units = json.units || unitsState
-        json.battle = json.battle || initialState
-        json.battle[DefinitionType.Land] = json.battle[DefinitionType.Land] ||  modeState(DefinitionType.Land)
-        json.battle[DefinitionType.Naval] = json.battle[DefinitionType.Naval] ||  modeState(DefinitionType.Naval)
-        json.settings = json.settings || settingsState
-        json.countries = json.countries || countriesState
-      } 
+      if (reset_missing)
+        resetMissing(json)
       keys(json).filter(key => !json[key]).forEach(key => delete json[key])
       dispatch(importState(json, reset_missing))
     }

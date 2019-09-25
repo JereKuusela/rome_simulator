@@ -1,6 +1,7 @@
 import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
 import { AppState } from '../'
 import { ExportKey } from './index'
+import { resetMissing } from '../utils'
 
 type ExportKeys = { [key in ExportKey]: boolean }
 
@@ -44,10 +45,16 @@ class ImportReducer extends ImmerReducer<AppState> {
         units: state.units ? { ...this.state.units, ...state.units } : this.state.units
       }
   }
+
+  reset() {
+    this.draftState = { ...this.state, ...resetMissing({} as any) }
+  }
 }
 
 const importActions = createActionCreators(ImportReducer)
 
 export const importState = importActions.importState
+export const reset = importActions.reset
+
 
 export const importReducer = createReducerFunction(ImportReducer, {} as any)

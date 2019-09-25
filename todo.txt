@@ -8,13 +8,11 @@ Tests (high priority):
 
 Refactor:
 - Getting rid of custom map, reduce, etc functions as much as possible.
-- Data heal up
-- Global error page with auto reset
 - reducer utils.ts has lots of army/participant functions, some kind of sense? 
 
 Reducers can probably be split to sub reducers (one handles the data structure, other the actual data)
 
-Rowtype selectors could show unit priority?
+Rowtype selectors could show unit priority? Different colors for main and flank. Frontline could slightly color tiles based on main/flank.
 
 Pluralization of reducers, state, etc
 

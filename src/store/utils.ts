@@ -2,18 +2,18 @@ import { AppState } from "./index"
 import { objGet, sumObj, map, reduce, toArr, filter, arrGet } from '../utils'
 import { filterUnitDefinitions, isIncludedInMode, mergeUnits } from '../army_utils'
 import { TacticType } from "./tactics/actions"
-import { mergeValues } from "../base_definition"
+import { mergeValues, DefinitionType } from "../base_definition"
 import { TerrainType } from "./terrains/actions"
 import { UnitType, UnitDefinition } from "./units/actions"
-import { Battle, modeState } from "./battle/reducer"
+import { Battle, modeState, initialState } from "./battle/reducer"
 import { getDefaultArmy, Army as BaseArmy, Side, getDefaultParticipant, BaseUnits, Participant, Units } from "./battle/actions"
-import { defaultCountry } from "./countries/reducer"
+import { defaultCountry, countriesState } from "./countries/reducer"
 import { CountryName } from "./countries"
 import { getDefaultGlobals, getDefaultUnits } from "./units/data"
-import { Settings } from "./settings"
-import { UnitDefinitions } from "./units"
-import { TerrainDefinitions } from "./terrains";
-import { TacticDefinitions } from "./tactics";
+import { Settings, settingsState } from "./settings"
+import { UnitDefinitions, globalStatsState, unitsState } from "./units"
+import { TerrainDefinitions, getDefaultTerrains } from "./terrains";
+import { TacticDefinitions, getDefaultTactics } from "./tactics";
 
 /**
  * Returns settings of the current mode.
@@ -166,6 +166,22 @@ const getUnitDefinitionsByCountry = (state: AppState, name: CountryName): UnitDe
   return map(units, definition => mergeValues(definition, global))
 }
 
+/**
+ * Resets missing data by using the default data.
+ * @param data 
+ */
+export const resetMissing = (data: AppState) => {
+  data.global_stats = data.global_stats || globalStatsState
+  data.tactics = data.tactics || getDefaultTactics()
+  data.terrains = data.terrains || getDefaultTerrains()
+  data.units = data.units || unitsState
+  data.battle = data.battle || initialState
+  data.battle[DefinitionType.Land] = data.battle[DefinitionType.Land] || modeState(DefinitionType.Land)
+  data.battle[DefinitionType.Naval] = data.battle[DefinitionType.Naval] || modeState(DefinitionType.Naval)
+  data.settings = data.settings || settingsState
+  data.countries = data.countries || countriesState
+  return data
+}
 
 export interface Army extends BaseArmy {
   general: {
