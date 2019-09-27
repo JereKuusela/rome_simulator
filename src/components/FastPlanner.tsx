@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Table, Input } from 'semantic-ui-react'
-import { UnitType, Units } from '../store/units'
-import { renderImages } from './utils'
-import { getImages } from '../base_definition'
+
 import { Side } from '../store/battle'
+import { UnitType, Units } from '../store/units'
+import { getImages } from '../base_definition'
+import { renderImages, renderHeaders } from './utils'
 import { toArr } from '../utils'
-import { has } from 'lodash'
 
 export type PlannerUnits = { [key in UnitType]: number }
 
@@ -22,30 +22,21 @@ interface IProps {
   readonly changes_d: PlannerUnits
 }
 
-// Display component for showing and changing tactic details.
+/**
+ * Allows quickly adding or removing units from reserve.
+ */
 export default class FastPlanner extends Component<IProps> {
 
   readonly headers = ['Units in reserve', 'Attacker', 'Defender']
 
-  render(): JSX.Element {
-    const types = new Set([...this.props.types_a, ...this.props.types_d])
+  render() {
+    const { types_a, types_d, attached } = this.props
+    const types = Array.from(new Set([...types_a, ...types_d]))
     return (
-      <Table celled unstackable attached={this.props.attached}>
-        <Table.Header>
-          <Table.Row>
-            {
-              Array.from(this.headers).map((value) => (
-                <Table.HeaderCell key={value}>
-                  {value}
-                </Table.HeaderCell>
-              ))
-            }
-          </Table.Row>
-        </Table.Header>
+      <Table celled unstackable attached={attached}>
+        {renderHeaders(this.headers)}
         <Table.Body>
-          {
-            Array.from(types).map(this.renderRow)
-          }
+          {types.map(this.renderRow)}
         </Table.Body>
       </Table>
     )
@@ -56,38 +47,33 @@ export default class FastPlanner extends Component<IProps> {
     return renderImages(images)
   }
 
-  renderRow = (type: UnitType): JSX.Element => (
-    <Table.Row key={type}>
-      <Table.Cell width='6'>
-        {this.renderImages(type)}
-        {type}
-      </Table.Cell>
-      <Table.Cell width='5'>
-        {
-          this.props.types_a.has(type) ?
-            <Input
-              type='number'
-              size='mini'
-              value={has(this.props.changes_a, type) ? this.props.changes_a[type] : this.props.reserve_a[type]}
-              onChange={(_, data) => this.props.onValueChange(Side.Attacker, type, Math.max(0, Math.round(Number(data.value))))
-              }
-            />
-            : null
-        }
-      </Table.Cell>
-      <Table.Cell width='5'>
-        {
-          this.props.types_d.has(type) ?
-            <Input
-              type='number'
-              size='mini'
-              value={has(this.props.changes_d, type) ? this.props.changes_d[type] : this.props.reserve_d[type]}
-              onChange={(_, data) => this.props.onValueChange(Side.Defender, type, Math.max(0, Math.round(Number(data.value))))
-              }
-            />
-            : null
-        }
-      </Table.Cell>
-    </Table.Row>
+  renderRow = (type: UnitType) => {
+    const { types_a, types_d, changes_a, changes_d, reserve_a, reserve_d } = this.props
+    const units_a = changes_a[type] || reserve_a[type]
+    const units_d = changes_d[type] || reserve_d[type]
+    return (
+      <Table.Row key={type}>
+        <Table.Cell width='6'>
+          {this.renderImages(type)}
+          {type}
+        </Table.Cell>
+        <Table.Cell width='5'>
+          {types_a.has(type) ? this.renderSide(type, Side.Attacker, units_a) : null}
+        </Table.Cell>
+        <Table.Cell width='5'>
+          {types_d.has(type) ? this.renderSide(type, Side.Defender, units_d) : null}
+        </Table.Cell>
+      </Table.Row>
+    )
+  }
+
+  renderSide = (type: UnitType, side: Side, value: number) => (
+    <Input
+      type='number'
+      size='mini'
+      value={value}
+      onChange={(_, data) => this.props.onValueChange(side, type, Math.max(0, Math.round(Number(data.value))))
+      }
+    />
   )
 }

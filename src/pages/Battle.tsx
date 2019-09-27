@@ -131,8 +131,9 @@ class Battle extends Component<IProps, IState> {
           <Grid.Row columns={1} style={{ padding: 0 }}>
             <Grid.Column>
               <TargetArrows
-                attacker={this.props.fight_over ? undefined : army_a.frontline}
-                defender={this.props.fight_over ? undefined : army_d.frontline}
+                visible={!this.props.fight_over}
+                attacker={army_a.frontline}
+                defender={army_d.frontline}
                 attacker_color={ATTACKER_COLOR}
                 defender_color={DEFENDER_COLOR}
               />
@@ -428,7 +429,7 @@ class Battle extends Component<IProps, IState> {
         <Table.Cell collapsing>
           <DropdownSelector
             items={keys(this.props.armies)}
-            active={name}
+            value={name}
             onSelect={name => this.props.selectArmy(this.props.mode, type, name)}
           />
         </Table.Cell>

@@ -1,16 +1,19 @@
 import React, { Component } from 'react'
 import { Image, Table, List, Button } from 'semantic-ui-react'
-import { UnitType, Units } from '../store/units'
-import { TacticDefinition, TacticType, TacticCalc, TacticDefinitions as Definitions} from '../store/tactics'
-import { calculateValue, getImage } from '../base_definition'
-import { toSignedPercent } from '../formatters'
+
 import ValueModal from './ValueModal'
 import VersusList from './VersusList'
 import StyledNumber from './StyledNumber'
-import { toArr } from '../utils';
+
+import { UnitType, Units } from '../store/units'
+import { TacticDefinition, TacticType, TacticCalc } from '../store/tactics'
+
+import { calculateValue, getImage } from '../base_definition'
+import { toSignedPercent } from '../formatters'
+import { renderHeaders } from './utils'
 
 interface IProps {
-  readonly tactics: Definitions
+  readonly tactics: TacticDefinition[]
   readonly units: Units
   readonly unit_types: Set<UnitType>
   readonly onRowClick: (type: TacticType) => void
@@ -21,7 +24,9 @@ interface IState {
   open_create: boolean
 }
 
-// Display component for showing unit definitions for an army.
+/**
+ * Shows tactic definitions for both sides.
+ */
 export default class TacticDefinitions extends Component<IProps, IState> {
 
   constructor(props: IProps) {
@@ -33,70 +38,49 @@ export default class TacticDefinitions extends Component<IProps, IState> {
 
   render(): JSX.Element {
     return (
-      <div>
+      <>
         <ValueModal
-            open={this.state.open_create}
-            onSuccess={this.props.onCreateNew}
-            onClose={this.onClose}
-            message='New tactic type'
-            button_message='Create'
-            initial={'' as TacticType}
-          />
+          open={this.state.open_create}
+          onSuccess={this.props.onCreateNew}
+          onClose={this.onClose}
+          message='New tactic type'
+          button_message='Create'
+          initial={'' as TacticType}
+        />
         <Table celled selectable unstackable>
-          <Table.Header>
-            <Table.Row>
-              {
-                Array.from(this.headers).map((value) => (
-                  <Table.HeaderCell key={value}>
-                    {value}
-                  </Table.HeaderCell>
-                ))
-              }
-            </Table.Row>
-          </Table.Header>
+          {renderHeaders(this.headers)}
           <Table.Body>
-            {
-              toArr(this.props.tactics, this.renderRow)
-            }
+            {this.props.tactics.map(this.renderRow)}
           </Table.Body>
         </Table>
-        <Button primary onClick={() => this.setState({ open_create: true })}>
+        <Button primary onClick={this.onClick}>
           Create new
         </Button>
-      </div>
+      </>
     )
   }
 
+  onClick = (): void => this.setState({ open_create: true })
   onClose = (): void => this.setState({ open_create: false })
 
-  renderRow = (tactic: TacticDefinition | undefined): JSX.Element | null => {
-    if (!tactic)
-      return null
+  renderRow = (tactic: TacticDefinition) => {
+    const { onRowClick, units, unit_types } = this.props
     return (
-      <Table.Row key={tactic.type} onClick={() => this.props.onRowClick(tactic.type)}>
+      <Table.Row key={tactic.type} onClick={() => onRowClick(tactic.type)}>
         <Table.Cell>
           <Image src={getImage(tactic)} avatar />
-          {tactic.type}</Table.Cell>
+          {tactic.type}
+        </Table.Cell>
         <Table.Cell>
           <VersusList
             item={tactic}
-            units={this.props.units}
-            unit_types={this.props.unit_types}
+            units={units}
+            unit_types={unit_types}
           />
         </Table.Cell>
         <Table.Cell singleLine>
           <List horizontal>
-            {
-              toArr(this.props.tactics).filter(vs_tactic => calculateValue(tactic, vs_tactic.type)).map(vs_tactic => (
-                <List.Item key={vs_tactic.type} style={{ marginLeft: 0, marginRight: '1em' }}>
-                  <Image src={getImage(vs_tactic)} avatar />
-                  <StyledNumber
-                    value={calculateValue(tactic, vs_tactic.type)}
-                    formatter={toSignedPercent}
-                  />
-                </List.Item>
-              ))
-            }
+            {this.renderVersus(tactic)}
           </List>
         </Table.Cell>
         <Table.Cell>
@@ -107,5 +91,18 @@ export default class TacticDefinitions extends Component<IProps, IState> {
         </Table.Cell>
       </Table.Row>
     )
+  }
+
+  renderVersus = (tactic: TacticDefinition) => {
+    const non_zero = this.props.tactics.filter(versus => calculateValue(tactic, versus.type))
+    return non_zero.map(versus => (
+      <List.Item key={versus.type} style={{ marginLeft: 0, marginRight: '1em' }}>
+        <Image src={getImage(versus)} avatar />
+        <StyledNumber
+          value={calculateValue(tactic, versus.type)}
+          formatter={toSignedPercent}
+        />
+      </List.Item>
+    ))
   }
 }

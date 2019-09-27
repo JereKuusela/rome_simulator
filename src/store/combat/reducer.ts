@@ -5,7 +5,7 @@ import { doBattle as fight } from './combat'
 import { mergeValues, Mode } from '../../base_definition'
 import { CombatParameter } from '../settings'
 import { AppState } from '../'
-import { getSettings, getBattle, getArmy, getParticipant, getArmyBySide } from '../utils'
+import { getSettings, getBattle, getArmy, getArmyBySide } from '../utils'
 import { objGet, sumObj, map, arrGet } from '../../utils'
 import { defaultCountry } from '../countries/reducer'
 
@@ -16,8 +16,8 @@ const doBattle = (state: AppState, mode: Mode, steps: number, refresh: boolean):
   // Whole logic really messed after so many refactorings
   let units_a = refresh ? getArmyBySide(state, Side.Attacker) : getArmy(state, Side.Attacker)
   let units_d = refresh ? getArmyBySide(state, Side.Defender) : getArmy(state, Side.Defender)
-  let participant_a = getParticipant(state, Side.Attacker)
-  let participant_d = getParticipant(state, Side.Defender)
+  let participant_a = next.participants[Side.Attacker]
+  let participant_d = next.participants[Side.Defender]
   if (refresh) {
     participant_a = { ...participant_a, rounds: [] }
     participant_d = { ...participant_d, rounds: [] }

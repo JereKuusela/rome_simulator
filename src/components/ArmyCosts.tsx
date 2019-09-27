@@ -20,14 +20,18 @@ interface IProps {
   attached?: boolean
 }
 
-// Display component for showing and changing tactic details.
+/**
+ * Shows various costs for both sides.
+ */
 export default class ArmyCosts extends Component<IProps> {
 
   readonly headers = ['Costs for all units', 'Attacker', 'Defender']
 
   render(): JSX.Element {
+    const { mode, attached } = this.props
+    const icon_strength = mode === DefinitionType.Naval ? IconStrength : IconManpower
     return (
-      <Table celled unstackable attached={this.props.attached}>
+      <Table celled unstackable attached={attached}>
         <Table.Header>
           <Table.Row>
             {
@@ -41,7 +45,7 @@ export default class ArmyCosts extends Component<IProps> {
         </Table.Header>
         <Table.Body>
           {
-            this.renderRow('Strength', this.props.mode === DefinitionType.Naval ? IconStrength : IconManpower, UnitCalc.Strength, undefined)
+            this.renderRow('Strength', icon_strength, UnitCalc.Strength, undefined)
           }
           {
             this.renderRow('Cost', IconCost, UnitCalc.Cost, undefined)

@@ -31,7 +31,6 @@ class ModalTerrainSelector extends Component<IProps> {
       <Modal basic onClose={this.props.onClose} open>
         <Modal.Content>
           <ItemSelector
-            onClose={this.props.onClose}
             onSelection={this.selectTerrain}
             items={toArr(this.props.terrains).filter(terrain => this.props.info && (!this.props.info.location || terrain.location === this.props.info.location))}
             attributes={attributes}
@@ -41,9 +40,10 @@ class ModalTerrainSelector extends Component<IProps> {
     )
   }
 
-  selectTerrain = (type: TerrainType | null): void => (
+  selectTerrain = (type: TerrainType | null): void => {
     this.props.info && type && this.props.selectTerrain(this.props.mode, this.props.info.index, type)
-  )
+    this.props.onClose()
+  }
 }
 
 const mapStateToProps = (state: AppState) => ({

@@ -58,7 +58,7 @@ class CountryManager extends Component<IProps, IState> {
           <Grid.Column>
             <DropdownSelector
               items={keys(this.props.countries)}
-              active={this.props.selected_country}
+              value={this.props.selected_country}
               onSelect={this.props.selectCountry}
             />
           </Grid.Column>

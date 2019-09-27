@@ -8,6 +8,7 @@ import ItemRemover from '../components/ItemRemover'
 import { TerrainType, deleteTerrain, addTerrain, changeType } from '../store/terrains'
 import { DefinitionType } from '../base_definition'
 import { filterTerrains } from '../store/utils'
+import { toArr } from '../utils'
 
 interface IState {
   modal_terrain: TerrainType | null
@@ -31,7 +32,6 @@ class Terrains extends Component<IProps, IState> {
         <Modal basic onClose={this.closeModal} open={this.state.modal_terrain !== null}>
           <Modal.Content>
             <ItemRemover
-              onClose={this.closeModal}
               onRemove={this.onRemove}
               confirm_remove={true}
               item={'terrain definition ' + String(this.state.modal_terrain)}
@@ -42,18 +42,19 @@ class Terrains extends Component<IProps, IState> {
             />
           </Modal.Content>
         </Modal>
-        {
-          <TerrainDefinitions
-            terrains={this.props.terrains}
-            onRowClick={terrain => this.openModal(terrain)}
-            onCreateNew={type => this.props.addTerrain(type, this.props.mode)}
-          />
-        }
+        <TerrainDefinitions
+          terrains={toArr(this.props.terrains)}
+          onRowClick={terrain => this.openModal(terrain)}
+          onCreateNew={type => this.props.addTerrain(type, this.props.mode)}
+        />
       </Container>
     )
   }
 
-  onRemove = (): void => this.state.modal_terrain && this.props.deleteTerrain(this.state.modal_terrain)
+  onRemove = (): void => {
+    this.state.modal_terrain && this.props.deleteTerrain(this.state.modal_terrain)
+    this.closeModal()
+  }
 
   onChangeType = (old_type: TerrainType, new_type: TerrainType): void => {
     this.props.changeType(old_type, new_type)

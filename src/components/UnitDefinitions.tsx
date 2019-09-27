@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
 import { Image, Table, List, Icon } from 'semantic-ui-react'
-import { UnitType, UnitDefinition, UnitCalc, ValueType, Units } from '../store/units'
-import { TerrainType } from '../store/terrains'
-import { getImage, calculateValue, calculateBase, calculateModifier, calculateLoss, mergeValues, DefinitionType } from '../base_definition'
-import { toSignedPercent, toNumber, hideZero, toPercent, toManpower } from '../formatters'
-import { CountryName } from '../store/countries'
-import { filterUnitDefinitions } from '../army_utils'
+import { sortBy } from 'lodash'
+
 import StyledNumber from './StyledNumber'
 import VersusList from './VersusList'
+
+import { UnitType, UnitDefinition, UnitCalc, ValueType, Units } from '../store/units'
+import { TerrainType } from '../store/terrains'
+import { CountryName } from '../store/countries'
+import { getImage, calculateValue, calculateBase, calculateModifier, calculateLoss, mergeValues, DefinitionType } from '../base_definition'
+import { toSignedPercent, toNumber, hideZero, toPercent, toManpower } from '../formatters'
+import { filterUnitDefinitions } from '../army_utils'
 import { toArr } from '../utils'
 
 import IconDiscipline from '../images/discipline.png'
@@ -17,14 +20,13 @@ import IconManpower from '../images/manpower.png'
 import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
 import IconAttrition from '../images/attrition.png'
-import { sortBy } from 'lodash'
 
 interface IProps {
   readonly mode: DefinitionType
   readonly country: CountryName
   readonly units: Units
   readonly unit_types: Set<UnitType>
-  readonly terrains: Set<TerrainType>
+  readonly terrains: TerrainType[]
   readonly global_stats: UnitDefinition
   readonly onRowClick: (unit: UnitDefinition) => void
 }
@@ -32,57 +34,50 @@ interface IProps {
 // Display component for showing unit definitions for an army.
 export default class UnitDefinitions extends Component<IProps> {
 
-  render(): JSX.Element {
-    const units = sortBy(toArr(filterUnitDefinitions(this.props.mode, this.props.units[this.props.country])), unit => unit.type)
+  render() {
+    const { mode, units, country, global_stats } = this.props
+    const sorted_units = sortBy(toArr(filterUnitDefinitions(mode, units[country])), unit => unit.type)
+    const icon_strength = mode === DefinitionType.Naval ? IconStrength : IconManpower
     return (
       <Table celled selectable unstackable>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>
-              {this.props.country}
+              {country}
             </Table.HeaderCell>
             <Table.HeaderCell>
               <Image src={IconMorale} avatar />
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <Image src={this.props.mode === DefinitionType.Naval ? IconStrength : IconManpower} avatar />
+              <Image src={icon_strength} avatar />
             </Table.HeaderCell>
-            {
-              this.props.mode === DefinitionType.Naval ? null :
-                <Table.HeaderCell>
-                  <Image src={IconDiscipline} avatar />
-                </Table.HeaderCell>
-            }
+            <Table.HeaderCell>
+              <Image src={IconDiscipline} avatar />
+            </Table.HeaderCell>
             <Table.HeaderCell>
               <Image src={IconOffense} avatar />
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <Image src={this.props.mode === DefinitionType.Naval ? IconAttrition : IconDefense} avatar />
+              <Image src={mode === DefinitionType.Naval ? IconAttrition : IconDefense} avatar />
             </Table.HeaderCell>
             <Table.HeaderCell>
               <Icon name='arrows alternate horizontal' size='big' />
             </Table.HeaderCell>
-            {
-              this.props.mode !== DefinitionType.Naval ? null :
-                <Table.HeaderCell>
-                  <Image src={IconOffense} avatar />
-                  <Image src={IconMorale} avatar />
-                </Table.HeaderCell>
-            }
+            <Table.HeaderCell>
+              <Image src={IconOffense} avatar />
+              <Image src={IconMorale} avatar />
+            </Table.HeaderCell>
             <Table.HeaderCell>
               <Image src={IconAttrition} avatar />
               <Image src={IconMorale} avatar />
             </Table.HeaderCell>
-            {
-              this.props.mode !== DefinitionType.Naval ? null :
-                <Table.HeaderCell>
-                  <Image src={IconOffense} avatar />
-                  <Image src={IconStrength} avatar />
-                </Table.HeaderCell>
-            }
+            <Table.HeaderCell>
+              <Image src={IconOffense} avatar />
+              <Image src={icon_strength} avatar />
+            </Table.HeaderCell>
             <Table.HeaderCell>
               <Image src={IconAttrition} avatar />
-              <Image src={this.props.mode === DefinitionType.Naval ? IconStrength : IconManpower} avatar />
+              <Image src={icon_strength} avatar />
             </Table.HeaderCell>
             <Table.HeaderCell>
               Starting Experience
@@ -97,17 +92,17 @@ export default class UnitDefinitions extends Component<IProps> {
         </Table.Header>
         <Table.Body>
           {
-            this.renderGlobalStats(this.props.global_stats)
+            this.renderGlobalStats(global_stats)
           }
           {
-            units.map(this.renderRow)
+            sorted_units.map(this.renderRow)
           }
         </Table.Body>
       </Table>
     )
   }
 
-  renderRow = (definition: UnitDefinition): JSX.Element => {
+  renderRow = (definition: UnitDefinition) => {
     const unit = mergeValues(definition, this.props.global_stats)
     return (
       <Table.Row key={unit.type} onClick={() => this.props.onRowClick(unit)}>
@@ -121,15 +116,12 @@ export default class UnitDefinitions extends Component<IProps> {
         <Table.Cell>
           {this.props.mode === DefinitionType.Naval ? toPercent(calculateValue(unit, UnitCalc.Strength)) : toManpower(calculateValue(unit, UnitCalc.Strength))}
         </Table.Cell>
-        {
-          this.props.mode === DefinitionType.Naval ? null :
-            <Table.Cell>
-              <StyledNumber
-                value={calculateValue(unit, UnitCalc.Discipline)}
-                formatter={toSignedPercent} hide_zero
-              />
-            </Table.Cell>
-        }
+        <Table.Cell>
+          <StyledNumber
+            value={calculateValue(unit, UnitCalc.Discipline)}
+            formatter={toSignedPercent} hide_zero
+          />
+        </Table.Cell>
         <Table.Cell>
           <StyledNumber
             value={calculateValue(unit, this.props.mode === DefinitionType.Naval ? UnitCalc.DamageDone : UnitCalc.Offense)}
@@ -146,15 +138,12 @@ export default class UnitDefinitions extends Component<IProps> {
         <Table.Cell>
           {toNumber(calculateValue(unit, UnitCalc.Maneuver))}
         </Table.Cell>
-        {
-          this.props.mode !== DefinitionType.Naval ? null :
-            <Table.Cell>
-              <StyledNumber
-                value={calculateValue(unit, UnitCalc.MoraleDamageDone)}
-                formatter={toSignedPercent} hide_zero
-              />
-            </Table.Cell>
-        }
+        <Table.Cell>
+          <StyledNumber
+            value={calculateValue(unit, UnitCalc.MoraleDamageDone)}
+            formatter={toSignedPercent} hide_zero
+          />
+        </Table.Cell>
         <Table.Cell>
           <StyledNumber
             value={calculateValue(unit, UnitCalc.MoraleDamageTaken)}
@@ -162,15 +151,12 @@ export default class UnitDefinitions extends Component<IProps> {
             reverse
           />
         </Table.Cell>
-        {
-          this.props.mode !== DefinitionType.Naval ? null :
-            <Table.Cell>
-              <StyledNumber
-                value={calculateValue(unit, UnitCalc.StrengthDamageDone)}
-                formatter={toSignedPercent} hide_zero
-              />
-            </Table.Cell>
-        }
+        <Table.Cell>
+          <StyledNumber
+            value={calculateValue(unit, UnitCalc.StrengthDamageDone)}
+            formatter={toSignedPercent} hide_zero
+          />
+        </Table.Cell>
         <Table.Cell>
           <StyledNumber
             value={calculateValue(unit, UnitCalc.StrengthDamageTaken)}
@@ -192,7 +178,7 @@ export default class UnitDefinitions extends Component<IProps> {
         <Table.Cell>
           <List>
             {
-              Array.from(this.props.terrains).filter(type => calculateValue(unit, type) !== 0).map(type => (
+              this.props.terrains.filter(type => calculateValue(unit, type) !== 0).map(type => (
                 <List.Item key={type}>
                   {type + ': '}
                   <StyledNumber

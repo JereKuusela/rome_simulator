@@ -44,7 +44,6 @@ class Units extends Component<IProps, IState> {
             {
               this.state.modal_unit ?
                 <ItemRemover
-                  onClose={this.closeModal}
                   onRemove={this.onRemove}
                   confirm_remove={true}
                   item={'item definition ' + String(this.state.modal_unit)}
@@ -91,7 +90,10 @@ class Units extends Component<IProps, IState> {
 
   openModal = (country: CountryName, unit: UnitType): void => this.setState({ modal_country: country, modal_unit: unit })
 
-  onRemove = (): void => this.state.modal_country && this.state.modal_unit && this.props.deleteUnit(this.state.modal_country, this.state.modal_unit)
+  onRemove = (): void => {
+    this.state.modal_country && this.state.modal_unit && this.props.deleteUnit(this.state.modal_country, this.state.modal_unit)
+    this.closeModal()
+  }
 
   onChangeType = (country: CountryName, old_type: UnitType, new_type: UnitType): void => {
     this.props.changeType(country, old_type, new_type)

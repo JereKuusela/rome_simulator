@@ -9,6 +9,7 @@ Tests (high priority):
 Refactor:
 - Getting rid of custom map, reduce, etc functions as much as possible.
 - reducer utils.ts has lots of army/participant functions, some kind of sense? 
+- props to fromStateToProps to do better filtering
 
 Reducers can probably be split to sub reducers (one handles the data structure, other the actual data)
 

@@ -27,10 +27,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
     return (
       <Modal basic onClose={this.props.onClose} open>
         <Modal.Content>
-          <ItemRemover
-            onClose={this.props.onClose}
-            onRemove={this.removeUnit}
-          />
+          <ItemRemover onRemove={this.removeUnit} />
           <UnitDetail
             mode={this.props.mode}
             terrain_types={this.props.terrain_types}
@@ -49,10 +46,11 @@ class ModalArmyUnitDetail extends Component<IProps> {
     )
   }
 
-  removeUnit = (): void => (
-    this.props.info && 
-    this.props.removeUnit(this.props.mode, this.props.info.country, this.props.info.base_unit)
-  )
+  removeUnit = (): void => {
+    this.props.info &&
+      this.props.removeUnit(this.props.mode, this.props.info.country, this.props.info.base_unit)
+    this.props.onClose()
+  }
 
   setBaseValue = (key: string, attribute: ValueType, value: number): void => {
     if (!this.props.info)

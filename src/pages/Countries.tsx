@@ -68,14 +68,14 @@ class Countries extends Component<IProps> {
             <Grid.Column>
               <DropdownSelector
                 items={keys(this.props.traditions)}
-                active={country.culture}
+                value={country.culture}
                 onSelect={item => this.selectCulture(item, selections)}
               />
             </Grid.Column>
             <Grid.Column>
               <DropdownSelector
                 items={keys(this.props.omens)}
-                active={country.religion}
+                value={country.religion}
                 onSelect={item => this.selectReligion(item, country.omen_power, selections)}
               />
             </Grid.Column>

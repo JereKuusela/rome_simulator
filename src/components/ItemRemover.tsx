@@ -3,7 +3,6 @@ import { Table } from 'semantic-ui-react'
 import Confirmation from './Confirmation'
 
 interface IProps {
-  onClose: () => void
   onRemove: () => void
   confirm_remove?: boolean
   item?: string
@@ -13,6 +12,9 @@ interface IState {
   is_confirm: boolean
 }
 
+/**
+ * Component for removing items with a confirmation.
+ */
 export default class ItemRemover extends Component<IProps, IState> {
 
   constructor(props: IProps) {
@@ -21,13 +23,14 @@ export default class ItemRemover extends Component<IProps, IState> {
   }
 
   render(): JSX.Element {
+    const { item } = this.props
     return (
       <Table celled selectable unstackable>
         <Confirmation
           onClose={this.confirmOnClose}
-          onConfirm={this.confirmOnConfirm}
+          onConfirm={this.props.onRemove}
           open={this.state.is_confirm}
-          message={'Are you sure you want to remove ' + this.props.item + ' ?'}
+          message={'Are you sure you want to remove ' + item + ' ?'}
         />
         <Table.Body>
           <Table.Row onClick={this.onClick}>
@@ -37,23 +40,15 @@ export default class ItemRemover extends Component<IProps, IState> {
           </Table.Row>
         </Table.Body>
       </Table>
-
     )
   }
 
-  remove = (): void => {
-    this.props.onRemove()
-    this.props.onClose()
-  }
-
-  confirmOnClose = (): void => this.setState({ is_confirm: false })
-
-  confirmOnConfirm = (): void => this.remove()
+  confirmOnClose = () => this.setState({ is_confirm: false })
 
   onClick = (): void => {
     if (this.props.confirm_remove)
       this.setState({ is_confirm: true })
     else
-      this.remove()
+      this.props.onRemove()
   }
 }

@@ -46,7 +46,7 @@ export default class ValueDropdownModal<T extends string, S extends string> exte
                   this.props.dropdown_label
                 }
                 <DropDownSelector
-                  active={this.state.selected}
+                  value={this.state.selected}
                   items={this.props.items}
                   clearable
                   onSelect={item => this.setState({selected: item})}

@@ -12,7 +12,9 @@ interface IState {
   confirmation: string
 }
 
-
+/**
+ * Confirms an action.
+ */
 export default class Confirmation extends Component<IProps, IState> {
 
   CONFIRM = 'yes'
@@ -23,16 +25,17 @@ export default class Confirmation extends Component<IProps, IState> {
   }
 
   render(): JSX.Element {
+    const { onClose, open, message } = this.props
     return (
-      <Modal onClose={this.props.onClose} open={this.props.open}>
-        <Modal.Header>{this.props.message}</Modal.Header>
+      <Modal onClose={onClose} open={open}>
+        <Modal.Header>{message}</Modal.Header>
         <Modal.Content style={{ paddingLeft: '5em' }}>
           <Grid>
             <Grid.Row>
               Write&nbsp;<i>yes</i>&nbsp;to confirm
               </Grid.Row>
             <Grid.Row>
-              <Input value={this.state.confirmation} onChange={(_, {value}) => this.checkConfirm(value)} autoFocus />
+              <Input value={this.state.confirmation} onChange={(_, { value }) => this.checkConfirm(value)} autoFocus />
             </Grid.Row>
           </Grid>
         </Modal.Content>

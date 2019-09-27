@@ -12,16 +12,17 @@ interface IProps {
  */
 export default class StyledNumber extends Component<IProps> {
 
-  render(): JSX.Element | string {
-    if (this.props.hide_zero && this.props.value === 0)
-      return ''
-    const is_positive = this.props.reverse ? this.props.value < 0 : this.props.value > 0
-    const className = this.props.value === 0 ? '' : (is_positive ? 'value-positive' : 'value-negative')
-    const str = this.props.formatter(this.props.value)
+  render() {
+    const { hide_zero, value, reverse, formatter } = this.props
+    if (hide_zero && value === 0)
+      return null
+    const is_positive = reverse ? value < 0 : value > 0
+    const className = value === 0 ? '' : (is_positive ? 'value-positive' : 'value-negative')
+    const str = formatter(value)
     return (
-        <span className={className}>
+      <span className={className}>
         {str}
-        </span>
+      </span>
     )
   }
 }

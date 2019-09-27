@@ -53,7 +53,6 @@ class ModalTacticSelector extends Component<IProps> {
     <Modal basic onClose={this.props.onClose} open>
       <Modal.Content>
         <ItemSelector
-          onClose={this.props.onClose}
           onSelection={this.selectTactic}
           items={toArr(this.props.tactics)}
           attributes={attributes}
@@ -63,11 +62,12 @@ class ModalTacticSelector extends Component<IProps> {
     )
   }
 
-  selectTactic = (type: TacticType | null): void => (
+  selectTactic = (type: TacticType | null): void => {
     this.props.info && type && this.props.selectTactic(this.props.mode, this.props.info.country, type)
-  )
+    this.props.onClose()
+  }
 
-  
+
   mergeAllValues = (name: CountryName, army: BaseFrontLine): BaseFrontLine => {
     return army.map(value => value && mergeValues(mergeValues(this.props.units[name][value.type], value), this.props.global_stats[name][this.props.mode]))
   }

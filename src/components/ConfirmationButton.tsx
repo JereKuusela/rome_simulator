@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Button } from 'semantic-ui-react'
+
 import Confirmation from './Confirmation'
 
 interface IProps {
@@ -24,27 +25,21 @@ export default class ConfirmationButton extends Component<IProps, IState> {
   }
 
   render(): JSX.Element {
+    const { message, onConfirm, negative, text } = this.props
     return (
-      <div>
+      <>
         <Confirmation
-          message={this.props.message}
+          message={message}
           open={this.state.open}
-          onConfirm={this.onConfirm}
+          onConfirm={onConfirm}
           onClose={this.onClose}
         />
-        <Button negative={this.props.negative} onClick={this.onClick}>
-          {this.props.text}
+        <Button negative={negative} onClick={this.onClick}>
+          {text}
         </Button>
-      </div>
+      </>
     )
   }
-  onClick = () => {
-    this.setState({ open: true })
-  }
-  onClose = () => {
-    this.setState({ open: false })
-  }
-  onConfirm = () => {
-    this.props.onConfirm()
-  }
+  onClick = () => this.setState({ open: true })
+  onClose = () => this.setState({ open: false })
 }

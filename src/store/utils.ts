@@ -39,8 +39,8 @@ export const mergeUnitTypes = (state: AppState): Set<UnitType> => {
  * Returns terrain types for the current mode.
  * @param state Application state.
  */
-export const filterTerrainTypes = (state: AppState): Set<TerrainType> => {
-  return new Set(toArr(filterTerrains(state), terrain => terrain.type))
+export const filterTerrainTypes = (state: AppState): TerrainType[] => {
+  return toArr(filterTerrains(state), terrain => terrain.type)
 }
 
 /**

@@ -15,7 +15,7 @@ interface IProps {
   readonly unit: Unit
   readonly unit_types: Set<UnitType>
   readonly show_statistics: boolean
-  readonly terrain_types: Set<TerrainType>
+  readonly terrain_types: TerrainType[]
   readonly unit_types_as_dropdown?: boolean
   readonly onCustomBaseValueChange: (key: string, attribute: ValueType, value: number) => void
   readonly onCustomModifierValueChange: (key: string, attribute: ValueType, value: number) => void
@@ -208,7 +208,7 @@ export default class UnitDetail extends Component<IProps> {
             Array.from(this.props.unit_types).map(value => this.renderRow(this.props.unit, value))
           }
           {
-            Array.from(this.props.terrain_types).map(value => this.renderRow(this.props.unit, value))
+            this.props.terrain_types.map(value => this.renderRow(this.props.unit, value))
           }
         </Table.Body>
       </Table>
