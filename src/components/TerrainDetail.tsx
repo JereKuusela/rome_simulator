@@ -1,8 +1,13 @@
 import React, { Component } from 'react'
-import { Table, Input, Dropdown } from 'semantic-ui-react'
+import { Table, Dropdown } from 'semantic-ui-react'
+
+import DetailInput from './DetailInput'
+
 import { TerrainDefinition, ValueType, TerrainType, TerrainCalc, valueToString, LocationType } from '../store/terrains'
+
 import { getBaseValue, explainShort, DefinitionType } from '../base_definition'
 import { values } from '../utils'
+import { renderModeDropdown, renderHeaders } from './utils'
 
 interface IProps {
   readonly custom_value_key: string
@@ -19,54 +24,21 @@ export default class TerrainDetail extends Component<IProps> {
 
   readonly attributes = values(TerrainCalc)
   readonly locations = values(LocationType)
-  readonly modes = values(DefinitionType)
   readonly headers = ['Attribute', 'Value', 'Custom value', 'Explained']
 
-  renderModeDropdown = (type: TerrainType, mode: DefinitionType): JSX.Element => {
-    return (
-      <Dropdown
-        text={mode}
-        selection
-        value={mode}
-      >
-        <Dropdown.Menu>
-          {
-            this.modes.map(key => (
-              <Dropdown.Item value={key} text={key} key={key} active={mode === key}
-                onClick={() => this.props.onModeChange && this.props.onModeChange(type, key)}
-              />
-            ))
-          }
-        </Dropdown.Menu>
-      </Dropdown>
-    )
-  }
-
   render(): JSX.Element {
+    const { terrain, onTypeChange, onModeChange, onImageChange } = this.props
+    const { type, mode, image, location } = terrain
     return (
-      <Table celled unstackable>
-        <Table.Header>
-          <Table.Row>
-            {
-              Array.from(this.headers).map((value) => (
-                <Table.HeaderCell key={value}>
-                  {value}
-                </Table.HeaderCell>
-              ))
-            }
-          </Table.Row>
-        </Table.Header>
+      <Table celled unstackable>   
+        {renderHeaders(this.headers)}
         <Table.Body>
           <Table.Row>
             <Table.Cell>
               Type
             </Table.Cell>
             <Table.Cell collapsing>
-              <Input
-                size='mini'
-                defaultValue={this.props.terrain.type}
-                onChange={(_, data) => this.props.onTypeChange(this.props.terrain.type, data.value as TerrainType)}
-              />
+              <DetailInput value={type} onChange={value => onTypeChange(type, value)} />
             </Table.Cell>
             <Table.Cell />
             <Table.Cell />
@@ -76,7 +48,7 @@ export default class TerrainDetail extends Component<IProps> {
               Mode
             </Table.Cell>
             <Table.Cell collapsing>
-              {this.renderModeDropdown(this.props.terrain.type, this.props.terrain.mode)}
+              {renderModeDropdown(mode, mode => onModeChange(type, mode))}
             </Table.Cell>
             <Table.Cell />
             <Table.Cell />
@@ -88,11 +60,7 @@ export default class TerrainDetail extends Component<IProps> {
               Image
             </Table.Cell>
             <Table.Cell collapsing>
-              <Input
-                size='mini'
-                defaultValue={this.props.terrain.image}
-                onChange={(_, data) => this.props.onImageChange(this.props.terrain.type, data.value)}
-              />
+              <DetailInput value={image} onChange={value => onImageChange(type, value)} />
             </Table.Cell>
             <Table.Cell />
             <Table.Cell />
@@ -102,31 +70,31 @@ export default class TerrainDetail extends Component<IProps> {
               Location
             </Table.Cell>
             <Table.Cell collapsing>
-              {this.renderLocationDropdown()}
+              {this.renderLocationDropdown(type, location)}
             </Table.Cell>
             <Table.Cell />
             <Table.Cell />
           </Table.Row>
           {
-            this.attributes.map(value => this.renderRow(this.props.terrain, value))
+            this.attributes.map(value => this.renderRow(terrain, value))
           }
         </Table.Body>
       </Table>
     )
   }
 
-  renderLocationDropdown = (): JSX.Element => {
+  renderLocationDropdown = (type: TerrainType, location: LocationType) => {
     return (
       <Dropdown
-        text={this.props.terrain.location}
+        text={location}
         selection
-        value={this.props.terrain.location}
+        value={location}
       >
         <Dropdown.Menu>
           {
             this.locations.map(value => (
-              <Dropdown.Item value={value} text={value} key={value} active={this.props.terrain.location === value}
-                onClick={() => this.props.onLocationChange(this.props.terrain.type, value)}
+              <Dropdown.Item value={value} text={value} key={value} active={location === value}
+                onClick={() => this.props.onLocationChange(type, value)}
               />
             ))
           }
@@ -136,7 +104,8 @@ export default class TerrainDetail extends Component<IProps> {
   }
 
   renderRow = (tactic: TerrainDefinition, attribute: ValueType): JSX.Element => {
-    let base_value = getBaseValue(tactic, attribute, this.props.custom_value_key)
+    const { custom_value_key, onCustomBaseValueChange } = this.props
+    let base_value = getBaseValue(tactic, attribute, custom_value_key)
 
     return (
       <Table.Row key={attribute}>
@@ -147,12 +116,7 @@ export default class TerrainDetail extends Component<IProps> {
           {valueToString(tactic, attribute)}
         </Table.Cell>
         <Table.Cell collapsing>
-          <Input
-            size='mini'
-            defaultValue={base_value}
-            onChange={(_, data) => this.props.onCustomBaseValueChange(tactic.type, this.props.custom_value_key, attribute, Number(data.value))
-            }
-          />
+          <DetailInput value={String(base_value)} onChange={value => onCustomBaseValueChange(tactic.type, custom_value_key, attribute, Number(value))} />
         </Table.Cell>
         <Table.Cell>
           {explainShort(tactic, attribute)}

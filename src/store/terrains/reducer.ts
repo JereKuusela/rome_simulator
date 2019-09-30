@@ -16,7 +16,7 @@ class TerrainsReducer extends ImmerReducer<TerrainDefinitions> {
   }
 
   addTerrain(type: TerrainType, mode: DefinitionType) {
-    this.draftState[type] = { type, mode, image: '' }
+    this.draftState[type] = { type, mode, image: '', location: LocationType.Border }
   }
 
   changeType(old_type: TerrainType, type: TerrainType) {

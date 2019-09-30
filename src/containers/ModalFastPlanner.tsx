@@ -108,7 +108,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
     forEach(changes, (value, key) => {
       const original = originals ? originals[key] || 0 : 0
       if (value > original)
-        units = units.concat(mapRange(value - original, _ => ({ id: generateIds ? getNextId() : 0, type: key  })))
+        units = units.concat(mapRange(value - original, _ => ({ id: generateIds ? getNextId() : 0, type: key, image: ''  })))
     })
     return units
   }

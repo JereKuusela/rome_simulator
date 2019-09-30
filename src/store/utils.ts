@@ -27,12 +27,12 @@ export const getSettings = (state: AppState): Settings => {
  * Returns unit types for the current mode from all armies.
  * @param state Application state.
  */
-export const mergeUnitTypes = (state: AppState): Set<UnitType> => {
-  return reduce(state.units, (previous, current) => {
+export const mergeUnitTypes = (state: AppState): UnitType[] => {
+  return Array.from(reduce(state.units, (previous, current) => {
     const arr = toArr(current)
     arr.filter(unit => isIncludedInMode(state.settings.mode, unit)).forEach(unit => previous.add(unit.type))
     return previous
-  }, new Set<UnitType>())
+  }, new Set<UnitType>()))
 }
 
 /**
@@ -55,8 +55,8 @@ export const filterTerrains = (state: AppState): TerrainDefinitions => {
  * Returns tactic types for the current mode.
  * @param state Application state.
  */
-export const filterTacticTypes = (state: AppState): Set<TacticType> => {
-  return new Set(toArr(filterTactics(state), tactic => tactic.type))
+export const filterTacticTypes = (state: AppState): TacticType[] => {
+  return toArr(filterTactics(state), tactic => tactic.type)
 }
 
 /**

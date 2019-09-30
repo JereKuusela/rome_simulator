@@ -20,6 +20,9 @@ interface IState<T, S> {
   selected: S
 }
 
+/**
+ * Component for choosing a dropdown value in a modal.
+ */
 export default class ValueDropdownModal<T extends string, S extends string> extends Component<IProps<T, S>, IState<T, S>> {
 
   constructor(props: IProps<T, S>) {
@@ -27,35 +30,37 @@ export default class ValueDropdownModal<T extends string, S extends string> exte
     this.state = { value: this.props.value, selected: this.props.selected }
   }
 
-  render(): JSX.Element {
+  render() {
+    const { onClose, open, message, items, value_label, dropdown_label, button_message } = this.props
+    const { value, selected } = this.state
     return (
-      <Modal onClose={this.props.onClose} open={this.props.open}>
-        <Modal.Header>{this.props.message}</Modal.Header>
+      <Modal onClose={onClose} open={open}>
+        <Modal.Header>{message}</Modal.Header>
         <Modal.Content style={{ paddingLeft: '5em' }}>
           <Grid>
             <Grid.Row columns='2'>
               <Grid.Column>
                 <Input
-                  value={this.state.value}
-                  placeholder={this.props.value_label}
-                  onChange={(_, event) => this.setState({ value: event.value as T })}
+                  value={value}
+                  placeholder={value_label}
+                  onChange={(_, { value }) => this.setState({ value: value as T })}
                 />
               </Grid.Column>
               <Grid.Column>
                 {
-                  this.props.dropdown_label
+                  dropdown_label
                 }
                 <DropDownSelector
-                  value={this.state.selected}
-                  items={this.props.items}
+                  value={selected}
+                  items={items}
                   clearable
-                  onSelect={item => this.setState({selected: item})}
+                  onSelect={item => this.setState({ selected: item })}
                 />
               </Grid.Column>
             </Grid.Row>
             <Grid.Row>
-              <Button onClick={this.onSuccess} disabled={!this.state.value}>
-                {this.props.button_message}
+              <Button onClick={this.onSuccess} disabled={!value}>
+                {button_message}
               </Button>
             </Grid.Row>
           </Grid>
@@ -64,9 +69,11 @@ export default class ValueDropdownModal<T extends string, S extends string> exte
     )
   }
 
-  onSuccess = (): void => {
-    if (this.state.value)
-      this.props.onSuccess(this.state.value, this.state.selected)
-    this.props.onClose()
+  onSuccess = () => {
+    const { onSuccess, onClose } = this.props
+    const { value, selected } = this.state
+    if (value)
+      onSuccess(value, selected)
+    onClose()
   }
 }

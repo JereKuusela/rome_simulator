@@ -25,7 +25,7 @@ interface IProps {
   readonly mode: DefinitionType
   readonly country: CountryName
   readonly units: Units
-  readonly unit_types: Set<UnitType>
+  readonly unit_types: UnitType[]
   readonly terrains: TerrainType[]
   readonly global_stats: UnitDefinition
   readonly onRowClick: (unit: UnitDefinition) => void

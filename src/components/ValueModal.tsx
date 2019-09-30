@@ -14,7 +14,9 @@ interface IState<T> {
   value: T
 }
 
-
+/**
+ * Component for setting a value in a modal.
+ */
 export default class ValueModal<T extends string> extends Component<IProps<T>, IState<T>> {
 
   constructor(props: IProps<T>) {
@@ -22,18 +24,20 @@ export default class ValueModal<T extends string> extends Component<IProps<T>, I
     this.state = { value: this.props.initial }
   }
 
-  render(): JSX.Element {
+  render() {
+    const { open, onClose, message, button_message } = this.props
+    const { value } = this.state
     return (
-      <Modal onClose={this.props.onClose} open={this.props.open}>
-        <Modal.Header>{this.props.message}</Modal.Header>
+      <Modal onClose={onClose} open={open}>
+        <Modal.Header>{message}</Modal.Header>
         <Modal.Content style={{ paddingLeft: '5em' }}>
           <Grid>
             <Grid.Row>
-              <Input value={this.state.value} onChange={(_, event) => this.setState({ value: event.value as T })} />
+              <Input value={value} onChange={(_, { value }) => this.setState({ value: value as T })} />
             </Grid.Row>
             <Grid.Row>
-              <Button onClick={this.onSuccess} disabled={!this.state.value}>
-                {this.props.button_message}
+              <Button onClick={this.onSuccess} disabled={!value}>
+                {button_message}
               </Button>
             </Grid.Row>
           </Grid>
@@ -42,9 +46,11 @@ export default class ValueModal<T extends string> extends Component<IProps<T>, I
     )
   }
 
-  onSuccess = (): void => {
-    if (this.state.value)
-      this.props.onSuccess(this.state.value)
-    this.props.onClose()
+  onSuccess = () => {
+    const { onSuccess, onClose } = this.props
+    const { value } = this.state
+    if (value)
+      onSuccess(value)
+    onClose()
   }
 }

@@ -1,19 +1,23 @@
 import React, { Component } from 'react'
-import { Table, Input, Dropdown, Image, Button } from 'semantic-ui-react'
+import { Table, Dropdown } from 'semantic-ui-react'
+
+import DetailInput from './DetailInput'
+import DetailToggle from './DetailToggle'
+
 import { UnitType, Unit, UnitCalc, ValueType, valueToString } from '../store/units'
 import { TerrainType } from '../store/terrains'
+
 import { getBaseValue, getLossValue, getModifierValue, explain, DefinitionType, calculateValue } from '../base_definition'
 import { toMaintenance } from '../formatters'
 import { values } from '../utils'
-
-import IconYes from '../images/yes.png'
-import IconNo from '../images/no.png'
+import { renderModeDropdown, renderHeaders } from './utils'
+import DetailValueInput from './DetailValueInput'
 
 interface IProps {
   readonly mode: DefinitionType
   readonly custom_value_key: string
   readonly unit: Unit
-  readonly unit_types: Set<UnitType>
+  readonly unit_types: UnitType[]
   readonly show_statistics: boolean
   readonly terrain_types: TerrainType[]
   readonly unit_types_as_dropdown?: boolean
@@ -35,7 +39,7 @@ export default class UnitDetail extends Component<IProps> {
   readonly modes = values(DefinitionType)
   readonly headers = ['Attribute', 'Value', 'Custom base', 'Custom modifier', 'Custom losses', 'Explained']
 
-  renderUnitTypeDropdown = (type: UnitType): JSX.Element => {
+  renderUnitTypeDropdown = (type: UnitType) => {
     return (
       <Dropdown
         text={type}
@@ -45,7 +49,7 @@ export default class UnitDetail extends Component<IProps> {
       >
         <Dropdown.Menu>
           {
-            Array.from(this.props.unit_types).map(key => (
+            this.props.unit_types.map(key => (
               <Dropdown.Item value={key} text={key} key={key} active={type === key}
                 onClick={() => this.props.onTypeChange && this.props.onTypeChange(key)}
               />
@@ -56,51 +60,21 @@ export default class UnitDetail extends Component<IProps> {
     )
   }
 
-  renderModeDropdown = (mode: DefinitionType): JSX.Element => {
-    return (
-      <Dropdown
-        text={mode}
-        selection
-        value={mode}
-        disabled={this.props.unit.is_defeated}
-      >
-        <Dropdown.Menu>
-          {
-            this.modes.map(key => (
-              <Dropdown.Item value={key} text={key} key={key} active={mode === key}
-                onClick={() => this.props.onModeChange && this.props.onModeChange(key)}
-              />
-            ))
-          }
-        </Dropdown.Menu>
-      </Dropdown>
-    )
-  }
-
-  render(): JSX.Element {
-
+  render() {
+    const { unit, onTypeChange, onModeChange, onImageChange, unit_types_as_dropdown, onIsFlankToggle, onCanAssaultToggle } = this.props
+    const { id, type, mode, image, is_defeated, is_flank, can_assault } = unit
     return (
       <Table celled selectable unstackable>
-        <Table.Header>
-          <Table.Row>
-            {
-              Array.from(this.headers).map((value) => (
-                <Table.HeaderCell key={value}>
-                  {value}
-                </Table.HeaderCell>
-              ))
-            }
-          </Table.Row>
-        </Table.Header>
+        {renderHeaders(this.headers)}
         <Table.Body>
           {
-            this.props.unit.id ?
+            id ?
               <Table.Row>
                 <Table.Cell>
                   Identifier
                 </Table.Cell>
                 <Table.Cell>
-                  {this.props.unit.id}
+                  {id}
                 </Table.Cell>
                 <Table.Cell />
                 <Table.Cell />
@@ -109,20 +83,16 @@ export default class UnitDetail extends Component<IProps> {
               : null
           }
           {
-            this.props.onTypeChange ?
+            onTypeChange ?
               <Table.Row>
                 <Table.Cell>
                   Type
                 </Table.Cell>
                 <Table.Cell collapsing>
-                  {this.props.unit_types_as_dropdown ?
-                    this.renderUnitTypeDropdown(this.props.unit.type) :
-                    <Input
-                      size='mini'
-                      disabled={this.props.unit.is_defeated}
-                      defaultValue={this.props.unit.type}
-                      onChange={(_, data) => this.props.onTypeChange && this.props.onTypeChange(data.value as UnitType)}
-                    />
+                  {
+                    unit_types_as_dropdown ?
+                      this.renderUnitTypeDropdown(type) :
+                      <DetailInput value={type} disabled={is_defeated} onChange={onTypeChange} />
                   }
                 </Table.Cell>
                 <Table.Cell />
@@ -133,13 +103,13 @@ export default class UnitDetail extends Component<IProps> {
               : null
           }
           {
-            this.props.onModeChange ?
+            onModeChange ?
               <Table.Row>
                 <Table.Cell>
                   Mode
                 </Table.Cell>
                 <Table.Cell collapsing>
-                  {this.renderModeDropdown(this.props.unit.mode)}
+                  {renderModeDropdown(mode, mode => onModeChange!(mode), is_defeated)}
                 </Table.Cell>
                 <Table.Cell />
                 <Table.Cell />
@@ -149,18 +119,13 @@ export default class UnitDetail extends Component<IProps> {
               : null
           }
           {
-            this.props.onImageChange ?
+            onImageChange ?
               <Table.Row>
                 <Table.Cell>
                   Image
                 </Table.Cell>
                 <Table.Cell collapsing>
-                  <Input
-                    size='mini'
-                    disabled={this.props.unit.is_defeated}
-                    defaultValue={this.props.unit.image}
-                    onChange={(_, data) => this.props.onImageChange && this.props.onImageChange(data.value)}
-                  />
+                  <DetailInput value={image} disabled={is_defeated} onChange={onImageChange} />
                 </Table.Cell>
                 <Table.Cell />
                 <Table.Cell />
@@ -175,9 +140,7 @@ export default class UnitDetail extends Component<IProps> {
                 Is flank?
             </Table.Cell>
               <Table.Cell collapsing>
-                <Button size='mini' basic compact disabled={!this.props.onIsFlankToggle} className='no-dim' onClick={this.props.onIsFlankToggle}>
-                  <Image avatar src={this.props.unit.is_flank ? IconYes : IconNo} />
-                </Button>
+                <DetailToggle value={is_flank} onClick={onIsFlankToggle} />
               </Table.Cell>
               <Table.Cell />
               <Table.Cell />
@@ -191,9 +154,7 @@ export default class UnitDetail extends Component<IProps> {
                 Can assault?
             </Table.Cell>
               <Table.Cell collapsing>
-                <Button size='mini' basic compact disabled={!this.props.onCanAssaultToggle} className='no-dim' onClick={this.props.onCanAssaultToggle}>
-                  <Image avatar src={this.props.unit.can_assault ? IconYes : IconNo} />
-                </Button>
+                <DetailToggle value={can_assault} onClick={onCanAssaultToggle} />
               </Table.Cell>
               <Table.Cell />
               <Table.Cell />
@@ -202,27 +163,29 @@ export default class UnitDetail extends Component<IProps> {
             </Table.Row>
           }
           {
-            this.attributes.map(value => this.renderRow(this.props.unit, value))
+            this.attributes.map(this.renderRow)
           }
           {
-            Array.from(this.props.unit_types).map(value => this.renderRow(this.props.unit, value))
+            this.props.unit_types.map(this.renderRow)
           }
           {
-            this.props.terrain_types.map(value => this.renderRow(this.props.unit, value))
+            this.props.terrain_types.map(this.renderRow)
           }
         </Table.Body>
       </Table>
     )
   }
 
-  renderRow = (unit: Unit, attribute: ValueType): JSX.Element | null => {
+  renderRow = (attribute: ValueType) => {
+    const { unit, show_statistics, custom_value_key, onCustomBaseValueChange, onCustomModifierValueChange, onCustomLossValueChange } = this.props
+    const { is_defeated } = unit
     if (attribute === UnitCalc.MovementSpeed || attribute === UnitCalc.RecruitTime)
       return null
-    if (!this.props.show_statistics && (attribute === UnitCalc.StrengthDepleted || attribute === UnitCalc.MoraleDepleted))
+    if (!show_statistics && (attribute === UnitCalc.StrengthDepleted || attribute === UnitCalc.MoraleDepleted))
       return null
-    const base_value = getBaseValue(unit, attribute, this.props.custom_value_key)
-    const modifier_value = getModifierValue(unit, attribute, this.props.custom_value_key)
-    const loss_value = getLossValue(unit, attribute, this.props.custom_value_key)
+    const base_value = getBaseValue(unit, attribute, custom_value_key)
+    const modifier_value = getModifierValue(unit, attribute, custom_value_key)
+    const loss_value = getLossValue(unit, attribute, custom_value_key)
     let value = valueToString(unit, attribute)
     if (attribute === UnitCalc.Maintenance)
       value += ' (' + toMaintenance(calculateValue(unit, UnitCalc.Cost) * calculateValue(unit, UnitCalc.Maintenance)) + ')'
@@ -236,37 +199,18 @@ export default class UnitDetail extends Component<IProps> {
           {value}
         </Table.Cell>
         <Table.Cell collapsing>
-          <Input
-            size='mini'
-            style={{ width: 50 }}
-            defaultValue={base_value}
-            disabled={unit.is_defeated}
-            onChange={(_, { value }) => this.props.onCustomBaseValueChange(this.props.custom_value_key, attribute, Number(value))
-            }
-          />
+          <DetailValueInput value={base_value} disabled={is_defeated} onChange={value => onCustomBaseValueChange(custom_value_key, attribute, value)} />
         </Table.Cell>
         <Table.Cell collapsing>
           {
             (attribute === UnitCalc.Morale || attribute === UnitCalc.Strength || attribute === UnitCalc.Maintenance || attribute === UnitCalc.Cost || attribute === UnitCalc.AttritionWeight) &&
-            <Input
-              size='mini'
-              style={{ width: 50 }}
-              defaultValue={modifier_value}
-              disabled={unit.is_defeated}
-              onChange={(_, { value }) => this.props.onCustomModifierValueChange(this.props.custom_value_key, attribute, Number(value))}
-            />
+            <DetailValueInput value={modifier_value} disabled={is_defeated} onChange={value => onCustomModifierValueChange(custom_value_key, attribute, value)} />
           }
         </Table.Cell>
         <Table.Cell collapsing>
           {
             (attribute === UnitCalc.Morale || attribute === UnitCalc.Strength) &&
-            <Input
-              size='mini'
-              style={{ width: 50 }}
-              defaultValue={loss_value}
-              disabled={unit.is_defeated}
-              onChange={(_, { value }) => this.props.onCustomLossValueChange(this.props.custom_value_key, attribute, Number(value))}
-            />
+            <DetailValueInput value={loss_value} disabled={is_defeated} onChange={value => onCustomLossValueChange(custom_value_key, attribute, value)} />
           }
         </Table.Cell>
         <Table.Cell>

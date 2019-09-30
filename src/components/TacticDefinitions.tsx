@@ -15,7 +15,7 @@ import { renderHeaders } from './utils'
 interface IProps {
   readonly tactics: TacticDefinition[]
   readonly units: Units
-  readonly unit_types: Set<UnitType>
+  readonly unit_types: UnitType[]
   readonly onRowClick: (type: TacticType) => void
   readonly onCreateNew: (type: TacticType) => void
 }
@@ -94,8 +94,8 @@ export default class TacticDefinitions extends Component<IProps, IState> {
   }
 
   renderVersus = (tactic: TacticDefinition) => {
-    const non_zero = this.props.tactics.filter(versus => calculateValue(tactic, versus.type))
-    return non_zero.map(versus => (
+    const filtered = this.props.tactics.filter(versus => calculateValue(tactic, versus.type))
+    return filtered.map(versus => (
       <List.Item key={versus.type} style={{ marginLeft: 0, marginRight: '1em' }}>
         <Image src={getImage(versus)} avatar />
         <StyledNumber

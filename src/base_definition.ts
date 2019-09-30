@@ -26,7 +26,7 @@ type Values<S extends string> = { [key in S]: ValuesSub }
 
 export interface BaseDefinition<T extends string, S extends string> {
   readonly type: T
-  readonly image?: string
+  readonly image: string
   readonly base_values?: Values<S>
   readonly modifier_values?: Values<S>
   readonly loss_values?: Values<S>
@@ -35,7 +35,7 @@ export interface BaseDefinition<T extends string, S extends string> {
 export interface BaseValuesDefinition<T extends string, S extends string> {
   readonly type: T
   readonly mode: DefinitionType
-  readonly image?: string
+  readonly image: string
   readonly base_values?: Values<S>
 }
 

@@ -10,26 +10,30 @@ import { toArr } from '../utils'
 
 interface IProps {
   readonly units: Units
-  readonly unit_types: Set<UnitType>
+  readonly unit_types: UnitType[]
   readonly item: UnitDefinition | TacticDefinition
   readonly styled?: boolean
 }
 
+/**
+ * Shows unit's strength and weakness versus other units.
+ */
 export default class VersusList extends Component<IProps> {
 
-  render(): JSX.Element {
+  render() {
+    const { unit_types, item, units, styled } = this.props
     return (
       <List horizontal>
         {
-          Array.from(this.props.unit_types).filter(type => calculateValue(this.props.item, type)).map(type => (
+          unit_types.filter(type => calculateValue(item, type)).map(type => (
             <List.Item key={type} style={{ marginLeft: 0, marginRight: '1em' }}>
-              {renderImages(getImages(toArr(this.props.units), type))}
-              {this.props.styled ?
+              {renderImages(getImages(toArr(units), type))}
+              {styled ?
                 <StyledNumber
-                  value={calculateValue(this.props.item, type)}
+                  value={calculateValue(item, type)}
                   formatter={toSignedPercent}
                 />
-                : toSignedPercent(calculateValue(this.props.item, type))
+                : toSignedPercent(calculateValue(item, type))
               }
             </List.Item>
           ))
