@@ -1,26 +1,32 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { UnitType, setGlobalValue, ValueType, Unit } from '../store/units'
+
+import UnitDetail from '../components/UnitDetail'
+
 import { AppState } from '../store/'
-import { ValuesType, Mode } from '../base_definition'
-import { mergeUnitTypes, filterTerrainTypes } from '../store/utils'
+import { UnitType, setGlobalValue, ValueType, Unit } from '../store/units'
 import { CountryName } from '../store/countries'
 import { invalidateCountry } from '../store/battle'
-import UnitDetail from '../components/UnitDetail'
+
+import { ValuesType } from '../base_definition'
 
 const CUSTOM_VALUE_KEY = 'Global'
 
+interface Props {
+  readonly country: CountryName | null
+  readonly unit: UnitType | null
+}
+
 class ModalGlobalStatsDetail extends Component<IProps> {
-  render(): JSX.Element | null {
-    if (!this.props.country || this.props.unit)
+  render() {
+    const { country, unit, global_stats, mode } = this.props
+    if (!country || unit)
       return null
     return (
       <UnitDetail
-        mode={this.props.mode}
-        terrain_types={this.props.terrain_types}
+        mode={mode}
         custom_value_key={CUSTOM_VALUE_KEY}
-        unit={this.props.global_stats[this.props.country][this.props.mode] as Unit}
-        unit_types={this.props.unit_types}
+        unit={global_stats[country][this.props.mode] as Unit}
         onCustomBaseValueChange={this.setGlobalBaseValue}
         onCustomModifierValueChange={this.setGlobalModifierValue}
         onCustomLossValueChange={this.setGlobalLossValue}
@@ -29,35 +35,29 @@ class ModalGlobalStatsDetail extends Component<IProps> {
     )
   }
 
-  setGlobalBaseValue = (key: string, attribute: ValueType, value: number) => {
-    !Number.isNaN(value) && this.props.country && this.props.setGlobalValue(this.props.country, this.props.mode, ValuesType.Base, key, attribute, value)
-  }
+  setGlobalBaseValue = (key: string, attribute: ValueType, value: number) => this.setValue(key, ValuesType.Base, attribute, value)
 
-  setGlobalModifierValue = (key: string, attribute: ValueType, value: number) => {
-    !Number.isNaN(value) && this.props.country && this.props.setGlobalValue(this.props.country, this.props.mode, ValuesType.Modifier, key, attribute, value)
-  }
+  setGlobalModifierValue = (key: string, attribute: ValueType, value: number) => this.setValue(key, ValuesType.Modifier, attribute, value)
 
-  setGlobalLossValue = (key: string, attribute: ValueType, value: number) => {
-    !Number.isNaN(value) && this.props.country && this.props.setGlobalValue(this.props.country, this.props.mode, ValuesType.Loss, key, attribute, value)
+  setGlobalLossValue = (key: string, attribute: ValueType, value: number) => this.setValue(key, ValuesType.Loss, attribute, value)
+
+  setValue = (key: string, type: ValuesType, attribute: ValueType, value: number) => {
+    if (Number.isNaN(value))
+      return
+    const { country, mode } = this.props
+    this.props.setGlobalValue(country!, mode, type, key, attribute, value)
+    this.props.invalidateCountry(country!)
   }
 }
 
 const mapStateToProps = (state: AppState) => ({
   global_stats: state.global_stats,
-  terrain_types: filterTerrainTypes(state),
-  unit_types: mergeUnitTypes(state),
   mode: state.settings.mode
 })
 
-const mapDispatchToProps = (dispatch: any) => ({
-  setGlobalValue: (country: CountryName, mode: Mode, type: ValuesType, key: string, attribute: ValueType, value: number) => (
-    dispatch(setGlobalValue(country, mode, type, key, attribute, value)) && dispatch(invalidateCountry(country))
-  )
-})
+const actions = { setGlobalValue, invalidateCountry }
 
-interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {
-  country: CountryName | null
-  unit: UnitType | null
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ModalGlobalStatsDetail)
+type S = ReturnType<typeof mapStateToProps>
+type D = typeof actions
+interface IProps extends Props, S, D { }
+export default connect(mapStateToProps, actions)(ModalGlobalStatsDetail)

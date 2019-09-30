@@ -6,13 +6,17 @@ import FastPlanner from '../components/FastPlanner'
 import ArmyCosts from '../components/ArmyCosts'
 import { UnitType, BaseUnit } from '../store/units'
 import { clearUnits, removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits, invalidate, Side, BaseReserve } from '../store/battle'
-import { getBaseUnits, filterUnitTypes, getParticipant, getUnitDefinitions } from '../store/utils'
+import { getBaseUnits, filterUnitTypesBySide, getParticipant, getUnitDefinitions } from '../store/utils'
 import { mapRange, forEach } from '../utils'
 import { getNextId, mergeBaseUnitsWithDefinitions } from '../army_utils'
 import { CountryName } from '../store/countries'
-import { Mode } from '../base_definition'
 
 type Units = { [key in UnitType]: number }
+
+interface Props {
+  open: boolean
+  onClose: () => void
+}
 
 interface IState {
   changes_a: Units
@@ -26,37 +30,36 @@ class ModalFastPlanner extends Component<IProps, IState> {
     this.state = { changes_a: {} as Units, changes_d: {} as Units }
   }
 
-  originals_a? = {} as Units
-  originals_d? = {} as Units
+  originals_a?= {} as Units
+  originals_d?= {} as Units
 
-  render(): JSX.Element | null {
-    if (!this.props.open)
+  render() {
+    const { open, types_a, types_d, definitions_a, definitions_d, units } = this.props
+    let { base_units_a, base_units_d } = this.props
+    const { changes_a, changes_d } = this.state
+    if (!open)
       return null
-    //// The logic is bit tricky here.
-    //Base units are needed because there might be custom changes.
-    let base_units_a = { ...this.props.base_units_a }
-    let base_units_d = { ...this.props.base_units_d }
-    const types_a = this.props.types_a
-    const types_d = this.props.types_d
-    this.originals_a = Array.from(types_a).reduce((map, value) => ({ ...map, [value]: this.countUnits(base_units_a.reserve, value) }), {} as Units)
-    this.originals_d = Array.from(types_d).reduce((map, value) => ({ ...map, [value]: this.countUnits(base_units_d.reserve, value) }), {} as Units)
-    // Current changes to the reserve must alse be applied.
-    base_units_a = { ...base_units_a, reserve: this.editReserve(base_units_a.reserve, this.state.changes_a, this.originals_a) }
-    base_units_d = { ...base_units_d, reserve: this.editReserve(base_units_d.reserve, this.state.changes_d, this.originals_d) }
+    //// The logic is a bit tricky here.
+    // Base units are needed because there might be unit specific changes.
+    this.originals_a = types_a.reduce((map, value) => ({ ...map, [value]: this.countUnits(base_units_a.reserve, value) }), {} as Units)
+    this.originals_d = types_d.reduce((map, value) => ({ ...map, [value]: this.countUnits(base_units_d.reserve, value) }), {} as Units)
+    // Current changes to the reserve must also be applied.
+    base_units_a = { ...base_units_a, reserve: this.editReserve(base_units_a.reserve, changes_a, this.originals_a) }
+    base_units_d = { ...base_units_d, reserve: this.editReserve(base_units_d.reserve, changes_d, this.originals_d) }
     // And finally both merged with definitions to get real values.
-    const units_a = mergeBaseUnitsWithDefinitions(base_units_a, this.props.definitions_a)
-    const units_d = mergeBaseUnitsWithDefinitions(base_units_d, this.props.definitions_d)
+    const units_a = mergeBaseUnitsWithDefinitions(base_units_a, definitions_a)
+    const units_d = mergeBaseUnitsWithDefinitions(base_units_d, definitions_d)
     return (
       <Modal basic onClose={this.onClose} open centered={false}>
         <Modal.Content>
           <FastPlanner
-            changes_a={this.state.changes_a}
+            changes_a={changes_a}
             reserve_a={this.originals_a}
-            units={this.props.units}
-            types_a={types_a}
-            changes_d={this.state.changes_d}
+            units={units}
+            types_a={new Set(types_a)}
+            changes_d={changes_d}
             reserve_d={this.originals_d}
-            types_d={types_d}
+            types_d={new Set(types_d)}
             onValueChange={this.onValueChange}
             attached
           />
@@ -96,7 +99,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
     return doRemoveReserveUnits(doAddReserveUnits(reserve, units), types)
   }
 
-  onValueChange = (side: Side, unit: UnitType, value: number): void => {
+  onValueChange = (side: Side, unit: UnitType, value: number) => {
     if (side === Side.Attacker)
       this.setState({ changes_a: { ...this.state.changes_a, [unit]: value } })
     if (side === Side.Defender)
@@ -108,7 +111,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
     forEach(changes, (value, key) => {
       const original = originals ? originals[key] || 0 : 0
       if (value > original)
-        units = units.concat(mapRange(value - original, _ => ({ id: generateIds ? getNextId() : 0, type: key, image: ''  })))
+        units = units.concat(mapRange(value - original, _ => ({ id: generateIds ? getNextId() : 0, type: key, image: '' })))
     })
     return units
   }
@@ -123,11 +126,16 @@ class ModalFastPlanner extends Component<IProps, IState> {
     return types
   }
 
-  updateReserve = (name: CountryName, changes: Units, originals?: Units): void => {
+  updateReserve = (name: CountryName, changes: Units, originals?: Units) => {
+    const { mode, addReserveUnits, removeReserveUnits, invalidate } = this.props
     const units = this.getUnitsToAdd(changes, originals, true)
     const types = this.getTypesToRemove(changes, originals)
-    units.length > 0 && this.props.addReserveUnits(this.props.mode, name, units)
-    types.length > 0 && this.props.removeReserveUnits(this.props.mode, name, types)
+    if (units.length > 0)
+      addReserveUnits(mode, name, units)
+    if (types.length > 0)
+      removeReserveUnits(mode, name, types)
+    if (units.length > 0 || types.length > 0)
+      invalidate(mode)
   }
 
   onClose = (): void => {
@@ -140,8 +148,10 @@ class ModalFastPlanner extends Component<IProps, IState> {
   countUnits = (reserve: BaseUnit[], unit: UnitType): number => reserve.reduce((previous, current) => previous + (current && current.type === unit ? 1 : 0), 0)
 
   clearUnits = (): void => {
+    const { mode, clearUnits, invalidate } = this.props
     this.setState({ changes_a: {} as Units, changes_d: {} as Units })
-    this.props.clearUnits(this.props.mode)
+    clearUnits(mode)
+    invalidate(mode)
   }
 }
 
@@ -150,24 +160,17 @@ const mapStateToProps = (state: AppState) => ({
   defender: getParticipant(state, Side.Defender).name,
   base_units_a: getBaseUnits(state, Side.Attacker),
   base_units_d: getBaseUnits(state, Side.Defender),
-  types_a: filterUnitTypes(state, Side.Attacker),
-  types_d: filterUnitTypes(state, Side.Defender),
+  types_a: filterUnitTypesBySide(state, Side.Attacker),
+  types_d: filterUnitTypesBySide(state, Side.Defender),
   definitions_a: getUnitDefinitions(state, Side.Attacker),
   definitions_d: getUnitDefinitions(state, Side.Defender),
   units: state.units,
-  global_stats: state.global_stats,
   mode: state.settings.mode
 })
 
-const mapDispatchToProps = (dispatch: any) => ({
-  addReserveUnits: (mode: Mode, name: CountryName, units: BaseUnit[]) => dispatch(addReserveUnits(mode, name, units)) && dispatch(invalidate(mode)),
-  removeReserveUnits: (mode: Mode, name: CountryName, types: UnitType[]) => dispatch(removeReserveUnits(mode, name, types)) && dispatch(invalidate(mode)),
-  clearUnits: (mode: Mode) => dispatch(clearUnits(mode))
-})
+const actions = { addReserveUnits, removeReserveUnits, clearUnits, invalidate }
 
-interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {
-  open: boolean
-  onClose: () => void
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ModalFastPlanner)
+type S = ReturnType<typeof mapStateToProps>
+type D = typeof actions
+interface IProps extends Props, S, D { }
+export default connect(mapStateToProps, actions)(ModalFastPlanner)

@@ -1,17 +1,25 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
-import { UnitType, ValueType, BaseUnit, Unit } from '../store/units'
-import { editUnit, removeUnit } from '../store/battle'
-import { AppState } from '../store/'
-import { filterTerrainTypes, mergeUnitTypes } from '../store/utils'
-import { addValues, ValuesType, Mode } from '../base_definition'
+
 import ItemRemover from '../components/ItemRemover'
 import UnitDetail from '../components/UnitDetail'
-import { invalidateCountry } from '../store/battle'
+
+import { AppState } from '../store/'
+import { UnitType, ValueType, BaseUnit, Unit } from '../store/units'
+import { editUnit, removeUnit } from '../store/battle'
 import { CountryName } from '../store/countries'
+import { filterTerrainTypes, filterUnitTypesByCountry } from '../store/utils'
+
+import { addValues, ValuesType } from '../base_definition'
+import { invalidateCountry } from '../store/battle'
 
 const CUSTOM_VALUE_KEY = 'Unit'
+
+interface Props {
+  info: ModalInfo | null
+  onClose: () => void
+}
 
 export interface ModalInfo {
   readonly country: CountryName
@@ -21,19 +29,21 @@ export interface ModalInfo {
 
 class ModalArmyUnitDetail extends Component<IProps> {
 
-  render(): JSX.Element | null {
-    if (!this.props.info)
+  render() {
+    const { info, onClose, mode, unit_types, terrain_types } = this.props
+    if (!info)
       return null
+    const { unit } = info
     return (
-      <Modal basic onClose={this.props.onClose} open>
+      <Modal basic onClose={onClose} open>
         <Modal.Content>
           <ItemRemover onRemove={this.removeUnit} />
           <UnitDetail
-            mode={this.props.mode}
-            terrain_types={this.props.terrain_types}
+            mode={mode}
+            terrain_types={terrain_types}
             custom_value_key={CUSTOM_VALUE_KEY}
-            unit={this.props.info.unit}
-            unit_types={this.props.unit_types}
+            unit={unit}
+            unit_types={unit_types}
             unit_types_as_dropdown={true}
             onTypeChange={this.changeType}
             onCustomBaseValueChange={this.setBaseValue}
@@ -46,60 +56,56 @@ class ModalArmyUnitDetail extends Component<IProps> {
     )
   }
 
-  removeUnit = (): void => {
-    this.props.info &&
-      this.props.removeUnit(this.props.mode, this.props.info.country, this.props.info.base_unit)
+  removeUnit = () => {
+    const { mode } = this.props
+    const { base_unit, country } = this.props.info!
+    this.props.removeUnit(mode, country, base_unit)
+    this.props.invalidateCountry(country)
     this.props.onClose()
   }
 
-  setBaseValue = (key: string, attribute: ValueType, value: number): void => {
-    if (!this.props.info)
-      return
-    const unit = addValues(this.props.info.base_unit, ValuesType.Base, key, [[attribute, value]])
-    this.props.editUnit(this.props.mode, this.props.info.country, unit)
+  setBaseValue = (key: string, attribute: ValueType, value: number) => {
+    const { base_unit, country } = this.props.info!
+    const unit = addValues(base_unit, ValuesType.Base, key, [[attribute, value]])
+    this.edit(unit, country)
   }
 
-  setModifierValue = (key: string, attribute: ValueType, value: number): void => {
-    if (!this.props.info)
-      return
-    const unit = addValues(this.props.info.base_unit, ValuesType.Modifier, key, [[attribute, value]])
-    this.props.editUnit(this.props.mode, this.props.info.country, unit)
+  setModifierValue = (key: string, attribute: ValueType, value: number) => {
+    const { base_unit, country } = this.props.info!
+    const unit = addValues(base_unit, ValuesType.Modifier, key, [[attribute, value]])
+    this.edit(unit, country)
   }
 
-  setLossValue = (key: string, attribute: ValueType, value: number): void => {
-    if (!this.props.info)
-      return
-    const unit = addValues(this.props.info.base_unit, ValuesType.Loss, key, [[attribute, value]])
-    this.props.editUnit(this.props.mode, this.props.info.country, unit)
+  setLossValue = (key: string, attribute: ValueType, value: number) => {
+    const { base_unit, country } = this.props.info!
+    const unit = addValues(base_unit, ValuesType.Loss, key, [[attribute, value]])
+    this.edit(unit, country)
   }
 
-  changeType = (new_type: UnitType): void => {
-    if (!this.props.info)
-      return
-    const unit = { ...this.props.info.base_unit, type: new_type }
-    this.props.editUnit(this.props.mode, this.props.info.country, unit)
+  edit = (unit: BaseUnit, country: CountryName) => {
+    const { mode } = this.props
+    this.props.editUnit(mode, country, unit)
+    this.props.invalidateCountry(country)
+  }
+
+  changeType = (type: UnitType) => {
+    const { base_unit, country } = this.props.info!
+    const unit = { ...base_unit, type }
+    this.edit(unit, country)
   }
 }
 
-const mapStateToProps = (state: AppState) => ({
-  unit_types: mergeUnitTypes(state),
+const mapStateToProps = (state: AppState, props: Props) => ({
+  unit_types: filterUnitTypesByCountry(state, props.info! && props.info!.country),
   global_stats: state.global_stats,
   terrain_types: filterTerrainTypes(state),
   mode: state.settings.mode
 })
 
-const mapDispatchToProps = (dispatch: any) => ({
-  editUnit: (mode: Mode, country: CountryName, unit: BaseUnit) => (
-    dispatch(editUnit(mode, country, unit)) && dispatch(invalidateCountry(country))
-  ),
-  removeUnit: (mode: Mode, country: CountryName, unit: BaseUnit) => (
-    dispatch(removeUnit(mode, country, unit)) && dispatch(invalidateCountry(country))
-  )
-})
+const actions = { editUnit, removeUnit, invalidateCountry }
 
-interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {
-  info: ModalInfo | null
-  onClose: () => void
-}
+type S = ReturnType<typeof mapStateToProps>
+type D = typeof actions
+interface IProps extends Props, S, D { }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ModalArmyUnitDetail)
+export default connect(mapStateToProps, actions)(ModalArmyUnitDetail)

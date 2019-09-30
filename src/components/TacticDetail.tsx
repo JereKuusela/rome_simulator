@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
-import { Table, Image } from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react'
 
-import DetailInput from './DetailInput'
+import DetailInput from './Detail/DetailInput'
+import DetailDropdownRow from './Detail/DetailDropndownRow'
+import DetailInputRow from './Detail/DetailInputRow'
 
 import { UnitType, Units } from '../store/units'
 import { TacticDefinition, ValueType, TacticType, TacticCalc, TacticDefinitions } from '../store/tactics'
 
 import { getBaseValue, explainShort, getImage, DefinitionType, calculateValue, getImages } from '../base_definition'
-import { renderImages, renderModeDropdown, renderHeaders } from './utils'
+import { renderImages, renderHeaders } from './utils'
 import { toSignedPercent, toPercent } from '../formatters'
 import { toArr, values } from '../utils'
 
@@ -18,10 +20,10 @@ interface IProps {
   readonly units: Units
   readonly custom_value_key: string
   readonly tactic: TacticDefinition
-  readonly onCustomBaseValueChange: (type: TacticType, key: string, attribute: ValueType, value: number) => void
-  readonly onTypeChange: (old_type: TacticType, new_type: TacticType) => void
-  readonly onImageChange: (type: TacticType, image: string) => void
-  readonly onModeChange: (type: TacticType, mode: DefinitionType) => void
+  readonly onCustomBaseValueChange: (key: string, attribute: ValueType, value: number) => void
+  readonly onTypeChange: (type: TacticType) => void
+  readonly onImageChange: (image: string) => void
+  readonly onModeChange: (mode: DefinitionType) => void
 }
 
 /**
@@ -30,7 +32,10 @@ interface IProps {
 export default class TacticDetail extends Component<IProps> {
 
   readonly attributes = values(TacticCalc)
+  readonly modes = values(DefinitionType)
   readonly headers = ['Attribute', 'Value', 'Custom value', 'Explained']
+
+  readonly CELLS = 4
 
   render() {
     const { tactic, unit_types, tactic_types, onTypeChange, onModeChange, onImageChange, units, tactics } = this.props
@@ -39,53 +44,17 @@ export default class TacticDetail extends Component<IProps> {
       <Table celled unstackable>
         {renderHeaders(this.headers)}
         <Table.Body>
-          <Table.Row>
-            <Table.Cell>
-              <Image src={getImage(null)} avatar />
-              Type
-            </Table.Cell>
-            <Table.Cell collapsing>
-              <DetailInput value={type} onChange={value => onTypeChange(type, value)} />
-            </Table.Cell>
-            <Table.Cell />
-            <Table.Cell />
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>
-              <Image src={getImage(null)} avatar />
-              Mode
-            </Table.Cell>
-            <Table.Cell collapsing>
-              {renderModeDropdown(mode, mode => onModeChange(type, mode))}
-            </Table.Cell>
-            <Table.Cell />
-            <Table.Cell />
-            <Table.Cell />
-            <Table.Cell />
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>
-              <Image src={getImage(null)} avatar />
-              Image
-            </Table.Cell>
-            <Table.Cell collapsing>
-              <DetailInput value={image} onChange={value => onImageChange(type, value)} />
-            </Table.Cell>
-            <Table.Cell />
-            <Table.Cell />
-          </Table.Row>
+          <DetailInputRow text='Name' value={type} onChange={onTypeChange} cells={this.CELLS} />
+          <DetailDropdownRow text='Mode' value={mode} values={this.modes} onChange={onModeChange} cells={this.CELLS} />
+          <DetailInputRow text='Image' value={image} onChange={onImageChange} cells={this.CELLS} />
           {
             unit_types.map(type => {
               const images = getImages(toArr(units), type)
               return this.renderRow(tactic, type, false, images)
             })
           }
-          {
-            tactic_types.map(value => this.renderRow(tactic, value, true, new Set([getImage(tactics[value])])))
-          }
-          {
-            this.attributes.map(value => this.renderRow(tactic, value, true, new Set([getImage(null)])))
-          }
+          {tactic_types.map(value => this.renderRow(tactic, value, true, new Set([getImage(tactics[value])])))}
+          {this.attributes.map(value => this.renderRow(tactic, value, true, new Set([getImage(null)])))}
         </Table.Body>
       </Table>
     )
@@ -93,7 +62,6 @@ export default class TacticDetail extends Component<IProps> {
 
   renderRow = (tactic: TacticDefinition, attribute: ValueType, relative: boolean, images: Set<string>) => {
     const { custom_value_key, onCustomBaseValueChange } = this.props
-    const { type } = tactic
     const base_value = getBaseValue(tactic, attribute, custom_value_key)
     const value = calculateValue(tactic, attribute)
 
@@ -107,7 +75,7 @@ export default class TacticDetail extends Component<IProps> {
           {relative ? toSignedPercent(value) : toPercent(value)}
         </Table.Cell>
         <Table.Cell collapsing>
-          <DetailInput value={String(base_value)} onChange={value => onCustomBaseValueChange(type, custom_value_key, attribute, Number(value))} />
+          <DetailInput value={String(base_value)} onChange={value => onCustomBaseValueChange(custom_value_key, attribute, Number(value))} />
         </Table.Cell>
         <Table.Cell>
           {explainShort(tactic, attribute)}

@@ -1,42 +1,45 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Accordion, Icon, Header } from 'semantic-ui-react'
+
 import { AppState } from '../store/'
 import { toggleAccordion } from '../store/settings'
-import { has } from '../utils'
 
+interface Props {
+  readonly title: string
+  readonly identifier: string
+}
+
+/**
+ * Togglable accordion.
+ */
 class AccordionToggle extends Component<IProps> {
 
-  render(): JSX.Element {
+  render() {
+    const { active, title, identifier, toggleAccordion, children } = this.props
     return (
       <Accordion>
-        <Accordion.Title active={has(this.props.accordions, this.props.identifier)} onClick={() => this.props.toggleAccordion(this.props.identifier)}>
+        <Accordion.Title active={active} onClick={() => toggleAccordion(identifier)}>
           <Header>
             <Icon name='dropdown' />
-            {this.props.title}
+            {title}
           </Header>
         </Accordion.Title>
-        <Accordion.Content active={has(this.props.accordions, this.props.identifier)}>
-          {
-            this.props.children
-          }
+        <Accordion.Content active={active}>
+          {children}
         </Accordion.Content>
       </Accordion>
     )
   }
 }
 
-const mapStateToProps = (state: AppState) => ({
-  accordions: state.settings.accordions
+const mapStateToProps = (state: AppState, props: Props) => ({
+  active: state.settings.accordions[props.identifier]
 })
 
-const mapDispatchToProps = (dispatch: any) => ({
-  toggleAccordion: (key: string) => dispatch(toggleAccordion(key))
-})
+const actions = { toggleAccordion }
 
-interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {
-  readonly title: string
-  readonly identifier: string
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(AccordionToggle)
+type S = ReturnType<typeof mapStateToProps>
+type D = typeof actions
+interface IProps extends Props, S, D { }
+export default connect(mapStateToProps, actions)(AccordionToggle)

@@ -16,6 +16,7 @@ interface IState {
   open_edit_country: boolean
   open_delete_country: boolean
 }
+
 class CountryManager extends Component<IProps, IState> {
 
   constructor(props: IProps) {
@@ -25,41 +26,43 @@ class CountryManager extends Component<IProps, IState> {
 
   initialState = { open_create_country: false, open_delete_country: false, open_edit_country: false }
 
-  render(): JSX.Element | null {
+  render() {
+    const { createCountry, countries, changeCountryName, selected_country, deleteCountry, selectCountry, children } = this.props
+    const { open_create_country, open_edit_country, open_delete_country } = this.state
     return (
       <Grid>
         <ValueDropdownModal
           value={'' as CountryName}
           selected={'' as CountryName}
-          open={this.state.open_create_country}
-          onSuccess={this.props.createCountry}
+          open={open_create_country}
+          onSuccess={createCountry}
           onClose={this.onClose}
-          items={keys(this.props.countries)}
+          items={keys(countries)}
           message='New country'
           button_message='Create'
           value_label='Name '
           dropdown_label='Copy country: '
         />
         <ValueModal
-          open={this.state.open_edit_country}
-          onSuccess={name => this.props.changeCountryName(this.props.selected_country, name)}
+          open={open_edit_country}
+          onSuccess={name => changeCountryName(selected_country, name)}
           onClose={this.onClose}
           message='Rename country'
           button_message='Edit'
-          initial={this.props.selected_country}
+          initial={selected_country}
         />
         <Confirmation
-          open={this.state.open_delete_country}
+          open={open_delete_country}
           onClose={this.onClose}
-          onConfirm={() => this.props.deleteCountry(this.props.selected_country)}
-          message={'Are you sure you want to remove country ' + this.props.selected_country + ' ?'}
+          onConfirm={() => deleteCountry(selected_country)}
+          message={'Are you sure you want to remove country ' + selected_country + ' ?'}
         />
         <Grid.Row columns='5'>
           <Grid.Column>
             <DropdownSelector
-              items={keys(this.props.countries)}
-              value={this.props.selected_country}
-              onSelect={this.props.selectCountry}
+              items={keys(countries)}
+              value={selected_country}
+              onSelect={selectCountry}
             />
           </Grid.Column>
           <Grid.Column>
@@ -68,7 +71,7 @@ class CountryManager extends Component<IProps, IState> {
             </Button>
           </Grid.Column>
           {
-            this.props.selected_country &&
+            selected_country &&
             <Grid.Column>
               <Button primary onClick={() => this.setState({ open_edit_country: true })}>
                 Rename country
@@ -76,7 +79,7 @@ class CountryManager extends Component<IProps, IState> {
             </Grid.Column>
           }
           {
-            this.props.selected_country &&
+            selected_country &&
             <Grid.Column>
               <Button primary onClick={() => this.setState({ open_delete_country: true })}>
                 Delete country
@@ -84,7 +87,7 @@ class CountryManager extends Component<IProps, IState> {
             </Grid.Column>
           }
           {
-            React.Children.map(this.props.children, elem => (
+            React.Children.map(children, elem => (
               <Grid.Column>
                 {elem}
               </Grid.Column>
@@ -95,7 +98,8 @@ class CountryManager extends Component<IProps, IState> {
       </Grid>
     )
   }
-  onClose = (): void => this.setState(this.initialState)
+
+  onClose = () => this.setState(this.initialState)
 }
 
 const mapStateToProps = (state: AppState) => ({
@@ -103,14 +107,10 @@ const mapStateToProps = (state: AppState) => ({
   countries: state.countries
 })
 
-const mapDispatchToProps = (dispatch: any) => ({
-  selectCountry: (country: CountryName) => (dispatch(selectCountry(country))),
-  createCountry: (country: CountryName, source_country?: CountryName) => dispatch(createCountry(country, source_country)),
-  changeCountryName: (old_country: CountryName, country: CountryName) => dispatch(changeCountryName(old_country, country)),
-  deleteCountry: (country: CountryName) => dispatch(deleteCountry(country))
-})
+const actions = { selectCountry, createCountry, changeCountryName, deleteCountry }
 
-interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {
-}
+type S = ReturnType<typeof mapStateToProps>
+type D = typeof actions
+interface IProps extends S, D { }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CountryManager)
+export default connect(mapStateToProps, actions)(CountryManager)

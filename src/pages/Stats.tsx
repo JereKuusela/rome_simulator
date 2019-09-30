@@ -4,7 +4,7 @@ import { Container, Image, Table } from 'semantic-ui-react'
 
 import { sumArr, round } from '../utils'
 import { calculateValue, calculateValueWithoutLoss, getImage, Mode, DefinitionType, strengthToValue } from '../base_definition'
-import { filterUnitTypes, getBattle, getCurrentUnits } from '../store/utils'
+import { filterUnitTypesBySide, getBattle, getCurrentUnits } from '../store/utils'
 import { AppState } from '../store/index'
 import { Unit, UnitType, UnitCalc } from '../store/units'
 import { Side, Units } from '../store/battle'
@@ -26,8 +26,7 @@ class Stats extends Component<IProps> {
     )
   }
 
-  renderArmy = (side: Side, units: Units, unit_types: Set<UnitType>): JSX.Element => {
-    const types = Array.from(unit_types)
+  renderArmy = (side: Side, units: Units, types: UnitType[]) => {
     const rows = types.map(type => this.renderRow(units, type)).filter(row => row)
     return (
       <Table celled selectable unstackable key={side}>
@@ -108,8 +107,8 @@ class Stats extends Component<IProps> {
 const mapStateToProps = (state: AppState) => ({
   units_a: getCurrentUnits(state, Side.Attacker),
   units_d: getCurrentUnits(state, Side.Defender),
-  types_a: filterUnitTypes(state, Side.Attacker),
-  types_d: filterUnitTypes(state, Side.Defender),
+  types_a: filterUnitTypesBySide(state, Side.Attacker),
+  types_d: filterUnitTypesBySide(state, Side.Defender),
   outdated: getBattle(state).outdated,
   mode: state.settings.mode
 })

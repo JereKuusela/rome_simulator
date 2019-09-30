@@ -3,8 +3,7 @@ import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { UnitType } from '../store/units'
 import { AppState } from '../store/'
-import { setRowType, RowType } from '../store/battle'
-import { Mode } from '../base_definition'
+import { setRowType, RowType, invalidate } from '../store/battle'
 import ItemSelector from '../components/ItemSelector'
 import ItemRemover from '../components/ItemRemover'
 import { CountryName } from '../store/countries'
@@ -39,6 +38,7 @@ class ModalRowTypeSelector extends Component<IProps> {
   selectUnit = (unit: UnitType | null): void => {
     this.props.info &&
       this.props.setRowType(this.props.mode, this.props.info.country, this.props.info.type, unit)
+    this.props.invalidate(this.props.mode)
     this.props.onClose()
   }
 }
@@ -48,13 +48,12 @@ const mapStateToProps = (state: AppState) => ({
   mode: state.settings.mode
 })
 
-const mapDispatchToProps = (dispatch: any) => ({
-  setRowType: (mode: Mode, name: CountryName, type: RowType, unit: UnitType | null) => (
-    dispatch(setRowType(mode, name, type, unit))
-  )
-})
+const mapDispatchToProps = { setRowType, invalidate }
 
-interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {
+type S = ReturnType<typeof mapStateToProps>
+type D = typeof mapDispatchToProps
+
+interface IProps extends S, D {
   info: ModalInfo | null
   onClose: () => void
 }

@@ -10,8 +10,9 @@ import { mergeUnitTypes, filterTacticTypes, filterTactics } from '../store/utils
 const CUSTOM_VALUE_KEY = 'Custom'
 
 class ModalTacticDetail extends Component<IProps> {
-  render(): JSX.Element | null {
-    if (!this.props.tactic)
+  render() {
+    const { tactic, mode } = this.props
+    if (!tactic)
       return null
     return (
       <TacticDetail
@@ -20,11 +21,11 @@ class ModalTacticDetail extends Component<IProps> {
         unit_types={this.props.unit_types}
         units={this.props.units}
         custom_value_key={CUSTOM_VALUE_KEY}
-        tactic={this.props.tactics[this.props.tactic]}
-        onCustomBaseValueChange={(tactic, key, attribute, value) => this.props.setBaseValue(this.props.mode, tactic, key, attribute, value)}
-        onTypeChange={this.props.changeType}
-        onImageChange={this.props.changeImage}
-        onModeChange={this.props.changeMode}
+        tactic={this.props.tactics[tactic]}
+        onCustomBaseValueChange={(key, attribute, value) => this.props.setBaseValue(mode, tactic, key, attribute, value)}
+        onTypeChange={type => this.props.changeType(tactic, type)}
+        onImageChange={image => this.props.changeImage(tactic, image)}
+        onModeChange={mode => this.props.changeMode(tactic, mode)}
       />
     )
   }

@@ -71,12 +71,20 @@ export const filterTactics = (state: AppState): TacticDefinitions => {
 /**
  * Returns unit types for the current mode and side.
  * @param state Application state.
- * @param side Attacker or defender
+ * @param side Attacker or defender.
  */
-export const filterUnitTypes = (state: AppState, side: Side): Set<UnitType> => {
-  const name = getParticipant(state, side).name
-  const units = filterUnitDefinitions(state.settings.mode, objGet(state.units, name, getDefaultUnits()))
-  return new Set(toArr(units).map(unit => unit.type))
+export const filterUnitTypesBySide = (state: AppState, side: Side): UnitType[] => (
+  filterUnitTypesByCountry(state, getParticipant(state, side).name)
+)
+
+/**
+ * Returns unit types for the current mode and country.
+ * @param state Application state.
+ * @param country Country.
+ */
+export const filterUnitTypesByCountry = (state: AppState, country: CountryName): UnitType[] => {
+  const units = filterUnitDefinitions(state.settings.mode, objGet(state.units, country, getDefaultUnits()))
+  return toArr(units).map(unit => unit.type)
 }
 
 /**

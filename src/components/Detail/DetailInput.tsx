@@ -12,13 +12,13 @@ interface IProps<T extends string> {
 export default class DetailInput<T extends string> extends Component<IProps<T>> {
 
   render() {
-    const { value, onChange, disabled, style } = this.props
+    const { value, onChange, style } = this.props
     return (
       <Input
         size='mini'
         style={style}
         defaultValue={value}
-        disabled={disabled}
+        disabled={!onChange}
         onChange={(_, { value }) => onChange && onChange(value as T)}
       />
     )

@@ -31,7 +31,7 @@ export default class FastPlanner extends Component<IProps> {
 
   render() {
     const { types_a, types_d, attached } = this.props
-    const types = Array.from(new Set([...types_a, ...types_d]))
+    const types = Array.from(new Set([...types_a, ...types_d])).sort()
     return (
       <Table celled unstackable attached={attached}>
         {renderHeaders(this.headers)}

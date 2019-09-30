@@ -1,21 +1,21 @@
 import React, { Component } from 'react'
 import { Button, Image } from 'semantic-ui-react'
 
-import IconYes from '../images/yes.png'
-import IconNo from '../images/no.png'
+import IconYes from '../../images/yes.png'
+import IconNo from '../../images/no.png'
 
 interface IProps {
   value: boolean
-  onClick?: () => void
+  onChange?: () => void
 }
 
 
 export default class DetailToggle extends Component<IProps> {
 
   render() {
-    const { value, onClick } = this.props
+    const { value, onChange } = this.props
     return (
-      <Button size='mini' basic compact disabled={!onClick} className='no-dim' onClick={() => onClick && onClick()}>
+      <Button size='mini' basic compact disabled={!onChange} className='no-dim' onClick={() => onChange && onChange()}>
         <Image avatar src={value ? IconYes : IconNo} />
       </Button>
     )

@@ -8,7 +8,7 @@ import { TerrainType } from '../terrains'
 import { DefinitionType, Mode } from '../../base_definition'
 import { CountryName } from '../countries'
 import { TacticType } from '../tactics';
-import { keys, toArr, map, forEach, arrGet } from '../../utils'
+import { keys, toArr, forEach, arrGet } from '../../utils'
 import { findLastIndex, every, some } from 'lodash'
 
 export interface Battle {
@@ -206,14 +206,6 @@ class BattleReducer extends ImmerReducer<ModeState> {
       armies[value.name].reserve = []
       armies[value.name].defeated = []
     })
-    participants = map(participants, value => ({ ...value, rounds: [], rolls: [] }))
-    next = {
-      ...next,
-      armies,
-      participants,
-      round: -1,
-      fight_over: true
-    }
     this.draftState[mode] = next
   }
 }
