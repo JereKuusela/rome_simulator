@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import PaddedRow from '../PaddedRow'
+import PaddedRow from '../Utils/PaddedRow'
 
 interface IProps {
   text: string

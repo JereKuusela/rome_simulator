@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import DropdownSelector from '../components/DropdownSelector'
+import Dropdown from '../components/Utils/Dropdown'
 import ValueDropdownModal from '../components/ValueDropdownModal'
 import ValueModal from '../components/ValueModal'
 import { AppState } from '../store/'
@@ -59,10 +59,10 @@ class CountryManager extends Component<IProps, IState> {
         />
         <Grid.Row columns='5'>
           <Grid.Column>
-            <DropdownSelector
-              items={keys(countries)}
+            <Dropdown
+              values={keys(countries)}
               value={selected_country}
-              onSelect={selectCountry}
+              onChange={selectCountry}
             />
           </Grid.Column>
           <Grid.Column>

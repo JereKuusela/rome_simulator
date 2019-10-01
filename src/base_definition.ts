@@ -41,7 +41,7 @@ export interface BaseValuesDefinition<T extends string, S extends string> {
 
 const initValues = <S extends string>() => ({} as Values<S>)
 
-export const getImages = <K extends string>(definitions: { [key in K]: BaseDefinition<K, any>}[], type: K): Set<string> => new Set(definitions.filter(value => value[type]).map(value => getImage(value[type])))
+export const getImages = <K extends string>(definitions: { [key in K]: BaseDefinition<K, any>}[], type: K): string[] => Array.from(new Set(definitions.filter(value => value[type]).map(value => getImage(value[type]))))
 
 /**
  * Returns the image of a definition while handling missing cases.

@@ -7,7 +7,7 @@ import ItemSelector, { SelectorAttributes } from '../components/ItemSelector'
 import { TerrainType, TerrainCalc, LocationType } from '../store/terrains'
 import { calculateValue, Mode } from '../base_definition'
 import { filterTerrains } from '../store/utils'
-import StyledNumber from '../components/StyledNumber'
+import StyledNumber from '../components/Utils/StyledNumber'
 import { addSign } from '../formatters'
 import { toArr, filter, map } from '../utils'
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import PaddedRow from '../PaddedRow'
-import DetailToggle from './DetailToggle'
+import PaddedRow from '../Utils/PaddedRow'
+import Toggle from '../Utils/Toggle'
 
 interface IProps {
   text: string
@@ -17,7 +17,7 @@ export default class DetailToggleRow extends Component<IProps> {
     return (
       <PaddedRow cells={cells} stretch={stretch}>
         {text}
-        <DetailToggle value={value} onChange={onChange} />
+        <Toggle value={value} onChange={onChange} />
       </PaddedRow>
     )
   }

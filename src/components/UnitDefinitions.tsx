@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Image, Table, List, Icon } from 'semantic-ui-react'
 import { sortBy } from 'lodash'
 
-import StyledNumber from './StyledNumber'
+import StyledNumber from './Utils/StyledNumber'
 import VersusList from './VersusList'
 
 import { UnitType, UnitDefinition, UnitCalc, ValueType, Units } from '../store/units'
@@ -22,13 +22,13 @@ import IconMorale from '../images/morale.png'
 import IconAttrition from '../images/attrition.png'
 
 interface IProps {
-  readonly mode: DefinitionType
-  readonly country: CountryName
-  readonly units: Units
-  readonly unit_types: UnitType[]
-  readonly terrains: TerrainType[]
-  readonly global_stats: UnitDefinition
-  readonly onRowClick: (unit: UnitDefinition) => void
+  mode: DefinitionType
+  country: CountryName
+  units: Units
+  unit_types: UnitType[]
+  terrains: TerrainType[]
+  global_stats: UnitDefinition
+  onRowClick: (unit: UnitDefinition) => void
 }
 
 // Display component for showing unit definitions for an army.

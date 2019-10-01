@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import PaddedRow from '../PaddedRow'
-import DetailDropdown from './DetailDropdown'
+import PaddedRow from '../Utils/PaddedRow'
+import Dropdown from '../Utils/Dropdown'
 
 interface IProps<T extends string> {
   text: string
@@ -18,7 +18,7 @@ export default class DetailDropdownRow<T extends string> extends Component<IProp
     return (
       <PaddedRow cells={cells} stretch={stretch}>
         {text}
-        <DetailDropdown value={value} values={values} onChange={onChange} />
+        <Dropdown value={value} values={values} onChange={onChange} />
       </PaddedRow>
     )
   }

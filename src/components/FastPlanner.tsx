@@ -1,25 +1,27 @@
 import React, { Component } from 'react'
 import { Table, Input } from 'semantic-ui-react'
 
+import Headers from './Utils/Headers'
+import Images from './Utils/Images'
+
 import { Side } from '../store/battle'
 import { UnitType, Units } from '../store/units'
 import { getImages } from '../base_definition'
-import { renderImages, renderHeaders } from './utils'
 import { toArr } from '../utils'
 
 export type PlannerUnits = { [key in UnitType]: number }
 
 
 interface IProps {
-  readonly units: Units
-  readonly types_a: Set<UnitType>
-  readonly types_d: Set<UnitType>
-  readonly reserve_a: PlannerUnits
-  readonly reserve_d: PlannerUnits
-  readonly onValueChange: (side: Side, unit: UnitType, value: number) => void
-  readonly attached?: boolean
-  readonly changes_a: PlannerUnits
-  readonly changes_d: PlannerUnits
+  units: Units
+  types_a: Set<UnitType>
+  types_d: Set<UnitType>
+  reserve_a: PlannerUnits
+  reserve_d: PlannerUnits
+  onValueChange: (side: Side, unit: UnitType, value: number) => void
+  attached?: boolean
+  changes_a: PlannerUnits
+  changes_d: PlannerUnits
 }
 
 /**
@@ -34,7 +36,7 @@ export default class FastPlanner extends Component<IProps> {
     const types = Array.from(new Set([...types_a, ...types_d])).sort()
     return (
       <Table celled unstackable attached={attached}>
-        {renderHeaders(this.headers)}
+        <Headers values={this.headers} />
         <Table.Body>
           {types.map(this.renderRow)}
         </Table.Body>
@@ -42,9 +44,9 @@ export default class FastPlanner extends Component<IProps> {
     )
   }
 
-  renderImages = (type: UnitType): JSX.Element[] => {
+  renderImages = (type: UnitType) => {
     const images = getImages(toArr(this.props.units), type)
-    return renderImages(images)
+    return <Images values={images} />
   }
 
   renderRow = (type: UnitType) => {

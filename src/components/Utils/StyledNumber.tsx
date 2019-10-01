@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 
 interface IProps {
-  readonly value: number
-  readonly reverse?: boolean
-  readonly hide_zero?: boolean
-  readonly formatter: (value: number) => string
+  value: number
+  reverse?: boolean
+  hide_zero?: boolean
+  formatter: (value: number) => string
 }
 
 /**

@@ -10,7 +10,7 @@ interface IProps {
 }
 
 
-export default class DetailToggle extends Component<IProps> {
+export default class Toggle extends Component<IProps> {
 
   render() {
     const { value, onChange } = this.props

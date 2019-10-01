@@ -1,29 +1,30 @@
 import React, { Component } from 'react'
 import { Table } from 'semantic-ui-react'
 
-import DetailInput from './Detail/DetailInput'
+import Input from './Utils/Input'
+import Headers from './Utils/Headers'
 import DetailDropdownRow from './Detail/DetailDropndownRow'
 import DetailInputRow from './Detail/DetailInputRow'
+import Images from './Utils/Images'
 
 import { UnitType, Units } from '../store/units'
 import { TacticDefinition, ValueType, TacticType, TacticCalc, TacticDefinitions } from '../store/tactics'
 
 import { getBaseValue, explainShort, getImage, DefinitionType, calculateValue, getImages } from '../base_definition'
-import { renderImages, renderHeaders } from './utils'
 import { toSignedPercent, toPercent } from '../formatters'
 import { toArr, values } from '../utils'
 
 interface IProps {
-  readonly tactic_types: TacticType[]
-  readonly tactics: TacticDefinitions
-  readonly unit_types: UnitType[]
-  readonly units: Units
-  readonly custom_value_key: string
-  readonly tactic: TacticDefinition
-  readonly onCustomBaseValueChange: (key: string, attribute: ValueType, value: number) => void
-  readonly onTypeChange: (type: TacticType) => void
-  readonly onImageChange: (image: string) => void
-  readonly onModeChange: (mode: DefinitionType) => void
+  tactic_types: TacticType[]
+  tactics: TacticDefinitions
+  unit_types: UnitType[]
+  units: Units
+  custom_value_key: string
+  tactic: TacticDefinition
+  onCustomBaseValueChange: (key: string, attribute: ValueType, value: number) => void
+  onTypeChange: (type: TacticType) => void
+  onImageChange: (image: string) => void
+  onModeChange: (mode: DefinitionType) => void
 }
 
 /**
@@ -42,7 +43,7 @@ export default class TacticDetail extends Component<IProps> {
     const { type, mode, image } = tactic
     return (
       <Table celled unstackable>
-        {renderHeaders(this.headers)}
+        <Headers values={this.headers} />
         <Table.Body>
           <DetailInputRow text='Name' value={type} onChange={onTypeChange} cells={this.CELLS} />
           <DetailDropdownRow text='Mode' value={mode} values={this.modes} onChange={onModeChange} cells={this.CELLS} />
@@ -53,14 +54,14 @@ export default class TacticDetail extends Component<IProps> {
               return this.renderRow(tactic, type, false, images)
             })
           }
-          {tactic_types.map(value => this.renderRow(tactic, value, true, new Set([getImage(tactics[value])])))}
-          {this.attributes.map(value => this.renderRow(tactic, value, true, new Set([getImage(null)])))}
+          {tactic_types.map(value => this.renderRow(tactic, value, true, [getImage(tactics[value])]))}
+          {this.attributes.map(value => this.renderRow(tactic, value, true, [getImage(null)]))}
         </Table.Body>
       </Table>
     )
   }
 
-  renderRow = (tactic: TacticDefinition, attribute: ValueType, relative: boolean, images: Set<string>) => {
+  renderRow = (tactic: TacticDefinition, attribute: ValueType, relative: boolean, images: string[]) => {
     const { custom_value_key, onCustomBaseValueChange } = this.props
     const base_value = getBaseValue(tactic, attribute, custom_value_key)
     const value = calculateValue(tactic, attribute)
@@ -68,14 +69,14 @@ export default class TacticDetail extends Component<IProps> {
     return (
       <Table.Row key={attribute}>
         <Table.Cell collapsing>
-          {renderImages(images)}
+          <Images values={images} />
           {attribute}
         </Table.Cell>
         <Table.Cell collapsing>
           {relative ? toSignedPercent(value) : toPercent(value)}
         </Table.Cell>
         <Table.Cell collapsing>
-          <DetailInput value={String(base_value)} onChange={value => onCustomBaseValueChange(custom_value_key, attribute, Number(value))} />
+          <Input value={String(base_value)} onChange={value => onCustomBaseValueChange(custom_value_key, attribute, Number(value))} />
         </Table.Cell>
         <Table.Cell>
           {explainShort(tactic, attribute)}

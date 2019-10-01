@@ -17,9 +17,9 @@ import { DefinitionType, ValuesType } from '../base_definition'
 import { UnitCalc } from '../store/units'
 import AccordionToggle from '../containers/AccordionToggle'
 import CountryManager from '../containers/CountryManager'
-import DropdownSelector from '../components/DropdownSelector'
+import Dropdown from '../components/Utils/Dropdown'
 import ConfirmationButton from '../components/ConfirmationButton'
-import StyledNumber from '../components/StyledNumber'
+import StyledNumber from '../components/Utils/StyledNumber'
 import { addSign } from '../formatters'
 
 const TRADE_COLUMNS = 4
@@ -66,17 +66,17 @@ class Countries extends Component<IProps> {
         <Grid>
           <Grid.Row columns='3'>
             <Grid.Column>
-              <DropdownSelector
-                items={keys(this.props.traditions)}
+              <Dropdown
+                values={keys(this.props.traditions)}
                 value={country.culture}
-                onSelect={item => this.selectCulture(item, selections)}
+                onChange={item => this.selectCulture(item, selections)}
               />
             </Grid.Column>
             <Grid.Column>
-              <DropdownSelector
-                items={keys(this.props.omens)}
+              <Dropdown
+                values={keys(this.props.omens)}
                 value={country.religion}
-                onSelect={item => this.selectReligion(item, country.omen_power, selections)}
+                onChange={item => this.selectReligion(item, country.omen_power, selections)}
               />
             </Grid.Column>
           </Grid.Row>

@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Table } from 'semantic-ui-react'
-import { mapRange } from '../utils'
+import { mapRange } from '../../utils'
 
 interface IProps {
-  readonly cells: number
-  readonly stretch?: number
+  cells: number
+  stretch?: number
 }
 
 /**

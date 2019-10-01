@@ -1,18 +1,18 @@
 import React, { Component } from 'react'
 import { Modal, Input, Grid, Button } from 'semantic-ui-react'
-import DropDownSelector from './DropdownSelector'
+import Dropdown from './Utils/Dropdown'
 
 interface IProps<T, S> {
-  readonly onSuccess: (value: T, selected: S) => void
-  readonly onClose: () => void
-  readonly message: string
-  readonly value_label?: string
-  readonly dropdown_label?: string
-  readonly button_message: string
-  readonly open: boolean
-  readonly value: T
-  readonly selected: S
-  readonly items: S[]
+  onSuccess: (value: T, selected: S) => void
+  onClose: () => void
+  message: string
+  value_label?: string
+  dropdown_label?: string
+  button_message: string
+  open: boolean
+  value: T
+  selected: S
+  items: S[]
 }
 
 interface IState<T, S> {
@@ -50,11 +50,11 @@ export default class ValueDropdownModal<T extends string, S extends string> exte
                 {
                   dropdown_label
                 }
-                <DropDownSelector
+                <Dropdown
                   value={selected}
-                  items={items}
+                  values={items}
                   clearable
-                  onSelect={item => this.setState({ selected: item })}
+                  onChange={item => this.setState({ selected: item })}
                 />
               </Grid.Column>
             </Grid.Row>

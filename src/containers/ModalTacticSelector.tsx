@@ -10,7 +10,7 @@ import { getBattle, filterTactics } from '../store/utils'
 import { mergeValues, calculateValue, Mode } from '../base_definition'
 import { toSignedPercent, toPercent } from '../formatters'
 import { CountryName } from '../store/countries'
-import StyledNumber from '../components/StyledNumber';
+import StyledNumber from '../components/Utils/StyledNumber';
 import { map, filter, toArr } from '../utils';
 
 export interface ModalInfo {

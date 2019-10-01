@@ -11,7 +11,7 @@ import { calculateTactic, calculateRollModifierFromTerrains, calculateRollModifi
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import { TacticType } from '../store/tactics'
 import IconDice from '../images/chance.png'
-import DropdownSelector from '../components/DropdownSelector'
+import Dropdown from '../components/Utils/Dropdown'
 import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from '../containers/ModalUnitSelector'
 import ModalRowTypeSelector, { ModalInfo as ModalRowInfo } from '../containers/ModalRowTypeSelector'
 import ModalTerrainSelector, { ModalInfo as ModalTerrainInfo } from '../containers/ModalTerrainSelector'
@@ -25,7 +25,7 @@ import { CountryName, setGeneralMartial } from '../store/countries'
 import { CombatParameter } from '../store/settings'
 import IconTerrain from '../images/terrain.png'
 import IconGeneral from '../images/military_power.png'
-import StyledNumber from '../components/StyledNumber'
+import StyledNumber from '../components/Utils/StyledNumber'
 import { findUnitById } from '../army_utils'
 import { keys, resize } from '../utils';
 
@@ -427,10 +427,10 @@ class Battle extends Component<IProps, IState> {
           {type}
         </Table.Cell>
         <Table.Cell collapsing>
-          <DropdownSelector
-            items={keys(this.props.armies)}
+          <Dropdown
+            values={keys(this.props.armies)}
             value={name}
-            onSelect={name => this.props.selectArmy(this.props.mode, type, name)}
+            onChange={name => this.props.selectArmy(this.props.mode, type, name)}
           />
         </Table.Cell>
         <Table.Cell collapsing>

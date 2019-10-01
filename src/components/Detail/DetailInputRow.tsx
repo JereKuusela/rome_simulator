@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import PaddedRow from '../PaddedRow'
-import DetailInput from './DetailInput'
+import PaddedRow from '../Utils/PaddedRow'
+import Input from '../Utils/Input'
 
 interface IProps<T extends string> {
   text: string
@@ -17,7 +17,7 @@ export default class DetailInputRow<T extends string> extends Component<IProps<T
     return (
       <PaddedRow cells={cells} stretch={stretch}>
         {text}
-        <DetailInput value={value} onChange={onChange}/>
+        <Input value={value} onChange={onChange}/>
       </PaddedRow>
     )
   }

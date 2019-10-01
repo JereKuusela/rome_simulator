@@ -3,21 +3,21 @@ import { Image, Table, List, Button } from 'semantic-ui-react'
 
 import ValueModal from './ValueModal'
 import VersusList from './VersusList'
-import StyledNumber from './StyledNumber'
+import StyledNumber from './Utils/StyledNumber'
 
 import { UnitType, Units } from '../store/units'
 import { TacticDefinition, TacticType, TacticCalc } from '../store/tactics'
 
 import { calculateValue, getImage } from '../base_definition'
 import { toSignedPercent } from '../formatters'
-import { renderHeaders } from './utils'
+import Headers from './Utils/Headers'
 
 interface IProps {
-  readonly tactics: TacticDefinition[]
-  readonly units: Units
-  readonly unit_types: UnitType[]
-  readonly onRowClick: (type: TacticType) => void
-  readonly onCreateNew: (type: TacticType) => void
+  tactics: TacticDefinition[]
+  units: Units
+  unit_types: UnitType[]
+  onRowClick: (type: TacticType) => void
+  onCreateNew: (type: TacticType) => void
 }
 
 interface IState {
@@ -48,7 +48,7 @@ export default class TacticDefinitions extends Component<IProps, IState> {
           initial={'' as TacticType}
         />
         <Table celled selectable unstackable>
-          {renderHeaders(this.headers)}
+          <Headers values={this.headers} />
           <Table.Body>
             {this.props.tactics.map(this.renderRow)}
           </Table.Body>

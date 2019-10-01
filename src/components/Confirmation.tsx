@@ -17,7 +17,7 @@ interface IState {
  */
 export default class Confirmation extends Component<IProps, IState> {
 
-  CONFIRM = 'yes'
+  readonly CONFIRM = 'yes'
 
   constructor(props: IProps) {
     super(props)

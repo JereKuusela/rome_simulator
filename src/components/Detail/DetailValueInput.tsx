@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import DetailInput from './DetailInput'
+import Input from '../Utils/Input'
 
 interface IProps {
   value: number
@@ -14,7 +14,7 @@ export default class DetailValueInput extends Component<IProps> {
   render() {
     const { value, onChange, disabled } = this.props
     return (
-      <DetailInput
+      <Input
         style={{ width: 50 }}
         value={String(value)}
         disabled={disabled}

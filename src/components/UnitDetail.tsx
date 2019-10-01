@@ -2,11 +2,12 @@ import React, { Component } from 'react'
 import { Table } from 'semantic-ui-react'
 
 import DetailValueInput from './Detail/DetailValueInput'
-import PaddedRow from './PaddedRow'
+import PaddedRow from './Utils/PaddedRow'
 import DetailToggleRow from './Detail/DetailToggleRow'
 import DetailTextRow from './Detail/DetailTextRow'
 import DetailInputRow from './Detail/DetailInputRow'
 import DetailDropdownRow from './Detail/DetailDropndownRow'
+import Headers from './Utils/Headers'
 
 import { UnitType, Unit, UnitCalc, ValueType, valueToString } from '../store/units'
 import { TerrainType } from '../store/terrains'
@@ -14,24 +15,23 @@ import { TerrainType } from '../store/terrains'
 import { getBaseValue, getLossValue, getModifierValue, explain, DefinitionType, calculateValue } from '../base_definition'
 import { toMaintenance } from '../formatters'
 import { values } from '../utils'
-import { renderHeaders } from './utils'
 
 interface IProps {
-  readonly mode: DefinitionType
-  readonly custom_value_key: string
-  readonly unit: Unit
-  readonly unit_types?: UnitType[]
-  readonly show_statistics: boolean
-  readonly terrain_types?: TerrainType[]
-  readonly unit_types_as_dropdown?: boolean
-  readonly onCustomBaseValueChange: (key: string, attribute: ValueType, value: number) => void
-  readonly onCustomModifierValueChange: (key: string, attribute: ValueType, value: number) => void
-  readonly onCustomLossValueChange: (key: string, attribute: ValueType, value: number) => void
-  readonly onTypeChange?: (type: UnitType) => void
-  readonly onModeChange?: (mode: DefinitionType) => void
-  readonly onImageChange?: (image: string) => void
-  readonly onCanAssaultToggle?: () => void
-  readonly onIsFlankToggle?: () => void
+  mode: DefinitionType
+  custom_value_key: string
+  unit: Unit
+  unit_types?: UnitType[]
+  show_statistics: boolean
+  terrain_types?: TerrainType[]
+  unit_types_as_dropdown?: boolean
+  onCustomBaseValueChange: (key: string, attribute: ValueType, value: number) => void
+  onCustomModifierValueChange: (key: string, attribute: ValueType, value: number) => void
+  onCustomLossValueChange: (key: string, attribute: ValueType, value: number) => void
+  onTypeChange?: (type: UnitType) => void
+  onModeChange?: (mode: DefinitionType) => void
+  onImageChange?: (image: string) => void
+  onCanAssaultToggle?: () => void
+  onIsFlankToggle?: () => void
 }
 
 /**
@@ -52,7 +52,7 @@ export default class UnitDetail extends Component<IProps> {
     const { id, type, mode, image, is_defeated, is_flank, can_assault } = unit
     return (
       <Table celled selectable unstackable>
-        {renderHeaders(this.headers)}
+        <Headers values={this.headers} />
         <Table.Body>
           {id && <DetailTextRow text='Identifier' cells={this.CELLS} value={id} />}
           {onTypeChange && unit_types && unit_types_as_dropdown && <DetailDropdownRow text='Type' cells={this.CELLS} value={type} values={unit_types} onChange={is_defeated ? undefined : onTypeChange} />}

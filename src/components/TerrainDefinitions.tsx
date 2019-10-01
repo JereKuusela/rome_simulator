@@ -1,17 +1,19 @@
 import React, { Component } from 'react'
 import { Table, Button, Image } from 'semantic-ui-react'
+
+import Headers from './Utils/Headers'
+import ValueModal from './ValueModal'
+import StyledNumber from './Utils/StyledNumber'
+
 import { TerrainCalc, TerrainDefinition, TerrainType } from '../store/terrains'
 import { getImage, calculateValue } from '../base_definition'
-import ValueModal from './ValueModal'
-import StyledNumber from './StyledNumber'
 import { addSign } from '../formatters'
 import { keys } from '../utils'
-import { renderHeaders } from './utils'
 
 interface IProps {
-  readonly terrains: TerrainDefinition[]
-  readonly onRowClick: (type: TerrainType) => void
-  readonly onCreateNew: (type: TerrainType) => void
+  terrains: TerrainDefinition[]
+  onRowClick: (type: TerrainType) => void
+  onCreateNew: (type: TerrainType) => void
 }
 
 interface IState {
@@ -41,7 +43,7 @@ export default class TerrainDefinitions extends Component<IProps, IState> {
           initial={'' as TerrainType}
         />
         <Table celled selectable unstackable>
-          {renderHeaders(this.headers)}
+          <Headers values={this.headers} />
           <Table.Body>
             {this.props.terrains.map(this.renderRow)}
           </Table.Body>

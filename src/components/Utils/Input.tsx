@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Input } from 'semantic-ui-react'
+import { Input as InputUI } from 'semantic-ui-react'
 
 interface IProps<T extends string> {
   value: T
@@ -9,12 +9,12 @@ interface IProps<T extends string> {
 }
 
 
-export default class DetailInput<T extends string> extends Component<IProps<T>> {
+export default class Input<T extends string> extends Component<IProps<T>> {
 
   render() {
     const { value, onChange, style } = this.props
     return (
-      <Input
+      <InputUI
         size='mini'
         style={style}
         defaultValue={value}
