@@ -1,29 +1,36 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
-import { UnitType, BaseUnit } from '../store/units'
+
+import ItemSelector from '../components/ItemSelector'
+
 import { AppState } from '../store/'
+import { UnitType } from '../store/units'
 import { selectUnit, ArmyType } from '../store/battle'
 import { CountryName } from '../store/countries'
-import { Mode } from '../base_definition'
-import ItemSelector from '../components/ItemSelector'
-import { filterUnitDefinitions, getNextId } from '../army_utils'
+
+import { getNextId } from '../army_utils'
 import { toArr } from '../utils'
+import { getUnitDefinitionsByCountry } from '../store/utils'
+
+interface Props {
+  info: ModalInfo | null
+  onClose: () => void
+}
 
 export interface ModalInfo {
-  name: CountryName
   country: CountryName
   index: number
   type: ArmyType
 }
 
 class ModalUnitSelector extends Component<IProps> {
-  render(): JSX.Element | null {
-    if (!this.props.info)
+  render() {
+    const { units, onClose } = this.props
+    if (!units)
       return null
-    const units = filterUnitDefinitions(this.props.mode, this.props.units[this.props.info.country])
     return (
-      <Modal basic onClose={this.props.onClose} open centered={false}>
+      <Modal basic onClose={onClose} open centered={false}>
         <Modal.Content>
           <ItemSelector
             onSelection={this.selectUnit}
@@ -34,27 +41,21 @@ class ModalUnitSelector extends Component<IProps> {
     )
   }
 
-  selectUnit = (unit: UnitType | null): void => {
-    this.props.info &&
-      this.props.selectUnit(this.props.mode, this.props.info.name, this.props.info.type, this.props.info.index, unit ? { id: getNextId(), image: '', type: this.props.units[this.props.info.name][unit].type } : null)
+  selectUnit = (type: UnitType) => {
+    if (this.props.info)
+      this.props.selectUnit(this.props.mode, this.props.info.country, this.props.info.type, this.props.info.index, { id: getNextId(), image: '', type })
     this.props.onClose()
   }
 }
 
-const mapStateToProps = (state: AppState) => ({
-  units: state.units,
+const mapStateToProps = (state: AppState, props: Props) => ({
+  units: props.info && getUnitDefinitionsByCountry(state, props.info.country),
   mode: state.settings.mode
 })
 
-const mapDispatchToProps = (dispatch: any) => ({
-  selectUnit: (mode: Mode, name: CountryName, type: ArmyType, column: number, unit: BaseUnit | null) => (
-    dispatch(selectUnit(mode, name, type, column, unit))
-  )
-})
+const actions = { selectUnit }
 
-interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {
-  info: ModalInfo | null
-  onClose: () => void
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ModalUnitSelector)
+type S = ReturnType<typeof mapStateToProps>
+type D = typeof actions
+interface IProps extends Props, S, D { }
+export default connect(mapStateToProps, actions)(ModalUnitSelector)

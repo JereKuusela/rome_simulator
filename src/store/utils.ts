@@ -168,7 +168,7 @@ export const getSelected = (state: AppState): Army => getArmyByCountry(state, st
  */
 export const getUnitDefinitions = (state: AppState, side: Side): UnitDefinitions => getUnitDefinitionsByCountry(state, getParticipant(state, side).name)
 
-const getUnitDefinitionsByCountry = (state: AppState, name: CountryName): UnitDefinitions => {
+export const getUnitDefinitionsByCountry = (state: AppState, name: CountryName): UnitDefinitions => {
   const global = objGet(state.global_stats, name, getDefaultGlobals())[state.settings.mode]
   const units = filterUnitDefinitions(state.settings.mode, objGet(state.units, name, getDefaultUnits()))
   return map(units, definition => mergeValues(definition, global))

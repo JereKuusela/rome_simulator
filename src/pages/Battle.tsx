@@ -51,14 +51,14 @@ class Battle extends Component<IProps, IState> {
 
   closeModal = (): void => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null, modal_fast_planner_open: false, modal_row_info: null })
 
-  openUnitModal = (name: CountryName, type: ArmyType, country: CountryName, column: number, unit: BaseUnit | null): void => {
+  openUnitModal = (type: ArmyType, country: CountryName, column: number, unit: BaseUnit | null): void => {
     if (unit)
       this.openArmyUnitModal(country, unit as BaseUnit & UnitDefinition)
     else
-      this.openUnitSelector(name, type, country, column)
+      this.openUnitSelector(type, country, column)
   }
 
-  openUnitSelector = (name: CountryName, type: ArmyType, country: CountryName, index: number): void => this.setState({ modal_unit_info: { name, type, country, index } })
+  openUnitSelector = (type: ArmyType, country: CountryName, index: number): void => this.setState({ modal_unit_info: { type, country, index } })
 
   openArmyUnitModal = (country: CountryName, current_unit: BaseUnit & UnitDefinition): void => {
     const base_unit = findUnitById(this.props.armies[country], current_unit.id)
@@ -286,7 +286,7 @@ class Battle extends Component<IProps, IState> {
         <UnitArmy
           color={type === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={type}
-          onClick={(column, unit) => this.openUnitModal(country, ArmyType.Frontline, country, column, unit)}
+          onClick={(column, unit) => this.openUnitModal(ArmyType.Frontline, country, column, unit)}
           onRemove={column => this.props.removeUnit(this.props.mode, country, ArmyType.Frontline, column)}
           units={resize(this.mergeAllValues(country, participant.frontline), combat_width, null)}
           row_width={Math.max(30, combat_width)}
@@ -343,7 +343,7 @@ class Battle extends Component<IProps, IState> {
         <UnitArmy
           color={type === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={type}
-          onClick={(column, unit) => this.openUnitModal(country, ArmyType.Reserve, country, column, unit)}
+          onClick={(column, unit) => this.openUnitModal(ArmyType.Reserve, country, column, unit)}
           onRemove={column => this.props.removeUnit(this.props.mode, country, ArmyType.Reserve, column)}
           units={resize(units, size, null)}
           row_width={30}
@@ -366,7 +366,7 @@ class Battle extends Component<IProps, IState> {
         <UnitArmy
           color={type === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={type}
-          onClick={(column, unit) => this.openUnitModal(country, ArmyType.Defeated, country, column, unit)}
+          onClick={(column, unit) => this.openUnitModal(ArmyType.Defeated, country, column, unit)}
           onRemove={column => this.props.removeUnit(this.props.mode, country, ArmyType.Defeated, column)}
           units={resize(units, size, null)}
           row_width={30}
