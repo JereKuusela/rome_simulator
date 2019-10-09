@@ -13,6 +13,7 @@ import { refreshBattle } from '../store/combat'
 import IconManpower from '../images/manpower.png'
 import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
+import IconEmpty from '../images/empty.png'
 
 class Stats extends Component<IProps> {
   render(): JSX.Element {
@@ -28,6 +29,7 @@ class Stats extends Component<IProps> {
 
   renderArmy = (side: Side, units: Units, types: UnitType[]) => {
     const rows = types.map(type => this.renderRow(units, type)).filter(row => row)
+    const flatten = this.flatten(units)
     return (
       <Table celled selectable unstackable key={side}>
         <Table.Header>
@@ -50,18 +52,25 @@ class Stats extends Component<IProps> {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {
-            rows
-          }
-          {
-            rows.length ? null : (
-              <Table.Row>
-                <Table.Cell>
-                  No units in the army
-                </Table.Cell>
-              </Table.Row>
-            )
-          }
+          {rows}
+          <Table.Row>
+            <Table.Cell width='4'>
+              <Image src={IconEmpty} avatar />
+              Total
+            </Table.Cell>
+            <Table.Cell width='3'>
+              {strengthToValue(this.props.mode, this.sum(flatten, UnitCalc.Strength))} / {strengthToValue(this.props.mode, this.sumMax(flatten, UnitCalc.Strength))}
+            </Table.Cell>
+            <Table.Cell width='3'>
+              {round(this.sum(flatten, UnitCalc.Morale), 100.0)} / {round(this.sumMax(flatten, UnitCalc.Morale), 100.0)}
+            </Table.Cell>
+            <Table.Cell width='3'>
+              {strengthToValue(this.props.mode, this.sum(flatten, UnitCalc.StrengthDepleted))}
+            </Table.Cell>
+            <Table.Cell width='3'>
+              {round(this.sum(flatten, UnitCalc.MoraleDepleted), 100.0)}
+            </Table.Cell>
+          </Table.Row>
         </Table.Body>
       </Table>
     )
@@ -99,9 +108,11 @@ class Stats extends Component<IProps> {
   sumMax = (merged: Unit[], attribute: UnitCalc): number => sumArr(merged, value => Math.max(0, calculateValueWithoutLoss(value, attribute)))
 
   // Flattens units to a single list. Also filters temporary "defeated" units because they are copies of another unit.
-  flatten = (units: Units, type: UnitType): Unit[] => (
-    units.reserve.filter(unit => !unit.is_defeated && unit.type === type).concat(units.defeated.filter(unit => !unit.is_defeated && unit.type === type).concat(units.frontline.filter(unit => unit && !unit.is_defeated && unit.type === type) as Unit[]))
+  flatten = (units: Units, type?: UnitType): Unit[] => (
+    units.reserve.filter(unit => this.filter(unit, type)).concat(units.defeated.filter(unit => this.filter(unit, type)).concat(units.frontline.filter(unit => this.filter(unit, type)) as Unit[]))
   )
+
+  filter = (unit: Unit | null, type?: UnitType) => unit && !unit.is_defeated && (!type || unit.type === type)
 }
 
 const mapStateToProps = (state: AppState) => ({
