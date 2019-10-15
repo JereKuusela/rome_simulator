@@ -72,11 +72,11 @@ export const reinforce = (army: R<BaseUnits>, definitions: R<UnitDefinitions>, r
     // Calculate priorities (mostly based on unit type, ties are resolved with index numbers).
     let orderedMainReserve = sortBy(mainReserve, value => {
         value = mergeValues(value, definitions[value.type])
-        return -calculateBase(value,  UnitCalc.Cost) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 - (value.type === row_types[RowType.Front] ? 200000000 : 0) - (value.type === row_types[RowType.Back] ? -100000000 : 0)
+        return -calculateBase(value, UnitCalc.Cost) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 - (value.type === row_types[RowType.Front] ? 200000000 : 0) - (value.type === row_types[RowType.Back] ? -100000000 : 0)
     })
     let orderedFlankReserve = sortBy(flankReserve, value => {
         value = mergeValues(value, definitions[value.type])
-        return -calculateBase(value,  UnitCalc.Maneuver) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 - (value.type === row_types[RowType.Flank] ? 100000000 : 0)
+        return -calculateBase(value, UnitCalc.Maneuver) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 - (value.type === row_types[RowType.Flank] ? 100000000 : 0)
     })
 
     const free_spots = frontline.filter((_, index) => index < frontline.length).reduce((previous, current) => previous + (current ? 0 : 1), 0)
@@ -113,7 +113,7 @@ export const reinforce = (army: R<BaseUnits>, definitions: R<UnitDefinitions>, r
         for (; index >= 0 && index < frontline.length && reserve.length > 0; index = nextIndex(index, center)) {
             if (frontline[index])
                 continue
-                const flank = orderedFlankReserve.pop()
+            const flank = orderedFlankReserve.pop()
             if (flank) {
                 reserve = reserve.filter(value => value !== flank)
                 frontline[index] = flank
@@ -126,35 +126,37 @@ export const reinforce = (army: R<BaseUnits>, definitions: R<UnitDefinitions>, r
                 continue
             }
         }
-        // Move units from left to center.
-        for (let unit_index = Math.ceil(frontline.length / 2.0) - 1; unit_index > 0; --unit_index) {
-            const unit = frontline[unit_index]
-            if (unit)
-                continue
-            const unit_on_left = frontline[unit_index - 1]
-            if (unit_on_left) {
-                frontline[unit_index] = unit_on_left
+        if (round > 0) {
+            // Move units from left to center.
+            for (let unit_index = Math.ceil(frontline.length / 2.0) - 1; unit_index > 0; --unit_index) {
+                const unit = frontline[unit_index]
+                if (unit)
+                    continue
+                const unit_on_left = frontline[unit_index - 1]
+                if (unit_on_left) {
+                    frontline[unit_index] = unit_on_left
                     frontline[unit_index - 1] = null
-                if (attacker_to_defender)
-                    attacker_to_defender.forEach((target, index) => attacker_to_defender[index] = target === unit_index - 1 ? unit_index : target)
-                continue
+                    if (attacker_to_defender)
+                        attacker_to_defender.forEach((target, index) => attacker_to_defender[index] = target === unit_index - 1 ? unit_index : target)
+                    continue
+                }
             }
-        }
-        // Move units from right to center.
-        for (let unit_index = Math.ceil(frontline.length / 2.0); unit_index < frontline.length - 1; ++unit_index) {
-            const unit = frontline[unit_index]
-            if (unit)
-                continue
-            const unit_on_right = frontline[unit_index + 1]
-            if (unit_on_right) {
-                frontline[unit_index] = unit_on_right
+            // Move units from right to center.
+            for (let unit_index = Math.ceil(frontline.length / 2.0); unit_index < frontline.length - 1; ++unit_index) {
+                const unit = frontline[unit_index]
+                if (unit)
+                    continue
+                const unit_on_right = frontline[unit_index + 1]
+                if (unit_on_right) {
+                    frontline[unit_index] = unit_on_right
                     frontline[unit_index + 1] = null
-                if (attacker_to_defender)
-                    attacker_to_defender.forEach((target, index) => attacker_to_defender[index] = target === unit_index + 1 ? unit_index : target)
-                continue
+                    if (attacker_to_defender)
+                        attacker_to_defender.forEach((target, index) => attacker_to_defender[index] = target === unit_index + 1 ? unit_index : target)
+                    continue
+                }
             }
         }
     })
-    
+
     return { frontline, reserve, defeated: army.defeated }
 }
