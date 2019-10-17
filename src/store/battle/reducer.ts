@@ -12,14 +12,14 @@ import { keys, toArr, forEach, arrGet } from '../../utils'
 import { findLastIndex, every, some } from 'lodash'
 
 export interface Battle {
-  readonly armies: Armies
-  readonly terrains: TerrainType[],
-  readonly participants: Participants,
-  readonly round: number,
-  readonly fight_over: boolean,
-  readonly seed: number,
-  readonly custom_seed?: number,
-  readonly outdated: boolean
+  armies: Armies
+  terrains: TerrainType[],
+  participants: Participants,
+  round: number,
+  fight_over: boolean,
+  seed: number,
+  custom_seed?: number,
+  outdated: boolean
 }
 
 export type Armies = { [key in CountryName]: Army }

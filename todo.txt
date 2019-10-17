@@ -4,6 +4,7 @@ Release 5:
 Tests (high priority):
 - utils tested
 - combat tested
+ - tactic manpower 
 - check that reinforcement is stable (higher key ends in right position)
 
 Refactor:

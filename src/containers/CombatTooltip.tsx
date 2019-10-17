@@ -18,7 +18,8 @@ import { CombatParameter } from '../store/settings'
 import { TacticCalc } from '../store/tactics'
 
 interface Props {
-  index: number
+  index: number | null
+  context: Element | null
   side: Side
 }
 
@@ -37,13 +38,13 @@ class CombatTooltip extends Component<IProps, IState> {
   }
 
   render() {
-    const { index } = this.props
+    const { index, context } = this.props
     return (
       <Popup
-        trigger={this.props.children}
-        content={this.state.content}
+        open={index != null}
+        context={context!}
+        content={this.getExplanation(index)}
         inverted
-        onOpen={() => this.setState({content: this.getExplanation(index)})}
       />
     )
   }
@@ -52,7 +53,9 @@ class CombatTooltip extends Component<IProps, IState> {
   ORANGE = 'value-orange'
   RED = 'value-red'
 
-  getExplanation = (index: number) => {
+  getExplanation = (index: number | null) => {
+    if (index === null)
+      return null
     const current = this.findUnit(this.props.current_s, index)
     if (!current)
       return null
@@ -68,11 +71,11 @@ class CombatTooltip extends Component<IProps, IState> {
     return (
       <List>
         {this.getInfoSection(source, current, target)}
-        <List.Item />
+        {target && <List.Item />}
         {target && this.getBaseSection(source, target, base_damage, tactic_damage, total_damage)}
-        <List.Item />
+        {target && <List.Item />}
         {target && this.getStrengthSection(source, target, total_damage)}
-        <List.Item />
+        {target && <List.Item />}
         {target && this.getMoraleSection(source, target, total_damage)}
       </List>
     )

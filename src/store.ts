@@ -44,7 +44,7 @@ const DataTransform = createTransform(
 )
 
 const migrations = {
-  5: (_: any) => ({})
+  5: (_: any) => ({_persist: _._persist})
 }
 
 const persistConfig = {
