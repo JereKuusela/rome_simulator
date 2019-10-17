@@ -7,7 +7,7 @@ import UnitArmy from '../components/UnitArmy'
 import TargetArrows from '../components/TargetArrows'
 import { invalidate, invalidateCountry, ArmyType, undo, Participant, Side, toggleRandomRoll, setRoll, RowType, setFlankSize, selectArmy, selectUnit, RowTypes, BaseFrontLine, BaseReserve, BaseDefeated } from '../store/battle'
 import { battle, setSeed, refreshBattle } from '../store/combat'
-import { calculateTactic, calculateRollModifierFromTerrains, calculateRollModifierFromGenerals, calculateBaseDamage } from '../store/combat/combat'
+import { calculateTactic, calculateRollModifierFromTerrains, calculateRollModifierFromGenerals, calculateBaseDamage, calculateTotalRoll } from '../store/combat/combat'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import { TacticType } from '../store/tactics'
 import IconDice from '../images/chance.png'
@@ -48,6 +48,7 @@ class Battle extends Component<IProps, IState> {
     this.state = { modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null, modal_fast_planner_open: false, modal_row_info: null }
   }
 
+  isModalOpen = () => this.state.modal_unit_info  || this.state.modal_terrain_info || this.state.modal_tactic_info || this.state.modal_army_unit_info || this.state.modal_fast_planner_open || this.state.modal_row_info
 
   closeModal = (): void => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null, modal_fast_planner_open: false, modal_row_info: null })
 
@@ -75,7 +76,7 @@ class Battle extends Component<IProps, IState> {
   openRowModal = (country: CountryName, type: RowType): void => this.setState({ modal_row_info: { country, type } })
 
   render(): JSX.Element {
-    if (this.props.outdated)
+    if (this.props.outdated && !this.isModalOpen())
       this.props.refreshBattle(this.props.mode)
     const army_a = this.props.army_a
     const army_d = this.props.army_d
@@ -302,7 +303,7 @@ class Battle extends Component<IProps, IState> {
   renderRoll = (type: Side, roll: number, is_random: boolean, general: number, opposing_general: number): JSX.Element => {
     const terrain_effect = type === Side.Attacker ? calculateRollModifierFromTerrains(this.props.selected_terrains.map(value => this.props.terrains[value])) : 0
     const general_effect = calculateRollModifierFromGenerals(general, opposing_general)
-    const total = terrain_effect + general_effect + roll
+    const total = calculateTotalRoll(roll, type === Side.Attacker ? this.props.selected_terrains.map(value => this.props.terrains[value]) : [], general, opposing_general)
     const base_damage = calculateBaseDamage(total, this.props.combat)
     return (
       <div key={type}>
