@@ -88,6 +88,7 @@ class CombatTooltip extends Component<IProps, IState> {
     const offense_vs_defense = calculateValue(source, UnitCalc.Offense) - calculateValue(target, UnitCalc.Defense)
     const experience_reduction = calculateExperienceReduction(settings, target)
     const target_type = calculateValue(source, target.type)
+    const is_loyal = source.is_loyal
 
     const attributes: (UnitCalc | UnitType)[] = [UnitCalc.Discipline, UnitCalc.DamageDone]
     if (!settings[CombatParameter.FixDamageTaken])
@@ -99,6 +100,7 @@ class CombatTooltip extends Component<IProps, IState> {
     return (<>
       {this.renderItem('Base damage', base_damage, toNumber)}
       {this.renderStyledItem('Tactic', tactic_damage, toSignedPercent)}
+      {this.renderStyledItem('Loyal', is_loyal ? 0.1 : 0, toSignedPercent)}
       {attributes.map(attribute => this.getAttribute(source, attribute))}
       {this.renderStyledItem(target.type, target_type, toSignedPercent)}
       {this.renderStyledItem('Offense vs Defense', offense_vs_defense, toSignedPercent)}

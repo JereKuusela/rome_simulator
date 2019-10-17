@@ -49,6 +49,7 @@ export interface BaseUnit extends BaseDefinition<UnitType, ValueType> {
   readonly is_defeated?: boolean
   readonly target?: number | null
   readonly id: number
+  readonly is_loyal?: boolean
 }
 
 export interface UnitDefinition extends BaseDefinition<UnitType, ValueType> {
@@ -56,6 +57,7 @@ export interface UnitDefinition extends BaseDefinition<UnitType, ValueType> {
   readonly can_assault: boolean
   readonly is_flank: boolean
   readonly mode: DefinitionType
+  readonly is_loyal?: boolean
 }
 
 export interface Unit extends BaseUnit, UnitDefinition { }

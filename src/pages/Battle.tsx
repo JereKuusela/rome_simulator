@@ -73,7 +73,7 @@ class Battle extends Component<IProps, IState> {
   openRowModal = (country: CountryName, type: RowType): void => this.setState({ modal_row_info: { country, type } })
 
   render(): JSX.Element {
-    if (this.props.outdated && !this.isModalOpen())
+    if (this.props.outdated)
       this.props.refreshBattle(this.props.mode)
     const army_a = this.props.army_a
     const army_d = this.props.army_d

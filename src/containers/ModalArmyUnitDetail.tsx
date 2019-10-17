@@ -7,7 +7,7 @@ import UnitDetail from '../components/UnitDetail'
 
 import { AppState } from '../store/'
 import { UnitType, ValueType } from '../store/units'
-import { editUnit, deleteUnit, setValue, changeType, invalidateCountry, Side } from '../store/battle'
+import { editUnit, deleteUnit, setValue, changeType, invalidateCountry, Side, toggleLoyal } from '../store/battle'
 import { CountryName } from '../store/countries'
 import { filterTerrainTypes, filterUnitTypesByCountry, findUnit } from '../store/utils'
 
@@ -43,6 +43,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
             onCustomBaseValueChange={this.setBaseValue}
             onCustomModifierValueChange={this.setModifierValue}
             onCustomLossValueChange={this.setLossValue}
+            onIsLoyalToggle={this.toggleIsLoyal}
             show_statistics={true}
           />
         </Modal.Content>
@@ -51,34 +52,40 @@ class ModalArmyUnitDetail extends Component<IProps> {
   }
 
   removeUnit = () => {
-    const { mode, id, country } = this.props
-    this.props.deleteUnit(mode, country, id)
-    this.props.invalidateCountry(country)
-    this.props.onClose()
+    const { mode, id, country, deleteUnit, invalidateCountry, onClose } = this.props
+    deleteUnit(mode, country, id)
+    invalidateCountry(country)
+    onClose()
   }
 
   setBaseValue = (key: string, attribute: ValueType, value: number) => {
-    const { mode, country, id } = this.props
-    this.props.setValue(mode, country, id, ValuesType.Base, key, attribute, value)
-    this.props.invalidateCountry(country)
+    const { mode, country, id, setValue, invalidateCountry } = this.props
+    setValue(mode, country, id, ValuesType.Base, key, attribute, value)
+    invalidateCountry(country)
   }
 
   setModifierValue = (key: string, attribute: ValueType, value: number) => {
-    const { mode, country, id } = this.props
-    this.props.setValue(mode, country, id, ValuesType.Modifier, key, attribute, value)
-    this.props.invalidateCountry(country)
+    const { mode, country, id, setValue, invalidateCountry } = this.props
+    setValue(mode, country, id, ValuesType.Modifier, key, attribute, value)
+    invalidateCountry(country)
   }
 
   setLossValue = (key: string, attribute: ValueType, value: number) => {
-    const { mode, country, id } = this.props
-    this.props.setValue(mode, country, id, ValuesType.Loss, key, attribute, value)
-    this.props.invalidateCountry(country)
+    const { mode, country, id, setValue, invalidateCountry } = this.props
+    setValue(mode, country, id, ValuesType.Loss, key, attribute, value)
+    invalidateCountry(country)
   }
 
   changeType = (type: UnitType) => {
-    const { mode, country, id } = this.props
-    this.props.changeType(mode, country, id, type)
-    this.props.invalidateCountry(country)
+    const { mode, country, id, changeType, invalidateCountry } = this.props
+    changeType(mode, country, id, type)
+    invalidateCountry(country)
+  }
+
+  toggleIsLoyal = () => {
+    const { mode, country, id, toggleLoyal, invalidateCountry } = this.props
+    toggleLoyal(mode, country, id)
+    invalidateCountry(country)
   }
 }
 
@@ -90,7 +97,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   unit: findUnit(state, props.side, props.id)
 })
 
-const actions = { editUnit, deleteUnit, invalidateCountry, setValue, changeType }
+const actions = { editUnit, deleteUnit, invalidateCountry, setValue, changeType, toggleLoyal }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

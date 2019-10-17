@@ -4,7 +4,7 @@ import {
   ValueType
 } from './actions'
 import { CountryName, enableModifiers, clearModifiers, createCountry, deleteCountry, changeCountryName } from '../countries'
-import { addValues, DefinitionType, ValuesType, regenerateValues, clearValues } from '../../base_definition'
+import { addValues, DefinitionType, ValuesType, regenerateValues, clearValues, Mode } from '../../base_definition'
 import { ImmerReducer, createActionCreators, createReducerFunction, Actions } from 'immer-reducer'
 import { Modifier } from '../data'
 import { objGet, map } from '../../utils'
@@ -50,6 +50,10 @@ class UnitsReducer extends ImmerReducer<Units> {
     this.draftState[country][type].can_assault = !this.draftState[country][type].can_assault
   }
 
+  toggleIsLoyal(country: CountryName, type: UnitType) {
+    this.draftState[country][type].is_loyal = !this.draftState[country][type].is_loyal
+  }
+
   changeMode(country: CountryName, type: UnitType, mode: DefinitionType) {
     this.draftState[country][type].mode = mode
   }
@@ -84,7 +88,7 @@ class UnitsReducer extends ImmerReducer<Units> {
 
 class GlobalStatsReducer extends ImmerReducer<GlobalStats> {
 
-  setGlobalValue(country: CountryName, mode: DefinitionType.Land | DefinitionType.Naval, type: ValuesType, key: string, attribute: ValueType, value: number) {
+  setGlobalValue(country: CountryName, mode: Mode, type: ValuesType, key: string, attribute: ValueType, value: number) {
     this.draftState[country][mode] = addValues(this.state[country][mode], type, key, [[attribute, value]])
   }
 
@@ -98,6 +102,10 @@ class GlobalStatsReducer extends ImmerReducer<GlobalStats> {
 
   changeCountryName(old_country: CountryName, country: CountryName) {
     delete Object.assign(this.draftState, {[country]: this.draftState[old_country] })[old_country]
+  }
+
+  toggleIsLoyal(country: CountryName, mode: Mode) {
+    this.draftState[country][mode].is_loyal = !this.draftState[country][mode].is_loyal
   }
 
   enableModifiers(country: CountryName, key: string, modifiers: Modifier[]) {
@@ -133,6 +141,7 @@ export const changeImage = unitsActions.changeImage
 export const changeMode = unitsActions.changeMode
 export const toggleIsFlank = unitsActions.toggleIsFlank
 export const toggleCanAssault = unitsActions.toggleCanAssault
+export const toggleIsLoyal = unitsActions.toggleIsLoyal
 
 const unitsBaseReducer = createReducerFunction(UnitsReducer, unitsState)
 
@@ -153,6 +162,7 @@ export const unitsReducer = (state = unitsState, action: Actions<typeof UnitsRed
 const globalStatsActions = createActionCreators(GlobalStatsReducer)
 
 export const setGlobalValue = globalStatsActions.setGlobalValue
+export const toggleGlobalIsLoyal = globalStatsActions.toggleIsLoyal
 
 const globalStatsBaseReducer = createReducerFunction(GlobalStatsReducer, globalStatsState)
 

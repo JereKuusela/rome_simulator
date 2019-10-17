@@ -119,6 +119,11 @@ class BattleReducer extends ImmerReducer<ModeState> {
     update(draft, id, unit => ({ ...unit, type}))
   }
 
+  toggleLoyal(mode: Mode, country: CountryName, id: number) {
+    const draft = this.draftState[mode].armies[country]
+    update(draft, id, unit => ({ ...unit, is_loyal: !unit.is_loyal}))
+  }
+
   editUnit(mode: Mode, country: CountryName, unit: BaseUnit) {
     const state = this.state[mode].armies[country]
     const draft = this.draftState[mode].armies[country]
@@ -245,6 +250,7 @@ export const editUnit = actions.editUnit
 export const setValue = actions.setValue
 export const changeType = actions.changeType
 export const deleteUnit = actions.deleteUnit
+export const toggleLoyal = actions.toggleLoyal
 export const removeReserveUnits = actions.removeReserveUnits
 export const addReserveUnits = actions.addReserveUnits
 export const selectTerrain = actions.selectTerrain

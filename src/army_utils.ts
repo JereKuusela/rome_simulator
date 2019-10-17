@@ -28,7 +28,7 @@ export const getDefeated = (participant: Army): Defeated => {
 }
 
 export const mergeUnits = (units: UnitDefinitions, global: UnitDefinition, unit: BaseUnit): Unit => (
-  mergeValues(mergeValues(units[unit.type], unit), global) as Unit
+  mergeValues(mergeValues(unit, units[unit.type]), global) as Unit
 )
 
 

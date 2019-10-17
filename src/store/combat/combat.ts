@@ -351,6 +351,8 @@ export const calculateTotalDamage = (settings: Settings, base_damage: number, so
     damage = calculate(damage, 1.0 + calculateValue(target, UnitCalc.DamageTaken))
   else
     damage = calculate(damage, 1.0 + calculateValue(source, UnitCalc.DamageDone))
+  if (source.is_loyal)
+    damage = calculate(damage, 1.1)
   damage = calculate(damage, 1.0 + sumBy(terrains, terrain => calculateValue(source, terrain.type)))
   damage = calculate(damage, 1.0 + calculateValue(source, target.type))
   damage = calculate(damage, 1.0 + tactic_damage_multiplier)

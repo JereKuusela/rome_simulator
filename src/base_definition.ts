@@ -72,7 +72,9 @@ export const mergeValues = <D1 extends BD | undefined, D2 extends BD | undefined
     merge(loss_values, definition.loss_values)
   if (to_merge && to_merge.loss_values)
     merge(loss_values, to_merge.loss_values)
-  return { ...to_merge, ...definition, base_values, modifier_values, loss_values }
+  // Must be set manually to overwrite '' with an actual image.
+  const image = (definition && definition.image) || (to_merge && to_merge.image)
+  return { ...to_merge, ...definition, base_values, modifier_values, loss_values, image }
 }
 
 /**
