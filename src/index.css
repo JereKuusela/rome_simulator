@@ -25,6 +25,18 @@ code {
   color: blue;
   font-weight: bold;
 }
+.value-orange {
+  color: orange;
+  font-weight: bold;
+}
+.value-red {
+  color: rgb(255, 104, 104);
+  font-weight: bold;
+}
+.value-blue {
+  color: lightskyblue;
+  font-weight: bold;
+}
 .selectable {
   cursor: pointer;
 }

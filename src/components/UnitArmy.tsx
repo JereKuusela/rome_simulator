@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
+
 import { Side, ArmyType, BaseFrontLine } from '../store/battle'
 import { Table, Image, Icon } from 'semantic-ui-react'
 import { BaseUnit, UnitCalc } from '../store/units'
 import { calculateValue, calculateValueWithoutLoss, getImage } from '../base_definition'
 import IconDefeated from '../images/attrition.png'
+import CombatTooltip from '../containers/CombatTooltip'
 
 
 interface IProps {
   side: Side
-  units?: BaseFrontLine
+  units: BaseFrontLine
   row_width: number
   reverse: boolean
   onClick?: (index: number, unit: BaseUnit | null) => void
@@ -22,10 +24,10 @@ const MORALE_COLOR = 'rgba(200,55,55,0.60)'
 const MANPOWER_COLOR = 'rgba(0,0,0,0.90)'
 const WHITE_COLOR = 'rgba(255,255,255,0)'
 
-// Display component for showing unit definitions for an army.
+// Shows a part of an army (frontline, reserve or defeated).
 export default class UnitArmy extends Component<IProps> {
   render(): JSX.Element {
-    const width = this.props.units ? this.props.units.length : 0
+    const width = this.props.units.length
     const row_count = Math.ceil(width / this.props.row_width)
     const rows = Array(row_count).fill(0).map((_, index) => index)
     const columns = Array(this.props.row_width)
@@ -40,46 +42,57 @@ export default class UnitArmy extends Component<IProps> {
         columns[i] = -1
     }
     return (
-      <Table compact celled definition unstackable>
-        <Table.Body>
-          {
-            rows.map(row => (
-              <Table.Row key={row} textAlign='center'>
-                <Table.Cell>
-                  <Icon fitted size='small' name={this.getIcon()} style={{color: this.props.color}}></Icon>
-                </Table.Cell>
-                {
-                  columns.map((column, index) => {
-                    const unit = column > -1 && this.props.units ? this.props.units[row * this.props.row_width + column] : null
-                    return (
-                      <Table.Cell
-                      className={this.props.side + '-' + this.props.type + '-' + column}
-                      textAlign='center'
-                      key={index}
-                      disabled={column < 0 || (this.props.disable_add && !unit)}
-                      selectable={!!this.props.onClick}
-                      style={{backgroundColor: column < 0 ? '#DDDDDD' : 'white', padding: 0}}
-                      onClick={() => this.props.onClick && this.props.onClick(row * this.props.row_width + column, unit)}
-                      onContextMenu={(e: any) => e.preventDefault() || (this.props.onRemove && this.props.onRemove(row * this.props.row_width + column))}
-                      >
-                        {
-                          <div style={{ background: this.gradient(unit, MANPOWER_COLOR, UnitCalc.Strength) }}>
-                            <div style={{ background: this.gradient(unit, MORALE_COLOR, UnitCalc.Morale) }}>
-                              <Image src={unit && unit.is_defeated ? IconDefeated : getImage(unit)} avatar style={{margin: 0}}/>
-                            </div>
-                          </div>
-                        }
-                      </Table.Cell>
-                    )
-                  })
-                }
-              </Table.Row>
-            ))
-          }
-        </Table.Body>
-      </Table>
+      <>
+        <Table compact celled definition unstackable>
+          <Table.Body>
+            {
+              rows.map(row => (
+                <Table.Row key={row} textAlign='center'>
+                  <Table.Cell>
+                    <Icon fitted size='small' name={this.getIcon()} style={{ color: this.props.color }}></Icon>
+                  </Table.Cell>
+                  {
+                    columns.map((column, index) => {
+                      const unit = column > -1 ? this.props.units[row * this.props.row_width + column] : null
+                      if (unit) {
+                        return (
+                          <CombatTooltip key={index} index={unit.id} side={this.props.side}>
+                            {this.renderCell(row, index, column, unit)}
+                          </CombatTooltip>
+                        )
+                      }
+                      return this.renderCell(row, index, column, unit)
+                    })
+                  }
+                </Table.Row>
+              ))
+            }
+          </Table.Body>
+        </Table>
+      </>
     )
   }
+
+  renderCell = (row: number, index: number, column: number, unit: BaseUnit | null) => (
+    <Table.Cell
+      className={this.props.side + '-' + this.props.type + '-' + column}
+      textAlign='center'
+      key={index}
+      disabled={column < 0 || (this.props.disable_add && !unit)}
+      selectable={!!this.props.onClick}
+      style={{ backgroundColor: column < 0 ? '#DDDDDD' : 'white', padding: 0 }}
+      onClick={() => this.props.onClick && this.props.onClick(row * this.props.row_width + column, unit)}
+      onContextMenu={(e: any) => e.preventDefault() || (this.props.onRemove && this.props.onRemove(row * this.props.row_width + column))}
+    >
+      {
+        <div style={{ background: this.gradient(unit, MANPOWER_COLOR, UnitCalc.Strength) }}>
+          <div style={{ background: this.gradient(unit, MORALE_COLOR, UnitCalc.Morale) }}>
+            <Image src={unit && unit.is_defeated ? IconDefeated : getImage(unit)} avatar style={{ margin: 0 }} />
+          </div>
+        </div>
+      }
+    </Table.Cell>
+  )
 
   getIcon = () => {
     if (this.props.type === ArmyType.Frontline)
