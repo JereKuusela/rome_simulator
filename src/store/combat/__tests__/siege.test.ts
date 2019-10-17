@@ -6,21 +6,25 @@ describe('siege', () => {
   it('works', () => {
     const min = -5
     const max = -10
-    const iterations = 1000000
+    const iterations = 10000
     const seed = createEntropy()[0]
     const engine = MersenneTwister19937.seed(seed)
     const rng = new Random(engine)
-    console.log('! Initial modifier !! Average !! Very lucky (5th pct) !! Lucky (25th pct) !! Expected (50th pct) !! Unlucky (75th pct) !! Very unlucky (95th pct) !! Disease chance !! Garrison depleted')
+    console.log('! Initial modifier !! Average !! Very lucky (5th pct) !! Lucky (25th pct) !! Expected (50th pct) !! Unlucky (75th pct) !! Very unlucky (95th pct) !! Disease chance !! Assault chance !! Turns saved !! Garrison depleted')
 
     for (var delta = min; delta <= max; delta++) {
       let garrison_low = 0
       let diseases = 0
+      let assaults = 0
       const results = []
       let total = 0
+      let turns_saved = 0
       for (var iteration = 0; iteration < iterations; iteration++) {
         let accumulation = 0
         let roll = 1
+        let breach = false
         let garrison = 1.0
+        let assaulted = false
         for (; roll < 10000; roll++) {
           const roll = rng.integer(1, 14)
           const modded = roll + accumulation + delta
@@ -34,6 +38,7 @@ describe('siege', () => {
             break
           else if (roll === 14) { // Breach
             accumulation += 2
+            breach = true
             garrison *= 0.95
           }
           else if (modded > 15) { // Desert
@@ -56,11 +61,22 @@ describe('siege', () => {
             diseases += 1
           // Status Quo
           accumulation = Math.min(accumulation, 11)
+
+          if (!assaulted && garrison <= 0.50) {
+            assaulted = true
+            assaults++
+          }
+          if (!assaulted && breach && garrison <= 0.75) {
+            assaulted = true
+            assaults++
+          }
+          if (assaulted)
+            turns_saved++
         }
         results.push(roll)
         total += roll
       }
-      console.log('| ' + delta + ' || ' + total / iterations + ' || ' + percentile(5, results) + ' || ' + percentile(25, results) + ' || ' + percentile(50, results) + ' || ' + percentile(75, results) + ' || ' + percentile(95, results) + ' || ' + diseases / iterations + ' || ' + garrison_low / iterations)
+      console.log('| ' + delta + ' || ' + total / iterations + ' || ' + percentile(5, results) + ' || ' + percentile(25, results) + ' || ' + percentile(50, results) + ' || ' + percentile(75, results) + ' || ' + percentile(95, results) + ' || ' + diseases / iterations + ' || ' + assaults / iterations + ' || ' + turns_saved / iterations + ' || ' + garrison_low / iterations)
     }
   })
 })
