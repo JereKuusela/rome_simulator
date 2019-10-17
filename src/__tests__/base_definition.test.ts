@@ -3,11 +3,11 @@ import EmptyIcon from '../images/empty.png'
 import UnknownIcon from '../images/unknown.png'
 import { size } from 'lodash'
 
-type Values = { [key: string]: {[key: string]: number} }
+type Values = { [key: string]: { [key: string]: number } }
 
 describe('getImage', () => {
   it('returns image', () => {
-    const definition = { image: 'test'}
+    const definition = { image: 'test' }
     const result = getImage(definition)
     expect(result).toEqual('test')
   })
@@ -23,7 +23,7 @@ describe('getImage', () => {
 })
 
 const initValues = (attribute: string, key: string, value: number) => (
-  { [attribute]: { [key]: value} }
+  { [attribute]: { [key]: value } }
 )
 
 const get = (value1?: number, value2?: number): Values => {
@@ -31,48 +31,48 @@ const get = (value1?: number, value2?: number): Values => {
     return { 'attribute': { 'key1': value1, 'key2': value2 } }
   if (value1 !== undefined)
     return { 'attribute': { 'key1': value1 } }
-  return { 'attribute': { } }
+  return { 'attribute': {} }
 }
 
 const initDefinition = (value1: number | undefined, value2: number | undefined, value3: number | undefined) => (
-  { type: 'test', base_values: get(value1), modifier_values: get(value2), loss_values: get(value3) }
+  { type: 'test', image: '', base_values: get(value1), modifier_values: get(value2), loss_values: get(value3) }
 )
 
 const initBase = (value1: number, value2?: number) => (
-  { type: 'test', base_values: get(value1, value2) }
+  { type: 'test', image: '', base_values: get(value1, value2) }
 )
 
 const initModifier = (value1: number, value2?: number) => (
-  { type: 'test', modifier_values: get(value1, value2) }
+  { type: 'test', image: '', modifier_values: get(value1, value2) }
 )
 
 const initLoss = (value1: number, value2?: number) => (
-  { type: 'test', loss_values: get(value1, value2) }
+  { type: 'test', image: '', loss_values: get(value1, value2) }
 )
 
 describe('mergeValues', () => {
   it('returns first when only', () => {
-    const result = mergeValues({ type: 'test'}, undefined) as any
+    const result = mergeValues({ type: 'test', image: '' }, undefined) as any
     expect(result.type).toEqual('test')
   })
   it('returns second when only', () => {
-    const result = mergeValues(undefined, { type: 'test'}) as any
+    const result = mergeValues(undefined, { type: 'test', image: '' }) as any
     expect(result.type).toEqual('test')
   })
   it('returns first when both', () => {
-    const result = mergeValues({ type: 'test1'}, { type: 'test2'})
+    const result = mergeValues({ type: 'test1', image: '' }, { type: 'test2', image: '' })
     expect(result.type).toEqual('test1')
   })
   it('generates empty values', () => {
-    const definition = { type: 'test', base_values: undefined, modifier_values: undefined, loss_values: undefined}
+    const definition = { type: 'test', image: '', base_values: undefined, modifier_values: undefined, loss_values: undefined }
     const result = mergeValues(definition, undefined) as any
     expect(result.base_values).toBeTruthy()
     expect(result.modifier_values).toBeTruthy()
     expect(result.loss_values).toBeTruthy()
   })
   it('merges different values', () => {
-    const definition = { type: 'test', base_values: initValues('test1', 'key1', 0), modifier_values: initValues('test1', 'key2', 0), loss_values: initValues('test1', 'key3', 0)}
-    const toMerge = { type: 'test', base_values: initValues('test2', 'key1', 0), modifier_values: initValues('test2', 'key2', 0), loss_values: initValues('test2', 'key3', 0)}
+    const definition = { type: 'test', image: '', base_values: initValues('test1', 'key1', 0), modifier_values: initValues('test1', 'key2', 0), loss_values: initValues('test1', 'key3', 0) }
+    const toMerge = { type: 'test', image: '', base_values: initValues('test2', 'key1', 0), modifier_values: initValues('test2', 'key2', 0), loss_values: initValues('test2', 'key3', 0) }
     const result = mergeValues(definition, toMerge)
     expect(size(result.base_values)).toEqual(2)
     expect(size(result.modifier_values)).toEqual(2)
@@ -97,15 +97,15 @@ describe('mergeValues', () => {
 
 describe('addValues', () => {
   it('generates empty base values', () => {
-    const result = addValues({ type: 'test', base_values: undefined }, ValuesType.Base, 'key1', [])
+    const result = addValues({ type: 'test', image: '', base_values: undefined }, ValuesType.Base, 'key1', [])
     expect(result.base_values).toBeTruthy
   })
   it('generates empty modifier values', () => {
-    const result = addValues({ type: 'test', modifier_values: undefined }, ValuesType.Modifier, 'key1', [])
+    const result = addValues({ type: 'test', image: '', modifier_values: undefined }, ValuesType.Modifier, 'key1', [])
     expect(result.modifier_values).toBeTruthy
   })
   it('generates empty loss values', () => {
-    const result = addValues({ type: 'test', loss_values: undefined }, ValuesType.Loss, 'key1', [])
+    const result = addValues({ type: 'test', image: '', loss_values: undefined }, ValuesType.Loss, 'key1', [])
     expect(result.loss_values).toBeTruthy
   })
   it('adds to base values', () => {
@@ -151,7 +151,7 @@ describe('addValues', () => {
 
 describe('clearAllValues', () => {
   it('resets empty values', () => {
-    const result = clearAllValues({ type: 'test', base_values: undefined, modifier_values: undefined, loss_values: undefined }, 'key1')
+    const result = clearAllValues({ type: 'test', image: '', base_values: undefined, modifier_values: undefined, loss_values: undefined }, 'key1')
     expect(result.base_values).toBeTruthy
     expect(result.modifier_values).toBeTruthy
     expect(result.loss_values).toBeTruthy
@@ -317,7 +317,7 @@ describe('getLossValue', () => {
 
 describe('explainShort', () => {
   it('works for undefined', () => {
-    const result = explainShort({ type: 'test' }, 'attribute')
+    const result = explainShort({ type: 'test', image: '' }, 'attribute')
     expect(result).toEqual('')
   })
   it('works for missing', () => {
@@ -332,7 +332,7 @@ describe('explainShort', () => {
 
 describe('explain', () => {
   it('works for undefined', () => {
-    const result = explain({ type: 'test' }, 'attribute')
+    const result = explain({ type: 'test', image: '' }, 'attribute')
     expect(result).toEqual('')
   })
   it('works for missing', () => {
@@ -352,7 +352,7 @@ describe('explain', () => {
     expect(result).toEqual('Base value 0 multiplied by 150% (key1: 50%) reduced by losses 0.75 (key1: 0.75)')
   })
   it('works for multiple base + modifier + loss values', () => {
-    const result = explain({ type: 'test',  base_values: get(1, 1.5), modifier_values: get(2, 2.5), loss_values: get(3, 3.5) }, 'attribute')
+    const result = explain({ type: 'test', image: '', base_values: get(1, 1.5), modifier_values: get(2, 2.5), loss_values: get(3, 3.5) }, 'attribute')
     expect(result).toEqual('Base value 2.5 (key1: 1, key2: 1.5) multiplied by 550% (key1: 200%, key2: 250%) reduced by losses 6.5 (key1: 3, key2: 3.5)')
   })
 })
