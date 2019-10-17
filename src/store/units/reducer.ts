@@ -147,15 +147,15 @@ const unitsBaseReducer = createReducerFunction(UnitsReducer, unitsState)
 
 export const unitsReducer = (state = unitsState, action: Actions<typeof UnitsReducer>) => {
   if (action.type === createCountry.type)
-    return unitsBaseReducer(state, { payload: action.payload, type: unitsActions.createCountry.type })
+    return unitsBaseReducer(state, { payload: action.payload, type: unitsActions.createCountry.type, args: true } as any)
   if (action.type === deleteCountry.type)
     return unitsBaseReducer(state, { payload: action.payload, type: unitsActions.deleteCountry.type })
   if (action.type === changeCountryName.type)
-    return unitsBaseReducer(state, { payload: action.payload, type: unitsActions.changeCountryName.type })
+    return unitsBaseReducer(state, { payload: action.payload, type: unitsActions.changeCountryName.type, args: true } as any)
   if (action.type === enableModifiers.type)
-    return unitsBaseReducer(state, { payload: action.payload, type: unitsActions.enableModifiers.type })
+    return unitsBaseReducer(state, { payload: action.payload, type: unitsActions.enableModifiers.type, args: true } as any)
   if (action.type === clearModifiers.type)
-    return unitsBaseReducer(state, { payload: action.payload, type: unitsActions.clearModifiers.type })
+    return unitsBaseReducer(state, { payload: action.payload, type: unitsActions.clearModifiers.type, args: true } as any)
   return unitsBaseReducer(state, action)
 }
 
@@ -168,14 +168,14 @@ const globalStatsBaseReducer = createReducerFunction(GlobalStatsReducer, globalS
 
 export const globalStatsReducer = (state = globalStatsState, action: Actions<typeof GlobalStatsReducer>) => {
   if (action.type === createCountry.type)
-    return globalStatsBaseReducer(state, { payload: action.payload, type: globalStatsActions.createCountry.type })
+    return globalStatsBaseReducer(state, { payload: action.payload, type: globalStatsActions.createCountry.type, args: true } as any)
   if (action.type === deleteCountry.type)
     return globalStatsBaseReducer(state, { payload: action.payload, type: globalStatsActions.deleteCountry.type })
   if (action.type === changeCountryName.type)
-    return globalStatsBaseReducer(state, { payload: action.payload, type: globalStatsActions.changeCountryName.type })
+    return globalStatsBaseReducer(state, { payload: action.payload, type: globalStatsActions.changeCountryName.type, args: true } as any)
   if (action.type === enableModifiers.type)
-    return globalStatsBaseReducer(state, { payload: action.payload, type: globalStatsActions.enableModifiers.type })
+    return globalStatsBaseReducer(state, { payload: action.payload, type: globalStatsActions.enableModifiers.type, args: true } as any)
   if (action.type === clearModifiers.type)
-    return globalStatsBaseReducer(state, { payload: action.payload, type: globalStatsActions.clearModifiers.type })
+    return globalStatsBaseReducer(state, { payload: action.payload, type: globalStatsActions.clearModifiers.type, args: true } as any)
   return globalStatsBaseReducer(state, action)
 }

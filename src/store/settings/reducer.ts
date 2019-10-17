@@ -70,10 +70,10 @@ export const reducer = createReducerFunction(SettingsReducer, settingsState)
 
 export const settingsReducer = (state = settingsState, action: Actions<typeof SettingsReducer>) => {
   if (action.type === createCountry.type)
-    return reducer(state, { payload: action.payload, type: actions.createCountry.type })
+    return reducer(state, { payload: action.payload, type: actions.createCountry.type, args: true } as any)
   if (action.type === deleteCountry.type)
     return reducer(state, { payload: action.payload, type: actions.deleteCountry.type })
   if (action.type === changeCountryName.type)
-    return reducer(state, { payload: action.payload, type: actions.changeCountryName.type })
+    return reducer(state, { payload: action.payload, type: actions.changeCountryName.type, args: true } as any)
   return reducer(state, action)
 }
