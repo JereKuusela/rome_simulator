@@ -65,6 +65,7 @@ export const reinforce = (army: R<BaseUnits>, definitions: R<UnitDefinitions>, r
     let reserve = army.reserve
 
     const center = Math.floor(frontline.length / 2.0)
+    const is_deployment = round === 0
 
     // Separate reserve to main and flank groups.
     const mainReserve = reserve.filter(value => !isFlankUnit(row_types, mergeValues(value, definitions[value.type])))
@@ -82,7 +83,7 @@ export const reinforce = (army: R<BaseUnits>, definitions: R<UnitDefinitions>, r
     const free_spots = frontline.filter((_, index) => index < frontline.length).reduce((previous, current) => previous + (current ? 0 : 1), 0)
     const [left_flank_size, right_flank_size] = calculateFlankSizes(round, flank_size, frontline.length, reserve.length, free_spots, enemy_size)
 
-    if (round === 0) {
+    if (is_deployment) {
         // Initial deployment uses reversed order (so Primary unit is first and Secondary last).
         orderedMainReserve = orderedMainReserve.reverse()
         orderedFlankReserve = orderedFlankReserve.reverse()
@@ -126,7 +127,8 @@ export const reinforce = (army: R<BaseUnits>, definitions: R<UnitDefinitions>, r
                 continue
             }
         }
-        if (round > 0) {
+        // Deployment shouldn't move manually set units (so they start the battle where user wanted them)
+        if (!is_deployment) {
             // Move units from left to center.
             for (let unit_index = Math.ceil(frontline.length / 2.0) - 1; unit_index > 0; --unit_index) {
                 const unit = frontline[unit_index]

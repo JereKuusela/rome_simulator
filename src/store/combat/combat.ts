@@ -1,4 +1,4 @@
-import { BaseUnit, UnitCalc, Units } from '../units'
+import { BaseUnit, UnitCalc, Units, Unit } from '../units'
 import { TerrainCalc, TerrainDefinition } from '../terrains'
 import { TacticDefinition, TacticCalc, TacticType } from '../tactics'
 import { BaseUnits, RowTypes, FrontLine, BaseFrontLine } from '../battle'
@@ -43,48 +43,57 @@ export const doBattle = (definitions: Units, attacker: R<ParticipantState>, defe
 
   // Simplifies later code because armies can be assumed to be the correct size.
   const combat_width = settings[CombatParameter.CombatWidth]
-  
+
   a = removeOutOfBounds(a, combat_width)
   d = removeOutOfBounds(d, combat_width)
   a = removeDefeated(a)
   d = removeDefeated(d)
   a = reinforce(a, definitions[attacker.country], round, attacker.row_types, attacker.flank_size, calculateArmySize(d), settings, undefined)
-  let definitions_a: FrontLine = a.frontline.map(value => value && mergeValues(value, definitions[attacker.country][value.type]))
+  let units_a = {
+    frontline: a.frontline.map(value => value && mergeValues(value, definitions[attacker.country][value.type])),
+    reserve: a.reserve.map(value => value && mergeValues(value, definitions[attacker.country][value.type])),
+    defeated: a.defeated.map(value => value && mergeValues(value, definitions[attacker.country][value.type]))
+  }
   if (settings[CombatParameter.ReinforceFirst])
     d = reinforce(d, definitions[defender.country], round, defender.row_types, defender.flank_size, calculateArmySize(a), settings, undefined)
-  let a_to_d = pickTargets(definitions_a, d.frontline)
+  let a_to_d = pickTargets(units_a.frontline, d.frontline)
   if (!settings[CombatParameter.ReinforceFirst])
     d = reinforce(d, definitions[defender.country], round, defender.row_types, defender.flank_size, calculateArmySize(a), settings, a_to_d)
-  let definitions_d: FrontLine = d.frontline.map(value => value && mergeValues(value, definitions[defender.country][value.type]))
-  let d_to_a = pickTargets(definitions_d, a.frontline)
+  let units_d = {
+    frontline: d.frontline.map(value => value && mergeValues(value, definitions[defender.country][value.type])),
+    reserve: d.reserve.map(value => value && mergeValues(value, definitions[defender.country][value.type])),
+    defeated: d.defeated.map(value => value && mergeValues(value, definitions[defender.country][value.type]))
+  }
+  let d_to_a = pickTargets(units_d.frontline, a.frontline)
   if (round < 1)
     return [a, d] as [BaseUnits, BaseUnits]
 
+  // Must use real units here because manpower affects the tactic effectivenes.
   const tactic_effects = {
-    attacker: calculateTactic(attacker, attacker.tactic, defender.tactic && defender.tactic.type),
-    defender: calculateTactic(defender, defender.tactic, attacker.tactic && attacker.tactic.type),
+    attacker: calculateTactic(units_a, attacker.tactic, defender.tactic && defender.tactic.type),
+    defender: calculateTactic(units_d, defender.tactic, attacker.tactic && attacker.tactic.type),
     casualties: calculateValue(attacker.tactic, TacticCalc.Casualties) + calculateValue(defender.tactic, TacticCalc.Casualties)
   }
 
-  const attacker_roll = modifyRoll(attacker.roll, terrains, attacker.general, defender.general)
-  const defender_roll = modifyRoll(defender.roll, [], defender.general, attacker.general)
+  const attacker_roll = calculateTotalRoll(attacker.roll, terrains, attacker.general, defender.general)
+  const defender_roll = calculateTotalRoll(defender.roll, [], defender.general, attacker.general)
 
-  const [losses_d, kills_a] = attack(definitions_a, definitions_d, a_to_d, attacker_roll, terrains, tactic_effects.attacker, tactic_effects.casualties, settings)
-  const [losses_a, kills_d] = attack(definitions_d, definitions_a, d_to_a, defender_roll, terrains, tactic_effects.defender, tactic_effects.casualties, settings)
+  const [losses_d, kills_a] = attack(units_a.frontline, units_d.frontline, a_to_d, attacker_roll, terrains, tactic_effects.attacker, tactic_effects.casualties, settings)
+  const [losses_a, kills_d] = attack(units_d.frontline, units_a.frontline, d_to_a, defender_roll, terrains, tactic_effects.defender, tactic_effects.casualties, settings)
 
   a = { frontline: applyLosses(a.frontline, losses_a, round), reserve: a.reserve, defeated: a.defeated }
   d = { frontline: applyLosses(d.frontline, losses_d, round), reserve: d.reserve, defeated: d.defeated }
   a = { frontline: applyKills(a.frontline, kills_a, round), reserve: a.reserve, defeated: a.defeated }
   d = { frontline: applyKills(d.frontline, kills_d, round), reserve: d.reserve, defeated: d.defeated }
   // Definitions contain the actual strength and morale values so they must be used to check defeated.
-  definitions_a = applyLosses(definitions_a, losses_a, round) as FrontLine
-  definitions_d = applyLosses(definitions_d, losses_d, round) as FrontLine
+  units_a.frontline = applyLosses(units_a.frontline, losses_a, round) as FrontLine
+  units_d.frontline = applyLosses(units_d.frontline, losses_d, round) as FrontLine
   a = saveTargets(a, a_to_d)
   d = saveTargets(d, d_to_a)
   const minimum_morale = settings[CombatParameter.MinimumMorale]
   const minimum_strength = settings[CombatParameter.MinimumStrength]
-  a = copyDefeated(a, definitions_a, minimum_morale, minimum_strength)
-  d = copyDefeated(d, definitions_d, minimum_morale, minimum_strength)
+  a = copyDefeated(a, units_a.frontline, minimum_morale, minimum_strength)
+  d = copyDefeated(d, units_d.frontline, minimum_morale, minimum_strength)
   if (a.frontline.findIndex(unit => !!(unit && !unit.is_defeated)) === -1 && a.reserve.length === 0)
     a = removeDefeated(a)
   if (d.frontline.findIndex(unit => !!(unit && !unit.is_defeated)) === -1 && d.reserve.length === 0)
@@ -101,7 +110,7 @@ const saveTargets = (army: R<BaseUnits>, targets: Array<number | null>): R<BaseU
   const frontline = army.frontline.map((unit, index): (BaseUnit | null) => {
     if (!unit)
       return unit
-    return { ...unit, target: targets[index]}
+    return { ...unit, target: targets[index] }
   })
   return { ...army, frontline }
 }
@@ -119,7 +128,7 @@ const removeOutOfBounds = (army: R<BaseUnits>, combat_width: number): R<BaseUnit
       return unit
     if (index >= 0 && index < combat_width)
       return unit
-    defeated = [ ...defeated, unit ]
+    defeated = [...defeated, unit]
     return null
   }), combat_width, null)
   return { ...army, frontline, defeated }
@@ -186,7 +195,7 @@ export const calculateRollModifierFromTerrains = (terrains: TerrainDefinition[])
  * @param general Skill level of own general.
  * @param opposing_general Skill level of the enemy general.
  */
-const modifyRoll = (roll: number, terrains: TerrainDefinition[], general: number, opposing_general: number): number => {
+export const calculateTotalRoll = (roll: number, terrains: TerrainDefinition[], general: number, opposing_general: number): number => {
   const modifier_terrain = calculateRollModifierFromTerrains(terrains)
   const modifier_effect = calculateRollModifierFromGenerals(general, opposing_general)
   return roll + modifier_terrain + modifier_effect
@@ -212,7 +221,7 @@ export const calculateTactic = (army?: R<BaseUnits>, tactic?: R<TacticDefinition
     let units = 0
     let weight = 0.0
     for (const unit of army.frontline.concat(army.reserve).concat(army.defeated)) {
-      if (!unit)
+      if (!unit || unit.is_defeated)
         continue
       const strength = calculateValue(unit, UnitCalc.Strength)
       units += strength
@@ -221,6 +230,7 @@ export const calculateTactic = (army?: R<BaseUnits>, tactic?: R<TacticDefinition
     if (units)
       unit_modifier = weight / units
   }
+
   return effectiveness * Math.min(1.0, unit_modifier)
 }
 
@@ -275,7 +285,7 @@ const copyDefeated = (army: R<BaseUnits>, definitions: FrontLine, minimum_morale
       return null
     if (calculateValue(definition, UnitCalc.Strength) > minimum_strength && calculateValue(definition, UnitCalc.Morale) > minimum_morale)
       return unit
-    defeated = [ ...defeated, unit]
+    defeated = [...defeated, unit]
     return { ...unit, is_defeated: true }
   })
   return { frontline, reserve: army.reserve, defeated }
@@ -325,6 +335,52 @@ export const calculateBaseDamage = (roll: number, settings: Settings): number =>
   return Math.min(max_damage, base_damage + roll_damage * roll)
 }
 
+export const calculateExperienceReduction = (settings: Settings, target: Unit) => {
+  let damage_reduction_per_experience = settings[CombatParameter.ExperienceDamageReduction]
+  // Bug in game which makes morale damage taken and strength damage taken affect damage reduction from experience.
+  if (!settings[CombatParameter.FixExperience])
+    damage_reduction_per_experience *= (2.0 + calculateValue(target, UnitCalc.MoraleDamageTaken) + calculateValue(target, UnitCalc.StrengthDamageTaken)) * 0.5
+  return -damage_reduction_per_experience * calculateValue(target, UnitCalc.Experience)
+}
+
+export const calculateTotalDamage = (settings: Settings, base_damage: number, source: Unit, target: Unit, terrains: TerrainDefinition[], tactic_damage_multiplier: number) => {
+  let damage = 100000.0 * base_damage
+  damage = calculate(damage, 1.0 + calculateValue(source, UnitCalc.Discipline))
+  damage = calculate(damage, 1.0 + calculateValue(source, UnitCalc.DamageDone))
+  if (settings[CombatParameter.FixDamageTaken])
+    damage = calculate(damage, 1.0 + calculateValue(target, UnitCalc.DamageTaken))
+  else
+    damage = calculate(damage, 1.0 + calculateValue(source, UnitCalc.DamageDone))
+  damage = calculate(damage, 1.0 + sumBy(terrains, terrain => calculateValue(source, terrain.type)))
+  damage = calculate(damage, 1.0 + calculateValue(source, target.type))
+  damage = calculate(damage, 1.0 + tactic_damage_multiplier)
+  damage = calculate(damage, 1.0 + calculateValue(source, UnitCalc.Offense) - calculateValue(target, UnitCalc.Defense))
+  damage = calculate(damage, 1.0 + calculateExperienceReduction(settings, target))
+  damage = calculate(damage, calculateValue(source, UnitCalc.Strength))
+  return damage / 100000.0
+}
+
+export const calculateStrengthDamage = (settings: Settings, total_damage: number, source: Unit, target: Unit, casualties_multiplier: number) => {
+  const strength_lost_multiplier = settings[CombatParameter.StrengthLostMultiplier]
+  let strength_lost = total_damage * 100000.0
+  strength_lost = calculate(strength_lost, 1.0 + casualties_multiplier)
+  strength_lost = calculate(strength_lost, strength_lost_multiplier)
+  strength_lost = calculate(strength_lost, 1.0 + calculateValue(source, UnitCalc.StrengthDamageDone))
+  strength_lost = calculate(strength_lost, 1.0 + calculateValue(target, UnitCalc.StrengthDamageTaken))
+  return strength_lost / 100000.0
+}
+
+export const calculateMoraleDamage = (settings: Settings, total_damage: number, source: Unit, target: Unit) => {
+  const morale_lost_multiplier = settings[CombatParameter.MoraleLostMultiplier]
+  const morale_base_damage = settings[CombatParameter.MoraleDamageBase]
+  let morale_lost = total_damage * 100000.0
+  morale_lost = calculate(morale_lost, Math.max(0, calculateValue(source, UnitCalc.Morale)) / morale_base_damage)
+  morale_lost = calculate(morale_lost, morale_lost_multiplier)
+  morale_lost = calculate(morale_lost, 1.0 + calculateValue(source, UnitCalc.MoraleDamageDone))
+  morale_lost = calculate(morale_lost, 1.0 + calculateValue(target, UnitCalc.MoraleDamageTaken))
+  return morale_lost / 100000.0
+}
+
 /**
  * Calculates both strength and morale losses caused by a given attacker to a given defender.
  * Experimental: Tested with unit tests from in-game results. Not 100% accurate.
@@ -336,38 +392,14 @@ export const calculateBaseDamage = (roll: number, settings: Settings): number =>
  * @param casualties_multiplier Multiplier for strength lost from tactics.
  * @param settings Combat parameters.
  */
-const calculateLosses = (source: BaseUnit, target: BaseUnit, roll: number, terrains: TerrainDefinition[], tactic_damage_multiplier: number, casualties_multiplier: number, settings: Settings): Loss => {
-  let damage_reduction_per_experience = settings[CombatParameter.ExperienceDamageReduction]
-  // Bug in game which makes morale damage taken and strength damage taken affect damage reduction from experience.
-  if (!settings[CombatParameter.FixExperience])
-    damage_reduction_per_experience *= (2.0 + calculateValue(target, UnitCalc.MoraleDamageTaken) + calculateValue(target, UnitCalc.StrengthDamageTaken)) * 0.5
-  const strength_lost_multiplier = settings[CombatParameter.StrengthLostMultiplier]
-  const morale_lost_multiplier = settings[CombatParameter.MoraleLostMultiplier]
-  const morale_base_damage = settings[CombatParameter.MoraleDamageBase]
-  let damage = 100000.0 * calculateBaseDamage(roll, settings)
-  damage = calculate(damage, 1.0 + calculateValue(source, UnitCalc.Discipline))
-  damage = calculate(damage, 1.0 + calculateValue(source, UnitCalc.DamageDone))
-  if (settings[CombatParameter.FixDamageTaken])
-    damage = calculate(damage, 1.0 + calculateValue(target, UnitCalc.DamageTaken))
-  else
-    damage = calculate(damage, 1.0 + calculateValue(source, UnitCalc.DamageDone))
-  damage = calculate(damage, 1.0 + sumBy(terrains, terrain => calculateValue(source, terrain.type)))
-  damage = calculate(damage, 1.0 + calculateValue(source, target.type))
-  damage = calculate(damage, 1.0 + tactic_damage_multiplier)
-  damage = calculate(damage, 1.0 + calculateValue(source, UnitCalc.Offense) - calculateValue(target, UnitCalc.Defense))
-  damage = calculate(damage, 1.0 - damage_reduction_per_experience * calculateValue(target, UnitCalc.Experience))
-  damage = calculate(damage, calculateValue(source, UnitCalc.Strength))
-  let strength_lost = damage
-  strength_lost = calculate(strength_lost, 1.0 + casualties_multiplier)
-  strength_lost = calculate(strength_lost, strength_lost_multiplier)
-  strength_lost = calculate(strength_lost, 1.0 + calculateValue(source, UnitCalc.StrengthDamageDone))
-  strength_lost = calculate(strength_lost, 1.0 + calculateValue(target, UnitCalc.StrengthDamageTaken))
-  let morale_lost = damage
-  morale_lost = calculate(morale_lost, Math.max(0, calculateValue(source, UnitCalc.Morale)) / morale_base_damage)
-  morale_lost = calculate(morale_lost, morale_lost_multiplier)
-  morale_lost = calculate(morale_lost, 1.0 + calculateValue(source, UnitCalc.MoraleDamageDone))
-  morale_lost = calculate(morale_lost, 1.0 + calculateValue(target, UnitCalc.MoraleDamageTaken))
-  return { strength: strength_lost / 100000.0, morale: morale_lost / 100000.0 }
+const calculateLosses = (source: Unit, target: Unit, roll: number, terrains: TerrainDefinition[], tactic_damage_multiplier: number, casualties_multiplier: number, settings: Settings): Loss => {
+  
+  const base_damage = calculateBaseDamage(roll, settings)
+  const total_damage = calculateTotalDamage(settings, base_damage, source, target, terrains, tactic_damage_multiplier)
+  const strength_lost = calculateStrengthDamage(settings, total_damage, source, target, casualties_multiplier)
+  const morale_lost = calculateMoraleDamage(settings, total_damage, source, target)
+  
+  return { strength: strength_lost, morale: morale_lost }
 }
 
 /**
