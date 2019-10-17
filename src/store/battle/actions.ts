@@ -70,7 +70,7 @@ export const getInitialTerrains = (mode: DefinitionType): TerrainType[] => {
     return [TerrainType.None, TerrainType.Plains]
 } 
 
-const getInitialTactic = (mode: Mode): TacticType => mode === DefinitionType.Land ? TacticType.ShockAction : TacticType.FrontalAssault
+const getInitialTactic = (mode: Mode): TacticType => mode === DefinitionType.Land ? TacticType.Deception : TacticType.FrontalAssault
 
 const getInitialRowTypes = (mode: Mode): RowTypes => {
   if (mode === DefinitionType.Naval) {
