@@ -4,7 +4,7 @@ import { filterUnitDefinitions, isIncludedInMode, mergeUnits } from '../army_uti
 import { TacticType } from "./tactics/actions"
 import { mergeValues, DefinitionType } from "../base_definition"
 import { TerrainType, TerrainDefinition } from "./terrains/actions"
-import { UnitType, UnitDefinition } from "./units/actions"
+import { UnitType, UnitDefinition, BaseUnit, Unit } from "./units/actions"
 import { Battle, modeState, initialState } from "./battle/reducer"
 import { getDefaultArmy, Army as BaseArmy, Side, getDefaultParticipant, BaseUnits, Participant, Units } from "./battle/actions"
 import { defaultCountry, countriesState } from "./countries/reducer"
@@ -21,6 +21,34 @@ import { TacticDefinitions, getDefaultTactics } from "./tactics";
  */
 export const getSettings = (state: AppState): Settings => {
   return state.settings.combat[state.settings.mode]
+}
+
+export const findBaseUnit = (state: AppState, country: CountryName, id: number): BaseUnit | null => {
+  const units = getBaseUnitsByCountry(state, country)
+  let unit = units.reserve.find(unit => unit.id === id) || null
+  if (unit)
+    return unit
+  unit = units.frontline.find(unit => unit ? unit.id === id : false) || null
+  if (unit)
+    return unit
+  unit = units.defeated.find(unit => unit.id === id) || null
+  if (unit)
+    return unit
+  return null
+}
+
+export const findUnit = (state: AppState, side: Side, id: number): Unit | null => {
+  const units = getCurrentUnitsBySide(state, side)
+  let unit = units.reserve.find(unit => unit.id === id) || null
+  if (unit)
+    return unit
+  unit = units.frontline.find(unit => unit ? unit.id === id : false) || null
+  if (unit)
+    return unit
+  unit = units.defeated.find(unit => unit.id === id) || null
+  if (unit)
+    return unit
+  return null
 }
 
 /**
@@ -122,10 +150,9 @@ const getBaseUnitsByCountry = (state: AppState, name: CountryName): BaseUnits =>
 const getUnitsBySide = (state: AppState, side: Side): Units => getUnitsByCountry(state, getParticipant(state, side).name)
 
 const getUnitsByCountry = (state: AppState, name: CountryName): Units => {
-  const battle = getBattle(state)
-  const army = objGet(battle.armies, name, getDefaultArmy(state.settings.mode))
+  const army = getBattle(state).armies[name]
   const units = filterUnitDefinitions(state.settings.mode, objGet(state.units, name, getDefaultUnits()))
-  const global = objGet(state.global_stats, name, getDefaultGlobals())[state.settings.mode]
+  const global = state.global_stats[name][state.settings.mode]
   const frontline = army.frontline.map(value => value && mergeUnits(units, global, value))
   const reserve = army.reserve.map(value => mergeUnits(units, global, value))
   const defeated = army.defeated.map(value => mergeUnits(units, global, value))

@@ -16,7 +16,7 @@ import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from '../containers/Mod
 import ModalRowTypeSelector, { ModalInfo as ModalRowInfo } from '../containers/ModalRowTypeSelector'
 import ModalTerrainSelector, { ModalInfo as ModalTerrainInfo } from '../containers/ModalTerrainSelector'
 import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers/ModalTacticSelector'
-import ModalArmyUnitDetail, { ModalInfo as ModalArmyUnitInfo } from '../containers/ModalArmyUnitDetail'
+import ModalArmyUnitDetail from '../containers/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/ModalFastPlanner'
 import { calculateValue, mergeValues, getImage, Mode } from '../base_definition'
 import { getSettings, getBattle, getArmy, Army, getParticipant } from '../store/utils'
@@ -26,14 +26,13 @@ import { CombatParameter } from '../store/settings'
 import IconTerrain from '../images/terrain.png'
 import IconGeneral from '../images/military_power.png'
 import StyledNumber from '../components/Utils/StyledNumber'
-import { findUnitById } from '../army_utils'
-import { keys, resize } from '../utils';
+import { keys, resize } from '../utils'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
   modal_terrain_info: ModalTerrainInfo | null
   modal_tactic_info: ModalTacticInfo | null
-  modal_army_unit_info: ModalArmyUnitInfo | null
+  modal_army_unit_info: { country: CountryName, id: number, side: Side} | null
   modal_row_info: ModalRowInfo | null
   modal_fast_planner_open: boolean
 }
@@ -52,19 +51,17 @@ class Battle extends Component<IProps, IState> {
 
   closeModal = (): void => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null, modal_fast_planner_open: false, modal_row_info: null })
 
-  openUnitModal = (type: ArmyType, country: CountryName, column: number, unit: BaseUnit | null): void => {
+  openUnitModal = (side: Side, type: ArmyType, country: CountryName, column: number, unit: BaseUnit | null): void => {
     if (unit)
-      this.openArmyUnitModal(country, unit as BaseUnit & UnitDefinition)
+      this.openArmyUnitModal(side, country, unit as BaseUnit & UnitDefinition)
     else
       this.openUnitSelector(type, country, column)
   }
 
   openUnitSelector = (type: ArmyType, country: CountryName, index: number): void => this.setState({ modal_unit_info: { type, country, index } })
 
-  openArmyUnitModal = (country: CountryName, current_unit: BaseUnit & UnitDefinition): void => {
-    const base_unit = findUnitById(this.props.armies[country], current_unit.id)
-    if (base_unit)
-      this.setState({ modal_army_unit_info: { country, unit: current_unit, base_unit } })
+  openArmyUnitModal = (side: Side, country: CountryName, current_unit: BaseUnit & UnitDefinition): void => {
+    this.setState({ modal_army_unit_info: { country, id: current_unit.id, side } })
   }
 
   openTerrainModal = (index: number): void => this.setState({ modal_terrain_info: { index, location: this.props.terrains[this.props.selected_terrains[index]].location } })
@@ -95,7 +92,9 @@ class Battle extends Component<IProps, IState> {
           onClose={this.closeModal}
         />
         <ModalArmyUnitDetail
-          info={this.state.modal_army_unit_info}
+          country={this.state.modal_army_unit_info ? this.state.modal_army_unit_info.country : '' as CountryName}
+          id={this.state.modal_army_unit_info ? this.state.modal_army_unit_info.id : -1}
+          side={this.state.modal_army_unit_info ? this.state.modal_army_unit_info.side : Side.Attacker}
           onClose={this.closeModal}
         />
         <ModalTerrainSelector
@@ -125,7 +124,7 @@ class Battle extends Component<IProps, IState> {
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderArmy(Side.Attacker, army_a)
+                this.renderFrontline(Side.Attacker, army_a)
               }
             </Grid.Column>
           </Grid.Row>
@@ -143,7 +142,7 @@ class Battle extends Component<IProps, IState> {
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderArmy(Side.Defender, army_d)
+                this.renderFrontline(Side.Defender, army_d)
               }
             </Grid.Column>
           </Grid.Row>
@@ -278,38 +277,38 @@ class Battle extends Component<IProps, IState> {
     return String(round)
   }
 
-  renderArmy = (type: Side, participant: Army): JSX.Element => {
+  renderFrontline = (side: Side, participant: Army): JSX.Element => {
     const country = participant.name
     const combat_width = this.props.combat[CombatParameter.CombatWidth]
     return (
-      <div key={type}>
-        {type === Side.Attacker && <Header>{type + '\'s frontline'}</Header>}
+      <div key={side}>
+        {side === Side.Attacker && <Header>{side + '\'s frontline'}</Header>}
         <UnitArmy
-          color={type === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
-          side={type}
-          onClick={(column, unit) => this.openUnitModal(ArmyType.Frontline, country, column, unit)}
+          color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
+          side={side}
+          onClick={(column, unit) => this.openUnitModal(side, ArmyType.Frontline, country, column, unit)}
           onRemove={column => this.props.removeUnit(this.props.mode, country, ArmyType.Frontline, column)}
           units={resize(this.mergeAllValues(country, participant.frontline), combat_width, null)}
           row_width={Math.max(30, combat_width)}
-          reverse={type === Side.Attacker}
+          reverse={side === Side.Attacker}
           type={ArmyType.Frontline}
           disable_add={this.props.round > -1}
         />
-        {type === Side.Defender && <Header>{type + '\'s frontline'}</Header>}
+        {side === Side.Defender && <Header>{side + '\'s frontline'}</Header>}
       </div>
     )
   }
 
-  renderRoll = (type: Side, roll: number, is_random: boolean, general: number, opposing_general: number): JSX.Element => {
-    const terrain_effect = type === Side.Attacker ? calculateRollModifierFromTerrains(this.props.selected_terrains.map(value => this.props.terrains[value])) : 0
+  renderRoll = (side: Side, roll: number, is_random: boolean, general: number, opposing_general: number): JSX.Element => {
+    const terrain_effect = side === Side.Attacker ? calculateRollModifierFromTerrains(this.props.selected_terrains.map(value => this.props.terrains[value])) : 0
     const general_effect = calculateRollModifierFromGenerals(general, opposing_general)
-    const total = calculateTotalRoll(roll, type === Side.Attacker ? this.props.selected_terrains.map(value => this.props.terrains[value]) : [], general, opposing_general)
+    const total = calculateTotalRoll(roll, side === Side.Attacker ? this.props.selected_terrains.map(value => this.props.terrains[value]) : [], general, opposing_general)
     const base_damage = calculateBaseDamage(total, this.props.combat)
     return (
-      <div key={type}>
+      <div key={side}>
         {base_damage.toFixed(2)} :
         <span style={{ paddingLeft: '1em' }} /><Image src={IconDice} avatar />
-        {is_random ? roll : <Input size='mini' style={{ width: 100 }} type='number' value={roll} onChange={(_, data) => this.props.setRoll(this.props.mode, type, Number(data.value))} />}
+        {is_random ? roll : <Input size='mini' style={{ width: 100 }} type='number' value={roll} onChange={(_, data) => this.props.setRoll(this.props.mode, side, Number(data.value))} />}
         {general_effect !== 0 ?
           <span style={{ paddingLeft: '1em' }}>
             <Image src={IconGeneral} avatar />
@@ -326,25 +325,25 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderIsRollRandom = (type: Side, is_random: boolean): JSX.Element => {
+  renderIsRollRandom = (side: Side, is_random: boolean): JSX.Element => {
     return (
-      <Checkbox toggle checked={is_random} onClick={() => this.props.toggleRandomRoll(this.props.mode, type)} />
+      <Checkbox toggle checked={is_random} onClick={() => this.props.toggleRandomRoll(this.props.mode, side)} />
     )
   }
 
-  renderReserve = (type: Side, participant: Army): JSX.Element => {
+  renderReserve = (side: Side, participant: Army): JSX.Element => {
     const country = participant.name
     const units = this.mergeAllValues(country, participant.reserve)
     // + 1 ensures that the user can always select an empty space.
     // ceil ensures full rows for a cleaner UI.
     const size = Math.ceil((units.length + 1) / 30.0) * 30
     return (
-      <div key={type}>
-        <Header>{type + '\'s reserve'}</Header>
+      <div key={side}>
+        <Header>{side + '\'s reserve'}</Header>
         <UnitArmy
-          color={type === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
-          side={type}
-          onClick={(column, unit) => this.openUnitModal(ArmyType.Reserve, country, column, unit)}
+          color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
+          side={side}
+          onClick={(column, unit) => this.openUnitModal(side, ArmyType.Reserve, country, column, unit)}
           onRemove={column => this.props.removeUnit(this.props.mode, country, ArmyType.Reserve, column)}
           units={resize(units, size, null)}
           row_width={30}
@@ -355,19 +354,19 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderDefeatedArmy = (type: Side, participant: Army): JSX.Element => {
+  renderDefeatedArmy = (side: Side, participant: Army): JSX.Element => {
     const country = participant.name
     const units = this.mergeAllValues(country, participant.defeated)
     // + 1 ensures that the user can always select an empty space.
     // ceil ensures full rows for a cleaner UI.
     const size = Math.ceil((units.length + 1) / 30.0) * 30
     return (
-      <div key={type}>
-        <Header>{type + '\'s defeated units'}</Header>
+      <div key={side}>
+        <Header>{side + '\'s defeated units'}</Header>
         <UnitArmy
-          color={type === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
-          side={type}
-          onClick={(column, unit) => this.openUnitModal(ArmyType.Defeated, country, column, unit)}
+          color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
+          side={side}
+          onClick={(column, unit) => this.openUnitModal(side, ArmyType.Defeated, country, column, unit)}
           onRemove={column => this.props.removeUnit(this.props.mode, country, ArmyType.Defeated, column)}
           units={resize(units, size, null)}
           row_width={30}
@@ -398,13 +397,13 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderTactic = (participant: Army, counter?: TacticType): JSX.Element => {
-    const country = participant.name
-    const tactic = this.props.tactics[participant.tactic]
-    const army = {
-      frontline: this.mergeAllValues(country, participant.frontline),
-      reserve: this.mergeAllValues(country, participant.reserve) as BaseReserve,
-      defeated: this.mergeAllValues(country, participant.defeated) as BaseDefeated
+  renderTactic = (army: Army, counter?: TacticType): JSX.Element => {
+    const country = army.name
+    const tactic = this.props.tactics[army.tactic]
+    const units = {
+      frontline: this.mergeAllValues(country, army.frontline),
+      reserve: this.mergeAllValues(country, army.reserve) as BaseReserve,
+      defeated: this.mergeAllValues(country, army.defeated) as BaseDefeated
     }
     return (
       <div key={country} onClick={() => this.openTacticModal(country, counter)}>
@@ -412,7 +411,7 @@ class Battle extends Component<IProps, IState> {
         {(tactic && tactic.type) || 'None'}
         {' ('}
         <StyledNumber
-          value={calculateTactic(army, tactic, counter)}
+          value={calculateTactic(units, tactic, counter)}
           formatter={toSignedPercent}
         />
         {')'}
@@ -420,18 +419,18 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderArmyInfo = (type: Side, participant: Participant, army: Army, enemy: Army): JSX.Element => {
+  renderArmyInfo = (side: Side, participant: Participant, army: Army, enemy: Army): JSX.Element => {
     const name = army.name
     return (
-      <Table.Row key={type}>
+      <Table.Row key={side}>
         <Table.Cell collapsing>
-          {type}
+          {side}
         </Table.Cell>
         <Table.Cell collapsing>
           <Dropdown
             values={keys(this.props.armies)}
             value={name}
-            onChange={name => this.props.selectArmy(this.props.mode, type, name)}
+            onChange={name => this.props.selectArmy(this.props.mode, side, name)}
           />
         </Table.Cell>
         <Table.Cell collapsing>
@@ -442,10 +441,10 @@ class Battle extends Component<IProps, IState> {
           {this.renderTactic(army, enemy.tactic)}
         </Table.Cell>
         <Table.Cell>
-          {this.renderRoll(type, participant.roll, participant.randomize_roll, army.general.total, enemy.general.total)}
+          {this.renderRoll(side, participant.roll, participant.randomize_roll, army.general.total, enemy.general.total)}
         </Table.Cell>
         <Table.Cell collapsing>
-          {this.renderIsRollRandom(type, participant.randomize_roll)}
+          {this.renderIsRollRandom(side, participant.randomize_roll)}
         </Table.Cell>
       </Table.Row>
     )

@@ -6,34 +6,28 @@ import ItemRemover from '../components/ItemRemover'
 import UnitDetail from '../components/UnitDetail'
 
 import { AppState } from '../store/'
-import { UnitType, ValueType, BaseUnit, Unit } from '../store/units'
-import { editUnit, removeUnit } from '../store/battle'
+import { UnitType, ValueType } from '../store/units'
+import { editUnit, deleteUnit, setValue, changeType, invalidateCountry, Side } from '../store/battle'
 import { CountryName } from '../store/countries'
-import { filterTerrainTypes, filterUnitTypesByCountry } from '../store/utils'
+import { filterTerrainTypes, filterUnitTypesByCountry, findUnit } from '../store/utils'
 
-import { addValues, ValuesType } from '../base_definition'
-import { invalidateCountry } from '../store/battle'
+import { ValuesType } from '../base_definition'
 
 const CUSTOM_VALUE_KEY = 'Unit'
 
 interface Props {
-  info: ModalInfo | null
+  side: Side
+  country: CountryName
+  id: number
   onClose: () => void
-}
-
-export interface ModalInfo {
-  readonly country: CountryName
-  readonly unit: Unit
-  readonly base_unit: BaseUnit
 }
 
 class ModalArmyUnitDetail extends Component<IProps> {
 
   render() {
-    const { info, onClose, mode, unit_types, terrain_types } = this.props
-    if (!info)
+    const { onClose, mode, unit_types, terrain_types, unit } = this.props
+    if (!unit)
       return null
-    const { unit } = info
     return (
       <Modal basic onClose={onClose} open>
         <Modal.Content>
@@ -57,52 +51,46 @@ class ModalArmyUnitDetail extends Component<IProps> {
   }
 
   removeUnit = () => {
-    const { mode } = this.props
-    const { base_unit, country } = this.props.info!
-    this.props.removeUnit(mode, country, base_unit)
+    const { mode, id, country } = this.props
+    this.props.deleteUnit(mode, country, id)
     this.props.invalidateCountry(country)
     this.props.onClose()
   }
 
   setBaseValue = (key: string, attribute: ValueType, value: number) => {
-    const { base_unit, country } = this.props.info!
-    const unit = addValues(base_unit, ValuesType.Base, key, [[attribute, value]])
-    this.edit(unit, country)
+    const { mode, country, id } = this.props
+    this.props.setValue(mode, country, id, ValuesType.Base, key, attribute, value)
+    this.props.invalidateCountry(country)
   }
 
   setModifierValue = (key: string, attribute: ValueType, value: number) => {
-    const { base_unit, country } = this.props.info!
-    const unit = addValues(base_unit, ValuesType.Modifier, key, [[attribute, value]])
-    this.edit(unit, country)
+    const { mode, country, id } = this.props
+    this.props.setValue(mode, country, id, ValuesType.Modifier, key, attribute, value)
+    this.props.invalidateCountry(country)
   }
 
   setLossValue = (key: string, attribute: ValueType, value: number) => {
-    const { base_unit, country } = this.props.info!
-    const unit = addValues(base_unit, ValuesType.Loss, key, [[attribute, value]])
-    this.edit(unit, country)
-  }
-
-  edit = (unit: BaseUnit, country: CountryName) => {
-    const { mode } = this.props
-    this.props.editUnit(mode, country, unit)
+    const { mode, country, id } = this.props
+    this.props.setValue(mode, country, id, ValuesType.Loss, key, attribute, value)
     this.props.invalidateCountry(country)
   }
 
   changeType = (type: UnitType) => {
-    const { base_unit, country } = this.props.info!
-    const unit = { ...base_unit, type }
-    this.edit(unit, country)
+    const { mode, country, id } = this.props
+    this.props.changeType(mode, country, id, type)
+    this.props.invalidateCountry(country)
   }
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  unit_types: filterUnitTypesByCountry(state, props.info! && props.info!.country),
+  unit_types: filterUnitTypesByCountry(state, props.country),
   global_stats: state.global_stats,
   terrain_types: filterTerrainTypes(state),
-  mode: state.settings.mode
+  mode: state.settings.mode,
+  unit: findUnit(state, props.side, props.id)
 })
 
-const actions = { editUnit, removeUnit, invalidateCountry }
+const actions = { editUnit, deleteUnit, invalidateCountry, setValue, changeType }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

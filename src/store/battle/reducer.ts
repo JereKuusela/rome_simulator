@@ -3,9 +3,9 @@ import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer
 import {
   getDefaultArmy, getInitialTerrains, Army, Side, ArmyType, BaseUnits, Participant, getDefaultParticipant, RowType
 } from './actions'
-import { BaseUnit, UnitType } from '../units'
+import { BaseUnit, UnitType, ValueType } from '../units'
 import { TerrainType } from '../terrains'
-import { DefinitionType, Mode } from '../../base_definition'
+import { DefinitionType, Mode, ValuesType, addValues } from '../../base_definition'
 import { CountryName } from '../countries'
 import { TacticType } from '../tactics';
 import { keys, toArr, forEach, arrGet } from '../../utils'
@@ -53,6 +53,24 @@ const findUnit = (participant: Army, id: number): [ArmyType | undefined, number]
   return [undefined, -1]
 }
 
+const update = (army: Army, id: number, updater: (unit: BaseUnit) => BaseUnit): void => {
+  let index = army.reserve.findIndex(unit => unit.id === id)
+  if (index > -1) {
+    army.reserve[index] = updater(army.reserve[index])
+    return
+  }
+  index = army.frontline.findIndex(unit => unit ? unit.id === id : false)
+  if (index > -1) {
+    army.frontline[index] = updater(army.frontline[index]!)
+    return
+  }
+  index = army.defeated.findIndex(unit => unit.id === id)
+  if (index > -1) {
+    army.defeated[index] = updater(army.defeated[index])
+    return
+  }
+}
+
 const checkFightSub = (army: BaseUnits) => checkArmy(army.frontline) || checkArmy(army.reserve)
 
 export const isOver = (participants: Participants, armies: Armies) => !every(participants, value => checkFightSub(arrGet(value.rounds, -1, armies[value.name])))
@@ -91,6 +109,16 @@ class BattleReducer extends ImmerReducer<ModeState> {
     this.draftState[mode].fight_over = isOver(this.draftState[mode].participants, this.draftState[mode].armies)
   }
 
+  setValue(mode: Mode, country: CountryName, id: number, values_type: ValuesType, key: string, attribute: ValueType, value: number) {
+    const draft = this.draftState[mode].armies[country]
+    update(draft, id, unit => addValues(unit, values_type, key, [[attribute, value]]))
+  }
+
+  changeType(mode: Mode, country: CountryName, id: number, type: UnitType) {
+    const draft = this.draftState[mode].armies[country]
+    update(draft, id, unit => ({ ...unit, type}))
+  }
+
   editUnit(mode: Mode, country: CountryName, unit: BaseUnit) {
     const state = this.state[mode].armies[country]
     const draft = this.draftState[mode].armies[country]
@@ -105,10 +133,10 @@ class BattleReducer extends ImmerReducer<ModeState> {
       draft.defeated[index] = unit
   }
 
-  removeUnit(mode: Mode, country: CountryName, unit: BaseUnit) {
+  deleteUnit(mode: Mode, country: CountryName, id: number) {
     const state = this.state[mode].armies[country]
     const draft = this.draftState[mode].armies[country]
-    const [type, index] = findUnit(state, unit.id)
+    const [type, index] = findUnit(state, id)
     if (!type)
       return
     if (type === ArmyType.Frontline)
@@ -117,7 +145,6 @@ class BattleReducer extends ImmerReducer<ModeState> {
       draft.reserve.splice(index, 1)
     if (type === ArmyType.Defeated)
       draft.defeated.splice(index, 1)
-    this.draftState[mode].fight_over = isOver(this.draftState[mode].participants, this.draftState[mode].armies)
   }
 
   removeReserveUnits(mode: Mode, country: CountryName, types: UnitType[]) {
@@ -215,7 +242,9 @@ const actions = createActionCreators(BattleReducer)
 
 export const selectUnit = actions.selectUnit
 export const editUnit = actions.editUnit
-export const removeUnit = actions.removeUnit
+export const setValue = actions.setValue
+export const changeType = actions.changeType
+export const deleteUnit = actions.deleteUnit
 export const removeReserveUnits = actions.removeReserveUnits
 export const addReserveUnits = actions.addReserveUnits
 export const selectTerrain = actions.selectTerrain
