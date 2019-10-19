@@ -8,6 +8,7 @@ import { Side } from '../store/battle'
 import { UnitType, Units } from '../store/units'
 import { getImages } from '../base_definition'
 import { toArr } from '../utils'
+import { get } from 'lodash'
 
 export type PlannerUnits = { [key in UnitType]: number }
 
@@ -51,8 +52,8 @@ export default class FastPlanner extends Component<IProps> {
 
   renderRow = (type: UnitType) => {
     const { types_a, types_d, changes_a, changes_d, reserve_a, reserve_d } = this.props
-    const units_a = changes_a[type] || reserve_a[type]
-    const units_d = changes_d[type] || reserve_d[type]
+    const units_a = get(changes_a, type, reserve_a[type])
+    const units_d = get(changes_d, type, reserve_d[type])
     return (
       <Table.Row key={type}>
         <Table.Cell width='6'>
