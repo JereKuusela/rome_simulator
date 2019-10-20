@@ -6,11 +6,11 @@ describe('siege', () => {
   it('works', () => {
     const min = -5
     const max = -10
-    const iterations = 10000
+    const iterations = 1000000
     const seed = createEntropy()[0]
     const engine = MersenneTwister19937.seed(seed)
     const rng = new Random(engine)
-    console.log('! Initial modifier !! Average !! Very lucky (5th pct) !! Lucky (25th pct) !! Expected (50th pct) !! Unlucky (75th pct) !! Very unlucky (95th pct) !! Disease chance !! Assault chance !! Turns saved !! Garrison depleted')
+    console.log('! Initial modifier !! Average !! Very lucky (5th pct) !! Lucky (25th pct) !! Expected (50th pct) !! Unlucky (75th pct) !! Very unlucky (95th pct) !! Disease chance !! Assault chance !! Intervals saved  !! Intervals saved (total) !! Garrison depleted')
 
     for (var delta = min; delta <= max; delta++) {
       let garrison_low = 0
@@ -18,7 +18,7 @@ describe('siege', () => {
       let assaults = 0
       const results = []
       let total = 0
-      let turns_saved = 0
+      let intervals_saved = 0
       for (var iteration = 0; iteration < iterations; iteration++) {
         let accumulation = 0
         let roll = 1
@@ -71,12 +71,12 @@ describe('siege', () => {
             assaults++
           }
           if (assaulted)
-            turns_saved++
+            intervals_saved++
         }
         results.push(roll)
         total += roll
       }
-      console.log('| ' + delta + ' || ' + total / iterations + ' || ' + percentile(5, results) + ' || ' + percentile(25, results) + ' || ' + percentile(50, results) + ' || ' + percentile(75, results) + ' || ' + percentile(95, results) + ' || ' + diseases / iterations + ' || ' + assaults / iterations + ' || ' + turns_saved / iterations + ' || ' + garrison_low / iterations)
+      console.log('| ' + delta + ' || ' + total / iterations + ' || ' + percentile(5, results) + ' || ' + percentile(25, results) + ' || ' + percentile(50, results) + ' || ' + percentile(75, results) + ' || ' + percentile(95, results) + ' || ' + diseases / iterations + ' || ' + assaults / iterations + ' || ' + intervals_saved / assaults +  ' || ' + intervals_saved / iterations + ' || ' + garrison_low / iterations)
     }
   })
 })
