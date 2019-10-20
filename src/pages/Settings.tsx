@@ -1,23 +1,28 @@
 import React, { Component } from 'react'
-import { Container, Grid, Input, Table } from 'semantic-ui-react'
-import { changeParameter, CombatParameter, parameterToDescription } from '../store/settings'
 import { connect } from 'react-redux'
+import { Container, Grid, Input, Table } from 'semantic-ui-react'
+
+import { changeParameter, CombatParameter, parameterToDescription } from '../store/settings'
+import { invalidate } from '../store/battle'
 import { AppState } from '../store/index'
-import { DefinitionType } from '../base_definition'
 import { getSettings } from '../store/utils'
+
 import { toArr } from '../utils'
+
+interface Props { }
 
 class Settings extends Component<IProps> {
 
-  render(): JSX.Element {
+  render() {
+    const { mode, settings } = this.props
     return (
       <Container>
         <Grid padded celled>
           <Grid.Row columns='2'>
             {
-              toArr(this.props.combat, (value, key) => {
+              toArr(settings, (value, key) => {
                 return (
-                  <Grid.Column key={this.props.mode + '_' + key}>
+                  <Grid.Column key={mode + '_' + key}>
                     <Table basic='very'>
                       <Table.Row>
                         <Table.Cell collapsing >
@@ -25,7 +30,7 @@ class Settings extends Component<IProps> {
                             size='mini'
                             style={{ width: 50 }}
                             defaultValue={value}
-                            onChange={(_, data) => this.onChange(key, data.value)}
+                            onChange={(_, { value }) => this.onChange(key, value)}
                           />
                         </Table.Cell>
                         <Table.Cell key={key + '_description'} style={{ whiteSpace: 'pre-line' }} >
@@ -43,18 +48,25 @@ class Settings extends Component<IProps> {
     )
   }
 
-  onChange = (key: CombatParameter, value: string) => Number(value) && this.props.changeParameter(this.props.mode, key, Number(value))
+  onChange = (key: CombatParameter, str: string) => {
+    const value = +str
+    if (isNaN(value))
+      return
+    const { mode, changeParameter, invalidate } = this.props
+    changeParameter(mode, key, value)
+    invalidate(mode)
+  }
 }
 
 const mapStateToProps = (state: AppState) => ({
-  combat: getSettings(state),
+  settings: getSettings(state),
   mode: state.settings.mode
 })
 
-const mapDispatchToProps = (dispatch: any) => ({
-  changeParameter: (mode: DefinitionType.Land | DefinitionType.Naval, key: CombatParameter, value: number) => dispatch(changeParameter(mode, key, value))
-})
+const actions = { changeParameter, invalidate }
 
-interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }
+type S = ReturnType<typeof mapStateToProps>
+type D = typeof actions
+interface IProps extends React.PropsWithChildren<Props>, S, D { }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Settings)
+export default connect(mapStateToProps, actions)(Settings)

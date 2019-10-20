@@ -56,7 +56,7 @@ export const doBattle = (definitions: Units, attacker: R<ParticipantState>, defe
   }
   if (settings[CombatParameter.ReinforceFirst])
     d = reinforce(d, definitions[defender.country], round, defender.row_types, defender.flank_size, calculateArmySize(a), settings, undefined)
-  let a_to_d = pickTargets(units_a.frontline, d.frontline)
+  let a_to_d = pickTargets(units_a.frontline, d.frontline, settings)
   if (!settings[CombatParameter.ReinforceFirst])
     d = reinforce(d, definitions[defender.country], round, defender.row_types, defender.flank_size, calculateArmySize(a), settings, a_to_d)
   let units_d = {
@@ -64,7 +64,7 @@ export const doBattle = (definitions: Units, attacker: R<ParticipantState>, defe
     reserve: d.reserve.map(value => value && mergeValues(value, definitions[defender.country][value.type])),
     defeated: d.defeated.map(value => value && mergeValues(value, definitions[defender.country][value.type]))
   }
-  let d_to_a = pickTargets(units_d.frontline, a.frontline)
+  let d_to_a = pickTargets(units_d.frontline, a.frontline, settings)
   if (round < 1)
     return [a, d] as [BaseUnits, BaseUnits]
 
@@ -139,8 +139,9 @@ const removeOutOfBounds = (army: R<BaseUnits>, combat_width: number): R<BaseUnit
  * Returns an array which maps attacker to defender.
  * @param source_row Attackers.
  * @param target_row Defenders.
+ * @param settings Targeting setting.
  */
-const pickTargets = (source_row: R<FrontLine>, target_row: R<BaseFrontLine>): Array<number | null> => {
+const pickTargets = (source_row: R<FrontLine>, target_row: R<BaseFrontLine>, settings: Settings): Array<number | null> => {
   // Units attack mainly units on front of them. If not then first target from left to right.
   const attacker_to_defender = Array<number | null>(source_row.length)
   for (let i = 0; i < source_row.length; ++i)
@@ -153,8 +154,8 @@ const pickTargets = (source_row: R<FrontLine>, target_row: R<BaseFrontLine>): Ar
       target_index = source_index
     else {
       const maneuver = calculateValue(source, UnitCalc.Maneuver)
-      if (source_index > source_row.length / 2) {
-        for (let index = source_index + maneuver; index >= source_index - maneuver; --index) {
+      if (settings[CombatParameter.FixTargeting] ? source_index < source_row.length / 2 : source_index <= source_row.length / 2) {
+        for (let index = source_index - maneuver; index <= source_index + maneuver; ++index) {
           if (index >= 0 && index < source_row.length && target_row[index]) {
             target_index = index
             break
@@ -162,7 +163,7 @@ const pickTargets = (source_row: R<FrontLine>, target_row: R<BaseFrontLine>): Ar
         }
       }
       else {
-        for (let index = source_index - maneuver; index <= source_index + maneuver; ++index) {
+        for (let index = source_index + maneuver; index >= source_index - maneuver; --index) {
           if (index >= 0 && index < source_row.length && target_row[index]) {
             target_index = index
             break
@@ -395,12 +396,12 @@ export const calculateMoraleDamage = (settings: Settings, total_damage: number, 
  * @param settings Combat parameters.
  */
 const calculateLosses = (source: Unit, target: Unit, roll: number, terrains: TerrainDefinition[], tactic_damage_multiplier: number, casualties_multiplier: number, settings: Settings): Loss => {
-  
+
   const base_damage = calculateBaseDamage(roll, settings)
   const total_damage = calculateTotalDamage(settings, base_damage, source, target, terrains, tactic_damage_multiplier)
   const strength_lost = calculateStrengthDamage(settings, total_damage, source, target, casualties_multiplier)
   const morale_lost = calculateMoraleDamage(settings, total_damage, source, target)
-  
+
   return { strength: strength_lost, morale: morale_lost }
 }
 

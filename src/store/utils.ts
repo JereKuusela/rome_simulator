@@ -10,7 +10,7 @@ import { getDefaultArmy, Army as BaseArmy, Side, getDefaultParticipant, BaseUnit
 import { defaultCountry, countriesState } from "./countries/reducer"
 import { CountryName } from "./countries"
 import { getDefaultGlobals, getDefaultUnits } from "./units/data"
-import { Settings, settingsState } from "./settings"
+import { Settings, getDefaultSetings } from "./settings"
 import { UnitDefinitions, globalStatsState, unitsState } from "./units"
 import { TerrainDefinitions, getDefaultTerrains } from "./terrains";
 import { TacticDefinitions, getDefaultTactics } from "./tactics";
@@ -228,9 +228,11 @@ export const resetMissing = (data: AppState) => {
   data.terrains = data.terrains || getDefaultTerrains()
   data.units = data.units || unitsState
   data.battle = data.battle || initialState
-  data.battle[DefinitionType.Land] = data.battle[DefinitionType.Land] || modeState(DefinitionType.Land)
-  data.battle[DefinitionType.Naval] = data.battle[DefinitionType.Naval] || modeState(DefinitionType.Naval)
-  data.settings = data.settings || settingsState
+  if (!data.battle[DefinitionType.Land])
+    data.battle[DefinitionType.Land] = modeState(DefinitionType.Land)
+  if (!data.battle[DefinitionType.Naval])
+    data.battle[DefinitionType.Naval] = modeState(DefinitionType.Naval)
+  data.settings = data.settings || getDefaultSetings()
   data.countries = data.countries || countriesState
   return data
 }

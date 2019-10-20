@@ -34,6 +34,7 @@ const getDefaultAnySettings = (): { [key in CombatParameter]: number } => {
     [CombatParameter.MinimumMorale]: 0.25,
     [CombatParameter.MinimumStrength]: 0,
     [CombatParameter.ReinforceFirst]: 0,
-    [CombatParameter.FixDamageTaken]: 0
+    [CombatParameter.FixDamageTaken]: 0,
+    [CombatParameter.FixTargeting]: 1
   }
 }

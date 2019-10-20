@@ -7,16 +7,15 @@ import { ObjSet, has } from '../../utils'
 
 export type Settings = { [key in CombatParameter]: number }
 
-export const settingsState = {
-  combat: {} as { [key in Mode]: Settings },
+export const getDefaultSetings = () => ({
+  combat: {[DefinitionType.Land]: getDefaultLandSettings(), [DefinitionType.Naval]: getDefaultNavalSettings()},
   simple_mode: true,
   mode: DefinitionType.Land as Mode,
   country: CountryName.Country1,
   accordions: {} as ObjSet
-}
+})
 
-settingsState.combat[DefinitionType.Land] = getDefaultLandSettings()
-settingsState.combat[DefinitionType.Naval] = getDefaultNavalSettings()
+const settingsState = getDefaultSetings()
 
 class SettingsReducer extends ImmerReducer<typeof settingsState> {
 

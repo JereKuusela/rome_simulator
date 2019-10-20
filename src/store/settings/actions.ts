@@ -14,7 +14,8 @@ export enum CombatParameter {
   RollFrequency = 'RollFrequency',
   CombatWidth = 'CombatWidth',
   ReinforceFirst = 'ReinforceFirst',
-  FixDamageTaken = 'FixDamageTaken'
+  FixDamageTaken = 'FixDamageTaken',
+  FixTargeting = 'FixTargeting'
 }
 
 export const parameterToDescription = (parameter: CombatParameter): string => {
@@ -51,6 +52,8 @@ export const parameterToDescription = (parameter: CombatParameter): string => {
       return 'Additional base damage per dice roll and other modifiers.'
     case CombatParameter.RollFrequency:
       return 'How many rounds dice rolls stay active.'
+    case CombatParameter.FixTargeting:
+      return '16th unit uses wrong targeting direction.\nThis makes the left and right sides behave slightly differently.\nThis is probably a bug in the game. Set 1 to fix this.'
     default:
       return 'No description.'
   }
