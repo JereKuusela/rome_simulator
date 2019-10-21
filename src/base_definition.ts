@@ -80,7 +80,7 @@ export const mergeValues = <D1 extends BD | undefined, D2 extends BD | undefined
 /**
  * Adds base, modifier or loss values.
  */
-export const addValues = <D extends BVD, A extends string> (definition: D, type: ValuesType, key: string, values: [A, number][]): D => {
+export const addValues = <D extends BVD> (definition: D, type: ValuesType, key: string, values: [string, number][]): D => {
   if (type === ValuesType.Base)
     return { ...definition, base_values: subAddValues(definition.base_values, key, values) }
   const any = definition as any
