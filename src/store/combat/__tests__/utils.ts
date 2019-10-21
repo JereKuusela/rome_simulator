@@ -135,9 +135,9 @@ const verifySide = (round: number, side: Side, frontline: (BaseUnit | null)[], e
   }
 }
 
-export const initSide = (rounds: number) => (
-  mapRange(rounds, initFrontline)
-)
+export const initSide = (rounds: number) => ({
+  attacker: mapRange(rounds, initFrontline), defender: mapRange(rounds, initFrontline)
+})
 
 const initFrontline = (): ExpectedUnits[] => (
   [null, null, null, null, null, null, null, null, null, null,

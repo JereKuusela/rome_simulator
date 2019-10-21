@@ -3,7 +3,7 @@ import { CombatParameter } from '../../settings'
 import { verifyType, getRowTypes, getUnit, every_type, setFlankSizes, initInfo, TestInfo, initSide, testCombat } from './utils'
 
 describe('reinforcement', () => {
-  
+
   let info: TestInfo
   beforeEach(() => { info = initInfo() })
 
@@ -24,8 +24,7 @@ describe('reinforcement', () => {
   }
 
   const reinforce = () => {
-    const attacker = initSide(1)
-    const defender = initSide(1)
+    const { attacker, defender } = initSide(1)
     attacker[0] = null as any
     defender[0] = null as any
     testCombat(info, [[0, 0]], attacker, defender)

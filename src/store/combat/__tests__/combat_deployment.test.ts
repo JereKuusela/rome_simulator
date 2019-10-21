@@ -25,8 +25,7 @@ describe('initial deployment', () => {
 
 const deploy = () => {
     info.round = -1
-    const attacker = initSide(1)
-    const defender = initSide(1)
+    const { attacker, defender } = initSide(1)
     attacker[0] = null as any
     defender[0] = null as any
     testCombat(info, [[0, 0]], attacker, defender)
