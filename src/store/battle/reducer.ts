@@ -27,7 +27,7 @@ export type Participants = { [key in Side]: Participant }
 export type ModeState = { [key in Mode]: Battle }
 
 
-export const modeState = (mode: Mode): Battle => ({
+export const getDefaultMode = (mode: Mode): Battle => ({
   armies: { [CountryName.Country1]: getDefaultArmy(mode), [CountryName.Country2]: getDefaultArmy(mode) },
   participants: { [Side.Attacker]: getDefaultParticipant(CountryName.Country1), [Side.Defender]: getDefaultParticipant(CountryName.Country2) },
   terrains: getInitialTerrains(mode),
@@ -38,7 +38,9 @@ export const modeState = (mode: Mode): Battle => ({
   outdated: true
 })
 
-export const initialState: ModeState = { [DefinitionType.Land]: modeState(DefinitionType.Land), [DefinitionType.Naval]: modeState(DefinitionType.Naval) }
+export const getDefaultBattle = (): ModeState => ({ [DefinitionType.Land]: getDefaultMode(DefinitionType.Land), [DefinitionType.Naval]: getDefaultMode(DefinitionType.Naval) })
+
+const battleState = getDefaultBattle()
 
 const findUnit = (participant: Army, id: number): [ArmyType | undefined, number] => {
   let index = participant.reserve.findIndex(unit => unit.id === id)
@@ -266,4 +268,4 @@ export const selectArmy = actions.selectArmy
 export const clearUnits = actions.clearUnits
 
 
-export const battleReducer = createReducerFunction(BattleReducer, initialState)
+export const battleReducer = createReducerFunction(BattleReducer, battleState)

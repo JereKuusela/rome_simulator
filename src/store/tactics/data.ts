@@ -81,9 +81,7 @@ const createTacticFromJson = (data: TacticData): TacticDefinition => {
 
 export type TacticDefinitions = { [key in TacticType]: TacticDefinition }
 
-const initializeDefaultTactics = (): TacticDefinitions => toObj(data.tactics.map(createTacticFromJson), unit => unit.type)
-
-const defaultTactics = initializeDefaultTactics()
+const defaultTactics = toObj(data.tactics.map(createTacticFromJson), unit => unit.type)
 
 export const getDefaultTactics = () => defaultTactics
 export const getDefaultTactic = (type: TacticType): TacticDefinition => defaultTactics[type]

@@ -7,7 +7,7 @@ import { ObjSet, has } from '../../utils'
 
 export type Settings = { [key in CombatParameter]: number }
 
-export const getDefaultSetings = () => ({
+export const getDefaultSettings = () => ({
   combat: {[DefinitionType.Land]: getDefaultLandSettings(), [DefinitionType.Naval]: getDefaultNavalSettings()},
   simple_mode: true,
   mode: DefinitionType.Land as Mode,
@@ -15,9 +15,9 @@ export const getDefaultSetings = () => ({
   accordions: {} as ObjSet
 })
 
-const settingsState = getDefaultSetings()
+const settings = getDefaultSettings()
 
-class SettingsReducer extends ImmerReducer<typeof settingsState> {
+class SettingsReducer extends ImmerReducer<typeof settings> {
 
   changeParameter(mode: Mode, key: CombatParameter, value: number) {
     this.draftState.combat[mode][key] = value
@@ -65,9 +65,9 @@ export const toggleAccordion = actions.toggleAccordion
 export const toggleMode = actions.toggleMode
 export const toggleSimpleMode = actions.toggleSimpleMode
 
-export const reducer = createReducerFunction(SettingsReducer, settingsState)
+export const reducer = createReducerFunction(SettingsReducer, settings)
 
-export const settingsReducer = (state = settingsState, action: Actions<typeof SettingsReducer>) => {
+export const settingsReducer = (state = settings, action: Actions<typeof SettingsReducer>) => {
   if (action.type === createCountry.type)
     return reducer(state, { payload: action.payload, type: actions.createCountry.type, args: true } as any)
   if (action.type === deleteCountry.type)

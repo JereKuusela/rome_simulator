@@ -15,9 +15,11 @@ export type GlobalDefinitions = { [key in DefinitionType.Land | DefinitionType.N
 export type Units = { [key in CountryName]: UnitDefinitions }
 export type UnitDefinitions = { [key in UnitType]: UnitDefinition }
 
-export const unitsState = { [CountryName.Country1]: getDefaultUnits(), [CountryName.Country2]: getDefaultUnits() } as Units
+export const getDefaultUnitDefinitions = (): Units => ({ [CountryName.Country1]: getDefaultUnits(), [CountryName.Country2]: getDefaultUnits() })
+export const getDefaultBaseDefinitions = (): GlobalStats => ({ [CountryName.Country1]: getDefaultGlobals(), [CountryName.Country2]: getDefaultGlobals() })
 
-export const globalStatsState = { [CountryName.Country1]: getDefaultGlobals(), [CountryName.Country2]: getDefaultGlobals() } as GlobalStats
+const unitDefinitions = getDefaultUnitDefinitions()
+const baseDefinitions = getDefaultBaseDefinitions()
 
 
 class UnitsReducer extends ImmerReducer<Units> {
@@ -35,7 +37,7 @@ class UnitsReducer extends ImmerReducer<Units> {
   }
 
   changeType(country: CountryName, old_type: UnitType, type: UnitType) {
-    delete Object.assign(this.draftState[country], {[type]: this.draftState[country][old_type] })[old_type]
+    delete Object.assign(this.draftState[country], { [type]: this.draftState[country][old_type] })[old_type]
   }
 
   changeImage(country: CountryName, type: UnitType, image: string) {
@@ -67,7 +69,7 @@ class UnitsReducer extends ImmerReducer<Units> {
   }
 
   changeCountryName(old_country: CountryName, country: CountryName) {
-    delete Object.assign(this.draftState, {[country]: this.draftState[old_country] })[old_country]
+    delete Object.assign(this.draftState, { [country]: this.draftState[old_country] })[old_country]
   }
 
   enableModifiers(country: CountryName, key: string, modifiers: Modifier[]) {
@@ -101,7 +103,7 @@ class GlobalStatsReducer extends ImmerReducer<GlobalStats> {
   }
 
   changeCountryName(old_country: CountryName, country: CountryName) {
-    delete Object.assign(this.draftState, {[country]: this.draftState[old_country] })[old_country]
+    delete Object.assign(this.draftState, { [country]: this.draftState[old_country] })[old_country]
   }
 
   toggleIsLoyal(country: CountryName, mode: Mode) {
@@ -143,9 +145,9 @@ export const toggleIsFlank = unitsActions.toggleIsFlank
 export const toggleCanAssault = unitsActions.toggleCanAssault
 export const toggleIsLoyal = unitsActions.toggleIsLoyal
 
-const unitsBaseReducer = createReducerFunction(UnitsReducer, unitsState)
+const unitsBaseReducer = createReducerFunction(UnitsReducer, unitDefinitions)
 
-export const unitsReducer = (state = unitsState, action: Actions<typeof UnitsReducer>) => {
+export const unitsReducer = (state = unitDefinitions, action: Actions<typeof UnitsReducer>) => {
   if (action.type === createCountry.type)
     return unitsBaseReducer(state, { payload: action.payload, type: unitsActions.createCountry.type, args: true } as any)
   if (action.type === deleteCountry.type)
@@ -164,9 +166,9 @@ const globalStatsActions = createActionCreators(GlobalStatsReducer)
 export const setGlobalValue = globalStatsActions.setGlobalValue
 export const toggleGlobalIsLoyal = globalStatsActions.toggleIsLoyal
 
-const globalStatsBaseReducer = createReducerFunction(GlobalStatsReducer, globalStatsState)
+const globalStatsBaseReducer = createReducerFunction(GlobalStatsReducer, baseDefinitions)
 
-export const globalStatsReducer = (state = globalStatsState, action: Actions<typeof GlobalStatsReducer>) => {
+export const globalStatsReducer = (state = baseDefinitions, action: Actions<typeof GlobalStatsReducer>) => {
   if (action.type === createCountry.type)
     return globalStatsBaseReducer(state, { payload: action.payload, type: globalStatsActions.createCountry.type, args: true } as any)
   if (action.type === deleteCountry.type)

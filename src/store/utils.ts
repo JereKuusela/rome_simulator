@@ -5,15 +5,15 @@ import { TacticType } from "./tactics/actions"
 import { mergeValues, DefinitionType } from "../base_definition"
 import { TerrainType, TerrainDefinition } from "./terrains/actions"
 import { UnitType, UnitDefinition, BaseUnit, Unit } from "./units/actions"
-import { Battle, modeState, initialState } from "./battle/reducer"
+import { Battle, getDefaultMode, getDefaultBattle } from "./battle/reducer"
 import { getDefaultArmy, Army as BaseArmy, Side, getDefaultParticipant, BaseUnits, Participant, Units } from "./battle/actions"
-import { defaultCountry, countriesState } from "./countries/reducer"
+import { defaultCountry, getDefaultCountryDefinitions } from "./countries/reducer"
 import { CountryName } from "./countries"
 import { getDefaultGlobals, getDefaultUnits } from "./units/data"
-import { Settings, getDefaultSetings } from "./settings"
-import { UnitDefinitions, globalStatsState, unitsState } from "./units"
-import { TerrainDefinitions, getDefaultTerrains } from "./terrains";
-import { TacticDefinitions, getDefaultTactics } from "./tactics";
+import { Settings, getDefaultSettings } from "./settings"
+import { UnitDefinitions, getDefaultBaseDefinitions, getDefaultUnitDefinitions } from "./units"
+import { TerrainDefinitions, getDefaultTerrainDefinitions } from "./terrains";
+import { TacticDefinitions, getDefaultTacticDefinitions } from "./tactics";
 
 /**
  * Returns settings of the current mode.
@@ -119,7 +119,7 @@ export const filterUnitTypesByCountry = (state: AppState, country: CountryName):
  * Returns armies of the current mode.
  * @param state Application state.
  */
-export const getBattle = (state: AppState): Battle => objGet(state.battle, state.settings.mode, modeState(state.settings.mode))
+export const getBattle = (state: AppState): Battle => objGet(state.battle, state.settings.mode, getDefaultMode(state.settings.mode))
 
 export const getArmyBySide = (state: AppState, side: Side): Army => getArmyByCountry(state, getParticipant(state, side).name)
 
@@ -223,17 +223,17 @@ export const getUnitDefinitionsByCountry = (state: AppState, name: CountryName):
  * @param data 
  */
 export const resetMissing = (data: AppState) => {
-  data.global_stats = data.global_stats || globalStatsState
-  data.tactics = data.tactics || getDefaultTactics()
-  data.terrains = data.terrains || getDefaultTerrains()
-  data.units = data.units || unitsState
-  data.battle = data.battle || initialState
+  data.global_stats = data.global_stats || getDefaultBaseDefinitions()
+  data.tactics = data.tactics || getDefaultTacticDefinitions()
+  data.terrains = data.terrains || getDefaultTerrainDefinitions()
+  data.units = data.units || getDefaultUnitDefinitions()
+  data.battle = data.battle || getDefaultBattle()
   if (!data.battle[DefinitionType.Land])
-    data.battle[DefinitionType.Land] = modeState(DefinitionType.Land)
+    data.battle[DefinitionType.Land] = getDefaultMode(DefinitionType.Land)
   if (!data.battle[DefinitionType.Naval])
-    data.battle[DefinitionType.Naval] = modeState(DefinitionType.Naval)
-  data.settings = data.settings || getDefaultSetings()
-  data.countries = data.countries || countriesState
+    data.battle[DefinitionType.Naval] = getDefaultMode(DefinitionType.Naval)
+  data.settings = data.settings || getDefaultSettings()
+  data.countries = data.countries || getDefaultCountryDefinitions()
   return data
 }
 

@@ -36,12 +36,14 @@ export const defaultCountry: Country =
   office_morale: 0
 }
 
-export const countriesState: { [key in CountryName]: Country } = {
+export const getDefaultCountryDefinitions = (): { [key in CountryName]: Country } => ({
   [CountryName.Country1]: defaultCountry,
   [CountryName.Country2]: defaultCountry
-}
+})
 
-class CountriesReducer extends ImmerReducer<typeof countriesState> {
+const countryDefinitions = getDefaultCountryDefinitions()
+
+class CountriesReducer extends ImmerReducer<typeof countryDefinitions> {
 
   createCountry(country: CountryName, source_country?: CountryName) {
     this.draftState[country] = objGet(this.state, source_country, defaultCountry)
@@ -119,5 +121,5 @@ export const setMilitaryPower = actions.setMilitaryPower
 export const setOfficeDiscipline = actions.setOfficeDiscipline
 export const setOfficeMorale = actions.setOfficeMorale
 
-export const selectionsReducer = createReducerFunction(CountriesReducer, countriesState)
+export const selectionsReducer = createReducerFunction(CountriesReducer, countryDefinitions)
 

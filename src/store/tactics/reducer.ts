@@ -4,7 +4,9 @@ import { TacticType, ValueType } from './actions'
 import { addValues, ValuesType, DefinitionType } from '../../base_definition'
 import { getIcon } from '../tactics'
 
-export const tacticsState = getDefaultTactics()
+export const getDefaultTacticDefinitions = () => getDefaultTactics()
+
+const tacticDefinitions = getDefaultTacticDefinitions()
 
 class TacticsReducer extends ImmerReducer<TacticDefinitions> {
 
@@ -42,4 +44,4 @@ export const changeType = actions.changeType
 export const changeImage = actions.changeImage
 export const changeMode = actions.changeMode
 
-export const tacticsReducer = createReducerFunction(TacticsReducer, tacticsState)
+export const tacticsReducer = createReducerFunction(TacticsReducer, tacticDefinitions)
