@@ -28,8 +28,17 @@ export interface TestInfo {
 export const initInfo = () => ({
   attacker: getDefaultParticipant(CountryName.Country1),
   defender: getDefaultParticipant(CountryName.Country2),
-  army_a: { ...getDefaultArmy(DefinitionType.Land), tactic: TacticType.Envelopment, row_types: getRowTypes() },
-  army_d: { ...getDefaultArmy(DefinitionType.Land), tactic: TacticType.Envelopment, row_types: getRowTypes() },
+  army_a: {
+    ...getDefaultArmy(DefinitionType.Land),
+    frontline: [...getDefaultArmy(DefinitionType.Land).frontline],
+    tactic: TacticType.Envelopment,
+    row_types: getRowTypes() },
+  army_d: {
+    ...getDefaultArmy(DefinitionType.Land),
+    frontline: [...getDefaultArmy(DefinitionType.Land).frontline],
+    tactic: TacticType.Envelopment,
+    row_types: getRowTypes()
+  },
   round: 0,
   terrains: [],
   settings:  getDefaultLandSettings()
@@ -70,10 +79,14 @@ export const setTactics = (info: TestInfo, tactic_a: TacticType, tactic_d: Tacti
   info.army_d = { ...info.army_d, tactic: tactic_d }
 }
 export const setCenterUnits = (info: TestInfo, unit_a: BaseUnit, unit_d: BaseUnit) => {
-  info.army_a = { ...info.army_a, frontline: [...info.army_a.frontline] }
-  info.army_d = { ...info.army_d, frontline: [...info.army_d.frontline] }
   info.army_a.frontline[15] = unit_a
   info.army_d.frontline[15] = unit_d
+}
+export const setAttacker = (info: TestInfo, index: number, unit: BaseUnit) => {
+  info.army_a.frontline[index] = unit
+}
+export const setDefender = (info: TestInfo, index: number, unit: BaseUnit) => {
+  info.army_d.frontline[index] = unit
 }
 export const setFlankSizes = (info: TestInfo, flank_a: number, flank_d: number) => {
   info.army_a = { ...info.army_a, flank_size: flank_a }

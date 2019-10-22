@@ -30,13 +30,13 @@ describe('reinforcement', () => {
     testCombat(info, [[0, 0]], attacker, defender)
   }
 
-  it('works with a single unit', () => {
+  it('a single unit', () => {
     setAttacker([UnitType.Archers])
     reinforce()
     verifyType(info.army_a.frontline[15], UnitType.Archers)
     expect(info.army_a.reserve.length).toEqual(0)
   })
-  it('works with both sides', () => {
+  it('both sides', () => {
     setAttacker([UnitType.Archers])
     setDefender([UnitType.Chariots])
     reinforce()
@@ -45,7 +45,7 @@ describe('reinforcement', () => {
     verifyType(info.army_d.frontline[15], UnitType.Chariots)
     expect(info.army_d.reserve.length).toEqual(0)
   })
-  it('works with main front and default priorities', () => {
+  it('main front and default priorities', () => {
     setAttacker(every_type)
     const result = [UnitType.LightInfantry, UnitType.Archers, UnitType.Chariots, UnitType.HeavyInfantry, UnitType.HeavyCavalry, UnitType.WarElephants, UnitType.LightCavalry, UnitType.CamelCavalry, UnitType.HorseArchers]
     fillDefender(UnitType.Archers)
@@ -53,14 +53,14 @@ describe('reinforcement', () => {
     verify(result)
     expect(info.army_a.reserve.length).toEqual(0)
   })
-  it('works with flank only and default priorities', () => {
+  it('flank only and default priorities', () => {
     setAttacker(every_type)
     const result = [UnitType.LightInfantry, UnitType.Archers, UnitType.Chariots, UnitType.HeavyInfantry, UnitType.HeavyCavalry, UnitType.WarElephants, UnitType.LightCavalry, UnitType.CamelCavalry, UnitType.HorseArchers]
     reinforce()
     verify(result)
     expect(info.army_a.reserve.length).toEqual(0)
   })
-  it('works with mixed field and default priorities, uneven', () => {
+  it('mixed field and default priorities, uneven', () => {
     setAttacker(every_type)
     setDefender([UnitType.Archers, UnitType.Archers, UnitType.Archers])
     const result = [UnitType.LightInfantry, UnitType.Archers, UnitType.Chariots, UnitType.HeavyInfantry, UnitType.HeavyCavalry, UnitType.WarElephants, UnitType.LightCavalry, UnitType.CamelCavalry, UnitType.HorseArchers]
@@ -68,7 +68,7 @@ describe('reinforcement', () => {
     verify(result)
     expect(info.army_a.reserve.length).toEqual(0)
   })
-  it('works with mixed field and default priorities, even', () => {
+  it('mixed field and default priorities, even', () => {
     setAttacker(every_type)
     setDefender([UnitType.Archers, UnitType.Archers, UnitType.Archers, UnitType.Archers])
     const result = [UnitType.LightInfantry, UnitType.Archers, UnitType.Chariots, UnitType.HeavyInfantry, UnitType.HeavyCavalry, UnitType.WarElephants, UnitType.LightCavalry, UnitType.CamelCavalry, UnitType.HorseArchers]
@@ -76,7 +76,7 @@ describe('reinforcement', () => {
     verify(result)
     expect(info.army_a.reserve.length).toEqual(0)
   })
-  it('works with front priority', () => {
+  it('front priority', () => {
     info.army_a = { ...info.army_a, row_types: getRowTypes(UnitType.Archers, UnitType.Archers) }
     setAttacker(every_type)
     setDefender([UnitType.Archers, UnitType.Archers, UnitType.Archers, UnitType.Archers])
@@ -85,7 +85,7 @@ describe('reinforcement', () => {
     verify(result)
     expect(info.army_a.reserve.length).toEqual(0)
   })
-  it('works with back priority', () => {
+  it('back priority', () => {
     info.army_a = { ...info.army_a, row_types: getRowTypes(null, UnitType.Archers) }
     setAttacker(every_type)
     setDefender([UnitType.Archers, UnitType.Archers, UnitType.Archers, UnitType.Archers])
@@ -94,7 +94,7 @@ describe('reinforcement', () => {
     verify(result)
     expect(info.army_a.reserve.length).toEqual(0)
   })
-  it('works with flank priority', () => {
+  it('flank priority', () => {
     info.army_a = { ...info.army_a, row_types: getRowTypes(UnitType.Archers, UnitType.Archers, UnitType.Archers) }
     setAttacker(every_type)
     setDefender([UnitType.Archers, UnitType.Archers, UnitType.Archers, UnitType.Archers])
@@ -103,7 +103,7 @@ describe('reinforcement', () => {
     verify(result)
     expect(info.army_a.reserve.length).toEqual(0)
   })
-  it('works with mixed priority', () => {
+  it('mixed priority', () => {
     info.army_a = { ...info.army_a, row_types: getRowTypes(UnitType.HeavyInfantry, UnitType.HorseArchers, UnitType.Archers) }
     setAttacker(every_type)
     setDefender([UnitType.Archers, UnitType.Archers, UnitType.Archers, UnitType.Archers])
@@ -112,7 +112,7 @@ describe('reinforcement', () => {
     verify(result)
     expect(info.army_a.reserve.length).toEqual(0)
   })
-  it('works with flank size, inactive', () => {
+  it('flank size, inactive', () => {
     setFlankSizes(info, 5, 0)
     fillAttacker(UnitType.Archers)
     setAttacker([UnitType.HorseArchers])
@@ -121,7 +121,7 @@ describe('reinforcement', () => {
     reinforce()
     verify(result)
   })
-  it('works with flank size', () => {
+  it('flank size', () => {
     setFlankSizes(info, 5, 0)
     fillAttacker(UnitType.Archers)
     setAttacker([UnitType.HorseArchers, UnitType.HorseArchers, UnitType.HorseArchers])
@@ -130,7 +130,7 @@ describe('reinforcement', () => {
     reinforce()
     verify(result)
   })
-  it('works with reduced combat width', () => {
+  it('reduced combat width', () => {
     setFlankSizes(info, 2, 0)
     info.settings[CombatParameter.CombatWidth] = 5
     setAttacker([UnitType.HorseArchers, UnitType.HorseArchers, UnitType.HorseArchers])

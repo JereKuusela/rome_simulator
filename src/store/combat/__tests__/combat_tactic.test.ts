@@ -3,14 +3,14 @@ import { UnitType, UnitCalc } from '../../units'
 import { addValues, ValuesType } from '../../../base_definition'
 import { getUnit, TestInfo, initInfo, setCenterUnits, testCombat, initSide, setTactics } from './utils'
 
-describe('1 vs 1', () => {
+describe('tactics', () => {
   const archer = addValues(getUnit(UnitType.Archers), ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.2]])
   const heavy = addValues(getUnit(UnitType.HeavyInfantry), ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.2]])
   
   let info: TestInfo
   beforeEach(() => { info = initInfo() })
 
-  it('should work with increased casualties', () => {
+  it('increased casualties', () => {
     setTactics(info, TacticType.ShockAction, TacticType.ShockAction)
     setCenterUnits(info, archer, archer)
     const rolls = [[3, 2]]
@@ -27,7 +27,7 @@ describe('1 vs 1', () => {
     testCombat(info, rolls, attacker, defender)
   })
 
-  it('should work with mixed casualties', () => {
+  it('mixed casualties', () => {
     setTactics(info, TacticType.Skirmishing, TacticType.ShockAction)
     setCenterUnits(info, archer, archer)
     const rolls = [[3, 2]]
@@ -44,7 +44,7 @@ describe('1 vs 1', () => {
     testCombat(info, rolls, attacker, defender)
   })
   
-  it('should work with counters and effectiveness', () => {
+  it('counters and effectiveness', () => {
     setTactics(info, TacticType.Bottleneck, TacticType.ShockAction)
     setCenterUnits(info, archer, archer)
     const rolls = [[0, 4]]
@@ -61,7 +61,7 @@ describe('1 vs 1', () => {
     testCombat(info, rolls, attacker, defender)
   })
     
-  it('should work with varying effectiveness (manpower)', () => {
+  it('varying effectiveness (manpower)', () => {
     setTactics(info, TacticType.Bottleneck, TacticType.ShockAction)
     setCenterUnits(info, archer, archer)
     info.army_a.frontline[0] = heavy

@@ -12,7 +12,7 @@ describe('1 vs 1', () => {
   let info: TestInfo
   beforeEach(() => { info = initInfo() })
 
-  it('should work without modifiers', () => {
+  it('no modifiers', () => {
     const unit = addValues(archer, ValuesType.Base, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25]])
     setCenterUnits(info, unit, unit)
     const rolls = [[0, 2], [3, 2]]
@@ -43,7 +43,7 @@ describe('1 vs 1', () => {
     testCombat(info, rolls, attacker, defender)
   })
 
-  it('should work with increased morale damage taken, terrain bonus and discipline', () => {
+  it('increased morale damage taken, terrain bonus and discipline', () => {
     const unit_a = addValues(archer, ValuesType.Base, 'Test', [[UnitCalc.Discipline, 0.045]])
     const unit_d = addValues(archer, ValuesType.Base, 'Test', [[UnitCalc.Discipline, 0.14], [TerrainType.Forest, 0.15]])
     setTerrain(info, TerrainType.Forest)
@@ -64,7 +64,7 @@ describe('1 vs 1', () => {
     testCombat(info, rolls, attacker, defender)
   })
 
-  it('should work with reduced morale damage taken, offense/defense and experience', () => {
+  it('reduced morale damage taken, offense/defense and experience', () => {
     const unit_a = addValues(infantry, ValuesType.Base, 'Test', [[UnitCalc.Offense, 0.1], [UnitCalc.Defense, 0.15], [UnitCalc.Experience, 0.0001]])
     const unit_d = addValues(infantry, ValuesType.Base, 'Test', [[UnitCalc.Offense, 0.05], [UnitCalc.Defense, 0.05], [UnitCalc.Experience, 0.0004]])
     setCenterUnits(info, unit_a, unit_d)
@@ -84,7 +84,7 @@ describe('1 vs 1', () => {
     testCombat(info, rolls, attacker, defender)
   })
 
-  it('should work with versus damage and increased morale damage taken', () => {
+  it('versus damage and increased morale damage taken', () => {
     const unit_a = addValues(cavalry, ValuesType.Base, 'Test', [])
     const unit_d = addValues(archer, ValuesType.Base, 'Test', [])
     setCenterUnits(info, unit_a, unit_d)
