@@ -226,10 +226,10 @@ class Battle extends Component<IProps, IState> {
                       Preferred unit types
                     </Table.HeaderCell>
                     <Table.HeaderCell>
-                      {RowType.Front}
+                      {RowType.Primary}
                     </Table.HeaderCell>
                     <Table.HeaderCell>
-                      {RowType.Back}
+                      {RowType.Secondary}
                     </Table.HeaderCell>
                     <Table.HeaderCell>
                       {RowType.Flank}
@@ -468,8 +468,8 @@ class Battle extends Component<IProps, IState> {
         <Table.Cell>
           {type}
         </Table.Cell>
-        {this.renderCell(country, RowType.Front, row_types, units)}
-        {this.renderCell(country, RowType.Back, row_types, units)}
+        {this.renderCell(country, RowType.Primary, row_types, units)}
+        {this.renderCell(country, RowType.Secondary, row_types, units)}
         {this.renderCell(country, RowType.Flank, row_types, units)}
         <Table.Cell collapsing>
           <Input size='mini' style={{ width: 100 }} type='number' value={army && army.flank_size} onChange={(_, data) => this.props.setFlankSize(this.props.mode, country, Number(data.value))} />

@@ -17,7 +17,7 @@ export const nextIndex = (index: number, center: number) => index < center ? ind
 const isFlankUnit = (row_types: RowTypes, unit: Unit) => {
     if (unit.type === row_types[RowType.Flank])
         return true
-    if (unit.type === row_types[RowType.Front] || unit.type === row_types[RowType.Back])
+    if (unit.type === row_types[RowType.Primary] || unit.type === row_types[RowType.Secondary])
         return false
     return unit.is_flank
 }
@@ -73,7 +73,7 @@ export const reinforce = (army: R<BaseUnits>, definitions: R<UnitDefinitions>, r
     // Calculate priorities (mostly based on unit type, ties are resolved with index numbers).
     let orderedMainReserve = sortBy(mainReserve, value => {
         value = mergeValues(value, definitions[value.type])
-        return -calculateBase(value, UnitCalc.Cost) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 - (value.type === row_types[RowType.Front] ? 200000000 : 0) - (value.type === row_types[RowType.Back] ? -100000000 : 0)
+        return -calculateBase(value, UnitCalc.Cost) * 100000 - calculateValue(value, UnitCalc.Strength) * 1000 - (value.type === row_types[RowType.Primary] ? 200000000 : 0) - (value.type === row_types[RowType.Secondary] ? -100000000 : 0)
     })
     let orderedFlankReserve = sortBy(flankReserve, value => {
         value = mergeValues(value, definitions[value.type])

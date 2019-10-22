@@ -1,6 +1,7 @@
 import { UnitType } from '../../units'
 import { CombatParameter } from '../../settings'
 import { verifyType, getRowTypes, getUnit, every_type, setFlankSizes, initInfo, TestInfo, initSide, testCombat } from './utils'
+import { Side } from '../../battle'
 
 describe('reinforcement', () => {
 
@@ -18,7 +19,7 @@ describe('reinforcement', () => {
     const half = Math.floor(info.settings[CombatParameter.CombatWidth] / 2.0)
     let index = half
     for (const type of types) {
-      verifyType(info.army_a.frontline[index], type, ' at index ' + index)
+      verifyType(info.round, Side.Attacker, index, info.army_a.frontline[index], type, ' at index ' + index)
       index = nextIndex(index, half)
     }
   }
@@ -33,16 +34,16 @@ describe('reinforcement', () => {
   it('a single unit', () => {
     setAttacker([UnitType.Archers])
     reinforce()
-    verifyType(info.army_a.frontline[15], UnitType.Archers)
+    verifyType(info.round, Side.Attacker, 15, info.army_a.frontline[15], UnitType.Archers)
     expect(info.army_a.reserve.length).toEqual(0)
   })
   it('both sides', () => {
     setAttacker([UnitType.Archers])
     setDefender([UnitType.Chariots])
     reinforce()
-    verifyType(info.army_a.frontline[15], UnitType.Archers)
+    verifyType(info.round, Side.Attacker, 15, info.army_a.frontline[15], UnitType.Archers)
     expect(info.army_a.reserve.length).toEqual(0)
-    verifyType(info.army_d.frontline[15], UnitType.Chariots)
+    verifyType(info.round, Side.Attacker, 15, info.army_d.frontline[15], UnitType.Chariots)
     expect(info.army_d.reserve.length).toEqual(0)
   })
   it('main front and default priorities', () => {

@@ -6,8 +6,8 @@ import { CountryName } from '../countries'
 import { ObjSet } from '../../utils'
 
 export enum RowType {
-  Front = 'Front',
-  Back = 'Back',
+  Primary = 'Primary',
+  Secondary = 'Secondary',
   Flank = 'Flank'
 }
 
@@ -75,15 +75,15 @@ const getInitialTactic = (mode: Mode): TacticType => mode === DefinitionType.Lan
 const getInitialRowTypes = (mode: Mode): RowTypes => {
   if (mode === DefinitionType.Naval) {
     return {
-      [RowType.Front]: UnitType.MegaPolyreme,
-      [RowType.Back]: UnitType.MegaPolyreme,
+      [RowType.Primary]: UnitType.MegaPolyreme,
+      [RowType.Secondary]: UnitType.MegaPolyreme,
       [RowType.Flank]: UnitType.MegaPolyreme
     }
   }
   else {
     return {
-      [RowType.Front]: UnitType.Archers,
-      [RowType.Back]: UnitType.HeavyInfantry,
+      [RowType.Primary]: UnitType.Archers,
+      [RowType.Secondary]: UnitType.HeavyInfantry,
       [RowType.Flank]: UnitType.LightCavalry
     }
   }
