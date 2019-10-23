@@ -174,7 +174,8 @@
       "tetrere": -0.25,
       "hexere": -0.35,
       "octere": -0.4,
-      "mega_polyreme": -0.5
+      "mega_polyreme": -0.5,
+      "riverine": 0.25
     },
     {
       "type": "Trireme",
@@ -189,7 +190,8 @@
       "tetrere": -0.1,
       "hexere": -0.1,
       "octere": -0.2,
-      "mega_polyreme": -0.2
+      "mega_polyreme": -0.2,
+      "riverine": 0.25
     },
     {
       "type": "Tetrere",

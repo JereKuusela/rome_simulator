@@ -88,7 +88,7 @@
       "type": "Riverine",
       "mode": "Naval",
       "location": "Tile",
-      "roll": -1
+      "roll": 0
     }
   ]
 }

@@ -20,6 +20,7 @@ import IconTetrere from '../../images/tetrere.png'
 import IconHexere from '../../images/hexere.png'
 import IconOctere from '../../images/octere.png'
 import IconMegaPolyreme from '../../images/mega_polyreme.png'
+import { TerrainType } from '../terrains'
 
 const unit_to_icon: { [key in UnitType]: string } = {
   [UnitType.Archers]: IconArcher,
@@ -72,7 +73,8 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
     [UnitType.Tetrere, data.tetrere || 0],
     [UnitType.Hexere, data.hexere || 0],
     [UnitType.Octere, data.octere || 0],
-    [UnitType.MegaPolyreme, data.mega_polyreme || 0]
+    [UnitType.MegaPolyreme, data.mega_polyreme || 0],
+    [TerrainType.Riverine, data.riverine || 0]
   ]
   unit = addValues(unit, ValuesType.Base, unit.type, base_values)
   return unit
@@ -142,4 +144,5 @@ interface UnitData {
   hexere?: number
   octere?: number
   mega_polyreme?: number
+  riverine?: number
 }
