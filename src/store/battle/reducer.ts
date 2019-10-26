@@ -73,7 +73,7 @@ const update = (army: Army, id: number, updater: (unit: BaseUnit) => BaseUnit): 
   }
 }
 
-const checkFightSub = (army: BaseUnits) => checkArmy(army.frontline) || checkArmy(army.reserve)
+export const checkFightSub = (army: BaseUnits) => checkArmy(army.frontline) || checkArmy(army.reserve)
 
 export const isOver = (participants: Participants, armies: Armies) => !every(participants, value => checkFightSub(arrGet(value.rounds, -1, armies[value.name])))
 
