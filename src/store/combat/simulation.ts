@@ -80,6 +80,10 @@ export const monteCarot = (definitions: Units, attacker: R<ParticipantState>, de
 
 }
 
+const copyStatus = (status: StatusLine): StatusLine => {
+  return status.map(value => value ? { ...value } : null)
+}
+
 export const calculateWinRate = (definitions: Units, attacker: R<ParticipantState>, defender: R<ParticipantState>, terrains: TerrainDefinition[], settings: Settings) => {
   const dice = settings[CombatParameter.DiceMaximum] - settings[CombatParameter.DiceMinimum] + 1
   const dice_2 = dice * dice
@@ -102,12 +106,11 @@ export const calculateWinRate = (definitions: Units, attacker: R<ParticipantStat
   const todo: number[] = []
   let last_primary = 0
   let iterations = 0
-  let rounds = 0
   while (indexes.length) {
     iterations++
     // Copy once to allow mutations.
-    let units_a: StatusLine | null = null
-    let units_d: StatusLine | null = null
+    let units_a: StatusLine = []
+    let units_d: StatusLine = []
     const index = indexes.pop()!
     const rolls = getRolls(index, dice)
     let depth = rolls.length
@@ -119,39 +122,41 @@ export const calculateWinRate = (definitions: Units, attacker: R<ParticipantStat
     let winner: Side | null | undefined = undefined
     let key = ''
 
-    rolls.forEach(([roll_a, roll_d], roll_index) => {
+    for (let i = 0; i < rolls.length; i++) {
+      const roll_a = rolls[i][0]
+      const roll_d = rolls[i][1]
+      const roll_index = i
       if (winner !== undefined)
-        return
-      if (storage[key + roll_a + ',' + roll_d]) {
-        const stored = storage[key + roll_a + ',' + roll_d]
-        units_a = cloneDeep(stored.units_a)
-        units_d = cloneDeep(stored.units_d)
-        key += roll_a + ',' + roll_d + '_'
-        return
+        continue
+
+      if (roll_index < rolls.length - 1) {
+        key += '_' + roll_a + ',' + roll_d
+        continue
       }
-      if (!units_a)
-        units_a = cloneDeep(status_a)
-      if (!units_d)
-        units_d = cloneDeep(status_d)
-      rounds++
+      if (key) {
+        const valid = storage[key]
+        units_a = copyStatus(valid.units_a)
+        units_d = copyStatus(valid.units_d)
+      }
+      else {
+        units_a = copyStatus(status_a)
+        units_d = copyStatus(status_d)
+      }
+      
       winner = doPhase(units_a, orig_a, units_d, orig_d, roll_a, roll_d, terrains, settings)
+      key += '_' + roll_a + ',' + roll_d
       if (winner === undefined) {
-        storage[key + roll_a + ',' + roll_d] = { units_a: cloneDeep(units_a), units_d: cloneDeep(units_d) }
+        storage[key] = { units_a: copyStatus(units_a), units_d: copyStatus(units_d) }
       }
-      key += roll_a + ',' + roll_d + '_'
-    })
-    while (winner === undefined && depth < 5) {
+    }
+    while (winner === undefined && depth < 4) {
       // Need to extend rolls.
       indexes = indexes.concat(...spread(index, dice_2, depth))
-      if (!units_a)
-        units_a = cloneDeep(status_a)
-      if (!units_d)
-        units_d = cloneDeep(status_d)
       winner = doPhase(units_a, orig_a, units_d, orig_d, 1, 1, terrains, settings)
+      key += '_1,1'
       if (winner === undefined) {
-        storage[key + '1,1'] = { units_a: cloneDeep(units_a), units_d: cloneDeep(units_d) }
+        storage[key] = { units_a: copyStatus(units_a), units_d: copyStatus(units_d) }
       }
-      key += '1,1' + '_'
       depth++
     }
     if (winner === Side.Attacker)
@@ -169,8 +174,8 @@ export const calculateWinRate = (definitions: Units, attacker: R<ParticipantStat
   wins_defender = round(wins_defender, 10000.0)
   draws = round(draws, 10000.0)
   incomplete = round(incomplete, 10000.0)
-  console.log(iterations + ' ' + rounds + ' ' + todo.length)
-  console.log('Attacker ' + wins_attacker + ' Defender ' + wins_defender + ' Draws ' + draws + ' Incomplete ' + incomplete)
+  //console.log(iterations + ' ' + todo.length)
+  //console.log('Attacker ' + wins_attacker + ' Defender ' + wins_defender + ' Draws ' + draws + ' Incomplete ' + incomplete)
   return { wins_attacker, wins_defender, draws, incomplete }
 }
 
