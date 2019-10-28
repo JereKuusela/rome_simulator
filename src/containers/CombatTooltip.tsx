@@ -7,7 +7,7 @@ import StyledNumber from '../components/Utils/StyledNumber'
 
 import { AppState } from '../store/'
 import { Side, Units } from '../store/battle'
-import { getArmyBySide, getCurrentUnits, getParticipant, getSettings, getSelectedTerrains, getPreviousUnits } from '../store/utils'
+import { getArmyBySide, getCurrentUnits, getParticipant, getCombatSettings, getSelectedTerrains, getPreviousUnits } from '../store/utils'
 
 import { calculateValue, calculateValueWithoutLoss, strengthToValue } from '../base_definition'
 import { toManpower, toNumber, toSignedPercent } from '../formatters'
@@ -252,7 +252,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   current_s: getCurrentUnits(state, props.side),
   units_t: getCurrentUnits(state, props.side === Side.Attacker ? Side.Defender : Side.Attacker),
   roll: (last(getParticipant(state, props.side).rolls) || { roll: 0 }).roll,
-  settings: getSettings(state),
+  settings: getCombatSettings(state),
   terrains: getSelectedTerrains(state),
   general_s: getArmyBySide(state, props.side).general.total,
   tactic_s: state.tactics[getArmyBySide(state, props.side).tactic],

@@ -1,3 +1,7 @@
+
+export type CombatSettings = { [key in CombatParameter]: number }
+export type SimulationSettings = { [key in SimulationParameter]: number }
+
 export enum CombatParameter {
   StrengthLostMultiplier = 'StrengthLostMultiplier',
   MoraleLostMultiplier = 'MoraleLostMultiplier',
@@ -18,7 +22,13 @@ export enum CombatParameter {
   FixTargeting = 'FixTargeting'
 }
 
-export const parameterToDescription = (parameter: CombatParameter): string => {
+export enum SimulationParameter {
+  MaxDepth = 'MaxDepth',
+  PhaseLengthMultiplier = 'PhaseLengthMultiplier',
+  ChunkSize = 'ChunkSize'
+}
+
+export const parameterToDescription = (parameter: CombatParameter | SimulationParameter): string => {
   switch (parameter) {
     case CombatParameter.BaseDamage:
       return 'Initial base damage.'
@@ -54,6 +64,12 @@ export const parameterToDescription = (parameter: CombatParameter): string => {
       return 'How many rounds dice rolls stay active.'
     case CombatParameter.FixTargeting:
       return '16th unit uses wrong targeting direction.\nThis makes the left and right sides behave slightly differently.\nThis is probably a bug in the game. Set 1 to fix this.'
+    case SimulationParameter.MaxDepth:
+      return 'How many dice rolls (phases) are simulated. Higher values reduce amount of draws but take significantly longer to calculate.'
+    case SimulationParameter.PhaseLengthMultiplier:
+      return 'Scales length of phases. Higher values reduce amount of draws but lower the precision significantly.'
+    case SimulationParameter.ChunkSize:
+      return 'How many battles are simulated in a row. Higher values slightly increase performance but make the UI less responsive.'
     default:
       return 'No description.'
   }

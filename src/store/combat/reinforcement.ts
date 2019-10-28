@@ -1,7 +1,7 @@
 import { sortBy } from 'lodash'
 import { UnitCalc, UnitDefinitions, Unit } from '../units'
 import { RowType, BaseUnits, RowTypes } from '../battle'
-import { Settings } from '../settings'
+import { CombatSettings } from '../settings'
 import { calculateValue, mergeValues, calculateBase } from '../../base_definition'
 import { DeepReadonly as R } from 'ts-essentials'
 import produce from 'immer'
@@ -60,7 +60,7 @@ const calculateFlankSizes = (round: number, flank_size: number, front_size: numb
  * @param settings Parameters for reinforcement.
  * @param attacker_to_defender Output. Reinforcement may move units so this must be updated also.
  */
-export const reinforce = (army: R<BaseUnits>, definitions: R<UnitDefinitions>, round: number, row_types: RowTypes, flank_size: number, enemy_size: number, settings: Settings, attacker_to_defender: (number | null)[] | undefined): R<BaseUnits> => {
+export const reinforce = (army: R<BaseUnits>, definitions: R<UnitDefinitions>, round: number, row_types: RowTypes, flank_size: number, enemy_size: number, settings: CombatSettings, attacker_to_defender: (number | null)[] | undefined): R<BaseUnits> => {
     let frontline = army.frontline
     let reserve = army.reserve
 

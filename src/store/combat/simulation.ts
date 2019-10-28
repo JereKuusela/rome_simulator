@@ -2,7 +2,7 @@ import { Units, Unit, UnitCalc, UnitType } from "../units"
 import { ParticipantState, doBattle } from "."
 import { TerrainDefinition, TerrainType } from "../terrains"
 import { DeepReadonly as R, DeepWritable as W } from 'ts-essentials'
-import { Settings, CombatParameter } from "../settings"
+import { CombatSettings, CombatParameter, SimulationSettings, SimulationParameter } from "../settings"
 import { mapRange, round, values } from "../../utils"
 import { Side } from "../battle"
 import { createEntropy, MersenneTwister19937, Random } from "random-js"
@@ -71,7 +71,7 @@ export const spread = (index: number, dice_2: number, depth: number) => {
   return mapRange(dice_2 - 1, value => index + spread * (value + 1))
 }
 
-export const monteCarot = (definitions: Units, attacker: R<ParticipantState>, defender: R<ParticipantState>, terrains: TerrainDefinition[], settings: Settings) => {
+export const monteCarot = (definitions: Units, attacker: R<ParticipantState>, defender: R<ParticipantState>, terrains: TerrainDefinition[], settings: CombatSettings) => {
   const iterations = 10000
   const seed = createEntropy()[0]
   const engine = MersenneTwister19937.seed(seed)
@@ -134,13 +134,15 @@ let interruptSimulation = false
 
 export const interrupt = () => interruptSimulation = true
 
-export const calculateWinRate = (chunks: number, callback: (progress: Progress) => void, definitions: Units, attacker: R<ParticipantState>, defender: R<ParticipantState>, terrains: TerrainDefinition[], settings: Settings) => {
-  const dice = settings[CombatParameter.DiceMaximum] - settings[CombatParameter.DiceMinimum] + 1
+export const calculateWinRate = (simulationSettings: SimulationSettings, callback: (progress: Progress) => void, definitions: Units, attacker: R<ParticipantState>, defender: R<ParticipantState>, terrains: TerrainDefinition[], combatSettings: CombatSettings) => {
+  const dice = combatSettings[CombatParameter.DiceMaximum] - combatSettings[CombatParameter.DiceMinimum] + 1
   const dice_2 = dice * dice
 
   interruptSimulation = false
 
   const fractions = mapRange(10, value => 1.0 / Math.pow(dice_2, value))
+
+  const phaseLength = Math.floor(combatSettings[CombatParameter.RollFrequency] * simulationSettings[SimulationParameter.PhaseLengthMultiplier])
 
   const progress: Progress = {
     attacker: 0.0,
@@ -152,7 +154,7 @@ export const calculateWinRate = (chunks: number, callback: (progress: Progress) 
   }
 
   // Deployment is shared for each iteration.
-  const [a, d] = doBattle(definitions, attacker, defender, 0, terrains, settings)
+  const [a, d] = doBattle(definitions, attacker, defender, 0, terrains, combatSettings)
   const orig_a = a.frontline.map(unit => calculateUnit(unit as Unit))
   const orig_d = d.frontline.map(unit => calculateUnit(unit as Unit))
   const status_a = a.frontline.map(unit => calculateState(unit as Unit))
@@ -161,7 +163,7 @@ export const calculateWinRate = (chunks: number, callback: (progress: Progress) 
 
   const worker = () => {
     setTimeout(() => {
-      for (let i = 0; i < chunks && cache.length && !interruptSimulation; i++) {
+      for (let i = 0; i < simulationSettings[SimulationParameter.ChunkSize] && cache.length && !interruptSimulation; i++) {
         progress.iterations++
         const status = cache[cache.length - 1]
         // Copy once to allow mutations.
@@ -172,13 +174,13 @@ export const calculateWinRate = (chunks: number, callback: (progress: Progress) 
         status.index++
         if (status.index === dice * dice)
           cache.pop()
-        let winner = doPhase(units_a, orig_a, units_d, orig_d, roll_a, roll_d, terrains, settings)
+        let winner = doPhase(phaseLength, units_a, orig_a, units_d, orig_d, roll_a, roll_d, terrains, combatSettings)
 
         let depth = status.depth
-        while (winner === undefined && depth < 5) {
+        while (winner === undefined && depth < simulationSettings[SimulationParameter.MaxDepth]) {
           depth++
           cache.push({ status_a: copyStatus(units_a), status_d: copyStatus(units_d), index: 1, depth })
-          winner = doPhase(units_a, orig_a, units_d, orig_d, rolls[0][0], rolls[0][1], terrains, settings)
+          winner = doPhase(phaseLength,units_a, orig_a, units_d, orig_d, rolls[0][0], rolls[0][1], terrains, combatSettings)
         }
         progress.progress += fractions[depth]
         if (winner === Side.Attacker)
@@ -228,11 +230,10 @@ const calculateState = (unit: Unit | null): UnitStatus | null => {
   return calculated
 }
 
-const doPhase = (units_a: StatusLine, orig_a: FrontLine, units_d: StatusLine, orig_d: FrontLine, roll_a: number, roll_d: number, terrains: TerrainDefinition[], settings: Settings) => {
+const doPhase = (phaseLength: number, units_a: StatusLine, orig_a: FrontLine, units_d: StatusLine, orig_d: FrontLine, roll_a: number, roll_d: number, terrains: TerrainDefinition[], combatSettings: CombatSettings) => {
   let winner: Side | null | undefined = undefined
-  const phase = settings[CombatParameter.RollFrequency]
-  for (let i = 0; i < phase; i++) {
-    doBattleFast(units_a, units_d, orig_a, orig_d, roll_a, roll_d, terrains, settings)
+  for (let round = 0; round < phaseLength; round++) {
+    doBattleFast(units_a, units_d, orig_a, orig_d, roll_a, roll_d, terrains, combatSettings)
 
     const alive_a = some(units_a, value => value)
     const alive_d = some(units_d, value => value)

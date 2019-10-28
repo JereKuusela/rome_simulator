@@ -2,7 +2,7 @@ import { BaseUnit, UnitCalc, Units, Unit } from '../units'
 import { TerrainCalc, TerrainDefinition } from '../terrains'
 import { TacticDefinition, TacticCalc, TacticType } from '../tactics'
 import { BaseUnits, RowTypes, FrontLine, BaseFrontLine } from '../battle'
-import { CombatParameter, Settings } from '../settings'
+import { CombatParameter, CombatSettings } from '../settings'
 import { calculateValue, addValues, mergeValues, ValuesType } from '../../base_definition'
 import { reinforce } from './reinforcement'
 import { CountryName } from '../countries'
@@ -37,7 +37,7 @@ export interface ParticipantState extends BaseUnits {
  * @param terrains Terrains of the battle, may affect amount of damage inflicted.
  */
 
-export const doBattle = (definitions: Units, attacker: R<ParticipantState>, defender: R<ParticipantState>, round: number, terrains: TerrainDefinition[], settings: Settings): [BaseUnits, BaseUnits] => {
+export const doBattle = (definitions: Units, attacker: R<ParticipantState>, defender: R<ParticipantState>, round: number, terrains: TerrainDefinition[], settings: CombatSettings): [BaseUnits, BaseUnits] => {
   let a: R<BaseUnits> = { frontline: attacker.frontline, reserve: attacker.reserve, defeated: attacker.defeated }
   let d: R<BaseUnits> = { frontline: defender.frontline, reserve: defender.reserve, defeated: defender.defeated }
 
@@ -141,7 +141,7 @@ const removeOutOfBounds = (army: R<BaseUnits>, combat_width: number): R<BaseUnit
  * @param target_row Defenders.
  * @param settings Targeting setting.
  */
-const pickTargets = (source_row: R<FrontLine>, target_row: R<BaseFrontLine>, settings: Settings): Array<number | null> => {
+const pickTargets = (source_row: R<FrontLine>, target_row: R<BaseFrontLine>, settings: CombatSettings): Array<number | null> => {
   // Units attack mainly units on front of them. If not then first target from left to right.
   const attacker_to_defender = Array<number | null>(source_row.length)
   for (let i = 0; i < source_row.length; ++i)
@@ -303,7 +303,7 @@ const copyDefeated = (army: R<BaseUnits>, definitions: FrontLine, minimum_morale
  * @param casualties_multiplier Multiplier for strength lost from tactics.
  * @param settings Combat parameters.
  */
-const attack = (source_row: FrontLine, target_row: FrontLine, source_to_target: (number | null)[], roll: number, terrains: TerrainDefinition[], tactic_damage_multiplier: number, casualties_multiplier: number, settings: Settings): [Loss[], Kill[]] => {
+const attack = (source_row: FrontLine, target_row: FrontLine, source_to_target: (number | null)[], roll: number, terrains: TerrainDefinition[], tactic_damage_multiplier: number, casualties_multiplier: number, settings: CombatSettings): [Loss[], Kill[]] => {
   const target_losses = Array<Loss>(target_row.length)
   for (let i = 0; i < target_row.length; ++i)
     target_losses[i] = { morale: 0, strength: 0 }
@@ -329,14 +329,14 @@ const attack = (source_row: FrontLine, target_row: FrontLine, source_to_target: 
  * @param roll Dice roll with modifiers.
  * @param settings Combat parameters.
  */
-export const calculateBaseDamage = (roll: number, settings: Settings): number => {
+export const calculateBaseDamage = (roll: number, settings: CombatSettings): number => {
   const base_damage = settings[CombatParameter.BaseDamage]
   const roll_damage = settings[CombatParameter.RollDamage]
   const max_damage = settings[CombatParameter.MaxBaseDamage]
   return Math.min(max_damage, base_damage + roll_damage * roll)
 }
 
-export const calculateExperienceReduction = (settings: Settings, target: Unit) => {
+export const calculateExperienceReduction = (settings: CombatSettings, target: Unit) => {
   let damage_reduction_per_experience = settings[CombatParameter.ExperienceDamageReduction]
   // Bug in game which makes morale damage taken and strength damage taken affect damage reduction from experience.
   if (!settings[CombatParameter.FixExperience])
@@ -344,7 +344,7 @@ export const calculateExperienceReduction = (settings: Settings, target: Unit) =
   return -damage_reduction_per_experience * calculateValue(target, UnitCalc.Experience)
 }
 
-export const calculateTotalDamage = (settings: Settings, base_damage: number, source: Unit, target: Unit, terrains: TerrainDefinition[], tactic_damage_multiplier: number) => {
+export const calculateTotalDamage = (settings: CombatSettings, base_damage: number, source: Unit, target: Unit, terrains: TerrainDefinition[], tactic_damage_multiplier: number) => {
   let damage = 100000.0 * base_damage
   damage = calculate(damage, 1.0 + calculateValue(source, UnitCalc.Discipline))
   damage = calculate(damage, 1.0 + calculateValue(source, UnitCalc.DamageDone))
@@ -363,7 +363,7 @@ export const calculateTotalDamage = (settings: Settings, base_damage: number, so
   return damage / 100000.0
 }
 
-export const calculateStrengthDamage = (settings: Settings, total_damage: number, source: Unit, target: Unit, casualties_multiplier: number) => {
+export const calculateStrengthDamage = (settings: CombatSettings, total_damage: number, source: Unit, target: Unit, casualties_multiplier: number) => {
   const strength_lost_multiplier = settings[CombatParameter.StrengthLostMultiplier]
   let strength_lost = total_damage * 100000.0
   strength_lost = calculate(strength_lost, 1.0 + casualties_multiplier)
@@ -373,7 +373,7 @@ export const calculateStrengthDamage = (settings: Settings, total_damage: number
   return strength_lost / 100000.0
 }
 
-export const calculateMoraleDamage = (settings: Settings, total_damage: number, source: Unit, target: Unit) => {
+export const calculateMoraleDamage = (settings: CombatSettings, total_damage: number, source: Unit, target: Unit) => {
   const morale_lost_multiplier = settings[CombatParameter.MoraleLostMultiplier]
   const morale_base_damage = settings[CombatParameter.MoraleDamageBase]
   let morale_lost = total_damage * 100000.0
@@ -395,7 +395,7 @@ export const calculateMoraleDamage = (settings: Settings, total_damage: number, 
  * @param casualties_multiplier Multiplier for strength lost from tactics.
  * @param settings Combat parameters.
  */
-const calculateLosses = (source: Unit, target: Unit, roll: number, terrains: TerrainDefinition[], tactic_damage_multiplier: number, casualties_multiplier: number, settings: Settings): Loss => {
+const calculateLosses = (source: Unit, target: Unit, roll: number, terrains: TerrainDefinition[], tactic_damage_multiplier: number, casualties_multiplier: number, settings: CombatSettings): Loss => {
 
   const base_damage = calculateBaseDamage(roll, settings)
   const total_damage = calculateTotalDamage(settings, base_damage, source, target, terrains, tactic_damage_multiplier)

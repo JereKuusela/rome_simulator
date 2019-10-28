@@ -10,7 +10,7 @@ import { getDefaultArmy, Army as BaseArmy, Side, getDefaultParticipant, BaseUnit
 import { defaultCountry, getDefaultCountryDefinitions } from "./countries/reducer"
 import { CountryName } from "./countries"
 import { getDefaultGlobals, getDefaultUnits } from "./units/data"
-import { Settings, getDefaultSettings } from "./settings"
+import { CombatSettings, getDefaultSettings } from "./settings"
 import { UnitDefinitions, getDefaultBaseDefinitions, getDefaultUnitDefinitions } from "./units"
 import { TerrainDefinitions, getDefaultTerrainDefinitions } from "./terrains";
 import { TacticDefinitions, getDefaultTacticDefinitions } from "./tactics";
@@ -19,7 +19,7 @@ import { TacticDefinitions, getDefaultTacticDefinitions } from "./tactics";
  * Returns settings of the current mode.
  * @param state Application state.
  */
-export const getSettings = (state: AppState): Settings => {
+export const getCombatSettings = (state: AppState): CombatSettings => {
   return state.settings.combat[state.settings.mode]
 }
 

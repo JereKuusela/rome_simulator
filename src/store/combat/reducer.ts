@@ -5,7 +5,7 @@ import { doBattle as fight } from './combat'
 import { mergeValues, Mode } from '../../base_definition'
 import { CombatParameter } from '../settings'
 import { AppState } from '../'
-import { getSettings, getBattle, getArmy, getArmyBySide } from '../utils'
+import { getCombatSettings, getBattle, getArmy, getArmyBySide } from '../utils'
 import { objGet, sumObj, map, arrGet } from '../../utils'
 import { defaultCountry } from '../countries/reducer'
 
@@ -25,7 +25,7 @@ const doBattle = (state: AppState, mode: Mode, steps: number, refresh: boolean):
   }
   const country_a = objGet(state.countries, units_a.name, defaultCountry)
   const country_d = objGet(state.countries, units_d.name, defaultCountry)
-  const combat = getSettings(state)
+  const combat = getCombatSettings(state)
   const minimum_roll = combat[CombatParameter.DiceMinimum]
   const maximum_roll = combat[CombatParameter.DiceMaximum]
   const roll_frequency = combat[CombatParameter.RollFrequency]

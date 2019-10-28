@@ -1,7 +1,14 @@
-import { CombatParameter } from './actions'
+import { CombatParameter, SimulationParameter, CombatSettings, SimulationSettings } from './actions'
 
+export const getDefaultSimulationSettings = (): SimulationSettings => {
+  return {
+    [SimulationParameter.ChunkSize]: 10000,
+    [SimulationParameter.MaxDepth]: 5,
+    [SimulationParameter.PhaseLengthMultiplier]: 1.0
+  }
+}
 
-export const getDefaultLandSettings = (): { [key in CombatParameter]: number } => {
+export const getDefaultLandSettings = (): CombatSettings => {
   return {
     ...getDefaultAnySettings(),
     [CombatParameter.StrengthLostMultiplier]: 0.2,
@@ -9,7 +16,7 @@ export const getDefaultLandSettings = (): { [key in CombatParameter]: number } =
   }
 }
 
-export const getDefaultNavalSettings = (): { [key in CombatParameter]: number } => {
+export const getDefaultNavalSettings = ():CombatSettings  => {
   return {
     ...getDefaultAnySettings(),
     [CombatParameter.StrengthLostMultiplier]: 0.5,
@@ -17,7 +24,7 @@ export const getDefaultNavalSettings = (): { [key in CombatParameter]: number } 
   }
 }
 
-const getDefaultAnySettings = (): { [key in CombatParameter]: number } => {
+const getDefaultAnySettings = (): CombatSettings => {
   return {
     [CombatParameter.BaseDamage]: 0.08,
     [CombatParameter.RollDamage]: 0.02,

@@ -1,14 +1,13 @@
 import { ImmerReducer, createActionCreators, createReducerFunction, Actions } from 'immer-reducer'
-import { CombatParameter } from './actions'
-import { getDefaultLandSettings, getDefaultNavalSettings } from './data'
+import { CombatParameter, SimulationParameter } from './actions'
+import { getDefaultLandSettings, getDefaultNavalSettings, getDefaultSimulationSettings } from './data'
 import { CountryName, createCountry, deleteCountry, changeCountryName } from '../countries'
 import { DefinitionType, Mode } from '../../base_definition'
 import { ObjSet, has } from '../../utils'
 
-export type Settings = { [key in CombatParameter]: number }
-
 export const getDefaultSettings = () => ({
   combat: {[DefinitionType.Land]: getDefaultLandSettings(), [DefinitionType.Naval]: getDefaultNavalSettings()},
+  simulation: getDefaultSimulationSettings(),
   simple_mode: true,
   mode: DefinitionType.Land as Mode,
   country: CountryName.Country1,
@@ -19,8 +18,12 @@ const settings = getDefaultSettings()
 
 class SettingsReducer extends ImmerReducer<typeof settings> {
 
-  changeParameter(mode: Mode, key: CombatParameter, value: number) {
+  changeCombatParameter(mode: Mode, key: CombatParameter, value: number) {
     this.draftState.combat[mode][key] = value
+  }
+
+  changeSimulationParameter(key: SimulationParameter, value: number) {
+    this.draftState.simulation[key] = value
   }
 
   toggleSimpleMode() {
@@ -59,7 +62,8 @@ class SettingsReducer extends ImmerReducer<typeof settings> {
 
 const actions = createActionCreators(SettingsReducer)
 
-export const changeParameter = actions.changeParameter
+export const changeCombatParameter = actions.changeCombatParameter
+export const changeSimulationParameter = actions.changeSimulationParameter
 export const selectCountry = actions.selectCountry
 export const toggleAccordion = actions.toggleAccordion
 export const toggleMode = actions.toggleMode

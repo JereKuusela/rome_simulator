@@ -19,7 +19,7 @@ import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers
 import ModalArmyUnitDetail from '../containers/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/ModalFastPlanner'
 import { calculateValue, mergeValues, getImage, Mode } from '../base_definition'
-import { getSettings, getBattle, getArmy, Army, getParticipant } from '../store/utils'
+import { getCombatSettings, getBattle, getArmy, Army, getParticipant } from '../store/utils'
 import { addSign, toSignedPercent } from '../formatters'
 import { CountryName, setGeneralMartial } from '../store/countries'
 import { CombatParameter } from '../store/settings'
@@ -520,7 +520,7 @@ const mapStateToProps = (state: AppState) => ({
   fight_over: getBattle(state).fight_over,
   units: state.units,
   global_stats: state.global_stats,
-  combat: getSettings(state),
+  combat: getCombatSettings(state),
   mode: state.settings.mode,
   countries: state.countries
 })
