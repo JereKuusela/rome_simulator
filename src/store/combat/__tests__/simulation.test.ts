@@ -18,7 +18,7 @@ describe('1 vs 1', () => {
     setCenterUnits(info, archer, cavalry)
     // Depth 3 (5 s): Attacker 0.0017 Defender 0.9588 Draws 0 Incomplete 0.0395
     // Depth 4 (6 s): Attacker 0.0067 Defender 0.9835 Draws 0 Incomplete 0.0098
-    // Depth 5 (30 s): Attacker 0.0096 Defender 0.9889 Draws 0.0001 Incomplete 0.0013
+    // Depth 5 (30 s): Attacker 0.0096 Defender 0.989 Draws 0.0001 Incomplete 0.0013
     calculateWinRate(getDefinitions(), { ...info.attacker, ...info.army_a, tactic: tactics[info.army_a.tactic], country: CountryName.Country1, general: 0 }, { ...info.defender, ...info.army_d, tactic: tactics[info.army_d.tactic], country: CountryName.Country2, general: 0 }, info.terrains, info.settings)
   })
 

@@ -8,7 +8,7 @@ import { Side } from "../battle"
 import { createEntropy, MersenneTwister19937, Random } from "random-js"
 import { doBattleFast, CalculatedUnit, FrontLine, totalDamageSource, UnitStatus, StatusLine } from "./combat_fast"
 import { calculateValue } from "../../base_definition"
-import { cloneDeep, some } from "lodash"
+import { some } from "lodash"
 
 export const getRolls = (index: number, dice: number): [number, number][] => {
   const dice_2 = dice * dice
@@ -26,6 +26,45 @@ export const getRolls = (index: number, dice: number): [number, number][] => {
   rolls.push([(index % dice) + 1, Math.floor(index / dice) + 1])
   return rolls.reverse()
 }
+
+const rolls = [
+  [1, 1],
+  [2, 1],
+  [3, 1],
+  [4, 1],
+  [5, 1],
+  [6, 1],
+  [1, 2],
+  [2, 2],
+  [3, 2],
+  [4, 2],
+  [5, 2],
+  [6, 2],
+  [1, 3],
+  [2, 3],
+  [3, 3],
+  [4, 3],
+  [5, 3],
+  [6, 3],
+  [1, 4],
+  [2, 4],
+  [3, 4],
+  [4, 4],
+  [5, 4],
+  [6, 4],
+  [1, 5],
+  [2, 5],
+  [3, 5],
+  [4, 5],
+  [5, 5],
+  [6, 5],
+  [1, 6],
+  [2, 6],
+  [3, 6],
+  [4, 6],
+  [5, 6],
+  [6, 6],
+]
 
 export const spread = (index: number, dice_2: number, depth: number) => {
   const spread = Math.pow(dice_2, depth)
@@ -54,13 +93,10 @@ export const monteCarot = (definitions: Units, attacker: R<ParticipantState>, de
     const units_d = { ...defender } as W<ParticipantState>
     let winner: Side | null | undefined = undefined
 
-    let round = 0
-
     while (winner === undefined) {
       units_a.roll = rng.integer(1, 6)
       units_d.roll = rng.integer(1, 6)
       //winner = doPhase(round, definitions, units_a, units_d, terrains, settings)
-      round++
     }
     if (winner === Side.Attacker)
       wins_attacker += 1.0 / iterations
@@ -84,11 +120,12 @@ const copyStatus = (status: StatusLine): StatusLine => {
   return status.map(value => value ? { ...value } : null)
 }
 
+
 export const calculateWinRate = (definitions: Units, attacker: R<ParticipantState>, defender: R<ParticipantState>, terrains: TerrainDefinition[], settings: Settings) => {
   const dice = settings[CombatParameter.DiceMaximum] - settings[CombatParameter.DiceMinimum] + 1
   const dice_2 = dice * dice
-  let indexes = mapRange(dice_2, value => value)
-  //windexes = [11]
+
+  const fractions = mapRange(10, value => 1.0 / Math.pow(dice_2, value))
 
   let wins_attacker = 0.0
   let wins_defender = 0.0
@@ -101,82 +138,43 @@ export const calculateWinRate = (definitions: Units, attacker: R<ParticipantStat
   const orig_d = d.frontline.map(unit => calculateUnit(unit as Unit))
   const status_a = a.frontline.map(unit => calculateState(unit as Unit))
   const status_d = d.frontline.map(unit => calculateState(unit as Unit))
-  let storage: { [key: string]: any } = {}
-
-  const todo: number[] = []
-  let last_primary = 0
   let iterations = 0
-  while (indexes.length) {
+
+  const cache = [{ status_a, status_d, index: 0, depth: 1 }]
+  while (cache.length) {
     iterations++
+    const status = cache[cache.length - 1]
     // Copy once to allow mutations.
-    let units_a: StatusLine = []
-    let units_d: StatusLine = []
-    const index = indexes.pop()!
-    const rolls = getRolls(index, dice)
-    let depth = rolls.length
-    if (depth === 1) {
-      if (rolls[0][0] !== last_primary)
-        storage = {}
-      last_primary = rolls[0][0]
-    }
-    let winner: Side | null | undefined = undefined
-    let key = ''
+    const units_a = copyStatus(status.status_a)
+    const units_d = copyStatus(status.status_d)
 
-    for (let i = 0; i < rolls.length; i++) {
-      const roll_a = rolls[i][0]
-      const roll_d = rolls[i][1]
-      const roll_index = i
-      if (winner !== undefined)
-        continue
+    const [roll_a, roll_d] = rolls[status.index]
+    status.index++
+    if (status.index === dice * dice)
+      cache.pop()
+    let winner = doPhase(units_a, orig_a, units_d, orig_d, roll_a, roll_d, terrains, settings)
 
-      if (roll_index < rolls.length - 1) {
-        key += '_' + roll_a + ',' + roll_d
-        continue
-      }
-      if (key) {
-        const valid = storage[key]
-        units_a = copyStatus(valid.units_a)
-        units_d = copyStatus(valid.units_d)
-      }
-      else {
-        units_a = copyStatus(status_a)
-        units_d = copyStatus(status_d)
-      }
-      
-      winner = doPhase(units_a, orig_a, units_d, orig_d, roll_a, roll_d, terrains, settings)
-      key += '_' + roll_a + ',' + roll_d
-      if (winner === undefined) {
-        storage[key] = { units_a: copyStatus(units_a), units_d: copyStatus(units_d) }
-      }
-    }
-    while (winner === undefined && depth < 4) {
-      // Need to extend rolls.
-      indexes = indexes.concat(...spread(index, dice_2, depth))
-      winner = doPhase(units_a, orig_a, units_d, orig_d, 1, 1, terrains, settings)
-      key += '_1,1'
-      if (winner === undefined) {
-        storage[key] = { units_a: copyStatus(units_a), units_d: copyStatus(units_d) }
-      }
+    let depth = status.depth
+    while (winner === undefined && depth < 5) {
       depth++
+      cache.push({ status_a: copyStatus(units_a), status_d: copyStatus(units_d), index: 1, depth })
+      winner = doPhase(units_a, orig_a, units_d, orig_d, 1, 1, terrains, settings)
     }
     if (winner === Side.Attacker)
-      wins_attacker += 1.0 / Math.pow(dice_2, depth)
-    if (winner === Side.Defender)
-      wins_defender += 1.0 / Math.pow(dice_2, depth)
-    if (winner === null)
-      draws += 1.0 / Math.pow(dice_2, depth)
-    if (winner === undefined)
-      incomplete += 1.0 / Math.pow(dice_2, depth)
-    if (winner === undefined)
-      todo.push(index)
+      wins_attacker += fractions[depth]
+    else if (winner === Side.Defender)
+      wins_defender += fractions[depth]
+    else if (winner === null)
+      draws += fractions[depth]
+    else
+      incomplete += fractions[depth]
   }
   wins_attacker = round(wins_attacker, 10000.0)
   wins_defender = round(wins_defender, 10000.0)
   draws = round(draws, 10000.0)
   incomplete = round(incomplete, 10000.0)
-  //console.log(iterations + ' ' + todo.length)
-  //console.log('Attacker ' + wins_attacker + ' Defender ' + wins_defender + ' Draws ' + draws + ' Incomplete ' + incomplete)
-  return { wins_attacker, wins_defender, draws, incomplete }
+  //console.log('Iterations ' + iterations + ' Attacker ' + wins_attacker + ' Defender ' + wins_defender + ' Draws ' + draws + ' Incomplete ' + incomplete)
+  return { wins_attacker, wins_defender, draws, incomplete, iterations }
 }
 
 const unitCalcs = values(UnitCalc)
@@ -209,7 +207,7 @@ const calculateState = (unit: Unit | null): UnitStatus | null => {
 
 const doPhase = (units_a: StatusLine, orig_a: FrontLine, units_d: StatusLine, orig_d: FrontLine, roll_a: number, roll_d: number, terrains: TerrainDefinition[], settings: Settings) => {
   let winner: Side | null | undefined = undefined
-  const phase = Math.floor(settings[CombatParameter.RollFrequency])
+  const phase = settings[CombatParameter.RollFrequency]
   for (let i = 0; i < phase; i++) {
     doBattleFast(units_a, units_d, orig_a, orig_d, roll_a, roll_d, terrains, settings)
 

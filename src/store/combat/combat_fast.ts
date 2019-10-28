@@ -1,19 +1,11 @@
-import { UnitCalc, Unit, UnitType } from '../units'
+import { UnitCalc, UnitType } from '../units'
 import { TerrainDefinition, TerrainType } from '../terrains'
 import { TacticDefinition } from '../tactics'
-import { BaseUnits, RowTypes, Units } from '../battle'
+import { RowTypes, Units } from '../battle'
 import { CombatParameter, Settings } from '../settings'
-import { calculateValue, addValues, ValuesType } from '../../base_definition'
 import { CountryName } from '../countries'
-import { sumBy } from 'lodash'
-import { DeepWritable as R } from 'ts-essentials'
 
 interface Loss {
-  morale: number
-  strength: number
-}
-
-interface Kill {
   morale: number
   strength: number
 }
@@ -29,7 +21,7 @@ export interface ParticipantState extends Units {
 export type FrontLine = (CalculatedUnit | null)[]
 export type StatusLine = (UnitStatus | null)[]
 
-type UnitCalcs = {[key in (UnitCalc | UnitType | TerrainType)]: number}
+type UnitCalcs = { [key in (UnitCalc | UnitType | TerrainType)]: number }
 
 const rollToDamage = [
   0.08, 0.08 + 0.02 * 1, 0.08 + 0.02 * 2, 0.08 + 0.02 * 3, 0.08 + 0.02 * 4, 0.08 + 0.02 * 5, 0.08 + 0.02 * 6
@@ -81,9 +73,10 @@ export const doBattleFast = (status_a: StatusLine, status_d: StatusLine, attacke
  */
 const pickTargets = (source_row: FrontLine, target_row: FrontLine, settings: Settings) => {
   // Units attack mainly units on front of them. If not then first target from left to right.
-  source_row.forEach((source, source_index) => {
+  for (let source_index = 0; source_index < source_row.length; source_index++) {
+    const source = source_row[source_index]
     if (!source)
-      return
+      continue
     source.target = null
     if (target_row[source_index])
       source.target = source_index
@@ -106,7 +99,7 @@ const pickTargets = (source_row: FrontLine, target_row: FrontLine, settings: Set
         }
       }
     }
-  })
+  }
 }
 
 /**
@@ -158,18 +151,21 @@ const attack = (status: StatusLine, source_row: FrontLine, target_row: FrontLine
   const target_losses = Array<Loss>(target_row.length)
   for (let i = 0; i < target_row.length; ++i)
     target_losses[i] = { morale: 0, strength: 0 }
-  source_row.forEach((source, source_index)  => {
+  for (let source_index = 0; source_index < source_row.length; source_index++) {
+    const source = source_row[source_index]
+    if (!source)
+      continue
     const state = status[source_index]
     if (!source || !state)
-      return
+      continue
     const target_index = source.target
     if (target_index === null)
-      return
+      continue
     const target = target_row[target_index]!
     const losses = calculateLosses(state, source, target, roll, terrains, tactic_damage_multiplier, casualties_multiplier, settings)
     target_losses[target_index].strength += losses.strength
     target_losses[target_index].morale += losses.morale
-  })
+  }
   return target_losses
 }
 
