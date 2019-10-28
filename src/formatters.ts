@@ -27,18 +27,17 @@ export const toMaintenance = (number?: number): string => {
   return String(Math.floor(100 * number) / 100.0)
 }
 
-export const toNumber = (number?: number): string => {
+export const toNumber = (number?: number, fixed: number = 2): string => {
   if (number === undefined)
     return ''
-  return String(+(number).toFixed(2))
+  return String(+(number).toFixed(fixed))
 }
 
-export const toPercent = (number?: number): string => {
+export const toPercent = (number?: number, fixed: number = 2): string => {
   if (number === undefined)
     return ''
-  return toNumber(100 * number) + '%'
-}
-
+  return toNumber(100 * number, fixed) + '%'
+} 
 export const toSignedPercent = (number?: number): string => {
   if (number === undefined)
     return ''

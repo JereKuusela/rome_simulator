@@ -27,12 +27,13 @@ import IconTerrain from '../images/terrain.png'
 import IconGeneral from '../images/military_power.png'
 import StyledNumber from '../components/Utils/StyledNumber'
 import { keys, resize } from '../utils'
+import WinRate from '../containers/WinRate'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
   modal_terrain_info: ModalTerrainInfo | null
   modal_tactic_info: ModalTacticInfo | null
-  modal_army_unit_info: { country: CountryName, id: number, side: Side} | null
+  modal_army_unit_info: { country: CountryName, id: number, side: Side } | null
   modal_row_info: ModalRowInfo | null
   modal_fast_planner_open: boolean
 }
@@ -47,7 +48,7 @@ class Battle extends Component<IProps, IState> {
     this.state = { modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null, modal_fast_planner_open: false, modal_row_info: null }
   }
 
-  isModalOpen = () => this.state.modal_unit_info  || this.state.modal_terrain_info || this.state.modal_tactic_info || this.state.modal_army_unit_info || this.state.modal_fast_planner_open || this.state.modal_row_info
+  isModalOpen = () => this.state.modal_unit_info || this.state.modal_terrain_info || this.state.modal_tactic_info || this.state.modal_army_unit_info || this.state.modal_fast_planner_open || this.state.modal_row_info
 
   closeModal = (): void => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null, modal_fast_planner_open: false, modal_row_info: null })
 
@@ -106,14 +107,19 @@ class Battle extends Component<IProps, IState> {
           onClose={this.closeModal}
         />
         <Grid verticalAlign='middle'>
-          <Grid.Row columns={3} >
-            <Grid.Column floated='left'><Header>{'Round: ' + this.roundName(this.props.round)}</Header></Grid.Column>
-            <Grid.Column textAlign='center'>
+          <Grid.Row>
+            <Grid.Column floated='left' width='2'>
+              <Header>{'Round: ' + this.roundName(this.props.round)}</Header>
+            </Grid.Column>
+            <Grid.Column textAlign='center' width='6'>
               <Button primary size='large' onClick={this.openFastPlanner}>
                 Create and remove units
               </Button>
             </Grid.Column>
-            <Grid.Column floated='right' textAlign='right'>
+            <Grid.Column width='4'>
+              <WinRate />
+            </Grid.Column>
+            <Grid.Column floated='right' textAlign='right' width='4'>
               <Button circular icon='angle double left' color='black' size='huge' disabled={!this.props.is_undo} onClick={() => this.props.undo(this.props.mode, 10)} />
               <Button circular icon='angle left' color='black' size='huge' disabled={!this.props.is_undo} onClick={() => this.props.undo(this.props.mode, 1)} />
               <Button circular icon='angle right' color='black' size='huge' disabled={this.props.fight_over} onClick={() => this.props.battle(this.props.mode, 1)} />

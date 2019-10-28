@@ -28,42 +28,42 @@ export const getRolls = (index: number, dice: number): [number, number][] => {
 }
 
 const rolls = [
-  [1, 1],
-  [2, 1],
-  [3, 1],
-  [4, 1],
-  [5, 1],
-  [6, 1],
-  [1, 2],
-  [2, 2],
-  [3, 2],
-  [4, 2],
-  [5, 2],
-  [6, 2],
-  [1, 3],
-  [2, 3],
-  [3, 3],
-  [4, 3],
-  [5, 3],
-  [6, 3],
-  [1, 4],
-  [2, 4],
-  [3, 4],
-  [4, 4],
-  [5, 4],
-  [6, 4],
-  [1, 5],
-  [2, 5],
-  [3, 5],
-  [4, 5],
-  [5, 5],
-  [6, 5],
-  [1, 6],
-  [2, 6],
-  [3, 6],
-  [4, 6],
-  [5, 6],
   [6, 6],
+  [5, 6],
+  [6, 5],
+  [4, 6],
+  [6, 4],
+  [3, 6],
+  [6, 3],
+  [2, 6],
+  [6, 2],
+  [1, 6],
+  [6, 1],
+  [5, 5],
+  [4, 5],
+  [5, 4],
+  [3, 5],
+  [5, 3],
+  [2, 5],
+  [5, 2],
+  [1, 5],
+  [5, 1],
+  [4, 4],
+  [3, 4],
+  [4, 3],
+  [2, 4],
+  [4, 2],
+  [1, 4],
+  [4, 1],
+  [3, 3],
+  [2, 3],
+  [3, 2],
+  [1, 3],
+  [3, 1],
+  [2, 2],
+  [1, 2],
+  [2, 1],
+  [1, 1]
 ]
 
 export const spread = (index: number, dice_2: number, depth: number) => {
@@ -121,16 +121,35 @@ const copyStatus = (status: StatusLine): StatusLine => {
 }
 
 
-export const calculateWinRate = (definitions: Units, attacker: R<ParticipantState>, defender: R<ParticipantState>, terrains: TerrainDefinition[], settings: Settings) => {
+export interface Progress {
+  attacker: number
+  defender: number
+  draws: number
+  incomplete: number
+  progress: number
+  iterations: number
+}
+
+let interruptSimulation = false
+
+export const interrupt = () => interruptSimulation = true
+
+export const calculateWinRate = (chunks: number, callback: (progress: Progress) => void, definitions: Units, attacker: R<ParticipantState>, defender: R<ParticipantState>, terrains: TerrainDefinition[], settings: Settings) => {
   const dice = settings[CombatParameter.DiceMaximum] - settings[CombatParameter.DiceMinimum] + 1
   const dice_2 = dice * dice
 
+  interruptSimulation = false
+
   const fractions = mapRange(10, value => 1.0 / Math.pow(dice_2, value))
 
-  let wins_attacker = 0.0
-  let wins_defender = 0.0
-  let draws = 0.0
-  let incomplete = 0.0
+  const progress: Progress = {
+    attacker: 0.0,
+    defender: 0.0,
+    draws: 0.0,
+    incomplete: 0.0,
+    progress: 0.0,
+    iterations: 0
+  }
 
   // Deployment is shared for each iteration.
   const [a, d] = doBattle(definitions, attacker, defender, 0, terrains, settings)
@@ -138,43 +157,47 @@ export const calculateWinRate = (definitions: Units, attacker: R<ParticipantStat
   const orig_d = d.frontline.map(unit => calculateUnit(unit as Unit))
   const status_a = a.frontline.map(unit => calculateState(unit as Unit))
   const status_d = d.frontline.map(unit => calculateState(unit as Unit))
-  let iterations = 0
-
   const cache = [{ status_a, status_d, index: 0, depth: 1 }]
-  while (cache.length) {
-    iterations++
-    const status = cache[cache.length - 1]
-    // Copy once to allow mutations.
-    const units_a = copyStatus(status.status_a)
-    const units_d = copyStatus(status.status_d)
 
-    const [roll_a, roll_d] = rolls[status.index]
-    status.index++
-    if (status.index === dice * dice)
-      cache.pop()
-    let winner = doPhase(units_a, orig_a, units_d, orig_d, roll_a, roll_d, terrains, settings)
+  const worker = () => {
+    setTimeout(() => {
+      for (let i = 0; i < chunks && cache.length && !interruptSimulation; i++) {
+        progress.iterations++
+        const status = cache[cache.length - 1]
+        // Copy once to allow mutations.
+        const units_a = copyStatus(status.status_a)
+        const units_d = copyStatus(status.status_d)
 
-    let depth = status.depth
-    while (winner === undefined && depth < 5) {
-      depth++
-      cache.push({ status_a: copyStatus(units_a), status_d: copyStatus(units_d), index: 1, depth })
-      winner = doPhase(units_a, orig_a, units_d, orig_d, 1, 1, terrains, settings)
-    }
-    if (winner === Side.Attacker)
-      wins_attacker += fractions[depth]
-    else if (winner === Side.Defender)
-      wins_defender += fractions[depth]
-    else if (winner === null)
-      draws += fractions[depth]
-    else
-      incomplete += fractions[depth]
+        const [roll_a, roll_d] = rolls[status.index]
+        status.index++
+        if (status.index === dice * dice)
+          cache.pop()
+        let winner = doPhase(units_a, orig_a, units_d, orig_d, roll_a, roll_d, terrains, settings)
+
+        let depth = status.depth
+        while (winner === undefined && depth < 5) {
+          depth++
+          cache.push({ status_a: copyStatus(units_a), status_d: copyStatus(units_d), index: 1, depth })
+          winner = doPhase(units_a, orig_a, units_d, orig_d, rolls[0][0], rolls[0][1], terrains, settings)
+        }
+        progress.progress += fractions[depth]
+        if (winner === Side.Attacker)
+          progress.attacker += fractions[depth]
+        else if (winner === Side.Defender)
+          progress.defender += fractions[depth]
+        else if (winner === null)
+          progress.draws += fractions[depth]
+        else
+          progress.incomplete += fractions[depth]
+      }
+      if (!cache.length || interruptSimulation)
+        progress.progress = 1
+      callback(progress)
+      if (cache.length && !interruptSimulation)
+        worker()
+    }, 0)
   }
-  wins_attacker = round(wins_attacker, 10000.0)
-  wins_defender = round(wins_defender, 10000.0)
-  draws = round(draws, 10000.0)
-  incomplete = round(incomplete, 10000.0)
-  //console.log('Iterations ' + iterations + ' Attacker ' + wins_attacker + ' Defender ' + wins_defender + ' Draws ' + draws + ' Incomplete ' + incomplete)
-  return { wins_attacker, wins_defender, draws, incomplete, iterations }
+  worker()
 }
 
 const unitCalcs = values(UnitCalc)

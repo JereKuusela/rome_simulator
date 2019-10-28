@@ -13,30 +13,43 @@ code {
     monospace;
 }
 
-.value-positive {
+.color-positive {
   color: green;
   font-weight: bold;
 }
-.value-negative {
+.color-negative {
   color: red;
   font-weight: bold;
 }
-.value-info {
+.color-info {
   color: blue;
   font-weight: bold;
 }
-.value-orange {
+.color-orange {
   color: orange;
   font-weight: bold;
 }
-.value-red {
+.color-red {
   color: rgb(255, 104, 104);
   font-weight: bold;
 }
-.value-blue {
+.color-blue {
   color: lightskyblue;
   font-weight: bold;
 }
+.color-attacker {
+  color: #FFAA00AA;
+  font-weight: bold;
+}
+.color-defender {
+  color: #00AAFFAA;
+  font-weight: bold;
+}
+.color-draw {
+  color: #AAAAAAAA;
+  font-weight: bold;
+}
+
 .selectable {
   cursor: pointer;
 }

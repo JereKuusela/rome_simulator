@@ -3,9 +3,9 @@ Release 5:
 
 Tests (high priority):
 - utils tested
-- combat tested
- - tactic manpower 
 - check that reinforcement is stable (higher key ends in right position)
+
+Verify maintenance cost (put high unit cost on defines).
 
 Refactor:
 - Getting rid of custom map, reduce, etc functions as much as possible.
@@ -23,8 +23,6 @@ Combat things to combat reducer. Perhaps state as parameter when needed? Since i
 Deployment changed in latest beta? To be messed up like with multiarmy?
 
 Stats to show amount of traditions, trade, etc..
-
-File import/export to transfer
 
 
 Release 6+:
