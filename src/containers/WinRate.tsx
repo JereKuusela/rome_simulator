@@ -9,7 +9,7 @@ import { Side } from '../store/battle'
 import { getArmyBySide, getCombatSettings, getSelectedTerrains, getUnits } from '../store/utils'
 
 import { toPercent } from '../formatters'
-import { calculateWinRate, Progress, interrupt } from '../store/combat/simulation'
+import { calculateWinRate, WinRateProgress, interrupt } from '../store/combat/simulation'
 
 interface Props { }
 
@@ -69,7 +69,7 @@ class WinRate extends Component<IProps, IState> {
     )
   }
 
-  update = (update: Progress) => {
+  update = (update: WinRateProgress) => {
     const { attacker, defender, draws, incomplete, progress } = update
     this.setState({ attacker: attacker, defender: defender, draws: draws + incomplete, progress: progress, calculating: progress !== 1 })
   }
