@@ -47,13 +47,15 @@ export const calculateWinRate = (simulationSettings: SimulationSettings, progres
     iterations: 0
   }
   interruptSimulation = false
-  
+
   // Performance is critical. Precalculate as many things as possible.
   const dice = combatSettings[CombatParameter.DiceMaximum] - combatSettings[CombatParameter.DiceMinimum] + 1
   const dice_2 = dice * dice
   const rolls = getRolls(combatSettings[CombatParameter.DiceMinimum], combatSettings[CombatParameter.DiceMaximum])
   const fractions = mapRange(10, value => 1.0 / Math.pow(dice_2, value))
   const phaseLength = Math.floor(combatSettings[CombatParameter.RollFrequency] * simulationSettings[SimulationParameter.PhaseLengthMultiplier])
+  const chunkSize = simulationSettings[SimulationParameter.ChunkSize]
+  const maxDepth = simulationSettings[SimulationParameter.MaxDepth]
 
   // Deployment is shared for each iteration.
   const [a, d] = doBattle(definitions, attacker, defender, 0, terrains, combatSettings)
@@ -75,40 +77,41 @@ export const calculateWinRate = (simulationSettings: SimulationSettings, progres
 
   // Nodes also cache state of units, only store what is absolutely necessary.
   const nodes = [{ status_a, status_d, branch: 0, depth: 1 }]
-  
-  const worker = () => {
-    setTimeout(() => {
-      for (let i = 0; i < simulationSettings[SimulationParameter.ChunkSize] && nodes.length && !interruptSimulation; i++) {
-        progress.iterations++
-        const node = nodes[nodes.length - 1]
-        // Most of the data is expected to change, so it's better to deep clone which allows mutations.
-        const units_a = copyStatus(node.status_a)
-        const units_d = copyStatus(node.status_d)
 
-        const [roll_a, roll_d] = rolls[node.branch]
-        let winner = doPhase(phaseLength, units_a, orig_a, units_d, orig_d, roll_a, roll_d, terrains, combatSettings)
+  const work = () => {
+    for (let i = 0; (i < chunkSize) && nodes.length && !interruptSimulation; i++) {
+      progress.iterations = progress.iterations + 1
+      const node = nodes[nodes.length - 1]
+      // Most of the data is expected to change, so it's better to deep clone which allows mutations.
+      const units_a = copyStatus(node.status_a)
+      const units_d = copyStatus(node.status_d)
 
-        let depth = node.depth
-        while (winner === undefined && depth < simulationSettings[SimulationParameter.MaxDepth]) {
-          depth++
-          // Current node will be still used so the cache must be deep cloned.  
-          // Branch starts at 1 because the current execution is 0.
-          nodes.push({ status_a: copyStatus(units_a), status_d: copyStatus(units_d), branch: 1, depth })
-          const [roll_a, roll_d] = rolls[0]
-          winner = doPhase(phaseLength, units_a, orig_a, units_d, orig_d, roll_a, roll_d, terrains, combatSettings)
-        }
-        updateProgress(progress, fractions[depth], winner)
+      const [roll_a, roll_d] = rolls[node.branch]
+      let winner = doPhase(phaseLength, units_a, orig_a, units_d, orig_d, roll_a, roll_d, terrains, combatSettings)
 
-        if (++node.branch === dice_2)
-          nodes.pop()
+      node.branch++
+      if (node.branch === dice_2)
+        nodes.pop()
+
+      let depth = node.depth
+      while (winner === undefined && depth < maxDepth) {
+        depth++
+        // Current node will be still used so the cache must be deep cloned.  
+        // Branch starts at 1 because the current execution is 0.
+        nodes.push({ status_a: copyStatus(units_a), status_d: copyStatus(units_d), branch: 1, depth })
+        const [roll_a, roll_d] = rolls[0]
+        winner = doPhase(phaseLength, units_a, orig_a, units_d, orig_d, roll_a, roll_d, terrains, combatSettings)
       }
-      if (!nodes.length || interruptSimulation)
-        progress.progress = 1
-      progressCallback(progress)
-      if (nodes.length && !interruptSimulation)
-        worker()
-    }, 0)
+      updateProgress(progress, fractions[depth], winner)
+    }
+    if (!nodes.length || interruptSimulation)
+      progress.progress = 1
+    progressCallback(progress)
+    if (nodes.length && !interruptSimulation)
+      worker()
   }
+
+  const worker = () => setTimeout(work, 0)
   worker()
 }
 
