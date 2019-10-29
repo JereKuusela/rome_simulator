@@ -9,7 +9,7 @@ import { Side } from '../store/battle'
 import { getArmyBySide, getCombatSettings, getSelectedTerrains, getUnits } from '../store/utils'
 
 import { toPercent } from '../formatters'
-import { calculateWinRate, WinRateProgress, interrupt } from '../store/combat/simulation'
+import { calculateWinRate, WinRateProgress, interrupt } from '../combat/simulation'
 
 interface Props { }
 

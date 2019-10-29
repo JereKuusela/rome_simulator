@@ -1,6 +1,6 @@
 import { UnitType, UnitCalc, } from '../../units'
 import { setCenterUnits, getUnit, initInfo, TestInfo, getDefinitions, every_type } from './utils'
-import { calculateWinRate } from '../simulation'
+import { calculateWinRate } from '../../../combat/simulation'
 import { getDefaultTactics } from '../../tactics'
 import { CountryName } from '../../countries'
 import { addValues, ValuesType } from '../../../base_definition'

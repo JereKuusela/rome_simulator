@@ -12,10 +12,10 @@ import { getArmyBySide, getCurrentUnits, getParticipant, getCombatSettings, getS
 import { calculateValue, calculateValueWithoutLoss, strengthToValue } from '../base_definition'
 import { toManpower, toNumber, toSignedPercent } from '../formatters'
 import { UnitCalc, Unit, UnitType } from '../store/units'
-import { calculateTotalRoll, calculateBaseDamage, calculateTactic, calculateExperienceReduction, calculateTotalDamage, calculateStrengthDamage, calculateMoraleDamage } from '../store/combat'
 import { TerrainType } from '../store/terrains'
 import { CombatParameter } from '../store/settings'
 import { TacticCalc } from '../store/tactics'
+import { calculateTotalRoll, calculateBaseDamage, calculateTactic, calculateTotalDamage, calculateExperienceReduction, calculateStrengthDamage, calculateMoraleDamage } from '../combat/combat'
 
 interface Props {
   index: number | null

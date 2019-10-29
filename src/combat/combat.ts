@@ -1,14 +1,17 @@
-import { BaseUnit, UnitCalc, Units, Unit } from '../units'
-import { TerrainCalc, TerrainDefinition } from '../terrains'
-import { TacticDefinition, TacticCalc, TacticType } from '../tactics'
-import { BaseUnits, RowTypes, FrontLine, BaseFrontLine } from '../battle'
-import { CombatParameter, CombatSettings } from '../settings'
-import { calculateValue, addValues, mergeValues, ValuesType } from '../../base_definition'
-import { reinforce } from './reinforcement'
-import { CountryName } from '../countries'
-import { resize } from '../../utils'
-import { sumBy } from 'lodash'
+
 import { DeepReadonly as R } from 'ts-essentials'
+import { sumBy } from 'lodash'
+
+import { CountryName } from '../store/countries'
+import { BaseUnit, UnitCalc, Units, Unit } from '../store/units'
+import { TerrainCalc, TerrainDefinition } from '../store/terrains'
+import { TacticDefinition, TacticCalc, TacticType } from '../store/tactics'
+import { BaseUnits, RowTypes, FrontLine, BaseFrontLine } from '../store/battle'
+import { CombatParameter, CombatSettings } from '../store/settings'
+
+import { calculateValue, addValues, mergeValues, ValuesType } from '../base_definition'
+import { reinforce } from './reinforcement'
+import { resize } from '../utils'
 
 interface Loss {
   morale: number

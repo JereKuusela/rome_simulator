@@ -1,10 +1,12 @@
-import { Units, Unit } from "../units"
-import { ParticipantState, doBattle } from "."
-import { TerrainDefinition } from "../terrains"
-import { CombatSettings, CombatParameter, SimulationSettings, SimulationParameter } from "../settings"
-import { mapRange } from "../../utils"
-import { Side } from "../battle"
-import { doBattleFast, StaticLine, DynamicLine, getStaticUnit, getDynamicUnit } from "./combat_fast"
+import { Units, Unit } from "../store/units"
+import { TerrainDefinition } from "../store/terrains"
+import { CombatSettings, CombatParameter, SimulationSettings, SimulationParameter } from "../store/settings"
+import { Side } from "../store/battle"
+
+import { doBattleFast, StaticLine, DynamicLine, getStaticUnit, getDynamicUnit, ParticipantState } from "./combat_fast"
+import { doBattle } from "./combat"
+
+import { mapRange } from "../utils"
 
 /**
  * Status of the win rate calculation. Most values are percents, only iterations is integer.

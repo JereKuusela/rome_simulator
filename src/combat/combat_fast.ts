@@ -1,11 +1,11 @@
-import { UnitCalc, UnitType, Unit } from '../units'
-import { TerrainDefinition, TerrainType } from '../terrains'
-import { TacticDefinition } from '../tactics'
-import { RowTypes, Units } from '../battle'
-import { CombatParameter, CombatSettings } from '../settings'
-import { CountryName } from '../countries'
-import { values } from '../../utils'
-import { calculateValue } from '../../base_definition'
+import { UnitCalc, UnitType, Unit } from '../store/units'
+import { TerrainDefinition, TerrainType } from '../store/terrains'
+import { TacticDefinition } from '../store/tactics'
+import { RowTypes, Units } from '../store/battle'
+import { CombatParameter, CombatSettings } from '../store/settings'
+import { CountryName } from '../store/countries'
+import { values } from '../utils'
+import { calculateValue } from '../base_definition'
 
 /**
  * Losses must be stored because they are applied after all units have attacked.

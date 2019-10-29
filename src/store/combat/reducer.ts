@@ -1,7 +1,7 @@
 import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
 import { Random, MersenneTwister19937, createEntropy } from 'random-js'
 import { isOver, Side, Participant } from '../battle'
-import { doBattle as fight } from './combat'
+import { doBattle as fight } from '../../combat/combat'
 import { mergeValues, Mode } from '../../base_definition'
 import { CombatParameter } from '../settings'
 import { AppState } from '../'

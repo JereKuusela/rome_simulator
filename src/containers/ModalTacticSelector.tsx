@@ -3,15 +3,15 @@ import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { AppState } from '../store/'
 import { selectTactic, invalidate, BaseDefeated, BaseReserve, BaseFrontLine } from '../store/battle'
-import { calculateTactic } from '../store/combat'
 import ItemSelector, { SelectorAttributes } from '../components/ItemSelector'
 import { TacticType, TacticCalc } from '../store/tactics'
 import { getBattle, filterTactics } from '../store/utils'
 import { mergeValues, calculateValue, Mode } from '../base_definition'
 import { toSignedPercent, toPercent } from '../formatters'
 import { CountryName } from '../store/countries'
-import StyledNumber from '../components/Utils/StyledNumber';
-import { map, filter, toArr } from '../utils';
+import StyledNumber from '../components/Utils/StyledNumber'
+import { map, filter, toArr } from '../utils'
+import { calculateTactic } from '../combat/combat'
 
 export interface ModalInfo {
   country: CountryName

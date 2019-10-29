@@ -1,8 +1,8 @@
 import { sortBy } from 'lodash'
-import { UnitCalc, UnitDefinitions, Unit } from '../units'
-import { RowType, BaseUnits, RowTypes } from '../battle'
-import { CombatSettings } from '../settings'
-import { calculateValue, mergeValues, calculateBase } from '../../base_definition'
+import { UnitCalc, UnitDefinitions, Unit } from '../store/units'
+import { RowType, BaseUnits, RowTypes } from '../store/battle'
+import { CombatSettings } from '../store/settings'
+import { calculateValue, mergeValues, calculateBase } from '../base_definition'
 import { DeepReadonly as R } from 'ts-essentials'
 import produce from 'immer'
 

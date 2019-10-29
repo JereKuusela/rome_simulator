@@ -4,7 +4,7 @@ import { BaseUnit, UnitCalc, UnitType, getDefaultUnits, getDefaultGlobals } from
 import { calculateValue, mergeValues, DefinitionType } from '../../../base_definition'
 import { map, mapRange } from '../../../utils'
 import { CountryName } from '../../countries'
-import { doBattle } from '../combat'
+import { doBattle } from '../../../combat/combat'
 import { getDefaultLandSettings, CombatParameter } from '../../settings'
 import { TerrainDefinition, TerrainType, getDefaultTerrains } from '../../terrains'
 
