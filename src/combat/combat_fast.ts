@@ -5,10 +5,12 @@ import { UnitCalc, UnitType, Unit } from '../store/units'
 import { TerrainDefinition } from '../store/terrains'
 import { TacticDefinition } from '../store/tactics'
 import { CombatParameter, CombatSettings } from '../store/settings'
+import { RowTypes } from '../store/battle'
 
 import { mapRange } from '../utils'
 import { calculateValue } from '../base_definition'
 import { calculateExperienceReduction } from './combat'
+import { reinforce } from './reinforcement_fast'
 
 /**
  * Information required for fast combat calculation.
@@ -18,6 +20,7 @@ export interface CombatParticipant {
   army: CombatUnits
   readonly tactic: TacticDefinition
   roll: number
+  readonly row_types: RowTypes
 }
 export type Frontline = (CombatUnit | null)[]
 export type Reserve = CombatUnit[]
@@ -37,8 +40,10 @@ const getUnitInfo = (combatSettings: CombatSettings, casualties_multiplier: numb
   const info = {
     type: unit.type,
     is_loyal: !!unit.is_loyal,
+    is_flank: unit.is_flank,
     experience: 1.0 + calculateExperienceReduction(combatSettings, unit),
     [UnitCalc.Maneuver]: calculateValue(unit, UnitCalc.Maneuver),
+    [UnitCalc.Cost]: calculateValue(unit, UnitCalc.Cost),
     [UnitCalc.Offense]: calculateValue(unit, UnitCalc.Offense),
     [UnitCalc.Defense]: calculateValue(unit, UnitCalc.Defense)
   } as UnitInfo
@@ -75,6 +80,7 @@ export interface UnitInfo extends UnitCalcs {
   is_loyal: boolean
   total: number[] // Total damage for each dice roll.
   experience: number
+  is_flank: boolean
   [UnitCalc.DamageTaken]: number
   [UnitCalc.DamageDone]: number
   [UnitCalc.MoraleDamageTaken]: number
@@ -84,6 +90,7 @@ export interface UnitInfo extends UnitCalcs {
   [UnitCalc.Offense]: number
   [UnitCalc.Defense]: number
   [UnitCalc.Maneuver]: number
+  [UnitCalc.Cost]: number
 }
 
 /**
@@ -109,7 +116,12 @@ export interface CombatUnit {
  * Makes given armies attach each other.
  */
 export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, settings: CombatSettings) => {
+  reinforce(a.army, a.row_types)
+  if (settings[CombatParameter.ReinforceFirst])
+    reinforce(d.army, d.row_types)
   pickTargets(a.army.frontline, d.army.frontline, settings)
+  if (!settings[CombatParameter.ReinforceFirst])
+    reinforce(d.army, d.row_types)
   pickTargets(d.army.frontline, a.army.frontline, settings)
 
   // Tactic bonus changes dynamically when units lose strength so it can't be precalculated.

@@ -77,12 +77,14 @@ export const calculateWinRate = (simulationSettings: SimulationSettings, progres
   const participant_a: CombatParticipant = {
     army: status_a,
     roll: 0,
-    tactic: attacker.tactic!
+    tactic: attacker.tactic!,
+    row_types: attacker.row_types
   }
   const participant_d: CombatParticipant = {
     army: status_d,
     roll: 0,
-    tactic: defender.tactic!
+    tactic: defender.tactic!,
+    row_types: defender.row_types
   }
 
 

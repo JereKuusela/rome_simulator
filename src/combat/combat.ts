@@ -51,17 +51,17 @@ export const doBattle = (definitions: Units, attacker: R<ParticipantState>, defe
   d = removeOutOfBounds(d, combat_width)
   a = removeDefeated(a)
   d = removeDefeated(d)
-  a = reinforce(a, definitions[attacker.country], round, attacker.row_types, attacker.flank_size, calculateArmySize(d), settings, undefined)
+  a = reinforce(a, definitions[attacker.country], round, attacker.row_types, attacker.flank_size, calculateArmySize(d), undefined)
   let units_a = {
     frontline: a.frontline.map(value => value && mergeValues(value, definitions[attacker.country][value.type])),
     reserve: a.reserve.map(value => value && mergeValues(value, definitions[attacker.country][value.type])),
     defeated: a.defeated.map(value => value && mergeValues(value, definitions[attacker.country][value.type]))
   }
   if (settings[CombatParameter.ReinforceFirst])
-    d = reinforce(d, definitions[defender.country], round, defender.row_types, defender.flank_size, calculateArmySize(a), settings, undefined)
+    d = reinforce(d, definitions[defender.country], round, defender.row_types, defender.flank_size, calculateArmySize(a), undefined)
   let a_to_d = pickTargets(units_a.frontline, d.frontline, settings)
   if (!settings[CombatParameter.ReinforceFirst])
-    d = reinforce(d, definitions[defender.country], round, defender.row_types, defender.flank_size, calculateArmySize(a), settings, a_to_d)
+    d = reinforce(d, definitions[defender.country], round, defender.row_types, defender.flank_size, calculateArmySize(a), a_to_d)
   let units_d = {
     frontline: d.frontline.map(value => value && mergeValues(value, definitions[defender.country][value.type])),
     reserve: d.reserve.map(value => value && mergeValues(value, definitions[defender.country][value.type])),

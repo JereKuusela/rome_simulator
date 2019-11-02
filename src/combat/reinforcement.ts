@@ -1,10 +1,11 @@
 import { sortBy } from 'lodash'
-import { UnitCalc, UnitDefinitions, Unit } from '../store/units'
-import { RowType, BaseUnits, RowTypes } from '../store/battle'
-import { CombatSettings } from '../store/settings'
-import { calculateValue, mergeValues, calculateBase } from '../base_definition'
-import { DeepReadonly as R } from 'ts-essentials'
 import produce from 'immer'
+import { DeepReadonly as R } from 'ts-essentials'
+
+import { UnitCalc, UnitDefinitions, Unit } from '../store/units'
+import { RowType, BaseUnits, RowTypes, BaseFrontLine, BaseReserve } from '../store/battle'
+
+import { calculateValue, mergeValues, calculateBase } from '../base_definition'
 
 /**
  * Calculates the next index when the order is from center to edges.
@@ -32,8 +33,8 @@ const isFlankUnit = (row_types: RowTypes, unit: Unit) => {
  * @param free_spots Amount of free spots in the frontline.
  * @param enemy_size Size of the enemy army.
  */
-const calculateFlankSizes = (round: number, flank_size: number, front_size: number, reserve_size: number, free_spots: number, enemy_size: number): [number, number] => {
-    if (round > 0)
+const calculateFlankSizes = (flank_size: number, front_size: number, reserve_size: number, free_spots: number, enemy_size: number, is_deployment: boolean): [number, number] => {
+    if (!is_deployment)
         return [0, 0]
     const army_size = front_size - free_spots + reserve_size
     // Determine whether the preferred flank size has any effect.
@@ -47,27 +48,9 @@ const calculateFlankSizes = (round: number, flank_size: number, front_size: numb
     return [left_flank_size, right_flank_size]
 }
 
-/**
- * Reinforces a given army based on reinforcement rules.
- * First priority is to move units from reserve. Then units move towards center.
- * Initial deployment has different rules than reinforcement.
- * @param army Frontline and reserve. Currently being mutated.
- * @param definitions Definitions to calculate priorities.
- * @param round Round number is used to check for the initial deployment.
- * @param row_types Preferred unit types.
- * @param flank_size Minimum size of flanks. Only works for the initial deployment and if enough unit.
- * @param enemy_size Army size of the enemy. Affects size of flanks.
- * @param settings Parameters for reinforcement.
- * @param attacker_to_defender Output. Reinforcement may move units so this must be updated also.
- */
-export const reinforce = (army: R<BaseUnits>, definitions: R<UnitDefinitions>, round: number, row_types: RowTypes, flank_size: number, enemy_size: number, settings: CombatSettings, attacker_to_defender: (number | null)[] | undefined): R<BaseUnits> => {
-    let frontline = army.frontline
-    let reserve = army.reserve
+const reinforceUnits = (frontline: R<BaseFrontLine>, reserve: R<BaseReserve>, definitions: R<UnitDefinitions>, row_types: RowTypes, flank_size: number, enemy_size: number, is_deployment: boolean) => {
+    const center = Math.floor(frontline.length / 2.0)// Separate reserve to main and flank groups.
 
-    const center = Math.floor(frontline.length / 2.0)
-    const is_deployment = round === 0
-
-    // Separate reserve to main and flank groups.
     const mainReserve = reserve.filter(value => !isFlankUnit(row_types, mergeValues(value, definitions[value.type])))
     const flankReserve = reserve.filter(value => isFlankUnit(row_types, mergeValues(value, definitions[value.type])))
     // Calculate priorities (mostly based on unit type, ties are resolved with index numbers).
@@ -81,7 +64,7 @@ export const reinforce = (army: R<BaseUnits>, definitions: R<UnitDefinitions>, r
     })
 
     const free_spots = frontline.filter((_, index) => index < frontline.length).reduce((previous, current) => previous + (current ? 0 : 1), 0)
-    const [left_flank_size, right_flank_size] = calculateFlankSizes(round, flank_size, frontline.length, reserve.length, free_spots, enemy_size)
+    const [left_flank_size, right_flank_size] = calculateFlankSizes(flank_size, frontline.length, reserve.length, free_spots, enemy_size, is_deployment)
 
     if (is_deployment) {
         // Initial deployment uses reversed order (so Primary unit is first and Secondary last).
@@ -91,6 +74,7 @@ export const reinforce = (army: R<BaseUnits>, definitions: R<UnitDefinitions>, r
     // Optimization to not drag units in calculations which have no chance to get picked.
     orderedMainReserve = orderedMainReserve.slice(-free_spots)
     orderedFlankReserve = orderedFlankReserve.slice(-free_spots)
+
     let index = center
     // Fill main front until flanks are reached.
     frontline = produce(frontline, frontline => {
@@ -127,38 +111,70 @@ export const reinforce = (army: R<BaseUnits>, definitions: R<UnitDefinitions>, r
                 continue
             }
         }
-        // Deployment shouldn't move manually set units (so they start the battle where user wanted them)
-        if (!is_deployment) {
-            // Move units from left to center.
-            for (let unit_index = Math.ceil(frontline.length / 2.0) - 1; unit_index > 0; --unit_index) {
-                const unit = frontline[unit_index]
-                if (unit)
-                    continue
-                const unit_on_left = frontline[unit_index - 1]
-                if (unit_on_left) {
-                    frontline[unit_index] = unit_on_left
-                    frontline[unit_index - 1] = null
-                    if (attacker_to_defender)
-                        attacker_to_defender.forEach((target, index) => attacker_to_defender[index] = target === unit_index - 1 ? unit_index : target)
-                    continue
-                }
+    })
+    return { frontline, reserve }
+}
+
+const moveUnits = (frontline: R<BaseFrontLine>, attacker_to_defender: (number | null)[] | undefined) => {
+    return produce(frontline, frontline => {
+        // Move units from left to center.
+        for (let unit_index = Math.ceil(frontline.length / 2.0) - 1; unit_index > 0; --unit_index) {
+            const unit = frontline[unit_index]
+            if (unit)
+                continue
+            const unit_on_left = frontline[unit_index - 1]
+            if (unit_on_left) {
+                frontline[unit_index] = unit_on_left
+                frontline[unit_index - 1] = null
+                if (attacker_to_defender)
+                    attacker_to_defender.forEach((target, index) => attacker_to_defender[index] = target === unit_index - 1 ? unit_index : target)
+                continue
             }
-            // Move units from right to center.
-            for (let unit_index = Math.ceil(frontline.length / 2.0); unit_index < frontline.length - 1; ++unit_index) {
-                const unit = frontline[unit_index]
-                if (unit)
-                    continue
-                const unit_on_right = frontline[unit_index + 1]
-                if (unit_on_right) {
-                    frontline[unit_index] = unit_on_right
-                    frontline[unit_index + 1] = null
-                    if (attacker_to_defender)
-                        attacker_to_defender.forEach((target, index) => attacker_to_defender[index] = target === unit_index + 1 ? unit_index : target)
-                    continue
-                }
+        }
+        // Move units from right to center.
+        for (let unit_index = Math.ceil(frontline.length / 2.0); unit_index < frontline.length - 1; ++unit_index) {
+            const unit = frontline[unit_index]
+            if (unit)
+                continue
+            const unit_on_right = frontline[unit_index + 1]
+            if (unit_on_right) {
+                frontline[unit_index] = unit_on_right
+                frontline[unit_index + 1] = null
+                if (attacker_to_defender)
+                    attacker_to_defender.forEach((target, index) => attacker_to_defender[index] = target === unit_index + 1 ? unit_index : target)
+                continue
             }
         }
     })
+}
+
+/**
+ * Reinforces a given army based on reinforcement rules.
+ * First priority is to move units from reserve. Then units move towards center.
+ * Initial deployment has different rules than reinforcement.
+ * @param army Frontline and reserve. Currently being mutated.
+ * @param definitions Definitions to calculate priorities.
+ * @param round Round number is used to check for the initial deployment.
+ * @param row_types Preferred unit types.
+ * @param flank_size Minimum size of flanks. Only works for the initial deployment and if enough unit.
+ * @param enemy_size Army size of the enemy. Affects size of flanks.
+ * @param settings Parameters for reinforcement.
+ * @param attacker_to_defender Output. Reinforcement may move units so this must be updated also.
+ */
+export const reinforce = (army: R<BaseUnits>, definitions: R<UnitDefinitions>, round: number, row_types: RowTypes, flank_size: number, enemy_size: number, attacker_to_defender: (number | null)[] | undefined): R<BaseUnits> => {
+    let frontline = army.frontline
+    let reserve = army.reserve
+
+    const is_deployment = round === 0
+
+    if (reserve.length) {
+        const result = reinforceUnits(frontline, reserve, definitions, row_types, flank_size, enemy_size, is_deployment)
+        frontline = result.frontline
+        reserve = result.reserve
+    }
+    // Deployment shouldn't move manually set units (so they start the battle where user wanted them)
+    if (!is_deployment)
+        frontline = moveUnits(frontline, attacker_to_defender)
 
     return { frontline, reserve, defeated: army.defeated }
 }
