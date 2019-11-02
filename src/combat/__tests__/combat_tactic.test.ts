@@ -1,6 +1,6 @@
-import { TacticType } from '../../tactics'
-import { UnitType, UnitCalc } from '../../units'
-import { addValues, ValuesType } from '../../../base_definition'
+import { TacticType } from '../../store/tactics'
+import { UnitType, UnitCalc } from '../../store/units'
+import { addValues, ValuesType } from '../../base_definition'
 import { getUnit, TestInfo, initInfo, setCenterUnits, testCombat, initSide, setTactics } from './utils'
 
 describe('tactics', () => {

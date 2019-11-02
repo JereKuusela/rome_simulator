@@ -1,12 +1,12 @@
-import { Army, Participant, RowType, Side, getDefaultParticipant, getDefaultArmy } from '../../battle'
-import { TacticType, getDefaultTactics } from '../../tactics'
-import { BaseUnit, UnitCalc, UnitType, getDefaultUnits, getDefaultGlobals } from '../../units'
-import { calculateValue, mergeValues, DefinitionType } from '../../../base_definition'
-import { map, mapRange } from '../../../utils'
-import { CountryName } from '../../countries'
-import { doBattle } from '../../../combat/combat'
-import { getDefaultLandSettings, CombatParameter } from '../../settings'
-import { TerrainDefinition, TerrainType, getDefaultTerrains } from '../../terrains'
+import { Army, Participant, RowType, Side, getDefaultParticipant, getDefaultArmy } from '../../store/battle'
+import { TacticType, getDefaultTactics } from '../../store/tactics'
+import { BaseUnit, UnitCalc, UnitType, getDefaultUnits, getDefaultGlobals } from '../../store/units'
+import { calculateValue, mergeValues, DefinitionType } from '../../base_definition'
+import { map, mapRange } from '../../utils'
+import { CountryName } from '../../store/countries'
+import { doBattle } from '../combat'
+import { getDefaultLandSettings, CombatParameter } from '../../store/settings'
+import { TerrainDefinition, TerrainType, getDefaultTerrains } from '../../store/terrains'
 
 const global_stats = getDefaultGlobals()[DefinitionType.Land]
 const units = map(getDefaultUnits(), unit => mergeValues(unit, global_stats))

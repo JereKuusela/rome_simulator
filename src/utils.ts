@@ -96,7 +96,12 @@ export function reduceKeys<K extends string, R>(object: { [key in K]: any }, cal
   return keys(object).reduce(callback, initial as R)
 }
 
-export const toObj = <K extends string, V>(arr: V[], key: (value: V, index: number) => K): { [key in K]: V} => Object.assign({}, ...arr.map((v, i) => ({ [key(v, i)]: v })))
+export function toObj<K extends string | number, V>(arr: V[], key: (value: V, index: number) => K): { [key in K]: V}
+export function toObj<K extends string | number, V, R>(arr: V[], key: (value: V, index: number) => K, value: (value: V, index: number) => R): { [key in K]: R}
+export function toObj<K extends string | number, V, R>(arr: V[], key: (value: V, index: number) => K, value: (value: V, index: number) => R = ((value) => value as any as R)): { [key in K]: R}
+{
+  return Object.assign({}, ...arr.map((v, i) => ({ [key(v, i)]: value(v, i) })))
+}
 
 export const toSet = <V, R extends string>(object: { [key: string]: V}, key: (value: V) => R): { [key in R]: true } => Object.assign({}, ...values(object).map(v => ({ [key(v)]: true })))
 

@@ -389,7 +389,6 @@ export const calculateMoraleDamage = (settings: CombatSettings, total_damage: nu
 
 /**
  * Calculates both strength and morale losses caused by a given attacker to a given defender.
- * Experimental: Tested with unit tests from in-game results. Not 100% accurate.
  * @param source An attacker inflicting damange on the target.
  * @param target A defender receiving damage from the source.
  * @param roll Dice roll, affects amount of damage inflicted.

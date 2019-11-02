@@ -1,6 +1,6 @@
-import { TerrainType } from '../../terrains'
-import { UnitType, UnitCalc } from '../../units'
-import { addValues, ValuesType } from '../../../base_definition'
+import { TerrainType } from '../../store/terrains'
+import { UnitType, UnitCalc } from '../../store/units'
+import { addValues, ValuesType } from '../../base_definition'
 import { setCenterUnits, getUnit, initSide, testCombat, initInfo, TestInfo, setTerrain } from './utils'
 
 describe('1 vs 1', () => {

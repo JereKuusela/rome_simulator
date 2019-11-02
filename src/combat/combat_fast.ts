@@ -1,11 +1,14 @@
+
+import { sumBy } from 'lodash'
+
 import { UnitCalc, UnitType, Unit } from '../store/units'
-import { TerrainDefinition, TerrainType } from '../store/terrains'
-import { TacticDefinition } from '../store/tactics'
-import { RowTypes, Units } from '../store/battle'
+import { TerrainDefinition } from '../store/terrains'
+import { TacticDefinition, TacticType } from '../store/tactics'
 import { CombatParameter, CombatSettings } from '../store/settings'
-import { CountryName } from '../store/countries'
-import { values } from '../utils'
+
+import { values, mapRange } from '../utils'
 import { calculateValue } from '../base_definition'
+import { calculateExperienceReduction } from './combat'
 
 /**
  * Losses must be stored because they are applied after all units have attacked.
@@ -15,37 +18,49 @@ interface Loss {
   strength: number
 }
 
-export interface ParticipantState extends Units {
-  readonly country: CountryName
-  readonly tactic?: TacticDefinition
-  readonly roll: number
-  readonly general: number
-  readonly row_types: RowTypes
-  readonly flank_size: number
+export interface Participant {
+  d: DynamicUnits
+  readonly s: StaticUnits
+  readonly tactic: TacticDefinition
+  roll: number
 }
-export type StaticLine = (StaticUnit | null)[]
-export type DynamicLine = (DynamicUnit | null)[]
+export type DynamicFrontline = (DynamicUnit | null)[]
+export type DynamicReserve = DynamicUnit[]
 
+export type StaticUnits = {
+  [key: number]: StaticUnit
+}
 
-const unitCalcs = values(UnitCalc)
-const terrainTypes = values(TerrainType)
+export type DynamicUnits = {
+  readonly frontline: (DynamicUnit | null)[]
+  readonly reserve: DynamicUnit[]
+  readonly defeated: DynamicUnit[]
+}
+
 const unitTypes = values(UnitType)
 
+const properties = [UnitCalc.DamageTaken, UnitCalc.DamageDone, UnitCalc.MoraleDamageTaken, UnitCalc.MoraleDamageDone, UnitCalc.StrengthDamageTaken, UnitCalc.StrengthDamageDone]
+
 /**
- * Returns the static part of a unit.
+ * Returns the static part of a unit, precalculating as much as possible.
  */
-export const getStaticUnit = (unit: Unit | null): StaticUnit | null => {
+export const getStaticUnit = (combatSettings: CombatSettings, casualties_multiplier: number, base_damages: number[], terrains: TerrainDefinition[], unit: Unit | null): StaticUnit | null => {
   if (!unit)
     return null
-  const calculated = {
+  const staticUnit = {
     type: unit.type,
-    is_loyal: !!unit.is_loyal
+    is_loyal: !!unit.is_loyal,
+    experience: 1.0 + calculateExperienceReduction(combatSettings, unit),
+    [UnitCalc.Maneuver]: calculateValue(unit, UnitCalc.Maneuver),
+    [UnitCalc.Offense]: calculateValue(unit, UnitCalc.Offense),
+    [UnitCalc.Defense]: calculateValue(unit, UnitCalc.Defense)
   } as StaticUnit
-  unitCalcs.forEach(calc => { calculated[calc] = calculateValue(unit, calc) })
-  terrainTypes.forEach(calc => { calculated[calc] = calculateValue(unit, calc) })
-  unitTypes.forEach(calc => { calculated[calc] = calculateValue(unit, calc) })
-  calculated['total'] = totalDamageSource(calculated)
-  return calculated
+  properties.forEach(calc => { staticUnit[calc] = 1.0 + calculateValue(unit, calc) })
+  staticUnit[UnitCalc.StrengthDamageDone] *= combatSettings[CombatParameter.StrengthLostMultiplier] * (1.0 + casualties_multiplier)
+  staticUnit[UnitCalc.MoraleDamageDone] *= combatSettings[CombatParameter.MoraleLostMultiplier] / combatSettings[CombatParameter.MoraleDamageBase]
+  unitTypes.forEach(calc => { staticUnit[calc] = 1.0 + calculateValue(unit, calc) })
+  staticUnit.total = mapRange(base_damages.length, roll => precalculateDamage(base_damages[roll], terrains, unit))
+  return staticUnit
 }
 
 /**
@@ -54,21 +69,15 @@ export const getStaticUnit = (unit: Unit | null): StaticUnit | null => {
 export const getDynamicUnit = (unit: Unit | null): DynamicUnit | null => {
   if (!unit)
     return null
-  const calculated = {
+  const dynamicUnit = {
     [UnitCalc.Morale]: calculateValue(unit, UnitCalc.Morale),
     [UnitCalc.Strength]: calculateValue(unit, UnitCalc.Strength),
+    id: unit.id
   }
-  return calculated
+  return dynamicUnit
 }
 
-type UnitCalcs = { [key in (UnitCalc | UnitType | TerrainType)]: number }
-
-/**
- * Precalculated base damage values.
- */
-const rollToDamage = [
-  0.08, 0.08 + 0.02 * 1, 0.08 + 0.02 * 2, 0.08 + 0.02 * 3, 0.08 + 0.02 * 4, 0.08 + 0.02 * 5, 0.08 + 0.02 * 6
-]
+type UnitCalcs = { [key in (UnitType | UnitCalc)]: number }
 
 /**
  * Static part of a unit. Properties which don't change during the battle.
@@ -76,8 +85,20 @@ const rollToDamage = [
 export interface StaticUnit extends UnitCalcs {
   type: UnitType
   is_loyal: boolean
-  total: number
+  total: number[] // Total damage for each dice roll.
+  experience: number
+  [UnitCalc.DamageTaken]: number
+  [UnitCalc.DamageDone]: number
+  [UnitCalc.MoraleDamageTaken]: number
+  [UnitCalc.MoraleDamageDone]: number
+  [UnitCalc.StrengthDamageTaken]: number
+  [UnitCalc.StrengthDamageDone]: number
+  [UnitCalc.Offense]: number
+  [UnitCalc.Defense]: number
+  [UnitCalc.Maneuver]: number
   target: number | null // This one is here for performance (temporary property).
+  morale_loss: number // This one is here for performance (temporary property).
+  strength_loss: number // This one is here for performance (temporary property).
 }
 
 /**
@@ -86,63 +107,56 @@ export interface StaticUnit extends UnitCalcs {
 export interface DynamicUnit {
   [UnitCalc.Morale]: number
   [UnitCalc.Strength]: number
+  id: number
 }
 
 /**
  * Makes given armies attach each other.
- * @param attacker Attackers.
- * @param defender Defenders.
- * @param round Turn number to distinguish different rounds.
- * @param terrains Terrains of the battle, may affect amount of damage inflicted.
  */
+export const doBattleFast = (a: Participant, d: Participant, settings: CombatSettings) => {
+  pickTargets(a.d.frontline, a.s, d.d.frontline, settings)
+  pickTargets(d.d.frontline, d.s, a.d.frontline, settings)
 
-export const doBattleFast = (status_a: DynamicLine, status_d: DynamicLine, attacker: StaticLine, defender: StaticLine, roll_a: number, roll_d: number, terrains: TerrainDefinition[], settings: CombatSettings) => {
-  pickTargets(attacker, defender, settings)
-  pickTargets(defender, attacker, settings)
+  attack(a.d.frontline, a.s, d.s, a.roll, 1 + calculateTactic(a.d, a.s, a.tactic, d.tactic.type), settings)
+  attack(d.d.frontline, d.s, a.s, d.roll, 1 + calculateTactic(d.d, d.s, d.tactic, a.tactic.type), settings)
 
-  const base_a = rollToDamage[roll_a]
-  const base_d = rollToDamage[roll_d]
-  const losses_d = attack(status_a, attacker, defender, base_a, terrains, 0, 0, settings)
-  const losses_a = attack(status_d, defender, attacker, base_d, terrains, 0, 0, settings)
-
-  applyLosses(status_a, losses_a)
-  applyLosses(status_d, losses_d)
+  applyLosses(a.d.frontline, a.s)
+  applyLosses(d.d.frontline, d.s)
   const minimum_morale = settings[CombatParameter.MinimumMorale]
   const minimum_strength = settings[CombatParameter.MinimumStrength]
-  copyDefeated(status_a, minimum_morale, minimum_strength)
-  copyDefeated(status_d, minimum_morale, minimum_strength)
+  moveDefeated(a.d.frontline, a.d.defeated, minimum_morale, minimum_strength)
+  moveDefeated(d.d.frontline, d.d.defeated, minimum_morale, minimum_strength)
 }
 
 /**
  * Selects targets for a given source_row from a given target_row.
- * Returns an array which maps attacker to defender.
- * @param source_row Attackers.
- * @param target_row Defenders.
- * @param settings Targeting setting.
  */
-const pickTargets = (source_row: StaticLine, target_row: StaticLine, settings: CombatSettings) => {
+const pickTargets = (source_row: DynamicFrontline, units: StaticUnits, target_row: DynamicFrontline, settings: CombatSettings) => {
   // Units attack mainly units on front of them. If not then first target from left to right.
-  for (let source_index = 0; source_index < source_row.length; source_index++) {
-    const source = source_row[source_index]
-    if (!source)
+  for (let i = 0; i < source_row.length; i++) {
+    const source_d = source_row[i]
+    if (!source_d)
       continue
-    source.target = null
-    if (target_row[source_index])
-      source.target = source_index
+    const source_s = units[source_d.id]
+    source_s.morale_loss = 0
+    source_s.strength_loss = 0
+    source_s.target = null
+    if (target_row[i])
+      source_s.target = target_row[i]!.id
     else {
-      const maneuver = source[UnitCalc.Maneuver]
-      if (settings[CombatParameter.FixTargeting] ? source_index < source_row.length / 2 : source_index <= source_row.length / 2) {
-        for (let index = source_index - maneuver; index <= source_index + maneuver; ++index) {
+      const maneuver = source_s[UnitCalc.Maneuver]
+      if (settings[CombatParameter.FixTargeting] ? i < source_row.length / 2 : i <= source_row.length / 2) {
+        for (let index = i - maneuver; index <= i + maneuver; ++index) {
           if (index >= 0 && index < source_row.length && target_row[index]) {
-            source.target = index
+            source_s.target = target_row[index]!.id
             break
           }
         }
       }
       else {
-        for (let index = source_index + maneuver; index >= source_index - maneuver; --index) {
+        for (let index = i + maneuver; index >= i - maneuver; --index) {
           if (index >= 0 && index < source_row.length && target_row[index]) {
-            source.target = index
+            source_s.target = target_row[index]!.id
             break
           }
         }
@@ -152,139 +166,106 @@ const pickTargets = (source_row: StaticLine, target_row: StaticLine, settings: C
 }
 
 /**
+ * Calculates effectiveness of a tactic against another tactic with a given army.
+ * @param frontline Units affecting the positive bonus.
+ * @param tactic Tactic to calculate.
+ * @param counter_tactic Opposing tactic, can counter or get countered.
+ */
+const calculateTactic = (army: DynamicUnits, army2: StaticUnits, tactic: TacticDefinition, counter_tactic: TacticType): number => {
+  const effectiveness = (tactic && counter_tactic) ? calculateValue(tactic, counter_tactic) : tactic ? 1.0 : 0.0
+  let unit_modifier = 1.0
+  if (effectiveness > 0 && tactic && army) {
+    let units = 0
+    let weight = 0.0
+    for (const unit of army.frontline.concat(army.reserve).concat(army.defeated)) {
+      if (!unit)
+        continue
+      units += unit[UnitCalc.Strength]
+      weight += calculateValue(tactic, army2[unit.id].type) * unit[UnitCalc.Strength]
+    }
+    if (units)
+      unit_modifier = weight / units
+  }
+
+  return effectiveness * Math.min(1.0, unit_modifier)
+}
+
+/**
  * Adds losses to a frontline, causing damage to the units.
  * @param frontline Frontline.
  * @param losses Losses added to units. 
  */
-const applyLosses = (status: DynamicLine, losses: Loss[]) => {
+const applyLosses = (status: DynamicFrontline, units: StaticUnits) => {
   for (let i = 0; i < status.length; i++) {
     const unit = status[i]
     if (!unit)
       continue
-    unit[UnitCalc.Morale] -= losses[i].morale
-    unit[UnitCalc.Strength] -= losses[i].strength
+    unit[UnitCalc.Morale] -= units[unit.id].morale_loss
+    unit[UnitCalc.Strength] -= units[unit.id].strength_loss
   }
 }
 
 /**
- * Copies defeated units from a frontline to defeated.
- * Units on the frontline will be marked as defeated for visual purposes.
- * @param army Frontline and defeated.
- * @param definitions Full definitions for units in the frontline. Needed to check when defeated.
- * @param minimum_morale Minimum morale to stay in the fight.
- * @param minimum_strength Minimum strength to stay in the fight.
+ * Moves defeated units from a frontline to defeated.
  */
-const copyDefeated = (status: DynamicLine, minimum_morale: number, minimum_strength: number) => {
-  for (let i = 0; i < status.length; i++) {
-    const state = status[i]
+const moveDefeated = (frontline: DynamicFrontline, defeated: DynamicReserve, minimum_morale: number, minimum_strength: number) => {
+  for (let i = 0; i < frontline.length; i++) {
+    const state = frontline[i]
     if (!state)
       continue
     if (state[UnitCalc.Strength] > minimum_strength && state[UnitCalc.Morale] > minimum_morale)
       continue
-    status[i] = null
+    defeated.push(state)
+    frontline[i] = null
   }
 }
 
 /**
  * Calculates losses when a given source row attacks a given target row.
- * @param source_row A row of attackers inflicting daamge on target_row.
- * @param target_row A row of defenders receiving damage from source_row.
- * @param source_to_target Selected targets for attackers.
- * @param roll Dice roll, affects amount of damage inflicted.
- * @param terrains Terrains of the battle, may affect amount of damage inflicted.
- * @param tactic_damage_multiplier Multiplier for damage from tactics.
- * @param casualties_multiplier Multiplier for strength lost from tactics.
- * @param settings Combat parameters.
  */
-const attack = (status: DynamicLine, source_row: StaticLine, target_row: StaticLine, roll: number, terrains: TerrainDefinition[], tactic_damage_multiplier: number, casualties_multiplier: number, settings: CombatSettings): Loss[] => {
-  const target_losses = Array<Loss>(target_row.length)
-  for (let i = 0; i < target_row.length; ++i)
-    target_losses[i] = { morale: 0, strength: 0 }
-  for (let source_index = 0; source_index < source_row.length; source_index++) {
-    const source = source_row[source_index]
-    if (!source)
+const attack = (frontline: DynamicFrontline, units_source: StaticUnits, units_target: StaticUnits, roll: number, tactic_damage_multiplier: number, settings: CombatSettings) => {
+  for (let i = 0; i < frontline.length; i++) {
+    const source_d = frontline[i]
+    if (!source_d)
       continue
-    const state = status[source_index]
-    if (!source || !state)
+    const source_s = units_source[source_d.id]
+    if (!source_s)
       continue
-    const target_index = source.target
-    if (target_index === null)
+    if (source_s.target === null)
       continue
-    const target = target_row[target_index]!
-    const losses = calculateLosses(state, source, target, roll, terrains, tactic_damage_multiplier, casualties_multiplier, settings)
-    target_losses[target_index].strength += losses.strength
-    target_losses[target_index].morale += losses.morale
+    const target = units_target[source_s.target]
+    const losses = calculateLosses(source_d, source_s, target, roll, tactic_damage_multiplier, settings)
+    target.morale_loss += losses.morale
+    target.strength_loss += losses.strength
   }
-  return target_losses
 }
 
-const totalDamageSource = (source: StaticUnit) => {
-  let damage = 1
-  damage = calculate(damage, 1.0 + source[UnitCalc.Discipline])
-  damage = calculate(damage, 1.0 + source[UnitCalc.DamageDone])
-  if (source.is_loyal)
-    damage = calculate(damage, 1.1)
-  return damage
-}
+const precalculateDamage = (base_damage: number, terrains: TerrainDefinition[], source: Unit) => (
+  100000.0 * base_damage
+  * (1.0 + calculateValue(source, UnitCalc.Discipline))
+  * (1.0 + calculateValue(source, UnitCalc.DamageDone))
+  * (1.0 + sumBy(terrains, terrain => calculateValue(source, terrain.type)))
+  * (source.is_loyal ? 1.1 : 1.0)
+)
 
-const calculateTotalDamage = (state: DynamicUnit, settings: CombatSettings, base_damage: number, source: StaticUnit, target: StaticUnit, terrains: TerrainDefinition[], tactic_damage_multiplier: number) => {
-  let damage = 100000.0 * base_damage
-  damage = calculate(damage, source.total)
-  /*if (settings[CombatParameter.FixDamageTaken])
-    damage = calculate(damage, 1.0 + target[UnitCalc.DamageTaken])
+const calculateTotalDamage = (state: DynamicUnit, settings: CombatSettings, roll: number, source: StaticUnit, target: StaticUnit, tactic_damage_multiplier: number) => {
+  let damage = source.total[roll] * source[target.type] * tactic_damage_multiplier * state[UnitCalc.Strength] * target.experience
+    * (1.0 + source[UnitCalc.Offense] - target[UnitCalc.Defense])
+  if (settings[CombatParameter.FixDamageTaken])
+    damage *= target[UnitCalc.DamageTaken]
   else
-    damage = calculate(damage, 1.0 + source[UnitCalc.DamageDone])*/
-  //damage = calculate(damage, 1.0 + sumBy(terrains, terrain => source[terrain.type]))
-  damage = calculate(damage, 1.0 + source[target.type])
-  //damage = calculate(damage, 1.0 + tactic_damage_multiplier)
-  //damage = calculate(damage, 1.0 + source[UnitCalc.Offense] - target[UnitCalc.Defense])
-  //damage = calculate(damage, 1.0 + calculateExperienceReduction(settings, target))
-  damage = calculate(damage, state[UnitCalc.Strength])
-  return damage / 100000.0
-}
-
-const precalc2 = 100000.0 * 0.2
-
-const calculateStrengthDamage = (settings: CombatSettings, total_damage: number, source: StaticUnit, target: StaticUnit, casualties_multiplier: number) => {
-  //const strength_lost_multiplier = settings[CombatParameter.StrengthLostMultiplier]
-  let strength_lost = total_damage * precalc2
-  //strength_lost = calculate(strength_lost, 1.0 + casualties_multiplier)
-  //strength_lost = calculate(strength_lost, strength_lost_multiplier)
-  //strength_lost = calculate(strength_lost, 1.0 + source[UnitCalc.StrengthDamageDone])
-  strength_lost = calculate(strength_lost, 1.0 + target[UnitCalc.StrengthDamageTaken])
-  return strength_lost / 100000.0
-}
-
-const precalc1 = 100000.0 * 1.5 / 2.0
-
-const calculateMoraleDamage = (state: DynamicUnit, settings: CombatSettings, total_damage: number, source: StaticUnit, target: StaticUnit) => {
-  let morale_lost = total_damage * precalc1 * state[UnitCalc.Morale]
-  //morale_lost = calculate(morale_lost, 1.0 + source[UnitCalc.MoraleDamageDone])
-  morale_lost = calculate(morale_lost, 1.0 + target[UnitCalc.MoraleDamageTaken])
-  return morale_lost / 100000.0
+    damage *= source[UnitCalc.DamageDone]
+  return damage
 }
 
 /**
  * Calculates both strength and morale losses caused by a given attacker to a given defender.
- * Experimental: Tested with unit tests from in-game results. Not 100% accurate.
- * @param source An attacker inflicting damange on the target.
- * @param target A defender receiving damage from the source.
- * @param roll Dice roll, affects amount of damage inflicted.
- * @param terrains Terrains of the battle, may affect amount of damage inflicted.
- * @param tactic_damage_multiplier Multiplier for damage from tactics.
- * @param casualties_multiplier Multiplier for strength lost from tactics.
- * @param settings Combat parameters.
  */
-const calculateLosses = (state: DynamicUnit, source: StaticUnit, target: StaticUnit, base_damage: number, terrains: TerrainDefinition[], tactic_damage_multiplier: number, casualties_multiplier: number, settings: CombatSettings): Loss => {
+const calculateLosses = (dynamic_source: DynamicUnit, static_source: StaticUnit, static_target: StaticUnit, roll: number, tactic_damage_multiplier: number, settings: CombatSettings): Loss => {
 
-  const total_damage = calculateTotalDamage(state, settings, base_damage, source, target, terrains, tactic_damage_multiplier)
-  const strength_lost = calculateStrengthDamage(settings, total_damage, source, target, casualties_multiplier)
-  const morale_lost = calculateMoraleDamage(state, settings, total_damage, source, target)
+  const total_damage = calculateTotalDamage(dynamic_source, settings, roll, static_source, static_target, tactic_damage_multiplier)
+  const strength_lost = total_damage * static_source[UnitCalc.StrengthDamageDone] * static_target[UnitCalc.StrengthDamageTaken]
+  const morale_lost = total_damage * dynamic_source[UnitCalc.Morale] * static_source[UnitCalc.MoraleDamageDone] * static_target[UnitCalc.MoraleDamageTaken]
 
-  return { strength: strength_lost, morale: morale_lost }
+  return { strength: Math.floor(strength_lost) / 100000.0, morale: Math.floor(morale_lost) / 100000.0 }
 }
-
-/**
- * Similar rounding formula like in the game.
- */
-const calculate = (value1: number, value2: number) => Math.floor(value1 * value2)

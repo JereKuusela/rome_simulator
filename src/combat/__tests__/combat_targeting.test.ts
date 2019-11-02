@@ -1,5 +1,5 @@
-import { UnitType, UnitCalc } from '../../units'
-import { addValues, ValuesType } from '../../../base_definition'
+import { UnitType, UnitCalc } from '../../store/units'
+import { addValues, ValuesType } from '../../base_definition'
 import { getUnit, TestInfo, initInfo, testCombat, initSide, setAttacker, setDefender } from './utils'
 
 describe('targeting', () => {

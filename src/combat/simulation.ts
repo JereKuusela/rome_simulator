@@ -3,10 +3,12 @@ import { TerrainDefinition } from "../store/terrains"
 import { CombatSettings, CombatParameter, SimulationSettings, SimulationParameter } from "../store/settings"
 import { Side } from "../store/battle"
 
-import { doBattleFast, StaticLine, DynamicLine, getStaticUnit, getDynamicUnit, ParticipantState } from "./combat_fast"
-import { doBattle } from "./combat"
+import { doBattleFast, DynamicUnits, getStaticUnit, getDynamicUnit, DynamicFrontline, DynamicReserve, Participant } from "./combat_fast"
+import { doBattle, calculateTotalRoll, ParticipantState as Temp } from "./combat"
 
-import { mapRange } from "../utils"
+import { mapRange, toObj } from "../utils"
+import { calculateValue } from "../base_definition"
+import { TacticCalc } from "../store/tactics"
 
 /**
  * Status of the win rate calculation. Most values are percents, only iterations is integer.
@@ -18,6 +20,9 @@ export interface WinRateProgress {
   incomplete: number
   progress: number
   iterations: number
+  rounds: number,
+  attacker_rounds: number
+  defender_rounds: number
 }
 
 let interruptSimulation = false
@@ -37,20 +42,26 @@ export const interrupt = () => interruptSimulation = true
  * @param terrains Current terrains.
  * @param combatSettings Settings for combat.
  */
-export const calculateWinRate = (simulationSettings: SimulationSettings, progressCallback: (progress: WinRateProgress) => void, definitions: Units, attacker: ParticipantState, defender: ParticipantState, terrains: TerrainDefinition[], combatSettings: CombatSettings) => {
+export const calculateWinRate = (simulationSettings: SimulationSettings, progressCallback: (progress: WinRateProgress) => void, definitions: Units, attacker: Temp, defender: Temp, terrains: TerrainDefinition[], combatSettings: CombatSettings) => {
   const progress: WinRateProgress = {
     attacker: 0.0,
     defender: 0.0,
     draws: 0.0,
     incomplete: 0.0,
     progress: 0.0,
-    iterations: 0
+    iterations: 0,
+    rounds: 0,
+    attacker_rounds: 0,
+    defender_rounds: 0
   }
   interruptSimulation = false
 
   // Performance is critical. Precalculate as many things as possible.
   const dice = combatSettings[CombatParameter.DiceMaximum] - combatSettings[CombatParameter.DiceMinimum] + 1
+  const base_damages_a = getBaseDamages(combatSettings, dice, calculateTotalRoll(0, terrains, attacker.general, defender.general))
+  const base_damages_d = getBaseDamages(combatSettings, dice, calculateTotalRoll(0, [], defender.general, attacker.general))
   const dice_2 = dice * dice
+  const casualties = calculateValue(attacker.tactic, TacticCalc.Casualties) + calculateValue(defender.tactic, TacticCalc.Casualties)
   const rolls = getRolls(combatSettings[CombatParameter.DiceMinimum], combatSettings[CombatParameter.DiceMaximum])
   const fractions = mapRange(10, value => 1.0 / Math.pow(dice_2, value))
   const phaseLength = Math.floor(combatSettings[CombatParameter.RollFrequency] * simulationSettings[SimulationParameter.PhaseLengthMultiplier])
@@ -59,10 +70,39 @@ export const calculateWinRate = (simulationSettings: SimulationSettings, progres
 
   // Deployment is shared for each iteration.
   const [a, d] = doBattle(definitions, attacker, defender, 0, terrains, combatSettings)
-  const orig_a = a.frontline.map(unit => getStaticUnit(unit as Unit))
-  const orig_d = d.frontline.map(unit => getStaticUnit(unit as Unit))
-  const status_a = a.frontline.map(unit => getDynamicUnit(unit as Unit))
-  const status_d = d.frontline.map(unit => getDynamicUnit(unit as Unit))
+  const orig_a = {
+    ...toObj(a.frontline, unit => unit ? unit.id : 0, unit => getStaticUnit(combatSettings, casualties, base_damages_a, terrains, unit as Unit)!),
+    ...toObj(a.reserve, unit => unit ? unit.id : 0, unit => getStaticUnit(combatSettings, casualties, base_damages_a, terrains, unit as Unit)!),
+    ...toObj(a.defeated, unit => unit ? unit.id : 0, unit => getStaticUnit(combatSettings, casualties, base_damages_a, terrains, unit as Unit)!),
+  }
+  const orig_d = {
+    ...toObj(d.frontline, unit => unit ? unit.id : 0, unit => getStaticUnit(combatSettings, casualties, base_damages_d, terrains, unit as Unit)!),
+    ...toObj(d.reserve, unit => unit ? unit.id : 0, unit => getStaticUnit(combatSettings, casualties, base_damages_d, terrains, unit as Unit)!),
+    ...toObj(d.defeated, unit => unit ? unit.id : 0, unit => getStaticUnit(combatSettings, casualties, base_damages_d, terrains, unit as Unit)!),
+  }
+  const status_a = {
+    frontline: a.frontline.map(unit => getDynamicUnit(unit as Unit)),
+    reserve: a.reserve.map(unit => getDynamicUnit(unit as Unit)!),
+    defeated: a.defeated.map(unit => getDynamicUnit(unit as Unit)!)
+  }
+  const status_d = {
+    frontline: d.frontline.map(unit => getDynamicUnit(unit as Unit)),
+    reserve: d.reserve.map(unit => getDynamicUnit(unit as Unit)!),
+    defeated: d.defeated.map(unit => getDynamicUnit(unit as Unit)!)
+  }
+
+  const participant_a: Participant = {
+    d: status_a,
+    s: orig_a,
+    roll: 0,
+    tactic: attacker.tactic!
+  }
+  const participant_d: Participant = {
+    d: status_d,
+    s: orig_d,
+    roll: 0,
+    tactic: defender.tactic!
+  }
 
 
   // Overview of the algorithm:
@@ -87,22 +127,31 @@ export const calculateWinRate = (simulationSettings: SimulationSettings, progres
       const units_d = copyStatus(node.status_d)
 
       const [roll_a, roll_d] = rolls[node.branch]
-      let winner = doPhase(phaseLength, units_a, orig_a, units_d, orig_d, roll_a, roll_d, terrains, combatSettings)
+      participant_a.roll = roll_a
+      participant_d.roll = roll_d
+      participant_a.d = units_a
+      participant_d.d = units_d
+      let result = doPhase(phaseLength, participant_a, participant_d, combatSettings)
 
       node.branch++
       if (node.branch === dice_2)
         nodes.pop()
 
       let depth = node.depth
-      while (winner === undefined && depth < maxDepth) {
+      while (result.winner === undefined && depth < maxDepth) {
         depth++
         // Current node will be still used so the cache must be deep cloned.  
         // Branch starts at 1 because the current execution is 0.
         nodes.push({ status_a: copyStatus(units_a), status_d: copyStatus(units_d), branch: 1, depth })
-        const [roll_a, roll_d] = rolls[0]
-        winner = doPhase(phaseLength, units_a, orig_a, units_d, orig_d, roll_a, roll_d, terrains, combatSettings)
+        const [roll_a, roll_d] = rolls[0];
+        participant_a.roll = roll_a
+        participant_d.roll = roll_d
+        participant_a.d = units_a
+        participant_d.d = units_d
+        result = doPhase(phaseLength, participant_a, participant_d, combatSettings)
       }
-      updateProgress(progress, fractions[depth], winner)
+      result.round += (depth - 1) * phaseLength + 1
+      updateProgress(progress, fractions[depth], result)
     }
     if (!nodes.length || interruptSimulation)
       progress.progress = 1
@@ -114,6 +163,11 @@ export const calculateWinRate = (simulationSettings: SimulationSettings, progres
   const worker = () => setTimeout(work, 0)
   worker()
 }
+
+/**
+ * Precalculates base damage values for each roll.
+ */
+const getBaseDamages = (combatSettings: CombatSettings, dice: number, modifier: number) => mapRange(dice + 1, roll => Math.min(combatSettings[CombatParameter.MaxBaseDamage], combatSettings[CombatParameter.BaseDamage] + combatSettings[CombatParameter.RollDamage] * (roll + modifier)))
 
 /**
  * Returns a balanced set of rolls. Higher rolls are prioritized to give results faster.
@@ -133,20 +187,25 @@ const getRolls = (minimum: number, maximum: number) => {
 /**
  * Custom deep clone function. Probably could use Lodash but better safe than sorry (since performance is so critical).
  */
-const copyStatus = (status: DynamicLine): DynamicLine => status.map(value => value ? { ...value } : null)
+const copyStatus = (status: DynamicUnits): DynamicUnits => ({
+  frontline: status.frontline.map(value => value ? { ...value } : null),
+  reserve: status.reserve.map(value => ({ ...value })),
+  defeated: status.defeated.map(value => ({ ...value }))
+})
 
 type Winner = Side | null | undefined
 
 /**
  * Simulates one dice roll phase.
  */
-const doPhase = (rounds: number, units_a: DynamicLine, orig_a: StaticLine, units_d: DynamicLine, orig_d: StaticLine, roll_a: number, roll_d: number, terrains: TerrainDefinition[], combatSettings: CombatSettings) => {
+const doPhase = (rounds_per_phase: number, attacker: Participant, defender: Participant, combatSettings: CombatSettings) => {
   let winner: Winner = undefined
-  for (let round = 0; round < rounds; round++) {
-    doBattleFast(units_a, units_d, orig_a, orig_d, roll_a, roll_d, terrains, combatSettings)
+  let round = 0
+  for (round = 0; round < rounds_per_phase; round++) {
+    doBattleFast(attacker, defender, combatSettings)
 
-    const alive_a = checkAlive(units_a)
-    const alive_d = checkAlive(units_d)
+    const alive_a = checkAlive(attacker.d.frontline, attacker.d.reserve)
+    const alive_d = checkAlive(defender.d.frontline, defender.d.reserve)
     if (!alive_a && !alive_d)
       winner = null
     if (alive_a && !alive_d)
@@ -156,15 +215,17 @@ const doPhase = (rounds: number, units_a: DynamicLine, orig_a: StaticLine, units
     if (winner !== undefined)
       break
   }
-  return winner
+  return { winner, round }
 }
 
 /**
  * Custom some function. Probably could use Lodash but better safe than sorry (since performance is so critical).
  */
-const checkAlive = (units: DynamicLine) => {
-  for (let i = 0; i < units.length; i++) {
-    if (units[i])
+const checkAlive = (frontline: DynamicFrontline, reserve: DynamicReserve) => {
+  if (reserve.length)
+    return true
+  for (let i = 0; i < frontline.length; i++) {
+    if (frontline[i])
       return true
   }
   return false
@@ -173,14 +234,20 @@ const checkAlive = (units: DynamicLine) => {
 /**
  * Updates progress of the calculation.
  */
-const updateProgress = (progress: WinRateProgress, amount: number, winner: Winner) => {
+const updateProgress = (progress: WinRateProgress, amount: number, result: { winner: Winner, round: number }) => {
+  const { winner, round } = result
   progress.progress += amount
-  if (winner === Side.Attacker)
+  if (winner === Side.Attacker) {
     progress.attacker += amount
-  else if (winner === Side.Defender)
+    progress.attacker_rounds += amount * round
+  }
+  else if (winner === Side.Defender) {
     progress.defender += amount
+    progress.defender_rounds += amount * round
+  }
   else if (winner === null)
     progress.draws += amount
   else
     progress.incomplete += amount
+  progress.rounds += amount * round
 }
