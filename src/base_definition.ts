@@ -1,6 +1,6 @@
 import EmptyIcon from './images/empty.png'
 import UnknownIcon from './images/unknown.png'
-import { toPercent, toManpower} from './formatters'
+import { toPercent, toManpower } from './formatters'
 import { round, map, filter, forEach } from './utils'
 import { merge, has, size } from 'lodash'
 
@@ -41,7 +41,7 @@ export interface BaseValuesDefinition<T extends string, S extends string> {
 
 const initValues = <S extends string>() => ({} as Values<S>)
 
-export const getImages = <K extends string>(definitions: { [key in K]: BaseDefinition<K, any>}[], type: K): string[] => Array.from(new Set(definitions.filter(value => value[type]).map(value => getImage(value[type]))))
+export const getImages = <K extends string>(definitions: { [key in K]: BaseDefinition<K, any> }[], type: K): string[] => Array.from(new Set(definitions.filter(value => value[type]).map(value => getImage(value[type]))))
 
 /**
  * Returns the image of a definition while handling missing cases.
@@ -49,14 +49,14 @@ export const getImages = <K extends string>(definitions: { [key in K]: BaseDefin
  * Empty is returned for non-existing definitions.
  * @param definition
  */
-export const getImage = (definition: { image?: string} | null): string => (definition && definition.image) || (definition ? UnknownIcon : EmptyIcon)
+export const getImage = (definition: { image?: string } | null): string => (definition && definition.image) || (definition ? UnknownIcon : EmptyIcon)
 
 /**
  * Merges base, modifier and loss values of given definitions. Returns the first definition (if defined), otherwise the second definition.
  * @param definition Returned definition with base values from to_merge.
  * @param to_merge Only returned if other parameter is not defined.
  */
-export const mergeValues = <D1 extends BD | undefined, D2 extends BD | undefined> (definition: D1, to_merge: D2): D1 & D2 => {
+export const mergeValues = <D1 extends BD | undefined, D2 extends BD | undefined>(definition: D1, to_merge: D2): D1 & D2 => {
   let base_values = initValues()
   if (definition && definition.base_values)
     merge(base_values, definition.base_values)
@@ -80,7 +80,7 @@ export const mergeValues = <D1 extends BD | undefined, D2 extends BD | undefined
 /**
  * Adds base, modifier or loss values.
  */
-export const addValues = <D extends BVD> (definition: D, type: ValuesType, key: string, values: [string, number][]): D => {
+export const addValues = <D extends BVD>(definition: D, type: ValuesType, key: string, values: [string, number][]): D => {
   if (type === ValuesType.Base)
     return { ...definition, base_values: subAddValues(definition.base_values, key, values) }
   const any = definition as any
@@ -113,7 +113,7 @@ const subAddValues = <A extends string>(container: Values<A> | undefined, key: s
 /**
  * Clears base, modifier and loss values with a given key.
  */
-export const clearAllValues = <D extends BD> (definition: D, key: string): D => {
+export const clearAllValues = <D extends BD>(definition: D, key: string): D => {
   return {
     ...definition,
     base_values: subClearValues(definition.base_values, key),
@@ -125,7 +125,7 @@ export const clearAllValues = <D extends BD> (definition: D, key: string): D => 
 /**
  * Clears base, modifier or loss values with a given key.
  */
-export const clearValues = <D extends BVD> (definition: D, type: ValuesType, key: string): D => {
+export const clearValues = <D extends BVD>(definition: D, type: ValuesType, key: string): D => {
   if (type === ValuesType.Base)
     return { ...definition, base_values: subClearValues(definition.base_values, key) }
   const any = definition as any
@@ -150,7 +150,7 @@ const subClearValues = <A extends string>(container: Values<A> | undefined, key:
 /**
  * Adds base, modifier or loss values while clearing previous ones.
  */
-export const regenerateValues = <D extends BVD, A extends string> (definition: D, type: ValuesType, key: string, values: [A, number][]): D => {
+export const regenerateValues = <D extends BVD, A extends string>(definition: D, type: ValuesType, key: string, values: [A, number][]): D => {
   return addValues(clearValues(definition, type, key), type, key, values)
 }
 
@@ -162,7 +162,7 @@ const PRECISION = 100000.0
  * @param definition 
  * @param attribute 
  */
-export const calculateValue = <D extends BVD, A extends string> (definition: D | undefined, attribute: A): number => {
+export const calculateValue = <D extends BVD, A extends string>(definition: D | undefined, attribute: A): number => {
   if (!definition)
     return 0.0
   let value = calculateBase(definition, attribute) * calculateModifier(definition, attribute) - calculateLoss(definition, attribute)
@@ -174,7 +174,7 @@ export const calculateValue = <D extends BVD, A extends string> (definition: D |
  * @param definition 
  * @param attribute 
  */
-export const calculateValueWithoutLoss = <D extends BVD, A extends string> (definition: D | undefined, attribute: A): number => {
+export const calculateValueWithoutLoss = <D extends BVD, A extends string>(definition: D | undefined, attribute: A): number => {
   if (!definition)
     return 0.0
   let value = calculateBase(definition, attribute) * calculateModifier(definition, attribute)
@@ -186,21 +186,21 @@ export const calculateValueWithoutLoss = <D extends BVD, A extends string> (defi
  * @param definition 
  * @param attribute 
  */
-export const calculateBase = <D extends BVD, A extends string> (definition: D, attribute: A): number => calculateValueSub(definition.base_values, attribute, 0)
+export const calculateBase = <D extends BVD, A extends string>(definition: D, attribute: A): number => calculateValueSub(definition.base_values, attribute, 0)
 
 /**
  * Calculates the modifier value of an attribute.
  * @param definition 
  * @param attribute 
  */
-export const calculateModifier = <D extends BD, A extends string> (definition: D, attribute: A): number => calculateValueSub(definition.modifier_values, attribute, 1.0)
+export const calculateModifier = <D extends BD, A extends string>(definition: D, attribute: A): number => calculateValueSub(definition.modifier_values, attribute, 1.0)
 
 /**
  * Calculates the loss value of an attribute.
  * @param definition 
  * @param attribute 
  */
-export const calculateLoss = <D extends BD, A extends string> (definition: D, attribute: A): number => calculateValueSub(definition.loss_values, attribute, 0)
+export const calculateLoss = <D extends BD, A extends string>(definition: D, attribute: A): number => calculateValueSub(definition.loss_values, attribute, 0)
 
 /**
  * Shared implementation for calculating the value of an attribute.
@@ -224,7 +224,7 @@ const calculateValueSub = <A extends string>(container: Values<A> | undefined, a
  * @param attribute 
  * @param key 
  */
-export const getBaseValue = <D extends BVD, A extends string> (definition: D, attribute: A, key: string): number => getValue(definition.base_values, attribute, key)
+export const getBaseValue = <D extends BVD, A extends string>(definition: D, attribute: A, key: string): number => getValue(definition.base_values, attribute, key)
 
 /**
  * Returns a modifier of a given attribute with a given identifier.
@@ -232,7 +232,7 @@ export const getBaseValue = <D extends BVD, A extends string> (definition: D, at
  * @param attribute 
  * @param key 
  */
-export const getModifierValue = <D extends BD, A extends string> (definition: D, attribute: A, key: string): number => getValue(definition.modifier_values, attribute, key)
+export const getModifierValue = <D extends BD, A extends string>(definition: D, attribute: A, key: string): number => getValue(definition.modifier_values, attribute, key)
 
 /**
  * Returns a loss of a given attribute with a given identifier.
@@ -240,7 +240,7 @@ export const getModifierValue = <D extends BD, A extends string> (definition: D,
  * @param attribute 
  * @param key 
  */
-export const getLossValue = <D extends BD, A extends string> (definition: D, attribute: A, key: string): number => getValue(definition.loss_values, attribute, key)
+export const getLossValue = <D extends BD, A extends string>(definition: D, attribute: A, key: string): number => getValue(definition.loss_values, attribute, key)
 
 /**
  * Shared implementation to get values. Zero is returned for missing values because values with zero are not stored.
@@ -265,7 +265,7 @@ const getValue = <A extends string>(container: Values<A> | undefined, attribute:
  * @param definition 
  * @param attribute 
  */
-export const explainShort = <D extends BVD, A extends string> (definition: D, attribute: A): string => {
+export const explainShort = <D extends BVD, A extends string>(definition: D, attribute: A): string => {
   if (!definition.base_values)
     return ''
   const value_base = definition.base_values[attribute]
@@ -282,7 +282,7 @@ export const explainShort = <D extends BVD, A extends string> (definition: D, at
  * @param definition 
  * @param attribute 
  */
-export const explain = <D extends BD, A extends string> (definition: D, attribute: A): string => {
+export const explain = <D extends BD, A extends string>(definition: D, attribute: A): string => {
   const value_modifier = definition.modifier_values ? definition.modifier_values[attribute] : undefined
   const value_loss = definition.loss_values ? definition.loss_values[attribute] : undefined
   if ((!value_modifier || size(value_modifier) === 0) && (!value_loss || size(value_loss) === 0))

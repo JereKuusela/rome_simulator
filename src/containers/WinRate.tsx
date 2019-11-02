@@ -6,7 +6,7 @@ import StyledNumber from '../components/Utils/StyledNumber'
 
 import { AppState } from '../store/'
 import { Side } from '../store/battle'
-import { getArmyBySide, getCombatSettings, getSelectedTerrains, getUnits } from '../store/utils'
+import { getArmyBySide, getCombatSettings, getSelectedTerrains, getUnits, mergeUnitTypes } from '../store/utils'
 
 import { toPercent } from '../formatters'
 import { calculateWinRate, WinRateProgress, interrupt } from '../combat/simulation'
@@ -80,8 +80,8 @@ class WinRate extends Component<IProps, IState> {
   }
 
   calculate = () => {
-    const { units, attacker, defender, units_a, units_d, tactics, combatSettings: settings, terrains, simulationSettings } = this.props
-    calculateWinRate(simulationSettings, this.update, units, { ...attacker, ...units_a, tactic: tactics[attacker.tactic], country: attacker.name, general: attacker.general.total, roll: 0 }, { ...defender, ...units_d, tactic: tactics[defender.tactic], country: defender.name, general: defender.general.total, roll: 0 }, terrains, settings)
+    const { units, attacker, defender, units_a, units_d, tactics, combatSettings: settings, terrains, simulationSettings, unit_types } = this.props
+    calculateWinRate(simulationSettings, this.update, units, { ...attacker, ...units_a, tactic: tactics[attacker.tactic], country: attacker.name, general: attacker.general.total, roll: 0 }, { ...defender, ...units_d, tactic: tactics[defender.tactic], country: defender.name, general: defender.general.total, roll: 0 }, terrains, unit_types, settings)
   }
 }
 
@@ -94,7 +94,8 @@ const mapStateToProps = (state: AppState) => ({
   units_d: getUnits(state, Side.Defender),
   combatSettings: getCombatSettings(state),
   simulationSettings: state.settings.simulation,
-  terrains: getSelectedTerrains(state)
+  terrains: getSelectedTerrains(state),
+  unit_types: mergeUnitTypes(state)
 })
 
 const actions = {}
