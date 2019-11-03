@@ -14,6 +14,7 @@ import IconManpower from '../images/manpower.png'
 import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
 import IconEmpty from '../images/empty.png'
+import Statistics from '../containers/Statistics'
 
 class Stats extends Component<IProps> {
   render(): JSX.Element {
@@ -21,6 +22,7 @@ class Stats extends Component<IProps> {
       this.props.refreshBattle(this.props.mode)
     return (
       <Container>
+        <Statistics />
         {this.renderArmy(Side.Attacker, this.props.units_a, this.props.types_a)}
         {this.renderArmy(Side.Defender, this.props.units_d, this.props.types_d)}
       </Container >

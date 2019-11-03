@@ -67,7 +67,6 @@ export const every = <K extends string, V, R>(object: { [key in K]: V}, callback
 export const filter = <K extends string, V>(object: { [key in K]: V}, callback?: (item: V, key: K) => any): { [key in K]: V} => Object.assign({}, ...entries(object).filter(([k ,v]) => callback ? callback(v, k) : object[k]).map(([k ,v]) => ({ [k]: v })))
 export const filterKeys = <K extends string, V>(object: { [key in K]: V}, callback?: (key: K) => any): { [key in K]: V} => Object.assign({}, ...entries(object).filter(([k ,v]) => callback ? callback(k) : v).map(([k ,v]) => ({ [k]: v })))
 
-
 export function toArr<K extends string, V>(object: { [key in K]: V}): V[]
 export function toArr<K extends string, V, R>(object: { [key in K]: V}, callback: (value: V, key: K) => R): R[]
 export function toArr<K extends string, V, R>(object: { [key in K]: V}, callback?: (value: V, key: K) => R): (R | V)[]

@@ -72,11 +72,6 @@ class WinRate extends Component<IProps, IState> {
   update = (update: WinRateProgress) => {
     const { attacker, defender, draws, incomplete, progress } = update
     this.setState({ attacker: attacker, defender: defender, draws: draws + incomplete, progress: progress, calculating: progress !== 1 })
-    if (!this.state.calculating) {
-      console.log(update)
-      console.log(update.attacker_rounds / update.attacker)
-      console.log(update.defender_rounds / update.defender)
-    }
   }
 
   calculate = () => {

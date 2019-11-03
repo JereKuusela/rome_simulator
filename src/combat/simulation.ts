@@ -1,4 +1,4 @@
-import { Units, Unit, UnitType } from "../store/units"
+import { Units, Unit, UnitType, UnitCalc } from "../store/units"
 import { TerrainDefinition } from "../store/terrains"
 import { CombatSettings, CombatParameter, SimulationSettings, SimulationParameter } from "../store/settings"
 import { Side, BaseUnits } from "../store/battle"
@@ -20,10 +20,23 @@ export interface WinRateProgress {
   incomplete: number
   progress: number
   iterations: number
-  rounds: number,
+  average_rounds: number,
   attacker_rounds: number
-  defender_rounds: number
+  defender_rounds: number,
+  rounds: { [key: number]: number }
 }
+
+export interface CasualtiesProgress {
+  morale_a: number
+  strength_a: number
+  morale_d: number
+  strength_d: number
+  max_morale_a: number
+  max_strength_a: number
+  max_morale_d: number
+  max_strength_d: number
+}
+
 
 let interruptSimulation = false
 
@@ -42,7 +55,7 @@ export const interrupt = () => interruptSimulation = true
  * @param terrains Current terrains.
  * @param combatSettings Settings for combat.
  */
-export const calculateWinRate = (simulationSettings: SimulationSettings, progressCallback: (progress: WinRateProgress) => void, definitions: Units, attacker: Temp, defender: Temp, terrains: TerrainDefinition[], unit_types: UnitType[], combatSettings: CombatSettings) => {
+export const calculateWinRate = (simulationSettings: SimulationSettings, progressCallback: (progress: WinRateProgress, casualties: CasualtiesProgress) => void, definitions: Units, attacker: Temp, defender: Temp, terrains: TerrainDefinition[], unit_types: UnitType[], combatSettings: CombatSettings) => {
   const progress: WinRateProgress = {
     attacker: 0.0,
     defender: 0.0,
@@ -50,9 +63,10 @@ export const calculateWinRate = (simulationSettings: SimulationSettings, progres
     incomplete: 0.0,
     progress: 0.0,
     iterations: 0,
-    rounds: 0,
+    average_rounds: 0,
     attacker_rounds: 0,
-    defender_rounds: 0
+    defender_rounds: 0,
+    rounds: {}
   }
   interruptSimulation = false
 
@@ -61,7 +75,7 @@ export const calculateWinRate = (simulationSettings: SimulationSettings, progres
   const base_damages_a = getBaseDamages(combatSettings, dice, calculateTotalRoll(0, terrains, attacker.general, defender.general))
   const base_damages_d = getBaseDamages(combatSettings, dice, calculateTotalRoll(0, [], defender.general, attacker.general))
   const dice_2 = dice * dice
-  const casualties = calculateValue(attacker.tactic, TacticCalc.Casualties) + calculateValue(defender.tactic, TacticCalc.Casualties)
+  const tactic_casualties = calculateValue(attacker.tactic, TacticCalc.Casualties) + calculateValue(defender.tactic, TacticCalc.Casualties)
   const rolls = getRolls(combatSettings[CombatParameter.DiceMinimum], combatSettings[CombatParameter.DiceMaximum])
   const fractions = mapRange(10, value => 1.0 / Math.pow(dice_2, value))
   const phaseLength = Math.floor(combatSettings[CombatParameter.RollFrequency] * simulationSettings[SimulationParameter.PhaseLengthMultiplier])
@@ -71,8 +85,8 @@ export const calculateWinRate = (simulationSettings: SimulationSettings, progres
   // Deployment is shared for each iteration.
   const [a, d] = doBattle(definitions, attacker, defender, 0, terrains, combatSettings)
 
-  const status_a = convertUnits(a, combatSettings, casualties, base_damages_a, terrains, unit_types)
-  const status_d = convertUnits(d, combatSettings, casualties, base_damages_d, terrains, unit_types)
+  const status_a = convertUnits(a, combatSettings, tactic_casualties, base_damages_a, terrains, unit_types)
+  const status_d = convertUnits(d, combatSettings, tactic_casualties, base_damages_d, terrains, unit_types)
 
   const participant_a: CombatParticipant = {
     army: status_a,
@@ -87,6 +101,23 @@ export const calculateWinRate = (simulationSettings: SimulationSettings, progres
     row_types: defender.row_types
   }
 
+  const total_a: State = { morale: 0, strength: 0}
+  const current_a: State = { morale: 0, strength: 0}
+  sumState(total_a, status_a)
+  const total_d: State = { morale: 0, strength: 0}
+  const current_d: State = { morale: 0, strength: 0}
+  sumState(total_d, status_d)
+
+  const casualties: CasualtiesProgress = {
+    morale_a: 0,
+    morale_d: 0,
+    strength_a: 0,
+    strength_d: 0,
+    max_morale_a: total_a.morale,
+    max_morale_d: total_d.morale,
+    max_strength_a: total_a.strength,
+    max_strength_d: total_d.strength
+  }
 
   // Overview of the algorithm:
   // Initial state is the first node.
@@ -133,12 +164,15 @@ export const calculateWinRate = (simulationSettings: SimulationSettings, progres
         participant_d.army = units_d
         result = doPhase(phaseLength, participant_a, participant_d, combatSettings)
       }
-      result.round += (depth - 1) * phaseLength + 1
+      sumState(current_a, participant_a.army)
+      sumState(current_d, participant_d.army)
+      updateCasualties(casualties, fractions[depth], total_a, total_d, current_a, current_d)
+      result.round += (depth - 1) * phaseLength
       updateProgress(progress, fractions[depth], result)
     }
     if (!nodes.length || interruptSimulation)
       progress.progress = 1
-    progressCallback(progress)
+    progressCallback(progress, casualties)
     if (nodes.length && !interruptSimulation)
       worker()
   }
@@ -190,8 +224,9 @@ type Winner = Side | null | undefined
 const doPhase = (rounds_per_phase: number, attacker: CombatParticipant, defender: CombatParticipant, combatSettings: CombatSettings) => {
   let winner: Winner = undefined
   let round = 0
-  for (round = 0; round < rounds_per_phase; round++) {
+  for (round = 0; round < rounds_per_phase;) {
     doBattleFast(attacker, defender, combatSettings)
+    round++
 
     const alive_a = checkAlive(attacker.army.frontline, attacker.army.reserve)
     const alive_d = checkAlive(defender.army.frontline, defender.army.reserve)
@@ -220,6 +255,36 @@ const checkAlive = (frontline: Frontline, reserve: Reserve) => {
   return false
 }
 
+type State = {
+  morale: number
+  strength: number
+}
+
+/**
+ * Counts total morale and strength of units.
+ */
+const sumState = (state: State, units: CombatUnits) => {
+  state.strength = 0
+  state.morale = 0
+  for (let i = 0; i < units.frontline.length; i++) {
+    const unit = units.frontline[i]
+    if (!unit)
+      continue
+    state.strength += unit[UnitCalc.Strength]
+    state.morale += unit[UnitCalc.Morale]
+  }
+  for (let i = 0; i < units.reserve.length; i++) {
+    const unit = units.reserve[i]
+    state.strength += unit[UnitCalc.Strength]
+    state.morale += unit[UnitCalc.Morale]
+  }
+  for (let i = 0; i < units.defeated.length; i++) {
+    const unit = units.defeated[i]
+    state.strength += unit[UnitCalc.Strength]
+    state.morale += unit[UnitCalc.Morale]
+  }
+}
+
 /**
  * Updates progress of the calculation.
  */
@@ -238,5 +303,16 @@ const updateProgress = (progress: WinRateProgress, amount: number, result: { win
     progress.draws += amount
   else
     progress.incomplete += amount
-  progress.rounds += amount * round
+  progress.average_rounds += amount * round
+  progress.rounds[round] = (progress.rounds[round] || 0) + amount
+}
+
+/**
+ * Updates casualties of the calculation.
+ */
+const updateCasualties = (casualties: CasualtiesProgress, amount: number, total_a: State, total_d: State, current_a: State, current_d: State) => {
+  casualties.morale_a += (total_a.morale - current_a.morale) * amount
+  casualties.morale_d += (total_d.morale - current_d.morale) * amount
+  casualties.strength_a += (total_a.strength - current_a.strength) * amount
+  casualties.strength_d += (total_d.strength - current_d.strength) * amount
 }
