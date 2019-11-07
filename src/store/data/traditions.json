@@ -265,7 +265,7 @@
               "modifiers": [
                 {
                   "target": "Text",
-                  "attribute": "Recruit speed",
+                  "attribute": "Land recruit speed",
                   "value": 0.25
                 },
                 {
@@ -289,8 +289,8 @@
               "name": "Mastery of the Mountains",
               "modifiers": [
                 {
-                  "target": "Siege",
-                  "attribute": "Ability",
+                  "target": "Text",
+                  "attribute": "Siege Ability",
                   "value": 0.1
                 }
               ]
@@ -488,8 +488,8 @@
               "name": "City State Fortifications",
               "modifiers": [
                 {
-                  "target": "Fort",
-                  "attribute": "Defense",
+                  "target": "Text",
+                  "attribute": "Fort Defense",
                   "value": 0.15
                 }
               ]
@@ -575,8 +575,8 @@
               "name": "Siegecraft",
               "modifiers": [
                 {
-                  "target": "Siege",
-                  "attribute": "Ability",
+                  "target": "Text",
+                  "attribute": "Siege Ability",
                   "value": 0.1
                 }
               ]
@@ -616,7 +616,7 @@
               "modifiers": [
                 {
                   "target": "Light Infantry",
-                  "attribute": "OFfense",
+                  "attribute": "Offense",
                   "value": 0.1
                 },
                 {
@@ -635,7 +635,7 @@
       "modifiers": [
         {
           "target": "Text",
-          "attribute": "Fort defense",
+          "attribute": "Fort Defense",
           "value": 0.15
         }
       ],
@@ -755,8 +755,8 @@
               "name": "Veterans of the Great Campaign",
               "modifiers": [
                 {
-                  "target": "Siege",
-                  "attribute": "Skill",
+                  "target": "Text",
+                  "attribute": "Siege roll",
                   "no_percent": true,
                   "value": 1
                 }
@@ -766,8 +766,8 @@
               "name": "Tarentine Advance",
               "modifiers": [
                 {
-                  "target": "Siege",
-                  "attribute": "Ability",
+                  "target": "Text",
+                  "attribute": "Siege speed",
                   "value": 0.1
                 }
               ]
@@ -896,7 +896,7 @@
               "modifiers": [
                 {
                   "target": "Text",
-                  "attribute": "War Exhaustion",
+                  "attribute": "War exhaustion",
                   "no_percent": true,
                   "value": -0.01
                 }
@@ -1071,7 +1071,7 @@
                 },
                 {
                   "target": "Text",
-                  "attribute": "Allow the 'Octere' unit",
+                  "attribute": "Allows the 'Octere' unit",
                   "value": 0
                 }
               ]
@@ -1095,8 +1095,8 @@
               "name": "Tarentine Advance",
               "modifiers": [
                 {
-                  "target": "Fort",
-                  "attribute": "Defense",
+                  "target": "Text",
+                  "attribute": "Fort defense",
                   "value": 0.15
                 }
               ]
@@ -1208,7 +1208,7 @@
               "modifiers": [
                 {
                   "target": "Text",
-                  "attribute": "Mercenary Maintenance",
+                  "attribute": "Mercenary maintenance",
                   "value": -0.15
                 }
               ]
@@ -1258,7 +1258,7 @@
       "modifiers": [
         {
           "target": "Text",
-          "attribute": "Allow the 'Chariots' unit",
+          "attribute": "Allows the 'Chariots' unit",
           "value": 0
         }
       ],

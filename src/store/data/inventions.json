@@ -47,8 +47,8 @@
         ],
         [
           {
-            "target": "Siege",
-            "attribute": "Ability",
+            "target": "Text",
+            "attribute": "Siege Ability",
             "value": 0.05
           }
         ],
@@ -87,15 +87,16 @@
         ],
         [
           {
-            "target": "Siege",
-            "attribute": "Engineers",
+            "target": "Text",
+            "attribute": "Siege Engineers",
+            "no_percent": true,
             "value": 1
           }
         ],
         [
           {
-            "target": "Fort",
-            "attribute": "Defense",
+            "target": "Text",
+            "attribute": "Fort Defense",
             "value": 0.05
           }
         ],
@@ -210,8 +211,9 @@
         ],
         [
           {
-            "target": "Siege",
-            "attribute": "Engineers",
+            "target": "Text",
+            "attribute": "Siege Engineers",
+            "no_percent": true,
             "value": 1
           }
         ],
@@ -226,6 +228,7 @@
           {
             "target": "Text",
             "attribute": "Monthly general loyalty",
+            "no_percent": true,
             "value": 0.01
           }
         ]
@@ -250,8 +253,8 @@
         ],
         [
           {
-            "target": "Siege",
-            "attribute": "Ability",
+            "target": "Text",
+            "attribute": "Siege Ability",
             "value": 0.05
           }
         ],
@@ -259,6 +262,7 @@
           {
             "target": "Text",
             "attribute": "Hostile attrition",
+            "no_percent": true,
             "value": 1
           }
         ],
@@ -297,15 +301,15 @@
         ],
         [
           {
-            "target": "Fort",
-            "attribute": "Defense",
+            "target": "Text",
+            "attribute": "Fort Defense",
             "value": 0.05
           }
         ],
         [
           {
-            "target": "Assault",
-            "attribute": "Ability",
+            "target": "Text",
+            "attribute": "Assault Ability",
             "value": 0.05
           }
         ]
@@ -337,8 +341,9 @@
         ],
         [
           {
-            "target": "Siege",
-            "attribute": "Engineers",
+            "target": "Text",
+            "attribute": "Siege Engineers",
+            "no_percent": true,
             "value": 1
           }
         ],
@@ -371,15 +376,15 @@
         ],
         [
           {
-            "target": "Siege",
-            "attribute": "Ability",
+            "target": "Text",
+            "attribute": "Siege Ability",
             "value": 0.05
           }
         ],
         [
           {
             "target": "Text",
-            "attribute": "Ship recruit speed",
+            "attribute": "Naval recruit speed",
             "value": 0.2
           }
         ],
@@ -465,8 +470,8 @@
         ],
         [
           {
-            "target": "Fort",
-            "attribute": "Maintenance",
+            "target": "Text",
+            "attribute": "Fort Maintenance",
             "value": -0.1
           }
         ]
@@ -491,8 +496,8 @@
         ],
         [
           {
-            "target": "Fort",
-            "attribute": "Defense",
+            "target": "Text",
+            "attribute": "Fort Defense",
             "value": 0.05
           }
         ],
@@ -506,8 +511,9 @@
         ],
         [
           {
-            "target": "Siege",
-            "attribute": "Engineers",
+            "target": "Text",
+            "attribute": "Siege Engineers",
+            "no_percent": true,
             "value": 1
           }
         ]
@@ -532,8 +538,8 @@
         ],
         [
           {
-            "target": "Siege",
-            "attribute": "Ability",
+            "target": "Text",
+            "attribute": "Siege Ability",
             "value": 0.05
           }
         ],
@@ -579,8 +585,8 @@
         ],
         [
           {
-            "target": "Fort",
-            "attribute": "Defense",
+            "target": "Text",
+            "attribute": "Fort Defense",
             "value": 0.05
           }
         ],
@@ -627,7 +633,7 @@
         [
           {
             "target": "Text",
-            "attribute": "Reinforcement",
+            "attribute": "Reinforcement speed",
             "value": 0.05
           }
         ]
@@ -652,8 +658,9 @@
         ],
         [
           {
-            "target": "Siege",
-            "attribute": "Engineers",
+            "target": "Text",
+            "attribute": "Siege Engineers",
+            "no_percent": true,
             "value": 1
           }
         ],
@@ -668,6 +675,7 @@
           {
             "target": "Text",
             "attribute": "Retreat delay",
+            "no_percent": true,
             "value": -2
           }
         ]
@@ -732,8 +740,8 @@
         ],
         [
           {
-            "target": "Siege",
-            "attribute": "Ability",
+            "target": "Text",
+            "attribute": "Siege Ability",
             "value": 0.05
           }
         ],
@@ -772,8 +780,8 @@
         ],
         [
           {
-            "target": "Fort",
-            "attribute": "Defense",
+            "target": "Text",
+            "attribute": "Fort Defense",
             "value": 0.2
           }
         ],
@@ -786,8 +794,9 @@
         ],
         [
           {
-            "target": "Siege",
-            "attribute": "Engineers",
+            "target": "Text",
+            "attribute": "Siege Engineers",
+            "no_percent": true,
             "value": 2
           }
         ]
