@@ -27,14 +27,18 @@ export interface WinRateProgress {
 }
 
 export interface CasualtiesProgress {
-  morale_a: number
-  strength_a: number
-  morale_d: number
-  strength_d: number
+  avg_morale_a: number
+  avg_strength_a: number
+  avg_morale_d: number
+  avg_strength_d: number
   max_morale_a: number
   max_strength_a: number
   max_morale_d: number
   max_strength_d: number
+  morale_a: { [key: string]: number }
+  morale_d: { [key: string]: number }
+  strength_a: { [key: string]: number }
+  strength_d: { [key: string]: number }
 }
 
 
@@ -109,14 +113,18 @@ export const calculateWinRate = (simulationSettings: SimulationSettings, progres
   sumState(total_d, status_d)
 
   const casualties: CasualtiesProgress = {
-    morale_a: 0,
-    morale_d: 0,
-    strength_a: 0,
-    strength_d: 0,
+    avg_morale_a: 0,
+    avg_morale_d: 0,
+    avg_strength_a: 0,
+    avg_strength_d: 0,
     max_morale_a: total_a.morale,
     max_morale_d: total_d.morale,
     max_strength_a: total_a.strength,
-    max_strength_d: total_d.strength
+    max_strength_d: total_d.strength,
+    morale_a: {},
+    morale_d: {},
+    strength_a: {},
+    strength_d: {}
   }
 
   // Overview of the algorithm:
@@ -311,8 +319,17 @@ const updateProgress = (progress: WinRateProgress, amount: number, result: { win
  * Updates casualties of the calculation.
  */
 const updateCasualties = (casualties: CasualtiesProgress, amount: number, total_a: State, total_d: State, current_a: State, current_d: State) => {
-  casualties.morale_a += (total_a.morale - current_a.morale) * amount
-  casualties.morale_d += (total_d.morale - current_d.morale) * amount
-  casualties.strength_a += (total_a.strength - current_a.strength) * amount
-  casualties.strength_d += (total_d.strength - current_d.strength) * amount
+  casualties.avg_morale_a += (total_a.morale - current_a.morale) * amount
+  casualties.avg_morale_d += (total_d.morale - current_d.morale) * amount
+  casualties.avg_strength_a += (total_a.strength - current_a.strength) * amount
+  casualties.avg_strength_d += (total_d.strength - current_d.strength) * amount
+
+  const morale_a = (Math.max(0, current_a.morale) / total_a.morale).toFixed(2)
+  const morale_d = (Math.max(0, current_d.morale) / total_d.morale).toFixed(2)
+  const strength_a = (Math.max(0, current_a.strength) / total_a.strength).toFixed(2)
+  const strength_d = (Math.max(0, current_d.strength) / total_d.strength).toFixed(2)
+  casualties.morale_a[morale_a] =  (casualties.morale_a[morale_a] || 0) + amount
+  casualties.morale_d[morale_d] =  (casualties.morale_d[morale_d] || 0) + amount
+  casualties.strength_a[strength_a] =  (casualties.strength_a[strength_a] || 0) + amount
+  casualties.strength_d[strength_d] =  (casualties.strength_d[strength_d] || 0) + amount
 }
