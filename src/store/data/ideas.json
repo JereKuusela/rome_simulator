@@ -69,12 +69,12 @@
       "modifiers": [
         {
           "target": "Text",
-          "attribute": "Reinforcement Speed",
+          "attribute": "Reinforcement speed",
           "value": 0.1
         },
         {
           "target": "Text",
-          "attribute": "Land Morale Recovery",
+          "attribute": "Land morale recovery",
           "value": 0.05
         }
       ]
@@ -83,9 +83,9 @@
       "name": "Siege Training",
       "modifiers": [
         {
-          "target": "Siege",
-          "attribute": "Ability",
-          "value": 0.15
+          "target": "Text",
+          "attribute": "Siege interval",
+          "value": -0.15
         }
       ]
     },
@@ -94,7 +94,7 @@
       "modifiers": [
         {
           "target": "Text",
-          "attribute": "Experience Decay",
+          "attribute": "Experience decay",
           "value": -0.01
         }
       ]

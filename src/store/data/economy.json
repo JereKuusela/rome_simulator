@@ -26,7 +26,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "(No effect)",
+              "attribute": "No effect",
               "value": 0
             }
           ]
@@ -77,7 +77,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "(No effect)",
+              "attribute": "No effect",
               "value": 0
             }
           ]
@@ -110,19 +110,19 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Garrison Size",
+              "attribute": "Garrison size",
               "negative": true,
               "value": -0.5
             },
             {
               "target": "Text",
-              "attribute": "Fort Defense",
+              "attribute": "Fort defense",
               "negative": true,
               "value": -0.5
             },
             {
               "target": "Text",
-              "attribute": "Fort Maintenance",
+              "attribute": "Fort maintenance",
               "value": -0.25
             }
           ]
@@ -132,7 +132,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "(No effect)",
+              "attribute": "No effect",
               "value": 0
             }
           ]
@@ -142,17 +142,17 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Garrison Size",
+              "attribute": "Garrison size",
               "value": 0.1
             },
             {
               "target": "Text",
-              "attribute": "Fort Defense",
+              "attribute": "Fort defense",
               "value": 0.1
             },
             {
               "target": "Text",
-              "attribute": "Fort Maintenance",
+              "attribute": "Fort maintenance",
               "negative": true,
               "value": 0.25
             }

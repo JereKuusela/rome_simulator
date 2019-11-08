@@ -48,8 +48,8 @@
         [
           {
             "target": "Text",
-            "attribute": "Siege Ability",
-            "value": 0.05
+            "attribute": "Siege interval",
+            "value": -0.05
           }
         ],
         [
@@ -88,7 +88,7 @@
         [
           {
             "target": "Text",
-            "attribute": "Siege Engineers",
+            "attribute": "Siege roll",
             "no_percent": true,
             "value": 1
           }
@@ -96,7 +96,7 @@
         [
           {
             "target": "Text",
-            "attribute": "Fort Defense",
+            "attribute": "Fort defense",
             "value": 0.05
           }
         ],
@@ -212,7 +212,7 @@
         [
           {
             "target": "Text",
-            "attribute": "Siege Engineers",
+            "attribute": "Siege roll",
             "no_percent": true,
             "value": 1
           }
@@ -254,8 +254,8 @@
         [
           {
             "target": "Text",
-            "attribute": "Siege Ability",
-            "value": 0.05
+            "attribute": "Siege interval",
+            "value": -0.05
           }
         ],
         [
@@ -302,15 +302,15 @@
         [
           {
             "target": "Text",
-            "attribute": "Fort Defense",
+            "attribute": "Fort defense",
             "value": 0.05
           }
         ],
         [
           {
             "target": "Text",
-            "attribute": "Assault Ability",
-            "value": 0.05
+            "attribute": "Assault width",
+            "value": -0.05
           }
         ]
       ]
@@ -342,7 +342,7 @@
         [
           {
             "target": "Text",
-            "attribute": "Siege Engineers",
+            "attribute": "Siege roll",
             "no_percent": true,
             "value": 1
           }
@@ -377,8 +377,8 @@
         [
           {
             "target": "Text",
-            "attribute": "Siege Ability",
-            "value": 0.05
+            "attribute": "Siege interval",
+            "value": -0.05
           }
         ],
         [
@@ -471,7 +471,7 @@
         [
           {
             "target": "Text",
-            "attribute": "Fort Maintenance",
+            "attribute": "Fort maintenance",
             "value": -0.1
           }
         ]
@@ -497,7 +497,7 @@
         [
           {
             "target": "Text",
-            "attribute": "Fort Defense",
+            "attribute": "Fort defense",
             "value": 0.05
           }
         ],
@@ -512,7 +512,7 @@
         [
           {
             "target": "Text",
-            "attribute": "Siege Engineers",
+            "attribute": "Siege roll",
             "no_percent": true,
             "value": 1
           }
@@ -539,8 +539,8 @@
         [
           {
             "target": "Text",
-            "attribute": "Siege Ability",
-            "value": 0.05
+            "attribute": "Siege interval",
+            "value": -0.05
           }
         ],
         [
@@ -586,7 +586,7 @@
         [
           {
             "target": "Text",
-            "attribute": "Fort Defense",
+            "attribute": "Fort defense",
             "value": 0.05
           }
         ],
@@ -659,7 +659,7 @@
         [
           {
             "target": "Text",
-            "attribute": "Siege Engineers",
+            "attribute": "Siege roll",
             "no_percent": true,
             "value": 1
           }
@@ -667,7 +667,7 @@
         [
           {
             "target": "Text",
-            "attribute": "Land Attrition",
+            "attribute": "Land attrition",
             "value": -0.1
           }
         ],
@@ -741,8 +741,8 @@
         [
           {
             "target": "Text",
-            "attribute": "Siege Ability",
-            "value": 0.05
+            "attribute": "Siege interval",
+            "value": -0.05
           }
         ],
         [
@@ -781,7 +781,7 @@
         [
           {
             "target": "Text",
-            "attribute": "Fort Defense",
+            "attribute": "Fort defense",
             "value": 0.2
           }
         ],
@@ -795,7 +795,7 @@
         [
           {
             "target": "Text",
-            "attribute": "Siege Engineers",
+            "attribute": "Siege roll",
             "no_percent": true,
             "value": 2
           }

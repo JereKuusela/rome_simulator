@@ -8,7 +8,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Ship Capture Chance",
+              "attribute": "Ship capture chance",
               "value": 0.1
             },
             {

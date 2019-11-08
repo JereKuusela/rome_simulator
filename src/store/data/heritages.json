@@ -140,7 +140,7 @@
         },
         {
           "target": "Text",
-          "attribute": "Enslavement",
+          "attribute": "Enslavement efficiency",
           "value": 0.05
         },
         {
@@ -177,13 +177,13 @@
       "name": "Montane",
       "modifiers": [
         {
-          "target": "Fort",
-          "attribute": "Maintenance",
+          "target": "Text",
+          "attribute": "Fort maintenance",
           "value": -0.05
         },
         {
-          "target": "Fort",
-          "attribute": "Defense",
+          "target": "Text",
+          "attribute": "Fort defense",
           "value": 0.05
         },
         {
@@ -199,7 +199,7 @@
       "modifiers": [
         {
           "target": "Text",
-          "attribute": "Enslavement",
+          "attribute": "Enslavement efficiency",
           "value": 0.05
         },
         {
@@ -287,8 +287,8 @@
       "name": "Highland",
       "modifiers": [
         {
-          "target": "Fort",
-          "attribute": "Cost",
+          "target": "Text",
+          "attribute": "Fort cost",
           "value": -0.1
         },
         {
@@ -374,9 +374,9 @@
       "name": "Antigonid",
       "modifiers": [
         {
-          "target": "Siege",
-          "attribute": "Ability",
-          "value": 0.05
+          "target": "Text",
+          "attribute": "Siege interval",
+          "value": -0.05
         },
         {
           "target": "Text",
@@ -385,8 +385,8 @@
           "value": 2
         },
         {
-          "target": "Fort",
-          "attribute": "Defense",
+          "target": "Text",
+          "attribute": "Fort defense",
           "negative": true,
           "value": -0.1
         }
@@ -468,7 +468,7 @@
         },
         {
           "target": "Text",
-          "attribute": "Religous tech",
+          "attribute": "Religious tech",
           "value": 0.1
         },
         {
@@ -483,13 +483,13 @@
       "name": "Judea",
       "modifiers": [
         {
-          "target": "Fort",
-          "attribute": "Defense",
+          "target": "Text",
+          "attribute": "Fort defense",
           "value": 0.1
         },
         {
           "target": "Text",
-          "attribute": "Religous tech",
+          "attribute": "Religious tech",
           "value": 0.1
         },
         {
@@ -620,13 +620,13 @@
           "value": -0.1
         },
         {
-          "target": "Fort",
-          "attribute": "Defense",
+          "target": "Text",
+          "attribute": "Fort defense",
           "value": 0.1
         },
         {
-          "target": "Fort",
-          "attribute": "Maintenance",
+          "target": "Text",
+          "attribute": "Fort maintenance",
           "negative": true,
           "value": 0.1
         }
@@ -736,7 +736,7 @@
         },
         {
           "target": "Text",
-          "attribute": "Enslavement",
+          "attribute": "Enslavement efficiency",
           "negative": true,
           "value": -0.1
         }
@@ -823,8 +823,8 @@
           "value": 0.05
         },
         {
-          "target": "Fort",
-          "attribute": "Defense",
+          "target": "Text",
+          "attribute": "Fort defense",
           "negative": true,
           "value": -0.1
         }
@@ -840,7 +840,7 @@
         },
         {
           "target": "Text",
-          "attribute": "Build Cost",
+          "attribute": "Build cost",
           "value": -0.1
         },
         {

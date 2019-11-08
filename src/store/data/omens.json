@@ -270,19 +270,6 @@
       ]
     },
     {
-      "type": "Druidic",
-      "omens": [
-        {
-          "name": "Taranis",
-          "modifier":  {
-            "target": "Text",
-            "attribute": "Fort defense",
-            "value": 0.2
-          }
-        }
-      ]
-    },
-    {
       "type": "Druidic Nemetia",
       "omens": [
         {
@@ -479,19 +466,6 @@
             "attribute": "Morale",
             "type": "Modifier",
             "value": 0.1
-          }
-        }
-      ]
-    },
-    {
-      "type": "Kemetic",
-      "omens": [
-        {
-          "name": "Sekhmet",
-          "modifier":  {
-            "target": "Text",
-            "attribute": "Fort defense",
-            "value": 0.2
           }
         }
       ]

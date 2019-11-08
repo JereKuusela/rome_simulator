@@ -8,7 +8,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "(No effect)",
+              "attribute": "No effect",
               "value": 0
             }
           ]
@@ -45,7 +45,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "(No effect)",
+              "attribute": "No effect",
               "value": 0
             }
           ]
@@ -55,7 +55,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "National Tax",
+              "attribute": "Tax",
               "negative": true,
               "value": -0.05
             },
