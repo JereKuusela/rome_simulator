@@ -9,6 +9,7 @@ import { toArr, mapRange } from '../../utils'
 
 interface IProps {
   rounds: { [key: number]: number }
+  progress: number
 }
 
 interface IState {
@@ -37,9 +38,9 @@ export default class RoundChart extends Component<IProps, IState> {
   toPercent = (value: number) => toPercent(value, 1)
 
   render() {
-    const { rounds } = this.props
+    const { rounds, progress } = this.props
     const { label } = this.state
-    const round_values = sortBy(toArr(rounds, (count, round) => ({ x: Number(round), y: count })), item => item.x)
+    const round_values = sortBy(toArr(rounds, (count, round) => ({ x: Number(round), y: count / progress })), item => item.x)
     const round_cumulative: { x: number, y: number }[] = []
     let count = 0
     for (let i = 0; i < round_values.length; i++) {

@@ -12,6 +12,7 @@ interface IProps {
   d: { [key: string]: number }
   max_a: number
   max_d: number
+  progress: number
   type: string
 }
 
@@ -46,12 +47,12 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
 
   toPercent = (value: number) => toPercent(Math.abs(value), 1)
 
-  calculate = (values: { [key: string]: number }, max: number, reverse: boolean): ChartData => {
+  calculate = (values: { [key: string]: number }, max: number, progress: number, reverse: boolean): ChartData => {
     const data: ChartData = { values: [], percent: [], cumulative: [] }
     if (reverse)
-      data.values = sortBy(toArr(values, (count, value) => ({ x: -count, y: Number(value) })), item => -item.y)
+      data.values = sortBy(toArr(values, (count, value) => ({ x: -count / progress, y: Number(value) })), item => -item.y)
     else
-      data.values = sortBy(toArr(values, (count, value) => ({ x: count, y: Number(value) })), item => -item.y)
+      data.values = sortBy(toArr(values, (count, value) => ({ x: count / progress, y: Number(value) })), item => -item.y)
     let count = 1
     for (let value of data.values) {
       count += value.x
@@ -62,11 +63,11 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
   }
 
   render() {
-    const { a, d, max_a, max_d, type } = this.props
+    const { a, d, max_a, max_d, type, progress } = this.props
     const { label } = this.state
 
-    const data_a = this.calculate(a, max_a, true)
-    const data_d = this.calculate(d, max_d, false)
+    const data_a = this.calculate(a, max_a, progress, true)
+    const data_d = this.calculate(d, max_d, progress, false)
 
     const ticks = mapRange(3, value => value)
 

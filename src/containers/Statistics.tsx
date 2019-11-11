@@ -147,17 +147,23 @@ class Statistics extends Component<IProps, IState> {
         <Grid>
           <Grid.Row columns='2'>
             <Grid.Column>
-              <RoundChart rounds={rounds} />
+              <RoundChart progress={progress} rounds={rounds} />
             </Grid.Column>
             <Grid.Column>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns='2'>
             <Grid.Column>
-              <CumulativePercentChart a={morale_a} d={morale_d} max_a={max_morale_a} max_d={max_morale_d} type='morale' />
+              <CumulativePercentChart
+                progress={progress} type='morale'
+                a={morale_a} d={morale_d} max_a={max_morale_a} max_d={max_morale_d}
+              />
             </Grid.Column>
             <Grid.Column>
-              <CumulativePercentChart a={strength_a} d={strength_d} max_a={max_strength_a} max_d={max_strength_d} type='strength' />
+              <CumulativePercentChart
+                progress={progress} type='strength'
+                a={strength_a} d={strength_d} max_a={max_strength_a} max_d={max_strength_d}
+              />
             </Grid.Column>
           </Grid.Row>
         </Grid>
