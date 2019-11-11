@@ -324,10 +324,10 @@ const updateCasualties = (casualties: CasualtiesProgress, amount: number, total_
   casualties.avg_strength_a += (total_a.strength - current_a.strength) * amount
   casualties.avg_strength_d += (total_d.strength - current_d.strength) * amount
 
-  const morale_a = (Math.max(0, current_a.morale) / total_a.morale).toFixed(2)
-  const morale_d = (Math.max(0, current_d.morale) / total_d.morale).toFixed(2)
-  const strength_a = (Math.max(0, current_a.strength) / total_a.strength).toFixed(2)
-  const strength_d = (Math.max(0, current_d.strength) / total_d.strength).toFixed(2)
+  const morale_a = (Math.max(0, current_a.morale)).toFixed(2)
+  const morale_d = (Math.max(0, current_d.morale)).toFixed(2)
+  const strength_a = (Math.max(0, current_a.strength)).toFixed(2)
+  const strength_d = (Math.max(0, current_d.strength)).toFixed(2)
   casualties.morale_a[morale_a] =  (casualties.morale_a[morale_a] || 0) + amount
   casualties.morale_d[morale_d] =  (casualties.morale_d[morale_d] || 0) + amount
   casualties.strength_a[strength_a] =  (casualties.strength_a[strength_a] || 0) + amount
