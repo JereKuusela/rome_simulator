@@ -20,7 +20,7 @@ export default class StyledNumber extends Component<IProps> {
     if (hide_zero && value === 0)
       return null
     const is_positive = reverse ? value < 0 : value > 0
-    const className = value === 0 ? neutral_color || '' : (is_positive ? (positive_color || 'value-positive') : (negative_color || 'value-negative'))
+    const className = value === 0 ? neutral_color || '' : (is_positive ? (positive_color || 'color-positive') : (negative_color || 'color-negative'))
     const str = formatter(value)
     return (
       <span className={className}>

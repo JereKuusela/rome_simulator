@@ -29,7 +29,7 @@ const DRAW_COLOR = 'color-draw'
 class WinRate extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
-    this.state = { attacker: 0, defender: 0, draws: 0, calculating: false, progress: 0 }
+    this.state = { attacker: 0, defender: 0, draws: 0, calculating: false, progress: 1 }
   }
 
   toPercent = (value: number) => toPercent(value, 0)
@@ -53,13 +53,13 @@ class WinRate extends Component<IProps, IState> {
             <Grid style={{ fontSize: '1.25em' }} columns='3'>
               <Grid.Row verticalAlign='middle'>
                 <Grid.Column>
-                  <StyledNumber value={attacker} positive_color={ATTACKER_COLOR} neutral_color={ATTACKER_COLOR} formatter={this.toPercent} />
+                  <StyledNumber value={attacker / progress} positive_color={ATTACKER_COLOR} neutral_color={ATTACKER_COLOR} formatter={this.toPercent} />
                 </Grid.Column>
                 <Grid.Column>
-                  <StyledNumber value={draws} positive_color={DRAW_COLOR} neutral_color={DRAW_COLOR} formatter={this.toPercent} />
+                  <StyledNumber value={draws / progress} positive_color={DRAW_COLOR} neutral_color={DRAW_COLOR} formatter={this.toPercent} />
                 </Grid.Column>
                 <Grid.Column>
-                  <StyledNumber value={defender} positive_color={DEFENDER_COLOR} neutral_color={DEFENDER_COLOR} formatter={this.toPercent} />
+                  <StyledNumber value={defender / progress} positive_color={DEFENDER_COLOR} neutral_color={DEFENDER_COLOR} formatter={this.toPercent} />
                 </Grid.Column>
               </Grid.Row>
             </Grid>
