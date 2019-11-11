@@ -178,7 +178,7 @@ export const calculateWinRate = (simulationSettings: SimulationSettings, progres
       result.round += (depth - 1) * phaseLength
       updateProgress(progress, fractions[depth], result)
     }
-    if (!nodes.length || interruptSimulation)
+    if (!nodes.length)
       progress.progress = 1
     progressCallback(progress, casualties)
     if (nodes.length && !interruptSimulation)
