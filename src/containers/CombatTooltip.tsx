@@ -49,9 +49,9 @@ class CombatTooltip extends Component<IProps, IState> {
     )
   }
 
-  BLUE = 'value-blue'
-  ORANGE = 'value-orange'
-  RED = 'value-red'
+  BLUE = 'color-blue'
+  ORANGE = 'color-orange'
+  RED = 'color-red'
 
   getExplanation = (index: number | null) => {
     if (index === null)

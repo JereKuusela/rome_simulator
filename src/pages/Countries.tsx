@@ -749,7 +749,7 @@ class Countries extends Component<IProps> {
     const sign = modifier.value > 0 ? '+' : '-'
     const value = Math.abs(modifier.value)
     const str = modifier.no_percent ? value + padding : +(value * 100).toFixed(2) + ' %'
-    return <span className={modifier.negative ? 'value-negative' : 'value-positive'} style={{ float: 'right' }}>{sign + str}</span>
+    return <span className={modifier.negative ? 'color-negative' : 'color-positive'} style={{ float: 'right' }}>{sign + str}</span>
   }
 
   getNumberFromKey = (key: string, index: number) => {
