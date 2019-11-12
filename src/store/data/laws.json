@@ -1,18 +1,8 @@
 {
   "laws": [
     {
-      "name": "Military (Republic)",
+      "name": "Military Reforms (Republic)",
       "options": [
-        {
-          "name": "None",
-          "modifiers": [
-            {
-              "target": "Text",
-              "attribute": "No effect",
-              "value": 0
-            }
-          ]
-        },
         {
           "name": "Noble Elite",
           "modifiers": [
@@ -28,39 +18,84 @@
           "name": "Provisioning Act",
           "modifiers": [
             {
-              "target": "Global",
+              "target": "Land",
               "attribute": "Maintenance",
               "type": "Modifier",
-              "value": -0.1
+              "value": -0.15
+            }
+          ]
+        },
+        {
+          "name": "Draft Act",
+          "modifiers": [
+            {
+              "target": "Naval",
+              "attribute": "Damage done",
+              "value": 0.1
+            }
+          ]
+        },
+        {
+          "name": "Military Modernization",
+          "modifiers": [
+            {
+              "target": "Global",
+              "attribute": "Discipline",
+              "value": 0.05
             }
           ]
         }
       ]
     },
     {
-      "name": "Maritime (Monarchy)",
+      "name": "Military Reforms (Monarchy)",
       "options": [
         {
-          "name": "None",
+          "name": "Martial Education",
           "modifiers": [
             {
-              "target": "Text",
-              "attribute": "No effect",
-              "value": 0
+              "target": "Global",
+              "attribute": "Experience",
+              "value": 0.1
             }
           ]
         },
         {
-          "name": "Professional Oarsmen",
+          "name": "Nobility Admission Law",
           "modifiers": [
             {
-              "target": "Text",
-              "attribute": "Tax",
-              "negative": true,
-              "value": -0.05
-            },
+              "target": "Global",
+              "attribute": "Discipline",
+              "value": 0.5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Taxation Laws (Monarchy)",
+      "options": [
+        {
+          "name": "Exemption for Nobility",
+          "modifiers": [
             {
-              "target": "Naval",
+              "target": "Land",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "value": -0.15
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "War Philosophy (Tribal)",
+      "options": [
+        {
+          "name": "Honor in Battle",
+          "modifiers": [
+            {
+              "target": "Land",
               "attribute": "Morale",
               "type": "Modifier",
               "value": 0.1

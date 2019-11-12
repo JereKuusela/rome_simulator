@@ -51,6 +51,7 @@ export default class TargetArrows extends Component<IProps> {
 
   renderArrow = (from: string, to: string, fromAnchor: string, toAnchor: string, borderColor: string) => (
     <LineTo
+      key={from + '_' + to}
       borderColor={borderColor}
       from={from}
       fromAnchor={fromAnchor}

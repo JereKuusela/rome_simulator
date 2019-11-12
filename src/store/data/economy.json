@@ -22,16 +22,6 @@
           ]
         },
         {
-          "name": "Default",
-          "modifiers": [
-            {
-              "target": "Text",
-              "attribute": "No effect",
-              "value": 0
-            }
-          ]
-        },
-        {
           "name": "Increased Pay",
           "modifiers": [
             {
@@ -73,16 +63,6 @@
           ]
         },
         {
-          "name": "Default",
-          "modifiers": [
-            {
-              "target": "Text",
-              "attribute": "No effect",
-              "value": 0
-            }
-          ]
-        },
-        {
           "name": "Increased Pay",
           "modifiers": [
             {
@@ -97,64 +77,6 @@
               "type": "Modifier",
               "negative": true,
               "value": 0.5
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Fort Maintenance",
-      "options": [
-        {
-          "name": "Ignored Garrisons",
-          "modifiers": [
-            {
-              "target": "Text",
-              "attribute": "Garrison size",
-              "negative": true,
-              "value": -0.5
-            },
-            {
-              "target": "Text",
-              "attribute": "Fort defense",
-              "negative": true,
-              "value": -0.5
-            },
-            {
-              "target": "Text",
-              "attribute": "Fort maintenance",
-              "value": -0.25
-            }
-          ]
-        },
-        {
-          "name": "Paid Garrisons",
-          "modifiers": [
-            {
-              "target": "Text",
-              "attribute": "No effect",
-              "value": 0
-            }
-          ]
-        },
-        {
-          "name": "Improved Fortifications",
-          "modifiers": [
-            {
-              "target": "Text",
-              "attribute": "Garrison size",
-              "value": 0.1
-            },
-            {
-              "target": "Text",
-              "attribute": "Fort defense",
-              "value": 0.1
-            },
-            {
-              "target": "Text",
-              "attribute": "Fort maintenance",
-              "negative": true,
-              "value": 0.25
             }
           ]
         }

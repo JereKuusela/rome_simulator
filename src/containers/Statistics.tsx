@@ -68,81 +68,89 @@ class Statistics extends Component<IProps, IState> {
         </Grid>
         <Table>
           <Table.Header>
-            <Table.HeaderCell>
-              Attacker win chance
+            <Table.Row>
+              <Table.HeaderCell>
+                Attacker win chance
             </Table.HeaderCell>
-            <Table.HeaderCell>
-              Defender win chance
+              <Table.HeaderCell>
+                Defender win chance
             </Table.HeaderCell>
-            <Table.HeaderCell>
-              Draw chance
+              <Table.HeaderCell>
+                Draw chance
             </Table.HeaderCell>
-            <Table.HeaderCell>
-              Incomplete
+              <Table.HeaderCell>
+                Incomplete
             </Table.HeaderCell>
-            <Table.HeaderCell>
-              Average rounds
+              <Table.HeaderCell>
+                Average rounds
             </Table.HeaderCell>
-            <Table.HeaderCell>
-              When attacker wins
+              <Table.HeaderCell>
+                When attacker wins
             </Table.HeaderCell>
-            <Table.HeaderCell>
-              When defender wins
+              <Table.HeaderCell>
+                When defender wins
             </Table.HeaderCell>
+            </Table.Row>
           </Table.Header>
-          <Table.Row>
-            <Table.Cell>
-              {this.toPercent(attacker_win_chance / progress)}
-            </Table.Cell>
-            <Table.Cell>
-              {this.toPercent(defender_win_chance / progress)}
-            </Table.Cell>
-            <Table.Cell>
-              {this.toPercent(draw_chance / progress)}
-            </Table.Cell>
-            <Table.Cell>
-              {this.toPercent(incomplete / progress)}
-            </Table.Cell>
-            <Table.Cell>
-              {this.toNumber(average_rounds / progress)}
-            </Table.Cell>
-            <Table.Cell>
-              {this.toNumber(average_rounds_when_attacker_wins)}
-            </Table.Cell>
-            <Table.Cell>
-              {this.toNumber(average_rounds_when_defender_wins)}
-            </Table.Cell>
-          </Table.Row>
+          <Table.Body>
+            <Table.Row>
+              <Table.Cell>
+                {this.toPercent(attacker_win_chance / progress)}
+              </Table.Cell>
+              <Table.Cell>
+                {this.toPercent(defender_win_chance / progress)}
+              </Table.Cell>
+              <Table.Cell>
+                {this.toPercent(draw_chance / progress)}
+              </Table.Cell>
+              <Table.Cell>
+                {this.toPercent(incomplete / progress)}
+              </Table.Cell>
+              <Table.Cell>
+                {this.toNumber(average_rounds / progress)}
+              </Table.Cell>
+              <Table.Cell>
+                {this.toNumber(average_rounds_when_attacker_wins)}
+              </Table.Cell>
+              <Table.Cell>
+                {this.toNumber(average_rounds_when_defender_wins)}
+              </Table.Cell>
+            </Table.Row>
+          </Table.Body>
         </Table>
         <Table>
           <Table.Header>
-            <Table.HeaderCell>
-              Attacker morale losses
+            <Table.Row>
+              <Table.HeaderCell>
+                Attacker morale losses
             </Table.HeaderCell>
-            <Table.HeaderCell>
-              Attacker strength losses
+              <Table.HeaderCell>
+                Attacker strength losses
             </Table.HeaderCell>
-            <Table.HeaderCell>
-              Defender morale losses
+              <Table.HeaderCell>
+                Defender morale losses
             </Table.HeaderCell>
-            <Table.HeaderCell>
-              Defender strength losses
+              <Table.HeaderCell>
+                Defender strength losses
             </Table.HeaderCell>
+            </Table.Row>
           </Table.Header>
-          <Table.Row>
-            <Table.Cell>
-              {this.toNumber(avg_morale_a / progress) + ' (' + this.toPercent(avg_morale_a / max_morale_a / progress) + ')'}
-            </Table.Cell>
-            <Table.Cell>
-              {this.toNumber(avg_strength_a / progress) + ' (' + this.toPercent(avg_strength_a / max_strength_a / progress) + ')'}
-            </Table.Cell>
-            <Table.Cell>
-              {this.toNumber(avg_morale_d / progress) + ' (' + this.toPercent(avg_morale_d / max_morale_d / progress) + ')'}
-            </Table.Cell>
-            <Table.Cell>
-              {this.toNumber(avg_strength_d / progress) + ' (' + this.toPercent(avg_strength_d / max_strength_d / progress) + ')'}
-            </Table.Cell>
-          </Table.Row>
+          <Table.Body>
+            <Table.Row>
+              <Table.Cell>
+                {this.toNumber(avg_morale_a / progress) + ' (' + this.toPercent(avg_morale_a / max_morale_a / progress) + ')'}
+              </Table.Cell>
+              <Table.Cell>
+                {this.toNumber(avg_strength_a / progress) + ' (' + this.toPercent(avg_strength_a / max_strength_a / progress) + ')'}
+              </Table.Cell>
+              <Table.Cell>
+                {this.toNumber(avg_morale_d / progress) + ' (' + this.toPercent(avg_morale_d / max_morale_d / progress) + ')'}
+              </Table.Cell>
+              <Table.Cell>
+                {this.toNumber(avg_strength_d / progress) + ' (' + this.toPercent(avg_strength_d / max_strength_d / progress) + ')'}
+              </Table.Cell>
+            </Table.Row>
+          </Table.Body>
         </Table>
         <Grid>
           <Grid.Row columns='2'>

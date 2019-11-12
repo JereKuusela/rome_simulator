@@ -16,7 +16,7 @@ export default class Dropdown<T extends string> extends Component<IProps<T>> {
     return (
       <DropdownUI
         text={value}
-        selection
+        className='selection'
         clearable={clearable}
         value={value}
         disabled={!onChange}

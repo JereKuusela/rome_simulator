@@ -27,6 +27,8 @@ class Transfer extends Component<IProps, IState> {
   render(): JSX.Element {
     const json = JSON.stringify(this.filterKeys(this.props.state), undefined, 2)
     if (this.last_data !== json) {
+      // Hack to make data editable manually or when exported settings change.
+      // This could probably be moved to trigger when export keys change?
       this.last_data = json
       this.setState({ data: json })
     }
@@ -88,7 +90,7 @@ class Transfer extends Component<IProps, IState> {
 
   renderCheckbox = (key: ExportKey): JSX.Element => {
     return (
-      <List.Item>
+      <List.Item key={key}>
         <Checkbox
           key={key}
           toggle

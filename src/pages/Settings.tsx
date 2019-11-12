@@ -34,19 +34,21 @@ class Settings extends Component<IProps> {
           return (
             <Grid.Column key={key}>
               <Table basic='very'>
-                <Table.Row>
-                  <Table.Cell collapsing >
-                    <Input
-                      size='mini'
-                      style={{ width: 50 }}
-                      defaultValue={value}
-                      onChange={(_, { value }) => onChange(key, value)}
-                    />
-                  </Table.Cell>
-                  <Table.Cell key={key + '_description'} style={{ whiteSpace: 'pre-line' }} >
-                    {parameterToDescription(key)}
-                  </Table.Cell>
-                </Table.Row>
+                <Table.Body>
+                  <Table.Row>
+                    <Table.Cell collapsing >
+                      <Input
+                        size='mini'
+                        style={{ width: 50 }}
+                        defaultValue={value}
+                        onChange={(_, { value }) => onChange(key, value)}
+                      />
+                    </Table.Cell>
+                    <Table.Cell key={key + '_description'} style={{ whiteSpace: 'pre-line' }} >
+                      {parameterToDescription(key)}
+                    </Table.Cell>
+                  </Table.Row>
+                </Table.Body>
               </Table>
             </Grid.Column>
           )

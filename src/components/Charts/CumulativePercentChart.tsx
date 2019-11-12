@@ -7,6 +7,7 @@ import BaseChart from './BaseChart'
 
 import { toPercent } from '../../formatters'
 import { toArr, mapRange } from '../../utils'
+import { Side } from '../../store/battle'
 
 interface IProps {
   a: { [key: string]: number }
@@ -32,9 +33,6 @@ interface ChartData {
   percent: { x: number, y: number }[]
   cumulative: { x: number, y: number }[]
 }
-
-const CUMULATIVE = 'CUMULATIVE'
-const PERCENT = 'PERCENT'
 
 /**
  * Shows a chart used for current morale and strength
@@ -90,7 +88,7 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
             style={{
               data: { fill: "#FFAA00AA" }
             }}
-            name={CUMULATIVE}
+            name={this.cumulative(Side.Attacker)}
           />
           <VictoryArea
             interpolation="natural"
@@ -98,7 +96,7 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
             style={{
               data: { fill: "#FFAA00" }
             }}
-            name={PERCENT}
+            name={this.percent(Side.Attacker)}
           />
           <VictoryArea
             interpolation="natural"
@@ -106,7 +104,7 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
             style={{
               data: { fill: "#00AAFFAA" }
             }}
-            name={CUMULATIVE}
+            name={this.cumulative(Side.Defender)}
           />
           <VictoryArea
             interpolation="natural"
@@ -114,7 +112,7 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
             style={{
               data: { fill: "#00AAFF" }
             }}
-            name={PERCENT}
+            name={this.percent(Side.Defender)}
           />
         </BaseChart>
       </>
@@ -135,9 +133,9 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
     x = 1 - x
     if (x > 1)
       x = 2 - x
-    if (childName === PERCENT)
+    if (this.isPercent(childName))
       return `${this.toPercent(x)} chance to have ${this.toPercent(y)} or more ${type} remaining`
-    if (childName === CUMULATIVE)
+    if (this.isCumulative(childName))
       return `${this.toPercent(x)} chance to have ${y} or more ${type} remaining`
     return ''
   }
@@ -148,10 +146,16 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
     x = 1 - x
     if (x > 1)
       x = 2 - x
-    if (childName === PERCENT)
+    if (this.isPercent(childName))
       return `${capitalize(type)} ${this.toPercent(y)}: ${this.toPercent(x)}`
-    if (childName === CUMULATIVE)
+    if (this.isCumulative(childName))
       return `${capitalize(type)} ${y}: ${this.toPercent(x)}`
     return ''
   }
+
+  isPercent = (name: string) => name === this.percent(Side.Attacker) || name === this.percent(Side.Defender)
+  isCumulative = (name: string) => name === this.cumulative(Side.Attacker) || name === this.cumulative(Side.Defender)
+
+  cumulative = (side: Side) => `Cumulative_${this.props.type}_${side}`
+  percent = (side: Side) => `Percent_${this.props.type}_${side}`
 }

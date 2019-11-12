@@ -49,7 +49,7 @@ const CELL_PADDING = '.78571429em .78571429em'
 
 class Countries extends Component<IProps> {
 
-  render(): JSX.Element {
+  render() {
     const country = objGet(this.props.countries, this.props.selected_country, defaultCountry)
     const selections = country.selections
     const tradition = this.props.traditions[country.culture]
@@ -104,9 +104,9 @@ class Countries extends Component<IProps> {
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title={'Traditions (' + country.culture + ')'} identifier='countries_tradition'>
-                Military power: <Input type='number' value={country.military_power} onChange={(_, { value }) => this.setMilitaryPower(value)} />
+                Military experience: <Input type='number' value={country.military_power} onChange={(_, { value }) => this.setMilitaryPower(value)} />
                 {
-                  tradition && this.renderTraditions(tradition, selections)
+                  this.renderTraditions(tradition, selections)
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -141,13 +141,12 @@ class Countries extends Component<IProps> {
                   <List.Item>Mandated Observance: 20</List.Item>
                   <List.Item>Latin tradition: 15</List.Item>
                   <List.Item>Exporting Incense: 10</List.Item>
-                  <List.Item>Laws: -15 / 10</List.Item>
+                  <List.Item>Laws: -15 / 15</List.Item>
                   <List.Item>Ruler: -15 / 7.5)</List.Item>
-                  <List.Item><b>Total: From -30 to 287.5</b></List.Item>
+                  <List.Item><b>Total: From -30 to 300</b></List.Item>
                 </List>
-
                 {
-                  omen && this.renderOmens(omen, selections, country.omen_power)
+                  this.renderOmens(omen, selections, country.omen_power)
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -156,15 +155,17 @@ class Countries extends Component<IProps> {
             <Grid.Column>
               <AccordionToggle title='Government, Economy & Ideas' identifier='countries_government'>
                 <Table fixed singleLine basic='very' style={{ paddingLeft: '0.785714em' }}>
-                  <Table.Row>
-                    <Table.Cell>
-                      Republic Land Discipline (0 - 7.5): <Input size='mini' type='number' value={country.office_discipline} onChange={(_, { value }) => this.setOfficeDiscipline(value)} />
-                    </Table.Cell>
-                    <Table.Cell>
-                      Monarch Land Morale (0 - 15): <Input size='mini' type='number' value={country.office_morale} onChange={(_, { value }) => this.setOfficeMorale(value)} />
-                    </Table.Cell>
-                    <Table.Cell />
-                  </Table.Row>
+                  <Table.Body>
+                    <Table.Row>
+                      <Table.Cell>
+                        Republic Global Discipline (0 - 7.5): <Input size='mini' type='number' value={country.office_discipline} onChange={(_, { value }) => this.setOfficeDiscipline(value)} />
+                      </Table.Cell>
+                      <Table.Cell>
+                        Monarch Land Morale (0 - 15): <Input size='mini' type='number' value={country.office_morale} onChange={(_, { value }) => this.setOfficeMorale(value)} />
+                      </Table.Cell>
+                      <Table.Cell />
+                    </Table.Row>
+                  </Table.Body>
                 </Table>
                 {
                   this.renderLaws(this.props.laws, selections)
@@ -200,7 +201,7 @@ class Countries extends Component<IProps> {
           <Table.Row>
             {
               traditions.paths.map(path => (
-                <Table.HeaderCell>
+                <Table.HeaderCell key={path.name}>
                   {path.name}
                 </Table.HeaderCell>
               ))
@@ -415,18 +416,18 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderEconomy = (economy: EconomyDefinition[], selections: ObjSet) => this.renderOptions(ECONOMY_KEY, economy, selections)
+  renderEconomy = (economy: EconomyDefinition[], selections: ObjSet) => this.renderOptions(ECONOMY_KEY, economy, selections, 2)
 
-  renderLaws = (laws: LawDefinition[], selections: ObjSet) => this.renderOptions(LAW_KEY, laws, selections)
+  renderLaws = (laws: LawDefinition[], selections: ObjSet) => this.renderOptions(LAW_KEY, laws, selections, 4)
 
-  renderAbilities = (abilities: AbilityDefinition[], selections: ObjSet) => this.renderOptions(ABILITY_KEY, abilities, selections)
+  renderAbilities = (abilities: AbilityDefinition[], selections: ObjSet) => this.renderOptions(ABILITY_KEY, abilities, selections, 2)
 
-  renderOptions = (modifier_key: string, economy: (EconomyDefinition | LawDefinition | AbilityDefinition)[], selections: ObjSet) => {
+  renderOptions = (modifier_key: string, definitions: (EconomyDefinition | LawDefinition | AbilityDefinition)[], selections: ObjSet, columns: number) => {
     return (
       <Table celled unstackable fixed>
         <Table.Body>
           {
-            economy.map(options => (
+            definitions.map(options => (
               <Table.Row key={options.name}>
                 {
                   options.options.map(option => {
@@ -435,6 +436,9 @@ class Countries extends Component<IProps> {
                     return this.renderCell(key, option.name, selections, modifiers,
                       () => this.enableOption(key, modifiers, selections), () => this.props.clearModifiers(this.props.selected_country, key))
                   })
+                }
+                {
+                  mapRange(columns - options.options.length, (value) => <Table.Cell key={value} />)
                 }
               </Table.Row>
             ))
@@ -460,15 +464,15 @@ class Countries extends Component<IProps> {
     >
       <List>
         {name &&
-          <List.Item>
+          <List.Item key='name'>
             <List.Header>
               {name}
             </List.Header>
           </List.Item>
         }
         {
-          modifiers.map(modifier => (
-            <List.Item>
+          modifiers.map((modifier, index) => (
+            <List.Item key={index}>
               {
                 this.getText(modifier)
               }
