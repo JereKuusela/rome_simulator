@@ -1,12 +1,14 @@
 import { Army, Participant, RowType, Side, getDefaultParticipant, getDefaultArmy } from '../../store/battle'
-import { TacticType, getDefaultTactics } from '../../store/tactics'
+import { TacticType, getDefaultTactics, TacticCalc } from '../../store/tactics'
 import { BaseUnit, UnitCalc, UnitType, getDefaultUnits, getDefaultGlobals } from '../../store/units'
 import { calculateValue, mergeValues, DefinitionType } from '../../base_definition'
 import { map, mapRange } from '../../utils'
 import { CountryName } from '../../store/countries'
-import { doBattle } from '../combat'
+import { doBattle, calculateTotalRoll } from '../combat'
 import { getDefaultLandSettings, CombatParameter } from '../../store/settings'
 import { TerrainDefinition, TerrainType, getDefaultTerrains } from '../../store/terrains'
+import { doBattleFast, CombatParticipant, CombatUnit, RoundInfo } from '../combat_fast'
+import { getBaseDamages, convertUnits } from '../simulation'
 
 const global_stats = getDefaultGlobals()[DefinitionType.Land]
 const units = map(getDefaultUnits(), unit => mergeValues(unit, global_stats))
@@ -23,7 +25,6 @@ export interface TestInfo {
   defender: Participant
   army_a: Army
   army_d: Army
-  round: number
   terrains: TerrainDefinition[]
   settings: { [key in CombatParameter]: number }
 }
@@ -68,17 +69,38 @@ const verify = (round: number, side: Side, index: number, unit: BaseUnit | null,
   expect(unit).toBeTruthy()
   if (!unit)
     return
+  const unit_strength = Math.floor(1000 * calculateValue(unit, UnitCalc.Strength))
   try {
-    expect(Math.floor(1000 * calculateValue(unit, UnitCalc.Strength))).toEqual(strength)
+    expect(Math.floor(unit_strength)).toEqual(strength)
   }
   catch (e) {
-    throw new Error(errorPrefix(round, side, index) + 'Strength ' + 1000 * calculateValue(unit, UnitCalc.Strength) + ' is not ' + strength);
+    throw new Error(errorPrefix(round, side, index) + 'Strength ' + unit_strength + ' is not ' + strength);
   }
+  const unit_morale = calculateValue(unit, UnitCalc.Morale)
   try {
-    expect(Math.abs(calculateValue(unit, UnitCalc.Morale) - 2 * morale)).toBeLessThan(0.002)
+    expect(Math.abs(unit_morale - 2 * morale)).toBeLessThan(0.002)
   }
   catch (e) {
-    throw new Error(errorPrefix(round, side, index) + 'Morale ' + calculateValue(unit, UnitCalc.Morale) + ' is not ' + 2 * morale);
+    throw new Error(errorPrefix(round, side, index) + 'Morale ' + unit_morale + ' is not ' + 2 * morale);
+  }
+}
+const verifyFast = (round: number, side: Side, index: number, unit: CombatUnit | null, strength: number, morale: number) => {
+  expect(unit).toBeTruthy()
+  if (!unit)
+    return
+  const unit_strength = Math.floor(1000 * unit[UnitCalc.Strength])
+  try {
+    expect(Math.floor(unit_strength)).toEqual(strength)
+  }
+  catch (e) {
+    throw new Error(errorPrefix(round, side, index) + 'Strength ' + unit_strength + ' is not ' + strength);
+  }
+  const unit_morale = unit[UnitCalc.Morale]
+  try {
+    expect(Math.abs(unit_morale - 2 * morale)).toBeLessThan(0.002)
+  }
+  catch (e) {
+    throw new Error(errorPrefix(round, side, index) + 'Morale ' + unit_morale + ' is not ' + 2 * morale);
   }
 }
 
@@ -91,7 +113,7 @@ const verify = (round: number, side: Side, index: number, unit: BaseUnit | null,
  * @param type Expected type.
  * @param message Custom message on error.
  */
-export const verifyType = (round: number, side: Side, index: number, unit: BaseUnit | null, type: UnitType | null, message: string = '') => {
+export const verifyType = (round: number, side: Side, index: number, unit: { type: UnitType } | null | undefined, type: UnitType | null, message: string = '') => {
   if (type) {
     try {
       expect(unit).toBeTruthy()
@@ -189,12 +211,15 @@ export const every_type = [UnitType.Archers, UnitType.CamelCavalry, UnitType.Cha
 /**
  * Performs one combat round with a given test info.
  */
-const doRound = (info: TestInfo) => {
-  info.round = info.round + 1
-  const [a, d] = doBattle(definitions, { ...info.attacker, ...info.army_a, tactic: tactics[info.army_a.tactic], country: CountryName.Country1, general: 0 }, { ...info.defender, ...info.army_d, tactic: tactics[info.army_d.tactic], country: CountryName.Country2, general: 0 }, info.round, info.terrains, info.settings)
+const doRound = (round: number, info: TestInfo) => {
+  const [a, d] = doBattle(definitions, { ...info.attacker, ...info.army_a, tactic: tactics[info.army_a.tactic], country: CountryName.Country1, general: 0 }, { ...info.defender, ...info.army_d, tactic: tactics[info.army_d.tactic], country: CountryName.Country2, general: 0 }, round + 1, info.terrains, info.settings)
   info.army_a = { ...info.army_a, ...a }
   info.army_d = { ...info.army_d, ...d }
 }
+const doFastRound = (info: TestInfo, a: CombatParticipant, d: CombatParticipant) => {
+  doBattleFast(a, d, info.settings)
+}
+
 
 type ExpectedUnits = ([UnitType | null, number | null, number | null] | null)
 type Expected = (ExpectedUnits[] | null)
@@ -207,13 +232,53 @@ type Expected = (ExpectedUnits[] | null)
  * @param defender Expected defender units for every round. Nulls can be used to skip checks.
  */
 export const testCombat = (info: TestInfo, rolls: number[][], attacker: Expected[], defender: Expected[]) => {
+  // Fast combat must be tested first because slow overwrites original data.
+  testCombatFast(info, rolls, attacker, defender)
+  testCombatSlow(info, rolls, attacker, defender)
+}
+export const testDeploy = (info: TestInfo) => doRound(-1, info)
+export const testReinforce = (info: TestInfo) => doRound(0, info)
+
+
+const testCombatSlow = (info: TestInfo, rolls: number[][], attacker: Expected[], defender: Expected[]) => {
   for (let roll = 0; roll < rolls.length; roll++) {
     setRolls(info, rolls[roll][0], rolls[roll][1])
     const limit = Math.min((roll + 1) * 5, attacker.length)
     for (let round = roll * 5; round < limit; round++) {
-      doRound(info)
+      doRound(round, info)
       verifySide(round, Side.Attacker, info.army_a.frontline, attacker[round])
       verifySide(round, Side.Defender, info.army_d.frontline, defender[round])
+    }
+  }
+}
+
+const testCombatFast = (info: TestInfo, rolls: number[][], attacker: Expected[], defender: Expected[]) => {
+  const dice = info.settings[CombatParameter.DiceMaximum] - info.settings[CombatParameter.DiceMinimum] + 1
+  const base_damages_a = getBaseDamages(info.settings, dice, calculateTotalRoll(0, info.terrains, 0, 0))
+  const base_damages_d = getBaseDamages(info.settings, dice, calculateTotalRoll(0, [], 0, 0))
+  const tactic_casualties = calculateValue(tactics[info.army_a.tactic], TacticCalc.Casualties) + calculateValue(tactics[info.army_d.tactic], TacticCalc.Casualties)
+  const status_a = convertUnits(info.army_a, info.settings, tactic_casualties, base_damages_a, info.terrains, every_type)
+  const status_d = convertUnits(info.army_d, info.settings, tactic_casualties, base_damages_d, info.terrains, every_type)
+  const participant_a: CombatParticipant = {
+    army: status_a,
+    roll: 0,
+    tactic: tactics[info.army_a.tactic],
+    row_types: info.army_a.row_types
+  }
+  const participant_d: CombatParticipant = {
+    army: status_d,
+    roll: 0,
+    tactic: tactics[info.army_d.tactic],
+    row_types: info.army_d.row_types
+  }
+  for (let roll = 0; roll < rolls.length; roll++) {
+    participant_a.roll = rolls[roll][0]
+    participant_d.roll = rolls[roll][1]
+    const limit = Math.min((roll + 1) * 5, attacker.length)
+    for (let round = roll * 5; round < limit; round++) {
+      doFastRound(info, participant_a, participant_d)
+      verifyFastSide(round, Side.Attacker, participant_a.army.frontline, attacker[round])
+      verifyFastSide(round, Side.Defender, participant_d.army.frontline, defender[round])
     }
   }
 }
@@ -238,6 +303,25 @@ const verifySide = (round: number, side: Side, frontline: (BaseUnit | null)[], e
     }
     else
       verifyType(round, side, index, frontline[index], null)
+  })
+}
+const verifyFastSide = (round: number, side: Side, frontline: (CombatUnit | null)[], expected: Expected | null) => {
+  // Data might be missing or not relevant for the test..
+  if (!expected)
+    return
+  expected.forEach((unit, index) => {
+    if (unit) {
+      const type = unit[0]
+      const asd = frontline[index]
+      if (asd) {
+        asd.info.type
+      }
+      verifyType(round, side, index, frontline[index]?.info, type)
+      if (unit[1] !== null && unit[2] !== null)
+        verifyFast(round, side, index, frontline[index], unit[1], unit[2])
+    }
+    else
+      verifyType(round, side, index, frontline[index]?.info, null)
   })
 }
 /**

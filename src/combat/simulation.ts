@@ -189,7 +189,7 @@ export const calculateWinRate = (simulationSettings: SimulationSettings, progres
   worker()
 }
 
-const convertUnits = (units: BaseUnits, combatSettings: CombatSettings, casualties_multiplier: number, base_damages: number[], terrains: TerrainDefinition[], unit_types: UnitType[]) => ({
+export const convertUnits = (units: BaseUnits, combatSettings: CombatSettings, casualties_multiplier: number, base_damages: number[], terrains: TerrainDefinition[], unit_types: UnitType[]) => ({
   frontline: units.frontline.map(unit => getCombatUnit(combatSettings, casualties_multiplier, base_damages, terrains, unit_types, unit as Unit)),
   reserve: units.reserve.map(unit => getCombatUnit(combatSettings, casualties_multiplier, base_damages, terrains, unit_types, unit as Unit)!),
   defeated: units.defeated.map(unit => getCombatUnit(combatSettings, casualties_multiplier, base_damages, terrains, unit_types, unit as Unit)!)
@@ -198,7 +198,7 @@ const convertUnits = (units: BaseUnits, combatSettings: CombatSettings, casualti
 /**
  * Precalculates base damage values for each roll.
  */
-const getBaseDamages = (combatSettings: CombatSettings, dice: number, modifier: number) => mapRange(dice + 1, roll => Math.min(combatSettings[CombatParameter.MaxBaseDamage], combatSettings[CombatParameter.BaseDamage] + combatSettings[CombatParameter.RollDamage] * (roll + modifier)))
+export const getBaseDamages = (combatSettings: CombatSettings, dice: number, modifier: number) => mapRange(dice + 1, roll => Math.min(combatSettings[CombatParameter.MaxBaseDamage], combatSettings[CombatParameter.BaseDamage] + combatSettings[CombatParameter.RollDamage] * (roll + modifier)))
 
 /**
  * Returns a balanced set of rolls. Higher rolls are prioritized to give results faster.

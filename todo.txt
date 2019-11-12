@@ -2,6 +2,8 @@
 Release 5:
 
 Tests (high priority):
+- general effect for dice tested?
+- negative dice tested? at least fast combat fails
 - utils tested
 - check that reinforcement is stable (higher key ends in right position)
 

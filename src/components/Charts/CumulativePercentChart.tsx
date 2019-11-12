@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { Header } from 'semantic-ui-react'
-import { VictoryChart, VictoryVoronoiContainer, VictoryTheme, VictoryAxis, VictoryArea } from 'victory'
+import { VictoryAxis, VictoryArea } from 'victory'
 import { sortBy, capitalize } from 'lodash'
+
+import BaseChart from './BaseChart'
 
 import { toPercent } from '../../formatters'
 import { toArr, mapRange } from '../../utils'
-
 
 interface IProps {
   a: { [key: string]: number }
@@ -69,23 +70,13 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
     const data_a = this.calculate(a, max_a, progress, true)
     const data_d = this.calculate(d, max_d, progress, false)
 
-    const ticks = mapRange(3, value => value)
+    const ticks = mapRange(9, value => value / 4)
 
     return (
       <>
         <Header textAlign='center' size='huge'>{`Remaining ${type}`}</Header>
         <Header textAlign='center' >{label}</Header>
-        <VictoryChart
-          containerComponent={
-            <VictoryVoronoiContainer
-              labels={({ datum }) => this.getTooltip(datum)}
-              onActivated={this.onActivated}
-            />
-          }
-          theme={VictoryTheme.material}
-          domainPadding={10}
-          padding={{ top: 25, left: 50, bottom: 30, right: 50 }}
-        >
+        <BaseChart onActivated={this.onActivated} getTooltip={this.getTooltip}>
           <VictoryAxis
             tickValues={ticks}
             tickFormat={(x) => (`${(Math.abs(1 - x)) * 100}%`)}
@@ -125,7 +116,7 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
             }}
             name={PERCENT}
           />
-        </VictoryChart>
+        </BaseChart>
       </>
     )
   }

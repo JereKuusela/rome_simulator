@@ -1,6 +1,6 @@
 import { UnitType } from '../../store/units'
 import { CombatParameter } from '../../store/settings'
-import { verifyType, getRowTypes, getUnit, every_type, setFlankSizes, initInfo, TestInfo, initSide, testCombat } from './utils'
+import { verifyType, getRowTypes, getUnit, every_type, setFlankSizes, initInfo, TestInfo, initSide, testCombat, testReinforce } from './utils'
 import { Side } from '../../store/battle'
 
 describe('reinforcement', () => {
@@ -19,31 +19,26 @@ describe('reinforcement', () => {
     const half = Math.floor(info.settings[CombatParameter.CombatWidth] / 2.0)
     let index = half
     for (const type of types) {
-      verifyType(info.round, Side.Attacker, index, info.army_a.frontline[index], type, ' at index ' + index)
+      verifyType(0, Side.Attacker, index, info.army_a.frontline[index], type, ' at index ' + index)
       index = nextIndex(index, half)
     }
   }
 
-  const reinforce = () => {
-    const { attacker, defender } = initSide(1)
-    attacker[0] = null as any
-    defender[0] = null as any
-    testCombat(info, [[0, 0]], attacker, defender)
-  }
+  const reinforce = () => testReinforce(info)
 
   it('a single unit', () => {
     setAttacker([UnitType.Archers])
     reinforce()
-    verifyType(info.round, Side.Attacker, 15, info.army_a.frontline[15], UnitType.Archers)
+    verifyType(0, Side.Attacker, 15, info.army_a.frontline[15], UnitType.Archers)
     expect(info.army_a.reserve.length).toEqual(0)
   })
   it('both sides', () => {
     setAttacker([UnitType.Archers])
     setDefender([UnitType.Chariots])
     reinforce()
-    verifyType(info.round, Side.Attacker, 15, info.army_a.frontline[15], UnitType.Archers)
+    verifyType(0, Side.Attacker, 15, info.army_a.frontline[15], UnitType.Archers)
     expect(info.army_a.reserve.length).toEqual(0)
-    verifyType(info.round, Side.Attacker, 15, info.army_d.frontline[15], UnitType.Chariots)
+    verifyType(0, Side.Attacker, 15, info.army_d.frontline[15], UnitType.Chariots)
     expect(info.army_d.reserve.length).toEqual(0)
   })
   it('main front and default priorities', () => {
