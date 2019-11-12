@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Header, Button, Grid, Image, Checkbox, Input, Table, Divider } from 'semantic-ui-react'
+import { Header, Button, Grid, Image, Checkbox, Input, Table, Divider } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { BaseUnit, UnitDefinition, UnitDefinitions } from '../store/units'
@@ -28,6 +28,7 @@ import IconGeneral from '../images/military_power.png'
 import StyledNumber from '../components/Utils/StyledNumber'
 import { keys, resize } from '../utils'
 import WinRate from '../containers/WinRate'
+import Stats from '../containers/Stats'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
@@ -73,13 +74,13 @@ class Battle extends Component<IProps, IState> {
 
   openRowModal = (country: CountryName, type: RowType): void => this.setState({ modal_row_info: { country, type } })
 
-  render(): JSX.Element {
+  render() {
     if (this.props.outdated)
       this.props.refreshBattle(this.props.mode)
     const army_a = this.props.army_a
     const army_d = this.props.army_d
     return (
-      <Container>
+      <>
         <ModalUnitSelector
           info={this.state.modal_unit_info}
           onClose={this.closeModal}
@@ -155,6 +156,11 @@ class Battle extends Component<IProps, IState> {
           <Divider />
           <Grid.Row columns={1}>
             <Grid.Column>
+              <Stats />
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns={1}>
+            <Grid.Column>
               <Table celled unstackable>
                 <Table.Header>
                   <Table.Row>
@@ -208,21 +214,6 @@ class Battle extends Component<IProps, IState> {
               </Table>
             </Grid.Column>
           </Grid.Row>
-          <Divider />
-          <Grid.Row columns={1}>
-            <Grid.Column>
-              {
-                this.renderReserve(Side.Attacker, army_a)
-              }
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row columns={1}>
-            <Grid.Column>
-              {
-                this.renderReserve(Side.Defender, army_d)
-              }
-            </Grid.Column>
-          </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
               <Table celled unstackable>
@@ -256,6 +247,20 @@ class Battle extends Component<IProps, IState> {
           <Grid.Row columns={1}>
             <Grid.Column>
               {
+                this.renderReserve(Side.Attacker, army_a)
+              }
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns={1}>
+            <Grid.Column>
+              {
+                this.renderReserve(Side.Defender, army_d)
+              }
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns={1}>
+            <Grid.Column>
+              {
                 this.renderDefeatedArmy(Side.Attacker, army_a)
               }
             </Grid.Column>
@@ -273,7 +278,7 @@ class Battle extends Component<IProps, IState> {
             }
           </Grid.Row>
         </Grid >
-      </Container >
+      </ >
     )
   }
 

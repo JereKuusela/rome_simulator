@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Modal } from 'semantic-ui-react'
+import { Modal } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import ModalTerrainDetail from '../containers/ModalTerrainDetail'
 import { AppState } from '../store/index'
@@ -26,9 +26,9 @@ class Terrains extends Component<IProps, IState> {
   openModal = (terrain: TerrainType): void => this.setState({ modal_terrain: terrain })
 
 
-  render(): JSX.Element {
+  render() {
     return (
-      <Container>
+      <>
         <Modal basic onClose={this.closeModal} open={this.state.modal_terrain !== null}>
           <Modal.Content>
             <ItemRemover
@@ -47,7 +47,7 @@ class Terrains extends Component<IProps, IState> {
           onRowClick={terrain => this.openModal(terrain)}
           onCreateNew={type => this.props.addTerrain(type, this.props.mode)}
         />
-      </Container>
+      </>
     )
   }
 

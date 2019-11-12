@@ -1,31 +1,26 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Container, Image, Table } from 'semantic-ui-react'
+import { Image, Table } from 'semantic-ui-react'
 
 import { sumArr, round } from '../utils'
-import { calculateValue, calculateValueWithoutLoss, getImage, Mode, DefinitionType, strengthToValue } from '../base_definition'
-import { filterUnitTypesBySide, getBattle, getCurrentUnits } from '../store/utils'
+import { calculateValue, calculateValueWithoutLoss, getImage, DefinitionType, strengthToValue } from '../base_definition'
+import { filterUnitTypesBySide, getCurrentUnits } from '../store/utils'
 import { AppState } from '../store/index'
 import { Unit, UnitType, UnitCalc } from '../store/units'
 import { Side, Units } from '../store/battle'
-import { refreshBattle } from '../store/combat'
 
 import IconManpower from '../images/manpower.png'
 import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
 import IconEmpty from '../images/empty.png'
-import Statistics from '../containers/Statistics'
 
 class Stats extends Component<IProps> {
-  render(): JSX.Element {
-    if (this.props.outdated)
-      this.props.refreshBattle(this.props.mode)
+  render() {
     return (
-      <Container>
-        <Statistics />
+      <>
         {this.renderArmy(Side.Attacker, this.props.units_a, this.props.types_a)}
         {this.renderArmy(Side.Defender, this.props.units_d, this.props.types_d)}
-      </Container >
+      </ >
     )
   }
 
@@ -122,12 +117,10 @@ const mapStateToProps = (state: AppState) => ({
   units_d: getCurrentUnits(state, Side.Defender),
   types_a: filterUnitTypesBySide(state, Side.Attacker),
   types_d: filterUnitTypesBySide(state, Side.Defender),
-  outdated: getBattle(state).outdated,
   mode: state.settings.mode
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  refreshBattle: (mode: Mode) => dispatch(refreshBattle(mode))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

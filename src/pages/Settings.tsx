@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Container, Grid, Input, Table } from 'semantic-ui-react'
+import { Grid, Input, Table } from 'semantic-ui-react'
 
 import { changeCombatParameter, changeSimulationParameter, CombatParameter, parameterToDescription, SimulationParameter } from '../store/settings'
 import { invalidate } from '../store/battle'
@@ -18,12 +18,10 @@ class Settings extends Component<IProps> {
   render() {
     const { combatSettings, simulationSettings } = this.props
     return (
-      <Container>
-        <Grid padded celled>
-          {this.renderRow(combatSettings, this.onCombatChange)}
-          {this.renderRow(simulationSettings, this.onSimulationChange)}
-        </Grid>
-      </Container>
+      <Grid padded celled>
+        {this.renderRow(combatSettings, this.onCombatChange)}
+        {this.renderRow(simulationSettings, this.onSimulationChange)}
+      </Grid>
     )
   }
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Modal, Button } from 'semantic-ui-react'
+import { Modal, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import ModalUnitDetail from '../containers/ModalUnitDetail'
 import ModalGlobalStatsDetail from '../containers/ModalGlobalStatsDetail'
@@ -28,9 +28,9 @@ class Units extends Component<IProps, IState> {
 
   initialState = { modal_country: null, modal_unit: null, open_create_unit: false }
 
-  render(): JSX.Element {
+  render() {
     return (
-      <Container>
+      <>
         <ValueModal
           open={this.state.open_create_unit}
           onSuccess={type => this.props.addUnit(this.props.country, this.props.mode, type)}
@@ -82,7 +82,7 @@ class Units extends Component<IProps, IState> {
         <br />
         <br />
         <br />
-      </Container>
+      </>
     )
   }
 

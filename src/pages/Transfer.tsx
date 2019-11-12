@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { saveAs } from 'file-saver'
-import { Container, Grid, TextArea, Checkbox, List, Header, Button, Input } from 'semantic-ui-react'
+import { Grid, TextArea, Checkbox, List, Header, Button, Input } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { importState, ExportKey, setResetMissing, setExportKey } from '../store/transfer'
@@ -33,58 +33,56 @@ class Transfer extends Component<IProps, IState> {
       this.setState({ data: json })
     }
     return (
-      <Container>
-        <Grid>
-          <Grid.Row columns='2'>
-            <Grid.Column>
-              <Header>Export</Header>
-              <List>
-                <List.Item>
-                  1. Select which parts to export (resets any manual changes)
+      <Grid>
+        <Grid.Row columns='2'>
+          <Grid.Column>
+            <Header>Export</Header>
+            <List>
+              <List.Item>
+                1. Select which parts to export (resets any manual changes)
                 </List.Item>
-                {this.attributes.map(value => this.renderCheckbox(value))}
-                <List.Item>
-                  2a. <Button primary onClick={() => this.saveContent(this.state.data)}>Export to file</Button>
+              {this.attributes.map(value => this.renderCheckbox(value))}
+              <List.Item>
+                2a. <Button primary onClick={() => this.saveContent(this.state.data)}>Export to file</Button>
+              </List.Item>
+              <List.Item>
+                2b. Copy paste the data from the text box
                 </List.Item>
-                <List.Item>
-                  2b. Copy paste the data from the text box
+            </List>
+            <Header>Import</Header>
+            <List>
+              <List.Item>
+                1a. <Input type='file' onChange={event => this.loadContent(event.target.files![0])} />
+              </List.Item>
+              <List.Item>
+                1b. Copy paste the data to the text box
                 </List.Item>
-              </List>
-              <Header>Import</Header>
-              <List>
-                <List.Item>
-                  1a. <Input type='file' onChange={event => this.loadContent(event.target.files![0])} />
+              <List.Item>
+                2. Select how to handle missing data
                 </List.Item>
-                <List.Item>
-                  1b. Copy paste the data to the text box
+              <List.Item>
+                <Checkbox
+                  toggle
+                  label='Reset missing data'
+                  checked={this.props.reset_missing}
+                  onChange={() => this.props.setResetMissing(!this.props.reset_missing)}
+                />
+              </List.Item>
+              <List.Item>
+                3. Push the button
                 </List.Item>
-                <List.Item>
-                  2. Select how to handle missing data
-                </List.Item>
-                <List.Item>
-                  <Checkbox
-                    toggle
-                    label='Reset missing data'
-                    checked={this.props.reset_missing}
-                    onChange={() => this.props.setResetMissing(!this.props.reset_missing)}
-                  />
-                </List.Item>
-                <List.Item>
-                  3. Push the button
-                </List.Item>
-                <List.Item>
-                  <Button primary onClick={() => this.props.importState(this.state.data, this.props.reset_missing)}>Import</Button>
-                </List.Item>
-              </List>
-            </Grid.Column>
-            <Grid.Column >
-              <TextArea value={this.state.data} rows='30' style={{ width: '100%' }}
-                onChange={(_, data) => this.setState({ data: String(data.value) })}
-              />
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Container>
+              <List.Item>
+                <Button primary onClick={() => this.props.importState(this.state.data, this.props.reset_missing)}>Import</Button>
+              </List.Item>
+            </List>
+          </Grid.Column>
+          <Grid.Column >
+            <TextArea value={this.state.data} rows='30' style={{ width: '100%' }}
+              onChange={(_, data) => this.setState({ data: String(data.value) })}
+            />
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     )
   }
 
@@ -103,13 +101,13 @@ class Transfer extends Component<IProps, IState> {
 
   loadContent = (file: File) => {
     const blob = file as any
-    blob.text().then((data: string) => this.setState({data}))
+    blob.text().then((data: string) => this.setState({ data }))
   }
 
   pad = (value: number) => String(value).padStart(2, '0')
 
   saveContent = (data: string) => {
-    const blob = new Blob([data], {type: 'text/plain;charset=utf-8'})
+    const blob = new Blob([data], { type: 'text/plain;charset=utf-8' })
     const date = new Date()
     const formatted = date.getFullYear() + '-' + this.pad(date.getMonth()) + '-' + this.pad(date.getDate()) + '_' + this.pad(date.getHours()) + '-' + this.pad(date.getMinutes()) + '-' + this.pad(date.getSeconds())
     saveAs(blob, 'imperator-simulator_' + formatted + '.json');
@@ -162,7 +160,7 @@ const mapDispatchToProps = (dispatch: any) => ({
       json.tactics = json.tactics && restoreBaseTactics(json.tactics)
       json.terrains = json.terrains && restoreBaseTerrains(json.terrains)
       json.units = json.units && restoreBaseUnits(json.units)
-      json.battle  = json.battle && setIds(json.battle)
+      json.battle = json.battle && setIds(json.battle)
       if (reset_missing)
         resetMissing(json)
       keys(json).filter(key => !json[key]).forEach(key => delete json[key])

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { toggleMode } from '../store/settings'
-import { Container, Menu, Image, Button } from 'semantic-ui-react'
+import { Menu, Image, Button } from 'semantic-ui-react'
 import IconLand from '../images/land_combat.png'
 import IconNaval from '../images/naval_combat.png'
 import { DefinitionType } from '../base_definition'
@@ -12,11 +12,11 @@ import { DefinitionType } from '../base_definition'
  */
 class Navigation extends Component<IProps> {
 
-  render(): JSX.Element {
+  render() {
     const path = (this.props as any).location.pathname
     const history = (this.props as any).history
     return (
-      <Container id='navigation'>
+      <div id='navigation'>
         <Menu>
           <Menu.Item active={path === '/'} onClick={() => history.push('/')}>
             Battle
@@ -57,7 +57,7 @@ class Navigation extends Component<IProps> {
           </div>
         </Menu>
         <br />
-      </Container>
+      </div>
     )
   }
 }

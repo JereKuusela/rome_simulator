@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Button, Header, Segment } from 'semantic-ui-react'
+import { Button, Header, Segment } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { reset } from '../store/transfer'
@@ -27,7 +27,7 @@ class Error extends Component<IProps, IState> {
     if (process.env.NODE_ENV === 'development')
       return this.props.children
     return (
-      <Container>
+      <>
         <br/><br/>
         <Segment>
           <Header size='huge'>Something went wrong</Header>
@@ -35,7 +35,7 @@ class Error extends Component<IProps, IState> {
           <br/><br/>
           <p>If that doesn't help please clear the cache and then force refresh the site.</p>
         </Segment>
-      </Container>
+      </>
     )
   }
 

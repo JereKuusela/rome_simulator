@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Modal } from 'semantic-ui-react'
+import { Modal } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import ModalTacticDetail from '../containers/ModalTacticDetail'
 import { AppState } from '../store/index'
@@ -25,9 +25,9 @@ class Tactics extends Component<IProps, IState> {
 
   openModal = (tactic: TacticType): void => this.setState({ modal_tactic: tactic })
 
-  render(): JSX.Element {
+  render() {
     return (
-      <Container>
+      <>
         <Modal basic onClose={this.closeModal} open={this.state.modal_tactic !== null}>
           <Modal.Content>
             <ItemRemover
@@ -48,7 +48,7 @@ class Tactics extends Component<IProps, IState> {
           onRowClick={tactic => this.openModal(tactic)}
           onCreateNew={type => this.props.addTactic(type, this.props.mode)}
         />
-      </Container>
+      </>
     )
   }
 

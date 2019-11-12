@@ -28,7 +28,7 @@ export default class BaseChart extends Component<IProps> {
           />
         }
         theme={VictoryTheme.material}
-        domainPadding={10}
+        domainPadding={0}
         padding={{ top: 25, left: 50, bottom: 30, right: 50 }}
       >
         {

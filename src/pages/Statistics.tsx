@@ -70,7 +70,7 @@ class Statistics extends Component<IProps, IState> {
                 style={{ width: '120px' }}
                 onClick={() => calculating ? interrupt() : this.calculate()}
               >
-                {calculating || progress ? showProgress(this.toPercent(progress), updates, DOTS) : 'Analyze'}
+                {calculating || progress ? showProgress(toPercent(progress, 0), updates, DOTS) : 'Analyze'}
               </Button>
             </Grid.Column>
             <Grid.Column width='2' floated='right'>
