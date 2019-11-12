@@ -3,8 +3,8 @@ import { CombatParameter, SimulationParameter, CombatSettings, SimulationSetting
 export const getDefaultSimulationSettings = (): SimulationSettings => {
   return {
     [SimulationParameter.ChunkSize]: 10000,
-    [SimulationParameter.MaxDepth]: 4,
-    [SimulationParameter.PhaseLengthMultiplier]: 1.0
+    [SimulationParameter.MaxDepth]: 5,
+    [SimulationParameter.PhaseLengthMultiplier]: 2.0
   }
 }
 

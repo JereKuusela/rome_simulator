@@ -17,7 +17,6 @@ interface Props { }
 interface IState {
   attacker: number
   defender: number
-  draws: number
   calculating: boolean
   progress: number
   updates: number
@@ -26,14 +25,13 @@ interface IState {
 const DOTS = 6
 const ATTACKER_COLOR = 'color-attacker'
 const DEFENDER_COLOR = 'color-defender'
-const DRAW_COLOR = 'color-draw'
 /**
  * Calculates win rate for the current battle.
  */
 class WinRate extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
-    this.state = { attacker: 0, defender: 0, draws: 0, calculating: false, progress: 0, updates: 0 }
+    this.state = { attacker: 0, defender: 0, calculating: false, progress: 0, updates: 0 }
   }
 
   toPercent = (value: number) => toPercent(value, 0)
@@ -45,7 +43,7 @@ class WinRate extends Component<IProps, IState> {
   }
 
   render() {
-    const { attacker, defender, draws, calculating, progress, updates } = this.state
+    const { attacker, defender, calculating, progress, updates } = this.state
     return (
       <Grid>
         <Grid.Row verticalAlign='middle'>
@@ -60,15 +58,13 @@ class WinRate extends Component<IProps, IState> {
             </Button>
           </Grid.Column>
           <Grid.Column width='7'>
-            <Grid style={{ fontSize: '1.25em' }} columns='3'>
+            <Grid style={{ fontSize: '1.25em' }} columns='1' >
               <Grid.Row verticalAlign='middle'>
-                <Grid.Column>
+                <Grid.Column textAlign='center'>
+                  <b>Win rate</b>
+                  <br />
                   <StyledNumber value={this.scale(attacker)} positive_color={ATTACKER_COLOR} neutral_color={ATTACKER_COLOR} formatter={this.toPercent} />
-                </Grid.Column>
-                <Grid.Column>
-                  <StyledNumber value={this.scale(draws)} positive_color={DRAW_COLOR} neutral_color={DRAW_COLOR} formatter={this.toPercent} />
-                </Grid.Column>
-                <Grid.Column>
+                  {' / '}
                   <StyledNumber value={this.scale(defender)} positive_color={DEFENDER_COLOR} neutral_color={DEFENDER_COLOR} formatter={this.toPercent} />
                 </Grid.Column>
               </Grid.Row>
@@ -82,15 +78,15 @@ class WinRate extends Component<IProps, IState> {
   update = (update: WinRateProgress) => {
     if (this.willUnmount)
       return
-    const { attacker, defender, draws, incomplete, progress, calculating } = update
-    this.setState({ attacker, defender, draws: draws + incomplete, progress, calculating, updates: calculating ? (this.state.updates + 1) % DOTS : 0 })
+    const { attacker, defender, progress, calculating } = update
+    this.setState({ attacker, defender, progress, calculating, updates: calculating ? (this.state.updates + 1) % DOTS : 0 })
   }
 
   calculate = () => {
     const { units, attacker, defender, units_a, units_d, tactics, combatSettings: settings, terrains, simulationSettings, unit_types } = this.props
     calculateWinRate(simulationSettings, this.update, units, { ...attacker, ...units_a, tactic: tactics[attacker.tactic], country: attacker.name, general: attacker.general.total, roll: 0 }, { ...defender, ...units_d, tactic: tactics[defender.tactic], country: defender.name, general: defender.general.total, roll: 0 }, terrains, unit_types, settings)
   }
-  
+
   scale = (value: number) => this.state.progress ? value / this.state.progress : 0
 }
 
