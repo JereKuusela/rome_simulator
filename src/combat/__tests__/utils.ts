@@ -23,6 +23,8 @@ const terrains = getDefaultTerrains()
 export interface TestInfo {
   attacker: Participant
   defender: Participant
+  general_a: number
+  general_d: number
   army_a: Army
   army_d: Army
   terrains: TerrainDefinition[]
@@ -50,6 +52,8 @@ export const initInfo = () => ({
     row_types: getRowTypes()
   },
   round: 0,
+  general_a: 0,
+  general_d: 0,
   terrains: [],
   settings: getDefaultLandSettings()
 })
@@ -212,7 +216,7 @@ export const every_type = [UnitType.Archers, UnitType.CamelCavalry, UnitType.Cha
  * Performs one combat round with a given test info.
  */
 const doRound = (round: number, info: TestInfo) => {
-  const [a, d] = doBattle(definitions, { ...info.attacker, ...info.army_a, tactic: tactics[info.army_a.tactic], country: CountryName.Country1, general: 0 }, { ...info.defender, ...info.army_d, tactic: tactics[info.army_d.tactic], country: CountryName.Country2, general: 0 }, round + 1, info.terrains, info.settings)
+  const [a, d] = doBattle(definitions, { ...info.attacker, ...info.army_a, tactic: tactics[info.army_a.tactic], country: CountryName.Country1, general: info.general_a }, { ...info.defender, ...info.army_d, tactic: tactics[info.army_d.tactic], country: CountryName.Country2, general: info.general_d }, round + 1, info.terrains, info.settings)
   info.army_a = { ...info.army_a, ...a }
   info.army_d = { ...info.army_d, ...d }
 }
@@ -254,8 +258,8 @@ const testCombatSlow = (info: TestInfo, rolls: number[][], attacker: Expected[],
 
 const testCombatFast = (info: TestInfo, rolls: number[][], attacker: Expected[], defender: Expected[]) => {
   const dice = info.settings[CombatParameter.DiceMaximum] - info.settings[CombatParameter.DiceMinimum] + 1
-  const base_damages_a = getBaseDamages(info.settings, dice, calculateTotalRoll(0, info.terrains, 0, 0))
-  const base_damages_d = getBaseDamages(info.settings, dice, calculateTotalRoll(0, [], 0, 0))
+  const base_damages_a = getBaseDamages(info.settings, dice, calculateTotalRoll(0, info.terrains, info.general_a, info.general_d))
+  const base_damages_d = getBaseDamages(info.settings, dice, calculateTotalRoll(0, [], info.general_d, info.general_a))
   const tactic_casualties = calculateValue(tactics[info.army_a.tactic], TacticCalc.Casualties) + calculateValue(tactics[info.army_d.tactic], TacticCalc.Casualties)
   const status_a = convertUnits(info.army_a, info.settings, tactic_casualties, base_damages_a, info.terrains, every_type)
   const status_d = convertUnits(info.army_d, info.settings, tactic_casualties, base_damages_d, info.terrains, every_type)
@@ -312,10 +316,6 @@ const verifyFastSide = (round: number, side: Side, frontline: (CombatUnit | null
   expected.forEach((unit, index) => {
     if (unit) {
       const type = unit[0]
-      const asd = frontline[index]
-      if (asd) {
-        asd.info.type
-      }
       verifyType(round, side, index, frontline[index]?.info, type)
       if (unit[1] !== null && unit[2] !== null)
         verifyFast(round, side, index, frontline[index], unit[1], unit[2])

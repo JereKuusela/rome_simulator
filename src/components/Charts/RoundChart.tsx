@@ -47,7 +47,7 @@ export default class RoundChart extends Component<IProps, IState> {
   calculate = (values: { [key: string]: number }, progress: number): ChartData => {
     const data: ChartData = { values: [], cumulative: [] }
     data.values = sortBy(toArr(values, (count, value) => ({ x: Number(value), y: count / progress })), item => item.x)
-    let count = 1
+    let count = 0
     for (let value of data.values) {
       count += value.y
       data.cumulative.push({ x: value.x, y: count })

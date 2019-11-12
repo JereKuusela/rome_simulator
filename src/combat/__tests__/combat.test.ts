@@ -101,6 +101,42 @@ describe('1 vs 1', () => {
 
     testCombat(info, rolls, attacker, defender)
   })
+
+  it('general, no difference', () => {
+    const unit = addValues(archer, ValuesType.Base, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25]])
+    info.general_d = 1
+    setCenterUnits(info, unit, unit)
+    const rolls = [[0, 2]]
+    const { attacker, defender } = initSide(3)
+
+    attacker[0][15] = [unit.type, 976, 1.0920]
+    attacker[1][15] = [unit.type, 952, 0.9921]
+    attacker[2][15] = [unit.type, 929, 0.8993]
+
+    defender[0][15] = [unit.type, 984, 1.1280]
+    defender[1][15] = [unit.type, 968, 1.0640]
+    defender[2][15] = [unit.type, 953, 1.0073]
+    
+    testCombat(info, rolls, attacker, defender)
+  })
+  
+  it('general, difference', () => {
+    const unit = addValues(archer, ValuesType.Base, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25]])
+    info.general_d = 2
+    setCenterUnits(info, unit, unit)
+    const rolls = [[0, 1]]
+    const { attacker, defender } = initSide(3)
+
+    attacker[0][15] = [unit.type, 976, 1.0920]
+    attacker[1][15] = [unit.type, 952, 0.9921]
+    attacker[2][15] = [unit.type, 929, 0.8993]
+
+    defender[0][15] = [unit.type, 984, 1.1280]
+    defender[1][15] = [unit.type, 968, 1.0640]
+    defender[2][15] = [unit.type, 953, 1.0073]
+    
+    testCombat(info, rolls, attacker, defender)
+  })
 })
 
 export default null

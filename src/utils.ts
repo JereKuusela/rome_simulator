@@ -25,6 +25,8 @@ export const sumArr = (arr: any[], converter?: (value: any) => number): number =
  */
 export const sumObj = (object: { [key: string]: number}, converter?: (value: any) => number): number => Object.values(object).reduce((previous, current) => previous + (converter ? converter(current) : Number(current)), 0)
 
+export const showProgress = (text: string, updates: number, dots: number) => '\u00a0'.repeat(updates % dots) + text + '.'.repeat(updates % dots)
+
 /**
  * Simple round function.
  * @param number 

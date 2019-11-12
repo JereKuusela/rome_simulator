@@ -10,6 +10,7 @@ import { getArmyBySide, getCombatSettings, getSelectedTerrains, getUnits, mergeU
 
 import { toPercent } from '../formatters'
 import { calculateWinRate, WinRateProgress, interrupt } from '../combat/simulation'
+import { showProgress } from '../utils'
 
 interface Props { }
 
@@ -19,7 +20,10 @@ interface IState {
   draws: number
   calculating: boolean
   progress: number
+  updates: number
 }
+
+const DOTS = 6
 const ATTACKER_COLOR = 'color-attacker'
 const DEFENDER_COLOR = 'color-defender'
 const DRAW_COLOR = 'color-draw'
@@ -29,13 +33,19 @@ const DRAW_COLOR = 'color-draw'
 class WinRate extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
-    this.state = { attacker: 0, defender: 0, draws: 0, calculating: false, progress: 1 }
+    this.state = { attacker: 0, defender: 0, draws: 0, calculating: false, progress: 0, updates: 0 }
   }
 
   toPercent = (value: number) => toPercent(value, 0)
 
+  willUnmount = false
+  componentWillUnmount() {
+    this.willUnmount = true
+    interrupt()
+  }
+
   render() {
-    const { attacker, defender, draws, calculating, progress } = this.state
+    const { attacker, defender, draws, calculating, progress, updates } = this.state
     return (
       <Grid>
         <Grid.Row verticalAlign='middle'>
@@ -46,20 +56,20 @@ class WinRate extends Component<IProps, IState> {
               style={{ width: '120px' }}
               onClick={() => calculating ? interrupt() : this.calculate()}
             >
-              {calculating ? this.toPercent(progress) : 'Win rate'}
+              {calculating || progress ? showProgress(this.toPercent(progress), updates, DOTS) : 'Win rate'}
             </Button>
           </Grid.Column>
           <Grid.Column width='7'>
             <Grid style={{ fontSize: '1.25em' }} columns='3'>
               <Grid.Row verticalAlign='middle'>
                 <Grid.Column>
-                  <StyledNumber value={attacker / progress} positive_color={ATTACKER_COLOR} neutral_color={ATTACKER_COLOR} formatter={this.toPercent} />
+                  <StyledNumber value={this.scale(attacker)} positive_color={ATTACKER_COLOR} neutral_color={ATTACKER_COLOR} formatter={this.toPercent} />
                 </Grid.Column>
                 <Grid.Column>
-                  <StyledNumber value={draws / progress} positive_color={DRAW_COLOR} neutral_color={DRAW_COLOR} formatter={this.toPercent} />
+                  <StyledNumber value={this.scale(draws)} positive_color={DRAW_COLOR} neutral_color={DRAW_COLOR} formatter={this.toPercent} />
                 </Grid.Column>
                 <Grid.Column>
-                  <StyledNumber value={defender / progress} positive_color={DEFENDER_COLOR} neutral_color={DEFENDER_COLOR} formatter={this.toPercent} />
+                  <StyledNumber value={this.scale(defender)} positive_color={DEFENDER_COLOR} neutral_color={DEFENDER_COLOR} formatter={this.toPercent} />
                 </Grid.Column>
               </Grid.Row>
             </Grid>
@@ -70,14 +80,18 @@ class WinRate extends Component<IProps, IState> {
   }
 
   update = (update: WinRateProgress) => {
-    const { attacker, defender, draws, incomplete, progress } = update
-    this.setState({ attacker: attacker, defender: defender, draws: draws + incomplete, progress: progress, calculating: progress !== 1 })
+    if (this.willUnmount)
+      return
+    const { attacker, defender, draws, incomplete, progress, calculating } = update
+    this.setState({ attacker, defender, draws: draws + incomplete, progress, calculating, updates: calculating ? (this.state.updates + 1) % DOTS : 0 })
   }
 
   calculate = () => {
     const { units, attacker, defender, units_a, units_d, tactics, combatSettings: settings, terrains, simulationSettings, unit_types } = this.props
     calculateWinRate(simulationSettings, this.update, units, { ...attacker, ...units_a, tactic: tactics[attacker.tactic], country: attacker.name, general: attacker.general.total, roll: 0 }, { ...defender, ...units_d, tactic: tactics[defender.tactic], country: defender.name, general: defender.general.total, roll: 0 }, terrains, unit_types, settings)
   }
+  
+  scale = (value: number) => this.state.progress ? value / this.state.progress : 0
 }
 
 const mapStateToProps = (state: AppState) => ({

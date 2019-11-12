@@ -14,6 +14,7 @@ import { TacticCalc } from "../store/tactics"
  * Status of the win rate calculation. Most values are percents, only iterations is integer.
  */
 export interface WinRateProgress {
+  calculating: boolean
   attacker: number
   defender: number
   draws: number
@@ -21,8 +22,6 @@ export interface WinRateProgress {
   progress: number
   iterations: number
   average_rounds: number,
-  attacker_rounds: number
-  defender_rounds: number,
   rounds: { [key: number]: number }
 }
 
@@ -61,6 +60,7 @@ export const interrupt = () => interruptSimulation = true
  */
 export const calculateWinRate = (simulationSettings: SimulationSettings, progressCallback: (progress: WinRateProgress, casualties: CasualtiesProgress) => void, definitions: Units, attacker: Temp, defender: Temp, terrains: TerrainDefinition[], unit_types: UnitType[], combatSettings: CombatSettings) => {
   const progress: WinRateProgress = {
+    calculating: true,
     attacker: 0.0,
     defender: 0.0,
     draws: 0.0,
@@ -68,8 +68,6 @@ export const calculateWinRate = (simulationSettings: SimulationSettings, progres
     progress: 0.0,
     iterations: 0,
     average_rounds: 0,
-    attacker_rounds: 0,
-    defender_rounds: 0,
     rounds: {}
   }
   interruptSimulation = false
@@ -105,11 +103,11 @@ export const calculateWinRate = (simulationSettings: SimulationSettings, progres
     row_types: defender.row_types
   }
 
-  const total_a: State = { morale: 0, strength: 0}
-  const current_a: State = { morale: 0, strength: 0}
+  const total_a: State = { morale: 0, strength: 0 }
+  const current_a: State = { morale: 0, strength: 0 }
   sumState(total_a, status_a)
-  const total_d: State = { morale: 0, strength: 0}
-  const current_d: State = { morale: 0, strength: 0}
+  const total_d: State = { morale: 0, strength: 0 }
+  const current_d: State = { morale: 0, strength: 0 }
   sumState(total_d, status_d)
 
   const casualties: CasualtiesProgress = {
@@ -139,6 +137,8 @@ export const calculateWinRate = (simulationSettings: SimulationSettings, progres
 
   // Nodes also cache state of units, only store what is absolutely necessary.
   const nodes = [{ status_a, status_d, branch: 0, depth: 1 }]
+
+  progressCallback(progress, casualties)
 
   const work = () => {
     for (let i = 0; (i < chunkSize) && nodes.length && !interruptSimulation; i++) {
@@ -178,8 +178,12 @@ export const calculateWinRate = (simulationSettings: SimulationSettings, progres
       result.round += (depth - 1) * phaseLength
       updateProgress(progress, fractions[depth], result)
     }
-    if (!nodes.length)
+    if (!nodes.length) {
+      progress.calculating = false
       progress.progress = 1
+    }
+    if (interruptSimulation)
+      progress.calculating = false
     progressCallback(progress, casualties)
     if (nodes.length && !interruptSimulation)
       worker()
@@ -299,14 +303,10 @@ const sumState = (state: State, units: CombatUnits) => {
 const updateProgress = (progress: WinRateProgress, amount: number, result: { winner: Winner, round: number }) => {
   const { winner, round } = result
   progress.progress += amount
-  if (winner === Side.Attacker) {
+  if (winner === Side.Attacker)
     progress.attacker += amount
-    progress.attacker_rounds += amount * round
-  }
-  else if (winner === Side.Defender) {
+  else if (winner === Side.Defender)
     progress.defender += amount
-    progress.defender_rounds += amount * round
-  }
   else if (winner === null)
     progress.draws += amount
   else
@@ -328,8 +328,8 @@ const updateCasualties = (casualties: CasualtiesProgress, amount: number, total_
   const morale_d = (Math.max(0, current_d.morale)).toFixed(2)
   const strength_a = (Math.max(0, current_a.strength)).toFixed(2)
   const strength_d = (Math.max(0, current_d.strength)).toFixed(2)
-  casualties.morale_a[morale_a] =  (casualties.morale_a[morale_a] || 0) + amount
-  casualties.morale_d[morale_d] =  (casualties.morale_d[morale_d] || 0) + amount
-  casualties.strength_a[strength_a] =  (casualties.strength_a[strength_a] || 0) + amount
-  casualties.strength_d[strength_d] =  (casualties.strength_d[strength_d] || 0) + amount
+  casualties.morale_a[morale_a] = (casualties.morale_a[morale_a] || 0) + amount
+  casualties.morale_d[morale_d] = (casualties.morale_d[morale_d] || 0) + amount
+  casualties.strength_a[strength_a] = (casualties.strength_a[strength_a] || 0) + amount
+  casualties.strength_d[strength_d] = (casualties.strength_d[strength_d] || 0) + amount
 }
