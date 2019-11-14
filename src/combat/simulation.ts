@@ -58,7 +58,7 @@ export const interrupt = () => interruptSimulation = true
  * @param terrains Current terrains.
  * @param combatSettings Settings for combat.
  */
-export const calculateWinRate = (simulationSettings: SimulationSettings, progressCallback: (progress: WinRateProgress, casualties: CasualtiesProgress) => void, definitions: Units, attacker: Temp, defender: Temp, terrains: TerrainDefinition[], unit_types: UnitType[], combatSettings: CombatSettings) => {
+export const calculateWinRate = (doUpdateCasualties: boolean, simulationSettings: SimulationSettings, progressCallback: (progress: WinRateProgress, casualties: CasualtiesProgress) => void, definitions: Units, attacker: Temp, defender: Temp, terrains: TerrainDefinition[], unit_types: UnitType[], combatSettings: CombatSettings) => {
   const progress: WinRateProgress = {
     calculating: true,
     attacker: 0.0,
@@ -174,7 +174,8 @@ export const calculateWinRate = (simulationSettings: SimulationSettings, progres
       }
       sumState(current_a, participant_a.army)
       sumState(current_d, participant_d.army)
-      updateCasualties(casualties, fractions[depth], total_a, total_d, current_a, current_d)
+      if (doUpdateCasualties)
+        updateCasualties(casualties, fractions[depth], total_a, total_d, current_a, current_d)
       result.round += (depth - 1) * phaseLength
       updateProgress(progress, fractions[depth], result)
     }
