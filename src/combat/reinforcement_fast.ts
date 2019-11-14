@@ -1,4 +1,4 @@
-import { sortBy } from 'lodash'
+import { sortBy, remove } from 'lodash'
 
 import { UnitCalc } from '../store/units'
 import { RowType, RowTypes } from '../store/battle'
@@ -47,13 +47,13 @@ const reinforceUnits = (frontline: Frontline, reserve: Reserve, row_types: RowTy
             continue
         const main = orderedMainReserve.pop()
         if (main) {
-            reserve = reserve.filter(value => value !== main)
+            remove(reserve, value => value === main)
             frontline[index] = main
             continue
         }
         const flank = orderedFlankReserve.pop()
         if (flank) {
-            reserve = reserve.filter(value => value !== flank)
+            remove(reserve, value => value === flank)
             frontline[index] = flank
             continue
         }
