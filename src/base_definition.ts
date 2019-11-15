@@ -7,7 +7,8 @@ import { merge, has, size } from 'lodash'
 export enum ValuesType {
   Base = 'Base',
   Modifier = 'Modifier',
-  Loss = 'Loss'
+  Loss = 'Loss',
+  LossModifier = 'LossModifier'
 }
 
 export enum DefinitionType {
@@ -30,6 +31,7 @@ export interface BaseDefinition<T extends string, S extends string> {
   readonly base_values?: Values<S>
   readonly modifier_values?: Values<S>
   readonly loss_values?: Values<S>
+  readonly loss_modifier_values?: Values<S>
 }
 
 export interface BaseValuesDefinition<T extends string, S extends string> {
@@ -88,6 +90,8 @@ export const addValues = <D extends BVD>(definition: D, type: ValuesType, key: s
     return { ...definition, modifier_values: subAddValues(any.modifier_values, key, values) }
   if (type === ValuesType.Loss)
     return { ...definition, loss_values: subAddValues(any.loss_values, key, values) }
+  if (type === ValuesType.LossModifier)
+    return { ...definition, loss_modifier_values: subAddValues(any.loss_modifier_values, key, values) }
   return definition
 }
 
@@ -165,7 +169,7 @@ const PRECISION = 100000.0
 export const calculateValue = <D extends BVD, A extends string>(definition: D | undefined, attribute: A): number => {
   if (!definition)
     return 0.0
-  let value = calculateBase(definition, attribute) * calculateModifier(definition, attribute) - calculateLoss(definition, attribute)
+  let value = calculateBase(definition, attribute) * calculateModifier(definition, attribute) * (1 - calculateLossModifier(definition, attribute)) - calculateLoss(definition, attribute)
   return round(value, PRECISION)
 }
 
@@ -203,6 +207,13 @@ export const calculateModifier = <D extends BD, A extends string>(definition: D,
 export const calculateLoss = <D extends BD, A extends string>(definition: D, attribute: A): number => calculateValueSub(definition.loss_values, attribute, 0)
 
 /**
+ * Calculates the loss modifier value of an attribute.
+ * @param definition 
+ * @param attribute 
+ */
+export const calculateLossModifier = <D extends BD, A extends string>(definition: D, attribute: A): number => calculateValueSub(definition.loss_modifier_values, attribute, 0)
+
+/**
  * Shared implementation for calculating the value of an attribute.
  * @param container 
  * @param attribute 
@@ -219,38 +230,13 @@ const calculateValueSub = <A extends string>(container: Values<A> | undefined, a
 }
 
 /**
- * Returns a base value of a given attribute with a given identifier.
- * @param definition 
- * @param attribute 
- * @param key 
- */
-export const getBaseValue = <D extends BVD, A extends string>(definition: D, attribute: A, key: string): number => getValue(definition.base_values, attribute, key)
-
-/**
- * Returns a modifier of a given attribute with a given identifier.
- * @param definition 
- * @param attribute 
- * @param key 
- */
-export const getModifierValue = <D extends BD, A extends string>(definition: D, attribute: A, key: string): number => getValue(definition.modifier_values, attribute, key)
-
-/**
- * Returns a loss of a given attribute with a given identifier.
- * @param definition 
- * @param attribute 
- * @param key 
- */
-export const getLossValue = <D extends BD, A extends string>(definition: D, attribute: A, key: string): number => getValue(definition.loss_values, attribute, key)
-
-/**
  * Shared implementation to get values. Zero is returned for missing values because values with zero are not stored.
  * @param container 
  * @param attribute 
  * @param key 
  */
-const getValue = <A extends string>(container: Values<A> | undefined, attribute: A, key: string): number => {
-  if (!container)
-    return 0.0
+export const getValue = <D extends BD, A extends string>(type: ValuesType, definition: D, attribute: A, key: string): number => {
+  const container = getContainer(type, definition)
   const values = container[attribute]
   if (!values)
     return 0.0
@@ -258,6 +244,16 @@ const getValue = <A extends string>(container: Values<A> | undefined, attribute:
   if (!value)
     return 0.0
   return value
+}
+
+const getContainer = <D extends BD, A extends string>(type: ValuesType, definition: D): Values<A> => {
+  if (type === ValuesType.Modifier)
+    return definition.modifier_values ?? {}
+  if (type === ValuesType.Loss)
+    return definition.loss_values ?? {}
+  if (type === ValuesType.LossModifier)
+    return definition.loss_modifier_values ?? {}
+  return definition.base_values ?? {}
 }
 
 /**
@@ -313,13 +309,13 @@ export const explain = <D extends BD, A extends string>(definition: D, attribute
     forEach(value_modifier, (value, key) => explanation += key.replace(/_/g, ' ') + ': ' + toPercent(value) + ', ')
     explanation = explanation.substring(0, explanation.length - 2) + ')'
   }
-  let loss = 0
-  if (value_loss)
-    forEach(value_loss, value => loss += value)
+  const value = calculateValue(definition, attribute)
+  const base_value = calculateValueWithoutLoss(definition, attribute)
+  const loss = base_value - value
   if (value_loss && size(value_loss) > 0) {
     explanation += ' reduced by losses ' + +(loss).toFixed(2)
     explanation += ' ('
-    forEach(value_loss, (value, key) => explanation += key.replace(/_/g, ' ') + ': ' + value + ', ')
+    forEach(value, (value, key) => explanation += key.replace(/_/g, ' ') + ': ' + value + ', ')
     explanation = explanation.substring(0, explanation.length - 2) + ')'
   }
   return explanation

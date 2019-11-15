@@ -12,7 +12,7 @@ import Headers from './Utils/Headers'
 import { UnitType, Unit, UnitCalc, ValueType, valueToString } from '../store/units'
 import { TerrainType } from '../store/terrains'
 
-import { getBaseValue, getLossValue, getModifierValue, explain, DefinitionType, calculateValue } from '../base_definition'
+import { explain, DefinitionType, calculateValue, getValue, ValuesType } from '../base_definition'
 import { toMaintenance } from '../formatters'
 import { values } from '../utils'
 
@@ -78,9 +78,9 @@ export default class UnitDetail extends Component<IProps> {
       return null
     if (!show_statistics && (attribute === UnitCalc.StrengthDepleted || attribute === UnitCalc.MoraleDepleted))
       return null
-    const base_value = getBaseValue(unit, attribute, custom_value_key)
-    const modifier_value = getModifierValue(unit, attribute, custom_value_key)
-    const loss_value = getLossValue(unit, attribute, custom_value_key)
+    const base_value = getValue(ValuesType.Base, unit, attribute, custom_value_key)
+    const modifier_value = getValue(ValuesType.Modifier, unit, attribute, custom_value_key)
+    const loss_value = getValue(ValuesType.LossModifier, unit, attribute, custom_value_key)
     let value = valueToString(unit, attribute)
     if (attribute === UnitCalc.Maintenance)
       value += ' (' + toMaintenance(calculateValue(unit, UnitCalc.Cost) * calculateValue(unit, UnitCalc.Maintenance)) + ')'

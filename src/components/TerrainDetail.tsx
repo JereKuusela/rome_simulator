@@ -9,7 +9,7 @@ import Headers from './Utils/Headers'
 
 import { TerrainDefinition, ValueType, TerrainType, TerrainCalc, valueToString, LocationType } from '../store/terrains'
 
-import { getBaseValue, explainShort, DefinitionType } from '../base_definition'
+import { getValue, explainShort, DefinitionType, ValuesType } from '../base_definition'
 import { values } from '../utils'
 
 interface IProps {
@@ -51,7 +51,7 @@ export default class TerrainDetail extends Component<IProps> {
 
   renderRow = (tactic: TerrainDefinition, attribute: ValueType) => {
     const { custom_value_key, onCustomBaseValueChange } = this.props
-    const base_value = getBaseValue(tactic, attribute, custom_value_key)
+    const base_value = getValue(ValuesType.Base, tactic, attribute, custom_value_key)
 
     return (
       <PaddedRow key={attribute} cells={this.CELLS}>

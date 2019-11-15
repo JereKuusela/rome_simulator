@@ -10,7 +10,7 @@ import Images from './Utils/Images'
 import { UnitType, Units } from '../store/units'
 import { TacticDefinition, ValueType, TacticType, TacticCalc, TacticDefinitions } from '../store/tactics'
 
-import { getBaseValue, explainShort, getImage, DefinitionType, calculateValue, getImages } from '../base_definition'
+import { explainShort, getImage, DefinitionType, calculateValue, getImages, getValue, ValuesType } from '../base_definition'
 import { toSignedPercent, toPercent } from '../formatters'
 import { toArr, values } from '../utils'
 
@@ -63,7 +63,7 @@ export default class TacticDetail extends Component<IProps> {
 
   renderRow = (tactic: TacticDefinition, attribute: ValueType, relative: boolean, images: string[]) => {
     const { custom_value_key, onCustomBaseValueChange } = this.props
-    const base_value = getBaseValue(tactic, attribute, custom_value_key)
+    const base_value = getValue(ValuesType.Base, tactic, attribute, custom_value_key)
     const value = calculateValue(tactic, attribute)
 
     return (

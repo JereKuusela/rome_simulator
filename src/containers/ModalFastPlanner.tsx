@@ -137,7 +137,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
   }
 
   applyLosses = (values: UnitCalcValues, units: BaseReserve) => (
-    units.map(unit => addValues(unit, ValuesType.Loss, 'Custom', this.generateLosses(values)))
+    units.map(unit => addValues(unit, ValuesType.LossModifier, 'Unit', this.generateLosses(values)))
   )
 
   generateLosses = (values: UnitCalcValues): [string, number][] => toArr(values, (range, type ) => [type, round(randomWithinRange(range.min, range.max), 100)])
