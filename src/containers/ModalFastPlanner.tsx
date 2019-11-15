@@ -4,12 +4,15 @@ import { Modal, Button, Grid } from 'semantic-ui-react'
 import { AppState } from '../store/'
 import FastPlanner from '../components/FastPlanner'
 import ArmyCosts from '../components/ArmyCosts'
-import { UnitType, BaseUnit } from '../store/units'
+import { UnitType, BaseUnit, UnitCalc } from '../store/units'
 import { clearUnits, removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits, invalidate, Side, BaseReserve } from '../store/battle'
 import { getBaseUnits, filterUnitTypesBySide, getParticipant, getUnitDefinitions } from '../store/utils'
-import { mapRange, forEach } from '../utils'
+import { mapRange, forEach, round, randomWithinRange, toArr } from '../utils'
 import { getNextId, mergeBaseUnitsWithDefinitions } from '../army_utils'
 import { CountryName } from '../store/countries'
+import LossesRange, { LossRangeValues, UnitCalcValues } from '../components/LossesRange'
+import { clone } from 'lodash'
+import { addValues, ValuesType } from '../base_definition'
 
 type Units = { [key in UnitType]: number }
 
@@ -21,22 +24,27 @@ interface Props {
 interface IState {
   changes_a: Units
   changes_d: Units
+  losses: LossRangeValues
 }
 
 class ModalFastPlanner extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    this.state = { changes_a: {} as Units, changes_d: {} as Units }
+    const losses = {
+      [Side.Attacker]: { [UnitCalc.Morale]: { min: 0, max: 0 }, [UnitCalc.Strength]: { min: 0, max: 0 } },
+      [Side.Defender]: { [UnitCalc.Morale]: { min: 0, max: 0 }, [UnitCalc.Strength]: { min: 0, max: 0 } }
+    } as LossRangeValues
+    this.state = { changes_a: {} as Units, changes_d: {} as Units, losses }
   }
 
-  originals_a?= {} as Units
-  originals_d?= {} as Units
+  originals_a = {} as Units
+  originals_d = {} as Units
 
   render() {
     const { open, types_a, types_d, definitions_a, definitions_d, units } = this.props
     let { base_units_a, base_units_d } = this.props
-    const { changes_a, changes_d } = this.state
+    const { changes_a, changes_d, losses } = this.state
     if (!open)
       return null
     //// The logic is a bit tricky here.
@@ -73,6 +81,11 @@ class ModalFastPlanner extends Component<IProps, IState> {
             defeated_d={units_d.defeated}
             attached
           />
+          <LossesRange
+            values={losses}
+            onChange={this.editLosses}
+            attached
+          />
           <br />
           <Grid>
             <Grid.Row columns='2'>
@@ -91,6 +104,13 @@ class ModalFastPlanner extends Component<IProps, IState> {
         </Modal.Content>
       </Modal>
     )
+  }
+
+  editLosses = (side: Side, type: UnitCalc, min: number, max: number) => {
+    const losses = clone(this.state.losses)
+    losses[side][type].max = max
+    losses[side][type].min = min
+    this.setState({ losses })
   }
 
   editReserve = (reserve: BaseReserve, changes: Units, originals?: Units): BaseReserve => {
@@ -116,6 +136,12 @@ class ModalFastPlanner extends Component<IProps, IState> {
     return units
   }
 
+  applyLosses = (values: UnitCalcValues, units: BaseReserve) => (
+    units.map(unit => addValues(unit, ValuesType.Loss, 'Custom', this.generateLosses(values)))
+  )
+
+  generateLosses = (values: UnitCalcValues): [string, number][] => toArr(values, (range, type ) => [type, round(randomWithinRange(range.min, range.max), 100)])
+
   getTypesToRemove = (changes: Units, originals?: Units): UnitType[] => {
     let types: UnitType[] = []
     forEach(changes, (value, key) => {
@@ -126,9 +152,9 @@ class ModalFastPlanner extends Component<IProps, IState> {
     return types
   }
 
-  updateReserve = (name: CountryName, changes: Units, originals?: Units) => {
+  updateReserve = (name: CountryName, changes: Units, originals: Units, limits: UnitCalcValues) => {
     const { mode, addReserveUnits, removeReserveUnits, invalidate } = this.props
-    const units = this.getUnitsToAdd(changes, originals, true)
+    const units = this.applyLosses(limits, this.getUnitsToAdd(changes, originals, true))
     const types = this.getTypesToRemove(changes, originals)
     if (units.length > 0)
       addReserveUnits(mode, name, units)
@@ -139,8 +165,8 @@ class ModalFastPlanner extends Component<IProps, IState> {
   }
 
   onClose = (): void => {
-    this.updateReserve(this.props.attacker, this.state.changes_a, this.originals_a)
-    this.updateReserve(this.props.defender, this.state.changes_d, this.originals_d)
+    this.updateReserve(this.props.attacker, this.state.changes_a, this.originals_a, this.state.losses[Side.Attacker])
+    this.updateReserve(this.props.defender, this.state.changes_d, this.originals_d, this.state.losses[Side.Defender])
     this.setState({ changes_a: {} as Units, changes_d: {} as Units })
     this.props.onClose()
   }

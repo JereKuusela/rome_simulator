@@ -11,6 +11,8 @@ export const mapRange = <T>(length: number, func: (number: number) => T): T[] =>
   return array
 }
 
+export const randomWithinRange = (min: number, max: number) => min + Math.random() * (max - min)
+
 /**
  * Sums numbers in a list.
  * @param list
