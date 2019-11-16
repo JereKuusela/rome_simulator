@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table } from 'semantic-ui-react'
+import { Table, Header } from 'semantic-ui-react'
 import { Range, getTrackBackground } from 'react-range'
 
 import Headers from './Utils/Headers'
@@ -7,6 +7,7 @@ import Headers from './Utils/Headers'
 import { Side } from '../store/battle'
 import { UnitCalc } from '../store/units'
 import { toArr, keys, reduce } from '../utils'
+import { toPercent } from '../formatters'
 
 export type WearinessValues = { [key in Side]: UnitCalcValues }
 export type UnitCalcValues = { [key in UnitCalc]: MinMax }
@@ -17,7 +18,10 @@ interface IProps {
   onChange: (side: Side, type: UnitCalc, min: number, max: number) => void
   attached?: boolean
 }
-const COLORS = ['#0C2960', '#276EF1', '#9CBCF8', '#ccc'];
+
+const NEUTRAL = '#CCC'
+const ACTIVE = '#000'
+const BACK = '#FFF'
 
 /**
  * Allows setting min and max value for weariness (random losses).
@@ -51,6 +55,9 @@ export default class WearinessRange extends Component<IProps> {
             const range = ranges[type]
             return (
               <Table.Cell width='5'>
+                <Header textAlign='center' size='small' style={{margin: 0}}>
+                  {toPercent(range.min, 0)} - {toPercent(range.max, 0)}
+                </Header>
                 {this.renderRange(range.min, range.max, (min, max) => onChange(side, type, min, max))}
               </Table.Cell>
             )
@@ -63,7 +70,7 @@ export default class WearinessRange extends Component<IProps> {
   renderRange = (min: number, max: number, onChange: (min: number, max: number) => void) => (
     <Range
       values={[min, max]}
-      step={0.1}
+      step={0.05}
       min={0}
       max={1}
       onChange={values => onChange(values[0], values[1])}
@@ -75,7 +82,8 @@ export default class WearinessRange extends Component<IProps> {
             ...props.style,
             height: '36px',
             display: 'flex',
-            width: '100%'
+            paddingRight: '5%',
+            paddingLeft: '5%'
           }}
         >
           <div
@@ -86,7 +94,7 @@ export default class WearinessRange extends Component<IProps> {
               borderRadius: '4px',
               background: getTrackBackground({
                 values: [min, max],
-                colors: COLORS,
+                colors: [NEUTRAL, ACTIVE, NEUTRAL],
                 min: 0,
                 max: 1
               }),
@@ -97,15 +105,15 @@ export default class WearinessRange extends Component<IProps> {
           </div>
         </div>
       )}
-      renderThumb={({ props, isDragged, index }) => (
+      renderThumb={({ props, isDragged }) => (
         <div
           {...props}
           style={{
             ...props.style,
-            height: '42px',
-            width: '42px',
+            height: '30px',
+            width: '30px',
             borderRadius: '4px',
-            backgroundColor: '#FFF',
+            backgroundColor: BACK,
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -114,9 +122,9 @@ export default class WearinessRange extends Component<IProps> {
         >
           <div
             style={{
-              height: '16px',
+              height: '12px',
               width: '5px',
-              backgroundColor: isDragged ? COLORS[index] : '#CCC'
+              backgroundColor: isDragged ? ACTIVE : NEUTRAL
             }}
           />
         </div>
