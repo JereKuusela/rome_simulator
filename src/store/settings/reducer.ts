@@ -4,14 +4,21 @@ import { getDefaultLandSettings, getDefaultNavalSettings, getDefaultSimulationSe
 import { CountryName, createCountry, deleteCountry, changeCountryName } from '../countries'
 import { DefinitionType, Mode } from '../../base_definition'
 import { ObjSet, has } from '../../utils'
+import { Side } from '../battle'
+import { UnitCalc } from '../units'
+import { WearinessValues } from '../../components/WearinessRange'
 
 export const getDefaultSettings = () => ({
-  combat: {[DefinitionType.Land]: getDefaultLandSettings(), [DefinitionType.Naval]: getDefaultNavalSettings()},
+  combat: { [DefinitionType.Land]: getDefaultLandSettings(), [DefinitionType.Naval]: getDefaultNavalSettings() },
   simulation: getDefaultSimulationSettings(),
   simple_mode: true,
   mode: DefinitionType.Land as Mode,
   country: CountryName.Country1,
-  accordions: {} as ObjSet
+  accordions: {} as ObjSet,
+  weariness: {
+    [Side.Attacker]: { [UnitCalc.Morale]: { min: 0, max: 0 }, [UnitCalc.Strength]: { min: 0, max: 0 } },
+    [Side.Defender]: { [UnitCalc.Morale]: { min: 0, max: 0 }, [UnitCalc.Strength]: { min: 0, max: 0 } }
+  } as WearinessValues
 })
 
 const settings = getDefaultSettings()
@@ -58,6 +65,11 @@ class SettingsReducer extends ImmerReducer<typeof settings> {
     else
       this.draftState.accordions[key] = true
   }
+
+  changeWeariness(side: Side, type: UnitCalc, min: number, max: number) {
+    this.draftState.weariness[side][type].min = min
+    this.draftState.weariness[side][type].max = max
+  }
 }
 
 const actions = createActionCreators(SettingsReducer)
@@ -68,6 +80,7 @@ export const selectCountry = actions.selectCountry
 export const toggleAccordion = actions.toggleAccordion
 export const toggleMode = actions.toggleMode
 export const toggleSimpleMode = actions.toggleSimpleMode
+export const changeWeariness = actions.changeWeariness
 
 export const reducer = createReducerFunction(SettingsReducer, settings)
 

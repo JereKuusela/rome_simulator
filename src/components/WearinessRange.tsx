@@ -8,21 +8,21 @@ import { Side } from '../store/battle'
 import { UnitCalc } from '../store/units'
 import { toArr, keys, reduce } from '../utils'
 
-export type LossRangeValues = { [key in Side]: UnitCalcValues }
+export type WearinessValues = { [key in Side]: UnitCalcValues }
 export type UnitCalcValues = { [key in UnitCalc]: MinMax }
 type MinMax = { min: number, max: number }
 
 interface IProps {
-  values: LossRangeValues
+  values: WearinessValues
   onChange: (side: Side, type: UnitCalc, min: number, max: number) => void
   attached?: boolean
 }
 const COLORS = ['#0C2960', '#276EF1', '#9CBCF8', '#ccc'];
 
 /**
- * ASD
+ * Allows setting min and max value for weariness (random losses).
  */
-export default class LossesRange extends Component<IProps> {
+export default class WearinessRange extends Component<IProps> {
 
   readonly headers = ['Weariness', 'Attacker', 'Defender']
 
@@ -39,7 +39,7 @@ export default class LossesRange extends Component<IProps> {
     )
   }
 
-  renderRow = (type: UnitCalc, values: LossRangeValues) => {
+  renderRow = (type: UnitCalc, values: WearinessValues) => {
     const { onChange } = this.props
     return (
       <Table.Row key={type}>

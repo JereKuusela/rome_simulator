@@ -10,8 +10,8 @@ import { getBaseUnits, filterUnitTypesBySide, getParticipant, getUnitDefinitions
 import { mapRange, forEach, round, randomWithinRange, toArr } from '../utils'
 import { getNextId, mergeBaseUnitsWithDefinitions } from '../army_utils'
 import { CountryName } from '../store/countries'
-import LossesRange, { LossRangeValues, UnitCalcValues } from '../components/LossesRange'
-import { clone } from 'lodash'
+import { changeWeariness } from '../store/settings'
+import WearinessRange, { WearinessValues, UnitCalcValues } from '../components/WearinessRange'
 import { addValues, ValuesType } from '../base_definition'
 
 type Units = { [key in UnitType]: number }
@@ -24,18 +24,13 @@ interface Props {
 interface IState {
   changes_a: Units
   changes_d: Units
-  losses: LossRangeValues
 }
 
 class ModalFastPlanner extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    const losses = {
-      [Side.Attacker]: { [UnitCalc.Morale]: { min: 0, max: 0 }, [UnitCalc.Strength]: { min: 0, max: 0 } },
-      [Side.Defender]: { [UnitCalc.Morale]: { min: 0, max: 0 }, [UnitCalc.Strength]: { min: 0, max: 0 } }
-    } as LossRangeValues
-    this.state = { changes_a: {} as Units, changes_d: {} as Units, losses }
+    this.state = { changes_a: {} as Units, changes_d: {} as Units }
   }
 
   originals_a = {} as Units
@@ -43,8 +38,8 @@ class ModalFastPlanner extends Component<IProps, IState> {
 
   render() {
     const { open, types_a, types_d, definitions_a, definitions_d, units } = this.props
-    let { base_units_a, base_units_d } = this.props
-    const { changes_a, changes_d, losses } = this.state
+    let { base_units_a, base_units_d, weariness } = this.props
+    const { changes_a, changes_d } = this.state
     if (!open)
       return null
     //// The logic is a bit tricky here.
@@ -81,9 +76,9 @@ class ModalFastPlanner extends Component<IProps, IState> {
             defeated_d={units_d.defeated}
             attached
           />
-          <LossesRange
-            values={losses}
-            onChange={this.editLosses}
+          <WearinessRange
+            values={weariness}
+            onChange={this.props.changeWeariness}
             attached
           />
           <br />
@@ -104,13 +99,6 @@ class ModalFastPlanner extends Component<IProps, IState> {
         </Modal.Content>
       </Modal>
     )
-  }
-
-  editLosses = (side: Side, type: UnitCalc, min: number, max: number) => {
-    const losses = clone(this.state.losses)
-    losses[side][type].max = max
-    losses[side][type].min = min
-    this.setState({ losses })
   }
 
   editReserve = (reserve: BaseReserve, changes: Units, originals?: Units): BaseReserve => {
@@ -165,10 +153,11 @@ class ModalFastPlanner extends Component<IProps, IState> {
   }
 
   onClose = (): void => {
-    this.updateReserve(this.props.attacker, this.state.changes_a, this.originals_a, this.state.losses[Side.Attacker])
-    this.updateReserve(this.props.defender, this.state.changes_d, this.originals_d, this.state.losses[Side.Defender])
+    const { attacker, defender, weariness, onClose } = this.props
+    this.updateReserve(attacker, this.state.changes_a, this.originals_a, weariness[Side.Attacker])
+    this.updateReserve(defender, this.state.changes_d, this.originals_d, weariness[Side.Defender])
     this.setState({ changes_a: {} as Units, changes_d: {} as Units })
-    this.props.onClose()
+    onClose()
   }
 
   countUnits = (reserve: BaseUnit[], unit: UnitType): number => reserve.reduce((previous, current) => previous + (current && current.type === unit ? 1 : 0), 0)
@@ -191,10 +180,11 @@ const mapStateToProps = (state: AppState) => ({
   definitions_a: getUnitDefinitions(state, Side.Attacker),
   definitions_d: getUnitDefinitions(state, Side.Defender),
   units: state.units,
-  mode: state.settings.mode
+  mode: state.settings.mode,
+  weariness: state.settings.weariness
 })
 
-const actions = { addReserveUnits, removeReserveUnits, clearUnits, invalidate }
+const actions = { addReserveUnits, removeReserveUnits, clearUnits, invalidate, changeWeariness }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
