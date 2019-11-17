@@ -1,11 +1,6 @@
 
 Release 6:
 
-Fix 100% on winrate/stats before finished (round down).
-
-Optimize reinforce for fast.
-Create optimized deployment for fast.
-
 Get rid of slower combat formula.
 
 Tests (high priority):

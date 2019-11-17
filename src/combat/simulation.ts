@@ -1,14 +1,16 @@
-import { Units, Unit, UnitType, UnitCalc } from "../store/units"
+import { Unit, UnitType, UnitCalc } from "../store/units"
 import { TerrainDefinition } from "../store/terrains"
 import { CombatSettings, CombatParameter, SimulationSettings, SimulationParameter } from "../store/settings"
-import { Side, BaseUnits } from "../store/battle"
+import { Side, BaseUnits, RowTypes } from "../store/battle"
 
-import { doBattleFast, getCombatUnit, CombatParticipant, CombatUnits, Frontline, Reserve } from "./combat_fast"
-import { doBattle, calculateTotalRoll, ParticipantState as Temp } from "./combat"
+import { doBattleFast, getCombatUnit, CombatParticipant, CombatUnits, Frontline } from "./combat_fast"
+import { calculateTotalRoll, ParticipantState } from "./combat"
 
 import { mapRange } from "../utils"
 import { calculateValue } from "../base_definition"
 import { TacticCalc } from "../store/tactics"
+import { sortReserve, SortedReserve } from "./reinforcement_fast"
+import { deploy } from "./deployment"
 
 /**
  * Status of the win rate calculation. Most values are percents, only iterations is integer.
@@ -58,7 +60,7 @@ export const interrupt = () => interruptSimulation = true
  * @param terrains Current terrains.
  * @param combatSettings Settings for combat.
  */
-export const calculateWinRate = (doUpdateCasualties: boolean, simulationSettings: SimulationSettings, progressCallback: (progress: WinRateProgress, casualties: CasualtiesProgress) => void, definitions: Units, attacker: Temp, defender: Temp, terrains: TerrainDefinition[], unit_types: UnitType[], combatSettings: CombatSettings) => {
+export const calculateWinRate = (doUpdateCasualties: boolean, simulationSettings: SimulationSettings, progressCallback: (progress: WinRateProgress, casualties: CasualtiesProgress) => void, attacker: ParticipantState, defender: ParticipantState, terrains: TerrainDefinition[], unit_types: UnitType[], combatSettings: CombatSettings) => {
   const progress: WinRateProgress = {
     calculating: true,
     attacker: 0.0,
@@ -84,23 +86,21 @@ export const calculateWinRate = (doUpdateCasualties: boolean, simulationSettings
   const chunkSize = simulationSettings[SimulationParameter.ChunkSize]
   const maxDepth = simulationSettings[SimulationParameter.MaxDepth]
 
-  // Deployment is shared for each iteration.
-  const [a, d] = doBattle(definitions, attacker, defender, 0, terrains, combatSettings)
+  const status_a = convertUnits(attacker, combatSettings, tactic_casualties, base_damages_a, terrains, unit_types, attacker.row_types)
+  const status_d = convertUnits(defender, combatSettings, tactic_casualties, base_damages_d, terrains, unit_types, defender.row_types)
 
-  const status_a = convertUnits(a, combatSettings, tactic_casualties, base_damages_a, terrains, unit_types)
-  const status_d = convertUnits(d, combatSettings, tactic_casualties, base_damages_d, terrains, unit_types)
+  // Deployment is shared for each iteration.
+  deploy(status_a, status_d, attacker.flank_size, defender.flank_size, combatSettings)
 
   const participant_a: CombatParticipant = {
     army: status_a,
     roll: 0,
-    tactic: attacker.tactic!,
-    row_types: attacker.row_types
+    tactic: attacker.tactic!
   }
   const participant_d: CombatParticipant = {
     army: status_d,
     roll: 0,
-    tactic: defender.tactic!,
-    row_types: defender.row_types
+    tactic: defender.tactic!
   }
 
   const total_a: State = { morale: 0, strength: 0 }
@@ -124,6 +124,7 @@ export const calculateWinRate = (doUpdateCasualties: boolean, simulationSettings
     strength_a: {},
     strength_d: {}
   }
+
 
   // Overview of the algorithm:
   // Initial state is the first node.
@@ -194,11 +195,17 @@ export const calculateWinRate = (doUpdateCasualties: boolean, simulationSettings
   worker()
 }
 
-export const convertUnits = (units: BaseUnits, combatSettings: CombatSettings, casualties_multiplier: number, base_damages: number[], terrains: TerrainDefinition[], unit_types: UnitType[]) => ({
-  frontline: units.frontline.map(unit => getCombatUnit(combatSettings, casualties_multiplier, base_damages, terrains, unit_types, unit as Unit)),
-  reserve: units.reserve.map(unit => getCombatUnit(combatSettings, casualties_multiplier, base_damages, terrains, unit_types, unit as Unit)!),
-  defeated: units.defeated.map(unit => getCombatUnit(combatSettings, casualties_multiplier, base_damages, terrains, unit_types, unit as Unit)!)
-})
+export const convertUnits = (units: BaseUnits, combatSettings: CombatSettings, casualties_multiplier: number, base_damages: number[], terrains: TerrainDefinition[], unit_types: UnitType[], row_types: RowTypes) => {
+  const reserve = units.reserve.map(unit => getCombatUnit(combatSettings, casualties_multiplier, base_damages, terrains, unit_types, unit as Unit)!)
+  const sorted = sortReserve(reserve, row_types)
+
+  return {
+    frontline: units.frontline.map(unit => getCombatUnit(combatSettings, casualties_multiplier, base_damages, terrains, unit_types, unit as Unit)),
+    reserve: sorted,
+    defeated: units.defeated.map(unit => getCombatUnit(combatSettings, casualties_multiplier, base_damages, terrains, unit_types, unit as Unit)!)
+  }
+}
+
 
 /**
  * Precalculates base damage values for each roll.
@@ -225,7 +232,7 @@ const getRolls = (minimum: number, maximum: number) => {
  */
 const copyStatus = (status: CombatUnits): CombatUnits => ({
   frontline: status.frontline.map(value => value ? { ...value } : null),
-  reserve: status.reserve.map(value => ({ ...value })),
+  reserve: { main: status.reserve.main.map(value => ({ ...value })), flank: status.reserve.flank.map(value => ({ ...value })) },
   defeated: status.defeated.map(value => ({ ...value }))
 })
 
@@ -258,8 +265,8 @@ const doPhase = (rounds_per_phase: number, attacker: CombatParticipant, defender
 /**
  * Custom some function. Probably could use Lodash but better safe than sorry (since performance is so critical).
  */
-const checkAlive = (frontline: Frontline, reserve: Reserve) => {
-  if (reserve.length)
+const checkAlive = (frontline: Frontline, reserve: SortedReserve) => {
+  if (reserve.main.length || reserve.flank.length)
     return true
   for (let i = 0; i < frontline.length; i++) {
     if (frontline[i])
@@ -286,8 +293,13 @@ const sumState = (state: State, units: CombatUnits) => {
     state.strength += unit[UnitCalc.Strength]
     state.morale += unit[UnitCalc.Morale]
   }
-  for (let i = 0; i < units.reserve.length; i++) {
-    const unit = units.reserve[i]
+  for (let i = 0; i < units.reserve.main.length; i++) {
+    const unit = units.reserve.main[i]
+    state.strength += unit[UnitCalc.Strength]
+    state.morale += unit[UnitCalc.Morale]
+  }
+  for (let i = 0; i < units.reserve.flank.length; i++) {
+    const unit = units.reserve.flank[i]
     state.strength += unit[UnitCalc.Strength]
     state.morale += unit[UnitCalc.Morale]
   }

@@ -83,15 +83,14 @@ class WinRate extends Component<IProps, IState> {
   }
 
   calculate = () => {
-    const { units, attacker, defender, units_a, units_d, tactics, combatSettings: settings, terrains, simulationSettings, unit_types } = this.props
-    calculateWinRate(false, simulationSettings, this.update, units, { ...attacker, ...units_a, tactic: tactics[attacker.tactic], country: attacker.name, general: attacker.general.total, roll: 0 }, { ...defender, ...units_d, tactic: tactics[defender.tactic], country: defender.name, general: defender.general.total, roll: 0 }, terrains, unit_types, settings)
+    const { attacker, defender, units_a, units_d, tactics, combatSettings: settings, terrains, simulationSettings, unit_types } = this.props
+    calculateWinRate(false, simulationSettings, this.update, { ...attacker, ...units_a, tactic: tactics[attacker.tactic], country: attacker.name, general: attacker.general.total, roll: 0 }, { ...defender, ...units_d, tactic: tactics[defender.tactic], country: defender.name, general: defender.general.total, roll: 0 }, terrains, unit_types, settings)
   }
 
   scale = (value: number) => this.state.progress ? value / this.state.progress : 0
 }
 
 const mapStateToProps = (state: AppState) => ({
-  units: state.units,
   tactics: state.tactics,
   attacker: getArmyBySide(state, Side.Attacker),
   defender: getArmyBySide(state, Side.Defender),
