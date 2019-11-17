@@ -8,7 +8,7 @@ import CombatTooltip from '../containers/CombatTooltip'
 
 import IconDefeated from '../images/attrition.png'
 
-export type IUnit = {
+export type UnitArmyUnit = {
   id: number
   is_defeated: boolean
   image?: string
@@ -16,11 +16,11 @@ export type IUnit = {
   max_strength: number
   morale: number
   strength: number
-}
+} | null
 
 type IProps = {
   side: Side
-  units: (IUnit | null)[]
+  units: UnitArmyUnit[]
   row_width: number
   reverse: boolean
   onClick?: (index: number, id: number | undefined) => void
@@ -87,10 +87,10 @@ export default class UnitArmy extends Component<IProps, IState> {
     )
   }
 
-  renderCell = (row: number, index: number, column: number, unit: IUnit | null) => {
+  renderCell = (row: number, index: number, column: number, unit: UnitArmyUnit) => {
     return (
       <Table.Cell
-        className={this.props.side + '-' + this.props.type + '-' + column}
+        className={this.props.side + '-' + this.props.type + '-' + unit?.id}
         textAlign='center'
         key={index}
         disabled={column < 0 || (this.props.disable_add && !unit)}
@@ -106,7 +106,7 @@ export default class UnitArmy extends Component<IProps, IState> {
     )
   }
 
-  renderUnit = (unit: IUnit | null) => {
+  renderUnit = (unit: UnitArmyUnit) => {
     if (!unit)
       return this.renderImage(getImage(null))
     if (unit.is_defeated)

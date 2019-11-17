@@ -3,8 +3,8 @@ import { Header, Button, Grid, Image, Checkbox, Input, Table, Divider } from 'se
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { BaseUnit, UnitDefinitions, UnitCalc } from '../store/units'
-import UnitArmy, { IUnit } from '../components/UnitArmy'
-import TargetArrows from '../components/TargetArrows'
+import UnitArmy, { UnitArmyUnit } from '../components/UnitArmy'
+import TargetArrows, { TargetArrowsUnit } from '../components/TargetArrows'
 import { invalidate, invalidateCountry, ArmyType, undo, Participant, Side, toggleRandomRoll, setRoll, RowType, setFlankSize, selectArmy, selectUnit, RowTypes, BaseFrontLine, BaseReserve, BaseDefeated } from '../store/battle'
 import { battle, setSeed, refreshBattle } from '../store/combat'
 import { calculateTactic, calculateRollModifierFromTerrains, calculateRollModifierFromGenerals, calculateBaseDamage, calculateTotalRoll } from '../combat/combat'
@@ -139,8 +139,8 @@ class Battle extends Component<IProps, IState> {
             <Grid.Column>
               <TargetArrows
                 visible={!this.props.fight_over}
-                attacker={army_a.frontline}
-                defender={army_d.frontline}
+                attacker={army_a.frontline.map(unit => this.convertUnitForTargetArrows(unit, army_d.frontline))}
+                defender={army_d.frontline.map(unit => this.convertUnitForTargetArrows(unit, army_a.frontline))}
                 attacker_color={ATTACKER_COLOR}
                 defender_color={DEFENDER_COLOR}
               />
@@ -288,7 +288,7 @@ class Battle extends Component<IProps, IState> {
     return String(round)
   }
 
-  convertUnitForRender = (unit: BaseUnit | null): IUnit | null => {
+  convertUnitForRender = (unit: BaseUnit | null): UnitArmyUnit => {
     return unit && {
       id: unit.id,
       is_defeated: !!unit.is_defeated,
@@ -297,6 +297,13 @@ class Battle extends Component<IProps, IState> {
       max_morale: calculateValueWithoutLoss(unit, UnitCalc.Morale),
       strength: calculateValue(unit, UnitCalc.Strength),
       max_strength: calculateValueWithoutLoss(unit, UnitCalc.Strength)
+    }
+  }
+
+  convertUnitForTargetArrows = (unit: BaseUnit | null, targets: BaseFrontLine): TargetArrowsUnit => {
+    return unit && {
+      id: unit.id,
+      target: unit.target ? targets[unit.target]!.id : null
     }
   }
 

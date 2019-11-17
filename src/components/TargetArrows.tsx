@@ -1,12 +1,17 @@
 import React, { Component } from 'react'
 import LineTo from 'react-lineto'
 
-import { Side, ArmyType, BaseFrontLine } from '../store/battle'
+import { Side, ArmyType } from '../store/battle'
 
-interface IProps {
+export type TargetArrowsUnit = {
+  id: number
+  target: number | null
+} | null
+
+type IProps = {
   visible: boolean
-  attacker: BaseFrontLine
-  defender: BaseFrontLine
+  attacker: TargetArrowsUnit[]
+  defender: TargetArrowsUnit []
   attacker_color: string
   defender_color: string
 }
@@ -22,30 +27,24 @@ export default class TargetArrows extends Component<IProps> {
       return null
     return (
       <>
-        {
-          this.getTargets(attacker).map(([from, to]) => this.renderAttacker(from, to, attacker_color))
-        }
-        {
-          this.getTargets(defender).map(([from, to]) => this.renderDefender(from, to, defender_color))
-        }
+        {attacker.map(unit => this.renderAttacker(unit, attacker_color))}
+        {defender.map(unit => this.renderDefender(unit, defender_color))}
       </>
     )
   }
-
-  getTargets = (front: BaseFrontLine) => {
-    const targets = front.map((unit, index) => unit && unit.target !== null && [index, unit.target!])
-    return targets.filter(data => data) as [number, number][]
-  }
-
-  renderAttacker = (from: number, to: number, color: string) => {
-    const from_str = Side.Attacker + '-' + ArmyType.Frontline + '-' + from
-    const to_str = Side.Defender + '-' + ArmyType.Frontline + '-' + to
+  renderAttacker = (unit: TargetArrowsUnit, color: string) => {
+    if (!unit || !unit.target)
+      return null
+    const from_str = Side.Attacker + '-' + ArmyType.Frontline + '-' + unit.id
+    const to_str = Side.Defender + '-' + ArmyType.Frontline + '-' + unit.target
     return this.renderArrow(from_str, to_str, 'bottom', 'top', color)
   }
 
-  renderDefender = (from: number, to: number, color: string) => {
-    const from_str = Side.Defender + '-' + ArmyType.Frontline + '-' + from
-    const to_str = Side.Attacker + '-' + ArmyType.Frontline + '-' + to
+  renderDefender = (unit: TargetArrowsUnit, color: string) => {
+    if (!unit || !unit.target)
+      return null
+    const from_str = Side.Defender + '-' + ArmyType.Frontline + '-' + unit.id
+    const to_str = Side.Attacker + '-' + ArmyType.Frontline + '-' + unit.target
     return this.renderArrow(from_str, to_str, 'top', 'bottom', color)
   }
 
