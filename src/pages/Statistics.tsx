@@ -6,7 +6,7 @@ import { AppState } from '../store/'
 import { Side } from '../store/battle'
 import { getArmyBySide, getCombatSettings, getSelectedTerrains, getUnits, mergeUnitTypes } from '../store/utils'
 
-import { toPercent, toNumber } from '../formatters'
+import { toPercent, toNumber, toFlooredPercent } from '../formatters'
 import { calculateWinRate, WinRateProgress, interrupt, CasualtiesProgress } from '../combat/simulation'
 import RoundChart from '../components/Charts/RoundChart'
 import CumulativePercentChart from '../components/Charts/CumulativePercentChart'
@@ -70,7 +70,7 @@ class Statistics extends Component<IProps, IState> {
                 style={{ width: '120px' }}
                 onClick={() => calculating ? interrupt() : this.calculate()}
               >
-                {calculating || progress ? showProgress(toPercent(progress, 0), updates, DOTS) : 'Analyze'}
+                {calculating || progress ? showProgress(toFlooredPercent(progress, 0), updates, DOTS) : 'Analyze'}
               </Button>
             </Grid.Column>
             <Grid.Column width='2' floated='right'>

@@ -8,7 +8,7 @@ import { AppState } from '../store/'
 import { Side } from '../store/battle'
 import { getArmyBySide, getCombatSettings, getSelectedTerrains, getUnits, mergeUnitTypes } from '../store/utils'
 
-import { toPercent } from '../formatters'
+import { toPercent, toFlooredPercent } from '../formatters'
 import { calculateWinRate, WinRateProgress, interrupt } from '../combat/simulation'
 import { showProgress } from '../utils'
 
@@ -54,7 +54,7 @@ class WinRate extends Component<IProps, IState> {
               style={{ width: '120px' }}
               onClick={() => calculating ? interrupt() : this.calculate()}
             >
-              {calculating || progress ? showProgress(this.toPercent(progress), updates, DOTS) : 'Win rate'}
+              {calculating || progress ? showProgress(toFlooredPercent(progress, 0), updates, DOTS) : 'Win rate'}
             </Button>
           </Grid.Column>
           <Grid.Column width='7'>

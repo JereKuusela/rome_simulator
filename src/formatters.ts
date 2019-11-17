@@ -1,3 +1,5 @@
+import { mapRange } from "./utils"
+
 /**
  * This file contains functions to format numbers to strings.
  */
@@ -37,6 +39,12 @@ export const toPercent = (number?: number, fixed: number = 2): string => {
   if (number === undefined)
     return ''
   return toNumber(100 * number, fixed) + '%'
+}
+const multipliers = mapRange(10, value => Math.pow(10, value))
+export const toFlooredPercent = (number?: number, decimals: number = 2): string => {
+  if (number === undefined)
+    return ''
+  return Math.floor(multipliers[decimals + 2] * number) / multipliers[decimals] + '%'
 } 
 export const toSignedPercent = (number?: number): string => {
   if (number === undefined)
