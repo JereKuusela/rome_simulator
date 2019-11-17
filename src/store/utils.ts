@@ -1,13 +1,13 @@
 import { AppState } from "./index"
 import { objGet, sumObj, map, reduce, toArr, filter, arrGet } from '../utils'
 import { filterUnitDefinitions, isIncludedInMode, mergeUnits } from '../army_utils'
-import { TacticType } from "./tactics/actions"
+import { TacticType, TacticDefinition } from "./tactics/actions"
 import { mergeValues, DefinitionType } from "../base_definition"
 import { TerrainType, TerrainDefinition } from "./terrains/actions"
 import { UnitType, UnitDefinition, BaseUnit, Unit } from "./units/actions"
 import { Battle, getDefaultMode, getDefaultBattle } from "./battle/reducer"
-import { getDefaultArmy, Army as BaseArmy, Side, getDefaultParticipant, BaseUnits, Participant, Units } from "./battle/actions"
-import { defaultCountry, getDefaultCountryDefinitions } from "./countries/reducer"
+import { getDefaultArmy, Army as BaseArmy, Side, getDefaultParticipant, BaseUnits, Participant, Units, RowTypes } from "./battle/actions"
+import { getDefaultCountryDefinitions } from "./countries/reducer"
 import { CountryName } from "./countries"
 import { getDefaultGlobals, getDefaultUnits } from "./units/data"
 import { CombatSettings, getDefaultSettings } from "./settings"
@@ -121,14 +121,26 @@ export const filterUnitTypesByCountry = (state: AppState, country: CountryName):
  */
 export const getBattle = (state: AppState): Battle => objGet(state.battle, state.settings.mode, getDefaultMode(state.settings.mode))
 
+
+
+export const getArmyForCombat = (state: AppState, side: Side): ArmyForCombat => {
+  const name = state.battle[state.settings.mode].participants[side].name
+  const army = state.battle[state.settings.mode].armies[name]
+  const country = state.countries[name]
+  const units = getUnitsByCountry(state, name)
+  const general = country.has_general ? country.general_martial + sumObj(country.trait_martial) : 0
+  const tactic = state.tactics[army.tactic]
+  return { ...units, tactic, general, flank_size: army.flank_size, row_types: army.row_types }
+}
+
+
 export const getArmyBySide = (state: AppState, side: Side): Army => getArmyByCountry(state, getParticipant(state, side).name)
 
 const getArmyByCountry = (state: AppState, name: CountryName): Army => {
-  const battle = getBattle(state)
-  const army = objGet(battle.armies, name, getDefaultArmy(state.settings.mode))
-  const country = objGet(state.countries, name, defaultCountry)
-  const units = filterUnitDefinitions(state.settings.mode, objGet(state.units, name, getDefaultUnits()))
-  const global = objGet(state.global_stats, name, getDefaultGlobals())[state.settings.mode]
+  const army = state.battle[state.settings.mode].armies[name]
+  const country = state.countries[name]
+  const units = filterUnitDefinitions(state.settings.mode, state.units[name])
+  const global = state.global_stats[name][state.settings.mode]
   const general = {
     total: country.has_general ? country.general_martial + sumObj(country.trait_martial) : 0,
     base: country.has_general ? country.general_martial : 0,
@@ -247,4 +259,11 @@ export interface Army extends BaseArmy {
   units: UnitDefinitions
   global: UnitDefinition
   has_general: boolean
+}
+
+export interface ArmyForCombat extends Units {
+  readonly tactic?: TacticDefinition
+  readonly general: number
+  readonly row_types: RowTypes
+  readonly flank_size: number
 }

@@ -18,6 +18,7 @@ import { reinforce, SortedReserve } from './reinforcement_fast'
 export interface CombatParticipant {
   army: CombatUnits
   readonly tactic: TacticDefinition
+  flank: number
   roll: number
 }
 export type Frontline = (CombatUnit | null)[]

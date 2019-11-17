@@ -4,10 +4,10 @@ import { Grid, Button, Table } from 'semantic-ui-react'
 
 import { AppState } from '../store/'
 import { Side } from '../store/battle'
-import { getArmyBySide, getCombatSettings, getSelectedTerrains, getUnits, mergeUnitTypes } from '../store/utils'
+import { getCombatSettings, getSelectedTerrains, mergeUnitTypes, getArmyForCombat } from '../store/utils'
 
 import { toPercent, toNumber, toFlooredPercent } from '../formatters'
-import { calculateWinRate, WinRateProgress, interrupt, CasualtiesProgress } from '../combat/simulation'
+import { calculateWinRate, WinRateProgress, interrupt, CasualtiesProgress, doConversion } from '../combat/simulation'
 import RoundChart from '../components/Charts/RoundChart'
 import CumulativePercentChart from '../components/Charts/CumulativePercentChart'
 import { showProgress } from '../utils'
@@ -199,19 +199,17 @@ class Statistics extends Component<IProps, IState> {
   }
 
   calculate = () => {
-    const { attacker, defender, units_a, units_d, tactics, combatSettings, terrains, simulationSettings, unit_types } = this.props
-    calculateWinRate(true, simulationSettings, this.update, { ...attacker, ...units_a, tactic: tactics[attacker.tactic], country: attacker.name, general: attacker.general.total, roll: 0 }, { ...defender, ...units_d, tactic: tactics[defender.tactic], country: defender.name, general: defender.general.total, roll: 0 }, terrains, unit_types, combatSettings)
+    const { attacker, defender, combatSettings, terrains, simulationSettings, unit_types } = this.props
+    const [ combat_a, combat_d ] = doConversion(attacker, defender, terrains, unit_types, combatSettings)
+    calculateWinRate(true, simulationSettings, this.update, combat_a, combat_d, combatSettings)
   }
 
   scale = (value: number) => this.state.progress ? value / this.state.progress : 0
 }
 
 const mapStateToProps = (state: AppState) => ({
-  tactics: state.tactics,
-  attacker: getArmyBySide(state, Side.Attacker),
-  defender: getArmyBySide(state, Side.Defender),
-  units_a: getUnits(state, Side.Attacker),
-  units_d: getUnits(state, Side.Defender),
+  attacker: getArmyForCombat(state, Side.Attacker),
+  defender: getArmyForCombat(state, Side.Defender),
   combatSettings: getCombatSettings(state),
   simulationSettings: state.settings.simulation,
   terrains: getSelectedTerrains(state),

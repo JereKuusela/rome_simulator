@@ -6,10 +6,10 @@ import StyledNumber from '../components/Utils/StyledNumber'
 
 import { AppState } from '../store/'
 import { Side } from '../store/battle'
-import { getArmyBySide, getCombatSettings, getSelectedTerrains, getUnits, mergeUnitTypes } from '../store/utils'
+import { getCombatSettings, getSelectedTerrains, mergeUnitTypes, getArmyForCombat } from '../store/utils'
 
 import { toPercent, toFlooredPercent } from '../formatters'
-import { calculateWinRate, WinRateProgress, interrupt } from '../combat/simulation'
+import { calculateWinRate, WinRateProgress, interrupt, doConversion } from '../combat/simulation'
 import { showProgress } from '../utils'
 
 interface Props { }
@@ -83,19 +83,17 @@ class WinRate extends Component<IProps, IState> {
   }
 
   calculate = () => {
-    const { attacker, defender, units_a, units_d, tactics, combatSettings: settings, terrains, simulationSettings, unit_types } = this.props
-    calculateWinRate(false, simulationSettings, this.update, { ...attacker, ...units_a, tactic: tactics[attacker.tactic], country: attacker.name, general: attacker.general.total, roll: 0 }, { ...defender, ...units_d, tactic: tactics[defender.tactic], country: defender.name, general: defender.general.total, roll: 0 }, terrains, unit_types, settings)
+    const { attacker, defender, combatSettings, terrains, simulationSettings, unit_types } = this.props
+    const [ combat_a, combat_d ] = doConversion(attacker, defender, terrains, unit_types, combatSettings)
+    calculateWinRate(false, simulationSettings, this.update, combat_a, combat_d, combatSettings)
   }
 
   scale = (value: number) => this.state.progress ? value / this.state.progress : 0
 }
 
 const mapStateToProps = (state: AppState) => ({
-  tactics: state.tactics,
-  attacker: getArmyBySide(state, Side.Attacker),
-  defender: getArmyBySide(state, Side.Defender),
-  units_a: getUnits(state, Side.Attacker),
-  units_d: getUnits(state, Side.Defender),
+  attacker: getArmyForCombat(state, Side.Attacker),
+  defender: getArmyForCombat(state, Side.Defender),
   combatSettings: getCombatSettings(state),
   simulationSettings: state.settings.simulation,
   terrains: getSelectedTerrains(state),
