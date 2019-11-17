@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { Header, Button, Grid, Image, Checkbox, Input, Table, Divider } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
-import { BaseUnit, UnitDefinition, UnitDefinitions } from '../store/units'
-import UnitArmy from '../components/UnitArmy'
+import { BaseUnit, UnitDefinitions, UnitCalc } from '../store/units'
+import UnitArmy, { IUnit } from '../components/UnitArmy'
 import TargetArrows from '../components/TargetArrows'
 import { invalidate, invalidateCountry, ArmyType, undo, Participant, Side, toggleRandomRoll, setRoll, RowType, setFlankSize, selectArmy, selectUnit, RowTypes, BaseFrontLine, BaseReserve, BaseDefeated } from '../store/battle'
 import { battle, setSeed, refreshBattle } from '../store/combat'
@@ -18,7 +18,7 @@ import ModalTerrainSelector, { ModalInfo as ModalTerrainInfo } from '../containe
 import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers/ModalTacticSelector'
 import ModalArmyUnitDetail from '../containers/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/ModalFastPlanner'
-import { calculateValue, mergeValues, getImage, Mode } from '../base_definition'
+import { calculateValue, mergeValues, getImage, Mode, calculateValueWithoutLoss } from '../base_definition'
 import { getCombatSettings, getBattle, getArmy, Army, getParticipant } from '../store/utils'
 import { addSign, toSignedPercent } from '../formatters'
 import { CountryName, setGeneralMartial } from '../store/countries'
@@ -53,17 +53,17 @@ class Battle extends Component<IProps, IState> {
 
   closeModal = (): void => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null, modal_fast_planner_open: false, modal_row_info: null })
 
-  openUnitModal = (side: Side, type: ArmyType, country: CountryName, column: number, unit: BaseUnit | null): void => {
-    if (unit)
-      this.openArmyUnitModal(side, country, unit as BaseUnit & UnitDefinition)
+  openUnitModal = (side: Side, type: ArmyType, country: CountryName, column: number, id: number | undefined): void => {
+    if (id)
+      this.openArmyUnitModal(side, country, id)
     else
       this.openUnitSelector(type, country, column)
   }
 
   openUnitSelector = (type: ArmyType, country: CountryName, index: number): void => this.setState({ modal_unit_info: { type, country, index } })
 
-  openArmyUnitModal = (side: Side, country: CountryName, current_unit: BaseUnit & UnitDefinition): void => {
-    this.setState({ modal_army_unit_info: { country, id: current_unit.id, side } })
+  openArmyUnitModal = (side: Side, country: CountryName, id: number): void => {
+    this.setState({ modal_army_unit_info: { country, id, side } })
   }
 
   openTerrainModal = (index: number): void => this.setState({ modal_terrain_info: { index, location: this.props.terrains[this.props.selected_terrains[index]].location } })
@@ -288,6 +288,18 @@ class Battle extends Component<IProps, IState> {
     return String(round)
   }
 
+  convertUnitForRender = (unit: BaseUnit | null): IUnit | null => {
+    return unit && {
+      id: unit.id,
+      is_defeated: !!unit.is_defeated,
+      image: unit.image,
+      morale: calculateValue(unit, UnitCalc.Morale),
+      max_morale: calculateValueWithoutLoss(unit, UnitCalc.Morale),
+      strength: calculateValue(unit, UnitCalc.Strength),
+      max_strength: calculateValueWithoutLoss(unit, UnitCalc.Strength)
+    }
+  }
+
   renderFrontline = (side: Side, participant: Army): JSX.Element => {
     const country = participant.name
     const combat_width = this.props.combat[CombatParameter.CombatWidth]
@@ -297,9 +309,9 @@ class Battle extends Component<IProps, IState> {
         <UnitArmy
           color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={side}
-          onClick={(column, unit) => this.openUnitModal(side, ArmyType.Frontline, country, column, unit)}
+          onClick={(column, id) => this.openUnitModal(side, ArmyType.Frontline, country, column, id)}
           onRemove={column => this.props.removeUnit(this.props.mode, country, ArmyType.Frontline, column)}
-          units={resize(this.mergeAllValues(country, participant.frontline), combat_width, null)}
+          units={resize(this.mergeAllValues(country, participant.frontline), combat_width, null).map(this.convertUnitForRender)}
           row_width={Math.max(30, combat_width)}
           reverse={side === Side.Attacker}
           type={ArmyType.Frontline}
@@ -354,9 +366,9 @@ class Battle extends Component<IProps, IState> {
         <UnitArmy
           color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={side}
-          onClick={(column, unit) => this.openUnitModal(side, ArmyType.Reserve, country, column, unit)}
+          onClick={(column, id) => this.openUnitModal(side, ArmyType.Reserve, country, column, id)}
           onRemove={column => this.props.removeUnit(this.props.mode, country, ArmyType.Reserve, column)}
-          units={resize(units, size, null)}
+          units={resize(units, size, null).map(this.convertUnitForRender)}
           row_width={30}
           reverse={false}
           type={ArmyType.Reserve}
@@ -377,9 +389,9 @@ class Battle extends Component<IProps, IState> {
         <UnitArmy
           color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={side}
-          onClick={(column, unit) => this.openUnitModal(side, ArmyType.Defeated, country, column, unit)}
+          onClick={(column, id) => this.openUnitModal(side, ArmyType.Defeated, country, column, id)}
           onRemove={column => this.props.removeUnit(this.props.mode, country, ArmyType.Defeated, column)}
-          units={resize(units, size, null)}
+          units={resize(units, size, null).map(this.convertUnitForRender)}
           row_width={30}
           reverse={false}
           type={ArmyType.Defeated}

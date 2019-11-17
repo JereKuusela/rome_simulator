@@ -2,17 +2,26 @@ import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer
 import { Random, MersenneTwister19937, createEntropy } from 'random-js'
 import { isOver, Side, Participant } from '../battle'
 import { doBattle as fight } from '../../combat/combat'
+//import { doBattleFast } from '../../combat/combat_fast'
 import { mergeValues, Mode } from '../../base_definition'
 import { CombatParameter } from '../settings'
 import { AppState } from '../'
-import { getCombatSettings, getBattle, getArmy, getArmyBySide } from '../utils'
+import { getCombatSettings, getBattle, getArmy, getArmyBySide, /*getArmyForCombat, getSelectedTerrains, mergeUnitTypes*/ } from '../utils'
 import { objGet, sumObj, map, arrGet } from '../../utils'
 import { defaultCountry } from '../countries/reducer'
+//import { doConversion } from '../../combat/simulation'
 
 
 const doBattle = (state: AppState, mode: Mode, steps: number, refresh: boolean): AppState => {
   const definitions = map(state.units, (definitions, country) => map(definitions, unit => mergeValues(unit, state.global_stats[country][mode])))
   let next = getBattle(state)
+  // ASD
+  const settings = getCombatSettings(state)
+  /*const asd_a = getArmyForCombat(state, Side.Attacker)
+  const asd_d = getArmyForCombat(state, Side.Defender)
+  const [ combat_a, combat_d ] = doConversion(asd_a, asd_d, getSelectedTerrains(state), mergeUnitTypes(state), settings)
+  doBattleFast(combat_a, combat_d, settings)*/
+
   // Whole logic really messed after so many refactorings
   let units_a = refresh ? getArmyBySide(state, Side.Attacker) : getArmy(state, Side.Attacker)
   let units_d = refresh ? getArmyBySide(state, Side.Defender) : getArmy(state, Side.Defender)
@@ -25,10 +34,9 @@ const doBattle = (state: AppState, mode: Mode, steps: number, refresh: boolean):
   }
   const country_a = objGet(state.countries, units_a.name, defaultCountry)
   const country_d = objGet(state.countries, units_d.name, defaultCountry)
-  const combat = getCombatSettings(state)
-  const minimum_roll = combat[CombatParameter.DiceMinimum]
-  const maximum_roll = combat[CombatParameter.DiceMaximum]
-  const roll_frequency = combat[CombatParameter.RollFrequency]
+  const minimum_roll = settings[CombatParameter.DiceMinimum]
+  const maximum_roll = settings[CombatParameter.DiceMaximum]
+  const roll_frequency = settings[CombatParameter.RollFrequency]
   if (!next.seed)
     next = { ...next, seed: next.custom_seed || createEntropy()[0] }
   next = { ...next, fight_over: isOver(next.participants, next.armies), outdated: false }
@@ -79,7 +87,7 @@ const doBattle = (state: AppState, mode: Mode, steps: number, refresh: boolean):
       general: country_d.has_general ? country_d.general_martial + sumObj(country_d.trait_martial) : 0,
       roll: participant_d.roll
     }
-    const [a, d] = fight(definitions, attacker_info, defender_info, next.round + 1, next.terrains.map(type => state.terrains[type]), combat)
+    const [a, d] = fight(definitions, attacker_info, defender_info, next.round + 1, next.terrains.map(type => state.terrains[type]), settings)
     participant_a = { ...participant_a, rounds: [ ...participant_a.rounds, a ] }
     if (participant_a.rolls.length < next.round + 2)
       participant_a = { ...participant_a, rolls: [ ...participant_a.rolls, { roll: participant_a.roll, randomized: participant_a.randomize_roll } ] }

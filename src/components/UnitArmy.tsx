@@ -1,26 +1,36 @@
 import React, { Component } from 'react'
 
-import { Side, ArmyType, BaseFrontLine } from '../store/battle'
+import { Side, ArmyType } from '../store/battle'
 import { Table, Image, Icon } from 'semantic-ui-react'
-import { BaseUnit, UnitCalc } from '../store/units'
-import { calculateValue, calculateValueWithoutLoss, getImage } from '../base_definition'
-import IconDefeated from '../images/attrition.png'
+import { getImage } from '../base_definition'
+
 import CombatTooltip from '../containers/CombatTooltip'
 
+import IconDefeated from '../images/attrition.png'
 
-interface IProps {
+export type IUnit = {
+  id: number
+  is_defeated: boolean
+  image?: string
+  max_morale: number
+  max_strength: number
+  morale: number
+  strength: number
+}
+
+type IProps = {
   side: Side
-  units: BaseFrontLine
+  units: (IUnit | null)[]
   row_width: number
   reverse: boolean
-  onClick?: (index: number, unit: BaseUnit | null) => void
+  onClick?: (index: number, id: number | undefined) => void
   onRemove?: (index: number) => void
   type: ArmyType
   color: string
   disable_add?: boolean
 }
 
-interface IState {
+type IState = {
   tooltip_index: number | null
   tooltip_context: Element | null
 }
@@ -77,7 +87,7 @@ export default class UnitArmy extends Component<IProps, IState> {
     )
   }
 
-  renderCell = (row: number, index: number, column: number, unit: BaseUnit | null) => {
+  renderCell = (row: number, index: number, column: number, unit: IUnit | null) => {
     return (
       <Table.Cell
         className={this.props.side + '-' + this.props.type + '-' + column}
@@ -86,21 +96,31 @@ export default class UnitArmy extends Component<IProps, IState> {
         disabled={column < 0 || (this.props.disable_add && !unit)}
         selectable={!!this.props.onClick}
         style={{ backgroundColor: column < 0 ? '#DDDDDD' : 'white', padding: 0 }}
-        onClick={() => this.props.onClick && this.props.onClick(row * this.props.row_width + column, unit)}
+        onClick={() => this.props.onClick && this.props.onClick(row * this.props.row_width + column, unit?.id)}
         onMouseEnter={(e: React.MouseEvent) => unit && this.setState({ tooltip_index: unit.id, tooltip_context: e.currentTarget })}
         onMouseLeave={() => this.setState({ tooltip_index: null, tooltip_context: null })}
         onContextMenu={(e: any) => e.preventDefault() || (this.props.onRemove && this.props.onRemove(row * this.props.row_width + column))}
       >
-        {
-          <div style={{ background: this.gradient(unit, MANPOWER_COLOR, UnitCalc.Strength) }}>
-            <div style={{ background: this.gradient(unit, MORALE_COLOR, UnitCalc.Morale) }}>
-              <Image src={unit && unit.is_defeated ? IconDefeated : getImage(unit)} avatar style={{ margin: 0 }} />
-            </div>
-          </div>
-        }
+        {this.renderUnit(unit)}
       </Table.Cell>
     )
   }
+
+  renderUnit = (unit: IUnit | null) => {
+    if (!unit)
+      return this.renderImage(getImage(null))
+    if (unit.is_defeated)
+      return this.renderImage(IconDefeated)
+    return (
+      <div style={{ background: this.gradient(MANPOWER_COLOR, unit.strength, unit.max_strength) }}>
+        <div style={{ background: this.gradient(MORALE_COLOR, unit.morale, unit.max_morale) }}>
+          {this.renderImage(getImage(unit))}
+        </div>
+      </div>
+    )
+  }
+
+  renderImage = (image: string) => <Image src={image} avatar style={{ margin: 0 }} />
 
   getIcon = () => {
     if (this.props.type === ArmyType.Frontline)
@@ -112,13 +132,9 @@ export default class UnitArmy extends Component<IProps, IState> {
     return 'square full'
   }
 
-  gradient = (unit: BaseUnit | null, color: string, attribute: UnitCalc): string => {
-    return 'linear-gradient(0deg, ' + color + ' 0%, ' + color + ' ' + this.percent(unit, attribute) + '%, ' + WHITE_COLOR + ' ' + this.percent(unit, attribute) + '%, ' + WHITE_COLOR + ' 100%)'
-  }
+  gradient = (color: string, current: number, max: number) => (
+    'linear-gradient(0deg, ' + color + ' 0%, ' + color + ' ' + this.percent(current, max) + '%, ' + WHITE_COLOR + ' ' + this.percent(current, max) + '%, ' + WHITE_COLOR + ' 100%)'
+  )
 
-  percent = (unit: BaseUnit | null, attribute: UnitCalc): number => {
-    if (!unit || unit.is_defeated)
-      return 0
-    return 100.0 - 100.0 * calculateValue(unit, attribute) / calculateValueWithoutLoss(unit, attribute)
-  }
+  percent = (current: number, max: number) => 100.0 - 100.0 * current / max
 }
