@@ -7,9 +7,10 @@ import { TacticDefinition } from '../store/tactics'
 import { CombatParameter, CombatSettings } from '../store/settings'
 
 import { mapRange } from '../utils'
-import { calculateValue, calculateBase } from '../base_definition'
+import { calculateValue, calculateBase, calculateValueWithoutLoss } from '../base_definition'
 import { calculateExperienceReduction } from './combat'
-import { reinforce, SortedReserve } from './reinforcement_fast'
+import { reinforce } from './reinforcement_fast'
+import { RowTypes } from '../store/battle'
 
 /**
  * Information required for fast combat calculation.
@@ -17,16 +18,17 @@ import { reinforce, SortedReserve } from './reinforcement_fast'
  */
 export interface CombatParticipant {
   army: CombatUnits
-  readonly tactic: TacticDefinition
+  tactic: TacticDefinition
   flank: number
   roll: number
+  row_types: RowTypes
 }
 export type Frontline = (CombatUnit | null)[]
 export type Reserve = CombatUnit[]
 
 export type CombatUnits = {
   readonly frontline: (CombatUnit | null)[]
-  readonly reserve: SortedReserve
+  readonly reserve: CombatUnit[]
   readonly defeated: CombatUnit[]
 }
 
@@ -37,9 +39,13 @@ const properties = [UnitCalc.DamageTaken, UnitCalc.DamageDone, UnitCalc.MoraleDa
  */
 const getUnitInfo = (combatSettings: CombatSettings, casualties_multiplier: number, base_damages: number[], terrains: TerrainDefinition[], unit_types: UnitType[], unit: Unit): UnitInfo => {
   const info = {
+    id: unit.id,
     type: unit.type,
     is_loyal: !!unit.is_loyal,
+    image: unit.image,
     is_flank: unit.is_flank,
+    max_morale: calculateValueWithoutLoss(unit, UnitCalc.Morale),
+    max_strength: calculateValueWithoutLoss(unit, UnitCalc.Strength),
     experience: 1.0 + calculateExperienceReduction(combatSettings, unit),
     [UnitCalc.Maneuver]: calculateValue(unit, UnitCalc.Maneuver),
     // Unmodified value is used to determine deployment order.
@@ -65,7 +71,7 @@ export const getCombatUnit = (combatSettings: CombatSettings, casualties_multipl
     [UnitCalc.Morale]: calculateValue(unit, UnitCalc.Morale),
     [UnitCalc.Strength]: calculateValue(unit, UnitCalc.Strength),
     info: getUnitInfo(combatSettings, casualties_multiplier, base_damages, terrains, unit_types, unit),
-    state: { target: null, morale_loss: 0, strength_loss: 0 }
+    state: { target: null, morale_loss: 0, strength_loss: 0, is_defeated: false }
   }
   return combat_unit
 }
@@ -76,11 +82,15 @@ type UnitCalcs = { [key in (UnitType | UnitCalc)]: number }
  * Static part of a unit. Properties which don't change during the battle.
  */
 export interface UnitInfo extends UnitCalcs {
+  id: number
+  image: string
   type: UnitType
   is_loyal: boolean
   total: number[] // Total damage for each dice roll.
   experience: number
   is_flank: boolean
+  max_strength: number
+  max_morale: number
   [UnitCalc.DamageTaken]: number
   [UnitCalc.DamageDone]: number
   [UnitCalc.MoraleDamageTaken]: number
@@ -100,6 +110,7 @@ export interface RoundInfo {
   target: CombatUnit | null
   morale_loss: number
   strength_loss: number
+  is_defeated: boolean
 }
 
 /**
@@ -184,7 +195,7 @@ const calculateTactic = (army: CombatUnits, tactic: TacticDefinition, counter_ta
   if (effectiveness > 0 && tactic && army) {
     let units = 0
     let weight = 0.0
-    for (const unit of army.frontline.concat(army.reserve.main).concat(army.reserve.flank).concat(army.defeated)) {
+    for (const unit of army.frontline.concat(army.reserve).concat(army.defeated)) {
       if (!unit)
         continue
       units += unit[UnitCalc.Strength]

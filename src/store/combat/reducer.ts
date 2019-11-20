@@ -1,129 +1,125 @@
 import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
 import { Random, MersenneTwister19937, createEntropy } from 'random-js'
-import { isOver, Side, Participant } from '../battle'
-import { doBattle as fight } from '../../combat/combat'
-//import { doBattleFast } from '../../combat/combat_fast'
-import { mergeValues, Mode } from '../../base_definition'
-import { CombatParameter } from '../settings'
+import { Side, Participant, Battle } from '../battle'
+import { Mode } from '../../base_definition'
+import { CombatParameter, CombatSettings } from '../settings'
 import { AppState } from '../'
-import { getCombatSettings, getBattle, getArmy, getArmyBySide, /*getArmyForCombat, getSelectedTerrains, mergeUnitTypes*/ } from '../utils'
-import { objGet, sumObj, map, arrGet } from '../../utils'
-import { defaultCountry } from '../countries/reducer'
-//import { doConversion } from '../../combat/simulation'
+import { getArmyForCombat, mergeUnitTypes, getCurrentCombat } from '../utils'
+import { arrGet } from '../../utils'
+import { doConversion, checkAlive } from '../../combat/simulation'
+import { deploy } from '../../combat/deployment'
+import { doBattleFast, CombatUnits } from '../../combat/combat_fast'
 
-
-const doBattle = (state: AppState, mode: Mode, steps: number, refresh: boolean): AppState => {
-  const definitions = map(state.units, (definitions, country) => map(definitions, unit => mergeValues(unit, state.global_stats[country][mode])))
-  let next = getBattle(state)
-  // ASD
-  const settings = getCombatSettings(state)
-  /*const asd_a = getArmyForCombat(state, Side.Attacker)
-  const asd_d = getArmyForCombat(state, Side.Defender)
-  const [ combat_a, combat_d ] = doConversion(asd_a, asd_d, getSelectedTerrains(state), mergeUnitTypes(state), settings)
-  doBattleFast(combat_a, combat_d, settings)*/
-
-  // Whole logic really messed after so many refactorings
-  let units_a = refresh ? getArmyBySide(state, Side.Attacker) : getArmy(state, Side.Attacker)
-  let units_d = refresh ? getArmyBySide(state, Side.Defender) : getArmy(state, Side.Defender)
-  let participant_a = next.participants[Side.Attacker]
-  let participant_d = next.participants[Side.Defender]
-  if (refresh) {
-    participant_a = { ...participant_a, rounds: [] }
-    participant_d = { ...participant_d, rounds: [] }
-    next = { ...next, round: -1, participants: { [Side.Attacker]: participant_a, [Side.Defender]: participant_d }, fight_over: false }
-  }
-  const country_a = objGet(state.countries, units_a.name, defaultCountry)
-  const country_d = objGet(state.countries, units_d.name, defaultCountry)
-  const minimum_roll = settings[CombatParameter.DiceMinimum]
-  const maximum_roll = settings[CombatParameter.DiceMaximum]
-  const roll_frequency = settings[CombatParameter.RollFrequency]
-  if (!next.seed)
-    next = { ...next, seed: next.custom_seed || createEntropy()[0] }
-  next = { ...next, fight_over: isOver(next.participants, next.armies), outdated: false }
-  const engine = MersenneTwister19937.seed(next.seed)
-  engine.discard(2 * Math.ceil((next.round) / roll_frequency))
-  const rng = new Random(engine)
-
-
-  const rollDice = (participant: Participant): Participant => {
-    if (next.round % roll_frequency !== 0 || !participant.randomize_roll)
-      return participant
-    return { ...participant, roll: rng.integer(minimum_roll, maximum_roll) }
-  }
-  const checkOldRoll = (participant: Participant): Participant => {
-    const rolls = arrGet(participant.rolls, next.round + 1, { randomized: participant.randomize_roll, roll: participant.roll })
-    if (!rolls.randomized)
-      return { ...participant, roll: rolls.roll }
-    return participant
-  }
-
-  for (let step = 0; step < steps && !next.fight_over; ++step) {
-    if (!units_a || !units_d)
-      continue
-    participant_a = rollDice(participant_a)
-    participant_d = rollDice(participant_d)
-    participant_a = checkOldRoll(participant_a)
-    participant_d = checkOldRoll(participant_d)
-
-    const attacker_info = {
-      frontline: units_a.frontline,
-      reserve: units_a.reserve,
-      defeated: units_a.defeated,
-      row_types: units_a.row_types,
-      flank_size: units_a.flank_size,
-      tactic: state.tactics[units_a.tactic],
-      country: participant_a.name,
-      general: country_a.has_general ? country_a.general_martial + sumObj(country_a.trait_martial) : 0,
-      roll: participant_a.roll
-    }
-    const defender_info = {
-      frontline: units_d.frontline,
-      reserve: units_d.reserve,
-      defeated: units_d.defeated,
-      row_types: units_d.row_types,
-      flank_size: units_d.flank_size,
-      tactic: state.tactics[units_d.tactic],
-      country: participant_d.name,
-      general: country_d.has_general ? country_d.general_martial + sumObj(country_d.trait_martial) : 0,
-      roll: participant_d.roll
-    }
-    const [a, d] = fight(definitions, attacker_info, defender_info, next.round + 1, next.terrains.map(type => state.terrains[type]), settings)
-    participant_a = { ...participant_a, rounds: [ ...participant_a.rounds, a ] }
-    if (participant_a.rolls.length < next.round + 2)
-      participant_a = { ...participant_a, rolls: [ ...participant_a.rolls, { roll: participant_a.roll, randomized: participant_a.randomize_roll } ] }
-    participant_d = { ...participant_d, rounds: [ ...participant_d.rounds, d ] }
-    if (participant_d.rolls.length < next.round + 2)
-      participant_d = { ...participant_d, rolls: [ ...participant_d.rolls, { roll: participant_d.roll, randomized: participant_d.randomize_roll } ] }
-    
-    next = {
-      ...next,
-      participants: { [Side.Attacker]: participant_a, [Side.Defender]: participant_d },
-      round: next.round + 1
-    }
-    next = {
-      ...next,
-      fight_over: isOver(next.participants, next.armies)
-    }
-    units_a = { ...units_a, ...a }
-    units_d = { ...units_d, ...d }
-  }
-  return { ...state, battle: { ...state.battle, [mode]: next } }
-}
+const copyStatus = (status: CombatUnits): CombatUnits => ({
+  frontline: status.frontline.map(value => value ? { ...value, state: { ...value.state } } : null),
+  reserve: status.reserve.map(value => ({ ...value, state: { ...value.state } })),
+  defeated: status.defeated.map(value => ({ ...value, state: { ...value.state } }))
+})
 
 class CombatReducer extends ImmerReducer<AppState> {
 
+  private doBattle = (mode: Mode, battle: Battle, settings: CombatSettings, steps: number) => {
+    const army_a = getArmyForCombat(this.state, Side.Attacker, mode)
+    const army_d = getArmyForCombat(this.state, Side.Defender, mode)
+    const terrains = battle.terrains.map(value => this.state.terrains[value])
+    const [attacker, defender] = doConversion(army_a, army_d, terrains, mergeUnitTypes(this.state, mode), settings)
+
+    const participant_a = battle.participants[Side.Attacker]
+    const participant_d = battle.participants[Side.Defender]
+
+    battle.outdated = false
+
+    const minimum_roll = settings[CombatParameter.DiceMinimum]
+    const maximum_roll = settings[CombatParameter.DiceMaximum]
+    const roll_frequency = settings[CombatParameter.RollFrequency]
+    if (!battle.seed)
+      battle.seed = battle.custom_seed ?? createEntropy()[0]
+    const engine = MersenneTwister19937.seed(battle.seed)
+    engine.discard(2 * Math.ceil((battle.round) / roll_frequency))
+    const rng = new Random(engine)
+
+
+    const rollDice = (participant: Participant) => {
+      if (battle.round % roll_frequency !== 0 || !participant.randomize_roll)
+        return
+      participant.roll = rng.integer(minimum_roll, maximum_roll)
+    }
+
+    const updateRoll = (participant: Participant) => {
+      if (participant.rolls.length < battle.round + 2)
+        participant.rolls.push({ roll: participant.roll, randomized: participant.randomize_roll })
+    }
+
+    const checkOldRoll = (participant: Participant) => {
+      const rolls = arrGet(participant.rolls, battle.round + 1, { randomized: participant.randomize_roll, roll: participant.roll })
+      if (!rolls.randomized)
+        participant.roll = rolls.roll
+    }
+
+    if (battle.round === -1) {
+      Object.freeze(attacker.army)
+      Object.freeze(defender.army)
+      battle.participants[Side.Attacker].rounds = [attacker.army]
+      battle.participants[Side.Defender].rounds = [defender.army]
+      attacker.army = copyStatus(attacker.army)
+      defender.army = copyStatus(defender.army)
+    } else {
+
+      attacker.army = copyStatus(getCurrentCombat(this.state, Side.Attacker))
+      defender.army = copyStatus(getCurrentCombat(this.state, Side.Defender))
+
+    }
+    if (battle.round === -1 && steps > 0) {
+      deploy(attacker.army, defender.army, attacker.flank, defender.flank, attacker.row_types, defender.row_types, settings)
+      Object.freeze(attacker.army)
+      Object.freeze(defender.army)
+      battle.participants[Side.Attacker].rounds.push(attacker.army)
+      battle.participants[Side.Defender].rounds.push(defender.army)
+      battle.round++
+      steps--
+    }
+
+    for (let step = 0; step < steps && !battle.fight_over; ++step) {
+      attacker.army = copyStatus(attacker.army)
+      defender.army = copyStatus(defender.army)
+      rollDice(participant_a)
+      rollDice(participant_d)
+      checkOldRoll(participant_a)
+      checkOldRoll(participant_d)
+      attacker.roll = participant_a.roll
+      defender.roll = participant_d.roll
+
+      doBattleFast(attacker, defender, settings)
+      Object.freeze(attacker.army)
+      Object.freeze(defender.army)
+      battle.participants[Side.Attacker].rounds.push(attacker.army)
+      battle.participants[Side.Defender].rounds.push(defender.army)
+      updateRoll(participant_a)
+      updateRoll(participant_d)
+      battle.round++
+      battle.fight_over = !checkAlive(attacker.army.frontline, attacker.army.reserve) || !checkAlive(defender.army.frontline, defender.army.reserve)
+    }
+  }
+
   battle(mode: Mode, steps: number) {
-    this.draftState = doBattle(this.state, mode, steps, false)
+    const battle = this.draftState.battle[mode]
+    const settings = this.state.settings.combat[mode]
+    this.doBattle(mode, battle, settings, steps)
   }
 
   setSeed(mode: Mode, seed?: number) {
-    this.draftState.battle[mode].custom_seed = seed
-    this.draftState.battle[mode].seed = seed || 0
+    const battle = this.draftState.battle[mode]
+    battle.custom_seed = seed
+    battle.seed = seed ?? 0
   }
 
   refreshBattle(mode: Mode) {
-    const steps = this.state.battle[mode].round + 1
-    this.draftState = doBattle(this.state, mode, steps, true)
+    const battle = this.draftState.battle[mode]
+    const settings = this.state.settings.combat[mode]
+    const steps = battle.round + 1
+    battle.round = -1
+    battle.fight_over = false
+    this.doBattle(mode, battle, settings, steps)
   }
 }
 

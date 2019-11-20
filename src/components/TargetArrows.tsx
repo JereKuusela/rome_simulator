@@ -5,7 +5,7 @@ import { Side, ArmyType } from '../store/battle'
 
 export type TargetArrowsUnit = {
   id: number
-  target: number | null
+  target: number | null | undefined
 } | null
 
 type IProps = {

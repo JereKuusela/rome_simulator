@@ -4,6 +4,7 @@ import { TacticType } from '../tactics/actions'
 import { DefinitionType, Mode } from '../../base_definition'
 import { CountryName } from '../countries'
 import { ObjSet } from '../../utils'
+import { CombatUnits } from '../../combat/combat_fast'
 
 export enum RowType {
   Primary = 'Primary',
@@ -36,11 +37,11 @@ interface Rolls {
 }
 
 export interface Participant {
-  readonly name: CountryName
-  readonly rounds: BaseUnits[],
-  readonly rolls: Rolls[],
-  readonly roll: number,
-  readonly randomize_roll: boolean
+  name: CountryName
+  rounds: CombatUnits[],
+  rolls: Rolls[],
+  roll: number,
+  randomize_roll: boolean
 }
 
 export type RowTypes = { [key in RowType]: UnitType | null }

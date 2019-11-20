@@ -1,17 +1,24 @@
 import { nextIndex } from "./reinforcement_fast"
-import { CombatUnits, CombatUnit } from "./combat_fast"
+import { CombatUnits, CombatUnit, Reserve } from "./combat_fast"
 import { UnitCalc } from "../store/units"
-import { remove } from "lodash"
+import { remove, sortBy } from "lodash"
 import { CombatSettings, CombatParameter } from "../store/settings"
+import { RowTypes, RowType } from "../store/battle"
 
 
-const armySize = (units: CombatUnits) => {
-  return units.frontline.filter(unit => unit).length + units.reserve.main.length + units.reserve.flank.length
+export type SortedReserve = {
+  main: CombatUnit[]
+  flank: CombatUnit[]
 }
 
-const deployArmy = (units: CombatUnits, left_flank: number, right_flank: number) => {
+const armySize = (units: CombatUnits) => {
+  return units.frontline.filter(unit => unit).length + units.reserve.length
+}
+
+const deployArmy = (units: CombatUnits, left_flank: number, right_flank: number, row_types: RowTypes) => {
   const frontline = units.frontline
   const reserve = units.reserve
+  const sorted = sortReserve(reserve, row_types)
   const center = Math.floor(frontline.length / 2.0)
 
   let index = center
@@ -19,12 +26,12 @@ const deployArmy = (units: CombatUnits, left_flank: number, right_flank: number)
   for (; index >= left_flank && index + right_flank < frontline.length; index = nextIndex(index, center)) {
       if (frontline[index])
           continue
-      const main = reserve.main.shift()
+      const main = sorted.main.shift()
       if (main) {
           frontline[index] = main
           continue
       }
-      const flank = reserve.flank.shift()
+      const flank = sorted.flank.shift()
       if (flank) {
           frontline[index] = flank
           continue
@@ -35,20 +42,46 @@ const deployArmy = (units: CombatUnits, left_flank: number, right_flank: number)
   for (; index >= 0 && index < frontline.length; index = nextIndex(index, center)) {
       if (frontline[index])
           continue
-      const flank = reserve.flank.shift()
+      const flank = sorted.flank.shift()
       if (flank) {
           frontline[index] = flank
           continue
       }
-      const main = reserve.main.shift()
+      const main = sorted.main.shift()
       if (main) {
           frontline[index] = main
           continue
       }
       break
   }
+  reserve.splice(0, reserve.length, ...(sorted.flank.concat(sorted.main)))
+
 }
 
+
+export const sortReserve = (reserve: Reserve, row_types: RowTypes): SortedReserve => {
+  const mainReserve = reserve.filter(value => !isFlankUnit(row_types, value))
+  const flankReserve = reserve.filter(value => isFlankUnit(row_types, value))
+  // Calculate priorities (mostly based on unit type, ties are resolved with index numbers).
+  const main = sortBy(mainReserve, value => {
+      return -value.info[UnitCalc.Cost] * 100000 - value.info[UnitCalc.Strength] * 1000 - (value.info.type === row_types[RowType.Primary] ? 200000000 : 0) - (value.info.type === row_types[RowType.Secondary] ? -100000000 : 0)
+  })
+  const flank = sortBy(flankReserve, value => {
+      return -value.info[UnitCalc.Maneuver] * 100000 - value.info[UnitCalc.Strength] * 1000 - (value.info.type === row_types[RowType.Flank] ? 100000000 : 0)
+  })
+  return { main, flank }
+}
+
+/**
+* Returns whether a given unit is a flanker.
+*/
+const isFlankUnit = (row_types: RowTypes, unit: CombatUnit) => {
+  if (unit.info.type === row_types[RowType.Flank])
+      return true
+  if (unit.info.type === row_types[RowType.Primary] || unit.info.type === row_types[RowType.Secondary])
+      return false
+  return unit.info.is_flank
+}
 
 /**
  * Removes units from frontline which are out of combat width.
@@ -81,23 +114,14 @@ const removeDefeated = (units: CombatUnits, minimum_morale: number, minimum_stre
     defeated.push(unit)
     frontline[i] = null
   }
-  for (let i = 0; i < reserve.main.length; i++) {
-    const unit = reserve.main[i]
+  for (let i = 0; i < reserve.length; i++) {
+    const unit = reserve[i]
     if (!unit)
       continue
     if (isAlive(unit, minimum_morale, minimum_strength))
       continue
     defeated.push(unit)
-    remove(reserve.main, value => value === unit)
-  }
-  for (let i = 0; i < reserve.flank.length; i++) {
-    const unit = reserve.flank[i]
-    if (!unit)
-      continue
-    if (isAlive(unit, minimum_morale, minimum_strength))
-      continue
-    defeated.push(unit)
-    remove(reserve.flank, value => value === unit)
+    remove(reserve, value => value === unit)
   }
 }
 
@@ -120,7 +144,7 @@ const calculateFlankSizes = (flank_size: number, enemy_units: CombatUnits): [num
   return [left_flank_size, right_flank_size]
 }
 
-export const deploy = (units_a: CombatUnits, units_d: CombatUnits, preferred_flank_a: number, preferred_flank_d: number, settings: CombatSettings) => {
+export const deploy = (units_a: CombatUnits, units_d: CombatUnits, preferred_flank_a: number, preferred_flank_d: number, row_types_a: RowTypes, row_types_d: RowTypes,settings: CombatSettings) => {
   removeOutOfBounds(units_a, settings[CombatParameter.CombatWidth])
   removeOutOfBounds(units_d, settings[CombatParameter.CombatWidth])
   removeDefeated(units_a, settings[CombatParameter.MinimumMorale], settings[CombatParameter.MinimumStrength])
@@ -132,6 +156,6 @@ export const deploy = (units_a: CombatUnits, units_d: CombatUnits, preferred_fla
   const [left_flank_a, right_flank_a] = calculateFlankSizes(preferred_flank_a, units_d)
   const [left_flank_d, right_flank_d] = calculateFlankSizes(preferred_flank_d, units_a)
 
-  deployArmy(units_a, left_flank_a, right_flank_a)
-  deployArmy(units_d, left_flank_d, right_flank_d)
+  deployArmy(units_a, left_flank_a, right_flank_a, row_types_a)
+  deployArmy(units_d, left_flank_d, right_flank_d, row_types_d)
 }

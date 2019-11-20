@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Header, Button, Grid, Image, Checkbox, Input, Table, Divider } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
-import { BaseUnit, UnitDefinitions, UnitCalc } from '../store/units'
+import { UnitDefinitions, UnitCalc } from '../store/units'
 import UnitArmy, { UnitArmyUnit } from '../components/UnitArmy'
 import TargetArrows, { TargetArrowsUnit } from '../components/TargetArrows'
 import { invalidate, invalidateCountry, ArmyType, undo, Participant, Side, toggleRandomRoll, setRoll, RowType, setFlankSize, selectArmy, selectUnit, RowTypes, BaseFrontLine, BaseReserve, BaseDefeated } from '../store/battle'
@@ -18,8 +18,8 @@ import ModalTerrainSelector, { ModalInfo as ModalTerrainInfo } from '../containe
 import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers/ModalTacticSelector'
 import ModalArmyUnitDetail from '../containers/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/ModalFastPlanner'
-import { calculateValue, mergeValues, getImage, Mode, calculateValueWithoutLoss } from '../base_definition'
-import { getCombatSettings, getBattle, getArmy, Army, getParticipant } from '../store/utils'
+import { calculateValue, mergeValues, getImage, Mode } from '../base_definition'
+import { getCombatSettings, getBattle, getArmy, Army, getParticipant, getCurrentCombat } from '../store/utils'
 import { addSign, toSignedPercent } from '../formatters'
 import { CountryName, setGeneralMartial } from '../store/countries'
 import { CombatParameter } from '../store/settings'
@@ -29,6 +29,7 @@ import StyledNumber from '../components/Utils/StyledNumber'
 import { keys, resize } from '../utils'
 import WinRate from '../containers/WinRate'
 import Stats from '../containers/Stats'
+import { CombatUnit, CombatUnits } from '../combat/combat_fast'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
@@ -131,7 +132,7 @@ class Battle extends Component<IProps, IState> {
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderFrontline(Side.Attacker, army_a)
+                this.renderFrontline(Side.Attacker, army_a, this.props.combat_a)
               }
             </Grid.Column>
           </Grid.Row>
@@ -139,8 +140,8 @@ class Battle extends Component<IProps, IState> {
             <Grid.Column>
               <TargetArrows
                 visible={!this.props.fight_over}
-                attacker={army_a.frontline.map(unit => this.convertUnitForTargetArrows(unit, army_d.frontline))}
-                defender={army_d.frontline.map(unit => this.convertUnitForTargetArrows(unit, army_a.frontline))}
+                attacker={this.props.combat_a.frontline.map(this.convertUnitForTargetArrows)}
+                defender={this.props.combat_d.frontline.map(this.convertUnitForTargetArrows)}
                 attacker_color={ATTACKER_COLOR}
                 defender_color={DEFENDER_COLOR}
               />
@@ -149,7 +150,7 @@ class Battle extends Component<IProps, IState> {
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderFrontline(Side.Defender, army_d)
+                this.renderFrontline(Side.Defender, army_d, this.props.combat_d)
               }
             </Grid.Column>
           </Grid.Row>
@@ -247,28 +248,28 @@ class Battle extends Component<IProps, IState> {
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderReserve(Side.Attacker, army_a)
+                this.renderReserve(Side.Attacker, army_a, this.props.combat_a)
               }
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderReserve(Side.Defender, army_d)
+                this.renderReserve(Side.Defender, army_d, this.props.combat_d)
               }
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderDefeatedArmy(Side.Attacker, army_a)
+                this.renderDefeatedArmy(Side.Attacker, army_a, this.props.combat_a)
               }
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderDefeatedArmy(Side.Defender, army_d)
+                this.renderDefeatedArmy(Side.Defender, army_d, this.props.combat_d)
               }
             </Grid.Column>
           </Grid.Row>
@@ -288,26 +289,26 @@ class Battle extends Component<IProps, IState> {
     return String(round)
   }
 
-  convertUnitForRender = (unit: BaseUnit | null): UnitArmyUnit => {
+  convertUnitForRender = (unit: CombatUnit | null): UnitArmyUnit => {
     return unit && {
-      id: unit.id,
-      is_defeated: !!unit.is_defeated,
-      image: unit.image,
-      morale: calculateValue(unit, UnitCalc.Morale),
-      max_morale: calculateValueWithoutLoss(unit, UnitCalc.Morale),
-      strength: calculateValue(unit, UnitCalc.Strength),
-      max_strength: calculateValueWithoutLoss(unit, UnitCalc.Strength)
+      id: unit.info.id,
+      is_defeated: unit.state.is_defeated,
+      image: unit.info.image,
+      morale: unit[UnitCalc.Morale],
+      max_morale: unit.info.max_morale,
+      strength: unit[UnitCalc.Strength],
+      max_strength: unit.info.max_strength
     }
   }
 
-  convertUnitForTargetArrows = (unit: BaseUnit | null, targets: BaseFrontLine): TargetArrowsUnit => {
+  convertUnitForTargetArrows = (unit: CombatUnit | null): TargetArrowsUnit => {
     return unit && {
-      id: unit.id,
-      target: unit.target ? targets[unit.target]!.id : null
+      id: unit.info.id,
+      target: unit.state.target?.info.id
     }
   }
 
-  renderFrontline = (side: Side, participant: Army): JSX.Element => {
+  renderFrontline = (side: Side, participant: Army, units: CombatUnits): JSX.Element => {
     const country = participant.name
     const combat_width = this.props.combat[CombatParameter.CombatWidth]
     return (
@@ -318,7 +319,7 @@ class Battle extends Component<IProps, IState> {
           side={side}
           onClick={(column, id) => this.openUnitModal(side, ArmyType.Frontline, country, column, id)}
           onRemove={column => this.props.removeUnit(this.props.mode, country, ArmyType.Frontline, column)}
-          units={resize(this.mergeAllValues(country, participant.frontline), combat_width, null).map(this.convertUnitForRender)}
+          units={resize(units.frontline, combat_width, null).map(this.convertUnitForRender)}
           row_width={Math.max(30, combat_width)}
           reverse={side === Side.Attacker}
           type={ArmyType.Frontline}
@@ -361,12 +362,11 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderReserve = (side: Side, participant: Army): JSX.Element => {
+  renderReserve = (side: Side, participant: Army, units: CombatUnits): JSX.Element => {
     const country = participant.name
-    const units = this.mergeAllValues(country, participant.reserve)
     // + 1 ensures that the user can always select an empty space.
     // ceil ensures full rows for a cleaner UI.
-    const size = Math.ceil((units.length + 1) / 30.0) * 30
+    const size = Math.ceil((units.reserve.length + 1) / 30.0) * 30
     return (
       <div key={side}>
         <Header>{side + '\'s reserve'}</Header>
@@ -375,7 +375,7 @@ class Battle extends Component<IProps, IState> {
           side={side}
           onClick={(column, id) => this.openUnitModal(side, ArmyType.Reserve, country, column, id)}
           onRemove={column => this.props.removeUnit(this.props.mode, country, ArmyType.Reserve, column)}
-          units={resize(units, size, null).map(this.convertUnitForRender)}
+          units={resize(units.reserve, size, null).map(this.convertUnitForRender)}
           row_width={30}
           reverse={false}
           type={ArmyType.Reserve}
@@ -384,12 +384,11 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderDefeatedArmy = (side: Side, participant: Army): JSX.Element => {
+  renderDefeatedArmy = (side: Side, participant: Army, units: CombatUnits): JSX.Element => {
     const country = participant.name
-    const units = this.mergeAllValues(country, participant.defeated)
     // + 1 ensures that the user can always select an empty space.
     // ceil ensures full rows for a cleaner UI.
-    const size = Math.ceil((units.length + 1) / 30.0) * 30
+    const size = Math.ceil((units.defeated.length + 1) / 30.0) * 30
     return (
       <div key={side}>
         <Header>{side + '\'s defeated units'}</Header>
@@ -398,7 +397,7 @@ class Battle extends Component<IProps, IState> {
           side={side}
           onClick={(column, id) => this.openUnitModal(side, ArmyType.Defeated, country, column, id)}
           onRemove={column => this.props.removeUnit(this.props.mode, country, ArmyType.Defeated, column)}
-          units={resize(units, size, null).map(this.convertUnitForRender)}
+          units={resize(units.defeated, size, null).map(this.convertUnitForRender)}
           row_width={30}
           reverse={false}
           type={ArmyType.Defeated}
@@ -529,6 +528,8 @@ class Battle extends Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
+  combat_a: getCurrentCombat(state, Side.Attacker),
+  combat_d: getCurrentCombat(state, Side.Defender),
   army_a: getArmy(state, Side.Attacker),
   army_d: getArmy(state, Side.Defender),
   attacker: getParticipant(state, Side.Attacker),
