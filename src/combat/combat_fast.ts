@@ -90,7 +90,7 @@ type UnitCalcs = { [key in (UnitType | UnitCalc | TerrainType)]: number }
  * Static part of a unit. Properties which don't change during the battle.
  */
 export interface CombatUnitPreCalculated {
-  total_damage: { [key in UnitType] : number[] }  // Total damage for each unit and dice roll.
+  total_damage: { [key in UnitType]: number[] }  // Total damage for each unit and dice roll.
   morale_done_multiplier: number
   strength_done_multiplier: number
   morale_taken_multiplier: number
@@ -137,7 +137,11 @@ export interface CombatUnit {
 /**
  * Makes given armies attach each other.
  */
-export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, settings: CombatSettings) => {
+export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, mark_defeated: boolean, settings: CombatSettings) => {
+  if (mark_defeated) {
+    removeDefeated(a.army.frontline)
+    removeDefeated(d.army.frontline)
+  }
   reinforce(a.army.frontline, a.army.reserve)
   if (settings[CombatParameter.ReinforceFirst])
     reinforce(d.army.frontline, d.army.reserve)
@@ -157,8 +161,8 @@ export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, setting
   applyLosses(d.army.frontline)
   const minimum_morale = settings[CombatParameter.MinimumMorale]
   const minimum_strength = settings[CombatParameter.MinimumStrength]
-  moveDefeated(a.army.frontline, a.army.defeated, minimum_morale, minimum_strength)
-  moveDefeated(d.army.frontline, d.army.defeated, minimum_morale, minimum_strength)
+  moveDefeated(a.army.frontline, a.army.defeated, minimum_morale, minimum_strength, mark_defeated)
+  moveDefeated(d.army.frontline, d.army.defeated, minimum_morale, minimum_strength, mark_defeated)
 }
 
 /**
@@ -239,15 +243,32 @@ const applyLosses = (frontline: Frontline) => {
 /**
  * Moves defeated units from a frontline to defeated.
  */
-const moveDefeated = (frontline: Frontline, defeated: Reserve, minimum_morale: number, minimum_strength: number) => {
+const moveDefeated = (frontline: Frontline, defeated: Reserve, minimum_morale: number, minimum_strength: number, mark_defeated: boolean) => {
   for (let i = 0; i < frontline.length; i++) {
     const unit = frontline[i]
     if (!unit)
       continue
     if (unit[UnitCalc.Strength] > minimum_strength && unit[UnitCalc.Morale] > minimum_morale)
       continue
+    if (mark_defeated)
+      frontline[i] = { ...unit, state: { ...unit.state, is_defeated: true } }
+    else
+      frontline[i] = null
+    unit.state.target = null
     defeated.push(unit)
-    frontline[i] = null
+  }
+}
+
+/**
+ * Removes temporary defeated units from frontline.
+ */
+const removeDefeated = (frontline: Frontline) => {
+  for (let i = 0; i < frontline.length; i++) {
+    const unit = frontline[i]
+    if (!unit)
+      continue
+    if (unit.state.is_defeated)
+      frontline[i] = null
   }
 }
 
@@ -296,7 +317,7 @@ const calculateDamageMultiplier = (source: CombatUnit, target: CombatUnit, tacti
 const calculateLosses = (source: CombatUnit, target: CombatUnit, dice_roll: number, tactic_damage_multiplier: number) => {
   const total_damage = source.calculated.total_damage[target.definition.type][dice_roll] * calculateDamageMultiplier(source, target, tactic_damage_multiplier)
   const strength_lost = total_damage * source.calculated.strength_done_multiplier * target.calculated.strength_taken_multiplier
-  const morale_lost = total_damage * source.calculated.morale_done_multiplier * target.calculated.morale_taken_multiplier
+  const morale_lost = total_damage * source[UnitCalc.Morale] * source.calculated.morale_done_multiplier * target.calculated.morale_taken_multiplier
 
   source.state.damage_dealt = Math.floor(total_damage) / PRECISION
   source.state.morale_dealt = Math.floor(morale_lost) / PRECISION

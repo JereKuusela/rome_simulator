@@ -221,7 +221,7 @@ const doRound = (round: number, info: TestInfo) => {
   info.army_d = { ...info.army_d, ...d }
 }
 const doFastRound = (info: TestInfo, a: CombatParticipant, d: CombatParticipant) => {
-  doBattleFast(a, d, info.settings)
+  doBattleFast(a, d, false, info.settings)
 }
 
 

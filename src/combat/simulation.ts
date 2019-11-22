@@ -250,7 +250,7 @@ const doPhase = (rounds_per_phase: number, attacker: CombatParticipant, defender
   let winner: Winner = undefined
   let round = 0
   for (round = 0; round < rounds_per_phase;) {
-    doBattleFast(attacker, defender, combatSettings)
+    doBattleFast(attacker, defender, false, combatSettings)
     round++
 
     const alive_a = checkAlive(attacker.army.frontline, attacker.army.reserve)

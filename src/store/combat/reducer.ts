@@ -90,7 +90,7 @@ class CombatReducer extends ImmerReducer<AppState> {
       attacker.roll = participant_a.roll
       defender.roll = participant_d.roll
 
-      doBattleFast(attacker, defender, settings)
+      doBattleFast(attacker, defender, true, settings)
       Object.freeze(attacker.army)
       Object.freeze(defender.army)
       battle.participants[Side.Attacker].rounds.push(attacker.army)
