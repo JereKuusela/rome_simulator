@@ -137,9 +137,8 @@ export const getArmyForCombat = (state: AppState, side: Side, mode?: Mode): Army
 
 export const getCurrentCombat = (state: AppState, side: Side): CombatUnits => {
   const participant = state.battle[state.settings.mode].participants[side]
-  return arrGet(participant.rounds, -1) ?? { frontline: [], reserve: [], defeated: [] }
+  return arrGet(participant.rounds, -1) ?? { frontline: [], reserve: [], defeated: [], tactic_bonus: 0 }
 }
-
 
 export const getArmyBySide = (state: AppState, side: Side): Army => getArmyByCountry(state, getParticipant(state, side).name)
 

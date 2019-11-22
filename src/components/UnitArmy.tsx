@@ -63,7 +63,7 @@ export default class UnitArmy extends Component<IProps, IState> {
     }
     return (
       <>
-        <CombatTooltip index={this.state.tooltip_index} context={this.state.tooltip_context} side={this.props.side} />
+        <CombatTooltip id={this.state.tooltip_index} context={this.state.tooltip_context} side={this.props.side} />
         <Table compact celled definition unstackable>
           <Table.Body>
             {

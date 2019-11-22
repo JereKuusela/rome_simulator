@@ -205,7 +205,8 @@ export const calculateWinRate = (doUpdateCasualties: boolean, simulationSettings
 export const convertUnits = (units: BaseUnits, combatSettings: CombatSettings, casualties_multiplier: number, base_damages: number[], terrains: TerrainDefinition[], unit_types: UnitType[], row_types: RowTypes) => ({
   frontline: units.frontline.map(unit => getCombatUnit(combatSettings, casualties_multiplier, base_damages, terrains, unit_types, unit as Unit)),
   reserve: units.reserve.map(unit => getCombatUnit(combatSettings, casualties_multiplier, base_damages, terrains, unit_types, unit as Unit)!),
-  defeated: units.defeated.map(unit => getCombatUnit(combatSettings, casualties_multiplier, base_damages, terrains, unit_types, unit as Unit)!)
+  defeated: units.defeated.map(unit => getCombatUnit(combatSettings, casualties_multiplier, base_damages, terrains, unit_types, unit as Unit)!),
+  tactic_bonus: 0
 })
 
 
@@ -235,7 +236,8 @@ const getRolls = (minimum: number, maximum: number) => {
 const copyStatus = (status: CombatUnits): CombatUnits => ({
   frontline: status.frontline.map(value => value ? { ...value } : null),
   reserve: status.reserve.map(value => ({ ...value })),
-  defeated: status.defeated.map(value => ({ ...value }))
+  defeated: status.defeated.map(value => ({ ...value })),
+  tactic_bonus: status.tactic_bonus
 })
 
 

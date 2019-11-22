@@ -2,11 +2,11 @@
 import { sumBy } from 'lodash'
 
 import { UnitCalc, UnitType, Unit } from '../store/units'
-import { TerrainDefinition } from '../store/terrains'
+import { TerrainDefinition, TerrainType } from '../store/terrains'
 import { TacticDefinition } from '../store/tactics'
 import { CombatParameter, CombatSettings } from '../store/settings'
 
-import { mapRange } from '../utils'
+import { mapRange, values, toObj } from '../utils'
 import { calculateValue, calculateBase, calculateValueWithoutLoss } from '../base_definition'
 import { calculateExperienceReduction } from './combat'
 import { reinforce } from './reinforcement_fast'
@@ -30,14 +30,26 @@ export type CombatUnits = {
   readonly frontline: (CombatUnit | null)[]
   readonly reserve: CombatUnit[]
   readonly defeated: CombatUnit[]
+  tactic_bonus: number
 }
-
-const properties = [UnitCalc.DamageTaken, UnitCalc.DamageDone, UnitCalc.MoraleDamageTaken, UnitCalc.MoraleDamageDone, UnitCalc.StrengthDamageTaken, UnitCalc.StrengthDamageDone]
 
 /**
  * Returns a precalculated info about a given unit.
  */
-const getUnitInfo = (combatSettings: CombatSettings, casualties_multiplier: number, base_damages: number[], terrains: TerrainDefinition[], unit_types: UnitType[], unit: Unit): UnitInfo => {
+const precalculateUnit = (settings: CombatSettings, casualties_multiplier: number, base_damages: number[], terrains: TerrainDefinition[], unit_types: UnitType[], unit: Unit) => {
+  const damage_reduction = precalculateDamageReduction(unit, settings)
+  const total_damage = mapRange(base_damages.length, roll => precalculateDamage(base_damages[roll], terrains, unit, settings))
+  const info: CombatUnitPreCalculated = {
+    total_damage: toObj(unit_types, type => type, type => total_damage.map(damage => damage * (1.0 + calculateValue(unit, type)))),
+    morale_done_multiplier: (1.0 + calculateValue(unit, UnitCalc.MoraleDamageDone)) * settings[CombatParameter.MoraleLostMultiplier] / settings[CombatParameter.MoraleDamageBase],
+    strength_done_multiplier: (1.0 + calculateValue(unit, UnitCalc.StrengthDamageDone)) * settings[CombatParameter.StrengthLostMultiplier] * (1.0 + casualties_multiplier),
+    morale_taken_multiplier: damage_reduction * (1.0 + calculateValue(unit, UnitCalc.MoraleDamageTaken)),
+    strength_taken_multiplier: damage_reduction * (1.0 + calculateValue(unit, UnitCalc.StrengthDamageTaken))
+  }
+  return info
+}
+
+const getUnitDefinition = (combatSettings: CombatSettings, terrains: TerrainDefinition[], unit_types: UnitType[], unit: Unit): CombatUnitDefinition => {
   const info = {
     id: unit.id,
     type: unit.type,
@@ -46,18 +58,13 @@ const getUnitInfo = (combatSettings: CombatSettings, casualties_multiplier: numb
     is_flank: unit.is_flank,
     max_morale: calculateValueWithoutLoss(unit, UnitCalc.Morale),
     max_strength: calculateValueWithoutLoss(unit, UnitCalc.Strength),
-    experience: 1.0 + calculateExperienceReduction(combatSettings, unit),
-    [UnitCalc.Maneuver]: calculateValue(unit, UnitCalc.Maneuver),
+    experience_reduction: calculateExperienceReduction(combatSettings, unit),
     // Unmodified value is used to determine deployment order.
-    [UnitCalc.Cost]: calculateBase(unit, UnitCalc.Cost),
-    [UnitCalc.Offense]: calculateValue(unit, UnitCalc.Offense),
-    [UnitCalc.Defense]: calculateValue(unit, UnitCalc.Defense)
-  } as UnitInfo
-  properties.forEach(calc => { info[calc] = 1.0 + calculateValue(unit, calc) })
-  info[UnitCalc.StrengthDamageDone] *= combatSettings[CombatParameter.StrengthLostMultiplier] * (1.0 + casualties_multiplier)
-  info[UnitCalc.MoraleDamageDone] *= combatSettings[CombatParameter.MoraleLostMultiplier] / combatSettings[CombatParameter.MoraleDamageBase]
-  unit_types.forEach(calc => { info[calc] = 1.0 + calculateValue(unit, calc) })
-  info.total = mapRange(base_damages.length, roll => precalculateDamage(base_damages[roll], terrains, unit))
+    deployment_cost: calculateBase(unit, UnitCalc.Cost)
+  } as CombatUnitDefinition
+  values(UnitCalc).forEach(calc => { info[calc] = calculateValue(unit, calc) })
+  terrains.forEach(({ type }) => { info[type] = calculateValue(unit, type) })
+  unit_types.forEach(calc => { info[calc] = calculateValue(unit, calc) })
   return info
 }
 
@@ -67,40 +74,40 @@ const getUnitInfo = (combatSettings: CombatSettings, casualties_multiplier: numb
 export const getCombatUnit = (combatSettings: CombatSettings, casualties_multiplier: number, base_damages: number[], terrains: TerrainDefinition[], unit_types: UnitType[], unit: Unit | null): CombatUnit | null => {
   if (!unit)
     return null
-  const combat_unit = {
+  const combat_unit: CombatUnit = {
     [UnitCalc.Morale]: calculateValue(unit, UnitCalc.Morale),
     [UnitCalc.Strength]: calculateValue(unit, UnitCalc.Strength),
-    info: getUnitInfo(combatSettings, casualties_multiplier, base_damages, terrains, unit_types, unit),
-    state: { target: null, morale_loss: 0, strength_loss: 0, is_defeated: false }
+    calculated: precalculateUnit(combatSettings, casualties_multiplier, base_damages, terrains, unit_types, unit),
+    state: { target: null, morale_loss: 0, strength_loss: 0, morale_dealt: 0, strength_dealt: 0, damage_dealt: 0, is_defeated: false },
+    definition: getUnitDefinition(combatSettings, terrains, unit_types, unit)
   }
   return combat_unit
 }
 
-type UnitCalcs = { [key in (UnitType | UnitCalc)]: number }
+type UnitCalcs = { [key in (UnitType | UnitCalc | TerrainType)]: number }
 
 /**
  * Static part of a unit. Properties which don't change during the battle.
  */
-export interface UnitInfo extends UnitCalcs {
+export interface CombatUnitPreCalculated {
+  total_damage: { [key in UnitType] : number[] }  // Total damage for each unit and dice roll.
+  morale_done_multiplier: number
+  strength_done_multiplier: number
+  morale_taken_multiplier: number
+  strength_taken_multiplier: number
+}
+
+export interface CombatUnitDefinition extends UnitCalcs {
   id: number
   image: string
   type: UnitType
   is_loyal: boolean
-  total: number[] // Total damage for each dice roll.
   experience: number
   is_flank: boolean
   max_strength: number
   max_morale: number
-  [UnitCalc.DamageTaken]: number
-  [UnitCalc.DamageDone]: number
-  [UnitCalc.MoraleDamageTaken]: number
-  [UnitCalc.MoraleDamageDone]: number
-  [UnitCalc.StrengthDamageTaken]: number
-  [UnitCalc.StrengthDamageDone]: number
-  [UnitCalc.Offense]: number
-  [UnitCalc.Defense]: number
-  [UnitCalc.Maneuver]: number
-  [UnitCalc.Cost]: number
+  experience_reduction: number
+  deployment_cost: number
 }
 
 /**
@@ -110,6 +117,9 @@ export interface RoundInfo {
   target: CombatUnit | null
   morale_loss: number
   strength_loss: number
+  morale_dealt: number
+  strength_dealt: number
+  damage_dealt: number
   is_defeated: boolean
 }
 
@@ -119,8 +129,9 @@ export interface RoundInfo {
 export interface CombatUnit {
   [UnitCalc.Morale]: number
   [UnitCalc.Strength]: number
-  info: UnitInfo
+  calculated: CombatUnitPreCalculated
   state: RoundInfo
+  definition: CombatUnitDefinition
 }
 
 /**
@@ -137,8 +148,10 @@ export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, setting
 
   // Tactic bonus changes dynamically when units lose strength so it can't be precalculated.
   // If this is a problem a fast mode can be implemeted where to bonus is only calculated once.
-  attack(a.army.frontline, a.roll, 1 + calculateTactic(a.army, a.tactic, d.tactic), settings)
-  attack(d.army.frontline, d.roll, 1 + calculateTactic(d.army, d.tactic, a.tactic), settings)
+  a.army.tactic_bonus = calculateTactic(a.army, a.tactic, d.tactic)
+  d.army.tactic_bonus = calculateTactic(d.army, d.tactic, a.tactic)
+  attack(a.army.frontline, a.roll, 1 + a.army.tactic_bonus)
+  attack(d.army.frontline, d.roll, 1 + d.army.tactic_bonus)
 
   applyLosses(a.army.frontline)
   applyLosses(d.army.frontline)
@@ -157,14 +170,16 @@ const pickTargets = (source: Frontline, target: Frontline, settings: CombatSetti
     if (!unit)
       continue
     const state = unit.state
-    const info = unit.info
+    state.damage_dealt = 0
+    state.morale_dealt = 0
+    state.strength_dealt = 0
     state.morale_loss = 0
     state.strength_loss = 0
     state.target = null
     if (target[i])
       state.target = target[i]
     else {
-      const maneuver = info[UnitCalc.Maneuver]
+      const maneuver = unit.definition[UnitCalc.Maneuver]
       if (settings[CombatParameter.FixTargeting] ? i < source.length / 2 : i <= source.length / 2) {
         for (let index = i - maneuver; index <= i + maneuver; ++index) {
           if (index >= 0 && index < source.length && target[index]) {
@@ -189,7 +204,7 @@ const pickTargets = (source: Frontline, target: Frontline, settings: CombatSetti
  * Calculates effectiveness of a tactic against another tactic with a given army.
  * Not optimized!
  */
-const calculateTactic = (army: CombatUnits, tactic: TacticDefinition, counter_tactic: TacticDefinition): number => {
+export const calculateTactic = (army: CombatUnits, tactic: TacticDefinition, counter_tactic: TacticDefinition): number => {
   const effectiveness = calculateValue(tactic, counter_tactic.type)
   let unit_modifier = 1.0
   if (effectiveness > 0 && tactic && army) {
@@ -199,7 +214,7 @@ const calculateTactic = (army: CombatUnits, tactic: TacticDefinition, counter_ta
       if (!unit)
         continue
       units += unit[UnitCalc.Strength]
-      weight += calculateValue(tactic, unit.info.type) * unit[UnitCalc.Strength]
+      weight += calculateValue(tactic, unit.definition.type) * unit[UnitCalc.Strength]
     }
     if (units)
       unit_modifier = weight / units
@@ -239,7 +254,7 @@ const moveDefeated = (frontline: Frontline, defeated: Reserve, minimum_morale: n
 /**
  * Calculates losses when units attack their targets.
  */
-const attack = (frontline: Frontline, roll: number, tactic_damage_multiplier: number, settings: CombatSettings) => {
+const attack = (frontline: Frontline, roll: number, tactic_damage_multiplier: number) => {
   for (let i = 0; i < frontline.length; i++) {
     const unit = frontline[i]
     if (!unit)
@@ -247,40 +262,45 @@ const attack = (frontline: Frontline, roll: number, tactic_damage_multiplier: nu
     const target = unit.state.target
     if (!target)
       continue
-    calculateLosses(unit, target, roll, tactic_damage_multiplier, settings)
+    calculateLosses(unit, target, roll, tactic_damage_multiplier)
   }
 }
 
 const PRECISION = 100000.0
 
-const precalculateDamage = (base_damage: number, terrains: TerrainDefinition[], source: Unit) => (
+const precalculateDamage = (base_damage: number, terrains: TerrainDefinition[], unit: Unit, settings: CombatSettings) => (
   PRECISION * base_damage
-  * (1.0 + calculateValue(source, UnitCalc.Discipline))
-  * (1.0 + calculateValue(source, UnitCalc.DamageDone))
-  * (1.0 + sumBy(terrains, terrain => calculateValue(source, terrain.type)))
-  * (source.is_loyal ? 1.1 : 1.0)
+  * (1.0 + calculateValue(unit, UnitCalc.Discipline))
+  * (1.0 + calculateValue(unit, UnitCalc.DamageDone))
+  * (settings[CombatParameter.FixDamageTaken] ? 1.0 : 1.0 + calculateValue(unit, UnitCalc.DamageDone))
+  * (1.0 + sumBy(terrains, terrain => calculateValue(unit, terrain.type)))
+  * (unit.is_loyal ? 1.1 : 1.0)
 )
 
-const calculateTotalDamage = (source: CombatUnit, target: CombatUnit, dice_roll: number, tactic_damage_multiplier: number, settings: CombatSettings) => {
-  const info_s = source.info
-  const info_t = target.info
-  let damage = info_s.total[dice_roll] * info_s[info_t.type] * tactic_damage_multiplier * source[UnitCalc.Strength] * info_t.experience
+const precalculateDamageReduction = (unit: Unit, settings: CombatSettings) => (
+  (1.0 + calculateExperienceReduction(settings, unit))
+  * (settings[CombatParameter.FixDamageTaken] ? 1.0 + calculateValue(unit, UnitCalc.DamageTaken) : 1.0)
+)
+
+const calculateDamageMultiplier = (source: CombatUnit, target: CombatUnit, tactic_damage_multiplier: number) => {
+  const info_s = source.definition
+  const info_t = target.definition
+  let damage = tactic_damage_multiplier * source[UnitCalc.Strength]
     * (1.0 + info_s[UnitCalc.Offense] - info_t[UnitCalc.Defense])
-  if (settings[CombatParameter.FixDamageTaken])
-    damage *= info_t[UnitCalc.DamageTaken]
-  else
-    damage *= info_s[UnitCalc.DamageDone]
   return damage
 }
 
 /**
  * Calculates both strength and morale losses caused by a given source to a given target.
  */
-const calculateLosses = (source: CombatUnit, target: CombatUnit, dice_roll: number, tactic_damage_multiplier: number, settings: CombatSettings) => {
-  const total_damage = calculateTotalDamage(source, target, dice_roll, tactic_damage_multiplier, settings)
-  const strength_lost = total_damage * source.info[UnitCalc.StrengthDamageDone] * target.info[UnitCalc.StrengthDamageTaken]
-  const morale_lost = total_damage * source[UnitCalc.Morale] * source.info[UnitCalc.MoraleDamageDone] * target.info[UnitCalc.MoraleDamageTaken]
+const calculateLosses = (source: CombatUnit, target: CombatUnit, dice_roll: number, tactic_damage_multiplier: number) => {
+  const total_damage = source.calculated.total_damage[target.definition.type][dice_roll] * calculateDamageMultiplier(source, target, tactic_damage_multiplier)
+  const strength_lost = total_damage * source.calculated.strength_done_multiplier * target.calculated.strength_taken_multiplier
+  const morale_lost = total_damage * source.calculated.morale_done_multiplier * target.calculated.morale_taken_multiplier
 
-  target.state.morale_loss += Math.floor(morale_lost) / PRECISION
-  target.state.strength_loss += Math.floor(strength_lost) / PRECISION
+  source.state.damage_dealt = Math.floor(total_damage) / PRECISION
+  source.state.morale_dealt = Math.floor(morale_lost) / PRECISION
+  source.state.strength_dealt = Math.floor(strength_lost) / PRECISION
+  target.state.morale_loss += source.state.morale_dealt
+  target.state.strength_loss += source.state.strength_dealt
 }

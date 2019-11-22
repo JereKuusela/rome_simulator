@@ -291,20 +291,20 @@ class Battle extends Component<IProps, IState> {
 
   convertUnitForRender = (unit: CombatUnit | null): UnitArmyUnit => {
     return unit && {
-      id: unit.info.id,
+      id: unit.definition.id,
       is_defeated: unit.state.is_defeated,
-      image: unit.info.image,
+      image: unit.definition.image,
       morale: unit[UnitCalc.Morale],
-      max_morale: unit.info.max_morale,
+      max_morale: unit.definition.max_morale,
       strength: unit[UnitCalc.Strength],
-      max_strength: unit.info.max_strength
+      max_strength: unit.definition.max_strength
     }
   }
 
   convertUnitForTargetArrows = (unit: CombatUnit | null): TargetArrowsUnit => {
     return unit && {
-      id: unit.info.id,
-      target: unit.state.target?.info.id
+      id: unit.definition.id,
+      target: unit.state.target?.definition.id
     }
   }
 

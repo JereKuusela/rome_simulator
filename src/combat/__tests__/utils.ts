@@ -261,19 +261,21 @@ const testCombatFast = (info: TestInfo, rolls: number[][], attacker: Expected[],
   const base_damages_a = getBaseDamages(info.settings, dice, calculateTotalRoll(0, info.terrains, info.general_a, info.general_d))
   const base_damages_d = getBaseDamages(info.settings, dice, calculateTotalRoll(0, [], info.general_d, info.general_a))
   const tactic_casualties = calculateValue(tactics[info.army_a.tactic], TacticCalc.Casualties) + calculateValue(tactics[info.army_d.tactic], TacticCalc.Casualties)
-  const status_a = convertUnits(info.army_a, info.settings, tactic_casualties, base_damages_a, info.terrains, every_type)
-  const status_d = convertUnits(info.army_d, info.settings, tactic_casualties, base_damages_d, info.terrains, every_type)
+  const status_a = convertUnits(info.army_a, info.settings, tactic_casualties, base_damages_a, info.terrains, every_type, info.army_a.row_types)
+  const status_d = convertUnits(info.army_d, info.settings, tactic_casualties, base_damages_d, info.terrains, every_type, info.army_d.row_types)
   const participant_a: CombatParticipant = {
     army: status_a,
     roll: 0,
     tactic: tactics[info.army_a.tactic],
-    row_types: info.army_a.row_types
+    row_types: info.army_a.row_types,
+    flank: info.army_a.flank_size
   }
   const participant_d: CombatParticipant = {
     army: status_d,
     roll: 0,
     tactic: tactics[info.army_d.tactic],
-    row_types: info.army_d.row_types
+    row_types: info.army_d.row_types,
+    flank: info.army_d.flank_size
   }
   for (let roll = 0; roll < rolls.length; roll++) {
     participant_a.roll = rolls[roll][0]
@@ -316,12 +318,12 @@ const verifyFastSide = (round: number, side: Side, frontline: (CombatUnit | null
   expected.forEach((unit, index) => {
     if (unit) {
       const type = unit[0]
-      verifyType(round, side, index, frontline[index]?.info, type)
+      verifyType(round, side, index, frontline[index]?.definition, type)
       if (unit[1] !== null && unit[2] !== null)
         verifyFast(round, side, index, frontline[index], unit[1], unit[2])
     }
     else
-      verifyType(round, side, index, frontline[index]?.info, null)
+      verifyType(round, side, index, frontline[index]?.definition, null)
   })
 }
 /**

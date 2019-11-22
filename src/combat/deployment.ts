@@ -64,10 +64,10 @@ export const sortReserve = (reserve: Reserve, row_types: RowTypes): SortedReserv
   const flankReserve = reserve.filter(value => isFlankUnit(row_types, value))
   // Calculate priorities (mostly based on unit type, ties are resolved with index numbers).
   const main = sortBy(mainReserve, value => {
-      return -value.info[UnitCalc.Cost] * 100000 - value.info[UnitCalc.Strength] * 1000 - (value.info.type === row_types[RowType.Primary] ? 200000000 : 0) - (value.info.type === row_types[RowType.Secondary] ? -100000000 : 0)
+      return -value.definition.deployment_cost * 100000 - value[UnitCalc.Strength] * 1000 - (value.definition.type === row_types[RowType.Primary] ? 200000000 : 0) - (value.definition.type === row_types[RowType.Secondary] ? -100000000 : 0)
   })
   const flank = sortBy(flankReserve, value => {
-      return -value.info[UnitCalc.Maneuver] * 100000 - value.info[UnitCalc.Strength] * 1000 - (value.info.type === row_types[RowType.Flank] ? 100000000 : 0)
+      return -value.definition[UnitCalc.Maneuver] * 100000 - value[UnitCalc.Strength] * 1000 - (value.definition.type === row_types[RowType.Flank] ? 100000000 : 0)
   })
   return { main, flank }
 }
@@ -76,11 +76,11 @@ export const sortReserve = (reserve: Reserve, row_types: RowTypes): SortedReserv
 * Returns whether a given unit is a flanker.
 */
 const isFlankUnit = (row_types: RowTypes, unit: CombatUnit) => {
-  if (unit.info.type === row_types[RowType.Flank])
+  if (unit.definition.type === row_types[RowType.Flank])
       return true
-  if (unit.info.type === row_types[RowType.Primary] || unit.info.type === row_types[RowType.Secondary])
+  if (unit.definition.type === row_types[RowType.Primary] || unit.definition.type === row_types[RowType.Secondary])
       return false
-  return unit.info.is_flank
+  return unit.definition.is_flank
 }
 
 /**

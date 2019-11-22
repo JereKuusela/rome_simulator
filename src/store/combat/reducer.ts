@@ -13,7 +13,8 @@ import { doBattleFast, CombatUnits } from '../../combat/combat_fast'
 const copyStatus = (status: CombatUnits): CombatUnits => ({
   frontline: status.frontline.map(value => value ? { ...value, state: { ...value.state } } : null),
   reserve: status.reserve.map(value => ({ ...value, state: { ...value.state } })),
-  defeated: status.defeated.map(value => ({ ...value, state: { ...value.state } }))
+  defeated: status.defeated.map(value => ({ ...value, state: { ...value.state } })),
+  tactic_bonus: status.tactic_bonus
 })
 
 class CombatReducer extends ImmerReducer<AppState> {
