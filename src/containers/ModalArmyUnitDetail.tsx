@@ -9,7 +9,7 @@ import { AppState } from '../store/'
 import { UnitType, ValueType } from '../store/units'
 import { editUnit, deleteUnit, setValue, changeType, invalidateCountry, Side, toggleLoyal } from '../store/battle'
 import { CountryName } from '../store/countries'
-import { filterTerrainTypes, filterUnitTypesByCountry, findUnit } from '../store/utils'
+import { filterTerrainTypes, filterUnitTypesByCountry, getMergedUnit } from '../store/utils'
 
 import { ValuesType } from '../base_definition'
 
@@ -94,7 +94,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   global_stats: state.global_stats,
   terrain_types: filterTerrainTypes(state),
   mode: state.settings.mode,
-  unit: findUnit(state, props.side, props.id)
+  unit: getMergedUnit(state, props.side, props.id)
 })
 
 const actions = { editUnit, deleteUnit, invalidateCountry, setValue, changeType, toggleLoyal }
