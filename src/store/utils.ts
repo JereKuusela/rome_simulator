@@ -39,7 +39,7 @@ export const findBaseUnit = (state: AppState, country: CountryName, id: number):
 }
 
 export const findUnit = (state: AppState, side: Side, id: number): Unit | null => {
-  const units = getCurrentUnitsBySide(state, side)
+  const units = getUnitsBySide(state, side)
   let unit = units.reserve.find(unit => unit.id === id) || null
   if (unit)
     return unit
@@ -177,43 +177,9 @@ const getUnitsByCountry = (state: AppState, name: CountryName): Units => {
   return { frontline, reserve, defeated }
 }
 
-/*const getRounds = (state: AppState, type: Side, index: number = -1): BaseUnits | undefined => {
-  const battle = getBattle(state)
-  const participant = objGet(battle.participants, type, getDefaultParticipant(CountryName.Country1))
-  return arrGet(participant.rounds, index)
-}*/
-
-const getCurrentUnitsBySide = (state: AppState, side: Side): Units => {
-  const battle = getBattle(state)
-  const name = getParticipant(state, side).name
-  const army = battle.armies[name]
-  const units = filterUnitDefinitions(state.settings.mode, objGet(state.units, name, getDefaultUnits()))
-  const global = objGet(state.global_stats, name, getDefaultGlobals())[state.settings.mode]
-  const frontline = army.frontline.map(value => value && mergeUnits(units, global, value))
-  const reserve = army.reserve.map(value => mergeUnits(units, global, value))
-  const defeated = army.defeated.map(value => mergeUnits(units, global, value))
-  return { frontline, reserve, defeated }
-}
-
-const getPreviousUnitsBySide = (state: AppState, side: Side): Units => {
-  const battle = getBattle(state)
-  const name = getParticipant(state, side).name
-  const army = battle.armies[name]
-  const units = filterUnitDefinitions(state.settings.mode, objGet(state.units, name, getDefaultUnits()))
-  const global = objGet(state.global_stats, name, getDefaultGlobals())[state.settings.mode]
-  const frontline = army.frontline.map(value => value && mergeUnits(units, global, value))
-  const reserve = army.reserve.map(value => mergeUnits(units, global, value))
-  const defeated = army.defeated.map(value => mergeUnits(units, global, value))
-  return { frontline, reserve, defeated }
-}
-
 export const getArmy = (state: AppState, type: Side): Army => getArmyBySide(state, type)
 
 export const getBaseUnits = (state: AppState, type: Side): BaseUnits => getBaseUnitsBySide(state, type)
-
-export const getCurrentUnits = (state: AppState, type: Side): Units => getCurrentUnitsBySide(state, type)
-
-export const getPreviousUnits = (state: AppState, type: Side): Units => getPreviousUnitsBySide(state, type)
 
 export const getUnits = (state: AppState, type: Side): Units => getUnitsBySide(state, type)
 

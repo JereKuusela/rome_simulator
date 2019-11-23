@@ -78,7 +78,7 @@ export const getCombatUnit = (combatSettings: CombatSettings, casualties_multipl
     [UnitCalc.Morale]: calculateValue(unit, UnitCalc.Morale),
     [UnitCalc.Strength]: calculateValue(unit, UnitCalc.Strength),
     calculated: precalculateUnit(combatSettings, casualties_multiplier, base_damages, terrains, unit_types, unit),
-    state: { target: null, morale_loss: 0, strength_loss: 0, morale_dealt: 0, strength_dealt: 0, damage_dealt: 0, is_defeated: false },
+    state: { target: null, morale_loss: 0, strength_loss: 0, morale_dealt: 0, strength_dealt: 0, damage_dealt: 0, is_defeated: false, total_morale_dealt: 0, total_strength_dealt: 0 },
     definition: getUnitDefinition(combatSettings, terrains, unit_types, unit)
   }
   return combat_unit
@@ -121,6 +121,8 @@ export interface RoundInfo {
   strength_dealt: number
   damage_dealt: number
   is_defeated: boolean
+  total_morale_dealt: number
+  total_strength_dealt: number
 }
 
 /**
@@ -322,6 +324,8 @@ const calculateLosses = (source: CombatUnit, target: CombatUnit, dice_roll: numb
   source.state.damage_dealt = Math.floor(total_damage) / PRECISION
   source.state.morale_dealt = Math.floor(morale_lost) / PRECISION
   source.state.strength_dealt = Math.floor(strength_lost) / PRECISION
+  source.state.total_morale_dealt += source.state.morale_dealt
+  source.state.total_strength_dealt += source.state.strength_dealt
   target.state.morale_loss += source.state.morale_dealt
   target.state.strength_loss += source.state.strength_dealt
 }

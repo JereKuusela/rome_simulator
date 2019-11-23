@@ -18,7 +18,7 @@ export const randomWithinRange = (min: number, max: number) => min + Math.random
  * @param list
  * @param converter Optional converted to sum complex attributes.
  */
-export const sumArr = (arr: any[], converter?: (value: any) => number): number => arr.reduce((previous, current) => previous + (converter ? converter(current) : Number(current)), 0)
+export const sumArr = <T>(arr: T[], converter?: (value: T) => number): number => arr.reduce((previous, current) => previous + (converter ? converter(current) : Number(current)), 0)
 
 /**
  * Sums numbers in a object.
