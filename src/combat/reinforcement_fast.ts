@@ -1,4 +1,4 @@
-import { Frontline, Reserve } from './combat_fast'
+import { Frontline, Reserve } from './combat'
 
 /**
  * Calculates the next index when the order is from center to edges.

@@ -1,17 +1,17 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import LineTo from 'react-lineto'
 
 import { Side, ArmyType } from '../store/battle'
+import { AppState } from '../store/'
+import { getCurrentCombat } from '../store/utils'
 
-export type TargetArrowsUnit = {
-  id: number
-  target: number | null | undefined
-} | null
+import { CombatUnit } from '../combat/combat'
+import { getArmyPart } from '../army_utils'
 
-type IProps = {
+type Props = {
+  type: ArmyType
   visible: boolean
-  attacker: TargetArrowsUnit[]
-  defender: TargetArrowsUnit []
   attacker_color: string
   defender_color: string
 }
@@ -19,7 +19,7 @@ type IProps = {
 /**
  * Display component for showing attack targets for both sides.
  */
-export default class TargetArrows extends Component<IProps> {
+class TargetArrows extends Component<IProps> {
 
   render() {
     const { attacker, defender, attacker_color, defender_color, visible } = this.props
@@ -32,7 +32,7 @@ export default class TargetArrows extends Component<IProps> {
       </>
     )
   }
-  renderAttacker = (unit: TargetArrowsUnit, color: string) => {
+  renderAttacker = (unit: IUnit, color: string) => {
     if (!unit || !unit.target)
       return null
     const from_str = Side.Attacker + '-' + ArmyType.Frontline + '-' + unit.id
@@ -40,7 +40,7 @@ export default class TargetArrows extends Component<IProps> {
     return this.renderArrow(from_str, to_str, 'bottom', 'top', color)
   }
 
-  renderDefender = (unit: TargetArrowsUnit, color: string) => {
+  renderDefender = (unit: IUnit, color: string) => {
     if (!unit || !unit.target)
       return null
     const from_str = Side.Defender + '-' + ArmyType.Frontline + '-' + unit.id
@@ -61,3 +61,25 @@ export default class TargetArrows extends Component<IProps> {
     />
   )
 }
+
+type IUnit = {
+  id: number
+  target: number | null | undefined
+} | null
+
+const convertUnits = (units: (CombatUnit | null)[]): IUnit[] => (
+  units.map(unit => unit ? { id: unit.definition.id, target: unit.state.target?.definition.id } : null)
+)
+
+const mapStateToProps = (state: AppState, props: Props) => ({
+  attacker: convertUnits(getArmyPart(getCurrentCombat(state, Side.Attacker), props.type)),
+  defender: convertUnits(getArmyPart(getCurrentCombat(state, Side.Defender), props.type)),
+})
+
+const actions = {}
+
+type S = ReturnType<typeof mapStateToProps>
+type D = typeof actions
+interface IProps extends React.PropsWithChildren<Props>, S, D { }
+
+export default connect(mapStateToProps, actions)(TargetArrows)

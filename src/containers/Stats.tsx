@@ -13,7 +13,7 @@ import IconManpower from '../images/manpower.png'
 import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
 import IconEmpty from '../images/empty.png'
-import { CombatUnits, CombatUnit } from '../combat/combat_fast'
+import { CombatUnits, CombatUnit } from '../combat/combat'
 
 class Stats extends Component<IProps> {
   render() {

@@ -1,12 +1,12 @@
 import { AppState } from "./index"
 import { objGet, sumObj, map, reduce, toArr, filter, arrGet } from '../utils'
-import { filterUnitDefinitions, isIncludedInMode, mergeUnits } from '../army_utils'
+import { filterUnitDefinitions, isIncludedInMode, mergeUnits, getArmyPart } from '../army_utils'
 import { TacticType, TacticDefinition } from "./tactics/actions"
-import { mergeValues, DefinitionType, Mode, addValues, ValuesType } from "../base_definition"
+import { mergeValues, DefinitionType, Mode } from "../base_definition"
 import { TerrainType, TerrainDefinition } from "./terrains/actions"
-import { UnitType, UnitDefinition, BaseUnit, Unit, UnitCalc } from "./units/actions"
+import { UnitType, UnitDefinition, BaseUnit, Unit } from "./units/actions"
 import { Battle, getDefaultMode, getDefaultBattle } from "./battle/reducer"
-import { getDefaultArmy, Army as BaseArmy, Side, getDefaultParticipant, BaseUnits, Participant, Units, RowTypes } from "./battle/actions"
+import { getDefaultArmy, Army as BaseArmy, Side, getDefaultParticipant, BaseUnits, Participant, Units, RowTypes, ArmyType } from "./battle/actions"
 import { getDefaultCountryDefinitions } from "./countries/reducer"
 import { CountryName } from "./countries"
 import { getDefaultGlobals, getDefaultUnits } from "./units/data"
@@ -14,7 +14,7 @@ import { CombatSettings, getDefaultSettings } from "./settings"
 import { UnitDefinitions, getDefaultBaseDefinitions, getDefaultUnitDefinitions } from "./units"
 import { TerrainDefinitions, getDefaultTerrainDefinitions } from "./terrains";
 import { TacticDefinitions, getDefaultTacticDefinitions } from "./tactics";
-import { CombatUnits, CombatUnit } from "../combat/combat_fast"
+import { CombatUnits, CombatUnit } from "../combat/combat"
 
 /**
  * Returns settings of the current mode.
@@ -52,6 +52,14 @@ export const findUnit = (state: AppState, side: Side, id: number): Unit | null =
   return null
 }
 
+export const getCombatUnit = (state: AppState, side: Side, type: ArmyType, id: number | null): CombatUnit | null => {
+  if (id === null)
+    return null
+  const units = getCurrentCombat(state, side)
+  const army = getArmyPart(units, type)
+  return army.find(unit => unit?.definition.id === id) ?? null
+}
+
 const findCombatUnit = (units: CombatUnits, id: number): CombatUnit | null => {
   let unit = units.reserve.find(unit => unit.definition.id === id) || null
   if (unit)
@@ -65,28 +73,9 @@ const findCombatUnit = (units: CombatUnits, id: number): CombatUnit | null => {
   return null
 }
 
-export const getMergedUnit = (state: AppState, side: Side, id: number): Unit | null => {
-  let definition = findUnit(state, side, id)
-  if (!definition)
-    return null
+export const getCombatUnitForEachRound = (state: AppState, side: Side, id: number) => {
   const rounds = state.battle[state.settings.mode].participants[side].rounds
-  rounds.forEach((units, round) => {
-    const combat = findCombatUnit(units, id)
-    if (!combat)
-      return
-    const lossValues: [string, number][] = [
-      [UnitCalc.Morale, combat.state.morale_loss],
-      [UnitCalc.Strength, combat.state.strength_loss]
-    ]
-    const dealtValues: [string, number][] = [
-      [UnitCalc.MoraleDepleted, combat.state.morale_dealt],
-      [UnitCalc.StrengthDepleted, combat.state.strength_dealt]
-    ]
-    definition = addValues(definition!, ValuesType.Loss, 'Round ' + (round - 1),  lossValues)
-    definition = addValues(definition!, ValuesType.Base, 'Round ' + (round - 1),  dealtValues)
-
-  })
-  return definition
+  return rounds.map(units => findCombatUnit(units, id))
 }
 
 /**

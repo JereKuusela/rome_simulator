@@ -74,9 +74,14 @@ export const mergeValues = <D1 extends BD | undefined, D2 extends BD | undefined
     merge(loss_values, definition.loss_values)
   if (to_merge && to_merge.loss_values)
     merge(loss_values, to_merge.loss_values)
+  let loss_modifier_values = initValues()
+  if (definition && definition.loss_modifier_values)
+    merge(loss_modifier_values, definition.loss_modifier_values)
+  if (to_merge && to_merge.loss_modifier_values)
+    merge(loss_modifier_values, to_merge.loss_modifier_values)
   // Must be set manually to overwrite '' with an actual image.
   const image = (definition && definition.image) || (to_merge && to_merge.image)
-  return { ...to_merge, ...definition, base_values, modifier_values, loss_values, image }
+  return { ...to_merge, ...definition, base_values, modifier_values, loss_values, loss_modifier_values, image }
 }
 
 /**
@@ -122,7 +127,8 @@ export const clearAllValues = <D extends BD>(definition: D, key: string): D => {
     ...definition,
     base_values: subClearValues(definition.base_values, key),
     modifier_values: subClearValues(definition.modifier_values, key),
-    loss_values: subClearValues(definition.loss_values, key)
+    loss_values: subClearValues(definition.loss_values, key),
+    loss_modifier_values: subClearValues(definition.loss_modifier_values, key)
   }
 }
 
@@ -137,6 +143,8 @@ export const clearValues = <D extends BVD>(definition: D, type: ValuesType, key:
     return { ...definition, modifier_values: subClearValues(any.modifier_values, key) }
   if (type === ValuesType.Loss)
     return { ...definition, loss_values: subClearValues(any.loss_values, key) }
+  if (type === ValuesType.LossModifier)
+    return { ...definition, loss_modifier_values: subClearValues(any.loss_values, key) }
   return definition
 }
 

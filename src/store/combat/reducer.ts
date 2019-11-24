@@ -8,7 +8,7 @@ import { getArmyForCombat, mergeUnitTypes, getCurrentCombat } from '../utils'
 import { arrGet } from '../../utils'
 import { doConversion, checkAlive } from '../../combat/simulation'
 import { deploy } from '../../combat/deployment'
-import { doBattleFast, CombatUnits } from '../../combat/combat_fast'
+import { doBattleFast, CombatUnits } from '../../combat/combat'
 
 const copyStatus = (status: CombatUnits): CombatUnits => ({
   frontline: status.frontline.map(value => value ? { ...value, state: { ...value.state } } : null),
@@ -71,7 +71,7 @@ class CombatReducer extends ImmerReducer<AppState> {
 
     }
     if (battle.round === -1 && steps > 0) {
-      deploy(attacker.army, defender.army, attacker.flank, defender.flank, attacker.row_types, defender.row_types, settings)
+      deploy(attacker, defender, settings)
       Object.freeze(attacker.army)
       Object.freeze(defender.army)
       battle.participants[Side.Attacker].rounds.push(attacker.army)

@@ -4,11 +4,12 @@ import { BaseUnit, UnitCalc, UnitType, getDefaultUnits, getDefaultGlobals } from
 import { calculateValue, mergeValues, DefinitionType } from '../../base_definition'
 import { map, mapRange } from '../../utils'
 import { CountryName } from '../../store/countries'
-import { doBattle, calculateTotalRoll } from '../combat'
+import { calculateTotalRoll } from '../combat_utils'
 import { getDefaultLandSettings, CombatParameter } from '../../store/settings'
 import { TerrainDefinition, TerrainType, getDefaultTerrains } from '../../store/terrains'
-import { doBattleFast, CombatParticipant, CombatUnit, RoundInfo } from '../combat_fast'
+import { doBattleFast, CombatParticipant, CombatUnit, CombatUnitRoundInfo } from '../combat'
 import { getBaseDamages, convertUnits } from '../simulation'
+import { deploy, sortReserve } from '../deployment'
 
 const global_stats = getDefaultGlobals()[DefinitionType.Land]
 const units = map(getDefaultUnits(), unit => mergeValues(unit, global_stats))
@@ -215,12 +216,7 @@ export const every_type = [UnitType.Archers, UnitType.CamelCavalry, UnitType.Cha
 /**
  * Performs one combat round with a given test info.
  */
-const doRound = (round: number, info: TestInfo) => {
-  const [a, d] = doBattle(definitions, { ...info.attacker, ...info.army_a, tactic: tactics[info.army_a.tactic], country: CountryName.Country1, general: info.general_a }, { ...info.defender, ...info.army_d, tactic: tactics[info.army_d.tactic], country: CountryName.Country2, general: info.general_d }, round + 1, info.terrains, info.settings)
-  info.army_a = { ...info.army_a, ...a }
-  info.army_d = { ...info.army_d, ...d }
-}
-const doFastRound = (info: TestInfo, a: CombatParticipant, d: CombatParticipant) => {
+const doRound = (info: TestInfo, a: CombatParticipant, d: CombatParticipant) => {
   doBattleFast(a, d, false, info.settings)
 }
 
@@ -228,35 +224,7 @@ const doFastRound = (info: TestInfo, a: CombatParticipant, d: CombatParticipant)
 type ExpectedUnits = ([UnitType | null, number | null, number | null] | null)
 type Expected = (ExpectedUnits[] | null)
 
-/**
- * Tester function for combat.
- * @param info Initial combat state.
- * @param rolls List of rolls.
- * @param attacker Expected attacker units for every round. Nulls can be used to skip checks.
- * @param defender Expected defender units for every round. Nulls can be used to skip checks.
- */
-export const testCombat = (info: TestInfo, rolls: number[][], attacker: Expected[], defender: Expected[]) => {
-  // Fast combat must be tested first because slow overwrites original data.
-  testCombatFast(info, rolls, attacker, defender)
-  testCombatSlow(info, rolls, attacker, defender)
-}
-export const testDeploy = (info: TestInfo) => doRound(-1, info)
-export const testReinforce = (info: TestInfo) => doRound(0, info)
-
-
-const testCombatSlow = (info: TestInfo, rolls: number[][], attacker: Expected[], defender: Expected[]) => {
-  for (let roll = 0; roll < rolls.length; roll++) {
-    setRolls(info, rolls[roll][0], rolls[roll][1])
-    const limit = Math.min((roll + 1) * 5, attacker.length)
-    for (let round = roll * 5; round < limit; round++) {
-      doRound(round, info)
-      verifySide(round, Side.Attacker, info.army_a.frontline, attacker[round])
-      verifySide(round, Side.Defender, info.army_d.frontline, defender[round])
-    }
-  }
-}
-
-const testCombatFast = (info: TestInfo, rolls: number[][], attacker: Expected[], defender: Expected[]) => {
+const getParticipants = (info: TestInfo) => {
   const dice = info.settings[CombatParameter.DiceMaximum] - info.settings[CombatParameter.DiceMinimum] + 1
   const base_damages_a = getBaseDamages(info.settings, dice, calculateTotalRoll(0, info.terrains, info.general_a, info.general_d))
   const base_damages_d = getBaseDamages(info.settings, dice, calculateTotalRoll(0, [], info.general_d, info.general_a))
@@ -277,16 +245,65 @@ const testCombatFast = (info: TestInfo, rolls: number[][], attacker: Expected[],
     row_types: info.army_d.row_types,
     flank: info.army_d.flank_size
   }
+  return [participant_a, participant_d]
+}
+
+/**
+ * Tester function for combat.
+ * @param info Initial combat state.
+ * @param rolls List of rolls.
+ * @param attacker Expected attacker units for every round. Nulls can be used to skip checks.
+ * @param defender Expected defender units for every round. Nulls can be used to skip checks.
+ */
+export const testCombat = (info: TestInfo, rolls: number[][], attacker: Expected[], defender: Expected[]) => {
+  const [participant_a, participant_d] = getParticipants(info)
   for (let roll = 0; roll < rolls.length; roll++) {
     participant_a.roll = rolls[roll][0]
     participant_d.roll = rolls[roll][1]
     const limit = Math.min((roll + 1) * 5, attacker.length)
     for (let round = roll * 5; round < limit; round++) {
-      doFastRound(info, participant_a, participant_d)
-      verifyFastSide(round, Side.Attacker, participant_a.army.frontline, attacker[round])
-      verifyFastSide(round, Side.Defender, participant_d.army.frontline, defender[round])
+      doRound(info, participant_a, participant_d)
+      verifySide(round, Side.Attacker, participant_a.army.frontline, attacker[round])
+      verifySide(round, Side.Defender, participant_d.army.frontline, defender[round])
     }
   }
+}
+export const testDeploy = (info: TestInfo, expected_a: UnitType[] | null = null, reserve_length_a: number = 0, expected_d: UnitType[] | null = null, reserve_length_d: number = 0) => {
+  const [participant_a, participant_d] = getParticipants(info)
+  deploy(participant_a, participant_d, info.settings)
+  verifyDeployOrReinforce(info, Side.Attacker, participant_a, expected_a, reserve_length_a)
+  verifyDeployOrReinforce(info, Side.Defender, participant_d, expected_d, reserve_length_d)
+}
+
+const verifyDeployOrReinforce = (info: TestInfo, side: Side, participant: CombatParticipant, expected: UnitType[] | null = null, reserve_length: number = 0) => {
+  if (expected) {
+    verifyTypes(info, expected, side, participant.army.frontline)
+    expect(participant.army.reserve.length).toEqual(reserve_length)
+  }
+}
+
+const nextIndex = (index: number, half: number) => index < half ? index + 2 * (half - index) : index - 2 * (index - half) - 1
+
+const verifyTypes = (info: TestInfo, types: UnitType[], side: Side, frontline: (CombatUnit | null)[]) => {
+  const half = Math.floor(info.settings[CombatParameter.CombatWidth] / 2.0)
+  let index = half
+  for (const type of types) {
+    verifyType(-1, side, index, frontline[index]?.definition, type, ' at index ' + index)
+    index = nextIndex(index, half)
+  }
+}
+
+export const testReinforce = (info: TestInfo, expected_a: UnitType[] | null = null, reserve_length_a: number = 0, expected_d: UnitType[] | null = null, reserve_length_d: number = 0) => {
+  const [participant_a, participant_d] = getParticipants(info)
+  let reserve = participant_a.army.reserve
+  let sorted = sortReserve(reserve, participant_a.row_types)
+  reserve.splice(0, reserve.length, ...(sorted.flank.concat(sorted.main)))
+  reserve = participant_d.army.reserve
+  sorted = sortReserve(reserve, participant_d.row_types)
+  reserve.splice(0, reserve.length, ...(sorted.flank.concat(sorted.main)))
+  doRound(info, participant_a, participant_d)
+  verifyDeployOrReinforce(info, Side.Attacker, participant_a, expected_a, reserve_length_a)
+  verifyDeployOrReinforce(info, Side.Defender, participant_d, expected_d, reserve_length_d)
 }
 
 /**
@@ -296,22 +313,7 @@ const testCombatFast = (info: TestInfo, rolls: number[][], attacker: Expected[],
  * @param frontline Units to check.
  * @param expected Expected units. Check is skipped if null.
  */
-const verifySide = (round: number, side: Side, frontline: (BaseUnit | null)[], expected: Expected | null) => {
-  // Data might be missing or not relevant for the test..
-  if (!expected)
-    return
-  expected.forEach((unit, index) => {
-    if (unit) {
-      const type = unit[0]
-      verifyType(round, side, index, frontline[index], type)
-      if (unit[1] !== null && unit[2] !== null)
-        verify(round, side, index, frontline[index], unit[1], unit[2])
-    }
-    else
-      verifyType(round, side, index, frontline[index], null)
-  })
-}
-const verifyFastSide = (round: number, side: Side, frontline: (CombatUnit | null)[], expected: Expected | null) => {
+const verifySide = (round: number, side: Side, frontline: (CombatUnit | null)[], expected: Expected | null) => {
   // Data might be missing or not relevant for the test..
   if (!expected)
     return

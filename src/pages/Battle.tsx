@@ -4,10 +4,10 @@ import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { UnitDefinitions, UnitCalc } from '../store/units'
 import UnitArmy, { UnitArmyUnit } from '../components/UnitArmy'
-import TargetArrows, { TargetArrowsUnit } from '../components/TargetArrows'
+import TargetArrows from '../containers/TargetArrows'
 import { invalidate, invalidateCountry, ArmyType, undo, Participant, Side, toggleRandomRoll, setRoll, RowType, setFlankSize, selectArmy, selectUnit, RowTypes, BaseFrontLine, BaseReserve, BaseDefeated } from '../store/battle'
 import { battle, setSeed, refreshBattle } from '../store/combat'
-import { calculateTactic, calculateRollModifierFromTerrains, calculateRollModifierFromGenerals, calculateBaseDamage, calculateTotalRoll } from '../combat/combat'
+import { calculateTactic, calculateRollModifierFromTerrains, calculateRollModifierFromGenerals, calculateBaseDamage, calculateTotalRoll } from '../combat/combat_utils'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import { TacticType } from '../store/tactics'
 import IconDice from '../images/chance.png'
@@ -29,7 +29,7 @@ import StyledNumber from '../components/Utils/StyledNumber'
 import { keys, resize } from '../utils'
 import WinRate from '../containers/WinRate'
 import Stats from '../containers/Stats'
-import { CombatUnit, CombatUnits } from '../combat/combat_fast'
+import { CombatUnit, CombatUnits } from '../combat/combat'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
@@ -139,9 +139,8 @@ class Battle extends Component<IProps, IState> {
           <Grid.Row columns={1} style={{ padding: 0 }}>
             <Grid.Column>
               <TargetArrows
+                type={ArmyType.Frontline}
                 visible={!this.props.fight_over}
-                attacker={this.props.combat_a.frontline.map(this.convertUnitForTargetArrows)}
-                defender={this.props.combat_d.frontline.map(this.convertUnitForTargetArrows)}
                 attacker_color={ATTACKER_COLOR}
                 defender_color={DEFENDER_COLOR}
               />
@@ -298,13 +297,6 @@ class Battle extends Component<IProps, IState> {
       max_morale: unit.definition.max_morale,
       strength: unit[UnitCalc.Strength],
       max_strength: unit.definition.max_strength
-    }
-  }
-
-  convertUnitForTargetArrows = (unit: CombatUnit | null): TargetArrowsUnit => {
-    return unit && {
-      id: unit.definition.id,
-      target: unit.state.target?.definition.id
     }
   }
 

@@ -3,8 +3,8 @@ import { TerrainDefinition } from "../store/terrains"
 import { CombatSettings, CombatParameter, SimulationSettings, SimulationParameter } from "../store/settings"
 import { Side, BaseUnits, RowTypes } from "../store/battle"
 
-import { doBattleFast, getCombatUnit, CombatParticipant, CombatUnits, Frontline, Reserve } from "./combat_fast"
-import { calculateTotalRoll } from "./combat"
+import { doBattleFast, getCombatUnit, CombatParticipant, CombatUnits, Frontline, Reserve } from "./combat"
+import { calculateTotalRoll } from "./combat_utils"
 
 import { mapRange } from "../utils"
 import { calculateValue } from "../base_definition"
@@ -108,7 +108,7 @@ export const calculateWinRate = (doUpdateCasualties: boolean, simulationSettings
   const maxDepth = simulationSettings[SimulationParameter.MaxDepth]
 
   // Deployment is shared for each iteration.
-  deploy(attacker.army, defender.army, attacker.flank, defender.flank, attacker.row_types, defender.row_types, combatSettings)
+  deploy(attacker, defender, combatSettings)
 
   const total_a: State = { morale: 0, strength: 0 }
   const current_a: State = { morale: 0, strength: 0 }

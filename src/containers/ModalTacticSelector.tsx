@@ -11,7 +11,7 @@ import { toSignedPercent, toPercent } from '../formatters'
 import { CountryName } from '../store/countries'
 import StyledNumber from '../components/Utils/StyledNumber'
 import { map, filter, toArr } from '../utils'
-import { calculateTactic } from '../combat/combat'
+import { calculateTactic } from '../combat/combat_utils'
 
 export interface ModalInfo {
   country: CountryName

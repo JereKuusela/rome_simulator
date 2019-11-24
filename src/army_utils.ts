@@ -2,9 +2,10 @@ import { Army } from './store/utils';
 import { BaseUnit, UnitDefinition, Unit } from './store/units/actions'
 import { mergeValues, DefinitionType } from './base_definition'
 import { getDefaultUnits } from './store/units/data'
-import { BaseUnits, Units, BaseFrontLine, FrontLine, Reserve, Defeated } from './store/battle'
+import { BaseUnits, Units, BaseFrontLine, FrontLine, Reserve, Defeated, ArmyType } from './store/battle'
 import { UnitDefinitions } from './store/units'
 import { filter } from './utils';
+import { CombatUnits } from './combat/combat';
 
 /**
  * Merges units to their definitions resulting in current units.
@@ -83,4 +84,12 @@ export const findUnitById = (units: BaseUnits | undefined, id: number): BaseUnit
   if (base_unit)
     return base_unit
   return undefined
+}
+
+export const getArmyPart = (units: CombatUnits, type: ArmyType) => {
+  if (type === ArmyType.Frontline)
+    return units.frontline
+  if (type === ArmyType.Reserve)
+    return units.reserve
+  return units.defeated
 }

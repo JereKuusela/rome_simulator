@@ -4,7 +4,7 @@ import { TacticType } from '../tactics/actions'
 import { DefinitionType, Mode } from '../../base_definition'
 import { CountryName } from '../countries'
 import { ObjSet } from '../../utils'
-import { CombatUnits } from '../../combat/combat_fast'
+import { CombatUnits } from '../../combat/combat'
 
 export enum RowType {
   Primary = 'Primary',

@@ -6,12 +6,13 @@ import ItemRemover from '../components/ItemRemover'
 import UnitDetail from '../components/UnitDetail'
 
 import { AppState } from '../store/'
-import { UnitType, ValueType } from '../store/units'
+import { UnitType, ValueType, Unit, UnitCalc } from '../store/units'
 import { editUnit, deleteUnit, setValue, changeType, invalidateCountry, Side, toggleLoyal } from '../store/battle'
 import { CountryName } from '../store/countries'
-import { filterTerrainTypes, filterUnitTypesByCountry, getMergedUnit } from '../store/utils'
+import { filterTerrainTypes, filterUnitTypesByCountry, findUnit, getCombatUnitForEachRound } from '../store/utils'
 
-import { ValuesType } from '../base_definition'
+import { ValuesType, addValues } from '../base_definition'
+import { CombatUnit } from '../combat/combat'
 
 const CUSTOM_VALUE_KEY = 'Unit'
 
@@ -89,12 +90,34 @@ class ModalArmyUnitDetail extends Component<IProps> {
   }
 }
 
+
+const convertUnit = (definition: Unit | null, rounds: (CombatUnit | null)[]): Unit | null => {
+  if (!definition)
+    return null
+  rounds.forEach((combat, round) => {
+    if (!combat)
+      return
+    const lossValues: [string, number][] = [
+      [UnitCalc.Morale, combat.state.morale_loss],
+      [UnitCalc.Strength, combat.state.strength_loss]
+    ]
+    const dealtValues: [string, number][] = [
+      [UnitCalc.MoraleDepleted, combat.state.morale_dealt],
+      [UnitCalc.StrengthDepleted, combat.state.strength_dealt]
+    ]
+    definition = addValues(definition!, ValuesType.Loss, 'Round ' + (round - 1),  lossValues)
+    definition = addValues(definition!, ValuesType.Base, 'Round ' + (round - 1),  dealtValues)
+
+  })
+  return definition
+}
+
 const mapStateToProps = (state: AppState, props: Props) => ({
   unit_types: filterUnitTypesByCountry(state, props.country),
   global_stats: state.global_stats,
   terrain_types: filterTerrainTypes(state),
   mode: state.settings.mode,
-  unit: getMergedUnit(state, props.side, props.id)
+  unit: convertUnit(findUnit(state, props.side, props.id), getCombatUnitForEachRound(state, props.side, props.id) )
 })
 
 const actions = { editUnit, deleteUnit, invalidateCountry, setValue, changeType, toggleLoyal }

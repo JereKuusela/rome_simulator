@@ -1,5 +1,5 @@
 import { nextIndex } from "./reinforcement_fast"
-import { CombatUnits, CombatUnit, Reserve } from "./combat_fast"
+import { CombatUnits, CombatUnit, Reserve, CombatParticipant } from "./combat"
 import { UnitCalc } from "../store/units"
 import { remove, sortBy } from "lodash"
 import { CombatSettings, CombatParameter } from "../store/settings"
@@ -144,18 +144,18 @@ const calculateFlankSizes = (flank_size: number, enemy_units: CombatUnits): [num
   return [left_flank_size, right_flank_size]
 }
 
-export const deploy = (units_a: CombatUnits, units_d: CombatUnits, preferred_flank_a: number, preferred_flank_d: number, row_types_a: RowTypes, row_types_d: RowTypes,settings: CombatSettings) => {
-  removeOutOfBounds(units_a, settings[CombatParameter.CombatWidth])
-  removeOutOfBounds(units_d, settings[CombatParameter.CombatWidth])
-  removeDefeated(units_a, settings[CombatParameter.MinimumMorale], settings[CombatParameter.MinimumStrength])
-  removeDefeated(units_d, settings[CombatParameter.MinimumMorale], settings[CombatParameter.MinimumStrength])
+export const deploy = (attacker: CombatParticipant, defender: CombatParticipant, settings: CombatSettings) => {
+  removeOutOfBounds(attacker.army, settings[CombatParameter.CombatWidth])
+  removeOutOfBounds(defender.army, settings[CombatParameter.CombatWidth])
+  removeDefeated(attacker.army, settings[CombatParameter.MinimumMorale], settings[CombatParameter.MinimumStrength])
+  removeDefeated(defender.army, settings[CombatParameter.MinimumMorale], settings[CombatParameter.MinimumStrength])
 
-  preferred_flank_a = preferredFlankSize(units_a, preferred_flank_a)
-  preferred_flank_d = preferredFlankSize(units_a, preferred_flank_d)
+  const preferred_flank_a = preferredFlankSize(attacker.army, attacker.flank)
+  const preferred_flank_d = preferredFlankSize(defender.army, defender.flank)
 
-  const [left_flank_a, right_flank_a] = calculateFlankSizes(preferred_flank_a, units_d)
-  const [left_flank_d, right_flank_d] = calculateFlankSizes(preferred_flank_d, units_a)
+  const [left_flank_a, right_flank_a] = calculateFlankSizes(preferred_flank_a, defender.army)
+  const [left_flank_d, right_flank_d] = calculateFlankSizes(preferred_flank_d, attacker.army)
 
-  deployArmy(units_a, left_flank_a, right_flank_a, row_types_a)
-  deployArmy(units_d, left_flank_d, right_flank_d, row_types_d)
+  deployArmy(attacker.army, left_flank_a, right_flank_a, attacker.row_types)
+  deployArmy(defender.army, left_flank_d, right_flank_d, defender.row_types)
 }
