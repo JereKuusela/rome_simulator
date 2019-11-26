@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Modal } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import ModalTacticDetail from '../containers/ModalTacticDetail'
+import ModalTacticDetail from '../containers/modal/ModalTacticDetail'
 import { AppState } from '../store/index'
 import TacticDefinitions from '../components/TacticDefinitions'
 import ItemRemover from '../components/ItemRemover'

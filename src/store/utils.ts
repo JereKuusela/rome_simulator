@@ -171,9 +171,21 @@ export const getSelectedTactic = (state: AppState, side: Side): TacticDefinition
   return state.tactics[army.tactic]
 }
 
+export const getRowTypes = (state: AppState, side: Side): RowTypes => {
+  const army = getBaseArmy(state, side)
+  return  army.row_types
+}
+
+export const getFlankSize = (state: AppState, side: Side): number => {
+  const army = getBaseArmy(state, side)
+  return  army.flank_size
+}
+
 export const getCountry = (state: AppState, side: Side): CountryName => {
   return state.battle[state.settings.mode].participants[side].name
 }
+
+export const getMode = (state: AppState): Mode => state.settings.mode
 
 const getBaseArmy = (state: AppState, side: Side)=> {
   const participant = state.battle[state.settings.mode].participants[side]
@@ -239,7 +251,7 @@ export const getUnitDefinitions = (state: AppState, side: Side): UnitDefinitions
 
 export const getUnitDefinitionsByCountry = (state: AppState, name: CountryName): UnitDefinitions => {
   const global = objGet(state.global_stats, name, getDefaultGlobals())[state.settings.mode]
-  const units = filterUnitDefinitions(state.settings.mode, objGet(state.units, name, getDefaultUnits()))
+  const units = filterUnitDefinitions(state.settings.mode, state.units[name])
   return map(units, definition => mergeValues(definition, global))
 }
 

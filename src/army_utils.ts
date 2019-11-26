@@ -1,7 +1,6 @@
 import { Army } from './store/utils';
 import { BaseUnit, UnitDefinition, Unit } from './store/units/actions'
 import { mergeValues, DefinitionType } from './base_definition'
-import { getDefaultUnits } from './store/units/data'
 import { BaseUnits, Units, BaseFrontLine, FrontLine, Reserve, Defeated, ArmyType } from './store/battle'
 import { UnitDefinitions } from './store/units'
 import { filter } from './utils';
@@ -54,8 +53,7 @@ export const isIncludedInMode = (mode: DefinitionType, definition: { mode: Defin
  * @param mode
  * @param definitions 
  */
-export const filterUnitDefinitions = (mode: DefinitionType, definitions?: UnitDefinitions): UnitDefinitions => {
-  definitions = definitions || getDefaultUnits()
+export const filterUnitDefinitions = (mode: DefinitionType, definitions: UnitDefinitions): UnitDefinitions => {
   return filter(definitions, unit => isIncludedInMode(mode, unit))
 }
 

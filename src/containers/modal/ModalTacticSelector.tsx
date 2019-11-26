@@ -2,18 +2,18 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 
-import { AppState } from '../store/'
-import { selectTactic, invalidate, Side, getOpponent } from '../store/battle'
-import { TacticType, TacticCalc } from '../store/tactics'
-import { filterTactics, getCurrentCombat, getSelectedTactic, getCountry } from '../store/utils'
+import { AppState } from '../../store/'
+import { selectTactic, invalidate, Side, getOpponent } from '../../store/battle'
+import { TacticType, TacticCalc } from '../../store/tactics'
+import { filterTactics, getCurrentCombat, getSelectedTactic, getCountry } from '../../store/utils'
 
-import { calculateValue } from '../base_definition'
-import { toSignedPercent, toPercent } from '../formatters'
-import { map, filter, toArr } from '../utils'
-import { calculateTactic } from '../combat/combat'
+import { calculateValue } from '../../base_definition'
+import { toSignedPercent, toPercent } from '../../formatters'
+import { map, filter, toArr } from '../../utils'
+import { calculateTactic } from '../../combat/combat'
 
-import StyledNumber from '../components/Utils/StyledNumber'
-import ItemSelector, { SelectorAttributes } from '../components/ItemSelector'
+import StyledNumber from '../../components/Utils/StyledNumber'
+import ItemSelector, { SelectorAttributes } from '../../components/ItemSelector'
 
 type Props = {
   side?: Side

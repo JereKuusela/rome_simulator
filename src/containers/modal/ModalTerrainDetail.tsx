@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { setBaseValue, ValueType, TerrainType, LocationType, changeLocation, changeImage, changeMode } from '../store/terrains'
-import { AppState } from '../store/'
-import { invalidate } from '../store/battle'
-import { DefinitionType, Mode } from '../base_definition'
-import TerrainDetail from '../components/TerrainDetail'
+import { setBaseValue, ValueType, TerrainType, LocationType, changeLocation, changeImage, changeMode } from '../../store/terrains'
+import { AppState } from '../../store/'
+import { invalidate } from '../../store/battle'
+import { DefinitionType, Mode } from '../../base_definition'
+import TerrainDetail from '../../components/TerrainDetail'
 
 
 const CUSTOM_VALUE_KEY = 'Custom'

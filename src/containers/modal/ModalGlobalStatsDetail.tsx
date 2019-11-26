@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import UnitDetail from '../components/UnitDetail'
+import UnitDetail from '../../components/UnitDetail'
 
-import { AppState } from '../store/'
-import { UnitType, setGlobalValue, ValueType, Unit, toggleGlobalIsLoyal } from '../store/units'
-import { CountryName } from '../store/countries'
-import { invalidateCountry } from '../store/battle'
+import { AppState } from '../../store/'
+import { UnitType, setGlobalValue, ValueType, Unit, toggleGlobalIsLoyal } from '../../store/units'
+import { CountryName } from '../../store/countries'
+import { invalidateCountry } from '../../store/battle'
 
-import { ValuesType } from '../base_definition'
+import { ValuesType } from '../../base_definition'
 
 const CUSTOM_VALUE_KEY = 'Global'
 

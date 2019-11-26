@@ -10,7 +10,7 @@ import { getImage } from '../base_definition'
 
 import StyledNumber from '../components/Utils/StyledNumber'
 import { toSignedPercent } from '../formatters'
-import ModalTacticSelector from './ModalTacticSelector'
+import ModalTacticSelector from './modal/ModalTacticSelector'
 
 type Props = {
   side: Side

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Modal } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import ModalTerrainDetail from '../containers/ModalTerrainDetail'
+import ModalTerrainDetail from '../containers/modal/ModalTerrainDetail'
 import { AppState } from '../store/index'
 import TerrainDefinitions from '../components/TerrainDefinitions'
 import ItemRemover from '../components/ItemRemover'

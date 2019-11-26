@@ -2,22 +2,21 @@ import React, { Component } from 'react'
 import { Header, Button, Grid, Image, Checkbox, Input, Table, Divider } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
-import { UnitDefinitions } from '../store/units'
 import UnitArmy from '../containers/TableArmyPart'
 import TargetArrows from '../containers/TargetArrows'
-import { invalidate, invalidateCountry, ArmyType, undo, Participant, Side, toggleRandomRoll, setRoll, RowType, setFlankSize, selectArmy, selectUnit, RowTypes, BaseFrontLine } from '../store/battle'
+import { invalidate, invalidateCountry, ArmyType, undo, Participant, Side, toggleRandomRoll, setRoll, RowType, setFlankSize, selectArmy, selectUnit, BaseFrontLine } from '../store/battle'
 import { battle, setSeed, refreshBattle } from '../store/combat'
 import { calculateRollModifierFromTerrains, calculateRollModifierFromGenerals, calculateBaseDamage, calculateTotalRoll } from '../combat/combat_utils'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import IconDice from '../images/chance.png'
 import Dropdown from '../components/Utils/Dropdown'
-import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from '../containers/ModalUnitSelector'
-import ModalRowTypeSelector, { ModalInfo as ModalRowInfo } from '../containers/ModalRowTypeSelector'
-import ModalTerrainSelector, { ModalInfo as ModalTerrainInfo } from '../containers/ModalTerrainSelector'
+import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from '../containers/modal/ModalUnitSelector'
+import PreferredUnitTypes from '../containers/PreferredUnitTypes'
+import ModalTerrainSelector, { ModalInfo as ModalTerrainInfo } from '../containers/modal/ModalTerrainSelector'
 import TacticSelector from '../containers/TacticSelector'
-import ModalArmyUnitDetail from '../containers/ModalArmyUnitDetail'
-import ModalFastPlanner from '../containers/ModalFastPlanner'
-import { calculateValue, mergeValues, getImage, Mode } from '../base_definition'
+import ModalArmyUnitDetail from '../containers/modal/ModalArmyUnitDetail'
+import ModalFastPlanner from '../containers/modal/ModalFastPlanner'
+import { calculateValue, mergeValues, Mode } from '../base_definition'
 import { getCombatSettings, getBattle, getArmy, Army, getParticipant, getCurrentCombat } from '../store/utils'
 import { addSign } from '../formatters'
 import { CountryName, setGeneralMartial } from '../store/countries'
@@ -34,7 +33,6 @@ interface IState {
   modal_unit_info: ModalUnitInfo | null
   modal_terrain_info: ModalTerrainInfo | null
   modal_army_unit_info: { country: CountryName, id: number, side: Side } | null
-  modal_row_info: ModalRowInfo | null
   modal_fast_planner_open: boolean
 }
 
@@ -45,12 +43,12 @@ class Battle extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    this.state = { modal_unit_info: null, modal_terrain_info: null, modal_army_unit_info: null, modal_fast_planner_open: false, modal_row_info: null }
+    this.state = { modal_unit_info: null, modal_terrain_info: null, modal_army_unit_info: null, modal_fast_planner_open: false }
   }
 
-  isModalOpen = () => this.state.modal_unit_info || this.state.modal_terrain_info || this.state.modal_army_unit_info || this.state.modal_fast_planner_open || this.state.modal_row_info
+  isModalOpen = () => this.state.modal_unit_info || this.state.modal_terrain_info || this.state.modal_army_unit_info || this.state.modal_fast_planner_open
 
-  closeModal = (): void => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_army_unit_info: null, modal_fast_planner_open: false, modal_row_info: null })
+  closeModal = (): void => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_army_unit_info: null, modal_fast_planner_open: false })
 
   openUnitModal = (side: Side, type: ArmyType, country: CountryName, column: number, id: number | undefined): void => {
     if (id)
@@ -69,8 +67,6 @@ class Battle extends Component<IProps, IState> {
 
   openFastPlanner = (): void => this.setState({ modal_fast_planner_open: true })
 
-  openRowModal = (country: CountryName, type: RowType): void => this.setState({ modal_row_info: { country, type } })
-
   render() {
     if (this.props.outdated)
       this.props.refreshBattle(this.props.mode)
@@ -80,10 +76,6 @@ class Battle extends Component<IProps, IState> {
       <>
         <ModalUnitSelector
           info={this.state.modal_unit_info}
-          onClose={this.closeModal}
-        />
-        <ModalRowTypeSelector
-          info={this.state.modal_row_info}
           onClose={this.closeModal}
         />
         <ModalFastPlanner
@@ -229,8 +221,8 @@ class Battle extends Component<IProps, IState> {
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {this.renderRowTypes(Side.Attacker, army_a)}
-                  {this.renderRowTypes(Side.Defender, army_d)}
+                  <PreferredUnitTypes side={Side.Attacker} />
+                  <PreferredUnitTypes side={Side.Defender} />
                 </Table.Body>
               </Table>
             </Grid.Column>
@@ -419,34 +411,6 @@ class Battle extends Component<IProps, IState> {
         </Table.Cell>
         <Table.Cell collapsing>
           {this.renderIsRollRandom(side, participant.randomize_roll)}
-        </Table.Cell>
-      </Table.Row>
-    )
-  }
-
-  renderCell = (country: CountryName, type: RowType, types: RowTypes, units: UnitDefinitions): JSX.Element => {
-    const unit = types[type]
-    return (
-      <Table.Cell selectable onClick={() => this.openRowModal(country, type)}>
-        <Image src={getImage(unit && units[unit])} avatar />
-      </Table.Cell>
-    )
-  }
-
-  renderRowTypes = (type: Side, army: Army): JSX.Element => {
-    const country = army.name
-    const units = this.props.units[country]
-    const row_types = army.row_types
-    return (
-      <Table.Row key={type}>
-        <Table.Cell>
-          {type}
-        </Table.Cell>
-        {this.renderCell(country, RowType.Primary, row_types, units)}
-        {this.renderCell(country, RowType.Secondary, row_types, units)}
-        {this.renderCell(country, RowType.Flank, row_types, units)}
-        <Table.Cell collapsing>
-          <Input size='mini' style={{ width: 100 }} type='number' value={army && army.flank_size} onChange={(_, data) => this.props.setFlankSize(this.props.mode, country, Number(data.value))} />
         </Table.Cell>
       </Table.Row>
     )

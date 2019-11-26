@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { setBaseValue, ValueType, TacticType, changeImage, changeMode } from '../store/tactics'
-import { AppState } from '../store/'
-import { invalidate } from '../store/battle'
-import TacticDetail from '../components/TacticDetail'
-import { Mode, DefinitionType } from '../base_definition'
-import { mergeUnitTypes, filterTacticTypes, filterTactics } from '../store/utils'
+import { setBaseValue, ValueType, TacticType, changeImage, changeMode } from '../../store/tactics'
+import { AppState } from '../../store/'
+import { invalidate } from '../../store/battle'
+import TacticDetail from '../../components/TacticDetail'
+import { Mode, DefinitionType } from '../../base_definition'
+import { mergeUnitTypes, filterTacticTypes, filterTactics } from '../../store/utils'
 
 const CUSTOM_VALUE_KEY = 'Custom'
 

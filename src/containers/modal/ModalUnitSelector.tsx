@@ -2,16 +2,16 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 
-import ItemSelector from '../components/ItemSelector'
+import ItemSelector from '../../components/ItemSelector'
 
-import { AppState } from '../store/'
-import { UnitType } from '../store/units'
-import { selectUnit, ArmyType } from '../store/battle'
-import { CountryName } from '../store/countries'
+import { AppState } from '../../store/'
+import { UnitType } from '../../store/units'
+import { selectUnit, ArmyType } from '../../store/battle'
+import { CountryName } from '../../store/countries'
 
-import { getNextId } from '../army_utils'
-import { toArr } from '../utils'
-import { getUnitDefinitionsByCountry } from '../store/utils'
+import { getNextId } from '../../army_utils'
+import { toArr } from '../../utils'
+import { getUnitDefinitionsByCountry } from '../../store/utils'
 
 interface Props {
   info: ModalInfo | null
