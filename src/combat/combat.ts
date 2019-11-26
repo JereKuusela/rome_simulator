@@ -210,8 +210,8 @@ const pickTargets = (source: Frontline, target: Frontline, settings: CombatSetti
  * Calculates effectiveness of a tactic against another tactic with a given army.
  * Not optimized!
  */
-export const calculateTactic = (army: CombatUnits, tactic: TacticDefinition, counter_tactic: TacticDefinition): number => {
-  const effectiveness = calculateValue(tactic, counter_tactic.type)
+export const calculateTactic = (army: CombatUnits, tactic: TacticDefinition, counter_tactic?: TacticDefinition): number => {
+  const effectiveness = counter_tactic ? calculateValue(tactic, counter_tactic.type) : 1.0
   let unit_modifier = 1.0
   if (effectiveness > 0 && tactic && army) {
     let units = 0
@@ -264,7 +264,7 @@ const moveDefeated = (frontline: Frontline, defeated: Reserve, minimum_morale: n
 /**
  * Removes temporary defeated units from frontline.
  */
-const removeDefeated = (frontline: Frontline) => {
+export const removeDefeated = (frontline: Frontline) => {
   for (let i = 0; i < frontline.length; i++) {
     const unit = frontline[i]
     if (!unit)

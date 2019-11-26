@@ -6,9 +6,9 @@ import { CombatParameter, CombatSettings } from '../settings'
 import { AppState } from '../'
 import { getArmyForCombat, mergeUnitTypes, getCurrentCombat } from '../utils'
 import { arrGet } from '../../utils'
-import { doConversion, checkAlive } from '../../combat/simulation'
+import { doConversion } from '../../combat/simulation'
 import { deploy } from '../../combat/deployment'
-import { doBattleFast, CombatUnits } from '../../combat/combat'
+import { doBattleFast, CombatUnits, removeDefeated, Frontline, Reserve } from '../../combat/combat'
 
 const copyStatus = (status: CombatUnits): CombatUnits => ({
   frontline: status.frontline.map(value => value ? { ...value, state: { ...value.state } } : null),
@@ -16,6 +16,8 @@ const copyStatus = (status: CombatUnits): CombatUnits => ({
   defeated: status.defeated.map(value => ({ ...value, state: { ...value.state } })),
   tactic_bonus: status.tactic_bonus
 })
+
+const checkAlive = (frontline: Frontline, reserve: Reserve) => reserve.length || frontline.some(value => value && !value.state.is_defeated)
 
 class CombatReducer extends ImmerReducer<AppState> {
 
@@ -91,6 +93,13 @@ class CombatReducer extends ImmerReducer<AppState> {
       defender.roll = participant_d.roll
 
       doBattleFast(attacker, defender, true, settings)
+
+      battle.fight_over = !checkAlive(attacker.army.frontline, attacker.army.reserve) || !checkAlive(defender.army.frontline, defender.army.reserve)
+      if (battle.fight_over) {
+        removeDefeated(attacker.army.frontline)
+        removeDefeated(defender.army.frontline)
+      }
+
       Object.freeze(attacker.army)
       Object.freeze(defender.army)
       battle.participants[Side.Attacker].rounds.push(attacker.army)
@@ -98,7 +107,6 @@ class CombatReducer extends ImmerReducer<AppState> {
       updateRoll(participant_a)
       updateRoll(participant_d)
       battle.round++
-      battle.fight_over = !checkAlive(attacker.army.frontline, attacker.army.reserve) || !checkAlive(defender.army.frontline, defender.army.reserve)
     }
   }
 

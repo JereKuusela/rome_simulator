@@ -1,11 +1,8 @@
 
-import { DeepReadonly as R } from 'ts-essentials'
 import { sumBy } from 'lodash'
 
 import { UnitCalc, Unit } from '../store/units'
 import { TerrainCalc, TerrainDefinition } from '../store/terrains'
-import { TacticDefinition, TacticType } from '../store/tactics'
-import { BaseUnits } from '../store/battle'
 import { CombatParameter, CombatSettings } from '../store/settings'
 
 import { calculateValue} from '../base_definition'
@@ -32,32 +29,6 @@ export const calculateTotalRoll = (roll: number, terrains: TerrainDefinition[], 
   const modifier_terrain = calculateRollModifierFromTerrains(terrains)
   const modifier_effect = calculateRollModifierFromGenerals(general, opposing_general)
   return roll + modifier_terrain + modifier_effect
-}
-
-/**
- * Calculates effectiveness of a tactic against another tactic with a given army.
- * @param frontline Units affecting the positive bonus.
- * @param tactic Tactic to calculate.
- * @param counter_tactic Opposing tactic, can counter or get countered.
- */
-export const calculateTactic = (army?: R<BaseUnits>, tactic?: R<TacticDefinition>, counter_tactic?: TacticType): number => {
-  const effectiveness = (tactic && counter_tactic) ? calculateValue(tactic, counter_tactic) : tactic ? 1.0 : 0.0
-  let unit_modifier = 1.0
-  if (effectiveness > 0 && tactic && army) {
-    let units = 0
-    let weight = 0.0
-    for (const unit of army.frontline.concat(army.reserve).concat(army.defeated)) {
-      if (!unit || unit.is_defeated)
-        continue
-      const strength = calculateValue(unit, UnitCalc.Strength)
-      units += strength
-      weight += calculateValue(tactic, unit.type) * strength
-    }
-    if (units)
-      unit_modifier = weight / units
-  }
-
-  return effectiveness * Math.min(1.0, unit_modifier)
 }
 
 /**

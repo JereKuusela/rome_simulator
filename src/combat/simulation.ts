@@ -270,7 +270,7 @@ const doPhase = (rounds_per_phase: number, attacker: CombatParticipant, defender
 /**
  * Custom some function. Probably could use Lodash but better safe than sorry (since performance is so critical).
  */
-export const checkAlive = (frontline: Frontline, reserve: Reserve) => {
+const checkAlive = (frontline: Frontline, reserve: Reserve) => {
   if (reserve.length)
     return true
   for (let i = 0; i < frontline.length; i++) {

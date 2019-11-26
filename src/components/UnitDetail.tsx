@@ -50,16 +50,16 @@ export default class UnitDetail extends Component<IProps> {
   render() {
     const { unit, onTypeChange, onModeChange, onImageChange, onIsFlankToggle, onCanAssaultToggle, onIsLoyalToggle } = this.props
     const { terrain_types, unit_types, unit_types_as_dropdown } = this.props
-    const { id, type, mode, image, is_defeated, is_flank, can_assault, is_loyal } = unit
+    const { id, type, mode, image, is_flank, can_assault, is_loyal } = unit
     return (
       <Table celled selectable unstackable>
         <Headers values={this.headers} />
         <Table.Body>
           {id && <DetailTextRow text='Identifier' cells={this.CELLS} value={id} />}
-          {onTypeChange && unit_types && unit_types_as_dropdown && <DetailDropdownRow text='Type' cells={this.CELLS} value={type} values={unit_types} onChange={is_defeated ? undefined : onTypeChange} />}
-          {onTypeChange && unit_types && !unit_types_as_dropdown && <DetailInputRow text='Name' cells={this.CELLS} value={type} onChange={is_defeated ? undefined : onTypeChange} />}
+          {onTypeChange && unit_types && unit_types_as_dropdown && <DetailDropdownRow text='Type' cells={this.CELLS} value={type} values={unit_types} onChange={onTypeChange} />}
+          {onTypeChange && unit_types && !unit_types_as_dropdown && <DetailInputRow text='Name' cells={this.CELLS} value={type} onChange={onTypeChange} />}
           {onModeChange && <DetailDropdownRow text='Mode' cells={this.CELLS} value={mode} values={this.modes} onChange={onModeChange} />}
-          {onImageChange && <DetailInputRow text='Image' cells={this.CELLS} value={image} onChange={is_defeated ? undefined : onImageChange} />}
+          {onImageChange && <DetailInputRow text='Image' cells={this.CELLS} value={image} onChange={onImageChange} />}
           {unit_types && <DetailToggleRow text='Is flank?' cells={this.CELLS} value={is_flank} onChange={onIsFlankToggle} />}
           {unit_types && <DetailToggleRow text='Can assault?' cells={this.CELLS} value={can_assault} onChange={onCanAssaultToggle} />}
           {<DetailToggleRow text='Is loyal?' cells={this.CELLS} value={!!is_loyal} onChange={onIsLoyalToggle} />}
@@ -73,7 +73,6 @@ export default class UnitDetail extends Component<IProps> {
 
   renderRow = (attribute: ValueType) => {
     const { unit, show_statistics, custom_value_key, onCustomBaseValueChange, onCustomModifierValueChange, onCustomLossValueChange } = this.props
-    const { is_defeated } = unit
     if (attribute === UnitCalc.MovementSpeed || attribute === UnitCalc.RecruitTime)
       return null
     if (!show_statistics && (attribute === UnitCalc.StrengthDepleted || attribute === UnitCalc.MoraleDepleted))
@@ -89,14 +88,14 @@ export default class UnitDetail extends Component<IProps> {
       <PaddedRow key={attribute} cells={this.CELLS}>
         {attribute}
         {value}
-        <DetailValueInput value={base_value} disabled={is_defeated} onChange={value => onCustomBaseValueChange(custom_value_key, attribute, value)} />
+        <DetailValueInput value={base_value} onChange={value => onCustomBaseValueChange(custom_value_key, attribute, value)} />
         {
           (attribute === UnitCalc.Morale || attribute === UnitCalc.Strength || attribute === UnitCalc.Maintenance || attribute === UnitCalc.Cost || attribute === UnitCalc.AttritionWeight) &&
-          <DetailValueInput value={modifier_value} disabled={is_defeated} onChange={value => onCustomModifierValueChange(custom_value_key, attribute, value)} />
+          <DetailValueInput value={modifier_value} onChange={value => onCustomModifierValueChange(custom_value_key, attribute, value)} />
         }
         {
           (attribute === UnitCalc.Morale || attribute === UnitCalc.Strength) &&
-          <DetailValueInput value={loss_value} disabled={is_defeated} onChange={value => onCustomLossValueChange(custom_value_key, attribute, value)} />
+          <DetailValueInput value={loss_value} onChange={value => onCustomLossValueChange(custom_value_key, attribute, value)} />
         }
         {explain(unit, attribute)}
       </PaddedRow>

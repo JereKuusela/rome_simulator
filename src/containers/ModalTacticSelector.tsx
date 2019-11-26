@@ -1,44 +1,40 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
-import { AppState } from '../store/'
-import { selectTactic, invalidate, BaseDefeated, BaseReserve, BaseFrontLine } from '../store/battle'
-import ItemSelector, { SelectorAttributes } from '../components/ItemSelector'
-import { TacticType, TacticCalc } from '../store/tactics'
-import { getBattle, filterTactics } from '../store/utils'
-import { mergeValues, calculateValue, Mode } from '../base_definition'
-import { toSignedPercent, toPercent } from '../formatters'
-import { CountryName } from '../store/countries'
-import StyledNumber from '../components/Utils/StyledNumber'
-import { map, filter, toArr } from '../utils'
-import { calculateTactic } from '../combat/combat_utils'
 
-export interface ModalInfo {
-  country: CountryName
-  counter?: TacticType
+import { AppState } from '../store/'
+import { selectTactic, invalidate, Side, getOpponent } from '../store/battle'
+import { TacticType, TacticCalc } from '../store/tactics'
+import { filterTactics, getCurrentCombat, getSelectedTactic, getCountry } from '../store/utils'
+
+import { calculateValue } from '../base_definition'
+import { toSignedPercent, toPercent } from '../formatters'
+import { map, filter, toArr } from '../utils'
+import { calculateTactic } from '../combat/combat'
+
+import StyledNumber from '../components/Utils/StyledNumber'
+import ItemSelector, { SelectorAttributes } from '../components/ItemSelector'
+
+type Props = {
+  side?: Side
+  onClose: () => void
 }
 
 class ModalTacticSelector extends Component<IProps> {
-  render(): JSX.Element | null {
-    if (!this.props.info)
+  render() {
+    const { side, units, opposing_tactic } = this.props
+    if (!side || !units)
       return null
-    const country = this.props.info.country
-    const participant = this.props.armies[country]
-    const army = participant && {
-      frontline: this.mergeAllValues(country, participant.frontline),
-      reserve: this.mergeAllValues(country, participant.reserve) as BaseReserve,
-      defeated: this.mergeAllValues(country, participant.defeated) as BaseDefeated
-    }
     const attributes = {} as SelectorAttributes<TacticType>
     attributes['effect'] =  map(this.props.tactics, value => (
         <StyledNumber
-         value={calculateTactic(army, value)}
+         value={calculateTactic(units, value)}
          formatter={toPercent}
         /> 
     ))
     attributes['damage'] = map(this.props.tactics, value => (
        <StyledNumber
-        value={calculateTactic(army, value, this.props.info!.counter)}
+        value={calculateTactic(units, value, opposing_tactic)}
         formatter={toSignedPercent}
        /> 
     ))
@@ -62,32 +58,27 @@ class ModalTacticSelector extends Component<IProps> {
     )
   }
 
-  selectTactic = (type: TacticType | null): void => {
-    this.props.info && type && this.props.selectTactic(this.props.mode, this.props.info.country, type)
-    this.props.onClose()
-  }
-
-
-  mergeAllValues = (name: CountryName, army: BaseFrontLine): BaseFrontLine => {
-    return army.map(value => value && mergeValues(mergeValues(this.props.units[name][value.type], value), this.props.global_stats[name][this.props.mode]))
+  selectTactic = (type: TacticType | null) => {
+    const { mode, country, selectTactic, onClose, invalidate } = this.props
+    if (country && type)
+      selectTactic(mode, country, type)
+    invalidate(mode)
+    onClose()
   }
 }
 
-const mapStateToProps = (state: AppState) => ({
+const mapStateToProps = (state: AppState, props: Props) => ({
+  units: props.side && getCurrentCombat(state, props.side),
   tactics: filterTactics(state),
-  armies: getBattle(state).armies,
-  mode: state.settings.mode,
-  units: state.units,
-  global_stats: state.global_stats
+  opposing_tactic: props.side && getSelectedTactic(state, getOpponent(props.side)),
+  country: props.side && getCountry(state, props.side),
+  mode: state.settings.mode
 })
 
-const mapDispatchToProps = (dispatch: any) => ({
-  selectTactic: (mode: Mode, name: CountryName, type: TacticType) => dispatch(selectTactic(mode, name, type)) && dispatch(invalidate(mode))
-})
+const actions = { selectTactic, invalidate}
 
-interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {
-  info: ModalInfo | null
-  onClose: () => void
-}
+type S = ReturnType<typeof mapStateToProps>
+type D = typeof actions
+type IProps = Props & S & D
 
-export default connect(mapStateToProps, mapDispatchToProps)(ModalTacticSelector)
+export default connect(mapStateToProps, actions)(ModalTacticSelector)

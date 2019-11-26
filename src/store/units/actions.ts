@@ -46,8 +46,6 @@ export enum UnitCalc {
 export type ValueType = UnitCalc | UnitType | TerrainType
 
 export interface BaseUnit extends BaseDefinition<UnitType, ValueType> {
-  readonly is_defeated?: boolean
-  readonly target?: number | null
   readonly id: number
   readonly is_loyal?: boolean
 }

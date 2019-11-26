@@ -3,24 +3,23 @@ import { Header, Button, Grid, Image, Checkbox, Input, Table, Divider } from 'se
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { UnitDefinitions } from '../store/units'
-import UnitArmy from '../components/TableArmyPart'
+import UnitArmy from '../containers/TableArmyPart'
 import TargetArrows from '../containers/TargetArrows'
-import { invalidate, invalidateCountry, ArmyType, undo, Participant, Side, toggleRandomRoll, setRoll, RowType, setFlankSize, selectArmy, selectUnit, RowTypes, BaseFrontLine, BaseReserve, BaseDefeated } from '../store/battle'
+import { invalidate, invalidateCountry, ArmyType, undo, Participant, Side, toggleRandomRoll, setRoll, RowType, setFlankSize, selectArmy, selectUnit, RowTypes, BaseFrontLine } from '../store/battle'
 import { battle, setSeed, refreshBattle } from '../store/combat'
-import { calculateTactic, calculateRollModifierFromTerrains, calculateRollModifierFromGenerals, calculateBaseDamage, calculateTotalRoll } from '../combat/combat_utils'
+import { calculateRollModifierFromTerrains, calculateRollModifierFromGenerals, calculateBaseDamage, calculateTotalRoll } from '../combat/combat_utils'
 import { TerrainDefinition, TerrainCalc } from '../store/terrains'
-import { TacticType } from '../store/tactics'
 import IconDice from '../images/chance.png'
 import Dropdown from '../components/Utils/Dropdown'
 import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from '../containers/ModalUnitSelector'
 import ModalRowTypeSelector, { ModalInfo as ModalRowInfo } from '../containers/ModalRowTypeSelector'
 import ModalTerrainSelector, { ModalInfo as ModalTerrainInfo } from '../containers/ModalTerrainSelector'
-import ModalTacticSelector, { ModalInfo as ModalTacticInfo } from '../containers/ModalTacticSelector'
+import TacticSelector from '../containers/TacticSelector'
 import ModalArmyUnitDetail from '../containers/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/ModalFastPlanner'
 import { calculateValue, mergeValues, getImage, Mode } from '../base_definition'
 import { getCombatSettings, getBattle, getArmy, Army, getParticipant, getCurrentCombat } from '../store/utils'
-import { addSign, toSignedPercent } from '../formatters'
+import { addSign } from '../formatters'
 import { CountryName, setGeneralMartial } from '../store/countries'
 import { CombatParameter } from '../store/settings'
 import IconTerrain from '../images/terrain.png'
@@ -34,7 +33,6 @@ import { CombatUnits } from '../combat/combat'
 interface IState {
   modal_unit_info: ModalUnitInfo | null
   modal_terrain_info: ModalTerrainInfo | null
-  modal_tactic_info: ModalTacticInfo | null
   modal_army_unit_info: { country: CountryName, id: number, side: Side } | null
   modal_row_info: ModalRowInfo | null
   modal_fast_planner_open: boolean
@@ -47,12 +45,12 @@ class Battle extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    this.state = { modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null, modal_fast_planner_open: false, modal_row_info: null }
+    this.state = { modal_unit_info: null, modal_terrain_info: null, modal_army_unit_info: null, modal_fast_planner_open: false, modal_row_info: null }
   }
 
-  isModalOpen = () => this.state.modal_unit_info || this.state.modal_terrain_info || this.state.modal_tactic_info || this.state.modal_army_unit_info || this.state.modal_fast_planner_open || this.state.modal_row_info
+  isModalOpen = () => this.state.modal_unit_info || this.state.modal_terrain_info || this.state.modal_army_unit_info || this.state.modal_fast_planner_open || this.state.modal_row_info
 
-  closeModal = (): void => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_tactic_info: null, modal_army_unit_info: null, modal_fast_planner_open: false, modal_row_info: null })
+  closeModal = (): void => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_army_unit_info: null, modal_fast_planner_open: false, modal_row_info: null })
 
   openUnitModal = (side: Side, type: ArmyType, country: CountryName, column: number, id: number | undefined): void => {
     if (id)
@@ -68,8 +66,6 @@ class Battle extends Component<IProps, IState> {
   }
 
   openTerrainModal = (index: number): void => this.setState({ modal_terrain_info: { index, location: this.props.terrains[this.props.selected_terrains[index]].location } })
-
-  openTacticModal = (country: CountryName, counter?: TacticType): void => this.setState({ modal_tactic_info: { country, counter } })
 
   openFastPlanner = (): void => this.setState({ modal_fast_planner_open: true })
 
@@ -102,10 +98,6 @@ class Battle extends Component<IProps, IState> {
         />
         <ModalTerrainSelector
           info={this.state.modal_terrain_info}
-          onClose={this.closeModal}
-        />
-        <ModalTacticSelector
-          info={this.state.modal_tactic_info}
           onClose={this.closeModal}
         />
         <Grid verticalAlign='middle'>
@@ -401,28 +393,6 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderTactic = (army: Army, counter?: TacticType): JSX.Element => {
-    const country = army.name
-    const tactic = this.props.tactics[army.tactic]
-    const units = {
-      frontline: this.mergeAllValues(country, army.frontline),
-      reserve: this.mergeAllValues(country, army.reserve) as BaseReserve,
-      defeated: this.mergeAllValues(country, army.defeated) as BaseDefeated
-    }
-    return (
-      <div key={country} onClick={() => this.openTacticModal(country, counter)}>
-        {<Image src={getImage(tactic)} avatar />}
-        {(tactic && tactic.type) || 'None'}
-        {' ('}
-        <StyledNumber
-          value={calculateTactic(units, tactic, counter)}
-          formatter={toSignedPercent}
-        />
-        {')'}
-      </div >
-    )
-  }
-
   renderArmyInfo = (side: Side, participant: Participant, army: Army, enemy: Army): JSX.Element => {
     const name = army.name
     return (
@@ -442,7 +412,7 @@ class Battle extends Component<IProps, IState> {
           {' '}<StyledNumber value={army.general.trait} formatter={addSign} />
         </Table.Cell>
         <Table.Cell collapsing>
-          {this.renderTactic(army, enemy.tactic)}
+          <TacticSelector side={side} />
         </Table.Cell>
         <Table.Cell>
           {this.renderRoll(side, participant.roll, participant.randomize_roll, army.general.total, enemy.general.total)}

@@ -1,7 +1,7 @@
 
 import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
 import {
-  getDefaultArmy, getInitialTerrains, Army, Side, ArmyType, BaseUnits, Participant, getDefaultParticipant, RowType
+  getDefaultArmy, getInitialTerrains, Army, Side, ArmyType, Participant, getDefaultParticipant, RowType
 } from './actions'
 import { BaseUnit, UnitType, ValueType } from '../units'
 import { TerrainType } from '../terrains'
@@ -9,7 +9,7 @@ import { DefinitionType, Mode, ValuesType, addValues } from '../../base_definiti
 import { CountryName } from '../countries'
 import { TacticType } from '../tactics';
 import { keys, toArr, forEach, arrGet } from '../../utils'
-import { findLastIndex, every, some } from 'lodash'
+import { findLastIndex} from 'lodash'
 
 export interface Battle {
   armies: Armies
@@ -73,12 +73,6 @@ const update = (army: Army, id: number, updater: (unit: BaseUnit) => BaseUnit): 
   }
 }
 
-export const checkFightSub = (army: BaseUnits) => checkArmy(army.frontline) || checkArmy(army.reserve)
-
-export const isOver = (participants: Participants, armies: Armies) => !every(participants, value => checkFightSub(arrGet(value.rounds, -1, armies[value.name])))
-
-const checkArmy = (army: (BaseUnit | null)[]) => some(army, value => value)
-
 export const doRemoveReserveUnits = (reserve: BaseUnit[], types: UnitType[]) => {
   for (const type of types) {
     const index = findLastIndex(reserve, value => value.type === type)
@@ -108,7 +102,6 @@ class BattleReducer extends ImmerReducer<ModeState> {
       draft.defeated.push(unit)
     else if (type === ArmyType.Defeated && !unit)
       draft.defeated.splice(index, 1)
-    this.draftState[mode].fight_over = isOver(this.draftState[mode].participants, this.draftState[mode].armies)
   }
 
   setValue(mode: Mode, country: CountryName, id: number, values_type: ValuesType, key: string, attribute: ValueType, value: number) {
@@ -158,13 +151,11 @@ class BattleReducer extends ImmerReducer<ModeState> {
     const state = this.state[mode].armies[country]
     const draft = this.draftState[mode].armies[country]
     draft.reserve = doRemoveReserveUnits(state.reserve, types)
-    this.draftState[mode].fight_over = isOver(this.draftState[mode].participants, this.draftState[mode].armies)
   }
 
   addReserveUnits(mode: Mode, country: CountryName, units: BaseUnit[]) {
     const draft = this.draftState[mode].armies[country]
     draft.reserve = doAddReserveUnits(draft.reserve, units)
-    this.draftState[mode].fight_over = isOver(this.draftState[mode].participants, this.draftState[mode].armies)
   }
 
   selectTerrain(mode: Mode, index: number, terrain: TerrainType) {
@@ -193,7 +184,6 @@ class BattleReducer extends ImmerReducer<ModeState> {
   }
 
   undo(mode: Mode, steps: number) {
-    const state = this.state[mode]
     const draft = this.draftState[mode]
     for (let step = 0; step < steps && draft.round > -1; ++step) {
       let seed: number = draft.seed
@@ -205,8 +195,8 @@ class BattleReducer extends ImmerReducer<ModeState> {
         value.rolls.pop()
       })
       draft.round--
-      draft.fight_over = isOver(draft.participants, state.armies)
       draft.seed = seed
+      draft.fight_over = false
     }
   }
 

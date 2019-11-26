@@ -58,6 +58,8 @@ export enum Side {
   Defender = 'Defender'
 }
 
+export const getOpponent = (side: Side) => side === Side.Attacker ? Side.Defender : Side.Attacker
+
 export enum ArmyType {
   Frontline = 'Frontline',
   Reserve = 'Reserve',
