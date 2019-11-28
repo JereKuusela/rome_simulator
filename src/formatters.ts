@@ -9,6 +9,14 @@ export const hideZero = (number: number) => number === 0 ? undefined : number
 export const addSign = (number?: number): string => {
   if (number === undefined)
     return ''
+  if (number > 0)
+    return '+' + String(number)
+  return String(number)
+}
+
+export const addSignWithZero = (number?: number): string => {
+  if (number === undefined)
+    return ''
   if (number >= 0)
     return '+' + String(number)
   return String(number)

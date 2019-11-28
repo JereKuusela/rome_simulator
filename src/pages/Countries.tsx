@@ -20,7 +20,7 @@ import CountryManager from '../containers/CountryManager'
 import Dropdown from '../components/Utils/Dropdown'
 import ConfirmationButton from '../components/ConfirmationButton'
 import StyledNumber from '../components/Utils/StyledNumber'
-import { addSign } from '../formatters'
+import { addSignWithZero } from '../formatters'
 
 const TRADE_COLUMNS = 4
 const HERITAGE_COLUMNS = 4
@@ -91,7 +91,7 @@ class Countries extends Component<IProps> {
                   style={{ float: 'right' }}
                 />
                 Base martial: <Input disabled={!country.has_general} type='number' value={country.general_martial} onChange={(_, { value }) => omen && this.setGeneralMartial(value)} />
-                {' '}with <StyledNumber value={sumObj(country.trait_martial)} formatter={addSign} /> from traits
+                {' '}with <StyledNumber value={sumObj(country.trait_martial)} formatter={addSignWithZero} /> from traits
                 {
                   this.renderTraits(this.props.traits, selections, !country.has_general)
                 }

@@ -3,7 +3,7 @@ import { objGet, sumObj, map, reduce, toArr, filter, arrGet } from '../utils'
 import { filterUnitDefinitions, isIncludedInMode, mergeUnits, getArmyPart } from '../army_utils'
 import { TacticType, TacticDefinition } from "./tactics/actions"
 import { mergeValues, DefinitionType, Mode } from "../base_definition"
-import { TerrainType, TerrainDefinition } from "./terrains/actions"
+import { TerrainType, TerrainDefinition, LocationType } from "./terrains/actions"
 import { UnitType, UnitDefinition, BaseUnit, Unit } from "./units/actions"
 import { Battle, getDefaultMode, getDefaultBattle } from "./battle/reducer"
 import { getDefaultArmy, Army as BaseArmy, Side, getDefaultParticipant, BaseUnits, Participant, Units, RowTypes, ArmyType } from "./battle/actions"
@@ -102,8 +102,8 @@ export const filterTerrainTypes = (state: AppState): TerrainType[] => {
  * Returns terrains for the current mode.
  * @param state Application state.
  */
-export const filterTerrains = (state: AppState): TerrainDefinitions => {
-  return filter(state.terrains, terrain => isIncludedInMode(state.settings.mode, terrain))
+export const filterTerrains = (state: AppState, location?: LocationType): TerrainDefinitions => {
+  return filter(state.terrains, terrain => isIncludedInMode(state.settings.mode, terrain) && (!location || terrain.location === location))
 }
 
 /**

@@ -4,19 +4,18 @@ import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import UnitArmy from '../containers/TableArmyPart'
 import TargetArrows from '../containers/TargetArrows'
-import { invalidate, invalidateCountry, ArmyType, undo, Participant, Side, toggleRandomRoll, setRoll, RowType, setFlankSize, selectArmy, selectUnit, BaseFrontLine } from '../store/battle'
+import { invalidate, invalidateCountry, ArmyType, undo, Participant, Side, toggleRandomRoll, setRoll, setFlankSize, selectArmy, selectUnit, BaseFrontLine } from '../store/battle'
 import { battle, setSeed, refreshBattle } from '../store/combat'
 import { calculateRollModifierFromTerrains, calculateRollModifierFromGenerals, calculateBaseDamage, calculateTotalRoll } from '../combat/combat_utils'
-import { TerrainDefinition, TerrainCalc } from '../store/terrains'
 import IconDice from '../images/chance.png'
 import Dropdown from '../components/Utils/Dropdown'
 import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from '../containers/modal/ModalUnitSelector'
 import PreferredUnitTypes from '../containers/PreferredUnitTypes'
-import ModalTerrainSelector, { ModalInfo as ModalTerrainInfo } from '../containers/modal/ModalTerrainSelector'
+import TerrainSelector from '../containers/TerrainSelector'
 import TacticSelector from '../containers/TacticSelector'
 import ModalArmyUnitDetail from '../containers/modal/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/modal/ModalFastPlanner'
-import { calculateValue, mergeValues, Mode } from '../base_definition'
+import { mergeValues, Mode } from '../base_definition'
 import { getCombatSettings, getBattle, getArmy, Army, getParticipant, getCurrentCombat } from '../store/utils'
 import { addSign } from '../formatters'
 import { CountryName, setGeneralMartial } from '../store/countries'
@@ -31,7 +30,6 @@ import { CombatUnits } from '../combat/combat'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
-  modal_terrain_info: ModalTerrainInfo | null
   modal_army_unit_info: { country: CountryName, id: number, side: Side } | null
   modal_fast_planner_open: boolean
 }
@@ -43,12 +41,12 @@ class Battle extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    this.state = { modal_unit_info: null, modal_terrain_info: null, modal_army_unit_info: null, modal_fast_planner_open: false }
+    this.state = { modal_unit_info: null, modal_army_unit_info: null, modal_fast_planner_open: false }
   }
 
-  isModalOpen = () => this.state.modal_unit_info || this.state.modal_terrain_info || this.state.modal_army_unit_info || this.state.modal_fast_planner_open
+  isModalOpen = () => this.state.modal_unit_info || this.state.modal_army_unit_info || this.state.modal_fast_planner_open
 
-  closeModal = (): void => this.setState({ modal_unit_info: null, modal_terrain_info: null, modal_army_unit_info: null, modal_fast_planner_open: false })
+  closeModal = (): void => this.setState({ modal_unit_info: null, modal_army_unit_info: null, modal_fast_planner_open: false })
 
   openUnitModal = (side: Side, type: ArmyType, country: CountryName, column: number, id: number | undefined): void => {
     if (id)
@@ -62,8 +60,6 @@ class Battle extends Component<IProps, IState> {
   openArmyUnitModal = (side: Side, country: CountryName, id: number): void => {
     this.setState({ modal_army_unit_info: { country, id, side } })
   }
-
-  openTerrainModal = (index: number): void => this.setState({ modal_terrain_info: { index, location: this.props.terrains[this.props.selected_terrains[index]].location } })
 
   openFastPlanner = (): void => this.setState({ modal_fast_planner_open: true })
 
@@ -86,10 +82,6 @@ class Battle extends Component<IProps, IState> {
           country={this.state.modal_army_unit_info ? this.state.modal_army_unit_info.country : '' as CountryName}
           id={this.state.modal_army_unit_info ? this.state.modal_army_unit_info.id : -1}
           side={this.state.modal_army_unit_info ? this.state.modal_army_unit_info.side : Side.Attacker}
-          onClose={this.closeModal}
-        />
-        <ModalTerrainSelector
-          info={this.state.modal_terrain_info}
           onClose={this.closeModal}
         />
         <Grid verticalAlign='middle'>
@@ -176,55 +168,12 @@ class Battle extends Component<IProps, IState> {
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
-              <Table celled unstackable>
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell>
-                      Location
-                  </Table.HeaderCell>
-                    <Table.HeaderCell>
-                      Terrain
-                    </Table.HeaderCell>
-                    <Table.HeaderCell>
-                      Roll modifier
-                  </Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {
-                    this.props.selected_terrains.map((terrain, index) => this.renderTerrain(this.props.terrains[terrain], index))
-                  }
-                </Table.Body>
-              </Table>
+              <TerrainSelector />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
-              <Table celled unstackable>
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell>
-                      Preferred unit types
-                    </Table.HeaderCell>
-                    <Table.HeaderCell>
-                      {RowType.Primary}
-                    </Table.HeaderCell>
-                    <Table.HeaderCell>
-                      {RowType.Secondary}
-                    </Table.HeaderCell>
-                    <Table.HeaderCell>
-                      {RowType.Flank}
-                    </Table.HeaderCell>
-                    <Table.HeaderCell>
-                      Flank size
-                    </Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  <PreferredUnitTypes side={Side.Attacker} />
-                  <PreferredUnitTypes side={Side.Defender} />
-                </Table.Body>
-              </Table>
+              <PreferredUnitTypes />
             </Grid.Column>
           </Grid.Row>
           <Divider />
@@ -362,26 +311,6 @@ class Battle extends Component<IProps, IState> {
           extra_slot
         />
       </div>
-    )
-  }
-
-  renderTerrain = (terrain: TerrainDefinition, index: number): JSX.Element => {
-    return (
-      <Table.Row key={terrain.location} onClick={() => this.openTerrainModal(index)}>
-        <Table.Cell>
-          {terrain.location}
-        </Table.Cell>
-        <Table.Cell>
-          {terrain.type}
-        </Table.Cell>
-        <Table.Cell>
-          <Image src={IconDice} avatar />
-          {calculateValue(terrain, TerrainCalc.Roll) ?
-            <StyledNumber value={calculateValue(terrain, TerrainCalc.Roll)} formatter={addSign} />
-            : 0
-          }
-        </Table.Cell>
-      </Table.Row>
     )
   }
 

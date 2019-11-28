@@ -5,34 +5,36 @@ import { AppState } from '../../store/'
 import { selectTerrain, invalidate } from '../../store/battle'
 import ItemSelector, { SelectorAttributes } from '../../components/ItemSelector'
 import { TerrainType, TerrainCalc, LocationType } from '../../store/terrains'
-import { calculateValue, Mode } from '../../base_definition'
-import { filterTerrains } from '../../store/utils'
+import { calculateValue } from '../../base_definition'
+import { filterTerrains, getMode } from '../../store/utils'
 import StyledNumber from '../../components/Utils/StyledNumber'
 import { addSign } from '../../formatters'
 import { toArr, filter, map } from '../../utils'
 
-export interface ModalInfo {
-  index: number
+type Props = {
+  index?: number
   location?: LocationType
+  onClose: () => void
 }
 
 class ModalTerrainSelector extends Component<IProps> {
-  render(): JSX.Element | null {
-    if (!this.props.info)
+  render() {
+    const { index, terrains, onClose } = this.props
+    if (index === undefined)
       return null
     const attributes = {} as SelectorAttributes<TerrainType>
-    attributes['to attacker\'s roll'] = map(filter(this.props.terrains, value => calculateValue(value, TerrainCalc.Roll)), value => (
+    attributes['to attacker\'s roll'] = map(filter(terrains, value => calculateValue(value, TerrainCalc.Roll)), value => (
       <StyledNumber
         value={calculateValue(value, TerrainCalc.Roll)}
         formatter={addSign}
       />
     ))
     return (
-      <Modal basic onClose={this.props.onClose} open>
+      <Modal basic onClose={onClose} open>
         <Modal.Content>
           <ItemSelector
             onSelection={this.selectTerrain}
-            items={toArr(this.props.terrains).filter(terrain => this.props.info && (!this.props.info.location || terrain.location === this.props.info.location))}
+            items={toArr(terrains)}
             attributes={attributes}
           />
         </Modal.Content>
@@ -40,24 +42,24 @@ class ModalTerrainSelector extends Component<IProps> {
     )
   }
 
-  selectTerrain = (type: TerrainType | null): void => {
-    this.props.info && type && this.props.selectTerrain(this.props.mode, this.props.info.index, type)
-    this.props.onClose()
+  selectTerrain = (terrain_type: TerrainType | null): void => {
+    const { selectTerrain, invalidate, onClose, mode, index } = this.props
+    if (index !== undefined && terrain_type)
+      selectTerrain(mode, index, terrain_type)
+    invalidate(mode)
+    onClose()
   }
 }
 
-const mapStateToProps = (state: AppState) => ({
-  terrains: filterTerrains(state),
-  mode: state.settings.mode
+const mapStateToProps = (state: AppState, props: Props) => ({
+  terrains: filterTerrains(state, props.location),
+  mode: getMode(state)
 })
 
-const mapDispatchToProps = (dispatch: any) => ({
-  selectTerrain: (mode: Mode, index: number, type: TerrainType) => dispatch(selectTerrain(mode, index, type)) && dispatch(invalidate(mode))
-})
+const actions = { selectTerrain, invalidate }
 
-interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {
-  info: ModalInfo | null
-  onClose: () => void
-}
+type S = ReturnType<typeof mapStateToProps>
+type D = typeof actions
+type IProps = Props & S & D
 
-export default connect(mapStateToProps, mapDispatchToProps)(ModalTerrainSelector)
+export default connect(mapStateToProps, actions)(ModalTerrainSelector)

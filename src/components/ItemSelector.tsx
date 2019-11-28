@@ -15,7 +15,7 @@ interface Item<T extends ItemType> {
 
 type ItemType = UnitType | TerrainType | TacticType
 
-export type SelectorAttributes<T extends ItemType> = { [key: string]: { [key in T]: number | string | JSX.Element } }
+export type SelectorAttributes<T extends ItemType> = { [key: string]: { [key in T]: number | string | JSX.Element | null } }
 
 interface IProps<T extends ItemType> {
   items: Item<T>[]

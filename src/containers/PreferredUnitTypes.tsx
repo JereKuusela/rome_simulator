@@ -10,6 +10,41 @@ import { getImage } from '../base_definition'
 
 import ModalRowTypeSelector from './modal/ModalRowTypeSelector'
 
+/**
+ * Table with row types and flank sizes.
+ */
+export default class PreferredUnitTypes extends Component {
+  render() {
+    return (
+      <Table celled unstackable>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>
+              Preferred unit types
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              {RowType.Primary}
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              {RowType.Secondary}
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              {RowType.Flank}
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              Flank size
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          <ConnectedRow side={Side.Attacker} />
+          <ConnectedRow side={Side.Defender} />
+        </Table.Body>
+      </Table>
+    )
+  }
+}
+
 type Props = {
   side: Side
 }
@@ -18,8 +53,10 @@ type IState = {
   modal_type?: RowType
 }
 
-// Shows row types and flank size for a side.
-class PreferredUnitTypes extends Component<IProps, IState> {
+/**
+ * Row types and flank size for a side.
+ */
+class Row extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = { modal_type: undefined }
@@ -87,4 +124,4 @@ type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
 type IProps = Props & S & D
 
-export default connect(mapStateToProps, actions)(PreferredUnitTypes)
+const ConnectedRow = connect(mapStateToProps, actions)(Row)
