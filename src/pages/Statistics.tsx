@@ -1,16 +1,19 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Grid, Button, Table } from 'semantic-ui-react'
+import { Grid, Button, Table, Header, Checkbox } from 'semantic-ui-react'
 
 import { AppState } from '../store/'
 import { Side } from '../store/battle'
 import { getCombatSettings, getSelectedTerrains, mergeUnitTypes, getArmyForCombat } from '../store/utils'
+import { changeSimulationParameter } from '../store/settings'
 
 import { toPercent, toNumber, toFlooredPercent } from '../formatters'
 import { calculateWinRate, WinRateProgress, interrupt, CasualtiesProgress, doConversion } from '../combat/simulation'
 import RoundChart from '../components/Charts/RoundChart'
 import CumulativePercentChart from '../components/Charts/CumulativePercentChart'
 import { showProgress } from '../utils'
+import SimpleRange from '../components/SimpleRange'
+import { SimulationParameter } from '../store/settings'
 
 interface Props { }
 
@@ -59,11 +62,12 @@ class Statistics extends Component<IProps, IState> {
       avg_morale_a, avg_morale_d, avg_strength_a, avg_strength_d, max_morale_a, max_morale_d, max_strength_a, max_strength_d,
       morale_a, morale_d, strength_a, strength_d
     } = this.state
+    const { simulation_settings, changeSimulationParameter } = this.props
     return (
       <>
         <Grid>
           <Grid.Row verticalAlign='middle'>
-            <Grid.Column width='9' >
+            <Grid.Column width='4' >
               <Button
                 primary
                 size='large'
@@ -72,6 +76,21 @@ class Statistics extends Component<IProps, IState> {
               >
                 {calculating || progress ? showProgress(toFlooredPercent(progress, 0), updates, DOTS) : 'Analyze'}
               </Button>
+            </Grid.Column>
+            <Grid.Column width='4'>
+              <Checkbox
+                value={simulation_settings[SimulationParameter.UpdateCasualties]}
+                onChange={(_, { value }) => changeSimulationParameter(SimulationParameter.UpdateCasualties, value ? 0 : 1)}
+                label='Update casualties'
+              />
+            </Grid.Column>
+            <Grid.Column width='4'>
+              <Header textAlign='center'>Speed: {simulation_settings[SimulationParameter.Speed] || 'Custom'}</Header>
+              <SimpleRange
+                min={1} max={5} step={1}
+                value={simulation_settings[SimulationParameter.Speed] || 1}
+                onChange={value => changeSimulationParameter(SimulationParameter.Speed, value)}
+              />
             </Grid.Column>
             <Grid.Column width='2' floated='right'>
               Iterations {iterations}
@@ -118,63 +137,66 @@ class Statistics extends Component<IProps, IState> {
             </Table.Row>
           </Table.Body>
         </Table>
-        <Table>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>
-                Attacker morale losses
-            </Table.HeaderCell>
-              <Table.HeaderCell>
-                Attacker strength losses
-            </Table.HeaderCell>
-              <Table.HeaderCell>
-                Defender morale losses
-            </Table.HeaderCell>
-              <Table.HeaderCell>
-                Defender strength losses
-            </Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            <Table.Row>
-              <Table.Cell>
-                {this.toNumber(this.scale(avg_morale_a)) + ' (' + this.toPercent(this.scale(avg_morale_a / max_morale_a)) + ')'}
-              </Table.Cell>
-              <Table.Cell>
-                {this.toNumber(this.scale(avg_strength_a)) + ' (' + this.toPercent(this.scale(avg_strength_a / max_strength_a)) + ')'}
-              </Table.Cell>
-              <Table.Cell>
-                {this.toNumber(this.scale(avg_morale_d)) + ' (' + this.toPercent(this.scale(avg_morale_d / max_morale_d)) + ')'}
-              </Table.Cell>
-              <Table.Cell>
-                {this.toNumber(this.scale(avg_strength_d)) + ' (' + this.toPercent(this.scale(avg_strength_d / max_strength_d)) + ')'}
-              </Table.Cell>
-            </Table.Row>
-          </Table.Body>
-        </Table>
-        <Grid>
-          <Grid.Row columns='2'>
-            <Grid.Column>
-              <RoundChart progress={progress} rounds={rounds} />
-            </Grid.Column>
-            <Grid.Column>
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row columns='2'>
-            <Grid.Column>
-              <CumulativePercentChart
-                progress={progress} type='morale'
-                a={morale_a} d={morale_d} max_a={max_morale_a} max_d={max_morale_d}
-              />
-            </Grid.Column>
-            <Grid.Column>
-              <CumulativePercentChart
-                progress={progress} type='strength'
-                a={strength_a} d={strength_d} max_a={max_strength_a} max_d={max_strength_d}
-              />
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
+        {simulation_settings[SimulationParameter.UpdateCasualties] ?
+          <>
+            <Table>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>
+                    Attacker morale losses
+           </Table.HeaderCell>
+                  <Table.HeaderCell>
+                    Attacker strength losses
+           </Table.HeaderCell>
+                  <Table.HeaderCell>
+                    Defender morale losses
+           </Table.HeaderCell>
+                  <Table.HeaderCell>
+                    Defender strength losses
+           </Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                <Table.Row>
+                  <Table.Cell>
+                    {this.toNumber(this.scale(avg_morale_a)) + ' (' + this.toPercent(this.scale(avg_morale_a / max_morale_a)) + ')'}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {this.toNumber(this.scale(avg_strength_a)) + ' (' + this.toPercent(this.scale(avg_strength_a / max_strength_a)) + ')'}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {this.toNumber(this.scale(avg_morale_d)) + ' (' + this.toPercent(this.scale(avg_morale_d / max_morale_d)) + ')'}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {this.toNumber(this.scale(avg_strength_d)) + ' (' + this.toPercent(this.scale(avg_strength_d / max_strength_d)) + ')'}
+                  </Table.Cell>
+                </Table.Row>
+              </Table.Body>
+            </Table>
+            <Grid>
+              <Grid.Row columns='2'>
+                <Grid.Column>
+                  <RoundChart progress={progress} rounds={rounds} />
+                </Grid.Column>
+                <Grid.Column>
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row columns='2'>
+                <Grid.Column>
+                  <CumulativePercentChart
+                    progress={progress} type='morale'
+                    a={morale_a} d={morale_d} max_a={max_morale_a} max_d={max_morale_d}
+                  />
+                </Grid.Column>
+                <Grid.Column>
+                  <CumulativePercentChart
+                    progress={progress} type='strength'
+                    a={strength_a} d={strength_d} max_a={max_strength_a} max_d={max_strength_d}
+                  />
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </> : null}
       </>
     )
   }
@@ -199,9 +221,9 @@ class Statistics extends Component<IProps, IState> {
   }
 
   calculate = () => {
-    const { attacker, defender, combatSettings, terrains, simulationSettings, unit_types } = this.props
-    const [ combat_a, combat_d ] = doConversion(attacker, defender, terrains, unit_types, combatSettings)
-    calculateWinRate(true, simulationSettings, this.update, combat_a, combat_d, combatSettings)
+    const { attacker, defender, combat_settings: combatSettings, terrains, simulation_settings, unit_types } = this.props
+    const [combat_a, combat_d] = doConversion(attacker, defender, terrains, unit_types, combatSettings)
+    calculateWinRate(!!simulation_settings[SimulationParameter.UpdateCasualties], simulation_settings, this.update, combat_a, combat_d, combatSettings)
   }
 
   scale = (value: number) => this.state.progress ? value / this.state.progress : 0
@@ -210,13 +232,13 @@ class Statistics extends Component<IProps, IState> {
 const mapStateToProps = (state: AppState) => ({
   attacker: getArmyForCombat(state, Side.Attacker),
   defender: getArmyForCombat(state, Side.Defender),
-  combatSettings: getCombatSettings(state),
-  simulationSettings: state.settings.simulation,
+  combat_settings: getCombatSettings(state),
+  simulation_settings: state.settings.simulation,
   terrains: getSelectedTerrains(state),
   unit_types: mergeUnitTypes(state)
 })
 
-const actions = {}
+const actions = { changeSimulationParameter }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

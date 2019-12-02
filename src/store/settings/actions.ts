@@ -25,7 +25,9 @@ export enum CombatParameter {
 export enum SimulationParameter {
   MaxDepth = 'MaxDepth',
   PhaseLengthMultiplier = 'PhaseLengthMultiplier',
-  ChunkSize = 'ChunkSize'
+  ChunkSize = 'ChunkSize',
+  Speed = 'Speed',
+  UpdateCasualties = 'UpdateCasualties'
 }
 
 export const parameterToDescription = (parameter: CombatParameter | SimulationParameter): string => {
@@ -70,6 +72,10 @@ export const parameterToDescription = (parameter: CombatParameter | SimulationPa
       return 'Scales length of phases. Higher values reduce amount of draws but lower the precision significantly.'
     case SimulationParameter.ChunkSize:
       return 'How many battles are simulated in a row. Higher values slightly increase performance but make the UI less responsive.'
+    case SimulationParameter.Speed:
+      return 'Quick setting to tweak length of phases and amount of dice rolls at the same time.'
+    case SimulationParameter.UpdateCasualties:
+      return 'Set 1 to update charts in statistics.'
     default:
       return 'No description.'
   }

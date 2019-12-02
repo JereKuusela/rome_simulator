@@ -23,6 +23,8 @@ export const getDefaultSettings = () => ({
 
 const settings = getDefaultSettings()
 
+const speedValues = [[], [1.0, 5], [1.0, 4], [1.5, 4], [2.0, 4], [3.0, 3]]
+
 class SettingsReducer extends ImmerReducer<typeof settings> {
 
   changeCombatParameter(mode: Mode, key: CombatParameter, value: number) {
@@ -30,6 +32,14 @@ class SettingsReducer extends ImmerReducer<typeof settings> {
   }
 
   changeSimulationParameter(key: SimulationParameter, value: number) {
+    if (key === SimulationParameter.Speed && value > 0) {
+      value = Math.min(speedValues.length - 1, Math.floor(value))
+      this.draftState.simulation[SimulationParameter.PhaseLengthMultiplier] = speedValues[value][0]
+        this.draftState.simulation[SimulationParameter.MaxDepth] = speedValues[value][1]
+    }
+    if (key === SimulationParameter.PhaseLengthMultiplier || key === SimulationParameter.MaxDepth) {
+      this.draftState.simulation[SimulationParameter.Speed] = 0
+    }
     this.draftState.simulation[key] = value
   }
 
