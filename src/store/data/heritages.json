@@ -81,9 +81,9 @@
         },
         {
           "target": "Text",
-          "attribute": "Land movement",
+          "attribute": "Manpower",
           "negative": true,
-          "value": -0.1
+          "value": -0.05
         }
       ]
     },
@@ -594,7 +594,7 @@
         {
           "target": "Text",
           "attribute": "War score cost",
-          "value": -0.1
+          "value": -0.05
         },
         {
           "target": "Text",
@@ -831,6 +831,93 @@
       ]
     },
     {
+      "name": "Pontic",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Wrong culture happiness",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Ruler popularity",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Civic investment cost",
+          "negative": true,
+          "value": 0.15
+        }
+      ]
+    },
+    {
+      "name": "Iberian",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Same religion happiness",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Diplomatic relations",
+          "no_percent": true,
+          "value": 1
+        },
+        {
+          "target": "Text",
+          "attribute": "Monthly governor loyalty",
+          "negative": true,
+          "no_percent": true,
+          "value": -0.02
+        }
+      ]
+    },
+    {
+      "name": "Massalian",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Fort defense",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Wrong culture happiness",
+          "value": 0.03
+        },
+        {
+          "target": "Text",
+          "attribute": "Manpower recovery",
+          "negative": true,
+          "value": -0.05
+        }
+      ]
+    },
+    {
+      "name": "Minoan",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Capital trade routes",
+          "no_percent": true,
+          "value": 1
+        },
+        {
+          "target": "Text",
+          "attribute": "Same culture happiness",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Military investment cost",
+          "negative": true,
+          "value": 0.15
+        }
+      ]
+    },
+    {
       "name": "Kushite",
       "modifiers": [
         {
@@ -912,6 +999,116 @@
           "negative": true,
           "no_percent": true,
           "value": -2
+        }
+      ]
+    },
+    {
+      "name": "Heraclea Pontican",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "City cost",
+          "value": -0.25
+        },
+        {
+          "target": "Text",
+          "attribute": "Citizen happiness",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Loyalty gain chance",
+          "negative": true,
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Religious Enclave",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Same religion happiness",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Omen power",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Diplomatic relations",
+          "negative": true,
+          "no_percent": true,
+          "value": -1
+        }
+      ]
+    },
+    {
+      "name": "Epikrateia",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Wrong culture group happiness",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Capital trade routes",
+          "no_percent": true,
+          "value": 1
+        },
+        {
+          "target": "Text",
+          "attribute": "Loyalty to overlord",
+          "negative": true,
+          "no_percent": true,
+          "value": 30
+        }
+      ]
+    },
+    {
+      "name": "Corinthian",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Fort maintenance",
+          "value": -0.33
+        },
+        {
+          "target": "Text",
+          "attribute": "Manpower recovery",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Diplomatic relations",
+          "negative": true,
+          "no_percent": true,
+          "value": -1
+        }
+      ]
+    },
+    {
+      "name": "Decapolian",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Wrong culture group happiness",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Assimilation speed",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Loyalty to overlord",
+          "negative": true,
+          "no_percent": true,
+          "value": 30
         }
       ]
     }

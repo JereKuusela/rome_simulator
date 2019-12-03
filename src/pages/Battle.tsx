@@ -16,7 +16,7 @@ import TacticSelector from '../containers/TacticSelector'
 import ModalArmyUnitDetail from '../containers/modal/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/modal/ModalFastPlanner'
 import { mergeValues, Mode } from '../base_definition'
-import { getCombatSettings, getBattle, getArmy, Army, getParticipant, getCurrentCombat } from '../store/utils'
+import { getCombatSettings, getBattle, getArmy, Army, getParticipant, getCurrentCombat, resetMissing } from '../store/utils'
 import { addSign } from '../formatters'
 import { CountryName, setGeneralMartial } from '../store/countries'
 import { CombatParameter } from '../store/settings'
@@ -27,6 +27,8 @@ import { keys } from '../utils'
 import WinRate from '../containers/WinRate'
 import Stats from '../containers/Stats'
 import { CombatUnits } from '../combat/combat'
+import { importState } from '../store/transfer'
+import ConfirmationButton from '../components/ConfirmationButton'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
@@ -209,6 +211,13 @@ class Battle extends Component<IProps, IState> {
             {
               this.renderSeed()
             }
+            <Grid.Column floated='right' width='6' textAlign='right'>
+              <ConfirmationButton
+                negative text='Reset all data'
+                message='Do you really want to reset all data?'
+                onConfirm={() => this.props.importState(resetMissing({} as any), true)}
+              />
+            </Grid.Column>
           </Grid.Row>
         </Grid >
       </ >
@@ -400,7 +409,8 @@ const mapDispatchToProps = (dispatch: any) => ({
     dispatch(selectUnit(mode, name, type, column, null))
   ),
   setSeed: (mode: Mode, seed?: number) => dispatch(setSeed(mode, seed)) && dispatch(invalidate(mode)),
-  refreshBattle: (mode: Mode) => dispatch(refreshBattle(mode))
+  refreshBattle: (mode: Mode) => dispatch(refreshBattle(mode)),
+  importState: (data: {}, reset_missing: boolean) => dispatch(importState(data, reset_missing))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

@@ -7,6 +7,7 @@ import { restoreBaseGlobalStats, restoreBaseTactics, restoreBaseTerrains, restor
 import { values, keys } from '../utils'
 import { resetMissing } from '../store/utils'
 import { exportState, saveToFile } from '../managers/transfer_manager'
+import ConfirmationButton from '../components/ConfirmationButton'
 
 interface IState {
   data: string
@@ -69,9 +70,22 @@ class Transfer extends Component<IProps, IState> {
               </List.Item>
               <List.Item>
                 3. Push the button
-                </List.Item>
+              </List.Item>
               <List.Item>
                 <Button primary onClick={() => this.props.importState(this.state.data, this.props.reset_missing)}>Import</Button>
+              </List.Item>
+            </List>
+            <Header>Reset</Header>
+            <List>
+              <List.Item>
+                Reset all data (battle, countries, units, tactics, terrains, settings)
+              </List.Item>
+              <List.Item>
+              <ConfirmationButton
+                negative text='Reset'
+                message='Do you really want to reset all data?'
+                onConfirm={() => this.props.importState('', true)}
+              />
               </List.Item>
             </List>
           </Grid.Column>
