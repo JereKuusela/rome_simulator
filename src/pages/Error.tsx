@@ -3,15 +3,18 @@ import { Button, Header, Segment } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { reset } from '../store/transfer'
+import { exportState, saveToFile } from '../managers/transfer_manager'
 
-interface IState {
+type State = {
   hasError: boolean
 }
+
+type Props = {}
 
 /**
  * Global error page to deal with crashes from corrupted data. Also hides bugs.
  */
-class Error extends Component<IProps, IState> {
+class Error extends Component<IProps, State> {
   constructor(props: IProps) {
     super(props);
     this.state = { hasError: false }
@@ -31,6 +34,7 @@ class Error extends Component<IProps, IState> {
         <br/><br/>
         <Segment>
           <Header size='huge'>Something went wrong</Header>
+          <Button primary onClick={() => this.download()}>Click here to download current data</Button>
           <Button primary onClick={() => this.reset()}>Click here to reset the simulator</Button>
           <br/><br/>
           <p>If that doesn't help please clear the cache and then force refresh the site.</p>
@@ -39,19 +43,22 @@ class Error extends Component<IProps, IState> {
     )
   }
 
-  reset() {
+  reset = () => {
     this.props.reset()
     this.setState({ hasError: false })
   }
+
+  download = () => saveToFile(exportState(this.props.state))
 }
 
 const mapStateToProps = (state: AppState) => ({
+  state
 })
 
-const mapDispatchToProps = (dispatch: any) => ({
-  reset: () => dispatch(reset())
-})
+const actions = { reset }
 
-interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }
+type S = ReturnType<typeof mapStateToProps>
+type D = typeof actions
+interface IProps extends Props, S, D { }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Error)
+export default connect(mapStateToProps, actions)(Error)

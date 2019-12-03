@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
-import { saveAs } from 'file-saver'
 import { Grid, TextArea, Checkbox, List, Header, Button, Input } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { importState, ExportKey, setResetMissing, setExportKey } from '../store/transfer'
-import { restoreBaseGlobalStats, stripRounds, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits, setIds } from '../store/transforms'
-import { DefinitionType } from '../base_definition'
+import { restoreBaseGlobalStats, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits, setIds } from '../store/transforms'
 import { values, keys } from '../utils'
 import { resetMissing } from '../store/utils'
+import { exportState, saveToFile } from '../managers/transfer_manager'
 
 interface IState {
   data: string
@@ -24,8 +23,8 @@ class Transfer extends Component<IProps, IState> {
 
   readonly attributes = values(ExportKey)
 
-  render(): JSX.Element {
-    const json = JSON.stringify(this.filterKeys(this.props.state), undefined, 2)
+  render() {
+    const json = exportState(this.props.state, this.props.export_keys)
     if (this.last_data !== json) {
       // Hack to make data editable manually or when exported settings change.
       // This could probably be moved to trigger when export keys change?
@@ -43,7 +42,7 @@ class Transfer extends Component<IProps, IState> {
                 </List.Item>
               {this.attributes.map(value => this.renderCheckbox(value))}
               <List.Item>
-                2a. <Button primary onClick={() => this.saveContent(this.state.data)}>Export to file</Button>
+                2a. <Button primary onClick={() => saveToFile(this.state.data)}>Export to file</Button>
               </List.Item>
               <List.Item>
                 2b. Copy paste the data from the text box
@@ -102,42 +101,6 @@ class Transfer extends Component<IProps, IState> {
   loadContent = (file: File) => {
     const blob = file as any
     blob.text().then((data: string) => this.setState({ data }))
-  }
-
-  pad = (value: number) => String(value).padStart(2, '0')
-
-  saveContent = (data: string) => {
-    const blob = new Blob([data], { type: 'text/plain;charset=utf-8' })
-    const date = new Date()
-    const formatted = date.getFullYear() + '-' + this.pad(date.getMonth()) + '-' + this.pad(date.getDate()) + '_' + this.pad(date.getHours()) + '-' + this.pad(date.getMinutes()) + '-' + this.pad(date.getSeconds())
-    saveAs(blob, 'imperator-simulator_' + formatted + '.json');
-  }
-
-  filterKeys = (state: AppState): any => {
-    const new_state: any = { ...state }
-    new_state._persist = undefined
-    new_state.transfer = undefined
-    new_state.data = undefined
-    new_state.battle = stripRounds(new_state.battle)
-    if (!this.props.export_keys[ExportKey.Countries])
-      new_state.countries = undefined
-    if (!this.props.export_keys[ExportKey.Units])
-      new_state.units = undefined
-    if (!this.props.export_keys[ExportKey.Units])
-      new_state.global_stats = undefined
-    if (!this.props.export_keys[ExportKey.Terrains])
-      new_state.terrains = undefined
-    if (!this.props.export_keys[ExportKey.Tactics])
-      new_state.tactics = undefined
-    if (!this.props.export_keys[ExportKey.Settings])
-      new_state.settings = undefined
-    if (!this.props.export_keys[ExportKey.Land])
-      delete new_state.battle[DefinitionType.Land]
-    if (!this.props.export_keys[ExportKey.Naval])
-      delete new_state.battle[DefinitionType.Naval]
-    if (!this.props.export_keys[ExportKey.Land] && !this.props.export_keys[ExportKey.Naval])
-      new_state.battle = undefined
-    return new_state
   }
 }
 

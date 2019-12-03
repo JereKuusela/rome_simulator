@@ -3,7 +3,7 @@ import { AppState } from '../'
 import { ExportKey } from './index'
 import { resetMissing } from '../utils'
 
-type ExportKeys = { [key in ExportKey]: boolean }
+export type ExportKeys = { [key in ExportKey]: boolean }
 
 export const transferState = {
   export_keys: {} as ExportKeys,

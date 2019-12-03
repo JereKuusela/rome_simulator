@@ -1,7 +1,15 @@
 
 Release 6:
 
-Get rid of slower combat formula.
+Changelog:
+
+- Battle: Big performance boost for combat calculations (uses now the much faster algorithm from Statistics).
+- Statistics: New checkbox to hide casualty information (makes calculations slightly faster).
+- Statistics: New slider to quickly change calculation speed settings (speed vs accuracy).
+- Statistics: Optimized deployment and reinforcement.
+- Settings: Two new settings to match changes of Statistics page.
+- Error: Added a button to download current data (can be imported later to try restore some of your changes).
+
 
 Tests (high priority):
 - utils tested
