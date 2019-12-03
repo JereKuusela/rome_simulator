@@ -26,25 +26,25 @@ describe('reinforcement', () => {
   })
   it('main front and default priorities', () => {
     setAttacker(every_type)
-    const result = [UnitType.LightInfantry, UnitType.Archers, UnitType.Chariots, UnitType.HeavyInfantry, UnitType.HeavyCavalry, UnitType.WarElephants, UnitType.LightCavalry, UnitType.CamelCavalry, UnitType.HorseArchers]
+    const result = [UnitType.LightInfantry, UnitType.Chariots, UnitType.Archers, UnitType.HeavyInfantry, UnitType.HeavyCavalry, UnitType.WarElephants, UnitType.LightCavalry, UnitType.CamelCavalry, UnitType.HorseArchers]
     fillDefender(UnitType.Archers)
     testReinforce(info, result)
   })
   it('flank only and default priorities', () => {
     setAttacker(every_type)
-    const result = [UnitType.LightInfantry, UnitType.Archers, UnitType.Chariots, UnitType.HeavyInfantry, UnitType.HeavyCavalry, UnitType.WarElephants, UnitType.LightCavalry, UnitType.CamelCavalry, UnitType.HorseArchers]
+    const result = [UnitType.LightInfantry, UnitType.Chariots, UnitType.Archers, UnitType.HeavyInfantry, UnitType.HeavyCavalry, UnitType.WarElephants, UnitType.LightCavalry, UnitType.CamelCavalry, UnitType.HorseArchers]
     testReinforce(info, result)
   })
   it('mixed field and default priorities, uneven', () => {
     setAttacker(every_type)
     setDefender([UnitType.Archers, UnitType.Archers, UnitType.Archers])
-    const result = [UnitType.LightInfantry, UnitType.Archers, UnitType.Chariots, UnitType.HeavyInfantry, UnitType.HeavyCavalry, UnitType.WarElephants, UnitType.LightCavalry, UnitType.CamelCavalry, UnitType.HorseArchers]
+    const result = [UnitType.LightInfantry, UnitType.Chariots, UnitType.Archers, UnitType.HeavyInfantry, UnitType.HeavyCavalry, UnitType.WarElephants, UnitType.LightCavalry, UnitType.CamelCavalry, UnitType.HorseArchers]
     testReinforce(info, result)
   })
   it('mixed field and default priorities, even', () => {
     setAttacker(every_type)
     setDefender([UnitType.Archers, UnitType.Archers, UnitType.Archers, UnitType.Archers])
-    const result = [UnitType.LightInfantry, UnitType.Archers, UnitType.Chariots, UnitType.HeavyInfantry, UnitType.HeavyCavalry, UnitType.WarElephants, UnitType.LightCavalry, UnitType.CamelCavalry, UnitType.HorseArchers]
+    const result = [UnitType.LightInfantry, UnitType.Chariots, UnitType.Archers, UnitType.HeavyInfantry, UnitType.HeavyCavalry, UnitType.WarElephants, UnitType.LightCavalry, UnitType.CamelCavalry, UnitType.HorseArchers]
     testReinforce(info, result)
   })
   it('front priority', () => {
