@@ -79,8 +79,8 @@ class Statistics extends Component<IProps, IState> {
             </Grid.Column>
             <Grid.Column width='4'>
               <Checkbox
-                value={simulation_settings[SimulationParameter.UpdateCasualties]}
-                onChange={(_, { value }) => changeSimulationParameter(SimulationParameter.UpdateCasualties, value ? 0 : 1)}
+                checked={!!simulation_settings[SimulationParameter.UpdateCasualties]}
+                onChange={(_, { checked }) => changeSimulationParameter(SimulationParameter.UpdateCasualties, checked ? 1 : 0)}
                 label='Update casualties'
               />
             </Grid.Column>
