@@ -363,8 +363,6 @@ class Battle extends Component<IProps, IState> {
   }
 
   setSeed = (value: string): void => {
-    if (value === '')
-      this.props.setSeed(this.props.mode, undefined)
     if (!isNaN(Number(value)))
       this.props.setSeed(this.props.mode, Number(value))
   }
@@ -408,7 +406,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   removeUnit: (mode: Mode, name: CountryName, type: ArmyType, column: number) => (
     dispatch(selectUnit(mode, name, type, column, null))
   ),
-  setSeed: (mode: Mode, seed?: number) => dispatch(setSeed(mode, seed)) && dispatch(invalidate(mode)),
+  setSeed: (mode: Mode, seed: number) => dispatch(setSeed(mode, seed)) && dispatch(invalidate(mode)),
   refreshBattle: (mode: Mode) => dispatch(refreshBattle(mode)),
   importState: (data: {}, reset_missing: boolean) => dispatch(importState(data, reset_missing))
 })

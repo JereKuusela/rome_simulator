@@ -35,8 +35,9 @@ class CombatReducer extends ImmerReducer<AppState> {
     const minimum_roll = settings[CombatParameter.DiceMinimum]
     const maximum_roll = settings[CombatParameter.DiceMaximum]
     const roll_frequency = settings[CombatParameter.RollFrequency]
-    if (!battle.seed)
-      battle.seed = battle.custom_seed ?? createEntropy()[0]
+    // Regenerate seed for the first roll (undo resets it when going back to deployment).
+    if (battle.round + steps > 0 && !battle.seed)
+      battle.seed = battle.custom_seed ?? Math.abs(createEntropy(undefined, 1)[0])
     const engine = MersenneTwister19937.seed(battle.seed)
     engine.discard(2 * Math.ceil((battle.round) / roll_frequency))
     const rng = new Random(engine)
@@ -116,10 +117,10 @@ class CombatReducer extends ImmerReducer<AppState> {
     this.doBattle(mode, battle, settings, steps)
   }
 
-  setSeed(mode: Mode, seed?: number) {
+  setSeed(mode: Mode, seed: number) {
     const battle = this.draftState.battle[mode]
-    battle.custom_seed = seed
-    battle.seed = seed ?? 0
+    battle.custom_seed = seed || undefined
+    battle.seed = seed
   }
 
   refreshBattle(mode: Mode) {
