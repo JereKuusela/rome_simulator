@@ -9,7 +9,7 @@ import DetailInputRow from './Detail/DetailInputRow'
 import DetailDropdownRow from './Detail/DetailDropndownRow'
 import Headers from './Utils/Headers'
 
-import { UnitType, Unit, UnitCalc, ValueType, valueToString } from '../store/units'
+import { UnitType, Unit, UnitCalc, ValueType, valueToString, UnitDeployment } from '../store/units'
 import { TerrainType } from '../store/terrains'
 
 import { explain, DefinitionType, calculateValue, getValue, ValuesType } from '../base_definition'
@@ -31,7 +31,7 @@ interface IProps {
   onModeChange?: (mode: DefinitionType) => void
   onImageChange?: (image: string) => void
   onCanAssaultToggle?: () => void
-  onIsFlankToggle?: () => void
+  onChangeDeployment?: (deployment: UnitDeployment) => void
   onIsLoyalToggle?: () => void
 }
 
@@ -43,14 +43,15 @@ export default class UnitDetail extends Component<IProps> {
   readonly attributes = values(UnitCalc)
   readonly units = values(UnitType).sort()
   readonly modes = values(DefinitionType)
+  readonly deployments = values(UnitDeployment)
   readonly headers = ['Attribute', 'Value', 'Custom base', 'Custom modifier', 'Custom losses', 'Explained']
 
   readonly CELLS = 6
 
   render() {
-    const { unit, onTypeChange, onModeChange, onImageChange, onIsFlankToggle, onCanAssaultToggle, onIsLoyalToggle } = this.props
+    const { unit, onTypeChange, onModeChange, onImageChange, onChangeDeployment, onCanAssaultToggle, onIsLoyalToggle } = this.props
     const { terrain_types, unit_types, unit_types_as_dropdown } = this.props
-    const { id, type, mode, image, is_flank, can_assault, is_loyal } = unit
+    const { id, type, mode, image, deployment, can_assault, is_loyal } = unit
     return (
       <Table celled selectable unstackable>
         <Headers values={this.headers} />
@@ -60,7 +61,7 @@ export default class UnitDetail extends Component<IProps> {
           {onTypeChange && unit_types && !unit_types_as_dropdown && <DetailInputRow text='Name' cells={this.CELLS} value={type} onChange={onTypeChange} />}
           {onModeChange && <DetailDropdownRow text='Mode' cells={this.CELLS} value={mode} values={this.modes} onChange={onModeChange} />}
           {onImageChange && <DetailInputRow text='Image' cells={this.CELLS} value={image} onChange={onImageChange} />}
-          {unit_types && <DetailToggleRow text='Is flank?' cells={this.CELLS} value={is_flank} onChange={onIsFlankToggle} />}
+          {onChangeDeployment && <DetailDropdownRow text='Deployment' cells={this.CELLS} value={deployment} values={this.deployments} onChange={onChangeDeployment} />}
           {unit_types && <DetailToggleRow text='Can assault?' cells={this.CELLS} value={can_assault} onChange={onCanAssaultToggle} />}
           {<DetailToggleRow text='Is loyal?' cells={this.CELLS} value={!!is_loyal} onChange={onIsLoyalToggle} />}
           {this.attributes.map(this.renderRow)}

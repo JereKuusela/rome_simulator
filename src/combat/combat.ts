@@ -1,7 +1,7 @@
 
 import { sumBy } from 'lodash'
 
-import { UnitCalc, UnitType, Unit } from '../store/units'
+import { UnitCalc, UnitType, Unit, UnitDeployment } from '../store/units'
 import { TerrainDefinition, TerrainType } from '../store/terrains'
 import { TacticDefinition } from '../store/tactics'
 import { CombatParameter, CombatSettings } from '../store/settings'
@@ -9,7 +9,7 @@ import { CombatParameter, CombatSettings } from '../store/settings'
 import { mapRange, values, toObj } from '../utils'
 import { calculateValue, calculateBase, calculateValueWithoutLoss } from '../base_definition'
 import { calculateExperienceReduction } from './combat_utils'
-import { reinforce } from './reinforcement_fast'
+import { reinforce } from './reinforcement'
 import { RowTypes } from '../store/battle'
 
 /**
@@ -55,7 +55,7 @@ const getUnitDefinition = (combatSettings: CombatSettings, terrains: TerrainDefi
     type: unit.type,
     is_loyal: !!unit.is_loyal,
     image: unit.image,
-    is_flank: unit.is_flank,
+    deployment: unit.deployment,
     max_morale: calculateValueWithoutLoss(unit, UnitCalc.Morale),
     max_strength: calculateValueWithoutLoss(unit, UnitCalc.Strength),
     experience_reduction: calculateExperienceReduction(combatSettings, unit),
@@ -103,7 +103,7 @@ export interface CombatUnitDefinition extends UnitCalcs {
   type: UnitType
   is_loyal: boolean
   experience: number
-  is_flank: boolean
+  deployment: UnitDeployment
   max_strength: number
   max_morale: number
   experience_reduction: number

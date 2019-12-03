@@ -1,4 +1,4 @@
-import { UnitType, UnitDefinition, UnitCalc, ValueType } from './actions'
+import { UnitType, UnitDefinition, UnitCalc, ValueType, UnitDeployment } from './actions'
 import { GlobalDefinitions, UnitDefinitions } from './reducer'
 import { addValues, ValuesType, DefinitionType, Mode } from '../../base_definition'
 import { toObj } from '../../utils'
@@ -13,6 +13,7 @@ import IconHorseArchers from '../../images/horse_archers.png'
 import IconLightCavalry from '../../images/light_cavalry.png'
 import IconLightInfantry from '../../images/light_infantry.png'
 import IconWarElephants from '../../images/war_elephants.png'
+import IconSupplyTrain from '../../images/supply_train.png'
 import IconMilitaryPower from '../../images/military_power.png'
 import IconLiburnian from '../../images/liburnian.png'
 import IconTrireme from '../../images/trireme.png'
@@ -32,6 +33,7 @@ const unit_to_icon: { [key in UnitType]: string } = {
   [UnitType.LightCavalry]: IconLightCavalry,
   [UnitType.LightInfantry]: IconLightInfantry,
   [UnitType.WarElephants]: IconWarElephants,
+  [UnitType.SupplyTrain]: IconSupplyTrain,
   [UnitType.Liburnian]: IconLiburnian,
   [UnitType.Trireme]: IconTrireme,
   [UnitType.Tetrere]: IconTetrere,
@@ -45,7 +47,7 @@ export const getIcon = (type: UnitType) => unit_to_icon[type] || ''
 export const GlobalKey = 'Base'
 
 const createUnitFromJson = (data: UnitData): UnitDefinition => {
-  let unit = { type: data.type as UnitType, mode: data.mode as DefinitionType, image: unit_to_icon[data.type as UnitType] || '', requirements: data.requirements, can_assault: !!data.can_assault, is_flank: !!data.is_flank }
+  let unit = { type: data.type as UnitType, mode: data.mode as DefinitionType, image: unit_to_icon[data.type as UnitType] || '', requirements: data.requirements, can_assault: !!data.can_assault, deployment: data.deployment as UnitDeployment }
   const base_values: [ValueType, number][] = [
     [UnitCalc.AttritionWeight, data.attrition_weight || 0],
     [UnitCalc.Cost, data.cost],
@@ -68,6 +70,7 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
     [UnitType.LightCavalry, data.light_cavalry || 0],
     [UnitType.LightInfantry, data.light_infantry || 0],
     [UnitType.WarElephants, data.war_elephants || 0],
+    [UnitType.SupplyTrain, data.supply_train || 0],
     [UnitType.Liburnian, data.liburnian || 0],
     [UnitType.Trireme, data.trireme || 0],
     [UnitType.Tetrere, data.tetrere || 0],
@@ -83,8 +86,8 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
 const initializeDefaultUnits = (): UnitDefinitions => toObj(data.units.map(createUnitFromJson), unit => unit.type)
 
 const initializeDefaultGlobal = (): GlobalDefinitions => {
-  const land = { type: '' as UnitType, mode: DefinitionType.Land, image: IconMilitaryPower, requirements: '', can_assault: false, is_flank: false }
-  const naval = { type: '' as UnitType, mode: DefinitionType.Naval, image: IconMilitaryPower, requirements: '', can_assault: false, is_flank: false }
+  const land = { type: '' as UnitType, mode: DefinitionType.Land, image: IconMilitaryPower, requirements: '', can_assault: false, deployment: UnitDeployment.Front }
+  const naval = { type: '' as UnitType, mode: DefinitionType.Naval, image: IconMilitaryPower, requirements: '', can_assault: false, deployment: UnitDeployment.Front }
   const landValues: [UnitCalc, number][] = [
     [UnitCalc.Strength, 1],
     [UnitCalc.Morale, 3],
@@ -116,7 +119,7 @@ interface UnitData {
   mode: string
   cost: number
   recruit_time: number
-  is_flank?: boolean
+  deployment: string
   maintenance?: number
   requirements: string
   can_assault?: boolean
@@ -138,6 +141,7 @@ interface UnitData {
   light_cavalry?: number
   light_infantry?: number
   war_elephants?: number
+  supply_train?: number
   liburnian?: number
   trireme?: number
   tetrere?: number

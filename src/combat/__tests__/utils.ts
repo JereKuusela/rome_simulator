@@ -297,10 +297,10 @@ export const testReinforce = (info: TestInfo, expected_a: UnitType[] | null = nu
   const [participant_a, participant_d] = getParticipants(info)
   let reserve = participant_a.army.reserve
   let sorted = sortReserve(reserve, participant_a.row_types)
-  reserve.splice(0, reserve.length, ...(sorted.flank.concat(sorted.main)))
+  reserve.splice(0, reserve.length, ...(sorted.flank.concat(sorted.front)))
   reserve = participant_d.army.reserve
   sorted = sortReserve(reserve, participant_d.row_types)
-  reserve.splice(0, reserve.length, ...(sorted.flank.concat(sorted.main)))
+  reserve.splice(0, reserve.length, ...(sorted.flank.concat(sorted.front)))
   doRound(info, participant_a, participant_d)
   verifyDeployOrReinforce(info, Side.Attacker, participant_a, expected_a, reserve_length_a)
   verifyDeployOrReinforce(info, Side.Defender, participant_d, expected_d, reserve_length_d)

@@ -6,6 +6,8 @@ import storage from 'redux-persist/lib/storage'
 import {
   restoreBaseGlobalStats, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits, stripRounds, setIds
 } from './store/transforms'
+import { forEach } from './utils'
+import { UnitType, UnitDefinitions } from './store/units'
 
 const TacticsTransform = createTransform(
   (inboundState) => inboundState,
@@ -44,13 +46,16 @@ const DataTransform = createTransform(
 )
 
 const migrations = {
-  5: (_: any) => ({_persist: _._persist})
+  6: (state: any) => {
+    forEach(state.units, (definitions: UnitDefinitions) => definitions[UnitType.SupplyTrain] = {} as any)
+    return state
+  }
 }
 
 const persistConfig = {
   key: 'primary',
   storage: storage,
-  version: 5,
+  version: 6,
   migrate: createMigrate(migrations, { debug: false }),
   transforms: [
     TacticsTransform,

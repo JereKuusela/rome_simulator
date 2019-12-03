@@ -1,7 +1,8 @@
 import { getDefaultUnits, getDefaultGlobals, getIcon } from './data'
 import {
   UnitType, UnitDefinition,
-  ValueType
+  ValueType,
+  UnitDeployment
 } from './actions'
 import { CountryName, enableModifiers, clearModifiers, createCountry, deleteCountry, changeCountryName } from '../countries'
 import { addValues, DefinitionType, ValuesType, regenerateValues, clearValues, Mode } from '../../base_definition'
@@ -33,7 +34,7 @@ class UnitsReducer extends ImmerReducer<Units> {
   }
 
   addUnit(country: CountryName, mode: DefinitionType, type: UnitType) {
-    this.draftState[country][type] = { type, mode, image: getIcon(type), can_assault: false, requirements: '', is_flank: false }
+    this.draftState[country][type] = { type, mode, image: getIcon(type), can_assault: false, requirements: '', deployment: UnitDeployment.Front }
   }
 
   changeType(country: CountryName, old_type: UnitType, type: UnitType) {
@@ -44,8 +45,8 @@ class UnitsReducer extends ImmerReducer<Units> {
     this.draftState[country][type].image = image
   }
 
-  toggleIsFlank(country: CountryName, type: UnitType) {
-    this.draftState[country][type].is_flank = !this.draftState[country][type].is_flank
+  changeDeployment(country: CountryName, type: UnitType, deployment: UnitDeployment) {
+    this.draftState[country][type].deployment = deployment
   }
 
   toggleCanAssault(country: CountryName, type: UnitType) {
@@ -141,7 +142,7 @@ export const addUnit = unitsActions.addUnit
 export const changeType = unitsActions.changeType
 export const changeImage = unitsActions.changeImage
 export const changeMode = unitsActions.changeMode
-export const toggleIsFlank = unitsActions.toggleIsFlank
+export const changeDeployment = unitsActions.changeDeployment
 export const toggleCanAssault = unitsActions.toggleCanAssault
 export const toggleIsLoyal = unitsActions.toggleIsLoyal
 

@@ -12,12 +12,19 @@ export enum UnitType {
   LightCavalry = 'Light Cavalry',
   LightInfantry = 'Light Infantry',
   WarElephants = 'War Elephants',
+  SupplyTrain = 'Supply Train',
   Liburnian = 'Liburnian',
   Trireme = 'Trireme',
   Tetrere = 'Tetrere',
   Hexere = 'Hexere',
   Octere = 'Octere',
   MegaPolyreme = 'Mega-Polyreme'
+}
+
+export enum UnitDeployment {
+  Front = 'Front',
+  Flank = 'Flank',
+  Support = 'Support'
 }
 
 export enum UnitCalc {
@@ -53,7 +60,7 @@ export interface BaseUnit extends BaseDefinition<UnitType, ValueType> {
 export interface UnitDefinition extends BaseDefinition<UnitType, ValueType> {
   readonly requirements: string
   readonly can_assault: boolean
-  readonly is_flank: boolean
+  readonly deployment: UnitDeployment
   readonly mode: DefinitionType
   readonly is_loyal?: boolean
 }

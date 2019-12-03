@@ -1,14 +1,15 @@
-import { nextIndex } from "./reinforcement_fast"
+import { nextIndex } from "./reinforcement"
 import { CombatUnits, CombatUnit, Reserve, CombatParticipant } from "./combat"
-import { UnitCalc } from "../store/units"
+import { UnitCalc, UnitDeployment } from "../store/units"
 import { remove, sortBy } from "lodash"
 import { CombatSettings, CombatParameter } from "../store/settings"
 import { RowTypes, RowType } from "../store/battle"
 
 
 export type SortedReserve = {
-  main: CombatUnit[]
+  front: CombatUnit[]
   flank: CombatUnit[]
+  support: CombatUnit[]
 }
 
 const armySize = (units: CombatUnits) => {
@@ -26,7 +27,7 @@ const deployArmy = (units: CombatUnits, left_flank: number, right_flank: number,
   for (; index >= left_flank && index + right_flank < frontline.length; index = nextIndex(index, center)) {
       if (frontline[index])
           continue
-      const main = sorted.main.shift()
+      const main = sorted.front.shift()
       if (main) {
           frontline[index] = main
           continue
@@ -34,6 +35,11 @@ const deployArmy = (units: CombatUnits, left_flank: number, right_flank: number,
       const flank = sorted.flank.shift()
       if (flank) {
           frontline[index] = flank
+          continue
+      }
+      const support = sorted.support.shift()
+      if (support) {
+          frontline[index] = support
           continue
       }
       break
@@ -47,41 +53,64 @@ const deployArmy = (units: CombatUnits, left_flank: number, right_flank: number,
           frontline[index] = flank
           continue
       }
-      const main = sorted.main.shift()
+      const main = sorted.front.shift()
       if (main) {
           frontline[index] = main
           continue
       }
+      const support = sorted.support.shift()
+      if (support) {
+          frontline[index] = support
+          continue
+      }
       break
   }
-  reserve.splice(0, reserve.length, ...(sorted.flank.concat(sorted.main)))
+  reserve.splice(0, reserve.length, ...(sorted.support.concat(sorted.flank).concat(sorted.front)))
 
 }
 
 
 export const sortReserve = (reserve: Reserve, row_types: RowTypes): SortedReserve => {
-  const mainReserve = reserve.filter(value => !isFlankUnit(row_types, value))
+  const frontReserve = reserve.filter(value => isFrontUnit(row_types, value))
   const flankReserve = reserve.filter(value => isFlankUnit(row_types, value))
+  const supportReserve = reserve.filter(value => isSupportUnit(row_types, value))
   // Calculate priorities (mostly based on unit type, ties are resolved with index numbers).
-  const main = sortBy(mainReserve, value => {
+  const front = sortBy(frontReserve, value => {
       return -value.definition.deployment_cost * 100000 - value[UnitCalc.Strength] * 1000 - (value.definition.type === row_types[RowType.Primary] ? 200000000 : 0) - (value.definition.type === row_types[RowType.Secondary] ? -100000000 : 0)
   })
   const flank = sortBy(flankReserve, value => {
       return -value.definition[UnitCalc.Maneuver] * 100000 - value[UnitCalc.Strength] * 1000 - (value.definition.type === row_types[RowType.Flank] ? 100000000 : 0)
   })
-  return { main, flank }
+  const support = sortBy(supportReserve, value => {
+    return -value[UnitCalc.Strength] * 1000
+})
+  return { front, flank, support }
 }
 
-/**
-* Returns whether a given unit is a flanker.
-*/
+const isFrontUnit = (row_types: RowTypes, unit: CombatUnit) => {
+  if (unit.definition.type === row_types[RowType.Flank])
+      return false
+  if (unit.definition.type === row_types[RowType.Primary] || unit.definition.type === row_types[RowType.Secondary])
+      return true
+  return unit.definition.deployment === UnitDeployment.Front
+}
+
 const isFlankUnit = (row_types: RowTypes, unit: CombatUnit) => {
   if (unit.definition.type === row_types[RowType.Flank])
       return true
   if (unit.definition.type === row_types[RowType.Primary] || unit.definition.type === row_types[RowType.Secondary])
       return false
-  return unit.definition.is_flank
+  return unit.definition.deployment === UnitDeployment.Flank
 }
+
+const isSupportUnit = (row_types: RowTypes, unit: CombatUnit) => {
+  if (unit.definition.type === row_types[RowType.Flank])
+      return false
+  if (unit.definition.type === row_types[RowType.Primary] || unit.definition.type === row_types[RowType.Secondary])
+      return false
+  return unit.definition.deployment === UnitDeployment.Support
+}
+
 
 /**
  * Removes units from frontline which are out of combat width.
