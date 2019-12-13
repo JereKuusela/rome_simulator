@@ -56,7 +56,7 @@ export const initInfo = () => ({
   general_a: 0,
   general_d: 0,
   terrains: [],
-  settings: getDefaultLandSettings()
+  settings: { ...getDefaultLandSettings(), [CombatParameter.BaseDamage]: 0.08, [CombatParameter.RollDamage]: 0.02 }
 })
 
 const errorPrefix = (round: number, side: Side, index: number) => 'Round ' + round + ', ' + side + ' ' + index + ': '
