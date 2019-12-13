@@ -28,9 +28,9 @@ export const getDefaultNavalSettings = ():CombatSettings  => {
 
 const getDefaultAnySettings = (): CombatSettings => {
   return {
-    [CombatParameter.BaseDamage]: 0.08,
-    [CombatParameter.RollDamage]: 0.02,
-    [CombatParameter.MaxBaseDamage]: 0.3,
+    [CombatParameter.BaseDamage]: 0.096,
+    [CombatParameter.RollDamage]: 0.024,
+    [CombatParameter.MaxBaseDamage]: 0.36,
     [CombatParameter.DiceMinimum]: 1,
     [CombatParameter.DiceMaximum]: 6,
     [CombatParameter.RollFrequency]: 5,
@@ -43,7 +43,6 @@ const getDefaultAnySettings = (): CombatSettings => {
     [CombatParameter.MinimumMorale]: 0.25,
     [CombatParameter.MinimumStrength]: 0,
     [CombatParameter.ReinforceFirst]: 0,
-    [CombatParameter.FixDamageTaken]: 0,
     [CombatParameter.FixTargeting]: 1
   }
 }

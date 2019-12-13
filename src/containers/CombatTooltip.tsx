@@ -77,8 +77,10 @@ class CombatTooltip extends Component<IProps, IState> {
     )
   }
 
+  toNumber = (value: number) => toNumber(value, 3)
+
   getBaseSection = (source: IUnit, target: IUnit, base_damage: number, tactic_damage: number) => {
-    const { settings, terrains } = this.props
+    const { terrains } = this.props
     const terrain_types = terrains.map(value => value.type)
     const strength = source[UnitCalc.Strength] + source.strength_loss
     const offense_vs_defense = source[UnitCalc.Offense] - target[UnitCalc.Defense]
@@ -88,14 +90,10 @@ class CombatTooltip extends Component<IProps, IState> {
     const total_damage = source.damage_dealt
 
     const attributes: (UnitCalc | UnitType)[] = [UnitCalc.Discipline, UnitCalc.DamageDone]
-    if (!settings[CombatParameter.FixDamageTaken])
-      attributes.push(UnitCalc.DamageDone)
-    const target_attributes: (UnitCalc | UnitType)[] = []
-    if (settings[CombatParameter.FixDamageTaken])
-      target_attributes.push(UnitCalc.DamageTaken)
+    const target_attributes: (UnitCalc | UnitType)[] = [UnitCalc.DamageTaken]
 
     return (<>
-      {this.renderItem('Base damage', base_damage, toNumber)}
+      {this.renderItem('Base damage', base_damage, this.toNumber)}
       {this.renderStyledItem('Tactic', tactic_damage, toSignedPercent)}
       {this.renderStyledItem('Loyal', is_loyal ? 0.1 : 0, toSignedPercent)}
       {attributes.map(attribute => this.getAttribute(source, attribute))}
@@ -105,7 +103,7 @@ class CombatTooltip extends Component<IProps, IState> {
       {target_attributes.map(terrain => this.getAttribute(target, terrain))}
       {terrain_types.map(terrain => this.getAttribute(source, terrain))}
       {this.renderMultiplier('Unit strength', strength, toNumber)}
-      {this.renderItem('Total damage', total_damage, toNumber)}
+      {this.renderItem('Total damage', total_damage, this.toNumber)}
     </>)
   }
 
@@ -136,7 +134,7 @@ class CombatTooltip extends Component<IProps, IState> {
       {this.getAttribute(source, UnitCalc.MoraleDamageDone)}
       {this.getAttribute(target, UnitCalc.MoraleDamageTaken)}
       {this.renderMultiplier('Unit morale', morale, toNumber)}
-      {this.renderItem('Morale damage', morale_damage, toNumber)}
+      {this.renderItem('Morale damage', morale_damage, this.toNumber)}
     </>)
   }
 
@@ -178,7 +176,7 @@ class CombatTooltip extends Component<IProps, IState> {
           morale_loss ?
             <>
               {' ('}
-              <StyledNumber value={morale_loss} formatter={toNumber} negative_color={this.RED} />
+              <StyledNumber value={morale_loss} formatter={this.toNumber} negative_color={this.RED} />
               {')'}
             </>
             : null

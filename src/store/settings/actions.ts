@@ -18,7 +18,6 @@ export enum CombatParameter {
   RollFrequency = 'RollFrequency',
   CombatWidth = 'CombatWidth',
   ReinforceFirst = 'ReinforceFirst',
-  FixDamageTaken = 'FixDamageTaken',
   FixTargeting = 'FixTargeting'
 }
 
@@ -58,8 +57,6 @@ export const parameterToDescription = (parameter: CombatParameter | SimulationPa
       return 'Multiplier for morale lost.'
     case CombatParameter.ReinforceFirst:
       return 'Attackers pick targets before defenders reinforce.\nThis makes attacker and defender behave differently.\nThis is probably a bug in the game. Set 1 to fix this.'
-    case CombatParameter.FixDamageTaken:
-      return 'Damage taken attribute is not used in calculations.\nDamage done attribute is used twice in calculations.\nThis is probably a bug in the game. Set 1 to fix this.'
     case CombatParameter.RollDamage:
       return 'Additional base damage per dice roll and other modifiers.'
     case CombatParameter.RollFrequency:

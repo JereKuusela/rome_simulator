@@ -258,7 +258,7 @@ class Battle extends Component<IProps, IState> {
     const base_damage = calculateBaseDamage(total, this.props.combat)
     return (
       <div key={side}>
-        {base_damage.toFixed(2)} :
+        {base_damage.toFixed(3)} :
         <span style={{ paddingLeft: '1em' }} /><Image src={IconDice} avatar />
         {is_random ? roll : <Input size='mini' style={{ width: 100 }} type='number' value={roll} onChange={(_, data) => this.props.setRoll(this.props.mode, side, Number(data.value))} />}
         {general_effect !== 0 ?

@@ -8,6 +8,8 @@ import {
 } from './store/transforms'
 import { forEach } from './utils'
 import { UnitType, UnitDefinitions } from './store/units'
+import { DefinitionType } from './base_definition'
+import { CombatParameter } from './store/settings'
 
 const TacticsTransform = createTransform(
   (inboundState) => inboundState,
@@ -49,13 +51,22 @@ const migrations = {
   6: (state: any) => {
     forEach(state.units, (definitions: UnitDefinitions) => definitions[UnitType.SupplyTrain] = {} as any)
     return state
+  },
+  7: (state: any) => {
+    state.settings.combat[DefinitionType.Land][CombatParameter.BaseDamage] = 0.096
+    state.settings.combat[DefinitionType.Naval][CombatParameter.BaseDamage] = 0.096
+    state.settings.combat[DefinitionType.Land][CombatParameter.RollDamage] = 0.024
+    state.settings.combat[DefinitionType.Naval][CombatParameter.RollDamage] = 0.024
+    state.settings.combat[DefinitionType.Land][CombatParameter.MaxBaseDamage] = 0.36
+    state.settings.combat[DefinitionType.Naval][CombatParameter.MaxBaseDamage] = 0.36
+    return state
   }
 }
 
 const persistConfig = {
   key: 'primary',
   storage: storage,
-  version: 6,
+  version: 7,
   migrate: createMigrate(migrations, { debug: false }),
   transforms: [
     TacticsTransform,

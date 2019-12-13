@@ -295,14 +295,13 @@ const precalculateDamage = (base_damage: number, terrains: TerrainDefinition[], 
   PRECISION * base_damage
   * (1.0 + calculateValue(unit, UnitCalc.Discipline))
   * (1.0 + calculateValue(unit, UnitCalc.DamageDone))
-  * (settings[CombatParameter.FixDamageTaken] ? 1.0 : 1.0 + calculateValue(unit, UnitCalc.DamageDone))
   * (1.0 + sumBy(terrains, terrain => calculateValue(unit, terrain.type)))
   * (unit.is_loyal ? 1.1 : 1.0)
 )
 
 const precalculateDamageReduction = (unit: Unit, settings: CombatSettings) => (
   (1.0 + calculateExperienceReduction(settings, unit))
-  * (settings[CombatParameter.FixDamageTaken] ? 1.0 + calculateValue(unit, UnitCalc.DamageTaken) : 1.0)
+  * (1.0 + calculateValue(unit, UnitCalc.DamageTaken))
 )
 
 const calculateDamageMultiplier = (source: CombatUnit, target: CombatUnit, tactic_damage_multiplier: number) => {
