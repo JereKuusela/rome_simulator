@@ -59,7 +59,7 @@
       "light_infantry": 0.35,
       "war_elephants": -0.5,
       "supply_train": 1.0,
-      "food_consumption": 0.1,
+      "food_consumption": 0.2,
       "food_storage": 2.4
     },
     {
