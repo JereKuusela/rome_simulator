@@ -101,7 +101,7 @@ export default class ArmyCosts extends Component<IProps> {
 
   storageFormatter = (frontline: FrontLine, reserve: Reserve, defeated: Defeated) => {
     const storage = this.calculateTotal(UnitCalc.FoodStorage, undefined, frontline, reserve, defeated)
-    const consumption = this.calculateTotal(UnitCalc.FoodConsumption, undefined, frontline, reserve, defeated)
+    const consumption = this.calculateTotal(UnitCalc.FoodConsumption, undefined, frontline, reserve, defeated) || 1.0
     return `${toNumber(storage / consumption / 12)} years (${toNumber(this.calculateTotal(UnitCalc.FoodStorage, undefined, frontline, reserve, defeated))})`
   }
 
