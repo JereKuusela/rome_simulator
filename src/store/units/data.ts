@@ -47,37 +47,39 @@ export const getIcon = (type: UnitType) => unit_to_icon[type] || ''
 export const GlobalKey = 'Base'
 
 const createUnitFromJson = (data: UnitData): UnitDefinition => {
-  let unit = { type: data.type as UnitType, mode: data.mode as DefinitionType, image: unit_to_icon[data.type as UnitType] || '', requirements: data.requirements, can_assault: !!data.can_assault, deployment: data.deployment as UnitDeployment }
+  let unit = { type: data.type as UnitType, mode: data.mode as DefinitionType, image: unit_to_icon[data.type as UnitType] ?? '', requirements: data.requirements, can_assault: !!data.can_assault, deployment: data.deployment as UnitDeployment }
   const base_values: [ValueType, number][] = [
-    [UnitCalc.AttritionWeight, data.attrition_weight || 0],
+    [UnitCalc.AttritionWeight, data.attrition_weight ?? 0],
     [UnitCalc.Cost, data.cost],
     [UnitCalc.RecruitTime, data.recruit_time],
-    [UnitCalc.Maintenance, data.maintenance || 0],
+    [UnitCalc.Maintenance, data.maintenance ?? 0],
     [UnitCalc.MovementSpeed, data.movement_speed],
     [UnitCalc.Maneuver, data.maneuver],
-    [UnitCalc.MoraleDamageTaken, data.morale_damage_taken || 0],
-    [UnitCalc.StrengthDamageTaken, data.strength_damage_taken || 0],
-    [UnitCalc.MoraleDamageDone, data.morale_damage_done || 0],
-    [UnitCalc.StrengthDamageDone, data.strength_damage_done || 0],
-    [UnitCalc.DamageDone, data.damage_done || 0],
-    [UnitCalc.DamageTaken, data.damage_taken || 0],
-    [UnitType.Archers, data.archers || 0],
-    [UnitType.CamelCavalry, data.camel_cavalry || 0],
-    [UnitType.Chariots, data.chariots || 0],
-    [UnitType.HeavyCavalry, data.heavy_cavalry || 0],
-    [UnitType.HeavyInfantry, data.heavy_infantry || 0],
-    [UnitType.HorseArchers, data.horse_archers || 0],
-    [UnitType.LightCavalry, data.light_cavalry || 0],
-    [UnitType.LightInfantry, data.light_infantry || 0],
-    [UnitType.WarElephants, data.war_elephants || 0],
-    [UnitType.SupplyTrain, data.supply_train || 0],
-    [UnitType.Liburnian, data.liburnian || 0],
-    [UnitType.Trireme, data.trireme || 0],
-    [UnitType.Tetrere, data.tetrere || 0],
-    [UnitType.Hexere, data.hexere || 0],
-    [UnitType.Octere, data.octere || 0],
-    [UnitType.MegaPolyreme, data.mega_polyreme || 0],
-    [TerrainType.Riverine, data.riverine || 0]
+    [UnitCalc.MoraleDamageTaken, data.morale_damage_taken ?? 0],
+    [UnitCalc.StrengthDamageTaken, data.strength_damage_taken ?? 0],
+    [UnitCalc.MoraleDamageDone, data.morale_damage_done ?? 0],
+    [UnitCalc.StrengthDamageDone, data.strength_damage_done ?? 0],
+    [UnitCalc.DamageDone, data.damage_done ?? 0],
+    [UnitCalc.DamageTaken, data.damage_taken ?? 0],
+    [UnitCalc.FoodConsumption, data.food_consumption ?? 0],
+    [UnitCalc.FoodStorage, data.food_storage ?? 0],
+    [UnitType.Archers, data.archers ?? 0],
+    [UnitType.CamelCavalry, data.camel_cavalry ?? 0],
+    [UnitType.Chariots, data.chariots ?? 0],
+    [UnitType.HeavyCavalry, data.heavy_cavalry ?? 0],
+    [UnitType.HeavyInfantry, data.heavy_infantry ?? 0],
+    [UnitType.HorseArchers, data.horse_archers ?? 0],
+    [UnitType.LightCavalry, data.light_cavalry ?? 0],
+    [UnitType.LightInfantry, data.light_infantry ?? 0],
+    [UnitType.WarElephants, data.war_elephants ?? 0],
+    [UnitType.SupplyTrain, data.supply_train ?? 0],
+    [UnitType.Liburnian, data.liburnian ?? 0],
+    [UnitType.Trireme, data.trireme ?? 0],
+    [UnitType.Tetrere, data.tetrere ?? 0],
+    [UnitType.Hexere, data.hexere ?? 0],
+    [UnitType.Octere, data.octere ?? 0],
+    [UnitType.MegaPolyreme, data.mega_polyreme ?? 0],
+    [TerrainType.Riverine, data.riverine ?? 0]
   ]
   unit = addValues(unit, ValuesType.Base, unit.type, base_values)
   return unit
@@ -127,6 +129,8 @@ interface UnitData {
   maneuver: number
   morale_damage_taken?: number
   strength_damage_taken?: number
+  food_consumption?: number
+  food_storage?: number
   damage_taken?: number
   morale_damage_done?: number
   strength_damage_done?: number

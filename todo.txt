@@ -3,20 +3,11 @@ Release 6:
 
 Changelog:
 
-- Battle: Big performance boost for combat calculations (uses now the much faster algorithm from Statistics).
-- Battle: Added 'Reset all data' to bottom of the page.
-- Statistics: New checkbox to hide casualty information (makes calculations slightly faster).
-- Statistics: New slider to quickly change calculation speed settings (speed vs accuracy).
-- Statistics: Optimized deployment and reinforcement.
-- Countries: Heritage changes from 1.3.
-- Countries: Changed color of maintenance increase from technology to red (negative).
-- Countries: Added a note about heritages to source of omen power list.
-- Units: Added Supply Train.
-- Units: Applied 1.3 unit balance changes (cost change + War Elephants increased moral damage taken).
-- Units: Is flank property changed to deployment mode (with Front, Flank or Support) to add support to Support units.
-- Settings: Two new settings to match changes of Statistics page.
-- Transfer: Added 'Reset all data' to bottom of the page (technically this was already possible by importing nothing).
-- Error: Added a button to download current data (can be imported later to try restore some of your changes).
+- Battle: Added food consumption and storage to fast planner.
+- Units: Balance changes from 1.3.2 (War Elephants damage against Infantry, Supply Train cost).
+- Units: Added food consumption and storage.
+- Settings: Applied 20% increase to base damage values.
+- Settings: Removed "Fix damage taken" settings as it is fixed in the game.
 
 
 Tests (high priority):

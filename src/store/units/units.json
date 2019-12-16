@@ -17,7 +17,9 @@
       "heavy_infantry": 0.1,
       "light_cavalry": -0.1,
       "light_infantry": 0.25,
-      "supply_train": 1.0
+      "supply_train": 1.0,
+      "food_consumption": 0.1,
+      "food_storage": 2.4
     },
     {
       "type": "Camel Cavalry",
@@ -35,7 +37,9 @@
       "horse_archers": 0.1,
       "light_infantry": 0.1,
       "war_elephants": -0.5,
-      "supply_train": 1.0
+      "supply_train": 1.0,
+      "food_consumption": 0.2,
+      "food_storage": 3.6
     },
     {
       "type": "Chariots",
@@ -54,7 +58,9 @@
       "light_cavalry": 0.1,
       "light_infantry": 0.35,
       "war_elephants": -0.5,
-      "supply_train": 1.0
+      "supply_train": 1.0,
+      "food_consumption": 0.1,
+      "food_storage": 2.4
     },
     {
       "type": "Heavy Cavalry",
@@ -73,7 +79,9 @@
       "light_cavalry": 0.2,
       "light_infantry": 0.25,
       "war_elephants": -0.5,
-      "supply_train": 1.0
+      "supply_train": 1.0,
+      "food_consumption": 0.25,
+      "food_storage": 2.4
     },
     {
       "type": "Heavy Infantry",
@@ -93,7 +101,9 @@
       "horse_archers": -0.25,
       "light_cavalry": -0.1,
       "light_infantry": 0.2,
-      "supply_train": 1.0
+      "supply_train": 1.0,
+      "food_consumption": 0.2,
+      "food_storage": 2.4
     },
     {
       "type": "Horse Archers",
@@ -114,7 +124,9 @@
       "light_cavalry": -0.1,
       "light_infantry": 0.25,
       "war_elephants": -0.2,
-      "supply_train": 1.0
+      "supply_train": 1.0,
+      "food_consumption": 0.25,
+      "food_storage": 2.4
     },
     {
       "type": "Light Cavalry",
@@ -133,7 +145,9 @@
       "horse_archers": 0.25,
       "light_infantry": 0.25,
       "war_elephants": -0.5,
-      "supply_train": 1.0
+      "supply_train": 1.0,
+      "food_consumption": 0.25,
+      "food_storage": 2.4
     },
     {
       "type": "Light Infantry",
@@ -153,29 +167,9 @@
       "heavy_infantry": -0.25,
       "horse_archers": -0.5,
       "war_elephants": -0.25,
-      "supply_train": 1.0
-    },
-    {
-      "type": "War Elephants",
-      "mode": "Land",
-      "deployment": "Front",
-      "cost": 26,
-      "recruit_time": 365,
-      "requirements": "Elephants",
-      "movement_speed": 2.5,
-      "maneuver": 1,
-      "strength_damage_taken": -0.5,
-      "morale_damage_taken": 0.1,
-      "attrition_weight": 2,
-      "archers": 0.5,
-      "camel_cavalry": -0.1,
-      "chariots": 0.5,
-      "heavy_cavalry": -0.1,
-      "heavy_infantry": 0.4,
-      "horse_archers": -0.1,
-      "light_cavalry": -0.1,
-      "light_infantry": 0.3,
-      "supply_train": 1.0
+      "supply_train": 1.0,
+      "food_consumption": 0.1,
+      "food_storage": 2.4
     },
     {
       "type": "Supply Train",
@@ -197,7 +191,33 @@
       "horse_archers": -0.9,
       "light_cavalry": -0.9,
       "light_infantry": -0.9,
-      "war_elephants": -0.9
+      "war_elephants": -0.9,
+      "food_consumption": 0.05,
+      "food_storage": 50
+    },
+    {
+      "type": "War Elephants",
+      "mode": "Land",
+      "deployment": "Front",
+      "cost": 26,
+      "recruit_time": 365,
+      "requirements": "Elephants",
+      "movement_speed": 2.5,
+      "maneuver": 1,
+      "strength_damage_taken": -0.5,
+      "morale_damage_taken": 0.1,
+      "attrition_weight": 2,
+      "archers": 0.5,
+      "camel_cavalry": -0.1,
+      "chariots": 0.5,
+      "heavy_cavalry": -0.1,
+      "heavy_infantry": 0.4,
+      "horse_archers": -0.1,
+      "light_cavalry": -0.1,
+      "light_infantry": 0.3,
+      "supply_train": 1.0,
+      "food_consumption": 0.3,
+      "food_storage": 1.0
     },
     {
       "type": "Liburnian",

@@ -47,7 +47,9 @@ export enum UnitCalc {
   Cost = 'Cost',
   Maintenance = 'Maintenance',
   AttritionWeight = 'Attrition weight',
-  Experience = 'Experience'
+  Experience = 'Experience',
+  FoodConsumption = 'Food Consumption',
+  FoodStorage = 'Food Storage'
 }
 
 export type ValueType = UnitCalc | UnitType | TerrainType
