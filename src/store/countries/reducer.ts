@@ -1,6 +1,6 @@
 import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
 import { GovermentType, ReligionType, CultureType, Modifier } from '../data'
-import { objGet, ObjSet, toObj } from '../../utils'
+import { ObjSet, toObj } from '../../utils'
 
 export enum CountryName {
   Country1 = 'Country 1',
@@ -46,7 +46,7 @@ const countryDefinitions = getDefaultCountryDefinitions()
 class CountriesReducer extends ImmerReducer<typeof countryDefinitions> {
 
   createCountry(country: CountryName, source_country?: CountryName) {
-    this.draftState[country] = objGet(this.state, source_country, defaultCountry)
+    this.draftState[country] = source_country ? this.state[source_country] : defaultCountry
   }
 
   deleteCountry(country: CountryName) {

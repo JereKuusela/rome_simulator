@@ -35,13 +35,6 @@ export const showProgress = (text: string, updates: number, dots: number) => '\u
  */
 export const round = (number: number, precision: number): number => Math.round(precision * number) / precision
 
-export function objGet<K extends string, V>(object: { [key in K]: V}, key: K | undefined): V | undefined
-export function objGet<K extends string, V>(object: { [key in K]: V}, key: K | undefined, initial: V | undefined): V
-export function objGet<K extends string, V>(object: { [key in K]: V}, key: K | undefined, initial?: V)
-{
-  return key !== undefined && has(object, key) ? object[key] : initial
-}
-
 export function arrGet<V>(arr: V[], index: number): V | undefined
 export function arrGet<V1, V2>(arr: V1[], index: number, initial: V2 | undefined): V1 & V2
 export function arrGet<V1, V2>(arr: V1[], index: number, initial?: V2)

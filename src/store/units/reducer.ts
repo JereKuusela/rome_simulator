@@ -8,7 +8,7 @@ import { CountryName, enableModifiers, clearModifiers, createCountry, deleteCoun
 import { addValues, DefinitionType, ValuesType, regenerateValues, clearValues, Mode } from '../../base_definition'
 import { ImmerReducer, createActionCreators, createReducerFunction, Actions } from 'immer-reducer'
 import { Modifier } from '../data'
-import { objGet, map } from '../../utils'
+import { map } from '../../utils'
 
 export type GlobalStats = { [key in CountryName]: GlobalDefinitions }
 export type GlobalDefinitions = { [key in DefinitionType.Land | DefinitionType.Naval]: UnitDefinition }
@@ -58,7 +58,7 @@ class UnitsReducer extends ImmerReducer<Units> {
   }
 
   createCountry(country: CountryName, source_country?: CountryName) {
-    this.draftState[country] = objGet(this.state, source_country, getDefaultUnits())
+    this.draftState[country] = source_country ? this.state[source_country] : getDefaultUnits()
   }
 
   deleteCountry(country: CountryName) {
@@ -92,7 +92,7 @@ class GlobalStatsReducer extends ImmerReducer<GlobalStats> {
   }
 
   createCountry(country: CountryName, source_country?: CountryName) {
-    this.draftState[country] = objGet(this.state, source_country!, getDefaultGlobals())
+    this.draftState[country] = source_country ? this.state[source_country] :  getDefaultGlobals()
   }
 
   deleteCountry(country: CountryName) {

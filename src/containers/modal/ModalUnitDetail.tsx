@@ -3,70 +3,96 @@ import { connect } from 'react-redux'
 import { UnitType, ValueType, setValue, changeImage, changeMode, Unit, changeDeployment, toggleIsLoyal, UnitDeployment } from '../../store/units'
 import { AppState } from '../../store/'
 import { CountryName } from '../../store/countries'
-import { ValuesType, mergeValues, DefinitionType } from '../../base_definition'
+import { ValuesType, DefinitionType } from '../../base_definition'
 import UnitDetail from '../../components/UnitDetail'
 import { invalidateCountry } from '../../store/battle'
-import { mergeUnitTypes, filterTerrainTypes } from '../../store/utils'
+import { mergeUnitTypes, filterTerrainTypes, getUnitDefinitionByCountry, getMode } from '../../store/utils'
 
 const CUSTOM_VALUE_KEY = 'Custom'
 
+type Props = {
+  country: CountryName | null
+  unit_type: UnitType | null
+  changeType: (country: CountryName, old_type: UnitType, new_type: UnitType) => void
+}
+
 class ModalUnitDetail extends Component<IProps> {
-  render(): JSX.Element | null {
-    if (!this.props.country || !this.props.unit)
+  render() {
+    const { mode, unit } = this.props
+    if (!unit)
       return null
-    const country = this.props.country
-    const definition = this.props.units[this.props.country][this.props.unit]
-    const unit = mergeValues(definition, this.props.global_stats[this.props.country][this.props.mode])
-    const type = unit.type
     return (
       <UnitDetail
-        mode={this.props.mode}
+        mode={mode}
         terrain_types={this.props.terrain_types}
         custom_value_key={CUSTOM_VALUE_KEY}
         unit={unit as Unit}
         unit_types={this.props.unit_types}
-        onCustomBaseValueChange={(key, attribute, value) => this.props.setBaseValue(country, type, key, attribute, value)}
-        onCustomModifierValueChange={(key, attribute, value) => this.props.setModifierValue(country, type, key, attribute, value)}
-        onCustomLossValueChange={(key, attribute, value) => this.props.setLossValue(country, type, key, attribute, value)}
+        onCustomBaseValueChange={this.setBaseValue}
+        onCustomModifierValueChange={this.setModifierValue}
+        onCustomLossValueChange={this.setLossValue}
         show_statistics={false}
-        onTypeChange={new_type => this.props.changeType(country, type, new_type)}
-        onImageChange={image => this.props.changeImage(country, type, image)}
-        onModeChange={mode => this.props.changeMode(country, type, mode)}
-        onChangeDeployment={deployment => this.props.changeDeployment(country, type, deployment)}
-        onIsLoyalToggle={() => this.props.toggleIsLoyal(country, type)}
+        onTypeChange={this.changeType}
+        onImageChange={this.changeImage}
+        onModeChange={this.changeMode}
+        onChangeDeployment={this.changeDeployment}
+        onIsLoyalToggle={this.toggleIsLoyal}
       />
     )
   }
+
+  changeType = (type: UnitType) => {
+    const { changeType, invalidateCountry, country, unit_type } = this.props
+    changeType(country!, unit_type!, type)
+    invalidateCountry(country!)
+  }
+
+  setBaseValue = (key: string, attribute: ValueType, value: number) => this.setValue(ValuesType.Base, key, attribute, value)
+  setModifierValue = (key: string, attribute: ValueType, value: number) => this.setValue(ValuesType.Modifier, key, attribute, value)
+  setLossValue = (key: string, attribute: ValueType, value: number) => this.setValue(ValuesType.Loss, key, attribute, value)
+
+  setValue = (type: ValuesType, key: string, attribute: ValueType, value: number) => {
+    const { setValue, invalidateCountry, country, unit_type } = this.props
+    setValue(country!, type, unit_type!, key, attribute, value)
+    invalidateCountry(country!)
+  }
+
+  changeImage = (image: string) => {
+    const { changeImage, invalidateCountry, country, unit_type } = this.props
+    changeImage(country!, unit_type!, image)
+    invalidateCountry(country!)
+  }
+
+  changeMode = (mode: DefinitionType) => {
+    const { changeMode, invalidateCountry, country, unit_type } = this.props
+    changeMode(country!, unit_type!, mode)
+    invalidateCountry(country!)
+  }
+
+  changeDeployment = (deployment: UnitDeployment) => {
+    const { changeDeployment, invalidateCountry, country, unit_type } = this.props
+    changeDeployment(country!, unit_type!, deployment)
+    invalidateCountry(country!)
+  }
+
+  toggleIsLoyal = () => {
+    const { toggleIsLoyal, invalidateCountry, country, unit_type } = this.props
+    toggleIsLoyal(country!, unit_type!)
+    invalidateCountry(country!)
+  }
 }
 
-const mapStateToProps = (state: AppState) => ({
-  units: state.units,
-  global_stats: state.global_stats,
+const mapStateToProps = (state: AppState, props: Props) => ({
+  unit: props.country && props.unit_type && getUnitDefinitionByCountry(state, props.country, props.unit_type),
   unit_types: mergeUnitTypes(state),
   terrain_types: filterTerrainTypes(state),
-  mode: state.settings.mode
+  mode: getMode(state)
 })
 
-const mapDispatchToProps = (dispatch: any) => ({
-  setBaseValue: (country: CountryName, unit: UnitType, key: string, attribute: ValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setValue(country, ValuesType.Base, unit, key, attribute, value)) && dispatch(invalidateCountry(country))
-  ),
-  setModifierValue: (country: CountryName, unit: UnitType, key: string, attribute: ValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setValue(country, ValuesType.Modifier, unit, key, attribute, value)) && dispatch(invalidateCountry(country))
-  ),
-  setLossValue: (country: CountryName, unit: UnitType, key: string, attribute: ValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setValue(country, ValuesType.Loss, unit, key, attribute, value)) && dispatch(invalidateCountry(country))
-  ),
-  changeImage: (country: CountryName, type: UnitType, image: string) => dispatch(changeImage(country, type, image)),
-  changeMode: (country: CountryName, type: UnitType, mode: DefinitionType) => dispatch(changeMode(country, type, mode)),
-  changeDeployment: (country: CountryName, type: UnitType, deployment: UnitDeployment) => dispatch(changeDeployment(country, type, deployment)),
-  toggleIsLoyal: (country: CountryName, type: UnitType) => dispatch(toggleIsLoyal(country, type)) && dispatch(invalidateCountry(country))
-})
+const actions = { setValue, changeImage, changeMode, changeDeployment, toggleIsLoyal, invalidateCountry }
 
-interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {
-  country: CountryName | null
-  unit: UnitType | null
-  changeType: (country: CountryName, old_type: UnitType, new_type: UnitType) => void
-}
+type S = ReturnType<typeof mapStateToProps>
+type D = typeof actions
+interface IProps extends React.PropsWithChildren<Props>, S, D { }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ModalUnitDetail)
+export default connect(mapStateToProps, actions)(ModalUnitDetail)

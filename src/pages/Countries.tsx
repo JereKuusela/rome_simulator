@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Container, Grid, Table, List, Input, Checkbox } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
-import { mapRange, objGet, ObjSet, sumObj, has, keys } from '../utils'
+import { mapRange, ObjSet, sumObj, has, keys } from '../utils'
 import { invalidateCountry } from '../store/battle'
 import {
   ModifierType, Modifier, Tradition, CultureType,
@@ -10,7 +10,7 @@ import {
   GovermentType, ReligionType, TraitDefinition, EconomyDefinition, LawDefinition, IdeaDefinition, AbilityDefinition
 } from '../store/data'
 import {
-  enableModifiers, clearModifiers, CountryName, selectGovernment, selectReligion, selectCulture, setOmenPower, setGeneralMartial, defaultCountry,
+  enableModifiers, clearModifiers, CountryName, selectGovernment, selectReligion, selectCulture, setOmenPower, setGeneralMartial,
   setHasGeneral, setMilitaryPower, setOfficeDiscipline, setOfficeMorale
 } from '../store/countries'
 import { DefinitionType, ValuesType } from '../base_definition'
@@ -50,7 +50,7 @@ const CELL_PADDING = '.78571429em .78571429em'
 class Countries extends Component<IProps> {
 
   render() {
-    const country = objGet(this.props.countries, this.props.selected_country, defaultCountry)
+    const country = this.props.countries[this.props.selected_country]
     const selections = country.selections
     const tradition = this.props.traditions[country.culture]
     const omen = this.props.omens[country.religion]

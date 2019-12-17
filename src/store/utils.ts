@@ -1,15 +1,13 @@
 import { AppState } from "./index"
-import { objGet, sumObj, map, reduce, toArr, filter, arrGet } from '../utils'
+import { sumObj, map, reduce, toArr, filter, arrGet } from '../utils'
 import { filterUnitDefinitions, isIncludedInMode, mergeUnits, getArmyPart } from '../army_utils'
 import { TacticType, TacticDefinition } from "./tactics/actions"
 import { mergeValues, DefinitionType, Mode } from "../base_definition"
 import { TerrainType, TerrainDefinition, LocationType } from "./terrains/actions"
 import { UnitType, UnitDefinition, BaseUnit, Unit } from "./units/actions"
 import { Battle, getDefaultMode, getDefaultBattle } from "./battle/reducer"
-import { getDefaultArmy, Army as BaseArmy, Side, getDefaultParticipant, BaseUnits, Participant, Units, RowTypes, ArmyType } from "./battle/actions"
-import { getDefaultCountryDefinitions } from "./countries/reducer"
-import { CountryName } from "./countries"
-import { getDefaultGlobals, getDefaultUnits } from "./units/data"
+import { Army as BaseArmy, Side, BaseUnits, Participant, Units, RowTypes, ArmyType } from "./battle/actions"
+import { CountryName, getDefaultCountryDefinitions } from "./countries"
 import { CombatSettings, getDefaultSettings } from "./settings"
 import { UnitDefinitions, getDefaultBaseDefinitions, getDefaultUnitDefinitions } from "./units"
 import { TerrainDefinitions, getDefaultTerrainDefinitions } from "./terrains";
@@ -138,7 +136,7 @@ export const filterUnitTypesBySide = (state: AppState, side: Side): UnitType[] =
  * @param country Country.
  */
 export const filterUnitTypesByCountry = (state: AppState, country: CountryName): UnitType[] => {
-  const units = filterUnitDefinitions(state.settings.mode, objGet(state.units, country, getDefaultUnits()))
+  const units = filterUnitDefinitions(state.settings.mode, state.units[country])
   return toArr(units).map(unit => unit.type)
 }
 
@@ -146,7 +144,7 @@ export const filterUnitTypesByCountry = (state: AppState, country: CountryName):
  * Returns armies of the current mode.
  * @param state Application state.
  */
-export const getBattle = (state: AppState): Battle => objGet(state.battle, state.settings.mode, getDefaultMode(state.settings.mode))
+export const getBattle = (state: AppState): Battle => state.battle[state.settings.mode]
 
 
 
@@ -213,7 +211,7 @@ const getBaseUnitsBySide = (state: AppState, side: Side): BaseUnits => getBaseUn
 
 const getBaseUnitsByCountry = (state: AppState, name: CountryName): BaseUnits => {
   const battle = getBattle(state)
-  const army = objGet(battle.armies, name, getDefaultArmy(state.settings.mode))
+  const army = battle.armies[name]
   return { frontline: army.frontline, reserve: army.reserve, defeated: army.defeated }
 }
 
@@ -222,7 +220,7 @@ const getUnitsBySide = (state: AppState, side: Side): Units => getUnitsByCountry
 
 const getUnitsByCountry = (state: AppState, name: CountryName): Units => {
   const army = getBattle(state).armies[name]
-  const units = filterUnitDefinitions(state.settings.mode, objGet(state.units, name, getDefaultUnits()))
+  const units = filterUnitDefinitions(state.settings.mode, state.units[name])
   const global = state.global_stats[name][state.settings.mode]
   const frontline = army.frontline.map(value => value && mergeUnits(units, global, value))
   const reserve = army.reserve.map(value => mergeUnits(units, global, value))
@@ -236,7 +234,7 @@ export const getBaseUnits = (state: AppState, type: Side): BaseUnits => getBaseU
 
 export const getUnits = (state: AppState, type: Side): Units => getUnitsBySide(state, type)
 
-export const getParticipant = (state: AppState, type: Side): Participant => objGet(getBattle(state).participants, type, getDefaultParticipant(CountryName.Country1))
+export const getParticipant = (state: AppState, type: Side): Participant => getBattle(state).participants[type]
 
 export const getSelected = (state: AppState): Army => getArmyByCountry(state, state.settings.country)
 
@@ -250,9 +248,15 @@ export const getSelectedTerrains = (state: AppState): TerrainDefinition[] => get
 export const getUnitDefinitions = (state: AppState, side: Side): UnitDefinitions => getUnitDefinitionsByCountry(state, getParticipant(state, side).name)
 
 export const getUnitDefinitionsByCountry = (state: AppState, name: CountryName): UnitDefinitions => {
-  const global = objGet(state.global_stats, name, getDefaultGlobals())[state.settings.mode]
+  const global = state.global_stats[name][state.settings.mode]
   const units = filterUnitDefinitions(state.settings.mode, state.units[name])
   return map(units, definition => mergeValues(definition, global))
+}
+
+export const getUnitDefinitionByCountry = (state: AppState, name: CountryName, unit_type: UnitType): UnitDefinition => {
+  const global = state.global_stats[name][state.settings.mode]
+  const unit = state.units[name][unit_type]
+  return mergeValues(unit, global)
 }
 
 /**

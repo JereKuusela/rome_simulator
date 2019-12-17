@@ -52,7 +52,7 @@ class Units extends Component<IProps, IState> {
             }
             <ModalUnitDetail
               country={this.state.modal_country}
-              unit={this.state.modal_unit}
+              unit_type={this.state.modal_unit}
               changeType={this.onChangeType}
             />
             <ModalGlobalStatsDetail
