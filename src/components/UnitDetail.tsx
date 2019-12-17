@@ -30,7 +30,6 @@ interface IProps {
   onTypeChange?: (type: UnitType) => void
   onModeChange?: (mode: DefinitionType) => void
   onImageChange?: (image: string) => void
-  onCanAssaultToggle?: () => void
   onChangeDeployment?: (deployment: UnitDeployment) => void
   onIsLoyalToggle?: () => void
 }
@@ -49,9 +48,9 @@ export default class UnitDetail extends Component<IProps> {
   readonly CELLS = 6
 
   render() {
-    const { unit, onTypeChange, onModeChange, onImageChange, onChangeDeployment, onCanAssaultToggle, onIsLoyalToggle } = this.props
+    const { unit, onTypeChange, onModeChange, onImageChange, onChangeDeployment, onIsLoyalToggle } = this.props
     const { terrain_types, unit_types, unit_types_as_dropdown } = this.props
-    const { id, type, mode, image, deployment, can_assault, is_loyal } = unit
+    const { id, type, mode, image, deployment, is_loyal } = unit
     return (
       <Table celled selectable unstackable>
         <Headers values={this.headers} />
@@ -62,7 +61,6 @@ export default class UnitDetail extends Component<IProps> {
           {onModeChange && <DetailDropdownRow text='Mode' cells={this.CELLS} value={mode} values={this.modes} onChange={onModeChange} />}
           {onImageChange && <DetailInputRow text='Image' cells={this.CELLS} value={image} onChange={onImageChange} />}
           {onChangeDeployment && <DetailDropdownRow text='Deployment' cells={this.CELLS} value={deployment} values={this.deployments} onChange={onChangeDeployment} />}
-          {unit_types && <DetailToggleRow text='Can assault?' cells={this.CELLS} value={can_assault} onChange={onCanAssaultToggle} />}
           {<DetailToggleRow text='Is loyal?' cells={this.CELLS} value={!!is_loyal} onChange={onIsLoyalToggle} />}
           {this.attributes.map(this.renderRow)}
           {unit_types && unit_types.map(this.renderRow)}

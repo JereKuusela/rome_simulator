@@ -34,7 +34,7 @@ class UnitsReducer extends ImmerReducer<Units> {
   }
 
   addUnit(country: CountryName, mode: DefinitionType, type: UnitType) {
-    this.draftState[country][type] = { type, mode, image: getIcon(type), can_assault: false, requirements: '', deployment: UnitDeployment.Front }
+    this.draftState[country][type] = { type, mode, image: getIcon(type), deployment: UnitDeployment.Front }
   }
 
   changeType(country: CountryName, old_type: UnitType, type: UnitType) {
@@ -47,10 +47,6 @@ class UnitsReducer extends ImmerReducer<Units> {
 
   changeDeployment(country: CountryName, type: UnitType, deployment: UnitDeployment) {
     this.draftState[country][type].deployment = deployment
-  }
-
-  toggleCanAssault(country: CountryName, type: UnitType) {
-    this.draftState[country][type].can_assault = !this.draftState[country][type].can_assault
   }
 
   toggleIsLoyal(country: CountryName, type: UnitType) {
@@ -143,7 +139,6 @@ export const changeType = unitsActions.changeType
 export const changeImage = unitsActions.changeImage
 export const changeMode = unitsActions.changeMode
 export const changeDeployment = unitsActions.changeDeployment
-export const toggleCanAssault = unitsActions.toggleCanAssault
 export const toggleIsLoyal = unitsActions.toggleIsLoyal
 
 const unitsBaseReducer = createReducerFunction(UnitsReducer, unitDefinitions)

@@ -47,7 +47,7 @@ export const getIcon = (type: UnitType) => unit_to_icon[type] || ''
 export const GlobalKey = 'Base'
 
 const createUnitFromJson = (data: UnitData): UnitDefinition => {
-  let unit = { type: data.type as UnitType, mode: data.mode as DefinitionType, image: unit_to_icon[data.type as UnitType] ?? '', requirements: data.requirements, can_assault: !!data.can_assault, deployment: data.deployment as UnitDeployment }
+  let unit = { type: data.type as UnitType, mode: data.mode as DefinitionType, image: unit_to_icon[data.type as UnitType] ?? '', deployment: data.deployment as UnitDeployment }
   const base_values: [ValueType, number][] = [
     [UnitCalc.AttritionWeight, data.attrition_weight ?? 0],
     [UnitCalc.Cost, data.cost],

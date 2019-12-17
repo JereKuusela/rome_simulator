@@ -15,6 +15,8 @@ import IconMorale from '../images/morale.png'
 import IconEmpty from '../images/empty.png'
 import { CombatUnits, CombatUnit } from '../combat/combat'
 
+type Props = {}
+
 class Stats extends Component<IProps> {
   render() {
     return (
@@ -74,7 +76,7 @@ class Stats extends Component<IProps> {
     )
   }
 
-  renderRow = (units: CombatUnits, type: UnitType): JSX.Element | null => {
+  renderRow = (units: CombatUnits, type: UnitType) => {
     const flatten = this.flatten(units, type)
     const count = flatten.length
     if (count === 0)
@@ -119,9 +121,10 @@ const mapStateToProps = (state: AppState) => ({
   mode: state.settings.mode
 })
 
-const mapDispatchToProps = (dispatch: any) => ({
-})
+const actions = {}
 
-interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }
+type S = ReturnType<typeof mapStateToProps>
+type D = typeof actions
+interface IProps extends React.PropsWithChildren<Props>, S, D { }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Stats)
+export default connect(mapStateToProps, actions)(Stats)

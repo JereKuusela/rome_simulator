@@ -60,8 +60,6 @@ export interface BaseUnit extends BaseDefinition<UnitType, ValueType> {
 }
 
 export interface UnitDefinition extends BaseDefinition<UnitType, ValueType> {
-  readonly requirements: string
-  readonly can_assault: boolean
   readonly deployment: UnitDeployment
   readonly mode: DefinitionType
   readonly is_loyal?: boolean
