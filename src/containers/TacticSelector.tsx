@@ -4,13 +4,14 @@ import { Image } from 'semantic-ui-react'
 
 import { AppState } from '../store/'
 import { getCurrentCombat, getSelectedTactic } from '../store/utils'
-import { Side } from '../store/battle'
+import { Side, getOpponent } from '../store/battle'
 
 import { getImage } from '../base_definition'
 
 import StyledNumber from '../components/Utils/StyledNumber'
 import { toSignedPercent } from '../formatters'
 import ModalTacticSelector from './modal/ModalTacticSelector'
+import { calculateTactic } from '../combat/combat'
 
 type Props = {
   side: Side
@@ -28,8 +29,9 @@ class TacticSelector extends Component<IProps, IState> {
   }
 
   render() {
-    const { side, bonus, tactic } = this.props
+    const { side, opposing_tactic, tactic, units } = this.props
     const { modal_open } = this.state
+    const bonus = calculateTactic(units, tactic, opposing_tactic)
     return (
       <>
         <ModalTacticSelector
@@ -57,8 +59,9 @@ class TacticSelector extends Component<IProps, IState> {
 
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  bonus: getCurrentCombat(state, props.side).tactic_bonus,
-  tactic: getSelectedTactic(state, props.side)
+  units: getCurrentCombat(state, props.side),
+  tactic: getSelectedTactic(state, props.side),
+  opposing_tactic: getSelectedTactic(state, getOpponent(props.side)),
 })
 
 const actions = {}

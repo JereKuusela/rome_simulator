@@ -67,13 +67,14 @@ class CombatReducer extends ImmerReducer<AppState> {
       battle.participants[Side.Defender].rounds = [defender.army]
       attacker.army = copyStatus(attacker.army)
       defender.army = copyStatus(defender.army)
+      battle.fight_over = !checkAlive(attacker.army.frontline, attacker.army.reserve) || !checkAlive(defender.army.frontline, defender.army.reserve)
     } else {
 
       attacker.army = copyStatus(getCurrentCombat(this.state, Side.Attacker))
       defender.army = copyStatus(getCurrentCombat(this.state, Side.Defender))
 
     }
-    if (battle.round === -1 && steps > 0) {
+    if (battle.round === -1 && steps > 0 && !battle.fight_over) {
       deploy(attacker, defender, settings)
       Object.freeze(attacker.army)
       Object.freeze(defender.army)
