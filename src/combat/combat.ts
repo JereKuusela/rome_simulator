@@ -163,8 +163,8 @@ export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, mark_de
   applyLosses(d.army.frontline)
   const minimum_morale = settings[CombatParameter.MinimumMorale]
   const minimum_strength = settings[CombatParameter.MinimumStrength]
-  moveDefeated(a.army.frontline, a.army.defeated, minimum_morale, minimum_strength, mark_defeated)
-  moveDefeated(d.army.frontline, d.army.defeated, minimum_morale, minimum_strength, mark_defeated)
+  moveDefeated(a.army.frontline, a.army.defeated, minimum_morale, minimum_strength, mark_defeated, false)
+  moveDefeated(d.army.frontline, d.army.defeated, minimum_morale, minimum_strength, mark_defeated, false)
 }
 
 /**
@@ -245,13 +245,15 @@ const applyLosses = (frontline: Frontline) => {
 /**
  * Moves defeated units from a frontline to defeated.
  */
-const moveDefeated = (frontline: Frontline, defeated: Reserve, minimum_morale: number, minimum_strength: number, mark_defeated: boolean) => {
+const moveDefeated = (frontline: Frontline, defeated: Reserve, minimum_morale: number, minimum_strength: number, mark_defeated: boolean, damage_defeated: boolean) => {
   for (let i = 0; i < frontline.length; i++) {
     const unit = frontline[i]
     if (!unit)
       continue
     if (unit[UnitCalc.Strength] > minimum_strength && unit[UnitCalc.Morale] > minimum_morale)
       continue
+    if (damage_defeated)
+      unit[UnitCalc.Strength] *= 0.5
     if (mark_defeated)
       frontline[i] = { ...unit, state: { ...unit.state, is_defeated: true } }
     else

@@ -10,19 +10,32 @@ Changelog:
 - Settings: Applied 20% increase to base damage values.
 - Settings: Removed "Fix damage taken" settings as it is fixed in the game.
 
+Todo:
+ - Icons to frontline to show when things like defender's advantage, flanking or unit countering applies.
+ - Fix new countries not showing up on battle army selection.
+ - Defeated list to show strength and gold lost to sinking (only shown when setting is active.
+ - Transfer could only show non-base stats for units, terrains and tactics (since base stats are supposed to regenerate?), currently it shows way too much information.
+
+Settings:
+ - Better descriptions
+ - Show list of "Increase value to ...", "Decrease value too", green and red colors for increase and decrease.
+ - Gives a better idea how the attribute affects the result.
+ - Setting for 50% chance to sink defeated ships (off, 50% chance, 50% strength loss for all).
+ - Improved settings: Dropdowns instead of magic values (description updates according to selection).
+ - New settings for deployment / reinforcement order/attribute.
+ - More sections for settings (at least new section for deployment and reinforcement).
+
 
 Tests (high priority):
 - utils tested
 - check that reinforcement is stable (higher key ends in right position)
 
-Verify maintenance cost (put high unit cost on defines).
+Verify maintenance cost (put high unit cost on game defines).
 
 Refactor:
 - Getting rid of custom map, reduce, etc functions as much as possible.
 - reducer utils.ts has lots of army/participant functions, some kind of sense? 
 - props to fromStateToProps to do better filtering
-
-Reducers can probably be split to sub reducers (one handles the data structure, other the actual data)
 
 Rowtype selectors could show unit priority? Different colors for main and flank. Frontline could slightly color tiles based on main/flank.
 
@@ -30,12 +43,12 @@ Pluralization of reducers, state, etc
 
 Combat things to combat reducer. Perhaps state as parameter when needed? Since it only changes same things as battle reducer,
 
-Deployment changed in latest beta? To be messed up like with multiarmy?
-
 Stats to show amount of traditions, trade, etc..
 
 
-Release 6+:
+Release++:
+
+Reducers can probably be split to sub reducers (one handles the data structure, other the actual data)
 
 Army management:
 - Probably needed for multi-army battles because countries need to have multiple armies
@@ -45,11 +58,8 @@ Army management:
 - Accordion for reserve?
 - Accordion for unit definitions?
 
-
 - Accordions to more places?? (unit detail?)
 
-
-- Immutable reviver to simplify fromJS calls when transforming data?
 - Index files don't really work with circular references (some types are used everywhere)
    * Own files for types?
    * Get rid of index files?
@@ -59,26 +69,8 @@ Countries:
 - Tag selector for tech (some inventions are tag specific)
 - Tag preset selector for common tags (selects tradition, tag for tech and religion)
 
-Navigation:
-- Toggle for simple mode, enabled by default: disables army management, disabled army selection, unit / terrain / tactic management
-
-Settings:
-- Better descriptions
-- Show list of "Increase value to ...", "Decrease value too", green and red colors for increase and decrease.
-- Gives a better idea how the attribute affects the result.
-
-
-Siege:
-- Time to capture
-- Units lost to attrition
-- Fort level
-- Commander martial + traits
-- Research bonuses
-
 Land battle:
-- Loyalty gives +10% discipline, include or not?
 - Deployment order based also on manpower!! (before index), need to to test whether full strength is prioritized for both deploy and reinforce
-- With multiple armies: preferred flank size is halved (not always, sometimes also unit jumps directly to middle...), filled first (reverse index order), then from middle
 
 Multi army:
 - Two armies attack: First army on initial deployment on day 0, second army does from bottom to top
@@ -130,7 +122,3 @@ Findings 2:
 - Flank size may change mode
 - Mode seems to be also affected by amount of units in the filled
 - Amount of units also affects flank size
-
-Navigation:
-- Simulation
-- Graphs

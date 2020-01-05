@@ -1,12 +1,12 @@
 
-import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
+import { ImmerReducer, createActionCreators, createReducerFunction, Actions } from 'immer-reducer'
 import {
   getDefaultArmy, getInitialTerrains, Army, Side, ArmyType, Participant, getDefaultParticipant, RowType
 } from './actions'
 import { BaseUnit, UnitType, ValueType } from '../units'
 import { TerrainType } from '../terrains'
 import { DefinitionType, Mode, ValuesType, addValues } from '../../base_definition'
-import { CountryName } from '../countries'
+import { CountryName, changeCountryName, deleteCountry, createCountry } from '../countries'
 import { TacticType } from '../tactics';
 import { keys, toArr, forEach, arrGet } from '../../utils'
 import { findLastIndex} from 'lodash'
@@ -232,6 +232,21 @@ class BattleReducer extends ImmerReducer<ModeState> {
     })
     this.draftState[mode] = next
   }
+
+  createCountry(country: CountryName, source_country?: CountryName) {
+    this.draftState[DefinitionType.Land].armies[country] = source_country ? this.state[DefinitionType.Land].armies[source_country] : getDefaultArmy(DefinitionType.Land)
+    this.draftState[DefinitionType.Naval].armies[country] = source_country ? this.state[DefinitionType.Naval].armies[source_country] : getDefaultArmy(DefinitionType.Naval)
+  }
+
+  deleteCountry(country: CountryName) {
+    delete this.draftState[DefinitionType.Land].armies[country]
+    delete this.draftState[DefinitionType.Naval].armies[country]
+  }
+
+  changeCountryName(old_country: CountryName, country: CountryName) {
+    delete Object.assign(this.draftState[DefinitionType.Land].armies, { [country]: this.draftState[DefinitionType.Land].armies[old_country] })[old_country]
+    delete Object.assign(this.draftState[DefinitionType.Naval].armies, { [country]: this.draftState[DefinitionType.Naval].armies[old_country] })[old_country]
+  }
 }
 
 
@@ -258,4 +273,14 @@ export const selectArmy = actions.selectArmy
 export const clearUnits = actions.clearUnits
 
 
-export const battleReducer = createReducerFunction(BattleReducer, battleState)
+const battleBaseReducer = createReducerFunction(BattleReducer, battleState)
+
+export const battleReducer = (state = battleState, action: Actions<typeof BattleReducer>) => {
+  if (action.type === createCountry.type)
+    return battleBaseReducer(state, { payload: action.payload, type: actions.createCountry.type, args: true } as any)
+  if (action.type === deleteCountry.type)
+    return battleBaseReducer(state, { payload: action.payload, type: actions.deleteCountry.type })
+  if (action.type === changeCountryName.type)
+    return battleBaseReducer(state, { payload: action.payload, type: actions.changeCountryName.type, args: true } as any)
+  return battleBaseReducer(state, action)
+}
