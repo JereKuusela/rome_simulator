@@ -1,5 +1,5 @@
 import { UnitType } from '../../store/units'
-import { CombatParameter } from '../../store/settings'
+import { Setting } from '../../store/settings'
 import { getRowTypes, getUnit, every_type, setFlankSizes, TestInfo, initInfo, testDeploy } from './utils'
 
 describe('initial deployment', () => {
@@ -93,7 +93,7 @@ describe('initial deployment', () => {
   })
   it('reduced combat width', () => {
     setFlankSizes(info, 2, 0)
-    info.settings[CombatParameter.CombatWidth] = 5
+    info.settings[Setting.CombatWidth] = 5
     setAttacker([UnitType.HorseArchers, UnitType.HorseArchers, UnitType.HorseArchers])
     fillAttacker(UnitType.Archers)
     fillDefender(UnitType.Archers)

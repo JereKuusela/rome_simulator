@@ -7,13 +7,13 @@ import StyledNumber from '../components/Utils/StyledNumber'
 
 import { AppState } from '../store/'
 import { Side, ArmyType } from '../store/battle'
-import { getArmyBySide, getParticipant, getCombatSettings, getSelectedTerrains, getCombatUnit, getCurrentCombat } from '../store/utils'
+import { getArmyBySide, getParticipant, getSettings, getSelectedTerrains, getCombatUnit, getCurrentCombat } from '../store/utils'
 
 import { calculateValue, strengthToValue, DefinitionType } from '../base_definition'
 import { toNumber, toSignedPercent, toManpower } from '../formatters'
 import { UnitCalc, UnitType } from '../store/units'
 import { TerrainType } from '../store/terrains'
-import { CombatParameter } from '../store/settings'
+import { Setting } from '../store/settings'
 import { TacticCalc } from '../store/tactics'
 import { calculateTotalRoll, calculateBaseDamage } from '../combat/combat_utils'
 import { CombatUnit, CombatUnitDefinition, CombatUnitRoundInfo } from '../combat/combat'
@@ -109,7 +109,7 @@ class CombatTooltip extends Component<IProps, IState> {
 
   getStrengthSection = (source: IUnit, target: IUnit) => {
     const { settings, tactic_s, tactic_t, mode } = this.props
-    const strength_lost_multiplier = settings[CombatParameter.StrengthLostMultiplier]
+    const strength_lost_multiplier = settings[Setting.StrengthLostMultiplier]
     const tactic_casualties = calculateValue(tactic_s, TacticCalc.Casualties) + calculateValue(tactic_t, TacticCalc.Casualties)
 
     const strength_damage = source.strength_dealt
@@ -125,7 +125,7 @@ class CombatTooltip extends Component<IProps, IState> {
 
   getMoraleSection = (source: IUnit, target: IUnit) => {
     const { settings } = this.props
-    const morale_lost_multiplier = settings[CombatParameter.MoraleLostMultiplier] / settings[CombatParameter.MoraleDamageBase]
+    const morale_lost_multiplier = settings[Setting.MoraleLostMultiplier]
     const morale = source[UnitCalc.Morale] + source.morale_loss
     const morale_damage = source.morale_dealt
 
@@ -244,7 +244,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   source: convertUnit(getCombatUnit(state, props.side, props.army, props.id)),
   tactic_bonus: getCurrentCombat(state, props.side).tactic_bonus,
   roll: (last(getParticipant(state, props.side).rolls) || { roll: 0 }).roll,
-  settings: getCombatSettings(state),
+  settings: getSettings(state),
   terrains: getSelectedTerrains(state),
   general_s: getArmyBySide(state, props.side).general.total,
   tactic_s: state.tactics[getArmyBySide(state, props.side).tactic],

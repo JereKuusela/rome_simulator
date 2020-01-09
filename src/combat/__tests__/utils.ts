@@ -5,7 +5,7 @@ import { calculateValue, mergeValues, DefinitionType } from '../../base_definiti
 import { map, mapRange } from '../../utils'
 import { CountryName } from '../../store/countries'
 import { calculateTotalRoll } from '../combat_utils'
-import { getDefaultLandSettings, CombatParameter } from '../../store/settings'
+import { getDefaultLandSettings, Setting, Settings, getDefaultSiteSettings } from '../../store/settings'
 import { TerrainDefinition, TerrainType, getDefaultTerrains } from '../../store/terrains'
 import { doBattleFast, CombatParticipant, CombatUnit, CombatUnitRoundInfo } from '../combat'
 import { getBaseDamages, convertUnits } from '../simulation'
@@ -29,7 +29,7 @@ export interface TestInfo {
   army_a: Army
   army_d: Army
   terrains: TerrainDefinition[]
-  settings: { [key in CombatParameter]: number }
+  settings: Settings
 }
 
 /**
@@ -56,7 +56,7 @@ export const initInfo = () => ({
   general_a: 0,
   general_d: 0,
   terrains: [],
-  settings: { ...getDefaultLandSettings(), [CombatParameter.BaseDamage]: 0.08, [CombatParameter.RollDamage]: 0.02 }
+  settings: { ...getDefaultLandSettings(), ...getDefaultSiteSettings(), [Setting.BaseDamage]: 0.08, [Setting.RollDamage]: 0.02 }
 })
 
 const errorPrefix = (round: number, side: Side, index: number) => 'Round ' + round + ', ' + side + ' ' + index + ': '
@@ -225,12 +225,12 @@ type ExpectedUnits = ([UnitType | null, number | null, number | null] | null)
 type Expected = (ExpectedUnits[] | null)
 
 const getParticipants = (info: TestInfo) => {
-  const dice = info.settings[CombatParameter.DiceMaximum] - info.settings[CombatParameter.DiceMinimum] + 1
+  const dice = info.settings[Setting.DiceMaximum] - info.settings[Setting.DiceMinimum] + 1
   const base_damages_a = getBaseDamages(info.settings, dice, calculateTotalRoll(0, info.terrains, info.general_a, info.general_d))
   const base_damages_d = getBaseDamages(info.settings, dice, calculateTotalRoll(0, [], info.general_d, info.general_a))
   const tactic_casualties = calculateValue(tactics[info.army_a.tactic], TacticCalc.Casualties) + calculateValue(tactics[info.army_d.tactic], TacticCalc.Casualties)
-  const status_a = convertUnits(info.army_a, info.settings, tactic_casualties, base_damages_a, info.terrains, every_type, info.army_a.row_types)
-  const status_d = convertUnits(info.army_d, info.settings, tactic_casualties, base_damages_d, info.terrains, every_type, info.army_d.row_types)
+  const status_a = convertUnits(info.army_a, info.settings, tactic_casualties, base_damages_a, info.terrains, every_type)
+  const status_d = convertUnits(info.army_d, info.settings, tactic_casualties, base_damages_d, info.terrains, every_type)
   const participant_a: CombatParticipant = {
     army: status_a,
     roll: 0,
@@ -285,7 +285,7 @@ const verifyDeployOrReinforce = (info: TestInfo, side: Side, participant: Combat
 const nextIndex = (index: number, half: number) => index < half ? index + 2 * (half - index) : index - 2 * (index - half) - 1
 
 const verifyTypes = (info: TestInfo, types: UnitType[], side: Side, frontline: (CombatUnit | null)[]) => {
-  const half = Math.floor(info.settings[CombatParameter.CombatWidth] / 2.0)
+  const half = Math.floor(info.settings[Setting.CombatWidth] / 2.0)
   let index = half
   for (const type of types) {
     verifyType(-1, side, index, frontline[index]?.definition, type, ' at index ' + index)

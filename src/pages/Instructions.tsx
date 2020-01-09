@@ -152,9 +152,6 @@ class Instructions extends Component<IProps> {
             <p><b>Export</b>: Exporting allows you to specify which parts of the data to export.</p>
             <p><b>Import</b>: Imports data from the text box. Recommended to be careful. Corrupted data may cause weird behavior.</p>
             <p><b>Reset missing data</b>: When turned on, export resets missing data to default values. Useful to reset all data.</p>
-            <br />
-            <br />
-            <br />
           </Grid.Column>
         </Grid.Row>
       </Grid>

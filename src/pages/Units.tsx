@@ -76,12 +76,6 @@ class Units extends Component<IProps, IState> {
           unit_types={this.props.unit_types}
           onRowClick={unit => this.openModal(this.props.country, unit.type)}
         />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
       </>
     )
   }

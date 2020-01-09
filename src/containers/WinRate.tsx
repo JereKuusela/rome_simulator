@@ -6,7 +6,7 @@ import StyledNumber from '../components/Utils/StyledNumber'
 
 import { AppState } from '../store/'
 import { Side } from '../store/battle'
-import { getCombatSettings, getSelectedTerrains, mergeUnitTypes, getArmyForCombat } from '../store/utils'
+import { getSettings, getSelectedTerrains, mergeUnitTypes, getArmyForCombat } from '../store/utils'
 
 import { toPercent, toFlooredPercent } from '../formatters'
 import { calculateWinRate, WinRateProgress, interrupt, doConversion } from '../combat/simulation'
@@ -83,9 +83,9 @@ class WinRate extends Component<IProps, IState> {
   }
 
   calculate = () => {
-    const { attacker, defender, combatSettings, terrains, simulationSettings, unit_types } = this.props
-    const [ combat_a, combat_d ] = doConversion(attacker, defender, terrains, unit_types, combatSettings)
-    calculateWinRate(false, simulationSettings, this.update, combat_a, combat_d, combatSettings)
+    const { attacker, defender, settings, terrains, unit_types } = this.props
+    const [ combat_a, combat_d ] = doConversion(attacker, defender, terrains, unit_types, settings)
+    calculateWinRate(false, settings, this.update, combat_a, combat_d)
   }
 
   scale = (value: number) => this.state.progress ? value / this.state.progress : 0
@@ -94,8 +94,7 @@ class WinRate extends Component<IProps, IState> {
 const mapStateToProps = (state: AppState) => ({
   attacker: getArmyForCombat(state, Side.Attacker),
   defender: getArmyForCombat(state, Side.Defender),
-  combatSettings: getCombatSettings(state),
-  simulationSettings: state.settings.simulation,
+  settings: getSettings(state),
   terrains: getSelectedTerrains(state),
   unit_types: mergeUnitTypes(state)
 })

@@ -2,9 +2,9 @@ import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer
 import { Random, MersenneTwister19937, createEntropy } from 'random-js'
 import { Side, Participant, Battle } from '../battle'
 import { Mode } from '../../base_definition'
-import { CombatParameter, CombatSettings } from '../settings'
+import { Setting, Settings } from '../settings'
 import { AppState } from '../'
-import { getArmyForCombat, mergeUnitTypes, getCurrentCombat } from '../utils'
+import { getArmyForCombat, mergeUnitTypes, getCurrentCombat, getSettings } from '../utils'
 import { arrGet } from '../../utils'
 import { doConversion } from '../../combat/simulation'
 import { deploy } from '../../combat/deployment'
@@ -21,7 +21,7 @@ const checkAlive = (frontline: Frontline, reserve: Reserve) => reserve.length ||
 
 class CombatReducer extends ImmerReducer<AppState> {
 
-  private doBattle = (mode: Mode, battle: Battle, settings: CombatSettings, steps: number) => {
+  private doBattle = (mode: Mode, battle: Battle, settings: Settings, steps: number) => {
     const army_a = getArmyForCombat(this.state, Side.Attacker, mode)
     const army_d = getArmyForCombat(this.state, Side.Defender, mode)
     const terrains = battle.terrains.map(value => this.state.terrains[value])
@@ -32,9 +32,9 @@ class CombatReducer extends ImmerReducer<AppState> {
 
     battle.outdated = false
 
-    const minimum_roll = settings[CombatParameter.DiceMinimum]
-    const maximum_roll = settings[CombatParameter.DiceMaximum]
-    const roll_frequency = settings[CombatParameter.RollFrequency]
+    const minimum_roll = settings[Setting.DiceMinimum]
+    const maximum_roll = settings[Setting.DiceMaximum]
+    const roll_frequency = settings[Setting.RollFrequency]
     // Regenerate seed for the first roll (undo resets it when going back to deployment).
     if (battle.round + steps > 0 && !battle.seed)
       battle.seed = battle.custom_seed ?? Math.abs(createEntropy(undefined, 1)[0])
@@ -114,7 +114,7 @@ class CombatReducer extends ImmerReducer<AppState> {
 
   battle(mode: Mode, steps: number) {
     const battle = this.draftState.battle[mode]
-    const settings = this.state.settings.combat[mode]
+    const settings = getSettings(this.state, mode)
     this.doBattle(mode, battle, settings, steps)
   }
 
@@ -126,7 +126,7 @@ class CombatReducer extends ImmerReducer<AppState> {
 
   refreshBattle(mode: Mode) {
     const battle = this.draftState.battle[mode]
-    const settings = this.state.settings.combat[mode]
+    const settings = getSettings(this.state, mode)
     const steps = battle.round + 1
     battle.round = -1
     battle.fight_over = false

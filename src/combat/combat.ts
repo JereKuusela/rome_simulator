@@ -4,7 +4,7 @@ import { sumBy } from 'lodash'
 import { UnitCalc, UnitType, Unit, UnitDeployment } from '../store/units'
 import { TerrainDefinition, TerrainType } from '../store/terrains'
 import { TacticDefinition } from '../store/tactics'
-import { CombatParameter, CombatSettings } from '../store/settings'
+import { Setting, Settings } from '../store/settings'
 
 import { mapRange, values, toObj } from '../utils'
 import { calculateValue, calculateBase, calculateValueWithoutLoss } from '../base_definition'
@@ -36,20 +36,20 @@ export type CombatUnits = {
 /**
  * Returns a precalculated info about a given unit.
  */
-const precalculateUnit = (settings: CombatSettings, casualties_multiplier: number, base_damages: number[], terrains: TerrainDefinition[], unit_types: UnitType[], unit: Unit) => {
+const precalculateUnit = (settings: Settings, casualties_multiplier: number, base_damages: number[], terrains: TerrainDefinition[], unit_types: UnitType[], unit: Unit) => {
   const damage_reduction = precalculateDamageReduction(unit, settings)
-  const total_damage = mapRange(base_damages.length, roll => precalculateDamage(base_damages[roll], terrains, unit, settings))
+  const total_damage = mapRange(base_damages.length, roll => precalculateDamage(base_damages[roll], terrains, unit))
   const info: CombatUnitPreCalculated = {
     total_damage: toObj(unit_types, type => type, type => total_damage.map(damage => damage * (1.0 + calculateValue(unit, type)))),
-    morale_done_multiplier: (1.0 + calculateValue(unit, UnitCalc.MoraleDamageDone)) * settings[CombatParameter.MoraleLostMultiplier] / settings[CombatParameter.MoraleDamageBase],
-    strength_done_multiplier: (1.0 + calculateValue(unit, UnitCalc.StrengthDamageDone)) * settings[CombatParameter.StrengthLostMultiplier] * (1.0 + casualties_multiplier),
+    morale_done_multiplier: (1.0 + calculateValue(unit, UnitCalc.MoraleDamageDone)) * settings[Setting.MoraleLostMultiplier],
+    strength_done_multiplier: (1.0 + calculateValue(unit, UnitCalc.StrengthDamageDone)) * settings[Setting.StrengthLostMultiplier] * (1.0 + casualties_multiplier),
     morale_taken_multiplier: damage_reduction * (1.0 + calculateValue(unit, UnitCalc.MoraleDamageTaken)),
     strength_taken_multiplier: damage_reduction * (1.0 + calculateValue(unit, UnitCalc.StrengthDamageTaken))
   }
   return info
 }
 
-const getUnitDefinition = (combatSettings: CombatSettings, terrains: TerrainDefinition[], unit_types: UnitType[], unit: Unit): CombatUnitDefinition => {
+const getUnitDefinition = (combatSettings: Settings, terrains: TerrainDefinition[], unit_types: UnitType[], unit: Unit): CombatUnitDefinition => {
   const info = {
     id: unit.id,
     type: unit.type,
@@ -71,7 +71,7 @@ const getUnitDefinition = (combatSettings: CombatSettings, terrains: TerrainDefi
 /**
  * Transforms a unit to a combat unit.
  */
-export const getCombatUnit = (combatSettings: CombatSettings, casualties_multiplier: number, base_damages: number[], terrains: TerrainDefinition[], unit_types: UnitType[], unit: Unit | null): CombatUnit | null => {
+export const getCombatUnit = (combatSettings: Settings, casualties_multiplier: number, base_damages: number[], terrains: TerrainDefinition[], unit_types: UnitType[], unit: Unit | null): CombatUnit | null => {
   if (!unit)
     return null
   const combat_unit: CombatUnit = {
@@ -139,16 +139,16 @@ export interface CombatUnit {
 /**
  * Makes given armies attach each other.
  */
-export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, mark_defeated: boolean, settings: CombatSettings) => {
+export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, mark_defeated: boolean, settings: Settings) => {
   if (mark_defeated) {
     removeDefeated(a.army.frontline)
     removeDefeated(d.army.frontline)
   }
   reinforce(a.army.frontline, a.army.reserve)
-  if (settings[CombatParameter.ReinforceFirst])
+  if (settings[Setting.DefenderAdvantage])
     reinforce(d.army.frontline, d.army.reserve)
   pickTargets(a.army.frontline, d.army.frontline, settings)
-  if (!settings[CombatParameter.ReinforceFirst])
+  if (!settings[Setting.DefenderAdvantage])
     reinforce(d.army.frontline, d.army.reserve)
   pickTargets(d.army.frontline, a.army.frontline, settings)
 
@@ -161,8 +161,8 @@ export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, mark_de
 
   applyLosses(a.army.frontline)
   applyLosses(d.army.frontline)
-  const minimum_morale = settings[CombatParameter.MinimumMorale]
-  const minimum_strength = settings[CombatParameter.MinimumStrength]
+  const minimum_morale = settings[Setting.MinimumMorale]
+  const minimum_strength = settings[Setting.MinimumStrength]
   moveDefeated(a.army.frontline, a.army.defeated, minimum_morale, minimum_strength, mark_defeated, false)
   moveDefeated(d.army.frontline, d.army.defeated, minimum_morale, minimum_strength, mark_defeated, false)
 }
@@ -170,7 +170,7 @@ export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, mark_de
 /**
  * Selects targets for units.
  */
-const pickTargets = (source: Frontline, target: Frontline, settings: CombatSettings) => {
+const pickTargets = (source: Frontline, target: Frontline, settings: Settings) => {
   for (let i = 0; i < source.length; i++) {
     const unit = source[i]
     if (!unit)
@@ -186,7 +186,7 @@ const pickTargets = (source: Frontline, target: Frontline, settings: CombatSetti
       state.target = target[i]
     else {
       const maneuver = unit.definition[UnitCalc.Maneuver]
-      if (settings[CombatParameter.FixTargeting] ? i < source.length / 2 : i <= source.length / 2) {
+      if (settings[Setting.FixTargeting] ? i < source.length / 2 : i <= source.length / 2) {
         for (let index = i - maneuver; index <= i + maneuver; ++index) {
           if (index >= 0 && index < source.length && target[index]) {
             state.target = target[index]
@@ -293,7 +293,7 @@ const attack = (frontline: Frontline, roll: number, tactic_damage_multiplier: nu
 
 const PRECISION = 100000.0
 
-const precalculateDamage = (base_damage: number, terrains: TerrainDefinition[], unit: Unit, settings: CombatSettings) => (
+const precalculateDamage = (base_damage: number, terrains: TerrainDefinition[], unit: Unit) => (
   PRECISION * base_damage
   * (1.0 + calculateValue(unit, UnitCalc.Discipline))
   * (1.0 + calculateValue(unit, UnitCalc.DamageDone))
@@ -301,7 +301,7 @@ const precalculateDamage = (base_damage: number, terrains: TerrainDefinition[], 
   * (unit.is_loyal ? 1.1 : 1.0)
 )
 
-const precalculateDamageReduction = (unit: Unit, settings: CombatSettings) => (
+const precalculateDamageReduction = (unit: Unit, settings: Settings) => (
   (1.0 + calculateExperienceReduction(settings, unit))
   * (1.0 + calculateValue(unit, UnitCalc.DamageTaken))
 )

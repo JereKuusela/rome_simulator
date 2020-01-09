@@ -16,10 +16,10 @@ import TacticSelector from '../containers/TacticSelector'
 import ModalArmyUnitDetail from '../containers/modal/ModalArmyUnitDetail'
 import ModalFastPlanner from '../containers/modal/ModalFastPlanner'
 import { mergeValues, Mode } from '../base_definition'
-import { getCombatSettings, getBattle, getArmy, Army, getParticipant, getCurrentCombat, resetMissing } from '../store/utils'
+import { getSettings, getBattle, getArmy, Army, getParticipant, getCurrentCombat, resetMissing } from '../store/utils'
 import { addSign } from '../formatters'
 import { CountryName, setGeneralMartial } from '../store/countries'
-import { CombatParameter } from '../store/settings'
+import { Setting } from '../store/settings'
 import IconTerrain from '../images/terrain.png'
 import IconGeneral from '../images/military_power.png'
 import StyledNumber from '../components/Utils/StyledNumber'
@@ -232,7 +232,7 @@ class Battle extends Component<IProps, IState> {
 
   renderFrontline = (side: Side, participant: Army, units: CombatUnits): JSX.Element => {
     const country = participant.name
-    const combat_width = this.props.combat[CombatParameter.CombatWidth]
+    const combat_width = this.props.combat[Setting.CombatWidth]
     return (
       <div key={side}>
         {side === Side.Attacker && <Header>{side + '\'s frontline'}</Header>}
@@ -390,7 +390,7 @@ const mapStateToProps = (state: AppState) => ({
   fight_over: getBattle(state).fight_over,
   units: state.units,
   global_stats: state.global_stats,
-  combat: getCombatSettings(state),
+  combat: getSettings(state),
   mode: state.settings.mode,
   countries: state.countries
 })

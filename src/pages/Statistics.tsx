@@ -4,16 +4,16 @@ import { Grid, Button, Table, Header, Checkbox } from 'semantic-ui-react'
 
 import { AppState } from '../store/'
 import { Side } from '../store/battle'
-import { getCombatSettings, getSelectedTerrains, mergeUnitTypes, getArmyForCombat } from '../store/utils'
-import { changeSimulationParameter } from '../store/settings'
+import { getSettings, getSelectedTerrains, mergeUnitTypes, getArmyForCombat } from '../store/utils'
+import { changeSiteParameter, SimulationSpeed } from '../store/settings'
 
 import { toPercent, toNumber, toFlooredPercent } from '../formatters'
 import { calculateWinRate, WinRateProgress, interrupt, CasualtiesProgress, doConversion } from '../combat/simulation'
 import RoundChart from '../components/Charts/RoundChart'
 import CumulativePercentChart from '../components/Charts/CumulativePercentChart'
-import { showProgress } from '../utils'
+import { showProgress, values } from '../utils'
 import SimpleRange from '../components/SimpleRange'
-import { SimulationParameter } from '../store/settings'
+import { Setting } from '../store/settings'
 
 interface Props { }
 
@@ -31,6 +31,8 @@ interface IState extends CasualtiesProgress {
 }
 
 const DOTS = 6
+
+const simulationSpeeds = values(SimulationSpeed)
 
 /**
  * Calculates win rate for the current battle.
@@ -62,7 +64,7 @@ class Statistics extends Component<IProps, IState> {
       avg_morale_a, avg_morale_d, avg_strength_a, avg_strength_d, max_morale_a, max_morale_d, max_strength_a, max_strength_d,
       morale_a, morale_d, strength_a, strength_d
     } = this.state
-    const { simulation_settings, changeSimulationParameter } = this.props
+    const { settings } = this.props
     return (
       <>
         <Grid>
@@ -79,17 +81,17 @@ class Statistics extends Component<IProps, IState> {
             </Grid.Column>
             <Grid.Column width='4'>
               <Checkbox
-                checked={!!simulation_settings[SimulationParameter.UpdateCasualties]}
-                onChange={(_, { checked }) => changeSimulationParameter(SimulationParameter.UpdateCasualties, checked ? 1 : 0)}
+                checked={settings[Setting.UpdateCasualties]}
+                onChange={(_, { checked }) => changeSiteParameter(Setting.UpdateCasualties, !!checked)}
                 label='Update casualties'
               />
             </Grid.Column>
             <Grid.Column width='4'>
-              <Header textAlign='center'>Speed: {simulation_settings[SimulationParameter.Speed] || 'Custom'}</Header>
+              <Header textAlign='center'>Speed: {settings[Setting.Performance] || 'Custom'}</Header>
               <SimpleRange
-                min={1} max={5} step={1}
-                value={simulation_settings[SimulationParameter.Speed] || 1}
-                onChange={value => changeSimulationParameter(SimulationParameter.Speed, value)}
+                min={0} max={4} step={1}
+                value={simulationSpeeds.indexOf(settings[Setting.Performance])}
+                onChange={value => changeSiteParameter(Setting.Performance, simulationSpeeds[value])}
               />
             </Grid.Column>
             <Grid.Column width='2' floated='right'>
@@ -137,7 +139,7 @@ class Statistics extends Component<IProps, IState> {
             </Table.Row>
           </Table.Body>
         </Table>
-        {simulation_settings[SimulationParameter.UpdateCasualties] ?
+        {settings[Setting.UpdateCasualties] ?
           <>
             <Table>
               <Table.Header>
@@ -221,9 +223,9 @@ class Statistics extends Component<IProps, IState> {
   }
 
   calculate = () => {
-    const { attacker, defender, combat_settings: combatSettings, terrains, simulation_settings, unit_types } = this.props
-    const [combat_a, combat_d] = doConversion(attacker, defender, terrains, unit_types, combatSettings)
-    calculateWinRate(!!simulation_settings[SimulationParameter.UpdateCasualties], simulation_settings, this.update, combat_a, combat_d, combatSettings)
+    const { attacker, defender, terrains, settings, unit_types } = this.props
+    const [combat_a, combat_d] = doConversion(attacker, defender, terrains, unit_types, settings)
+    calculateWinRate(!!settings[Setting.UpdateCasualties], settings, this.update, combat_a, combat_d)
   }
 
   scale = (value: number) => this.state.progress ? value / this.state.progress : 0
@@ -232,13 +234,12 @@ class Statistics extends Component<IProps, IState> {
 const mapStateToProps = (state: AppState) => ({
   attacker: getArmyForCombat(state, Side.Attacker),
   defender: getArmyForCombat(state, Side.Defender),
-  combat_settings: getCombatSettings(state),
-  simulation_settings: state.settings.simulation,
+  settings: getSettings(state),
   terrains: getSelectedTerrains(state),
   unit_types: mergeUnitTypes(state)
 })
 
-const actions = { changeSimulationParameter }
+const actions = { changeSiteParameter }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

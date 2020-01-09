@@ -3,7 +3,7 @@ import { sumBy } from 'lodash'
 
 import { UnitCalc, Unit } from '../store/units'
 import { TerrainCalc, TerrainDefinition } from '../store/terrains'
-import { CombatParameter, CombatSettings } from '../store/settings'
+import { Setting, Settings} from '../store/settings'
 
 import { calculateValue} from '../base_definition'
 
@@ -36,17 +36,17 @@ export const calculateTotalRoll = (roll: number, terrains: TerrainDefinition[], 
  * @param roll Dice roll with modifiers.
  * @param settings Combat parameters.
  */
-export const calculateBaseDamage = (roll: number, settings: CombatSettings): number => {
-  const base_damage = settings[CombatParameter.BaseDamage]
-  const roll_damage = settings[CombatParameter.RollDamage]
-  const max_damage = settings[CombatParameter.MaxBaseDamage]
+export const calculateBaseDamage = (roll: number, settings: Settings): number => {
+  const base_damage = settings[Setting.BaseDamage]
+  const roll_damage = settings[Setting.RollDamage]
+  const max_damage = settings[Setting.MaxBaseDamage]
   return Math.min(max_damage, base_damage + roll_damage * roll)
 }
 
-export const calculateExperienceReduction = (settings: CombatSettings, target: Unit) => {
-  let damage_reduction_per_experience = settings[CombatParameter.ExperienceDamageReduction]
+export const calculateExperienceReduction = (settings: Settings, target: Unit) => {
+  let damage_reduction_per_experience = settings[Setting.ExperienceDamageReduction]
   // Bug in game which makes morale damage taken and strength damage taken affect damage reduction from experience.
-  if (!settings[CombatParameter.FixExperience])
+  if (!settings[Setting.FixExperience])
     damage_reduction_per_experience *= (2.0 + calculateValue(target, UnitCalc.MoraleDamageTaken) + calculateValue(target, UnitCalc.StrengthDamageTaken)) * 0.5
   return -damage_reduction_per_experience * calculateValue(target, UnitCalc.Experience)
 }

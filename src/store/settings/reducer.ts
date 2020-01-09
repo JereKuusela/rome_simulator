@@ -1,6 +1,6 @@
 import { ImmerReducer, createActionCreators, createReducerFunction, Actions } from 'immer-reducer'
-import { CombatParameter, SimulationParameter } from './actions'
-import { getDefaultLandSettings, getDefaultNavalSettings, getDefaultSimulationSettings } from './data'
+import { Setting, SimulationSpeed, SiteSettings, CombatSettings } from './actions'
+import { getDefaultLandSettings, getDefaultNavalSettings, getDefaultSiteSettings } from './data'
 import { CountryName, createCountry, deleteCountry, changeCountryName } from '../countries'
 import { DefinitionType, Mode } from '../../base_definition'
 import { ObjSet, has } from '../../utils'
@@ -9,8 +9,8 @@ import { UnitCalc } from '../units'
 import { WearinessValues } from '../../components/WearinessRange'
 
 export const getDefaultSettings = () => ({
-  combat: { [DefinitionType.Land]: getDefaultLandSettings(), [DefinitionType.Naval]: getDefaultNavalSettings() },
-  simulation: getDefaultSimulationSettings(),
+  combatSettings: { [DefinitionType.Land]: getDefaultLandSettings(), [DefinitionType.Naval]: getDefaultNavalSettings() },
+  siteSettings: getDefaultSiteSettings(),
   simple_mode: true,
   mode: DefinitionType.Land as Mode,
   country: CountryName.Country1,
@@ -27,20 +27,20 @@ const speedValues = [[], [1.0, 5], [1.0, 4], [1.5, 4], [2.0, 4], [3.0, 3]]
 
 class SettingsReducer extends ImmerReducer<typeof settings> {
 
-  changeCombatParameter(mode: Mode, key: CombatParameter, value: number) {
-    this.draftState.combat[mode][key] = value
+  changeCombatParameter(mode: Mode, key: keyof CombatSettings, value: number | boolean | string) {
+    this.draftState.combatSettings[mode][key] = value as never
   }
 
-  changeSimulationParameter(key: SimulationParameter, value: number) {
-    if (key === SimulationParameter.Speed && value > 0) {
-      value = Math.min(speedValues.length - 1, Math.floor(value))
-      this.draftState.simulation[SimulationParameter.PhaseLengthMultiplier] = speedValues[value][0]
-        this.draftState.simulation[SimulationParameter.MaxDepth] = speedValues[value][1]
+  changeSiteParameter(key: keyof SiteSettings, value: number | boolean | string) {
+    if (key === Setting.Performance && value > 0) {
+      value = Math.min(speedValues.length - 1, Math.floor(Number(value)))
+      this.draftState.siteSettings[Setting.PhaseLengthMultiplier] = speedValues[value][0]
+      this.draftState.siteSettings[Setting.MaxDepth] = speedValues[value][1]
     }
-    if (key === SimulationParameter.PhaseLengthMultiplier || key === SimulationParameter.MaxDepth) {
-      this.draftState.simulation[SimulationParameter.Speed] = 0
+    if (key === Setting.PhaseLengthMultiplier || key === Setting.MaxDepth) {
+      this.draftState.siteSettings[Setting.Performance] = SimulationSpeed.Custom
     }
-    this.draftState.simulation[key] = value
+    this.draftState.siteSettings[key] = value as never
   }
 
   toggleSimpleMode() {
@@ -85,7 +85,7 @@ class SettingsReducer extends ImmerReducer<typeof settings> {
 const actions = createActionCreators(SettingsReducer)
 
 export const changeCombatParameter = actions.changeCombatParameter
-export const changeSimulationParameter = actions.changeSimulationParameter
+export const changeSiteParameter = actions.changeSiteParameter
 export const selectCountry = actions.selectCountry
 export const toggleAccordion = actions.toggleAccordion
 export const toggleMode = actions.toggleMode

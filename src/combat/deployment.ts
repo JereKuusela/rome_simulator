@@ -2,7 +2,7 @@ import { nextIndex } from "./reinforcement"
 import { CombatUnits, CombatUnit, Reserve, CombatParticipant } from "./combat"
 import { UnitCalc, UnitDeployment } from "../store/units"
 import { remove, sortBy } from "lodash"
-import { CombatSettings, CombatParameter } from "../store/settings"
+import { CombatSettings, Setting } from "../store/settings"
 import { RowTypes, RowType } from "../store/battle"
 
 
@@ -174,10 +174,10 @@ const calculateFlankSizes = (flank_size: number, enemy_units: CombatUnits): [num
 }
 
 export const deploy = (attacker: CombatParticipant, defender: CombatParticipant, settings: CombatSettings) => {
-  removeOutOfBounds(attacker.army, settings[CombatParameter.CombatWidth])
-  removeOutOfBounds(defender.army, settings[CombatParameter.CombatWidth])
-  removeDefeated(attacker.army, settings[CombatParameter.MinimumMorale], settings[CombatParameter.MinimumStrength])
-  removeDefeated(defender.army, settings[CombatParameter.MinimumMorale], settings[CombatParameter.MinimumStrength])
+  removeOutOfBounds(attacker.army, settings[Setting.CombatWidth])
+  removeOutOfBounds(defender.army, settings[Setting.CombatWidth])
+  removeDefeated(attacker.army, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength])
+  removeDefeated(defender.army, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength])
 
   const preferred_flank_a = preferredFlankSize(attacker.army, attacker.flank)
   const preferred_flank_d = preferredFlankSize(defender.army, defender.flank)

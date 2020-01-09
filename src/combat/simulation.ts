@@ -1,7 +1,7 @@
 import { Unit, UnitType, UnitCalc } from "../store/units"
 import { TerrainDefinition } from "../store/terrains"
-import { CombatSettings, CombatParameter, SimulationSettings, SimulationParameter } from "../store/settings"
-import { Side, BaseUnits, RowTypes } from "../store/battle"
+import { Setting, Settings } from "../store/settings"
+import { Side, BaseUnits } from "../store/battle"
 
 import { doBattleFast, getCombatUnit, CombatParticipant, CombatUnits, Frontline, Reserve } from "./combat"
 import { calculateTotalRoll } from "./combat_utils"
@@ -45,13 +45,13 @@ export interface CasualtiesProgress {
 let interruptSimulation = false
 
 
-export const doConversion = (attacker: ArmyForCombat, defender: ArmyForCombat, terrains: TerrainDefinition[], unit_types: UnitType[], combatSettings: CombatSettings) => {
-  const dice = combatSettings[CombatParameter.DiceMaximum] - combatSettings[CombatParameter.DiceMinimum] + 1
-  const base_damages_a = getBaseDamages(combatSettings, dice, calculateTotalRoll(0, terrains, attacker.general, defender.general))
-  const base_damages_d = getBaseDamages(combatSettings, dice, calculateTotalRoll(0, [], defender.general, attacker.general))
+export const doConversion = (attacker: ArmyForCombat, defender: ArmyForCombat, terrains: TerrainDefinition[], unit_types: UnitType[], settings: Settings) => {
+  const dice = settings[Setting.DiceMaximum] - settings[Setting.DiceMinimum] + 1
+  const base_damages_a = getBaseDamages(settings, dice, calculateTotalRoll(0, terrains, attacker.general, defender.general))
+  const base_damages_d = getBaseDamages(settings, dice, calculateTotalRoll(0, [], defender.general, attacker.general))
   const tactic_casualties = calculateValue(attacker.tactic, TacticCalc.Casualties) + calculateValue(defender.tactic, TacticCalc.Casualties)
-  const status_a = convertUnits(attacker, combatSettings, tactic_casualties, base_damages_a, terrains, unit_types, attacker.row_types)
-  const status_d = convertUnits(defender, combatSettings, tactic_casualties, base_damages_d, terrains, unit_types, defender.row_types)
+  const status_a = convertUnits(attacker, settings, tactic_casualties, base_damages_a, terrains, unit_types)
+  const status_d = convertUnits(defender, settings, tactic_casualties, base_damages_d, terrains, unit_types)
   const participant_a: CombatParticipant = {
     army: status_a,
     roll: 0,
@@ -82,9 +82,8 @@ export const interrupt = () => interruptSimulation = true
  * @param attacker Attacker information.
  * @param defender Defender information.
  * @param terrains Current terrains.
- * @param combatSettings Settings for combat.
  */
-export const calculateWinRate = (doUpdateCasualties: boolean, simulationSettings: SimulationSettings, progressCallback: (progress: WinRateProgress, casualties: CasualtiesProgress) => void, attacker: CombatParticipant, defender: CombatParticipant, combatSettings: CombatSettings) => {
+export const calculateWinRate = (doUpdateCasualties: boolean, settings: Settings, progressCallback: (progress: WinRateProgress, casualties: CasualtiesProgress) => void, attacker: CombatParticipant, defender: CombatParticipant) => {
   const progress: WinRateProgress = {
     calculating: true,
     attacker: 0.0,
@@ -99,16 +98,16 @@ export const calculateWinRate = (doUpdateCasualties: boolean, simulationSettings
   interruptSimulation = false
 
   // Performance is critical. Precalculate as many things as possible.
-  const dice = combatSettings[CombatParameter.DiceMaximum] - combatSettings[CombatParameter.DiceMinimum] + 1
+  const dice = settings[Setting.DiceMaximum] - settings[Setting.DiceMinimum] + 1
   const dice_2 = dice * dice
-  const rolls = getRolls(combatSettings[CombatParameter.DiceMinimum], combatSettings[CombatParameter.DiceMaximum])
+  const rolls = getRolls(settings[Setting.DiceMinimum], settings[Setting.DiceMaximum])
   const fractions = mapRange(10, value => 1.0 / Math.pow(dice_2, value))
-  const phaseLength = Math.floor(combatSettings[CombatParameter.RollFrequency] * simulationSettings[SimulationParameter.PhaseLengthMultiplier])
-  const chunkSize = simulationSettings[SimulationParameter.ChunkSize]
-  const maxDepth = simulationSettings[SimulationParameter.MaxDepth]
+  const phaseLength = Math.floor(settings[Setting.RollFrequency] * settings[Setting.PhaseLengthMultiplier])
+  const chunkSize = settings[Setting.ChunkSize]
+  const maxDepth = settings[Setting.MaxDepth]
 
   // Deployment is shared for each iteration.
-  deploy(attacker, defender, combatSettings)
+  deploy(attacker, defender, settings)
 
   const total_a: State = { morale: 0, strength: 0 }
   const current_a: State = { morale: 0, strength: 0 }
@@ -161,7 +160,7 @@ export const calculateWinRate = (doUpdateCasualties: boolean, simulationSettings
       defender.roll = roll_d
       attacker.army = units_a
       defender.army = units_d
-      let result = doPhase(phaseLength, attacker, defender, combatSettings)
+      let result = doPhase(phaseLength, attacker, defender, settings)
 
       node.branch++
       if (node.branch === dice_2)
@@ -178,7 +177,7 @@ export const calculateWinRate = (doUpdateCasualties: boolean, simulationSettings
         defender.roll = roll_d
         attacker.army = units_a
         defender.army = units_d
-        result = doPhase(phaseLength, attacker, defender, combatSettings)
+        result = doPhase(phaseLength, attacker, defender, settings)
       }
       sumState(current_a, attacker.army)
       sumState(current_d, defender.army)
@@ -202,10 +201,10 @@ export const calculateWinRate = (doUpdateCasualties: boolean, simulationSettings
   worker()
 }
 
-export const convertUnits = (units: BaseUnits, combatSettings: CombatSettings, casualties_multiplier: number, base_damages: number[], terrains: TerrainDefinition[], unit_types: UnitType[], row_types: RowTypes) => ({
-  frontline: units.frontline.map(unit => getCombatUnit(combatSettings, casualties_multiplier, base_damages, terrains, unit_types, unit as Unit)),
-  reserve: units.reserve.map(unit => getCombatUnit(combatSettings, casualties_multiplier, base_damages, terrains, unit_types, unit as Unit)!),
-  defeated: units.defeated.map(unit => getCombatUnit(combatSettings, casualties_multiplier, base_damages, terrains, unit_types, unit as Unit)!),
+export const convertUnits = (units: BaseUnits, settings: Settings, casualties_multiplier: number, base_damages: number[], terrains: TerrainDefinition[], unit_types: UnitType[]) => ({
+  frontline: units.frontline.map(unit => getCombatUnit(settings, casualties_multiplier, base_damages, terrains, unit_types, unit as Unit)),
+  reserve: units.reserve.map(unit => getCombatUnit(settings, casualties_multiplier, base_damages, terrains, unit_types, unit as Unit)!),
+  defeated: units.defeated.map(unit => getCombatUnit(settings, casualties_multiplier, base_damages, terrains, unit_types, unit as Unit)!),
   tactic_bonus: 0
 })
 
@@ -213,7 +212,7 @@ export const convertUnits = (units: BaseUnits, combatSettings: CombatSettings, c
 /**
  * Precalculates base damage values for each roll.
  */
-export const getBaseDamages = (combatSettings: CombatSettings, dice: number, modifier: number) => mapRange(dice + 1, roll => Math.min(combatSettings[CombatParameter.MaxBaseDamage], combatSettings[CombatParameter.BaseDamage] + combatSettings[CombatParameter.RollDamage] * (roll + modifier)))
+export const getBaseDamages = (settings: Settings, dice: number, modifier: number) => mapRange(dice + 1, roll => Math.min(settings[Setting.MaxBaseDamage], settings[Setting.BaseDamage] + settings[Setting.RollDamage] * (roll + modifier)))
 
 /**
  * Returns a balanced set of rolls. Higher rolls are prioritized to give results faster.
@@ -246,11 +245,11 @@ type Winner = Side | null | undefined
 /**
  * Simulates one dice roll phase.
  */
-const doPhase = (rounds_per_phase: number, attacker: CombatParticipant, defender: CombatParticipant, combatSettings: CombatSettings) => {
+const doPhase = (rounds_per_phase: number, attacker: CombatParticipant, defender: CombatParticipant, settings: Settings) => {
   let winner: Winner = undefined
   let round = 0
   for (round = 0; round < rounds_per_phase;) {
-    doBattleFast(attacker, defender, false, combatSettings)
+    doBattleFast(attacker, defender, false, settings)
     round++
 
     const alive_a = checkAlive(attacker.army.frontline, attacker.army.reserve)

@@ -41,6 +41,12 @@ const Root = ({ store, persistor }: MainProps) => {
               <Route path='/Instructions' component={Instructions} />
               <Route path='/Countries' component={Countries} />
               <Route path='/Settings' component={Settings} />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
             </Container>
           </BrowserRouter>
         </Error>

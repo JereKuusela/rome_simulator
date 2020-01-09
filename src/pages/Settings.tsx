@@ -1,88 +1,108 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Grid, Input, Table } from 'semantic-ui-react'
+import { Grid, Input, Table, Header, Checkbox, Tab } from 'semantic-ui-react'
 
-import { changeCombatParameter, changeSimulationParameter, CombatParameter, parameterToDescription, SimulationParameter } from '../store/settings'
+import { changeCombatParameter, changeSiteParameter, Setting, parameterToDescription, SiteSettings, CombatSettings } from '../store/settings'
 import { invalidate } from '../store/battle'
 import { AppState } from '../store/index'
-import { getCombatSettings } from '../store/utils'
 
 import { toArr } from '../utils'
+import { DefinitionType, Mode } from '../base_definition'
 
 interface Props { }
 
-type P = CombatParameter | SimulationParameter
+type Values = string | number | boolean
 
 class Settings extends Component<IProps> {
 
   render() {
-    const { combatSettings, simulationSettings } = this.props
-    return (
-      <Grid padded celled>
-        {this.renderRow(combatSettings, this.onCombatChange)}
-        {this.renderRow(simulationSettings, this.onSimulationChange)}
-      </Grid>
-    )
+    const { combatSettings, siteSettings } = this.props
+    const panes = toArr(combatSettings, (settings, mode) => ({
+      menuItem: mode, render: () => <Tab.Pane style={{ padding: 0 }}>{this.renderRow(mode, settings, (key, str) => this.onCombatChange(mode, key, str))}</Tab.Pane>
+    }))
+    return (<>
+      <Tab panes={panes} />
+      {this.renderRow('Shared', siteSettings, this.onSharedChange)}
+    </>)
   }
 
-  renderRow = <T extends P>(settings: { [key in T]: number }, onChange: (key: T, str: string) => void) => (
-    <Grid.Row columns='2'>
-      {
-        toArr(settings, (value, key) => {
-          return (
-            <Grid.Column key={key}>
-              <Table basic='very'>
-                <Table.Body>
-                  <Table.Row>
-                    <Table.Cell collapsing >
-                      <Input
-                        size='mini'
-                        style={{ width: 50 }}
-                        defaultValue={value}
-                        onChange={(_, { value }) => onChange(key, value)}
-                      />
-                    </Table.Cell>
-                    <Table.Cell key={key + '_description'} style={{ whiteSpace: 'pre-line' }} >
-                      {parameterToDescription(key)}
-                    </Table.Cell>
-                  </Table.Row>
-                </Table.Body>
-              </Table>
-            </Grid.Column>
-          )
-        })
-      }
-      {
-        toArr(settings).length % 2 ? <Grid.Column /> : null
-      }
-    </Grid.Row>
+  renderRow = <T extends Setting>(mode: string, settings: { [key in T]: Values }, onChange: (key: T, str: Values) => void) => (
+    <Grid padded celled key={mode}>
+      <Grid.Row columns='2'>
+        {
+          toArr(settings, (value, key) => {
+            return (
+              <Grid.Column key={key}>
+                <Table basic='very'>
+                  <Table.Body>
+                    <Table.Row>
+                      <Table.Cell collapsing >
+                        {this.renderSetting(key, value, onChange)}
+                      </Table.Cell>
+                      <Table.Cell key={key + '_description'} style={{ whiteSpace: 'pre-line' }} >
+                        <Header size='tiny'>{key}</Header>
+                        {parameterToDescription(key, value)}
+                      </Table.Cell>
+                    </Table.Row>
+                  </Table.Body>
+                </Table>
+              </Grid.Column>
+            )
+          })
+        }
+        {
+          toArr(settings).length % 2 ? <Grid.Column /> : null
+        }
+      </Grid.Row>
+    </Grid>
   )
 
-  onCombatChange = (key: CombatParameter, str: string) => {
+  renderSetting = <T extends Setting>(key: T, value: Values, onChange: (key: T, str: Values) => void) => {
+    if (typeof value === 'number') {
+      return (<Input
+        size='mini'
+        style={{ width: 60 }}
+        defaultValue={value}
+        onChange={(_, { value }) => this.onInputChange(key, value, onChange)}
+      />)
+    }
+    if (typeof value === 'boolean') {
+      return (<Checkbox
+        checked={value}
+        style={{ width: 60 }}
+        onChange={(_, { checked }) => onChange(key, !!checked)}
+      />)
+    }
+    return null
+  }
+
+  onInputChange = <T extends Setting>(key: T, str: string, onChange: (key: T, value: number) => void) => {
     const value = +str
     if (isNaN(value))
       return
-    const { mode, changeCombatParameter, invalidate } = this.props
+    onChange(key, value)
+  }
+
+  onCombatChange = (mode: Mode, key: keyof CombatSettings, value: Values) => {
+    const { changeCombatParameter, invalidate } = this.props
     changeCombatParameter(mode, key, value)
     invalidate(mode)
   }
 
-  onSimulationChange = (key: SimulationParameter, str: string) => {
-    const value = +str
-    if (isNaN(value))
-      return
-    const { changeSimulationParameter } = this.props
-    changeSimulationParameter(key, value)
+  onSharedChange = (key: keyof SiteSettings, value: Values) => {
+    const { changeSiteParameter } = this.props
+    changeSiteParameter(key, value)
+    invalidate(DefinitionType.Land)
+    invalidate(DefinitionType.Naval)
   }
 }
 
 const mapStateToProps = (state: AppState) => ({
-  combatSettings: getCombatSettings(state),
-  simulationSettings: state.settings.simulation,
-  mode: state.settings.mode
+  combatSettings: state.settings.combatSettings,
+  siteSettings: state.settings.siteSettings
 })
 
-const actions = { changeCombatParameter, changeSimulationParameter, invalidate }
+const actions = { changeCombatParameter, changeSiteParameter, invalidate }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

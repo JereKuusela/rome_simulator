@@ -4,17 +4,23 @@ Release 6:
 Changelog:
 
 - Battle: Added food consumption and storage to fast planner.
+- Battle: Fixed new countries not shown on country selector.
 - Units: Balance changes from 1.3.2 (War Elephants damage against Infantry, Supply Train cost).
 - Units: Added food consumption and storage.
 - Units: Removed can assault toggle button (attribute not used anywhere in simulator).
+- Settings: New page which more clearly shows which settings affects land, naval or both.
+- Settings: Added support for boolean and dropdown options.
+- Settings: Settings for bug fixes (and some others) converted to boolean settings.
+- Settings: Better names and descriptions for all settings.
 - Settings: Applied 20% increase to base damage values.
 - Settings: Removed "Fix damage taken" settings as it is fixed in the game.
 
 Todo:
  - Icons to frontline to show when things like defender's advantage, flanking or unit countering applies.
- - Fix new countries not showing up on battle army selection.
  - Defeated list to show strength and gold lost to sinking (only shown when setting is active.
  - Transfer could only show non-base stats for units, terrains and tactics (since base stats are supposed to regenerate?), currently it shows way too much information.
+ - Add neutral unit to ease testing.
+ - Order naval units by cost so easier to know which are which.
 
 Settings:
  - Better descriptions

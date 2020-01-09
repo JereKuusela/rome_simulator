@@ -1,5 +1,5 @@
 import { UnitType } from '../../store/units'
-import { CombatParameter } from '../../store/settings'
+import { Setting } from '../../store/settings'
 import { verifyType, getRowTypes, getUnit, every_type, setFlankSizes, initInfo, TestInfo, initSide, testCombat, testReinforce } from './utils'
 import { Side } from '../../store/battle'
 import { resize } from '../../utils'
@@ -93,7 +93,7 @@ describe('reinforcement', () => {
   })
   it('reduced combat width', () => {
     setFlankSizes(info, 2, 0)
-    info.settings[CombatParameter.CombatWidth] = 5
+    info.settings[Setting.CombatWidth] = 5
     // Deploy resizes so have to do this manually.
     info.army_a = { ...info.army_a, frontline: resize(info.army_a.frontline, 5, null) }
     info.army_d = { ...info.army_d, frontline: resize(info.army_d.frontline, 5, null) }

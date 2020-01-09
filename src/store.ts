@@ -9,7 +9,7 @@ import {
 import { forEach } from './utils'
 import { UnitType, UnitDefinitions } from './store/units'
 import { DefinitionType } from './base_definition'
-import { CombatParameter } from './store/settings'
+import { Setting } from './store/settings'
 
 const TacticsTransform = createTransform(
   (inboundState) => inboundState,
@@ -53,12 +53,12 @@ const migrations = {
     return state
   },
   7: (state: any) => {
-    state.settings.combat[DefinitionType.Land][CombatParameter.BaseDamage] = 0.096
-    state.settings.combat[DefinitionType.Naval][CombatParameter.BaseDamage] = 0.096
-    state.settings.combat[DefinitionType.Land][CombatParameter.RollDamage] = 0.024
-    state.settings.combat[DefinitionType.Naval][CombatParameter.RollDamage] = 0.024
-    state.settings.combat[DefinitionType.Land][CombatParameter.MaxBaseDamage] = 0.36
-    state.settings.combat[DefinitionType.Naval][CombatParameter.MaxBaseDamage] = 0.36
+    state.settings.combat[DefinitionType.Land][Setting.BaseDamage] = 0.096
+    state.settings.combat[DefinitionType.Naval][Setting.BaseDamage] = 0.096
+    state.settings.combat[DefinitionType.Land][Setting.RollDamage] = 0.024
+    state.settings.combat[DefinitionType.Naval][Setting.RollDamage] = 0.024
+    state.settings.combat[DefinitionType.Land][Setting.MaxBaseDamage] = 0.36
+    state.settings.combat[DefinitionType.Naval][Setting.MaxBaseDamage] = 0.36
     return state
   }
 }
