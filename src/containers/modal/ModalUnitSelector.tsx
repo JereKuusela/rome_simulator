@@ -6,7 +6,7 @@ import ItemSelector from '../../components/ItemSelector'
 
 import { AppState } from '../../store/'
 import { UnitType } from '../../store/units'
-import { selectUnit, ArmyType } from '../../store/battle'
+import { selectUnit, ArmyType, invalidate } from '../../store/battle'
 import { CountryName } from '../../store/countries'
 
 import { getNextId } from '../../army_utils'
@@ -44,6 +44,7 @@ class ModalUnitSelector extends Component<IProps> {
   selectUnit = (type: UnitType) => {
     if (this.props.info)
       this.props.selectUnit(this.props.mode, this.props.info.country, this.props.info.type, this.props.info.index, { id: getNextId(), image: '', type })
+    this.props.invalidate(this.props.mode)
     this.props.onClose()
   }
 }
@@ -53,7 +54,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   mode: state.settings.mode
 })
 
-const actions = { selectUnit }
+const actions = { selectUnit, invalidate }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
