@@ -94,13 +94,13 @@ const initializeDefaultGlobal = (): GlobalDefinitions => {
     [UnitCalc.Strength, 1],
     [UnitCalc.Morale, 3],
     [UnitCalc.AttritionWeight, 1],
-    [UnitCalc.Maintenance, 0.054]
+    [UnitCalc.Maintenance, 0.04166]
   ]
   const navalValues: [UnitCalc, number][] = [
     [UnitCalc.Strength, 1],
     [UnitCalc.Morale, 3],
     [UnitCalc.AttritionWeight, 1],
-    [UnitCalc.Maintenance, 0.016]
+    [UnitCalc.Maintenance, 0.02083]
   ]
   return {
     [DefinitionType.Land]: addValues(land, ValuesType.Base, GlobalKey, landValues),
