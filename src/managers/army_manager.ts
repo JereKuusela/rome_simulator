@@ -2,7 +2,7 @@ import { General } from "../store/countries"
 import { GeneralCalc, UnitDefinitionValues, UnitType, UnitDefinitionValue, UnitDefinition, UnitCalc } from "../store/units"
 import { calculateValue, clearAllValues, mergeValues, calculateBase } from "../definition_values"
 import { Mode, DefinitionType } from "../base_definition"
-import { map, filterKeys } from "../utils"
+import { filterKeys } from "../utils"
 
 export type GeneralStats = {
   enabled: boolean
@@ -30,16 +30,9 @@ export const getGeneralStats = (general: General): GeneralStats => {
   }
 }
 
-export const getGeneralDefinitions = (general: General, mode: Mode): UnitDefinitionValues => {
-  const base = mergeValues(general.definitions[DefinitionType.Global], general.definitions[mode])
-  const unit_definitions = filterKeys(general.definitions, type => !(type in DefinitionType)) as UnitDefinitionValues
-  return map(unit_definitions, definition => mergeValues(base, definition))
-}
+export const getGeneralDefinitions = (general: General): UnitDefinitionValues => filterKeys(general.definitions, type => !(type in DefinitionType))
 
-export const getGeneralDefinition = (general: General, mode: Mode, type: UnitType): UnitDefinitionValue => {
-  const base = mergeValues(general.definitions[DefinitionType.Global], general.definitions[mode])
-  return mergeValues(base, general.definitions[type])
-}
+export const getGeneralDefinition = (general: General, type: UnitType): UnitDefinitionValue => general.definitions[type]
 
 export const getGeneralBaseDefinition = (general: General, mode: Mode): UnitDefinitionValue => {
   return mergeValues(general.definitions[DefinitionType.Global], general.definitions[mode])

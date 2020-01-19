@@ -2,9 +2,9 @@ import { BaseUnit, UnitDefinition, UnitDefinitionValues, UnitDefinitionValue } f
 import { DefinitionType } from './base_definition'
 import { BaseUnits, Units, ArmyType, Side } from './store/battle'
 import { UnitDefinitions } from './store/units'
-import { filter, map } from './utils';
-import { CombatUnits } from './combat/combat';
-import { mergeValues } from './definition_values';
+import { filter, map } from './utils'
+import { CombatUnits } from './combat/combat'
+import { mergeValues } from './definition_values'
 
 /**
  * Merges base units with their definitions resulting in real units.
@@ -17,12 +17,12 @@ export const mergeBaseUnitsWithDefinitions = (units: BaseUnits, definitions: Uni
   defeated: units.defeated.map(value => value && mergeValues(definitions[value.type], value))
 })
 
-export const mergeDefinitions = (global: UnitDefinition, units: UnitDefinitions, general: UnitDefinitionValues) => {
-  return map(units, (definition, type) => mergeValues(mergeValues(definition, global), general[type]))
+export const mergeDefinitions = (base: UnitDefinition, definitions: UnitDefinitions, general_base: UnitDefinitionValue, general: UnitDefinitionValues) => {
+  return map(definitions, (definition, type) => mergeValues(mergeValues(definition, base), mergeValues(general_base, general[type])))
 }
 
-export const mergeDefinition = (global: UnitDefinition, unit: UnitDefinition, general: UnitDefinitionValue) => {
-  return mergeValues(mergeValues(unit, global), general)
+export const mergeDefinition = (global: UnitDefinition, unit: UnitDefinition, general_base: UnitDefinitionValue, general: UnitDefinitionValue) => {
+  return mergeValues(mergeValues(unit, global), mergeValues(general_base, general))
 }
 
 /**

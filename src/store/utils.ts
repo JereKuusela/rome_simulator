@@ -213,9 +213,9 @@ const getBaseUnitsByCountry = (state: AppState, name: CountryName): BaseUnits =>
 
 const getUnitsBySide = (state: AppState, side: Side): Units => getUnitsByCountry(state, getParticipant(state, side).country)
 
-const getUnitsByCountry = (state: AppState, name: CountryName): Units => {
-  const army = getBattle(state).armies[name]
-  const definitions = getUnitDefinitions(state, name)
+const getUnitsByCountry = (state: AppState, country: CountryName): Units => {
+  const army = getBattle(state).armies[country]
+  const definitions = getUnitDefinitions(state, country)
   return mergeBaseUnitsWithDefinitions(army, definitions)
 }
 
@@ -236,18 +236,20 @@ export const getUnitDefinitionsBySide = (state: AppState, side: Side): UnitDefin
 
 export const getUnitDefinitions = (state: AppState, country?: CountryName): UnitDefinitions => {
   country = country ?? state.settings.country
-  const global = state.global_stats[country][state.settings.mode]
-  const units = filterUnitDefinitions(state.settings.mode, state.units[country])
-  const general = getGeneralDefinitions(state.countries[country].general, state.settings.mode)
-  return mergeDefinitions(global, units, general)
+  const base = state.global_stats[country][state.settings.mode]
+  const definitions = filterUnitDefinitions(state.settings.mode, state.units[country])
+  const general_base = getGeneralBaseDefinition(state.countries[country].general, state.settings.mode)
+  const general = getGeneralDefinitions(state.countries[country].general)
+  return mergeDefinitions(base, definitions, general_base, general)
 }
 
 export const getUnitDefinition = (state: AppState, unit_type: UnitType, country?: CountryName): UnitDefinition => {
   country = country ?? state.settings.country
   const global = state.global_stats[country][state.settings.mode]
   const unit = state.units[country][unit_type]
-  const general = getGeneralDefinition(state.countries[country].general, state.settings.mode, unit_type)
-  return mergeDefinition(global, unit, general)
+  const general_base = getGeneralBaseDefinition(state.countries[country].general, state.settings.mode)
+  const general = getGeneralDefinition(state.countries[country].general, unit_type)
+  return mergeDefinition(global, unit, general_base, general)
 }
 
 export const getBaseDefinition = (state: AppState, country?: CountryName): UnitDefinition => {
