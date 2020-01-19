@@ -5,12 +5,11 @@ import { sortBy } from 'lodash'
 import StyledNumber from './Utils/StyledNumber'
 import VersusList from './VersusList'
 
-import { UnitType, UnitDefinition, UnitCalc, ValueType, Units } from '../store/units'
+import { UnitType, UnitDefinition, UnitCalc, ValueType, UnitDefinitions as Units } from '../store/units'
 import { TerrainType } from '../store/terrains'
 import { CountryName } from '../store/countries'
-import { getImage, calculateValue, calculateBase, calculateModifier, calculateLoss, mergeValues, DefinitionType } from '../base_definition'
+import { getImage, DefinitionType, Mode } from '../base_definition'
 import { toSignedPercent, toNumber, hideZero, toPercent, toManpower } from '../formatters'
-import { filterUnitDefinitions } from '../army_utils'
 import { toArr } from '../utils'
 
 import IconDiscipline from '../images/discipline.png'
@@ -20,14 +19,17 @@ import IconManpower from '../images/manpower.png'
 import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
 import IconAttrition from '../images/attrition.png'
+import { mergeValues, calculateValue, calculateBase, calculateModifier, calculateLoss } from '../definition_values'
+import { unitSorter } from '../managers/army_manager'
 
 interface IProps {
-  mode: DefinitionType
+  mode: Mode
   country: CountryName
-  units: Units
+  definitions: Units
+  images: { [key in UnitType]: string[] }
   unit_types: UnitType[]
   terrains: TerrainType[]
-  global_stats: UnitDefinition
+  base_definition: UnitDefinition
   onRowClick: (unit: UnitDefinition) => void
 }
 
@@ -35,8 +37,8 @@ interface IProps {
 export default class UnitDefinitions extends Component<IProps> {
 
   render() {
-    const { mode, units, country, global_stats } = this.props
-    const sorted_units = sortBy(toArr(filterUnitDefinitions(mode, units[country])), unit => unit.type)
+    const { mode, definitions, country, base_definition } = this.props
+    const sorted_units = sortBy(toArr(definitions), definition => unitSorter(definition, mode))
     const icon_strength = mode === DefinitionType.Naval ? IconStrength : IconManpower
     return (
       <Table celled selectable unstackable>
@@ -80,7 +82,7 @@ export default class UnitDefinitions extends Component<IProps> {
               <Image src={icon_strength} avatar />
             </Table.HeaderCell>
             <Table.HeaderCell>
-              Starting Experience
+              Exp
             </Table.HeaderCell>
             <Table.HeaderCell>
               Units
@@ -92,7 +94,7 @@ export default class UnitDefinitions extends Component<IProps> {
         </Table.Header>
         <Table.Body>
           {
-            this.renderGlobalStats(global_stats)
+            this.renderGlobalStats(base_definition)
           }
           {
             sorted_units.map(this.renderRow)
@@ -103,7 +105,7 @@ export default class UnitDefinitions extends Component<IProps> {
   }
 
   renderRow = (definition: UnitDefinition) => {
-    const unit = mergeValues(definition, this.props.global_stats)
+    const unit = mergeValues(definition, this.props.base_definition)
     return (
       <Table.Row key={unit.type} onClick={() => this.props.onRowClick(unit)}>
         <Table.Cell singleLine>
@@ -170,7 +172,7 @@ export default class UnitDefinitions extends Component<IProps> {
         <Table.Cell>
           <VersusList
             item={unit}
-            units={this.props.units}
+            images={this.props.images}
             unit_types={this.props.unit_types}
             styled
           />
@@ -246,7 +248,7 @@ export default class UnitDefinitions extends Component<IProps> {
         <Table.Cell>
           <VersusList
             item={unit}
-            units={this.props.units}
+            images={this.props.images}
             unit_types={this.props.unit_types}
           />
         </Table.Cell>
@@ -261,6 +263,11 @@ export default class UnitDefinitions extends Component<IProps> {
             }
           </List>
         </Table.Cell>
+        <Table.Cell />
+        {
+          this.props.mode === DefinitionType.Naval ? null :
+            <Table.Cell />
+        }
       </Table.Row>
     )
   }

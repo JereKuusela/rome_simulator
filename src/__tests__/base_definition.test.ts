@@ -1,4 +1,5 @@
-import { getImage, mergeValues, addValues, ValuesType, clearAllValues, clearValues, regenerateValues, calculateValue, calculateValueWithoutLoss, calculateBase, calculateModifier, calculateLoss, strengthToValue, DefinitionType, explainShort, explain, BaseDefinition, getValue } from '../base_definition'
+import { getImage } from '../base_definition'
+import { mergeValues, addValues, ValuesType, clearAllValues, clearValues, regenerateValues, calculateValue, calculateValueWithoutLoss, calculateBase, calculateModifier, calculateLoss, strengthToValue, DefinitionType, explainShort, explain, Definition, getValue } from '../definition_values'
 import EmptyIcon from '../images/empty.png'
 import UnknownIcon from '../images/unknown.png'
 import { size } from 'lodash'
@@ -56,11 +57,11 @@ const initLossModifier = (value1: number, value2?: number) => (
 
 describe('mergeValues', () => {
   it('returns first when only', () => {
-    const result = mergeValues({ type: 'test', image: '' }, undefined) as any
+    const result = mergeValues({}, undefined) as any
     expect(result.type).toEqual('test')
   })
   it('returns second when only', () => {
-    const result = mergeValues(undefined, { type: 'test', image: '' }) as any
+    const result = mergeValues(undefined, {}) as any
     expect(result.type).toEqual('test')
   })
   it('returns first when both', () => {

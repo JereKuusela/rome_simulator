@@ -37,7 +37,7 @@ interface Rolls {
 }
 
 export interface Participant {
-  name: CountryName
+  country: CountryName
   rounds: CombatUnits[],
   rolls: Rolls[],
   roll: number,
@@ -112,7 +112,7 @@ export const getDefaultArmy = (mode: Mode): Army => {
 
 export const getDefaultParticipant = (name: CountryName): Participant => {
   return {
-    name,
+    country: name,
     rounds: [],
     rolls: [],
     roll: 3,

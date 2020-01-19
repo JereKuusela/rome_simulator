@@ -6,13 +6,14 @@ import FastPlanner from '../../components/FastPlanner'
 import ArmyCosts from '../../components/ArmyCosts'
 import { UnitType, BaseUnit } from '../../store/units'
 import { clearUnits, removeReserveUnits, addReserveUnits, doAddReserveUnits, doRemoveReserveUnits, invalidate, Side, BaseReserve } from '../../store/battle'
-import { getBaseUnits, filterUnitTypesBySide, getParticipant, getUnitDefinitions } from '../../store/utils'
+import { getBaseUnits, filterUnitTypesBySide, getParticipant, getUnitDefinitionsBySide, getUnitImages } from '../../store/utils'
 import { mapRange, forEach, round, randomWithinRange, toArr } from '../../utils'
 import { getNextId, mergeBaseUnitsWithDefinitions } from '../../army_utils'
 import { CountryName } from '../../store/countries'
 import { changeWeariness } from '../../store/settings'
 import WearinessRange, { UnitCalcValues } from '../../components/WearinessRange'
-import { addValues, ValuesType } from '../../base_definition'
+import { ValuesType } from '../../base_definition'
+import { addValues } from '../../definition_values'
 
 type Units = { [key in UnitType]: number }
 
@@ -37,7 +38,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
   originals_d = {} as Units
 
   render() {
-    const { open, types_a, types_d, definitions_a, definitions_d, units } = this.props
+    const { open, types_a, types_d, definitions_a, definitions_d, images } = this.props
     let { base_units_a, base_units_d, weariness } = this.props
     const { changes_a, changes_d } = this.state
     if (!open)
@@ -58,7 +59,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
           <FastPlanner
             changes_a={changes_a}
             reserve_a={this.originals_a}
-            units={units}
+            images={images}
             types_a={new Set(types_a)}
             changes_d={changes_d}
             reserve_d={this.originals_d}
@@ -171,15 +172,15 @@ class ModalFastPlanner extends Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  attacker: getParticipant(state, Side.Attacker).name,
-  defender: getParticipant(state, Side.Defender).name,
+  attacker: getParticipant(state, Side.Attacker).country,
+  defender: getParticipant(state, Side.Defender).country,
   base_units_a: getBaseUnits(state, Side.Attacker),
   base_units_d: getBaseUnits(state, Side.Defender),
   types_a: filterUnitTypesBySide(state, Side.Attacker),
   types_d: filterUnitTypesBySide(state, Side.Defender),
-  definitions_a: getUnitDefinitions(state, Side.Attacker),
-  definitions_d: getUnitDefinitions(state, Side.Defender),
-  units: state.units,
+  definitions_a: getUnitDefinitionsBySide(state, Side.Attacker),
+  definitions_d: getUnitDefinitionsBySide(state, Side.Defender),
+  images: getUnitImages(state),
   mode: state.settings.mode,
   weariness: state.settings.weariness
 })

@@ -7,10 +7,10 @@ import { doBattleFast, getCombatUnit, CombatParticipant, CombatUnits, Frontline,
 import { calculateTotalRoll } from "./combat_utils"
 
 import { mapRange } from "../utils"
-import { calculateValue } from "../base_definition"
 import { TacticCalc } from "../store/tactics"
 import { deploy } from "./deployment"
 import { ArmyForCombat } from "../store/utils"
+import { calculateValue } from "../definition_values"
 
 /**
  * Status of the win rate calculation. Most values are percents, only iterations is integer.

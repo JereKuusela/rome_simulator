@@ -1,6 +1,8 @@
 import { UnitType, UnitDefinition, UnitCalc, ValueType, UnitDeployment } from './actions'
 import { GlobalDefinitions, UnitDefinitions } from './reducer'
-import { addValues, ValuesType, DefinitionType, Mode } from '../../base_definition'
+import { ValuesType, DefinitionType, Mode } from '../../base_definition'
+import { TerrainType } from '../terrains'
+import { addValues } from '../../definition_values'
 import { toObj } from '../../utils'
 
 import * as data from './units.json'
@@ -21,7 +23,6 @@ import IconTetrere from '../../images/tetrere.png'
 import IconHexere from '../../images/hexere.png'
 import IconOctere from '../../images/octere.png'
 import IconMegaPolyreme from '../../images/mega_polyreme.png'
-import { TerrainType } from '../terrains'
 
 const unit_to_icon: { [key in UnitType]: string } = {
   [UnitType.Archers]: IconArcher,
@@ -47,7 +48,7 @@ export const getIcon = (type: UnitType) => unit_to_icon[type] || ''
 export const GlobalKey = 'Base'
 
 const createUnitFromJson = (data: UnitData): UnitDefinition => {
-  let unit = { type: data.type as UnitType, mode: data.mode as DefinitionType, image: unit_to_icon[data.type as UnitType] ?? '', deployment: data.deployment as UnitDeployment }
+  let unit: UnitDefinition = { type: data.type as UnitType, mode: data.mode as DefinitionType, image: unit_to_icon[data.type as UnitType] ?? '', deployment: data.deployment as UnitDeployment }
   const base_values: [ValueType, number][] = [
     [UnitCalc.AttritionWeight, data.attrition_weight ?? 0],
     [UnitCalc.Cost, data.cost],
@@ -63,6 +64,8 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
     [UnitCalc.DamageTaken, data.damage_taken ?? 0],
     [UnitCalc.FoodConsumption, data.food_consumption ?? 0],
     [UnitCalc.FoodStorage, data.food_storage ?? 0],
+    [UnitCalc.CaptureChance, data.capture_chance ?? 0],
+    [UnitCalc.CaptureResist, data.capture_resist ?? 0],
     [UnitType.Archers, data.archers ?? 0],
     [UnitType.CamelCavalry, data.camel_cavalry ?? 0],
     [UnitType.Chariots, data.chariots ?? 0],
@@ -88,8 +91,8 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
 const initializeDefaultUnits = (): UnitDefinitions => toObj(data.units.map(createUnitFromJson), unit => unit.type)
 
 const initializeDefaultGlobal = (): GlobalDefinitions => {
-  const land = { type: '' as UnitType, mode: DefinitionType.Land, image: IconMilitaryPower, requirements: '', can_assault: false, deployment: UnitDeployment.Front }
-  const naval = { type: '' as UnitType, mode: DefinitionType.Naval, image: IconMilitaryPower, requirements: '', can_assault: false, deployment: UnitDeployment.Front }
+  const land: UnitDefinition = { type: '' as UnitType, mode: DefinitionType.Land, image: IconMilitaryPower, deployment: UnitDeployment.Front }
+  const naval: UnitDefinition = { type: '' as UnitType, mode: DefinitionType.Naval, image: IconMilitaryPower, deployment: UnitDeployment.Front }
   const landValues: [UnitCalc, number][] = [
     [UnitCalc.Strength, 1],
     [UnitCalc.Morale, 3],
@@ -100,7 +103,8 @@ const initializeDefaultGlobal = (): GlobalDefinitions => {
     [UnitCalc.Strength, 1],
     [UnitCalc.Morale, 3],
     [UnitCalc.AttritionWeight, 1],
-    [UnitCalc.Maintenance, 0.02083]
+    [UnitCalc.Maintenance, 0.02083],
+    [UnitCalc.CaptureChance, 0.06]
   ]
   return {
     [DefinitionType.Land]: addValues(land, ValuesType.Base, GlobalKey, landValues),
@@ -131,6 +135,8 @@ interface UnitData {
   strength_damage_taken?: number
   food_consumption?: number
   food_storage?: number
+  capture_chance?: number
+  capture_resist?: number
   damage_taken?: number
   morale_damage_done?: number
   strength_damage_done?: number

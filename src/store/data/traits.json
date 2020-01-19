@@ -177,8 +177,8 @@
       "name": "Original Thinker",
       "modifiers": [
         {
-          "target": "Siege",
-          "attribute": "Ability",
+          "target": "Text",
+          "attribute": "Siege ability",
           "value": 0.1
         },
         {
@@ -214,8 +214,8 @@
       "name": "Sea Dog",
       "modifiers": [
         {
-          "target": "Text",
-          "attribute": "Ship capture",
+          "target": "Naval",
+          "attribute": "Capture Chance",
           "value": 0.1
         },
         {

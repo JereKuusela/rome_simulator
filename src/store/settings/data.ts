@@ -1,4 +1,4 @@
-import { Setting, CombatSettings, DefeatedPenalty, SimulationSpeed, SiteSettings } from './actions'
+import { Setting, CombatSettings, SimulationSpeed, SiteSettings } from './actions'
 
 export const getDefaultLandSettings = (): CombatSettings => {
   return {
@@ -12,9 +12,7 @@ export const getDefaultNavalSettings = ():CombatSettings  => {
   return {
     ...getDefaultAnySettings(),
     [Setting.StrengthLostMultiplier]: 0.5,
-    [Setting.MoraleLostMultiplier]: 1.0,
-    [Setting.DefeatedPenalty]: DefeatedPenalty.Damage,
-    [Setting.DefeatedPenaltyAmount]: 0.5,
+    [Setting.MoraleLostMultiplier]: 1.0
   }
 }
 
@@ -31,9 +29,7 @@ const getDefaultAnySettings = (): CombatSettings => {
     [Setting.StrengthLostMultiplier]: 0.2,
     [Setting.MoraleLostMultiplier]: 0.75,
     [Setting.MinimumMorale]: 0.25,
-    [Setting.MinimumStrength]: 0,
-    [Setting.DefeatedPenalty]: DefeatedPenalty.None,
-    [Setting.DefeatedPenaltyAmount]: 0
+    [Setting.MinimumStrength]: 0
   }
 }
 

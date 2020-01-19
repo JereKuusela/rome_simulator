@@ -6,13 +6,13 @@ import { CountryName } from '../../store/countries'
 import { ValuesType, DefinitionType } from '../../base_definition'
 import UnitDetail from '../../components/UnitDetail'
 import { invalidateCountry } from '../../store/battle'
-import { mergeUnitTypes, filterTerrainTypes, getUnitDefinitionByCountry, getMode } from '../../store/utils'
+import { mergeUnitTypes, filterTerrainTypes, getUnitDefinition, getMode } from '../../store/utils'
 
 const CUSTOM_VALUE_KEY = 'Custom'
 
 type Props = {
-  country: CountryName | null
-  unit_type: UnitType | null
+  country: CountryName | undefined
+  unit_type: UnitType | undefined
   changeType: (country: CountryName, old_type: UnitType, new_type: UnitType) => void
 }
 
@@ -83,7 +83,7 @@ class ModalUnitDetail extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  unit: props.country && props.unit_type && getUnitDefinitionByCountry(state, props.country, props.unit_type),
+  unit: props.country && props.unit_type && getUnitDefinition(state, props.unit_type, props.country),
   unit_types: mergeUnitTypes(state),
   terrain_types: filterTerrainTypes(state),
   mode: getMode(state)

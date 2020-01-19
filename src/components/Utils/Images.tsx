@@ -5,9 +5,6 @@ interface IProps {
   values: string[]
 }
 
-/**
- * Creates a table row with a fixed amount of cells.
- */
 export default class Images extends Component<IProps> {
 
   render() {

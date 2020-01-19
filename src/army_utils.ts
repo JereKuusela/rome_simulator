@@ -1,36 +1,10 @@
-import { Army } from './store/utils';
-import { BaseUnit, UnitDefinition, Unit } from './store/units/actions'
-import { mergeValues, DefinitionType } from './base_definition'
-import { BaseUnits, Units, BaseFrontLine, FrontLine, Reserve, Defeated, ArmyType } from './store/battle'
+import { BaseUnit, UnitDefinition, UnitDefinitionValues, UnitDefinitionValue } from './store/units/actions'
+import { DefinitionType } from './base_definition'
+import { BaseUnits, Units, ArmyType, Side } from './store/battle'
 import { UnitDefinitions } from './store/units'
-import { filter } from './utils';
+import { filter, map } from './utils';
 import { CombatUnits } from './combat/combat';
-
-/**
- * Merges units to their definitions resulting in current units.
- * @param participant 
- * @param army 
- */
-export const mergeArmy = (participant: Army, army: BaseFrontLine): FrontLine => {
-  return army.map(value => value && mergeValues(mergeValues(participant.units[value.type], value), participant.global))
-}
-
-export const getFrontline = (participant: Army): FrontLine => {
-  return participant.frontline.map(value => value && mergeUnits(participant.units, participant.global, value))
-}
-
-export const getReserve = (participant: Army): Reserve => {
-  return participant.reserve.map(value => mergeUnits(participant.units, participant.global, value))
-}
-
-export const getDefeated = (participant: Army): Defeated => {
-  return participant.defeated.map(value => mergeUnits(participant.units, participant.global, value))
-}
-
-export const mergeUnits = (units: UnitDefinitions, global: UnitDefinition, unit: BaseUnit): Unit => (
-  mergeValues(mergeValues(unit, units[unit.type]), global) as Unit
-)
-
+import { mergeValues } from './definition_values';
 
 /**
  * Merges base units with their definitions resulting in real units.
@@ -42,6 +16,14 @@ export const mergeBaseUnitsWithDefinitions = (units: BaseUnits, definitions: Uni
   reserve: units.reserve.map(value => value && mergeValues(definitions[value.type], value)),
   defeated: units.defeated.map(value => value && mergeValues(definitions[value.type], value))
 })
+
+export const mergeDefinitions = (global: UnitDefinition, units: UnitDefinitions, general: UnitDefinitionValues) => {
+  return map(units, (definition, type) => mergeValues(mergeValues(definition, global), general[type]))
+}
+
+export const mergeDefinition = (global: UnitDefinition, unit: UnitDefinition, general: UnitDefinitionValue) => {
+  return mergeValues(mergeValues(unit, global), general)
+}
 
 /**
  * Returns whether a given definition belongs to a given battle mode.
@@ -91,3 +73,5 @@ export const getArmyPart = (units: CombatUnits, type: ArmyType) => {
     return units.reserve
   return units.defeated
 }
+
+export const getOpponent =  (side: Side) => side === Side.Attacker ? Side.Defender : Side.Attacker

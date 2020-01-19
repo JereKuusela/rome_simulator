@@ -5,7 +5,7 @@ import { Modal } from 'semantic-ui-react'
 import { UnitType } from '../../store/units'
 import { AppState } from '../../store/'
 import { setRowType, RowType, invalidate } from '../../store/battle'
-import { getUnitDefinitionsByCountry } from '../../store/utils'
+import { getUnitDefinitions } from '../../store/utils'
 
 import { CountryName } from '../../store/countries'
 import { toArr } from '../../utils'
@@ -49,7 +49,7 @@ class ModalRowTypeSelector extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  units: toArr(getUnitDefinitionsByCountry(state, props.country)),
+  units: toArr(getUnitDefinitions(state, props.country)),
   mode: state.settings.mode
 })
 

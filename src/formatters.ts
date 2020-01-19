@@ -1,4 +1,5 @@
 import { mapRange } from "./utils"
+import { DefinitionType } from "./base_definition"
 
 /**
  * This file contains functions to format numbers to strings.
@@ -29,6 +30,12 @@ export const toManpower = (number?: number): string => {
   if (number === undefined)
     return ''
   return String(Math.floor(1000 * number))
+}
+
+export const strengthToValue = (mode: DefinitionType, number: number) => {
+  if (mode === DefinitionType.Naval)
+    return toPercent(number)
+  return toManpower(number)
 }
 
 export const toMaintenance = (number?: number): string => {

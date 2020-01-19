@@ -7,10 +7,10 @@ import { TacticDefinition } from '../store/tactics'
 import { Setting, Settings } from '../store/settings'
 
 import { mapRange, values, toObj } from '../utils'
-import { calculateValue, calculateBase, calculateValueWithoutLoss } from '../base_definition'
 import { calculateExperienceReduction } from './combat_utils'
 import { reinforce } from './reinforcement'
 import { RowTypes } from '../store/battle'
+import { calculateValue, calculateValueWithoutLoss, calculateBase } from '../definition_values'
 
 /**
  * Information required for fast combat calculation.

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Table, Image } from 'semantic-ui-react'
 import { UnitCalc, Unit } from '../store/units'
-import { calculateValueWithoutLoss, DefinitionType, strengthToValue } from '../base_definition'
+import { DefinitionType } from '../base_definition'
 import IconCost from '../images/cost.png'
 import IconSupplyLimit from '../images/supply_limit.png'
 import IconManpower from '../images/manpower.png'
@@ -9,7 +9,8 @@ import IconStrength from '../images/naval_combat.png'
 import IconFoodConsumption from '../images/food.png'
 import IconFoodStorage from '../images/food_capacity.png'
 import { FrontLine, Reserve, Defeated } from '../store/battle'
-import { toNumber } from '../formatters'
+import { toNumber, strengthToValue } from '../formatters'
+import { calculateValueWithoutLoss } from '../definition_values'
 
 
 interface IProps {

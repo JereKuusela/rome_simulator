@@ -12,9 +12,10 @@ import Headers from './Utils/Headers'
 import { UnitType, Unit, UnitCalc, ValueType, valueToString, UnitDeployment } from '../store/units'
 import { TerrainType } from '../store/terrains'
 
-import { explain, DefinitionType, calculateValue, getValue, ValuesType } from '../base_definition'
+import {  DefinitionType, ValuesType } from '../base_definition'
 import { toMaintenance } from '../formatters'
 import { values } from '../utils'
+import { getValue, calculateValue, explain } from '../definition_values'
 
 interface IProps {
   mode: DefinitionType

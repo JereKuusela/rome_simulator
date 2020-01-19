@@ -2,16 +2,16 @@ import React, { Component } from 'react'
 import { Container, Grid, Table, List, Input, Checkbox } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
-import { mapRange, ObjSet, sumObj, has, keys } from '../utils'
+import { mapRange, ObjSet, has, keys } from '../utils'
 import { invalidateCountry } from '../store/battle'
 import {
   ModifierType, Modifier, Tradition, CultureType,
   OmenDefinition, TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition,
-  GovermentType, ReligionType, TraitDefinition, EconomyDefinition, LawDefinition, IdeaDefinition, AbilityDefinition
+  GovermentType, ReligionType, TraitDefinition, EconomyDefinition, LawDefinition, IdeaDefinition, AbilityDefinition, ScopeType
 } from '../store/data'
 import {
-  enableModifiers, clearModifiers, CountryName, selectGovernment, selectReligion, selectCulture, setOmenPower, setGeneralMartial,
-  setHasGeneral, setMilitaryPower, setOfficeDiscipline, setOfficeMorale
+  enableModifiers, clearModifiers, CountryName, selectGovernment, selectReligion, selectCulture, setOmenPower,
+  setHasGeneral, setMilitaryPower, setOfficeDiscipline, setOfficeMorale, setGeneralMartial
 } from '../store/countries'
 import { DefinitionType, ValuesType } from '../base_definition'
 import { UnitCalc } from '../store/units'
@@ -21,6 +21,7 @@ import Dropdown from '../components/Utils/Dropdown'
 import ConfirmationButton from '../components/ConfirmationButton'
 import StyledNumber from '../components/Utils/StyledNumber'
 import { addSignWithZero } from '../formatters'
+import { getGeneral } from '../store/utils'
 
 const TRADE_COLUMNS = 4
 const HERITAGE_COLUMNS = 4
@@ -54,6 +55,7 @@ class Countries extends Component<IProps> {
     const selections = country.selections
     const tradition = this.props.traditions[country.culture]
     const omen = this.props.omens[country.religion]
+    const general = this.props.general
     return (
       <Container>
         <CountryManager>
@@ -86,14 +88,14 @@ class Countries extends Component<IProps> {
                 <Checkbox
                   toggle
                   label='General'
-                  checked={country.has_general}
-                  onChange={country.has_general ? this.disableGeneral : this.enableGeneral}
+                  checked={general.enabled}
+                  onChange={general.enabled ? this.disableGeneral : this.enableGeneral}
                   style={{ float: 'right' }}
                 />
-                Base martial: <Input disabled={!country.has_general} type='number' value={country.general_martial} onChange={(_, { value }) => omen && this.setGeneralMartial(value)} />
-                {' '}with <StyledNumber value={sumObj(country.trait_martial)} formatter={addSignWithZero} /> from traits
+                Base martial: <Input disabled={!general.enabled} type='number' value={general.base_martial} onChange={(_, { value }) => omen && this.setGeneralMartial(value)} />
+                {' '}with <StyledNumber value={general.trait_martial} formatter={addSignWithZero} /> from traits
                 {
-                  this.renderTraits(this.props.traits, selections, !country.has_general)
+                  this.renderTraits(this.props.traits, selections, !general.enabled)
                 }
                 {
                   this.renderAbilities(this.props.abilities, selections)
@@ -406,7 +408,8 @@ class Countries extends Component<IProps> {
                     if (!trait)
                       return (<Table.Cell key={TRAIT_KEY + index}></Table.Cell>)
                     const modifiers = trait.modifiers
-                    return this.renderCell(TRAIT_KEY + trait.name, trait.name, selections, modifiers, undefined, undefined, undefined, disabled)
+                    const key = TRAIT_KEY + trait.name
+                    return this.renderCell(key, trait.name, selections, modifiers, undefined, undefined, undefined, disabled)
                   })
                 }
               </Table.Row>
@@ -463,7 +466,12 @@ class Countries extends Component<IProps> {
       }
       style={{ padding: CELL_PADDING }}
     >
-      <List>
+      {this.renderModifiers(name, modifiers, padding)}
+    </Table.Cell>
+  )
+
+  renderModifiers = (name: string | null, modifiers: Modifier[], padding?: string) => (
+    <List>
         {name &&
           <List.Item key='name'>
             <List.Header>
@@ -484,7 +492,6 @@ class Countries extends Component<IProps> {
           ))
         }
       </List>
-    </Table.Cell>
   )
 
   /**
@@ -604,6 +611,7 @@ class Countries extends Component<IProps> {
     this.props.setMilitaryPower(this.props.selected_country, power)
     this.props.enableModifiers(this.props.selected_country, MILITARY_POWER_KEY, [{
       target: DefinitionType.Land,
+      scope: ScopeType.Country,
       attribute: UnitCalc.Morale,
       type: ValuesType.Modifier,
       value: power * 0.001
@@ -620,6 +628,8 @@ class Countries extends Component<IProps> {
     this.props.setOfficeDiscipline(this.props.selected_country, number)
     this.props.enableModifiers(this.props.selected_country, OFFICE_KEY + 'Discipline', [{
       target: DefinitionType.Global,
+      type: ValuesType.Base,
+      scope: ScopeType.Country,
       attribute: UnitCalc.Discipline,
       value: number / 100.0
     }])
@@ -635,6 +645,7 @@ class Countries extends Component<IProps> {
     this.props.setOfficeMorale(this.props.selected_country, number)
     this.props.enableModifiers(this.props.selected_country, OFFICE_KEY + 'Morale', [{
       target: DefinitionType.Land,
+      scope: ScopeType.Country,
       attribute: UnitCalc.Morale,
       type: ValuesType.Modifier,
       value: number / 100.0
@@ -693,11 +704,11 @@ class Countries extends Component<IProps> {
   clearAll = (selections: ObjSet) => {
     KEYS.forEach(key => this.clearModifiers(key, selections))
     this.props.setOmenPower(this.props.selected_country, 100)
-    this.props.setGeneralMartial(this.props.selected_country, 0)
     this.props.setMilitaryPower(this.props.selected_country, 0)
     this.props.setOfficeDiscipline(this.props.selected_country, 0)
     this.props.setOfficeMorale(this.props.selected_country, 0)
     this.props.setHasGeneral(this.props.selected_country, true)
+    this.props.setGeneralMartial(this.props.selected_country, 0)
   }
 
   /**
@@ -731,6 +742,7 @@ class Countries extends Component<IProps> {
   disableGeneral = () => {
     this.props.enableModifiers(this.props.selected_country, NO_GENERAL_KEY, [{
       target: DefinitionType.Global,
+      scope: ScopeType.Army,
       attribute: UnitCalc.Morale,
       type: ValuesType.Modifier,
       value: -0.25
@@ -784,17 +796,18 @@ const mapStateToProps = (state: AppState) => ({
   mode: state.settings.mode,
   traits: state.data.traits,
   ideas: state.data.ideas,
-  abilities: state.data.abilities
+  abilities: state.data.abilities,
+  general: getGeneral(state, state.settings.country)
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
   enableModifiers: (country: CountryName, key: string, modifiers: Modifier[]) => dispatch(enableModifiers(country, key, modifiers)) && dispatch(invalidateCountry(country)),
   clearModifiers: (country: CountryName, key: string) => dispatch(clearModifiers(country, key)) && dispatch(invalidateCountry(country)),
+  setGeneralMartial: (country: CountryName, value: number) => dispatch(setGeneralMartial(country, value)),
   selectCulture: (country: CountryName, culture: CultureType) => dispatch(selectCulture(country, culture)),
   selectReligion: (country: CountryName, religion: ReligionType) => dispatch(selectReligion(country, religion)),
   selectGovernment: (country: CountryName, government: GovermentType) => dispatch(selectGovernment(country, government)),
   setOmenPower: (country: CountryName, power: number) => dispatch(setOmenPower(country, power)),
-  setGeneralMartial: (country: CountryName, skill: number) => dispatch(setGeneralMartial(country, skill)) && dispatch(invalidateCountry(country)),
   setHasGeneral: (country: CountryName, value: boolean) => dispatch(setHasGeneral(country, value)),
   setMilitaryPower: (country: CountryName, power: number) => dispatch(setMilitaryPower(country, power)),
   setOfficeMorale: (country: CountryName, value: number) => dispatch(setOfficeMorale(country, value)),

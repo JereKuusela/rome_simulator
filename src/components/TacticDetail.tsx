@@ -7,18 +7,19 @@ import DetailDropdownRow from './Detail/DetailDropndownRow'
 import DetailInputRow from './Detail/DetailInputRow'
 import Images from './Utils/Images'
 
-import { UnitType, Units } from '../store/units'
+import { UnitType } from '../store/units'
 import { TacticDefinition, ValueType, TacticType, TacticCalc, TacticDefinitions } from '../store/tactics'
 
-import { explainShort, getImage, DefinitionType, calculateValue, getImages, getValue, ValuesType } from '../base_definition'
+import { getImage, DefinitionType, ValuesType } from '../base_definition'
 import { toSignedPercent, toPercent } from '../formatters'
-import { toArr, values } from '../utils'
+import { values } from '../utils'
+import { getValue, calculateValue, explainShort } from '../definition_values'
 
 interface IProps {
   tactic_types: TacticType[]
   tactics: TacticDefinitions
   unit_types: UnitType[]
-  units: Units
+  images: { [key in UnitType]: string[] }
   custom_value_key: string
   tactic: TacticDefinition
   onCustomBaseValueChange: (key: string, attribute: ValueType, value: number) => void
@@ -39,7 +40,7 @@ export default class TacticDetail extends Component<IProps> {
   readonly CELLS = 4
 
   render() {
-    const { tactic, unit_types, tactic_types, onTypeChange, onModeChange, onImageChange, units, tactics } = this.props
+    const { tactic, unit_types, tactic_types, onTypeChange, onModeChange, onImageChange, images, tactics } = this.props
     const { type, mode, image } = tactic
     return (
       <Table celled unstackable>
@@ -49,10 +50,7 @@ export default class TacticDetail extends Component<IProps> {
           <DetailDropdownRow text='Mode' value={mode} values={this.modes} onChange={onModeChange} cells={this.CELLS} />
           <DetailInputRow text='Image' value={image} onChange={onImageChange} cells={this.CELLS} />
           {
-            unit_types.map(type => {
-              const images = getImages(toArr(units), type)
-              return this.renderRow(tactic, type, false, images)
-            })
+            unit_types.map(type => this.renderRow(tactic, type, false, images[type]))
           }
           {tactic_types.map(value => this.renderRow(tactic, value, true, [getImage(tactics[value])]))}
           {this.attributes.map(value => this.renderRow(tactic, value, true, [getImage(null)]))}

@@ -1,24 +1,31 @@
 import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
-import { GovermentType, ReligionType, CultureType, Modifier } from '../data'
-import { ObjSet, toObj } from '../../utils'
+import { GovermentType, ReligionType, CultureType, Modifier, ScopeType } from '../data'
+import { ObjSet, map } from '../../utils'
+import { ValueType, GeneralCalc, UnitCalc, UnitType } from '../units'
+import { regenerateValues, ValuesType, calculateValue, clearAllValues, BaseDefinitionValues, DefinitionValues, addValues } from '../../definition_values'
+import { DefinitionType } from '../../base_definition'
 
 export enum CountryName {
   Country1 = 'Country 1',
   Country2 = 'Country 2'
 }
 
+
+export interface General extends BaseDefinitionValues<GeneralCalc> {
+  enabled: boolean
+  definitions: { [key in UnitType | DefinitionType]: DefinitionValues<ValueType> }
+}
+
 export interface Country {
-  readonly selections: ObjSet
-  readonly culture: CultureType
-  readonly government: GovermentType
-  readonly religion: ReligionType
-  readonly omen_power: number
-  readonly general_martial: number
-  readonly trait_martial: { [key: string]: number }
-  readonly has_general: boolean
-  readonly military_power: number
-  readonly office_discipline: number
-  readonly office_morale: number
+  selections: ObjSet
+  culture: CultureType
+  government: GovermentType
+  religion: ReligionType
+  omen_power: number
+  military_power: number
+  office_discipline: number
+  office_morale: number
+  general: General
 }
 
 export const defaultCountry: Country =
@@ -28,9 +35,10 @@ export const defaultCountry: Country =
   religion: 'Hellenic' as ReligionType,
   culture: CultureType.Greek,
   omen_power: 100,
-  general_martial: 0,
-  trait_martial: {},
-  has_general: true,
+  general: {
+    enabled: true,
+    definitions: {} as any
+  },
   military_power: 0,
   office_discipline: 0,
   office_morale: 0
@@ -43,7 +51,10 @@ export const getDefaultCountryDefinitions = (): { [key in CountryName]: Country 
 
 const countryDefinitions = getDefaultCountryDefinitions()
 
+const BASE_MARTIAL_KEY = 'Base stat'
+
 class CountriesReducer extends ImmerReducer<typeof countryDefinitions> {
+
 
   createCountry(country: CountryName, source_country?: CountryName) {
     this.draftState[country] = source_country ? this.state[source_country] : defaultCountry
@@ -54,18 +65,55 @@ class CountriesReducer extends ImmerReducer<typeof countryDefinitions> {
   }
 
   changeCountryName(old_country: CountryName, country: CountryName) {
-    delete Object.assign(this.draftState, {[country]: this.state[old_country] })[old_country]
+    delete Object.assign(this.draftState, { [country]: this.state[old_country] })[old_country]
+  }
+
+  setGeneralMartial(country: CountryName, value: number) {
+    this.enableModifiers(country, BASE_MARTIAL_KEY, [{
+      target: 'General',
+      type: ValuesType.Base,
+      scope: ScopeType.Army,
+      attribute: GeneralCalc.Martial,
+      value
+    }])
   }
 
   enableModifiers(country: CountryName, key: string, modifiers: Modifier[]) {
-    const general_modifiers = toObj(modifiers.filter(value => value.target === 'General' && value.attribute === 'Martial').map(value => value.value), () => key)
     this.draftState[country].selections[key] = true
-    this.draftState[country].trait_martial = { ...this.draftState[country].trait_martial, ...general_modifiers }
+
+    modifiers = modifiers.filter(value => value.scope === ScopeType.Army)
+    const definitions = map(this.state[country].general.definitions, definition => clearAllValues(definition, key))
+    const otherModifiers = modifiers.filter(value => value.attribute !== GeneralCalc.Martial)
+
+    otherModifiers.forEach(modifier => {
+      const type = modifier.target as UnitType | DefinitionType
+      if (!definitions[type])
+        definitions[type] = {}
+      if (modifier.type === ValuesType.Modifier)
+        definitions[type] = addValues(definitions[type], ValuesType.Modifier, key, [[modifier.attribute, modifier.value]])
+      else
+        definitions[type] = addValues(definitions[type], ValuesType.Base, key, [[modifier.attribute, modifier.value]])
+    })
+
+    let definition = clearAllValues(this.state[country].general, key)
+    const generalModifiers = modifiers.filter(value => value.attribute === GeneralCalc.Martial)
+    const generalValues = generalModifiers.map(value => [value.attribute, value.value] as [ValueType, number])
+    definition = regenerateValues(definition, ValuesType.Base, key, generalValues)
+    const martial = calculateValue(definition, GeneralCalc.Martial)
+    if (!definitions[DefinitionType.Naval])
+        definitions[DefinitionType.Naval] = {}
+    definitions[DefinitionType.Naval] = addValues(definitions[DefinitionType.Naval], ValuesType.Base, GeneralCalc.Martial, [[UnitCalc.CaptureChance, 0.002 * martial]])
+    definition.definitions = definitions
+    this.draftState[country].general = definition
   }
 
   clearModifiers(country: CountryName, key: string) {
     delete this.draftState[country].selections[key]
-    delete this.draftState[country].trait_martial[key]
+    
+    const definition = clearAllValues(this.state[country].general, key)
+    const definitions = map(this.state[country].general.definitions, definition => clearAllValues(definition, key))
+    definition.definitions = definitions
+    this.draftState[country].general = definition
   }
 
   selectGovernment(country: CountryName, government: GovermentType) {
@@ -84,12 +132,8 @@ class CountriesReducer extends ImmerReducer<typeof countryDefinitions> {
     this.draftState[country].omen_power = omen_power
   }
 
-  setGeneralMartial(country: CountryName, general_martial: number) {
-    this.draftState[country].general_martial = general_martial
-  }
-
   setHasGeneral(country: CountryName, has_general: boolean) {
-    this.draftState[country].has_general = has_general
+    this.draftState[country].general.enabled = has_general
   }
 
   setMilitaryPower(country: CountryName, military_power: number) {
@@ -109,13 +153,13 @@ const actions = createActionCreators(CountriesReducer)
 export const createCountry = actions.createCountry
 export const deleteCountry = actions.deleteCountry
 export const changeCountryName = actions.changeCountryName
+export const setGeneralMartial = actions.setGeneralMartial
 export const enableModifiers = actions.enableModifiers
 export const clearModifiers = actions.clearModifiers
 export const selectGovernment = actions.selectGovernment
 export const selectReligion = actions.selectReligion
 export const selectCulture = actions.selectCulture
 export const setOmenPower = actions.setOmenPower
-export const setGeneralMartial = actions.setGeneralMartial
 export const setHasGeneral = actions.setHasGeneral
 export const setMilitaryPower = actions.setMilitaryPower
 export const setOfficeDiscipline = actions.setOfficeDiscipline

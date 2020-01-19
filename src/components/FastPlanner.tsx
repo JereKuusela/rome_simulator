@@ -5,16 +5,14 @@ import Headers from './Utils/Headers'
 import Images from './Utils/Images'
 
 import { Side } from '../store/battle'
-import { UnitType, Units } from '../store/units'
-import { getImages } from '../base_definition'
-import { toArr } from '../utils'
+import { UnitType } from '../store/units'
 import { get } from 'lodash'
 
 export type PlannerUnits = { [key in UnitType]: number }
 
 
 interface IProps {
-  units: Units
+  images: { [key in UnitType]: string[] }
   types_a: Set<UnitType>
   types_d: Set<UnitType>
   reserve_a: PlannerUnits
@@ -34,7 +32,7 @@ export default class FastPlanner extends Component<IProps> {
 
   render() {
     const { types_a, types_d, attached } = this.props
-    const types = Array.from(new Set([...types_a, ...types_d])).sort()
+    const types = Array.from(new Set([...types_a, ...types_d]))
     return (
       <Table celled unstackable attached={attached}>
         <Headers values={this.headers} />
@@ -46,8 +44,7 @@ export default class FastPlanner extends Component<IProps> {
   }
 
   renderImages = (type: UnitType) => {
-    const images = getImages(toArr(this.props.units), type)
-    return <Images values={images} />
+    return <Images values={this.props.images[type]} />
   }
 
   renderRow = (type: UnitType) => {

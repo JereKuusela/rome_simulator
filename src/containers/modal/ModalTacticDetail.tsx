@@ -5,27 +5,27 @@ import { AppState } from '../../store/'
 import { invalidate } from '../../store/battle'
 import TacticDetail from '../../components/TacticDetail'
 import { Mode, DefinitionType } from '../../base_definition'
-import { mergeUnitTypes, filterTacticTypes, filterTactics } from '../../store/utils'
+import { mergeUnitTypes, filterTacticTypes, filterTactics, getUnitImages } from '../../store/utils'
 
 const CUSTOM_VALUE_KEY = 'Custom'
 
 class ModalTacticDetail extends Component<IProps> {
   render() {
-    const { tactic, mode } = this.props
+    const { tactic, mode, images, tactics, tactic_types, unit_types, setBaseValue, changeType, changeImage, changeMode } = this.props
     if (!tactic)
       return null
     return (
       <TacticDetail
-        tactics={this.props.tactics}
-        tactic_types={this.props.tactic_types}
-        unit_types={this.props.unit_types}
-        units={this.props.units}
+        tactics={tactics}
+        tactic_types={tactic_types}
+        unit_types={unit_types}
+        images={images}
         custom_value_key={CUSTOM_VALUE_KEY}
-        tactic={this.props.tactics[tactic]}
-        onCustomBaseValueChange={(key, attribute, value) => this.props.setBaseValue(mode, tactic, key, attribute, value)}
-        onTypeChange={type => this.props.changeType(tactic, type)}
-        onImageChange={image => this.props.changeImage(tactic, image)}
-        onModeChange={mode => this.props.changeMode(tactic, mode)}
+        tactic={tactics[tactic]}
+        onCustomBaseValueChange={(key, attribute, value) => setBaseValue(mode, tactic, key, attribute, value)}
+        onTypeChange={type => changeType(tactic, type)}
+        onImageChange={image => changeImage(tactic, image)}
+        onModeChange={mode => changeMode(tactic, mode)}
       />
     )
   }
@@ -34,7 +34,7 @@ class ModalTacticDetail extends Component<IProps> {
 const mapStateToProps = (state: AppState) => ({
   tactics: filterTactics(state),
   tactic_types: filterTacticTypes(state),
-  units: state.units,
+  images: getUnitImages(state),
   unit_types: mergeUnitTypes(state),
   mode: state.settings.mode
 })

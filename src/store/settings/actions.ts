@@ -12,8 +12,6 @@ export enum Setting {
   MinimumStrength = 'Minimum strength for combat',
   RollFrequency = 'Length of combat phases',
   CombatWidth = 'Combat width',
-  DefeatedPenalty = 'Penalty for defeated units',
-  DefeatedPenaltyAmount = 'Amount of penalty',
   DefenderAdvantage = 'Defender\'s advantage',
   FixExperience = 'Fix damage reduction from experience',
   FixTargeting = 'Fix targeting',
@@ -22,12 +20,6 @@ export enum Setting {
   ChunkSize = 'Statistics: Chunk size',
   Performance = 'Statistics: Performance',
   UpdateCasualties = 'Statistics: Update casualties'
-}
-
-export enum DefeatedPenalty {
-  None = 'None',
-  Damage = 'Damage',
-  Kill = 'Kill'
 }
 
 export enum SimulationSpeed {
@@ -80,10 +72,6 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Targeting is fixed.\nLeft and right sides work exactly same.'
       else
         return '16th unit uses wrong targeting direction.\nLeft and right sides behave slightly differently.'
-    case Setting.DefeatedPenalty:
-      return 'Whether defeated units should suffer additional penalties.'
-    case Setting.DefeatedPenaltyAmount:
-      return 'How strong the penalty is.'
     case Setting.MaxDepth:
       return 'How many phases are simulated.\nIncrease for higher accuracy and less incomplete rounds.\nDecrease forg faster speed.'
     case Setting.PhaseLengthMultiplier:
@@ -114,9 +102,7 @@ export type CombatSettings = {
   [Setting.MinimumMorale]: number,
   [Setting.MoraleLostMultiplier]: number,
   [Setting.RollDamage]: number,
-  [Setting.RollFrequency]: number,
-  [Setting.DefeatedPenalty]: DefeatedPenalty,
-  [Setting.DefeatedPenaltyAmount]: number
+  [Setting.RollFrequency]: number
 }
 
 export type SiteSettings = {

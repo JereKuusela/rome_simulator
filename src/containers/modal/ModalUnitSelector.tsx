@@ -11,7 +11,7 @@ import { CountryName } from '../../store/countries'
 
 import { getNextId } from '../../army_utils'
 import { toArr } from '../../utils'
-import { getUnitDefinitionsByCountry } from '../../store/utils'
+import { getUnitDefinitions } from '../../store/utils'
 
 interface Props {
   info: ModalInfo | null
@@ -43,14 +43,14 @@ class ModalUnitSelector extends Component<IProps> {
 
   selectUnit = (type: UnitType) => {
     if (this.props.info)
-      this.props.selectUnit(this.props.mode, this.props.info.country, this.props.info.type, this.props.info.index, { id: getNextId(), image: '', type })
+      this.props.selectUnit(this.props.mode, this.props.info.country, this.props.info.type, this.props.info.index, { id: getNextId(), type })
     this.props.invalidate(this.props.mode)
     this.props.onClose()
   }
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  units: props.info && getUnitDefinitionsByCountry(state, props.info.country),
+  units: props.info && getUnitDefinitions(state, props.info.country),
   mode: state.settings.mode
 })
 

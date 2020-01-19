@@ -1,6 +1,7 @@
 
 import { UnitType } from '../units/'
-import { BaseValuesDefinition } from '../../base_definition'
+import { Definition } from '../../base_definition'
+import { BaseDefinitionValues } from '../../definition_values'
 
 export enum TacticCalc {
   Casualties = 'Casualties'
@@ -26,5 +27,5 @@ export enum TacticType {
 
 export type ValueType = UnitType | TacticCalc | TacticType
 
-export interface TacticDefinition extends BaseValuesDefinition<TacticType, ValueType> {
+export interface TacticDefinition extends Definition<TacticType>, BaseDefinitionValues<ValueType> {
 }

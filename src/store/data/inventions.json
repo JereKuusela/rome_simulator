@@ -316,8 +316,8 @@
         [
           {
             "target": "Text",
-            "attribute": "Assault width",
-            "value": -0.05
+            "attribute": "Assault ability",
+            "value": 0.05
           }
         ]
       ]

@@ -5,11 +5,11 @@ import { AppState } from '../../store/'
 import { selectTerrain, invalidate } from '../../store/battle'
 import ItemSelector, { SelectorAttributes } from '../../components/ItemSelector'
 import { TerrainType, TerrainCalc, LocationType } from '../../store/terrains'
-import { calculateValue } from '../../base_definition'
 import { filterTerrains, getMode } from '../../store/utils'
 import StyledNumber from '../../components/Utils/StyledNumber'
 import { addSign } from '../../formatters'
 import { toArr, filter, map } from '../../utils'
+import { calculateValue } from '../../definition_values'
 
 type Props = {
   index?: number

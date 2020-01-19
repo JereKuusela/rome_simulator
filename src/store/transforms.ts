@@ -2,10 +2,10 @@ import { TacticDefinitions, getDefaultTactic } from './tactics'
 import { TerrainDefinitions, getDefaultTerrain } from './terrains'
 import { GlobalStats, Units, getDefaultUnit, getDefaultGlobal, GlobalKey } from './units'
 import { ModeState } from './battle'
-import { clearAllValues, mergeValues } from '../base_definition'
 import { map, forEach } from '../utils'
 import produce from 'immer'
 import { getNextId } from '../army_utils'
+import { mergeValues, clearAllValues } from '../definition_values'
 
 
 export const restoreBaseTactics = (state: TacticDefinitions): TacticDefinitions => map(state, (tactic, type) => mergeValues(clearAllValues(tactic, type), getDefaultTactic(type)))

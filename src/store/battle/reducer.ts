@@ -5,11 +5,12 @@ import {
 } from './actions'
 import { BaseUnit, UnitType, ValueType } from '../units'
 import { TerrainType } from '../terrains'
-import { DefinitionType, Mode, ValuesType, addValues } from '../../base_definition'
+import { DefinitionType, Mode, ValuesType } from '../../base_definition'
 import { CountryName, changeCountryName, deleteCountry, createCountry } from '../countries'
 import { TacticType } from '../tactics';
 import { keys, toArr, forEach, arrGet } from '../../utils'
 import { findLastIndex} from 'lodash'
+import { addValues } from '../../definition_values'
 
 export interface Battle {
   armies: Armies
@@ -178,7 +179,7 @@ class BattleReducer extends ImmerReducer<ModeState> {
 
   invalidateCountry(country: CountryName) {
     keys(this.state).forEach(key => {
-      if (toArr(this.state[key].participants).find(value => value.name === country))
+      if (toArr(this.state[key].participants).find(value => value.country === country))
         this.invalidate(key)
     })
   }
@@ -218,7 +219,7 @@ class BattleReducer extends ImmerReducer<ModeState> {
 
   selectArmy(mode: Mode, side: Side, name: CountryName) {
     const draft = this.draftState[mode].participants[side]
-    draft.name = name
+    draft.country = name
   }
 
   clearUnits(mode: Mode) {
@@ -226,9 +227,9 @@ class BattleReducer extends ImmerReducer<ModeState> {
     let armies = next.armies
     let participants = next.participants
     forEach(participants, value => {
-      armies[value.name].frontline = getDefaultArmy(mode).frontline
-      armies[value.name].reserve = []
-      armies[value.name].defeated = []
+      armies[value.country].frontline = getDefaultArmy(mode).frontline
+      armies[value.country].reserve = []
+      armies[value.country].defeated = []
     })
     this.draftState[mode] = next
   }

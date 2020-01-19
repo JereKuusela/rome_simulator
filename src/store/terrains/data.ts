@@ -1,10 +1,10 @@
 import { TerrainType, LocationType, TerrainCalc, TerrainDefinition, ValueType } from './actions'
-import { addValues, ValuesType, DefinitionType } from '../../base_definition'
+import { ValuesType, DefinitionType } from '../../base_definition'
+import { addValues } from '../../definition_values'
 import { toObj } from '../../utils'
 
 import * as data from './terrains.json'
 import IconTerrain from '../../images/terrain.png'
-
 const createTerrainFromJson = (data: TerrainData): TerrainDefinition => {
   let terrain: TerrainDefinition = {type: data.type as TerrainType, mode: data.mode as DefinitionType, image: IconTerrain, location: data.location as LocationType}
   const base_values: [ValueType, number][] = [

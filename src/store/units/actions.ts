@@ -1,6 +1,7 @@
 import { TerrainType } from '../terrains'
-import { calculateValue, BaseDefinition, DefinitionType } from '../../base_definition'
+import { Definition, DefinitionType } from '../../base_definition'
 import { toPercent, toSignedPercent, toNumber } from '../../formatters'
+import { DefinitionValues, calculateValue } from '../../definition_values'
 
 export enum UnitType {
   Archers = 'Archers',
@@ -49,26 +50,36 @@ export enum UnitCalc {
   AttritionWeight = 'Attrition weight',
   Experience = 'Experience',
   FoodConsumption = 'Food Consumption',
-  FoodStorage = 'Food Storage'
+  FoodStorage = 'Food Storage',
+  CaptureChance = 'Capture Chance',
+  CaptureResist = 'Capture Resist'
+}
+
+export enum GeneralCalc {
+  Martial = 'Martial'
 }
 
 export type ValueType = UnitCalc | UnitType | TerrainType
+export type UnitDefinitionValues = { [key in UnitType]: UnitDefinitionValue }
+export type UnitDefinitionValue = DefinitionValues<ValueType>
 
-export interface BaseUnit extends BaseDefinition<UnitType, ValueType> {
-  readonly id: number
-  readonly is_loyal?: boolean
+
+export interface BaseUnit extends DefinitionValues<ValueType> {
+  type: UnitType
+  id: number
+  is_loyal?: boolean
 }
 
-export interface UnitDefinition extends BaseDefinition<UnitType, ValueType> {
-  readonly deployment: UnitDeployment
-  readonly mode: DefinitionType
-  readonly is_loyal?: boolean
+export interface UnitDefinition extends Definition<UnitType>, DefinitionValues<ValueType> {
+  deployment: UnitDeployment
+  mode: DefinitionType
+  is_loyal?: boolean
 }
 
 export interface Unit extends BaseUnit, UnitDefinition { }
 
 
-export const valueToString = (definition: BaseDefinition<UnitType, ValueType>, type: ValueType): string => {
+export const valueToString = (definition: DefinitionValues<ValueType>, type: ValueType): string => {
   const value = calculateValue(definition, type)
   switch (type) {
     case UnitCalc.Cost:

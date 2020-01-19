@@ -1,8 +1,9 @@
 import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
 import { getDefaultTactics, TacticDefinitions } from './data'
 import { TacticType, ValueType } from './actions'
-import { addValues, ValuesType, DefinitionType } from '../../base_definition'
+import { ValuesType, DefinitionType } from '../../base_definition'
 import { getIcon } from '../tactics'
+import { addValues } from '../../definition_values'
 
 export const getDefaultTacticDefinitions = () => getDefaultTactics()
 

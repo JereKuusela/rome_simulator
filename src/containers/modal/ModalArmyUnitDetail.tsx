@@ -11,8 +11,9 @@ import { editUnit, deleteUnit, setValue, changeType, invalidateCountry, Side, to
 import { CountryName } from '../../store/countries'
 import { filterTerrainTypes, filterUnitTypesByCountry, findUnit, getCombatUnitForEachRound } from '../../store/utils'
 
-import { ValuesType, addValues } from '../../base_definition'
+import { ValuesType } from '../../base_definition'
 import { CombatUnit } from '../../combat/combat'
+import { addValues } from '../../definition_values'
 
 const CUSTOM_VALUE_KEY = 'Unit'
 

@@ -5,16 +5,17 @@ import ValueModal from './ValueModal'
 import VersusList from './VersusList'
 import StyledNumber from './Utils/StyledNumber'
 
-import { UnitType, Units } from '../store/units'
+import { UnitType } from '../store/units'
 import { TacticDefinition, TacticType, TacticCalc } from '../store/tactics'
 
-import { calculateValue, getImage } from '../base_definition'
+import { getImage } from '../base_definition'
+import { calculateValue } from '../definition_values'
 import { toSignedPercent } from '../formatters'
 import Headers from './Utils/Headers'
 
 interface IProps {
   tactics: TacticDefinition[]
-  units: Units
+  images: { [key in UnitType]: string[] }
   unit_types: UnitType[]
   onRowClick: (type: TacticType) => void
   onCreateNew: (type: TacticType) => void
@@ -64,7 +65,7 @@ export default class TacticDefinitions extends Component<IProps, IState> {
   onClose = (): void => this.setState({ open_create: false })
 
   renderRow = (tactic: TacticDefinition) => {
-    const { onRowClick, units, unit_types } = this.props
+    const { onRowClick, images, unit_types } = this.props
     return (
       <Table.Row key={tactic.type} onClick={() => onRowClick(tactic.type)}>
         <Table.Cell>
@@ -74,7 +75,7 @@ export default class TacticDefinitions extends Component<IProps, IState> {
         <Table.Cell>
           <VersusList
             item={tactic}
-            units={units}
+            images={images}
             unit_types={unit_types}
           />
         </Table.Cell>

@@ -34,70 +34,76 @@ export enum TradeType {
   Capital = 'Capital'
 }
 
+export enum ScopeType {
+  Country = 'Country',
+  Army = 'Army'
+}
+
 export interface Modifier {
-  readonly target: UnitType | DefinitionType | ModifierType | 'Text' | 'General'
-  readonly attribute: string
-  readonly negative?: boolean
-  readonly type?: ValuesType
-  readonly no_percent?: boolean
-  readonly value: number
+  target: UnitType | DefinitionType | ModifierType | 'Text' | 'General'
+  scope: ScopeType
+  attribute: string
+  negative?: boolean
+  type: ValuesType
+  no_percent?: boolean
+  value: number
 }
 export interface Tradition {
-  readonly name: string
-  readonly modifiers: Modifier[]
+  name: string
+  modifiers: Modifier[]
 }
 export interface Path {
-  readonly name: string
-  readonly traditions: Tradition[]
+  name: string
+  traditions: Tradition[]
 }
 export interface TraditionDefinition {
-  readonly type: CultureType
-  readonly paths: Path[]
-  readonly modifiers: Modifier[]
+  type: CultureType
+  paths: Path[]
+  modifiers: Modifier[]
 }
 export interface TradeDefinition {
-  readonly name: string
-  readonly type: TradeType
-  readonly modifier: Modifier
+  name: string
+  type: TradeType
+  modifier: Modifier
 }
 export interface HeritageDefinition {
-  readonly name: string
-  readonly modifiers: Modifier[]
+  name: string
+  modifiers: Modifier[]
 }
 export interface InventionDefinition {
-  readonly name: string
-  readonly inventions: Modifier[][]
+  name: string
+  inventions: Modifier[][]
 }
 export interface OmenDefinition {
-  readonly name: string
-  readonly modifier: Modifier
+  name: string
+  modifier: Modifier
 }
 export interface TraitDefinition {
-  readonly name: string
-  readonly modifiers: Modifier[]
+  name: string
+  modifiers: Modifier[]
  }
 export interface LawDefinition {
-  readonly name: string
-  readonly options: {
-    readonly name: string
-    readonly modifiers: Modifier[]
+  name: string
+  options: {
+    name: string
+    modifiers: Modifier[]
   }[]
 }
 export interface EconomyDefinition {
-  readonly name: string
-  readonly options: {
-    readonly name: string
-    readonly modifiers: Modifier[]
+  name: string
+  options: {
+    name: string
+    modifiers: Modifier[]
   }[]
 }
 export interface IdeaDefinition {
-  readonly name: string
-  readonly modifiers: Modifier[]
+  name: string
+  modifiers: Modifier[]
 }
 export interface AbilityDefinition {
-  readonly name: string
-  readonly options: {
-    readonly name: string
-    readonly modifiers: Modifier[]
+  name: string
+  options: {
+    name: string
+    modifiers: Modifier[]
   }[]
 }

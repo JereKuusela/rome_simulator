@@ -7,8 +7,8 @@
           "name": "Boarding Tactics",
           "modifiers": [
             {
-              "target": "Text",
-              "attribute": "Ship capture chance",
+              "target": "Naval",
+              "attribute": "Capture Chance",
               "value": 0.1
             },
             {

@@ -9,8 +9,9 @@ import Headers from './Utils/Headers'
 
 import { TerrainDefinition, ValueType, TerrainType, TerrainCalc, valueToString, LocationType } from '../store/terrains'
 
-import { getValue, explainShort, DefinitionType, ValuesType } from '../base_definition'
+import { DefinitionType, ValuesType } from '../base_definition'
 import { values } from '../utils'
+import { getValue, explainShort } from '../definition_values'
 
 interface IProps {
   custom_value_key: string

@@ -9,12 +9,13 @@ import { CountryName } from '../../store/countries'
 import { invalidateCountry } from '../../store/battle'
 
 import { ValuesType } from '../../base_definition'
+import { getBaseDefinition } from '../../store/utils'
 
 const CUSTOM_VALUE_KEY = 'Global'
 
 interface Props {
-  readonly country: CountryName | null
-  readonly unit: UnitType | null
+  readonly country: CountryName | undefined
+  readonly unit: UnitType | undefined
 }
 
 class ModalGlobalStatsDetail extends Component<IProps> {
@@ -26,7 +27,7 @@ class ModalGlobalStatsDetail extends Component<IProps> {
       <UnitDetail
         mode={mode}
         custom_value_key={CUSTOM_VALUE_KEY}
-        unit={global_stats[country][this.props.mode] as Unit}
+        unit={global_stats as Unit}
         onCustomBaseValueChange={this.setGlobalBaseValue}
         onCustomModifierValueChange={this.setGlobalModifierValue}
         onCustomLossValueChange={this.setGlobalLossValue}
@@ -57,8 +58,8 @@ class ModalGlobalStatsDetail extends Component<IProps> {
   }
 }
 
-const mapStateToProps = (state: AppState) => ({
-  global_stats: state.global_stats,
+const mapStateToProps = (state: AppState, props: Props) => ({
+  global_stats: getBaseDefinition(state, props.country),
   mode: state.settings.mode
 })
 

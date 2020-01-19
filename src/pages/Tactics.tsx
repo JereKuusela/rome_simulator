@@ -6,7 +6,7 @@ import { AppState } from '../store/index'
 import TacticDefinitions from '../components/TacticDefinitions'
 import ItemRemover from '../components/ItemRemover'
 import { TacticType, deleteTactic, addTactic, changeType } from '../store/tactics'
-import { mergeUnitTypes, filterTactics } from '../store/utils'
+import { mergeUnitTypes, filterTactics, getUnitImages } from '../store/utils'
 import { DefinitionType } from '../base_definition'
 import { toArr } from '../utils'
 
@@ -44,7 +44,7 @@ class Tactics extends Component<IProps, IState> {
         <TacticDefinitions
           tactics={toArr(this.props.tactics)}
           unit_types={this.props.unit_types}
-          units={this.props.units}
+          images={this.props.images}
           onRowClick={tactic => this.openModal(tactic)}
           onCreateNew={type => this.props.addTactic(type, this.props.mode)}
         />
@@ -65,7 +65,7 @@ class Tactics extends Component<IProps, IState> {
 
 const mapStateToProps = (state: AppState) => ({
   tactics: filterTactics(state),
-  units: state.units,
+  images: getUnitImages(state),
   unit_types: mergeUnitTypes(state),
   mode: state.settings.mode
 })

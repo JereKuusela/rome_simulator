@@ -5,9 +5,10 @@ import {
   UnitDeployment
 } from './actions'
 import { CountryName, enableModifiers, clearModifiers, createCountry, deleteCountry, changeCountryName } from '../countries'
-import { addValues, DefinitionType, ValuesType, regenerateValues, clearValues, Mode } from '../../base_definition'
+import { DefinitionType, ValuesType, Mode } from '../../base_definition'
+import { addValues, regenerateValues, clearValues, clearAllValues } from '../../definition_values'
 import { ImmerReducer, createActionCreators, createReducerFunction, Actions } from 'immer-reducer'
-import { Modifier } from '../data'
+import { Modifier, ScopeType } from '../data'
 import { map } from '../../utils'
 
 export type GlobalStats = { [key in CountryName]: GlobalDefinitions }
@@ -70,6 +71,7 @@ class UnitsReducer extends ImmerReducer<Units> {
   }
 
   enableModifiers(country: CountryName, key: string, modifiers: Modifier[]) {
+    modifiers = modifiers.filter(value => value.scope === ScopeType.Country)
     const next = map(this.state[country], (unit, type) => {
       const values = modifiers.filter(value => value.target === type)
       const base_values = values.filter(value => value.type !== ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number])
@@ -108,6 +110,7 @@ class GlobalStatsReducer extends ImmerReducer<GlobalStats> {
   }
 
   enableModifiers(country: CountryName, key: string, modifiers: Modifier[]) {
+    modifiers = modifiers.filter(value => value.scope === ScopeType.Country)
     const landValues = modifiers.filter(value => value.target === DefinitionType.Land || value.target === DefinitionType.Global)
     const baseLandValues = landValues.filter(value => value.type !== ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number])
     const modifierLandValues = landValues.filter(value => value.type === ValuesType.Modifier).map(value => [value.attribute, value.value] as [ValueType, number])
@@ -125,8 +128,8 @@ class GlobalStatsReducer extends ImmerReducer<GlobalStats> {
   }
 
   clearModifiers(country: CountryName, key: string) {
-    this.draftState[country][DefinitionType.Land] = clearValues(clearValues(this.state[country][DefinitionType.Land], ValuesType.Base, key), ValuesType.Modifier, key)
-    this.draftState[country][DefinitionType.Naval] = clearValues(clearValues(this.state[country][DefinitionType.Naval], ValuesType.Base, key), ValuesType.Modifier, key)
+    this.draftState[country][DefinitionType.Land] = clearAllValues(this.state[country][DefinitionType.Land], key)
+    this.draftState[country][DefinitionType.Naval] = clearAllValues(this.state[country][DefinitionType.Naval], key)
   }
 }
 

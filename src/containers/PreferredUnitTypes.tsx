@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Image, Table, Input } from 'semantic-ui-react'
 
 import { AppState } from '../store/'
-import { getCountry, getRowTypes, getUnitDefinitions, getFlankSize, getMode } from '../store/utils'
+import { getCountry, getRowTypes, getFlankSize, getMode, getUnitDefinitionsBySide } from '../store/utils'
 import { Side, RowType, setFlankSize } from '../store/battle'
 
 import { getImage } from '../base_definition'
@@ -111,7 +111,7 @@ class Row extends Component<IProps, IState> {
 
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  units: getUnitDefinitions(state, props.side),
+  units: getUnitDefinitionsBySide(state, props.side),
   country: getCountry(state, props.side),
   flank_size: getFlankSize(state, props.side),
   row_types: getRowTypes(state, props.side),

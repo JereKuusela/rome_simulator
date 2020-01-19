@@ -6,9 +6,10 @@ import ValueModal from './ValueModal'
 import StyledNumber from './Utils/StyledNumber'
 
 import { TerrainCalc, TerrainDefinition, TerrainType } from '../store/terrains'
-import { getImage, calculateValue } from '../base_definition'
+import { getImage } from '../base_definition'
 import { addSign } from '../formatters'
 import { keys } from '../utils'
+import { calculateValue } from '../definition_values'
 
 interface IProps {
   terrains: TerrainDefinition[]

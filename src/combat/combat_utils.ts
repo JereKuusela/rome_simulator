@@ -5,7 +5,7 @@ import { UnitCalc, Unit } from '../store/units'
 import { TerrainCalc, TerrainDefinition } from '../store/terrains'
 import { Setting, Settings} from '../store/settings'
 
-import { calculateValue} from '../base_definition'
+import { calculateValue } from '../definition_values'
 
 /**
  * Calculates the roll modifier based on skill level difference of generals.

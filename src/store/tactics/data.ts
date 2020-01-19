@@ -1,5 +1,5 @@
 import { TacticType, TacticCalc, TacticDefinition, ValueType } from './actions'
-import { addValues, ValuesType, DefinitionType } from '../../base_definition'
+import { ValuesType, DefinitionType } from '../../base_definition'
 import { UnitType } from '../units/actions'
 import { toObj } from '../../utils'
 
@@ -19,6 +19,7 @@ import IconNavalEnvelopment from '../../images/naval_envelopment.png'
 import IconHarassment from '../../images/harassment.png'
 import IconProbingAttack from '../../images/probing_attack.png'
 import IconCloseRanks from '../../images/close_ranks.png'
+import { addValues } from '../../definition_values'
 
 const tactic_to_icon: { [ key in TacticType ]: string } = {
   [TacticType.Bottleneck]: IconBottleneck,

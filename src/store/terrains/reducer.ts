@@ -1,7 +1,8 @@
 import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
 import { getDefaultTerrains, TerrainDefinitions } from './data'
 import { TerrainType, ValueType, LocationType } from './actions'
-import { addValues, ValuesType, DefinitionType } from '../../base_definition'
+import { ValuesType, DefinitionType } from '../../base_definition'
+import { addValues } from '../../definition_values'
 
 export const getDefaultTerrainDefinitions = () => getDefaultTerrains()
 

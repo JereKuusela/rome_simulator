@@ -6,17 +6,18 @@ import { last } from 'lodash'
 import StyledNumber from '../components/Utils/StyledNumber'
 
 import { AppState } from '../store/'
-import { Side, ArmyType } from '../store/battle'
-import { getArmyBySide, getParticipant, getSettings, getSelectedTerrains, getCombatUnit, getCurrentCombat } from '../store/utils'
+import { Side, ArmyType, getOpponent } from '../store/battle'
+import { getParticipant, getSettings, getSelectedTerrains, getCombatUnit, getCurrentCombat, getGeneral, getCountry, getTactic } from '../store/utils'
 
-import { calculateValue, strengthToValue, DefinitionType } from '../base_definition'
-import { toNumber, toSignedPercent, toManpower } from '../formatters'
+import { DefinitionType } from '../base_definition'
+import { toNumber, toSignedPercent, toManpower, strengthToValue } from '../formatters'
 import { UnitCalc, UnitType } from '../store/units'
 import { TerrainType } from '../store/terrains'
 import { Setting } from '../store/settings'
 import { TacticCalc } from '../store/tactics'
 import { calculateTotalRoll, calculateBaseDamage } from '../combat/combat_utils'
 import { CombatUnit, CombatUnitDefinition, CombatUnitRoundInfo } from '../combat/combat'
+import { calculateValue } from '../definition_values'
 
 type Props = {
   id: number | null
@@ -246,10 +247,10 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   roll: (last(getParticipant(state, props.side).rolls) || { roll: 0 }).roll,
   settings: getSettings(state),
   terrains: getSelectedTerrains(state),
-  general_s: getArmyBySide(state, props.side).general.total,
-  tactic_s: state.tactics[getArmyBySide(state, props.side).tactic],
-  general_t: getArmyBySide(state, props.side === Side.Attacker ? Side.Defender : Side.Attacker).general.total,
-  tactic_t: state.tactics[getArmyBySide(state, props.side === Side.Attacker ? Side.Defender : Side.Attacker).tactic],
+  general_s: getGeneral(state, getCountry(state, props.side)).martial,
+  tactic_s: getTactic(state, props.side),
+  general_t: getGeneral(state, getCountry(state, getOpponent(props.side))).martial,
+  tactic_t: getTactic(state, getOpponent(props.side)),
   mode: state.settings.mode
 })
 

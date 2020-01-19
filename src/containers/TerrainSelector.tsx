@@ -7,8 +7,8 @@ import { getMode, getSelectedTerrains } from '../store/utils'
 import { setFlankSize } from '../store/battle'
 import { TerrainDefinition, TerrainCalc, LocationType } from '../store/terrains'
 
-import { calculateValue } from '../base_definition'
 import { addSign } from '../formatters'
+import { calculateValue } from '../definition_values'
 
 import ModalTerrainSelector from './modal/ModalTerrainSelector'
 import IconDice from '../images/chance.png'

@@ -7,9 +7,9 @@ import { selectTactic, invalidate, Side, getOpponent } from '../../store/battle'
 import { TacticType, TacticCalc } from '../../store/tactics'
 import { filterTactics, getCurrentCombat, getSelectedTactic, getCountry } from '../../store/utils'
 
-import { calculateValue } from '../../base_definition'
 import { toSignedPercent, toPercent } from '../../formatters'
 import { map, filter, toArr } from '../../utils'
+import { calculateValue } from '../../definition_values'
 import { calculateTactic } from '../../combat/combat'
 
 import StyledNumber from '../../components/Utils/StyledNumber'
