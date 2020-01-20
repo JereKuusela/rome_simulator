@@ -7,6 +7,9 @@ Changelog:
 - Battle: Fixed new countries not shown on country selector.
 - Battle: Fixed manual unit adding not working.
 - Battle: Fixed order of naval units in fast planner.
+- Stats: Added average gold losses to naval simulations (from repair, from destroyed and from captured).
+- Countries: Added naval capture chance from general martial.
+- Countries: Refactored general to be separate entity (first step towards multiarmy battles).
 - Units: Balance changes from 1.3.2 (War Elephants damage against Infantry, Supply Train cost).
 - Units: Added 1 maneuver to Mega-Polyreme (no idea when this was changed).
 - Units: Added new attributes: food consumption and storage.
@@ -14,8 +17,6 @@ Changelog:
 - Units: More accurate maintenance costs.
 - Units: Fixed order of naval units.
 - Units: Added new attributes: capture chance and capture resist.
-- Countries: Added naval capture chance from general martial.
-- Countries: Refactored general to be separate entity (first step towards multiarmy battles).
 - Settings: New page which more clearly shows which settings affects land, naval or both.
 - Settings: Added support for boolean and dropdown options.
 - Settings: Settings for bug fixes (and some others) converted to boolean settings.
@@ -24,17 +25,25 @@ Changelog:
 - Settings: Removed "Fix damage taken" settings as it is fixed in the game.
 
 Todo:
- - Icons to frontline to show when things like defender's advantage, flanking or unit countering applies.
- - Defeated list to show strength and gold lost to sinking (only shown when setting is active.
  - Transfer could only show non-base stats for units, terrains and tactics (since base stats are supposed to regenerate?), currently it shows way too much information.
  - Add neutral unit to ease testing.
- - Order naval units by cost so easier to know which are which.
+ - Disable defenders advantage by default (people make wrong conclusions)
+ - Refactor simluation to update only single parameter, also parameters split should make more sense
+
+Tags:
+ - Icons to frontline to show various things, with tooltips:
+  * Defender's advantage (some kind of ninja icon?)
+  * Very bad matchup, bad match up, good matchup, very good matchup (red or green arrows)
+  * Flanking (attacking without being attacked)
+  * No target (red sign)
+ - Battle stats to show amount of tags acquired (hopefully gives a better view of the battle)
+ - Battle stats to show individual units
 
 Settings:
+ - Tab based on current mode
  - Better descriptions
- - Show list of "Increase value to ...", "Decrease value too", green and red colors for increase and decrease.
- - Gives a better idea how the attribute affects the result.
- - Setting for 50% chance to sink defeated ships (off, 50% chance, 50% strength loss for all).
+ - Show default value
+ - Show current change versus default value (for example faster battles, more randomness)
  - Improved settings: Dropdowns instead of magic values (description updates according to selection).
  - New settings for deployment / reinforcement order/attribute.
  - More sections for settings (at least new section for deployment and reinforcement).
@@ -43,11 +52,6 @@ Settings:
 Tests (high priority):
 - utils tested
 - check that reinforcement is stable (higher key ends in right position)
-
-Refactor:
-- Getting rid of custom map, reduce, etc functions as much as possible.
-- reducer utils.ts has lots of army/participant functions, some kind of sense? 
-- props to fromStateToProps to do better filtering
 
 Rowtype selectors could show unit priority? Different colors for main and flank. Frontline could slightly color tiles based on main/flank.
 
@@ -134,10 +138,3 @@ Findings 2:
 - Flank size may change mode
 - Mode seems to be also affected by amount of units in the filled
 - Amount of units also affects flank size
-
-Naval capture:
-- Base like 5%?
-- Higher tier seems to give 10%?
-- Tactic seems to give 5%
-- Generals also get some
-- Results fluctuate a lot, even with lots of ships, more ships?

@@ -3,7 +3,7 @@ import { TerrainDefinition } from "../store/terrains"
 import { Setting, Settings } from "../store/settings"
 import { Side, BaseUnits } from "../store/battle"
 
-import { doBattleFast, getCombatUnit, CombatParticipant, CombatUnits, Frontline, Reserve } from "./combat"
+import { doBattleFast, getCombatUnit, CombatParticipant, CombatUnits, Frontline, Reserve, Defeated } from "./combat"
 import { calculateTotalRoll } from "./combat_utils"
 
 import { mapRange } from "../utils"
@@ -40,6 +40,17 @@ export interface CasualtiesProgress {
   morale_d: { [key: string]: number }
   strength_a: { [key: string]: number }
   strength_d: { [key: string]: number }
+}
+
+export interface ResourceLossesProgress {
+  losses_a: ResourceLosses
+  losses_d: ResourceLosses
+}
+
+export type ResourceLosses = {
+  repair: number
+  destoyed: number
+  captured: number
 }
 
 let interruptSimulation = false
@@ -83,7 +94,7 @@ export const interrupt = () => interruptSimulation = true
  * @param defender Defender information.
  * @param terrains Current terrains.
  */
-export const calculateWinRate = (doUpdateCasualties: boolean, settings: Settings, progressCallback: (progress: WinRateProgress, casualties: CasualtiesProgress) => void, attacker: CombatParticipant, defender: CombatParticipant) => {
+export const calculateWinRate = (doUpdateCasualties: boolean, settings: Settings, progressCallback: (progress: WinRateProgress, casualties: CasualtiesProgress, losses: ResourceLossesProgress) => void, attacker: CombatParticipant, defender: CombatParticipant) => {
   const progress: WinRateProgress = {
     calculating: true,
     attacker: 0.0,
@@ -96,6 +107,23 @@ export const calculateWinRate = (doUpdateCasualties: boolean, settings: Settings
     rounds: {}
   }
   interruptSimulation = false
+
+  const doUpdateResources = true
+  const losses_a: ResourceLosses = {
+    captured: 0,
+    destoyed: 0,
+    repair: 0
+  }
+  const losses_d: ResourceLosses = {
+    captured: 0,
+    destoyed: 0,
+    repair: 0
+  }
+
+  const resurce_losses: ResourceLossesProgress = {
+    losses_a,
+    losses_d
+  }
 
   // Performance is critical. Precalculate as many things as possible.
   const dice = settings[Setting.DiceMaximum] - settings[Setting.DiceMinimum] + 1
@@ -145,7 +173,7 @@ export const calculateWinRate = (doUpdateCasualties: boolean, settings: Settings
   // Nodes also cache state of units, only store what is absolutely necessary.
   const nodes = [{ status_a: attacker.army, status_d: defender.army, branch: 0, depth: 1 }]
 
-  progressCallback(progress, casualties)
+  progressCallback(progress, casualties, resurce_losses)
 
   const work = () => {
     for (let i = 0; (i < chunkSize) && nodes.length && !interruptSimulation; i++) {
@@ -183,6 +211,10 @@ export const calculateWinRate = (doUpdateCasualties: boolean, settings: Settings
       sumState(current_d, defender.army)
       if (doUpdateCasualties)
         updateCasualties(casualties, fractions[depth], total_a, total_d, current_a, current_d)
+      if (doUpdateResources) {
+        calculateResourceLoss(attacker.army.frontline, attacker.army.defeated, fractions[depth], losses_a, losses_d)
+        calculateResourceLoss(defender.army.frontline, defender.army.defeated, fractions[depth], losses_d, losses_a)
+      }
       result.round += (depth - 1) * phaseLength
       updateProgress(progress, fractions[depth], result)
     }
@@ -192,7 +224,7 @@ export const calculateWinRate = (doUpdateCasualties: boolean, settings: Settings
     }
     if (interruptSimulation)
       progress.calculating = false
-    progressCallback(progress, casualties)
+    progressCallback(progress, casualties, resurce_losses)
     if (nodes.length && !interruptSimulation)
       worker()
   }
@@ -238,6 +270,36 @@ const copyStatus = (status: CombatUnits): CombatUnits => ({
   defeated: status.defeated.map(value => ({ ...value })),
   tactic_bonus: status.tactic_bonus
 })
+
+const REPAIR_PER_MONTH = 0.1
+
+/**
+ * Calculates repair and other resource losses.
+ */
+const calculateResourceLoss = (frontline: Frontline, defeated: Defeated, amount: number, own: ResourceLosses, enemy: ResourceLosses) => {
+  for (let i = 0; i < frontline.length; i++) {
+    const unit = frontline[i]
+    if (!unit)
+      continue
+    own.repair += amount * (unit.definition.max_strength - unit[UnitCalc.Strength]) * unit.definition[UnitCalc.Maintenance] * unit.definition[UnitCalc.Cost] / REPAIR_PER_MONTH
+  }
+  for (let i = 0; i < defeated.length; i++) {
+    const unit = defeated[i]
+    const unit_cost = amount * unit.definition[UnitCalc.Cost]
+    if (unit.state.is_destroyed) {
+      own.destoyed += unit_cost
+      continue
+    }
+    const capture = (unit.state.capture_chance ?? 0.0) - unit.definition[UnitCalc.CaptureResist]
+    const repair = (unit.definition.max_strength - unit[UnitCalc.Strength]) * unit.definition[UnitCalc.Maintenance] * unit_cost / REPAIR_PER_MONTH
+    if (capture <= 0.0) {
+      own.repair += repair
+      continue
+    }
+    own.repair += (1 - capture) * repair
+    own.captured += capture * (unit_cost - repair)
+  }
+}
 
 
 type Winner = Side | null | undefined

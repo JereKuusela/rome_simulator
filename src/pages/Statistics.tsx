@@ -8,7 +8,7 @@ import { getSettings, getSelectedTerrains, mergeUnitTypes, getArmyForCombat } fr
 import { changeSiteParameter, SimulationSpeed } from '../store/settings'
 
 import { toPercent, toNumber, toFlooredPercent } from '../formatters'
-import { calculateWinRate, WinRateProgress, interrupt, CasualtiesProgress, doConversion } from '../combat/simulation'
+import { calculateWinRate, WinRateProgress, interrupt, CasualtiesProgress, doConversion, ResourceLossesProgress, ResourceLosses } from '../combat/simulation'
 import RoundChart from '../components/Charts/RoundChart'
 import CumulativePercentChart from '../components/Charts/CumulativePercentChart'
 import { showProgress, values } from '../utils'
@@ -28,6 +28,8 @@ interface IState extends CasualtiesProgress {
   progress: number
   average_rounds: number
   rounds: { [key: number]: number }
+  losses_a?: ResourceLosses
+  losses_d?: ResourceLosses
 }
 
 const DOTS = 6
@@ -62,7 +64,7 @@ class Statistics extends Component<IProps, IState> {
       attacker_win_chance, defender_win_chance, draw_chance, incomplete, calculating, progress, updates,
       average_rounds, rounds, iterations,
       avg_morale_a, avg_morale_d, avg_strength_a, avg_strength_d, max_morale_a, max_morale_d, max_strength_a, max_strength_d,
-      morale_a, morale_d, strength_a, strength_d
+      morale_a, morale_d, strength_a, strength_d, losses_a, losses_d
     } = this.state
     const { settings } = this.props
     return (
@@ -89,7 +91,7 @@ class Statistics extends Component<IProps, IState> {
             <Grid.Column width='4'>
               <Header textAlign='center'>Speed: {settings[Setting.Performance] || 'Custom'}</Header>
               <SimpleRange
-                min={0} max={4} step={1}
+                min={1} max={5} step={1}
                 value={simulationSpeeds.indexOf(settings[Setting.Performance])}
                 onChange={value => changeSiteParameter(Setting.Performance, simulationSpeeds[value])}
               />
@@ -139,6 +141,7 @@ class Statistics extends Component<IProps, IState> {
             </Table.Row>
           </Table.Body>
         </Table>
+        {losses_a && losses_d ? this.renderResourceLosses(losses_a, losses_d): null}
         {settings[Setting.UpdateCasualties] ?
           <>
             <Table>
@@ -203,7 +206,83 @@ class Statistics extends Component<IProps, IState> {
     )
   }
 
-  update = (update: WinRateProgress, casualties: CasualtiesProgress) => {
+  renderResourceLosses = (losses_a: ResourceLosses, losses_d: ResourceLosses) => {
+    const resource = ' gold'
+    return (
+      <Table>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell />
+            <Table.HeaderCell>
+              Attacker
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              Defender
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          <Table.Row>
+            <Table.Cell>
+              Repair costs
+            </Table.Cell>
+            <Table.Cell>
+              {this.toNumber(this.scale(losses_a.repair))}{resource}
+            </Table.Cell>
+            <Table.Cell>
+              {this.toNumber(this.scale(losses_d.repair))}{resource}
+            </Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>
+              Destroyed costs
+            </Table.Cell>
+            <Table.Cell>
+              {this.toNumber(this.scale(losses_a.destoyed))}{resource}
+            </Table.Cell>
+            <Table.Cell>
+              {this.toNumber(this.scale(losses_d.destoyed))}{resource}
+            </Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>
+              Captured costs
+            </Table.Cell>
+            <Table.Cell>
+              {this.toNumber(this.scale(losses_a.captured))}{resource}
+            </Table.Cell>
+            <Table.Cell>
+              {this.toNumber(this.scale(losses_d.captured))}{resource}
+            </Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>
+              Enemies captured
+            </Table.Cell>
+            <Table.Cell>
+              {this.toNumber(this.scale(-losses_d.captured))}{resource}
+            </Table.Cell>
+            <Table.Cell>
+              {this.toNumber(this.scale(-losses_a.captured))}{resource}
+            </Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>
+              Total costs
+            </Table.Cell>
+            <Table.Cell>
+              {this.toNumber(this.scale(losses_a.repair + losses_a.captured + losses_a.destoyed - losses_d.captured))}{resource}
+            </Table.Cell>
+            <Table.Cell>
+              {this.toNumber(this.scale(losses_d.repair + losses_d.captured + losses_d.destoyed - losses_a.captured))}{resource}
+            </Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </Table>
+    )
+  }
+
+  update = (update: WinRateProgress, casualties: CasualtiesProgress, resources: ResourceLossesProgress) => {
     if (this.willUnmount)
       return
     const { attacker, defender, draws, incomplete, progress, average_rounds, rounds, iterations, calculating } = update
@@ -218,7 +297,8 @@ class Statistics extends Component<IProps, IState> {
       rounds,
       iterations,
       updates: calculating ? (this.state.updates + 1) % DOTS : 0,
-      ...casualties
+      ...casualties,
+      ...resources
     })
   }
 

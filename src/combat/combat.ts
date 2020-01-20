@@ -25,6 +25,7 @@ export interface CombatParticipant {
 }
 export type Frontline = (CombatUnit | null)[]
 export type Reserve = CombatUnit[]
+export type Defeated = CombatUnit[]
 
 export type CombatUnits = {
   readonly frontline: (CombatUnit | null)[]
@@ -78,7 +79,7 @@ export const getCombatUnit = (combatSettings: Settings, casualties_multiplier: n
     [UnitCalc.Morale]: calculateValue(unit, UnitCalc.Morale),
     [UnitCalc.Strength]: calculateValue(unit, UnitCalc.Strength),
     calculated: precalculateUnit(combatSettings, casualties_multiplier, base_damages, terrains, unit_types, unit),
-    state: { target: null, morale_loss: 0, strength_loss: 0, morale_dealt: 0, strength_dealt: 0, damage_dealt: 0, is_defeated: false, total_morale_dealt: 0, total_strength_dealt: 0 },
+    state: { target: null, morale_loss: 0, strength_loss: 0, morale_dealt: 0, strength_dealt: 0, damage_dealt: 0, is_defeated: false, is_destroyed: false, total_morale_dealt: 0, total_strength_dealt: 0 },
     definition: getUnitDefinition(combatSettings, terrains, unit_types, unit)
   }
   return combat_unit
@@ -121,8 +122,10 @@ export interface CombatUnitRoundInfo {
   strength_dealt: number
   damage_dealt: number
   is_defeated: boolean
+  is_destroyed: boolean
   total_morale_dealt: number
   total_strength_dealt: number
+  capture_chance?: number
 }
 
 /**
@@ -145,10 +148,10 @@ export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, mark_de
     removeDefeated(d.army.frontline)
   }
   reinforce(a.army.frontline, a.army.reserve)
-  if (settings[Setting.DefenderAdvantage])
+  if (!settings[Setting.DefenderAdvantage])
     reinforce(d.army.frontline, d.army.reserve)
   pickTargets(a.army.frontline, d.army.frontline, settings)
-  if (!settings[Setting.DefenderAdvantage])
+  if (settings[Setting.DefenderAdvantage])
     reinforce(d.army.frontline, d.army.reserve)
   pickTargets(d.army.frontline, a.army.frontline, settings)
 
@@ -163,8 +166,8 @@ export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, mark_de
   applyLosses(d.army.frontline)
   const minimum_morale = settings[Setting.MinimumMorale]
   const minimum_strength = settings[Setting.MinimumStrength]
-  moveDefeated(a.army.frontline, a.army.defeated, minimum_morale, minimum_strength, mark_defeated, false)
-  moveDefeated(d.army.frontline, d.army.defeated, minimum_morale, minimum_strength, mark_defeated, false)
+  moveDefeated(a.army.frontline, a.army.defeated, minimum_morale, minimum_strength, mark_defeated)
+  moveDefeated(d.army.frontline, d.army.defeated, minimum_morale, minimum_strength, mark_defeated)
 }
 
 /**
@@ -245,15 +248,14 @@ const applyLosses = (frontline: Frontline) => {
 /**
  * Moves defeated units from a frontline to defeated.
  */
-const moveDefeated = (frontline: Frontline, defeated: Reserve, minimum_morale: number, minimum_strength: number, mark_defeated: boolean, damage_defeated: boolean) => {
+const moveDefeated = (frontline: Frontline, defeated: Reserve, minimum_morale: number, minimum_strength: number, mark_defeated: boolean) => {
   for (let i = 0; i < frontline.length; i++) {
     const unit = frontline[i]
     if (!unit)
       continue
     if (unit[UnitCalc.Strength] > minimum_strength && unit[UnitCalc.Morale] > minimum_morale)
       continue
-    if (damage_defeated)
-      unit[UnitCalc.Strength] *= 0.5
+    unit.state.is_destroyed = unit[UnitCalc.Strength] <= minimum_strength
     if (mark_defeated)
       frontline[i] = { ...unit, state: { ...unit.state, is_defeated: true } }
     else
@@ -287,6 +289,7 @@ const attack = (frontline: Frontline, roll: number, tactic_damage_multiplier: nu
     const target = unit.state.target
     if (!target)
       continue
+    target.state.capture_chance = unit.definition[UnitCalc.CaptureChance]
     calculateLosses(unit, target, roll, tactic_damage_multiplier)
   }
 }
