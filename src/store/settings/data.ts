@@ -36,7 +36,7 @@ const getDefaultAnySettings = (): CombatSettings => {
 export const getDefaultSiteSettings = (): SiteSettings => {
   return {
     [Setting.FixExperience]: false,
-    [Setting.DefenderAdvantage]: true,
+    [Setting.DefenderAdvantage]: false,
     [Setting.FixTargeting]: true,
     [Setting.ChunkSize]: 10000,
     [Setting.MaxDepth]: 4,

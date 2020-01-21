@@ -8,7 +8,7 @@ Changelog:
 - Battle: Fixed manual unit adding not working.
 - Battle: Fixed order of naval units in fast planner.
 - Stats: Added average gold losses to naval simulations (from repair, from destroyed and from captured).
-- Countries: Added naval capture chance from general martial.
+- Countries: Added naval capture chance from general martial (0.2% * martial).
 - Countries: Refactored general to be separate entity (first step towards multiarmy battles).
 - Units: Balance changes from 1.3.2 (War Elephants damage against Infantry, Supply Train cost).
 - Units: Added 1 maneuver to Mega-Polyreme (no idea when this was changed).
@@ -23,11 +23,11 @@ Changelog:
 - Settings: Better names and descriptions for all settings.
 - Settings: Applied 20% increase to base damage values.
 - Settings: Removed "Fix damage taken" settings as it is fixed in the game.
+- Settings: Defender's advantage is now disabled by default (people seem to make wrong conclusions because of it).
 
 Todo:
  - Transfer could only show non-base stats for units, terrains and tactics (since base stats are supposed to regenerate?), currently it shows way too much information.
  - Add neutral unit to ease testing.
- - Disable defenders advantage by default (people make wrong conclusions)
  - Refactor simluation to update only single parameter, also parameters split should make more sense
 
 Tags:
