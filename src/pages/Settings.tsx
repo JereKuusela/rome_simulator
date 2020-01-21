@@ -6,7 +6,7 @@ import { changeCombatParameter, changeSiteParameter, Setting, parameterToDescrip
 import { invalidate } from '../store/battle'
 import { AppState } from '../store/index'
 
-import { toArr } from '../utils'
+import { toArr, keys } from '../utils'
 import { DefinitionType, Mode } from '../base_definition'
 
 interface Props { }
@@ -21,7 +21,7 @@ class Settings extends Component<IProps> {
       menuItem: mode, render: () => <Tab.Pane style={{ padding: 0 }}>{this.renderRow(mode, settings, (key, str) => this.onCombatChange(mode, key, str))}</Tab.Pane>
     }))
     return (<>
-      <Tab panes={panes} />
+      <Tab panes={panes} defaultActiveIndex={keys(combatSettings).findIndex(mode => mode === this.props.mode)} />
       {this.renderRow('Shared', siteSettings, this.onSharedChange)}
     </>)
   }
@@ -90,7 +90,7 @@ class Settings extends Component<IProps> {
   }
 
   onSharedChange = (key: keyof SiteSettings, value: Values) => {
-    const { changeSiteParameter } = this.props
+    const { changeSiteParameter, invalidate } = this.props
     changeSiteParameter(key, value)
     invalidate(DefinitionType.Land)
     invalidate(DefinitionType.Naval)
@@ -99,7 +99,8 @@ class Settings extends Component<IProps> {
 
 const mapStateToProps = (state: AppState) => ({
   combatSettings: state.settings.combatSettings,
-  siteSettings: state.settings.siteSettings
+  siteSettings: state.settings.siteSettings,
+  mode: state.settings.mode
 })
 
 const actions = { changeCombatParameter, changeSiteParameter, invalidate }

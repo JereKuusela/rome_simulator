@@ -40,7 +40,6 @@ Tags:
  - Battle stats to show individual units
 
 Settings:
- - Tab based on current mode
  - Better descriptions
  - Show default value
  - Show current change versus default value (for example faster battles, more randomness)
