@@ -64,9 +64,9 @@ class Statistics extends Component<IProps, IState> {
       attacker_win_chance, defender_win_chance, draw_chance, incomplete, calculating, progress, updates,
       average_rounds, rounds, iterations,
       avg_morale_a, avg_morale_d, avg_strength_a, avg_strength_d, max_morale_a, max_morale_d, max_strength_a, max_strength_d,
-      morale_a, morale_d, strength_a, strength_d, losses_a, losses_d
+      morale_a, morale_d, strength_a, strength_d, losses_a, losses_d,
     } = this.state
-    const { settings } = this.props
+    const { settings, changeSiteParameter } = this.props
     return (
       <>
         <Grid>
@@ -92,7 +92,7 @@ class Statistics extends Component<IProps, IState> {
               <Header textAlign='center'>Speed: {settings[Setting.Performance] || 'Custom'}</Header>
               <SimpleRange
                 min={1} max={5} step={1}
-                value={simulationSpeeds.indexOf(settings[Setting.Performance])}
+                value={simulationSpeeds.indexOf(settings[Setting.Performance]) || 3}
                 onChange={value => changeSiteParameter(Setting.Performance, simulationSpeeds[value])}
               />
             </Grid.Column>

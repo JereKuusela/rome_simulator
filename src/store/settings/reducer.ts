@@ -23,7 +23,13 @@ export const getDefaultSettings = () => ({
 
 const settings = getDefaultSettings()
 
-const speedValues = [[], [1.0, 5], [1.0, 4], [1.5, 4], [2.0, 4], [3.0, 3]]
+const speedValues: { [key: string]: number[] } = {
+  [SimulationSpeed.VeryAccurate]: [1.0, 5],
+  [SimulationSpeed.Accurate]: [1.0, 4],
+  [SimulationSpeed.Normal]: [1.5, 4],
+  [SimulationSpeed.Fast]: [2.0, 4],
+  [SimulationSpeed.VeryFast]: [3.0, 3]
+}
 
 class SettingsReducer extends ImmerReducer<typeof settings> {
 
@@ -32,8 +38,7 @@ class SettingsReducer extends ImmerReducer<typeof settings> {
   }
 
   changeSiteParameter(key: keyof SiteSettings, value: number | boolean | string) {
-    if (key === Setting.Performance && value > 0) {
-      value = Math.min(speedValues.length - 1, Math.floor(Number(value)))
+    if (key === Setting.Performance && typeof value === 'string' && speedValues[value]) {
       this.draftState.siteSettings[Setting.PhaseLengthMultiplier] = speedValues[value][0]
       this.draftState.siteSettings[Setting.MaxDepth] = speedValues[value][1]
     }

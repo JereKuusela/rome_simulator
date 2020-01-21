@@ -23,12 +23,12 @@ export enum Setting {
 }
 
 export enum SimulationSpeed {
+  Custom = 'Custom',
   VeryAccurate = 'Very accurate',
   Accurate = 'Accurate',
   Normal = 'Normal',
   Fast = 'Fast',
-  VeryFast = 'Very fast',
-  Custom = 'Custom'
+  VeryFast = 'Very fast'
 }
 
 export const parameterToDescription = (parameter: Setting, value: string | number | boolean): string => {
