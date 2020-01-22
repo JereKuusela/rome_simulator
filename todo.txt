@@ -43,7 +43,6 @@ Settings:
  - Better descriptions
  - Show default value
  - Show current change versus default value (for example faster battles, more randomness)
- - Improved settings: Dropdowns instead of magic values (description updates according to selection).
  - New settings for deployment / reinforcement order/attribute.
  - More sections for settings (at least new section for deployment and reinforcement).
 

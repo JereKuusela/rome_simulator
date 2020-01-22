@@ -6,13 +6,14 @@ interface IProps<T extends string> {
   values: T[]
   onChange?: (value: T) => void
   clearable?: boolean
+  style?: any
 }
 
 
 export default class Dropdown<T extends string> extends Component<IProps<T>> {
 
   render() {
-    const { value, values, clearable, onChange } = this.props
+    const { value, values, clearable, onChange, style } = this.props
     return (
       <DropdownUI
         text={value}
@@ -21,6 +22,8 @@ export default class Dropdown<T extends string> extends Component<IProps<T>> {
         value={value}
         disabled={!onChange}
         onChange={(_, { value }) => onChange && onChange(value as T)}
+        style={style}
+        compact
       >
         <DropdownUI.Menu>
           {

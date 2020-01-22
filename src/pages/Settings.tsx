@@ -2,12 +2,13 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Grid, Input, Table, Header, Checkbox, Tab } from 'semantic-ui-react'
 
-import { changeCombatParameter, changeSiteParameter, Setting, parameterToDescription, SiteSettings, CombatSettings } from '../store/settings'
+import { changeCombatParameter, changeSiteParameter, Setting, parameterToDescription, SiteSettings, CombatSettings, SimulationSpeed } from '../store/settings'
 import { invalidate } from '../store/battle'
 import { AppState } from '../store/index'
 
-import { toArr, keys } from '../utils'
+import { toArr, keys, values } from '../utils'
 import { DefinitionType, Mode } from '../base_definition'
+import Dropdown from '../components/Utils/Dropdown'
 
 interface Props { }
 
@@ -36,7 +37,7 @@ class Settings extends Component<IProps> {
                 <Table basic='very'>
                   <Table.Body>
                     <Table.Row>
-                      <Table.Cell collapsing >
+                      <Table.Cell collapsing style={{ width: 100 }} textAlign='center' >
                         {this.renderSetting(key, value, onChange)}
                       </Table.Cell>
                       <Table.Cell key={key + '_description'} style={{ whiteSpace: 'pre-line' }} >
@@ -59,19 +60,32 @@ class Settings extends Component<IProps> {
 
   renderSetting = <T extends Setting>(key: T, value: Values, onChange: (key: T, str: Values) => void) => {
     if (typeof value === 'number') {
-      return (<Input
-        size='mini'
-        style={{ width: 60 }}
-        defaultValue={value}
-        onChange={(_, { value }) => this.onInputChange(key, value, onChange)}
-      />)
+      return (
+        <Input
+          size='mini'
+          style={{ width: 60 }}
+          defaultValue={value}
+          onChange={(_, { value }) => this.onInputChange(key, value, onChange)}
+        />
+      )
     }
     if (typeof value === 'boolean') {
-      return (<Checkbox
-        checked={value}
-        style={{ width: 60 }}
-        onChange={(_, { checked }) => onChange(key, !!checked)}
-      />)
+      return (
+        <Checkbox
+          checked={value}
+          onChange={(_, { checked }) => onChange(key, !!checked)}
+        />
+      )
+    }
+    if (key === Setting.Performance) {
+      return (
+        <Dropdown
+          value={value}
+          style={{ width: 100 }}
+          values={values(SimulationSpeed)}
+          onChange={value => onChange(key, value)}
+        />
+      )
     }
     return null
   }
