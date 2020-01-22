@@ -8,9 +8,7 @@ import { Grid, Button } from 'semantic-ui-react'
 import Confirmation from '../components/Confirmation'
 import { CountryName } from 'types'
 import { keys } from 'utils'
-import { createCountry, changeCountryName, deleteCountry } from 'reducers/countries'
-import { selectCountry } from 'reducers/settings'
-
+import { createCountry, changeCountryName, deleteCountry, selectCountry } from 'reducers'
 
 interface IState {
   open_create_country: boolean

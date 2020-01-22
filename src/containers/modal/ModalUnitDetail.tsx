@@ -5,8 +5,7 @@ import UnitDetail from 'components/UnitDetail'
 import { ValuesType, DefinitionType } from 'base_definition'
 import { AppState } from 'store/'
 import { getUnitDefinition, mergeUnitTypes, filterTerrainTypes, getMode } from 'store/utils'
-import { invalidateCountry } from 'reducers/battle'
-import { setValue, changeImage, changeMode, changeDeployment, toggleIsLoyal } from 'reducers/units'
+import { setUnitValue, changeUnitImage, changeUnitMode, changeUnitDeployment, toggleIsUnitLoyal, invalidateCountry } from 'reducers'
 
 
 const CUSTOM_VALUE_KEY = 'Custom'
@@ -90,7 +89,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   mode: getMode(state)
 })
 
-const actions = { setValue, changeImage, changeMode, changeDeployment, toggleIsLoyal, invalidateCountry }
+const actions = { setValue: setUnitValue, changeImage: changeUnitImage, changeMode: changeUnitMode, changeDeployment: changeUnitDeployment, toggleIsLoyal: toggleIsUnitLoyal, invalidateCountry }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

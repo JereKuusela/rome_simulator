@@ -8,7 +8,7 @@ import ItemRemover from '../components/ItemRemover'
 import { TacticType } from 'types'
 import { toArr } from 'utils'
 import { filterTactics, getUnitImages, mergeUnitTypes } from 'store/utils'
-import { deleteTactic, addTactic, changeType } from 'reducers/tactics'
+import { deleteTactic, addTactic, changeTacticType } from 'reducers'
 import { DefinitionType } from 'base_definition'
 
 interface IState {
@@ -74,7 +74,7 @@ const mapStateToProps = (state: AppState) => ({
 const mapDispatchToProps = (dispatch: any) => ({
   deleteTactic: (type: TacticType) => dispatch(deleteTactic(type)),
   addTactic: (type: TacticType, mode: DefinitionType) => dispatch(addTactic(type, mode)),
-  changeType: (old_type: TacticType, new_type: TacticType) => dispatch(changeType(old_type, new_type))
+  changeType: (old_type: TacticType, new_type: TacticType) => dispatch(changeTacticType(old_type, new_type))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

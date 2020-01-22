@@ -4,8 +4,7 @@ import { AppState } from '../../store/'
 import TerrainDetail from '../../components/TerrainDetail'
 import { Mode, DefinitionType } from 'base_definition'
 import { TerrainType, LocationType, TerrainValueType } from 'types'
-import { invalidate } from 'reducers/battle'
-import { changeLocation, changeImage, changeMode, setBaseValue } from 'reducers/terrains'
+import { changeTerrainLocation, changeTerrainImage, changeTerrainMode, setTerrainBaseValue, invalidate } from 'reducers'
 
 const CUSTOM_VALUE_KEY = 'Custom'
 
@@ -35,11 +34,11 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchToProps = (dispatch: any) => ({
   setBaseValue: (mode: Mode, type: TerrainType, key: string, attribute: TerrainValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setBaseValue(type, key, attribute, value)) && dispatch(invalidate(mode))
+    !Number.isNaN(value) && dispatch(setTerrainBaseValue(type, key, attribute, value)) && dispatch(invalidate(mode))
   ),
-  changeLocation: (type: TerrainType, location: LocationType) => dispatch(changeLocation(type, location)),
-  changeImage: (type: TerrainType, image: string) => dispatch(changeImage(type, image)),
-  changeMode: (type: TerrainType, mode: DefinitionType) => dispatch(changeMode(type, mode))
+  changeLocation: (type: TerrainType, location: LocationType) => dispatch(changeTerrainLocation(type, location)),
+  changeImage: (type: TerrainType, image: string) => dispatch(changeTerrainImage(type, image)),
+  changeMode: (type: TerrainType, mode: DefinitionType) => dispatch(changeTerrainMode(type, mode))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {

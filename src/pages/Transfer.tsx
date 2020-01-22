@@ -6,7 +6,7 @@ import { values, keys } from 'utils'
 import { ExportKey } from 'types'
 import { exportState, saveToFile } from 'managers/transfer_manager'
 import ConfirmationButton from 'components/ConfirmationButton'
-import { setExportKey, setResetMissing, importState } from 'reducers/transfer'
+import { setExportKey, setResetMissing, importState } from 'reducers'
 import { restoreBaseGlobalStats, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits, setIds } from 'store/transforms'
 import { resetMissing } from 'store/utils'
 

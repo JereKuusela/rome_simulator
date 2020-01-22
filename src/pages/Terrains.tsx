@@ -8,7 +8,7 @@ import ItemRemover from '../components/ItemRemover'
 import { TerrainType } from 'types'
 import { toArr } from 'utils'
 import { filterTerrains } from 'store/utils'
-import { deleteTerrain, addTerrain, changeType } from 'reducers/terrains'
+import { deleteTerrain, addTerrain, changeTerrainType } from 'reducers'
 import { DefinitionType } from 'base_definition'
 
 interface IState {
@@ -71,7 +71,7 @@ const mapStateToProps = (state: AppState) => ({
 const mapDispatchToProps = (dispatch: any) => ({
   deleteTerrain: (type: TerrainType) => dispatch(deleteTerrain(type)),
   addTerrain: (type: TerrainType, mode: DefinitionType) => dispatch(addTerrain(type, mode)),
-  changeType: (old_type: TerrainType, new_type: TerrainType) => dispatch(changeType(old_type, new_type))
+  changeType: (old_type: TerrainType, new_type: TerrainType) => dispatch(changeTerrainType(old_type, new_type))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

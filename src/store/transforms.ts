@@ -2,8 +2,7 @@ import produce from 'immer'
 import { TacticDefinitions, getDefaultTactic, TerrainDefinitions, getDefaultTerrain, getDefaultUnit, GlobalKey, getDefaultGlobal } from 'data'
 import { map, forEach } from 'utils'
 import { mergeValues, clearAllValues } from 'definition_values'
-import { GlobalStats, Units } from 'reducers/units'
-import { ModeState } from 'reducers/battle'
+import { GlobalStats, Units, ModeState } from 'reducers'
 import { getNextId } from 'army_utils'
 
 

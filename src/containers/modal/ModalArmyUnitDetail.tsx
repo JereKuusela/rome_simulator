@@ -11,7 +11,7 @@ import { ValuesType } from 'base_definition'
 import { CombatUnit } from 'combat/combat'
 import { addValues } from 'definition_values'
 import { filterUnitTypesByCountry, filterTerrainTypes, findUnit, getCombatUnitForEachRound } from 'store/utils'
-import { editUnit, deleteUnit, invalidateCountry, setValue, changeType, toggleLoyal } from 'reducers/battle'
+import { editCohort, deleteCohort, invalidateCountry, setCohortValue, changeCohortType, toggleCohortLoyal } from 'reducers'
 
 const CUSTOM_VALUE_KEY = 'Unit'
 
@@ -119,7 +119,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   unit: convertUnit(findUnit(state, props.side, props.id), getCombatUnitForEachRound(state, props.side, props.id) )
 })
 
-const actions = { editUnit, deleteUnit, invalidateCountry, setValue, changeType, toggleLoyal }
+const actions = { editUnit: editCohort, deleteUnit: deleteCohort, invalidateCountry, setValue: setCohortValue, changeType: changeCohortType, toggleLoyal: toggleCohortLoyal }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

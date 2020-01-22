@@ -8,7 +8,7 @@ import { toArr } from 'utils'
 import { getNextId } from 'army_utils'
 import { AppState } from 'store/'
 import { getUnitDefinitions } from 'store/utils'
-import { selectUnit, invalidate } from 'reducers/battle'
+import { selectCohort, invalidate } from 'reducers'
 
 
 interface Props {
@@ -52,7 +52,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   mode: state.settings.mode
 })
 
-const actions = { selectUnit, invalidate }
+const actions = { selectUnit: selectCohort, invalidate }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

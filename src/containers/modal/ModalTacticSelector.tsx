@@ -12,7 +12,7 @@ import { calculateTactic } from 'combat/combat'
 import { toPercent, toSignedPercent } from 'formatters'
 import { calculateValue } from 'definition_values'
 import { getCurrentCombat, filterTactics, getSelectedTactic, getCountry } from 'store/utils'
-import { selectTactic, invalidate } from 'reducers/battle'
+import { selectTactic, invalidate } from 'reducers'
 
 type Props = {
   side?: Side

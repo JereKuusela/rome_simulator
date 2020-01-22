@@ -41,12 +41,12 @@ class TerrainsReducer extends ImmerReducer<TerrainDefinitions> {
 
 const actions = createActionCreators(TerrainsReducer)
 
-export const setBaseValue = actions.setBaseValue
+export const setTerrainBaseValue = actions.setBaseValue
 export const deleteTerrain = actions.deleteTerrain
 export const addTerrain = actions.addTerrain
-export const changeType = actions.changeType
-export const changeLocation = actions.changeLocation
-export const changeImage = actions.changeImage
-export const changeMode = actions.changeMode
+export const changeTerrainType = actions.changeType
+export const changeTerrainLocation = actions.changeLocation
+export const changeTerrainImage = actions.changeImage
+export const changeTerrainMode = actions.changeMode
 
 export const terrainsReducer = createReducerFunction(TerrainsReducer, terrainDefinitions)

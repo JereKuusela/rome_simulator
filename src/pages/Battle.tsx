@@ -24,12 +24,9 @@ import { GeneralStats } from 'managers/army_manager'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
-    invalidate, invalidateCountry, selectArmy, selectUnit, setFlankSize, setRoll, toggleRandomRoll,
-    undo
-} from 'reducers/battle'
-import { battle, refreshBattle, setSeed } from 'reducers/combat'
-import { setGeneralMartial } from 'reducers/countries'
-import { importState } from 'reducers/transfer'
+    invalidate, invalidateCountry, selectArmy, selectCohort, setFlankSize, setRoll, toggleRandomRoll,
+    undo, battle, refreshBattle, setSeed, setGeneralMartial, importState
+} from 'reducers'
 import { Button, Checkbox, Divider, Grid, Header, Image, Input, Table } from 'semantic-ui-react'
 import { AppState } from 'store/index'
 import {
@@ -399,7 +396,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   setFlankSize: (mode: Mode, name: CountryName, size: number) => dispatch(setFlankSize(mode, name, size)) && dispatch(invalidate(mode)),
   selectArmy: (mode: Mode, type: Side, name: CountryName) => dispatch(selectArmy(mode, type, name)) && dispatch(invalidate(mode)),
   removeUnit: (mode: Mode, name: CountryName, type: ArmyType, column: number) => (
-    dispatch(selectUnit(mode, name, type, column, null))
+    dispatch(selectCohort(mode, name, type, column, null))
   ),
   setSeed: (mode: Mode, seed: number) => dispatch(setSeed(mode, seed)) && dispatch(invalidate(mode)),
   refreshBattle: (mode: Mode) => dispatch(refreshBattle(mode)),

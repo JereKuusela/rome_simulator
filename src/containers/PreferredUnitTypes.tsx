@@ -4,7 +4,7 @@ import { Image, Table, Input } from 'semantic-ui-react'
 
 import { AppState } from '../store/'
 import { getCountry, getRowTypes, getFlankSize, getMode, getUnitDefinitionsBySide } from '../store/utils'
-import { setFlankSize } from 'reducers/battle'
+import { setFlankSize } from 'reducers'
 
 import ModalRowTypeSelector from './modal/ModalRowTypeSelector'
 import { RowType, Side } from 'types'

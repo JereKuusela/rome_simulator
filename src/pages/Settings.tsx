@@ -8,8 +8,7 @@ import Dropdown from '../components/Utils/Dropdown'
 import { toArr, keys, values } from 'utils'
 import { Setting, parameterToDescription, SimulationSpeed, CombatSettings, SiteSettings } from 'types'
 import { Mode, DefinitionType } from 'base_definition'
-import { changeCombatParameter, changeSiteParameter } from 'reducers/settings'
-import { invalidate } from 'reducers/battle'
+import { changeCombatParameter, changeSiteParameter, invalidate } from 'reducers'
 
 interface Props { }
 

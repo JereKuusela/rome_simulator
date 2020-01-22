@@ -3,7 +3,7 @@ import { Button, Header, Segment } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { saveToFile, exportState } from 'managers/transfer_manager'
-import { reset } from 'reducers/transfer'
+import { reset } from 'reducers'
 
 type State = {
   hasError: boolean

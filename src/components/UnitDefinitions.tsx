@@ -18,7 +18,7 @@ import IconManpower from '../images/manpower.png'
 import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
 import IconAttrition from '../images/attrition.png'
-import { UnitDefinitions as Units } from 'reducers/units'
+import { UnitDefinitions as Units } from 'reducers'
 
 interface IProps {
   mode: Mode

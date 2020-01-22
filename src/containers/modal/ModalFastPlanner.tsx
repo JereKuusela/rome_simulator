@@ -7,14 +7,11 @@ import ArmyCosts from '../../components/ArmyCosts'
 import { UnitType, BaseReserve, Side, CountryName, BaseUnit } from 'types'
 import { mergeBaseUnitsWithDefinitions, getNextId } from 'army_utils'
 import WearinessRange, { UnitCalcValues } from 'components/WearinessRange'
-import { doRemoveReserveUnits, doAddReserveUnits } from 'reducers/battle'
+import { doRemoveReserveUnits, doAddReserveUnits, changeWeariness, addReserveUnits, removeReserveUnits, clearUnits, invalidate } from 'reducers'
 import { forEach, mapRange, toArr, round, randomWithinRange } from 'utils'
 import { addValues } from 'definition_values'
 import { ValuesType } from 'base_definition'
 import { getParticipant, getBaseUnits, filterUnitTypesBySide, getUnitDefinitionsBySide, getUnitImages } from 'store/utils'
-import { addReserveUnits, removeReserveUnits, clearUnits, invalidate } from 'reducers/battle'
-import { changeWeariness } from 'reducers/settings'
-
 
 type Units = { [key in UnitType]: number }
 

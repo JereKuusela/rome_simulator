@@ -7,7 +7,7 @@ import ModalGlobalStatsDetail from '../containers/modal/ModalGlobalStatsDetail'
 import { AppState } from '../store/index'
 import { mergeUnitTypes, filterTerrainTypes, getUnitDefinitions, getBaseDefinition, getUnitImages } from '../store/utils'
 import { DefinitionType } from 'base_definition'
-import { addUnit, deleteUnit, changeType } from 'reducers/units'
+import { addUnit, deleteUnit, changeUnitType } from 'reducers'
 import UnitDefinitions from '../components/UnitDefinitions'
 import ItemRemover from '../components/ItemRemover'
 import ValueModal from '../components/ValueModal'
@@ -111,7 +111,7 @@ const mapStateToProps = (state: AppState) => ({
 const mapDispatchToProps = (dispatch: any) => ({
   deleteUnit: (country: CountryName, type: UnitType) => dispatch(deleteUnit(country, type)),
   addUnit: (country: CountryName, mode: DefinitionType, type: UnitType) => dispatch(addUnit(country, mode, type)),
-  changeType: (country: CountryName, old_type: UnitType, new_type: UnitType) => dispatch(changeType(country, old_type, new_type))
+  changeType: (country: CountryName, old_type: UnitType, new_type: UnitType) => dispatch(changeUnitType(country, old_type, new_type))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

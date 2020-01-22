@@ -11,7 +11,7 @@ import { toPercent, toNumber, toFlooredPercent } from 'formatters'
 import SimpleRange from 'components/SimpleRange'
 import RoundChart from 'components/Charts/RoundChart'
 import CumulativePercentChart from 'components/Charts/CumulativePercentChart'
-import { changeSiteParameter } from 'reducers/settings'
+import { changeSiteParameter } from 'reducers'
 
 interface Props { }
 

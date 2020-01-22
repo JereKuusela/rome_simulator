@@ -1,4 +1,4 @@
-import { GlobalDefinitions, UnitDefinitions } from 'reducers/units'
+import { GlobalDefinitions, UnitDefinitions } from 'reducers'
 import { ValuesType, DefinitionType, Mode } from 'base_definition'
 import { UnitType, UnitDefinition, UnitCalc, UnitValueType, UnitDeployment, TerrainType } from 'types'
 import { addValues } from 'definition_values'

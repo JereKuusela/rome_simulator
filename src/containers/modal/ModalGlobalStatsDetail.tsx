@@ -7,8 +7,7 @@ import { AppState } from '../../store/'
 import { CountryName, UnitType, Unit, UnitValueType } from 'types'
 import { ValuesType } from 'base_definition'
 import { getBaseDefinition } from 'store/utils'
-import { setGlobalValue, toggleGlobalIsLoyal } from 'reducers/units'
-import { invalidateCountry } from 'reducers/battle'
+import { setGlobalValue, toggleGlobalIsLoyal, invalidateCountry } from 'reducers'
 
 const CUSTOM_VALUE_KEY = 'Global'
 

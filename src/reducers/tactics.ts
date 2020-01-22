@@ -37,11 +37,11 @@ class TacticsReducer extends ImmerReducer<TacticDefinitions> {
 
 const actions = createActionCreators(TacticsReducer)
 
-export const setBaseValue = actions.setBaseValue
+export const setTacticBaseValue = actions.setBaseValue
 export const deleteTactic = actions.deleteTactic
 export const addTactic = actions.addTactic
-export const changeType = actions.changeType
-export const changeImage = actions.changeImage
-export const changeMode = actions.changeMode
+export const changeTacticType = actions.changeType
+export const changeTacticImage = actions.changeImage
+export const changeTacticMode = actions.changeMode
 
 export const tacticsReducer = createReducerFunction(TacticsReducer, tacticDefinitions)

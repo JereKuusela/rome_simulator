@@ -248,12 +248,12 @@ class BattleReducer extends ImmerReducer<ModeState> {
 
 const actions = createActionCreators(BattleReducer)
 
-export const selectUnit = actions.selectUnit
-export const editUnit = actions.editUnit
-export const setValue = actions.setValue
-export const changeType = actions.changeType
-export const deleteUnit = actions.deleteUnit
-export const toggleLoyal = actions.toggleLoyal
+export const selectCohort = actions.selectUnit
+export const editCohort = actions.editUnit
+export const setCohortValue = actions.setValue
+export const changeCohortType = actions.changeType
+export const deleteCohort = actions.deleteUnit
+export const toggleCohortLoyal = actions.toggleLoyal
 export const removeReserveUnits = actions.removeReserveUnits
 export const addReserveUnits = actions.addReserveUnits
 export const selectTerrain = actions.selectTerrain

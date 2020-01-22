@@ -9,7 +9,7 @@ import { map, filter, toArr } from 'utils'
 import { calculateValue } from 'definition_values'
 import { addSign } from 'formatters'
 import { filterTerrains, getMode } from 'store/utils'
-import { selectTerrain, invalidate } from 'reducers/battle'
+import { selectTerrain, invalidate } from 'reducers'
 
 type Props = {
   index?: number

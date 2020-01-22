@@ -132,14 +132,14 @@ class GlobalStatsReducer extends ImmerReducer<GlobalStats> {
 
 const unitsActions = createActionCreators(UnitsReducer)
 
-export const setValue = unitsActions.setValue
+export const setUnitValue = unitsActions.setValue
 export const deleteUnit = unitsActions.deleteUnit
 export const addUnit = unitsActions.addUnit
-export const changeType = unitsActions.changeType
-export const changeImage = unitsActions.changeImage
-export const changeMode = unitsActions.changeMode
-export const changeDeployment = unitsActions.changeDeployment
-export const toggleIsLoyal = unitsActions.toggleIsLoyal
+export const changeUnitType = unitsActions.changeType
+export const changeUnitImage = unitsActions.changeImage
+export const changeUnitMode = unitsActions.changeMode
+export const changeUnitDeployment = unitsActions.changeDeployment
+export const toggleIsUnitLoyal = unitsActions.toggleIsLoyal
 
 const unitsBaseReducer = createReducerFunction(UnitsReducer, unitDefinitions)
 

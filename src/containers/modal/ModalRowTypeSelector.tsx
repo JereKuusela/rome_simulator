@@ -5,7 +5,7 @@ import { CountryName, RowType, UnitType } from 'types'
 import ItemRemover from 'components/ItemRemover'
 import ItemSelector from 'components/ItemSelector'
 import { AppState } from 'store/'
-import { setRowType, invalidate } from 'reducers/battle'
+import { setRowType, invalidate } from 'reducers'
 import { toArr } from 'utils'
 import { getUnitDefinitions } from 'store/utils'
 
