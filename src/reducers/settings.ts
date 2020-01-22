@@ -9,7 +9,6 @@ import { createCountry, deleteCountry, changeCountryName } from './countries'
 export const getDefaultSettings = () => ({
   combatSettings: { [DefinitionType.Land]: getDefaultLandSettings(), [DefinitionType.Naval]: getDefaultNavalSettings() },
   siteSettings: getDefaultSiteSettings(),
-  simple_mode: true,
   mode: DefinitionType.Land as Mode,
   country: CountryName.Country1,
   accordions: {} as ObjSet,
@@ -44,10 +43,6 @@ class SettingsReducer extends ImmerReducer<typeof settings> {
       this.draftState.siteSettings[Setting.Performance] = SimulationSpeed.Custom
     }
     this.draftState.siteSettings[key] = value as never
-  }
-
-  toggleSimpleMode() {
-    this.draftState.simple_mode = !this.state.simple_mode
   }
 
   toggleMode() {
@@ -92,7 +87,6 @@ export const changeSiteParameter = actions.changeSiteParameter
 export const selectCountry = actions.selectCountry
 export const toggleAccordion = actions.toggleAccordion
 export const toggleMode = actions.toggleMode
-export const toggleSimpleMode = actions.toggleSimpleMode
 export const changeWeariness = actions.changeWeariness
 
 export const reducer = createReducerFunction(SettingsReducer, settings)
