@@ -1,7 +1,6 @@
 import { UnitType } from '../../store/units'
 import { Setting } from '../../store/settings'
-import { verifyType, getRowTypes, getUnit, every_type, setFlankSizes, initInfo, TestInfo, initSide, testCombat, testReinforce } from './utils'
-import { Side } from '../../store/battle'
+import { getRowTypes, getUnit, every_type, setFlankSizes, initInfo, TestInfo, testReinforce } from './utils'
 import { resize } from '../../utils'
 
 describe('reinforcement', () => {

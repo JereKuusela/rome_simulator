@@ -10,7 +10,7 @@ import {
   GovermentType, ReligionType, TraitDefinition, EconomyDefinition, LawDefinition, IdeaDefinition, AbilityDefinition, ScopeType
 } from '../store/data'
 import {
-  enableModifiers, clearModifiers, CountryName, selectGovernment, selectReligion, selectCulture, setOmenPower,
+  enableModifiers, clearModifiers, selectGovernment, selectReligion, selectCulture, setOmenPower,
   setHasGeneral, setMilitaryPower, setOfficeDiscipline, setOfficeMorale, setGeneralMartial
 } from '../store/countries'
 import { DefinitionType, ValuesType } from '../base_definition'
@@ -22,6 +22,7 @@ import ConfirmationButton from '../components/ConfirmationButton'
 import StyledNumber from '../components/Utils/StyledNumber'
 import { addSignWithZero } from '../formatters'
 import { getGeneral } from '../store/utils'
+import { CountryName } from '../enums'
 
 const TRADE_COLUMNS = 4
 const HERITAGE_COLUMNS = 4

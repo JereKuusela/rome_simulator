@@ -2,9 +2,9 @@ import { BaseUnit, UnitType, Unit } from '../units/actions'
 import { TerrainType } from '../terrains/actions'
 import { TacticType } from '../tactics/actions'
 import { DefinitionType, Mode } from '../../base_definition'
-import { CountryName } from '../countries'
 import { ObjSet } from '../../utils'
 import { CombatUnits } from '../../combat/combat'
+import { CountryName } from '../../enums'
 
 export enum RowType {
   Primary = 'Primary',

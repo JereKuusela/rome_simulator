@@ -1,12 +1,13 @@
 import { ImmerReducer, createActionCreators, createReducerFunction, Actions } from 'immer-reducer'
 import { Setting, SimulationSpeed, SiteSettings, CombatSettings } from './actions'
 import { getDefaultLandSettings, getDefaultNavalSettings, getDefaultSiteSettings } from './data'
-import { CountryName, createCountry, deleteCountry, changeCountryName } from '../countries'
+import { createCountry, deleteCountry, changeCountryName } from '../countries'
 import { DefinitionType, Mode } from '../../base_definition'
 import { ObjSet, has } from '../../utils'
 import { Side } from '../battle'
 import { UnitCalc } from '../units'
 import { WearinessValues } from '../../components/WearinessRange'
+import { CountryName } from '../../enums'
 
 export const getDefaultSettings = () => ({
   combatSettings: { [DefinitionType.Land]: getDefaultLandSettings(), [DefinitionType.Naval]: getDefaultNavalSettings() },

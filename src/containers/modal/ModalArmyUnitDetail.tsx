@@ -8,12 +8,12 @@ import UnitDetail from '../../components/UnitDetail'
 import { AppState } from '../../store/'
 import { UnitType, ValueType, Unit, UnitCalc } from '../../store/units'
 import { editUnit, deleteUnit, setValue, changeType, invalidateCountry, Side, toggleLoyal } from '../../store/battle'
-import { CountryName } from '../../store/countries'
 import { filterTerrainTypes, filterUnitTypesByCountry, findUnit, getCombatUnitForEachRound } from '../../store/utils'
 
 import { ValuesType } from '../../base_definition'
 import { CombatUnit } from '../../combat/combat'
 import { addValues } from '../../definition_values'
+import { CountryName } from '../../enums'
 
 const CUSTOM_VALUE_KEY = 'Unit'
 

@@ -6,11 +6,12 @@ import {
 import { BaseUnit, UnitType, ValueType } from '../units'
 import { TerrainType } from '../terrains'
 import { DefinitionType, Mode, ValuesType } from '../../base_definition'
-import { CountryName, changeCountryName, deleteCountry, createCountry } from '../countries'
+import { changeCountryName, deleteCountry, createCountry } from '../countries'
 import { TacticType } from '../tactics';
 import { keys, toArr, forEach, arrGet } from '../../utils'
 import { findLastIndex} from 'lodash'
 import { addValues } from '../../definition_values'
+import { CountryName } from '../../enums'
 
 export interface Battle {
   armies: Armies

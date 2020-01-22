@@ -1,17 +1,11 @@
 import { UnitType, UnitCalc, } from '../../store/units'
-import { setCenterUnits, getUnit, initInfo, TestInfo, getDefinitions, every_type } from './utils'
-import { calculateWinRate } from '../simulation'
-import { getDefaultTactics } from '../../store/tactics'
-import { CountryName } from '../../store/countries'
-import { addValues, ValuesType } from '../../base_definition'
-import { toPercent } from '../../formatters'
-import { getDefaultSimulationSettings } from '../../store/settings'
+import { setCenterUnits, getUnit, initInfo, TestInfo, every_type } from './utils'
+import { ValuesType } from '../../base_definition'
+import { addValues } from '../../definition_values'
 
 describe('1 vs 1', () => {
-  const tactics = getDefaultTactics()
   const archer = getUnit(UnitType.Archers)
   const cavalry = getUnit(UnitType.LightCavalry)
-  const simulation = getDefaultSimulationSettings()
 
   let info: TestInfo
   beforeEach(() => { info = initInfo() })

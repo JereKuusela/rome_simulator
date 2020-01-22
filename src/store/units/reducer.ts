@@ -4,12 +4,13 @@ import {
   ValueType,
   UnitDeployment
 } from './actions'
-import { CountryName, enableModifiers, clearModifiers, createCountry, deleteCountry, changeCountryName } from '../countries'
+import { enableModifiers, clearModifiers, createCountry, deleteCountry, changeCountryName } from '../countries'
 import { DefinitionType, ValuesType, Mode } from '../../base_definition'
 import { addValues, regenerateValues, clearValues, clearAllValues } from '../../definition_values'
 import { ImmerReducer, createActionCreators, createReducerFunction, Actions } from 'immer-reducer'
 import { Modifier, ScopeType } from '../data'
 import { map } from '../../utils'
+import { CountryName } from '../../enums'
 
 export type GlobalStats = { [key in CountryName]: GlobalDefinitions }
 export type GlobalDefinitions = { [key in DefinitionType.Land | DefinitionType.Naval]: UnitDefinition }

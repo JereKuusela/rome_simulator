@@ -1,20 +1,21 @@
+
 import { Army, Participant, RowType, Side, getDefaultParticipant, getDefaultArmy } from '../../store/battle'
 import { TacticType, getDefaultTactics, TacticCalc } from '../../store/tactics'
 import { BaseUnit, UnitCalc, UnitType, getDefaultUnits, getDefaultGlobals } from '../../store/units'
-import { calculateValue, mergeValues, DefinitionType } from '../../base_definition'
+import { DefinitionType } from '../../base_definition'
 import { map, mapRange } from '../../utils'
-import { CountryName } from '../../store/countries'
 import { calculateTotalRoll } from '../combat_utils'
 import { getDefaultLandSettings, Setting, Settings, getDefaultSiteSettings } from '../../store/settings'
 import { TerrainDefinition, TerrainType, getDefaultTerrains } from '../../store/terrains'
-import { doBattleFast, CombatParticipant, CombatUnit, CombatUnitRoundInfo } from '../combat'
+import { doBattleFast, CombatParticipant, CombatUnit } from '../combat'
 import { getBaseDamages, convertUnits } from '../simulation'
 import { deploy, sortReserve } from '../deployment'
+import { mergeValues, calculateValue } from '../../definition_values'
+import { CountryName } from '../../enums'
 
 const global_stats = getDefaultGlobals()[DefinitionType.Land]
 const units = map(getDefaultUnits(), unit => mergeValues(unit, global_stats))
 export const getDefinitions = () => ({ [CountryName.Country1]: units, [CountryName.Country2]: units })
-const definitions = getDefinitions()
 const tactics = getDefaultTactics()
 const terrains = getDefaultTerrains()
 

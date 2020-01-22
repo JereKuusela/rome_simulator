@@ -5,11 +5,11 @@ import UnitDetail from '../../components/UnitDetail'
 
 import { AppState } from '../../store/'
 import { UnitType, setGlobalValue, ValueType, Unit, toggleGlobalIsLoyal } from '../../store/units'
-import { CountryName } from '../../store/countries'
 import { invalidateCountry } from '../../store/battle'
 
 import { ValuesType } from '../../base_definition'
 import { getBaseDefinition } from '../../store/utils'
+import { CountryName } from '../../enums'
 
 const CUSTOM_VALUE_KEY = 'Global'
 

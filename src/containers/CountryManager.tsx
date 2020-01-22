@@ -4,11 +4,12 @@ import Dropdown from '../components/Utils/Dropdown'
 import ValueDropdownModal from '../components/ValueDropdownModal'
 import ValueModal from '../components/ValueModal'
 import { AppState } from '../store/'
-import { CountryName, createCountry, changeCountryName, deleteCountry } from '../store/countries'
+import { createCountry, changeCountryName, deleteCountry } from '../store/countries'
 import { Grid, Button } from 'semantic-ui-react'
 import { selectCountry } from '../store/settings'
 import Confirmation from '../components/Confirmation'
 import { keys } from '../utils'
+import { CountryName } from '../enums'
 
 
 interface IState {

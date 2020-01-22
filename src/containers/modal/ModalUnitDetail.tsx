@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { UnitType, ValueType, setValue, changeImage, changeMode, Unit, changeDeployment, toggleIsLoyal, UnitDeployment } from '../../store/units'
 import { AppState } from '../../store/'
-import { CountryName } from '../../store/countries'
 import { ValuesType, DefinitionType } from '../../base_definition'
 import UnitDetail from '../../components/UnitDetail'
 import { invalidateCountry } from '../../store/battle'
 import { mergeUnitTypes, filterTerrainTypes, getUnitDefinition, getMode } from '../../store/utils'
+import { CountryName } from '../../enums'
 
 const CUSTOM_VALUE_KEY = 'Custom'
 

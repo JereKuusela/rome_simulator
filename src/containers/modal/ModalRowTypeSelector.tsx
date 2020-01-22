@@ -7,11 +7,11 @@ import { AppState } from '../../store/'
 import { setRowType, RowType, invalidate } from '../../store/battle'
 import { getUnitDefinitions } from '../../store/utils'
 
-import { CountryName } from '../../store/countries'
 import { toArr } from '../../utils'
 
 import ItemSelector from '../../components/ItemSelector'
 import ItemRemover from '../../components/ItemRemover'
+import { CountryName } from '../../enums'
 
 type Props = {
   country: CountryName

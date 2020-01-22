@@ -10,8 +10,8 @@ import { UnitType, addUnit, deleteUnit, changeType } from '../store/units'
 import UnitDefinitions from '../components/UnitDefinitions'
 import ItemRemover from '../components/ItemRemover'
 import ValueModal from '../components/ValueModal'
-import { CountryName } from '../store/countries'
 import CountryManager from '../containers/CountryManager'
+import { CountryName } from '../enums'
 
 interface IState {
   modal_country: CountryName | undefined

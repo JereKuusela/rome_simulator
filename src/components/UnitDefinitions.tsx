@@ -7,7 +7,6 @@ import VersusList from './VersusList'
 
 import { UnitType, UnitDefinition, UnitCalc, ValueType, UnitDefinitions as Units } from '../store/units'
 import { TerrainType } from '../store/terrains'
-import { CountryName } from '../store/countries'
 import { getImage, DefinitionType, Mode } from '../base_definition'
 import { toSignedPercent, toNumber, hideZero, toPercent, toManpower } from '../formatters'
 import { toArr } from '../utils'
@@ -21,6 +20,7 @@ import IconMorale from '../images/morale.png'
 import IconAttrition from '../images/attrition.png'
 import { mergeValues, calculateValue, calculateBase, calculateModifier, calculateLoss } from '../definition_values'
 import { unitSorter } from '../managers/army_manager'
+import { CountryName } from '../enums'
 
 interface IProps {
   mode: Mode

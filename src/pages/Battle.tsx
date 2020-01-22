@@ -18,7 +18,7 @@ import ModalFastPlanner from '../containers/modal/ModalFastPlanner'
 import { Mode } from '../base_definition'
 import { getSettings, getBattle, getParticipant, resetMissing, getGeneral, getCountry } from '../store/utils'
 import { addSign } from '../formatters'
-import { CountryName, setGeneralMartial } from '../store/countries'
+import { setGeneralMartial } from '../store/countries'
 import { Setting } from '../store/settings'
 import IconTerrain from '../images/terrain.png'
 import IconGeneral from '../images/military_power.png'
@@ -29,6 +29,7 @@ import Stats from '../containers/Stats'
 import { importState } from '../store/transfer'
 import ConfirmationButton from '../components/ConfirmationButton'
 import { GeneralStats } from '../managers/army_manager'
+import { CountryName } from '../enums'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null

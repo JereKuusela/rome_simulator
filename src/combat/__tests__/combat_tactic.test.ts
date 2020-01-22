@@ -1,7 +1,8 @@
 import { TacticType } from '../../store/tactics'
 import { UnitType, UnitCalc } from '../../store/units'
-import { addValues, ValuesType } from '../../base_definition'
+import { ValuesType } from '../../base_definition'
 import { getUnit, TestInfo, initInfo, setCenterUnits, testCombat, initSide, setTactics } from './utils'
+import { addValues } from '../../definition_values'
 
 describe('tactics', () => {
   const archer = addValues(getUnit(UnitType.Archers), ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.2]])

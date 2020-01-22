@@ -4,12 +4,7 @@ import { ObjSet, map } from '../../utils'
 import { ValueType, GeneralCalc, UnitCalc, UnitType } from '../units'
 import { regenerateValues, ValuesType, calculateValue, clearAllValues, BaseDefinitionValues, DefinitionValues, addValues } from '../../definition_values'
 import { DefinitionType } from '../../base_definition'
-
-export enum CountryName {
-  Country1 = 'Country 1',
-  Country2 = 'Country 2'
-}
-
+import { CountryName } from '../../enums'
 
 export interface General extends BaseDefinitionValues<GeneralCalc> {
   enabled: boolean

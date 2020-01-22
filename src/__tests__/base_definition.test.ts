@@ -1,10 +1,12 @@
-import { getImage } from '../base_definition'
-import { mergeValues, addValues, ValuesType, clearAllValues, clearValues, regenerateValues, calculateValue, calculateValueWithoutLoss, calculateBase, calculateModifier, calculateLoss, strengthToValue, DefinitionType, explainShort, explain, Definition, getValue } from '../definition_values'
+import { getImage, DefinitionType } from '../base_definition'
+import { mergeValues, addValues, ValuesType, clearAllValues, clearValues, regenerateValues, calculateValue, calculateValueWithoutLoss, calculateBase, calculateModifier, calculateLoss, explainShort, getValue, BaseDefinitionValues } from '../definition_values'
 import EmptyIcon from '../images/empty.png'
 import UnknownIcon from '../images/unknown.png'
 import { size } from 'lodash'
+import { strengthToValue } from '../formatters'
 
 type Values = { [key: string]: { [key: string]: number } }
+type BD = BaseDefinitionValues<any>
 
 describe('getImage', () => {
   it('returns image', () => {
@@ -57,15 +59,15 @@ const initLossModifier = (value1: number, value2?: number) => (
 
 describe('mergeValues', () => {
   it('returns first when only', () => {
-    const result = mergeValues({}, undefined) as any
+    const result = mergeValues({ type: 'test' } as BD, undefined) as any
     expect(result.type).toEqual('test')
   })
   it('returns second when only', () => {
-    const result = mergeValues(undefined, {}) as any
+    const result = mergeValues(undefined, { type: 'test' } as BD) as any
     expect(result.type).toEqual('test')
   })
   it('returns first when both', () => {
-    const result = mergeValues({ type: 'test1', image: '' }, { type: 'test2', image: '' })
+    const result = mergeValues({ type: 'test1' } as BD, { type: 'test2' } as BD) as any
     expect(result.type).toEqual('test1')
   })
   it('generates empty values', () => {
@@ -377,7 +379,7 @@ describe('getValue', () => {
 
 describe('explainShort', () => {
   it('works for undefined', () => {
-    const result = explainShort({ type: 'test', image: '' }, 'attribute')
+    const result = explainShort({}, 'attribute')
     expect(result).toEqual('')
   })
   it('works for missing', () => {

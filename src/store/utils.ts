@@ -7,7 +7,7 @@ import { TerrainType, TerrainDefinition, LocationType } from "./terrains/actions
 import { UnitType, UnitDefinition, BaseUnit, Unit } from "./units/actions"
 import { Battle, getDefaultMode, getDefaultBattle } from "./battle/reducer"
 import { Side, BaseUnits, Participant, Units, RowTypes, ArmyType } from "./battle/actions"
-import { CountryName, getDefaultCountryDefinitions } from "./countries"
+import { getDefaultCountryDefinitions } from "./countries"
 import { getDefaultSettings, Settings } from "./settings"
 import { UnitDefinitions, getDefaultBaseDefinitions, getDefaultUnitDefinitions } from "./units"
 import { TerrainDefinitions, getDefaultTerrainDefinitions } from "./terrains";
@@ -16,6 +16,7 @@ import { CombatUnits, CombatUnit } from "../combat/combat"
 import { GeneralStats, getGeneralStats, getGeneralDefinitions, getGeneralDefinition, getGeneralBaseDefinition, unitSorter } from "../managers/army_manager"
 import { mergeValues } from "../definition_values"
 import { uniq, sortBy } from "lodash"
+import { CountryName } from "../enums"
 
 /**
  * Returns settings of the current mode.

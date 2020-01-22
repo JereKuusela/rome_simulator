@@ -7,11 +7,11 @@ import ItemSelector from '../../components/ItemSelector'
 import { AppState } from '../../store/'
 import { UnitType } from '../../store/units'
 import { selectUnit, ArmyType, invalidate } from '../../store/battle'
-import { CountryName } from '../../store/countries'
 
 import { getNextId } from '../../army_utils'
 import { toArr } from '../../utils'
 import { getUnitDefinitions } from '../../store/utils'
+import { CountryName } from '../../enums'
 
 interface Props {
   info: ModalInfo | null

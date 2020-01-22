@@ -9,11 +9,11 @@ import { clearUnits, removeReserveUnits, addReserveUnits, doAddReserveUnits, doR
 import { getBaseUnits, filterUnitTypesBySide, getParticipant, getUnitDefinitionsBySide, getUnitImages } from '../../store/utils'
 import { mapRange, forEach, round, randomWithinRange, toArr } from '../../utils'
 import { getNextId, mergeBaseUnitsWithDefinitions } from '../../army_utils'
-import { CountryName } from '../../store/countries'
 import { changeWeariness } from '../../store/settings'
 import WearinessRange, { UnitCalcValues } from '../../components/WearinessRange'
 import { ValuesType } from '../../base_definition'
 import { addValues } from '../../definition_values'
+import { CountryName } from '../../enums'
 
 type Units = { [key in UnitType]: number }
 
