@@ -1,8 +1,9 @@
 import { AppState } from "../store/"
-import { ExportKeys, ExportKey } from "../store/transfer"
-import { stripRounds } from "../store/transforms"
-import { DefinitionType } from "../base_definition"
 import { saveAs } from 'file-saver'
+import { ExportKeys } from "reducers/transfer"
+import { stripRounds } from "store/transforms"
+import { ExportKey } from "types"
+import { DefinitionType } from "base_definition"
 
 const filterState = (state: AppState, export_keys?: ExportKeys): any => {
   const filtered: any = { ...state }

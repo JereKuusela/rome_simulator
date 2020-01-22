@@ -5,11 +5,11 @@ import Headers from './Utils/Headers'
 import ValueModal from './ValueModal'
 import StyledNumber from './Utils/StyledNumber'
 
-import { TerrainCalc, TerrainDefinition, TerrainType } from '../store/terrains'
-import { getImage } from '../base_definition'
-import { addSign } from '../formatters'
-import { keys } from '../utils'
-import { calculateValue } from '../definition_values'
+import { TerrainDefinition, TerrainType, TerrainCalc } from 'types'
+import { keys } from 'utils'
+import { getImage } from 'base_definition'
+import { calculateValue } from 'definition_values'
+import { addSign } from 'formatters'
 
 interface IProps {
   terrains: TerrainDefinition[]

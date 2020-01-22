@@ -6,16 +6,13 @@ import PaddedRow from './Utils/PaddedRow'
 import DetailToggleRow from './Detail/DetailToggleRow'
 import DetailTextRow from './Detail/DetailTextRow'
 import DetailInputRow from './Detail/DetailInputRow'
-import DetailDropdownRow from './Detail/DetailDropndownRow'
+import DetailDropdownRow from './Detail/DetailDropdownRow'
 import Headers from './Utils/Headers'
-
-import { UnitType, Unit, UnitCalc, ValueType, valueToString, UnitDeployment } from '../store/units'
-import { TerrainType } from '../store/terrains'
-
-import {  DefinitionType, ValuesType } from '../base_definition'
-import { toMaintenance } from '../formatters'
-import { values } from '../utils'
-import { getValue, calculateValue, explain } from '../definition_values'
+import { DefinitionType, ValuesType } from 'base_definition'
+import { Unit, UnitType, TerrainType, UnitDeployment, UnitCalc, UnitValueType, unitValueToString } from 'types'
+import { values } from 'utils'
+import { getValue, calculateValue, explain } from 'definition_values'
+import { toMaintenance } from 'formatters'
 
 interface IProps {
   mode: DefinitionType
@@ -25,9 +22,9 @@ interface IProps {
   show_statistics: boolean
   terrain_types?: TerrainType[]
   unit_types_as_dropdown?: boolean
-  onCustomBaseValueChange: (key: string, attribute: ValueType, value: number) => void
-  onCustomModifierValueChange: (key: string, attribute: ValueType, value: number) => void
-  onCustomLossValueChange: (key: string, attribute: ValueType, value: number) => void
+  onCustomBaseValueChange: (key: string, attribute: UnitValueType, value: number) => void
+  onCustomModifierValueChange: (key: string, attribute: UnitValueType, value: number) => void
+  onCustomLossValueChange: (key: string, attribute: UnitValueType, value: number) => void
   onTypeChange?: (type: UnitType) => void
   onModeChange?: (mode: DefinitionType) => void
   onImageChange?: (image: string) => void
@@ -71,7 +68,7 @@ export default class UnitDetail extends Component<IProps> {
     )
   }
 
-  renderRow = (attribute: ValueType) => {
+  renderRow = (attribute: UnitValueType) => {
     const { unit, show_statistics, custom_value_key, onCustomBaseValueChange, onCustomModifierValueChange, onCustomLossValueChange } = this.props
     if (attribute === UnitCalc.MovementSpeed || attribute === UnitCalc.RecruitTime)
       return null
@@ -80,7 +77,7 @@ export default class UnitDetail extends Component<IProps> {
     const base_value = getValue(ValuesType.Base, unit, attribute, custom_value_key)
     const modifier_value = getValue(ValuesType.Modifier, unit, attribute, custom_value_key)
     const loss_value = getValue(ValuesType.LossModifier, unit, attribute, custom_value_key)
-    let value = valueToString(unit, attribute)
+    let value = unitValueToString(unit, attribute)
     if (attribute === UnitCalc.Maintenance)
       value += ' (' + toMaintenance(calculateValue(unit, UnitCalc.Cost) * calculateValue(unit, UnitCalc.Maintenance)) + ')'
 

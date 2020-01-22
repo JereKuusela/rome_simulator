@@ -3,17 +3,16 @@ import { Table } from 'semantic-ui-react'
 
 import Input from './Utils/Input'
 import Headers from './Utils/Headers'
-import DetailDropdownRow from './Detail/DetailDropndownRow'
+import DetailDropdownRow from './Detail/DetailDropdownRow'
 import DetailInputRow from './Detail/DetailInputRow'
 import Images from './Utils/Images'
+import { TacticType, UnitType, TacticDefinition, TacticCalc, TacticValueType } from 'types'
+import { TacticDefinitions } from 'data'
+import { DefinitionType, getImage, ValuesType } from 'base_definition'
+import { values } from 'utils'
+import { getValue, calculateValue, explainShort } from 'definition_values'
+import { toSignedPercent, toPercent } from 'formatters'
 
-import { UnitType } from '../store/units'
-import { TacticDefinition, ValueType, TacticType, TacticCalc, TacticDefinitions } from '../store/tactics'
-
-import { getImage, DefinitionType, ValuesType } from '../base_definition'
-import { toSignedPercent, toPercent } from '../formatters'
-import { values } from '../utils'
-import { getValue, calculateValue, explainShort } from '../definition_values'
 
 interface IProps {
   tactic_types: TacticType[]
@@ -22,7 +21,7 @@ interface IProps {
   images: { [key in UnitType]: string[] }
   custom_value_key: string
   tactic: TacticDefinition
-  onCustomBaseValueChange: (key: string, attribute: ValueType, value: number) => void
+  onCustomBaseValueChange: (key: string, attribute: TacticValueType, value: number) => void
   onTypeChange: (type: TacticType) => void
   onImageChange: (image: string) => void
   onModeChange: (mode: DefinitionType) => void
@@ -59,7 +58,7 @@ export default class TacticDetail extends Component<IProps> {
     )
   }
 
-  renderRow = (tactic: TacticDefinition, attribute: ValueType, relative: boolean, images: string[]) => {
+  renderRow = (tactic: TacticDefinition, attribute: TacticValueType, relative: boolean, images: string[]) => {
     const { custom_value_key, onCustomBaseValueChange } = this.props
     const base_value = getValue(ValuesType.Base, tactic, attribute, custom_value_key)
     const value = calculateValue(tactic, attribute)

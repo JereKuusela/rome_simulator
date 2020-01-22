@@ -3,17 +3,15 @@ import { connect } from 'react-redux'
 import { Grid, Button, Table, Header, Checkbox } from 'semantic-ui-react'
 
 import { AppState } from '../store/'
-import { Side } from '../store/battle'
 import { getSettings, getSelectedTerrains, mergeUnitTypes, getArmyForCombat } from '../store/utils'
-import { changeSiteParameter, SimulationSpeed } from '../store/settings'
-
-import { toPercent, toNumber, toFlooredPercent } from '../formatters'
-import { calculateWinRate, WinRateProgress, interrupt, CasualtiesProgress, doConversion, ResourceLossesProgress, ResourceLosses } from '../combat/simulation'
-import RoundChart from '../components/Charts/RoundChart'
-import CumulativePercentChart from '../components/Charts/CumulativePercentChart'
-import { showProgress, values } from '../utils'
-import SimpleRange from '../components/SimpleRange'
-import { Setting } from '../store/settings'
+import { CasualtiesProgress, ResourceLosses, interrupt, WinRateProgress, ResourceLossesProgress, doConversion, calculateWinRate } from 'combat/simulation'
+import { values, showProgress } from 'utils'
+import { SimulationSpeed, Setting, Side } from 'types'
+import { toPercent, toNumber, toFlooredPercent } from 'formatters'
+import SimpleRange from 'components/SimpleRange'
+import RoundChart from 'components/Charts/RoundChart'
+import CumulativePercentChart from 'components/Charts/CumulativePercentChart'
+import { changeSiteParameter } from 'reducers/settings'
 
 interface Props { }
 

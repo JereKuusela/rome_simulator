@@ -3,11 +3,9 @@ import { Table, Header } from 'semantic-ui-react'
 import { Range, getTrackBackground } from 'react-range'
 
 import Headers from './Utils/Headers'
-
-import { Side } from '../store/battle'
-import { UnitCalc } from '../store/units'
-import { toArr, keys, reduce } from '../utils'
-import { toPercent } from '../formatters'
+import { Side, UnitCalc } from 'types'
+import { keys, reduce, toArr } from 'utils'
+import { toPercent } from 'formatters'
 
 export type WearinessValues = { [key in Side]: UnitCalcValues }
 export type UnitCalcValues = { [key in UnitCalc]: MinMax }

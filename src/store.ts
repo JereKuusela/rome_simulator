@@ -6,10 +6,10 @@ import storage from 'redux-persist/lib/storage'
 import {
   restoreBaseGlobalStats, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits, stripRounds, setIds
 } from './store/transforms'
-import { forEach } from './utils'
-import { UnitType, UnitDefinitions } from './store/units'
-import { DefinitionType } from './base_definition'
-import { Setting } from './store/settings'
+import { forEach } from 'utils'
+import { UnitDefinitions } from 'reducers/units'
+import { UnitType, Setting } from 'types'
+import { DefinitionType } from 'base_definition'
 
 const TacticsTransform = createTransform(
   (inboundState) => inboundState,

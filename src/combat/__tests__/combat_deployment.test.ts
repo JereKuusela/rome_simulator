@@ -1,6 +1,5 @@
-import { UnitType } from '../../store/units'
-import { Setting } from '../../store/settings'
-import { getRowTypes, getUnit, every_type, setFlankSizes, TestInfo, initInfo, testDeploy } from './utils'
+import { TestInfo, initInfo, getUnit, testDeploy, every_type, setFlankSizes, getRowTypes } from "./utils"
+import { UnitType, Setting } from "types"
 
 describe('initial deployment', () => {
 

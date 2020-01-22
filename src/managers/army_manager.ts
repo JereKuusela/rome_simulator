@@ -1,8 +1,8 @@
-import { General } from "../store/countries"
-import { GeneralCalc, UnitDefinitionValues, UnitType, UnitDefinitionValue, UnitDefinition, UnitCalc } from "../store/units"
-import { calculateValue, clearAllValues, mergeValues, calculateBase } from "../definition_values"
-import { Mode, DefinitionType } from "../base_definition"
-import { filterKeys } from "../utils"
+import { General } from "reducers/countries"
+import { calculateValue, clearAllValues, mergeValues, calculateBase } from "definition_values"
+import { GeneralCalc, UnitDefinitionValues, UnitType, UnitDefinitionValue, UnitDefinition, UnitCalc } from "types"
+import { filterKeys } from "utils"
+import { DefinitionType, Mode } from "base_definition"
 
 export type GeneralStats = {
   enabled: boolean

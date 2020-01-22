@@ -1,17 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
-
-import { UnitType } from '../../store/units'
-import { AppState } from '../../store/'
-import { setRowType, RowType, invalidate } from '../../store/battle'
-import { getUnitDefinitions } from '../../store/utils'
-
-import { toArr } from '../../utils'
-
-import ItemSelector from '../../components/ItemSelector'
-import ItemRemover from '../../components/ItemRemover'
-import { CountryName } from '../../enums'
+import { CountryName, RowType, UnitType } from 'types'
+import ItemRemover from 'components/ItemRemover'
+import ItemSelector from 'components/ItemSelector'
+import { AppState } from 'store/'
+import { setRowType, invalidate } from 'reducers/battle'
+import { toArr } from 'utils'
+import { getUnitDefinitions } from 'store/utils'
 
 type Props = {
   country: CountryName

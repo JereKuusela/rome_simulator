@@ -1,12 +1,8 @@
 import React, { Component } from 'react'
 import { Table, Image } from 'semantic-ui-react'
-
-import { TerrainType } from '../store/terrains'
-import { UnitType } from '../store/units'
-import { TacticType } from '../store/tactics'
-
-import { toArr } from '../utils'
-import { getImage } from '../base_definition'
+import { UnitType, TerrainType, TacticType } from 'types'
+import { getImage } from 'base_definition'
+import { toArr } from 'utils'
 
 interface Item<T extends ItemType> {
   type: T,

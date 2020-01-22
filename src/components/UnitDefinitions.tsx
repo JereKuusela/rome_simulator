@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 import { Image, Table, List, Icon } from 'semantic-ui-react'
-import { sortBy } from 'lodash'
+import { sortBy, toNumber } from 'lodash'
+
+import { Mode, DefinitionType, getImage } from 'base_definition'
+import { CountryName, UnitType, TerrainType, UnitDefinition, UnitCalc, UnitValueType } from 'types'
+import { toArr } from 'utils'
+import { unitSorter } from 'managers/army_manager'
+import { mergeValues, calculateValue, calculateBase, calculateModifier, calculateLoss } from 'definition_values'
+import { toPercent, toManpower, toSignedPercent, hideZero } from 'formatters'
 
 import StyledNumber from './Utils/StyledNumber'
 import VersusList from './VersusList'
-
-import { UnitType, UnitDefinition, UnitCalc, ValueType, UnitDefinitions as Units } from '../store/units'
-import { TerrainType } from '../store/terrains'
-import { getImage, DefinitionType, Mode } from '../base_definition'
-import { toSignedPercent, toNumber, hideZero, toPercent, toManpower } from '../formatters'
-import { toArr } from '../utils'
-
 import IconDiscipline from '../images/discipline.png'
 import IconOffense from '../images/offense.png'
 import IconDefense from '../images/defense.png'
@@ -18,9 +18,7 @@ import IconManpower from '../images/manpower.png'
 import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
 import IconAttrition from '../images/attrition.png'
-import { mergeValues, calculateValue, calculateBase, calculateModifier, calculateLoss } from '../definition_values'
-import { unitSorter } from '../managers/army_manager'
-import { CountryName } from '../enums'
+import { UnitDefinitions as Units } from 'reducers/units'
 
 interface IProps {
   mode: Mode
@@ -272,7 +270,7 @@ export default class UnitDefinitions extends Component<IProps> {
     )
   }
 
-  renderAttributeList = (unit: UnitDefinition, attribute: ValueType): JSX.Element => {
+  renderAttributeList = (unit: UnitDefinition, attribute: UnitValueType): JSX.Element => {
     const base = calculateBase(unit, attribute)
     let base_str = String(base)
     if (this.props.mode === DefinitionType.Naval && attribute === UnitCalc.Strength)

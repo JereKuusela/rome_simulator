@@ -1,22 +1,19 @@
 import { AppState } from "./index"
 import { reduce, toArr, filter, arrGet, toObj } from '../utils'
 import { filterUnitDefinitions, isIncludedInMode, getArmyPart, mergeBaseUnitsWithDefinitions, mergeDefinitions, mergeDefinition } from '../army_utils'
-import { TacticType, TacticDefinition } from "./tactics/actions"
-import { DefinitionType, Mode } from "../base_definition"
-import { TerrainType, TerrainDefinition, LocationType } from "./terrains/actions"
-import { UnitType, UnitDefinition, BaseUnit, Unit } from "./units/actions"
-import { Battle, getDefaultMode, getDefaultBattle } from "./battle/reducer"
-import { Side, BaseUnits, Participant, Units, RowTypes, ArmyType } from "./battle/actions"
-import { getDefaultCountryDefinitions } from "./countries"
-import { getDefaultSettings, Settings } from "./settings"
-import { UnitDefinitions, getDefaultBaseDefinitions, getDefaultUnitDefinitions } from "./units"
-import { TerrainDefinitions, getDefaultTerrainDefinitions } from "./terrains";
-import { TacticDefinitions, getDefaultTacticDefinitions } from "./tactics";
-import { CombatUnits, CombatUnit } from "../combat/combat"
-import { GeneralStats, getGeneralStats, getGeneralDefinitions, getGeneralDefinition, getGeneralBaseDefinition, unitSorter } from "../managers/army_manager"
-import { mergeValues } from "../definition_values"
-import { uniq, sortBy } from "lodash"
-import { CountryName } from "../enums"
+import { Mode, DefinitionType } from "base_definition"
+import { CountryName, BaseUnit, Side, Unit, ArmyType, UnitType, TerrainType, LocationType, TacticType, TacticDefinition, RowTypes, BaseUnits, Units, Participant, TerrainDefinition, UnitDefinition, Settings } from "types"
+import { CombatUnit, CombatUnits } from "combat/combat"
+import { TerrainDefinitions, TacticDefinitions } from "data"
+import { sortBy, uniq } from "lodash"
+import { unitSorter, GeneralStats, getGeneralStats, getGeneralBaseDefinition, getGeneralDefinitions, getGeneralDefinition } from "managers/army_manager"
+import { Battle, getDefaultBattle, getDefaultMode } from "reducers/battle"
+import { UnitDefinitions, getDefaultBaseDefinitions, getDefaultUnitDefinitions } from "reducers/units"
+import { mergeValues } from "definition_values"
+import { getDefaultTacticDefinitions } from "reducers/tactics"
+import { getDefaultTerrainDefinitions } from "reducers/terrains"
+import { getDefaultCountryDefinitions } from "reducers/countries"
+import { getDefaultSettings } from "reducers/settings"
 
 /**
  * Returns settings of the current mode.

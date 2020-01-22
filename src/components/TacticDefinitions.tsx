@@ -5,13 +5,11 @@ import ValueModal from './ValueModal'
 import VersusList from './VersusList'
 import StyledNumber from './Utils/StyledNumber'
 
-import { UnitType } from '../store/units'
-import { TacticDefinition, TacticType, TacticCalc } from '../store/tactics'
-
-import { getImage } from '../base_definition'
-import { calculateValue } from '../definition_values'
-import { toSignedPercent } from '../formatters'
 import Headers from './Utils/Headers'
+import { TacticDefinition, UnitType, TacticType, TacticCalc } from 'types'
+import { getImage } from 'base_definition'
+import { calculateValue } from 'definition_values'
+import { toSignedPercent } from 'formatters'
 
 interface IProps {
   tactics: TacticDefinition[]

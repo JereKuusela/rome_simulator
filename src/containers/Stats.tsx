@@ -2,19 +2,18 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table } from 'semantic-ui-react'
 
-import { sumArr, round } from '../utils'
-import { getImage, DefinitionType } from '../base_definition'
-import { filterUnitTypesBySide, getCurrentCombat } from '../store/utils'
-import { AppState } from '../store/index'
-import { UnitType, UnitCalc } from '../store/units'
-import { Side } from '../store/battle'
+import { AppState } from 'store/index'
 
 import IconManpower from '../images/manpower.png'
 import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
 import IconEmpty from '../images/empty.png'
-import { CombatUnits, CombatUnit } from '../combat/combat'
-import { strengthToValue } from '../formatters'
+import { Side, UnitType, UnitCalc } from 'types'
+import { CombatUnits, CombatUnit } from 'combat/combat'
+import { DefinitionType, getImage } from 'base_definition'
+import { strengthToValue } from 'formatters'
+import { round, sumArr } from 'utils'
+import { getCurrentCombat, filterUnitTypesBySide } from 'store/utils'
 
 type Props = {}
 

@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { setBaseValue, ValueType, TacticType, changeImage, changeMode } from '../../store/tactics'
 import { AppState } from '../../store/'
-import { invalidate } from '../../store/battle'
 import TacticDetail from '../../components/TacticDetail'
-import { Mode, DefinitionType } from '../../base_definition'
-import { mergeUnitTypes, filterTacticTypes, filterTactics, getUnitImages } from '../../store/utils'
+import { filterTactics, filterTacticTypes, getUnitImages, mergeUnitTypes } from 'store/utils'
+import { Mode, DefinitionType } from 'base_definition'
+import { TacticType, TacticValueType } from 'types'
+import { setBaseValue, changeImage, changeMode } from 'reducers/tactics'
+import { invalidate } from 'reducers/battle'
 
 const CUSTOM_VALUE_KEY = 'Custom'
 
@@ -40,7 +41,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setBaseValue: (mode: Mode, tactic: TacticType,  key: string, attribute: ValueType, value: number) => (
+  setBaseValue: (mode: Mode, tactic: TacticType,  key: string, attribute: TacticValueType, value: number) => (
     !Number.isNaN(value) && dispatch(setBaseValue(tactic, key, attribute, value)) && dispatch(invalidate(mode))
   ),
   changeImage: (type: TacticType, image: string) => dispatch(changeImage(type, image)),

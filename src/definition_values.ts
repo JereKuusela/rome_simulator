@@ -295,7 +295,7 @@ export const explain = <D extends BD, A extends string>(definition: D, attribute
   if (value_loss && size(value_loss) > 0) {
     explanation += ' reduced by losses ' + +(loss).toFixed(2)
     explanation += ' ('
-    forEach(value, (value, key) => explanation += key.replace(/_/g, ' ') + ': ' + value + ', ')
+    forEach(value_loss, (value, key) => explanation += key.replace(/_/g, ' ') + ': ' + value + ', ')
     explanation = explanation.substring(0, explanation.length - 2) + ')'
   }
   return explanation

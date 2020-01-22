@@ -1,10 +1,7 @@
+import { CombatUnit, CombatUnits, Reserve, CombatParticipant } from "./combat"
+import { RowTypes, UnitCalc, RowType, UnitDeployment, CombatSettings, Setting } from "types"
 import { nextIndex } from "./reinforcement"
-import { CombatUnits, CombatUnit, Reserve, CombatParticipant } from "./combat"
-import { UnitCalc, UnitDeployment } from "../store/units"
-import { remove, sortBy } from "lodash"
-import { CombatSettings, Setting } from "../store/settings"
-import { RowTypes, RowType } from "../store/battle"
-
+import { sortBy, remove } from "lodash"
 
 export type SortedReserve = {
   front: CombatUnit[]

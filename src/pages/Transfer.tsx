@@ -2,12 +2,14 @@ import React, { Component } from 'react'
 import { Grid, TextArea, Checkbox, List, Header, Button, Input } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
-import { importState, ExportKey, setResetMissing, setExportKey } from '../store/transfer'
-import { restoreBaseGlobalStats, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits, setIds } from '../store/transforms'
-import { values, keys } from '../utils'
-import { resetMissing } from '../store/utils'
-import { exportState, saveToFile } from '../managers/transfer_manager'
-import ConfirmationButton from '../components/ConfirmationButton'
+import { values, keys } from 'utils'
+import { ExportKey } from 'types'
+import { exportState, saveToFile } from 'managers/transfer_manager'
+import ConfirmationButton from 'components/ConfirmationButton'
+import { setExportKey, setResetMissing, importState } from 'reducers/transfer'
+import { restoreBaseGlobalStats, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits, setIds } from 'store/transforms'
+import { resetMissing } from 'store/utils'
+
 
 interface IState {
   data: string

@@ -5,10 +5,11 @@ import ModalTerrainDetail from '../containers/modal/ModalTerrainDetail'
 import { AppState } from '../store/index'
 import TerrainDefinitions from '../components/TerrainDefinitions'
 import ItemRemover from '../components/ItemRemover'
-import { TerrainType, deleteTerrain, addTerrain, changeType } from '../store/terrains'
-import { DefinitionType } from '../base_definition'
-import { filterTerrains } from '../store/utils'
-import { toArr } from '../utils'
+import { TerrainType } from 'types'
+import { toArr } from 'utils'
+import { filterTerrains } from 'store/utils'
+import { deleteTerrain, addTerrain, changeType } from 'reducers/terrains'
+import { DefinitionType } from 'base_definition'
 
 interface IState {
   modal_terrain: TerrainType | null

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Accordion, Icon, Header } from 'semantic-ui-react'
 
 import { AppState } from '../store/'
-import { toggleAccordion } from '../store/settings'
+import { toggleAccordion } from 'reducers/settings'
 
 interface Props {
   readonly title: string

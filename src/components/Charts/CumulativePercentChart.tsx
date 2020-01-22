@@ -4,10 +4,9 @@ import { VictoryAxis, VictoryArea } from 'victory'
 import { sortBy, capitalize } from 'lodash'
 
 import BaseChart from './BaseChart'
-
-import { toPercent } from '../../formatters'
-import { toArr, mapRange } from '../../utils'
-import { Side } from '../../store/battle'
+import { toPercent } from 'formatters'
+import { toArr, mapRange } from 'utils'
+import { Side } from 'types'
 
 interface IProps {
   a: { [key: string]: number }

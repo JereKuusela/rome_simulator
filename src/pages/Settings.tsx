@@ -2,13 +2,14 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Grid, Input, Table, Header, Checkbox, Tab } from 'semantic-ui-react'
 
-import { changeCombatParameter, changeSiteParameter, Setting, parameterToDescription, SiteSettings, CombatSettings, SimulationSpeed } from '../store/settings'
-import { invalidate } from '../store/battle'
 import { AppState } from '../store/index'
 
-import { toArr, keys, values } from '../utils'
-import { DefinitionType, Mode } from '../base_definition'
 import Dropdown from '../components/Utils/Dropdown'
+import { toArr, keys, values } from 'utils'
+import { Setting, parameterToDescription, SimulationSpeed, CombatSettings, SiteSettings } from 'types'
+import { Mode, DefinitionType } from 'base_definition'
+import { changeCombatParameter, changeSiteParameter } from 'reducers/settings'
+import { invalidate } from 'reducers/battle'
 
 interface Props { }
 

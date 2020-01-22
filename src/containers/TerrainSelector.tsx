@@ -4,15 +4,12 @@ import { Image, Table } from 'semantic-ui-react'
 
 import { AppState } from '../store/'
 import { getMode, getSelectedTerrains } from '../store/utils'
-import { setFlankSize } from '../store/battle'
-import { TerrainDefinition, TerrainCalc, LocationType } from '../store/terrains'
-
-import { addSign } from '../formatters'
-import { calculateValue } from '../definition_values'
-
 import ModalTerrainSelector from './modal/ModalTerrainSelector'
 import IconDice from '../images/chance.png'
 import StyledNumber from '../components/Utils/StyledNumber'
+import { LocationType, TerrainDefinition, TerrainCalc } from 'types'
+import { calculateValue } from 'definition_values'
+import { addSign } from 'formatters'
 
 type Props = {
 }
@@ -88,12 +85,12 @@ class TerrainSelector extends Component<IProps, IState> {
   }
 }
 
-const mapStateToProps = (state: AppState, props: Props) => ({
+const mapStateToProps = (state: AppState) => ({
   terrains: getSelectedTerrains(state),
   mode: getMode(state)
 })
 
-const actions = { setFlankSize }
+const actions = { }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

@@ -23,7 +23,7 @@ export default class Dropdown<T extends string> extends Component<IProps<T>> {
         disabled={!onChange}
         onChange={(_, { value }) => onChange && onChange(value as T)}
         style={style}
-        compact
+        compact={!!style}
       >
         <DropdownUI.Menu>
           {

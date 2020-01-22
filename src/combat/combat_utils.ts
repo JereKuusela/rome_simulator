@@ -1,11 +1,7 @@
 
 import { sumBy } from 'lodash'
-
-import { UnitCalc, Unit } from '../store/units'
-import { TerrainCalc, TerrainDefinition } from '../store/terrains'
-import { Setting, Settings} from '../store/settings'
-
-import { calculateValue } from '../definition_values'
+import { TerrainDefinition, TerrainCalc, Setting, Unit, UnitCalc, Settings } from 'types'
+import { calculateValue } from 'definition_values'
 
 /**
  * Calculates the roll modifier based on skill level difference of generals.

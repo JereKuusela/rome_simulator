@@ -6,14 +6,12 @@ import ItemRemover from '../../components/ItemRemover'
 import UnitDetail from '../../components/UnitDetail'
 
 import { AppState } from '../../store/'
-import { UnitType, ValueType, Unit, UnitCalc } from '../../store/units'
-import { editUnit, deleteUnit, setValue, changeType, invalidateCountry, Side, toggleLoyal } from '../../store/battle'
-import { filterTerrainTypes, filterUnitTypesByCountry, findUnit, getCombatUnitForEachRound } from '../../store/utils'
-
-import { ValuesType } from '../../base_definition'
-import { CombatUnit } from '../../combat/combat'
-import { addValues } from '../../definition_values'
-import { CountryName } from '../../enums'
+import { Side, CountryName, UnitType, Unit, UnitCalc, UnitValueType } from 'types'
+import { ValuesType } from 'base_definition'
+import { CombatUnit } from 'combat/combat'
+import { addValues } from 'definition_values'
+import { filterUnitTypesByCountry, filterTerrainTypes, findUnit, getCombatUnitForEachRound } from 'store/utils'
+import { editUnit, deleteUnit, invalidateCountry, setValue, changeType, toggleLoyal } from 'reducers/battle'
 
 const CUSTOM_VALUE_KEY = 'Unit'
 
@@ -60,19 +58,19 @@ class ModalArmyUnitDetail extends Component<IProps> {
     onClose()
   }
 
-  setBaseValue = (key: string, attribute: ValueType, value: number) => {
+  setBaseValue = (key: string, attribute: UnitValueType, value: number) => {
     const { mode, country, id, setValue, invalidateCountry } = this.props
     setValue(mode, country, id, ValuesType.Base, key, attribute, value)
     invalidateCountry(country)
   }
 
-  setModifierValue = (key: string, attribute: ValueType, value: number) => {
+  setModifierValue = (key: string, attribute: UnitValueType, value: number) => {
     const { mode, country, id, setValue, invalidateCountry } = this.props
     setValue(mode, country, id, ValuesType.Modifier, key, attribute, value)
     invalidateCountry(country)
   }
 
-  setLossValue = (key: string, attribute: ValueType, value: number) => {
+  setLossValue = (key: string, attribute: UnitValueType, value: number) => {
     const { mode, country, id, setValue, invalidateCountry } = this.props
     setValue(mode, country, id, ValuesType.Loss, key, attribute, value)
     invalidateCountry(country)

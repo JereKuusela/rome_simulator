@@ -1,14 +1,14 @@
 import { combineReducers, AnyAction, Reducer } from 'redux'
-import { unitsReducer, globalStatsReducer } from './units'
-import { tacticsReducer } from './tactics'
-import { terrainsReducer } from './terrains'
-import { battleReducer } from './battle'
-import { combatReducer } from './combat'
-import { transferReducer, importReducer } from './transfer'
-import { settingsReducer } from './settings'
-import { selectionsReducer } from './countries'
-import { dataReducer } from './data'
+import { unitsReducer, globalStatsReducer } from '../reducers/units'
 import { composeReducers } from 'immer-reducer'
+import { tacticsReducer } from 'reducers/tactics'
+import { terrainsReducer } from 'reducers/terrains'
+import { battleReducer } from 'reducers/battle'
+import { transferReducer, importReducer } from 'reducers/transfer'
+import { selectionsReducer } from 'reducers/countries'
+import { dataReducer } from 'reducers/modifiers'
+import { settingsReducer } from 'reducers/settings'
+import { combatReducer } from 'reducers/combat'
 
 const combined = combineReducers({
   units: unitsReducer,

@@ -1,16 +1,11 @@
 
-import { sumBy } from 'lodash'
-
-import { UnitCalc, UnitType, Unit, UnitDeployment } from '../store/units'
-import { TerrainDefinition, TerrainType } from '../store/terrains'
-import { TacticDefinition } from '../store/tactics'
-import { Setting, Settings } from '../store/settings'
-
-import { mapRange, values, toObj } from '../utils'
+import { sumBy, values } from 'lodash'
+import { TacticDefinition, RowTypes, TerrainDefinition, UnitType, Unit, UnitCalc, Setting, TerrainType, UnitDeployment, Settings } from 'types'
+import { mapRange, toObj } from 'utils'
+import { calculateValue, calculateValueWithoutLoss, calculateBase } from 'definition_values'
 import { calculateExperienceReduction } from './combat_utils'
 import { reinforce } from './reinforcement'
-import { RowTypes } from '../store/battle'
-import { calculateValue, calculateValueWithoutLoss, calculateBase } from '../definition_values'
+
 
 /**
  * Information required for fast combat calculation.

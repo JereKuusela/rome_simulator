@@ -4,12 +4,11 @@ import { connect } from 'react-redux'
 import UnitDetail from '../../components/UnitDetail'
 
 import { AppState } from '../../store/'
-import { UnitType, setGlobalValue, ValueType, Unit, toggleGlobalIsLoyal } from '../../store/units'
-import { invalidateCountry } from '../../store/battle'
-
-import { ValuesType } from '../../base_definition'
-import { getBaseDefinition } from '../../store/utils'
-import { CountryName } from '../../enums'
+import { CountryName, UnitType, Unit, UnitValueType } from 'types'
+import { ValuesType } from 'base_definition'
+import { getBaseDefinition } from 'store/utils'
+import { setGlobalValue, toggleGlobalIsLoyal } from 'reducers/units'
+import { invalidateCountry } from 'reducers/battle'
 
 const CUSTOM_VALUE_KEY = 'Global'
 
@@ -37,13 +36,13 @@ class ModalGlobalStatsDetail extends Component<IProps> {
     )
   }
 
-  setGlobalBaseValue = (key: string, attribute: ValueType, value: number) => this.setValue(key, ValuesType.Base, attribute, value)
+  setGlobalBaseValue = (key: string, attribute: UnitValueType, value: number) => this.setValue(key, ValuesType.Base, attribute, value)
 
-  setGlobalModifierValue = (key: string, attribute: ValueType, value: number) => this.setValue(key, ValuesType.Modifier, attribute, value)
+  setGlobalModifierValue = (key: string, attribute: UnitValueType, value: number) => this.setValue(key, ValuesType.Modifier, attribute, value)
 
-  setGlobalLossValue = (key: string, attribute: ValueType, value: number) => this.setValue(key, ValuesType.Loss, attribute, value)
+  setGlobalLossValue = (key: string, attribute: UnitValueType, value: number) => this.setValue(key, ValuesType.Loss, attribute, value)
 
-  setValue = (key: string, type: ValuesType, attribute: ValueType, value: number) => {
+  setValue = (key: string, type: ValuesType, attribute: UnitValueType, value: number) => {
     if (Number.isNaN(value))
       return
     const { country, mode, setGlobalValue, invalidateCountry } = this.props

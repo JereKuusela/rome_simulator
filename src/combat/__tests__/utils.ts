@@ -1,17 +1,13 @@
+import { getDefaultGlobals, getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings } from "data"
+import { DefinitionType } from "base_definition"
+import { map, mapRange } from "utils"
+import { mergeValues, calculateValue } from "definition_values"
+import { CountryName, Participant, Army, TerrainDefinition, getDefaultParticipant, getDefaultArmy, TacticType, Setting, Side, BaseUnit, UnitCalc, UnitType, TerrainType, RowType, TacticCalc, Settings } from "types"
+import { CombatUnit, CombatParticipant, doBattleFast } from "combat/combat"
+import { getBaseDamages, convertUnits } from "combat/simulation"
+import { calculateTotalRoll } from "combat/combat_utils"
+import { deploy, sortReserve } from "combat/deployment"
 
-import { Army, Participant, RowType, Side, getDefaultParticipant, getDefaultArmy } from '../../store/battle'
-import { TacticType, getDefaultTactics, TacticCalc } from '../../store/tactics'
-import { BaseUnit, UnitCalc, UnitType, getDefaultUnits, getDefaultGlobals } from '../../store/units'
-import { DefinitionType } from '../../base_definition'
-import { map, mapRange } from '../../utils'
-import { calculateTotalRoll } from '../combat_utils'
-import { getDefaultLandSettings, Setting, Settings, getDefaultSiteSettings } from '../../store/settings'
-import { TerrainDefinition, TerrainType, getDefaultTerrains } from '../../store/terrains'
-import { doBattleFast, CombatParticipant, CombatUnit } from '../combat'
-import { getBaseDamages, convertUnits } from '../simulation'
-import { deploy, sortReserve } from '../deployment'
-import { mergeValues, calculateValue } from '../../definition_values'
-import { CountryName } from '../../enums'
 
 const global_stats = getDefaultGlobals()[DefinitionType.Land]
 const units = map(getDefaultUnits(), unit => mergeValues(unit, global_stats))

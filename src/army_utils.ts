@@ -1,10 +1,9 @@
-import { BaseUnit, UnitDefinition, UnitDefinitionValues, UnitDefinitionValue } from './store/units/actions'
-import { DefinitionType } from './base_definition'
-import { BaseUnits, Units, ArmyType, Side } from './store/battle'
-import { UnitDefinitions } from './store/units'
-import { filter, map } from './utils'
-import { CombatUnits } from './combat/combat'
-import { mergeValues } from './definition_values'
+import { BaseUnits, UnitDefinition, UnitDefinitionValue, UnitDefinitionValues, BaseUnit, ArmyType, Side, Units } from "types"
+import { UnitDefinitions } from "reducers/units"
+import { mergeValues } from "definition_values"
+import { map, filter } from "utils"
+import { DefinitionType } from "base_definition"
+import { CombatUnits } from "combat/combat"
 
 /**
  * Merges base units with their definitions resulting in real units.

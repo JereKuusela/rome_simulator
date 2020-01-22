@@ -6,18 +6,13 @@ import { last } from 'lodash'
 import StyledNumber from '../components/Utils/StyledNumber'
 
 import { AppState } from '../store/'
-import { Side, ArmyType, getOpponent } from '../store/battle'
-import { getParticipant, getSettings, getSelectedTerrains, getCombatUnit, getCurrentCombat, getGeneral, getCountry, getTactic } from '../store/utils'
-
-import { DefinitionType } from '../base_definition'
-import { toNumber, toSignedPercent, toManpower, strengthToValue } from '../formatters'
-import { UnitCalc, UnitType } from '../store/units'
-import { TerrainType } from '../store/terrains'
-import { Setting } from '../store/settings'
-import { TacticCalc } from '../store/tactics'
-import { calculateTotalRoll, calculateBaseDamage } from '../combat/combat_utils'
-import { CombatUnit, CombatUnitDefinition, CombatUnitRoundInfo } from '../combat/combat'
-import { calculateValue } from '../definition_values'
+import { Side, ArmyType, UnitCalc, UnitType, Setting, TacticCalc, TerrainType, getOpponent } from 'types'
+import { calculateTotalRoll, calculateBaseDamage } from 'combat/combat_utils'
+import { toSignedPercent, toManpower, strengthToValue, toNumber } from 'formatters'
+import { calculateValue } from 'definition_values'
+import { DefinitionType } from 'base_definition'
+import { CombatUnitDefinition, CombatUnitRoundInfo, CombatUnit } from 'combat/combat'
+import { getCurrentCombat, getParticipant, getSettings, getSelectedTerrains, getGeneral, getCountry, getTactic, getCombatUnit } from 'store/utils'
 
 type Props = {
   id: number | null

@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { setBaseValue, ValueType, TerrainType, LocationType, changeLocation, changeImage, changeMode } from '../../store/terrains'
 import { AppState } from '../../store/'
-import { invalidate } from '../../store/battle'
-import { DefinitionType, Mode } from '../../base_definition'
 import TerrainDetail from '../../components/TerrainDetail'
-
+import { Mode, DefinitionType } from 'base_definition'
+import { TerrainType, LocationType, TerrainValueType } from 'types'
+import { invalidate } from 'reducers/battle'
+import { changeLocation, changeImage, changeMode, setBaseValue } from 'reducers/terrains'
 
 const CUSTOM_VALUE_KEY = 'Custom'
 
@@ -34,7 +34,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setBaseValue: (mode: Mode, type: TerrainType, key: string, attribute: ValueType, value: number) => (
+  setBaseValue: (mode: Mode, type: TerrainType, key: string, attribute: TerrainValueType, value: number) => (
     !Number.isNaN(value) && dispatch(setBaseValue(type, key, attribute, value)) && dispatch(invalidate(mode))
   ),
   changeLocation: (type: TerrainType, location: LocationType) => dispatch(changeLocation(type, location)),

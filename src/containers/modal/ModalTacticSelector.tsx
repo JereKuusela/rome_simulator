@@ -3,17 +3,16 @@ import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 
 import { AppState } from '../../store/'
-import { selectTactic, invalidate, Side, getOpponent } from '../../store/battle'
-import { TacticType, TacticCalc } from '../../store/tactics'
-import { filterTactics, getCurrentCombat, getSelectedTactic, getCountry } from '../../store/utils'
-
-import { toSignedPercent, toPercent } from '../../formatters'
-import { map, filter, toArr } from '../../utils'
-import { calculateValue } from '../../definition_values'
-import { calculateTactic } from '../../combat/combat'
 
 import StyledNumber from '../../components/Utils/StyledNumber'
 import ItemSelector, { SelectorAttributes } from '../../components/ItemSelector'
+import { Side, TacticType, TacticCalc, getOpponent } from 'types'
+import { map, filter, toArr } from 'utils'
+import { calculateTactic } from 'combat/combat'
+import { toPercent, toSignedPercent } from 'formatters'
+import { calculateValue } from 'definition_values'
+import { getCurrentCombat, filterTactics, getSelectedTactic, getCountry } from 'store/utils'
+import { selectTactic, invalidate } from 'reducers/battle'
 
 type Props = {
   side?: Side
@@ -75,7 +74,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   mode: state.settings.mode
 })
 
-const actions = { selectTactic, invalidate}
+const actions = { selectTactic, invalidate }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

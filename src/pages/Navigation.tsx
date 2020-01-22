@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
-import { toggleMode } from '../store/settings'
+import { toggleMode } from 'reducers/settings'
 import { Menu, Image, Button } from 'semantic-ui-react'
 import IconLand from '../images/land_combat.png'
 import IconNaval from '../images/naval_combat.png'
-import { DefinitionType } from '../base_definition'
+import { DefinitionType } from 'base_definition'
 
 /**
  * Navigation menu for different pages.

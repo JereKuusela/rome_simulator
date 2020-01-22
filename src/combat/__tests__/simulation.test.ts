@@ -1,7 +1,7 @@
-import { UnitType, UnitCalc, } from '../../store/units'
-import { setCenterUnits, getUnit, initInfo, TestInfo, every_type } from './utils'
-import { ValuesType } from '../../base_definition'
-import { addValues } from '../../definition_values'
+import { getUnit, TestInfo, initInfo, setCenterUnits, every_type } from "./utils"
+import { UnitType, UnitCalc } from "types"
+import { addValues } from "definition_values"
+import { ValuesType } from "base_definition"
 
 describe('1 vs 1', () => {
   const archer = getUnit(UnitType.Archers)

@@ -3,20 +3,19 @@ import { Table } from 'semantic-ui-react'
 
 import PaddedRow from './Utils/PaddedRow'
 import DetailInputRow from './Detail/DetailInputRow'
-import DetailDropdownRow from './Detail/DetailDropndownRow'
+import DetailDropdownRow from './Detail/DetailDropdownRow'
 import Input from './Utils/Input'
 import Headers from './Utils/Headers'
 
-import { TerrainDefinition, ValueType, TerrainType, TerrainCalc, valueToString, LocationType } from '../store/terrains'
-
-import { DefinitionType, ValuesType } from '../base_definition'
-import { values } from '../utils'
-import { getValue, explainShort } from '../definition_values'
+import { TerrainDefinition, TerrainType, LocationType, TerrainCalc, TerrainValueType, terrainValueToString } from 'types'
+import { DefinitionType, ValuesType } from 'base_definition'
+import { values } from 'utils'
+import { getValue, explainShort } from 'definition_values'
 
 interface IProps {
   custom_value_key: string
   terrain: TerrainDefinition
-  onCustomBaseValueChange: (key: string, attribute: ValueType, value: number) => void
+  onCustomBaseValueChange: (key: string, attribute: TerrainValueType, value: number) => void
   onTypeChange: (type: TerrainType) => void
   onLocationChange: (location: LocationType) => void
   onImageChange: (image: string) => void
@@ -50,14 +49,14 @@ export default class TerrainDetail extends Component<IProps> {
     )
   }
 
-  renderRow = (tactic: TerrainDefinition, attribute: ValueType) => {
+  renderRow = (tactic: TerrainDefinition, attribute: TerrainValueType) => {
     const { custom_value_key, onCustomBaseValueChange } = this.props
     const base_value = getValue(ValuesType.Base, tactic, attribute, custom_value_key)
 
     return (
       <PaddedRow key={attribute} cells={this.CELLS}>
         {attribute}
-        {valueToString(tactic, attribute)}
+        {terrainValueToString(tactic, attribute)}
         <Input value={String(base_value)} onChange={value => onCustomBaseValueChange(custom_value_key, attribute, Number(value))} />
         {explainShort(tactic, attribute)}
       </PaddedRow>

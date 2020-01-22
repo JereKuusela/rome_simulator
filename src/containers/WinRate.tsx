@@ -5,12 +5,11 @@ import { Grid, Button } from 'semantic-ui-react'
 import StyledNumber from '../components/Utils/StyledNumber'
 
 import { AppState } from '../store/'
-import { Side } from '../store/battle'
 import { getSettings, getSelectedTerrains, mergeUnitTypes, getArmyForCombat } from '../store/utils'
-
-import { toPercent, toFlooredPercent } from '../formatters'
-import { calculateWinRate, WinRateProgress, interrupt, doConversion } from '../combat/simulation'
-import { showProgress } from '../utils'
+import { toPercent, toFlooredPercent } from 'formatters'
+import { interrupt, WinRateProgress, doConversion, calculateWinRate } from 'combat/simulation'
+import { showProgress } from 'utils'
+import { Side } from 'types'
 
 interface Props { }
 

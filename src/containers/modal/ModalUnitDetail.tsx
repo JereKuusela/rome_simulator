@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { UnitType, ValueType, setValue, changeImage, changeMode, Unit, changeDeployment, toggleIsLoyal, UnitDeployment } from '../../store/units'
-import { AppState } from '../../store/'
-import { ValuesType, DefinitionType } from '../../base_definition'
-import UnitDetail from '../../components/UnitDetail'
-import { invalidateCountry } from '../../store/battle'
-import { mergeUnitTypes, filterTerrainTypes, getUnitDefinition, getMode } from '../../store/utils'
-import { CountryName } from '../../enums'
+import { CountryName, UnitType, Unit, UnitDeployment, UnitValueType } from 'types'
+import UnitDetail from 'components/UnitDetail'
+import { ValuesType, DefinitionType } from 'base_definition'
+import { AppState } from 'store/'
+import { getUnitDefinition, mergeUnitTypes, filterTerrainTypes, getMode } from 'store/utils'
+import { invalidateCountry } from 'reducers/battle'
+import { setValue, changeImage, changeMode, changeDeployment, toggleIsLoyal } from 'reducers/units'
+
 
 const CUSTOM_VALUE_KEY = 'Custom'
 
@@ -47,11 +48,11 @@ class ModalUnitDetail extends Component<IProps> {
     invalidateCountry(country!)
   }
 
-  setBaseValue = (key: string, attribute: ValueType, value: number) => this.setValue(ValuesType.Base, key, attribute, value)
-  setModifierValue = (key: string, attribute: ValueType, value: number) => this.setValue(ValuesType.Modifier, key, attribute, value)
-  setLossValue = (key: string, attribute: ValueType, value: number) => this.setValue(ValuesType.Loss, key, attribute, value)
+  setBaseValue = (key: string, attribute: UnitValueType, value: number) => this.setValue(ValuesType.Base, key, attribute, value)
+  setModifierValue = (key: string, attribute: UnitValueType, value: number) => this.setValue(ValuesType.Modifier, key, attribute, value)
+  setLossValue = (key: string, attribute: UnitValueType, value: number) => this.setValue(ValuesType.Loss, key, attribute, value)
 
-  setValue = (type: ValuesType, key: string, attribute: ValueType, value: number) => {
+  setValue = (type: ValuesType, key: string, attribute: UnitValueType, value: number) => {
     const { setValue, invalidateCountry, country, unit_type } = this.props
     setValue(country!, type, unit_type!, key, attribute, value)
     invalidateCountry(country!)

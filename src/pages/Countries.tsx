@@ -3,26 +3,19 @@ import { Container, Grid, Table, List, Input, Checkbox } from 'semantic-ui-react
 import { connect } from 'react-redux'
 import { AppState } from '../store/index'
 import { mapRange, ObjSet, has, keys } from '../utils'
-import { invalidateCountry } from '../store/battle'
-import {
-  ModifierType, Modifier, Tradition, CultureType,
-  OmenDefinition, TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition,
-  GovermentType, ReligionType, TraitDefinition, EconomyDefinition, LawDefinition, IdeaDefinition, AbilityDefinition, ScopeType
-} from '../store/data'
-import {
-  enableModifiers, clearModifiers, selectGovernment, selectReligion, selectCulture, setOmenPower,
-  setHasGeneral, setMilitaryPower, setOfficeDiscipline, setOfficeMorale, setGeneralMartial
-} from '../store/countries'
-import { DefinitionType, ValuesType } from '../base_definition'
-import { UnitCalc } from '../store/units'
+
+import { addSignWithZero } from 'formatters'
+import { TraditionDefinition, TradeDefinition, IdeaDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, EconomyDefinition, LawDefinition, AbilityDefinition, Modifier, Tradition, ScopeType, UnitCalc, ReligionType, CultureType, ModifierType, CountryName, GovermentType } from 'types'
+import { DefinitionType, ValuesType } from 'base_definition'
+import { getGeneral } from 'store/utils'
+import { enableModifiers, clearModifiers, setGeneralMartial, selectCulture, selectReligion, selectGovernment, setOmenPower, setHasGeneral, setMilitaryPower, setOfficeMorale, setOfficeDiscipline } from 'reducers/countries'
+import { invalidateCountry } from 'reducers/battle'
+
 import AccordionToggle from '../containers/AccordionToggle'
 import CountryManager from '../containers/CountryManager'
 import Dropdown from '../components/Utils/Dropdown'
 import ConfirmationButton from '../components/ConfirmationButton'
 import StyledNumber from '../components/Utils/StyledNumber'
-import { addSignWithZero } from '../formatters'
-import { getGeneral } from '../store/utils'
-import { CountryName } from '../enums'
 
 const TRADE_COLUMNS = 4
 const HERITAGE_COLUMNS = 4

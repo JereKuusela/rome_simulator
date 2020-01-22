@@ -2,17 +2,15 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table, Image, Icon } from 'semantic-ui-react'
 
-import { AppState } from '../store/'
-import { getCurrentCombat } from '../store/utils'
-import { Side, ArmyType } from '../store/battle'
-import { UnitCalc } from '../store/units'
-
-import { CombatUnit } from '../combat/combat'
-import { getArmyPart } from '../army_utils'
-import { getImage } from '../base_definition'
 
 import CombatTooltip from './CombatTooltip'
-import IconDefeated from '../images/attrition.png'
+import IconDefeated from 'images/attrition.png'
+import { Side, ArmyType, UnitCalc } from 'types'
+import { getImage } from 'base_definition'
+import { CombatUnit } from 'combat/combat'
+import { AppState } from 'store/'
+import { getArmyPart } from 'army_utils'
+import { getCurrentCombat } from 'store/utils'
 
 type Props = {
   side: Side

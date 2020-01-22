@@ -3,15 +3,13 @@ import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 
 import ItemSelector from '../../components/ItemSelector'
+import { CountryName, ArmyType, UnitType } from 'types'
+import { toArr } from 'utils'
+import { getNextId } from 'army_utils'
+import { AppState } from 'store/'
+import { getUnitDefinitions } from 'store/utils'
+import { selectUnit, invalidate } from 'reducers/battle'
 
-import { AppState } from '../../store/'
-import { UnitType } from '../../store/units'
-import { selectUnit, ArmyType, invalidate } from '../../store/battle'
-
-import { getNextId } from '../../army_utils'
-import { toArr } from '../../utils'
-import { getUnitDefinitions } from '../../store/utils'
-import { CountryName } from '../../enums'
 
 interface Props {
   info: ModalInfo | null

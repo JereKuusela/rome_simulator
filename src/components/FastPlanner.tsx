@@ -4,9 +4,8 @@ import { Table, Input } from 'semantic-ui-react'
 import Headers from './Utils/Headers'
 import Images from './Utils/Images'
 
-import { Side } from '../store/battle'
-import { UnitType } from '../store/units'
 import { get } from 'lodash'
+import { UnitType, Side } from 'types'
 
 export type PlannerUnits = { [key in UnitType]: number }
 
