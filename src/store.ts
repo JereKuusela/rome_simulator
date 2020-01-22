@@ -1,11 +1,9 @@
 import { createStore } from 'redux'
 import { devToolsEnhancer } from 'redux-devtools-extension'
-import { rootReducer } from './store/'
+import { rootReducer, restoreBaseGlobalStats, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits, stripRounds, setIds } from 'state'
 import { persistStore, persistReducer, createTransform, createMigrate } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
-import {
-  restoreBaseGlobalStats, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits, stripRounds, setIds
-} from './store/transforms'
+
 import { forEach } from 'utils'
 import { UnitDefinitions } from 'reducers'
 import { UnitType, Setting } from 'types'

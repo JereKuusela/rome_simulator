@@ -4,10 +4,9 @@ import { Modal } from 'semantic-ui-react'
 import { CountryName, RowType, UnitType } from 'types'
 import ItemRemover from 'components/ItemRemover'
 import ItemSelector from 'components/ItemSelector'
-import { AppState } from 'store/'
+import { AppState, getUnitDefinitions } from 'state'
 import { setRowType, invalidate } from 'reducers'
 import { toArr } from 'utils'
-import { getUnitDefinitions } from 'store/utils'
 
 type Props = {
   country: CountryName

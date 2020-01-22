@@ -17,3 +17,5 @@ const combined = combineReducers({
 export const rootReducer:Reducer<AppState, AnyAction> = composeReducers(combined, combatReducer, importReducer) as Reducer<AppState, AnyAction>
 
 export type AppState = ReturnType<typeof combined>
+export * from './transforms'
+export * from './utils'

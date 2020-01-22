@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import { Container, Grid, Table, List, Input, Checkbox } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { AppState } from '../store/index'
+import { AppState, getGeneral } from 'state'
 import { mapRange, ObjSet, has, keys } from '../utils'
 
 import { addSignWithZero } from 'formatters'
 import { TraditionDefinition, TradeDefinition, IdeaDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, EconomyDefinition, LawDefinition, AbilityDefinition, Modifier, Tradition, ScopeType, UnitCalc, ReligionType, CultureType, ModifierType, CountryName, GovermentType } from 'types'
 import { DefinitionType, ValuesType } from 'base_definition'
-import { getGeneral } from 'store/utils'
 import { enableModifiers, clearModifiers, setGeneralMartial, selectCulture, selectReligion, selectGovernment, setOmenPower, setHasGeneral, setMilitaryPower, setOfficeMorale, setOfficeDiscipline, invalidateCountry } from 'reducers'
 
 import AccordionToggle from '../containers/AccordionToggle'

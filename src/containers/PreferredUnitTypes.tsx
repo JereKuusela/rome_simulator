@@ -2,8 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table, Input } from 'semantic-ui-react'
 
-import { AppState } from '../store/'
-import { getCountry, getRowTypes, getFlankSize, getMode, getUnitDefinitionsBySide } from '../store/utils'
+import { AppState, getCountry, getRowTypes, getFlankSize, getMode, getUnitDefinitionsBySide } from 'state'
 import { setFlankSize } from 'reducers'
 
 import ModalRowTypeSelector from './modal/ModalRowTypeSelector'

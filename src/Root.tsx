@@ -13,7 +13,7 @@ import Instructions from './pages/Instructions'
 import Countries from './pages/Countries'
 import Settings from './pages/Settings'
 import Error from './pages/Error'
-import { AppState } from './store/'
+import { AppState } from 'state'
 import Statistics from './pages/Statistics'
 import { Container } from 'semantic-ui-react'
 

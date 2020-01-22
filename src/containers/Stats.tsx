@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table } from 'semantic-ui-react'
 
-import { AppState } from 'store/index'
-
 import IconManpower from '../images/manpower.png'
 import IconStrength from '../images/naval_combat.png'
 import IconMorale from '../images/morale.png'
@@ -13,7 +11,7 @@ import { CombatUnits, CombatUnit } from 'combat/combat'
 import { DefinitionType, getImage } from 'base_definition'
 import { strengthToValue } from 'formatters'
 import { round, sumArr } from 'utils'
-import { getCurrentCombat, filterUnitTypesBySide } from 'store/utils'
+import { AppState, getCurrentCombat, filterUnitTypesBySide } from 'state'
 
 type Props = {}
 

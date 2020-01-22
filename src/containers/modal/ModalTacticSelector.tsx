@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 
-import { AppState } from '../../store/'
+import { AppState, getCurrentCombat, filterTactics, getSelectedTactic, getCountry } from 'state'
 
 import StyledNumber from '../../components/Utils/StyledNumber'
 import ItemSelector, { SelectorAttributes } from '../../components/ItemSelector'
@@ -11,7 +11,6 @@ import { map, filter, toArr } from 'utils'
 import { calculateTactic } from 'combat/combat'
 import { toPercent, toSignedPercent } from 'formatters'
 import { calculateValue } from 'definition_values'
-import { getCurrentCombat, filterTactics, getSelectedTactic, getCountry } from 'store/utils'
 import { selectTactic, invalidate } from 'reducers'
 
 type Props = {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal, Button, Grid } from 'semantic-ui-react'
-import { AppState } from '../../store/'
+import { AppState, getParticipant, getBaseUnits, filterUnitTypesBySide, getUnitDefinitionsBySide, getUnitImages } from 'state'
 import FastPlanner from '../../components/FastPlanner'
 import ArmyCosts from '../../components/ArmyCosts'
 import { UnitType, BaseReserve, Side, CountryName, BaseUnit } from 'types'
@@ -11,7 +11,6 @@ import { doRemoveReserveUnits, doAddReserveUnits, changeWeariness, addReserveUni
 import { forEach, mapRange, toArr, round, randomWithinRange } from 'utils'
 import { addValues } from 'definition_values'
 import { ValuesType } from 'base_definition'
-import { getParticipant, getBaseUnits, filterUnitTypesBySide, getUnitDefinitionsBySide, getUnitImages } from 'store/utils'
 
 type Units = { [key in UnitType]: number }
 

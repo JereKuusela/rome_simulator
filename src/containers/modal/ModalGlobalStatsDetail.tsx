@@ -3,10 +3,9 @@ import { connect } from 'react-redux'
 
 import UnitDetail from '../../components/UnitDetail'
 
-import { AppState } from '../../store/'
+import { AppState, getBaseDefinition } from 'state'
 import { CountryName, UnitType, Unit, UnitValueType } from 'types'
 import { ValuesType } from 'base_definition'
-import { getBaseDefinition } from 'store/utils'
 import { setGlobalValue, toggleGlobalIsLoyal, invalidateCountry } from 'reducers'
 
 const CUSTOM_VALUE_KEY = 'Global'

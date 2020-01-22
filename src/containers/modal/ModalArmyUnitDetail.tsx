@@ -5,12 +5,11 @@ import { Modal } from 'semantic-ui-react'
 import ItemRemover from '../../components/ItemRemover'
 import UnitDetail from '../../components/UnitDetail'
 
-import { AppState } from '../../store/'
+import { AppState, filterUnitTypesByCountry, filterTerrainTypes, findUnit, getCombatUnitForEachRound } from 'state'
 import { Side, CountryName, UnitType, Unit, UnitCalc, UnitValueType } from 'types'
 import { ValuesType } from 'base_definition'
 import { CombatUnit } from 'combat/combat'
 import { addValues } from 'definition_values'
-import { filterUnitTypesByCountry, filterTerrainTypes, findUnit, getCombatUnitForEachRound } from 'store/utils'
 import { editCohort, deleteCohort, invalidateCountry, setCohortValue, changeCohortType, toggleCohortLoyal } from 'reducers'
 
 const CUSTOM_VALUE_KEY = 'Unit'

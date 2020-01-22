@@ -8,9 +8,8 @@ import IconDefeated from 'images/attrition.png'
 import { Side, ArmyType, UnitCalc } from 'types'
 import { getImage } from 'base_definition'
 import { CombatUnit } from 'combat/combat'
-import { AppState } from 'store/'
+import { AppState, getCurrentCombat } from 'state'
 import { getArmyPart } from 'army_utils'
-import { getCurrentCombat } from 'store/utils'
 
 type Props = {
   side: Side

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { AppState } from '../../store/'
+import { AppState } from 'state'
 import TerrainDetail from '../../components/TerrainDetail'
 import { Mode, DefinitionType } from 'base_definition'
 import { TerrainType, LocationType, TerrainValueType } from 'types'

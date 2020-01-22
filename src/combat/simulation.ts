@@ -1,4 +1,4 @@
-import { ArmyForCombat } from "store/utils"
+import { ArmyForCombat } from "state"
 import { TerrainDefinition, UnitType, Setting, TacticCalc, BaseUnits, Unit, UnitCalc, Side, Settings } from "types"
 import { calculateTotalRoll } from "./combat_utils"
 import { calculateValue } from "definition_values"

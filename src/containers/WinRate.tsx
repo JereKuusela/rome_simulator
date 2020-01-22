@@ -4,8 +4,7 @@ import { Grid, Button } from 'semantic-ui-react'
 
 import StyledNumber from '../components/Utils/StyledNumber'
 
-import { AppState } from '../store/'
-import { getSettings, getSelectedTerrains, mergeUnitTypes, getArmyForCombat } from '../store/utils'
+import { AppState, getSettings, getSelectedTerrains, mergeUnitTypes, getArmyForCombat } from 'state'
 import { toPercent, toFlooredPercent } from 'formatters'
 import { interrupt, WinRateProgress, doConversion, calculateWinRate } from 'combat/simulation'
 import { showProgress } from 'utils'

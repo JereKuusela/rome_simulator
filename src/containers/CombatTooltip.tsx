@@ -5,14 +5,13 @@ import { last } from 'lodash'
 
 import StyledNumber from '../components/Utils/StyledNumber'
 
-import { AppState } from '../store/'
 import { Side, ArmyType, UnitCalc, UnitType, Setting, TacticCalc, TerrainType, getOpponent } from 'types'
 import { calculateTotalRoll, calculateBaseDamage } from 'combat/combat_utils'
 import { toSignedPercent, toManpower, strengthToValue, toNumber } from 'formatters'
 import { calculateValue } from 'definition_values'
 import { DefinitionType } from 'base_definition'
 import { CombatUnitDefinition, CombatUnitRoundInfo, CombatUnit } from 'combat/combat'
-import { getCurrentCombat, getParticipant, getSettings, getSelectedTerrains, getGeneral, getCountry, getTactic, getCombatUnit } from 'store/utils'
+import { AppState, getCurrentCombat, getParticipant, getSettings, getSelectedTerrains, getGeneral, getCountry, getTactic, getCombatUnit } from 'state'
 
 type Props = {
   id: number | null

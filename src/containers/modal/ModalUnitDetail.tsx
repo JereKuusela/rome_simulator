@@ -3,8 +3,7 @@ import { connect } from 'react-redux'
 import { CountryName, UnitType, Unit, UnitDeployment, UnitValueType } from 'types'
 import UnitDetail from 'components/UnitDetail'
 import { ValuesType, DefinitionType } from 'base_definition'
-import { AppState } from 'store/'
-import { getUnitDefinition, mergeUnitTypes, filterTerrainTypes, getMode } from 'store/utils'
+import { AppState, getUnitDefinition, mergeUnitTypes, filterTerrainTypes, getMode } from 'state'
 import { setUnitValue, changeUnitImage, changeUnitMode, changeUnitDeployment, toggleIsUnitLoyal, invalidateCountry } from 'reducers'
 
 

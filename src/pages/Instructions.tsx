@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Grid, Header } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { AppState } from '../store/index'
+import { AppState } from 'state'
 
 class Instructions extends Component<IProps> {
   render() {

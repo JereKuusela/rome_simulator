@@ -1,7 +1,6 @@
-import { AppState } from "../store/"
+import { AppState, stripRounds } from "state"
 import { saveAs } from 'file-saver'
 import { ExportKeys } from "reducers/transfer"
-import { stripRounds } from "store/transforms"
 import { ExportKey } from "types"
 import { DefinitionType } from "base_definition"
 

@@ -1,6 +1,5 @@
 import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
-import { AppState } from 'store/'
-import { resetMissing } from 'store/utils'
+import { AppState, resetMissing } from 'state'
 import { ExportKey } from 'types'
 
 export type ExportKeys = { [key in ExportKey]: boolean }

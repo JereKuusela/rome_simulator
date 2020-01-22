@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Grid, Input, Table, Header, Checkbox, Tab } from 'semantic-ui-react'
 
-import { AppState } from '../store/index'
+import { AppState } from 'state'
 
 import Dropdown from '../components/Utils/Dropdown'
 import { toArr, keys, values } from 'utils'

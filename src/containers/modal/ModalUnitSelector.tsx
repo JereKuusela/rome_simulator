@@ -6,8 +6,7 @@ import ItemSelector from '../../components/ItemSelector'
 import { CountryName, ArmyType, UnitType } from 'types'
 import { toArr } from 'utils'
 import { getNextId } from 'army_utils'
-import { AppState } from 'store/'
-import { getUnitDefinitions } from 'store/utils'
+import { AppState, getUnitDefinitions } from 'state'
 import { selectCohort, invalidate } from 'reducers'
 
 

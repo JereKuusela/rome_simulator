@@ -2,8 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image } from 'semantic-ui-react'
 
-import { AppState } from '../store/'
-import { getCurrentCombat, getSelectedTactic } from '../store/utils'
+import { AppState, getCurrentCombat, getSelectedTactic } from 'state'
 
 import { getImage } from '../base_definition'
 

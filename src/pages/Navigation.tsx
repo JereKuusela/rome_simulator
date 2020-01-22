@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { AppState } from '../store/index'
+import { AppState } from 'state'
 import { toggleMode } from 'reducers'
 import { Menu, Image, Button } from 'semantic-ui-react'
 import IconLand from '../images/land_combat.png'

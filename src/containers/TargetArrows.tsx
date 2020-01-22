@@ -2,11 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import LineTo from 'react-lineto'
 
-import { AppState } from '../store/'
+import { AppState, getCurrentCombat } from 'state'
 import { ArmyType, Side } from 'types'
 import { CombatUnit } from 'combat/combat'
 import { getArmyPart } from 'army_utils'
-import { getCurrentCombat } from 'store/utils'
 
 type Props = {
   type: ArmyType

@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
-import { AppState } from '../../store/'
+import { AppState, filterTerrains, getMode } from 'state'
 import ItemSelector, { SelectorAttributes } from '../../components/ItemSelector'
 import StyledNumber from '../../components/Utils/StyledNumber'
 import { LocationType, TerrainType, TerrainCalc } from 'types'
 import { map, filter, toArr } from 'utils'
 import { calculateValue } from 'definition_values'
 import { addSign } from 'formatters'
-import { filterTerrains, getMode } from 'store/utils'
 import { selectTerrain, invalidate } from 'reducers'
 
 type Props = {

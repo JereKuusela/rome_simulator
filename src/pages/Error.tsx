@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Button, Header, Segment } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { AppState } from '../store/index'
+import { AppState } from 'state'
 import { saveToFile, exportState } from 'managers/transfer_manager'
 import { reset } from 'reducers'
 

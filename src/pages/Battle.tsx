@@ -28,10 +28,7 @@ import {
     undo, battle, refreshBattle, setSeed, setGeneralMartial, importState
 } from 'reducers'
 import { Button, Checkbox, Divider, Grid, Header, Image, Input, Table } from 'semantic-ui-react'
-import { AppState } from 'store/index'
-import {
-    getBattle, getCountry, getGeneral, getParticipant, getSettings, resetMissing
-} from 'store/utils'
+import { AppState, getBattle, getCountry, getGeneral, getParticipant, getSettings, resetMissing } from 'state'
 import { ArmyType, CountryName, Participant, Setting, Side } from 'types'
 import { keys } from 'utils'
 
