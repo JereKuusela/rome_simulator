@@ -6,7 +6,7 @@ import { AppState, getCurrentCombat, getSelectedTactic } from 'state'
 
 import { getImage } from '../base_definition'
 
-import StyledNumber from '../components/Utils/StyledNumber'
+import StyledNumber from 'components/Utils/StyledNumber'
 import ModalTacticSelector from './modal/ModalTacticSelector'
 import { Side, getOpponent } from 'types'
 import { calculateTactic } from 'combat/combat'

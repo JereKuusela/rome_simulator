@@ -1,6 +1,6 @@
-import { TestInfo, initInfo, getUnit, testReinforce, every_type, setFlankSizes, getRowTypes } from "./utils"
-import { UnitType, Setting } from "types"
-import { resize } from "utils"
+import { TestInfo, initInfo, getUnit, testReinforce, every_type, setFlankSizes, getRowTypes } from './utils'
+import { UnitType, Setting } from 'types'
+import { resize } from 'utils'
 
 describe('reinforcement', () => {
 

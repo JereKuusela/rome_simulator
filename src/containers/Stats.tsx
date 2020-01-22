@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table } from 'semantic-ui-react'
 
-import IconManpower from '../images/manpower.png'
-import IconStrength from '../images/naval_combat.png'
-import IconMorale from '../images/morale.png'
-import IconEmpty from '../images/empty.png'
+import IconManpower from 'images/manpower.png'
+import IconStrength from 'images/naval_combat.png'
+import IconMorale from 'images/morale.png'
+import IconEmpty from 'images/empty.png'
 import { Side, UnitType, UnitCalc } from 'types'
 import { CombatUnits, CombatUnit } from 'combat/combat'
 import { DefinitionType, getImage } from 'base_definition'
@@ -103,7 +103,7 @@ class Stats extends Component<IProps> {
 
   sum = (merged: CombatUnit[], getAttribute: (unit: CombatUnit) => number): number => sumArr(merged, value => Math.max(0, getAttribute(value)))
 
-  // Flattens units to a single list. Also filters temporary "defeated" units because they are copies of another unit.
+  // Flattens units to a single list. Also filters temporary 'defeated' units because they are copies of another unit.
   flatten = (units: CombatUnits, type?: UnitType): CombatUnit[] => (
     units.reserve.filter(unit => this.filter(unit, type)).concat(units.defeated.filter(unit => this.filter(unit, type)).concat(units.frontline.filter(unit => this.filter(unit, type)) as CombatUnit[]))
   )

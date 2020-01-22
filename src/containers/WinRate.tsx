@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Grid, Button } from 'semantic-ui-react'
 
-import StyledNumber from '../components/Utils/StyledNumber'
+import StyledNumber from 'components/Utils/StyledNumber'
 
 import { AppState, getSettings, getSelectedTerrains, mergeUnitTypes, getArmyForCombat } from 'state'
 import { toPercent, toFlooredPercent } from 'formatters'

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { AppState, filterTactics, filterTacticTypes, getUnitImages, mergeUnitTypes } from 'state'
-import TacticDetail from '../../components/TacticDetail'
+import TacticDetail from 'components/TacticDetail'
 import { Mode, DefinitionType } from 'base_definition'
 import { TacticType, TacticValueType } from 'types'
 import { setTacticBaseValue, changeTacticImage, changeTacticMode, invalidate } from 'reducers'

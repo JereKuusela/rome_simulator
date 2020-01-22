@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 
-import ItemSelector from '../../components/ItemSelector'
+import ItemSelector from 'components/ItemSelector'
 import { CountryName, ArmyType, UnitType } from 'types'
 import { toArr } from 'utils'
 import { getNextId } from 'army_utils'

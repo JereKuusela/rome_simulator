@@ -74,18 +74,18 @@ export default class RoundChart extends Component<IProps, IState> {
             tickFormat={(x) => (`${x * 100}%`)}
           />
           <VictoryArea
-            interpolation="natural"
+            interpolation='natural'
             data={data.cumulative}
             style={{
-              data: { fill: "grey" }
+              data: { fill: 'grey' }
             }}
             name={CUMULATIVE}
           />
           <VictoryArea
-            interpolation="natural"
+            interpolation='natural'
             data={data.values}
             style={{
-              data: { fill: "black" }
+              data: { fill: 'black' }
             }}
             name={VALUES}
           />

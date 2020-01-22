@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { AppState } from 'state'
-import TerrainDetail from '../../components/TerrainDetail'
+import TerrainDetail from 'components/TerrainDetail'
 import { Mode, DefinitionType } from 'base_definition'
 import { TerrainType, LocationType, TerrainValueType } from 'types'
 import { changeTerrainLocation, changeTerrainImage, changeTerrainMode, setTerrainBaseValue, invalidate } from 'reducers'

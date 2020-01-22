@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import UnitDetail from '../../components/UnitDetail'
+import UnitDetail from 'components/UnitDetail'
 
 import { AppState, getBaseDefinition } from 'state'
 import { CountryName, UnitType, Unit, UnitValueType } from 'types'

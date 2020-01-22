@@ -1,4 +1,4 @@
-import { CombatSettings, Setting, SiteSettings, SimulationSpeed } from "types"
+import { CombatSettings, Setting, SiteSettings, SimulationSpeed } from 'types'
 
 export const getDefaultLandSettings = (): CombatSettings => {
   return {

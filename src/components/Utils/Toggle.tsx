@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Button, Image } from 'semantic-ui-react'
 
-import IconYes from '../../images/yes.png'
-import IconNo from '../../images/no.png'
+import IconYes from 'images/yes.png'
+import IconNo from 'images/no.png'
 
 interface IProps {
   value: boolean

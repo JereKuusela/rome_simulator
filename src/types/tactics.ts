@@ -1,6 +1,6 @@
-import { UnitType } from "./units"
-import { Definition } from "base_definition"
-import { BaseDefinitionValues } from "definition_values"
+import { UnitType } from './units'
+import { Definition } from 'base_definition'
+import { BaseDefinitionValues } from 'definition_values'
 
 export enum TacticCalc {
   Casualties = 'Casualties'

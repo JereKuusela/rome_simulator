@@ -1,5 +1,5 @@
-import { Definition } from "base_definition"
-import { BaseDefinitionValues, calculateValue } from "definition_values"
+import { Definition } from 'base_definition'
+import { BaseDefinitionValues, calculateValue } from 'definition_values'
 
 export enum TerrainType {
   Desert = 'Desert',

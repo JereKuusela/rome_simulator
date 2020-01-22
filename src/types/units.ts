@@ -1,7 +1,7 @@
-import { TerrainType } from "./terrains"
-import { DefinitionValues, calculateValue } from "definition_values"
-import { Definition, DefinitionType } from "base_definition"
-import { toNumber, toPercent, toSignedPercent } from "formatters"
+import { TerrainType } from './terrains'
+import { DefinitionValues, calculateValue } from 'definition_values'
+import { Definition, DefinitionType } from 'base_definition'
+import { toNumber, toPercent, toSignedPercent } from 'formatters'
 
 export enum UnitType {
   Archers = 'Archers',

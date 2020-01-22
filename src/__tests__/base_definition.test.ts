@@ -1,7 +1,7 @@
 import { getImage, DefinitionType } from 'base_definition'
 import { mergeValues, addValues, ValuesType, clearAllValues, clearValues, regenerateValues, calculateValue, calculateValueWithoutLoss, calculateBase, calculateModifier, calculateLoss, explainShort, getValue, BaseDefinitionValues } from 'definition_values'
-import EmptyIcon from '../images/empty.png'
-import UnknownIcon from '../images/unknown.png'
+import EmptyIcon from 'images/empty.png'
+import UnknownIcon from 'images/unknown.png'
 import { size } from 'lodash'
 import { strengthToValue } from 'formatters'
 

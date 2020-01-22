@@ -1,10 +1,10 @@
-import { ArmyForCombat } from "state"
-import { TerrainDefinition, UnitType, Setting, TacticCalc, BaseUnits, Unit, UnitCalc, Side, Settings } from "types"
-import { calculateTotalRoll } from "./combat_utils"
-import { calculateValue } from "definition_values"
-import { CombatParticipant, getCombatUnit, CombatUnits, Frontline, Defeated, doBattleFast, Reserve } from "./combat"
-import { mapRange } from "utils"
-import { deploy } from "./deployment"
+import { ArmyForCombat } from 'state'
+import { TerrainDefinition, UnitType, Setting, TacticCalc, BaseUnits, Unit, UnitCalc, Side, Settings } from 'types'
+import { calculateTotalRoll } from './combat_utils'
+import { calculateValue } from 'definition_values'
+import { CombatParticipant, getCombatUnit, CombatUnits, Frontline, Defeated, doBattleFast, Reserve } from './combat'
+import { mapRange } from 'utils'
+import { deploy } from './deployment'
 
 /**
  * Status of the win rate calculation. Most values are percents, only iterations is integer.

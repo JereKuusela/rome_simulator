@@ -82,34 +82,34 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
             dependentAxis
           />
           <VictoryArea
-            interpolation="natural"
+            interpolation='natural'
             data={data_a.cumulative}
             style={{
-              data: { fill: "#FFAA00AA" }
+              data: { fill: '#FFAA00AA' }
             }}
             name={this.cumulative(Side.Attacker)}
           />
           <VictoryArea
-            interpolation="natural"
+            interpolation='natural'
             data={data_a.percent}
             style={{
-              data: { fill: "#FFAA00" }
+              data: { fill: '#FFAA00' }
             }}
             name={this.percent(Side.Attacker)}
           />
           <VictoryArea
-            interpolation="natural"
+            interpolation='natural'
             data={data_d.cumulative}
             style={{
-              data: { fill: "#00AAFFAA" }
+              data: { fill: '#00AAFFAA' }
             }}
             name={this.cumulative(Side.Defender)}
           />
           <VictoryArea
-            interpolation="natural"
+            interpolation='natural'
             data={data_d.percent}
             style={{
-              data: { fill: "#00AAFF" }
+              data: { fill: '#00AAFF' }
             }}
             name={this.percent(Side.Defender)}
           />

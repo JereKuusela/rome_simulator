@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Popup, List } from 'semantic-ui-react'
 import { last } from 'lodash'
 
-import StyledNumber from '../components/Utils/StyledNumber'
+import StyledNumber from 'components/Utils/StyledNumber'
 
 import { Side, ArmyType, UnitCalc, UnitType, Setting, TacticCalc, TerrainType, getOpponent } from 'types'
 import { calculateTotalRoll, calculateBaseDamage } from 'combat/combat_utils'

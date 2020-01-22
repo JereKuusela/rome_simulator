@@ -4,8 +4,8 @@ import { Modal } from 'semantic-ui-react'
 
 import { AppState, getCurrentCombat, filterTactics, getSelectedTactic, getCountry } from 'state'
 
-import StyledNumber from '../../components/Utils/StyledNumber'
-import ItemSelector, { SelectorAttributes } from '../../components/ItemSelector'
+import StyledNumber from 'components/Utils/StyledNumber'
+import ItemSelector, { SelectorAttributes } from 'components/ItemSelector'
 import { Side, TacticType, TacticCalc, getOpponent } from 'types'
 import { map, filter, toArr } from 'utils'
 import { calculateTactic } from 'combat/combat'

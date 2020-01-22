@@ -1,19 +1,19 @@
-import { AppState } from "./index"
+import { AppState } from './index'
 import { reduce, toArr, filter, arrGet, toObj } from '../utils'
 import { filterUnitDefinitions, isIncludedInMode, getArmyPart, mergeBaseUnitsWithDefinitions, mergeDefinitions, mergeDefinition } from '../army_utils'
-import { Mode, DefinitionType } from "base_definition"
-import { CountryName, BaseUnit, Side, Unit, ArmyType, UnitType, TerrainType, LocationType, TacticType, TacticDefinition, RowTypes, BaseUnits, Units, Participant, TerrainDefinition, UnitDefinition, Settings } from "types"
-import { CombatUnit, CombatUnits } from "combat/combat"
-import { TerrainDefinitions, TacticDefinitions } from "data"
-import { sortBy, uniq } from "lodash"
-import { unitSorter, GeneralStats, getGeneralStats, getGeneralBaseDefinition, getGeneralDefinitions, getGeneralDefinition } from "managers/army_manager"
-import { Battle, getDefaultBattle, getDefaultMode } from "reducers/battle"
-import { UnitDefinitions, getDefaultBaseDefinitions, getDefaultUnitDefinitions } from "reducers/units"
-import { mergeValues } from "definition_values"
-import { getDefaultTacticDefinitions } from "reducers/tactics"
-import { getDefaultTerrainDefinitions } from "reducers/terrains"
-import { getDefaultCountryDefinitions } from "reducers/countries"
-import { getDefaultSettings } from "reducers/settings"
+import { Mode, DefinitionType } from 'base_definition'
+import { CountryName, BaseUnit, Side, Unit, ArmyType, UnitType, TerrainType, LocationType, TacticType, TacticDefinition, RowTypes, BaseUnits, Units, Participant, TerrainDefinition, UnitDefinition, Settings } from 'types'
+import { CombatUnit, CombatUnits } from 'combat/combat'
+import { TerrainDefinitions, TacticDefinitions } from 'data'
+import { sortBy, uniq } from 'lodash'
+import { unitSorter, GeneralStats, getGeneralStats, getGeneralBaseDefinition, getGeneralDefinitions, getGeneralDefinition } from 'managers/army_manager'
+import { Battle, getDefaultBattle, getDefaultMode } from 'reducers/battle'
+import { UnitDefinitions, getDefaultBaseDefinitions, getDefaultUnitDefinitions } from 'reducers/units'
+import { mergeValues } from 'definition_values'
+import { getDefaultTacticDefinitions } from 'reducers/tactics'
+import { getDefaultTerrainDefinitions } from 'reducers/terrains'
+import { getDefaultCountryDefinitions } from 'reducers/countries'
+import { getDefaultSettings } from 'reducers/settings'
 
 /**
  * Returns settings of the current mode.

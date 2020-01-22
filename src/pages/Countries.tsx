@@ -9,11 +9,11 @@ import { TraditionDefinition, TradeDefinition, IdeaDefinition, HeritageDefinitio
 import { DefinitionType, ValuesType } from 'base_definition'
 import { enableModifiers, clearModifiers, setGeneralMartial, selectCulture, selectReligion, selectGovernment, setOmenPower, setHasGeneral, setMilitaryPower, setOfficeMorale, setOfficeDiscipline, invalidateCountry } from 'reducers'
 
-import AccordionToggle from '../containers/AccordionToggle'
-import CountryManager from '../containers/CountryManager'
-import Dropdown from '../components/Utils/Dropdown'
-import ConfirmationButton from '../components/ConfirmationButton'
-import StyledNumber from '../components/Utils/StyledNumber'
+import AccordionToggle from 'containers/AccordionToggle'
+import CountryManager from 'containers/CountryManager'
+import Dropdown from 'components/Utils/Dropdown'
+import ConfirmationButton from 'components/ConfirmationButton'
+import StyledNumber from 'components/Utils/StyledNumber'
 
 const TRADE_COLUMNS = 4
 const HERITAGE_COLUMNS = 4

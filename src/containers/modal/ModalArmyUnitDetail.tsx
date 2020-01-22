@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 
-import ItemRemover from '../../components/ItemRemover'
-import UnitDetail from '../../components/UnitDetail'
+import ItemRemover from 'components/ItemRemover'
+import UnitDetail from 'components/UnitDetail'
 
 import { AppState, filterUnitTypesByCountry, filterTerrainTypes, findUnit, getCombatUnitForEachRound } from 'state'
 import { Side, CountryName, UnitType, Unit, UnitCalc, UnitValueType } from 'types'

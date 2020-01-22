@@ -1,7 +1,7 @@
-import { CombatUnit, CombatUnits, Reserve, CombatParticipant } from "./combat"
-import { RowTypes, UnitCalc, RowType, UnitDeployment, CombatSettings, Setting } from "types"
-import { nextIndex } from "./reinforcement"
-import { sortBy, remove } from "lodash"
+import { CombatUnit, CombatUnits, Reserve, CombatParticipant } from './combat'
+import { RowTypes, UnitCalc, RowType, UnitDeployment, CombatSettings, Setting } from 'types'
+import { nextIndex } from './reinforcement'
+import { sortBy, remove } from 'lodash'
 
 export type SortedReserve = {
   front: CombatUnit[]
@@ -111,7 +111,7 @@ const isSupportUnit = (row_types: RowTypes, unit: CombatUnit) => {
 
 /**
  * Removes units from frontline which are out of combat width.
- * Also resizes the frontline to prevent "index out of bounds" errors.
+ * Also resizes the frontline to prevent 'index out of bounds' errors.
  * Calling this function shouldn't be necessary 
  */
 const removeOutOfBounds = (units: CombatUnits, combat_width: number) => {

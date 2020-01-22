@@ -4,7 +4,7 @@ import { Grid, Input, Table, Header, Checkbox, Tab } from 'semantic-ui-react'
 
 import { AppState } from 'state'
 
-import Dropdown from '../components/Utils/Dropdown'
+import Dropdown from 'components/Utils/Dropdown'
 import { toArr, keys, values } from 'utils'
 import { Setting, parameterToDescription, SimulationSpeed, CombatSettings, SiteSettings } from 'types'
 import { Mode, DefinitionType } from 'base_definition'

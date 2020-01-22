@@ -1,12 +1,12 @@
 
-import { ImmerReducer, createActionCreators, createReducerFunction, Actions } from "immer-reducer"
+import { ImmerReducer, createActionCreators, createReducerFunction, Actions } from 'immer-reducer'
 
-import { CountryName, UnitDefinition, UnitType, UnitValueType, UnitDeployment, Modifier, ScopeType } from "types"
-import { DefinitionType, ValuesType, Mode } from "base_definition"
-import { getDefaultUnits, getDefaultGlobals, getUnitIcon } from "data"
-import { addValues, regenerateValues, clearValues, clearAllValues } from "definition_values"
-import { map } from "utils"
-import { createCountry, deleteCountry, changeCountryName, enableModifiers, clearModifiers } from "./countries"
+import { CountryName, UnitDefinition, UnitType, UnitValueType, UnitDeployment, Modifier, ScopeType } from 'types'
+import { DefinitionType, ValuesType, Mode } from 'base_definition'
+import { getDefaultUnits, getDefaultGlobals, getUnitIcon } from 'data'
+import { addValues, regenerateValues, clearValues, clearAllValues } from 'definition_values'
+import { map } from 'utils'
+import { createCountry, deleteCountry, changeCountryName, enableModifiers, clearModifiers } from './countries'
 
 export type GlobalStats = { [key in CountryName]: GlobalDefinitions }
 export type GlobalDefinitions = { [key in DefinitionType.Land | DefinitionType.Naval]: UnitDefinition }
