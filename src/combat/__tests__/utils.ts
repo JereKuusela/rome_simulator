@@ -76,14 +76,14 @@ const verify = (round: number, side: Side, index: number, unit: BaseUnit | null,
     expect(Math.floor(unit_strength)).toEqual(strength)
   }
   catch (e) {
-    throw new Error(errorPrefix(round, side, index) + 'Strength ' + unit_strength + ' is not ' + strength);
+    throw new Error(errorPrefix(round, side, index) + 'Strength ' + unit_strength + ' is not ' + strength)
   }
   const unit_morale = calculateValue(unit, UnitCalc.Morale)
   try {
     expect(Math.abs(unit_morale - 2 * morale)).toBeLessThan(0.002)
   }
   catch (e) {
-    throw new Error(errorPrefix(round, side, index) + 'Morale ' + unit_morale + ' is not ' + 2 * morale);
+    throw new Error(errorPrefix(round, side, index) + 'Morale ' + unit_morale + ' is not ' + 2 * morale)
   }
 }
 const verifyFast = (round: number, side: Side, index: number, unit: CombatUnit | null, strength: number, morale: number) => {
@@ -95,14 +95,14 @@ const verifyFast = (round: number, side: Side, index: number, unit: CombatUnit |
     expect(Math.floor(unit_strength)).toEqual(strength)
   }
   catch (e) {
-    throw new Error(errorPrefix(round, side, index) + 'Strength ' + unit_strength + ' is not ' + strength);
+    throw new Error(errorPrefix(round, side, index) + 'Strength ' + unit_strength + ' is not ' + strength)
   }
   const unit_morale = unit[UnitCalc.Morale]
   try {
     expect(Math.abs(unit_morale - 2 * morale)).toBeLessThan(0.002)
   }
   catch (e) {
-    throw new Error(errorPrefix(round, side, index) + 'Morale ' + unit_morale + ' is not ' + 2 * morale);
+    throw new Error(errorPrefix(round, side, index) + 'Morale ' + unit_morale + ' is not ' + 2 * morale)
   }
 }
 
@@ -121,13 +121,13 @@ export const verifyType = (round: number, side: Side, index: number, unit: { typ
       expect(unit).toBeTruthy()
     }
     catch (e) {
-      throw new Error(errorPrefix(round, side, index) + 'Unit should exist');
+      throw new Error(errorPrefix(round, side, index) + 'Unit should exist')
     }
     try {
       expect(unit!.type + message).toEqual(type + message)
     }
     catch (e) {
-      throw new Error(errorPrefix(round, side, index) + 'Type ' + unit!.type + ' is not ' + type);
+      throw new Error(errorPrefix(round, side, index) + 'Type ' + unit!.type + ' is not ' + type)
     }
 
   }
@@ -136,7 +136,7 @@ export const verifyType = (round: number, side: Side, index: number, unit: { typ
       expect(unit).toBeFalsy()
     }
     catch (e) {
-      throw new Error(errorPrefix(round, side, index) + 'Unit shouldn\'t exist');
+      throw new Error(errorPrefix(round, side, index) + 'Unit shouldn\'t exist')
     }
   }
 }
