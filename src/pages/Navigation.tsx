@@ -5,7 +5,7 @@ import { toggleMode } from 'reducers'
 import { Menu, Image, Button } from 'semantic-ui-react'
 import IconLand from 'images/land_combat.png'
 import IconNaval from 'images/naval_combat.png'
-import { DefinitionType } from 'base_definition'
+import { DefinitionType } from 'types'
 
 /**
  * Navigation menu for different pages.

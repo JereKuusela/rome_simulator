@@ -1,27 +1,14 @@
 
 import { ImmerReducer, createActionCreators, createReducerFunction, Actions } from 'immer-reducer'
 
-import { CountryName, UnitDefinition, UnitType, UnitValueType, UnitDeployment, Modifier, ScopeType } from 'types'
-import { DefinitionType, ValuesType, Mode } from 'base_definition'
-import { getDefaultUnits, getDefaultGlobals, getUnitIcon } from 'data'
+import { DefinitionType, ValuesType, Mode, CountryName, UnitType, UnitValueType, UnitDeployment, Modifier, ScopeType, UnitState, GlobalStats } from 'types'
+import { getDefaultUnits, getDefaultGlobals, getUnitIcon, getDefaultUnitDefinitions, getDefaultBaseDefinitions } from 'data'
 import { addValues, regenerateValues, clearValues, clearAllValues } from 'definition_values'
 import { map } from 'utils'
 import { createCountry, deleteCountry, changeCountryName, enableModifiers, clearModifiers } from './countries'
 
-export type GlobalStats = { [key in CountryName]: GlobalDefinitions }
-export type GlobalDefinitions = { [key in DefinitionType.Land | DefinitionType.Naval]: UnitDefinition }
 
-export type Units = { [key in CountryName]: UnitDefinitions }
-export type UnitDefinitions = { [key in UnitType]: UnitDefinition }
-
-export const getDefaultUnitDefinitions = (): Units => ({ [CountryName.Country1]: getDefaultUnits(), [CountryName.Country2]: getDefaultUnits() })
-export const getDefaultBaseDefinitions = (): GlobalStats => ({ [CountryName.Country1]: getDefaultGlobals(), [CountryName.Country2]: getDefaultGlobals() })
-
-const unitDefinitions = getDefaultUnitDefinitions()
-const baseDefinitions = getDefaultBaseDefinitions()
-
-
-class UnitsReducer extends ImmerReducer<Units> {
+class UnitsReducer extends ImmerReducer<UnitState> {
 
   setValue(country: CountryName, values_type: ValuesType, type: UnitType, key: string, attribute: UnitValueType, value: number) {
     this.draftState[country][type] = addValues(this.state[country][type], values_type, key, [[attribute, value]])
@@ -84,7 +71,7 @@ class UnitsReducer extends ImmerReducer<Units> {
   }
 }
 
-class GlobalStatsReducer extends ImmerReducer<GlobalStats> {
+class BaseDefinitionsReducer extends ImmerReducer<GlobalStats> {
 
   setGlobalValue(country: CountryName, mode: Mode, type: ValuesType, key: string, attribute: UnitValueType, value: number) {
     this.draftState[country][mode] = addValues(this.state[country][mode], type, key, [[attribute, value]])
@@ -141,9 +128,9 @@ export const changeUnitMode = unitsActions.changeMode
 export const changeUnitDeployment = unitsActions.changeDeployment
 export const toggleIsUnitLoyal = unitsActions.toggleIsLoyal
 
-const unitsBaseReducer = createReducerFunction(UnitsReducer, unitDefinitions)
+const unitsBaseReducer = createReducerFunction(UnitsReducer, getDefaultUnitDefinitions())
 
-export const unitsReducer = (state = unitDefinitions, action: Actions<typeof UnitsReducer>) => {
+export const unitsReducer = (state = getDefaultUnitDefinitions(), action: Actions<typeof UnitsReducer>) => {
   if (action.type === createCountry.type)
     return unitsBaseReducer(state, { payload: action.payload, type: unitsActions.createCountry.type, args: true } as any)
   if (action.type === deleteCountry.type)
@@ -157,23 +144,23 @@ export const unitsReducer = (state = unitDefinitions, action: Actions<typeof Uni
   return unitsBaseReducer(state, action)
 }
 
-const globalStatsActions = createActionCreators(GlobalStatsReducer)
+const baseDefinitionsActions = createActionCreators(BaseDefinitionsReducer)
 
-export const setGlobalValue = globalStatsActions.setGlobalValue
-export const toggleGlobalIsLoyal = globalStatsActions.toggleIsLoyal
+export const setGlobalValue = baseDefinitionsActions.setGlobalValue
+export const toggleGlobalIsLoyal = baseDefinitionsActions.toggleIsLoyal
 
-const globalStatsBaseReducer = createReducerFunction(GlobalStatsReducer, baseDefinitions)
+const baseDefinitionsReducer = createReducerFunction(BaseDefinitionsReducer, getDefaultBaseDefinitions())
 
-export const globalStatsReducer = (state = baseDefinitions, action: Actions<typeof GlobalStatsReducer>) => {
+export const globalStatsReducer = (state = getDefaultBaseDefinitions(), action: Actions<typeof BaseDefinitionsReducer>) => {
   if (action.type === createCountry.type)
-    return globalStatsBaseReducer(state, { payload: action.payload, type: globalStatsActions.createCountry.type, args: true } as any)
+    return baseDefinitionsReducer(state, { payload: action.payload, type: baseDefinitionsActions.createCountry.type, args: true } as any)
   if (action.type === deleteCountry.type)
-    return globalStatsBaseReducer(state, { payload: action.payload, type: globalStatsActions.deleteCountry.type })
+    return baseDefinitionsReducer(state, { payload: action.payload, type: baseDefinitionsActions.deleteCountry.type })
   if (action.type === changeCountryName.type)
-    return globalStatsBaseReducer(state, { payload: action.payload, type: globalStatsActions.changeCountryName.type, args: true } as any)
+    return baseDefinitionsReducer(state, { payload: action.payload, type: baseDefinitionsActions.changeCountryName.type, args: true } as any)
   if (action.type === enableModifiers.type)
-    return globalStatsBaseReducer(state, { payload: action.payload, type: globalStatsActions.enableModifiers.type, args: true } as any)
+    return baseDefinitionsReducer(state, { payload: action.payload, type: baseDefinitionsActions.enableModifiers.type, args: true } as any)
   if (action.type === clearModifiers.type)
-    return globalStatsBaseReducer(state, { payload: action.payload, type: globalStatsActions.clearModifiers.type, args: true } as any)
-  return globalStatsBaseReducer(state, action)
+    return baseDefinitionsReducer(state, { payload: action.payload, type: baseDefinitionsActions.clearModifiers.type, args: true } as any)
+  return baseDefinitionsReducer(state, action)
 }

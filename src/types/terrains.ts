@@ -1,4 +1,4 @@
-import { Definition } from 'base_definition'
+import { Definition } from 'types'
 import { BaseDefinitionValues, calculateValue } from 'definition_values'
 
 export enum TerrainType {
@@ -27,6 +27,8 @@ export enum LocationType {
 export enum TerrainCalc {
   Roll = 'Roll'
 }
+
+export type TerrainDefinitions = { [key in TerrainType]: TerrainDefinition }
 
 export type TerrainValueType = TerrainCalc
 

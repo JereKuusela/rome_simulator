@@ -1,12 +1,7 @@
 import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
-import { getDefaultTerrains, TerrainDefinitions } from 'data'
-import { TerrainType, LocationType, TerrainValueType } from 'types'
+import { getDefaultTerrains } from 'data'
+import { TerrainType, LocationType, TerrainValueType, ValuesType, DefinitionType, TerrainDefinitions } from 'types'
 import { addValues } from 'definition_values'
-import { ValuesType, DefinitionType } from 'base_definition'
-
-export const getDefaultTerrainDefinitions = () => getDefaultTerrains()
-
-const terrainDefinitions = getDefaultTerrainDefinitions()
 
 class TerrainsReducer extends ImmerReducer<TerrainDefinitions> {
 
@@ -49,4 +44,4 @@ export const changeTerrainLocation = actions.changeLocation
 export const changeTerrainImage = actions.changeImage
 export const changeTerrainMode = actions.changeMode
 
-export const terrainsReducer = createReducerFunction(TerrainsReducer, terrainDefinitions)
+export const terrainsReducer = createReducerFunction(TerrainsReducer, getDefaultTerrains())

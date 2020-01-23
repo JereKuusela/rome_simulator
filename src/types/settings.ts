@@ -1,3 +1,12 @@
+import { CountryName, Mode, Side, UnitCalc } from "types"
+import { ObjSet } from "utils"
+
+export type WearinessValues = { [key in Side]: WearinessAttributes }
+export type WearinessAttribute = UnitCalc.Morale | UnitCalc.Strength
+export type WearinessAttributes = { [key in WearinessAttribute]: MinMax }
+type MinMax = { min: number, max: number }
+
+
 export enum Setting {
   StrengthLostMultiplier = 'Multiplier for strength damage',
   MoraleLostMultiplier = 'Multiplier for morale damage',
@@ -116,3 +125,12 @@ export type SiteSettings = {
 }
 
 export type Settings = CombatSettings & SiteSettings
+
+export type SettingsAndOptions = {
+  combatSettings: { [key in Mode]: CombatSettings }
+  siteSettings: SiteSettings
+  mode: Mode
+  country: CountryName
+  accordions: ObjSet
+  weariness: WearinessValues
+}

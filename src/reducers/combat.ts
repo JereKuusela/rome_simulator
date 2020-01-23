@@ -1,13 +1,9 @@
 import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
 import { Random, MersenneTwister19937, createEntropy } from 'random-js'
-import { CombatUnits, Frontline, Reserve, doBattleFast, removeDefeated } from 'combat/combat'
-import { Mode } from 'base_definition'
-import { Battle } from './battle'
+import { CombatUnits, Frontline, Reserve, doBattleFast, removeDefeated, doConversion, deploy } from 'combat'
 import { AppState, getArmyForCombat, mergeUnitTypes, getCurrentCombat, getSettings } from 'state'
-import { Side, Setting, Participant, Settings } from 'types'
-import { doConversion } from 'combat/simulation'
+import { Side, Setting, Participant, Settings, Battle, Mode } from 'types'
 import { arrGet } from 'utils'
-import { deploy } from 'combat/deployment'
 
 const copyStatus = (status: CombatUnits): CombatUnits => ({
   frontline: status.frontline.map(value => value ? { ...value, state: { ...value.state } } : null),

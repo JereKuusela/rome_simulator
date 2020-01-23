@@ -4,13 +4,12 @@ import { Modal, Button, Grid } from 'semantic-ui-react'
 import { AppState, getParticipant, getBaseUnits, filterUnitTypesBySide, getUnitDefinitionsBySide, getUnitImages } from 'state'
 import FastPlanner from 'components/FastPlanner'
 import ArmyCosts from 'components/ArmyCosts'
-import { UnitType, BaseReserve, Side, CountryName, BaseUnit } from 'types'
+import { ValuesType, UnitType, BaseReserve, Side, CountryName, BaseUnit, WearinessAttributes } from 'types'
 import { mergeBaseUnitsWithDefinitions, getNextId } from 'army_utils'
-import WearinessRange, { UnitCalcValues } from 'components/WearinessRange'
+import WearinessRange from 'components/WearinessRange'
 import { doRemoveReserveUnits, doAddReserveUnits, changeWeariness, addReserveUnits, removeReserveUnits, clearUnits, invalidate } from 'reducers'
 import { forEach, mapRange, toArr, round, randomWithinRange } from 'utils'
 import { addValues } from 'definition_values'
-import { ValuesType } from 'base_definition'
 
 type Units = { [key in UnitType]: number }
 
@@ -122,11 +121,11 @@ class ModalFastPlanner extends Component<IProps, IState> {
     return units
   }
 
-  applyLosses = (values: UnitCalcValues, units: BaseReserve) => (
+  applyLosses = (values: WearinessAttributes, units: BaseReserve) => (
     units.map(unit => addValues(unit, ValuesType.LossModifier, 'Unit', this.generateLosses(values)))
   )
 
-  generateLosses = (values: UnitCalcValues): [string, number][] => toArr(values, (range, type ) => [type, round(randomWithinRange(range.min, range.max), 100)])
+  generateLosses = (values: WearinessAttributes): [string, number][] => toArr(values, (range, type ) => [type, round(randomWithinRange(range.min, range.max), 100)])
 
   getTypesToRemove = (changes: Units, originals?: Units): UnitType[] => {
     let types: UnitType[] = []
@@ -138,7 +137,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
     return types
   }
 
-  updateReserve = (name: CountryName, changes: Units, originals: Units, limits: UnitCalcValues) => {
+  updateReserve = (name: CountryName, changes: Units, originals: Units, limits: WearinessAttributes) => {
     const { mode, addReserveUnits, removeReserveUnits, invalidate } = this.props
     const units = this.applyLosses(limits, this.getUnitsToAdd(changes, originals, true))
     const types = this.getTypesToRemove(changes, originals)

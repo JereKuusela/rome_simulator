@@ -1,7 +1,6 @@
 import { addValues } from 'definition_values'
 import { getUnit, TestInfo, initInfo, setCenterUnits, initSide, testCombat, setTerrain } from './utils'
-import { UnitType, UnitCalc, TerrainType } from 'types'
-import { ValuesType } from 'base_definition'
+import { UnitType, UnitCalc, TerrainType, ValuesType } from 'types'
 
 describe('1 vs 1', () => {
 

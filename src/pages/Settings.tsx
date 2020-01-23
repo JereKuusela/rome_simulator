@@ -6,8 +6,7 @@ import { AppState } from 'state'
 
 import Dropdown from 'components/Utils/Dropdown'
 import { toArr, keys, values } from 'utils'
-import { Setting, parameterToDescription, SimulationSpeed, CombatSettings, SiteSettings } from 'types'
-import { Mode, DefinitionType } from 'base_definition'
+import { Mode, DefinitionType, Setting, parameterToDescription, SimulationSpeed, CombatSettings, SiteSettings } from 'types'
 import { changeCombatParameter, changeSiteParameter, invalidate } from 'reducers'
 
 interface Props { }

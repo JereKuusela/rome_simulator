@@ -7,8 +7,7 @@ import DetailDropdownRow from './Detail/DetailDropdownRow'
 import Input from './Utils/Input'
 import Headers from './Utils/Headers'
 
-import { TerrainDefinition, TerrainType, LocationType, TerrainCalc, TerrainValueType, terrainValueToString } from 'types'
-import { DefinitionType, ValuesType } from 'base_definition'
+import { DefinitionType, ValuesType, TerrainDefinition, TerrainType, LocationType, TerrainCalc, TerrainValueType, terrainValueToString } from 'types'
 import { values } from 'utils'
 import { getValue, explainShort } from 'definition_values'
 

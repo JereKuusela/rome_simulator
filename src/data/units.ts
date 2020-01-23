@@ -1,6 +1,4 @@
-import { GlobalDefinitions, UnitDefinitions } from 'reducers'
-import { ValuesType, DefinitionType, Mode } from 'base_definition'
-import { UnitType, UnitDefinition, UnitCalc, UnitValueType, UnitDeployment, TerrainType } from 'types'
+import { ValuesType, DefinitionType, Mode, UnitType, UnitDefinition, UnitCalc, UnitValueType, UnitDeployment, TerrainType, UnitState, GlobalStats, CountryName, UnitDefinitions, GlobalDefinitions } from 'types'
 import { addValues } from 'definition_values'
 import { toObj } from 'utils'
 
@@ -159,3 +157,6 @@ interface UnitData {
   mega_polyreme?: number
   riverine?: number
 }
+
+export const getDefaultUnitDefinitions = (): UnitState => ({ [CountryName.Country1]: getDefaultUnits(), [CountryName.Country2]: getDefaultUnits() })
+export const getDefaultBaseDefinitions = (): GlobalStats => ({ [CountryName.Country1]: getDefaultGlobals(), [CountryName.Country2]: getDefaultGlobals() })

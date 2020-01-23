@@ -7,9 +7,9 @@ import StyledNumber from './Utils/StyledNumber'
 
 import Headers from './Utils/Headers'
 import { TacticDefinition, UnitType, TacticType, TacticCalc } from 'types'
-import { getImage } from 'base_definition'
 import { calculateValue } from 'definition_values'
 import { toSignedPercent } from 'formatters'
+import { getImage } from 'utils'
 
 interface IProps {
   tactics: TacticDefinition[]

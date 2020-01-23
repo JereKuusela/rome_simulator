@@ -5,9 +5,7 @@ import { persistStore, persistReducer, createTransform, createMigrate } from 're
 import storage from 'redux-persist/lib/storage'
 
 import { forEach } from 'utils'
-import { UnitDefinitions } from 'reducers'
-import { UnitType, Setting } from 'types'
-import { DefinitionType } from 'base_definition'
+import { UnitType, Setting, DefinitionType, UnitDefinitions } from 'types'
 
 const TacticsTransform = createTransform(
   (inboundState) => inboundState,

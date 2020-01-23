@@ -7,3 +7,5 @@ export enum ExportKey {
   Naval = 'Naval Armies',
   Settings = 'Settings'
 }
+
+export type ExportKeys = { [key in ExportKey]: boolean }

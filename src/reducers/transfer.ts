@@ -1,8 +1,6 @@
 import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
 import { AppState, resetMissing } from 'state'
-import { ExportKey } from 'types'
-
-export type ExportKeys = { [key in ExportKey]: boolean }
+import { ExportKey, ExportKeys } from 'types'
 
 export const transferState = {
   export_keys: {} as ExportKeys,
@@ -54,6 +52,5 @@ const importActions = createActionCreators(ImportReducer)
 
 export const importState = importActions.importState
 export const reset = importActions.reset
-
 
 export const importReducer = createReducerFunction(ImportReducer, {} as any)

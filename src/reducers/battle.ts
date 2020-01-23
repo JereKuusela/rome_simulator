@@ -1,42 +1,11 @@
 
 import { ImmerReducer, createActionCreators, createReducerFunction, Actions } from 'immer-reducer'
 import { findLastIndex, forEach} from 'lodash'
-import { TerrainType, CountryName, Army, Side, Participant, getDefaultArmy, getDefaultParticipant, getInitialTerrains, ArmyType, BaseUnit, UnitType, UnitValueType, TacticType, RowType } from 'types'
-import { Mode, DefinitionType, ValuesType } from 'base_definition'
+import { Mode, DefinitionType, ValuesType, TerrainType, CountryName, Army, Side, ArmyType, BaseUnit, UnitType, UnitValueType, TacticType, RowType, ModeState } from 'types'
 import { addValues } from 'definition_values'
 import { toArr, arrGet, keys } from 'utils'
 import { createCountry, deleteCountry, changeCountryName } from './countries'
-
-export interface Battle {
-  armies: Armies
-  terrains: TerrainType[],
-  participants: Participants,
-  round: number,
-  fight_over: boolean,
-  seed: number,
-  custom_seed?: number,
-  outdated: boolean
-}
-
-export type Armies = { [key in CountryName]: Army }
-export type Participants = { [key in Side]: Participant }
-export type ModeState = { [key in Mode]: Battle }
-
-
-export const getDefaultMode = (mode: Mode): Battle => ({
-  armies: { [CountryName.Country1]: getDefaultArmy(mode), [CountryName.Country2]: getDefaultArmy(mode) },
-  participants: { [Side.Attacker]: getDefaultParticipant(CountryName.Country1), [Side.Defender]: getDefaultParticipant(CountryName.Country2) },
-  terrains: getInitialTerrains(mode),
-  round: -1,
-  fight_over: true,
-  seed: 0,
-  custom_seed: undefined,
-  outdated: true
-})
-
-export const getDefaultBattle = (): ModeState => ({ [DefinitionType.Land]: getDefaultMode(DefinitionType.Land), [DefinitionType.Naval]: getDefaultMode(DefinitionType.Naval) })
-
-const battleState = getDefaultBattle()
+import { getDefaultBattle, getDefaultArmy } from 'data'
 
 const findUnit = (participant: Army, id: number): [ArmyType | undefined, number] => {
   let index = participant.reserve.findIndex(unit => unit.id === id)
@@ -269,9 +238,9 @@ export const selectArmy = actions.selectArmy
 export const clearUnits = actions.clearUnits
 
 
-const battleBaseReducer = createReducerFunction(BattleReducer, battleState)
+const battleBaseReducer = createReducerFunction(BattleReducer, getDefaultBattle())
 
-export const battleReducer = (state = battleState, action: Actions<typeof BattleReducer>) => {
+export const battleReducer = (state = getDefaultBattle(), action: Actions<typeof BattleReducer>) => {
   if (action.type === createCountry.type)
     return battleBaseReducer(state, { payload: action.payload, type: actions.createCountry.type, args: true } as any)
   if (action.type === deleteCountry.type)

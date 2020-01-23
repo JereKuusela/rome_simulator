@@ -1,8 +1,11 @@
-import { Mode } from 'base_definition'
+
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Button, Checkbox, Divider, Grid, Header, Image, Input, Table } from 'semantic-ui-react'
 import {
     calculateBaseDamage, calculateRollModifierFromGenerals, calculateRollModifierFromTerrains,
     calculateTotalRoll
-} from 'combat/combat_utils'
+} from 'combat'
 import ConfirmationButton from 'components/ConfirmationButton'
 import Dropdown from 'components/Utils/Dropdown'
 import StyledNumber from 'components/Utils/StyledNumber'
@@ -21,15 +24,12 @@ import IconDice from 'images/chance.png'
 import IconGeneral from 'images/military_power.png'
 import IconTerrain from 'images/terrain.png'
 import { GeneralStats } from 'managers/army_manager'
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import {
     invalidate, invalidateCountry, selectArmy, selectCohort, setFlankSize, setRoll, toggleRandomRoll,
     undo, battle, refreshBattle, setSeed, setGeneralMartial, importState
 } from 'reducers'
-import { Button, Checkbox, Divider, Grid, Header, Image, Input, Table } from 'semantic-ui-react'
 import { AppState, getBattle, getCountry, getGeneral, getParticipant, getSettings, resetMissing } from 'state'
-import { ArmyType, CountryName, Participant, Setting, Side } from 'types'
+import { ArmyType, CountryName, Participant, Setting, Side, Mode } from 'types'
 import { keys } from 'utils'
 
 interface IState {

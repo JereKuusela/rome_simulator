@@ -5,10 +5,9 @@ import ModalTacticDetail from 'containers/modal/ModalTacticDetail'
 import { AppState, filterTactics, getUnitImages, mergeUnitTypes } from 'state'
 import TacticDefinitions from 'components/TacticDefinitions'
 import ItemRemover from 'components/ItemRemover'
-import { TacticType } from 'types'
+import { TacticType, DefinitionType } from 'types'
 import { toArr } from 'utils'
 import { deleteTactic, addTactic, changeTacticType } from 'reducers'
-import { DefinitionType } from 'base_definition'
 
 interface IState {
   modal_tactic: TacticType | null

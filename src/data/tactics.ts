@@ -1,5 +1,4 @@
-import { ValuesType, DefinitionType } from 'base_definition'
-import { TacticType, TacticCalc, TacticDefinition, TacticValueType, UnitType } from 'types'
+import { ValuesType, DefinitionType, TacticType, TacticCalc, TacticDefinition, TacticValueType, UnitType } from 'types'
 import { toObj } from 'utils'
 
 import * as data from './json/tactics.json'
@@ -79,12 +78,12 @@ const createTacticFromJson = (data: TacticData): TacticDefinition => {
   return addValues(tactic, ValuesType.Base, tactic.type, base_values)
 }
 
-export type TacticDefinitions = { [key in TacticType]: TacticDefinition }
-
 const defaultTactics = toObj(data.tactics.map(createTacticFromJson), unit => unit.type)
 
 export const getDefaultTactics = () => defaultTactics
 export const getDefaultTactic = (type: TacticType): TacticDefinition => defaultTactics[type]
+
+export const getDefaultTacticDefinitions = () => getDefaultTactics()
 
 interface TacticData {
   type: string

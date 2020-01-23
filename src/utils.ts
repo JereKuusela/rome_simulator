@@ -1,3 +1,15 @@
+import EmptyIcon from './images/empty.png'
+import UnknownIcon from './images/unknown.png'
+
+/**
+ * Returns the image of a definition while handling missing cases.
+ * Question mark is returned for existing definitions without an image.
+ * Empty is returned for non-existing definitions.
+ * @param definition
+ */
+export const getImage = (definition: { image?: string } | null): string => (definition && definition.image) || (definition ? UnknownIcon : EmptyIcon)
+
+
 /**
  * Maps a range to a list.
  * @param length Length of the range.

@@ -6,7 +6,7 @@ import StyledNumber from 'components/Utils/StyledNumber'
 
 import { AppState, getSettings, getSelectedTerrains, mergeUnitTypes, getArmyForCombat } from 'state'
 import { toPercent, toFlooredPercent } from 'formatters'
-import { interrupt, WinRateProgress, doConversion, calculateWinRate } from 'combat/simulation'
+import { interrupt, WinRateProgress, doConversion, calculateWinRate } from 'combat'
 import { showProgress } from 'utils'
 import { Side } from 'types'
 

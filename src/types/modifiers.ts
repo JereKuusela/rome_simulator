@@ -1,5 +1,4 @@
-import { UnitType } from 'types'
-import { DefinitionType, ValuesType } from 'base_definition'
+import { UnitType, DefinitionType, ValuesType } from 'types'
 
 export enum ModifierType {
   Text = 'Text',

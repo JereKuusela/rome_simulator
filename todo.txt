@@ -18,8 +18,7 @@ Changelog:
 - Units: Fixed order of naval units.
 - Units: Added new attributes: capture chance and capture resist.
 - Settings: New page which more clearly shows which settings affects land, naval or both.
-- Settings: Added support for boolean and dropdown options.
-- Settings: Settings for bug fixes (and some others) converted to boolean settings.
+- Settings: Settings for bug fixes (and some others) converted to checkbox settings.
 - Settings: Better names and descriptions for all settings.
 - Settings: Applied 20% increase to base damage values.
 - Settings: Removed "Fix damage taken" settings as it is fixed in the game.
@@ -29,6 +28,7 @@ Todo:
  - Transfer could only show non-base stats for units, terrains and tactics (since base stats are supposed to regenerate?), currently it shows way too much information.
  - Add neutral unit to ease testing.
  - Refactor simluation to update only single parameter, also parameters split should make more sense
+ - Some sort of place for business logic rules
 
 Tags:
  - Icons to frontline to show various things, with tooltips:

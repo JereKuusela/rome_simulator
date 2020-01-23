@@ -3,17 +3,13 @@ import { Table, Header } from 'semantic-ui-react'
 import { Range, getTrackBackground } from 'react-range'
 
 import Headers from './Utils/Headers'
-import { Side, UnitCalc } from 'types'
+import { Side, WearinessValues, WearinessAttribute, WearinessAttributes } from 'types'
 import { keys, reduce, toArr } from 'utils'
 import { toPercent } from 'formatters'
 
-export type WearinessValues = { [key in Side]: UnitCalcValues }
-export type UnitCalcValues = { [key in UnitCalc]: MinMax }
-type MinMax = { min: number, max: number }
-
 interface IProps {
   values: WearinessValues
-  onChange: (side: Side, type: UnitCalc, min: number, max: number) => void
+  onChange: (side: Side, type: WearinessAttribute, min: number, max: number) => void
   attached?: boolean
 }
 
@@ -30,7 +26,7 @@ export default class WearinessRange extends Component<IProps> {
 
   render() {
     const { attached, values } = this.props
-    const calcs = keys(reduce(values, (prev, curr) => ({ ...prev, ...curr }), {} as UnitCalcValues))
+    const calcs = keys(reduce(values, (prev, curr) => ({ ...prev, ...curr }), {} as WearinessAttributes))
     return (
       <Table celled unstackable attached={attached}>
         <Headers values={this.headers} />
@@ -41,7 +37,7 @@ export default class WearinessRange extends Component<IProps> {
     )
   }
 
-  renderRow = (type: UnitCalc, values: WearinessValues) => {
+  renderRow = (type: WearinessAttribute, values: WearinessValues) => {
     const { onChange } = this.props
     return (
       <Table.Row key={type}>

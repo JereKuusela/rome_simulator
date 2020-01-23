@@ -4,7 +4,7 @@ import LineTo from 'react-lineto'
 
 import { AppState, getCurrentCombat } from 'state'
 import { ArmyType, Side } from 'types'
-import { CombatUnit } from 'combat/combat'
+import { CombatUnit } from 'combat'
 import { getArmyPart } from 'army_utils'
 
 type Props = {

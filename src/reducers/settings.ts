@@ -1,24 +1,9 @@
 import { ImmerReducer, createActionCreators, createReducerFunction, Actions } from 'immer-reducer'
-import { DefinitionType, Mode } from 'base_definition'
-import { getDefaultLandSettings, getDefaultNavalSettings, getDefaultSiteSettings } from 'data'
-import { CountryName, Side, UnitCalc, SimulationSpeed, CombatSettings, SiteSettings, Setting } from 'types'
-import { ObjSet, has } from 'utils'
-import { WearinessValues } from 'components/WearinessRange'
+
+import { has } from 'utils'
+import { DefinitionType, Mode, CountryName, Side, SimulationSpeed, CombatSettings, SiteSettings, Setting, SettingsAndOptions, WearinessAttribute } from 'types'
 import { createCountry, deleteCountry, changeCountryName } from './countries'
-
-export const getDefaultSettings = () => ({
-  combatSettings: { [DefinitionType.Land]: getDefaultLandSettings(), [DefinitionType.Naval]: getDefaultNavalSettings() },
-  siteSettings: getDefaultSiteSettings(),
-  mode: DefinitionType.Land as Mode,
-  country: CountryName.Country1,
-  accordions: {} as ObjSet,
-  weariness: {
-    [Side.Attacker]: { [UnitCalc.Morale]: { min: 0, max: 0 }, [UnitCalc.Strength]: { min: 0, max: 0 } },
-    [Side.Defender]: { [UnitCalc.Morale]: { min: 0, max: 0 }, [UnitCalc.Strength]: { min: 0, max: 0 } }
-  } as WearinessValues
-})
-
-const settings = getDefaultSettings()
+import { getDefaultSettings } from 'data'
 
 const speedValues: { [key: string]: number[] } = {
   [SimulationSpeed.VeryAccurate]: [1.0, 5],
@@ -28,7 +13,7 @@ const speedValues: { [key: string]: number[] } = {
   [SimulationSpeed.VeryFast]: [3.0, 3]
 }
 
-class SettingsReducer extends ImmerReducer<typeof settings> {
+class SettingsReducer extends ImmerReducer<SettingsAndOptions> {
 
   changeCombatParameter(mode: Mode, key: keyof CombatSettings, value: number | boolean | string) {
     this.draftState.combatSettings[mode][key] = value as never
@@ -74,7 +59,7 @@ class SettingsReducer extends ImmerReducer<typeof settings> {
       this.draftState.accordions[key] = true
   }
 
-  changeWeariness(side: Side, type: UnitCalc, min: number, max: number) {
+  changeWeariness(side: Side, type: WearinessAttribute, min: number, max: number) {
     this.draftState.weariness[side][type].min = min
     this.draftState.weariness[side][type].max = max
   }
@@ -89,9 +74,9 @@ export const toggleAccordion = actions.toggleAccordion
 export const toggleMode = actions.toggleMode
 export const changeWeariness = actions.changeWeariness
 
-export const reducer = createReducerFunction(SettingsReducer, settings)
+export const reducer = createReducerFunction(SettingsReducer, getDefaultSettings())
 
-export const settingsReducer = (state = settings, action: Actions<typeof SettingsReducer>) => {
+export const settingsReducer = (state = getDefaultSettings(), action: Actions<typeof SettingsReducer>) => {
   if (action.type === createCountry.type)
     return reducer(state, { payload: action.payload, type: actions.createCountry.type, args: true } as any)
   if (action.type === deleteCountry.type)

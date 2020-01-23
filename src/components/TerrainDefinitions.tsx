@@ -6,8 +6,7 @@ import ValueModal from './ValueModal'
 import StyledNumber from './Utils/StyledNumber'
 
 import { TerrainDefinition, TerrainType, TerrainCalc } from 'types'
-import { keys } from 'utils'
-import { getImage } from 'base_definition'
+import { keys, getImage } from 'utils'
 import { calculateValue } from 'definition_values'
 import { addSign } from 'formatters'
 

@@ -2,9 +2,8 @@ import React, { Component } from 'react'
 import { Image, Table, List, Icon } from 'semantic-ui-react'
 import { sortBy, toNumber } from 'lodash'
 
-import { Mode, DefinitionType, getImage } from 'base_definition'
-import { CountryName, UnitType, TerrainType, UnitDefinition, UnitCalc, UnitValueType } from 'types'
-import { toArr } from 'utils'
+import { Mode, DefinitionType, CountryName, UnitType, TerrainType, UnitDefinition, UnitCalc, UnitValueType, UnitDefinitions as Units } from 'types'
+import { toArr, getImage } from 'utils'
 import { unitSorter } from 'managers/army_manager'
 import { mergeValues, calculateValue, calculateBase, calculateModifier, calculateLoss } from 'definition_values'
 import { toPercent, toManpower, toSignedPercent, hideZero } from 'formatters'
@@ -18,7 +17,6 @@ import IconManpower from 'images/manpower.png'
 import IconStrength from 'images/naval_combat.png'
 import IconMorale from 'images/morale.png'
 import IconAttrition from 'images/attrition.png'
-import { UnitDefinitions as Units } from 'reducers'
 
 interface IProps {
   mode: Mode

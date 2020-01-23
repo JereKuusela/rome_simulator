@@ -1,5 +1,4 @@
-import { UnitType } from './units'
-import { Definition } from 'base_definition'
+import { UnitType, Definition } from 'types'
 import { BaseDefinitionValues } from 'definition_values'
 
 export enum TacticCalc {
@@ -23,6 +22,8 @@ export enum TacticType {
   Harassment = 'Harassment',
   ProbingAttack = 'Probing Attack'
 }
+
+export type TacticDefinitions = { [key in TacticType]: TacticDefinition }
 
 export type TacticValueType = UnitType | TacticCalc | TacticType
 

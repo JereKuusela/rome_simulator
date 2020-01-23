@@ -8,8 +8,7 @@ import IconStrength from 'images/naval_combat.png'
 import IconFoodConsumption from 'images/food.png'
 import IconFoodStorage from 'images/food_capacity.png'
 
-import { DefinitionType } from 'base_definition'
-import { UnitCalc, Unit, FrontLine, Reserve, Defeated } from 'types'
+import { DefinitionType, UnitCalc, Unit, FrontLine, Reserve, Defeated } from 'types'
 import { calculateValueWithoutLoss } from 'definition_values'
 import { toNumber, strengthToValue } from 'formatters'
 

@@ -4,13 +4,14 @@ import { Image } from 'semantic-ui-react'
 
 import { AppState, getCurrentCombat, getSelectedTactic } from 'state'
 
-import { getImage } from '../base_definition'
+import { getImage } from 'utils'
 
 import StyledNumber from 'components/Utils/StyledNumber'
 import ModalTacticSelector from './modal/ModalTacticSelector'
-import { Side, getOpponent } from 'types'
-import { calculateTactic } from 'combat/combat'
+import { Side } from 'types'
+import { calculateTactic } from 'combat'
 import { toSignedPercent } from 'formatters'
+import { getOpponent } from 'army_utils'
 
 type Props = {
   side: Side

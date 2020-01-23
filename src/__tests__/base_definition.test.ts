@@ -1,9 +1,10 @@
-import { getImage, DefinitionType } from 'base_definition'
+import { DefinitionType } from 'types'
 import { mergeValues, addValues, ValuesType, clearAllValues, clearValues, regenerateValues, calculateValue, calculateValueWithoutLoss, calculateBase, calculateModifier, calculateLoss, explainShort, getValue, BaseDefinitionValues } from 'definition_values'
 import EmptyIcon from 'images/empty.png'
 import UnknownIcon from 'images/unknown.png'
 import { size } from 'lodash'
 import { strengthToValue } from 'formatters'
+import { getImage } from 'utils'
 
 type Values = { [key: string]: { [key: string]: number } }
 type BD = BaseDefinitionValues<any>

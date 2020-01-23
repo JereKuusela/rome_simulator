@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Grid, Button, Table, Header, Checkbox } from 'semantic-ui-react'
 
 import { AppState, getSettings, getSelectedTerrains, mergeUnitTypes, getArmyForCombat } from 'state'
-import { CasualtiesProgress, ResourceLosses, interrupt, WinRateProgress, ResourceLossesProgress, doConversion, calculateWinRate } from 'combat/simulation'
+import { CasualtiesProgress, ResourceLosses, interrupt, WinRateProgress, ResourceLossesProgress, doConversion, calculateWinRate } from 'combat'
 import { values, showProgress } from 'utils'
 import { SimulationSpeed, Setting, Side } from 'types'
 import { toPercent, toNumber, toFlooredPercent } from 'formatters'

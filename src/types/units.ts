@@ -1,6 +1,5 @@
-import { TerrainType } from './terrains'
 import { DefinitionValues, calculateValue } from 'definition_values'
-import { Definition, DefinitionType } from 'base_definition'
+import { TerrainType, Definition, DefinitionType, CountryName } from 'types'
 import { toNumber, toPercent, toSignedPercent } from 'formatters'
 
 export enum UnitType {
@@ -99,3 +98,9 @@ export const unitValueToString = (definition: DefinitionValues<UnitValueType>, t
       return toSignedPercent(value)
   }
 }
+
+export type GlobalStats = { [key in CountryName]: GlobalDefinitions }
+export type GlobalDefinitions = { [key in DefinitionType.Land | DefinitionType.Naval]: UnitDefinition }
+
+export type UnitState = { [key in CountryName]: UnitDefinitions }
+export type UnitDefinitions = { [key in UnitType]: UnitDefinition }

@@ -7,7 +7,7 @@ import { setFlankSize } from 'reducers'
 
 import ModalRowTypeSelector from './modal/ModalRowTypeSelector'
 import { RowType, Side } from 'types'
-import { getImage } from 'base_definition'
+import { getImage } from 'utils'
 
 /**
  * Table with row types and flank sizes.

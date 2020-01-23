@@ -1,5 +1,4 @@
-import { TerrainType, LocationType, TerrainCalc, TerrainDefinition, TerrainValueType } from 'types'
-import { ValuesType, DefinitionType } from 'base_definition'
+import { ValuesType, DefinitionType, TerrainType, LocationType, TerrainCalc, TerrainDefinition, TerrainValueType, TerrainDefinitions } from 'types'
 import { addValues } from 'definition_values'
 import { toObj } from 'utils'
 
@@ -14,8 +13,6 @@ const createTerrainFromJson = (data: TerrainData): TerrainDefinition => {
   return addValues(terrain, ValuesType.Base, terrain.type, base_values)
 }
 
-export type TerrainDefinitions = { [key in TerrainType]: TerrainDefinition }
-
 const initializeDefaultTerrains = (): TerrainDefinitions => toObj(data.terrain.map(createTerrainFromJson), unit => unit.type)
 
 const defaultTerrains = initializeDefaultTerrains()
@@ -29,3 +26,5 @@ interface TerrainData {
   location: string
   roll: number
 }
+
+export const getDefaultTerrainDefinitions = () => getDefaultTerrains()

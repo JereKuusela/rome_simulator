@@ -1,7 +1,6 @@
 import { addValues } from 'definition_values'
 import { getUnit, TestInfo, initInfo, setTactics, setCenterUnits, initSide, testCombat } from './utils'
-import { UnitType, UnitCalc, TacticType } from 'types'
-import { ValuesType } from 'base_definition'
+import { UnitType, UnitCalc, TacticType, ValuesType } from 'types'
 
 describe('tactics', () => {
   const archer = addValues(getUnit(UnitType.Archers), ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.2]])

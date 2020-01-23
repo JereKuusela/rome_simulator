@@ -5,13 +5,12 @@ import { connect } from 'react-redux'
 import ModalUnitDetail from 'containers/modal/ModalUnitDetail'
 import ModalGlobalStatsDetail from 'containers/modal/ModalGlobalStatsDetail'
 import { AppState, mergeUnitTypes, filterTerrainTypes, getUnitDefinitions, getBaseDefinition, getUnitImages } from 'state'
-import { DefinitionType } from 'base_definition'
 import { addUnit, deleteUnit, changeUnitType } from 'reducers'
 import UnitDefinitions from 'components/UnitDefinitions'
 import ItemRemover from 'components/ItemRemover'
 import ValueModal from 'components/ValueModal'
 import CountryManager from 'containers/CountryManager'
-import { CountryName, UnitType } from 'types'
+import { CountryName, UnitType, DefinitionType } from 'types'
 
 interface IState {
   modal_country: CountryName | undefined

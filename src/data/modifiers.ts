@@ -1,10 +1,9 @@
 import { sortBy } from 'lodash'
 import { toObj, map, forEach } from 'utils'
 import {
-  CultureType, ReligionType, LawDefinition, EconomyDefinition, IdeaDefinition, AbilityDefinition,
+  ValuesType, CultureType, ReligionType, LawDefinition, EconomyDefinition, IdeaDefinition, AbilityDefinition,
   TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, Modifier, ScopeType
 } from 'types'
-import { ValuesType } from 'base_definition'
 
 import * as traditionData from './json/traditions.json'
 import * as tradeData from './json/trades.json'

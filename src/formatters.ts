@@ -1,5 +1,5 @@
 import { mapRange } from './utils'
-import { DefinitionType } from './base_definition'
+import { DefinitionType } from './types/definition'
 
 /**
  * This file contains functions to format numbers to strings.

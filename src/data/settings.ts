@@ -1,4 +1,16 @@
-import { CombatSettings, Setting, SiteSettings, SimulationSpeed } from 'types'
+import { DefinitionType, CombatSettings, Setting, SiteSettings, SimulationSpeed, CountryName, Side, UnitCalc, SettingsAndOptions } from 'types'
+
+export const getDefaultSettings = (): SettingsAndOptions => ({
+  combatSettings: { [DefinitionType.Land]: getDefaultLandSettings(), [DefinitionType.Naval]: getDefaultNavalSettings() },
+  siteSettings: getDefaultSiteSettings(),
+  mode: DefinitionType.Land,
+  country: CountryName.Country1,
+  accordions: {},
+  weariness: {
+    [Side.Attacker]: { [UnitCalc.Morale]: { min: 0, max: 0 }, [UnitCalc.Strength]: { min: 0, max: 0 } },
+    [Side.Defender]: { [UnitCalc.Morale]: { min: 0, max: 0 }, [UnitCalc.Strength]: { min: 0, max: 0 } }
+  }
+})
 
 export const getDefaultLandSettings = (): CombatSettings => {
   return {
@@ -8,7 +20,7 @@ export const getDefaultLandSettings = (): CombatSettings => {
   }
 }
 
-export const getDefaultNavalSettings = ():CombatSettings  => {
+export const getDefaultNavalSettings = (): CombatSettings  => {
   return {
     ...getDefaultAnySettings(),
     [Setting.StrengthLostMultiplier]: 0.5,

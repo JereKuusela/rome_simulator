@@ -6,12 +6,13 @@ import { AppState, getCurrentCombat, filterTactics, getSelectedTactic, getCountr
 
 import StyledNumber from 'components/Utils/StyledNumber'
 import ItemSelector, { SelectorAttributes } from 'components/ItemSelector'
-import { Side, TacticType, TacticCalc, getOpponent } from 'types'
+import { Side, TacticType, TacticCalc } from 'types'
 import { map, filter, toArr } from 'utils'
-import { calculateTactic } from 'combat/combat'
+import { calculateTactic } from 'combat'
 import { toPercent, toSignedPercent } from 'formatters'
 import { calculateValue } from 'definition_values'
 import { selectTactic, invalidate } from 'reducers'
+import { getOpponent } from 'army_utils'
 
 type Props = {
   side?: Side

@@ -1,10 +1,21 @@
-import { BaseUnit, UnitType, Unit } from 'types/units'
-import { TerrainType } from 'types/terrains'
-import { TacticType } from 'types/tactics'
-import { DefinitionType, Mode } from 'base_definition'
+import { CountryName, Mode, TacticType, TerrainType, BaseUnit, UnitType, Unit } from 'types'
 import { ObjSet } from 'utils'
-import { CombatUnits } from 'combat/combat'
-import { CountryName } from 'types/countries'
+import { CombatUnits } from 'combat'
+
+export interface Battle {
+  armies: Armies
+  terrains: TerrainType[],
+  participants: Participants,
+  round: number,
+  fight_over: boolean,
+  seed: number,
+  custom_seed?: number,
+  outdated: boolean
+}
+
+export type Armies = { [key in CountryName]: Army }
+export type Participants = { [key in Side]: Participant }
+export type ModeState = { [key in Mode]: Battle }
 
 export enum RowType {
   Primary = 'Primary',
@@ -58,64 +69,8 @@ export enum Side {
   Defender = 'Defender'
 }
 
-export const getOpponent = (side: Side) => side === Side.Attacker ? Side.Defender : Side.Attacker
-
 export enum ArmyType {
   Frontline = 'Frontline',
   Reserve = 'Reserve',
   Defeated = 'Defeated'
-}
-
-export const getInitialTerrains = (mode: DefinitionType): TerrainType[] => {
-  if (mode === DefinitionType.Naval)
-    return [TerrainType.Ocean]
-  else
-    return [TerrainType.None, TerrainType.Plains]
-} 
-
-const getInitialTactic = (mode: Mode): TacticType => mode === DefinitionType.Land ? TacticType.Deception : TacticType.FrontalAssault
-
-const getInitialRowTypes = (mode: Mode): RowTypes => {
-  if (mode === DefinitionType.Naval) {
-    return {
-      [RowType.Primary]: UnitType.MegaPolyreme,
-      [RowType.Secondary]: UnitType.MegaPolyreme,
-      [RowType.Flank]: UnitType.MegaPolyreme
-    }
-  }
-  else {
-    return {
-      [RowType.Primary]: UnitType.Archers,
-      [RowType.Secondary]: UnitType.HeavyInfantry,
-      [RowType.Flank]: UnitType.LightCavalry
-    }
-  }
-}
-
-const initializeDefaultArmy = (mode: Mode): Army => ({
-  frontline: Array(30).fill(null),
-  reserve: [],
-  defeated: [],
-  tactic: getInitialTactic(mode),
-  row_types: getInitialRowTypes(mode),
-  flank_size: 5,
-  selections: {}
-})
-const defaultLandArmy = initializeDefaultArmy(DefinitionType.Land)
-const defaultNavalArmy = initializeDefaultArmy(DefinitionType.Naval)
-
-export const getDefaultArmy = (mode: Mode): Army => {
-  if (mode === DefinitionType.Naval)
-    return defaultNavalArmy
-  return defaultLandArmy
-}
-
-export const getDefaultParticipant = (name: CountryName): Participant => {
-  return {
-    country: name,
-    rounds: [],
-    rolls: [],
-    roll: 3,
-    randomize_roll: false
-  }
 }

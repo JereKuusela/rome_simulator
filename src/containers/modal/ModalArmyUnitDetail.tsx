@@ -6,9 +6,8 @@ import ItemRemover from 'components/ItemRemover'
 import UnitDetail from 'components/UnitDetail'
 
 import { AppState, filterUnitTypesByCountry, filterTerrainTypes, findUnit, getCombatUnitForEachRound } from 'state'
-import { Side, CountryName, UnitType, Unit, UnitCalc, UnitValueType } from 'types'
-import { ValuesType } from 'base_definition'
-import { CombatUnit } from 'combat/combat'
+import { ValuesType, Side, CountryName, UnitType, Unit, UnitCalc, UnitValueType } from 'types'
+import { CombatUnit } from 'combat'
 import { addValues } from 'definition_values'
 import { editCohort, deleteCohort, invalidateCountry, setCohortValue, changeCohortType, toggleCohortLoyal } from 'reducers'
 

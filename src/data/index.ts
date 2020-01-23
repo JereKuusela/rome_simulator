@@ -1,3 +1,5 @@
+export * from './battle'
+export * from './countries'
 export * from './modifiers'
 export * from './settings'
 export * from './tactics'

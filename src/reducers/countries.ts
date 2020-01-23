@@ -1,53 +1,12 @@
 import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
-import { BaseDefinitionValues, DefinitionValues, clearAllValues, addValues, regenerateValues, calculateValue } from 'definition_values'
-import { GeneralCalc, UnitType, UnitValueType, CultureType, GovermentType, ReligionType, CountryName, ScopeType, Modifier, UnitCalc } from 'types'
-import { DefinitionType, ValuesType } from 'base_definition'
-import { ObjSet, map } from 'utils'
-
-export interface General extends BaseDefinitionValues<GeneralCalc> {
-  enabled: boolean
-  definitions: { [key in UnitType | DefinitionType]: DefinitionValues<UnitValueType> }
-}
-
-export interface Country {
-  selections: ObjSet
-  culture: CultureType
-  government: GovermentType
-  religion: ReligionType
-  omen_power: number
-  military_power: number
-  office_discipline: number
-  office_morale: number
-  general: General
-}
-
-export const defaultCountry: Country =
-{
-  selections: {},
-  government: GovermentType.Republic,
-  religion: 'Hellenic' as ReligionType,
-  culture: CultureType.Greek,
-  omen_power: 100,
-  general: {
-    enabled: true,
-    definitions: {} as any
-  },
-  military_power: 0,
-  office_discipline: 0,
-  office_morale: 0
-}
-
-export const getDefaultCountryDefinitions = (): { [key in CountryName]: Country } => ({
-  [CountryName.Country1]: defaultCountry,
-  [CountryName.Country2]: defaultCountry
-})
-
-const countryDefinitions = getDefaultCountryDefinitions()
+import { clearAllValues, addValues, regenerateValues, calculateValue } from 'definition_values'
+import { DefinitionType, ValuesType, GeneralCalc, UnitType, UnitValueType, CultureType, GovermentType, ReligionType, CountryName, ScopeType, Modifier, UnitCalc, Countries } from 'types'
+import { map } from 'utils'
+import { defaultCountry, getDefaultCountryDefinitions } from 'data'
 
 const BASE_MARTIAL_KEY = 'Base stat'
 
-class CountriesReducer extends ImmerReducer<typeof countryDefinitions> {
-
+class CountriesReducer extends ImmerReducer<Countries> {
 
   createCountry(country: CountryName, source_country?: CountryName) {
     this.draftState[country] = source_country ? this.state[source_country] : defaultCountry
@@ -158,5 +117,5 @@ export const setMilitaryPower = actions.setMilitaryPower
 export const setOfficeDiscipline = actions.setOfficeDiscipline
 export const setOfficeMorale = actions.setOfficeMorale
 
-export const selectionsReducer = createReducerFunction(CountriesReducer, countryDefinitions)
+export const selectionsReducer = createReducerFunction(CountriesReducer, getDefaultCountryDefinitions())
 
