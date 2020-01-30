@@ -11,6 +11,7 @@ import SimpleRange from 'components/SimpleRange'
 import RoundChart from 'components/Charts/RoundChart'
 import CumulativePercentChart from 'components/Charts/CumulativePercentChart'
 import { changeSiteParameter } from 'reducers'
+import HelpTooltip from 'components/HelpTooltip'
 
 interface Props { }
 
@@ -209,7 +210,9 @@ class Statistics extends Component<IProps, IState> {
       <Table>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell />
+            <Table.HeaderCell>
+              Average gold losses
+            </Table.HeaderCell>
             <Table.HeaderCell>
               Attacker
             </Table.HeaderCell>
@@ -222,6 +225,7 @@ class Statistics extends Component<IProps, IState> {
           <Table.Row>
             <Table.Cell>
               Destroyed costs
+              <HelpTooltip value='Cost of destroyed units' formula='sum(cost)'/>
             </Table.Cell>
             <Table.Cell>
               {this.toNumber(this.scale(losses_a.destroyed_cost))}{resource}
@@ -233,6 +237,7 @@ class Statistics extends Component<IProps, IState> {
           <Table.Row>
             <Table.Cell>
               Repair costs
+              <HelpTooltip value='Maintenance cost of repairs for non-captured units' formula='sum((1 - capture%) * maintenance * damage / 10%)'/>
             </Table.Cell>
             <Table.Cell>
               {this.toNumber(this.scale(losses_a.repair_maintenance))}{resource}
@@ -244,6 +249,7 @@ class Statistics extends Component<IProps, IState> {
           <Table.Row>
             <Table.Cell>
               Captured costs
+              <HelpTooltip value='Cost of captured units' formula='sum(capture% * cost)'/>
             </Table.Cell>
             <Table.Cell>
               {this.toNumber(this.scale(losses_a.captured_cost))}{resource}
@@ -255,6 +261,7 @@ class Statistics extends Component<IProps, IState> {
           <Table.Row>
             <Table.Cell>
               Enemies captured
+              <HelpTooltip value='Cost of captured enemy units' formula='sum(capture% * -cost)'/>
             </Table.Cell>
             <Table.Cell>
               {this.toNumber(this.scale(losses_a.seized_cost))}{resource}
@@ -266,6 +273,7 @@ class Statistics extends Component<IProps, IState> {
           <Table.Row>
             <Table.Cell>
               Repair cost of captured
+              <HelpTooltip value='Repair cost of captured enemy units' formula='sum(capture% * maintenance * damage / 10%)'/>
             </Table.Cell>
             <Table.Cell>
               {this.toNumber(this.scale(losses_a.seized_repair_maintenance))}{resource}
@@ -277,6 +285,7 @@ class Statistics extends Component<IProps, IState> {
           <Table.Row>
             <Table.Cell>
               Total costs
+              <HelpTooltip value='Total cost of all gains and losses'/>
             </Table.Cell>
             <Table.Cell>
               {this.toNumber(this.scale(losses_a.destroyed_cost + losses_a.repair_maintenance + losses_a.captured_cost + losses_a.seized_cost + losses_a.seized_repair_maintenance))}{resource}
