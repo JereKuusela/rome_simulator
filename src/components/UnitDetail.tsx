@@ -21,6 +21,7 @@ interface IProps {
   show_statistics: boolean
   terrain_types?: TerrainType[]
   unit_types_as_dropdown?: boolean
+  disable_base_values?: boolean
   onCustomBaseValueChange: (key: string, attribute: UnitValueType, value: number) => void
   onCustomModifierValueChange: (key: string, attribute: UnitValueType, value: number) => void
   onCustomLossValueChange: (key: string, attribute: UnitValueType, value: number) => void
@@ -68,7 +69,7 @@ export default class UnitDetail extends Component<IProps> {
   }
 
   renderRow = (attribute: UnitValueType) => {
-    const { unit, show_statistics, custom_value_key, onCustomBaseValueChange, onCustomModifierValueChange, onCustomLossValueChange } = this.props
+    const { unit, show_statistics, custom_value_key, onCustomBaseValueChange, onCustomModifierValueChange, onCustomLossValueChange, disable_base_values } = this.props
     if (attribute === UnitCalc.MovementSpeed || attribute === UnitCalc.RecruitTime)
       return null
     if (!show_statistics && (attribute === UnitCalc.StrengthDepleted || attribute === UnitCalc.MoraleDepleted))
@@ -80,19 +81,17 @@ export default class UnitDetail extends Component<IProps> {
     if (attribute === UnitCalc.Maintenance)
       value += ' (' + toMaintenance(calculateValue(unit, UnitCalc.Cost) * calculateValue(unit, UnitCalc.Maintenance)) + ')'
 
+    const enable_loss = attribute === UnitCalc.Morale || attribute === UnitCalc.Strength
+    const enable_modifier = enable_loss || attribute === UnitCalc.Maintenance || attribute === UnitCalc.Cost || attribute === UnitCalc.AttritionWeight
+    const enable_base = !disable_base_values || !enable_modifier
+
     return (
       <PaddedRow key={attribute} cells={this.CELLS}>
         {attribute}
         {value}
-        <DetailValueInput value={base_value} onChange={value => onCustomBaseValueChange(custom_value_key, attribute, value)} />
-        {
-          (attribute === UnitCalc.Morale || attribute === UnitCalc.Strength || attribute === UnitCalc.Maintenance || attribute === UnitCalc.Cost || attribute === UnitCalc.AttritionWeight) &&
-          <DetailValueInput value={modifier_value} onChange={value => onCustomModifierValueChange(custom_value_key, attribute, value)} />
-        }
-        {
-          (attribute === UnitCalc.Morale || attribute === UnitCalc.Strength) &&
-          <DetailValueInput value={loss_value} onChange={value => onCustomLossValueChange(custom_value_key, attribute, value)} />
-        }
+        {enable_base && <DetailValueInput value={base_value} onChange={value => onCustomBaseValueChange(custom_value_key, attribute, value)} />}
+        {enable_modifier && <DetailValueInput value={modifier_value} onChange={value => onCustomModifierValueChange(custom_value_key, attribute, value)} /> }
+        {enable_loss && <DetailValueInput value={loss_value} onChange={value => onCustomLossValueChange(custom_value_key, attribute, value)} />}
         {explain(unit, attribute)}
       </PaddedRow>
     )

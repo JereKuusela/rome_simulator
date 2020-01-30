@@ -43,6 +43,7 @@ class ModalArmyUnitDetail extends Component<IProps> {
             onCustomLossValueChange={this.setLossValue}
             onIsLoyalToggle={this.toggleIsLoyal}
             show_statistics={true}
+            disable_base_values={true}
           />
         </Modal.Content>
       </Modal>
