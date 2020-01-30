@@ -96,7 +96,6 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Win chance and average rounds are calculated.\nThis slightly decreases performance.'
       else
         return 'Win chance and average rounds won\'t be calculated.\nThis slightly improves performance.'
-    case Setting.CalculateResourceLosses:
     case Setting.CalculateCasualties:
       if (value)
         return 'Casualties are calculated.\nThis slightly decreases performance.'
