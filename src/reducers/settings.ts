@@ -3,15 +3,7 @@ import { ImmerReducer, createActionCreators, createReducerFunction, Actions } fr
 import { has } from 'utils'
 import { DefinitionType, Mode, CountryName, Side, SimulationSpeed, CombatSettings, SiteSettings, Setting, SettingsAndOptions, WearinessAttribute } from 'types'
 import { createCountry, deleteCountry, changeCountryName } from './countries'
-import { getDefaultSettings } from 'data'
-
-const speedValues: { [key: string]: number[] } = {
-  [SimulationSpeed.VeryAccurate]: [1.0, 5],
-  [SimulationSpeed.Accurate]: [1.0, 4],
-  [SimulationSpeed.Normal]: [1.5, 4],
-  [SimulationSpeed.Fast]: [2.0, 4],
-  [SimulationSpeed.VeryFast]: [3.0, 3]
-}
+import { getDefaultSettings, speedValues } from 'data'
 
 class SettingsReducer extends ImmerReducer<SettingsAndOptions> {
 

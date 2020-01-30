@@ -27,7 +27,10 @@ export enum Setting {
   PhaseLengthMultiplier = 'Statistics: Multiplier for phase length',
   ChunkSize = 'Statistics: Chunk size',
   Performance = 'Statistics: Performance',
-  UpdateCasualties = 'Statistics: Update casualties'
+  CalculateWinChance = 'Statistics: Calculate win chance',
+  CalculateCasualties = 'Statistics: Calculate casualties',
+  CalculateResourceLosses = 'Statistics: Calculate resource losses',
+  ShowGraphs = 'Statistics: Show graphs'
 }
 
 export enum SimulationSpeed {
@@ -88,11 +91,27 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
       return 'How many battles are simulated in a row. Higher values slightly increase performance but make the UI less responsive.'
     case Setting.Performance:
       return 'Quick setting for speed and accuracy.\nAffects phase length multiplier and maximum depth.'
-    case Setting.UpdateCasualties:
+    case Setting.CalculateWinChance:
       if (value)
-        return 'Casualties and graphs are updated.\nThis slightly decreases performance.'
+        return 'Win chance and average rounds are calculated.\nThis slightly decreases performance.'
       else
-        return 'Casualties and graphs are not updated.\nThis slightly improves performance.'
+        return 'Win chance and average rounds won\'t be calculated.\nThis slightly improves performance.'
+    case Setting.CalculateResourceLosses:
+    case Setting.CalculateCasualties:
+      if (value)
+        return 'Casualties are calculated.\nThis slightly decreases performance.'
+      else
+        return 'Casualties won\'t be calculated.\nThis slightly improves performance.'
+    case Setting.CalculateResourceLosses:
+      if (value)
+        return 'Gold losses are calculated for naval combat.\nThis slightly decreases performance.'
+      else
+        return 'Gold losses won\'t be calculated for naval combat.\nThis slightly improves performance.'
+    case Setting.ShowGraphs:
+      if (value)
+        return 'Graphs are shown.\nThis slightly decreases performance.'
+      else
+        return 'Graphs won\'t be shown.\nThis slightly improves performance.'
     default:
       return 'No description.'
   }
@@ -120,7 +139,10 @@ export type SiteSettings = {
   [Setting.ChunkSize]: number,
   [Setting.MaxDepth]: number,
   [Setting.PhaseLengthMultiplier]: number,
-  [Setting.UpdateCasualties]: boolean,
+  [Setting.CalculateWinChance]: boolean,
+  [Setting.CalculateCasualties]: boolean,
+  [Setting.CalculateResourceLosses]: boolean,
+  [Setting.ShowGraphs]: boolean,
   [Setting.Performance]: SimulationSpeed
 }
 

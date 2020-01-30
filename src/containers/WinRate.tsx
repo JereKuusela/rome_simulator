@@ -8,7 +8,7 @@ import { AppState, getSettings, getSelectedTerrains, mergeUnitTypes, getArmyForC
 import { toPercent, toFlooredPercent } from 'formatters'
 import { interrupt, WinRateProgress, doConversion, calculateWinRate } from 'combat'
 import { showProgress } from 'utils'
-import { Side } from 'types'
+import { Side, Setting } from 'types'
 
 interface Props { }
 
@@ -82,8 +82,9 @@ class WinRate extends Component<IProps, IState> {
 
   calculate = () => {
     const { attacker, defender, settings, terrains, unit_types } = this.props
-    const [ combat_a, combat_d ] = doConversion(attacker, defender, terrains, unit_types, settings)
-    calculateWinRate(false, settings, this.update, combat_a, combat_d)
+    const [combat_a, combat_d] = doConversion(attacker, defender, terrains, unit_types, settings)
+    const modified_settings = { ...settings, [Setting.CalculateWinChance]: true, [Setting.CalculateCasualties]: false, [Setting.CalculateResourceLosses]: false }
+    calculateWinRate(modified_settings, this.update, combat_a, combat_d)
   }
 
   scale = (value: number) => this.state.progress ? value / this.state.progress : 0

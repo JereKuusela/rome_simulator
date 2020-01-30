@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Grid, Button, Table, Header, Checkbox } from 'semantic-ui-react'
 
-import { AppState, getSettings, getSelectedTerrains, mergeUnitTypes, getArmyForCombat } from 'state'
-import { CasualtiesProgress, ResourceLosses, interrupt, WinRateProgress, ResourceLossesProgress, doConversion, calculateWinRate } from 'combat'
+import { AppState, getSettings, getSelectedTerrains, mergeUnitTypes, getArmyForCombat, getMode } from 'state'
+import { CasualtiesProgress, ResourceLosses, interrupt, WinRateProgress, ResourceLossesProgress, doConversion, calculateWinRate, initResourceLosses } from 'combat'
 import { values, showProgress } from 'utils'
-import { SimulationSpeed, Setting, Side } from 'types'
+import { SimulationSpeed, Setting, Side, DefinitionType } from 'types'
 import { toPercent, toNumber, toFlooredPercent } from 'formatters'
 import SimpleRange from 'components/SimpleRange'
 import RoundChart from 'components/Charts/RoundChart'
@@ -26,8 +26,8 @@ interface IState extends CasualtiesProgress {
   progress: number
   average_rounds: number
   rounds: { [key: number]: number }
-  losses_a?: ResourceLosses
-  losses_d?: ResourceLosses
+  losses_a: ResourceLosses
+  losses_d: ResourceLosses
 }
 
 const DOTS = 6
@@ -44,7 +44,7 @@ class Statistics extends Component<IProps, IState> {
       attacker_win_chance: 0, defender_win_chance: 0, draw_chance: 0, incomplete: 0, calculating: false, progress: 0, updates: 0,
       average_rounds: 0, rounds: {}, iterations: 0,
       avg_morale_a: 0, avg_morale_d: 0, avg_strength_a: 0, avg_strength_d: 0, max_morale_a: 1, max_morale_d: 1, max_strength_a: 1, max_strength_d: 1,
-      morale_a: {}, morale_d: {}, strength_a: {}, strength_d: {}
+      morale_a: {}, morale_d: {}, strength_a: {}, strength_d: {}, losses_a: initResourceLosses(), losses_d: initResourceLosses()
     }
   }
 
@@ -58,13 +58,8 @@ class Statistics extends Component<IProps, IState> {
   }
 
   render() {
-    const {
-      attacker_win_chance, defender_win_chance, draw_chance, incomplete, calculating, progress, updates,
-      average_rounds, rounds, iterations,
-      avg_morale_a, avg_morale_d, avg_strength_a, avg_strength_d, max_morale_a, max_morale_d, max_strength_a, max_strength_d,
-      morale_a, morale_d, strength_a, strength_d, losses_a, losses_d,
-    } = this.state
-    const { settings, changeSiteParameter } = this.props
+    const { iterations, calculating, progress, updates } = this.state
+    const { settings, changeSiteParameter, mode } = this.props
     return (
       <>
         <Grid>
@@ -80,14 +75,9 @@ class Statistics extends Component<IProps, IState> {
               </Button>
             </Grid.Column>
             <Grid.Column width='4'>
-              <Checkbox
-                checked={settings[Setting.UpdateCasualties]}
-                onChange={(_, { checked }) => changeSiteParameter(Setting.UpdateCasualties, !!checked)}
-                label='Update casualties'
-              />
             </Grid.Column>
             <Grid.Column width='4'>
-              <Header textAlign='center'>Speed: {settings[Setting.Performance] || 'Custom'}</Header>
+              <Header textAlign='center'>Performance: {settings[Setting.Performance] || 'Custom'}</Header>
               <SimpleRange
                 min={1} max={5} step={1}
                 value={simulationSpeeds.indexOf(settings[Setting.Performance]) || 3}
@@ -98,113 +88,133 @@ class Statistics extends Component<IProps, IState> {
               Iterations {iterations}
             </Grid.Column>
           </Grid.Row>
+          <Grid.Row columns='4'>
+            <Grid.Column width='4'>
+              <Checkbox
+                checked={settings[Setting.CalculateWinChance]}
+                onChange={(_, { checked }) => changeSiteParameter(Setting.CalculateWinChance, !!checked)}
+                label='Win chance'
+              />
+            </Grid.Column>
+            <Grid.Column width='4'>
+              <Checkbox
+                checked={settings[Setting.CalculateResourceLosses]}
+                onChange={(_, { checked }) => changeSiteParameter(Setting.CalculateResourceLosses, !!checked)}
+                label='Naval gold losses'
+              />
+            </Grid.Column>
+            <Grid.Column width='4'>
+              <Checkbox
+                checked={settings[Setting.CalculateCasualties]}
+                onChange={(_, { checked }) => changeSiteParameter(Setting.CalculateCasualties, !!checked)}
+                label='Casualties'
+              />
+            </Grid.Column>
+            <Grid.Column width='4'>
+              <Checkbox
+                checked={settings[Setting.ShowGraphs]}
+                onChange={(_, { checked }) => changeSiteParameter(Setting.ShowGraphs, !!checked)}
+                label='Show graphs'
+              />
+            </Grid.Column>
+          </Grid.Row>
         </Grid>
-        <Table>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>
-                Attacker win chance
-            </Table.HeaderCell>
-              <Table.HeaderCell>
-                Defender win chance
-            </Table.HeaderCell>
-              <Table.HeaderCell>
-                Draw chance
-            </Table.HeaderCell>
-              <Table.HeaderCell>
-                Incomplete
-            </Table.HeaderCell>
-              <Table.HeaderCell>
-                Average rounds
-            </Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            <Table.Row>
-              <Table.Cell>
-                {this.toPercent(this.scale(attacker_win_chance))}
-              </Table.Cell>
-              <Table.Cell>
-                {this.toPercent(this.scale(defender_win_chance))}
-              </Table.Cell>
-              <Table.Cell>
-                {this.toPercent(this.scale(draw_chance))}
-              </Table.Cell>
-              <Table.Cell>
-                {this.toPercent(this.scale(incomplete))}
-              </Table.Cell>
-              <Table.Cell>
-                {this.toNumber(this.scale(average_rounds))}
-              </Table.Cell>
-            </Table.Row>
-          </Table.Body>
-        </Table>
-        {losses_a && losses_d ? this.renderResourceLosses(losses_a, losses_d) : null}
-        {settings[Setting.UpdateCasualties] ?
-          <>
-            <Table>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell>
-                    Attacker morale losses
-           </Table.HeaderCell>
-                  <Table.HeaderCell>
-                    Attacker strength losses
-           </Table.HeaderCell>
-                  <Table.HeaderCell>
-                    Defender morale losses
-           </Table.HeaderCell>
-                  <Table.HeaderCell>
-                    Defender strength losses
-           </Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                <Table.Row>
-                  <Table.Cell>
-                    {this.toNumber(this.scale(avg_morale_a)) + ' (' + this.toPercent(this.scale(avg_morale_a / max_morale_a)) + ')'}
-                  </Table.Cell>
-                  <Table.Cell>
-                    {this.toNumber(this.scale(avg_strength_a)) + ' (' + this.toPercent(this.scale(avg_strength_a / max_strength_a)) + ')'}
-                  </Table.Cell>
-                  <Table.Cell>
-                    {this.toNumber(this.scale(avg_morale_d)) + ' (' + this.toPercent(this.scale(avg_morale_d / max_morale_d)) + ')'}
-                  </Table.Cell>
-                  <Table.Cell>
-                    {this.toNumber(this.scale(avg_strength_d)) + ' (' + this.toPercent(this.scale(avg_strength_d / max_strength_d)) + ')'}
-                  </Table.Cell>
-                </Table.Row>
-              </Table.Body>
-            </Table>
-            <Grid>
-              <Grid.Row columns='2'>
-                <Grid.Column>
-                  <RoundChart progress={progress} rounds={rounds} />
-                </Grid.Column>
-                <Grid.Column>
-                </Grid.Column>
-              </Grid.Row>
-              <Grid.Row columns='2'>
-                <Grid.Column>
-                  <CumulativePercentChart
-                    progress={progress} type='morale'
-                    a={morale_a} d={morale_d} max_a={max_morale_a} max_d={max_morale_d}
-                  />
-                </Grid.Column>
-                <Grid.Column>
-                  <CumulativePercentChart
-                    progress={progress} type='strength'
-                    a={strength_a} d={strength_d} max_a={max_strength_a} max_d={max_strength_d}
-                  />
-                </Grid.Column>
-              </Grid.Row>
-            </Grid>
-          </> : null}
+        {settings[Setting.CalculateWinChance] && this.renderWinchance()}
+        {settings[Setting.CalculateResourceLosses] && mode === DefinitionType.Naval && this.renderResourceLosses()}
+        {settings[Setting.CalculateCasualties] && this.renderCasualties()}
+        {settings[Setting.ShowGraphs] && this.renderGraphs()}
       </>
     )
   }
 
-  renderResourceLosses = (losses_a: ResourceLosses, losses_d: ResourceLosses) => {
+  renderWinchance = () => {
+    const { attacker_win_chance, defender_win_chance, draw_chance, incomplete, average_rounds } = this.state
+    return (
+      <Table>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>
+              Attacker win chance
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              Defender win chance
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              Draw chance
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              Incomplete
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              Average rounds
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          <Table.Row>
+            <Table.Cell>
+              {this.toPercent(this.scale(attacker_win_chance))}
+            </Table.Cell>
+            <Table.Cell>
+              {this.toPercent(this.scale(defender_win_chance))}
+            </Table.Cell>
+            <Table.Cell>
+              {this.toPercent(this.scale(draw_chance))}
+            </Table.Cell>
+            <Table.Cell>
+              {this.toPercent(this.scale(incomplete))}
+            </Table.Cell>
+            <Table.Cell>
+              {this.toNumber(this.scale(average_rounds))}
+            </Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </Table>
+    )
+  }
+
+  renderCasualties = () => {
+    const { avg_morale_a, avg_morale_d, avg_strength_a, avg_strength_d, max_morale_a, max_morale_d, max_strength_a, max_strength_d } = this.state
+    return (
+      <Table>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>
+              Attacker morale losses
+           </Table.HeaderCell>
+            <Table.HeaderCell>
+              Attacker strength losses
+           </Table.HeaderCell>
+            <Table.HeaderCell>
+              Defender morale losses
+           </Table.HeaderCell>
+            <Table.HeaderCell>
+              Defender strength losses
+           </Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          <Table.Row>
+            <Table.Cell>
+              {this.toNumber(this.scale(avg_morale_a)) + ' (' + this.toPercent(this.scale(avg_morale_a / max_morale_a)) + ')'}
+            </Table.Cell>
+            <Table.Cell>
+              {this.toNumber(this.scale(avg_strength_a)) + ' (' + this.toPercent(this.scale(avg_strength_a / max_strength_a)) + ')'}
+            </Table.Cell>
+            <Table.Cell>
+              {this.toNumber(this.scale(avg_morale_d)) + ' (' + this.toPercent(this.scale(avg_morale_d / max_morale_d)) + ')'}
+            </Table.Cell>
+            <Table.Cell>
+              {this.toNumber(this.scale(avg_strength_d)) + ' (' + this.toPercent(this.scale(avg_strength_d / max_strength_d)) + ')'}
+            </Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </Table>
+    )
+  }
+
+  renderResourceLosses = () => {
+    const { losses_a, losses_d } = this.state
     const resource = ' gold'
     return (
       <Table>
@@ -225,7 +235,7 @@ class Statistics extends Component<IProps, IState> {
           <Table.Row>
             <Table.Cell>
               Destroyed costs
-              <HelpTooltip value='Cost of destroyed units' formula='sum(cost)'/>
+              <HelpTooltip value='Cost of destroyed units' formula='sum(cost)' />
             </Table.Cell>
             <Table.Cell>
               {this.toNumber(this.scale(losses_a.destroyed_cost))}{resource}
@@ -237,7 +247,7 @@ class Statistics extends Component<IProps, IState> {
           <Table.Row>
             <Table.Cell>
               Repair costs
-              <HelpTooltip value='Maintenance cost of repairs for non-captured units' formula='sum((1 - capture%) * maintenance * damage / 10%)'/>
+              <HelpTooltip value='Maintenance cost of repairs for non-captured units' formula='sum((1 - capture%) * maintenance * damage / 10%)' />
             </Table.Cell>
             <Table.Cell>
               {this.toNumber(this.scale(losses_a.repair_maintenance))}{resource}
@@ -249,7 +259,7 @@ class Statistics extends Component<IProps, IState> {
           <Table.Row>
             <Table.Cell>
               Captured costs
-              <HelpTooltip value='Cost of captured units' formula='sum(capture% * cost)'/>
+              <HelpTooltip value='Cost of captured units' formula='sum(capture% * cost)' />
             </Table.Cell>
             <Table.Cell>
               {this.toNumber(this.scale(losses_a.captured_cost))}{resource}
@@ -261,7 +271,7 @@ class Statistics extends Component<IProps, IState> {
           <Table.Row>
             <Table.Cell>
               Enemies captured
-              <HelpTooltip value='Cost of captured enemy units' formula='sum(capture% * -cost)'/>
+              <HelpTooltip value='Cost of captured enemy units' formula='sum(capture% * -cost)' />
             </Table.Cell>
             <Table.Cell>
               {this.toNumber(this.scale(losses_a.seized_cost))}{resource}
@@ -273,7 +283,7 @@ class Statistics extends Component<IProps, IState> {
           <Table.Row>
             <Table.Cell>
               Repair cost of captured
-              <HelpTooltip value='Repair cost of captured enemy units' formula='sum(capture% * maintenance * damage / 10%)'/>
+              <HelpTooltip value='Repair cost of captured enemy units' formula='sum(capture% * maintenance * damage / 10%)' />
             </Table.Cell>
             <Table.Cell>
               {this.toNumber(this.scale(losses_a.seized_repair_maintenance))}{resource}
@@ -285,7 +295,7 @@ class Statistics extends Component<IProps, IState> {
           <Table.Row>
             <Table.Cell>
               Total costs
-              <HelpTooltip value='Total cost of all gains and losses'/>
+              <HelpTooltip value='Total cost of all gains and losses' />
             </Table.Cell>
             <Table.Cell>
               {this.toNumber(this.scale(losses_a.destroyed_cost + losses_a.repair_maintenance + losses_a.captured_cost + losses_a.seized_cost + losses_a.seized_repair_maintenance))}{resource}
@@ -296,6 +306,35 @@ class Statistics extends Component<IProps, IState> {
           </Table.Row>
         </Table.Body>
       </Table>
+    )
+  }
+
+  renderGraphs = () => {
+    const { progress, rounds, morale_a, morale_d, max_morale_a, max_morale_d, strength_a, strength_d, max_strength_a, max_strength_d } = this.state
+    return (
+      <Grid>
+        <Grid.Row columns='2'>
+          <Grid.Column>
+            <RoundChart progress={progress} rounds={rounds} />
+          </Grid.Column>
+          <Grid.Column>
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row columns='2'>
+          <Grid.Column>
+            <CumulativePercentChart
+              progress={progress} type='morale'
+              a={morale_a} d={morale_d} max_a={max_morale_a} max_d={max_morale_d}
+            />
+          </Grid.Column>
+          <Grid.Column>
+            <CumulativePercentChart
+              progress={progress} type='strength'
+              a={strength_a} d={strength_d} max_a={max_strength_a} max_d={max_strength_d}
+            />
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     )
   }
 
@@ -322,7 +361,7 @@ class Statistics extends Component<IProps, IState> {
   calculate = () => {
     const { attacker, defender, terrains, settings, unit_types } = this.props
     const [combat_a, combat_d] = doConversion(attacker, defender, terrains, unit_types, settings)
-    calculateWinRate(!!settings[Setting.UpdateCasualties], settings, this.update, combat_a, combat_d)
+    calculateWinRate(settings, this.update, combat_a, combat_d)
   }
 
   scale = (value: number) => this.state.progress ? value / this.state.progress : 0
@@ -333,7 +372,8 @@ const mapStateToProps = (state: AppState) => ({
   defender: getArmyForCombat(state, Side.Defender),
   settings: getSettings(state),
   terrains: getSelectedTerrains(state),
-  unit_types: mergeUnitTypes(state)
+  unit_types: mergeUnitTypes(state),
+  mode: getMode(state)
 })
 
 const actions = { changeSiteParameter }

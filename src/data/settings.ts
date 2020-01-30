@@ -51,9 +51,20 @@ export const getDefaultSiteSettings = (): SiteSettings => {
     [Setting.DefenderAdvantage]: false,
     [Setting.FixTargeting]: true,
     [Setting.ChunkSize]: 10000,
-    [Setting.MaxDepth]: 4,
-    [Setting.PhaseLengthMultiplier]: 2.0,
+    [Setting.MaxDepth]: speedValues[SimulationSpeed.Normal][1],
+    [Setting.PhaseLengthMultiplier]: speedValues[SimulationSpeed.Normal][0],
     [Setting.Performance]: SimulationSpeed.Normal,
-    [Setting.UpdateCasualties]: true
+    [Setting.CalculateWinChance]: true,
+    [Setting.CalculateCasualties]: true,
+    [Setting.CalculateResourceLosses]: true,
+    [Setting.ShowGraphs]: false
   }
+}
+
+export const speedValues: { [key: string]: number[] } = {
+  [SimulationSpeed.VeryAccurate]: [1.0, 5],
+  [SimulationSpeed.Accurate]: [1.0, 4],
+  [SimulationSpeed.Normal]: [1.5, 4],
+  [SimulationSpeed.Fast]: [2.0, 4],
+  [SimulationSpeed.VeryFast]: [3.0, 3]
 }

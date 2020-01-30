@@ -49,12 +49,19 @@ const migrations = {
     return state
   },
   7: (state: any) => {
-    state.settings.combat[DefinitionType.Land][Setting.BaseDamage] = 0.096
-    state.settings.combat[DefinitionType.Naval][Setting.BaseDamage] = 0.096
-    state.settings.combat[DefinitionType.Land][Setting.RollDamage] = 0.024
-    state.settings.combat[DefinitionType.Naval][Setting.RollDamage] = 0.024
-    state.settings.combat[DefinitionType.Land][Setting.MaxBaseDamage] = 0.36
-    state.settings.combat[DefinitionType.Naval][Setting.MaxBaseDamage] = 0.36
+    state.settings.combatSettings[DefinitionType.Land][Setting.BaseDamage] = 0.096
+    state.settings.combatSettings[DefinitionType.Naval][Setting.BaseDamage] = 0.096
+    state.settings.combatSettings[DefinitionType.Land][Setting.RollDamage] = 0.024
+    state.settings.combatSettings[DefinitionType.Naval][Setting.RollDamage] = 0.024
+    state.settings.combatSettings[DefinitionType.Land][Setting.MaxBaseDamage] = 0.36
+    state.settings.combatSettings[DefinitionType.Naval][Setting.MaxBaseDamage] = 0.36
+    return state
+  },
+  8: (state: any) => {
+    state.settings.siteSettings[Setting.CalculateCasualties] = true
+    state.settings.siteSettings[Setting.CalculateResourceLosses] = true
+    state.settings.siteSettings[Setting.CalculateWinChance] = true
+    state.settings.siteSettings[Setting.ShowGraphs] = false
     return state
   }
 }
@@ -62,7 +69,7 @@ const migrations = {
 const persistConfig = {
   key: 'primary',
   storage: storage,
-  version: 7,
+  version: 8,
   migrate: createMigrate(migrations, { debug: false }),
   transforms: [
     TacticsTransform,

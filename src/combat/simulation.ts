@@ -41,7 +41,7 @@ export interface ResourceLossesProgress {
   losses_d: ResourceLosses
 }
 
-const initResourceLosses = (): ResourceLosses => ({
+export const initResourceLosses = (): ResourceLosses => ({
   repair_maintenance: 0,
   destroyed_cost: 0,
   captured_cost: 0,
@@ -100,7 +100,7 @@ export const interrupt = () => interruptSimulation = true
  * @param defender Defender information.
  * @param terrains Current terrains.
  */
-export const calculateWinRate = (doUpdateCasualties: boolean, settings: Settings, progressCallback: (progress: WinRateProgress, casualties: CasualtiesProgress, losses: ResourceLossesProgress) => void, attacker: CombatParticipant, defender: CombatParticipant) => {
+export const calculateWinRate = (settings: Settings, progressCallback: (progress: WinRateProgress, casualties: CasualtiesProgress, losses: ResourceLossesProgress) => void, attacker: CombatParticipant, defender: CombatParticipant) => {
   const progress: WinRateProgress = {
     calculating: true,
     attacker: 0.0,
@@ -114,7 +114,6 @@ export const calculateWinRate = (doUpdateCasualties: boolean, settings: Settings
   }
   interruptSimulation = false
 
-  const doUpdateResources = true
   const losses_a = initResourceLosses()
   const losses_d = initResourceLosses()
   const resurce_losses: ResourceLossesProgress = {
@@ -206,9 +205,9 @@ export const calculateWinRate = (doUpdateCasualties: boolean, settings: Settings
       }
       sumState(current_a, attacker.army)
       sumState(current_d, defender.army)
-      if (doUpdateCasualties)
+      if (settings[Setting.CalculateCasualties])
         updateCasualties(casualties, fractions[depth], total_a, total_d, current_a, current_d)
-      if (doUpdateResources) {
+      if (settings[Setting.CalculateResourceLosses]) {
         calculateResourceLoss(attacker.army.frontline, attacker.army.defeated, fractions[depth], losses_a, losses_d, attacker.unit_types, defender.unit_types)
         calculateResourceLoss(defender.army.frontline, defender.army.defeated, fractions[depth], losses_d, losses_a, defender.unit_types, attacker.unit_types)
       }
