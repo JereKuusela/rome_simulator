@@ -1,6 +1,6 @@
 
 import { sumBy } from 'lodash'
-import { TerrainDefinition, TerrainCalc, Setting, Unit, UnitCalc, Settings } from 'types'
+import { TerrainDefinition, TerrainCalc, Setting, UnitCalc, Settings, UnitDefinition } from 'types'
 import { calculateValue } from 'definition_values'
 
 /**
@@ -39,7 +39,7 @@ export const calculateBaseDamage = (roll: number, settings: Settings): number =>
   return Math.min(max_damage, base_damage + roll_damage * roll)
 }
 
-export const calculateExperienceReduction = (settings: Settings, target: Unit) => {
+export const calculateExperienceReduction = (settings: Settings, target: UnitDefinition) => {
   let damage_reduction_per_experience = settings[Setting.ExperienceDamageReduction]
   // Bug in game which makes morale damage taken and strength damage taken affect damage reduction from experience.
   if (!settings[Setting.FixExperience])

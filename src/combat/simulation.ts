@@ -2,8 +2,8 @@ import { ArmyForCombat } from 'state'
 import { TerrainDefinition, UnitType, Setting, TacticCalc, BaseUnits, Unit, UnitCalc, Side, Settings } from 'types'
 import { calculateTotalRoll } from './combat_utils'
 import { calculateValue } from 'definition_values'
-import { CombatParticipant, getCombatUnit, CombatUnits, Frontline, Defeated, doBattleFast, Reserve } from './combat'
-import { mapRange } from 'utils'
+import { CombatParticipant, getCombatUnit, CombatUnits, Frontline, Defeated, doBattleFast, Reserve, getUnitDefinition, CombatUnitTypes } from './combat'
+import { mapRange, map } from 'utils'
 import { deploy } from './deployment'
 
 /**
@@ -41,10 +41,20 @@ export interface ResourceLossesProgress {
   losses_d: ResourceLosses
 }
 
+const initResourceLosses = (): ResourceLosses => ({
+  repair_maintenance: 0,
+  destroyed_cost: 0,
+  captured_cost: 0,
+  seized_cost :0,
+  seized_repair_maintenance: 0,
+})
+
 export type ResourceLosses = {
-  repair: number
-  destoyed: number
-  captured: number
+  repair_maintenance: number
+  destroyed_cost: number
+  captured_cost: number
+  seized_cost :number
+  seized_repair_maintenance: number
 }
 
 let interruptSimulation = false
@@ -62,14 +72,16 @@ export const doConversion = (attacker: ArmyForCombat, defender: ArmyForCombat, t
     roll: 0,
     flank: attacker.flank_size,
     tactic: attacker.tactic!,
-    row_types: attacker.row_types
+    row_types: attacker.row_types,
+    unit_types: map(attacker.definitions, unit => getUnitDefinition(settings, terrains, unit_types, { ...unit, id: -1 }))
   }
   const participant_d: CombatParticipant = {
     army: status_d,
     roll: 0,
     flank: defender.flank_size,
     tactic: defender.tactic!,
-    row_types: defender.row_types
+    row_types: defender.row_types,
+    unit_types: map(defender.definitions, unit => getUnitDefinition(settings, terrains, unit_types, { ...unit, id: -1 }))
   }
   return [participant_a, participant_d]
 }
@@ -103,17 +115,8 @@ export const calculateWinRate = (doUpdateCasualties: boolean, settings: Settings
   interruptSimulation = false
 
   const doUpdateResources = true
-  const losses_a: ResourceLosses = {
-    captured: 0,
-    destoyed: 0,
-    repair: 0
-  }
-  const losses_d: ResourceLosses = {
-    captured: 0,
-    destoyed: 0,
-    repair: 0
-  }
-
+  const losses_a = initResourceLosses()
+  const losses_d = initResourceLosses()
   const resurce_losses: ResourceLossesProgress = {
     losses_a,
     losses_d
@@ -206,8 +209,8 @@ export const calculateWinRate = (doUpdateCasualties: boolean, settings: Settings
       if (doUpdateCasualties)
         updateCasualties(casualties, fractions[depth], total_a, total_d, current_a, current_d)
       if (doUpdateResources) {
-        calculateResourceLoss(attacker.army.frontline, attacker.army.defeated, fractions[depth], losses_a, losses_d)
-        calculateResourceLoss(defender.army.frontline, defender.army.defeated, fractions[depth], losses_d, losses_a)
+        calculateResourceLoss(attacker.army.frontline, attacker.army.defeated, fractions[depth], losses_a, losses_d, attacker.unit_types, defender.unit_types)
+        calculateResourceLoss(defender.army.frontline, defender.army.defeated, fractions[depth], losses_d, losses_a, defender.unit_types, attacker.unit_types)
       }
       result.round += (depth - 1) * phaseLength
       updateProgress(progress, fractions[depth], result)
@@ -270,28 +273,36 @@ const REPAIR_PER_MONTH = 0.1
 /**
  * Calculates repair and other resource losses.
  */
-const calculateResourceLoss = (frontline: Frontline, defeated: Defeated, amount: number, own: ResourceLosses, enemy: ResourceLosses) => {
+const calculateResourceLoss = (frontline: Frontline, defeated: Defeated, amount: number, own: ResourceLosses, enemy: ResourceLosses, own_types: CombatUnitTypes, enemy_types: CombatUnitTypes) => {
   for (let i = 0; i < frontline.length; i++) {
     const unit = frontline[i]
     if (!unit)
       continue
-    own.repair += amount * (unit.definition.max_strength - unit[UnitCalc.Strength]) * unit.definition[UnitCalc.Maintenance] * unit.definition[UnitCalc.Cost] / REPAIR_PER_MONTH
+    own.repair_maintenance += amount * (unit.definition.max_strength - unit[UnitCalc.Strength]) * unit.definition[UnitCalc.Maintenance] * unit.definition[UnitCalc.Cost] / REPAIR_PER_MONTH
   }
   for (let i = 0; i < defeated.length; i++) {
     const unit = defeated[i]
     const unit_cost = amount * unit.definition[UnitCalc.Cost]
     if (unit.state.is_destroyed) {
-      own.destoyed += unit_cost
+      own.destroyed_cost += unit_cost
       continue
     }
     const capture = (unit.state.capture_chance ?? 0.0) - unit.definition[UnitCalc.CaptureResist]
     const repair = (unit.definition.max_strength - unit[UnitCalc.Strength]) * unit.definition[UnitCalc.Maintenance] * unit_cost / REPAIR_PER_MONTH
     if (capture <= 0.0) {
-      own.repair += repair
+      own.repair_maintenance += repair
       continue
     }
-    own.repair += (1 - capture) * repair
-    own.captured += capture * (unit_cost - repair)
+    // If captured then the unit doesn't have to be repaired.
+    own.repair_maintenance += (1 - capture) * repair
+    // If captured then the full cost of unit is lost.
+    own.captured_cost += capture * unit_cost
+    const enemy_unit_cost = amount * (unit.definition[UnitCalc.Cost] - own_types[unit.definition.type][UnitCalc.Cost] + enemy_types[unit.definition.type][UnitCalc.Cost])
+    const enemy_repair = (unit.definition.max_strength - unit[UnitCalc.Strength]) * (unit.definition[UnitCalc.Maintenance] - own_types[unit.definition.type][UnitCalc.Maintenance] + enemy_types[unit.definition.type][UnitCalc.Maintenance]) * enemy_unit_cost / REPAIR_PER_MONTH
+    // If captured then the enemy gainst full cost of the unit.
+    enemy.seized_cost -= capture * enemy_unit_cost
+    // But enemy also has to repair the unit.
+    enemy.seized_repair_maintenance += capture * enemy_repair
   }
 }
 

@@ -138,7 +138,7 @@ class Statistics extends Component<IProps, IState> {
             </Table.Row>
           </Table.Body>
         </Table>
-        {losses_a && losses_d ? this.renderResourceLosses(losses_a, losses_d): null}
+        {losses_a && losses_d ? this.renderResourceLosses(losses_a, losses_d) : null}
         {settings[Setting.UpdateCasualties] ?
           <>
             <Table>
@@ -221,24 +221,24 @@ class Statistics extends Component<IProps, IState> {
         <Table.Body>
           <Table.Row>
             <Table.Cell>
-              Repair costs
+              Destroyed costs
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(losses_a.repair))}{resource}
+              {this.toNumber(this.scale(losses_a.destroyed_cost))}{resource}
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(losses_d.repair))}{resource}
+              {this.toNumber(this.scale(losses_d.destroyed_cost))}{resource}
             </Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>
-              Destroyed costs
+              Repair costs
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(losses_a.destoyed))}{resource}
+              {this.toNumber(this.scale(losses_a.repair_maintenance))}{resource}
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(losses_d.destoyed))}{resource}
+              {this.toNumber(this.scale(losses_d.repair_maintenance))}{resource}
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -246,10 +246,10 @@ class Statistics extends Component<IProps, IState> {
               Captured costs
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(losses_a.captured))}{resource}
+              {this.toNumber(this.scale(losses_a.captured_cost))}{resource}
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(losses_d.captured))}{resource}
+              {this.toNumber(this.scale(losses_d.captured_cost))}{resource}
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -257,10 +257,21 @@ class Statistics extends Component<IProps, IState> {
               Enemies captured
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(-losses_d.captured))}{resource}
+              {this.toNumber(this.scale(losses_a.seized_cost))}{resource}
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(-losses_a.captured))}{resource}
+              {this.toNumber(this.scale(losses_d.seized_cost))}{resource}
+            </Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>
+              Repair cost of captured
+            </Table.Cell>
+            <Table.Cell>
+              {this.toNumber(this.scale(losses_a.seized_repair_maintenance))}{resource}
+            </Table.Cell>
+            <Table.Cell>
+              {this.toNumber(this.scale(losses_d.seized_repair_maintenance))}{resource}
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -268,10 +279,10 @@ class Statistics extends Component<IProps, IState> {
               Total costs
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(losses_a.repair + losses_a.captured + losses_a.destoyed - losses_d.captured))}{resource}
+              {this.toNumber(this.scale(losses_a.destroyed_cost + losses_a.repair_maintenance + losses_a.captured_cost + losses_a.seized_cost + losses_a.seized_repair_maintenance))}{resource}
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(losses_d.repair + losses_d.captured + losses_d.destoyed - losses_a.captured))}{resource}
+              {this.toNumber(this.scale(losses_d.destroyed_cost + losses_d.repair_maintenance + losses_d.captured_cost + losses_d.seized_cost + losses_d.seized_repair_maintenance))}{resource}
             </Table.Cell>
           </Table.Row>
         </Table.Body>

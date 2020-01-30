@@ -13,6 +13,7 @@ import { reinforce } from './reinforcement'
  */
 export interface CombatParticipant {
   army: CombatUnits
+  unit_types: CombatUnitTypes
   tactic: TacticDefinition
   flank: number
   roll: number
@@ -21,6 +22,7 @@ export interface CombatParticipant {
 export type Frontline = (CombatUnit | null)[]
 export type Reserve = CombatUnit[]
 export type Defeated = CombatUnit[]
+export type CombatUnitTypes =  { [key in UnitType]: CombatUnitDefinition }
 
 export type CombatUnits = {
   readonly frontline: (CombatUnit | null)[]
@@ -45,7 +47,7 @@ const precalculateUnit = (settings: Settings, casualties_multiplier: number, bas
   return info
 }
 
-const getUnitDefinition = (combatSettings: Settings, terrains: TerrainDefinition[], unit_types: UnitType[], unit: Unit): CombatUnitDefinition => {
+export const getUnitDefinition = (combatSettings: Settings, terrains: TerrainDefinition[], unit_types: UnitType[], unit: Unit): CombatUnitDefinition => {
   const info = {
     id: unit.id,
     type: unit.type,

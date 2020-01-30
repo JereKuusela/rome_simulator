@@ -145,12 +145,13 @@ export const getBattle = (state: AppState): Battle => state.battle[state.setting
 
 export const getArmyForCombat = (state: AppState, side: Side, mode?: Mode): ArmyForCombat => {
   const participant = state.battle[mode ?? state.settings.mode].participants[side]
-  const name = participant.country
-  const army = state.battle[state.settings.mode].armies[name]
-  const units = getUnitsByCountry(state, name)
-  const general = getGeneral(state, name).martial
+  const country = participant.country
+  const army = state.battle[state.settings.mode].armies[country]
+  const units = getUnitsByCountry(state, country)
+  const general = getGeneral(state, country).martial
   const tactic = state.tactics[army.tactic]
-  return { ...units, tactic, general, flank_size: army.flank_size, row_types: army.row_types }
+  const definitions = getUnitDefinitions(state, country)
+  return { ...units, tactic, general, flank_size: army.flank_size, row_types: army.row_types, definitions }
 }
 
 export const getCurrentCombat = (state: AppState, side: Side): CombatUnits => {
@@ -276,8 +277,9 @@ export const resetMissing = (data: AppState) => {
 }
 
 export interface ArmyForCombat extends Units {
-  readonly tactic?: TacticDefinition
-  readonly general: number
-  readonly row_types: RowTypes
-  readonly flank_size: number
+  tactic?: TacticDefinition
+  definitions: UnitDefinitions
+  general: number
+  row_types: RowTypes
+  flank_size: number
 }
