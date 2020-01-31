@@ -151,14 +151,6 @@ const removeDefeated = (units: CombatUnits, minimum_morale: number, minimum_stre
   }
 }
 
-const preferredFlankSize = (units: CombatUnits, flank_size: number) => {
-  const front_size = units.frontline.length
-  const army_size = armySize(units)
-  // Determine whether the preferred flank size has any effect.
-  // Note: Only tested with combat width of 30. +2 might be a bug in the game.
-  return army_size > front_size + 2 ? flank_size : 0
-}
-
 const calculateFlankSizes = (flank_size: number, enemy_units: CombatUnits): [number, number] => {
   const front_size = enemy_units.frontline.length
   const enemy_size = armySize(enemy_units)
@@ -176,11 +168,8 @@ export const deploy = (attacker: CombatParticipant, defender: CombatParticipant,
   removeDefeated(attacker.army, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength])
   removeDefeated(defender.army, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength])
 
-  const preferred_flank_a = preferredFlankSize(attacker.army, attacker.flank)
-  const preferred_flank_d = preferredFlankSize(defender.army, defender.flank)
-
-  const [left_flank_a, right_flank_a] = calculateFlankSizes(preferred_flank_a, defender.army)
-  const [left_flank_d, right_flank_d] = calculateFlankSizes(preferred_flank_d, attacker.army)
+  const [left_flank_a, right_flank_a] = calculateFlankSizes(attacker.flank, defender.army)
+  const [left_flank_d, right_flank_d] = calculateFlankSizes(defender.flank, attacker.army)
 
   deployArmy(attacker.army, left_flank_a, right_flank_a, attacker.row_types)
   deployArmy(defender.army, left_flank_d, right_flank_d, defender.row_types)

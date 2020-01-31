@@ -1,5 +1,7 @@
 import { TestInfo, initInfo, getUnit, testDeploy, every_type, setFlankSizes, getRowTypes } from './utils'
 import { UnitType, Setting } from 'types'
+import { loadInput } from './parser'
+import data from './data/deployment_full_flank_size.txt'
 
 describe('initial deployment', () => {
 
@@ -71,24 +73,14 @@ describe('initial deployment', () => {
     const result = [UnitType.HeavyInfantry, UnitType.WarElephants, UnitType.HeavyCavalry, UnitType.Chariots, UnitType.Archers, UnitType.CamelCavalry, UnitType.LightCavalry, UnitType.LightInfantry, UnitType.HorseArchers]
     testDeploy(info, result)
   })
-  it('flank size, inactive', () => {
-    setFlankSizes(info, 5, 0)
-    setAttacker([UnitType.HorseArchers, UnitType.HorseArchers])
-    fillAttacker(UnitType.Archers)
-    fillDefender(UnitType.Archers)
+  it('flank size, full', () => {
+    loadInput(info,  data)
     const result = Array(30).fill(UnitType.Archers)
-    testDeploy(info, result, 2)
-  })
-  it('flank size', () => {
-    setFlankSizes(info, 5, 0)
-    setAttacker([UnitType.HorseArchers, UnitType.HorseArchers, UnitType.HorseArchers])
-    fillAttacker(UnitType.Archers)
-    fillDefender(UnitType.Archers)
-    const result = Array(30).fill(UnitType.Archers)
-    result[20] = UnitType.HorseArchers
-    result[21] = UnitType.HorseArchers
-    result[22] = UnitType.HorseArchers
-    testDeploy(info, result, 3)
+    result[26] = UnitType.HorseArchers
+    result[27] = UnitType.HorseArchers
+    result[28] = UnitType.HorseArchers
+    result[29] = UnitType.HorseArchers
+    testDeploy(info, result, 5)
   })
   it('reduced combat width', () => {
     setFlankSizes(info, 2, 0)

@@ -183,6 +183,11 @@ export const setTerrain = (info: TestInfo, terrain: TerrainType) => {
   info.terrains.push(terrains[terrain])
 }
 
+export const setReserve = (info: TestInfo, attacker: UnitType[], defender: UnitType[]) => {
+  info.army_a = { ...info.army_a, reserve: info.army_a.reserve.concat(attacker.map(type => getUnit(type))) }
+  info.army_d = { ...info.army_d, reserve: info.army_d.reserve.concat(defender.map(type => getUnit(type))) }
+}
+
 // Dummy test to avoid an error.
 describe('utils', () => {
   it('works', () => { })
@@ -195,6 +200,19 @@ describe('utils', () => {
  * @param flank Selected flank tyoe or null.
  */
 export const getRowTypes = (primary: UnitType | null = null, secondary: UnitType | null = null, flank: UnitType | null = null) => ({ [RowType.Primary]: primary, [RowType.Secondary]: secondary, [RowType.Flank]: flank })
+
+/**
+ * Sets preferred unit types.
+ * @param info 
+ * @param attacker Array of 3 unit types.
+ * @param defender Array of 3 unit types.
+ */
+export const setPreferredTypes = (info: TestInfo, attacker: (UnitType | null)[], defender: (UnitType | null)[]) => {
+  
+  info.army_a = { ...info.army_a, row_types: { [RowType.Primary]: attacker[0], [RowType.Secondary]: attacker[1], [RowType.Flank]: attacker[2] } }
+  info.army_d = { ...info.army_d, row_types: { [RowType.Primary]: defender[0], [RowType.Secondary]: defender[1], [RowType.Flank]: defender[2] } }
+}
+
 /**
  * Returns a unit with a given type.
  */
@@ -228,14 +246,16 @@ const getParticipants = (info: TestInfo) => {
     roll: 0,
     tactic: tactics[info.army_a.tactic],
     row_types: info.army_a.row_types,
-    flank: info.army_a.flank_size
+    flank: info.army_a.flank_size,
+    unit_types: {} as any
   }
   const participant_d: CombatParticipant = {
     army: status_d,
     roll: 0,
     tactic: tactics[info.army_d.tactic],
     row_types: info.army_d.row_types,
-    flank: info.army_d.flank_size
+    flank: info.army_d.flank_size,
+    unit_types: {} as any
   }
   return [participant_a, participant_d]
 }

@@ -66,3 +66,8 @@ declare module '*.module.sass' {
 declare module 'react-lineto' {
   export default class LineTo extends React.Component<any, any> {}
 }
+
+declare module "*.txt" {
+  const content: string;
+  export default content;
+}

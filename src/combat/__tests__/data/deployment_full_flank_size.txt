@@ -1,0 +1,18 @@
+combat_name = {
+	fast_combat = no
+	cleanup_combat = yes
+	attacker = { 
+		location = 2
+		archers = 30
+		horse_archers = 5
+		primary = archers
+		secondary = archers
+		flank = horse_archers
+		flank_size = 2
+	}
+	
+	defender = { 
+		location = 2
+		archers = 30
+	}
+}
