@@ -38,7 +38,6 @@ class ImportReducer extends ImmerReducer<AppState> {
         ...state,
         tactics: state.tactics ? { ...this.state.tactics, ...state.tactics } : this.state.tactics,
         terrains: state.terrains ? { ...this.state.terrains, ...state.terrains } : this.state.terrains,
-        global_stats: state.global_stats ? { ...this.state.global_stats, ...state.global_stats } : this.state.global_stats,
         units: state.units ? { ...this.state.units, ...state.units } : this.state.units
       }
   }

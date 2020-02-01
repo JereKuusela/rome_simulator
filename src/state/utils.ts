@@ -3,9 +3,9 @@ import { reduce, toArr, filter, arrGet, toObj } from 'utils'
 import { filterUnitDefinitions, isIncludedInMode, getArmyPart, mergeBaseUnitsWithDefinitions, mergeDefinitions, mergeDefinition } from '../army_utils'
 import { Mode, DefinitionType, CountryName, BaseUnit, Side, Unit, ArmyType, UnitType, TerrainType, LocationType, TacticType, TacticDefinition, UnitPreferences, BaseUnits, Participant, TerrainDefinition, UnitDefinition, Settings, Battle, TerrainDefinitions, TacticDefinitions, Units, UnitDefinitions } from 'types'
 import { CombatUnit, CombatUnits } from 'combat'
-import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticDefinitions, getDefaultTerrainDefinitions, getDefaultBaseDefinitions, getDefaultUnitDefinitions } from 'data'
+import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticDefinitions, getDefaultTerrainDefinitions, getDefaultUnitState } from 'data'
 import { sortBy, uniq } from 'lodash'
-import { unitSorter, GeneralStats, getGeneralStats, getGeneralBaseDefinition, getGeneralDefinitions, getGeneralDefinition } from 'managers/army_manager'
+import { unitSorter, GeneralStats, getGeneralStats, getGeneralBaseDefinition, getGeneralDefinitions, getGeneralDefinition, getBaseUnitType } from 'managers/army_manager'
 import { mergeValues } from 'definition_values'
 
 /**
@@ -228,7 +228,7 @@ export const getUnitDefinitionsBySide = (state: AppState, side: Side): UnitDefin
 
 export const getUnitDefinitions = (state: AppState, country?: CountryName): UnitDefinitions => {
   country = country ?? state.settings.country
-  const base = state.global_stats[country][state.settings.mode]
+  const base = state.units[country][getBaseUnitType(state.settings.mode)]
   const definitions = filterUnitDefinitions(state.settings.mode, state.units[country])
   const general_base = getGeneralBaseDefinition(state.countries[country].general, state.settings.mode)
   const general = getGeneralDefinitions(state.countries[country].general)
@@ -237,18 +237,18 @@ export const getUnitDefinitions = (state: AppState, country?: CountryName): Unit
 
 export const getUnitDefinition = (state: AppState, unit_type: UnitType, country?: CountryName): UnitDefinition => {
   country = country ?? state.settings.country
-  const global = state.global_stats[country][state.settings.mode]
+  const base = state.units[country][getBaseUnitType(state.settings.mode)]
   const unit = state.units[country][unit_type]
   const general_base = getGeneralBaseDefinition(state.countries[country].general, state.settings.mode)
   const general = getGeneralDefinition(state.countries[country].general, unit_type)
-  return mergeDefinition(global, unit, general_base, general)
+  return mergeDefinition(base, unit, general_base, general)
 }
 
 export const getBaseDefinition = (state: AppState, country?: CountryName): UnitDefinition => {
   country = country ?? state.settings.country
-  const global = state.global_stats[country][state.settings.mode]
+  const base = state.units[country][getBaseUnitType(state.settings.mode)]
   const general = getGeneralBaseDefinition(state.countries[country].general, state.settings.mode)
-  return mergeValues(global, general)
+  return mergeValues(base, general)
 }
 
 export const getUnitImages = (state: AppState): { [key in UnitType]: string[] } => {
@@ -262,10 +262,9 @@ export const getUnitImages = (state: AppState): { [key in UnitType]: string[] } 
  * @param data 
  */
 export const resetMissing = (data: AppState) => {
-  data.global_stats = data.global_stats || getDefaultBaseDefinitions()
   data.tactics = data.tactics || getDefaultTacticDefinitions()
   data.terrains = data.terrains || getDefaultTerrainDefinitions()
-  data.units = data.units || getDefaultUnitDefinitions()
+  data.units = data.units || getDefaultUnitState()
   data.battle = data.battle || getDefaultBattle()
   if (!data.battle[DefinitionType.Land])
     data.battle[DefinitionType.Land] = getDefaultMode(DefinitionType.Land)

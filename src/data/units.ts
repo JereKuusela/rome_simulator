@@ -1,4 +1,4 @@
-import { ValuesType, DefinitionType, Mode, UnitType, UnitDefinition, UnitCalc, UnitValueType, UnitDeployment, TerrainType, UnitState, GlobalStats, CountryName, UnitDefinitions, GlobalDefinitions } from 'types'
+import { ValuesType, DefinitionType, UnitType, UnitDefinition, UnitCalc, UnitValueType, UnitDeployment, TerrainType, UnitState, CountryName, UnitDefinitions } from 'types'
 import { addValues } from 'definition_values'
 import { toObj } from 'utils'
 
@@ -37,7 +37,9 @@ const unit_to_icon: { [key in UnitType]: string } = {
   [UnitType.Tetrere]: IconTetrere,
   [UnitType.Hexere]: IconHexere,
   [UnitType.Octere]: IconOctere,
-  [UnitType.MegaPolyreme]: IconMegaPolyreme
+  [UnitType.MegaPolyreme]: IconMegaPolyreme,
+  [UnitType.BaseLand]: IconMilitaryPower,
+  [UnitType.BaseNaval]: IconMilitaryPower
 }
 
 export const getUnitIcon = (type: UnitType) => unit_to_icon[type] || ''
@@ -49,10 +51,10 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
   const base_values: [UnitValueType, number][] = [
     [UnitCalc.AttritionWeight, data.attrition_weight ?? 0],
     [UnitCalc.Cost, data.cost],
-    [UnitCalc.RecruitTime, data.recruit_time],
     [UnitCalc.Maintenance, data.maintenance ?? 0],
-    [UnitCalc.MovementSpeed, data.movement_speed],
-    [UnitCalc.Maneuver, data.maneuver],
+    [UnitCalc.Strength, data.strength ?? 0],
+    [UnitCalc.Morale, data.morale ?? 0],
+    [UnitCalc.Maneuver, data.maneuver ?? 0],
     [UnitCalc.MoraleDamageTaken, data.morale_damage_taken ?? 0],
     [UnitCalc.StrengthDamageTaken, data.strength_damage_taken ?? 0],
     [UnitCalc.MoraleDamageDone, data.morale_damage_done ?? 0],
@@ -87,47 +89,20 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
 
 const initializeDefaultUnits = (): UnitDefinitions => toObj(data.units.map(createUnitFromJson), unit => unit.type)
 
-const initializeDefaultGlobal = (): GlobalDefinitions => {
-  const land: UnitDefinition = { type: '' as UnitType, mode: DefinitionType.Land, image: IconMilitaryPower, deployment: UnitDeployment.Front }
-  const naval: UnitDefinition = { type: '' as UnitType, mode: DefinitionType.Naval, image: IconMilitaryPower, deployment: UnitDeployment.Front }
-  const landValues: [UnitCalc, number][] = [
-    [UnitCalc.Strength, 1],
-    [UnitCalc.Morale, 3],
-    [UnitCalc.AttritionWeight, 1],
-    [UnitCalc.Maintenance, 0.04166]
-  ]
-  const navalValues: [UnitCalc, number][] = [
-    [UnitCalc.Strength, 1],
-    [UnitCalc.Morale, 3],
-    [UnitCalc.AttritionWeight, 1],
-    [UnitCalc.Maintenance, 0.02083],
-    [UnitCalc.CaptureChance, 0.06]
-  ]
-  return {
-    [DefinitionType.Land]: addValues(land, ValuesType.Base, GlobalKey, landValues),
-    [DefinitionType.Naval]: addValues(naval, ValuesType.Base, GlobalKey, navalValues)
-  }
-}
-
 const defaultUnits = initializeDefaultUnits()
-const defaultGlobal = initializeDefaultGlobal()
 
 export const getDefaultUnits = (): UnitDefinitions => defaultUnits
 export const getDefaultUnit = (type: UnitType): UnitDefinition => defaultUnits[type]
-export const getDefaultGlobals = (): GlobalDefinitions => defaultGlobal
-export const getDefaultGlobal = (mode: Mode): UnitDefinition => defaultGlobal[mode]
 
 interface UnitData {
   type: string
   mode: string
+  morale?: number
+  strength?: number
   cost: number
-  recruit_time: number
   deployment: string
   maintenance?: number
-  requirements: string
-  can_assault?: boolean
-  movement_speed: number
-  maneuver: number
+  maneuver?: number
   morale_damage_taken?: number
   strength_damage_taken?: number
   food_consumption?: number
@@ -158,5 +133,4 @@ interface UnitData {
   riverine?: number
 }
 
-export const getDefaultUnitDefinitions = (): UnitState => ({ [CountryName.Country1]: getDefaultUnits(), [CountryName.Country2]: getDefaultUnits() })
-export const getDefaultBaseDefinitions = (): GlobalStats => ({ [CountryName.Country1]: getDefaultGlobals(), [CountryName.Country2]: getDefaultGlobals() })
+export const getDefaultUnitState = (): UnitState => ({ [CountryName.Country1]: getDefaultUnits(), [CountryName.Country2]: getDefaultUnits() })

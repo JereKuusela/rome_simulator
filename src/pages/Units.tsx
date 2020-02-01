@@ -3,7 +3,6 @@ import { Modal, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
 import ModalUnitDetail from 'containers/modal/ModalUnitDetail'
-import ModalGlobalStatsDetail from 'containers/modal/ModalGlobalStatsDetail'
 import { AppState, mergeUnitTypes, filterTerrainTypes, getUnitDefinitions, getBaseDefinition, getUnitImages } from 'state'
 import { addUnit, deleteUnit, changeUnitType } from 'reducers'
 import UnitDefinitions from 'components/UnitDefinitions'
@@ -53,10 +52,6 @@ class Units extends Component<IProps, IState> {
               country={this.state.modal_country}
               unit_type={this.state.modal_unit}
               changeType={this.onChangeType}
-            />
-            <ModalGlobalStatsDetail
-              country={this.state.modal_country}
-              unit={this.state.modal_unit}
             />
           </Modal.Content>
         </Modal>

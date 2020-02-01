@@ -70,8 +70,6 @@ export default class UnitDetail extends Component<IProps> {
 
   renderRow = (attribute: UnitValueType) => {
     const { unit, show_statistics, custom_value_key, onCustomBaseValueChange, onCustomModifierValueChange, onCustomLossValueChange, disable_base_values } = this.props
-    if (attribute === UnitCalc.MovementSpeed || attribute === UnitCalc.RecruitTime)
-      return null
     if (!show_statistics && (attribute === UnitCalc.StrengthDepleted || attribute === UnitCalc.MoraleDepleted))
       return null
     const base_value = getValue(ValuesType.Base, unit, attribute, custom_value_key)

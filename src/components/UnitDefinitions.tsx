@@ -33,7 +33,7 @@ interface IProps {
 export default class UnitDefinitions extends Component<IProps> {
 
   render() {
-    const { mode, definitions, country, base_definition } = this.props
+    const { mode, definitions, country } = this.props
     const sorted_units = sortBy(toArr(definitions), definition => unitSorter(definition, mode))
     const icon_strength = mode === DefinitionType.Naval ? IconStrength : IconManpower
     return (
@@ -89,12 +89,7 @@ export default class UnitDefinitions extends Component<IProps> {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {
-            this.renderGlobalStats(base_definition)
-          }
-          {
-            sorted_units.map(this.renderRow)
-          }
+          {sorted_units.map(this.renderRow)}
         </Table.Body>
       </Table>
     )
@@ -188,82 +183,6 @@ export default class UnitDefinitions extends Component<IProps> {
             }
           </List>
         </Table.Cell>
-      </Table.Row>
-    )
-  }
-
-  renderGlobalStats = (unit: UnitDefinition): JSX.Element => {
-    return (
-      <Table.Row key={unit.type} onClick={() => this.props.onRowClick(unit)}>
-        <Table.Cell singleLine>
-          <Image src={getImage(unit)} avatar />
-          All units
-        </Table.Cell>
-        <Table.Cell>
-          {this.renderAttributeList(unit, UnitCalc.Morale)}
-        </Table.Cell>
-        <Table.Cell>
-          {this.renderAttributeList(unit, UnitCalc.Strength)}
-        </Table.Cell>
-        {
-          this.props.mode === DefinitionType.Naval ? null :
-            <Table.Cell>
-              {this.renderAttributeList(unit, UnitCalc.Discipline)}
-            </Table.Cell>
-        }
-        <Table.Cell>
-          {this.renderAttributeList(unit, this.props.mode === DefinitionType.Naval ? UnitCalc.DamageDone : UnitCalc.Offense)}
-        </Table.Cell>
-        <Table.Cell>
-          {this.renderAttributeList(unit, this.props.mode === DefinitionType.Naval ? UnitCalc.DamageTaken : UnitCalc.Defense)}
-        </Table.Cell>
-        <Table.Cell>
-          {this.renderAttributeList(unit, UnitCalc.Maneuver)}
-        </Table.Cell>
-        {
-          this.props.mode !== DefinitionType.Naval ? null :
-            <Table.Cell>
-              {this.renderAttributeList(unit, UnitCalc.MoraleDamageDone)}
-            </Table.Cell>
-        }
-        <Table.Cell>
-          {this.renderAttributeList(unit, UnitCalc.MoraleDamageTaken)}
-        </Table.Cell>
-        {
-          this.props.mode !== DefinitionType.Naval ? null :
-            <Table.Cell>
-              {this.renderAttributeList(unit, UnitCalc.StrengthDamageDone)}
-            </Table.Cell>
-        }
-        <Table.Cell>
-          {this.renderAttributeList(unit, UnitCalc.StrengthDamageTaken)}
-        </Table.Cell>
-        <Table.Cell>
-          {this.renderAttributeList(unit, UnitCalc.Experience)}
-        </Table.Cell>
-        <Table.Cell>
-          <VersusList
-            item={unit}
-            images={this.props.images}
-            unit_types={this.props.unit_types}
-          />
-        </Table.Cell>
-        <Table.Cell>
-          <List>
-            {
-              Array.from(this.props.terrains).filter(type => calculateValue(unit, type) !== 0.0).map(type => (
-                <List.Item key={type}>
-                  {type + ': ' + toSignedPercent(calculateValue(unit, type))}
-                </List.Item>
-              ))
-            }
-          </List>
-        </Table.Cell>
-        <Table.Cell />
-        {
-          this.props.mode === DefinitionType.Naval ? null :
-            <Table.Cell />
-        }
       </Table.Row>
     )
   }

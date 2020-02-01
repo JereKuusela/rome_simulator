@@ -1,12 +1,12 @@
-import { getDefaultGlobals, getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultParticipant, getDefaultArmy } from 'data'
+import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultParticipant, getDefaultArmy, getDefaultUnit } from 'data'
 import { map, mapRange } from 'utils'
 import { mergeValues, calculateValue } from 'definition_values'
 import { DefinitionType, CountryName, Participant, Army, TerrainDefinition, TacticType, Setting, Side, BaseUnit, UnitCalc, UnitType, TerrainType, UnitPreferenceType, TacticCalc, Settings } from 'types'
 import { CombatUnit, CombatParticipant, doBattleFast, getBaseDamages, convertUnits, calculateTotalRoll, deploy, sortReserve } from 'combat'
+import { getBaseUnitType } from 'managers/army_manager'
 
-const global_stats = getDefaultGlobals()[DefinitionType.Land]
-const units = map(getDefaultUnits(), unit => mergeValues(unit, global_stats))
-export const getDefinitions = () => ({ [CountryName.Country1]: units, [CountryName.Country2]: units })
+const unitDefinitions = map(getDefaultUnits(), unit => mergeValues(unit, getDefaultUnit(getBaseUnitType(DefinitionType.Land))))
+export const getDefinitions = () => ({ [CountryName.Country1]: unitDefinitions, [CountryName.Country2]: unitDefinitions })
 const tactics = getDefaultTactics()
 const terrains = getDefaultTerrains()
 
@@ -216,7 +216,7 @@ export const setUnitPreferences = (info: TestInfo, attacker: (UnitType | null)[]
 /**
  * Returns a unit with a given type.
  */
-export const getUnit = (type: UnitType) => ({ ...units[type] } as any as BaseUnit)
+export const getUnit = (type: UnitType) => ({ ...unitDefinitions[type] } as any as BaseUnit)
 
 /**
  * List of every unit type for deployment/reinforcement tests.

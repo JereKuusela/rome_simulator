@@ -112,7 +112,6 @@ const convertUnit = (definition: Unit | null, rounds: (CombatUnit | null)[]): Un
 
 const mapStateToProps = (state: AppState, props: Props) => ({
   unit_types: props.country ? filterUnitTypesByCountry(state, props.country) : [],
-  global_stats: state.global_stats,
   terrain_types: filterTerrainTypes(state),
   mode: state.settings.mode,
   unit: convertUnit(findUnit(state, props.side, props.id), getCombatUnitForEachRound(state, props.side, props.id) )

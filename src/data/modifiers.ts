@@ -27,6 +27,7 @@ const setDefault = (modifier: Modifier, scope: ScopeType = ScopeType.Country) =>
 export const getTraditionDefinitions = () => {
   const data = toObj(sortBy<TraditionData>(Array.from(traditionData.traditions), value => value.type), value => value.type) as Traditions
   forEach(data, tradition => tradition.modifiers.forEach(modifier => setDefault(modifier)))
+  forEach(data, tradition => tradition.paths.forEach(path => path.traditions.forEach(tradition => tradition.modifiers.forEach(modifier => setDefault(modifier)))))
   return data
 }
 

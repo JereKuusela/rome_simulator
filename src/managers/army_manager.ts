@@ -39,5 +39,7 @@ export const getGeneralBaseDefinition = (general: General, mode: Mode): UnitDefi
 export const unitSorter = (definition: UnitDefinition, mode: Mode) => {
   if (mode === DefinitionType.Naval)
     return calculateBase(definition, UnitCalc.Cost)
-  return definition.type
+  return definition.type === UnitType.BaseLand ? '' : definition.type
 }
+
+export const getBaseUnitType = (mode: Mode) => mode === DefinitionType.Land ? UnitType.BaseLand : UnitType.BaseNaval

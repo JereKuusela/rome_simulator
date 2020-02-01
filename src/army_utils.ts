@@ -18,8 +18,8 @@ export const mergeDefinitions = (base: UnitDefinition, definitions: UnitDefiniti
   return map(definitions, (definition, type) => mergeValues(mergeValues(definition, base), mergeValues(general_base, general[type])))
 }
 
-export const mergeDefinition = (global: UnitDefinition, unit: UnitDefinition, general_base: UnitDefinitionValue, general: UnitDefinitionValue) => {
-  return mergeValues(mergeValues(unit, global), mergeValues(general_base, general))
+export const mergeDefinition = (base: UnitDefinition, unit: UnitDefinition, general_base: UnitDefinitionValue, general: UnitDefinitionValue) => {
+  return mergeValues(mergeValues(unit, base), mergeValues(general_base, general))
 }
 
 /**

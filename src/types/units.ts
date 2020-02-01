@@ -18,7 +18,9 @@ export enum UnitType {
   Tetrere = 'Tetrere',
   Hexere = 'Hexere',
   Octere = 'Octere',
-  MegaPolyreme = 'Mega-Polyreme'
+  MegaPolyreme = 'Mega-Polyreme',
+  BaseLand = 'Base Land Unit',
+  BaseNaval = 'Base Naval Unit'
 }
 
 export enum UnitDeployment {
@@ -42,8 +44,6 @@ export enum UnitCalc {
   StrengthDamageTaken = 'Strength damage taken',
   DamageDone = 'Damage done',
   DamageTaken = 'Damage taken',
-  MovementSpeed = 'Movement speed',
-  RecruitTime = 'Recruit time',
   Cost = 'Cost',
   Maintenance = 'Maintenance',
   AttritionWeight = 'Attrition weight',
@@ -87,8 +87,6 @@ export const unitValueToString = (definition: DefinitionValues<UnitValueType>, t
     case UnitCalc.StrengthDepleted:
     case UnitCalc.Morale:
     case UnitCalc.MoraleDepleted:
-    case UnitCalc.MovementSpeed:
-    case UnitCalc.RecruitTime:
       return toNumber(value)
     case UnitCalc.Experience:
     case UnitCalc.Maintenance:
@@ -98,9 +96,6 @@ export const unitValueToString = (definition: DefinitionValues<UnitValueType>, t
       return toSignedPercent(value)
   }
 }
-
-export type GlobalStats = { [key in CountryName]: GlobalDefinitions }
-export type GlobalDefinitions = { [key in DefinitionType.Land | DefinitionType.Naval]: UnitDefinition }
 
 export type UnitState = { [key in CountryName]: UnitDefinitions }
 export type UnitDefinitions = { [key in UnitType]: UnitDefinition }
