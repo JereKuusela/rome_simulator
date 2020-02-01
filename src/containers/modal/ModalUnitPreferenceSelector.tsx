@@ -1,20 +1,23 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
-import { CountryName, RowType, UnitType } from 'types'
+import { CountryName, UnitPreferenceType, UnitType } from 'types'
 import ItemRemover from 'components/ItemRemover'
 import ItemSelector from 'components/ItemSelector'
-import { AppState, getUnitDefinitions } from 'state'
-import { setRowType, invalidate } from 'reducers'
+import { AppState, getUnitDefinitions, getMode } from 'state'
+import { setUnitPreference, invalidate } from 'reducers'
 import { toArr } from 'utils'
 
 type Props = {
   country: CountryName
-  type?: RowType
+  type?: UnitPreferenceType
   onClose: () => void
 }
 
-class ModalRowTypeSelector extends Component<IProps> {
+/**
+ * Component for selecting unit type preference.
+ */
+class ModalUnitPreferenceSelector extends Component<IProps> {
   render() {
     const { units, type, onClose } = this.props
     if (!type)
@@ -35,9 +38,9 @@ class ModalRowTypeSelector extends Component<IProps> {
   }
 
   selectUnit = (unit_type: UnitType | null): void => {
-    const { setRowType, invalidate, onClose, mode, country, type } = this.props
+    const { setUnitPreference, invalidate, onClose, mode, country, type } = this.props
     if (type)
-      setRowType(this.props.mode, country, type, unit_type)
+      setUnitPreference(this.props.mode, country, type, unit_type)
     invalidate(mode)
     onClose()
   }
@@ -45,13 +48,13 @@ class ModalRowTypeSelector extends Component<IProps> {
 
 const mapStateToProps = (state: AppState, props: Props) => ({
   units: toArr(getUnitDefinitions(state, props.country)),
-  mode: state.settings.mode
+  mode: getMode(state)
 })
 
-const actions = { setRowType, invalidate }
+const actions = { setUnitPreference, invalidate }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
 type IProps = Props & S & D
 
-export default connect(mapStateToProps, actions)(ModalRowTypeSelector)
+export default connect(mapStateToProps, actions)(ModalUnitPreferenceSelector)

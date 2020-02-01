@@ -1,7 +1,9 @@
-import { TestInfo, initInfo, getUnit, testDeploy, every_type, setFlankSizes, getRowTypes } from './utils'
+import { TestInfo, initInfo, getUnit, testDeploy, every_type, setFlankSizes, getUnitPreferences } from './utils'
 import { UnitType, Setting } from 'types'
 import { loadInput } from './parser'
 
+import basic from './input/deployment/basic.txt'
+import all_land_front from './input/deployment/all_land_front.txt'
 import flanksize_small_flank from './input/deployment/flanksize_small_flank.txt'
 import flanksize_big_flank from './input/deployment/flanksize_big_flank.txt'
 
@@ -15,20 +17,15 @@ describe('initial deployment', () => {
   const fillAttacker = (type: UnitType) => (info.army_a = { ...info.army_a, reserve: info.army_a.reserve.concat(Array(30).fill(type).map(type => getUnit(type))) })
   const fillDefender = (type: UnitType) => (info.army_d = { ...info.army_d, reserve: info.army_d.reserve.concat(Array(30).fill(type).map(type => getUnit(type))) })
 
-  it('a single unit', () => {
-    setAttacker([UnitType.Archers])
-    testDeploy(info, [UnitType.Archers])
-  })
-  it('both sides', () => {
-    setAttacker([UnitType.Archers])
-    setDefender([UnitType.Chariots])
+  it('1 vs 1', () => {
+    loadInput(basic, info)
     testDeploy(info, [UnitType.Archers], 0, [UnitType.Chariots], 0)
   })
-  it('main front and default priorities', () => {
-    setAttacker(every_type)
-    const result = [UnitType.WarElephants, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.Archers, UnitType.Chariots, UnitType.LightInfantry, UnitType.HorseArchers, UnitType.CamelCavalry, UnitType.LightCavalry]
-    fillDefender(UnitType.Archers)
-    testDeploy(info, result)
+  it('all land units against full frontline', () => {
+    loadInput(all_land_front, info)
+    const attacker = Array(30).fill(UnitType.Archers)
+    const defender = [UnitType.WarElephants, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.Archers,  UnitType.LightInfantry, UnitType.Chariots, UnitType.HorseArchers, UnitType.CamelCavalry, UnitType.LightCavalry, UnitType.SupplyTrain]
+    testDeploy(info, attacker, 0, defender, 0)
   })
   it('flank only and default priorities', () => {
     setAttacker(every_type)
@@ -48,35 +45,35 @@ describe('initial deployment', () => {
     testDeploy(info, result)
   })
   it('front priority', () => {
-    info.army_a = { ...info.army_a, row_types: getRowTypes(UnitType.Archers, UnitType.Archers) }
+    info.army_a = { ...info.army_a, unit_preferences: getUnitPreferences(UnitType.Archers, UnitType.Archers) }
     setAttacker(every_type)
     setDefender([UnitType.Archers, UnitType.Archers, UnitType.Archers, UnitType.Archers])
     const result = [UnitType.Archers, UnitType.WarElephants, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.HorseArchers, UnitType.CamelCavalry, UnitType.LightCavalry, UnitType.Chariots, UnitType.LightInfantry]
     testDeploy(info, result)
   })
   it('back priority', () => {
-    info.army_a = { ...info.army_a, row_types: getRowTypes(null, UnitType.Archers) }
+    info.army_a = { ...info.army_a, unit_preferences: getUnitPreferences(null, UnitType.Archers) }
     setAttacker(every_type)
     setDefender([UnitType.Archers, UnitType.Archers, UnitType.Archers, UnitType.Archers])
     const result = [UnitType.WarElephants, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.Chariots, UnitType.HorseArchers, UnitType.CamelCavalry, UnitType.LightCavalry, UnitType.LightInfantry, UnitType.Archers]
     testDeploy(info, result)
   })
   it('flank priority', () => {
-    info.army_a = { ...info.army_a, row_types: getRowTypes(UnitType.Archers, UnitType.Archers, UnitType.Archers) }
+    info.army_a = { ...info.army_a, unit_preferences: getUnitPreferences(UnitType.Archers, UnitType.Archers, UnitType.Archers) }
     setAttacker(every_type)
     setDefender([UnitType.Archers, UnitType.Archers, UnitType.Archers, UnitType.Archers])
     const result = [UnitType.WarElephants, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.Chariots, UnitType.Archers, UnitType.HorseArchers, UnitType.CamelCavalry, UnitType.LightCavalry, UnitType.LightInfantry]
     testDeploy(info, result)
   })
   it('mixed priority', () => {
-    info.army_a = { ...info.army_a, row_types: getRowTypes(UnitType.HeavyInfantry, UnitType.HorseArchers, UnitType.Archers) }
+    info.army_a = { ...info.army_a, unit_preferences: getUnitPreferences(UnitType.HeavyInfantry, UnitType.HorseArchers, UnitType.Archers) }
     setAttacker(every_type)
     setDefender([UnitType.Archers, UnitType.Archers, UnitType.Archers, UnitType.Archers])
     const result = [UnitType.HeavyInfantry, UnitType.WarElephants, UnitType.HeavyCavalry, UnitType.Chariots, UnitType.Archers, UnitType.CamelCavalry, UnitType.LightCavalry, UnitType.LightInfantry, UnitType.HorseArchers]
     testDeploy(info, result)
   })
   it('flank size, enough flanking units', () => {
-    loadInput(info,  flanksize_small_flank)
+    loadInput(flanksize_small_flank, info)
     const result = Array(30).fill(UnitType.Archers)
     result[26] = UnitType.HorseArchers
     result[27] = UnitType.HorseArchers
@@ -85,7 +82,7 @@ describe('initial deployment', () => {
     testDeploy(info, result, 5)
   })
   it('flank size, not enough flanking units', () => {
-    loadInput(info,  flanksize_big_flank)
+    loadInput(flanksize_big_flank, info)
     const result = Array(30).fill(UnitType.Archers)
     result[24] = UnitType.HorseArchers
     result[25] = UnitType.HorseArchers

@@ -1,7 +1,7 @@
 
 import { ImmerReducer, createActionCreators, createReducerFunction, Actions } from 'immer-reducer'
 import { findLastIndex, forEach} from 'lodash'
-import { Mode, DefinitionType, ValuesType, TerrainType, CountryName, Army, Side, ArmyType, BaseUnit, UnitType, UnitValueType, TacticType, RowType, ModeState } from 'types'
+import { Mode, DefinitionType, ValuesType, TerrainType, CountryName, Army, Side, ArmyType, BaseUnit, UnitType, UnitValueType, TacticType, UnitPreferenceType, ModeState } from 'types'
 import { addValues } from 'definition_values'
 import { toArr, arrGet, keys } from 'utils'
 import { createCountry, deleteCountry, changeCountryName } from './countries'
@@ -132,9 +132,9 @@ class BattleReducer extends ImmerReducer<ModeState> {
     draft.tactic = tactic
   }
 
-  setRowType(mode: Mode, country: CountryName, row_type: RowType, unit: UnitType | null) {
+  setUnitPreference(mode: Mode, country: CountryName, preference_type: UnitPreferenceType, unit: UnitType | null) {
     const draft = this.draftState[mode].armies[country]
-    draft.row_types[row_type] = unit
+    draft.unit_preferences[preference_type] = unit
   }
 
   invalidate(mode: Mode) {
@@ -227,7 +227,7 @@ export const removeReserveUnits = actions.removeReserveUnits
 export const addReserveUnits = actions.addReserveUnits
 export const selectTerrain = actions.selectTerrain
 export const selectTactic = actions.selectTactic
-export const setRowType = actions.setRowType
+export const setUnitPreference = actions.setUnitPreference
 export const invalidate = actions.invalidate
 export const invalidateCountry = actions.invalidateCountry
 export const undo = actions.undo

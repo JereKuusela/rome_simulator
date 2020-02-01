@@ -72,7 +72,7 @@ export const doConversion = (attacker: ArmyForCombat, defender: ArmyForCombat, t
     roll: 0,
     flank: attacker.flank_size,
     tactic: attacker.tactic!,
-    row_types: attacker.row_types,
+    unit_preferences: attacker.unit_preferences,
     unit_types: map(attacker.definitions, unit => getUnitDefinition(settings, terrains, unit_types, { ...unit, id: -1 }))
   }
   const participant_d: CombatParticipant = {
@@ -80,7 +80,7 @@ export const doConversion = (attacker: ArmyForCombat, defender: ArmyForCombat, t
     roll: 0,
     flank: defender.flank_size,
     tactic: defender.tactic!,
-    row_types: defender.row_types,
+    unit_preferences: defender.unit_preferences,
     unit_types: map(defender.definitions, unit => getUnitDefinition(settings, terrains, unit_types, { ...unit, id: -1 }))
   }
   return [participant_a, participant_d]

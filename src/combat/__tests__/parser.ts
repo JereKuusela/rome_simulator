@@ -1,17 +1,17 @@
 import { UnitType } from "types"
 import { forEach, mapRange } from "utils"
-import { TestInfo, setFlankSizes, setPreferredTypes, setReserve } from "./utils"
+import { TestInfo, setFlankSizes, setUnitPreferences, setReserve } from "./utils"
 
 const typeConversion: { [key: string]: UnitType | undefined } = {
   archers: UnitType.Archers,
-  camel_cavalry: UnitType.CamelCavalry,
+  camels: UnitType.CamelCavalry,
   chariots: UnitType.Chariots,
   heavy_cavalry: UnitType.HeavyCavalry,
   heavy_infantry: UnitType.HeavyInfantry,
   horse_archers: UnitType.HorseArchers,
   light_cavalry: UnitType.LightCavalry,
   light_infantry: UnitType.LightInfantry,
-  war_elephants: UnitType.WarElephants,
+  warelephant: UnitType.WarElephants,
   supply_train: UnitType.SupplyTrain
 }
 
@@ -55,7 +55,7 @@ const getUnits = (input: Input) => {
   return units
 }
 
-const getRowTypes = (input: Input) => [
+const getUnitPrefences = (input: Input) => [
   typeConversion[input['primary']] ?? null,
   typeConversion[input['secondary']] ?? null,
   typeConversion[input['flank']] ?? null
@@ -66,11 +66,16 @@ const getFlankSize = (input: Input) => Number(input['flank_size'] ?? 0)
 
 const setInfoFromInput = (info: TestInfo, attacker: Input, defender: Input) => {
   setFlankSizes(info, getFlankSize(attacker), getFlankSize(defender))
-  setPreferredTypes(info, getRowTypes(attacker), getRowTypes(defender))
+  setUnitPreferences(info, getUnitPrefences(attacker), getUnitPrefences(defender))
 }
 
-export const loadInput = (info: TestInfo, data: string) => {
+/**
+ * Loads a given input data to a given test info.
+ * @param info 
+ * @param data 
+ */
+export const loadInput = (data: string, info: TestInfo) => {
   const [attacker, defender] = parseInput(data)
   setInfoFromInput(info, attacker, defender)
-  setReserve(info, getUnits(attacker), getUnits(attacker))
+  setReserve(info, getUnits(attacker), getUnits(defender))
 }

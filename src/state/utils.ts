@@ -1,7 +1,7 @@
 import { AppState } from './index'
 import { reduce, toArr, filter, arrGet, toObj } from 'utils'
 import { filterUnitDefinitions, isIncludedInMode, getArmyPart, mergeBaseUnitsWithDefinitions, mergeDefinitions, mergeDefinition } from '../army_utils'
-import { Mode, DefinitionType, CountryName, BaseUnit, Side, Unit, ArmyType, UnitType, TerrainType, LocationType, TacticType, TacticDefinition, RowTypes, BaseUnits, Participant, TerrainDefinition, UnitDefinition, Settings, Battle, TerrainDefinitions, TacticDefinitions, Units, UnitDefinitions } from 'types'
+import { Mode, DefinitionType, CountryName, BaseUnit, Side, Unit, ArmyType, UnitType, TerrainType, LocationType, TacticType, TacticDefinition, UnitPreferences, BaseUnits, Participant, TerrainDefinition, UnitDefinition, Settings, Battle, TerrainDefinitions, TacticDefinitions, Units, UnitDefinitions } from 'types'
 import { CombatUnit, CombatUnits } from 'combat'
 import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticDefinitions, getDefaultTerrainDefinitions, getDefaultBaseDefinitions, getDefaultUnitDefinitions } from 'data'
 import { sortBy, uniq } from 'lodash'
@@ -151,7 +151,7 @@ export const getArmyForCombat = (state: AppState, side: Side, mode?: Mode): Army
   const general = getGeneral(state, country).martial
   const tactic = state.tactics[army.tactic]
   const definitions = getUnitDefinitions(state, country)
-  return { ...units, tactic, general, flank_size: army.flank_size, row_types: army.row_types, definitions }
+  return { ...units, tactic, general, flank_size: army.flank_size, unit_preferences: army.unit_preferences, definitions }
 }
 
 export const getCurrentCombat = (state: AppState, side: Side): CombatUnits => {
@@ -164,9 +164,9 @@ export const getSelectedTactic = (state: AppState, side: Side): TacticDefinition
   return state.tactics[army.tactic]
 }
 
-export const getRowTypes = (state: AppState, side: Side): RowTypes => {
+export const getUnitPreferences = (state: AppState, side: Side): UnitPreferences => {
   const army = getBaseArmy(state, side)
-  return  army.row_types
+  return  army.unit_preferences
 }
 
 export const getFlankSize = (state: AppState, side: Side): number => {
@@ -280,6 +280,6 @@ export interface ArmyForCombat extends Units {
   tactic?: TacticDefinition
   definitions: UnitDefinitions
   general: number
-  row_types: RowTypes
+  unit_preferences: UnitPreferences
   flank_size: number
 }

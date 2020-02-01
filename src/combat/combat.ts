@@ -1,6 +1,6 @@
 
 import { sumBy, values } from 'lodash'
-import { TacticDefinition, RowTypes, TerrainDefinition, UnitType, Unit, UnitCalc, Setting, TerrainType, UnitDeployment, Settings } from 'types'
+import { TacticDefinition, UnitPreferences, TerrainDefinition, UnitType, Unit, UnitCalc, Setting, TerrainType, UnitDeployment, Settings } from 'types'
 import { mapRange, toObj } from 'utils'
 import { calculateValue, calculateValueWithoutLoss, calculateBase } from 'definition_values'
 import { calculateExperienceReduction } from './combat_utils'
@@ -17,7 +17,7 @@ export interface CombatParticipant {
   tactic: TacticDefinition
   flank: number
   roll: number
-  row_types: RowTypes
+  unit_preferences: UnitPreferences
 }
 export type Frontline = (CombatUnit | null)[]
 export type Reserve = CombatUnit[]

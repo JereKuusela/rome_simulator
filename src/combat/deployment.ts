@@ -1,5 +1,5 @@
 import { CombatUnit, CombatUnits, Reserve, CombatParticipant } from './combat'
-import { RowTypes, UnitCalc, RowType, UnitDeployment, CombatSettings, Setting } from 'types'
+import { UnitPreferences, UnitCalc, UnitPreferenceType, UnitDeployment, CombatSettings, Setting } from 'types'
 import { nextIndex } from './reinforcement'
 import { sortBy, remove, clamp } from 'lodash'
 
@@ -66,16 +66,16 @@ const deployArmy = (units: CombatUnits, left_flank: number, right_flank: number,
 }
 
 
-export const sortReserve = (reserve: Reserve, row_types: RowTypes): SortedReserve => {
-  const frontReserve = reserve.filter(value => isFrontUnit(row_types, value))
-  const flankReserve = reserve.filter(value => isFlankUnit(row_types, value))
-  const supportReserve = reserve.filter(value => isSupportUnit(row_types, value))
+export const sortReserve = (reserve: Reserve, unit_preferences: UnitPreferences): SortedReserve => {
+  const frontReserve = reserve.filter(value => isFrontUnit(unit_preferences, value))
+  const flankReserve = reserve.filter(value => isFlankUnit(unit_preferences, value))
+  const supportReserve = reserve.filter(value => isSupportUnit(unit_preferences, value))
   // Calculate priorities (mostly based on unit type, ties are resolved with index numbers).
   const front = sortBy(frontReserve, value => {
-      return -value.definition.deployment_cost * 100000 - value[UnitCalc.Strength] * 1000 - (value.definition.type === row_types[RowType.Primary] ? 200000000 : 0) - (value.definition.type === row_types[RowType.Secondary] ? -100000000 : 0)
+      return -value.definition.deployment_cost * 100000 - value[UnitCalc.Strength] * 1000 - (value.definition.type === unit_preferences[UnitPreferenceType.Primary] ? 200000000 : 0) - (value.definition.type === unit_preferences[UnitPreferenceType.Secondary] ? -100000000 : 0)
   })
   const flank = sortBy(flankReserve, value => {
-      return -value.definition[UnitCalc.Maneuver] * 100000 - value[UnitCalc.Strength] * 1000 - (value.definition.type === row_types[RowType.Flank] ? 100000000 : 0)
+      return -value.definition[UnitCalc.Maneuver] * 100000 - value[UnitCalc.Strength] * 1000 - (value.definition.type === unit_preferences[UnitPreferenceType.Flank] ? 100000000 : 0)
   })
   const support = sortBy(supportReserve, value => {
     return -value[UnitCalc.Strength] * 1000
@@ -83,26 +83,26 @@ export const sortReserve = (reserve: Reserve, row_types: RowTypes): SortedReserv
   return { front, flank, support }
 }
 
-const isFrontUnit = (row_types: RowTypes, unit: CombatUnit) => {
-  if (unit.definition.type === row_types[RowType.Flank])
+const isFrontUnit = (preferences: UnitPreferences, unit: CombatUnit) => {
+  if (unit.definition.type === preferences[UnitPreferenceType.Flank])
       return false
-  if (unit.definition.type === row_types[RowType.Primary] || unit.definition.type === row_types[RowType.Secondary])
+  if (unit.definition.type === preferences[UnitPreferenceType.Primary] || unit.definition.type === preferences[UnitPreferenceType.Secondary])
       return true
   return unit.definition.deployment === UnitDeployment.Front
 }
 
-const isFlankUnit = (row_types: RowTypes, unit: CombatUnit) => {
-  if (unit.definition.type === row_types[RowType.Flank])
+const isFlankUnit = (preferences: UnitPreferences, unit: CombatUnit) => {
+  if (unit.definition.type === preferences[UnitPreferenceType.Flank])
       return true
-  if (unit.definition.type === row_types[RowType.Primary] || unit.definition.type === row_types[RowType.Secondary])
+  if (unit.definition.type === preferences[UnitPreferenceType.Primary] || unit.definition.type === preferences[UnitPreferenceType.Secondary])
       return false
   return unit.definition.deployment === UnitDeployment.Flank
 }
 
-const isSupportUnit = (row_types: RowTypes, unit: CombatUnit) => {
-  if (unit.definition.type === row_types[RowType.Flank])
+const isSupportUnit = (preferences: UnitPreferences, unit: CombatUnit) => {
+  if (unit.definition.type === preferences[UnitPreferenceType.Flank])
       return false
-  if (unit.definition.type === row_types[RowType.Primary] || unit.definition.type === row_types[RowType.Secondary])
+  if (unit.definition.type === preferences[UnitPreferenceType.Primary] || unit.definition.type === preferences[UnitPreferenceType.Secondary])
       return false
   return unit.definition.deployment === UnitDeployment.Support
 }
@@ -160,10 +160,10 @@ const removeDefeated = (units: CombatUnits, minimum_morale: number, minimum_stre
 const calculateFlankSizes = (combat_width: number, preferred_flank_size: number, reserve: SortedReserve, enemy_units: CombatUnits): [number, number] => {
   const space_needed_for_flanking_units = Math.ceil(reserve.flank.length / 2.0)
   const target_flank_size = Math.min(space_needed_for_flanking_units, preferred_flank_size)
-
-  const enemy_size = armySize(enemy_units)
-  const left_side_free_space = Math.ceil((combat_width - enemy_size) / 2.0)
-  const right_side_free_space = Math.floor((combat_width - enemy_size) / 2.0)
+  
+  const free_space = combat_width - armySize(enemy_units)
+  const left_side_free_space = Math.ceil(free_space / 2.0)
+  const right_side_free_space = Math.floor(free_space / 2.0)
   // Max space checks needed for low combat widths.
   const left_side_max_space = Math.ceil(combat_width / 2.0)
   const right_side_max_space = Math.floor(combat_width / 2.0)
@@ -178,8 +178,8 @@ export const deploy = (attacker: CombatParticipant, defender: CombatParticipant,
   removeDefeated(attacker.army, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength])
   removeDefeated(defender.army, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength])
 
-  const sorted_a = sortReserve(attacker.army.reserve, attacker.row_types)
-  const sorted_d = sortReserve(defender.army.reserve, defender.row_types)
+  const sorted_a = sortReserve(attacker.army.reserve, attacker.unit_preferences)
+  const sorted_d = sortReserve(defender.army.reserve, defender.unit_preferences)
 
   const [left_flank_a, right_flank_a] = calculateFlankSizes(settings[Setting.CombatWidth], attacker.flank, sorted_a, defender.army)
   const [left_flank_d, right_flank_d] = calculateFlankSizes(settings[Setting.CombatWidth], defender.flank, sorted_d, attacker.army)

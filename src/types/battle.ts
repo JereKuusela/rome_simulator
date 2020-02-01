@@ -17,7 +17,7 @@ export type Armies = { [key in CountryName]: Army }
 export type Participants = { [key in Side]: Participant }
 export type ModeState = { [key in Mode]: Battle }
 
-export enum RowType {
+export enum UnitPreferenceType {
   Primary = 'Primary',
   Secondary = 'Secondary',
   Flank = 'Flank'
@@ -55,11 +55,11 @@ export interface Participant {
   randomize_roll: boolean
 }
 
-export type RowTypes = { [key in RowType]: UnitType | null }
+export type UnitPreferences = { [key in UnitPreferenceType]: UnitType | null }
 
 export interface Army extends BaseUnits {
   readonly tactic: TacticType
-  readonly row_types: RowTypes
+  readonly unit_preferences: UnitPreferences
   readonly flank_size: number
   readonly selections: ObjSet
 }

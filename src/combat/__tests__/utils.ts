@@ -1,7 +1,7 @@
 import { getDefaultGlobals, getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultParticipant, getDefaultArmy } from 'data'
 import { map, mapRange } from 'utils'
 import { mergeValues, calculateValue } from 'definition_values'
-import { DefinitionType, CountryName, Participant, Army, TerrainDefinition, TacticType, Setting, Side, BaseUnit, UnitCalc, UnitType, TerrainType, RowType, TacticCalc, Settings } from 'types'
+import { DefinitionType, CountryName, Participant, Army, TerrainDefinition, TacticType, Setting, Side, BaseUnit, UnitCalc, UnitType, TerrainType, UnitPreferenceType, TacticCalc, Settings } from 'types'
 import { CombatUnit, CombatParticipant, doBattleFast, getBaseDamages, convertUnits, calculateTotalRoll, deploy, sortReserve } from 'combat'
 
 const global_stats = getDefaultGlobals()[DefinitionType.Land]
@@ -35,14 +35,14 @@ export const initInfo = () => ({
     // Frontline must be cloned to prevent tests mutating the source.
     frontline: [...getDefaultArmy(DefinitionType.Land).frontline],
     tactic: TacticType.Envelopment,
-    row_types: getRowTypes()
+    unit_preferences: getUnitPreferences()
   },
   army_d: {
     ...getDefaultArmy(DefinitionType.Land),
     // Frontline must be cloned to prevent tests mutating the source.
     frontline: [...getDefaultArmy(DefinitionType.Land).frontline],
     tactic: TacticType.Envelopment,
-    row_types: getRowTypes()
+    unit_preferences: getUnitPreferences()
   },
   round: 0,
   general_a: 0,
@@ -194,12 +194,12 @@ describe('utils', () => {
 })
 
 /**
- * Returns row types object with given selections.
+ * Returns unit prerefences object with given selections.
  * @param primary Selected primary type or null.
  * @param secondary Selected secondary type or null.
  * @param flank Selected flank tyoe or null.
  */
-export const getRowTypes = (primary: UnitType | null = null, secondary: UnitType | null = null, flank: UnitType | null = null) => ({ [RowType.Primary]: primary, [RowType.Secondary]: secondary, [RowType.Flank]: flank })
+export const getUnitPreferences = (primary: UnitType | null = null, secondary: UnitType | null = null, flank: UnitType | null = null) => ({ [UnitPreferenceType.Primary]: primary, [UnitPreferenceType.Secondary]: secondary, [UnitPreferenceType.Flank]: flank })
 
 /**
  * Sets preferred unit types.
@@ -207,10 +207,10 @@ export const getRowTypes = (primary: UnitType | null = null, secondary: UnitType
  * @param attacker Array of 3 unit types.
  * @param defender Array of 3 unit types.
  */
-export const setPreferredTypes = (info: TestInfo, attacker: (UnitType | null)[], defender: (UnitType | null)[]) => {
+export const setUnitPreferences = (info: TestInfo, attacker: (UnitType | null)[], defender: (UnitType | null)[]) => {
   
-  info.army_a = { ...info.army_a, row_types: { [RowType.Primary]: attacker[0], [RowType.Secondary]: attacker[1], [RowType.Flank]: attacker[2] } }
-  info.army_d = { ...info.army_d, row_types: { [RowType.Primary]: defender[0], [RowType.Secondary]: defender[1], [RowType.Flank]: defender[2] } }
+  info.army_a = { ...info.army_a, unit_preferences: { [UnitPreferenceType.Primary]: attacker[0], [UnitPreferenceType.Secondary]: attacker[1], [UnitPreferenceType.Flank]: attacker[2] } }
+  info.army_d = { ...info.army_d, unit_preferences: { [UnitPreferenceType.Primary]: defender[0], [UnitPreferenceType.Secondary]: defender[1], [UnitPreferenceType.Flank]: defender[2] } }
 }
 
 /**
@@ -245,7 +245,7 @@ const getParticipants = (info: TestInfo) => {
     army: status_a,
     roll: 0,
     tactic: tactics[info.army_a.tactic],
-    row_types: info.army_a.row_types,
+    unit_preferences: info.army_a.unit_preferences,
     flank: info.army_a.flank_size,
     unit_types: {} as any
   }
@@ -253,7 +253,7 @@ const getParticipants = (info: TestInfo) => {
     army: status_d,
     roll: 0,
     tactic: tactics[info.army_d.tactic],
-    row_types: info.army_d.row_types,
+    unit_preferences: info.army_d.unit_preferences,
     flank: info.army_d.flank_size,
     unit_types: {} as any
   }
@@ -280,14 +280,14 @@ export const testCombat = (info: TestInfo, rolls: number[][], attacker: Expected
     }
   }
 }
-export const testDeploy = (info: TestInfo, expected_a: UnitType[] | null = null, reserve_length_a: number = 0, expected_d: UnitType[] | null = null, reserve_length_d: number = 0) => {
+export const testDeploy = (info: TestInfo, expected_a: (UnitType | null)[] | null = null, reserve_length_a: number = 0, expected_d: (UnitType | null)[] | null = null, reserve_length_d: number = 0) => {
   const [participant_a, participant_d] = getParticipants(info)
   deploy(participant_a, participant_d, info.settings)
   verifyDeployOrReinforce(info, Side.Attacker, participant_a, expected_a, reserve_length_a)
   verifyDeployOrReinforce(info, Side.Defender, participant_d, expected_d, reserve_length_d)
 }
 
-const verifyDeployOrReinforce = (info: TestInfo, side: Side, participant: CombatParticipant, expected: UnitType[] | null = null, reserve_length: number = 0) => {
+const verifyDeployOrReinforce = (info: TestInfo, side: Side, participant: CombatParticipant, expected: (UnitType | null)[] | null = null, reserve_length: number = 0) => {
   if (expected) {
     verifyTypes(info, expected, side, participant.army.frontline)
     expect(participant.army.reserve.length).toEqual(reserve_length)
@@ -296,7 +296,7 @@ const verifyDeployOrReinforce = (info: TestInfo, side: Side, participant: Combat
 
 const nextIndex = (index: number, half: number) => index < half ? index + 2 * (half - index) : index - 2 * (index - half) - 1
 
-const verifyTypes = (info: TestInfo, types: UnitType[], side: Side, frontline: (CombatUnit | null)[]) => {
+const verifyTypes = (info: TestInfo, types: (UnitType | null)[], side: Side, frontline: (CombatUnit | null)[]) => {
   const half = Math.floor(info.settings[Setting.CombatWidth] / 2.0)
   let index = half
   for (const type of types) {
@@ -308,10 +308,10 @@ const verifyTypes = (info: TestInfo, types: UnitType[], side: Side, frontline: (
 export const testReinforce = (info: TestInfo, expected_a: UnitType[] | null = null, reserve_length_a: number = 0, expected_d: UnitType[] | null = null, reserve_length_d: number = 0) => {
   const [participant_a, participant_d] = getParticipants(info)
   let reserve = participant_a.army.reserve
-  let sorted = sortReserve(reserve, participant_a.row_types)
+  let sorted = sortReserve(reserve, participant_a.unit_preferences)
   reserve.splice(0, reserve.length, ...(sorted.flank.concat(sorted.front)))
   reserve = participant_d.army.reserve
-  sorted = sortReserve(reserve, participant_d.row_types)
+  sorted = sortReserve(reserve, participant_d.unit_preferences)
   reserve.splice(0, reserve.length, ...(sorted.flank.concat(sorted.front)))
   doRound(info, participant_a, participant_d)
   verifyDeployOrReinforce(info, Side.Attacker, participant_a, expected_a, reserve_length_a)

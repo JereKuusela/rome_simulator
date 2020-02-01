@@ -1,5 +1,5 @@
 import { Mode, DefinitionType } from "types/definition"
-import { Battle, CountryName, Side, ModeState, TerrainType, TacticType, RowTypes, RowType, UnitType, Army, Participant } from "types"
+import { Battle, CountryName, Side, ModeState, TerrainType, TacticType, UnitPreferences, UnitPreferenceType, UnitType, Army, Participant } from "types"
 
 export const getInitialTerrains = (mode: DefinitionType): TerrainType[] => {
   if (mode === DefinitionType.Naval)
@@ -10,19 +10,19 @@ export const getInitialTerrains = (mode: DefinitionType): TerrainType[] => {
 
 const getInitialTactic = (mode: Mode): TacticType => mode === DefinitionType.Land ? TacticType.Deception : TacticType.FrontalAssault
 
-const getInitialRowTypes = (mode: Mode): RowTypes => {
+const getInitialRowTypes = (mode: Mode): UnitPreferences => {
   if (mode === DefinitionType.Naval) {
     return {
-      [RowType.Primary]: UnitType.MegaPolyreme,
-      [RowType.Secondary]: UnitType.MegaPolyreme,
-      [RowType.Flank]: UnitType.MegaPolyreme
+      [UnitPreferenceType.Primary]: UnitType.MegaPolyreme,
+      [UnitPreferenceType.Secondary]: UnitType.MegaPolyreme,
+      [UnitPreferenceType.Flank]: UnitType.MegaPolyreme
     }
   }
   else {
     return {
-      [RowType.Primary]: UnitType.Archers,
-      [RowType.Secondary]: UnitType.HeavyInfantry,
-      [RowType.Flank]: UnitType.LightCavalry
+      [UnitPreferenceType.Primary]: UnitType.Archers,
+      [UnitPreferenceType.Secondary]: UnitType.HeavyInfantry,
+      [UnitPreferenceType.Flank]: UnitType.LightCavalry
     }
   }
 }
@@ -32,7 +32,7 @@ const initializeDefaultArmy = (mode: Mode): Army => ({
   reserve: [],
   defeated: [],
   tactic: getInitialTactic(mode),
-  row_types: getInitialRowTypes(mode),
+  unit_preferences: getInitialRowTypes(mode),
   flank_size: 5,
   selections: {}
 })

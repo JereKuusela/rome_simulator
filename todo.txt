@@ -35,7 +35,7 @@ Todo:
 
 Tags:
  - Icons to frontline to show various things, with tooltips:
-  * Defender's advantage (some kind of ninja icon?)
+  * Defender's advantage (some kind of ninja icon?) - This is expected to be fixed so shouldn't waste time.
   * Very bad matchup, bad match up, good matchup, very good matchup (red or green arrows)
   * Flanking (attacking without being attacked)
   * No target (red sign)

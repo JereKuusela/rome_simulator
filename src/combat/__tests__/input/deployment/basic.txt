@@ -1,0 +1,13 @@
+combat_name = {
+	fast_combat = no
+	cleanup_combat = yes
+	attacker = { 
+		location = 2
+		archers = 1
+	}
+	
+	defender = { 
+		location = 2
+		chariots = 1
+	}
+}
