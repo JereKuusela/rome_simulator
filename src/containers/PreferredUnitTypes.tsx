@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Image, Table, Input } from 'semantic-ui-react'
 
 import { AppState, getCountry, getRowTypes, getFlankSize, getMode, getUnitDefinitionsBySide } from 'state'
-import { setFlankSize } from 'reducers'
+import { setFlankSize, invalidateCountry } from 'reducers'
 
 import ModalRowTypeSelector from './modal/ModalRowTypeSelector'
 import { RowType, Side } from 'types'
@@ -95,12 +95,18 @@ class Row extends Component<IProps, IState> {
   }
 
   renderFlankSize = () => {
-    const { flank_size, setFlankSize, mode, country } = this.props
+    const { flank_size } = this.props
     return (
       <Table.Cell collapsing>
-        <Input size='mini' style={{ width: 100 }} type='number' value={flank_size} onChange={(_, data) => setFlankSize(mode, country, Number(data.value))} />
+        <Input size='mini' style={{ width: 100 }} type='number' value={flank_size} onChange={(_, data) => this.setFlankSize(Number(data.value))} />
       </Table.Cell>
     )
+  }
+
+  setFlankSize = (value: number) => {
+    const { setFlankSize, invalidateCountry, mode, country } = this.props
+    setFlankSize(mode, country, value)
+    invalidateCountry(country)
   }
 
   closeModal = () => {
@@ -117,7 +123,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   mode: getMode(state)
 })
 
-const actions = { setFlankSize }
+const actions = { setFlankSize, invalidateCountry }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

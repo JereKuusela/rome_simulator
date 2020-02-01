@@ -1,7 +1,7 @@
 import { CombatUnit, CombatUnits, Reserve, CombatParticipant } from './combat'
 import { RowTypes, UnitCalc, RowType, UnitDeployment, CombatSettings, Setting } from 'types'
 import { nextIndex } from './reinforcement'
-import { sortBy, remove } from 'lodash'
+import { sortBy, remove, clamp } from 'lodash'
 
 export type SortedReserve = {
   front: CombatUnit[]
@@ -13,10 +13,9 @@ const armySize = (units: CombatUnits) => {
   return units.frontline.filter(unit => unit).length + units.reserve.length
 }
 
-const deployArmy = (units: CombatUnits, left_flank: number, right_flank: number, row_types: RowTypes) => {
+const deployArmy = (units: CombatUnits, left_flank: number, right_flank: number, sorted: SortedReserve) => {
   const frontline = units.frontline
   const reserve = units.reserve
-  const sorted = sortReserve(reserve, row_types)
   const center = Math.floor(frontline.length / 2.0)
 
   let index = center
@@ -151,14 +150,25 @@ const removeDefeated = (units: CombatUnits, minimum_morale: number, minimum_stre
   }
 }
 
-const calculateFlankSizes = (flank_size: number, enemy_units: CombatUnits): [number, number] => {
-  const front_size = enemy_units.frontline.length
+/**
+ * Calculates the left and right flank size.
+ * @param combat_width Size of the battlefield.
+ * @param preferred_flank_size Maximum amount of flanking units per side.
+ * @param reserve Sorted reserve to get amount of flanking units.
+ * @param enemy_units Enemy units to calculate space on the battlefield.
+ */
+const calculateFlankSizes = (combat_width: number, preferred_flank_size: number, reserve: SortedReserve, enemy_units: CombatUnits): [number, number] => {
+  const space_needed_for_flanking_units = Math.ceil(reserve.flank.length / 2.0)
+  const target_flank_size = Math.min(space_needed_for_flanking_units, preferred_flank_size)
+
   const enemy_size = armySize(enemy_units)
-  let left_flank_size = Math.max(flank_size, Math.ceil((front_size - enemy_size) / 2.0))
-  // Ensure that the flank doesn't spill over the center with small combat sizes.
-  left_flank_size = Math.min(Math.ceil(front_size / 2.0), left_flank_size)
-  let right_flank_size = Math.max(flank_size, Math.floor((front_size - enemy_size) / 2.0))
-  right_flank_size = Math.min(Math.floor(front_size / 2.0), right_flank_size)
+  const left_side_free_space = Math.ceil((combat_width - enemy_size) / 2.0)
+  const right_side_free_space = Math.floor((combat_width - enemy_size) / 2.0)
+  // Max space checks needed for low combat widths.
+  const left_side_max_space = Math.ceil(combat_width / 2.0)
+  const right_side_max_space = Math.floor(combat_width / 2.0)
+  const left_flank_size = clamp(target_flank_size, left_side_free_space, left_side_max_space)
+  const right_flank_size = clamp(target_flank_size, right_side_free_space, right_side_max_space)
   return [left_flank_size, right_flank_size]
 }
 
@@ -168,9 +178,12 @@ export const deploy = (attacker: CombatParticipant, defender: CombatParticipant,
   removeDefeated(attacker.army, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength])
   removeDefeated(defender.army, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength])
 
-  const [left_flank_a, right_flank_a] = calculateFlankSizes(attacker.flank, defender.army)
-  const [left_flank_d, right_flank_d] = calculateFlankSizes(defender.flank, attacker.army)
+  const sorted_a = sortReserve(attacker.army.reserve, attacker.row_types)
+  const sorted_d = sortReserve(defender.army.reserve, defender.row_types)
 
-  deployArmy(attacker.army, left_flank_a, right_flank_a, attacker.row_types)
-  deployArmy(defender.army, left_flank_d, right_flank_d, defender.row_types)
+  const [left_flank_a, right_flank_a] = calculateFlankSizes(settings[Setting.CombatWidth], attacker.flank, sorted_a, defender.army)
+  const [left_flank_d, right_flank_d] = calculateFlankSizes(settings[Setting.CombatWidth], defender.flank, sorted_d, attacker.army)
+
+  deployArmy(attacker.army, left_flank_a, right_flank_a, sorted_a)
+  deployArmy(defender.army, left_flank_d, right_flank_d, sorted_d)
 }

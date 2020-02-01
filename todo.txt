@@ -7,6 +7,8 @@ Changelog:
 - Battle: Fixed new countries not shown on country selector.
 - Battle: Fixed manual unit adding not working.
 - Battle: Fixed order of naval units in fast planner.
+- Battle: Fixed changing flank size not automatically updating the result.
+- Battle: Updated flank size setting to work more accurately (not sure when this was changed).
 - Stats: Added average gold losses to naval simulations (from repair, from destroyed, from captured, etc.).
 - Stats: Added separate settings for calculating different things.
 - Countries: Added naval capture chance from general martial (0.2% * martial).

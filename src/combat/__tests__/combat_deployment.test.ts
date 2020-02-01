@@ -1,7 +1,9 @@
 import { TestInfo, initInfo, getUnit, testDeploy, every_type, setFlankSizes, getRowTypes } from './utils'
 import { UnitType, Setting } from 'types'
 import { loadInput } from './parser'
-import data from './data/deployment_full_flank_size.txt'
+
+import flanksize_small_flank from './input/deployment/flanksize_small_flank.txt'
+import flanksize_big_flank from './input/deployment/flanksize_big_flank.txt'
 
 describe('initial deployment', () => {
 
@@ -73,13 +75,23 @@ describe('initial deployment', () => {
     const result = [UnitType.HeavyInfantry, UnitType.WarElephants, UnitType.HeavyCavalry, UnitType.Chariots, UnitType.Archers, UnitType.CamelCavalry, UnitType.LightCavalry, UnitType.LightInfantry, UnitType.HorseArchers]
     testDeploy(info, result)
   })
-  it('flank size, full', () => {
-    loadInput(info,  data)
+  it('flank size, enough flanking units', () => {
+    loadInput(info,  flanksize_small_flank)
     const result = Array(30).fill(UnitType.Archers)
     result[26] = UnitType.HorseArchers
     result[27] = UnitType.HorseArchers
     result[28] = UnitType.HorseArchers
     result[29] = UnitType.HorseArchers
+    testDeploy(info, result, 5)
+  })
+  it('flank size, not enough flanking units', () => {
+    loadInput(info,  flanksize_big_flank)
+    const result = Array(30).fill(UnitType.Archers)
+    result[24] = UnitType.HorseArchers
+    result[25] = UnitType.HorseArchers
+    result[26] = UnitType.HorseArchers
+    result[27] = UnitType.HorseArchers
+    result[28] = UnitType.HorseArchers
     testDeploy(info, result, 5)
   })
   it('reduced combat width', () => {
