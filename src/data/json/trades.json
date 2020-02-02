@@ -216,8 +216,8 @@
       "type": "Export",
       "modifier": {
         "target": "Naval",
-        "attribute": "Damage done",
-        "value": 0.05
+        "attribute": "Damage taken",
+        "value": -0.1
       }
     },
     {
