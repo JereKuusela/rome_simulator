@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { ValuesType, DefinitionType, CountryName, UnitType, Unit, UnitDeployment, UnitValueType } from 'types'
+import { ValuesType, DefinitionType, CountryName, UnitType, Cohort, UnitDeployment, UnitValueType } from 'types'
 import UnitDetail from 'components/UnitDetail'
 import { AppState, getUnitDefinition, mergeUnitTypes, filterTerrainTypes, getMode } from 'state'
 import { setUnitValue, changeUnitImage, changeUnitMode, changeUnitDeployment, toggleIsUnitLoyal, invalidateCountry } from 'reducers'
@@ -24,7 +24,7 @@ class ModalUnitDetail extends Component<IProps> {
         mode={mode}
         terrain_types={this.props.terrain_types}
         custom_value_key={CUSTOM_VALUE_KEY}
-        unit={unit as Unit}
+        unit={unit as Cohort}
         unit_types={this.props.unit_types}
         onCustomBaseValueChange={this.setBaseValue}
         onCustomModifierValueChange={this.setModifierValue}

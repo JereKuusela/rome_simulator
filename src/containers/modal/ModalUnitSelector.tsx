@@ -39,9 +39,10 @@ class ModalUnitSelector extends Component<IProps> {
   }
 
   selectUnit = (type: UnitType) => {
-    if (this.props.info)
-      this.props.selectUnit(this.props.mode, this.props.info.country, this.props.info.type, this.props.info.index, { id: getNextId(), type })
-    this.props.invalidate(this.props.mode)
+    const { info, mode } = this.props
+    if (info)
+      this.props.selectUnit(info.country, mode, info.type, info.index, { id: getNextId(), type })
+    this.props.invalidate(mode)
     this.props.onClose()
   }
 }

@@ -8,7 +8,7 @@ import DetailTextRow from './Detail/DetailTextRow'
 import DetailInputRow from './Detail/DetailInputRow'
 import DetailDropdownRow from './Detail/DetailDropdownRow'
 import Headers from './Utils/Headers'
-import { DefinitionType, ValuesType, Unit, UnitType, TerrainType, UnitDeployment, UnitCalc, UnitValueType, unitValueToString } from 'types'
+import { DefinitionType, ValuesType, Cohort, UnitType, TerrainType, UnitDeployment, UnitCalc, UnitValueType, unitValueToString } from 'types'
 import { values } from 'utils'
 import { getValue, calculateValue, explain } from 'definition_values'
 import { toMaintenance } from 'formatters'
@@ -16,7 +16,7 @@ import { toMaintenance } from 'formatters'
 interface IProps {
   mode: DefinitionType
   custom_value_key: string
-  unit: Unit
+  unit: Cohort
   unit_types?: UnitType[]
   show_statistics: boolean
   terrain_types?: TerrainType[]

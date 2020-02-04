@@ -63,7 +63,7 @@ export type UnitDefinitionValues = { [key in UnitType]: UnitDefinitionValue }
 export type UnitDefinitionValue = DefinitionValues<UnitValueType>
 
 
-export interface BaseUnit extends DefinitionValues<UnitValueType> {
+export interface BaseCohort extends DefinitionValues<UnitValueType> {
   type: UnitType
   id: number
   is_loyal?: boolean
@@ -75,7 +75,7 @@ export interface UnitDefinition extends Definition<UnitType>, DefinitionValues<U
   is_loyal?: boolean
 }
 
-export interface Unit extends BaseUnit, UnitDefinition { }
+export interface Cohort extends BaseCohort, UnitDefinition { }
 
 
 export const unitValueToString = (definition: DefinitionValues<UnitValueType>, type: UnitValueType): string => {

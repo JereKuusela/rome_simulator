@@ -105,7 +105,7 @@ class Row extends Component<IProps, IState> {
 
   setFlankSize = (value: number) => {
     const { setFlankSize, invalidateCountry, mode, country } = this.props
-    setFlankSize(mode, country, value)
+    setFlankSize(country, mode, value)
     invalidateCountry(country)
   }
 

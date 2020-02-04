@@ -9,7 +9,7 @@ import { DefinitionType, Side, ArmyType, UnitCalc, UnitType, Setting, TacticCalc
 import { calculateTotalRoll, calculateBaseDamage, CombatUnitDefinition, CombatUnitRoundInfo, CombatUnit } from 'combat'
 import { toSignedPercent, toManpower, strengthToValue, toNumber } from 'formatters'
 import { calculateValue } from 'definition_values'
-import { AppState, getCurrentCombat, getParticipant, getSettings, getSelectedTerrains, getGeneral, getCountry, getTactic, getCombatUnit } from 'state'
+import { AppState, getCurrentCombat, getParticipant, getSettings, getSelectedTerrains, getGeneralStats, getCountry, getTactic, getCombatUnit } from 'state'
 import { getOpponent } from 'army_utils'
 
 type Props = {
@@ -240,9 +240,9 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   roll: (last(getParticipant(state, props.side).rolls) || { roll: 0 }).roll,
   settings: getSettings(state),
   terrains: getSelectedTerrains(state),
-  general_s: getGeneral(state, getCountry(state, props.side)).martial,
+  general_s: getGeneralStats(state, getCountry(state, props.side)).martial,
   tactic_s: getTactic(state, props.side),
-  general_t: getGeneral(state, getCountry(state, getOpponent(props.side))).martial,
+  general_t: getGeneralStats(state, getCountry(state, getOpponent(props.side))).martial,
   tactic_t: getTactic(state, getOpponent(props.side)),
   mode: state.settings.mode
 })

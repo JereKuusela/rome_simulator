@@ -1,7 +1,7 @@
 import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultParticipant, getDefaultArmy, getDefaultUnit } from 'data'
 import { map, mapRange } from 'utils'
 import { mergeValues, calculateValue } from 'definition_values'
-import { DefinitionType, CountryName, Participant, Army, TerrainDefinition, TacticType, Setting, Side, BaseUnit, UnitCalc, UnitType, TerrainType, UnitPreferenceType, TacticCalc, Settings } from 'types'
+import { DefinitionType, CountryName, Participant, Army, TerrainDefinition, TacticType, Setting, Side, BaseCohort, UnitCalc, UnitType, TerrainType, UnitPreferenceType, TacticCalc, Settings } from 'types'
 import { CombatUnit, CombatParticipant, doBattleFast, getBaseDamages, convertUnits, calculateTotalRoll, deploy, sortReserve } from 'combat'
 import { getBaseUnitType } from 'managers/army_manager'
 
@@ -62,7 +62,7 @@ const errorPrefix = (round: number, side: Side, index: number) => 'Round ' + rou
  * @param strength Expected strength (rounded down as in game).
  * @param morale Half of expected morale (as in game)
  */
-const verify = (round: number, side: Side, index: number, unit: BaseUnit | null, strength: number, morale: number) => {
+const verify = (round: number, side: Side, index: number, unit: BaseCohort | null, strength: number, morale: number) => {
   expect(unit).toBeTruthy()
   if (!unit)
     return
@@ -152,20 +152,20 @@ export const setTactics = (info: TestInfo, tactic_a: TacticType, tactic_d: Tacti
 /**
  * Sets center units (useful for 1v1 tests).
  */
-export const setCenterUnits = (info: TestInfo, unit_a: BaseUnit, unit_d: BaseUnit) => {
+export const setCenterUnits = (info: TestInfo, unit_a: BaseCohort, unit_d: BaseCohort) => {
   info.army_a.frontline[15] = unit_a
   info.army_d.frontline[15] = unit_d
 }
 /**
  * Sets an attacker unit (useful for more complex tests).
  */
-export const setAttacker = (info: TestInfo, index: number, unit: BaseUnit) => {
+export const setAttacker = (info: TestInfo, index: number, unit: BaseCohort) => {
   info.army_a.frontline[index] = unit
 }
 /**
  * Sets a defender unit (useful for more complex tests).
  */
-export const setDefender = (info: TestInfo, index: number, unit: BaseUnit) => {
+export const setDefender = (info: TestInfo, index: number, unit: BaseCohort) => {
   info.army_d.frontline[index] = unit
 }
 /**
@@ -216,7 +216,7 @@ export const setUnitPreferences = (info: TestInfo, attacker: (UnitType | null)[]
 /**
  * Returns a unit with a given type.
  */
-export const getUnit = (type: UnitType) => ({ ...unitDefinitions[type] } as any as BaseUnit)
+export const getUnit = (type: UnitType) => ({ ...unitDefinitions[type] } as any as BaseCohort)
 
 /**
  * List of every unit type for deployment/reinforcement tests.

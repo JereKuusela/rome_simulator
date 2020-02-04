@@ -1,4 +1,4 @@
-import { BaseUnits, UnitDefinitions, DefinitionType, UnitDefinition, UnitDefinitionValue, UnitDefinitionValues, BaseUnit, ArmyType, Side, Units } from 'types'
+import { BaseUnits, UnitDefinitions, DefinitionType, UnitDefinition, UnitDefinitionValue, UnitDefinitionValues, BaseCohort, ArmyType, Side, Units } from 'types'
 import { mergeValues } from 'definition_values'
 import { map, filter } from 'utils'
 import { CombatUnits } from 'combat'
@@ -48,13 +48,13 @@ export const getNextId = () => ++unit_id
  * @param units Units to search.
  * @param id Id to find.
  */
-export const findUnitById = (units: BaseUnits | undefined, id: number): BaseUnit | undefined => {
+export const findUnitById = (units: BaseUnits | undefined, id: number): BaseCohort | undefined => {
   if (!units)
     return undefined
   let base_unit = units.reserve.find(unit => unit.id === id)
   if (base_unit)
     return base_unit
-  base_unit = units.frontline.find(unit => unit ? unit.id === id : false) as BaseUnit | undefined
+  base_unit = units.frontline.find(unit => unit ? unit.id === id : false) as BaseCohort | undefined
   if (base_unit)
     return base_unit
   base_unit = units.defeated.find(unit => unit.id === id)

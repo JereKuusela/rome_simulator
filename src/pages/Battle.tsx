@@ -9,7 +9,7 @@ import {
 import ConfirmationButton from 'components/ConfirmationButton'
 import Dropdown from 'components/Utils/Dropdown'
 import StyledNumber from 'components/Utils/StyledNumber'
-import ModalArmyUnitDetail from 'containers/modal/ModalArmyUnitDetail'
+import ModalCohortDetail from 'containers/modal/ModalCohortDetail'
 import ModalFastPlanner from 'containers/modal/ModalFastPlanner'
 import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from 'containers/modal/ModalUnitSelector'
 import PreferredUnitTypes from 'containers/PreferredUnitTypes'
@@ -23,13 +23,12 @@ import { addSign } from 'formatters'
 import IconDice from 'images/chance.png'
 import IconGeneral from 'images/military_power.png'
 import IconTerrain from 'images/terrain.png'
-import { GeneralStats } from 'managers/army_manager'
 import {
     invalidate, invalidateCountry, selectArmy, selectCohort, setFlankSize, setRoll, toggleRandomRoll,
     undo, battle, refreshBattle, setSeed, setGeneralMartial, importState
 } from 'reducers'
-import { AppState, getBattle, getCountry, getGeneral, getParticipant, getSettings, resetMissing } from 'state'
-import { ArmyType, CountryName, Participant, Setting, Side, Mode } from 'types'
+import { AppState, getBattle, getCountry, getGeneralStats, getParticipant, getSettings, resetMissing, getCountries } from 'state'
+import { ArmyType, CountryName, Participant, Setting, Side, Mode, GeneralStats } from 'types'
 import { keys } from 'utils'
 
 interface IState {
@@ -81,7 +80,7 @@ class Battle extends Component<IProps, IState> {
           open={this.state.modal_fast_planner_open}
           onClose={this.closeModal}
         />
-        <ModalArmyUnitDetail
+        <ModalCohortDetail
           country={this.state.modal_army_unit_info ? this.state.modal_army_unit_info.country : '' as CountryName}
           id={this.state.modal_army_unit_info ? this.state.modal_army_unit_info.id : -1}
           side={this.state.modal_army_unit_info ? this.state.modal_army_unit_info.side : Side.Attacker}
@@ -329,7 +328,7 @@ class Battle extends Component<IProps, IState> {
         </Table.Cell>
         <Table.Cell collapsing>
           <Dropdown
-            values={keys(this.props.armies)}
+            values={keys(this.props.countries)}
             value={participant.country}
             onChange={name => this.props.selectArmy(this.props.mode, side, name)}
           />
@@ -368,9 +367,9 @@ class Battle extends Component<IProps, IState> {
 const mapStateToProps = (state: AppState) => ({
   attacker: getParticipant(state, Side.Attacker),
   defender: getParticipant(state, Side.Defender),
-  general_a: getGeneral(state, getCountry(state, Side.Attacker)),
-  general_d: getGeneral(state, getCountry(state, Side.Defender)),
-  armies: getBattle(state).armies,
+  general_a: getGeneralStats(state, getCountry(state, Side.Attacker)),
+  general_d: getGeneralStats(state, getCountry(state, Side.Defender)),
+  countries: getCountries(state),
   is_undo: getBattle(state).round > -1,
   round: getBattle(state).round,
   seed: getBattle(state).seed,
@@ -380,20 +379,19 @@ const mapStateToProps = (state: AppState) => ({
   tactics: state.tactics,
   fight_over: getBattle(state).fight_over,
   combat: getSettings(state),
-  mode: state.settings.mode,
-  countries: state.countries
+  mode: state.settings.mode
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
   battle: (mode: Mode, steps: number) => dispatch(battle(mode, steps)),
   undo: (mode: Mode, steps: number) => dispatch(undo(mode, steps)),
-  toggleRandomRoll: (mode: Mode, participant: Side) => dispatch(toggleRandomRoll(mode, participant)),
+  toggleRandomRoll: (mode: Mode, side: Side) => dispatch(toggleRandomRoll(mode, side)),
   setRoll: (mode: Mode, participant: Side, roll: number) => dispatch(setRoll(mode, participant, roll)),
-  setGeneralMartial: (name: CountryName, skill: number) => dispatch(setGeneralMartial(name, skill)) && dispatch(invalidateCountry(name)),
-  setFlankSize: (mode: Mode, name: CountryName, size: number) => dispatch(setFlankSize(mode, name, size)) && dispatch(invalidate(mode)),
-  selectArmy: (mode: Mode, type: Side, name: CountryName) => dispatch(selectArmy(mode, type, name)) && dispatch(invalidate(mode)),
-  removeUnit: (mode: Mode, name: CountryName, type: ArmyType, column: number) => (
-    dispatch(selectCohort(mode, name, type, column, null))
+  setGeneralMartial: (country: CountryName, skill: number) => dispatch(setGeneralMartial(country, skill)) && dispatch(invalidateCountry(country)),
+  setFlankSize: (mode: Mode, country: CountryName, size: number) => dispatch(setFlankSize(country, mode, size)) && dispatch(invalidate(mode)),
+  selectArmy: (mode: Mode, type: Side, country: CountryName) => dispatch(selectArmy(mode, type, country)) && dispatch(invalidate(mode)),
+  removeUnit: (mode: Mode, country: CountryName, type: ArmyType, column: number) => (
+    dispatch(selectCohort(country, mode, type, column, null))
   ),
   setSeed: (mode: Mode, seed: number) => dispatch(setSeed(mode, seed)) && dispatch(invalidate(mode)),
   refreshBattle: (mode: Mode) => dispatch(refreshBattle(mode)),
