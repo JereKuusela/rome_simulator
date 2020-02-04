@@ -33,9 +33,9 @@ class Error extends Component<IProps, State> {
       <>
         <br/><br/>
         <Segment>
-          <Header size='huge'>Something went wrong</Header>
-          <Button primary onClick={() => this.download()}>Click here to download current data</Button>
+          <Header size='huge'>Something went wrong (probably a new version of the simulator)</Header>
           <Button primary onClick={() => this.reset()}>Click here to reset the simulator</Button>
+          <Button primary onClick={() => this.download()}>Click here to download current data</Button>
           <br/><br/>
           <p>If that doesn't help please clear the cache and then force refresh the site.</p>
         </Segment>
