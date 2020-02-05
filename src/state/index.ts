@@ -1,5 +1,5 @@
 import { Reducer, CombinedState } from 'redux'
-import { armyReducer, countriesReducer, countryReducer, unitsReducer, tacticsReducer, terrainsReducer, battleReducer, transferReducer, importReducer, dataReducer, settingsReducer, combatReducer } from 'reducers'
+import { terrainReducer, armyReducer, countriesReducer, countryReducer, unitsReducer, tacticsReducer, terrainsReducer, battleReducer, transferReducer, importReducer, dataReducer, settingsReducer, combatReducer } from 'reducers'
 import { composeReducers } from 'immer-reducer'
 import { Mode, CountryName } from 'types'
 
@@ -35,7 +35,7 @@ function combine<S>(reducers: {[K in keyof S]: ReducerWithParam<S[K]>}): Reducer
 const combined = combine({
   units: unitsReducer,
   tactics: tacticsReducer,
-  terrains: terrainsReducer,
+  terrains: compose(terrainsReducer, terrainReducer),
   battle: battleReducer,
   transfer: transferReducer,
   countries: compose(countryReducer, countriesReducer, armyReducer),

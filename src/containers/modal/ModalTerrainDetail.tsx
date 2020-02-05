@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { AppState } from 'state'
 import TerrainDetail from 'components/TerrainDetail'
-import { Mode, DefinitionType, TerrainType, LocationType, TerrainValueType } from 'types'
-import { changeTerrainLocation, changeTerrainImage, changeTerrainMode, setTerrainBaseValue, invalidate } from 'reducers'
+import { Mode, DefinitionType, TerrainType, LocationType, TerrainValueType, ValuesType } from 'types'
+import { setTerrainLocation, setTerrainImage, setTerrainMode, setTerrainValue, invalidate } from 'reducers'
 
 const CUSTOM_VALUE_KEY = 'Custom'
 
@@ -16,11 +16,11 @@ class ModalTerrainDetail extends Component<IProps> {
       <TerrainDetail
         custom_value_key={CUSTOM_VALUE_KEY}
         terrain={terrain}
-        onCustomBaseValueChange={(key, attribute, value) => this.props.setBaseValue(this.props.mode, terrain.type, key, attribute, value)}
+        onCustomBaseValueChange={(key, attribute, value) => this.props.setTerrainValue(this.props.mode, terrain.type, key, attribute, value)}
         onTypeChange={type => this.props.changeType(terrain.type, type)}
-        onLocationChange={location => this.props.changeLocation(terrain.type, location)}
-        onImageChange={image => this.props.changeImage(terrain.type, image)}
-        onModeChange={mode => this.props.changeMode(terrain.type, mode)}
+        onLocationChange={location => this.props.setLocation(terrain.type, location)}
+        onImageChange={image => this.props.setImage(terrain.type, image)}
+        onModeChange={mode => this.props.setMode(terrain.type, mode)}
       />
     )
   }
@@ -32,12 +32,12 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setBaseValue: (mode: Mode, type: TerrainType, key: string, attribute: TerrainValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setTerrainBaseValue(type, key, attribute, value)) && dispatch(invalidate(mode))
+  setTerrainValue: (mode: Mode, type: TerrainType, key: string, attribute: TerrainValueType, value: number) => (
+    !Number.isNaN(value) && dispatch(setTerrainValue(type, ValuesType.Base, key, attribute, value)) && dispatch(invalidate(mode))
   ),
-  changeLocation: (type: TerrainType, location: LocationType) => dispatch(changeTerrainLocation(type, location)),
-  changeImage: (type: TerrainType, image: string) => dispatch(changeTerrainImage(type, image)),
-  changeMode: (type: TerrainType, mode: DefinitionType) => dispatch(changeTerrainMode(type, mode))
+  setLocation: (type: TerrainType, location: LocationType) => dispatch(setTerrainLocation(type, location)),
+  setImage: (type: TerrainType, image: string) => dispatch(setTerrainImage(type, image)),
+  setMode: (type: TerrainType, mode: DefinitionType) => dispatch(setTerrainMode(type, mode))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {

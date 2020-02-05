@@ -6,7 +6,7 @@ import { AppState, getMode, getSelectedTerrains } from 'state'
 import ModalTerrainSelector from './modal/ModalTerrainSelector'
 import IconDice from 'images/chance.png'
 import StyledNumber from 'components/Utils/StyledNumber'
-import { LocationType, TerrainDefinition, TerrainCalc } from 'types'
+import { LocationType, Terrain, TerrainCalc } from 'types'
 import { calculateValue } from 'definition_values'
 import { addSign } from 'formatters'
 
@@ -61,7 +61,7 @@ class TerrainSelector extends Component<IProps, IState> {
     )
   }
 
-  renderTerrain = (terrain: TerrainDefinition, index: number) => {
+  renderTerrain = (terrain: Terrain, index: number) => {
     const roll = calculateValue(terrain, TerrainCalc.Roll)
     return (
       <Table.Row key={terrain.location} onClick={() => this.setState({ index, location: terrain.location })}>

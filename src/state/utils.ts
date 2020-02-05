@@ -1,7 +1,7 @@
 import { AppState } from './index'
 import { reduce, toArr, filter, arrGet, toObj } from 'utils'
 import { filterUnitDefinitions, isIncludedInMode, getArmyPart, mergeBaseUnitsWithDefinitions, mergeDefinitions, mergeDefinition } from '../army_utils'
-import { Mode, DefinitionType, CountryName, BaseCohort, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, TacticDefinition, UnitPreferences, BaseUnits, Participant, TerrainDefinition, UnitDefinition, Settings, Battle, TerrainDefinitions, TacticDefinitions, Units, UnitDefinitions, ArmyName, GeneralStats, Countries } from 'types'
+import { Mode, DefinitionType, CountryName, BaseCohort, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, TacticDefinition, UnitPreferences, BaseUnits, Participant, Terrain, UnitDefinition, Settings, Battle, Terrains, TacticDefinitions, Units, UnitDefinitions, ArmyName, GeneralStats, Countries } from 'types'
 import { CombatUnit, CombatUnits } from 'combat'
 import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticDefinitions, getDefaultTerrainDefinitions, getDefaultUnitState } from 'data'
 import { sortBy, uniq } from 'lodash'
@@ -94,7 +94,7 @@ export const filterTerrainTypes = (state: AppState): TerrainType[] => {
  * Returns terrains for the current mode.
  * @param state Application state.
  */
-export const filterTerrains = (state: AppState, location?: LocationType): TerrainDefinitions => {
+export const filterTerrains = (state: AppState, location?: LocationType): Terrains => {
   return filter(state.terrains, terrain => isIncludedInMode(state.settings.mode, terrain) && (!location || terrain.location === location))
 }
 
@@ -220,7 +220,7 @@ export const getUnits = (state: AppState, type: Side): Units => getUnitsBySide(s
 
 export const getParticipant = (state: AppState, type: Side): Participant => getBattle(state).participants[type]
 
-export const getSelectedTerrains = (state: AppState): TerrainDefinition[] => getBattle(state).terrains.map(value => state.terrains[value])
+export const getSelectedTerrains = (state: AppState): Terrain[] => getBattle(state).terrains.map(value => state.terrains[value])
 
 /**
  * Returns unit definitions for the current mode and side. Global definitions have already been merged.

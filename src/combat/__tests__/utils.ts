@@ -1,7 +1,7 @@
 import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultParticipant, getDefaultArmy, getDefaultUnit } from 'data'
 import { map, mapRange } from 'utils'
 import { mergeValues, calculateValue } from 'definition_values'
-import { DefinitionType, CountryName, Participant, Army, TerrainDefinition, TacticType, Setting, Side, BaseCohort, UnitCalc, UnitType, TerrainType, UnitPreferenceType, TacticCalc, Settings } from 'types'
+import { DefinitionType, CountryName, Participant, Army, Terrain, TacticType, Setting, Side, BaseCohort, UnitCalc, UnitType, TerrainType, UnitPreferenceType, TacticCalc, Settings } from 'types'
 import { CombatUnit, CombatParticipant, doBattleFast, getBaseDamages, convertUnits, calculateTotalRoll, deploy, sortReserve } from 'combat'
 import { getBaseUnitType } from 'managers/army_manager'
 
@@ -20,7 +20,7 @@ export interface TestInfo {
   general_d: number
   army_a: Army
   army_d: Army
-  terrains: TerrainDefinition[]
+  terrains: Terrain[]
   settings: Settings
 }
 

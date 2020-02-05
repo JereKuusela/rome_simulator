@@ -9,20 +9,16 @@ export enum ValuesType {
   LossModifier = 'LossModifier'
 }
 
-type BVD = BD | BaseDefinitionValues<any>
 type BD = DefinitionValues<any>
 
 type ValuesSub = { [key: string]: number }
 type Values<S extends string> = { [key in S]: ValuesSub }
 
-export interface DefinitionValues<S extends string> extends BaseDefinitionValues<S> {
-  readonly modifier_values?: Values<S>
-  readonly loss_values?: Values<S>
-  readonly loss_modifier_values?: Values<S>
-}
-
-export interface BaseDefinitionValues< S extends string> {
-  readonly base_values?: Values<S>
+export interface DefinitionValues<S extends string> {
+  base_values?: Values<S>
+  modifier_values?: Values<S>
+  loss_values?: Values<S>
+  loss_modifier_values?: Values<S>
 }
 
 const initValues = <S extends string>() => ({} as Values<S>)
@@ -59,17 +55,27 @@ export const mergeValues = <D1 extends BD | undefined, D2 extends BD | undefined
 /**
  * Adds base, modifier or loss values.
  */
-export const addValues = <D extends BVD>(definition: D, type: ValuesType, key: string, values: [string, number][]): D => {
+export const addValues = <D extends BD>(definition: D, type: ValuesType, key: string, values: [string, number][]): D => {
   if (type === ValuesType.Base)
     return { ...definition, base_values: subAddValues(definition.base_values, key, values) }
-  const any = definition as any
   if (type === ValuesType.Modifier)
-    return { ...definition, modifier_values: subAddValues(any.modifier_values, key, values) }
+    return { ...definition, modifier_values: subAddValues(definition.modifier_values, key, values) }
   if (type === ValuesType.Loss)
-    return { ...definition, loss_values: subAddValues(any.loss_values, key, values) }
+    return { ...definition, loss_values: subAddValues(definition.loss_values, key, values) }
   if (type === ValuesType.LossModifier)
-    return { ...definition, loss_modifier_values: subAddValues(any.loss_modifier_values, key, values) }
+    return { ...definition, loss_modifier_values: subAddValues(definition.loss_modifier_values, key, values) }
   return definition
+}
+
+export const addValuesWithMutate = <D extends BD>(definition: D, type: ValuesType, key: string, values: [string, number][]) => {
+  if (type === ValuesType.Base)
+    definition.base_values = subAddValues(definition.base_values, key, values)
+  if (type === ValuesType.Modifier)
+    definition.modifier_values = subAddValues(definition.modifier_values, key, values)
+  if (type === ValuesType.Loss)
+    definition.loss_values = subAddValues(definition.loss_values, key, values)
+  if (type === ValuesType.LossModifier)
+    definition.loss_modifier_values = subAddValues(definition.loss_modifier_values, key, values)
 }
 
 /**
@@ -107,7 +113,7 @@ export const clearAllValues = <D extends BD>(definition: D, key: string): D => {
 /**
  * Clears base, modifier or loss values with a given key.
  */
-export const clearValues = <D extends BVD>(definition: D, type: ValuesType, key: string): D => {
+export const clearValues = <D extends BD>(definition: D, type: ValuesType, key: string): D => {
   if (type === ValuesType.Base)
     return { ...definition, base_values: subClearValues(definition.base_values, key) }
   const any = definition as any
@@ -134,7 +140,7 @@ const subClearValues = <A extends string>(container: Values<A> | undefined, key:
 /**
  * Adds base, modifier or loss values while clearing previous ones.
  */
-export const regenerateValues = <D extends BVD, A extends string>(definition: D, type: ValuesType, key: string, values: [A, number][]): D => {
+export const regenerateValues = <D extends BD, A extends string>(definition: D, type: ValuesType, key: string, values: [A, number][]): D => {
   return addValues(clearValues(definition, type, key), type, key, values)
 }
 
@@ -146,7 +152,7 @@ const PRECISION = 100000.0
  * @param definition 
  * @param attribute 
  */
-export const calculateValue = <D extends BVD, A extends string>(definition: D | undefined, attribute: A): number => {
+export const calculateValue = <D extends BD, A extends string>(definition: D | undefined, attribute: A): number => {
   if (!definition)
     return 0.0
   let value = calculateBase(definition, attribute) * calculateModifier(definition, attribute) * (1 - calculateLossModifier(definition, attribute)) - calculateLoss(definition, attribute)
@@ -158,7 +164,7 @@ export const calculateValue = <D extends BVD, A extends string>(definition: D | 
  * @param definition 
  * @param attribute 
  */
-export const calculateValueWithoutLoss = <D extends BVD, A extends string>(definition: D | undefined, attribute: A): number => {
+export const calculateValueWithoutLoss = <D extends BD, A extends string>(definition: D | undefined, attribute: A): number => {
   if (!definition)
     return 0.0
   let value = calculateBase(definition, attribute) * calculateModifier(definition, attribute)
@@ -170,7 +176,7 @@ export const calculateValueWithoutLoss = <D extends BVD, A extends string>(defin
  * @param definition 
  * @param attribute 
  */
-export const calculateBase = <D extends BVD, A extends string>(definition: D, attribute: A): number => calculateValueSub(definition.base_values, attribute, 0)
+export const calculateBase = <D extends BD, A extends string>(definition: D, attribute: A): number => calculateValueSub(definition.base_values, attribute, 0)
 
 /**
  * Calculates the modifier value of an attribute.
@@ -241,7 +247,7 @@ const getContainer = <D extends BD, A extends string>(type: ValuesType, definiti
  * @param definition 
  * @param attribute 
  */
-export const explainShort = <D extends BVD, A extends string>(definition: D, attribute: A): string => {
+export const explainShort = <D extends BD, A extends string>(definition: D, attribute: A): string => {
   if (!definition.base_values)
     return ''
   const value_base = definition.base_values[attribute]

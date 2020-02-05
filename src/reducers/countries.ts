@@ -2,14 +2,13 @@ import { produce } from 'immer'
 import * as manager from 'managers/countries'
 import { Countries } from 'types'
 import { getDefaultCountryDefinitions } from 'data'
-import { Concat } from 'typescript-tuple'
 
 const actionToFunction: { [key: string]: (countries: Countries, ...args: any) => void | undefined } = {}
 
 const makeAction = <T extends any[], S extends string>(func: (countries: Countries, ...args: T) => any, type: S) => {
   const ret = (...args: T) => ({
     type,
-    payload: args as any as Concat<[Countries], T>
+    payload: args as T
   })
   actionToFunction[type] = func
   ret['type'] = type
@@ -25,9 +24,7 @@ export const countriesReducer = (state = getDefaultCountryDefinitions(), action:
   if (!func)
     return state
   return produce(state, draft => {
-    const func = actionToFunction[action.type]
-    if (func)
-      func(draft, ...action.payload)
+    func(draft, ...action.payload)
   })
 }
 

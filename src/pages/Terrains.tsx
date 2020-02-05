@@ -7,7 +7,7 @@ import TerrainDefinitions from 'components/TerrainDefinitions'
 import ItemRemover from 'components/ItemRemover'
 import { TerrainType, DefinitionType } from 'types'
 import { toArr } from 'utils'
-import { deleteTerrain, addTerrain, changeTerrainType } from 'reducers'
+import { deleteTerrain, addTerrain, setTerrainType } from 'reducers'
 
 interface IState {
   modal_terrain: TerrainType | null
@@ -56,7 +56,7 @@ class Terrains extends Component<IProps, IState> {
   }
 
   onChangeType = (old_type: TerrainType, new_type: TerrainType): void => {
-    this.props.changeType(old_type, new_type)
+    this.props.setTerrainType(old_type, new_type)
     this.setState({ modal_terrain: new_type })
   }
 }
@@ -69,7 +69,7 @@ const mapStateToProps = (state: AppState) => ({
 const mapDispatchToProps = (dispatch: any) => ({
   deleteTerrain: (type: TerrainType) => dispatch(deleteTerrain(type)),
   addTerrain: (type: TerrainType, mode: DefinitionType) => dispatch(addTerrain(type, mode)),
-  changeType: (old_type: TerrainType, new_type: TerrainType) => dispatch(changeTerrainType(old_type, new_type))
+  setTerrainType: (old_type: TerrainType, new_type: TerrainType) => dispatch(setTerrainType(old_type, new_type))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

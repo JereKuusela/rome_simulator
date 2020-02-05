@@ -5,13 +5,13 @@ import Headers from './Utils/Headers'
 import ValueModal from './ValueModal'
 import StyledNumber from './Utils/StyledNumber'
 
-import { TerrainDefinition, TerrainType, TerrainCalc } from 'types'
+import { Terrain, TerrainType, TerrainCalc } from 'types'
 import { keys, getImage } from 'utils'
 import { calculateValue } from 'definition_values'
 import { addSign } from 'formatters'
 
 interface IProps {
-  terrains: TerrainDefinition[]
+  terrains: Terrain[]
   onRowClick: (type: TerrainType) => void
   onCreateNew: (type: TerrainType) => void
 }
@@ -58,7 +58,7 @@ export default class TerrainDefinitions extends Component<IProps, IState> {
   onClick = () => this.setState({ open_create: true })
   onClose = () => this.setState({ open_create: false })
 
-  renderRow = (terrain: TerrainDefinition) => {
+  renderRow = (terrain: Terrain) => {
     return (
       <Table.Row key={terrain.type} onClick={() => this.props.onRowClick(terrain.type)}>
         <Table.Cell>
@@ -73,7 +73,7 @@ export default class TerrainDefinitions extends Component<IProps, IState> {
     )
   }
 
-  renderAttributes = (terrain: TerrainDefinition) => (
+  renderAttributes = (terrain: Terrain) => (
     this.attributes.map(type => (
       <Table.Cell key={type}>
         <StyledNumber value={calculateValue(terrain, type)} formatter={addSign} hide_zero />
