@@ -5,8 +5,8 @@ import { AppState, getGeneralStats } from 'state'
 import { mapRange, ObjSet, has, keys } from '../utils'
 
 import { addSignWithZero } from 'formatters'
-import { DefinitionType, ValuesType, TraditionDefinition, TradeDefinition, IdeaDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, EconomyDefinition, LawDefinition, AbilityDefinition, Modifier, Tradition, ScopeType, UnitCalc, ReligionType, CultureType, ModifierType, CountryName, GovermentType, Mode } from 'types'
-import { enableModifiers, clearModifiers, setGeneralMartial, selectCulture, selectReligion, selectGovernment, setOmenPower, setHasGeneral, setMilitaryPower, setOfficeMorale, setOfficeDiscipline, invalidateCountry } from 'reducers'
+import { DefinitionType, ValuesType, TraditionDefinition, TradeDefinition, IdeaDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, EconomyDefinition, LawDefinition, AbilityDefinition, Modifier, Tradition, ScopeType, UnitCalc, ReligionType, CultureType, ModifierType } from 'types'
+import { enableSelection, clearSelection, enableModifiers, clearModifiers, setGeneralMartial, selectCulture, selectReligion, selectGovernment, setOmenPower, setHasGeneral, setMilitaryPower, setOfficeMorale, setOfficeDiscipline, invalidateCountry } from 'reducers'
 
 import AccordionToggle from 'containers/AccordionToggle'
 import CountryManager from 'containers/CountryManager'
@@ -206,7 +206,7 @@ class Countries extends Component<IProps> {
           <Table.Row key={'base'} textAlign='center'>
             {
               this.renderCell(TRADITION_BASE_KEY, null, selections, traditions.modifiers,
-                undefined, () => this.clearModifiers(TRADITION_KEY, selections), undefined, undefined, 3)
+                undefined, () => this.clearModifiersStartingWith(TRADITION_KEY, selections), undefined, undefined, 3)
             }
           </Table.Row>
           {
@@ -429,7 +429,7 @@ class Countries extends Component<IProps> {
                     const key = modifier_key + options.name + '_' + option.name
                     const modifiers = option.modifiers
                     return this.renderCell(key, option.name, selections, modifiers,
-                      () => this.enableOption(key, modifiers, selections), () => this.props.clearModifiers(this.props.selected_country, this.props.mode, key))
+                      () => this.enableOption(key, modifiers, selections), () => this.clearModifiers(key))
                   })
                 }
                 {
@@ -452,8 +452,8 @@ class Countries extends Component<IProps> {
       colSpan={width || 1}
       onClick={
         has(selections, key)
-          ? (clear ? clear : () => this.props.clearModifiers(this.props.selected_country, this.props.mode, key))
-          : (enable ? enable : () => this.props.enableModifiers(this.props.selected_country, this.props.mode, key, modifiers))
+          ? (clear ? clear : () => this.clearModifiers(key))
+          : (enable ? enable : () => this.enableModifiers(key, modifiers))
       }
       style={{ padding: CELL_PADDING }}
     >
@@ -463,26 +463,26 @@ class Countries extends Component<IProps> {
 
   renderModifiers = (name: string | null, modifiers: Modifier[], padding?: string) => (
     <List>
-        {name &&
-          <List.Item key='name'>
-            <List.Header>
-              {name}
-            </List.Header>
+      {name &&
+        <List.Item key='name'>
+          <List.Header>
+            {name}
+          </List.Header>
+        </List.Item>
+      }
+      {
+        modifiers.map((modifier, index) => (
+          <List.Item key={index}>
+            {
+              this.getText(modifier)
+            }
+            {
+              this.getValue(modifier, padding)
+            }
           </List.Item>
-        }
-        {
-          modifiers.map((modifier, index) => (
-            <List.Item key={index}>
-              {
-                this.getText(modifier)
-              }
-              {
-                this.getValue(modifier, padding)
-              }
-            </List.Item>
-          ))
-        }
-      </List>
+        ))
+      }
+    </List>
   )
 
   /**
@@ -491,7 +491,7 @@ class Countries extends Component<IProps> {
   clearTraditions = (column: number, row: number, selections: ObjSet) => {
     const key = TRADITION_KEY + column
     keys(selections).filter(value => value.startsWith(key) && !value.startsWith(TRADITION_BASE_KEY) && this.getNumberFromKey(value, 2) > row)
-      .forEach(value => this.props.clearModifiers(this.props.selected_country, this.props.mode, value))
+      .forEach(value => this.clearModifiers(value))
   }
 
   /**
@@ -499,7 +499,7 @@ class Countries extends Component<IProps> {
    */
   enableTraditions = (traditions: Tradition[], column: number, row: number, selections: ObjSet) => {
     mapRange(row + 1, number => number).filter(value => !has(selections, TRADITION_KEY + column + '_' + value))
-      .forEach(value => this.props.enableModifiers(this.props.selected_country, this.props.mode, TRADITION_KEY + column + '_' + value, traditions[value].modifiers))
+      .forEach(value => this.enableModifiers(TRADITION_KEY + column + '_' + value, traditions[value].modifiers))
   }
 
   /**
@@ -508,7 +508,7 @@ class Countries extends Component<IProps> {
   enableTradition = (traditions: Tradition[], base: Modifier[], column: number, row: number, selections: ObjSet) => {
     this.clearTraditions(column, row, selections)
     if (!has(selections, TRADITION_BASE_KEY))
-      this.props.enableModifiers(this.props.selected_country, this.props.mode, TRADITION_BASE_KEY, base)
+      this.enableModifiers(TRADITION_BASE_KEY, base)
     this.enableTraditions(traditions, column, row, selections)
   }
 
@@ -516,31 +516,31 @@ class Countries extends Component<IProps> {
    * Enables a heritage and clears any existing heritages.
    */
   enableHeritage = (key: string, modifiers: Modifier[], selections: ObjSet) => {
-    this.clearModifiers(HERITAGE_KEY, selections)
-    this.props.enableModifiers(this.props.selected_country, this.props.mode, key, modifiers)
+    this.clearModifiersStartingWith(HERITAGE_KEY, selections)
+    this.enableModifiers(key, modifiers)
   }
 
   /**
    * Clears modifiers starting with a given key.
    */
-  clearModifiers = (key: string, selections: ObjSet) => {
-    Object.keys(selections).filter(value => value.startsWith(key)).forEach(value => this.props.clearModifiers(this.props.selected_country, this.props.mode, value))
+  clearModifiersStartingWith = (key: string, selections: ObjSet) => {
+    Object.keys(selections).filter(value => value.startsWith(key)).forEach(value => this.clearModifiers(value))
   }
 
   /**
    * Enables an option and clears any existing options.
    */
   enableOption = (key: string, modifiers: Modifier[], selections: ObjSet) => {
-    this.clearModifiers(this.getUpperKey(key) + '_', selections)
-    this.props.enableModifiers(this.props.selected_country, this.props.mode, key, modifiers)
+    this.clearModifiersStartingWith(this.getUpperKey(key) + '_', selections)
+    this.enableModifiers(key, modifiers)
   }
 
   /**
    * Enables a omen and clears any existing omens.
    */
   enableOmen = (key: string, modifiers: Modifier[], selections: ObjSet) => {
-    this.clearModifiers(OMEN_KEY, selections)
-    this.props.enableModifiers(this.props.selected_country, this.props.mode, key, modifiers)
+    this.clearModifiersStartingWith(OMEN_KEY, selections)
+    this.enableModifiers(key, modifiers)
   }
 
   /**
@@ -553,9 +553,9 @@ class Countries extends Component<IProps> {
       const index = this.getNumberFromKey(value, 1)
       const omen = omens[index]
       if (omen)
-        this.props.enableModifiers(this.props.selected_country, this.props.mode, value, [this.scaleModifier(omen.modifier, power)])
+        this.enableModifiers(value, [this.scaleModifier(omen.modifier, power)])
       else
-        this.props.clearModifiers(this.props.selected_country, this.props.mode, value)
+        this.clearModifiers(value)
     })
   }
 
@@ -566,7 +566,7 @@ class Countries extends Component<IProps> {
     if (!traditions)
       return
     Object.keys(selections).filter(value => value.startsWith(TRADITION_KEY) && !value.startsWith(TRADITION_BASE_KEY)).forEach(value => {
-      this.props.clearModifiers(this.props.selected_country, this.props.mode, value)
+      this.clearModifiers(value)
       const column = this.getNumberFromKey(value, 1)
       const path = traditions.paths[column]
       if (!path)
@@ -575,10 +575,10 @@ class Countries extends Component<IProps> {
       const tradition = path.traditions[row]
       if (!tradition)
         return
-      this.props.enableModifiers(this.props.selected_country, this.props.mode, value, tradition.modifiers)
+      this.enableModifiers(value, tradition.modifiers)
     })
     if (selections.hasOwnProperty(TRADITION_BASE_KEY))
-      this.props.enableModifiers(this.props.selected_country, this.props.mode, TRADITION_BASE_KEY, traditions.modifiers)
+      this.enableModifiers(TRADITION_BASE_KEY, traditions.modifiers)
   }
 
   /**
@@ -588,7 +588,7 @@ class Countries extends Component<IProps> {
     const power = Number(value)
     if (isNaN(power))
       return
-    this.props.setOmenPower(this.props.selected_country, power)
+    this.props.setOmenPower(power)
     this.refreshOmens(selections, power, omens)
   }
 
@@ -599,8 +599,8 @@ class Countries extends Component<IProps> {
     const power = Number(value)
     if (isNaN(power))
       return
-    this.props.setMilitaryPower(this.props.selected_country, power)
-    this.props.enableModifiers(this.props.selected_country, this.props.mode, MILITARY_POWER_KEY, [{
+    this.props.setMilitaryPower(power)
+    this.enableModifiers(MILITARY_POWER_KEY, [{
       target: DefinitionType.Land,
       scope: ScopeType.Country,
       attribute: UnitCalc.Morale,
@@ -616,8 +616,8 @@ class Countries extends Component<IProps> {
     const number = Number(value)
     if (isNaN(number))
       return
-    this.props.setOfficeDiscipline(this.props.selected_country, number)
-    this.props.enableModifiers(this.props.selected_country, this.props.mode, OFFICE_KEY + 'Discipline', [{
+    this.props.setOfficeDiscipline(number)
+    this.enableModifiers(OFFICE_KEY + 'Discipline', [{
       target: DefinitionType.Global,
       type: ValuesType.Base,
       scope: ScopeType.Country,
@@ -633,8 +633,8 @@ class Countries extends Component<IProps> {
     const number = Number(value)
     if (isNaN(number))
       return
-    this.props.setOfficeMorale(this.props.selected_country, number)
-    this.props.enableModifiers(this.props.selected_country, this.props.mode, OFFICE_KEY + 'Morale', [{
+    this.props.setOfficeMorale(number)
+    this.enableModifiers(OFFICE_KEY + 'Morale', [{
       target: DefinitionType.Land,
       scope: ScopeType.Country,
       attribute: UnitCalc.Morale,
@@ -647,7 +647,7 @@ class Countries extends Component<IProps> {
    * Selects religion while also re-enabling current omen.
    */
   selectReligion = (value: ReligionType, power: number, selections: ObjSet) => {
-    this.props.selectReligion(this.props.selected_country, value)
+    this.props.selectReligion(value)
     const omens = this.props.omens[value]
     this.refreshOmens(selections, power, omens)
   }
@@ -656,7 +656,7 @@ class Countries extends Component<IProps> {
    * Selects culture while also re-enabling tradition.
    */
   selectCulture = (value: CultureType, selections: ObjSet) => {
-    this.props.selectCulture(this.props.selected_country, value)
+    this.props.selectCulture(value)
     this.refreshTraditions(selections, this.props.traditions[value])
   }
   /**
@@ -670,7 +670,7 @@ class Countries extends Component<IProps> {
    */
   clearInventions = (level: number, selections: ObjSet) => {
     Object.keys(selections).filter(value => value.startsWith(INVENTION_KEY) && this.getNumberFromKey(value, 1) >= level)
-      .forEach(value => this.props.clearModifiers(this.props.selected_country, this.props.mode, value))
+      .forEach(value => this.clearModifiers(value))
   }
 
   /**
@@ -678,7 +678,7 @@ class Countries extends Component<IProps> {
    */
   enableTech = (inventions: InventionDefinition[], level: number, selections: ObjSet) => {
     mapRange(level + 1, number => number).filter(value => !has(selections, INVENTION_KEY + value + '_0'))
-      .forEach(value => this.props.enableModifiers(this.props.selected_country, this.props.mode, INVENTION_KEY + value + '_0', inventions[value].inventions[0]))
+      .forEach(value => this.enableModifiers(INVENTION_KEY + value + '_0', inventions[value].inventions[0]))
   }
 
   /**
@@ -686,20 +686,20 @@ class Countries extends Component<IProps> {
    */
   enableInvention = (inventions: InventionDefinition[], key: string, modifiers: Modifier[], selections: ObjSet) => {
     this.enableTech(inventions, this.getNumberFromKey(key, 1), selections)
-    this.props.enableModifiers(this.props.selected_country, this.props.mode, key, modifiers)
+    this.enableModifiers(key, modifiers)
   }
 
   /**
    * Clears all selections.
    */
   clearAll = (selections: ObjSet) => {
-    KEYS.forEach(key => this.clearModifiers(key, selections))
-    this.props.setOmenPower(this.props.selected_country, 100)
-    this.props.setMilitaryPower(this.props.selected_country, 0)
-    this.props.setOfficeDiscipline(this.props.selected_country, 0)
-    this.props.setOfficeMorale(this.props.selected_country, 0)
-    this.props.setHasGeneral(this.props.selected_country, this.props.mode, true)
-    this.props.setGeneralMartial(this.props.selected_country, this.props.mode, 0)
+    KEYS.forEach(key => this.clearModifiersStartingWith(key, selections))
+    this.props.setOmenPower(100)
+    this.props.setMilitaryPower(0)
+    this.props.setOfficeDiscipline(0)
+    this.props.setOfficeMorale(0)
+    this.props.setHasGeneral(this.props.selected_country, true)
+    this.props.setGeneralMartial(this.props.selected_country, 0)
   }
 
   /**
@@ -709,36 +709,36 @@ class Countries extends Component<IProps> {
     const skill = Number(value)
     if (isNaN(skill))
       return
-    this.props.setGeneralMartial(this.props.selected_country, this.props.mode, skill)
+    this.props.setGeneralMartial(this.props.selected_country, skill)
   }
 
   clearInvention = (key: string, selections: ObjSet) => {
     const column = this.getNumberFromKey(key, 2)
     if (column === 0)
       this.clearInventions(this.getNumberFromKey(key, 1), selections)
-    this.props.clearModifiers(this.props.selected_country, this.props.mode, key)
+    this.clearModifiers(key)
   }
 
   /**
    * Toggles has general while removing no general debuff.
    */
   enableGeneral = () => {
-    this.props.clearModifiers(this.props.selected_country, this.props.mode, NO_GENERAL_KEY)
-    this.props.setHasGeneral(this.props.selected_country, this.props.mode, true)
+    this.clearModifiers(NO_GENERAL_KEY)
+    this.props.setHasGeneral(this.props.selected_country, true)
   }
 
   /**
    * Toggles has general while enabling no general debuff.
    */
   disableGeneral = () => {
-    this.props.enableModifiers(this.props.selected_country, this.props.mode, NO_GENERAL_KEY, [{
+    this.enableModifiers(NO_GENERAL_KEY, [{
       target: DefinitionType.Global,
       scope: ScopeType.Army,
       attribute: UnitCalc.Morale,
       type: ValuesType.Modifier,
       value: -0.25
     }])
-    this.props.setHasGeneral(this.props.selected_country, this.props.mode, false)
+    this.props.setHasGeneral(this.props.selected_country, false)
   }
 
   getText = (modifier: Modifier): JSX.Element => {
@@ -772,6 +772,20 @@ class Countries extends Component<IProps> {
       return ''
     return key.substring(0, index)
   }
+
+  enableModifiers = (key: string, modifiers: Modifier[]) => {
+    const { enableModifiers, enableSelection, invalidateCountry, selected_country } = this.props
+    enableModifiers(selected_country, key, modifiers)
+    enableSelection(key)
+    invalidateCountry(selected_country)
+  }
+
+  clearModifiers = (key: string) => {
+    const { clearModifiers, clearSelection, invalidateCountry, selected_country } = this.props
+    clearModifiers(selected_country, key)
+    clearSelection(key)
+    invalidateCountry(selected_country)
+  }
 }
 
 const mapStateToProps = (state: AppState) => ({
@@ -784,27 +798,19 @@ const mapStateToProps = (state: AppState) => ({
   selected_country: state.settings.country,
   laws: state.data.laws,
   economy: state.data.economy,
-  mode: state.settings.mode,
   traits: state.data.traits,
   ideas: state.data.ideas,
   abilities: state.data.abilities,
   general: getGeneralStats(state, state.settings.country)
 })
 
-const mapDispatchToProps = (dispatch: any) => ({
-  enableModifiers: (country: CountryName, mode: Mode, key: string, modifiers: Modifier[]) => dispatch(enableModifiers(country, mode, key, modifiers)) && dispatch(invalidateCountry(country)),
-  clearModifiers: (country: CountryName, mode: Mode, key: string) => dispatch(clearModifiers(country, mode, key)) && dispatch(invalidateCountry(country)),
-  setGeneralMartial: (country: CountryName, mode: Mode, value: number) => dispatch(setGeneralMartial(country, mode, value)),
-  selectCulture: (country: CountryName, culture: CultureType) => dispatch(selectCulture(country, culture)),
-  selectReligion: (country: CountryName, religion: ReligionType) => dispatch(selectReligion(country, religion)),
-  selectGovernment: (country: CountryName, government: GovermentType) => dispatch(selectGovernment(country, government)),
-  setOmenPower: (country: CountryName, power: number) => dispatch(setOmenPower(country, power)),
-  setHasGeneral: (country: CountryName, mode: Mode, value: boolean) => dispatch(setHasGeneral(country, mode, value)),
-  setMilitaryPower: (country: CountryName, power: number) => dispatch(setMilitaryPower(country, power)),
-  setOfficeMorale: (country: CountryName, value: number) => dispatch(setOfficeMorale(country, value)),
-  setOfficeDiscipline: (country: CountryName, value: number) => dispatch(setOfficeDiscipline(country, value))
-})
+const actions = {
+  enableModifiers, clearModifiers, setGeneralMartial, selectCulture, invalidateCountry,
+  selectReligion, selectGovernment, setOmenPower, setHasGeneral, setMilitaryPower, setOfficeMorale, setOfficeDiscipline, enableSelection, clearSelection
+}
 
-interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }
+type S = ReturnType<typeof mapStateToProps>
+type D = typeof actions
+type IProps = S & D
 
-export default connect(mapStateToProps, mapDispatchToProps)(Countries)
+export default connect(mapStateToProps, actions)(Countries)

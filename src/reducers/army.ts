@@ -1,6 +1,6 @@
 
 import { produce } from 'immer'
-import { Concat } from 'typescript-tuple'
+import { Prepend } from 'typescript-tuple'
 import { Army, CountryName } from 'types'
 import { ArmyName } from 'types/armies'
 import * as manager from 'managers/army_manager'
@@ -12,9 +12,10 @@ const actionToFunction: { [key: string]: (army: Army, ...args: any) => void | un
 const makeAction = <T extends any[], S extends string>(func: (army: Army, ...args: T) => any, type: S) => {
   const ret = (country: CountryName, ...args: T) => ({
     type,
-    payload: [country, ...args] as any as Concat<[CountryName], T>
+    payload: [country, ...args] as any as  Prepend<T, CountryName>
   })
   actionToFunction[type] = func
+  ret['type'] = type
   return ret
 }
 
@@ -30,6 +31,10 @@ export const clearCohorts = makeAction(manager.clearCohorts, 'clearCohorts')
 export const selectTactic = makeAction(manager.selectTactic, 'selectTactic')
 export const setFlankSize = makeAction(manager.setFlankSize, 'setFlankSize')
 export const setUnitPreference = makeAction(manager.setUnitPreference, 'setUnitPreference')
+export const setGeneralMartial = makeAction(manager.setGeneralMartial, 'setGeneralMartial')
+export const setHasGeneral = makeAction(manager.setHasGeneral, 'setHasGeneral')
+export const clearModifiers = makeAction(manager.clearModifiers, 'clearModifiers')
+export const enableModifiers = makeAction(manager.enableModifiers, 'enableModifiers')
 
 export const armyReducer = (state = getDefaultCountryDefinitions(), action: Action, params: ReducerParams) => {
   const func = actionToFunction[action.type]

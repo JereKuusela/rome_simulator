@@ -1,6 +1,6 @@
-import { calculateValue, clearAllValues, mergeValues, calculateBase, addValues } from 'definition_values'
-import { DefinitionType, Mode, GeneralCalc, UnitDefinitionValues, UnitType, UnitDefinitionValue, UnitDefinition, UnitCalc, General, Army, ArmyType, BaseCohort, ValuesType, UnitValueType, TacticType, UnitPreferenceType, GeneralStats, BaseReserve } from 'types'
-import { filterKeys } from 'utils'
+import { calculateValue, clearAllValues, mergeValues, calculateBase, addValues, regenerateValues } from 'definition_values'
+import { DefinitionType, Mode, GeneralCalc, UnitDefinitionValues, UnitType, UnitDefinitionValue, UnitDefinition, UnitCalc, General, Army, ArmyType, BaseCohort, ValuesType, UnitValueType, TacticType, UnitPreferenceType, GeneralStats, BaseReserve, ScopeType, Modifier, CountryName } from 'types'
+import { filterKeys, map } from 'utils'
 import { findLastIndex } from 'lodash'
 
 /**
@@ -70,7 +70,7 @@ const update = (army: Army, id: number, updater: (unit: BaseCohort) => BaseCohor
   }
 }
 
-export const selectCohort = (army: Army, type: ArmyType, index: number, cohort: BaseCohort | null) => {
+export const selectCohort = (army: Army, type: ArmyType, index: number, cohort: BaseCohort | null, country?: CountryName) => {
   if (type === ArmyType.Frontline)
     army.frontline[index] = cohort
   else if (type === ArmyType.Reserve && cohort && index > army.reserve.length)
@@ -150,4 +150,53 @@ export const setUnitPreference = (army: Army, preference_type: UnitPreferenceTyp
 
 export const setFlankSize = (army: Army, flank_size: number) => {
   army.flank_size = flank_size
+}
+
+export const setGeneralMartial = (army: Army, value: number) => {
+  enableModifiers(army, BASE_MARTIAL_KEY, [{
+    target: 'General',
+    type: ValuesType.Base,
+    scope: ScopeType.Army,
+    attribute: GeneralCalc.Martial,
+    value
+  }])
+}
+
+export const enableModifiers = (army: Army, key: string, modifiers: Modifier[]) => {
+
+  modifiers = modifiers.filter(value => value.scope === ScopeType.Army)
+  const definitions = map(army.general.definitions, definition => clearAllValues(definition, key))
+  const otherModifiers = modifiers.filter(value => value.attribute !== GeneralCalc.Martial)
+
+  otherModifiers.forEach(modifier => {
+    const type = modifier.target as UnitType | DefinitionType
+    if (!definitions[type])
+      definitions[type] = {}
+    if (modifier.type === ValuesType.Modifier)
+      definitions[type] = addValues(definitions[type], ValuesType.Modifier, key, [[modifier.attribute, modifier.value]])
+    else
+      definitions[type] = addValues(definitions[type], ValuesType.Base, key, [[modifier.attribute, modifier.value]])
+  })
+
+  let definition = clearAllValues(army.general, key)
+  const generalModifiers = modifiers.filter(value => value.attribute === GeneralCalc.Martial)
+  const generalValues = generalModifiers.map(value => [value.attribute, value.value] as [UnitValueType, number])
+  definition = regenerateValues(definition, ValuesType.Base, key, generalValues)
+  const martial = calculateValue(definition, GeneralCalc.Martial)
+  if (!definitions[DefinitionType.Naval])
+      definitions[DefinitionType.Naval] = {}
+  definitions[DefinitionType.Naval] = addValues(definitions[DefinitionType.Naval], ValuesType.Base, GeneralCalc.Martial, [[UnitCalc.CaptureChance, 0.002 * martial]])
+  definition.definitions = definitions
+  army.general = definition
+}
+
+export const clearModifiers = (army: Army, key: string) => {
+  const definition = clearAllValues(army.general, key)
+  const definitions = map(army.general.definitions, definition => clearAllValues(definition, key))
+  definition.definitions = definitions
+  army.general = definition
+}
+
+export const setHasGeneral = (army: Army, has_general: boolean) => {
+  army.general.enabled = has_general
 }

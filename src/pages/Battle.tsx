@@ -334,7 +334,7 @@ class Battle extends Component<IProps, IState> {
           />
         </Table.Cell>
         <Table.Cell collapsing>
-          <Input disabled={!stats.enabled} size='mini' style={{ width: 100 }} type='number' value={stats.base_martial} onChange={(_, { value }) => this.props.setGeneralMartial(participant.country, this.props.mode, Number(value))} />
+          <Input disabled={!stats.enabled} size='mini' style={{ width: 100 }} type='number' value={stats.base_martial} onChange={(_, { value }) => this.props.setGeneralMartial(participant.country, Number(value))} />
           {' '}<StyledNumber value={stats.trait_martial} formatter={addSign} />
         </Table.Cell>
         <Table.Cell collapsing>
@@ -387,7 +387,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   undo: (mode: Mode, steps: number) => dispatch(undo(mode, steps)),
   toggleRandomRoll: (mode: Mode, side: Side) => dispatch(toggleRandomRoll(mode, side)),
   setRoll: (mode: Mode, participant: Side, roll: number) => dispatch(setRoll(mode, participant, roll)),
-  setGeneralMartial: (country: CountryName, mode: Mode,skill: number) => dispatch(setGeneralMartial(country, mode, skill)) && dispatch(invalidateCountry(country)),
+  setGeneralMartial: (country: CountryName, skill: number) => dispatch(setGeneralMartial(country, skill)) && dispatch(invalidateCountry(country)),
   selectArmy: (mode: Mode, type: Side, country: CountryName) => dispatch(selectArmy(mode, type, country)) && dispatch(invalidate(mode)),
   removeUnit: (country: CountryName, type: ArmyType, column: number) => (
     dispatch(selectCohort(country, type, column, null))

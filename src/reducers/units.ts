@@ -1,7 +1,7 @@
 
 import { ImmerReducer, createActionCreators, createReducerFunction, Actions } from 'immer-reducer'
 
-import { DefinitionType, ValuesType, CountryName, UnitType, UnitValueType, UnitDeployment, Modifier, ScopeType, UnitState, Mode } from 'types'
+import { DefinitionType, ValuesType, CountryName, UnitType, UnitValueType, UnitDeployment, Modifier, ScopeType, UnitState } from 'types'
 import { getDefaultUnits, getUnitIcon, getDefaultUnitState } from 'data'
 import { addValues, regenerateValues, clearValues } from 'definition_values'
 import { map } from 'utils'
@@ -61,7 +61,7 @@ class UnitsReducer extends ImmerReducer<UnitState> {
     delete Object.assign(this.draftState, { [country]: this.draftState[old_country] })[old_country]
   }
 
-  enableModifiers(country: CountryName, _mode: Mode, key: string, modifiers: Modifier[]) {
+  enableModifiers(country: CountryName, key: string, modifiers: Modifier[]) {
     modifiers = modifiers.filter(value => value.scope === ScopeType.Country)
     const next = map(this.state[country], (unit, type) => {
       const values = modifiers.filter(value => filterTarget(type, value.target))
@@ -72,7 +72,7 @@ class UnitsReducer extends ImmerReducer<UnitState> {
     this.draftState[country] = next
   }
 
-  clearModifiers(country: CountryName, _mode: Mode, key: string) {
+  clearModifiers(country: CountryName, key: string) {
     const next = map(this.state[country], unit => clearValues(clearValues(unit, ValuesType.Base, key), ValuesType.Modifier, key))
     this.draftState[country] = next
   }
