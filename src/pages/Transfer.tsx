@@ -133,10 +133,10 @@ const mapDispatchToProps = (dispatch: any) => ({
         data = '{}'
       let json = JSON.parse(data)
       json.transfer = undefined
+      json.countries = json.countries && setIds(json.countries)
       json.tactics = json.tactics && restoreBaseTactics(json.tactics)
       json.terrains = json.terrains && restoreBaseTerrains(json.terrains)
       json.units = json.units && restoreBaseUnits(json.units)
-      json.battle = json.battle && setIds(json.battle)
       if (reset_missing)
         resetMissing(json)
       keys(json).filter(key => !json[key]).forEach(key => delete json[key])

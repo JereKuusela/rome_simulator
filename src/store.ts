@@ -27,8 +27,14 @@ const UnitsTransform = createTransform(
 
 const BattleTransform = createTransform(
   (inboundState: any) => stripRounds(inboundState),
-  (outboundState: any) => setIds(outboundState),
+  (outboundState: any) => outboundState,
   { whitelist: ['battle'] }
+)
+
+const CountriesTransform = createTransform(
+  (inboundState: any) => inboundState,
+  (outboundState: any) => setIds(outboundState),
+  { whitelist: ['countries'] }
 )
 
 const DataTransform = createTransform(
@@ -70,7 +76,8 @@ const persistConfig = {
     TerrainsTransform,
     UnitsTransform,
     DataTransform,
-    BattleTransform
+    BattleTransform,
+    CountriesTransform
   ]
 }
 

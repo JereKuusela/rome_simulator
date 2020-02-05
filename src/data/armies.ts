@@ -1,5 +1,4 @@
 import { Mode, Army, DefinitionType, TacticType, UnitPreferences, UnitPreferenceType, UnitType, Armies, ArmyName } from "types"
-import { map } from "utils"
 
 
 const getDefaultTactic = (mode: Mode): TacticType => mode === DefinitionType.Land ? TacticType.Deception : TacticType.FrontalAssault

@@ -3,7 +3,7 @@ import { getDefaultTactic, getDefaultTerrain, getDefaultUnit } from 'data'
 import { map, forEach } from 'utils'
 import { mergeValues, clearAllValues } from 'definition_values'
 import { getNextId } from 'army_utils'
-import { ModeState, TacticDefinitions, TerrainDefinitions, UnitState } from 'types'
+import { ModeState, TacticDefinitions, TerrainDefinitions, UnitState, Countries } from 'types'
 
 
 
@@ -13,12 +13,12 @@ export const restoreBaseUnits = (state: UnitState): UnitState => map(state, defi
 
 export const stripRounds = (battle: ModeState): ModeState => map(battle, value => ({ ...value, outdated: true, participants: map(value.participants, value => ({ ...value, rounds: [] })) }))
 
-export const setIds = (battle: ModeState): ModeState => {
-  return produce(battle, battle => {
-    forEach(battle, mode => forEach(mode.armies, army => {
+export const setIds = (countries: Countries): Countries => {
+  return produce(countries, countries => {
+    forEach(countries, country => forEach(country.armies, mode => forEach(mode, army => {
       army.frontline.forEach(unit => unit ? unit.id = getNextId() : {})
       army.reserve.forEach(unit => unit.id = getNextId())
       army.defeated.forEach(unit => unit.id = getNextId())
-    }))
+    })))
   })
 }
