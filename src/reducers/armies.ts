@@ -1,17 +1,18 @@
 
 import { produce } from 'immer'
 import { Concat } from 'typescript-tuple'
-import { Army, Mode, CountryName } from 'types'
+import { Army, CountryName } from 'types'
 import { ArmyName } from 'types/armies'
 import * as manager from 'managers/army_manager'
 import { getDefaultCountryDefinitions } from 'data'
+import { ReducerParams } from 'state'
 
 const actionToFunction: { [key: string]: (army: Army, ...args: any) => void | undefined } = {}
 
 const makeAction = <T extends any[], S extends string>(func: (army: Army, ...args: T) => any, type: S) => {
-  const ret = (country: CountryName, mode: Mode, ...args: T) => ({
+  const ret = (country: CountryName, ...args: T) => ({
     type,
-    payload: [country, mode, ...args] as any as Concat<[CountryName, Mode], T>
+    payload: [country, ...args] as any as Concat<[CountryName], T>
   })
   actionToFunction[type] = func
   return ret
@@ -30,20 +31,18 @@ export const selectTactic = makeAction(manager.selectTactic, 'selectTactic')
 export const setFlankSize = makeAction(manager.setFlankSize, 'setFlankSize')
 export const setUnitPreference = makeAction(manager.setUnitPreference, 'setUnitPreference')
 
-export const armyReducer = (state = getDefaultCountryDefinitions(), action: Action) => {
+export const armyReducer = (state = getDefaultCountryDefinitions(), action: Action, params: ReducerParams) => {
   const func = actionToFunction[action.type]
   if (!func)
     return state
   return produce(state, draft => {
-    const [country, mode, ...payload] = action.payload
-    const sub = { type: action.type, payload }
-    const func = actionToFunction[sub.type]
-    if (func)
-      func(draft[country].armies[mode][ArmyName.Army1], ...sub.payload)
+    const [country, ...payload] = action.payload
+    const army = draft[country].armies[params.mode]
+    func(army[ArmyName.Army1], ...payload)
   })
 }
 
 type Action = {
   type: string,
-  payload: [CountryName, Mode, ...any[]]
+  payload: [CountryName, ...any[]]
 }

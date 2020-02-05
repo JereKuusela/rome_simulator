@@ -146,9 +146,9 @@ class ModalFastPlanner extends Component<IProps, IState> {
     const units = this.applyLosses(limits, this.getUnitsToAdd(changes, originals, true))
     const types = this.getTypesToRemove(changes, originals)
     if (units.length > 0)
-      addToReserve(country, mode, units)
+      addToReserve(country, units)
     if (types.length > 0)
-      removeFromReserve(country, mode, types)
+      removeFromReserve(country, types)
     if (units.length > 0 || types.length > 0)
       invalidate(mode)
   }
@@ -166,8 +166,8 @@ class ModalFastPlanner extends Component<IProps, IState> {
   clearUnits = (): void => {
     const { mode, attacker, defender, clearCohorts, invalidate } = this.props
     this.setState({ changes_a: {} as Units, changes_d: {} as Units })
-    clearCohorts(attacker, mode)
-    clearCohorts(defender, mode)
+    clearCohorts(attacker)
+    clearCohorts(defender)
     invalidate(mode)
   }
 }

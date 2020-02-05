@@ -24,7 +24,7 @@ import IconDice from 'images/chance.png'
 import IconGeneral from 'images/military_power.png'
 import IconTerrain from 'images/terrain.png'
 import {
-    invalidate, invalidateCountry, selectArmy, selectCohort, setFlankSize, setRoll, toggleRandomRoll,
+    invalidate, invalidateCountry, selectArmy, selectCohort, setRoll, toggleRandomRoll,
     undo, battle, refreshBattle, setSeed, setGeneralMartial, importState
 } from 'reducers'
 import { AppState, getBattle, getCountry, getGeneralStats, getParticipant, getSettings, resetMissing, getCountries } from 'state'
@@ -239,7 +239,7 @@ class Battle extends Component<IProps, IState> {
           color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={side}
           onClick={(column, id) => this.openUnitModal(side, ArmyType.Frontline, country, column, id)}
-          onRemove={column => this.props.removeUnit(this.props.mode, country, ArmyType.Frontline, column)}
+          onRemove={column => this.props.removeUnit(country, ArmyType.Frontline, column)}
           row_width={Math.max(30, combat_width)}
           reverse={side === Side.Attacker}
           type={ArmyType.Frontline}
@@ -290,7 +290,7 @@ class Battle extends Component<IProps, IState> {
           color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={side}
           onClick={(column, id) => this.openUnitModal(side, ArmyType.Reserve, country, column, id)}
-          onRemove={column => this.props.removeUnit(this.props.mode, country, ArmyType.Reserve, column)}
+          onRemove={column => this.props.removeUnit(country, ArmyType.Reserve, column)}
           row_width={30}
           reverse={false}
           type={ArmyType.Reserve}
@@ -309,7 +309,7 @@ class Battle extends Component<IProps, IState> {
           color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={side}
           onClick={(column, id) => this.openUnitModal(side, ArmyType.Defeated, country, column, id)}
-          onRemove={column => this.props.removeUnit(this.props.mode, country, ArmyType.Defeated, column)}
+          onRemove={column => this.props.removeUnit(country, ArmyType.Defeated, column)}
           row_width={30}
           reverse={false}
           type={ArmyType.Defeated}
@@ -388,10 +388,9 @@ const mapDispatchToProps = (dispatch: any) => ({
   toggleRandomRoll: (mode: Mode, side: Side) => dispatch(toggleRandomRoll(mode, side)),
   setRoll: (mode: Mode, participant: Side, roll: number) => dispatch(setRoll(mode, participant, roll)),
   setGeneralMartial: (country: CountryName, mode: Mode,skill: number) => dispatch(setGeneralMartial(country, mode, skill)) && dispatch(invalidateCountry(country)),
-  setFlankSize: (mode: Mode, country: CountryName, size: number) => dispatch(setFlankSize(country, mode, size)) && dispatch(invalidate(mode)),
   selectArmy: (mode: Mode, type: Side, country: CountryName) => dispatch(selectArmy(mode, type, country)) && dispatch(invalidate(mode)),
-  removeUnit: (mode: Mode, country: CountryName, type: ArmyType, column: number) => (
-    dispatch(selectCohort(country, mode, type, column, null))
+  removeUnit: (country: CountryName, type: ArmyType, column: number) => (
+    dispatch(selectCohort(country, type, column, null))
   ),
   setSeed: (mode: Mode, seed: number) => dispatch(setSeed(mode, seed)) && dispatch(invalidate(mode)),
   refreshBattle: (mode: Mode) => dispatch(refreshBattle(mode)),

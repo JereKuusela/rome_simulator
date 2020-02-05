@@ -60,7 +60,7 @@ class ModalTacticSelector extends Component<IProps> {
   selectTactic = (type: TacticType | null) => {
     const { mode, country, selectTactic, onClose, invalidate } = this.props
     if (country && type)
-      selectTactic(country, mode, type)
+      selectTactic(country, type)
     invalidate(mode)
     onClose()
   }

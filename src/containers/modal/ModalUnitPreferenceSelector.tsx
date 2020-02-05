@@ -40,7 +40,7 @@ class ModalUnitPreferenceSelector extends Component<IProps> {
   selectUnit = (unit_type: UnitType | null): void => {
     const { setUnitPreference, invalidate, onClose, mode, country, type } = this.props
     if (type)
-      setUnitPreference(country, mode, type, unit_type)
+      setUnitPreference(country, type, unit_type)
     invalidate(mode)
     onClose()
   }

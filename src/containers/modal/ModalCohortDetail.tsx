@@ -51,39 +51,39 @@ class ModalCohortDetail extends Component<IProps> {
   }
 
   removeUnit = () => {
-    const { mode, id, country, deleteCohort, invalidateCountry, onClose } = this.props
-    deleteCohort(country, mode, id)
+    const { id, country, deleteCohort, invalidateCountry, onClose } = this.props
+    deleteCohort(country, id)
     invalidateCountry(country)
     onClose()
   }
 
   setBaseValue = (key: string, attribute: UnitValueType, value: number) => {
-    const { mode, country, id, setCohortValue, invalidateCountry } = this.props
-    setCohortValue(country, mode, id, ValuesType.Base, key, attribute, value)
+    const { country, id, setCohortValue, invalidateCountry } = this.props
+    setCohortValue(country, id, ValuesType.Base, key, attribute, value)
     invalidateCountry(country)
   }
 
   setModifierValue = (key: string, attribute: UnitValueType, value: number) => {
-    const { mode, country, id, setCohortValue, invalidateCountry } = this.props
-    setCohortValue(country, mode, id, ValuesType.Modifier, key, attribute, value)
+    const { country, id, setCohortValue, invalidateCountry } = this.props
+    setCohortValue(country, id, ValuesType.Modifier, key, attribute, value)
     invalidateCountry(country)
   }
 
   setLossValue = (key: string, attribute: UnitValueType, value: number) => {
-    const { mode, country, id, setCohortValue, invalidateCountry } = this.props
-    setCohortValue(country, mode, id, ValuesType.Loss, key, attribute, value)
+    const { country, id, setCohortValue, invalidateCountry } = this.props
+    setCohortValue(country, id, ValuesType.Loss, key, attribute, value)
     invalidateCountry(country)
   }
 
   changeType = (type: UnitType) => {
-    const { mode, country, id, changeCohortType, invalidateCountry } = this.props
-    changeCohortType(country, mode, id, type)
+    const { country, id, changeCohortType, invalidateCountry } = this.props
+    changeCohortType(country, id, type)
     invalidateCountry(country)
   }
 
   toggleIsLoyal = () => {
-    const { mode, country, id, toggleCohortLoyality, invalidateCountry } = this.props
-    toggleCohortLoyality(country, mode, id)
+    const { country, id, toggleCohortLoyality, invalidateCountry } = this.props
+    toggleCohortLoyality(country, id)
     invalidateCountry(country)
   }
 }

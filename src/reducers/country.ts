@@ -34,8 +34,7 @@ export const countryReducer = (state = getDefaultCountryDefinitions(), action: A
     return state
   return produce(state, draft => {
     const [country, ...payload] = action.payload
-    const sub = { type: action.type, payload }
-    func(draft[country], ...sub.payload)
+    func(draft[country], ...payload)
   })
 }
 
