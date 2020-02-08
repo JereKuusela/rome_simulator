@@ -2,7 +2,6 @@ import { ImmerReducer, createActionCreators, createReducerFunction, Actions } fr
 
 import { has } from 'utils'
 import { DefinitionType, Mode, CountryName, Side, SimulationSpeed, CombatSettings, SiteSettings, Setting, SettingsAndOptions, WearinessAttribute } from 'types'
-import { createCountry, deleteCountry, changeCountryName } from './countries'
 import { getDefaultSettings, speedValues } from 'data'
 
 class SettingsReducer extends ImmerReducer<SettingsAndOptions> {
@@ -69,11 +68,5 @@ export const changeWeariness = actions.changeWeariness
 export const reducer = createReducerFunction(SettingsReducer, getDefaultSettings())
 
 export const settingsReducer = (state = getDefaultSettings(), action: Actions<typeof SettingsReducer>) => {
-  if (action.type === createCountry.type)
-    return reducer(state, { payload: action.payload, type: actions.createCountry.type, args: true } as any)
-  if (action.type === deleteCountry.type)
-    return reducer(state, { payload: action.payload, type: actions.deleteCountry.type })
-  if (action.type === changeCountryName.type)
-    return reducer(state, { payload: action.payload, type: actions.changeCountryName.type, args: true } as any)
   return reducer(state, action)
 }

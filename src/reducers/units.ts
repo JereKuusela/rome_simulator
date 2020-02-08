@@ -5,7 +5,6 @@ import { DefinitionType, ValuesType, CountryName, UnitType, UnitValueType, UnitD
 import { getDefaultUnits, getUnitIcon, getDefaultUnitState } from 'data'
 import { addValues, regenerateValues, clearValues } from 'definition_values'
 import { map } from 'utils'
-import { createCountry, deleteCountry, changeCountryName, enableModifiers, clearModifiers } from 'reducers'
 
 
 const filterTarget = (type: UnitType, target: string) => (
@@ -92,15 +91,5 @@ export const toggleIsUnitLoyal = unitsActions.toggleIsLoyal
 const unitsBaseReducer = createReducerFunction(UnitsReducer, getDefaultUnitState())
 
 export const unitsReducer = (state = getDefaultUnitState(), action: Actions<typeof UnitsReducer>) => {
-  if (action.type === createCountry.type)
-    return unitsBaseReducer(state, { payload: action.payload, type: unitsActions.createCountry.type, args: true } as any)
-  if (action.type === deleteCountry.type)
-    return unitsBaseReducer(state, { payload: action.payload, type: unitsActions.deleteCountry.type })
-  if (action.type === changeCountryName.type)
-    return unitsBaseReducer(state, { payload: action.payload, type: unitsActions.changeCountryName.type, args: true } as any)
-  if (action.type === enableModifiers.type)
-    return unitsBaseReducer(state, { payload: action.payload, type: unitsActions.enableModifiers.type, args: true } as any)
-  if (action.type === clearModifiers.type)
-    return unitsBaseReducer(state, { payload: action.payload, type: unitsActions.clearModifiers.type, args: true } as any)
   return unitsBaseReducer(state, action)
 }
