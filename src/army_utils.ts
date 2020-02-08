@@ -1,4 +1,4 @@
-import { BaseUnits, UnitDefinitions, DefinitionType, UnitDefinition, UnitDefinitionValue, UnitDefinitionValues, BaseCohort, ArmyType, Side, Units } from 'types'
+import { BaseCohorts, Cohorts, DefinitionType, Unit, UnitDefinitionValue, UnitDefinitionValues, BaseCohort, ArmyType, Side, Units } from 'types'
 import { mergeValues } from 'definition_values'
 import { map, filter } from 'utils'
 import { CombatUnits } from 'combat'
@@ -8,17 +8,17 @@ import { CombatUnits } from 'combat'
  * @param units Base units to merge. 
  * @param definitions Definitions to merge.
  */
-export const mergeBaseUnitsWithDefinitions = (units: BaseUnits, definitions: UnitDefinitions): Units => ({
+export const mergeBaseUnitsWithDefinitions = (units: BaseCohorts, definitions: Units): Cohorts => ({
   frontline: units.frontline.map(value => value && mergeValues(definitions[value.type], value)),
   reserve: units.reserve.map(value => value && mergeValues(definitions[value.type], value)),
   defeated: units.defeated.map(value => value && mergeValues(definitions[value.type], value))
 })
 
-export const mergeDefinitions = (base: UnitDefinition, definitions: UnitDefinitions, general_base: UnitDefinitionValue, general: UnitDefinitionValues) => {
+export const mergeDefinitions = (base: Unit, definitions: Units, general_base: UnitDefinitionValue, general: UnitDefinitionValues) => {
   return map(definitions, (definition, type) => mergeValues(mergeValues(definition, base), mergeValues(general_base, general[type])))
 }
 
-export const mergeDefinition = (base: UnitDefinition, unit: UnitDefinition, general_base: UnitDefinitionValue, general: UnitDefinitionValue) => {
+export const mergeDefinition = (base: Unit, unit: Unit, general_base: UnitDefinitionValue, general: UnitDefinitionValue) => {
   return mergeValues(mergeValues(unit, base), mergeValues(general_base, general))
 }
 
@@ -32,7 +32,7 @@ export const isIncludedInMode = (mode: DefinitionType, definition: { mode: Defin
  * @param mode
  * @param definitions 
  */
-export const filterUnitDefinitions = (mode: DefinitionType, definitions: UnitDefinitions): UnitDefinitions => {
+export const filterUnitDefinitions = (mode: DefinitionType, definitions: Units): Units => {
   return filter(definitions, unit => isIncludedInMode(mode, unit))
 }
 
@@ -48,7 +48,7 @@ export const getNextId = () => ++unit_id
  * @param units Units to search.
  * @param id Id to find.
  */
-export const findUnitById = (units: BaseUnits | undefined, id: number): BaseCohort | undefined => {
+export const findUnitById = (units: BaseCohorts | undefined, id: number): BaseCohort | undefined => {
   if (!units)
     return undefined
   let base_unit = units.reserve.find(unit => unit.id === id)

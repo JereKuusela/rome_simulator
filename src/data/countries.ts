@@ -1,5 +1,6 @@
 import { Country, GovermentType, ReligionType, CultureType, CountryName } from 'types'
 import { getDefaultArmies } from 'data'
+import { getDefaultUnits } from './units'
 
 export const defaultCountry: Country =
 {
@@ -11,7 +12,8 @@ export const defaultCountry: Country =
   military_power: 0,
   office_discipline: 0,
   office_morale: 0,
-  armies: getDefaultArmies()
+  armies: getDefaultArmies(),
+  units: getDefaultUnits()
 }
 
 export const getDefaultCountryDefinitions = (): { [key in CountryName]: Country } => ({

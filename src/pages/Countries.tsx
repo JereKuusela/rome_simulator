@@ -6,7 +6,7 @@ import { mapRange, ObjSet, has, keys } from '../utils'
 
 import { addSignWithZero } from 'formatters'
 import { DefinitionType, ValuesType, TraditionDefinition, TradeDefinition, IdeaDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, EconomyDefinition, LawDefinition, AbilityDefinition, Modifier, Tradition, ScopeType, UnitCalc, ReligionType, CultureType, ModifierType } from 'types'
-import { enableSelection, clearSelection, enableModifiers, clearModifiers, setGeneralMartial, selectCulture, selectReligion, selectGovernment, setOmenPower, setHasGeneral, setMilitaryPower, setOfficeMorale, setOfficeDiscipline, invalidateCountry } from 'reducers'
+import { enableSelection, clearSelection, enableUnitModifiers, enableGeneralModifiers, clearUnitModifiers, clearGeneralModifiers, setGeneralMartial, selectCulture, selectReligion, selectGovernment, setOmenPower, setHasGeneral, setMilitaryPower, setOfficeMorale, setOfficeDiscipline, invalidateCountry } from 'reducers'
 
 import AccordionToggle from 'containers/AccordionToggle'
 import CountryManager from 'containers/CountryManager'
@@ -774,15 +774,17 @@ class Countries extends Component<IProps> {
   }
 
   enableModifiers = (key: string, modifiers: Modifier[]) => {
-    const { enableModifiers, enableSelection, invalidateCountry, selected_country } = this.props
-    enableModifiers(selected_country, key, modifiers)
+    const { enableGeneralModifiers, enableUnitModifiers, enableSelection, invalidateCountry, selected_country } = this.props
+    enableGeneralModifiers(selected_country, key, modifiers)
+    enableUnitModifiers(key, modifiers)
     enableSelection(key)
     invalidateCountry(selected_country)
   }
 
   clearModifiers = (key: string) => {
-    const { clearModifiers, clearSelection, invalidateCountry, selected_country } = this.props
-    clearModifiers(selected_country, key)
+    const { clearGeneralModifiers, clearUnitModifiers, clearSelection, invalidateCountry, selected_country } = this.props
+    clearGeneralModifiers(selected_country, key)
+    clearUnitModifiers(key)
     clearSelection(key)
     invalidateCountry(selected_country)
   }
@@ -805,7 +807,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const actions = {
-  enableModifiers, clearModifiers, setGeneralMartial, selectCulture, invalidateCountry,
+  enableGeneralModifiers, clearGeneralModifiers, clearUnitModifiers, enableUnitModifiers, setGeneralMartial, selectCulture, invalidateCountry,
   selectReligion, selectGovernment, setOmenPower, setHasGeneral, setMilitaryPower, setOfficeMorale, setOfficeDiscipline, enableSelection, clearSelection
 }
 

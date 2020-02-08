@@ -1,5 +1,5 @@
 import { calculateValue, clearAllValues, mergeValues, calculateBase, addValues, regenerateValues } from 'definition_values'
-import { DefinitionType, Mode, GeneralCalc, UnitDefinitionValues, UnitType, UnitDefinitionValue, UnitDefinition, UnitCalc, General, Army, ArmyType, BaseCohort, ValuesType, UnitValueType, TacticType, UnitPreferenceType, GeneralStats, BaseReserve, ScopeType, Modifier, CountryName } from 'types'
+import { DefinitionType, Mode, GeneralCalc, UnitDefinitionValues, UnitType, UnitDefinitionValue, Unit, UnitCalc, General, Army, ArmyType, BaseCohort, ValuesType, UnitValueType, TacticType, UnitPreferenceType, GeneralStats, BaseReserve, ScopeType, Modifier, CountryName } from 'types'
 import { filterKeys, map } from 'utils'
 import { findLastIndex } from 'lodash'
 
@@ -30,7 +30,7 @@ export const getGeneralBaseDefinition = (general: General, mode: Mode): UnitDefi
   return mergeValues(general.definitions[DefinitionType.Global], general.definitions[mode])
 }
 
-export const unitSorter = (definition: UnitDefinition, mode: Mode) => {
+export const unitSorter = (definition: Unit, mode: Mode) => {
   if (mode === DefinitionType.Naval)
     return calculateBase(definition, UnitCalc.Cost)
   return definition.type === UnitType.BaseLand ? '' : definition.type
@@ -153,7 +153,7 @@ export const setFlankSize = (army: Army, flank_size: number) => {
 }
 
 export const setGeneralMartial = (army: Army, value: number) => {
-  enableModifiers(army, BASE_MARTIAL_KEY, [{
+  enableGeneralModifiers(army, BASE_MARTIAL_KEY, [{
     target: 'General',
     type: ValuesType.Base,
     scope: ScopeType.Army,
@@ -162,7 +162,7 @@ export const setGeneralMartial = (army: Army, value: number) => {
   }])
 }
 
-export const enableModifiers = (army: Army, key: string, modifiers: Modifier[]) => {
+export const enableGeneralModifiers = (army: Army, key: string, modifiers: Modifier[]) => {
 
   modifiers = modifiers.filter(value => value.scope === ScopeType.Army)
   const definitions = map(army.general.definitions, definition => clearAllValues(definition, key))
@@ -190,7 +190,7 @@ export const enableModifiers = (army: Army, key: string, modifiers: Modifier[]) 
   army.general = definition
 }
 
-export const clearModifiers = (army: Army, key: string) => {
+export const clearGeneralModifiers = (army: Army, key: string) => {
   const definition = clearAllValues(army.general, key)
   const definitions = map(army.general.definitions, definition => clearAllValues(definition, key))
   definition.definitions = definitions

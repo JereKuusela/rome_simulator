@@ -1,5 +1,5 @@
 import { ArmyForCombat } from 'state'
-import { Terrain, UnitType, Setting, TacticCalc, BaseUnits, Cohort, UnitCalc, Side, Settings } from 'types'
+import { Terrain, UnitType, Setting, TacticCalc, BaseCohorts, Cohort, UnitCalc, Side, Settings } from 'types'
 import { calculateTotalRoll } from './combat_utils'
 import { calculateValue } from 'definition_values'
 import { CombatParticipant, getCombatUnit, CombatUnits, Frontline, Defeated, doBattleFast, Reserve, getUnitDefinition, CombatUnitTypes } from './combat'
@@ -229,7 +229,7 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
   worker()
 }
 
-export const convertUnits = (units: BaseUnits, settings: Settings, casualties_multiplier: number, base_damages: number[], terrains: Terrain[], unit_types: UnitType[]) => ({
+export const convertUnits = (units: BaseCohorts, settings: Settings, casualties_multiplier: number, base_damages: number[], terrains: Terrain[], unit_types: UnitType[]) => ({
   frontline: units.frontline.map(unit => getCombatUnit(settings, casualties_multiplier, base_damages, terrains, unit_types, unit as Cohort)),
   reserve: units.reserve.map(unit => getCombatUnit(settings, casualties_multiplier, base_damages, terrains, unit_types, unit as Cohort)!),
   defeated: units.defeated.map(unit => getCombatUnit(settings, casualties_multiplier, base_damages, terrains, unit_types, unit as Cohort)!),

@@ -11,10 +11,6 @@ const filterState = (state: AppState, export_keys?: ExportKeys): any => {
   filtered.battle = stripRounds(filtered.battle)
   if (export_keys && !export_keys[ExportKey.Countries])
     filtered.countries = undefined
-  if (export_keys && !export_keys[ExportKey.Units])
-    filtered.units = undefined
-  if (export_keys && !export_keys[ExportKey.Units])
-    filtered.global_stats = undefined
   if (export_keys && !export_keys[ExportKey.Terrains])
     filtered.terrains = undefined
   if (export_keys && !export_keys[ExportKey.Tactics])

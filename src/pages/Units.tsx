@@ -4,12 +4,12 @@ import { connect } from 'react-redux'
 
 import ModalUnitDetail from 'containers/modal/ModalUnitDetail'
 import { AppState, mergeUnitTypes, filterTerrainTypes, getUnitDefinitions, getBaseDefinition, getUnitImages } from 'state'
-import { addUnit, deleteUnit, changeUnitType } from 'reducers'
+import { createUnit, deleteUnit, changeUnitType } from 'reducers'
 import UnitDefinitions from 'components/UnitDefinitions'
 import ItemRemover from 'components/ItemRemover'
 import ValueModal from 'components/ValueModal'
 import CountryManager from 'containers/CountryManager'
-import { CountryName, UnitType, DefinitionType } from 'types'
+import { CountryName, UnitType } from 'types'
 
 interface IState {
   modal_country: CountryName | undefined
@@ -31,7 +31,7 @@ class Units extends Component<IProps, IState> {
       <>
         <ValueModal
           open={this.state.open_create_unit}
-          onSuccess={type => this.props.addUnit(this.props.country, this.props.mode, type)}
+          onSuccess={type => this.props.createUnit(this.props.mode, type)}
           onClose={this.closeModal}
           message='Create unit'
           button_message='Create'
@@ -80,12 +80,12 @@ class Units extends Component<IProps, IState> {
   openModal = (country: CountryName, unit: UnitType): void => this.setState({ modal_country: country, modal_unit: unit })
 
   onRemove = (): void => {
-    this.state.modal_country && this.state.modal_unit && this.props.deleteUnit(this.state.modal_country, this.state.modal_unit)
+    this.state.modal_country && this.state.modal_unit && this.props.deleteUnit(this.state.modal_unit)
     this.closeModal()
   }
 
-  onChangeType = (country: CountryName, old_type: UnitType, new_type: UnitType): void => {
-    this.props.changeType(country, old_type, new_type)
+  onChangeType = (old_type: UnitType, new_type: UnitType): void => {
+    this.props.changeUnitType(old_type, new_type)
     this.setState({ modal_unit: new_type })
   }
 
@@ -101,12 +101,12 @@ const mapStateToProps = (state: AppState) => ({
   country: state.settings.country
 })
 
-const mapDispatchToProps = (dispatch: any) => ({
-  deleteUnit: (country: CountryName, type: UnitType) => dispatch(deleteUnit(country, type)),
-  addUnit: (country: CountryName, mode: DefinitionType, type: UnitType) => dispatch(addUnit(country, mode, type)),
-  changeType: (country: CountryName, old_type: UnitType, new_type: UnitType) => dispatch(changeUnitType(country, old_type, new_type))
-})
+const actions = {
+  deleteUnit, createUnit, changeUnitType
+}
 
-interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }
+type S = ReturnType<typeof mapStateToProps>
+type D = typeof actions
+type IProps = S & D
 
-export default connect(mapStateToProps, mapDispatchToProps)(Units)
+export default connect(mapStateToProps, actions)(Units)

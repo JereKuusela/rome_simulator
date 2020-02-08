@@ -1,4 +1,4 @@
-import { ValuesType, DefinitionType, UnitType, UnitDefinition, UnitCalc, UnitValueType, UnitDeployment, TerrainType, UnitState, CountryName, UnitDefinitions } from 'types'
+import { ValuesType, DefinitionType, UnitType, Unit, UnitCalc, UnitValueType, UnitDeployment, TerrainType, UnitState, CountryName, Units } from 'types'
 import { addValues } from 'definition_values'
 import { toObj } from 'utils'
 
@@ -46,8 +46,8 @@ export const getUnitIcon = (type: UnitType) => unit_to_icon[type] || ''
 
 export const GlobalKey = 'Base'
 
-const createUnitFromJson = (data: UnitData): UnitDefinition => {
-  let unit: UnitDefinition = { type: data.type as UnitType, mode: data.mode as DefinitionType, image: unit_to_icon[data.type as UnitType] ?? '', deployment: data.deployment as UnitDeployment }
+const createUnitFromJson = (data: UnitData): Unit => {
+  let unit: Unit = { type: data.type as UnitType, mode: data.mode as DefinitionType, image: unit_to_icon[data.type as UnitType] ?? '', deployment: data.deployment as UnitDeployment }
   const base_values: [UnitValueType, number][] = [
     [UnitCalc.AttritionWeight, data.attrition_weight ?? 0],
     [UnitCalc.Cost, data.cost],
@@ -87,12 +87,12 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
   return unit
 }
 
-const initializeDefaultUnits = (): UnitDefinitions => toObj(data.units.map(createUnitFromJson), unit => unit.type)
+const initializeDefaultUnits = (): Units => toObj(data.units.map(createUnitFromJson), unit => unit.type)
 
 const defaultUnits = initializeDefaultUnits()
 
-export const getDefaultUnits = (): UnitDefinitions => defaultUnits
-export const getDefaultUnit = (type: UnitType): UnitDefinition => defaultUnits[type]
+export const getDefaultUnits = (): Units => defaultUnits
+export const getDefaultUnit = (type: UnitType): Unit => defaultUnits[type]
 
 interface UnitData {
   type: string

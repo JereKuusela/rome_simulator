@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal, Button, Grid } from 'semantic-ui-react'
-import { AppState, getParticipant, getBaseUnits, filterUnitTypesBySide, getUnitDefinitionsBySide, getUnitImages } from 'state'
+import { AppState, getParticipant, getBaseCohorts, filterUnitTypesBySide, getUnitDefinitionsBySide, getUnitImages } from 'state'
 import FastPlanner from 'components/FastPlanner'
 import ArmyCosts from 'components/ArmyCosts'
 import { ValuesType, UnitType, BaseReserve, Side, CountryName, BaseCohort, WearinessAttributes } from 'types'
@@ -175,8 +175,8 @@ class ModalFastPlanner extends Component<IProps, IState> {
 const mapStateToProps = (state: AppState) => ({
   attacker: getParticipant(state, Side.Attacker).country,
   defender: getParticipant(state, Side.Defender).country,
-  base_units_a: getBaseUnits(state, Side.Attacker),
-  base_units_d: getBaseUnits(state, Side.Defender),
+  base_units_a: getBaseCohorts(state, Side.Attacker),
+  base_units_d: getBaseCohorts(state, Side.Defender),
   types_a: filterUnitTypesBySide(state, Side.Attacker),
   types_d: filterUnitTypesBySide(state, Side.Defender),
   definitions_a: getUnitDefinitionsBySide(state, Side.Attacker),

@@ -1,6 +1,7 @@
 import { ObjSet } from "utils"
 import { CultureType, GovermentType, ReligionType } from "./modifiers"
 import { Armies } from "./armies"
+import { Units } from "./units"
 
 export enum CountryName {
   Country1 = 'Country 1',
@@ -17,5 +18,6 @@ export interface Country {
   military_power: number
   office_discipline: number
   office_morale: number,
-  armies: Armies
+  armies: Armies,
+  units: Units
 }

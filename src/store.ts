@@ -4,9 +4,6 @@ import { rootReducer, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits,
 import { persistStore, persistReducer, createTransform, createMigrate } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
-import { forEach } from 'utils'
-import { UnitType, Setting, DefinitionType, UnitDefinitions } from 'types'
-
 const TacticsTransform = createTransform(
   (inboundState) => inboundState,
   (outboundState: any) => restoreBaseTactics(outboundState),
@@ -44,32 +41,13 @@ const DataTransform = createTransform(
 )
 
 const migrations = {
-  6: (state: any) => {
-    forEach(state.units, (definitions: UnitDefinitions) => definitions[UnitType.SupplyTrain] = {} as any)
-    return state
-  },
-  7: (state: any) => {
-    state.settings.combatSettings[DefinitionType.Land][Setting.BaseDamage] = 0.096
-    state.settings.combatSettings[DefinitionType.Naval][Setting.BaseDamage] = 0.096
-    state.settings.combatSettings[DefinitionType.Land][Setting.RollDamage] = 0.024
-    state.settings.combatSettings[DefinitionType.Naval][Setting.RollDamage] = 0.024
-    state.settings.combatSettings[DefinitionType.Land][Setting.MaxBaseDamage] = 0.36
-    state.settings.combatSettings[DefinitionType.Naval][Setting.MaxBaseDamage] = 0.36
-    return state
-  },
-  8: (state: any) => {
-    state.settings.siteSettings[Setting.CalculateCasualties] = true
-    state.settings.siteSettings[Setting.CalculateResourceLosses] = true
-    state.settings.siteSettings[Setting.CalculateWinChance] = true
-    state.settings.siteSettings[Setting.ShowGraphs] = false
-    return state
-  }
+  9: () => rootReducer(undefined, { type: ''}) as any
 }
 
 const persistConfig = {
   key: 'primary',
   storage: storage,
-  version: 8,
+  version: 9,
   migrate: createMigrate(migrations, { debug: false }),
   transforms: [
     TacticsTransform,

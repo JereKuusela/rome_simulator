@@ -3,14 +3,14 @@ import { List } from 'semantic-ui-react'
 
 import Images from './Utils/Images'
 import StyledNumber from './Utils/StyledNumber'
-import { UnitType, UnitDefinition, TacticDefinition } from 'types'
+import { UnitType, Unit, TacticDefinition } from 'types'
 import { calculateValue } from 'definition_values'
 import { toSignedPercent } from 'formatters'
 
 interface IProps {
   images: { [key in UnitType]: string[] }
   unit_types: UnitType[]
-  item: UnitDefinition | TacticDefinition
+  item: Unit | TacticDefinition
   styled?: boolean
 }
 

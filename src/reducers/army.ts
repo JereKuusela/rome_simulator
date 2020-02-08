@@ -22,8 +22,8 @@ export const setFlankSize = makeActionReplaceFirst(manager.setFlankSize, 'setFla
 export const setUnitPreference = makeActionReplaceFirst(manager.setUnitPreference, 'setUnitPreference' as CountryName, actionToFunction)
 export const setGeneralMartial = makeActionReplaceFirst(manager.setGeneralMartial, 'setGeneralMartial' as CountryName, actionToFunction)
 export const setHasGeneral = makeActionReplaceFirst(manager.setHasGeneral, 'setHasGeneral' as CountryName, actionToFunction)
-export const clearModifiers = makeActionReplaceFirst(manager.clearModifiers, 'clearModifiers' as CountryName, actionToFunction)
-export const enableModifiers = makeActionReplaceFirst(manager.enableModifiers, 'enableModifiers' as CountryName, actionToFunction)
+export const clearGeneralModifiers = makeActionReplaceFirst(manager.clearGeneralModifiers, 'clearGeneralModifiers' as CountryName, actionToFunction)
+export const enableGeneralModifiers = makeActionReplaceFirst(manager.enableGeneralModifiers, 'enableGeneralModifiers' as CountryName, actionToFunction)
 
 const getEntity = (draft: Countries, action: Action<CountryName>, params: ReducerParams) => {
   const [country] = action.payload
