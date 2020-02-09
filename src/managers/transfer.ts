@@ -1,7 +1,7 @@
 
 import { saveAs } from 'file-saver'
-import { AppState, stripRounds } from 'state'
-import { DefinitionType, ExportKey, ExportKeys } from 'types'
+import { AppState, stripRounds, resetMissing } from 'state'
+import { DefinitionType, ExportKey, ExportKeys, TransferState } from 'types'
 
 const filterState = (state: AppState, export_keys?: ExportKeys): any => {
   const filtered: any = { ...state }
@@ -35,4 +35,30 @@ export const saveToFile = (data: string) => {
   const date = new Date()
   const formatted = date.getFullYear() + '-' + pad(date.getMonth()) + '-' + pad(date.getDate()) + '_' + pad(date.getHours()) + '-' + pad(date.getMinutes()) + '-' + pad(date.getSeconds())
   saveAs(blob, 'imperator-simulator_' + formatted + '.json');
+}
+
+export const setExportKey = (transfer: TransferState, key: ExportKey, value: boolean) => {
+  transfer.export_keys[key] = value
+}
+
+export const setResetMissing = (transfer: TransferState, value: boolean) => {
+  transfer.reset_missing = value
+}
+
+export const importState = (state: AppState, imported: any, reset_missing: boolean) => {
+  if (reset_missing)
+    state = { ...state, transfer: state.transfer, ...imported }
+  else
+    // Bit complicated logic needed to allow adding and partially updating definitions.
+    // TODO: this.state vs state really messy.
+    state = {
+      ...state,
+      ...imported,
+      tactics: state.tactics ? { ...state.tactics, ...imported.tactics } : imported.tactics,
+      terrains: state.terrains ? { ...state.terrains, ...imported.terrains } : imported.terrains
+    }
+}
+
+export const reset = (state: AppState) => {
+  resetMissing(state)
 }

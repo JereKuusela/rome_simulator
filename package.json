@@ -40,7 +40,6 @@
     "fs-extra": "8.1.0",
     "html-webpack-plugin": "4.0.0-beta.5",
     "identity-obj-proxy": "3.0.0",
-    "immer-reducer": "^0.7.10",
     "is-wsl": "^2.1.1",
     "jest": "25.1.0",
     "jest-environment-jsdom-fourteen": "1.0.1",
