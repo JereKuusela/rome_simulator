@@ -21,7 +21,7 @@ export const deleteTerrain = (terrains: Terrains, type: TerrainType) => {
   delete terrains[type]
 }
 
-export const addTerrain = (terrains: Terrains, type: TerrainType, mode: DefinitionType) => {
+export const createTerrain = (terrains: Terrains, type: TerrainType, mode: DefinitionType) => {
   terrains[type] = { type, mode, image: '', location: LocationType.Border }
 }
 

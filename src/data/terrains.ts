@@ -27,4 +27,4 @@ interface TerrainData {
   roll: number
 }
 
-export const getDefaultTerrainDefinitions = () => getDefaultTerrains()
+export const getDefaultTerrainState = () => getDefaultTerrains()

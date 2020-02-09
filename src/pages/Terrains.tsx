@@ -5,9 +5,9 @@ import ModalTerrainDetail from 'containers/modal/ModalTerrainDetail'
 import { AppState, filterTerrains } from 'state'
 import TerrainDefinitions from 'components/TerrainDefinitions'
 import ItemRemover from 'components/ItemRemover'
-import { TerrainType, DefinitionType } from 'types'
+import { TerrainType } from 'types'
 import { toArr } from 'utils'
-import { deleteTerrain, addTerrain, setTerrainType } from 'reducers'
+import { deleteTerrain, createTerrain, setTerrainType } from 'reducers'
 
 interface IState {
   modal_terrain: TerrainType | null
@@ -44,7 +44,7 @@ class Terrains extends Component<IProps, IState> {
         <TerrainDefinitions
           terrains={toArr(this.props.terrains)}
           onRowClick={terrain => this.openModal(terrain)}
-          onCreateNew={type => this.props.addTerrain(type, this.props.mode)}
+          onCreateNew={type => this.props.createTerrain(type, this.props.mode)}
         />
       </>
     )
@@ -66,12 +66,10 @@ const mapStateToProps = (state: AppState) => ({
   mode: state.settings.mode
 })
 
-const mapDispatchToProps = (dispatch: any) => ({
-  deleteTerrain: (type: TerrainType) => dispatch(deleteTerrain(type)),
-  addTerrain: (type: TerrainType, mode: DefinitionType) => dispatch(addTerrain(type, mode)),
-  setTerrainType: (old_type: TerrainType, new_type: TerrainType) => dispatch(setTerrainType(old_type, new_type))
-})
+const actions = { deleteTerrain, createTerrain, setTerrainType }
 
-interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }
+type S = ReturnType<typeof mapStateToProps>
+type D = typeof actions
+type IProps = S & D
 
-export default connect(mapStateToProps, mapDispatchToProps)(Terrains)
+export default connect(mapStateToProps, actions)(Terrains)

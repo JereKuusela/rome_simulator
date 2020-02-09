@@ -1,9 +1,9 @@
 import { AppState } from './index'
 import { reduce, toArr, filter, arrGet, toObj } from 'utils'
 import { filterUnitDefinitions, isIncludedInMode, getArmyPart, mergeBaseUnitsWithDefinitions, mergeDefinitions, mergeDefinition } from '../army_utils'
-import { Mode, DefinitionType, CountryName, BaseCohort, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, TacticDefinition, UnitPreferences, BaseCohorts, Participant, Terrain, Unit, Settings, Battle, Terrains, TacticDefinitions, Cohorts, Units, ArmyName, GeneralStats, Countries } from 'types'
+import { Mode, DefinitionType, CountryName, BaseCohort, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, Tactic, UnitPreferences, BaseCohorts, Participant, Terrain, Unit, Settings, Battle, Terrains, Tactics, Cohorts, Units, ArmyName, GeneralStats, Countries } from 'types'
 import { CombatUnit, CombatUnits } from 'combat'
-import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticDefinitions, getDefaultTerrainDefinitions } from 'data'
+import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticState, getDefaultTerrainState } from 'data'
 import { sortBy, uniq } from 'lodash'
 import * as manager from 'managers/army_manager'
 import { mergeValues } from 'definition_values'
@@ -110,7 +110,7 @@ export const filterTacticTypes = (state: AppState): TacticType[] => {
  * Returns tactics for the current mode.
  * @param state Application state.
  */
-export const filterTactics = (state: AppState): TacticDefinitions => {
+export const filterTactics = (state: AppState): Tactics => {
   return filter(state.tactics, tactic => isIncludedInMode(state.settings.mode, tactic))
 }
 
@@ -161,7 +161,7 @@ export const getCurrentCombat = (state: AppState, side: Side): CombatUnits => {
   return arrGet(participant.rounds, -1) ?? { frontline: [], reserve: [], defeated: [], tactic_bonus: 0 }
 }
 
-export const getSelectedTactic = (state: AppState, side: Side): TacticDefinition => {
+export const getSelectedTactic = (state: AppState, side: Side): Tactic => {
   const army = getBaseArmy(state, side)
   return state.tactics[army.tactic]
 }
@@ -193,7 +193,7 @@ const getBaseArmy = (state: AppState, side: Side)=> {
   return getArmy(state, country)
 }
 
-export const getTactic = (state: AppState, side: Side): TacticDefinition => {
+export const getTactic = (state: AppState, side: Side): Tactic => {
   const country = getParticipant(state, side).country
   const army = getArmy(state, country)
   return state.tactics[army.tactic]
@@ -268,8 +268,8 @@ export const getUnitImages = (state: AppState): { [key in UnitType]: string[] } 
  * @param data 
  */
 export const resetMissing = (data: AppState) => {
-  data.tactics = data.tactics || getDefaultTacticDefinitions()
-  data.terrains = data.terrains || getDefaultTerrainDefinitions()
+  data.tactics = data.tactics || getDefaultTacticState()
+  data.terrains = data.terrains || getDefaultTerrainState()
   data.battle = data.battle || getDefaultBattle()
   if (!data.battle[DefinitionType.Land])
     data.battle[DefinitionType.Land] = getDefaultMode(DefinitionType.Land)
@@ -281,7 +281,7 @@ export const resetMissing = (data: AppState) => {
 }
 
 export interface ArmyForCombat extends Cohorts {
-  tactic?: TacticDefinition
+  tactic?: Tactic
   definitions: Units
   general: number
   unit_preferences: UnitPreferences

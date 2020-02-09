@@ -5,9 +5,9 @@ import ModalTacticDetail from 'containers/modal/ModalTacticDetail'
 import { AppState, filterTactics, getUnitImages, mergeUnitTypes } from 'state'
 import TacticDefinitions from 'components/TacticDefinitions'
 import ItemRemover from 'components/ItemRemover'
-import { TacticType, DefinitionType } from 'types'
+import { TacticType } from 'types'
 import { toArr } from 'utils'
-import { deleteTactic, addTactic, changeTacticType } from 'reducers'
+import { deleteTactic, createTactic, setTacticType } from 'reducers'
 
 interface IState {
   modal_tactic: TacticType | null
@@ -45,7 +45,7 @@ class Tactics extends Component<IProps, IState> {
           unit_types={this.props.unit_types}
           images={this.props.images}
           onRowClick={tactic => this.openModal(tactic)}
-          onCreateNew={type => this.props.addTactic(type, this.props.mode)}
+          onCreateNew={type => this.props.createTactic(type, this.props.mode)}
         />
       </>
     )
@@ -57,7 +57,7 @@ class Tactics extends Component<IProps, IState> {
   }
 
   onChangeType = (old_type: TacticType, new_type: TacticType): void => {
-    this.props.changeType(old_type, new_type)
+    this.props.setTacticType(old_type, new_type)
     this.setState({ modal_tactic: new_type })
   }
 }
@@ -69,12 +69,10 @@ const mapStateToProps = (state: AppState) => ({
   mode: state.settings.mode
 })
 
-const mapDispatchToProps = (dispatch: any) => ({
-  deleteTactic: (type: TacticType) => dispatch(deleteTactic(type)),
-  addTactic: (type: TacticType, mode: DefinitionType) => dispatch(addTactic(type, mode)),
-  changeType: (old_type: TacticType, new_type: TacticType) => dispatch(changeTacticType(old_type, new_type))
-})
+const actions = { deleteTactic, createTactic, setTacticType }
 
-interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }
+type S = ReturnType<typeof mapStateToProps>
+type D = typeof actions
+type IProps = S & D
 
-export default connect(mapStateToProps, mapDispatchToProps)(Tactics)
+export default connect(mapStateToProps, actions)(Tactics)

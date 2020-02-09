@@ -6,15 +6,15 @@ import { makeActionRemoveFirst, ActionToFunction, Action, makeReducer } from './
 
 const actionToFunction: ActionToFunction<Country> = {}
 
-export const clearSelection = makeActionRemoveFirst(manager.clearSelection, 'clearSelection', actionToFunction)
-export const enableSelection = makeActionRemoveFirst(manager.enableSelection, 'enableSelection', actionToFunction)
-export const selectCulture = makeActionRemoveFirst(manager.selectCulture, 'selectCulture', actionToFunction)
-export const selectGovernment = makeActionRemoveFirst(manager.selectGovernment, 'selectGovernment', actionToFunction)
-export const selectReligion = makeActionRemoveFirst(manager.selectReligion, 'selectReligion', actionToFunction)
-export const setMilitaryPower = makeActionRemoveFirst(manager.setMilitaryPower, 'setMilitaryPower', actionToFunction)
-export const setOfficeDiscipline = makeActionRemoveFirst(manager.setOfficeDiscipline, 'setOfficeDiscipline', actionToFunction)
-export const setOfficeMorale = makeActionRemoveFirst(manager.setOfficeMorale, 'setOfficeMorale', actionToFunction)
-export const setOmenPower = makeActionRemoveFirst(manager.setOmenPower, 'setOmenPower', actionToFunction)
+export const clearSelection = makeActionRemoveFirst(manager.clearSelection, actionToFunction)
+export const enableSelection = makeActionRemoveFirst(manager.enableSelection, actionToFunction)
+export const selectCulture = makeActionRemoveFirst(manager.selectCulture, actionToFunction)
+export const selectGovernment = makeActionRemoveFirst(manager.selectGovernment, actionToFunction)
+export const selectReligion = makeActionRemoveFirst(manager.selectReligion, actionToFunction)
+export const setMilitaryPower = makeActionRemoveFirst(manager.setMilitaryPower, actionToFunction)
+export const setOfficeDiscipline = makeActionRemoveFirst(manager.setOfficeDiscipline, actionToFunction)
+export const setOfficeMorale = makeActionRemoveFirst(manager.setOfficeMorale, actionToFunction)
+export const setOmenPower = makeActionRemoveFirst(manager.setOmenPower, actionToFunction)
 
 const getEntity = (draft: Countries, _: Action, params: ReducerParams) => draft[params.country]
 

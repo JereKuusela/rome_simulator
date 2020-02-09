@@ -6,16 +6,16 @@ export type Action<T = any> = {
   payload: [T, ...any[]]
 }
 
-export type ActionToFunction<T> = { [key: string]: (entity: T, ...args: any) => void | undefined }
+export type ActionToFunction<T, K = any> = { [key: string]: (entity: T, ...args: any) => void | undefined }
 
-export const makeActionRemoveFirst = <T extends any[], E>(func: (entity: E, ...args: T) => any, type: string, actionToFunction: ActionToFunction<E>) => {
-  actionToFunction[type] = func
-  return (...payload: T) => ({ type, payload } as {})
+export const makeActionRemoveFirst = <T extends any[], E>(func: (entity: E, ...args: T) => any, actionToFunction: ActionToFunction<E>) => {
+  actionToFunction[func.name] = func
+  return (...payload: T) => ({ type: func.name, payload } as {})
 }
 
-export const makeActionReplaceFirst = <T extends any[], K extends string, E>(func: (entity: E, ...args: T) => any, type: K, actionToFunction: ActionToFunction<E>) => {
-  actionToFunction[type] = func
-  const ret = (key: K, ...args: T) => ({ type, payload: [key, ...args] } as {})
+export const makeActionReplaceFirst = <T extends any[], K extends string, E>(func: (entity: E, ...args: T) => any, actionToFunction: ActionToFunction<E, K>) => {
+  actionToFunction[func.name] = func
+  const ret = (key: K, ...args: T) => ({ type: func.name, payload: [key, ...args] } as {})
   return ret
 }
 
@@ -31,8 +31,8 @@ const getEntityPayload = (action: Action) => {
 
 const getDraft = <E>(draft: E) => draft
 
-export const makeReducer = <S, T extends string, E>(initial: S, actionToFunction: ActionToFunction<E>, getEntity: GetEntity<S, E, T>, getPayload?: GetPayload<T>) => {
-  return (state = initial, action: Action<T>, params: ReducerParams) => {
+export const makeReducer = <S, K extends string, E>(initial: S, actionToFunction: ActionToFunction<E, K>, getEntity: GetEntity<S, E, K>, getPayload?: GetPayload<K>) => {
+  return (state = initial, action: Action<K>, params: ReducerParams) => {
     const func = actionToFunction[action.type]
     if (!func)
       return state
@@ -42,7 +42,7 @@ export const makeReducer = <S, T extends string, E>(initial: S, actionToFunction
   }
 }
 
-export const makeEntityReducer = <S extends { [key in T]: E }, T extends string, E>(initial: S, actionToFunction: ActionToFunction<E>) => (
+export const makeEntityReducer = <S extends { [key in K]: E }, K extends string, E>(initial: S, actionToFunction: ActionToFunction<E, K>) => (
   makeReducer(initial, actionToFunction, getEntity, getEntityPayload)
 )
 

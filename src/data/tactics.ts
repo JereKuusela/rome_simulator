@@ -1,4 +1,4 @@
-import { ValuesType, DefinitionType, TacticType, TacticCalc, TacticDefinition, TacticValueType, UnitType } from 'types'
+import { ValuesType, DefinitionType, TacticType, TacticCalc, Tactic, TacticValueType, UnitType } from 'types'
 import { toObj } from 'utils'
 
 import * as data from './json/tactics.json'
@@ -39,8 +39,8 @@ const tactic_to_icon: { [ key in TacticType ]: string } = {
 
 export const getTacticIcon = (type: TacticType) => tactic_to_icon[type] || ''
 
-const createTacticFromJson = (data: TacticData): TacticDefinition => {
-  let tactic: TacticDefinition = { type: data.type as TacticType, mode: data.mode as DefinitionType, image: tactic_to_icon[data.type as TacticType] || '' }
+const createTacticFromJson = (data: TacticData): Tactic => {
+  let tactic: Tactic = { type: data.type as TacticType, mode: data.mode as DefinitionType, image: tactic_to_icon[data.type as TacticType] || '' }
   const base_values: [TacticValueType, number][] = [
     [UnitType.Archers, data.archers || 0],
     [UnitType.CamelCavalry, data.camel_cavalry || 0],
@@ -81,9 +81,9 @@ const createTacticFromJson = (data: TacticData): TacticDefinition => {
 const defaultTactics = toObj(data.tactics.map(createTacticFromJson), unit => unit.type)
 
 export const getDefaultTactics = () => defaultTactics
-export const getDefaultTactic = (type: TacticType): TacticDefinition => defaultTactics[type]
+export const getDefaultTactic = (type: TacticType): Tactic => defaultTactics[type]
 
-export const getDefaultTacticDefinitions = () => getDefaultTactics()
+export const getDefaultTacticState = () => getDefaultTactics()
 
 interface TacticData {
   type: string

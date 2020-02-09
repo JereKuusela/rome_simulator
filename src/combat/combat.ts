@@ -1,6 +1,6 @@
 
 import { sumBy, values } from 'lodash'
-import { TacticDefinition, UnitPreferences, Terrain, UnitType, Cohort, UnitCalc, Setting, TerrainType, UnitDeployment, Settings } from 'types'
+import { Tactic, UnitPreferences, Terrain, UnitType, Cohort, UnitCalc, Setting, TerrainType, UnitDeployment, Settings } from 'types'
 import { mapRange, toObj } from 'utils'
 import { calculateValue, calculateValueWithoutLoss, calculateBase } from 'definition_values'
 import { calculateExperienceReduction } from './combat_utils'
@@ -14,7 +14,7 @@ import { reinforce } from './reinforcement'
 export interface CombatParticipant {
   army: CombatUnits
   unit_types: CombatUnitTypes
-  tactic: TacticDefinition
+  tactic: Tactic
   flank: number
   roll: number
   unit_preferences: UnitPreferences
@@ -210,7 +210,7 @@ const pickTargets = (source: Frontline, target: Frontline, settings: Settings) =
  * Calculates effectiveness of a tactic against another tactic with a given army.
  * Not optimized!
  */
-export const calculateTactic = (army: CombatUnits, tactic: TacticDefinition, counter_tactic?: TacticDefinition): number => {
+export const calculateTactic = (army: CombatUnits, tactic: Tactic, counter_tactic?: Tactic): number => {
   const effectiveness = counter_tactic ? calculateValue(tactic, counter_tactic.type) : 1.0
   let unit_modifier = 1.0
   if (effectiveness > 0 && tactic && army) {

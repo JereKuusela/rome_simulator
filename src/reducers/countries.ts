@@ -5,8 +5,8 @@ import { makeContainerReducer, ActionToFunction, makeActionRemoveFirst } from '.
 
 const actionToFunction: ActionToFunction<Countries> = {}
 
-export const createCountry = makeActionRemoveFirst(manager.createCountry, 'createCountry', actionToFunction)
-export const deleteCountry = makeActionRemoveFirst(manager.deleteCountry, 'deleteCountry', actionToFunction)
-export const changeCountryName = makeActionRemoveFirst(manager.changeCountryName, 'changeCountryName', actionToFunction)
+export const createCountry = makeActionRemoveFirst(manager.createCountry, actionToFunction)
+export const deleteCountry = makeActionRemoveFirst(manager.deleteCountry, actionToFunction)
+export const changeCountryName = makeActionRemoveFirst(manager.changeCountryName, actionToFunction)
 
 export const countriesReducer = makeContainerReducer(getDefaultCountryDefinitions(), actionToFunction)
