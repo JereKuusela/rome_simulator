@@ -1,6 +1,6 @@
 
 import { sumBy, values } from 'lodash'
-import { TacticDefinition, UnitPreferences, TerrainDefinition, UnitType, Unit, UnitCalc, Setting, TerrainType, UnitDeployment, Settings } from 'types'
+import { Tactic, UnitPreferences, Terrain, UnitType, Cohort, UnitCalc, Setting, TerrainType, UnitDeployment, Settings } from 'types'
 import { mapRange, toObj } from 'utils'
 import { calculateValue, calculateValueWithoutLoss, calculateBase } from 'definition_values'
 import { calculateExperienceReduction } from './combat_utils'
@@ -14,7 +14,7 @@ import { reinforce } from './reinforcement'
 export interface CombatParticipant {
   army: CombatUnits
   unit_types: CombatUnitTypes
-  tactic: TacticDefinition
+  tactic: Tactic
   flank: number
   roll: number
   unit_preferences: UnitPreferences
@@ -34,7 +34,7 @@ export type CombatUnits = {
 /**
  * Returns a precalculated info about a given unit.
  */
-const precalculateUnit = (settings: Settings, casualties_multiplier: number, base_damages: number[], terrains: TerrainDefinition[], unit_types: UnitType[], unit: Unit) => {
+const precalculateUnit = (settings: Settings, casualties_multiplier: number, base_damages: number[], terrains: Terrain[], unit_types: UnitType[], unit: Cohort) => {
   const damage_reduction = precalculateDamageReduction(unit, settings)
   const total_damage = mapRange(base_damages.length, roll => precalculateDamage(base_damages[roll], terrains, unit))
   const info: CombatUnitPreCalculated = {
@@ -47,7 +47,7 @@ const precalculateUnit = (settings: Settings, casualties_multiplier: number, bas
   return info
 }
 
-export const getUnitDefinition = (combatSettings: Settings, terrains: TerrainDefinition[], unit_types: UnitType[], unit: Unit): CombatUnitDefinition => {
+export const getUnitDefinition = (combatSettings: Settings, terrains: Terrain[], unit_types: UnitType[], unit: Cohort): CombatUnitDefinition => {
   const info = {
     id: unit.id,
     type: unit.type,
@@ -69,7 +69,7 @@ export const getUnitDefinition = (combatSettings: Settings, terrains: TerrainDef
 /**
  * Transforms a unit to a combat unit.
  */
-export const getCombatUnit = (combatSettings: Settings, casualties_multiplier: number, base_damages: number[], terrains: TerrainDefinition[], unit_types: UnitType[], unit: Unit | null): CombatUnit | null => {
+export const getCombatUnit = (combatSettings: Settings, casualties_multiplier: number, base_damages: number[], terrains: Terrain[], unit_types: UnitType[], unit: Cohort | null): CombatUnit | null => {
   if (!unit)
     return null
   const combat_unit: CombatUnit = {
@@ -210,7 +210,7 @@ const pickTargets = (source: Frontline, target: Frontline, settings: Settings) =
  * Calculates effectiveness of a tactic against another tactic with a given army.
  * Not optimized!
  */
-export const calculateTactic = (army: CombatUnits, tactic: TacticDefinition, counter_tactic?: TacticDefinition): number => {
+export const calculateTactic = (army: CombatUnits, tactic: Tactic, counter_tactic?: Tactic): number => {
   const effectiveness = counter_tactic ? calculateValue(tactic, counter_tactic.type) : 1.0
   let unit_modifier = 1.0
   if (effectiveness > 0 && tactic && army) {
@@ -293,7 +293,7 @@ const attack = (frontline: Frontline, roll: number, tactic_damage_multiplier: nu
 
 const PRECISION = 100000.0
 
-const precalculateDamage = (base_damage: number, terrains: TerrainDefinition[], unit: Unit) => (
+const precalculateDamage = (base_damage: number, terrains: Terrain[], unit: Cohort) => (
   PRECISION * base_damage
   * (1.0 + calculateValue(unit, UnitCalc.Discipline))
   * (1.0 + calculateValue(unit, UnitCalc.DamageDone))
@@ -301,7 +301,7 @@ const precalculateDamage = (base_damage: number, terrains: TerrainDefinition[], 
   * (unit.is_loyal ? 1.1 : 1.0)
 )
 
-const precalculateDamageReduction = (unit: Unit, settings: Settings) => (
+const precalculateDamageReduction = (unit: Cohort, settings: Settings) => (
   (1.0 + calculateExperienceReduction(settings, unit))
   * (1.0 + calculateValue(unit, UnitCalc.DamageTaken))
 )

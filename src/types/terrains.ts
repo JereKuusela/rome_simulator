@@ -1,5 +1,5 @@
 import { Definition } from 'types'
-import { BaseDefinitionValues, calculateValue } from 'definition_values'
+import { DefinitionValues, calculateValue } from 'definition_values'
 
 export enum TerrainType {
   Desert = 'Desert',
@@ -28,15 +28,15 @@ export enum TerrainCalc {
   Roll = 'Roll'
 }
 
-export type TerrainDefinitions = { [key in TerrainType]: TerrainDefinition }
+export type Terrains = { [key in TerrainType]: Terrain }
 
 export type TerrainValueType = TerrainCalc
 
-export interface TerrainDefinition extends Definition<TerrainType>, BaseDefinitionValues<TerrainValueType> {
+export interface Terrain extends Definition<TerrainType>, DefinitionValues<TerrainValueType> {
   location: LocationType
 }
 
-export const terrainValueToString = (definition: TerrainDefinition, type: TerrainValueType): string => {
+export const terrainValueToString = (definition: Terrain, type: TerrainValueType): string => {
   const value = calculateValue(definition, type)
   return String(value)
 }

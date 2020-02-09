@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal, Button, Grid } from 'semantic-ui-react'
-import { AppState, getParticipant, getBaseUnits, filterUnitTypesBySide, getUnitDefinitionsBySide, getUnitImages } from 'state'
+import { AppState, getParticipant, getBaseCohorts, filterUnitTypesBySide, getUnitDefinitionsBySide, getUnitImages } from 'state'
 import FastPlanner from 'components/FastPlanner'
 import ArmyCosts from 'components/ArmyCosts'
-import { ValuesType, UnitType, BaseReserve, Side, CountryName, BaseUnit, WearinessAttributes } from 'types'
+import { ValuesType, UnitType, BaseReserve, Side, CountryName, BaseCohort, WearinessAttributes } from 'types'
 import { mergeBaseUnitsWithDefinitions, getNextId } from 'army_utils'
 import WearinessRange from 'components/WearinessRange'
-import { doRemoveReserveUnits, doAddReserveUnits, changeWeariness, addReserveUnits, removeReserveUnits, clearUnits, invalidate } from 'reducers'
+import { changeWeariness, addToReserve, removeFromReserve, clearCohorts, invalidate } from 'reducers'
+import { removeFromReserve as removeReserve, addToReserve as addReserve } from 'managers/army'
 import { forEach, mapRange, toArr, round, randomWithinRange } from 'utils'
 import { addValues } from 'definition_values'
 
@@ -101,7 +102,10 @@ class ModalFastPlanner extends Component<IProps, IState> {
   editReserve = (reserve: BaseReserve, changes: Units, originals?: Units): BaseReserve => {
     const units = this.getUnitsToAdd(changes, originals)
     const types = this.getTypesToRemove(changes, originals)
-    return doRemoveReserveUnits(doAddReserveUnits(reserve, units), types)
+    const army = { reserve }
+    addReserve(army, units)
+    removeReserve(army, types)
+    return army.reserve
   }
 
   onValueChange = (side: Side, unit: UnitType, value: number) => {
@@ -125,7 +129,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
     units.map(unit => addValues(unit, ValuesType.LossModifier, 'Unit', this.generateLosses(values)))
   )
 
-  generateLosses = (values: WearinessAttributes): [string, number][] => toArr(values, (range, type ) => [type, round(randomWithinRange(range.min, range.max), 100)])
+  generateLosses = (values: WearinessAttributes): [string, number][] => toArr(values, (range, type) => [type, round(randomWithinRange(range.min, range.max), 100)])
 
   getTypesToRemove = (changes: Units, originals?: Units): UnitType[] => {
     let types: UnitType[] = []
@@ -137,16 +141,16 @@ class ModalFastPlanner extends Component<IProps, IState> {
     return types
   }
 
-  updateReserve = (name: CountryName, changes: Units, originals: Units, limits: WearinessAttributes) => {
-    const { mode, addReserveUnits, removeReserveUnits, invalidate } = this.props
+  updateReserve = (country: CountryName, changes: Units, originals: Units, limits: WearinessAttributes) => {
+    const { addToReserve, removeFromReserve, invalidate } = this.props
     const units = this.applyLosses(limits, this.getUnitsToAdd(changes, originals, true))
     const types = this.getTypesToRemove(changes, originals)
     if (units.length > 0)
-      addReserveUnits(mode, name, units)
+      addToReserve(country, units)
     if (types.length > 0)
-      removeReserveUnits(mode, name, types)
+      removeFromReserve(country, types)
     if (units.length > 0 || types.length > 0)
-      invalidate(mode)
+      invalidate()
   }
 
   onClose = (): void => {
@@ -157,21 +161,22 @@ class ModalFastPlanner extends Component<IProps, IState> {
     onClose()
   }
 
-  countUnits = (reserve: BaseUnit[], unit: UnitType): number => reserve.reduce((previous, current) => previous + (current && current.type === unit ? 1 : 0), 0)
+  countUnits = (reserve: BaseCohort[], unit: UnitType): number => reserve.reduce((previous, current) => previous + (current && current.type === unit ? 1 : 0), 0)
 
   clearUnits = (): void => {
-    const { mode, clearUnits, invalidate } = this.props
+    const { attacker, defender, clearCohorts, invalidate } = this.props
     this.setState({ changes_a: {} as Units, changes_d: {} as Units })
-    clearUnits(mode)
-    invalidate(mode)
+    clearCohorts(attacker)
+    clearCohorts(defender)
+    invalidate()
   }
 }
 
 const mapStateToProps = (state: AppState) => ({
   attacker: getParticipant(state, Side.Attacker).country,
   defender: getParticipant(state, Side.Defender).country,
-  base_units_a: getBaseUnits(state, Side.Attacker),
-  base_units_d: getBaseUnits(state, Side.Defender),
+  base_units_a: getBaseCohorts(state, Side.Attacker),
+  base_units_d: getBaseCohorts(state, Side.Defender),
   types_a: filterUnitTypesBySide(state, Side.Attacker),
   types_d: filterUnitTypesBySide(state, Side.Defender),
   definitions_a: getUnitDefinitionsBySide(state, Side.Attacker),
@@ -181,7 +186,7 @@ const mapStateToProps = (state: AppState) => ({
   weariness: state.settings.weariness
 })
 
-const actions = { addReserveUnits, removeReserveUnits, clearUnits, invalidate, changeWeariness }
+const actions = { addToReserve, removeFromReserve, clearCohorts, invalidate, changeWeariness }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

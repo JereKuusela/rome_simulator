@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { ValuesType, DefinitionType, CountryName, UnitType, Unit, UnitDeployment, UnitValueType } from 'types'
+import { ValuesType, DefinitionType, CountryName, UnitType, Cohort, UnitDeployment, UnitValueType } from 'types'
 import UnitDetail from 'components/UnitDetail'
 import { AppState, getUnitDefinition, mergeUnitTypes, filterTerrainTypes, getMode } from 'state'
-import { setUnitValue, changeUnitImage, changeUnitMode, changeUnitDeployment, toggleIsUnitLoyal, invalidateCountry } from 'reducers'
+import { setUnitValue, changeUnitImage, changeUnitMode, changeUnitDeployment, toggleUnitLoyality, invalidate } from 'reducers'
 
 
 const CUSTOM_VALUE_KEY = 'Custom'
@@ -11,7 +11,7 @@ const CUSTOM_VALUE_KEY = 'Custom'
 type Props = {
   country: CountryName | undefined
   unit_type: UnitType | undefined
-  changeType: (country: CountryName, old_type: UnitType, new_type: UnitType) => void
+  changeType: (old_type: UnitType, new_type: UnitType) => void
 }
 
 class ModalUnitDetail extends Component<IProps> {
@@ -24,7 +24,7 @@ class ModalUnitDetail extends Component<IProps> {
         mode={mode}
         terrain_types={this.props.terrain_types}
         custom_value_key={CUSTOM_VALUE_KEY}
-        unit={unit as Unit}
+        unit={unit as Cohort}
         unit_types={this.props.unit_types}
         onCustomBaseValueChange={this.setBaseValue}
         onCustomModifierValueChange={this.setModifierValue}
@@ -40,9 +40,9 @@ class ModalUnitDetail extends Component<IProps> {
   }
 
   changeType = (type: UnitType) => {
-    const { changeType, invalidateCountry, country, unit_type } = this.props
-    changeType(country!, unit_type!, type)
-    invalidateCountry(country!)
+    const { changeType, invalidate, unit_type } = this.props
+    changeType(unit_type!, type)
+    invalidate()
   }
 
   setBaseValue = (key: string, attribute: UnitValueType, value: number) => this.setValue(ValuesType.Base, key, attribute, value)
@@ -50,33 +50,33 @@ class ModalUnitDetail extends Component<IProps> {
   setLossValue = (key: string, attribute: UnitValueType, value: number) => this.setValue(ValuesType.Loss, key, attribute, value)
 
   setValue = (type: ValuesType, key: string, attribute: UnitValueType, value: number) => {
-    const { setValue, invalidateCountry, country, unit_type } = this.props
-    setValue(country!, type, unit_type!, key, attribute, value)
-    invalidateCountry(country!)
+    const { setUnitValue, invalidate, unit_type } = this.props
+    setUnitValue(unit_type!, type, key, attribute, value)
+    invalidate()
   }
 
   changeImage = (image: string) => {
-    const { changeImage, invalidateCountry, country, unit_type } = this.props
-    changeImage(country!, unit_type!, image)
-    invalidateCountry(country!)
+    const { changeUnitImage, invalidate, unit_type } = this.props
+    changeUnitImage(unit_type!, image)
+    invalidate()
   }
 
   changeMode = (mode: DefinitionType) => {
-    const { changeMode, invalidateCountry, country, unit_type } = this.props
-    changeMode(country!, unit_type!, mode)
-    invalidateCountry(country!)
+    const { changeUnitMode, invalidate, unit_type } = this.props
+    changeUnitMode(unit_type!, mode)
+    invalidate()
   }
 
   changeDeployment = (deployment: UnitDeployment) => {
-    const { changeDeployment, invalidateCountry, country, unit_type } = this.props
-    changeDeployment(country!, unit_type!, deployment)
-    invalidateCountry(country!)
+    const { changeUnitDeployment, invalidate, unit_type } = this.props
+    changeUnitDeployment(unit_type!, deployment)
+    invalidate()
   }
 
   toggleIsLoyal = () => {
-    const { toggleIsLoyal, invalidateCountry, country, unit_type } = this.props
-    toggleIsLoyal(country!, unit_type!)
-    invalidateCountry(country!)
+    const { toggleUnitLoyality, invalidate, unit_type } = this.props
+    toggleUnitLoyality(unit_type!)
+    invalidate()
   }
 }
 
@@ -87,7 +87,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   mode: getMode(state)
 })
 
-const actions = { setValue: setUnitValue, changeImage: changeUnitImage, changeMode: changeUnitMode, changeDeployment: changeUnitDeployment, toggleIsLoyal: toggleIsUnitLoyal, invalidateCountry }
+const actions = { setUnitValue, changeUnitImage, changeUnitMode, changeUnitDeployment, toggleUnitLoyality, invalidate }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

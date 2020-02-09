@@ -63,19 +63,19 @@ export type UnitDefinitionValues = { [key in UnitType]: UnitDefinitionValue }
 export type UnitDefinitionValue = DefinitionValues<UnitValueType>
 
 
-export interface BaseUnit extends DefinitionValues<UnitValueType> {
+export interface BaseCohort extends DefinitionValues<UnitValueType> {
   type: UnitType
   id: number
   is_loyal?: boolean
 }
 
-export interface UnitDefinition extends Definition<UnitType>, DefinitionValues<UnitValueType> {
+export interface Unit extends Definition<UnitType>, DefinitionValues<UnitValueType> {
   deployment: UnitDeployment
   mode: DefinitionType
   is_loyal?: boolean
 }
 
-export interface Unit extends BaseUnit, UnitDefinition { }
+export interface Cohort extends BaseCohort, Unit { }
 
 
 export const unitValueToString = (definition: DefinitionValues<UnitValueType>, type: UnitValueType): string => {
@@ -97,5 +97,5 @@ export const unitValueToString = (definition: DefinitionValues<UnitValueType>, t
   }
 }
 
-export type UnitState = { [key in CountryName]: UnitDefinitions }
-export type UnitDefinitions = { [key in UnitType]: UnitDefinition }
+export type UnitState = { [key in CountryName]: Units }
+export type Units = { [key in UnitType]: Unit }

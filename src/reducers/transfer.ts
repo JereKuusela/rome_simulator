@@ -1,55 +1,20 @@
-import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
-import { AppState, resetMissing } from 'state'
-import { ExportKey, ExportKeys } from 'types'
+import * as manager from 'managers/transfer'
+import { TransferState } from 'types'
+import { getDefaultTransferState } from 'data'
+import { makeContainerReducer, ActionToFunction, makeActionRemoveFirst } from './utils'
+import { AppState } from 'state'
 
-export const transferState = {
-  export_keys: {} as ExportKeys,
-  reset_missing: false
-}
+const transferMapping: ActionToFunction<TransferState> = {}
 
+export const setExportKey = makeActionRemoveFirst(manager.setExportKey, transferMapping)
+export const setResetMissing = makeActionRemoveFirst(manager.setResetMissing, transferMapping)
 
-class TransferReducer extends ImmerReducer<typeof transferState> {
+export const transferReducer = makeContainerReducer(getDefaultTransferState(), transferMapping)
 
-  setExportKey(key: ExportKey, value: boolean) {
-    this.draftState.export_keys[key] = value
-  }
+const importMapping: ActionToFunction<AppState> = {}
 
-  setResetMissing(value: boolean) {
-    this.draftState.reset_missing = value
-  }
-}
-const transferActions = createActionCreators(TransferReducer)
+export const importState = makeActionRemoveFirst(manager.importState, importMapping)
+export const resetMissingState = makeActionRemoveFirst(manager.resetMissingState, importMapping)
+export const resetState = makeActionRemoveFirst(manager.resetState, importMapping)
 
-export const setResetMissing = transferActions.setResetMissing
-export const setExportKey = transferActions.setExportKey
-
-export const transferReducer = createReducerFunction(TransferReducer, transferState)
-
-class ImportReducer extends ImmerReducer<AppState> {
-
-  importState(state: any, reset_missing: boolean) {
-    if (reset_missing)
-      this.draftState = { ...this.state, transfer: this.state.transfer, ...state }
-    else
-      // Bit complicated logic needed to allow adding and partially updating definitions.
-      // TODO: this.state vs state really messy.
-      this.draftState = {
-        ...this.state,
-        ...state,
-        tactics: state.tactics ? { ...this.state.tactics, ...state.tactics } : this.state.tactics,
-        terrains: state.terrains ? { ...this.state.terrains, ...state.terrains } : this.state.terrains,
-        units: state.units ? { ...this.state.units, ...state.units } : this.state.units
-      }
-  }
-
-  reset() {
-    this.draftState = { ...this.state, ...resetMissing({} as any) }
-  }
-}
-
-const importActions = createActionCreators(ImportReducer)
-
-export const importState = importActions.importState
-export const reset = importActions.reset
-
-export const importReducer = createReducerFunction(ImportReducer, {} as any)
+export const importReducer = makeContainerReducer({} as AppState, importMapping)

@@ -1,5 +1,5 @@
 import { ArmyForCombat } from 'state'
-import { TerrainDefinition, UnitType, Setting, TacticCalc, BaseUnits, Unit, UnitCalc, Side, Settings } from 'types'
+import { Terrain, UnitType, Setting, TacticCalc, BaseCohorts, Cohort, UnitCalc, Side, Settings } from 'types'
 import { calculateTotalRoll } from './combat_utils'
 import { calculateValue } from 'definition_values'
 import { CombatParticipant, getCombatUnit, CombatUnits, Frontline, Defeated, doBattleFast, Reserve, getUnitDefinition, CombatUnitTypes } from './combat'
@@ -60,7 +60,7 @@ export type ResourceLosses = {
 let interruptSimulation = false
 
 
-export const doConversion = (attacker: ArmyForCombat, defender: ArmyForCombat, terrains: TerrainDefinition[], unit_types: UnitType[], settings: Settings) => {
+export const doConversion = (attacker: ArmyForCombat, defender: ArmyForCombat, terrains: Terrain[], unit_types: UnitType[], settings: Settings) => {
   const dice = settings[Setting.DiceMaximum] - settings[Setting.DiceMinimum] + 1
   const base_damages_a = getBaseDamages(settings, dice, calculateTotalRoll(0, terrains, attacker.general, defender.general))
   const base_damages_d = getBaseDamages(settings, dice, calculateTotalRoll(0, [], defender.general, attacker.general))
@@ -229,10 +229,10 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
   worker()
 }
 
-export const convertUnits = (units: BaseUnits, settings: Settings, casualties_multiplier: number, base_damages: number[], terrains: TerrainDefinition[], unit_types: UnitType[]) => ({
-  frontline: units.frontline.map(unit => getCombatUnit(settings, casualties_multiplier, base_damages, terrains, unit_types, unit as Unit)),
-  reserve: units.reserve.map(unit => getCombatUnit(settings, casualties_multiplier, base_damages, terrains, unit_types, unit as Unit)!),
-  defeated: units.defeated.map(unit => getCombatUnit(settings, casualties_multiplier, base_damages, terrains, unit_types, unit as Unit)!),
+export const convertUnits = (units: BaseCohorts, settings: Settings, casualties_multiplier: number, base_damages: number[], terrains: Terrain[], unit_types: UnitType[]) => ({
+  frontline: units.frontline.map(unit => getCombatUnit(settings, casualties_multiplier, base_damages, terrains, unit_types, unit as Cohort)),
+  reserve: units.reserve.map(unit => getCombatUnit(settings, casualties_multiplier, base_damages, terrains, unit_types, unit as Cohort)!),
+  defeated: units.defeated.map(unit => getCombatUnit(settings, casualties_multiplier, base_damages, terrains, unit_types, unit as Cohort)!),
   tactic_bonus: 0
 })
 

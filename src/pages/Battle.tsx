@@ -9,7 +9,7 @@ import {
 import ConfirmationButton from 'components/ConfirmationButton'
 import Dropdown from 'components/Utils/Dropdown'
 import StyledNumber from 'components/Utils/StyledNumber'
-import ModalArmyUnitDetail from 'containers/modal/ModalArmyUnitDetail'
+import ModalCohortDetail from 'containers/modal/ModalCohortDetail'
 import ModalFastPlanner from 'containers/modal/ModalFastPlanner'
 import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from 'containers/modal/ModalUnitSelector'
 import PreferredUnitTypes from 'containers/PreferredUnitTypes'
@@ -23,13 +23,12 @@ import { addSign } from 'formatters'
 import IconDice from 'images/chance.png'
 import IconGeneral from 'images/military_power.png'
 import IconTerrain from 'images/terrain.png'
-import { GeneralStats } from 'managers/army_manager'
 import {
-    invalidate, invalidateCountry, selectArmy, selectCohort, setFlankSize, setRoll, toggleRandomRoll,
-    undo, battle, refreshBattle, setSeed, setGeneralMartial, importState
+    invalidate, selectArmy, selectCohort, setRoll, toggleRandomRoll,
+    undo, battle, refreshBattle, setSeed, setGeneralMartial, resetState
 } from 'reducers'
-import { AppState, getBattle, getCountry, getGeneral, getParticipant, getSettings, resetMissing } from 'state'
-import { ArmyType, CountryName, Participant, Setting, Side, Mode } from 'types'
+import { AppState, getBattle, getCountry, getGeneralStats, getParticipant, getSettings, getCountries } from 'state'
+import { ArmyType, CountryName, Participant, Setting, Side, GeneralStats } from 'types'
 import { keys } from 'utils'
 
 interface IState {
@@ -68,9 +67,9 @@ class Battle extends Component<IProps, IState> {
   openFastPlanner = (): void => this.setState({ modal_fast_planner_open: true })
 
   render() {
-    const { attacker, defender, general_a, general_d, round, outdated, is_undo, fight_over, mode, refreshBattle } = this.props
+    const { attacker, defender, general_a, general_d, round, outdated, is_undo, fight_over, refreshBattle } = this.props
     if (outdated)
-      refreshBattle(mode)
+      refreshBattle()
     return (
       <>
         <ModalUnitSelector
@@ -81,7 +80,7 @@ class Battle extends Component<IProps, IState> {
           open={this.state.modal_fast_planner_open}
           onClose={this.closeModal}
         />
-        <ModalArmyUnitDetail
+        <ModalCohortDetail
           country={this.state.modal_army_unit_info ? this.state.modal_army_unit_info.country : '' as CountryName}
           id={this.state.modal_army_unit_info ? this.state.modal_army_unit_info.id : -1}
           side={this.state.modal_army_unit_info ? this.state.modal_army_unit_info.side : Side.Attacker}
@@ -101,10 +100,10 @@ class Battle extends Component<IProps, IState> {
               <WinRate />
             </Grid.Column>
             <Grid.Column floated='right' textAlign='right' width='4'>
-              <Button circular icon='angle double left' color='black' size='huge' disabled={!is_undo} onClick={() => this.props.undo(this.props.mode, 10)} />
-              <Button circular icon='angle left' color='black' size='huge' disabled={!is_undo} onClick={() => this.props.undo(this.props.mode, 1)} />
-              <Button circular icon='angle right' color='black' size='huge' disabled={fight_over} onClick={() => this.props.battle(this.props.mode, 1)} />
-              <Button circular icon='angle double right' color='black' size='huge' disabled={fight_over} onClick={() => this.props.battle(this.props.mode, 10)} />
+              <Button circular icon='angle double left' color='black' size='huge' disabled={!is_undo} onClick={() => this.props.undo(10)} />
+              <Button circular icon='angle left' color='black' size='huge' disabled={!is_undo} onClick={() => this.props.undo(1)} />
+              <Button circular icon='angle right' color='black' size='huge' disabled={fight_over} onClick={() => this.props.battle(1)} />
+              <Button circular icon='angle double right' color='black' size='huge' disabled={fight_over} onClick={() => this.props.battle(10)} />
             </Grid.Column>
 
           </Grid.Row>
@@ -216,7 +215,7 @@ class Battle extends Component<IProps, IState> {
               <ConfirmationButton
                 negative text='Reset all data'
                 message='Do you really want to reset all data?'
-                onConfirm={() => this.props.importState(resetMissing({} as any), true)}
+                onConfirm={() => this.props.resetState()}
               />
             </Grid.Column>
           </Grid.Row>
@@ -240,7 +239,7 @@ class Battle extends Component<IProps, IState> {
           color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={side}
           onClick={(column, id) => this.openUnitModal(side, ArmyType.Frontline, country, column, id)}
-          onRemove={column => this.props.removeUnit(this.props.mode, country, ArmyType.Frontline, column)}
+          onRemove={column => this.props.removeUnit(country, ArmyType.Frontline, column)}
           row_width={Math.max(30, combat_width)}
           reverse={side === Side.Attacker}
           type={ArmyType.Frontline}
@@ -260,7 +259,7 @@ class Battle extends Component<IProps, IState> {
       <div key={side}>
         {base_damage.toFixed(3)} :
         <span style={{ paddingLeft: '1em' }} /><Image src={IconDice} avatar />
-        {is_random ? roll : <Input size='mini' style={{ width: 100 }} type='number' value={roll} onChange={(_, data) => this.props.setRoll(this.props.mode, side, Number(data.value))} />}
+        {is_random ? roll : <Input size='mini' style={{ width: 100 }} type='number' value={roll} onChange={(_, data) => this.props.setRoll(side, Number(data.value))} />}
         {general_effect !== 0 ?
           <span style={{ paddingLeft: '1em' }}>
             <Image src={IconGeneral} avatar />
@@ -279,7 +278,7 @@ class Battle extends Component<IProps, IState> {
 
   renderIsRollRandom = (side: Side, is_random: boolean) => {
     return (
-      <Checkbox toggle checked={is_random} onClick={() => this.props.toggleRandomRoll(this.props.mode, side)} />
+      <Checkbox toggle checked={is_random} onClick={() => this.props.toggleRandomRoll(side)} />
     )
   }
 
@@ -291,7 +290,7 @@ class Battle extends Component<IProps, IState> {
           color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={side}
           onClick={(column, id) => this.openUnitModal(side, ArmyType.Reserve, country, column, id)}
-          onRemove={column => this.props.removeUnit(this.props.mode, country, ArmyType.Reserve, column)}
+          onRemove={column => this.props.removeUnit(country, ArmyType.Reserve, column)}
           row_width={30}
           reverse={false}
           type={ArmyType.Reserve}
@@ -310,7 +309,7 @@ class Battle extends Component<IProps, IState> {
           color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={side}
           onClick={(column, id) => this.openUnitModal(side, ArmyType.Defeated, country, column, id)}
-          onRemove={column => this.props.removeUnit(this.props.mode, country, ArmyType.Defeated, column)}
+          onRemove={column => this.props.removeUnit(country, ArmyType.Defeated, column)}
           row_width={30}
           reverse={false}
           type={ArmyType.Defeated}
@@ -329,9 +328,9 @@ class Battle extends Component<IProps, IState> {
         </Table.Cell>
         <Table.Cell collapsing>
           <Dropdown
-            values={keys(this.props.armies)}
+            values={keys(this.props.countries)}
             value={participant.country}
-            onChange={name => this.props.selectArmy(this.props.mode, side, name)}
+            onChange={name => this.props.selectArmy(side, name)}
           />
         </Table.Cell>
         <Table.Cell collapsing>
@@ -361,16 +360,16 @@ class Battle extends Component<IProps, IState> {
 
   setSeed = (value: string): void => {
     if (!isNaN(Number(value)))
-      this.props.setSeed(this.props.mode, Number(value))
+      this.props.setSeed(Number(value))
   }
 }
 
 const mapStateToProps = (state: AppState) => ({
   attacker: getParticipant(state, Side.Attacker),
   defender: getParticipant(state, Side.Defender),
-  general_a: getGeneral(state, getCountry(state, Side.Attacker)),
-  general_d: getGeneral(state, getCountry(state, Side.Defender)),
-  armies: getBattle(state).armies,
+  general_a: getGeneralStats(state, getCountry(state, Side.Attacker)),
+  general_d: getGeneralStats(state, getCountry(state, Side.Defender)),
+  countries: getCountries(state),
   is_undo: getBattle(state).round > -1,
   round: getBattle(state).round,
   seed: getBattle(state).seed,
@@ -379,25 +378,22 @@ const mapStateToProps = (state: AppState) => ({
   terrains: state.terrains,
   tactics: state.tactics,
   fight_over: getBattle(state).fight_over,
-  combat: getSettings(state),
-  mode: state.settings.mode,
-  countries: state.countries
+  combat: getSettings(state)
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  battle: (mode: Mode, steps: number) => dispatch(battle(mode, steps)),
-  undo: (mode: Mode, steps: number) => dispatch(undo(mode, steps)),
-  toggleRandomRoll: (mode: Mode, participant: Side) => dispatch(toggleRandomRoll(mode, participant)),
-  setRoll: (mode: Mode, participant: Side, roll: number) => dispatch(setRoll(mode, participant, roll)),
-  setGeneralMartial: (name: CountryName, skill: number) => dispatch(setGeneralMartial(name, skill)) && dispatch(invalidateCountry(name)),
-  setFlankSize: (mode: Mode, name: CountryName, size: number) => dispatch(setFlankSize(mode, name, size)) && dispatch(invalidate(mode)),
-  selectArmy: (mode: Mode, type: Side, name: CountryName) => dispatch(selectArmy(mode, type, name)) && dispatch(invalidate(mode)),
-  removeUnit: (mode: Mode, name: CountryName, type: ArmyType, column: number) => (
-    dispatch(selectCohort(mode, name, type, column, null))
+  battle: (steps: number) => dispatch(battle(steps)),
+  undo: (steps: number) => dispatch(undo(steps)),
+  toggleRandomRoll: (side: Side) => dispatch(toggleRandomRoll(side)),
+  setRoll: (participant: Side, roll: number) => dispatch(setRoll(participant, roll)),
+  setGeneralMartial: (country: CountryName, skill: number) => dispatch(setGeneralMartial(country, skill)) && dispatch(invalidate()),
+  selectArmy: (type: Side, country: CountryName) => dispatch(selectArmy(type, country)) && dispatch(invalidate()),
+  removeUnit: (country: CountryName, type: ArmyType, column: number) => (
+    dispatch(selectCohort(country, type, column, null))
   ),
-  setSeed: (mode: Mode, seed: number) => dispatch(setSeed(mode, seed)) && dispatch(invalidate(mode)),
-  refreshBattle: (mode: Mode) => dispatch(refreshBattle(mode)),
-  importState: (data: {}, reset_missing: boolean) => dispatch(importState(data, reset_missing))
+  setSeed: (seed: number) => dispatch(setSeed(seed)) && dispatch(invalidate()),
+  refreshBattle: () => dispatch(refreshBattle()),
+  resetState: () => dispatch(resetState())
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

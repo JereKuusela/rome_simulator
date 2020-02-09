@@ -7,13 +7,13 @@ import DetailDropdownRow from './Detail/DetailDropdownRow'
 import Input from './Utils/Input'
 import Headers from './Utils/Headers'
 
-import { DefinitionType, ValuesType, TerrainDefinition, TerrainType, LocationType, TerrainCalc, TerrainValueType, terrainValueToString } from 'types'
+import { DefinitionType, ValuesType, Terrain, TerrainType, LocationType, TerrainCalc, TerrainValueType, terrainValueToString } from 'types'
 import { values } from 'utils'
 import { getValue, explainShort } from 'definition_values'
 
 interface IProps {
   custom_value_key: string
-  terrain: TerrainDefinition
+  terrain: Terrain
   onCustomBaseValueChange: (key: string, attribute: TerrainValueType, value: number) => void
   onTypeChange: (type: TerrainType) => void
   onLocationChange: (location: LocationType) => void
@@ -48,7 +48,7 @@ export default class TerrainDetail extends Component<IProps> {
     )
   }
 
-  renderRow = (tactic: TerrainDefinition, attribute: TerrainValueType) => {
+  renderRow = (tactic: Terrain, attribute: TerrainValueType) => {
     const { custom_value_key, onCustomBaseValueChange } = this.props
     const base_value = getValue(ValuesType.Base, tactic, attribute, custom_value_key)
 

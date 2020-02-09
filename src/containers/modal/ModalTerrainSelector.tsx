@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
-import { AppState, filterTerrains, getMode } from 'state'
+import { AppState, filterTerrains } from 'state'
 import ItemSelector, { SelectorAttributes } from 'components/ItemSelector'
 import StyledNumber from 'components/Utils/StyledNumber'
 import { LocationType, TerrainType, TerrainCalc } from 'types'
@@ -42,17 +42,16 @@ class ModalTerrainSelector extends Component<IProps> {
   }
 
   selectTerrain = (terrain_type: TerrainType | null): void => {
-    const { selectTerrain, invalidate, onClose, mode, index } = this.props
+    const { selectTerrain, invalidate, onClose, index } = this.props
     if (index !== undefined && terrain_type)
-      selectTerrain(mode, index, terrain_type)
-    invalidate(mode)
+      selectTerrain(index, terrain_type)
+    invalidate()
     onClose()
   }
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  terrains: filterTerrains(state, props.location),
-  mode: getMode(state)
+  terrains: filterTerrains(state, props.location)
 })
 
 const actions = { selectTerrain, invalidate }

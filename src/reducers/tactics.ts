@@ -1,42 +1,22 @@
-import { ImmerReducer, createActionCreators, createReducerFunction } from 'immer-reducer'
-import { ValuesType, DefinitionType, TacticType, TacticValueType, TacticDefinitions } from 'types'
-import { addValues } from 'definition_values'
-import { getTacticIcon, getDefaultTacticDefinitions } from 'data'
+import { getDefaultTacticState } from 'data'
+import { Tactics, Tactic, TacticType } from 'types'
+import * as manager from 'managers/tactics'
+import { makeActionRemoveFirst, makeContainerReducer, ActionToFunction, makeActionReplaceFirst, makeEntityReducer, compose } from './utils'
 
-class TacticsReducer extends ImmerReducer<TacticDefinitions> {
+const tacticsMapping: ActionToFunction<Tactics> = {}
 
-  setBaseValue(type: TacticType, key: string, attribute: TacticValueType, value: number) {
-    this.draftState[type] = addValues(this.state[type], ValuesType.Base, key, [[attribute, value]])
-  }
+export const createTactic = makeActionRemoveFirst(manager.createTactic, tacticsMapping)
+export const setTacticType = makeActionRemoveFirst(manager.setTacticType, tacticsMapping)
+export const deleteTactic = makeActionRemoveFirst(manager.deleteTactic, tacticsMapping)
 
-  deleteTactic(type: TacticType) {
-    delete this.draftState[type]
-  }
+const tactics = makeContainerReducer(getDefaultTacticState(), tacticsMapping)
 
-  addTactic(type: TacticType, mode: DefinitionType) {
-    this.draftState[type] = { type, mode, image: getTacticIcon(type) }
-  }
+const tacticMapping: ActionToFunction<Tactic, TacticType> = {}
 
-  changeType(old_type: TacticType, type: TacticType) {
-    delete Object.assign(this.draftState, {[type]: this.draftState[old_type] })[old_type]
-  }
+export const setTacticBaseValue = makeActionReplaceFirst(manager.setTacticBaseValue, tacticMapping)
+export const setTacticImage = makeActionReplaceFirst(manager.setTacticImage, tacticMapping)
+export const setTacticMode = makeActionReplaceFirst(manager.setTacticMode, tacticMapping)
 
-  changeImage(type: TacticType, image: string) {
-    this.draftState[type].image = image
-  }
+const tactic = makeEntityReducer(getDefaultTacticState(), tacticMapping)
 
-  changeMode(type: TacticType, mode: DefinitionType) {
-    this.draftState[type].mode = mode
-  }
-}
-
-const actions = createActionCreators(TacticsReducer)
-
-export const setTacticBaseValue = actions.setBaseValue
-export const deleteTactic = actions.deleteTactic
-export const addTactic = actions.addTactic
-export const changeTacticType = actions.changeType
-export const changeTacticImage = actions.changeImage
-export const changeTacticMode = actions.changeMode
-
-export const tacticsReducer = createReducerFunction(TacticsReducer, getDefaultTacticDefinitions())
+export const tacticsReducer = compose(tactic, tactics)

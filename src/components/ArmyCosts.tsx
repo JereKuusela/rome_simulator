@@ -8,7 +8,7 @@ import IconStrength from 'images/naval_combat.png'
 import IconFoodConsumption from 'images/food.png'
 import IconFoodStorage from 'images/food_capacity.png'
 
-import { DefinitionType, UnitCalc, Unit, FrontLine, Reserve, Defeated } from 'types'
+import { DefinitionType, UnitCalc, Cohort, FrontLine, Reserve, Defeated } from 'types'
 import { calculateValueWithoutLoss } from 'definition_values'
 import { toNumber, strengthToValue } from 'formatters'
 
@@ -78,7 +78,7 @@ export default class ArmyCosts extends Component<IProps> {
       + defeated.reduce((previous, current) => previous + this.reduce(current, attribute1, attribute2), 0)
   }
 
-  reduce = (current: Unit, attribute1: UnitCalc, attribute2: UnitCalc | undefined) => (
+  reduce = (current: Cohort, attribute1: UnitCalc, attribute2: UnitCalc | undefined) => (
     Math.floor(100 * calculateValueWithoutLoss(current, attribute1) * (attribute2 ? calculateValueWithoutLoss(current, attribute2) : 1))/ 100.0
   )
 

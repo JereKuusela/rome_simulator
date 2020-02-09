@@ -39,16 +39,16 @@ class ModalUnitSelector extends Component<IProps> {
   }
 
   selectUnit = (type: UnitType) => {
-    if (this.props.info)
-      this.props.selectUnit(this.props.mode, this.props.info.country, this.props.info.type, this.props.info.index, { id: getNextId(), type })
-    this.props.invalidate(this.props.mode)
+    const { info } = this.props
+    if (info)
+      this.props.selectUnit(info.country, info.type, info.index, { id: getNextId(), type })
+    this.props.invalidate()
     this.props.onClose()
   }
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  units: props.info && getUnitDefinitions(state, props.info.country),
-  mode: state.settings.mode
+  units: props.info && getUnitDefinitions(state, props.info.country)
 })
 
 const actions = { selectUnit: selectCohort, invalidate }

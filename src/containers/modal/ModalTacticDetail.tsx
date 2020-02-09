@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { AppState, filterTactics, filterTacticTypes, getUnitImages, mergeUnitTypes } from 'state'
 import TacticDetail from 'components/TacticDetail'
 import { Mode, DefinitionType, TacticType, TacticValueType } from 'types'
-import { setTacticBaseValue, changeTacticImage, changeTacticMode, invalidate } from 'reducers'
+import { setTacticBaseValue, setTacticImage, setTacticMode, invalidate } from 'reducers'
 
 const CUSTOM_VALUE_KEY = 'Custom'
 
@@ -39,10 +39,10 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchToProps = (dispatch: any) => ({
   setBaseValue: (mode: Mode, tactic: TacticType,  key: string, attribute: TacticValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setTacticBaseValue(tactic, key, attribute, value)) && dispatch(invalidate(mode))
+    !Number.isNaN(value) && dispatch(setTacticBaseValue(tactic, key, attribute, value)) && dispatch(invalidate())
   ),
-  changeImage: (type: TacticType, image: string) => dispatch(changeTacticImage(type, image)),
-  changeMode: (type: TacticType, mode: DefinitionType) => dispatch(changeTacticMode(type, mode))
+  changeImage: (type: TacticType, image: string) => dispatch(setTacticImage(type, image)),
+  changeMode: (type: TacticType, mode: DefinitionType) => dispatch(setTacticMode(type, mode))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {

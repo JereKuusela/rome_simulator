@@ -1,3 +1,4 @@
+export * from './army'
 export * from './battle'
 export * from './combat'
 export * from './countries'

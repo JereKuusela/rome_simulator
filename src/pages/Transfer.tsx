@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { AppState, resetMissing, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits, setIds } from 'state'
 import { values, keys } from 'utils'
 import { ExportKey } from 'types'
-import { exportState, saveToFile } from 'managers/transfer_manager'
+import { exportState, saveToFile } from 'managers/transfer'
 import ConfirmationButton from 'components/ConfirmationButton'
 import { setExportKey, setResetMissing, importState } from 'reducers'
 
@@ -133,10 +133,10 @@ const mapDispatchToProps = (dispatch: any) => ({
         data = '{}'
       let json = JSON.parse(data)
       json.transfer = undefined
+      json.countries = json.countries && setIds(json.countries)
       json.tactics = json.tactics && restoreBaseTactics(json.tactics)
       json.terrains = json.terrains && restoreBaseTerrains(json.terrains)
       json.units = json.units && restoreBaseUnits(json.units)
-      json.battle = json.battle && setIds(json.battle)
       if (reset_missing)
         resetMissing(json)
       keys(json).filter(key => !json[key]).forEach(key => delete json[key])

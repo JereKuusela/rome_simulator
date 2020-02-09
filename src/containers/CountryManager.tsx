@@ -26,7 +26,7 @@ class CountryManager extends Component<IProps, IState> {
   initialState = { open_create_country: false, open_delete_country: false, open_edit_country: false }
 
   render() {
-    const { createCountry, countries, changeCountryName, selected_country, deleteCountry, selectCountry, children } = this.props
+    const { countries, selected_country, selectCountry, children } = this.props
     const { open_create_country, open_edit_country, open_delete_country } = this.state
     return (
       <Grid>
@@ -34,7 +34,7 @@ class CountryManager extends Component<IProps, IState> {
           value={'' as CountryName}
           selected={'' as CountryName}
           open={open_create_country}
-          onSuccess={createCountry}
+          onSuccess={this.createCountry}
           onClose={this.onClose}
           items={keys(countries)}
           message='New country'
@@ -44,7 +44,7 @@ class CountryManager extends Component<IProps, IState> {
         />
         <ValueModal
           open={open_edit_country}
-          onSuccess={name => changeCountryName(selected_country, name)}
+          onSuccess={this.changeCountryName}
           onClose={this.onClose}
           message='Rename country'
           button_message='Edit'
@@ -53,7 +53,7 @@ class CountryManager extends Component<IProps, IState> {
         <Confirmation
           open={open_delete_country}
           onClose={this.onClose}
-          onConfirm={() => deleteCountry(selected_country)}
+          onConfirm={this.deleteCountry}
           message={'Are you sure you want to remove country ' + selected_country + ' ?'}
         />
         <Grid.Row columns='5'>
@@ -99,6 +99,24 @@ class CountryManager extends Component<IProps, IState> {
   }
 
   onClose = () => this.setState(this.initialState)
+
+  createCountry = (country: CountryName, source_country?: CountryName) => {
+    const { selectCountry, createCountry } = this.props
+    createCountry(country, source_country)
+    selectCountry(country)
+  }
+
+  deleteCountry = () => {
+    const { selectCountry, deleteCountry, selected_country } = this.props
+    deleteCountry(selected_country)
+    selectCountry('' as CountryName)
+  }
+
+  changeCountryName = (country: CountryName) => {
+    const { selectCountry, changeCountryName, selected_country } = this.props
+    changeCountryName(selected_country, country)
+    selectCountry(country)
+  }
 }
 
 const mapStateToProps = (state: AppState) => ({

@@ -1,6 +1,6 @@
 
 import { sumBy } from 'lodash'
-import { TerrainDefinition, TerrainCalc, Setting, UnitCalc, Settings, UnitDefinition } from 'types'
+import { Terrain, TerrainCalc, Setting, UnitCalc, Settings, Unit } from 'types'
 import { calculateValue } from 'definition_values'
 
 /**
@@ -12,7 +12,7 @@ export const calculateRollModifierFromGenerals = (skill: number, enemy_skill: nu
 /**
  * Calculates the roll modifier from terrains.
  */
-export const calculateRollModifierFromTerrains = (terrains: TerrainDefinition[]): number => sumBy(terrains, terrain => calculateValue(terrain, TerrainCalc.Roll))
+export const calculateRollModifierFromTerrains = (terrains: Terrain[]): number => sumBy(terrains, terrain => calculateValue(terrain, TerrainCalc.Roll))
 
 /**
  * Modifies a dice roll with terrains and general skill levels.
@@ -21,7 +21,7 @@ export const calculateRollModifierFromTerrains = (terrains: TerrainDefinition[])
  * @param general Skill level of own general.
  * @param opposing_general Skill level of the enemy general.
  */
-export const calculateTotalRoll = (roll: number, terrains: TerrainDefinition[], general: number, opposing_general: number): number => {
+export const calculateTotalRoll = (roll: number, terrains: Terrain[], general: number, opposing_general: number): number => {
   const modifier_terrain = calculateRollModifierFromTerrains(terrains)
   const modifier_effect = calculateRollModifierFromGenerals(general, opposing_general)
   return roll + modifier_terrain + modifier_effect
@@ -39,7 +39,7 @@ export const calculateBaseDamage = (roll: number, settings: Settings): number =>
   return Math.min(max_damage, base_damage + roll_damage * roll)
 }
 
-export const calculateExperienceReduction = (settings: Settings, target: UnitDefinition) => {
+export const calculateExperienceReduction = (settings: Settings, target: Unit) => {
   let damage_reduction_per_experience = settings[Setting.ExperienceDamageReduction]
   // Bug in game which makes morale damage taken and strength damage taken affect damage reduction from experience.
   if (!settings[Setting.FixExperience])

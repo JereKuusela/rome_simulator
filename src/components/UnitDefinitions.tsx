@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { Image, Table, List, Icon } from 'semantic-ui-react'
 import { sortBy, toNumber } from 'lodash'
 
-import { Mode, DefinitionType, CountryName, UnitType, TerrainType, UnitDefinition, UnitCalc, UnitValueType, UnitDefinitions as Units } from 'types'
+import { Mode, DefinitionType, CountryName, UnitType, TerrainType, Unit, UnitCalc, UnitValueType, Units } from 'types'
 import { toArr, getImage } from 'utils'
-import { unitSorter } from 'managers/army_manager'
+import { unitSorter } from 'managers/army'
 import { mergeValues, calculateValue, calculateBase, calculateModifier, calculateLoss } from 'definition_values'
 import { toPercent, toManpower, toSignedPercent, hideZero } from 'formatters'
 
@@ -25,8 +25,8 @@ interface IProps {
   images: { [key in UnitType]: string[] }
   unit_types: UnitType[]
   terrains: TerrainType[]
-  base_definition: UnitDefinition
-  onRowClick: (unit: UnitDefinition) => void
+  base_definition: Unit
+  onRowClick: (unit: Unit) => void
 }
 
 // Display component for showing unit definitions for an army.
@@ -95,7 +95,7 @@ export default class UnitDefinitions extends Component<IProps> {
     )
   }
 
-  renderRow = (definition: UnitDefinition) => {
+  renderRow = (definition: Unit) => {
     const unit = mergeValues(definition, this.props.base_definition)
     return (
       <Table.Row key={unit.type} onClick={() => this.props.onRowClick(unit)}>
@@ -187,7 +187,7 @@ export default class UnitDefinitions extends Component<IProps> {
     )
   }
 
-  renderAttributeList = (unit: UnitDefinition, attribute: UnitValueType): JSX.Element => {
+  renderAttributeList = (unit: Unit, attribute: UnitValueType): JSX.Element => {
     const base = calculateBase(unit, attribute)
     let base_str = String(base)
     if (this.props.mode === DefinitionType.Naval && attribute === UnitCalc.Strength)

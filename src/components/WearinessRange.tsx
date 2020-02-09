@@ -48,7 +48,7 @@ export default class WearinessRange extends Component<IProps> {
           toArr(values, (ranges, side) => {
             const range = ranges[type]
             return (
-              <Table.Cell width='5'>
+              <Table.Cell width='5' key={type + '_' + side}>
                 <Header textAlign='center' size='small' style={{margin: 0}}>
                   {toPercent(range.min, 0)} - {toPercent(range.max, 0)}
                 </Header>
