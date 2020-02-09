@@ -9,7 +9,7 @@ import { AppState, filterUnitTypesByCountry, filterTerrainTypes, findUnit, getCo
 import { ValuesType, Side, CountryName, UnitType, Cohort, UnitCalc, UnitValueType } from 'types'
 import { CombatUnit } from 'combat'
 import { addValues } from 'definition_values'
-import { editCohort, deleteCohort, invalidateCountry, setCohortValue, changeCohortType, toggleCohortLoyality } from 'reducers'
+import { editCohort, deleteCohort, invalidate, setCohortValue, changeCohortType, toggleCohortLoyality } from 'reducers'
 
 const CUSTOM_VALUE_KEY = 'Unit'
 
@@ -51,40 +51,40 @@ class ModalCohortDetail extends Component<IProps> {
   }
 
   removeUnit = () => {
-    const { id, country, deleteCohort, invalidateCountry, onClose } = this.props
+    const { id, country, deleteCohort, invalidate, onClose } = this.props
     deleteCohort(country, id)
-    invalidateCountry(country)
+    invalidate()
     onClose()
   }
 
   setBaseValue = (key: string, attribute: UnitValueType, value: number) => {
-    const { country, id, setCohortValue, invalidateCountry } = this.props
+    const { country, id, setCohortValue, invalidate } = this.props
     setCohortValue(country, id, ValuesType.Base, key, attribute, value)
-    invalidateCountry(country)
+    invalidate()
   }
 
   setModifierValue = (key: string, attribute: UnitValueType, value: number) => {
-    const { country, id, setCohortValue, invalidateCountry } = this.props
+    const { country, id, setCohortValue, invalidate } = this.props
     setCohortValue(country, id, ValuesType.Modifier, key, attribute, value)
-    invalidateCountry(country)
+    invalidate()
   }
 
   setLossValue = (key: string, attribute: UnitValueType, value: number) => {
-    const { country, id, setCohortValue, invalidateCountry } = this.props
+    const { country, id, setCohortValue, invalidate } = this.props
     setCohortValue(country, id, ValuesType.Loss, key, attribute, value)
-    invalidateCountry(country)
+    invalidate()
   }
 
   changeType = (type: UnitType) => {
-    const { country, id, changeCohortType, invalidateCountry } = this.props
+    const { country, id, changeCohortType, invalidate } = this.props
     changeCohortType(country, id, type)
-    invalidateCountry(country)
+    invalidate()
   }
 
   toggleIsLoyal = () => {
-    const { country, id, toggleCohortLoyality, invalidateCountry } = this.props
+    const { country, id, toggleCohortLoyality, invalidate } = this.props
     toggleCohortLoyality(country, id)
-    invalidateCountry(country)
+    invalidate()
   }
 }
 
@@ -117,7 +117,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   unit: convertUnit(findUnit(state, props.side, props.id), getCombatUnitForEachRound(state, props.side, props.id) )
 })
 
-const actions = { editCohort, deleteCohort, invalidateCountry, setCohortValue, changeCohortType, toggleCohortLoyality }
+const actions = { editCohort, deleteCohort, invalidate, setCohortValue, changeCohortType, toggleCohortLoyality }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

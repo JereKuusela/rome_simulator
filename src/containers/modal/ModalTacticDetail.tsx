@@ -39,7 +39,7 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchToProps = (dispatch: any) => ({
   setBaseValue: (mode: Mode, tactic: TacticType,  key: string, attribute: TacticValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setTacticBaseValue(tactic, key, attribute, value)) && dispatch(invalidate(mode))
+    !Number.isNaN(value) && dispatch(setTacticBaseValue(tactic, key, attribute, value)) && dispatch(invalidate())
   ),
   changeImage: (type: TacticType, image: string) => dispatch(setTacticImage(type, image)),
   changeMode: (type: TacticType, mode: DefinitionType) => dispatch(setTacticMode(type, mode))

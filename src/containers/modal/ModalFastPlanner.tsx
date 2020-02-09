@@ -142,7 +142,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
   }
 
   updateReserve = (country: CountryName, changes: Units, originals: Units, limits: WearinessAttributes) => {
-    const { mode, addToReserve, removeFromReserve, invalidate } = this.props
+    const { addToReserve, removeFromReserve, invalidate } = this.props
     const units = this.applyLosses(limits, this.getUnitsToAdd(changes, originals, true))
     const types = this.getTypesToRemove(changes, originals)
     if (units.length > 0)
@@ -150,7 +150,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
     if (types.length > 0)
       removeFromReserve(country, types)
     if (units.length > 0 || types.length > 0)
-      invalidate(mode)
+      invalidate()
   }
 
   onClose = (): void => {
@@ -164,11 +164,11 @@ class ModalFastPlanner extends Component<IProps, IState> {
   countUnits = (reserve: BaseCohort[], unit: UnitType): number => reserve.reduce((previous, current) => previous + (current && current.type === unit ? 1 : 0), 0)
 
   clearUnits = (): void => {
-    const { mode, attacker, defender, clearCohorts, invalidate } = this.props
+    const { attacker, defender, clearCohorts, invalidate } = this.props
     this.setState({ changes_a: {} as Units, changes_d: {} as Units })
     clearCohorts(attacker)
     clearCohorts(defender)
-    invalidate(mode)
+    invalidate()
   }
 }
 

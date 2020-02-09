@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Image, Table, Input } from 'semantic-ui-react'
 
 import { AppState, getCountry, getUnitPreferences, getFlankSize, getMode, getUnitDefinitionsBySide } from 'state'
-import { setFlankSize, invalidateCountry } from 'reducers'
+import { setFlankSize, invalidate } from 'reducers'
 
 import ModalUnitPreferenceSelector from './modal/ModalUnitPreferenceSelector'
 import { UnitPreferenceType, Side } from 'types'
@@ -104,9 +104,9 @@ class Row extends Component<IProps, IState> {
   }
 
   setFlankSize = (value: number) => {
-    const { setFlankSize, invalidateCountry, country } = this.props
+    const { setFlankSize, invalidate, country } = this.props
     setFlankSize(country, value)
-    invalidateCountry(country)
+    invalidate()
   }
 
   closeModal = () => {
@@ -123,7 +123,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   mode: getMode(state)
 })
 
-const actions = { setFlankSize, invalidateCountry }
+const actions = { setFlankSize, invalidate }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

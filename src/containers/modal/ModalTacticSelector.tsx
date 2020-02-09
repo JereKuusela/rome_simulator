@@ -58,10 +58,10 @@ class ModalTacticSelector extends Component<IProps> {
   }
 
   selectTactic = (type: TacticType | null) => {
-    const { mode, country, selectTactic, onClose, invalidate } = this.props
+    const { country, selectTactic, onClose, invalidate } = this.props
     if (country && type)
       selectTactic(country, type)
-    invalidate(mode)
+    invalidate()
     onClose()
   }
 }
@@ -70,8 +70,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   units: props.side && getCurrentCombat(state, props.side),
   tactics: filterTactics(state),
   opposing_tactic: props.side && getSelectedTactic(state, getOpponent(props.side)),
-  country: props.side && getCountry(state, props.side),
-  mode: state.settings.mode
+  country: props.side && getCountry(state, props.side)
 })
 
 const actions = { selectTactic, invalidate }

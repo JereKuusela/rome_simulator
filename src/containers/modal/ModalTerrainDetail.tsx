@@ -2,13 +2,13 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { AppState } from 'state'
 import TerrainDetail from 'components/TerrainDetail'
-import { Mode, DefinitionType, TerrainType, LocationType, TerrainValueType, ValuesType } from 'types'
+import { DefinitionType, TerrainType, LocationType, TerrainValueType, ValuesType } from 'types'
 import { setTerrainLocation, setTerrainImage, setTerrainMode, setTerrainValue, invalidate } from 'reducers'
 
 const CUSTOM_VALUE_KEY = 'Custom'
 
 class ModalTerrainDetail extends Component<IProps> {
-  render(): JSX.Element | null {
+  render() {
     if (this.props.terrain === null)
       return null
     const terrain = this.props.terrains[this.props.terrain]
@@ -16,7 +16,7 @@ class ModalTerrainDetail extends Component<IProps> {
       <TerrainDetail
         custom_value_key={CUSTOM_VALUE_KEY}
         terrain={terrain}
-        onCustomBaseValueChange={(key, attribute, value) => this.props.setTerrainValue(this.props.mode, terrain.type, key, attribute, value)}
+        onCustomBaseValueChange={(key, attribute, value) => this.props.setTerrainValue(terrain.type, key, attribute, value)}
         onTypeChange={type => this.props.changeType(terrain.type, type)}
         onLocationChange={location => this.props.setLocation(terrain.type, location)}
         onImageChange={image => this.props.setImage(terrain.type, image)}
@@ -32,8 +32,8 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setTerrainValue: (mode: Mode, type: TerrainType, key: string, attribute: TerrainValueType, value: number) => (
-    !Number.isNaN(value) && dispatch(setTerrainValue(type, ValuesType.Base, key, attribute, value)) && dispatch(invalidate(mode))
+  setTerrainValue: (type: TerrainType, key: string, attribute: TerrainValueType, value: number) => (
+    !Number.isNaN(value) && dispatch(setTerrainValue(type, ValuesType.Base, key, attribute, value)) && dispatch(invalidate())
   ),
   setLocation: (type: TerrainType, location: LocationType) => dispatch(setTerrainLocation(type, location)),
   setImage: (type: TerrainType, image: string) => dispatch(setTerrainImage(type, image)),

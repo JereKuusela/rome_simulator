@@ -1,7 +1,6 @@
-import { Reducer } from 'redux'
 import { armyReducer, countriesReducer, unitsReducer, tacticsReducer, terrainsReducer, battleReducer, transferReducer, importReducer, dataReducer, settingsReducer, combatReducer } from 'reducers'
-import { composeReducers } from 'immer-reducer'
 import { combine, compose } from 'reducers/utils'
+import { Reducer } from 'react'
 
 const combined = combine({
   tactics: tacticsReducer,
@@ -13,7 +12,7 @@ const combined = combine({
   settings: settingsReducer
 })
 
-export const rootReducer: Reducer<AppState, any> = composeReducers(combined, combatReducer, importReducer)
+export const rootReducer = compose(combined, combatReducer, importReducer) as Reducer<any, any>
 
 export type AppState = ReturnType<typeof combined>
 export * from './transforms'

@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Grid, Input, Table, Header, Checkbox, Tab } from 'semantic-ui-react'
 
-import { AppState } from 'state'
+import { AppState, getMode } from 'state'
 
 import Dropdown from 'components/Utils/Dropdown'
 import { toArr, keys, values } from 'utils'
-import { Mode, DefinitionType, Setting, parameterToDescription, SimulationSpeed, CombatSettings, SiteSettings } from 'types'
+import { Mode, Setting, parameterToDescription, SimulationSpeed, CombatSettings, SiteSettings } from 'types'
 import { changeCombatParameter, changeSiteParameter, invalidate } from 'reducers'
 
 interface Props { }
@@ -99,21 +99,20 @@ class Settings extends Component<IProps> {
   onCombatChange = (mode: Mode, key: keyof CombatSettings, value: Values) => {
     const { changeCombatParameter, invalidate } = this.props
     changeCombatParameter(mode, key, value)
-    invalidate(mode)
+    invalidate()
   }
 
   onSharedChange = (key: keyof SiteSettings, value: Values) => {
     const { changeSiteParameter, invalidate } = this.props
     changeSiteParameter(key, value)
-    invalidate(DefinitionType.Land)
-    invalidate(DefinitionType.Naval)
+    invalidate()
   }
 }
 
 const mapStateToProps = (state: AppState) => ({
   combatSettings: state.settings.combatSettings,
   siteSettings: state.settings.siteSettings,
-  mode: state.settings.mode
+  mode: getMode(state)
 })
 
 const actions = { changeCombatParameter, changeSiteParameter, invalidate }
