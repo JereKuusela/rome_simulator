@@ -1,8 +1,8 @@
-import { AppState, getMode, getArmyForCombat, mergeUnitTypes, getCurrentCombat, getSettings } from "state"
-import { CombatUnits, Frontline, Reserve, doConversion, deploy, doBattleFast, removeDefeated } from "combat"
-import { Mode, Battle, Side, Setting, Participant, Settings } from "types"
-import { createEntropy, MersenneTwister19937, Random } from "random-js"
-import { arrGet } from "utils"
+import { AppState, getMode, getArmyForCombat, mergeUnitTypes, getCurrentCombat, getSettings } from 'state'
+import { CombatUnits, Frontline, Reserve, doConversion, deploy, doBattleFast, removeDefeated } from 'combat'
+import { Mode, Battle, Side, Setting, Participant, Settings } from 'types'
+import { createEntropy, MersenneTwister19937, Random } from 'random-js'
+import { arrGet } from 'utils'
 
 const copyStatus = (status: CombatUnits): CombatUnits => ({
   frontline: status.frontline.map(value => value ? { ...value, state: { ...value.state } } : null),
@@ -61,10 +61,8 @@ const doBattle = (state: AppState, mode: Mode, battle: Battle, settings: Setting
     defender.army = copyStatus(defender.army)
     battle.fight_over = !checkAlive(attacker.army.frontline, attacker.army.reserve) || !checkAlive(defender.army.frontline, defender.army.reserve)
   } else {
-
     attacker.army = copyStatus(getCurrentCombat(state, Side.Attacker))
     defender.army = copyStatus(getCurrentCombat(state, Side.Defender))
-
   }
   if (battle.round === -1 && steps > 0 && !battle.fight_over) {
     deploy(attacker, defender, settings)
@@ -104,16 +102,18 @@ const doBattle = (state: AppState, mode: Mode, battle: Battle, settings: Setting
   }
 }
 
-export const battle = (state: AppState, steps: number) => {
+export const battle = (pair: [AppState, AppState], steps: number) => {
+  const [ state, draft ] = pair
   const mode = getMode(state)
-  const battle = state.battle[mode]
+  const battle = draft.battle[mode]
   const settings = getSettings(state, mode)
   doBattle(state, mode, battle, settings, steps)
 }
 
-export const refreshBattle = (state: AppState) => {
+export const refreshBattle = (pair: [AppState, AppState]) => {
+  const [ state, draft ] = pair
   const mode = getMode(state)
-  const battle = state.battle[mode]
+  const battle = draft.battle[mode]
   const settings = getSettings(state, mode)
   const steps = battle.round + 1
   battle.round = -1

@@ -14,6 +14,7 @@ export const transferReducer = makeContainerReducer(getDefaultTransferState(), t
 const importMapping: ActionToFunction<AppState> = {}
 
 export const importState = makeActionRemoveFirst(manager.importState, importMapping)
-export const reset = makeActionRemoveFirst(manager.reset, importMapping)
+export const resetMissingState = makeActionRemoveFirst(manager.resetMissingState, importMapping)
+export const resetState = makeActionRemoveFirst(manager.resetState, importMapping)
 
 export const importReducer = makeContainerReducer({} as AppState, importMapping)

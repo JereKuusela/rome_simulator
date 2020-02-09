@@ -3,7 +3,7 @@ import { Button, Header, Segment } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState } from 'state'
 import { saveToFile, exportState } from 'managers/transfer'
-import { reset } from 'reducers'
+import { resetState } from 'reducers'
 
 type State = {
   hasError: boolean
@@ -44,7 +44,7 @@ class Error extends Component<IProps, State> {
   }
 
   reset = () => {
-    this.props.reset()
+    this.props.resetState()
     this.setState({ hasError: false })
   }
 
@@ -55,7 +55,7 @@ const mapStateToProps = (state: AppState) => ({
   state
 })
 
-const actions = { reset }
+const actions = { resetState }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

@@ -1,6 +1,6 @@
 
 import { saveAs } from 'file-saver'
-import { AppState, stripRounds, resetMissing } from 'state'
+import { AppState, stripRounds, resetMissing, resetAll } from 'state'
 import { DefinitionType, ExportKey, ExportKeys, TransferState } from 'types'
 
 const filterState = (state: AppState, export_keys?: ExportKeys): any => {
@@ -45,6 +45,10 @@ export const setResetMissing = (transfer: TransferState, value: boolean) => {
   transfer.reset_missing = value
 }
 
+export const resetState = (state: AppState) => {
+  resetAll(state)
+}
+
 export const importState = (state: AppState, imported: any, reset_missing: boolean) => {
   if (reset_missing)
     state = { ...state, transfer: state.transfer, ...imported }
@@ -59,6 +63,6 @@ export const importState = (state: AppState, imported: any, reset_missing: boole
     }
 }
 
-export const reset = (state: AppState) => {
+export const resetMissingState = (state: AppState) => {
   resetMissing(state)
 }

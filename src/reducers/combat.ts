@@ -1,10 +1,12 @@
 import * as manager from 'managers/combat'
-import { makeContainerReducer, ActionToFunction, makeActionRemoveFirst } from './utils'
+import { ActionToFunction, makeActionRemoveFirst, makeReducer } from './utils'
 import { AppState } from 'state'
 
-const combatMapping: ActionToFunction<AppState> = {}
+const combatMapping: ActionToFunction<[AppState, AppState]> = {}
 
 export const battle = makeActionRemoveFirst(manager.battle, combatMapping)
 export const refreshBattle = makeActionRemoveFirst(manager.refreshBattle, combatMapping)
 
-export const combatReducer = makeContainerReducer({} as AppState, combatMapping)
+const getState = (draft: AppState, _2: any, _3: any, state: AppState) => [state, draft]
+
+export const combatReducer = makeReducer({} as AppState, combatMapping, getState as any)

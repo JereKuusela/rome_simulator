@@ -20,7 +20,7 @@ export const makeActionReplaceFirst = <T extends any[], K extends string, E>(fun
   return ret
 }
 
-type GetEntity<S, E, T extends string> = (draft: S, action: Action<T>, params: ReducerParams) => E
+type GetEntity<S, E, T extends string> = (draft: S, action: Action<T>, params: ReducerParams, state: S) => E
 type GetPayload<T extends string> = (action: Action<T>) => any[]
 
 const getEntity = <S extends {[key in T]: E}, E, T extends string>(draft: S, action: Action<T>) => draft[action.payload[0]]
@@ -38,7 +38,7 @@ export const makeReducer = <S, K extends string, E>(initial: S, actionToFunction
     if (!func)
       return state
     return produce(state, (draft: S) => {
-      func(getEntity(draft, action, params), ...(getPayload ? getPayload(action) : action.payload))
+      func(getEntity(draft, action, params, state), ...(getPayload ? getPayload(action) : action.payload))
     })
   }
 }

@@ -25,9 +25,9 @@ import IconGeneral from 'images/military_power.png'
 import IconTerrain from 'images/terrain.png'
 import {
     invalidate, selectArmy, selectCohort, setRoll, toggleRandomRoll,
-    undo, battle, refreshBattle, setSeed, setGeneralMartial, importState
+    undo, battle, refreshBattle, setSeed, setGeneralMartial, resetState
 } from 'reducers'
-import { AppState, getBattle, getCountry, getGeneralStats, getParticipant, getSettings, resetMissing, getCountries } from 'state'
+import { AppState, getBattle, getCountry, getGeneralStats, getParticipant, getSettings, getCountries } from 'state'
 import { ArmyType, CountryName, Participant, Setting, Side, GeneralStats } from 'types'
 import { keys } from 'utils'
 
@@ -215,7 +215,7 @@ class Battle extends Component<IProps, IState> {
               <ConfirmationButton
                 negative text='Reset all data'
                 message='Do you really want to reset all data?'
-                onConfirm={() => this.props.importState(resetMissing({} as any), true)}
+                onConfirm={() => this.props.resetState()}
               />
             </Grid.Column>
           </Grid.Row>
@@ -393,7 +393,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   ),
   setSeed: (seed: number) => dispatch(setSeed(seed)) && dispatch(invalidate()),
   refreshBattle: () => dispatch(refreshBattle()),
-  importState: (data: {}, reset_missing: boolean) => dispatch(importState(data, reset_missing))
+  resetState: () => dispatch(resetState())
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }

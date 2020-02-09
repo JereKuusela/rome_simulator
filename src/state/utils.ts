@@ -280,6 +280,18 @@ export const resetMissing = (data: AppState) => {
   return data
 }
 
+/**
+ * Resets all data.
+ * @param data 
+ */
+export const resetAll = (data: AppState) => {
+  data.tactics = getDefaultTacticState()
+  data.terrains = getDefaultTerrainState()
+  data.battle =  getDefaultBattle()
+  data.settings = getDefaultSettings()
+  data.countries = getDefaultCountryDefinitions()
+}
+
 export interface ArmyForCombat extends Cohorts {
   tactic?: Tactic
   definitions: Units
