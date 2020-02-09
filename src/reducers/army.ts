@@ -1,10 +1,9 @@
 
 import { Army, CountryName, Countries } from 'types'
 import { ArmyName } from 'types/armies'
-import * as manager from 'managers/army_manager'
+import * as manager from 'managers/army'
 import { getDefaultCountryDefinitions } from 'data'
-import { ReducerParams } from 'state'
-import { ActionToFunction, makeActionReplaceFirst, makeReducer, Action } from './utils'
+import { ActionToFunction, makeActionReplaceFirst, makeReducer, Action, ReducerParams } from './utils'
 
 const actionToFunction: ActionToFunction<Army, CountryName> = {}
 

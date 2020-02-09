@@ -3,7 +3,7 @@ import { map, mapRange } from 'utils'
 import { mergeValues, calculateValue } from 'definition_values'
 import { DefinitionType, CountryName, Participant, Army, Terrain, TacticType, Setting, Side, BaseCohort, UnitCalc, UnitType, TerrainType, UnitPreferenceType, TacticCalc, Settings } from 'types'
 import { CombatUnit, CombatParticipant, doBattleFast, getBaseDamages, convertUnits, calculateTotalRoll, deploy, sortReserve } from 'combat'
-import { getBaseUnitType } from 'managers/army_manager'
+import { getBaseUnitType } from 'managers/army'
 
 const unitDefinitions = map(getDefaultUnits(), unit => mergeValues(unit, getDefaultUnit(getBaseUnitType(DefinitionType.Land))))
 export const getDefinitions = () => ({ [CountryName.Country1]: unitDefinitions, [CountryName.Country2]: unitDefinitions })

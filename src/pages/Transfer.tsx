@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { AppState, resetMissing, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits, setIds } from 'state'
 import { values, keys } from 'utils'
 import { ExportKey } from 'types'
-import { exportState, saveToFile } from 'managers/transfer_manager'
+import { exportState, saveToFile } from 'managers/transfer'
 import ConfirmationButton from 'components/ConfirmationButton'
 import { setExportKey, setResetMissing, importState } from 'reducers'
 

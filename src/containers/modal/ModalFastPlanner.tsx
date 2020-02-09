@@ -8,7 +8,7 @@ import { ValuesType, UnitType, BaseReserve, Side, CountryName, BaseCohort, Weari
 import { mergeBaseUnitsWithDefinitions, getNextId } from 'army_utils'
 import WearinessRange from 'components/WearinessRange'
 import { changeWeariness, addToReserve, removeFromReserve, clearCohorts, invalidate } from 'reducers'
-import { removeFromReserve as removeReserve, addToReserve as addReserve } from 'managers/army_manager'
+import { removeFromReserve as removeReserve, addToReserve as addReserve } from 'managers/army'
 import { forEach, mapRange, toArr, round, randomWithinRange } from 'utils'
 import { addValues } from 'definition_values'
 

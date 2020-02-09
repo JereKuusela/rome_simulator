@@ -5,7 +5,7 @@ import { Mode, DefinitionType, CountryName, BaseCohort, Side, Cohort, ArmyType, 
 import { CombatUnit, CombatUnits } from 'combat'
 import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticState, getDefaultTerrainState } from 'data'
 import { sortBy, uniq } from 'lodash'
-import * as manager from 'managers/army_manager'
+import * as manager from 'managers/army'
 import { mergeValues } from 'definition_values'
 
 /**

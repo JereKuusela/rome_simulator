@@ -4,7 +4,7 @@ import { sortBy, toNumber } from 'lodash'
 
 import { Mode, DefinitionType, CountryName, UnitType, TerrainType, Unit, UnitCalc, UnitValueType, Units } from 'types'
 import { toArr, getImage } from 'utils'
-import { unitSorter } from 'managers/army_manager'
+import { unitSorter } from 'managers/army'
 import { mergeValues, calculateValue, calculateBase, calculateModifier, calculateLoss } from 'definition_values'
 import { toPercent, toManpower, toSignedPercent, hideZero } from 'formatters'
 
