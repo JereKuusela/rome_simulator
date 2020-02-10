@@ -5,7 +5,7 @@ import { Modal } from 'semantic-ui-react'
 import ItemRemover from 'components/ItemRemover'
 import UnitDetail from 'components/UnitDetail'
 
-import { AppState, filterUnitTypesByCountry, filterTerrainTypes, findUnit, getCombatUnitForEachRound, getMode } from 'state'
+import { AppState, filterUnitTypesByCountry, filterTerrainTypes, findUnit, getCombatUnitForEachRound, getMode, getSettings } from 'state'
 import { ValuesType, Side, CountryName, UnitType, Cohort, UnitCalc, UnitValueType } from 'types'
 import { CombatUnit } from 'combat'
 import { addValues } from 'definition_values'
@@ -23,7 +23,7 @@ interface Props {
 class ModalCohortDetail extends Component<IProps> {
 
   render() {
-    const { onClose, mode, unit_types, terrain_types, unit } = this.props
+    const { onClose, mode, unit_types, terrain_types, unit, settings } = this.props
     if (!unit)
       return null
     return (
@@ -32,6 +32,7 @@ class ModalCohortDetail extends Component<IProps> {
           <ItemRemover onRemove={this.removeUnit} />
           <UnitDetail
             mode={mode}
+            settings={settings}
             terrain_types={terrain_types}
             custom_value_key={CUSTOM_VALUE_KEY}
             unit={unit}
@@ -103,8 +104,8 @@ const convertUnit = (definition: Cohort | null, rounds: (CombatUnit | null)[]): 
       [UnitCalc.MoraleDepleted, combat.state.morale_dealt],
       [UnitCalc.StrengthDepleted, combat.state.strength_dealt]
     ]
-    definition = addValues(definition!, ValuesType.Loss, 'Round ' + (round - 1),  lossValues)
-    definition = addValues(definition!, ValuesType.Base, 'Round ' + (round - 1),  dealtValues)
+    definition = addValues(definition!, ValuesType.Loss, 'Round ' + (round - 1), lossValues)
+    definition = addValues(definition!, ValuesType.Base, 'Round ' + (round - 1), dealtValues)
 
   })
   return definition
@@ -114,7 +115,8 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   unit_types: props.country ? filterUnitTypesByCountry(state, props.country) : [],
   terrain_types: filterTerrainTypes(state),
   mode: getMode(state),
-  unit: convertUnit(findUnit(state, props.side, props.id), getCombatUnitForEachRound(state, props.side, props.id) )
+  unit: convertUnit(findUnit(state, props.side, props.id), getCombatUnitForEachRound(state, props.side, props.id)),
+  settings: getSettings(state)
 })
 
 const actions = { editCohort, deleteCohort, invalidate, setCohortValue, changeCohortType, toggleCohortLoyality }

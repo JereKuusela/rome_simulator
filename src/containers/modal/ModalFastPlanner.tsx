@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal, Button, Grid } from 'semantic-ui-react'
-import { AppState, getParticipant, getBaseCohorts, filterUnitTypesBySide, getUnitDefinitionsBySide, getUnitImages } from 'state'
+import { AppState, getParticipant, getBaseCohorts, filterUnitTypesBySide, getUnitDefinitionsBySide, getUnitImages, getCohorts } from 'state'
 import FastPlanner from 'components/FastPlanner'
 import ArmyCosts from 'components/ArmyCosts'
 import { ValuesType, UnitType, BaseReserve, Side, CountryName, BaseCohort, WearinessAttributes } from 'types'
-import { mergeBaseUnitsWithDefinitions, getNextId } from 'army_utils'
+import { getNextId } from 'army_utils'
 import WearinessRange from 'components/WearinessRange'
 import { changeWeariness, addToReserve, removeFromReserve, clearCohorts, invalidate } from 'reducers'
 import { removeFromReserve as removeReserve, addToReserve as addReserve } from 'managers/army'
 import { forEach, mapRange, toArr, round, randomWithinRange } from 'utils'
-import { addValues } from 'definition_values'
+import { addValues, mergeValues } from 'definition_values'
 
 type Units = { [key in UnitType]: number }
 
@@ -35,7 +35,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
   originals_d = {} as Units
 
   render() {
-    const { open, types_a, types_d, definitions_a, definitions_d, images } = this.props
+    const { open, types_a, types_d, definitions_a, definitions_d, images, cohorts_a, cohorts_d } = this.props
     let { base_units_a, base_units_d, weariness } = this.props
     const { changes_a, changes_d } = this.state
     if (!open)
@@ -45,11 +45,9 @@ class ModalFastPlanner extends Component<IProps, IState> {
     this.originals_a = types_a.reduce((map, value) => ({ ...map, [value]: this.countUnits(base_units_a.reserve, value) }), {} as Units)
     this.originals_d = types_d.reduce((map, value) => ({ ...map, [value]: this.countUnits(base_units_d.reserve, value) }), {} as Units)
     // Current changes to the reserve must also be applied.
-    base_units_a = { ...base_units_a, reserve: this.editReserve(base_units_a.reserve, changes_a, this.originals_a) }
-    base_units_d = { ...base_units_d, reserve: this.editReserve(base_units_d.reserve, changes_d, this.originals_d) }
     // And finally both merged with definitions to get real values.
-    const units_a = mergeBaseUnitsWithDefinitions(base_units_a, definitions_a)
-    const units_d = mergeBaseUnitsWithDefinitions(base_units_d, definitions_d)
+    const reserve_a = this.editReserve(base_units_a.reserve, changes_a, this.originals_a).map(value => value && mergeValues(definitions_a[value.type], value))
+    const reserve_d = this.editReserve(base_units_d.reserve, changes_d, this.originals_d).map(value => value && mergeValues(definitions_d[value.type], value))
     return (
       <Modal basic onClose={this.onClose} open centered={false}>
         <Modal.Content>
@@ -66,12 +64,12 @@ class ModalFastPlanner extends Component<IProps, IState> {
           />
           <ArmyCosts
             mode={this.props.mode}
-            frontline_a={units_a.frontline}
-            frontline_d={units_d.frontline}
-            reserve_a={units_a.reserve}
-            reserve_d={units_d.reserve}
-            defeated_a={units_a.defeated}
-            defeated_d={units_d.defeated}
+            frontline_a={cohorts_a.frontline}
+            frontline_d={cohorts_d.frontline}
+            reserve_a={reserve_a}
+            reserve_d={reserve_d}
+            defeated_a={cohorts_a.defeated}
+            defeated_d={cohorts_d.defeated}
             attached
           />
           <WearinessRange
@@ -177,6 +175,8 @@ const mapStateToProps = (state: AppState) => ({
   defender: getParticipant(state, Side.Defender).country,
   base_units_a: getBaseCohorts(state, Side.Attacker),
   base_units_d: getBaseCohorts(state, Side.Defender),
+  cohorts_a: getCohorts(state, Side.Attacker),
+  cohorts_d: getCohorts(state, Side.Defender),
   types_a: filterUnitTypesBySide(state, Side.Attacker),
   types_d: filterUnitTypesBySide(state, Side.Defender),
   definitions_a: getUnitDefinitionsBySide(state, Side.Attacker),

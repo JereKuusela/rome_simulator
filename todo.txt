@@ -9,10 +9,12 @@ Changelog:
 - Battle: Fixed order of naval units in fast planner.
 - Battle: Fixed changing flank size not automatically updating the result.
 - Battle: Updated flank size setting to work more accurately (not sure when this was changed).
+- Battle: Refactored state for armies (first step towards multiarmy battles).
+- Battle: Added support for backrow and backrow effectiveness.
 - Stats: Added average gold losses to naval simulations (from repair, from destroyed, from captured, etc.).
 - Stats: Added separate settings for calculating different things.
 - Countries: Added naval capture chance from general martial (0.2% * martial).
-- Countries: Refactored general to be separate entity (first step towards multiarmy battles).
+- Countries: Refactored general to be separate entity (second step towards multiarmy battles).
 - Countries: Fixed/updated Export Hemp to give -10% Naval Damage taken instead of +5% Naval Damage done.
 - Units: Balance changes from 1.3.2 (War Elephants damage against Infantry, Supply Train cost).
 - Units: Added 1 maneuver to Mega-Polyreme (no idea when this was changed).
@@ -28,6 +30,7 @@ Changelog:
 - Settings: Applied 20% increase to base damage values.
 - Settings: Removed "Fix damage taken" settings as it is fixed in the game.
 - Settings: Defender's advantage is now disabled by default (people seem to make wrong conclusions because of it).
+- Settings: New setting to enable backrow (support units are prioritized), feature from EUIV.
 
 Todo:
  - Transfer could only show non-base stats for units, terrains and tactics (since base stats are supposed to regenerate?), currently it shows way too much information.
@@ -50,6 +53,18 @@ Settings:
  - New settings for deployment / reinforcement order/attribute.
  - More sections for settings (at least new section for deployment and reinforcement).
 
+EUIV:
+ - Base front to a two dimensional map to support adding cohorts manually
+ - Daily morale losses, attribute for reducing them (+ setting)
+ - Dynamic combat width (country needs definition), setting changed to base combat width
+ - Military tactics as defensive value (+ setting)
+ - Discipline also to reduce damage (+ setting)
+ - Derivate attributes (reduce flanking range based on strength)
+ - Cavalry to infantry ratio (flank to front, country definition, + setting)
+ - Fire and shock phases, fire/shock damage done/taken attributes (+ setting)
+ - Fire, shock and morale pips (+ setting)
+ - General fire, shock and maneuver pips (+ setting for pip cap, 0 for disabled)
+ - Setting for martial cap (0 for disabled)
 
 Tests (high priority):
 - utils tested

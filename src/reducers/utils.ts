@@ -20,20 +20,20 @@ export const makeActionReplaceFirst = <T extends any[], K extends string, E>(fun
   return ret
 }
 
-type GetEntity<S, E, T extends string> = (draft: S, action: Action<T>, params: ReducerParams, state: S) => E
-type GetPayload<T extends string> = (action: Action<T>) => any[]
+type GetEntity<S, E> = (draft: S, action: Action, params: ReducerParams, state: S) => E
+type GetPayload = (action: Action) => any[]
 
-const getEntity = <S extends {[key in T]: E}, E, T extends string>(draft: S, action: Action<T>) => draft[action.payload[0]]
+const getDefaultEntity = (draft: any, action: Action<any>) => draft[action.payload[0]]
 
 const getEntityPayload = (action: Action) => {
   const [, ...payload] = action.payload
   return payload
 }
 
-const getDraft = <E>(draft: E) => draft
+const getDefaultContainer = (draft: any) => draft
 
-export const makeReducer = <S, K extends string, E>(initial: S, actionToFunction: ActionToFunction<E, K>, getEntity: GetEntity<S, E, K>, getPayload?: GetPayload<K>) => {
-  return (state = initial, action: Action<K>, params: ReducerParams) => {
+export const makeReducer = <S, E>(initial: S, actionToFunction: ActionToFunction<E>, getEntity: GetEntity<S, E>, getPayload?: GetPayload) => {
+  return (state = initial, action: Action, params: ReducerParams) => {
     const func = actionToFunction[action.type]
     if (!func)
       return state
@@ -43,14 +43,18 @@ export const makeReducer = <S, K extends string, E>(initial: S, actionToFunction
   }
 }
 
-export const makeEntityReducer = <S extends { [key in K]: E }, K extends string, E>(initial: S, actionToFunction: ActionToFunction<E, K>) => (
-  makeReducer(initial, actionToFunction, getEntity, getEntityPayload)
-)
+export function makeEntityReducer <S extends {[key in K]: E}, E, K extends string>(initial: S, actionToFunction: ActionToFunction<E, K>): ReducerWithParam<S>
+export function makeEntityReducer <S, E>(initial: S, actionToFunction: ActionToFunction<E>, getEntity: GetEntity<S, E>): ReducerWithParam<S>
+export function makeEntityReducer <S, E>(initial: S, actionToFunction: ActionToFunction<E>, getEntity?: GetEntity<S, E>) {
+  return makeReducer(initial, actionToFunction, getEntity ? getEntity : getDefaultEntity, getEntityPayload)
+}
 
-export const makeContainerReducer = <E>(initial: E, actionToFunction: ActionToFunction<E>) => (
-  makeReducer(initial, actionToFunction, getDraft)
-)
 
+export function makeContainerReducer <S>(initial: S, actionToFunction: ActionToFunction<S>): ReducerWithParam<S>
+export function makeContainerReducer <S, E>(initial: S, actionToFunction: ActionToFunction<E>, getContainer: GetEntity<S, E>): ReducerWithParam<S>
+export function makeContainerReducer <S, E>(initial: S, actionToFunction: ActionToFunction<E>, getContainer?: GetEntity<S, E>) {
+  return makeReducer(initial, actionToFunction, getContainer ? getContainer : getDefaultContainer)
+}
 
 export type ReducerParams = { mode: Mode, country: CountryName}
 

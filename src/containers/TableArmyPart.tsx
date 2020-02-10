@@ -10,6 +10,7 @@ import { getImage } from 'utils'
 import { CombatUnit } from 'combat'
 import { AppState, getCurrentCombat } from 'state'
 import { getArmyPart } from 'army_utils'
+import { flatten } from 'lodash'
 
 type Props = {
   side: Side
@@ -30,6 +31,7 @@ type Props = {
 type IState = {
   tooltip_index: number | null
   tooltip_context: Element | null
+  tooltip_is_support: boolean
 }
 
 const MORALE_COLOR = 'rgba(200,55,55,0.60)'
@@ -40,13 +42,15 @@ const WHITE_COLOR = 'rgba(255,255,255,0)'
 class UnitArmy extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
-    this.state = { tooltip_index: null, tooltip_context: null }
+    this.state = { tooltip_index: null, tooltip_context: null, tooltip_is_support: false }
   }
 
   render() {
-    const { units, row_width, side, type, full_rows, extra_slot } = this.props
-    const { tooltip_index, tooltip_context } = this.state
-    let width = units.length
+    const { units, row_width, side, type, full_rows, extra_slot, reverse } = this.props
+    const copy = reverse ? [...units].reverse() : units
+    const flat_units = flatten(copy)
+    const { tooltip_index, tooltip_context, tooltip_is_support } = this.state
+    let width = flat_units.length
     if (extra_slot)
       width++
     if (full_rows)
@@ -66,7 +70,7 @@ class UnitArmy extends Component<IProps, IState> {
     }
     return (
       <>
-        <CombatTooltip id={tooltip_index} context={tooltip_context} side={side} army={type} />
+        <CombatTooltip id={tooltip_index} context={tooltip_context} is_support={tooltip_is_support} side={side} army={type} />
         <Table compact celled definition unstackable>
           <Table.Body>
             {
@@ -77,8 +81,8 @@ class UnitArmy extends Component<IProps, IState> {
                   </Table.Cell>
                   {
                     columns.map((column, index) => {
-                      const unit = column > -1 ? units[row * row_width + column] : null
-                      return this.renderCell(row, index, column, unit)
+                      const unit = column > -1 ? flat_units[row * row_width + column] : null
+                      return this.renderCell(row, index, column, unit, reverse ? row === 0 : row > 0)
                     })
                   }
                 </Table.Row>
@@ -90,7 +94,7 @@ class UnitArmy extends Component<IProps, IState> {
     )
   }
 
-  renderCell = (row: number, index: number, column: number, unit: IUnit) => {
+  renderCell = (row: number, index: number, column: number, unit: IUnit, is_support: boolean) => {
     const { side, type, disable_add, onClick, row_width, onRemove } = this.props
     return (
       <Table.Cell
@@ -101,7 +105,7 @@ class UnitArmy extends Component<IProps, IState> {
         selectable={!!onClick}
         style={{ backgroundColor: column < 0 ? '#DDDDDD' : 'white', padding: 0 }}
         onClick={() => onClick && onClick(row * this.props.row_width + column, unit?.id)}
-        onMouseEnter={(e: React.MouseEvent) => unit && this.setState({ tooltip_index: unit.id, tooltip_context: e.currentTarget })}
+        onMouseEnter={(e: React.MouseEvent) => unit && this.setState({ tooltip_index: unit.id, tooltip_context: e.currentTarget, tooltip_is_support: is_support })}
         onMouseLeave={() => this.setState({ tooltip_index: null, tooltip_context: null })}
         onContextMenu={(e: any) => e.preventDefault() || (onRemove && onRemove(row * row_width + column))}
       >
@@ -154,8 +158,8 @@ type IUnit = {
   strength: number
 } | null
 
-const convertUnits = (units: (CombatUnit | null)[]): IUnit[] => (
-  units.map(unit => unit && {
+const convertUnits = (units: (CombatUnit | null)[][]): IUnit[][] => (
+  units.map(row => row.map(unit => unit && {
     id: unit.definition.id,
     is_defeated: unit.state.is_defeated,
     image: unit.definition.image,
@@ -163,7 +167,7 @@ const convertUnits = (units: (CombatUnit | null)[]): IUnit[] => (
     max_morale: unit.definition.max_morale,
     strength: unit[UnitCalc.Strength],
     max_strength: unit.definition.max_strength
-  })
+  }))
 )
 
 const mapStateToProps = (state: AppState, props: Props) => ({

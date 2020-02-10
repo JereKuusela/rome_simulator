@@ -25,8 +25,8 @@ class TargetArrows extends Component<IProps> {
       return null
     return (
       <>
-        {attacker.map(unit => this.renderAttacker(unit, attacker_color))}
-        {defender.map(unit => this.renderDefender(unit, defender_color))}
+        {attacker.map(row => row.map(unit => this.renderAttacker(unit, attacker_color)))}
+        {defender.map(row => row.map(unit => this.renderDefender(unit, defender_color)))}
       </>
     )
   }
@@ -65,8 +65,8 @@ type IUnit = {
   target: number | null | undefined
 } | null
 
-const convertUnits = (units: (CombatUnit | null)[]): IUnit[] => (
-  units.map(unit => unit ? { id: unit.definition.id, target: unit.state.target?.definition.id } : null)
+const convertUnits = (units: (CombatUnit | null)[][]): IUnit[][] => (
+  units.map(row => row.map(unit => unit ? { id: unit.definition.id, target: unit.state.target?.definition.id } : null))
 )
 
 const mapStateToProps = (state: AppState, props: Props) => ({

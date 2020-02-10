@@ -1,5 +1,5 @@
 import { ArmyForCombat } from 'state'
-import { Terrain, UnitType, Setting, TacticCalc, BaseCohorts, Cohort, UnitCalc, Side, Settings } from 'types'
+import { Terrain, UnitType, Setting, TacticCalc, Cohort, UnitCalc, Side, Settings, Cohorts } from 'types'
 import { calculateTotalRoll } from './combat_utils'
 import { calculateValue } from 'definition_values'
 import { CombatParticipant, getCombatUnit, CombatUnits, Frontline, Defeated, doBattleFast, Reserve, getUnitDefinition, CombatUnitTypes } from './combat'
@@ -45,7 +45,7 @@ export const initResourceLosses = (): ResourceLosses => ({
   repair_maintenance: 0,
   destroyed_cost: 0,
   captured_cost: 0,
-  seized_cost :0,
+  seized_cost: 0,
   seized_repair_maintenance: 0,
 })
 
@@ -53,7 +53,7 @@ export type ResourceLosses = {
   repair_maintenance: number
   destroyed_cost: number
   captured_cost: number
-  seized_cost :number
+  seized_cost: number
   seized_repair_maintenance: number
 }
 
@@ -229,8 +229,8 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
   worker()
 }
 
-export const convertUnits = (units: BaseCohorts, settings: Settings, casualties_multiplier: number, base_damages: number[], terrains: Terrain[], unit_types: UnitType[]) => ({
-  frontline: units.frontline.map(unit => getCombatUnit(settings, casualties_multiplier, base_damages, terrains, unit_types, unit as Cohort)),
+export const convertUnits = (units: Cohorts, settings: Settings, casualties_multiplier: number, base_damages: number[], terrains: Terrain[], unit_types: UnitType[]) => ({
+  frontline: units.frontline.map((row, index) => row.map(unit => getCombatUnit(settings, casualties_multiplier, base_damages, terrains, unit_types, unit as Cohort))),
   reserve: units.reserve.map(unit => getCombatUnit(settings, casualties_multiplier, base_damages, terrains, unit_types, unit as Cohort)!),
   defeated: units.defeated.map(unit => getCombatUnit(settings, casualties_multiplier, base_damages, terrains, unit_types, unit as Cohort)!),
   tactic_bonus: 0
@@ -261,7 +261,7 @@ const getRolls = (minimum: number, maximum: number) => {
  * Custom clone function to only copy state and keep references to constant data same.
  */
 const copyStatus = (status: CombatUnits): CombatUnits => ({
-  frontline: status.frontline.map(value => value ? { ...value } : null),
+  frontline: status.frontline.map(row => row.map(value => value ? { ...value } : null)),
   reserve: status.reserve.map(value => ({ ...value })),
   defeated: status.defeated.map(value => ({ ...value })),
   tactic_bonus: status.tactic_bonus
@@ -274,10 +274,12 @@ const REPAIR_PER_MONTH = 0.1
  */
 const calculateResourceLoss = (frontline: Frontline, defeated: Defeated, amount: number, own: ResourceLosses, enemy: ResourceLosses, own_types: CombatUnitTypes, enemy_types: CombatUnitTypes) => {
   for (let i = 0; i < frontline.length; i++) {
-    const unit = frontline[i]
-    if (!unit)
-      continue
-    own.repair_maintenance += amount * (unit.definition.max_strength - unit[UnitCalc.Strength]) * unit.definition[UnitCalc.Maintenance] * unit.definition[UnitCalc.Cost] / REPAIR_PER_MONTH
+    for (let j = 0; j < frontline[i].length; j++) {
+      const unit = frontline[i][j]
+      if (!unit)
+        continue
+      own.repair_maintenance += amount * (unit.definition.max_strength - unit[UnitCalc.Strength]) * unit.definition[UnitCalc.Maintenance] * unit.definition[UnitCalc.Cost] / REPAIR_PER_MONTH
+    }
   }
   for (let i = 0; i < defeated.length; i++) {
     const unit = defeated[i]
@@ -357,11 +359,13 @@ const sumState = (state: State, units: CombatUnits) => {
   state.strength = 0
   state.morale = 0
   for (let i = 0; i < units.frontline.length; i++) {
-    const unit = units.frontline[i]
-    if (!unit)
-      continue
-    state.strength += unit[UnitCalc.Strength]
-    state.morale += unit[UnitCalc.Morale]
+    for (let j = 0; j < units.frontline[i].length; j++) {
+      const unit = units.frontline[i][j]
+      if (!unit)
+        continue
+      state.strength += unit[UnitCalc.Strength]
+      state.morale += unit[UnitCalc.Morale]
+    }
   }
   for (let i = 0; i < units.reserve.length; i++) {
     const unit = units.reserve[i]

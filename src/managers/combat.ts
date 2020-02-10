@@ -5,13 +5,13 @@ import { createEntropy, MersenneTwister19937, Random } from 'random-js'
 import { arrGet } from 'utils'
 
 const copyStatus = (status: CombatUnits): CombatUnits => ({
-  frontline: status.frontline.map(value => value ? { ...value, state: { ...value.state } } : null),
+  frontline: status.frontline.map(row => row.map(value => value ? { ...value, state: { ...value.state } } : null)),
   reserve: status.reserve.map(value => ({ ...value, state: { ...value.state } })),
   defeated: status.defeated.map(value => ({ ...value, state: { ...value.state } })),
   tactic_bonus: status.tactic_bonus
 })
 
-const checkAlive = (frontline: Frontline, reserve: Reserve) => reserve.length || frontline.some(value => value && !value.state.is_defeated)
+const checkAlive = (frontline: Frontline, reserve: Reserve) => reserve.length || frontline.some(row => row.some(value => value && !value.state.is_defeated))
 
 const doBattle = (state: AppState, mode: Mode, battle: Battle, settings: Settings, steps: number) => {
   const army_a = getArmyForCombat(state, Side.Attacker, mode)

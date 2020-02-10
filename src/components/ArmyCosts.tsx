@@ -73,7 +73,7 @@ export default class ArmyCosts extends Component<IProps> {
   }
 
   calculateTotal = (attribute1: UnitCalc, attribute2: UnitCalc | undefined, frontline: FrontLine, reserve: Reserve, defeated: Reserve): number => {
-    return frontline.reduce((previous, current) => previous + (current ?  + this.reduce(current, attribute1, attribute2) : 0), 0)
+    return frontline.reduce((previous, current) => previous + current.reduce((previous, current) => previous + (current ?  + this.reduce(current, attribute1, attribute2) : 0), 0), 0)
       + reserve.reduce((previous, current) => previous + this.reduce(current, attribute1, attribute2), 0)
       + defeated.reduce((previous, current) => previous + this.reduce(current, attribute1, attribute2), 0)
   }

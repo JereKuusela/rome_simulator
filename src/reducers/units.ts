@@ -1,7 +1,7 @@
 import { Units, Unit, Countries, UnitType } from 'types'
 import { getDefaultCountryDefinitions } from 'data'
 import * as manager from 'managers/units'
-import { ActionToFunction, makeActionRemoveFirst, makeReducer, Action, makeActionReplaceFirst, ReducerParams, compose } from './utils'
+import { ActionToFunction, makeActionRemoveFirst, makeContainerReducer, Action, makeActionReplaceFirst, ReducerParams, compose, makeEntityReducer } from './utils'
 
 const unitsMapping: ActionToFunction<Units> = {}
 
@@ -13,7 +13,7 @@ export const clearUnitModifiers = makeActionRemoveFirst(manager.clearUnitModifie
 
 const getUnits = (draft: Countries, _: Action, params: ReducerParams) => draft[params.country].units
 
-const units = makeReducer(getDefaultCountryDefinitions(), unitsMapping, getUnits)
+const units = makeContainerReducer(getDefaultCountryDefinitions(), unitsMapping, getUnits)
 
 const unitMapping: ActionToFunction<Unit, UnitType> = {}
 
@@ -28,6 +28,6 @@ const getUnit = (draft: Countries, action: Action<UnitType>, params: ReducerPara
   return draft[params.country].units[key]
 }
 
-const unit = makeReducer(getDefaultCountryDefinitions(), unitMapping, getUnit)
+const unit = makeEntityReducer(getDefaultCountryDefinitions(), unitMapping, getUnit)
 
 export const unitsReducer = compose(unit, units)

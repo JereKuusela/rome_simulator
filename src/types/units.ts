@@ -42,6 +42,7 @@ export enum UnitCalc {
   MoraleDamageTaken = 'Morale damage taken',
   StrengthDamageDone = 'Strength damage done',
   StrengthDamageTaken = 'Strength damage taken',
+  BackrowEffectiveness = 'Backrow effectiveness',
   DamageDone = 'Damage done',
   DamageTaken = 'Damage taken',
   Cost = 'Cost',
@@ -87,6 +88,8 @@ export const unitValueToString = (definition: DefinitionValues<UnitValueType>, t
     case UnitCalc.StrengthDepleted:
     case UnitCalc.Morale:
     case UnitCalc.MoraleDepleted:
+    case UnitCalc.FoodConsumption:
+    case UnitCalc.FoodStorage:
       return toNumber(value)
     case UnitCalc.Experience:
     case UnitCalc.Maintenance:

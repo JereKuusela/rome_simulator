@@ -7,15 +7,16 @@ export const nextIndex = (index: number, center: number) => index < center ? ind
 
 
 const reinforceUnits = (frontline: Frontline, reserve: Reserve) => {
+    const front = frontline[0]
     const center = Math.floor(frontline.length / 2.0)
 
     // Reinforce missing units.
-    for (let index = center; index >= 0 && index < frontline.length; index = nextIndex(index, center)) {
-        if (frontline[index])
+    for (let index = center; index >= 0 && index < front.length; index = nextIndex(index, center)) {
+        if (front[index])
             continue
         const unit = reserve.pop()
         if (unit) {
-            frontline[index] = unit
+            front[index] = unit
             continue
         }
         break
@@ -23,27 +24,28 @@ const reinforceUnits = (frontline: Frontline, reserve: Reserve) => {
 }
 
 const moveUnits = (frontline: Frontline) => {
+    const front = frontline[0]
     // Move units from left to center.
-    for (let unit_index = Math.ceil(frontline.length / 2.0) - 1; unit_index > 0; --unit_index) {
-        const unit = frontline[unit_index]
+    for (let unit_index = Math.ceil(front.length / 2.0) - 1; unit_index > 0; --unit_index) {
+        const unit = front[unit_index]
         if (unit)
             continue
-        const unit_on_left = frontline[unit_index - 1]
+        const unit_on_left = front[unit_index - 1]
         if (unit_on_left) {
-            frontline[unit_index] = unit_on_left
-            frontline[unit_index - 1] = null
+            front[unit_index] = unit_on_left
+            front[unit_index - 1] = null
             continue
         }
     }
     // Move units from right to center.
-    for (let unit_index = Math.ceil(frontline.length / 2.0); unit_index < frontline.length - 1; ++unit_index) {
-        const unit = frontline[unit_index]
+    for (let unit_index = Math.ceil(front.length / 2.0); unit_index < front.length - 1; ++unit_index) {
+        const unit = front[unit_index]
         if (unit)
             continue
-        const unit_on_right = frontline[unit_index + 1]
+        const unit_on_right = front[unit_index + 1]
         if (unit_on_right) {
-            frontline[unit_index] = unit_on_right
-            frontline[unit_index + 1] = null
+            front[unit_index] = unit_on_right
+            front[unit_index + 1] = null
             continue
         }
     }

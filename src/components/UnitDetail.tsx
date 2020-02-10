@@ -8,13 +8,14 @@ import DetailTextRow from './Detail/DetailTextRow'
 import DetailInputRow from './Detail/DetailInputRow'
 import DetailDropdownRow from './Detail/DetailDropdownRow'
 import Headers from './Utils/Headers'
-import { DefinitionType, ValuesType, Cohort, UnitType, TerrainType, UnitDeployment, UnitCalc, UnitValueType, unitValueToString } from 'types'
+import { DefinitionType, ValuesType, Cohort, UnitType, TerrainType, UnitDeployment, UnitCalc, UnitValueType, unitValueToString, Settings, Setting } from 'types'
 import { values } from 'utils'
 import { getValue, calculateValue, explain } from 'definition_values'
 import { toMaintenance } from 'formatters'
 
 interface IProps {
   mode: DefinitionType
+  settings: Settings
   custom_value_key: string
   unit: Cohort
   unit_types?: UnitType[]
@@ -68,9 +69,20 @@ export default class UnitDetail extends Component<IProps> {
     )
   }
 
-  renderRow = (attribute: UnitValueType) => {
-    const { unit, show_statistics, custom_value_key, onCustomBaseValueChange, onCustomModifierValueChange, onCustomLossValueChange, disable_base_values } = this.props
+  hideAttribute = (attribute: UnitValueType) => {
+    const { show_statistics, settings, mode } = this.props
     if (!show_statistics && (attribute === UnitCalc.StrengthDepleted || attribute === UnitCalc.MoraleDepleted))
+      return true
+    if (!settings[Setting.BackRow] && attribute === UnitCalc.SupportEffectiveness)
+      return true
+    if (mode === DefinitionType.Naval && (attribute === UnitCalc.CaptureChance || attribute === UnitCalc.CaptureResist))
+      return true
+    return false
+  }
+
+  renderRow = (attribute: UnitValueType) => {
+    const { unit, custom_value_key, onCustomBaseValueChange, onCustomModifierValueChange, onCustomLossValueChange, disable_base_values} = this.props
+    if (this.hideAttribute(attribute))
       return null
     const base_value = getValue(ValuesType.Base, unit, attribute, custom_value_key)
     const modifier_value = getValue(ValuesType.Modifier, unit, attribute, custom_value_key)

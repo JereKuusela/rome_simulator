@@ -19,13 +19,13 @@ export interface CombatParticipant {
   roll: number
   unit_preferences: UnitPreferences
 }
-export type Frontline = (CombatUnit | null)[]
+export type Frontline = (CombatUnit | null)[][]
 export type Reserve = CombatUnit[]
 export type Defeated = CombatUnit[]
-export type CombatUnitTypes =  { [key in UnitType]: CombatUnitDefinition }
+export type CombatUnitTypes = { [key in UnitType]: CombatUnitDefinition }
 
 export type CombatUnits = {
-  readonly frontline: (CombatUnit | null)[]
+  readonly frontline: (CombatUnit | null)[][]
   readonly reserve: CombatUnit[]
   readonly defeated: CombatUnit[]
   tactic_bonus: number
@@ -171,34 +171,41 @@ export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, mark_de
  * Selects targets for units.
  */
 const pickTargets = (source: Frontline, target: Frontline, settings: Settings) => {
+  const source_length = source[0].length
+  const target_length = target[0].length
   for (let i = 0; i < source.length; i++) {
-    const unit = source[i]
-    if (!unit)
-      continue
-    const state = unit.state
-    state.damage_dealt = 0
-    state.morale_dealt = 0
-    state.strength_dealt = 0
-    state.morale_loss = 0
-    state.strength_loss = 0
-    state.target = null
-    if (target[i])
-      state.target = target[i]
-    else {
-      const maneuver = unit.definition[UnitCalc.Maneuver]
-      if (settings[Setting.FixTargeting] ? i < source.length / 2 : i <= source.length / 2) {
-        for (let index = i - maneuver; index <= i + maneuver; ++index) {
-          if (index >= 0 && index < source.length && target[index]) {
-            state.target = target[index]
-            break
+    for (let j = 0; j < source[i].length; j++) {
+      const unit = source[i][j]
+      if (!unit)
+        continue
+      // No need to select targets for units without effect.
+      if (i > 0 && !unit.definition[UnitCalc.SupportEffectiveness])
+        continue
+      const state = unit.state
+      state.damage_dealt = 0
+      state.morale_dealt = 0
+      state.strength_dealt = 0
+      state.morale_loss = 0
+      state.strength_loss = 0
+      state.target = null
+      if (target[0][j])
+        state.target = target[0][j]
+      else {
+        const maneuver = unit.definition[UnitCalc.Maneuver]
+        if (settings[Setting.FixTargeting] ? j < source_length / 2 : j <= source_length / 2) {
+          for (let index = j - maneuver; index <= j + maneuver; ++index) {
+            if (index >= 0 && index < target_length && target[0][index]) {
+              state.target = target[0][index]
+              break
+            }
           }
         }
-      }
-      else {
-        for (let index = i + maneuver; index >= i - maneuver; --index) {
-          if (index >= 0 && index < source.length && target[index]) {
-            state.target = target[index]
-            break
+        else {
+          for (let index = j + maneuver; index >= j - maneuver; --index) {
+            if (index >= 0 && index < target_length && target[0][index]) {
+              state.target = target[0][index]
+              break
+            }
           }
         }
       }
@@ -216,7 +223,7 @@ export const calculateTactic = (army: CombatUnits, tactic: Tactic, counter_tacti
   if (effectiveness > 0 && tactic && army) {
     let units = 0
     let weight = 0.0
-    for (const unit of army.frontline.concat(army.reserve).concat(army.defeated)) {
+    for (const unit of army.frontline.reduce((prev, current) => prev.concat(current), army.reserve.concat(army.defeated))) {
       if (!unit)
         continue
       units += unit[UnitCalc.Strength]
@@ -234,11 +241,13 @@ export const calculateTactic = (army: CombatUnits, tactic: Tactic, counter_tacti
  */
 const applyLosses = (frontline: Frontline) => {
   for (let i = 0; i < frontline.length; i++) {
-    const unit = frontline[i]
-    if (!unit)
-      continue
-    unit[UnitCalc.Morale] -= unit.state.morale_loss
-    unit[UnitCalc.Strength] -= unit.state.strength_loss
+    for (let j = 0; j < frontline[i].length; j++) {
+      const unit = frontline[i][j]
+      if (!unit)
+        continue
+      unit[UnitCalc.Morale] -= unit.state.morale_loss
+      unit[UnitCalc.Strength] -= unit.state.strength_loss
+    }
   }
 }
 
@@ -247,18 +256,20 @@ const applyLosses = (frontline: Frontline) => {
  */
 const moveDefeated = (frontline: Frontline, defeated: Reserve, minimum_morale: number, minimum_strength: number, mark_defeated: boolean) => {
   for (let i = 0; i < frontline.length; i++) {
-    const unit = frontline[i]
-    if (!unit)
-      continue
-    if (unit[UnitCalc.Strength] > minimum_strength && unit[UnitCalc.Morale] > minimum_morale)
-      continue
-    unit.state.is_destroyed = unit[UnitCalc.Strength] <= minimum_strength
-    if (mark_defeated)
-      frontline[i] = { ...unit, state: { ...unit.state, is_defeated: true } }
-    else
-      frontline[i] = null
-    unit.state.target = null
-    defeated.push(unit)
+    for (let j = 0; j < frontline[i].length; j++) {
+      const unit = frontline[i][j]
+      if (!unit)
+        continue
+      if (unit[UnitCalc.Strength] > minimum_strength && unit[UnitCalc.Morale] > minimum_morale)
+        continue
+      unit.state.is_destroyed = unit[UnitCalc.Strength] <= minimum_strength
+      if (mark_defeated)
+        frontline[i][j] = { ...unit, state: { ...unit.state, is_defeated: true } }
+      else
+        frontline[i][j] = null
+      unit.state.target = null
+      defeated.push(unit)
+    }
   }
 }
 
@@ -267,11 +278,13 @@ const moveDefeated = (frontline: Frontline, defeated: Reserve, minimum_morale: n
  */
 export const removeDefeated = (frontline: Frontline) => {
   for (let i = 0; i < frontline.length; i++) {
-    const unit = frontline[i]
-    if (!unit)
-      continue
-    if (unit.state.is_defeated)
-      frontline[i] = null
+    for (let j = 0; j < frontline[i].length; j++) {
+      const unit = frontline[i][j]
+      if (!unit)
+        continue
+      if (unit.state.is_defeated)
+        frontline[i][j] = null
+    }
   }
 }
 
@@ -280,14 +293,16 @@ export const removeDefeated = (frontline: Frontline) => {
  */
 const attack = (frontline: Frontline, roll: number, tactic_damage_multiplier: number) => {
   for (let i = 0; i < frontline.length; i++) {
-    const unit = frontline[i]
-    if (!unit)
-      continue
-    const target = unit.state.target
-    if (!target)
-      continue
-    target.state.capture_chance = unit.definition[UnitCalc.CaptureChance]
-    calculateLosses(unit, target, roll, tactic_damage_multiplier)
+    for (let j = 0; j < frontline[i].length; j++) {
+      const unit = frontline[i][j]
+      if (!unit)
+        continue
+      const target = unit.state.target
+      if (!target)
+        continue
+      target.state.capture_chance = unit.definition[UnitCalc.CaptureChance]
+      calculateLosses(unit, target, roll, tactic_damage_multiplier, i > 0)
+    }
   }
 }
 
@@ -317,8 +332,8 @@ const calculateDamageMultiplier = (source: CombatUnit, target: CombatUnit, tacti
 /**
  * Calculates both strength and morale losses caused by a given source to a given target.
  */
-const calculateLosses = (source: CombatUnit, target: CombatUnit, dice_roll: number, tactic_damage_multiplier: number) => {
-  const total_damage = source.calculated.total_damage[target.definition.type][dice_roll] * calculateDamageMultiplier(source, target, tactic_damage_multiplier)
+const calculateLosses = (source: CombatUnit, target: CombatUnit, dice_roll: number, tactic_damage_multiplier: number, is_support: boolean) => {
+  const total_damage = source.calculated.total_damage[target.definition.type][dice_roll] * calculateDamageMultiplier(source, target, tactic_damage_multiplier) * (is_support ? source.definition[UnitCalc.SupportEffectiveness] : 1.0)
   const strength_lost = total_damage * source.calculated.strength_done_multiplier * target.calculated.strength_taken_multiplier
   const morale_lost = total_damage * source[UnitCalc.Morale] * source.calculated.morale_done_multiplier * target.calculated.morale_taken_multiplier
 

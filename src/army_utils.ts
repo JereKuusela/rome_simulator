@@ -8,8 +8,8 @@ import { CombatUnits } from 'combat'
  * @param units Base units to merge. 
  * @param definitions Definitions to merge.
  */
-export const mergeBaseUnitsWithDefinitions = (units: BaseCohorts, definitions: Units): Cohorts => ({
-  frontline: units.frontline.map(value => value && mergeValues(definitions[value.type], value)),
+export const mergeBaseUnitsWithDefinitions = (units: Cohorts, definitions: Units): Cohorts => ({
+  frontline: units.frontline.map(row => row.map(unit => unit && mergeValues(definitions[unit.type], unit))),
   reserve: units.reserve.map(value => value && mergeValues(definitions[value.type], value)),
   defeated: units.defeated.map(value => value && mergeValues(definitions[value.type], value))
 })
@@ -67,8 +67,8 @@ export const getArmyPart = (units: CombatUnits, type: ArmyType) => {
   if (type === ArmyType.Frontline)
     return units.frontline
   if (type === ArmyType.Reserve)
-    return units.reserve
-  return units.defeated
+    return [units.reserve]
+  return [units.defeated]
 }
 
 export const getOpponent =  (side: Side) => side === Side.Attacker ? Side.Defender : Side.Attacker

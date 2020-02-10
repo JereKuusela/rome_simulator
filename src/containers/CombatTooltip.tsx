@@ -14,6 +14,7 @@ import { getOpponent } from 'army_utils'
 
 type Props = {
   id: number | null
+  is_support: boolean
   context: Element | null
   side: Side
   army: ArmyType
@@ -34,12 +35,12 @@ class CombatTooltip extends Component<IProps, IState> {
   }
 
   render() {
-    const { id, context } = this.props
+    const { id, context, is_support } = this.props
     return (
       <Popup
         open={id != null}
         context={context!}
-        content={this.getExplanation(id)}
+        content={this.getExplanation(id, is_support)}
         inverted
       />
     )
@@ -49,7 +50,7 @@ class CombatTooltip extends Component<IProps, IState> {
   ORANGE = 'color-orange'
   RED = 'color-red'
 
-  getExplanation = (id: number | null) => {
+  getExplanation = (id: number | null, is_support: boolean) => {
     if (id === null)
       return null
     const { source, tactic_bonus, roll, side, settings, terrains, general_s, general_t } = this.props
@@ -62,7 +63,7 @@ class CombatTooltip extends Component<IProps, IState> {
       <List>
         {this.getInfoSection(source, target)}
         {target && <List.Item />}
-        {target && this.getBaseSection(source, target, base_damage, tactic_bonus)}
+        {target && this.getBaseSection(source, target, base_damage, tactic_bonus, is_support)}
         {target && <List.Item />}
         {target && this.getStrengthSection(source, target)}
         {target && <List.Item />}
@@ -73,7 +74,7 @@ class CombatTooltip extends Component<IProps, IState> {
 
   toNumber = (value: number) => toNumber(value, 3)
 
-  getBaseSection = (source: IUnit, target: IUnit, base_damage: number, tactic_damage: number) => {
+  getBaseSection = (source: IUnit, target: IUnit, base_damage: number, tactic_damage: number, is_support: boolean) => {
     const { terrains } = this.props
     const terrain_types = terrains.map(value => value.type)
     const strength = source[UnitCalc.Strength] + source.strength_loss
@@ -96,6 +97,7 @@ class CombatTooltip extends Component<IProps, IState> {
       {this.renderStyledItem('Target experience', experience_reduction, toSignedPercent)}
       {target_attributes.map(terrain => this.getAttribute(target, terrain))}
       {terrain_types.map(terrain => this.getAttribute(source, terrain))}
+      {is_support && this.renderStyledItem(UnitCalc.SupportEffectiveness, source[UnitCalc.SupportEffectiveness] - 1, toSignedPercent)}
       {this.renderMultiplier('Unit strength', strength, toNumber)}
       {this.renderItem('Total damage', total_damage, this.toNumber)}
     </>)
@@ -187,7 +189,7 @@ class CombatTooltip extends Component<IProps, IState> {
     if (!value)
       return null
     return (
-      <List.Item>
+      <List.Item key={label}>
         {label}
         {': '}
         <StyledNumber value={value} formatter={formatter} negative_color={this.RED} />

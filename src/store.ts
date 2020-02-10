@@ -1,6 +1,6 @@
 import { createStore } from 'redux'
 import { devToolsEnhancer } from 'redux-devtools-extension'
-import { rootReducer, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits, stripRounds, setIds } from 'state'
+import { rootReducer, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits, stripRounds, setIds, restoreBaseSettings } from 'state'
 import { persistStore, persistReducer, createTransform, createMigrate } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
@@ -34,6 +34,12 @@ const CountriesTransform = createTransform(
   { whitelist: ['countries'] }
 )
 
+const SettingsTransform = createTransform(
+  (inboundState: any) => inboundState,
+  (outboundState: any) => restoreBaseSettings(outboundState),
+  { whitelist: ['settings'] }
+)
+
 const DataTransform = createTransform(
   () => undefined,
   () => ({}),
@@ -55,7 +61,8 @@ const persistConfig = {
     UnitsTransform,
     DataTransform,
     BattleTransform,
-    CountriesTransform
+    CountriesTransform,
+    SettingsTransform
   ]
 }
 

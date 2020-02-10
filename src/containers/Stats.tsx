@@ -11,6 +11,7 @@ import { CombatUnits, CombatUnit } from 'combat'
 import { strengthToValue } from 'formatters'
 import { getImage, round, sumArr } from 'utils'
 import { AppState, getCurrentCombat, filterUnitTypesBySide } from 'state'
+import { flatten } from 'lodash'
 
 type Props = {}
 
@@ -104,7 +105,7 @@ class Stats extends Component<IProps> {
 
   // Flattens units to a single list. Also filters temporary 'defeated' units because they are copies of another unit.
   flatten = (units: CombatUnits, type?: UnitType): CombatUnit[] => (
-    units.reserve.filter(unit => this.filter(unit, type)).concat(units.defeated.filter(unit => this.filter(unit, type)).concat(units.frontline.filter(unit => this.filter(unit, type)) as CombatUnit[]))
+    units.reserve.filter(unit => this.filter(unit, type)).concat(units.defeated.filter(unit => this.filter(unit, type)).concat(flatten(units.frontline).filter(unit => this.filter(unit, type)) as CombatUnit[]))
   )
 
   filter = (unit: CombatUnit | null, type?: UnitType) => unit && !unit.state.is_defeated && (!type || unit.definition.type === type)

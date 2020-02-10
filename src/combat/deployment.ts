@@ -7,6 +7,7 @@ export type SortedReserve = {
   front: CombatUnit[]
   flank: CombatUnit[]
   support: CombatUnit[]
+  length: number
 }
 
 const armySize = (units: CombatUnits) => {
@@ -14,52 +15,68 @@ const armySize = (units: CombatUnits) => {
 }
 
 const deployArmy = (units: CombatUnits, left_flank: number, right_flank: number, sorted: SortedReserve) => {
-  const frontline = units.frontline
+  const frontline = units.frontline[0]
+  const backline = units.frontline.length > 1 ? units.frontline[1] : null
   const reserve = units.reserve
   const center = Math.floor(frontline.length / 2.0)
 
   let index = center
-  // Fill main front until flanks are reached.
-  for (; index >= left_flank && index + right_flank < frontline.length; index = nextIndex(index, center)) {
-      if (frontline[index])
-          continue
-      const main = sorted.front.shift()
-      if (main) {
-          frontline[index] = main
-          continue
-      }
-      const flank = sorted.flank.shift()
-      if (flank) {
-          frontline[index] = flank
-          continue
-      }
+  // Fill back row.
+  if (backline) {
+    const max_support = Math.floor(Math.min(frontline.length, reserve.length / 2))
+    for (let i = 0; i < max_support; i++, index = nextIndex(index, center)) {
+      if (backline[index])
+        continue
       const support = sorted.support.shift()
       if (support) {
-          frontline[index] = support
-          continue
+        backline[index] = support
+        continue
       }
       break
+    }
+  }
+  index = center
+  // Fill main front until flanks are reached.
+  for (; index >= left_flank && index + right_flank < frontline.length; index = nextIndex(index, center)) {
+    if (frontline[index])
+      continue
+    const main = sorted.front.shift()
+    if (main) {
+      frontline[index] = main
+      continue
+    }
+    const flank = sorted.flank.shift()
+    if (flank) {
+      frontline[index] = flank
+      continue
+    }
+    const support = sorted.support.shift()
+    if (support) {
+      frontline[index] = support
+      continue
+    }
+    break
   }
   // Fill flanks with remaining units.
   for (; index >= 0 && index < frontline.length; index = nextIndex(index, center)) {
-      if (frontline[index])
-          continue
-      const flank = sorted.flank.shift()
-      if (flank) {
-          frontline[index] = flank
-          continue
-      }
-      const main = sorted.front.shift()
-      if (main) {
-          frontline[index] = main
-          continue
-      }
-      const support = sorted.support.shift()
-      if (support) {
-          frontline[index] = support
-          continue
-      }
-      break
+    if (frontline[index])
+      continue
+    const flank = sorted.flank.shift()
+    if (flank) {
+      frontline[index] = flank
+      continue
+    }
+    const main = sorted.front.shift()
+    if (main) {
+      frontline[index] = main
+      continue
+    }
+    const support = sorted.support.shift()
+    if (support) {
+      frontline[index] = support
+      continue
+    }
+    break
   }
   reserve.splice(0, reserve.length, ...(sorted.support.concat(sorted.flank).concat(sorted.front)))
 
@@ -72,53 +89,39 @@ export const sortReserve = (reserve: Reserve, unit_preferences: UnitPreferences)
   const supportReserve = reserve.filter(value => isSupportUnit(unit_preferences, value))
   // Calculate priorities (mostly based on unit type, ties are resolved with index numbers).
   const front = sortBy(frontReserve, value => {
-      return -value.definition.deployment_cost * 100000 - value[UnitCalc.Strength] * 1000 - (value.definition.type === unit_preferences[UnitPreferenceType.Primary] ? 200000000 : 0) - (value.definition.type === unit_preferences[UnitPreferenceType.Secondary] ? -100000000 : 0)
+    return -value.definition.deployment_cost * 100000 - value[UnitCalc.Strength] * 1000 - (value.definition.type === unit_preferences[UnitPreferenceType.Primary] ? 200000000 : 0) - (value.definition.type === unit_preferences[UnitPreferenceType.Secondary] ? -100000000 : 0)
   })
   const flank = sortBy(flankReserve, value => {
-      return -value.definition[UnitCalc.Maneuver] * 100000 - value[UnitCalc.Strength] * 1000 - (value.definition.type === unit_preferences[UnitPreferenceType.Flank] ? 100000000 : 0)
+    return -value.definition[UnitCalc.Maneuver] * 100000 - value[UnitCalc.Strength] * 1000 - (value.definition.type === unit_preferences[UnitPreferenceType.Flank] ? 100000000 : 0)
   })
   const support = sortBy(supportReserve, value => {
     return -value[UnitCalc.Strength] * 1000
-})
-  return { front, flank, support }
+  })
+  return { front, flank, support, length: front.length + flank.length + support.length }
 }
 
 const isFrontUnit = (preferences: UnitPreferences, unit: CombatUnit) => {
   if (unit.definition.type === preferences[UnitPreferenceType.Flank])
-      return false
+    return false
   if (unit.definition.type === preferences[UnitPreferenceType.Primary] || unit.definition.type === preferences[UnitPreferenceType.Secondary])
-      return true
+    return true
   return unit.definition.deployment === UnitDeployment.Front
 }
 
 const isFlankUnit = (preferences: UnitPreferences, unit: CombatUnit) => {
   if (unit.definition.type === preferences[UnitPreferenceType.Flank])
-      return true
+    return true
   if (unit.definition.type === preferences[UnitPreferenceType.Primary] || unit.definition.type === preferences[UnitPreferenceType.Secondary])
-      return false
+    return false
   return unit.definition.deployment === UnitDeployment.Flank
 }
 
 const isSupportUnit = (preferences: UnitPreferences, unit: CombatUnit) => {
   if (unit.definition.type === preferences[UnitPreferenceType.Flank])
-      return false
+    return false
   if (unit.definition.type === preferences[UnitPreferenceType.Primary] || unit.definition.type === preferences[UnitPreferenceType.Secondary])
-      return false
+    return false
   return unit.definition.deployment === UnitDeployment.Support
-}
-
-
-/**
- * Removes units from frontline which are out of combat width.
- * Also resizes the frontline to prevent 'index out of bounds' errors.
- * Calling this function shouldn't be necessary 
- */
-const removeOutOfBounds = (units: CombatUnits, combat_width: number) => {
-  while (units.frontline.length > combat_width)  {
-    const unit = units.frontline.pop()
-    if (unit)
-      units.defeated.push(unit)
-  }
 }
 
 const isAlive = (unit: CombatUnit, minimum_morale: number, minimum_strength: number) => (
@@ -131,13 +134,15 @@ const removeDefeated = (units: CombatUnits, minimum_morale: number, minimum_stre
   const defeated = units.defeated
 
   for (let i = 0; i < frontline.length; i++) {
-    const unit = frontline[i]
-    if (!unit)
-      continue
-    if (isAlive(unit, minimum_morale, minimum_strength))
-      continue
-    defeated.push(unit)
-    frontline[i] = null
+    for (let j = 0; j < frontline[i].length; j++) {
+      const unit = frontline[i][j]
+      if (!unit)
+        continue
+      if (isAlive(unit, minimum_morale, minimum_strength))
+        continue
+      defeated.push(unit)
+      frontline[i][j] = null
+    }
   }
   for (let i = 0; i < reserve.length; i++) {
     const unit = reserve[i]
@@ -160,7 +165,7 @@ const removeDefeated = (units: CombatUnits, minimum_morale: number, minimum_stre
 const calculateFlankSizes = (combat_width: number, preferred_flank_size: number, reserve: SortedReserve, enemy_units: CombatUnits): [number, number] => {
   const space_needed_for_flanking_units = Math.ceil(reserve.flank.length / 2.0)
   const target_flank_size = Math.min(space_needed_for_flanking_units, preferred_flank_size)
-  
+
   const free_space = combat_width - armySize(enemy_units)
   const left_side_free_space = Math.ceil(free_space / 2.0)
   const right_side_free_space = Math.floor(free_space / 2.0)
@@ -173,8 +178,6 @@ const calculateFlankSizes = (combat_width: number, preferred_flank_size: number,
 }
 
 export const deploy = (attacker: CombatParticipant, defender: CombatParticipant, settings: CombatSettings) => {
-  removeOutOfBounds(attacker.army, settings[Setting.CombatWidth])
-  removeOutOfBounds(defender.army, settings[Setting.CombatWidth])
   removeDefeated(attacker.army, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength])
   removeDefeated(defender.army, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength])
 

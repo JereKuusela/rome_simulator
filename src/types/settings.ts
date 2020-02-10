@@ -23,6 +23,7 @@ export enum Setting {
   DefenderAdvantage = 'Defender\'s advantage',
   FixExperience = 'Fix damage reduction from experience',
   FixTargeting = 'Fix targeting',
+  BackRow = 'Enable backrow',
   MaxDepth = 'Statistics: Maximum depth',
   PhaseLengthMultiplier = 'Statistics: Multiplier for phase length',
   ChunkSize = 'Statistics: Chunk size',
@@ -74,6 +75,11 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Defending units can\'t be targeted when they reinforce.\nThis undocumented feature gives a minor advantage to the defender.'
       else
         return 'Defender\'s advantage is removed.\nDefender gets no undocumented benefits.'
+    case Setting.BackRow:
+      if (value)
+        return 'Backrow enabled for support units (EUIV).'
+      else
+        return 'Only front row (Imperator).'
     case Setting.RollDamage:
       return 'Additional base damage per dice roll and other modifiers.\nIncrease for faster battles, more randomness and stronger generals.\nDecrease for slower battles, less randomness and weaker generals.'
     case Setting.RollFrequency:
@@ -142,6 +148,7 @@ export type SiteSettings = {
   [Setting.CalculateCasualties]: boolean,
   [Setting.CalculateResourceLosses]: boolean,
   [Setting.ShowGraphs]: boolean,
+  [Setting.BackRow]: boolean,
   [Setting.Performance]: SimulationSpeed
 }
 

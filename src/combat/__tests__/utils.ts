@@ -1,7 +1,7 @@
 import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultParticipant, getDefaultArmy, getDefaultUnit } from 'data'
 import { map, mapRange } from 'utils'
 import { mergeValues, calculateValue } from 'definition_values'
-import { DefinitionType, CountryName, Participant, Army, Terrain, TacticType, Setting, Side, BaseCohort, UnitCalc, UnitType, TerrainType, UnitPreferenceType, TacticCalc, Settings } from 'types'
+import { DefinitionType, CountryName, Participant, Terrain, TacticType, Setting, Side, BaseCohort, UnitCalc, UnitType, TerrainType, UnitPreferenceType, TacticCalc, Settings, Cohorts, UnitPreferences, General, Cohort } from 'types'
 import { CombatUnit, CombatParticipant, doBattleFast, getBaseDamages, convertUnits, calculateTotalRoll, deploy, sortReserve } from 'combat'
 import { getBaseUnitType } from 'managers/army'
 
@@ -22,6 +22,13 @@ export interface TestInfo {
   army_d: Army
   terrains: Terrain[]
   settings: Settings
+}
+
+interface Army extends Cohorts {
+  tactic: TacticType
+  unit_preferences: UnitPreferences
+  flank_size: number
+  general: General
 }
 
 /**
@@ -152,21 +159,21 @@ export const setTactics = (info: TestInfo, tactic_a: TacticType, tactic_d: Tacti
 /**
  * Sets center units (useful for 1v1 tests).
  */
-export const setCenterUnits = (info: TestInfo, unit_a: BaseCohort, unit_d: BaseCohort) => {
-  info.army_a.frontline[15] = unit_a
-  info.army_d.frontline[15] = unit_d
+export const setCenterUnits = (info: TestInfo, unit_a: Cohort, unit_d: Cohort) => {
+  info.army_a.frontline[0][15] = unit_a
+  info.army_d.frontline[0][15] = unit_d
 }
 /**
  * Sets an attacker unit (useful for more complex tests).
  */
-export const setAttacker = (info: TestInfo, index: number, unit: BaseCohort) => {
-  info.army_a.frontline[index] = unit
+export const setAttacker = (info: TestInfo, index: number, unit: Cohort) => {
+  info.army_a.frontline[0][index] = unit
 }
 /**
  * Sets a defender unit (useful for more complex tests).
  */
-export const setDefender = (info: TestInfo, index: number, unit: BaseCohort) => {
-  info.army_d.frontline[index] = unit
+export const setDefender = (info: TestInfo, index: number, unit: Cohort) => {
+  info.army_d.frontline[0][index] = unit
 }
 /**
  * Sets flank sizes for deployment.
@@ -216,7 +223,7 @@ export const setUnitPreferences = (info: TestInfo, attacker: (UnitType | null)[]
 /**
  * Returns a unit with a given type.
  */
-export const getUnit = (type: UnitType) => ({ ...unitDefinitions[type] } as any as BaseCohort)
+export const getUnit = (type: UnitType) => ({ ...unitDefinitions[type] } as any as Cohort)
 
 /**
  * List of every unit type for deployment/reinforcement tests.
@@ -275,8 +282,8 @@ export const testCombat = (info: TestInfo, rolls: number[][], attacker: Expected
     const limit = Math.min((roll + 1) * 5, attacker.length)
     for (let round = roll * 5; round < limit; round++) {
       doRound(info, participant_a, participant_d)
-      verifySide(round, Side.Attacker, participant_a.army.frontline, attacker[round])
-      verifySide(round, Side.Defender, participant_d.army.frontline, defender[round])
+      verifySide(round, Side.Attacker, participant_a.army.frontline[0], attacker[round])
+      verifySide(round, Side.Defender, participant_d.army.frontline[0], defender[round])
     }
   }
 }
@@ -289,7 +296,7 @@ export const testDeploy = (info: TestInfo, expected_a: (UnitType | null)[] | nul
 
 const verifyDeployOrReinforce = (info: TestInfo, side: Side, participant: CombatParticipant, expected: (UnitType | null)[] | null = null, reserve_length: number = 0) => {
   if (expected) {
-    verifyTypes(info, expected, side, participant.army.frontline)
+    verifyTypes(info, expected, side, participant.army.frontline[0])
     expect(participant.army.reserve.length).toEqual(reserve_length)
   }
 }

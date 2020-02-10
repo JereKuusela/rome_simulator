@@ -1,10 +1,10 @@
 import { AppState } from './index'
 import { reduce, toArr, filter, arrGet, toObj } from 'utils'
 import { filterUnitDefinitions, isIncludedInMode, getArmyPart, mergeBaseUnitsWithDefinitions, mergeDefinitions, mergeDefinition } from '../army_utils'
-import { Mode, DefinitionType, CountryName, BaseCohort, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, Tactic, UnitPreferences, BaseCohorts, Participant, Terrain, Unit, Settings, Battle, Terrains, Tactics, Cohorts, Units, ArmyName, GeneralStats, Countries } from 'types'
+import { Mode, DefinitionType, CountryName, BaseCohort, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, Tactic, UnitPreferences, BaseCohorts, Participant, Terrain, Unit, Settings, Battle, Terrains, Tactics, Cohorts, Units, ArmyName, GeneralStats, Countries, Setting, Reserve, Defeated } from 'types'
 import { CombatUnit, CombatUnits } from 'combat'
 import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticState, getDefaultTerrainState } from 'data'
-import { sortBy, uniq } from 'lodash'
+import { sortBy, uniq, flatten } from 'lodash'
 import * as manager from 'managers/army'
 import { mergeValues } from 'definition_values'
 
@@ -35,7 +35,7 @@ export const findUnit = (state: AppState, side: Side, id: number): Cohort | null
   let unit = units.reserve.find(unit => unit.id === id) || null
   if (unit)
     return unit
-  unit = units.frontline.find(unit => unit ? unit.id === id : false) || null
+  unit = flatten(units.frontline).find(unit => unit ? unit.id === id : false) || null
   if (unit)
     return unit
   unit = units.defeated.find(unit => unit.id === id) || null
@@ -49,14 +49,14 @@ export const getCombatUnit = (state: AppState, side: Side, type: ArmyType, id: n
     return null
   const units = getCurrentCombat(state, side)
   const army = getArmyPart(units, type)
-  return army.find(unit => unit?.definition.id === id) ?? null
+  return flatten(army).find(unit => unit?.definition.id === id) ?? null
 }
 
 const findCombatUnit = (units: CombatUnits, id: number): CombatUnit | null => {
   let unit = units.reserve.find(unit => unit.definition.id === id) || null
   if (unit)
     return unit
-  unit = units.frontline.find(unit => unit ? unit.definition.id === id : false) || null
+  unit = flatten(units.frontline).find(unit => unit ? unit.definition.id === id : false) || null
   if (unit)
     return unit
   unit = units.defeated.find(unit => unit.definition.id === id) || null
@@ -210,9 +210,18 @@ const getBaseCohortsByCountry = (state: AppState, country: CountryName): BaseCoh
 const getCohortsBySide = (state: AppState, side: Side): Cohorts => getCohortsByCountry(state, getParticipant(state, side).country)
 
 const getCohortsByCountry = (state: AppState, country: CountryName): Cohorts => {
-  const army = getArmy(state, country)
+  const settings = getSettings(state)
+  const base = getBaseCohortsByCountry(state, country)
+  const frontline = [Array<Cohort | null>(settings[Setting.CombatWidth]).fill(null)]
+  if (settings[Setting.BackRow])
+    frontline.push([...frontline[0]])
+  const cohorts = {
+    frontline,
+    reserve: base.reserve as Reserve,
+    defeated: base.defeated as Defeated
+  }
   const definitions = getUnitDefinitions(state, country)
-  return mergeBaseUnitsWithDefinitions(army, definitions)
+  return mergeBaseUnitsWithDefinitions(cohorts, definitions)
 }
 
 export const getBaseCohorts = (state: AppState, type: Side): BaseCohorts => getBaseCohortsBySide(state, type)

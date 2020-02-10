@@ -46,7 +46,7 @@ export enum UnitPreferenceType {
 export type BaseFrontLine = (BaseCohort | null)[]
 export type BaseReserve = BaseCohort[]
 export type BaseDefeated = BaseCohort[]
-export type FrontLine = (Cohort | null)[]
+export type FrontLine = (Cohort | null)[][]
 export type Reserve = Cohort[]
 export type Defeated = Cohort[]
 
