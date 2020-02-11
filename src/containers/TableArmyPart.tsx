@@ -105,7 +105,7 @@ class UnitArmy extends Component<IProps, IState> {
         selectable={!!onClick}
         style={{ backgroundColor: column < 0 ? '#DDDDDD' : 'white', padding: 0 }}
         onClick={() => onClick && onClick(row, column, unit?.id)}
-        onMouseEnter={(e: React.MouseEvent) => unit && this.setState({ tooltip_index: unit.id, tooltip_context: e.currentTarget, tooltip_is_support: is_support })}
+        onMouseOver={(e: React.MouseEvent) => unit && this.setState({ tooltip_index: unit.id, tooltip_context: e.currentTarget, tooltip_is_support: is_support })}
         onMouseLeave={() => unit && this.state.tooltip_index === unit.id && this.setState({ tooltip_index: null, tooltip_context: null })}
         onContextMenu={(e: any) => e.preventDefault() || this.deleteCohort(unit)}
       >

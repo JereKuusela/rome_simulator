@@ -11,6 +11,8 @@ Changelog:
 - Battle: Updated flank size setting to work more accurately (not sure when this was changed).
 - Battle: Refactored state for armies (first step towards multiarmy battles).
 - Battle: Added support for backrow and backrow effectiveness.
+- Battle: Fixed right-click cohort removal not always working correctly.
+- Battle: Fixed cohort tooltip not appearing when moving mouse fast.
 - Stats: Added average gold losses to naval simulations (from repair, from destroyed, from captured, etc.).
 - Stats: Added separate settings for calculating different things.
 - Countries: Added naval capture chance from general martial (0.2% * martial).
