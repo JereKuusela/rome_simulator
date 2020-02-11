@@ -19,7 +19,7 @@ export enum Setting {
   MinimumMorale = 'Minimum morale for combat',
   MinimumStrength = 'Minimum strength for combat',
   RollFrequency = 'Length of combat phases',
-  CombatWidth = 'Combat width',
+  CombatWidth = 'Base combat width',
   DefenderAdvantage = 'Defender\'s advantage',
   FixExperience = 'Fix damage reduction from experience',
   FixTargeting = 'Fix targeting',

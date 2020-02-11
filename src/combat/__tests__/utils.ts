@@ -1,7 +1,7 @@
 import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultParticipant, getDefaultArmy, getDefaultUnit } from 'data'
 import { map, mapRange } from 'utils'
 import { mergeValues, calculateValue } from 'definition_values'
-import { DefinitionType, CountryName, Participant, Terrain, TacticType, Setting, Side, BaseCohort, UnitCalc, UnitType, TerrainType, UnitPreferenceType, TacticCalc, Settings, Cohorts, UnitPreferences, General, Cohort } from 'types'
+import { DefinitionType, CountryName, Participant, Terrain, TacticType, Setting, Side, BaseCohort, UnitCalc, UnitType, TerrainType, UnitPreferenceType, TacticCalc, Settings, Cohorts, UnitPreferences, General, Cohort, FrontLine } from 'types'
 import { CombatUnit, CombatParticipant, doBattleFast, getBaseDamages, convertUnits, calculateTotalRoll, deploy, sortReserve } from 'combat'
 import { getBaseUnitType } from 'managers/army'
 
@@ -40,14 +40,18 @@ export const initInfo = () => ({
   army_a: {
     ...getDefaultArmy(DefinitionType.Land),
     // Frontline must be cloned to prevent tests mutating the source.
-    frontline: [...getDefaultArmy(DefinitionType.Land).frontline],
+    frontline: [],
+    reserve: {},
+    defeated: {},
     tactic: TacticType.Envelopment,
     unit_preferences: getUnitPreferences()
   },
   army_d: {
     ...getDefaultArmy(DefinitionType.Land),
     // Frontline must be cloned to prevent tests mutating the source.
-    frontline: [...getDefaultArmy(DefinitionType.Land).frontline],
+    frontline: [],
+    reserve: {},
+    defeated: {},
     tactic: TacticType.Envelopment,
     unit_preferences: getUnitPreferences()
   },

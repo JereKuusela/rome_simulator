@@ -18,6 +18,7 @@ Changelog:
 - Countries: Added naval capture chance from general martial (0.2% * martial).
 - Countries: Refactored general to be separate entity (second step towards multiarmy battles).
 - Countries: Fixed/updated Export Hemp to give -10% Naval Damage taken instead of +5% Naval Damage done.
+- Countries: Added support for country specific combat width modifiers, feature from EUIV.
 - Units: Balance changes from 1.3.2 (War Elephants damage against Infantry, Supply Train cost).
 - Units: Added 1 maneuver to Mega-Polyreme (no idea when this was changed).
 - Units: Added new attributes: food consumption and storage.
@@ -56,9 +57,7 @@ Settings:
  - More sections for settings (at least new section for deployment and reinforcement).
 
 EUIV:
- - Base front to a two dimensional map to support adding cohorts manually
  - Daily morale losses, attribute for reducing them (+ setting)
- - Dynamic combat width (country needs definition), setting changed to base combat width
  - Military tactics as defensive value (+ setting)
  - Discipline also to reduce damage (+ setting)
  - Derivate attributes (reduce flanking range based on strength)

@@ -1,5 +1,5 @@
 import { CombatUnit, CombatUnits, Reserve, CombatParticipant } from './combat'
-import { UnitPreferences, UnitCalc, UnitPreferenceType, UnitDeployment, CombatSettings, Setting } from 'types'
+import { UnitPreferences, UnitCalc, UnitPreferenceType, UnitDeployment, Setting, Settings } from 'types'
 import { nextIndex } from './reinforcement'
 import { sortBy, remove, clamp } from 'lodash'
 
@@ -177,7 +177,7 @@ const calculateFlankSizes = (combat_width: number, preferred_flank_size: number,
   return [left_flank_size, right_flank_size]
 }
 
-export const deploy = (attacker: CombatParticipant, defender: CombatParticipant, settings: CombatSettings) => {
+export const deploy = (attacker: CombatParticipant, defender: CombatParticipant, settings: Settings) => {
   removeDefeated(attacker.army, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength])
   removeDefeated(defender.army, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength])
 

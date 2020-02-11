@@ -1,19 +1,23 @@
 import { AppState } from './index'
 import { reduce, toArr, filter, arrGet, toObj, forEach2 } from 'utils'
 import { filterUnitDefinitions, isIncludedInMode, getArmyPart, mergeBaseUnitsWithDefinitions, mergeDefinitions, mergeDefinition, findUnitById } from '../army_utils'
-import { Mode, DefinitionType, CountryName, BaseCohort, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, Tactic, UnitPreferences, BaseCohorts, Participant, Terrain, Unit, Settings, Battle, Terrains, Tactics, Cohorts, Units, ArmyName, GeneralStats, Countries, Setting, Reserve, Defeated } from 'types'
+import { Mode, DefinitionType, CountryName, BaseCohort, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, Tactic, UnitPreferences, BaseCohorts, Participant, Terrain, Unit, Settings, Battle, Terrains, Tactics, Cohorts, Units, ArmyName, GeneralStats, Countries, Setting, Reserve, Defeated, CountryCalc } from 'types'
 import { CombatUnit, CombatUnits } from 'combat'
 import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticState, getDefaultTerrainState } from 'data'
 import { sortBy, uniq, flatten } from 'lodash'
 import * as manager from 'managers/army'
-import { mergeValues } from 'definition_values'
+import { mergeValues, calculateValue } from 'definition_values'
 
 /**
  * Returns settings of the current mode.
  * @param state Application state.
  */
 export const getSettings = (state: AppState, mode?: Mode): Settings => {
-  return { ...state.settings.combatSettings[mode || state.settings.mode], ...state.settings.siteSettings }
+  const settings =  { ...state.settings.combatSettings[mode || state.settings.mode], ...state.settings.siteSettings }
+  const attacker = getCountries(state)[getCountry(state, Side.Attacker)]
+  const defender = getCountries(state)[getCountry(state, Side.Defender)]
+  settings[Setting.CombatWidth] += Math.max(calculateValue(attacker, CountryCalc.CombatWidth), calculateValue(defender, CountryCalc.CombatWidth))
+  return settings
 }
 
 export const findBaseUnit = (state: AppState, country: CountryName, id: number): BaseCohort | null => {

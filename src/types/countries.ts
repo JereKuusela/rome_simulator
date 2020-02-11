@@ -2,6 +2,7 @@ import { ObjSet } from "utils"
 import { CultureType, GovermentType, ReligionType } from "./modifiers"
 import { Armies } from "./armies"
 import { Units } from "./units"
+import { DefinitionValues } from "definition_values"
 
 export enum CountryName {
   Country1 = 'Country 1',
@@ -9,7 +10,11 @@ export enum CountryName {
 }
 export type Countries = { [key in CountryName]: Country }
 
-export interface Country {
+export enum CountryCalc {
+  CombatWidth = 'Combat width'
+}
+
+export interface Country extends DefinitionValues<CountryCalc> {
   selections: ObjSet
   culture: CultureType
   government: GovermentType
