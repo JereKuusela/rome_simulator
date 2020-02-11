@@ -52,7 +52,8 @@ export enum UnitCalc {
   FoodConsumption = 'Food Consumption',
   FoodStorage = 'Food Storage',
   CaptureChance = 'Capture Chance',
-  CaptureResist = 'Capture Resist'
+  CaptureResist = 'Capture Resist',
+  DailyLossResist = 'Daily loss resist'
 }
 
 export enum GeneralCalc {

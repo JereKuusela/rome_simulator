@@ -77,6 +77,8 @@ export default class UnitDetail extends Component<IProps> {
       return true
     if (mode === DefinitionType.Naval && (attribute === UnitCalc.CaptureChance || attribute === UnitCalc.CaptureResist))
       return true
+    if (!settings[Setting.DailyMoraleLoss] && attribute === UnitCalc.DailyLossResist)
+      return true
     return false
   }
 

@@ -187,7 +187,7 @@ const pickTargets = (source: Frontline, target: Frontline, settings: Settings) =
       state.damage_dealt = 0
       state.morale_dealt = 0
       state.strength_dealt = 0
-      state.morale_loss = 0
+      state.morale_loss = settings[Setting.DailyMoraleLoss] * (1 - unit.definition[UnitCalc.DailyLossResist])
       state.strength_loss = 0
       state.target = null
       if (target[0][j])

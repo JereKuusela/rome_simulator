@@ -59,7 +59,8 @@ export const getDefaultSiteSettings = (): SiteSettings => {
     [Setting.CalculateCasualties]: true,
     [Setting.CalculateResourceLosses]: true,
     [Setting.ShowGraphs]: false,
-    [Setting.DisciplineDamageReduction]: false
+    [Setting.DisciplineDamageReduction]: false,
+    [Setting.DailyMoraleLoss]: 0
   }
 }
 

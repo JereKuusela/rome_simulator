@@ -28,6 +28,7 @@ Changelog:
 - Units: Fixed order of naval units.
 - Units: Added new attributes: capture chance and capture resist.
 - Units: Refactored base stats to a base unit (simplifies code and allows using it as a neutral unit).
+- Units: New attribute for reducing daily morale losses, feature from EUIV.
 - Settings: New page which more clearly shows which settings affects land, naval or both.
 - Settings: Settings for bug fixes (and some others) converted to checkbox settings.
 - Settings: Better names and descriptions for all settings.
@@ -36,6 +37,7 @@ Changelog:
 - Settings: Defender's advantage is now disabled by default (people seem to make wrong conclusions because of it).
 - Settings: New setting to enable backrow (support units are prioritized), feature from EUIV.
 - Settings: New setting for discipline reducing damage, feature from EUIV.
+- Settings: New setting for daily morale losses, feature from EUIV.
 
 Todo:
  - Transfer could only show non-base stats for units, terrains and tactics (since base stats are supposed to regenerate?), currently it shows way too much information.
@@ -56,10 +58,10 @@ Settings:
  - Show default value
  - Show current change versus default value (for example faster battles, more randomness)
  - New settings for deployment / reinforcement order/attribute.
- - More sections for settings (at least new section for deployment and reinforcement).
+ - More sections for settings (at least new section for deployment and reinforcement, game mechanics, simulation settings).
 
 EUIV:
- - Daily morale losses, attribute for reducing them (+ setting)
+ - Tooltip needs to show source of losses (to include daily loss)
  - Military tactics as defensive value (+ setting)
  - Derivate attributes (reduce flanking range based on strength)
  - Cavalry to infantry ratio (flank to front, country definition, + setting)

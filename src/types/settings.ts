@@ -22,6 +22,7 @@ export enum Setting {
   CombatWidth = 'Base combat width',
   DefenderAdvantage = 'Defender\'s advantage',
   DisciplineDamageReduction = 'Discipline also reduces damage',
+  DailyMoraleLoss = 'Daily morale loss',
   FixExperience = 'Fix damage reduction from experience',
   FixTargeting = 'Fix targeting',
   BackRow = 'Enable backrow',
@@ -86,6 +87,8 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Discipline increases damage done and reduces damage taken (EUIV).'
       else
         return 'Discipline only increases damage done (Imperator).'
+    case Setting.DailyMoraleLoss:
+      return 'Amount of morale lost each round in battle (EUIV).'
     case Setting.RollDamage:
       return 'Additional base damage per dice roll and other modifiers.\nIncrease for faster battles, more randomness and stronger generals.\nDecrease for slower battles, less randomness and weaker generals.'
     case Setting.RollFrequency:
@@ -156,6 +159,7 @@ export type SiteSettings = {
   [Setting.ShowGraphs]: boolean,
   [Setting.BackRow]: boolean,
   [Setting.DisciplineDamageReduction]: boolean,
+  [Setting.DailyMoraleLoss]: number,
   [Setting.Performance]: SimulationSpeed
 }
 
