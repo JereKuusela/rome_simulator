@@ -82,7 +82,7 @@ class UnitArmy extends Component<IProps, IState> {
                   {
                     columns.map((column, index) => {
                       const unit = column > -1 ? flat_units[row * row_width + column] : null
-                      return this.renderCell(reverse ? rows.length - 1 - row : row, index, column, unit, reverse ? row === 0 : row > 0)
+                      return this.renderCell(reverse ? rows.length - 1 - row : row, index, column, unit, reverse ? row < rows.length - 1 : row > 0)
                     })
                   }
                 </Table.Row>

@@ -13,6 +13,7 @@ Changelog:
 - Battle: Added support for backrow and backrow effectiveness.
 - Battle: Fixed right-click cohort removal not always working correctly.
 - Battle: Fixed cohort tooltip not appearing when moving mouse fast.
+- Battle: Fixed total damage shown incorrectly on cohort tooltips (if target had experience).
 - Stats: Added average gold losses to naval simulations (from repair, from destroyed, from captured, etc.).
 - Stats: Added separate settings for calculating different things.
 - Countries: Added naval capture chance from general martial (0.2% * martial).
@@ -34,6 +35,7 @@ Changelog:
 - Settings: Removed "Fix damage taken" settings as it is fixed in the game.
 - Settings: Defender's advantage is now disabled by default (people seem to make wrong conclusions because of it).
 - Settings: New setting to enable backrow (support units are prioritized), feature from EUIV.
+- Settings: New setting for discipline reducing damage, feature from EUIV.
 
 Todo:
  - Transfer could only show non-base stats for units, terrains and tactics (since base stats are supposed to regenerate?), currently it shows way too much information.
@@ -59,7 +61,6 @@ Settings:
 EUIV:
  - Daily morale losses, attribute for reducing them (+ setting)
  - Military tactics as defensive value (+ setting)
- - Discipline also to reduce damage (+ setting)
  - Derivate attributes (reduce flanking range based on strength)
  - Cavalry to infantry ratio (flank to front, country definition, + setting)
  - Fire and shock phases, fire/shock damage done/taken attributes (+ setting)

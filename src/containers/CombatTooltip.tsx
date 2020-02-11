@@ -75,7 +75,7 @@ class CombatTooltip extends Component<IProps, IState> {
   toNumber = (value: number) => toNumber(value, 3)
 
   getBaseSection = (source: IUnit, target: IUnit, base_damage: number, tactic_damage: number, is_support: boolean) => {
-    const { terrains } = this.props
+    const { terrains, settings } = this.props
     const terrain_types = terrains.map(value => value.type)
     const strength = source[UnitCalc.Strength] + source.strength_loss
     const offense_vs_defense = source[UnitCalc.Offense] - target[UnitCalc.Defense]
@@ -94,6 +94,7 @@ class CombatTooltip extends Component<IProps, IState> {
       {attributes.map(attribute => this.getAttribute(source, attribute))}
       {this.renderStyledItem(target.type, target_type, toSignedPercent)}
       {this.renderStyledItem('Offense vs Defense', offense_vs_defense, toSignedPercent)}
+      {settings[Setting.DisciplineDamageReduction] && this.renderStyledItem('Target discipline', 1/(target[UnitCalc.Discipline] + 1) - 1, toSignedPercent)}
       {this.renderStyledItem('Target experience', experience_reduction, toSignedPercent)}
       {target_attributes.map(terrain => this.getAttribute(target, terrain))}
       {terrain_types.map(terrain => this.getAttribute(source, terrain))}

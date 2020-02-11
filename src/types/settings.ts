@@ -21,6 +21,7 @@ export enum Setting {
   RollFrequency = 'Length of combat phases',
   CombatWidth = 'Base combat width',
   DefenderAdvantage = 'Defender\'s advantage',
+  DisciplineDamageReduction = 'Discipline also reduces damage',
   FixExperience = 'Fix damage reduction from experience',
   FixTargeting = 'Fix targeting',
   BackRow = 'Enable backrow',
@@ -80,6 +81,11 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Backrow enabled for support units (EUIV).'
       else
         return 'Only front row (Imperator).'
+    case Setting.DisciplineDamageReduction:
+      if (value)
+        return 'Discipline increases damage done and reduces damage taken (EUIV).'
+      else
+        return 'Discipline only increases damage done (Imperator).'
     case Setting.RollDamage:
       return 'Additional base damage per dice roll and other modifiers.\nIncrease for faster battles, more randomness and stronger generals.\nDecrease for slower battles, less randomness and weaker generals.'
     case Setting.RollFrequency:
@@ -149,6 +155,7 @@ export type SiteSettings = {
   [Setting.CalculateResourceLosses]: boolean,
   [Setting.ShowGraphs]: boolean,
   [Setting.BackRow]: boolean,
+  [Setting.DisciplineDamageReduction]: boolean,
   [Setting.Performance]: SimulationSpeed
 }
 

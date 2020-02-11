@@ -58,7 +58,8 @@ export const getDefaultSiteSettings = (): SiteSettings => {
     [Setting.CalculateWinChance]: true,
     [Setting.CalculateCasualties]: true,
     [Setting.CalculateResourceLosses]: true,
-    [Setting.ShowGraphs]: false
+    [Setting.ShowGraphs]: false,
+    [Setting.DisciplineDamageReduction]: false
   }
 }
 

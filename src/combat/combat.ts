@@ -41,8 +41,9 @@ const precalculateUnit = (settings: Settings, casualties_multiplier: number, bas
     total_damage: toObj(unit_types, type => type, type => total_damage.map(damage => damage * (1.0 + calculateValue(unit, type)))),
     morale_done_multiplier: (1.0 + calculateValue(unit, UnitCalc.MoraleDamageDone)) * settings[Setting.MoraleLostMultiplier],
     strength_done_multiplier: (1.0 + calculateValue(unit, UnitCalc.StrengthDamageDone)) * settings[Setting.StrengthLostMultiplier] * (1.0 + casualties_multiplier),
-    morale_taken_multiplier: damage_reduction * (1.0 + calculateValue(unit, UnitCalc.MoraleDamageTaken)),
-    strength_taken_multiplier: damage_reduction * (1.0 + calculateValue(unit, UnitCalc.StrengthDamageTaken))
+    damage_taken_multiplier: damage_reduction,
+    morale_taken_multiplier: 1.0 + calculateValue(unit, UnitCalc.MoraleDamageTaken),
+    strength_taken_multiplier: 1.0 + calculateValue(unit, UnitCalc.StrengthDamageTaken)
   }
   return info
 }
@@ -91,6 +92,7 @@ export interface CombatUnitPreCalculated {
   total_damage: { [key in UnitType]: number[] }  // Total damage for each unit and dice roll.
   morale_done_multiplier: number
   strength_done_multiplier: number
+  damage_taken_multiplier: number
   morale_taken_multiplier: number
   strength_taken_multiplier: number
 }
@@ -319,13 +321,14 @@ const precalculateDamage = (base_damage: number, terrains: Terrain[], unit: Coho
 const precalculateDamageReduction = (unit: Cohort, settings: Settings) => (
   (1.0 + calculateExperienceReduction(settings, unit))
   * (1.0 + calculateValue(unit, UnitCalc.DamageTaken))
+  / (settings[Setting.DisciplineDamageReduction] ? 1.0 + calculateValue(unit, UnitCalc.Discipline) : 1.0)
 )
 
 const calculateDamageMultiplier = (source: CombatUnit, target: CombatUnit, tactic_damage_multiplier: number) => {
   const info_s = source.definition
   const info_t = target.definition
   let damage = tactic_damage_multiplier * source[UnitCalc.Strength]
-    * (1.0 + info_s[UnitCalc.Offense] - info_t[UnitCalc.Defense])
+    * (1.0 + info_s[UnitCalc.Offense] - info_t[UnitCalc.Defense]) * target.calculated.damage_taken_multiplier
   return damage
 }
 
