@@ -1,6 +1,6 @@
 import { calculateValue, clearAllValues, mergeValues, calculateBase, addValues, regenerateValues } from 'definition_values'
-import { DefinitionType, Mode, GeneralCalc, UnitDefinitionValues, UnitType, UnitDefinitionValue, Unit, UnitCalc, General, Army, ArmyType, BaseCohort, ValuesType, UnitValueType, TacticType, UnitPreferenceType, GeneralStats, BaseReserve, ScopeType, Modifier, CountryName } from 'types'
-import { filterKeys, map } from 'utils'
+import { DefinitionType, Mode, GeneralCalc, UnitDefinitionValues, UnitType, UnitDefinitionValue, Unit, UnitCalc, General, Army, ArmyType, BaseCohort, ValuesType, UnitValueType, TacticType, UnitPreferenceType, GeneralStats, BaseReserve, ScopeType, Modifier, BaseDefeated, BaseFrontLine } from 'types'
+import { filterKeys, map, forEach, keys } from 'utils'
 import { findLastIndex } from 'lodash'
 
 /**
@@ -39,52 +39,52 @@ export const unitSorter = (definition: Unit, mode: Mode) => {
 export const getBaseUnitType = (mode: Mode) => mode === DefinitionType.Land ? UnitType.BaseLand : UnitType.BaseNaval
 
 
-const findUnit = (participant: Army, id: number): [ArmyType | undefined, number] => {
-  let index = participant.reserve.findIndex(unit => unit.id === id)
-  if (index > -1)
-    return [ArmyType.Reserve, index]
-  index = participant.frontline.findIndex(unit => unit ? unit.id === id : false)
-  if (index > -1)
-    return [ArmyType.Frontline, index]
-  index = participant.defeated.findIndex(unit => unit.id === id)
-  if (index > -1)
-    return [ArmyType.Defeated, index]
-  return [undefined, -1]
+const findFromFrontline = (frontline: BaseFrontLine, id: number): [number, number] | undefined => {
+  let ret: [number, number] | undefined = undefined
+  forEach(frontline, (row, row_index) => forEach(row, (unit, column_index) => {
+    if (unit.id === id)
+      ret = [Number(row_index), Number(column_index)]
+  }))
+  return ret
 }
 
+const findFromReserve = (reserve: BaseReserve, id: number) => reserve.findIndex(unit => unit.id === id)
+const findFromDefeated = (defeated: BaseDefeated, id: number) => defeated.findIndex(unit => unit.id === id)
+
+
 const update = (army: Army, id: number, updater: (unit: BaseCohort) => BaseCohort): void => {
-  let index = army.reserve.findIndex(unit => unit.id === id)
+  let index = findFromReserve(army.reserve, id)
   if (index > -1) {
     army.reserve[index] = updater(army.reserve[index])
     return
   }
-  index = army.frontline.findIndex(unit => unit ? unit.id === id : false)
-  if (index > -1) {
-    army.frontline[index] = updater(army.frontline[index]!)
+  const location = findFromFrontline(army.frontline, id)
+  if (location) {
+    const [row, column] = location
+    army.frontline[row][column] = updater(army.frontline[row][column])
     return
   }
-  index = army.defeated.findIndex(unit => unit.id === id)
+  index = findFromDefeated(army.defeated, id)
   if (index > -1) {
     army.defeated[index] = updater(army.defeated[index])
     return
   }
 }
 
-export const selectCohort = (army: Army, type: ArmyType, index: number, cohort: BaseCohort | null, country?: CountryName) => {
-  if (type === ArmyType.Frontline)
-    army.frontline[index] = cohort
-  else if (type === ArmyType.Reserve && cohort && index > army.reserve.length)
+export const selectCohort = (army: Army, type: ArmyType, row: number, column: number, cohort: BaseCohort) => {
+  if (type === ArmyType.Frontline) {
+    if (!army.frontline[row])
+      army.frontline[row] = {}
+    army.frontline[row][column] = cohort
+  }
+  else if (type === ArmyType.Reserve && cohort && column > army.reserve.length)
     army.reserve.push(cohort)
   else if (type === ArmyType.Reserve && cohort)
-    army.reserve[index] = cohort
-  else if (type === ArmyType.Reserve && !cohort)
-    army.reserve.splice(index, 1)
+    army.reserve[column] = cohort
   else if (type === ArmyType.Defeated && cohort)
-    army.defeated[index] = cohort
-  else if (type === ArmyType.Defeated && cohort && index > army.defeated.length)
+    army.defeated[column] = cohort
+  else if (type === ArmyType.Defeated && cohort && column > army.defeated.length)
     army.defeated.push(cohort)
-  else if (type === ArmyType.Defeated && !cohort)
-    army.defeated.splice(index, 1)
 }
 
 export const toggleCohortLoyality = (army: Army, id: number) => {
@@ -100,27 +100,43 @@ export const changeCohortType = (army: Army, id: number, type: UnitType) => {
 }
 
 export const editCohort = (army: Army, unit: BaseCohort) => {
-  const [type, index] = findUnit(army, unit.id)
-  if (!type)
-    return
-  if (type === ArmyType.Frontline)
-    army.frontline[index] = unit
-  if (type === ArmyType.Reserve)
+  let index = findFromReserve(army.reserve, unit.id)
+  if (index > -1) {
     army.reserve[index] = unit
-  if (type === ArmyType.Defeated)
+    return
+  }
+  const location = findFromFrontline(army.frontline, unit.id)
+  if (location) {
+    const [row, column] = location
+    army.frontline[row][column] = unit
+    return
+  }
+  index = findFromDefeated(army.defeated, unit.id)
+  if (index > -1) {
     army.defeated[index] = unit
+    return
+  }
 }
 
 export const deleteCohort = (army: Army, id: number) => {
-  const [type, index] = findUnit(army, id)
-  if (!type)
-    return
-  if (type === ArmyType.Frontline)
-    army.frontline[index] = null
-  if (type === ArmyType.Reserve)
+  let index = findFromReserve(army.reserve, id)
+  if (index > -1) {
     army.reserve.splice(index, 1)
-  if (type === ArmyType.Defeated)
+    return
+  }
+  const location = findFromFrontline(army.frontline, id)
+  if (location) {
+    const [row, column] = location
+    delete army.frontline[row][column]
+    if (!keys(army.frontline[row]).length)
+      delete army.frontline[row]
+    return
+  }
+  index = findFromDefeated(army.defeated, id)
+  if (index > -1) {
     army.defeated.splice(index, 1)
+    return
+  }
 }
 
 export const removeFromReserve = (army: { reserve: BaseReserve }, types: UnitType[]) => {
@@ -135,7 +151,7 @@ export const addToReserve = (army: { reserve: BaseReserve }, cohorts: BaseCohort
 }
 
 export const clearCohorts = (army: Army) => {
-  army.frontline = Array(30).fill(null)
+  army.frontline = {}
   army.reserve = []
   army.defeated = []
 }
@@ -184,7 +200,7 @@ export const enableGeneralModifiers = (army: Army, key: string, modifiers: Modif
   definition = regenerateValues(definition, ValuesType.Base, key, generalValues)
   const martial = calculateValue(definition, GeneralCalc.Martial)
   if (!definitions[DefinitionType.Naval])
-      definitions[DefinitionType.Naval] = {}
+    definitions[DefinitionType.Naval] = {}
   definitions[DefinitionType.Naval] = addValues(definitions[DefinitionType.Naval], ValuesType.Base, GeneralCalc.Martial, [[UnitCalc.CaptureChance, 0.002 * martial]])
   definition.definitions = definitions
   army.general = definition

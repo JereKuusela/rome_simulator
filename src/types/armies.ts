@@ -43,7 +43,7 @@ export enum UnitPreferenceType {
   Flank = 'Flank'
 }
 
-export type BaseFrontLine = (BaseCohort | null)[]
+export type BaseFrontLine = { [key: string]: { [key: string]: BaseCohort } }
 export type BaseReserve = BaseCohort[]
 export type BaseDefeated = BaseCohort[]
 export type FrontLine = (Cohort | null)[][]

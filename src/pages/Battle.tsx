@@ -24,7 +24,7 @@ import IconDice from 'images/chance.png'
 import IconGeneral from 'images/military_power.png'
 import IconTerrain from 'images/terrain.png'
 import {
-    invalidate, selectArmy, selectCohort, setRoll, toggleRandomRoll,
+    invalidate, selectArmy, setRoll, toggleRandomRoll,
     undo, battle, refreshBattle, setSeed, setGeneralMartial, resetState
 } from 'reducers'
 import { AppState, getBattle, getCountry, getGeneralStats, getParticipant, getSettings, getCountries } from 'state'
@@ -51,14 +51,14 @@ class Battle extends Component<IProps, IState> {
 
   closeModal = (): void => this.setState({ modal_unit_info: null, modal_army_unit_info: null, modal_fast_planner_open: false })
 
-  openUnitModal = (side: Side, type: ArmyType, country: CountryName, column: number, id: number | undefined): void => {
+  openUnitModal = (side: Side, type: ArmyType, country: CountryName, row: number, column: number, id: number | undefined): void => {
     if (id)
       this.openArmyUnitModal(side, country, id)
     else
-      this.openUnitSelector(type, country, column)
+      this.openUnitSelector(type, country, row, column)
   }
 
-  openUnitSelector = (type: ArmyType, country: CountryName, index: number): void => this.setState({ modal_unit_info: { type, country, index } })
+  openUnitSelector = (type: ArmyType, country: CountryName, row: number, column: number): void => this.setState({ modal_unit_info: { type, country, row, column } })
 
   openArmyUnitModal = (side: Side, country: CountryName, id: number): void => {
     this.setState({ modal_army_unit_info: { country, id, side } })
@@ -238,8 +238,7 @@ class Battle extends Component<IProps, IState> {
         <UnitArmy
           color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={side}
-          onClick={(column, id) => this.openUnitModal(side, ArmyType.Frontline, country, column, id)}
-          onRemove={column => this.props.removeUnit(country, ArmyType.Frontline, column)}
+          onClick={(row, column, id) => this.openUnitModal(side, ArmyType.Frontline, country, row, column, id)}
           row_width={Math.max(30, combat_width)}
           reverse={side === Side.Attacker}
           type={ArmyType.Frontline}
@@ -289,8 +288,7 @@ class Battle extends Component<IProps, IState> {
         <UnitArmy
           color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={side}
-          onClick={(column, id) => this.openUnitModal(side, ArmyType.Reserve, country, column, id)}
-          onRemove={column => this.props.removeUnit(country, ArmyType.Reserve, column)}
+          onClick={(row, column, id) => this.openUnitModal(side, ArmyType.Reserve, country, row, column + 30 * row, id)}
           row_width={30}
           reverse={false}
           type={ArmyType.Reserve}
@@ -308,8 +306,7 @@ class Battle extends Component<IProps, IState> {
         <UnitArmy
           color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={side}
-          onClick={(column, id) => this.openUnitModal(side, ArmyType.Defeated, country, column, id)}
-          onRemove={column => this.props.removeUnit(country, ArmyType.Defeated, column)}
+          onClick={(row, column, id) => this.openUnitModal(side, ArmyType.Defeated, country, row, column + 30 * row, id)}
           row_width={30}
           reverse={false}
           type={ArmyType.Defeated}
@@ -388,9 +385,6 @@ const mapDispatchToProps = (dispatch: any) => ({
   setRoll: (participant: Side, roll: number) => dispatch(setRoll(participant, roll)),
   setGeneralMartial: (country: CountryName, skill: number) => dispatch(setGeneralMartial(country, skill)) && dispatch(invalidate()),
   selectArmy: (type: Side, country: CountryName) => dispatch(selectArmy(type, country)) && dispatch(invalidate()),
-  removeUnit: (country: CountryName, type: ArmyType, column: number) => (
-    dispatch(selectCohort(country, type, column, null))
-  ),
   setSeed: (seed: number) => dispatch(setSeed(seed)) && dispatch(invalidate()),
   refreshBattle: () => dispatch(refreshBattle()),
   resetState: () => dispatch(resetState())

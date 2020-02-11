@@ -8,16 +8,16 @@ import IconDefeated from 'images/attrition.png'
 import { Side, ArmyType, UnitCalc } from 'types'
 import { getImage } from 'utils'
 import { CombatUnit } from 'combat'
-import { AppState, getCurrentCombat } from 'state'
+import { AppState, getCurrentCombat, getCountry } from 'state'
 import { getArmyPart } from 'army_utils'
 import { flatten } from 'lodash'
+import { deleteCohort, invalidate } from 'reducers'
 
 type Props = {
   side: Side
   row_width: number
   reverse: boolean
-  onClick?: (index: number, id: number | undefined) => void
-  onRemove?: (index: number) => void
+  onClick?: (row: number, column: number, id: number | undefined) => void
   type: ArmyType
   color: string
   // Prevents adding units.
@@ -82,7 +82,7 @@ class UnitArmy extends Component<IProps, IState> {
                   {
                     columns.map((column, index) => {
                       const unit = column > -1 ? flat_units[row * row_width + column] : null
-                      return this.renderCell(row, index, column, unit, reverse ? row === 0 : row > 0)
+                      return this.renderCell(reverse ? rows.length - 1 - row : row, index, column, unit, reverse ? row === 0 : row > 0)
                     })
                   }
                 </Table.Row>
@@ -94,8 +94,8 @@ class UnitArmy extends Component<IProps, IState> {
     )
   }
 
-  renderCell = (row: number, index: number, column: number, unit: IUnit, is_support: boolean) => {
-    const { side, type, disable_add, onClick, row_width, onRemove } = this.props
+  renderCell = (row: number, index: number, column: number, unit: ICohort, is_support: boolean) => {
+    const { side, type, disable_add, onClick } = this.props
     return (
       <Table.Cell
         className={side + '-' + type + '-' + unit?.id}
@@ -104,17 +104,17 @@ class UnitArmy extends Component<IProps, IState> {
         disabled={column < 0 || (disable_add && !unit)}
         selectable={!!onClick}
         style={{ backgroundColor: column < 0 ? '#DDDDDD' : 'white', padding: 0 }}
-        onClick={() => onClick && onClick(row * this.props.row_width + column, unit?.id)}
+        onClick={() => onClick && onClick(row, column, unit?.id)}
         onMouseEnter={(e: React.MouseEvent) => unit && this.setState({ tooltip_index: unit.id, tooltip_context: e.currentTarget, tooltip_is_support: is_support })}
-        onMouseLeave={() => this.setState({ tooltip_index: null, tooltip_context: null })}
-        onContextMenu={(e: any) => e.preventDefault() || (onRemove && onRemove(row * row_width + column))}
+        onMouseLeave={() => unit && this.state.tooltip_index === unit.id && this.setState({ tooltip_index: null, tooltip_context: null })}
+        onContextMenu={(e: any) => e.preventDefault() || this.deleteCohort(unit)}
       >
         {this.renderUnit(unit)}
       </Table.Cell>
     )
   }
 
-  renderUnit = (unit: IUnit) => {
+  renderUnit = (unit: ICohort) => {
     if (!unit)
       return this.renderImage(getImage(null))
     if (unit.is_defeated)
@@ -146,9 +146,17 @@ class UnitArmy extends Component<IProps, IState> {
   )
 
   percent = (current: number, max: number) => 100.0 - 100.0 * current / max
+
+  deleteCohort = (cohort: ICohort) => {
+    if (!cohort)
+      return
+    const { deleteCohort, invalidate, country } = this.props
+    deleteCohort(country, cohort.id)
+    invalidate()
+  }
 }
 
-type IUnit = {
+type ICohort = {
   id: number
   is_defeated: boolean
   image?: string
@@ -158,7 +166,7 @@ type IUnit = {
   strength: number
 } | null
 
-const convertUnits = (units: (CombatUnit | null)[][]): IUnit[][] => (
+const convertUnits = (units: (CombatUnit | null)[][]): ICohort[][] => (
   units.map(row => row.map(unit => unit && {
     id: unit.definition.id,
     is_defeated: unit.state.is_defeated,
@@ -171,10 +179,11 @@ const convertUnits = (units: (CombatUnit | null)[][]): IUnit[][] => (
 )
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  units: convertUnits(getArmyPart(getCurrentCombat(state, props.side), props.type))
+  units: convertUnits(getArmyPart(getCurrentCombat(state, props.side), props.type)),
+  country: getCountry(state, props.side)
 })
 
-const actions = {}
+const actions = { deleteCohort, invalidate }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

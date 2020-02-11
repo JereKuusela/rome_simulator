@@ -24,31 +24,33 @@ const reinforceUnits = (frontline: Frontline, reserve: Reserve) => {
 }
 
 const moveUnits = (frontline: Frontline) => {
-    const front = frontline[0]
-    // Move units from left to center.
-    for (let unit_index = Math.ceil(front.length / 2.0) - 1; unit_index > 0; --unit_index) {
-        const unit = front[unit_index]
-        if (unit)
-            continue
-        const unit_on_left = front[unit_index - 1]
-        if (unit_on_left) {
-            front[unit_index] = unit_on_left
-            front[unit_index - 1] = null
-            continue
+    for (let row = 0; row < frontline.length; row++) {
+        const front = frontline[row]
+        // Move units from left to center.
+        for (let unit_index = Math.ceil(front.length / 2.0) - 1; unit_index > 0; --unit_index) {
+            const unit = front[unit_index]
+            if (unit)
+                continue
+            const unit_on_left = front[unit_index - 1]
+            if (unit_on_left) {
+                front[unit_index] = unit_on_left
+                front[unit_index - 1] = null
+                continue
+            }
         }
-    }
-    // Move units from right to center.
-    for (let unit_index = Math.ceil(front.length / 2.0); unit_index < front.length - 1; ++unit_index) {
-        const unit = front[unit_index]
-        if (unit)
-            continue
-        const unit_on_right = front[unit_index + 1]
-        if (unit_on_right) {
-            front[unit_index] = unit_on_right
-            front[unit_index + 1] = null
-            continue
-        }
-    }
+        // Move units from right to center.
+        for (let unit_index = Math.ceil(front.length / 2.0); unit_index < front.length - 1; ++unit_index) {
+            const unit = front[unit_index]
+            if (unit)
+                continue
+            const unit_on_right = front[unit_index + 1]
+            if (unit_on_right) {
+                front[unit_index] = unit_on_right
+                front[unit_index + 1] = null
+                continue
+            }
+        } 
+    }    
 }
 
 /**

@@ -17,7 +17,8 @@ interface Props {
 
 export interface ModalInfo {
   country: CountryName
-  index: number
+  row: number
+  column: number
   type: ArmyType
 }
 
@@ -41,7 +42,7 @@ class ModalUnitSelector extends Component<IProps> {
   selectUnit = (type: UnitType) => {
     const { info } = this.props
     if (info)
-      this.props.selectUnit(info.country, info.type, info.index, { id: getNextId(), type })
+      this.props.selectUnit(info.country, info.type, info.row, info.column, { id: getNextId(), type })
     this.props.invalidate()
     this.props.onClose()
   }

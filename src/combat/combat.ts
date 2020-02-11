@@ -179,7 +179,7 @@ const pickTargets = (source: Frontline, target: Frontline, settings: Settings) =
       if (!unit)
         continue
       // No need to select targets for units without effect.
-      if (i > 0 && !unit.definition[UnitCalc.SupportEffectiveness])
+      if (i > 0 && !unit.definition[UnitCalc.BackrowEffectiveness])
         continue
       const state = unit.state
       state.damage_dealt = 0
@@ -333,7 +333,7 @@ const calculateDamageMultiplier = (source: CombatUnit, target: CombatUnit, tacti
  * Calculates both strength and morale losses caused by a given source to a given target.
  */
 const calculateLosses = (source: CombatUnit, target: CombatUnit, dice_roll: number, tactic_damage_multiplier: number, is_support: boolean) => {
-  const total_damage = source.calculated.total_damage[target.definition.type][dice_roll] * calculateDamageMultiplier(source, target, tactic_damage_multiplier) * (is_support ? source.definition[UnitCalc.SupportEffectiveness] : 1.0)
+  const total_damage = source.calculated.total_damage[target.definition.type][dice_roll] * calculateDamageMultiplier(source, target, tactic_damage_multiplier) * (is_support ? source.definition[UnitCalc.BackrowEffectiveness] : 1.0)
   const strength_lost = total_damage * source.calculated.strength_done_multiplier * target.calculated.strength_taken_multiplier
   const morale_lost = total_damage * source[UnitCalc.Morale] * source.calculated.morale_done_multiplier * target.calculated.morale_taken_multiplier
 

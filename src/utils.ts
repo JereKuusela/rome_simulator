@@ -66,6 +66,9 @@ export const values = <V> (object: { [key: string]: V}) => Object.values(object)
 
 export const map = <K extends string, V, R>(object: { [key in K]: V}, callback: (item: V, key: K) => R): { [key in K]: R} => Object.assign({}, ...entries(object).map(([k ,v]) => ({ [k]: callback(v, k) })))
 
+export const forEach2 = <K extends string, V, R>(object: { [key in K]: { [key in K]: V}}, callback: (item: V, row: K, column: K) => R): void => (
+  forEach(object, (sub, row) => forEach(sub, (item, column) => callback(item, row, column)))
+)
 export const forEach = <K extends string, V, R>(object: { [key in K]: V}, callback: (item: V, key: K) => R): void => entries(object).forEach(([k ,v]) => callback(v, k))
 export const every = <K extends string, V, R>(object: { [key in K]: V}, callback: (item: V, key: K) => any): boolean => {
   let ret = true 

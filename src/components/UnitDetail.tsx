@@ -73,7 +73,7 @@ export default class UnitDetail extends Component<IProps> {
     const { show_statistics, settings, mode } = this.props
     if (!show_statistics && (attribute === UnitCalc.StrengthDepleted || attribute === UnitCalc.MoraleDepleted))
       return true
-    if (!settings[Setting.BackRow] && attribute === UnitCalc.SupportEffectiveness)
+    if (!settings[Setting.BackRow] && attribute === UnitCalc.BackrowEffectiveness)
       return true
     if (mode === DefinitionType.Naval && (attribute === UnitCalc.CaptureChance || attribute === UnitCalc.CaptureResist))
       return true

@@ -97,7 +97,7 @@ class CombatTooltip extends Component<IProps, IState> {
       {this.renderStyledItem('Target experience', experience_reduction, toSignedPercent)}
       {target_attributes.map(terrain => this.getAttribute(target, terrain))}
       {terrain_types.map(terrain => this.getAttribute(source, terrain))}
-      {is_support && this.renderStyledItem(UnitCalc.SupportEffectiveness, source[UnitCalc.SupportEffectiveness] - 1, toSignedPercent)}
+      {is_support && this.renderStyledItem(UnitCalc.BackrowEffectiveness, source[UnitCalc.BackrowEffectiveness] - 1, toSignedPercent)}
       {this.renderMultiplier('Unit strength', strength, toNumber)}
       {this.renderItem('Total damage', total_damage, this.toNumber)}
     </>)

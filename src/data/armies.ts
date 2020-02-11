@@ -21,7 +21,7 @@ const getDefaultUnitPreferences = (mode: Mode): UnitPreferences => {
 }
 
 const initializeDefaultArmy = (mode: Mode): Army => ({
-  frontline: Array(30).fill(null),
+  frontline: {},
   reserve: [],
   defeated: [],
   tactic: getDefaultTactic(mode),

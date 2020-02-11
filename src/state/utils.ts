@@ -1,6 +1,6 @@
 import { AppState } from './index'
-import { reduce, toArr, filter, arrGet, toObj } from 'utils'
-import { filterUnitDefinitions, isIncludedInMode, getArmyPart, mergeBaseUnitsWithDefinitions, mergeDefinitions, mergeDefinition } from '../army_utils'
+import { reduce, toArr, filter, arrGet, toObj, forEach2 } from 'utils'
+import { filterUnitDefinitions, isIncludedInMode, getArmyPart, mergeBaseUnitsWithDefinitions, mergeDefinitions, mergeDefinition, findUnitById } from '../army_utils'
 import { Mode, DefinitionType, CountryName, BaseCohort, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, Tactic, UnitPreferences, BaseCohorts, Participant, Terrain, Unit, Settings, Battle, Terrains, Tactics, Cohorts, Units, ArmyName, GeneralStats, Countries, Setting, Reserve, Defeated } from 'types'
 import { CombatUnit, CombatUnits } from 'combat'
 import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticState, getDefaultTerrainState } from 'data'
@@ -18,16 +18,7 @@ export const getSettings = (state: AppState, mode?: Mode): Settings => {
 
 export const findBaseUnit = (state: AppState, country: CountryName, id: number): BaseCohort | null => {
   const units = getBaseCohortsByCountry(state, country)
-  let unit = units.reserve.find(unit => unit.id === id) || null
-  if (unit)
-    return unit
-  unit = units.frontline.find(unit => unit ? unit.id === id : false) || null
-  if (unit)
-    return unit
-  unit = units.defeated.find(unit => unit.id === id) || null
-  if (unit)
-    return unit
-  return null
+  return findUnitById(units, id) ?? null
 }
 
 export const findUnit = (state: AppState, side: Side, id: number): Cohort | null => {
@@ -220,6 +211,7 @@ const getCohortsByCountry = (state: AppState, country: CountryName): Cohorts => 
     reserve: base.reserve as Reserve,
     defeated: base.defeated as Defeated
   }
+  forEach2(base.frontline, (item, row, column) => cohorts.frontline[Number(row)][Number(column)] = item as Cohort)
   const definitions = getUnitDefinitions(state, country)
   return mergeBaseUnitsWithDefinitions(cohorts, definitions)
 }

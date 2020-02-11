@@ -2,6 +2,7 @@ import { BaseCohorts, Cohorts, DefinitionType, Unit, UnitDefinitionValue, UnitDe
 import { mergeValues } from 'definition_values'
 import { map, filter } from 'utils'
 import { CombatUnits } from 'combat'
+import { flatMap } from 'lodash'
 
 /**
  * Merges base units with their definitions resulting in real units.
@@ -54,7 +55,7 @@ export const findUnitById = (units: BaseCohorts | undefined, id: number): BaseCo
   let base_unit = units.reserve.find(unit => unit.id === id)
   if (base_unit)
     return base_unit
-  base_unit = units.frontline.find(unit => unit ? unit.id === id : false) as BaseCohort | undefined
+  base_unit = (flatMap(units.frontline) as BaseCohort[]).find(unit => unit ? unit.id === id : false) as BaseCohort | undefined
   if (base_unit)
     return base_unit
   base_unit = units.defeated.find(unit => unit.id === id)
