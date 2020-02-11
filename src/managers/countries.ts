@@ -1,5 +1,6 @@
-import { Countries, CountryName, Country, GovermentType, ReligionType, CultureType } from "types"
+import { Countries, CountryName, Country, GovermentType, ReligionType, CultureType, CountryAttribute, ValuesType } from "types"
 import { defaultCountry } from "data"
+import { addValuesWithMutate } from "definition_values"
 
 export const createCountry = (countries: Countries, country: CountryName, source_country?: CountryName)  => {
   countries[country] = source_country ? countries[source_country] : defaultCountry
@@ -11,6 +12,10 @@ export const deleteCountry = (countries: Countries, country: CountryName) => {
 
 export const changeCountryName = (countries: Countries, old_country: CountryName, country: CountryName) => {
   delete Object.assign(countries, { [country]: countries[old_country] })[old_country]
+}
+
+export const setCountryValue = (ountry: Country, key: string, attribute: CountryAttribute, value: number) => {
+  addValuesWithMutate(ountry, ValuesType.Base, key, [[attribute, value]])
 }
 
 export const selectGovernment = (country: Country, government: GovermentType) => {

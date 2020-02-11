@@ -1,6 +1,6 @@
 
 import { sumBy, values } from 'lodash'
-import { Tactic, UnitPreferences, Terrain, UnitType, Cohort, UnitCalc, Setting, TerrainType, UnitDeployment, Settings } from 'types'
+import { Tactic, UnitPreferences, Terrain, UnitType, Cohort, UnitCalc, Setting, TerrainType, UnitRole, Settings } from 'types'
 import { mapRange, toObj } from 'utils'
 import { calculateValue, calculateValueWithoutLoss, calculateBase } from 'definition_values'
 import { calculateExperienceReduction } from './combat_utils'
@@ -54,7 +54,7 @@ export const getUnitDefinition = (combatSettings: Settings, terrains: Terrain[],
     type: unit.type,
     is_loyal: !!unit.is_loyal,
     image: unit.image,
-    deployment: unit.deployment,
+    deployment: unit.role,
     max_morale: calculateValueWithoutLoss(unit, UnitCalc.Morale),
     max_strength: calculateValueWithoutLoss(unit, UnitCalc.Strength),
     experience_reduction: calculateExperienceReduction(combatSettings, unit),
@@ -103,7 +103,7 @@ export interface CombatUnitDefinition extends UnitCalcs {
   type: UnitType
   is_loyal: boolean
   experience: number
-  deployment: UnitDeployment
+  deployment: UnitRole
   max_strength: number
   max_morale: number
   experience_reduction: number

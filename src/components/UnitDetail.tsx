@@ -8,7 +8,7 @@ import DetailTextRow from './Detail/DetailTextRow'
 import DetailInputRow from './Detail/DetailInputRow'
 import DetailDropdownRow from './Detail/DetailDropdownRow'
 import Headers from './Utils/Headers'
-import { DefinitionType, ValuesType, Cohort, UnitType, TerrainType, UnitDeployment, UnitCalc, UnitValueType, unitValueToString, Settings, Setting } from 'types'
+import { DefinitionType, ValuesType, Cohort, UnitType, TerrainType, UnitRole, UnitCalc, UnitValueType, unitValueToString, Settings, Setting } from 'types'
 import { values } from 'utils'
 import { getValue, calculateValue, explain } from 'definition_values'
 import { toMaintenance } from 'formatters'
@@ -29,7 +29,7 @@ interface IProps {
   onTypeChange?: (type: UnitType) => void
   onModeChange?: (mode: DefinitionType) => void
   onImageChange?: (image: string) => void
-  onChangeDeployment?: (deployment: UnitDeployment) => void
+  onChangeDeployment?: (deployment: UnitRole) => void
   onIsLoyalToggle?: () => void
 }
 
@@ -41,7 +41,7 @@ export default class UnitDetail extends Component<IProps> {
   readonly attributes = values(UnitCalc)
   readonly units = values(UnitType).sort()
   readonly modes = values(DefinitionType)
-  readonly deployments = values(UnitDeployment)
+  readonly deployments = values(UnitRole)
   readonly headers = ['Attribute', 'Value', 'Custom base', 'Custom modifier', 'Custom losses', 'Explained']
 
   readonly CELLS = 6
@@ -49,7 +49,7 @@ export default class UnitDetail extends Component<IProps> {
   render() {
     const { unit, onTypeChange, onModeChange, onImageChange, onChangeDeployment, onIsLoyalToggle } = this.props
     const { terrain_types, unit_types, unit_types_as_dropdown } = this.props
-    const { id, type, mode, image, deployment, is_loyal } = unit
+    const { id, type, mode, image, role: deployment, is_loyal } = unit
     return (
       <Table celled selectable unstackable>
         <Headers values={this.headers} />

@@ -10,11 +10,11 @@ export enum CountryName {
 }
 export type Countries = { [key in CountryName]: Country }
 
-export enum CountryCalc {
+export enum CountryAttribute {
   CombatWidth = 'Combat width'
 }
 
-export interface Country extends DefinitionValues<CountryCalc> {
+export interface Country extends DefinitionValues<CountryAttribute> {
   selections: ObjSet
   culture: CultureType
   government: GovermentType

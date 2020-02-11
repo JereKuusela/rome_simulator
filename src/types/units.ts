@@ -23,7 +23,7 @@ export enum UnitType {
   BaseNaval = 'Base Naval Unit'
 }
 
-export enum UnitDeployment {
+export enum UnitRole {
   Front = 'Front',
   Flank = 'Flank',
   Support = 'Support'
@@ -72,7 +72,7 @@ export interface BaseCohort extends DefinitionValues<UnitValueType> {
 }
 
 export interface Unit extends Definition<UnitType>, DefinitionValues<UnitValueType> {
-  deployment: UnitDeployment
+  role: UnitRole
   mode: DefinitionType
   is_loyal?: boolean
 }

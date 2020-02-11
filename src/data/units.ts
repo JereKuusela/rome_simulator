@@ -1,4 +1,4 @@
-import { ValuesType, DefinitionType, UnitType, Unit, UnitCalc, UnitValueType, UnitDeployment, TerrainType, UnitState, CountryName, Units } from 'types'
+import { ValuesType, DefinitionType, UnitType, Unit, UnitCalc, UnitValueType, UnitRole, TerrainType, UnitState, CountryName, Units } from 'types'
 import { addValues } from 'definition_values'
 import { toObj } from 'utils'
 
@@ -47,7 +47,7 @@ export const getUnitIcon = (type: UnitType) => unit_to_icon[type] || ''
 export const GlobalKey = 'Base'
 
 const createUnitFromJson = (data: UnitData): Unit => {
-  let unit: Unit = { type: data.type as UnitType, mode: data.mode as DefinitionType, image: unit_to_icon[data.type as UnitType] ?? '', deployment: data.deployment as UnitDeployment }
+  let unit: Unit = { type: data.type as UnitType, mode: data.mode as DefinitionType, image: unit_to_icon[data.type as UnitType] ?? '', role: data.role as UnitRole }
   const base_values: [UnitValueType, number][] = [
     [UnitCalc.AttritionWeight, data.attrition_weight ?? 0],
     [UnitCalc.Cost, data.cost],
@@ -100,7 +100,7 @@ interface UnitData {
   morale?: number
   strength?: number
   cost: number
-  deployment: string
+  role: string
   maintenance?: number
   maneuver?: number
   morale_damage_taken?: number

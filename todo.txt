@@ -20,6 +20,7 @@ Changelog:
 - Countries: Refactored general to be separate entity (second step towards multiarmy battles).
 - Countries: Fixed/updated Export Hemp to give -10% Naval Damage taken instead of +5% Naval Damage done.
 - Countries: Added support for country specific combat width modifiers, feature from EUIV.
+- Countries: Added new table at bottom to allow changing country specific attributes.
 - Units: Balance changes from 1.3.2 (War Elephants damage against Infantry, Supply Train cost).
 - Units: Added 1 maneuver to Mega-Polyreme (no idea when this was changed).
 - Units: Added new attributes: food consumption and storage.
@@ -69,6 +70,14 @@ EUIV:
  - Fire, shock and morale pips (+ setting)
  - General fire, shock and maneuver pips (+ setting for pip cap, 0 for disabled)
  - Setting for martial cap (0 for disabled)
+ - Units: Available units determined by tech level + culture (selector should sort by tech level + show pips)
+ - Units on the backline take full morale casualties
+ - Increasing daily multiplier (1% per day)
+ - Combat ability directly increases damage
+ - Infantry fire, Infantry shock, etc multiply damage for casualties (base unit level, 3 different base units are needed?
+ - Or using preference system someshow? support fire, support shock as country level modifiers?
+ - General and unit pips affect dice rolls (enemy ones reduce)
+ - Base damage is different for each unit (also depends on phase, also different for morale damage)
 
 Tests (high priority):
 - utils tested

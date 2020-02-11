@@ -1,5 +1,5 @@
 import { CombatUnit, CombatUnits, Reserve, CombatParticipant } from './combat'
-import { UnitPreferences, UnitCalc, UnitPreferenceType, UnitDeployment, Setting, Settings } from 'types'
+import { UnitPreferences, UnitCalc, UnitPreferenceType, UnitRole, Setting, Settings } from 'types'
 import { nextIndex } from './reinforcement'
 import { sortBy, remove, clamp } from 'lodash'
 
@@ -105,7 +105,7 @@ const isFrontUnit = (preferences: UnitPreferences, unit: CombatUnit) => {
     return false
   if (unit.definition.type === preferences[UnitPreferenceType.Primary] || unit.definition.type === preferences[UnitPreferenceType.Secondary])
     return true
-  return unit.definition.deployment === UnitDeployment.Front
+  return unit.definition.deployment === UnitRole.Front
 }
 
 const isFlankUnit = (preferences: UnitPreferences, unit: CombatUnit) => {
@@ -113,7 +113,7 @@ const isFlankUnit = (preferences: UnitPreferences, unit: CombatUnit) => {
     return true
   if (unit.definition.type === preferences[UnitPreferenceType.Primary] || unit.definition.type === preferences[UnitPreferenceType.Secondary])
     return false
-  return unit.definition.deployment === UnitDeployment.Flank
+  return unit.definition.deployment === UnitRole.Flank
 }
 
 const isSupportUnit = (preferences: UnitPreferences, unit: CombatUnit) => {
@@ -121,7 +121,7 @@ const isSupportUnit = (preferences: UnitPreferences, unit: CombatUnit) => {
     return false
   if (unit.definition.type === preferences[UnitPreferenceType.Primary] || unit.definition.type === preferences[UnitPreferenceType.Secondary])
     return false
-  return unit.definition.deployment === UnitDeployment.Support
+  return unit.definition.deployment === UnitRole.Support
 }
 
 const isAlive = (unit: CombatUnit, minimum_morale: number, minimum_strength: number) => (

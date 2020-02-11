@@ -1,4 +1,4 @@
-import { ValuesType, UnitValueType, UnitType, DefinitionType, UnitDeployment, Modifier, ScopeType, Unit, Units } from "types"
+import { ValuesType, UnitValueType, UnitType, DefinitionType, UnitRole, Modifier, ScopeType, Unit, Units } from "types"
 import { addValuesWithMutate, regenerateValues, clearValues } from "definition_values"
 import { getUnitIcon } from "data"
 import { forEach } from "utils"
@@ -12,7 +12,7 @@ export const deleteUnit = (units: Units, type: UnitType) => {
 }
 
 export const createUnit = (units: Units, mode: DefinitionType, type: UnitType) => {
-  units[type] = { type, mode, image: getUnitIcon(type), deployment: UnitDeployment.Front }
+  units[type] = { type, mode, image: getUnitIcon(type), role: UnitRole.Front }
 }
 
 export const changeUnitType = (units: Units, old_type: UnitType, type: UnitType) => {
@@ -23,8 +23,8 @@ export const changeUnitImage = (unit: Unit, image: string) => {
   unit.image = image
 }
 
-export const changeUnitDeployment = (unit: Unit, deployment: UnitDeployment) => {
-  unit.deployment = deployment
+export const changeUnitDeployment = (unit: Unit, deployment: UnitRole) => {
+  unit.role = deployment
 }
 
 export const toggleUnitLoyality = (unit: Unit) => {

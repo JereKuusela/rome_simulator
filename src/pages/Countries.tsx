@@ -2,17 +2,18 @@ import React, { Component } from 'react'
 import { Container, Grid, Table, List, Input, Checkbox } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState, getGeneralStats } from 'state'
-import { mapRange, ObjSet, has, keys } from '../utils'
+import { mapRange, ObjSet, has, keys, values } from '../utils'
 
 import { addSignWithZero } from 'formatters'
-import { DefinitionType, ValuesType, TraditionDefinition, TradeDefinition, IdeaDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, EconomyDefinition, LawDefinition, AbilityDefinition, Modifier, Tradition, ScopeType, UnitCalc, ReligionType, CultureType, ModifierType } from 'types'
-import { invalidate, enableSelection, clearSelection, enableUnitModifiers, enableGeneralModifiers, clearUnitModifiers, clearGeneralModifiers, setGeneralMartial, selectCulture, selectReligion, selectGovernment, setOmenPower, setHasGeneral, setMilitaryPower, setOfficeMorale, setOfficeDiscipline } from 'reducers'
+import { DefinitionType, ValuesType, TraditionDefinition, TradeDefinition, IdeaDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, EconomyDefinition, LawDefinition, AbilityDefinition, Modifier, Tradition, ScopeType, UnitCalc, ReligionType, CultureType, ModifierType, CountryAttribute } from 'types'
+import { invalidate, setCountryValue, enableSelection, clearSelection, enableUnitModifiers, enableGeneralModifiers, clearUnitModifiers, clearGeneralModifiers, setGeneralMartial, selectCulture, selectReligion, selectGovernment, setOmenPower, setHasGeneral, setMilitaryPower, setOfficeMorale, setOfficeDiscipline } from 'reducers'
 
 import AccordionToggle from 'containers/AccordionToggle'
 import CountryManager from 'containers/CountryManager'
 import Dropdown from 'components/Utils/Dropdown'
 import ConfirmationButton from 'components/ConfirmationButton'
 import StyledNumber from 'components/Utils/StyledNumber'
+import TableAttributes from 'components/TableAttributes'
 
 const TRADE_COLUMNS = 4
 const HERITAGE_COLUMNS = 4
@@ -179,6 +180,13 @@ class Countries extends Component<IProps> {
                 {
                   this.renderHeritages(this.props.heritages, selections)
                 }
+              </AccordionToggle>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns='1'>
+            <Grid.Column>
+              <AccordionToggle title='Attributes' identifier='countries_attributes'>
+                <TableAttributes attributes={values(CountryAttribute)} custom_value_key='Custom' definition={country} onChange={this.setCountryValue} />
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
@@ -788,6 +796,12 @@ class Countries extends Component<IProps> {
     clearSelection(key)
     invalidate()
   }
+
+  setCountryValue = (key: string, attribute: CountryAttribute, value: number) => {
+    const { setCountryValue, invalidate} = this.props
+    setCountryValue(key, attribute, value )
+    invalidate()
+  }
 }
 
 const mapStateToProps = (state: AppState) => ({
@@ -807,7 +821,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const actions = {
-  enableGeneralModifiers, clearGeneralModifiers, clearUnitModifiers, enableUnitModifiers, setGeneralMartial, selectCulture, invalidate,
+  enableGeneralModifiers, clearGeneralModifiers, clearUnitModifiers, enableUnitModifiers, setGeneralMartial, selectCulture, invalidate, setCountryValue,
   selectReligion, selectGovernment, setOmenPower, setHasGeneral, setMilitaryPower, setOfficeMorale, setOfficeDiscipline, enableSelection, clearSelection
 }
 

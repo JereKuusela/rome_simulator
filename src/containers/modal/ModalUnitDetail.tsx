@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { ValuesType, DefinitionType, CountryName, UnitType, Cohort, UnitDeployment, UnitValueType } from 'types'
+import { ValuesType, DefinitionType, CountryName, UnitType, Cohort, UnitRole, UnitValueType } from 'types'
 import UnitDetail from 'components/UnitDetail'
 import { AppState, getUnitDefinition, mergeUnitTypes, filterTerrainTypes, getMode, getSettings } from 'state'
 import { setUnitValue, changeUnitImage, changeUnitMode, changeUnitDeployment, toggleUnitLoyality, invalidate } from 'reducers'
@@ -68,7 +68,7 @@ class ModalUnitDetail extends Component<IProps> {
     invalidate()
   }
 
-  changeDeployment = (deployment: UnitDeployment) => {
+  changeDeployment = (deployment: UnitRole) => {
     const { changeUnitDeployment, invalidate, unit_type } = this.props
     changeUnitDeployment(unit_type!, deployment)
     invalidate()

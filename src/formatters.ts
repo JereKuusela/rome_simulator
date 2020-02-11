@@ -1,9 +1,16 @@
 import { mapRange } from './utils'
 import { DefinitionType } from './types/definition'
+import { CountryAttribute } from 'types'
 
 /**
  * This file contains functions to format numbers to strings.
  */
+
+export const formatAttribute = (value: number, attribute: string) => {
+  if (attribute === CountryAttribute.CombatWidth)
+    return String(value)
+  return toPercent(value)
+}
 
 export const hideZero = (number: number) => number === 0 ? undefined : number
 
