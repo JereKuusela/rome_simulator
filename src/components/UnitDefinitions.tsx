@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Image, Table, List, Icon } from 'semantic-ui-react'
 import { sortBy, toNumber } from 'lodash'
 
-import { Mode, DefinitionType, CountryName, UnitType, TerrainType, Unit, UnitCalc, UnitValueType, Units } from 'types'
+import { Mode, DefinitionType, CountryName, UnitType, TerrainType, Unit, UnitAttribute, UnitValueType, Units } from 'types'
 import { toArr, getImage } from 'utils'
 import { unitSorter } from 'managers/army'
 import { mergeValues, calculateValue, calculateBase, calculateModifier, calculateLoss } from 'definition_values'
@@ -104,61 +104,61 @@ export default class UnitDefinitions extends Component<IProps> {
           {unit.type}
         </Table.Cell>
         <Table.Cell>
-          {toNumber(calculateValue(unit, UnitCalc.Morale))}
+          {toNumber(calculateValue(unit, UnitAttribute.Morale))}
         </Table.Cell>
         <Table.Cell>
-          {this.props.mode === DefinitionType.Naval ? toPercent(calculateValue(unit, UnitCalc.Strength)) : toManpower(calculateValue(unit, UnitCalc.Strength))}
+          {this.props.mode === DefinitionType.Naval ? toPercent(calculateValue(unit, UnitAttribute.Strength)) : toManpower(calculateValue(unit, UnitAttribute.Strength))}
         </Table.Cell>
         <Table.Cell>
           <StyledNumber
-            value={calculateValue(unit, UnitCalc.Discipline)}
+            value={calculateValue(unit, UnitAttribute.Discipline)}
             formatter={toSignedPercent} hide_zero
           />
         </Table.Cell>
         <Table.Cell>
           <StyledNumber
-            value={calculateValue(unit, this.props.mode === DefinitionType.Naval ? UnitCalc.DamageDone : UnitCalc.Offense)}
+            value={calculateValue(unit, this.props.mode === DefinitionType.Naval ? UnitAttribute.DamageDone : UnitAttribute.Offense)}
             formatter={toSignedPercent} hide_zero
           />
         </Table.Cell>
         <Table.Cell>
           <StyledNumber
-            value={calculateValue(unit, this.props.mode === DefinitionType.Naval ? UnitCalc.DamageTaken : UnitCalc.Defense)}
+            value={calculateValue(unit, this.props.mode === DefinitionType.Naval ? UnitAttribute.DamageTaken : UnitAttribute.Defense)}
             formatter={toSignedPercent} hide_zero
             reverse={this.props.mode === DefinitionType.Naval}
           />
         </Table.Cell>
         <Table.Cell>
-          {toNumber(calculateValue(unit, UnitCalc.Maneuver))}
+          {toNumber(calculateValue(unit, UnitAttribute.Maneuver))}
         </Table.Cell>
         <Table.Cell>
           <StyledNumber
-            value={calculateValue(unit, UnitCalc.MoraleDamageDone)}
+            value={calculateValue(unit, UnitAttribute.MoraleDamageDone)}
             formatter={toSignedPercent} hide_zero
           />
         </Table.Cell>
         <Table.Cell>
           <StyledNumber
-            value={calculateValue(unit, UnitCalc.MoraleDamageTaken)}
-            formatter={toSignedPercent} hide_zero
-            reverse
-          />
-        </Table.Cell>
-        <Table.Cell>
-          <StyledNumber
-            value={calculateValue(unit, UnitCalc.StrengthDamageDone)}
-            formatter={toSignedPercent} hide_zero
-          />
-        </Table.Cell>
-        <Table.Cell>
-          <StyledNumber
-            value={calculateValue(unit, UnitCalc.StrengthDamageTaken)}
+            value={calculateValue(unit, UnitAttribute.MoraleDamageTaken)}
             formatter={toSignedPercent} hide_zero
             reverse
           />
         </Table.Cell>
         <Table.Cell>
-          {toPercent(hideZero(calculateValue(unit, UnitCalc.Experience)))}
+          <StyledNumber
+            value={calculateValue(unit, UnitAttribute.StrengthDamageDone)}
+            formatter={toSignedPercent} hide_zero
+          />
+        </Table.Cell>
+        <Table.Cell>
+          <StyledNumber
+            value={calculateValue(unit, UnitAttribute.StrengthDamageTaken)}
+            formatter={toSignedPercent} hide_zero
+            reverse
+          />
+        </Table.Cell>
+        <Table.Cell>
+          {toPercent(hideZero(calculateValue(unit, UnitAttribute.Experience)))}
         </Table.Cell>
         <Table.Cell>
           <VersusList
@@ -190,16 +190,16 @@ export default class UnitDefinitions extends Component<IProps> {
   renderAttributeList = (unit: Unit, attribute: UnitValueType): JSX.Element => {
     const base = calculateBase(unit, attribute)
     let base_str = String(base)
-    if (this.props.mode === DefinitionType.Naval && attribute === UnitCalc.Strength)
+    if (this.props.mode === DefinitionType.Naval && attribute === UnitAttribute.Strength)
       base_str = String(base * 100) + '%'
-    if (this.props.mode !== DefinitionType.Naval && attribute === UnitCalc.Strength)
+    if (this.props.mode !== DefinitionType.Naval && attribute === UnitAttribute.Strength)
       base_str = String(base * 1000)
     const modifier = calculateModifier(unit, attribute)
     const loss = calculateLoss(unit, attribute)
     let loss_str = String(base)
-    if (this.props.mode === DefinitionType.Naval && attribute === UnitCalc.Strength)
+    if (this.props.mode === DefinitionType.Naval && attribute === UnitAttribute.Strength)
       loss_str = String(loss * 100) + '%'
-    if (this.props.mode !== DefinitionType.Naval && attribute === UnitCalc.Strength)
+    if (this.props.mode !== DefinitionType.Naval && attribute === UnitAttribute.Strength)
       loss_str = String(loss * 1000)
     return (
       <List>

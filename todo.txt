@@ -44,6 +44,7 @@ Todo:
  - Transfer could only show non-base stats for units, terrains and tactics (since base stats are supposed to regenerate?), currently it shows way too much information.
  - Refactor simluation to update only single parameter, also parameters split should make more sense
  - Some sort of place for business logic rules
+ - Consider removing global mode, modifiers could be made apply to both, would also simplify stuff
 
 Tags:
  - Icons to frontline to show various things, with tooltips:

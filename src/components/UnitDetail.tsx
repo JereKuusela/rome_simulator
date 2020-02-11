@@ -8,7 +8,7 @@ import DetailTextRow from './Detail/DetailTextRow'
 import DetailInputRow from './Detail/DetailInputRow'
 import DetailDropdownRow from './Detail/DetailDropdownRow'
 import Headers from './Utils/Headers'
-import { DefinitionType, ValuesType, Cohort, UnitType, TerrainType, UnitRole, UnitCalc, UnitValueType, unitValueToString, Settings, Setting } from 'types'
+import { DefinitionType, ValuesType, Cohort, UnitType, TerrainType, UnitRole, UnitAttribute, UnitValueType, unitValueToString, Settings, Setting } from 'types'
 import { values } from 'utils'
 import { getValue, calculateValue, explain } from 'definition_values'
 import { toMaintenance } from 'formatters'
@@ -38,7 +38,7 @@ interface IProps {
  */
 export default class UnitDetail extends Component<IProps> {
 
-  readonly attributes = values(UnitCalc)
+  readonly attributes = values(UnitAttribute)
   readonly units = values(UnitType).sort()
   readonly modes = values(DefinitionType)
   readonly deployments = values(UnitRole)
@@ -71,13 +71,13 @@ export default class UnitDetail extends Component<IProps> {
 
   hideAttribute = (attribute: UnitValueType) => {
     const { show_statistics, settings, mode } = this.props
-    if (!show_statistics && (attribute === UnitCalc.StrengthDepleted || attribute === UnitCalc.MoraleDepleted))
+    if (!show_statistics && (attribute === UnitAttribute.StrengthDepleted || attribute === UnitAttribute.MoraleDepleted))
       return true
-    if (!settings[Setting.BackRow] && attribute === UnitCalc.BackrowEffectiveness)
+    if (!settings[Setting.BackRow] && attribute === UnitAttribute.BackrowEffectiveness)
       return true
-    if (mode === DefinitionType.Naval && (attribute === UnitCalc.CaptureChance || attribute === UnitCalc.CaptureResist))
+    if (mode === DefinitionType.Naval && (attribute === UnitAttribute.CaptureChance || attribute === UnitAttribute.CaptureResist))
       return true
-    if (!settings[Setting.DailyMoraleLoss] && attribute === UnitCalc.DailyLossResist)
+    if (!settings[Setting.DailyMoraleLoss] && attribute === UnitAttribute.DailyLossResist)
       return true
     return false
   }
@@ -90,11 +90,11 @@ export default class UnitDetail extends Component<IProps> {
     const modifier_value = getValue(ValuesType.Modifier, unit, attribute, custom_value_key)
     const loss_value = getValue(ValuesType.LossModifier, unit, attribute, custom_value_key)
     let value = unitValueToString(unit, attribute)
-    if (attribute === UnitCalc.Maintenance)
-      value += ' (' + toMaintenance(calculateValue(unit, UnitCalc.Cost) * calculateValue(unit, UnitCalc.Maintenance)) + ')'
+    if (attribute === UnitAttribute.Maintenance)
+      value += ' (' + toMaintenance(calculateValue(unit, UnitAttribute.Cost) * calculateValue(unit, UnitAttribute.Maintenance)) + ')'
 
-    const enable_loss = attribute === UnitCalc.Morale || attribute === UnitCalc.Strength
-    const enable_modifier = enable_loss || attribute === UnitCalc.Maintenance || attribute === UnitCalc.Cost || attribute === UnitCalc.AttritionWeight
+    const enable_loss = attribute === UnitAttribute.Morale || attribute === UnitAttribute.Strength
+    const enable_modifier = enable_loss || attribute === UnitAttribute.Maintenance || attribute === UnitAttribute.Cost || attribute === UnitAttribute.AttritionWeight
     const enable_base = !disable_base_values || !enable_modifier
 
     return (

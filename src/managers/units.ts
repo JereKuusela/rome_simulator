@@ -1,7 +1,8 @@
-import { ValuesType, UnitValueType, UnitType, DefinitionType, UnitRole, Modifier, ScopeType, Unit, Units } from "types"
+import { ValuesType, UnitValueType, UnitType, DefinitionType, UnitRole, Modifier, ScopeType, Unit, Units, Mode } from "types"
 import { addValuesWithMutate, regenerateValues, clearValues } from "definition_values"
 import { getUnitIcon } from "data"
 import { forEach } from "utils"
+import { getBaseUnitType } from "./army"
 
 export const setUnitValue = (unit: Unit, values_type: ValuesType, key: string, attribute: UnitValueType, value: number) => {
   addValuesWithMutate(unit, values_type, key, [[attribute, value]])
@@ -11,8 +12,8 @@ export const deleteUnit = (units: Units, type: UnitType) => {
   delete units[type]
 }
 
-export const createUnit = (units: Units, mode: DefinitionType, type: UnitType) => {
-  units[type] = { type, mode, image: getUnitIcon(type), role: UnitRole.Front }
+export const createUnit = (units: Units, mode: Mode, type: UnitType) => {
+  units[type] = { type, mode, image: getUnitIcon(type), role: UnitRole.Front, base: getBaseUnitType(mode) }
 }
 
 export const changeUnitType = (units: Units, old_type: UnitType, type: UnitType) => {

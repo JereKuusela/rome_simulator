@@ -231,7 +231,7 @@ class Battle extends Component<IProps, IState> {
   }
 
   renderFrontline = (side: Side, country: CountryName) => {
-    const combat_width = this.props.combat[Setting.CombatWidth]
+    const combat_width = this.props.settings[Setting.CombatWidth]
     return (
       <div key={side}>
         {side === Side.Attacker && <Header>{side + '\'s frontline'}</Header>}
@@ -253,7 +253,7 @@ class Battle extends Component<IProps, IState> {
     const terrain_effect = side === Side.Attacker ? calculateRollModifierFromTerrains(this.props.selected_terrains.map(value => this.props.terrains[value])) : 0
     const general_effect = calculateRollModifierFromGenerals(general, opposing_general)
     const total = calculateTotalRoll(roll, side === Side.Attacker ? this.props.selected_terrains.map(value => this.props.terrains[value]) : [], general, opposing_general)
-    const base_damage = calculateBaseDamage(total, this.props.combat)
+    const base_damage = calculateBaseDamage(total, this.props.settings)
     return (
       <div key={side}>
         {base_damage.toFixed(3)} :
@@ -375,7 +375,7 @@ const mapStateToProps = (state: AppState) => ({
   terrains: state.terrains,
   tactics: state.tactics,
   fight_over: getBattle(state).fight_over,
-  combat: getSettings(state)
+  settings: getSettings(state)
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

@@ -1,4 +1,4 @@
-import { ValuesType, DefinitionType, UnitType, Unit, UnitCalc, UnitValueType, UnitRole, TerrainType, UnitState, CountryName, Units } from 'types'
+import { ValuesType, DefinitionType, UnitType, Unit, UnitAttribute, UnitValueType, UnitRole, TerrainType, UnitState, CountryName, Units, Mode } from 'types'
 import { addValues } from 'definition_values'
 import { toObj } from 'utils'
 
@@ -20,6 +20,7 @@ import IconTetrere from 'images/tetrere.png'
 import IconHexere from 'images/hexere.png'
 import IconOctere from 'images/octere.png'
 import IconMegaPolyreme from 'images/mega_polyreme.png'
+import { getBaseUnitType } from 'managers/army'
 
 const unit_to_icon: { [key in UnitType]: string } = {
   [UnitType.Archers]: IconArcher,
@@ -39,7 +40,10 @@ const unit_to_icon: { [key in UnitType]: string } = {
   [UnitType.Octere]: IconOctere,
   [UnitType.MegaPolyreme]: IconMegaPolyreme,
   [UnitType.BaseLand]: IconMilitaryPower,
-  [UnitType.BaseNaval]: IconMilitaryPower
+  [UnitType.BaseNaval]: IconMilitaryPower,
+  [UnitType.Cavalry]: IconHeavyCavalry,
+  [UnitType.Infantry]: IconHeavyInfantry,
+  [UnitType.Artillery]: IconWarElephants
 }
 
 export const getUnitIcon = (type: UnitType) => unit_to_icon[type] || ''
@@ -47,24 +51,30 @@ export const getUnitIcon = (type: UnitType) => unit_to_icon[type] || ''
 export const GlobalKey = 'Base'
 
 const createUnitFromJson = (data: UnitData): Unit => {
-  let unit: Unit = { type: data.type as UnitType, mode: data.mode as DefinitionType, image: unit_to_icon[data.type as UnitType] ?? '', role: data.role as UnitRole }
+  let unit: Unit = {
+    type: data.type as UnitType,
+    mode: data.mode as DefinitionType,
+    image: unit_to_icon[data.type as UnitType] ?? '',
+    role: data.role as UnitRole,
+    base: getBaseUnitType(data.mode as Mode)
+  }
   const base_values: [UnitValueType, number][] = [
-    [UnitCalc.AttritionWeight, data.attrition_weight ?? 0],
-    [UnitCalc.Cost, data.cost],
-    [UnitCalc.Maintenance, data.maintenance ?? 0],
-    [UnitCalc.Strength, data.strength ?? 0],
-    [UnitCalc.Morale, data.morale ?? 0],
-    [UnitCalc.Maneuver, data.maneuver ?? 0],
-    [UnitCalc.MoraleDamageTaken, data.morale_damage_taken ?? 0],
-    [UnitCalc.StrengthDamageTaken, data.strength_damage_taken ?? 0],
-    [UnitCalc.MoraleDamageDone, data.morale_damage_done ?? 0],
-    [UnitCalc.StrengthDamageDone, data.strength_damage_done ?? 0],
-    [UnitCalc.DamageDone, data.damage_done ?? 0],
-    [UnitCalc.DamageTaken, data.damage_taken ?? 0],
-    [UnitCalc.FoodConsumption, data.food_consumption ?? 0],
-    [UnitCalc.FoodStorage, data.food_storage ?? 0],
-    [UnitCalc.CaptureChance, data.capture_chance ?? 0],
-    [UnitCalc.CaptureResist, data.capture_resist ?? 0],
+    [UnitAttribute.AttritionWeight, data.attrition_weight ?? 0],
+    [UnitAttribute.Cost, data.cost],
+    [UnitAttribute.Maintenance, data.maintenance ?? 0],
+    [UnitAttribute.Strength, data.strength ?? 0],
+    [UnitAttribute.Morale, data.morale ?? 0],
+    [UnitAttribute.Maneuver, data.maneuver ?? 0],
+    [UnitAttribute.MoraleDamageTaken, data.morale_damage_taken ?? 0],
+    [UnitAttribute.StrengthDamageTaken, data.strength_damage_taken ?? 0],
+    [UnitAttribute.MoraleDamageDone, data.morale_damage_done ?? 0],
+    [UnitAttribute.StrengthDamageDone, data.strength_damage_done ?? 0],
+    [UnitAttribute.DamageDone, data.damage_done ?? 0],
+    [UnitAttribute.DamageTaken, data.damage_taken ?? 0],
+    [UnitAttribute.FoodConsumption, data.food_consumption ?? 0],
+    [UnitAttribute.FoodStorage, data.food_storage ?? 0],
+    [UnitAttribute.CaptureChance, data.capture_chance ?? 0],
+    [UnitAttribute.CaptureResist, data.capture_resist ?? 0],
     [UnitType.Archers, data.archers ?? 0],
     [UnitType.CamelCavalry, data.camel_cavalry ?? 0],
     [UnitType.Chariots, data.chariots ?? 0],
@@ -95,6 +105,7 @@ export const getDefaultUnits = (): Units => defaultUnits
 export const getDefaultUnit = (type: UnitType): Unit => defaultUnits[type]
 
 interface UnitData {
+  base?: string
   type: string
   mode: string
   morale?: number

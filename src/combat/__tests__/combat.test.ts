@@ -1,18 +1,18 @@
 import { addValues } from 'definition_values'
 import { getUnit, TestInfo, initInfo, setCenterUnits, initSide, testCombat, setTerrain } from './utils'
-import { UnitType, UnitCalc, TerrainType, ValuesType } from 'types'
+import { UnitType, UnitAttribute, TerrainType, ValuesType } from 'types'
 
 describe('1 vs 1', () => {
 
-  const archer = addValues(getUnit(UnitType.Archers), ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.2]])
-  const infantry = addValues(getUnit(UnitType.LightInfantry), ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.25]])
-  const cavalry = addValues(getUnit(UnitType.LightCavalry), ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.2]])
+  const archer = addValues(getUnit(UnitType.Archers), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.2]])
+  const infantry = addValues(getUnit(UnitType.LightInfantry), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.25]])
+  const cavalry = addValues(getUnit(UnitType.LightCavalry), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.2]])
 
   let info: TestInfo
   beforeEach(() => { info = initInfo() })
 
   it('no modifiers', () => {
-    const unit = addValues(archer, ValuesType.Base, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25]])
+    const unit = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.MoraleDamageTaken, -0.25]])
     setCenterUnits(info, unit, unit)
     const rolls = [[0, 2], [3, 2]]
     const { attacker, defender } = initSide(10)
@@ -43,8 +43,8 @@ describe('1 vs 1', () => {
   })
 
   it('increased morale damage taken, terrain bonus and discipline', () => {
-    const unit_a = addValues(archer, ValuesType.Base, 'Test', [[UnitCalc.Discipline, 0.045]])
-    const unit_d = addValues(archer, ValuesType.Base, 'Test', [[UnitCalc.Discipline, 0.14], [TerrainType.Forest, 0.15]])
+    const unit_a = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.Discipline, 0.045]])
+    const unit_d = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.Discipline, 0.14], [TerrainType.Forest, 0.15]])
     setTerrain(info, TerrainType.Forest)
     setCenterUnits(info, unit_a, unit_d)
     const rolls = [[4, 4]]
@@ -64,8 +64,8 @@ describe('1 vs 1', () => {
   })
 
   it('reduced morale damage taken, offense/defense and experience', () => {
-    const unit_a = addValues(infantry, ValuesType.Base, 'Test', [[UnitCalc.Offense, 0.1], [UnitCalc.Defense, 0.15], [UnitCalc.Experience, 0.0001]])
-    const unit_d = addValues(infantry, ValuesType.Base, 'Test', [[UnitCalc.Offense, 0.05], [UnitCalc.Defense, 0.05], [UnitCalc.Experience, 0.0004]])
+    const unit_a = addValues(infantry, ValuesType.Base, 'Test', [[UnitAttribute.Offense, 0.1], [UnitAttribute.Defense, 0.15], [UnitAttribute.Experience, 0.0001]])
+    const unit_d = addValues(infantry, ValuesType.Base, 'Test', [[UnitAttribute.Offense, 0.05], [UnitAttribute.Defense, 0.05], [UnitAttribute.Experience, 0.0004]])
     setCenterUnits(info, unit_a, unit_d)
     const rolls = [[6, 1]]
     const { attacker, defender } = initSide(4)
@@ -102,7 +102,7 @@ describe('1 vs 1', () => {
   })
 
   it('general, no difference', () => {
-    const unit = addValues(archer, ValuesType.Base, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25]])
+    const unit = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.MoraleDamageTaken, -0.25]])
     info.general_d = 1
     setCenterUnits(info, unit, unit)
     const rolls = [[0, 2]]
@@ -120,7 +120,7 @@ describe('1 vs 1', () => {
   })
   
   it('general, difference', () => {
-    const unit = addValues(archer, ValuesType.Base, 'Test', [[UnitCalc.MoraleDamageTaken, -0.25]])
+    const unit = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.MoraleDamageTaken, -0.25]])
     info.general_d = 2
     setCenterUnits(info, unit, unit)
     const rolls = [[0, 1]]

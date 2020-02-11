@@ -15,8 +15,8 @@ export const mergeBaseUnitsWithDefinitions = (units: Cohorts, definitions: Units
   defeated: units.defeated.map(value => value && mergeValues(definitions[value.type], value))
 })
 
-export const mergeDefinitions = (base: Unit, definitions: Units, general_base: UnitDefinitionValue, general: UnitDefinitionValues) => {
-  return map(definitions, (definition, type) => mergeValues(mergeValues(definition, base), mergeValues(general_base, general[type])))
+export const mergeDefinitions = (definitions: Units, general_base: UnitDefinitionValue, general: UnitDefinitionValues) => {
+  return map(definitions, (definition, type) => mergeValues(mergeValues(definition, definitions[definition.base]), mergeValues(general_base, general[type])))
 }
 
 export const mergeDefinition = (base: Unit, unit: Unit, general_base: UnitDefinitionValue, general: UnitDefinitionValue) => {

@@ -6,7 +6,7 @@ import ItemRemover from 'components/ItemRemover'
 import UnitDetail from 'components/UnitDetail'
 
 import { AppState, filterUnitTypesByCountry, filterTerrainTypes, findUnit, getCombatUnitForEachRound, getMode, getSettings } from 'state'
-import { ValuesType, Side, CountryName, UnitType, Cohort, UnitCalc, UnitValueType } from 'types'
+import { ValuesType, Side, CountryName, UnitType, Cohort, UnitAttribute, UnitValueType } from 'types'
 import { CombatUnit } from 'combat'
 import { addValues } from 'definition_values'
 import { editCohort, deleteCohort, invalidate, setCohortValue, changeCohortType, toggleCohortLoyality } from 'reducers'
@@ -97,12 +97,12 @@ const convertUnit = (definition: Cohort | null, rounds: (CombatUnit | null)[]): 
     if (!combat)
       return
     const lossValues: [string, number][] = [
-      [UnitCalc.Morale, combat.state.morale_loss],
-      [UnitCalc.Strength, combat.state.strength_loss]
+      [UnitAttribute.Morale, combat.state.morale_loss],
+      [UnitAttribute.Strength, combat.state.strength_loss]
     ]
     const dealtValues: [string, number][] = [
-      [UnitCalc.MoraleDepleted, combat.state.morale_dealt],
-      [UnitCalc.StrengthDepleted, combat.state.strength_dealt]
+      [UnitAttribute.MoraleDepleted, combat.state.morale_dealt],
+      [UnitAttribute.StrengthDepleted, combat.state.strength_dealt]
     ]
     definition = addValues(definition!, ValuesType.Loss, 'Round ' + (round - 1), lossValues)
     definition = addValues(definition!, ValuesType.Base, 'Round ' + (round - 1), dealtValues)

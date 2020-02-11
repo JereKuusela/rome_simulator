@@ -1,6 +1,7 @@
 import { DefinitionValues, calculateValue } from 'definition_values'
 import { TerrainType, Definition, DefinitionType, CountryName } from 'types'
 import { toNumber, toPercent, toSignedPercent } from 'formatters'
+import { CombatPhase } from './battle'
 
 export enum UnitType {
   Archers = 'Archers',
@@ -20,7 +21,10 @@ export enum UnitType {
   Octere = 'Octere',
   MegaPolyreme = 'Mega-Polyreme',
   BaseLand = 'Base Land Unit',
-  BaseNaval = 'Base Naval Unit'
+  BaseNaval = 'Base Naval Unit',
+  Infantry = 'Infantry',
+  Cavalry = 'Cavalry',
+  Artillery = 'Artillery'
 }
 
 export enum UnitRole {
@@ -29,7 +33,7 @@ export enum UnitRole {
   Support = 'Support'
 }
 
-export enum UnitCalc {
+export enum UnitAttribute {
   StrengthDepleted = 'Strength depleted',
   MoraleDepleted = 'Morale depleted',
   Morale = 'Morale',
@@ -60,7 +64,7 @@ export enum GeneralCalc {
   Martial = 'Martial'
 }
 
-export type UnitValueType = UnitCalc | UnitType | TerrainType
+export type UnitValueType = UnitAttribute | UnitType | TerrainType | CombatPhase
 export type UnitDefinitionValues = { [key in UnitType]: UnitDefinitionValue }
 export type UnitDefinitionValue = DefinitionValues<UnitValueType>
 
@@ -74,7 +78,8 @@ export interface BaseCohort extends DefinitionValues<UnitValueType> {
 export interface Unit extends Definition<UnitType>, DefinitionValues<UnitValueType> {
   role: UnitRole
   mode: DefinitionType
-  is_loyal?: boolean
+  is_loyal?: boolean,
+  base: UnitType
 }
 
 export interface Cohort extends BaseCohort, Unit { }
@@ -83,18 +88,18 @@ export interface Cohort extends BaseCohort, Unit { }
 export const unitValueToString = (definition: DefinitionValues<UnitValueType>, type: UnitValueType): string => {
   const value = calculateValue(definition, type)
   switch (type) {
-    case UnitCalc.Cost:
-    case UnitCalc.Maneuver:
-    case UnitCalc.Strength:
-    case UnitCalc.StrengthDepleted:
-    case UnitCalc.Morale:
-    case UnitCalc.MoraleDepleted:
-    case UnitCalc.FoodConsumption:
-    case UnitCalc.FoodStorage:
+    case UnitAttribute.Cost:
+    case UnitAttribute.Maneuver:
+    case UnitAttribute.Strength:
+    case UnitAttribute.StrengthDepleted:
+    case UnitAttribute.Morale:
+    case UnitAttribute.MoraleDepleted:
+    case UnitAttribute.FoodConsumption:
+    case UnitAttribute.FoodStorage:
       return toNumber(value)
-    case UnitCalc.Experience:
-    case UnitCalc.Maintenance:
-    case UnitCalc.AttritionWeight:
+    case UnitAttribute.Experience:
+    case UnitAttribute.Maintenance:
+    case UnitAttribute.AttritionWeight:
       return toPercent(value)
     default:
       return toSignedPercent(value)

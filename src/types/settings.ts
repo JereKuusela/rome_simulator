@@ -1,8 +1,8 @@
-import { CountryName, Mode, Side, UnitCalc } from "types"
+import { CountryName, Mode, Side, UnitAttribute } from "types"
 import { ObjSet } from "utils"
 
 export type WearinessValues = { [key in Side]: WearinessAttributes }
-export type WearinessAttribute = UnitCalc.Morale | UnitCalc.Strength
+export type WearinessAttribute = UnitAttribute.Morale | UnitAttribute.Strength
 export type WearinessAttributes = { [key in WearinessAttribute]: MinMax }
 type MinMax = { min: number, max: number }
 
@@ -26,6 +26,7 @@ export enum Setting {
   FixExperience = 'Fix damage reduction from experience',
   FixTargeting = 'Fix targeting',
   BackRow = 'Enable backrow',
+  FireAndShock = 'Enable fire and shock phases',
   MaxDepth = 'Statistics: Maximum depth',
   PhaseLengthMultiplier = 'Statistics: Multiplier for phase length',
   ChunkSize = 'Statistics: Chunk size',
@@ -87,6 +88,11 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Discipline increases damage done and reduces damage taken (EUIV).'
       else
         return 'Discipline only increases damage done (Imperator).'
+    case Setting.FireAndShock:
+      if (value)
+        return 'Combat alternates between fire and shock phases (EUIV).'
+      else
+        return 'Combat only has one phase (Imperator).'
     case Setting.DailyMoraleLoss:
       return 'Amount of morale lost each round in battle (EUIV).'
     case Setting.RollDamage:
@@ -159,6 +165,7 @@ export type SiteSettings = {
   [Setting.ShowGraphs]: boolean,
   [Setting.BackRow]: boolean,
   [Setting.DisciplineDamageReduction]: boolean,
+  [Setting.FireAndShock]: boolean,
   [Setting.DailyMoraleLoss]: number,
   [Setting.Performance]: SimulationSpeed
 }

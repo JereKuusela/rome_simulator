@@ -1,6 +1,6 @@
 import { AppState, getMode, getArmyForCombat, mergeUnitTypes, getCurrentCombat, getSettings } from 'state'
 import { CombatUnits, Frontline, Reserve, doConversion, deploy, doBattleFast, removeDefeated } from 'combat'
-import { Mode, Battle, Side, Setting, Participant, Settings } from 'types'
+import { Mode, Battle, Side, Setting, Participant, Settings, CombatPhase } from 'types'
 import { createEntropy, MersenneTwister19937, Random } from 'random-js'
 import { arrGet } from 'utils'
 
@@ -84,7 +84,7 @@ const doBattle = (state: AppState, mode: Mode, battle: Battle, settings: Setting
     attacker.roll = participant_a.roll
     defender.roll = participant_d.roll
 
-    doBattleFast(attacker, defender, true, settings)
+    doBattleFast(attacker, defender, true, settings, battle.round)
 
     battle.fight_over = !checkAlive(attacker.army.frontline, attacker.army.reserve) || !checkAlive(defender.army.frontline, defender.army.reserve)
     if (battle.fight_over) {
@@ -102,8 +102,16 @@ const doBattle = (state: AppState, mode: Mode, battle: Battle, settings: Setting
   }
 }
 
+export const getCombatPhase = (round: number, settings: Settings) => {
+  if (settings[Setting.FireAndShock]) {
+    const phase = Math.floor(round / settings[Setting.RollFrequency])
+    return phase % 2 ? CombatPhase.Shock : CombatPhase.Fire
+  }
+  return CombatPhase.Default
+}
+
 export const battle = (pair: [AppState, AppState], steps: number) => {
-  const [ state, draft ] = pair
+  const [state, draft] = pair
   const mode = getMode(state)
   const battle = draft.battle[mode]
   const settings = getSettings(state, mode)
@@ -111,7 +119,7 @@ export const battle = (pair: [AppState, AppState], steps: number) => {
 }
 
 export const refreshBattle = (pair: [AppState, AppState]) => {
-  const [ state, draft ] = pair
+  const [state, draft] = pair
   const mode = getMode(state)
   const battle = draft.battle[mode]
   const settings = getSettings(state, mode)

@@ -5,7 +5,7 @@ import { Table, Image, Icon } from 'semantic-ui-react'
 
 import CombatTooltip from './CombatTooltip'
 import IconDefeated from 'images/attrition.png'
-import { Side, ArmyType, UnitCalc } from 'types'
+import { Side, ArmyType, UnitAttribute } from 'types'
 import { getImage } from 'utils'
 import { CombatUnit } from 'combat'
 import { AppState, getCurrentCombat, getCountry } from 'state'
@@ -171,9 +171,9 @@ const convertUnits = (units: (CombatUnit | null)[][]): ICohort[][] => (
     id: unit.definition.id,
     is_defeated: unit.state.is_defeated,
     image: unit.definition.image,
-    morale: unit[UnitCalc.Morale],
+    morale: unit[UnitAttribute.Morale],
     max_morale: unit.definition.max_morale,
-    strength: unit[UnitCalc.Strength],
+    strength: unit[UnitAttribute.Strength],
     max_strength: unit.definition.max_strength
   }))
 )

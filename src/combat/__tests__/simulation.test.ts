@@ -1,5 +1,5 @@
 import { getUnit, TestInfo, initInfo, setCenterUnits, every_type } from './utils'
-import { UnitType, UnitCalc, ValuesType } from 'types'
+import { UnitType, UnitAttribute, ValuesType } from 'types'
 import { addValues } from 'definition_values'
 
 describe('1 vs 1', () => {
@@ -32,7 +32,7 @@ describe('1 vs 1', () => {
   })
 
   it('first phase', () => {
-    const unit_a = addValues(archer, ValuesType.Base, 'Test', [[UnitCalc.Morale, -2.5]])
+    const unit_a = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.Morale, -2.5]])
     setCenterUnits(info, unit_a, cavalry)
     /*const result = calculateWinRate(getDefinitions(), { ...info.attacker, ...info.army_a, tactic: tactics[info.army_a.tactic], country: CountryName.Country1, general: 0 }, { ...info.defender, ...info.army_d, tactic: tactics[info.army_d.tactic], country: CountryName.Country2, general: 0 }, info.terrains, info.settings)
     expect(result.wins_attacker).toEqual(0)

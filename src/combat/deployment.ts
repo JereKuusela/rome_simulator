@@ -1,5 +1,5 @@
 import { CombatUnit, CombatUnits, Reserve, CombatParticipant } from './combat'
-import { UnitPreferences, UnitCalc, UnitPreferenceType, UnitRole, Setting, Settings } from 'types'
+import { UnitPreferences, UnitAttribute, UnitPreferenceType, UnitRole, Setting, Settings } from 'types'
 import { nextIndex } from './reinforcement'
 import { sortBy, remove, clamp } from 'lodash'
 
@@ -89,13 +89,13 @@ export const sortReserve = (reserve: Reserve, unit_preferences: UnitPreferences)
   const supportReserve = reserve.filter(value => isSupportUnit(unit_preferences, value))
   // Calculate priorities (mostly based on unit type, ties are resolved with index numbers).
   const front = sortBy(frontReserve, value => {
-    return -value.definition.deployment_cost * 100000 - value[UnitCalc.Strength] * 1000 - (value.definition.type === unit_preferences[UnitPreferenceType.Primary] ? 200000000 : 0) - (value.definition.type === unit_preferences[UnitPreferenceType.Secondary] ? -100000000 : 0)
+    return -value.definition.deployment_cost * 100000 - value[UnitAttribute.Strength] * 1000 - (value.definition.type === unit_preferences[UnitPreferenceType.Primary] ? 200000000 : 0) - (value.definition.type === unit_preferences[UnitPreferenceType.Secondary] ? -100000000 : 0)
   })
   const flank = sortBy(flankReserve, value => {
-    return -value.definition[UnitCalc.Maneuver] * 100000 - value[UnitCalc.Strength] * 1000 - (value.definition.type === unit_preferences[UnitPreferenceType.Flank] ? 100000000 : 0)
+    return -value.definition[UnitAttribute.Maneuver] * 100000 - value[UnitAttribute.Strength] * 1000 - (value.definition.type === unit_preferences[UnitPreferenceType.Flank] ? 100000000 : 0)
   })
   const support = sortBy(supportReserve, value => {
-    return -value[UnitCalc.Strength] * 1000
+    return -value[UnitAttribute.Strength] * 1000
   })
   return { front, flank, support, length: front.length + flank.length + support.length }
 }
@@ -125,7 +125,7 @@ const isSupportUnit = (preferences: UnitPreferences, unit: CombatUnit) => {
 }
 
 const isAlive = (unit: CombatUnit, minimum_morale: number, minimum_strength: number) => (
-  unit[UnitCalc.Morale] > minimum_morale && unit[UnitCalc.Strength] > minimum_strength
+  unit[UnitAttribute.Morale] > minimum_morale && unit[UnitAttribute.Strength] > minimum_strength
 )
 
 const removeDefeated = (units: CombatUnits, minimum_morale: number, minimum_strength: number) => {

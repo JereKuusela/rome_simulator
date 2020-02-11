@@ -8,7 +8,7 @@ import IconStrength from 'images/naval_combat.png'
 import IconFoodConsumption from 'images/food.png'
 import IconFoodStorage from 'images/food_capacity.png'
 
-import { DefinitionType, UnitCalc, Cohort, FrontLine, Reserve, Defeated } from 'types'
+import { DefinitionType, UnitAttribute, Cohort, FrontLine, Reserve, Defeated } from 'types'
 import { calculateValueWithoutLoss } from 'definition_values'
 import { toNumber, strengthToValue } from 'formatters'
 
@@ -72,38 +72,38 @@ export default class ArmyCosts extends Component<IProps> {
     )
   }
 
-  calculateTotal = (attribute1: UnitCalc, attribute2: UnitCalc | undefined, frontline: FrontLine, reserve: Reserve, defeated: Reserve): number => {
+  calculateTotal = (attribute1: UnitAttribute, attribute2: UnitAttribute | undefined, frontline: FrontLine, reserve: Reserve, defeated: Reserve): number => {
     return frontline.reduce((previous, current) => previous + current.reduce((previous, current) => previous + (current ?  + this.reduce(current, attribute1, attribute2) : 0), 0), 0)
       + reserve.reduce((previous, current) => previous + this.reduce(current, attribute1, attribute2), 0)
       + defeated.reduce((previous, current) => previous + this.reduce(current, attribute1, attribute2), 0)
   }
 
-  reduce = (current: Cohort, attribute1: UnitCalc, attribute2: UnitCalc | undefined) => (
+  reduce = (current: Cohort, attribute1: UnitAttribute, attribute2: UnitAttribute | undefined) => (
     Math.floor(100 * calculateValueWithoutLoss(current, attribute1) * (attribute2 ? calculateValueWithoutLoss(current, attribute2) : 1))/ 100.0
   )
 
-  defaultFormatter = (attribute: UnitCalc, frontline: FrontLine, reserve: Reserve, defeated: Defeated) => (
+  defaultFormatter = (attribute: UnitAttribute, frontline: FrontLine, reserve: Reserve, defeated: Defeated) => (
     toNumber(this.calculateTotal(attribute, undefined, frontline, reserve, defeated))
   )
 
   maintenanceFormatter = (frontline: FrontLine, reserve: Reserve, defeated: Defeated) => (
-    toNumber(this.calculateTotal(UnitCalc.Maintenance, UnitCalc.Cost, frontline, reserve, defeated))
+    toNumber(this.calculateTotal(UnitAttribute.Maintenance, UnitAttribute.Cost, frontline, reserve, defeated))
   )
 
-  costFormatter = (frontline: FrontLine, reserve: Reserve, defeated: Defeated) => this.defaultFormatter(UnitCalc.Cost, frontline, reserve, defeated)
+  costFormatter = (frontline: FrontLine, reserve: Reserve, defeated: Defeated) => this.defaultFormatter(UnitAttribute.Cost, frontline, reserve, defeated)
 
-  supplyFormatter = (frontline: FrontLine, reserve: Reserve, defeated: Defeated) => this.defaultFormatter(UnitCalc.AttritionWeight, frontline, reserve, defeated)
+  supplyFormatter = (frontline: FrontLine, reserve: Reserve, defeated: Defeated) => this.defaultFormatter(UnitAttribute.AttritionWeight, frontline, reserve, defeated)
 
-  consumptionFormatter = (frontline: FrontLine, reserve: Reserve, defeated: Defeated) => this.defaultFormatter(UnitCalc.FoodConsumption, frontline, reserve, defeated)
+  consumptionFormatter = (frontline: FrontLine, reserve: Reserve, defeated: Defeated) => this.defaultFormatter(UnitAttribute.FoodConsumption, frontline, reserve, defeated)
 
   manpowerFormatter = (frontline: FrontLine, reserve: Reserve, defeated: Defeated) => (
-    strengthToValue(this.props.mode, this.calculateTotal(UnitCalc.Strength, undefined, frontline, reserve, defeated))
+    strengthToValue(this.props.mode, this.calculateTotal(UnitAttribute.Strength, undefined, frontline, reserve, defeated))
   )
 
   storageFormatter = (frontline: FrontLine, reserve: Reserve, defeated: Defeated) => {
-    const storage = this.calculateTotal(UnitCalc.FoodStorage, undefined, frontline, reserve, defeated)
-    const consumption = this.calculateTotal(UnitCalc.FoodConsumption, undefined, frontline, reserve, defeated) || 1.0
-    return `${toNumber(storage / consumption / 12)} years (${toNumber(this.calculateTotal(UnitCalc.FoodStorage, undefined, frontline, reserve, defeated))})`
+    const storage = this.calculateTotal(UnitAttribute.FoodStorage, undefined, frontline, reserve, defeated)
+    const consumption = this.calculateTotal(UnitAttribute.FoodConsumption, undefined, frontline, reserve, defeated) || 1.0
+    return `${toNumber(storage / consumption / 12)} years (${toNumber(this.calculateTotal(UnitAttribute.FoodStorage, undefined, frontline, reserve, defeated))})`
   }
 
   renderRow = (name: string, image: string, formatter: (frontline: FrontLine, reserve: Reserve, defeated: Defeated) => string) => (

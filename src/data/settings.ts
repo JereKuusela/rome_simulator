@@ -1,4 +1,4 @@
-import { DefinitionType, CombatSettings, Setting, SiteSettings, SimulationSpeed, CountryName, Side, UnitCalc, SettingsAndOptions } from 'types'
+import { DefinitionType, CombatSettings, Setting, SiteSettings, SimulationSpeed, CountryName, Side, UnitAttribute, SettingsAndOptions } from 'types'
 
 export const getDefaultSettings = (): SettingsAndOptions => ({
   combatSettings: { [DefinitionType.Land]: getDefaultLandSettings(), [DefinitionType.Naval]: getDefaultNavalSettings() },
@@ -7,8 +7,8 @@ export const getDefaultSettings = (): SettingsAndOptions => ({
   country: CountryName.Country1,
   accordions: {},
   weariness: {
-    [Side.Attacker]: { [UnitCalc.Morale]: { min: 0, max: 0 }, [UnitCalc.Strength]: { min: 0, max: 0 } },
-    [Side.Defender]: { [UnitCalc.Morale]: { min: 0, max: 0 }, [UnitCalc.Strength]: { min: 0, max: 0 } }
+    [Side.Attacker]: { [UnitAttribute.Morale]: { min: 0, max: 0 }, [UnitAttribute.Strength]: { min: 0, max: 0 } },
+    [Side.Defender]: { [UnitAttribute.Morale]: { min: 0, max: 0 }, [UnitAttribute.Strength]: { min: 0, max: 0 } }
   }
 })
 
@@ -60,7 +60,8 @@ export const getDefaultSiteSettings = (): SiteSettings => {
     [Setting.CalculateResourceLosses]: true,
     [Setting.ShowGraphs]: false,
     [Setting.DisciplineDamageReduction]: false,
-    [Setting.DailyMoraleLoss]: 0
+    [Setting.DailyMoraleLoss]: 0,
+    [Setting.FireAndShock]: false
   }
 }
 

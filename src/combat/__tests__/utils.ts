@@ -1,7 +1,7 @@
 import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultParticipant, getDefaultArmy, getDefaultUnit } from 'data'
 import { map, mapRange } from 'utils'
 import { mergeValues, calculateValue } from 'definition_values'
-import { DefinitionType, CountryName, Participant, Terrain, TacticType, Setting, Side, BaseCohort, UnitCalc, UnitType, TerrainType, UnitPreferenceType, TacticCalc, Settings, Cohorts, UnitPreferences, General, Cohort, FrontLine } from 'types'
+import { DefinitionType, CountryName, Participant, Terrain, TacticType, Setting, Side, BaseCohort, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, TacticCalc, Settings, Cohorts, UnitPreferences, General, Cohort, FrontLine } from 'types'
 import { CombatUnit, CombatParticipant, doBattleFast, getBaseDamages, convertUnits, calculateTotalRoll, deploy, sortReserve } from 'combat'
 import { getBaseUnitType } from 'managers/army'
 
@@ -77,14 +77,14 @@ const verify = (round: number, side: Side, index: number, unit: BaseCohort | nul
   expect(unit).toBeTruthy()
   if (!unit)
     return
-  const unit_strength = Math.floor(1000 * calculateValue(unit, UnitCalc.Strength))
+  const unit_strength = Math.floor(1000 * calculateValue(unit, UnitAttribute.Strength))
   try {
     expect(Math.floor(unit_strength)).toEqual(strength)
   }
   catch (e) {
     throw new Error(errorPrefix(round, side, index) + 'Strength ' + unit_strength + ' is not ' + strength)
   }
-  const unit_morale = calculateValue(unit, UnitCalc.Morale)
+  const unit_morale = calculateValue(unit, UnitAttribute.Morale)
   try {
     expect(Math.abs(unit_morale - 2 * morale)).toBeLessThan(0.002)
   }
@@ -96,14 +96,14 @@ const verifyFast = (round: number, side: Side, index: number, unit: CombatUnit |
   expect(unit).toBeTruthy()
   if (!unit)
     return
-  const unit_strength = Math.floor(1000 * unit[UnitCalc.Strength])
+  const unit_strength = Math.floor(1000 * unit[UnitAttribute.Strength])
   try {
     expect(Math.floor(unit_strength)).toEqual(strength)
   }
   catch (e) {
     throw new Error(errorPrefix(round, side, index) + 'Strength ' + unit_strength + ' is not ' + strength)
   }
-  const unit_morale = unit[UnitCalc.Morale]
+  const unit_morale = unit[UnitAttribute.Morale]
   try {
     expect(Math.abs(unit_morale - 2 * morale)).toBeLessThan(0.002)
   }
@@ -238,7 +238,7 @@ export const every_type = [UnitType.Archers, UnitType.CamelCavalry, UnitType.Cha
  * Performs one combat round with a given test info.
  */
 const doRound = (info: TestInfo, a: CombatParticipant, d: CombatParticipant) => {
-  doBattleFast(a, d, false, info.settings)
+  doBattleFast(a, d, false, info.settings, 1)
 }
 
 

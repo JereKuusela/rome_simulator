@@ -6,7 +6,7 @@ import IconManpower from 'images/manpower.png'
 import IconStrength from 'images/naval_combat.png'
 import IconMorale from 'images/morale.png'
 import IconEmpty from 'images/empty.png'
-import { DefinitionType, Side, UnitType, UnitCalc } from 'types'
+import { DefinitionType, Side, UnitType, UnitAttribute } from 'types'
 import { CombatUnits, CombatUnit } from 'combat'
 import { strengthToValue } from 'formatters'
 import { getImage, round, sumArr } from 'utils'
@@ -57,10 +57,10 @@ class Stats extends Component<IProps> {
               Total
             </Table.Cell>
             <Table.Cell width='3'>
-              {strengthToValue(this.props.mode, this.sum(flatten,  unit => unit[UnitCalc.Strength]))} / {strengthToValue(this.props.mode, this.sum(flatten, unit => unit.definition.max_strength))}
+              {strengthToValue(this.props.mode, this.sum(flatten,  unit => unit[UnitAttribute.Strength]))} / {strengthToValue(this.props.mode, this.sum(flatten, unit => unit.definition.max_strength))}
             </Table.Cell>
             <Table.Cell width='3'>
-              {round(this.sum(flatten,  unit => unit[UnitCalc.Morale]), 100.0)} / {round(this.sum(flatten, unit => unit.definition.max_morale), 100.0)}
+              {round(this.sum(flatten,  unit => unit[UnitAttribute.Morale]), 100.0)} / {round(this.sum(flatten, unit => unit.definition.max_morale), 100.0)}
             </Table.Cell>
             <Table.Cell width='3'>
               {strengthToValue(this.props.mode, this.sum(flatten, unit => unit.state.total_strength_dealt))}
@@ -86,10 +86,10 @@ class Stats extends Component<IProps> {
           <Image src={image} avatar />
           {type + ' (x ' + count + ')'}</Table.Cell>
         <Table.Cell width='3'>
-          {strengthToValue(this.props.mode, this.sum(flatten, unit => unit[UnitCalc.Strength]))} / {strengthToValue(this.props.mode, this.sum(flatten, unit => unit.definition.max_strength))}
+          {strengthToValue(this.props.mode, this.sum(flatten, unit => unit[UnitAttribute.Strength]))} / {strengthToValue(this.props.mode, this.sum(flatten, unit => unit.definition.max_strength))}
         </Table.Cell>
         <Table.Cell width='3'>
-          {round(this.sum(flatten, unit => unit[UnitCalc.Morale]), 100.0)} / {round(this.sum(flatten, unit => unit.definition.max_morale), 100.0)}
+          {round(this.sum(flatten, unit => unit[UnitAttribute.Morale]), 100.0)} / {round(this.sum(flatten, unit => unit.definition.max_morale), 100.0)}
         </Table.Cell>
         <Table.Cell width='3'>
           {strengthToValue(this.props.mode, this.sum(flatten, unit => unit.state.total_strength_dealt))}

@@ -238,18 +238,17 @@ export const getUnitDefinitionsBySide = (state: AppState, side: Side): Units => 
 export const getUnitDefinitions = (state: AppState, country?: CountryName): Units => {
   country = country ?? state.settings.country
   const mode = state.settings.mode
-  const base = getUnits(state, country)[manager.getBaseUnitType(mode)]
   const definitions = filterUnitDefinitions(mode, getUnits(state, country))
   const general_base = manager.getGeneralBaseDefinition(getGeneral(state, country), mode)
   const general = manager.getGeneralDefinitions(getGeneral(state, country))
-  return mergeDefinitions(base, definitions, general_base, general)
+  return mergeDefinitions(definitions, general_base, general)
 }
 
 export const getUnitDefinition = (state: AppState, unit_type: UnitType, country?: CountryName): Unit => {
   country = country ?? state.settings.country
   const mode = state.settings.mode
-  const base = getUnits(state, country)[manager.getBaseUnitType(mode)]
   const unit = getUnits(state, country)[unit_type]
+  const base = getUnits(state, country)[unit.base]
   const general_base = manager.getGeneralBaseDefinition(getGeneral(state, country), mode)
   const general = manager.getGeneralDefinition(getGeneral(state, country), unit_type)
   return mergeDefinition(base, unit, general_base, general)

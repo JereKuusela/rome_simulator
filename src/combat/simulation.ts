@@ -1,5 +1,5 @@
 import { ArmyForCombat } from 'state'
-import { Terrain, UnitType, Setting, TacticCalc, Cohort, UnitCalc, Side, Settings, Cohorts } from 'types'
+import { Terrain, UnitType, Setting, TacticCalc, Cohort, UnitAttribute, Side, Settings, Cohorts } from 'types'
 import { calculateTotalRoll } from './combat_utils'
 import { calculateValue } from 'definition_values'
 import { CombatParticipant, getCombatUnit, CombatUnits, Frontline, Defeated, doBattleFast, Reserve, getUnitDefinition, CombatUnitTypes } from './combat'
@@ -184,7 +184,7 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
       defender.roll = roll_d
       attacker.army = units_a
       defender.army = units_d
-      let result = doPhase(phaseLength, attacker, defender, settings)
+      let result = doPhase(node.depth, phaseLength, attacker, defender, settings)
 
       node.branch++
       if (node.branch === dice_2)
@@ -201,7 +201,7 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
         defender.roll = roll_d
         attacker.army = units_a
         defender.army = units_d
-        result = doPhase(phaseLength, attacker, defender, settings)
+        result = doPhase(depth, phaseLength, attacker, defender, settings)
       }
       sumState(current_a, attacker.army)
       sumState(current_d, defender.army)
@@ -278,18 +278,18 @@ const calculateResourceLoss = (frontline: Frontline, defeated: Defeated, amount:
       const unit = frontline[i][j]
       if (!unit)
         continue
-      own.repair_maintenance += amount * (unit.definition.max_strength - unit[UnitCalc.Strength]) * unit.definition[UnitCalc.Maintenance] * unit.definition[UnitCalc.Cost] / REPAIR_PER_MONTH
+      own.repair_maintenance += amount * (unit.definition.max_strength - unit[UnitAttribute.Strength]) * unit.definition[UnitAttribute.Maintenance] * unit.definition[UnitAttribute.Cost] / REPAIR_PER_MONTH
     }
   }
   for (let i = 0; i < defeated.length; i++) {
     const unit = defeated[i]
-    const unit_cost = amount * unit.definition[UnitCalc.Cost]
+    const unit_cost = amount * unit.definition[UnitAttribute.Cost]
     if (unit.state.is_destroyed) {
       own.destroyed_cost += unit_cost
       continue
     }
-    const capture = (unit.state.capture_chance ?? 0.0) - unit.definition[UnitCalc.CaptureResist]
-    const repair = (unit.definition.max_strength - unit[UnitCalc.Strength]) * unit.definition[UnitCalc.Maintenance] * unit_cost / REPAIR_PER_MONTH
+    const capture = (unit.state.capture_chance ?? 0.0) - unit.definition[UnitAttribute.CaptureResist]
+    const repair = (unit.definition.max_strength - unit[UnitAttribute.Strength]) * unit.definition[UnitAttribute.Maintenance] * unit_cost / REPAIR_PER_MONTH
     if (capture <= 0.0) {
       own.repair_maintenance += repair
       continue
@@ -298,8 +298,8 @@ const calculateResourceLoss = (frontline: Frontline, defeated: Defeated, amount:
     own.repair_maintenance += (1 - capture) * repair
     // If captured then the full cost of unit is lost.
     own.captured_cost += capture * unit_cost
-    const enemy_unit_cost = amount * (unit.definition[UnitCalc.Cost] - own_types[unit.definition.type][UnitCalc.Cost] + enemy_types[unit.definition.type][UnitCalc.Cost])
-    const enemy_repair = (unit.definition.max_strength - unit[UnitCalc.Strength]) * (unit.definition[UnitCalc.Maintenance] - own_types[unit.definition.type][UnitCalc.Maintenance] + enemy_types[unit.definition.type][UnitCalc.Maintenance]) * enemy_unit_cost / REPAIR_PER_MONTH
+    const enemy_unit_cost = amount * (unit.definition[UnitAttribute.Cost] - own_types[unit.definition.type][UnitAttribute.Cost] + enemy_types[unit.definition.type][UnitAttribute.Cost])
+    const enemy_repair = (unit.definition.max_strength - unit[UnitAttribute.Strength]) * (unit.definition[UnitAttribute.Maintenance] - own_types[unit.definition.type][UnitAttribute.Maintenance] + enemy_types[unit.definition.type][UnitAttribute.Maintenance]) * enemy_unit_cost / REPAIR_PER_MONTH
     // If captured then the enemy gainst full cost of the unit.
     enemy.seized_cost -= capture * enemy_unit_cost
     // But enemy also has to repair the unit.
@@ -313,11 +313,11 @@ type Winner = Side | null | undefined
 /**
  * Simulates one dice roll phase.
  */
-const doPhase = (rounds_per_phase: number, attacker: CombatParticipant, defender: CombatParticipant, settings: Settings) => {
+const doPhase = (depth: number, rounds_per_phase: number, attacker: CombatParticipant, defender: CombatParticipant, settings: Settings) => {
   let winner: Winner = undefined
   let round = 0
   for (round = 0; round < rounds_per_phase;) {
-    doBattleFast(attacker, defender, false, settings)
+    doBattleFast(attacker, defender, false, settings, round + depth * rounds_per_phase)
     round++
 
     const alive_a = checkAlive(attacker.army.frontline, attacker.army.reserve)
@@ -363,19 +363,19 @@ const sumState = (state: State, units: CombatUnits) => {
       const unit = units.frontline[i][j]
       if (!unit)
         continue
-      state.strength += unit[UnitCalc.Strength]
-      state.morale += unit[UnitCalc.Morale]
+      state.strength += unit[UnitAttribute.Strength]
+      state.morale += unit[UnitAttribute.Morale]
     }
   }
   for (let i = 0; i < units.reserve.length; i++) {
     const unit = units.reserve[i]
-    state.strength += unit[UnitCalc.Strength]
-    state.morale += unit[UnitCalc.Morale]
+    state.strength += unit[UnitAttribute.Strength]
+    state.morale += unit[UnitAttribute.Morale]
   }
   for (let i = 0; i < units.defeated.length; i++) {
     const unit = units.defeated[i]
-    state.strength += unit[UnitCalc.Strength]
-    state.morale += unit[UnitCalc.Morale]
+    state.strength += unit[UnitAttribute.Strength]
+    state.morale += unit[UnitAttribute.Morale]
   }
 }
 

@@ -5,7 +5,7 @@ import { AppState, getGeneralStats } from 'state'
 import { mapRange, ObjSet, has, keys, values } from '../utils'
 
 import { addSignWithZero } from 'formatters'
-import { DefinitionType, ValuesType, TraditionDefinition, TradeDefinition, IdeaDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, EconomyDefinition, LawDefinition, AbilityDefinition, Modifier, Tradition, ScopeType, UnitCalc, ReligionType, CultureType, ModifierType, CountryAttribute } from 'types'
+import { DefinitionType, ValuesType, TraditionDefinition, TradeDefinition, IdeaDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, EconomyDefinition, LawDefinition, AbilityDefinition, Modifier, Tradition, ScopeType, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute } from 'types'
 import { invalidate, setCountryValue, enableSelection, clearSelection, enableUnitModifiers, enableGeneralModifiers, clearUnitModifiers, clearGeneralModifiers, setGeneralMartial, selectCulture, selectReligion, selectGovernment, setOmenPower, setHasGeneral, setMilitaryPower, setOfficeMorale, setOfficeDiscipline } from 'reducers'
 
 import AccordionToggle from 'containers/AccordionToggle'
@@ -611,7 +611,7 @@ class Countries extends Component<IProps> {
     this.enableModifiers(MILITARY_POWER_KEY, [{
       target: DefinitionType.Land,
       scope: ScopeType.Country,
-      attribute: UnitCalc.Morale,
+      attribute: UnitAttribute.Morale,
       type: ValuesType.Modifier,
       value: power * 0.001
     }])
@@ -629,7 +629,7 @@ class Countries extends Component<IProps> {
       target: DefinitionType.Global,
       type: ValuesType.Base,
       scope: ScopeType.Country,
-      attribute: UnitCalc.Discipline,
+      attribute: UnitAttribute.Discipline,
       value: number / 100.0
     }])
   }
@@ -645,7 +645,7 @@ class Countries extends Component<IProps> {
     this.enableModifiers(OFFICE_KEY + 'Morale', [{
       target: DefinitionType.Land,
       scope: ScopeType.Country,
-      attribute: UnitCalc.Morale,
+      attribute: UnitAttribute.Morale,
       type: ValuesType.Modifier,
       value: number / 100.0
     }])
@@ -742,7 +742,7 @@ class Countries extends Component<IProps> {
     this.enableModifiers(NO_GENERAL_KEY, [{
       target: DefinitionType.Global,
       scope: ScopeType.Army,
-      attribute: UnitCalc.Morale,
+      attribute: UnitAttribute.Morale,
       type: ValuesType.Modifier,
       value: -0.25
     }])

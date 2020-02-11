@@ -1,5 +1,5 @@
 import { calculateValue, clearAllValues, mergeValues, calculateBase, addValues, regenerateValues } from 'definition_values'
-import { DefinitionType, Mode, GeneralCalc, UnitDefinitionValues, UnitType, UnitDefinitionValue, Unit, UnitCalc, General, Army, ArmyType, BaseCohort, ValuesType, UnitValueType, TacticType, UnitPreferenceType, GeneralStats, BaseReserve, ScopeType, Modifier, BaseDefeated, BaseFrontLine } from 'types'
+import { DefinitionType, Mode, GeneralCalc, UnitDefinitionValues, UnitType, UnitDefinitionValue, Unit, UnitAttribute, General, Army, ArmyType, BaseCohort, ValuesType, UnitValueType, TacticType, UnitPreferenceType, GeneralStats, BaseReserve, ScopeType, Modifier, BaseDefeated, BaseFrontLine } from 'types'
 import { filterKeys, map, forEach, keys } from 'utils'
 import { findLastIndex } from 'lodash'
 
@@ -32,7 +32,7 @@ export const getGeneralBaseDefinition = (general: General, mode: Mode): UnitDefi
 
 export const unitSorter = (definition: Unit, mode: Mode) => {
   if (mode === DefinitionType.Naval)
-    return calculateBase(definition, UnitCalc.Cost)
+    return calculateBase(definition, UnitAttribute.Cost)
   return definition.type === UnitType.BaseLand ? '' : definition.type
 }
 
@@ -201,7 +201,7 @@ export const enableGeneralModifiers = (army: Army, key: string, modifiers: Modif
   const martial = calculateValue(definition, GeneralCalc.Martial)
   if (!definitions[DefinitionType.Naval])
     definitions[DefinitionType.Naval] = {}
-  definitions[DefinitionType.Naval] = addValues(definitions[DefinitionType.Naval], ValuesType.Base, GeneralCalc.Martial, [[UnitCalc.CaptureChance, 0.002 * martial]])
+  definitions[DefinitionType.Naval] = addValues(definitions[DefinitionType.Naval], ValuesType.Base, GeneralCalc.Martial, [[UnitAttribute.CaptureChance, 0.002 * martial]])
   definition.definitions = definitions
   army.general = definition
 }

@@ -11,6 +11,12 @@ export interface Battle {
   outdated: boolean
 }
 
+export enum CombatPhase {
+  Fire = 'Fire',
+  Shock = 'Shock',
+  Default = 'Default'
+}
+
 export type Participants = { [key in Side]: Participant }
 export type ModeState = { [key in Mode]: Battle }
 

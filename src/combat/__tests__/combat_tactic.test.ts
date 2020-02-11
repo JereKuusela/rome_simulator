@@ -1,10 +1,10 @@
 import { addValues } from 'definition_values'
 import { getUnit, TestInfo, initInfo, setTactics, setCenterUnits, initSide, testCombat } from './utils'
-import { UnitType, UnitCalc, TacticType, ValuesType } from 'types'
+import { UnitType, UnitAttribute, TacticType, ValuesType } from 'types'
 
 describe('tactics', () => {
-  const archer = addValues(getUnit(UnitType.Archers), ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.2]])
-  const heavy = addValues(getUnit(UnitType.HeavyInfantry), ValuesType.Modifier, 'Initial', [[UnitCalc.Morale, -0.2]])
+  const archer = addValues(getUnit(UnitType.Archers), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.2]])
+  const heavy = addValues(getUnit(UnitType.HeavyInfantry), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.2]])
   
   let info: TestInfo
   beforeEach(() => { info = initInfo() })

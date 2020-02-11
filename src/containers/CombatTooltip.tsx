@@ -5,7 +5,7 @@ import { last } from 'lodash'
 
 import StyledNumber from 'components/Utils/StyledNumber'
 
-import { DefinitionType, Side, ArmyType, UnitCalc, UnitType, Setting, TacticCalc, TerrainType } from 'types'
+import { DefinitionType, Side, ArmyType, UnitAttribute, UnitType, Setting, TacticCalc, TerrainType } from 'types'
 import { calculateTotalRoll, calculateBaseDamage, CombatUnitDefinition, CombatUnitRoundInfo, CombatUnit } from 'combat'
 import { toSignedPercent, toManpower, strengthToValue, toNumber } from 'formatters'
 import { calculateValue } from 'definition_values'
@@ -77,15 +77,15 @@ class CombatTooltip extends Component<IProps, IState> {
   getBaseSection = (source: IUnit, target: IUnit, base_damage: number, tactic_damage: number, is_support: boolean) => {
     const { terrains, settings } = this.props
     const terrain_types = terrains.map(value => value.type)
-    const strength = source[UnitCalc.Strength] + source.strength_loss
-    const offense_vs_defense = source[UnitCalc.Offense] - target[UnitCalc.Defense]
+    const strength = source[UnitAttribute.Strength] + source.strength_loss
+    const offense_vs_defense = source[UnitAttribute.Offense] - target[UnitAttribute.Defense]
     const experience_reduction = target.experience_reduction
     const target_type = source[target.type]
     const is_loyal = source.is_loyal
     const total_damage = source.damage_dealt
 
-    const attributes: (UnitCalc | UnitType)[] = [UnitCalc.Discipline, UnitCalc.DamageDone]
-    const target_attributes: (UnitCalc | UnitType)[] = [UnitCalc.DamageTaken]
+    const attributes: (UnitAttribute | UnitType)[] = [UnitAttribute.Discipline, UnitAttribute.DamageDone]
+    const target_attributes: (UnitAttribute | UnitType)[] = [UnitAttribute.DamageTaken]
 
     return (<>
       {this.renderItem('Base damage', base_damage, this.toNumber)}
@@ -94,11 +94,11 @@ class CombatTooltip extends Component<IProps, IState> {
       {attributes.map(attribute => this.getAttribute(source, attribute))}
       {this.renderStyledItem(target.type, target_type, toSignedPercent)}
       {this.renderStyledItem('Offense vs Defense', offense_vs_defense, toSignedPercent)}
-      {settings[Setting.DisciplineDamageReduction] && this.renderStyledItem('Target discipline', 1/(target[UnitCalc.Discipline] + 1) - 1, toSignedPercent)}
+      {settings[Setting.DisciplineDamageReduction] && this.renderStyledItem('Target discipline', 1/(target[UnitAttribute.Discipline] + 1) - 1, toSignedPercent)}
       {this.renderStyledItem('Target experience', experience_reduction, toSignedPercent)}
       {target_attributes.map(terrain => this.getAttribute(target, terrain))}
       {terrain_types.map(terrain => this.getAttribute(source, terrain))}
-      {is_support && this.renderStyledItem(UnitCalc.BackrowEffectiveness, source[UnitCalc.BackrowEffectiveness] - 1, toSignedPercent)}
+      {is_support && this.renderStyledItem(UnitAttribute.BackrowEffectiveness, source[UnitAttribute.BackrowEffectiveness] - 1, toSignedPercent)}
       {this.renderMultiplier('Unit strength', strength, toNumber)}
       {this.renderItem('Total damage', total_damage, this.toNumber)}
     </>)
@@ -114,8 +114,8 @@ class CombatTooltip extends Component<IProps, IState> {
     return (<>
       {this.renderMultiplier('Constant', strength_lost_multiplier, value => mode === DefinitionType.Land ? toManpower(value) : String(value))}
       {this.renderStyledItem('Tactic casualties', tactic_casualties, toSignedPercent)}
-      {this.getAttribute(source, UnitCalc.StrengthDamageDone)}
-      {this.getAttribute(target, UnitCalc.StrengthDamageTaken)}
+      {this.getAttribute(source, UnitAttribute.StrengthDamageDone)}
+      {this.getAttribute(target, UnitAttribute.StrengthDamageTaken)}
       {this.renderItem('Strength damage', strength_damage, value => strengthToValue(mode, value))}
     </>)
   }
@@ -123,28 +123,28 @@ class CombatTooltip extends Component<IProps, IState> {
   getMoraleSection = (source: IUnit, target: IUnit) => {
     const { settings } = this.props
     const morale_lost_multiplier = settings[Setting.MoraleLostMultiplier]
-    const morale = source[UnitCalc.Morale] + source.morale_loss
+    const morale = source[UnitAttribute.Morale] + source.morale_loss
     const morale_damage = source.morale_dealt
 
     return (<>
       {this.renderMultiplier('Constant', morale_lost_multiplier, String)}
-      {this.getAttribute(source, UnitCalc.MoraleDamageDone)}
-      {this.getAttribute(target, UnitCalc.MoraleDamageTaken)}
+      {this.getAttribute(source, UnitAttribute.MoraleDamageDone)}
+      {this.getAttribute(target, UnitAttribute.MoraleDamageTaken)}
       {this.renderMultiplier('Unit morale', morale, toNumber)}
       {this.renderItem('Morale damage', morale_damage, this.toNumber)}
     </>)
   }
 
-  getAttribute = (unit: IUnit, attribute: UnitCalc | UnitType | TerrainType) => (
+  getAttribute = (unit: IUnit, attribute: UnitAttribute | UnitType | TerrainType) => (
     this.renderStyledItem(attribute, unit[attribute], toSignedPercent)
   )
 
   getInfoSection = (source: IUnit, target: IUnit | null) => {
     const { mode } = this.props
-    const morale_current = source[UnitCalc.Morale]
+    const morale_current = source[UnitAttribute.Morale]
     const moraleMax = source.max_morale
     const morale_loss = -source.morale_loss
-    const strength_current = source[UnitCalc.Strength]
+    const strength_current = source[UnitAttribute.Strength]
     const strength_loss = -source.strength_loss
     return (<>
       <List.Item>
