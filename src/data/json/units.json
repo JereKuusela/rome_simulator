@@ -2,6 +2,7 @@
   "units": [
     {
       "type": "Base Land Unit",
+      "base": null,
       "mode": "Land",
       "role": "Front",
       "morale": 3.0,
@@ -13,6 +14,7 @@
     },
     {
       "type": "Base Naval Unit",
+      "base": null,
       "mode": "Naval",
       "role": "Front",
       "morale": 3.0,
@@ -25,7 +27,7 @@
     },
     {
       "type": "Archers",
-      "mode": "Land",
+      "base": "Base Land Unit",
       "role": "Front",
       "cost": 6,
       "morale_damage_taken": 0.25,
@@ -41,7 +43,7 @@
     },
     {
       "type": "Camel Cavalry",
-      "mode": "Land",
+      "base": "Base Land Unit",
       "role": "Flank",
       "cost": 13,
       "maneuver": 3,
@@ -58,7 +60,7 @@
     },
     {
       "type": "Chariots",
-      "mode": "Land",
+      "base": "Base Land Unit",
       "role": "Front",
       "cost": 6,
       "archers": 0.2,
@@ -75,7 +77,7 @@
     },
     {
       "type": "Heavy Cavalry",
-      "mode": "Land",
+      "base": "Base Land Unit",
       "role": "Front",
       "cost": 14,
       "maneuver": 1,
@@ -93,7 +95,7 @@
     },
     {
       "type": "Heavy Infantry",
-      "mode": "Land",
+      "base": "Base Land Unit",
       "role": "Front",
       "cost": 14,
       "morale_damage_taken": -0.1,
@@ -110,7 +112,7 @@
     },
     {
       "type": "Horse Archers",
-      "mode": "Land",
+      "base": "Base Land Unit",
       "role": "Flank",
       "cost": 14,
       "maneuver": 4,
@@ -130,7 +132,7 @@
     },
     {
       "type": "Light Cavalry",
-      "mode": "Land",
+      "base": "Base Land Unit",
       "role": "Flank",
       "cost": 7,
       "maneuver": 2,
@@ -148,7 +150,7 @@
     },
     {
       "type": "Light Infantry",
-      "mode": "Land",
+      "base": "Base Land Unit",
       "role": "Front",
       "cost": 6,
       "morale_damage_taken": -0.25,
@@ -165,7 +167,7 @@
     },
     {
       "type": "Supply Train",
-      "mode": "Land",
+      "base": "Base Land Unit",
       "role": "Support",
       "cost": 16,
       "morale_damage_taken": 1.0,
@@ -184,7 +186,7 @@
     },
     {
       "type": "War Elephants",
-      "mode": "Land",
+      "base": "Base Land Unit",
       "role": "Front",
       "cost": 26,
       "strength_damage_taken": -0.5,
@@ -204,7 +206,7 @@
     },
     {
       "type": "Liburnian",
-      "mode": "Naval",
+      "base": "Base Naval Unit",
       "role": "Front",
       "cost": 4,
       "maneuver": 4,
@@ -220,7 +222,7 @@
     },
     {
       "type": "Trireme",
-      "mode": "Naval",
+      "base": "Base Naval Unit",
       "role": "Front",
       "cost": 8,
       "maneuver": 2,
@@ -236,7 +238,7 @@
     },
     {
       "type": "Tetrere",
-      "mode": "Naval",
+      "base": "Base Naval Unit",
       "role": "Front",
       "cost": 10,
       "maneuver": 1,
@@ -249,7 +251,7 @@
     },
     {
       "type": "Hexere",
-      "mode": "Naval",
+      "base": "Base Naval Unit",
       "role": "Front",
       "cost": 15,
       "capture_chance": 0.2,
@@ -264,7 +266,7 @@
     },
     {
       "type": "Octere",
-      "mode": "Naval",
+      "base": "Base Naval Unit",
       "role": "Front",
       "cost": 25,
       "maneuver": -1,
@@ -279,7 +281,7 @@
     },
     {
       "type": "Mega-Polyreme",
-      "mode": "Naval",
+      "base": "Base Naval Unit",
       "role": "Front",
       "cost": 32,
       "capture_chance": 0.3,

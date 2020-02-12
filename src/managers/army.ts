@@ -36,15 +36,6 @@ export const unitSorter = (definition: Unit, mode: Mode) => {
   return definition.type === UnitType.BaseLand ? '' : definition.type
 }
 
-export function getBaseUnitType (mode: Mode, type: UnitType): UnitType | undefined
-export function getBaseUnitType (mode: Mode): UnitType
-export function getBaseUnitType (mode: Mode, type?: UnitType) {
-  if (type === UnitType.BaseLand || type === UnitType.BaseNaval)
-    return undefined
-  return (mode === DefinitionType.Land ? UnitType.BaseLand : UnitType.BaseNaval) as UnitType
-}
-
-
 const findFromFrontline = (frontline: BaseFrontLine, id: number): [number, number] | undefined => {
   let ret: [number, number] | undefined = undefined
   forEach(frontline, (row, row_index) => forEach(row, (unit, column_index) => {

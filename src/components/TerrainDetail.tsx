@@ -31,7 +31,7 @@ export default class TerrainDetail extends Component<IProps> {
 
   readonly CELLS = 4
 
-  render(): JSX.Element {
+  render() {
     const { terrain, onTypeChange, onModeChange, onImageChange, onLocationChange } = this.props
     const { type, mode, image, location } = terrain
     return (

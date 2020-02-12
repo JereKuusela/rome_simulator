@@ -17,5 +17,5 @@ export type Mode = DefinitionType.Land | DefinitionType.Naval
 export interface Definition<T extends string> {
   type: T
   image: string
-  mode: DefinitionType
+  mode?: DefinitionType
 }

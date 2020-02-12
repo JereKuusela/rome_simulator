@@ -2,7 +2,6 @@ import { ValuesType, UnitValueType, UnitType, DefinitionType, UnitRole, Modifier
 import { addValuesWithMutate, regenerateValues, clearValues } from "definition_values"
 import { getUnitIcon } from "data"
 import { forEach } from "utils"
-import { getBaseUnitType } from "./army"
 
 export const setUnitValue = (unit: Unit, values_type: ValuesType, key: string, attribute: UnitValueType, value: number) => {
   addValuesWithMutate(unit, values_type, key, [[attribute, value]])
@@ -13,7 +12,7 @@ export const deleteUnit = (units: Units, type: UnitType) => {
 }
 
 export const createUnit = (units: Units, mode: Mode, type: UnitType) => {
-  units[type] = { type, mode, image: getUnitIcon(type), role: UnitRole.Front, base: getBaseUnitType(mode, type) }
+  units[type] = { type, image: getUnitIcon(type), role: UnitRole.Front, base: mode === DefinitionType.Naval ? UnitType.BaseNaval : UnitType.BaseLand }
 }
 
 export const changeUnitType = (units: Units, old_type: UnitType, type: UnitType) => {
@@ -32,8 +31,8 @@ export const toggleUnitLoyality = (unit: Unit) => {
   unit.is_loyal = !unit.is_loyal
 }
 
-export const changeUnitMode = (unit: Unit, mode: DefinitionType) => {
-  unit.mode = mode
+export const changeUnitBaseType = (unit: Unit, base: UnitType) => {
+  unit.base = base
 }
 
 const filterTarget = (type: UnitType, target: string) => (

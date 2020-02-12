@@ -3,44 +3,46 @@ Release 6:
 
 Changelog:
 
-- Battle: Added food consumption and storage to fast planner.
 - Battle: Fixed new countries not shown on country selector.
 - Battle: Fixed manual unit adding not working.
 - Battle: Fixed order of naval units in fast planner.
 - Battle: Fixed changing flank size not automatically updating the result.
-- Battle: Updated flank size setting to work more accurately (not sure when this was changed).
-- Battle: Refactored state for armies (first step towards multiarmy battles).
-- Battle: Added support for backrow and backrow effectiveness.
 - Battle: Fixed right-click cohort removal not always working correctly.
 - Battle: Fixed cohort tooltip not appearing when moving mouse fast.
 - Battle: Fixed total damage shown incorrectly on cohort tooltips (if target had experience).
+- Battle: Improved flank size setting to work more accurately (not sure when this was changed).
+- Battle: Added support for backrow and backrow effectiveness.
+- Battle: Added food consumption and storage to fast planner.
+- Battle: Refactored state for armies (first step towards multiarmy battles).
 - Stats: Added average gold losses to naval simulations (from repair, from destroyed, from captured, etc.).
 - Stats: Added separate settings for calculating different things.
+- Countries: Updated Export Hemp to give -10% Naval Damage taken instead of +5% Naval Damage done.
 - Countries: Added naval capture chance from general martial (0.2% * martial).
-- Countries: Refactored general to be separate entity (second step towards multiarmy battles).
-- Countries: Fixed/updated Export Hemp to give -10% Naval Damage taken instead of +5% Naval Damage done.
 - Countries: Added support for country specific combat width modifiers, feature from EUIV.
 - Countries: Added new table at bottom to allow changing country specific attributes.
-- Units: Balance changes from 1.3.2 (War Elephants damage against Infantry, Supply Train cost).
-- Units: Added 1 maneuver to Mega-Polyreme (no idea when this was changed).
-- Units: Added new attributes: food consumption and storage.
-- Units: Removed can assault toggle button (attribute not used anywhere in simulator).
-- Units: More accurate maintenance costs.
+- Countries: Refactored general to be separate entity (second step towards multiarmy battles).
+- Units: Updated balance changes from 1.3.2 (War Elephants damage against Infantry, Supply Train cost).
+- Units: Updated 1 maneuver to Mega-Polyreme (no idea when this was changed).
 - Units: Fixed order of naval units.
+- Units: Improved maintenance costs (higher accuracy).
+- Units: Added new attributes: food consumption and storage.
 - Units: Added new attributes: capture chance and capture resist.
+- Units: Added a new attribute for reducing daily morale losses, feature from EUIV.
+- Units: Added new attributes for Fire and Shock phases (base + modifier), feature from EUIV.
+- Units: Added support for changing the base type of a unit (allows more flexible unit hierarchies, for EUIV).
+- Units: Removed support for changing unit mode (land or naval), instead it is derived from the base unit.
+- Units: Removed can assault toggle button (attribute not used anywhere in simulator).
 - Units: Refactored base stats to a base unit (simplifies code and allows using it as a neutral unit).
-- Units: New attribute for reducing daily morale losses, feature from EUIV.
-- Units: New attributes for Fire and Shock phases (base + modifier), feature from EUIV.
-- Settings: New page which more clearly shows which settings affects land, naval or both.
-- Settings: Settings for bug fixes (and some others) converted to checkbox settings.
-- Settings: Better names and descriptions for all settings.
-- Settings: Applied 20% increase to base damage values.
-- Settings: Removed "Fix damage taken" settings as it is fixed in the game.
-- Settings: Defender's advantage is now disabled by default (people seem to make wrong conclusions because of it).
-- Settings: New setting to enable backrow (support units are prioritized), feature from EUIV.
-- Settings: New setting for discipline reducing damage, feature from EUIV.
-- Settings: New setting for daily morale losses, feature from EUIV.
-- Settings: New setting for enabling fire and shock phases, feature from EUIV.
+- Settings: Improve page layout which more clearly shows which settings affects land, naval or both.
+- Settings: Improved settings for bug fixes (and some others), converted to checkbox settings.
+- Settings: Improved names and descriptions for all settings.
+- Settings: Updated a 20% increase to base damage values.
+- Settings: Removed "Fix damage taken" setting as it is fixed in the game.
+- Settings: Updated Defender's advantage to be disabled by default (people seem to make wrong conclusions because of it).
+- Settings: Added a new setting to enable backrow (support units are prioritized), feature from EUIV.
+- Settings: Added a new setting for discipline reducing damage, feature from EUIV.
+- Settings: Added a new setting for daily morale losses, feature from EUIV.
+- Settings: Added a new setting for enabling fire and shock phases, feature from EUIV.
 
 Todo:
  - Transfer could only show non-base stats for units, terrains and tactics (since base stats are supposed to regenerate?), currently it shows way too much information.
@@ -77,8 +79,6 @@ EUIV:
  - Units on the backline take full morale casualties
  - Increasing daily multiplier (1% per day)
  - Combat ability directly increases damage
- - Infantry fire, Infantry shock, etc multiply damage for casualties (base unit level, 3 different base units are needed?
- - Or using preference system someshow? support fire, support shock as country level modifiers?
  - General and unit pips affect dice rolls (enemy ones reduce)
  - Base damage is different for each unit (also depends on phase, also different for morale damage)
 

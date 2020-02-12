@@ -3,7 +3,7 @@ import { Modal, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
 import ModalUnitDetail from 'containers/modal/ModalUnitDetail'
-import { AppState, mergeUnitTypes, filterTerrainTypes, getUnitDefinitions, getBaseDefinition, getUnitImages } from 'state'
+import { AppState, mergeUnitTypes, filterTerrainTypes, getUnitDefinitions, getUnitImages } from 'state'
 import { createUnit, deleteUnit, changeUnitType } from 'reducers'
 import UnitDefinitions from 'components/UnitDefinitions'
 import ItemRemover from 'components/ItemRemover'
@@ -65,7 +65,6 @@ class Units extends Component<IProps, IState> {
           mode={this.props.mode}
           country={this.props.country}
           terrains={this.props.terrains}
-          base_definition={this.props.base_definition}
           definitions={this.props.definitions}
           images={this.props.images}
           unit_types={this.props.unit_types}
@@ -92,7 +91,6 @@ class Units extends Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  base_definition: getBaseDefinition(state),
   definitions: getUnitDefinitions(state),
   images: getUnitImages(state),
   unit_types: mergeUnitTypes(state),

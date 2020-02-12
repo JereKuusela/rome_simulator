@@ -6,7 +6,7 @@ import { CombatUnit, CombatUnits } from 'combat'
 import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticState, getDefaultTerrainState } from 'data'
 import { sortBy, uniq, flatten } from 'lodash'
 import * as manager from 'managers/army'
-import { mergeValues, calculateValue } from 'definition_values'
+import { calculateValue } from 'definition_values'
 
 /**
  * Returns settings of the current mode.
@@ -250,13 +250,6 @@ export const getUnitDefinition = (state: AppState, unit_type: UnitType, country?
   const general_base = manager.getGeneralBaseDefinition(getGeneral(state, country), mode)
   const general = manager.getGeneralDefinitions(getGeneral(state, country))
   return mergeDefinition(getUnits(state, country), general_base, general, unit_type)
-}
-
-export const getBaseDefinition = (state: AppState, country?: CountryName): Unit => {
-  country = country ?? state.settings.country
-  const base = getUnits(state, country)[manager.getBaseUnitType(state.settings.mode)]
-  const general = manager.getGeneralBaseDefinition(getGeneral(state, country), state.settings.mode)
-  return mergeValues(base, general)
 }
 
 export const getUnitImages = (state: AppState): { [key in UnitType]: string[] } => {

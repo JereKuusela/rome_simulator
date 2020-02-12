@@ -1,5 +1,5 @@
 import { DefinitionValues, calculateValue } from 'definition_values'
-import { TerrainType, Definition, DefinitionType, CountryName } from 'types'
+import { TerrainType, Definition, CountryName } from 'types'
 import { toNumber, toPercent, toSignedPercent, toMultiplier } from 'formatters'
 import { CombatPhase } from './battle'
 
@@ -77,7 +77,6 @@ export interface BaseCohort extends DefinitionValues<UnitValueType> {
 
 export interface Unit extends Definition<UnitType>, DefinitionValues<UnitValueType> {
   role: UnitRole
-  mode: DefinitionType
   is_loyal?: boolean,
   base?: UnitType
 }

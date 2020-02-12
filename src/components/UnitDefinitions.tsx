@@ -5,7 +5,7 @@ import { sortBy, toNumber } from 'lodash'
 import { Mode, DefinitionType, CountryName, UnitType, TerrainType, Unit, UnitAttribute, UnitValueType, Units } from 'types'
 import { toArr, getImage } from 'utils'
 import { unitSorter } from 'managers/army'
-import { mergeValues, calculateValue, calculateBase, calculateModifier, calculateLoss } from 'definition_values'
+import { calculateValue, calculateBase, calculateModifier, calculateLoss } from 'definition_values'
 import { toPercent, toManpower, toSignedPercent, hideZero } from 'formatters'
 
 import StyledNumber from './Utils/StyledNumber'
@@ -25,7 +25,6 @@ interface IProps {
   images: { [key in UnitType]: string[] }
   unit_types: UnitType[]
   terrains: TerrainType[]
-  base_definition: Unit
   onRowClick: (unit: Unit) => void
 }
 
@@ -95,8 +94,7 @@ export default class UnitDefinitions extends Component<IProps> {
     )
   }
 
-  renderRow = (definition: Unit) => {
-    const unit = mergeValues(definition, this.props.base_definition)
+  renderRow = (unit: Unit) => {
     return (
       <Table.Row key={unit.type} onClick={() => this.props.onRowClick(unit)}>
         <Table.Cell singleLine>

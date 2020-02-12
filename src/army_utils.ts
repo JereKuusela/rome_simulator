@@ -22,12 +22,11 @@ export const mergeDefinitions = (definitions: Units, general_base: UnitDefinitio
 export const mergeDefinition = (definitions: Units, general_base: UnitDefinitionValue, general: UnitDefinitionValues, type: UnitType) => {
   let unit = definitions[type]
   let base = unit.base
-  while (base) {
+  const merged = [type]
+  while (base && !merged.includes(base)) {
+    merged.push(base)
     unit = mergeValues(unit, definitions[base])
-    if (definitions[base].base === base)
-      base = undefined
-    else
-      base = definitions[base].base
+    base = definitions[base].base
   }
   return mergeValues(unit, mergeValues(general_base, general[type]))
 }
@@ -35,7 +34,7 @@ export const mergeDefinition = (definitions: Units, general_base: UnitDefinition
 /**
  * Returns whether a given definition belongs to a given battle mode.
  */
-export const isIncludedInMode = (mode: DefinitionType, definition: { mode: DefinitionType }) => definition.mode === DefinitionType.Global || definition.mode === mode
+export const isIncludedInMode = (mode: DefinitionType, definition: { mode?: DefinitionType }) => !definition || definition.mode === DefinitionType.Global || definition.mode === mode
 
 /**
  * Returns unit definitions for current battle mode.

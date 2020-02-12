@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { ValuesType, DefinitionType, CountryName, UnitType, Cohort, UnitRole, UnitValueType } from 'types'
+import { ValuesType, CountryName, UnitType, Cohort, UnitRole, UnitValueType } from 'types'
 import UnitDetail from 'components/UnitDetail'
 import { AppState, getUnitDefinition, mergeUnitTypes, filterTerrainTypes, getMode, getSettings } from 'state'
-import { setUnitValue, changeUnitImage, changeUnitMode, changeUnitDeployment, toggleUnitLoyality, invalidate } from 'reducers'
+import { setUnitValue, changeUnitImage, changeUnitBaseType, changeUnitDeployment, toggleUnitLoyality, invalidate } from 'reducers'
 
 
 const CUSTOM_VALUE_KEY = 'Custom'
@@ -33,7 +33,7 @@ class ModalUnitDetail extends Component<IProps> {
         show_statistics={false}
         onTypeChange={this.changeType}
         onImageChange={this.changeImage}
-        onModeChange={this.changeMode}
+        onBaseTypeChange={this.changeBaseType}
         onChangeDeployment={this.changeDeployment}
         onIsLoyalToggle={this.toggleIsLoyal}
       />
@@ -62,9 +62,9 @@ class ModalUnitDetail extends Component<IProps> {
     invalidate()
   }
 
-  changeMode = (mode: DefinitionType) => {
-    const { changeUnitMode, invalidate, unit_type } = this.props
-    changeUnitMode(unit_type!, mode)
+  changeBaseType = (type: UnitType) => {
+    const { changeUnitBaseType, invalidate, unit_type } = this.props
+    changeUnitBaseType(unit_type!, type)
     invalidate()
   }
 
@@ -89,7 +89,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   settings: getSettings(state)
 })
 
-const actions = { setUnitValue, changeUnitImage, changeUnitMode, changeUnitDeployment, toggleUnitLoyality, invalidate }
+const actions = { setUnitValue, changeUnitImage, changeUnitBaseType, changeUnitDeployment, toggleUnitLoyality, invalidate }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

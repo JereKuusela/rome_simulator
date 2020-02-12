@@ -20,7 +20,6 @@ import IconTetrere from 'images/tetrere.png'
 import IconHexere from 'images/hexere.png'
 import IconOctere from 'images/octere.png'
 import IconMegaPolyreme from 'images/mega_polyreme.png'
-import { getBaseUnitType } from 'managers/army'
 
 const unit_to_icon: { [key in UnitType]: string } = {
   [UnitType.Archers]: IconArcher,
@@ -51,14 +50,12 @@ export const getUnitIcon = (type: UnitType) => unit_to_icon[type] || ''
 export const GlobalKey = 'Base'
 
 const createUnitFromJson = (data: UnitData): Unit => {
-  const type = data.type as UnitType
-  const mode = data.mode as Mode
   let unit: Unit = {
-    type,
-    mode,
+    type: data.type as UnitType,
+    mode:  data.mode as Mode | undefined,
     image: unit_to_icon[data.type as UnitType] ?? '',
     role: data.role as UnitRole,
-    base: getBaseUnitType(mode, type)
+    base: data.base ? data.base as UnitType : undefined
   }
   const base_values: [UnitValueType, number][] = [
     [UnitAttribute.AttritionWeight, data.attrition_weight ?? 0],
@@ -107,9 +104,9 @@ export const getDefaultUnits = (): Units => defaultUnits
 export const getDefaultUnit = (type: UnitType): Unit => defaultUnits[type]
 
 interface UnitData {
-  base?: string
+  base: string | null
   type: string
-  mode: string
+  mode?: string
   morale?: number
   strength?: number
   cost: number

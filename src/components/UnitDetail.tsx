@@ -27,7 +27,7 @@ interface IProps {
   onCustomModifierValueChange: (key: string, attribute: UnitValueType, value: number) => void
   onCustomLossValueChange: (key: string, attribute: UnitValueType, value: number) => void
   onTypeChange?: (type: UnitType) => void
-  onModeChange?: (mode: DefinitionType) => void
+  onBaseTypeChange?: (type: UnitType) => void
   onImageChange?: (image: string) => void
   onChangeDeployment?: (deployment: UnitRole) => void
   onIsLoyalToggle?: () => void
@@ -47,9 +47,9 @@ export default class UnitDetail extends Component<IProps> {
   readonly CELLS = 6
 
   render() {
-    const { unit, onTypeChange, onModeChange, onImageChange, onChangeDeployment, onIsLoyalToggle } = this.props
+    const { unit, onTypeChange, onBaseTypeChange, onImageChange, onChangeDeployment, onIsLoyalToggle } = this.props
     const { terrain_types, unit_types, unit_types_as_dropdown } = this.props
-    const { id, type, mode, image, role: deployment, is_loyal } = unit
+    const { id, type, mode, base, image, role: deployment, is_loyal } = unit
     return (
       <Table celled selectable unstackable>
         <Headers values={this.headers} />
@@ -57,7 +57,8 @@ export default class UnitDetail extends Component<IProps> {
           {id && <DetailTextRow text='Identifier' cells={this.CELLS} value={id} />}
           {onTypeChange && unit_types && unit_types_as_dropdown && <DetailDropdownRow text='Type' cells={this.CELLS} value={type} values={unit_types} onChange={onTypeChange} />}
           {onTypeChange && unit_types && !unit_types_as_dropdown && <DetailInputRow text='Name' cells={this.CELLS} value={type} onChange={onTypeChange} />}
-          {onModeChange && <DetailDropdownRow text='Mode' cells={this.CELLS} value={mode} values={this.modes} onChange={onModeChange} />}
+          {mode && <DetailTextRow text='Mode' cells={this.CELLS} value={mode} />}
+          {base && unit_types && onBaseTypeChange && <DetailDropdownRow text='Base type' cells={this.CELLS} value={base} values={unit_types} onChange={onBaseTypeChange} />}
           {onImageChange && <DetailInputRow text='Image' cells={this.CELLS} value={image} onChange={onImageChange} />}
           {onChangeDeployment && <DetailDropdownRow text='Deployment' cells={this.CELLS} value={deployment} values={this.deployments} onChange={onChangeDeployment} />}
           {<DetailToggleRow text='Is loyal?' cells={this.CELLS} value={!!is_loyal} onChange={onIsLoyalToggle} />}

@@ -21,7 +21,7 @@ export const setUnitValue = makeActionReplaceFirst(manager.setUnitValue, unitMap
 export const changeUnitImage = makeActionReplaceFirst(manager.changeUnitImage, unitMapping)
 export const changeUnitDeployment = makeActionReplaceFirst(manager.changeUnitDeployment, unitMapping)
 export const toggleUnitLoyality = makeActionReplaceFirst(manager.toggleUnitLoyality, unitMapping)
-export const changeUnitMode = makeActionReplaceFirst(manager.changeUnitMode, unitMapping)
+export const changeUnitBaseType = makeActionReplaceFirst(manager.changeUnitBaseType, unitMapping)
 
 const getUnit = (draft: Countries, action: Action<UnitType>, params: ReducerParams) => {
   const [key] = action.payload
