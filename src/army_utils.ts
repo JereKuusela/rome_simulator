@@ -1,4 +1,4 @@
-import { BaseCohorts, Cohorts, DefinitionType, Unit, UnitDefinitionValue, UnitDefinitionValues, BaseCohort, ArmyType, Side, Units } from 'types'
+import { BaseCohorts, Cohorts, DefinitionType, UnitDefinitionValue, UnitDefinitionValues, BaseCohort, ArmyType, Side, Units, UnitType } from 'types'
 import { mergeValues } from 'definition_values'
 import { map, filter } from 'utils'
 import { CombatUnits } from 'combat'
@@ -16,11 +16,20 @@ export const mergeBaseUnitsWithDefinitions = (units: Cohorts, definitions: Units
 })
 
 export const mergeDefinitions = (definitions: Units, general_base: UnitDefinitionValue, general: UnitDefinitionValues) => {
-  return map(definitions, (definition, type) => mergeValues(mergeValues(definition, definitions[definition.base]), mergeValues(general_base, general[type])))
+  return map(definitions, (_, type) => mergeDefinition(definitions, general_base, general, type))
 }
 
-export const mergeDefinition = (base: Unit, unit: Unit, general_base: UnitDefinitionValue, general: UnitDefinitionValue) => {
-  return mergeValues(mergeValues(unit, base), mergeValues(general_base, general))
+export const mergeDefinition = (definitions: Units, general_base: UnitDefinitionValue, general: UnitDefinitionValues, type: UnitType) => {
+  let unit = definitions[type]
+  let base = unit.base
+  while (base) {
+    unit = mergeValues(unit, definitions[base])
+    if (definitions[base].base === base)
+      base = undefined
+    else
+      base = definitions[base].base
+  }
+  return mergeValues(unit, mergeValues(general_base, general[type]))
 }
 
 /**
@@ -72,4 +81,4 @@ export const getArmyPart = (units: CombatUnits, type: ArmyType) => {
   return [units.defeated]
 }
 
-export const getOpponent =  (side: Side) => side === Side.Attacker ? Side.Defender : Side.Attacker
+export const getOpponent = (side: Side) => side === Side.Attacker ? Side.Defender : Side.Attacker

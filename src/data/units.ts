@@ -1,4 +1,4 @@
-import { ValuesType, DefinitionType, UnitType, Unit, UnitAttribute, UnitValueType, UnitRole, TerrainType, UnitState, CountryName, Units, Mode } from 'types'
+import { ValuesType, UnitType, Unit, UnitAttribute, UnitValueType, UnitRole, TerrainType, UnitState, CountryName, Units, Mode } from 'types'
 import { addValues } from 'definition_values'
 import { toObj } from 'utils'
 
@@ -51,12 +51,14 @@ export const getUnitIcon = (type: UnitType) => unit_to_icon[type] || ''
 export const GlobalKey = 'Base'
 
 const createUnitFromJson = (data: UnitData): Unit => {
+  const type = data.type as UnitType
+  const mode = data.mode as Mode
   let unit: Unit = {
-    type: data.type as UnitType,
-    mode: data.mode as DefinitionType,
+    type,
+    mode,
     image: unit_to_icon[data.type as UnitType] ?? '',
     role: data.role as UnitRole,
-    base: getBaseUnitType(data.mode as Mode)
+    base: getBaseUnitType(mode, type)
   }
   const base_values: [UnitValueType, number][] = [
     [UnitAttribute.AttritionWeight, data.attrition_weight ?? 0],

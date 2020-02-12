@@ -1,5 +1,5 @@
 import { ArmyForCombat } from 'state'
-import { Terrain, UnitType, Setting, TacticCalc, Cohort, UnitAttribute, Side, Settings, Cohorts } from 'types'
+import { Terrain, UnitType, Setting, TacticCalc, Cohort, UnitAttribute, Side, Settings, Cohorts, CombatPhase } from 'types'
 import { calculateTotalRoll } from './combat_utils'
 import { calculateValue } from 'definition_values'
 import { CombatParticipant, getCombatUnit, CombatUnits, Frontline, Defeated, doBattleFast, Reserve, getUnitDefinition, CombatUnitTypes } from './combat'
@@ -233,7 +233,8 @@ export const convertUnits = (units: Cohorts, settings: Settings, casualties_mult
   frontline: units.frontline.map((row, index) => row.map(unit => getCombatUnit(settings, casualties_multiplier, base_damages, terrains, unit_types, unit as Cohort))),
   reserve: units.reserve.map(unit => getCombatUnit(settings, casualties_multiplier, base_damages, terrains, unit_types, unit as Cohort)!),
   defeated: units.defeated.map(unit => getCombatUnit(settings, casualties_multiplier, base_damages, terrains, unit_types, unit as Cohort)!),
-  tactic_bonus: 0
+  tactic_bonus: 0,
+  phase: CombatPhase.Default
 })
 
 
@@ -264,7 +265,8 @@ const copyStatus = (status: CombatUnits): CombatUnits => ({
   frontline: status.frontline.map(row => row.map(value => value ? { ...value } : null)),
   reserve: status.reserve.map(value => ({ ...value })),
   defeated: status.defeated.map(value => ({ ...value })),
-  tactic_bonus: status.tactic_bonus
+  tactic_bonus: status.tactic_bonus,
+  phase: status.phase
 })
 
 const REPAIR_PER_MONTH = 0.1

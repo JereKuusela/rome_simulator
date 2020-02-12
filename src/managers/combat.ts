@@ -8,7 +8,8 @@ const copyStatus = (status: CombatUnits): CombatUnits => ({
   frontline: status.frontline.map(row => row.map(value => value ? { ...value, state: { ...value.state } } : null)),
   reserve: status.reserve.map(value => ({ ...value, state: { ...value.state } })),
   defeated: status.defeated.map(value => ({ ...value, state: { ...value.state } })),
-  tactic_bonus: status.tactic_bonus
+  tactic_bonus: status.tactic_bonus,
+  phase: status.phase
 })
 
 const checkAlive = (frontline: Frontline, reserve: Reserve) => reserve.length || frontline.some(row => row.some(value => value && !value.state.is_defeated))

@@ -8,7 +8,7 @@ import DetailTextRow from './Detail/DetailTextRow'
 import DetailInputRow from './Detail/DetailInputRow'
 import DetailDropdownRow from './Detail/DetailDropdownRow'
 import Headers from './Utils/Headers'
-import { DefinitionType, ValuesType, Cohort, UnitType, TerrainType, UnitRole, UnitAttribute, UnitValueType, unitValueToString, Settings, Setting } from 'types'
+import { DefinitionType, ValuesType, Cohort, UnitType, TerrainType, UnitRole, UnitAttribute, UnitValueType, unitValueToString, Settings, Setting, CombatPhase } from 'types'
 import { values } from 'utils'
 import { getValue, calculateValue, explain } from 'definition_values'
 import { toMaintenance } from 'formatters'
@@ -64,6 +64,7 @@ export default class UnitDetail extends Component<IProps> {
           {this.attributes.map(this.renderRow)}
           {unit_types && unit_types.map(this.renderRow)}
           {terrain_types && terrain_types.map(this.renderRow)}
+          {[CombatPhase.Fire, CombatPhase.Shock].map(this.renderRow)}
         </Table.Body>
       </Table>
     )
@@ -78,6 +79,8 @@ export default class UnitDetail extends Component<IProps> {
     if (mode === DefinitionType.Naval && (attribute === UnitAttribute.CaptureChance || attribute === UnitAttribute.CaptureResist))
       return true
     if (!settings[Setting.DailyMoraleLoss] && attribute === UnitAttribute.DailyLossResist)
+      return true
+    if (!settings[Setting.FireAndShock] && attribute in CombatPhase)
       return true
     return false
   }
@@ -94,7 +97,7 @@ export default class UnitDetail extends Component<IProps> {
       value += ' (' + toMaintenance(calculateValue(unit, UnitAttribute.Cost) * calculateValue(unit, UnitAttribute.Maintenance)) + ')'
 
     const enable_loss = attribute === UnitAttribute.Morale || attribute === UnitAttribute.Strength
-    const enable_modifier = enable_loss || attribute === UnitAttribute.Maintenance || attribute === UnitAttribute.Cost || attribute === UnitAttribute.AttritionWeight
+    const enable_modifier = enable_loss || attribute === UnitAttribute.Maintenance || attribute === UnitAttribute.Cost || attribute === UnitAttribute.AttritionWeight || attribute in CombatPhase
     const enable_base = !disable_base_values || !enable_modifier
 
     return (

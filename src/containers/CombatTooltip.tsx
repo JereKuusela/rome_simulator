@@ -5,11 +5,11 @@ import { last } from 'lodash'
 
 import StyledNumber from 'components/Utils/StyledNumber'
 
-import { DefinitionType, Side, ArmyType, UnitAttribute, UnitType, Setting, TacticCalc, TerrainType } from 'types'
+import { DefinitionType, Side, ArmyType, UnitAttribute, UnitType, Setting, TacticCalc, TerrainType, Cohort } from 'types'
 import { calculateTotalRoll, calculateBaseDamage, CombatUnitDefinition, CombatUnitRoundInfo, CombatUnit } from 'combat'
 import { toSignedPercent, toManpower, strengthToValue, toNumber } from 'formatters'
-import { calculateValue } from 'definition_values'
-import { AppState, getCurrentCombat, getParticipant, getSettings, getSelectedTerrains, getGeneralStats, getCountry, getTactic, getCombatUnit } from 'state'
+import { calculateValue, calculateBase, calculateModifier } from 'definition_values'
+import { AppState, getCurrentCombat, getParticipant, getSettings, getSelectedTerrains, getGeneralStats, getCountry, getTactic, getCombatUnit, findUnit } from 'state'
 import { getOpponent } from 'army_utils'
 
 type Props = {
@@ -53,8 +53,8 @@ class CombatTooltip extends Component<IProps, IState> {
   getExplanation = (id: number | null, is_support: boolean) => {
     if (id === null)
       return null
-    const { source, tactic_bonus, roll, side, settings, terrains, general_s, general_t } = this.props
-    if (!source)
+    const { source, tactic_bonus, roll, side, settings, terrains, general_s, general_t, definition } = this.props
+    if (!source || !definition)
       return null
     const target = source.target
     const total = calculateTotalRoll(roll, side === Side.Attacker ? terrains : [], general_s, general_t)
@@ -65,7 +65,7 @@ class CombatTooltip extends Component<IProps, IState> {
         {target && <List.Item />}
         {target && this.getBaseSection(source, target, base_damage, tactic_bonus, is_support)}
         {target && <List.Item />}
-        {target && this.getStrengthSection(source, target)}
+        {target && this.getStrengthSection(source, definition, target)}
         {target && <List.Item />}
         {target && this.getMoraleSection(source, target)}
       </List>
@@ -104,16 +104,19 @@ class CombatTooltip extends Component<IProps, IState> {
     </>)
   }
 
-  getStrengthSection = (source: IUnit, target: IUnit) => {
-    const { settings, tactic_s, tactic_t, mode } = this.props
+  getStrengthSection = (source: IUnit, definition: Cohort, target: IUnit) => {
+    const { settings, tactic_s, tactic_t, mode, phase } = this.props
     const strength_lost_multiplier = settings[Setting.StrengthLostMultiplier]
     const tactic_casualties = calculateValue(tactic_s, TacticCalc.Casualties) + calculateValue(tactic_t, TacticCalc.Casualties)
-
+    const base_phase = calculateBase(definition, phase)
+    const modifier_phase = calculateModifier(definition, phase) - 1
     const strength_damage = source.strength_dealt
 
     return (<>
       {this.renderMultiplier('Constant', strength_lost_multiplier, value => mode === DefinitionType.Land ? toManpower(value) : String(value))}
+      {settings[Setting.FireAndShock] && this.renderMultiplier('Base ' + phase, base_phase, String)}
       {this.renderStyledItem('Tactic casualties', tactic_casualties, toSignedPercent)}
+      {this.renderStyledItem(phase, modifier_phase, toSignedPercent)}
       {this.getAttribute(source, UnitAttribute.StrengthDamageDone)}
       {this.getAttribute(target, UnitAttribute.StrengthDamageTaken)}
       {this.renderItem('Strength damage', strength_damage, value => strengthToValue(mode, value))}
@@ -239,7 +242,9 @@ const convertUnit = (unit: CombatUnit | null, convert_target: boolean = true): I
 
 const mapStateToProps = (state: AppState, props: Props) => ({
   source: convertUnit(getCombatUnit(state, props.side, props.army, props.id)),
+  definition: findUnit(state, props.side, props.id!),
   tactic_bonus: getCurrentCombat(state, props.side).tactic_bonus,
+  phase: getCurrentCombat(state, props.side).phase,
   roll: (last(getParticipant(state, props.side).rolls) || { roll: 0 }).roll,
   settings: getSettings(state),
   terrains: getSelectedTerrains(state),

@@ -13,7 +13,7 @@ export const deleteUnit = (units: Units, type: UnitType) => {
 }
 
 export const createUnit = (units: Units, mode: Mode, type: UnitType) => {
-  units[type] = { type, mode, image: getUnitIcon(type), role: UnitRole.Front, base: getBaseUnitType(mode) }
+  units[type] = { type, mode, image: getUnitIcon(type), role: UnitRole.Front, base: getBaseUnitType(mode, type) }
 }
 
 export const changeUnitType = (units: Units, old_type: UnitType, type: UnitType) => {

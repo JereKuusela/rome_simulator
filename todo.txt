@@ -30,6 +30,7 @@ Changelog:
 - Units: Added new attributes: capture chance and capture resist.
 - Units: Refactored base stats to a base unit (simplifies code and allows using it as a neutral unit).
 - Units: New attribute for reducing daily morale losses, feature from EUIV.
+- Units: New attributes for Fire and Shock phases (base + modifier), feature from EUIV.
 - Settings: New page which more clearly shows which settings affects land, naval or both.
 - Settings: Settings for bug fixes (and some others) converted to checkbox settings.
 - Settings: Better names and descriptions for all settings.
@@ -39,6 +40,7 @@ Changelog:
 - Settings: New setting to enable backrow (support units are prioritized), feature from EUIV.
 - Settings: New setting for discipline reducing damage, feature from EUIV.
 - Settings: New setting for daily morale losses, feature from EUIV.
+- Settings: New setting for enabling fire and shock phases, feature from EUIV.
 
 Todo:
  - Transfer could only show non-base stats for units, terrains and tactics (since base stats are supposed to regenerate?), currently it shows way too much information.

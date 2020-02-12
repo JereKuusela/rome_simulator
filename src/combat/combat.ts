@@ -1,6 +1,6 @@
 
 import { sumBy, values } from 'lodash'
-import { Tactic, UnitPreferences, Terrain, UnitType, Cohort, UnitAttribute, Setting, TerrainType, UnitRole, Settings, CombatPhase } from 'types'
+import { Tactic, UnitPreferences, Terrain, UnitType, Cohort, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, UnitValueType } from 'types'
 import { mapRange, toObj } from 'utils'
 import { calculateValue, calculateValueWithoutLoss, calculateBase } from 'definition_values'
 import { calculateExperienceReduction } from './combat_utils'
@@ -30,6 +30,7 @@ export type CombatUnits = {
   readonly reserve: CombatUnit[]
   readonly defeated: CombatUnit[]
   tactic_bonus: number
+  phase: CombatPhase
 }
 
 /**
@@ -85,7 +86,7 @@ export const getCombatUnit = (combatSettings: Settings, casualties_multiplier: n
   return combat_unit
 }
 
-type UnitCalcs = { [key in (UnitType | UnitAttribute | TerrainType)]: number }
+type UnitCalcs = { [key in (UnitValueType)]: number }
 
 /**
  * Static part of a unit. Properties which don't change during the battle.
@@ -160,6 +161,8 @@ export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, mark_de
   // Tactic bonus changes dynamically when units lose strength so it can't be precalculated.
   // If this is a problem a fast mode can be implemeted where to bonus is only calculated once.
   a.army.tactic_bonus = calculateTactic(a.army, a.tactic, d.tactic)
+  a.army.phase = phase
+  d.army.phase = phase
   d.army.tactic_bonus = calculateTactic(d.army, d.tactic, a.tactic)
   attack(a.army.frontline, a.roll, 1 + a.army.tactic_bonus, phase)
   attack(d.army.frontline, d.roll, 1 + d.army.tactic_bonus, phase)

@@ -1,7 +1,7 @@
 import { AppState } from './index'
 import { reduce, toArr, filter, arrGet, toObj, forEach2 } from 'utils'
 import { filterUnitDefinitions, isIncludedInMode, getArmyPart, mergeBaseUnitsWithDefinitions, mergeDefinitions, mergeDefinition, findUnitById } from '../army_utils'
-import { Mode, DefinitionType, CountryName, BaseCohort, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, Tactic, UnitPreferences, BaseCohorts, Participant, Terrain, Unit, Settings, Battle, Terrains, Tactics, Cohorts, Units, ArmyName, GeneralStats, Countries, Setting, Reserve, Defeated, CountryAttribute } from 'types'
+import { Mode, DefinitionType, CountryName, BaseCohort, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, Tactic, UnitPreferences, BaseCohorts, Participant, Terrain, Unit, Settings, Battle, Terrains, Tactics, Cohorts, Units, ArmyName, GeneralStats, Countries, Setting, Reserve, Defeated, CountryAttribute, CombatPhase } from 'types'
 import { CombatUnit, CombatUnits } from 'combat'
 import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticState, getDefaultTerrainState } from 'data'
 import { sortBy, uniq, flatten } from 'lodash'
@@ -153,7 +153,7 @@ export const getArmyForCombat = (state: AppState, side: Side, mode?: Mode): Army
 
 export const getCurrentCombat = (state: AppState, side: Side): CombatUnits => {
   const participant = state.battle[state.settings.mode].participants[side]
-  return arrGet(participant.rounds, -1) ?? { frontline: [], reserve: [], defeated: [], tactic_bonus: 0 }
+  return arrGet(participant.rounds, -1) ?? { frontline: [], reserve: [], defeated: [], tactic_bonus: 0, phase: CombatPhase.Default }
 }
 
 export const getSelectedTactic = (state: AppState, side: Side): Tactic => {
@@ -247,11 +247,9 @@ export const getUnitDefinitions = (state: AppState, country?: CountryName): Unit
 export const getUnitDefinition = (state: AppState, unit_type: UnitType, country?: CountryName): Unit => {
   country = country ?? state.settings.country
   const mode = state.settings.mode
-  const unit = getUnits(state, country)[unit_type]
-  const base = getUnits(state, country)[unit.base]
   const general_base = manager.getGeneralBaseDefinition(getGeneral(state, country), mode)
-  const general = manager.getGeneralDefinition(getGeneral(state, country), unit_type)
-  return mergeDefinition(base, unit, general_base, general)
+  const general = manager.getGeneralDefinitions(getGeneral(state, country))
+  return mergeDefinition(getUnits(state, country), general_base, general, unit_type)
 }
 
 export const getBaseDefinition = (state: AppState, country?: CountryName): Unit => {

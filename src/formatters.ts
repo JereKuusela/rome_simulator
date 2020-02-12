@@ -57,6 +57,12 @@ export const toNumber = (number?: number, fixed: number = 2): string => {
   return String(+(number).toFixed(fixed))
 }
 
+export const toMultiplier = (number?: number, fixed: number = 2): string => {
+  if (number === undefined)
+    return ''
+  return 'x' + toNumber(number, fixed)
+}
+
 export const toPercent = (number?: number, fixed: number = 2): string => {
   if (number === undefined)
     return ''

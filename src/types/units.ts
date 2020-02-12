@@ -1,6 +1,6 @@
 import { DefinitionValues, calculateValue } from 'definition_values'
 import { TerrainType, Definition, DefinitionType, CountryName } from 'types'
-import { toNumber, toPercent, toSignedPercent } from 'formatters'
+import { toNumber, toPercent, toSignedPercent, toMultiplier } from 'formatters'
 import { CombatPhase } from './battle'
 
 export enum UnitType {
@@ -79,7 +79,7 @@ export interface Unit extends Definition<UnitType>, DefinitionValues<UnitValueTy
   role: UnitRole
   mode: DefinitionType
   is_loyal?: boolean,
-  base: UnitType
+  base?: UnitType
 }
 
 export interface Cohort extends BaseCohort, Unit { }
@@ -97,6 +97,9 @@ export const unitValueToString = (definition: DefinitionValues<UnitValueType>, t
     case UnitAttribute.FoodConsumption:
     case UnitAttribute.FoodStorage:
       return toNumber(value)
+    case CombatPhase.Fire:
+    case CombatPhase.Shock:
+      return toMultiplier(value)
     case UnitAttribute.Experience:
     case UnitAttribute.Maintenance:
     case UnitAttribute.AttritionWeight:
