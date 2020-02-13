@@ -9,7 +9,7 @@ import { Mode, Side, ArmyType, UnitAttribute, UnitType, Setting, TacticCalc, Ter
 import { calculateTotalRoll, calculateBaseDamage, CombatUnitDefinition, CombatUnitRoundInfo, CombatUnit } from 'combat'
 import { toSignedPercent, toManpower, strengthToValue, toNumber } from 'formatters'
 import { calculateValue, calculateBase, calculateModifier } from 'definition_values'
-import { AppState, getCurrentCombat, getParticipant, getSettings, getSelectedTerrains, getGeneralStats, getCountry, getTactic, getCombatUnit, findUnit } from 'state'
+import { AppState, getCurrentCombat, getParticipant, getSettings, getSelectedTerrains, getGeneralStats, getCountry, getTactic, getCombatUnit, findCohortById } from 'state'
 import { getOpponent } from 'army_utils'
 
 type Props = {
@@ -53,8 +53,8 @@ class CombatTooltip extends Component<IProps, IState> {
   getExplanation = (id: number | null, is_support: boolean) => {
     if (id === null)
       return null
-    const { source, tactic_bonus, roll, side, settings, terrains, general_s, general_t, definition } = this.props
-    if (!source || !definition)
+    const { source, tactic_bonus, roll, side, settings, terrains, general_s, general_t, cohort } = this.props
+    if (!source || !cohort)
       return null
     const target = source.target
     const total = calculateTotalRoll(roll, side === Side.Attacker ? terrains : [], general_s, general_t)
@@ -65,7 +65,7 @@ class CombatTooltip extends Component<IProps, IState> {
         {target && <List.Item />}
         {target && this.getBaseSection(source, target, base_damage, tactic_bonus, is_support)}
         {target && <List.Item />}
-        {target && this.getStrengthSection(source, definition, target)}
+        {target && this.getStrengthSection(source, cohort, target)}
         {target && <List.Item />}
         {target && this.getMoraleSection(source, target)}
       </List>
@@ -104,12 +104,12 @@ class CombatTooltip extends Component<IProps, IState> {
     </>)
   }
 
-  getStrengthSection = (source: IUnit, definition: Cohort, target: IUnit) => {
+  getStrengthSection = (source: IUnit, cohort: Cohort, target: IUnit) => {
     const { settings, tactic_s, tactic_t, mode, phase } = this.props
     const strength_lost_multiplier = settings[Setting.StrengthLostMultiplier]
     const tactic_casualties = calculateValue(tactic_s, TacticCalc.Casualties) + calculateValue(tactic_t, TacticCalc.Casualties)
-    const base_phase = calculateBase(definition, phase)
-    const modifier_phase = calculateModifier(definition, phase) - 1
+    const base_phase = calculateBase(cohort, phase)
+    const modifier_phase = calculateModifier(cohort, phase) - 1
     const strength_damage = source.strength_dealt
 
     return (<>
@@ -242,7 +242,7 @@ const convertUnit = (unit: CombatUnit | null, convert_target: boolean = true): I
 
 const mapStateToProps = (state: AppState, props: Props) => ({
   source: convertUnit(getCombatUnit(state, props.side, props.army, props.id)),
-  definition: findUnit(state, props.side, props.id!),
+  cohort: findCohortById(state, props.side, props.id!),
   tactic_bonus: getCurrentCombat(state, props.side).tactic_bonus,
   phase: getCurrentCombat(state, props.side).phase,
   roll: (last(getParticipant(state, props.side).rolls) || { roll: 0 }).roll,

@@ -1,7 +1,7 @@
 import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultParticipant, getDefaultArmy, getDefaultUnit } from 'data'
 import { map, mapRange } from 'utils'
 import { mergeValues, calculateValue } from 'definition_values'
-import { Mode, CountryName, Participant, Terrain, TacticType, Setting, Side, BaseCohort, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, TacticCalc, Settings, Cohorts, UnitPreferences, General, Cohort, FrontLine } from 'types'
+import { Mode, CountryName, Participant, Terrain, TacticType, Setting, Side, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, TacticCalc, Settings, Cohorts, UnitPreferences, General, Cohort } from 'types'
 import { CombatUnit, CombatParticipant, doBattleFast, getBaseDamages, convertUnits, calculateTotalRoll, deploy, sortReserve } from 'combat'
 
 const unitDefinitions = map(getDefaultUnits(), unit => mergeValues(unit, getDefaultUnit(UnitType.BaseLand)))
@@ -72,7 +72,7 @@ const errorPrefix = (round: number, side: Side, index: number) => 'Round ' + rou
  * @param strength Expected strength (rounded down as in game).
  * @param morale Half of expected morale (as in game)
  */
-const verify = (round: number, side: Side, index: number, unit: BaseCohort | null, strength: number, morale: number) => {
+const verify = (round: number, side: Side, index: number, unit: Cohort | null, strength: number, morale: number) => {
   expect(unit).toBeTruthy()
   if (!unit)
     return

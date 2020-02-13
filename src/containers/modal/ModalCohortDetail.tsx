@@ -5,7 +5,7 @@ import { Modal } from 'semantic-ui-react'
 import ItemRemover from 'components/ItemRemover'
 import UnitDetail from 'components/UnitDetail'
 
-import { AppState, filterUnitTypesByCountry, filterTerrainTypes, findUnit, getCombatUnitForEachRound, getMode, getSettings } from 'state'
+import { AppState, filterUnitTypesByCountry, filterTerrainTypes, findCohortById, getCombatUnitForEachRound, getMode, getSettings } from 'state'
 import { ValuesType, Side, CountryName, UnitType, Cohort, UnitAttribute, UnitValueType } from 'types'
 import { CombatUnit } from 'combat'
 import { addValues } from 'definition_values'
@@ -115,7 +115,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   unit_types: props.country ? filterUnitTypesByCountry(state, props.country) : [],
   terrain_types: filterTerrainTypes(state),
   mode: getMode(state),
-  unit: convertUnit(findUnit(state, props.side, props.id), getCombatUnitForEachRound(state, props.side, props.id)),
+  unit: convertUnit(findCohortById(state, props.side, props.id), getCombatUnitForEachRound(state, props.side, props.id)),
   settings: getSettings(state)
 })
 

@@ -23,11 +23,14 @@ export interface General extends DefinitionValues<GeneralCalc> {
 
 export type UnitPreferences = { [key in UnitPreferenceType]: UnitType | null }
 
-export interface Army extends BaseCohorts {
+export type Army = {
   tactic: TacticType
   unit_preferences: UnitPreferences
   flank_size: number
   general: General
+  frontline: BaseFrontLine
+  reserve: BaseReserve
+  defeated: BaseDefeated
 }
 
 export enum ArmyType {
@@ -49,12 +52,6 @@ export type BaseDefeated = BaseCohort[]
 export type FrontLine = (Cohort | null)[][]
 export type Reserve = Cohort[]
 export type Defeated = Cohort[]
-
-export interface BaseCohorts {
-  frontline: BaseFrontLine
-  reserve: BaseReserve
-  defeated: BaseDefeated
-}
 
 export interface Cohorts {
   frontline: FrontLine

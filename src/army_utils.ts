@@ -1,8 +1,7 @@
-import { BaseCohorts, Cohorts, Mode, UnitDefinitionValues, BaseCohort, ArmyType, Side, BaseUnits, UnitType, Units, Unit } from 'types'
+import { Cohorts, Mode, UnitDefinitionValues, ArmyType, Side, BaseUnits, UnitType, Units, Unit } from 'types'
 import { mergeValues } from 'definition_values'
 import { map, filter } from 'utils'
 import { CombatUnits } from 'combat'
-import { flatMap } from 'lodash'
 
 /**
  * Merges base units with their definitions resulting in real units.
@@ -44,26 +43,6 @@ let unit_id = 0
  * This is only meant for non-persisted ids because any existing ids are not considered.
  */
 export const getNextId = () => ++unit_id
-
-/**
- * Finds the base unit with a given id from a given army.
- * @param units Units to search.
- * @param id Id to find.
- */
-export const findUnitById = (units: BaseCohorts | undefined, id: number): BaseCohort | undefined => {
-  if (!units)
-    return undefined
-  let base_unit = units.reserve.find(unit => unit.id === id)
-  if (base_unit)
-    return base_unit
-  base_unit = (flatMap(units.frontline) as BaseCohort[]).find(unit => unit ? unit.id === id : false) as BaseCohort | undefined
-  if (base_unit)
-    return base_unit
-  base_unit = units.defeated.find(unit => unit.id === id)
-  if (base_unit)
-    return base_unit
-  return undefined
-}
 
 export const getArmyPart = (units: CombatUnits, type: ArmyType) => {
   if (type === ArmyType.Frontline)

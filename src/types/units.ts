@@ -68,23 +68,26 @@ export type UnitValueType = UnitAttribute | UnitType | TerrainType | CombatPhase
 export type UnitDefinitionValues = { [key in UnitType]: UnitDefinitionValue }
 export type UnitDefinitionValue = DefinitionValues<UnitValueType>
 
-
+/** An identity of a cohort. Used to store data but shouldn't be used for anything else. */
 export interface BaseCohort extends DefinitionValues<UnitValueType> {
   type: UnitType
   id: number
   is_loyal?: boolean
 }
 
+/** A single (sub) unit definition. Used to store data but shouldn't be used for anything else. */
 export interface BaseUnit extends Definition<UnitType>, DefinitionValues<UnitValueType> {
   role: UnitRole
   is_loyal?: boolean,
   base?: UnitType
 }
 
+/** A full unit definition (merged with definitions of country, general and base unit types). */
 export interface Unit extends BaseUnit {
   mode: Mode
 }
 
+/** A full cohort (merged with unit definition). */
 export interface Cohort extends BaseCohort, Unit { }
 
 
