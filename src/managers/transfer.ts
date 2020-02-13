@@ -1,7 +1,7 @@
 
 import { saveAs } from 'file-saver'
 import { AppState, stripRounds, resetMissing, resetAll } from 'state'
-import { DefinitionType, ExportKey, ExportKeys, TransferState } from 'types'
+import { Mode, ExportKey, ExportKeys, TransferState } from 'types'
 
 const filterState = (state: AppState, export_keys?: ExportKeys): any => {
   const filtered: any = { ...state }
@@ -18,9 +18,9 @@ const filterState = (state: AppState, export_keys?: ExportKeys): any => {
   if (export_keys && !export_keys[ExportKey.Settings])
     filtered.settings = undefined
   if (export_keys && !export_keys[ExportKey.Land])
-    delete filtered.battle[DefinitionType.Land]
+    delete filtered.battle[Mode.Land]
   if (export_keys && !export_keys[ExportKey.Naval])
-    delete filtered.battle[DefinitionType.Naval]
+    delete filtered.battle[Mode.Naval]
   if (export_keys && !export_keys[ExportKey.Land] && !export_keys[ExportKey.Naval])
     filtered.battle = undefined
   return filtered

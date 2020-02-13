@@ -6,7 +6,7 @@ import IconManpower from 'images/manpower.png'
 import IconStrength from 'images/naval_combat.png'
 import IconMorale from 'images/morale.png'
 import IconEmpty from 'images/empty.png'
-import { DefinitionType, Side, UnitType, UnitAttribute } from 'types'
+import { Mode, Side, UnitType, UnitAttribute } from 'types'
 import { CombatUnits, CombatUnit } from 'combat'
 import { strengthToValue } from 'formatters'
 import { getImage, round, sumArr } from 'utils'
@@ -36,7 +36,7 @@ class Stats extends Component<IProps> {
               {side}
             </Table.HeaderCell>
             <Table.HeaderCell width='3'>
-              <Image src={this.props.mode === DefinitionType.Naval ? IconStrength : IconManpower} avatar />
+              <Image src={this.props.mode === Mode.Naval ? IconStrength : IconManpower} avatar />
             </Table.HeaderCell>
             <Table.HeaderCell width='3'>
               <Image src={IconMorale} avatar />

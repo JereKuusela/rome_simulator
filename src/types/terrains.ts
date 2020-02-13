@@ -1,6 +1,6 @@
 import { Definition } from 'types'
 import { DefinitionValues, calculateValue } from 'definition_values'
-import { DefinitionType } from './definition'
+import { Mode } from './definition'
 
 export enum TerrainType {
   Desert = 'Desert',
@@ -35,7 +35,7 @@ export type TerrainValueType = TerrainCalc
 
 export interface Terrain extends Definition<TerrainType>, DefinitionValues<TerrainValueType> {
   location: LocationType
-  mode: DefinitionType
+  mode: Mode
 }
 
 export const terrainValueToString = (definition: Terrain, type: TerrainValueType): string => {

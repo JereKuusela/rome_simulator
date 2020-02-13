@@ -6,16 +6,13 @@ export enum ValuesType {
   LossModifier = 'LossModifier'
 }
 
-export enum DefinitionType {
+export enum Mode {
   Land = 'Land',
-  Naval = 'Naval',
-  Global = 'Global'
+  Naval = 'Naval'
 }
-
-export type Mode = DefinitionType.Land | DefinitionType.Naval
 
 export interface Definition<T extends string> {
   type: T
   image: string
-  mode?: DefinitionType
+  mode?: Mode
 }

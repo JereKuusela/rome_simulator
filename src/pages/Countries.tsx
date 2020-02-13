@@ -5,7 +5,7 @@ import { AppState, getGeneralStats } from 'state'
 import { mapRange, ObjSet, has, keys, values } from '../utils'
 
 import { addSignWithZero } from 'formatters'
-import { DefinitionType, ValuesType, TraditionDefinition, TradeDefinition, IdeaDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, EconomyDefinition, LawDefinition, AbilityDefinition, Modifier, Tradition, ScopeType, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute } from 'types'
+import { ValuesType, TraditionDefinition, TradeDefinition, IdeaDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, EconomyDefinition, LawDefinition, AbilityDefinition, Modifier, Tradition, ScopeType, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute, UnitType, Mode } from 'types'
 import { invalidate, setCountryValue, enableSelection, clearSelection, enableUnitModifiers, enableGeneralModifiers, clearUnitModifiers, clearGeneralModifiers, setGeneralMartial, selectCulture, selectReligion, selectGovernment, setOmenPower, setHasGeneral, setMilitaryPower, setOfficeMorale, setOfficeDiscipline } from 'reducers'
 
 import AccordionToggle from 'containers/AccordionToggle'
@@ -14,6 +14,7 @@ import Dropdown from 'components/Utils/Dropdown'
 import ConfirmationButton from 'components/ConfirmationButton'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TableAttributes from 'components/TableAttributes'
+import { getBaseUnitType } from 'managers/units'
 
 const TRADE_COLUMNS = 4
 const HERITAGE_COLUMNS = 4
@@ -609,7 +610,7 @@ class Countries extends Component<IProps> {
       return
     this.props.setMilitaryPower(power)
     this.enableModifiers(MILITARY_POWER_KEY, [{
-      target: DefinitionType.Land,
+      target: UnitType.BaseLand,
       scope: ScopeType.Country,
       attribute: UnitAttribute.Morale,
       type: ValuesType.Modifier,
@@ -626,7 +627,7 @@ class Countries extends Component<IProps> {
       return
     this.props.setOfficeDiscipline(number)
     this.enableModifiers(OFFICE_KEY + 'Discipline', [{
-      target: DefinitionType.Global,
+      target: ModifierType.Global,
       type: ValuesType.Base,
       scope: ScopeType.Country,
       attribute: UnitAttribute.Discipline,
@@ -643,7 +644,7 @@ class Countries extends Component<IProps> {
       return
     this.props.setOfficeMorale(number)
     this.enableModifiers(OFFICE_KEY + 'Morale', [{
-      target: DefinitionType.Land,
+      target: UnitType.BaseLand,
       scope: ScopeType.Country,
       attribute: UnitAttribute.Morale,
       type: ValuesType.Modifier,
@@ -740,7 +741,7 @@ class Countries extends Component<IProps> {
    */
   disableGeneral = () => {
     this.enableModifiers(NO_GENERAL_KEY, [{
-      target: DefinitionType.Global,
+      target: ModifierType.Global,
       scope: ScopeType.Army,
       attribute: UnitAttribute.Morale,
       type: ValuesType.Modifier,
@@ -749,13 +750,13 @@ class Countries extends Component<IProps> {
     this.props.setHasGeneral(this.props.selected_country, false)
   }
 
-  getText = (modifier: Modifier): JSX.Element => {
-    if (modifier.target === ModifierType.Text)
+  getText = (modifier: Modifier) => {
+    if (modifier.target in ModifierType)
       return <span>{modifier.attribute}</span>
     return <span>{modifier.target + ' ' + modifier.attribute}</span>
   }
 
-  getValue = (modifier: Modifier, padding: string = ''): JSX.Element | null => {
+  getValue = (modifier: Modifier, padding: string = '') => {
     if (!modifier.value)
       return null
     const sign = modifier.value > 0 ? '+' : '-'
@@ -781,8 +782,29 @@ class Countries extends Component<IProps> {
     return key.substring(0, index)
   }
 
+
+  mapModifiersToUnits = (modifiers: Modifier[]) => {
+    const mapped: Modifier[] = []
+    modifiers.forEach(modifier => {
+      if (modifier.target === ModifierType.Text)
+        return
+      if (modifier.target in Mode) {
+        mapped.push({...modifier, target: getBaseUnitType(modifier.target as Mode)})
+        return
+      }
+      if (modifier.target === ModifierType.Global) {
+        mapped.push({...modifier, target: getBaseUnitType(Mode.Naval)})
+        mapped.push({...modifier, target: getBaseUnitType(Mode.Land)})
+        return
+      }
+      mapped.push(modifier)
+    })
+    return mapped
+  }
+
   enableModifiers = (key: string, modifiers: Modifier[]) => {
     const { enableGeneralModifiers, enableUnitModifiers, enableSelection, invalidate, selected_country } = this.props
+    modifiers = this.mapModifiersToUnits(modifiers)
     enableGeneralModifiers(selected_country, key, modifiers)
     enableUnitModifiers(key, modifiers)
     enableSelection(key)

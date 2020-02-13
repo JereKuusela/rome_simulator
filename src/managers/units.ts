@@ -1,4 +1,4 @@
-import { ValuesType, UnitValueType, UnitType, DefinitionType, UnitRole, Modifier, ScopeType, Unit, Units, Mode } from "types"
+import { ValuesType, UnitValueType, UnitType, UnitRole, Modifier, ScopeType, Unit, Units, Mode } from "types"
 import { addValuesWithMutate, regenerateValues, clearValues } from "definition_values"
 import { getUnitIcon } from "data"
 import { forEach } from "utils"
@@ -12,7 +12,7 @@ export const deleteUnit = (units: Units, type: UnitType) => {
 }
 
 export const createUnit = (units: Units, mode: Mode, type: UnitType) => {
-  units[type] = { type, image: getUnitIcon(type), role: UnitRole.Front, base: mode === DefinitionType.Naval ? UnitType.BaseNaval : UnitType.BaseLand }
+  units[type] = { type, image: getUnitIcon(type), role: UnitRole.Front, base: getBaseUnitType(mode) }
 }
 
 export const changeUnitType = (units: Units, old_type: UnitType, type: UnitType) => {
@@ -35,17 +35,10 @@ export const changeUnitBaseType = (unit: Unit, base: UnitType) => {
   unit.base = base
 }
 
-const filterTarget = (type: UnitType, target: string) => (
-  type === target
-  || (target === DefinitionType.Land && type === UnitType.BaseLand)
-  || (target === DefinitionType.Naval && type === UnitType.BaseNaval)
-  || (target === DefinitionType.Global && (type === UnitType.BaseLand || type === UnitType.BaseNaval))
-)
-
 export const enableUnitModifiers = (units: Units, key: string, modifiers: Modifier[]) => {
   modifiers = modifiers.filter(value => value.scope === ScopeType.Country)
   forEach(units, (unit, type) => {
-    const values = modifiers.filter(value => filterTarget(type, value.target))
+    const values = modifiers.filter(value => type === value.target)
     const base_values = values.filter(value => value.type !== ValuesType.Modifier).map(value => [value.attribute, value.value] as [UnitValueType, number])
     const modifier_values = values.filter(value => value.type === ValuesType.Modifier).map(value => [value.attribute, value.value] as [UnitValueType, number])
     units[type] = regenerateValues(regenerateValues(unit, ValuesType.Base, key, base_values), ValuesType.Modifier, key, modifier_values)
@@ -57,3 +50,5 @@ export const clearUnitModifiers = (units: Units, key: string) => {
     units[type] = clearValues(clearValues(unit, ValuesType.Base, key), ValuesType.Modifier, key)
   })
 }
+
+export const getBaseUnitType = (mode: Mode) => mode === Mode.Naval ? UnitType.BaseNaval : UnitType.BaseLand

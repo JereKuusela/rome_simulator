@@ -5,7 +5,7 @@ import { toggleMode } from 'reducers'
 import { Menu, Image, Button } from 'semantic-ui-react'
 import IconLand from 'images/land_combat.png'
 import IconNaval from 'images/naval_combat.png'
-import { DefinitionType } from 'types'
+import { Mode } from 'types'
 
 /**
  * Navigation menu for different pages.
@@ -47,10 +47,10 @@ class Navigation extends Component<IProps> {
           </Menu.Item>
           
           <div id='menu-info'>
-            <Button active={this.props.mode === DefinitionType.Land} compact icon basic circular size='tiny' onClick={this.props.toggleMode}>
+            <Button active={this.props.mode === Mode.Land} compact icon basic circular size='tiny' onClick={this.props.toggleMode}>
               <Image src={IconLand} avatar style={{ marginRight: 0 }} />
             </Button>
-            <Button active={this.props.mode === DefinitionType.Naval} compact icon basic circular size='tiny' onClick={this.props.toggleMode}>
+            <Button active={this.props.mode === Mode.Naval} compact icon basic circular size='tiny' onClick={this.props.toggleMode}>
               <Image src={IconNaval} avatar style={{ marginRight: 0 }} />
             </Button>
             <div id='version'><div>Site version 0.5.9</div><div>Game version 1.3.2</div></div>

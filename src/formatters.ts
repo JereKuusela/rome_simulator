@@ -1,5 +1,5 @@
 import { mapRange } from './utils'
-import { DefinitionType } from './types/definition'
+import { Mode } from './types/definition'
 import { CountryAttribute } from 'types'
 
 /**
@@ -39,8 +39,8 @@ export const toManpower = (number?: number): string => {
   return String(Math.floor(1000 * number))
 }
 
-export const strengthToValue = (mode: DefinitionType, number: number) => {
-  if (mode === DefinitionType.Naval)
+export const strengthToValue = (mode: Mode, number: number) => {
+  if (mode === Mode.Naval)
     return toPercent(number)
   return toManpower(number)
 }

@@ -8,13 +8,13 @@ import IconStrength from 'images/naval_combat.png'
 import IconFoodConsumption from 'images/food.png'
 import IconFoodStorage from 'images/food_capacity.png'
 
-import { DefinitionType, UnitAttribute, Cohort, FrontLine, Reserve, Defeated } from 'types'
+import { Mode, UnitAttribute, Cohort, FrontLine, Reserve, Defeated } from 'types'
 import { calculateValueWithoutLoss } from 'definition_values'
 import { toNumber, strengthToValue } from 'formatters'
 
 
 interface IProps {
-  mode: DefinitionType
+  mode: Mode
   frontline_a: FrontLine
   frontline_d: FrontLine
   reserve_a: Reserve
@@ -33,7 +33,7 @@ export default class ArmyCosts extends Component<IProps> {
 
   render() {
     const { mode, attached } = this.props
-    const is_naval = mode === DefinitionType.Naval
+    const is_naval = mode === Mode.Naval
     const icon_strength = is_naval ? IconStrength : IconManpower
     return (
       <Table celled unstackable attached={attached}>

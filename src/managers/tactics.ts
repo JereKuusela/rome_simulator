@@ -1,4 +1,4 @@
-import { TacticType, TacticValueType, ValuesType, DefinitionType, Tactic, Tactics } from "types"
+import { TacticType, TacticValueType, ValuesType, Mode, Tactic, Tactics } from "types"
 import { addValuesWithMutate } from "definition_values"
 import { getTacticIcon } from "data"
 
@@ -10,7 +10,7 @@ export const deleteTactic = (tactics: Tactics, type: TacticType) => {
   delete tactics[type]
 }
 
-export const createTactic = (tactics: Tactics, type: TacticType, mode: DefinitionType) => {
+export const createTactic = (tactics: Tactics, type: TacticType, mode: Mode) => {
   tactics[type] = { type, mode, image: getTacticIcon(type) }
 }
 
@@ -22,6 +22,6 @@ export const setTacticImage = (tactic: Tactic, image: string) => {
   tactic.image = image
 }
 
-export const setTacticMode = (tactic: Tactic, mode: DefinitionType) => {
+export const setTacticMode = (tactic: Tactic, mode: Mode) => {
   tactic.mode = mode
 }

@@ -1,6 +1,6 @@
 import { DefinitionValues } from "definition_values"
-import { GeneralCalc, UnitType, UnitValueType, BaseCohort, Cohort } from "./units"
-import { DefinitionType, Mode } from "types/definition"
+import { GeneralCalc, UnitType, BaseCohort, Cohort, UnitDefinitionValues } from "./units"
+import { Mode } from "types/definition"
 import { TacticType } from "./tactics"
 
 export enum ArmyName {
@@ -18,7 +18,7 @@ export type Armies = { [key in Mode]: { [key in ArmyName]: Army } }
 
 export interface General extends DefinitionValues<GeneralCalc> {
   enabled: boolean
-  definitions: { [key in UnitType | DefinitionType]: DefinitionValues<UnitValueType> }
+  definitions: UnitDefinitionValues
 }
 
 export type UnitPreferences = { [key in UnitPreferenceType]: UnitType | null }

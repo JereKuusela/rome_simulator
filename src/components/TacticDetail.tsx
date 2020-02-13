@@ -6,7 +6,7 @@ import Headers from './Utils/Headers'
 import DetailDropdownRow from './Detail/DetailDropdownRow'
 import DetailInputRow from './Detail/DetailInputRow'
 import Images from './Utils/Images'
-import { DefinitionType, ValuesType, TacticType, UnitType, Tactic, TacticCalc, TacticValueType, Tactics } from 'types'
+import { Mode, ValuesType, TacticType, UnitType, Tactic, TacticCalc, TacticValueType, Tactics } from 'types'
 import { values, getImage } from 'utils'
 import { getValue, calculateValue, explainShort } from 'definition_values'
 import { toSignedPercent, toPercent } from 'formatters'
@@ -22,7 +22,7 @@ interface IProps {
   onCustomBaseValueChange: (key: string, attribute: TacticValueType, value: number) => void
   onTypeChange: (type: TacticType) => void
   onImageChange: (image: string) => void
-  onModeChange: (mode: DefinitionType) => void
+  onModeChange: (mode: Mode) => void
 }
 
 /**
@@ -31,7 +31,7 @@ interface IProps {
 export default class TacticDetail extends Component<IProps> {
 
   readonly attributes = values(TacticCalc)
-  readonly modes = values(DefinitionType)
+  readonly modes = values(Mode)
   readonly headers = ['Attribute', 'Value', 'Custom value', 'Explained']
 
   readonly CELLS = 4

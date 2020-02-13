@@ -1,4 +1,4 @@
-import { UnitType, Definition, DefinitionType } from 'types'
+import { UnitType, Definition, Mode } from 'types'
 import { DefinitionValues } from 'definition_values'
 
 export enum TacticCalc {
@@ -28,5 +28,5 @@ export type Tactics = { [key in TacticType]: Tactic }
 export type TacticValueType = UnitType | TacticCalc | TacticType
 
 export interface Tactic extends Definition<TacticType>, DefinitionValues<TacticValueType> {
-  mode: DefinitionType
+  mode: Mode
 }

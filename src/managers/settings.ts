@@ -1,4 +1,4 @@
-import { SettingsAndOptions, Mode, CombatSettings, SiteSettings, Setting, SimulationSpeed, DefinitionType, CountryName, Side, WearinessAttribute } from "types"
+import { SettingsAndOptions, CombatSettings, SiteSettings, Setting, SimulationSpeed, Mode, CountryName, Side, WearinessAttribute } from "types"
 import { speedValues } from "data"
 import { has } from "utils"
 
@@ -18,7 +18,7 @@ export const changeSiteParameter = (settings: SettingsAndOptions, key: keyof Sit
 }
 
 export const toggleMode = (settings: SettingsAndOptions) => {
-  settings.mode = settings.mode === DefinitionType.Land ? DefinitionType.Naval : DefinitionType.Land
+  settings.mode = settings.mode === Mode.Land ? Mode.Naval : Mode.Land
 }
 
 export const selectCountry = (settings: SettingsAndOptions, country: CountryName) => {

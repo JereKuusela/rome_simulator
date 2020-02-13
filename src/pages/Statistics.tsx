@@ -5,7 +5,7 @@ import { Grid, Button, Table, Header, Checkbox } from 'semantic-ui-react'
 import { AppState, getSettings, getSelectedTerrains, mergeUnitTypes, getArmyForCombat, getMode } from 'state'
 import { CasualtiesProgress, ResourceLosses, interrupt, WinRateProgress, ResourceLossesProgress, doConversion, calculateWinRate, initResourceLosses } from 'combat'
 import { values, showProgress } from 'utils'
-import { SimulationSpeed, Setting, Side, DefinitionType } from 'types'
+import { SimulationSpeed, Setting, Side, Mode } from 'types'
 import { toPercent, toNumber, toFlooredPercent } from 'formatters'
 import SimpleRange from 'components/SimpleRange'
 import RoundChart from 'components/Charts/RoundChart'
@@ -120,7 +120,7 @@ class Statistics extends Component<IProps, IState> {
           </Grid.Row>
         </Grid>
         {settings[Setting.CalculateWinChance] && this.renderWinchance()}
-        {settings[Setting.CalculateResourceLosses] && mode === DefinitionType.Naval && this.renderResourceLosses()}
+        {settings[Setting.CalculateResourceLosses] && mode === Mode.Naval && this.renderResourceLosses()}
         {settings[Setting.CalculateCasualties] && this.renderCasualties()}
         {settings[Setting.ShowGraphs] && this.renderGraphs()}
       </>

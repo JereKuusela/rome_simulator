@@ -1,9 +1,10 @@
-import { UnitType, DefinitionType, ValuesType } from 'types'
+import { UnitType, ValuesType } from 'types'
+import { Mode } from './definition';
 
 export enum ModifierType {
   Text = 'Text',
-  Siege = 'Siege',
-  Fort = 'Fort'
+  Global = 'Global',
+  General = 'General'
 }
 
 export enum GovermentType {
@@ -39,7 +40,7 @@ export enum ScopeType {
 }
 
 export interface Modifier {
-  target: UnitType | DefinitionType | ModifierType | 'Text' | 'General'
+  target: UnitType | ModifierType | Mode 
   scope: ScopeType
   attribute: string
   negative?: boolean

@@ -1,8 +1,8 @@
-import { Mode, DefinitionType } from "types/definition"
+import { Mode } from "types/definition"
 import { Battle, CountryName, Side, ModeState, TerrainType, Participant } from "types"
 
-export const getInitialTerrains = (mode: DefinitionType): TerrainType[] => {
-  if (mode === DefinitionType.Naval)
+export const getInitialTerrains = (mode: Mode): TerrainType[] => {
+  if (mode === Mode.Naval)
     return [TerrainType.Ocean]
   else
     return [TerrainType.None, TerrainType.Plains]
@@ -30,6 +30,6 @@ export const getDefaultMode = (mode: Mode): Battle => ({
 
 export const getDefaultBattle = (): ModeState => battleState
 
-const initializeStuff = (): ModeState => ({ [DefinitionType.Land]: getDefaultMode(DefinitionType.Land), [DefinitionType.Naval]: getDefaultMode(DefinitionType.Naval) })
+const initializeStuff = (): ModeState => ({ [Mode.Land]: getDefaultMode(Mode.Land), [Mode.Naval]: getDefaultMode(Mode.Naval) })
 
 const battleState = initializeStuff()

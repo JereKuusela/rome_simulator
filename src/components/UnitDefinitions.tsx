@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Image, Table, List, Icon } from 'semantic-ui-react'
 import { sortBy, toNumber } from 'lodash'
 
-import { Mode, DefinitionType, CountryName, UnitType, TerrainType, Unit, UnitAttribute, UnitValueType, Units } from 'types'
+import { Mode, CountryName, UnitType, TerrainType, Unit, UnitAttribute, UnitValueType, Units } from 'types'
 import { toArr, getImage } from 'utils'
 import { unitSorter } from 'managers/army'
 import { calculateValue, calculateBase, calculateModifier, calculateLoss } from 'definition_values'
@@ -34,7 +34,8 @@ export default class UnitDefinitions extends Component<IProps> {
   render() {
     const { mode, definitions, country } = this.props
     const sorted_units = sortBy(toArr(definitions), definition => unitSorter(definition, mode))
-    const icon_strength = mode === DefinitionType.Naval ? IconStrength : IconManpower
+    console.log(sorted_units)
+    const icon_strength = mode === Mode.Naval ? IconStrength : IconManpower
     return (
       <Table celled selectable unstackable>
         <Table.Header>
@@ -55,7 +56,7 @@ export default class UnitDefinitions extends Component<IProps> {
               <Image src={IconOffense} avatar />
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <Image src={mode === DefinitionType.Naval ? IconAttrition : IconDefense} avatar />
+              <Image src={mode === Mode.Naval ? IconAttrition : IconDefense} avatar />
             </Table.HeaderCell>
             <Table.HeaderCell>
               <Icon name='arrows alternate horizontal' size='big' />
@@ -105,7 +106,7 @@ export default class UnitDefinitions extends Component<IProps> {
           {toNumber(calculateValue(unit, UnitAttribute.Morale))}
         </Table.Cell>
         <Table.Cell>
-          {this.props.mode === DefinitionType.Naval ? toPercent(calculateValue(unit, UnitAttribute.Strength)) : toManpower(calculateValue(unit, UnitAttribute.Strength))}
+          {this.props.mode === Mode.Naval ? toPercent(calculateValue(unit, UnitAttribute.Strength)) : toManpower(calculateValue(unit, UnitAttribute.Strength))}
         </Table.Cell>
         <Table.Cell>
           <StyledNumber
@@ -115,15 +116,15 @@ export default class UnitDefinitions extends Component<IProps> {
         </Table.Cell>
         <Table.Cell>
           <StyledNumber
-            value={calculateValue(unit, this.props.mode === DefinitionType.Naval ? UnitAttribute.DamageDone : UnitAttribute.Offense)}
+            value={calculateValue(unit, this.props.mode === Mode.Naval ? UnitAttribute.DamageDone : UnitAttribute.Offense)}
             formatter={toSignedPercent} hide_zero
           />
         </Table.Cell>
         <Table.Cell>
           <StyledNumber
-            value={calculateValue(unit, this.props.mode === DefinitionType.Naval ? UnitAttribute.DamageTaken : UnitAttribute.Defense)}
+            value={calculateValue(unit, this.props.mode === Mode.Naval ? UnitAttribute.DamageTaken : UnitAttribute.Defense)}
             formatter={toSignedPercent} hide_zero
-            reverse={this.props.mode === DefinitionType.Naval}
+            reverse={this.props.mode === Mode.Naval}
           />
         </Table.Cell>
         <Table.Cell>
@@ -188,16 +189,16 @@ export default class UnitDefinitions extends Component<IProps> {
   renderAttributeList = (unit: Unit, attribute: UnitValueType): JSX.Element => {
     const base = calculateBase(unit, attribute)
     let base_str = String(base)
-    if (this.props.mode === DefinitionType.Naval && attribute === UnitAttribute.Strength)
+    if (this.props.mode === Mode.Naval && attribute === UnitAttribute.Strength)
       base_str = String(base * 100) + '%'
-    if (this.props.mode !== DefinitionType.Naval && attribute === UnitAttribute.Strength)
+    if (this.props.mode !== Mode.Naval && attribute === UnitAttribute.Strength)
       base_str = String(base * 1000)
     const modifier = calculateModifier(unit, attribute)
     const loss = calculateLoss(unit, attribute)
     let loss_str = String(base)
-    if (this.props.mode === DefinitionType.Naval && attribute === UnitAttribute.Strength)
+    if (this.props.mode === Mode.Naval && attribute === UnitAttribute.Strength)
       loss_str = String(loss * 100) + '%'
-    if (this.props.mode !== DefinitionType.Naval && attribute === UnitAttribute.Strength)
+    if (this.props.mode !== Mode.Naval && attribute === UnitAttribute.Strength)
       loss_str = String(loss * 1000)
     return (
       <List>

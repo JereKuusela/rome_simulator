@@ -10,6 +10,7 @@ import ItemRemover from 'components/ItemRemover'
 import ValueModal from 'components/ValueModal'
 import CountryManager from 'containers/CountryManager'
 import { CountryName, UnitType } from 'types'
+import { getBaseUnitType } from 'managers/units'
 
 interface IState {
   modal_country: CountryName | undefined
@@ -27,11 +28,12 @@ class Units extends Component<IProps, IState> {
   initialState = { modal_country: undefined, modal_unit: undefined, open_create_unit: false }
 
   render() {
+    const { mode, createUnit, country, terrains, definitions, images, unit_types } = this.props
     return (
       <>
         <ValueModal
           open={this.state.open_create_unit}
-          onSuccess={type => this.props.createUnit(this.props.mode, type)}
+          onSuccess={type => createUnit(mode, type)}
           onClose={this.closeModal}
           message='Create unit'
           button_message='Create'
@@ -40,7 +42,7 @@ class Units extends Component<IProps, IState> {
         <Modal basic onClose={this.closeModal} open={!!this.state.modal_country}>
           <Modal.Content>
             {
-              this.state.modal_unit ?
+              this.state.modal_unit && this.state.modal_unit !== getBaseUnitType(mode) ?
                 <ItemRemover
                   onRemove={this.onRemove}
                   confirm_remove={true}
@@ -62,13 +64,13 @@ class Units extends Component<IProps, IState> {
         </CountryManager>
         <br />
         <UnitDefinitions
-          mode={this.props.mode}
-          country={this.props.country}
-          terrains={this.props.terrains}
-          definitions={this.props.definitions}
-          images={this.props.images}
-          unit_types={this.props.unit_types}
-          onRowClick={unit => this.openModal(this.props.country, unit.type)}
+          mode={mode}
+          country={country}
+          terrains={terrains}
+          definitions={definitions}
+          images={images}
+          unit_types={unit_types}
+          onRowClick={unit => this.openModal(country, unit.type)}
         />
       </>
     )

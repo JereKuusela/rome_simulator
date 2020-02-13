@@ -8,13 +8,13 @@ import DetailTextRow from './Detail/DetailTextRow'
 import DetailInputRow from './Detail/DetailInputRow'
 import DetailDropdownRow from './Detail/DetailDropdownRow'
 import Headers from './Utils/Headers'
-import { DefinitionType, ValuesType, Cohort, UnitType, TerrainType, UnitRole, UnitAttribute, UnitValueType, unitValueToString, Settings, Setting, CombatPhase } from 'types'
+import { Mode, ValuesType, Cohort, UnitType, TerrainType, UnitRole, UnitAttribute, UnitValueType, unitValueToString, Settings, Setting, CombatPhase } from 'types'
 import { values } from 'utils'
 import { getValue, calculateValue, explain } from 'definition_values'
 import { toMaintenance } from 'formatters'
 
 interface IProps {
-  mode: DefinitionType
+  mode: Mode
   settings: Settings
   custom_value_key: string
   unit: Cohort
@@ -40,7 +40,7 @@ export default class UnitDetail extends Component<IProps> {
 
   readonly attributes = values(UnitAttribute)
   readonly units = values(UnitType).sort()
-  readonly modes = values(DefinitionType)
+  readonly modes = values(Mode)
   readonly deployments = values(UnitRole)
   readonly headers = ['Attribute', 'Value', 'Custom base', 'Custom modifier', 'Custom losses', 'Explained']
 
@@ -77,7 +77,7 @@ export default class UnitDetail extends Component<IProps> {
       return true
     if (!settings[Setting.BackRow] && attribute === UnitAttribute.BackrowEffectiveness)
       return true
-    if (mode === DefinitionType.Naval && (attribute === UnitAttribute.CaptureChance || attribute === UnitAttribute.CaptureResist))
+    if (mode === Mode.Naval && (attribute === UnitAttribute.CaptureChance || attribute === UnitAttribute.CaptureResist))
       return true
     if (!settings[Setting.DailyMoraleLoss] && attribute === UnitAttribute.DailyLossResist)
       return true

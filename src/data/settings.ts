@@ -1,9 +1,9 @@
-import { DefinitionType, CombatSettings, Setting, SiteSettings, SimulationSpeed, CountryName, Side, UnitAttribute, SettingsAndOptions } from 'types'
+import { Mode, CombatSettings, Setting, SiteSettings, SimulationSpeed, CountryName, Side, UnitAttribute, SettingsAndOptions } from 'types'
 
 export const getDefaultSettings = (): SettingsAndOptions => ({
-  combatSettings: { [DefinitionType.Land]: getDefaultLandSettings(), [DefinitionType.Naval]: getDefaultNavalSettings() },
+  combatSettings: { [Mode.Land]: getDefaultLandSettings(), [Mode.Naval]: getDefaultNavalSettings() },
   siteSettings: getDefaultSiteSettings(),
-  mode: DefinitionType.Land,
+  mode: Mode.Land,
   country: CountryName.Country1,
   accordions: {},
   weariness: {

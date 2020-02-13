@@ -7,7 +7,7 @@ import DetailDropdownRow from './Detail/DetailDropdownRow'
 import Input from './Utils/Input'
 import Headers from './Utils/Headers'
 
-import { DefinitionType, ValuesType, Terrain, TerrainType, LocationType, TerrainCalc, TerrainValueType, terrainValueToString } from 'types'
+import { Mode, ValuesType, Terrain, TerrainType, LocationType, TerrainCalc, TerrainValueType, terrainValueToString } from 'types'
 import { values } from 'utils'
 import { getValue, explainShort } from 'definition_values'
 
@@ -18,7 +18,7 @@ interface IProps {
   onTypeChange: (type: TerrainType) => void
   onLocationChange: (location: LocationType) => void
   onImageChange: (image: string) => void
-  onModeChange: (mode: DefinitionType) => void
+  onModeChange: (mode: Mode) => void
 }
 
 // Display component for showing and changing terrain details.
@@ -26,7 +26,7 @@ export default class TerrainDetail extends Component<IProps> {
 
   readonly attributes = values(TerrainCalc)
   readonly locations = values(LocationType)
-  readonly modes = values(DefinitionType)
+  readonly modes = values(Mode)
   readonly headers = ['Attribute', 'Value', 'Custom value', 'Explained']
 
   readonly CELLS = 4

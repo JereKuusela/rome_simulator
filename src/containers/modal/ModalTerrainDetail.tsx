@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { AppState } from 'state'
 import TerrainDetail from 'components/TerrainDetail'
-import { DefinitionType, TerrainType, LocationType, TerrainValueType, ValuesType } from 'types'
+import { Mode, TerrainType, LocationType, TerrainValueType, ValuesType } from 'types'
 import { setTerrainLocation, setTerrainImage, setTerrainMode, setTerrainValue, invalidate } from 'reducers'
 
 const CUSTOM_VALUE_KEY = 'Custom'
@@ -37,7 +37,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   ),
   setLocation: (type: TerrainType, location: LocationType) => dispatch(setTerrainLocation(type, location)),
   setImage: (type: TerrainType, image: string) => dispatch(setTerrainImage(type, image)),
-  setMode: (type: TerrainType, mode: DefinitionType) => dispatch(setTerrainMode(type, mode))
+  setMode: (type: TerrainType, mode: Mode) => dispatch(setTerrainMode(type, mode))
 })
 
 interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> {

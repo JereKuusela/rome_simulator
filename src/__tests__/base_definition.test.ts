@@ -1,5 +1,5 @@
-import { DefinitionType } from 'types'
-import { mergeValues, addValues, ValuesType, clearAllValues, clearValues, regenerateValues, calculateValue, calculateValueWithoutLoss, calculateBase, calculateModifier, calculateLoss, explainShort, getValue, BaseDefinitionValues } from 'definition_values'
+import { Mode } from 'types'
+import { mergeValues, addValues, ValuesType, clearAllValues, clearValues, regenerateValues, calculateValue, calculateValueWithoutLoss, calculateBase, calculateModifier, calculateLoss, explainShort, getValue, DefinitionValues } from 'definition_values'
 import EmptyIcon from 'images/empty.png'
 import UnknownIcon from 'images/unknown.png'
 import { size } from 'lodash'
@@ -7,7 +7,7 @@ import { strengthToValue } from 'formatters'
 import { getImage } from 'utils'
 
 type Values = { [key: string]: { [key: string]: number } }
-type BD = BaseDefinitionValues<any>
+type BD = DefinitionValues<any>
 
 describe('getImage', () => {
   it('returns image', () => {
@@ -422,11 +422,11 @@ describe('explainShort', () => {
 
 describe('strengthToValue', () => {
   it('works for naval', () => {
-    const result = strengthToValue(DefinitionType.Naval, 0.75)
+    const result = strengthToValue(Mode.Naval, 0.75)
     expect(result).toEqual('75%')
   })
   it('works for land', () => {
-    const result = strengthToValue(DefinitionType.Land, 0.75)
+    const result = strengthToValue(Mode.Land, 0.75)
     expect(result).toEqual('750')
   })
 })

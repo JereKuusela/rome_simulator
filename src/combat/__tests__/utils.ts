@@ -1,11 +1,10 @@
 import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultParticipant, getDefaultArmy, getDefaultUnit } from 'data'
 import { map, mapRange } from 'utils'
 import { mergeValues, calculateValue } from 'definition_values'
-import { DefinitionType, CountryName, Participant, Terrain, TacticType, Setting, Side, BaseCohort, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, TacticCalc, Settings, Cohorts, UnitPreferences, General, Cohort, FrontLine } from 'types'
+import { Mode, CountryName, Participant, Terrain, TacticType, Setting, Side, BaseCohort, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, TacticCalc, Settings, Cohorts, UnitPreferences, General, Cohort, FrontLine } from 'types'
 import { CombatUnit, CombatParticipant, doBattleFast, getBaseDamages, convertUnits, calculateTotalRoll, deploy, sortReserve } from 'combat'
-import { getBaseUnitType } from 'managers/army'
 
-const unitDefinitions = map(getDefaultUnits(), unit => mergeValues(unit, getDefaultUnit(getBaseUnitType(DefinitionType.Land))))
+const unitDefinitions = map(getDefaultUnits(), unit => mergeValues(unit, getDefaultUnit(UnitType.BaseLand)))
 export const getDefinitions = () => ({ [CountryName.Country1]: unitDefinitions, [CountryName.Country2]: unitDefinitions })
 const tactics = getDefaultTactics()
 const terrains = getDefaultTerrains()
@@ -38,7 +37,7 @@ export const initInfo = () => ({
   attacker: getDefaultParticipant(CountryName.Country1),
   defender: getDefaultParticipant(CountryName.Country2),
   army_a: {
-    ...getDefaultArmy(DefinitionType.Land),
+    ...getDefaultArmy(Mode.Land),
     // Frontline must be cloned to prevent tests mutating the source.
     frontline: [],
     reserve: {},
@@ -47,7 +46,7 @@ export const initInfo = () => ({
     unit_preferences: getUnitPreferences()
   },
   army_d: {
-    ...getDefaultArmy(DefinitionType.Land),
+    ...getDefaultArmy(Mode.Land),
     // Frontline must be cloned to prevent tests mutating the source.
     frontline: [],
     reserve: {},

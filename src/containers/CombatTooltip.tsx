@@ -5,7 +5,7 @@ import { last } from 'lodash'
 
 import StyledNumber from 'components/Utils/StyledNumber'
 
-import { DefinitionType, Side, ArmyType, UnitAttribute, UnitType, Setting, TacticCalc, TerrainType, Cohort } from 'types'
+import { Mode, Side, ArmyType, UnitAttribute, UnitType, Setting, TacticCalc, TerrainType, Cohort } from 'types'
 import { calculateTotalRoll, calculateBaseDamage, CombatUnitDefinition, CombatUnitRoundInfo, CombatUnit } from 'combat'
 import { toSignedPercent, toManpower, strengthToValue, toNumber } from 'formatters'
 import { calculateValue, calculateBase, calculateModifier } from 'definition_values'
@@ -113,7 +113,7 @@ class CombatTooltip extends Component<IProps, IState> {
     const strength_damage = source.strength_dealt
 
     return (<>
-      {this.renderMultiplier('Constant', strength_lost_multiplier, value => mode === DefinitionType.Land ? toManpower(value) : String(value))}
+      {this.renderMultiplier('Constant', strength_lost_multiplier, value => mode === Mode.Land ? toManpower(value) : String(value))}
       {settings[Setting.FireAndShock] && this.renderMultiplier('Base ' + phase, base_phase, String)}
       {this.renderStyledItem('Tactic casualties', tactic_casualties, toSignedPercent)}
       {this.renderStyledItem(phase, modifier_phase, toSignedPercent)}
