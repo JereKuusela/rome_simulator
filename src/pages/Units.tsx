@@ -3,7 +3,7 @@ import { Modal, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
 import ModalUnitDetail from 'containers/modal/ModalUnitDetail'
-import { AppState, mergeUnitTypes, filterTerrainTypes, getUnitDefinitions, getUnitImages } from 'state'
+import { AppState, mergeUnitTypes, filterTerrainTypes, getUnits, getUnitImages, getMode } from 'state'
 import { createUnit, deleteUnit, changeUnitType } from 'reducers'
 import UnitDefinitions from 'components/UnitDefinitions'
 import ItemRemover from 'components/ItemRemover'
@@ -28,7 +28,7 @@ class Units extends Component<IProps, IState> {
   initialState = { modal_country: undefined, modal_unit: undefined, open_create_unit: false }
 
   render() {
-    const { mode, createUnit, country, terrains, definitions, images, unit_types } = this.props
+    const { mode, createUnit, country, terrains, units: definitions, images, unit_types } = this.props
     return (
       <>
         <ValueModal
@@ -67,7 +67,7 @@ class Units extends Component<IProps, IState> {
           mode={mode}
           country={country}
           terrains={terrains}
-          definitions={definitions}
+          units={definitions}
           images={images}
           unit_types={unit_types}
           onRowClick={unit => this.openModal(country, unit.type)}
@@ -93,11 +93,11 @@ class Units extends Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  definitions: getUnitDefinitions(state),
+  units: getUnits(state),
   images: getUnitImages(state),
   unit_types: mergeUnitTypes(state),
   terrains: filterTerrainTypes(state),
-  mode: state.settings.mode,
+  mode: getMode(state),
   country: state.settings.country
 })
 

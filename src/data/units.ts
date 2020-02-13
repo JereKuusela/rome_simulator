@@ -1,4 +1,4 @@
-import { ValuesType, UnitType, Unit, UnitAttribute, UnitValueType, UnitRole, TerrainType, UnitState, CountryName, Units, Mode } from 'types'
+import { ValuesType, UnitType, BaseUnit, UnitAttribute, UnitValueType, UnitRole, TerrainType, UnitState, CountryName, BaseUnits, Mode } from 'types'
 import { addValues } from 'definition_values'
 import { toObj } from 'utils'
 
@@ -49,8 +49,8 @@ export const getUnitIcon = (type: UnitType) => unit_to_icon[type] || ''
 
 export const GlobalKey = 'Base'
 
-const createUnitFromJson = (data: UnitData): Unit => {
-  let unit: Unit = {
+const createUnitFromJson = (data: UnitData): BaseUnit => {
+  let unit: BaseUnit = {
     type: data.type as UnitType,
     mode:  data.mode as Mode | undefined,
     image: unit_to_icon[data.type as UnitType] ?? '',
@@ -96,12 +96,12 @@ const createUnitFromJson = (data: UnitData): Unit => {
   return unit
 }
 
-const initializeDefaultUnits = (): Units => toObj(data.units.map(createUnitFromJson), unit => unit.type)
+const initializeDefaultUnits = (): BaseUnits => toObj(data.units.map(createUnitFromJson), unit => unit.type)
 
 const defaultUnits = initializeDefaultUnits()
 
-export const getDefaultUnits = (): Units => defaultUnits
-export const getDefaultUnit = (type: UnitType): Unit => defaultUnits[type]
+export const getDefaultUnits = (): BaseUnits => defaultUnits
+export const getDefaultUnit = (type: UnitType): BaseUnit => defaultUnits[type]
 
 interface UnitData {
   base: string | null

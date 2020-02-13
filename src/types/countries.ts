@@ -1,7 +1,7 @@
 import { ObjSet } from "utils"
 import { CultureType, GovermentType, ReligionType } from "./modifiers"
 import { Armies } from "./armies"
-import { Units } from "./units"
+import { BaseUnits } from "./units"
 import { DefinitionValues } from "definition_values"
 
 export enum CountryName {
@@ -24,5 +24,5 @@ export interface Country extends DefinitionValues<CountryAttribute> {
   office_discipline: number
   office_morale: number,
   armies: Armies,
-  units: Units
+  units: BaseUnits
 }

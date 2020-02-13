@@ -15,7 +15,7 @@ export const createTactic = (tactics: Tactics, type: TacticType, mode: Mode) => 
 }
 
 export const setTacticType = (tactics: Tactics, old_type: TacticType, type: TacticType) => {
-  delete Object.assign(tactics, { [type]: tactics[old_type] })[old_type]
+  delete Object.assign(tactics, { [type]: { ...tactics[old_type], type } })[old_type]
 }
 
 export const setTacticImage = (tactic: Tactic, image: string) => {

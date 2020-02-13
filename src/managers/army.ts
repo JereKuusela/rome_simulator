@@ -1,5 +1,5 @@
 import { calculateValue, clearAllValues, calculateBase, addValues, regenerateValues } from 'definition_values'
-import { Mode, GeneralCalc, UnitType, Unit, UnitAttribute, General, Army, ArmyType, BaseCohort, ValuesType, UnitValueType, TacticType, UnitPreferenceType, GeneralStats, BaseReserve, ScopeType, Modifier, BaseDefeated, BaseFrontLine, ModifierType } from 'types'
+import { Mode, GeneralCalc, UnitType, BaseUnit, UnitAttribute, General, Army, ArmyType, BaseCohort, ValuesType, UnitValueType, TacticType, UnitPreferenceType, GeneralStats, BaseReserve, ScopeType, Modifier, BaseDefeated, BaseFrontLine, ModifierType } from 'types'
 import { map, forEach, keys } from 'utils'
 import { findLastIndex } from 'lodash'
 
@@ -22,7 +22,7 @@ export const getGeneralStats = (general: General): GeneralStats => {
   }
 }
 
-export const unitSorter = (definition: Unit, mode: Mode) => {
+export const unitSorter = (definition: BaseUnit, mode: Mode) => {
   if (mode === Mode.Naval)
     return calculateBase(definition, UnitAttribute.Cost)
   return definition.type === UnitType.BaseLand ? '' : definition.type

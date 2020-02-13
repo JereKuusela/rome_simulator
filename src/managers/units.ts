@@ -1,41 +1,41 @@
-import { ValuesType, UnitValueType, UnitType, UnitRole, Modifier, ScopeType, Unit, Units, Mode } from "types"
+import { ValuesType, UnitValueType, UnitType, UnitRole, Modifier, ScopeType, BaseUnit, BaseUnits, Mode } from "types"
 import { addValuesWithMutate, regenerateValues, clearValues } from "definition_values"
 import { getUnitIcon } from "data"
 import { forEach } from "utils"
 
-export const setUnitValue = (unit: Unit, values_type: ValuesType, key: string, attribute: UnitValueType, value: number) => {
+export const setUnitValue = (unit: BaseUnit, values_type: ValuesType, key: string, attribute: UnitValueType, value: number) => {
   addValuesWithMutate(unit, values_type, key, [[attribute, value]])
 }
 
-export const deleteUnit = (units: Units, type: UnitType) => {
+export const deleteUnit = (units: BaseUnits, type: UnitType) => {
   delete units[type]
 }
 
-export const createUnit = (units: Units, mode: Mode, type: UnitType) => {
+export const createUnit = (units: BaseUnits, mode: Mode, type: UnitType) => {
   units[type] = { type, image: getUnitIcon(type), role: UnitRole.Front, base: getBaseUnitType(mode) }
 }
 
-export const changeUnitType = (units: Units, old_type: UnitType, type: UnitType) => {
-  delete Object.assign(units, { [type]: units[old_type] })[old_type]
+export const changeUnitType = (units: BaseUnits, old_type: UnitType, type: UnitType) => {
+  delete Object.assign(units, { [type]: { ...units[old_type], type } })[old_type]
 }
 
-export const changeUnitImage = (unit: Unit, image: string) => {
+export const changeUnitImage = (unit: BaseUnit, image: string) => {
   unit.image = image
 }
 
-export const changeUnitDeployment = (unit: Unit, deployment: UnitRole) => {
+export const changeUnitDeployment = (unit: BaseUnit, deployment: UnitRole) => {
   unit.role = deployment
 }
 
-export const toggleUnitLoyality = (unit: Unit) => {
+export const toggleUnitLoyality = (unit: BaseUnit) => {
   unit.is_loyal = !unit.is_loyal
 }
 
-export const changeUnitBaseType = (unit: Unit, base: UnitType) => {
+export const changeUnitBaseType = (unit: BaseUnit, base: UnitType) => {
   unit.base = base
 }
 
-export const enableUnitModifiers = (units: Units, key: string, modifiers: Modifier[]) => {
+export const enableUnitModifiers = (units: BaseUnits, key: string, modifiers: Modifier[]) => {
   modifiers = modifiers.filter(value => value.scope === ScopeType.Country)
   forEach(units, (unit, type) => {
     const values = modifiers.filter(value => type === value.target)
@@ -45,7 +45,7 @@ export const enableUnitModifiers = (units: Units, key: string, modifiers: Modifi
   })
 }
 
-export const clearUnitModifiers = (units: Units, key: string) => {
+export const clearUnitModifiers = (units: BaseUnits, key: string) => {
   forEach(units, (unit, type) => {
     units[type] = clearValues(clearValues(unit, ValuesType.Base, key), ValuesType.Modifier, key)
   })

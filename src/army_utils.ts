@@ -1,4 +1,4 @@
-import { BaseCohorts, Cohorts, Mode, UnitDefinitionValues, BaseCohort, ArmyType, Side, Units, UnitType } from 'types'
+import { BaseCohorts, Cohorts, Mode, UnitDefinitionValues, BaseCohort, ArmyType, Side, BaseUnits, UnitType, Units, Unit } from 'types'
 import { mergeValues } from 'definition_values'
 import { map, filter } from 'utils'
 import { CombatUnits } from 'combat'
@@ -9,17 +9,17 @@ import { flatMap } from 'lodash'
  * @param units Base units to merge. 
  * @param definitions Definitions to merge.
  */
-export const mergeBaseUnitsWithDefinitions = (units: Cohorts, definitions: Units): Cohorts => ({
+export const mergeBaseUnitsWithDefinitions = (units: Cohorts, definitions: BaseUnits): Cohorts => ({
   frontline: units.frontline.map(row => row.map(unit => unit && mergeValues(definitions[unit.type], unit))),
   reserve: units.reserve.map(value => value && mergeValues(definitions[value.type], value)),
   defeated: units.defeated.map(value => value && mergeValues(definitions[value.type], value))
 })
 
-export const mergeDefinitions = (units: Units, general: UnitDefinitionValues) => {
+export const mergeDefinitions = (units: BaseUnits, general: UnitDefinitionValues): Units => {
   return map(units, (_, type) => mergeDefinition(units, general, type))
 }
 
-export const mergeDefinition = (units: Units, general: UnitDefinitionValues, type: UnitType) => {
+export const mergeDefinition = (units: BaseUnits, general: UnitDefinitionValues, type: UnitType): Unit => {
   let unit = mergeValues(units[type], general[type])
   let base = unit.base
   const merged = [type]
@@ -28,22 +28,15 @@ export const mergeDefinition = (units: Units, general: UnitDefinitionValues, typ
     unit = mergeValues(mergeValues(unit, units[base]), general[base])
     base = units[base].base
   }
-  return unit
+  return unit as Unit
 }
-
-/**
- * Returns whether a given definition belongs to a given battle mode.
- */
-export const isIncludedInMode = (mode: Mode, definition: { mode?: Mode }) => !definition || definition.mode === mode
 
 /**
  * Returns unit definitions for current battle mode.
  * @param mode
  * @param definitions 
  */
-export const filterUnitDefinitions = (mode: Mode, definitions: Units): Units => {
-  return filter(definitions, unit => isIncludedInMode(mode, unit))
-}
+export const filterUnitDefinitions = (mode: Mode, definitions: Units): Units => filter(definitions, unit => unit.mode === mode)
 
 let unit_id = 0
 /**

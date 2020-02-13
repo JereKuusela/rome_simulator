@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Image, Table, List, Icon } from 'semantic-ui-react'
 import { sortBy, toNumber } from 'lodash'
 
-import { Mode, CountryName, UnitType, TerrainType, Unit, UnitAttribute, UnitValueType, Units } from 'types'
+import { Mode, CountryName, UnitType, TerrainType, BaseUnit, UnitAttribute, UnitValueType, Units } from 'types'
 import { toArr, getImage } from 'utils'
 import { unitSorter } from 'managers/army'
 import { calculateValue, calculateBase, calculateModifier, calculateLoss } from 'definition_values'
@@ -21,20 +21,19 @@ import IconAttrition from 'images/attrition.png'
 interface IProps {
   mode: Mode
   country: CountryName
-  definitions: Units
+  units: Units
   images: { [key in UnitType]: string[] }
   unit_types: UnitType[]
   terrains: TerrainType[]
-  onRowClick: (unit: Unit) => void
+  onRowClick: (unit: BaseUnit) => void
 }
 
 // Display component for showing unit definitions for an army.
 export default class UnitDefinitions extends Component<IProps> {
 
   render() {
-    const { mode, definitions, country } = this.props
-    const sorted_units = sortBy(toArr(definitions), definition => unitSorter(definition, mode))
-    console.log(sorted_units)
+    const { mode, units, country } = this.props
+    const sorted_units = sortBy(toArr(units), unit => unitSorter(unit, mode))
     const icon_strength = mode === Mode.Naval ? IconStrength : IconManpower
     return (
       <Table celled selectable unstackable>
@@ -95,7 +94,7 @@ export default class UnitDefinitions extends Component<IProps> {
     )
   }
 
-  renderRow = (unit: Unit) => {
+  renderRow = (unit: BaseUnit) => {
     return (
       <Table.Row key={unit.type} onClick={() => this.props.onRowClick(unit)}>
         <Table.Cell singleLine>
@@ -186,7 +185,7 @@ export default class UnitDefinitions extends Component<IProps> {
     )
   }
 
-  renderAttributeList = (unit: Unit, attribute: UnitValueType): JSX.Element => {
+  renderAttributeList = (unit: BaseUnit, attribute: UnitValueType): JSX.Element => {
     const base = calculateBase(unit, attribute)
     let base_str = String(base)
     if (this.props.mode === Mode.Naval && attribute === UnitAttribute.Strength)

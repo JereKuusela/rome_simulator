@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { ValuesType, CountryName, UnitType, Cohort, UnitRole, UnitValueType } from 'types'
 import UnitDetail from 'components/UnitDetail'
-import { AppState, getUnitDefinition, mergeUnitTypes, filterTerrainTypes, getMode, getSettings } from 'state'
+import { AppState, getUnit, mergeUnitTypes, filterTerrainTypes, getMode, getSettings } from 'state'
 import { setUnitValue, changeUnitImage, changeUnitBaseType, changeUnitDeployment, toggleUnitLoyality, invalidate } from 'reducers'
 
 
@@ -82,7 +82,7 @@ class ModalUnitDetail extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  unit: props.country && props.unit_type && getUnitDefinition(state, props.unit_type, props.country),
+  unit: props.country && props.unit_type && getUnit(state, props.unit_type, props.country),
   unit_types: mergeUnitTypes(state),
   terrain_types: filterTerrainTypes(state),
   mode: getMode(state),
