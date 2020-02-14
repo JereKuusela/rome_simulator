@@ -40,8 +40,8 @@ export const initInfo = () => ({
     ...getDefaultArmy(Mode.Land),
     // Frontline must be cloned to prevent tests mutating the source.
     frontline: [],
-    reserve: {},
-    defeated: {},
+    reserve: [],
+    defeated: [],
     tactic: TacticType.Envelopment,
     unit_preferences: getUnitPreferences()
   },
@@ -49,8 +49,8 @@ export const initInfo = () => ({
     ...getDefaultArmy(Mode.Land),
     // Frontline must be cloned to prevent tests mutating the source.
     frontline: [],
-    reserve: {},
-    defeated: {},
+    reserve: [],
+    defeated: [],
     tactic: TacticType.Envelopment,
     unit_preferences: getUnitPreferences()
   },

@@ -1,6 +1,6 @@
 
 import { sumBy } from 'lodash'
-import { Terrain, TerrainCalc, Setting, UnitAttribute, Settings, BaseUnit } from 'types'
+import { Terrain, TerrainCalc, Setting, UnitAttribute, Settings, BaseUnit, CombatPhase } from 'types'
 import { calculateValue } from 'definition_values'
 
 /**
@@ -47,3 +47,10 @@ export const calculateExperienceReduction = (settings: Settings, target: BaseUni
   return -damage_reduction_per_experience * calculateValue(target, UnitAttribute.Experience)
 }
 
+export const getCombatPhase = (round: number, settings: Settings) => {
+  if (settings[Setting.FireAndShock]) {
+    const phase = Math.floor(round / settings[Setting.RollFrequency])
+    return phase % 2 ? CombatPhase.Shock : CombatPhase.Fire
+  }
+  return CombatPhase.Default
+}

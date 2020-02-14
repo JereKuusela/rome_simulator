@@ -1,6 +1,6 @@
 import { AppState, getMode, getArmyForCombat, mergeUnitTypes, getCurrentCombat, getSettings } from 'state'
 import { CombatUnits, Frontline, Reserve, doConversion, deploy, doBattleFast, removeDefeated } from 'combat'
-import { Mode, Battle, Side, Setting, Participant, Settings, CombatPhase } from 'types'
+import { Mode, Battle, Side, Setting, Participant, Settings } from 'types'
 import { createEntropy, MersenneTwister19937, Random } from 'random-js'
 import { arrGet } from 'utils'
 
@@ -101,14 +101,6 @@ const doBattle = (state: AppState, mode: Mode, battle: Battle, settings: Setting
     updateRoll(participant_d)
     battle.round++
   }
-}
-
-export const getCombatPhase = (round: number, settings: Settings) => {
-  if (settings[Setting.FireAndShock]) {
-    const phase = Math.floor(round / settings[Setting.RollFrequency])
-    return phase % 2 ? CombatPhase.Shock : CombatPhase.Fire
-  }
-  return CombatPhase.Default
 }
 
 export const battle = (pair: [AppState, AppState], steps: number) => {

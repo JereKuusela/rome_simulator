@@ -83,11 +83,15 @@ export default class UnitDetail extends Component<IProps> {
       return true
     if (!settings[Setting.FireAndShock] && attribute in CombatPhase)
       return true
+    if (!settings[Setting.FireAndShock] && (attribute === UnitAttribute.FireDamageDone || attribute === UnitAttribute.FireDamageTaken || attribute === UnitAttribute.ShockDamageDone || attribute === UnitAttribute.ShockDamageTaken))
+      return true
+    if (attribute === CombatPhase.Default)
+      return true
     return false
   }
 
   renderRow = (attribute: UnitValueType) => {
-    const { unit, custom_value_key, onCustomBaseValueChange, onCustomModifierValueChange, onCustomLossValueChange, disable_base_values} = this.props
+    const { unit, custom_value_key, onCustomBaseValueChange, onCustomModifierValueChange, onCustomLossValueChange, disable_base_values } = this.props
     if (this.hideAttribute(attribute))
       return null
     const base_value = getValue(ValuesType.Base, unit, attribute, custom_value_key)
@@ -98,7 +102,7 @@ export default class UnitDetail extends Component<IProps> {
       value += ' (' + toMaintenance(calculateValue(unit, UnitAttribute.Cost) * calculateValue(unit, UnitAttribute.Maintenance)) + ')'
 
     const enable_loss = attribute === UnitAttribute.Morale || attribute === UnitAttribute.Strength
-    const enable_modifier = enable_loss || attribute === UnitAttribute.Maintenance || attribute === UnitAttribute.Cost || attribute === UnitAttribute.AttritionWeight || attribute in CombatPhase
+    const enable_modifier = enable_loss || attribute === UnitAttribute.Maintenance || attribute === UnitAttribute.Cost || attribute === UnitAttribute.AttritionWeight
     const enable_base = !disable_base_values || !enable_modifier
 
     return (
@@ -106,7 +110,7 @@ export default class UnitDetail extends Component<IProps> {
         {attribute}
         {value}
         {enable_base && <DetailValueInput value={base_value} onChange={value => onCustomBaseValueChange(custom_value_key, attribute, value)} />}
-        {enable_modifier && <DetailValueInput value={modifier_value} onChange={value => onCustomModifierValueChange(custom_value_key, attribute, value)} /> }
+        {enable_modifier && <DetailValueInput value={modifier_value} onChange={value => onCustomModifierValueChange(custom_value_key, attribute, value)} />}
         {enable_loss && <DetailValueInput value={loss_value} onChange={value => onCustomLossValueChange(custom_value_key, attribute, value)} />}
         {explain(unit, attribute)}
       </PaddedRow>
