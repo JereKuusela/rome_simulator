@@ -1,6 +1,6 @@
 import { ValuesType, UnitType, BaseUnit, UnitAttribute, UnitValueType, UnitRole, TerrainType, UnitState, CountryName, BaseUnits, Mode } from 'types'
 import { addValues } from 'definition_values'
-import { toObj } from 'utils'
+import { toObj, removeUndefined } from 'utils'
 
 import * as data from './json/units.json'
 import IconArcher from 'images/archers.png'
@@ -57,6 +57,7 @@ const createUnitFromJson = (data: UnitData): BaseUnit => {
     role: data.role as UnitRole,
     base: data.base ? data.base as UnitType : undefined
   }
+  removeUndefined(unit)
   const base_values: [UnitValueType, number][] = [
     [UnitAttribute.AttritionWeight, data.attrition_weight ?? 0],
     [UnitAttribute.Cost, data.cost],

@@ -1,4 +1,4 @@
-import { TestInfo, initInfo, getUnit, testDeploy, every_type, setFlankSizes, getUnitPreferences } from './utils'
+import { TestInfo, initInfo, getUnit, testDeploy, every_type, setFlankSizes, getUnitPreferences, setCombatWidth } from './utils'
 import { UnitType, Setting } from 'types'
 import { loadInput } from './parser'
 
@@ -6,16 +6,17 @@ import basic from './input/deployment/basic.txt'
 import all_land_front from './input/deployment/all_land_front.txt'
 import flanksize_small_flank from './input/deployment/flanksize_small_flank.txt'
 import flanksize_big_flank from './input/deployment/flanksize_big_flank.txt'
+import { resize } from 'utils'
 
 describe('initial deployment', () => {
 
   let info: TestInfo
   beforeEach(() => { info = initInfo() })
   
-  const setAttacker = (types: UnitType[]) => (info.army_a = { ...info.army_a, reserve: info.army_a.reserve.concat(types.map(type => getUnit(type))) })
-  const setDefender = (types: UnitType[]) => (info.army_d = { ...info.army_d, reserve: info.army_d.reserve.concat(types.map(type => getUnit(type))) })
-  const fillAttacker = (type: UnitType) => (info.army_a = { ...info.army_a, reserve: info.army_a.reserve.concat(Array(30).fill(type).map(type => getUnit(type))) })
-  const fillDefender = (type: UnitType) => (info.army_d = { ...info.army_d, reserve: info.army_d.reserve.concat(Array(30).fill(type).map(type => getUnit(type))) })
+  const setAttacker = (types: UnitType[]) => info.army_a.reserve.push(...types.map(type => getUnit(type)))
+  const setDefender = (types: UnitType[]) => info.army_d.reserve.push(...types.map(type => getUnit(type)))
+  const fillAttacker = (type: UnitType) => info.army_a.reserve.push(...Array(info.army_a.frontline[0].length).fill(type).map(type => getUnit(type)))
+  const fillDefender = (type: UnitType) => info.army_d.reserve.push(...Array(info.army_d.frontline[0].length).fill(type).map(type => getUnit(type)))
 
   it('1 vs 1', () => {
     loadInput(basic, info)
@@ -93,7 +94,8 @@ describe('initial deployment', () => {
   })
   it('reduced combat width', () => {
     setFlankSizes(info, 2, 0)
-    info.settings[Setting.CombatWidth] = 5
+    setFlankSizes(info, 2, 0)
+    setCombatWidth(info, 5)
     setAttacker([UnitType.HorseArchers, UnitType.HorseArchers, UnitType.HorseArchers])
     fillAttacker(UnitType.Archers)
     fillDefender(UnitType.Archers)
@@ -101,7 +103,7 @@ describe('initial deployment', () => {
     result[1] = UnitType.HorseArchers
     result[2] = UnitType.HorseArchers
     result[3] = UnitType.HorseArchers
-    testDeploy(info, result, 28)
+    testDeploy(info, result, 3)
   })
 })
 

@@ -11,7 +11,7 @@ export type SortedReserve = {
 }
 
 const armySize = (units: CombatUnits) => {
-  return units.frontline.filter(unit => unit).length + units.reserve.length
+  return units.frontline[0].filter(unit => unit).length + units.reserve.length
 }
 
 const deployArmy = (units: CombatUnits, left_flank: number, right_flank: number, sorted: SortedReserve) => {

@@ -8,7 +8,7 @@ import { CombatUnits } from 'combat'
  * @param units Base units to merge. 
  * @param definitions Definitions to merge.
  */
-export const mergeBaseUnitsWithDefinitions = (units: Cohorts, definitions: BaseUnits): Cohorts => ({
+export const mergeBaseUnitsWithDefinitions = (units: Cohorts, definitions: Units): Cohorts => ({
   frontline: units.frontline.map(row => row.map(unit => unit && mergeValues(definitions[unit.type], unit))),
   reserve: units.reserve.map(value => value && mergeValues(definitions[value.type], value)),
   defeated: units.defeated.map(value => value && mergeValues(definitions[value.type], value))

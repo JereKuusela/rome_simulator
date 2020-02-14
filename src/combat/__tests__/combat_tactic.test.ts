@@ -63,7 +63,7 @@ describe('tactics', () => {
   it('varying effectiveness (manpower)', () => {
     setTactics(info, TacticType.Bottleneck, TacticType.ShockAction)
     setCenterUnits(info, archer, archer)
-    info.army_a.frontline[0] = heavy
+    info.army_a.frontline[0][0] = heavy
     const rolls = [[5, 5]]
     const { attacker, defender } = initSide(3)
 

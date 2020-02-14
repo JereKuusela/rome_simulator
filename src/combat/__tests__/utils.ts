@@ -1,5 +1,5 @@
 import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultParticipant, getDefaultArmy, getDefaultUnit } from 'data'
-import { map, mapRange } from 'utils'
+import { map, mapRange, resize } from 'utils'
 import { mergeValues, calculateValue } from 'definition_values'
 import { Mode, CountryName, Participant, Terrain, TacticType, Setting, Side, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, TacticCalc, Settings, Cohorts, UnitPreferences, General, Cohort } from 'types'
 import { CombatUnit, CombatParticipant, doBattleFast, getBaseDamages, convertUnits, calculateTotalRoll, deploy, sortReserve } from 'combat'
@@ -39,7 +39,7 @@ export const initInfo = () => ({
   army_a: {
     ...getDefaultArmy(Mode.Land),
     // Frontline must be cloned to prevent tests mutating the source.
-    frontline: [],
+    frontline: [Array(30).fill(null)],
     reserve: [],
     defeated: [],
     tactic: TacticType.Envelopment,
@@ -48,7 +48,7 @@ export const initInfo = () => ({
   army_d: {
     ...getDefaultArmy(Mode.Land),
     // Frontline must be cloned to prevent tests mutating the source.
-    frontline: [],
+    frontline: [Array(30).fill(null)],
     reserve: [],
     defeated: [],
     tactic: TacticType.Envelopment,
@@ -223,6 +223,12 @@ export const setUnitPreferences = (info: TestInfo, attacker: (UnitType | null)[]
   info.army_d = { ...info.army_d, unit_preferences: { [UnitPreferenceType.Primary]: defender[0], [UnitPreferenceType.Secondary]: defender[1], [UnitPreferenceType.Flank]: defender[2] } }
 }
 
+export const setCombatWidth = (info: TestInfo, value: number) => {
+  info.settings[Setting.CombatWidth] = value
+  info.army_a.frontline[0] = resize(info.army_a.frontline[0], value, null)
+  info.army_d.frontline[0] = resize(info.army_d.frontline[0], value, null)
+}
+
 /**
  * Returns a unit with a given type.
  */
@@ -319,10 +325,10 @@ export const testReinforce = (info: TestInfo, expected_a: UnitType[] | null = nu
   const [participant_a, participant_d] = getParticipants(info)
   let reserve = participant_a.army.reserve
   let sorted = sortReserve(reserve, participant_a.unit_preferences)
-  reserve.splice(0, reserve.length, ...(sorted.flank.concat(sorted.front)))
+  reserve.splice(0, reserve.length, ...(sorted.support.concat(sorted.flank.concat(sorted.front))))
   reserve = participant_d.army.reserve
   sorted = sortReserve(reserve, participant_d.unit_preferences)
-  reserve.splice(0, reserve.length, ...(sorted.flank.concat(sorted.front)))
+  reserve.splice(0, reserve.length, ...(sorted.support.concat(sorted.flank.concat(sorted.front))))
   doRound(info, participant_a, participant_d)
   verifyDeployOrReinforce(info, Side.Attacker, participant_a, expected_a, reserve_length_a)
   verifyDeployOrReinforce(info, Side.Defender, participant_d, expected_d, reserve_length_d)

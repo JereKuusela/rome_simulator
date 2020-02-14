@@ -124,6 +124,8 @@ export type ObjSet<K extends string = string> = {
   [key in K]: true
 }
 
+export const removeUndefined = (object: { [key: string]: any}) => Object.keys(object).forEach(key => object[key] === undefined && delete object[key])
+
 export function resize<V>(arr: (V | undefined)[], size: number): (V | undefined)[]
 export function resize<V>(arr: (V | undefined)[], size: number, defaultValue: V): V[]
 export function resize<V>(arr: (V | undefined)[], size: number, defaultValue?: V): (V | undefined)[] {
