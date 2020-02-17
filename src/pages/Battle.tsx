@@ -3,8 +3,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Button, Checkbox, Divider, Grid, Header, Image, Input, Table } from 'semantic-ui-react'
 import {
-    calculateRollModifierFromGenerals, calculateRollModifierFromTerrains,
-    calculateBaseDamage
+    calculateGeneralPips, calculateTerrainPips,
+    calculateBaseDamage,
+    getCombatPhase
 } from 'combat'
 import ConfirmationButton from 'components/ConfirmationButton'
 import Dropdown from 'components/Utils/Dropdown'
@@ -27,9 +28,10 @@ import {
     invalidate, selectArmy, setRoll, toggleRandomRoll,
     undo, battle, refreshBattle, setSeed, setGeneralMartial, resetState
 } from 'reducers'
-import { AppState, getBattle, getCountry, getGeneralStats, getParticipant, getSettings, getCountries } from 'state'
-import { ArmyType, CountryName, Participant, Setting, Side, GeneralStats } from 'types'
+import { AppState, getBattle, getCountry, getParticipant, getSettings, getCountries, getGeneral } from 'state'
+import { ArmyType, CountryName, Participant, Setting, Side, General } from 'types'
 import { keys } from 'utils'
+import { getGeneralStats } from 'managers/army'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
@@ -249,10 +251,10 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderRoll = (side: Side, dice: number, is_random: boolean, general: number, opposing_general: number) => {
-    const { selected_terrains, terrains, settings } = this.props
-    const terrain_effect = side === Side.Attacker ? calculateRollModifierFromTerrains(selected_terrains.map(value => terrains[value])) : 0
-    const general_effect = calculateRollModifierFromGenerals(general, opposing_general)
+  renderRoll = (side: Side, dice: number, is_random: boolean, general: General, opposing_general: General) => {
+    const { selected_terrains, terrains, settings, round } = this.props
+    const terrain_effect = side === Side.Attacker ? calculateTerrainPips(selected_terrains.map(value => terrains[value])) : 0
+    const general_effect = calculateGeneralPips(general, opposing_general, getCombatPhase(round, settings))
     const total = terrain_effect + general_effect + dice
     const base_damage = calculateBaseDamage(total, settings)
     return (
@@ -318,7 +320,8 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderArmyInfo = (side: Side, participant: Participant, stats: GeneralStats, enemy: GeneralStats) => {
+  renderArmyInfo = (side: Side, participant: Participant, general: General, enemy: General) => {
+    const stats = getGeneralStats(general)
     return (
       <Table.Row key={side}>
         <Table.Cell collapsing>
@@ -332,14 +335,14 @@ class Battle extends Component<IProps, IState> {
           />
         </Table.Cell>
         <Table.Cell collapsing>
-          <Input disabled={!stats.enabled} size='mini' style={{ width: 100 }} type='number' value={stats.base_martial} onChange={(_, { value }) => this.props.setGeneralMartial(participant.country, Number(value))} />
+          <Input disabled={!general.enabled} size='mini' style={{ width: 100 }} type='number' value={stats.base_martial} onChange={(_, { value }) => this.props.setGeneralMartial(participant.country, Number(value))} />
           {' '}<StyledNumber value={stats.trait_martial} formatter={addSign} />
         </Table.Cell>
         <Table.Cell collapsing>
           <TacticSelector side={side} />
         </Table.Cell>
         <Table.Cell>
-          {this.renderRoll(side, participant.dice, participant.randomize_roll, stats.martial, enemy.martial)}
+          {this.renderRoll(side, participant.dice, participant.randomize_roll, general, enemy)}
         </Table.Cell>
         <Table.Cell collapsing>
           {this.renderIsRollRandom(side, participant.randomize_roll)}
@@ -365,8 +368,8 @@ class Battle extends Component<IProps, IState> {
 const mapStateToProps = (state: AppState) => ({
   attacker: getParticipant(state, Side.Attacker),
   defender: getParticipant(state, Side.Defender),
-  general_a: getGeneralStats(state, getCountry(state, Side.Attacker)),
-  general_d: getGeneralStats(state, getCountry(state, Side.Defender)),
+  general_a: getGeneral(state, getCountry(state, Side.Attacker)),
+  general_d: getGeneral(state, getCountry(state, Side.Defender)),
   countries: getCountries(state),
   is_undo: getBattle(state).round > -1,
   round: getBattle(state).round,

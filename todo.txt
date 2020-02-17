@@ -21,6 +21,7 @@ Changelog:
 - Countries: Added naval capture chance from general martial (0.2% * martial).
 - Countries: Added support for country specific combat width modifiers, feature from EUIV.
 - Countries: Added new table at bottom to allow changing country specific attributes.
+- Countries: Added new attributes for Fire, Shock and Maneuver pips, feature from EUIV.
 - Countries: Removed Global and General words from modifier targets (should be obvious without them.)
 - Countries: Refactored general to be separate entity (second step towards multiarmy battles).
 - Units: Updated balance changes from 1.3.2 (War Elephants damage against Infantry, Supply Train cost).
@@ -33,6 +34,7 @@ Changelog:
 - Units: Added a new attribute for reducing daily morale losses, feature from EUIV.
 - Units: Added new attributes for Fire and Shock phases, feature from EUIV.
 - Units: Added new attributes for Fire damage done, Fire damage taken, Shock damage done and Shock damage taken, feature from EUIV.
+- Units: Added new attributes for Fire and Shock pips, feature from EUIV.
 - Units: Added support for changing the base type of a unit (allows more flexible unit hierarchies, for EUIV).
 - Units: Removed support for changing unit mode (land or naval), instead it is derived from the base unit.
 - Units: Removed support for global unit mode (units are now either land or naval units).
@@ -75,8 +77,7 @@ EUIV:
  - Military tactics as defensive value (+ setting)
  - Derivate attributes (reduce flanking range based on strength)
  - Cavalry to infantry ratio (flank to front, country definition, + setting)
- - Fire, shock and morale pips (+ setting)
- - General fire, shock and maneuver pips (+ setting for pip cap, 0 for disabled)
+ - General maneuver pips
  - Setting for martial cap (0 for disabled)
  - Units: Available units determined by tech level + culture (selector should sort by tech level + show pips)
  - Units on the backline take full morale casualties

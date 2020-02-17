@@ -5,7 +5,7 @@ import { Popup, List } from 'semantic-ui-react'
 import StyledNumber from 'components/Utils/StyledNumber'
 
 import { Mode, Side, ArmyType, UnitAttribute, UnitType, Setting, TacticCalc, TerrainType, CombatPhase } from 'types'
-import { CombatUnit, CombatUnitRoundInfo, CombatCohort, calculateRollModifierFromUnits, calculateBaseDamage, calculateRollModifierFromUnit } from 'combat'
+import { CombatUnit, CombatUnitRoundInfo, CombatCohort, calculateUnitPips, calculateBaseDamage, getUnitPips } from 'combat'
 import { toSignedPercent, toManpower, strengthToValue, toNumber, addSign, toMultiplier } from 'formatters'
 import { calculateValue } from 'definition_values'
 import { AppState, getSettings, getSelectedTerrains, getGeneralStats, getCountry, getTactic, getCombatUnit, getCombatParticipant } from 'state'
@@ -79,34 +79,34 @@ class CombatTooltip extends Component<IProps, IState> {
   getBaseDamageSection = (source: IUnit, target: IUnit) => {
     const { participant } = this.props
     const { phase } = participant
-    const phase_roll = calculateRollModifierFromUnits(source, target, UnitAttribute.Strength, phase)
-    const morale_roll = calculateRollModifierFromUnits(source, target, UnitAttribute.Morale)
+    const phase_roll = calculateUnitPips(source, target, UnitAttribute.Strength, phase)
+    const morale_roll = calculateUnitPips(source, target, UnitAttribute.Morale)
     const multi = phase_roll || morale_roll
 
     if (multi) {
       return (<>
         {this.getBaseDamageSubSection(source, target, UnitAttribute.Strength, phase)}
         {<List.Item />}
-        {this.getBaseDamageSubSection(source, target, UnitAttribute.Morale)}
+        {this.getBaseDamageSubSection(source, target, UnitAttribute.Morale, phase)}
       </>)
     }
     return (<>
-      {this.getBaseDamageSubSection(source, target, '')}
+      {this.getBaseDamageSubSection(source, target, '', phase)}
     </>)
   }
 
-  getBaseDamageSubSection = (source: IUnit, target: IUnit, type: UnitAttribute.Strength | UnitAttribute.Morale | '', phase?: CombatPhase) => {
+  getBaseDamageSubSection = (source: IUnit, target: IUnit, type: UnitAttribute.Strength | UnitAttribute.Morale | '', phase: CombatPhase) => {
     const { settings, participant } = this.props
-    const { dice, roll_terrain, roll_general } = participant
+    const { dice, terrain_pips, general_pips } = participant
     const base_roll = settings[Setting.BaseRoll]
-    const source_roll = type ? calculateRollModifierFromUnit(source, type, phase) : 0
-    const target_roll = type ? -calculateRollModifierFromUnit(target, type, phase) : 0
-    const total_roll = dice + roll_terrain + roll_general + source_roll + target_roll
+    const source_roll = type ? getUnitPips(source, type, phase) : 0
+    const target_roll = type ? -getUnitPips(target, type, phase) : 0
+    const total_roll = dice + terrain_pips + general_pips[phase] + source_roll + target_roll
     return (<>
       {this.renderModifier('Base pips', base_roll, this.toAdd)}
       {this.renderModifier('Dice pips', dice, this.toAdd)}
-      {this.renderModifier('Terrain pips', roll_terrain, this.toAdd)}
-      {this.renderModifier('General pips', roll_general, this.toAdd)}
+      {this.renderModifier('Terrain pips', terrain_pips, this.toAdd)}
+      {this.renderModifier('General pips', general_pips[phase], this.toAdd)}
       {this.renderModifier(type + ' pips', source_roll, this.toAdd)}
       {this.renderModifier('Enemy pips', target_roll, this.toAdd)}
       {this.renderModifier('Roll damage', settings[Setting.RollDamage], this.toMultiplier)}

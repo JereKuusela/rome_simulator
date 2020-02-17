@@ -1,5 +1,5 @@
 import { AppState, getMode, getArmyForCombat, mergeUnitTypes, getCurrentCombat, getSettings } from 'state'
-import { CombatCohorts, Frontline, Reserve, doConversion, deploy, doBattleFast, removeDefeated, getBaseDamages, CombatParticipant } from 'combat'
+import { CombatCohorts, Frontline, Reserve, deploy, doBattleFast, removeDefeated, getBaseDamages, CombatParticipant, convertParticipant } from 'combat'
 import { Mode, Battle, Side, Setting, Participant, Settings } from 'types'
 import { createEntropy, MersenneTwister19937, Random } from 'random-js'
 import { arrGet } from 'utils'
@@ -18,7 +18,8 @@ const doBattle = (state: AppState, mode: Mode, battle: Battle, settings: Setting
   const army_a = getArmyForCombat(state, Side.Attacker, mode)
   const army_d = getArmyForCombat(state, Side.Defender, mode)
   const terrains = battle.terrains.map(value => state.terrains[value])
-  let [attacker, defender] = doConversion(army_a, army_d, terrains, mergeUnitTypes(state, mode), settings)
+  let attacker = convertParticipant(Side.Attacker, army_a, army_d, terrains, mergeUnitTypes(state, mode), settings)
+  let defender = convertParticipant(Side.Defender, army_d, army_a, terrains, mergeUnitTypes(state, mode), settings)
 
   const participant_a = battle.participants[Side.Attacker]
   const participant_d = battle.participants[Side.Defender]

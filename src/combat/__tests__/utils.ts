@@ -252,6 +252,11 @@ const getParticipants = (info: TestInfo) => {
   const tactic_casualties = calculateValue(tactics[info.army_a.tactic], TacticCalc.Casualties) + calculateValue(tactics[info.army_d.tactic], TacticCalc.Casualties)
   const status_a = convertCohorts(info.army_a, info.settings, tactic_casualties, info.terrains, every_type)
   const status_d = convertCohorts(info.army_d, info.settings, tactic_casualties, info.terrains, every_type)
+  const pips = {
+    [CombatPhase.Default]: info.settings[Setting.BaseRoll],
+    [CombatPhase.Fire]: info.settings[Setting.BaseRoll],
+    [CombatPhase.Shock]: info.settings[Setting.BaseRoll]
+  }
   const participant_a: CombatParticipant = {
     cohorts: status_a,
     dice: 0,
@@ -260,10 +265,10 @@ const getParticipants = (info: TestInfo) => {
     flank: info.army_a.flank_size,
     unit_types: {} as any,
     phase: CombatPhase.Default,
-    roll_terrain: 0,
-    roll_general: 0,
+    terrain_pips: 0,
+    general_pips: pips,
     tactic_bonus: 0.0,
-    roll_modifier: info.settings[Setting.BaseRoll]
+    roll_pips: pips
   }
   const participant_d: CombatParticipant = {
     cohorts: status_d,
@@ -273,10 +278,10 @@ const getParticipants = (info: TestInfo) => {
     flank: info.army_d.flank_size,
     unit_types: {} as any,
     phase: CombatPhase.Default,
-    roll_terrain: 0,
-    roll_general: 0,
+    terrain_pips: 0,
+    general_pips: pips,
     tactic_bonus: 0.0,
-    roll_modifier: info.settings[Setting.BaseRoll]
+    roll_pips: pips
   }
   return [participant_a, participant_d]
 }

@@ -1,7 +1,7 @@
 import { AppState } from './index'
 import { toArr, filter, arrGet, toObj, forEach2, keys } from 'utils'
 import { filterUnitDefinitions, getArmyPart, mergeBaseUnitsWithDefinitions, mergeDefinitions, mergeDefinition } from '../army_utils'
-import { Mode, CountryName, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, Tactic, UnitPreferences, Participant, Terrain, Settings, Battle, Terrains, Tactics, Cohorts, ArmyName, GeneralStats, Countries, Setting, Reserve, Defeated, CountryAttribute, Units, Unit } from 'types'
+import { Mode, CountryName, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, Tactic, UnitPreferences, Participant, Terrain, Settings, Battle, Terrains, Tactics, Cohorts, ArmyName, GeneralStats, Countries, Setting, Reserve, Defeated, CountryAttribute, Units, Unit, General } from 'types'
 import { CombatCohort, CombatCohorts, CombatParticipant } from 'combat'
 import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticState, getDefaultTerrainState } from 'data'
 import { sortBy, uniq, flatten } from 'lodash'
@@ -141,7 +141,7 @@ export const getArmyForCombat = (state: AppState, side: Side, mode?: Mode): Army
   const country = participant.country
   const army = getArmy(state, country)
   const units = getCohortsByCountry(state, country)
-  const general = getGeneralStats(state, country).martial
+  const general = getGeneral(state, country)
   const tactic = state.tactics[army.tactic]
   const definitions = getUnits(state, country)
   return { ...units, tactic, general, flank_size: army.flank_size, unit_preferences: army.unit_preferences, definitions }
@@ -282,7 +282,7 @@ export const resetAll = (data: AppState) => {
 export interface ArmyForCombat extends Cohorts {
   tactic?: Tactic
   definitions: Units
-  general: number
+  general: General
   unit_preferences: UnitPreferences
   flank_size: number
 }

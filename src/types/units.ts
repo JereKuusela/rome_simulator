@@ -67,10 +67,6 @@ export enum UnitAttribute {
   DailyLossResist = 'Daily loss resist'
 }
 
-export enum GeneralCalc {
-  Martial = 'Martial'
-}
-
 export type UnitValueType = UnitAttribute | UnitType | TerrainType | CombatPhase
 export type UnitDefinitionValues = { [key in UnitType]: UnitDefinitionValue }
 export type UnitDefinitionValue = DefinitionValues<UnitValueType>

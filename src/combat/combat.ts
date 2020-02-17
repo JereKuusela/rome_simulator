@@ -3,7 +3,7 @@ import { sumBy, values } from 'lodash'
 import { Tactic, UnitPreferences, Terrain, UnitType, Cohort, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, UnitValueType } from 'types'
 import { toObj, map } from 'utils'
 import { calculateValue, calculateValueWithoutLoss, calculateBase } from 'definition_values'
-import { calculateExperienceReduction, getCombatPhase, calculateRollModifierFromUnits } from './combat_utils'
+import { calculateExperienceReduction, getCombatPhase, calculateUnitPips } from './combat_utils'
 import { reinforce } from './reinforcement'
 
 
@@ -19,9 +19,9 @@ export type CombatParticipant = {
   tactic: Tactic
   flank: number
   dice: number
-  roll_terrain: number
-  roll_general: number
-  roll_modifier: number
+  terrain_pips: number
+  general_pips: { [key in CombatPhase]: number }
+  roll_pips: { [key in CombatPhase]: number }
   unit_preferences: UnitPreferences
 }
 export type Frontline = (CombatCohort | null)[][]
@@ -196,8 +196,8 @@ export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, mark_de
   a.phase = phase
   d.phase = phase
   d.tactic_bonus = calculateTactic(d.cohorts, d.tactic, a.tactic)
-  attack(base_damages, a.cohorts.frontline, a.dice + a.roll_modifier, 1 + a.tactic_bonus, phase)
-  attack(base_damages, d.cohorts.frontline, d.dice + d.roll_modifier, 1 + d.tactic_bonus, phase)
+  attack(base_damages, a.cohorts.frontline, a.dice + a.roll_pips[phase], 1 + a.tactic_bonus, phase)
+  attack(base_damages, d.cohorts.frontline, d.dice + d.roll_pips[phase], 1 + d.tactic_bonus, phase)
 
   applyLosses(a.cohorts.frontline)
   applyLosses(d.cohorts.frontline)
@@ -370,7 +370,7 @@ const calculateDynamicDamageMultiplier = (source: CombatCohort, target: CombatCo
     * (is_support ? definition_s[UnitAttribute.BackrowEffectiveness] : 1.0)
 }
 
-const calculateDynamicBaseDamage = (roll: number, source: CombatCohort, target: CombatCohort, type: UnitAttribute.Morale | UnitAttribute.Strength, phase?: CombatPhase)  => Math.max(0, roll + calculateRollModifierFromUnits(source.definition, target.definition, type, phase))
+const calculateDynamicBaseDamage = (roll: number, source: CombatCohort, target: CombatCohort, type: UnitAttribute.Morale | UnitAttribute.Strength, phase?: CombatPhase)  => Math.max(0, roll + calculateUnitPips(source.definition, target.definition, type, phase))
 
 /**
  * Calculates both strength and morale losses caused by a given source to a given target.

@@ -1,6 +1,6 @@
 
 import { sumBy, clamp } from 'lodash'
-import { Terrain, TerrainCalc, Setting, UnitAttribute, Settings, BaseUnit, CombatPhase } from 'types'
+import { Terrain, TerrainCalc, Setting, UnitAttribute, Settings, BaseUnit, CombatPhase, General, GeneralCalc } from 'types'
 import { calculateValue } from 'definition_values'
 import { CombatUnit } from './combat'
 
@@ -8,24 +8,28 @@ import { CombatUnit } from './combat'
  * Calculates the roll modifier based on skill level difference of generals.
  * Every two levels increase dice roll by one (rounded down).
  */
-export const calculateRollModifierFromGenerals = (skill: number, enemy_skill: number): number => Math.max(0, Math.floor((skill - enemy_skill) / 2.0))
+export const calculateGeneralPips = (general: General, enemy: General, phase: CombatPhase): number => {
+  const martial_pip = Math.max(0, Math.floor((calculateValue(general, GeneralCalc.Martial) - calculateValue(enemy, GeneralCalc.Martial)) / 2.0))
+  const phase_pip = Math.max(0, Math.floor((calculateValue(general, phase) - calculateValue(enemy, phase))))
+  return martial_pip + phase_pip
+}
 
 /**
  * Calculates the roll modifier from terrains.
  */
-export const calculateRollModifierFromTerrains = (terrains: Terrain[]): number => sumBy(terrains, terrain => calculateValue(terrain, TerrainCalc.Roll))
+export const calculateTerrainPips = (terrains: Terrain[]): number => sumBy(terrains, terrain => calculateValue(terrain, TerrainCalc.Roll))
 
 /**
  * Calculates the roll modifier from unit pips.
  */
-export const calculateRollModifierFromUnits = (source: CombatUnit, target: CombatUnit, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
-  return calculateRollModifierFromUnit(source, type, phase) - calculateRollModifierFromUnit(target, type, phase)
+export const calculateUnitPips = (source: CombatUnit, target: CombatUnit, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
+  return getUnitPips(source, type, phase) - getUnitPips(target, type, phase)
 }
 
 /**
  * Calculates the roll modifier from unit pips.
  */
-export const calculateRollModifierFromUnit = (unit: CombatUnit, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
+export const getUnitPips = (unit: CombatUnit, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
   if (type === UnitAttribute.Morale)
     return unit[UnitAttribute.MoralePips] 
   if (phase === CombatPhase.Shock)

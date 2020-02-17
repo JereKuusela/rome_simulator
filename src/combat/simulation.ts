@@ -1,9 +1,9 @@
 import { ArmyForCombat } from 'state'
 import { Terrain, UnitType, Setting, TacticCalc, UnitAttribute, Side, Settings, Cohorts, CombatPhase } from 'types'
-import { calculateRollModifierFromTerrains, calculateRollModifierFromGenerals } from './combat_utils'
+import { calculateTerrainPips, calculateGeneralPips } from './combat_utils'
 import { calculateValue } from 'definition_values'
 import { CombatParticipant, getCombatUnit, CombatCohorts, Frontline, Defeated, doBattleFast, Reserve, getUnitDefinition, CombatUnitTypes } from './combat'
-import { mapRange, map } from 'utils'
+import { mapRange, map, values, toObj } from 'utils'
 import { deploy } from './deployment'
 
 /**
@@ -60,39 +60,24 @@ export type ResourceLosses = {
 let interruptSimulation = false
 
 
-export const doConversion = (attacker: ArmyForCombat, defender: ArmyForCombat, terrains: Terrain[], unit_types: UnitType[], settings: Settings) => {
+export const convertParticipant = (side: Side, attacker: ArmyForCombat, defender: ArmyForCombat, terrains: Terrain[], unit_types: UnitType[], settings: Settings): CombatParticipant => {
   const tactic_casualties = calculateValue(attacker.tactic, TacticCalc.Casualties) + calculateValue(defender.tactic, TacticCalc.Casualties)
   const status_a = convertCohorts(attacker, settings, tactic_casualties, terrains, unit_types)
-  const status_d = convertCohorts(defender, settings, tactic_casualties, terrains, unit_types)
-  const participant_a: CombatParticipant = {
+  const general_pips = toObj(values(CombatPhase), phase => phase, phase => calculateGeneralPips(attacker.general, defender.general, phase))
+  const terrain_pips = side === Side.Attacker ? calculateTerrainPips(terrains) : 0
+  return {
     cohorts: status_a,
     dice: 0,
     flank: attacker.flank_size,
     tactic: attacker.tactic!,
-    roll_terrain: calculateRollModifierFromTerrains(terrains),
-    roll_general: calculateRollModifierFromGenerals(attacker.general, defender.general),
-    roll_modifier: settings[Setting.BaseRoll],
+    terrain_pips,
+    general_pips,
+    roll_pips: toObj(values(CombatPhase), phase => phase, phase => general_pips[phase] + terrain_pips + settings[Setting.BaseRoll]),
     unit_preferences: attacker.unit_preferences,
     unit_types: map(attacker.definitions, unit => getUnitDefinition(settings, terrains, unit_types, { ...unit, id: -1 })),
     phase: CombatPhase.Default,
-    tactic_bonus: 1.0
+    tactic_bonus: 0.0
   }
-  participant_a.roll_modifier += participant_a.roll_general + participant_a.roll_terrain
-  const participant_d: CombatParticipant = {
-    cohorts: status_d,
-    dice: 0,
-    flank: defender.flank_size,
-    tactic: defender.tactic!,
-    roll_terrain: calculateRollModifierFromTerrains([]),
-    roll_general: calculateRollModifierFromGenerals(defender.general, attacker.general),
-    roll_modifier: settings[Setting.BaseRoll],
-    unit_preferences: defender.unit_preferences,
-    unit_types: map(defender.definitions, unit => getUnitDefinition(settings, terrains, unit_types, { ...unit, id: -1 })),
-    phase: CombatPhase.Default,
-    tactic_bonus: 1.0
-  }
-  participant_d.roll_modifier += participant_d.roll_general + participant_d.roll_terrain
-  return [participant_a, participant_d]
 }
 
 /**
