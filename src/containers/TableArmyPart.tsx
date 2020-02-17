@@ -7,7 +7,7 @@ import CombatTooltip from './CombatTooltip'
 import IconDefeated from 'images/attrition.png'
 import { Side, ArmyType, UnitAttribute } from 'types'
 import { getImage } from 'utils'
-import { CombatUnit } from 'combat'
+import { CombatCohort } from 'combat'
 import { AppState, getCurrentCombat, getCountry } from 'state'
 import { getArmyPart } from 'army_utils'
 import { flatten } from 'lodash'
@@ -166,7 +166,7 @@ type ICohort = {
   strength: number
 } | null
 
-const convertUnits = (units: (CombatUnit | null)[][]): ICohort[][] => (
+const convertUnits = (units: (CombatCohort | null)[][]): ICohort[][] => (
   units.map(row => row.map(unit => unit && {
     id: unit.definition.id,
     is_defeated: unit.state.is_defeated,

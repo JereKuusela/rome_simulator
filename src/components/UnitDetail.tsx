@@ -85,6 +85,8 @@ export default class UnitDetail extends Component<IProps> {
       return true
     if (!settings[Setting.FireAndShock] && (attribute === UnitAttribute.FireDamageDone || attribute === UnitAttribute.FireDamageTaken || attribute === UnitAttribute.ShockDamageDone || attribute === UnitAttribute.ShockDamageTaken))
       return true
+    if (!settings[Setting.FireAndShock] && (attribute === UnitAttribute.FirePips || attribute === UnitAttribute.ShockPips || attribute === UnitAttribute.MoralePips))
+      return true
     if (attribute === CombatPhase.Default)
       return true
     return false

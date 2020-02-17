@@ -4,7 +4,7 @@ import LineTo from 'react-lineto'
 
 import { AppState, getCurrentCombat } from 'state'
 import { ArmyType, Side } from 'types'
-import { CombatUnit } from 'combat'
+import { CombatCohort } from 'combat'
 import { getArmyPart } from 'army_utils'
 
 type Props = {
@@ -65,7 +65,7 @@ type IUnit = {
   target: number | null | undefined
 } | null
 
-const convertUnits = (units: (CombatUnit | null)[][]): IUnit[][] => (
+const convertUnits = (units: (CombatCohort | null)[][]): IUnit[][] => (
   units.map(row => row.map(unit => unit ? { id: unit.definition.id, target: unit.state.target?.definition.id } : null))
 )
 

@@ -1,7 +1,8 @@
 
-import { sumBy } from 'lodash'
+import { sumBy, clamp } from 'lodash'
 import { Terrain, TerrainCalc, Setting, UnitAttribute, Settings, BaseUnit, CombatPhase } from 'types'
 import { calculateValue } from 'definition_values'
+import { CombatUnit } from './combat'
 
 /**
  * Calculates the roll modifier based on skill level difference of generals.
@@ -15,28 +16,35 @@ export const calculateRollModifierFromGenerals = (skill: number, enemy_skill: nu
 export const calculateRollModifierFromTerrains = (terrains: Terrain[]): number => sumBy(terrains, terrain => calculateValue(terrain, TerrainCalc.Roll))
 
 /**
- * Modifies a dice roll with terrains and general skill levels.
- * @param roll Initial dice roll.
- * @param terrains List of terrains in the battlefield.
- * @param general Skill level of own general.
- * @param opposing_general Skill level of the enemy general.
+ * Calculates the roll modifier from unit pips.
  */
-export const calculateTotalRoll = (roll: number, terrains: Terrain[], general: number, opposing_general: number): number => {
-  const modifier_terrain = calculateRollModifierFromTerrains(terrains)
-  const modifier_effect = calculateRollModifierFromGenerals(general, opposing_general)
-  return roll + modifier_terrain + modifier_effect
+export const calculateRollModifierFromUnits = (source: CombatUnit, target: CombatUnit, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
+  return calculateRollModifierFromUnit(source, type, phase) - calculateRollModifierFromUnit(target, type, phase)
+}
+
+/**
+ * Calculates the roll modifier from unit pips.
+ */
+export const calculateRollModifierFromUnit = (unit: CombatUnit, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
+  if (type === UnitAttribute.Morale)
+    return unit[UnitAttribute.MoralePips] 
+  if (phase === CombatPhase.Shock)
+    return unit[UnitAttribute.ShockPips]
+  if (phase === CombatPhase.Fire)
+    return unit[UnitAttribute.FirePips]
+  return 0
 }
 
 /**
  * Calculates the base damage value from roll.
  * @param roll Dice roll with modifiers.
- * @param settings Combat parameters.
+ * @param settings Settings.
  */
 export const calculateBaseDamage = (roll: number, settings: Settings): number => {
-  const base_damage = settings[Setting.BaseDamage]
+  const base_roll = settings[Setting.BaseRoll]
   const roll_damage = settings[Setting.RollDamage]
-  const max_damage = settings[Setting.MaxBaseDamage]
-  return Math.min(max_damage, base_damage + roll_damage * roll)
+  const max_roll = settings[Setting.MaxRoll]
+  return roll_damage * clamp(base_roll + roll, 0, max_roll)
 }
 
 export const calculateExperienceReduction = (settings: Settings, target: BaseUnit) => {

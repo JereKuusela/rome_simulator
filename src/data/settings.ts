@@ -30,9 +30,9 @@ export const getDefaultNavalSettings = (): CombatSettings  => {
 
 const getDefaultAnySettings = (): CombatSettings => {
   return {
-    [Setting.BaseDamage]: 0.096,
+    [Setting.BaseRoll]: 4,
     [Setting.RollDamage]: 0.024,
-    [Setting.MaxBaseDamage]: 0.36,
+    [Setting.MaxRoll]: 15,
     [Setting.DiceMinimum]: 1,
     [Setting.DiceMaximum]: 6,
     [Setting.RollFrequency]: 5,

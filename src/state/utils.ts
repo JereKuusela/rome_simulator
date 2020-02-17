@@ -1,8 +1,8 @@
 import { AppState } from './index'
 import { toArr, filter, arrGet, toObj, forEach2, keys } from 'utils'
 import { filterUnitDefinitions, getArmyPart, mergeBaseUnitsWithDefinitions, mergeDefinitions, mergeDefinition } from '../army_utils'
-import { Mode, CountryName, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, Tactic, UnitPreferences, Participant, Terrain, Settings, Battle, Terrains, Tactics, Cohorts, ArmyName, GeneralStats, Countries, Setting, Reserve, Defeated, CountryAttribute, CombatPhase, Units, Unit } from 'types'
-import { CombatUnit, CombatUnits } from 'combat'
+import { Mode, CountryName, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, Tactic, UnitPreferences, Participant, Terrain, Settings, Battle, Terrains, Tactics, Cohorts, ArmyName, GeneralStats, Countries, Setting, Reserve, Defeated, CountryAttribute, Units, Unit } from 'types'
+import { CombatCohort, CombatCohorts, CombatParticipant } from 'combat'
 import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticState, getDefaultTerrainState } from 'data'
 import { sortBy, uniq, flatten } from 'lodash'
 import * as manager from 'managers/army'
@@ -34,7 +34,7 @@ export const findCohortById = (state: AppState, side: Side, id: number): Cohort 
   return null
 }
 
-export const getCombatUnit = (state: AppState, side: Side, type: ArmyType, id: number | null): CombatUnit | null => {
+export const getCombatUnit = (state: AppState, side: Side, type: ArmyType, id: number | null): CombatCohort | null => {
   if (id === null)
     return null
   const units = getCurrentCombat(state, side)
@@ -42,7 +42,7 @@ export const getCombatUnit = (state: AppState, side: Side, type: ArmyType, id: n
   return flatten(army).find(unit => unit?.definition.id === id) ?? null
 }
 
-const findCombatUnit = (units: CombatUnits, id: number): CombatUnit | null => {
+const findCombatUnit = (units: CombatCohorts, id: number): CombatCohort | null => {
   let unit = units.reserve.find(unit => unit.definition.id === id) || null
   if (unit)
     return unit
@@ -57,7 +57,7 @@ const findCombatUnit = (units: CombatUnits, id: number): CombatUnit | null => {
 
 export const getCombatUnitForEachRound = (state: AppState, side: Side, id: number) => {
   const rounds = state.battle[state.settings.mode].participants[side].rounds
-  return rounds.map(units => findCombatUnit(units, id))
+  return rounds.map(participant => findCombatUnit(participant.cohorts, id))
 }
 
 /**
@@ -147,9 +147,14 @@ export const getArmyForCombat = (state: AppState, side: Side, mode?: Mode): Army
   return { ...units, tactic, general, flank_size: army.flank_size, unit_preferences: army.unit_preferences, definitions }
 }
 
-export const getCurrentCombat = (state: AppState, side: Side): CombatUnits => {
+export const getCurrentCombat = (state: AppState, side: Side): CombatCohorts => {
   const participant = state.battle[state.settings.mode].participants[side]
-  return arrGet(participant.rounds, -1) ?? { frontline: [], reserve: [], defeated: [], tactic_bonus: 0, phase: CombatPhase.Default }
+  return arrGet(participant.rounds, -1)?.cohorts ?? { frontline: [], reserve: [], defeated: [] }
+}
+
+export const getCombatParticipant = (state: AppState, side: Side): CombatParticipant => {
+  const participant = state.battle[state.settings.mode].participants[side]
+  return arrGet(participant.rounds, -1)!
 }
 
 export const getSelectedTactic = (state: AppState, side: Side): Tactic => {

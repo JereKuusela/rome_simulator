@@ -7,7 +7,7 @@ import UnitDetail from 'components/UnitDetail'
 
 import { AppState, filterUnitTypesByCountry, filterTerrainTypes, findCohortById, getCombatUnitForEachRound, getMode, getSettings } from 'state'
 import { ValuesType, Side, CountryName, UnitType, Cohort, UnitAttribute, UnitValueType } from 'types'
-import { CombatUnit } from 'combat'
+import { CombatCohort } from 'combat'
 import { addValues } from 'definition_values'
 import { editCohort, deleteCohort, invalidate, setCohortValue, changeCohortType, toggleCohortLoyality } from 'reducers'
 
@@ -90,7 +90,7 @@ class ModalCohortDetail extends Component<IProps> {
 }
 
 
-const convertUnit = (definition: Cohort | null, rounds: (CombatUnit | null)[]): Cohort | null => {
+const convertUnit = (definition: Cohort | null, rounds: (CombatCohort | null)[]): Cohort | null => {
   if (!definition)
     return null
   rounds.forEach((combat, round) => {

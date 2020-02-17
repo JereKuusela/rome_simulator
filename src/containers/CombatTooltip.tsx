@@ -1,15 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Popup, List } from 'semantic-ui-react'
-import { last } from 'lodash'
 
 import StyledNumber from 'components/Utils/StyledNumber'
 
 import { Mode, Side, ArmyType, UnitAttribute, UnitType, Setting, TacticCalc, TerrainType, CombatPhase } from 'types'
-import { calculateTotalRoll, calculateBaseDamage, CombatUnitDefinition, CombatUnitRoundInfo, CombatUnit } from 'combat'
-import { toSignedPercent, toManpower, strengthToValue, toNumber } from 'formatters'
+import { CombatUnit, CombatUnitRoundInfo, CombatCohort, calculateRollModifierFromUnits, calculateBaseDamage, calculateRollModifierFromUnit } from 'combat'
+import { toSignedPercent, toManpower, strengthToValue, toNumber, addSign, toMultiplier } from 'formatters'
 import { calculateValue } from 'definition_values'
-import { AppState, getCurrentCombat, getParticipant, getSettings, getSelectedTerrains, getGeneralStats, getCountry, getTactic, getCombatUnit } from 'state'
+import { AppState, getSettings, getSelectedTerrains, getGeneralStats, getCountry, getTactic, getCombatUnit, getCombatParticipant } from 'state'
 import { getOpponent } from 'army_utils'
 
 type Props = {
@@ -53,17 +52,18 @@ class CombatTooltip extends Component<IProps, IState> {
   getExplanation = (id: number | null, is_support: boolean) => {
     if (id === null)
       return null
-    const { source, tactic_bonus, roll, side, settings, terrains, general_s, general_t } = this.props
+    const { source, participant } = this.props
     if (!source)
       return null
+
     const target = source.target
-    const total = calculateTotalRoll(roll, side === Side.Attacker ? terrains : [], general_s, general_t)
-    const base_damage = calculateBaseDamage(total, settings)
     return (
       <List>
         {this.getInfoSection(source, target)}
         {target && <List.Item />}
-        {target && this.getBaseSection(source, target, base_damage, tactic_bonus, is_support)}
+        {target && this.getBaseDamageSection(source, target)}
+        {target && <List.Item />}
+        {target && this.getTotalDamageSection(source, target, participant.tactic_bonus, is_support)}
         {target && <List.Item />}
         {target && this.getStrengthSection(source, target)}
         {target && <List.Item />}
@@ -73,49 +73,90 @@ class CombatTooltip extends Component<IProps, IState> {
   }
 
   toNumber = (value: number) => toNumber(value, 3)
+  toAdd = (value: number) => value ? addSign(Number(this.toNumber(value))) : null
+  toMultiplier = (value: number) => toMultiplier(value, 3)
 
-  getBaseSection = (source: IUnit, target: IUnit, base_damage: number, tactic_damage: number, is_support: boolean) => {
-    const { terrains, settings, phase } = this.props
+  getBaseDamageSection = (source: IUnit, target: IUnit) => {
+    const { participant } = this.props
+    const { phase } = participant
+    const phase_roll = calculateRollModifierFromUnits(source, target, UnitAttribute.Strength, phase)
+    const morale_roll = calculateRollModifierFromUnits(source, target, UnitAttribute.Morale)
+    const multi = phase_roll || morale_roll
+
+    if (multi) {
+      return (<>
+        {this.getBaseDamageSubSection(source, target, UnitAttribute.Strength, phase)}
+        {<List.Item />}
+        {this.getBaseDamageSubSection(source, target, UnitAttribute.Morale)}
+      </>)
+    }
+    return (<>
+      {this.getBaseDamageSubSection(source, target, '')}
+    </>)
+  }
+
+  getBaseDamageSubSection = (source: IUnit, target: IUnit, type: UnitAttribute.Strength | UnitAttribute.Morale | '', phase?: CombatPhase) => {
+    const { settings, participant } = this.props
+    const { dice, roll_terrain, roll_general } = participant
+    const base_roll = settings[Setting.BaseRoll]
+    const source_roll = type ? calculateRollModifierFromUnit(source, type, phase) : 0
+    const target_roll = type ? -calculateRollModifierFromUnit(target, type, phase) : 0
+    const total_roll = dice + roll_terrain + roll_general + source_roll + target_roll
+    return (<>
+      {this.renderModifier('Base pips', base_roll, this.toAdd)}
+      {this.renderModifier('Dice pips', dice, this.toAdd)}
+      {this.renderModifier('Terrain pips', roll_terrain, this.toAdd)}
+      {this.renderModifier('General pips', roll_general, this.toAdd)}
+      {this.renderModifier(type + ' pips', source_roll, this.toAdd)}
+      {this.renderModifier('Enemy pips', target_roll, this.toAdd)}
+      {this.renderModifier('Roll damage', settings[Setting.RollDamage], this.toMultiplier)}
+      {this.renderItem('Base ' + type.toLowerCase() + ' damage', calculateBaseDamage(total_roll, settings), this.toNumber)}
+    </>)
+  }
+
+  getTotalDamageSection = (source: IUnit, target: IUnit, tactic_damage: number, is_support: boolean) => {
+    const { terrains, settings, participant } = this.props
+    const { phase } = participant
     const terrain_types = terrains.map(value => value.type)
     const strength = source[UnitAttribute.Strength] + source.strength_loss
     const offense_vs_defense = source[UnitAttribute.Offense] - target[UnitAttribute.Defense]
     const experience_reduction = target.experience_reduction
     const target_type = source[target.type]
     const is_loyal = source.is_loyal
-    const total_damage = source.damage_dealt
+    const total_damage = source.damage_multiplier
 
     const attributes: (UnitAttribute | UnitType)[] = [UnitAttribute.Discipline, UnitAttribute.DamageDone]
     const target_attributes: (UnitAttribute | UnitType)[] = [UnitAttribute.DamageTaken]
 
     return (<>
-      {this.renderItem('Base damage', base_damage, this.toNumber)}
       {this.renderStyledItem('Tactic', tactic_damage, toSignedPercent)}
       {this.renderStyledItem('Loyal', is_loyal ? 0.1 : 0, toSignedPercent)}
       {attributes.map(attribute => this.getAttribute(source, attribute))}
       {this.renderStyledItem(target.type, target_type, toSignedPercent)}
       {this.renderStyledItem('Offense vs Defense', offense_vs_defense, toSignedPercent)}
-      {settings[Setting.DisciplineDamageReduction] && this.renderStyledItem('Target discipline', 1/(target[UnitAttribute.Discipline] + 1) - 1, toSignedPercent)}
-      {this.renderStyledItem('Target experience', experience_reduction, toSignedPercent)}
+      {settings[Setting.DisciplineDamageReduction] && this.renderStyledItem('Target discipline', 1 / (target[UnitAttribute.Discipline] + 1) - 1, toSignedPercent)}
+      {this.renderStyledItem('Enemy experience', experience_reduction, toSignedPercent)}
       {target_attributes.map(terrain => this.getAttribute(target, terrain))}
       {terrain_types.map(terrain => this.getAttribute(source, terrain))}
       {is_support && this.renderStyledItem(UnitAttribute.BackrowEffectiveness, source[UnitAttribute.BackrowEffectiveness] - 1, toSignedPercent)}
-      {settings[Setting.FireAndShock] && this.renderMultiplier(phase, source[phase], String)}
-      {this.renderMultiplier('Unit strength', strength, toNumber)}
-      {this.renderItem('Total damage', total_damage, this.toNumber)}
+      {settings[Setting.FireAndShock] && this.renderModifier(phase, source[phase], this.toMultiplier)}
+      {this.renderModifier('Unit strength', strength, this.toMultiplier)}
+      {this.renderItem('Damage multiplier', total_damage, this.toMultiplier)}
     </>)
   }
 
   getStrengthSection = (source: IUnit, target: IUnit) => {
-    const { settings, tactic_s, tactic_t, mode, phase } = this.props
+    const { settings, tactic_s, tactic_t, mode, participant } = this.props
+    const { phase } = participant
     const strength_lost_multiplier = settings[Setting.StrengthLostMultiplier]
     const tactic_casualties = calculateValue(tactic_s, TacticCalc.Casualties) + calculateValue(tactic_t, TacticCalc.Casualties)
     const strength_damage = source.strength_dealt
 
     return (<>
-      {this.renderMultiplier('Constant', strength_lost_multiplier, value => mode === Mode.Land ? toManpower(value) : String(value))}
+      {this.renderModifier('Constant', strength_lost_multiplier, value => mode === Mode.Land ? this.toMultiplier(Number(toManpower(value))) : this.toMultiplier(value))}
       {this.renderStyledItem('Tactic casualties', tactic_casualties, toSignedPercent)}
-      {settings[Setting.FireAndShock] && this.getAttribute(source, phase === CombatPhase.Shock ? UnitAttribute.ShockDamageDone: UnitAttribute.FireDamageDone)}
-      {settings[Setting.FireAndShock] && this.getAttribute(target, phase === CombatPhase.Shock ? UnitAttribute.ShockDamageTaken: UnitAttribute.FireDamageTaken)}
+      {settings[Setting.FireAndShock] && this.getAttribute(source, phase === CombatPhase.Shock ? UnitAttribute.ShockDamageDone : UnitAttribute.FireDamageDone)}
+      {settings[Setting.FireAndShock] && this.getAttribute(target, phase === CombatPhase.Shock ? UnitAttribute.ShockDamageTaken : UnitAttribute.FireDamageTaken)}
       {this.getAttribute(source, UnitAttribute.StrengthDamageDone)}
       {this.getAttribute(target, UnitAttribute.StrengthDamageTaken)}
       {this.renderItem('Strength damage', strength_damage, value => strengthToValue(mode, value))}
@@ -129,10 +170,10 @@ class CombatTooltip extends Component<IProps, IState> {
     const morale_damage = source.morale_dealt
 
     return (<>
-      {this.renderMultiplier('Constant', morale_lost_multiplier, String)}
+      {this.renderModifier('Constant', morale_lost_multiplier, this.toMultiplier)}
       {this.getAttribute(source, UnitAttribute.MoraleDamageDone)}
       {this.getAttribute(target, UnitAttribute.MoraleDamageTaken)}
-      {this.renderMultiplier('Unit morale', morale, toNumber)}
+      {this.renderModifier('Unit morale', morale, this.toMultiplier)}
       {this.renderItem('Morale damage', morale_damage, this.toNumber)}
     </>)
   }
@@ -210,25 +251,26 @@ class CombatTooltip extends Component<IProps, IState> {
     )
   }
 
-  renderMultiplier = (label: string, value: number, formatter: (value: number) => string) => {
-    if (!value)
+  renderModifier = (label: string, value: number, formatter: (value: number) => string | null) => {
+    const str = formatter(value)
+    if (!str)
       return null
     return (
       <List.Item>
         {label}
         {': '}
-        <span className={this.BLUE}>{'x' + formatter(value)}</span>
+        <span className={this.BLUE}>{str}</span>
       </List.Item>
     )
   }
 }
 
 
-interface IUnit extends CombatUnitDefinition, Omit<CombatUnitRoundInfo, 'target'> {
+interface IUnit extends CombatUnit, Omit<CombatUnitRoundInfo, 'target'> {
   target: IUnit | null
 }
 
-const convertUnit = (unit: CombatUnit | null, convert_target: boolean = true): IUnit | null => {
+const convertUnit = (unit: CombatCohort | null, convert_target: boolean = true): IUnit | null => {
   if (!unit)
     return null
   return {
@@ -241,9 +283,7 @@ const convertUnit = (unit: CombatUnit | null, convert_target: boolean = true): I
 
 const mapStateToProps = (state: AppState, props: Props) => ({
   source: convertUnit(getCombatUnit(state, props.side, props.army, props.id)),
-  tactic_bonus: getCurrentCombat(state, props.side).tactic_bonus,
-  phase: getCurrentCombat(state, props.side).phase,
-  roll: (last(getParticipant(state, props.side).rolls) || { roll: 0 }).roll,
+  participant: getCombatParticipant(state, props.side),
   settings: getSettings(state),
   terrains: getSelectedTerrains(state),
   general_s: getGeneralStats(state, getCountry(state, props.side)).martial,

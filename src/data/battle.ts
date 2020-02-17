@@ -13,7 +13,7 @@ export const getDefaultParticipant = (name: CountryName): Participant => {
     country: name,
     rounds: [],
     rolls: [],
-    roll: 3,
+    dice: 3,
     randomize_roll: false
   }
 }

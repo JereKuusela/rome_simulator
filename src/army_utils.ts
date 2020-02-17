@@ -1,7 +1,7 @@
 import { Cohorts, Mode, UnitDefinitionValues, ArmyType, Side, BaseUnits, UnitType, Units, Unit } from 'types'
 import { mergeValues } from 'definition_values'
 import { map, filter } from 'utils'
-import { CombatUnits } from 'combat'
+import { CombatCohorts } from 'combat'
 
 /**
  * Merges base units with their definitions resulting in real units.
@@ -44,7 +44,7 @@ let unit_id = 0
  */
 export const getNextId = () => ++unit_id
 
-export const getArmyPart = (units: CombatUnits, type: ArmyType) => {
+export const getArmyPart = (units: CombatCohorts, type: ArmyType) => {
   if (type === ArmyType.Frontline)
     return units.frontline
   if (type === ArmyType.Reserve)

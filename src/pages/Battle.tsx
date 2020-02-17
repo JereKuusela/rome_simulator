@@ -3,8 +3,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Button, Checkbox, Divider, Grid, Header, Image, Input, Table } from 'semantic-ui-react'
 import {
-    calculateBaseDamage, calculateRollModifierFromGenerals, calculateRollModifierFromTerrains,
-    calculateTotalRoll
+    calculateRollModifierFromGenerals, calculateRollModifierFromTerrains,
+    calculateBaseDamage
 } from 'combat'
 import ConfirmationButton from 'components/ConfirmationButton'
 import Dropdown from 'components/Utils/Dropdown'
@@ -249,16 +249,17 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderRoll = (side: Side, roll: number, is_random: boolean, general: number, opposing_general: number) => {
-    const terrain_effect = side === Side.Attacker ? calculateRollModifierFromTerrains(this.props.selected_terrains.map(value => this.props.terrains[value])) : 0
+  renderRoll = (side: Side, dice: number, is_random: boolean, general: number, opposing_general: number) => {
+    const { selected_terrains, terrains, settings } = this.props
+    const terrain_effect = side === Side.Attacker ? calculateRollModifierFromTerrains(selected_terrains.map(value => terrains[value])) : 0
     const general_effect = calculateRollModifierFromGenerals(general, opposing_general)
-    const total = calculateTotalRoll(roll, side === Side.Attacker ? this.props.selected_terrains.map(value => this.props.terrains[value]) : [], general, opposing_general)
-    const base_damage = calculateBaseDamage(total, this.props.settings)
+    const total = terrain_effect + general_effect + dice
+    const base_damage = calculateBaseDamage(total, settings)
     return (
       <div key={side}>
         {base_damage.toFixed(3)} :
         <span style={{ paddingLeft: '1em' }} /><Image src={IconDice} avatar />
-        {is_random ? roll : <Input size='mini' style={{ width: 100 }} type='number' value={roll} onChange={(_, data) => this.props.setRoll(side, Number(data.value))} />}
+        {is_random ? dice : <Input size='mini' style={{ width: 100 }} type='number' value={dice} onChange={(_, data) => this.props.setRoll(side, Number(data.value))} />}
         {general_effect !== 0 ?
           <span style={{ paddingLeft: '1em' }}>
             <Image src={IconGeneral} avatar />
@@ -317,7 +318,7 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderArmyInfo = (side: Side, participant: Participant, stats: GeneralStats, enemy: GeneralStats): JSX.Element => {
+  renderArmyInfo = (side: Side, participant: Participant, stats: GeneralStats, enemy: GeneralStats) => {
     return (
       <Table.Row key={side}>
         <Table.Cell collapsing>
@@ -338,7 +339,7 @@ class Battle extends Component<IProps, IState> {
           <TacticSelector side={side} />
         </Table.Cell>
         <Table.Cell>
-          {this.renderRoll(side, participant.roll, participant.randomize_roll, stats.martial, enemy.martial)}
+          {this.renderRoll(side, participant.dice, participant.randomize_roll, stats.martial, enemy.martial)}
         </Table.Cell>
         <Table.Cell collapsing>
           {this.renderIsRollRandom(side, participant.randomize_roll)}

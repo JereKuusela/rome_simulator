@@ -7,7 +7,7 @@ import IconStrength from 'images/naval_combat.png'
 import IconMorale from 'images/morale.png'
 import IconEmpty from 'images/empty.png'
 import { Mode, Side, UnitType, UnitAttribute } from 'types'
-import { CombatUnits, CombatUnit } from 'combat'
+import { CombatCohorts, CombatCohort } from 'combat'
 import { strengthToValue } from 'formatters'
 import { getImage, round, sumArr } from 'utils'
 import { AppState, getCurrentCombat, filterUnitTypesBySide } from 'state'
@@ -25,7 +25,7 @@ class Stats extends Component<IProps> {
     )
   }
 
-  renderArmy = (side: Side, units: CombatUnits, types: UnitType[]) => {
+  renderArmy = (side: Side, units: CombatCohorts, types: UnitType[]) => {
     const rows = types.map(type => this.renderRow(units, type)).filter(row => row)
     const flatten = this.flatten(units)
     return (
@@ -74,7 +74,7 @@ class Stats extends Component<IProps> {
     )
   }
 
-  renderRow = (units: CombatUnits, type: UnitType) => {
+  renderRow = (units: CombatCohorts, type: UnitType) => {
     const flatten = this.flatten(units, type)
     const count = flatten.length
     if (count === 0)
@@ -101,14 +101,14 @@ class Stats extends Component<IProps> {
     )
   }
 
-  sum = (merged: CombatUnit[], getAttribute: (unit: CombatUnit) => number): number => sumArr(merged, value => Math.max(0, getAttribute(value)))
+  sum = (merged: CombatCohort[], getAttribute: (unit: CombatCohort) => number): number => sumArr(merged, value => Math.max(0, getAttribute(value)))
 
   // Flattens units to a single list. Also filters temporary 'defeated' units because they are copies of another unit.
-  flatten = (units: CombatUnits, type?: UnitType): CombatUnit[] => (
-    units.reserve.filter(unit => this.filter(unit, type)).concat(units.defeated.filter(unit => this.filter(unit, type)).concat(flatten(units.frontline).filter(unit => this.filter(unit, type)) as CombatUnit[]))
+  flatten = (units: CombatCohorts, type?: UnitType): CombatCohort[] => (
+    units.reserve.filter(unit => this.filter(unit, type)).concat(units.defeated.filter(unit => this.filter(unit, type)).concat(flatten(units.frontline).filter(unit => this.filter(unit, type)) as CombatCohort[]))
   )
 
-  filter = (unit: CombatUnit | null, type?: UnitType) => unit && !unit.state.is_defeated && (!type || unit.definition.type === type)
+  filter = (unit: CombatCohort | null, type?: UnitType) => unit && !unit.state.is_defeated && (!type || unit.definition.type === type)
 }
 
 const mapStateToProps = (state: AppState) => ({

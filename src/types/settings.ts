@@ -13,9 +13,9 @@ export enum Setting {
   ExperienceDamageReduction = 'Damage reduction for 100% experience',
   DiceMinimum = 'Minimum dice roll',
   DiceMaximum = 'Maximum dice roll',
-  BaseDamage = 'Base damage',
+  BaseRoll = 'Base roll',
   RollDamage = 'Base damage per dice roll',
-  MaxBaseDamage = 'Maximum base damage',
+  MaxRoll = 'Maximum roll',
   MinimumMorale = 'Minimum morale for combat',
   MinimumStrength = 'Minimum strength for combat',
   RollFrequency = 'Length of combat phases',
@@ -48,9 +48,9 @@ export enum SimulationSpeed {
 
 export const parameterToDescription = (parameter: Setting, value: string | number | boolean): string => {
   switch (parameter) {
-    case Setting.BaseDamage:
-      return 'Base damage for all units.\nIncrease for faster battles and less randomness.\nDecrease for slower battles and more randomness.'
-    case Setting.MaxBaseDamage:
+    case Setting.BaseRoll:
+      return 'Base roll for all units.\nIncrease for faster battles and less randomness.\nDecrease for slower battles and more randomness.'
+    case Setting.MaxRoll:
       return 'Reduces and caps effect of high martial generals.\nIncrease for more benefit from skilled generals.\nDecrease for less benefit from skilled generals.'
     case Setting.CombatWidth:
       return 'How many units can fight at the same time.\nIncrease for faster big battles and more effective flanking.\nDecrease for slower big battles and less effective flanking.'
@@ -138,8 +138,8 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
 }
 
 export type CombatSettings = {
-  [Setting.BaseDamage]: number,
-  [Setting.MaxBaseDamage]: number,
+  [Setting.BaseRoll]: number,
+  [Setting.MaxRoll]: number,
   [Setting.CombatWidth]: number,
   [Setting.DiceMaximum]: number,
   [Setting.DiceMinimum]: number,

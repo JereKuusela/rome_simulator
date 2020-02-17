@@ -21,7 +21,7 @@ export const undo = (battle: Battle, steps: number) => {
       seed = battle.custom_seed ? battle.custom_seed : 0
     forEach(battle.participants, value => {
       value.rounds.pop()
-      value.roll = arrGet(value.rolls, -2, { roll: value.roll }).roll
+      value.dice = arrGet(value.rolls, -2, { dice: value.dice }).dice
       value.rolls.pop()
     })
     battle.round--
@@ -36,7 +36,7 @@ export const toggleRandomRoll = (battle: Battle, side: Side) => {
 }
 
 export const setRoll = (battle: Battle, side: Side, roll: number) => {
-  battle.participants[side].roll = roll
+  battle.participants[side].dice = roll
 }
 
 export const selectArmy = (battle: Battle, side: Side, name: CountryName) => {

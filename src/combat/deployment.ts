@@ -1,20 +1,20 @@
-import { CombatUnit, CombatUnits, Reserve, CombatParticipant } from './combat'
+import { CombatCohort, CombatCohorts, Reserve, CombatParticipant } from './combat'
 import { UnitPreferences, UnitAttribute, UnitPreferenceType, UnitRole, Setting, Settings } from 'types'
 import { nextIndex } from './reinforcement'
 import { sortBy, remove, clamp } from 'lodash'
 
 export type SortedReserve = {
-  front: CombatUnit[]
-  flank: CombatUnit[]
-  support: CombatUnit[]
+  front: CombatCohort[]
+  flank: CombatCohort[]
+  support: CombatCohort[]
   length: number
 }
 
-const armySize = (units: CombatUnits) => {
+const armySize = (units: CombatCohorts) => {
   return units.frontline[0].filter(unit => unit).length + units.reserve.length
 }
 
-const deployArmy = (units: CombatUnits, left_flank: number, right_flank: number, sorted: SortedReserve) => {
+const deployCohorts = (units: CombatCohorts, left_flank: number, right_flank: number, sorted: SortedReserve) => {
   const frontline = units.frontline[0]
   const backline = units.frontline.length > 1 ? units.frontline[1] : null
   const reserve = units.reserve
@@ -100,7 +100,7 @@ export const sortReserve = (reserve: Reserve, unit_preferences: UnitPreferences)
   return { front, flank, support, length: front.length + flank.length + support.length }
 }
 
-const isFrontUnit = (preferences: UnitPreferences, unit: CombatUnit) => {
+const isFrontUnit = (preferences: UnitPreferences, unit: CombatCohort) => {
   if (unit.definition.type === preferences[UnitPreferenceType.Flank])
     return false
   if (unit.definition.type === preferences[UnitPreferenceType.Primary] || unit.definition.type === preferences[UnitPreferenceType.Secondary])
@@ -108,7 +108,7 @@ const isFrontUnit = (preferences: UnitPreferences, unit: CombatUnit) => {
   return unit.definition.deployment === UnitRole.Front
 }
 
-const isFlankUnit = (preferences: UnitPreferences, unit: CombatUnit) => {
+const isFlankUnit = (preferences: UnitPreferences, unit: CombatCohort) => {
   if (unit.definition.type === preferences[UnitPreferenceType.Flank])
     return true
   if (unit.definition.type === preferences[UnitPreferenceType.Primary] || unit.definition.type === preferences[UnitPreferenceType.Secondary])
@@ -116,7 +116,7 @@ const isFlankUnit = (preferences: UnitPreferences, unit: CombatUnit) => {
   return unit.definition.deployment === UnitRole.Flank
 }
 
-const isSupportUnit = (preferences: UnitPreferences, unit: CombatUnit) => {
+const isSupportUnit = (preferences: UnitPreferences, unit: CombatCohort) => {
   if (unit.definition.type === preferences[UnitPreferenceType.Flank])
     return false
   if (unit.definition.type === preferences[UnitPreferenceType.Primary] || unit.definition.type === preferences[UnitPreferenceType.Secondary])
@@ -124,11 +124,11 @@ const isSupportUnit = (preferences: UnitPreferences, unit: CombatUnit) => {
   return unit.definition.deployment === UnitRole.Support
 }
 
-const isAlive = (unit: CombatUnit, minimum_morale: number, minimum_strength: number) => (
+const isAlive = (unit: CombatCohort, minimum_morale: number, minimum_strength: number) => (
   unit[UnitAttribute.Morale] > minimum_morale && unit[UnitAttribute.Strength] > minimum_strength
 )
 
-const removeDefeated = (units: CombatUnits, minimum_morale: number, minimum_strength: number) => {
+const removeDefeated = (units: CombatCohorts, minimum_morale: number, minimum_strength: number) => {
   const frontline = units.frontline
   const reserve = units.reserve
   const defeated = units.defeated
@@ -162,7 +162,7 @@ const removeDefeated = (units: CombatUnits, minimum_morale: number, minimum_stre
  * @param reserve Sorted reserve to get amount of flanking units.
  * @param enemy_units Enemy units to calculate space on the battlefield.
  */
-const calculateFlankSizes = (combat_width: number, preferred_flank_size: number, reserve: SortedReserve, enemy_units: CombatUnits): [number, number] => {
+const calculateFlankSizes = (combat_width: number, preferred_flank_size: number, reserve: SortedReserve, enemy_units: CombatCohorts): [number, number] => {
   const space_needed_for_flanking_units = Math.ceil(reserve.flank.length / 2.0)
   const target_flank_size = Math.min(space_needed_for_flanking_units, preferred_flank_size)
 
@@ -178,15 +178,15 @@ const calculateFlankSizes = (combat_width: number, preferred_flank_size: number,
 }
 
 export const deploy = (attacker: CombatParticipant, defender: CombatParticipant, settings: Settings) => {
-  removeDefeated(attacker.army, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength])
-  removeDefeated(defender.army, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength])
+  removeDefeated(attacker.cohorts, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength])
+  removeDefeated(defender.cohorts, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength])
 
-  const sorted_a = sortReserve(attacker.army.reserve, attacker.unit_preferences)
-  const sorted_d = sortReserve(defender.army.reserve, defender.unit_preferences)
+  const sorted_a = sortReserve(attacker.cohorts.reserve, attacker.unit_preferences)
+  const sorted_d = sortReserve(defender.cohorts.reserve, defender.unit_preferences)
 
-  const [left_flank_a, right_flank_a] = calculateFlankSizes(settings[Setting.CombatWidth], attacker.flank, sorted_a, defender.army)
-  const [left_flank_d, right_flank_d] = calculateFlankSizes(settings[Setting.CombatWidth], defender.flank, sorted_d, attacker.army)
+  const [left_flank_a, right_flank_a] = calculateFlankSizes(settings[Setting.CombatWidth], attacker.flank, sorted_a, defender.cohorts)
+  const [left_flank_d, right_flank_d] = calculateFlankSizes(settings[Setting.CombatWidth], defender.flank, sorted_d, attacker.cohorts)
 
-  deployArmy(attacker.army, left_flank_a, right_flank_a, sorted_a)
-  deployArmy(defender.army, left_flank_d, right_flank_d, sorted_d)
+  deployCohorts(attacker.cohorts, left_flank_a, right_flank_a, sorted_a)
+  deployCohorts(defender.cohorts, left_flank_d, right_flank_d, sorted_d)
 }

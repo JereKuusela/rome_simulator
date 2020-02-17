@@ -1,8 +1,8 @@
 import { ArmyForCombat } from 'state'
-import { Terrain, UnitType, Setting, TacticCalc, Cohort, UnitAttribute, Side, Settings, Cohorts, CombatPhase } from 'types'
-import { calculateTotalRoll } from './combat_utils'
+import { Terrain, UnitType, Setting, TacticCalc, UnitAttribute, Side, Settings, Cohorts, CombatPhase } from 'types'
+import { calculateRollModifierFromTerrains, calculateRollModifierFromGenerals } from './combat_utils'
 import { calculateValue } from 'definition_values'
-import { CombatParticipant, getCombatUnit, CombatUnits, Frontline, Defeated, doBattleFast, Reserve, getUnitDefinition, CombatUnitTypes } from './combat'
+import { CombatParticipant, getCombatUnit, CombatCohorts, Frontline, Defeated, doBattleFast, Reserve, getUnitDefinition, CombatUnitTypes } from './combat'
 import { mapRange, map } from 'utils'
 import { deploy } from './deployment'
 
@@ -61,28 +61,37 @@ let interruptSimulation = false
 
 
 export const doConversion = (attacker: ArmyForCombat, defender: ArmyForCombat, terrains: Terrain[], unit_types: UnitType[], settings: Settings) => {
-  const dice = settings[Setting.DiceMaximum] - settings[Setting.DiceMinimum] + 1
-  const base_damages_a = getBaseDamages(settings, dice, calculateTotalRoll(0, terrains, attacker.general, defender.general))
-  const base_damages_d = getBaseDamages(settings, dice, calculateTotalRoll(0, [], defender.general, attacker.general))
   const tactic_casualties = calculateValue(attacker.tactic, TacticCalc.Casualties) + calculateValue(defender.tactic, TacticCalc.Casualties)
-  const status_a = convertUnits(attacker, settings, tactic_casualties, base_damages_a, terrains, unit_types)
-  const status_d = convertUnits(defender, settings, tactic_casualties, base_damages_d, terrains, unit_types)
+  const status_a = convertCohorts(attacker, settings, tactic_casualties, terrains, unit_types)
+  const status_d = convertCohorts(defender, settings, tactic_casualties, terrains, unit_types)
   const participant_a: CombatParticipant = {
-    army: status_a,
-    roll: 0,
+    cohorts: status_a,
+    dice: 0,
     flank: attacker.flank_size,
     tactic: attacker.tactic!,
+    roll_terrain: calculateRollModifierFromTerrains(terrains),
+    roll_general: calculateRollModifierFromGenerals(attacker.general, defender.general),
+    roll_modifier: settings[Setting.BaseRoll],
     unit_preferences: attacker.unit_preferences,
-    unit_types: map(attacker.definitions, unit => getUnitDefinition(settings, terrains, unit_types, { ...unit, id: -1 }))
+    unit_types: map(attacker.definitions, unit => getUnitDefinition(settings, terrains, unit_types, { ...unit, id: -1 })),
+    phase: CombatPhase.Default,
+    tactic_bonus: 1.0
   }
+  participant_a.roll_modifier += participant_a.roll_general + participant_a.roll_terrain
   const participant_d: CombatParticipant = {
-    army: status_d,
-    roll: 0,
+    cohorts: status_d,
+    dice: 0,
     flank: defender.flank_size,
     tactic: defender.tactic!,
+    roll_terrain: calculateRollModifierFromTerrains([]),
+    roll_general: calculateRollModifierFromGenerals(defender.general, attacker.general),
+    roll_modifier: settings[Setting.BaseRoll],
     unit_preferences: defender.unit_preferences,
-    unit_types: map(defender.definitions, unit => getUnitDefinition(settings, terrains, unit_types, { ...unit, id: -1 }))
+    unit_types: map(defender.definitions, unit => getUnitDefinition(settings, terrains, unit_types, { ...unit, id: -1 })),
+    phase: CombatPhase.Default,
+    tactic_bonus: 1.0
   }
+  participant_d.roll_modifier += participant_d.roll_general + participant_d.roll_terrain
   return [participant_a, participant_d]
 }
 
@@ -135,10 +144,10 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
 
   const total_a: State = { morale: 0, strength: 0 }
   const current_a: State = { morale: 0, strength: 0 }
-  sumState(total_a, attacker.army)
+  sumState(total_a, attacker.cohorts)
   const total_d: State = { morale: 0, strength: 0 }
   const current_d: State = { morale: 0, strength: 0 }
-  sumState(total_d, defender.army)
+  sumState(total_d, defender.cohorts)
 
   const casualties: CasualtiesProgress = {
     avg_morale_a: 0,
@@ -155,6 +164,8 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
     strength_d: {}
   }
 
+  const base_damages = getBaseDamages(settings)
+
 
   // Overview of the algorithm:
   // Initial state is the first node.
@@ -167,7 +178,7 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
   // Nodes know their depth which determines their weight for win rate.
 
   // Nodes also cache state of units, only store what is absolutely necessary.
-  const nodes = [{ status_a: attacker.army, status_d: defender.army, branch: 0, depth: 1 }]
+  const nodes = [{ status_a: attacker.cohorts, status_d: defender.cohorts, branch: 0, depth: 1 }]
 
   progressCallback(progress, casualties, resurce_losses)
 
@@ -176,15 +187,15 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
       progress.iterations = progress.iterations + 1
       const node = nodes[nodes.length - 1]
       // Most of the data is expected to change, so it's better to deep clone which allows mutations.
-      const units_a = copyStatus(node.status_a)
-      const units_d = copyStatus(node.status_d)
+      const cohorts_a = copyStatus(node.status_a)
+      const cohorts_d = copyStatus(node.status_d)
 
       const [roll_a, roll_d] = rolls[node.branch]
-      attacker.roll = roll_a
-      defender.roll = roll_d
-      attacker.army = units_a
-      defender.army = units_d
-      let result = doPhase(node.depth, phaseLength, attacker, defender, settings)
+      attacker.dice = roll_a
+      defender.dice = roll_d
+      attacker.cohorts = cohorts_a
+      defender.cohorts = cohorts_d
+      let result = doPhase(base_damages, node.depth, phaseLength, attacker, defender, settings)
 
       node.branch++
       if (node.branch === dice_2)
@@ -195,21 +206,21 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
         depth++
         // Current node will be still used so the cache must be deep cloned.  
         // Branch starts at 1 because the current execution is 0.
-        nodes.push({ status_a: copyStatus(units_a), status_d: copyStatus(units_d), branch: 1, depth })
+        nodes.push({ status_a: copyStatus(cohorts_a), status_d: copyStatus(cohorts_d), branch: 1, depth })
         const [roll_a, roll_d] = rolls[0];
-        attacker.roll = roll_a
-        defender.roll = roll_d
-        attacker.army = units_a
-        defender.army = units_d
-        result = doPhase(depth, phaseLength, attacker, defender, settings)
+        attacker.dice = roll_a
+        defender.dice = roll_d
+        attacker.cohorts = cohorts_a
+        defender.cohorts = cohorts_d
+        result = doPhase(base_damages, depth, phaseLength, attacker, defender, settings)
       }
-      sumState(current_a, attacker.army)
-      sumState(current_d, defender.army)
+      sumState(current_a, attacker.cohorts)
+      sumState(current_d, defender.cohorts)
       if (settings[Setting.CalculateCasualties])
         updateCasualties(casualties, fractions[depth], total_a, total_d, current_a, current_d)
       if (settings[Setting.CalculateResourceLosses]) {
-        calculateResourceLoss(attacker.army.frontline, attacker.army.defeated, fractions[depth], losses_a, losses_d, attacker.unit_types, defender.unit_types)
-        calculateResourceLoss(defender.army.frontline, defender.army.defeated, fractions[depth], losses_d, losses_a, defender.unit_types, attacker.unit_types)
+        calculateResourceLoss(attacker.cohorts.frontline, attacker.cohorts.defeated, fractions[depth], losses_a, losses_d, attacker.unit_types, defender.unit_types)
+        calculateResourceLoss(defender.cohorts.frontline, defender.cohorts.defeated, fractions[depth], losses_d, losses_a, defender.unit_types, attacker.unit_types)
       }
       result.round += (depth - 1) * phaseLength
       updateProgress(progress, fractions[depth], result)
@@ -229,19 +240,17 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
   worker()
 }
 
-export const convertUnits = (units: Cohorts, settings: Settings, casualties_multiplier: number, base_damages: number[], terrains: Terrain[], unit_types: UnitType[]) => ({
-  frontline: units.frontline.map((row, index) => row.map(unit => getCombatUnit(settings, casualties_multiplier, base_damages, terrains, unit_types, unit as Cohort))),
-  reserve: units.reserve.map(unit => getCombatUnit(settings, casualties_multiplier, base_damages, terrains, unit_types, unit as Cohort)!),
-  defeated: units.defeated.map(unit => getCombatUnit(settings, casualties_multiplier, base_damages, terrains, unit_types, unit as Cohort)!),
-  tactic_bonus: 0,
-  phase: CombatPhase.Default
+export const convertCohorts = (cohorts: Cohorts, settings: Settings, casualties_multiplier: number, terrains: Terrain[], unit_types: UnitType[]): CombatCohorts => ({
+  frontline: cohorts.frontline.map(row => row.map(cohort => getCombatUnit(settings, casualties_multiplier, terrains, unit_types, cohort))),
+  reserve: cohorts.reserve.map(cohort => getCombatUnit(settings, casualties_multiplier, terrains, unit_types, cohort)!),
+  defeated: cohorts.defeated.map(cohort => getCombatUnit(settings, casualties_multiplier, terrains, unit_types, cohort )!)
 })
 
 
 /**
  * Precalculates base damage values for each roll.
  */
-export const getBaseDamages = (settings: Settings, dice: number, modifier: number) => mapRange(dice + 1, roll => Math.min(settings[Setting.MaxBaseDamage], settings[Setting.BaseDamage] + settings[Setting.RollDamage] * (roll + modifier)))
+export const getBaseDamages = (settings: Settings) => mapRange(100, roll => Math.min(settings[Setting.MaxRoll], roll) * settings[Setting.RollDamage])
 
 /**
  * Returns a balanced set of rolls. Higher rolls are prioritized to give results faster.
@@ -261,12 +270,10 @@ const getRolls = (minimum: number, maximum: number) => {
 /**
  * Custom clone function to only copy state and keep references to constant data same.
  */
-const copyStatus = (status: CombatUnits): CombatUnits => ({
+const copyStatus = (status: CombatCohorts): CombatCohorts => ({
   frontline: status.frontline.map(row => row.map(value => value ? { ...value } : null)),
   reserve: status.reserve.map(value => ({ ...value })),
-  defeated: status.defeated.map(value => ({ ...value })),
-  tactic_bonus: status.tactic_bonus,
-  phase: status.phase
+  defeated: status.defeated.map(value => ({ ...value }))
 })
 
 const REPAIR_PER_MONTH = 0.1
@@ -315,15 +322,15 @@ type Winner = Side | null | undefined
 /**
  * Simulates one dice roll phase.
  */
-const doPhase = (depth: number, rounds_per_phase: number, attacker: CombatParticipant, defender: CombatParticipant, settings: Settings) => {
+const doPhase = (base_damages: number[], depth: number, rounds_per_phase: number, attacker: CombatParticipant, defender: CombatParticipant, settings: Settings) => {
   let winner: Winner = undefined
   let round = 0
   for (round = 0; round < rounds_per_phase;) {
-    doBattleFast(attacker, defender, false, settings, round + depth * rounds_per_phase)
+    doBattleFast(attacker, defender, false, base_damages, settings, round + depth * rounds_per_phase)
     round++
 
-    const alive_a = checkAlive(attacker.army.frontline, attacker.army.reserve)
-    const alive_d = checkAlive(defender.army.frontline, defender.army.reserve)
+    const alive_a = checkAlive(attacker.cohorts.frontline, attacker.cohorts.reserve)
+    const alive_d = checkAlive(defender.cohorts.frontline, defender.cohorts.reserve)
     if (!alive_a && !alive_d)
       winner = null
     if (alive_a && !alive_d)
@@ -357,7 +364,7 @@ type State = {
 /**
  * Counts total morale and strength of units.
  */
-const sumState = (state: State, units: CombatUnits) => {
+const sumState = (state: State, units: CombatCohorts) => {
   state.strength = 0
   state.morale = 0
   for (let i = 0; i < units.frontline.length; i++) {

@@ -1,5 +1,5 @@
 import { CountryName, Mode, TerrainType } from 'types'
-import { CombatUnits } from 'combat'
+import { CombatParticipant } from 'combat'
 
 export interface Battle {
   terrains: TerrainType[],
@@ -21,15 +21,15 @@ export type Participants = { [key in Side]: Participant }
 export type ModeState = { [key in Mode]: Battle }
 
 interface Rolls {
-  roll: number
+  dice: number
   randomized: boolean
 }
 
 export interface Participant {
   country: CountryName
-  rounds: CombatUnits[],
+  rounds: CombatParticipant[],
   rolls: Rolls[],
-  roll: number,
+  dice: number,
   randomize_roll: boolean
 }
 
