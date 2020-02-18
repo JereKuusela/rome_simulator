@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Grid, Button, Table, Header, Checkbox } from 'semantic-ui-react'
 
 import { AppState, getSettings, getSelectedTerrains, mergeUnitTypes, getArmyForCombat, getMode } from 'state'
-import { CasualtiesProgress, ResourceLosses, interrupt, WinRateProgress, ResourceLossesProgress, doConversion, calculateWinRate, initResourceLosses } from 'combat'
+import { CasualtiesProgress, ResourceLosses, interrupt, WinRateProgress, ResourceLossesProgress, convertParticipant, calculateWinRate, initResourceLosses } from 'combat'
 import { values, showProgress } from 'utils'
 import { SimulationSpeed, Setting, Side, Mode } from 'types'
 import { toPercent, toNumber, toFlooredPercent } from 'formatters'
@@ -360,7 +360,8 @@ class Statistics extends Component<IProps, IState> {
 
   calculate = () => {
     const { attacker, defender, terrains, settings, unit_types } = this.props
-    const [combat_a, combat_d] = doConversion(attacker, defender, terrains, unit_types, settings)
+    const combat_a = convertParticipant(Side.Attacker, attacker, defender, terrains, unit_types, settings)
+    const combat_d = convertParticipant(Side.Defender, defender, attacker, terrains, unit_types, settings)
     calculateWinRate(settings, this.update, combat_a, combat_d)
   }
 

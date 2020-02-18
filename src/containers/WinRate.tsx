@@ -6,7 +6,7 @@ import StyledNumber from 'components/Utils/StyledNumber'
 
 import { AppState, getSettings, getSelectedTerrains, mergeUnitTypes, getArmyForCombat } from 'state'
 import { toPercent, toFlooredPercent } from 'formatters'
-import { interrupt, WinRateProgress, doConversion, calculateWinRate } from 'combat'
+import { interrupt, WinRateProgress, convertParticipant, calculateWinRate } from 'combat'
 import { showProgress } from 'utils'
 import { Side, Setting } from 'types'
 
@@ -82,7 +82,8 @@ class WinRate extends Component<IProps, IState> {
 
   calculate = () => {
     const { attacker, defender, settings, terrains, unit_types } = this.props
-    const [combat_a, combat_d] = doConversion(attacker, defender, terrains, unit_types, settings)
+    const combat_a = convertParticipant(Side.Attacker, attacker, defender, terrains, unit_types, settings)
+    const combat_d = convertParticipant(Side.Defender, defender, attacker, terrains, unit_types, settings)
     const modified_settings = { ...settings, [Setting.CalculateWinChance]: true, [Setting.CalculateCasualties]: false, [Setting.CalculateResourceLosses]: false }
     calculateWinRate(modified_settings, this.update, combat_a, combat_d)
   }

@@ -176,7 +176,7 @@ export const getCountry = (state: AppState, side: Side): CountryName => {
   return state.battle[state.settings.mode].participants[side].country
 }
 
-const getGeneral = (state: AppState, country: CountryName) => getArmy(state, country).general
+export const getGeneral = (state: AppState, country: CountryName) => getArmy(state, country).general
 const getArmy = (state: AppState, country: CountryName) => state.countries[country].armies[state.settings.mode][ArmyName.Army1]
 
 export const getGeneralStats = (state: AppState, country: CountryName): GeneralStats => manager.getGeneralStats(getGeneral(state, country))

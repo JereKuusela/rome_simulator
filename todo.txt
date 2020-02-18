@@ -34,7 +34,7 @@ Changelog:
 - Units: Added a new attribute for reducing daily morale losses, feature from EUIV.
 - Units: Added new attributes for Fire and Shock phases, feature from EUIV.
 - Units: Added new attributes for Fire damage done, Fire damage taken, Shock damage done and Shock damage taken, feature from EUIV.
-- Units: Added new attributes for Fire and Shock pips, feature from EUIV.
+- Units: Added new attributes for Offensive fire, Defensive fire, Offensive shock, Defensive shock, Offensive Morale and Defensive morale pips, feature from EUIV.
 - Units: Added support for changing the base type of a unit (allows more flexible unit hierarchies, for EUIV).
 - Units: Removed support for changing unit mode (land or naval), instead it is derived from the base unit.
 - Units: Removed support for global unit mode (units are now either land or naval units).

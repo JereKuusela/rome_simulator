@@ -23,22 +23,28 @@ export const calculateTerrainPips = (terrains: Terrain[]): number => sumBy(terra
  * Calculates the roll modifier from unit pips.
  */
 export const calculateUnitPips = (source: CombatUnit, target: CombatUnit, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
-  return getUnitPips(source, type, phase) - getUnitPips(target, type, phase)
+  return getOffensiveUnitPips(source, type, phase) + getDefensiveUnitPips(target, type, phase)
 }
 
-/**
- * Calculates the roll modifier from unit pips.
- */
-export const getUnitPips = (unit: CombatUnit, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
+export const getOffensiveUnitPips = (unit: CombatUnit, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
   if (type === UnitAttribute.Morale)
-    return unit[UnitAttribute.MoralePips] 
+    return unit[UnitAttribute.OffensiveMoralePips] 
   if (phase === CombatPhase.Shock)
-    return unit[UnitAttribute.ShockPips]
+    return unit[UnitAttribute.OffensiveShockPips]
   if (phase === CombatPhase.Fire)
-    return unit[UnitAttribute.FirePips]
+    return unit[UnitAttribute.OffensiveFirePips]
   return 0
 }
 
+export const getDefensiveUnitPips = (unit: CombatUnit, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
+  if (type === UnitAttribute.Morale)
+    return -unit[UnitAttribute.DefensiveMoralePips] 
+  if (phase === CombatPhase.Shock)
+    return -unit[UnitAttribute.DefensiveShockPips]
+  if (phase === CombatPhase.Fire)
+    return -unit[UnitAttribute.DefensiveFirePips]
+  return 0
+}
 /**
  * Calculates the base damage value from roll.
  * @param roll Dice roll with modifiers.

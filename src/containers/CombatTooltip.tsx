@@ -5,7 +5,7 @@ import { Popup, List } from 'semantic-ui-react'
 import StyledNumber from 'components/Utils/StyledNumber'
 
 import { Mode, Side, ArmyType, UnitAttribute, UnitType, Setting, TacticCalc, TerrainType, CombatPhase } from 'types'
-import { CombatUnit, CombatUnitRoundInfo, CombatCohort, calculateUnitPips, calculateBaseDamage, getUnitPips } from 'combat'
+import { CombatUnit, CombatUnitRoundInfo, CombatCohort, calculateUnitPips, calculateBaseDamage, getOffensiveUnitPips, getDefensiveUnitPips } from 'combat'
 import { toSignedPercent, toManpower, strengthToValue, toNumber, addSign, toMultiplier } from 'formatters'
 import { calculateValue } from 'definition_values'
 import { AppState, getSettings, getSelectedTerrains, getGeneralStats, getCountry, getTactic, getCombatUnit, getCombatParticipant } from 'state'
@@ -99,16 +99,17 @@ class CombatTooltip extends Component<IProps, IState> {
     const { settings, participant } = this.props
     const { dice, terrain_pips, general_pips } = participant
     const base_roll = settings[Setting.BaseRoll]
-    const source_roll = type ? getUnitPips(source, type, phase) : 0
-    const target_roll = type ? -getUnitPips(target, type, phase) : 0
+    const source_roll = type ? getOffensiveUnitPips(source, type, phase) : 0
+    const target_roll = type ? getDefensiveUnitPips(target, type, phase) : 0
     const total_roll = dice + terrain_pips + general_pips[phase] + source_roll + target_roll
+    const text = type === UnitAttribute.Morale ? UnitAttribute.Morale : phase
     return (<>
       {this.renderModifier('Base pips', base_roll, this.toAdd)}
       {this.renderModifier('Dice pips', dice, this.toAdd)}
       {this.renderModifier('Terrain pips', terrain_pips, this.toAdd)}
       {this.renderModifier('General pips', general_pips[phase], this.toAdd)}
-      {this.renderModifier(type + ' pips', source_roll, this.toAdd)}
-      {this.renderModifier('Enemy pips', target_roll, this.toAdd)}
+      {this.renderModifier(text + ' pips', source_roll, this.toAdd)}
+      {this.renderModifier('Enemy ' + text.toLowerCase() + ' pips', target_roll, this.toAdd)}
       {this.renderModifier('Roll damage', settings[Setting.RollDamage], this.toMultiplier)}
       {this.renderItem('Base ' + type.toLowerCase() + ' damage', calculateBaseDamage(total_roll, settings), this.toNumber)}
     </>)
