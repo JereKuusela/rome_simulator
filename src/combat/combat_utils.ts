@@ -72,3 +72,5 @@ export const getCombatPhase = (round: number, settings: Settings) => {
   }
   return CombatPhase.Default
 }
+
+export const getDailyIncrease = (round: number, settings: Settings) => settings[Setting.DailyDamageIncrease] * (round + 1)

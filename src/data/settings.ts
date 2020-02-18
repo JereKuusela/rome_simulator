@@ -61,6 +61,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
     [Setting.ShowGraphs]: false,
     [Setting.DisciplineDamageReduction]: false,
     [Setting.DailyMoraleLoss]: 0,
+    [Setting.DailyDamageIncrease]: 0,
     [Setting.FireAndShock]: false
   }
 }

@@ -3,7 +3,7 @@ import { sumBy, values } from 'lodash'
 import { Tactic, UnitPreferences, Terrain, UnitType, Cohort, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, UnitValueType } from 'types'
 import { toObj, map } from 'utils'
 import { calculateValue, calculateValueWithoutLoss, calculateBase } from 'definition_values'
-import { calculateExperienceReduction, getCombatPhase, calculateUnitPips } from './combat_utils'
+import { calculateExperienceReduction, getCombatPhase, calculateUnitPips, getDailyIncrease } from './combat_utils'
 import { reinforce } from './reinforcement'
 
 
@@ -14,7 +14,7 @@ import { reinforce } from './reinforcement'
 export type CombatParticipant = {
   cohorts: CombatCohorts
   tactic_bonus: number
-  phase: CombatPhase
+  round: number
   unit_types: CombatUnitTypes
   tactic: Tactic
   flank: number
@@ -192,12 +192,13 @@ export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, mark_de
 
   // Tactic bonus changes dynamically when units lose strength so it can't be precalculated.
   // If this is a problem a fast mode can be implemeted where to bonus is only calculated once.
-  a.tactic_bonus = calculateTactic(a.cohorts, a.tactic, d.tactic)
-  a.phase = phase
-  d.phase = phase
-  d.tactic_bonus = calculateTactic(d.cohorts, d.tactic, a.tactic)
-  attack(base_damages, a.cohorts.frontline, a.dice + a.roll_pips[phase], 1 + a.tactic_bonus, phase)
-  attack(base_damages, d.cohorts.frontline, d.dice + d.roll_pips[phase], 1 + d.tactic_bonus, phase)
+  a.round = round
+  d.round = round
+  const daily_multiplier = 1 + getDailyIncrease(round, settings)
+  const multiplier_a = (1 + calculateTactic(a.cohorts, a.tactic, d.tactic)) * daily_multiplier
+  const multiplier_d = (1 + calculateTactic(d.cohorts, d.tactic, a.tactic)) * daily_multiplier
+  attack(base_damages, a.cohorts.frontline, a.dice + a.roll_pips[phase], multiplier_a, phase)
+  attack(base_damages, d.cohorts.frontline, d.dice + d.roll_pips[phase], multiplier_d, phase)
 
   applyLosses(a.cohorts.frontline)
   applyLosses(d.cohorts.frontline)
@@ -331,7 +332,7 @@ export const removeDefeated = (frontline: Frontline) => {
 /**
  * Calculates losses when units attack their targets.
  */
-const attack = (base_damages: number[], frontline: Frontline, roll: number, tactic_damage_multiplier: number, phase: CombatPhase) => {
+const attack = (base_damages: number[], frontline: Frontline, roll: number, dynamic_multiplier: number, phase: CombatPhase) => {
   for (let i = 0; i < frontline.length; i++) {
     for (let j = 0; j < frontline[i].length; j++) {
       const unit = frontline[i][j]
@@ -341,7 +342,7 @@ const attack = (base_damages: number[], frontline: Frontline, roll: number, tact
       if (!target)
         continue
       target.state.capture_chance = unit.definition[UnitAttribute.CaptureChance]
-      calculateLosses(base_damages, unit, target, roll, tactic_damage_multiplier, i > 0, phase)
+      calculateLosses(base_damages, unit, target, roll, dynamic_multiplier, i > 0, phase)
     }
   }
 }
@@ -362,10 +363,10 @@ const precalculateDamageReduction = (unit: Cohort, settings: Settings) => (
   / (settings[Setting.DisciplineDamageReduction] ? 1.0 + calculateValue(unit, UnitAttribute.Discipline) : 1.0)
 )
 
-const calculateDynamicDamageMultiplier = (source: CombatCohort, target: CombatCohort, tactic_damage_multiplier: number, is_support: boolean) => {
+const calculateCohortDamageMultiplier = (source: CombatCohort, target: CombatCohort, is_support: boolean) => {
   const definition_s = source.definition
   const definition_t = target.definition
-  return tactic_damage_multiplier * source[UnitAttribute.Strength]
+  return source[UnitAttribute.Strength]
     * (1.0 + definition_s[UnitAttribute.Offense] - definition_t[UnitAttribute.Defense])
     * (is_support ? definition_s[UnitAttribute.BackrowEffectiveness] : 1.0)
 }
@@ -375,14 +376,14 @@ const calculateDynamicBaseDamage = (roll: number, source: CombatCohort, target: 
 /**
  * Calculates both strength and morale losses caused by a given source to a given target.
  */
-const calculateLosses = (base_damages: number[], source: CombatCohort, target: CombatCohort, roll: number, tactic_damage_multiplier: number, is_support: boolean, phase: CombatPhase) => {
+const calculateLosses = (base_damages: number[], source: CombatCohort, target: CombatCohort, roll: number, dynamic_multiplier: number, is_support: boolean, phase: CombatPhase) => {
   const strength_roll = calculateDynamicBaseDamage(roll, source, target, UnitAttribute.Strength, phase)
   const morale_roll = calculateDynamicBaseDamage(roll, source, target, UnitAttribute.Morale)
-  const multiplier = calculateDynamicDamageMultiplier(source, target, tactic_damage_multiplier, is_support)
-  const strength_lost = base_damages[strength_roll] * multiplier * source.calculated.damage[UnitAttribute.Strength][target.definition.type][phase] * target.calculated.strength_taken_multiplier[phase]
-  const morale_lost = base_damages[morale_roll] * multiplier * source.calculated.damage[UnitAttribute.Morale][target.definition.type][phase] * source[UnitAttribute.Morale] * target.calculated.morale_taken_multiplier
+  dynamic_multiplier *= calculateCohortDamageMultiplier(source, target, is_support)
+  const strength_lost = base_damages[strength_roll] * dynamic_multiplier * source.calculated.damage[UnitAttribute.Strength][target.definition.type][phase] * target.calculated.strength_taken_multiplier[phase]
+  const morale_lost = base_damages[morale_roll] * dynamic_multiplier * source.calculated.damage[UnitAttribute.Morale][target.definition.type][phase] * source[UnitAttribute.Morale] * target.calculated.morale_taken_multiplier
 
-  source.state.damage_multiplier = multiplier * source.calculated.damage['Damage'][target.definition.type][phase] / PRECISION
+  source.state.damage_multiplier = dynamic_multiplier * source.calculated.damage['Damage'][target.definition.type][phase] / PRECISION
   source.state.morale_dealt = Math.floor(morale_lost) / PRECISION
   source.state.strength_dealt = Math.floor(strength_lost) / PRECISION
   source.state.total_morale_dealt += source.state.morale_dealt

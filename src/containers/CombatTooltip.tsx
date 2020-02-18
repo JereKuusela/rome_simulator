@@ -5,7 +5,7 @@ import { Popup, List } from 'semantic-ui-react'
 import StyledNumber from 'components/Utils/StyledNumber'
 
 import { Mode, Side, ArmyType, UnitAttribute, UnitType, Setting, TacticCalc, TerrainType, CombatPhase } from 'types'
-import { CombatUnit, CombatUnitRoundInfo, CombatCohort, calculateUnitPips, calculateBaseDamage, getOffensiveUnitPips, getDefensiveUnitPips } from 'combat'
+import { CombatUnit, CombatUnitRoundInfo, CombatCohort, calculateUnitPips, calculateBaseDamage, getOffensiveUnitPips, getDefensiveUnitPips, getCombatPhase, getDailyIncrease } from 'combat'
 import { toSignedPercent, toManpower, strengthToValue, toNumber, addSign, toMultiplier } from 'formatters'
 import { calculateValue } from 'definition_values'
 import { AppState, getSettings, getSelectedTerrains, getGeneralStats, getCountry, getTactic, getCombatUnit, getCombatParticipant } from 'state'
@@ -77,8 +77,9 @@ class CombatTooltip extends Component<IProps, IState> {
   toMultiplier = (value: number) => toMultiplier(value, 3)
 
   getBaseDamageSection = (source: IUnit, target: IUnit) => {
-    const { participant } = this.props
-    const { phase } = participant
+    const { participant, settings } = this.props
+    const { round } = participant
+    const phase = getCombatPhase(round, settings)
     const phase_roll = calculateUnitPips(source, target, UnitAttribute.Strength, phase)
     const morale_roll = calculateUnitPips(source, target, UnitAttribute.Morale)
     const multi = phase_roll || morale_roll
@@ -117,7 +118,9 @@ class CombatTooltip extends Component<IProps, IState> {
 
   getTotalDamageSection = (source: IUnit, target: IUnit, tactic_damage: number, is_support: boolean) => {
     const { terrains, settings, participant } = this.props
-    const { phase } = participant
+    const { round } = participant
+    const phase = getCombatPhase(round, settings)
+    const daily_damage = getDailyIncrease(round, settings)
     const terrain_types = terrains.map(value => value.type)
     const strength = source[UnitAttribute.Strength] + source.strength_loss
     const offense_vs_defense = source[UnitAttribute.Offense] - target[UnitAttribute.Defense]
@@ -140,6 +143,7 @@ class CombatTooltip extends Component<IProps, IState> {
       {target_attributes.map(terrain => this.getAttribute(target, terrain))}
       {terrain_types.map(terrain => this.getAttribute(source, terrain))}
       {is_support && this.renderStyledItem(UnitAttribute.BackrowEffectiveness, source[UnitAttribute.BackrowEffectiveness] - 1, toSignedPercent)}
+      {this.renderStyledItem('Battle length', daily_damage, toSignedPercent)}
       {settings[Setting.FireAndShock] && this.renderModifier(phase, source[phase], this.toMultiplier)}
       {this.renderModifier('Unit strength', strength, this.toMultiplier)}
       {this.renderItem('Damage multiplier', total_damage, this.toMultiplier)}
@@ -148,7 +152,8 @@ class CombatTooltip extends Component<IProps, IState> {
 
   getStrengthSection = (source: IUnit, target: IUnit) => {
     const { settings, tactic_s, tactic_t, mode, participant } = this.props
-    const { phase } = participant
+    const { round } = participant
+    const phase = getCombatPhase(round, settings)
     const strength_lost_multiplier = settings[Setting.StrengthLostMultiplier]
     const tactic_casualties = calculateValue(tactic_s, TacticCalc.Casualties) + calculateValue(tactic_t, TacticCalc.Casualties)
     const strength_damage = source.strength_dealt

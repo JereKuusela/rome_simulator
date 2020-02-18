@@ -75,8 +75,8 @@ export const convertParticipant = (side: Side, attacker: ArmyForCombat, defender
     roll_pips: toObj(values(CombatPhase), phase => phase, phase => general_pips[phase] + terrain_pips + settings[Setting.BaseRoll]),
     unit_preferences: attacker.unit_preferences,
     unit_types: map(attacker.definitions, unit => getUnitDefinition(settings, terrains, unit_types, { ...unit, id: -1 })),
-    phase: CombatPhase.Default,
-    tactic_bonus: 0.0
+    tactic_bonus: 0.0,
+    round: 0
   }
 }
 

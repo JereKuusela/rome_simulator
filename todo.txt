@@ -50,6 +50,7 @@ Changelog:
 - Settings: Added a new setting for discipline reducing damage, feature from EUIV.
 - Settings: Added a new setting for daily morale losses, feature from EUIV.
 - Settings: Added a new setting for enabling fire and shock phases, feature from EUIV.
+- Settings: Added a new setting for daily damage increase, feature from EUIV.
 
 Todo:
  - Transfer could only show non-base stats for units, terrains and tactics (since base stats are supposed to regenerate?), currently it shows way too much information.
@@ -81,7 +82,6 @@ EUIV:
  - Setting for martial cap (0 for disabled)
  - Units: Available units determined by tech level + culture (selector should sort by tech level + show pips)
  - Units on the backline take full morale casualties
- - Increasing daily multiplier (1% per day)
  - Combat ability directly increases damage
  - General and unit pips affect dice rolls (enemy ones reduce)
 
