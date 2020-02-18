@@ -48,7 +48,7 @@ export default class UnitDetail extends Component<IProps> {
 
   render() {
     const { unit, onTypeChange, onBaseTypeChange, onImageChange, onChangeDeployment, onIsLoyalToggle } = this.props
-    const { terrain_types, unit_types, unit_types_as_dropdown } = this.props
+    const { terrain_types, unit_types, unit_types_as_dropdown, settings } = this.props
     const { id, type, mode, base, image, role: deployment, is_loyal } = unit
     return (
       <Table celled selectable unstackable>
@@ -63,8 +63,8 @@ export default class UnitDetail extends Component<IProps> {
           {onChangeDeployment && <DetailDropdownRow text='Deployment' cells={this.CELLS} value={deployment} values={this.deployments} onChange={onChangeDeployment} />}
           {<DetailToggleRow text='Is loyal?' cells={this.CELLS} value={!!is_loyal} onChange={onIsLoyalToggle} />}
           {this.attributes.map(this.renderRow)}
-          {unit_types && unit_types.map(this.renderRow)}
-          {terrain_types && terrain_types.map(this.renderRow)}
+          {settings[Setting.AttributeUnitType] && unit_types && unit_types.map(this.renderRow)}
+          {settings[Setting.AttributeTerrainType] && terrain_types && terrain_types.map(this.renderRow)}
           {[CombatPhase.Fire, CombatPhase.Shock].map(this.renderRow)}
         </Table.Body>
       </Table>
@@ -88,6 +88,22 @@ export default class UnitDetail extends Component<IProps> {
     if (!settings[Setting.FireAndShock] && (attribute === UnitAttribute.OffensiveFirePips || attribute === UnitAttribute.OffensiveMoralePips || attribute === UnitAttribute.OffensiveShockPips))
       return true
     if (!settings[Setting.FireAndShock] && (attribute === UnitAttribute.DefensiveFirePips || attribute === UnitAttribute.DefensiveMoralePips || attribute === UnitAttribute.DefensiveShockPips))
+      return true
+    if (!settings[Setting.FireAndShock] && (attribute === UnitAttribute.DefensiveFirePips || attribute === UnitAttribute.DefensiveMoralePips || attribute === UnitAttribute.DefensiveShockPips))
+      return true
+    if (!settings[Setting.AttributeCombatAbility] && attribute === UnitAttribute.CombatAbility)
+      return true
+    if (!settings[Setting.AttributeDamage] && (attribute === UnitAttribute.DamageDone || attribute === UnitAttribute.DamageTaken))
+      return true
+    if (!settings[Setting.AttributeExperience] && attribute === UnitAttribute.Experience)
+      return true
+    if (!settings[Setting.AttributeMilitaryTactics] && attribute === UnitAttribute.MilitaryTactics)
+      return true
+    if (!settings[Setting.AttributeMoraleDamage] && (attribute === UnitAttribute.MoraleDamageDone || attribute === UnitAttribute.MoraleDamageTaken))
+      return true
+    if (!settings[Setting.AttributeOffenseDefense] && (attribute === UnitAttribute.Offense || attribute === UnitAttribute.Defense))
+      return true
+    if (!settings[Setting.AttributeStrengthDamage] && (attribute === UnitAttribute.StrengthDamageDone || attribute === UnitAttribute.StrengthDamageTaken))
       return true
     if (attribute === CombatPhase.Default)
       return true

@@ -62,7 +62,17 @@ export const getDefaultSiteSettings = (): SiteSettings => {
     [Setting.DisciplineDamageReduction]: false,
     [Setting.DailyMoraleLoss]: 0,
     [Setting.DailyDamageIncrease]: 0,
-    [Setting.FireAndShock]: false
+    [Setting.FireAndShock]: false,
+    [Setting.AttributeCombatAbility]: false,
+    [Setting.AttributeDamage]: true,
+    [Setting.AttributeDrill]: false,
+    [Setting.AttributeExperience]: true,
+    [Setting.AttributeMilitaryTactics]: false,
+    [Setting.AttributeMoraleDamage]: true,
+    [Setting.AttributeOffenseDefense]: true,
+    [Setting.AttributeStrengthDamage]: true,
+    [Setting.AttributeTerrainType]: true,
+    [Setting.AttributeUnitType]: true
   }
 }
 

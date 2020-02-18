@@ -31,6 +31,8 @@ Changelog:
 - Units: Improved maintenance costs (higher accuracy).
 - Units: Added new attributes: food consumption and storage.
 - Units: Added new attributes: capture chance and capture resist.
+- Units: Added a new attribute Combat ability, feature from EUIV.
+- Units: Added a new attribute Military tactics, feature from EUIV.
 - Units: Added a new attribute for reducing daily morale losses, feature from EUIV.
 - Units: Added new attributes for Fire and Shock phases, feature from EUIV.
 - Units: Added new attributes for Fire damage done, Fire damage taken, Shock damage done and Shock damage taken, feature from EUIV.
@@ -51,6 +53,7 @@ Changelog:
 - Settings: Added a new setting for daily morale losses, feature from EUIV.
 - Settings: Added a new setting for enabling fire and shock phases, feature from EUIV.
 - Settings: Added a new setting for daily damage increase, feature from EUIV.
+- Settings: Added new settings for enabling/disabling different unit attributes.
 
 Todo:
  - Transfer could only show non-base stats for units, terrains and tactics (since base stats are supposed to regenerate?), currently it shows way too much information.
@@ -75,13 +78,12 @@ Settings:
 
 EUIV:
  - Tooltip needs to show source of losses (to include daily loss)
- - Military tactics as defensive value (+ setting)
- - Derivate attributes (reduce flanking range based on strength)
+ - Derivate attributes (reduce flanking range based on strength, phase damage done and taken from drill)
  - Cavalry to infantry ratio (flank to front, country definition, + setting)
- - General maneuver pips
+ - General maneuver pips (removes crossing terrain penalties if higher)
  - Setting for martial cap (0 for disabled)
  - Units: Available units determined by tech level + culture (selector should sort by tech level + show pips)
- - Combat ability directly increases damage
+ - Backrow defensive pip transfer (50% effect, rounded down)
 
 Tests:
 - utils tested

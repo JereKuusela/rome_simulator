@@ -1,7 +1,7 @@
 
 import { sumBy, values } from 'lodash'
 import { Tactic, UnitPreferences, Terrain, UnitType, Cohort, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, UnitValueType } from 'types'
-import { toObj, map } from 'utils'
+import { toObj, map, noZero } from 'utils'
 import { calculateValue, calculateValueWithoutLoss, calculateBase } from 'definition_values'
 import { calculateExperienceReduction, getCombatPhase, calculateUnitPips, getDailyIncrease } from './combat_utils'
 import { reinforce } from './reinforcement'
@@ -54,13 +54,13 @@ const applyPhaseDamage = (unit: Cohort, value: number) => ({
   [CombatPhase.Shock]: value * calculateValue(unit, CombatPhase.Shock)
 })
 
-const applyUnitTypes = (unit: Cohort, unit_types: UnitType[], values: { [key in CombatPhase]: number }) => (
-  toObj(unit_types, type => type, type => map(values, damage => damage * (1.0 + calculateValue(unit, type))))
+const applyUnitTypes = (unit: Cohort, unit_types: UnitType[], settings: Settings, values: { [key in CombatPhase]: number }) => (
+  toObj(unit_types, type => type, type => map(values, damage => damage * getValue(unit, type, settings[Setting.AttributeUnitType])))
 )
 
 const applyDamageTypes = (unit: Cohort, settings: Settings, casualties_multiplier: number, values: { [key in UnitType]: { [key in CombatPhase]: number } }) => {
-  const morale_done = (1.0 + calculateValue(unit, UnitAttribute.MoraleDamageDone)) * settings[Setting.MoraleLostMultiplier]
-  const strength_done = applyPhaseDamageDone(unit, (1.0 + calculateValue(unit, UnitAttribute.StrengthDamageDone)) * settings[Setting.StrengthLostMultiplier] * (1.0 + casualties_multiplier))
+  const morale_done = getValue(unit, UnitAttribute.MoraleDamageDone, settings[Setting.AttributeMoraleDamage]) * settings[Setting.MoraleLostMultiplier]
+  const strength_done = applyPhaseDamageDone(unit, getValue(unit, UnitAttribute.StrengthDamageDone, settings[Setting.AttributeStrengthDamage]) * settings[Setting.StrengthLostMultiplier] * (1.0 + casualties_multiplier))
   return {
     [UnitAttribute.Strength]: map(values, values => map(values, (value, phase) => value * strength_done[phase])),
     [UnitAttribute.Morale]: map(values, values => map(values, value => value * morale_done)),
@@ -69,7 +69,7 @@ const applyDamageTypes = (unit: Cohort, settings: Settings, casualties_multiplie
 }
 
 const getDamages = (settings: Settings, casualties_multiplier: number, terrains: Terrain[], unit_types: UnitType[], unit: Cohort) => (
-  applyDamageTypes(unit, settings, casualties_multiplier, applyUnitTypes(unit, unit_types, applyPhaseDamage(unit, precalculateDamage(terrains, unit))))
+  applyDamageTypes(unit, settings, casualties_multiplier, applyUnitTypes(unit, unit_types, settings, applyPhaseDamage(unit, precalculateDamage(terrains, unit, settings))))
 )
 
 /**
@@ -79,11 +79,15 @@ const precalculateUnit = (settings: Settings, casualties_multiplier: number, ter
   const damage_reduction = precalculateDamageReduction(unit, settings)
   const info: CombatUnitPreCalculated = {
     damage: getDamages(settings, casualties_multiplier, terrains, unit_types, unit),
-    morale_taken_multiplier: damage_reduction * (1.0 + calculateValue(unit, UnitAttribute.MoraleDamageTaken)),
-    strength_taken_multiplier: applyPhaseDamageTaken(unit, damage_reduction * (1.0 + calculateValue(unit, UnitAttribute.StrengthDamageTaken)))
+    damage_taken_multiplier: damage_reduction,
+    morale_taken_multiplier: damage_reduction * getValue(unit, UnitAttribute.MoraleDamageTaken, settings[Setting.AttributeMoraleDamage]),
+    strength_taken_multiplier: applyPhaseDamageTaken(unit, damage_reduction * getValue(unit, UnitAttribute.StrengthDamageTaken, settings[Setting.AttributeStrengthDamage]))
   }
   return info
 }
+
+const getValue = (unit: Cohort, attribute: UnitValueType, enabled: boolean) => 1.0 + getMultiplier(unit, attribute, enabled)
+const getMultiplier = (unit: Cohort, attribute: UnitValueType, enabled: boolean) => enabled ? calculateValue(unit, attribute): 0
 
 export const getUnitDefinition = (combatSettings: Settings, terrains: Terrain[], unit_types: UnitType[], unit: Cohort): CombatUnit => {
   const info = {
@@ -128,6 +132,7 @@ type UnitCalcs = { [key in (UnitValueType)]: number }
  */
 export interface CombatUnitPreCalculated {
   damage: { [key in UnitAttribute.Strength | UnitAttribute.Morale | 'Damage']: { [key in UnitType]: { [key in CombatPhase]: number } } }  // Damage multiplier for each damage type, versus each unit and for each phase.
+  damage_taken_multiplier: number
   morale_taken_multiplier: number
   strength_taken_multiplier: { [key in CombatPhase]: number }
 }
@@ -197,8 +202,8 @@ export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, mark_de
   const daily_multiplier = 1 + getDailyIncrease(round, settings)
   const multiplier_a = (1 + calculateTactic(a.cohorts, a.tactic, d.tactic)) * daily_multiplier
   const multiplier_d = (1 + calculateTactic(d.cohorts, d.tactic, a.tactic)) * daily_multiplier
-  attack(base_damages, a.cohorts.frontline, a.dice + a.roll_pips[phase], multiplier_a, phase)
-  attack(base_damages, d.cohorts.frontline, d.dice + d.roll_pips[phase], multiplier_d, phase)
+  attack(base_damages, a.cohorts.frontline, a.dice + a.roll_pips[phase], multiplier_a, phase, settings)
+  attack(base_damages, d.cohorts.frontline, d.dice + d.roll_pips[phase], multiplier_d, phase, settings)
 
   applyLosses(a.cohorts.frontline)
   applyLosses(d.cohorts.frontline)
@@ -340,7 +345,7 @@ export const removeDefeated = (frontline: Frontline) => {
 /**
  * Calculates losses when units attack their targets.
  */
-const attack = (base_damages: number[], frontline: Frontline, roll: number, dynamic_multiplier: number, phase: CombatPhase) => {
+const attack = (base_damages: number[], frontline: Frontline, roll: number, dynamic_multiplier: number, phase: CombatPhase, settings: Settings) => {
   for (let i = 0; i < frontline.length; i++) {
     for (let j = 0; j < frontline[i].length; j++) {
       const unit = frontline[i][j]
@@ -350,48 +355,50 @@ const attack = (base_damages: number[], frontline: Frontline, roll: number, dyna
       if (!target)
         continue
       target.state.capture_chance = unit.definition[UnitAttribute.CaptureChance]
-      calculateLosses(base_damages, unit, target, roll, dynamic_multiplier, i > 0, phase)
+      calculateLosses(base_damages, unit, target, roll, dynamic_multiplier, i > 0, phase, settings)
     }
   }
 }
 
 const PRECISION = 100000.0
 
-const precalculateDamage = (terrains: Terrain[], unit: Cohort) => (
+const precalculateDamage = (terrains: Terrain[], unit: Cohort, settings: Settings) => (
   PRECISION
-  * (1.0 + calculateValue(unit, UnitAttribute.Discipline))
-  * (1.0 + calculateValue(unit, UnitAttribute.DamageDone))
-  * (1.0 + sumBy(terrains, terrain => calculateValue(unit, terrain.type)))
+  * getValue(unit, UnitAttribute.Discipline, true)
+  * getValue(unit, UnitAttribute.CombatAbility, settings[Setting.AttributeCombatAbility])
+  * getValue(unit, UnitAttribute.DamageDone, settings[Setting.AttributeDamage])
+  * (1.0 + sumBy(terrains, terrain => getMultiplier(unit, terrain.type, settings[Setting.AttributeTerrainType])))
   * (unit.is_loyal ? 1.1 : 1.0)
 )
 
 const precalculateDamageReduction = (unit: Cohort, settings: Settings) => (
-  (1.0 + calculateExperienceReduction(settings, unit))
-  * (1.0 + calculateValue(unit, UnitAttribute.DamageTaken))
-  / (settings[Setting.DisciplineDamageReduction] ? 1.0 + calculateValue(unit, UnitAttribute.Discipline) : 1.0)
+  (settings[Setting.AttributeExperience] ? 1.0 + calculateExperienceReduction(settings, unit) : 0)
+  * getValue(unit, UnitAttribute.DamageTaken, settings[Setting.AttributeDamage])
+  / noZero(getValue(unit, UnitAttribute.Discipline, settings[Setting.DisciplineDamageReduction]))
+  / noZero(getMultiplier(unit, UnitAttribute.MilitaryTactics, settings[Setting.AttributeMilitaryTactics]))
 )
 
-const calculateCohortDamageMultiplier = (source: CombatCohort, target: CombatCohort, is_support: boolean) => {
+const calculateCohortDamageMultiplier = (source: CombatCohort, target: CombatCohort, is_support: boolean, settings: Settings) => {
   const definition_s = source.definition
   const definition_t = target.definition
   return source[UnitAttribute.Strength]
-    * (1.0 + definition_s[UnitAttribute.Offense] - definition_t[UnitAttribute.Defense])
+    * (settings[Setting.AttributeOffenseDefense] ? 1.0 + definition_s[UnitAttribute.Offense] - definition_t[UnitAttribute.Defense] : 1.0)
     * (is_support ? definition_s[UnitAttribute.BackrowEffectiveness] : 1.0)
 }
 
-const calculateDynamicBaseDamage = (roll: number, source: CombatCohort, target: CombatCohort, type: UnitAttribute.Morale | UnitAttribute.Strength, phase?: CombatPhase)  => Math.max(0, roll + calculateUnitPips(source.definition, target.definition, type, phase))
+const calculateDynamicBaseDamage = (roll: number, source: CombatCohort, target: CombatCohort, type: UnitAttribute.Morale | UnitAttribute.Strength, phase?: CombatPhase) => Math.max(0, roll + calculateUnitPips(source.definition, target.definition, type, phase))
 
 /**
  * Calculates both strength and morale losses caused by a given source to a given target.
  */
-const calculateLosses = (base_damages: number[], source: CombatCohort, target: CombatCohort, roll: number, dynamic_multiplier: number, is_support: boolean, phase: CombatPhase) => {
+const calculateLosses = (base_damages: number[], source: CombatCohort, target: CombatCohort, roll: number, dynamic_multiplier: number, is_support: boolean, phase: CombatPhase, settings: Settings) => {
   const strength_roll = calculateDynamicBaseDamage(roll, source, target, UnitAttribute.Strength, phase)
   const morale_roll = calculateDynamicBaseDamage(roll, source, target, UnitAttribute.Morale)
-  dynamic_multiplier *= calculateCohortDamageMultiplier(source, target, is_support)
+  dynamic_multiplier *= calculateCohortDamageMultiplier(source, target, is_support, settings)
   const strength_lost = base_damages[strength_roll] * dynamic_multiplier * source.calculated.damage[UnitAttribute.Strength][target.definition.type][phase] * target.calculated.strength_taken_multiplier[phase]
   const morale_lost = base_damages[morale_roll] * dynamic_multiplier * source.calculated.damage[UnitAttribute.Morale][target.definition.type][phase] * source[UnitAttribute.Morale] * target.calculated.morale_taken_multiplier
 
-  source.state.damage_multiplier = dynamic_multiplier * source.calculated.damage['Damage'][target.definition.type][phase] / PRECISION
+  source.state.damage_multiplier = dynamic_multiplier * source.calculated.damage['Damage'][target.definition.type][phase] * target.calculated.damage_taken_multiplier / PRECISION
   source.state.morale_dealt = Math.floor(morale_lost) / PRECISION
   source.state.strength_dealt = Math.floor(strength_lost) / PRECISION
   source.state.total_morale_dealt += source.state.morale_dealt

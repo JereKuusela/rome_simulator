@@ -23,6 +23,8 @@ export const mapRange = <T>(length: number, func: (number: number) => T): T[] =>
   return array
 }
 
+export const noZero = (value: number) => value ? value : 1.0
+
 export const randomWithinRange = (min: number, max: number) => min + Math.random() * (max - min)
 
 /**

@@ -28,6 +28,16 @@ export enum Setting {
   FixTargeting = 'Fix targeting',
   BackRow = 'Enable backrow',
   FireAndShock = 'Enable fire and shock phases',
+  AttributeCombatAbility = 'Enable Combat ability attribute',
+  AttributeDrill = 'Enable Drill attribute',
+  AttributeExperience = 'Enable Experience attribute',
+  AttributeMilitaryTactics = 'Enable Military tactics attribute',
+  AttributeOffenseDefense = 'Enable Offense and Defense attributes',
+  AttributeDamage = 'Enable Damage done and Damage taken attributes',
+  AttributeMoraleDamage = 'Enable Morale damage done and Morale damage taken attributes',
+  AttributeStrengthDamage = 'Enable Strength damage done and Strength damage taken attributes',
+  AttributeTerrainType = 'Enable terrain type based attributes',
+  AttributeUnitType = 'Enable unit type based attributes',
   MaxDepth = 'Statistics: Maximum depth',
   PhaseLengthMultiplier = 'Statistics: Multiplier for phase length',
   ChunkSize = 'Statistics: Chunk size',
@@ -107,6 +117,56 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Targeting is fixed.\nLeft and right sides work exactly same.'
       else
         return '16th unit uses wrong targeting direction.\nLeft and right sides behave slightly differently.'
+    case Setting.AttributeCombatAbility:
+      if (value)
+        return 'Combat ability increases damage done (EUIV).'
+      else
+        return 'Combat ability is ignored (Imperator).'
+    case Setting.AttributeDamage:
+      if (value)
+        return 'Damage done and Damage taken have an effect (Imperator, EUIV).'
+      else
+        return 'Damage done and Damage taken are ignored.'
+    case Setting.AttributeDrill:
+      if (value)
+        return 'Drill increases damage done and reduces damage taken (EUIV).'
+      else
+        return 'Drill is ignored (Imperator).'
+    case Setting.AttributeExperience:
+      if (value)
+        return 'Experience reduces damage taken (Imperator).'
+      else
+        return 'Experience is ignored (EUIV).'
+    case Setting.AttributeMilitaryTactics:
+      if (value)
+        return 'Military tactics reduces damage taken (EUIV).'
+      else
+        return 'Military tactics is ignored (Imperator).'
+    case Setting.AttributeMoraleDamage:
+      if (value)
+        return 'Morale damage done and Morale damage taken have an effect (Imperator).'
+      else
+        return 'Morale damage done and Morale damage taken are ignored (EUIV).'
+    case Setting.AttributeOffenseDefense:
+      if (value)
+        return 'Offense increases damage done and Defense reduces damage taken (Imperator).'
+      else
+        return 'Offense and Defense are ignored (EUIV).'
+    case Setting.AttributeStrengthDamage:
+      if (value)
+        return 'Strength damage done and Strength damage taken have an effect (Imperator).'
+      else
+        return 'Strength damage done and Strength damage taken are ignored (EUIV).'
+    case Setting.AttributeTerrainType:
+      if (value)
+        return 'Terrain types may also increase damage done (Imperator).'
+      else
+        return 'Terrain types only affect dice rolls (EUIV).'
+    case Setting.AttributeUnitType:
+      if (value)
+        return 'Unit types may increase or decrease damage done (Imperator).'
+      else
+        return 'Unit types are ignored (EUIV).'
     case Setting.MaxDepth:
       return 'How many phases are simulated.\nIncrease for higher accuracy and less incomplete rounds.\nDecrease forg faster speed.'
     case Setting.PhaseLengthMultiplier:
@@ -162,15 +222,25 @@ export type SiteSettings = {
   [Setting.ChunkSize]: number,
   [Setting.MaxDepth]: number,
   [Setting.PhaseLengthMultiplier]: number,
-  [Setting.CalculateWinChance]: boolean,
-  [Setting.CalculateCasualties]: boolean,
-  [Setting.CalculateResourceLosses]: boolean,
   [Setting.ShowGraphs]: boolean,
   [Setting.BackRow]: boolean,
   [Setting.DisciplineDamageReduction]: boolean,
   [Setting.FireAndShock]: boolean,
   [Setting.DailyMoraleLoss]: number,
   [Setting.DailyDamageIncrease]: number,
+  [Setting.AttributeCombatAbility]: boolean,
+  [Setting.AttributeDamage]: boolean,
+  [Setting.AttributeDrill]: boolean,
+  [Setting.AttributeExperience]: boolean,
+  [Setting.AttributeMilitaryTactics]: boolean,
+  [Setting.AttributeMoraleDamage]: boolean,
+  [Setting.AttributeOffenseDefense]: boolean,
+  [Setting.AttributeStrengthDamage]: boolean,
+  [Setting.AttributeTerrainType]: boolean,
+  [Setting.AttributeUnitType]: boolean,
+  [Setting.CalculateWinChance]: boolean,
+  [Setting.CalculateCasualties]: boolean,
+  [Setting.CalculateResourceLosses]: boolean,
   [Setting.Performance]: SimulationSpeed
 }
 

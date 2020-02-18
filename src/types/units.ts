@@ -57,6 +57,8 @@ export enum UnitAttribute {
   DefensiveShockPips = 'Defensive shock pips',
   DefensiveMoralePips = 'Defensive morale pips',
   BackrowEffectiveness = 'Backrow effectiveness',
+  MilitaryTactics = 'Military tactics',
+  CombatAbility = 'Combat Ability',
   DamageDone = 'Damage done',
   DamageTaken = 'Damage taken',
   Cost = 'Cost',
