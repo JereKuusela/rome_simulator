@@ -288,6 +288,14 @@ const applyLosses = (frontline: Frontline) => {
         continue
       unit[UnitAttribute.Morale] -= unit.state.morale_loss
       unit[UnitAttribute.Strength] -= unit.state.strength_loss
+      if (i > 0) {
+        // Morale losses from the frontline are copied to the backline.
+        const front_unit = frontline[0][j]
+        if (front_unit) {
+          unit.state.morale_loss += front_unit.state.morale_loss
+          unit[UnitAttribute.Morale] -= front_unit.state.morale_loss
+        }
+      }
     }
   }
 }

@@ -81,9 +81,7 @@ EUIV:
  - General maneuver pips
  - Setting for martial cap (0 for disabled)
  - Units: Available units determined by tech level + culture (selector should sort by tech level + show pips)
- - Units on the backline take full morale casualties
  - Combat ability directly increases damage
- - General and unit pips affect dice rolls (enemy ones reduce)
 
 Tests:
 - utils tested
