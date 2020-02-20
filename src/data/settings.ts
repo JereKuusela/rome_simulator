@@ -51,6 +51,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
     [Setting.DefenderAdvantage]: false,
     [Setting.FixTargeting]: true,
     [Setting.BackRow]: false,
+    [Setting.StrengthBasedFlank]: false,
     [Setting.ChunkSize]: 10000,
     [Setting.MaxDepth]: speedValues[SimulationSpeed.Normal][1],
     [Setting.PhaseLengthMultiplier]: speedValues[SimulationSpeed.Normal][0],

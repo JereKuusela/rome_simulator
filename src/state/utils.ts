@@ -21,16 +21,16 @@ export const getSettings = (state: AppState, mode?: Mode): Settings => {
 }
 
 export const findCohortById = (state: AppState, side: Side, id: number): Cohort | null => {
-  const units = getCohortsByCountry(state, getCountry(state, side))
-  let unit = units.reserve.find(unit => unit.id === id) || null
-  if (unit)
-    return unit
-  unit = flatten(units.frontline).find(unit => unit ? unit.id === id : false) || null
-  if (unit)
-    return unit
-  unit = units.defeated.find(unit => unit.id === id) || null
-  if (unit)
-    return unit
+  const cohorts = getCohortsByCountry(state, getCountry(state, side))
+  let cohort = cohorts.reserve.find(unit => unit.id === id) || null
+  if (cohort)
+    return cohort
+  cohort = flatten(cohorts.frontline).find(unit => unit ? unit.id === id : false) || null
+  if (cohort)
+    return cohort
+  cohort = cohorts.defeated.find(unit => unit.id === id) || null
+  if (cohort)
+    return cohort
   return null
 }
 
@@ -140,11 +140,11 @@ export const getArmyForCombat = (state: AppState, side: Side, mode?: Mode): Army
   const participant = state.battle[mode ?? state.settings.mode].participants[side]
   const country = participant.country
   const army = getArmy(state, country)
-  const units = getCohortsByCountry(state, country)
+  const cohorts = getCohortsByCountry(state, country)
   const general = getGeneral(state, country)
   const tactic = state.tactics[army.tactic]
   const definitions = getUnits(state, country)
-  return { ...units, tactic, general, flank_size: army.flank_size, unit_preferences: army.unit_preferences, definitions }
+  return { ...cohorts, tactic, general, flank_size: army.flank_size, unit_preferences: army.unit_preferences, definitions }
 }
 
 export const getCurrentCombat = (state: AppState, side: Side): CombatCohorts => {
@@ -213,7 +213,7 @@ const getCohortsByCountry = (state: AppState, country: CountryName): Cohorts => 
   }
   forEach2(base.frontline, (item, row, column) => cohorts.frontline[Number(row)][Number(column)] = item as Cohort)
   const definitions = getUnits(state, country)
-  return mergeBaseUnitsWithDefinitions(cohorts, definitions)
+  return mergeBaseUnitsWithDefinitions(settings, cohorts, definitions)
 }
 
 export const getCohorts = (state: AppState, side: Side): Cohorts => getCohortsByCountry(state, getCountry(state, side))
@@ -230,18 +230,20 @@ export const getSelectedTerrains = (state: AppState): Terrain[] => getBattle(sta
 export const getUnitDefinitionsBySide = (state: AppState, side: Side): Units => getUnits(state, getParticipant(state, side).country)
 
 export const getUnits = (state: AppState, country?: CountryName): Units => {
+  const settings = getSettings(state)
   country = country ?? state.settings.country
   const mode = state.settings.mode
   const base_units = getBaseUnits(state, country)
   const general = getGeneral(state, country).definitions
-  const units = mergeDefinitions(base_units, general)
+  const units = mergeDefinitions(settings,base_units, general)
   return filterUnitDefinitions(mode, units)
 }
 
 export const getUnit = (state: AppState, unit_type: UnitType, country?: CountryName): Unit => {
+  const settings = getSettings(state)
   country = country ?? state.settings.country
   const general = getGeneral(state, country).definitions
-  return mergeDefinition(getBaseUnits(state, country), general, unit_type)
+  return mergeDefinition(settings, getBaseUnits(state, country), general, unit_type)
 }
 
 export const getUnitImages = (state: AppState): { [key in UnitType]: string[] } => {

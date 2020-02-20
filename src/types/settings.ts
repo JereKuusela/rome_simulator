@@ -27,6 +27,7 @@ export enum Setting {
   FixExperience = 'Fix damage reduction from experience',
   FixTargeting = 'Fix targeting',
   BackRow = 'Enable backrow',
+  StrengthBasedFlank = 'Enable strength based flank',
   FireAndShock = 'Enable fire and shock phases',
   AttributeCombatAbility = 'Enable Combat ability attribute',
   AttributeDrill = 'Enable Drill attribute',
@@ -94,6 +95,11 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Backrow enabled for support units (EUIV).'
       else
         return 'Only front row (Imperator).'
+    case Setting.StrengthBasedFlank:
+      if (value)
+        return 'Every 25% of lost strength reduces maneuveur by 25% (EUIV).'
+      else
+        return 'Cohort strength has no effect on maneuver (Imperator).'
     case Setting.DisciplineDamageReduction:
       if (value)
         return 'Discipline increases damage done and reduces damage taken (EUIV).'
@@ -224,6 +230,7 @@ export type SiteSettings = {
   [Setting.PhaseLengthMultiplier]: number,
   [Setting.ShowGraphs]: boolean,
   [Setting.BackRow]: boolean,
+  [Setting.StrengthBasedFlank]: boolean,
   [Setting.DisciplineDamageReduction]: boolean,
   [Setting.FireAndShock]: boolean,
   [Setting.DailyMoraleLoss]: number,

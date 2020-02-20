@@ -5,6 +5,7 @@ import { toObj, map, noZero } from 'utils'
 import { calculateValue, calculateValueWithoutLoss, calculateBase } from 'definition_values'
 import { calculateExperienceReduction, getCombatPhase, calculateUnitPips, getDailyIncrease } from './combat_utils'
 import { reinforce } from './reinforcement'
+import { getStrengthBasedFlank } from 'managers/units'
 
 
 /**
@@ -68,20 +69,20 @@ const applyDamageTypes = (unit: Cohort, settings: Settings, casualties_multiplie
   }
 }
 
-const getDamages = (settings: Settings, casualties_multiplier: number, terrains: Terrain[], unit_types: UnitType[], unit: Cohort) => (
-  applyDamageTypes(unit, settings, casualties_multiplier, applyUnitTypes(unit, unit_types, settings, applyPhaseDamage(unit, precalculateDamage(terrains, unit, settings))))
+const getDamages = (settings: Settings, casualties_multiplier: number, terrains: Terrain[], unit_types: UnitType[], cohort: Cohort) => (
+  applyDamageTypes(cohort, settings, casualties_multiplier, applyUnitTypes(cohort, unit_types, settings, applyPhaseDamage(cohort, precalculateDamage(terrains, cohort, settings))))
 )
 
 /**
  * Returns a precalculated info about a given unit.
  */
-const precalculateUnit = (settings: Settings, casualties_multiplier: number, terrains: Terrain[], unit_types: UnitType[], unit: Cohort) => {
-  const damage_reduction = precalculateDamageReduction(unit, settings)
+const precalculateUnit = (settings: Settings, casualties_multiplier: number, terrains: Terrain[], unit_types: UnitType[], cohort: Cohort) => {
+  const damage_reduction = precalculateDamageReduction(cohort, settings)
   const info: CombatUnitPreCalculated = {
-    damage: getDamages(settings, casualties_multiplier, terrains, unit_types, unit),
+    damage: getDamages(settings, casualties_multiplier, terrains, unit_types, cohort),
     damage_taken_multiplier: damage_reduction,
-    morale_taken_multiplier: damage_reduction * getValue(unit, UnitAttribute.MoraleDamageTaken, settings[Setting.AttributeMoraleDamage]),
-    strength_taken_multiplier: applyPhaseDamageTaken(unit, damage_reduction * getValue(unit, UnitAttribute.StrengthDamageTaken, settings[Setting.AttributeStrengthDamage]))
+    morale_taken_multiplier: damage_reduction * getValue(cohort, UnitAttribute.MoraleDamageTaken, settings[Setting.AttributeMoraleDamage]),
+    strength_taken_multiplier: applyPhaseDamageTaken(cohort, damage_reduction * getValue(cohort, UnitAttribute.StrengthDamageTaken, settings[Setting.AttributeStrengthDamage]))
   }
   return info
 }
@@ -89,38 +90,38 @@ const precalculateUnit = (settings: Settings, casualties_multiplier: number, ter
 const getValue = (unit: Cohort, attribute: UnitValueType, enabled: boolean) => 1.0 + getMultiplier(unit, attribute, enabled)
 const getMultiplier = (unit: Cohort, attribute: UnitValueType, enabled: boolean) => enabled ? calculateValue(unit, attribute): 0
 
-export const getUnitDefinition = (combatSettings: Settings, terrains: Terrain[], unit_types: UnitType[], unit: Cohort): CombatUnit => {
+export const getUnitDefinition = (combatSettings: Settings, terrains: Terrain[], unit_types: UnitType[], cohort: Cohort): CombatUnit => {
   const info = {
-    id: unit.id,
-    type: unit.type,
-    is_loyal: !!unit.is_loyal,
-    image: unit.image,
-    deployment: unit.role,
-    max_morale: calculateValueWithoutLoss(unit, UnitAttribute.Morale),
-    max_strength: calculateValueWithoutLoss(unit, UnitAttribute.Strength),
-    experience_reduction: calculateExperienceReduction(combatSettings, unit),
+    id: cohort.id,
+    type: cohort.type,
+    is_loyal: !!cohort.is_loyal,
+    image: cohort.image,
+    deployment: cohort.role,
+    max_morale: calculateValueWithoutLoss(cohort, UnitAttribute.Morale),
+    max_strength: calculateValueWithoutLoss(cohort, UnitAttribute.Strength),
+    experience_reduction: calculateExperienceReduction(combatSettings, cohort),
     // Unmodified value is used to determine deployment order.
-    deployment_cost: calculateBase(unit, UnitAttribute.Cost)
+    deployment_cost: calculateBase(cohort, UnitAttribute.Cost)
   } as CombatUnit
-  values(UnitAttribute).forEach(calc => { info[calc] = calculateValue(unit, calc) })
-  values(CombatPhase).forEach(calc => { info[calc] = calculateValue(unit, calc) })
-  terrains.forEach(({ type }) => { info[type] = calculateValue(unit, type) })
-  unit_types.forEach(calc => { info[calc] = calculateValue(unit, calc) })
+  values(UnitAttribute).forEach(calc => { info[calc] = calculateValue(cohort, calc) })
+  values(CombatPhase).forEach(calc => { info[calc] = calculateValue(cohort, calc) })
+  terrains.forEach(({ type }) => { info[type] = calculateValue(cohort, type) })
+  unit_types.forEach(calc => { info[calc] = calculateValue(cohort, calc) })
   return info
 }
 
 /**
  * Transforms a unit to a combat unit.
  */
-export const getCombatUnit = (combatSettings: Settings, casualties_multiplier: number, terrains: Terrain[], unit_types: UnitType[], unit: Cohort | null): CombatCohort | null => {
-  if (!unit)
+export const getCombatUnit = (combatSettings: Settings, casualties_multiplier: number, terrains: Terrain[], unit_types: UnitType[], cohort: Cohort | null): CombatCohort | null => {
+  if (!cohort)
     return null
   const combat_unit: CombatCohort = {
-    [UnitAttribute.Morale]: calculateValue(unit, UnitAttribute.Morale),
-    [UnitAttribute.Strength]: calculateValue(unit, UnitAttribute.Strength),
-    calculated: precalculateUnit(combatSettings, casualties_multiplier, terrains, unit_types, unit),
+    [UnitAttribute.Morale]: calculateValue(cohort, UnitAttribute.Morale),
+    [UnitAttribute.Strength]: calculateValue(cohort, UnitAttribute.Strength),
+    calculated: precalculateUnit(combatSettings, casualties_multiplier, terrains, unit_types, cohort),
     state: { target: null, morale_loss: 0, strength_loss: 0, morale_dealt: 0, strength_dealt: 0, damage_multiplier: 0, is_defeated: false, is_destroyed: false, total_morale_dealt: 0, total_strength_dealt: 0 },
-    definition: getUnitDefinition(combatSettings, terrains, unit_types, unit)
+    definition: getUnitDefinition(combatSettings, terrains, unit_types, cohort)
   }
   return combat_unit
 }
@@ -237,7 +238,7 @@ const pickTargets = (source: Frontline, target: Frontline, settings: Settings) =
       if (target[0][j])
         state.target = target[0][j]
       else {
-        const maneuver = unit.definition[UnitAttribute.Maneuver]
+        const maneuver = Math.floor(unit.definition[UnitAttribute.Maneuver] * (settings[Setting.StrengthBasedFlank] ? getStrengthBasedFlank(unit[UnitAttribute.Strength]) : 1.0))
         if (settings[Setting.FixTargeting] ? j < source_length / 2 : j <= source_length / 2) {
           for (let index = j - maneuver; index <= j + maneuver; ++index) {
             if (index >= 0 && index < target_length && target[0][index]) {
@@ -381,6 +382,7 @@ const precalculateDamageReduction = (unit: Cohort, settings: Settings) => (
 const calculateCohortDamageMultiplier = (source: CombatCohort, target: CombatCohort, is_support: boolean, settings: Settings) => {
   const definition_s = source.definition
   const definition_t = target.definition
+
   return source[UnitAttribute.Strength]
     * (settings[Setting.AttributeOffenseDefense] ? 1.0 + definition_s[UnitAttribute.Offense] - definition_t[UnitAttribute.Defense] : 1.0)
     * (is_support ? definition_s[UnitAttribute.BackrowEffectiveness] : 1.0)

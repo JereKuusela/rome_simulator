@@ -6,10 +6,11 @@ import ItemRemover from 'components/ItemRemover'
 import UnitDetail from 'components/UnitDetail'
 
 import { AppState, filterUnitTypesByCountry, filterTerrainTypes, findCohortById, getCombatUnitForEachRound, getMode, getSettings } from 'state'
-import { ValuesType, Side, CountryName, UnitType, Cohort, UnitAttribute, UnitValueType } from 'types'
+import { ValuesType, Side, CountryName, UnitType, Cohort, UnitAttribute, UnitValueType, Settings } from 'types'
 import { CombatCohort } from 'combat'
 import { addValues } from 'definition_values'
 import { editCohort, deleteCohort, invalidate, setCohortValue, changeCohortType, toggleCohortLoyality } from 'reducers'
+import { applyDynamicAttributes } from 'managers/units'
 
 const CUSTOM_VALUE_KEY = 'Unit'
 
@@ -90,7 +91,7 @@ class ModalCohortDetail extends Component<IProps> {
 }
 
 
-const convertUnit = (definition: Cohort | null, rounds: (CombatCohort | null)[]): Cohort | null => {
+const convertUnit = (settings: Settings, definition: Cohort | null, rounds: (CombatCohort | null)[]): Cohort | null => {
   if (!definition)
     return null
   rounds.forEach((combat, round) => {
@@ -108,14 +109,14 @@ const convertUnit = (definition: Cohort | null, rounds: (CombatCohort | null)[])
     definition = addValues(definition!, ValuesType.Base, 'Round ' + (round - 1), dealtValues)
 
   })
-  return definition
+  return applyDynamicAttributes(definition, settings)
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
   unit_types: props.country ? filterUnitTypesByCountry(state, props.country) : [],
   terrain_types: filterTerrainTypes(state),
   mode: getMode(state),
-  unit: convertUnit(findCohortById(state, props.side, props.id), getCombatUnitForEachRound(state, props.side, props.id)),
+  unit: convertUnit(getSettings(state), findCohortById(state, props.side, props.id), getCombatUnitForEachRound(state, props.side, props.id)),
   settings: getSettings(state)
 })
 

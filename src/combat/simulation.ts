@@ -60,21 +60,21 @@ export type ResourceLosses = {
 let interruptSimulation = false
 
 
-export const convertParticipant = (side: Side, attacker: ArmyForCombat, defender: ArmyForCombat, terrains: Terrain[], unit_types: UnitType[], settings: Settings): CombatParticipant => {
-  const tactic_casualties = calculateValue(attacker.tactic, TacticCalc.Casualties) + calculateValue(defender.tactic, TacticCalc.Casualties)
-  const status_a = convertCohorts(attacker, settings, tactic_casualties, terrains, unit_types)
-  const general_pips = toObj(values(CombatPhase), phase => phase, phase => calculateGeneralPips(attacker.general, defender.general, phase))
+export const convertParticipant = (side: Side, army: ArmyForCombat, enemy: ArmyForCombat, terrains: Terrain[], unit_types: UnitType[], settings: Settings): CombatParticipant => {
+  const tactic_casualties = calculateValue(army.tactic, TacticCalc.Casualties) + calculateValue(enemy.tactic, TacticCalc.Casualties)
+  const cohorts = convertCohorts(army, settings, tactic_casualties, terrains, unit_types)
+  const general_pips = toObj(values(CombatPhase), phase => phase, phase => calculateGeneralPips(army.general, enemy.general, phase))
   const terrain_pips = side === Side.Attacker ? calculateTerrainPips(terrains) : 0
   return {
-    cohorts: status_a,
+    cohorts,
     dice: 0,
-    flank: attacker.flank_size,
-    tactic: attacker.tactic!,
+    flank: army.flank_size,
+    tactic: army.tactic!,
     terrain_pips,
     general_pips,
     roll_pips: toObj(values(CombatPhase), phase => phase, phase => general_pips[phase] + terrain_pips + settings[Setting.BaseRoll]),
-    unit_preferences: attacker.unit_preferences,
-    unit_types: map(attacker.definitions, unit => getUnitDefinition(settings, terrains, unit_types, { ...unit, id: -1 })),
+    unit_preferences: army.unit_preferences,
+    unit_types: map(army.definitions, unit => getUnitDefinition(settings, terrains, unit_types, { ...unit, id: -1 })),
     tactic_bonus: 0.0,
     round: 0
   }

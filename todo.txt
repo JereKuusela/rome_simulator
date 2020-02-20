@@ -53,21 +53,8 @@ Changelog:
 - Settings: Added a new setting for daily morale losses, feature from EUIV.
 - Settings: Added a new setting for enabling fire and shock phases, feature from EUIV.
 - Settings: Added a new setting for daily damage increase, feature from EUIV.
+- Settings: Added a new setting for strength affecting maneuver, feature from EUIV.
 - Settings: Added new settings for enabling/disabling different unit attributes.
-
-Todo:
- - Transfer could only show non-base stats for units, terrains and tactics (since base stats are supposed to regenerate?), currently it shows way too much information.
- - Refactor simluation to update only single parameter, also parameters split should make more sense
- - Some sort of place for business logic rules
-
-Tags:
- - Icons to frontline to show various things, with tooltips:
-  * Defender's advantage (some kind of ninja icon?) - This is expected to be fixed so shouldn't waste time.
-  * Very bad matchup, bad match up, good matchup, very good matchup (red or green arrows)
-  * Flanking (attacking without being attacked)
-  * No target (red sign)
- - Battle stats to show amount of tags acquired (hopefully gives a better view of the battle)
- - Battle stats to show individual units
 
 Settings:
  - Better descriptions
@@ -78,27 +65,37 @@ Settings:
 
 EUIV:
  - Tooltip needs to show source of losses (to include daily loss)
- - Derivate attributes (reduce flanking range based on strength, phase damage done and taken from drill)
  - Cavalry to infantry ratio (flank to front, country definition, + setting)
  - General maneuver pips (removes crossing terrain penalties if higher)
  - Setting for martial cap (0 for disabled)
  - Units: Available units determined by tech level + culture (selector should sort by tech level + show pips)
  - Backrow defensive pip transfer (50% effect, rounded down)
 
+Todo:
+ - Combat massively tested (especially EUIV, but also different configurations).
+
+Release++:
+
+Todo:
+ - Transfer could only show non-base stats for units, terrains and tactics (since base stats are supposed to regenerate?), currently it shows way too much information.
+ - Refactor simluation to update only single parameter, also parameters split should make more sense
+ - Some sort of place for business logic rules
+ - Rowtype selectors could show unit priority? Different colors for main and flank. Frontline could slightly color tiles based on main/flank.
+ - Combat things to combat reducer. Perhaps state as parameter when needed? Since it only changes same things as battle reducer,
+ - Stats to show amount of traditions, trade, etc..
+
 Tests:
 - utils tested
 - check that reinforcement is stable (higher key ends in right position)
 
-Rowtype selectors could show unit priority? Different colors for main and flank. Frontline could slightly color tiles based on main/flank.
-
-Pluralization of reducers, state, etc
-
-Combat things to combat reducer. Perhaps state as parameter when needed? Since it only changes same things as battle reducer,
-
-Stats to show amount of traditions, trade, etc..
-
-
-Release++:
+Tags:
+ - Icons to frontline to show various things, with tooltips:
+  * Defender's advantage (some kind of ninja icon?) - This is expected to be fixed so shouldn't waste time.
+  * Very bad matchup, bad match up, good matchup, very good matchup (red or green arrows)
+  * Flanking (attacking without being attacked)
+  * No target (red sign)
+ - Battle stats to show amount of tags acquired (hopefully gives a better view of the battle)
+ - Battle stats to show individual units
 
 Army management:
 - Probably needed for multi-army battles because countries need to have multiple armies

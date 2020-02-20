@@ -105,6 +105,8 @@ export default class UnitDetail extends Component<IProps> {
       return true
     if (!settings[Setting.AttributeStrengthDamage] && (attribute === UnitAttribute.StrengthDamageDone || attribute === UnitAttribute.StrengthDamageTaken))
       return true
+    if (!settings[Setting.AttributeDrill] && attribute === UnitAttribute.Drill)
+      return true
     if (attribute === CombatPhase.Default)
       return true
     return false

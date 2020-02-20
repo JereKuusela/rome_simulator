@@ -65,6 +65,7 @@ export enum UnitAttribute {
   Maintenance = 'Maintenance',
   AttritionWeight = 'Attrition weight',
   Experience = 'Experience',
+  Drill = 'Drill',
   FoodConsumption = 'Food consumption',
   FoodStorage = 'Food storage',
   CaptureChance = 'Capture chance',
@@ -102,8 +103,9 @@ export interface Cohort extends BaseCohort, Unit { }
 export const unitValueToString = (definition: DefinitionValues<UnitValueType>, type: UnitValueType): string => {
   const value = calculateValue(definition, type)
   switch (type) {
-    case UnitAttribute.Cost:
     case UnitAttribute.Maneuver:
+        return toNumber(Math.floor(value))
+    case UnitAttribute.Cost:
     case UnitAttribute.Strength:
     case UnitAttribute.StrengthDepleted:
     case UnitAttribute.Morale:

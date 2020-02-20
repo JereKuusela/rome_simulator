@@ -1,5 +1,5 @@
-import { ValuesType, UnitValueType, UnitType, UnitRole, Modifier, ScopeType, BaseUnit, BaseUnits, Mode } from "types"
-import { addValuesWithMutate, regenerateValues, clearValues } from "definition_values"
+import { ValuesType, UnitValueType, UnitType, UnitRole, Modifier, ScopeType, BaseUnit, BaseUnits, Mode, Settings, Setting, UnitAttribute } from "types"
+import { addValuesWithMutate, regenerateValues, clearValues, DefinitionValues, calculateValue, addValues } from "definition_values"
 import { getUnitIcon } from "data"
 import { forEach } from "utils"
 
@@ -52,3 +52,17 @@ export const clearUnitModifiers = (units: BaseUnits, key: string) => {
 }
 
 export const getBaseUnitType = (mode: Mode) => mode === Mode.Naval ? UnitType.BaseNaval : UnitType.BaseLand
+
+export const applyDynamicAttributes = <T extends DefinitionValues<UnitValueType>>(definition: T, settings: Settings) => {
+  if (settings[Setting.AttributeDrill]) {
+    const drill = 0.1 * calculateValue(definition, UnitAttribute.Drill)
+    definition = addValues(definition, ValuesType.Base, 'From drill', [[UnitAttribute.ShockDamageDone, drill], [UnitAttribute.FireDamageDone, drill], [UnitAttribute.ShockDamageTaken, -drill], [UnitAttribute.FireDamageTaken, -drill]])
+  }
+  if (settings[Setting.StrengthBasedFlank]) {
+    const maneuver = getStrengthBasedFlank(calculateValue(definition, UnitAttribute.Strength)) - 1
+    definition = addValues(definition, ValuesType.Modifier, 'From losses', [[UnitAttribute.Maneuver, maneuver]])
+  }
+  return definition
+}
+
+export const getStrengthBasedFlank = (strength: number) => Math.ceil(strength * 4.0) / 4.0
