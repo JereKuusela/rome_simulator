@@ -1,16 +1,9 @@
 import { mapRange } from './utils'
 import { Mode } from './types/definition'
-import { CountryAttribute } from 'types'
 
 /**
  * This file contains functions to format numbers to strings.
  */
-
-export const formatAttribute = (value: number, attribute: string) => {
-  if (attribute === CountryAttribute.CombatWidth)
-    return String(value)
-  return toPercent(value)
-}
 
 export const hideZero = (number: number) => number === 0 ? undefined : number
 
@@ -30,9 +23,9 @@ export const addSignWithZero = (number?: number): string => {
   return String(number)
 }
 
- /**
-  * Special converter for manpower. Strength multiplied by 1000 and floored down.
-  */
+/**
+ * Special converter for manpower. Strength multiplied by 1000 and floored down.
+ */
 export const toManpower = (number?: number): string => {
   if (number === undefined)
     return ''
@@ -73,7 +66,7 @@ export const toFlooredPercent = (number?: number, decimals: number = 2): string 
   if (number === undefined)
     return ''
   return Math.floor(multipliers[decimals + 2] * number) / multipliers[decimals] + '%'
-} 
+}
 export const toSignedPercent = (number?: number): string => {
   if (number === undefined)
     return ''

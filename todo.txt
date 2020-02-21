@@ -14,6 +14,7 @@ Changelog:
 - Battle: Added support for backrow and backrow effectiveness.
 - Battle: Added food consumption and storage to fast planner.
 - Battle: Refactored state for armies (first step towards multiarmy battles).
+- Battle: Added support for crossing terrain penalties not affecting attacker if their general has higher maneuver, feature from EUIV.
 - Stats: Added average gold losses to naval simulations (from repair, from destroyed, from captured, etc.).
 - Stats: Added separate settings for calculating different things.
 - Stats: Improved performance (but probably overall less performance because new mechanics from EUIV).
@@ -57,6 +58,10 @@ Changelog:
 - Settings: Added new settings for enabling/disabling different unit attributes.
 
 Settings:
+ - discipline: Reduces damage, only increases damage, no effect.
+ - general maneuver: Affects crossing, affects terrain, affects both, no effect.
+ - general: martial, fire&shock, both
+ - Show on main page current settings set (Imperator, EUIV, mixed), tooltip to show individual (or only changed?)
  - Better descriptions
  - Show default value
  - Show current change versus default value (for example faster battles, more randomness)
@@ -66,7 +71,6 @@ Settings:
 EUIV:
  - Tooltip needs to show source of losses (to include daily loss)
  - Cavalry to infantry ratio (flank to front, country definition, + setting)
- - General maneuver pips (removes crossing terrain penalties if higher)
  - Setting for martial cap (0 for disabled)
  - Units: Available units determined by tech level + culture (selector should sort by tech level + show pips)
  - Backrow defensive pip transfer (50% effect, rounded down)

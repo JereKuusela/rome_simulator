@@ -1,5 +1,5 @@
-import { calculateValue, clearAllValues, calculateBase, addValues, regenerateValues } from 'definition_values'
-import { Mode, GeneralCalc, UnitType, BaseUnit, UnitAttribute, General, Army, ArmyType, BaseCohort, ValuesType, UnitValueType, TacticType, UnitPreferenceType, GeneralStats, BaseReserve, ScopeType, Modifier, BaseDefeated, BaseFrontLine, ModifierType } from 'types'
+import { calculateValue, clearAllValues, calculateBase, addValues, regenerateValues, addValuesWithMutate } from 'definition_values'
+import { Mode, GeneralAttribute, UnitType, BaseUnit, UnitAttribute, General, Army, ArmyType, BaseCohort, ValuesType, UnitValueType, TacticType, UnitPreferenceType, GeneralStats, BaseReserve, ScopeType, Modifier, BaseDefeated, BaseFrontLine, GeneralValueType } from 'types'
 import { map, forEach, keys } from 'utils'
 import { findLastIndex } from 'lodash'
 
@@ -12,8 +12,8 @@ export const martialToCaptureChance = (martial: number) => 0.002 * martial
 const BASE_MARTIAL_KEY = 'Base stat'
 
 export const getGeneralStats = (general: General): GeneralStats => {
-  const martial = calculateValue(general, GeneralCalc.Martial)
-  const trait_martial = calculateValue(clearAllValues(general, BASE_MARTIAL_KEY), GeneralCalc.Martial)
+  const martial = calculateValue(general, GeneralAttribute.Martial)
+  const trait_martial = calculateValue(clearAllValues(general, BASE_MARTIAL_KEY), GeneralAttribute.Martial)
   return {
     enabled: general.enabled,
     martial: general.enabled ? martial : 0,
@@ -158,20 +158,18 @@ export const setFlankSize = (army: Army, flank_size: number) => {
 }
 
 export const setGeneralMartial = (army: Army, value: number) => {
-  enableGeneralModifiers(army, BASE_MARTIAL_KEY, [{
-    target: ModifierType.General,
-    type: ValuesType.Base,
-    scope: ScopeType.Army,
-    attribute: GeneralCalc.Martial,
-    value
-  }])
+  setGeneralValue(army, BASE_MARTIAL_KEY, GeneralAttribute.Martial, value)
+}
+
+export const setGeneralValue = (army: Army, key: string, attribute: GeneralValueType, value: number) => {
+  addValuesWithMutate(army.general, ValuesType.Base, key, [[attribute, value]])
 }
 
 export const enableGeneralModifiers = (army: Army, key: string, modifiers: Modifier[]) => {
 
   modifiers = modifiers.filter(value => value.scope === ScopeType.Army)
   const definitions = map(army.general.definitions, definition => clearAllValues(definition, key))
-  const otherModifiers = modifiers.filter(value => value.attribute !== GeneralCalc.Martial)
+  const otherModifiers = modifiers.filter(value => value.attribute !== GeneralAttribute.Martial)
 
   otherModifiers.forEach(modifier => {
     const type = modifier.target as UnitType
@@ -184,13 +182,13 @@ export const enableGeneralModifiers = (army: Army, key: string, modifiers: Modif
   })
 
   let definition = clearAllValues(army.general, key)
-  const generalModifiers = modifiers.filter(value => value.attribute === GeneralCalc.Martial)
+  const generalModifiers = modifiers.filter(value => value.attribute === GeneralAttribute.Martial)
   const generalValues = generalModifiers.map(value => [value.attribute, value.value] as [UnitValueType, number])
   definition = regenerateValues(definition, ValuesType.Base, key, generalValues)
-  const martial = calculateValue(definition, GeneralCalc.Martial)
+  const martial = calculateValue(definition, GeneralAttribute.Martial)
   if (!definitions[UnitType.BaseNaval])
     definitions[UnitType.BaseNaval] = {}
-  definitions[UnitType.BaseNaval] = addValues(definitions[UnitType.BaseNaval], ValuesType.Base, GeneralCalc.Martial, [[UnitAttribute.CaptureChance, 0.002 * martial]])
+  definitions[UnitType.BaseNaval] = addValues(definitions[UnitType.BaseNaval], ValuesType.Base, GeneralAttribute.Martial, [[UnitAttribute.CaptureChance, 0.002 * martial]])
   definition.definitions = definitions
   army.general = definition
 }

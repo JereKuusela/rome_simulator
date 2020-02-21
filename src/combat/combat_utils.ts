@@ -1,6 +1,6 @@
 
 import { sumBy, clamp } from 'lodash'
-import { Terrain, TerrainCalc, Setting, UnitAttribute, Settings, BaseUnit, CombatPhase, General, GeneralCalc } from 'types'
+import { Terrain, TerrainCalc, Setting, UnitAttribute, Settings, BaseUnit, CombatPhase, General, GeneralAttribute, Side, LocationType } from 'types'
 import { calculateValue } from 'definition_values'
 import { CombatUnit } from './combat'
 
@@ -9,15 +9,17 @@ import { CombatUnit } from './combat'
  * Every two levels increase dice roll by one (rounded down).
  */
 export const calculateGeneralPips = (general: General, enemy: General, phase: CombatPhase): number => {
-  const martial_pip = Math.max(0, Math.floor((calculateValue(general, GeneralCalc.Martial) - calculateValue(enemy, GeneralCalc.Martial)) / 2.0))
+  const martial_pip = Math.max(0, Math.floor((calculateValue(general, GeneralAttribute.Martial) - calculateValue(enemy, GeneralAttribute.Martial)) / 2.0))
   const phase_pip = Math.max(0, Math.floor((calculateValue(general, phase) - calculateValue(enemy, phase))))
   return martial_pip + phase_pip
 }
 
-/**
- * Calculates the roll modifier from terrains.
- */
-export const calculateTerrainPips = (terrains: Terrain[]): number => sumBy(terrains, terrain => calculateValue(terrain, TerrainCalc.Roll))
+export const getTerrainPips = (terrains: Terrain[], side: Side, general: General, enemy: General) => {
+  const ignore_tiles = side === Side.Defender
+  const ignore_borders = side === Side.Defender || calculateValue(general, GeneralAttribute.Maneuver) <= calculateValue(enemy, GeneralAttribute.Maneuver)
+  terrains = terrains.filter(terrain => terrain.location === LocationType.Border ? ignore_borders : ignore_tiles)
+  return sumBy(terrains, terrain => calculateValue(terrain, TerrainCalc.Roll))
+}
 
 /**
  * Calculates the roll modifier from unit pips.
@@ -28,7 +30,7 @@ export const calculateUnitPips = (source: CombatUnit, target: CombatUnit, type: 
 
 export const getOffensiveUnitPips = (unit: CombatUnit, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
   if (type === UnitAttribute.Morale)
-    return unit[UnitAttribute.OffensiveMoralePips] 
+    return unit[UnitAttribute.OffensiveMoralePips]
   if (phase === CombatPhase.Shock)
     return unit[UnitAttribute.OffensiveShockPips]
   if (phase === CombatPhase.Fire)
@@ -38,7 +40,7 @@ export const getOffensiveUnitPips = (unit: CombatUnit, type: UnitAttribute.Stren
 
 export const getDefensiveUnitPips = (unit: CombatUnit, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
   if (type === UnitAttribute.Morale)
-    return -unit[UnitAttribute.DefensiveMoralePips] 
+    return -unit[UnitAttribute.DefensiveMoralePips]
   if (phase === CombatPhase.Shock)
     return -unit[UnitAttribute.DefensiveShockPips]
   if (phase === CombatPhase.Fire)

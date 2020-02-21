@@ -2,11 +2,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Button, Checkbox, Divider, Grid, Header, Image, Input, Table } from 'semantic-ui-react'
-import {
-    calculateGeneralPips, calculateTerrainPips,
-    calculateBaseDamage,
-    getCombatPhase
-} from 'combat'
+import { calculateGeneralPips, calculateBaseDamage, getCombatPhase, getTerrainPips} from 'combat'
 import ConfirmationButton from 'components/ConfirmationButton'
 import Dropdown from 'components/Utils/Dropdown'
 import StyledNumber from 'components/Utils/StyledNumber'
@@ -28,7 +24,7 @@ import {
     invalidate, selectArmy, setRoll, toggleRandomRoll,
     undo, battle, refreshBattle, setSeed, setGeneralMartial, resetState
 } from 'reducers'
-import { AppState, getBattle, getCountry, getParticipant, getSettings, getCountries, getGeneral } from 'state'
+import { AppState, getBattle, getCountry, getParticipant, getSettings, getCountries, getGeneral, getSelectedTerrains } from 'state'
 import { ArmyType, CountryName, Participant, Setting, Side, General } from 'types'
 import { keys } from 'utils'
 import { getGeneralStats } from 'managers/army'
@@ -252,26 +248,26 @@ class Battle extends Component<IProps, IState> {
   }
 
   renderRoll = (side: Side, dice: number, is_random: boolean, general: General, opposing_general: General) => {
-    const { selected_terrains, terrains, settings, round } = this.props
-    const terrain_effect = side === Side.Attacker ? calculateTerrainPips(selected_terrains.map(value => terrains[value])) : 0
-    const general_effect = calculateGeneralPips(general, opposing_general, getCombatPhase(round, settings))
-    const total = terrain_effect + general_effect + dice
-    const base_damage = calculateBaseDamage(total, settings)
+    const { terrains, settings, round } = this.props
+    const terrain_pips = getTerrainPips(terrains, side, general, opposing_general)
+    const general_pips = calculateGeneralPips(general, opposing_general, getCombatPhase(round, settings))
+    const pips = terrain_pips + general_pips + dice
+    const base_damage = calculateBaseDamage(pips, settings)
     return (
       <div key={side}>
         {base_damage.toFixed(3)} :
         <span style={{ paddingLeft: '1em' }} /><Image src={IconDice} avatar />
         {is_random ? dice : <Input size='mini' style={{ width: 100 }} type='number' value={dice} onChange={(_, data) => this.props.setRoll(side, Number(data.value))} />}
-        {general_effect !== 0 ?
+        {general_pips !== 0 ?
           <span style={{ paddingLeft: '1em' }}>
             <Image src={IconGeneral} avatar />
-            <StyledNumber value={general_effect} formatter={addSign} />
+            <StyledNumber value={general_pips} formatter={addSign} />
           </span>
           : null}
-        {terrain_effect !== 0 ?
+        {terrain_pips !== 0 ?
           <span style={{ paddingLeft: '1em' }}>
             <Image src={IconTerrain} avatar />
-            <StyledNumber value={terrain_effect} formatter={addSign} />
+            <StyledNumber value={terrain_pips} formatter={addSign} />
           </span>
           : null}
       </div>
@@ -375,8 +371,7 @@ const mapStateToProps = (state: AppState) => ({
   round: getBattle(state).round,
   seed: getBattle(state).seed,
   outdated: getBattle(state).outdated,
-  selected_terrains: getBattle(state).terrains,
-  terrains: state.terrains,
+  terrains: getSelectedTerrains(state),
   tactics: state.tactics,
   fight_over: getBattle(state).fight_over,
   settings: getSettings(state)

@@ -8,7 +8,7 @@ import DetailTextRow from './Detail/DetailTextRow'
 import DetailInputRow from './Detail/DetailInputRow'
 import DetailDropdownRow from './Detail/DetailDropdownRow'
 import Headers from './Utils/Headers'
-import { Mode, ValuesType, Cohort, UnitType, TerrainType, UnitRole, UnitAttribute, UnitValueType, unitValueToString, Settings, Setting, CombatPhase } from 'types'
+import { Mode, ValuesType, Cohort, UnitType, TerrainType, UnitRole, UnitAttribute, UnitValueType, unitValueToString, Settings, Setting, CombatPhase, isAttributeEnabled } from 'types'
 import { values } from 'utils'
 import { getValue, calculateValue, explain } from 'definition_values'
 import { toMaintenance } from 'formatters'
@@ -71,50 +71,9 @@ export default class UnitDetail extends Component<IProps> {
     )
   }
 
-  hideAttribute = (attribute: UnitValueType) => {
-    const { show_statistics, settings, mode } = this.props
-    if (!show_statistics && (attribute === UnitAttribute.StrengthDepleted || attribute === UnitAttribute.MoraleDepleted))
-      return true
-    if (!settings[Setting.BackRow] && attribute === UnitAttribute.BackrowEffectiveness)
-      return true
-    if (mode === Mode.Naval && (attribute === UnitAttribute.CaptureChance || attribute === UnitAttribute.CaptureResist))
-      return true
-    if (!settings[Setting.DailyMoraleLoss] && attribute === UnitAttribute.DailyLossResist)
-      return true
-    if (!settings[Setting.FireAndShock] && attribute in CombatPhase)
-      return true
-    if (!settings[Setting.FireAndShock] && (attribute === UnitAttribute.FireDamageDone || attribute === UnitAttribute.FireDamageTaken || attribute === UnitAttribute.ShockDamageDone || attribute === UnitAttribute.ShockDamageTaken))
-      return true
-    if (!settings[Setting.FireAndShock] && (attribute === UnitAttribute.OffensiveFirePips || attribute === UnitAttribute.OffensiveMoralePips || attribute === UnitAttribute.OffensiveShockPips))
-      return true
-    if (!settings[Setting.FireAndShock] && (attribute === UnitAttribute.DefensiveFirePips || attribute === UnitAttribute.DefensiveMoralePips || attribute === UnitAttribute.DefensiveShockPips))
-      return true
-    if (!settings[Setting.FireAndShock] && (attribute === UnitAttribute.DefensiveFirePips || attribute === UnitAttribute.DefensiveMoralePips || attribute === UnitAttribute.DefensiveShockPips))
-      return true
-    if (!settings[Setting.AttributeCombatAbility] && attribute === UnitAttribute.CombatAbility)
-      return true
-    if (!settings[Setting.AttributeDamage] && (attribute === UnitAttribute.DamageDone || attribute === UnitAttribute.DamageTaken))
-      return true
-    if (!settings[Setting.AttributeExperience] && attribute === UnitAttribute.Experience)
-      return true
-    if (!settings[Setting.AttributeMilitaryTactics] && attribute === UnitAttribute.MilitaryTactics)
-      return true
-    if (!settings[Setting.AttributeMoraleDamage] && (attribute === UnitAttribute.MoraleDamageDone || attribute === UnitAttribute.MoraleDamageTaken))
-      return true
-    if (!settings[Setting.AttributeOffenseDefense] && (attribute === UnitAttribute.Offense || attribute === UnitAttribute.Defense))
-      return true
-    if (!settings[Setting.AttributeStrengthDamage] && (attribute === UnitAttribute.StrengthDamageDone || attribute === UnitAttribute.StrengthDamageTaken))
-      return true
-    if (!settings[Setting.AttributeDrill] && attribute === UnitAttribute.Drill)
-      return true
-    if (attribute === CombatPhase.Default)
-      return true
-    return false
-  }
-
   renderRow = (attribute: UnitValueType) => {
-    const { unit, custom_value_key, onCustomBaseValueChange, onCustomModifierValueChange, onCustomLossValueChange, disable_base_values } = this.props
-    if (this.hideAttribute(attribute))
+    const { unit, custom_value_key, onCustomBaseValueChange, onCustomModifierValueChange, onCustomLossValueChange, disable_base_values, settings, mode, show_statistics } = this.props
+    if (!isAttributeEnabled(attribute, settings, mode, show_statistics))
       return null
     const base_value = getValue(ValuesType.Base, unit, attribute, custom_value_key)
     const modifier_value = getValue(ValuesType.Modifier, unit, attribute, custom_value_key)

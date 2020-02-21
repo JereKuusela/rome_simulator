@@ -20,6 +20,7 @@ export const selectTactic = makeActionReplaceFirst(manager.selectTactic, actionT
 export const setFlankSize = makeActionReplaceFirst(manager.setFlankSize, actionToFunction)
 export const setUnitPreference = makeActionReplaceFirst(manager.setUnitPreference, actionToFunction)
 export const setGeneralMartial = makeActionReplaceFirst(manager.setGeneralMartial, actionToFunction)
+export const setGeneralValue = makeActionReplaceFirst(manager.setGeneralValue, actionToFunction)
 export const setHasGeneral = makeActionReplaceFirst(manager.setHasGeneral, actionToFunction)
 export const clearGeneralModifiers = makeActionReplaceFirst(manager.clearGeneralModifiers, actionToFunction)
 export const enableGeneralModifiers = makeActionReplaceFirst(manager.enableGeneralModifiers, actionToFunction)

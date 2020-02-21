@@ -5,9 +5,8 @@ import PaddedRow from './Utils/PaddedRow'
 import Input from './Utils/Input'
 import Headers from './Utils/Headers'
 
-import { ValuesType } from 'types'
+import { ValuesType, formatAttribute } from 'types'
 import { getValue, explainShort, DefinitionValues, calculateValue } from 'definition_values'
-import { formatAttribute } from 'formatters'
 
 interface IProps<D extends DefinitionValues<T>, T extends string> {
   custom_value_key: string

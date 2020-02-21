@@ -8,8 +8,9 @@ export enum ArmyName {
   Army1 = 'Army 1'
 }
 
-export enum GeneralCalc {
-  Martial = 'Martial'
+export enum GeneralAttribute {
+  Martial = 'Martial',
+  Maneuver = 'Maneuver'
 }
 
 export type GeneralStats = {
@@ -19,9 +20,11 @@ export type GeneralStats = {
   trait_martial: number
 }
 
+export type GeneralValueType = GeneralAttribute | CombatPhase
+
 export type Armies = { [key in Mode]: { [key in ArmyName]: Army } }
 
-export interface General extends DefinitionValues<GeneralCalc | CombatPhase> {
+export interface General extends DefinitionValues<GeneralValueType> {
   enabled: boolean
   definitions: UnitDefinitionValues
 }

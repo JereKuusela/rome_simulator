@@ -1,6 +1,6 @@
 import { ArmyForCombat } from 'state'
 import { Terrain, UnitType, Setting, TacticCalc, UnitAttribute, Side, Settings, Cohorts, CombatPhase } from 'types'
-import { calculateTerrainPips, calculateGeneralPips } from './combat_utils'
+import { calculateGeneralPips, getTerrainPips } from './combat_utils'
 import { calculateValue } from 'definition_values'
 import { CombatParticipant, getCombatUnit, CombatCohorts, Frontline, Defeated, doBattleFast, Reserve, getUnitDefinition, CombatUnitTypes } from './combat'
 import { mapRange, map, values, toObj } from 'utils'
@@ -64,7 +64,7 @@ export const convertParticipant = (side: Side, army: ArmyForCombat, enemy: ArmyF
   const tactic_casualties = calculateValue(army.tactic, TacticCalc.Casualties) + calculateValue(enemy.tactic, TacticCalc.Casualties)
   const cohorts = convertCohorts(army, settings, tactic_casualties, terrains, unit_types)
   const general_pips = toObj(values(CombatPhase), phase => phase, phase => calculateGeneralPips(army.general, enemy.general, phase))
-  const terrain_pips = side === Side.Attacker ? calculateTerrainPips(terrains) : 0
+  const terrain_pips = getTerrainPips(terrains, side, army.general, enemy.general)
   return {
     cohorts,
     dice: 0,
