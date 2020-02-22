@@ -614,7 +614,7 @@ class Countries extends Component<IProps> {
       return
     this.props.setMilitaryPower(power)
     this.enableModifiers(MILITARY_POWER_KEY, [{
-      target: UnitType.BaseLand,
+      target: UnitType.Land,
       scope: ScopeType.Country,
       attribute: UnitAttribute.Morale,
       type: ValuesType.Modifier,
@@ -648,7 +648,7 @@ class Countries extends Component<IProps> {
       return
     this.props.setOfficeMorale(number)
     this.enableModifiers(OFFICE_KEY + 'Morale', [{
-      target: UnitType.BaseLand,
+      target: UnitType.Land,
       scope: ScopeType.Country,
       attribute: UnitAttribute.Morale,
       type: ValuesType.Modifier,

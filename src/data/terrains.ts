@@ -2,7 +2,7 @@ import { ValuesType, Mode, TerrainType, LocationType, TerrainCalc, Terrain, Terr
 import { addValues } from 'definition_values'
 import { toObj } from 'utils'
 
-import * as data from './json/terrains.json'
+import * as data from './json/ir/terrains.json'
 import IconTerrain from 'images/terrain.png'
 
 const createTerrainFromJson = (data: TerrainData): Terrain => {

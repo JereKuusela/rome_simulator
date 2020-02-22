@@ -2,6 +2,7 @@ import { DefinitionValues, calculateValue } from 'definition_values'
 import { TerrainType, Definition, CountryName, Mode } from 'types'
 import { toNumber, toPercent, toSignedPercent, toMultiplier } from 'formatters'
 import { CombatPhase } from './battle'
+import { CultureType } from './modifiers'
 
 export enum UnitType {
   Archers = 'Archers',
@@ -20,8 +21,8 @@ export enum UnitType {
   Hexere = 'Hexere',
   Octere = 'Octere',
   MegaPolyreme = 'Mega-Polyreme',
-  BaseLand = 'Base Land Unit',
-  BaseNaval = 'Base Naval Unit',
+  Land = 'Land Unit',
+  Naval = 'Naval Unit',
   Infantry = 'Infantry',
   Cavalry = 'Cavalry',
   Artillery = 'Artillery'
@@ -87,9 +88,11 @@ export interface BaseCohort extends DefinitionValues<UnitValueType> {
 
 /** A single (sub) unit definition. Used to store data but shouldn't be used for anything else. */
 export interface BaseUnit extends Definition<UnitType>, DefinitionValues<UnitValueType> {
-  role: UnitRole
-  is_loyal?: boolean,
+  role?: UnitRole
+  is_loyal?: boolean
   base?: UnitType
+  culture?: CultureType
+  tech?: number
 }
 
 /** A full unit definition (merged with definitions of country, general and base unit types). */

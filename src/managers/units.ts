@@ -51,7 +51,7 @@ export const clearUnitModifiers = (units: BaseUnits, key: string) => {
   })
 }
 
-export const getBaseUnitType = (mode: Mode) => mode === Mode.Naval ? UnitType.BaseNaval : UnitType.BaseLand
+export const getBaseUnitType = (mode: Mode) => mode === Mode.Naval ? UnitType.Naval : UnitType.Land
 
 export const applyDynamicAttributes = <T extends DefinitionValues<UnitValueType>>(definition: T, settings: Settings) => {
   if (settings[Setting.AttributeDrill]) {

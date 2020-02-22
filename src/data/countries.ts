@@ -13,7 +13,7 @@ export const defaultCountry: Country =
   office_discipline: 0,
   office_morale: 0,
   armies: getDefaultArmies(),
-  units: getDefaultUnits()
+  units: getDefaultUnits(CultureType.SubSaharan)
 }
 
 export const getDefaultCountryDefinitions = (): { [key in CountryName]: Country } => ({

@@ -5,16 +5,16 @@ import {
   TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, Modifier, ScopeType
 } from 'types'
 
-import * as traditionData from './json/traditions.json'
-import * as tradeData from './json/trades.json'
-import * as heritageData from './json/heritages.json'
-import * as inventionData from './json/inventions.json'
-import * as omenData from './json/omens.json'
-import * as traitData from './json/traits.json'
-import * as lawData from './json/laws.json'
-import * as economyData from './json/economy.json'
-import * as ideaData from './json/ideas.json'
-import * as abilityData from './json/abilities.json'
+import * as traditionData from './json/ir/traditions.json'
+import * as tradeData from './json/ir/trades.json'
+import * as heritageData from './json/ir/heritages.json'
+import * as inventionData from './json/ir/inventions.json'
+import * as omenData from './json/ir/omens.json'
+import * as traitData from './json/ir/traits.json'
+import * as lawData from './json/ir/laws.json'
+import * as economyData from './json/ir/economy.json'
+import * as ideaData from './json/ir/ideas.json'
+import * as abilityData from './json/ir/abilities.json'
 
 type Traditions = { [key in CultureType]: TraditionDefinition }
 type Omens = { [key in ReligionType]: OmenDefinition[] }

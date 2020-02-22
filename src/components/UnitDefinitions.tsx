@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Image, Table, List, Icon } from 'semantic-ui-react'
 import { sortBy, toNumber } from 'lodash'
 
-import { Mode, CountryName, UnitType, TerrainType, BaseUnit, UnitAttribute, UnitValueType, Units } from 'types'
+import { Mode, CountryName, UnitType, TerrainType, BaseUnit, UnitAttribute, UnitValueType, Units, Unit } from 'types'
 import { toArr, getImage } from 'utils'
 import { unitSorter } from 'managers/army'
 import { calculateValue, calculateBase, calculateModifier, calculateLoss } from 'definition_values'
@@ -21,7 +21,7 @@ import IconAttrition from 'images/attrition.png'
 interface IProps {
   mode: Mode
   country: CountryName
-  units: Units
+  units: Unit[]
   images: { [key in UnitType]: string[] }
   unit_types: UnitType[]
   terrains: TerrainType[]
@@ -33,7 +33,6 @@ export default class UnitDefinitions extends Component<IProps> {
 
   render() {
     const { mode, units, country } = this.props
-    const sorted_units = sortBy(toArr(units), unit => unitSorter(unit, mode))
     const icon_strength = mode === Mode.Naval ? IconStrength : IconManpower
     return (
       <Table celled selectable unstackable>
@@ -88,7 +87,7 @@ export default class UnitDefinitions extends Component<IProps> {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {sorted_units.map(this.renderRow)}
+          {units.map(this.renderRow)}
         </Table.Body>
       </Table>
     )
@@ -98,6 +97,7 @@ export default class UnitDefinitions extends Component<IProps> {
     return (
       <Table.Row key={unit.type} onClick={() => this.props.onRowClick(unit)}>
         <Table.Cell singleLine>
+          {unit.tech}
           <Image src={getImage(unit)} avatar />
           {unit.type}
         </Table.Cell>

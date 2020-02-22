@@ -13,7 +13,7 @@ import { calculateValue } from 'definition_values'
  * @param state Application state.
  */
 export const getSettings = (state: AppState, mode?: Mode): Settings => {
-  const settings =  { ...state.settings.combatSettings[mode || state.settings.mode], ...state.settings.siteSettings }
+  const settings = { ...state.settings.combatSettings[mode || state.settings.mode], ...state.settings.siteSettings }
   const attacker = getCountries(state)[getCountry(state, Side.Attacker)]
   const defender = getCountries(state)[getCountry(state, Side.Defender)]
   settings[Setting.CombatWidth] += Math.max(calculateValue(attacker, CountryAttribute.CombatWidth), calculateValue(defender, CountryAttribute.CombatWidth))
@@ -165,12 +165,12 @@ export const getSelectedTactic = (state: AppState, side: Side): Tactic => {
 
 export const getUnitPreferences = (state: AppState, side: Side): UnitPreferences => {
   const army = getBaseArmy(state, side)
-  return  army.unit_preferences
+  return army.unit_preferences
 }
 
 export const getFlankSize = (state: AppState, side: Side): number => {
   const army = getBaseArmy(state, side)
-  return  army.flank_size
+  return army.flank_size
 }
 
 export const getCountry = (state: AppState, side: Side): CountryName => {
@@ -184,7 +184,7 @@ export const getGeneralStats = (state: AppState, country: CountryName): GeneralS
 
 export const getMode = (state: AppState): Mode => state.settings.mode
 
-const getBaseArmy = (state: AppState, side: Side)=> {
+const getBaseArmy = (state: AppState, side: Side) => {
   const participant = state.battle[state.settings.mode].participants[side]
   const country = participant.country
   return getArmy(state, country)
@@ -236,8 +236,14 @@ export const getUnits = (state: AppState, country?: CountryName): Units => {
   const mode = state.settings.mode
   const base_units = getBaseUnits(state, country)
   const general = getGeneral(state, country).definitions
-  const units = mergeDefinitions(settings,base_units, general)
+  const units = mergeDefinitions(settings, base_units, general)
   return filterUnitDefinitions(mode, units)
+}
+
+export const getSortedUnits = (state: AppState, country?: CountryName): Unit[] => {
+  const mode = getMode(state)
+  const units = getUnits(state, country)
+  return sortBy(toArr(units), unit => manager.unitSorter(unit, mode))
 }
 
 export const getUnit = (state: AppState, unit_type: UnitType, country?: CountryName): Unit => {
@@ -277,7 +283,7 @@ export const resetMissing = (data: AppState) => {
 export const resetAll = (data: AppState) => {
   data.tactics = getDefaultTacticState()
   data.terrains = getDefaultTerrainState()
-  data.battle =  getDefaultBattle()
+  data.battle = getDefaultBattle()
   data.settings = getDefaultSettings()
   data.countries = getDefaultCountryDefinitions()
 }

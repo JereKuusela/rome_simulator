@@ -24,7 +24,8 @@ export enum CultureType {
   Levantine = 'Levantine',
   Mauryan = 'Mauryan',
   NorthAfrican = 'North African',
-  Persian = 'Persian'
+  Persian = 'Persian',
+  SubSaharan = 'Sub Saharan'
 }
 
 export enum TradeType {

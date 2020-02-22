@@ -23,9 +23,11 @@ export const getGeneralStats = (general: General): GeneralStats => {
 }
 
 export const unitSorter = (definition: BaseUnit, mode: Mode) => {
+  if (!definition.base)
+    return ''
   if (mode === Mode.Naval)
     return calculateBase(definition, UnitAttribute.Cost)
-  return definition.type === UnitType.BaseLand ? '' : definition.type
+  return (99 - (definition.tech ?? 0)) + definition.type
 }
 
 const findFromFrontline = (frontline: BaseFrontLine, id: number): [number, number] | undefined => {
@@ -186,9 +188,9 @@ export const enableGeneralModifiers = (army: Army, key: string, modifiers: Modif
   const generalValues = generalModifiers.map(value => [value.attribute, value.value] as [UnitValueType, number])
   definition = regenerateValues(definition, ValuesType.Base, key, generalValues)
   const martial = calculateValue(definition, GeneralAttribute.Martial)
-  if (!definitions[UnitType.BaseNaval])
-    definitions[UnitType.BaseNaval] = {}
-  definitions[UnitType.BaseNaval] = addValues(definitions[UnitType.BaseNaval], ValuesType.Base, GeneralAttribute.Martial, [[UnitAttribute.CaptureChance, 0.002 * martial]])
+  if (!definitions[UnitType.Naval])
+    definitions[UnitType.Naval] = {}
+  definitions[UnitType.Naval] = addValues(definitions[UnitType.Naval], ValuesType.Base, GeneralAttribute.Martial, [[UnitAttribute.CaptureChance, 0.002 * martial]])
   definition.definitions = definitions
   army.general = definition
 }

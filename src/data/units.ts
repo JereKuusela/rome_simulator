@@ -1,8 +1,10 @@
-import { ValuesType, UnitType, BaseUnit, UnitAttribute, UnitValueType, UnitRole, TerrainType, UnitState, CountryName, BaseUnits, Mode } from 'types'
+import { ValuesType, UnitType, BaseUnit, UnitAttribute, UnitValueType, UnitRole, TerrainType, UnitState, CountryName, BaseUnits, Mode, CultureType } from 'types'
 import { addValues } from 'definition_values'
-import { toObj, removeUndefined } from 'utils'
+import { toObj, removeUndefined, filter } from 'utils'
 
-import * as data from './json/units.json'
+import * as ir_data from './json/ir/units.json'
+import * as euiv_basedata from './json/euiv/base_units.json'
+import * as euiv_data from './json/euiv/units.json'
 import IconArcher from 'images/archers.png'
 import IconCamelCavalry from 'images/camel_cavalry.png'
 import IconChariots from 'images/chariots.png'
@@ -38,11 +40,11 @@ const unit_to_icon: { [key in UnitType]: string } = {
   [UnitType.Hexere]: IconHexere,
   [UnitType.Octere]: IconOctere,
   [UnitType.MegaPolyreme]: IconMegaPolyreme,
-  [UnitType.BaseLand]: IconMilitaryPower,
-  [UnitType.BaseNaval]: IconMilitaryPower,
+  [UnitType.Land]: IconMilitaryPower,
+  [UnitType.Naval]: IconMilitaryPower,
   [UnitType.Cavalry]: IconHeavyCavalry,
   [UnitType.Infantry]: IconHeavyInfantry,
-  [UnitType.Artillery]: IconWarElephants
+  [UnitType.Artillery]: IconSupplyTrain
 }
 
 export const getUnitIcon = (type: UnitType) => unit_to_icon[type] || ''
@@ -53,14 +55,16 @@ const createUnitFromJson = (data: UnitData): BaseUnit => {
   let unit: BaseUnit = {
     type: data.type as UnitType,
     mode:  data.mode as Mode | undefined,
-    image: unit_to_icon[data.type as UnitType] ?? '',
-    role: data.role as UnitRole,
-    base: data.base ? data.base as UnitType : undefined
+    image: unit_to_icon[data.type as UnitType] ?? unit_to_icon[data.base as UnitType] ?? '',
+    role: data.role ? data.role as UnitRole : undefined,
+    base: data.base ? data.base as UnitType : undefined,
+    culture: data.culture ? data.culture as CultureType : undefined,
+    tech: data.tech
   }
   removeUndefined(unit)
   const base_values: [UnitValueType, number][] = [
     [UnitAttribute.AttritionWeight, data.attrition_weight ?? 0],
-    [UnitAttribute.Cost, data.cost],
+    [UnitAttribute.Cost, data.cost ?? 0],
     [UnitAttribute.Maintenance, data.maintenance ?? 0],
     [UnitAttribute.Strength, data.strength ?? 0],
     [UnitAttribute.Morale, data.morale ?? 0],
@@ -75,6 +79,12 @@ const createUnitFromJson = (data: UnitData): BaseUnit => {
     [UnitAttribute.FoodStorage, data.food_storage ?? 0],
     [UnitAttribute.CaptureChance, data.capture_chance ?? 0],
     [UnitAttribute.CaptureResist, data.capture_resist ?? 0],
+    [UnitAttribute.OffensiveFirePips, data.offensive_fire ?? 0],
+    [UnitAttribute.DefensiveFirePips, data.defensive_fire ?? 0],
+    [UnitAttribute.OffensiveMoralePips, data.offensive_morale ?? 0],
+    [UnitAttribute.DefensiveMoralePips, data.defensive_morale ?? 0],
+    [UnitAttribute.OffensiveShockPips, data.offensive_shock ?? 0],
+    [UnitAttribute.DefensiveShockPips, data.defensive_shock ?? 0],
     [UnitType.Archers, data.archers ?? 0],
     [UnitType.CamelCavalry, data.camel_cavalry ?? 0],
     [UnitType.Chariots, data.chariots ?? 0],
@@ -97,21 +107,24 @@ const createUnitFromJson = (data: UnitData): BaseUnit => {
   return unit
 }
 
-const initializeDefaultUnits = (): BaseUnits => toObj(data.units.map(createUnitFromJson), unit => unit.type)
+//const initializeDefaultUnits = (): BaseUnits => toObj(ir_data.units.map(createUnitFromJson), unit => unit.type)
+const initializeDefaultUnits = (): BaseUnits => toObj(euiv_basedata.units.map(createUnitFromJson).concat(euiv_data.units.map(createUnitFromJson)), unit => unit.type)
 
 const defaultUnits = initializeDefaultUnits()
 
-export const getDefaultUnits = (): BaseUnits => defaultUnits
+export const getDefaultUnits = (culture: CultureType): BaseUnits => filter(defaultUnits, unit => !unit.culture || unit.culture === culture)
 export const getDefaultUnit = (type: UnitType): BaseUnit => defaultUnits[type]
 
 interface UnitData {
   base: string | null
   type: string
   mode?: string
+  culture?: string
   morale?: number
   strength?: number
-  cost: number
-  role: string
+  cost?: number
+  role?: string
+  tech?: number
   maintenance?: number
   maneuver?: number
   morale_damage_taken?: number
@@ -142,6 +155,12 @@ interface UnitData {
   octere?: number
   mega_polyreme?: number
   riverine?: number
+  offensive_morale?: number
+  defensive_morale?: number
+  offensive_fire?: number
+  defensive_fire?: number
+  offensive_shock?: number
+  defensive_shock?: number
 }
 
-export const getDefaultUnitState = (): UnitState => ({ [CountryName.Country1]: getDefaultUnits(), [CountryName.Country2]: getDefaultUnits() })
+export const getDefaultUnitState = (): UnitState => ({ [CountryName.Country1]: getDefaultUnits(CultureType.SubSaharan), [CountryName.Country2]: getDefaultUnits(CultureType.SubSaharan) })

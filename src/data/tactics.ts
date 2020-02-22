@@ -1,7 +1,7 @@
 import { ValuesType, Mode, TacticType, TacticCalc, Tactic, TacticValueType, UnitType } from 'types'
 import { toObj } from 'utils'
 
-import * as data from './json/tactics.json'
+import * as data from './json/ir/tactics.json'
 import IconBottleneck from 'images/bottleneck.png'
 import IconCavalrySkirmish from 'images/cavalry_skirmish.png'
 import IconDeception from 'images/deception.png'

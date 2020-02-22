@@ -6,7 +6,7 @@ import ItemSelector from 'components/ItemSelector'
 import { CountryName, ArmyType, UnitType } from 'types'
 import { toArr } from 'utils'
 import { getNextId } from 'army_utils'
-import { AppState, getUnits } from 'state'
+import { AppState, getSortedUnits } from 'state'
 import { selectCohort, invalidate } from 'reducers'
 
 
@@ -32,7 +32,7 @@ class ModalUnitSelector extends Component<IProps> {
         <Modal.Content>
           <ItemSelector
             onSelection={this.selectUnit}
-            items={toArr(units)}
+            items={units}
           />
         </Modal.Content>
       </Modal>
@@ -49,7 +49,7 @@ class ModalUnitSelector extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  units: props.info && getUnits(state, props.info.country)
+  units: props.info && getSortedUnits(state, props.info.country)
 })
 
 const actions = { selectUnit: selectCohort, invalidate }

@@ -5,8 +5,9 @@ import { UnitType, TerrainType, TacticType } from 'types'
 import { toArr, getImage } from 'utils'
 
 interface Item<T extends ItemType> {
-  type: T,
+  type: T
   image?: string
+  tech?: number
 }
 
 type ItemType = UnitType | TerrainType | TacticType
@@ -40,6 +41,7 @@ export default class ItemSelector<T extends ItemType> extends Component<IProps<T
     return (
       <Table.Row key={item.type} onClick={() => onSelection(item.type)}>
         <Table.Cell>
+          {item.tech}
           <Image src={getImage(item)} avatar />
           {item.type}
         </Table.Cell>

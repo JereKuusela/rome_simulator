@@ -1,10 +1,10 @@
 import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultParticipant, getDefaultArmy, getDefaultUnit } from 'data'
 import { map, mapRange, resize } from 'utils'
 import { mergeValues, calculateValue } from 'definition_values'
-import { Mode, CountryName, Participant, Terrain, TacticType, Setting, Side, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, TacticCalc, Settings, Cohorts, UnitPreferences, General, Cohort, CombatPhase } from 'types'
+import { Mode, CountryName, Participant, Terrain, TacticType, Setting, Side, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, TacticCalc, Settings, Cohorts, UnitPreferences, General, Cohort, CombatPhase, CultureType } from 'types'
 import { CombatCohort, CombatParticipant, doBattleFast, getBaseDamages, convertCohorts, deploy, sortReserve } from 'combat'
 
-const unitDefinitions = map(getDefaultUnits(), unit => mergeValues(unit, getDefaultUnit(UnitType.BaseLand)))
+const unitDefinitions = map(getDefaultUnits(CultureType.SubSaharan), unit => mergeValues(unit, getDefaultUnit(UnitType.Land)))
 export const getDefinitions = () => ({ [CountryName.Country1]: unitDefinitions, [CountryName.Country2]: unitDefinitions })
 const tactics = getDefaultTactics()
 const terrains = getDefaultTerrains()
