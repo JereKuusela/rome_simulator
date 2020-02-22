@@ -13,7 +13,7 @@ export const filterAttributes = <T extends string>(attributes: T[], settings: Se
 export const isAttributeEnabled = (attribute: string, settings: Settings, mode?: Mode, show_statistics?: boolean) => {
   if (!show_statistics && (attribute === UnitAttribute.StrengthDepleted || attribute === UnitAttribute.MoraleDepleted))
     return false
-  if (!settings[Setting.BackRow] && attribute === UnitAttribute.BackrowEffectiveness)
+  if (!settings[Setting.BackRow] && attribute === UnitAttribute.OffensiveSupport)
     return false
   if (mode !== Mode.Naval && (attribute === UnitAttribute.CaptureChance || attribute === UnitAttribute.CaptureResist))
     return false

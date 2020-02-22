@@ -2,16 +2,16 @@
 import { sumBy, clamp } from 'lodash'
 import { Terrain, TerrainCalc, Setting, UnitAttribute, Settings, BaseUnit, CombatPhase, General, GeneralAttribute, Side, LocationType } from 'types'
 import { calculateValue } from 'definition_values'
-import { CombatUnit } from './combat'
+import { CombatCohortDefinition } from './combat'
 
 /**
  * Calculates the roll modifier based on skill level difference of generals.
  * Every two levels increase dice roll by one (rounded down).
  */
 export const calculateGeneralPips = (general: General, enemy: General, phase: CombatPhase): number => {
-  const martial_pip = Math.max(0, Math.floor((calculateValue(general, GeneralAttribute.Martial) - calculateValue(enemy, GeneralAttribute.Martial)) / 2.0))
-  const phase_pip = Math.max(0, Math.floor((calculateValue(general, phase) - calculateValue(enemy, phase))))
-  return martial_pip + phase_pip
+  const martial_pip = Math.floor((calculateValue(general, GeneralAttribute.Martial) - calculateValue(enemy, GeneralAttribute.Martial)) / 2.0)
+  const phase_pip = calculateValue(general, phase) - calculateValue(enemy, phase)
+  return Math.max(0, martial_pip + phase_pip)
 }
 
 export const getTerrainPips = (terrains: Terrain[], side: Side, general: General, enemy: General) => {
@@ -24,29 +24,34 @@ export const getTerrainPips = (terrains: Terrain[], side: Side, general: General
 /**
  * Calculates the roll modifier from unit pips.
  */
-export const calculateUnitPips = (source: CombatUnit, target: CombatUnit, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
-  return getOffensiveUnitPips(source, type, phase) + getDefensiveUnitPips(target, type, phase)
+export const calculateCohortPips = (source: CombatCohortDefinition, target: CombatCohortDefinition, target_support: CombatCohortDefinition | null, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
+  return getOffensiveCohortPips(source, type, phase) + getDefensiveCohortPips(target, type, phase) + getDefensiveSupportCohortPips(target_support, type, phase)
 }
 
-export const getOffensiveUnitPips = (unit: CombatUnit, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
+export const getOffensiveCohortPips = (cohort: CombatCohortDefinition, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
   if (type === UnitAttribute.Morale)
-    return unit[UnitAttribute.OffensiveMoralePips]
+    return cohort[UnitAttribute.OffensiveMoralePips]
   if (phase === CombatPhase.Shock)
-    return unit[UnitAttribute.OffensiveShockPips]
+    return cohort[UnitAttribute.OffensiveShockPips]
   if (phase === CombatPhase.Fire)
-    return unit[UnitAttribute.OffensiveFirePips]
+    return cohort[UnitAttribute.OffensiveFirePips]
   return 0
 }
 
-export const getDefensiveUnitPips = (unit: CombatUnit, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
+export const getDefensiveCohortPips = (cohort: CombatCohortDefinition, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
   if (type === UnitAttribute.Morale)
-    return -unit[UnitAttribute.DefensiveMoralePips]
+    return -cohort[UnitAttribute.DefensiveMoralePips]
   if (phase === CombatPhase.Shock)
-    return -unit[UnitAttribute.DefensiveShockPips]
+    return -cohort[UnitAttribute.DefensiveShockPips]
   if (phase === CombatPhase.Fire)
-    return -unit[UnitAttribute.DefensiveFirePips]
+    return -cohort[UnitAttribute.DefensiveFirePips]
   return 0
 }
+
+export const getDefensiveSupportCohortPips = (cohort: CombatCohortDefinition | null, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
+  return cohort ?  Math.ceil(cohort[UnitAttribute.DefensiveSupport] * getDefensiveCohortPips(cohort, type, phase)) : 0
+}
+
 /**
  * Calculates the base damage value from roll.
  * @param roll Dice roll with modifiers.

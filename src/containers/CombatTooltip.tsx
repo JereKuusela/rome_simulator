@@ -5,7 +5,7 @@ import { Popup, List } from 'semantic-ui-react'
 import StyledNumber from 'components/Utils/StyledNumber'
 
 import { Mode, Side, ArmyType, UnitAttribute, UnitType, Setting, TacticCalc, TerrainType, CombatPhase } from 'types'
-import { CombatUnit, CombatUnitRoundInfo, CombatCohort, calculateUnitPips, calculateBaseDamage, getOffensiveUnitPips, getDefensiveUnitPips, getCombatPhase, getDailyIncrease } from 'combat'
+import { CombatCohort, CombatCohortRoundInfo, CombatCohortDefinition, calculateCohortPips, calculateBaseDamage, getOffensiveCohortPips, getDefensiveCohortPips, getCombatPhase, getDailyIncrease, getDefensiveSupportCohortPips } from 'combat'
 import { toSignedPercent, toManpower, strengthToValue, toNumber, addSign, toMultiplier } from 'formatters'
 import { calculateValue } from 'definition_values'
 import { AppState, getSettings, getSelectedTerrains, getGeneralStats, getCountry, getTactic, getCombatUnit, getCombatParticipant } from 'state'
@@ -58,11 +58,12 @@ class CombatTooltip extends Component<IProps, IState> {
       return null
 
     const target = source.target
+    const target_support = source.target_support
     return (
       <List>
         {this.getInfoSection(source, target)}
         {target && <List.Item />}
-        {target && this.getBaseDamageSection(source, target)}
+        {target && this.getBaseDamageSection(source, target, target_support)}
         {target && <List.Item />}
         {target && this.getDamageMultiplierSection(source, target, participant.tactic_bonus, is_support)}
         {target && <List.Item />}
@@ -77,43 +78,45 @@ class CombatTooltip extends Component<IProps, IState> {
   toAdd = (value: number) => value ? addSign(Number(this.toNumber(value))) : null
   toMultiplier = (value: number) => toMultiplier(value, 3)
 
-  getBaseDamageSection = (source: IUnit, target: IUnit) => {
+  getBaseDamageSection = (source: IUnit, target: IUnit, target_support: IUnit | null) => {
     const { participant, settings } = this.props
     const { round } = participant
     const phase = getCombatPhase(round, settings)
-    const phase_roll = calculateUnitPips(source, target, UnitAttribute.Strength, phase)
-    const morale_roll = calculateUnitPips(source, target, UnitAttribute.Morale)
+    const phase_roll = calculateCohortPips(source, target, target_support, UnitAttribute.Strength, phase)
+    const morale_roll = calculateCohortPips(source, target, target_support, UnitAttribute.Morale)
     const multi = phase_roll || morale_roll
 
     if (multi) {
       return (<>
-        {this.getBaseDamageSubSection(source, target, UnitAttribute.Strength, phase)}
+        {this.getBaseDamageSubSection(source, target, target_support, UnitAttribute.Strength, phase)}
         {<List.Item />}
-        {this.getBaseDamageSubSection(source, target, UnitAttribute.Morale, phase)}
+        {this.getBaseDamageSubSection(source, target, target_support, UnitAttribute.Morale, phase)}
       </>)
     }
     return (<>
-      {this.getBaseDamageSubSection(source, target, '', phase)}
+      {this.getBaseDamageSubSection(source, target, target_support, '', phase)}
     </>)
   }
 
-  getBaseDamageSubSection = (source: IUnit, target: IUnit, type: UnitAttribute.Strength | UnitAttribute.Morale | '', phase: CombatPhase) => {
+  getBaseDamageSubSection = (source: IUnit, target: IUnit, target_support: IUnit | null, type: UnitAttribute.Strength | UnitAttribute.Morale | '', phase: CombatPhase) => {
     const { settings, participant } = this.props
     const { dice, terrain_pips, general_pips } = participant
-    const base_roll = settings[Setting.BaseRoll]
-    const source_roll = type ? getOffensiveUnitPips(source, type, phase) : 0
-    const target_roll = type ? getDefensiveUnitPips(target, type, phase) : 0
-    const total_roll = dice + terrain_pips + general_pips[phase] + source_roll + target_roll
+    const base_pips = settings[Setting.BaseRoll]
+    const source_pips = type ? getOffensiveCohortPips(source, type, phase) : 0
+    const target_pips = type ? getDefensiveCohortPips(target, type, phase) : 0
+    const target_support_pips = type ? getDefensiveSupportCohortPips(target_support, type, phase) : 0
+    const total_pips = dice + terrain_pips + general_pips[phase] + source_pips + target_pips + target_support_pips
     const text = type === UnitAttribute.Morale ? UnitAttribute.Morale : phase
     return (<>
-      {this.renderModifier('Base pips', base_roll, this.toAdd)}
+      {this.renderModifier('Base pips', base_pips, this.toAdd)}
       {this.renderModifier('Dice pips', dice, this.toAdd)}
       {this.renderModifier('Terrain pips', terrain_pips, this.toAdd)}
       {this.renderModifier('General pips', general_pips[phase], this.toAdd)}
-      {this.renderModifier(text + ' pips', source_roll, this.toAdd)}
-      {this.renderModifier('Enemy ' + text.toLowerCase() + ' pips', target_roll, this.toAdd)}
+      {this.renderModifier(text + ' pips', source_pips, this.toAdd)}
+      {this.renderModifier('Enemy ' + text.toLowerCase() + ' pips', target_pips, this.toAdd)}
+      {this.renderModifier('Backrow ' + text.toLowerCase() + ' pips', target_support_pips, this.toAdd)}
       {this.renderModifier('Roll damage', settings[Setting.RollDamage], this.toMultiplier)}
-      {this.renderItem('Base ' + type.toLowerCase() + ' damage', calculateBaseDamage(total_roll, settings), this.toNumber)}
+      {this.renderItem('Base ' + type.toLowerCase() + ' damage', calculateBaseDamage(total_pips, settings), this.toNumber)}
     </>)
   }
 
@@ -142,7 +145,7 @@ class CombatTooltip extends Component<IProps, IState> {
       {this.renderStyledItem('Enemy experience', experience_reduction, toSignedPercent)}
       {settings[Setting.AttributeDamage] && this.getAttribute(target, UnitAttribute.DamageTaken)}
       {terrain_types.map(terrain => this.getAttribute(source, terrain))}
-      {is_support && this.renderStyledItem(UnitAttribute.BackrowEffectiveness, source[UnitAttribute.BackrowEffectiveness] - 1, toSignedPercent)}
+      {is_support && this.renderStyledItem(UnitAttribute.OffensiveSupport, source[UnitAttribute.OffensiveSupport] - 1, toSignedPercent)}
       {this.renderStyledItem('Battle length', daily_damage, toSignedPercent)}
       {settings[Setting.FireAndShock] && this.renderModifier(phase, source[phase], this.toMultiplier)}
       {settings[Setting.AttributeMilitaryTactics] && this.renderModifier('Target military tactics', 1 / noZero(target[UnitAttribute.MilitaryTactics]), this.toMultiplier)}
@@ -273,18 +276,20 @@ class CombatTooltip extends Component<IProps, IState> {
 }
 
 
-interface IUnit extends CombatUnit, Omit<CombatUnitRoundInfo, 'target'> {
+interface IUnit extends CombatCohortDefinition, Omit<CombatCohortRoundInfo, 'target' | 'target_support'> {
   target: IUnit | null
+  target_support: IUnit | null
 }
 
-const convertUnit = (unit: CombatCohort | null, convert_target: boolean = true): IUnit | null => {
-  if (!unit)
+const convertUnit = (cohort: CombatCohort | null, convert_target: boolean = true): IUnit | null => {
+  if (!cohort)
     return null
   return {
-    ...unit.definition,
-    ...unit.state,
-    ...unit,
-    target: convert_target ? convertUnit(unit.state.target, false) : null
+    ...cohort.definition,
+    ...cohort.state,
+    ...cohort,
+    target: convert_target ? convertUnit(cohort.state.target, false) : null,
+    target_support: convert_target && cohort.state.target_support ? convertUnit(cohort.state.target_support, false) : null
   }
 }
 

@@ -11,7 +11,7 @@ Changelog:
 - Battle: Fixed cohort tooltip not appearing when moving mouse fast.
 - Battle: Fixed total damage shown incorrectly on cohort tooltips (if target had experience).
 - Battle: Improved flank size setting to work more accurately (not sure when this was changed).
-- Battle: Added support for backrow and backrow effectiveness.
+- Battle: Added support for backrow and backrow effectiveness (offensive and defensive).
 - Battle: Added food consumption and storage to fast planner.
 - Battle: Refactored state for armies (first step towards multiarmy battles).
 - Battle: Added support for crossing terrain penalties not affecting attacker if their general has higher maneuver, feature from EUIV.
@@ -71,9 +71,7 @@ Settings:
 EUIV:
  - Tooltip needs to show source of losses (to include daily loss)
  - Cavalry to infantry ratio (flank to front, country definition, + setting)
- - Setting for martial cap (0 for disabled)
  - Units: Available units determined by tech level + culture (selector should sort by tech level + show pips)
- - Backrow defensive pip transfer (50% effect, rounded down)
 
 Todo:
  - Combat massively tested (especially EUIV, but also different configurations).
