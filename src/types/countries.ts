@@ -11,7 +11,8 @@ export enum CountryName {
 export type Countries = { [key in CountryName]: Country }
 
 export enum CountryAttribute {
-  CombatWidth = 'Combat width'
+  CombatWidth = 'Combat width',
+  FlankRatio = 'Flank ratio'
 }
 
 export interface Country extends DefinitionValues<CountryAttribute> {

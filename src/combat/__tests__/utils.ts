@@ -262,26 +262,30 @@ const getParticipants = (info: TestInfo) => {
     dice: 0,
     tactic: tactics[info.army_a.tactic],
     unit_preferences: info.army_a.unit_preferences,
+    flank_ratio: 0,
     flank: info.army_a.flank_size,
     unit_types: {} as any,
     round: 0,
     terrain_pips: 0,
     general_pips: pips,
     tactic_bonus: 0.0,
-    roll_pips: pips
+    roll_pips: pips,
+    flank_ratio_bonus: 0.0
   }
   const participant_d: CombatParticipant = {
     cohorts: status_d,
     dice: 0,
     tactic: tactics[info.army_d.tactic],
     unit_preferences: info.army_d.unit_preferences,
+    flank_ratio: 0,
     flank: info.army_d.flank_size,
     unit_types: {} as any,
     round: 0,
     terrain_pips: 0,
     general_pips: pips,
     tactic_bonus: 0.0,
-    roll_pips: pips
+    roll_pips: pips,
+    flank_ratio_bonus: 0.0
   }
   return [participant_a, participant_d]
 }

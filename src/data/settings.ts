@@ -64,6 +64,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
     [Setting.DailyMoraleLoss]: 0,
     [Setting.DailyDamageIncrease]: 0,
     [Setting.FireAndShock]: false,
+    [Setting.InsufficientSupportPenalty]: 0.0,
     [Setting.AttributeCombatAbility]: false,
     [Setting.AttributeDamage]: true,
     [Setting.AttributeDrill]: false,

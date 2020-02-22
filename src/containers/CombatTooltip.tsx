@@ -53,7 +53,7 @@ class CombatTooltip extends Component<IProps, IState> {
   getExplanation = (id: number | null, is_support: boolean) => {
     if (id === null)
       return null
-    const { source, participant } = this.props
+    const { source } = this.props
     if (!source)
       return null
 
@@ -65,7 +65,7 @@ class CombatTooltip extends Component<IProps, IState> {
         {target && <List.Item />}
         {target && this.getBaseDamageSection(source, target, target_support)}
         {target && <List.Item />}
-        {target && this.getDamageMultiplierSection(source, target, participant.tactic_bonus, is_support)}
+        {target && this.getDamageMultiplierSection(source, target, is_support)}
         {target && <List.Item />}
         {target && this.getStrengthSection(source, target)}
         {target && <List.Item />}
@@ -120,9 +120,9 @@ class CombatTooltip extends Component<IProps, IState> {
     </>)
   }
 
-  getDamageMultiplierSection = (source: IUnit, target: IUnit, tactic_damage: number, is_support: boolean) => {
+  getDamageMultiplierSection = (source: IUnit, target: IUnit, is_support: boolean) => {
     const { terrains, settings, participant } = this.props
-    const { round } = participant
+    const { round, tactic_bonus, flank_ratio_bonus } = participant
     const phase = getCombatPhase(round, settings)
     const daily_damage = getDailyIncrease(round, settings)
     const terrain_types = settings[Setting.AttributeTerrainType] ? terrains.map(value => value.type) : []
@@ -134,7 +134,8 @@ class CombatTooltip extends Component<IProps, IState> {
     const total_damage = source.damage_multiplier
 
     return (<>
-      {this.renderStyledItem('Tactic', tactic_damage, toSignedPercent)}
+      {this.renderStyledItem('Tactic', tactic_bonus, toSignedPercent)}
+      {this.renderStyledItem('Enemy insufficient support', flank_ratio_bonus, toSignedPercent)}
       {this.renderStyledItem('Loyal', is_loyal ? 0.1 : 0, toSignedPercent)}
       {this.getAttribute(source, UnitAttribute.Discipline)}
       {settings[Setting.AttributeDamage] && this.getAttribute(source, UnitAttribute.DamageDone)}

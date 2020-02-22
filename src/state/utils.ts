@@ -144,7 +144,8 @@ export const getArmyForCombat = (state: AppState, side: Side, mode?: Mode): Army
   const general = getGeneral(state, country)
   const tactic = state.tactics[army.tactic]
   const definitions = getUnits(state, country)
-  return { ...cohorts, tactic, general, flank_size: army.flank_size, unit_preferences: army.unit_preferences, definitions }
+  const flank_ratio = calculateValue(state.countries[country], CountryAttribute.FlankRatio)
+  return { ...cohorts, tactic, general, flank_ratio, flank_size: army.flank_size, unit_preferences: army.unit_preferences, definitions }
 }
 
 export const getCurrentCombat = (state: AppState, side: Side): CombatCohorts => {
@@ -287,4 +288,5 @@ export interface ArmyForCombat extends Cohorts {
   general: General
   unit_preferences: UnitPreferences
   flank_size: number
+  flank_ratio: number
 }

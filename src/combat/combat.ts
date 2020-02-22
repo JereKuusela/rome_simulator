@@ -18,6 +18,8 @@ export type CombatParticipant = {
   round: number
   unit_types: CombatUnitTypes
   tactic: Tactic
+  flank_ratio: number
+  flank_ratio_bonus: number
   flank: number
   dice: number
   terrain_pips: number
@@ -88,7 +90,7 @@ const precalculateUnit = (settings: Settings, casualties_multiplier: number, ter
 }
 
 const getValue = (unit: Cohort, attribute: UnitValueType, enabled: boolean) => 1.0 + getMultiplier(unit, attribute, enabled)
-const getMultiplier = (unit: Cohort, attribute: UnitValueType, enabled: boolean) => enabled ? calculateValue(unit, attribute): 0
+const getMultiplier = (unit: Cohort, attribute: UnitValueType, enabled: boolean) => enabled ? calculateValue(unit, attribute) : 0
 
 export const getUnitDefinition = (combatSettings: Settings, terrains: Terrain[], unit_types: UnitType[], cohort: Cohort): CombatCohortDefinition => {
   const info = {
@@ -157,7 +159,7 @@ export interface CombatCohortRoundInfo {
   flanking: boolean
   /** Targeted enemy cohort. */
   target: CombatCohort | null
-   /** Support cohort behind the targeted enemy. */
+  /** Support cohort behind the targeted enemy. */
   target_support: CombatCohort | null
   /** Lost morale this round. */
   morale_loss: number
@@ -214,8 +216,12 @@ export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, mark_de
   a.round = round
   d.round = round
   const daily_multiplier = 1 + getDailyIncrease(round, settings)
-  const multiplier_a = (1 + calculateTactic(a.cohorts, a.tactic, d.tactic)) * daily_multiplier
-  const multiplier_d = (1 + calculateTactic(d.cohorts, d.tactic, a.tactic)) * daily_multiplier
+  a.tactic_bonus = calculateTactic(a.cohorts, a.tactic, d.tactic)
+  d.tactic_bonus = calculateTactic(d.cohorts, d.tactic, a.tactic)
+  a.flank_ratio_bonus = calculateFlankRatioPenalty(d.cohorts, d.flank_ratio, settings)
+  d.flank_ratio_bonus = calculateFlankRatioPenalty(a.cohorts, a.flank_ratio, settings)
+  const multiplier_a = (1 + a.tactic_bonus) * daily_multiplier * (1 + a.flank_ratio_bonus)
+  const multiplier_d = (1 + d.tactic_bonus) * daily_multiplier * (1 + d.flank_ratio_bonus)
   attack(base_damages, a.cohorts.frontline, a.dice + a.roll_pips[phase], multiplier_a, phase, settings)
   attack(base_damages, d.cohorts.frontline, d.dice + d.roll_pips[phase], multiplier_d, phase, settings)
 
@@ -306,6 +312,24 @@ export const calculateTactic = (army: CombatCohorts, tactic: Tactic, counter_tac
   return effectiveness * Math.min(1.0, unit_modifier)
 }
 
+export const calculateFlankRatioPenalty = (army: CombatCohorts, ratio: number, setting: Settings) => {
+  return ratio && calculateFlankRatio(army) > ratio? setting[Setting.InsufficientSupportPenalty]  : 0.0
+}
+
+const calculateFlankRatio = (army: CombatCohorts): number => {
+  let infantry = 0.0
+  let flank = 0.0
+  for (const unit of army.frontline.reduce((prev, current) => prev.concat(current), army.reserve.concat(army.defeated))) {
+    if (!unit)
+      continue
+    if (unit.definition.deployment === UnitRole.Front)
+      infantry += unit[UnitAttribute.Strength]
+    if (unit.definition.deployment === UnitRole.Flank)
+      flank += unit[UnitAttribute.Strength]
+  }
+  return flank / noZero(infantry)
+}
+
 /**
  * Applies stored losses to units.
  */
@@ -371,7 +395,7 @@ const attack = (base_damages: number[], frontline: Frontline, roll: number, dyna
       if (!target)
         continue
       target.state.capture_chance = source.definition[UnitAttribute.CaptureChance]
-      const multiplier = calculateDamageMultiplier(source, target, dynamic_multiplier, i > 0, phase ,settings)
+      const multiplier = calculateDamageMultiplier(source, target, dynamic_multiplier, i > 0, phase, settings)
       calculateMoraleLosses(base_damages, source, target, source.state.target_support, roll, multiplier, phase)
       calculateStrengthLosses(base_damages, source, target, source.state.target_support, roll, multiplier, phase)
     }

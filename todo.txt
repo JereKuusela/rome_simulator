@@ -23,6 +23,7 @@ Changelog:
 - Countries: Added support for country specific combat width modifiers, feature from EUIV.
 - Countries: Added new table at bottom to allow changing country specific attributes.
 - Countries: Added new attributes for Fire, Shock and Maneuver pips, feature from EUIV.
+- Countries: Added a new attribute for flank ratio, feature from EUIV.
 - Countries: Removed Global and General words from modifier targets (should be obvious without them.)
 - Countries: Refactored general to be separate entity (second step towards multiarmy battles).
 - Units: Updated balance changes from 1.3.2 (War Elephants damage against Infantry, Supply Train cost).
@@ -55,6 +56,7 @@ Changelog:
 - Settings: Added a new setting for enabling fire and shock phases, feature from EUIV.
 - Settings: Added a new setting for daily damage increase, feature from EUIV.
 - Settings: Added a new setting for strength affecting maneuver, feature from EUIV.
+- Settings: Added a new setting for insufficient support penalty, feature from EUIV.
 - Settings: Added new settings for enabling/disabling different unit attributes.
 
 Settings:
@@ -70,7 +72,6 @@ Settings:
 
 EUIV:
  - Tooltip needs to show source of losses (to include daily loss)
- - Cavalry to infantry ratio (flank to front, country definition, + setting)
  - Units: Available units determined by tech level + culture (selector should sort by tech level + show pips)
 
 Todo:

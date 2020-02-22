@@ -27,6 +27,7 @@ export enum Setting {
   FixExperience = 'Fix damage reduction from experience',
   FixTargeting = 'Fix targeting',
   BackRow = 'Enable backrow',
+  InsufficientSupportPenalty = 'Penalty for insufficient support',
   StrengthBasedFlank = 'Enable strength based flank',
   FireAndShock = 'Enable fire and shock phases',
   AttributeCombatAbility = 'Enable Combat ability attribute',
@@ -118,6 +119,8 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
       return 'Additional base damage per dice roll and other modifiers.\nIncrease for faster battles, more randomness and stronger generals.\nDecrease for slower battles, less randomness and weaker generals.'
     case Setting.RollFrequency:
       return 'How many rounds dice rolls stay active.\nIncrease for more randomness.\nDecrease for less randomness.'
+    case Setting.InsufficientSupportPenalty:
+      return 'How much damage taken is increased for having too many flanking units (EUIV).'
     case Setting.FixTargeting:
       if (value)
         return 'Targeting is fixed.\nLeft and right sides work exactly same.'
@@ -231,6 +234,7 @@ export type SiteSettings = {
   [Setting.ShowGraphs]: boolean,
   [Setting.BackRow]: boolean,
   [Setting.StrengthBasedFlank]: boolean,
+  [Setting.InsufficientSupportPenalty]: number,
   [Setting.DisciplineDamageReduction]: boolean,
   [Setting.FireAndShock]: boolean,
   [Setting.DailyMoraleLoss]: number,
