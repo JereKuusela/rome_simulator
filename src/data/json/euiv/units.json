@@ -1,7 +1,6 @@
 {
 	"units": [
 		{
-			"type": "Adal Guerilla Warfare",
 			"culture": "Sub Saharan",
 			"base": "Infantry",
 			"offensive_morale": 2,
@@ -10,10 +9,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Adal Guerilla Warfare",
 			"tech": 23
 		},
 		{
-			"type": "Adal Gunpowder Warfare",
 			"culture": "Sub Saharan",
 			"base": "Infantry",
 			"offensive_morale": 2,
@@ -22,38 +21,38 @@
 			"defensive_fire": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Adal Gunpowder Warfare",
 			"tech": 15
 		},
 		{
-			"type": "African Abyssinian Cavalry",
 			"base": "Cavalry",
 			"culture": "Sub Saharan",
 			"offensive_morale": 3,
 			"defensive_morale": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 2,
+			"type": "African Abyssinian Cavalry",
 			"tech": 10
 		},
 		{
-			"type": "African Abyssinian Light Cavalry",
 			"base": "Cavalry",
 			"culture": "Sub Saharan",
 			"offensive_morale": 2,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "African Abyssinian Light Cavalry",
 			"tech": 1
 		},
 		{
-			"type": "African Clubmen",
 			"culture": "Sub Saharan",
 			"base": "Infantry",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
+			"type": "African Clubmen",
 			"tech": 1
 		},
 		{
-			"type": "African Cuirassier",
 			"base": "Cavalry",
 			"culture": "Sub Saharan",
 			"offensive_morale": 4,
@@ -62,10 +61,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 4,
 			"defensive_shock": 4,
+			"type": "African Cuirassier",
 			"tech": 28
 		},
 		{
-			"type": "African Dragoon",
 			"base": "Cavalry",
 			"culture": "Sub Saharan",
 			"offensive_morale": 4,
@@ -74,10 +73,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "African Dragoon",
 			"tech": 23
 		},
 		{
-			"type": "African Hill Warfare",
 			"culture": "Sub Saharan",
 			"base": "Infantry",
 			"offensive_morale": 2,
@@ -86,10 +85,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 1,
 			"defensive_shock": 2,
+			"type": "African Hill Warfare",
 			"tech": 12
 		},
 		{
-			"type": "African Hussar",
 			"base": "Cavalry",
 			"culture": "Sub Saharan",
 			"offensive_morale": 3,
@@ -97,49 +96,49 @@
 			"offensive_fire": 1,
 			"offensive_shock": 3,
 			"defensive_shock": 2,
+			"type": "African Hussar",
 			"tech": 14
 		},
 		{
-			"type": "African Mandelaku",
 			"base": "Cavalry",
 			"culture": "Sub Saharan",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "African Mandelaku",
 			"tech": 1
 		},
 		{
-			"type": "African Mossi Horsemen",
 			"base": "Cavalry",
 			"culture": "Sub Saharan",
 			"offensive_morale": 3,
 			"defensive_morale": 3,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "African Mossi Horsemen",
 			"tech": 10
 		},
 		{
-			"type": "African Somali Cavalry",
 			"base": "Cavalry",
 			"culture": "Sub Saharan",
 			"offensive_morale": 1,
 			"defensive_morale": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "African Somali Cavalry",
 			"tech": 6
 		},
 		{
-			"type": "African Spearmen",
 			"culture": "Sub Saharan",
 			"base": "Infantry",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"defensive_shock": 1,
+			"type": "African Spearmen",
 			"tech": 1
 		},
 		{
-			"type": "African Swarm",
 			"base": "Cavalry",
 			"culture": "Sub Saharan",
 			"offensive_morale": 3,
@@ -147,10 +146,20 @@
 			"defensive_fire": 1,
 			"offensive_shock": 4,
 			"defensive_shock": 3,
+			"type": "African Swarm",
 			"tech": 17
 		},
 		{
-			"type": "African Western Franchise Warfare",
+			"base": "Cavalry",
+			"culture": "Sub Saharan",
+			"offensive_morale": 2,
+			"defensive_morale": 1,
+			"offensive_shock": 2,
+			"defensive_shock": 1,
+			"type": "African Tuareg Cavalry",
+			"tech": 6
+		},
+		{
 			"culture": "Sub Saharan",
 			"base": "Infantry",
 			"offensive_morale": 4,
@@ -159,10 +168,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "African Western Franchise Warfare",
 			"tech": 30
 		},
 		{
-			"type": "Afsharid Reformed",
 			"base": "Cavalry",
 			"culture": "Muslim",
 			"offensive_morale": 3,
@@ -170,20 +179,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 4,
 			"defensive_shock": 3,
+			"type": "Afsharid Reformed",
 			"tech": 18
 		},
 		{
-			"type": "African Tuareg Cavalry",
-			"base": "Cavalry",
-			"culture": "Sub Saharan",
-			"offensive_morale": 2,
-			"defensive_morale": 1,
-			"offensive_shock": 2,
-			"defensive_shock": 1,
-			"tech": 6
-		},
-		{
-			"type": "Afsharid Reformed Infantry",
 			"base": "Infantry",
 			"culture": "Muslim",
 			"offensive_morale": 2,
@@ -192,19 +191,19 @@
 			"defensive_fire": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Afsharid Reformed Infantry",
 			"tech": 15
 		},
 		{
-			"type": "Algonkin Tomahawk Charge",
 			"culture": "North American",
 			"base": "Infantry",
 			"offensive_morale": 2,
 			"defensive_morale": 1,
 			"defensive_shock": 1,
+			"type": "Algonkin Tomahawk Charge",
 			"tech": 5
 		},
 		{
-			"type": "Ali Bey Reformed Infantry",
 			"culture": "Muslim",
 			"base": "Cavalry",
 			"offensive_morale": 4,
@@ -213,10 +212,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 4,
 			"defensive_shock": 3,
+			"type": "Ali Bey Reformed Infantry",
 			"tech": 23
 		},
 		{
-			"type": "American Western Franchise Warfare",
 			"culture": "North American",
 			"base": "Infantry",
 			"offensive_morale": 4,
@@ -225,10 +224,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "American Western Franchise Warfare",
 			"tech": 30
 		},
 		{
-			"type": "Anglofrench Line",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 3,
@@ -237,10 +236,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Anglofrench Line",
 			"tech": 23
 		},
 		{
-			"type": "Apache Guerilla",
 			"culture": "North American",
 			"base": "Infantry",
 			"offensive_morale": 3,
@@ -249,18 +248,18 @@
 			"defensive_fire": 3,
 			"offensive_shock": 2,
 			"defensive_shock": 4,
+			"type": "Apache Guerilla",
 			"tech": 26
 		},
 		{
-			"type": "Archipelago Frigate",
 			"base": "Galley",
 			"hull_size": 24,
 			"base_cannons": 36,
 			"sail_speed": 8,
-			"sprite_level": 6
+			"sprite_level": 6,
+			"type": "Archipelago Frigate"
 		},
 		{
-			"type": "Asian Arquebusier",
 			"base": "Infantry",
 			"culture": "Chinese",
 			"offensive_morale": 1,
@@ -269,10 +268,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "Asian Arquebusier",
 			"tech": 9
 		},
 		{
-			"type": "Asian Charge Cavalry",
 			"base": "Cavalry",
 			"culture": "Chinese",
 			"offensive_morale": 3,
@@ -280,10 +279,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 3,
 			"defensive_shock": 2,
+			"type": "Asian Charge Cavalry",
 			"tech": 14
 		},
 		{
-			"type": "Asian Mass Infantry",
 			"base": "Infantry",
 			"culture": "Chinese",
 			"offensive_morale": 2,
@@ -292,10 +291,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Asian Mass Infantry",
 			"tech": 15
 		},
 		{
-			"type": "Asian Musketeer",
 			"base": "Infantry",
 			"culture": "Chinese",
 			"offensive_morale": 3,
@@ -304,10 +303,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Asian Musketeer",
 			"tech": 19
 		},
 		{
-			"type": "Austrian Grenzer",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 3,
@@ -316,10 +315,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 2,
 			"defensive_shock": 3,
+			"type": "Austrian Grenzer",
 			"tech": 23
 		},
 		{
-			"type": "Austrian Hussar",
 			"base": "Cavalry",
 			"culture": "Western",
 			"offensive_morale": 4,
@@ -328,10 +327,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 4,
 			"defensive_shock": 3,
+			"type": "Austrian Hussar",
 			"tech": 23
 		},
 		{
-			"type": "Austrian Jaeger",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 3,
@@ -340,10 +339,10 @@
 			"defensive_fire": 4,
 			"offensive_shock": 4,
 			"defensive_shock": 3,
+			"type": "Austrian Jaeger",
 			"tech": 30
 		},
 		{
-			"type": "Austrian Tercio",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 3,
@@ -352,10 +351,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 3,
+			"type": "Austrian Tercio",
 			"tech": 19
 		},
 		{
-			"type": "Austrian White Coat",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 3,
@@ -364,10 +363,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Austrian White Coat",
 			"tech": 26
 		},
 		{
-			"type": "Aztec Gunpowder Warfare",
 			"culture": "Mesoamerican",
 			"base": "Infantry",
 			"offensive_morale": 2,
@@ -376,29 +375,29 @@
 			"defensive_fire": 1,
 			"offensive_shock": 3,
 			"defensive_shock": 2,
+			"type": "Aztec Gunpowder Warfare",
 			"tech": 14
 		},
 		{
-			"type": "Aztec Hill Warfare",
 			"culture": "Mesoamerican",
 			"base": "Infantry",
 			"offensive_morale": 2,
 			"defensive_morale": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 1,
+			"type": "Aztec Hill Warfare",
 			"tech": 10
 		},
 		{
-			"type": "Aztec Tribal Warfare",
 			"culture": "Mesoamerican",
 			"base": "Infantry",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"defensive_shock": 2,
+			"type": "Aztec Tribal Warfare",
 			"tech": 5
 		},
 		{
-			"type": "Bantu Gunpowder Warfare",
 			"culture": "Sub Saharan",
 			"base": "Infantry",
 			"offensive_morale": 2,
@@ -407,10 +406,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 2,
+			"type": "Bantu Gunpowder Warfare",
 			"tech": 15
 		},
 		{
-			"type": "Bantu Plains Warfare",
 			"culture": "Sub Saharan",
 			"base": "Infantry",
 			"offensive_morale": 2,
@@ -419,37 +418,37 @@
 			"defensive_fire": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Bantu Plains Warfare",
 			"tech": 12
 		},
 		{
-			"type": "Bantu Tribal Warfare",
 			"culture": "Sub Saharan",
 			"base": "Infantry",
 			"offensive_morale": 2,
 			"defensive_morale": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "Bantu Tribal Warfare",
 			"tech": 5
 		},
 		{
-			"type": "Bardiche Infantry",
 			"base": "Infantry",
 			"culture": "Eastern",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
+			"type": "Bardiche Infantry",
 			"tech": 1
 		},
 		{
-			"type": "Barque",
 			"base": "Light Ship",
 			"hull_size": 8,
 			"base_cannons": 10,
 			"sail_speed": 10,
 			"trade_power": 2,
-			"sprite_level": 1
+			"sprite_level": 1,
+			"type": "Barque"
 		},
 		{
-			"type": "Bhonsle Cavalry",
 			"base": "Cavalry",
 			"culture": "Indian",
 			"offensive_morale": 4,
@@ -458,10 +457,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 4,
 			"defensive_shock": 4,
+			"type": "Bhonsle Cavalry",
 			"tech": 28
 		},
 		{
-			"type": "Bhonsle Infantry",
 			"base": "Infantry",
 			"culture": "Indian",
 			"offensive_morale": 2,
@@ -470,18 +469,18 @@
 			"defensive_fire": 3,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Bhonsle Infantry",
 			"tech": 18
 		},
 		{
-			"type": "Brig",
 			"base": "Transport",
 			"hull_size": 18,
 			"base_cannons": 6,
 			"sail_speed": 5,
-			"sprite_level": 3
+			"sprite_level": 3,
+			"type": "Brig"
 		},
 		{
-			"type": "British Hussar",
 			"base": "Cavalry",
 			"culture": "Western",
 			"offensive_morale": 4,
@@ -490,10 +489,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 4,
 			"defensive_shock": 4,
+			"type": "British Hussar",
 			"tech": 26
 		},
 		{
-			"type": "British Redcoat",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 4,
@@ -502,10 +501,10 @@
 			"defensive_fire": 4,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "British Redcoat",
 			"tech": 26
 		},
 		{
-			"type": "British Square",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 4,
@@ -514,27 +513,27 @@
 			"defensive_fire": 4,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "British Square",
 			"tech": 28
 		},
 		{
-			"type": "Caravel",
 			"base": "Light Ship",
 			"hull_size": 10,
 			"base_cannons": 13,
 			"sail_speed": 10,
 			"trade_power": 2.5,
-			"sprite_level": 2
+			"sprite_level": 2,
+			"type": "Caravel"
 		},
 		{
-			"type": "Carrack",
 			"base": "Heavy Ship",
 			"hull_size": 25,
 			"base_cannons": 50,
 			"sail_speed": 5,
-			"sprite_level": 2
+			"sprite_level": 2,
+			"type": "Carrack"
 		},
 		{
-			"type": "Central American Dragoon",
 			"culture": "Mesoamerican",
 			"base": "Cavalry",
 			"offensive_morale": 4,
@@ -543,20 +542,20 @@
 			"defensive_fire": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Central American Dragoon",
 			"tech": 23
 		},
 		{
-			"type": "Central American Horsemen",
 			"culture": "Mesoamerican",
 			"base": "Cavalry",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "Central American Horsemen",
 			"tech": 6
 		},
 		{
-			"type": "Central American Hussar",
 			"culture": "Mesoamerican",
 			"base": "Cavalry",
 			"offensive_morale": 3,
@@ -565,10 +564,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 3,
 			"defensive_shock": 2,
+			"type": "Central American Hussar",
 			"tech": 14
 		},
 		{
-			"type": "Central American Rifle Cavalry",
 			"culture": "Mesoamerican",
 			"base": "Cavalry",
 			"offensive_morale": 2,
@@ -576,10 +575,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 3,
 			"defensive_shock": 2,
+			"type": "Central American Rifle Cavalry",
 			"tech": 10
 		},
 		{
-			"type": "Central American Swarm",
 			"culture": "Mesoamerican",
 			"base": "Cavalry",
 			"offensive_morale": 3,
@@ -588,37 +587,37 @@
 			"defensive_fire": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Central American Swarm",
 			"tech": 19
 		},
 		{
-			"type": "Chambered Demi Cannon",
 			"base": "Artillery",
 			"offensive_morale": 2,
 			"defensive_morale": 1,
 			"offensive_fire": 2,
 			"defensive_fire": 2,
 			"defensive_shock": 1,
+			"type": "Chambered Demi Cannon",
 			"tech": 16
 		},
 		{
-			"type": "Chebeck",
 			"base": "Galley",
 			"hull_size": 20,
 			"base_cannons": 30,
 			"sail_speed": 8,
-			"sprite_level": 5
+			"sprite_level": 5,
+			"type": "Chebeck"
 		},
 		{
-			"type": "Chevauchee",
 			"base": "Cavalry",
 			"culture": "Western",
 			"offensive_morale": 1,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "Chevauchee",
 			"tech": 1
 		},
 		{
-			"type": "Chinese Dragoon",
 			"base": "Cavalry",
 			"culture": "Chinese",
 			"offensive_morale": 4,
@@ -627,37 +626,37 @@
 			"defensive_fire": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Chinese Dragoon",
 			"tech": 23
 		},
 		{
-			"type": "Chinese Footsoldier",
 			"base": "Infantry",
 			"culture": "Chinese",
 			"offensive_morale": 2,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
+			"type": "Chinese Footsoldier",
 			"tech": 5
 		},
 		{
-			"type": "Chinese Longspear",
 			"base": "Infantry",
 			"culture": "Chinese",
 			"defensive_morale": 1,
 			"defensive_shock": 1,
+			"type": "Chinese Longspear",
 			"tech": 1
 		},
 		{
-			"type": "Chinese Steppe",
 			"base": "Cavalry",
 			"culture": "Chinese",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Chinese Steppe",
 			"tech": 6
 		},
 		{
-			"type": "Coehorn Mortar",
 			"base": "Artillery",
 			"offensive_morale": 3,
 			"defensive_morale": 3,
@@ -665,18 +664,18 @@
 			"defensive_fire": 3,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "Coehorn Mortar",
 			"tech": 22
 		},
 		{
-			"type": "Cog",
 			"base": "Transport",
 			"hull_size": 12,
 			"base_cannons": 4,
 			"sail_speed": 5,
-			"sprite_level": 1
+			"sprite_level": 1,
+			"type": "Cog"
 		},
 		{
-			"type": "Commanche Swarm",
 			"culture": "North American",
 			"base": "Cavalry",
 			"offensive_morale": 3,
@@ -685,10 +684,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Commanche Swarm",
 			"tech": 19
 		},
 		{
-			"type": "Creek Arquebusier",
 			"culture": "North American",
 			"base": "Infantry",
 			"offensive_morale": 2,
@@ -697,28 +696,28 @@
 			"defensive_fire": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Creek Arquebusier",
 			"tech": 14
 		},
 		{
-			"type": "Culverin",
 			"base": "Artillery",
 			"offensive_morale": 1,
 			"offensive_fire": 1,
 			"defensive_fire": 1,
 			"defensive_shock": 1,
+			"type": "Culverin",
 			"tech": 10
 		},
 		{
-			"type": "Druzhina Cavalry",
 			"base": "Cavalry",
 			"culture": "Eastern",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"defensive_shock": 1,
+			"type": "Druzhina Cavalry",
 			"tech": 1
 		},
 		{
-			"type": "Durrani Dragoon",
 			"base": "Cavalry",
 			"culture": "Muslim",
 			"offensive_morale": 4,
@@ -727,10 +726,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 5,
 			"defensive_shock": 3,
+			"type": "Durrani Dragoon",
 			"tech": 28
 		},
 		{
-			"type": "Durrani Rifled Musketeer",
 			"base": "Infantry",
 			"culture": "Muslim",
 			"offensive_morale": 4,
@@ -739,10 +738,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Durrani Rifled Musketeer",
 			"tech": 23
 		},
 		{
-			"type": "Durrani Swivel",
 			"base": "Cavalry",
 			"culture": "Muslim",
 			"offensive_morale": 4,
@@ -751,10 +750,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 4,
 			"defensive_shock": 5,
+			"type": "Durrani Swivel",
 			"tech": 28
 		},
 		{
-			"type": "Dutch Maurician",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 3,
@@ -763,36 +762,36 @@
 			"defensive_fire": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "Dutch Maurician",
 			"tech": 15
 		},
 		{
-			"type": "Early Carrack",
 			"base": "Heavy Ship",
 			"hull_size": 20,
 			"base_cannons": 40,
 			"sail_speed": 5,
-			"sprite_level": 1
+			"sprite_level": 1,
+			"type": "Early Carrack"
 		},
 		{
-			"type": "Early Frigate",
 			"base": "Light Ship",
 			"hull_size": 12,
 			"base_cannons": 15,
 			"sail_speed": 10,
 			"trade_power": 3,
-			"sprite_level": 3
+			"sprite_level": 3,
+			"type": "Early Frigate"
 		},
 		{
-			"type": "Eastern Bow",
 			"base": "Cavalry",
 			"culture": "Chinese",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
+			"type": "Eastern Bow",
 			"tech": 1
 		},
 		{
-			"type": "Eastern Carabinier",
 			"base": "Infantry",
 			"culture": "Ottoman",
 			"offensive_morale": 3,
@@ -801,37 +800,37 @@
 			"defensive_fire": 3,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Eastern Carabinier",
 			"tech": 26
 		},
 		{
-			"type": "Eastern Knights",
 			"base": "Cavalry",
 			"culture": "Eastern",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
+			"type": "Eastern Knights",
 			"tech": 1
 		},
 		{
-			"type": "Eastern Medieval Infantry",
 			"base": "Infantry",
 			"culture": "Eastern",
 			"offensive_morale": 1,
 			"offensive_shock": 1,
+			"type": "Eastern Medieval Infantry",
 			"tech": 1
 		},
 		{
-			"type": "Eastern Militia",
 			"base": "Infantry",
 			"culture": "Eastern",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "Eastern Militia",
 			"tech": 5
 		},
 		{
-			"type": "Eastern Skirmisher",
 			"base": "Cavalry",
 			"culture": "Ottoman",
 			"offensive_morale": 4,
@@ -840,10 +839,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 4,
 			"defensive_shock": 3,
+			"type": "Eastern Skirmisher",
 			"tech": 26
 		},
 		{
-			"type": "Eastern Uhlan",
 			"base": "Cavalry",
 			"culture": "Ottoman",
 			"offensive_morale": 4,
@@ -852,18 +851,26 @@
 			"defensive_fire": 1,
 			"offensive_shock": 3,
 			"defensive_shock": 4,
+			"type": "Eastern Uhlan",
 			"tech": 26
 		},
 		{
-			"type": "East Asian Spearmen",
+			"base": "Transport",
+			"hull_size": 36,
+			"base_cannons": 12,
+			"sail_speed": 5,
+			"sprite_level": 5,
+			"type": "Eastindiaman"
+		},
+		{
 			"base": "Infantry",
 			"culture": "Chinese",
 			"offensive_morale": 1,
 			"defensive_shock": 1,
+			"type": "East Asian Spearmen",
 			"tech": 1
 		},
 		{
-			"type": "East Mongolian Steppe",
 			"base": "Cavalry",
 			"culture": "Chinese",
 			"offensive_morale": 2,
@@ -871,10 +878,10 @@
 			"offensive_fire": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "East Mongolian Steppe",
 			"tech": 10
 		},
 		{
-			"type": "Ethiopian Guerilla Warfare",
 			"culture": "Sub Saharan",
 			"base": "Infantry",
 			"offensive_morale": 2,
@@ -883,18 +890,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 2,
 			"defensive_shock": 3,
+			"type": "Ethiopian Guerilla Warfare",
 			"tech": 23
 		},
 		{
-			"type": "Eastindiaman",
-			"base": "Transport",
-			"hull_size": 36,
-			"base_cannons": 12,
-			"sail_speed": 5,
-			"sprite_level": 5
-		},
-		{
-			"type": "Ethiopian Gunpowder Warfare",
 			"culture": "Sub Saharan",
 			"base": "Infantry",
 			"offensive_morale": 1,
@@ -903,10 +902,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 2,
 			"defensive_shock": 3,
+			"type": "Ethiopian Gunpowder Warfare",
 			"tech": 15
 		},
 		{
-			"type": "Ethiopian Mountain Warfare",
 			"culture": "Sub Saharan",
 			"base": "Infantry",
 			"offensive_morale": 1,
@@ -915,18 +914,18 @@
 			"defensive_fire": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Ethiopian Mountain Warfare",
 			"tech": 12
 		},
 		{
-			"type": "Flute",
 			"base": "Transport",
 			"hull_size": 15,
 			"base_cannons": 5,
 			"sail_speed": 5,
-			"sprite_level": 2
+			"sprite_level": 2,
+			"type": "Flute"
 		},
 		{
-			"type": "Flying Battery",
 			"base": "Artillery",
 			"offensive_morale": 4,
 			"defensive_morale": 4,
@@ -934,10 +933,10 @@
 			"defensive_fire": 4,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Flying Battery",
 			"tech": 29
 		},
 		{
-			"type": "French Bluecoat",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 4,
@@ -946,10 +945,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "French Bluecoat",
 			"tech": 26
 		},
 		{
-			"type": "French Carabinier",
 			"base": "Cavalry",
 			"culture": "Western",
 			"offensive_morale": 3,
@@ -958,10 +957,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 5,
 			"defensive_shock": 4,
+			"type": "French Carabinier",
 			"tech": 26
 		},
 		{
-			"type": "French Caracolle",
 			"base": "Cavalry",
 			"culture": "Western",
 			"offensive_morale": 2,
@@ -969,10 +968,10 @@
 			"offensive_fire": 1,
 			"offensive_shock": 3,
 			"defensive_shock": 2,
+			"type": "French Caracolle",
 			"tech": 14
 		},
 		{
-			"type": "French Cuirassier",
 			"base": "Cavalry",
 			"culture": "Western",
 			"offensive_morale": 4,
@@ -981,10 +980,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 5,
 			"defensive_shock": 4,
+			"type": "French Cuirassier",
 			"tech": 28
 		},
 		{
-			"type": "French Dragoon",
 			"base": "Cavalry",
 			"culture": "Western",
 			"offensive_morale": 4,
@@ -993,10 +992,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 4,
 			"defensive_shock": 4,
+			"type": "French Dragoon",
 			"tech": 23
 		},
 		{
-			"type": "French Impulse",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 4,
@@ -1005,19 +1004,19 @@
 			"defensive_fire": 3,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "French Impulse",
 			"tech": 28
 		},
 		{
-			"type": "Frigate",
 			"base": "Light Ship",
 			"hull_size": 16,
 			"base_cannons": 20,
 			"sail_speed": 10,
 			"trade_power": 3.5,
-			"sprite_level": 4
+			"sprite_level": 4,
+			"type": "Frigate"
 		},
 		{
-			"type": "Gaelic Free Shooter",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 3,
@@ -1026,86 +1025,86 @@
 			"defensive_fire": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "Gaelic Free Shooter",
 			"tech": 12
 		},
 		{
-			"type": "Gaelic Galloglaigh",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 2,
 			"offensive_shock": 1,
+			"type": "Gaelic Galloglaigh",
 			"tech": 5
 		},
 		{
-			"type": "Gaelic Mercenary",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 2,
 			"defensive_morale": 1,
 			"offensive_shock": 2,
+			"type": "Gaelic Mercenary",
 			"tech": 9
 		},
 		{
-			"type": "Galiot",
 			"base": "Galley",
 			"hull_size": 16,
 			"base_cannons": 24,
 			"sail_speed": 8,
-			"sprite_level": 4
+			"sprite_level": 4,
+			"type": "Galiot"
 		},
 		{
-			"type": "Galleass",
 			"base": "Galley",
 			"hull_size": 12,
 			"base_cannons": 18,
 			"sail_speed": 8,
-			"sprite_level": 3
+			"sprite_level": 3,
+			"type": "Galleass"
 		},
 		{
-			"type": "Galleon",
 			"base": "Heavy Ship",
 			"hull_size": 30,
 			"base_cannons": 60,
 			"sail_speed": 5,
-			"sprite_level": 3
+			"sprite_level": 3,
+			"type": "Galleon"
 		},
 		{
-			"type": "Galley",
 			"base": "Galley",
 			"hull_size": 8,
 			"base_cannons": 12,
 			"sail_speed": 8,
-			"sprite_level": 1
+			"sprite_level": 1,
+			"type": "Galley"
 		},
 		{
-			"type": "Germanized Pike",
 			"base": "Infantry",
 			"culture": "Eastern",
 			"offensive_morale": 1,
 			"defensive_morale": 2,
 			"offensive_shock": 1,
 			"defensive_shock": 2,
+			"type": "Germanized Pike",
 			"tech": 9
 		},
 		{
-			"type": "Great Frigate",
 			"base": "Light Ship",
 			"hull_size": 24,
 			"base_cannons": 30,
 			"sail_speed": 10,
 			"trade_power": 5,
-			"sprite_level": 6
+			"sprite_level": 6,
+			"type": "Great Frigate"
 		},
 		{
-			"type": "Halberd Infantry",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 1,
 			"offensive_shock": 1,
+			"type": "Halberd Infantry",
 			"tech": 1
 		},
 		{
-			"type": "Han Banner",
 			"base": "Infantry",
 			"culture": "Chinese",
 			"offensive_morale": 2,
@@ -1114,10 +1113,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "Han Banner",
 			"tech": 12
 		},
 		{
-			"type": "Ha Foreign Influenced Infantry",
 			"culture": "High American",
 			"base": "Infantry",
 			"offensive_fire": 4,
@@ -1126,10 +1125,10 @@
 			"defensive_shock": 2,
 			"offensive_morale": 4,
 			"defensive_morale": 3,
+			"type": "Ha Foreign Influenced Infantry",
 			"tech": 23
 		},
 		{
-			"type": "Ha Reformed Influenced Infantry",
 			"culture": "High American",
 			"base": "Infantry",
 			"offensive_fire": 4,
@@ -1138,10 +1137,10 @@
 			"defensive_shock": 3,
 			"offensive_morale": 4,
 			"defensive_morale": 3,
+			"type": "Ha Reformed Influenced Infantry",
 			"tech": 26
 		},
 		{
-			"type": "Ha Reformed Xantican Warrior",
 			"culture": "High American",
 			"base": "Infantry",
 			"offensive_fire": 2,
@@ -1149,10 +1148,10 @@
 			"offensive_shock": 1,
 			"defensive_shock": 1,
 			"offensive_morale": 2,
+			"type": "Ha Reformed Xantican Warrior",
 			"tech": 5
 		},
 		{
-			"type": "Ha Reformed Xoloti",
 			"culture": "High American",
 			"base": "Infantry",
 			"offensive_fire": 4,
@@ -1161,20 +1160,20 @@
 			"defensive_shock": 3,
 			"offensive_morale": 4,
 			"defensive_morale": 3,
+			"type": "Ha Reformed Xoloti",
 			"tech": 30
 		},
 		{
-			"type": "Ha Xantican Warrior",
 			"culture": "High American",
 			"base": "Infantry",
 			"offensive_fire": 1,
 			"defensive_fire": 1,
 			"defensive_shock": 1,
 			"offensive_morale": 1,
+			"type": "Ha Xantican Warrior",
 			"tech": 1
 		},
 		{
-			"type": "Ha Xiuhtecuhtlian Infantry",
 			"culture": "High American",
 			"base": "Infantry",
 			"offensive_fire": 3,
@@ -1183,10 +1182,10 @@
 			"defensive_shock": 1,
 			"offensive_morale": 4,
 			"defensive_morale": 3,
+			"type": "Ha Xiuhtecuhtlian Infantry",
 			"tech": 12
 		},
 		{
-			"type": "Ha Xiuhtecuhtli Soldier",
 			"culture": "High American",
 			"base": "Infantry",
 			"offensive_fire": 3,
@@ -1195,10 +1194,10 @@
 			"defensive_shock": 1,
 			"offensive_morale": 3,
 			"defensive_morale": 2,
+			"type": "Ha Xiuhtecuhtli Soldier",
 			"tech": 9
 		},
 		{
-			"type": "Ha Xoloti",
 			"culture": "High American",
 			"base": "Infantry",
 			"offensive_fire": 3,
@@ -1207,19 +1206,19 @@
 			"defensive_shock": 2,
 			"offensive_morale": 4,
 			"defensive_morale": 2,
+			"type": "Ha Xoloti",
 			"tech": 18
 		},
 		{
-			"type": "Heavy Frigate",
 			"base": "Light Ship",
 			"hull_size": 20,
 			"base_cannons": 25,
 			"sail_speed": 10,
 			"trade_power": 4,
-			"sprite_level": 5
+			"sprite_level": 5,
+			"type": "Heavy Frigate"
 		},
 		{
-			"type": "High American Dragoon",
 			"culture": "High American",
 			"base": "Cavalry",
 			"offensive_morale": 4,
@@ -1228,10 +1227,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "High American Dragoon",
 			"tech": 23
 		},
 		{
-			"type": "High American Horsemen",
 			"culture": "High American",
 			"base": "Cavalry",
 			"offensive_morale": 1,
@@ -1239,10 +1238,10 @@
 			"offensive_fire": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "High American Horsemen",
 			"tech": 6
 		},
 		{
-			"type": "High American Hussar",
 			"culture": "High American",
 			"base": "Cavalry",
 			"offensive_morale": 3,
@@ -1251,10 +1250,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 2,
+			"type": "High American Hussar",
 			"tech": 14
 		},
 		{
-			"type": "High American Rifle Cavalry",
 			"culture": "High American",
 			"base": "Cavalry",
 			"offensive_morale": 2,
@@ -1263,10 +1262,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 3,
 			"defensive_shock": 2,
+			"type": "High American Rifle Cavalry",
 			"tech": 10
 		},
 		{
-			"type": "High American Swarm",
 			"culture": "High American",
 			"base": "Cavalry",
 			"offensive_morale": 3,
@@ -1275,27 +1274,27 @@
 			"defensive_fire": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "High American Swarm",
 			"tech": 19
 		},
 		{
-			"type": "Houfnice",
 			"base": "Artillery",
 			"defensive_morale": 1,
 			"offensive_fire": 1,
+			"type": "Houfnice",
 			"tech": 7
 		},
 		{
-			"type": "Hungarian Hussar",
 			"base": "Cavalry",
 			"culture": "Eastern",
 			"offensive_morale": 3,
 			"defensive_morale": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Hungarian Hussar",
 			"tech": 10
 		},
 		{
-			"type": "Huron Arquebusier",
 			"culture": "North American",
 			"base": "Infantry",
 			"offensive_morale": 3,
@@ -1304,19 +1303,19 @@
 			"defensive_fire": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "Huron Arquebusier",
 			"tech": 14
 		},
 		{
-			"type": "Incan Axemen",
 			"culture": "South American",
 			"base": "Infantry",
 			"offensive_morale": 2,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
+			"type": "Incan Axemen",
 			"tech": 5
 		},
 		{
-			"type": "Incan Guerilla Warfare",
 			"culture": "South American",
 			"base": "Infantry",
 			"offensive_morale": 2,
@@ -1325,46 +1324,46 @@
 			"defensive_fire": 3,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Incan Guerilla Warfare",
 			"tech": 19
 		},
 		{
-			"type": "Incan Slingshots",
 			"culture": "South American",
 			"base": "Infantry",
 			"offensive_morale": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "Incan Slingshots",
 			"tech": 5
 		},
 		{
-			"type": "Inca Mountain Warfare",
 			"culture": "South American",
 			"base": "Infantry",
 			"defensive_morale": 2,
 			"defensive_shock": 2,
+			"type": "Inca Mountain Warfare",
 			"tech": 5
 		},
 		{
-			"type": "Indian Archers",
 			"culture": "Indian",
 			"base": "Cavalry",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
+			"type": "Indian Archers",
 			"tech": 1
 		},
 		{
-			"type": "Indian Arquebusier",
 			"base": "Infantry",
 			"culture": "Indian",
 			"offensive_morale": 1,
 			"offensive_fire": 1,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "Indian Arquebusier",
 			"tech": 5
 		},
 		{
-			"type": "Indian Elephant",
 			"culture": "Indian",
 			"base": "Cavalry",
 			"offensive_morale": 2,
@@ -1372,19 +1371,19 @@
 			"offensive_fire": 1,
 			"offensive_shock": 3,
 			"defensive_shock": 2,
+			"type": "Indian Elephant",
 			"tech": 10
 		},
 		{
-			"type": "Indian Footsoldier",
 			"base": "Infantry",
 			"culture": "Indian",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
+			"type": "Indian Footsoldier",
 			"tech": 1
 		},
 		{
-			"type": "Indian Rifle",
 			"base": "Infantry",
 			"culture": "Indian",
 			"offensive_morale": 3,
@@ -1393,10 +1392,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Indian Rifle",
 			"tech": 26
 		},
 		{
-			"type": "Indian Shock Cavalry",
 			"culture": "Indian",
 			"base": "Cavalry",
 			"offensive_morale": 4,
@@ -1405,10 +1404,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 4,
 			"defensive_shock": 3,
+			"type": "Indian Shock Cavalry",
 			"tech": 23
 		},
 		{
-			"type": "Irish Charge",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 3,
@@ -1417,10 +1416,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 1,
+			"type": "Irish Charge",
 			"tech": 15
 		},
 		{
-			"type": "Iroquis Rifle Scout",
 			"culture": "New World",
 			"base": "Infantry",
 			"offensive_morale": 2,
@@ -1428,10 +1427,10 @@
 			"offensive_fire": 3,
 			"defensive_fire": 2,
 			"offensive_shock": 2,
-			"defensive_shock": 1
+			"defensive_shock": 1,
+			"type": "Iroquis Rifle Scout"
 		},
 		{
-			"type": "Iroquois Rifle Scout",
 			"culture": "North American",
 			"base": "Infantry",
 			"offensive_morale": 2,
@@ -1440,64 +1439,64 @@
 			"defensive_fire": 3,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Iroquois Rifle Scout",
 			"tech": 19
 		},
 		{
-			"type": "Italian Condotta",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "Italian Condotta",
 			"tech": 9
 		},
 		{
-			"type": "Japanese Archer",
 			"base": "Infantry",
 			"culture": "Chinese",
 			"defensive_morale": 1,
 			"offensive_shock": 1,
+			"type": "Japanese Archer",
 			"tech": 1
 		},
 		{
-			"type": "Japanese Footsoldier",
 			"base": "Infantry",
 			"culture": "Chinese",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "Japanese Footsoldier",
 			"tech": 5
 		},
 		{
-			"type": "Japanese Samurai",
 			"base": "Cavalry",
 			"culture": "Chinese",
 			"offensive_morale": 2,
 			"defensive_morale": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "Japanese Samurai",
 			"tech": 6
 		},
 		{
-			"type": "Large Cast Bronze Mortar",
 			"base": "Artillery",
 			"offensive_morale": 1,
 			"offensive_fire": 1,
+			"type": "Large Cast Bronze Mortar",
 			"tech": 7
 		},
 		{
-			"type": "Large Cast Iron Bombard",
 			"base": "Artillery",
 			"offensive_morale": 1,
 			"defensive_morale": 2,
 			"offensive_fire": 2,
 			"defensive_fire": 1,
+			"type": "Large Cast Iron Bombard",
 			"tech": 13
 		},
 		{
-			"type": "Leather Cannon",
 			"base": "Artillery",
 			"offensive_morale": 2,
 			"defensive_morale": 2,
@@ -1505,10 +1504,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "Leather Cannon",
 			"tech": 18
 		},
 		{
-			"type": "Maharathan Cavalry",
 			"base": "Cavalry",
 			"culture": "Indian",
 			"offensive_morale": 3,
@@ -1516,10 +1515,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 4,
 			"defensive_shock": 3,
+			"type": "Maharathan Cavalry",
 			"tech": 17
 		},
 		{
-			"type": "Maharathan Guerilla Warfare",
 			"base": "Infantry",
 			"culture": "Indian",
 			"offensive_morale": 2,
@@ -1528,48 +1527,48 @@
 			"defensive_fire": 3,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Maharathan Guerilla Warfare",
 			"tech": 23
 		},
 		{
-			"type": "Mali Tribal Warfare",
 			"culture": "Sub Saharan",
 			"base": "Infantry",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Mali Tribal Warfare",
 			"tech": 5
 		},
 		{
-			"type": "Mamluk Archer",
 			"base": "Infantry",
 			"culture": "Muslim",
 			"defensive_morale": 1,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "Mamluk Archer",
 			"tech": 1
 		},
 		{
-			"type": "Mamluk Cavalry Charge",
 			"base": "Cavalry",
 			"culture": "Muslim",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 2,
+			"type": "Mamluk Cavalry Charge",
 			"tech": 1
 		},
 		{
-			"type": "Mamluk Duel",
 			"culture": "Muslim",
 			"base": "Infantry",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "Mamluk Duel",
 			"tech": 5
 		},
 		{
-			"type": "Mamluk Musket Charge",
 			"base": "Cavalry",
 			"culture": "Muslim",
 			"offensive_morale": 3,
@@ -1578,10 +1577,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 4,
 			"defensive_shock": 3,
+			"type": "Mamluk Musket Charge",
 			"tech": 18
 		},
 		{
-			"type": "Manchu Banner",
 			"base": "Cavalry",
 			"culture": "Chinese",
 			"offensive_morale": 3,
@@ -1590,20 +1589,20 @@
 			"defensive_fire": 1,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Manchu Banner",
 			"tech": 17
 		},
 		{
-			"type": "Maya Forest Warfare",
 			"culture": "Mesoamerican",
 			"base": "Infantry",
 			"offensive_morale": 2,
 			"defensive_morale": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Maya Forest Warfare",
 			"tech": 10
 		},
 		{
-			"type": "Maya Guerilla Warfare",
 			"culture": "Mesoamerican",
 			"base": "Infantry",
 			"offensive_morale": 2,
@@ -1612,10 +1611,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 2,
+			"type": "Maya Guerilla Warfare",
 			"tech": 19
 		},
 		{
-			"type": "Maya Gunpowder Warfare",
 			"culture": "Mesoamerican",
 			"base": "Infantry",
 			"offensive_morale": 2,
@@ -1624,37 +1623,37 @@
 			"defensive_fire": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Maya Gunpowder Warfare",
 			"tech": 14
 		},
 		{
-			"type": "Maya Tribal Warfare",
 			"culture": "Mesoamerican",
 			"base": "Infantry",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "Maya Tribal Warfare",
 			"tech": 5
 		},
 		{
-			"type": "Merchantman",
 			"base": "Transport",
 			"hull_size": 24,
 			"base_cannons": 8,
 			"sail_speed": 5,
-			"sprite_level": 4
+			"sprite_level": 4,
+			"type": "Merchantman"
 		},
 		{
-			"type": "Mesoamerican Spearmen",
 			"culture": "Mesoamerican",
 			"base": "Infantry",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
+			"type": "Mesoamerican Spearmen",
 			"tech": 1
 		},
 		{
-			"type": "Mexican Guerilla Warfare",
 			"culture": "Mesoamerican",
 			"base": "Infantry",
 			"offensive_morale": 3,
@@ -1663,10 +1662,285 @@
 			"defensive_fire": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Mexican Guerilla Warfare",
 			"tech": 19
 		},
 		{
-			"type": "Mixed Order Infantry",
+			"_tech": 32,
+			""South American Spearmen"": 1,
+			""Native Indian Archer"": 1,
+			""Native Clubmen"": 1,
+			""African Spearmen"": 1,
+			""African Clubmen"": 1,
+			""Indian Archers"": 1,
+			""Mesoamerican Spearmen"": 1,
+			""Halberd Infantry"": 1,
+			""Chevauchee"": 1,
+			""Western Medieval Knights"": 1,
+			""Bardiche Infantry"": 1,
+			""Muslim Cavalry Archers"": 1,
+			""Western Medieval Infantry"": 1,
+			""Eastern Medieval Infantry"": 1,
+			""Ottoman Yaya"": 1,
+			""Chinese Longspear"": 1,
+			""Japanese Archer"": 1,
+			""Persian Footsoldier"": 1,
+			""East Asian Spearmen"": 1,
+			""Mongolian Bow"": 1,
+			""Indian Footsoldier"": 1,
+			""Rajput Hill Fighters"": 1,
+			""Eastern Bow"": 1,
+			""Persian Cavalry Charge"": 1,
+			""African Mandelaku"": 1,
+			""African Abyssinian Light Cavalry"": 1,
+			""Mongol Swarm"": 1,
+			""Mongol Steppe"": 1,
+			""Mongol Bow"": 1,
+			""Eastern Knights"": 1,
+			""Druzhina Cavalry"": 1,
+			""Ottoman Musellem"": 1,
+			""Mamluk Archer"": 1,
+			""Mamluk Cavalry Charge"": 1,
+			""South American Warfare"": 1,
+			""Ha Xantican Warrior"": 1,
+			""Western Men At Arms"": 5,
+			""Western Longbow"": 5,
+			""Gaelic Galloglaigh"": 5,
+			""Aztec Tribal Warfare"": 5,
+			""Zapotec Tribal Warfare"": 5,
+			""Songhai Tribal Warfare"": 5,
+			""Niger Kongolese Tribal Warfare"": 5,
+			""Bantu Tribal Warfare"": 5,
+			""Mali Tribal Warfare"": 5,
+			""Pueblo Ambush"": 5,
+			""Native Indian Tribal Warfare"": 5,
+			""Algonkin Tomahawk Charge"": 5,
+			""Indian Arquebusier"": 5,
+			""Eastern Militia"": 5,
+			""Mamluk Duel"": 5,
+			""Ottoman Azab"": 5,
+			""Inca Mountain Warfare"": 5,
+			""South American Forest Warfare"": 5,
+			""Incan Slingshots"": 5,
+			""Incan Axemen"": 5,
+			""Maya Tribal Warfare"": 5,
+			""Chinese Footsoldier"": 5,
+			""Japanese Footsoldier"": 5,
+			""Ha Reformed Xantican Warrior"": 5,
+			""African Somali Cavalry"": 6,
+			""African Tuareg Cavalry"": 6,
+			""Slavic Stradioti"": 6,
+			""Native Indian Horsemen"": 6,
+			""Central American Horsemen"": 6,
+			""South American Horsemen"": 6,
+			""Mughal Mansabdar"": 6,
+			""Ottoman Timariot"": 6,
+			""Chinese Steppe"": 6,
+			""Japanese Samurai"": 6,
+			""Shaybani"": 6,
+			""High American Horsemen"": 6,
+			""Large Cast Bronze Mortar"": 7,
+			""Houfnice"": 7,
+			""South Indian Musketeer"": 9,
+			""Mughal Musketeer"": 9,
+			""Ottoman Janissary"": 9,
+			""Persian Shamshir"": 9,
+			""Italian Condotta"": 9,
+			""Swiss Landsknechten"": 9,
+			""Gaelic Mercenary"": 9,
+			""Germanized Pike"": 9,
+			""Asian Arquebusier"": 9,
+			""Steppe Raiders"": 9,
+			""Ha Xiuhtecuhtli Soldier"": 9,
+			""Hungarian Hussar"": 10,
+			""Ottoman Spahi"": 10,
+			""Culverin"": 10,
+			""Pedrero"": 10,
+			""Schwarze Reiter"": 10,
+			""African Mossi Horsemen"": 10,
+			""African Abyssinian Cavalry"": 10,
+			""Native Indian Mountain Warfare"": 10,
+			""Aztec Hill Warfare"": 10,
+			""Maya Forest Warfare"": 10,
+			""Zapotec Plains Warfare"": 10,
+			""South American Gunpowder Warfare"": 10,
+			""South American Arquebusier"": 10,
+			""North American Rifle Cavalry"": 10,
+			""Central American Rifle Cavalry"": 10,
+			""South American Rifle Cavalry"": 10,
+			""Qizilbash Cavalry"": 10,
+			""East Mongolian Steppe"": 10,
+			""Indian Elephant"": 10,
+			""Steppe Riders"": 10,
+			""High American Rifle Cavalry"": 10,
+			""Tofongchis Musketeer"": 12,
+			""Ottoman Sekban"": 12,
+			""Rajput Musketeer"": 12,
+			""Spanish Tercio"": 12,
+			""Gaelic Free Shooter"": 12,
+			""Han Banner"": 12,
+			""Reformed Mughal Musketeer"": 12,
+			""Polish Musketeer"": 12,
+			""Muscovite Musketeer"": 12,
+			""Bantu Plains Warfare"": 12,
+			""Niger Kongolese Forest Warfare"": 12,
+			""African Hill Warfare"": 12,
+			""Ethiopian Mountain Warfare"": 12,
+			""Steppe Footmen"": 12,
+			""Ha Xiuhtecuhtlian Infantry"": 12,
+			""Small Cast Iron Bombard"": 13,
+			""Large Cast Iron Bombard"": 13,
+			""African Hussar"": 14,
+			""French Caracolle"": 14,
+			""Huron Arquebusier"": 14,
+			""Creek Arquebusier"": 14,
+			""Aztec Gunpowder Warfare"": 14,
+			""Maya Gunpowder Warfare"": 14,
+			""Zapotec Gunpowder Warfare"": 14,
+			""South American Reformed Gunpowder Warfare"": 14,
+			""North American Hussar"": 14,
+			""Central American Hussar"": 14,
+			""South American Hussar"": 14,
+			""Polish Hussar"": 14,
+			""Muscovite Caracolle"": 14,
+			""Zaporoghian Cossack"": 14,
+			""Topchis Artillery"": 14,
+			""Asian Charge Cavalry"": 14,
+			""Reformed Mughal Mansabdar"": 14,
+			""Steppe Lancers"": 14,
+			""High American Hussar"": 14,
+			""Irish Charge"": 15,
+			""Dutch Maurician"": 15,
+			""Afsharid Reformed Infantry"": 15,
+			""Muscovite Soldaty"": 15,
+			""Polish Tercio"": 15,
+			""Asian Mass Infantry"": 15,
+			""Bantu Gunpowder Warfare"": 15,
+			""Niger Kongolese Gunpowder Warfare"": 15,
+			""Adal Gunpowder Warfare"": 15,
+			""Ethiopian Gunpowder Warfare"": 15,
+			""Steppe Musketeers"": 15,
+			""Chambered Demi Cannon"": 16,
+			""Maharathan Cavalry"": 17,
+			""Manchu Banner"": 17,
+			""African Swarm"": 17,
+			""Swedish Gallop"": 18,
+			""Sikh Hit And Run"": 18,
+			""Bhonsle Infantry"": 18,
+			""Ottoman Reformed Spahi"": 18,
+			""Mamluk Musket Charge"": 18,
+			""Afsharid Reformed"": 18,
+			""Leather Cannon"": 18,
+			""Steppe Mounted Raiders"": 18,
+			""Ha Xoloti"": 18,
+			""Austrian Tercio"": 19,
+			""Swedish Gustavian"": 19,
+			""Scottish Highlander"": 19,
+			""Saxon Infantry"": 19,
+			""Ottoman Reformed Janissary"": 19,
+			""Asian Musketeer"": 19,
+			""Incan Guerilla Warfare"": 19,
+			""Iroquois Rifle Scout"": 19,
+			""Peruvian Guerilla Warfare"": 19,
+			""Mexican Guerilla Warfare"": 19,
+			""Maya Guerilla Warfare"": 19,
+			""Commanche Swarm"": 19,
+			""Central American Swarm"": 19,
+			""South American Swarm"": 19,
+			""Steppe Infantry"": 19,
+			""High American Swarm"": 19,
+			""Swivel Cannon"": 20,
+			""Polish Winged Hussar"": 22,
+			""Muscovite Cossack"": 22,
+			""Coehorn Mortar"": 22,
+			""Swedish Arme Blanche"": 23,
+			""French Dragoon"": 23,
+			""Austrian Hussar"": 23,
+			""Ottoman Toprakli Hit And Run"": 23,
+			""Sioux Dragoon"": 23,
+			""Central American Dragoon"": 23,
+			""South American Dragoon"": 23,
+			""African Dragoon"": 23,
+			""Maharathan Guerilla Warfare"": 23,
+			""Austrian Grenzer"": 23,
+			""Swedish Caroline"": 23,
+			""Anglofrench Line"": 23,
+			""Durrani Rifled Musketeer"": 23,
+			""Ottoman Nizami Cedid"": 23,
+			""Niger Kongolese Guerilla Warfare"": 23,
+			""Adal Guerilla Warfare"": 23,
+			""Ethiopian Guerilla Warfare"": 23,
+			""Muslim Dragoon"": 23,
+			""Ali Bey Reformed Infantry"": 23,
+			""Indian Shock Cavalry"": 23,
+			""Chinese Dragoon"": 23,
+			""Russian Petrine"": 23,
+			""Steppe Cavalry"": 23,
+			""Ha Foreign Influenced Infantry"": 23,
+			""High American Dragoon"": 23,
+			""Royal Mortar"": 25,
+			""Austrian White Coat"": 26,
+			""French Bluecoat"": 26,
+			""British Redcoat"": 26,
+			""Prussian Frederickian"": 26,
+			""Russian Green Coat"": 26,
+			""Muslim Mass Infantry"": 26,
+			""Eastern Carabinier"": 26,
+			""Indian Rifle"": 26,
+			""Reformed Asian Musketeer"": 26,
+			""Westernized Bantu"": 26,
+			""Westernized Niger Kongolese"": 26,
+			""Westernized Adal"": 26,
+			""Westernized Ethiopian"": 26,
+			""Apache Guerilla"": 26,
+			""Westernized South American"": 26,
+			""Westernized Aztec"": 26,
+			""Westernized Zapotec"": 26,
+			""Westernized Incan"": 26,
+			""Russian Lancer"": 26,
+			""Tartar Cossack"": 26,
+			""Prussian Uhlan"": 26,
+			""British Hussar"": 26,
+			""French Carabinier"": 26,
+			""Eastern Uhlan"": 26,
+			""Eastern Skirmisher"": 26,
+			""Steppe Rifles"": 26,
+			""Ha Reformed Influenced Infantry"": 26,
+			""African Cuirassier"": 28,
+			""Russian Cuirassier"": 28,
+			""Russian Cossack"": 28,
+			""Ottoman Toprakli Dragoon"": 28,
+			""Ottoman Lancer"": 28,
+			""Reformed Manchu Rifle"": 28,
+			""Open Order Cavalry"": 28,
+			""Napoleonic Lancers"": 28,
+			""French Cuirassier"": 28,
+			""Durrani Dragoon"": 28,
+			""Durrani Swivel"": 28,
+			""Sikh Rifle"": 28,
+			""Bhonsle Cavalry"": 28,
+			""Reformed Asian Cavalry"": 28,
+			""French Impulse"": 28,
+			""British Square"": 28,
+			""Steppe Uhlans"": 28,
+			""Flying Battery"": 29,
+			""Russian Mass"": 30,
+			""Mixed Order Infantry"": 30,
+			""Prussian Drill"": 30,
+			""Austrian Jaeger"": 30,
+			""Napoleonic Square"": 30,
+			""Persian Rifle"": 30,
+			""Ottoman New Model"": 30,
+			""Tipu Sultan Rocket"": 30,
+			""American Western Franchise Warfare"": 30,
+			""African Western Franchise Warfare"": 30,
+			""Westernized Mayan"": 30,
+			""Reformed Westernized Incan"": 30,
+			""Reformed Steppe Rifles"": 30,
+			""Ha Reformed Xoloti"": 30,
+			"type": "Mil"
+		},
+		{
 			"culture": "Western",
 			"base": "Infantry",
 			"offensive_morale": 4,
@@ -1675,59 +1949,59 @@
 			"defensive_fire": 3,
 			"offensive_shock": 4,
 			"defensive_shock": 3,
+			"type": "Mixed Order Infantry",
 			"tech": 30
 		},
 		{
-			"type": "Mongolian Bow",
 			"base": "Cavalry",
 			"culture": "Chinese",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"defensive_shock": 1,
+			"type": "Mongolian Bow",
 			"tech": 1
 		},
 		{
-			"type": "Mongol Bow",
 			"base": "Infantry",
 			"culture": "Nomad Group",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "Mongol Bow",
 			"tech": 1
 		},
 		{
-			"type": "Mongol Steppe",
 			"base": "Cavalry",
 			"culture": "Nomad Group",
 			"offensive_morale": 2,
 			"defensive_morale": 2,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "Mongol Steppe",
 			"tech": 1
 		},
 		{
-			"type": "Mongol Swarm",
 			"base": "Cavalry",
 			"culture": "Nomad Group",
 			"offensive_morale": 2,
 			"defensive_morale": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "Mongol Swarm",
 			"tech": 1
 		},
 		{
-			"type": "Mughal Mansabdar",
 			"base": "Cavalry",
 			"culture": "Indian",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Mughal Mansabdar",
 			"tech": 6
 		},
 		{
-			"type": "Mughal Musketeer",
 			"base": "Infantry",
 			"culture": "Indian",
 			"offensive_morale": 2,
@@ -1736,10 +2010,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "Mughal Musketeer",
 			"tech": 9
 		},
 		{
-			"type": "Muscovite Caracolle",
 			"base": "Cavalry",
 			"culture": "Eastern",
 			"offensive_morale": 3,
@@ -1747,10 +2021,10 @@
 			"offensive_fire": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Muscovite Caracolle",
 			"tech": 14
 		},
 		{
-			"type": "Muscovite Cossack",
 			"base": "Cavalry",
 			"culture": "Eastern",
 			"offensive_morale": 4,
@@ -1759,10 +2033,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 4,
 			"defensive_shock": 3,
+			"type": "Muscovite Cossack",
 			"tech": 22
 		},
 		{
-			"type": "Muscovite Musketeer",
 			"base": "Infantry",
 			"culture": "Eastern",
 			"offensive_morale": 3,
@@ -1771,10 +2045,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "Muscovite Musketeer",
 			"tech": 12
 		},
 		{
-			"type": "Muscovite Soldaty",
 			"base": "Infantry",
 			"culture": "Eastern",
 			"offensive_morale": 3,
@@ -1783,20 +2057,20 @@
 			"defensive_fire": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "Muscovite Soldaty",
 			"tech": 15
 		},
 		{
-			"type": "Muslim Cavalry Archers",
 			"base": "Cavalry",
 			"culture": "Muslim",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "Muslim Cavalry Archers",
 			"tech": 1
 		},
 		{
-			"type": "Muslim Dragoon",
 			"base": "Cavalry",
 			"culture": "Muslim",
 			"offensive_morale": 3,
@@ -1805,10 +2079,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 4,
+			"type": "Muslim Dragoon",
 			"tech": 23
 		},
 		{
-			"type": "Muslim Mass Infantry",
 			"base": "Infantry",
 			"culture": "Muslim",
 			"offensive_morale": 3,
@@ -1817,10 +2091,10 @@
 			"defensive_fire": 4,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Muslim Mass Infantry",
 			"tech": 26
 		},
 		{
-			"type": "Napoleonic Lancers",
 			"culture": "Western",
 			"base": "Cavalry",
 			"offensive_morale": 5,
@@ -1828,10 +2102,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 6,
 			"defensive_shock": 4,
+			"type": "Napoleonic Lancers",
 			"tech": 28
 		},
 		{
-			"type": "Napoleonic Square",
 			"culture": "Western",
 			"base": "Infantry",
 			"offensive_morale": 4,
@@ -1840,38 +2114,38 @@
 			"defensive_fire": 4,
 			"offensive_shock": 4,
 			"defensive_shock": 3,
+			"type": "Napoleonic Square",
 			"tech": 30
 		},
 		{
-			"type": "Native Clubmen",
 			"culture": "North American",
 			"base": "Infantry",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
+			"type": "Native Clubmen",
 			"tech": 1
 		},
 		{
-			"type": "Native Indian Archer",
 			"culture": "North American",
 			"base": "Infantry",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"defensive_shock": 1,
+			"type": "Native Indian Archer",
 			"tech": 1
 		},
 		{
-			"type": "Native Indian Horsemen",
 			"culture": "North American",
 			"base": "Cavalry",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "Native Indian Horsemen",
 			"tech": 6
 		},
 		{
-			"type": "Native Indian Mountain Warfare",
 			"culture": "North American",
 			"base": "Infantry",
 			"offensive_morale": 2,
@@ -1880,20 +2154,20 @@
 			"defensive_fire": 1,
 			"offensive_shock": 1,
 			"defensive_shock": 2,
+			"type": "Native Indian Mountain Warfare",
 			"tech": 10
 		},
 		{
-			"type": "Native Indian Tribal Warfare",
 			"culture": "North American",
 			"base": "Infantry",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "Native Indian Tribal Warfare",
 			"tech": 5
 		},
 		{
-			"type": "Niger Kongolese Forest Warfare",
 			"culture": "Sub Saharan",
 			"base": "Infantry",
 			"offensive_morale": 2,
@@ -1902,10 +2176,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Niger Kongolese Forest Warfare",
 			"tech": 12
 		},
 		{
-			"type": "Niger Kongolese Guerilla Warfare",
 			"culture": "Sub Saharan",
 			"base": "Infantry",
 			"offensive_morale": 3,
@@ -1914,10 +2188,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 3,
+			"type": "Niger Kongolese Guerilla Warfare",
 			"tech": 23
 		},
 		{
-			"type": "Niger Kongolese Gunpowder Warfare",
 			"culture": "Sub Saharan",
 			"base": "Infantry",
 			"offensive_morale": 2,
@@ -1926,20 +2200,20 @@
 			"defensive_fire": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Niger Kongolese Gunpowder Warfare",
 			"tech": 15
 		},
 		{
-			"type": "Niger Kongolese Tribal Warfare",
 			"culture": "Sub Saharan",
 			"base": "Infantry",
 			"offensive_morale": 2,
 			"defensive_morale": 2,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "Niger Kongolese Tribal Warfare",
 			"tech": 5
 		},
 		{
-			"type": "North American Dragoon",
 			"culture": "North American",
 			"base": "Cavalry",
 			"offensive_morale": 4,
@@ -1947,19 +2221,19 @@
 			"offensive_fire": 2,
 			"defensive_fire": 2,
 			"offensive_shock": 3,
-			"defensive_shock": 3
+			"defensive_shock": 3,
+			"type": "North American Dragoon"
 		},
 		{
-			"type": "North American Horsemen",
 			"culture": "North American",
 			"base": "Cavalry",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 2,
-			"defensive_shock": 1
+			"defensive_shock": 1,
+			"type": "North American Horsemen"
 		},
 		{
-			"type": "North American Hussar",
 			"culture": "North American",
 			"base": "Cavalry",
 			"offensive_morale": 3,
@@ -1968,10 +2242,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 3,
 			"defensive_shock": 2,
+			"type": "North American Hussar",
 			"tech": 14
 		},
 		{
-			"type": "North American Rifle Cavalry",
 			"culture": "North American",
 			"base": "Cavalry",
 			"offensive_morale": 2,
@@ -1979,10 +2253,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 3,
 			"defensive_shock": 2,
+			"type": "North American Rifle Cavalry",
 			"tech": 10
 		},
 		{
-			"type": "North American Swarm",
 			"culture": "North American",
 			"base": "Cavalry",
 			"offensive_morale": 3,
@@ -1990,10 +2264,10 @@
 			"offensive_fire": 1,
 			"defensive_fire": 2,
 			"offensive_shock": 3,
-			"defensive_shock": 3
+			"defensive_shock": 3,
+			"type": "North American Swarm"
 		},
 		{
-			"type": "Open Order Cavalry",
 			"culture": "Western",
 			"base": "Cavalry",
 			"offensive_morale": 5,
@@ -2002,20 +2276,20 @@
 			"defensive_fire": 1,
 			"offensive_shock": 4,
 			"defensive_shock": 4,
+			"type": "Open Order Cavalry",
 			"tech": 28
 		},
 		{
-			"type": "Ottoman Azab",
 			"base": "Infantry",
 			"culture": "Ottoman",
 			"offensive_morale": 2,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "Ottoman Azab",
 			"tech": 5
 		},
 		{
-			"type": "Ottoman Janissary",
 			"base": "Infantry",
 			"culture": "Ottoman",
 			"offensive_morale": 2,
@@ -2023,10 +2297,10 @@
 			"offensive_fire": 1,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "Ottoman Janissary",
 			"tech": 9
 		},
 		{
-			"type": "Ottoman Lancer",
 			"base": "Cavalry",
 			"culture": "Ottoman",
 			"offensive_morale": 5,
@@ -2035,20 +2309,20 @@
 			"defensive_fire": 1,
 			"offensive_shock": 5,
 			"defensive_shock": 3,
+			"type": "Ottoman Lancer",
 			"tech": 28
 		},
 		{
-			"type": "Ottoman Musellem",
 			"base": "Cavalry",
 			"culture": "Ottoman",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "Ottoman Musellem",
 			"tech": 1
 		},
 		{
-			"type": "Ottoman New Model",
 			"base": "Infantry",
 			"culture": "Ottoman",
 			"offensive_morale": 4,
@@ -2057,10 +2331,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Ottoman New Model",
 			"tech": 30
 		},
 		{
-			"type": "Ottoman Nizami Cedid",
 			"base": "Infantry",
 			"culture": "Ottoman",
 			"offensive_morale": 3,
@@ -2069,10 +2343,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Ottoman Nizami Cedid",
 			"tech": 23
 		},
 		{
-			"type": "Ottoman Reformed Janissary",
 			"base": "Infantry",
 			"culture": "Ottoman",
 			"offensive_morale": 3,
@@ -2081,10 +2355,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Ottoman Reformed Janissary",
 			"tech": 19
 		},
 		{
-			"type": "Ottoman Reformed Spahi",
 			"base": "Cavalry",
 			"culture": "Ottoman",
 			"offensive_morale": 3,
@@ -2093,10 +2367,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Ottoman Reformed Spahi",
 			"tech": 18
 		},
 		{
-			"type": "Ottoman Sekban",
 			"base": "Infantry",
 			"culture": "Ottoman",
 			"offensive_morale": 2,
@@ -2105,30 +2379,30 @@
 			"defensive_fire": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "Ottoman Sekban",
 			"tech": 12
 		},
 		{
-			"type": "Ottoman Spahi",
 			"base": "Cavalry",
 			"culture": "Ottoman",
 			"offensive_morale": 3,
 			"defensive_morale": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 2,
+			"type": "Ottoman Spahi",
 			"tech": 10
 		},
 		{
-			"type": "Ottoman Timariot",
 			"base": "Cavalry",
 			"culture": "Ottoman",
 			"offensive_morale": 2,
 			"defensive_morale": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "Ottoman Timariot",
 			"tech": 6
 		},
 		{
-			"type": "Ottoman Toprakli Dragoon",
 			"base": "Cavalry",
 			"culture": "Ottoman",
 			"offensive_morale": 4,
@@ -2137,10 +2411,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Ottoman Toprakli Dragoon",
 			"tech": 28
 		},
 		{
-			"type": "Ottoman Toprakli Hit And Run",
 			"base": "Cavalry",
 			"culture": "Ottoman",
 			"offensive_morale": 4,
@@ -2148,46 +2422,46 @@
 			"offensive_fire": 2,
 			"offensive_shock": 4,
 			"defensive_shock": 3,
+			"type": "Ottoman Toprakli Hit And Run",
 			"tech": 23
 		},
 		{
-			"type": "Ottoman Yaya",
 			"base": "Infantry",
 			"culture": "Ottoman",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
+			"type": "Ottoman Yaya",
 			"tech": 1
 		},
 		{
-			"type": "Pedrero",
 			"base": "Artillery",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_fire": 1,
 			"defensive_fire": 1,
+			"type": "Pedrero",
 			"tech": 10
 		},
 		{
-			"type": "Persian Cavalry Charge",
 			"base": "Cavalry",
 			"culture": "Muslim",
 			"offensive_morale": 2,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
+			"type": "Persian Cavalry Charge",
 			"tech": 1
 		},
 		{
-			"type": "Persian Footsoldier",
 			"base": "Infantry",
 			"culture": "Muslim",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
+			"type": "Persian Footsoldier",
 			"tech": 1
 		},
 		{
-			"type": "Persian Rifle",
 			"base": "Infantry",
 			"culture": "Muslim",
 			"offensive_morale": 4,
@@ -2196,20 +2470,20 @@
 			"defensive_fire": 3,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Persian Rifle",
 			"tech": 30
 		},
 		{
-			"type": "Persian Shamshir",
 			"base": "Infantry",
 			"culture": "Muslim",
 			"offensive_morale": 2,
 			"defensive_morale": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "Persian Shamshir",
 			"tech": 9
 		},
 		{
-			"type": "Peruvian Guerilla Warfare",
 			"culture": "South American",
 			"base": "Infantry",
 			"offensive_morale": 3,
@@ -2218,10 +2492,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Peruvian Guerilla Warfare",
 			"tech": 19
 		},
 		{
-			"type": "Polish Hussar",
 			"base": "Cavalry",
 			"culture": "Eastern",
 			"offensive_morale": 2,
@@ -2230,10 +2504,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Polish Hussar",
 			"tech": 14
 		},
 		{
-			"type": "Polish Musketeer",
 			"base": "Infantry",
 			"culture": "Eastern",
 			"offensive_morale": 2,
@@ -2242,10 +2516,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 1,
 			"defensive_shock": 2,
+			"type": "Polish Musketeer",
 			"tech": 12
 		},
 		{
-			"type": "Polish Tercio",
 			"base": "Infantry",
 			"culture": "Eastern",
 			"offensive_morale": 2,
@@ -2254,10 +2528,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 1,
 			"defensive_shock": 2,
+			"type": "Polish Tercio",
 			"tech": 15
 		},
 		{
-			"type": "Polish Winged Hussar",
 			"base": "Cavalry",
 			"culture": "Eastern",
 			"offensive_morale": 4,
@@ -2265,10 +2539,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 5,
 			"defensive_shock": 4,
+			"type": "Polish Winged Hussar",
 			"tech": 22
 		},
 		{
-			"type": "Prussian Drill",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 4,
@@ -2277,10 +2551,10 @@
 			"defensive_fire": 4,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Prussian Drill",
 			"tech": 30
 		},
 		{
-			"type": "Prussian Frederickian",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 4,
@@ -2289,10 +2563,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Prussian Frederickian",
 			"tech": 26
 		},
 		{
-			"type": "Prussian Uhlan",
 			"base": "Cavalry",
 			"culture": "Western",
 			"offensive_morale": 4,
@@ -2301,38 +2575,38 @@
 			"defensive_fire": 2,
 			"offensive_shock": 5,
 			"defensive_shock": 4,
+			"type": "Prussian Uhlan",
 			"tech": 26
 		},
 		{
-			"type": "Pueblo Ambush",
 			"culture": "North American",
 			"base": "Infantry",
 			"offensive_morale": 2,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
+			"type": "Pueblo Ambush",
 			"tech": 5
 		},
 		{
-			"type": "Qizilbash Cavalry",
 			"base": "Cavalry",
 			"culture": "Muslim",
 			"offensive_morale": 3,
 			"defensive_morale": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Qizilbash Cavalry",
 			"tech": 10
 		},
 		{
-			"type": "Rajput Hill Fighters",
 			"base": "Cavalry",
 			"culture": "Indian",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"defensive_shock": 1,
+			"type": "Rajput Hill Fighters",
 			"tech": 1
 		},
 		{
-			"type": "Rajput Musketeer",
 			"culture": "Indian",
 			"base": "Infantry",
 			"offensive_morale": 2,
@@ -2341,10 +2615,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 1,
 			"defensive_shock": 2,
+			"type": "Rajput Musketeer",
 			"tech": 12
 		},
 		{
-			"type": "Reformed Asian Cavalry",
 			"base": "Cavalry",
 			"culture": "Chinese",
 			"offensive_morale": 3,
@@ -2353,10 +2627,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 5,
 			"defensive_shock": 4,
+			"type": "Reformed Asian Cavalry",
 			"tech": 28
 		},
 		{
-			"type": "Reformed Asian Musketeer",
 			"base": "Infantry",
 			"culture": "Chinese",
 			"offensive_morale": 3,
@@ -2365,10 +2639,10 @@
 			"defensive_fire": 4,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Reformed Asian Musketeer",
 			"tech": 26
 		},
 		{
-			"type": "Reformed Manchu Rifle",
 			"base": "Cavalry",
 			"culture": "Chinese",
 			"offensive_morale": 4,
@@ -2377,10 +2651,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 4,
 			"defensive_shock": 4,
+			"type": "Reformed Manchu Rifle",
 			"tech": 28
 		},
 		{
-			"type": "Reformed Mughal Mansabdar",
 			"base": "Cavalry",
 			"culture": "Indian",
 			"offensive_morale": 3,
@@ -2388,10 +2662,10 @@
 			"offensive_fire": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 3,
+			"type": "Reformed Mughal Mansabdar",
 			"tech": 14
 		},
 		{
-			"type": "Reformed Mughal Musketeer",
 			"base": "Infantry",
 			"culture": "Indian",
 			"offensive_morale": 3,
@@ -2400,10 +2674,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "Reformed Mughal Musketeer",
 			"tech": 12
 		},
 		{
-			"type": "Reformed Steppe Rifles",
 			"base": "Infantry",
 			"culture": "Nomad Group",
 			"offensive_morale": 4,
@@ -2412,10 +2686,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Reformed Steppe Rifles",
 			"tech": 30
 		},
 		{
-			"type": "Reformed Westernized Incan",
 			"culture": "South American",
 			"base": "Infantry",
 			"offensive_morale": 3,
@@ -2424,10 +2698,10 @@
 			"defensive_fire": 4,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Reformed Westernized Incan",
 			"tech": 30
 		},
 		{
-			"type": "Royal Mortar",
 			"base": "Artillery",
 			"offensive_morale": 3,
 			"defensive_morale": 3,
@@ -2435,10 +2709,10 @@
 			"defensive_fire": 4,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "Royal Mortar",
 			"tech": 25
 		},
 		{
-			"type": "Russian Cossack",
 			"base": "Cavalry",
 			"culture": "Eastern",
 			"offensive_morale": 5,
@@ -2447,10 +2721,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 4,
 			"defensive_shock": 4,
+			"type": "Russian Cossack",
 			"tech": 28
 		},
 		{
-			"type": "Russian Cuirassier",
 			"base": "Cavalry",
 			"culture": "Eastern",
 			"offensive_morale": 4,
@@ -2459,10 +2733,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 5,
 			"defensive_shock": 4,
+			"type": "Russian Cuirassier",
 			"tech": 28
 		},
 		{
-			"type": "Russian Green Coat",
 			"base": "Infantry",
 			"culture": "Eastern",
 			"offensive_morale": 4,
@@ -2471,10 +2745,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Russian Green Coat",
 			"tech": 26
 		},
 		{
-			"type": "Russian Lancer",
 			"base": "Cavalry",
 			"culture": "Eastern",
 			"offensive_morale": 4,
@@ -2482,10 +2756,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 5,
 			"defensive_shock": 4,
+			"type": "Russian Lancer",
 			"tech": 26
 		},
 		{
-			"type": "Russian Mass",
 			"base": "Infantry",
 			"culture": "Eastern",
 			"offensive_morale": 4,
@@ -2494,10 +2768,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 4,
 			"defensive_shock": 3,
+			"type": "Russian Mass",
 			"tech": 30
 		},
 		{
-			"type": "Russian Petrine",
 			"base": "Infantry",
 			"culture": "Eastern",
 			"offensive_morale": 3,
@@ -2506,10 +2780,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 2,
 			"defensive_shock": 3,
+			"type": "Russian Petrine",
 			"tech": 23
 		},
 		{
-			"type": "Saxon Infantry",
 			"base": "Infantry",
 			"culture": "Eastern",
 			"offensive_morale": 2,
@@ -2518,10 +2792,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 2,
+			"type": "Saxon Infantry",
 			"tech": 19
 		},
 		{
-			"type": "Schwarze Reiter",
 			"base": "Cavalry",
 			"culture": "Western",
 			"offensive_morale": 2,
@@ -2529,10 +2803,10 @@
 			"offensive_fire": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "Schwarze Reiter",
 			"tech": 10
 		},
 		{
-			"type": "Scottish Highlander",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 4,
@@ -2541,20 +2815,20 @@
 			"defensive_fire": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 2,
+			"type": "Scottish Highlander",
 			"tech": 19
 		},
 		{
-			"type": "Shaybani",
 			"base": "Cavalry",
 			"culture": "Muslim",
 			"offensive_morale": 1,
 			"defensive_morale": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "Shaybani",
 			"tech": 6
 		},
 		{
-			"type": "Sikh Hit And Run",
 			"base": "Infantry",
 			"culture": "Indian",
 			"offensive_morale": 3,
@@ -2563,10 +2837,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Sikh Hit And Run",
 			"tech": 18
 		},
 		{
-			"type": "Sikh Rifle",
 			"base": "Cavalry",
 			"culture": "Indian",
 			"offensive_morale": 3,
@@ -2575,10 +2849,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 4,
 			"defensive_shock": 4,
+			"type": "Sikh Rifle",
 			"tech": 28
 		},
 		{
-			"type": "Sioux Dragoon",
 			"culture": "North American",
 			"base": "Cavalry",
 			"offensive_morale": 4,
@@ -2587,40 +2861,40 @@
 			"defensive_fire": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Sioux Dragoon",
 			"tech": 23
 		},
 		{
-			"type": "Slavic Stradioti",
 			"base": "Cavalry",
 			"culture": "Eastern",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "Slavic Stradioti",
 			"tech": 6
 		},
 		{
-			"type": "Small Cast Iron Bombard",
 			"base": "Artillery",
 			"offensive_morale": 2,
 			"defensive_morale": 1,
 			"offensive_fire": 1,
 			"defensive_fire": 1,
 			"defensive_shock": 1,
+			"type": "Small Cast Iron Bombard",
 			"tech": 13
 		},
 		{
-			"type": "Songhai Tribal Warfare",
 			"culture": "Sub Saharan",
 			"base": "Infantry",
 			"offensive_morale": 1,
 			"defensive_morale": 2,
 			"offensive_shock": 1,
 			"defensive_shock": 2,
+			"type": "Songhai Tribal Warfare",
 			"tech": 5
 		},
 		{
-			"type": "South American Arquebusier",
 			"culture": "South American",
 			"base": "Infantry",
 			"offensive_morale": 2,
@@ -2629,10 +2903,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "South American Arquebusier",
 			"tech": 10
 		},
 		{
-			"type": "South American Dragoon",
 			"culture": "South American",
 			"base": "Cavalry",
 			"offensive_morale": 4,
@@ -2641,20 +2915,20 @@
 			"defensive_fire": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "South American Dragoon",
 			"tech": 23
 		},
 		{
-			"type": "South American Forest Warfare",
 			"culture": "South American",
 			"base": "Infantry",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "South American Forest Warfare",
 			"tech": 5
 		},
 		{
-			"type": "South American Gunpowder Warfare",
 			"culture": "South American",
 			"base": "Infantry",
 			"offensive_morale": 1,
@@ -2663,20 +2937,20 @@
 			"defensive_fire": 1,
 			"offensive_shock": 1,
 			"defensive_shock": 2,
+			"type": "South American Gunpowder Warfare",
 			"tech": 10
 		},
 		{
-			"type": "South American Horsemen",
 			"culture": "South American",
 			"base": "Cavalry",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "South American Horsemen",
 			"tech": 6
 		},
 		{
-			"type": "South American Hussar",
 			"culture": "South American",
 			"base": "Cavalry",
 			"offensive_morale": 3,
@@ -2685,10 +2959,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 3,
 			"defensive_shock": 2,
+			"type": "South American Hussar",
 			"tech": 14
 		},
 		{
-			"type": "South American Reformed Gunpowder Warfare",
 			"culture": "South American",
 			"base": "Infantry",
 			"offensive_morale": 2,
@@ -2697,10 +2971,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "South American Reformed Gunpowder Warfare",
 			"tech": 14
 		},
 		{
-			"type": "South American Rifle Cavalry",
 			"culture": "South American",
 			"base": "Cavalry",
 			"offensive_morale": 2,
@@ -2708,19 +2982,19 @@
 			"defensive_fire": 1,
 			"offensive_shock": 3,
 			"defensive_shock": 2,
+			"type": "South American Rifle Cavalry",
 			"tech": 10
 		},
 		{
-			"type": "South American Spearmen",
 			"culture": "South American",
 			"base": "Infantry",
 			"offensive_morale": 1,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "South American Spearmen",
 			"tech": 1
 		},
 		{
-			"type": "South American Swarm",
 			"culture": "South American",
 			"base": "Cavalry",
 			"offensive_morale": 3,
@@ -2729,19 +3003,19 @@
 			"defensive_fire": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "South American Swarm",
 			"tech": 19
 		},
 		{
-			"type": "South American Warfare",
 			"culture": "South American",
 			"base": "Infantry",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"defensive_shock": 1,
+			"type": "South American Warfare",
 			"tech": 1
 		},
 		{
-			"type": "South Indian Musketeer",
 			"base": "Infantry",
 			"culture": "Indian",
 			"offensive_morale": 1,
@@ -2750,10 +3024,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "South Indian Musketeer",
 			"tech": 9
 		},
 		{
-			"type": "Spanish Tercio",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 2,
@@ -2762,10 +3036,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 1,
 			"defensive_shock": 2,
+			"type": "Spanish Tercio",
 			"tech": 12
 		},
 		{
-			"type": "Steppe Cavalry",
 			"base": "Cavalry",
 			"culture": "Nomad Group",
 			"offensive_morale": 3,
@@ -2774,10 +3048,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 4,
 			"defensive_shock": 3,
+			"type": "Steppe Cavalry",
 			"tech": 23
 		},
 		{
-			"type": "Steppe Footmen",
 			"base": "Infantry",
 			"culture": "Nomad Group",
 			"offensive_morale": 2,
@@ -2786,10 +3060,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Steppe Footmen",
 			"tech": 12
 		},
 		{
-			"type": "Steppe Infantry",
 			"base": "Infantry",
 			"culture": "Nomad Group",
 			"offensive_morale": 3,
@@ -2798,20 +3072,20 @@
 			"defensive_fire": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Steppe Infantry",
 			"tech": 19
 		},
 		{
-			"type": "Steppe Lancers",
 			"base": "Cavalry",
 			"culture": "Nomad Group",
 			"offensive_morale": 3,
 			"defensive_morale": 3,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Steppe Lancers",
 			"tech": 14
 		},
 		{
-			"type": "Steppe Mounted Raiders",
 			"base": "Cavalry",
 			"culture": "Nomad Group",
 			"offensive_morale": 3,
@@ -2819,10 +3093,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Steppe Mounted Raiders",
 			"tech": 18
 		},
 		{
-			"type": "Steppe Musketeers",
 			"base": "Infantry",
 			"culture": "Nomad Group",
 			"offensive_morale": 2,
@@ -2831,30 +3105,30 @@
 			"defensive_fire": 1,
 			"offensive_shock": 3,
 			"defensive_shock": 2,
+			"type": "Steppe Musketeers",
 			"tech": 15
 		},
 		{
-			"type": "Steppe Raiders",
 			"base": "Infantry",
 			"culture": "Nomad Group",
 			"offensive_morale": 1,
 			"defensive_morale": 2,
 			"offensive_shock": 2,
 			"defensive_shock": 1,
+			"type": "Steppe Raiders",
 			"tech": 9
 		},
 		{
-			"type": "Steppe Riders",
 			"base": "Cavalry",
 			"culture": "Nomad Group",
 			"offensive_morale": 3,
 			"defensive_morale": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 2,
+			"type": "Steppe Riders",
 			"tech": 10
 		},
 		{
-			"type": "Steppe Rifles",
 			"base": "Infantry",
 			"culture": "Nomad Group",
 			"offensive_morale": 4,
@@ -2863,10 +3137,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Steppe Rifles",
 			"tech": 26
 		},
 		{
-			"type": "Steppe Uhlans",
 			"base": "Cavalry",
 			"culture": "Nomad Group",
 			"offensive_morale": 4,
@@ -2875,10 +3149,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 5,
 			"defensive_shock": 4,
+			"type": "Steppe Uhlans",
 			"tech": 28
 		},
 		{
-			"type": "Swedish Arme Blanche",
 			"base": "Cavalry",
 			"culture": "Western",
 			"offensive_morale": 5,
@@ -2887,10 +3161,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 5,
 			"defensive_shock": 3,
+			"type": "Swedish Arme Blanche",
 			"tech": 23
 		},
 		{
-			"type": "Swedish Caroline",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 3,
@@ -2899,10 +3173,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 2,
+			"type": "Swedish Caroline",
 			"tech": 23
 		},
 		{
-			"type": "Swedish Gallop",
 			"base": "Cavalry",
 			"culture": "Western",
 			"offensive_morale": 3,
@@ -2911,10 +3185,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 4,
 			"defensive_shock": 3,
+			"type": "Swedish Gallop",
 			"tech": 18
 		},
 		{
-			"type": "Swedish Gustavian",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 3,
@@ -2923,20 +3197,20 @@
 			"defensive_fire": 2,
 			"offensive_shock": 3,
 			"defensive_shock": 2,
+			"type": "Swedish Gustavian",
 			"tech": 19
 		},
 		{
-			"type": "Swiss Landsknechten",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 1,
 			"defensive_morale": 2,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "Swiss Landsknechten",
 			"tech": 9
 		},
 		{
-			"type": "Swivel Cannon",
 			"base": "Artillery",
 			"offensive_morale": 3,
 			"defensive_morale": 2,
@@ -2944,10 +3218,10 @@
 			"defensive_fire": 2,
 			"offensive_shock": 1,
 			"defensive_shock": 1,
+			"type": "Swivel Cannon",
 			"tech": 20
 		},
 		{
-			"type": "Tartar Cossack",
 			"base": "Cavalry",
 			"culture": "Eastern",
 			"offensive_morale": 4,
@@ -2956,18 +3230,18 @@
 			"defensive_fire": 1,
 			"offensive_shock": 4,
 			"defensive_shock": 4,
+			"type": "Tartar Cossack",
 			"tech": 26
 		},
 		{
-			"type": "Threedecker",
 			"base": "Heavy Ship",
 			"hull_size": 60,
 			"base_cannons": 120,
 			"sail_speed": 5,
-			"sprite_level": 6
+			"sprite_level": 6,
+			"type": "Threedecker"
 		},
 		{
-			"type": "Tipu Sultan Rocket",
 			"base": "Infantry",
 			"culture": "Indian",
 			"offensive_morale": 4,
@@ -2976,10 +3250,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Tipu Sultan Rocket",
 			"tech": 30
 		},
 		{
-			"type": "Tofongchis Musketeer",
 			"base": "Infantry",
 			"culture": "Muslim",
 			"offensive_morale": 2,
@@ -2988,10 +3262,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 1,
 			"defensive_shock": 2,
+			"type": "Tofongchis Musketeer",
 			"tech": 12
 		},
 		{
-			"type": "Topchis Artillery",
 			"base": "Cavalry",
 			"culture": "Muslim",
 			"offensive_morale": 3,
@@ -2999,42 +3273,42 @@
 			"offensive_fire": 1,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Topchis Artillery",
 			"tech": 14
 		},
 		{
-			"type": "Trabakul",
 			"base": "Transport",
 			"hull_size": 30,
 			"base_cannons": 10,
 			"sail_speed": 5,
-			"sprite_level": 4
+			"sprite_level": 4,
+			"type": "Trabakul"
 		},
 		{
-			"type": "Twodecker",
 			"base": "Heavy Ship",
 			"hull_size": 50,
 			"base_cannons": 100,
 			"sail_speed": 5,
-			"sprite_level": 5
+			"sprite_level": 5,
+			"type": "Twodecker"
 		},
 		{
-			"type": "Wargalleon",
 			"base": "Heavy Ship",
 			"hull_size": 40,
 			"base_cannons": 80,
 			"sail_speed": 5,
-			"sprite_level": 4
+			"sprite_level": 4,
+			"type": "Wargalleon"
 		},
 		{
-			"type": "War Galley",
 			"base": "Galley",
 			"hull_size": 10,
 			"base_cannons": 15,
 			"sail_speed": 8,
-			"sprite_level": 2
+			"sprite_level": 2,
+			"type": "War Galley"
 		},
 		{
-			"type": "Westernized Adal",
 			"culture": "Sub Saharan",
 			"base": "Infantry",
 			"offensive_morale": 3,
@@ -3043,10 +3317,10 @@
 			"defensive_fire": 4,
 			"offensive_shock": 2,
 			"defensive_shock": 2,
+			"type": "Westernized Adal",
 			"tech": 26
 		},
 		{
-			"type": "Westernized Aztec",
 			"culture": "Mesoamerican",
 			"base": "Infantry",
 			"offensive_morale": 3,
@@ -3055,10 +3329,10 @@
 			"defensive_fire": 4,
 			"offensive_shock": 2,
 			"defensive_shock": 3,
+			"type": "Westernized Aztec",
 			"tech": 26
 		},
 		{
-			"type": "Westernized Bantu",
 			"culture": "Sub Saharan",
 			"base": "Infantry",
 			"offensive_morale": 3,
@@ -3067,10 +3341,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Westernized Bantu",
 			"tech": 26
 		},
 		{
-			"type": "Westernized Ethiopian",
 			"culture": "Sub Saharan",
 			"base": "Infantry",
 			"offensive_morale": 3,
@@ -3079,10 +3353,10 @@
 			"defensive_fire": 4,
 			"offensive_shock": 2,
 			"defensive_shock": 4,
+			"type": "Westernized Ethiopian",
 			"tech": 26
 		},
 		{
-			"type": "Westernized Incan",
 			"culture": "South American",
 			"base": "Infantry",
 			"offensive_morale": 3,
@@ -3091,10 +3365,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Westernized Incan",
 			"tech": 26
 		},
 		{
-			"type": "Westernized Mayan",
 			"culture": "Mesoamerican",
 			"base": "Infantry",
 			"offensive_morale": 3,
@@ -3103,10 +3377,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Westernized Mayan",
 			"tech": 30
 		},
 		{
-			"type": "Westernized Niger Kongolese",
 			"culture": "Sub Saharan",
 			"base": "Infantry",
 			"offensive_morale": 4,
@@ -3115,22 +3389,10 @@
 			"defensive_fire": 3,
 			"offensive_shock": 3,
 			"defensive_shock": 3,
+			"type": "Westernized Niger Kongolese",
 			"tech": 26
 		},
 		{
-			"type": "Westernized South American",
-			"culture": "South American",
-			"base": "Infantry",
-			"offensive_morale": 3,
-			"defensive_morale": 4,
-			"offensive_fire": 3,
-			"defensive_fire": 4,
-			"offensive_shock": 2,
-			"defensive_shock": 3,
-			"tech": 26
-		},
-		{
-			"type": "Westernized Zapotec",
 			"culture": "Mesoamerican",
 			"base": "Infantry",
 			"offensive_morale": 3,
@@ -3139,45 +3401,57 @@
 			"defensive_fire": 3,
 			"offensive_shock": 4,
 			"defensive_shock": 3,
+			"type": "Westernized Zapotec",
 			"tech": 26
 		},
 		{
-			"type": "Western Longbow",
+			"culture": "South American",
+			"base": "Infantry",
+			"offensive_morale": 3,
+			"defensive_morale": 4,
+			"offensive_fire": 3,
+			"defensive_fire": 4,
+			"offensive_shock": 2,
+			"defensive_shock": 3,
+			"type": "Westernized South American",
+			"tech": 26
+		},
+		{
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
+			"type": "Western Longbow",
 			"tech": 5
 		},
 		{
-			"type": "Western Medieval Infantry",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
+			"type": "Western Medieval Infantry",
 			"tech": 1
 		},
 		{
-			"type": "Western Medieval Knights",
 			"base": "Cavalry",
 			"culture": "Western",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
+			"type": "Western Medieval Knights",
 			"tech": 1
 		},
 		{
-			"type": "Western Men At Arms",
 			"base": "Infantry",
 			"culture": "Western",
 			"offensive_morale": 1,
 			"defensive_morale": 1,
 			"defensive_shock": 1,
+			"type": "Western Men At Arms",
 			"tech": 5
 		},
 		{
-			"type": "Zaporoghian Cossack",
 			"base": "Cavalry",
 			"culture": "Eastern",
 			"offensive_morale": 2,
@@ -3185,10 +3459,10 @@
 			"defensive_fire": 1,
 			"offensive_shock": 4,
 			"defensive_shock": 2,
+			"type": "Zaporoghian Cossack",
 			"tech": 14
 		},
 		{
-			"type": "Zapotec Gunpowder Warfare",
 			"culture": "Mesoamerican",
 			"base": "Infantry",
 			"offensive_morale": 3,
@@ -3197,35 +3471,36 @@
 			"defensive_fire": 1,
 			"offensive_shock": 1,
 			"defensive_shock": 2,
+			"type": "Zapotec Gunpowder Warfare",
 			"tech": 14
 		},
 		{
-			"type": "Zapotec Plains Warfare",
 			"culture": "Mesoamerican",
 			"base": "Infantry",
 			"offensive_morale": 3,
 			"defensive_morale": 2,
 			"offensive_shock": 1,
 			"defensive_shock": 2,
+			"type": "Zapotec Plains Warfare",
 			"tech": 10
 		},
 		{
-			"type": "Zapotec Tribal Warfare",
 			"culture": "Mesoamerican",
 			"base": "Infantry",
 			"offensive_morale": 2,
 			"defensive_morale": 1,
 			"offensive_shock": 1,
+			"type": "Zapotec Tribal Warfare",
 			"tech": 5
 		},
 		{
-			"type": "Zulu Chest And Horns",
 			"culture": "Sub Saharan",
 			"base": "Infantry",
 			"offensive_morale": 3,
 			"defensive_morale": 1,
 			"offensive_shock": 2,
-			"defensive_shock": 1
+			"defensive_shock": 1,
+			"type": "Zulu Chest And Horns"
 		}
 	]
 }
