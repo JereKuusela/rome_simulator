@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import { Image, Table, List, Icon } from 'semantic-ui-react'
-import { sortBy, toNumber } from 'lodash'
+import { toNumber } from 'lodash'
 
-import { Mode, CountryName, UnitType, TerrainType, BaseUnit, UnitAttribute, UnitValueType, Units, Unit } from 'types'
-import { toArr, getImage } from 'utils'
-import { unitSorter } from 'managers/army'
+import { Mode, CountryName, UnitType, TerrainType, BaseUnit, UnitAttribute, UnitValueType, Unit } from 'types'
+import { getImage } from 'utils'
 import { calculateValue, calculateBase, calculateModifier, calculateLoss } from 'definition_values'
 import { toPercent, toManpower, toSignedPercent, hideZero } from 'formatters'
 

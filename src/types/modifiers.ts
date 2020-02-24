@@ -17,16 +17,7 @@ export enum ReligionType {
   Dummy = 'Dummy'
 }
 
-export enum CultureType {
-  Celtic = 'Celtic',
-  Greek = 'Greek',
-  Latin = 'Latin',
-  Levantine = 'Levantine',
-  Mauryan = 'Mauryan',
-  NorthAfrican = 'North African',
-  Persian = 'Persian',
-  SubSaharan = 'Sub Saharan'
-}
+export enum CultureType {  Dummy = 'Dummy' }
 
 export enum TradeType {
   Country = 'Country',

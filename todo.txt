@@ -73,6 +73,10 @@ Settings:
 EUIV:
  - Tooltip needs to show source of losses (to include daily loss)
  - Units: Available units determined by tech level + culture (selector should sort by tech level + show pips)
+ - Tech level: Continuous table (like current tech but all in 4x8 table since no inventions?): Available units / phase damage / maneuver.
+ - General stats / traits:
+ - Professionalism: Value from 0 to 100, slider?: Affects phase damage done/takenn.
+ - Ideas / traditions / government / religion: Various buffs? Low priority.
 
 Todo:
  - Combat massively tested (especially EUIV, but also different configurations).

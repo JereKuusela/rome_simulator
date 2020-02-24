@@ -1,5 +1,5 @@
 import { Countries, CountryName, Country, GovermentType, ReligionType, CultureType, CountryAttribute, ValuesType } from "types"
-import { defaultCountry } from "data"
+import { defaultCountry, getDefaultUnits } from "data"
 import { addValuesWithMutate } from "definition_values"
 
 export const createCountry = (countries: Countries, country: CountryName, source_country?: CountryName)  => {
@@ -28,6 +28,7 @@ export const selectReligion = (country: Country, religion: ReligionType) => {
 
 export const selectCulture = (country: Country, culture: CultureType) => {
   country.culture = culture
+  country.units = getDefaultUnits(culture)
 }
 
 export const setOmenPower = (country: Country, omen_power: number) => {

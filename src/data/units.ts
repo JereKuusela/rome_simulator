@@ -1,6 +1,6 @@
 import { ValuesType, UnitType, BaseUnit, UnitAttribute, UnitValueType, UnitRole, TerrainType, UnitState, CountryName, BaseUnits, Mode, CultureType } from 'types'
 import { addValues } from 'definition_values'
-import { toObj, removeUndefined, filter } from 'utils'
+import { toObj, removeUndefined, filter, toArr } from 'utils'
 
 import * as ir_data from './json/ir/units.json'
 import * as euiv_basedata from './json/euiv/base_units.json'
@@ -22,6 +22,7 @@ import IconTetrere from 'images/tetrere.png'
 import IconHexere from 'images/hexere.png'
 import IconOctere from 'images/octere.png'
 import IconMegaPolyreme from 'images/mega_polyreme.png'
+import { uniq } from 'lodash'
 
 const unit_to_icon: { [key in UnitType]: string } = {
   [UnitType.Archers]: IconArcher,
@@ -112,6 +113,8 @@ const initializeDefaultUnits = (): BaseUnits => toObj(euiv_basedata.units.map(cr
 
 const defaultUnits = initializeDefaultUnits()
 
+export const getCultures = () => uniq(toArr(defaultUnits, value => value.culture).filter(culture => culture) as CultureType[])
+
 export const getDefaultUnits = (culture: CultureType): BaseUnits => filter(defaultUnits, unit => !unit.culture || unit.culture === culture)
 export const getDefaultUnit = (type: UnitType): BaseUnit => defaultUnits[type]
 
@@ -162,5 +165,3 @@ interface UnitData {
   offensive_shock?: number
   defensive_shock?: number
 }
-
-export const getDefaultUnitState = (): UnitState => ({ [CountryName.Country1]: getDefaultUnits(CultureType.SubSaharan), [CountryName.Country2]: getDefaultUnits(CultureType.SubSaharan) })
