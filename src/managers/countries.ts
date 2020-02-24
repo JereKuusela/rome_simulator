@@ -26,6 +26,10 @@ export const selectReligion = (country: Country, religion: ReligionType) => {
   country.religion = religion
 }
 
+export const setTechLevel = (country: Country, level: number) => {
+  country.tech_level = level
+}
+
 export const selectCulture = (country: Country, culture: CultureType) => {
   country.culture = culture
   country.units = getDefaultUnits(culture)

@@ -5,7 +5,7 @@ import { Modal } from 'semantic-ui-react'
 import ItemSelector from 'components/ItemSelector'
 import { CountryName, ArmyType, UnitType } from 'types'
 import { getNextId } from 'army_utils'
-import { AppState, getSortedUnits } from 'state'
+import { AppState, getSortedUnits, getCountries } from 'state'
 import { selectCohort, invalidate } from 'reducers'
 
 

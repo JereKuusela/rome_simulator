@@ -25,5 +25,6 @@ export interface Country extends DefinitionValues<CountryAttribute> {
   office_discipline: number
   office_morale: number,
   armies: Armies,
+  tech_level: number,
   units: BaseUnits
 }

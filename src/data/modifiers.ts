@@ -2,7 +2,7 @@ import { sortBy } from 'lodash'
 import { toObj, map, forEach } from 'utils'
 import {
   ValuesType, CultureType, ReligionType, LawDefinition, EconomyDefinition, IdeaDefinition, AbilityDefinition,
-  TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, Modifier, ScopeType
+  TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, Modifier, ScopeType, TechDefinitionEUIV
 } from 'types'
 
 import * as traditionData from './json/ir/traditions.json'
@@ -16,12 +16,20 @@ import * as economyData from './json/ir/economy.json'
 import * as ideaData from './json/ir/ideas.json'
 import * as abilityData from './json/ir/abilities.json'
 
+import * as techDataEUIV from './json/euiv/tech.json'
+
 type Traditions = { [key in CultureType]: TraditionDefinition }
 type Omens = { [key in ReligionType]: OmenDefinition[] }
 
 const setDefault = (modifier: Modifier, scope: ScopeType = ScopeType.Country) => {
   modifier.scope = modifier.scope ?? scope
   modifier.type = modifier.type ?? ValuesType.Base
+}
+
+export const getTechDefinitionsEUIV = () => {
+  const data = sortBy<TechDataEUIV>(Array.from(techDataEUIV.tech), () => 1) as TechDefinitionEUIV[]
+  data.forEach(level => level.modifiers.forEach(modifier => setDefault(modifier)))
+  return data
 }
 
 export const getTraditionDefinitions = () => {
@@ -107,6 +115,11 @@ interface TradeData {
   name: string
   type: string
   modifier: ModifierData
+}
+
+interface TechDataEUIV {
+  name: string
+  modifiers: ModifierData[]
 }
 
 interface HeritageData {

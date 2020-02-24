@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { getTraditionDefinitions, getTradeDefinitions, getHeritageDefinitions, getInventionDefinitions, getOmenDefinitions, getTraitDefinitions, getEconomyDefinitions, getLawDefinitions, getIdeaDefinitions, getAbilityDefinitions } from 'data'
+import { getTraditionDefinitions, getTradeDefinitions, getHeritageDefinitions, getInventionDefinitions, getOmenDefinitions, getTraitDefinitions, getEconomyDefinitions, getLawDefinitions, getIdeaDefinitions, getAbilityDefinitions, getTechDefinitionsEUIV } from 'data'
 
 const create =<T>(data: () => T) => (state = data()) => state
 
@@ -13,5 +13,6 @@ export const dataReducer = combineReducers({
   economy: create(getEconomyDefinitions),
   laws: create(getLawDefinitions),
   ideas: create(getIdeaDefinitions),
-  abilities: create(getAbilityDefinitions)
+  abilities: create(getAbilityDefinitions),
+  tech_euiv: create(getTechDefinitionsEUIV)
 })

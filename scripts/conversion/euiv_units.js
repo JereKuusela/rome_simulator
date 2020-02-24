@@ -38,6 +38,7 @@ function transformer(result) {
     });
   });
   delete result[TECH_FILE];
+  return Object.values(result);
 }
 
 const parsers = {

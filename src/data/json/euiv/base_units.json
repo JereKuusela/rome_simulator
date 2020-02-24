@@ -1,34 +1,34 @@
 {
   "units": [
     {
-      "type": "Artillery",
-      "base": null,
-      "mode": "Land",
-      "role": "Support",
-      "morale": 3.0,
-      "strength": 1.0,
-      "maneuver": 2,
-      "cost": 0
-    },
-    {
-      "type": "Cavalry",
-      "base": null,
-      "mode": "Land",
-      "role": "Flank",
-      "morale": 3.0,
-      "strength": 1.0,
-      "maneuver": 3,
-      "cost": 0
-    },
-    {
-      "type": "Infantry",
+      "type": "Land Unit",
       "base": null,
       "mode": "Land",
       "role": "Front",
-      "morale": 3.0,
+      "morale": 2.0,
       "strength": 1.0,
-      "maneuver": 1,
-      "cost": 0
+      "attrition_weight": 1.0,
+      "maneuver": 1
+    },
+    {
+      "type": "Artillery",
+      "base": "Land Unit",
+      "role": "Support",
+      "maneuver": 1
+    },
+    {
+      "type": "Cavalry",
+      "base": "Land Unit",
+      "mode": "Land",
+      "role": "Flank",
+      "maneuver": 2,
+      "shock": 0.8
+    },
+    {
+      "type": "Infantry",
+      "base": "Land Unit",
+      "fire": 0.25,
+      "shock": 0.2
     },
     {
       "type": "Light Ship",

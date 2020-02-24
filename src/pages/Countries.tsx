@@ -88,7 +88,7 @@ class Countries extends Component<IProps> {
                   onChange={general.enabled ? this.disableGeneral : this.enableGeneral}
                   style={{ float: 'right' }}
                 />
-                Base martial: <Input disabled={!general.enabled} type='number' value={stats.base_martial} onChange={(_, { value }) => omen && this.setGeneralMartial(value)} />
+                Base martial: <Input disabled={!general.enabled} type='number' value={stats.base_martial} onChange={(_, { value }) => this.setGeneralMartial(value)} />
                 {' '}with <StyledNumber value={stats.trait_martial} formatter={addSignWithZero} /> from traits
                 {
                   this.renderTraits(this.props.traits, selections, !general.enabled)

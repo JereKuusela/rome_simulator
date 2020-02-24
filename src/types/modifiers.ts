@@ -99,3 +99,7 @@ export interface AbilityDefinition {
     modifiers: Modifier[]
   }[]
 }
+export interface TechDefinitionEUIV {
+  name: string
+  modifiers: Modifier[]
+}

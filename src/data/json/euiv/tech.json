@@ -1,0 +1,512 @@
+{
+  "tech": [
+    {
+      "name": "Level 0",
+      "modifiers": []
+    },
+    {
+      "name": "Level 1",
+      "modifiers": [
+        {
+          "target": "Infantry",
+          "attribute": "Shock",
+          "value": 0.1
+        },
+        {
+          "target": "Infantry",
+          "attribute": "Fire",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Level 2",
+      "modifiers": [
+        {
+          "target": "Infantry",
+          "attribute": "Shock",
+          "value": 0.2
+        },
+        {
+          "target": "Cavalry",
+          "attribute": "Shock",
+          "value": 0.2
+        },
+        {
+          "target": "Global",
+          "attribute": "Combat width",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "name": "Level 3",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "value": 0.5
+        }
+      ]
+    },
+    {
+      "name": "Level 4",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "value": 0.5
+        },
+        {
+          "target": "Global",
+          "attribute": "Military tactics",
+          "value": 0.25
+        }
+      ]
+    },
+    {
+      "name": "Level 5",
+      "modifiers": [
+        {
+          "target": "Infantry",
+          "attribute": "Shock",
+          "value": 0.15
+        },
+        {
+          "target": "Cavalry",
+          "attribute": "Shock",
+          "value": 0.2
+        },
+        {
+          "target": "Global",
+          "attribute": "Combat width",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "name": "Level 6",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Military tactics",
+          "value": 0.25
+        },
+        {
+          "target": "Infantry",
+          "attribute": "Shock",
+          "value": 0.3
+        },
+        {
+          "target": "Infantry",
+          "attribute": "Fire",
+          "value": 0.2
+        },
+        {
+          "target": "Global",
+          "attribute": "Combat width",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "name": "Level 7",
+      "modifiers": [
+        {
+          "target": "Artillery",
+          "attribute": "Fire",
+          "value": 1
+        },
+        {
+          "target": "Artillery",
+          "attribute": "Shock",
+          "value": 0.05
+        },
+        {
+          "target": "Global",
+          "attribute": "Military tactics",
+          "value": 0.25
+        }
+      ]
+    },
+    {
+      "name": "Level 8",
+      "modifiers": [
+        {
+          "target": "Infantry",
+          "attribute": "Fire",
+          "value": 0.25
+        },
+        {
+          "target": "Cavalry",
+          "attribute": "Shock",
+          "value": 0.8
+        }
+      ]
+    },
+    {
+      "name": "Level 9",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Military tactics",
+          "value": 0.25
+        },
+        {
+          "target": "Global",
+          "attribute": "Combat width",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "Level 10",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Maneuver",
+          "type": "Modifier",
+          "value": 0.25
+        }
+      ]
+    },
+    {
+      "name": "Level 11",
+      "modifiers": [
+        {
+          "target": "Infantry",
+          "attribute": "Shock",
+          "value": 0.2
+        },
+        {
+          "target": "Cavalry",
+          "attribute": "Fire",
+          "value": 0.5
+        },
+        {
+          "target": "Global",
+          "attribute": "Combat width",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "name": "Level 12",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Military tactics",
+          "value": 0.25
+        }
+      ]
+    },
+    {
+      "name": "Level 13",
+      "modifiers": [
+        {
+          "target": "Artillery",
+          "attribute": "Shock",
+          "value": 0.1
+        },
+        {
+          "target": "Artillery",
+          "attribute": "Fire",
+          "value": 0.4
+        }
+      ]
+    },
+    {
+      "name": "Level 14",
+      "modifiers": [
+        {
+          "target": "Infantry",
+          "attribute": "Fire",
+          "value": 0.3
+        },
+        {
+          "target": "Global",
+          "attribute": "Combat width",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "name": "Level 15",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "value": 1
+        },
+        {
+          "target": "Global",
+          "attribute": "Military tactics",
+          "value": 0.25
+        }
+      ]
+    },
+    {
+      "name": "Level 16",
+      "modifiers": [
+        {
+          "target": "Artillery",
+          "attribute": "Shock",
+          "value": 0.1
+        },
+        {
+          "target": "Artillery",
+          "attribute": "Fire",
+          "value": 1
+        },
+        {
+          "target": "Global",
+          "attribute": "Combat width",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "Level 17",
+      "modifiers": [
+        {
+          "target": "Cavalry",
+          "attribute": "Shock",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "Level 18",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Maneuver",
+          "type": "Modifier",
+          "value": 0.25
+        },
+        {
+          "target": "Global",
+          "attribute": "Combat width",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "name": "Level 19",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Military tactics",
+          "value": 0.25
+        }
+      ]
+    },
+    {
+      "name": "Level 20",
+      "modifiers": [
+        {
+          "target": "Infantry",
+          "attribute": "Fire",
+          "value": 0.5
+        },
+        {
+          "target": "Global",
+          "attribute": "Combat width",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "name": "Level 21",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Military tactics",
+          "value": 0.25
+        },
+        {
+          "target": "Infantry",
+          "attribute": "Shock",
+          "value": 0.5
+        }
+      ]
+    },
+    {
+      "name": "Level 22",
+      "modifiers": [
+        {
+          "target": "Cavalry",
+          "attribute": "Fire",
+          "value": 0.5
+        },
+        {
+          "target": "Artillery",
+          "attribute": "Shock",
+          "value": 0.1
+        },
+        {
+          "target": "Artillery",
+          "attribute": "Fire",
+          "value": 2
+        },
+        {
+          "target": "Global",
+          "attribute": "Combat width",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "name": "Level 23",
+      "modifiers": [
+        {
+          "target": "Cavalry",
+          "attribute": "Shock",
+          "value": 1
+        },
+        {
+          "target": "Global",
+          "attribute": "Military tactics",
+          "value": 0.25
+        },
+        {
+          "target": "Global",
+          "attribute": "Maneuver",
+          "type": "Modifier",
+          "value": 0.5
+        }
+      ]
+    },
+    {
+      "name": "Level 24",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Military tactics",
+          "value": 0.25
+        },
+        {
+          "target": "Global",
+          "attribute": "Combat width",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "name": "Level 25",
+      "modifiers": [
+        {
+          "target": "Artillery",
+          "attribute": "Shock",
+          "value": 0.1
+        },
+        {
+          "target": "Artillery",
+          "attribute": "Fire",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "name": "Level 26",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "value": 1
+        },
+        {
+          "target": "Global",
+          "attribute": "Combat width",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "name": "Level 27",
+      "modifiers": [
+        {
+          "target": "Infantry",
+          "attribute": "Fire",
+          "value": 0.5
+        }
+      ]
+    },
+    {
+      "name": "Level 28",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Maneuver",
+          "type": "Modifier",
+          "value": 0.25
+        },
+        {
+          "target": "Infantry",
+          "attribute": "Shock",
+          "value": 0.5
+        }
+      ]
+    },
+    {
+      "name": "Level 29",
+      "modifiers": []
+    },
+    {
+      "name": "Level 30",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Military tactics",
+          "value": 0.25
+        },
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "value": 1
+        },
+        {
+          "target": "Global",
+          "attribute": "Maneuver",
+          "type": "Modifier",
+          "value": 0.25
+        }
+      ]
+    },
+    {
+      "name": "Level 31",
+      "modifiers": [
+        {
+          "target": "Cavalry",
+          "attribute": "Shock",
+          "value": 1
+        },
+        {
+          "target": "Infantry",
+          "attribute": "Fire",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "Level 32",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Military tactics",
+          "value": 0.25
+        },
+        {
+          "target": "Artillery",
+          "attribute": "Shock",
+          "value": 0.1
+        },
+        {
+          "target": "Artillery",
+          "attribute": "Fire",
+          "value": 2
+        }
+      ]
+    }
+  ]
+}

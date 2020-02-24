@@ -66,6 +66,7 @@ function transformer(result) {
   Object.keys(result).forEach(key => {
     result[key] = Object.values(result[key]);
   });
+  return Object.values(result)[0];
 }
 
 const parsers = {

@@ -23,6 +23,7 @@ export const setOfficeDiscipline = makeActionRemoveFirst(manager.setOfficeDiscip
 export const setOfficeMorale = makeActionRemoveFirst(manager.setOfficeMorale, countryMapping)
 export const setOmenPower = makeActionRemoveFirst(manager.setOmenPower, countryMapping)
 export const setCountryValue = makeActionRemoveFirst(manager.setCountryValue, countryMapping)
+export const setTechLevel = makeActionRemoveFirst(manager.setTechLevel, countryMapping)
 
 const getEntity = (draft: Countries, _: Action, params: ReducerParams) => draft[params.country]
 

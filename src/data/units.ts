@@ -1,4 +1,4 @@
-import { ValuesType, UnitType, BaseUnit, UnitAttribute, UnitValueType, UnitRole, TerrainType, UnitState, CountryName, BaseUnits, Mode, CultureType } from 'types'
+import { ValuesType, UnitType, BaseUnit, UnitAttribute, UnitValueType, UnitRole, TerrainType, BaseUnits, Mode, CultureType, CombatPhase } from 'types'
 import { addValues } from 'definition_values'
 import { toObj, removeUndefined, filter, toArr } from 'utils'
 
@@ -86,6 +86,8 @@ const createUnitFromJson = (data: UnitData): BaseUnit => {
     [UnitAttribute.DefensiveMoralePips, data.defensive_morale ?? 0],
     [UnitAttribute.OffensiveShockPips, data.offensive_shock ?? 0],
     [UnitAttribute.DefensiveShockPips, data.defensive_shock ?? 0],
+    [CombatPhase.Fire, data.fire ?? 0],
+    [CombatPhase.Shock, data.shock ?? 0],
     [UnitType.Archers, data.archers ?? 0],
     [UnitType.CamelCavalry, data.camel_cavalry ?? 0],
     [UnitType.Chariots, data.chariots ?? 0],
@@ -164,4 +166,6 @@ interface UnitData {
   defensive_fire?: number
   offensive_shock?: number
   defensive_shock?: number
+  shock?: number
+  fire?: number
 }

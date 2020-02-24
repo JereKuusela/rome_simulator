@@ -24,7 +24,7 @@ interface Props {
 class ModalCohortDetail extends Component<IProps> {
 
   render() {
-    const { onClose, mode, unit_types, terrain_types, unit, settings } = this.props
+    const { onClose, mode, unit_types, terrain_types, cohort: unit, settings } = this.props
     if (!unit)
       return null
     return (
@@ -91,7 +91,7 @@ class ModalCohortDetail extends Component<IProps> {
 }
 
 
-const convertUnit = (settings: Settings, definition: Cohort | null, rounds: (CombatCohort | null)[]): Cohort | null => {
+const convertCohort = (settings: Settings, definition: Cohort | null, rounds: (CombatCohort | null)[]): Cohort | null => {
   if (!definition)
     return null
   rounds.forEach((combat, round) => {
@@ -116,7 +116,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   unit_types: props.country ? filterUnitTypesByCountry(state, props.country) : [],
   terrain_types: filterTerrainTypes(state),
   mode: getMode(state),
-  unit: convertUnit(getSettings(state), findCohortById(state, props.side, props.id), getCombatUnitForEachRound(state, props.side, props.id)),
+  cohort: convertCohort(getSettings(state), findCohortById(state, props.side, props.id), getCombatUnitForEachRound(state, props.side, props.id)),
   settings: getSettings(state)
 })
 

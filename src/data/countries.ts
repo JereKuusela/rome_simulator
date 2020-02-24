@@ -12,6 +12,7 @@ export const defaultCountry: Country =
   military_power: 0,
   office_discipline: 0,
   office_morale: 0,
+  tech_level: 0,
   armies: getDefaultArmies(),
   units: getDefaultUnits(getCultures()[0])
 }

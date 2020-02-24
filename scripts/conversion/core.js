@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const readline = require('readline');
 const directoryPath = path.join(__dirname, '../../conversion');
-const resultPath = path.join(__dirname, '../../results');
+const resultPath = path.join(__dirname, '../../src/data/json');
 
 const format = value => {
   if (!isNaN(value))
@@ -64,9 +64,8 @@ exports.parseFiles = (parsers, transformer, filename) => {
   results = {};
   const promises = Object.keys(parsers).map(key => parseFiles(parsers[key], key));
   Promise.all(promises).then(() => {
-    transformer(results);
     const text = JSON.stringify({
-      [path.parse(filename).name]: Object.values(results)
+      [path.parse(filename).name]: transformer(results)
     }, undefined, 2);
     const file = path.join(resultPath, filename);
     fs.writeFile(file, text, err => {

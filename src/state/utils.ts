@@ -118,12 +118,13 @@ export const filterUnitTypesBySide = (state: AppState, side: Side): UnitType[] =
 /**
  * Returns unit types for the current mode and country.
  * @param state Application state.
- * @param country Country.
+ * @param country_name Country.
  */
-export const filterUnitTypesByCountry = (state: AppState, country: CountryName): UnitType[] => {
-  const definitions = filterUnitDefinitions(state.settings.mode, getUnits(state, country))
+export const filterUnitTypesByCountry = (state: AppState, country_name: CountryName): UnitType[] => {
+  const definitions = filterUnitDefinitions(state.settings.mode, getUnits(state, country_name))
+  const country = getCountries(state)[country_name]
   const sorted = sortBy(toArr(definitions), definition => manager.unitSorter(definition, state.settings.mode))
-  return sorted.map(unit => unit.type)
+  return sorted.filter(unit => !unit.tech || unit.tech <= country.tech_level).map(unit => unit.type)
 }
 
 /**
@@ -213,8 +214,8 @@ const getCohortsByCountry = (state: AppState, country: CountryName): Cohorts => 
     defeated: base.defeated as Defeated
   }
   forEach2(base.frontline, (item, row, column) => cohorts.frontline[Number(row)][Number(column)] = item as Cohort)
-  const definitions = getUnits(state, country)
-  return mergeBaseUnitsWithDefinitions(settings, cohorts, definitions)
+  const units = getUnits(state, country)
+  return mergeBaseUnitsWithDefinitions(settings, cohorts, units)
 }
 
 export const getCohorts = (state: AppState, side: Side): Cohorts => getCohortsByCountry(state, getCountry(state, side))
@@ -240,10 +241,12 @@ export const getUnits = (state: AppState, country?: CountryName): Units => {
   return filterUnitDefinitions(mode, units)
 }
 
-export const getSortedUnits = (state: AppState, country?: CountryName): Unit[] => {
+export const getSortedUnits = (state: AppState, name?: CountryName): Unit[] => {
   const mode = getMode(state)
-  const units = getUnits(state, country)
-  return sortBy(toArr(units), unit => manager.unitSorter(unit, mode))
+  name = name ?? state.settings.country
+  const country = getCountries(state)[name]
+  const units = getUnits(state, name)
+  return sortBy(toArr(units), unit => manager.unitSorter(unit, mode)).filter(unit => !unit.tech || unit.tech <= country.tech_level)
 }
 
 export const getUnit = (state: AppState, unit_type: UnitType, country?: CountryName): Unit => {
