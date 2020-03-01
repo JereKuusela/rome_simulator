@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Button, Checkbox, Divider, Grid, Header, Image, Input, Table } from 'semantic-ui-react'
-import { calculateGeneralPips, calculateBaseDamage, getCombatPhase, getTerrainPips} from 'combat'
+import { calculateGeneralPips, calculateBaseDamage, getCombatPhase, getTerrainPips } from 'combat'
 import ConfirmationButton from 'components/ConfirmationButton'
 import Dropdown from 'components/Utils/Dropdown'
 import StyledNumber from 'components/Utils/StyledNumber'
@@ -21,13 +21,12 @@ import IconDice from 'images/chance.png'
 import IconGeneral from 'images/military_power.png'
 import IconTerrain from 'images/terrain.png'
 import {
-    invalidate, selectArmy, setRoll, toggleRandomRoll,
-    undo, battle, refreshBattle, setSeed, setGeneralMartial, resetState
+  invalidate, selectArmy, setRoll, toggleRandomRoll,
+  undo, battle, refreshBattle, setSeed, setGeneralBaseStat, resetState
 } from 'reducers'
 import { AppState, getBattle, getCountry, getParticipant, getSettings, getCountries, getGeneral, getSelectedTerrains } from 'state'
-import { ArmyType, CountryName, Participant, Setting, Side, General } from 'types'
+import { ArmyType, CountryName, Participant, Setting, Side, GeneralAttribute, CombatPhase, General, GeneralValueType } from 'types'
 import { keys } from 'utils'
-import { getGeneralStats } from 'managers/army'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
@@ -65,7 +64,7 @@ class Battle extends Component<IProps, IState> {
   openFastPlanner = (): void => this.setState({ modal_fast_planner_open: true })
 
   render() {
-    const { attacker, defender, general_a, general_d, round, outdated, is_undo, fight_over, refreshBattle } = this.props
+    const { attacker, defender, general_a, general_d, round, outdated, is_undo, fight_over, refreshBattle, settings } = this.props
     if (outdated)
       refreshBattle()
     return (
@@ -145,12 +144,29 @@ class Battle extends Component<IProps, IState> {
                     <Table.HeaderCell>
                       Country
                     </Table.HeaderCell>
-                    <Table.HeaderCell collapsing>
-                      General skill
+                    {
+                      settings[Setting.Martial] &&
+                      <Table.HeaderCell collapsing>
+                        General skill
                     </Table.HeaderCell>
-                    <Table.HeaderCell>
-                      Tactic
-                    </Table.HeaderCell>
+                    }
+                    {
+                      settings[Setting.FireAndShock] &&
+                      <Table.HeaderCell collapsing>
+                        General fire
+                      </Table.HeaderCell>
+                    }{
+                      settings[Setting.FireAndShock] &&
+                      <Table.HeaderCell collapsing>
+                        General shock
+                      </Table.HeaderCell>
+                    }
+                    {
+                      settings[Setting.Tactics] &&
+                      <Table.HeaderCell>
+                        Tactic
+                      </Table.HeaderCell>
+                    }
                     <Table.HeaderCell>
                       Base damage
                     </Table.HeaderCell>
@@ -316,8 +332,15 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
+  renderGeneralAttribute = (country: CountryName, general: General, attribute: GeneralValueType) => (
+    <Table.Cell collapsing>
+      <Input disabled={!general.enabled} size='mini' style={{ width: 100 }} type='number' value={general.base_values[attribute]} onChange={(_, { value }) => this.props.setGeneralBaseStat(country, attribute, Number(value))} />
+      {' '}<StyledNumber value={general.extra_values[attribute]} formatter={addSign} />
+    </Table.Cell>
+  )
+
   renderArmyInfo = (side: Side, participant: Participant, general: General, enemy: General) => {
-    const stats = getGeneralStats(general)
+    const { settings, selectArmy, invalidate } = this.props
     return (
       <Table.Row key={side}>
         <Table.Cell collapsing>
@@ -327,16 +350,21 @@ class Battle extends Component<IProps, IState> {
           <Dropdown
             values={keys(this.props.countries)}
             value={participant.country}
-            onChange={name => this.props.selectArmy(side, name)}
+            onChange={name => {
+              selectArmy(side, name)
+              invalidate()
+            }}
           />
         </Table.Cell>
-        <Table.Cell collapsing>
-          <Input disabled={!general.enabled} size='mini' style={{ width: 100 }} type='number' value={stats.base_martial} onChange={(_, { value }) => this.props.setGeneralMartial(participant.country, Number(value))} />
-          {' '}<StyledNumber value={stats.trait_martial} formatter={addSign} />
-        </Table.Cell>
-        <Table.Cell collapsing>
-          <TacticSelector side={side} />
-        </Table.Cell>
+        {settings[Setting.Martial] && this.renderGeneralAttribute(participant.country, general, GeneralAttribute.Martial)}
+        {settings[Setting.FireAndShock] && this.renderGeneralAttribute(participant.country, general, CombatPhase.Fire)}
+        {settings[Setting.FireAndShock] && this.renderGeneralAttribute(participant.country, general, CombatPhase.Shock)}
+        {
+          settings[Setting.Tactics] &&
+          <Table.Cell collapsing>
+            <TacticSelector side={side} />
+          </Table.Cell>
+        }
         <Table.Cell>
           {this.renderRoll(side, participant.dice, participant.randomize_roll, general, enemy)}
         </Table.Cell>
@@ -377,18 +405,10 @@ const mapStateToProps = (state: AppState) => ({
   settings: getSettings(state)
 })
 
-const mapDispatchToProps = (dispatch: any) => ({
-  battle: (steps: number) => dispatch(battle(steps)),
-  undo: (steps: number) => dispatch(undo(steps)),
-  toggleRandomRoll: (side: Side) => dispatch(toggleRandomRoll(side)),
-  setRoll: (participant: Side, roll: number) => dispatch(setRoll(participant, roll)),
-  setGeneralMartial: (country: CountryName, skill: number) => dispatch(setGeneralMartial(country, skill)) && dispatch(invalidate()),
-  selectArmy: (type: Side, country: CountryName) => dispatch(selectArmy(type, country)) && dispatch(invalidate()),
-  setSeed: (seed: number) => dispatch(setSeed(seed)) && dispatch(invalidate()),
-  refreshBattle: () => dispatch(refreshBattle()),
-  resetState: () => dispatch(resetState())
-})
+const actions = { battle, undo, toggleRandomRoll, setRoll, setGeneralBaseStat, invalidate, selectArmy, setSeed, refreshBattle, resetState }
 
-interface IProps extends ReturnType<typeof mapStateToProps>, ReturnType<typeof mapDispatchToProps> { }
+type S = ReturnType<typeof mapStateToProps>
+type D = typeof actions
+interface IProps extends S, D { }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Battle)
+export default connect(mapStateToProps, actions)(Battle)

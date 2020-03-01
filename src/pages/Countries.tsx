@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { Container, Grid, Table, List, Input, Checkbox } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { AppState, getGeneral, getSettings } from 'state'
+import { AppState, getGeneral, getSettings, getGeneralDefinition } from 'state'
 import { mapRange, ObjSet, has, keys, values } from '../utils'
 
 import { addSignWithZero } from 'formatters'
 import { ValuesType, TraditionDefinition, TradeDefinition, IdeaDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, EconomyDefinition, LawDefinition, AbilityDefinition, Modifier, Tradition, ScopeType, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute, UnitType, Mode, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes } from 'types'
-import { invalidate, setCountryValue, enableSelection, clearSelection, enableUnitModifiers, enableGeneralModifiers, clearUnitModifiers, clearGeneralModifiers, setGeneralMartial, setGeneralValue, selectCulture, selectReligion, selectGovernment, setOmenPower, setHasGeneral, setMilitaryPower, setOfficeMorale, setOfficeDiscipline } from 'reducers'
+import { invalidate, setCountryValue, enableSelection, clearSelection, enableUnitModifiers, enableGeneralModifiers, clearUnitModifiers, clearGeneralModifiers, setGeneralBaseStat, setGeneralValue, selectCulture, selectReligion, selectGovernment, setOmenPower, setHasGeneral, setMilitaryPower, setOfficeMorale, setOfficeDiscipline } from 'reducers'
 
 import AccordionToggle from 'containers/AccordionToggle'
 import CountryManager from 'containers/CountryManager'
@@ -15,7 +15,7 @@ import ConfirmationButton from 'components/ConfirmationButton'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TableAttributes from 'components/TableAttributes'
 import { getBaseUnitType } from 'managers/units'
-import { getGeneralStats } from 'managers/army'
+import { convertGeneralDefinition } from 'managers/army'
 
 const TRADE_COLUMNS = 4
 const HERITAGE_COLUMNS = 4
@@ -45,13 +45,11 @@ const CELL_PADDING = '.78571429em .78571429em'
 class Countries extends Component<IProps> {
 
   render() {
-    const { settings } = this.props
+    const { settings, general_definition, general } = this.props
     const country = this.props.countries[this.props.selected_country]
     const selections = country.selections
     const tradition = this.props.traditions[country.culture]
     const omen = this.props.omens[country.religion]
-    const general = this.props.general
-    const stats = getGeneralStats(general)
     return (
       <Container>
         <CountryManager>
@@ -88,8 +86,8 @@ class Countries extends Component<IProps> {
                   onChange={general.enabled ? this.disableGeneral : this.enableGeneral}
                   style={{ float: 'right' }}
                 />
-                Base martial: <Input disabled={!general.enabled} type='number' value={stats.base_martial} onChange={(_, { value }) => this.setGeneralMartial(value)} />
-                {' '}with <StyledNumber value={stats.trait_martial} formatter={addSignWithZero} /> from traits
+                Base martial: <Input disabled={!general.enabled} type='number' value={general.base_values[GeneralAttribute.Martial]} onChange={(_, { value }) => this.setGeneralMartial(value)} />
+                {' '}with <StyledNumber value={general.extra_values[GeneralAttribute.Martial]} formatter={addSignWithZero} /> from traits
                 {
                   this.renderTraits(this.props.traits, selections, !general.enabled)
                 }
@@ -191,7 +189,7 @@ class Countries extends Component<IProps> {
             <Grid.Column>
               <AccordionToggle title='Attributes' identifier='countries_attributes'>
                 <TableAttributes attributes={filterAttributes(values(CountryAttribute), settings)} custom_value_key='Custom' definition={country} onChange={this.setCountryValue} />
-                <TableAttributes attributes={filterAttributes((values(GeneralAttribute) as GeneralValueType[]).concat(values(CombatPhase)), settings)} custom_value_key='Custom' definition={general} onChange={this.setGeneralValue} />
+                <TableAttributes attributes={filterAttributes((values(GeneralAttribute) as GeneralValueType[]).concat(values(CombatPhase)), settings)} custom_value_key='Custom' definition={general_definition} onChange={this.setGeneralValue} />
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
@@ -712,7 +710,7 @@ class Countries extends Component<IProps> {
     this.props.setOfficeDiscipline(0)
     this.props.setOfficeMorale(0)
     this.props.setHasGeneral(this.props.selected_country, true)
-    this.props.setGeneralMartial(this.props.selected_country, 0)
+    this.props.setGeneralBaseStat(this.props.selected_country, GeneralAttribute.Martial, 0)
   }
 
   /**
@@ -722,7 +720,7 @@ class Countries extends Component<IProps> {
     const skill = Number(value)
     if (isNaN(skill))
       return
-    this.props.setGeneralMartial(this.props.selected_country, skill)
+    this.props.setGeneralBaseStat(this.props.selected_country, GeneralAttribute.Martial, skill)
   }
 
   clearInvention = (key: string, selections: ObjSet) => {
@@ -850,12 +848,13 @@ const mapStateToProps = (state: AppState) => ({
   traits: state.data.traits,
   ideas: state.data.ideas,
   abilities: state.data.abilities,
+  general_definition: getGeneralDefinition(state, state.settings.country),
   general: getGeneral(state, state.settings.country),
   settings: getSettings(state)
 })
 
 const actions = {
-  enableGeneralModifiers, clearGeneralModifiers, clearUnitModifiers, enableUnitModifiers, setGeneralMartial, setGeneralValue, selectCulture, invalidate, setCountryValue,
+  enableGeneralModifiers, clearGeneralModifiers, clearUnitModifiers, enableUnitModifiers, setGeneralBaseStat, setGeneralValue, selectCulture, invalidate, setCountryValue,
   selectReligion, selectGovernment, setOmenPower, setHasGeneral, setMilitaryPower, setOfficeMorale, setOfficeDiscipline, enableSelection, clearSelection
 }
 

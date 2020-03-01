@@ -1,21 +1,18 @@
 import React, { Component } from 'react'
-import { Container, Grid, Table, List, Input, Checkbox } from 'semantic-ui-react'
+import { Container, Grid, Table, List, Checkbox } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { AppState, getGeneral, getSettings } from 'state'
+import { AppState, getSettings, getGeneralDefinition } from 'state'
 import { mapRange, ObjSet, has, values } from '../utils'
 
-import { addSignWithZero } from 'formatters'
 import { ValuesType, Modifier, ScopeType, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute, Mode, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, TechDefinitionEUIV } from 'types'
-import { invalidate, setCountryValue, setTechLevel, enableSelection, clearSelection, enableUnitModifiers, enableGeneralModifiers, clearUnitModifiers, clearGeneralModifiers, setGeneralMartial, setGeneralValue, selectCulture, selectReligion, selectGovernment, setHasGeneral } from 'reducers'
+import { invalidate, setCountryValue, setTechLevel, enableSelection, clearSelection, enableUnitModifiers, enableGeneralModifiers, clearUnitModifiers, clearGeneralModifiers, setGeneralValue, selectCulture, selectReligion, selectGovernment, setHasGeneral } from 'reducers'
 
 import AccordionToggle from 'containers/AccordionToggle'
 import CountryManager from 'containers/CountryManager'
 import Dropdown from 'components/Utils/Dropdown'
 import ConfirmationButton from 'components/ConfirmationButton'
-import StyledNumber from 'components/Utils/StyledNumber'
 import TableAttributes from 'components/TableAttributes'
 import { getBaseUnitType } from 'managers/units'
-import { getGeneralStats } from 'managers/army'
 import { getCultures } from 'data'
 
 const TECH_COLUMNS = 4
@@ -29,10 +26,9 @@ const CELL_PADDING = '.78571429em .78571429em'
 class Countries extends Component<IProps> {
 
   render() {
-    const { settings, tech, general, countries, selected_country } = this.props
+    const { settings, tech, general_definition, countries, selected_country } = this.props
     const country = countries[selected_country]
     const selections = country.selections
-    const stats = getGeneralStats(general)
     return (
       <Container>
         <CountryManager>
@@ -58,12 +54,10 @@ class Countries extends Component<IProps> {
                 <Checkbox
                   toggle
                   label='General'
-                  checked={general.enabled}
-                  onChange={general.enabled ? this.disableGeneral : this.enableGeneral}
+                  checked={general_definition.enabled}
+                  onChange={general_definition.enabled ? this.disableGeneral : this.enableGeneral}
                   style={{ float: 'right' }}
                 />
-                Base martial: <Input disabled={!general.enabled} type='number' value={stats.base_martial} onChange={(_, { value }) => this.setGeneralMartial(value)} />
-                {' '}with <StyledNumber value={stats.trait_martial} formatter={addSignWithZero} /> from traits
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
@@ -80,7 +74,7 @@ class Countries extends Component<IProps> {
             <Grid.Column>
               <AccordionToggle title='Attributes' identifier='countries_attributes'>
                 <TableAttributes attributes={filterAttributes(values(CountryAttribute), settings)} custom_value_key='Custom' definition={country} onChange={this.setCountryValue} />
-                <TableAttributes attributes={filterAttributes((values(GeneralAttribute) as GeneralValueType[]).concat(values(CombatPhase)), settings)} custom_value_key='Custom' definition={general} onChange={this.setGeneralValue} />
+                <TableAttributes attributes={filterAttributes((values(GeneralAttribute) as GeneralValueType[]).concat(values(CombatPhase)), settings)} custom_value_key='Custom' definition={general_definition} onChange={this.setGeneralValue} />
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
@@ -208,18 +202,8 @@ class Countries extends Component<IProps> {
   clearAll = (selections: ObjSet) => {
     KEYS.forEach(key => this.clearModifiersStartingWith(key, selections))
     this.props.setHasGeneral(this.props.selected_country, true)
-    this.props.setGeneralMartial(this.props.selected_country, 0)
   }
 
-  /**
-   * Sets generals martial skill level.
-   */
-  setGeneralMartial = (value: string) => {
-    const skill = Number(value)
-    if (isNaN(skill))
-      return
-    this.props.setGeneralMartial(this.props.selected_country, skill)
-  }
   /**
    * Toggles has general while removing no general debuff.
    */
@@ -329,12 +313,12 @@ const mapStateToProps = (state: AppState) => ({
   countries: state.countries,
   selected_country: state.settings.country,
   tech: state.data.tech_euiv,
-  general: getGeneral(state, state.settings.country),
+  general_definition: getGeneralDefinition(state, state.settings.country),
   settings: getSettings(state)
 })
 
 const actions = {
-  enableGeneralModifiers, clearGeneralModifiers, clearUnitModifiers, enableUnitModifiers, setGeneralMartial, setGeneralValue, selectCulture, invalidate, setCountryValue,
+  enableGeneralModifiers, clearGeneralModifiers, clearUnitModifiers, enableUnitModifiers, setGeneralValue, selectCulture, invalidate, setCountryValue,
   selectReligion, selectGovernment, setHasGeneral, enableSelection, clearSelection, setTechLevel
 }
 

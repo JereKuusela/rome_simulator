@@ -1,6 +1,6 @@
 
 import { sumBy, clamp } from 'lodash'
-import { Terrain, TerrainCalc, Setting, UnitAttribute, Settings, BaseUnit, CombatPhase, General, GeneralAttribute, Side, LocationType } from 'types'
+import { Terrain, TerrainCalc, Setting, UnitAttribute, Settings, BaseUnit, CombatPhase, GeneralAttribute, Side, LocationType, General } from 'types'
 import { calculateValue } from 'definition_values'
 import { CombatCohortDefinition } from './combat'
 
@@ -9,14 +9,14 @@ import { CombatCohortDefinition } from './combat'
  * Every two levels increase dice roll by one (rounded down).
  */
 export const calculateGeneralPips = (general: General, enemy: General, phase: CombatPhase): number => {
-  const martial_pip = Math.floor((calculateValue(general, GeneralAttribute.Martial) - calculateValue(enemy, GeneralAttribute.Martial)) / 2.0)
-  const phase_pip = calculateValue(general, phase) - calculateValue(enemy, phase)
+  const martial_pip = Math.floor((general.total_values[GeneralAttribute.Martial] - enemy.total_values[GeneralAttribute.Martial]) / 2.0)
+  const phase_pip = general.total_values[phase] - enemy.total_values[phase]
   return Math.max(0, martial_pip + phase_pip)
 }
 
 export const getTerrainPips = (terrains: Terrain[], side: Side, general: General, enemy: General) => {
   const ignore_tiles = side === Side.Defender
-  const ignore_borders = side === Side.Defender || calculateValue(general, GeneralAttribute.Maneuver) <= calculateValue(enemy, GeneralAttribute.Maneuver)
+  const ignore_borders = side === Side.Defender || general.total_values[GeneralAttribute.Maneuver] <= enemy.total_values[GeneralAttribute.Maneuver]
   terrains = terrains.filter(terrain => terrain.location === LocationType.Border ? ignore_borders : ignore_tiles)
   return sumBy(terrains, terrain => calculateValue(terrain, TerrainCalc.Roll))
 }

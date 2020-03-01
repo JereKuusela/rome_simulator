@@ -27,6 +27,8 @@ export enum Setting {
   FixExperience = 'Fix damage reduction from experience',
   FixTargeting = 'Fix targeting',
   BackRow = 'Enable backrow',
+  Tactics = 'Enable tactics',
+  Martial = 'Enable general martial',
   InsufficientSupportPenalty = 'Penalty for insufficient support',
   StrengthBasedFlank = 'Enable strength based flank',
   FireAndShock = 'Enable fire and shock phases',
@@ -96,6 +98,16 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Backrow enabled for support units (EUIV).'
       else
         return 'Only front row (Imperator).'
+    case Setting.Tactics:
+      if (value)
+        return 'Tactics not available (Imperator).'
+      else
+        return 'Tactics available (EUIV).'
+    case Setting.Martial:
+      if (value)
+        return 'Martial attribute available (Imperator).'
+      else
+        return 'Martial not available (EUIV).'
     case Setting.StrengthBasedFlank:
       if (value)
         return 'Every 25% of lost strength reduces maneuveur by 25% (EUIV).'
@@ -233,6 +245,8 @@ export type SiteSettings = {
   [Setting.PhaseLengthMultiplier]: number,
   [Setting.ShowGraphs]: boolean,
   [Setting.BackRow]: boolean,
+  [Setting.Tactics]: boolean,
+  [Setting.Martial]: boolean,
   [Setting.StrengthBasedFlank]: boolean,
   [Setting.InsufficientSupportPenalty]: number,
   [Setting.DisciplineDamageReduction]: boolean,

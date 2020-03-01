@@ -50,6 +50,38 @@ export const getDefaultSiteSettings = (): SiteSettings => {
     [Setting.FixExperience]: false,
     [Setting.DefenderAdvantage]: false,
     [Setting.FixTargeting]: true,
+    [Setting.BackRow]: true,
+    [Setting.StrengthBasedFlank]: true,
+    [Setting.ChunkSize]: 10000,
+    [Setting.MaxDepth]: speedValues[SimulationSpeed.Normal][1],
+    [Setting.PhaseLengthMultiplier]: speedValues[SimulationSpeed.Normal][0],
+    [Setting.Performance]: SimulationSpeed.Normal,
+    [Setting.CalculateWinChance]: true,
+    [Setting.CalculateCasualties]: true,
+    [Setting.CalculateResourceLosses]: true,
+    [Setting.ShowGraphs]: false,
+    [Setting.DisciplineDamageReduction]: true,
+    [Setting.DailyMoraleLoss]: 0.03,
+    [Setting.DailyDamageIncrease]: 0.01,
+    [Setting.FireAndShock]: true,
+    [Setting.InsufficientSupportPenalty]: 0.25,
+    [Setting.AttributeCombatAbility]: true,
+    [Setting.AttributeDamage]: true,
+    [Setting.AttributeDrill]: true,
+    [Setting.AttributeExperience]: false,
+    [Setting.AttributeMilitaryTactics]: true,
+    [Setting.AttributeMoraleDamage]: false,
+    [Setting.AttributeOffenseDefense]: false,
+    [Setting.AttributeStrengthDamage]: false,
+    [Setting.AttributeTerrainType]: false,
+    [Setting.AttributeUnitType]: false,
+    [Setting.Tactics]: false,
+    [Setting.Martial]: false
+  }
+  /*return {
+    [Setting.FixExperience]: false,
+    [Setting.DefenderAdvantage]: false,
+    [Setting.FixTargeting]: true,
     [Setting.BackRow]: false,
     [Setting.StrengthBasedFlank]: false,
     [Setting.ChunkSize]: 10000,
@@ -74,8 +106,10 @@ export const getDefaultSiteSettings = (): SiteSettings => {
     [Setting.AttributeOffenseDefense]: true,
     [Setting.AttributeStrengthDamage]: true,
     [Setting.AttributeTerrainType]: true,
-    [Setting.AttributeUnitType]: true
-  }
+    [Setting.AttributeUnitType]: true,
+    [Setting.Tactics]: true,
+    [Setting.Martial]: true
+  }*/
 }
 
 export const speedValues: { [key: string]: number[] } = {

@@ -1,5 +1,5 @@
 import { toPercent } from './formatters'
-import { round, map, filter, forEach } from './utils'
+import { round, map, filter, forEach, filterKeys } from './utils'
 import { merge, has, size } from 'lodash'
 
 export enum ValuesType {
@@ -87,6 +87,8 @@ export const addValuesWithMutate = <D extends BD>(definition: D, type: ValuesTyp
 const subAddValues = <A extends string>(container: Values<A> | undefined, key: string, values: [A, number][]): Values<A> => {
   let new_values = container ? container : initValues<A>()
   for (const [attribute, value] of values) {
+    if (!has(new_values, attribute) && value === 0)
+      continue
     if (!has(new_values, attribute))
       new_values = { ...new_values, [attribute]: {} }
     if (value === 0 && has(new_values[attribute], key))
@@ -146,6 +148,23 @@ export const regenerateValues = <D extends BD, A extends string>(definition: D, 
 
 // This precision is required for accurate morale calculations.
 const PRECISION = 100000.0
+
+/**
+ * Returns values of a given key.
+ * @param definition 
+ * @param key 
+ */
+export const filterValues = <D extends BD>(definition: D, key: string): D => {
+  return {
+    ...definition,
+    base_values: subFilterValues(definition.base_values, key),
+    modifier_values: subFilterValues(definition.modifier_values, key),
+    loss_values: subFilterValues(definition.loss_values, key),
+    loss_modifier_values: subFilterValues(definition.loss_modifier_values, key)
+  }
+}
+
+const subFilterValues = (values: Values<any> | undefined, filter_key: string) => values && map(values, attribute => filterKeys(attribute, key => key === filter_key))
 
 /**
  * Calculates the value of an attribute. Includes base, modifier and loss values.

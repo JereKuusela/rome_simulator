@@ -8,7 +8,7 @@ import { Mode, Side, ArmyType, UnitAttribute, UnitType, Setting, TacticCalc, Ter
 import { CombatCohort, CombatCohortRoundInfo, CombatCohortDefinition, calculateCohortPips, calculateBaseDamage, getOffensiveCohortPips, getDefensiveCohortPips, getCombatPhase, getDailyIncrease, getDefensiveSupportCohortPips } from 'combat'
 import { toSignedPercent, toManpower, strengthToValue, toNumber, addSign, toMultiplier } from 'formatters'
 import { calculateValue } from 'definition_values'
-import { AppState, getSettings, getSelectedTerrains, getGeneralStats, getCountry, getTactic, getCombatUnit, getCombatParticipant } from 'state'
+import { AppState, getSettings, getSelectedTerrains, getTactic, getCombatUnit, getCombatParticipant } from 'state'
 import { getOpponent } from 'army_utils'
 import { noZero } from 'utils'
 
@@ -299,9 +299,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   participant: getCombatParticipant(state, props.side),
   settings: getSettings(state),
   terrains: getSelectedTerrains(state),
-  general_s: getGeneralStats(state, getCountry(state, props.side)).martial,
   tactic_s: getTactic(state, props.side),
-  general_t: getGeneralStats(state, getCountry(state, getOpponent(props.side))).martial,
   tactic_t: getTactic(state, getOpponent(props.side)),
   mode: state.settings.mode
 })

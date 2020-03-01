@@ -1,7 +1,7 @@
 import { AppState } from './index'
 import { toArr, filter, arrGet, toObj, forEach2, keys } from 'utils'
 import { filterUnitDefinitions, getArmyPart, mergeBaseUnitsWithDefinitions, mergeDefinitions, mergeDefinition } from '../army_utils'
-import { Mode, CountryName, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, Tactic, UnitPreferences, Participant, Terrain, Settings, Battle, Terrains, Tactics, Cohorts, ArmyName, GeneralStats, Countries, Setting, Reserve, Defeated, CountryAttribute, Units, Unit, General } from 'types'
+import { Mode, CountryName, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, Tactic, UnitPreferences, Participant, Terrain, Settings, Battle, Terrains, Tactics, Cohorts, ArmyName, General, Countries, Setting, Reserve, Defeated, CountryAttribute, Units, Unit, GeneralDefinition } from 'types'
 import { CombatCohort, CombatCohorts, CombatParticipant } from 'combat'
 import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticState, getDefaultTerrainState } from 'data'
 import { sortBy, uniq, flatten } from 'lodash'
@@ -178,10 +178,10 @@ export const getCountry = (state: AppState, side: Side): CountryName => {
   return state.battle[state.settings.mode].participants[side].country
 }
 
-export const getGeneral = (state: AppState, country: CountryName) => getArmy(state, country).general
 const getArmy = (state: AppState, country: CountryName) => state.countries[country].armies[state.settings.mode][ArmyName.Army1]
 
-export const getGeneralStats = (state: AppState, country: CountryName): GeneralStats => manager.getGeneralStats(getGeneral(state, country))
+export const getGeneralDefinition = (state: AppState, country: CountryName): GeneralDefinition => getArmy(state, country).general
+export const getGeneral = (state: AppState, country: CountryName): General => manager.convertGeneralDefinition(getSettings(state), getGeneralDefinition(state, country))
 
 export const getMode = (state: AppState): Mode => state.settings.mode
 
@@ -236,7 +236,7 @@ export const getUnits = (state: AppState, country?: CountryName): Units => {
   country = country ?? state.settings.country
   const mode = state.settings.mode
   const base_units = getBaseUnits(state, country)
-  const general = getGeneral(state, country).definitions
+  const general = getGeneralDefinition(state, country).definitions
   const units = mergeDefinitions(settings, base_units, general)
   return filterUnitDefinitions(mode, units)
 }
@@ -252,7 +252,7 @@ export const getSortedUnits = (state: AppState, name?: CountryName): Unit[] => {
 export const getUnit = (state: AppState, unit_type: UnitType, country?: CountryName): Unit => {
   const settings = getSettings(state)
   country = country ?? state.settings.country
-  const general = getGeneral(state, country).definitions
+  const general = getGeneralDefinition(state, country).definitions
   return mergeDefinition(settings, getBaseUnits(state, country), general, unit_type)
 }
 

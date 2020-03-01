@@ -13,18 +13,18 @@ export enum GeneralAttribute {
   Maneuver = 'Maneuver'
 }
 
-export type GeneralStats = {
+export type General = {
   enabled: boolean
-  martial: number
-  base_martial: number
-  trait_martial: number
+  base_values: { [key in GeneralValueType]: number }
+  extra_values: { [key in GeneralValueType]: number }
+  total_values: { [key in GeneralValueType]: number }
 }
 
 export type GeneralValueType = GeneralAttribute | CombatPhase
 
 export type Armies = { [key in Mode]: { [key in ArmyName]: Army } }
 
-export interface General extends DefinitionValues<GeneralValueType> {
+export interface GeneralDefinition extends DefinitionValues<GeneralValueType> {
   enabled: boolean
   definitions: UnitDefinitionValues
 }
@@ -35,7 +35,7 @@ export type Army = {
   tactic: TacticType
   unit_preferences: UnitPreferences
   flank_size: number
-  general: General
+  general: GeneralDefinition
   frontline: BaseFrontLine
   reserve: BaseReserve
   defeated: BaseDefeated

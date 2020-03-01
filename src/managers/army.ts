@@ -1,6 +1,6 @@
-import { calculateValue, clearAllValues, calculateBase, addValues, regenerateValues, addValuesWithMutate } from 'definition_values'
-import { Mode, GeneralAttribute, UnitType, BaseUnit, UnitAttribute, General, Army, ArmyType, BaseCohort, ValuesType, UnitValueType, TacticType, UnitPreferenceType, GeneralStats, BaseReserve, ScopeType, Modifier, BaseDefeated, BaseFrontLine, GeneralValueType } from 'types'
-import { map, forEach, keys } from 'utils'
+import { calculateValue, clearAllValues, calculateBase, addValues, regenerateValues, addValuesWithMutate, filterValues } from 'definition_values'
+import { Mode, GeneralAttribute, UnitType, BaseUnit, UnitAttribute, GeneralDefinition, Army, ArmyType, BaseCohort, ValuesType, UnitValueType, TacticType, UnitPreferenceType, General, BaseReserve, ScopeType, Modifier, BaseDefeated, BaseFrontLine, GeneralValueType, CombatPhase, Settings, isAttributeEnabled } from 'types'
+import { map, forEach, keys, toObj } from 'utils'
 import { findLastIndex } from 'lodash'
 
 /**
@@ -9,16 +9,19 @@ import { findLastIndex } from 'lodash'
  */
 export const martialToCaptureChance = (martial: number) => 0.002 * martial
 
-const BASE_MARTIAL_KEY = 'Base stat'
+const BASE_STAT_KEY = 'Base stat'
 
-export const getGeneralStats = (general: General): GeneralStats => {
-  const martial = calculateValue(general, GeneralAttribute.Martial)
-  const trait_martial = calculateValue(clearAllValues(general, BASE_MARTIAL_KEY), GeneralAttribute.Martial)
+export const convertGeneralDefinition = (settings: Settings, general: GeneralDefinition): General => {
+  const base = filterValues(general, BASE_STAT_KEY)
+  const attributes = [GeneralAttribute.Maneuver, GeneralAttribute.Martial, CombatPhase.Fire, CombatPhase.Shock, CombatPhase.Default]
+  const base_values = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) ? calculateValue(base, attribute) : 0)
+  const extra_values = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) ? calculateValue(general, attribute) - calculateValue(base, attribute) : 0)
+  const total_values = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) ? calculateValue(general, attribute) : 0)
   return {
     enabled: general.enabled,
-    martial: general.enabled ? martial : 0,
-    base_martial: martial - trait_martial,
-    trait_martial
+    base_values,
+    total_values,
+    extra_values
   }
 }
 
@@ -159,11 +162,15 @@ export const setFlankSize = (army: Army, flank_size: number) => {
   army.flank_size = flank_size
 }
 
-export const setGeneralMartial = (army: Army, value: number) => {
-  setGeneralValue(army, BASE_MARTIAL_KEY, GeneralAttribute.Martial, value)
+export const setGeneralBaseStat = (army: Army, attribute: GeneralValueType, value: number) => {
+  setGeneralValue(army, BASE_STAT_KEY, attribute, value)
 }
 
 export const setGeneralValue = (army: Army, key: string, attribute: GeneralValueType, value: number) => {
+  addValuesWithMutate(army.general, ValuesType.Base, key, [[attribute, value]])
+}
+
+export const setGeneralBaseValue = (army: Army, key: string, attribute: GeneralValueType, value: number) => {
   addValuesWithMutate(army.general, ValuesType.Base, key, [[attribute, value]])
 }
 

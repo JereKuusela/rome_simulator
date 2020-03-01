@@ -45,6 +45,8 @@ export const isAttributeEnabled = (attribute: string, settings: Settings, mode?:
     return false
   if (!settings[Setting.AttributeDrill] && attribute === UnitAttribute.Drill)
     return false
+  if (!settings[Setting.Martial] && attribute === GeneralAttribute.Martial)
+    return false
   if (attribute === CombatPhase.Default)
     return false
   return true
