@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { AppState, getSettings, getGeneralDefinition } from 'state'
 import { mapRange, ObjSet, has, values } from '../utils'
 
-import { ValuesType, Modifier, ScopeType, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute, Mode, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, TechDefinitionEUIV } from 'types'
+import { ValuesType, Modifier, ScopeType, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute, Mode, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, TechDefinitionEUIV, CountryName } from 'types'
 import { invalidate, setCountryValue, setTechLevel, enableSelection, clearSelection, enableUnitModifiers, enableGeneralModifiers, clearUnitModifiers, clearGeneralModifiers, setGeneralValue, selectCulture, selectReligion, selectGovernment, setHasGeneral } from 'reducers'
 
 import AccordionToggle from 'containers/AccordionToggle'
@@ -162,14 +162,17 @@ class Countries extends Component<IProps> {
    * Selects religion while also re-enabling current omen.
    */
   selectReligion = (value: ReligionType) => {
-    this.props.selectReligion(value)
+    this.exec(this.props.selectReligion, value)
   }
+
+  /** Executes a given function with currently selected country. */
+  exec = <T extends any>(func: (country: CountryName, value: T, ...rest: any[]) => void, value: T, ...rest: any[]) => func(this.props.selected_country, value, ...rest)
 
   /**
    * Selects culture while also re-enabling tradition.
    */
   selectCulture = (value: CultureType) => {
-    this.props.selectCulture(value)
+    this.exec(this.props.selectCulture, value)
   }
   /**
    * Scales modifier with a given power.
@@ -184,7 +187,7 @@ class Countries extends Component<IProps> {
     level = level || 1
     Object.keys(selections).filter(value => value.startsWith(TECH_KEY) && this.getNumberFromKey(value, 1) >= level)
       .forEach(value => this.clearModifiers(value))
-    this.props.setTechLevel(level - 1)
+    this.exec(this.props.setTechLevel, level - 1)
   }
 
   /**
@@ -193,7 +196,7 @@ class Countries extends Component<IProps> {
   enableTech = (tech: TechDefinitionEUIV[], level: number, selections: ObjSet) => {
     mapRange(level + 1, number => number).filter(value => !has(selections, TECH_KEY + value))
       .forEach(value => this.enableModifiers(TECH_KEY + value, tech[value].modifiers))
-    this.props.setTechLevel(level)
+    this.exec(this.props.setTechLevel, level)
   }
 
   /**
@@ -201,7 +204,8 @@ class Countries extends Component<IProps> {
    */
   clearAll = (selections: ObjSet) => {
     KEYS.forEach(key => this.clearModifiersStartingWith(key, selections))
-    this.props.setHasGeneral(this.props.selected_country, true)
+    this.exec(this.props.setHasGeneral, true)
+    this.exec(this.props.setTechLevel, 0)
   }
 
   /**
@@ -209,7 +213,7 @@ class Countries extends Component<IProps> {
    */
   enableGeneral = () => {
     this.clearModifiers(NO_GENERAL_KEY)
-    this.props.setHasGeneral(this.props.selected_country, true)
+    this.exec(this.props.setHasGeneral, true)
   }
 
   /**
@@ -223,7 +227,7 @@ class Countries extends Component<IProps> {
       type: ValuesType.Modifier,
       value: -0.25
     }])
-    this.props.setHasGeneral(this.props.selected_country, false)
+    this.exec(this.props.setHasGeneral, false)
   }
 
   getText = (modifier: Modifier) => {
@@ -283,7 +287,7 @@ class Countries extends Component<IProps> {
     modifiers = this.mapModifiersToUnits(modifiers)
     enableGeneralModifiers(selected_country, key, modifiers)
     enableUnitModifiers(key, modifiers)
-    enableSelection(key)
+    enableSelection(selected_country, key)
     invalidate()
   }
 
@@ -291,13 +295,13 @@ class Countries extends Component<IProps> {
     const { clearGeneralModifiers, clearUnitModifiers, clearSelection, invalidate, selected_country } = this.props
     clearGeneralModifiers(selected_country, key)
     clearUnitModifiers(key)
-    clearSelection(key)
+    clearSelection(selected_country, key)
     invalidate()
   }
 
   setCountryValue = (key: string, attribute: CountryAttribute, value: number) => {
-    const { setCountryValue, invalidate } = this.props
-    setCountryValue(key, attribute, value)
+    const { setCountryValue, selected_country, invalidate } = this.props
+    setCountryValue(selected_country, key, attribute, value)
     invalidate()
   }
 

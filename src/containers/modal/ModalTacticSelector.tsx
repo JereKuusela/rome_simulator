@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 
-import { AppState, getCurrentCombat, filterTactics, getSelectedTactic, getCountry } from 'state'
+import { AppState, getCurrentCombat, filterTactics, getSelectedTactic, getCountryName } from 'state'
 
 import StyledNumber from 'components/Utils/StyledNumber'
 import ItemSelector, { SelectorAttributes } from 'components/ItemSelector'
@@ -70,7 +70,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   units: props.side && getCurrentCombat(state, props.side),
   tactics: filterTactics(state),
   opposing_tactic: props.side && getSelectedTactic(state, getOpponent(props.side)),
-  country: props.side && getCountry(state, props.side)
+  country: props.side && getCountryName(state, props.side)
 })
 
 const actions = { selectTactic, invalidate }

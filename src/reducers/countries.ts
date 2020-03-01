@@ -1,7 +1,7 @@
 import * as manager from 'managers/countries'
-import { Countries, Country } from 'types'
+import { Countries, Country, CountryName } from 'types'
 import { getDefaultCountryDefinitions } from 'data'
-import { makeContainerReducer, ActionToFunction, makeActionRemoveFirst, Action, ReducerParams, makeReducer, compose } from './utils'
+import { makeContainerReducer, ActionToFunction, makeActionRemoveFirst, makeEntityReducer, compose, makeActionReplaceFirst } from './utils'
 
 const countriesMapping: ActionToFunction<Countries> = {}
 
@@ -11,22 +11,20 @@ export const changeCountryName = makeActionRemoveFirst(manager.changeCountryName
 
 const countries = makeContainerReducer(getDefaultCountryDefinitions(), countriesMapping)
 
-const countryMapping: ActionToFunction<Country> = {}
+const countryMapping: ActionToFunction<Country, CountryName> = {}
 
-export const clearSelection = makeActionRemoveFirst(manager.clearSelection, countryMapping)
-export const enableSelection = makeActionRemoveFirst(manager.enableSelection, countryMapping)
-export const selectCulture = makeActionRemoveFirst(manager.selectCulture, countryMapping)
-export const selectGovernment = makeActionRemoveFirst(manager.selectGovernment, countryMapping)
-export const selectReligion = makeActionRemoveFirst(manager.selectReligion, countryMapping)
-export const setMilitaryPower = makeActionRemoveFirst(manager.setMilitaryPower, countryMapping)
-export const setOfficeDiscipline = makeActionRemoveFirst(manager.setOfficeDiscipline, countryMapping)
-export const setOfficeMorale = makeActionRemoveFirst(manager.setOfficeMorale, countryMapping)
-export const setOmenPower = makeActionRemoveFirst(manager.setOmenPower, countryMapping)
-export const setCountryValue = makeActionRemoveFirst(manager.setCountryValue, countryMapping)
-export const setTechLevel = makeActionRemoveFirst(manager.setTechLevel, countryMapping)
+export const clearSelection = makeActionReplaceFirst(manager.clearSelection, countryMapping)
+export const enableSelection = makeActionReplaceFirst(manager.enableSelection, countryMapping)
+export const selectCulture = makeActionReplaceFirst(manager.selectCulture, countryMapping)
+export const selectGovernment = makeActionReplaceFirst(manager.selectGovernment, countryMapping)
+export const selectReligion = makeActionReplaceFirst(manager.selectReligion, countryMapping)
+export const setMilitaryPower = makeActionReplaceFirst(manager.setMilitaryPower, countryMapping)
+export const setOfficeDiscipline = makeActionReplaceFirst(manager.setOfficeDiscipline, countryMapping)
+export const setOfficeMorale = makeActionReplaceFirst(manager.setOfficeMorale, countryMapping)
+export const setOmenPower = makeActionReplaceFirst(manager.setOmenPower, countryMapping)
+export const setCountryValue = makeActionReplaceFirst(manager.setCountryValue, countryMapping)
+export const setTechLevel = makeActionReplaceFirst(manager.setTechLevel, countryMapping)
 
-const getEntity = (draft: Countries, _: Action, params: ReducerParams) => draft[params.country]
-
-const country = makeReducer(getDefaultCountryDefinitions(), countryMapping, getEntity)
+const country = makeEntityReducer(getDefaultCountryDefinitions(), countryMapping)
 
 export const countriesReducer = compose(country, countries)

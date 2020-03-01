@@ -8,7 +8,7 @@ import IconDefeated from 'images/attrition.png'
 import { Side, ArmyType, UnitAttribute } from 'types'
 import { getImage } from 'utils'
 import { CombatCohort } from 'combat'
-import { AppState, getCurrentCombat, getCountry } from 'state'
+import { AppState, getCurrentCombat, getCountryName } from 'state'
 import { getArmyPart } from 'army_utils'
 import { flatten } from 'lodash'
 import { deleteCohort, invalidate } from 'reducers'
@@ -180,7 +180,7 @@ const convertUnits = (units: (CombatCohort | null)[][]): ICohort[][] => (
 
 const mapStateToProps = (state: AppState, props: Props) => ({
   units: convertUnits(getArmyPart(getCurrentCombat(state, props.side), props.type)),
-  country: getCountry(state, props.side)
+  country: getCountryName(state, props.side)
 })
 
 const actions = { deleteCohort, invalidate }

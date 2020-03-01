@@ -29,6 +29,8 @@ export enum Setting {
   BackRow = 'Enable backrow',
   Tactics = 'Enable tactics',
   Martial = 'Enable general martial',
+  Tech = 'Enable tech based units',
+  CustomDeployment = 'Enable deployment customization',
   InsufficientSupportPenalty = 'Penalty for insufficient support',
   StrengthBasedFlank = 'Enable strength based flank',
   FireAndShock = 'Enable fire and shock phases',
@@ -98,6 +100,11 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Backrow enabled for support units (EUIV).'
       else
         return 'Only front row (Imperator).'
+    case Setting.CustomDeployment:
+      if (value)
+        return 'Preferred unit types can be selected (Imperator).'
+      else
+        return 'Preferred unit types are not available (EUIV).'
     case Setting.Tactics:
       if (value)
         return 'Tactics not available (Imperator).'
@@ -108,6 +115,11 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Martial attribute available (Imperator).'
       else
         return 'Martial not available (EUIV).'
+    case Setting.Tech:
+      if (value)
+        return 'Tech level affects available units (EUIV).'
+      else
+        return 'Units are available regardless of tech level (Imperator).'
     case Setting.StrengthBasedFlank:
       if (value)
         return 'Every 25% of lost strength reduces maneuveur by 25% (EUIV).'
@@ -247,6 +259,8 @@ export type SiteSettings = {
   [Setting.BackRow]: boolean,
   [Setting.Tactics]: boolean,
   [Setting.Martial]: boolean,
+  [Setting.Tech]: boolean,
+  [Setting.CustomDeployment]: boolean,
   [Setting.StrengthBasedFlank]: boolean,
   [Setting.InsufficientSupportPenalty]: number,
   [Setting.DisciplineDamageReduction]: boolean,

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table, Input } from 'semantic-ui-react'
 
-import { AppState, getCountry, getUnitPreferences, getFlankSize, getMode, getUnitDefinitionsBySide } from 'state'
+import { AppState, getCountryName, getUnitPreferences, getFlankSize, getMode, getUnitDefinitionsBySide } from 'state'
 import { setFlankSize, invalidate } from 'reducers'
 
 import ModalUnitPreferenceSelector from './modal/ModalUnitPreferenceSelector'
@@ -117,7 +117,7 @@ class Row extends Component<IProps, IState> {
 
 const mapStateToProps = (state: AppState, props: Props) => ({
   units: getUnitDefinitionsBySide(state, props.side),
-  country: getCountry(state, props.side),
+  country: getCountryName(state, props.side),
   flank_size: getFlankSize(state, props.side),
   preferences: getUnitPreferences(state, props.side),
   mode: getMode(state)

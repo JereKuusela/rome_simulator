@@ -15,6 +15,9 @@ Changelog:
 - Battle: Added food consumption and storage to fast planner.
 - Battle: Refactored state for armies (first step towards multiarmy battles).
 - Battle: Added support for crossing terrain penalties not affecting attacker if their general has higher maneuver, feature from EUIV.
+- Battle: Added inputs for general phase pips, feauture from EUIV.
+- Battle: Added an input for tech level, feauture from EUIV.
+- Battle: Added support for showing and hiding inputs based on available game mechanics.
 - Stats: Added average gold losses to naval simulations (from repair, from destroyed, from captured, etc.).
 - Stats: Added separate settings for calculating different things.
 - Stats: Improved performance (but probably overall less performance because new mechanics from EUIV).
@@ -58,6 +61,7 @@ Changelog:
 - Settings: Added a new setting for strength affecting maneuver, feature from EUIV.
 - Settings: Added a new setting for insufficient support penalty, feature from EUIV.
 - Settings: Added new settings for enabling/disabling different unit attributes.
+- Settings: Added new settings for enabling/disabling existing game mechanics (martial, tactics, preferred unit types, etc.).
 
 Settings:
  - discipline: Reduces damage, only increases damage, no effect.

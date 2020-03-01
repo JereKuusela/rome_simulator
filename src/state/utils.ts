@@ -1,7 +1,7 @@
 import { AppState } from './index'
 import { toArr, filter, arrGet, toObj, forEach2, keys } from 'utils'
 import { filterUnitDefinitions, getArmyPart, mergeBaseUnitsWithDefinitions, mergeDefinitions, mergeDefinition } from '../army_utils'
-import { Mode, CountryName, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, Tactic, UnitPreferences, Participant, Terrain, Settings, Battle, Terrains, Tactics, Cohorts, ArmyName, General, Countries, Setting, Reserve, Defeated, CountryAttribute, Units, Unit, GeneralDefinition } from 'types'
+import { Mode, CountryName, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, Tactic, UnitPreferences, Participant, Terrain, Settings, Battle, Terrains, Tactics, Cohorts, ArmyName, General, Countries, Setting, Reserve, Defeated, CountryAttribute, Units, Unit, GeneralDefinition, Country } from 'types'
 import { CombatCohort, CombatCohorts, CombatParticipant } from 'combat'
 import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticState, getDefaultTerrainState } from 'data'
 import { sortBy, uniq, flatten } from 'lodash'
@@ -14,14 +14,14 @@ import { calculateValue } from 'definition_values'
  */
 export const getSettings = (state: AppState, mode?: Mode): Settings => {
   const settings = { ...state.settings.combatSettings[mode || state.settings.mode], ...state.settings.siteSettings }
-  const attacker = getCountries(state)[getCountry(state, Side.Attacker)]
-  const defender = getCountries(state)[getCountry(state, Side.Defender)]
+  const attacker = getCountries(state)[getCountryName(state, Side.Attacker)]
+  const defender = getCountries(state)[getCountryName(state, Side.Defender)]
   settings[Setting.CombatWidth] += Math.max(calculateValue(attacker, CountryAttribute.CombatWidth), calculateValue(defender, CountryAttribute.CombatWidth))
   return settings
 }
 
 export const findCohortById = (state: AppState, side: Side, id: number): Cohort | null => {
-  const cohorts = getCohortsByCountry(state, getCountry(state, side))
+  const cohorts = getCohortsByCountry(state, getCountryName(state, side))
   let cohort = cohorts.reserve.find(unit => unit.id === id) || null
   if (cohort)
     return cohort
@@ -174,10 +174,12 @@ export const getFlankSize = (state: AppState, side: Side): number => {
   return army.flank_size
 }
 
-export const getCountry = (state: AppState, side: Side): CountryName => {
+export const getCountryName = (state: AppState, side: Side): CountryName => {
   return state.battle[state.settings.mode].participants[side].country
 }
-
+export const getCountry = (state: AppState, side: Side): Country => {
+  return state.countries[state.battle[state.settings.mode].participants[side].country]
+}
 const getArmy = (state: AppState, country: CountryName) => state.countries[country].armies[state.settings.mode][ArmyName.Army1]
 
 export const getGeneralDefinition = (state: AppState, country: CountryName): GeneralDefinition => getArmy(state, country).general
@@ -218,7 +220,7 @@ const getCohortsByCountry = (state: AppState, country: CountryName): Cohorts => 
   return mergeBaseUnitsWithDefinitions(settings, cohorts, units)
 }
 
-export const getCohorts = (state: AppState, side: Side): Cohorts => getCohortsByCountry(state, getCountry(state, side))
+export const getCohorts = (state: AppState, side: Side): Cohorts => getCohortsByCountry(state, getCountryName(state, side))
 
 export const getParticipant = (state: AppState, type: Side): Participant => getBattle(state).participants[type]
 

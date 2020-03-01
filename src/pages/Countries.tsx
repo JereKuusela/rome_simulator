@@ -5,7 +5,7 @@ import { AppState, getGeneral, getSettings, getGeneralDefinition } from 'state'
 import { mapRange, ObjSet, has, keys, values } from '../utils'
 
 import { addSignWithZero } from 'formatters'
-import { ValuesType, TraditionDefinition, TradeDefinition, IdeaDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, EconomyDefinition, LawDefinition, AbilityDefinition, Modifier, Tradition, ScopeType, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute, UnitType, Mode, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes } from 'types'
+import { ValuesType, TraditionDefinition, TradeDefinition, IdeaDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, EconomyDefinition, LawDefinition, AbilityDefinition, Modifier, Tradition, ScopeType, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute, UnitType, Mode, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, CountryName } from 'types'
 import { invalidate, setCountryValue, enableSelection, clearSelection, enableUnitModifiers, enableGeneralModifiers, clearUnitModifiers, clearGeneralModifiers, setGeneralBaseStat, setGeneralValue, selectCulture, selectReligion, selectGovernment, setOmenPower, setHasGeneral, setMilitaryPower, setOfficeMorale, setOfficeDiscipline } from 'reducers'
 
 import AccordionToggle from 'containers/AccordionToggle'
@@ -599,7 +599,7 @@ class Countries extends Component<IProps> {
     const power = Number(value)
     if (isNaN(power))
       return
-    this.props.setOmenPower(power)
+    this.exec(this.props.setOmenPower, power)
     this.refreshOmens(selections, power, omens)
   }
 
@@ -610,7 +610,7 @@ class Countries extends Component<IProps> {
     const power = Number(value)
     if (isNaN(power))
       return
-    this.props.setMilitaryPower(power)
+    this.exec(this.props.setMilitaryPower, power)
     this.enableModifiers(MILITARY_POWER_KEY, [{
       target: UnitType.Land,
       scope: ScopeType.Country,
@@ -627,7 +627,7 @@ class Countries extends Component<IProps> {
     const number = Number(value)
     if (isNaN(number))
       return
-    this.props.setOfficeDiscipline(number)
+    this.exec(this.props.setOfficeDiscipline, number)
     this.enableModifiers(OFFICE_KEY + 'Discipline', [{
       target: ModifierType.Global,
       type: ValuesType.Base,
@@ -644,7 +644,7 @@ class Countries extends Component<IProps> {
     const number = Number(value)
     if (isNaN(number))
       return
-    this.props.setOfficeMorale(number)
+    this.exec(this.props.setOfficeMorale, number)
     this.enableModifiers(OFFICE_KEY + 'Morale', [{
       target: UnitType.Land,
       scope: ScopeType.Country,
@@ -658,7 +658,7 @@ class Countries extends Component<IProps> {
    * Selects religion while also re-enabling current omen.
    */
   selectReligion = (value: ReligionType, power: number, selections: ObjSet) => {
-    this.props.selectReligion(value)
+    this.exec(this.props.selectReligion, value)
     const omens = this.props.omens[value]
     this.refreshOmens(selections, power, omens)
   }
@@ -667,9 +667,13 @@ class Countries extends Component<IProps> {
    * Selects culture while also re-enabling tradition.
    */
   selectCulture = (value: CultureType, selections: ObjSet) => {
-    this.props.selectCulture(value)
+    this.exec(this.props.selectCulture, value)
     this.refreshTraditions(selections, this.props.traditions[value])
   }
+
+  /** Executes a given function with currently selected country. */
+  exec = <T extends any>(func: (country: CountryName, value: T, ...rest: any[]) => void, value: T, ...rest: any[]) => func(this.props.selected_country, value, ...rest)
+
   /**
    * Scales modifier with a given power.
    */
@@ -705,12 +709,12 @@ class Countries extends Component<IProps> {
    */
   clearAll = (selections: ObjSet) => {
     KEYS.forEach(key => this.clearModifiersStartingWith(key, selections))
-    this.props.setOmenPower(100)
-    this.props.setMilitaryPower(0)
-    this.props.setOfficeDiscipline(0)
-    this.props.setOfficeMorale(0)
-    this.props.setHasGeneral(this.props.selected_country, true)
-    this.props.setGeneralBaseStat(this.props.selected_country, GeneralAttribute.Martial, 0)
+    this.exec(this.props.setOmenPower, 100)
+    this.exec(this.props.setMilitaryPower, 0)
+    this.exec(this.props.setOfficeDiscipline, 0)
+    this.exec(this.props.setOfficeMorale, 0)
+    this.exec(this.props.setHasGeneral, true)
+    this.exec(this.props.setGeneralBaseStat, GeneralAttribute.Martial, 0)
   }
 
   /**
@@ -809,21 +813,21 @@ class Countries extends Component<IProps> {
     modifiers = this.mapModifiersToUnits(modifiers)
     enableGeneralModifiers(selected_country, key, modifiers)
     enableUnitModifiers(key, modifiers)
-    enableSelection(key)
+    this.exec(enableSelection, key)
     invalidate()
   }
 
   clearModifiers = (key: string) => {
-    const { clearGeneralModifiers, clearUnitModifiers, clearSelection, invalidate, selected_country } = this.props
-    clearGeneralModifiers(selected_country, key)
+    const { clearGeneralModifiers, clearUnitModifiers, clearSelection, invalidate } = this.props
+    this.exec(clearGeneralModifiers, key)
     clearUnitModifiers(key)
-    clearSelection(key)
+    this.exec(clearSelection, key)
     invalidate()
   }
 
   setCountryValue = (key: string, attribute: CountryAttribute, value: number) => {
-    const { setCountryValue, invalidate } = this.props
-    setCountryValue(key, attribute, value)
+    const { setCountryValue, selected_country, invalidate } = this.props
+    setCountryValue(selected_country, key, attribute, value)
     invalidate()
   }
 

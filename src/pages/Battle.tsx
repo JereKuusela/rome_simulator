@@ -22,10 +22,10 @@ import IconGeneral from 'images/military_power.png'
 import IconTerrain from 'images/terrain.png'
 import {
   invalidate, selectArmy, setRoll, toggleRandomRoll,
-  undo, battle, refreshBattle, setSeed, setGeneralBaseStat, resetState
+  undo, battle, refreshBattle, setSeed, setGeneralBaseStat, resetState, setTechLevel
 } from 'reducers'
-import { AppState, getBattle, getCountry, getParticipant, getSettings, getCountries, getGeneral, getSelectedTerrains } from 'state'
-import { ArmyType, CountryName, Participant, Setting, Side, GeneralAttribute, CombatPhase, General, GeneralValueType } from 'types'
+import { AppState, getBattle, getCountryName, getParticipant, getSettings, getCountries, getGeneral, getSelectedTerrains, getCountry } from 'state'
+import { ArmyType, CountryName, Participant, Setting, Side, GeneralAttribute, CombatPhase, General, GeneralValueType, Country } from 'types'
 import { keys } from 'utils'
 
 interface IState {
@@ -64,7 +64,7 @@ class Battle extends Component<IProps, IState> {
   openFastPlanner = (): void => this.setState({ modal_fast_planner_open: true })
 
   render() {
-    const { attacker, defender, general_a, general_d, round, outdated, is_undo, fight_over, refreshBattle, settings } = this.props
+    const { participant_a, participant_d, general_a, general_d, round, outdated, is_undo, fight_over, refreshBattle, settings, country_a, country_d } = this.props
     if (outdated)
       refreshBattle()
     return (
@@ -107,7 +107,7 @@ class Battle extends Component<IProps, IState> {
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderFrontline(Side.Attacker, attacker.country)
+                this.renderFrontline(Side.Attacker, participant_a.country)
               }
             </Grid.Column>
           </Grid.Row>
@@ -124,7 +124,7 @@ class Battle extends Component<IProps, IState> {
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderFrontline(Side.Defender, defender.country)
+                this.renderFrontline(Side.Defender, participant_d.country)
               }
             </Grid.Column>
           </Grid.Row>
@@ -167,6 +167,12 @@ class Battle extends Component<IProps, IState> {
                         Tactic
                       </Table.HeaderCell>
                     }
+                    {
+                      settings[Setting.Tech] &&
+                      <Table.HeaderCell>
+                        Tech
+                      </Table.HeaderCell>
+                    }
                     <Table.HeaderCell>
                       Base damage
                     </Table.HeaderCell>
@@ -176,8 +182,8 @@ class Battle extends Component<IProps, IState> {
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {this.renderArmyInfo(Side.Attacker, attacker, general_a, general_d)}
-                  {this.renderArmyInfo(Side.Defender, defender, general_d, general_a)}
+                  {this.renderArmyInfo(Side.Attacker, participant_a, country_a, general_a, general_d)}
+                  {this.renderArmyInfo(Side.Defender, participant_d, country_d, general_d, general_a)}
                 </Table.Body>
               </Table>
             </Grid.Column>
@@ -187,37 +193,39 @@ class Battle extends Component<IProps, IState> {
               <TerrainSelector />
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row columns={1}>
-            <Grid.Column>
-              <PreferredUnitTypes />
-            </Grid.Column>
-          </Grid.Row>
+          {settings[Setting.CustomDeployment] &&
+            <Grid.Row columns={1}>
+              <Grid.Column>
+                <PreferredUnitTypes />
+              </Grid.Column>
+            </Grid.Row>
+          }
           <Divider />
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderReserve(Side.Attacker, attacker.country)
+                this.renderReserve(Side.Attacker, participant_a.country)
               }
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderReserve(Side.Defender, defender.country)
+                this.renderReserve(Side.Defender, participant_d.country)
               }
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderDefeatedArmy(Side.Attacker, attacker.country)
+                this.renderDefeatedArmy(Side.Attacker, participant_a.country)
               }
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderDefeatedArmy(Side.Defender, defender.country)
+                this.renderDefeatedArmy(Side.Defender, participant_d.country)
               }
             </Grid.Column>
           </Grid.Row>
@@ -339,8 +347,8 @@ class Battle extends Component<IProps, IState> {
     </Table.Cell>
   )
 
-  renderArmyInfo = (side: Side, participant: Participant, general: General, enemy: General) => {
-    const { settings, selectArmy, invalidate } = this.props
+  renderArmyInfo = (side: Side, participant: Participant, country: Country, general: General, enemy: General) => {
+    const { settings, selectArmy, invalidate, setTechLevel } = this.props
     return (
       <Table.Row key={side}>
         <Table.Cell collapsing>
@@ -365,6 +373,12 @@ class Battle extends Component<IProps, IState> {
             <TacticSelector side={side} />
           </Table.Cell>
         }
+        {
+          settings[Setting.Tech] &&
+          <Table.Cell collapsing>
+            <Input disabled={!general.enabled} size='mini' style={{ width: 100 }} type='number' value={country.tech_level} onChange={(_, { value }) => setTechLevel(participant.country, Number(value))} />
+          </Table.Cell>
+        }
         <Table.Cell>
           {this.renderRoll(side, participant.dice, participant.randomize_roll, general, enemy)}
         </Table.Cell>
@@ -375,7 +389,7 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderSeed = (): JSX.Element => {
+  renderSeed = () => {
     return (
       <Grid.Column>
         <Input type='number' value={this.props.seed} label='Seed for random generator' onChange={(_, { value }) => this.setSeed(value)} />
@@ -390,10 +404,12 @@ class Battle extends Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  attacker: getParticipant(state, Side.Attacker),
-  defender: getParticipant(state, Side.Defender),
-  general_a: getGeneral(state, getCountry(state, Side.Attacker)),
-  general_d: getGeneral(state, getCountry(state, Side.Defender)),
+  participant_a: getParticipant(state, Side.Attacker),
+  participant_d: getParticipant(state, Side.Defender),
+  general_a: getGeneral(state, getCountryName(state, Side.Attacker)),
+  general_d: getGeneral(state, getCountryName(state, Side.Defender)),
+  country_a: getCountry(state, Side.Attacker),
+  country_d: getCountry(state, Side.Defender),
   countries: getCountries(state),
   is_undo: getBattle(state).round > -1,
   round: getBattle(state).round,
@@ -405,7 +421,7 @@ const mapStateToProps = (state: AppState) => ({
   settings: getSettings(state)
 })
 
-const actions = { battle, undo, toggleRandomRoll, setRoll, setGeneralBaseStat, invalidate, selectArmy, setSeed, refreshBattle, resetState }
+const actions = { battle, undo, toggleRandomRoll, setRoll, setGeneralBaseStat, invalidate, selectArmy, setSeed, refreshBattle, resetState, setTechLevel }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

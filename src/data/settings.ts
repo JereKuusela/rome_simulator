@@ -76,7 +76,9 @@ export const getDefaultSiteSettings = (): SiteSettings => {
     [Setting.AttributeTerrainType]: false,
     [Setting.AttributeUnitType]: false,
     [Setting.Tactics]: false,
-    [Setting.Martial]: false
+    [Setting.Martial]: false,
+    [Setting.CustomDeployment]: false,
+    [Setting.Tech]: true
   }
   /*return {
     [Setting.FixExperience]: false,
@@ -108,7 +110,9 @@ export const getDefaultSiteSettings = (): SiteSettings => {
     [Setting.AttributeTerrainType]: true,
     [Setting.AttributeUnitType]: true,
     [Setting.Tactics]: true,
-    [Setting.Martial]: true
+    [Setting.Martial]: true,
+    [Setting.CustomDeployment]: true,
+    [Setting.Tech]: false
   }*/
 }
 
