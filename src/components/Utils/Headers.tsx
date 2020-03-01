@@ -21,8 +21,8 @@ export default class Headers extends Component<IProps> {
     )
   }
 
-  renderHeader = (value: string) => (
-    <Table.HeaderCell key={value}>
+  renderHeader = (value: string, index: number) => (
+    <Table.HeaderCell key={index}>
       {value}
     </Table.HeaderCell>
   )

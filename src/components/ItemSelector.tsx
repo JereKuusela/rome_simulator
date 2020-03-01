@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { Table, Image } from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react'
 
 import { UnitType, TerrainType, TacticType } from 'types'
-import { toArr, getImage } from 'utils'
+import { toArr } from 'utils'
+import LabelItem from './Utils/LabelUnit'
 
 interface Item<T extends ItemType> {
   type: T
@@ -41,9 +42,7 @@ export default class ItemSelector<T extends ItemType> extends Component<IProps<T
     return (
       <Table.Row key={item.type} onClick={() => onSelection(item.type)}>
         <Table.Cell>
-          {item.tech}
-          <Image src={getImage(item)} avatar />
-          {item.type}
+          <LabelItem unit={item} />
         </Table.Cell>
         {attributes ? this.renderAttributes(item, attributes) : null}
       </Table.Row>

@@ -10,7 +10,7 @@ import { Mode, Side, UnitType, UnitAttribute } from 'types'
 import { CombatCohorts, CombatCohort } from 'combat'
 import { strengthToValue } from 'formatters'
 import { getImage, round, sumArr } from 'utils'
-import { AppState, getCurrentCombat, filterUnitTypesBySide } from 'state'
+import { AppState, getCurrentCombat, getCountryName, getUnitTypeList } from 'state'
 import { flatten } from 'lodash'
 
 type Props = {}
@@ -114,8 +114,8 @@ class Stats extends Component<IProps> {
 const mapStateToProps = (state: AppState) => ({
   units_a: getCurrentCombat(state, Side.Attacker),
   units_d: getCurrentCombat(state, Side.Defender),
-  types_a: filterUnitTypesBySide(state, Side.Attacker),
-  types_d: filterUnitTypesBySide(state, Side.Defender),
+  types_a: getUnitTypeList(state, true, getCountryName(state, Side.Attacker)),
+  types_d: getUnitTypeList(state, true, getCountryName(state, Side.Defender)),
   mode: state.settings.mode
 })
 

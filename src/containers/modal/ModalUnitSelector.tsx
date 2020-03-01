@@ -5,7 +5,7 @@ import { Modal } from 'semantic-ui-react'
 import ItemSelector from 'components/ItemSelector'
 import { CountryName, ArmyType, UnitType } from 'types'
 import { getNextId } from 'army_utils'
-import { AppState, getSortedUnits } from 'state'
+import { AppState, getUnitList } from 'state'
 import { selectCohort, invalidate } from 'reducers'
 
 
@@ -48,7 +48,7 @@ class ModalUnitSelector extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  units: props.info && getSortedUnits(state, props.info.country)
+  units: props.info && getUnitList(state, true, props.info.country)
 })
 
 const actions = { selectUnit: selectCohort, invalidate }

@@ -4,7 +4,7 @@ import { filterUnitDefinitions, getArmyPart, mergeBaseUnitsWithDefinitions, merg
 import { Mode, CountryName, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, Tactic, UnitPreferences, Participant, Terrain, Settings, Battle, Terrains, Tactics, Cohorts, ArmyName, General, Countries, Setting, Reserve, Defeated, CountryAttribute, Units, Unit, GeneralDefinition, Country } from 'types'
 import { CombatCohort, CombatCohorts, CombatParticipant } from 'combat'
 import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticState, getDefaultTerrainState } from 'data'
-import { sortBy, uniq, flatten } from 'lodash'
+import { uniq, flatten } from 'lodash'
 import * as manager from 'managers/army'
 import { calculateValue } from 'definition_values'
 
@@ -103,28 +103,6 @@ export const filterTacticTypes = (state: AppState): TacticType[] => {
  */
 export const filterTactics = (state: AppState): Tactics => {
   return filter(state.tactics, tactic => tactic.mode === state.settings.mode)
-}
-
-
-/**
- * Returns unit types for the current mode and side.
- * @param state Application state.
- * @param side Attacker or defender.
- */
-export const filterUnitTypesBySide = (state: AppState, side: Side): UnitType[] => (
-  filterUnitTypesByCountry(state, getParticipant(state, side).country)
-)
-
-/**
- * Returns unit types for the current mode and country.
- * @param state Application state.
- * @param country_name Country.
- */
-export const filterUnitTypesByCountry = (state: AppState, country_name: CountryName): UnitType[] => {
-  const definitions = filterUnitDefinitions(state.settings.mode, getUnits(state, country_name))
-  const country = getCountries(state)[country_name]
-  const sorted = sortBy(toArr(definitions), definition => manager.unitSorter(definition, state.settings.mode))
-  return sorted.filter(unit => !unit.tech || unit.tech <= country.tech_level).map(unit => unit.type)
 }
 
 /**
@@ -243,12 +221,14 @@ export const getUnits = (state: AppState, country?: CountryName): Units => {
   return filterUnitDefinitions(mode, units)
 }
 
-export const getSortedUnits = (state: AppState, name?: CountryName): Unit[] => {
+export const getUnitTypeList = (state: AppState, filter_base: boolean, name?: CountryName) => getUnitList(state, filter_base, name).map(unit => unit.type)
+
+export const getUnitList = (state: AppState, filter_base: boolean, name?: CountryName): Unit[] => {
   const mode = getMode(state)
   name = name ?? state.settings.country
   const country = getCountries(state)[name]
   const units = getUnits(state, name)
-  return sortBy(toArr(units), unit => manager.unitSorter(unit, mode)).filter(unit => !unit.tech || unit.tech <= country.tech_level)
+  return manager.getUnitList(units, mode, country.tech_level, filter_base)
 }
 
 export const getUnit = (state: AppState, unit_type: UnitType, country?: CountryName): Unit => {

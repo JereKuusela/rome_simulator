@@ -3,7 +3,6 @@ import { Image, Table, List, Icon } from 'semantic-ui-react'
 import { toNumber } from 'lodash'
 
 import { Mode, CountryName, UnitType, TerrainType, BaseUnit, UnitAttribute, UnitValueType, Unit } from 'types'
-import { getImage } from 'utils'
 import { calculateValue, calculateBase, calculateModifier, calculateLoss } from 'definition_values'
 import { toPercent, toManpower, toSignedPercent, hideZero } from 'formatters'
 
@@ -16,6 +15,7 @@ import IconManpower from 'images/manpower.png'
 import IconStrength from 'images/naval_combat.png'
 import IconMorale from 'images/morale.png'
 import IconAttrition from 'images/attrition.png'
+import LabelItem from './Utils/LabelUnit'
 
 interface IProps {
   mode: Mode
@@ -96,9 +96,7 @@ export default class UnitDefinitions extends Component<IProps> {
     return (
       <Table.Row key={unit.type} onClick={() => this.props.onRowClick(unit)}>
         <Table.Cell singleLine>
-          {unit.tech}
-          <Image src={getImage(unit)} avatar />
-          {unit.type}
+          <LabelItem unit={unit} />
         </Table.Cell>
         <Table.Cell>
           {toNumber(calculateValue(unit, UnitAttribute.Morale))}

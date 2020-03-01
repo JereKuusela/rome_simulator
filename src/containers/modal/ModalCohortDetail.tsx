@@ -5,13 +5,12 @@ import { Modal } from 'semantic-ui-react'
 import ItemRemover from 'components/ItemRemover'
 import UnitDetail from 'components/UnitDetail'
 
-import { AppState, filterUnitTypesByCountry, filterTerrainTypes, findCohortById, getCombatUnitForEachRound, getMode, getSettings } from 'state'
+import { AppState, filterTerrainTypes, findCohortById, getCombatUnitForEachRound, getMode, getSettings, getUnitTypeList } from 'state'
 import { ValuesType, Side, CountryName, UnitType, Cohort, UnitAttribute, UnitValueType, Settings } from 'types'
 import { CombatCohort } from 'combat'
 import { addValues } from 'definition_values'
 import { editCohort, deleteCohort, invalidate, setCohortValue, changeCohortType, toggleCohortLoyality } from 'reducers'
 import { applyDynamicAttributes } from 'managers/units'
-
 const CUSTOM_VALUE_KEY = 'Unit'
 
 interface Props {
@@ -113,7 +112,7 @@ const convertCohort = (settings: Settings, definition: Cohort | null, rounds: (C
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  unit_types: props.country ? filterUnitTypesByCountry(state, props.country) : [],
+  unit_types: props.country ? getUnitTypeList(state, true, props.country) : [],
   terrain_types: filterTerrainTypes(state),
   mode: getMode(state),
   cohort: convertCohort(getSettings(state), findCohortById(state, props.side, props.id), getCombatUnitForEachRound(state, props.side, props.id)),

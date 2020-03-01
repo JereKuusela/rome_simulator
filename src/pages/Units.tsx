@@ -3,7 +3,7 @@ import { Modal, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
 import ModalUnitDetail from 'containers/modal/ModalUnitDetail'
-import { AppState, mergeUnitTypes, filterTerrainTypes, getUnitImages, getMode, getSortedUnits } from 'state'
+import { AppState, mergeUnitTypes, filterTerrainTypes, getUnitImages, getMode, getUnitList } from 'state'
 import { createUnit, deleteUnit, changeUnitType } from 'reducers'
 import UnitDefinitions from 'components/UnitDefinitions'
 import ItemRemover from 'components/ItemRemover'
@@ -93,7 +93,7 @@ class Units extends Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  units: getSortedUnits(state),
+  units: getUnitList(state, false),
   images: getUnitImages(state),
   unit_types: mergeUnitTypes(state),
   terrains: filterTerrainTypes(state),

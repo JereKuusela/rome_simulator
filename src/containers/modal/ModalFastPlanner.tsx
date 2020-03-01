@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal, Button, Grid } from 'semantic-ui-react'
-import { AppState, getParticipant, filterUnitTypesBySide, getUnitDefinitionsBySide, getUnitImages, getCohorts, getMode } from 'state'
+import { AppState, getParticipant, getUnitDefinitionsBySide, getCohorts, getMode, getCountryName, getUnitList } from 'state'
 import FastPlanner from 'components/FastPlanner'
 import ArmyCosts from 'components/ArmyCosts'
 import { ValuesType, UnitType, Side, CountryName, WearinessAttributes, Reserve, BaseReserve } from 'types'
@@ -35,14 +35,14 @@ class ModalFastPlanner extends Component<IProps, IState> {
   originals_d = {} as UnitTypeCounts
 
   render() {
-    const { open, types_a, types_d, definitions_a, definitions_d, images, cohorts_a, cohorts_d, weariness } = this.props
+    const { open, units_a, units_d, definitions_a, definitions_d, cohorts_a, cohorts_d, weariness } = this.props
     const { changes_a, changes_d } = this.state
     if (!open)
       return null
     //// The logic is a bit tricky here.
     // Base units are needed because there might be unit specific changes.
-    this.originals_a = types_a.reduce((map, value) => ({ ...map, [value]: this.countUnits(cohorts_a.reserve, value) }), {} as UnitTypeCounts)
-    this.originals_d = types_d.reduce((map, value) => ({ ...map, [value]: this.countUnits(cohorts_d.reserve, value) }), {} as UnitTypeCounts)
+    this.originals_a = units_a.reduce((map, value) => ({ ...map, [value.type]: this.countUnits(cohorts_a.reserve, value.type) }), {} as UnitTypeCounts)
+    this.originals_d = units_d.reduce((map, value) => ({ ...map, [value.type]: this.countUnits(cohorts_d.reserve, value.type) }), {} as UnitTypeCounts)
     // Current changes to the reserve must also be applied.
     // And finally both merged with definitions to get real values.
     const reserve_a = this.editReserve(cohorts_a.reserve, changes_a, this.originals_a).map(value => value && mergeValues(definitions_a[value.type], value))
@@ -53,11 +53,10 @@ class ModalFastPlanner extends Component<IProps, IState> {
           <FastPlanner
             changes_a={changes_a}
             reserve_a={this.originals_a}
-            images={images}
-            types_a={new Set(types_a)}
+            units_a={units_a}
             changes_d={changes_d}
             reserve_d={this.originals_d}
-            types_d={new Set(types_d)}
+            units_d={units_d}
             onValueChange={this.onValueChange}
             attached
           />
@@ -174,11 +173,10 @@ const mapStateToProps = (state: AppState) => ({
   defender: getParticipant(state, Side.Defender).country,
   cohorts_a: getCohorts(state, Side.Attacker),
   cohorts_d: getCohorts(state, Side.Defender),
-  types_a: filterUnitTypesBySide(state, Side.Attacker),
-  types_d: filterUnitTypesBySide(state, Side.Defender),
+  units_a: getUnitList(state, true, getCountryName(state, Side.Attacker)),
+  units_d: getUnitList(state, true, getCountryName(state, Side.Defender)),
   definitions_a: getUnitDefinitionsBySide(state, Side.Attacker),
   definitions_d: getUnitDefinitionsBySide(state, Side.Defender),
-  images: getUnitImages(state),
   mode: getMode(state),
   weariness: state.settings.weariness
 })

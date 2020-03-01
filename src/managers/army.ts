@@ -1,7 +1,7 @@
 import { calculateValue, clearAllValues, calculateBase, addValues, regenerateValues, addValuesWithMutate, filterValues } from 'definition_values'
-import { Mode, GeneralAttribute, UnitType, BaseUnit, UnitAttribute, GeneralDefinition, Army, ArmyType, BaseCohort, ValuesType, UnitValueType, TacticType, UnitPreferenceType, General, BaseReserve, ScopeType, Modifier, BaseDefeated, BaseFrontLine, GeneralValueType, CombatPhase, Settings, isAttributeEnabled } from 'types'
-import { map, forEach, keys, toObj } from 'utils'
-import { findLastIndex } from 'lodash'
+import { Mode, GeneralAttribute, UnitType, BaseUnit, UnitAttribute, GeneralDefinition, Army, ArmyType, BaseCohort, ValuesType, UnitValueType, TacticType, UnitPreferenceType, General, BaseReserve, ScopeType, Modifier, BaseDefeated, BaseFrontLine, GeneralValueType, CombatPhase, Settings, isAttributeEnabled, Unit, UnitRole, Units } from 'types'
+import { map, forEach, keys, toObj, toArr, toSet, ObjSet } from 'utils'
+import { findLastIndex, sortBy } from 'lodash'
 
 /**
  * Returns how much capture chance given martial skill gives.
@@ -25,13 +25,43 @@ export const convertGeneralDefinition = (settings: Settings, general: GeneralDef
   }
 }
 
-export const unitSorter = (definition: BaseUnit, mode: Mode) => {
-  if (!definition.base)
+export const getUnitList = (units: Units, mode: Mode, tech: number, filter_base: boolean) => {
+  const base_units = getBaseUnits(units)
+  let list = sortBy(toArr(units), unit => unitSorter(unit, mode, base_units))
+  list = filter_base ? list.filter(unit => !base_units[unit.type]) : list
+  return filterByRecent(filterByTech(list, tech), base_units)
+}
+
+const unitSorter = (definition: BaseUnit, mode: Mode, base_units?: ObjSet) => {
+  if (base_units && base_units[definition.type])
     return ''
   if (mode === Mode.Naval)
     return calculateBase(definition, UnitAttribute.Cost)
   return (99 - (definition.tech ?? 0)) + definition.type
 }
+
+const getBaseUnits = (units: Units) => toSet(units, unit => unit.base || unit.type)
+
+const filterByRecent = (units: Unit[], base_units: ObjSet) => {
+  const MAX_TECH_LEVEL_PER_ROLE = 2
+  const role_counts: { [key in UnitRole]: number[] } = {
+    [UnitRole.Flank]: [],
+    [UnitRole.Front]: [],
+    [UnitRole.Support]: []
+  }
+  return units.filter(unit => {
+    if (unit.role && !base_units[unit.type]) {
+      const unit_tech = unit.tech ?? 0
+      if (role_counts[unit.role].length >= MAX_TECH_LEVEL_PER_ROLE && !role_counts[unit.role].includes(unit_tech))
+        return false
+      if (!role_counts[unit.role].includes(unit_tech))
+        role_counts[unit.role].push(unit_tech)
+    }
+    return true
+  })
+}
+
+const filterByTech = (units: Unit[], tech: number) => units.filter(unit => unit.tech === undefined || unit.tech < tech)
 
 const findFromFrontline = (frontline: BaseFrontLine, id: number): [number, number] | undefined => {
   let ret: [number, number] | undefined = undefined
