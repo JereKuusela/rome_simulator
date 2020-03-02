@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal, Button, Grid } from 'semantic-ui-react'
-import { AppState, getParticipant, getUnitDefinitionsBySide, getCohorts, getMode, getCountryName, getUnitList } from 'state'
+import { AppState, getParticipant, getUnitDefinitionsBySide, getCohorts, getMode, getCountryName, getUnitList, getSettings } from 'state'
 import FastPlanner from 'components/FastPlanner'
 import ArmyCosts from 'components/ArmyCosts'
-import { ValuesType, UnitType, Side, CountryName, WearinessAttributes, Reserve, BaseReserve } from 'types'
+import { ValuesType, UnitType, Side, CountryName, WearinessAttributes, Reserve, BaseReserve, Setting } from 'types'
 import { getNextId } from 'army_utils'
 import WearinessRange from 'components/WearinessRange'
 import { changeWeariness, addToReserve, removeFromReserve, clearCohorts, invalidate } from 'reducers'
@@ -35,7 +35,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
   originals_d = {} as UnitTypeCounts
 
   render() {
-    const { open, units_a, units_d, definitions_a, definitions_d, cohorts_a, cohorts_d, weariness } = this.props
+    const { open, units_a, units_d, definitions_a, definitions_d, cohorts_a, cohorts_d, weariness, settings } = this.props
     const { changes_a, changes_d } = this.state
     if (!open)
       return null
@@ -68,6 +68,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
             reserve_d={reserve_d}
             defeated_a={cohorts_a.defeated}
             defeated_d={cohorts_d.defeated}
+            show_food={settings[Setting.Food]}
             attached
           />
           <WearinessRange
@@ -178,7 +179,8 @@ const mapStateToProps = (state: AppState) => ({
   definitions_a: getUnitDefinitionsBySide(state, Side.Attacker),
   definitions_d: getUnitDefinitionsBySide(state, Side.Defender),
   mode: getMode(state),
-  weariness: state.settings.weariness
+  weariness: state.settings.weariness,
+  settings: getSettings(state)
 })
 
 const actions = { addToReserve, removeFromReserve, clearCohorts, invalidate, changeWeariness }

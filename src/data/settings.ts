@@ -79,7 +79,8 @@ export const getDefaultSiteSettings = (): SiteSettings => {
     [Setting.Martial]: false,
     [Setting.CustomDeployment]: false,
     [Setting.Tech]: true,
-    [Setting.Culture]: true
+    [Setting.Culture]: true,
+    [Setting.Food]: false
   }
   /*return {
     [Setting.FixExperience]: false,
@@ -114,7 +115,8 @@ export const getDefaultSiteSettings = (): SiteSettings => {
     [Setting.Martial]: true,
     [Setting.CustomDeployment]: true,
     [Setting.Tech]: false,
-    [Setting.Culture]: false
+    [Setting.Culture]: false,
+    [Setting.Food]: true
   }*/
 }
 

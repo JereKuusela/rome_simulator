@@ -30,6 +30,7 @@ export enum Setting {
   Tactics = 'Enable tactics',
   Martial = 'Enable general martial',
   Tech = 'Enable tech based units',
+  Food = 'Enable food attributes',
   Culture = 'Enable culture based units',
   CustomDeployment = 'Enable deployment customization',
   InsufficientSupportPenalty = 'Penalty for insufficient support',
@@ -126,6 +127,11 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Culture affects available units (EUIV).'
       else
         return 'Units are available regardless of culture (Imperator).'
+    case Setting.Food:
+      if (value)
+        return 'Food consumption and storage are shown (Imperator).'
+      else
+        return 'Food attributes are not available (EUIV).'
     case Setting.StrengthBasedFlank:
       if (value)
         return 'Every 25% of lost strength reduces maneuveur by 25% (EUIV).'
@@ -267,6 +273,7 @@ export type SiteSettings = {
   [Setting.Martial]: boolean,
   [Setting.Tech]: boolean,
   [Setting.Culture]: boolean,
+  [Setting.Food]: boolean,
   [Setting.CustomDeployment]: boolean,
   [Setting.StrengthBasedFlank]: boolean,
   [Setting.InsufficientSupportPenalty]: number,

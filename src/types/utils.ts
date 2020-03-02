@@ -47,6 +47,8 @@ export const isAttributeEnabled = (attribute: string, settings: Settings, mode?:
     return false
   if (!settings[Setting.Martial] && attribute === GeneralAttribute.Martial)
     return false
+  if (!settings[Setting.Food] && (attribute === UnitAttribute.FoodConsumption || attribute === UnitAttribute.FoodStorage))
+    return false
   if (attribute === CombatPhase.Default)
     return false
   return true

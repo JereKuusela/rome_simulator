@@ -15,6 +15,7 @@ import { toNumber, strengthToValue } from 'formatters'
 
 interface IProps {
   mode: Mode
+  show_food: boolean
   frontline_a: FrontLine
   frontline_d: FrontLine
   reserve_a: Reserve
@@ -32,7 +33,7 @@ export default class ArmyCosts extends Component<IProps> {
   readonly headers = ['Costs for all units', 'Attacker', 'Defender']
 
   render() {
-    const { mode, attached } = this.props
+    const { mode, attached, show_food } = this.props
     const is_naval = mode === Mode.Naval
     const icon_strength = is_naval ? IconStrength : IconManpower
     return (
@@ -62,10 +63,10 @@ export default class ArmyCosts extends Component<IProps> {
             this.renderRow('Supply Limit', IconSupplyLimit, this.supplyFormatter)
           }
           {
-            !is_naval && this.renderRow('Monthly Consumption', IconFoodConsumption, this.consumptionFormatter)
+            !is_naval && show_food && this.renderRow('Monthly Consumption', IconFoodConsumption, this.consumptionFormatter)
           }
           {
-            !is_naval && this.renderRow('Food Storage', IconFoodStorage, this.storageFormatter)
+            !is_naval && show_food && this.renderRow('Food Storage', IconFoodStorage, this.storageFormatter)
           }
         </Table.Body>
       </Table>

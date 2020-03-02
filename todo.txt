@@ -76,6 +76,7 @@ Settings:
 
 EUIV:
  - Tooltip needs to show source of losses (to include daily loss)
+ - Quick tech selector doesnt actually add modifiers
  - Units: Show pips on selectors
  - General stats / traits:
  - Professionalism: Value from 0 to 100, slider?: Affects phase damage done/takenn.
