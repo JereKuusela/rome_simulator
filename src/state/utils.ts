@@ -228,7 +228,7 @@ export const getUnitList = (state: AppState, filter_base: boolean, name?: Countr
   name = name ?? state.settings.country
   const country = getCountries(state)[name]
   const units = getUnits(state, name)
-  return manager.getUnitList(units, mode, country.tech_level, filter_base)
+  return manager.getUnitList(units, mode, country.tech_level, filter_base, getSettings(state))
 }
 
 export const getUnit = (state: AppState, unit_type: UnitType, country?: CountryName): Unit => {

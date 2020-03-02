@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { AppState, getSettings, getGeneralDefinition } from 'state'
 import { mapRange, ObjSet, has, values } from '../utils'
 
-import { ValuesType, Modifier, ScopeType, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute, Mode, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, TechDefinitionEUIV, CountryName } from 'types'
+import { ValuesType, Modifier, ScopeType, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute, Mode, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, TechDefinitionEUIV, CountryName, Setting } from 'types'
 import { invalidate, setCountryValue, setTechLevel, enableSelection, clearSelection, enableUnitModifiers, enableGeneralModifiers, clearUnitModifiers, clearGeneralModifiers, setGeneralValue, selectCulture, selectReligion, selectGovernment, setHasGeneral } from 'reducers'
 
 import AccordionToggle from 'containers/AccordionToggle'
@@ -172,7 +172,7 @@ class Countries extends Component<IProps> {
    * Selects culture while also re-enabling tradition.
    */
   selectCulture = (value: CultureType) => {
-    this.exec(this.props.selectCulture, value)
+    this.exec(this.props.selectCulture, value, !this.props.settings[Setting.Culture])
   }
   /**
    * Scales modifier with a given power.

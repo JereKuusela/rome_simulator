@@ -30,9 +30,9 @@ export const setTechLevel = (country: Country, level: number) => {
   country.tech_level = level
 }
 
-export const selectCulture = (country: Country, culture: CultureType) => {
+export const selectCulture = (country: Country, culture: CultureType, load_all_units: boolean) => {
   country.culture = culture
-  country.units = getDefaultUnits(culture)
+  country.units = getDefaultUnits(load_all_units ? undefined : culture)
 }
 
 export const setOmenPower = (country: Country, omen_power: number) => {

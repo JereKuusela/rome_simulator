@@ -1,5 +1,5 @@
 import { calculateValue, clearAllValues, calculateBase, addValues, regenerateValues, addValuesWithMutate, filterValues } from 'definition_values'
-import { Mode, GeneralAttribute, UnitType, BaseUnit, UnitAttribute, GeneralDefinition, Army, ArmyType, BaseCohort, ValuesType, UnitValueType, TacticType, UnitPreferenceType, General, BaseReserve, ScopeType, Modifier, BaseDefeated, BaseFrontLine, GeneralValueType, CombatPhase, Settings, isAttributeEnabled, Unit, UnitRole, Units } from 'types'
+import { Mode, GeneralAttribute, UnitType, BaseUnit, UnitAttribute, GeneralDefinition, Army, ArmyType, BaseCohort, ValuesType, UnitValueType, TacticType, UnitPreferenceType, General, BaseReserve, ScopeType, Modifier, BaseDefeated, BaseFrontLine, GeneralValueType, CombatPhase, Settings, isAttributeEnabled, Unit, UnitRole, Units, Setting } from 'types'
 import { map, forEach, keys, toObj, toArr, toSet, ObjSet } from 'utils'
 import { findLastIndex, sortBy } from 'lodash'
 
@@ -25,11 +25,11 @@ export const convertGeneralDefinition = (settings: Settings, general: GeneralDef
   }
 }
 
-export const getUnitList = (units: Units, mode: Mode, tech: number, filter_base: boolean) => {
+export const getUnitList = (units: Units, mode: Mode, tech: number, filter_base: boolean, settings: Settings) => {
   const base_units = getBaseUnits(units)
   let list = sortBy(toArr(units), unit => unitSorter(unit, mode, base_units))
   list = filter_base ? list.filter(unit => !base_units[unit.type]) : list
-  return filterByRecent(filterByTech(list, tech), base_units)
+  return settings[Setting.Tech] ? filterByRecent(filterByTech(list, tech), base_units) : list
 }
 
 const unitSorter = (definition: BaseUnit, mode: Mode, base_units?: ObjSet) => {
@@ -61,7 +61,7 @@ const filterByRecent = (units: Unit[], base_units: ObjSet) => {
   })
 }
 
-const filterByTech = (units: Unit[], tech: number) => units.filter(unit => unit.tech === undefined || unit.tech < tech)
+const filterByTech = (units: Unit[], tech: number) => units.filter(unit => unit.tech === undefined || unit.tech <= tech)
 
 const findFromFrontline = (frontline: BaseFrontLine, id: number): [number, number] | undefined => {
   let ret: [number, number] | undefined = undefined

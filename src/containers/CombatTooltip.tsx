@@ -131,7 +131,7 @@ class CombatTooltip extends Component<IProps, IState> {
     const experience_reduction = settings[Setting.AttributeExperience] ? target.experience_reduction : 0
     const target_type = settings[Setting.AttributeUnitType] ? source[target.type] : 0
     const is_loyal = source.is_loyal
-    const total_damage = source.damage_multiplier
+    const multiplier = source.damage_multiplier
 
     return (<>
       {this.renderStyledItem('Tactic', tactic_bonus, toSignedPercent)}
@@ -151,7 +151,7 @@ class CombatTooltip extends Component<IProps, IState> {
       {settings[Setting.FireAndShock] && this.renderModifier(phase, source[phase], this.toMultiplier)}
       {settings[Setting.AttributeMilitaryTactics] && this.renderModifier('Target military tactics', 1 / noZero(target[UnitAttribute.MilitaryTactics]), this.toMultiplier)}
       {this.renderModifier('Unit strength', strength, this.toMultiplier)}
-      {this.renderItem('Damage multiplier', total_damage, this.toMultiplier)}
+      {this.renderItem('Damage multiplier', multiplier, this.toMultiplier)}
     </>)
   }
 

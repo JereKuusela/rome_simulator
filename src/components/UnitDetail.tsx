@@ -58,8 +58,8 @@ export default class UnitDetail extends Component<IProps> {
           {onTypeChange && unit_types && unit_types_as_dropdown && <DetailDropdownRow text='Type' cells={this.CELLS} value={type} values={unit_types} onChange={onTypeChange} />}
           {onTypeChange && unit_types && !unit_types_as_dropdown && <DetailInputRow text='Name' cells={this.CELLS} value={type} onChange={onTypeChange} />}
           {mode && <DetailTextRow text='Mode' cells={this.CELLS} value={mode} />}
-          {culture && <DetailTextRow text='Culture' cells={this.CELLS} value={culture} />}
-          {tech && <DetailTextRow text='Tech' cells={this.CELLS} value={tech} />}
+          {settings[Setting.Culture] && culture && <DetailTextRow text='Culture' cells={this.CELLS} value={culture} />}
+          {settings[Setting.Tech] && tech && <DetailTextRow text='Tech' cells={this.CELLS} value={tech} />}
           {base && unit_types && onBaseTypeChange && <DetailDropdownRow text='Base type' cells={this.CELLS} value={base} values={unit_types} onChange={onBaseTypeChange} />}
           {onImageChange && <DetailInputRow text='Image' cells={this.CELLS} value={image} onChange={onImageChange} />}
           {onChangeDeployment && deployment && <DetailDropdownRow text='Deployment' cells={this.CELLS} value={deployment} values={this.deployments} onChange={onChangeDeployment} />}

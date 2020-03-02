@@ -5,7 +5,7 @@ import { AppState, getGeneral, getSettings, getGeneralDefinition } from 'state'
 import { mapRange, ObjSet, has, keys, values } from '../utils'
 
 import { addSignWithZero } from 'formatters'
-import { ValuesType, TraditionDefinition, TradeDefinition, IdeaDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, EconomyDefinition, LawDefinition, AbilityDefinition, Modifier, Tradition, ScopeType, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute, UnitType, Mode, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, CountryName } from 'types'
+import { ValuesType, TraditionDefinition, TradeDefinition, IdeaDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, EconomyDefinition, LawDefinition, AbilityDefinition, Modifier, Tradition, ScopeType, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute, UnitType, Mode, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, CountryName, Setting } from 'types'
 import { invalidate, setCountryValue, enableSelection, clearSelection, enableUnitModifiers, enableGeneralModifiers, clearUnitModifiers, clearGeneralModifiers, setGeneralBaseStat, setGeneralValue, selectCulture, selectReligion, selectGovernment, setOmenPower, setHasGeneral, setMilitaryPower, setOfficeMorale, setOfficeDiscipline } from 'reducers'
 
 import AccordionToggle from 'containers/AccordionToggle'
@@ -15,7 +15,6 @@ import ConfirmationButton from 'components/ConfirmationButton'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TableAttributes from 'components/TableAttributes'
 import { getBaseUnitType } from 'managers/units'
-import { convertGeneralDefinition } from 'managers/army'
 
 const TRADE_COLUMNS = 4
 const HERITAGE_COLUMNS = 4
@@ -667,7 +666,7 @@ class Countries extends Component<IProps> {
    * Selects culture while also re-enabling tradition.
    */
   selectCulture = (value: CultureType, selections: ObjSet) => {
-    this.exec(this.props.selectCulture, value)
+    this.exec(this.props.selectCulture, value, !this.props.settings[Setting.Culture])
     this.refreshTraditions(selections, this.props.traditions[value])
   }
 

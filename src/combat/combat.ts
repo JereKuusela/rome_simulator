@@ -414,7 +414,7 @@ const precalculateDamage = (terrains: Terrain[], unit: Cohort, settings: Setting
 )
 
 const precalculateDamageReduction = (unit: Cohort, settings: Settings) => (
-  (settings[Setting.AttributeExperience] ? 1.0 + calculateExperienceReduction(settings, unit) : 0)
+  (settings[Setting.AttributeExperience] ? 1.0 + calculateExperienceReduction(settings, unit) : 1.0)
   * getValue(unit, UnitAttribute.DamageTaken, settings[Setting.AttributeDamage])
   / noZero(getValue(unit, UnitAttribute.Discipline, settings[Setting.DisciplineDamageReduction]))
   / noZero(getMultiplier(unit, UnitAttribute.MilitaryTactics, settings[Setting.AttributeMilitaryTactics]))
@@ -431,6 +431,7 @@ const calculateCohortDamageMultiplier = (source: CombatCohort, target: CombatCoh
 
 const calculateDamageMultiplier = (source: CombatCohort, target: CombatCohort, dynamic_multiplier: number, is_support: boolean, phase: CombatPhase, settings: Settings) => {
   dynamic_multiplier *= calculateCohortDamageMultiplier(source, target, is_support, settings)
+  console.log(target.calculated.damage_taken_multiplier)
   source.state.damage_multiplier = dynamic_multiplier * source.calculated.damage['Damage'][target.definition.type][phase] * target.calculated.damage_taken_multiplier / PRECISION
   return dynamic_multiplier
 }
