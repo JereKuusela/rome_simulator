@@ -94,9 +94,9 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
       return 'Multiplier for morale lost.\nIncrease for faster battles and less losses.\nDecrease for slower battles and more losses.'
     case Setting.DefenderAdvantage:
       if (value)
-        return 'Defending units can\'t be targeted when they reinforce.\nThis undocumented feature gives a minor advantage to the defender.'
+        return 'Defending units can\'t be targeted when they reinforce (EUIV).'
       else
-        return 'Defender\'s advantage is removed.\nDefender gets no undocumented benefits.'
+        return 'Defender gets no undocumented benefits (Imperator).'
     case Setting.BackRow:
       if (value)
         return 'Backrow enabled for support units (EUIV).'

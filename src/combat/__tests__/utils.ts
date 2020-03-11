@@ -15,13 +15,11 @@ const terrains = getDefaultTerrains()
 export interface TestInfo {
   attacker: Participant
   defender: Participant
-  general_a: number
-  general_d: number
   army_a: Army
   army_d: Army
   terrains: Terrain[]
   settings: Settings
-  base_damages: []
+  base_damages: number[]
 }
 
 interface Army extends Cohorts {
@@ -36,7 +34,7 @@ interface Army extends Cohorts {
  */
 export const initInfo = () => {
   const settings = { ...getDefaultLandSettings(), ...getDefaultSiteSettings(), [Setting.RollDamage]: 0.02 }
-  const army = {
+  const army = () => ({
     ...getDefaultArmy(Mode.Land),
     // Frontline must be cloned to prevent tests mutating the source.
     frontline: [Array(30).fill(null)],
@@ -44,12 +42,12 @@ export const initInfo = () => {
     defeated: [],
     tactic: TacticType.Envelopment,
     unit_preferences: getUnitPreferences()
-  }
+  })
   return {
     attacker: getDefaultParticipant(CountryName.Country1),
     defender: getDefaultParticipant(CountryName.Country2),
-    army_a: { ... army},
-    army_d: { ... army},
+    army_a: army(),
+    army_d: army(),
     round: 0,
     general_a: 0,
     general_d: 0,
@@ -61,34 +59,6 @@ export const initInfo = () => {
 
 const errorPrefix = (round: number, side: Side, index: number) => 'Round ' + round + ', ' + side + ' ' + index + ': '
 
-/**
- * Verifies that unit's strength and morale values are correct (or at least close enough).
- * @param round Round number for debugging purposes.
- * @param side Side for debugging purposes.
- * @param index Unit location of frontline for debugging purposes.
- * @param unit Unit to check.
- * @param strength Expected strength (rounded down as in game).
- * @param morale Half of expected morale (as in game)
- */
-const verify = (round: number, side: Side, index: number, unit: Cohort | null, strength: number, morale: number) => {
-  expect(unit).toBeTruthy()
-  if (!unit)
-    return
-  const unit_strength = Math.floor(1000 * calculateValue(unit, UnitAttribute.Strength))
-  try {
-    expect(Math.floor(unit_strength)).toEqual(strength)
-  }
-  catch (e) {
-    throw new Error(errorPrefix(round, side, index) + 'Strength ' + unit_strength + ' is not ' + strength)
-  }
-  const unit_morale = calculateValue(unit, UnitAttribute.Morale)
-  try {
-    expect(Math.abs(unit_morale - 2 * morale)).toBeLessThan(0.002)
-  }
-  catch (e) {
-    throw new Error(errorPrefix(round, side, index) + 'Morale ' + unit_morale + ' is not ' + 2 * morale)
-  }
-}
 const verifyFast = (round: number, side: Side, index: number, unit: CombatCohort | null, strength: number, morale: number) => {
   expect(unit).toBeTruthy()
   if (!unit)
@@ -98,14 +68,14 @@ const verifyFast = (round: number, side: Side, index: number, unit: CombatCohort
     expect(Math.floor(unit_strength)).toEqual(strength)
   }
   catch (e) {
-    throw new Error(errorPrefix(round, side, index) + 'Strength ' + unit_strength + ' is not ' + strength)
+    throw new Error(errorPrefix(round, side, index) + 'Strength ' + unit_strength + ' should be ' + strength)
   }
   const unit_morale = unit[UnitAttribute.Morale]
   try {
     expect(Math.abs(unit_morale - 2 * morale)).toBeLessThan(0.002)
   }
   catch (e) {
-    throw new Error(errorPrefix(round, side, index) + 'Morale ' + unit_morale + ' is not ' + 2 * morale)
+    throw new Error(errorPrefix(round, side, index) + 'Morale ' + unit_morale + ' should be ' + 2 * morale)
   }
 }
 
@@ -130,7 +100,7 @@ export const verifyType = (round: number, side: Side, index: number, unit: { typ
       expect(unit!.type + message).toEqual(type + message)
     }
     catch (e) {
-      throw new Error(errorPrefix(round, side, index) + 'Type ' + unit!.type + ' is not ' + type)
+      throw new Error(errorPrefix(round, side, index) + 'Type ' + unit!.type + ' should be ' + type)
     }
 
   }

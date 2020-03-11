@@ -431,7 +431,6 @@ const calculateCohortDamageMultiplier = (source: CombatCohort, target: CombatCoh
 
 const calculateDamageMultiplier = (source: CombatCohort, target: CombatCohort, dynamic_multiplier: number, is_support: boolean, phase: CombatPhase, settings: Settings) => {
   dynamic_multiplier *= calculateCohortDamageMultiplier(source, target, is_support, settings)
-  console.log(target.calculated.damage_taken_multiplier)
   source.state.damage_multiplier = dynamic_multiplier * source.calculated.damage['Damage'][target.definition.type][phase] * target.calculated.damage_taken_multiplier / PRECISION
   return dynamic_multiplier
 }

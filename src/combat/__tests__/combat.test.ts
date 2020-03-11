@@ -47,7 +47,7 @@ describe('1 vs 1', () => {
     const unit_d = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.Discipline, 0.14], [TerrainType.Forest, 0.15]])
     setTerrain(info, TerrainType.Forest)
     setCenterUnits(info, unit_a, unit_d)
-    const rolls = [[4, 4]]
+    const rolls = [[3, 4]]
     const { attacker, defender } = initSide(4)
 
     attacker[0][15] = [unit_a.type, 958, 0.9644]
@@ -98,42 +98,6 @@ describe('1 vs 1', () => {
     defender[1][15] = [unit_d.type, 921, 0.7800]
     defender[2][15] = [unit_d.type, 883, 0.6086]
 
-    testCombat(info, rolls, attacker, defender)
-  })
-
-  it('general, no difference', () => {
-    const unit = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.MoraleDamageTaken, -0.25]])
-    info.general_d = 1
-    setCenterUnits(info, unit, unit)
-    const rolls = [[0, 2]]
-    const { attacker, defender } = initSide(3)
-
-    attacker[0][15] = [unit.type, 976, 1.0920]
-    attacker[1][15] = [unit.type, 952, 0.9921]
-    attacker[2][15] = [unit.type, 929, 0.8993]
-
-    defender[0][15] = [unit.type, 984, 1.1280]
-    defender[1][15] = [unit.type, 968, 1.0640]
-    defender[2][15] = [unit.type, 953, 1.0073]
-    
-    testCombat(info, rolls, attacker, defender)
-  })
-  
-  it('general, difference', () => {
-    const unit = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.MoraleDamageTaken, -0.25]])
-    info.general_d = 2
-    setCenterUnits(info, unit, unit)
-    const rolls = [[0, 1]]
-    const { attacker, defender } = initSide(3)
-
-    attacker[0][15] = [unit.type, 976, 1.0920]
-    attacker[1][15] = [unit.type, 952, 0.9921]
-    attacker[2][15] = [unit.type, 929, 0.8993]
-
-    defender[0][15] = [unit.type, 984, 1.1280]
-    defender[1][15] = [unit.type, 968, 1.0640]
-    defender[2][15] = [unit.type, 953, 1.0073]
-    
     testCombat(info, rolls, attacker, defender)
   })
 })
