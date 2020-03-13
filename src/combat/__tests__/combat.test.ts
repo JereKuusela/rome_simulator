@@ -47,7 +47,7 @@ describe('1 vs 1', () => {
     const unit_d = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.Discipline, 0.14], [TerrainType.Forest, 0.15]])
     setTerrain(info, TerrainType.Forest)
     setCenterUnits(info, unit_a, unit_d)
-    const rolls = [[3, 4]]
+    const rolls = [[4, 4]]
     const { attacker, defender } = initSide(4)
 
     attacker[0][15] = [unit_a.type, 958, 0.9644]

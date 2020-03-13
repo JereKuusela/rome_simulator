@@ -27,7 +27,7 @@ const deployCohorts = (units: CombatCohorts, left_flank: number, right_flank: nu
     for (let i = 0; i < max_support; i++ , index = nextIndex(index, center)) {
       if (backline[index])
         continue
-      const support = sorted.support.shift()
+      const support = sorted.support.pop()
       if (support) {
         backline[index] = support
         continue
@@ -41,17 +41,17 @@ const deployCohorts = (units: CombatCohorts, left_flank: number, right_flank: nu
   for (; index >= left_flank && index + right_flank < frontline.length; index = nextIndex(index, center)) {
     if (frontline[index])
       continue
-    const main = sorted.front.shift()
+    const main = sorted.front.pop()
     if (main) {
       frontline[index] = main
       continue
     }
-    const flank = sorted.flank.shift()
+    const flank = sorted.flank.pop()
     if (flank) {
       frontline[index] = flank
       continue
     }
-    const support = deploy_support && sorted.support.shift()
+    const support = deploy_support && sorted.support.pop()
     if (support) {
       frontline[index] = support
       continue
@@ -62,17 +62,17 @@ const deployCohorts = (units: CombatCohorts, left_flank: number, right_flank: nu
   for (; index >= 0 && index < frontline.length; index = nextIndex(index, center)) {
     if (frontline[index])
       continue
-    const flank = sorted.flank.shift()
+    const flank = sorted.flank.pop()
     if (flank) {
       frontline[index] = flank
       continue
     }
-    const main = sorted.front.shift()
+    const main = sorted.front.pop()
     if (main) {
       frontline[index] = main
       continue
     }
-    const support = deploy_support && sorted.support.shift()
+    const support = deploy_support && sorted.support.pop()
     if (support) {
       frontline[index] = support
       continue
@@ -90,13 +90,13 @@ export const sortReserve = (reserve: Reserve, unit_preferences: UnitPreferences)
   const supportReserve = reserve.filter(value => isSupportUnit(unit_preferences, value))
   // Calculate priorities (mostly based on unit type, ties are resolved with index numbers).
   const front = sortBy(frontReserve, value => {
-    return -value.definition.deployment_cost * 100000 - value[UnitAttribute.Strength] * 1000 - (value.definition.type === unit_preferences[UnitPreferenceType.Primary] ? 200000000 : 0) - (value.definition.type === unit_preferences[UnitPreferenceType.Secondary] ? 100000000 : 0)
+    return value.definition.deployment_cost * 100000 + value[UnitAttribute.Strength] * 1000 + (value.definition.type === unit_preferences[UnitPreferenceType.Primary] ? 200000000 : 0) + (value.definition.type === unit_preferences[UnitPreferenceType.Secondary] ? 100000000 : 0)
   })
   const flank = sortBy(flankReserve, value => {
-    return -value.definition[UnitAttribute.Maneuver] * 100000 - value[UnitAttribute.Strength] * 1000 - (value.definition.type === unit_preferences[UnitPreferenceType.Flank] ? 100000000 : 0)
+    return value.definition[UnitAttribute.Maneuver] * 100000 + value[UnitAttribute.Strength] * 1000 + (value.definition.type === unit_preferences[UnitPreferenceType.Flank] ? 100000000 : 0)
   })
   const support = sortBy(supportReserve, value => {
-    return -value[UnitAttribute.Strength] * 1000
+    return value[UnitAttribute.Strength] * 1000
   })
   return { front, flank, support, length: front.length + flank.length + support.length }
 }

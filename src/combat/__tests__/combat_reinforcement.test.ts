@@ -1,5 +1,8 @@
-import { TestInfo, initInfo, getUnit, testReinforce, every_type, setFlankSizes, getUnitPreferences, setCombatWidth } from './utils'
+import { TestInfo, initInfo, getUnit, testReinforceOld, every_type, setFlankSizes, getUnitPreferences, setCombatWidth, testDeployment, testReinforcement } from './utils'
 import { UnitType, Setting } from 'types'
+
+import unit_preferences from './input/reinforcement/unit_preferences.txt'
+import { loadInput } from './parser'
 
 describe('reinforcement', () => {
 
@@ -12,7 +15,20 @@ describe('reinforcement', () => {
   const fillDefender = (type: UnitType) => info.army_d.reserve.push(...Array(info.army_d.frontline[0].length).fill(type).map(type => getUnit(type)))
 
 
-  it('a single unit', () => {
+  it('deploys front correctly with preferennces', () => {
+    loadInput(unit_preferences, info)
+    const attacker = {
+      front: Array(30).fill(UnitType.LightInfantry)
+    }
+    const defender = {
+      front: [UnitType.SupplyTrain, UnitType.Archers],
+      defeated: Array(30).fill(UnitType.SupplyTrain)
+    }
+    testReinforcement(2, info, attacker, defender)
+  })
+
+
+  /*it('a single unit', () => {
     setAttacker([UnitType.Archers])
     testReinforce(info, [UnitType.Archers])
   })
@@ -97,7 +113,7 @@ describe('reinforcement', () => {
     const result = Array(5).fill(UnitType.Archers)
     testReinforce(info, result, 3)
 
-  })
+  })*/
 })
 
 

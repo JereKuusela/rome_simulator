@@ -9,7 +9,6 @@ export const nextIndex = (index: number, center: number) => index < center ? ind
 const reinforceUnits = (frontline: Frontline, reserve: Reserve) => {
     const front = frontline[0]
     const center = Math.floor(front.length / 2.0)
-
     // Reinforce missing units.
     for (let index = center; index >= 0 && index < front.length; index = nextIndex(index, center)) {
         if (front[index])
