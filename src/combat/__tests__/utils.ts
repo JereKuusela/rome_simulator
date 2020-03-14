@@ -351,3 +351,5 @@ const initFrontline = (): ExpectedUnits[] => (
     null, null, null, null, null, null, null, null, null, null,
     null, null, null, null, null, null, null, null, null, null]
 )
+
+export const createExpected = (...types: ([UnitType, number] | UnitType)[]) => types.reduce((prev, current) => prev.concat(Array.isArray(current) ? Array(current[1]).fill(current[0]) : [current]), [] as UnitType[])

@@ -1,0 +1,19 @@
+combat_name = {
+	fast_combat = no
+	cleanup_combat = yes
+	random = no
+	attacker = { 
+		random_traits = no
+		location = 3
+		general=100
+		heavy_cavalry = 30
+	}
+	
+	defender = { 
+		random_traits = no
+		location = 3
+		light_cavalry = 30
+		heavy_cavalry = 20
+		flank_size = 5
+	}
+}

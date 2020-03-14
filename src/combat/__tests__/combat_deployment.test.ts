@@ -1,4 +1,4 @@
-import { TestInfo, initInfo, getUnit, testDeployment, setFlankSizes, setCombatWidth } from './utils'
+import { TestInfo, initInfo, getUnit, testDeployment, setFlankSizes, setCombatWidth, createExpected } from './utils'
 import { UnitType } from 'types'
 import { loadInput } from './parser'
 
@@ -24,104 +24,95 @@ describe('initial deployment', () => {
   it('deploys all land units with default order except support', () => {
     loadInput(all_land_front, info)
     const attacker = {
-      front: Array(30).fill(UnitType.Archers)
+      front: createExpected([UnitType.Archers, 30])
     }
     const defender = {
-      front: [UnitType.WarElephants, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.Archers, UnitType.LightInfantry, UnitType.Chariots, UnitType.HorseArchers, UnitType.CamelCavalry, UnitType.LightCavalry],
-      reserve_support: [UnitType.SupplyTrain]
+      front: createExpected(UnitType.WarElephants, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.Archers, UnitType.LightInfantry, UnitType.Chariots, UnitType.HorseArchers, UnitType.CamelCavalry, UnitType.LightCavalry),
+      reserve_support: createExpected(UnitType.SupplyTrain)
     }
     testDeployment(info, attacker, defender)
   })
   it('can deploy front units on flank', () => {
     loadInput(front_only, info)
     const attacker = {
-      front: Array(5).fill(UnitType.Archers)
+      front: createExpected([UnitType.Archers, 5])
     }
     const defender = {
-      front: [UnitType.Archers]
+      front: createExpected(UnitType.Archers)
     }
     testDeployment(info, attacker, defender)
   })
   it('can deploy flank units on front', () => {
     loadInput(flank_only, info)
     const attacker = {
-      front: Array(5).fill(UnitType.HorseArchers)
+      front: createExpected([UnitType.HorseArchers, 5])
     }
     const defender = {
-      front: [UnitType.Archers]
+      front: createExpected(UnitType.Archers)
     }
     testDeployment(info, attacker, defender)
   })
   it('deploys support if nothing else is available', () => {
     loadInput(support_only, info)
     const attacker = {
-      front: Array(5).fill(UnitType.SupplyTrain)
+      front: createExpected([UnitType.SupplyTrain, 5])
     }
     const defender = {
-      front: [UnitType.Archers]
+      front: createExpected(UnitType.Archers)
     }
     testDeployment(info, attacker, defender)
   })
   it('deploys flank correctly when outnumbering the enemy', () => {
     loadInput(flank_outnumbered, info)
     const attacker = {
-      front: Array(10).fill(UnitType.Archers).concat(Array(10).fill(UnitType.HorseArchers)).concat(Array(10).fill(UnitType.Archers))
+      front: createExpected([UnitType.Archers, 10], [UnitType.HorseArchers, 10], [UnitType.Archers, 10])
     }
     const defender = {
-      front: Array(10).fill(UnitType.Archers)
+      front: createExpected([UnitType.Archers, 10])
     }
     testDeployment(info, attacker, defender)
   })
   it('deploys front correctly with preferennces', () => {
     loadInput(unit_preferences, info)
     const attacker = {
-      front: [UnitType.SupplyTrain, UnitType.HorseArchers, UnitType.WarElephants, UnitType.Chariots, UnitType.LightCavalry]
+      front: createExpected(UnitType.SupplyTrain, UnitType.HorseArchers, UnitType.WarElephants, UnitType.Chariots, UnitType.LightCavalry)
     }
     const defender = {
-      front: Array(30).fill(UnitType.Archers)
+      front: createExpected([UnitType.Archers, 30])
     }
     testDeployment(info, attacker, defender)
   })
   it('deploys front correctly when all preferences have the same unit', () => {
     loadInput(unit_preferences_order, info)
     const attacker = {
-      front: [UnitType.SupplyTrain, UnitType.WarElephants, UnitType.Chariots, UnitType.HorseArchers, UnitType.LightCavalry]
+      front: createExpected(UnitType.SupplyTrain, UnitType.WarElephants, UnitType.Chariots, UnitType.HorseArchers, UnitType.LightCavalry)
     }
     const defender = {
-      front: Array(30).fill(UnitType.Archers)
+      front: createExpected([UnitType.Archers, 30])
     }
     testDeployment(info, attacker, defender)
   })
   it('flank size, enough flanking units', () => {
     loadInput(flanksize_small_flank, info)
     const attacker = {
-      front: Array(30).fill(UnitType.Archers),
-      reserve_front: Array(4).fill(UnitType.Archers),
-      reserve_flank: [UnitType.HorseArchers]
+      front: createExpected([UnitType.Archers, 26], [UnitType.HorseArchers, 4]),
+      reserve_front: createExpected([UnitType.Archers, 4]),
+      reserve_flank: createExpected(UnitType.HorseArchers)
     }
     const defender = {
-      front: Array(30).fill(UnitType.Archers)
+      front: createExpected([UnitType.Archers, 30])
     }
-    attacker.front[26] = UnitType.HorseArchers
-    attacker.front[27] = UnitType.HorseArchers
-    attacker.front[28] = UnitType.HorseArchers
-    attacker.front[29] = UnitType.HorseArchers
     testDeployment(info, attacker, defender)
   })
   it('flank size, not enough flanking units', () => {
     loadInput(flanksize_big_flank, info)
     const attacker = {
-      front: Array(30).fill(UnitType.Archers),
-      reserve_front: Array(5).fill(UnitType.Archers)
+      front: createExpected([UnitType.Archers, 20], [UnitType.HorseArchers, 5], [UnitType.Archers, 5]),
+      reserve_front: createExpected([UnitType.Archers, 5])
     }
     const defender = {
-      front: Array(30).fill(UnitType.Archers)
+      front: createExpected([UnitType.Archers, 30])
     }
-    attacker.front[20] = UnitType.HorseArchers
-    attacker.front[21] = UnitType.HorseArchers
-    attacker.front[22] = UnitType.HorseArchers
-    attacker.front[23] = UnitType.HorseArchers
-    attacker.front[24] = UnitType.HorseArchers
     testDeployment(info, attacker, defender)
   })
   it('reduced combat width', () => {
@@ -131,15 +122,12 @@ describe('initial deployment', () => {
     fillAttacker(UnitType.Archers)
     fillDefender(UnitType.Archers)
     const attacker = {
-      front: Array(5).fill(UnitType.Archers),
-      reserve_front: Array(3).fill(UnitType.Archers)
+      front: createExpected(UnitType.Archers, [UnitType.HorseArchers, 3], UnitType.Archers),
+      reserve_front: createExpected([UnitType.Archers, 3])
     }
     const defender = {
-      front: Array(5).fill(UnitType.Archers)
+      front: createExpected([UnitType.Archers, 5])
     }
-    attacker.front[1] = UnitType.HorseArchers
-    attacker.front[2] = UnitType.HorseArchers
-    attacker.front[3] = UnitType.HorseArchers
     testDeployment(info, attacker, defender)
   })
 })
