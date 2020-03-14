@@ -49,7 +49,7 @@ export const getArmyPart = (units: CombatCohorts, type: ArmyType) => {
   if (type === ArmyType.Frontline)
     return units.frontline
   if (type === ArmyType.Reserve)
-    return [units.reserve]
+    return [units.reserve.front.concat(units.reserve.flank).concat(units.reserve.support)]
   return [units.defeated]
 }
 

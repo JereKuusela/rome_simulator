@@ -1,18 +1,24 @@
 import { AppState, getMode, getArmyForCombat, mergeUnitTypes, getCurrentCombat, getSettings } from 'state'
-import { CombatCohorts, Frontline, Reserve, deploy, doBattleFast, removeDefeated, getBaseDamages, CombatParticipant, convertParticipant } from 'combat'
+import { CombatCohorts, Frontline, deploy, doBattleFast, removeDefeated, getBaseDamages, CombatParticipant, convertParticipant, SortedReserve, reserveSize } from 'combat'
 import { Mode, Battle, Side, Setting, Participant, Settings } from 'types'
 import { createEntropy, MersenneTwister19937, Random } from 'random-js'
 import { arrGet } from 'utils'
 
 const copyStatus = (status: CombatCohorts): CombatCohorts => ({
   frontline: status.frontline.map(row => row.map(value => value ? { ...value, state: { ...value.state } } : null)),
-  reserve: status.reserve.map(value => ({ ...value, state: { ...value.state } })),
-  defeated: status.defeated.map(value => ({ ...value, state: { ...value.state } }))
+  reserve: {
+    front: status.reserve.front.map(value => ({ ...value, state: { ...value.state } })),
+    flank: status.reserve.flank.map(value => ({ ...value, state: { ...value.state } })),
+    support: status.reserve.support.map(value => ({ ...value, state: { ...value.state } }))
+  },
+  defeated: status.defeated.map(value => ({ ...value, state: { ...value.state } })),
+  left_flank: status.left_flank,
+  right_flank: status.right_flank
 })
 
 const copy = (participant: CombatParticipant): CombatParticipant => ({ ...participant, cohorts: copyStatus(participant.cohorts) })
 
-const checkAlive = (frontline: Frontline, reserve: Reserve) => reserve.length || frontline.some(row => row.some(value => value && !value.state.is_defeated))
+const checkAlive = (frontline: Frontline, reserve: SortedReserve) => reserveSize(reserve) || frontline.some(row => row.some(value => value && !value.state.is_defeated))
 
 const doBattle = (state: AppState, mode: Mode, battle: Battle, settings: Settings, steps: number) => {
   const army_a = getArmyForCombat(state, Side.Attacker, mode)

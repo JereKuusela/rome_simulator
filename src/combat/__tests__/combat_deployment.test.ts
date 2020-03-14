@@ -28,7 +28,7 @@ describe('initial deployment', () => {
     }
     const defender = {
       front: [UnitType.WarElephants, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.Archers, UnitType.LightInfantry, UnitType.Chariots, UnitType.HorseArchers, UnitType.CamelCavalry, UnitType.LightCavalry],
-      reserve: [UnitType.SupplyTrain]
+      reserve_support: [UnitType.SupplyTrain]
     }
     testDeployment(info, attacker, defender)
   })
@@ -96,7 +96,8 @@ describe('initial deployment', () => {
     loadInput(flanksize_small_flank, info)
     const attacker = {
       front: Array(30).fill(UnitType.Archers),
-      reserve: Array(5).fill(UnitType.Archers)
+      reserve_front: Array(4).fill(UnitType.Archers),
+      reserve_flank: [UnitType.HorseArchers]
     }
     const defender = {
       front: Array(30).fill(UnitType.Archers)
@@ -105,14 +106,13 @@ describe('initial deployment', () => {
     attacker.front[27] = UnitType.HorseArchers
     attacker.front[28] = UnitType.HorseArchers
     attacker.front[29] = UnitType.HorseArchers
-    attacker.reserve[0] = UnitType.HorseArchers
     testDeployment(info, attacker, defender)
   })
   it('flank size, not enough flanking units', () => {
     loadInput(flanksize_big_flank, info)
     const attacker = {
       front: Array(30).fill(UnitType.Archers),
-      reserve: Array(5).fill(UnitType.Archers)
+      reserve_front: Array(5).fill(UnitType.Archers)
     }
     const defender = {
       front: Array(30).fill(UnitType.Archers)
@@ -132,7 +132,7 @@ describe('initial deployment', () => {
     fillDefender(UnitType.Archers)
     const attacker = {
       front: Array(5).fill(UnitType.Archers),
-      reserve: Array(3).fill(UnitType.Archers)
+      reserve_front: Array(3).fill(UnitType.Archers)
     }
     const defender = {
       front: Array(5).fill(UnitType.Archers)

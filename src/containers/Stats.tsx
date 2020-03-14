@@ -57,10 +57,10 @@ class Stats extends Component<IProps> {
               Total
             </Table.Cell>
             <Table.Cell width='3'>
-              {strengthToValue(this.props.mode, this.sum(flatten,  unit => unit[UnitAttribute.Strength]))} / {strengthToValue(this.props.mode, this.sum(flatten, unit => unit.definition.max_strength))}
+              {strengthToValue(this.props.mode, this.sum(flatten, unit => unit[UnitAttribute.Strength]))} / {strengthToValue(this.props.mode, this.sum(flatten, unit => unit.definition.max_strength))}
             </Table.Cell>
             <Table.Cell width='3'>
-              {round(this.sum(flatten,  unit => unit[UnitAttribute.Morale]), 100.0)} / {round(this.sum(flatten, unit => unit.definition.max_morale), 100.0)}
+              {round(this.sum(flatten, unit => unit[UnitAttribute.Morale]), 100.0)} / {round(this.sum(flatten, unit => unit.definition.max_morale), 100.0)}
             </Table.Cell>
             <Table.Cell width='3'>
               {strengthToValue(this.props.mode, this.sum(flatten, unit => unit.state.total_strength_dealt))}
@@ -105,7 +105,8 @@ class Stats extends Component<IProps> {
 
   // Flattens units to a single list. Also filters temporary 'defeated' units because they are copies of another unit.
   flatten = (units: CombatCohorts, type?: UnitType): CombatCohort[] => (
-    units.reserve.filter(unit => this.filter(unit, type)).concat(units.defeated.filter(unit => this.filter(unit, type)).concat(flatten(units.frontline).filter(unit => this.filter(unit, type)) as CombatCohort[]))
+    units.reserve.front.filter(unit => this.filter(unit, type)).concat(units.reserve.flank.filter(unit => this.filter(unit, type))).concat(units.reserve.support.filter(unit => this.filter(unit, type)))
+      .concat(units.defeated.filter(unit => this.filter(unit, type)).concat(flatten(units.frontline).filter(unit => this.filter(unit, type)) as CombatCohort[]))
   )
 
   filter = (unit: CombatCohort | null, type?: UnitType) => unit && !unit.state.is_defeated && (!type || unit.definition.type === type)

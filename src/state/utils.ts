@@ -43,7 +43,13 @@ export const getCombatUnit = (state: AppState, side: Side, type: ArmyType, id: n
 }
 
 const findCombatUnit = (units: CombatCohorts, id: number): CombatCohort | null => {
-  let unit = units.reserve.find(unit => unit.definition.id === id) || null
+  let unit = units.reserve.front.find(unit => unit.definition.id === id) || null
+  if (unit)
+    return unit
+  unit = units.reserve.flank.find(unit => unit.definition.id === id) || null
+  if (unit)
+    return unit
+  unit = units.reserve.support.find(unit => unit.definition.id === id) || null
   if (unit)
     return unit
   unit = flatten(units.frontline).find(unit => unit ? unit.definition.id === id : false) || null
@@ -129,7 +135,7 @@ export const getArmyForCombat = (state: AppState, side: Side, mode?: Mode): Army
 
 export const getCurrentCombat = (state: AppState, side: Side): CombatCohorts => {
   const participant = state.battle[state.settings.mode].participants[side]
-  return arrGet(participant.rounds, -1)?.cohorts ?? { frontline: [], reserve: [], defeated: [] }
+  return arrGet(participant.rounds, -1)?.cohorts ?? { frontline: [], reserve: { front: [], flank: [], support: [] }, defeated: [], left_flank: 0, right_flank: 0 }
 }
 
 export const getCombatParticipant = (state: AppState, side: Side): CombatParticipant => {

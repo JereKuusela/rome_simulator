@@ -1,6 +1,6 @@
 import { addValues } from 'definition_values'
 import { getUnit, TestInfo, initInfo, setCenterUnits, initSide, testCombat, setTerrain } from './utils'
-import { UnitType, UnitAttribute, TerrainType, ValuesType } from 'types'
+import { UnitType, UnitAttribute, TerrainType, ValuesType, Setting } from 'types'
 
 describe('1 vs 1', () => {
 
@@ -9,7 +9,10 @@ describe('1 vs 1', () => {
   const cavalry = addValues(getUnit(UnitType.LightCavalry), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.2]])
 
   let info: TestInfo
-  beforeEach(() => { info = initInfo() })
+  beforeEach(() => {
+    info = initInfo()
+    info.settings[Setting.RollDamage] = 0.02
+  })
 
   it('no modifiers', () => {
     const unit = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.MoraleDamageTaken, -0.25]])

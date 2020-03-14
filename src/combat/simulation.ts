@@ -1,10 +1,10 @@
 import { ArmyForCombat } from 'state'
-import { Terrain, UnitType, Setting, TacticCalc, UnitAttribute, Side, Settings, Cohorts, CombatPhase } from 'types'
+import { Terrain, UnitType, Setting, TacticCalc, UnitAttribute, Side, Settings, Cohorts, CombatPhase, UnitPreferences } from 'types'
 import { calculateGeneralPips, getTerrainPips } from './combat_utils'
 import { calculateValue } from 'definition_values'
-import { CombatParticipant, getCombatUnit, CombatCohorts, Frontline, Defeated, doBattleFast, Reserve, getUnitDefinition, CombatUnitTypes } from './combat'
+import { CombatParticipant, getCombatUnit, CombatCohorts, Frontline, Defeated, doBattleFast, getUnitDefinition, CombatUnitTypes } from './combat'
 import { mapRange, map, values, toObj } from 'utils'
-import { deploy } from './deployment'
+import { deploy, sortReserve, SortedReserve, reserveSize } from './deployment'
 
 /**
  * Status of the win rate calculation. Most values are percents, only iterations is integer.
@@ -62,7 +62,7 @@ let interruptSimulation = false
 
 export const convertParticipant = (side: Side, army: ArmyForCombat, enemy: ArmyForCombat, terrains: Terrain[], unit_types: UnitType[], settings: Settings): CombatParticipant => {
   const tactic_casualties = calculateValue(army.tactic, TacticCalc.Casualties) + calculateValue(enemy.tactic, TacticCalc.Casualties)
-  const cohorts = convertCohorts(army, settings, tactic_casualties, terrains, unit_types)
+  const cohorts = convertCohorts(army, settings, tactic_casualties, terrains, unit_types, army.unit_preferences)
   const general_pips = toObj(values(CombatPhase), phase => phase, phase => calculateGeneralPips(army.general, enemy.general, phase))
   const terrain_pips = getTerrainPips(terrains, side, army.general, enemy.general)
   return {
@@ -227,10 +227,12 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
   worker()
 }
 
-export const convertCohorts = (cohorts: Cohorts, settings: Settings, casualties_multiplier: number, terrains: Terrain[], unit_types: UnitType[]): CombatCohorts => ({
+export const convertCohorts = (cohorts: Cohorts, settings: Settings, casualties_multiplier: number, terrains: Terrain[], unit_types: UnitType[], unit_preferences: UnitPreferences): CombatCohorts => ({
   frontline: cohorts.frontline.map(row => row.map(cohort => getCombatUnit(settings, casualties_multiplier, terrains, unit_types, cohort))),
-  reserve: cohorts.reserve.map(cohort => getCombatUnit(settings, casualties_multiplier, terrains, unit_types, cohort)!),
-  defeated: cohorts.defeated.map(cohort => getCombatUnit(settings, casualties_multiplier, terrains, unit_types, cohort )!)
+  reserve: sortReserve(cohorts.reserve.map(cohort => getCombatUnit(settings, casualties_multiplier, terrains, unit_types, cohort)!), unit_preferences),
+  defeated: cohorts.defeated.map(cohort => getCombatUnit(settings, casualties_multiplier, terrains, unit_types, cohort )!),
+  left_flank: 0,
+  right_flank: 0
 })
 
 
@@ -259,8 +261,14 @@ const getRolls = (minimum: number, maximum: number) => {
  */
 const copyStatus = (status: CombatCohorts): CombatCohorts => ({
   frontline: status.frontline.map(row => row.map(value => value ? { ...value } : null)),
-  reserve: status.reserve.map(value => ({ ...value })),
-  defeated: status.defeated.map(value => ({ ...value }))
+  reserve: {
+    front: status.reserve.front.map(value => ({ ...value })),
+    flank: status.reserve.flank.map(value => ({ ...value })),
+    support: status.reserve.support.map(value => ({ ...value }))
+  },
+  defeated: status.defeated.map(value => ({ ...value })),
+  left_flank: status.left_flank,
+  right_flank: status.right_flank
 })
 
 const REPAIR_PER_MONTH = 0.1
@@ -333,8 +341,8 @@ const doPhase = (base_damages: number[], depth: number, rounds_per_phase: number
 /**
  * Custom some function. Probably could use Lodash but better safe than sorry (since performance is so critical).
  */
-const checkAlive = (frontline: Frontline, reserve: Reserve) => {
-  if (reserve.length)
+const checkAlive = (frontline: Frontline, reserve: SortedReserve) => {
+  if (reserveSize(reserve))
     return true
   for (let i = 0; i < frontline.length; i++) {
     if (frontline[i])
@@ -363,8 +371,18 @@ const sumState = (state: State, units: CombatCohorts) => {
       state.morale += unit[UnitAttribute.Morale]
     }
   }
-  for (let i = 0; i < units.reserve.length; i++) {
-    const unit = units.reserve[i]
+  for (let i = 0; i < units.reserve.front.length; i++) {
+    const unit = units.reserve.front[i]
+    state.strength += unit[UnitAttribute.Strength]
+    state.morale += unit[UnitAttribute.Morale]
+  }
+  for (let i = 0; i < units.reserve.flank.length; i++) {
+    const unit = units.reserve.flank[i]
+    state.strength += unit[UnitAttribute.Strength]
+    state.morale += unit[UnitAttribute.Morale]
+  }
+  for (let i = 0; i < units.reserve.support.length; i++) {
+    const unit = units.reserve.support[i]
     state.strength += unit[UnitAttribute.Strength]
     state.morale += unit[UnitAttribute.Morale]
   }

@@ -20,12 +20,13 @@ export interface TestInfo {
   army_d: ArmyForCombat
   terrains: Terrain[]
   settings: Settings
-  base_damages: number[]
 }
 
 export interface ExpectedTypes {
   front?: (UnitType | null)[]
-  reserve?: UnitType[]
+  reserve_front?: UnitType[]
+  reserve_flank?: UnitType[]
+  reserve_support?: UnitType[]
   defeated?: UnitType[]
 }
 
@@ -33,7 +34,7 @@ export interface ExpectedTypes {
  * Returns a clean combat state for tests.
  */
 export const initInfo = () => {
-  const settings = { ...getDefaultLandSettings(), ...getDefaultSiteSettings(), [Setting.RollDamage]: 0.02 }
+  const settings = { ...getDefaultLandSettings(), ...getDefaultSiteSettings() }
   const general = (): General => ({
     enabled: true,
     base_values: {} as any,
@@ -66,8 +67,7 @@ export const initInfo = () => {
     army_d: army(),
     round: 0,
     terrains: [],
-    settings,
-    base_damages: getBaseDamages(settings)
+    settings
   }
 }
 
@@ -232,7 +232,7 @@ export const every_type = [UnitType.Archers, UnitType.CamelCavalry, UnitType.Cha
  * Performs one combat round with a given test info.
  */
 const doRound = (info: TestInfo, a: CombatParticipant, d: CombatParticipant) => {
-  doBattleFast(a, d, false, info.base_damages, info.settings, 1)
+  doBattleFast(a, d, false, getBaseDamages(info.settings), info.settings, 1)
 }
 
 
@@ -279,15 +279,17 @@ export const testReinforcement = (rounds_to_skip: number, info: TestInfo, expect
   participant_d.dice = 2
   for (let round = 0; round < rounds_to_skip; round++)
     doRound(info, participant_a, participant_d)
-  reinforce(participant_a.cohorts.frontline, participant_a.cohorts.reserve)
-  reinforce(participant_d.cohorts.frontline, participant_d.cohorts.reserve)
+  reinforce(participant_a)
+  reinforce(participant_d)
   verifyDeployOrReinforce(info, Side.Attacker, participant_a, expected_a)
   verifyDeployOrReinforce(info, Side.Defender, participant_d, expected_d)
 }
 
 const verifyDeployOrReinforce = (info: TestInfo, side: Side, participant: CombatParticipant, expected: ExpectedTypes) => {
   verifyTypes('Front', info, expected.front ?? [], side, participant.cohorts.frontline[0])
-  verifyTypes('Reserve', info, expected.reserve ?? [], side, participant.cohorts.reserve)
+  verifyTypes('Reserve front', info, expected.reserve_front ?? [], side, participant.cohorts.reserve.front)
+  verifyTypes('Reserve flank', info, expected.reserve_flank ?? [], side, participant.cohorts.reserve.flank)
+  verifyTypes('Reserve support', info, expected.reserve_support ?? [], side, participant.cohorts.reserve.support)
   verifyTypes('Defeated', info, expected.defeated ?? [], side, participant.cohorts.defeated)
 }
 
@@ -295,27 +297,20 @@ const nextIndex = (index: number, half: number) => index < half ? index + 2 * (h
 
 const verifyTypes = (identifier: string, info: TestInfo, types: (UnitType | null)[], side: Side, cohorts: (CombatCohort | null)[]) => {
   const is_front = identifier === 'Front'
-  if (!is_front)
-    expect(cohorts.length).toEqual(types.length)
+  if (!is_front) {
+    try {
+      expect(cohorts.length).toEqual(types.length)
+    }
+    catch (e) {
+      throw new Error(identifier + ' length ' + cohorts.length + ' should be ' + types.length + '.')
+    }
+  }
   const half = Math.floor(info.settings[Setting.CombatWidth] / 2.0)
   let index = is_front ? half : 0
   for (const type of types) {
     verifyType(identifier, side, index, cohorts[index]?.definition, type, ' at index ' + index)
     index = is_front ? nextIndex(index, half) : index + 1
   }
-}
-
-export const testReinforceOld = (info: TestInfo, expected_a: ExpectedTypes, expected_d: ExpectedTypes) => {
-  const [participant_a, participant_d] = getParticipants(info)
-  let reserve = participant_a.cohorts.reserve
-  let sorted = sortReserve(reserve, participant_a.unit_preferences)
-  reserve.splice(0, reserve.length, ...(sorted.support.concat(sorted.flank.concat(sorted.front))))
-  reserve = participant_d.cohorts.reserve
-  sorted = sortReserve(reserve, participant_d.unit_preferences)
-  reserve.splice(0, reserve.length, ...(sorted.support.concat(sorted.flank.concat(sorted.front))))
-  doRound(info, participant_a, participant_d)
-  verifyDeployOrReinforce(info, Side.Attacker, participant_a, expected_a)
-  verifyDeployOrReinforce(info, Side.Defender, participant_d, expected_d)
 }
 
 /**
