@@ -47,7 +47,7 @@ const DataTransform = createTransform(
 )
 
 const migrations = {
-  9: () => rootReducer(undefined, { type: ''}) as any
+  9: () => rootReducer(undefined, { type: 'fooo'}) as any
 }
 
 const persistConfig = {
