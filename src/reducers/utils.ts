@@ -7,16 +7,21 @@ export type Action<T = any> = {
   payload: [T, ...any[]]
 }
 
+let typeCounter = 0
+const getActionType = (func: Function) => process.env.NODE_ENV === 'production' ? 'action' + typeCounter++ : func.name
+
 export type ActionToFunction<T, K = any> = { [key: string]: (entity: T, ...args: any) => void | undefined }
 
 export const makeActionRemoveFirst = <T extends any[], E>(func: (entity: E, ...args: T) => any, actionToFunction: ActionToFunction<E>) => {
-  actionToFunction[func.name] = func
-  return (...payload: T) => ({ type: func.name, payload } as {})
+  const type = getActionType(func)
+  actionToFunction[type] = func
+  return (...payload: T) => ({ type, payload } as {})
 }
 
 export const makeActionReplaceFirst = <T extends any[], K extends string, E>(func: (entity: E, ...args: T) => any, actionToFunction: ActionToFunction<E, K>) => {
-  actionToFunction[func.name] = func
-  const ret = (key: K, ...args: T) => ({ type: func.name, payload: [key, ...args] } as {})
+  const type = getActionType(func)
+  actionToFunction[type] = func
+  const ret = (key: K, ...args: T) => ({ type, payload: [key, ...args] } as {})
   return ret
 }
 

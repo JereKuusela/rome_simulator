@@ -57,7 +57,7 @@ class UnitArmy extends Component<IProps, IState> {
       width = Math.ceil(width / row_width) * row_width
     const row_count = Math.ceil(width / row_width)
     const rows = Array(row_count).fill(0).map((_, index) => index)
-    const columns = Array(row_width)
+    const columns = Array<number>(row_width)
     const delta = Math.max(0, row_width - width)
     const low_limit = Math.ceil(delta / 2.0)
     const up_limit = row_width - Math.floor(delta / 2.0)

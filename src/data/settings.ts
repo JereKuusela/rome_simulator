@@ -46,7 +46,7 @@ const getDefaultAnySettings = (): CombatSettings => {
 }
 
 export const getDefaultSiteSettings = (): SiteSettings => {
-  return {
+  /*return {
     [Setting.FixExperience]: false,
     [Setting.DefenderAdvantage]: false,
     [Setting.FixTargeting]: true,
@@ -81,8 +81,8 @@ export const getDefaultSiteSettings = (): SiteSettings => {
     [Setting.Tech]: true,
     [Setting.Culture]: true,
     [Setting.Food]: false
-  }
-  /*return {
+  }*/
+  return {
     [Setting.FixExperience]: false,
     [Setting.DefenderAdvantage]: false,
     [Setting.FixTargeting]: true,
@@ -117,7 +117,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
     [Setting.Tech]: false,
     [Setting.Culture]: false,
     [Setting.Food]: true
-  }*/
+  }
 }
 
 export const speedValues: { [key: string]: number[] } = {

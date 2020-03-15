@@ -1,0 +1,19 @@
+combat_name = {
+	fast_combat = no
+	cleanup_combat = yes
+	random = no
+	attacker = { 
+		random_traits = no
+		location = 2
+		general = 100
+		light_infantry = 30
+	}
+	
+	defender = { 
+		random_traits = no
+		location = 2
+		supply_train = 31
+		archers = 1
+		primary = supply_train
+	}
+}

@@ -18,10 +18,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve",
-    "downlevelIteration": true,
-    "noImplicitReturns": true,
-    "incremental": true
+    "jsx": "react",
+    "noImplicitReturns": true
   },
   "include": [
     "src"

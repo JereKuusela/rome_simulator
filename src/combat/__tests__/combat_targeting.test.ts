@@ -6,9 +6,12 @@ describe('targeting', () => {
   const archer = addValues(getUnit(UnitType.Archers), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.2]])
   const light = addValues(getUnit(UnitType.LightCavalry), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.2]])
   const heavy = addValues(getUnit(UnitType.HeavyCavalry), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.2]])
-  
+
   let info: TestInfo
-  beforeEach(() => { info = initInfo() })
+  beforeEach(() => {
+    info = initInfo()
+    info.settings[Setting.RollDamage] = 0.02
+  })
 
   it('main and flanks', () => {
     setAttacker(info, 14, archer)
@@ -31,7 +34,7 @@ describe('targeting', () => {
   it('inner flank', () => {
     info.settings[Setting.FixTargeting] = false
     info.settings[Setting.DefenderAdvantage] = true
-    
+
     setAttacker(info, 13, archer)
     setAttacker(info, 14, heavy)
     setAttacker(info, 15, heavy)
@@ -59,7 +62,7 @@ describe('targeting', () => {
     // Can't be tested in game.
     info.settings[Setting.FixTargeting] = true
     info.settings[Setting.DefenderAdvantage] = true
-    
+
     setAttacker(info, 13, archer)
     setAttacker(info, 14, heavy)
     setAttacker(info, 15, heavy)

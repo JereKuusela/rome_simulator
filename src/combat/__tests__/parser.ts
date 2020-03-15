@@ -1,6 +1,6 @@
-import { UnitType } from "types"
-import { forEach, mapRange } from "utils"
-import { TestInfo, setFlankSizes, setUnitPreferences, setReserve } from "./utils"
+import { UnitType } from 'types'
+import { forEach, mapRange } from 'utils'
+import { TestInfo, setFlankSizes, setUnitPreferences, setReserve, setGeneral } from './utils'
 
 const typeConversion: { [key: string]: UnitType | undefined } = {
   archers: UnitType.Archers,
@@ -62,10 +62,12 @@ const getUnitPrefences = (input: Input) => [
 ]
 
 const getFlankSize = (input: Input) => Number(input['flank_size'] ?? 0)
+const getGeneral = (input: Input) => Number(input['general'] ?? 0)
 
 
 const setInfoFromInput = (info: TestInfo, attacker: Input, defender: Input) => {
   setFlankSizes(info, getFlankSize(attacker), getFlankSize(defender))
+  setGeneral(info, getGeneral(attacker), getGeneral(defender))
   setUnitPreferences(info, getUnitPrefences(attacker), getUnitPrefences(defender))
 }
 

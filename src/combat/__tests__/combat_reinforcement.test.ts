@@ -1,18 +1,74 @@
-import { TestInfo, initInfo, getUnit, testReinforce, every_type, setFlankSizes, getUnitPreferences, setCombatWidth } from './utils'
+import { TestInfo, initInfo, getUnit, testReinforcement, createExpected } from './utils'
 import { UnitType, Setting } from 'types'
+
+import unit_preferences from './input/reinforcement/unit_preferences.txt'
+import support_late_reinforcement from './input/reinforcement/support_late_reinforcement.txt'
+import preferred_flank_size from './input/reinforcement/preferred_flank_size.txt'
+import flank_only from './input/reinforcement/flank_only.txt'
+import { loadInput } from './parser'
 
 describe('reinforcement', () => {
 
   let info: TestInfo
   beforeEach(() => { info = initInfo() })
 
-  const setAttacker = (types: UnitType[]) => info.army_a.reserve.push(...types.map(type => getUnit(type)))
-  const setDefender = (types: UnitType[]) => info.army_d.reserve.push(...types.map(type => getUnit(type)))
-  const fillAttacker = (type: UnitType) => info.army_a.reserve.push(...Array(info.army_a.frontline[0].length).fill(type).map(type => getUnit(type)))
-  const fillDefender = (type: UnitType) => info.army_d.reserve.push(...Array(info.army_d.frontline[0].length).fill(type).map(type => getUnit(type)))
 
 
-  it('a single unit', () => {
+  it('unit preferences', () => {
+    loadInput(unit_preferences, info)
+    const attacker = {
+      front: createExpected([UnitType.LightInfantry, 30])
+    }
+    const defender = {
+      front: createExpected(UnitType.SupplyTrain, UnitType.Archers),
+      defeated: createExpected([UnitType.SupplyTrain, 30])
+    }
+    testReinforcement(1, info, attacker, defender)
+  })
+
+
+  it('support units only when nothing else is left', () => {
+    loadInput(support_late_reinforcement, info)
+    const attacker = {
+      front: createExpected([UnitType.HeavyCavalry, 30])
+    }
+    const defender = {
+      front: createExpected(UnitType.SupplyTrain),
+      defeated: createExpected([UnitType.Archers, 31])
+    }
+    testReinforcement(3, info, attacker, defender)
+  })
+
+  it('preferred flank size', () => {
+    loadInput(preferred_flank_size, info)
+    // Tweak to defeat whole enemy line during the same turn.
+    info.settings[Setting.MaxRoll] = 20
+    const attacker = {
+      front: createExpected([UnitType.HeavyCavalry, 30])
+    }
+    const defender = {
+      front: createExpected([UnitType.HeavyCavalry, 26], [UnitType.LightCavalry, 4]),
+      reserve_front: createExpected([UnitType.HeavyCavalry, 8]),
+      reserve_flank: createExpected([UnitType.LightCavalry, 52]),
+      defeated: createExpected([UnitType.LightCavalry, 2], [UnitType.HeavyCavalry, 26], [UnitType.LightCavalry, 2])
+    }
+    testReinforcement(3, info, attacker, defender)
+  })
+
+  it('frontline is reinforced first', () => {
+    loadInput(flank_only, info)
+    // Tweak to defeat whole enemy line during the same turn.
+    info.settings[Setting.MaxRoll] = 20
+    const attacker = {
+      front: createExpected([UnitType.HeavyCavalry, 30])
+    }
+    const defender = {
+      front: createExpected([UnitType.LightCavalry, 10]),
+      defeated: createExpected([UnitType.LightCavalry, 5], [UnitType.HeavyCavalry, 20], [UnitType.LightCavalry, 5])
+    }
+    testReinforcement(3, info, attacker, defender)
+  })
+  /*it('a single unit', () => {
     setAttacker([UnitType.Archers])
     testReinforce(info, [UnitType.Archers])
   })
@@ -97,7 +153,7 @@ describe('reinforcement', () => {
     const result = Array(5).fill(UnitType.Archers)
     testReinforce(info, result, 3)
 
-  })
+  })*/
 })
 
 

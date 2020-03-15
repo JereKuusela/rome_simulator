@@ -1,6 +1,6 @@
 import { addValues } from 'definition_values'
 import { getUnit, TestInfo, initInfo, setCenterUnits, initSide, testCombat, setTerrain } from './utils'
-import { UnitType, UnitAttribute, TerrainType, ValuesType } from 'types'
+import { UnitType, UnitAttribute, TerrainType, ValuesType, Setting } from 'types'
 
 describe('1 vs 1', () => {
 
@@ -9,7 +9,10 @@ describe('1 vs 1', () => {
   const cavalry = addValues(getUnit(UnitType.LightCavalry), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.2]])
 
   let info: TestInfo
-  beforeEach(() => { info = initInfo() })
+  beforeEach(() => {
+    info = initInfo()
+    info.settings[Setting.RollDamage] = 0.02
+  })
 
   it('no modifiers', () => {
     const unit = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.MoraleDamageTaken, -0.25]])
@@ -98,42 +101,6 @@ describe('1 vs 1', () => {
     defender[1][15] = [unit_d.type, 921, 0.7800]
     defender[2][15] = [unit_d.type, 883, 0.6086]
 
-    testCombat(info, rolls, attacker, defender)
-  })
-
-  it('general, no difference', () => {
-    const unit = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.MoraleDamageTaken, -0.25]])
-    info.general_d = 1
-    setCenterUnits(info, unit, unit)
-    const rolls = [[0, 2]]
-    const { attacker, defender } = initSide(3)
-
-    attacker[0][15] = [unit.type, 976, 1.0920]
-    attacker[1][15] = [unit.type, 952, 0.9921]
-    attacker[2][15] = [unit.type, 929, 0.8993]
-
-    defender[0][15] = [unit.type, 984, 1.1280]
-    defender[1][15] = [unit.type, 968, 1.0640]
-    defender[2][15] = [unit.type, 953, 1.0073]
-    
-    testCombat(info, rolls, attacker, defender)
-  })
-  
-  it('general, difference', () => {
-    const unit = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.MoraleDamageTaken, -0.25]])
-    info.general_d = 2
-    setCenterUnits(info, unit, unit)
-    const rolls = [[0, 1]]
-    const { attacker, defender } = initSide(3)
-
-    attacker[0][15] = [unit.type, 976, 1.0920]
-    attacker[1][15] = [unit.type, 952, 0.9921]
-    attacker[2][15] = [unit.type, 929, 0.8993]
-
-    defender[0][15] = [unit.type, 984, 1.1280]
-    defender[1][15] = [unit.type, 968, 1.0640]
-    defender[2][15] = [unit.type, 953, 1.0073]
-    
     testCombat(info, rolls, attacker, defender)
   })
 })

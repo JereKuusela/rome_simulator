@@ -3,8 +3,8 @@ import { addValues } from 'definition_values'
 import { toObj, removeUndefined, filter, toArr } from 'utils'
 
 import * as ir_data from './json/ir/units.json'
-import * as euiv_basedata from './json/euiv/base_units.json'
-import * as euiv_data from './json/euiv/units.json'
+//import * as euiv_basedata from './json/euiv/base_units.json'
+//import * as euiv_data from './json/euiv/units.json'
 import IconArcher from 'images/archers.png'
 import IconCamelCavalry from 'images/camel_cavalry.png'
 import IconChariots from 'images/chariots.png'
@@ -110,8 +110,8 @@ const createUnitFromJson = (data: UnitData): BaseUnit => {
   return unit
 }
 
-//const initializeDefaultUnits = (): BaseUnits => toObj(ir_data.units.map(createUnitFromJson), unit => unit.type)
-const initializeDefaultUnits = (): BaseUnits => toObj(euiv_basedata.units.map(createUnitFromJson).concat(euiv_data.units.map(createUnitFromJson)), unit => unit.type)
+const initializeDefaultUnits = (): BaseUnits => toObj(ir_data.units.map(createUnitFromJson), unit => unit.type)
+//const initializeDefaultUnits = (): BaseUnits => toObj(euiv_basedata.units.map(createUnitFromJson).concat(euiv_data.units.map(createUnitFromJson)), unit => unit.type)
 
 const defaultUnits = initializeDefaultUnits()
 

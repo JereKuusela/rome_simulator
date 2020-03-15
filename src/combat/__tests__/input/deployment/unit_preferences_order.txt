@@ -4,13 +4,16 @@ combat_name = {
 	random = no
 	attacker = { 
 		location = 2
-		archers = 30
-		horse_archers = 5
-		primary = archers
-		secondary = archers
-		flank = horse_archers
-		flank_size = 2
+		horse_archers = 1
+		chariots = 1
+		light_cavalry = 1
+		warelephant = 1
+		supply_train = 1
 		random_traits = no
+		primary = supply_train
+		secondary = supply_train
+		flank = supply_train
+		flank_size = 5
 	}
 	
 	defender = { 

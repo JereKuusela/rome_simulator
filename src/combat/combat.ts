@@ -4,8 +4,8 @@ import { Tactic, UnitPreferences, Terrain, UnitType, Cohort, UnitAttribute, Sett
 import { toObj, map, noZero } from 'utils'
 import { calculateValue, calculateValueWithoutLoss, calculateBase } from 'definition_values'
 import { calculateExperienceReduction, getCombatPhase, calculateCohortPips, getDailyIncrease } from './combat_utils'
-import { reinforce } from './reinforcement'
 import { getStrengthBasedFlank } from 'managers/units'
+import { SortedReserve, reinforce } from './deployment'
 
 
 /**
@@ -33,11 +33,22 @@ export type Defeated = CombatCohort[]
 export type CombatUnitTypes = { [key in UnitType]: CombatCohortDefinition }
 
 export type CombatCohorts = {
-  frontline: (CombatCohort | null)[][]
-  reserve: CombatCohort[]
-  defeated: CombatCohort[]
+  frontline: Frontline
+  reserve: SortedReserve
+  defeated: Defeated
+  left_flank: number
+  right_flank: number
 }
 
+
+export const iterateCohorts = (cohorts: CombatCohorts, func: (cohorts: (CombatCohort | null)[]) => void) => {
+  for (let i = 0; i < cohorts.frontline.length; i++)
+    func(cohorts.frontline[i])
+  func(cohorts.reserve.front)
+  func(cohorts.reserve.flank)
+  func(cohorts.reserve.support)
+  func(cohorts.defeated)
+}
 
 const applyPhaseDamageDone = (unit: Cohort, value: number) => ({
   [CombatPhase.Default]: value,
@@ -203,12 +214,12 @@ export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, mark_de
     removeDefeated(a.cohorts.frontline)
     removeDefeated(d.cohorts.frontline)
   }
-  reinforce(a.cohorts.frontline, a.cohorts.reserve)
+  reinforce(a)
   if (!settings[Setting.DefenderAdvantage])
-    reinforce(d.cohorts.frontline, d.cohorts.reserve)
+    reinforce(d)
   pickTargets(a.cohorts.frontline, d.cohorts.frontline, settings)
   if (settings[Setting.DefenderAdvantage])
-    reinforce(d.cohorts.frontline, d.cohorts.reserve)
+    reinforce(d)
   pickTargets(d.cohorts.frontline, a.cohorts.frontline, settings)
 
   // Tactic bonus changes dynamically when units lose strength so it can't be precalculated.
@@ -291,42 +302,52 @@ const pickTargets = (source: Frontline, target: Frontline, settings: Settings) =
 
 /**
  * Calculates effectiveness of a tactic against another tactic with a given army.
- * Not optimized!
  */
 export const calculateTactic = (army: CombatCohorts, tactic: Tactic, counter_tactic?: Tactic): number => {
   const effectiveness = counter_tactic ? calculateValue(tactic, counter_tactic.type) : 1.0
-  let unit_modifier = 1.0
+  let average_weight = 1.0
   if (effectiveness > 0 && tactic && army) {
-    let units = 0
-    let weight = 0.0
-    for (const unit of army.frontline.reduce((prev, current) => prev.concat(current), army.reserve.concat(army.defeated))) {
-      if (!unit)
-        continue
-      units += unit[UnitAttribute.Strength]
-      weight += calculateValue(tactic, unit.definition.type) * unit[UnitAttribute.Strength]
+    let total_strength = 0
+    let total_weight = 0.0
+
+    const addWeight = (cohorts: (CombatCohort | null)[]) => {
+      for (let i = 0; i < cohorts.length; i++) {
+        const cohort = cohorts[i]
+        if (!cohort)
+          continue
+        total_strength += cohort[UnitAttribute.Strength]
+        total_weight += calculateValue(tactic, cohort.definition.type) * cohort[UnitAttribute.Strength]
+      }
     }
-    if (units)
-      unit_modifier = weight / units
+    iterateCohorts(army, addWeight)
+    if (total_strength)
+      average_weight = total_weight / total_strength
   }
 
-  return effectiveness * Math.min(1.0, unit_modifier)
+  return effectiveness * Math.min(1.0, average_weight)
 }
 
 export const calculateFlankRatioPenalty = (army: CombatCohorts, ratio: number, setting: Settings) => {
-  return ratio && calculateFlankRatio(army) > ratio? setting[Setting.InsufficientSupportPenalty]  : 0.0
+  return ratio && calculateFlankRatio(army) > ratio ? setting[Setting.InsufficientSupportPenalty] : 0.0
 }
 
 const calculateFlankRatio = (army: CombatCohorts): number => {
   let infantry = 0.0
   let flank = 0.0
-  for (const unit of army.frontline.reduce((prev, current) => prev.concat(current), army.reserve.concat(army.defeated))) {
-    if (!unit)
-      continue
-    if (unit.definition.deployment === UnitRole.Front)
-      infantry += unit[UnitAttribute.Strength]
-    if (unit.definition.deployment === UnitRole.Flank)
-      flank += unit[UnitAttribute.Strength]
+
+  const addRatio = (cohorts: (CombatCohort | null)[]) => {
+    for (let i = 0; i < cohorts.length; i++) {
+      const cohort = cohorts[i]
+      if (!cohort)
+        continue
+      if (cohort.definition.deployment === UnitRole.Front)
+        infantry += cohort[UnitAttribute.Strength]
+      if (cohort.definition.deployment === UnitRole.Flank)
+        flank += cohort[UnitAttribute.Strength]
+    }
   }
+  iterateCohorts(army, addRatio)
+
   return flank / noZero(infantry)
 }
 
@@ -431,7 +452,6 @@ const calculateCohortDamageMultiplier = (source: CombatCohort, target: CombatCoh
 
 const calculateDamageMultiplier = (source: CombatCohort, target: CombatCohort, dynamic_multiplier: number, is_support: boolean, phase: CombatPhase, settings: Settings) => {
   dynamic_multiplier *= calculateCohortDamageMultiplier(source, target, is_support, settings)
-  console.log(target.calculated.damage_taken_multiplier)
   source.state.damage_multiplier = dynamic_multiplier * source.calculated.damage['Damage'][target.definition.type][phase] * target.calculated.damage_taken_multiplier / PRECISION
   return dynamic_multiplier
 }
