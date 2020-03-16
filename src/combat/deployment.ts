@@ -172,8 +172,8 @@ const removeDefeated = (units: CombatCohorts, minimum_morale: number, minimum_st
  * @param reserve Sorted reserve to get amount of flanking units.
  * @param enemy_units Enemy units to calculate space on the battlefield.
  */
-const calculateFlankSizes = (combat_width: number, preferred_flank_size: number, enemy_units: CombatCohorts): [number, number] => {
-  const free_space = combat_width - armySize(enemy_units)
+const calculateFlankSizes = (combat_width: number, preferred_flank_size: number, enemy_units?: CombatCohorts): [number, number] => {
+  const free_space = enemy_units ? combat_width - armySize(enemy_units) : 0
   const left_side_free_space = Math.ceil(free_space / 2.0)
   const right_side_free_space = Math.floor(free_space / 2.0)
   // Max space checks needed for low combat widths.
@@ -188,8 +188,8 @@ export const deploy = (attacker: CombatParticipant, defender: CombatParticipant,
   removeDefeated(attacker.cohorts, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength])
   removeDefeated(defender.cohorts, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength])
 
-  const [left_flank_a, right_flank_a] = calculateFlankSizes(settings[Setting.CombatWidth], attacker.flank, defender.cohorts)
-  const [left_flank_d, right_flank_d] = calculateFlankSizes(settings[Setting.CombatWidth], defender.flank, attacker.cohorts)
+  const [left_flank_a, right_flank_a] = calculateFlankSizes(settings[Setting.CombatWidth], attacker.flank, settings[Setting.DynamicFlanking] ? defender.cohorts : undefined)
+  const [left_flank_d, right_flank_d] = calculateFlankSizes(settings[Setting.CombatWidth], defender.flank, settings[Setting.DynamicFlanking] ? attacker.cohorts : undefined)
   attacker.cohorts.left_flank = left_flank_a
   attacker.cohorts.right_flank = right_flank_a
   defender.cohorts.left_flank = left_flank_d

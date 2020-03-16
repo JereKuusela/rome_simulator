@@ -78,6 +78,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
     [Setting.Tactics]: false,
     [Setting.Martial]: false,
     [Setting.CustomDeployment]: false,
+    [Setting.DynamicFlanking]: true,
     [Setting.Tech]: true,
     [Setting.Culture]: true,
     [Setting.Food]: false
@@ -114,6 +115,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
     [Setting.Tactics]: true,
     [Setting.Martial]: true,
     [Setting.CustomDeployment]: true,
+    [Setting.DynamicFlanking]: false,
     [Setting.Tech]: false,
     [Setting.Culture]: false,
     [Setting.Food]: true

@@ -10,8 +10,8 @@ Changelog:
 - Battle: Fixed right-click cohort removal not always working correctly.
 - Battle: Fixed cohort tooltip not appearing when moving mouse fast.
 - Battle: Fixed total damage shown incorrectly on cohort tooltips (if target had experience).
-- Battle: Improved flank size setting to work more accurately (not sure when this was changed).
-- Battle: Added support for backrow and backrow effectiveness (offensive and defensive).
+- Battle: Improved flank size setting (1.4).
+- Battle: Added support for backrow and backrow effectiveness (offensive and defensive), feature from EUIV.
 - Battle: Added food consumption and storage to fast planner.
 - Battle: Refactored state for armies (first step towards multiarmy battles).
 - Battle: Added support for crossing terrain penalties not affecting attacker if their general has higher maneuver, feature from EUIV.
@@ -60,6 +60,7 @@ Changelog:
 - Settings: Added a new setting for daily damage increase, feature from EUIV.
 - Settings: Added a new setting for strength affecting maneuver, feature from EUIV.
 - Settings: Added a new setting for insufficient support penalty, feature from EUIV.
+- Settings: Added a new setting for dynamic flanking calculation (to support 1.3 deployment).
 - Settings: Added new settings for enabling/disabling different unit attributes.
 - Settings: Added new settings for enabling/disabling existing game mechanics (martial, tactics, preferred unit types, etc.).
 

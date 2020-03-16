@@ -1,5 +1,5 @@
 import { TestInfo, initInfo, getUnit, testDeployment, setFlankSizes, setCombatWidth, createExpected } from './utils'
-import { UnitType } from 'types'
+import { UnitType, Setting } from 'types'
 import { loadInput } from './parser'
 
 import all_land_front from './input/deployment/all_land_front.txt'
@@ -62,10 +62,22 @@ describe('initial deployment', () => {
     }
     testDeployment(info, attacker, defender)
   })
-  it('deploys flank correctly when outnumbering the enemy', () => {
+  it('deploys flank correctly when outnumbering the enemy, dynamic', () => {
     loadInput(flank_outnumbered, info)
+    info.settings[Setting.DynamicFlanking] = true
     const attacker = {
       front: createExpected([UnitType.Archers, 10], [UnitType.HorseArchers, 10], [UnitType.Archers, 10])
+    }
+    const defender = {
+      front: createExpected([UnitType.Archers, 10])
+    }
+    testDeployment(info, attacker, defender)
+  })
+  it('deploys flank correctly when outnumbering the enemy, static', () => {
+    loadInput(flank_outnumbered, info)
+    info.settings[Setting.DynamicFlanking] = false
+    const attacker = {
+      front: createExpected([UnitType.Archers, 20], [UnitType.HorseArchers, 10])
     }
     const defender = {
       front: createExpected([UnitType.Archers, 10])

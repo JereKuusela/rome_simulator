@@ -33,6 +33,7 @@ export enum Setting {
   Food = 'Enable food attributes',
   Culture = 'Enable culture based units',
   CustomDeployment = 'Enable deployment customization',
+  DynamicFlanking = 'Enable dynamic flanking',
   InsufficientSupportPenalty = 'Penalty for insufficient support',
   StrengthBasedFlank = 'Enable strength based flank',
   FireAndShock = 'Enable fire and shock phases',
@@ -107,6 +108,11 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Preferred unit types can be selected (Imperator).'
       else
         return 'Preferred unit types are not available (EUIV).'
+    case Setting.DynamicFlanking:
+      if (value)
+        return 'Enemy army size affects flanking slots (EUIV).'
+      else
+        return 'Amount of flanking slots is only based on preferred flanking (Imperator).'
     case Setting.Tactics:
       if (value)
         return 'Tactics not available (Imperator).'
@@ -275,6 +281,7 @@ export type SiteSettings = {
   [Setting.Culture]: boolean,
   [Setting.Food]: boolean,
   [Setting.CustomDeployment]: boolean,
+  [Setting.DynamicFlanking]: boolean,
   [Setting.StrengthBasedFlank]: boolean,
   [Setting.InsufficientSupportPenalty]: number,
   [Setting.DisciplineDamageReduction]: boolean,
