@@ -11,7 +11,7 @@ import Navigation from './pages/Navigation'
 import Transfer from './pages/Transfer'
 import Instructions from './pages/Instructions'
 import Countries from './pages/Countries'
-//import CountriesEUIV from './pages/CountriesEU'
+import CountriesEUIV from './pages/CountriesEU'
 import Settings from './pages/Settings'
 import Error from './pages/Error'
 import { AppState } from 'state'
@@ -40,7 +40,7 @@ const Root = ({ store, persistor }: MainProps) => {
               <Route path='/Stats' component={Statistics} />
               <Route path='/Transfer' component={Transfer} />
               <Route path='/Instructions' component={Instructions} />
-              <Route path='/Countries' component={Countries} />
+              <Route path='/Countries' component={process.env.GAME === 'euiv' ? CountriesEUIV : Countries} />
               <Route path='/Settings' component={Settings} />
               <br />
               <br />

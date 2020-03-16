@@ -3,8 +3,8 @@ import { addValues } from 'definition_values'
 import { toObj, removeUndefined, filter, toArr } from 'utils'
 
 import * as ir_data from './json/ir/units.json'
-//import * as euiv_basedata from './json/euiv/base_units.json'
-//import * as euiv_data from './json/euiv/units.json'
+import * as euiv_basedata from './json/euiv/base_units.json'
+import * as euiv_data from './json/euiv/units.json'
 import IconArcher from 'images/archers.png'
 import IconCamelCavalry from 'images/camel_cavalry.png'
 import IconChariots from 'images/chariots.png'
@@ -55,7 +55,7 @@ export const GlobalKey = 'Base'
 const createUnitFromJson = (data: UnitData): BaseUnit => {
   let unit: BaseUnit = {
     type: data.type as UnitType,
-    mode:  data.mode as Mode | undefined,
+    mode: data.mode as Mode | undefined,
     image: unit_to_icon[data.type as UnitType] ?? unit_to_icon[data.base as UnitType] ?? '',
     role: data.role ? data.role as UnitRole : undefined,
     base: data.base ? data.base as UnitType : undefined,
@@ -110,9 +110,11 @@ const createUnitFromJson = (data: UnitData): BaseUnit => {
   return unit
 }
 
-const initializeDefaultUnits = (): BaseUnits => toObj(ir_data.units.map(createUnitFromJson), unit => unit.type)
-//const initializeDefaultUnits = (): BaseUnits => toObj(euiv_basedata.units.map(createUnitFromJson).concat(euiv_data.units.map(createUnitFromJson)), unit => unit.type)
-
+const initializeDefaultUnits = (): BaseUnits => {
+  if (process.env.GAME === 'euiv')
+    return toObj(euiv_basedata.units.map(createUnitFromJson).concat(euiv_data.units.map(createUnitFromJson)), unit => unit.type)
+  return toObj(ir_data.units.map(createUnitFromJson), unit => unit.type)
+}
 const defaultUnits = initializeDefaultUnits()
 
 export const getCultures = () => uniq(toArr(defaultUnits, value => value.culture).filter(culture => culture) as CultureType[])

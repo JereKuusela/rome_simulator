@@ -20,7 +20,7 @@ export const getDefaultLandSettings = (): CombatSettings => {
   }
 }
 
-export const getDefaultNavalSettings = (): CombatSettings  => {
+export const getDefaultNavalSettings = (): CombatSettings => {
   return {
     ...getDefaultAnySettings(),
     [Setting.StrengthLostMultiplier]: 0.5,
@@ -46,43 +46,45 @@ const getDefaultAnySettings = (): CombatSettings => {
 }
 
 export const getDefaultSiteSettings = (): SiteSettings => {
-  /*return {
-    [Setting.FixExperience]: false,
-    [Setting.DefenderAdvantage]: false,
-    [Setting.FixTargeting]: true,
-    [Setting.BackRow]: true,
-    [Setting.StrengthBasedFlank]: true,
-    [Setting.ChunkSize]: 10000,
-    [Setting.MaxDepth]: speedValues[SimulationSpeed.Normal][1],
-    [Setting.PhaseLengthMultiplier]: speedValues[SimulationSpeed.Normal][0],
-    [Setting.Performance]: SimulationSpeed.Normal,
-    [Setting.CalculateWinChance]: true,
-    [Setting.CalculateCasualties]: true,
-    [Setting.CalculateResourceLosses]: true,
-    [Setting.ShowGraphs]: false,
-    [Setting.DisciplineDamageReduction]: true,
-    [Setting.DailyMoraleLoss]: 0.03,
-    [Setting.DailyDamageIncrease]: 0.01,
-    [Setting.FireAndShock]: true,
-    [Setting.InsufficientSupportPenalty]: 0.25,
-    [Setting.AttributeCombatAbility]: true,
-    [Setting.AttributeDamage]: true,
-    [Setting.AttributeDrill]: true,
-    [Setting.AttributeExperience]: false,
-    [Setting.AttributeMilitaryTactics]: true,
-    [Setting.AttributeMoraleDamage]: false,
-    [Setting.AttributeOffenseDefense]: false,
-    [Setting.AttributeStrengthDamage]: false,
-    [Setting.AttributeTerrainType]: false,
-    [Setting.AttributeUnitType]: false,
-    [Setting.Tactics]: false,
-    [Setting.Martial]: false,
-    [Setting.CustomDeployment]: false,
-    [Setting.DynamicFlanking]: true,
-    [Setting.Tech]: true,
-    [Setting.Culture]: true,
-    [Setting.Food]: false
-  }*/
+  if (process.env.GAME === 'euiv') {
+    return {
+      [Setting.FixExperience]: false,
+      [Setting.DefenderAdvantage]: false,
+      [Setting.FixTargeting]: true,
+      [Setting.BackRow]: true,
+      [Setting.StrengthBasedFlank]: true,
+      [Setting.ChunkSize]: 10000,
+      [Setting.MaxDepth]: speedValues[SimulationSpeed.Normal][1],
+      [Setting.PhaseLengthMultiplier]: speedValues[SimulationSpeed.Normal][0],
+      [Setting.Performance]: SimulationSpeed.Normal,
+      [Setting.CalculateWinChance]: true,
+      [Setting.CalculateCasualties]: true,
+      [Setting.CalculateResourceLosses]: true,
+      [Setting.ShowGraphs]: false,
+      [Setting.DisciplineDamageReduction]: true,
+      [Setting.DailyMoraleLoss]: 0.03,
+      [Setting.DailyDamageIncrease]: 0.01,
+      [Setting.FireAndShock]: true,
+      [Setting.InsufficientSupportPenalty]: 0.25,
+      [Setting.AttributeCombatAbility]: true,
+      [Setting.AttributeDamage]: true,
+      [Setting.AttributeDrill]: true,
+      [Setting.AttributeExperience]: false,
+      [Setting.AttributeMilitaryTactics]: true,
+      [Setting.AttributeMoraleDamage]: false,
+      [Setting.AttributeOffenseDefense]: false,
+      [Setting.AttributeStrengthDamage]: false,
+      [Setting.AttributeTerrainType]: false,
+      [Setting.AttributeUnitType]: false,
+      [Setting.Tactics]: false,
+      [Setting.Martial]: false,
+      [Setting.CustomDeployment]: false,
+      [Setting.DynamicFlanking]: true,
+      [Setting.Tech]: true,
+      [Setting.Culture]: true,
+      [Setting.Food]: false
+    }
+  }
   return {
     [Setting.FixExperience]: false,
     [Setting.DefenderAdvantage]: false,
