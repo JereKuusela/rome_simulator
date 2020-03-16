@@ -46,7 +46,7 @@ const getDefaultAnySettings = (): CombatSettings => {
 }
 
 export const getDefaultSiteSettings = (): SiteSettings => {
-  if (process.env.GAME === 'euiv') {
+  if (process.env.REACT_APP_GAME === 'euiv') {
     return {
       [Setting.FixExperience]: false,
       [Setting.DefenderAdvantage]: false,

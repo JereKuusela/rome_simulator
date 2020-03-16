@@ -40,7 +40,7 @@ const Root = ({ store, persistor }: MainProps) => {
               <Route path='/Stats' component={Statistics} />
               <Route path='/Transfer' component={Transfer} />
               <Route path='/Instructions' component={Instructions} />
-              <Route path='/Countries' component={process.env.GAME === 'euiv' ? CountriesEUIV : Countries} />
+              <Route path='/Countries' component={process.env.REACT_APP_GAME === 'euiv' ? CountriesEUIV : Countries} />
               <Route path='/Settings' component={Settings} />
               <br />
               <br />
