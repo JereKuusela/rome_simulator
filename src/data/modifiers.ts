@@ -18,6 +18,19 @@ import * as abilityData from './json/ir/abilities.json'
 
 import * as techDataEUIV from './json/euiv/tech.json'
 
+// Bit ugly but these enable tree shaking based on the game.
+const getTechDataEUIV = () => process.env.REACT_APP_GAME === 'euiv' ? Array.from(techDataEUIV.tech) : [] as TechDataEUIV[]
+const getTraditionData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(traditionData.traditions) : [] as TraditionData[]
+const getTradeData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(tradeData.trades) : [] as TradeData[]
+const getHeritageData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(heritageData.heritages) : [] as HeritageData[]
+const getInventionData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(inventionData.levels) : [] as InventionData[]
+const getOmenData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(omenData.religions) : [] as OmenData[]
+const getTraitData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(traitData.traits) : [] as TraitData[]
+const getLawData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(lawData.laws) : [] as LawData[]
+const getEconomyData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(economyData.economy) : [] as EconomyData[]
+const getIdeaData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(ideaData.ideas) : [] as IdeaData[]
+const getAbilityData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(abilityData.abilities) : [] as AbilityData[]
+
 type Traditions = { [key in CultureType]: TraditionDefinition }
 type Omens = { [key in ReligionType]: OmenDefinition[] }
 
@@ -27,68 +40,68 @@ const setDefault = (modifier: Modifier, scope: ScopeType = ScopeType.Country) =>
 }
 
 export const getTechDefinitionsEUIV = () => {
-  const data = sortBy<TechDataEUIV>(Array.from(techDataEUIV.tech), () => 1) as TechDefinitionEUIV[]
+  const data = sortBy<TechDataEUIV>(getTechDataEUIV(), () => 1) as TechDefinitionEUIV[]
   data.forEach(level => level.modifiers.forEach(modifier => setDefault(modifier)))
   return data
 }
 
 export const getTraditionDefinitions = () => {
-  const data = toObj(sortBy<TraditionData>(Array.from(traditionData.traditions), value => value.type), value => value.type) as Traditions
+  const data = toObj(sortBy<TraditionData>(getTraditionData(), value => value.type), value => value.type) as Traditions
   forEach(data, tradition => tradition.modifiers.forEach(modifier => setDefault(modifier)))
   forEach(data, tradition => tradition.paths.forEach(path => path.traditions.forEach(tradition => tradition.modifiers.forEach(modifier => setDefault(modifier)))))
   return data
 }
 
 export const getTradeDefinitions = () => {
-  const data = sortBy<TradeData>(Array.from(tradeData.trades), value => value.name) as TradeDefinition[]
+  const data = sortBy<TradeData>(getTradeData(), value => value.name) as TradeDefinition[]
   data.forEach(trade => setDefault(trade.modifier))
   return data
 }
 
 export const getHeritageDefinitions = () => {
-  const data = sortBy<HeritageData>(Array.from(heritageData.heritages), value => value.name) as HeritageDefinition[]
+  const data = sortBy<HeritageData>(getHeritageData(), value => value.name) as HeritageDefinition[]
   data.forEach(heritage => heritage.modifiers.forEach(modifier => setDefault(modifier)))
   return data
 }
 
 export const getInventionDefinitions = () => {
-  const data = sortBy<InventionData>(Array.from(inventionData.levels), () => 1) as InventionDefinition[]
+  const data = sortBy<InventionData>(getInventionData(), () => 1) as InventionDefinition[]
   data.forEach(level => level.inventions.forEach(invention => invention.forEach(modifier => setDefault(modifier))))
   return data
 }
 
 export const getOmenDefinitions = () => {
-  const data = map(toObj(sortBy<OmenData>(Array.from(omenData.religions), value => value.type), value => value.type), value => value.omens) as Omens
+  const data = map(toObj(sortBy<OmenData>(getOmenData(), value => value.type), value => value.type), value => value.omens) as Omens
   forEach(data, omens => omens.forEach(omen => setDefault(omen.modifier)))
   return data
 }
 
 export const getTraitDefinitions = () => {
-  const data = sortBy<TraitData>(Array.from(traitData.traits), value => value.name) as TraitDefinition[]
+  const data = sortBy<TraitData>(getTraitData(), value => value.name) as TraitDefinition[]
   data.forEach(trait => trait.modifiers.forEach(modifier => setDefault(modifier, ScopeType.Army)))
   return data
 }
 
 export const getLawDefinitions = () => {
-  const data = sortBy<LawData>(Array.from(lawData.laws), () => 1) as LawDefinition[]
+  const data = sortBy<LawData>(getLawData(), () => 1) as LawDefinition[]
   data.forEach(law => law.options.forEach(option => option.modifiers.forEach(modifier => setDefault(modifier))))
   return data
 }
 
 export const getEconomyDefinitions = () => {
-  const data = sortBy<EconomyData>(Array.from(economyData.economy), () => 1) as EconomyDefinition[]
+  const data = sortBy<EconomyData>(getEconomyData(), () => 1) as EconomyDefinition[]
   data.forEach(economy => economy.options.forEach(option => option.modifiers.forEach(modifier => setDefault(modifier))))
   return data
 }
 
 export const getIdeaDefinitions = () => {
-  const data = sortBy<IdeaData>(Array.from(ideaData.ideas), () => 1) as IdeaDefinition[]
+  const data = sortBy<IdeaData>(getIdeaData(), () => 1) as IdeaDefinition[]
   data.forEach(idea => idea.modifiers.forEach(modifier => setDefault(modifier)))
   return data
 }
 
 export const getAbilityDefinitions = () => {
-  const data = sortBy<AbilityData>(Array.from(abilityData.abilities), () => 1) as AbilityDefinition[]
+  const data = sortBy<AbilityData>(getAbilityData(), () => 1) as AbilityDefinition[]
   data.forEach(ability => ability.options.forEach(option => option.modifiers.forEach(modifier => setDefault(modifier, ScopeType.Army))))
   return data
 }

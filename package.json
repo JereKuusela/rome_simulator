@@ -22,9 +22,9 @@
     "victory": "^34.1.1"
   },
   "scripts": {
-    "start": "cross-env IMAGE_INLINE_SIZE_LIMIT=1 react-scripts start",
+    "start": "cross-env IMAGE_INLINE_SIZE_LIMIT=1 REACT_APP_GAME=ir react-scripts start",
     "start_euiv": "cross-env IMAGE_INLINE_SIZE_LIMIT=1 REACT_APP_GAME=euiv react-scripts start",
-    "build": "cross-env IMAGE_INLINE_SIZE_LIMIT=1 react-scripts build",
+    "build": "cross-env IMAGE_INLINE_SIZE_LIMIT=1 REACT_APP_GAME=ir react-scripts build",
     "build_euiv": "cross-env IMAGE_INLINE_SIZE_LIMIT=1 REACT_APP_GAME=euiv react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

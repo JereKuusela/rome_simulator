@@ -111,11 +111,10 @@ const createUnitFromJson = (data: UnitData): BaseUnit => {
 }
 
 const initializeDefaultUnits = (): BaseUnits => {
-  if (process.env.REACT_APP_GAME === 'euiv') {
+  if (process.env.REACT_APP_GAME === 'euiv')
     return toObj(euiv_basedata.units.map(createUnitFromJson).concat(euiv_data.units.map(createUnitFromJson)), unit => unit.type)
-
-  }
-  return toObj(ir_data.units.map(createUnitFromJson), unit => unit.type)
+  else
+    return toObj(ir_data.units.map(createUnitFromJson), unit => unit.type)
 }
 const defaultUnits = initializeDefaultUnits()
 
