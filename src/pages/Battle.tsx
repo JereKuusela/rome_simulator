@@ -10,7 +10,7 @@ import ModalCohortDetail from 'containers/modal/ModalCohortDetail'
 import ModalFastPlanner from 'containers/modal/ModalFastPlanner'
 import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from 'containers/modal/ModalUnitSelector'
 import PreferredUnitTypes from 'containers/PreferredUnitTypes'
-import Stats from 'containers/Stats'
+import TableStats from 'containers/TableStats'
 import TableArmyPart from 'containers/TableArmyPart'
 import TacticSelector from 'containers/TacticSelector'
 import TargetArrows from 'containers/TargetArrows'
@@ -132,7 +132,7 @@ class Battle extends Component<IProps, IState> {
           <Divider />
           <Grid.Row columns={1}>
             <Grid.Column>
-              <Stats />
+              <TableStats />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>
