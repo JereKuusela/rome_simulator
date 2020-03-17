@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { AppState, getSettings, getGeneralDefinition } from 'state'
 import { mapRange, ObjSet, has, values } from '../utils'
 
-import { ValuesType, Modifier, ScopeType, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute, Mode, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, TechDefinitionEUIV, CountryName, Setting } from 'types'
+import { ValuesType, Modifier, ScopeType, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, TechDefinitionEUIV, CountryName, Setting } from 'types'
 import { invalidate, setCountryValue, setTechLevel, enableSelection, clearSelection, enableUnitModifiers, enableGeneralModifiers, clearUnitModifiers, clearGeneralModifiers, setGeneralValue, selectCulture, selectReligion, selectGovernment, setHasGeneral } from 'reducers'
 
 import AccordionToggle from 'containers/AccordionToggle'
@@ -12,8 +12,9 @@ import CountryManager from 'containers/CountryManager'
 import Dropdown from 'components/Utils/Dropdown'
 import ConfirmationButton from 'components/ConfirmationButton'
 import TableAttributes from 'components/TableAttributes'
-import { getBaseUnitType } from 'managers/units'
 import { getCultures } from 'data'
+import { mapModifiersToUnits } from 'managers/modifiers'
+import InputTechLevel from 'containers/InputTechLevel'
 
 const TECH_COLUMNS = 4
 const TECH_KEY = 'Tech_'
@@ -63,7 +64,8 @@ class Countries extends Component<IProps> {
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <AccordionToggle title='Trade' identifier='countries_trade'>
+              <AccordionToggle title='Tech' identifier='countries_tech'>
+                Tech level: <InputTechLevel country={selected_country} tech={country.tech_level} />
                 {
                   this.renderTech(tech, selections)
                 }
@@ -262,29 +264,9 @@ class Countries extends Component<IProps> {
     return key.substring(0, index)
   }
 
-
-  mapModifiersToUnits = (modifiers: Modifier[]) => {
-    const mapped: Modifier[] = []
-    modifiers.forEach(modifier => {
-      if (modifier.target === ModifierType.Text)
-        return
-      if (modifier.target in Mode) {
-        mapped.push({ ...modifier, target: getBaseUnitType(modifier.target as Mode) })
-        return
-      }
-      if (modifier.target === ModifierType.Global) {
-        mapped.push({ ...modifier, target: getBaseUnitType(Mode.Naval) })
-        mapped.push({ ...modifier, target: getBaseUnitType(Mode.Land) })
-        return
-      }
-      mapped.push(modifier)
-    })
-    return mapped
-  }
-
   enableModifiers = (key: string, modifiers: Modifier[]) => {
     const { enableGeneralModifiers, enableUnitModifiers, enableSelection, invalidate, selected_country } = this.props
-    modifiers = this.mapModifiersToUnits(modifiers)
+    modifiers = mapModifiersToUnits(modifiers)
     enableGeneralModifiers(selected_country, key, modifiers)
     enableUnitModifiers(key, modifiers)
     enableSelection(selected_country, key)

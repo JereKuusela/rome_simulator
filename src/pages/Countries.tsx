@@ -5,7 +5,7 @@ import { AppState, getGeneral, getSettings, getGeneralDefinition } from 'state'
 import { mapRange, ObjSet, has, keys, values } from '../utils'
 
 import { addSignWithZero } from 'formatters'
-import { ValuesType, TraditionDefinition, TradeDefinition, IdeaDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, EconomyDefinition, LawDefinition, AbilityDefinition, Modifier, Tradition, ScopeType, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute, UnitType, Mode, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, CountryName, Setting } from 'types'
+import { ValuesType, TraditionDefinition, TradeDefinition, IdeaDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, EconomyDefinition, LawDefinition, AbilityDefinition, Modifier, Tradition, ScopeType, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute, UnitType, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, CountryName, Setting } from 'types'
 import { invalidate, setCountryValue, enableSelection, clearSelection, enableUnitModifiers, enableGeneralModifiers, clearUnitModifiers, clearGeneralModifiers, setGeneralBaseStat, setGeneralValue, selectCulture, selectReligion, selectGovernment, setOmenPower, setHasGeneral, setMilitaryPower, setOfficeMorale, setOfficeDiscipline } from 'reducers'
 
 import AccordionToggle from 'containers/AccordionToggle'
@@ -14,7 +14,7 @@ import Dropdown from 'components/Utils/Dropdown'
 import ConfirmationButton from 'components/ConfirmationButton'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TableAttributes from 'components/TableAttributes'
-import { getBaseUnitType } from 'managers/units'
+import { mapModifiersToUnits } from 'managers/modifiers'
 
 const TRADE_COLUMNS = 4
 const HERITAGE_COLUMNS = 4
@@ -787,29 +787,9 @@ class Countries extends Component<IProps> {
     return key.substring(0, index)
   }
 
-
-  mapModifiersToUnits = (modifiers: Modifier[]) => {
-    const mapped: Modifier[] = []
-    modifiers.forEach(modifier => {
-      if (modifier.target === ModifierType.Text)
-        return
-      if (modifier.target in Mode) {
-        mapped.push({ ...modifier, target: getBaseUnitType(modifier.target as Mode) })
-        return
-      }
-      if (modifier.target === ModifierType.Global) {
-        mapped.push({ ...modifier, target: getBaseUnitType(Mode.Naval) })
-        mapped.push({ ...modifier, target: getBaseUnitType(Mode.Land) })
-        return
-      }
-      mapped.push(modifier)
-    })
-    return mapped
-  }
-
   enableModifiers = (key: string, modifiers: Modifier[]) => {
     const { enableGeneralModifiers, enableUnitModifiers, enableSelection, invalidate, selected_country } = this.props
-    modifiers = this.mapModifiersToUnits(modifiers)
+    modifiers = mapModifiersToUnits(modifiers)
     enableGeneralModifiers(selected_country, key, modifiers)
     enableUnitModifiers(key, modifiers)
     this.exec(enableSelection, key)

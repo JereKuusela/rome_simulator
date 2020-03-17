@@ -41,6 +41,12 @@ const getType = key => {
   return undefined;
 }
 
+const getPercent = key => {
+  if (key === 'land_morale' || key === 'combat width' || key === 'military tactics')
+    return true;
+  return undefined;
+}
+
 const TECH_FILE = path.join('tech', 'mil.txt');
 let tech_level = -1;
 
@@ -58,6 +64,7 @@ const handleTech = (key, value, result) => {
       target: getTarget(key),
       attribute: getAttribute(key),
       type: getType(key),
+      no_percent: getPercent(key),
       value
     });
 }

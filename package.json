@@ -27,7 +27,8 @@
     "build": "cross-env IMAGE_INLINE_SIZE_LIMIT=1 REACT_APP_GAME=ir react-scripts build",
     "build_euiv": "cross-env IMAGE_INLINE_SIZE_LIMIT=1 REACT_APP_GAME=euiv react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "euiv": "node scripts/conversion/euiv.js"
   },
   "eslintConfig": {
     "extends": "react-app"

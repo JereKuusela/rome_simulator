@@ -996,6 +996,15 @@
       "tech": 23
     },
     {
+      "base": "Light Ship",
+      "hull_size": 16,
+      "base_cannons": 20,
+      "sail_speed": 10,
+      "trade_power": 3.5,
+      "sprite_level": 4,
+      "type": "Frigate"
+    },
+    {
       "base": "Infantry",
       "culture": "Western",
       "offensive_morale": 4,
@@ -1008,13 +1017,12 @@
       "tech": 28
     },
     {
-      "base": "Light Ship",
-      "hull_size": 16,
-      "base_cannons": 20,
-      "sail_speed": 10,
-      "trade_power": 3.5,
-      "sprite_level": 4,
-      "type": "Frigate"
+      "base": "Infantry",
+      "culture": "Western",
+      "offensive_morale": 2,
+      "offensive_shock": 1,
+      "type": "Gaelic Galloglaigh",
+      "tech": 5
     },
     {
       "base": "Infantry",
@@ -1027,14 +1035,6 @@
       "defensive_shock": 1,
       "type": "Gaelic Free Shooter",
       "tech": 12
-    },
-    {
-      "base": "Infantry",
-      "culture": "Western",
-      "offensive_morale": 2,
-      "offensive_shock": 1,
-      "type": "Gaelic Galloglaigh",
-      "tech": 5
     },
     {
       "base": "Infantry",

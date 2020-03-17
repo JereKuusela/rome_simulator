@@ -10,7 +10,7 @@ import { getImage, resize } from 'utils'
 import { CombatCohort } from 'combat'
 import { AppState, getCurrentCombat, getCountryName } from 'state'
 import { getArmyPart } from 'army_utils'
-import { flatten, chunk } from 'lodash'
+import { last } from 'lodash'
 import { deleteCohort, invalidate } from 'reducers'
 
 type Props = {
@@ -24,8 +24,6 @@ type Props = {
   disable_add?: boolean
   // Renders full rows for a cleaner look.
   full_rows?: boolean
-  // Can be used to guarantee that a new unit can always be added.
-  extra_slot?: boolean
 }
 
 type IState = {
@@ -46,21 +44,21 @@ class TableArmyPart extends Component<IProps, IState> {
   }
 
   render() {
-    const { row_width, side, type, full_rows, extra_slot, reverse } = this.props
+    const { row_width, side, type, full_rows, reverse } = this.props
     const { tooltip_index, tooltip_context, tooltip_is_support } = this.state
     let units = this.props.units
-    if (full_rows)
+    let index_offset = 0
+    if (full_rows) {
       units = units.map(arr => resize(arr, row_width, null))
-    const filler = Math.max(0, row_width - units[0].length)
-    const left_filler = Math.ceil(filler / 2.0)
-    const right_filler = Math.floor(filler / 2.0)
-    units = units.map(row => Array(left_filler).fill(undefined).concat(row).concat(Array(right_filler).fill(undefined)))
+      if (last(last(units)))
+        units.push(Array(row_width).fill(null))
 
-    const flat_units = flatten(units)
-    if (extra_slot)
-      flat_units.push(null)
-
-    units = chunk(flat_units, row_width)
+    } else {
+      const filler = Math.max(0, row_width - units[0].length)
+      const left_filler = index_offset = Math.ceil(filler / 2.0)
+      const right_filler = Math.floor(filler / 2.0)
+      units = units.map(row => Array(left_filler).fill(undefined).concat(row).concat(Array(right_filler).fill(undefined)))
+    }
     if (reverse)
       units.reverse()
     return (
@@ -77,9 +75,9 @@ class TableArmyPart extends Component<IProps, IState> {
                       <Icon fitted size='small' name={this.getIcon()} style={{ color: this.props.color }}></Icon>
                     </Table.Cell>
                     {
-                      row.map((cohort, column_index) => {
-                        column_index = column_index - left_filler
-                        return this.renderCell(row_index, column_index, cohort, row_index > 0)
+                      row.map((cohort, index) => {
+                        index = index - index_offset
+                        return this.renderCell(row_index, index, cohort, row_index > 0)
                       })
                     }
                   </Table.Row>

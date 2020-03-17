@@ -27,7 +27,7 @@ export const selectReligion = (country: Country, religion: ReligionType) => {
 }
 
 export const setTechLevel = (country: Country, level: number) => {
-  country.tech_level = level
+  country.tech_level = Math.max(0, level)
 }
 
 export const selectCulture = (country: Country, culture: CultureType, load_all_units: boolean) => {

@@ -6,9 +6,9 @@ import { Input } from 'semantic-ui-react'
 
 import { AppState, getCountries } from 'state'
 import { setTechLevel, enableGeneralModifiers, clearGeneralModifiers, clearUnitModifiers, enableUnitModifiers, enableSelection, clearSelection, invalidate } from 'reducers'
-import { CountryName, Modifier, ModifierType, Mode } from 'types'
+import { CountryName, Modifier } from 'types'
 import {  mapRange, has } from 'utils'
-import { getBaseUnitType } from 'managers/units'
+import { mapModifiersToUnits } from 'managers/modifiers'
 
 interface Props {
   country: CountryName
@@ -28,10 +28,10 @@ class InputTechLevel extends Component<IProps> {
   }
 
   setTechLevel = (level: number) => {
-    const { country, selections, tech_levels } = this.props
-    level = level || 1
+    const { country, selections, tech_levels, setTechLevel } = this.props
+    level = Math.max(0, level)
     setTechLevel(country, level)
-    Object.keys(selections).filter(value => value.startsWith(TECH_KEY) && this.getNumberFromKey(value, 1) >= level)
+    Object.keys(selections).filter(value => value.startsWith(TECH_KEY) && this.getNumberFromKey(value, 1) > level)
       .forEach(value => this.clearModifiers(value))
     mapRange(level + 1, number => number).filter(value => !has(selections, TECH_KEY + value))
       .forEach(value => this.enableModifiers(TECH_KEY + value, tech_levels[value].modifiers))
@@ -46,7 +46,7 @@ class InputTechLevel extends Component<IProps> {
 
   enableModifiers = (key: string, modifiers: Modifier[]) => {
     const { enableGeneralModifiers, enableUnitModifiers, enableSelection, invalidate, country } = this.props
-    modifiers = this.mapModifiersToUnits(modifiers)
+    modifiers = mapModifiersToUnits(modifiers)
     enableGeneralModifiers(country, key, modifiers)
     enableUnitModifiers(key, modifiers)
     enableSelection(country, key)
@@ -60,29 +60,10 @@ class InputTechLevel extends Component<IProps> {
     clearSelection(country, key)
     invalidate()
   }
-
-  mapModifiersToUnits = (modifiers: Modifier[]) => {
-    const mapped: Modifier[] = []
-    modifiers.forEach(modifier => {
-      if (modifier.target === ModifierType.Text)
-        return
-      if (modifier.target in Mode) {
-        mapped.push({ ...modifier, target: getBaseUnitType(modifier.target as Mode) })
-        return
-      }
-      if (modifier.target === ModifierType.Global) {
-        mapped.push({ ...modifier, target: getBaseUnitType(Mode.Naval) })
-        mapped.push({ ...modifier, target: getBaseUnitType(Mode.Land) })
-        return
-      }
-      mapped.push(modifier)
-    })
-    return mapped
-  }
 }
 
-const mapStateToProps = (state: AppState) => ({
-  selections: getCountries(state)[state.settings.country].selections,
+const mapStateToProps = (state: AppState, props: Props) => ({
+  selections: getCountries(state)[props.country].selections,
   tech_levels: state.data.tech_euiv,
 })
 

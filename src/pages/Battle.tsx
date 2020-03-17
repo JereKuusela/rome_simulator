@@ -22,12 +22,13 @@ import IconGeneral from 'images/military_power.png'
 import IconTerrain from 'images/terrain.png'
 import {
   invalidate, selectArmy, setRoll, toggleRandomRoll,
-  undo, battle, refreshBattle, setSeed, setGeneralBaseStat, resetState, setTechLevel, selectCulture
+  undo, battle, refreshBattle, setSeed, setGeneralBaseStat, resetState, selectCulture
 } from 'reducers'
 import { AppState, getBattle, getCountryName, getParticipant, getSettings, getCountries, getGeneral, getSelectedTerrains, getCountry } from 'state'
 import { ArmyType, CountryName, Participant, Setting, Side, GeneralAttribute, CombatPhase, General, GeneralValueType, Country } from 'types'
 import { keys } from 'utils'
 import { getCultures } from 'data'
+import InputTechLevel from 'containers/InputTechLevel'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
@@ -323,7 +324,6 @@ class Battle extends Component<IProps, IState> {
           reverse={false}
           type={ArmyType.Reserve}
           full_rows
-          extra_slot
         />
       </div>
     )
@@ -341,7 +341,6 @@ class Battle extends Component<IProps, IState> {
           reverse={false}
           type={ArmyType.Defeated}
           full_rows
-          extra_slot
         />
       </div>
     )
@@ -355,7 +354,7 @@ class Battle extends Component<IProps, IState> {
   )
 
   renderArmyInfo = (side: Side, participant: Participant, country: Country, general: General, enemy: General) => {
-    const { settings, selectArmy, invalidate, setTechLevel, selectCulture } = this.props
+    const { settings, selectArmy, invalidate, selectCulture } = this.props
     return (
       <Table.Row key={side}>
         <Table.Cell collapsing>
@@ -369,7 +368,7 @@ class Battle extends Component<IProps, IState> {
               selectArmy(side, name)
               invalidate()
             }}
-            style={{width: 150}}
+            style={{ width: 150 }}
           />
         </Table.Cell>
         {settings[Setting.Martial] && this.renderGeneralAttribute(participant.country, general, GeneralAttribute.Martial)}
@@ -384,7 +383,7 @@ class Battle extends Component<IProps, IState> {
         {
           settings[Setting.Tech] &&
           <Table.Cell collapsing>
-            <Input disabled={!general.enabled} size='mini' style={{ width: 100 }} type='number' value={country.tech_level} onChange={(_, { value }) => setTechLevel(participant.country, Number(value))} />
+            <InputTechLevel country={participant.country} tech={country.tech_level} />
           </Table.Cell>
         }
         {
@@ -394,7 +393,7 @@ class Battle extends Component<IProps, IState> {
               values={getCultures()}
               value={country.culture}
               onChange={item => selectCulture(participant.country, item, false)}
-              style={{width: 150}}
+              style={{ width: 150 }}
             />
           </Table.Cell>
         }
@@ -440,7 +439,7 @@ const mapStateToProps = (state: AppState) => ({
   settings: getSettings(state)
 })
 
-const actions = { battle, undo, toggleRandomRoll, setRoll, setGeneralBaseStat, invalidate, selectArmy, setSeed, refreshBattle, resetState, setTechLevel, selectCulture }
+const actions = { battle, undo, toggleRandomRoll, setRoll, setGeneralBaseStat, invalidate, selectArmy, setSeed, refreshBattle, resetState, selectCulture }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
