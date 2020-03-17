@@ -11,7 +11,7 @@ import ModalFastPlanner from 'containers/modal/ModalFastPlanner'
 import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from 'containers/modal/ModalUnitSelector'
 import PreferredUnitTypes from 'containers/PreferredUnitTypes'
 import Stats from 'containers/Stats'
-import UnitArmy from 'containers/TableArmyPart'
+import TableArmyPart from 'containers/TableArmyPart'
 import TacticSelector from 'containers/TacticSelector'
 import TargetArrows from 'containers/TargetArrows'
 import TerrainSelector from 'containers/TerrainSelector'
@@ -264,7 +264,7 @@ class Battle extends Component<IProps, IState> {
     return (
       <div key={side}>
         {side === Side.Attacker && <Header>{side + '\'s frontline'}</Header>}
-        <UnitArmy
+        <TableArmyPart
           color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={side}
           onClick={(row, column, id) => this.openUnitModal(side, ArmyType.Frontline, country, row, column, id)}
@@ -315,7 +315,7 @@ class Battle extends Component<IProps, IState> {
     return (
       <div key={side}>
         <Header>{side + '\'s reserve'}</Header>
-        <UnitArmy
+        <TableArmyPart
           color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={side}
           onClick={(row, column, id) => this.openUnitModal(side, ArmyType.Reserve, country, row, column + 30 * row, id)}
@@ -333,7 +333,7 @@ class Battle extends Component<IProps, IState> {
     return (
       <div key={side}>
         <Header>{side + '\'s defeated units'}</Header>
-        <UnitArmy
+        <TableArmyPart
           color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={side}
           onClick={(row, column, id) => this.openUnitModal(side, ArmyType.Defeated, country, row, column + 30 * row, id)}

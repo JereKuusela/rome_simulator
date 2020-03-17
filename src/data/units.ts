@@ -86,6 +86,7 @@ const createUnitFromJson = (data: UnitData): BaseUnit => {
     [UnitAttribute.DefensiveMoralePips, data.defensive_morale ?? 0],
     [UnitAttribute.OffensiveShockPips, data.offensive_shock ?? 0],
     [UnitAttribute.DefensiveShockPips, data.defensive_shock ?? 0],
+    [UnitAttribute.MilitaryTactics, data.military_tactics ?? 0],
     [CombatPhase.Fire, data.fire ?? 0],
     [CombatPhase.Shock, data.shock ?? 0],
     [UnitType.Archers, data.archers ?? 0],
@@ -171,4 +172,5 @@ interface UnitData {
   defensive_shock?: number
   shock?: number
   fire?: number
+  military_tactics?: number
 }

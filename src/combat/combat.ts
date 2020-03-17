@@ -417,7 +417,7 @@ const attack = (base_damages: number[], frontline: Frontline, roll: number, dyna
         continue
       target.state.capture_chance = source.definition[UnitAttribute.CaptureChance]
       const multiplier = calculateDamageMultiplier(source, target, dynamic_multiplier, i > 0, phase, settings)
-      calculateMoraleLosses(base_damages, source, target, source.state.target_support, roll, multiplier, phase)
+      calculateMoraleLosses(base_damages, source, target, source.state.target_support, roll, multiplier, phase, settings[Setting.UseMaxMorale])
       calculateStrengthLosses(base_damages, source, target, source.state.target_support, roll, multiplier, phase)
     }
   }
@@ -461,9 +461,10 @@ const calculateDynamicBaseDamage = (roll: number, source: CombatCohort, target: 
   return Math.max(0, roll + calculateCohortPips(source.definition, target.definition, target_support ? target_support.definition : null, type, phase))
 }
 
-const calculateMoraleLosses = (base_damages: number[], source: CombatCohort, target: CombatCohort, target_support: CombatCohort | null, roll: number, dynamic_multiplier: number, phase: CombatPhase) => {
+const calculateMoraleLosses = (base_damages: number[], source: CombatCohort, target: CombatCohort, target_support: CombatCohort | null, roll: number, dynamic_multiplier: number, phase: CombatPhase, use_max_morale: boolean) => {
   const morale_roll = calculateDynamicBaseDamage(roll, source, target, target_support, UnitAttribute.Morale)
-  const morale_lost = base_damages[morale_roll] * dynamic_multiplier * source.calculated.damage[UnitAttribute.Morale][target.definition.type][phase] * source[UnitAttribute.Morale] * target.calculated.morale_taken_multiplier
+  const morale = use_max_morale ? source.definition.max_morale : source[UnitAttribute.Morale]
+  const morale_lost = base_damages[morale_roll] * dynamic_multiplier * source.calculated.damage[UnitAttribute.Morale][target.definition.type][phase] * morale * target.calculated.morale_taken_multiplier
 
   source.state.morale_dealt = Math.floor(morale_lost) / PRECISION
   source.state.total_morale_dealt += source.state.morale_dealt

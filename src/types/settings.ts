@@ -34,6 +34,7 @@ export enum Setting {
   Culture = 'Enable culture based units',
   CustomDeployment = 'Enable deployment customization',
   DynamicFlanking = 'Enable dynamic flanking',
+  UseMaxMorale = 'Morale damage based on max morale',
   InsufficientSupportPenalty = 'Penalty for insufficient support',
   StrengthBasedFlank = 'Enable strength based flank',
   FireAndShock = 'Enable fire and shock phases',
@@ -148,6 +149,11 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Discipline increases damage done and reduces damage taken (EUIV).'
       else
         return 'Discipline only increases damage done (Imperator).'
+    case Setting.UseMaxMorale:
+      if (value)
+        return 'Morale damage is based on the maximum morale (EUIV).'
+      else
+        return 'Morale damage is based on the current morale (Imperator).'
     case Setting.FireAndShock:
       if (value)
         return 'Combat alternates between fire and shock phases (EUIV).'
@@ -282,6 +288,7 @@ export type SiteSettings = {
   [Setting.Food]: boolean,
   [Setting.CustomDeployment]: boolean,
   [Setting.DynamicFlanking]: boolean,
+  [Setting.UseMaxMorale]: boolean,
   [Setting.StrengthBasedFlank]: boolean,
   [Setting.InsufficientSupportPenalty]: number,
   [Setting.DisciplineDamageReduction]: boolean,

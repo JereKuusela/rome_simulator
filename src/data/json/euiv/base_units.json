@@ -8,7 +8,8 @@
       "morale": 2.0,
       "strength": 1.0,
       "maintenance": 0.02,
-      "attrition_weight": 1.0
+      "attrition_weight": 1.0,
+      "military_tactics": 0.5
     },
     {
       "type": "Artillery",

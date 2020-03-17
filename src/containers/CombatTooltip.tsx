@@ -177,14 +177,15 @@ class CombatTooltip extends Component<IProps, IState> {
   getMoraleSection = (source: IUnit, target: IUnit) => {
     const { settings } = this.props
     const morale_lost_multiplier = settings[Setting.MoraleLostMultiplier]
-    const morale = source[UnitAttribute.Morale] + source.morale_loss
+    const morale = settings[Setting.UseMaxMorale] ? source.max_morale : (source[UnitAttribute.Morale] + source.morale_loss)
+    const morale_str = settings[Setting.UseMaxMorale] ? 'Unit max morale' : 'Unit morale'
     const morale_damage = source.morale_dealt
 
     return (<>
       {this.renderModifier('Constant', morale_lost_multiplier, this.toMultiplier)}
       {settings[Setting.AttributeMoraleDamage] && this.getAttribute(source, UnitAttribute.MoraleDamageDone)}
       {settings[Setting.AttributeMoraleDamage] && this.getAttribute(target, UnitAttribute.MoraleDamageTaken)}
-      {this.renderModifier('Unit morale', morale, this.toMultiplier)}
+      {this.renderModifier(morale_str, morale, this.toMultiplier)}
       {this.renderItem('Morale damage', morale_damage, this.toNumber)}
     </>)
   }

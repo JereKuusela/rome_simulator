@@ -39,7 +39,7 @@ const MANPOWER_COLOR = 'rgba(0,0,0,0.90)'
 const WHITE_COLOR = 'rgba(255,255,255,0)'
 
 // Shows a part of an army (frontline, reserve or defeated).
-class UnitArmy extends Component<IProps, IState> {
+class TableArmyPart extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = { tooltip_index: null, tooltip_context: null, tooltip_is_support: false }
@@ -69,19 +69,22 @@ class UnitArmy extends Component<IProps, IState> {
         <Table compact celled definition unstackable>
           <Table.Body>
             {
-              units.map((row, row_index) => (
-                <Table.Row key={row_index} textAlign='center'>
-                  <Table.Cell>
-                    <Icon fitted size='small' name={this.getIcon()} style={{ color: this.props.color }}></Icon>
-                  </Table.Cell>
-                  {
-                    row.map((cohort, column_index) => {
-                      row_index = reverse ? units.length - 1 - row_index : row_index
-                      return this.renderCell(row_index, column_index, cohort, row_index > 0)
-                    })
-                  }
-                </Table.Row>
-              ))
+              units.map((row, row_index) => {
+                row_index = reverse ? units.length - 1 - row_index : row_index
+                return (
+                  < Table.Row key={row_index} textAlign='center' >
+                    <Table.Cell>
+                      <Icon fitted size='small' name={this.getIcon()} style={{ color: this.props.color }}></Icon>
+                    </Table.Cell>
+                    {
+                      row.map((cohort, column_index) => {
+                        column_index = column_index - left_filler
+                        return this.renderCell(row_index, column_index, cohort, row_index > 0)
+                      })
+                    }
+                  </Table.Row>
+                )
+              })
             }
           </Table.Body>
         </Table>
@@ -185,4 +188,4 @@ type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
 type IProps = Props & S & D
 
-export default connect(mapStateToProps, actions)(UnitArmy)
+export default connect(mapStateToProps, actions)(TableArmyPart)
