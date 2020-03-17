@@ -53,17 +53,21 @@ class Navigation extends Component<IProps> {
           </Menu.Item>
 
           <div id='menu-info'>
-            <Button active={mode === Mode.Land} compact icon basic circular size='tiny' onClick={toggleMode}>
-              <Image src={IconLand} avatar style={{ marginRight: 0 }} />
-            </Button>
-            <Button active={mode === Mode.Naval} compact icon basic circular size='tiny' onClick={toggleMode}>
-              <Image src={IconNaval} avatar style={{ marginRight: 0 }} />
-            </Button>
-            <div id='version'><div>Site version 0.5.9</div><div>Game version 1.3.2</div></div>
+            {process.env.REACT_APP_GAME === 'ir' &&
+              <Button active={mode === Mode.Land} compact icon basic circular size='tiny' onClick={toggleMode}>
+                <Image src={IconLand} avatar style={{ marginRight: 0 }} />
+              </Button>
+            }
+            {process.env.REACT_APP_GAME === 'ir' &&
+              <Button active={mode === Mode.Naval} compact icon basic circular size='tiny' onClick={toggleMode}>
+                <Image src={IconNaval} avatar style={{ marginRight: 0 }} />
+              </Button>
+            }
+            <div id='version'><div>Site version 0.5.9</div><div>Game version {process.env.REACT_APP_GAME === 'ir' ? '1.3.2' : '???'}</div></div>
           </div>
         </Menu>
         <br />
-      </div>
+      </div >
     )
   }
 }

@@ -350,7 +350,7 @@ class Battle extends Component<IProps, IState> {
   renderGeneralAttribute = (country: CountryName, general: General, attribute: GeneralValueType) => (
     <Table.Cell collapsing>
       <Input disabled={!general.enabled} size='mini' style={{ width: 100 }} type='number' value={general.base_values[attribute]} onChange={(_, { value }) => this.props.setGeneralBaseStat(country, attribute, Number(value))} />
-      {' '}<StyledNumber value={general.extra_values[attribute]} formatter={addSign} />
+      {' '}<StyledNumber value={general.extra_values[attribute]} formatter={addSign} hide_zero />
     </Table.Cell>
   )
 

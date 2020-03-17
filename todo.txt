@@ -77,6 +77,7 @@ Settings:
 
 EUIV:
  - Tooltip needs to show source of losses (to include daily loss)
+ - Morale damage based on max morale (+ setting)
  - Quick tech selector doesnt actually add modifiers
  - Units: Show pips on selectors
  - General stats / traits:

@@ -6,11 +6,11 @@ import { Table, Image, Icon } from 'semantic-ui-react'
 import CombatTooltip from './CombatTooltip'
 import IconDefeated from 'images/attrition.png'
 import { Side, ArmyType, UnitAttribute } from 'types'
-import { getImage } from 'utils'
+import { getImage, resize } from 'utils'
 import { CombatCohort } from 'combat'
 import { AppState, getCurrentCombat, getCountryName } from 'state'
 import { getArmyPart } from 'army_utils'
-import { flatten } from 'lodash'
+import { flatten, chunk } from 'lodash'
 import { deleteCohort, invalidate } from 'reducers'
 
 type Props = {
@@ -46,43 +46,38 @@ class UnitArmy extends Component<IProps, IState> {
   }
 
   render() {
-    const { units, row_width, side, type, full_rows, extra_slot, reverse } = this.props
-    const copy = reverse ? [...units].reverse() : units
-    const flat_units = flatten(copy)
+    const { row_width, side, type, full_rows, extra_slot, reverse } = this.props
     const { tooltip_index, tooltip_context, tooltip_is_support } = this.state
-    let width = flat_units.length
-    if (extra_slot)
-      width++
+    let units = this.props.units
     if (full_rows)
-      width = Math.ceil(width / row_width) * row_width
-    const row_count = Math.ceil(width / row_width)
-    const rows = Array(row_count).fill(0).map((_, index) => index)
-    const columns = Array<number>(row_width)
-    const delta = Math.max(0, row_width - width)
-    const low_limit = Math.ceil(delta / 2.0)
-    const up_limit = row_width - Math.floor(delta / 2.0)
-    for (let i = 0; i < row_width; i++) {
-      columns[i] = i - low_limit
-      if (i < low_limit)
-        columns[i] = -1
-      if (i >= up_limit)
-        columns[i] = -1
-    }
+      units = units.map(arr => resize(arr, row_width, null))
+    const filler = Math.max(0, row_width - units[0].length)
+    const left_filler = Math.ceil(filler / 2.0)
+    const right_filler = Math.floor(filler / 2.0)
+    units = units.map(row => Array(left_filler).fill(undefined).concat(row).concat(Array(right_filler).fill(undefined)))
+
+    const flat_units = flatten(units)
+    if (extra_slot)
+      flat_units.push(null)
+
+    units = chunk(flat_units, row_width)
+    if (reverse)
+      units.reverse()
     return (
       <>
         <CombatTooltip id={tooltip_index} context={tooltip_context} is_support={tooltip_is_support} side={side} army={type} />
         <Table compact celled definition unstackable>
           <Table.Body>
             {
-              rows.map(row => (
-                <Table.Row key={row} textAlign='center'>
+              units.map((row, row_index) => (
+                <Table.Row key={row_index} textAlign='center'>
                   <Table.Cell>
                     <Icon fitted size='small' name={this.getIcon()} style={{ color: this.props.color }}></Icon>
                   </Table.Cell>
                   {
-                    columns.map((column, index) => {
-                      const unit = column > -1 ? flat_units[row * row_width + column] : null
-                      return this.renderCell(reverse ? rows.length - 1 - row : row, index, column, unit, reverse ? row < rows.length - 1 : row > 0)
+                    row.map((cohort, column_index) => {
+                      row_index = reverse ? units.length - 1 - row_index : row_index
+                      return this.renderCell(row_index, column_index, cohort, row_index > 0)
                     })
                   }
                 </Table.Row>
@@ -94,22 +89,23 @@ class UnitArmy extends Component<IProps, IState> {
     )
   }
 
-  renderCell = (row: number, index: number, column: number, unit: ICohort, is_support: boolean) => {
+  renderCell = (row: number, column: number, cohort: ICohort, is_support: boolean) => {
     const { side, type, disable_add, onClick } = this.props
+    const filler = cohort === undefined
     return (
       <Table.Cell
-        className={side + '-' + type + '-' + unit?.id}
+        className={side + '-' + type + '-' + cohort?.id}
         textAlign='center'
-        key={index}
-        disabled={column < 0 || (disable_add && !unit)}
+        key={column}
+        disabled={filler || (disable_add && !cohort)}
         selectable={!!onClick}
-        style={{ backgroundColor: column < 0 ? '#DDDDDD' : 'white', padding: 0 }}
-        onClick={() => onClick && onClick(row, column, unit?.id)}
-        onMouseOver={(e: React.MouseEvent) => unit && this.setState({ tooltip_index: unit.id, tooltip_context: e.currentTarget, tooltip_is_support: is_support })}
-        onMouseLeave={() => unit && this.state.tooltip_index === unit.id && this.setState({ tooltip_index: null, tooltip_context: null })}
-        onContextMenu={(e: any) => e.preventDefault() || this.deleteCohort(unit)}
+        style={{ backgroundColor: filler ? '#DDDDDD' : 'white', padding: 0 }}
+        onClick={() => onClick && onClick(row, column, cohort?.id)}
+        onMouseOver={(e: React.MouseEvent) => cohort && this.setState({ tooltip_index: cohort.id, tooltip_context: e.currentTarget, tooltip_is_support: is_support })}
+        onMouseLeave={() => cohort && this.state.tooltip_index === cohort.id && this.setState({ tooltip_index: null, tooltip_context: null })}
+        onContextMenu={(e: any) => e.preventDefault() || this.deleteCohort(cohort)}
       >
-        {this.renderUnit(unit)}
+        {this.renderUnit(cohort)}
       </Table.Cell>
     )
   }
@@ -164,7 +160,7 @@ type ICohort = {
   max_strength: number
   morale: number
   strength: number
-} | null
+} | null | undefined
 
 const convertUnits = (units: (CombatCohort | null)[][]): ICohort[][] => (
   units.map(row => row.map(unit => unit && {
