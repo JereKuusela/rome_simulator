@@ -258,9 +258,6 @@ const pickTargets = (source: Frontline, target: Frontline, settings: Settings) =
       const unit = source[i][j]
       if (!unit)
         continue
-      // No need to select targets for units without effect.
-      if (i > 0 && !unit.definition[UnitAttribute.OffensiveSupport])
-        continue
       const state = unit.state
       state.damage_multiplier = 0
       state.morale_dealt = 0
@@ -269,6 +266,9 @@ const pickTargets = (source: Frontline, target: Frontline, settings: Settings) =
       state.strength_loss = 0
       state.target = null
       state.flanking = false
+      // No need to select targets for units without effect.
+      if (i > 0 && !unit.definition[UnitAttribute.OffensiveSupport])
+        continue
       if (target[0][j]) {
         state.target = target[0][j]
         state.target_support = getBackTarget(target, j)

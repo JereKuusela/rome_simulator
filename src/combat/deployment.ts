@@ -20,16 +20,16 @@ const armySize = (units: CombatCohorts) => {
 }
 
 const deployCohorts = (cohorts: CombatCohorts) => {
-  const { left_flank, right_flank, reserve} = cohorts
+  const { left_flank, right_flank, reserve } = cohorts
   const frontline = cohorts.frontline[0]
   const backline = cohorts.frontline.length > 1 ? cohorts.frontline[1] : null
   const center = Math.floor(frontline.length / 2.0)
 
   let index = center
+  const max_support = Math.floor(Math.min(frontline.length, reserveSize(reserve) / 2))
   // Fill back row.
   if (backline) {
-    const max_support = Math.floor(Math.min(frontline.length, reserveSize(reserve) / 2))
-    for (let i = 0; i < max_support; i++ , index = nextIndex(index, center)) {
+    for (let i = 0; i < max_support; i++, index = nextIndex(index, center)) {
       if (backline[index])
         continue
       const support = reserve.support.pop()
@@ -83,6 +83,24 @@ const deployCohorts = (cohorts: CombatCohorts) => {
       continue
     }
     break
+  }
+  if (backline) {
+    index = center
+    for (let i = 0; i < max_support; i++, index = nextIndex(index, center)) {
+      if (backline[index])
+        continue
+      const main = reserve.front.pop()
+      if (main) {
+        backline[index] = main
+        continue
+      }
+      const flank = reserve.flank.pop()
+      if (flank) {
+        backline[index] = flank
+        continue
+      }
+      break
+    }
   }
 }
 
@@ -148,7 +166,7 @@ const removeDefeated = (units: CombatCohorts, minimum_morale: number, minimum_st
       remove(part, value => value === unit)
     }
   }
-  
+
   for (let i = 0; i < frontline.length; i++) {
     for (let j = 0; j < frontline[i].length; j++) {
       const unit = frontline[i][j]
@@ -201,31 +219,31 @@ export const deploy = (attacker: CombatParticipant, defender: CombatParticipant,
 const moveUnits = (cohorts: CombatCohorts) => {
   const frontline = cohorts.frontline
   for (let row = 0; row < frontline.length; row++) {
-      const front = frontline[row]
-      // Move units from left to center.
-      for (let unit_index = Math.ceil(front.length / 2.0) - 1; unit_index > 0; --unit_index) {
-          const unit = front[unit_index]
-          if (unit)
-              continue
-          const unit_on_left = front[unit_index - 1]
-          if (unit_on_left) {
-              front[unit_index] = unit_on_left
-              front[unit_index - 1] = null
-              continue
-          }
+    const front = frontline[row]
+    // Move units from left to center.
+    for (let unit_index = Math.ceil(front.length / 2.0) - 1; unit_index > 0; --unit_index) {
+      const unit = front[unit_index]
+      if (unit)
+        continue
+      const unit_on_left = front[unit_index - 1]
+      if (unit_on_left) {
+        front[unit_index] = unit_on_left
+        front[unit_index - 1] = null
+        continue
       }
-      // Move units from right to center.
-      for (let unit_index = Math.ceil(front.length / 2.0); unit_index < front.length - 1; ++unit_index) {
-          const unit = front[unit_index]
-          if (unit)
-              continue
-          const unit_on_right = front[unit_index + 1]
-          if (unit_on_right) {
-              front[unit_index] = unit_on_right
-              front[unit_index + 1] = null
-              continue
-          }
+    }
+    // Move units from right to center.
+    for (let unit_index = Math.ceil(front.length / 2.0); unit_index < front.length - 1; ++unit_index) {
+      const unit = front[unit_index]
+      if (unit)
+        continue
+      const unit_on_right = front[unit_index + 1]
+      if (unit_on_right) {
+        front[unit_index] = unit_on_right
+        front[unit_index + 1] = null
+        continue
       }
+    }
   }
 }
 
@@ -235,6 +253,6 @@ const moveUnits = (cohorts: CombatCohorts) => {
 */
 export const reinforce = (participant: CombatParticipant) => {
   if (reserveSize(participant.cohorts.reserve))
-      deployCohorts(participant.cohorts)
+    deployCohorts(participant.cohorts)
   moveUnits(participant.cohorts)
 }
