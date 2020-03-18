@@ -243,7 +243,8 @@ describe('clearValues', () => {
 
 describe('regenerateValues', () => {
   it('regenerates base values', () => {
-    const result = regenerateValues(initDefinition(0, 0, 0, 0), ValuesType.Base, 'key1', [['attribute2', 1]])
+    const result = initDefinition(0, 0, 0, 0)
+    regenerateValues(result, ValuesType.Base, 'key1', [['attribute2', 1]])
     expect(size(result.base_values['attribute'])).toEqual(0)
     expect(size(result.base_values['attribute2'])).toEqual(1)
     expect(size(result.modifier_values['attribute'])).toEqual(1)
@@ -254,7 +255,8 @@ describe('regenerateValues', () => {
     expect(result.loss_modifier_values['attribute2']).toBeUndefined()
   })
   it('regenerates modifier values', () => {
-    const result = regenerateValues(initDefinition(0, 0, 0, 0), ValuesType.Modifier, 'key1', [['attribute2', 1]])
+    const result = initDefinition(0, 0, 0, 0)
+    regenerateValues(result, ValuesType.Modifier, 'key1', [['attribute2', 1]])
     expect(size(result.base_values['attribute'])).toEqual(1)
     expect(result.base_values['attribute2']).toBeUndefined()
     expect(size(result.modifier_values['attribute'])).toEqual(0)
@@ -265,7 +267,8 @@ describe('regenerateValues', () => {
     expect(result.loss_modifier_values['attribute2']).toBeUndefined()
   })
   it('regenerates loss values', () => {
-    const result = regenerateValues(initDefinition(0, 0, 0, 0), ValuesType.Loss, 'key1', [['attribute2', 1]])
+    const result = initDefinition(0, 0, 0, 0)
+    regenerateValues(result, ValuesType.Loss, 'key1', [['attribute2', 1]])
     expect(size(result.base_values['attribute'])).toEqual(1)
     expect(result.base_values['attribute2']).toBeUndefined()
     expect(size(result.modifier_values['attribute'])).toEqual(1)
@@ -276,7 +279,8 @@ describe('regenerateValues', () => {
     expect(result.loss_modifier_values['attribute2']).toBeUndefined()
   })
   it('regenerates loss modifier values', () => {
-    const result = regenerateValues(initDefinition(0, 0, 0, 0), ValuesType.LossModifier, 'key1', [['attribute2', 1]])
+    const result = initDefinition(0, 0, 0, 0)
+    regenerateValues(result, ValuesType.LossModifier, 'key1', [['attribute2', 1]])
     expect(size(result.base_values['attribute'])).toEqual(1)
     expect(result.base_values['attribute2']).toBeUndefined()
     expect(size(result.modifier_values['attribute'])).toEqual(1)
