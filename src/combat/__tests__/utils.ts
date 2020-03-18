@@ -2,7 +2,7 @@ import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandS
 import { map, mapRange, resize } from 'utils'
 import { mergeValues } from 'definition_values'
 import { Mode, CountryName, Participant, Terrain, TacticType, Setting, Side, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, Settings, Cohort, CombatPhase, CultureType, General, GeneralAttribute } from 'types'
-import { CombatCohort, CombatParticipant, doBattleFast, getBaseDamages, deploy, sortReserve, convertParticipant, reinforce } from 'combat'
+import { CombatCohort, CombatParticipant, doBattleFast, getBaseDamages, deploy, convertParticipant, reinforce } from 'combat'
 import { ArmyForCombat } from 'state'
 
 const unitDefinitions = map(getDefaultUnits('' as CultureType), unit => mergeValues(unit, getDefaultUnit(UnitType.Land)))

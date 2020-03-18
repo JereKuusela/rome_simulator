@@ -33,7 +33,7 @@
           "value": 0.2
         },
         {
-          "target": "Global",
+          "target": "Country",
           "attribute": "Combat width",
           "no_percent": true,
           "value": 5
@@ -82,7 +82,7 @@
           "value": 0.2
         },
         {
-          "target": "Global",
+          "target": "Country",
           "attribute": "Combat width",
           "no_percent": true,
           "value": 2
@@ -109,7 +109,7 @@
           "value": 0.2
         },
         {
-          "target": "Global",
+          "target": "Country",
           "attribute": "Combat width",
           "no_percent": true,
           "value": 2
@@ -162,7 +162,7 @@
           "value": 0.25
         },
         {
-          "target": "Global",
+          "target": "Country",
           "attribute": "Combat width",
           "no_percent": true,
           "value": 1
@@ -194,7 +194,7 @@
           "value": 0.5
         },
         {
-          "target": "Global",
+          "target": "Country",
           "attribute": "Combat width",
           "no_percent": true,
           "value": 2
@@ -236,7 +236,7 @@
           "value": 0.3
         },
         {
-          "target": "Global",
+          "target": "Country",
           "attribute": "Combat width",
           "no_percent": true,
           "value": 2
@@ -274,7 +274,7 @@
           "value": 1
         },
         {
-          "target": "Global",
+          "target": "Country",
           "attribute": "Combat width",
           "no_percent": true,
           "value": 1
@@ -301,7 +301,7 @@
           "value": 0.25
         },
         {
-          "target": "Global",
+          "target": "Country",
           "attribute": "Combat width",
           "no_percent": true,
           "value": 2
@@ -328,7 +328,7 @@
           "value": 0.5
         },
         {
-          "target": "Global",
+          "target": "Country",
           "attribute": "Combat width",
           "no_percent": true,
           "value": 2
@@ -370,7 +370,7 @@
           "value": 2
         },
         {
-          "target": "Global",
+          "target": "Country",
           "attribute": "Combat width",
           "no_percent": true,
           "value": 2
@@ -409,7 +409,7 @@
           "value": 0.25
         },
         {
-          "target": "Global",
+          "target": "Country",
           "attribute": "Combat width",
           "no_percent": true,
           "value": 2
@@ -441,7 +441,7 @@
           "value": 1
         },
         {
-          "target": "Global",
+          "target": "Country",
           "attribute": "Combat width",
           "no_percent": true,
           "value": 2

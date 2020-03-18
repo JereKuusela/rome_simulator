@@ -95,6 +95,7 @@ Todo:
  - Rowtype selectors could show unit priority? Different colors for main and flank. Frontline could slightly color tiles based on main/flank.
  - Combat things to combat reducer. Perhaps state as parameter when needed? Since it only changes same things as battle reducer,
  - Stats to show amount of traditions, trade, etc..
+ - Definition functions probably all could mutate (mostly used in reducers?)
 
 Tests:
 - utils tested

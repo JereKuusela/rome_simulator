@@ -41,7 +41,8 @@ export const enableUnitModifiers = (units: BaseUnits, key: string, modifiers: Mo
     const values = modifiers.filter(value => type === value.target)
     const base_values = values.filter(value => value.type !== ValuesType.Modifier).map(value => [value.attribute, value.value] as [UnitValueType, number])
     const modifier_values = values.filter(value => value.type === ValuesType.Modifier).map(value => [value.attribute, value.value] as [UnitValueType, number])
-    units[type] = regenerateValues(regenerateValues(unit, ValuesType.Base, key, base_values), ValuesType.Modifier, key, modifier_values)
+    regenerateValues(unit, ValuesType.Modifier, key, modifier_values)
+    regenerateValues(unit, ValuesType.Base, key, base_values)
   })
 }
 

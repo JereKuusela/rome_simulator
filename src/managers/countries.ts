@@ -1,8 +1,8 @@
-import { Countries, CountryName, Country, GovermentType, ReligionType, CultureType, CountryAttribute, ValuesType } from "types"
-import { defaultCountry, getDefaultUnits } from "data"
-import { addValuesWithMutate } from "definition_values"
+import { Countries, CountryName, Country, GovermentType, ReligionType, CultureType, CountryAttribute, ValuesType, Modifier } from 'types'
+import { defaultCountry, getDefaultUnits } from 'data'
+import { addValuesWithMutate, clearAllValuesWithMutate, regenerateValues } from 'definition_values'
 
-export const createCountry = (countries: Countries, country: CountryName, source_country?: CountryName)  => {
+export const createCountry = (countries: Countries, country: CountryName, source_country?: CountryName) => {
   countries[country] = source_country ? countries[source_country] : defaultCountry
 }
 
@@ -14,9 +14,18 @@ export const changeCountryName = (countries: Countries, old_country: CountryName
   delete Object.assign(countries, { [country]: countries[old_country] })[old_country]
 }
 
-export const setCountryValue = (ountry: Country, key: string, attribute: CountryAttribute, value: number) => {
-  addValuesWithMutate(ountry, ValuesType.Base, key, [[attribute, value]])
+export const setCountryValue = (country: Country, key: string, attribute: CountryAttribute, value: number) => {
+  addValuesWithMutate(country, ValuesType.Base, key, [[attribute, value]])
 }
+
+export const enableCountryModifiers = (country: Country, key: string, modifiers: Modifier[]) => {
+  modifiers = modifiers.filter(value => value.target === 'Country')
+  clearAllValuesWithMutate(country, key)
+  const values = modifiers.map(value => [value.attribute, value.value] as [CountryAttribute, number])
+  regenerateValues(country, ValuesType.Base, key, values)
+}
+
+export const clearCountryModifiers = (country: Country, key: string) => clearAllValuesWithMutate(country, key)
 
 export const selectGovernment = (country: Country, government: GovermentType) => {
   country.government = government

@@ -122,28 +122,28 @@ export const sortReserve = (reserve: Reserve, unit_preferences: UnitPreferences)
   return { front, flank, support }
 }
 
-const isFrontUnit = (preferences: UnitPreferences, unit: CombatCohort) => {
-  if (unit.definition.type === preferences[UnitPreferenceType.Primary] || unit.definition.type === preferences[UnitPreferenceType.Secondary])
+const isFrontUnit = (preferences: UnitPreferences, cohort: CombatCohort) => {
+  if (cohort.definition.type === preferences[UnitPreferenceType.Primary] || cohort.definition.type === preferences[UnitPreferenceType.Secondary])
     return true
-  if (unit.definition.type === preferences[UnitPreferenceType.Flank])
+  if (cohort.definition.type === preferences[UnitPreferenceType.Flank])
     return false
-  return unit.definition.deployment === UnitRole.Front
+  return cohort.definition.deployment === UnitRole.Front
 }
 
-const isFlankUnit = (preferences: UnitPreferences, unit: CombatCohort) => {
-  if (unit.definition.type === preferences[UnitPreferenceType.Primary] || unit.definition.type === preferences[UnitPreferenceType.Secondary])
+const isFlankUnit = (preferences: UnitPreferences, cohort: CombatCohort) => {
+  if (cohort.definition.type === preferences[UnitPreferenceType.Primary] || cohort.definition.type === preferences[UnitPreferenceType.Secondary])
     return false
-  if (unit.definition.type === preferences[UnitPreferenceType.Flank])
+  if (cohort.definition.type === preferences[UnitPreferenceType.Flank])
     return true
-  return unit.definition.deployment === UnitRole.Flank
+  return cohort.definition.deployment === UnitRole.Flank
 }
 
-const isSupportUnit = (preferences: UnitPreferences, unit: CombatCohort) => {
-  if (unit.definition.type === preferences[UnitPreferenceType.Primary] || unit.definition.type === preferences[UnitPreferenceType.Secondary])
+const isSupportUnit = (preferences: UnitPreferences, cohort: CombatCohort) => {
+  if (cohort.definition.type === preferences[UnitPreferenceType.Primary] || cohort.definition.type === preferences[UnitPreferenceType.Secondary])
     return false
-  if (unit.definition.type === preferences[UnitPreferenceType.Flank])
+  if (cohort.definition.type === preferences[UnitPreferenceType.Flank])
     return false
-  return unit.definition.deployment === UnitRole.Support
+  return cohort.definition.deployment === UnitRole.Support
 }
 
 const isAlive = (unit: CombatCohort, minimum_morale: number, minimum_strength: number) => (
@@ -206,8 +206,8 @@ export const deploy = (attacker: CombatParticipant, defender: CombatParticipant,
   removeDefeated(attacker.cohorts, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength])
   removeDefeated(defender.cohorts, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength])
 
-  const [left_flank_a, right_flank_a] = calculateFlankSizes(settings[Setting.CombatWidth], attacker.flank, settings[Setting.DynamicFlanking] ? defender.cohorts : undefined)
-  const [left_flank_d, right_flank_d] = calculateFlankSizes(settings[Setting.CombatWidth], defender.flank, settings[Setting.DynamicFlanking] ? attacker.cohorts : undefined)
+  const [left_flank_a, right_flank_a] = calculateFlankSizes(settings[Setting.CombatWidth], settings[Setting.CustomDeployment] ? attacker.flank : 0, settings[Setting.DynamicFlanking] ? defender.cohorts : undefined)
+  const [left_flank_d, right_flank_d] = calculateFlankSizes(settings[Setting.CombatWidth], settings[Setting.CustomDeployment] ? defender.flank : 0, settings[Setting.DynamicFlanking] ? attacker.cohorts : undefined)
   attacker.cohorts.left_flank = left_flank_a
   attacker.cohorts.right_flank = right_flank_a
   defender.cohorts.left_flank = left_flank_d

@@ -62,7 +62,7 @@ let interruptSimulation = false
 
 export const convertParticipant = (side: Side, army: ArmyForCombat, enemy: ArmyForCombat, terrains: Terrain[], unit_types: UnitType[], settings: Settings): CombatParticipant => {
   const tactic_casualties = calculateValue(army.tactic, TacticCalc.Casualties) + calculateValue(enemy.tactic, TacticCalc.Casualties)
-  const cohorts = convertCohorts(army, settings, tactic_casualties, terrains, unit_types, army.unit_preferences)
+  const cohorts = convertCohorts(army, settings, tactic_casualties, terrains, unit_types, settings[Setting.CustomDeployment] ? army.unit_preferences : {} as UnitPreferences)
   const general_pips = toObj(values(CombatPhase), phase => phase, phase => calculateGeneralPips(army.general, enemy.general, phase))
   const terrain_pips = getTerrainPips(terrains, side, army.general, enemy.general)
   return {

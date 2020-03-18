@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { Input } from 'semantic-ui-react'
 
 import { AppState, getCountries } from 'state'
-import { setTechLevel, enableGeneralModifiers, clearGeneralModifiers, clearUnitModifiers, enableUnitModifiers, enableSelection, clearSelection, invalidate } from 'reducers'
+import { setTechLevel, enableGeneralModifiers, clearGeneralModifiers, clearUnitModifiers, enableUnitModifiers, enableSelection, clearSelection, invalidate, enableCountryModifiers, clearCountryModifiers } from 'reducers'
 import { CountryName, Modifier } from 'types'
 import {  mapRange, has } from 'utils'
 import { mapModifiersToUnits } from 'managers/modifiers'
@@ -33,7 +33,7 @@ class InputTechLevel extends Component<IProps> {
     setTechLevel(country, level)
     Object.keys(selections).filter(value => value.startsWith(TECH_KEY) && this.getNumberFromKey(value, 1) > level)
       .forEach(value => this.clearModifiers(value))
-    mapRange(level + 1, number => number).filter(value => !has(selections, TECH_KEY + value))
+    mapRange(level + 1, number => number).filter(value => !has(selections, TECH_KEY + value) && tech_levels[value])
       .forEach(value => this.enableModifiers(TECH_KEY + value, tech_levels[value].modifiers))
   }
 
@@ -45,19 +45,21 @@ class InputTechLevel extends Component<IProps> {
   }
 
   enableModifiers = (key: string, modifiers: Modifier[]) => {
-    const { enableGeneralModifiers, enableUnitModifiers, enableSelection, invalidate, country } = this.props
+    const { enableGeneralModifiers, enableUnitModifiers, enableSelection, invalidate, country, enableCountryModifiers } = this.props
     modifiers = mapModifiersToUnits(modifiers)
     enableGeneralModifiers(country, key, modifiers)
     enableUnitModifiers(key, modifiers)
     enableSelection(country, key)
+    enableCountryModifiers(country, key, modifiers)
     invalidate()
   }
 
   clearModifiers = (key: string) => {
-    const { clearGeneralModifiers, clearUnitModifiers, clearSelection, invalidate, country } = this.props
+    const { clearGeneralModifiers, clearUnitModifiers, clearSelection, invalidate, country, clearCountryModifiers } = this.props
     clearGeneralModifiers(country, key)
     clearUnitModifiers(key)
     clearSelection(country, key)
+    clearCountryModifiers(country, key)
     invalidate()
   }
 }
@@ -68,7 +70,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
 })
 
 const actions = {
-  setTechLevel, enableGeneralModifiers, clearGeneralModifiers, clearUnitModifiers, enableUnitModifiers, enableSelection, clearSelection, invalidate
+  setTechLevel, enableGeneralModifiers, clearGeneralModifiers, clearUnitModifiers, enableUnitModifiers, enableSelection, clearSelection, invalidate, enableCountryModifiers, clearCountryModifiers
 }
 
 type S = ReturnType<typeof mapStateToProps>

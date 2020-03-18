@@ -4,7 +4,8 @@ import { Mode } from './definition';
 export enum ModifierType {
   Text = 'Text',
   Global = 'Global',
-  General = 'General'
+  General = 'General',
+  Country = 'Country'
 }
 
 export enum GovermentType {

@@ -223,7 +223,7 @@ export const enableGeneralModifiers = (army: Army, key: string, modifiers: Modif
   let definition = clearAllValues(army.general, key)
   const generalModifiers = modifiers.filter(value => value.attribute === GeneralAttribute.Martial)
   const generalValues = generalModifiers.map(value => [value.attribute, value.value] as [UnitValueType, number])
-  definition = regenerateValues(definition, ValuesType.Base, key, generalValues)
+  regenerateValues(definition, ValuesType.Base, key, generalValues)
   const martial = calculateValue(definition, GeneralAttribute.Martial)
   if (!definitions[UnitType.Naval])
     definitions[UnitType.Naval] = {}

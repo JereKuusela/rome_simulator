@@ -24,6 +24,8 @@ export const setOfficeMorale = makeActionReplaceFirst(manager.setOfficeMorale, c
 export const setOmenPower = makeActionReplaceFirst(manager.setOmenPower, countryMapping)
 export const setCountryValue = makeActionReplaceFirst(manager.setCountryValue, countryMapping)
 export const setTechLevel = makeActionReplaceFirst(manager.setTechLevel, countryMapping)
+export const enableCountryModifiers = makeActionReplaceFirst(manager.enableCountryModifiers, countryMapping)
+export const clearCountryModifiers = makeActionReplaceFirst(manager.clearCountryModifiers, countryMapping)
 
 const country = makeEntityReducer(getDefaultCountryDefinitions(), countryMapping)
 

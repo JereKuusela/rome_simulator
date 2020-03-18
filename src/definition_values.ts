@@ -113,6 +113,16 @@ export const clearAllValues = <D extends BD>(definition: D, key: string): D => {
 }
 
 /**
+ * Clears base, modifier and loss values with a given key.
+ */
+export const clearAllValuesWithMutate = <D extends BD>(definition: D, key: string) => {
+  definition.base_values = subClearValues(definition.base_values, key)
+  definition.modifier_values = subClearValues(definition.modifier_values, key)
+  definition.loss_values = subClearValues(definition.loss_values, key)
+  definition.loss_modifier_values = subClearValues(definition.loss_modifier_values, key)
+}
+
+/**
  * Clears base, modifier or loss values with a given key.
  */
 export const clearValues = <D extends BD>(definition: D, type: ValuesType, key: string): D => {
@@ -128,6 +138,19 @@ export const clearValues = <D extends BD>(definition: D, type: ValuesType, key: 
   return definition
 }
 
+export const clearValuesWithMutate = <D extends BD>(definition: D, type: ValuesType, key: string) => {
+  if (type === ValuesType.Base)
+    definition.base_values = subClearValues(definition.base_values, key)
+  const any = definition as any
+  if (type === ValuesType.Modifier)
+    definition.modifier_values = subClearValues(any.modifier_values, key)
+  if (type === ValuesType.Loss)
+    definition.loss_values = subClearValues(any.loss_values, key)
+  if (type === ValuesType.LossModifier)
+    definition.loss_modifier_values = subClearValues(any.loss_values, key)
+}
+
+
 /**
  * Shared implementation for clearing base, modifier or loss values.
  * @param container Base, modifier or loss values.
@@ -142,8 +165,9 @@ const subClearValues = <A extends string>(container: Values<A> | undefined, key:
 /**
  * Adds base, modifier or loss values while clearing previous ones.
  */
-export const regenerateValues = <D extends BD, A extends string>(definition: D, type: ValuesType, key: string, values: [A, number][]): D => {
-  return addValues(clearValues(definition, type, key), type, key, values)
+export const regenerateValues = <D extends BD, A extends string>(definition: D, type: ValuesType, key: string, values: [A, number][]) => {
+  clearValuesWithMutate(definition, type, key)
+  addValuesWithMutate(definition, type, key, values)
 }
 
 // This precision is required for accurate morale calculations.

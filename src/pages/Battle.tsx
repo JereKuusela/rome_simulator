@@ -87,10 +87,10 @@ class Battle extends Component<IProps, IState> {
         />
         <Grid verticalAlign='middle'>
           <Grid.Row>
-            <Grid.Column floated='left' width='2'>
-              <Header>{'Round: ' + this.roundName(round)}</Header>
+            <Grid.Column floated='left' width='3'>
+              <Header>{'Round: ' + this.roundName(round, getCombatPhase(round - 1, settings))}</Header>
             </Grid.Column>
-            <Grid.Column textAlign='center' width='6'>
+            <Grid.Column textAlign='center' width='5'>
               <Button primary size='large' onClick={this.openFastPlanner}>
                 Create and remove units
               </Button>
@@ -254,9 +254,13 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  roundName = (round: number): string => {
+  roundName = (round: number, phase: CombatPhase): string => {
     if (round < 0)
       return 'Before combat'
+    if (!round)
+      return 'Deployment'
+    if (phase !== CombatPhase.Default)
+      return String(round) + ' (' + phase + ')'
     return String(round)
   }
 

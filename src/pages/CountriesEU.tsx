@@ -5,7 +5,7 @@ import { AppState, getSettings, getGeneralDefinition } from 'state'
 import { mapRange, ObjSet, has, values } from '../utils'
 
 import { ValuesType, Modifier, ScopeType, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, TechDefinitionEUIV, CountryName, Setting } from 'types'
-import { invalidate, setCountryValue, setTechLevel, enableSelection, clearSelection, enableUnitModifiers, enableGeneralModifiers, clearUnitModifiers, clearGeneralModifiers, setGeneralValue, selectCulture, selectReligion, selectGovernment, setHasGeneral } from 'reducers'
+import { invalidate, enableCountryModifiers, clearCountryModifiers, setCountryValue, setTechLevel, enableSelection, clearSelection, enableUnitModifiers, enableGeneralModifiers, clearUnitModifiers, clearGeneralModifiers, setGeneralValue, selectCulture, selectReligion, selectGovernment, setHasGeneral } from 'reducers'
 
 import AccordionToggle from 'containers/AccordionToggle'
 import CountryManager from 'containers/CountryManager'
@@ -18,9 +18,10 @@ import InputTechLevel from 'containers/InputTechLevel'
 
 const TECH_COLUMNS = 4
 const TECH_KEY = 'Tech_'
+const CUSTOM_KEY = 'Custom'
 const NO_GENERAL_KEY = 'No general'
 
-const KEYS = [TECH_KEY, NO_GENERAL_KEY]
+const KEYS = [TECH_KEY, NO_GENERAL_KEY, CUSTOM_KEY]
 
 const CELL_PADDING = '.78571429em .78571429em'
 
@@ -75,8 +76,8 @@ class Countries extends Component<IProps> {
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title='Attributes' identifier='countries_attributes'>
-                <TableAttributes attributes={filterAttributes(values(CountryAttribute), settings)} custom_value_key='Custom' definition={country} onChange={this.setCountryValue} />
-                <TableAttributes attributes={filterAttributes((values(GeneralAttribute) as GeneralValueType[]).concat(values(CombatPhase)), settings)} custom_value_key='Custom' definition={general_definition} onChange={this.setGeneralValue} />
+                <TableAttributes attributes={filterAttributes(values(CountryAttribute), settings)} custom_value_key={CUSTOM_KEY} definition={country} onChange={this.setCountryValue} />
+                <TableAttributes attributes={filterAttributes((values(GeneralAttribute) as GeneralValueType[]).concat(values(CombatPhase)), settings)} custom_value_key={CUSTOM_KEY} definition={general_definition} onChange={this.setGeneralValue} />
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
@@ -205,9 +206,12 @@ class Countries extends Component<IProps> {
    * Clears all selections.
    */
   clearAll = (selections: ObjSet) => {
+    const { selected_country, clearCountryModifiers } = this.props
     KEYS.forEach(key => this.clearModifiersStartingWith(key, selections))
     this.exec(this.props.setHasGeneral, true)
     this.exec(this.props.setTechLevel, 0)
+    clearCountryModifiers(selected_country, CUSTOM_KEY)
+    clearGeneralModifiers(selected_country, CUSTOM_KEY)
   }
 
   /**
@@ -265,19 +269,21 @@ class Countries extends Component<IProps> {
   }
 
   enableModifiers = (key: string, modifiers: Modifier[]) => {
-    const { enableGeneralModifiers, enableUnitModifiers, enableSelection, invalidate, selected_country } = this.props
+    const { enableGeneralModifiers, enableUnitModifiers, enableCountryModifiers, enableSelection, invalidate, selected_country } = this.props
     modifiers = mapModifiersToUnits(modifiers)
     enableGeneralModifiers(selected_country, key, modifiers)
     enableUnitModifiers(key, modifiers)
     enableSelection(selected_country, key)
+    enableCountryModifiers(selected_country, key, modifiers)
     invalidate()
   }
 
   clearModifiers = (key: string) => {
-    const { clearGeneralModifiers, clearUnitModifiers, clearSelection, invalidate, selected_country } = this.props
+    const { clearGeneralModifiers, clearUnitModifiers, clearSelection, invalidate, selected_country, clearCountryModifiers } = this.props
     clearGeneralModifiers(selected_country, key)
     clearUnitModifiers(key)
     clearSelection(selected_country, key)
+    clearCountryModifiers(selected_country, key)
     invalidate()
   }
 
@@ -305,7 +311,7 @@ const mapStateToProps = (state: AppState) => ({
 
 const actions = {
   enableGeneralModifiers, clearGeneralModifiers, clearUnitModifiers, enableUnitModifiers, setGeneralValue, selectCulture, invalidate, setCountryValue,
-  selectReligion, selectGovernment, setHasGeneral, enableSelection, clearSelection, setTechLevel
+  selectReligion, selectGovernment, setHasGeneral, enableSelection, clearSelection, setTechLevel, clearCountryModifiers, enableCountryModifiers
 }
 
 type S = ReturnType<typeof mapStateToProps>

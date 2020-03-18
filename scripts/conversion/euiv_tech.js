@@ -25,6 +25,8 @@ const getTarget = key => {
   const split = key.split('_');
   if (split.length > 1)
     return core.format(split[0]);
+  if (key === 'combat width')
+    return 'Country';
   return 'Global';
 }
 
