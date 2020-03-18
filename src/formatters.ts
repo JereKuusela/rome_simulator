@@ -26,16 +26,16 @@ export const addSignWithZero = (number?: number): string => {
 /**
  * Special converter for manpower. Strength multiplied by 1000 and floored down.
  */
-export const toManpower = (number?: number): string => {
+export const toManpower = (number?: number, round_up?: boolean): string => {
   if (number === undefined)
     return ''
-  return String(Math.floor(1000 * number))
+  return String(round_up ? Math.ceil(1000 * number) : Math.floor(1000 * number))
 }
 
-export const strengthToValue = (mode: Mode, number: number) => {
+export const strengthToValue = (mode: Mode, number: number, round_up?: boolean) => {
   if (mode === Mode.Naval)
     return toPercent(number)
-  return toManpower(number)
+  return toManpower(number, round_up)
 }
 
 export const toMaintenance = (number?: number): string => {

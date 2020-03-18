@@ -100,7 +100,8 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.DynamicFlanking]: true,
       [Setting.Tech]: true,
       [Setting.Culture]: true,
-      [Setting.Food]: false
+      [Setting.Food]: false,
+      [Setting.ManpowerRoundUp]: true
     }
   }
   else {
@@ -140,7 +141,8 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.DynamicFlanking]: false,
       [Setting.Tech]: false,
       [Setting.Culture]: false,
-      [Setting.Food]: true
+      [Setting.Food]: true,
+      [Setting.ManpowerRoundUp]: false
     }
   }
 }

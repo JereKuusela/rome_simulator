@@ -55,7 +55,8 @@ export enum Setting {
   CalculateWinChance = 'Statistics: Calculate win chance',
   CalculateCasualties = 'Statistics: Calculate casualties',
   CalculateResourceLosses = 'Statistics: Calculate resource losses',
-  ShowGraphs = 'Statistics: Show graphs'
+  ShowGraphs = 'Statistics: Show graphs',
+  ManpowerRoundUp = 'Manpower round up'
 }
 
 export enum SimulationSpeed {
@@ -104,6 +105,11 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Backrow enabled for support units (EUIV).'
       else
         return 'Only front row (Imperator).'
+    case Setting.ManpowerRoundUp:
+      if (value)
+        return 'Round up manpower on UI (EUIV).'
+      else
+        return 'Round down manpower on UI (Imperator).'
     case Setting.CustomDeployment:
       if (value)
         return 'Preferred unit types can be selected (Imperator).'
@@ -308,7 +314,8 @@ export type SiteSettings = {
   [Setting.CalculateWinChance]: boolean,
   [Setting.CalculateCasualties]: boolean,
   [Setting.CalculateResourceLosses]: boolean,
-  [Setting.Performance]: SimulationSpeed
+  [Setting.Performance]: SimulationSpeed,
+  [Setting.ManpowerRoundUp]: boolean
 }
 
 export type Settings = CombatSettings & SiteSettings

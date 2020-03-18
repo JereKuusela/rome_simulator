@@ -195,7 +195,7 @@ class CombatTooltip extends Component<IProps, IState> {
   )
 
   getInfoSection = (source: IUnit, target: IUnit | null) => {
-    const { mode } = this.props
+    const { mode, settings } = this.props
     const morale_current = source[UnitAttribute.Morale]
     const moraleMax = source.max_morale
     const morale_loss = -source.morale_loss
@@ -209,7 +209,7 @@ class CombatTooltip extends Component<IProps, IState> {
       </List.Item>
       <List.Item>
         {'Strength: '}
-        <span className={this.ORANGE}>{strengthToValue(mode, strength_current)}</span>
+        <span className={this.ORANGE}>{strengthToValue(mode, strength_current, settings[Setting.ManpowerRoundUp])}</span>
         {
           strength_loss ?
             <>
