@@ -218,31 +218,42 @@ export const deploy = (attacker: CombatParticipant, defender: CombatParticipant,
 
 const moveUnits = (cohorts: CombatCohorts) => {
   const frontline = cohorts.frontline
-  for (let row = 0; row < frontline.length; row++) {
-    const front = frontline[row]
+  for (let row_index = 0; row_index < frontline.length; row_index++) {
+    const row = frontline[row_index]
     // Move units from left to center.
-    for (let unit_index = Math.ceil(front.length / 2.0) - 1; unit_index > 0; --unit_index) {
-      const unit = front[unit_index]
+    for (let unit_index = Math.ceil(row.length / 2.0) - 1; unit_index > 0; --unit_index) {
+      const unit = row[unit_index]
       if (unit)
         continue
-      const unit_on_left = front[unit_index - 1]
+      const unit_on_left = row[unit_index - 1]
       if (unit_on_left) {
-        front[unit_index] = unit_on_left
-        front[unit_index - 1] = null
+        row[unit_index] = unit_on_left
+        row[unit_index - 1] = null
         continue
       }
     }
     // Move units from right to center.
-    for (let unit_index = Math.ceil(front.length / 2.0); unit_index < front.length - 1; ++unit_index) {
-      const unit = front[unit_index]
+    for (let unit_index = Math.ceil(row.length / 2.0); unit_index < row.length - 1; ++unit_index) {
+      const unit = row[unit_index]
       if (unit)
         continue
-      const unit_on_right = front[unit_index + 1]
+      const unit_on_right = row[unit_index + 1]
       if (unit_on_right) {
-        front[unit_index] = unit_on_right
-        front[unit_index + 1] = null
+        row[unit_index] = unit_on_right
+        row[unit_index + 1] = null
         continue
       }
+    }
+  }
+  // Move units from back to front.
+  for (let row_index = frontline.length - 1; row_index > 0; row_index--) {
+    const row = frontline[row_index]
+    const next_row = frontline[row_index - 1]
+    for (let unit_index = 0; unit_index < row.length; unit_index++) {
+      if (next_row[unit_index])
+        continue
+      next_row[unit_index] = row[unit_index]
+      row[unit_index] = null
     }
   }
 }

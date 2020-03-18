@@ -17,7 +17,8 @@
       "role": "Support",
       "maneuver": 2,
       "cost": 30,
-      "damage_taken": 1
+      "damage_taken": 1,
+      "back_row": 0.5
     },
     {
       "type": "Cavalry",

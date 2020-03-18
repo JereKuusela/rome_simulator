@@ -5,9 +5,9 @@ import { connect } from 'react-redux'
 import { Input } from 'semantic-ui-react'
 
 import { AppState, getCountries } from 'state'
-import { setTechLevel, enableGeneralModifiers, clearGeneralModifiers, clearUnitModifiers, enableUnitModifiers, enableSelection, clearSelection, invalidate, enableCountryModifiers, clearCountryModifiers } from 'reducers'
+import { selectCountry, setTechLevel, enableGeneralModifiers, clearGeneralModifiers, clearUnitModifiers, enableUnitModifiers, enableSelection, clearSelection, invalidate, enableCountryModifiers, clearCountryModifiers } from 'reducers'
 import { CountryName, Modifier } from 'types'
-import {  mapRange, has } from 'utils'
+import { mapRange, has } from 'utils'
 import { mapModifiersToUnits } from 'managers/modifiers'
 
 interface Props {
@@ -45,7 +45,8 @@ class InputTechLevel extends Component<IProps> {
   }
 
   enableModifiers = (key: string, modifiers: Modifier[]) => {
-    const { enableGeneralModifiers, enableUnitModifiers, enableSelection, invalidate, country, enableCountryModifiers } = this.props
+    const { enableGeneralModifiers, enableUnitModifiers, enableSelection, invalidate, country, enableCountryModifiers, selectCountry } = this.props
+    selectCountry(country)
     modifiers = mapModifiersToUnits(modifiers)
     enableGeneralModifiers(country, key, modifiers)
     enableUnitModifiers(key, modifiers)
@@ -55,7 +56,8 @@ class InputTechLevel extends Component<IProps> {
   }
 
   clearModifiers = (key: string) => {
-    const { clearGeneralModifiers, clearUnitModifiers, clearSelection, invalidate, country, clearCountryModifiers } = this.props
+    const { clearGeneralModifiers, clearUnitModifiers, clearSelection, invalidate, country, clearCountryModifiers, selectCountry } = this.props
+    selectCountry(country)
     clearGeneralModifiers(country, key)
     clearUnitModifiers(key)
     clearSelection(country, key)
@@ -70,7 +72,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
 })
 
 const actions = {
-  setTechLevel, enableGeneralModifiers, clearGeneralModifiers, clearUnitModifiers, enableUnitModifiers, enableSelection, clearSelection, invalidate, enableCountryModifiers, clearCountryModifiers
+  setTechLevel, enableGeneralModifiers, clearGeneralModifiers, clearUnitModifiers, enableUnitModifiers, enableSelection, clearSelection, invalidate, enableCountryModifiers, clearCountryModifiers, selectCountry
 }
 
 type S = ReturnType<typeof mapStateToProps>
