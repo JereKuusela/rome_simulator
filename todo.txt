@@ -11,6 +11,7 @@ Changelog:
 - Battle: Fixed cohort tooltip not appearing when moving mouse fast.
 - Battle: Fixed total damage shown incorrectly on cohort tooltips (if target had experience).
 - Battle: Improved flank size setting (1.4).
+- Battle: Improved cohort tooltips (base damage is now part of strength/morale multipliers).
 - Battle: Added support for backrow and backrow effectiveness (offensive and defensive), feature from EUIV.
 - Battle: Added food consumption and storage to fast planner.
 - Battle: Refactored state for armies (first step towards multiarmy battles).
@@ -18,6 +19,7 @@ Changelog:
 - Battle: Added inputs for general phase pips, feauture from EUIV.
 - Battle: Added an input for tech level and culture, feauture from EUIV.
 - Battle: Added support for showing and hiding inputs based on available game mechanics.
+- Battle: Removed base damage from the UI (not very relevant information).
 - Stats: Added average gold losses to naval simulations (from repair, from destroyed, from captured, etc.).
 - Stats: Added separate settings for calculating different things.
 - Stats: Improved performance (but probably overall less performance because new mechanics from EUIV).
@@ -46,12 +48,13 @@ Changelog:
 - Units: Removed support for changing unit mode (land or naval), instead it is derived from the base unit.
 - Units: Removed support for global unit mode (units are now either land or naval units).
 - Units: Removed can assault toggle button (attribute not used anywhere in simulator).
-- Units: Refactored base stats to a base unit (simplifies code and allows using it as a neutral unit).
+- Units: Refactored base stats to a base unit (simplifies code).
 - Settings: Improve page layout which more clearly shows which settings affects land, naval or both.
 - Settings: Improved settings for bug fixes (and some others), converted to checkbox settings.
 - Settings: Improved names and descriptions for all settings.
 - Settings: Updated a 20% increase to base damage values.
 - Settings: Removed "Fix damage taken" setting as it is fixed in the game.
+- Settings: Removed "Damage per roll" setting as it's now included in Multiplier for morale damage and Multiplier for strength damage settings.
 - Settings: Updated Defender's advantage to be disabled by default (people seem to make wrong conclusions because of it).
 - Settings: Added a new setting to enable backrow (support units are prioritized), feature from EUIV.
 - Settings: Added a new setting for discipline reducing damage, feature from EUIV.
@@ -77,6 +80,9 @@ Settings:
  - More sections for settings (at least new section for deployment and reinforcement, game mechanics, simulation settings).
 
 EUIV:
+ - Winrate needs different default parameters. Or actually a parameter for less dice options (so fire/shock aren't always mirrored). Like 3x3 would be much faster than 5x5 or 9x9.
+  * Average roll needs to be same, probably min and max too. So 1 + 3 + 5 + 7 + 9 is fine. Also 1 + 5 + 9, and 1 + 9.
+ - Big refactor: Tech, etc modifiers applied when getting units (allows setting tech to at 3 start and prevents mismatches)
  - Tooltip needs to show source of losses (to include daily loss)
  - Units: Show pips on selectors
  - General stats / traits:

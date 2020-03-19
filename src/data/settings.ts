@@ -21,40 +21,38 @@ export const getDefaultLandSettings = (): CombatSettings => {
 export const getDefaultNavalSettings = (): CombatSettings => {
   return {
     ...getDefaultAnySettings(),
-    [Setting.StrengthLostMultiplier]: 0.5,
-    [Setting.MoraleLostMultiplier]: 1.0
+    [Setting.StrengthLostMultiplier]: 12,
+    [Setting.MoraleLostMultiplier]: 24
   }
 }
 
 const getDefaultAnySettings = (): CombatSettings => {
   if (process.env.REACT_APP_GAME === 'euiv') {
     return {
-      [Setting.BaseRoll]: 3,
-      [Setting.RollDamage]: 0.005,
-      [Setting.MaxRoll]: 100,
+      [Setting.BasePips]: 3,
+      [Setting.MaxPips]: 100,
       [Setting.DiceMinimum]: 1,
       [Setting.DiceMaximum]: 9,
       [Setting.RollFrequency]: 3,
       [Setting.CombatWidth]: 15,
       [Setting.ExperienceDamageReduction]: 0,
-      [Setting.StrengthLostMultiplier]: 1,
-      [Setting.MoraleLostMultiplier]: 5 / 2.7,
+      [Setting.StrengthLostMultiplier]: 5,
+      [Setting.MoraleLostMultiplier]: 25 / 2.7,
       [Setting.MinimumMorale]: 0.25,
       [Setting.MinimumStrength]: 0
     }
   }
   else {
     return {
-      [Setting.BaseRoll]: 4,
-      [Setting.RollDamage]: 0.024,
-      [Setting.MaxRoll]: 15,
+      [Setting.BasePips]: 4,
+      [Setting.MaxPips]: 15,
       [Setting.DiceMinimum]: 1,
       [Setting.DiceMaximum]: 6,
       [Setting.RollFrequency]: 5,
       [Setting.CombatWidth]: 30,
       [Setting.ExperienceDamageReduction]: 0.3,
-      [Setting.StrengthLostMultiplier]: 0.2,
-      [Setting.MoraleLostMultiplier]: 0.75,
+      [Setting.StrengthLostMultiplier]: 4.8,
+      [Setting.MoraleLostMultiplier]: 18,
       [Setting.MinimumMorale]: 0.25,
       [Setting.MinimumStrength]: 0
     }

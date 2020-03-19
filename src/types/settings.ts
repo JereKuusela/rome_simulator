@@ -13,9 +13,8 @@ export enum Setting {
   ExperienceDamageReduction = 'Damage reduction for 100% experience',
   DiceMinimum = 'Minimum dice roll',
   DiceMaximum = 'Maximum dice roll',
-  BaseRoll = 'Base roll',
-  RollDamage = 'Base damage per dice roll',
-  MaxRoll = 'Maximum roll',
+  BasePips = 'Base pips',
+  MaxPips = 'Maximum pips',
   MinimumMorale = 'Minimum morale for combat',
   MinimumStrength = 'Minimum strength for combat',
   RollFrequency = 'Length of combat phases',
@@ -70,9 +69,9 @@ export enum SimulationSpeed {
 
 export const parameterToDescription = (parameter: Setting, value: string | number | boolean): string => {
   switch (parameter) {
-    case Setting.BaseRoll:
+    case Setting.BasePips:
       return 'Base roll for all units.\nIncrease for faster battles and less randomness.\nDecrease for slower battles and more randomness.'
-    case Setting.MaxRoll:
+    case Setting.MaxPips:
       return 'Reduces and caps effect of high martial generals.\nIncrease for more benefit from skilled generals.\nDecrease for less benefit from skilled generals.'
     case Setting.CombatWidth:
       return 'How many units can fight at the same time.\nIncrease for faster big battles and more effective flanking.\nDecrease for slower big battles and less effective flanking.'
@@ -169,8 +168,6 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
       return 'Amount of morale lost each round in battle (EUIV).'
     case Setting.DailyDamageIncrease:
       return 'Amount of increased damage every round (EUIV).'
-    case Setting.RollDamage:
-      return 'Additional base damage per dice roll and other modifiers.\nIncrease for faster battles, more randomness and stronger generals.\nDecrease for slower battles, less randomness and weaker generals.'
     case Setting.RollFrequency:
       return 'How many rounds dice rolls stay active.\nIncrease for more randomness.\nDecrease for less randomness.'
     case Setting.InsufficientSupportPenalty:
@@ -264,8 +261,8 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
 }
 
 export type CombatSettings = {
-  [Setting.BaseRoll]: number,
-  [Setting.MaxRoll]: number,
+  [Setting.BasePips]: number,
+  [Setting.MaxPips]: number,
   [Setting.CombatWidth]: number,
   [Setting.DiceMaximum]: number,
   [Setting.DiceMinimum]: number,
@@ -274,7 +271,6 @@ export type CombatSettings = {
   [Setting.MinimumStrength]: number,
   [Setting.MinimumMorale]: number,
   [Setting.MoraleLostMultiplier]: number,
-  [Setting.RollDamage]: number,
   [Setting.RollFrequency]: number
 }
 

@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Button, Checkbox, Divider, Grid, Header, Image, Input, Table } from 'semantic-ui-react'
-import { calculateGeneralPips, calculateBaseDamage, getCombatPhase, getTerrainPips } from 'combat'
+import { calculateGeneralPips, getCombatPhase, getTerrainPips } from 'combat'
 import ConfirmationButton from 'components/ConfirmationButton'
 import Dropdown from 'components/Utils/Dropdown'
 import StyledNumber from 'components/Utils/StyledNumber'
@@ -182,7 +182,7 @@ class Battle extends Component<IProps, IState> {
                       </Table.HeaderCell>
                     }
                     <Table.HeaderCell>
-                      Base damage
+                      Dice roll
                     </Table.HeaderCell>
                     <Table.HeaderCell>
                       Randomize
@@ -287,12 +287,9 @@ class Battle extends Component<IProps, IState> {
     const { terrains, settings, round } = this.props
     const terrain_pips = getTerrainPips(terrains, side, general, opposing_general)
     const general_pips = calculateGeneralPips(general, opposing_general, getCombatPhase(round, settings))
-    const pips = terrain_pips + general_pips + dice
-    const base_damage = calculateBaseDamage(pips, settings)
     return (
       <div key={side}>
-        {base_damage.toFixed(3)} :
-        <span style={{ paddingLeft: '1em' }} /><Image src={IconDice} avatar />
+        <Image src={IconDice} avatar />
         {is_random ? dice : <Input size='mini' style={{ width: 100 }} type='number' value={dice} onChange={(_, data) => this.props.setRoll(side, Number(data.value))} />}
         {general_pips !== 0 ?
           <span style={{ paddingLeft: '1em' }}>

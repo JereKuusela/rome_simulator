@@ -42,7 +42,7 @@ describe('reinforcement', () => {
   it('preferred flank size', () => {
     loadInput(preferred_flank_size, info)
     // Tweak to defeat whole enemy line during the same turn.
-    info.settings[Setting.MaxRoll] = 20
+    info.settings[Setting.MaxPips] = 20
     const attacker = {
       front: createExpected([UnitType.HeavyCavalry, 30])
     }
@@ -58,7 +58,7 @@ describe('reinforcement', () => {
   it('frontline is reinforced first', () => {
     loadInput(flank_only, info)
     // Tweak to defeat whole enemy line during the same turn.
-    info.settings[Setting.MaxRoll] = 20
+    info.settings[Setting.MaxPips] = 20
     const attacker = {
       front: createExpected([UnitType.HeavyCavalry, 30])
     }

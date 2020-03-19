@@ -1,5 +1,5 @@
 
-import { sumBy, clamp } from 'lodash'
+import { sumBy } from 'lodash'
 import { Terrain, TerrainCalc, Setting, UnitAttribute, Settings, BaseUnit, CombatPhase, GeneralAttribute, Side, LocationType, General } from 'types'
 import { calculateValue } from 'definition_values'
 import { CombatCohortDefinition } from './combat'
@@ -50,18 +50,6 @@ export const getDefensiveCohortPips = (cohort: CombatCohortDefinition, type: Uni
 
 export const getDefensiveSupportCohortPips = (cohort: CombatCohortDefinition | null, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
   return cohort ?  Math.ceil(cohort[UnitAttribute.DefensiveSupport] * getDefensiveCohortPips(cohort, type, phase)) : 0
-}
-
-/**
- * Calculates the base damage value from roll.
- * @param roll Dice roll with modifiers.
- * @param settings Settings.
- */
-export const calculateBaseDamage = (roll: number, settings: Settings): number => {
-  const base_roll = settings[Setting.BaseRoll]
-  const roll_damage = settings[Setting.RollDamage]
-  const max_roll = settings[Setting.MaxRoll]
-  return roll_damage * clamp(base_roll + roll, 0, max_roll)
 }
 
 export const calculateExperienceReduction = (settings: Settings, target: BaseUnit) => {

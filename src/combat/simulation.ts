@@ -73,7 +73,7 @@ export const convertParticipant = (side: Side, army: ArmyForCombat, enemy: ArmyF
     tactic: army.tactic!,
     terrain_pips,
     general_pips,
-    roll_pips: toObj(values(CombatPhase), phase => phase, phase => general_pips[phase] + terrain_pips + settings[Setting.BaseRoll]),
+    roll_pips: toObj(values(CombatPhase), phase => phase, phase => general_pips[phase] + terrain_pips + settings[Setting.BasePips]),
     unit_preferences: army.unit_preferences,
     unit_types: map(army.definitions, unit => getUnitDefinition(settings, terrains, unit_types, { ...unit, id: -1 })),
     tactic_bonus: 0.0,
@@ -151,9 +151,6 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
     strength_d: {}
   }
 
-  const base_damages = getBaseDamages(settings)
-
-
   // Overview of the algorithm:
   // Initial state is the first node.
   // Nodes have a branch for each possible dice roll.
@@ -182,7 +179,7 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
       defender.dice = roll_d
       attacker.cohorts = cohorts_a
       defender.cohorts = cohorts_d
-      let result = doPhase(base_damages, node.depth, phaseLength, attacker, defender, settings)
+      let result = doPhase(node.depth, phaseLength, attacker, defender, settings)
 
       node.branch++
       if (node.branch === dice_2)
@@ -199,7 +196,7 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
         defender.dice = roll_d
         attacker.cohorts = cohorts_a
         defender.cohorts = cohorts_d
-        result = doPhase(base_damages, depth, phaseLength, attacker, defender, settings)
+        result = doPhase(depth, phaseLength, attacker, defender, settings)
       }
       sumState(current_a, attacker.cohorts)
       sumState(current_d, defender.cohorts)
@@ -234,12 +231,6 @@ export const convertCohorts = (cohorts: Cohorts, settings: Settings, casualties_
   left_flank: 0,
   right_flank: 0
 })
-
-
-/**
- * Precalculates base damage values for each roll.
- */
-export const getBaseDamages = (settings: Settings) => mapRange(100, roll => Math.min(settings[Setting.MaxRoll], roll) * settings[Setting.RollDamage])
 
 /**
  * Returns a balanced set of rolls. Higher rolls are prioritized to give results faster.
@@ -317,11 +308,11 @@ type Winner = Side | null | undefined
 /**
  * Simulates one dice roll phase.
  */
-const doPhase = (base_damages: number[], depth: number, rounds_per_phase: number, attacker: CombatParticipant, defender: CombatParticipant, settings: Settings) => {
+const doPhase = (depth: number, rounds_per_phase: number, attacker: CombatParticipant, defender: CombatParticipant, settings: Settings) => {
   let winner: Winner = undefined
   let round = 0
   for (round = 0; round < rounds_per_phase;) {
-    doBattleFast(attacker, defender, false, base_damages, settings, round + depth * rounds_per_phase)
+    doBattleFast(attacker, defender, false, settings, round + depth * rounds_per_phase)
     round++
 
     const alive_a = checkAlive(attacker.cohorts.frontline, attacker.cohorts.reserve)

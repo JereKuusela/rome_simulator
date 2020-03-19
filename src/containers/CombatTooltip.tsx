@@ -4,9 +4,9 @@ import { Popup, List } from 'semantic-ui-react'
 
 import StyledNumber from 'components/Utils/StyledNumber'
 
-import { Mode, Side, ArmyType, UnitAttribute, UnitType, Setting, TacticCalc, TerrainType, CombatPhase } from 'types'
-import { CombatCohort, CombatCohortRoundInfo, CombatCohortDefinition, calculateCohortPips, calculateBaseDamage, getOffensiveCohortPips, getDefensiveCohortPips, getCombatPhase, getDailyIncrease, getDefensiveSupportCohortPips } from 'combat'
-import { toSignedPercent, toManpower, strengthToValue, toNumber, addSign, toMultiplier } from 'formatters'
+import { Side, ArmyType, UnitAttribute, UnitType, Setting, TacticCalc, TerrainType, CombatPhase, Mode } from 'types'
+import { CombatCohort, CombatCohortRoundInfo, CombatCohortDefinition, calculateCohortPips, getOffensiveCohortPips, getDefensiveCohortPips, getCombatPhase, getDailyIncrease, getDefensiveSupportCohortPips } from 'combat'
+import { toSignedPercent, strengthToValue, toNumber, addSign, toMultiplier } from 'formatters'
 import { calculateValue } from 'definition_values'
 import { AppState, getSettings, getSelectedTerrains, getTactic, getCombatUnit, getCombatParticipant } from 'state'
 import { getOpponent } from 'army_utils'
@@ -101,22 +101,24 @@ class CombatTooltip extends Component<IProps, IState> {
   getBaseDamageSubSection = (source: IUnit, target: IUnit, target_support: IUnit | null, type: UnitAttribute.Strength | UnitAttribute.Morale | '', phase: CombatPhase) => {
     const { settings, participant } = this.props
     const { dice, terrain_pips, general_pips } = participant
-    const base_pips = settings[Setting.BaseRoll]
+    const base_pips = settings[Setting.BasePips]
     const source_pips = type ? getOffensiveCohortPips(source, type, phase) : 0
     const target_pips = type ? getDefensiveCohortPips(target, type, phase) : 0
     const target_support_pips = type ? getDefensiveSupportCohortPips(target_support, type, phase) : 0
     const total_pips = dice + terrain_pips + general_pips[phase] + source_pips + target_pips + target_support_pips
+    const capped_pips =  Math.min(total_pips, settings[Setting.MaxPips])
+    const reduction_to_cap = Math.min(0, settings[Setting.MaxPips] - capped_pips)
     const text = type === UnitAttribute.Morale ? UnitAttribute.Morale : phase
     return (<>
       {this.renderModifier('Base pips', base_pips, this.toAdd)}
-      {this.renderModifier('Dice pips', dice, this.toAdd)}
+      {this.renderModifier('Dice', dice, this.toAdd)}
       {this.renderModifier('Terrain pips', terrain_pips, this.toAdd)}
       {this.renderModifier('General pips', general_pips[phase], this.toAdd)}
       {this.renderModifier(text + ' pips', source_pips, this.toAdd)}
       {this.renderModifier('Enemy ' + text.toLowerCase() + ' pips', target_pips, this.toAdd)}
       {this.renderModifier('Backrow ' + text.toLowerCase() + ' pips', target_support_pips, this.toAdd)}
-      {this.renderModifier('Roll damage', settings[Setting.RollDamage], this.toMultiplier)}
-      {this.renderItem('Base ' + type.toLowerCase() + ' damage', calculateBaseDamage(total_pips, settings), this.toNumber)}
+      {this.renderModifier('Above maximum', reduction_to_cap, this.toAdd)}
+      {this.renderItem('Total ' + type.toLowerCase() + ' pips', capped_pips, this.toNumber)}
     </>)
   }
 
@@ -159,12 +161,12 @@ class CombatTooltip extends Component<IProps, IState> {
     const { settings, tactic_s, tactic_t, mode, participant } = this.props
     const { round } = participant
     const phase = getCombatPhase(round, settings)
-    const strength_lost_multiplier = settings[Setting.StrengthLostMultiplier]
+    const strength_lost_multiplier = mode === Mode.Land ? settings[Setting.StrengthLostMultiplier] : settings[Setting.StrengthLostMultiplier] / 1000
     const tactic_casualties = calculateValue(tactic_s, TacticCalc.Casualties) + calculateValue(tactic_t, TacticCalc.Casualties)
     const strength_damage = source.strength_dealt
 
     return (<>
-      {this.renderModifier('Constant', strength_lost_multiplier, value => mode === Mode.Land ? this.toMultiplier(Number(toManpower(value))) : this.toMultiplier(value))}
+      {this.renderModifier('Constant', strength_lost_multiplier, this.toMultiplier)}
       {this.renderStyledItem('Tactic casualties', tactic_casualties, toSignedPercent)}
       {settings[Setting.FireAndShock] && this.getAttribute(source, phase === CombatPhase.Shock ? UnitAttribute.ShockDamageDone : UnitAttribute.FireDamageDone)}
       {settings[Setting.FireAndShock] && this.getAttribute(target, phase === CombatPhase.Shock ? UnitAttribute.ShockDamageTaken : UnitAttribute.FireDamageTaken)}
@@ -182,7 +184,7 @@ class CombatTooltip extends Component<IProps, IState> {
     const morale_damage = source.morale_dealt
 
     return (<>
-      {this.renderModifier('Constant', morale_lost_multiplier, this.toMultiplier)}
+      {this.renderModifier('Constant', morale_lost_multiplier / 1000.0, this.toMultiplier)}
       {settings[Setting.AttributeMoraleDamage] && this.getAttribute(source, UnitAttribute.MoraleDamageDone)}
       {settings[Setting.AttributeMoraleDamage] && this.getAttribute(target, UnitAttribute.MoraleDamageTaken)}
       {this.renderModifier(morale_str, morale, this.toMultiplier)}

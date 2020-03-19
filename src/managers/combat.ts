@@ -1,5 +1,5 @@
 import { AppState, getMode, getArmyForCombat, mergeUnitTypes, getCurrentCombat, getSettings } from 'state'
-import { CombatCohorts, Frontline, deploy, doBattleFast, removeDefeated, getBaseDamages, CombatParticipant, convertParticipant, SortedReserve, reserveSize } from 'combat'
+import { CombatCohorts, Frontline, deploy, doBattleFast, removeDefeated, CombatParticipant, convertParticipant, SortedReserve, reserveSize } from 'combat'
 import { Mode, Battle, Side, Setting, Participant, Settings } from 'types'
 import { createEntropy, MersenneTwister19937, Random } from 'random-js'
 import { arrGet } from 'utils'
@@ -82,8 +82,6 @@ const doBattle = (state: AppState, mode: Mode, battle: Battle, settings: Setting
     steps--
   }
 
-  const base_damages = getBaseDamages(settings)
-
   for (let step = 0; step < steps && !battle.fight_over; ++step) {
     attacker = copy(attacker)
     defender = copy(defender)
@@ -94,7 +92,7 @@ const doBattle = (state: AppState, mode: Mode, battle: Battle, settings: Setting
     attacker.dice = participant_a.dice
     defender.dice = participant_d.dice
 
-    doBattleFast(attacker, defender, true, base_damages, settings, battle.round)
+    doBattleFast(attacker, defender, true, settings, battle.round)
 
     battle.fight_over = !checkAlive(attacker.cohorts.frontline, attacker.cohorts.reserve) || !checkAlive(defender.cohorts.frontline, defender.cohorts.reserve)
     if (battle.fight_over) {
