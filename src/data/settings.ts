@@ -72,6 +72,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.MaxDepth]: speedValues[SimulationSpeed.Normal][1],
       [Setting.PhaseLengthMultiplier]: speedValues[SimulationSpeed.Normal][0],
       [Setting.Performance]: SimulationSpeed.Normal,
+      [Setting.ReduceRolls]: speedValues[SimulationSpeed.Normal][2],
       [Setting.CalculateWinChance]: true,
       [Setting.CalculateCasualties]: true,
       [Setting.CalculateResourceLosses]: true,
@@ -113,6 +114,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.MaxDepth]: speedValues[SimulationSpeed.Normal][1],
       [Setting.PhaseLengthMultiplier]: speedValues[SimulationSpeed.Normal][0],
       [Setting.Performance]: SimulationSpeed.Normal,
+      [Setting.ReduceRolls]: speedValues[SimulationSpeed.Normal][2],
       [Setting.CalculateWinChance]: true,
       [Setting.CalculateCasualties]: true,
       [Setting.CalculateResourceLosses]: true,
@@ -145,10 +147,18 @@ export const getDefaultSiteSettings = (): SiteSettings => {
   }
 }
 
-export const speedValues: { [key: string]: number[] } = {
-  [SimulationSpeed.VeryAccurate]: [1.0, 5],
-  [SimulationSpeed.Accurate]: [1.0, 4],
-  [SimulationSpeed.Normal]: [1.5, 4],
-  [SimulationSpeed.Fast]: [2.0, 4],
-  [SimulationSpeed.VeryFast]: [3.0, 3]
-}
+export const speedValues: { [key: string]: number[] } = process.env.REACT_APP_GAME === 'euiv' ?
+  {
+    [SimulationSpeed.VeryAccurate]: [1.0, 8, 1],
+    [SimulationSpeed.Accurate]: [1.0, 7, 1],
+    [SimulationSpeed.Normal]: [1.0, 7, 2],
+    [SimulationSpeed.Fast]: [1.0, 7, 3],
+    [SimulationSpeed.VeryFast]: [1.0, 5, 3]
+  } :
+  {
+    [SimulationSpeed.VeryAccurate]: [1.0, 5, 0],
+    [SimulationSpeed.Accurate]: [1.0, 4, 0],
+    [SimulationSpeed.Normal]: [1.5, 4, 0],
+    [SimulationSpeed.Fast]: [2.0, 4, 0],
+    [SimulationSpeed.VeryFast]: [3.0, 3, 1]
+  }

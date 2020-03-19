@@ -54,6 +54,7 @@ export enum Setting {
   CalculateWinChance = 'Statistics: Calculate win chance',
   CalculateCasualties = 'Statistics: Calculate casualties',
   CalculateResourceLosses = 'Statistics: Calculate resource losses',
+  ReduceRolls = 'Statistics: Reduce possible dice rolls',
   ShowGraphs = 'Statistics: Show graphs',
   ManpowerRoundUp = 'Manpower round up'
 }
@@ -235,6 +236,8 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
       return 'How many battles are simulated in a row. Higher values slightly increase performance but make the UI less responsive.'
     case Setting.Performance:
       return 'Quick setting for speed and accuracy.\nAffects phase length multiplier and maximum depth.'
+    case Setting.ReduceRolls:
+      return 'Halves number of available dice rolls.\nMassively increases performance.'
     case Setting.CalculateWinChance:
       if (value)
         return 'Win chance and average rounds are calculated.\nThis slightly decreases performance.'
@@ -310,6 +313,7 @@ export type SiteSettings = {
   [Setting.CalculateWinChance]: boolean,
   [Setting.CalculateCasualties]: boolean,
   [Setting.CalculateResourceLosses]: boolean,
+  [Setting.ReduceRolls]: number,
   [Setting.Performance]: SimulationSpeed,
   [Setting.ManpowerRoundUp]: boolean
 }

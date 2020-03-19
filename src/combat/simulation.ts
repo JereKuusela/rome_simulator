@@ -118,9 +118,8 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
   }
 
   // Performance is critical. Precalculate as many things as possible.
-  const dice = settings[Setting.DiceMaximum] - settings[Setting.DiceMinimum] + 1
-  const dice_2 = dice * dice
-  const rolls = getRolls(settings[Setting.DiceMinimum], settings[Setting.DiceMaximum])
+  const rolls = getRolls(settings[Setting.DiceMinimum], settings[Setting.DiceMaximum], settings[Setting.ReduceRolls])
+  const dice_2 = rolls.length
   const fractions = mapRange(10, value => 1.0 / Math.pow(dice_2, value))
   const phaseLength = Math.floor(settings[Setting.RollFrequency] * settings[Setting.PhaseLengthMultiplier])
   const chunkSize = settings[Setting.ChunkSize]
@@ -227,19 +226,38 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
 export const convertCohorts = (cohorts: Cohorts, settings: Settings, casualties_multiplier: number, terrains: Terrain[], unit_types: UnitType[], unit_preferences: UnitPreferences): CombatCohorts => ({
   frontline: cohorts.frontline.map(row => row.map(cohort => getCombatUnit(settings, casualties_multiplier, terrains, unit_types, cohort))),
   reserve: sortReserve(cohorts.reserve.map(cohort => getCombatUnit(settings, casualties_multiplier, terrains, unit_types, cohort)!), unit_preferences),
-  defeated: cohorts.defeated.map(cohort => getCombatUnit(settings, casualties_multiplier, terrains, unit_types, cohort )!),
+  defeated: cohorts.defeated.map(cohort => getCombatUnit(settings, casualties_multiplier, terrains, unit_types, cohort)!),
   left_flank: 0,
   right_flank: 0
 })
 
+/** Returns an array of valid dice numbers. */
+const getValidRolls = (minimum: number, maximum: number, halve_times: number) => {
+  let valid_rolls = mapRange(maximum - minimum + 1, value => value + 1)
+  for (let i = 0; i < halve_times; i++) {
+    console.log(valid_rolls)
+    const length = valid_rolls.length
+    if (length % 2)
+      valid_rolls = valid_rolls.filter((_, index) => index % 2 === 0)
+    else
+      valid_rolls = valid_rolls.filter((_, index) => index < length / 2 ? index % 2 === 0 : (length - index) % 2 === 1)
+  }
+  return valid_rolls
+}
+
 /**
  * Returns a balanced set of rolls. Higher rolls are prioritized to give results faster.
  */
-const getRolls = (minimum: number, maximum: number) => {
+const getRolls = (minimum: number, maximum: number, halve_times: number) => {
+  let valid_rolls = getValidRolls(minimum, maximum, halve_times)
   const rolls: number[][] = []
   for (let roll = maximum; roll >= minimum; roll--) {
+    if (!valid_rolls.includes(roll))
+      continue
     rolls.push([roll, roll])
     for (let roll2 = roll - 1; roll2 >= minimum; roll2--) {
+      if (!valid_rolls.includes(roll2))
+        continue
       rolls.push([roll2, roll])
       rolls.push([roll, roll2])
     }
@@ -335,9 +353,11 @@ const doPhase = (depth: number, rounds_per_phase: number, attacker: CombatPartic
 const checkAlive = (frontline: Frontline, reserve: SortedReserve) => {
   if (reserveSize(reserve))
     return true
-  for (let i = 0; i < frontline.length; i++) {
-    if (frontline[i])
-      return true
+  for (let row = 0; row < frontline.length; row++) {
+    for (let column = 0; column < frontline[row].length; column++) {
+      if (frontline[row][column])
+        return true
+    }
   }
   return false
 }
