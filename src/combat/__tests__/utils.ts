@@ -2,7 +2,7 @@ import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandS
 import { map, mapRange, resize } from 'utils'
 import { mergeValues } from 'definition_values'
 import { Mode, CountryName, Participant, Terrain, TacticType, Setting, Side, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, Settings, Cohort, CombatPhase, CultureType, General, GeneralAttribute } from 'types'
-import { CombatCohort, CombatParticipant, doBattleFast, getBaseDamages, deploy, convertParticipant, reinforce } from 'combat'
+import { CombatCohort, CombatParticipant, doBattleFast, deploy, convertParticipant, reinforce } from 'combat'
 import { ArmyForCombat } from 'state'
 
 const unitDefinitions = map(getDefaultUnits('' as CultureType), unit => mergeValues(unit, getDefaultUnit(UnitType.Land)))
@@ -232,7 +232,7 @@ export const every_type = [UnitType.Archers, UnitType.CamelCavalry, UnitType.Cha
  * Performs one combat round with a given test info.
  */
 const doRound = (info: TestInfo, a: CombatParticipant, d: CombatParticipant) => {
-  doBattleFast(a, d, false, getBaseDamages(info.settings), info.settings, 1)
+  doBattleFast(a, d, false, info.settings, 1)
 }
 
 

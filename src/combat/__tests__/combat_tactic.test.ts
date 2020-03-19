@@ -9,7 +9,8 @@ describe('tactics', () => {
   let info: TestInfo
   beforeEach(() => {
     info = initInfo()
-    info.settings[Setting.RollDamage] = 0.02
+    info.settings[Setting.MoraleLostMultiplier] = info.settings[Setting.MoraleLostMultiplier] * 0.02 / 0.024
+    info.settings[Setting.StrengthLostMultiplier] = info.settings[Setting.StrengthLostMultiplier] * 0.02 / 0.024
   })
 
   it('increased casualties', () => {
