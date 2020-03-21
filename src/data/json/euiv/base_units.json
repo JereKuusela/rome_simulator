@@ -32,6 +32,7 @@
     {
       "type": "Infantry",
       "base": "Land Unit",
+      "role": "Front",
       "fire": 0.25,
       "maneuver": 1,
       "cost": 10,

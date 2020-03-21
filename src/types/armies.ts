@@ -1,5 +1,5 @@
 import { DefinitionValues } from "definition_values"
-import { UnitType, BaseCohort, Cohort, UnitDefinitionValues } from "./units"
+import { UnitType, BaseCohort, Cohort, UnitDefinitionValues, UnitRole } from "./units"
 import { Mode } from "types/definition"
 import { TacticType } from "./tactics"
 import { CombatPhase } from "./battle"
@@ -29,7 +29,7 @@ export interface GeneralDefinition extends DefinitionValues<GeneralValueType> {
   definitions: UnitDefinitionValues
 }
 
-export type UnitPreferences = { [key in UnitPreferenceType]: UnitType | null }
+export type UnitPreferences = { [key in UnitPreferenceType | UnitRole]: UnitType | null }
 
 export type Army = {
   tactic: TacticType
@@ -51,7 +51,7 @@ export enum ArmyType {
 export enum UnitPreferenceType {
   Primary = 'Primary',
   Secondary = 'Secondary',
-  Flank = 'Flank'
+  Flank = 'PrimaryFlank'
 }
 
 export type BaseFrontLine = { [key: string]: { [key: string]: BaseCohort } }

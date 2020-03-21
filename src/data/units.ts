@@ -48,7 +48,8 @@ const unit_to_icon: { [key in UnitType]: string } = {
   [UnitType.Naval]: IconMilitaryPower,
   [UnitType.Cavalry]: IconCavalry,
   [UnitType.Infantry]: IconInfantry,
-  [UnitType.Artillery]: IconArtillery
+  [UnitType.Artillery]: IconArtillery,
+  [UnitType.Latest]: IconMilitaryPower
 }
 
 export const getUnitIcon = (type: UnitType) => unit_to_icon[type] || ''

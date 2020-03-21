@@ -185,7 +185,9 @@ export const getTactic = (state: AppState, side: Side): Tactic => {
 
 const getBaseCohortsByCountry = (state: AppState, country: CountryName) => {
   const army = getArmy(state, country)
-  return { frontline: army.frontline, reserve: army.reserve, defeated: army.defeated }
+  const units = getUnits(state, country)
+  const latest = manager.getLatestUnits(units, getCountries(state)[country].tech_level)
+  return manager.overrideRoleWithPreferences(army, units, latest)
 }
 
 const getCohortsByCountry = (state: AppState, country: CountryName): Cohorts => {
@@ -236,6 +238,8 @@ export const getUnitList = (state: AppState, filter_base: boolean, name?: Countr
   const units = getUnits(state, name)
   return manager.getUnitList(units, mode, country.tech_level, filter_base, getSettings(state))
 }
+
+export const getArchetypes = (state: AppState, name: CountryName): Unit[] => manager.getArchetypes(getUnits(state, name))
 
 export const getUnit = (state: AppState, unit_type: UnitType, country?: CountryName): Unit => {
   const settings = getSettings(state)

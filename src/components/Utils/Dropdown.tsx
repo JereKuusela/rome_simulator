@@ -7,16 +7,17 @@ interface IProps<T extends string> {
   onChange?: (value: T) => void
   clearable?: boolean
   style?: any
+  empty?: string
 }
 
 
 export default class Dropdown<T extends string> extends Component<IProps<T>> {
 
   render() {
-    const { value, values, clearable, onChange, style } = this.props
+    const { value, values, clearable, onChange, style, empty } = this.props
     return (
       <DropdownUI
-        text={value}
+        text={value || empty}
         className='selection'
         clearable={clearable}
         value={value}
@@ -26,6 +27,11 @@ export default class Dropdown<T extends string> extends Component<IProps<T>> {
         compact={!!style}
       >
         <DropdownUI.Menu>
+          {
+            empty && <DropdownUI.Item value={''} text={empty} key={''} active={value === ''}
+              onClick={() => onChange && onChange('' as T)}
+            />
+          }
           {
             values.map(item => (
               <DropdownUI.Item value={item} text={item} key={item} active={value === item}

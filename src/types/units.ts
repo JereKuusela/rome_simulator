@@ -25,7 +25,8 @@ export enum UnitType {
   Naval = 'Naval Unit',
   Infantry = 'Infantry',
   Cavalry = 'Cavalry',
-  Artillery = 'Artillery'
+  Artillery = 'Artillery',
+  Latest = 'Latest'
 }
 
 export enum UnitRole {

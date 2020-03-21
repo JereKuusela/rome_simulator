@@ -82,6 +82,8 @@ Settings:
 
 EUIV:
  - Big refactor: Tech, etc modifiers applied when getting units (allows setting tech to at 3 start and prevents mismatches)
+ - Base unit mode: Only allow selecting base units, then type selectors somewhere which sets the type (prevents mix of units)
+ - Table on battle to quickly edit discipline, unit combat ability, phase damage taken/done, etc
  - Tooltip needs to show source of losses (to include daily loss)
  - Units: Show pips on selectors
  - General stats / traits:

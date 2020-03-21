@@ -29,6 +29,7 @@ import { ArmyType, CountryName, Participant, Setting, Side, GeneralAttribute, Co
 import { keys } from 'utils'
 import { getCultures } from 'data'
 import InputTechLevel from 'containers/InputTechLevel'
+import TableArchetypes from 'containers/TableArchetypes'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
@@ -194,6 +195,11 @@ class Battle extends Component<IProps, IState> {
                   {this.renderArmyInfo(Side.Defender, participant_d, country_d, general_d, general_a)}
                 </Table.Body>
               </Table>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns={1}>
+            <Grid.Column>
+             <TableArchetypes side={Side.Attacker} country={participant_a.country} />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>
