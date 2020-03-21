@@ -68,6 +68,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.FixTargeting]: true,
       [Setting.BackRow]: true,
       [Setting.StrengthBasedFlank]: true,
+      [Setting.Precision]: 3,
       [Setting.ChunkSize]: 10000,
       [Setting.MaxDepth]: speedValues[SimulationSpeed.Normal][1],
       [Setting.PhaseLengthMultiplier]: speedValues[SimulationSpeed.Normal][0],
@@ -99,8 +100,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.DynamicFlanking]: true,
       [Setting.Tech]: true,
       [Setting.Culture]: true,
-      [Setting.Food]: false,
-      [Setting.ManpowerRoundUp]: true
+      [Setting.Food]: false
     }
   }
   else {
@@ -110,6 +110,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.FixTargeting]: true,
       [Setting.BackRow]: false,
       [Setting.StrengthBasedFlank]: false,
+      [Setting.Precision]: 4,
       [Setting.ChunkSize]: 10000,
       [Setting.MaxDepth]: speedValues[SimulationSpeed.Normal][1],
       [Setting.PhaseLengthMultiplier]: speedValues[SimulationSpeed.Normal][0],
@@ -141,8 +142,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.DynamicFlanking]: false,
       [Setting.Tech]: false,
       [Setting.Culture]: false,
-      [Setting.Food]: true,
-      [Setting.ManpowerRoundUp]: false
+      [Setting.Food]: true
     }
   }
 }

@@ -204,6 +204,11 @@ class Battle extends Component<IProps, IState> {
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
+             <TableArchetypes side={Side.Defender} country={participant_d.country} />
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns={1}>
+            <Grid.Column>
               <TerrainSelector />
             </Grid.Column>
           </Grid.Row>

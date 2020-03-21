@@ -18,6 +18,7 @@ export enum Setting {
   MinimumMorale = 'Minimum morale for combat',
   MinimumStrength = 'Minimum strength for combat',
   RollFrequency = 'Length of combat phases',
+  Precision = 'Calculation precision',
   CombatWidth = 'Base combat width',
   DefenderAdvantage = 'Defender\'s advantage',
   DisciplineDamageReduction = 'Discipline also reduces damage',
@@ -55,8 +56,7 @@ export enum Setting {
   CalculateCasualties = 'Statistics: Calculate casualties',
   CalculateResourceLosses = 'Statistics: Calculate resource losses',
   ReduceRolls = 'Statistics: Reduce possible dice rolls',
-  ShowGraphs = 'Statistics: Show graphs',
-  ManpowerRoundUp = 'Manpower round up'
+  ShowGraphs = 'Statistics: Show graphs'
 }
 
 export enum SimulationSpeed {
@@ -82,6 +82,8 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
       return 'Minimum roll for the dice.\nIncrease for faster battles and less randomness.\nDecrease for slower battles and more randomness.'
     case Setting.ExperienceDamageReduction:
       return 'Damage reduction given by 100% experience.\nIncrease for stronger experienced units.\nDecrease for weaker experienced units.'
+    case Setting.Precision:
+      return 'Precision of combat calculations.'
     case Setting.FixExperience:
       if (value)
         return 'Damage reduction from experience is fixed.\nAll units benefit equally from the experience.'
@@ -105,11 +107,6 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Backrow enabled for support units (EUIV).'
       else
         return 'Only front row (Imperator).'
-    case Setting.ManpowerRoundUp:
-      if (value)
-        return 'Round up manpower on UI (EUIV).'
-      else
-        return 'Round down manpower on UI (Imperator).'
     case Setting.CustomDeployment:
       if (value)
         return 'Preferred unit types can be selected (Imperator).'
@@ -281,6 +278,7 @@ export type SiteSettings = {
   [Setting.FixTargeting]: boolean,
   [Setting.DefenderAdvantage]: boolean,
   [Setting.FixExperience]: boolean,
+  [Setting.Precision]: number,
   [Setting.ChunkSize]: number,
   [Setting.MaxDepth]: number,
   [Setting.PhaseLengthMultiplier]: number,
@@ -314,8 +312,7 @@ export type SiteSettings = {
   [Setting.CalculateCasualties]: boolean,
   [Setting.CalculateResourceLosses]: boolean,
   [Setting.ReduceRolls]: number,
-  [Setting.Performance]: SimulationSpeed,
-  [Setting.ManpowerRoundUp]: boolean
+  [Setting.Performance]: SimulationSpeed
 }
 
 export type Settings = CombatSettings & SiteSettings

@@ -423,10 +423,8 @@ const attack = ( frontline: Frontline, roll: number, dynamic_multiplier: number,
   }
 }
 
-const PRECISION = 100000.0
-
 const precalculateDamage = (terrains: Terrain[], unit: Cohort, settings: Settings) => (
-  PRECISION
+  settings[Setting.Precision]
   * getValue(unit, UnitAttribute.Discipline, true)
   * getValue(unit, UnitAttribute.CombatAbility, settings[Setting.AttributeCombatAbility])
   * getValue(unit, UnitAttribute.DamageDone, settings[Setting.AttributeDamage])
@@ -452,7 +450,7 @@ const calculateCohortDamageMultiplier = (source: CombatCohort, target: CombatCoh
 
 const calculateDamageMultiplier = (source: CombatCohort, target: CombatCohort, dynamic_multiplier: number, is_support: boolean, phase: CombatPhase, settings: Settings) => {
   dynamic_multiplier *= calculateCohortDamageMultiplier(source, target, is_support, settings)
-  source.state.damage_multiplier = dynamic_multiplier * source.calculated.damage['Damage'][target.definition.type][phase] * target.calculated.damage_taken_multiplier / PRECISION
+  source.state.damage_multiplier = dynamic_multiplier * source.calculated.damage['Damage'][target.definition.type][phase] * target.calculated.damage_taken_multiplier / settings[Setting.Precision]
   return dynamic_multiplier
 }
 
@@ -466,7 +464,7 @@ const calculateMoraleLosses = (source: CombatCohort, target: CombatCohort, targe
   const morale = settings[Setting.UseMaxMorale] ? source.definition.max_morale : source[UnitAttribute.Morale]
   const damage = pips * dynamic_multiplier * source.calculated.damage[UnitAttribute.Morale][target.definition.type][phase] * morale * target.calculated.morale_taken_multiplier
 
-  source.state.morale_dealt = Math.floor(damage) / PRECISION
+  source.state.morale_dealt = Math.floor(damage) / settings[Setting.Precision]
   source.state.total_morale_dealt += source.state.morale_dealt
   target.state.morale_loss += source.state.morale_dealt
   // Morale damage seems to carry over only when not flanking (but this can be wrong).
@@ -478,7 +476,7 @@ const calculateStrengthLosses = (source: CombatCohort, target: CombatCohort, tar
   const pips = calculatePips(roll, settings[Setting.MaxPips],source, target, target_support, UnitAttribute.Strength, phase)
   const damage = pips * dynamic_multiplier * source.calculated.damage[UnitAttribute.Strength][target.definition.type][phase] * target.calculated.strength_taken_multiplier[phase]
 
-  source.state.strength_dealt = Math.floor(damage) / PRECISION
+  source.state.strength_dealt = Math.floor(damage) / settings[Setting.Precision]
   source.state.total_strength_dealt += source.state.strength_dealt
   target.state.strength_loss += source.state.strength_dealt
 }

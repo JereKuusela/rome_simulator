@@ -6,7 +6,7 @@ import StyledNumber from 'components/Utils/StyledNumber'
 
 import { Side, ArmyType, UnitAttribute, UnitType, Setting, TacticCalc, TerrainType, CombatPhase, Mode } from 'types'
 import { CombatCohort, CombatCohortRoundInfo, CombatCohortDefinition, calculateCohortPips, getOffensiveCohortPips, getDefensiveCohortPips, getCombatPhase, getDailyIncrease, getDefensiveSupportCohortPips } from 'combat'
-import { toSignedPercent, strengthToValue, toNumber, addSign, toMultiplier } from 'formatters'
+import { toSignedPercent, strengthToValue, toNumber, addSign, toMultiplier, toMorale } from 'formatters'
 import { calculateValue } from 'definition_values'
 import { AppState, getSettings, getSelectedTerrains, getTactic, getCombatUnit, getCombatParticipant } from 'state'
 import { getOpponent } from 'army_utils'
@@ -105,7 +105,7 @@ class CombatTooltip extends Component<IProps, IState> {
     const source_pips = type ? getOffensiveCohortPips(source, type, phase) : 0
     const target_pips = type ? getDefensiveCohortPips(target, type, phase) : 0
     const target_support_pips = type ? getDefensiveSupportCohortPips(target_support, type, phase) : 0
-    const total_pips = dice + terrain_pips + general_pips[phase] + source_pips + target_pips + target_support_pips
+    const total_pips = base_pips + dice + terrain_pips + general_pips[phase] + source_pips + target_pips + target_support_pips
     const capped_pips =  Math.min(total_pips, settings[Setting.MaxPips])
     const reduction_to_cap = Math.min(0, settings[Setting.MaxPips] - capped_pips)
     const text = type === UnitAttribute.Morale ? UnitAttribute.Morale : phase
@@ -197,11 +197,13 @@ class CombatTooltip extends Component<IProps, IState> {
   )
 
   getInfoSection = (source: IUnit, target: IUnit | null) => {
-    const { mode, settings } = this.props
+    const { mode } = this.props
     const morale_current = source[UnitAttribute.Morale]
     const moraleMax = source.max_morale
     const morale_loss = -source.morale_loss
     const strength_current = source[UnitAttribute.Strength]
+    console.log(morale_current)
+    console.log(strength_current)
     const strength_loss = -source.strength_loss
     return (<>
       <List.Item>
@@ -211,7 +213,7 @@ class CombatTooltip extends Component<IProps, IState> {
       </List.Item>
       <List.Item>
         {'Strength: '}
-        <span className={this.ORANGE}>{strengthToValue(mode, strength_current, settings[Setting.ManpowerRoundUp])}</span>
+        <span className={this.ORANGE}>{strengthToValue(mode, strength_current)}</span>
         {
           strength_loss ?
             <>
@@ -225,7 +227,7 @@ class CombatTooltip extends Component<IProps, IState> {
       </List.Item>
       <List.Item>
         {'Morale: '}
-        <span className={this.ORANGE}>{toNumber(morale_current) + ' / ' + toNumber(moraleMax)}</span>
+        <span className={this.ORANGE}>{toMorale(morale_current) + ' / ' + toMorale(moraleMax)}</span>
         {
           morale_loss ?
             <>

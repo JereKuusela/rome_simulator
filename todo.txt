@@ -103,6 +103,7 @@ Todo:
  - Combat things to combat reducer. Perhaps state as parameter when needed? Since it only changes same things as battle reducer,
  - Stats to show amount of traditions, trade, etc..
  - Definition functions probably all could mutate (mostly used in reducers?)
+ - Winrate could automatically set precision based on unit count
 
 Tests:
 - utils tested
@@ -133,3 +134,9 @@ Countries:
 
 Land battle:
 - Deployment order based also on manpower!! (before index), need to to test whether full strength is prioritized for both deploy and reinforce
+
+Combat calculations:
+- In the game, integer calculations are used so the result is rounded down after each step.
+- This doesn't matter in Imperator because of higher precision but causes manpower to be bit off in EUIV.
+- Implementing this slows down the combat a lot because precalculation won't be possible.
+- Also the exact order of calculations must be researched or acquired from devs to get accurate results.

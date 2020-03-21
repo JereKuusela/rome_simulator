@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Input, Image, Table } from 'semantic-ui-react'
+import { Image, Table } from 'semantic-ui-react'
 
 import { Side, UnitRole, CountryName, UnitType } from 'types'
 import { getImage } from 'utils'
