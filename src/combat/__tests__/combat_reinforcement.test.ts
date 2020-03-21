@@ -1,4 +1,4 @@
-import { TestInfo, initInfo, getUnit, testReinforcement, createExpected } from './utils'
+import { TestInfo, initInfo, testReinforcement, createExpected } from './utils'
 import { UnitType, Setting } from 'types'
 
 import unit_preferences from './input/reinforcement/unit_preferences.txt'

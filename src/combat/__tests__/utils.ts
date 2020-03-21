@@ -1,7 +1,7 @@
 import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultParticipant, getDefaultArmy, getDefaultUnit } from 'data'
 import { map, mapRange, resize } from 'utils'
 import { mergeValues } from 'definition_values'
-import { Mode, CountryName, Participant, Terrain, TacticType, Setting, Side, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, Settings, Cohort, CombatPhase, CultureType, General, GeneralAttribute } from 'types'
+import { Mode, CountryName, Participant, Terrain, TacticType, Setting, Side, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, Settings, Cohort, CombatPhase, CultureType, General, GeneralAttribute, UnitPreferences } from 'types'
 import { CombatCohort, CombatParticipant, doBattleFast, deploy, convertParticipant, reinforce } from 'combat'
 import { ArmyForCombat } from 'state'
 
@@ -34,7 +34,7 @@ export interface ExpectedTypes {
  * Returns a clean combat state for tests.
  */
 export const initInfo = () => {
-  const settings = { ...getDefaultLandSettings(), ...getDefaultSiteSettings() }
+  const settings = { ...getDefaultLandSettings(), ...getDefaultSiteSettings(), [Setting.Precision]: 100000 }
   const general = (): General => ({
     enabled: true,
     base_values: {} as any,
@@ -198,7 +198,7 @@ describe('utils', () => {
  * @param secondary Selected secondary type or null.
  * @param flank Selected flank tyoe or null.
  */
-export const getUnitPreferences = (primary: UnitType | null = null, secondary: UnitType | null = null, flank: UnitType | null = null) => ({ [UnitPreferenceType.Primary]: primary, [UnitPreferenceType.Secondary]: secondary, [UnitPreferenceType.Flank]: flank })
+export const getUnitPreferences = (primary: UnitType | null = null, secondary: UnitType | null = null, flank: UnitType | null = null) => ({ [UnitPreferenceType.Primary]: primary, [UnitPreferenceType.Secondary]: secondary, [UnitPreferenceType.Flank]: flank } as UnitPreferences)
 
 /**
  * Sets preferred unit types.
@@ -208,8 +208,8 @@ export const getUnitPreferences = (primary: UnitType | null = null, secondary: U
  */
 export const setUnitPreferences = (info: TestInfo, attacker: (UnitType | null)[], defender: (UnitType | null)[]) => {
 
-  info.army_a = { ...info.army_a, unit_preferences: { [UnitPreferenceType.Primary]: attacker[0], [UnitPreferenceType.Secondary]: attacker[1], [UnitPreferenceType.Flank]: attacker[2] } }
-  info.army_d = { ...info.army_d, unit_preferences: { [UnitPreferenceType.Primary]: defender[0], [UnitPreferenceType.Secondary]: defender[1], [UnitPreferenceType.Flank]: defender[2] } }
+  info.army_a = { ...info.army_a, unit_preferences: { [UnitPreferenceType.Primary]: attacker[0], [UnitPreferenceType.Secondary]: attacker[1], [UnitPreferenceType.Flank]: attacker[2] } as UnitPreferences }
+  info.army_d = { ...info.army_d, unit_preferences: { [UnitPreferenceType.Primary]: defender[0], [UnitPreferenceType.Secondary]: defender[1], [UnitPreferenceType.Flank]: defender[2] } as UnitPreferences }
 }
 
 export const setCombatWidth = (info: TestInfo, value: number) => {
