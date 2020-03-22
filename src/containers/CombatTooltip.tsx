@@ -202,8 +202,6 @@ class CombatTooltip extends Component<IProps, IState> {
     const moraleMax = source.max_morale
     const morale_loss = -source.morale_loss
     const strength_current = source[UnitAttribute.Strength]
-    console.log(morale_current)
-    console.log(strength_current)
     const strength_loss = -source.strength_loss
     return (<>
       <List.Item>

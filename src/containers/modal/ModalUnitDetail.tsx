@@ -51,32 +51,32 @@ class ModalUnitDetail extends Component<IProps> {
   setLossValue = (key: string, attribute: UnitValueType, value: number) => this.setValue(ValuesType.Loss, key, attribute, value)
 
   setValue = (type: ValuesType, key: string, attribute: UnitValueType, value: number) => {
-    const { setUnitValue, invalidate, unit_type } = this.props
-    setUnitValue(unit_type!, type, key, attribute, value)
+    const { setUnitValue, invalidate, unit_type, country } = this.props
+    setUnitValue(country!, unit_type!, type, key, attribute, value)
     invalidate()
   }
 
   changeImage = (image: string) => {
-    const { changeUnitImage, invalidate, unit_type } = this.props
-    changeUnitImage(unit_type!, image)
+    const { changeUnitImage, invalidate, unit_type, country } = this.props
+    changeUnitImage(country!, unit_type!, image)
     invalidate()
   }
 
   changeBaseType = (type: UnitType) => {
-    const { changeUnitBaseType, invalidate, unit_type } = this.props
-    changeUnitBaseType(unit_type!, type)
+    const { changeUnitBaseType, invalidate, unit_type, country } = this.props
+    changeUnitBaseType(country!, unit_type!, type)
     invalidate()
   }
 
   changeDeployment = (deployment: UnitRole) => {
-    const { changeUnitDeployment, invalidate, unit_type } = this.props
-    changeUnitDeployment(unit_type!, deployment)
+    const { changeUnitDeployment, invalidate, unit_type, country  } = this.props
+    changeUnitDeployment(country!, unit_type!, deployment)
     invalidate()
   }
 
   toggleIsLoyal = () => {
-    const { toggleUnitLoyality, invalidate, unit_type } = this.props
-    toggleUnitLoyality(unit_type!)
+    const { toggleUnitLoyality, invalidate, unit_type, country  } = this.props
+    toggleUnitLoyality(country!, unit_type!)
     invalidate()
   }
 }

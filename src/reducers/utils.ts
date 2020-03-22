@@ -1,5 +1,5 @@
 import { produce } from 'immer'
-import { Mode, CountryName } from 'types'
+import { Mode } from 'types'
 import { Reducer, CombinedState } from 'redux'
 
 export type Action<T = any> = {
@@ -10,7 +10,7 @@ export type Action<T = any> = {
 let typeCounter = 0
 const getActionType = (func: Function) => process.env.NODE_ENV === 'production' ? 'action' + typeCounter++ : func.name
 
-export type ActionToFunction<T, K = any> = { [key: string]: (entity: T, ...args: any) => void | undefined }
+export type ActionToFunction<T, K1= any, K2= any> = { [key: string]: (entity: T, ...args: any) => void | undefined }
 
 export const makeActionRemoveFirst = <T extends any[], E>(func: (entity: E, ...args: T) => any, actionToFunction: ActionToFunction<E>) => {
   const type = getActionType(func)
@@ -22,6 +22,13 @@ export const makeActionReplaceFirst = <T extends any[], K extends string, E>(fun
   const type = getActionType(func)
   actionToFunction[type] = func
   const ret = (key: K, ...args: T) => ({ type, payload: [key, ...args] } as {})
+  return ret
+}
+
+export const makeActionReplaceFirstTwice = <T extends any[], K1 extends string, K2 extends string, E>(func: (entity: E, ...args: T) => any, actionToFunction: ActionToFunction<E, K1, K2>) => {
+  const type = getActionType(func)
+  actionToFunction[type] = func
+  const ret = (key1: K1, key2: K2,  ...args: T) => ({ type, payload: [key1, key2, ...args] } as {})
   return ret
 }
 
@@ -61,7 +68,7 @@ export function makeContainerReducer <S, E>(initial: S, actionToFunction: Action
   return makeReducer(initial, actionToFunction, getContainer ? getContainer : getDefaultContainer)
 }
 
-export type ReducerParams = { mode: Mode, country: CountryName}
+export type ReducerParams = { mode: Mode }
 
 export const compose = <State>(...reducers: ReducerWithParam<State>[]): ReducerWithParam<State> => {
   const initial = reducers[0](undefined, { payload: [] }, {} as ReducerParams)
@@ -80,7 +87,7 @@ export function combine<S>(reducers: {[K in keyof S]: ReducerWithParam<S[K]>}): 
 
   return function combination(state: S = {} as S, action) {
     const nextState: S = {} as S
-    const settings: ReducerParams =  { mode: (state as any)?.settings?.mode, country: (state as any)?.settings?.country }
+    const settings: ReducerParams =  { mode: (state as any)?.settings?.mode }
 
     for (let key of reducerKeys) {
       const reducer = reducers[key] as any

@@ -49,7 +49,7 @@ class InputTechLevel extends Component<IProps> {
     selectCountry(country)
     modifiers = mapModifiersToUnits(modifiers)
     enableGeneralModifiers(country, key, modifiers)
-    enableUnitModifiers(key, modifiers)
+    enableUnitModifiers(country, key, modifiers)
     enableSelection(country, key)
     enableCountryModifiers(country, key, modifiers)
     invalidate()
@@ -59,7 +59,7 @@ class InputTechLevel extends Component<IProps> {
     const { clearGeneralModifiers, clearUnitModifiers, clearSelection, invalidate, country, clearCountryModifiers, selectCountry } = this.props
     selectCountry(country)
     clearGeneralModifiers(country, key)
-    clearUnitModifiers(key)
+    clearUnitModifiers(country, key)
     clearSelection(country, key)
     clearCountryModifiers(country, key)
     invalidate()

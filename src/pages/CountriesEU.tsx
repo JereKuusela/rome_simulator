@@ -272,7 +272,7 @@ class Countries extends Component<IProps> {
     const { enableGeneralModifiers, enableUnitModifiers, enableCountryModifiers, enableSelection, invalidate, selected_country } = this.props
     modifiers = mapModifiersToUnits(modifiers)
     enableGeneralModifiers(selected_country, key, modifiers)
-    enableUnitModifiers(key, modifiers)
+    enableUnitModifiers(selected_country, key, modifiers)
     enableSelection(selected_country, key)
     enableCountryModifiers(selected_country, key, modifiers)
     invalidate()
@@ -281,7 +281,7 @@ class Countries extends Component<IProps> {
   clearModifiers = (key: string) => {
     const { clearGeneralModifiers, clearUnitModifiers, clearSelection, invalidate, selected_country, clearCountryModifiers } = this.props
     clearGeneralModifiers(selected_country, key)
-    clearUnitModifiers(key)
+    clearUnitModifiers(selected_country, key)
     clearSelection(selected_country, key)
     clearCountryModifiers(selected_country, key)
     invalidate()

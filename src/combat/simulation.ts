@@ -235,7 +235,6 @@ export const convertCohorts = (cohorts: Cohorts, settings: Settings, casualties_
 const getValidRolls = (minimum: number, maximum: number, halve_times: number) => {
   let valid_rolls = mapRange(maximum - minimum + 1, value => value + 1)
   for (let i = 0; i < halve_times; i++) {
-    console.log(valid_rolls)
     const length = valid_rolls.length
     if (length % 2)
       valid_rolls = valid_rolls.filter((_, index) => index % 2 === 0)

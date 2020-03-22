@@ -33,7 +33,7 @@ class Units extends Component<IProps, IState> {
       <>
         <ValueModal
           open={this.state.open_create_unit}
-          onSuccess={type => createUnit(mode, type)}
+          onSuccess={type => createUnit(country, mode, type)}
           onClose={this.closeModal}
           message='Create unit'
           button_message='Create'
@@ -81,12 +81,12 @@ class Units extends Component<IProps, IState> {
   openModal = (country: CountryName, unit: UnitType): void => this.setState({ modal_country: country, modal_unit: unit })
 
   onRemove = (): void => {
-    this.state.modal_country && this.state.modal_unit && this.props.deleteUnit(this.state.modal_unit)
+    this.state.modal_country && this.state.modal_unit && this.props.deleteUnit(this.props.country, this.state.modal_unit)
     this.closeModal()
   }
 
   onChangeType = (old_type: UnitType, new_type: UnitType): void => {
-    this.props.changeUnitType(old_type, new_type)
+    this.props.changeUnitType(this.props.country, old_type, new_type)
     this.setState({ modal_unit: new_type })
   }
 
