@@ -199,12 +199,12 @@ class Battle extends Component<IProps, IState> {
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
-             <TableArchetypes side={Side.Attacker} country={participant_a.country} />
+              <TableArchetypes side={Side.Attacker} country={participant_a.country} />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
-             <TableArchetypes side={Side.Defender} country={participant_d.country} />
+              <TableArchetypes side={Side.Defender} country={participant_d.country} />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>

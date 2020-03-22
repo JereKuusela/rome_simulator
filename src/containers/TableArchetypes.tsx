@@ -2,12 +2,13 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table } from 'semantic-ui-react'
 
-import { Side, UnitRole, CountryName, UnitType } from 'types'
+import { Side, UnitRole, CountryName, UnitType, UnitAttribute, filterAttributes } from 'types'
 import { getImage } from 'utils'
-import { AppState, getUnits, getUnitPreferences, getCountry, getArchetypes } from 'state'
+import { AppState, getUnits, getUnitPreferences, getCountry, getArchetypes, getSettings } from 'state'
 import { invalidate, setUnitPreference } from 'reducers'
 import { getChildUnits } from 'managers/army'
 import Dropdown from 'components/Utils/Dropdown'
+import UnitValueInput from './UnitValueInput'
 
 type Props = {
   side: Side
@@ -15,6 +16,8 @@ type Props = {
 }
 
 class TableArchetypes extends Component<IProps> {
+
+  attributes = [UnitAttribute.CombatAbility, UnitAttribute.FireDamageDone, UnitAttribute.FireDamageTaken, UnitAttribute.ShockDamageDone, UnitAttribute.ShockDamageTaken]
 
   checkPreference = (role: UnitRole) => {
     const { units, preferences, tech, country } = this.props
@@ -32,17 +35,24 @@ class TableArchetypes extends Component<IProps> {
   }
 
   render() {
-    const { side } = this.props
+    const { side, settings } = this.props
     return (
       <Table celled selectable unstackable key={side}>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell width='4'>
+            <Table.HeaderCell width='2'>
               {side}
             </Table.HeaderCell>
-            <Table.HeaderCell width='3'>
+            <Table.HeaderCell width='2'>
               Type
             </Table.HeaderCell>
+            {
+              filterAttributes(this.attributes, settings).map(attribute => (
+                <Table.HeaderCell width='2'>
+                  {attribute}
+                </Table.HeaderCell>
+              ))
+            }
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -56,7 +66,7 @@ class TableArchetypes extends Component<IProps> {
 
   renderRow = (role: UnitRole) => {
     // List of archetypes -> get archetype -> get image
-    const { archetypes, units, setUnitPreference, country, invalidate, preferences, tech } = this.props
+    const { archetypes, units, setUnitPreference, country, invalidate, preferences, tech, settings } = this.props
     const archetype = archetypes.find(unit => unit.role === role)
     const preference = preferences[role]
     if (!archetype || !preference)
@@ -72,6 +82,13 @@ class TableArchetypes extends Component<IProps> {
         <Table.Cell>
           <Dropdown values={[UnitType.Latest].concat(types)} value={preference} onChange={type => setUnitPreference(country, role, type) && invalidate()} />
         </Table.Cell>
+        {
+          filterAttributes(this.attributes, settings).map(attribute => (
+            <Table.Cell>
+              <UnitValueInput unit={archetype} attribute={attribute} country={country} percent />
+            </Table.Cell>
+          ))
+        }
       </Table.Row>
     )
   }
@@ -81,7 +98,8 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   archetypes: getArchetypes(state, props.country),
   preferences: getUnitPreferences(state, props.side),
   units: getUnits(state, props.country),
-  tech: getCountry(state, props.side).tech_level
+  tech: getCountry(state, props.side).tech_level,
+  settings: getSettings(state)
 })
 
 const actions = { invalidate, setUnitPreference }
