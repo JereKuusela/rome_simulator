@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { UnitAttribute, Unit, ValuesType, CountryName } from 'types'
 import { invalidate, setUnitValue } from 'reducers'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
-import { filterValues, calculateBase } from 'definition_values'
+import { filterValues, calculateBase, calculateModifier } from 'definition_values'
 
 type Props = {
   unit: Unit
@@ -12,6 +12,7 @@ type Props = {
   identifier?: string
   attribute: UnitAttribute
   percent?: boolean
+  type?: ValuesType
 }
 
 /** 
@@ -19,18 +20,29 @@ type Props = {
  */
 class UnitValueInput extends Component<IProps> {
   render() {
-    const { unit, attribute, percent } = this.props
+    const { unit, attribute, percent, type } = this.props
+    const values_type = type ?? ValuesType.Base
+    let value = 0
+    if (values_type === ValuesType.Base)
+      value = calculateBase(unit, attribute)
+    else
+      value = calculateModifier(unit, attribute) - 1
     return (
-      <DelayedNumericInput value={calculateBase(unit, attribute)} onChange={this.onChange} percent={percent} />
+      <DelayedNumericInput value={value} onChange={this.onChange} percent={percent} />
     )
   }
 
   getKey = () => this.props.identifier || 'Custom'
 
   onChange = (value: number) => {
-    const { unit, attribute, setUnitValue, invalidate, country } = this.props
-    const base = calculateBase(unit, attribute) - calculateBase(filterValues(unit, this.getKey()), attribute)
-    setUnitValue(country, unit.type, ValuesType.Base, this.getKey(), attribute, value - base)
+    const { unit, attribute, setUnitValue, invalidate, country, type } = this.props
+    const values_type = type ?? ValuesType.Base
+    let base = 0
+    if (values_type === ValuesType.Base)
+      base = calculateBase(unit, attribute) - calculateBase(filterValues(unit, this.getKey()), attribute)
+    else
+      base = calculateModifier(unit, attribute) - calculateModifier(filterValues(unit, this.getKey()), attribute)
+    setUnitValue(country, unit.type, values_type, this.getKey(), attribute, value - base)
     invalidate()
   }
 }

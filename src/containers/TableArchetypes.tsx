@@ -9,6 +9,7 @@ import { invalidate, setUnitPreference } from 'reducers'
 import { getChildUnits } from 'managers/army'
 import Dropdown from 'components/Utils/Dropdown'
 import UnitValueInput from './UnitValueInput'
+import AttributeImage from 'components/Utils/AttributeImage'
 
 type Props = {
   side: Side
@@ -49,7 +50,7 @@ class TableArchetypes extends Component<IProps> {
             {
               filterAttributes(this.attributes, settings).map(attribute => (
                 <Table.HeaderCell width='2'>
-                  {attribute}
+                  <AttributeImage attribute={attribute} />
                 </Table.HeaderCell>
               ))
             }

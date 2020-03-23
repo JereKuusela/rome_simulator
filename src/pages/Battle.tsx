@@ -1,35 +1,26 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Button, Checkbox, Divider, Grid, Header, Image, Input, Table } from 'semantic-ui-react'
-import { calculateGeneralPips, getCombatPhase, getTerrainPips } from 'combat'
+import { Button, Divider, Grid, Header, Input } from 'semantic-ui-react'
+import { getCombatPhase } from 'combat'
 import ConfirmationButton from 'components/ConfirmationButton'
-import Dropdown from 'components/Utils/Dropdown'
-import StyledNumber from 'components/Utils/StyledNumber'
 import ModalCohortDetail from 'containers/modal/ModalCohortDetail'
 import ModalFastPlanner from 'containers/modal/ModalFastPlanner'
 import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from 'containers/modal/ModalUnitSelector'
 import PreferredUnitTypes from 'containers/PreferredUnitTypes'
 import TableStats from 'containers/TableStats'
 import TableArmyPart from 'containers/TableArmyPart'
-import TacticSelector from 'containers/TacticSelector'
 import TargetArrows from 'containers/TargetArrows'
 import TerrainSelector from 'containers/TerrainSelector'
 import WinRate from 'containers/WinRate'
-import { addSign } from 'formatters'
-import IconDice from 'images/chance.png'
-import IconGeneral from 'images/military_power.png'
-import IconTerrain from 'images/terrain.png'
 import {
   invalidate, selectArmy, setRoll, toggleRandomRoll,
   undo, battle, refreshBattle, setSeed, setGeneralBaseStat, resetState, selectCulture
 } from 'reducers'
 import { AppState, getBattle, getCountryName, getParticipant, getSettings, getCountries, getGeneral, getSelectedTerrains, getCountry } from 'state'
-import { ArmyType, CountryName, Participant, Setting, Side, GeneralAttribute, CombatPhase, General, GeneralValueType, Country } from 'types'
-import { keys } from 'utils'
-import { getCultures } from 'data'
-import InputTechLevel from 'containers/InputTechLevel'
+import { ArmyType, CountryName, Setting, Side, CombatPhase } from 'types'
 import TableArchetypes from 'containers/TableArchetypes'
+import TableArmyInfo from 'containers/TableArmyInfo'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
@@ -67,7 +58,7 @@ class Battle extends Component<IProps, IState> {
   openFastPlanner = (): void => this.setState({ modal_fast_planner_open: true })
 
   render() {
-    const { participant_a, participant_d, general_a, general_d, round, outdated, is_undo, fight_over, refreshBattle, settings, country_a, country_d } = this.props
+    const { participant_a, participant_d, round, outdated, is_undo, fight_over, refreshBattle, settings } = this.props
     if (outdated)
       refreshBattle()
     return (
@@ -139,62 +130,7 @@ class Battle extends Component<IProps, IState> {
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
-              <Table celled unstackable>
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell>
-                    </Table.HeaderCell>
-                    <Table.HeaderCell>
-                      Country
-                    </Table.HeaderCell>
-                    {
-                      settings[Setting.Martial] &&
-                      <Table.HeaderCell collapsing>
-                        General skill
-                    </Table.HeaderCell>
-                    }
-                    {
-                      settings[Setting.FireAndShock] &&
-                      <Table.HeaderCell collapsing>
-                        General fire
-                      </Table.HeaderCell>
-                    }{
-                      settings[Setting.FireAndShock] &&
-                      <Table.HeaderCell collapsing>
-                        General shock
-                      </Table.HeaderCell>
-                    }
-                    {
-                      settings[Setting.Tactics] &&
-                      <Table.HeaderCell>
-                        Tactic
-                      </Table.HeaderCell>
-                    }
-                    {
-                      settings[Setting.Tech] &&
-                      <Table.HeaderCell>
-                        Tech
-                      </Table.HeaderCell>
-                    }
-                    {
-                      settings[Setting.Culture] &&
-                      <Table.HeaderCell>
-                        Culture
-                      </Table.HeaderCell>
-                    }
-                    <Table.HeaderCell>
-                      Dice roll
-                    </Table.HeaderCell>
-                    <Table.HeaderCell>
-                      Randomize
-                    </Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {this.renderArmyInfo(Side.Attacker, participant_a, country_a, general_a, general_d)}
-                  {this.renderArmyInfo(Side.Defender, participant_d, country_d, general_d, general_a)}
-                </Table.Body>
-              </Table>
+              <TableArmyInfo />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>
@@ -294,36 +230,6 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderRoll = (side: Side, dice: number, is_random: boolean, general: General, opposing_general: General) => {
-    const { terrains, settings, round } = this.props
-    const terrain_pips = getTerrainPips(terrains, side, general, opposing_general)
-    const general_pips = calculateGeneralPips(general, opposing_general, getCombatPhase(round, settings))
-    return (
-      <div key={side}>
-        <Image src={IconDice} avatar />
-        {is_random ? dice : <Input size='mini' style={{ width: 100 }} type='number' value={dice} onChange={(_, data) => this.props.setRoll(side, Number(data.value))} />}
-        {general_pips !== 0 ?
-          <span style={{ paddingLeft: '1em' }}>
-            <Image src={IconGeneral} avatar />
-            <StyledNumber value={general_pips} formatter={addSign} />
-          </span>
-          : null}
-        {terrain_pips !== 0 ?
-          <span style={{ paddingLeft: '1em' }}>
-            <Image src={IconTerrain} avatar />
-            <StyledNumber value={terrain_pips} formatter={addSign} />
-          </span>
-          : null}
-      </div>
-    )
-  }
-
-  renderIsRollRandom = (side: Side, is_random: boolean) => {
-    return (
-      <Checkbox toggle checked={is_random} onClick={() => this.props.toggleRandomRoll(side)} />
-    )
-  }
-
   renderReserve = (side: Side, country: CountryName) => {
     return (
       <div key={side}>
@@ -355,67 +261,6 @@ class Battle extends Component<IProps, IState> {
           full_rows
         />
       </div>
-    )
-  }
-
-  renderGeneralAttribute = (country: CountryName, general: General, attribute: GeneralValueType) => (
-    <Table.Cell collapsing>
-      <Input disabled={!general.enabled} size='mini' style={{ width: 100 }} type='number' value={general.base_values[attribute]} onChange={(_, { value }) => this.props.setGeneralBaseStat(country, attribute, Number(value))} />
-      {' '}<StyledNumber value={general.extra_values[attribute]} formatter={addSign} hide_zero />
-    </Table.Cell>
-  )
-
-  renderArmyInfo = (side: Side, participant: Participant, country: Country, general: General, enemy: General) => {
-    const { settings, selectArmy, invalidate, selectCulture } = this.props
-    return (
-      <Table.Row key={side}>
-        <Table.Cell collapsing>
-          {side}
-        </Table.Cell>
-        <Table.Cell collapsing>
-          <Dropdown
-            values={keys(this.props.countries)}
-            value={participant.country}
-            onChange={name => {
-              selectArmy(side, name)
-              invalidate()
-            }}
-            style={{ width: 150 }}
-          />
-        </Table.Cell>
-        {settings[Setting.Martial] && this.renderGeneralAttribute(participant.country, general, GeneralAttribute.Martial)}
-        {settings[Setting.FireAndShock] && this.renderGeneralAttribute(participant.country, general, CombatPhase.Fire)}
-        {settings[Setting.FireAndShock] && this.renderGeneralAttribute(participant.country, general, CombatPhase.Shock)}
-        {
-          settings[Setting.Tactics] &&
-          <Table.Cell collapsing>
-            <TacticSelector side={side} />
-          </Table.Cell>
-        }
-        {
-          settings[Setting.Tech] &&
-          <Table.Cell collapsing>
-            <InputTechLevel country={participant.country} tech={country.tech_level} />
-          </Table.Cell>
-        }
-        {
-          settings[Setting.Culture] &&
-          <Table.Cell collapsing>
-            <Dropdown
-              values={getCultures()}
-              value={country.culture}
-              onChange={item => selectCulture(participant.country, item, false)}
-              style={{ width: 150 }}
-            />
-          </Table.Cell>
-        }
-        <Table.Cell>
-          {this.renderRoll(side, participant.dice, participant.randomize_roll, general, enemy)}
-        </Table.Cell>
-        <Table.Cell collapsing>
-          {this.renderIsRollRandom(side, participant.randomize_roll)}
-        </Table.Cell>
-      </Table.Row >
     )
   }
 

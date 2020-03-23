@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Image, Table, List, Icon } from 'semantic-ui-react'
+import { Table, List, Icon } from 'semantic-ui-react'
 import { toNumber } from 'lodash'
 
 import { Mode, CountryName, UnitType, TerrainType, BaseUnit, UnitAttribute, UnitValueType, Unit } from 'types'
@@ -8,14 +8,8 @@ import { toPercent, toManpower, toSignedPercent, hideZero } from 'formatters'
 
 import StyledNumber from './Utils/StyledNumber'
 import VersusList from './VersusList'
-import IconDiscipline from 'images/discipline.png'
-import IconOffense from 'images/offense.png'
-import IconDefense from 'images/defense.png'
-import IconManpower from 'images/manpower.png'
-import IconStrength from 'images/naval_combat.png'
-import IconMorale from 'images/morale.png'
-import IconAttrition from 'images/attrition.png'
 import LabelItem from './Utils/LabelUnit'
+import AttributeImage from './Utils/AttributeImage'
 
 interface IProps {
   mode: Mode
@@ -32,7 +26,6 @@ export default class UnitDefinitions extends Component<IProps> {
 
   render() {
     const { mode, units, country } = this.props
-    const icon_strength = mode === Mode.Naval ? IconStrength : IconManpower
     return (
       <Table celled selectable unstackable>
         <Table.Header>
@@ -41,38 +34,34 @@ export default class UnitDefinitions extends Component<IProps> {
               {country}
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <Image src={IconMorale} avatar />
+              <AttributeImage attribute={UnitAttribute.Morale} />
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <Image src={icon_strength} avatar />
+              <AttributeImage attribute={UnitAttribute.Strength} mode={mode} />
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <Image src={IconDiscipline} avatar />
+              <AttributeImage attribute={UnitAttribute.Discipline} />
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <Image src={IconOffense} avatar />
+              <AttributeImage attribute={mode === Mode.Naval ? UnitAttribute.DamageDone : UnitAttribute.Offense} />
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <Image src={mode === Mode.Naval ? IconAttrition : IconDefense} avatar />
+              <AttributeImage attribute={mode === Mode.Naval ? UnitAttribute.DamageTaken : UnitAttribute.Defense} />
             </Table.HeaderCell>
             <Table.HeaderCell>
               <Icon name='arrows alternate horizontal' size='big' />
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <Image src={IconOffense} avatar />
-              <Image src={IconMorale} avatar />
+              <AttributeImage attribute={UnitAttribute.MoraleDamageDone} />
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <Image src={IconAttrition} avatar />
-              <Image src={IconMorale} avatar />
+              <AttributeImage attribute={UnitAttribute.MoraleDamageTaken} />
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <Image src={IconOffense} avatar />
-              <Image src={icon_strength} avatar />
+              <AttributeImage attribute={UnitAttribute.StrengthDamageDone} />
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <Image src={IconAttrition} avatar />
-              <Image src={icon_strength} avatar />
+              <AttributeImage attribute={UnitAttribute.StrengthDamageTaken} />
             </Table.HeaderCell>
             <Table.HeaderCell>
               Exp

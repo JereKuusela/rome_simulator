@@ -69,3 +69,7 @@ code {
 .ui.button:disabled.no-dim {
   opacity: 1!important;
 }
+
+.small-input {
+  width: 55px;
+}

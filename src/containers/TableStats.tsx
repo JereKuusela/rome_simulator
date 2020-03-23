@@ -2,16 +2,14 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table } from 'semantic-ui-react'
 
-import IconManpower from 'images/manpower.png'
-import IconStrength from 'images/naval_combat.png'
-import IconMorale from 'images/morale.png'
 import IconEmpty from 'images/empty.png'
-import { Mode, Side, UnitType, UnitAttribute } from 'types'
+import { Side, UnitType, UnitAttribute } from 'types'
 import { CombatCohorts, CombatCohort } from 'combat'
 import { strengthToValue } from 'formatters'
 import { getImage, round, sumArr } from 'utils'
 import { AppState, getCurrentCombat, getMode } from 'state'
 import { flatten, uniq } from 'lodash'
+import AttributeImage from 'components/Utils/AttributeImage'
 
 type Props = {}
 
@@ -38,10 +36,10 @@ class TableStats extends Component<IProps> {
               {side}
             </Table.HeaderCell>
             <Table.HeaderCell width='3'>
-              <Image src={mode === Mode.Naval ? IconStrength : IconManpower} avatar />
+              <AttributeImage attribute={UnitAttribute.Strength} mode={mode} />
             </Table.HeaderCell>
             <Table.HeaderCell width='3'>
-              <Image src={IconMorale} avatar />
+              <AttributeImage attribute={UnitAttribute.Morale} />
             </Table.HeaderCell>
             <Table.HeaderCell width='3'>
               Strength depleted
