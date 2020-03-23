@@ -20,7 +20,7 @@ type Props = {
 
 class TableArchetypes extends Component<IProps> {
 
-  attributes = [UnitAttribute.CombatAbility, UnitAttribute.FireDamageDone, UnitAttribute.FireDamageTaken, UnitAttribute.ShockDamageDone, UnitAttribute.ShockDamageTaken]
+  attributes = [UnitAttribute.CombatAbility]
 
   checkPreference = (role: UnitRole) => {
     const { units, preferences, tech, country } = this.props
@@ -43,10 +43,10 @@ class TableArchetypes extends Component<IProps> {
       <Table celled selectable unstackable key={side}>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell width='2'>
+            <Table.HeaderCell>
               {side}
             </Table.HeaderCell>
-            <Table.HeaderCell width='2'>
+            <Table.HeaderCell>
               Type
             </Table.HeaderCell>
             <Table.HeaderCell>
@@ -54,7 +54,7 @@ class TableArchetypes extends Component<IProps> {
             </Table.HeaderCell>
             {
               filterAttributes(this.attributes, settings).map(attribute => (
-                <Table.HeaderCell>
+                <Table.HeaderCell key={attribute}>
                   <AttributeImage attribute={attribute} />
                 </Table.HeaderCell>
               ))
@@ -93,7 +93,7 @@ class TableArchetypes extends Component<IProps> {
         </Table.Cell>
         {
           filterAttributes(this.attributes, settings).map(attribute => (
-            <Table.Cell>
+            <Table.Cell key={attribute}>
               <UnitValueInput unit={archetype} attribute={attribute} country={country} percent />
             </Table.Cell>
           ))

@@ -21,6 +21,7 @@ import { AppState, getBattle, getCountryName, getParticipant, getSettings, getCo
 import { ArmyType, CountryName, Setting, Side, CombatPhase } from 'types'
 import TableArchetypes from 'containers/TableArchetypes'
 import TableArmyInfo from 'containers/TableArmyInfo'
+import TableDamageAttributes from 'containers/TableDamageAttributes'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
@@ -36,6 +37,9 @@ class Battle extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = { modal_unit_info: null, modal_army_unit_info: null, modal_fast_planner_open: false }
+    const { outdated, refreshBattle } = props
+    if (outdated)
+      refreshBattle()
   }
 
   isModalOpen = () => this.state.modal_unit_info || this.state.modal_army_unit_info || this.state.modal_fast_planner_open
@@ -57,10 +61,14 @@ class Battle extends Component<IProps, IState> {
 
   openFastPlanner = (): void => this.setState({ modal_fast_planner_open: true })
 
-  render() {
-    const { participant_a, participant_d, round, outdated, is_undo, fight_over, refreshBattle, settings } = this.props
+  componentDidUpdate() {
+    const { outdated, refreshBattle } = this.props
     if (outdated)
       refreshBattle()
+  }
+
+  render() {
+    const { participant_a, participant_d, round, is_undo, fight_over, settings } = this.props
     return (
       <>
         <ModalUnitSelector
@@ -125,22 +133,23 @@ class Battle extends Component<IProps, IState> {
           <Divider />
           <Grid.Row columns={1}>
             <Grid.Column>
-              <TableStats />
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row columns={1}>
-            <Grid.Column>
               <TableArmyInfo />
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row columns={1}>
+          <Grid.Row columns={2}>
             <Grid.Column>
               <TableArchetypes side={Side.Attacker} country={participant_a.country} />
             </Grid.Column>
-          </Grid.Row>
-          <Grid.Row columns={1}>
             <Grid.Column>
               <TableArchetypes side={Side.Defender} country={participant_d.country} />
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns={2}>
+            <Grid.Column>
+              <TableDamageAttributes side={Side.Attacker} country={participant_a.country} />
+            </Grid.Column>
+            <Grid.Column>
+              <TableDamageAttributes side={Side.Defender} country={participant_d.country} />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>
@@ -155,6 +164,12 @@ class Battle extends Component<IProps, IState> {
               </Grid.Column>
             </Grid.Row>
           }
+          <Divider />
+          <Grid.Row columns={1}>
+            <Grid.Column>
+              <TableStats />
+            </Grid.Column>
+          </Grid.Row>
           <Divider />
           <Grid.Row columns={1}>
             <Grid.Column>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Image } from 'semantic-ui-react'
-import { UnitAttribute, Mode } from 'types'
+import { UnitAttribute, Mode, CombatPhase } from 'types'
 
 import IconDiscipline from 'images/discipline.png'
 import IconOffense from 'images/offense.png'
@@ -43,6 +43,10 @@ const getFirstImage = (attribute: string, mode?: Mode) => {
       return IconAttrition
     case UnitAttribute.CombatAbility:
       return IconCombatAbility
+    case CombatPhase.Fire:
+      return IconFire
+    case CombatPhase.Shock:
+      return IconShock
     default:
       return null
   }

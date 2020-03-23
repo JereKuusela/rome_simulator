@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table, Checkbox, Input } from 'semantic-ui-react'
 
-import { Side, CountryName, Setting, Participant, Country, General, GeneralAttribute, CombatPhase, GeneralValueType, UnitAttribute, isAttributeEnabled, Mode, UnitType, Unit, ValuesType } from 'types'
+import { Side, CountryName, Setting, Participant, Country, General, GeneralAttribute, GeneralValueType, UnitAttribute, isAttributeEnabled, Mode, UnitType, Unit, ValuesType } from 'types'
 import { keys } from 'utils'
 import { AppState, getCountry, getSettings, getParticipant, getGeneral, getCountryName, getSelectedTerrains, getCountries, getBattle, getUnit, getMode } from 'state'
 import { invalidate, selectArmy, selectCulture, toggleRandomRoll, setRoll, setGeneralBaseStat } from 'reducers'
@@ -24,6 +24,8 @@ type Props = {
 
 class TableArmyInfo extends Component<IProps> {
 
+  attributes = [UnitAttribute.Discipline]
+
   render() {
     const { settings, participant_a, participant_d, country_a, country_d, general_a, general_d, unit_a, unit_d } = this.props
     return (
@@ -31,25 +33,12 @@ class TableArmyInfo extends Component<IProps> {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>
-            </Table.HeaderCell>
-            <Table.HeaderCell>
               Country
             </Table.HeaderCell>
             {
               settings[Setting.Martial] &&
               <Table.HeaderCell collapsing>
                 General skill
-              </Table.HeaderCell>
-            }
-            {
-              settings[Setting.FireAndShock] &&
-              <Table.HeaderCell collapsing>
-                General fire
-              </Table.HeaderCell>
-            }{
-              settings[Setting.FireAndShock] &&
-              <Table.HeaderCell collapsing>
-                General shock
               </Table.HeaderCell>
             }
             {
@@ -104,9 +93,6 @@ class TableArmyInfo extends Component<IProps> {
     return (
       <Table.Row key={side}>
         <Table.Cell collapsing>
-          {side}
-        </Table.Cell>
-        <Table.Cell collapsing>
           <Dropdown
             values={keys(this.props.countries)}
             value={participant.country}
@@ -118,8 +104,6 @@ class TableArmyInfo extends Component<IProps> {
           />
         </Table.Cell>
         {settings[Setting.Martial] && this.renderGeneralAttribute(participant.country, general, GeneralAttribute.Martial)}
-        {settings[Setting.FireAndShock] && this.renderGeneralAttribute(participant.country, general, CombatPhase.Fire)}
-        {settings[Setting.FireAndShock] && this.renderGeneralAttribute(participant.country, general, CombatPhase.Shock)}
         {
           settings[Setting.Tactics] &&
           <Table.Cell collapsing>
