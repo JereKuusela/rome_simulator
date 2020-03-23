@@ -120,10 +120,10 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
   // Performance is critical. Precalculate as many things as possible.
   const rolls = getRolls(settings[Setting.DiceMinimum], settings[Setting.DiceMaximum], settings[Setting.ReduceRolls])
   const dice_2 = rolls.length
-  const fractions = mapRange(10, value => 1.0 / Math.pow(dice_2, value))
   const phaseLength = Math.floor(settings[Setting.RollFrequency] * settings[Setting.PhaseLengthMultiplier])
   const chunkSize = settings[Setting.ChunkSize]
   const maxDepth = settings[Setting.MaxDepth]
+  const fractions = mapRange(maxDepth + 1, value => 1.0 / Math.pow(dice_2, value))
 
   // Deployment is shared for each iteration.
   deploy(attacker, defender, settings)
