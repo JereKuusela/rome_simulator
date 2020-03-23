@@ -172,8 +172,8 @@ class ModalFastPlanner extends Component<IProps, IState> {
 const mapStateToProps = (state: AppState) => ({
   attacker: getParticipant(state, Side.Attacker).country,
   defender: getParticipant(state, Side.Defender).country,
-  cohorts_a: getCohorts(state, Side.Attacker),
-  cohorts_d: getCohorts(state, Side.Defender),
+  cohorts_a: getCohorts(state, Side.Attacker, true),
+  cohorts_d: getCohorts(state, Side.Defender, true),
   units_a: getUnitList(state, true, getCountryName(state, Side.Attacker)),
   units_d: getUnitList(state, true, getCountryName(state, Side.Defender)),
   definitions_a: getUnitDefinitionsBySide(state, Side.Attacker),

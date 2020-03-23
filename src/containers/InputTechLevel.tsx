@@ -23,7 +23,7 @@ class InputTechLevel extends Component<IProps> {
   render() {
     const { tech } = this.props
     return (
-      <Input size='mini' style={{ width: 55 }} type='number' value={tech} onChange={(_, { value }) => this.setTechLevel(Number(value))} />
+      <Input size='mini' className='small-input' type='number' value={tech} onChange={(_, { value }) => this.setTechLevel(Number(value))} />
     )
   }
 

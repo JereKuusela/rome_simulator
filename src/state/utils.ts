@@ -184,16 +184,18 @@ export const getTactic = (state: AppState, side: Side): Tactic => {
   return state.tactics[army.tactic]
 }
 
-const getBaseCohortsByCountry = (state: AppState, country: CountryName) => {
+const getBaseCohortsByCountry = (state: AppState, country: CountryName, originals?: boolean) => {
   const army = getArmy(state, country)
+  if (originals)
+    return army
   const units = getUnits(state, country)
   const latest = manager.getLatestUnits(units, getCountries(state)[country].tech_level)
   return manager.overrideRoleWithPreferences(army, units, latest)
 }
 
-const getCohortsByCountry = (state: AppState, country: CountryName): Cohorts => {
+const getCohortsByCountry = (state: AppState, country: CountryName, originals?: boolean): Cohorts => {
   const settings = getSettings(state)
-  const base = getBaseCohortsByCountry(state, country)
+  const base = getBaseCohortsByCountry(state, country, originals)
   const frontline = [Array<Cohort | null>(settings[Setting.CombatWidth]).fill(null)]
   if (settings[Setting.BackRow])
     frontline.push([...frontline[0]])
@@ -207,7 +209,7 @@ const getCohortsByCountry = (state: AppState, country: CountryName): Cohorts => 
   return mergeBaseUnitsWithDefinitions(settings, cohorts, units)
 }
 
-export const getCohorts = (state: AppState, side: Side): Cohorts => getCohortsByCountry(state, getCountryName(state, side))
+export const getCohorts = (state: AppState, side: Side, originals?: boolean): Cohorts => getCohortsByCountry(state, getCountryName(state, side), originals)
 
 export const getParticipant = (state: AppState, type: Side): Participant => getBattle(state).participants[type]
 

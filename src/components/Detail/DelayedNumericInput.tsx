@@ -38,7 +38,7 @@ export default class DelayedNumericInput extends Component<IProps, IState> {
       <div onBlur={this.onLostFocus}>
         <Input
           size='mini'
-          style={{ width: 55 }}
+          className='small-input'
           value={value}
           disabled={disabled}
           onChange={(_, { value }) => this.onChange(value)}

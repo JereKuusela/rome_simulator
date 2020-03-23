@@ -3,13 +3,15 @@ import { connect } from 'react-redux'
 import { Image, Table } from 'semantic-ui-react'
 
 import { Side, UnitRole, CountryName, UnitType, UnitAttribute, filterAttributes } from 'types'
-import { getImage } from 'utils'
-import { AppState, getUnits, getUnitPreferences, getCountry, getArchetypes, getSettings } from 'state'
-import { invalidate, setUnitPreference } from 'reducers'
+import { getImage, mapRange } from 'utils'
+import { AppState, getUnits, getUnitPreferences, getCountry, getArchetypes, getSettings, getCohorts } from 'state'
+import { addToReserve, removeFromReserve, invalidate, setUnitPreference } from 'reducers'
 import { getChildUnits } from 'managers/army'
 import Dropdown from 'components/Utils/Dropdown'
 import UnitValueInput from './UnitValueInput'
 import AttributeImage from 'components/Utils/AttributeImage'
+import { getNextId } from 'army_utils'
+import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 
 type Props = {
   side: Side
@@ -47,9 +49,12 @@ class TableArchetypes extends Component<IProps> {
             <Table.HeaderCell width='2'>
               Type
             </Table.HeaderCell>
+            <Table.HeaderCell>
+              Amount
+            </Table.HeaderCell>
             {
               filterAttributes(this.attributes, settings).map(attribute => (
-                <Table.HeaderCell width='2'>
+                <Table.HeaderCell>
                   <AttributeImage attribute={attribute} />
                 </Table.HeaderCell>
               ))
@@ -83,6 +88,9 @@ class TableArchetypes extends Component<IProps> {
         <Table.Cell>
           <Dropdown values={[UnitType.Latest].concat(types)} value={preference} onChange={type => setUnitPreference(country, role, type) && invalidate()} />
         </Table.Cell>
+        <Table.Cell>
+          {this.renderCohortCount(archetype.type)}
+        </Table.Cell>
         {
           filterAttributes(this.attributes, settings).map(attribute => (
             <Table.Cell>
@@ -93,17 +101,41 @@ class TableArchetypes extends Component<IProps> {
       </Table.Row>
     )
   }
+
+  renderCohortCount = (type: UnitType) => {
+    const { reserve } = this.props
+    const count = reserve.filter(cohort => cohort.type === type).length
+    return (
+      <DelayedNumericInput value={count} onChange={value => this.updateReserve(type, value)} />
+    )
+  }
+
+  updateReserve = (type: UnitType, amount: number) => {
+    const { country, addToReserve, removeFromReserve, invalidate, reserve } = this.props
+    const previous = reserve.filter(cohort => cohort.type === type).length
+    if (amount > previous) {
+      const units = mapRange(amount - previous, _ => ({ id: getNextId(), type, image: '' }))
+      addToReserve(country, units)
+      invalidate()
+    }
+    if (amount < previous) {
+      const types = mapRange(previous - amount, _ => type)
+      removeFromReserve(country, types)
+      invalidate()
+    }
+  }
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
   archetypes: getArchetypes(state, props.country),
   preferences: getUnitPreferences(state, props.side),
+  reserve: getCohorts(state, props.side, true).reserve,
   units: getUnits(state, props.country),
   tech: getCountry(state, props.side).tech_level,
   settings: getSettings(state)
 })
 
-const actions = { invalidate, setUnitPreference }
+const actions = { addToReserve, removeFromReserve, invalidate, setUnitPreference }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
