@@ -1,4 +1,4 @@
-import { Country, GovermentType, ReligionType, CountryName, CultureType } from 'types'
+import { Country, GovermentType, ReligionType, CountryName, CultureType, CountryAttribute } from 'types'
 import { getDefaultArmies } from 'data'
 import { getDefaultUnits } from './units'
 
@@ -14,7 +14,12 @@ export const defaultCountry: Country =
   office_morale: 0,
   tech_level: 0,
   armies: getDefaultArmies(),
-  units: getDefaultUnits((process.env.REACT_APP_GAME === 'euiv' ? 'Western' : undefined) as CultureType)
+  units: getDefaultUnits((process.env.REACT_APP_GAME === 'euiv' ? 'Western' : undefined) as CultureType),
+  base_values: {
+    [CountryAttribute.FlankRatio]: {
+      'Base': 0.5
+    }
+  } as any
 }
 
 export const getDefaultCountryDefinitions = (): { [key in CountryName]: Country } => ({

@@ -22,6 +22,7 @@ import { ArmyType, CountryName, Setting, Side, CombatPhase } from 'types'
 import TableArchetypes from 'containers/TableArchetypes'
 import TableArmyInfo from 'containers/TableArmyInfo'
 import TableDamageAttributes from 'containers/TableDamageAttributes'
+import AccordionToggle from 'containers/AccordionToggle'
 
 interface IState {
   modal_unit_info: ModalUnitInfo | null
@@ -108,6 +109,7 @@ class Battle extends Component<IProps, IState> {
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
+              <Header>Frontline</Header>
               {
                 this.renderFrontline(Side.Attacker, participant_a.country)
               }
@@ -130,47 +132,57 @@ class Battle extends Component<IProps, IState> {
               }
             </Grid.Column>
           </Grid.Row>
-          <Divider />
-          <Grid.Row columns={1}>
-            <Grid.Column>
-              <TableArmyInfo />
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row columns={2}>
-            <Grid.Column>
-              <TableArchetypes side={Side.Attacker} country={participant_a.country} />
-            </Grid.Column>
-            <Grid.Column>
-              <TableArchetypes side={Side.Defender} country={participant_d.country} />
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row columns={2}>
-            <Grid.Column>
-              <TableDamageAttributes side={Side.Attacker} country={participant_a.country} />
-            </Grid.Column>
-            <Grid.Column>
-              <TableDamageAttributes side={Side.Defender} country={participant_d.country} />
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row columns={1}>
-            <Grid.Column>
-              <TerrainSelector />
-            </Grid.Column>
-          </Grid.Row>
-          {settings[Setting.CustomDeployment] &&
+        </Grid>
+        <Divider />
+        <AccordionToggle title='Setup' identifier='BattleSetup' open>
+          <Grid>
             <Grid.Row columns={1}>
               <Grid.Column>
-                <PreferredUnitTypes />
+                <TableArmyInfo />
               </Grid.Column>
             </Grid.Row>
-          }
-          <Divider />
-          <Grid.Row columns={1}>
-            <Grid.Column>
-              <TableStats />
-            </Grid.Column>
-          </Grid.Row>
-          <Divider />
+            <Grid.Row columns={2}>
+              <Grid.Column>
+                <TableArchetypes side={Side.Attacker} country={participant_a.country} />
+              </Grid.Column>
+              <Grid.Column>
+                <TableArchetypes side={Side.Defender} country={participant_d.country} />
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row columns={2}>
+              <Grid.Column>
+                <TableDamageAttributes side={Side.Attacker} country={participant_a.country} />
+              </Grid.Column>
+              <Grid.Column>
+                <TableDamageAttributes side={Side.Defender} country={participant_d.country} />
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row columns={1}>
+              <Grid.Column>
+                <TerrainSelector />
+              </Grid.Column>
+            </Grid.Row>
+            {settings[Setting.CustomDeployment] &&
+              <Grid.Row columns={1}>
+                <Grid.Column>
+                  <PreferredUnitTypes />
+                </Grid.Column>
+              </Grid.Row>
+            }
+          </Grid>
+        </AccordionToggle>
+        <Divider />
+        <AccordionToggle title='Stats' identifier='BattleStats' open>
+          <Grid>
+            <Grid.Row columns={1}>
+              <Grid.Column>
+                <TableStats />
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </AccordionToggle>
+        <Divider />
+        <Grid>
           <Grid.Row columns={1}>
             <Grid.Column>
               {
@@ -230,7 +242,6 @@ class Battle extends Component<IProps, IState> {
     const combat_width = this.props.settings[Setting.CombatWidth]
     return (
       <div key={side}>
-        {side === Side.Attacker && <Header>{side + '\'s frontline'}</Header>}
         <TableArmyPart
           color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={side}

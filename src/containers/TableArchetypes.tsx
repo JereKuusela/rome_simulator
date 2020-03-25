@@ -20,7 +20,7 @@ type Props = {
 
 class TableArchetypes extends Component<IProps> {
 
-  attributes = [UnitAttribute.CombatAbility]
+  attributes = [UnitAttribute.CombatAbility, UnitAttribute.OffensiveSupport]
 
   checkPreference = (role: UnitRole) => {
     const { units, preferences, tech, country } = this.props

@@ -328,7 +328,7 @@ export const calculateTactic = (army: CombatCohorts, tactic: Tactic, counter_tac
 }
 
 export const calculateFlankRatioPenalty = (army: CombatCohorts, ratio: number, setting: Settings) => {
-  return ratio && calculateFlankRatio(army) > ratio ? setting[Setting.InsufficientSupportPenalty] : 0.0
+  return ratio && calculateFlankRatio(army) > ratio ? setting[Setting.InsufficientSupportPenalty] / (1 - setting[Setting.InsufficientSupportPenalty]) : 0.0
 }
 
 const calculateFlankRatio = (army: CombatCohorts): number => {

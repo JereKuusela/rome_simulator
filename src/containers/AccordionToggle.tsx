@@ -5,9 +5,10 @@ import { Accordion, Icon, Header } from 'semantic-ui-react'
 import { AppState } from 'state'
 import { toggleAccordion } from 'reducers'
 
-interface Props {
-  readonly title: string
-  readonly identifier: string
+type Props = {
+  title: string
+  identifier: string
+  open?: boolean
 }
 
 /**
@@ -34,7 +35,7 @@ class AccordionToggle extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  active: state.settings.accordions[props.identifier]
+  active: props.open ? !state.settings.accordions[props.identifier] : state.settings.accordions[props.identifier]
 })
 
 const actions = { toggleAccordion }

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table, Checkbox, Input } from 'semantic-ui-react'
 
-import { Side, CountryName, Setting, Participant, Country, General, GeneralAttribute, GeneralValueType, UnitAttribute, isAttributeEnabled, Mode, UnitType, Unit, ValuesType } from 'types'
+import { Side, CountryName, Setting, Participant, Country, General, GeneralAttribute, GeneralValueType, UnitAttribute, isAttributeEnabled, Mode, UnitType, Unit, ValuesType, CountryAttribute } from 'types'
 import { keys } from 'utils'
 import { AppState, getCountry, getSettings, getParticipant, getGeneral, getCountryName, getSelectedTerrains, getCountries, getBattle, getUnit, getMode } from 'state'
 import { invalidate, selectArmy, selectCulture, toggleRandomRoll, setRoll, setGeneralBaseStat } from 'reducers'
@@ -18,6 +18,7 @@ import IconGeneral from 'images/military_power.png'
 import IconTerrain from 'images/terrain.png'
 import UnitValueInput from './UnitValueInput'
 import AttributeImage from 'components/Utils/AttributeImage'
+import CountryValueInput from './CountryValueInput'
 
 type Props = {
 }
@@ -66,6 +67,12 @@ class TableArmyInfo extends Component<IProps> {
               </Table.HeaderCell>
             }
             {
+              isAttributeEnabled(CountryAttribute.FlankRatio, settings) &&
+              <Table.HeaderCell >
+                <AttributeImage attribute={CountryAttribute.FlankRatio} />
+              </Table.HeaderCell>
+            }
+            {
               settings[Setting.Culture] &&
               <Table.HeaderCell>
                 Culture
@@ -83,7 +90,7 @@ class TableArmyInfo extends Component<IProps> {
           {this.renderArmyInfo(Side.Attacker, participant_a, country_a, general_a, general_d, unit_a)}
           {this.renderArmyInfo(Side.Defender, participant_d, country_d, general_d, general_a, unit_d)}
         </Table.Body>
-      </Table>
+      </Table >
     )
   }
 
@@ -126,6 +133,12 @@ class TableArmyInfo extends Component<IProps> {
           isAttributeEnabled(UnitAttribute.Morale, settings) &&
           <Table.Cell>
             <UnitValueInput unit={unit} attribute={UnitAttribute.Morale} country={participant.country} percent type={ValuesType.Modifier} />
+          </Table.Cell>
+        }
+        {
+          isAttributeEnabled(CountryAttribute.FlankRatio, settings) &&
+          <Table.Cell>
+            <CountryValueInput attribute={CountryAttribute.FlankRatio} country={participant.country} percent />
           </Table.Cell>
         }
         {

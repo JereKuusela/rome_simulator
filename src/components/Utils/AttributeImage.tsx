@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Image } from 'semantic-ui-react'
-import { UnitAttribute, Mode, CombatPhase } from 'types'
+import { UnitAttribute, Mode, CombatPhase, CountryAttribute } from 'types'
 
 import IconDiscipline from 'images/discipline.png'
 import IconOffense from 'images/offense.png'
@@ -71,6 +71,17 @@ const getSecondImage = (attribute: string, mode?: Mode) => {
   }
 }
 
+const getText = (attribute: string) => {
+  switch (attribute) {
+    case UnitAttribute.OffensiveSupport:
+      return 'Backrow'
+    case CountryAttribute.FlankRatio:
+      return 'Cavalry ratio'
+    default:
+      return attribute
+  }
+}
+
 /**
  * Helper component for showing images of atributes.
  */
@@ -84,7 +95,7 @@ export default class AttributeImage extends Component<IProps> {
       <>
         {first && <Image src={first} avatar />}
         {second && <Image src={second} avatar />}
-        {!first && !second && attribute}
+        {!first && !second && getText(attribute)}
       </>
     )
   }
