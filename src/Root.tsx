@@ -15,7 +15,7 @@ import CountriesEUIV from './pages/CountriesEU'
 import Settings from './pages/Settings'
 import Error from './pages/Error'
 import { AppState } from 'state'
-import Statistics from './pages/Statistics'
+import Analyze from './pages/Analyze'
 import { Container } from 'semantic-ui-react'
 
 // Any additional component props go here.
@@ -37,7 +37,7 @@ const Root = ({ store, persistor }: MainProps) => {
               <Route path='/Units' component={Units} />
               <Route path='/Tactics' component={Tactics} />
               <Route path='/Terrains' component={Terrains} />
-              <Route path='/Stats' component={Statistics} />
+              <Route path='/Analyze' component={Analyze} />
               <Route path='/Transfer' component={Transfer} />
               <Route path='/Instructions' component={Instructions} />
               <Route path='/Countries' component={process.env.REACT_APP_GAME === 'euiv' ? CountriesEUIV : Countries} />

@@ -22,9 +22,10 @@ Changelog:
 - Battle: Added more stats to Stats table (cost, maintenance, supply weight, food).
 - Battle: Removed base damage from the UI (not very relevant information).
 - Battle: Removed "Add and remove units" as obsolete.
-- Stats: Added average gold losses to naval simulations (from repair, from destroyed, from captured, etc.).
-- Stats: Added separate settings for calculating different things.
-- Stats: Improved performance (but probably overall less performance because new mechanics from EUIV).
+- Analyze: Added average gold losses to naval simulations (from repair, from destroyed, from captured, etc.).
+- Analyze: Added separate settings for calculating different things.
+- Analyze: Renamed page name (from Stats).
+- Analyze: Improved performance (but probably overall less performance because new mechanics from EUIV).
 - Countries: Updated Export Hemp to give -10% Naval Damage taken instead of +5% Naval Damage done.
 - Countries: Added naval capture chance from general martial (0.2% * martial).
 - Countries: Added support for country specific combat width modifiers, feature from EUIV.
