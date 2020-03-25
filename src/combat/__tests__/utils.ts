@@ -24,6 +24,7 @@ export interface TestInfo {
 
 export interface ExpectedTypes {
   front?: (UnitType | null)[]
+  back?: (UnitType | null)[]
   reserve_front?: UnitType[]
   reserve_flank?: UnitType[]
   reserve_support?: UnitType[]
@@ -50,7 +51,7 @@ export const initInfo = () => {
   const army = (): ArmyForCombat => ({
     ...getDefaultArmy(Mode.Land),
     // Frontline must be cloned to prevent tests mutating the source.
-    frontline: [Array(30).fill(null)],
+    frontline: process.env.REACT_APP_GAME === 'euiv' ? [Array(30).fill(null), Array(30).fill(null)] : [Array(30).fill(null)],
     reserve: [],
     defeated: [],
     unit_preferences: getUnitPreferences(),
@@ -214,8 +215,8 @@ export const setUnitPreferences = (info: TestInfo, attacker: (UnitType | null)[]
 
 export const setCombatWidth = (info: TestInfo, value: number) => {
   info.settings[Setting.CombatWidth] = value
-  info.army_a.frontline[0] = resize(info.army_a.frontline[0], value, null)
-  info.army_d.frontline[0] = resize(info.army_d.frontline[0], value, null)
+  info.army_a.frontline = info.army_a.frontline.map(row => resize(row, value, null))
+  info.army_d.frontline = info.army_d.frontline.map(row => resize(row, value, null))
 }
 
 /**
@@ -287,6 +288,7 @@ export const testReinforcement = (rounds_to_skip: number, info: TestInfo, expect
 
 const verifyDeployOrReinforce = (info: TestInfo, side: Side, participant: CombatParticipant, expected: ExpectedTypes) => {
   verifyTypes('Front', info, expected.front ?? [], side, participant.cohorts.frontline[0])
+  verifyTypes('Back', info, expected.back ?? [], side,  participant.cohorts.frontline.length ? participant.cohorts.frontline[1] : [])
   verifyTypes('Reserve front', info, expected.reserve_front ?? [], side, participant.cohorts.reserve.front)
   verifyTypes('Reserve flank', info, expected.reserve_flank ?? [], side, participant.cohorts.reserve.flank)
   verifyTypes('Reserve support', info, expected.reserve_support ?? [], side, participant.cohorts.reserve.support)
@@ -296,7 +298,7 @@ const verifyDeployOrReinforce = (info: TestInfo, side: Side, participant: Combat
 const nextIndex = (index: number, half: number) => index < half ? index + 2 * (half - index) : index - 2 * (index - half) - 1
 
 const verifyTypes = (identifier: string, info: TestInfo, types: (UnitType | null)[], side: Side, cohorts: (CombatCohort | null)[]) => {
-  const is_front = identifier === 'Front'
+  const is_front = identifier === 'Front' || identifier === 'Back'
   if (!is_front) {
     try {
       expect(cohorts.length).toEqual(types.length)
@@ -352,4 +354,4 @@ const initFrontline = (): ExpectedUnits[] => (
     null, null, null, null, null, null, null, null, null, null]
 )
 
-export const createExpected = (...types: ([UnitType, number] | UnitType)[]) => types.reduce((prev, current) => prev.concat(Array.isArray(current) ? Array(current[1]).fill(current[0]) : [current]), [] as UnitType[])
+export const createExpected = (...types: ([UnitType | null, number] | UnitType)[]) => types.reduce((prev, current) => prev.concat(Array.isArray(current) ? Array(current[1]).fill(current[0]) : [current]), [] as UnitType[])
