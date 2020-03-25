@@ -94,9 +94,6 @@ class Battle extends Component<IProps, IState> {
               <Header>{'Round: ' + this.roundName(round, getCombatPhase(round - 1, settings))}</Header>
             </Grid.Column>
             <Grid.Column textAlign='center' width='5'>
-              <Button primary size='large' onClick={this.openFastPlanner}>
-                Create and remove units
-              </Button>
             </Grid.Column>
             <Grid.Column width='4'>
               <WinRate />

@@ -5,6 +5,7 @@ import { Mode } from './definition'
 // Only listed what are required by code. There is actually a lot more terrains.
 export enum TerrainType {
   Grasslands = 'Grasslands',
+  Forest = 'Forest',
   None = 'None',
   Plains = 'Plains',
   Riverine = 'Riverine',
