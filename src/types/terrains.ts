@@ -2,21 +2,12 @@ import { Definition } from 'types'
 import { DefinitionValues, calculateValue } from 'definition_values'
 import { Mode } from './definition'
 
+// Only listed what are required by code. There is actually a lot more terrains.
 export enum TerrainType {
-  Desert = 'Desert',
-  Farmland = 'Farmland',
-  Forest = 'Forest',
-  Hills = 'Hills',
-  Jungle = 'Jungle',
-  Marsh = 'Marsh',
-  Mountain = 'Mountain',
-  Naval = 'Naval',
+  Grasslands = 'Grasslands',
   None = 'None',
   Plains = 'Plains',
-  River = 'River',
-  Strait = 'Strait',
   Riverine = 'Riverine',
-  Coastal = 'Coastal',
   Ocean = 'Ocean'
 }
 

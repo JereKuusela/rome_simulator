@@ -69,7 +69,9 @@ class Battle extends Component<IProps, IState> {
   }
 
   render() {
-    const { participant_a, participant_d, round, is_undo, fight_over, settings } = this.props
+    const { participant_a, participant_d, round, is_undo, fight_over, settings, outdated } = this.props
+    if (outdated)
+      return null
     return (
       <>
         <ModalUnitSelector

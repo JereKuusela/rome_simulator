@@ -5,7 +5,7 @@ export const getInitialTerrains = (mode: Mode): TerrainType[] => {
   if (mode === Mode.Naval)
     return [TerrainType.Ocean]
   else
-    return [TerrainType.None, TerrainType.Plains]
+    return [TerrainType.None, process.env.REACT_APP_GAME === 'euiv' ? TerrainType.Grasslands : TerrainType.Plains]
 } 
 
 export const getDefaultParticipant = (name: CountryName): Participant => {
