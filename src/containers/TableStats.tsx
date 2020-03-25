@@ -3,11 +3,11 @@ import { connect } from 'react-redux'
 import { Image, Table } from 'semantic-ui-react'
 
 import IconEmpty from 'images/empty.png'
-import { Side, UnitType, UnitAttribute } from 'types'
+import { Side, UnitType, UnitAttribute, isAttributeEnabled } from 'types'
 import { CombatCohorts, CombatCohort } from 'combat'
-import { strengthToValue } from 'formatters'
+import { strengthToValue, toNumber } from 'formatters'
 import { getImage, round, sumArr } from 'utils'
-import { AppState, getCurrentCombat, getMode } from 'state'
+import { AppState, getCurrentCombat, getMode, getSettings } from 'state'
 import { flatten, uniq } from 'lodash'
 import AttributeImage from 'components/Utils/AttributeImage'
 
@@ -24,12 +24,12 @@ class TableStats extends Component<IProps> {
   }
 
   renderArmy = (side: Side, cohorts: CombatCohorts) => {
-    const { mode } = this.props
+    const { mode, settings } = this.props
     const flatten = this.flatten(cohorts)
     const types = uniq(flatten.map(cohort => cohort.definition.type))
     const rows = types.map(type => this.renderRow(cohorts, type)).filter(row => row)
     return (
-      <Table celled selectable unstackable key={side}>
+      <Table celled selectable unstackable key={side} singleLine>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell width='4'>
@@ -47,6 +47,27 @@ class TableStats extends Component<IProps> {
             <Table.HeaderCell width='3'>
               Morale depleted
             </Table.HeaderCell>
+            <Table.HeaderCell width='3'>
+              <AttributeImage attribute={UnitAttribute.Cost} />
+            </Table.HeaderCell>
+            <Table.HeaderCell width='3'>
+              Monthly <AttributeImage attribute={UnitAttribute.Cost} />
+            </Table.HeaderCell>
+            <Table.HeaderCell width='3'>
+              <AttributeImage attribute={UnitAttribute.AttritionWeight} />
+            </Table.HeaderCell>
+            {
+              isAttributeEnabled(UnitAttribute.FoodConsumption, settings) &&
+              <Table.HeaderCell width='3'>
+                <AttributeImage attribute={UnitAttribute.FoodConsumption} />
+              </Table.HeaderCell>
+            }
+            {
+              isAttributeEnabled(UnitAttribute.FoodStorage, settings) &&
+              <Table.HeaderCell width='3'>
+                <AttributeImage attribute={UnitAttribute.FoodStorage} />
+              </Table.HeaderCell>
+            }
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -56,18 +77,7 @@ class TableStats extends Component<IProps> {
               <Image src={IconEmpty} avatar />
               Total
             </Table.Cell>
-            <Table.Cell width='3'>
-              {strengthToValue(mode, this.sum(flatten, unit => unit[UnitAttribute.Strength]))} / {strengthToValue(mode, this.sum(flatten, unit => unit.definition.max_strength))}
-            </Table.Cell>
-            <Table.Cell width='3'>
-              {round(this.sum(flatten, cohort => cohort[UnitAttribute.Morale]), 100.0)} / {round(this.sum(flatten, cohort => cohort.definition.max_morale), 100.0)}
-            </Table.Cell>
-            <Table.Cell width='3'>
-              {strengthToValue(mode, this.sum(flatten, unit => unit.state.total_strength_dealt))}
-            </Table.Cell>
-            <Table.Cell width='3'>
-              {round(this.sum(flatten, cohort => cohort.state.total_morale_dealt), 100.0)}
-            </Table.Cell>
+            {this.renderCells(flatten)}
           </Table.Row>
         </Table.Body>
       </Table>
@@ -75,7 +85,6 @@ class TableStats extends Component<IProps> {
   }
 
   renderRow = (cohorts: CombatCohorts, type: UnitType) => {
-    const { mode } = this.props
     const flatten = this.flatten(cohorts, type)
     const count = flatten.length
     if (count === 0)
@@ -85,21 +94,60 @@ class TableStats extends Component<IProps> {
       <Table.Row key={type}>
         <Table.Cell width='4'>
           <Image src={image} avatar />
-          {type + ' (x ' + count + ')'}</Table.Cell>
-        <Table.Cell width='3'>
-          {strengthToValue(mode, this.sum(flatten, cohort => cohort[UnitAttribute.Strength]))} / {strengthToValue(mode, this.sum(flatten, cohort => cohort.definition.max_strength))}
+          {type + ' (x ' + count + ')'}
         </Table.Cell>
-        <Table.Cell width='3'>
-          {round(this.sum(flatten, cohort => cohort[UnitAttribute.Morale]), 100.0)} / {round(this.sum(flatten, cohort => cohort.definition.max_morale), 100.0)}
-        </Table.Cell>
-        <Table.Cell width='3'>
-          {strengthToValue(mode, this.sum(flatten, cohort => cohort.state.total_strength_dealt))}
-        </Table.Cell>
-        <Table.Cell width='3'>
-          {round(this.sum(flatten, cohort => cohort.state.total_morale_dealt), 100.0)}
-        </Table.Cell>
+        {this.renderCells(flatten)}
       </Table.Row>
     )
+  }
+
+  renderCells = (cohorts: CombatCohort[]) => {
+    const { mode } = this.props
+    return (
+      <>
+        <Table.Cell width='3'>
+          {strengthToValue(mode, this.sum(cohorts, cohort => cohort[UnitAttribute.Strength]))} / {strengthToValue(mode, this.sum(cohorts, cohort => cohort.definition.max_strength))}
+        </Table.Cell>
+        <Table.Cell width='3'>
+          {round(this.sum(cohorts, cohort => cohort[UnitAttribute.Morale]), 100.0)} / {round(this.sum(cohorts, cohort => cohort.definition.max_morale), 100.0)}
+        </Table.Cell>
+        <Table.Cell width='3'>
+          {strengthToValue(mode, this.sum(cohorts, cohort => cohort.state.total_strength_dealt))}
+        </Table.Cell>
+        <Table.Cell width='3'>
+          {round(this.sum(cohorts, cohort => cohort.state.total_morale_dealt), 100.0)}
+        </Table.Cell>
+        {this.renderCell(cohorts, UnitAttribute.Cost)}
+        <Table.Cell width='3'>
+          {round(this.sum(cohorts, cohort => cohort.definition[UnitAttribute.Cost] * cohort.definition[UnitAttribute.Maintenance]), 100.0)}
+        </Table.Cell>
+        {this.renderCell(cohorts, UnitAttribute.AttritionWeight)}
+        {this.renderCell(cohorts, UnitAttribute.FoodConsumption)}
+        {this.renderCell(cohorts, UnitAttribute.FoodStorage, this.storageFormatter)}
+      </>
+    )
+  }
+
+  renderCell = (cohorts: CombatCohort[], attribute: UnitAttribute, formatter?: (cohorts: CombatCohort[], attribute: UnitAttribute) => string) => {
+    const { settings } = this.props
+    if (isAttributeEnabled(attribute, settings)) {
+      return (
+        <Table.Cell width='3'>
+          {formatter ? formatter(cohorts, attribute) : this.defaultFormatter(cohorts, attribute)}
+        </Table.Cell>
+      )
+    }
+    return null
+  }
+
+  defaultFormatter = (cohorts: CombatCohort[], attribute: UnitAttribute) => {
+    return round(this.sum(cohorts, cohort => cohort.definition[attribute]), 100.0)
+  }
+
+  storageFormatter = (cohorts: CombatCohort[]) => {
+    const storage = this.sum(cohorts, cohort => cohort.definition[UnitAttribute.FoodStorage])
+    const consumption = this.sum(cohorts, cohort => cohort.definition[UnitAttribute.FoodConsumption]) || 1.0
+    return `${toNumber(storage / consumption / 12)} years (${toNumber(storage)})`
   }
 
   sum = (merged: CombatCohort[], getAttribute: (cohort: CombatCohort) => number): number => sumArr(merged, value => Math.max(0, getAttribute(value)))
@@ -116,7 +164,8 @@ class TableStats extends Component<IProps> {
 const mapStateToProps = (state: AppState) => ({
   cohorts_a: getCurrentCombat(state, Side.Attacker),
   cohorts_d: getCurrentCombat(state, Side.Defender),
-  mode: getMode(state)
+  mode: getMode(state),
+  settings: getSettings(state)
 })
 
 const actions = {}

@@ -1,16 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal, Button, Grid } from 'semantic-ui-react'
-import { AppState, getParticipant, getUnitDefinitionsBySide, getCohorts, getMode, getCountryName, getUnitList, getSettings } from 'state'
+import { AppState, getParticipant, getCohorts, getMode, getCountryName, getUnitList } from 'state'
 import FastPlanner from 'components/FastPlanner'
-import ArmyCosts from 'components/ArmyCosts'
-import { ValuesType, UnitType, Side, CountryName, WearinessAttributes, Reserve, BaseReserve, Setting } from 'types'
+import { ValuesType, UnitType, Side, CountryName, WearinessAttributes, Reserve, BaseReserve } from 'types'
 import { getNextId } from 'army_utils'
 import WearinessRange from 'components/WearinessRange'
 import { changeWeariness, addToReserve, removeFromReserve, clearCohorts, invalidate } from 'reducers'
 import { removeFromReserve as removeReserve, addToReserve as addReserve } from 'managers/army'
 import { forEach, mapRange, toArr, round, randomWithinRange } from 'utils'
-import { addValues, mergeValues } from 'definition_values'
+import { addValues } from 'definition_values'
 
 type UnitTypeCounts = { [key in UnitType]: number }
 
@@ -35,7 +34,7 @@ class ModalFastPlanner extends Component<IProps, IState> {
   originals_d = {} as UnitTypeCounts
 
   render() {
-    const { open, units_a, units_d, definitions_a, definitions_d, cohorts_a, cohorts_d, weariness, settings } = this.props
+    const { open, units_a, units_d, cohorts_a, cohorts_d, weariness } = this.props
     const { changes_a, changes_d } = this.state
     if (!open)
       return null
@@ -43,10 +42,6 @@ class ModalFastPlanner extends Component<IProps, IState> {
     // Base units are needed because there might be unit specific changes.
     this.originals_a = units_a.reduce((map, value) => ({ ...map, [value.type]: this.countUnits(cohorts_a.reserve, value.type) }), {} as UnitTypeCounts)
     this.originals_d = units_d.reduce((map, value) => ({ ...map, [value.type]: this.countUnits(cohorts_d.reserve, value.type) }), {} as UnitTypeCounts)
-    // Current changes to the reserve must also be applied.
-    // And finally both merged with definitions to get real values.
-    const reserve_a = this.editReserve(cohorts_a.reserve, changes_a, this.originals_a).map(value => value && mergeValues(definitions_a[value.type], value))
-    const reserve_d = this.editReserve(cohorts_d.reserve, changes_d, this.originals_d).map(value => value && mergeValues(definitions_d[value.type], value))
     return (
       <Modal basic onClose={this.onClose} open centered={false}>
         <Modal.Content>
@@ -58,17 +53,6 @@ class ModalFastPlanner extends Component<IProps, IState> {
             reserve_d={this.originals_d}
             units_d={units_d}
             onValueChange={this.onValueChange}
-            attached
-          />
-          <ArmyCosts
-            mode={this.props.mode}
-            frontline_a={cohorts_a.frontline}
-            frontline_d={cohorts_d.frontline}
-            reserve_a={reserve_a}
-            reserve_d={reserve_d}
-            defeated_a={cohorts_a.defeated}
-            defeated_d={cohorts_d.defeated}
-            show_food={settings[Setting.Food]}
             attached
           />
           <WearinessRange
@@ -176,11 +160,8 @@ const mapStateToProps = (state: AppState) => ({
   cohorts_d: getCohorts(state, Side.Defender, true),
   units_a: getUnitList(state, true, getCountryName(state, Side.Attacker)),
   units_d: getUnitList(state, true, getCountryName(state, Side.Defender)),
-  definitions_a: getUnitDefinitionsBySide(state, Side.Attacker),
-  definitions_d: getUnitDefinitionsBySide(state, Side.Defender),
   mode: getMode(state),
-  weariness: state.settings.weariness,
-  settings: getSettings(state)
+  weariness: state.settings.weariness
 })
 
 const actions = { addToReserve, removeFromReserve, clearCohorts, invalidate, changeWeariness }

@@ -164,7 +164,6 @@
       "role": "Support",
       "cost": 16,
       "morale_damage_taken": 1.0,
-      "attrition_weight": 2,
       "archers": -0.9,
       "camel_cavalry": -0.9,
       "chariots": -0.9,

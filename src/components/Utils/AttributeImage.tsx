@@ -12,6 +12,10 @@ import IconAttrition from 'images/attrition.png'
 import IconFire from 'images/fire.png'
 import IconShock from 'images/shock.png'
 import IconCombatAbility from 'images/combat_ability.png'
+import IconCost from 'images/cost.png'
+import IconFoodConsumption from 'images/food.png'
+import IconFoodStorage from 'images/food_capacity.png'
+import IconSupplyLimit from 'images/supply_limit.png'
 
 type IProps = {
   attribute: string
@@ -47,6 +51,14 @@ const getFirstImage = (attribute: string, mode?: Mode) => {
       return IconFire
     case CombatPhase.Shock:
       return IconShock
+    case UnitAttribute.Cost:
+      return IconCost
+    case UnitAttribute.FoodConsumption:
+      return IconFoodConsumption
+    case UnitAttribute.FoodStorage:
+      return IconFoodStorage
+    case UnitAttribute.AttritionWeight:
+      return IconSupplyLimit
     default:
       return null
   }
