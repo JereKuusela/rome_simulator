@@ -1,10 +1,10 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Button, Divider, Grid, Header, Input } from 'semantic-ui-react'
+import { Button, Divider, Grid, Header, Input, Modal } from 'semantic-ui-react'
 import { getCombatPhase } from 'combat'
 import ModalCohortDetail from 'containers/modal/ModalCohortDetail'
-import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from 'containers/modal/ModalUnitSelector'
+import ModalUnitSelector, { ModalSelectorInfo } from 'containers/modal/ModalUnitSelector'
 import PreferredUnitTypes from 'containers/PreferredUnitTypes'
 import TableStats from 'containers/TableStats'
 import TableArmyPart from 'containers/TableArmyPart'
@@ -16,15 +16,17 @@ import {
   undo, battle, refreshBattle, setSeed, setGeneralBaseStat, resetState, selectCulture
 } from 'reducers'
 import { AppState, getBattle, getCountryName, getParticipant, getSettings, getCountries, getGeneral, getSelectedTerrains, getCountry } from 'state'
-import { ArmyType, CountryName, Setting, Side, CombatPhase } from 'types'
+import { ArmyType, CountryName, Setting, Side, CombatPhase, UnitType } from 'types'
 import TableArchetypes from 'containers/TableArchetypes'
 import TableArmyInfo from 'containers/TableArmyInfo'
 import TableDamageAttributes from 'containers/TableDamageAttributes'
 import AccordionToggle from 'containers/AccordionToggle'
+import ModalUnitDetail from 'containers/modal/ModalUnitDetail'
 
 interface IState {
-  modal_unit_info: ModalUnitInfo | null
-  modal_army_unit_info: { country: CountryName, id: number, side: Side } | null
+  modal_cohort_info: ModalSelectorInfo | null
+  modal_cohort_detail_info: { country: CountryName, id: number, side: Side } | null
+  modal_unit_info: { country: CountryName, type: UnitType } | null
 }
 
 const ATTACKER_COLOR = '#FFAA00AA'
@@ -34,27 +36,31 @@ class Battle extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    this.state = { modal_unit_info: null, modal_army_unit_info: null }
+    this.state = { modal_cohort_info: null, modal_cohort_detail_info: null, modal_unit_info: null }
     const { outdated, refreshBattle } = props
     if (outdated)
       refreshBattle()
   }
 
-  isModalOpen = () => this.state.modal_unit_info || this.state.modal_army_unit_info
+  isModalOpen = () => this.state.modal_cohort_info || this.state.modal_cohort_detail_info || this.state.modal_unit_info
 
-  closeModal = (): void => this.setState({ modal_unit_info: null, modal_army_unit_info: null })
+  closeModal = (): void => this.setState({ modal_cohort_info: null, modal_cohort_detail_info: null, modal_unit_info: null })
 
-  openUnitModal = (side: Side, type: ArmyType, country: CountryName, row: number, column: number, id: number | undefined): void => {
+  openCohortModal = (side: Side, type: ArmyType, country: CountryName, row: number, column: number, id: number | undefined): void => {
     if (id)
-      this.openArmyUnitModal(side, country, id)
+      this.openCohortDetails(side, country, id)
     else
-      this.openUnitSelector(type, country, row, column)
+      this.openCohortSelector(type, country, row, column)
   }
 
-  openUnitSelector = (type: ArmyType, country: CountryName, row: number, column: number): void => this.setState({ modal_unit_info: { type, country, row, column } })
+  openCohortSelector = (type: ArmyType, country: CountryName, row: number, column: number): void => this.setState({ modal_cohort_info: { type, country, row, column } })
 
-  openArmyUnitModal = (side: Side, country: CountryName, id: number): void => {
-    this.setState({ modal_army_unit_info: { country, id, side } })
+  openCohortDetails = (side: Side, country: CountryName, id: number): void => {
+    this.setState({ modal_cohort_detail_info: { country, id, side } })
+  }
+
+  openUnitDetails = (country: CountryName, type: UnitType): void => {
+    this.setState({ modal_unit_info: { country, type } })
   }
 
   componentDidUpdate() {
@@ -70,15 +76,23 @@ class Battle extends Component<IProps, IState> {
     return (
       <>
         <ModalUnitSelector
-          info={this.state.modal_unit_info}
+          info={this.state.modal_cohort_info}
           onClose={this.closeModal}
         />
         <ModalCohortDetail
-          country={this.state.modal_army_unit_info ? this.state.modal_army_unit_info.country : '' as CountryName}
-          id={this.state.modal_army_unit_info ? this.state.modal_army_unit_info.id : -1}
-          side={this.state.modal_army_unit_info ? this.state.modal_army_unit_info.side : Side.Attacker}
+          country={this.state.modal_cohort_detail_info ? this.state.modal_cohort_detail_info.country : '' as CountryName}
+          id={this.state.modal_cohort_detail_info ? this.state.modal_cohort_detail_info.id : -1}
+          side={this.state.modal_cohort_detail_info ? this.state.modal_cohort_detail_info.side : Side.Attacker}
           onClose={this.closeModal}
         />
+        <Modal basic onClose={this.closeModal} open={!!this.state.modal_unit_info}>
+          <Modal.Content>
+            <ModalUnitDetail
+              country={this.state.modal_unit_info?.country}
+              unit_type={this.state.modal_unit_info?.type}
+            />
+          </Modal.Content>
+        </Modal>
         <Grid verticalAlign='middle'>
           <Grid.Row>
             <Grid.Column floated='left' width='3'>
@@ -133,20 +147,24 @@ class Battle extends Component<IProps, IState> {
             </Grid.Row>
             <Grid.Row columns={2}>
               <Grid.Column>
-                <TableArchetypes side={Side.Attacker} country={participant_a.country} />
+                <TableArchetypes side={Side.Attacker} country={participant_a.country} onRowClick={this.openUnitDetails} />
               </Grid.Column>
               <Grid.Column>
-                <TableArchetypes side={Side.Defender} country={participant_d.country} />
+                <TableArchetypes side={Side.Defender} country={participant_d.country} onRowClick={this.openUnitDetails} />
               </Grid.Column>
             </Grid.Row>
-            <Grid.Row columns={2}>
-              <Grid.Column>
-                <TableDamageAttributes side={Side.Attacker} country={participant_a.country} />
-              </Grid.Column>
-              <Grid.Column>
-                <TableDamageAttributes side={Side.Defender} country={participant_d.country} />
-              </Grid.Column>
-            </Grid.Row>
+            {
+              settings[Setting.FireAndShock] &&
+              <Grid.Row columns={2}>
+                <Grid.Column>
+                  <TableDamageAttributes side={Side.Attacker} country={participant_a.country} />
+                </Grid.Column>
+                <Grid.Column>
+                  <TableDamageAttributes side={Side.Defender} country={participant_d.country} />
+                </Grid.Column>
+              </Grid.Row>
+
+            }
             <Grid.Row columns={1}>
               <Grid.Column>
                 <TerrainSelector />
@@ -236,7 +254,7 @@ class Battle extends Component<IProps, IState> {
         <TableArmyPart
           color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={side}
-          onClick={(row, column, id) => this.openUnitModal(side, ArmyType.Frontline, country, row, column, id)}
+          onClick={(row, column, id) => this.openCohortModal(side, ArmyType.Frontline, country, row, column, id)}
           row_width={Math.max(30, combat_width)}
           reverse={side === Side.Attacker}
           type={ArmyType.Frontline}
@@ -254,7 +272,7 @@ class Battle extends Component<IProps, IState> {
         <TableArmyPart
           color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={side}
-          onClick={(row, column, id) => this.openUnitModal(side, ArmyType.Reserve, country, row, column + 30 * row, id)}
+          onClick={(row, column, id) => this.openCohortModal(side, ArmyType.Reserve, country, row, column + 30 * row, id)}
           row_width={30}
           reverse={false}
           type={ArmyType.Reserve}
@@ -271,7 +289,7 @@ class Battle extends Component<IProps, IState> {
         <TableArmyPart
           color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={side}
-          onClick={(row, column, id) => this.openUnitModal(side, ArmyType.Defeated, country, row, column + 30 * row, id)}
+          onClick={(row, column, id) => this.openCohortModal(side, ArmyType.Defeated, country, row, column + 30 * row, id)}
           row_width={30}
           reverse={false}
           type={ArmyType.Defeated}

@@ -242,7 +242,7 @@ export const getUnitList = (state: AppState, filter_base: boolean, name?: Countr
   return manager.getUnitList(units, mode, country.tech_level, filter_base, getSettings(state))
 }
 
-export const getArchetypes = (state: AppState, name: CountryName): Unit[] => manager.getArchetypes(getUnits(state, name))
+export const getArchetypes = (state: AppState, name: CountryName): Unit[] => manager.getArchetypes(getUnits(state, name), getMode(state))
 
 export const getUnit = (state: AppState, unit_type: UnitType, country?: CountryName): Unit => {
   const settings = getSettings(state)

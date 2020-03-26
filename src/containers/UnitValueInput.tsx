@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { UnitAttribute, Unit, ValuesType, CountryName } from 'types'
+import { UnitAttribute, Unit, ValuesType, CountryName, getAttributeValuesType } from 'types'
 import { invalidate, setUnitValue } from 'reducers'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 import { filterValues, calculateBase, calculateModifier } from 'definition_values'
@@ -21,7 +21,7 @@ type Props = {
 class UnitValueInput extends Component<IProps> {
   render() {
     const { unit, attribute, percent, type } = this.props
-    const values_type = type ?? ValuesType.Base
+    const values_type = type ?? getAttributeValuesType(attribute)
     let value = 0
     if (values_type === ValuesType.Base)
       value = calculateBase(unit, attribute)
@@ -36,7 +36,7 @@ class UnitValueInput extends Component<IProps> {
 
   onChange = (value: number) => {
     const { unit, attribute, setUnitValue, invalidate, country, type } = this.props
-    const values_type = type ?? ValuesType.Base
+    const values_type = type ?? getAttributeValuesType(attribute)
     let base = 0
     if (values_type === ValuesType.Base)
       base = calculateBase(unit, attribute) - calculateBase(filterValues(unit, this.getKey()), attribute)

@@ -11,7 +11,7 @@ const CUSTOM_VALUE_KEY = 'Custom'
 type Props = {
   country: CountryName | undefined
   unit_type: UnitType | undefined
-  changeType: (old_type: UnitType, new_type: UnitType) => void
+  changeType?: (old_type: UnitType, new_type: UnitType) => void
 }
 
 class ModalUnitDetail extends Component<IProps> {
@@ -42,7 +42,7 @@ class ModalUnitDetail extends Component<IProps> {
 
   changeType = (type: UnitType) => {
     const { changeType, invalidate, unit_type } = this.props
-    changeType(unit_type!, type)
+    changeType && changeType(unit_type!, type)
     invalidate()
   }
 

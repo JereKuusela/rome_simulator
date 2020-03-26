@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Image, Table } from 'semantic-ui-react'
+import { Image, Table, Modal } from 'semantic-ui-react'
 
-import { Side, UnitRole, CountryName, UnitType, UnitAttribute, filterAttributes } from 'types'
+import { Side, UnitRole, CountryName, UnitType, UnitAttribute, filterAttributes, Setting, Unit, Mode } from 'types'
 import { getImage, mapRange } from 'utils'
-import { AppState, getUnits, getUnitPreferences, getCountry, getArchetypes, getSettings, getCohorts } from 'state'
+import { AppState, getUnits, getUnitPreferences, getCountry, getArchetypes, getSettings, getCohorts, getMode } from 'state'
 import { addToReserve, removeFromReserve, invalidate, setUnitPreference } from 'reducers'
 import { getChildUnits } from 'managers/army'
 import Dropdown from 'components/Utils/Dropdown'
@@ -17,11 +17,21 @@ import { applyLosses } from 'managers/units'
 type Props = {
   side: Side
   country: CountryName
+  onRowClick: (country: CountryName, type: UnitType) => void
 }
 
 class TableArchetypes extends Component<IProps> {
 
-  attributes = [UnitAttribute.CombatAbility, UnitAttribute.OffensiveSupport]
+  getAttributes = () => {
+    const { mode } = this.props
+    if (process.env.REACT_APP_GAME === 'euiv')
+      return [UnitAttribute.CombatAbility, UnitAttribute.OffensiveSupport]
+    else {
+      if (mode === Mode.Naval)
+        return [UnitAttribute.Discipline, UnitAttribute.Morale, UnitAttribute.DamageDone, UnitAttribute.DamageTaken]
+      return [UnitAttribute.Discipline, UnitAttribute.Morale, UnitAttribute.Offense, UnitAttribute.Defense]
+    }
+  }
 
   checkPreference = (role: UnitRole) => {
     const { units, preferences, tech, country } = this.props
@@ -39,41 +49,49 @@ class TableArchetypes extends Component<IProps> {
   }
 
   render() {
-    const { side, settings } = this.props
+    const { side, settings, archetypes } = this.props
     return (
-      <Table celled selectable unstackable key={side}>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>
-              {side}
+      <>
+
+        <Table celled selectable unstackable key={side}>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>
+                {side}
+              </Table.HeaderCell>
+              {
+                settings[Setting.Tech] &&
+                <Table.HeaderCell>
+                  Type
             </Table.HeaderCell>
-            <Table.HeaderCell>
-              Type
+              }
+              <Table.HeaderCell>
+                Amount
             </Table.HeaderCell>
-            <Table.HeaderCell>
-              Amount
-            </Table.HeaderCell>
-            {
-              filterAttributes(this.attributes, settings).map(attribute => (
-                <Table.HeaderCell key={attribute}>
-                  <AttributeImage attribute={attribute} />
-                </Table.HeaderCell>
-              ))
-            }
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {this.renderRow(UnitRole.Front)}
-          {this.renderRow(UnitRole.Flank)}
-          {this.renderRow(UnitRole.Support)}
-        </Table.Body>
-      </Table>
+              {
+                filterAttributes(this.getAttributes(), settings).map(attribute => (
+                  <Table.HeaderCell key={attribute}>
+                    <AttributeImage attribute={attribute} />
+                  </Table.HeaderCell>
+                ))
+              }
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {!settings[Setting.Tech] && archetypes.map(this.renderUnitRow)}
+            {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Front)}
+            {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Flank)}
+            {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Support)}
+          </Table.Body>
+        </Table>
+      </>
     )
   }
 
-  renderRow = (role: UnitRole) => {
+  renderRoleRow = (role: UnitRole) => {
     // List of archetypes -> get archetype -> get image
-    const { archetypes, units, setUnitPreference, country, invalidate, preferences, tech, settings } = this.props
+    const { archetypes, units, setUnitPreference, country, invalidate, preferences, tech, settings, onRowClick } = this.props
+    console.log(archetypes)
     const archetype = archetypes.find(unit => unit.role === role)
     const preference = preferences[role]
     if (!archetype || !preference)
@@ -81,8 +99,8 @@ class TableArchetypes extends Component<IProps> {
     const image = getImage(archetype)
     const types = getChildUnits(units, tech, archetype.type).map(unit => unit.type)
     return (
-      <Table.Row>
-        <Table.Cell>
+      <Table.Row key={role}>
+        <Table.Cell onClick={() => onRowClick(country, archetype.type)}>
           <Image src={image} avatar />
           {archetype.type}
         </Table.Cell>
@@ -93,9 +111,34 @@ class TableArchetypes extends Component<IProps> {
           {this.renderCohortCount(archetype.type)}
         </Table.Cell>
         {
-          filterAttributes(this.attributes, settings).map(attribute => (
+          filterAttributes(this.getAttributes(), settings).map(attribute => (
             <Table.Cell key={attribute}>
               <UnitValueInput unit={archetype} attribute={attribute} country={country} percent />
+            </Table.Cell>
+          ))
+        }
+      </Table.Row>
+    )
+  }
+
+  renderUnitRow = (unit: Unit) => {
+    const { country, settings, onRowClick } = this.props
+    if (!unit)
+      return null
+    const image = getImage(unit)
+    return (
+      <Table.Row key={unit.type}>
+        <Table.Cell onClick={() => onRowClick(country, unit.type)}>
+          <Image src={image} avatar />
+          {unit.type}
+        </Table.Cell>
+        <Table.Cell>
+          {this.renderCohortCount(unit.type)}
+        </Table.Cell>
+        {
+          filterAttributes(this.getAttributes(), settings).map(attribute => (
+            <Table.Cell key={attribute}>
+              <UnitValueInput unit={unit} attribute={attribute} country={country} percent />
             </Table.Cell>
           ))
         }
@@ -134,7 +177,8 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   units: getUnits(state, props.country),
   tech: getCountry(state, props.side).tech_level,
   settings: getSettings(state),
-  weariness: getCountry(state, props.side).weariness
+  weariness: getCountry(state, props.side).weariness,
+  mode: getMode(state)
 })
 
 const actions = { addToReserve, removeFromReserve, invalidate, setUnitPreference }

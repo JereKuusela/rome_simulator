@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Table } from 'semantic-ui-react'
 
-import DetailValueInput from './Detail/DetailValueInput'
 import PaddedRow from './Utils/PaddedRow'
 import DetailToggleRow from './Detail/DetailToggleRow'
 import DetailTextRow from './Detail/DetailTextRow'
@@ -12,6 +11,7 @@ import { Mode, ValuesType, Cohort, UnitType, TerrainType, UnitRole, UnitAttribut
 import { values } from 'utils'
 import { getValue, calculateValue, explain } from 'definition_values'
 import { toMaintenance } from 'formatters'
+import DelayedNumericInput from './Detail/DelayedNumericInput'
 
 interface IProps {
   mode: Mode
@@ -92,9 +92,9 @@ export default class UnitDetail extends Component<IProps> {
       <PaddedRow key={attribute} cells={this.CELLS}>
         {attribute}
         {value}
-        {enable_base && <DetailValueInput value={base_value} onChange={value => onCustomBaseValueChange(custom_value_key, attribute, value)} />}
-        {enable_modifier && <DetailValueInput value={modifier_value} onChange={value => onCustomModifierValueChange(custom_value_key, attribute, value)} />}
-        {enable_loss && <DetailValueInput value={loss_value} onChange={value => onCustomLossValueChange(custom_value_key, attribute, value)} />}
+        {enable_base && <DelayedNumericInput value={base_value} onChange={value => onCustomBaseValueChange(custom_value_key, attribute, value)} />}
+        {enable_modifier && <DelayedNumericInput value={modifier_value} onChange={value => onCustomModifierValueChange(custom_value_key, attribute, value)} />}
+        {enable_loss && <DelayedNumericInput value={loss_value} onChange={value => onCustomLossValueChange(custom_value_key, attribute, value)} />}
         {explain(unit, attribute)}
       </PaddedRow>
     )

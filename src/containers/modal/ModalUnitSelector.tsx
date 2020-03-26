@@ -10,11 +10,11 @@ import { selectCohort, invalidate } from 'reducers'
 
 
 interface Props {
-  info: ModalInfo | null
+  info: ModalSelectorInfo | null
   onClose: () => void
 }
 
-export interface ModalInfo {
+export interface ModalSelectorInfo {
   country: CountryName
   row: number
   column: number

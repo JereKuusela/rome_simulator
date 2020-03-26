@@ -1,5 +1,5 @@
 
-import { CombatPhase, GeneralAttribute, CountryAttribute, UnitAttribute, Setting, Mode, Settings } from 'types'
+import { CombatPhase, GeneralAttribute, CountryAttribute, UnitAttribute, Setting, Mode, Settings, ValuesType } from 'types'
 import { toPercent } from 'formatters'
 
 export const formatAttribute = (value: number, attribute: string) => {
@@ -9,6 +9,8 @@ export const formatAttribute = (value: number, attribute: string) => {
 }
 
 export const filterAttributes = <T extends string>(attributes: T[], settings: Settings, mode?: Mode, show_statistics?: boolean): T[] => attributes.filter(attribute => isAttributeEnabled(attribute, settings, mode, show_statistics))
+
+export const getAttributeValuesType = (attribute: UnitAttribute) => attribute === UnitAttribute.Morale ? ValuesType.Modifier : ValuesType.Base
 
 export const isAttributeEnabled = (attribute: string, settings: Settings, mode?: Mode, show_statistics?: boolean) => {
   if (!show_statistics && (attribute === UnitAttribute.StrengthDepleted || attribute === UnitAttribute.MoraleDepleted))
@@ -48,6 +50,8 @@ export const isAttributeEnabled = (attribute: string, settings: Settings, mode?:
   if (!settings[Setting.Martial] && attribute === GeneralAttribute.Martial)
     return false
   if (!settings[Setting.Food] && (attribute === UnitAttribute.FoodConsumption || attribute === UnitAttribute.FoodStorage))
+    return false
+  if (!settings[Setting.InsufficientSupportPenalty] && attribute === CountryAttribute.FlankRatio)
     return false
   if (attribute === CombatPhase.Default)
     return false
