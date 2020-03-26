@@ -8,6 +8,7 @@ import Dropdown from 'components/Utils/Dropdown'
 import { toArr, keys, values, filterKeys } from 'utils'
 import { Mode, Setting, parameterToDescription, SimulationSpeed, CombatSettings, SiteSettings } from 'types'
 import { changeCombatParameter, changeSiteParameter, invalidate } from 'reducers'
+import { getDefaultSiteSettings, getDefaultLandSettings } from 'data'
 
 interface Props { }
 
@@ -32,6 +33,8 @@ const attributes = [
   Setting.AttributeMoraleDamage, Setting.AttributeOffenseDefense, Setting.AttributeMilitaryTactics, Setting.AttributeExperience, Setting.AttributeDrill,
   Setting.DisciplineDamageReduction
 ]
+
+const defaultSettings = { ...getDefaultLandSettings(), ...getDefaultSiteSettings() }
 
 class Settings extends Component<IProps> {
 
@@ -121,6 +124,7 @@ class Settings extends Component<IProps> {
           size='mini'
           style={{ width: 60 }}
           defaultValue={value}
+          placeholder={defaultSettings[key]}
           onChange={(_, { value }) => this.onInputChange(key, value, onChange)}
         />
       )
@@ -147,7 +151,7 @@ class Settings extends Component<IProps> {
   }
 
   onInputChange = <T extends Setting>(key: T, str: string, onChange: (key: T, value: number) => void) => {
-    const value = +str
+    const value = str.length ? +str : Number(defaultSettings[key])
     if (isNaN(value))
       return
     onChange(key, value)

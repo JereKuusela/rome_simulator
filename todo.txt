@@ -55,13 +55,14 @@ Changelog:
 - Units: Removed support for global unit mode (units are now either land or naval units).
 - Units: Removed can assault toggle button (attribute not used anywhere in simulator).
 - Units: Refactored base stats to a base unit (simplifies code).
-- Settings: Improve page layout which more clearly shows which settings affects land, naval or both.
 - Settings: Improved settings for bug fixes (and some others), converted to checkbox settings.
 - Settings: Improved names and descriptions for all settings.
+- Settings: Improved numeric settings (removing value sets the default value).
 - Settings: Updated a 20% increase to base damage values.
 - Settings: Removed "Fix damage taken" setting as it is fixed in the game.
 - Settings: Removed "Damage per roll" setting as it's now included in Multiplier for morale damage and Multiplier for strength damage settings.
 - Settings: Updated Defender's advantage to be disabled by default (people seem to make wrong conclusions because of it).
+- Settings: Added new tabs to split settings to logical groups.
 - Settings: Added a new setting to enable backrow (support units are prioritized), feature from EUIV.
 - Settings: Added a new setting for discipline reducing damage, feature from EUIV.
 - Settings: Added a new setting for daily morale losses, feature from EUIV.
@@ -80,9 +81,6 @@ Settings:
  - general maneuver: Affects crossing, affects terrain, affects both, no effect.
  - general: martial, fire&shock, both
  - Show on main page current settings set (Imperator, EUIV, mixed), tooltip to show individual (or only changed?)
- - Better descriptions
- - Show default value
- - Show current change versus default value (for example faster battles, more randomness)
  - New settings for deployment / reinforcement order/attribute.
  - More sections for settings (at least new section for deployment and reinforcement, game mechanics, simulation settings).
 

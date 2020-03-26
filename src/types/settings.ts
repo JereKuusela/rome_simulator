@@ -65,32 +65,32 @@ export enum SimulationSpeed {
 export const parameterToDescription = (parameter: Setting, value: string | number | boolean): string => {
   switch (parameter) {
     case Setting.BasePips:
-      return 'Base roll for all units.\nIncrease for faster battles and less randomness.\nDecrease for slower battles and more randomness.'
+      return 'Base pips for all units. Affects how much damage units deal.'
     case Setting.MaxPips:
-      return 'Reduces and caps effect of high martial generals.\nIncrease for more benefit from skilled generals.\nDecrease for less benefit from skilled generals.'
+      return 'Maximum amount of pips. Affects how much damage units deal.'
     case Setting.CombatWidth:
-      return 'How many units can fight at the same time.\nIncrease for faster big battles and more effective flanking.\nDecrease for slower big battles and less effective flanking.'
+      return 'Width of the frontline. Affects how many units can fight at the same time.'
     case Setting.DiceMaximum:
-      return 'Maximum roll for the dice.\nIncrease for faster battles and more randomness.\nDecrese for slower battles and less randomness.'
+      return 'Maximum dice roll. Affects how much damage units deal.'
     case Setting.DiceMinimum:
-      return 'Minimum roll for the dice.\nIncrease for faster battles and less randomness.\nDecrease for slower battles and more randomness.'
+      return 'Minimum dice roll. Affects how much damage units deal.'
     case Setting.ExperienceDamageReduction:
-      return 'Damage reduction given by 100% experience.\nIncrease for stronger experienced units.\nDecrease for weaker experienced units.'
+      return 'Damage reduction given at 100% experience.'
     case Setting.Precision:
-      return 'Precision of combat calculations.'
+      return 'Precision of combat calculations. Advanced setting.'
     case Setting.FixExperience:
       if (value)
-        return 'Damage reduction from experience is fixed.\nAll units benefit equally from the experience.'
+        return 'Damage reduction from experience is fixed. All units benefit equally from the experience.'
       else
-        return 'Experience works like in the game.\nStrength and morale damage taken affect the damage reduction.'
+        return 'Experience works like in the game.Strength and morale damage taken affect the damage reduction.'
     case Setting.StrengthLostMultiplier:
-      return 'Multiplier for strength lost.\nIncrease for slightly slower battles and more losses.\nDecrease for slightly faster battles and less losses.'
+      return 'Multiplier for strength damage. Affects how much strength damage units deal.'
     case Setting.MinimumStrength:
-      return 'Threshold for marking units defeated.\nIncrease for slightly faster battles and less losses.\nDecrease for slightly slower battles and more losses.'
+      return 'Strength required for combat.Affects how quicky units retreat.'
     case Setting.MinimumMorale:
-      return 'Threshold for marking units defeated.\nIncrease for faster battles and less losses.\nDecrease for slower battles and more losses.'
+      return 'Morale required for combat.Affects how quicky units retreat.'
     case Setting.MoraleLostMultiplier:
-      return 'Multiplier for morale lost.\nIncrease for faster battles and less losses.\nDecrease for slower battles and more losses.'
+      return 'Multiplier for morale damage. Affects how much morale damage units deal.'
     case Setting.DefenderAdvantage:
       if (value)
         return 'Defending units can\'t be targeted when they reinforce (EUIV).'
@@ -157,11 +157,11 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
       else
         return 'Combat only has one phase (Imperator).'
     case Setting.DailyMoraleLoss:
-      return 'Amount of morale lost each round in battle (EUIV).'
+      return 'Amount of morale lost each round (EUIV).'
     case Setting.DailyDamageIncrease:
-      return 'Amount of increased damage every round (EUIV).'
+      return 'How much damage increases every round (EUIV).'
     case Setting.RollFrequency:
-      return 'How many rounds dice rolls stay active.\nIncrease for more randomness.\nDecrease for less randomness.'
+      return 'How often dice rolls and phases change.'
     case Setting.InsufficientSupportPenalty:
       return 'How much damage taken is increased for having too many flanking units (EUIV).'
     case Setting.FixTargeting:
