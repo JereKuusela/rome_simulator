@@ -1,4 +1,4 @@
-import { Countries, CountryName, Country, GovermentType, ReligionType, CultureType, CountryAttribute, ValuesType, Modifier } from 'types'
+import { Countries, CountryName, Country, GovermentType, ReligionType, CultureType, CountryAttribute, ValuesType, Modifier, WearinessAttribute } from 'types'
 import { defaultCountry, getDefaultUnits } from 'data'
 import { addValuesWithMutate, clearAllValuesWithMutate, regenerateValues } from 'definition_values'
 
@@ -66,4 +66,9 @@ export const enableSelection = (country: Country, key: string) => {
 
 export const clearSelection = (country: Country, key: string) => {
   delete country.selections[key]
+}
+
+export const changeWeariness = (country: Country,type: WearinessAttribute, min: number, max: number) => {
+  country.weariness[type].min = min
+  country.weariness[type].max = max
 }

@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import { Button, Divider, Grid, Header, Input } from 'semantic-ui-react'
 import { getCombatPhase } from 'combat'
 import ModalCohortDetail from 'containers/modal/ModalCohortDetail'
-import ModalFastPlanner from 'containers/modal/ModalFastPlanner'
 import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from 'containers/modal/ModalUnitSelector'
 import PreferredUnitTypes from 'containers/PreferredUnitTypes'
 import TableStats from 'containers/TableStats'
@@ -26,7 +25,6 @@ import AccordionToggle from 'containers/AccordionToggle'
 interface IState {
   modal_unit_info: ModalUnitInfo | null
   modal_army_unit_info: { country: CountryName, id: number, side: Side } | null
-  modal_fast_planner_open: boolean
 }
 
 const ATTACKER_COLOR = '#FFAA00AA'
@@ -36,15 +34,15 @@ class Battle extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    this.state = { modal_unit_info: null, modal_army_unit_info: null, modal_fast_planner_open: false }
+    this.state = { modal_unit_info: null, modal_army_unit_info: null }
     const { outdated, refreshBattle } = props
     if (outdated)
       refreshBattle()
   }
 
-  isModalOpen = () => this.state.modal_unit_info || this.state.modal_army_unit_info || this.state.modal_fast_planner_open
+  isModalOpen = () => this.state.modal_unit_info || this.state.modal_army_unit_info
 
-  closeModal = (): void => this.setState({ modal_unit_info: null, modal_army_unit_info: null, modal_fast_planner_open: false })
+  closeModal = (): void => this.setState({ modal_unit_info: null, modal_army_unit_info: null })
 
   openUnitModal = (side: Side, type: ArmyType, country: CountryName, row: number, column: number, id: number | undefined): void => {
     if (id)
@@ -58,8 +56,6 @@ class Battle extends Component<IProps, IState> {
   openArmyUnitModal = (side: Side, country: CountryName, id: number): void => {
     this.setState({ modal_army_unit_info: { country, id, side } })
   }
-
-  openFastPlanner = (): void => this.setState({ modal_fast_planner_open: true })
 
   componentDidUpdate() {
     const { outdated, refreshBattle } = this.props
@@ -75,10 +71,6 @@ class Battle extends Component<IProps, IState> {
       <>
         <ModalUnitSelector
           info={this.state.modal_unit_info}
-          onClose={this.closeModal}
-        />
-        <ModalFastPlanner
-          open={this.state.modal_fast_planner_open}
           onClose={this.closeModal}
         />
         <ModalCohortDetail

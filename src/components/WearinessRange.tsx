@@ -3,14 +3,12 @@ import { Table, Header } from 'semantic-ui-react'
 import { Range, getTrackBackground } from 'react-range'
 
 import Headers from './Utils/Headers'
-import { Side, WearinessValues, WearinessAttribute, WearinessAttributes } from 'types'
-import { keys, reduce, toArr } from 'utils'
+import { WearinessAttribute, WearinessAttributes, UnitAttribute } from 'types'
 import { toPercent } from 'formatters'
 
-interface IProps {
-  values: WearinessValues
-  onChange: (side: Side, type: WearinessAttribute, min: number, max: number) => void
-  attached?: boolean
+type IProps = {
+  values: WearinessAttributes
+  onChange: (type: WearinessAttribute, min: number, max: number) => void
 }
 
 const NEUTRAL = '#CCC'
@@ -22,42 +20,36 @@ const BACK = '#FFF'
  */
 export default class WearinessRange extends Component<IProps> {
 
-  readonly headers = ['Weariness', 'Attacker', 'Defender']
+  readonly headers = ['', 'Morale', 'Strength']
 
   render() {
-    const { attached, values } = this.props
-    const calcs = keys(reduce(values, (prev, curr) => ({ ...prev, ...curr }), {} as WearinessAttributes))
+    const { values } = this.props
     return (
-      <Table celled unstackable attached={attached}>
+      <Table celled unstackable>
         <Headers values={this.headers} />
         <Table.Body>
-          {calcs.map(type => this.renderRow(type, values))}
+          <Table.Row>
+            <Table.Cell width='6'>
+              Weariness
+            </Table.Cell>
+            {this.renderCell(UnitAttribute.Morale, values[UnitAttribute.Morale])}  
+            {this.renderCell(UnitAttribute.Strength, values[UnitAttribute.Strength])}  
+          </Table.Row>
         </Table.Body>
       </Table>
     )
   }
 
-  renderRow = (type: WearinessAttribute, values: WearinessValues) => {
+  renderCell = (type: WearinessAttribute, range: { min: number, max: number }) => {
     const { onChange } = this.props
     return (
-      <Table.Row key={type}>
-        <Table.Cell width='6'>
-          {type}
-        </Table.Cell>
-        {
-          toArr(values, (ranges, side) => {
-            const range = ranges[type]
-            return (
-              <Table.Cell width='5' key={type + '_' + side}>
-                <Header textAlign='center' size='small' style={{margin: 0}}>
-                  {toPercent(range.min, 0)} - {toPercent(range.max, 0)}
-                </Header>
-                {this.renderRange(range.min, range.max, (min, max) => onChange(side, type, min, max))}
-              </Table.Cell>
-            )
-          })
-        }
-      </Table.Row>
+      <Table.Cell width='5'>
+        <Header textAlign='center' size='small' style={{ margin: 0 }}>
+          {toPercent(range.min, 0)} - {toPercent(range.max, 0)}
+        </Header>
+        {this.renderRange(range.min, range.max, (min, max) => onChange(type, min, max))}
+      </Table.Cell>
+
     )
   }
 

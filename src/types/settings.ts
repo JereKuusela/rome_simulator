@@ -1,11 +1,5 @@
-import { CountryName, Mode, Side, UnitAttribute } from "types"
+import { CountryName, Mode } from "types"
 import { ObjSet } from "utils"
-
-export type WearinessValues = { [key in Side]: WearinessAttributes }
-export type WearinessAttribute = UnitAttribute.Morale | UnitAttribute.Strength
-export type WearinessAttributes = { [key in WearinessAttribute]: MinMax }
-type MinMax = { min: number, max: number }
-
 
 export enum Setting {
   StrengthLostMultiplier = 'Multiplier for strength damage',
@@ -323,5 +317,4 @@ export type SettingsAndOptions = {
   mode: Mode
   country: CountryName
   accordions: ObjSet
-  weariness: WearinessValues
 }

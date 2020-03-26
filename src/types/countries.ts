@@ -1,8 +1,13 @@
 import { ObjSet } from "utils"
 import { CultureType, GovermentType, ReligionType } from "./modifiers"
 import { Armies } from "./armies"
-import { BaseUnits } from "./units"
+import { BaseUnits, UnitAttribute } from "./units"
 import { DefinitionValues } from "definition_values"
+
+export type WearinessAttribute = UnitAttribute.Morale | UnitAttribute.Strength
+export type WearinessAttributes = { [key in WearinessAttribute]: MinMax }
+type MinMax = { min: number, max: number }
+
 
 export enum CountryName {
   Country1 = 'Country 1',
@@ -26,5 +31,6 @@ export interface Country extends DefinitionValues<CountryAttribute> {
   office_morale: number,
   armies: Armies,
   tech_level: number,
-  units: BaseUnits
+  units: BaseUnits,
+  weariness: WearinessAttributes
 }

@@ -1,4 +1,4 @@
-import { SettingsAndOptions, CombatSettings, SiteSettings, Setting, SimulationSpeed, Mode, CountryName, Side, WearinessAttribute } from "types"
+import { SettingsAndOptions, CombatSettings, SiteSettings, Setting, SimulationSpeed, Mode, CountryName } from "types"
 import { speedValues } from "data"
 import { has } from "utils"
 
@@ -31,9 +31,4 @@ export const toggleAccordion = (settings: SettingsAndOptions, key: string) => {
     delete settings.accordions[key]
   else
     settings.accordions[key] = true
-}
-
-export const changeWeariness = (settings: SettingsAndOptions, side: Side, type: WearinessAttribute, min: number, max: number) => {
-  settings.weariness[side][type].min = min
-  settings.weariness[side][type].max = max
 }

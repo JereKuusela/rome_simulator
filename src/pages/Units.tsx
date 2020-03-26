@@ -3,14 +3,15 @@ import { Modal, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
 import ModalUnitDetail from 'containers/modal/ModalUnitDetail'
-import { AppState, mergeUnitTypes, filterTerrainTypes, getUnitImages, getMode, getUnitList } from 'state'
-import { createUnit, deleteUnit, changeUnitType } from 'reducers'
+import { AppState, mergeUnitTypes, filterTerrainTypes, getUnitImages, getMode, getUnitList, getCountries } from 'state'
+import { createUnit, deleteUnit, changeUnitType, changeWeariness } from 'reducers'
 import UnitDefinitions from 'components/UnitDefinitions'
 import ItemRemover from 'components/ItemRemover'
 import ValueModal from 'components/ValueModal'
 import CountryManager from 'containers/CountryManager'
 import { CountryName, UnitType } from 'types'
 import { getBaseUnitType } from 'managers/units'
+import WearinessRange from 'components/WearinessRange'
 
 interface IState {
   modal_country: CountryName | undefined
@@ -28,7 +29,7 @@ class Units extends Component<IProps, IState> {
   initialState = { modal_country: undefined, modal_unit: undefined, open_create_unit: false }
 
   render() {
-    const { mode, createUnit, country, terrains, units, images, unit_types } = this.props
+    const { mode, createUnit, country, terrains, units, images, unit_types, weariness } = this.props
     return (
       <>
         <ValueModal
@@ -72,6 +73,10 @@ class Units extends Component<IProps, IState> {
           unit_types={unit_types}
           onRowClick={unit => this.openModal(country, unit.type)}
         />
+        <WearinessRange
+          values={weariness}
+          onChange={(type, min, max) => this.props.changeWeariness(country, type, min, max)}
+        />
       </>
     )
   }
@@ -98,11 +103,12 @@ const mapStateToProps = (state: AppState) => ({
   unit_types: mergeUnitTypes(state),
   terrains: filterTerrainTypes(state),
   mode: getMode(state),
-  country: state.settings.country
+  country: state.settings.country,
+  weariness: getCountries(state)[state.settings.country].weariness
 })
 
 const actions = {
-  deleteUnit, createUnit, changeUnitType
+  deleteUnit, createUnit, changeUnitType, changeWeariness
 }
 
 type S = ReturnType<typeof mapStateToProps>

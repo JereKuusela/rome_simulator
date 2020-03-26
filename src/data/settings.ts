@@ -1,15 +1,11 @@
-import { Mode, CombatSettings, Setting, SiteSettings, SimulationSpeed, CountryName, Side, UnitAttribute, SettingsAndOptions } from 'types'
+import { Mode, CombatSettings, Setting, SiteSettings, SimulationSpeed, CountryName, SettingsAndOptions } from 'types'
 
 export const getDefaultSettings = (): SettingsAndOptions => ({
   combatSettings: process.env.REACT_APP_GAME === 'ir' ? { [Mode.Land]: getDefaultLandSettings(), [Mode.Naval]: getDefaultNavalSettings() } : { [Mode.Land]: getDefaultLandSettings() } as any,
   siteSettings: getDefaultSiteSettings(),
   mode: Mode.Land,
   country: CountryName.Country1,
-  accordions: {},
-  weariness: {
-    [Side.Attacker]: { [UnitAttribute.Morale]: { min: 0, max: 0 }, [UnitAttribute.Strength]: { min: 0, max: 0 } },
-    [Side.Defender]: { [UnitAttribute.Morale]: { min: 0, max: 0 }, [UnitAttribute.Strength]: { min: 0, max: 0 } }
-  }
+  accordions: {}
 })
 
 export const getDefaultLandSettings = (): CombatSettings => {

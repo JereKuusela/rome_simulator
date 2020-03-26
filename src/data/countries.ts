@@ -1,4 +1,4 @@
-import { Country, GovermentType, ReligionType, CountryName, CultureType, CountryAttribute } from 'types'
+import { Country, GovermentType, ReligionType, CountryName, CultureType, CountryAttribute, UnitAttribute } from 'types'
 import { getDefaultArmies } from 'data'
 import { getDefaultUnits } from './units'
 
@@ -19,7 +19,8 @@ export const defaultCountry: Country =
     [CountryAttribute.FlankRatio]: {
       'Base': 0.5
     }
-  } as any
+  } as any,
+  weariness: { [UnitAttribute.Morale]: { min: 0, max: 0 }, [UnitAttribute.Strength]: { min: 0, max: 0 } }
 }
 
 export const getDefaultCountryDefinitions = (): { [key in CountryName]: Country } => ({

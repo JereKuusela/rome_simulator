@@ -8,7 +8,6 @@ const actionToFunction: ActionToFunction<SettingsAndOptions> = {}
 
 export const changeCombatParameter = makeActionRemoveFirst(manager.changeCombatParameter, actionToFunction)
 export const changeSiteParameter = makeActionRemoveFirst(manager.changeSiteParameter, actionToFunction)
-export const changeWeariness = makeActionRemoveFirst(manager.changeWeariness, actionToFunction)
 export const selectCountry = makeActionRemoveFirst(manager.selectCountry, actionToFunction)
 export const toggleAccordion = makeActionRemoveFirst(manager.toggleAccordion, actionToFunction)
 export const toggleMode = makeActionRemoveFirst(manager.toggleMode, actionToFunction)

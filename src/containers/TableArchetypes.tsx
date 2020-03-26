@@ -12,6 +12,7 @@ import UnitValueInput from './UnitValueInput'
 import AttributeImage from 'components/Utils/AttributeImage'
 import { getNextId } from 'army_utils'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
+import { applyLosses } from 'managers/units'
 
 type Props = {
   side: Side
@@ -111,11 +112,11 @@ class TableArchetypes extends Component<IProps> {
   }
 
   updateReserve = (type: UnitType, amount: number) => {
-    const { country, addToReserve, removeFromReserve, invalidate, reserve } = this.props
+    const { country, addToReserve, removeFromReserve, invalidate, reserve, weariness } = this.props
     const previous = reserve.filter(cohort => cohort.type === type).length
     if (amount > previous) {
       const units = mapRange(amount - previous, _ => ({ id: getNextId(), type, image: '' }))
-      addToReserve(country, units)
+      addToReserve(country, applyLosses(weariness, units))
       invalidate()
     }
     if (amount < previous) {
@@ -132,7 +133,8 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   reserve: getCohorts(state, props.side, true).reserve,
   units: getUnits(state, props.country),
   tech: getCountry(state, props.side).tech_level,
-  settings: getSettings(state)
+  settings: getSettings(state),
+  weariness: getCountry(state, props.side).weariness
 })
 
 const actions = { addToReserve, removeFromReserve, invalidate, setUnitPreference }

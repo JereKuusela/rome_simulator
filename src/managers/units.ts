@@ -1,7 +1,7 @@
-import { ValuesType, UnitValueType, UnitType, UnitRole, Modifier, ScopeType, BaseUnit, BaseUnits, Mode, Settings, Setting, UnitAttribute } from "types"
+import { ValuesType, UnitValueType, UnitType, UnitRole, Modifier, ScopeType, BaseUnit, BaseUnits, Mode, Settings, Setting, UnitAttribute, WearinessAttributes, BaseReserve } from "types"
 import { addValuesWithMutate, regenerateValues, clearValues, DefinitionValues, calculateValue, addValues } from "definition_values"
 import { getUnitIcon } from "data"
-import { forEach } from "utils"
+import { forEach, toArr, round, randomWithinRange } from "utils"
 
 export const setUnitValue = (unit: BaseUnit, values_type: ValuesType, key: string, attribute: UnitValueType, value: number) => {
   addValuesWithMutate(unit, values_type, key, [[attribute, value]])
@@ -67,3 +67,9 @@ export const applyDynamicAttributes = <T extends DefinitionValues<UnitValueType>
 }
 
 export const getStrengthBasedFlank = (strength: number) => Math.ceil(strength * 4.0) / 4.0
+
+export const applyLosses = (values: WearinessAttributes, units: BaseReserve) => (
+  units.map(unit => addValues(unit, ValuesType.LossModifier, 'Custom', generateLosses(values)))
+)
+
+const generateLosses = (values: WearinessAttributes): [string, number][] => toArr(values, (range, type) => [type, round(randomWithinRange(range.min, range.max), 100)])

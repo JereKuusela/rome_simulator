@@ -24,6 +24,7 @@ export const setOfficeMorale = makeActionReplaceFirst(manager.setOfficeMorale, c
 export const setOmenPower = makeActionReplaceFirst(manager.setOmenPower, countryMapping)
 export const setCountryValue = makeActionReplaceFirst(manager.setCountryValue, countryMapping)
 export const setTechLevel = makeActionReplaceFirst(manager.setTechLevel, countryMapping)
+export const changeWeariness = makeActionReplaceFirst(manager.changeWeariness, countryMapping)
 export const enableCountryModifiers = makeActionReplaceFirst(manager.enableCountryModifiers, countryMapping)
 export const clearCountryModifiers = makeActionReplaceFirst(manager.clearCountryModifiers, countryMapping)
 
