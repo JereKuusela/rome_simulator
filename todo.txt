@@ -20,6 +20,7 @@ Changelog:
 - Battle: Added an input for tech level and culture, feauture from EUIV.
 - Battle: Added support for showing and hiding inputs based on available game mechanics.
 - Battle: Added more stats to Stats table (cost, maintenance, supply weight, food).
+- Battle: Added clear units button at bottom.
 - Battle: Removed base damage from the UI (not very relevant information).
 - Battle: Removed "Add and remove units" as obsolete.
 - Analyze: Added average gold losses to naval simulations (from repair, from destroyed, from captured, etc.).

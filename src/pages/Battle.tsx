@@ -3,7 +3,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Button, Divider, Grid, Header, Input } from 'semantic-ui-react'
 import { getCombatPhase } from 'combat'
-import ConfirmationButton from 'components/ConfirmationButton'
 import ModalCohortDetail from 'containers/modal/ModalCohortDetail'
 import ModalFastPlanner from 'containers/modal/ModalFastPlanner'
 import ModalUnitSelector, { ModalInfo as ModalUnitInfo } from 'containers/modal/ModalUnitSelector'
@@ -14,7 +13,7 @@ import TargetArrows from 'containers/TargetArrows'
 import TerrainSelector from 'containers/TerrainSelector'
 import WinRate from 'containers/WinRate'
 import {
-  invalidate, selectArmy, setRoll, toggleRandomRoll,
+  invalidate, selectArmy, setRoll, toggleRandomRoll, clearCohorts,
   undo, battle, refreshBattle, setSeed, setGeneralBaseStat, resetState, selectCulture
 } from 'reducers'
 import { AppState, getBattle, getCountryName, getParticipant, getSettings, getCountries, getGeneral, getSelectedTerrains, getCountry } from 'state'
@@ -215,11 +214,12 @@ class Battle extends Component<IProps, IState> {
               this.renderSeed()
             }
             <Grid.Column floated='right' width='6' textAlign='right'>
-              <ConfirmationButton
-                negative text='Reset all data'
-                message='Do you really want to reset all data?'
-                onConfirm={() => this.props.resetState()}
-              />
+              <Button negative onClick={this.clearCohorts}>
+                Reset units
+              </Button>
+              <Button negative onClick={this.props.resetState}>
+                Reset all data
+              </Button>
             </Grid.Column>
           </Grid.Row>
         </Grid >
@@ -301,6 +301,13 @@ class Battle extends Component<IProps, IState> {
     if (!isNaN(Number(value)))
       this.props.setSeed(Number(value))
   }
+
+  clearCohorts = (): void => {
+    const { participant_a, participant_d, clearCohorts, invalidate } = this.props
+    clearCohorts(participant_a.country)
+    clearCohorts(participant_d.country)
+    invalidate()
+  }
 }
 
 const mapStateToProps = (state: AppState) => ({
@@ -321,7 +328,7 @@ const mapStateToProps = (state: AppState) => ({
   settings: getSettings(state)
 })
 
-const actions = { battle, undo, toggleRandomRoll, setRoll, setGeneralBaseStat, invalidate, selectArmy, setSeed, refreshBattle, resetState, selectCulture }
+const actions = { battle, undo, toggleRandomRoll, setRoll, setGeneralBaseStat, invalidate, selectArmy, setSeed, refreshBattle, resetState, selectCulture, clearCohorts }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
