@@ -98,9 +98,9 @@ class Battle extends Component<IProps, IState> {
             <Grid.Column floated='left' width='3'>
               <Header>{'Round: ' + this.roundName(round, getCombatPhase(round - 1, settings))}</Header>
             </Grid.Column>
-            <Grid.Column textAlign='center' width='5'>
+            <Grid.Column textAlign='center' width='4'>
             </Grid.Column>
-            <Grid.Column width='4'>
+            <Grid.Column width='5'>
               <WinRate />
             </Grid.Column>
             <Grid.Column floated='right' textAlign='right' width='4'>
@@ -113,7 +113,6 @@ class Battle extends Component<IProps, IState> {
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
-              <Header>Frontline</Header>
               {
                 this.renderFrontline(Side.Attacker, participant_a.country)
               }
@@ -137,7 +136,7 @@ class Battle extends Component<IProps, IState> {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-        <Divider />
+        <br /><br />
         <AccordionToggle title='Setup' identifier='BattleSetup' open>
           <Grid>
             <Grid.Row columns={1}>
@@ -178,8 +177,9 @@ class Battle extends Component<IProps, IState> {
               </Grid.Row>
             }
           </Grid>
+          <br />
         </AccordionToggle>
-        <Divider />
+        <br />
         <AccordionToggle title='Stats' identifier='BattleStats' open>
           <Grid>
             <Grid.Row columns={1}>
@@ -188,11 +188,13 @@ class Battle extends Component<IProps, IState> {
               </Grid.Column>
             </Grid.Row>
           </Grid>
+          <br /><br />
         </AccordionToggle>
-        <Divider />
+        <br />
         <Grid>
           <Grid.Row columns={1}>
             <Grid.Column>
+              <Header>Reserve</Header>
               {
                 this.renderReserve(Side.Attacker, participant_a.country)
               }
@@ -207,6 +209,7 @@ class Battle extends Component<IProps, IState> {
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
+              <Header>Defeated</Header>
               {
                 this.renderDefeatedArmy(Side.Attacker, participant_a.country)
               }
@@ -260,7 +263,6 @@ class Battle extends Component<IProps, IState> {
           type={ArmyType.Frontline}
           disable_add={this.props.round > -1}
         />
-        {side === Side.Defender && <Header>{side + '\'s frontline'}</Header>}
       </div>
     )
   }
@@ -268,7 +270,6 @@ class Battle extends Component<IProps, IState> {
   renderReserve = (side: Side, country: CountryName) => {
     return (
       <div key={side}>
-        <Header>{side + '\'s reserve'}</Header>
         <TableArmyPart
           color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={side}
@@ -285,7 +286,6 @@ class Battle extends Component<IProps, IState> {
   renderDefeatedArmy = (side: Side, country: CountryName) => {
     return (
       <div key={side}>
-        <Header>{side + '\'s defeated units'}</Header>
         <TableArmyPart
           color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
           side={side}
