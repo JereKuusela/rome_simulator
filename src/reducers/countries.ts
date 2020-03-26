@@ -1,5 +1,5 @@
 import * as manager from 'managers/countries'
-import { Countries, Country, CountryName } from 'types'
+import { Countries, CountryDefinition, CountryName } from 'types'
 import { getDefaultCountryDefinitions } from 'data'
 import { makeContainerReducer, ActionToFunction, makeActionRemoveFirst, makeEntityReducer, compose, makeActionReplaceFirst } from './utils'
 
@@ -11,7 +11,7 @@ export const changeCountryName = makeActionRemoveFirst(manager.changeCountryName
 
 const countries = makeContainerReducer(getDefaultCountryDefinitions(), countriesMapping)
 
-const countryMapping: ActionToFunction<Country, CountryName> = {}
+const countryMapping: ActionToFunction<CountryDefinition, CountryName> = {}
 
 export const clearSelection = makeActionReplaceFirst(manager.clearSelection, countryMapping)
 export const enableSelection = makeActionReplaceFirst(manager.enableSelection, countryMapping)

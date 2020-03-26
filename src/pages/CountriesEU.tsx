@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Container, Grid, Table, List, Checkbox } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { AppState, getSettings, getGeneralDefinition } from 'state'
+import { AppState, getSettings, getGeneralDefinition, getCountryDefinition } from 'state'
 import { mapRange, ObjSet, has, values } from '../utils'
 
 import { ValuesType, Modifier, ScopeType, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, TechDefinitionEUIV, CountryName, Setting } from 'types'
@@ -13,23 +13,21 @@ import Dropdown from 'components/Utils/Dropdown'
 import ConfirmationButton from 'components/ConfirmationButton'
 import TableAttributes from 'components/TableAttributes'
 import { getCultures } from 'data'
-import { mapModifiersToUnits } from 'managers/modifiers'
+import { mapModifiersToUnits, tech } from 'managers/modifiers'
 import InputTechLevel from 'containers/InputTechLevel'
 
 const TECH_COLUMNS = 4
-const TECH_KEY = 'Tech_'
 const CUSTOM_KEY = 'Custom'
 const NO_GENERAL_KEY = 'No general'
 
-const KEYS = [TECH_KEY, NO_GENERAL_KEY, CUSTOM_KEY]
+const KEYS = [NO_GENERAL_KEY, CUSTOM_KEY]
 
 const CELL_PADDING = '.78571429em .78571429em'
 
 class Countries extends Component<IProps> {
 
   render() {
-    const { settings, tech, general_definition, countries, selected_country } = this.props
-    const country = countries[selected_country]
+    const { settings, tech, general, country, selected_country } = this.props
     const selections = country.selections
     return (
       <Container>
@@ -56,8 +54,8 @@ class Countries extends Component<IProps> {
                 <Checkbox
                   toggle
                   label='General'
-                  checked={general_definition.enabled}
-                  onChange={general_definition.enabled ? this.disableGeneral : this.enableGeneral}
+                  checked={general.enabled}
+                  onChange={general.enabled ? this.disableGeneral : this.enableGeneral}
                   style={{ float: 'right' }}
                 />
               </AccordionToggle>
@@ -68,7 +66,7 @@ class Countries extends Component<IProps> {
               <AccordionToggle title='Tech' identifier='countries_tech'>
                 Tech level: <InputTechLevel country={selected_country} tech={country.tech_level} />
                 {
-                  this.renderTech(tech, selections)
+                  this.renderTech(tech, country.tech_level)
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -77,7 +75,7 @@ class Countries extends Component<IProps> {
             <Grid.Column>
               <AccordionToggle title='Attributes' identifier='countries_attributes'>
                 <TableAttributes attributes={filterAttributes(values(CountryAttribute), settings)} custom_value_key={CUSTOM_KEY} definition={country} onChange={this.setCountryValue} />
-                <TableAttributes attributes={filterAttributes((values(GeneralAttribute) as GeneralValueType[]).concat(values(CombatPhase)), settings)} custom_value_key={CUSTOM_KEY} definition={general_definition} onChange={this.setGeneralValue} />
+                <TableAttributes attributes={filterAttributes((values(GeneralAttribute) as GeneralValueType[]).concat(values(CombatPhase)), settings)} custom_value_key={CUSTOM_KEY} definition={general} onChange={this.setGeneralValue} />
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
@@ -86,7 +84,7 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderTech = (tech: TechDefinitionEUIV[], selections: ObjSet) => {
+  renderTech = (tech: TechDefinitionEUIV[], tech_level: number) => {
     const rows = Math.ceil(tech.length / TECH_COLUMNS)
     return (
       <Table celled unstackable fixed>
@@ -98,11 +96,26 @@ class Countries extends Component<IProps> {
                   mapRange(TECH_COLUMNS, number => number).map(column => {
                     const index = row * TECH_COLUMNS + column
                     const level = tech[index]
+                    const key = 'Tech' + index
                     if (!level)
-                      return (<Table.Cell key={TECH_KEY + index}></Table.Cell>)
-                    const key = TECH_KEY + index
-                    return this.renderCell(key, level.name, selections, level.modifiers,
-                      () => this.enableTech(tech, index, selections), () => this.clearTech(index, selections))
+                      return (<Table.Cell key={key}></Table.Cell>)
+                    const enabled = index <= tech_level
+                    return (
+                      <Table.Cell
+                        key={key}
+                        positive={enabled}
+                        selectable
+                        colSpan={1}
+                        onClick={
+                          enabled
+                            ? () => this.clearTech(index)
+                            : () => this.enableTech(index)
+                        }
+                        style={{ padding: CELL_PADDING }}
+                      >
+                        {this.renderModifiers(level.name, level.modifiers)}
+                      </Table.Cell>
+                    )
                   })
                 }
               </Table.Row>
@@ -186,19 +199,15 @@ class Countries extends Component<IProps> {
   /**
    * Clears tech above a given tech level.
    */
-  clearTech = (level: number, selections: ObjSet) => {
+  clearTech = (level: number) => {
     level = level || 1
-    Object.keys(selections).filter(value => value.startsWith(TECH_KEY) && this.getNumberFromKey(value, 1) >= level)
-      .forEach(value => this.clearModifiers(value))
     this.exec(this.props.setTechLevel, level - 1)
   }
 
   /**
    * Enables tech levels to a given level.
    */
-  enableTech = (tech: TechDefinitionEUIV[], level: number, selections: ObjSet) => {
-    mapRange(level + 1, number => number).filter(value => !has(selections, TECH_KEY + value))
-      .forEach(value => this.enableModifiers(TECH_KEY + value, tech[value].modifiers))
+  enableTech = (level: number) => {
     this.exec(this.props.setTechLevel, level)
   }
 
@@ -302,10 +311,10 @@ class Countries extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  countries: state.countries,
+  country: getCountryDefinition(state, state.settings.country),
   selected_country: state.settings.country,
-  tech: state.data.tech_euiv,
-  general_definition: getGeneralDefinition(state, state.settings.country),
+  tech,
+  general: getGeneralDefinition(state, state.settings.country),
   settings: getSettings(state)
 })
 

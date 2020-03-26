@@ -1,12 +1,15 @@
 import { AppState } from './index'
 import { toArr, filter, arrGet, toObj, forEach2, keys } from 'utils'
 import { filterUnitDefinitions, getArmyPart, mergeBaseUnitsWithDefinitions, mergeDefinitions, mergeDefinition } from '../army_utils'
-import { Mode, CountryName, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, Tactic, UnitPreferences, Participant, Terrain, Settings, Battle, Terrains, Tactics, Cohorts, ArmyName, General, Countries, Setting, Reserve, Defeated, CountryAttribute, Units, Unit, GeneralDefinition, Country } from 'types'
+import { Mode, CountryName, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, Tactic, UnitPreferences, Participant, Terrain, Settings, Battle, Terrains, Tactics, Cohorts, ArmyName, General, Countries, Setting, Reserve, Defeated, CountryAttribute, Units, Unit, GeneralDefinition, Country, CountryDefinition } from 'types'
 import { CombatCohort, CombatCohorts, CombatParticipant } from 'combat'
 import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticState, getDefaultTerrainState } from 'data'
 import { uniq, flatten } from 'lodash'
 import * as manager from 'managers/army'
 import { calculateValue } from 'definition_values'
+import { getModifiers } from 'managers/modifiers'
+import { convertCountryDefinition, applyCountryModifiers } from 'managers/countries'
+import { applyUnitModifiers } from 'managers/units'
 
 /**
  * Returns settings of the current mode.
@@ -14,9 +17,9 @@ import { calculateValue } from 'definition_values'
  */
 export const getSettings = (state: AppState, mode?: Mode): Settings => {
   const settings = { ...state.settings.combatSettings[mode || state.settings.mode], ...state.settings.siteSettings }
-  const attacker = getCountries(state)[getCountryName(state, Side.Attacker)]
-  const defender = getCountries(state)[getCountryName(state, Side.Defender)]
-  settings[Setting.CombatWidth] += Math.max(calculateValue(attacker, CountryAttribute.CombatWidth), calculateValue(defender, CountryAttribute.CombatWidth))
+  const attacker = getCountry(state, getCountryName(state, Side.Attacker))
+  const defender = getCountry(state, getCountryName(state, Side.Defender))
+  settings[Setting.CombatWidth] += Math.max(attacker.values[CountryAttribute.CombatWidth], defender.values[CountryAttribute.CombatWidth])
   settings[Setting.Precision] = Math.pow(10, settings[Setting.Precision])
   return settings
 }
@@ -120,7 +123,12 @@ export const getBattle = (state: AppState): Battle => state.battle[state.setting
 
 export const getCountries = (state: AppState): Countries => state.countries
 
-const getBaseUnits = (state: AppState, country: CountryName) => getCountries(state)[country].units
+const getBaseUnits = (state: AppState, country: CountryName) => {
+  const definition = state.countries[country]
+  const units = getCountries(state)[country].units
+  const modifiers = getModifiers(definition.selections, definition.tech_level)
+  return applyUnitModifiers(units, modifiers)
+}
 
 export const getArmyForCombat = (state: AppState, side: Side, mode?: Mode): ArmyForCombat => {
   const participant = state.battle[mode ?? state.settings.mode].participants[side]
@@ -162,8 +170,15 @@ export const getFlankSize = (state: AppState, side: Side): number => {
 export const getCountryName = (state: AppState, side: Side): CountryName => {
   return state.battle[state.settings.mode].participants[side].country
 }
-export const getCountry = (state: AppState, side: Side): Country => {
-  return state.countries[state.battle[state.settings.mode].participants[side].country]
+export const getCountry = (state: AppState, country: CountryName): Country => {
+  const settings = { ...state.settings.combatSettings[state.settings.mode], ...state.settings.siteSettings }
+  const definition = getCountryDefinition(state, country)
+  return convertCountryDefinition(definition, settings)
+}
+export const getCountryDefinition = (state: AppState, country: CountryName): CountryDefinition => {
+  const definition = state.countries[country]
+  const modifiers = getModifiers(definition.selections, definition.tech_level)
+  return applyCountryModifiers(definition, modifiers)
 }
 const getArmy = (state: AppState, country: CountryName) => state.countries[country].armies[state.settings.mode][ArmyName.Army1]
 

@@ -18,9 +18,9 @@ interface IProps<D extends DefinitionValues<T>, T extends string> {
 // Display component for showing and changing some country details.
 export default class TableAttributes<D extends DefinitionValues<T>, T extends string> extends Component<IProps<D, T>> {
 
-  readonly headers = ['Attribute', 'Value', 'Custom value', 'Explained']
+  headers = ['Attribute', 'Value', 'Custom value', 'Explained']
 
-  readonly CELLS = 4
+  CELLS = 4
 
   render() {
     const { attributes } = this.props

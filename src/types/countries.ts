@@ -13,14 +13,14 @@ export enum CountryName {
   Country1 = 'Country 1',
   Country2 = 'Country 2'
 }
-export type Countries = { [key in CountryName]: Country }
+export type Countries = { [key in CountryName]: CountryDefinition }
 
 export enum CountryAttribute {
   CombatWidth = 'Combat width',
   FlankRatio = 'Flank ratio'
 }
 
-export interface Country extends DefinitionValues<CountryAttribute> {
+export interface CountryDefinition extends DefinitionValues<CountryAttribute> {
   selections: ObjSet
   culture: CultureType
   government: GovermentType
@@ -28,9 +28,16 @@ export interface Country extends DefinitionValues<CountryAttribute> {
   omen_power: number
   military_power: number
   office_discipline: number
-  office_morale: number,
-  armies: Armies,
-  tech_level: number,
-  units: BaseUnits,
+  office_morale: number
+  armies: Armies
+  tech_level: number
+  units: BaseUnits
+  weariness: WearinessAttributes
+}
+
+export type Country = {
+  values: { [key in CountryAttribute]: number }
+  tech_level: number
+  culture: CultureType
   weariness: WearinessAttributes
 }

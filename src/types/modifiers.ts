@@ -41,6 +41,9 @@ export interface Modifier {
   no_percent?: boolean
   value: number
 }
+export interface ModifierWithKey extends Modifier {
+  key: string
+}
 export interface Tradition {
   name: string
   modifiers: Modifier[]

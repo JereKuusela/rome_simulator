@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Image, Table, Modal } from 'semantic-ui-react'
+import { Image, Table } from 'semantic-ui-react'
 
 import { Side, UnitRole, CountryName, UnitType, UnitAttribute, filterAttributes, Setting, Unit, Mode } from 'types'
 import { getImage, mapRange } from 'utils'
@@ -20,7 +20,7 @@ type Props = {
   onRowClick: (country: CountryName, type: UnitType) => void
 }
 
-class TableArchetypes extends Component<IProps> {
+class TableUnitTypes extends Component<IProps> {
 
   getAttributes = () => {
     const { mode } = this.props
@@ -63,11 +63,11 @@ class TableArchetypes extends Component<IProps> {
                 settings[Setting.Tech] &&
                 <Table.HeaderCell>
                   Type
-            </Table.HeaderCell>
+                </Table.HeaderCell>
               }
               <Table.HeaderCell>
                 Amount
-            </Table.HeaderCell>
+              </Table.HeaderCell>
               {
                 filterAttributes(this.getAttributes(), settings).map(attribute => (
                   <Table.HeaderCell key={attribute}>
@@ -91,7 +91,6 @@ class TableArchetypes extends Component<IProps> {
   renderRoleRow = (role: UnitRole) => {
     // List of archetypes -> get archetype -> get image
     const { archetypes, units, setUnitPreference, country, invalidate, preferences, tech, settings, onRowClick } = this.props
-    console.log(archetypes)
     const archetype = archetypes.find(unit => unit.role === role)
     const preference = preferences[role]
     if (!archetype || !preference)
@@ -150,7 +149,7 @@ class TableArchetypes extends Component<IProps> {
     const { reserve } = this.props
     const count = reserve.filter(cohort => cohort.type === type).length
     return (
-      <DelayedNumericInput value={count} onChange={value => this.updateReserve(type, value)} />
+      <DelayedNumericInput value={count} type='number' onChange={value => this.updateReserve(type, value)} />
     )
   }
 
@@ -175,9 +174,9 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   preferences: getUnitPreferences(state, props.side),
   reserve: getCohorts(state, props.side, true).reserve,
   units: getUnits(state, props.country),
-  tech: getCountry(state, props.side).tech_level,
+  tech: getCountry(state, props.country).tech_level,
   settings: getSettings(state),
-  weariness: getCountry(state, props.side).weariness,
+  weariness: getCountry(state, props.country).weariness,
   mode: getMode(state)
 })
 
@@ -187,4 +186,4 @@ type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
 interface IProps extends React.PropsWithChildren<Props>, S, D { }
 
-export default connect(mapStateToProps, actions)(TableArchetypes)
+export default connect(mapStateToProps, actions)(TableUnitTypes)

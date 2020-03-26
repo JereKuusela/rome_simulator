@@ -3,7 +3,7 @@ import { CombatPhase, GeneralAttribute, CountryAttribute, UnitAttribute, Setting
 import { toPercent } from 'formatters'
 
 export const formatAttribute = (value: number, attribute: string) => {
-  if (attribute in CountryAttribute || attribute in GeneralAttribute || attribute in CombatPhase)
+  if (attribute === CountryAttribute.CombatWidth || attribute in GeneralAttribute || attribute in CombatPhase)
     return String(value)
   return toPercent(value)
 }

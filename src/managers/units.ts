@@ -1,5 +1,5 @@
-import { ValuesType, UnitValueType, UnitType, UnitRole, Modifier, ScopeType, BaseUnit, BaseUnits, Mode, Settings, Setting, UnitAttribute, WearinessAttributes, BaseReserve } from "types"
-import { addValuesWithMutate, regenerateValues, clearValues, DefinitionValues, calculateValue, addValues } from "definition_values"
+import { ValuesType, UnitValueType, UnitType, UnitRole, Modifier, ScopeType, BaseUnit, BaseUnits, Mode, Settings, Setting, UnitAttribute, WearinessAttributes, BaseReserve, ModifierWithKey } from "types"
+import { addValuesWithMutate, regenerateValues, clearValues, DefinitionValues, calculateValue, addValues, addValue } from "definition_values"
 import { getUnitIcon } from "data"
 import { forEach, toArr, round, randomWithinRange } from "utils"
 
@@ -71,5 +71,16 @@ export const getStrengthBasedFlank = (strength: number) => Math.ceil(strength * 
 export const applyLosses = (values: WearinessAttributes, units: BaseReserve) => (
   units.map(unit => addValues(unit, ValuesType.LossModifier, 'Custom', generateLosses(values)))
 )
+
+export const applyUnitModifiers = (units: BaseUnits, modifiers: ModifierWithKey[]): BaseUnits => {
+  let result = { ...units }
+  modifiers.filter(value => value.scope === ScopeType.Country).forEach(value => {
+    const type = value.target as UnitType
+    if (!result[type])
+      return
+    result[type] = addValue(result[type], value.type, value.key, value.attribute, value.value)
+  })
+  return result
+}
 
 const generateLosses = (values: WearinessAttributes): [string, number][] => toArr(values, (range, type) => [type, round(randomWithinRange(range.min, range.max), 100)])

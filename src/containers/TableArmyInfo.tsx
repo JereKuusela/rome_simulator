@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table, Checkbox, Input } from 'semantic-ui-react'
 
-import { Side, CountryName, Setting, Participant, Country, General, GeneralAttribute, GeneralValueType, UnitAttribute, isAttributeEnabled, Mode, UnitType, Unit, ValuesType, CountryAttribute } from 'types'
+import { Side, CountryName, Setting, Participant, General, GeneralAttribute, GeneralValueType, UnitAttribute, isAttributeEnabled, Mode, UnitType, Unit, ValuesType, CountryAttribute, Country } from 'types'
 import { keys } from 'utils'
 import { AppState, getCountry, getSettings, getParticipant, getGeneral, getCountryName, getSelectedTerrains, getCountries, getBattle, getUnit, getMode } from 'state'
 import { invalidate, selectArmy, selectCulture, toggleRandomRoll, setRoll, setGeneralBaseStat } from 'reducers'
@@ -205,8 +205,8 @@ const mapStateToProps = (state: AppState) => ({
   participant_d: getParticipant(state, Side.Defender),
   general_a: getGeneral(state, getCountryName(state, Side.Attacker)),
   general_d: getGeneral(state, getCountryName(state, Side.Defender)),
-  country_a: getCountry(state, Side.Attacker),
-  country_d: getCountry(state, Side.Defender),
+  country_a: getCountry(state, getCountryName(state, Side.Attacker)),
+  country_d: getCountry(state, getCountryName(state, Side.Defender)),
   terrains: getSelectedTerrains(state),
   countries: getCountries(state),
   round: getBattle(state).round,

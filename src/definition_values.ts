@@ -67,6 +67,18 @@ export const addValues = <D extends BD>(definition: D, type: ValuesType, key: st
   return definition
 }
 
+export const addValue = <D extends BD>(definition: D, type: ValuesType, key: string, attribute: string, value: number): D => {
+  if (type === ValuesType.Base)
+    return { ...definition, base_values: subAddValues(definition.base_values, key, [[attribute, value]]) }
+  if (type === ValuesType.Modifier)
+    return { ...definition, modifier_values: subAddValues(definition.modifier_values, key, [[attribute, value]]) }
+  if (type === ValuesType.Loss)
+    return { ...definition, loss_values: subAddValues(definition.loss_values, key, [[attribute, value]]) }
+  if (type === ValuesType.LossModifier)
+    return { ...definition, loss_modifier_values: subAddValues(definition.loss_modifier_values, key, [[attribute, value]]) }
+  return definition
+}
+
 export const addValuesWithMutate = <D extends BD>(definition: D, type: ValuesType, key: string, values: [string, number][]) => {
   if (type === ValuesType.Base)
     definition.base_values = subAddValues(definition.base_values, key, values)

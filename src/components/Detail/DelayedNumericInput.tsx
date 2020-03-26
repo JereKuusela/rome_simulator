@@ -5,6 +5,7 @@ import { Input } from 'semantic-ui-react'
 
 type IProps = {
   value: number
+  type?: string
   onChange: (value: number) => void
   disabled?: boolean
   percent?: boolean
@@ -32,7 +33,7 @@ export default class DelayedNumericInput extends Component<IProps, IState> {
   }
 
   render() {
-    const { disabled } = this.props
+    const { disabled, type } = this.props
     const { value } = this.state
     return (
       <div onBlur={this.onLostFocus}>
@@ -40,6 +41,7 @@ export default class DelayedNumericInput extends Component<IProps, IState> {
           size='mini'
           className='small-input'
           value={value}
+          type={type}
           disabled={disabled}
           onChange={(_, { value }) => this.onChange(value)}
         />

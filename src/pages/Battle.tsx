@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Button, Divider, Grid, Header, Input, Modal } from 'semantic-ui-react'
+import { Button, Grid, Header, Input, Modal } from 'semantic-ui-react'
 import { getCombatPhase } from 'combat'
 import ModalCohortDetail from 'containers/modal/ModalCohortDetail'
 import ModalUnitSelector, { ModalSelectorInfo } from 'containers/modal/ModalUnitSelector'
@@ -15,9 +15,9 @@ import {
   invalidate, selectArmy, setRoll, toggleRandomRoll, clearCohorts,
   undo, battle, refreshBattle, setSeed, setGeneralBaseStat, resetState, selectCulture
 } from 'reducers'
-import { AppState, getBattle, getCountryName, getParticipant, getSettings, getCountries, getGeneral, getSelectedTerrains, getCountry } from 'state'
+import { AppState, getBattle, getParticipant, getSettings } from 'state'
 import { ArmyType, CountryName, Setting, Side, CombatPhase, UnitType } from 'types'
-import TableArchetypes from 'containers/TableArchetypes'
+import TableUnitTypes from 'containers/TableUnitTypes'
 import TableArmyInfo from 'containers/TableArmyInfo'
 import TableDamageAttributes from 'containers/TableDamageAttributes'
 import AccordionToggle from 'containers/AccordionToggle'
@@ -146,10 +146,10 @@ class Battle extends Component<IProps, IState> {
             </Grid.Row>
             <Grid.Row columns={2}>
               <Grid.Column>
-                <TableArchetypes side={Side.Attacker} country={participant_a.country} onRowClick={this.openUnitDetails} />
+                <TableUnitTypes side={Side.Attacker} country={participant_a.country} onRowClick={this.openUnitDetails} />
               </Grid.Column>
               <Grid.Column>
-                <TableArchetypes side={Side.Defender} country={participant_d.country} onRowClick={this.openUnitDetails} />
+                <TableUnitTypes side={Side.Defender} country={participant_d.country} onRowClick={this.openUnitDetails} />
               </Grid.Column>
             </Grid.Row>
             {
@@ -323,17 +323,10 @@ class Battle extends Component<IProps, IState> {
 const mapStateToProps = (state: AppState) => ({
   participant_a: getParticipant(state, Side.Attacker),
   participant_d: getParticipant(state, Side.Defender),
-  general_a: getGeneral(state, getCountryName(state, Side.Attacker)),
-  general_d: getGeneral(state, getCountryName(state, Side.Defender)),
-  country_a: getCountry(state, Side.Attacker),
-  country_d: getCountry(state, Side.Defender),
-  countries: getCountries(state),
   is_undo: getBattle(state).round > -1,
   round: getBattle(state).round,
   seed: getBattle(state).seed,
   outdated: getBattle(state).outdated,
-  terrains: getSelectedTerrains(state),
-  tactics: state.tactics,
   fight_over: getBattle(state).fight_over,
   settings: getSettings(state)
 })
