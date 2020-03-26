@@ -42,15 +42,15 @@ export enum Setting {
   AttributeStrengthDamage = 'Enable Strength damage done and Strength damage taken attributes',
   AttributeTerrainType = 'Enable terrain type based attributes',
   AttributeUnitType = 'Enable unit type based attributes',
-  MaxDepth = 'Statistics: Maximum depth',
-  PhaseLengthMultiplier = 'Statistics: Multiplier for phase length',
-  ChunkSize = 'Statistics: Chunk size',
-  Performance = 'Statistics: Performance',
-  CalculateWinChance = 'Statistics: Calculate win chance',
-  CalculateCasualties = 'Statistics: Calculate casualties',
-  CalculateResourceLosses = 'Statistics: Calculate resource losses',
-  ReduceRolls = 'Statistics: Reduce possible dice rolls',
-  ShowGraphs = 'Statistics: Show graphs'
+  Performance = 'Performance',
+  MaxDepth = 'Maximum depth',
+  PhaseLengthMultiplier = 'Multiplier for phase length',
+  ChunkSize = 'Chunk size',
+  CalculateWinChance = 'Calculate win chance',
+  CalculateCasualties = 'Calculate casualties',
+  CalculateResourceLosses = 'Calculate resource losses',
+  ReduceRolls = 'Reduce possible dice rolls',
+  ShowGraphs = 'Show graphs'
 }
 
 export enum SimulationSpeed {
@@ -255,20 +255,20 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
 }
 
 export type CombatSettings = {
+  [Setting.MoraleLostMultiplier]: number,
+  [Setting.StrengthLostMultiplier]: number
+}
+
+export type SiteSettings = {
   [Setting.BasePips]: number,
   [Setting.MaxPips]: number,
   [Setting.CombatWidth]: number,
   [Setting.DiceMaximum]: number,
   [Setting.DiceMinimum]: number,
   [Setting.ExperienceDamageReduction]: number,
-  [Setting.StrengthLostMultiplier]: number,
   [Setting.MinimumStrength]: number,
   [Setting.MinimumMorale]: number,
-  [Setting.MoraleLostMultiplier]: number,
-  [Setting.RollFrequency]: number
-}
-
-export type SiteSettings = {
+  [Setting.RollFrequency]: number,
   [Setting.FixTargeting]: boolean,
   [Setting.DefenderAdvantage]: boolean,
   [Setting.FixExperience]: boolean,

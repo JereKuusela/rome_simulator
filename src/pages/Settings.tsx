@@ -5,7 +5,7 @@ import { Grid, Input, Table, Header, Checkbox, Tab } from 'semantic-ui-react'
 import { AppState, getMode } from 'state'
 
 import Dropdown from 'components/Utils/Dropdown'
-import { toArr, keys, values } from 'utils'
+import { toArr, keys, values, filterKeys } from 'utils'
 import { Mode, Setting, parameterToDescription, SimulationSpeed, CombatSettings, SiteSettings } from 'types'
 import { changeCombatParameter, changeSiteParameter, invalidate } from 'reducers'
 
@@ -13,21 +13,78 @@ interface Props { }
 
 type Values = string | number | boolean
 
+const analyze = [
+  Setting.Performance, Setting.PhaseLengthMultiplier, Setting.ReduceRolls, Setting.MaxDepth, Setting.ChunkSize, Setting.ShowGraphs,
+  Setting.CalculateWinChance, Setting.CalculateCasualties, Setting.CalculateResourceLosses
+]
+const deployment = [Setting.CustomDeployment, Setting.DynamicFlanking]
+const mechanics = [
+  Setting.FireAndShock, Setting.StrengthBasedFlank, Setting.UseMaxMorale, Setting.InsufficientSupportPenalty, Setting.RollFrequency, Setting.CombatWidth,
+  Setting.ExperienceDamageReduction, Setting.FixExperience, Setting.DefenderAdvantage, Setting.FixTargeting, Setting.BackRow, Setting.Culture,
+  Setting.Tactics, Setting.Tech, Setting.Martial, Setting.Food
+]
+const damage = [
+  Setting.DailyMoraleLoss, Setting.DailyDamageIncrease, Setting.Precision, Setting.BasePips,
+  Setting.MaxPips, Setting.DiceMinimum, Setting.DiceMaximum, Setting.MinimumMorale, Setting.MinimumStrength
+]
+const attributes = [
+  Setting.AttributeCombatAbility, Setting.AttributeDamage, Setting.AttributeUnitType, Setting.AttributeTerrainType, Setting.AttributeStrengthDamage,
+  Setting.AttributeMoraleDamage, Setting.AttributeOffenseDefense, Setting.AttributeMilitaryTactics, Setting.AttributeExperience, Setting.AttributeDrill,
+  Setting.DisciplineDamageReduction
+]
+
 class Settings extends Component<IProps> {
 
   render() {
-    const { combatSettings, siteSettings } = this.props
-    const panes = toArr(combatSettings, (settings, mode) => ({
-      menuItem: mode, render: () => <Tab.Pane style={{ padding: 0 }}>{this.renderRow(mode, settings, (key, str) => this.onCombatChange(mode, key, str))}</Tab.Pane>
-    }))
-    return (<>
+    const { combatSettings } = this.props
+    const panes = [
+      this.getMenuItem('Analyze', analyze),
+      this.getMenuItem('Attributes', attributes),
+      this.getMenuItem('Damage', damage),
+      this.getMenuItem('Deployment', deployment),
+      this.getModeMenuItem(),
+      this.getMenuItem('Mechanics', mechanics)
+    ]
+    return (
       <Tab panes={panes} defaultActiveIndex={keys(combatSettings).findIndex(mode => mode === this.props.mode)} />
-      {this.renderRow('Shared', siteSettings, this.onSharedChange)}
-    </>)
+    )
   }
 
-  renderRow = <T extends Setting>(mode: string, settings: { [key in T]: Values }, onChange: (key: T, str: Values) => void) => (
-    <Grid padded celled key={mode}>
+  getMenuItem = (key: string, attributes: Setting[]) => {
+    const { siteSettings } = this.props
+    return {
+      menuItem: key,
+      render: () => this.renderSiteSettings(key, siteSettings, attributes)
+    }
+  }
+
+  getModeMenuItem = () => {
+    return {
+      menuItem: 'Land / Naval',
+      render: () => this.renderModeSettings()
+    }
+  }
+
+  renderModeSettings = () => {
+    const { combatSettings } = this.props
+    return (
+      <Tab.Pane style={{ padding: 0 }}>
+        {this.renderRow(Mode.Land, combatSettings[Mode.Land], (key, str) => this.onCombatChange(Mode.Land, key, str))}
+        {this.renderRow(Mode.Naval, combatSettings[Mode.Naval], (key, str) => this.onCombatChange(Mode.Naval, key, str))}
+      </Tab.Pane>
+    )
+  }
+
+  renderSiteSettings = (key: string, settings: SiteSettings, attributes: Setting[]) => {
+    return (
+      <Tab.Pane style={{ padding: 0 }}>
+        {this.renderRow(key, filterKeys(settings, setting => attributes.includes(setting)), this.onSharedChange)}
+      </Tab.Pane>
+    )
+  }
+
+  renderRow = <T extends Setting>(key: string, settings: { [key in T]: Values }, onChange: (key: T, str: Values) => void) => (
+    <Grid padded celled key={key}>
       <Grid.Row columns='2'>
         {
           toArr(settings, (value, key) => {

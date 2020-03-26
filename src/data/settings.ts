@@ -1,7 +1,7 @@
 import { Mode, CombatSettings, Setting, SiteSettings, SimulationSpeed, CountryName, SettingsAndOptions } from 'types'
 
 export const getDefaultSettings = (): SettingsAndOptions => ({
-  combatSettings: process.env.REACT_APP_GAME === 'ir' ? { [Mode.Land]: getDefaultLandSettings(), [Mode.Naval]: getDefaultNavalSettings() } : { [Mode.Land]: getDefaultLandSettings() } as any,
+  combatSettings: { [Mode.Land]: getDefaultLandSettings(), [Mode.Naval]: getDefaultNavalSettings() },
   siteSettings: getDefaultSiteSettings(),
   mode: Mode.Land,
   country: CountryName.Country1,
@@ -9,20 +9,36 @@ export const getDefaultSettings = (): SettingsAndOptions => ({
 })
 
 export const getDefaultLandSettings = (): CombatSettings => {
-  return {
-    ...getDefaultAnySettings()
+  if (process.env.REACT_APP_GAME === 'euiv') {
+    return {
+      [Setting.StrengthLostMultiplier]: 5,
+      [Setting.MoraleLostMultiplier]: 25 / 2.7
+    }
+  }
+  else {
+    return {
+      [Setting.StrengthLostMultiplier]: 4.8,
+      [Setting.MoraleLostMultiplier]: 18
+    }
   }
 }
 
 export const getDefaultNavalSettings = (): CombatSettings => {
-  return {
-    ...getDefaultAnySettings(),
-    [Setting.StrengthLostMultiplier]: 12,
-    [Setting.MoraleLostMultiplier]: 24
+  if (process.env.REACT_APP_GAME === 'euiv') {
+    return {
+      [Setting.StrengthLostMultiplier]: 5,
+      [Setting.MoraleLostMultiplier]: 25 / 2.7
+    }
+  }
+  else {
+    return {
+      [Setting.StrengthLostMultiplier]: 12,
+      [Setting.MoraleLostMultiplier]: 24
+    }
   }
 }
 
-const getDefaultAnySettings = (): CombatSettings => {
+export const getDefaultSiteSettings = (): SiteSettings => {
   if (process.env.REACT_APP_GAME === 'euiv') {
     return {
       [Setting.BasePips]: 3,
@@ -32,48 +48,13 @@ const getDefaultAnySettings = (): CombatSettings => {
       [Setting.RollFrequency]: 3,
       [Setting.CombatWidth]: 15,
       [Setting.ExperienceDamageReduction]: 0,
-      [Setting.StrengthLostMultiplier]: 5,
-      [Setting.MoraleLostMultiplier]: 25 / 2.7,
       [Setting.MinimumMorale]: 0.25,
-      [Setting.MinimumStrength]: 0
-    }
-  }
-  else {
-    return {
-      [Setting.BasePips]: 4,
-      [Setting.MaxPips]: 15,
-      [Setting.DiceMinimum]: 1,
-      [Setting.DiceMaximum]: 6,
-      [Setting.RollFrequency]: 5,
-      [Setting.CombatWidth]: 30,
-      [Setting.ExperienceDamageReduction]: 0.3,
-      [Setting.StrengthLostMultiplier]: 4.8,
-      [Setting.MoraleLostMultiplier]: 18,
-      [Setting.MinimumMorale]: 0.25,
-      [Setting.MinimumStrength]: 0
-    }
-  }
-
-}
-
-export const getDefaultSiteSettings = (): SiteSettings => {
-  if (process.env.REACT_APP_GAME === 'euiv') {
-    return {
+      [Setting.MinimumStrength]: 0,
       [Setting.FixExperience]: false,
       [Setting.DefenderAdvantage]: true,
       [Setting.FixTargeting]: true,
       [Setting.BackRow]: true,
       [Setting.StrengthBasedFlank]: true,
-      [Setting.Precision]: 3,
-      [Setting.ChunkSize]: 10000,
-      [Setting.MaxDepth]: speedValues[SimulationSpeed.Normal][1],
-      [Setting.PhaseLengthMultiplier]: speedValues[SimulationSpeed.Normal][0],
-      [Setting.Performance]: SimulationSpeed.Normal,
-      [Setting.ReduceRolls]: speedValues[SimulationSpeed.Normal][2],
-      [Setting.CalculateWinChance]: true,
-      [Setting.CalculateCasualties]: true,
-      [Setting.CalculateResourceLosses]: true,
-      [Setting.ShowGraphs]: false,
       [Setting.DisciplineDamageReduction]: true,
       [Setting.DailyMoraleLoss]: 0.03,
       [Setting.DailyDamageIncrease]: 0.01,
@@ -96,11 +77,31 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.DynamicFlanking]: true,
       [Setting.Tech]: true,
       [Setting.Culture]: true,
-      [Setting.Food]: false
+      [Setting.Food]: false,
+      [Setting.Precision]: 3,
+      // Analyze
+      [Setting.Performance]: SimulationSpeed.Normal,
+      [Setting.ChunkSize]: 10000,
+      [Setting.MaxDepth]: speedValues[SimulationSpeed.Normal][1],
+      [Setting.PhaseLengthMultiplier]: speedValues[SimulationSpeed.Normal][0],
+      [Setting.ReduceRolls]: speedValues[SimulationSpeed.Normal][2],
+      [Setting.CalculateWinChance]: true,
+      [Setting.CalculateCasualties]: true,
+      [Setting.CalculateResourceLosses]: true,
+      [Setting.ShowGraphs]: false,
     }
   }
   else {
     return {
+      [Setting.BasePips]: 4,
+      [Setting.MaxPips]: 15,
+      [Setting.DiceMinimum]: 1,
+      [Setting.DiceMaximum]: 6,
+      [Setting.RollFrequency]: 5,
+      [Setting.CombatWidth]: 30,
+      [Setting.ExperienceDamageReduction]: 0.3,
+      [Setting.MinimumMorale]: 0.25,
+      [Setting.MinimumStrength]: 0,
       [Setting.FixExperience]: false,
       [Setting.DefenderAdvantage]: false,
       [Setting.FixTargeting]: true,
