@@ -68,4 +68,6 @@ export const getCombatPhase = (round: number, settings: Settings) => {
   return CombatPhase.Default
 }
 
+export const getCombatPhaseNumber = (round: number, settings: Settings) => Math.ceil((round + 1) / settings[Setting.RollFrequency])
+
 export const getDailyIncrease = (round: number, settings: Settings) => settings[Setting.DailyDamageIncrease] * (round + 1)

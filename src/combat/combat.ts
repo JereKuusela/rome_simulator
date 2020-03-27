@@ -3,7 +3,7 @@ import { sumBy, values } from 'lodash'
 import { Tactic, UnitPreferences, Terrain, UnitType, Cohort, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, UnitValueType } from 'types'
 import { toObj, map, noZero } from 'utils'
 import { calculateValue, calculateValueWithoutLoss, calculateBase } from 'definition_values'
-import { calculateExperienceReduction, getCombatPhase, calculateCohortPips, getDailyIncrease } from './combat_utils'
+import { calculateExperienceReduction, getCombatPhase, calculateCohortPips, getDailyIncrease, getCombatPhaseNumber } from './combat_utils'
 import { getStrengthBasedFlank } from 'managers/units'
 import { SortedReserve, reinforce } from './deployment'
 
@@ -133,7 +133,7 @@ export const getCombatUnit = (combatSettings: Settings, casualties_multiplier: n
     [UnitAttribute.Morale]: calculateValue(cohort, UnitAttribute.Morale),
     [UnitAttribute.Strength]: calculateValue(cohort, UnitAttribute.Strength),
     calculated: precalculateUnit(combatSettings, casualties_multiplier, terrains, unit_types, cohort),
-    state: { target: null, target_support: null, flanking: false, morale_loss: 0, strength_loss: 0, morale_dealt: 0, strength_dealt: 0, damage_multiplier: 0, is_defeated: false, is_destroyed: false, total_morale_dealt: 0, total_strength_dealt: 0 },
+    state: { is_weak: false, target: null, target_support: null, flanking: false, morale_loss: 0, strength_loss: 0, morale_dealt: 0, strength_dealt: 0, damage_multiplier: 0, is_defeated: false, is_destroyed: false, total_morale_dealt: 0, total_strength_dealt: 0 },
     definition: getUnitDefinition(combatSettings, terrains, unit_types, cohort)
   }
   return combat_unit
@@ -186,6 +186,8 @@ export interface CombatCohortRoundInfo {
   is_defeated: boolean
   /** Did the cohort get destroyed.  */
   is_destroyed: boolean
+  /** Is the cohort considered weak for targeting.  */
+  is_weak: boolean
   /** Total morale losses inflicted during the battle. */
   total_morale_dealt: number
   /** Total strength losses inflicted during the battle. */
@@ -238,10 +240,8 @@ export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, mark_de
 
   applyLosses(a.cohorts.frontline)
   applyLosses(d.cohorts.frontline)
-  const minimum_morale = settings[Setting.MinimumMorale]
-  const minimum_strength = settings[Setting.MinimumStrength]
-  moveDefeated(a.cohorts.frontline, a.cohorts.defeated, minimum_morale, minimum_strength, mark_defeated)
-  moveDefeated(d.cohorts.frontline, d.cohorts.defeated, minimum_morale, minimum_strength, mark_defeated)
+  moveDefeated(a.cohorts.frontline, a.cohorts.defeated, mark_defeated, round, settings)
+  moveDefeated(d.cohorts.frontline, d.cohorts.defeated, mark_defeated, round, settings)
 }
 
 
@@ -269,15 +269,17 @@ const pickTargets = (source: Frontline, target: Frontline, settings: Settings) =
       // No need to select targets for units without effect.
       if (i > 0 && !unit.definition[UnitAttribute.OffensiveSupport])
         continue
-      if (target[0][j]) {
+      if (target[0][j] && !target[0][j]?.state.is_weak) {
         state.target = target[0][j]
         state.target_support = getBackTarget(target, j)
       }
       else {
         const maneuver = Math.floor(unit.definition[UnitAttribute.Maneuver] * (settings[Setting.StrengthBasedFlank] ? getStrengthBasedFlank(unit[UnitAttribute.Strength]) : 1.0))
-        if (settings[Setting.FixTargeting] ? j < source_length / 2 : j <= source_length / 2) {
-          for (let index = j - maneuver; index <= j + maneuver; ++index) {
-            if (index >= 0 && index < target_length && target[0][index]) {
+        if (!settings[Setting.FixFlankTargeting] || (settings[Setting.FixTargeting] ? j < source_length / 2 : j <= source_length / 2)) {
+          const start = Math.max(0, j - maneuver)
+          const end = Math.min(target_length - 1, j + maneuver)
+          for (let index = start; index <= end; ++index) {
+            if (target[0][index] && !target[0][index]?.state.is_weak) {
               state.target = target[0][index]
               state.flanking = true
               state.target_support = getBackTarget(target, index)
@@ -286,8 +288,10 @@ const pickTargets = (source: Frontline, target: Frontline, settings: Settings) =
           }
         }
         else {
-          for (let index = j + maneuver; index >= j - maneuver; --index) {
-            if (index >= 0 && index < target_length && target[0][index]) {
+          const start = Math.min(target_length - 1, j + maneuver)
+          const end = Math.max(0, j - maneuver)
+          for (let index = start; index >= end; --index) {
+            if (index >= 0 && index < target_length && target[0][index] && !target[0][index]?.state.is_weak) {
               state.target = target[0][index]
               state.flanking = true
               state.target_support = getBackTarget(target, index)
@@ -295,6 +299,11 @@ const pickTargets = (source: Frontline, target: Frontline, settings: Settings) =
             }
           }
         }
+      }
+      // Fallback if all targets are considered weak.
+      if (!state.target && target[0][j]) {
+        state.target = target[0][j]
+        state.target_support = getBackTarget(target, j)
       }
     }
   }
@@ -369,17 +378,25 @@ const applyLosses = (frontline: Frontline) => {
 /**
  * Moves defeated units from a frontline to defeated.
  */
-const moveDefeated = (frontline: Frontline, defeated: Reserve, minimum_morale: number, minimum_strength: number, mark_defeated: boolean) => {
+const moveDefeated = (frontline: Frontline, defeated: Reserve, mark_defeated: boolean, round: number, settings: Settings) => {
+  const minimum_morale = settings[Setting.MinimumMorale]
+  const minimum_strength = settings[Setting.MinimumStrength]
   for (let i = 0; i < frontline.length; i++) {
+    if (i > 0 && !settings[Setting.BackRowRetreat])
+      return
     for (let j = 0; j < frontline[i].length; j++) {
       const unit = frontline[i][j]
       if (!unit)
         continue
       if (unit[UnitAttribute.Strength] > minimum_strength && unit[UnitAttribute.Morale] > minimum_morale)
         continue
+      if (settings[Setting.DynamicTargeting])
+        unit.state.is_weak = true
+      if (settings[Setting.RetreatRounds] > round + 2)
+        continue
       unit.state.is_destroyed = unit[UnitAttribute.Strength] <= minimum_strength
       if (mark_defeated)
-        frontline[i][j] = { ...unit, state: { ...unit.state, is_defeated: true } }
+        frontline[i][j] = { ...unit, state: { ...unit.state, is_defeated: true } } // Temporary copy for UI purposes.
       else
         frontline[i][j] = null
       unit.state.target = null
@@ -406,7 +423,7 @@ export const removeDefeated = (frontline: Frontline) => {
 /**
  * Calculates losses when units attack their targets.
  */
-const attack = ( frontline: Frontline, roll: number, dynamic_multiplier: number, phase: CombatPhase, settings: Settings) => {
+const attack = (frontline: Frontline, roll: number, dynamic_multiplier: number, phase: CombatPhase, settings: Settings) => {
   for (let i = 0; i < frontline.length; i++) {
     for (let j = 0; j < frontline[i].length; j++) {
       const source = frontline[i][j]
@@ -473,7 +490,7 @@ const calculateMoraleLosses = (source: CombatCohort, target: CombatCohort, targe
 }
 
 const calculateStrengthLosses = (source: CombatCohort, target: CombatCohort, target_support: CombatCohort | null, roll: number, dynamic_multiplier: number, phase: CombatPhase, settings: Settings) => {
-  const pips = calculatePips(roll, settings[Setting.MaxPips],source, target, target_support, UnitAttribute.Strength, phase)
+  const pips = calculatePips(roll, settings[Setting.MaxPips], source, target, target_support, UnitAttribute.Strength, phase)
   const damage = pips * dynamic_multiplier * source.calculated.damage[UnitAttribute.Strength][target.definition.type][phase] * target.calculated.strength_taken_multiplier[phase]
 
   source.state.strength_dealt = Math.floor(damage) / settings[Setting.Precision]

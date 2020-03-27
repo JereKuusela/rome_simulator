@@ -25,7 +25,7 @@
       "base": "Land Unit",
       "mode": "Land",
       "role": "Flank",
-      "maneuver": 3,
+      "maneuver": 2,
       "cost": 25,
       "shock": 0.8
     },

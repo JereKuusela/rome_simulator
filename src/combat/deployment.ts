@@ -27,103 +27,54 @@ const armyFlankCount = (units: CombatCohorts) => {
     + units.reserve.support.filter(unit => unit.definition.deployment === UnitRole.Flank).length
 }
 
+const deployFront = (cohorts: CombatCohort[], row: (CombatCohort | null)[], center: number, flank: number) => {
+  for (let index = center; index !== flank; index = nextIndex(index, center)) {
+    if (row[index])
+      continue
+    const cohort = cohorts.pop()
+    if (cohort)
+      row[index] = cohort
+    else
+      break
+  }
+}
+
+const deployFlanks = (cohorts: CombatCohort[], row: (CombatCohort | null)[], center: number, flank: number) => {
+  for (let index = flank; index >= 0 && index < row.length; index = nextIndex(index, center)) {
+    if (row[index])
+      continue
+    const cohort = cohorts.pop()
+    if (cohort)
+      row[index] = cohort
+    else
+      break
+  }
+}
+
 const deployCohorts = (cohorts: CombatCohorts) => {
   const { left_flank, right_flank, reserve } = cohorts
   const frontline = cohorts.frontline[0]
   const backline = cohorts.frontline.length > 1 ? cohorts.frontline[1] : null
   const center = Math.floor(frontline.length / 2.0)
-
-  let index = center
-  const max_support = Math.floor(Math.min(frontline.length, reserveSize(reserve) / 2))
-  // Fill back row.
-  if (backline) {
-    for (let i = 0; i < max_support; i++, index = nextIndex(index, center)) {
-      if (backline[index])
-        continue
-      const support = reserve.support.pop()
-      if (support) {
-        backline[index] = support
-        continue
-      }
-      break
-    }
-  }
+  let flank_starting_index = left_flank > right_flank ? left_flank - 1 : frontline.length - right_flank
+  if (frontline.length % 2)
+    flank_starting_index = left_flank >= right_flank ? left_flank - 1 : frontline.length - right_flank
   const deploy_support = reserve.front.length === 0 && reserve.flank.length === 0
-  index = center
-  // Fill main front until flanks are reached.
-  for (; index >= left_flank && index + right_flank < frontline.length; index = nextIndex(index, center)) {
-    if (frontline[index])
-      continue
-    const main = reserve.front.pop()
-    if (main) {
-      frontline[index] = main
-      continue
-    }
-    const flank = reserve.flank.pop()
-    if (flank) {
-      frontline[index] = flank
-      continue
-    }
-    const support = deploy_support && reserve.support.pop()
-    if (support) {
-      frontline[index] = support
-      continue
-    }
-    break
-  }
-  const flank_starting_index = index
-  // Fill flanks with remaining units.
-  for (; index >= 0 && index < frontline.length; index = nextIndex(index, center)) {
-    if (frontline[index])
-      continue
-    const flank = reserve.flank.pop()
-    if (flank) {
-      frontline[index] = flank
-      continue
-    }
-    const main = reserve.front.pop()
-    if (main) {
-      frontline[index] = main
-      continue
-    }
-    const support = deploy_support && reserve.support.pop()
-    if (support) {
-      frontline[index] = support
-      continue
-    }
-    break
-  }
-  if (backline) {
-    index = flank_starting_index
-    // Prioritize flankers on flanks.
-    for (; index >= 0 && index < frontline.length; index = nextIndex(index, center)) {
-      if (backline[index])
-        continue
-      const flank = reserve.flank.pop()
-      if (flank) {
-        backline[index] = flank
-        continue
-      }
-      break
-    }
-    index = center
-    // Fill with remaining units.
-    for (; index >= 0 && index < frontline.length; index = nextIndex(index, center)) {
-      if (backline[index])
-        continue
-      const main = reserve.front.pop()
-      if (main) {
-        backline[index] = main
-        continue
-      }
-      const flank = reserve.flank.pop()
-      if (flank) {
-        backline[index] = flank
-        continue
-      }
-      break
-    }
-  }
+  if (backline)
+    deployFront(reserve.support, backline, center, flank_starting_index)
+
+  deployFront(reserve.front, frontline, center, flank_starting_index)
+  deployFront(reserve.flank, frontline, center, flank_starting_index)
+  if (deploy_support)
+    deployFront(reserve.support, frontline, center, flank_starting_index)
+  if (backline)
+    deployFront(reserve.front, backline, center, flank_starting_index)
+  deployFlanks(reserve.flank, frontline, center, flank_starting_index)
+  deployFlanks(reserve.front, frontline, center, flank_starting_index)
+  if (deploy_support)
+    deployFlanks(reserve.support, frontline, center, flank_starting_index)
+  if (backline)
+    deployFlanks(reserve.flank, backline, center, flank_starting_index)
 }
 
 

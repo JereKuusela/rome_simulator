@@ -45,6 +45,20 @@ if (process.env.REACT_APP_GAME === 'euiv') {
       }
       testDeployment(info, attacker, defender)
     })
+
+    it('combat width not filled', () => {
+      setCombatWidth(info, 22)
+      add(info.army_a, 2, 3, 0)
+      add(info.army_d, 1, 0, 0)
+      const attacker = {
+        front: createExpected(UnitType.Infantry, [UnitType.Cavalry, 3]),
+        back: createExpected([UnitType.Infantry, 1])
+      }
+      const defender = {
+        front: createExpected(UnitType.Infantry)
+      }
+      testDeployment(info, attacker, defender)
+    })
   })
 }
 

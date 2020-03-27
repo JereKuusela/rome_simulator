@@ -20,7 +20,11 @@ export enum Setting {
   DailyDamageIncrease = 'Daily damage increase',
   FixExperience = 'Fix damage reduction from experience',
   FixTargeting = 'Fix targeting',
+  FixFlankTargeting = 'Fix targeting',
+  DynamicTargeting = 'Dynamic targeting',
   BackRow = 'Enable backrow',
+  BackRowRetreat = 'Enable retreating from backrow',
+  RetreatRounds = 'Minimum rounds for retreat',
   Tactics = 'Enable tactics',
   Martial = 'Enable general martial',
   Tech = 'Enable tech based units',
@@ -98,9 +102,16 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Defender gets no undocumented benefits (Imperator).'
     case Setting.BackRow:
       if (value)
-        return 'Backrow enabled for support units (EUIV).'
+        return 'Backrow enabled for support and reinforcement units (EUIV).'
       else
         return 'Only front row (Imperator).'
+    case Setting.BackRowRetreat:
+      if (value)
+        return 'Units from backrow can\'t retreat. (EUIV).'
+      else
+        return 'Units can retreat from backrow.'
+    case Setting.RetreatRounds:
+      return 'How long the battle must last to enable retreat.'
     case Setting.CustomDeployment:
       if (value)
         return 'Preferred unit types can be selected (Imperator).'
@@ -166,9 +177,19 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
       return 'How much damage taken is increased for having too many flanking units (EUIV).'
     case Setting.FixTargeting:
       if (value)
-        return 'Targeting is fixed.\nLeft and right sides work exactly same.'
+        return 'Targeting is fixed.\nLeft and right flanks work exactly same.'
       else
-        return '16th unit uses wrong targeting direction.\nLeft and right sides behave slightly differently.'
+        return '16th unit uses wrong targeting direction.\nLeft and right flanks behave slightly differently.'
+    case Setting.FixFlankTargeting:
+      if (value)
+        return 'Targeting is fixed.\nLeft and right flanks work exactly same (Imperator).'
+      else
+        return 'Right flank prefers left-most units.\nLeft and right flanks behave differently (EUIV).'
+    case Setting.DynamicTargeting:
+      if (value)
+        return 'Units may flank if the main target is considered too weak (EUIV).'
+      else
+        return 'Units always attack the main target (Imperator).'
     case Setting.AttributeCombatAbility:
       if (value)
         return 'Combat ability increases damage done (EUIV).'
@@ -270,6 +291,8 @@ export type SiteSettings = {
   [Setting.MinimumMorale]: number,
   [Setting.RollFrequency]: number,
   [Setting.FixTargeting]: boolean,
+  [Setting.DynamicTargeting]: boolean,
+  [Setting.FixFlankTargeting]: boolean,
   [Setting.DefenderAdvantage]: boolean,
   [Setting.FixExperience]: boolean,
   [Setting.Precision]: number,
@@ -278,6 +301,8 @@ export type SiteSettings = {
   [Setting.PhaseLengthMultiplier]: number,
   [Setting.ShowGraphs]: boolean,
   [Setting.BackRow]: boolean,
+  [Setting.BackRowRetreat]: boolean,
+  [Setting.RetreatRounds]: number,
   [Setting.Tactics]: boolean,
   [Setting.Martial]: boolean,
   [Setting.Tech]: boolean,
