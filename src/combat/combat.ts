@@ -3,7 +3,7 @@ import { sumBy, values } from 'lodash'
 import { Tactic, UnitPreferences, Terrain, UnitType, Cohort, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, UnitValueType } from 'types'
 import { toObj, map, noZero } from 'utils'
 import { calculateValue, calculateValueWithoutLoss, calculateBase } from 'definition_values'
-import { calculateExperienceReduction, getCombatPhase, calculateCohortPips, getDailyIncrease, getCombatPhaseNumber } from './combat_utils'
+import { calculateExperienceReduction, getCombatPhase, calculateCohortPips, getDailyIncrease } from './combat_utils'
 import { getStrengthBasedFlank } from 'managers/units'
 import { SortedReserve, reinforce } from './deployment'
 
