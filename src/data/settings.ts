@@ -43,6 +43,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
     return {
       [Setting.BasePips]: 3,
       [Setting.MaxPips]: 100,
+      [Setting.MaxGeneral]: 6,
       [Setting.DiceMinimum]: 1,
       [Setting.DiceMaximum]: 9,
       [Setting.RollFrequency]: 3,
@@ -99,6 +100,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
     return {
       [Setting.BasePips]: 4,
       [Setting.MaxPips]: 15,
+      [Setting.MaxGeneral]: 100,
       [Setting.DiceMinimum]: 1,
       [Setting.DiceMaximum]: 6,
       [Setting.RollFrequency]: 5,

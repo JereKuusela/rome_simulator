@@ -16,7 +16,7 @@ export const convertGeneralDefinition = (settings: Settings, general: GeneralDef
   const attributes = [GeneralAttribute.Maneuver, GeneralAttribute.Martial, CombatPhase.Fire, CombatPhase.Shock, CombatPhase.Default]
   const base_values = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) ? calculateValue(base, attribute) : 0)
   const extra_values = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) ? calculateValue(general, attribute) - calculateValue(base, attribute) : 0)
-  const total_values = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) ? calculateValue(general, attribute) : 0)
+  const total_values = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) ? Math.min(calculateValue(general, attribute), settings[Setting.MaxGeneral]) : 0)
   return {
     enabled: general.enabled,
     base_values,

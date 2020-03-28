@@ -9,6 +9,7 @@ export enum Setting {
   DiceMaximum = 'Maximum dice roll',
   BasePips = 'Base pips',
   MaxPips = 'Maximum pips',
+  MaxGeneral = 'Maximum skill of generals',
   MinimumMorale = 'Minimum morale for combat',
   MinimumStrength = 'Minimum strength for combat',
   RollFrequency = 'Length of combat phases',
@@ -72,6 +73,8 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
       return 'Base pips for all units. Affects how much damage units deal.'
     case Setting.MaxPips:
       return 'Maximum amount of pips. Affects how much damage units deal.'
+    case Setting.MaxGeneral:
+      return 'Maximum amount of pips on generals.'
     case Setting.CombatWidth:
       return 'Width of the frontline. Affects how many units can fight at the same time.'
     case Setting.DiceMaximum:
@@ -283,6 +286,7 @@ export type CombatSettings = {
 export type SiteSettings = {
   [Setting.BasePips]: number,
   [Setting.MaxPips]: number,
+  [Setting.MaxGeneral]: number,
   [Setting.CombatWidth]: number,
   [Setting.DiceMaximum]: number,
   [Setting.DiceMinimum]: number,
