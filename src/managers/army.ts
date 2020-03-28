@@ -41,7 +41,7 @@ export const overrideRoleWithPreferences = (army: Army, units: Units, latest: { 
 export const getUnitList = (units: Units, mode: Mode, _tech: number, filter_base: boolean, settings: Settings) => {
   const base_units = getBaseUnits(units)
   let list = settings[Setting.Tech] ? [units[UnitType.Land]].concat(getArchetypes(units, mode)) : sortBy(toArr(units), unit => unitSorter(unit, mode, base_units))
-  list = filter_base ? list.filter(unit => unit.base) : list
+  list = filter_base ? list.filter(unit => !base_units[unit.type]) : list
   return list
 }
 
