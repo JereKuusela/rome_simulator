@@ -29,7 +29,7 @@ class TableStats extends Component<IProps> {
     const types = uniq(flatten.map(cohort => cohort.definition.type))
     const rows = types.map(type => this.renderRow(cohorts, type)).filter(row => row)
     return (
-      <Table celled selectable unstackable key={side} singleLine>
+      <Table celled unstackable key={side} singleLine>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell width='4'>

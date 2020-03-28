@@ -10,7 +10,7 @@ import { invalidate, setCountryValue, enableSelection, clearSelection, enableUni
 
 import AccordionToggle from 'containers/AccordionToggle'
 import CountryManager from 'containers/CountryManager'
-import Dropdown from 'components/Utils/Dropdown'
+import Dropdown from 'components/Dropdowns/Dropdown'
 import ConfirmationButton from 'components/ConfirmationButton'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TableAttributes from 'components/TableAttributes'

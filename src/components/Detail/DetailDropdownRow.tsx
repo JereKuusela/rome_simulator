@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PaddedRow from '../Utils/PaddedRow'
-import Dropdown from '../Utils/Dropdown'
+import Dropdown from '../Dropdowns/Dropdown'
 
 interface IProps<T extends string> {
   text: string

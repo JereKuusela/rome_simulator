@@ -3,73 +3,61 @@ import { connect } from 'react-redux'
 import { Image, Table } from 'semantic-ui-react'
 
 import { AppState, getMode, getSelectedTerrains } from 'state'
-import ModalTerrainSelector from './modal/ModalTerrainSelector'
 import IconDice from 'images/chance.png'
 import StyledNumber from 'components/Utils/StyledNumber'
-import { LocationType, Terrain, TerrainCalc } from 'types'
+import { Terrain, TerrainCalc, TerrainType } from 'types'
 import { calculateValue } from 'definition_values'
 import { addSign } from 'formatters'
+import { selectTerrain, invalidate } from 'reducers'
+import DropdownTerrain from 'components/Dropdowns/DropdownTerrain'
+import { toArr } from 'utils'
 
 type Props = {
-}
-
-type IState = {
-  index?: number
-  location?: LocationType
 }
 
 /**
  * Table with row types and flank sizes.
  */
-class TerrainSelector extends Component<IProps, IState> {
-  constructor(props: IProps) {
-    super(props)
-    this.state = { index: undefined, location: undefined }
-  }
+class TerrainSelector extends Component<IProps> {
 
   render() {
-    const { terrains } = this.props
-    const { index, location } = this.state
+    const { selected: terrains } = this.props
     return (
-      <>
-        <ModalTerrainSelector
-          index={index}
-          location={location}
-          onClose={this.closeModal}
-        />
-        <Table celled unstackable selectable >
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>
-                Location
-                  </Table.HeaderCell>
-              <Table.HeaderCell>
-                Terrain
-                    </Table.HeaderCell>
-              <Table.HeaderCell>
-                Roll modifier
-                  </Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {
-              terrains.map((terrain, index) => this.renderTerrain(terrain, index))
-            }
-          </Table.Body>
-        </Table >
-      </>
+      <Table celled unstackable >
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>
+              Location
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              Terrain
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              Roll modifier
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {terrains.map(this.renderTerrain)}
+        </Table.Body>
+      </Table >
     )
   }
 
   renderTerrain = (terrain: Terrain, index: number) => {
+    const { terrains } = this.props
     const roll = calculateValue(terrain, TerrainCalc.Roll)
     return (
-      <Table.Row key={terrain.location} onClick={() => this.setState({ index, location: terrain.location })}>
+      <Table.Row key={terrain.location}>
         <Table.Cell>
           {terrain.location}
         </Table.Cell>
         <Table.Cell>
-          {terrain.type}
+          <DropdownTerrain
+            value={terrain.type}
+            values={terrains.filter(item => item.location === terrain.location)}
+            onSelect={type => this.selectTerrain(type, index)}
+          />
         </Table.Cell>
         <Table.Cell>
           <Image src={IconDice} avatar />
@@ -79,17 +67,20 @@ class TerrainSelector extends Component<IProps, IState> {
     )
   }
 
-  closeModal = () => {
-    this.setState({ index: undefined, location: undefined })
+  selectTerrain = (terrain_type: TerrainType, index: number): void => {
+    const { selectTerrain, invalidate } = this.props
+    selectTerrain(index, terrain_type)
+    invalidate()
   }
 }
 
 const mapStateToProps = (state: AppState) => ({
-  terrains: getSelectedTerrains(state),
+  selected: getSelectedTerrains(state),
+  terrains: toArr(state.terrains),
   mode: getMode(state)
 })
 
-const actions = { }
+const actions = { selectTerrain, invalidate }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

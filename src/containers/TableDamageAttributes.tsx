@@ -20,7 +20,7 @@ class TableDamageAttributes extends Component<IProps> {
   render() {
     const { side, general, unit, country } = this.props
     return (
-      <Table celled selectable unstackable key={side}>
+      <Table celled unstackable key={side}>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>

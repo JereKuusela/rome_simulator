@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import Dropdown from 'components/Utils/Dropdown'
+import Dropdown from 'components/Dropdowns/Dropdown'
 import ValueDropdownModal from 'components/ValueDropdownModal'
 import ValueModal from 'components/ValueModal'
 import { AppState } from 'state'

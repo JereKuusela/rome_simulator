@@ -6,7 +6,7 @@ import { Side, CountryName, Setting, Participant, General, GeneralAttribute, Gen
 import { keys } from 'utils'
 import { AppState, getCountry, getSettings, getParticipant, getGeneral, getCountryName, getSelectedTerrains, getCountries, getBattle, getUnit, getMode } from 'state'
 import { invalidate, selectArmy, selectCulture, toggleRandomRoll, setRoll, setGeneralBaseStat } from 'reducers'
-import Dropdown from 'components/Utils/Dropdown'
+import Dropdown from 'components/Dropdowns/Dropdown'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TacticSelector from './TacticSelector'
 import InputTechLevel from './InputTechLevel'

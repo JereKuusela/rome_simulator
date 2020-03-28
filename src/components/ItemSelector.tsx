@@ -42,7 +42,7 @@ export default class ItemSelector<T extends ItemType> extends Component<IProps<T
     return (
       <Table.Row key={item.type} onClick={() => onSelection(item.type)}>
         <Table.Cell>
-          <LabelItem unit={item} />
+          <LabelItem item={item} />
         </Table.Cell>
         {attributes ? this.renderAttributes(item, attributes) : null}
       </Table.Row>

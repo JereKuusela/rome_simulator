@@ -77,6 +77,15 @@ Changelog:
 - Settings: Added new settings for halving analyze dice rolls (massively increases performance).
 - Settings: Added new settings for enabling/disabling existing game mechanics (martial, tactics, preferred unit types, etc.).
 
+EUIV:
+ - Tooltip needs to show source of losses (to include daily loss)
+
+Release++:
+
+EUIV:
+ - Tooltip needs to show source of losses (to include daily loss)
+ - Units: Show pips on selectors
+
 Settings:
  - discipline: Reduces damage, only increases damage, no effect.
  - general maneuver: Affects crossing, affects terrain, affects both, no effect.
@@ -84,18 +93,6 @@ Settings:
  - Show on main page current settings set (Imperator, EUIV, mixed), tooltip to show individual (or only changed?)
  - New settings for deployment / reinforcement order/attribute.
  - More sections for settings (at least new section for deployment and reinforcement, game mechanics, simulation settings).
-
-EUIV:
- - Tooltip needs to show source of losses (to include daily loss)
- - Units: Show pips on selectors
- - General stats / traits:
- - Professionalism: Value from 0 to 100, slider?: Affects phase damage done/takenn.
- - Ideas / traditions / government / religion: Various buffs? Low priority.
-
-Todo:
- - Combat massively tested (especially EUIV, but also different configurations).
-
-Release++:
 
 Todo:
  - Transfer could only show non-base stats for units, terrains and tactics (since base stats are supposed to regenerate?), currently it shows way too much information.
@@ -106,6 +103,7 @@ Todo:
  - Stats to show amount of traditions, trade, etc..
  - Definition functions probably all could mutate (mostly used in reducers?)
  - Winrate could automatically set precision based on unit count
+ - Custom dice roll to affect all phases, add button for modal to override individual phases.
 
 Tests:
 - utils tested

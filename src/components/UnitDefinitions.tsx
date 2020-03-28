@@ -85,7 +85,7 @@ export default class UnitDefinitions extends Component<IProps> {
     return (
       <Table.Row key={unit.type} onClick={() => this.props.onRowClick(unit)}>
         <Table.Cell singleLine>
-          <LabelItem unit={unit} />
+          <LabelItem item={unit} />
         </Table.Cell>
         <Table.Cell>
           {toNumber(calculateValue(unit, UnitAttribute.Morale))}

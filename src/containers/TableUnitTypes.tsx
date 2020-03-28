@@ -6,13 +6,13 @@ import { Side, UnitRole, CountryName, UnitType, UnitAttribute, filterAttributes,
 import { getImage, mapRange } from 'utils'
 import { AppState, getUnits, getUnitPreferences, getCountry, getSettings, getCohorts, getMode } from 'state'
 import { addToReserve, removeFromReserve, invalidate, setUnitPreference } from 'reducers'
-import { getChildUnits, getArchetypes, getActualUnits } from 'managers/army'
-import Dropdown from 'components/Utils/Dropdown'
+import { getChildUnits, getArchetypes, getActualUnits, getLatestUnits } from 'managers/army'
 import UnitValueInput from './UnitValueInput'
 import AttributeImage from 'components/Utils/AttributeImage'
 import { getNextId } from 'army_utils'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 import { applyLosses } from 'managers/units'
+import DropdownUnit from 'components/Dropdowns/DropdownUnit'
 
 type Props = {
   side: Side
@@ -52,40 +52,37 @@ class TableUnitTypes extends Component<IProps> {
     const { side, settings, units, mode } = this.props
     const unit_list = settings[Setting.Tech] ? getArchetypes(units, mode) : getActualUnits(units, mode)
     return (
-      <>
-
-        <Table celled selectable unstackable key={side}>
-          <Table.Header>
-            <Table.Row>
+      <Table celled unstackable key={side}>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>
+              {side}
+            </Table.HeaderCell>
+            {
+              settings[Setting.Tech] &&
               <Table.HeaderCell>
-                {side}
+                Type
               </Table.HeaderCell>
-              {
-                settings[Setting.Tech] &&
-                <Table.HeaderCell>
-                  Type
+            }
+            <Table.HeaderCell>
+              Amount
+            </Table.HeaderCell>
+            {
+              filterAttributes(this.getAttributes(), settings).map(attribute => (
+                <Table.HeaderCell key={attribute}>
+                  <AttributeImage attribute={attribute} />
                 </Table.HeaderCell>
-              }
-              <Table.HeaderCell>
-                Amount
-              </Table.HeaderCell>
-              {
-                filterAttributes(this.getAttributes(), settings).map(attribute => (
-                  <Table.HeaderCell key={attribute}>
-                    <AttributeImage attribute={attribute} />
-                  </Table.HeaderCell>
-                ))
-              }
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {!settings[Setting.Tech] && unit_list.map(this.renderUnitRow)}
-            {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Front, unit_list)}
-            {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Flank, unit_list)}
-            {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Support, unit_list)}
-          </Table.Body>
-        </Table>
-      </>
+              ))
+            }
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {!settings[Setting.Tech] && unit_list.map(this.renderUnitRow)}
+          {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Front, unit_list)}
+          {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Flank, unit_list)}
+          {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Support, unit_list)}
+        </Table.Body>
+      </Table>
     )
   }
 
@@ -97,27 +94,35 @@ class TableUnitTypes extends Component<IProps> {
     if (!archetype || !preference)
       return null
     const image = getImage(archetype)
-    const types = getChildUnits(units, tech, archetype.type).map(unit => unit.type)
+    const latest_type = getLatestUnits(units, tech)
+    const latest = { ...units[latest_type[role] || archetype.type], type: UnitType.Latest }
+    const children = [latest].concat(...getChildUnits(units, tech, archetype.type))
     return (
-      <Table.Row key={role}>
-        <Table.Cell onClick={() => onRowClick(country, archetype.type)}>
-          <Image src={image} avatar />
-          {archetype.type}
-        </Table.Cell>
-        <Table.Cell>
-          <Dropdown values={[UnitType.Latest].concat(types)} value={preference} onChange={type => setUnitPreference(country, role, type) && invalidate()} />
-        </Table.Cell>
-        <Table.Cell>
-          {this.renderCohortCount(archetype.type)}
-        </Table.Cell>
-        {
-          filterAttributes(this.getAttributes(), settings).map(attribute => (
-            <Table.Cell key={attribute}>
-              <UnitValueInput unit={archetype} attribute={attribute} country={country} percent />
-            </Table.Cell>
-          ))
-        }
-      </Table.Row>
+      <>
+        <Table.Row key={role}>
+          <Table.Cell onClick={() => onRowClick(country, archetype.type)} selectable>
+            <Image src={image} avatar />
+            {archetype.type}
+          </Table.Cell>
+          <Table.Cell>
+            <DropdownUnit
+              value={preference}
+              values={children}
+              onSelect={type => setUnitPreference(country, role, type) && invalidate()}
+            />
+          </Table.Cell>
+          <Table.Cell>
+            {this.renderCohortCount(archetype.type)}
+          </Table.Cell>
+          {
+            filterAttributes(this.getAttributes(), settings).map(attribute => (
+              <Table.Cell key={attribute}>
+                <UnitValueInput unit={archetype} attribute={attribute} country={country} percent />
+              </Table.Cell>
+            ))
+          }
+        </Table.Row>
+      </>
     )
   }
 
@@ -128,7 +133,7 @@ class TableUnitTypes extends Component<IProps> {
     const image = getImage(unit)
     return (
       <Table.Row key={unit.type}>
-        <Table.Cell onClick={() => onRowClick(country, unit.type)}>
+        <Table.Cell onClick={() => onRowClick(country, unit.type)} selectable>
           <Image src={image} avatar />
           {unit.type}
         </Table.Cell>

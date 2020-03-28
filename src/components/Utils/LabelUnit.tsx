@@ -5,7 +5,7 @@ import { Image } from 'semantic-ui-react'
 import { getImage } from 'utils'
 
 interface IProps {
-  unit?: {
+  item?: {
     type: string
     image?: string
     tech?: number
@@ -15,14 +15,14 @@ interface IProps {
 export default class LabelItem extends Component<IProps> {
 
   render() {
-    const { unit } = this.props
-    if (!unit)
+    const { item } = this.props
+    if (!item)
       return null
     return (
       <>
-        {unit.tech}
-        <Image src={getImage(unit)} avatar />
-        {unit.type}
+        {item.tech}
+        <Image src={getImage(item)} avatar />
+        {item.type}
       </>
     )
   }

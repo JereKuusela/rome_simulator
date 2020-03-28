@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Modal, Input, Grid, Button } from 'semantic-ui-react'
-import Dropdown from './Utils/Dropdown'
+import Dropdown from './Dropdowns/Dropdown'
 
 interface IProps<T, S> {
   onSuccess: (value: T, selected: S) => void
