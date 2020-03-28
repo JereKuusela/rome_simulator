@@ -1,0 +1,44 @@
+{
+  "units": [
+    {
+      "type": "Land Unit",
+      "base": null,
+      "mode": "Land",
+      "role": "Front",
+      "morale": 3.0,
+      "strength": 1.0,
+      "attrition_weight": 1.0,
+      "maintenance": 0.04166
+    },
+    {
+      "type": "Naval Unit",
+      "base": null,
+      "mode": "Naval",
+      "role": "Front",
+      "morale": 3.0,
+      "strength": 1.0,
+      "attrition_weight": 1.0,
+      "maintenance": 0.02083,
+      "capture_chance": 0.06
+    },
+    {
+      "type": "Light Ship",
+      "base": "Naval Unit",
+      "capture_chance": 0.1,
+      "capture_resist": 0.1,
+      "riverine": 0.25
+    },
+    {
+      "type": "Medium Ship",
+      "base": "Naval Unit",
+      "capture_chance": 0.2,
+      "capture_resist": 0.2
+    },
+    {
+      "type": "Heavy Ship",
+      "base": "Naval Unit",
+      "capture_chance": 0.3,
+      "capture_resist": 0.3
+    }
+  ]
+}

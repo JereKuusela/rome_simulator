@@ -4,9 +4,9 @@ import { Image, Table } from 'semantic-ui-react'
 
 import { Side, UnitRole, CountryName, UnitType, UnitAttribute, filterAttributes, Setting, Unit, Mode } from 'types'
 import { getImage, mapRange } from 'utils'
-import { AppState, getUnits, getUnitPreferences, getCountry, getArchetypes, getSettings, getCohorts, getMode } from 'state'
+import { AppState, getUnits, getUnitPreferences, getCountry, getSettings, getCohorts, getMode } from 'state'
 import { addToReserve, removeFromReserve, invalidate, setUnitPreference } from 'reducers'
-import { getChildUnits } from 'managers/army'
+import { getChildUnits, getArchetypes, getActualUnits } from 'managers/army'
 import Dropdown from 'components/Utils/Dropdown'
 import UnitValueInput from './UnitValueInput'
 import AttributeImage from 'components/Utils/AttributeImage'
@@ -49,7 +49,8 @@ class TableUnitTypes extends Component<IProps> {
   }
 
   render() {
-    const { side, settings, archetypes } = this.props
+    const { side, settings, units, mode } = this.props
+    const unit_list = settings[Setting.Tech] ? getArchetypes(units, mode) : getActualUnits(units, mode)
     return (
       <>
 
@@ -78,19 +79,19 @@ class TableUnitTypes extends Component<IProps> {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {!settings[Setting.Tech] && archetypes.map(this.renderUnitRow)}
-            {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Front)}
-            {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Flank)}
-            {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Support)}
+            {!settings[Setting.Tech] && unit_list.map(this.renderUnitRow)}
+            {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Front, unit_list)}
+            {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Flank, unit_list)}
+            {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Support, unit_list)}
           </Table.Body>
         </Table>
       </>
     )
   }
 
-  renderRoleRow = (role: UnitRole) => {
+  renderRoleRow = (role: UnitRole, archetypes: Unit[]) => {
     // List of archetypes -> get archetype -> get image
-    const { archetypes, units, setUnitPreference, country, invalidate, preferences, tech, settings, onRowClick } = this.props
+    const { units, setUnitPreference, country, invalidate, preferences, tech, settings, onRowClick } = this.props
     const archetype = archetypes.find(unit => unit.role === role)
     const preference = preferences[role]
     if (!archetype || !preference)
@@ -170,7 +171,6 @@ class TableUnitTypes extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  archetypes: getArchetypes(state, props.country),
   preferences: getUnitPreferences(state, props.side),
   reserve: getCohorts(state, props.side, true).reserve,
   units: getUnits(state, props.country),

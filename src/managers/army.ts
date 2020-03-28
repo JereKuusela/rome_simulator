@@ -25,7 +25,7 @@ export const convertGeneralDefinition = (settings: Settings, general: GeneralDef
   }
 }
 
-export const overrideRoleWithPreferences = (army: Army, units: Units, latest: {[key in UnitRole]: UnitType | undefined}) => {
+export const overrideRoleWithPreferences = (army: Army, units: Units, latest: { [key in UnitRole]: UnitType | undefined }) => {
   const preferences = army.unit_preferences
   return mapCohorts(army, cohort => {
     const role = units[cohort.type].role
@@ -69,6 +69,12 @@ const unitSorter = (unit: BaseUnit, mode: Mode, base_units?: ObjSet) => {
 }
 
 export const getArchetypes = (units: Units, mode: Mode) => toArr(units).filter(unit => mode === Mode.Naval ? unit.base === UnitType.Naval : unit.base === UnitType.Land)
+
+export const getActualUnits = (units: Units, mode: Mode) => {
+  const base_units = getBaseUnits(units)
+  return sortBy(toArr(units).filter(unit => !base_units[unit.type]), unit => unitSorter(unit, mode))
+}
+
 const getBaseUnits = (units: Units) => toSet(units, unit => unit.base || unit.type)
 
 const filterByTech = (units: Unit[], tech: number) => units.filter(unit => unit.tech === undefined || unit.tech <= tech)

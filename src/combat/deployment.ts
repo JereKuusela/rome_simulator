@@ -52,7 +52,7 @@ const deployFlanks = (cohorts: CombatCohort[], row: (CombatCohort | null)[], cen
 }
 
 const deployBoth = (cohorts: CombatCohort[], row: (CombatCohort | null)[], center: number, limit: number) => {
-  for (let index = center, count = 0; index >= 0 && index < row.length, count < limit; index = nextIndex(index, center), count++) {
+  for (let index = center, count = 0; index >= 0 && index < row.length && count < limit; index = nextIndex(index, center), count++) {
     if (row[index])
       continue
     const cohort = cohorts.pop()

@@ -79,7 +79,7 @@ function transformer(result) {
 }
 
 const parsers = {
-  [TECH_FILE]: handleTech
+  [path.join('euiv', TECH_FILE)]: handleTech
 };
 
 exports.run = () => core.parseFiles(parsers, transformer, path.join('euiv', 'tech.json'));

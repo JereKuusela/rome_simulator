@@ -3,6 +3,7 @@ import { addValues } from 'definition_values'
 import { toObj, removeUndefined, filter, toArr } from 'utils'
 
 import * as ir_data from './json/ir/units.json'
+import * as ir_basedata from './json/ir/base_units.json'
 import * as euiv_basedata from './json/euiv/base_units.json'
 import * as euiv_data from './json/euiv/units.json'
 import IconArcher from 'images/archers.png'
@@ -49,6 +50,9 @@ const unit_to_icon: { [key in UnitType]: string } = {
   [UnitType.Cavalry]: IconCavalry,
   [UnitType.Infantry]: IconInfantry,
   [UnitType.Artillery]: IconArtillery,
+  [UnitType.LightShip]: IconMilitaryPower,
+  [UnitType.MediumShip]: IconMilitaryPower,
+  [UnitType.HeavyShip]: IconMilitaryPower,
   [UnitType.Latest]: IconMilitaryPower
 }
 
@@ -121,7 +125,7 @@ const initializeDefaultUnits = (): BaseUnits => {
   if (process.env.REACT_APP_GAME === 'euiv')
     return toObj(euiv_basedata.units.map(createUnitFromJson).concat(euiv_data.units.map(createUnitFromJson)), unit => unit.type)
   else
-    return toObj(ir_data.units.map(createUnitFromJson), unit => unit.type)
+    return toObj(ir_basedata.units.map(createUnitFromJson).concat(ir_data.units.map(createUnitFromJson)), unit => unit.type)
 }
 const defaultUnits = initializeDefaultUnits()
 

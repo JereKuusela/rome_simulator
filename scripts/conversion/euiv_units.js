@@ -1,7 +1,7 @@
 const core = require('./core');
 const path = require('path');
 
-function convertKey(key) {
+const convertKey = key =>  {
   switch (key) {
     case 'unit_type':
       return 'culture';
@@ -26,7 +26,7 @@ const handleUnit = (key, value, result) => {
   result[convertKey(key)] = value;
 }
 
-function transformer(result) {
+const transformer = result => {
   const techLevels = result[TECH_FILE];
   Object.keys(result).forEach(key => {
     const unit = result[key];
@@ -42,8 +42,8 @@ function transformer(result) {
 }
 
 const parsers = {
-  'units': handleUnit,
-  [TECH_FILE]: handleTech
+  [path.join('euiv', 'units')]: handleUnit,
+  [path.join('euiv', TECH_FILE)]: handleTech
 };
 
 exports.run = () => core.parseFiles(parsers, transformer, path.join('euiv', 'units.json'));

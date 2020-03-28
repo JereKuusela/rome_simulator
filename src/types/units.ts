@@ -20,12 +20,15 @@ export enum UnitType {
   Tetrere = 'Tetrere',
   Hexere = 'Hexere',
   Octere = 'Octere',
-  MegaPolyreme = 'Mega-Polyreme',
+  MegaPolyreme = 'Mega Polyreme',
   Land = 'Land Unit',
   Naval = 'Naval Unit',
   Infantry = 'Infantry',
   Cavalry = 'Cavalry',
   Artillery = 'Artillery',
+  LightShip = 'Light Ship',
+  MediumShip = 'Medium Ship',
+  HeavyShip = 'Heavy Ship',
   Latest = 'Latest'
 }
 
