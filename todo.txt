@@ -71,9 +71,10 @@ Changelog:
 - Settings: Added a new setting for strength affecting maneuver, feature from EUIV.
 - Settings: Added a new setting for insufficient support penalty, feature from EUIV.
 - Settings: Added a new setting for morale damage based on max morale, feature from EUIV.
+- Settings: Added a new setting for maximum general skill, feature from EUIV.
 - Settings: Added a new setting for dynamic flanking calculation (to support 1.3 deployment).
 - Settings: Added new settings for enabling/disabling different unit attributes.
-- Settings: Added new settings for halving simulation dice rolls (massively increases performance).
+- Settings: Added new settings for halving analyze dice rolls (massively increases performance).
 - Settings: Added new settings for enabling/disabling existing game mechanics (martial, tactics, preferred unit types, etc.).
 
 Settings:

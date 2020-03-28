@@ -31,7 +31,6 @@ if (process.env.REACT_APP_GAME === 'euiv') {
       }
       testDeployment(info, attacker, defender)
     })
-
     it('less cavalry than flank size', () => {
       setCombatWidth(info, 22)
       add(info.army_a, 22, 0, 0)
@@ -45,7 +44,6 @@ if (process.env.REACT_APP_GAME === 'euiv') {
       }
       testDeployment(info, attacker, defender)
     })
-
     it('combat width not filled', () => {
       setCombatWidth(info, 22)
       add(info.army_a, 2, 3, 0)
@@ -56,6 +54,32 @@ if (process.env.REACT_APP_GAME === 'euiv') {
       }
       const defender = {
         front: createExpected(UnitType.Infantry)
+      }
+      testDeployment(info, attacker, defender)
+    })
+    it('artillery fills backline (both front and flank)', () => {
+      setCombatWidth(info, 24)
+      add(info.army_a, 6, 6, 6)
+      add(info.army_d, 2, 0, 0)
+      const attacker = {
+        front: createExpected([UnitType.Infantry, 2], [UnitType.Cavalry, 6], [UnitType.Infantry, 4]),
+        back: createExpected([UnitType.Artillery, 6])
+      }
+      const defender = {
+        front: createExpected([UnitType.Infantry, 2])
+      }
+      testDeployment(info, attacker, defender)
+    })
+    it('artillery backline doesn\'t exceend frontline', () => {
+      setCombatWidth(info, 24)
+      add(info.army_a, 6, 0, 12)
+      add(info.army_d, 2, 0, 0)
+      const attacker = {
+        front: createExpected([UnitType.Infantry, 6], [UnitType.Artillery, 3]),
+        back: createExpected([UnitType.Artillery, 9])
+      }
+      const defender = {
+        front: createExpected([UnitType.Infantry, 2])
       }
       testDeployment(info, attacker, defender)
     })

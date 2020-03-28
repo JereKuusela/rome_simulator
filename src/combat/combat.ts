@@ -216,12 +216,12 @@ export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, mark_de
     removeDefeated(a.cohorts.frontline)
     removeDefeated(d.cohorts.frontline)
   }
-  reinforce(a)
+  reinforce(a, settings)
   if (!settings[Setting.DefenderAdvantage])
-    reinforce(d)
+    reinforce(d, settings)
   pickTargets(a.cohorts.frontline, d.cohorts.frontline, settings)
   if (settings[Setting.DefenderAdvantage])
-    reinforce(d)
+    reinforce(d, settings)
   pickTargets(d.cohorts.frontline, a.cohorts.frontline, settings)
 
   // Tactic bonus changes dynamically when units lose strength so it can't be precalculated.
@@ -291,7 +291,7 @@ const pickTargets = (source: Frontline, target: Frontline, settings: Settings) =
           const start = Math.min(target_length - 1, j + maneuver)
           const end = Math.max(0, j - maneuver)
           for (let index = start; index >= end; --index) {
-            if (index >= 0 && index < target_length && target[0][index] && !target[0][index]?.state.is_weak) {
+            if (target[0][index] && !target[0][index]?.state.is_weak) {
               state.target = target[0][index]
               state.flanking = true
               state.target_support = getBackTarget(target, index)

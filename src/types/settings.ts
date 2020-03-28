@@ -34,6 +34,7 @@ export enum Setting {
   CustomDeployment = 'Enable deployment customization',
   DynamicFlanking = 'Enable dynamic flanking',
   UseMaxMorale = 'Morale damage based on max morale',
+  SupportPhase = 'Deploy support units separately',
   InsufficientSupportPenalty = 'Penalty for insufficient support',
   StrengthBasedFlank = 'Enable strength based flank',
   FireAndShock = 'Enable fire and shock phases',
@@ -170,6 +171,11 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Combat alternates between fire and shock phases (EUIV).'
       else
         return 'Combat only has one phase (Imperator).'
+    case Setting.SupportPhase:
+      if (value)
+        return 'Support units are deployed when no other units are available (Imperator).'
+      else
+        return 'Support units deploy with other units. (EUIV).'
     case Setting.DailyMoraleLoss:
       return 'Amount of morale lost each round (EUIV).'
     case Setting.DailyDamageIncrease:
@@ -319,6 +325,7 @@ export type SiteSettings = {
   [Setting.InsufficientSupportPenalty]: number,
   [Setting.DisciplineDamageReduction]: boolean,
   [Setting.FireAndShock]: boolean,
+  [Setting.SupportPhase]: boolean,
   [Setting.DailyMoraleLoss]: number,
   [Setting.DailyDamageIncrease]: number,
   [Setting.AttributeCombatAbility]: boolean,

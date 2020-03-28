@@ -51,7 +51,19 @@ const deployFlanks = (cohorts: CombatCohort[], row: (CombatCohort | null)[], cen
   }
 }
 
-const deployCohorts = (cohorts: CombatCohorts) => {
+const deployBoth = (cohorts: CombatCohort[], row: (CombatCohort | null)[], center: number, limit: number) => {
+  for (let index = center, count = 0; index >= 0 && index < row.length, count < limit; index = nextIndex(index, center), count++) {
+    if (row[index])
+      continue
+    const cohort = cohorts.pop()
+    if (cohort)
+      row[index] = cohort
+    else
+      break
+  }
+}
+
+const deployCohorts = (cohorts: CombatCohorts, settings: Settings) => {
   const { left_flank, right_flank, reserve } = cohorts
   const frontline = cohorts.frontline[0]
   const backline = cohorts.frontline.length > 1 ? cohorts.frontline[1] : null
@@ -59,9 +71,10 @@ const deployCohorts = (cohorts: CombatCohorts) => {
   let flank_starting_index = left_flank > right_flank ? left_flank - 1 : frontline.length - right_flank
   if (frontline.length % 2)
     flank_starting_index = left_flank >= right_flank ? left_flank - 1 : frontline.length - right_flank
-  const deploy_support = reserve.front.length === 0 && reserve.flank.length === 0
+  const deploy_support = !settings[Setting.SupportPhase] || (reserve.front.length === 0 && reserve.flank.length === 0)
+  const max_support_backline = Math.floor(reserveSize(reserve) / 2)
   if (backline)
-    deployFront(reserve.support, backline, center, flank_starting_index)
+    deployBoth(reserve.support, backline, center, max_support_backline)
 
   deployFront(reserve.front, frontline, center, flank_starting_index)
   deployFront(reserve.flank, frontline, center, flank_starting_index)
@@ -189,8 +202,8 @@ export const deploy = (attacker: CombatParticipant, defender: CombatParticipant,
   attacker.cohorts.right_flank = right_flank_a
   defender.cohorts.left_flank = left_flank_d
   defender.cohorts.right_flank = right_flank_d
-  deployCohorts(attacker.cohorts)
-  deployCohorts(defender.cohorts)
+  deployCohorts(attacker.cohorts, settings)
+  deployCohorts(defender.cohorts, settings)
 }
 
 const moveUnits = (cohorts: CombatCohorts, ) => {
@@ -236,8 +249,8 @@ const moveUnits = (cohorts: CombatCohorts, ) => {
 * Reinforces a given army based on reinforcement rules.
 * First priority is to move units from reserve. Then units move towards center.
 */
-export const reinforce = (participant: CombatParticipant) => {
+export const reinforce = (participant: CombatParticipant, settings: Settings) => {
   if (reserveSize(participant.cohorts.reserve))
-    deployCohorts(participant.cohorts)
+    deployCohorts(participant.cohorts, settings)
   moveUnits(participant.cohorts)
 }
