@@ -25,7 +25,8 @@ export const getDefaultMode = (mode: Mode): Battle => ({
   fight_over: true,
   seed: 0,
   custom_seed: undefined,
-  outdated: true
+  outdated: true,
+  initialized: false
 })
 
 export const getDefaultBattle = (): ModeState => battleState

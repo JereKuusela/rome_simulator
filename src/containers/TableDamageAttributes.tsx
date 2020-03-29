@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Table, Input } from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react'
 
 import { Side, CountryName, UnitAttribute, CombatPhase, General, GeneralValueType, Mode, UnitType } from 'types'
 import { AppState, getGeneral, getUnit, getMode } from 'state'
@@ -9,6 +9,7 @@ import AttributeImage from 'components/Utils/AttributeImage'
 import StyledNumber from 'components/Utils/StyledNumber'
 import { addSign } from 'formatters'
 import UnitValueInput from './UnitValueInput'
+import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 
 type Props = {
   side: Side
@@ -16,6 +17,10 @@ type Props = {
 }
 
 class TableDamageAttributes extends Component<IProps> {
+
+  shouldComponentUpdate(prevProps: IProps) {
+    return prevProps.country !== this.props.country
+  }
 
   render() {
     const { side, general, unit, country } = this.props
@@ -75,7 +80,7 @@ class TableDamageAttributes extends Component<IProps> {
 
   renderGeneralAttribute = (general: General, attribute: GeneralValueType) => (
     <>
-      <Input disabled={!general.enabled} size='mini' className='small-input' type='number' value={general.base_values[attribute]} onChange={(_, { value }) => this.setGeneralStat(attribute, Number(value))} />
+      <DelayedNumericInput disabled={!general.enabled}  type='number' value={general.base_values[attribute]} onChange={value => this.setGeneralStat(attribute, Number(value))}/>
       {' '} <StyledNumber value={general.extra_values[attribute]} formatter={addSign} hide_zero />
     </>
   )

@@ -56,7 +56,8 @@ export enum Setting {
   CalculateCasualties = 'Calculate casualties',
   CalculateResourceLosses = 'Calculate resource losses',
   ReduceRolls = 'Reduce possible dice rolls',
-  ShowGraphs = 'Show graphs'
+  ShowGraphs = 'Show graphs',
+  AutoRefresh = 'Automatic refresh'
 }
 
 export enum SimulationSpeed {
@@ -279,6 +280,11 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Graphs are shown.\nThis slightly decreases performance.'
       else
         return 'Graphs won\'t be shown.\nThis slightly improves performance.'
+    case Setting.AutoRefresh:
+      if (value)
+        return 'Battle refreshes automatically after any changes.'
+      else
+        return 'Battle only refreshes when going to previous or next rounds.'
     default:
       return 'No description.'
   }
@@ -342,7 +348,8 @@ export type SiteSettings = {
   [Setting.CalculateCasualties]: boolean,
   [Setting.CalculateResourceLosses]: boolean,
   [Setting.ReduceRolls]: number,
-  [Setting.Performance]: SimulationSpeed
+  [Setting.Performance]: SimulationSpeed,
+  [Setting.AutoRefresh]: boolean
 }
 
 export type Settings = CombatSettings & SiteSettings

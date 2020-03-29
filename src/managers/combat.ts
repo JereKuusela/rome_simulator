@@ -31,6 +31,7 @@ const doBattle = (state: AppState, mode: Mode, battle: Battle, settings: Setting
   const participant_d = battle.participants[Side.Defender]
 
   battle.outdated = false
+  battle.initialized = true
 
   const minimum_roll = settings[Setting.DiceMinimum]
   const maximum_roll = settings[Setting.DiceMaximum]

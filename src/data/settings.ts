@@ -85,6 +85,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.Culture]: true,
       [Setting.Food]: false,
       [Setting.Precision]: 3,
+      [Setting.AutoRefresh]: true,
       // Analyze
       [Setting.Performance]: SimulationSpeed.Normal,
       [Setting.ChunkSize]: 10000,
@@ -94,7 +95,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.CalculateWinChance]: true,
       [Setting.CalculateCasualties]: true,
       [Setting.CalculateResourceLosses]: true,
-      [Setting.ShowGraphs]: false,
+      [Setting.ShowGraphs]: false
     }
   }
   else {
@@ -151,7 +152,8 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.DynamicFlanking]: false,
       [Setting.Tech]: false,
       [Setting.Culture]: false,
-      [Setting.Food]: true
+      [Setting.Food]: true,
+      [Setting.AutoRefresh]: true
     }
   }
 }

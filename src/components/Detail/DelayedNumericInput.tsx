@@ -32,11 +32,20 @@ export default class DelayedNumericInput extends Component<IProps, IState> {
     return percent ? toPercent(value) : toNumber(value)
   }
 
+  shouldComponentUpdate(prevProps: IProps, prevState: IState) {
+    return this.state.value !== prevState.value || prevProps.value !== this.props.value
+  }
+
+  componentDidUpdate(prevProps: IProps) {
+    if (prevProps.value !== this.props.value)
+      this.setState({ value: this.convertValue(this.props.value) })
+  }
+
   render() {
     const { disabled, type } = this.props
     const { value } = this.state
     return (
-      <div onBlur={this.onLostFocus}>
+      <div onBlur={this.onLostFocus} style={{ display: 'inline-block' }}>
         <Input
           size='mini'
           className='small-input'
@@ -44,10 +53,17 @@ export default class DelayedNumericInput extends Component<IProps, IState> {
           type={type}
           disabled={disabled}
           onChange={(_, { value }) => this.onChange(value)}
+          onKeyPress={this.onKeyPress}
+          onFocus={(e: React.FocusEvent<HTMLInputElement>) => e.target.select()}
         />
       </div>
 
     )
+  }
+
+  onKeyPress = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter')
+      this.onLostFocus()
   }
 
   onLostFocus = () => {
@@ -70,9 +86,10 @@ export default class DelayedNumericInput extends Component<IProps, IState> {
     // Non-numeric values should just reset the previous value.
     if (Number.isNaN(new_value))
       this.setState({ value: this.convertValue(value) })
-    else if (value !== new_value) {
+    else {
       this.setState({ value: this.convertValue(new_value) })
-      onChange(new_value)
+      if (value !== new_value)
+        onChange(new_value)
     }
   }
 }

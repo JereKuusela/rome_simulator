@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Button, Grid, Header, Input, Modal } from 'semantic-ui-react'
+import { Button, Grid, Header, Input, Modal, Checkbox } from 'semantic-ui-react'
 import { getCombatPhase } from 'combat'
 import ModalCohortDetail from 'containers/modal/ModalCohortDetail'
 import ModalUnitSelector, { ModalSelectorInfo } from 'containers/modal/ModalUnitSelector'
@@ -12,7 +12,7 @@ import TargetArrows from 'containers/TargetArrows'
 import TerrainSelector from 'containers/TerrainSelector'
 import WinRate from 'containers/WinRate'
 import {
-  invalidate, selectArmy, setRoll, toggleRandomRoll, clearCohorts,
+  invalidate, selectArmy, setRoll, toggleRandomRoll, clearCohorts, changeSiteParameter,
   undo, battle, refreshBattle, setSeed, setGeneralBaseStat, resetState, selectCulture
 } from 'reducers'
 import { AppState, getBattle, getParticipant, getSettings } from 'state'
@@ -37,9 +37,7 @@ class Battle extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = { modal_cohort_info: null, modal_cohort_detail_info: null, modal_unit_info: null }
-    const { outdated, refreshBattle } = props
-    if (outdated)
-      refreshBattle()
+    props.refreshBattle()
   }
 
   isModalOpen = () => this.state.modal_cohort_info || this.state.modal_cohort_detail_info || this.state.modal_unit_info
@@ -64,14 +62,14 @@ class Battle extends Component<IProps, IState> {
   }
 
   componentDidUpdate() {
-    const { outdated, refreshBattle } = this.props
-    if (outdated)
+    const { outdated, refreshBattle, settings, round } = this.props
+    if (outdated && (settings[Setting.AutoRefresh] || round < 0))
       refreshBattle()
   }
 
   render() {
-    const { participant_a, participant_d, round, is_undo, fight_over, settings, outdated } = this.props
-    if (outdated)
+    const { participant_a, participant_d, round, is_undo, fight_over, settings, initialized, changeSiteParameter } = this.props
+    if (!initialized)
       return null
     return (
       <>
@@ -99,15 +97,20 @@ class Battle extends Component<IProps, IState> {
               <Header>{'Round: ' + this.roundName(round, getCombatPhase(round - 1, settings))}</Header>
             </Grid.Column>
             <Grid.Column textAlign='center' width='4'>
+              <Checkbox
+                label={Setting.AutoRefresh}
+                checked={settings[Setting.AutoRefresh]}
+                onChange={(_, { checked }) => changeSiteParameter(Setting.AutoRefresh, !!checked)}
+              />
             </Grid.Column>
             <Grid.Column width='5'>
               <WinRate />
             </Grid.Column>
             <Grid.Column floated='right' textAlign='right' width='4'>
-              <Button circular icon='angle double left' color='black' size='huge' disabled={!is_undo} onClick={() => this.props.undo(10)} />
-              <Button circular icon='angle left' color='black' size='huge' disabled={!is_undo} onClick={() => this.props.undo(1)} />
-              <Button circular icon='angle right' color='black' size='huge' disabled={fight_over} onClick={() => this.props.battle(1)} />
-              <Button circular icon='angle double right' color='black' size='huge' disabled={fight_over} onClick={() => this.props.battle(10)} />
+              <Button circular icon='angle double left' color='black' size='huge' disabled={!is_undo} onClick={() => this.undo(10)} />
+              <Button circular icon='angle left' color='black' size='huge' disabled={!is_undo} onClick={() => this.undo(1)} />
+              <Button circular icon='angle right' color='black' size='huge' disabled={fight_over} onClick={() => this.battle(1)} />
+              <Button circular icon='angle double right' color='black' size='huge' disabled={fight_over} onClick={() => this.battle(10)} />
             </Grid.Column>
 
           </Grid.Row>
@@ -141,7 +144,7 @@ class Battle extends Component<IProps, IState> {
           <Grid>
             <Grid.Row columns={1}>
               <Grid.Column>
-                <TableArmyInfo />
+                <TableArmyInfo key='Foo' />
               </Grid.Column>
             </Grid.Row>
             <Grid.Row columns={2}>
@@ -318,6 +321,20 @@ class Battle extends Component<IProps, IState> {
     clearCohorts(participant_d.country)
     invalidate()
   }
+
+  undo = (rounds: number) => {
+    const { undo, outdated, refreshBattle } = this.props
+    undo(rounds)
+    if (outdated)
+      refreshBattle()
+  }
+
+  battle = (rounds: number) => {
+    const { battle, outdated, refreshBattle } = this.props
+    if (outdated)
+      refreshBattle()
+    battle(rounds)
+  }
 }
 
 const mapStateToProps = (state: AppState) => ({
@@ -327,11 +344,12 @@ const mapStateToProps = (state: AppState) => ({
   round: getBattle(state).round,
   seed: getBattle(state).seed,
   outdated: getBattle(state).outdated,
+  initialized: getBattle(state).initialized,
   fight_over: getBattle(state).fight_over,
   settings: getSettings(state)
 })
 
-const actions = { battle, undo, toggleRandomRoll, setRoll, setGeneralBaseStat, invalidate, selectArmy, setSeed, refreshBattle, resetState, selectCulture, clearCohorts }
+const actions = { changeSiteParameter, battle, undo, toggleRandomRoll, setRoll, setGeneralBaseStat, invalidate, selectArmy, setSeed, refreshBattle, resetState, selectCulture, clearCohorts }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

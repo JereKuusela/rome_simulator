@@ -22,6 +22,12 @@ type Props = {
 
 class TableUnitTypes extends Component<IProps> {
 
+  shouldComponentUpdate(nextProps: IProps) {
+    if (this.props.preferences !== nextProps.preferences)
+      return true
+    return true
+  }
+
   getAttributes = () => {
     const { mode } = this.props
     if (process.env.REACT_APP_GAME === 'euiv')

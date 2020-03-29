@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table, Checkbox, Input } from 'semantic-ui-react'
 
-import { Side, CountryName, Setting, Participant, General, GeneralAttribute, GeneralValueType, UnitAttribute, isAttributeEnabled, Mode, UnitType, Unit, ValuesType, CountryAttribute, Country } from 'types'
+import { Side, CountryName, Setting, Participant, General, GeneralAttribute, GeneralValueType, UnitAttribute, isAttributeEnabled, Mode, UnitType, Unit, ValuesType, CountryAttribute, Country, CultureType } from 'types'
 import { keys } from 'utils'
 import { AppState, getCountry, getSettings, getParticipant, getGeneral, getCountryName, getSelectedTerrains, getCountries, getBattle, getUnit, getMode } from 'state'
 import { invalidate, selectArmy, selectCulture, toggleRandomRoll, setRoll, setGeneralBaseStat } from 'reducers'
@@ -19,6 +19,7 @@ import IconTerrain from 'images/terrain.png'
 import UnitValueInput from './UnitValueInput'
 import AttributeImage from 'components/Utils/AttributeImage'
 import CountryValueInput from './CountryValueInput'
+import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 
 type Props = {
 }
@@ -26,6 +27,26 @@ type Props = {
 class TableArmyInfo extends Component<IProps> {
 
   attributes = [UnitAttribute.Discipline]
+
+  shouldComponentUpdate(nextProps: IProps) {
+    if (this.props.country_a.culture !== nextProps.country_a.culture)
+      return true
+    if (this.props.country_d.culture !== nextProps.country_d.culture)
+      return true
+    if (this.props.participant_a.country !== nextProps.participant_a.country)
+      return true
+    if (this.props.participant_d.country !== nextProps.participant_d.country)
+      return true
+    if (this.props.participant_a.dice !== nextProps.participant_a.dice)
+      return true
+    if (this.props.participant_d.dice !== nextProps.participant_d.dice)
+      return true
+    if (this.props.participant_a.randomize_roll !== nextProps.participant_a.randomize_roll)
+      return true
+    if (this.props.participant_d.randomize_roll !== nextProps.participant_d.randomize_roll)
+      return true
+    return false
+  }
 
   render() {
     const { settings, participant_a, participant_d, country_a, country_d, general_a, general_d, unit_a, unit_d } = this.props
@@ -96,17 +117,14 @@ class TableArmyInfo extends Component<IProps> {
 
 
   renderArmyInfo = (side: Side, participant: Participant, country: Country, general: General, enemy: General, unit: Unit) => {
-    const { settings, selectArmy, invalidate, selectCulture } = this.props
+    const { settings } = this.props
     return (
       <Table.Row key={side}>
         <Table.Cell collapsing>
           <Dropdown
             values={keys(this.props.countries)}
             value={participant.country}
-            onChange={name => {
-              selectArmy(side, name)
-              invalidate()
-            }}
+            onChange={name => this.selectArmy(side, name)}
             style={{ width: 150 }}
           />
         </Table.Cell>
@@ -147,7 +165,7 @@ class TableArmyInfo extends Component<IProps> {
             <Dropdown
               values={getCultures()}
               value={country.culture}
-              onChange={item => selectCulture(participant.country, item, false)}
+              onChange={item => this.selectCulture(participant.country, item)}
               style={{ width: 150 }}
             />
           </Table.Cell>
@@ -176,7 +194,7 @@ class TableArmyInfo extends Component<IProps> {
     return (
       <div key={side}>
         <Image src={IconDice} avatar />
-        {is_random ? dice : <Input size='mini' className='small-input' type='number' value={dice} onChange={(_, data) => this.props.setRoll(side, Number(data.value))} />}
+        {is_random ? dice : <DelayedNumericInput type='number' value={dice} onChange={value => this.props.setRoll(side, value)} />}
         {general_pips !== 0 ?
           <span style={{ paddingLeft: '1em' }}>
             <Image src={IconGeneral} avatar />
@@ -197,6 +215,18 @@ class TableArmyInfo extends Component<IProps> {
     return (
       <Checkbox toggle checked={is_random} onClick={() => this.props.toggleRandomRoll(side)} />
     )
+  }
+
+  selectCulture = (country: CountryName, culture: CultureType) => {
+    const { selectCulture, invalidate } = this.props
+    selectCulture(country, culture, false)
+    invalidate()
+  }
+
+  selectArmy = (side: Side, country: CountryName) => {
+    const { selectArmy, invalidate } = this.props
+    selectArmy(side, country)
+    invalidate()
   }
 }
 

@@ -2,13 +2,14 @@ import { CountryName, Mode, TerrainType } from 'types'
 import { CombatParticipant } from 'combat'
 
 export interface Battle {
-  terrains: TerrainType[],
-  participants: Participants,
-  round: number,
-  fight_over: boolean,
-  seed: number,
-  custom_seed?: number,
+  terrains: TerrainType[]
+  participants: Participants
+  round: number
+  fight_over: boolean
+  seed: number
+  custom_seed?: number
   outdated: boolean
+  initialized: boolean
 }
 
 export enum CombatPhase {

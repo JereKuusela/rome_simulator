@@ -3,10 +3,11 @@ import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 
 import ItemSelector from 'components/ItemSelector'
-import { CountryName, ArmyType, UnitType } from 'types'
+import { CountryName, ArmyType, UnitType, Setting } from 'types'
 import { getNextId } from 'army_utils'
-import { AppState, getUnitList } from 'state'
+import { AppState, getUnits, getSettings, getMode } from 'state'
 import { selectCohort, invalidate } from 'reducers'
+import { getArchetypes, getActualUnits } from 'managers/army'
 
 
 interface Props {
@@ -23,15 +24,16 @@ export interface ModalSelectorInfo {
 
 class ModalUnitSelector extends Component<IProps> {
   render() {
-    const { units, onClose } = this.props
+    const { units, onClose, settings, mode } = this.props
     if (!units)
       return null
+    let unit_list = settings[Setting.Tech] ? getArchetypes(units, mode) : getActualUnits(units, mode)
     return (
       <Modal basic onClose={onClose} open centered={false}>
         <Modal.Content>
           <ItemSelector
             onSelection={this.selectUnit}
-            items={units}
+            items={unit_list}
           />
         </Modal.Content>
       </Modal>
@@ -39,16 +41,18 @@ class ModalUnitSelector extends Component<IProps> {
   }
 
   selectUnit = (type: UnitType) => {
-    const { info } = this.props
+    const { info, selectUnit, invalidate, onClose } = this.props
     if (info)
-      this.props.selectUnit(info.country, info.type, info.row, info.column, { id: getNextId(), type })
-    this.props.invalidate()
-    this.props.onClose()
+      selectUnit(info.country, info.type, info.row, info.column, { id: getNextId(), type })
+    invalidate()
+   onClose()
   }
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  units: props.info && getUnitList(state, true, props.info.country)
+  units: props.info && getUnits(state, props.info.country),
+  settings: getSettings(state),
+  mode: getMode(state)
 })
 
 const actions = { selectUnit: selectCohort, invalidate }

@@ -14,13 +14,15 @@ export default class DropdownTable<T extends string> extends Component<IProps<T>
 
   getHeader = () => (
     <Table.Header>
-      {this.props.headers.map(header => <Table.HeaderCell><AttributeImage attribute={header} /></Table.HeaderCell>)}
+      <Table.Row>
+        {this.props.headers.map(header => <Table.HeaderCell key={header}><AttributeImage attribute={header} /></Table.HeaderCell>)}
+      </Table.Row>
     </Table.Header>
   )
 
   getContent = (value: { type: T }) => (
-    <Table.Row onClick={() => this.props.onSelect(value.type)} active={this.props.value === value.type}>
-      {this.props.getContent(value).map(cell => <Table.Cell>{cell}</Table.Cell>)}
+    <Table.Row key={value.type} onClick={() => this.props.onSelect(value.type)} active={this.props.value === value.type}>
+      {this.props.getContent(value).map((cell, index) => <Table.Cell key={index}>{cell}</Table.Cell>)}
     </Table.Row>
   )
 
@@ -31,7 +33,9 @@ export default class DropdownTable<T extends string> extends Component<IProps<T>
         <Dropdown.Menu>
           <Table selectable celled>
             {this.getHeader()}
-            {values.map(this.getContent)}
+            <Table.Body>
+              {values.map(this.getContent)}
+            </Table.Body>
           </Table>
         </Dropdown.Menu>
       </Dropdown>
