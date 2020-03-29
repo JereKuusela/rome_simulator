@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { Table, Image, Icon } from 'semantic-ui-react'
 
@@ -8,7 +8,7 @@ import IconDefeated from 'images/attrition.png'
 import { Side, ArmyType, UnitAttribute } from 'types'
 import { getImage, resize } from 'utils'
 import { CombatCohort } from 'combat'
-import { AppState, getCurrentCombat, getCountryName } from 'state'
+import { AppState, getCurrentCombat, getCountryName, getBattle } from 'state'
 import { getArmyPart } from 'army_utils'
 import { last } from 'lodash'
 import { deleteCohort, invalidate } from 'reducers'
@@ -41,6 +41,10 @@ class TableArmyPart extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = { tooltip_index: null, tooltip_context: null, tooltip_is_support: false }
+  }
+
+  shouldComponentUpdate(prevProps: IProps, prevState: IState) {
+    return prevProps.timestamp !== this.props.timestamp || prevState.tooltip_index !== this.state.tooltip_index
   }
 
   render() {
@@ -106,26 +110,17 @@ class TableArmyPart extends Component<IProps, IState> {
         onMouseLeave={() => cohort && this.state.tooltip_index === cohort.id && this.setState({ tooltip_index: null, tooltip_context: null })}
         onContextMenu={(e: any) => e.preventDefault() || this.deleteCohort(cohort)}
       >
-        {this.renderUnit(cohort)}
+        <Cell
+          image={cohort?.image || null}
+          is_defeated={cohort?.is_defeated || false}
+          morale={cohort?.morale || 0}
+          max_morale={cohort?.max_morale || 0}
+          strength={cohort?.strength || 0}
+          max_strength={cohort?.max_strength || 0}
+        />
       </Table.Cell>
     )
   }
-
-  renderUnit = (unit: ICohort) => {
-    if (!unit)
-      return this.renderImage(getImage(null))
-    if (unit.is_defeated)
-      return this.renderImage(IconDefeated)
-    return (
-      <div style={{ background: this.gradient(MANPOWER_COLOR, unit.strength, unit.max_strength) }}>
-        <div style={{ background: this.gradient(MORALE_COLOR, unit.morale, unit.max_morale) }}>
-          {this.renderImage(getImage(unit))}
-        </div>
-      </div>
-    )
-  }
-
-  renderImage = (image: string) => <Image src={image} avatar style={{ margin: 0 }} />
 
   getIcon = () => {
     const { type, reverse } = this.props
@@ -138,12 +133,6 @@ class TableArmyPart extends Component<IProps, IState> {
     return 'square full'
   }
 
-  gradient = (color: string, current: number, max: number) => (
-    'linear-gradient(0deg, ' + color + ' 0%, ' + color + ' ' + this.percent(current, max) + '%, ' + WHITE_COLOR + ' ' + this.percent(current, max) + '%, ' + WHITE_COLOR + ' 100%)'
-  )
-
-  percent = (current: number, max: number) => 100.0 - 100.0 * current / max
-
   deleteCohort = (cohort: ICohort) => {
     if (!cohort)
       return
@@ -151,6 +140,42 @@ class TableArmyPart extends Component<IProps, IState> {
     deleteCohort(country, cohort.id)
     invalidate()
   }
+}
+
+type CellProps = {
+  strength: number
+  max_strength: number
+  morale: number
+  max_morale: number
+  is_defeated: boolean
+  image: string | null
+}
+
+/** Sub-component to hopefully help with performance (easier to prevent renders). */
+class Cell extends PureComponent<CellProps> {
+
+  render() {
+    const { strength, max_strength, morale, max_morale, is_defeated, image } = this.props
+    if (!image)
+      return this.renderImage(getImage(null))
+    if (is_defeated)
+      return this.renderImage(IconDefeated)
+    return (
+      <div style={{ background: this.gradient(MANPOWER_COLOR, strength, max_strength) }}>
+        <div style={{ background: this.gradient(MORALE_COLOR, morale, max_morale) }}>
+          {this.renderImage(getImage({ image }))}
+        </div>
+      </div>
+    )
+  }
+
+  renderImage = (image: string) => <Image src={image} avatar style={{ margin: 0 }} />
+
+  gradient = (color: string, current: number, max: number) => (
+    'linear-gradient(0deg, ' + color + ' 0%, ' + color + ' ' + this.percent(current, max) + '%, ' + WHITE_COLOR + ' ' + this.percent(current, max) + '%, ' + WHITE_COLOR + ' 100%)'
+  )
+
+  percent = (current: number, max: number) => 100.0 - 100.0 * current / max
 }
 
 type ICohort = {
@@ -177,7 +202,8 @@ const convertUnits = (units: (CombatCohort | null)[][]): ICohort[][] => (
 
 const mapStateToProps = (state: AppState, props: Props) => ({
   units: convertUnits(getArmyPart(getCurrentCombat(state, props.side), props.type)),
-  country: getCountryName(state, props.side)
+  country: getCountryName(state, props.side),
+  timestamp: getBattle(state).timestamp
 })
 
 const actions = { deleteCohort, invalidate }

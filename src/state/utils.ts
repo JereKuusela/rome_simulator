@@ -25,7 +25,7 @@ export const getSettings = (state: AppState, mode?: Mode): Settings => {
 }
 
 export const findCohortById = (state: AppState, side: Side, id: number): Cohort | null => {
-  const cohorts = getCohortsByCountry(state, getCountryName(state, side))
+  const cohorts = getCohorts(state, side)
   let cohort = cohorts.reserve.find(unit => unit.id === id) || null
   if (cohort)
     return cohort
@@ -134,7 +134,7 @@ export const getArmyForCombat = (state: AppState, side: Side, mode?: Mode): Army
   const participant = state.battle[mode ?? state.settings.mode].participants[side]
   const country = participant.country
   const army = getArmy(state, country)
-  const cohorts = getCohortsByCountry(state, country)
+  const cohorts = getCohorts(state, side)
   const general = getGeneral(state, country)
   const tactic = state.tactics[army.tactic]
   const definitions = getUnits(state, country)
@@ -147,9 +147,11 @@ export const getCurrentCombat = (state: AppState, side: Side): CombatCohorts => 
   return arrGet(participant.rounds, -1)?.cohorts ?? { frontline: [], reserve: { front: [], flank: [], support: [] }, defeated: [], left_flank: 0, right_flank: 0 }
 }
 
-export const getCombatParticipant = (state: AppState, side: Side): CombatParticipant => {
+export const getCombatParticipant = (state: AppState, side: Side, round?: number): CombatParticipant => {
   const participant = state.battle[state.settings.mode].participants[side]
-  return arrGet(participant.rounds, -1)!
+  if ((round && round >= participant.rounds.length) || !participant.rounds.length)
+    return null!
+  return participant.rounds[round ?? participant.rounds.length - 1]
 }
 
 export const getSelectedTactic = (state: AppState, side: Side): Tactic => {
@@ -199,18 +201,19 @@ export const getTactic = (state: AppState, side: Side): Tactic => {
   return state.tactics[army.tactic]
 }
 
-const getBaseCohortsByCountry = (state: AppState, country: CountryName, originals?: boolean) => {
+export const getBaseCohorts = (state: AppState, country: CountryName, originals?: boolean) => {
   const army = getArmy(state, country)
   if (originals)
     return army
   const units = getUnits(state, country)
-  const latest = manager.getLatestUnits(units, getCountries(state)[country].tech_level)
+  const latest = manager.getLatestUnits2(units, getCountries(state)[country].tech_level)
   return manager.overrideRoleWithPreferences(army, units, latest)
 }
 
-const getCohortsByCountry = (state: AppState, country: CountryName, originals?: boolean): Cohorts => {
+export const getCohorts = (state: AppState, side: Side, originals?: boolean): Cohorts => {
   const settings = getSettings(state)
-  const base = getBaseCohortsByCountry(state, country, originals)
+  const country = getCountryName(state, side)
+  const base = getBaseCohorts(state, country, originals)
   const frontline = [Array<Cohort | null>(settings[Setting.CombatWidth]).fill(null)]
   if (settings[Setting.BackRow])
     frontline.push([...frontline[0]])
@@ -223,8 +226,6 @@ const getCohortsByCountry = (state: AppState, country: CountryName, originals?: 
   const units = getUnits(state, country)
   return mergeBaseUnitsWithDefinitions(settings, cohorts, units)
 }
-
-export const getCohorts = (state: AppState, side: Side, originals?: boolean): Cohorts => getCohortsByCountry(state, getCountryName(state, side), originals)
 
 export const getParticipant = (state: AppState, type: Side): Participant => getBattle(state).participants[type]
 
@@ -254,10 +255,8 @@ export const getUnitList = (state: AppState, filter_base: boolean, name?: Countr
   name = name ?? state.settings.country
   const country = getCountries(state)[name]
   const units = getUnits(state, name)
-  return manager.getUnitList(units, mode, country.tech_level, filter_base, getSettings(state))
+  return manager.getUnitList2(units, mode, country.tech_level, filter_base, getSettings(state))
 }
-
-export const getArchetypes = (state: AppState, name: CountryName): Unit[] => manager.getArchetypes(getUnits(state, name), getMode(state))
 
 export const getUnit = (state: AppState, unit_type: UnitType, country?: CountryName): Unit => {
   const settings = getSettings(state)

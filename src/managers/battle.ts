@@ -27,6 +27,7 @@ export const undo = (battle: Battle, steps: number) => {
     battle.round--
     battle.seed = seed
     battle.fight_over = false
+    battle.timestamp = new Date().getMilliseconds()
   }
 }
 

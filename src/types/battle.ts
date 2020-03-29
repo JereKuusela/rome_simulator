@@ -9,7 +9,7 @@ export interface Battle {
   seed: number
   custom_seed?: number
   outdated: boolean
-  initialized: boolean
+  timestamp: number
 }
 
 export enum CombatPhase {

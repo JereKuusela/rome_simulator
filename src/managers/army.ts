@@ -1,7 +1,8 @@
 import { calculateValue, clearAllValues, calculateBase, addValues, regenerateValues, addValuesWithMutate, filterValues } from 'definition_values'
-import { Mode, GeneralAttribute, UnitType, BaseUnit, UnitAttribute, GeneralDefinition, Army, ArmyType, BaseCohort, ValuesType, UnitValueType, TacticType, UnitPreferenceType, General, BaseReserve, ScopeType, Modifier, BaseDefeated, BaseFrontLine, GeneralValueType, CombatPhase, Settings, isAttributeEnabled, Units, Setting, UnitRole, Unit } from 'types'
+import { Mode, GeneralAttribute, UnitType, UnitAttribute, GeneralDefinition, Army, ArmyType, BaseCohort, ValuesType, UnitValueType, TacticType, UnitPreferenceType, General, BaseReserve, ScopeType, Modifier, BaseDefeated, BaseFrontLine, GeneralValueType, CombatPhase, Settings, isAttributeEnabled, Units, Setting, UnitRole, Unit } from 'types'
 import { map, forEach, keys, toObj, toArr, toSet, ObjSet, values } from 'utils'
 import { findLastIndex, sortBy } from 'lodash'
+import { CombatUnitTypes, CombatCohortDefinition } from 'combat'
 
 /**
  * Returns how much capture chance given martial skill gives.
@@ -38,29 +39,51 @@ export const overrideRoleWithPreferences = (army: Army, units: Units, latest: { 
   })
 }
 
-export const getUnitList = (units: Units, mode: Mode, _tech: number, filter_base: boolean, settings: Settings) => {
+export const getUnitList = (units: CombatUnitTypes, mode: Mode, _tech: number, filter_base: boolean, settings: Settings) => {
   const base_units = getBaseUnits(units)
   let list = settings[Setting.Tech] ? [units[UnitType.Land]].concat(getArchetypes(units, mode)) : sortBy(toArr(units), unit => unitSorter(unit, mode, base_units))
   list = filter_base ? list.filter(unit => !base_units[unit.type]) : list
   return list
 }
 
+export const getUnitList2 = (units: Units, mode: Mode, _tech: number, filter_base: boolean, settings: Settings) => {
+  const base_units = getBaseUnits(units)
+  let list = settings[Setting.Tech] ? [units[UnitType.Land]].concat(getArchetypes2(units, mode)) : sortBy(toArr(units), unit => unitSorter2(unit, mode, base_units))
+  list = filter_base ? list.filter(unit => !base_units[unit.type]) : list
+  return list
+}
+
 /** Returns latest available unit for each role. */
-export const getLatestUnits = (units: Units, tech: number) => {
+export const getLatestUnits = (units: CombatUnitTypes, tech: number) => {
   const sorted = sortBy(filterByTech(toArr(units), tech), techSorter)
   return toObj(values(UnitRole), role => role, role => sorted.find(unit => unit.role === role)?.type)
 }
 
+/** Returns latest available unit for each role. */
+export const getLatestUnits2 = (units: Units, tech: number) => {
+  const sorted = sortBy(filterByTech2(toArr(units), tech), techSorter)
+  return toObj(values(UnitRole), role => role, role => sorted.find(unit => unit.role === role)?.type)
+}
+
+
 /** Returns available child units of a base unit.  */
-export const getChildUnits = (units: Units, tech: number, base_unit: UnitType) => {
+export const getChildUnits = (units: CombatUnitTypes, tech: number, base_unit: UnitType) => {
   return sortBy(filterByTech(toArr(units).filter(unit => unit.base === base_unit), tech), techSorter)
 }
 
-const techSorter = (unit: BaseUnit) => {
+const techSorter = (unit: { tech?: number, type: UnitType }) => {
   return (99 - (unit.tech ?? 0)) + unit.type
 }
 
-const unitSorter = (unit: BaseUnit, mode: Mode, base_units?: ObjSet) => {
+const unitSorter = (unit: CombatCohortDefinition, mode: Mode, base_units?: ObjSet) => {
+  if (base_units && base_units[unit.type])
+    return ''
+  if (mode === Mode.Naval)
+    return unit[UnitAttribute.Cost]
+  return techSorter(unit)
+}
+
+const unitSorter2 = (unit: Unit, mode: Mode, base_units?: ObjSet) => {
   if (base_units && base_units[unit.type])
     return ''
   if (mode === Mode.Naval)
@@ -68,16 +91,19 @@ const unitSorter = (unit: BaseUnit, mode: Mode, base_units?: ObjSet) => {
   return techSorter(unit)
 }
 
-export const getArchetypes = (units: Units, mode: Mode) => toArr(units).filter(unit => mode === Mode.Naval ? unit.base === UnitType.Naval : unit.base === UnitType.Land)
+export const getArchetypes = (units: CombatUnitTypes, mode: Mode) => toArr(units).filter(unit => mode === Mode.Naval ? unit.base === UnitType.Naval : unit.base === UnitType.Land)
+export const getArchetypes2 = (units: Units, mode: Mode) => toArr(units).filter(unit => mode === Mode.Naval ? unit.base === UnitType.Naval : unit.base === UnitType.Land)
 
-export const getActualUnits = (units: Units, mode: Mode) => {
+
+export const getActualUnits = (units: CombatUnitTypes, mode: Mode) => {
   const base_units = getBaseUnits(units)
   return sortBy(toArr(units).filter(unit => !base_units[unit.type]), unit => unitSorter(unit, mode))
 }
 
 const getBaseUnits = (units: Units) => toSet(units, unit => unit.base || unit.type)
 
-const filterByTech = (units: Unit[], tech: number) => units.filter(unit => unit.tech === undefined || unit.tech <= tech)
+const filterByTech = (units: CombatCohortDefinition[], tech: number) => units.filter(unit => unit.tech === undefined || unit.tech <= tech)
+const filterByTech2 = (units: Unit[], tech: number) => units.filter(unit => unit.tech === undefined || unit.tech <= tech)
 
 export const mapCohorts = (army: Army, mapper: (cohort: BaseCohort) => BaseCohort) => {
   return {

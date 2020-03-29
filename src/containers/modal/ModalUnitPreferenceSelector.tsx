@@ -4,8 +4,9 @@ import { Modal } from 'semantic-ui-react'
 import { CountryName, UnitPreferenceType, UnitType } from 'types'
 import ItemRemover from 'components/ItemRemover'
 import ItemSelector from 'components/ItemSelector'
-import { AppState, getUnitList } from 'state'
+import { AppState } from 'state'
 import { setUnitPreference, invalidate } from 'reducers'
+import { toArr } from 'utils'
 
 type Props = {
   country: CountryName
@@ -46,7 +47,7 @@ class ModalUnitPreferenceSelector extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  units: getUnitList(state, true, props.country)
+  units: toArr(state.countries[props.country].units)
 })
 
 const actions = { setUnitPreference, invalidate }

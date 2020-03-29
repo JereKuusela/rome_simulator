@@ -4,9 +4,9 @@ import { Grid, Button } from 'semantic-ui-react'
 
 import StyledNumber from 'components/Utils/StyledNumber'
 
-import { AppState, getSettings, getSelectedTerrains, mergeUnitTypes, getArmyForCombat } from 'state'
+import { AppState, getSettings, getCombatParticipant } from 'state'
 import { toPercent, toFlooredPercent } from 'formatters'
-import { interrupt, WinRateProgress, convertParticipant, calculateWinRate } from 'combat'
+import { interrupt, WinRateProgress, calculateWinRate } from 'combat'
 import { showProgress } from 'utils'
 import { Side, Setting } from 'types'
 
@@ -81,22 +81,18 @@ class WinRate extends Component<IProps, IState> {
   }
 
   calculate = () => {
-    const { attacker, defender, settings, terrains, unit_types } = this.props
-    const combat_a = convertParticipant(Side.Attacker, attacker, defender, terrains, unit_types, settings)
-    const combat_d = convertParticipant(Side.Defender, defender, attacker, terrains, unit_types, settings)
+    const { attacker, defender, settings } = this.props
     const modified_settings = { ...settings, [Setting.CalculateWinChance]: true, [Setting.CalculateCasualties]: false, [Setting.CalculateResourceLosses]: false }
-    calculateWinRate(modified_settings, this.update, combat_a, combat_d)
+    calculateWinRate(modified_settings, this.update, attacker, defender)
   }
 
   scale = (value: number) => this.state.progress ? value / this.state.progress : 0
 }
 
 const mapStateToProps = (state: AppState) => ({
-  attacker: getArmyForCombat(state, Side.Attacker),
-  defender: getArmyForCombat(state, Side.Defender),
-  settings: getSettings(state),
-  terrains: getSelectedTerrains(state),
-  unit_types: mergeUnitTypes(state)
+  attacker: getCombatParticipant(state, Side.Attacker),
+  defender: getCombatParticipant(state, Side.Defender),
+  settings: getSettings(state)
 })
 
 const actions = {}

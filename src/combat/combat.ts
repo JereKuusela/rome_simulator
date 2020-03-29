@@ -1,6 +1,6 @@
 
 import { sumBy, values } from 'lodash'
-import { Tactic, UnitPreferences, Terrain, UnitType, Cohort, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, UnitValueType } from 'types'
+import { Tactic, UnitPreferences, Terrain, UnitType, Cohort, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, UnitValueType, Mode } from 'types'
 import { toObj, map, noZero } from 'utils'
 import { calculateValue, calculateValueWithoutLoss, calculateBase } from 'definition_values'
 import { calculateExperienceReduction, getCombatPhase, calculateCohortPips, getDailyIncrease } from './combat_utils'
@@ -114,7 +114,11 @@ export const getUnitDefinition = (combatSettings: Settings, terrains: Terrain[],
     max_strength: calculateValueWithoutLoss(cohort, UnitAttribute.Strength),
     experience_reduction: calculateExperienceReduction(combatSettings, cohort),
     // Unmodified value is used to determine deployment order.
-    deployment_cost: calculateBase(cohort, UnitAttribute.Cost)
+    deployment_cost: calculateBase(cohort, UnitAttribute.Cost),
+    tech: cohort.tech,
+    mode: cohort.mode,
+    role: cohort.role,
+    base: cohort.base
   } as CombatCohortDefinition
   values(UnitAttribute).forEach(calc => { info[calc] = calculateValue(cohort, calc) })
   values(CombatPhase).forEach(calc => { info[calc] = calculateValue(cohort, calc) })
@@ -162,6 +166,10 @@ export interface CombatCohortDefinition extends UnitCalcs {
   max_morale: number
   experience_reduction: number
   deployment_cost: number
+  base?: UnitType
+  mode: Mode
+  tech?: number
+  role?: UnitRole
 }
 
 /** Round specific state for a cohort. */

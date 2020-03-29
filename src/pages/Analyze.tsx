@@ -2,15 +2,15 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Grid, Button, Table, Header, Checkbox } from 'semantic-ui-react'
 
-import { AppState, getSettings, getSelectedTerrains, mergeUnitTypes, getArmyForCombat, getMode } from 'state'
-import { CasualtiesProgress, ResourceLosses, interrupt, WinRateProgress, ResourceLossesProgress, convertParticipant, calculateWinRate, initResourceLosses } from 'combat'
+import { AppState, getSettings, getMode, getCombatParticipant } from 'state'
+import { CasualtiesProgress, ResourceLosses, interrupt, WinRateProgress, ResourceLossesProgress, calculateWinRate, initResourceLosses } from 'combat'
 import { values, showProgress } from 'utils'
 import { SimulationSpeed, Setting, Side, Mode } from 'types'
 import { toPercent, toNumber, toFlooredPercent } from 'formatters'
 import SimpleRange from 'components/SimpleRange'
 import RoundChart from 'components/Charts/RoundChart'
 import CumulativePercentChart from 'components/Charts/CumulativePercentChart'
-import { changeSiteParameter } from 'reducers'
+import { changeSiteParameter, refreshBattle } from 'reducers'
 import HelpTooltip from 'components/HelpTooltip'
 
 interface Props { }
@@ -37,7 +37,7 @@ const simulationSpeeds = values(SimulationSpeed)
 /**
  * Calculates win rate for the current battle.
  */
-class Statistics extends Component<IProps, IState> {
+class Analyze extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
@@ -50,6 +50,11 @@ class Statistics extends Component<IProps, IState> {
 
   toPercent = (value: number) => toPercent(value, 1)
   toNumber = (value: number) => toNumber(value, 1)
+
+  componentDidMount() {
+    // Ensures that the setup is not outdated.
+    this.props.refreshBattle()
+  }
 
   willUnmount = false
   componentWillUnmount() {
@@ -359,28 +364,24 @@ class Statistics extends Component<IProps, IState> {
   }
 
   calculate = () => {
-    const { attacker, defender, terrains, settings, unit_types } = this.props
-    const combat_a = convertParticipant(Side.Attacker, attacker, defender, terrains, unit_types, settings)
-    const combat_d = convertParticipant(Side.Defender, defender, attacker, terrains, unit_types, settings)
-    calculateWinRate(settings, this.update, combat_a, combat_d)
+    const { attacker, defender, settings } = this.props
+    calculateWinRate(settings, this.update, attacker, defender)
   }
 
   scale = (value: number) => this.state.progress ? value / this.state.progress : 0
 }
 
 const mapStateToProps = (state: AppState) => ({
-  attacker: getArmyForCombat(state, Side.Attacker),
-  defender: getArmyForCombat(state, Side.Defender),
+  attacker: getCombatParticipant(state, Side.Attacker, 0),
+  defender: getCombatParticipant(state, Side.Defender, 0),
   settings: getSettings(state),
-  terrains: getSelectedTerrains(state),
-  unit_types: mergeUnitTypes(state),
   mode: getMode(state)
 })
 
-const actions = { changeSiteParameter }
+const actions = { changeSiteParameter, refreshBattle }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
 interface IProps extends React.PropsWithChildren<Props>, S, D { }
 
-export default connect(mapStateToProps, actions)(Statistics)
+export default connect(mapStateToProps, actions)(Analyze)

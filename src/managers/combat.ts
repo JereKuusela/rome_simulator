@@ -1,8 +1,8 @@
-import { AppState, getMode, getArmyForCombat, mergeUnitTypes, getCurrentCombat, getSettings } from 'state'
+import { AppState, getMode, getArmyForCombat, getCurrentCombat, getSettings, getCombatParticipant } from 'state'
 import { CombatCohorts, Frontline, deploy, doBattleFast, removeDefeated, CombatParticipant, convertParticipant, SortedReserve, reserveSize } from 'combat'
 import { Mode, Battle, Side, Setting, Participant, Settings } from 'types'
 import { createEntropy, MersenneTwister19937, Random } from 'random-js'
-import { arrGet } from 'utils'
+import { arrGet, toArr } from 'utils'
 
 const copyStatus = (status: CombatCohorts): CombatCohorts => ({
   frontline: status.frontline.map(row => row.map(value => value ? { ...value, state: { ...value.state } } : null)),
@@ -21,17 +21,21 @@ const copy = (participant: CombatParticipant): CombatParticipant => ({ ...partic
 const checkAlive = (frontline: Frontline, reserve: SortedReserve) => reserveSize(reserve) || frontline.some(row => row.some(value => value && !value.state.is_defeated))
 
 const doBattle = (state: AppState, mode: Mode, battle: Battle, settings: Settings, steps: number) => {
-  const army_a = getArmyForCombat(state, Side.Attacker, mode)
-  const army_d = getArmyForCombat(state, Side.Defender, mode)
   const terrains = battle.terrains.map(value => state.terrains[value])
-  let attacker = convertParticipant(Side.Attacker, army_a, army_d, terrains, mergeUnitTypes(state, mode), settings)
-  let defender = convertParticipant(Side.Defender, army_d, army_a, terrains, mergeUnitTypes(state, mode), settings)
+  let attacker = getCombatParticipant(state, Side.Attacker, battle.round)
+  let defender = getCombatParticipant(state, Side.Defender, battle.round)
+  if (!attacker || !defender) {
+    const army_a = getArmyForCombat(state, Side.Attacker, mode)
+    const army_d = getArmyForCombat(state, Side.Defender, mode)
+    attacker = convertParticipant(Side.Attacker, army_a, army_d, terrains, toArr(army_d.definitions, unit => unit.type), settings)
+    defender = convertParticipant(Side.Defender, army_d, army_a, terrains, toArr(army_a.definitions, unit => unit.type), settings)
+  }
 
   const participant_a = battle.participants[Side.Attacker]
   const participant_d = battle.participants[Side.Defender]
 
   battle.outdated = false
-  battle.initialized = true
+  battle.timestamp = new Date().getMilliseconds()
 
   const minimum_roll = settings[Setting.DiceMinimum]
   const maximum_roll = settings[Setting.DiceMaximum]
@@ -127,5 +131,7 @@ export const refreshBattle = (pair: [AppState, AppState]) => {
   const steps = battle.round + 1
   battle.round = -1
   battle.fight_over = false
+  battle.participants[Side.Attacker].rounds = []
+  battle.participants[Side.Defender].rounds = []
   doBattle(state, mode, battle, settings, steps)
 }

@@ -3,9 +3,9 @@ import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 
 import ItemSelector from 'components/ItemSelector'
-import { CountryName, ArmyType, UnitType, Setting } from 'types'
+import { ArmyType, UnitType, Setting, Side } from 'types'
 import { getNextId } from 'army_utils'
-import { AppState, getUnits, getSettings, getMode } from 'state'
+import { AppState, getSettings, getMode, getCombatParticipant, getCountryName } from 'state'
 import { selectCohort, invalidate } from 'reducers'
 import { getArchetypes, getActualUnits } from 'managers/army'
 
@@ -16,7 +16,7 @@ interface Props {
 }
 
 export interface ModalSelectorInfo {
-  country: CountryName
+  side: Side
   row: number
   column: number
   type: ArmyType
@@ -41,16 +41,17 @@ class ModalUnitSelector extends Component<IProps> {
   }
 
   selectUnit = (type: UnitType) => {
-    const { info, selectUnit, invalidate, onClose } = this.props
-    if (info)
-      selectUnit(info.country, info.type, info.row, info.column, { id: getNextId(), type })
+    const { info, selectUnit, invalidate, onClose, country } = this.props
+    if (info && country)
+      selectUnit(country, info.type, info.row, info.column, { id: getNextId(), type })
     invalidate()
    onClose()
   }
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  units: props.info && getUnits(state, props.info.country),
+  units: props.info && getCombatParticipant(state, props.info.side).unit_types,
+  country: props.info && getCountryName(state, props.info.side),
   settings: getSettings(state),
   mode: getMode(state)
 })

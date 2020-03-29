@@ -7,19 +7,24 @@ import { Side, UnitType, UnitAttribute, isAttributeEnabled } from 'types'
 import { CombatCohorts, CombatCohort } from 'combat'
 import { strengthToValue, toNumber } from 'formatters'
 import { getImage, round, sumArr } from 'utils'
-import { AppState, getCurrentCombat, getMode, getSettings } from 'state'
+import { AppState, getCurrentCombat, getMode, getSettings, getBattle } from 'state'
 import { flatten, uniq } from 'lodash'
 import AttributeImage from 'components/Utils/AttributeImage'
 
 type Props = {}
 
 class TableStats extends Component<IProps> {
+
+  shouldComponentUpdate(prevProps: IProps) {
+    return prevProps.timestamp !== this.props.timestamp
+  }
+
   render() {
     return (
       <>
         {this.renderArmy(Side.Attacker, this.props.cohorts_a)}
         {this.renderArmy(Side.Defender, this.props.cohorts_d)}
-      </ >
+      </>
     )
   }
 
@@ -165,7 +170,8 @@ const mapStateToProps = (state: AppState) => ({
   cohorts_a: getCurrentCombat(state, Side.Attacker),
   cohorts_d: getCurrentCombat(state, Side.Defender),
   mode: getMode(state),
-  settings: getSettings(state)
+  settings: getSettings(state),
+  timestamp: getBattle(state).timestamp
 })
 
 const actions = {}
