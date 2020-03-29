@@ -1,5 +1,7 @@
+export * from './analyze'
 export * from './armies'
 export * from './battle'
+export * from './combat'
 export * from './countries'
 export * from './definition'
 export * from './modifiers'

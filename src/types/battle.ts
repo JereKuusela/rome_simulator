@@ -1,5 +1,4 @@
-import { CountryName, Mode, TerrainType } from 'types'
-import { CombatParticipant } from 'combat'
+import { CountryName, Mode, TerrainType, CombatParticipant } from 'types'
 
 export interface Battle {
   terrains: TerrainType[]

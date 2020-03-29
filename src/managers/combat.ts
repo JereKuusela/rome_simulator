@@ -1,8 +1,8 @@
-import { AppState, getMode, getArmyForCombat, getCurrentCombat, getSettings, getCombatParticipant } from 'state'
-import { CombatCohorts, Frontline, deploy, doBattleFast, removeDefeated, CombatParticipant, convertParticipant, SortedReserve, reserveSize } from 'combat'
-import { Mode, Battle, Side, Setting, Participant, Settings } from 'types'
+import { AppState, getMode, getCurrentCombat, getSettings, getCombatParticipants } from 'state'
+import { deploy, doBattleFast, removeDefeated, reserveSize } from 'combat'
+import { Battle, Side, Setting, Participant, Settings, CombatCohorts, CombatParticipant, CombatFrontline, SortedReserve } from 'types'
 import { createEntropy, MersenneTwister19937, Random } from 'random-js'
-import { arrGet, toArr } from 'utils'
+import { arrGet } from 'utils'
 
 const copyStatus = (status: CombatCohorts): CombatCohorts => ({
   frontline: status.frontline.map(row => row.map(value => value ? { ...value, state: { ...value.state } } : null)),
@@ -18,19 +18,10 @@ const copyStatus = (status: CombatCohorts): CombatCohorts => ({
 
 const copy = (participant: CombatParticipant): CombatParticipant => ({ ...participant, cohorts: copyStatus(participant.cohorts) })
 
-const checkAlive = (frontline: Frontline, reserve: SortedReserve) => reserveSize(reserve) || frontline.some(row => row.some(value => value && !value.state.is_defeated))
+const checkAlive = (frontline: CombatFrontline, reserve: SortedReserve) => reserveSize(reserve) || frontline.some(row => row.some(value => value && !value.state.is_defeated))
 
-const doBattle = (state: AppState, mode: Mode, battle: Battle, settings: Settings, steps: number) => {
-  const terrains = battle.terrains.map(value => state.terrains[value])
-  let attacker = getCombatParticipant(state, Side.Attacker, battle.round)
-  let defender = getCombatParticipant(state, Side.Defender, battle.round)
-  if (!attacker || !defender) {
-    const army_a = getArmyForCombat(state, Side.Attacker, mode)
-    const army_d = getArmyForCombat(state, Side.Defender, mode)
-    attacker = convertParticipant(Side.Attacker, army_a, army_d, terrains, toArr(army_d.definitions, unit => unit.type), settings)
-    defender = convertParticipant(Side.Defender, army_d, army_a, terrains, toArr(army_a.definitions, unit => unit.type), settings)
-  }
-
+const doBattle = (state: AppState, battle: Battle, settings: Settings, steps: number) => {
+  let [attacker, defender] = getCombatParticipants(state, battle.round)
   const participant_a = battle.participants[Side.Attacker]
   const participant_d = battle.participants[Side.Defender]
 
@@ -120,7 +111,7 @@ export const battle = (pair: [AppState, AppState], steps: number) => {
   const mode = getMode(state)
   const battle = draft.battle[mode]
   const settings = getSettings(state, mode)
-  doBattle(state, mode, battle, settings, steps)
+  doBattle(state, battle, settings, steps)
 }
 
 export const refreshBattle = (pair: [AppState, AppState]) => {
@@ -133,5 +124,5 @@ export const refreshBattle = (pair: [AppState, AppState]) => {
   battle.fight_over = false
   battle.participants[Side.Attacker].rounds = []
   battle.participants[Side.Defender].rounds = []
-  doBattle(state, mode, battle, settings, steps)
+  doBattle(state, battle, settings, steps)
 }

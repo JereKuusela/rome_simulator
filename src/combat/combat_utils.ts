@@ -1,8 +1,7 @@
 
 import { sumBy } from 'lodash'
-import { Terrain, TerrainCalc, Setting, UnitAttribute, Settings, BaseUnit, CombatPhase, GeneralAttribute, Side, LocationType, General } from 'types'
+import { Terrain, TerrainCalc, Setting, UnitAttribute, Settings, BaseUnit, CombatPhase, GeneralAttribute, Side, LocationType, General, CombatCohortDefinition } from 'types'
 import { calculateValue } from 'definition_values'
-import { CombatCohortDefinition } from './combat'
 
 /**
  * Calculates the roll modifier based on skill level difference of generals.

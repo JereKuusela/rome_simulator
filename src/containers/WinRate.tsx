@@ -6,9 +6,9 @@ import StyledNumber from 'components/Utils/StyledNumber'
 
 import { AppState, getSettings, getCombatParticipant } from 'state'
 import { toPercent, toFlooredPercent } from 'formatters'
-import { interrupt, WinRateProgress, calculateWinRate } from 'combat'
+import { interrupt, calculateWinRate } from 'combat'
 import { showProgress } from 'utils'
-import { Side, Setting } from 'types'
+import { Side, Setting, WinRateProgress } from 'types'
 
 interface Props { }
 

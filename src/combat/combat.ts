@@ -1,44 +1,11 @@
 
 import { sumBy, values } from 'lodash'
-import { Tactic, UnitPreferences, Terrain, UnitType, Cohort, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, UnitValueType, Mode } from 'types'
+import { Tactic, Terrain, UnitType, Cohort, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, UnitValueType, CombatCohorts, CombatCohort, CombatCohortCalculated, CombatCohortDefinition, CombatParticipant, CombatFrontline, CombatDefeated } from 'types'
 import { toObj, map, noZero } from 'utils'
 import { calculateValue, calculateValueWithoutLoss, calculateBase } from 'definition_values'
 import { calculateExperienceReduction, getCombatPhase, calculateCohortPips, getDailyIncrease } from './combat_utils'
 import { getStrengthBasedFlank } from 'managers/units'
-import { SortedReserve, reinforce } from './deployment'
-
-
-/**
- * Information required for fast combat calculation.
- * CombatUnits contain most of the information precalculated.
- */
-export type CombatParticipant = {
-  cohorts: CombatCohorts
-  tactic_bonus: number
-  round: number
-  unit_types: CombatUnitTypes
-  tactic: Tactic
-  flank_ratio: number
-  flank_ratio_bonus: number
-  flank: number
-  dice: number
-  terrain_pips: number
-  general_pips: { [key in CombatPhase]: number }
-  roll_pips: { [key in CombatPhase]: number }
-  unit_preferences: UnitPreferences
-}
-export type Frontline = (CombatCohort | null)[][]
-export type Reserve = CombatCohort[]
-export type Defeated = CombatCohort[]
-export type CombatUnitTypes = { [key in UnitType]: CombatCohortDefinition }
-
-export type CombatCohorts = {
-  frontline: Frontline
-  reserve: SortedReserve
-  defeated: Defeated
-  left_flank: number
-  right_flank: number
-}
+import { reinforce } from './deployment'
 
 
 export const iterateCohorts = (cohorts: CombatCohorts, func: (cohorts: (CombatCohort | null)[]) => void) => {
@@ -143,78 +110,6 @@ export const getCombatUnit = (combatSettings: Settings, casualties_multiplier: n
   return combat_unit
 }
 
-type UnitCalcs = { [key in (UnitValueType)]: number }
-
-/**
- * Static part of a unit. Properties which don't change during the battle.
- */
-export interface CombatCohortCalculated {
-  damage: { [key in UnitAttribute.Strength | UnitAttribute.Morale | 'Damage']: { [key in UnitType]: { [key in CombatPhase]: number } } }  // Damage multiplier for each damage type, versus each unit and for each phase.
-  damage_taken_multiplier: number
-  morale_taken_multiplier: number
-  strength_taken_multiplier: { [key in CombatPhase]: number }
-}
-
-export interface CombatCohortDefinition extends UnitCalcs {
-  id: number
-  image: string
-  type: UnitType
-  is_loyal: boolean
-  experience: number
-  deployment: UnitRole
-  max_strength: number
-  max_morale: number
-  experience_reduction: number
-  deployment_cost: number
-  base?: UnitType
-  mode: Mode
-  tech?: number
-  role?: UnitRole
-}
-
-/** Round specific state for a cohort. */
-export interface CombatCohortRoundInfo {
-  /** Is attacking diagonally. */
-  flanking: boolean
-  /** Targeted enemy cohort. */
-  target: CombatCohort | null
-  /** Support cohort behind the targeted enemy. */
-  target_support: CombatCohort | null
-  /** Lost morale this round. */
-  morale_loss: number
-  /** Lost strength this round. */
-  strength_loss: number
-  /** Morale losses inflicted this round. */
-  morale_dealt: number
-  /** Strength losses inflicted this round. */
-  strength_dealt: number
-  /** Damage multiplier. */
-  damage_multiplier: number
-  /** Did the cohort get defeated. */
-  is_defeated: boolean
-  /** Did the cohort get destroyed.  */
-  is_destroyed: boolean
-  /** Is the cohort considered weak for targeting.  */
-  is_weak: boolean
-  /** Total morale losses inflicted during the battle. */
-  total_morale_dealt: number
-  /** Total strength losses inflicted during the battle. */
-  total_strength_dealt: number
-  /** Chance to get captured in case of getting defeated.  */
-  capture_chance?: number
-}
-
-/**
- * Interface designed for fast combat calculations. This data is cached in simulations (keep lightweight).
- */
-export interface CombatCohort {
-  [UnitAttribute.Morale]: number
-  [UnitAttribute.Strength]: number
-  calculated: CombatCohortCalculated
-  state: CombatCohortRoundInfo
-  definition: CombatCohortDefinition
-}
-
 /**
  * Makes given armies attach each other.
  */
@@ -253,12 +148,12 @@ export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, mark_de
 }
 
 
-const getBackTarget = (target: Frontline, index: number) => target.length > 1 ? target[1][index] : null
+const getBackTarget = (target: CombatFrontline, index: number) => target.length > 1 ? target[1][index] : null
 
 /**
  * Selects targets for units.
  */
-const pickTargets = (source: Frontline, target: Frontline, settings: Settings) => {
+const pickTargets = (source: CombatFrontline, target: CombatFrontline, settings: Settings) => {
   const source_length = source[0].length
   const target_length = target[0].length
   for (let i = 0; i < source.length; i++) {
@@ -371,7 +266,7 @@ const calculateFlankRatio = (army: CombatCohorts): number => {
 /**
  * Applies stored losses to units.
  */
-const applyLosses = (frontline: Frontline) => {
+const applyLosses = (frontline: CombatFrontline) => {
   for (let i = 0; i < frontline.length; i++) {
     for (let j = 0; j < frontline[i].length; j++) {
       const unit = frontline[i][j]
@@ -386,7 +281,7 @@ const applyLosses = (frontline: Frontline) => {
 /**
  * Moves defeated units from a frontline to defeated.
  */
-const moveDefeated = (frontline: Frontline, defeated: Reserve, mark_defeated: boolean, round: number, settings: Settings) => {
+const moveDefeated = (frontline: CombatFrontline, defeated: CombatDefeated, mark_defeated: boolean, round: number, settings: Settings) => {
   const minimum_morale = settings[Setting.MinimumMorale]
   const minimum_strength = settings[Setting.MinimumStrength]
   for (let i = 0; i < frontline.length; i++) {
@@ -416,7 +311,7 @@ const moveDefeated = (frontline: Frontline, defeated: Reserve, mark_defeated: bo
 /**
  * Removes temporary defeated units from frontline.
  */
-export const removeDefeated = (frontline: Frontline) => {
+export const removeDefeated = (frontline: CombatFrontline) => {
   for (let i = 0; i < frontline.length; i++) {
     for (let j = 0; j < frontline[i].length; j++) {
       const unit = frontline[i][j]
@@ -431,7 +326,7 @@ export const removeDefeated = (frontline: Frontline) => {
 /**
  * Calculates losses when units attack their targets.
  */
-const attack = (frontline: Frontline, roll: number, dynamic_multiplier: number, phase: CombatPhase, settings: Settings) => {
+const attack = (frontline: CombatFrontline, roll: number, dynamic_multiplier: number, phase: CombatPhase, settings: Settings) => {
   for (let i = 0; i < frontline.length; i++) {
     for (let j = 0; j < frontline[i].length; j++) {
       const source = frontline[i][j]

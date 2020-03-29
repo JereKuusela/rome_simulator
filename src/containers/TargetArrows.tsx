@@ -3,8 +3,7 @@ import { connect } from 'react-redux'
 import LineTo from 'react-lineto'
 
 import { AppState, getCurrentCombat } from 'state'
-import { ArmyType, Side } from 'types'
-import { CombatCohort } from 'combat'
+import { ArmyType, Side, CombatCohort } from 'types'
 import { getArmyPart } from 'army_utils'
 
 type Props = {

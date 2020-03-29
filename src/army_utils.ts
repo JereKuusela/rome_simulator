@@ -1,7 +1,6 @@
-import { Cohorts, Mode, UnitDefinitionValues, ArmyType, Side, BaseUnits, UnitType, Units, Unit, Settings } from 'types'
+import { Cohorts, Mode, UnitDefinitionValues, ArmyType, Side, BaseUnits, UnitType, Units, Unit, Settings, CombatCohorts } from 'types'
 import { mergeValues } from 'definition_values'
 import { map, filter } from 'utils'
-import { CombatCohorts } from 'combat'
 import { applyDynamicAttributes } from 'managers/units'
 
 /**

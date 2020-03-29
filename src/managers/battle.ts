@@ -1,5 +1,7 @@
-import { Battle, TerrainType, Side, CountryName } from "types"
-import { forEach, arrGet } from "utils"
+import { Battle, TerrainType, Side, CountryName, ArmyForCombatConversion, Terrain, Settings, TacticCalc, Setting, UnitPreferences, CombatPhase, CombatParticipant } from "types"
+import { forEach, arrGet, toArr, toObj, values, map } from "utils"
+import { convertCohorts, calculateGeneralPips, getTerrainPips, getUnitDefinition } from "combat"
+import { calculateValue } from "definition_values"
 
 export const selectTerrain = (battle: Battle, index: number, terrain: TerrainType) => {
   battle.terrains[index] = terrain
@@ -42,4 +44,28 @@ export const setRoll = (battle: Battle, side: Side, roll: number) => {
 
 export const selectArmy = (battle: Battle, side: Side, name: CountryName) => {
   battle.participants[side].country = name
+}
+
+
+export const convertParticipant = (side: Side, army: ArmyForCombatConversion, enemy: ArmyForCombatConversion, terrains: Terrain[], settings: Settings): CombatParticipant => {
+  const enemy_types = toArr(enemy.definitions, unit => unit.type)
+  const tactic_casualties = calculateValue(army.tactic, TacticCalc.Casualties) + calculateValue(enemy.tactic, TacticCalc.Casualties)
+  const cohorts = convertCohorts(army, settings, tactic_casualties, terrains, enemy_types, settings[Setting.CustomDeployment] ? army.unit_preferences : {} as UnitPreferences)
+  const general_pips = toObj(values(CombatPhase), phase => phase, phase => calculateGeneralPips(army.general, enemy.general, phase))
+  const terrain_pips = getTerrainPips(terrains, side, army.general, enemy.general)
+  return {
+    cohorts,
+    dice: 0,
+    flank_ratio: army.flank_ratio,
+    flank: army.flank_size,
+    tactic: army.tactic!,
+    terrain_pips,
+    general_pips,
+    roll_pips: toObj(values(CombatPhase), phase => phase, phase => general_pips[phase] + terrain_pips + settings[Setting.BasePips]),
+    unit_preferences: army.unit_preferences,
+    unit_types: map(army.definitions, unit => getUnitDefinition(settings, terrains, enemy_types, { ...unit, id: -1 })),
+    tactic_bonus: 0.0,
+    round: 0,
+    flank_ratio_bonus: 0.0
+  }
 }

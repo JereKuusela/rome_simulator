@@ -1,45 +1,7 @@
-import { ArmyForCombat } from 'state'
-import { Terrain, UnitType, Setting, TacticCalc, UnitAttribute, Side, Settings, Cohorts, CombatPhase, UnitPreferences } from 'types'
-import { calculateGeneralPips, getTerrainPips } from './combat_utils'
-import { calculateValue } from 'definition_values'
-import { CombatParticipant, getCombatUnit, CombatCohorts, Frontline, Defeated, doBattleFast, getUnitDefinition, CombatUnitTypes } from './combat'
-import { mapRange, map, values, toObj } from 'utils'
-import { deploy, sortReserve, SortedReserve, reserveSize } from './deployment'
-
-/**
- * Status of the win rate calculation. Most values are percents, only iterations is integer.
- */
-export interface WinRateProgress {
-  calculating: boolean
-  attacker: number
-  defender: number
-  draws: number
-  incomplete: number
-  progress: number
-  iterations: number
-  average_rounds: number,
-  rounds: { [key: number]: number }
-}
-
-export interface CasualtiesProgress {
-  avg_morale_a: number
-  avg_strength_a: number
-  avg_morale_d: number
-  avg_strength_d: number
-  max_morale_a: number
-  max_strength_a: number
-  max_morale_d: number
-  max_strength_d: number
-  morale_a: { [key: string]: number }
-  morale_d: { [key: string]: number }
-  strength_a: { [key: string]: number }
-  strength_d: { [key: string]: number }
-}
-
-export interface ResourceLossesProgress {
-  losses_a: ResourceLosses
-  losses_d: ResourceLosses
-}
+import { Terrain, UnitType, Setting, UnitAttribute, Side, Settings, Cohorts, UnitPreferences, ResourceLosses, WinRateProgress, CasualtiesProgress, ResourceLossesProgress, CombatParticipant, CombatCohorts, CombatUnitTypes, SortedReserve, CombatFrontline, CombatDefeated } from 'types'
+import { getCombatUnit, doBattleFast } from './combat'
+import { mapRange } from 'utils'
+import { deploy, sortReserve, reserveSize } from './deployment'
 
 export const initResourceLosses = (): ResourceLosses => ({
   repair_maintenance: 0,
@@ -49,38 +11,7 @@ export const initResourceLosses = (): ResourceLosses => ({
   seized_repair_maintenance: 0,
 })
 
-export type ResourceLosses = {
-  repair_maintenance: number
-  destroyed_cost: number
-  captured_cost: number
-  seized_cost: number
-  seized_repair_maintenance: number
-}
-
 let interruptSimulation = false
-
-
-export const convertParticipant = (side: Side, army: ArmyForCombat, enemy: ArmyForCombat, terrains: Terrain[], unit_types: UnitType[], settings: Settings): CombatParticipant => {
-  const tactic_casualties = calculateValue(army.tactic, TacticCalc.Casualties) + calculateValue(enemy.tactic, TacticCalc.Casualties)
-  const cohorts = convertCohorts(army, settings, tactic_casualties, terrains, unit_types, settings[Setting.CustomDeployment] ? army.unit_preferences : {} as UnitPreferences)
-  const general_pips = toObj(values(CombatPhase), phase => phase, phase => calculateGeneralPips(army.general, enemy.general, phase))
-  const terrain_pips = getTerrainPips(terrains, side, army.general, enemy.general)
-  return {
-    cohorts,
-    dice: 0,
-    flank_ratio: army.flank_ratio,
-    flank: army.flank_size,
-    tactic: army.tactic!,
-    terrain_pips,
-    general_pips,
-    roll_pips: toObj(values(CombatPhase), phase => phase, phase => general_pips[phase] + terrain_pips + settings[Setting.BasePips]),
-    unit_preferences: army.unit_preferences,
-    unit_types: map(army.definitions, unit => getUnitDefinition(settings, terrains, unit_types, { ...unit, id: -1 })),
-    tactic_bonus: 0.0,
-    round: 0,
-    flank_ratio_bonus: 0.0
-  }
-}
 
 /**
  * Interrupts current win rate calculation.
@@ -284,7 +215,7 @@ const REPAIR_PER_MONTH = 0.1
 /**
  * Calculates repair and other resource losses.
  */
-const calculateResourceLoss = (frontline: Frontline, defeated: Defeated, amount: number, own: ResourceLosses, enemy: ResourceLosses, own_types: CombatUnitTypes, enemy_types: CombatUnitTypes) => {
+const calculateResourceLoss = (frontline: CombatFrontline, defeated: CombatDefeated, amount: number, own: ResourceLosses, enemy: ResourceLosses, own_types: CombatUnitTypes, enemy_types: CombatUnitTypes) => {
   for (let i = 0; i < frontline.length; i++) {
     for (let j = 0; j < frontline[i].length; j++) {
       const unit = frontline[i][j]
@@ -349,7 +280,7 @@ const doPhase = (depth: number, rounds_per_phase: number, attacker: CombatPartic
 /**
  * Custom some function. Probably could use Lodash but better safe than sorry (since performance is so critical).
  */
-const checkAlive = (frontline: Frontline, reserve: SortedReserve) => {
+const checkAlive = (frontline: CombatFrontline, reserve: SortedReserve) => {
   if (reserveSize(reserve))
     return true
   for (let row = 0; row < frontline.length; row++) {

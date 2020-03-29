@@ -1,17 +1,10 @@
-import { CombatCohort, CombatCohorts, Reserve, CombatParticipant } from './combat'
-import { UnitPreferences, UnitAttribute, UnitPreferenceType, UnitRole, Setting, Settings } from 'types'
+import { UnitPreferences, UnitAttribute, UnitPreferenceType, UnitRole, Setting, Settings, SortedReserve, CombatReserve, CombatCohorts, CombatCohort, CombatParticipant } from 'types'
 import { sortBy, remove, clamp } from 'lodash'
 
 /**
  * Calculates the next index when the order is from center to edges.
  */
 export const nextIndex = (index: number, center: number) => index < center ? index + 2 * (center - index) : index - 2 * (index - center) - 1
-
-export type SortedReserve = {
-  front: CombatCohort[]
-  flank: CombatCohort[]
-  support: CombatCohort[]
-}
 
 export const reserveSize = (reserve: SortedReserve) => reserve.front.length + reserve.flank.length + reserve.support.length
 
@@ -91,7 +84,7 @@ const deployCohorts = (cohorts: CombatCohorts, settings: Settings) => {
 }
 
 
-export const sortReserve = (reserve: Reserve, unit_preferences: UnitPreferences): SortedReserve => {
+export const sortReserve = (reserve: CombatReserve, unit_preferences: UnitPreferences): SortedReserve => {
   const frontReserve = reserve.filter(value => isFrontUnit(unit_preferences, value))
   const flankReserve = reserve.filter(value => isFlankUnit(unit_preferences, value))
   const supportReserve = reserve.filter(value => isSupportUnit(unit_preferences, value))
