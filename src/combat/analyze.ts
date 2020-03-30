@@ -136,7 +136,7 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
         calculateResourceLoss(attacker.cohorts.frontline, attacker.cohorts.defeated, fractions[depth], losses_a, losses_d, attacker.unit_types, defender.unit_types)
         calculateResourceLoss(defender.cohorts.frontline, defender.cohorts.defeated, fractions[depth], losses_d, losses_a, defender.unit_types, attacker.unit_types)
       }
-      result.round += (depth - 1) * phaseLength
+      result.round += (depth - 1)
       updateProgress(progress, fractions[depth], result)
     }
     if (!nodes.length) {
@@ -260,7 +260,7 @@ const doPhase = (depth: number, rounds_per_phase: number, attacker: CombatPartic
   let winner: Winner = undefined
   let round = 0
   for (round = 0; round < rounds_per_phase;) {
-    doBattleFast(attacker, defender, false, settings, round + depth * rounds_per_phase)
+    doBattleFast(attacker, defender, false, settings, round + (depth - 1) * rounds_per_phase)
     round++
 
     const alive_a = checkAlive(attacker.cohorts.frontline, attacker.cohorts.reserve)

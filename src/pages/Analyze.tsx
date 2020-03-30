@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Grid, Button, Table, Header, Checkbox } from 'semantic-ui-react'
 
-import { AppState, getSettings, getMode, getCombatParticipant } from 'state'
+import { AppState, getSettings, getMode, initializeCombatParticipants, getSiteSettings } from 'state'
 import { interrupt, calculateWinRate, initResourceLosses } from 'combat'
 import { values, showProgress } from 'utils'
-import { SimulationSpeed, Setting, Mode, CasualtiesProgress, ResourceLosses, WinRateProgress, ResourceLossesProgress, Side } from 'types'
+import { SimulationSpeed, Setting, Mode, CasualtiesProgress, ResourceLosses, WinRateProgress, ResourceLossesProgress } from 'types'
 import { toPercent, toNumber, toFlooredPercent } from 'formatters'
 import SimpleRange from 'components/SimpleRange'
 import RoundChart from 'components/Charts/RoundChart'
@@ -364,7 +364,10 @@ class Analyze extends Component<IProps, IState> {
   }
 
   calculate = () => {
-    const { attacker, defender, settings } = this.props
+    const { state } = this.props
+    // Initialization done here to reset status.
+    const [attacker, defender] = initializeCombatParticipants(state)
+    const settings = getSettings(state)
     calculateWinRate(settings, this.update, attacker, defender)
   }
 
@@ -373,9 +376,8 @@ class Analyze extends Component<IProps, IState> {
 
 const mapStateToProps = (state: AppState) => {
   return {
-    attacker: getCombatParticipant(state, Side.Attacker,  -1),
-    defender: getCombatParticipant(state, Side.Defender,  -1),
-    settings: getSettings(state),
+    state,
+    settings: getSiteSettings(state),
     mode: getMode(state)
   }
 }

@@ -1,5 +1,5 @@
 import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultParticipant, getDefaultArmy, getDefaultUnit } from 'data'
-import { map, mapRange, resize } from 'utils'
+import { map, mapRange, resize, toObj } from 'utils'
 import { mergeValues } from 'definition_values'
 import { Mode, CountryName, Participant, Terrain, TacticType, Setting, Side, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, Settings, Cohort, CombatPhase, CultureType, General, GeneralAttribute, UnitPreferences, ArmyForCombatConversion, CombatCohort, CombatParticipant } from 'types'
 import { doBattleFast, deploy, reinforce } from 'combat'
@@ -55,7 +55,7 @@ export const initInfo = () => {
     reserve: [],
     defeated: [],
     unit_preferences: getUnitPreferences(),
-    definitions: {} as any,
+    definitions: toObj(every_type, type => type, type => ({ type })) as any,
     general: general(),
     flank_ratio: 0,
     flank_size: 5,
@@ -288,7 +288,7 @@ export const testReinforcement = (rounds_to_skip: number, info: TestInfo, expect
 
 const verifyDeployOrReinforce = (info: TestInfo, side: Side, participant: CombatParticipant, expected: ExpectedTypes) => {
   verifyTypes('Front', info, expected.front ?? [], side, participant.cohorts.frontline[0])
-  verifyTypes('Back', info, expected.back ?? [], side,  participant.cohorts.frontline.length ? participant.cohorts.frontline[1] : [])
+  verifyTypes('Back', info, expected.back ?? [], side, participant.cohorts.frontline.length ? participant.cohorts.frontline[1] : [])
   verifyTypes('Reserve front', info, expected.reserve_front ?? [], side, participant.cohorts.reserve.front)
   verifyTypes('Reserve flank', info, expected.reserve_flank ?? [], side, participant.cohorts.reserve.flank)
   verifyTypes('Reserve support', info, expected.reserve_support ?? [], side, participant.cohorts.reserve.support)
