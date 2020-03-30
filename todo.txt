@@ -104,6 +104,7 @@ Todo:
  - Definition functions probably all could mutate (mostly used in reducers?)
  - Winrate could automatically set precision based on unit count
  - Custom dice roll to affect all phases, add button for modal to override individual phases.
+ - A button for random setup
 
 Tests:
 - utils tested
