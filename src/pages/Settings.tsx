@@ -18,7 +18,7 @@ const analyze = [
   Setting.Performance, Setting.PhaseLengthMultiplier, Setting.ReduceRolls, Setting.MaxDepth, Setting.ChunkSize, Setting.ShowGraphs,
   Setting.CalculateWinChance, Setting.CalculateCasualties, Setting.CalculateResourceLosses
 ]
-const deployment = [Setting.CustomDeployment, Setting.DynamicFlanking]
+const deployment = [Setting.CustomDeployment, Setting.DynamicFlanking, Setting.MoraleHitForNonSecondaryReinforcement]
 const mechanics = [
   Setting.FireAndShock, Setting.StrengthBasedFlank, Setting.UseMaxMorale, Setting.InsufficientSupportPenalty, Setting.RollFrequency, Setting.CombatWidth,
   Setting.ExperienceDamageReduction, Setting.FixExperience, Setting.DefenderAdvantage, Setting.FixTargeting, Setting.BackRow, Setting.Culture,

@@ -1,70 +1,56 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Image } from 'semantic-ui-react'
-
-import { AppState, getCurrentCombat, getSelectedTactic } from 'state'
-
-import { getImage } from 'utils'
-
-import StyledNumber from 'components/Utils/StyledNumber'
-import ModalTacticSelector from './modal/ModalTacticSelector'
-import { Side } from 'types'
+import { AppState, getCurrentCombat, getSelectedTactic, filterTactics, getCountryName } from 'state'
+import { toArr } from 'utils'
+import { selectTactic, invalidate } from 'reducers'
+import { Side, CombatCohorts, TacticDefinition, TacticCalc, TacticType, Tactic } from 'types'
 import { calculateTactic } from 'combat'
-import { toSignedPercent } from 'formatters'
 import { getOpponent } from 'army_utils'
+import { calculateValue } from 'definition_values'
+import DropdownTactic from 'components/Dropdowns/DropdownTactic'
 
 type Props = {
   side: Side
 }
 
-type IState = {
-  modal_open: boolean
-}
-
-// Shows a tactic for a side.
-class TacticSelector extends Component<IProps, IState> {
-  constructor(props: IProps) {
-    super(props)
-    this.state = { modal_open: false }
-  }
-
+class TacticSelector extends Component<IProps> {
   render() {
-    const { side, opposing_tactic, tactic, units } = this.props
-    const { modal_open } = this.state
-    const bonus = calculateTactic(units, tactic, opposing_tactic)
+    const { tactic, tactics } = this.props
     return (
-      <>
-        <ModalTacticSelector
-          side={modal_open ? side : undefined}
-          onClose={this.closeModal}
-        />
-        <div key={side} onClick={() => this.setState({modal_open: true})}>
-          {<Image src={getImage(tactic)} avatar />}
-          {(tactic && tactic.type) || 'None'}
-          {' ('}
-          <StyledNumber
-            value={bonus}
-            formatter={toSignedPercent}
-          />
-          {')'}
-        </div >
-      </>
+      <DropdownTactic values={tactics} value={tactic} onSelect={this.selectTactic} />
     )
   }
 
-  closeModal = () => {
-    this.setState({modal_open: false})
+  selectTactic = (type: TacticType) => {
+    const { country, selectTactic, invalidate } = this.props
+    selectTactic(country, type)
+    invalidate()
   }
 }
 
 
-const mapStateToProps = (state: AppState, props: Props) => ({
-  units: getCurrentCombat(state, props.side),
-  tactic: getSelectedTactic(state, props.side),
-  opposing_tactic: getSelectedTactic(state, getOpponent(props.side)),
-})
+const convertTactic = (tactic: TacticDefinition, cohorts: CombatCohorts, opposing_tactic: TacticDefinition): Tactic => {
+  return {
+    type: tactic.type,
+    effect: calculateTactic(cohorts, tactic),
+    damage: calculateTactic(cohorts, tactic, opposing_tactic),
+    casualties: calculateValue(tactic, TacticCalc.Casualties),
+    image: tactic.image
+  }
+}
 
-const actions = {}
+const mapStateToProps = (state: AppState, props: Props) => {
+  const cohorts = getCurrentCombat(state, props.side)
+  const tactic = getSelectedTactic(state, props.side)
+  const opposing_tactic = getSelectedTactic(state, getOpponent(props.side))
+  return {
+    tactics: toArr(filterTactics(state), tactic => convertTactic(tactic, cohorts, opposing_tactic)),
+    tactic: tactic.type,
+    country: getCountryName(state, props.side)
+  }
+}
+
+const actions = { selectTactic, invalidate }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

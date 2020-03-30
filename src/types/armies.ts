@@ -1,7 +1,7 @@
 import { DefinitionValues } from "definition_values"
 import { UnitType, BaseCohort, Cohort, UnitDefinitionValues, UnitRole, Units } from "./units"
 import { Mode } from "types/definition"
-import { TacticType, Tactic } from "./tactics"
+import { TacticType, TacticDefinition } from "./tactics"
 import { CombatPhase } from "./battle"
 
 export enum ArmyName {
@@ -69,7 +69,7 @@ export interface Cohorts {
 
 
 export interface ArmyForCombatConversion extends Cohorts {
-  tactic?: Tactic
+  tactic?: TacticDefinition
   definitions: Units
   general: General
   unit_preferences: UnitPreferences

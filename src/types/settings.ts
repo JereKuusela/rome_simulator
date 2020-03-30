@@ -12,6 +12,7 @@ export enum Setting {
   MaxGeneral = 'Maximum skill of generals',
   MinimumMorale = 'Minimum morale for combat',
   MinimumStrength = 'Minimum strength for combat',
+  MoraleHitForNonSecondaryReinforcement = 'Morale damage for non-secondary reinforcements',
   RollFrequency = 'Length of combat phases',
   Precision = 'Calculation precision',
   CombatWidth = 'Base combat width',
@@ -96,6 +97,8 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
       return 'Multiplier for strength damage. Affects how much strength damage units deal.'
     case Setting.MinimumStrength:
       return 'Strength required for combat.Affects how quicky units retreat.'
+    case Setting.MoraleHitForNonSecondaryReinforcement:
+      return 'Percentage of total morale lost when non-secondary units reinforce (Imperator).'
     case Setting.MinimumMorale:
       return 'Morale required for combat.Affects how quicky units retreat.'
     case Setting.MoraleLostMultiplier:
@@ -304,6 +307,7 @@ export type SiteSettings = {
   [Setting.DiceMinimum]: number,
   [Setting.ExperienceDamageReduction]: number,
   [Setting.MinimumStrength]: number,
+  [Setting.MoraleHitForNonSecondaryReinforcement]: number,
   [Setting.MinimumMorale]: number,
   [Setting.RollFrequency]: number,
   [Setting.FixTargeting]: boolean,

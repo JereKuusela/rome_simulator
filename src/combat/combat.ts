@@ -1,6 +1,6 @@
 
 import { sumBy, values } from 'lodash'
-import { Tactic, Terrain, UnitType, Cohort, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, UnitValueType, CombatCohorts, CombatCohort, CombatCohortCalculated, CombatCohortDefinition, CombatParticipant, CombatFrontline, CombatDefeated } from 'types'
+import { TacticDefinition, Terrain, UnitType, Cohort, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, UnitValueType, CombatCohorts, CombatCohort, CombatCohortCalculated, CombatCohortDefinition, CombatParticipant, CombatFrontline, CombatDefeated } from 'types'
 import { toObj, map, noZero } from 'utils'
 import { calculateValue, calculateValueWithoutLoss, calculateBase } from 'definition_values'
 import { calculateExperienceReduction, getCombatPhase, calculateCohortPips, getDailyIncrease } from './combat_utils'
@@ -215,7 +215,7 @@ const pickTargets = (source: CombatFrontline, target: CombatFrontline, settings:
 /**
  * Calculates effectiveness of a tactic against another tactic with a given army.
  */
-export const calculateTactic = (army: CombatCohorts, tactic: Tactic, counter_tactic?: Tactic): number => {
+export const calculateTactic = (army: CombatCohorts, tactic: TacticDefinition, counter_tactic?: TacticDefinition): number => {
   const effectiveness = counter_tactic ? calculateValue(tactic, counter_tactic.type) : 1.0
   let average_weight = 1.0
   if (effectiveness > 0 && tactic && army) {

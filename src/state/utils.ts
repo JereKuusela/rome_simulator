@@ -1,7 +1,7 @@
 import { AppState } from './index'
 import { toArr, filter, arrGet, toObj, forEach2, keys } from 'utils'
 import { filterUnitDefinitions, getArmyPart, mergeBaseUnitsWithDefinitions, mergeDefinitions, mergeDefinition } from '../army_utils'
-import { Mode, CountryName, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, Tactic, UnitPreferences, Participant, Terrain, Settings, Battle, Terrains, Tactics, Cohorts, ArmyName, General, Countries, Setting, Reserve, Defeated, CountryAttribute, Units, Unit, GeneralDefinition, Country, CountryDefinition, CombatCohort, CombatCohorts, CombatParticipant } from 'types'
+import { Mode, CountryName, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, TacticDefinition, UnitPreferences, Participant, Terrain, Settings, Battle, Terrains, Tactics, Cohorts, ArmyName, General, Countries, Setting, Reserve, Defeated, CountryAttribute, Units, Unit, GeneralDefinition, Country, CountryDefinition, CombatCohort, CombatCohorts, CombatParticipant } from 'types'
 import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticState, getDefaultTerrainState } from 'data'
 import { uniq, flatten } from 'lodash'
 import * as manager from 'managers/army'
@@ -168,7 +168,7 @@ export const initializeCombatParticipants = (state: AppState): CombatParticipant
   ]
 }
 
-export const getSelectedTactic = (state: AppState, side: Side): Tactic => {
+export const getSelectedTactic = (state: AppState, side: Side): TacticDefinition => {
   const army = getBaseArmy(state, side)
   return state.tactics[army.tactic]
 }
@@ -209,7 +209,7 @@ const getBaseArmy = (state: AppState, side: Side) => {
   return getArmy(state, country)
 }
 
-export const getTactic = (state: AppState, side: Side): Tactic => {
+export const getTactic = (state: AppState, side: Side): TacticDefinition => {
   const country = getParticipant(state, side).country
   const army = getArmy(state, country)
   return state.tactics[army.tactic]

@@ -20,43 +20,57 @@ const armyFlankCount = (units: CombatCohorts) => {
     + units.reserve.support.filter(unit => unit.definition.deployment === UnitRole.Flank).length
 }
 
-const deployFront = (cohorts: CombatCohort[], row: (CombatCohort | null)[], center: number, flank: number) => {
+const deployFront = (cohorts: CombatCohort[], row: (CombatCohort | null)[], center: number, flank: number, settings: Settings, preferences?: UnitPreferences) => {
   for (let index = center; index !== flank; index = nextIndex(index, center)) {
     if (row[index])
       continue
     const cohort = cohorts.pop()
-    if (cohort)
+    if (cohort) {
+      if (preferences)
+        applyReinforcementPenalty(cohort, preferences, settings)
       row[index] = cohort
+    }
     else
       break
   }
 }
 
-const deployFlanks = (cohorts: CombatCohort[], row: (CombatCohort | null)[], center: number, flank: number) => {
+const deployFlanks = (cohorts: CombatCohort[], row: (CombatCohort | null)[], center: number, flank: number, settings: Settings, preferences?: UnitPreferences) => {
   for (let index = flank; index >= 0 && index < row.length; index = nextIndex(index, center)) {
     if (row[index])
       continue
     const cohort = cohorts.pop()
-    if (cohort)
+    if (cohort) {
+      if (preferences)
+        applyReinforcementPenalty(cohort, preferences, settings)
       row[index] = cohort
+    }
     else
       break
   }
 }
 
-const deployBoth = (cohorts: CombatCohort[], row: (CombatCohort | null)[], center: number, limit: number) => {
+const deployBoth = (cohorts: CombatCohort[], row: (CombatCohort | null)[], center: number, limit: number, settings: Settings, preferences?: UnitPreferences) => {
   for (let index = center, count = 0; index >= 0 && index < row.length && count < limit; index = nextIndex(index, center), count++) {
     if (row[index])
       continue
     const cohort = cohorts.pop()
-    if (cohort)
+    if (cohort) {
+      if (preferences)
+        applyReinforcementPenalty(cohort, preferences, settings)
       row[index] = cohort
+    }
     else
       break
   }
 }
 
-const deployCohorts = (cohorts: CombatCohorts, settings: Settings) => {
+const applyReinforcementPenalty = (cohort: CombatCohort, preferences: UnitPreferences, settings: Settings) => {
+  if (cohort.definition.type !== preferences[UnitPreferenceType.Secondary])
+    cohort[UnitAttribute.Morale] -= cohort.definition.max_morale * settings[Setting.MoraleHitForNonSecondaryReinforcement]
+}
+
+const deployCohorts = (cohorts: CombatCohorts, settings: Settings, preferences?: UnitPreferences) => {
   const { left_flank, right_flank, reserve } = cohorts
   const frontline = cohorts.frontline[0]
   const backline = cohorts.frontline.length > 1 ? cohorts.frontline[1] : null
@@ -67,20 +81,20 @@ const deployCohorts = (cohorts: CombatCohorts, settings: Settings) => {
   const deploy_support = !settings[Setting.SupportPhase] || (reserve.front.length === 0 && reserve.flank.length === 0)
   const max_support_backline = Math.floor(reserveSize(reserve) / 2)
   if (backline)
-    deployBoth(reserve.support, backline, center, max_support_backline)
+    deployBoth(reserve.support, backline, center, max_support_backline, settings, preferences)
 
-  deployFront(reserve.front, frontline, center, flank_starting_index)
-  deployFront(reserve.flank, frontline, center, flank_starting_index)
+  deployFront(reserve.front, frontline, center, flank_starting_index, settings, preferences)
+  deployFront(reserve.flank, frontline, center, flank_starting_index, settings, preferences)
   if (deploy_support)
-    deployFront(reserve.support, frontline, center, flank_starting_index)
+    deployFront(reserve.support, frontline, center, flank_starting_index, settings, preferences)
   if (backline)
-    deployFront(reserve.front, backline, center, flank_starting_index)
-  deployFlanks(reserve.flank, frontline, center, flank_starting_index)
-  deployFlanks(reserve.front, frontline, center, flank_starting_index)
+    deployFront(reserve.front, backline, center, flank_starting_index, settings, preferences)
+  deployFlanks(reserve.flank, frontline, center, flank_starting_index, settings, preferences)
+  deployFlanks(reserve.front, frontline, center, flank_starting_index, settings, preferences)
   if (deploy_support)
-    deployFlanks(reserve.support, frontline, center, flank_starting_index)
+    deployFlanks(reserve.support, frontline, center, flank_starting_index, settings, preferences)
   if (backline)
-    deployFlanks(reserve.flank, backline, center, flank_starting_index)
+    deployFlanks(reserve.flank, backline, center, flank_starting_index, settings, preferences)
 }
 
 
@@ -244,6 +258,6 @@ const moveUnits = (cohorts: CombatCohorts, ) => {
 */
 export const reinforce = (participant: CombatParticipant, settings: Settings) => {
   if (reserveSize(participant.cohorts.reserve))
-    deployCohorts(participant.cohorts, settings)
+    deployCohorts(participant.cohorts, settings, participant.unit_preferences)
   moveUnits(participant.cohorts)
 }

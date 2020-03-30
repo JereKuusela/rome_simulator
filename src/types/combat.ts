@@ -1,4 +1,4 @@
-import { Tactic, CombatPhase, UnitPreferences, UnitType, UnitAttribute, UnitRole, Mode, UnitValueType } from "types"
+import { TacticDefinition, CombatPhase, UnitPreferences, UnitType, UnitAttribute, UnitRole, Mode, UnitValueType } from "types"
 
 /**
  * Information required for fast combat calculation.
@@ -9,7 +9,7 @@ export type CombatParticipant = {
   tactic_bonus: number
   round: number
   unit_types: CombatUnitTypes
-  tactic: Tactic
+  tactic: TacticDefinition
   flank_ratio: number
   flank_ratio_bonus: number
   flank: number

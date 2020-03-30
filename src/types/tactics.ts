@@ -23,10 +23,18 @@ export enum TacticType {
   ProbingAttack = 'Probing Attack'
 }
 
-export type Tactics = { [key in TacticType]: Tactic }
+export type Tactics = { [key in TacticType]: TacticDefinition }
 
 export type TacticValueType = UnitType | TacticCalc | TacticType
 
-export interface Tactic extends Definition<TacticType>, DefinitionValues<TacticValueType> {
+export interface TacticDefinition extends Definition<TacticType>, DefinitionValues<TacticValueType> {
   mode: Mode
+}
+
+export type Tactic = {
+  type: TacticType
+  effect: number
+  damage: number
+  casualties: number
+  image: string
 }

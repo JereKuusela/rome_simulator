@@ -6,13 +6,13 @@ import VersusList from './VersusList'
 import StyledNumber from './Utils/StyledNumber'
 
 import Headers from './Utils/Headers'
-import { Tactic, UnitType, TacticType, TacticCalc } from 'types'
+import { TacticDefinition, UnitType, TacticType, TacticCalc } from 'types'
 import { calculateValue } from 'definition_values'
 import { toSignedPercent } from 'formatters'
 import { getImage } from 'utils'
 
 interface IProps {
-  tactics: Tactic[]
+  tactics: TacticDefinition[]
   images: { [key in UnitType]: string[] }
   unit_types: UnitType[]
   onRowClick: (type: TacticType) => void
@@ -62,7 +62,7 @@ export default class TacticDefinitions extends Component<IProps, IState> {
   onClick = (): void => this.setState({ open_create: true })
   onClose = (): void => this.setState({ open_create: false })
 
-  renderRow = (tactic: Tactic) => {
+  renderRow = (tactic: TacticDefinition) => {
     const { onRowClick, images, unit_types } = this.props
     return (
       <Table.Row key={tactic.type} onClick={() => onRowClick(tactic.type)}>
@@ -92,7 +92,7 @@ export default class TacticDefinitions extends Component<IProps, IState> {
     )
   }
 
-  renderVersus = (tactic: Tactic) => {
+  renderVersus = (tactic: TacticDefinition) => {
     const filtered = this.props.tactics.filter(versus => calculateValue(tactic, versus.type))
     return filtered.map(versus => (
       <List.Item key={versus.type} style={{ marginLeft: 0, marginRight: '1em' }}>
