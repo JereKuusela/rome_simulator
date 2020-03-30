@@ -9,7 +9,6 @@ import Tactics from './pages/Tactics'
 import Terrains from './pages/Terrains'
 import Navigation from './pages/Navigation'
 import Transfer from './pages/Transfer'
-import Instructions from './pages/Instructions'
 import Countries from './pages/Countries'
 import CountriesEUIV from './pages/CountriesEU'
 import Settings from './pages/Settings'
@@ -41,7 +40,6 @@ const Root = ({ store, persistor }: MainProps) => {
               <Route path='/Terrains' component={Terrains} />
               <Route path='/Analyze' component={Analyze} />
               <Route path='/Transfer' component={Transfer} />
-              <Route path='/Instructions' component={Instructions} />
               <Route path='/Countries' component={process.env.REACT_APP_GAME === 'euiv' ? CountriesEUIV : Countries} />
               <Route path='/Settings' component={Settings} />
               <br />

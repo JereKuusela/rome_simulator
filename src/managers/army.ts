@@ -1,5 +1,5 @@
 import { calculateValue, clearAllValues, calculateBase, addValues, regenerateValues, addValuesWithMutate, filterValues } from 'definition_values'
-import { Mode, GeneralAttribute, UnitType, UnitAttribute, GeneralDefinition, Army, ArmyType, BaseCohort, ValuesType, UnitValueType, TacticType, UnitPreferenceType, General, BaseReserve, ScopeType, Modifier, BaseDefeated, BaseFrontLine, GeneralValueType, CombatPhase, Settings, isAttributeEnabled, Units, Setting, UnitRole, Unit, CombatUnitTypes, CombatCohortDefinition } from 'types'
+import { Mode, GeneralAttribute, UnitType, UnitAttribute, GeneralDefinition, Army, ArmyType, BaseCohort, ValuesType, UnitValueType, TacticType, UnitPreferenceType, General, BaseReserve, ScopeType, Modifier, BaseDefeated, BaseFrontLine, GeneralValueType, CombatPhase, isAttributeEnabled, Units, Setting, UnitRole, Unit, CombatUnitTypes, CombatCohortDefinition, SiteSettings } from 'types'
 import { map, forEach, keys, toObj, toArr, toSet, ObjSet, values } from 'utils'
 import { findLastIndex, sortBy } from 'lodash'
 
@@ -11,12 +11,12 @@ export const martialToCaptureChance = (martial: number) => 0.002 * martial
 
 const BASE_STAT_KEY = 'Base stat'
 
-export const convertGeneralDefinition = (settings: Settings, general: GeneralDefinition): General => {
+export const convertGeneralDefinition = (settings: SiteSettings, general: GeneralDefinition): General => {
   const base = filterValues(general, BASE_STAT_KEY)
   const attributes = [GeneralAttribute.Maneuver, GeneralAttribute.Martial, CombatPhase.Fire, CombatPhase.Shock, CombatPhase.Default]
   const base_values = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) ? calculateValue(base, attribute) : 0)
-  const extra_values = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) ? calculateValue(general, attribute) - calculateValue(base, attribute) : 0)
-  const total_values = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) ? Math.min(calculateValue(general, attribute), settings[Setting.MaxGeneral]) : 0)
+  const extra_values = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) && general.enabled ? calculateValue(general, attribute) - calculateValue(base, attribute) : 0)
+  const total_values = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) && general.enabled ? Math.min(calculateValue(general, attribute), settings[Setting.MaxGeneral]) : 0)
   return {
     enabled: general.enabled,
     base_values,
@@ -28,7 +28,7 @@ export const convertGeneralDefinition = (settings: Settings, general: GeneralDef
 export const overrideRoleWithPreferences = (army: Army, units: Units, latest: { [key in UnitRole]: UnitType | undefined }) => {
   const preferences = army.unit_preferences
   return mapCohorts(army, cohort => {
-    const role = units[cohort.type].role
+    const role = units[cohort.type]?.role
     let override = role && preferences[role]
     if (role && override === UnitType.Latest)
       override = latest[role]
@@ -38,14 +38,14 @@ export const overrideRoleWithPreferences = (army: Army, units: Units, latest: { 
   })
 }
 
-export const getUnitList = (units: CombatUnitTypes, mode: Mode, _tech: number, filter_base: boolean, settings: Settings) => {
+export const getUnitList = (units: CombatUnitTypes, mode: Mode, _tech: number, filter_base: boolean, settings: SiteSettings) => {
   const base_units = getBaseUnits(units)
   let list = settings[Setting.Tech] ? [units[UnitType.Land]].concat(getArchetypes(units, mode)) : sortBy(toArr(units), unit => unitSorter(unit, mode, base_units))
   list = filter_base ? list.filter(unit => !base_units[unit.type]) : list
   return list
 }
 
-export const getUnitList2 = (units: Units, mode: Mode, _tech: number, filter_base: boolean, settings: Settings) => {
+export const getUnitList2 = (units: Units, mode: Mode, _tech: number, filter_base: boolean, settings: SiteSettings) => {
   const base_units = getBaseUnits(units)
   let list = settings[Setting.Tech] ? [units[UnitType.Land]].concat(getArchetypes2(units, mode)) : sortBy(toArr(units), unit => unitSorter2(unit, mode, base_units))
   list = filter_base ? list.filter(unit => !base_units[unit.type]) : list
@@ -97,6 +97,11 @@ export const getArchetypes2 = (units: Units, mode: Mode) => toArr(units).filter(
 export const getActualUnits = (units: CombatUnitTypes, mode: Mode) => {
   const base_units = getBaseUnits(units)
   return sortBy(toArr(units).filter(unit => !base_units[unit.type]), unit => unitSorter(unit, mode))
+}
+
+export const getActualUnits2 = (units: Units, mode: Mode) => {
+  const base_units = getBaseUnits(units)
+  return sortBy(toArr(units).filter(unit => !base_units[unit.type]), unit => unitSorter2(unit, mode))
 }
 
 const getBaseUnits = (units: Units) => toSet(units, unit => unit.base || unit.type)

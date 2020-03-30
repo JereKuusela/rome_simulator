@@ -4,13 +4,13 @@ import { connect } from 'react-redux'
 import ItemRemover from 'components/ItemRemover'
 import UnitDetail from 'components/UnitDetail'
 
-import { AppState, filterTerrainTypes, findCohortById, getCombatUnitForEachRound, getMode, getSettings, getCombatParticipant, getSiteSettings, getCountryName } from 'state'
-import { ValuesType, CountryName, UnitType, Cohort, UnitAttribute, UnitValueType, Settings, CombatCohort, ModalType } from 'types'
+import { AppState, filterTerrainTypes, findCohortById, getCombatUnitForEachRound, getMode, getCombatParticipant, getSiteSettings, getCountryName } from 'state'
+import { ValuesType, CountryName, UnitType, Cohort, UnitAttribute, UnitValueType, CombatCohort, ModalType, SiteSettings } from 'types'
 import { addValues } from 'definition_values'
 import { editCohort, deleteCohort, invalidate, setCohortValue, changeCohortType, toggleCohortLoyality, closeModal } from 'reducers'
 import { applyDynamicAttributes } from 'managers/units'
 import BaseModal from './BaseModal'
-import { toArr } from 'utils'
+import { getActualUnits } from 'managers/army'
 const CUSTOM_VALUE_KEY = 'Unit'
 
 class ModalCohortDetail extends Component<IProps> {
@@ -81,7 +81,7 @@ class ModalCohortDetail extends Component<IProps> {
 }
 
 
-const convertCohort = (settings: Settings, definition: Cohort | null, rounds: (CombatCohort | null)[]): Cohort | null => {
+const convertCohort = (settings: SiteSettings, definition: Cohort | null, rounds: (CombatCohort | null)[]): Cohort | null => {
   if (!definition)
     return null
   rounds.forEach((combat, round) => {
@@ -104,23 +104,25 @@ const convertCohort = (settings: Settings, definition: Cohort | null, rounds: (C
 
 const mapStateToProps = (state: AppState) => {
   const data = state.ui[ModalType.CohortDetail]
+  const settings = getSiteSettings(state)
+  const mode = getMode(state)
   if (data) {
     return {
       id: data.id,
       terrain_types: filterTerrainTypes(state),
       country: getCountryName(state, data.side),
-      unit_types: toArr(getCombatParticipant(state, data.side).unit_types, unit => unit.type),
-      mode: getMode(state),
-      cohort: convertCohort(getSettings(state), findCohortById(state, data.side, data.id), getCombatUnitForEachRound(state, data.side, data.id)),
-      settings: getSiteSettings(state)
+      unit_types: getActualUnits(getCombatParticipant(state, data.side).unit_types, mode).map(unit => unit.type),
+      mode,
+      cohort: convertCohort(settings, findCohortById(state, data.side, data.id), getCombatUnitForEachRound(state, data.side, data.id)),
+      settings
     }
   }
   return {
     id: 0,
     terrain_types: filterTerrainTypes(state),
     country: CountryName.Country1,
-    mode: getMode(state),
-    settings: getSiteSettings(state),
+    mode,
+    settings,
     cohort: null,
     unit_types: [],
   }

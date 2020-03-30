@@ -19,6 +19,7 @@ interface IProps {
   custom_value_key: string
   unit: Cohort
   unit_types?: UnitType[]
+  unit_types_with_base?: UnitType[]
   show_statistics: boolean
   terrain_types?: TerrainType[]
   unit_types_as_dropdown?: boolean
@@ -48,7 +49,7 @@ export default class UnitDetail extends Component<IProps> {
 
   render() {
     const { unit, onTypeChange, onBaseTypeChange, onImageChange, onChangeDeployment, onIsLoyalToggle } = this.props
-    const { terrain_types, unit_types, unit_types_as_dropdown, settings } = this.props
+    const { terrain_types, unit_types, unit_types_with_base, unit_types_as_dropdown, settings } = this.props
     const { id, type, mode, base, image, role: deployment, is_loyal, culture, tech } = unit
     return (
       <Table celled selectable unstackable>
@@ -60,7 +61,7 @@ export default class UnitDetail extends Component<IProps> {
           {mode && <DetailTextRow text='Mode' cells={this.CELLS} value={mode} />}
           {settings[Setting.Culture] && culture && <DetailTextRow text='Culture' cells={this.CELLS} value={culture} />}
           {settings[Setting.Tech] && tech && <DetailTextRow text='Tech' cells={this.CELLS} value={tech} />}
-          {base && unit_types && onBaseTypeChange && <DetailDropdownRow text='Base type' cells={this.CELLS} value={base} values={unit_types} onChange={onBaseTypeChange} />}
+          {base && unit_types_with_base && onBaseTypeChange && <DetailDropdownRow text='Base type' cells={this.CELLS} value={base} values={unit_types_with_base} onChange={onBaseTypeChange} />}
           {onImageChange && <DetailInputRow text='Image' cells={this.CELLS} value={image} onChange={onImageChange} />}
           {onChangeDeployment && deployment && <DetailDropdownRow text='Deployment' cells={this.CELLS} value={deployment} values={this.deployments} onChange={onChangeDeployment} />}
           {<DetailToggleRow text='Is loyal?' cells={this.CELLS} value={!!is_loyal} onChange={onIsLoyalToggle} />}

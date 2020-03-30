@@ -1,4 +1,4 @@
-import { ValuesType, UnitValueType, UnitType, UnitRole, Modifier, ScopeType, BaseUnit, BaseUnits, Mode, Settings, Setting, UnitAttribute, WearinessAttributes, BaseReserve, ModifierWithKey } from "types"
+import { ValuesType, UnitValueType, UnitType, UnitRole, Modifier, ScopeType, BaseUnit, BaseUnits, Mode, Setting, UnitAttribute, WearinessAttributes, BaseReserve, ModifierWithKey, SiteSettings } from "types"
 import { addValuesWithMutate, regenerateValues, clearValues, DefinitionValues, calculateValue, addValues, addValue } from "definition_values"
 import { getUnitIcon } from "data"
 import { forEach, toArr, round, randomWithinRange } from "utils"
@@ -54,7 +54,7 @@ export const clearUnitModifiers = (units: BaseUnits, key: string) => {
 
 export const getBaseUnitType = (mode: Mode) => mode === Mode.Naval ? UnitType.Naval : UnitType.Land
 
-export const applyDynamicAttributes = <T extends DefinitionValues<UnitValueType>>(definition: T, settings: Settings) => {
+export const applyDynamicAttributes = <T extends DefinitionValues<UnitValueType>>(definition: T, settings: SiteSettings) => {
   if (settings[Setting.AttributeDrill]) {
     const drill = 0.1 * calculateValue(definition, UnitAttribute.Drill)
     definition = addValues(definition, ValuesType.Base, 'From drill', [[UnitAttribute.ShockDamageDone, drill], [UnitAttribute.FireDamageDone, drill], [UnitAttribute.ShockDamageTaken, -drill], [UnitAttribute.FireDamageTaken, -drill]])

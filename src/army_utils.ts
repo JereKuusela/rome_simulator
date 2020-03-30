@@ -1,4 +1,4 @@
-import { Cohorts, Mode, UnitDefinitionValues, ArmyType, Side, BaseUnits, UnitType, Units, Unit, Settings, CombatCohorts } from 'types'
+import { Cohorts, Mode, UnitDefinitionValues, ArmyType, Side, BaseUnits, UnitType, Units, Unit, CombatCohorts, SiteSettings } from 'types'
 import { mergeValues } from 'definition_values'
 import { map, filter } from 'utils'
 import { applyDynamicAttributes } from 'managers/units'
@@ -8,17 +8,17 @@ import { applyDynamicAttributes } from 'managers/units'
  * @param cohorts Base units to merge. 
  * @param units Definitions to merge.
  */
-export const mergeBaseUnitsWithDefinitions = (settings: Settings, cohorts: Cohorts, units: Units): Cohorts => ({
+export const mergeBaseUnitsWithDefinitions = (settings: SiteSettings, cohorts: Cohorts, units: Units): Cohorts => ({
   frontline: cohorts.frontline.map(row => row.map(cohort => cohort && applyDynamicAttributes(mergeValues(units[cohort.type], cohort), settings))),
   reserve: cohorts.reserve.map(cohort => cohort && applyDynamicAttributes(mergeValues(units[cohort.type], cohort), settings)),
   defeated: cohorts.defeated.map(cohort => cohort && applyDynamicAttributes(mergeValues(units[cohort.type], cohort), settings))
 })
 
-export const mergeDefinitions = (settings: Settings, units: BaseUnits, general: UnitDefinitionValues): Units => {
+export const mergeDefinitions = (settings: SiteSettings, units: BaseUnits, general: UnitDefinitionValues): Units => {
   return map(units, (_, type) => mergeDefinition(settings, units, general, type))
 }
 
-export const mergeDefinition = (settings: Settings, units: BaseUnits, general: UnitDefinitionValues, type: UnitType): Unit => {
+export const mergeDefinition = (settings: SiteSettings, units: BaseUnits, general: UnitDefinitionValues, type: UnitType): Unit => {
   let unit = mergeValues(units[type], general[type])
   let base = unit.base
   const merged = [type]

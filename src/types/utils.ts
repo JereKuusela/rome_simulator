@@ -16,7 +16,7 @@ export const getAttributeValuesType = (attribute: UnitAttribute) => attribute ==
 export const isAttributeEnabled = (attribute: string, settings: SiteSettings, mode?: Mode, show_statistics?: boolean) => {
   if (!show_statistics && (attribute === UnitAttribute.StrengthDepleted || attribute === UnitAttribute.MoraleDepleted))
     return false
-  if (!settings[Setting.BackRow] && attribute === UnitAttribute.OffensiveSupport)
+  if (!settings[Setting.BackRow] && (attribute === UnitAttribute.OffensiveSupport || attribute === UnitAttribute.DefensiveSupport))
     return false
   if (mode !== Mode.Naval && (attribute === UnitAttribute.CaptureChance || attribute === UnitAttribute.CaptureResist))
     return false

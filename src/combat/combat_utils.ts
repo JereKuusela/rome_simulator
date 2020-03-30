@@ -1,6 +1,6 @@
 
 import { sumBy } from 'lodash'
-import { Terrain, TerrainCalc, Setting, UnitAttribute, Settings, BaseUnit, CombatPhase, GeneralAttribute, Side, LocationType, General, CombatCohortDefinition } from 'types'
+import { Terrain, TerrainCalc, Setting, UnitAttribute, BaseUnit, CombatPhase, GeneralAttribute, Side, LocationType, General, CombatCohortDefinition, SiteSettings } from 'types'
 import { calculateValue } from 'definition_values'
 
 /**
@@ -51,7 +51,7 @@ export const getDefensiveSupportCohortPips = (cohort: CombatCohortDefinition | n
   return cohort ?  Math.ceil(cohort[UnitAttribute.DefensiveSupport] * getDefensiveCohortPips(cohort, type, phase)) : 0
 }
 
-export const calculateExperienceReduction = (settings: Settings, target: BaseUnit) => {
+export const calculateExperienceReduction = (settings: SiteSettings, target: BaseUnit) => {
   let damage_reduction_per_experience = settings[Setting.ExperienceDamageReduction]
   // Bug in game which makes morale damage taken and strength damage taken affect damage reduction from experience.
   if (!settings[Setting.FixExperience])
@@ -59,7 +59,7 @@ export const calculateExperienceReduction = (settings: Settings, target: BaseUni
   return -damage_reduction_per_experience * calculateValue(target, UnitAttribute.Experience)
 }
 
-export const getCombatPhase = (round: number, settings: Settings) => {
+export const getCombatPhase = (round: number, settings: SiteSettings) => {
   if (settings[Setting.FireAndShock]) {
     const phase = getCombatPhaseNumber(round, settings)
     if (phase)
@@ -68,6 +68,6 @@ export const getCombatPhase = (round: number, settings: Settings) => {
   return CombatPhase.Default
 }
 
-export const getCombatPhaseNumber = (round: number, settings: Settings) => Math.ceil(round  / settings[Setting.RollFrequency])
+export const getCombatPhaseNumber = (round: number, settings: SiteSettings) => Math.ceil(round  / settings[Setting.RollFrequency])
 
-export const getDailyIncrease = (round: number, settings: Settings) => settings[Setting.DailyDamageIncrease] * round
+export const getDailyIncrease = (round: number, settings: SiteSettings) => settings[Setting.DailyDamageIncrease] * round

@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { ValuesType, CountryName, UnitType, Cohort, UnitRole, UnitValueType, ModalType } from 'types'
 import UnitDetail from 'components/UnitDetail'
-import { AppState, getUnit, mergeUnitTypes, filterTerrainTypes, getMode, getSettings } from 'state'
-import { openModal, changeUnitType, deleteUnit, setUnitValue, changeUnitImage, changeUnitBaseType, changeUnitDeployment, toggleUnitLoyality, invalidate } from 'reducers'
+import { AppState, getUnit, filterTerrainTypes, getMode, getUnitTypeList, getSiteSettings } from 'state'
+import { openModal, changeUnitType, deleteUnit, setUnitValue, changeUnitImage, changeUnitBaseType, changeUnitDeployment, toggleUnitLoyality, invalidate, closeModal } from 'reducers'
 import BaseModal from './BaseModal'
 import { getBaseUnitType } from 'managers/units'
 import ItemRemover from 'components/ItemRemover'
@@ -33,6 +33,7 @@ class ModalUnitDetail extends Component<IProps> {
           custom_value_key={CUSTOM_VALUE_KEY}
           unit={unit as Cohort}
           unit_types={this.props.unit_types}
+          unit_types_with_base={this.props.unit_types_with_base}
           onCustomBaseValueChange={this.setBaseValue}
           onCustomModifierValueChange={this.setModifierValue}
           onCustomLossValueChange={this.setLossValue}
@@ -55,8 +56,9 @@ class ModalUnitDetail extends Component<IProps> {
   }
 
   remove = () => {
-    const { country, deleteUnit, invalidate, unit_type } = this.props
+    const { country, deleteUnit, invalidate, unit_type, closeModal } = this.props
     deleteUnit(country, unit_type)
+    closeModal(ModalType.UnitDetail)
     invalidate()
   }
 
@@ -102,14 +104,15 @@ const mapStateToProps = (state: AppState) => {
     country: data ? data.country : CountryName.Country1,
     unit_type: data ? data.type : UnitType.Land,
     unit: data ? getUnit(state, data.type, data.country) : null,
-    unit_types: mergeUnitTypes(state),
+    unit_types: getUnitTypeList(state, true, data?.country),
+    unit_types_with_base: getUnitTypeList(state, false, data?.country).filter(type => type !== data?.type),
     terrain_types: filterTerrainTypes(state),
     mode: getMode(state),
-    settings: getSettings(state)
+    settings: getSiteSettings(state)
   }
 }
 
-const actions = { openModal, deleteUnit, changeUnitType, setUnitValue, changeUnitImage, changeUnitBaseType, changeUnitDeployment, toggleUnitLoyality, invalidate }
+const actions = { closeModal, openModal, deleteUnit, changeUnitType, setUnitValue, changeUnitImage, changeUnitBaseType, changeUnitDeployment, toggleUnitLoyality, invalidate }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

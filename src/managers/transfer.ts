@@ -8,6 +8,7 @@ const filterState = (state: AppState, export_keys?: ExportKeys): any => {
   filtered._persist = undefined
   filtered.transfer = undefined
   filtered.data = undefined
+  filtered.ui = undefined
   filtered.battle = stripRounds(filtered.battle)
   if (export_keys && !export_keys[ExportKey.Countries])
     filtered.countries = undefined

@@ -43,7 +43,7 @@ export default class Confirmation extends Component<IProps, IState> {
     )
   }
   checkConfirm = (value: string) => {
-    if (value === this.CONFIRM) {
+    if (value.toLowerCase() === this.CONFIRM.toLowerCase()) {
       this.setState({ confirmation: '' })
       this.props.onConfirm()
       // Prevents nasty scroll down.

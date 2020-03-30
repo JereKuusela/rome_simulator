@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Container, Grid, Table, List, Input, Checkbox } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { AppState, getGeneral, getSettings, getGeneralDefinition } from 'state'
+import { AppState, getGeneral, getGeneralDefinition, getSiteSettings } from 'state'
 import { mapRange, ObjSet, has, keys, values } from '../utils'
 
 import { addSignWithZero } from 'formatters'
@@ -833,7 +833,7 @@ const mapStateToProps = (state: AppState) => ({
   abilities: state.data.abilities,
   general_definition: getGeneralDefinition(state, state.settings.country),
   general: getGeneral(state, state.settings.country),
-  settings: getSettings(state)
+  settings: getSiteSettings(state)
 })
 
 const actions = {

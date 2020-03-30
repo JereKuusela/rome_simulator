@@ -76,11 +76,11 @@ export const getCombatUnitForEachRound = (state: AppState, side: Side, id: numbe
  * Returns unit types for the current mode from all armies.
  * @param state Application state.
  */
-export const mergeUnitTypes = (state: AppState, mode?: Mode): UnitType[] => {
-  mode = mode ?? state.settings.mode
+export const mergeUnitTypes = (state: AppState, ): UnitType[] => {
+  const mode = getMode(state)
   return Array.from(keys(state.countries).reduce((previous, current) => {
-    const arr = toArr(getUnits(state, current))
-    arr.filter(unit => unit.mode === mode).forEach(unit => previous.add(unit.type))
+    const units = manager.getActualUnits2(getUnits(state, current), mode)
+    units.filter(unit => unit.mode === mode).forEach(unit => previous.add(unit.type))
     return previous
   }, new Set<UnitType>()))
 }
@@ -199,7 +199,7 @@ export const getCountryDefinition = (state: AppState, country: CountryName): Cou
 const getArmy = (state: AppState, country: CountryName) => state.countries[country].armies[state.settings.mode][ArmyName.Army1]
 
 export const getGeneralDefinition = (state: AppState, country: CountryName): GeneralDefinition => getArmy(state, country).general
-export const getGeneral = (state: AppState, country: CountryName): General => manager.convertGeneralDefinition(getSettings(state), getGeneralDefinition(state, country))
+export const getGeneral = (state: AppState, country: CountryName): General => manager.convertGeneralDefinition(getSiteSettings(state), getGeneralDefinition(state, country))
 
 export const getMode = (state: AppState): Mode => state.settings.mode
 
@@ -253,7 +253,7 @@ export const getSelectedTerrains = (state: AppState): Terrain[] => getBattle(sta
 export const getUnitDefinitionsBySide = (state: AppState, side: Side): Units => getUnits(state, getParticipant(state, side).country)
 
 export const getUnits = (state: AppState, country?: CountryName): Units => {
-  const settings = getSettings(state)
+  const settings = getSiteSettings(state)
   country = country ?? state.settings.country
   const mode = state.settings.mode
   const base_units = getBaseUnits(state, country)
@@ -269,11 +269,11 @@ export const getUnitList = (state: AppState, filter_base: boolean, name?: Countr
   name = name ?? state.settings.country
   const country = getCountries(state)[name]
   const units = getUnits(state, name)
-  return manager.getUnitList2(units, mode, country.tech_level, filter_base, getSettings(state))
+  return manager.getUnitList2(units, mode, country.tech_level, filter_base, getSiteSettings(state))
 }
 
 export const getUnit = (state: AppState, unit_type: UnitType, country?: CountryName): Unit => {
-  const settings = getSettings(state)
+  const settings = getSiteSettings(state)
   country = country ?? state.settings.country
   const general = getGeneralDefinition(state, country).definitions
   return mergeDefinition(settings, getBaseUnits(state, country), general, unit_type)

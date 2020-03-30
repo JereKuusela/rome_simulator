@@ -4,7 +4,7 @@ import { Image, Table, Checkbox, Input, Button } from 'semantic-ui-react'
 
 import { Side, CountryName, Setting, Participant, General, GeneralAttribute, GeneralValueType, UnitAttribute, isAttributeEnabled, Mode, UnitType, Unit, ValuesType, CountryAttribute, Country, CultureType, CombatParticipant, ModalType } from 'types'
 import { keys } from 'utils'
-import { AppState, getCountry, getSettings, getParticipant, getGeneral, getCountryName, getSelectedTerrains, getCountries, getBattle, getUnit, getMode, getCombatParticipant } from 'state'
+import { AppState, getCountry, getParticipant, getGeneral, getCountryName, getSelectedTerrains, getCountries, getBattle, getUnit, getMode, getCombatParticipant, getSiteSettings } from 'state'
 import { invalidate, selectArmy, selectCulture, toggleRandomDice, setDice, setGeneralBaseStat, openModal } from 'reducers'
 import Dropdown from 'components/Dropdowns/Dropdown'
 import StyledNumber from 'components/Utils/StyledNumber'
@@ -236,7 +236,7 @@ const mapStateToProps = (state: AppState) => ({
   round: getBattle(state).round,
   unit_a: getUnit(state, getMode(state) === Mode.Naval ? UnitType.Naval : UnitType.Land, getParticipant(state, Side.Attacker).country),
   unit_d: getUnit(state, getMode(state) === Mode.Naval ? UnitType.Naval : UnitType.Land, getParticipant(state, Side.Defender).country),
-  settings: getSettings(state)
+  settings: getSiteSettings(state)
 })
 
 const actions = { invalidate, selectArmy, selectCulture, toggleRandomRoll: toggleRandomDice, setRoll: setDice, setGeneralBaseStat, openModal }

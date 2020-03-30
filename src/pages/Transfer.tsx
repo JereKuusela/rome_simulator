@@ -133,6 +133,7 @@ const mapDispatchToProps = (dispatch: any) => ({
         data = '{}'
       let json = JSON.parse(data)
       json.transfer = undefined
+      json.ui = undefined
       json.countries = json.countries && setIds(json.countries)
       json.tactics = json.tactics && restoreBaseTactics(json.tactics)
       json.terrains = json.terrains && restoreBaseTerrains(json.terrains)

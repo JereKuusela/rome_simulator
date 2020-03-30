@@ -39,7 +39,7 @@ class Units extends Component<IProps, IState> {
         <CountryManager>
           <Button primary onClick={() => this.setState({ open_create_unit: true })}>
             New unit
-            </Button>
+          </Button>
         </CountryManager>
         <br />
         <UnitDefinitions
@@ -50,7 +50,7 @@ class Units extends Component<IProps, IState> {
           units={units}
           images={images}
           unit_types={unit_types}
-          onRowClick={unit => openModal(ModalType.UnitDetail, { country, type: unit.type, remove: true})}
+          onRowClick={unit => openModal(ModalType.UnitDetail, { country, type: unit.type, remove: true })}
         />
         <WearinessRange
           values={weariness}

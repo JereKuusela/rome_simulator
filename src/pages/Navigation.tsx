@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { AppState, getMode, getSettings } from 'state'
+import { AppState, getMode, getSiteSettings } from 'state'
 import { toggleMode } from 'reducers'
 import { Menu, Image, Button } from 'semantic-ui-react'
 import IconLand from 'images/land_combat.png'
@@ -48,9 +48,6 @@ class Navigation extends Component<IProps> {
           <Menu.Item active={path === '/transfer'} onClick={() => history.push('/transfer')}>
             Transfer
           </Menu.Item>
-          <Menu.Item active={path === '/instructions'} onClick={() => history.push('/instructions')}>
-            Instructions
-          </Menu.Item>
 
           <div id='menu-info'>
             {process.env.REACT_APP_GAME === 'ir' &&
@@ -74,7 +71,7 @@ class Navigation extends Component<IProps> {
 
 const mapStateToProps = (state: AppState) => ({
   mode: getMode(state),
-  settings: getSettings(state)
+  settings: getSiteSettings(state)
 })
 
 const actions = { toggleMode }

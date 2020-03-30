@@ -6,7 +6,7 @@ import IconEmpty from 'images/empty.png'
 import { Side, UnitType, UnitAttribute, isAttributeEnabled, CombatCohorts, CombatCohort } from 'types'
 import { strengthToValue, toNumber } from 'formatters'
 import { getImage, round, sumArr } from 'utils'
-import { AppState, getCurrentCombat, getMode, getSettings, getBattle } from 'state'
+import { AppState, getCurrentCombat, getMode, getBattle, getSiteSettings } from 'state'
 import { flatten, uniq } from 'lodash'
 import AttributeImage from 'components/Utils/AttributeImage'
 
@@ -169,7 +169,7 @@ const mapStateToProps = (state: AppState) => ({
   cohorts_a: getCurrentCombat(state, Side.Attacker),
   cohorts_d: getCurrentCombat(state, Side.Defender),
   mode: getMode(state),
-  settings: getSettings(state),
+  settings: getSiteSettings(state),
   timestamp: getBattle(state).timestamp
 })
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Container, Grid, Table, List, Checkbox } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { AppState, getSettings, getGeneralDefinition, getCountryDefinition } from 'state'
+import { AppState, getGeneralDefinition, getCountryDefinition, getSiteSettings } from 'state'
 import { mapRange, ObjSet, has, values } from '../utils'
 
 import { ValuesType, Modifier, ScopeType, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, TechDefinitionEUIV, CountryName, Setting } from 'types'
@@ -315,7 +315,7 @@ const mapStateToProps = (state: AppState) => ({
   selected_country: state.settings.country,
   tech,
   general: getGeneralDefinition(state, state.settings.country),
-  settings: getSettings(state)
+  settings: getSiteSettings(state)
 })
 
 const actions = {
