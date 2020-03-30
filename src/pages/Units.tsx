@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
-import { AppState, mergeUnitTypes, filterTerrainTypes, getUnitImages, getMode, getUnitList, getCountries } from 'state'
+import { AppState, mergeUnitTypes, filterTerrainTypes, getUnitImages, getMode, getUnitList, getCountries, getSiteSettings } from 'state'
 import { createUnit, deleteUnit, changeUnitType, changeWeariness, openModal } from 'reducers'
 import UnitDefinitions from 'components/UnitDefinitions'
 import ValueModal from 'components/ValueModal'
@@ -25,7 +25,7 @@ class Units extends Component<IProps, IState> {
   initialState = { modal_country: undefined, modal_unit: undefined, open_create_unit: false }
 
   render() {
-    const { mode, createUnit, country, terrains, units, images, unit_types, weariness, openModal } = this.props
+    const { mode, createUnit, country, terrains, units, images, unit_types, weariness, openModal, settings } = this.props
     return (
       <>
         <ValueModal
@@ -45,6 +45,7 @@ class Units extends Component<IProps, IState> {
         <UnitDefinitions
           mode={mode}
           country={country}
+          settings={settings}
           terrains={terrains}
           units={units}
           images={images}
@@ -69,6 +70,7 @@ const mapStateToProps = (state: AppState) => ({
   terrains: filterTerrainTypes(state),
   mode: getMode(state),
   country: state.settings.country,
+  settings: getSiteSettings(state),
   weariness: getCountries(state)[state.settings.country].weariness
 })
 

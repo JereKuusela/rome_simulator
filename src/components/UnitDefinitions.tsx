@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { Table, List, Icon } from 'semantic-ui-react'
 import { toNumber } from 'lodash'
 
-import { Mode, CountryName, UnitType, TerrainType, BaseUnit, UnitAttribute, UnitValueType, Unit } from 'types'
+import { Mode, CountryName, UnitType, TerrainType, BaseUnit, UnitAttribute, UnitValueType, Unit, filterAttributes, SiteSettings, Setting } from 'types'
 import { calculateValue, calculateBase, calculateModifier, calculateLoss } from 'definition_values'
-import { toPercent, toManpower, toSignedPercent, hideZero } from 'formatters'
+import { toPercent, toManpower, toSignedPercent } from 'formatters'
 
 import StyledNumber from './Utils/StyledNumber'
 import VersusList from './VersusList'
@@ -15,6 +15,7 @@ interface IProps {
   mode: Mode
   country: CountryName
   units: Unit[]
+  settings: SiteSettings
   images: { [key in UnitType]: string[] }
   unit_types: UnitType[]
   terrains: TerrainType[]
@@ -24,8 +25,27 @@ interface IProps {
 // Display component for showing unit definitions for an army.
 export default class UnitDefinitions extends Component<IProps> {
 
+  attributes = [
+    UnitAttribute.Discipline, UnitAttribute.DamageDone, UnitAttribute.DamageTaken, UnitAttribute.Offense, UnitAttribute.Defense, UnitAttribute.CombatAbility,
+    UnitAttribute.MoraleDamageDone, UnitAttribute.MoraleDamageTaken, UnitAttribute.StrengthDamageDone, UnitAttribute.StrengthDamageTaken,
+    UnitAttribute.FireDamageDone, UnitAttribute.FireDamageTaken, UnitAttribute.ShockDamageDone, UnitAttribute.ShockDamageTaken,
+    UnitAttribute.OffensiveSupport, UnitAttribute.Experience, UnitAttribute.Drill
+  ]
+
+  filterByMode = (attributes: UnitAttribute[]) => attributes.filter(attribute => {
+    if (this.props.mode === Mode.Naval) {
+      if (attribute === UnitAttribute.Offense || attribute === UnitAttribute.Defense)
+        return false
+    }
+    if (attribute === UnitAttribute.DamageDone || attribute === UnitAttribute.DamageTaken)
+      return false
+    return true
+  })
+
+  isDamageTaken = (attribute: UnitAttribute) => attribute === UnitAttribute.DamageTaken || attribute === UnitAttribute.FireDamageTaken || attribute === UnitAttribute.ShockDamageTaken || attribute === UnitAttribute.MoraleDamageTaken || attribute === UnitAttribute.StrengthDamageTaken
+
   render() {
-    const { mode, units, country } = this.props
+    const { mode, units, country, settings } = this.props
     return (
       <Table celled selectable unstackable>
         <Table.Header>
@@ -40,38 +60,27 @@ export default class UnitDefinitions extends Component<IProps> {
               <AttributeImage attribute={UnitAttribute.Strength} mode={mode} />
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <AttributeImage attribute={UnitAttribute.Discipline} />
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <AttributeImage attribute={mode === Mode.Naval ? UnitAttribute.DamageDone : UnitAttribute.Offense} />
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <AttributeImage attribute={mode === Mode.Naval ? UnitAttribute.DamageTaken : UnitAttribute.Defense} />
-            </Table.HeaderCell>
-            <Table.HeaderCell>
               <Icon name='arrows alternate horizontal' size='big' />
             </Table.HeaderCell>
-            <Table.HeaderCell>
-              <AttributeImage attribute={UnitAttribute.MoraleDamageDone} />
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <AttributeImage attribute={UnitAttribute.MoraleDamageTaken} />
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <AttributeImage attribute={UnitAttribute.StrengthDamageDone} />
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <AttributeImage attribute={UnitAttribute.StrengthDamageTaken} />
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              Exp
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              Units
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              Terrain
-            </Table.HeaderCell>
+            {
+              this.filterByMode(filterAttributes(this.attributes, settings)).map(attribute => (
+                <Table.HeaderCell>
+                  <AttributeImage attribute={attribute} />
+                </Table.HeaderCell>
+              ))
+            }
+            {
+              settings[Setting.AttributeUnitType] &&
+              <Table.HeaderCell>
+                Units
+              </Table.HeaderCell>
+            }
+            {
+              settings[Setting.AttributeTerrainType] &&
+              <Table.HeaderCell>
+                Terrain
+              </Table.HeaderCell>
+            }
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -82,8 +91,9 @@ export default class UnitDefinitions extends Component<IProps> {
   }
 
   renderRow = (unit: BaseUnit) => {
+    const { settings, onRowClick, mode } = this.props
     return (
-      <Table.Row key={unit.type} onClick={() => this.props.onRowClick(unit)}>
+      <Table.Row key={unit.type} onClick={() => onRowClick(unit)}>
         <Table.Cell singleLine>
           <LabelItem item={unit} />
         </Table.Cell>
@@ -91,82 +101,51 @@ export default class UnitDefinitions extends Component<IProps> {
           {toNumber(calculateValue(unit, UnitAttribute.Morale))}
         </Table.Cell>
         <Table.Cell>
-          {this.props.mode === Mode.Naval ? toPercent(calculateValue(unit, UnitAttribute.Strength)) : toManpower(calculateValue(unit, UnitAttribute.Strength))}
-        </Table.Cell>
-        <Table.Cell>
-          <StyledNumber
-            value={calculateValue(unit, UnitAttribute.Discipline)}
-            formatter={toSignedPercent} hide_zero
-          />
-        </Table.Cell>
-        <Table.Cell>
-          <StyledNumber
-            value={calculateValue(unit, this.props.mode === Mode.Naval ? UnitAttribute.DamageDone : UnitAttribute.Offense)}
-            formatter={toSignedPercent} hide_zero
-          />
-        </Table.Cell>
-        <Table.Cell>
-          <StyledNumber
-            value={calculateValue(unit, this.props.mode === Mode.Naval ? UnitAttribute.DamageTaken : UnitAttribute.Defense)}
-            formatter={toSignedPercent} hide_zero
-            reverse={this.props.mode === Mode.Naval}
-          />
+          {mode === Mode.Naval ? toPercent(calculateValue(unit, UnitAttribute.Strength)) : toManpower(calculateValue(unit, UnitAttribute.Strength))}
         </Table.Cell>
         <Table.Cell>
           {toNumber(calculateValue(unit, UnitAttribute.Maneuver))}
         </Table.Cell>
-        <Table.Cell>
-          <StyledNumber
-            value={calculateValue(unit, UnitAttribute.MoraleDamageDone)}
-            formatter={toSignedPercent} hide_zero
-          />
-        </Table.Cell>
-        <Table.Cell>
-          <StyledNumber
-            value={calculateValue(unit, UnitAttribute.MoraleDamageTaken)}
-            formatter={toSignedPercent} hide_zero
-            reverse
-          />
-        </Table.Cell>
-        <Table.Cell>
-          <StyledNumber
-            value={calculateValue(unit, UnitAttribute.StrengthDamageDone)}
-            formatter={toSignedPercent} hide_zero
-          />
-        </Table.Cell>
-        <Table.Cell>
-          <StyledNumber
-            value={calculateValue(unit, UnitAttribute.StrengthDamageTaken)}
-            formatter={toSignedPercent} hide_zero
-            reverse
-          />
-        </Table.Cell>
-        <Table.Cell>
-          {toPercent(hideZero(calculateValue(unit, UnitAttribute.Experience)))}
-        </Table.Cell>
-        <Table.Cell>
-          <VersusList
-            item={unit}
-            images={this.props.images}
-            unit_types={this.props.unit_types}
-            styled
-          />
-        </Table.Cell>
-        <Table.Cell>
-          <List>
-            {
-              this.props.terrains.filter(type => calculateValue(unit, type) !== 0).map(type => (
-                <List.Item key={type}>
-                  {type + ': '}
-                  <StyledNumber
-                    value={calculateValue(unit, type)}
-                    formatter={toSignedPercent}
-                  />
-                </List.Item>
-              ))
-            }
-          </List>
-        </Table.Cell>
+        {
+          this.filterByMode(filterAttributes(this.attributes, settings)).map(attribute => (
+            <Table.Cell>
+              <StyledNumber
+                value={calculateValue(unit, attribute)}
+                formatter={toSignedPercent} hide_zero
+                reverse={this.isDamageTaken(attribute)}
+              />
+            </Table.Cell>
+          ))
+        }
+        {
+          settings[Setting.AttributeUnitType] &&
+          <Table.Cell>
+            <VersusList
+              item={unit}
+              images={this.props.images}
+              unit_types={this.props.unit_types}
+              styled
+            />
+          </Table.Cell>
+        }
+        {
+          settings[Setting.AttributeTerrainType] &&
+          <Table.Cell>
+            <List>
+              {
+                this.props.terrains.filter(type => calculateValue(unit, type) !== 0).map(type => (
+                  <List.Item key={type}>
+                    {type + ': '}
+                    <StyledNumber
+                      value={calculateValue(unit, type)}
+                      formatter={toSignedPercent}
+                    />
+                  </List.Item>
+                ))
+              }
+            </List>
+          </Table.Cell>
+        }
       </Table.Row>
     )
   }

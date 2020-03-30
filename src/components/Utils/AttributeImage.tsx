@@ -89,6 +89,8 @@ const getText = (attribute: string) => {
       return 'Backrow'
     case CountryAttribute.FlankRatio:
       return 'Cavalry ratio'
+    case UnitAttribute.Experience:
+      return 'Exp'
     default:
       return attribute
   }
