@@ -9,8 +9,9 @@ const battleMapping: ActionToFunction<Battle> = {}
 export const invalidate = makeActionRemoveFirst(manager.invalidate, battleMapping)
 export const selectArmy = makeActionRemoveFirst(manager.selectArmy, battleMapping)
 export const selectTerrain = makeActionRemoveFirst(manager.selectTerrain, battleMapping)
-export const setRoll = makeActionRemoveFirst(manager.setRoll, battleMapping)
-export const toggleRandomRoll = makeActionRemoveFirst(manager.toggleRandomRoll, battleMapping)
+export const setDice = makeActionRemoveFirst(manager.setDice, battleMapping)
+export const setPhaseDice = makeActionRemoveFirst(manager.setPhaseDice, battleMapping)
+export const toggleRandomDice = makeActionRemoveFirst(manager.toggleRandomDice, battleMapping)
 export const undo = makeActionRemoveFirst(manager.undo, battleMapping)
 export const setSeed = makeActionRemoveFirst(manager.setSeed, battleMapping)
 

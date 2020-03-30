@@ -17,6 +17,7 @@ import Error from './pages/Error'
 import { AppState } from 'state'
 import Analyze from './pages/Analyze'
 import { Container } from 'semantic-ui-react'
+import Modals from 'pages/Modals'
 
 // Any additional component props go here.
 interface MainProps {
@@ -32,6 +33,7 @@ const Root = ({ store, persistor }: MainProps) => {
         <Error>
           <BrowserRouter>
             <Container>
+              <Modals/>
               <Route path='/' component={Navigation} />
               <Route path='/' exact component={Battle} />
               <Route path='/Units' component={Units} />

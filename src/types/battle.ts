@@ -20,17 +20,12 @@ export enum CombatPhase {
 export type Participants = { [key in Side]: Participant }
 export type ModeState = { [key in Mode]: Battle }
 
-interface Rolls {
-  dice: number
-  randomized: boolean
-}
-
 export interface Participant {
   country: CountryName
   rounds: CombatParticipant[],
-  rolls: Rolls[],
+  rolls: number[],
   dice: number,
-  randomize_roll: boolean
+  randomize_dice: boolean
 }
 
 export enum Side {

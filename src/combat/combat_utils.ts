@@ -61,12 +61,13 @@ export const calculateExperienceReduction = (settings: Settings, target: BaseUni
 
 export const getCombatPhase = (round: number, settings: Settings) => {
   if (settings[Setting.FireAndShock]) {
-    const phase = Math.floor(round / settings[Setting.RollFrequency])
-    return phase % 2 ? CombatPhase.Shock : CombatPhase.Fire
+    const phase = getCombatPhaseNumber(round, settings)
+    if (phase)
+      return phase % 2 ? CombatPhase.Fire : CombatPhase.Shock
   }
   return CombatPhase.Default
 }
 
-export const getCombatPhaseNumber = (round: number, settings: Settings) => Math.ceil((round + 1) / settings[Setting.RollFrequency])
+export const getCombatPhaseNumber = (round: number, settings: Settings) => Math.ceil(round  / settings[Setting.RollFrequency])
 
-export const getDailyIncrease = (round: number, settings: Settings) => settings[Setting.DailyDamageIncrease] * (round + 1)
+export const getDailyIncrease = (round: number, settings: Settings) => settings[Setting.DailyDamageIncrease] * round

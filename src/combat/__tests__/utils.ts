@@ -1,9 +1,9 @@
 import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultParticipant, getDefaultArmy, getDefaultUnit } from 'data'
 import { map, mapRange, resize } from 'utils'
 import { mergeValues } from 'definition_values'
-import { Mode, CountryName, Participant, Terrain, TacticType, Setting, Side, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, Settings, Cohort, CombatPhase, CultureType, General, GeneralAttribute, UnitPreferences } from 'types'
-import { CombatCohort, CombatParticipant, doBattleFast, deploy, convertParticipant, reinforce } from 'combat'
-import { ArmyForCombat } from 'state'
+import { Mode, CountryName, Participant, Terrain, TacticType, Setting, Side, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, Settings, Cohort, CombatPhase, CultureType, General, GeneralAttribute, UnitPreferences, ArmyForCombatConversion, CombatCohort, CombatParticipant } from 'types'
+import { doBattleFast, deploy, reinforce } from 'combat'
+import { convertParticipant } from 'managers/battle'
 
 const unitDefinitions = map(getDefaultUnits('' as CultureType), unit => mergeValues(unit, getDefaultUnit(UnitType.Land)))
 export const getDefinitions = () => ({ [CountryName.Country1]: unitDefinitions, [CountryName.Country2]: unitDefinitions })
@@ -16,8 +16,8 @@ const terrains = getDefaultTerrains()
 export interface TestInfo {
   attacker: Participant
   defender: Participant
-  army_a: ArmyForCombat
-  army_d: ArmyForCombat
+  army_a: ArmyForCombatConversion
+  army_d: ArmyForCombatConversion
   terrains: Terrain[]
   settings: Settings
 }
@@ -48,7 +48,7 @@ export const initInfo = () => {
       [CombatPhase.Shock]: 0
     }
   })
-  const army = (): ArmyForCombat => ({
+  const army = (): ArmyForCombatConversion => ({
     ...getDefaultArmy(Mode.Land),
     // Frontline must be cloned to prevent tests mutating the source.
     frontline: process.env.REACT_APP_GAME === 'euiv' ? [Array(30).fill(null), Array(30).fill(null)] : [Array(30).fill(null)],
@@ -241,8 +241,8 @@ type ExpectedUnits = ([UnitType | null, number | null, number | null] | null)
 type Expected = (ExpectedUnits[] | null)
 
 const getParticipants = (info: TestInfo) => {
-  const participant_a = convertParticipant(Side.Attacker, info.army_a, info.army_d, info.terrains, every_type, info.settings)
-  const participant_d = convertParticipant(Side.Defender, info.army_d, info.army_a, info.terrains, every_type, info.settings)
+  const participant_a = convertParticipant(Side.Attacker, info.army_a, info.army_d, info.terrains, info.settings)
+  const participant_d = convertParticipant(Side.Defender, info.army_d, info.army_a, info.terrains, info.settings)
   return [participant_a, participant_d]
 }
 
@@ -280,8 +280,8 @@ export const testReinforcement = (rounds_to_skip: number, info: TestInfo, expect
   participant_d.dice = 2
   for (let round = 0; round < rounds_to_skip; round++)
     doRound(info, participant_a, participant_d)
-  reinforce(participant_a)
-  reinforce(participant_d)
+  reinforce(participant_a, info.settings)
+  reinforce(participant_d, info.settings)
   verifyDeployOrReinforce(info, Side.Attacker, participant_a, expected_a)
   verifyDeployOrReinforce(info, Side.Defender, participant_d, expected_d)
 }

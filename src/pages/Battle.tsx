@@ -12,7 +12,7 @@ import TargetArrows from 'containers/TargetArrows'
 import TerrainSelector from 'containers/TerrainSelector'
 import WinRate from 'containers/WinRate'
 import {
-  invalidate, selectArmy, setRoll, toggleRandomRoll, clearCohorts, changeSiteParameter,
+  invalidate, selectArmy, setDice, toggleRandomDice, clearCohorts, changeSiteParameter,
   undo, battle, refreshBattle, setSeed, setGeneralBaseStat, resetState, selectCulture
 } from 'reducers'
 import { AppState, getBattle, getParticipant, getSettings } from 'state'
@@ -98,7 +98,7 @@ class Battle extends Component<IProps, IState> {
         <Grid verticalAlign='middle'>
           <Grid.Row>
             <Grid.Column floated='left' width='3'>
-              <Header>{'Round: ' + this.roundName(round, getCombatPhase(round - 1, settings))}</Header>
+              <Header>{'Round: ' + this.roundName(round, getCombatPhase(round, settings))}</Header>
             </Grid.Column>
             <Grid.Column textAlign='center' width='4'>
               <Checkbox
@@ -346,7 +346,7 @@ const mapStateToProps = (state: AppState) => {
   }
 }
 
-const actions = { changeSiteParameter, battle, undo, toggleRandomRoll, setRoll, setGeneralBaseStat, invalidate, selectArmy, setSeed, refreshBattle, resetState, selectCulture, clearCohorts }
+const actions = { changeSiteParameter, battle, undo, toggleRandomRoll: toggleRandomDice, setRoll: setDice, setGeneralBaseStat, invalidate, selectArmy, setSeed, refreshBattle, resetState, selectCulture, clearCohorts }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

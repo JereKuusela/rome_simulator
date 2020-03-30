@@ -5,7 +5,7 @@ import { Grid, Button, Table, Header, Checkbox } from 'semantic-ui-react'
 import { AppState, getSettings, getMode, getCombatParticipant } from 'state'
 import { interrupt, calculateWinRate, initResourceLosses } from 'combat'
 import { values, showProgress } from 'utils'
-import { SimulationSpeed, Setting, Side, Mode, CasualtiesProgress, ResourceLosses, WinRateProgress, ResourceLossesProgress } from 'types'
+import { SimulationSpeed, Setting, Mode, CasualtiesProgress, ResourceLosses, WinRateProgress, ResourceLossesProgress, Side } from 'types'
 import { toPercent, toNumber, toFlooredPercent } from 'formatters'
 import SimpleRange from 'components/SimpleRange'
 import RoundChart from 'components/Charts/RoundChart'
@@ -371,12 +371,14 @@ class Analyze extends Component<IProps, IState> {
   scale = (value: number) => this.state.progress ? value / this.state.progress : 0
 }
 
-const mapStateToProps = (state: AppState) => ({
-  attacker: getCombatParticipant(state, Side.Attacker, 0),
-  defender: getCombatParticipant(state, Side.Defender, 0),
-  settings: getSettings(state),
-  mode: getMode(state)
-})
+const mapStateToProps = (state: AppState) => {
+  return {
+    attacker: getCombatParticipant(state, Side.Attacker,  -1),
+    defender: getCombatParticipant(state, Side.Defender,  -1),
+    settings: getSettings(state),
+    mode: getMode(state)
+  }
+}
 
 const actions = { changeSiteParameter, refreshBattle }
 

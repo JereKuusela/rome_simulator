@@ -137,7 +137,7 @@ export const getCurrentCombat = (state: AppState, side: Side): CombatCohorts => 
 
 export const getCombatParticipant = (state: AppState, side: Side, round?: number): CombatParticipant => {
   const participant = state.battle[state.settings.mode].participants[side]
-  return participant.rounds[round ?? participant.rounds.length - 1]
+  return participant.rounds[round ? round + 1 : participant.rounds.length - 1]
 }
 
 /** Helper function, should be checked and refactored. */
@@ -153,27 +153,18 @@ const getArmyForCombat = (state: AppState, side: Side, mode?: Mode) => {
   return { ...cohorts, tactic, general, flank_ratio, flank_size: army.flank_size, unit_preferences: army.unit_preferences, definitions }
 }
 
-export const getCombatParticipants = (state: AppState, round?: number): CombatParticipant[] => {
+export const initializeCombatParticipants = (state: AppState): CombatParticipant[] => {
   const mode = getMode(state)
   const battle = getBattle(state)
-  const attacker = battle.participants[Side.Attacker]
-  const defender = battle.participants[Side.Defender]
-  if ((round && round >= attacker.rounds.length) || !attacker.rounds.length) {
-    const army_a = getArmyForCombat(state, Side.Attacker, mode)
-    const army_d = getArmyForCombat(state, Side.Defender, mode)
-    const terrains = battle.terrains.map(value => state.terrains[value])
-    const settings = getSettings(state)
-    return [
-      convertParticipant(Side.Attacker, army_a, army_d, terrains, settings),
-      convertParticipant(Side.Defender, army_d, army_a, terrains, settings)
-    ]
-  }
+  const army_a = getArmyForCombat(state, Side.Attacker, mode)
+  const army_d = getArmyForCombat(state, Side.Defender, mode)
+  const terrains = battle.terrains.map(value => state.terrains[value])
+  const settings = getSettings(state)
   return [
-    attacker.rounds[round ?? attacker.rounds.length - 1], 
-    defender.rounds[round ?? defender.rounds.length - 1]
+    convertParticipant(Side.Attacker, army_a, army_d, terrains, settings),
+    convertParticipant(Side.Defender, army_d, army_a, terrains, settings)
   ]
 }
-
 
 export const getSelectedTactic = (state: AppState, side: Side): Tactic => {
   const army = getBaseArmy(state, side)

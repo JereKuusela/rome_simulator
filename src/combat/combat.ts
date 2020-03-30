@@ -115,6 +115,7 @@ export const getCombatUnit = (combatSettings: Settings, casualties_multiplier: n
  */
 export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, mark_defeated: boolean, settings: Settings, round: number) => {
   const phase = getCombatPhase(round, settings)
+  console.log(round)
   if (mark_defeated) {
     removeDefeated(a.cohorts.frontline)
     removeDefeated(d.cohorts.frontline)

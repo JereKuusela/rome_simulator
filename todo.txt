@@ -12,6 +12,7 @@ Changelog:
 - Battle: Fixed total damage shown incorrectly on cohort tooltips (if target had experience).
 - Battle: Improved flank size setting (1.4).
 - Battle: Improved cohort tooltips (base damage is now part of strength/morale multipliers).
+- Battle: Improved dice roll input. Allows setting custom dice for all phases or individually.
 - Battle: Added support for backrow and backrow effectiveness (offensive and defensive), feature from EUIV.
 - Battle: Added food consumption and storage to fast planner.
 - Battle: Refactored state for armies (first step towards multiarmy battles).
@@ -81,10 +82,6 @@ EUIV:
  - Tooltip needs to show source of losses (to include daily loss)
 
 Release++:
-
-EUIV:
- - Tooltip needs to show source of losses (to include daily loss)
- - Units: Show pips on selectors
 
 Settings:
  - discipline: Reduces damage, only increases damage, no effect.

@@ -1,5 +1,5 @@
 import { Battle, TerrainType, Side, CountryName, ArmyForCombatConversion, Terrain, Settings, TacticCalc, Setting, UnitPreferences, CombatPhase, CombatParticipant } from "types"
-import { forEach, arrGet, toArr, toObj, values, map } from "utils"
+import { forEach, toArr, toObj, values, map } from "utils"
 import { convertCohorts, calculateGeneralPips, getTerrainPips, getUnitDefinition } from "combat"
 import { calculateValue } from "definition_values"
 
@@ -23,8 +23,6 @@ export const undo = (battle: Battle, steps: number) => {
       seed = battle.custom_seed ? battle.custom_seed : 0
     forEach(battle.participants, value => {
       value.rounds.pop()
-      value.dice = arrGet(value.rolls, -2, { dice: value.dice }).dice
-      value.rolls.pop()
     })
     battle.round--
     battle.seed = seed
@@ -33,13 +31,20 @@ export const undo = (battle: Battle, steps: number) => {
   }
 }
 
-export const toggleRandomRoll = (battle: Battle, side: Side) => {
+export const toggleRandomDice = (battle: Battle, side: Side) => {
   const participant = battle.participants[side]
-  participant.randomize_roll = !participant.randomize_roll
+  participant.randomize_dice = !participant.randomize_dice
 }
 
-export const setRoll = (battle: Battle, side: Side, roll: number) => {
-  battle.participants[side].dice = roll
+export const setDice = (battle: Battle, side: Side, dice: number) => {
+  battle.participants[side].dice = dice
+}
+
+export const setPhaseDice = (battle: Battle, side: Side, phase: number, dice: number) => {
+  const rolls = battle.participants[side].rolls
+  while (rolls.length - 1 < phase)
+    rolls.push(0)
+  rolls[phase] = dice
 }
 
 export const selectArmy = (battle: Battle, side: Side, name: CountryName) => {

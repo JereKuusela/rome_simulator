@@ -9,6 +9,7 @@ type IProps = {
   onChange: (value: number) => void
   disabled?: boolean
   percent?: boolean
+  delay?: number
 }
 
 type IState = {
@@ -75,7 +76,7 @@ export default class DelayedNumericInput extends Component<IProps, IState> {
   onChange = (value: string) => {
     if (this.state.timer)
       clearTimeout(this.state.timer)
-    this.setState({ value, timer: setTimeout(this.update, 2000) })
+    this.setState({ value, timer: setTimeout(this.update, this.props.delay ?? 2000) })
   }
 
   update = () => {
