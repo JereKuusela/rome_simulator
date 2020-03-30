@@ -1,6 +1,7 @@
 
-import { CombatPhase, GeneralAttribute, CountryAttribute, UnitAttribute, Setting, Mode, Settings, ValuesType } from 'types'
+import { CombatPhase, GeneralAttribute, CountryAttribute, UnitAttribute, Setting, Mode, ValuesType } from 'types'
 import { toPercent } from 'formatters'
+import { SiteSettings } from './settings'
 
 export const formatAttribute = (value: number, attribute: string) => {
   if (attribute === CountryAttribute.CombatWidth || attribute in GeneralAttribute || attribute in CombatPhase)
@@ -8,11 +9,11 @@ export const formatAttribute = (value: number, attribute: string) => {
   return toPercent(value)
 }
 
-export const filterAttributes = <T extends string>(attributes: T[], settings: Settings, mode?: Mode, show_statistics?: boolean): T[] => attributes.filter(attribute => isAttributeEnabled(attribute, settings, mode, show_statistics))
+export const filterAttributes = <T extends string>(attributes: T[], settings: SiteSettings, mode?: Mode, show_statistics?: boolean): T[] => attributes.filter(attribute => isAttributeEnabled(attribute, settings, mode, show_statistics))
 
 export const getAttributeValuesType = (attribute: UnitAttribute) => attribute === UnitAttribute.Morale ? ValuesType.Modifier : ValuesType.Base
 
-export const isAttributeEnabled = (attribute: string, settings: Settings, mode?: Mode, show_statistics?: boolean) => {
+export const isAttributeEnabled = (attribute: string, settings: SiteSettings, mode?: Mode, show_statistics?: boolean) => {
   if (!show_statistics && (attribute === UnitAttribute.StrengthDepleted || attribute === UnitAttribute.MoraleDepleted))
     return false
   if (!settings[Setting.BackRow] && attribute === UnitAttribute.OffensiveSupport)

@@ -25,7 +25,7 @@ export const mergeDefinition = (settings: Settings, units: BaseUnits, general: U
   while (base && !merged.includes(base)) {
     merged.push(base)
     unit = mergeValues(mergeValues(unit, units[base]), general[base])
-    base = units[base].base
+    base = units[base]?.base
   }
   return applyDynamicAttributes(unit, settings) as Unit
 }

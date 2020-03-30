@@ -1,10 +1,8 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Button, Grid, Header, Input, Modal, Checkbox } from 'semantic-ui-react'
+import { Button, Grid, Header, Input, Checkbox } from 'semantic-ui-react'
 import { getCombatPhase } from 'combat'
-import ModalCohortDetail from 'containers/modal/ModalCohortDetail'
-import ModalUnitSelector, { ModalSelectorInfo } from 'containers/modal/ModalUnitSelector'
 import PreferredUnitTypes from 'containers/PreferredUnitTypes'
 import TableStats from 'containers/TableStats'
 import TableArmyPart from 'containers/TableArmyPart'
@@ -13,56 +11,34 @@ import TerrainSelector from 'containers/TerrainSelector'
 import WinRate from 'containers/WinRate'
 import {
   invalidate, selectArmy, setDice, toggleRandomDice, clearCohorts, changeSiteParameter,
-  undo, battle, refreshBattle, setSeed, setGeneralBaseStat, resetState, selectCulture
+  undo, battle, refreshBattle, setSeed, setGeneralBaseStat, resetState, selectCulture, openModal
 } from 'reducers'
 import { AppState, getBattle, getParticipant, getSettings } from 'state'
-import { ArmyType, CountryName, Setting, Side, CombatPhase, UnitType } from 'types'
+import { ArmyType, CountryName, Setting, Side, CombatPhase, UnitType, ModalType } from 'types'
 import TableUnitTypes from 'containers/TableUnitTypes'
 import TableArmyInfo from 'containers/TableArmyInfo'
 import TableDamageAttributes from 'containers/TableDamageAttributes'
 import AccordionToggle from 'containers/AccordionToggle'
-import ModalUnitDetail from 'containers/modal/ModalUnitDetail'
-
-interface IState {
-  modal_cohort_info: ModalSelectorInfo | null
-  modal_cohort_detail_info: { country: CountryName, id: number, side: Side } | null
-  modal_unit_info: { country: CountryName, type: UnitType } | null
-}
 
 const ATTACKER_COLOR = '#FFAA00AA'
 const DEFENDER_COLOR = '#00AAFFAA'
 
-class Battle extends Component<IProps, IState> {
-
-  constructor(props: IProps) {
-    super(props)
-    this.state = { modal_cohort_info: null, modal_cohort_detail_info: null, modal_unit_info: null }
-  }
+class Battle extends Component<IProps> {
 
   componentDidMount() {
     // Ensures that the setup is not outdated.
     this.props.refreshBattle()
   }
 
-  isModalOpen = () => this.state.modal_cohort_info || this.state.modal_cohort_detail_info || this.state.modal_unit_info
-
-  closeModal = (): void => this.setState({ modal_cohort_info: null, modal_cohort_detail_info: null, modal_unit_info: null })
-
-  openCohortModal = (side: Side, type: ArmyType, country: CountryName, row: number, column: number, id: number | undefined): void => {
+  openCohortModal = (side: Side, type: ArmyType, row: number, column: number, id: number | undefined): void => {
     if (id)
-      this.openCohortDetails(side, country, id)
+      this.props.openModal(ModalType.CohortDetail, { side, id })
     else
-      this.openCohortSelector(type, side, row, column)
-  }
-
-  openCohortSelector = (type: ArmyType, side: Side, row: number, column: number): void => this.setState({ modal_cohort_info: { type, side, row, column } })
-
-  openCohortDetails = (side: Side, country: CountryName, id: number): void => {
-    this.setState({ modal_cohort_detail_info: { country, id, side } })
+      this.props.openModal(ModalType.CohortSelector, { side, type, row, column })
   }
 
   openUnitDetails = (country: CountryName, type: UnitType): void => {
-    this.setState({ modal_unit_info: { country, type } })
+    this.props.openModal(ModalType.UnitDetail, { country, type })
   }
 
   componentDidUpdate() {
@@ -77,24 +53,6 @@ class Battle extends Component<IProps, IState> {
       return null
     return (
       <>
-        <ModalUnitSelector
-          info={this.state.modal_cohort_info}
-          onClose={this.closeModal}
-        />
-        <ModalCohortDetail
-          country={this.state.modal_cohort_detail_info ? this.state.modal_cohort_detail_info.country : '' as CountryName}
-          id={this.state.modal_cohort_detail_info ? this.state.modal_cohort_detail_info.id : -1}
-          side={this.state.modal_cohort_detail_info ? this.state.modal_cohort_detail_info.side : Side.Attacker}
-          onClose={this.closeModal}
-        />
-        <Modal basic onClose={this.closeModal} open={!!this.state.modal_unit_info}>
-          <Modal.Content>
-            <ModalUnitDetail
-              country={this.state.modal_unit_info?.country}
-              unit_type={this.state.modal_unit_info?.type}
-            />
-          </Modal.Content>
-        </Modal>
         <Grid verticalAlign='middle'>
           <Grid.Row>
             <Grid.Column floated='left' width='3'>
@@ -121,7 +79,7 @@ class Battle extends Component<IProps, IState> {
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderFrontline(Side.Attacker, participant_a.country)
+                this.renderFrontline(Side.Attacker)
               }
             </Grid.Column>
           </Grid.Row>
@@ -138,7 +96,7 @@ class Battle extends Component<IProps, IState> {
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderFrontline(Side.Defender, participant_d.country)
+                this.renderFrontline(Side.Defender)
               }
             </Grid.Column>
           </Grid.Row>
@@ -202,22 +160,22 @@ class Battle extends Component<IProps, IState> {
           <Grid>
             <Grid.Row columns={1}>
               <Grid.Column>
-                {this.renderReserve(Side.Attacker, participant_a.country)}
+                {this.renderReserve(Side.Attacker)}
               </Grid.Column>
             </Grid.Row>
             <Grid.Row columns={1}>
               <Grid.Column>
-                {this.renderReserve(Side.Defender, participant_d.country)}
+                {this.renderReserve(Side.Defender)}
               </Grid.Column>
             </Grid.Row>
             <Grid.Row columns={1}>
               <Grid.Column>
-                {this.renderDefeatedArmy(Side.Attacker, participant_a.country)}
+                {this.renderDefeatedArmy(Side.Attacker)}
               </Grid.Column>
             </Grid.Row>
             <Grid.Row columns={1}>
               <Grid.Column>
-                {this.renderDefeatedArmy(Side.Defender, participant_d.country)}
+                {this.renderDefeatedArmy(Side.Defender)}
               </Grid.Column>
             </Grid.Row>
           </Grid>
@@ -253,13 +211,13 @@ class Battle extends Component<IProps, IState> {
     return String(round)
   }
 
-  renderFrontline = (side: Side, country: CountryName) => {
+  renderFrontline = (side: Side) => {
     const combat_width = this.props.settings[Setting.CombatWidth]
     return (
       <TableArmyPart
         color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
         side={side}
-        onClick={(row, column, id) => this.openCohortModal(side, ArmyType.Frontline, country, row, column, id)}
+        onClick={(row, column, id) => this.openCohortModal(side, ArmyType.Frontline, row, column, id)}
         row_width={Math.max(30, combat_width)}
         reverse={side === Side.Attacker}
         type={ArmyType.Frontline}
@@ -268,12 +226,12 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderReserve = (side: Side, country: CountryName) => {
+  renderReserve = (side: Side) => {
     return (
       <TableArmyPart
         color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
         side={side}
-        onClick={(row, column, id) => this.openCohortModal(side, ArmyType.Reserve, country, row, column + 30 * row, id)}
+        onClick={(row, column, id) => this.openCohortModal(side, ArmyType.Reserve, row, column + 30 * row, id)}
         row_width={30}
         reverse={false}
         type={ArmyType.Reserve}
@@ -282,12 +240,12 @@ class Battle extends Component<IProps, IState> {
     )
   }
 
-  renderDefeatedArmy = (side: Side, country: CountryName) => {
+  renderDefeatedArmy = (side: Side) => {
     return (
       <TableArmyPart
         color={side === Side.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
         side={side}
-        onClick={(row, column, id) => this.openCohortModal(side, ArmyType.Defeated, country, row, column + 30 * row, id)}
+        onClick={(row, column, id) => this.openCohortModal(side, ArmyType.Defeated, row, column + 30 * row, id)}
         row_width={30}
         reverse={false}
         type={ArmyType.Defeated}
@@ -346,7 +304,7 @@ const mapStateToProps = (state: AppState) => {
   }
 }
 
-const actions = { changeSiteParameter, battle, undo, toggleRandomRoll: toggleRandomDice, setRoll: setDice, setGeneralBaseStat, invalidate, selectArmy, setSeed, refreshBattle, resetState, selectCulture, clearCohorts }
+const actions = { openModal, changeSiteParameter, battle, undo, toggleRandomRoll: toggleRandomDice, setRoll: setDice, setGeneralBaseStat, invalidate, selectArmy, setSeed, refreshBattle, resetState, selectCulture, clearCohorts }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

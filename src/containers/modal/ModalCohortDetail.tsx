@@ -1,60 +1,52 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Modal } from 'semantic-ui-react'
 
 import ItemRemover from 'components/ItemRemover'
 import UnitDetail from 'components/UnitDetail'
 
-import { AppState, filterTerrainTypes, findCohortById, getCombatUnitForEachRound, getMode, getSettings, getUnitTypeList } from 'state'
-import { ValuesType, Side, CountryName, UnitType, Cohort, UnitAttribute, UnitValueType, Settings, CombatCohort } from 'types'
+import { AppState, filterTerrainTypes, findCohortById, getCombatUnitForEachRound, getMode, getSettings, getCombatParticipant, getSiteSettings, getCountryName } from 'state'
+import { ValuesType, CountryName, UnitType, Cohort, UnitAttribute, UnitValueType, Settings, CombatCohort, ModalType } from 'types'
 import { addValues } from 'definition_values'
-import { editCohort, deleteCohort, invalidate, setCohortValue, changeCohortType, toggleCohortLoyality } from 'reducers'
+import { editCohort, deleteCohort, invalidate, setCohortValue, changeCohortType, toggleCohortLoyality, closeModal } from 'reducers'
 import { applyDynamicAttributes } from 'managers/units'
+import BaseModal from './BaseModal'
+import { toArr } from 'utils'
 const CUSTOM_VALUE_KEY = 'Unit'
-
-interface Props {
-  side: Side
-  country: CountryName
-  id: number
-  onClose: () => void
-}
 
 class ModalCohortDetail extends Component<IProps> {
 
   render() {
-    const { onClose, mode, unit_types, terrain_types, cohort: unit, settings } = this.props
-    if (!unit)
+    const { mode, unit_types, terrain_types, cohort, settings } = this.props
+    if (!cohort)
       return null
     return (
-      <Modal basic onClose={onClose} open>
-        <Modal.Content>
-          <ItemRemover onRemove={this.removeUnit} />
-          <UnitDetail
-            mode={mode}
-            settings={settings}
-            terrain_types={terrain_types}
-            custom_value_key={CUSTOM_VALUE_KEY}
-            unit={unit}
-            unit_types={unit_types}
-            unit_types_as_dropdown={true}
-            onTypeChange={this.changeType}
-            onCustomBaseValueChange={this.setBaseValue}
-            onCustomModifierValueChange={this.setModifierValue}
-            onCustomLossValueChange={this.setLossValue}
-            onIsLoyalToggle={this.toggleIsLoyal}
-            show_statistics={true}
-            disable_base_values={true}
-          />
-        </Modal.Content>
-      </Modal>
+      <BaseModal basic type={ModalType.CohortDetail}>
+        <ItemRemover onRemove={this.removeUnit} />
+        <UnitDetail
+          mode={mode}
+          settings={settings}
+          terrain_types={terrain_types}
+          custom_value_key={CUSTOM_VALUE_KEY}
+          unit={cohort}
+          unit_types={unit_types}
+          unit_types_as_dropdown={true}
+          onTypeChange={this.changeType}
+          onCustomBaseValueChange={this.setBaseValue}
+          onCustomModifierValueChange={this.setModifierValue}
+          onCustomLossValueChange={this.setLossValue}
+          onIsLoyalToggle={this.toggleIsLoyal}
+          show_statistics={true}
+          disable_base_values={true}
+        />
+      </BaseModal>
     )
   }
 
   removeUnit = () => {
-    const { id, country, deleteCohort, invalidate, onClose } = this.props
+    const { id, country, deleteCohort, invalidate, closeModal } = this.props
     deleteCohort(country, id)
     invalidate()
-    onClose()
+    closeModal(ModalType.CohortDetail)
   }
 
   setBaseValue = (key: string, attribute: UnitValueType, value: number) => {
@@ -110,18 +102,34 @@ const convertCohort = (settings: Settings, definition: Cohort | null, rounds: (C
   return applyDynamicAttributes(definition, settings)
 }
 
-const mapStateToProps = (state: AppState, props: Props) => ({
-  unit_types: props.country ? getUnitTypeList(state, true, props.country) : [],
-  terrain_types: filterTerrainTypes(state),
-  mode: getMode(state),
-  cohort: convertCohort(getSettings(state), findCohortById(state, props.side, props.id), getCombatUnitForEachRound(state, props.side, props.id)),
-  settings: getSettings(state)
-})
+const mapStateToProps = (state: AppState) => {
+  const data = state.ui[ModalType.CohortDetail]
+  if (data) {
+    return {
+      id: data.id,
+      terrain_types: filterTerrainTypes(state),
+      country: getCountryName(state, data.side),
+      unit_types: toArr(getCombatParticipant(state, data.side).unit_types, unit => unit.type),
+      mode: getMode(state),
+      cohort: convertCohort(getSettings(state), findCohortById(state, data.side, data.id), getCombatUnitForEachRound(state, data.side, data.id)),
+      settings: getSiteSettings(state)
+    }
+  }
+  return {
+    id: 0,
+    terrain_types: filterTerrainTypes(state),
+    country: CountryName.Country1,
+    mode: getMode(state),
+    settings: getSiteSettings(state),
+    cohort: null,
+    unit_types: [],
+  }
+}
 
-const actions = { editCohort, deleteCohort, invalidate, setCohortValue, changeCohortType, toggleCohortLoyality }
+const actions = { editCohort, deleteCohort, invalidate, setCohortValue, changeCohortType, toggleCohortLoyality, closeModal }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
-interface IProps extends Props, S, D { }
+interface IProps extends S, D { }
 
 export default connect(mapStateToProps, actions)(ModalCohortDetail)

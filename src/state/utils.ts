@@ -24,6 +24,8 @@ export const getSettings = (state: AppState, mode?: Mode): Settings => {
   return settings
 }
 
+export const getSiteSettings = (state: AppState) => state.settings.siteSettings
+
 export const findCohortById = (state: AppState, side: Side, id: number): Cohort | null => {
   const cohorts = getCohorts(state, side)
   let cohort = cohorts.reserve.find(unit => unit.id === id) || null
