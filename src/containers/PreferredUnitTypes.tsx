@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Image, Table, Input } from 'semantic-ui-react'
+import { Table, Input } from 'semantic-ui-react'
 
-import { AppState, getCountryName, getUnitPreferences, getFlankSize, getMode, getUnitDefinitionsBySide } from 'state'
-import { setFlankSize, invalidate } from 'reducers'
+import { AppState, getCountryName, getUnitPreferences, getFlankSize, getMode, getUnitList} from 'state'
+import { setFlankSize, invalidate, setUnitPreference } from 'reducers'
 
-import ModalUnitPreferenceSelector from './modal/ModalUnitPreferenceSelector'
-import { UnitPreferenceType, Side } from 'types'
-import { getImage } from 'utils'
+import { UnitPreferenceType, Side, UnitType, Unit } from 'types'
+import DropdownUnit from 'components/Dropdowns/DropdownUnit'
+import { getUnitIcon } from 'data'
 
 /**
  * Table with row types and flank sizes.
@@ -48,48 +48,35 @@ type Props = {
   side: Side
 }
 
-type IState = {
-  modal_type?: UnitPreferenceType
-}
-
 /**
  * Row types and flank size for a side.
  */
-class Row extends Component<IProps, IState> {
-  constructor(props: IProps) {
-    super(props)
-    this.state = { modal_type: undefined }
-  }
+class Row extends Component<IProps> {
 
   render() {
-    const { country, side } = this.props
-    const { modal_type } = this.state
+    const { side } = this.props
     return (
-      <>
-        <ModalUnitPreferenceSelector
-          type={modal_type}
-          country={country}
-          onClose={this.closeModal}
-        />
-        <Table.Row key={side}>
-          <Table.Cell>
-            {side}
-          </Table.Cell>
-          {this.renderCell(UnitPreferenceType.Primary)}
-          {this.renderCell(UnitPreferenceType.Secondary)}
-          {this.renderCell(UnitPreferenceType.Flank)}
-          {this.renderFlankSize()}
-        </Table.Row>
-      </>
+      <Table.Row key={side}>
+        <Table.Cell>
+          {side}
+        </Table.Cell>
+        {this.renderCell(UnitPreferenceType.Primary)}
+        {this.renderCell(UnitPreferenceType.Secondary)}
+        {this.renderCell(UnitPreferenceType.Flank)}
+        {this.renderFlankSize()}
+      </Table.Row>
     )
   }
 
   renderCell = (type: UnitPreferenceType) => {
     const { units, preferences } = this.props
     const unit = preferences[type]
+    const empty = { type: UnitType.None, image: getUnitIcon(UnitType.None) } as Unit
     return (
       <Table.Cell selectable onClick={() => this.setState({ modal_type: type })}>
-        <Image src={getImage(unit && units[unit])} avatar />
+        <DropdownUnit value={unit ?? UnitType.None} values={[empty].concat(units)}
+        onSelect={unit_type => this.setUnitPreference(type, unit_type)}
+        />
       </Table.Cell>
     )
   }
@@ -109,21 +96,23 @@ class Row extends Component<IProps, IState> {
     invalidate()
   }
 
-  closeModal = () => {
-    this.setState({ modal_type: undefined })
+  setUnitPreference = (type: UnitPreferenceType, unit_type: UnitType): void => {
+    const { setUnitPreference, invalidate, country } = this.props
+    setUnitPreference(country, type, unit_type)
+    invalidate()
   }
 }
 
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  units: getUnitDefinitionsBySide(state, props.side),
+  units: getUnitList(state, true, getCountryName(state, props.side)),
   country: getCountryName(state, props.side),
   flank_size: getFlankSize(state, props.side),
   preferences: getUnitPreferences(state, props.side),
   mode: getMode(state)
 })
 
-const actions = { setFlankSize, invalidate }
+const actions = { setFlankSize, invalidate, setUnitPreference }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

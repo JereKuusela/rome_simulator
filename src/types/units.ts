@@ -29,7 +29,8 @@ export enum UnitType {
   LightShip = 'Light Ship',
   MediumShip = 'Medium Ship',
   HeavyShip = 'Heavy Ship',
-  Latest = 'Latest'
+  Latest = 'Latest',
+  None = 'None'
 }
 
 export enum UnitRole {

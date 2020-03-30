@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { Unit, UnitType, UnitAttribute, CombatPhase } from 'types'
-import { calculateValue } from 'definition_values'
+import { Unit, UnitType } from 'types'
 import DropdownTable from './DropdownTable'
+import LabelItem from 'components/Utils/LabelUnit'
 
 interface IProps {
   value: UnitType
@@ -12,14 +12,10 @@ interface IProps {
 export default class DropdownUnit extends Component<IProps> {
 
   getContent = (unit: Unit) => ([
-    unit.type,
-    unit.tech ?? '',
-    calculateValue(unit, UnitAttribute.OffensiveFirePips) + '/' + calculateValue(unit, UnitAttribute.DefensiveFirePips),
-    calculateValue(unit, UnitAttribute.OffensiveShockPips) + '/' + calculateValue(unit, UnitAttribute.DefensiveShockPips),
-    calculateValue(unit, UnitAttribute.OffensiveMoralePips) + '/' + calculateValue(unit, UnitAttribute.DefensiveMoralePips)
+    <LabelItem item={unit} />
   ])
 
-  headers = ['Unit', 'Tech', CombatPhase.Fire, CombatPhase.Shock, UnitAttribute.Morale]
+  headers = []
 
   render() {
     const { value, values, onSelect } = this.props
@@ -28,6 +24,7 @@ export default class DropdownUnit extends Component<IProps> {
         headers={this.headers}
         getContent={this.getContent}
         onSelect={onSelect}
+        trigger={<LabelItem item={values.find(unit => unit.type === value)} />}
       />
     )
   }

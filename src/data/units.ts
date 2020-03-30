@@ -26,6 +26,7 @@ import IconMegaPolyreme from 'images/mega_polyreme.png'
 import IconArtillery from 'images/artillery.png'
 import IconCavalry from 'images/cavalry.png'
 import IconInfantry from 'images/infantry.png'
+import IconEmpty from 'images/empty.png'
 import { uniq } from 'lodash'
 
 const unit_to_icon: { [key in UnitType]: string } = {
@@ -53,7 +54,8 @@ const unit_to_icon: { [key in UnitType]: string } = {
   [UnitType.LightShip]: IconMilitaryPower,
   [UnitType.MediumShip]: IconMilitaryPower,
   [UnitType.HeavyShip]: IconMilitaryPower,
-  [UnitType.Latest]: IconMilitaryPower
+  [UnitType.Latest]: IconMilitaryPower,
+  [UnitType.None]: IconEmpty
 }
 
 export const getUnitIcon = (type: UnitType) => unit_to_icon[type] || ''

@@ -12,7 +12,7 @@ import AttributeImage from 'components/Utils/AttributeImage'
 import { getNextId } from 'army_utils'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 import { applyLosses } from 'managers/units'
-import DropdownUnit from 'components/Dropdowns/DropdownUnit'
+import DropdownArchetype from 'components/Dropdowns/DropdownArchetype'
 
 type Props = {
   side: Side
@@ -111,7 +111,7 @@ class TableUnitTypes extends Component<IProps> {
             {archetype.type}
           </Table.Cell>
           <Table.Cell>
-            <DropdownUnit
+            <DropdownArchetype
               value={preference}
               values={children}
               onSelect={type => setUnitPreference(country, role, type) && invalidate()}

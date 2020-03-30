@@ -4,6 +4,7 @@ import AttributeImage from '../Utils/AttributeImage'
 
 interface IProps<T extends string> {
   value: T
+  trigger?: React.ReactNode
   values: { type: T }[]
   headers: string[]
   getContent: (value: any) => (string | number | JSX.Element)[]
@@ -27,12 +28,12 @@ export default class DropdownTable<T extends string> extends Component<IProps<T>
   )
 
   render() {
-    const { value, values } = this.props
+    const { value, values, headers, trigger } = this.props
     return (
-      <Dropdown text={value} value={value} scrolling>
+      <Dropdown text={value} value={value} scrolling trigger={trigger}>
         <Dropdown.Menu>
           <Table selectable celled>
-            {this.getHeader()}
+            {headers.length ? this.getHeader() : null}
             <Table.Body>
               {values.map(this.getContent)}
             </Table.Body>
