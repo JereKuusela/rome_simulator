@@ -82,6 +82,10 @@ Changelog:
 - Settings: Added new settings for morale hit of non secondary reinforcements (Imperator 1.4).
 - Instructions: Removed the page (not very useful and gets easily outdated).
 
+TODO:
+ - Add all units to Units page (for changing pips).
+
+
 EUIV:
  - Tooltip needs to show source of losses (to include daily loss)
 

@@ -49,7 +49,8 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
   }
 
   // Performance is critical. Precalculate as many things as possible.
-  const rolls = getRolls(settings[Setting.DiceMinimum], settings[Setting.DiceMaximum], settings[Setting.ReduceRolls])
+  let rolls = getRolls(settings[Setting.DiceMinimum], settings[Setting.DiceMaximum], settings[Setting.ReduceRolls])
+  rolls = [[1, 9], [1, 9]]
   const dice_2 = rolls.length
   const phaseLength = Math.floor(settings[Setting.RollFrequency] * settings[Setting.PhaseLengthMultiplier])
   const chunkSize = settings[Setting.ChunkSize]
@@ -120,8 +121,9 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
         depth++
         // Current node will be still used so the cache must be deep cloned.  
         // Branch starts at 1 because the current execution is 0.
-        nodes.push({ status_a: copyStatus(cohorts_a), status_d: copyStatus(cohorts_d), branch: 1, depth })
-        const [roll_a, roll_d] = rolls[0];
+        if (dice_2 > 1)
+          nodes.push({ status_a: copyStatus(cohorts_a), status_d: copyStatus(cohorts_d), branch: 1, depth })
+        const [roll_a, roll_d] = rolls[0]
         attacker.dice = roll_a
         defender.dice = roll_d
         attacker.cohorts = cohorts_a
@@ -136,7 +138,6 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
         calculateResourceLoss(attacker.cohorts.frontline, attacker.cohorts.defeated, fractions[depth], losses_a, losses_d, attacker.unit_types, defender.unit_types)
         calculateResourceLoss(defender.cohorts.frontline, defender.cohorts.defeated, fractions[depth], losses_d, losses_a, defender.unit_types, attacker.unit_types)
       }
-      result.round += (depth - 1)
       updateProgress(progress, fractions[depth], result)
     }
     if (!nodes.length) {
@@ -258,11 +259,9 @@ type Winner = Side | null | undefined
  */
 const doPhase = (depth: number, rounds_per_phase: number, attacker: CombatParticipant, defender: CombatParticipant, settings: Settings) => {
   let winner: Winner = undefined
-  let round = 0
-  for (round = 0; round < rounds_per_phase;) {
+  let round = 1
+  for (; round <= rounds_per_phase; round++) {
     doBattleFast(attacker, defender, false, settings, round + (depth - 1) * rounds_per_phase)
-    round++
-
     const alive_a = checkAlive(attacker.cohorts.frontline, attacker.cohorts.reserve)
     const alive_d = checkAlive(defender.cohorts.frontline, defender.cohorts.reserve)
     if (!alive_a && !alive_d)
@@ -271,10 +270,11 @@ const doPhase = (depth: number, rounds_per_phase: number, attacker: CombatPartic
       winner = Side.Attacker
     if (!alive_a && alive_d)
       winner = Side.Defender
-    if (winner !== undefined)
+    // Custom check to prevent round going over phase limit.
+    if (winner !== undefined || round === rounds_per_phase)
       break
   }
-  return { winner, round }
+  return { winner, round: round + (depth - 1) * rounds_per_phase }
 }
 
 /**

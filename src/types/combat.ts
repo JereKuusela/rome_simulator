@@ -44,6 +44,8 @@ export type SortedReserve = {
 export interface CombatCohort {
   [UnitAttribute.Morale]: number
   [UnitAttribute.Strength]: number
+  /** Is the cohort considered weak for targeting.  */
+  is_weak: boolean
   calculated: CombatCohortCalculated
   state: CombatCohortRoundInfo
   definition: CombatCohortDefinition
@@ -100,8 +102,6 @@ export interface CombatCohortRoundInfo {
   is_defeated: boolean
   /** Did the cohort get destroyed.  */
   is_destroyed: boolean
-  /** Is the cohort considered weak for targeting.  */
-  is_weak: boolean
   /** Total morale losses inflicted during the battle. */
   total_morale_dealt: number
   /** Total strength losses inflicted during the battle. */

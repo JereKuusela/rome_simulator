@@ -104,8 +104,9 @@ export const getCombatUnit = (combatSettings: Settings, casualties_multiplier: n
     [UnitAttribute.Morale]: calculateValue(cohort, UnitAttribute.Morale),
     [UnitAttribute.Strength]: calculateValue(cohort, UnitAttribute.Strength),
     calculated: precalculateUnit(combatSettings, casualties_multiplier, terrains, unit_types, cohort),
-    state: { is_weak: false, target: null, target_support: null, flanking: false, morale_loss: 0, strength_loss: 0, morale_dealt: 0, strength_dealt: 0, damage_multiplier: 0, is_defeated: false, is_destroyed: false, total_morale_dealt: 0, total_strength_dealt: 0 },
-    definition: getUnitDefinition(combatSettings, terrains, unit_types, cohort)
+    state: { target: null, target_support: null, flanking: false, morale_loss: 0, strength_loss: 0, morale_dealt: 0, strength_dealt: 0, damage_multiplier: 0, is_defeated: false, is_destroyed: false, total_morale_dealt: 0, total_strength_dealt: 0 },
+    definition: getUnitDefinition(combatSettings, terrains, unit_types, cohort),
+    is_weak: false
   }
   return combat_unit
 }
@@ -172,7 +173,7 @@ const pickTargets = (source: CombatFrontline, target: CombatFrontline, settings:
       // No need to select targets for units without effect.
       if (i > 0 && !unit.definition[UnitAttribute.OffensiveSupport])
         continue
-      if (target[0][j] && !target[0][j]?.state.is_weak) {
+      if (target[0][j] && !target[0][j]?.is_weak) {
         state.target = target[0][j]
         state.target_support = getBackTarget(target, j)
       }
@@ -182,7 +183,7 @@ const pickTargets = (source: CombatFrontline, target: CombatFrontline, settings:
           const start = Math.max(0, j - maneuver)
           const end = Math.min(target_length - 1, j + maneuver)
           for (let index = start; index <= end; ++index) {
-            if (target[0][index] && !target[0][index]?.state.is_weak) {
+            if (target[0][index] && !target[0][index]?.is_weak) {
               state.target = target[0][index]
               state.flanking = true
               state.target_support = getBackTarget(target, index)
@@ -194,7 +195,7 @@ const pickTargets = (source: CombatFrontline, target: CombatFrontline, settings:
           const start = Math.min(target_length - 1, j + maneuver)
           const end = Math.max(0, j - maneuver)
           for (let index = start; index >= end; --index) {
-            if (target[0][index] && !target[0][index]?.state.is_weak) {
+            if (target[0][index] && !target[0][index]?.is_weak) {
               state.target = target[0][index]
               state.flanking = true
               state.target_support = getBackTarget(target, index)
@@ -294,8 +295,8 @@ const moveDefeated = (frontline: CombatFrontline, defeated: CombatDefeated, mark
       if (unit[UnitAttribute.Strength] > minimum_strength && unit[UnitAttribute.Morale] > minimum_morale)
         continue
       if (settings[Setting.DynamicTargeting])
-        unit.state.is_weak = true
-      if (settings[Setting.RetreatRounds] > round + 2)
+        unit.is_weak = true
+      if (settings[Setting.RetreatRounds] > round + 1)
         continue
       unit.state.is_destroyed = unit[UnitAttribute.Strength] <= minimum_strength
       if (mark_defeated)
