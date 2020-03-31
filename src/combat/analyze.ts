@@ -49,8 +49,7 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
   }
 
   // Performance is critical. Precalculate as many things as possible.
-  let rolls = getRolls(settings[Setting.DiceMinimum], settings[Setting.DiceMaximum], settings[Setting.ReduceRolls])
-  rolls = [[1, 9], [1, 9]]
+  const rolls = getRolls(settings[Setting.DiceMinimum], settings[Setting.DiceMaximum], settings[Setting.ReduceRolls])
   const dice_2 = rolls.length
   const phaseLength = Math.floor(settings[Setting.RollFrequency] * settings[Setting.PhaseLengthMultiplier])
   const chunkSize = settings[Setting.ChunkSize]

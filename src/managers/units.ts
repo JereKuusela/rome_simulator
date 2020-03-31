@@ -2,6 +2,7 @@ import { ValuesType, UnitValueType, UnitType, UnitRole, Modifier, ScopeType, Bas
 import { addValuesWithMutate, regenerateValues, clearValues, DefinitionValues, calculateValue, addValues, addValue } from "definition_values"
 import { getUnitIcon } from "data"
 import { forEach, toArr, round, randomWithinRange } from "utils"
+import { mapModifiersToUnits2 } from "./modifiers"
 
 export const setUnitValue = (unit: BaseUnit, values_type: ValuesType, key: string, attribute: UnitValueType, value: number) => {
   addValuesWithMutate(unit, values_type, key, [[attribute, value]])
@@ -73,6 +74,7 @@ export const applyLosses = (values: WearinessAttributes, units: BaseReserve) => 
 )
 
 export const applyUnitModifiers = (units: BaseUnits, modifiers: ModifierWithKey[]): BaseUnits => {
+  modifiers = mapModifiersToUnits2(modifiers)
   let result = { ...units }
   modifiers.filter(value => value.scope === ScopeType.Country).forEach(value => {
     const type = value.target as UnitType

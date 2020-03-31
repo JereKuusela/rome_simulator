@@ -64,7 +64,7 @@ export default class UnitDefinitions extends Component<IProps> {
             </Table.HeaderCell>
             {
               this.filterByMode(filterAttributes(this.attributes, settings)).map(attribute => (
-                <Table.HeaderCell>
+                <Table.HeaderCell key={attribute}>
                   <AttributeImage attribute={attribute} />
                 </Table.HeaderCell>
               ))
@@ -108,7 +108,7 @@ export default class UnitDefinitions extends Component<IProps> {
         </Table.Cell>
         {
           this.filterByMode(filterAttributes(this.attributes, settings)).map(attribute => (
-            <Table.Cell>
+            <Table.Cell key={attribute}>
               <StyledNumber
                 value={calculateValue(unit, attribute)}
                 formatter={toSignedPercent} hide_zero

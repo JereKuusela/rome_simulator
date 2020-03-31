@@ -1,4 +1,4 @@
-import { Modifier, ModifierType, Mode, ScopeType, ModifierWithKey } from 'types'
+import { Modifier, ModifierType, Mode, ModifierWithKey } from 'types'
 import { getBaseUnitType } from './units'
 import { getTechDefinitionsEUIV } from 'data'
 import { ObjSet } from 'utils'
@@ -28,7 +28,26 @@ export const mapModifiersToUnits = (modifiers: Modifier[]) => {
       mapped.push({ ...modifier, target: getBaseUnitType(modifier.target as Mode) })
       return
     }
-    if (modifier.target === ModifierType.Global && modifier.scope === ScopeType.Army) {
+    if (modifier.target === ModifierType.Global) {
+      mapped.push({ ...modifier, target: getBaseUnitType(Mode.Naval) })
+      mapped.push({ ...modifier, target: getBaseUnitType(Mode.Land) })
+      return
+    }
+    mapped.push(modifier)
+  })
+  return mapped
+}
+
+export const mapModifiersToUnits2 = (modifiers: ModifierWithKey[]) => {
+  const mapped: ModifierWithKey[] = []
+  modifiers.forEach(modifier => {
+    if (modifier.target === ModifierType.Text)
+      return
+    if (modifier.target in Mode) {
+      mapped.push({ ...modifier, target: getBaseUnitType(modifier.target as Mode) })
+      return
+    }
+    if (modifier.target === ModifierType.Global) {
       mapped.push({ ...modifier, target: getBaseUnitType(Mode.Naval) })
       mapped.push({ ...modifier, target: getBaseUnitType(Mode.Land) })
       return
