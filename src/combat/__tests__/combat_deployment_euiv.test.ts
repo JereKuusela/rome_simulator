@@ -1,7 +1,6 @@
 import { TestInfo, initInfo, getUnit, testDeployment, createExpected, setCombatWidth } from './utils'
-import { UnitType, Setting, unitValueToString } from 'types'
+import { UnitType, ArmyForCombatConversion} from 'types'
 
-import { ArmyForCombat } from 'state'
 import { mapRange } from 'utils'
 
 if (process.env.REACT_APP_GAME === 'euiv') {
@@ -11,7 +10,7 @@ if (process.env.REACT_APP_GAME === 'euiv') {
     let info: TestInfo
     beforeEach(() => { info = initInfo() })
 
-    const add = (army: ArmyForCombat, infantry: number, cavalry: number, artillery: number) => {
+    const add = (army: ArmyForCombatConversion, infantry: number, cavalry: number, artillery: number) => {
       army.reserve.push(...mapRange(infantry, () => getUnit(UnitType.Infantry)))
       army.reserve.push(...mapRange(cavalry, () => getUnit(UnitType.Cavalry)))
       army.reserve.push(...mapRange(artillery, () => getUnit(UnitType.Artillery)))
@@ -77,6 +76,18 @@ if (process.env.REACT_APP_GAME === 'euiv') {
       const attacker = {
         front: createExpected([UnitType.Infantry, 6], [UnitType.Artillery, 3]),
         back: createExpected([UnitType.Artillery, 9])
+      }
+      const defender = {
+        front: createExpected([UnitType.Infantry, 2])
+      }
+      testDeployment(info, attacker, defender)
+    })
+    it('infantry only', () => {
+      setCombatWidth(info, 24)
+      add(info.army_a, 6, 0, 0)
+      add(info.army_d, 2, 0, 0)
+      const attacker = {
+        front: createExpected([UnitType.Infantry, 6])
       }
       const defender = {
         front: createExpected([UnitType.Infantry, 2])

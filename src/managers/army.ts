@@ -52,6 +52,13 @@ export const getUnitList2 = (units: Units, mode: Mode, _tech: number, filter_bas
   return list
 }
 
+export const getAllUnitList = (units: Units, mode: Mode) => {
+  const base_units = getBaseUnits(units)
+  return sortBy(toArr(units), unit => unitSorter2(unit, mode, base_units))
+}
+
+
+
 /** Returns latest available unit for each role. */
 export const getLatestUnits = (units: CombatUnitTypes, tech: number) => {
   const sorted = sortBy(filterByTech(toArr(units), tech), techSorter)

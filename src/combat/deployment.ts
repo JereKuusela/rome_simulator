@@ -78,7 +78,7 @@ const deployCohorts = (cohorts: CombatCohorts, settings: Settings, preferences?:
   let flank_starting_index = left_flank > right_flank ? left_flank - 1 : frontline.length - right_flank
   if (frontline.length % 2)
     flank_starting_index = left_flank >= right_flank ? left_flank - 1 : frontline.length - right_flank
-  const deploy_support = !settings[Setting.SupportPhase] || (reserve.front.length === 0 && reserve.flank.length === 0)
+  const deploy_support = !settings[Setting.SupportPhase] || (reserve.front.length === 0 && reserve.flank.length === 0 && !frontline.some(cohort => cohort))
   const max_support_backline = Math.floor(reserveSize(reserve) / 2)
   if (backline)
     deployBoth(reserve.support, backline, center, max_support_backline, settings, preferences)
@@ -87,6 +87,8 @@ const deployCohorts = (cohorts: CombatCohorts, settings: Settings, preferences?:
   deployFront(reserve.flank, frontline, center, flank_starting_index, settings, preferences)
   if (deploy_support)
     deployFront(reserve.support, frontline, center, flank_starting_index, settings, preferences)
+  // Use front units as flank if necessary.
+  deployFlanks(reserve.flank.length ? reserve.flank : reserve.front, frontline, center, flank_starting_index, settings, preferences)
   if (backline)
     deployFront(reserve.front, backline, center, flank_starting_index, settings, preferences)
   deployFlanks(reserve.flank, frontline, center, flank_starting_index, settings, preferences)

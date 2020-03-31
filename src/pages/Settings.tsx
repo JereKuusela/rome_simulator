@@ -21,7 +21,7 @@ const analyze = [
 const deployment = [Setting.CustomDeployment, Setting.DynamicFlanking, Setting.MoraleHitForNonSecondaryReinforcement]
 const mechanics = [
   Setting.FireAndShock, Setting.StrengthBasedFlank, Setting.UseMaxMorale, Setting.InsufficientSupportPenalty, Setting.RollFrequency, Setting.CombatWidth,
-  Setting.ExperienceDamageReduction, Setting.FixExperience, Setting.DefenderAdvantage, Setting.FixTargeting, Setting.BackRow, Setting.Culture,
+  Setting.ExperienceDamageReduction, Setting.FixExperience, Setting.DefenderAdvantage, Setting.FixTargeting, Setting.BackRow, Setting.Culture, Setting.AttributeLoyal,
   Setting.Tactics, Setting.Tech, Setting.Martial, Setting.Food, Setting.RetreatRounds, Setting.BackRowRetreat, Setting.FixFlankTargeting, Setting.SupportPhase
 ]
 const damage = [

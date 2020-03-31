@@ -2,13 +2,14 @@ import React, { Component } from 'react'
 import { Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
-import { AppState, mergeUnitTypes, filterTerrainTypes, getUnitImages, getMode, getUnitList, getCountries, getSiteSettings } from 'state'
+import { AppState, mergeUnitTypes, filterTerrainTypes, getUnitImages, getMode, getCountries, getSiteSettings, getUnits } from 'state'
 import { createUnit, deleteUnit, changeUnitType, changeWeariness, openModal } from 'reducers'
 import UnitDefinitions from 'components/UnitDefinitions'
 import ValueModal from 'components/ValueModal'
 import CountryManager from 'containers/CountryManager'
 import { CountryName, UnitType, ModalType } from 'types'
 import WearinessRange from 'components/WearinessRange'
+import { getAllUnitList } from 'managers/army'
 
 interface IState {
   modal_country: CountryName | undefined
@@ -64,7 +65,7 @@ class Units extends Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  units: getUnitList(state, false),
+  units: getAllUnitList(getUnits(state), getMode(state)),
   images: getUnitImages(state),
   unit_types: mergeUnitTypes(state),
   terrains: filterTerrainTypes(state),

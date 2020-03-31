@@ -350,7 +350,7 @@ const precalculateDamage = (terrains: Terrain[], unit: Cohort, settings: Setting
   * getValue(unit, UnitAttribute.CombatAbility, settings[Setting.AttributeCombatAbility])
   * getValue(unit, UnitAttribute.DamageDone, settings[Setting.AttributeDamage])
   * (1.0 + sumBy(terrains, terrain => getMultiplier(unit, terrain.type, settings[Setting.AttributeTerrainType])))
-  * (unit.is_loyal ? 1.1 : 1.0)
+  * (settings[Setting.AttributeLoyal] && unit.is_loyal ? 1.1 : 1.0)
 )
 
 const precalculateDamageReduction = (unit: Cohort, settings: Settings) => (

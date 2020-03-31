@@ -40,6 +40,7 @@ export enum Setting {
   StrengthBasedFlank = 'Enable strength based flank',
   FireAndShock = 'Enable fire and shock phases',
   AttributeCombatAbility = 'Enable Combat ability attribute',
+  AttributeLoyal = 'Enable Loyal attribute',
   AttributeDrill = 'Enable Drill attribute',
   AttributeExperience = 'Enable Experience attribute',
   AttributeMilitaryTactics = 'Enable Military tactics attribute',
@@ -213,6 +214,11 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Damage done and Damage taken have an effect (Imperator, EUIV).'
       else
         return 'Damage done and Damage taken are ignored.'
+    case Setting.AttributeLoyal:
+      if (value)
+        return 'Loyalty increase damage done (Imperator).'
+      else
+        return 'Loyalty is ignored (EUIV).'
     case Setting.AttributeDrill:
       if (value)
         return 'Drill increases damage done and reduces damage taken (EUIV).'
@@ -341,6 +347,7 @@ export type SiteSettings = {
   [Setting.AttributeCombatAbility]: boolean,
   [Setting.AttributeDamage]: boolean,
   [Setting.AttributeDrill]: boolean,
+  [Setting.AttributeLoyal]: boolean,
   [Setting.AttributeExperience]: boolean,
   [Setting.AttributeMilitaryTactics]: boolean,
   [Setting.AttributeMoraleDamage]: boolean,
