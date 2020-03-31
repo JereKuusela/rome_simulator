@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Dropdown, Table } from 'semantic-ui-react'
 import AttributeImage from '../Utils/AttributeImage'
+import { SiteSettings } from 'types'
 
 interface IProps<T extends string> {
   value: T
@@ -9,6 +10,7 @@ interface IProps<T extends string> {
   headers: string[]
   getContent: (value: any) => (string | number | JSX.Element)[]
   onSelect: (type: T) => void
+  settings: SiteSettings
 }
 
 export default class DropdownTable<T extends string> extends Component<IProps<T>> {
@@ -16,7 +18,7 @@ export default class DropdownTable<T extends string> extends Component<IProps<T>
   getHeader = () => (
     <Table.Header>
       <Table.Row>
-        {this.props.headers.map(header => <Table.HeaderCell key={header}><AttributeImage attribute={header} /></Table.HeaderCell>)}
+        {this.props.headers.map(header => <Table.HeaderCell key={header}><AttributeImage attribute={header} settings={this.props.settings} /></Table.HeaderCell>)}
       </Table.Row>
     </Table.Header>
   )

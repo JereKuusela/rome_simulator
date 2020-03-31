@@ -1,32 +1,35 @@
 import React, { Component } from 'react'
-import { UnitType, UnitAttribute, CombatPhase, CombatCohortDefinition } from 'types'
+import { UnitType, UnitAttribute, CombatPhase, SiteSettings, Unit } from 'types'
 import DropdownTable from './DropdownTable'
+import { calculateValue } from 'definition_values'
 
 interface IProps {
   value: UnitType
-  values: CombatCohortDefinition[]
+  values: Unit[]
   onSelect: (type: UnitType) => void
+  settings: SiteSettings
 }
 
 export default class DropdownArchetype extends Component<IProps> {
 
-  getContent = (unit: CombatCohortDefinition) => ([
+  getContent = (unit: Unit) => ([
     unit.type,
     unit.tech ?? '',
-    unit[UnitAttribute.OffensiveFirePips] + '/' + unit[UnitAttribute.DefensiveFirePips],
-    unit[UnitAttribute.OffensiveShockPips] + '/' + unit[UnitAttribute.DefensiveShockPips],
-    unit[UnitAttribute.OffensiveMoralePips] + '/' + unit[UnitAttribute.DefensiveMoralePips],
+    calculateValue(unit, UnitAttribute.OffensiveFirePips) + '/' + calculateValue(unit, UnitAttribute.DefensiveFirePips),
+    calculateValue(unit, UnitAttribute.OffensiveShockPips) + '/' + calculateValue(unit, UnitAttribute.DefensiveShockPips),
+    calculateValue(unit, UnitAttribute.OffensiveMoralePips) + '/' + calculateValue(unit, UnitAttribute.DefensiveMoralePips)
   ])
 
   headers = ['Unit', 'Tech', CombatPhase.Fire, CombatPhase.Shock, UnitAttribute.Morale]
 
   render() {
-    const { value, values, onSelect } = this.props
+    const { value, values, onSelect, settings } = this.props
     return (
       <DropdownTable value={value} values={values}
         headers={this.headers}
         getContent={this.getContent}
         onSelect={onSelect}
+        settings={settings}
       />
     )
   }

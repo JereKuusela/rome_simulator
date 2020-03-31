@@ -71,6 +71,7 @@ export const convertParticipant = (side: Side, army: ArmyForCombatConversion, en
     unit_types: map(army.definitions, unit => getUnitDefinition(settings, terrains, enemy_types, { ...unit, id: -1 })),
     tactic_bonus: 0.0,
     round: 0,
-    flank_ratio_bonus: 0.0
+    flank_ratio_bonus: 0.0,
+    definitions: army.definitions
   }
 }

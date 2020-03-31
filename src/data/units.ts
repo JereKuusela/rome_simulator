@@ -131,7 +131,7 @@ const initializeDefaultUnits = (): BaseUnits => {
 }
 const defaultUnits = initializeDefaultUnits()
 
-export const getCultures = () => uniq(toArr(defaultUnits, value => value.culture).filter(culture => culture) as CultureType[])
+export const getCultures = () => uniq(toArr(defaultUnits, value => value.culture).filter(culture => culture) as CultureType[]).sort()
 
 export const getDefaultUnits = (culture?: CultureType): BaseUnits => culture ? filter(defaultUnits, unit => !unit.culture || unit.culture === culture) : defaultUnits
 export const getDefaultUnit = (type: UnitType): BaseUnit => defaultUnits[type]

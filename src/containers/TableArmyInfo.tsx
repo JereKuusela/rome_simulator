@@ -58,19 +58,19 @@ class TableArmyInfo extends Component<IProps> {
             {
               isAttributeEnabled(UnitAttribute.Discipline, settings) &&
               <Table.HeaderCell>
-                <AttributeImage attribute={UnitAttribute.Discipline} />
+                <AttributeImage attribute={UnitAttribute.Discipline} settings={settings} />
               </Table.HeaderCell>
             }
             {
               isAttributeEnabled(UnitAttribute.Morale, settings) &&
               <Table.HeaderCell>
-                <AttributeImage attribute={UnitAttribute.Morale} />
+                <AttributeImage attribute={UnitAttribute.Morale} settings={settings} />
               </Table.HeaderCell>
             }
             {
               isAttributeEnabled(CountryAttribute.FlankRatio, settings) &&
               <Table.HeaderCell >
-                <AttributeImage attribute={CountryAttribute.FlankRatio} />
+                <AttributeImage attribute={CountryAttribute.FlankRatio} settings={settings} />
               </Table.HeaderCell>
             }
             {

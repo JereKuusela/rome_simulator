@@ -54,10 +54,10 @@ export default class UnitDefinitions extends Component<IProps> {
               {country}
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <AttributeImage attribute={UnitAttribute.Morale} />
+              <AttributeImage attribute={UnitAttribute.Morale} settings={settings} />
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <AttributeImage attribute={UnitAttribute.Strength} mode={mode} />
+              <AttributeImage attribute={UnitAttribute.Strength} mode={mode} settings={settings} />
             </Table.HeaderCell>
             <Table.HeaderCell>
               <Icon name='arrows alternate horizontal' size='big' />
@@ -65,7 +65,7 @@ export default class UnitDefinitions extends Component<IProps> {
             {
               this.filterByMode(filterAttributes(this.attributes, settings)).map(attribute => (
                 <Table.HeaderCell key={attribute}>
-                  <AttributeImage attribute={attribute} />
+                  <AttributeImage attribute={attribute} settings={settings} />
                 </Table.HeaderCell>
               ))
             }

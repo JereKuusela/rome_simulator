@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table } from 'semantic-ui-react'
 
-import { AppState, getMode, getSelectedTerrains } from 'state'
+import { AppState, getMode, getSelectedTerrains, getSiteSettings } from 'state'
 import IconDice from 'images/chance.png'
 import StyledNumber from 'components/Utils/StyledNumber'
 import { Terrain, TerrainCalc, TerrainType } from 'types'
@@ -45,7 +45,7 @@ class TerrainSelector extends Component<IProps> {
   }
 
   renderTerrain = (terrain: Terrain, index: number) => {
-    const { terrains } = this.props
+    const { terrains, settings } = this.props
     const roll = calculateValue(terrain, TerrainCalc.Roll)
     return (
       <Table.Row key={terrain.location}>
@@ -57,6 +57,7 @@ class TerrainSelector extends Component<IProps> {
             value={terrain.type}
             values={terrains.filter(item => item.location === terrain.location)}
             onSelect={type => this.selectTerrain(type, index)}
+            settings={settings}
           />
         </Table.Cell>
         <Table.Cell>
@@ -77,7 +78,8 @@ class TerrainSelector extends Component<IProps> {
 const mapStateToProps = (state: AppState) => ({
   selected: getSelectedTerrains(state),
   terrains: toArr(state.terrains),
-  mode: getMode(state)
+  mode: getMode(state),
+  settings: getSiteSettings(state)
 })
 
 const actions = { selectTerrain, invalidate }

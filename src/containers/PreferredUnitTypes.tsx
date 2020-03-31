@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table, Input } from 'semantic-ui-react'
 
-import { AppState, getCountryName, getUnitPreferences, getFlankSize, getMode, getUnitList} from 'state'
+import { AppState, getCountryName, getUnitPreferences, getFlankSize, getMode, getUnitList, getSiteSettings } from 'state'
 import { setFlankSize, invalidate, setUnitPreference } from 'reducers'
 
 import { UnitPreferenceType, Side, UnitType, Unit } from 'types'
@@ -69,13 +69,14 @@ class Row extends Component<IProps> {
   }
 
   renderCell = (type: UnitPreferenceType) => {
-    const { units, preferences } = this.props
+    const { units, preferences, settings } = this.props
     const unit = preferences[type]
     const empty = { type: UnitType.None, image: getUnitIcon(UnitType.None) } as Unit
     return (
       <Table.Cell selectable onClick={() => this.setState({ modal_type: type })}>
         <DropdownUnit value={unit ?? UnitType.None} values={[empty].concat(units)}
-        onSelect={unit_type => this.setUnitPreference(type, unit_type)}
+          onSelect={unit_type => this.setUnitPreference(type, unit_type)}
+          settings={settings}
         />
       </Table.Cell>
     )
@@ -109,7 +110,8 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   country: getCountryName(state, props.side),
   flank_size: getFlankSize(state, props.side),
   preferences: getUnitPreferences(state, props.side),
-  mode: getMode(state)
+  mode: getMode(state),
+  settings: getSiteSettings(state)
 })
 
 const actions = { setFlankSize, invalidate, setUnitPreference }

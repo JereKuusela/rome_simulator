@@ -77,6 +77,11 @@ export const getChildUnits = (units: CombatUnitTypes, tech: number, base_unit: U
   return sortBy(filterByTech(toArr(units).filter(unit => unit.base === base_unit), tech), techSorter)
 }
 
+export const getChildUnits2 = (units: Units, tech: number, base_unit: UnitType) => {
+  return sortBy(filterByTech2(toArr(units).filter(unit => unit.base === base_unit), tech), techSorter)
+}
+
+
 const techSorter = (unit: { tech?: number, type: UnitType }) => {
   return (99 - (unit.tech ?? 0)) + unit.type
 }

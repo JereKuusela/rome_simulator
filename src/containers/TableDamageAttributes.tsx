@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Table } from 'semantic-ui-react'
 
 import { Side, CountryName, UnitAttribute, CombatPhase, General, GeneralValueType, Mode, UnitType } from 'types'
-import { AppState, getGeneral, getUnit, getMode } from 'state'
+import { AppState, getGeneral, getUnit, getMode, getSiteSettings } from 'state'
 import { setGeneralBaseStat, invalidate } from 'reducers'
 import AttributeImage from 'components/Utils/AttributeImage'
 import StyledNumber from 'components/Utils/StyledNumber'
@@ -23,7 +23,7 @@ class TableDamageAttributes extends Component<IProps> {
   }
 
   render() {
-    const { side, general, unit, country } = this.props
+    const { side, general, unit, country, settings } = this.props
     return (
       <Table celled unstackable key={side}>
         <Table.Header>
@@ -32,10 +32,10 @@ class TableDamageAttributes extends Component<IProps> {
               {side}
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <AttributeImage attribute={CombatPhase.Fire} />
+              <AttributeImage attribute={CombatPhase.Fire} settings={settings} />
             </Table.HeaderCell>
             <Table.HeaderCell>
-              <AttributeImage attribute={CombatPhase.Shock} />
+              <AttributeImage attribute={CombatPhase.Shock} settings={settings} />
             </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -95,7 +95,8 @@ class TableDamageAttributes extends Component<IProps> {
 
 const mapStateToProps = (state: AppState, props: Props) => ({
   general: getGeneral(state, props.country),
-  unit: getUnit(state, getMode(state) === Mode.Naval ? UnitType.Naval : UnitType.Land, props.country)
+  unit: getUnit(state, getMode(state) === Mode.Naval ? UnitType.Naval : UnitType.Land, props.country),
+  settings: getSiteSettings(state)
 })
 
 const actions = { invalidate, setGeneralBaseStat }

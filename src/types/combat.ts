@@ -1,4 +1,5 @@
 import { TacticDefinition, CombatPhase, UnitPreferences, UnitType, UnitAttribute, UnitRole, Mode, UnitValueType } from "types"
+import { Units } from "./units"
 
 /**
  * Information required for fast combat calculation.
@@ -18,6 +19,7 @@ export type CombatParticipant = {
   general_pips: { [key in CombatPhase]: number }
   roll_pips: { [key in CombatPhase]: number }
   unit_preferences: UnitPreferences
+  definitions: Units
 }
 export type CombatFrontline = (CombatCohort | null)[][]
 export type CombatReserve = CombatCohort[]

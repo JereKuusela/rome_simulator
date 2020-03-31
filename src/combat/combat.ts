@@ -260,8 +260,7 @@ const calculateFlankRatio = (army: CombatCohorts): number => {
     }
   }
   iterateCohorts(army, addRatio)
-
-  return flank / noZero(infantry)
+  return flank / noZero(flank + infantry)
 }
 
 /**

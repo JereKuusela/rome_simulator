@@ -40,10 +40,10 @@ class TableStats extends Component<IProps> {
               {side}
             </Table.HeaderCell>
             <Table.HeaderCell width='3'>
-              <AttributeImage attribute={UnitAttribute.Strength} mode={mode} />
+              <AttributeImage attribute={UnitAttribute.Strength} mode={mode} settings={settings} />
             </Table.HeaderCell>
             <Table.HeaderCell width='3'>
-              <AttributeImage attribute={UnitAttribute.Morale} />
+              <AttributeImage attribute={UnitAttribute.Morale} settings={settings} />
             </Table.HeaderCell>
             <Table.HeaderCell width='3'>
               Strength depleted
@@ -52,24 +52,24 @@ class TableStats extends Component<IProps> {
               Morale depleted
             </Table.HeaderCell>
             <Table.HeaderCell width='3'>
-              <AttributeImage attribute={UnitAttribute.Cost} />
+              <AttributeImage attribute={UnitAttribute.Cost} settings={settings} />
             </Table.HeaderCell>
             <Table.HeaderCell width='3'>
-              Monthly <AttributeImage attribute={UnitAttribute.Cost} />
+              Monthly <AttributeImage attribute={UnitAttribute.Cost} settings={settings} />
             </Table.HeaderCell>
             <Table.HeaderCell width='3'>
-              <AttributeImage attribute={UnitAttribute.AttritionWeight} />
+              <AttributeImage attribute={UnitAttribute.AttritionWeight} settings={settings} />
             </Table.HeaderCell>
             {
               isAttributeEnabled(UnitAttribute.FoodConsumption, settings) &&
               <Table.HeaderCell width='3'>
-                <AttributeImage attribute={UnitAttribute.FoodConsumption} />
+                <AttributeImage attribute={UnitAttribute.FoodConsumption} settings={settings} />
               </Table.HeaderCell>
             }
             {
               isAttributeEnabled(UnitAttribute.FoodStorage, settings) &&
               <Table.HeaderCell width='3'>
-                <AttributeImage attribute={UnitAttribute.FoodStorage} />
+                <AttributeImage attribute={UnitAttribute.FoodStorage} settings={settings} />
               </Table.HeaderCell>
             }
           </Table.Row>

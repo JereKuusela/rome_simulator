@@ -6,7 +6,7 @@ import { Side, UnitRole, CountryName, UnitType, UnitAttribute, filterAttributes,
 import { getImage, mapRange } from 'utils'
 import { AppState, getUnitPreferences, getCountry, getMode, getCombatParticipant, getBaseCohorts, getSiteSettings } from 'state'
 import { addToReserve, removeFromReserve, invalidate, setUnitPreference } from 'reducers'
-import { getChildUnits, getArchetypes, getActualUnits, getLatestUnits } from 'managers/army'
+import { getArchetypes2, getActualUnits2, getLatestUnits2, getChildUnits2 } from 'managers/army'
 import UnitValueInput from './UnitValueInput'
 import AttributeImage from 'components/Utils/AttributeImage'
 import { getNextId } from 'army_utils'
@@ -56,7 +56,7 @@ class TableUnitTypes extends Component<IProps> {
 
   render() {
     const { side, settings, units, mode } = this.props
-    const unit_list = settings[Setting.Tech] ? getArchetypes(units, mode) : getActualUnits(units, mode)
+    const unit_list = settings[Setting.Tech] ? getArchetypes2(units, mode) : getActualUnits2(units, mode)
     return (
       <Table celled unstackable key={side}>
         <Table.Header>
@@ -76,7 +76,7 @@ class TableUnitTypes extends Component<IProps> {
             {
               filterAttributes(this.getAttributes(), settings).map(attribute => (
                 <Table.HeaderCell key={attribute}>
-                  <AttributeImage attribute={attribute} />
+                  <AttributeImage attribute={attribute} settings={settings} />
                 </Table.HeaderCell>
               ))
             }
@@ -100,9 +100,9 @@ class TableUnitTypes extends Component<IProps> {
     if (!archetype || !preference)
       return null
     const image = getImage(archetype)
-    const latest_type = getLatestUnits(units, tech)
+    const latest_type = getLatestUnits2(units, tech)
     const latest = { ...units[latest_type[role] || archetype.type], type: UnitType.Latest }
-    const children = [latest].concat(...getChildUnits(units, tech, archetype.type))
+    const children = [latest].concat(...getChildUnits2(units, tech, archetype.type))
     return (
       <>
         <Table.Row key={role}>
@@ -115,6 +115,7 @@ class TableUnitTypes extends Component<IProps> {
               value={preference}
               values={children}
               onSelect={type => setUnitPreference(country, role, type) && invalidate()}
+              settings={settings}
             />
           </Table.Cell>
           <Table.Cell>
@@ -184,7 +185,7 @@ class TableUnitTypes extends Component<IProps> {
 const mapStateToProps = (state: AppState, props: Props) => ({
   preferences: getUnitPreferences(state, props.side),
   reserve: getBaseCohorts(state, props.country, true).reserve,
-  units: getCombatParticipant(state, props.side).unit_types,
+  units: getCombatParticipant(state, props.side).definitions,
   tech: getCountry(state, props.country).tech_level,
   settings: getSiteSettings(state),
   weariness: getCountry(state, props.country).weariness,

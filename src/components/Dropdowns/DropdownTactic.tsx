@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
-import { TacticType, Tactic } from 'types'
+import { TacticType, Tactic, SiteSettings } from 'types'
 import DropdownTable from './DropdownTable'
 import StyledNumber from 'components/Utils/StyledNumber'
 import { toPercent, toSignedPercent } from 'formatters'
 import LabelItem from 'components/Utils/LabelUnit'
 
-interface IProps {
+type IProps = {
   value: TacticType
   values: Tactic[]
+  settings: SiteSettings
   onSelect: (type: TacticType) => void
 }
 
@@ -34,13 +35,14 @@ export default class DropdownTactic extends Component<IProps> {
   headers = ['Tactic', 'Effect', 'Damage', 'Casualties']
 
   render() {
-    const { value, values, onSelect } = this.props
+    const { value, values, onSelect, settings } = this.props
     return (
       <DropdownTable value={value} values={values}
         headers={this.headers}
         getContent={this.getContent}
         onSelect={onSelect}
         trigger={<LabelItem item={values.find(tactic => tactic.type === value)} />}
+        settings={settings}
       />
     )
   }
