@@ -33,7 +33,7 @@ class ModalCohortDetail extends Component<IProps> {
           onTypeChange={this.changeType}
           onCustomBaseValueChange={this.setBaseValue}
           onCustomModifierValueChange={this.setModifierValue}
-          onCustomLossValueChange={this.setLossValue}
+          onCustomLossModifierValueChange={this.setLossModifierValue}
           onIsLoyalToggle={this.toggleIsLoyal}
           show_statistics={true}
           disable_base_values={true}
@@ -61,9 +61,9 @@ class ModalCohortDetail extends Component<IProps> {
     invalidate()
   }
 
-  setLossValue = (key: string, attribute: UnitValueType, value: number) => {
+  setLossModifierValue = (key: string, attribute: UnitValueType, value: number) => {
     const { country, id, setCohortValue, invalidate } = this.props
-    setCohortValue(country, id, ValuesType.Loss, key, attribute, value)
+    setCohortValue(country, id, ValuesType.LossModifier, key, attribute, value)
     invalidate()
   }
 

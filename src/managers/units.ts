@@ -63,11 +63,13 @@ export const applyDynamicAttributes = <T extends DefinitionValues<UnitValueType>
   if (settings[Setting.StrengthBasedFlank]) {
     const maneuver = getStrengthBasedFlank(calculateValue(definition, UnitAttribute.Strength)) - 1
     definition = addValues(definition, ValuesType.Modifier, 'From losses', [[UnitAttribute.Maneuver, maneuver]])
+    if (calculateValue(definition, UnitAttribute.Maneuver) < 1)
+      definition = addValues(definition, ValuesType.Loss, 'Minimum cap', [[UnitAttribute.Maneuver, -1]])
   }
   return definition
 }
 
-export const getStrengthBasedFlank = (strength: number) => Math.ceil(strength * 4.0) / 4.0
+export const getStrengthBasedFlank = (strength: number) => Math.pow(0.5, 4 - Math.ceil(strength * 4.0))
 
 export const applyLosses = (values: WearinessAttributes, units: BaseReserve) => (
   units.map(unit => addValues(unit, ValuesType.LossModifier, 'Custom', generateLosses(values)))

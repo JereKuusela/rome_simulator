@@ -36,7 +36,7 @@ class ModalUnitDetail extends Component<IProps> {
           unit_types_with_base={this.props.unit_types_with_base}
           onCustomBaseValueChange={this.setBaseValue}
           onCustomModifierValueChange={this.setModifierValue}
-          onCustomLossValueChange={this.setLossValue}
+          onCustomLossModifierValueChange={this.setLossModifierValue}
           show_statistics={false}
           onTypeChange={this.changeType}
           onImageChange={this.changeImage}
@@ -64,7 +64,7 @@ class ModalUnitDetail extends Component<IProps> {
 
   setBaseValue = (key: string, attribute: UnitValueType, value: number) => this.setValue(ValuesType.Base, key, attribute, value)
   setModifierValue = (key: string, attribute: UnitValueType, value: number) => this.setValue(ValuesType.Modifier, key, attribute, value)
-  setLossValue = (key: string, attribute: UnitValueType, value: number) => this.setValue(ValuesType.Loss, key, attribute, value)
+  setLossModifierValue = (key: string, attribute: UnitValueType, value: number) => this.setValue(ValuesType.LossModifier, key, attribute, value)
 
   setValue = (type: ValuesType, key: string, attribute: UnitValueType, value: number) => {
     const { setUnitValue, invalidate, unit_type, country } = this.props

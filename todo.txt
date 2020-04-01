@@ -4,6 +4,7 @@ Release 7:
 Changelog:
 
 EUIV:
+ - Morale retreat limit?
  - Tooltip needs to show source of losses (to include daily loss)
 
 Release++:

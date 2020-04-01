@@ -322,7 +322,8 @@ export const explainShort = <D extends BD, A extends string>(definition: D, attr
 export const explain = <D extends BD, A extends string>(definition: D, attribute: A): string => {
   const value_modifier = definition.modifier_values ? definition.modifier_values[attribute] : undefined
   const value_loss = definition.loss_values ? definition.loss_values[attribute] : undefined
-  if ((!value_modifier || size(value_modifier) === 0) && (!value_loss || size(value_loss) === 0))
+  const value_loss_modifier = definition.loss_modifier_values ? definition.loss_modifier_values[attribute] : undefined
+  if ((!value_modifier || size(value_modifier) === 0) && (!value_loss || size(value_loss) === 0) && (!value_loss_modifier || size(value_loss_modifier) === 0))
     return explainShort(definition, attribute)
   let explanation = ''
   let base = 0
@@ -353,11 +354,25 @@ export const explain = <D extends BD, A extends string>(definition: D, attribute
   const value = calculateValue(definition, attribute)
   const base_value = calculateValueWithoutLoss(definition, attribute)
   const loss = base_value - value
-  if (value_loss && size(value_loss) > 0) {
-    explanation += ' reduced by losses ' + +(loss).toFixed(2)
-    explanation += ' ('
-    forEach(value_loss, (value, key) => explanation += key.replace(/_/g, ' ') + ': ' + value + ', ')
-    explanation = explanation.substring(0, explanation.length - 2) + ')'
+  if ((size(value_loss) + size(value_loss_modifier)) > 0) {
+    if (loss < 0) {
+      explanation += ' increased by ' + +(-loss).toFixed(2)
+      explanation += ' ('
+      if (value_loss)
+        forEach(value_loss, (value, key) => explanation += key.replace(/_/g, ' ') + ': ' + -value + ', ')
+      if (value_loss_modifier)
+        forEach(value_loss_modifier, (value, key) => explanation += key.replace(/_/g, ' ') + ': ' + toPercent(-value) + ', ')
+      explanation = explanation.substring(0, explanation.length - 2) + ')'
+
+    } else {
+      explanation += ' reduced by losses ' + +(loss).toFixed(2)
+      explanation += ' ('
+      if (value_loss)
+        forEach(value_loss, (value, key) => explanation += key.replace(/_/g, ' ') + ': ' + value + ', ')
+      if (value_loss_modifier)
+        forEach(value_loss_modifier, (value, key) => explanation += key.replace(/_/g, ' ') + ': ' + toPercent(value) + ', ')
+      explanation = explanation.substring(0, explanation.length - 2) + ')'
+    }
   }
   return explanation
 }

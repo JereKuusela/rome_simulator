@@ -26,7 +26,7 @@ interface IProps {
   disable_base_values?: boolean
   onCustomBaseValueChange: (key: string, attribute: UnitValueType, value: number) => void
   onCustomModifierValueChange: (key: string, attribute: UnitValueType, value: number) => void
-  onCustomLossValueChange: (key: string, attribute: UnitValueType, value: number) => void
+  onCustomLossModifierValueChange: (key: string, attribute: UnitValueType, value: number) => void
   onTypeChange?: (type: UnitType) => void
   onBaseTypeChange?: (type: UnitType) => void
   onImageChange?: (image: string) => void
@@ -75,7 +75,7 @@ export default class UnitDetail extends Component<IProps> {
   }
 
   renderRow = (attribute: UnitValueType) => {
-    const { unit, custom_value_key, onCustomBaseValueChange, onCustomModifierValueChange, onCustomLossValueChange, disable_base_values, settings, mode, show_statistics } = this.props
+    const { unit, custom_value_key, onCustomBaseValueChange, onCustomModifierValueChange, onCustomLossModifierValueChange: onCustomLossValueChange, disable_base_values, settings, mode, show_statistics } = this.props
     if (!isAttributeEnabled(attribute, settings, mode, show_statistics))
       return null
     const base_value = getValue(ValuesType.Base, unit, attribute, custom_value_key)

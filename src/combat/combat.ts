@@ -4,7 +4,6 @@ import { TacticDefinition, Terrain, UnitType, Cohort, UnitAttribute, Setting, Un
 import { toObj, map, noZero } from 'utils'
 import { calculateValue, calculateValueWithoutLoss, calculateBase } from 'definition_values'
 import { calculateExperienceReduction, getCombatPhase, calculateCohortPips, getDailyIncrease } from './combat_utils'
-import { getStrengthBasedFlank } from 'managers/units'
 import { reinforce } from './deployment'
 
 
@@ -178,7 +177,7 @@ const pickTargets = (source: CombatFrontline, target: CombatFrontline, settings:
         state.target_support = getBackTarget(target, j)
       }
       else {
-        const maneuver = Math.floor(unit.definition[UnitAttribute.Maneuver] * (settings[Setting.StrengthBasedFlank] ? getStrengthBasedFlank(unit[UnitAttribute.Strength]) : 1.0))
+        const maneuver = Math.floor(unit.definition[UnitAttribute.Maneuver])
         if (!settings[Setting.FixFlankTargeting] || (settings[Setting.FixTargeting] ? j < source_length / 2 : j <= source_length / 2)) {
           const start = Math.max(0, j - maneuver)
           const end = Math.min(target_length - 1, j + maneuver)
