@@ -50,7 +50,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.RetreatRounds]: 12,
       [Setting.CombatWidth]: 15,
       [Setting.ExperienceDamageReduction]: 0,
-      [Setting.MinimumMorale]: 0.25,
+      [Setting.MinimumMorale]: 0,
       [Setting.MinimumStrength]: 0,
       [Setting.MoraleHitForNonSecondaryReinforcement]: 0,
       [Setting.FixExperience]: false,

@@ -16,12 +16,6 @@ const TerrainsTransform = createTransform(
   { whitelist: ['terrains'] }
 )
 
-const UnitsTransform = createTransform(
-  (inboundState) => inboundState,
-  (outboundState: any) => restoreBaseUnits(outboundState),
-  { whitelist: ['units'] }
-)
-
 const BattleTransform = createTransform(
   (inboundState: any) => stripRounds(inboundState),
   (outboundState: any) => outboundState,
@@ -30,7 +24,7 @@ const BattleTransform = createTransform(
 
 const CountriesTransform = createTransform(
   (inboundState: any) => inboundState,
-  (outboundState: any) => setIds(outboundState),
+  (outboundState: any) => ({ ...setIds(outboundState), units: restoreBaseUnits(outboundState.units) }),
   { whitelist: ['countries'] }
 )
 
@@ -47,7 +41,7 @@ const DataTransform = createTransform(
 )
 
 const migrations = {
-  9: () => rootReducer(undefined, { type: 'fooo'}) as any
+  9: () => rootReducer(undefined, { type: 'dummy'}) as any
 }
 
 const persistConfig = {
@@ -58,7 +52,6 @@ const persistConfig = {
   transforms: [
     TacticsTransform,
     TerrainsTransform,
-    UnitsTransform,
     DataTransform,
     BattleTransform,
     CountriesTransform,
