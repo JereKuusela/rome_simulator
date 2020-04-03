@@ -2,7 +2,7 @@
   "units": [
     {
       "type": "Land Unit",
-      "base": null,
+      "parent": null,
       "mode": "Land",
       "role": "Front",
       "morale": 3.0,
@@ -12,7 +12,7 @@
     },
     {
       "type": "Naval Unit",
-      "base": null,
+      "parent": null,
       "mode": "Naval",
       "role": "Front",
       "morale": 3.0,
@@ -23,20 +23,20 @@
     },
     {
       "type": "Light Ship",
-      "base": "Naval Unit",
+      "parent": "Naval Unit",
       "capture_chance": 0.1,
       "capture_resist": 0.1,
       "riverine": 0.25
     },
     {
       "type": "Medium Ship",
-      "base": "Naval Unit",
+      "parent": "Naval Unit",
       "capture_chance": 0.2,
       "capture_resist": 0.2
     },
     {
       "type": "Heavy Ship",
-      "base": "Naval Unit",
+      "parent": "Naval Unit",
       "capture_chance": 0.3,
       "capture_resist": 0.3
     }

@@ -3,22 +3,22 @@ import { connect } from 'react-redux'
 import { ValuesType, CountryName, UnitType, Cohort, UnitRole, UnitValueType, ModalType } from 'types'
 import UnitDetail from 'components/UnitDetail'
 import { AppState, getUnit, filterTerrainTypes, getMode, getUnitTypeList, getSiteSettings } from 'state'
-import { openModal, changeUnitType, deleteUnit, setUnitValue, changeUnitImage, changeUnitBaseType, changeUnitDeployment, toggleUnitLoyality, invalidate, closeModal } from 'reducers'
+import { openModal, changeUnitType, deleteUnit, setUnitValue, changeUnitImage, changeParent, changeUnitDeployment, toggleUnitLoyality, invalidate, closeModal } from 'reducers'
 import BaseModal from './BaseModal'
-import { getBaseUnitType } from 'managers/units'
+import { getRootParent } from 'managers/units'
 import ItemRemover from 'components/ItemRemover'
 
 const CUSTOM_VALUE_KEY = 'Custom'
 
 class ModalUnitDetail extends Component<IProps> {
   render() {
-    const { mode, unit, settings, remove, unit_type } = this.props
+    const { mode, unit, settings, remove, unit_type, unit_types_with_parent, terrain_types, unit_types } = this.props
     if (!unit)
       return null
     return (
       <BaseModal basic type={ModalType.UnitDetail}>
         {
-          remove && unit_type !== getBaseUnitType(mode) ?
+          remove && unit_type !== getRootParent(mode) ?
             <ItemRemover
               onRemove={this.remove}
               confirm_remove={true}
@@ -29,18 +29,18 @@ class ModalUnitDetail extends Component<IProps> {
         <UnitDetail
           mode={mode}
           settings={settings}
-          terrain_types={this.props.terrain_types}
+          terrain_types={terrain_types}
           custom_value_key={CUSTOM_VALUE_KEY}
           unit={unit as Cohort}
-          unit_types={this.props.unit_types}
-          unit_types_with_base={this.props.unit_types_with_base}
+          unit_types={unit_types}
+          unit_types_with_parent={unit_types_with_parent}
           onCustomBaseValueChange={this.setBaseValue}
           onCustomModifierValueChange={this.setModifierValue}
           onCustomLossModifierValueChange={this.setLossModifierValue}
           show_statistics={false}
           onTypeChange={this.changeType}
           onImageChange={this.changeImage}
-          onBaseTypeChange={this.changeBaseType}
+          onParentChange={this.changeParent}
           onChangeDeployment={this.changeDeployment}
           onIsLoyalToggle={this.toggleIsLoyal}
         />
@@ -78,9 +78,9 @@ class ModalUnitDetail extends Component<IProps> {
     invalidate()
   }
 
-  changeBaseType = (type: UnitType) => {
-    const { changeUnitBaseType, invalidate, unit_type, country } = this.props
-    changeUnitBaseType(country!, unit_type, type)
+  changeParent = (type: UnitType) => {
+    const { changeParent, invalidate, unit_type, country } = this.props
+    changeParent(country!, unit_type, type)
     invalidate()
   }
 
@@ -105,14 +105,14 @@ const mapStateToProps = (state: AppState) => {
     unit_type: data ? data.type : UnitType.Land,
     unit: data ? getUnit(state, data.type, data.country) : null,
     unit_types: getUnitTypeList(state, true, data?.country),
-    unit_types_with_base: getUnitTypeList(state, false, data?.country).filter(type => type !== data?.type),
+    unit_types_with_parent: getUnitTypeList(state, false, data?.country).filter(type => type !== data?.type),
     terrain_types: filterTerrainTypes(state),
     mode: getMode(state),
     settings: getSiteSettings(state)
   }
 }
 
-const actions = { closeModal, openModal, deleteUnit, changeUnitType, setUnitValue, changeUnitImage, changeUnitBaseType, changeUnitDeployment, toggleUnitLoyality, invalidate }
+const actions = { closeModal, openModal, deleteUnit, changeUnitType, setUnitValue, changeUnitImage, changeParent, changeUnitDeployment, toggleUnitLoyality, invalidate }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

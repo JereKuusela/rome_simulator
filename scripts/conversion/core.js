@@ -37,7 +37,7 @@ const parseFile = (file, parser) => {
         parser(parsed[0], parsed[1], result);
     });
     rd.on('close', () => {
-      results[file] = result;
+      results[path.basename(file)] = result;
       resolve();
     });
   });

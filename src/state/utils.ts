@@ -1,6 +1,6 @@
 import { AppState } from './index'
 import { toArr, filter, arrGet, toObj, forEach2, keys } from 'utils'
-import { filterUnitDefinitions, getArmyPart, convertBaseCohorts, convertUnitDefinitions, convertUnitDefinition, shrinkUnits } from '../army_utils'
+import { filterUnitDefinitions, getArmyPart, convertCohortDefinitions, convertUnitDefinitions, convertUnitDefinition, shrinkUnits } from '../army_utils'
 import { Mode, CountryName, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, TacticDefinition, UnitPreferences, Participant, TerrainDefinition, Settings, Battle, TerrainDefinitions, TacticDefinitions, Cohorts, ArmyName, General, Countries, Setting, Reserve, Defeated, CountryAttribute, Units, Unit, GeneralDefinition, Country, CountryDefinition, CombatCohort, CombatCohorts, CombatParticipant } from 'types'
 import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticState, getDefaultTerrainState } from 'data'
 import { uniq, flatten } from 'lodash'
@@ -125,7 +125,7 @@ export const getBattle = (state: AppState): Battle => state.battle[state.setting
 
 export const getCountries = (state: AppState): Countries => state.countries
 
-const getBaseUnits = (state: AppState, country: CountryName) => {
+const getUnitDefinitions = (state: AppState, country: CountryName) => {
   const definition = state.countries[country]
   const units = getCountries(state)[country].units
   const modifiers = getModifiers(definition.selections, definition.tech_level)
@@ -146,7 +146,7 @@ export const getCombatParticipant = (state: AppState, side: Side, round?: number
 const getArmyForCombat = (state: AppState, side: Side, mode?: Mode) => {
   const participant = state.battle[mode ?? state.settings.mode].participants[side]
   const country = participant.country
-  const army = getArmy(state, country)
+  const army = getArmyDefinition(state, country)
   const cohorts = getCohorts(state, side)
   const general = getGeneral(state, country)
   const tactic = state.tactics[army.tactic]
@@ -169,17 +169,17 @@ export const initializeCombatParticipants = (state: AppState): CombatParticipant
 }
 
 export const getSelectedTactic = (state: AppState, side: Side): TacticDefinition => {
-  const army = getBaseArmy(state, side)
+  const army = getArmyDefinitionBySide(state, side)
   return state.tactics[army.tactic]
 }
 
 export const getUnitPreferences = (state: AppState, side: Side): UnitPreferences => {
-  const army = getBaseArmy(state, side)
+  const army = getArmyDefinitionBySide(state, side)
   return army.unit_preferences
 }
 
 export const getFlankSize = (state: AppState, side: Side): number => {
-  const army = getBaseArmy(state, side)
+  const army = getArmyDefinitionBySide(state, side)
   return army.flank_size
 }
 
@@ -196,27 +196,27 @@ export const getCountryDefinition = (state: AppState, country: CountryName): Cou
   const modifiers = getModifiers(definition.selections, definition.tech_level)
   return applyCountryModifiers(definition, modifiers)
 }
-const getArmy = (state: AppState, country: CountryName) => state.countries[country].armies[state.settings.mode][ArmyName.Army1]
+const getArmyDefinition = (state: AppState, country: CountryName) => state.countries[country].armies[state.settings.mode][ArmyName.Army1]
 
-export const getGeneralDefinition = (state: AppState, country: CountryName): GeneralDefinition => getArmy(state, country).general
+export const getGeneralDefinition = (state: AppState, country: CountryName): GeneralDefinition => getArmyDefinition(state, country).general
 export const getGeneral = (state: AppState, country: CountryName): General => manager.convertGeneralDefinition(getSiteSettings(state), getGeneralDefinition(state, country))
 
 export const getMode = (state: AppState): Mode => state.settings.mode
 
-const getBaseArmy = (state: AppState, side: Side) => {
+const getArmyDefinitionBySide = (state: AppState, side: Side) => {
   const participant = state.battle[state.settings.mode].participants[side]
   const country = participant.country
-  return getArmy(state, country)
+  return getArmyDefinition(state, country)
 }
 
 export const getTactic = (state: AppState, side: Side): TacticDefinition => {
   const country = getParticipant(state, side).country
-  const army = getArmy(state, country)
+  const army = getArmyDefinition(state, country)
   return state.tactics[army.tactic]
 }
 
-export const getBaseCohorts = (state: AppState, country: CountryName, originals?: boolean) => {
-  const army = getArmy(state, country)
+export const getArmyDefinitionWithOverriddenUnits = (state: AppState, country: CountryName, originals?: boolean) => {
+  const army = getArmyDefinition(state, country)
   if (originals)
     return army
   const units = getUnits(state, country)
@@ -227,18 +227,18 @@ export const getBaseCohorts = (state: AppState, country: CountryName, originals?
 export const getCohorts = (state: AppState, side: Side, originals?: boolean): Cohorts => {
   const settings = getSettings(state)
   const country = getCountryName(state, side)
-  const base = getBaseCohorts(state, country, originals)
+  const definition = getArmyDefinitionWithOverriddenUnits(state, country, originals)
   const frontline = [Array<Cohort | null>(settings[Setting.CombatWidth]).fill(null)]
   if (settings[Setting.BackRow])
     frontline.push([...frontline[0]])
   const cohorts = {
     frontline,
-    reserve: base.reserve as Reserve,
-    defeated: base.defeated as Defeated
+    reserve: definition.reserve as Reserve,
+    defeated: definition.defeated as Defeated
   }
-  forEach2(base.frontline, (item, row, column) => cohorts.frontline[Number(row)][Number(column)] = item as Cohort)
+  forEach2(definition.frontline, (item, row, column) => cohorts.frontline[Number(row)][Number(column)] = item as Cohort)
   const units = getUnits(state, country)
-  return convertBaseCohorts(settings, cohorts, units)
+  return convertCohortDefinitions(settings, cohorts, units)
 }
 
 export const getParticipant = (state: AppState, type: Side): Participant => getBattle(state).participants[type]
@@ -256,27 +256,27 @@ export const getUnits = (state: AppState, country?: CountryName): Units => {
   const settings = getSiteSettings(state)
   country = country ?? state.settings.country
   const mode = state.settings.mode
-  const base_units = getBaseUnits(state, country)
+  const definitions = getUnitDefinitions(state, country)
   const general = getGeneralDefinition(state, country).definitions
-  const units = convertUnitDefinitions(settings, base_units, general)
+  const units = convertUnitDefinitions(settings, definitions, general)
   return filterUnitDefinitions(mode, units)
 }
 
-export const getUnitTypeList = (state: AppState, filter_base: boolean, name?: CountryName) => getUnitList(state, filter_base, name).map(unit => unit.type)
+export const getUnitTypeList = (state: AppState, filter_parent: boolean, name?: CountryName) => getUnitList(state, filter_parent, name).map(unit => unit.type)
 
-export const getUnitList = (state: AppState, filter_base: boolean, name?: CountryName): Unit[] => {
+export const getUnitList = (state: AppState, filter_parent: boolean, name?: CountryName): Unit[] => {
   const mode = getMode(state)
   name = name ?? state.settings.country
   const country = getCountries(state)[name]
   const units = getUnits(state, name)
-  return manager.getUnitList2(units, mode, country.tech_level, filter_base, getSiteSettings(state))
+  return manager.getUnitList2(units, mode, country.tech_level, filter_parent, getSiteSettings(state))
 }
 
 export const getUnit = (state: AppState, unit_type: UnitType, country?: CountryName): Unit => {
   const settings = getSiteSettings(state)
   country = country ?? state.settings.country
   const general = getGeneralDefinition(state, country).definitions
-  const units = getBaseUnits(state, country)
+  const units = getUnitDefinitions(state, country)
   return convertUnitDefinition(settings, units, shrinkUnits(units), general, unit_type)
 }
 

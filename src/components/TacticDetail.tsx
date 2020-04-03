@@ -19,7 +19,7 @@ interface IProps {
   images: { [key in UnitType]: string[] }
   custom_value_key: string
   tactic: TacticDefinition
-  onCustomBaseValueChange: (key: string, attribute: TacticValueType, value: number) => void
+  onCustomValueChange: (key: string, attribute: TacticValueType, value: number) => void
   onTypeChange: (type: TacticType) => void
   onImageChange: (image: string) => void
   onModeChange: (mode: Mode) => void
@@ -57,7 +57,7 @@ export default class TacticDetail extends Component<IProps> {
   }
 
   renderRow = (tactic: TacticDefinition, attribute: TacticValueType, relative: boolean, images: string[]) => {
-    const { custom_value_key, onCustomBaseValueChange } = this.props
+    const { custom_value_key, onCustomValueChange } = this.props
     const base_value = getValue(ValuesType.Base, tactic, attribute, custom_value_key)
     const value = calculateValue(tactic, attribute)
 
@@ -71,7 +71,7 @@ export default class TacticDetail extends Component<IProps> {
           {relative ? toSignedPercent(value) : toPercent(value)}
         </Table.Cell>
         <Table.Cell collapsing>
-          <Input value={String(base_value)} onChange={value => onCustomBaseValueChange(custom_value_key, attribute, Number(value))} />
+          <Input value={String(base_value)} onChange={value => onCustomValueChange(custom_value_key, attribute, Number(value))} />
         </Table.Cell>
         <Table.Cell>
           {explainShort(tactic, attribute)}

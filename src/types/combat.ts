@@ -76,7 +76,7 @@ export interface CombatCohortDefinition extends UnitCalcs {
   max_morale: number
   experience_reduction: number
   deployment_cost: number
-  base?: UnitType
+  parent?: UnitType
   mode: Mode
   tech?: number
   role?: UnitRole

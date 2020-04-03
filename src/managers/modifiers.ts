@@ -1,5 +1,5 @@
 import { Modifier, ModifierType, Mode, ModifierWithKey } from 'types'
-import { getBaseUnitType } from './units'
+import { getRootParent } from './units'
 import { getTechDefinitionsEUIV } from 'data'
 import { ObjSet } from 'utils'
 
@@ -25,12 +25,12 @@ export const mapModifiersToUnits = (modifiers: Modifier[]) => {
     if (modifier.target === ModifierType.Text)
       return
     if (modifier.target in Mode) {
-      mapped.push({ ...modifier, target: getBaseUnitType(modifier.target as Mode) })
+      mapped.push({ ...modifier, target: getRootParent(modifier.target as Mode) })
       return
     }
     if (modifier.target === ModifierType.Global) {
-      mapped.push({ ...modifier, target: getBaseUnitType(Mode.Naval) })
-      mapped.push({ ...modifier, target: getBaseUnitType(Mode.Land) })
+      mapped.push({ ...modifier, target: getRootParent(Mode.Naval) })
+      mapped.push({ ...modifier, target: getRootParent(Mode.Land) })
       return
     }
     mapped.push(modifier)
@@ -44,12 +44,12 @@ export const mapModifiersToUnits2 = (modifiers: ModifierWithKey[]) => {
     if (modifier.target === ModifierType.Text)
       return
     if (modifier.target in Mode) {
-      mapped.push({ ...modifier, target: getBaseUnitType(modifier.target as Mode) })
+      mapped.push({ ...modifier, target: getRootParent(modifier.target as Mode) })
       return
     }
     if (modifier.target === ModifierType.Global) {
-      mapped.push({ ...modifier, target: getBaseUnitType(Mode.Naval) })
-      mapped.push({ ...modifier, target: getBaseUnitType(Mode.Land) })
+      mapped.push({ ...modifier, target: getRootParent(Mode.Naval) })
+      mapped.push({ ...modifier, target: getRootParent(Mode.Land) })
       return
     }
     mapped.push(modifier)

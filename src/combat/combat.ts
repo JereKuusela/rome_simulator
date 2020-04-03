@@ -84,7 +84,7 @@ export const getUnitDefinition = (combatSettings: Settings, terrains: TerrainDef
     tech: cohort.tech,
     mode: cohort.mode,
     role: cohort.role,
-    base: cohort.parent
+    parent: cohort.parent
   } as CombatCohortDefinition
   values(UnitAttribute).forEach(calc => { info[calc] = calculateValue(cohort, calc) })
   values(CombatPhase).forEach(calc => { info[calc] = calculateValue(cohort, calc) })

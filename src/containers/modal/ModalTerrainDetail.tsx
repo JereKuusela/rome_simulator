@@ -16,7 +16,7 @@ class ModalTerrainDetail extends Component<IProps> {
       <TerrainDetail
         custom_value_key={CUSTOM_VALUE_KEY}
         terrain={terrain}
-        onCustomBaseValueChange={(key, attribute, value) => this.props.setTerrainValue(terrain.type, key, attribute, value)}
+        onCustomValueChange={(key, attribute, value) => this.props.setTerrainValue(terrain.type, key, attribute, value)}
         onTypeChange={type => this.props.changeType(terrain.type, type)}
         onLocationChange={location => this.props.setLocation(terrain.type, location)}
         onImageChange={image => this.props.setImage(terrain.type, image)}

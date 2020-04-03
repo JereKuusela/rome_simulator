@@ -4,7 +4,7 @@ import { Table } from 'semantic-ui-react'
 
 import { Side, CountryName, UnitAttribute, CombatPhase, General, GeneralValueType, Mode, UnitType } from 'types'
 import { AppState, getGeneral, getUnit, getMode, getSiteSettings } from 'state'
-import { setGeneralBaseStat, invalidate } from 'reducers'
+import { setGeneralStat, invalidate } from 'reducers'
 import AttributeImage from 'components/Utils/AttributeImage'
 import StyledNumber from 'components/Utils/StyledNumber'
 import { addSign } from 'formatters'
@@ -86,9 +86,9 @@ class TableDamageAttributes extends Component<IProps> {
   )
 
   setGeneralStat = (attribute: GeneralValueType, value: number) => {
-    const { country, invalidate, setGeneralBaseStat } = this.props
+    const { country, invalidate, setGeneralStat } = this.props
 
-    setGeneralBaseStat(country, attribute, value)
+    setGeneralStat(country, attribute, value)
     invalidate()
   }
 }
@@ -99,7 +99,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   settings: getSiteSettings(state)
 })
 
-const actions = { invalidate, setGeneralBaseStat }
+const actions = { invalidate, setGeneralStat }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

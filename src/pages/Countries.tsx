@@ -6,7 +6,7 @@ import { mapRange, ObjSet, has, keys, values } from '../utils'
 
 import { addSignWithZero } from 'formatters'
 import { ValuesType, TraditionDefinition, TradeDefinition, IdeaDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, EconomyDefinition, LawDefinition, AbilityDefinition, Modifier, Tradition, ScopeType, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute, UnitType, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, CountryName, Setting } from 'types'
-import { invalidate, setCountryValue, enableSelection, clearSelection, enableUnitModifiers, enableGeneralModifiers, clearUnitModifiers, clearGeneralModifiers, setGeneralBaseStat, setGeneralValue, selectCulture, selectReligion, selectGovernment, setOmenPower, setHasGeneral, setMilitaryPower, setOfficeMorale, setOfficeDiscipline } from 'reducers'
+import { invalidate, setCountryValue, enableSelection, clearSelection, enableUnitModifiers, enableGeneralModifiers, clearUnitModifiers, clearGeneralModifiers, setGeneralStat, setGeneralValue, selectCulture, selectReligion, selectGovernment, setOmenPower, setHasGeneral, setMilitaryPower, setOfficeMorale, setOfficeDiscipline } from 'reducers'
 
 import AccordionToggle from 'containers/AccordionToggle'
 import CountryManager from 'containers/CountryManager'
@@ -713,7 +713,7 @@ class Countries extends Component<IProps> {
     this.exec(this.props.setOfficeDiscipline, 0)
     this.exec(this.props.setOfficeMorale, 0)
     this.exec(this.props.setHasGeneral, true)
-    this.exec(this.props.setGeneralBaseStat, GeneralAttribute.Martial, 0)
+    this.exec(this.props.setGeneralStat, GeneralAttribute.Martial, 0)
   }
 
   /**
@@ -723,7 +723,7 @@ class Countries extends Component<IProps> {
     const skill = Number(value)
     if (isNaN(skill))
       return
-    this.props.setGeneralBaseStat(this.props.selected_country, GeneralAttribute.Martial, skill)
+    this.props.setGeneralStat(this.props.selected_country, GeneralAttribute.Martial, skill)
   }
 
   clearInvention = (key: string, selections: ObjSet) => {
@@ -837,7 +837,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const actions = {
-  enableGeneralModifiers, clearGeneralModifiers, clearUnitModifiers, enableUnitModifiers, setGeneralBaseStat, setGeneralValue, selectCulture, invalidate, setCountryValue,
+  enableGeneralModifiers, clearGeneralModifiers, clearUnitModifiers, enableUnitModifiers, setGeneralStat, setGeneralValue, selectCulture, invalidate, setCountryValue,
   selectReligion, selectGovernment, setOmenPower, setHasGeneral, setMilitaryPower, setOfficeMorale, setOfficeDiscipline, enableSelection, clearSelection
 }
 

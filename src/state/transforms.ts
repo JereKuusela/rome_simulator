@@ -7,12 +7,12 @@ import { ModeState, TacticDefinitions, TerrainDefinitions, Countries, SettingsAn
 
 
 
-export const restoreBaseTactics = (state: TacticDefinitions): TacticDefinitions => map(state, definition => mergeValues(clearAllValues(definition, definition.type), getDefaultTactic(definition.type)))
-export const restoreBaseTerrains = (state: TerrainDefinitions): TerrainDefinitions => map(state, definition => mergeValues(clearAllValues(definition, definition.type), getDefaultTerrain(definition.type)))
-export const restoreBaseUnits = (state: UnitDefinitions): UnitDefinitions => map(state, definition => mergeValues(clearAllValues(definition, definition.type), getDefaultUnit(definition.type)))
-export const restoreBaseSettings = (state: SettingsAndOptions): SettingsAndOptions => {
-  const base = getDefaultSettings()
-  return { ...base, ...state, siteSettings: { ...base.siteSettings, ...state.siteSettings }, combatSettings: map(base.combatSettings, ((_, mode) => ({ ...base.combatSettings[mode], ...state.combatSettings[mode] }))) }
+export const restoreDefaultTactics = (state: TacticDefinitions): TacticDefinitions => map(state, definition => mergeValues(clearAllValues(definition, definition.type), getDefaultTactic(definition.type)))
+export const restoreDefaultTerrains = (state: TerrainDefinitions): TerrainDefinitions => map(state, definition => mergeValues(clearAllValues(definition, definition.type), getDefaultTerrain(definition.type)))
+export const restoreDefaultUnits = (state: UnitDefinitions): UnitDefinitions => map(state, definition => mergeValues(clearAllValues(definition, definition.type), getDefaultUnit(definition.type)))
+export const restoreDefaultSettings = (state: SettingsAndOptions): SettingsAndOptions => {
+  const defaultSettings = getDefaultSettings()
+  return { ...defaultSettings, ...state, siteSettings: { ...defaultSettings.siteSettings, ...state.siteSettings }, combatSettings: map(defaultSettings.combatSettings, ((_, mode) => ({ ...defaultSettings.combatSettings[mode], ...state.combatSettings[mode] }))) }
 }
 
 export const stripRounds = (battle: ModeState): ModeState => map(battle, value => ({ ...value, outdated: true, timestamp: 0, participants: map(value.participants, value => ({ ...value, rounds: [] })) }))

@@ -21,7 +21,7 @@ export const setUnitValue = makeActionReplaceFirstTwice(manager.setUnitValue, un
 export const changeUnitImage = makeActionReplaceFirstTwice(manager.changeUnitImage, unitMapping)
 export const changeUnitDeployment = makeActionReplaceFirstTwice(manager.changeUnitDeployment, unitMapping)
 export const toggleUnitLoyality = makeActionReplaceFirstTwice(manager.toggleUnitLoyality, unitMapping)
-export const changeUnitBaseType = makeActionReplaceFirstTwice(manager.changeUnitBaseType, unitMapping)
+export const changeParent = makeActionReplaceFirstTwice(manager.changeParent, unitMapping)
 
 const getUnit = (draft: Countries, action: Action<CountryName>) => {
   const [country, key] = action.payload

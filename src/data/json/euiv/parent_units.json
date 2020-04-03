@@ -2,7 +2,7 @@
   "units": [
     {
       "type": "Land Unit",
-      "base": null,
+      "parent": null,
       "mode": "Land",
       "role": "Front",
       "morale": 2.0,
@@ -13,7 +13,7 @@
     },
     {
       "type": "Artillery",
-      "base": "Land Unit",
+      "parent": "Land Unit",
       "role": "Support",
       "maneuver": 2,
       "cost": 30,
@@ -22,7 +22,7 @@
     },
     {
       "type": "Cavalry",
-      "base": "Land Unit",
+      "parent": "Land Unit",
       "mode": "Land",
       "role": "Flank",
       "maneuver": 2,
@@ -31,7 +31,7 @@
     },
     {
       "type": "Infantry",
-      "base": "Land Unit",
+      "parent": "Land Unit",
       "role": "Front",
       "fire": 0.25,
       "maneuver": 1,
@@ -40,7 +40,7 @@
     },
     {
       "type": "Light Ship",
-      "base": null,
+      "parent": null,
       "mode": "Naval",
       "role": "Front",
       "morale": 3.0,
@@ -50,7 +50,7 @@
     },
     {
       "type": "Heavy Ship",
-      "base": null,
+      "parent": null,
       "mode": "Naval",
       "role": "Front",
       "morale": 3.0,
@@ -60,7 +60,7 @@
     },
     {
       "type": "Galley",
-      "base": null,
+      "parent": null,
       "mode": "Naval",
       "role": "Front",
       "morale": 3.0,
@@ -70,7 +70,7 @@
     },
     {
       "type": "Transport",
-      "base": null,
+      "parent": null,
       "mode": "Naval",
       "role": "Front",
       "morale": 3.0,

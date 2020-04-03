@@ -11,7 +11,7 @@ import TerrainSelector from 'containers/TerrainSelector'
 import WinRate from 'containers/WinRate'
 import {
   invalidate, selectArmy, setDice, toggleRandomDice, clearCohorts, changeSiteParameter,
-  undo, battle, refreshBattle, setSeed, setGeneralBaseStat, resetState, selectCulture, openModal
+  undo, battle, refreshBattle, setSeed, setGeneralStat, resetState, selectCulture, openModal
 } from 'reducers'
 import { AppState, getBattle, getParticipant, getSettings } from 'state'
 import { ArmyType, CountryName, Setting, Side, CombatPhase, UnitType, ModalType } from 'types'
@@ -304,7 +304,7 @@ const mapStateToProps = (state: AppState) => {
   }
 }
 
-const actions = { openModal, changeSiteParameter, battle, undo, toggleRandomRoll: toggleRandomDice, setRoll: setDice, setGeneralBaseStat, invalidate, selectArmy, setSeed, refreshBattle, resetState, selectCulture, clearCohorts }
+const actions = { openModal, changeSiteParameter, battle, undo, toggleRandomRoll: toggleRandomDice, setDice, setGeneralStat, invalidate, selectArmy, setSeed, refreshBattle, resetState, selectCulture, clearCohorts }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

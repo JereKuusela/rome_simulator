@@ -5,7 +5,7 @@ import { Image, Table, Checkbox, Input, Button } from 'semantic-ui-react'
 import { Side, CountryName, Setting, Participant, General, GeneralAttribute, GeneralValueType, UnitAttribute, isAttributeEnabled, Mode, UnitType, Unit, ValuesType, CountryAttribute, Country, CultureType, CombatParticipant, ModalType } from 'types'
 import { keys } from 'utils'
 import { AppState, getCountry, getParticipant, getGeneral, getCountryName, getSelectedTerrains, getCountries, getBattle, getUnit, getMode, getCombatParticipant, getSiteSettings } from 'state'
-import { invalidate, selectArmy, selectCulture, toggleRandomDice, setDice, setGeneralBaseStat, openModal } from 'reducers'
+import { invalidate, selectArmy, selectCulture, toggleRandomDice, setDice, setGeneralStat, openModal } from 'reducers'
 import Dropdown from 'components/Dropdowns/Dropdown'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TacticSelector from './TacticSelector'
@@ -162,7 +162,7 @@ class TableArmyInfo extends Component<IProps> {
 
   renderGeneralAttribute = (country: CountryName, general: General, attribute: GeneralValueType) => (
     <Table.Cell collapsing>
-      <Input disabled={!general.enabled} size='mini' className='small-input' type='number' value={general.base_values[attribute]} onChange={(_, { value }) => this.props.setGeneralBaseStat(country, attribute, Number(value))} />
+      <Input disabled={!general.enabled} size='mini' className='small-input' type='number' value={general.base_values[attribute]} onChange={(_, { value }) => this.props.setGeneralStat(country, attribute, Number(value))} />
       {' '}<StyledNumber value={general.extra_values[attribute]} formatter={addSign} hide_zero />
     </Table.Cell>
   )
@@ -239,7 +239,7 @@ const mapStateToProps = (state: AppState) => ({
   settings: getSiteSettings(state)
 })
 
-const actions = { invalidate, selectArmy, selectCulture, toggleRandomRoll: toggleRandomDice, setRoll: setDice, setGeneralBaseStat, openModal }
+const actions = { invalidate, selectArmy, selectCulture, toggleRandomRoll: toggleRandomDice, setRoll: setDice, setGeneralStat, openModal }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

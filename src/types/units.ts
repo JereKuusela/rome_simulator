@@ -85,7 +85,7 @@ export type UnitDefinitionValues = { [key in UnitType]: UnitDefinitionValue }
 export type UnitDefinitionValue = DefinitionValues<UnitValueType>
 
 /** An identity of a cohort. Used to store data but shouldn't be used for anything else. */
-export interface BaseCohort extends DefinitionValues<UnitValueType> {
+export interface CohortDefinition extends DefinitionValues<UnitValueType> {
   type: UnitType
   id: number
   is_loyal?: boolean
@@ -100,13 +100,13 @@ export interface UnitDefinition extends Definition<UnitType>, DefinitionValues<U
   tech?: number
 }
 
-/** A full unit definition (merged with definitions of country, general and base unit types). */
+/** A full unit definition (merged with definitions of country, general and parent unit types). */
 export interface Unit extends UnitDefinition {
   mode: Mode
 }
 
 /** A full cohort (merged with unit definition). */
-export interface Cohort extends BaseCohort, Unit { }
+export interface Cohort extends CohortDefinition, Unit { }
 
 
 export const unitValueToString = (definition: DefinitionValues<UnitValueType>, type: UnitValueType): string => {

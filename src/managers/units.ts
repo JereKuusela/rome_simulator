@@ -1,4 +1,4 @@
-import { ValuesType, UnitValueType, UnitType, UnitRole, Modifier, ScopeType, UnitDefinition, UnitDefinitions, Mode, Setting, UnitAttribute, WearinessAttributes, BaseReserve, ModifierWithKey, SiteSettings } from "types"
+import { ValuesType, UnitValueType, UnitType, UnitRole, Modifier, ScopeType, UnitDefinition, UnitDefinitions, Mode, Setting, UnitAttribute, WearinessAttributes, ReserveDefinition, ModifierWithKey, SiteSettings } from "types"
 import { addValuesWithMutate, regenerateValues, clearValues, DefinitionValues, calculateValue, addValues, addValue } from "definition_values"
 import { getUnitIcon } from "data"
 import { forEach, toArr, round, randomWithinRange } from "utils"
@@ -13,7 +13,7 @@ export const deleteUnit = (units: UnitDefinitions, type: UnitType) => {
 }
 
 export const createUnit = (units: UnitDefinitions, mode: Mode, type: UnitType) => {
-  units[type] = { type, image: getUnitIcon(type), role: UnitRole.Front, parent: getBaseUnitType(mode) }
+  units[type] = { type, image: getUnitIcon(type), role: UnitRole.Front, parent: getRootParent(mode) }
 }
 
 export const changeUnitType = (units: UnitDefinitions, old_type: UnitType, type: UnitType) => {
@@ -32,8 +32,8 @@ export const toggleUnitLoyality = (unit: UnitDefinition) => {
   unit.is_loyal = !unit.is_loyal
 }
 
-export const changeUnitBaseType = (unit: UnitDefinition, base: UnitType) => {
-  unit.parent = base
+export const changeParent = (unit: UnitDefinition, parent: UnitType) => {
+  unit.parent = parent
 }
 
 export const enableUnitModifiers = (units: UnitDefinitions, key: string, modifiers: Modifier[]) => {
@@ -53,7 +53,7 @@ export const clearUnitModifiers = (units: UnitDefinitions, key: string) => {
   })
 }
 
-export const getBaseUnitType = (mode: Mode) => mode === Mode.Naval ? UnitType.Naval : UnitType.Land
+export const getRootParent = (mode: Mode) => mode === Mode.Naval ? UnitType.Naval : UnitType.Land
 
 export const applyDynamicAttributes = <T extends DefinitionValues<UnitValueType>>(definition: T, settings: SiteSettings) => {
   if (settings[Setting.AttributeDrill]) {
@@ -71,7 +71,7 @@ export const applyDynamicAttributes = <T extends DefinitionValues<UnitValueType>
 
 export const getStrengthBasedFlank = (strength: number) => Math.pow(0.5, 4 - Math.ceil(strength * 4.0))
 
-export const applyLosses = (values: WearinessAttributes, units: BaseReserve) => (
+export const applyLosses = (values: WearinessAttributes, units: ReserveDefinition) => (
   units.map(unit => addValues(unit, ValuesType.LossModifier, 'Custom', generateLosses(values)))
 )
 

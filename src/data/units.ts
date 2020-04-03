@@ -2,10 +2,10 @@ import { ValuesType, UnitType, UnitDefinition, UnitAttribute, UnitValueType, Uni
 import { addValues } from 'definition_values'
 import { toObj, removeUndefined, filter, toArr } from 'utils'
 
-import * as ir_data from './json/ir/units.json'
-import * as ir_basedata from './json/ir/base_units.json'
-import * as euiv_basedata from './json/euiv/base_units.json'
-import * as euiv_data from './json/euiv/units.json'
+import * as ir_units from './json/ir/units.json'
+import * as ir_parents from './json/ir/parent_units.json'
+import * as euiv_parents from './json/euiv/parent_units.json'
+import * as euiv_units from './json/euiv/units.json'
 import IconArcher from 'images/archers.png'
 import IconCamelCavalry from 'images/camel_cavalry.png'
 import IconChariots from 'images/chariots.png'
@@ -60,15 +60,13 @@ const unit_to_icon: { [key in UnitType]: string } = {
 
 export const getUnitIcon = (type: UnitType) => unit_to_icon[type] || ''
 
-export const GlobalKey = 'Base'
-
 const createUnitFromJson = (data: UnitData): UnitDefinition => {
   let unit: UnitDefinition = {
     type: data.type as UnitType,
     mode: data.mode as Mode | undefined,
-    image: unit_to_icon[data.type as UnitType] ?? unit_to_icon[data.base as UnitType] ?? '',
+    image: unit_to_icon[data.type as UnitType] ?? unit_to_icon[data.parent as UnitType] ?? '',
     role: data.role ? data.role as UnitRole : undefined,
-    parent: data.base ? data.base as UnitType : undefined,
+    parent: data.parent ? data.parent as UnitType : undefined,
     culture: data.culture ? data.culture as CultureType : undefined,
     tech: data.tech
   }
@@ -125,9 +123,9 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
 
 const initializeDefaultUnits = (): UnitDefinitions => {
   if (process.env.REACT_APP_GAME === 'euiv')
-    return toObj(euiv_basedata.units.map(createUnitFromJson).concat(euiv_data.units.map(createUnitFromJson)), unit => unit.type)
+    return toObj(euiv_parents.units.map(createUnitFromJson).concat(euiv_units.units.map(createUnitFromJson)), unit => unit.type)
   else
-    return toObj(ir_basedata.units.map(createUnitFromJson).concat(ir_data.units.map(createUnitFromJson)), unit => unit.type)
+    return toObj(ir_parents.units.map(createUnitFromJson).concat(ir_units.units.map(createUnitFromJson)), unit => unit.type)
 }
 const defaultUnits = initializeDefaultUnits()
 
@@ -137,7 +135,7 @@ export const getDefaultUnits = (culture?: CultureType): UnitDefinitions => cultu
 export const getDefaultUnit = (type: UnitType): UnitDefinition => defaultUnits[type]
 
 interface UnitData {
-  base: string | null
+  parent: string | null
   type: string
   mode?: string
   culture?: string

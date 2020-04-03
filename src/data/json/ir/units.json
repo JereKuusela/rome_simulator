@@ -15,7 +15,7 @@
       "cost": 6,
       "food_consumption": 0.1,
       "food_storage": 2.4,
-      "base": "Land Unit"
+      "parent": "Land Unit"
     },
     {
       "type": "Camel Cavalry",
@@ -33,7 +33,7 @@
       "supply_train": 1,
       "food_consumption": 0.2,
       "food_storage": 3.6,
-      "base": "Land Unit"
+      "parent": "Land Unit"
     },
     {
       "type": "Chariots",
@@ -51,7 +51,7 @@
       "supply_train": 1,
       "food_consumption": 0.2,
       "food_storage": 2.4,
-      "base": "Land Unit"
+      "parent": "Land Unit"
     },
     {
       "type": "Heavy Cavalry",
@@ -69,7 +69,7 @@
       "cost": 14,
       "food_consumption": 0.25,
       "food_storage": 2.4,
-      "base": "Land Unit"
+      "parent": "Land Unit"
     },
     {
       "type": "Heavy Infantry",
@@ -87,7 +87,7 @@
       "cost": 14,
       "food_consumption": 0.2,
       "food_storage": 2.4,
-      "base": "Land Unit"
+      "parent": "Land Unit"
     },
     {
       "type": "Horse Archers",
@@ -108,7 +108,7 @@
       "cost": 14,
       "food_consumption": 0.25,
       "food_storage": 3,
-      "base": "Land Unit"
+      "parent": "Land Unit"
     },
     {
       "type": "Light Cavalry",
@@ -127,7 +127,7 @@
       "cost": 7,
       "food_consumption": 0.25,
       "food_storage": 2.4,
-      "base": "Land Unit"
+      "parent": "Land Unit"
     },
     {
       "type": "Light Infantry",
@@ -145,7 +145,7 @@
       "food_storage": 2.4,
       "morale_damage_taken": -0.25,
       "cost": 6,
-      "base": "Land Unit"
+      "parent": "Land Unit"
     },
     {
       "type": "Supply Train",
@@ -165,7 +165,7 @@
       "food_storage": 50,
       "morale_damage_taken": 1,
       "cost": 16,
-      "base": "Land Unit"
+      "parent": "Land Unit"
     },
     {
       "type": "War Elephants",
@@ -185,12 +185,12 @@
       "cost": 26,
       "food_consumption": 0.3,
       "food_storage": 1,
-      "base": "Land Unit"
+      "parent": "Land Unit"
     },
     {
       "type": "Liburnian",
       "mode": "Naval",
-      "base": "Light Ship",
+      "parent": "Light Ship",
       "maneuver": 4,
       "morale_damage_done": 0.15,
       "trireme": -0.15,
@@ -203,7 +203,7 @@
     {
       "type": "Trireme",
       "mode": "Naval",
-      "base": "Light Ship",
+      "parent": "Light Ship",
       "maneuver": 3,
       "morale_damage_taken": -0.1,
       "liburnian": 0.15,
@@ -216,7 +216,7 @@
     {
       "type": "Tetrere",
       "mode": "Naval",
-      "base": "Medium Ship",
+      "parent": "Medium Ship",
       "maneuver": 2,
       "liburnian": 0.25,
       "trireme": 0.1,
@@ -227,7 +227,7 @@
     {
       "type": "Hexere",
       "mode": "Naval",
-      "base": "Medium Ship",
+      "parent": "Medium Ship",
       "maneuver": 1,
       "strength_damage_done": 0.1,
       "morale_damage_taken": -0.1,
@@ -241,7 +241,7 @@
     {
       "type": "Octere",
       "mode": "Naval",
-      "base": "Heavy Ship",
+      "parent": "Heavy Ship",
       "morale_damage_taken": -0.2,
       "liburnian": 0.4,
       "trireme": 0.2,
@@ -253,7 +253,7 @@
     {
       "type": "Mega Polyreme",
       "mode": "Naval",
-      "base": "Heavy Ship",
+      "parent": "Heavy Ship",
       "strength_damage_done": 0.4,
       "morale_damage_taken": -0.3,
       "liburnian": 0.5,

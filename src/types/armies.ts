@@ -1,5 +1,5 @@
 import { DefinitionValues } from "definition_values"
-import { UnitType, BaseCohort, Cohort, UnitDefinitionValues, UnitRole, Units } from "./units"
+import { UnitType, CohortDefinition, Cohort, UnitDefinitionValues, UnitRole, Units } from "./units"
 import { Mode } from "types/definition"
 import { TacticType, TacticDefinition } from "./tactics"
 import { CombatPhase } from "./battle"
@@ -36,9 +36,9 @@ export type Army = {
   unit_preferences: UnitPreferences
   flank_size: number
   general: GeneralDefinition
-  frontline: BaseFrontLine
-  reserve: BaseReserve
-  defeated: BaseDefeated
+  frontline: FrontlineDefinition
+  reserve: ReserveDefinition
+  defeated: DefeatedDefinition
 }
 
 export enum ArmyType {
@@ -54,9 +54,9 @@ export enum UnitPreferenceType {
   Flank = 'PrimaryFlank'
 }
 
-export type BaseFrontLine = { [key: string]: { [key: string]: BaseCohort } }
-export type BaseReserve = BaseCohort[]
-export type BaseDefeated = BaseCohort[]
+export type FrontlineDefinition = { [key: string]: { [key: string]: CohortDefinition } }
+export type ReserveDefinition = CohortDefinition[]
+export type DefeatedDefinition = CohortDefinition[]
 export type FrontLine = (Cohort | null)[][]
 export type Reserve = Cohort[]
 export type Defeated = Cohort[]

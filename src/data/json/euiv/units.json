@@ -2,7 +2,7 @@
   "units": [
     {
       "culture": "Sub Saharan",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 3,
       "offensive_fire": 3,
@@ -14,7 +14,7 @@
     },
     {
       "culture": "Sub Saharan",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 3,
       "offensive_fire": 2,
@@ -25,7 +25,7 @@
       "tech": 15
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Sub Saharan",
       "offensive_morale": 3,
       "defensive_morale": 2,
@@ -35,7 +35,7 @@
       "tech": 10
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Sub Saharan",
       "offensive_morale": 2,
       "offensive_shock": 1,
@@ -45,7 +45,7 @@
     },
     {
       "culture": "Sub Saharan",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 1,
       "defensive_morale": 1,
       "offensive_shock": 1,
@@ -53,7 +53,7 @@
       "tech": 1
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Sub Saharan",
       "offensive_morale": 4,
       "defensive_morale": 4,
@@ -65,7 +65,7 @@
       "tech": 28
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Sub Saharan",
       "offensive_morale": 4,
       "defensive_morale": 4,
@@ -78,7 +78,7 @@
     },
     {
       "culture": "Sub Saharan",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 2,
       "offensive_fire": 2,
@@ -89,7 +89,7 @@
       "tech": 12
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Sub Saharan",
       "offensive_morale": 3,
       "defensive_morale": 3,
@@ -100,7 +100,7 @@
       "tech": 14
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Sub Saharan",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -110,7 +110,7 @@
       "tech": 1
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Sub Saharan",
       "offensive_morale": 3,
       "defensive_morale": 3,
@@ -120,7 +120,7 @@
       "tech": 10
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Sub Saharan",
       "offensive_morale": 1,
       "defensive_morale": 2,
@@ -131,7 +131,7 @@
     },
     {
       "culture": "Sub Saharan",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 1,
       "defensive_morale": 1,
       "defensive_shock": 1,
@@ -139,7 +139,7 @@
       "tech": 1
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Sub Saharan",
       "offensive_morale": 3,
       "defensive_morale": 2,
@@ -150,7 +150,7 @@
       "tech": 17
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Sub Saharan",
       "offensive_morale": 2,
       "defensive_morale": 1,
@@ -161,7 +161,7 @@
     },
     {
       "culture": "Sub Saharan",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 4,
       "defensive_morale": 4,
       "offensive_fire": 3,
@@ -172,7 +172,7 @@
       "tech": 30
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Muslim",
       "offensive_morale": 3,
       "defensive_morale": 3,
@@ -183,7 +183,7 @@
       "tech": 18
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Muslim",
       "offensive_morale": 2,
       "defensive_morale": 2,
@@ -196,7 +196,7 @@
     },
     {
       "culture": "North American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 1,
       "defensive_shock": 1,
@@ -205,7 +205,7 @@
     },
     {
       "culture": "Muslim",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 4,
       "defensive_morale": 3,
       "offensive_fire": 2,
@@ -217,7 +217,7 @@
     },
     {
       "culture": "North American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 4,
       "defensive_morale": 3,
       "offensive_fire": 4,
@@ -228,7 +228,7 @@
       "tech": 30
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 3,
       "defensive_morale": 3,
@@ -241,7 +241,7 @@
     },
     {
       "culture": "North American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 3,
       "defensive_morale": 3,
       "offensive_fire": 4,
@@ -252,7 +252,7 @@
       "tech": 26
     },
     {
-      "base": "Galley",
+      "parent": "Galley",
       "hull_size": 24,
       "base_cannons": 36,
       "sail_speed": 8,
@@ -260,7 +260,7 @@
       "type": "Archipelago Frigate"
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Chinese",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -272,7 +272,7 @@
       "tech": 9
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Chinese",
       "offensive_morale": 3,
       "defensive_morale": 3,
@@ -283,7 +283,7 @@
       "tech": 14
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Chinese",
       "offensive_morale": 2,
       "defensive_morale": 2,
@@ -295,7 +295,7 @@
       "tech": 15
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Chinese",
       "offensive_morale": 3,
       "defensive_morale": 2,
@@ -307,7 +307,7 @@
       "tech": 19
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 3,
       "defensive_morale": 3,
@@ -319,7 +319,7 @@
       "tech": 23
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Western",
       "offensive_morale": 4,
       "defensive_morale": 4,
@@ -331,7 +331,7 @@
       "tech": 23
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 3,
       "defensive_morale": 4,
@@ -343,7 +343,7 @@
       "tech": 30
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 3,
       "defensive_morale": 3,
@@ -355,7 +355,7 @@
       "tech": 19
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 3,
       "defensive_morale": 4,
@@ -368,7 +368,7 @@
     },
     {
       "culture": "Mesoamerican",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 2,
       "offensive_fire": 2,
@@ -380,7 +380,7 @@
     },
     {
       "culture": "Mesoamerican",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 2,
       "offensive_shock": 3,
@@ -390,7 +390,7 @@
     },
     {
       "culture": "Mesoamerican",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 1,
       "defensive_morale": 1,
       "defensive_shock": 2,
@@ -399,7 +399,7 @@
     },
     {
       "culture": "Sub Saharan",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 1,
       "offensive_fire": 3,
@@ -411,7 +411,7 @@
     },
     {
       "culture": "Sub Saharan",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 1,
       "offensive_fire": 2,
@@ -423,7 +423,7 @@
     },
     {
       "culture": "Sub Saharan",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 1,
       "offensive_shock": 2,
@@ -432,7 +432,7 @@
       "tech": 5
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Eastern",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -440,7 +440,7 @@
       "tech": 1
     },
     {
-      "base": "Light Ship",
+      "parent": "Light Ship",
       "hull_size": 8,
       "base_cannons": 10,
       "sail_speed": 10,
@@ -449,7 +449,7 @@
       "type": "Barque"
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Indian",
       "offensive_morale": 4,
       "defensive_morale": 3,
@@ -461,7 +461,7 @@
       "tech": 28
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Indian",
       "offensive_morale": 2,
       "defensive_morale": 2,
@@ -473,7 +473,7 @@
       "tech": 18
     },
     {
-      "base": "Transport",
+      "parent": "Transport",
       "hull_size": 18,
       "base_cannons": 6,
       "sail_speed": 5,
@@ -481,7 +481,7 @@
       "type": "Brig"
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Western",
       "offensive_morale": 4,
       "defensive_morale": 4,
@@ -493,7 +493,7 @@
       "tech": 26
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 4,
       "defensive_morale": 3,
@@ -505,7 +505,7 @@
       "tech": 26
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 4,
       "defensive_morale": 4,
@@ -517,7 +517,7 @@
       "tech": 28
     },
     {
-      "base": "Light Ship",
+      "parent": "Light Ship",
       "hull_size": 10,
       "base_cannons": 13,
       "sail_speed": 10,
@@ -526,7 +526,7 @@
       "type": "Caravel"
     },
     {
-      "base": "Heavy Ship",
+      "parent": "Heavy Ship",
       "hull_size": 25,
       "base_cannons": 50,
       "sail_speed": 5,
@@ -535,7 +535,7 @@
     },
     {
       "culture": "Mesoamerican",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 4,
       "defensive_morale": 4,
       "offensive_fire": 2,
@@ -547,7 +547,7 @@
     },
     {
       "culture": "Mesoamerican",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 1,
       "defensive_morale": 1,
       "offensive_shock": 2,
@@ -557,7 +557,7 @@
     },
     {
       "culture": "Mesoamerican",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 3,
       "defensive_morale": 2,
       "offensive_fire": 1,
@@ -569,7 +569,7 @@
     },
     {
       "culture": "Mesoamerican",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 2,
       "defensive_morale": 2,
       "defensive_fire": 1,
@@ -580,7 +580,7 @@
     },
     {
       "culture": "Mesoamerican",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 3,
       "defensive_morale": 2,
       "offensive_fire": 1,
@@ -591,7 +591,7 @@
       "tech": 19
     },
     {
-      "base": "Artillery",
+      "parent": "Artillery",
       "offensive_morale": 2,
       "defensive_morale": 1,
       "offensive_fire": 2,
@@ -601,7 +601,7 @@
       "tech": 16
     },
     {
-      "base": "Galley",
+      "parent": "Galley",
       "hull_size": 20,
       "base_cannons": 30,
       "sail_speed": 8,
@@ -609,7 +609,7 @@
       "type": "Chebeck"
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Western",
       "offensive_morale": 1,
       "offensive_shock": 1,
@@ -618,7 +618,7 @@
       "tech": 1
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Chinese",
       "offensive_morale": 4,
       "defensive_morale": 3,
@@ -630,7 +630,7 @@
       "tech": 23
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Chinese",
       "offensive_morale": 2,
       "defensive_morale": 1,
@@ -639,7 +639,7 @@
       "tech": 5
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Chinese",
       "defensive_morale": 1,
       "defensive_shock": 1,
@@ -647,7 +647,7 @@
       "tech": 1
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Chinese",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -657,7 +657,7 @@
       "tech": 6
     },
     {
-      "base": "Artillery",
+      "parent": "Artillery",
       "offensive_morale": 3,
       "defensive_morale": 3,
       "offensive_fire": 3,
@@ -668,7 +668,7 @@
       "tech": 22
     },
     {
-      "base": "Transport",
+      "parent": "Transport",
       "hull_size": 12,
       "base_cannons": 4,
       "sail_speed": 5,
@@ -677,7 +677,7 @@
     },
     {
       "culture": "North American",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 3,
       "defensive_morale": 2,
       "offensive_fire": 1,
@@ -689,7 +689,7 @@
     },
     {
       "culture": "North American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 2,
       "offensive_fire": 2,
@@ -700,7 +700,7 @@
       "tech": 14
     },
     {
-      "base": "Artillery",
+      "parent": "Artillery",
       "offensive_morale": 1,
       "offensive_fire": 1,
       "defensive_fire": 1,
@@ -709,7 +709,7 @@
       "tech": 10
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Eastern",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -718,7 +718,7 @@
       "tech": 1
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Muslim",
       "offensive_morale": 4,
       "defensive_morale": 4,
@@ -730,7 +730,7 @@
       "tech": 28
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Muslim",
       "offensive_morale": 4,
       "defensive_morale": 3,
@@ -742,7 +742,7 @@
       "tech": 23
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Muslim",
       "offensive_morale": 4,
       "defensive_morale": 3,
@@ -754,7 +754,7 @@
       "tech": 28
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 3,
       "defensive_morale": 2,
@@ -766,7 +766,7 @@
       "tech": 15
     },
     {
-      "base": "Heavy Ship",
+      "parent": "Heavy Ship",
       "hull_size": 20,
       "base_cannons": 40,
       "sail_speed": 5,
@@ -774,7 +774,7 @@
       "type": "Early Carrack"
     },
     {
-      "base": "Light Ship",
+      "parent": "Light Ship",
       "hull_size": 12,
       "base_cannons": 15,
       "sail_speed": 10,
@@ -783,7 +783,7 @@
       "type": "Early Frigate"
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Chinese",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -792,7 +792,7 @@
       "tech": 1
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Ottoman",
       "offensive_morale": 3,
       "defensive_morale": 3,
@@ -804,7 +804,7 @@
       "tech": 26
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Eastern",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -813,7 +813,7 @@
       "tech": 1
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Eastern",
       "offensive_morale": 1,
       "offensive_shock": 1,
@@ -821,7 +821,7 @@
       "tech": 1
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Eastern",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -831,7 +831,7 @@
       "tech": 5
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Ottoman",
       "offensive_morale": 4,
       "defensive_morale": 3,
@@ -843,7 +843,7 @@
       "tech": 26
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Ottoman",
       "offensive_morale": 4,
       "defensive_morale": 3,
@@ -855,7 +855,7 @@
       "tech": 26
     },
     {
-      "base": "Transport",
+      "parent": "Transport",
       "hull_size": 36,
       "base_cannons": 12,
       "sail_speed": 5,
@@ -863,7 +863,7 @@
       "type": "Eastindiaman"
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Chinese",
       "offensive_morale": 1,
       "defensive_shock": 1,
@@ -871,7 +871,7 @@
       "tech": 1
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Chinese",
       "offensive_morale": 2,
       "defensive_morale": 2,
@@ -883,7 +883,7 @@
     },
     {
       "culture": "Sub Saharan",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 3,
       "offensive_fire": 2,
@@ -895,7 +895,7 @@
     },
     {
       "culture": "Sub Saharan",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 1,
       "defensive_morale": 2,
       "offensive_fire": 2,
@@ -907,7 +907,7 @@
     },
     {
       "culture": "Sub Saharan",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 1,
       "defensive_morale": 2,
       "offensive_fire": 1,
@@ -918,7 +918,7 @@
       "tech": 12
     },
     {
-      "base": "Transport",
+      "parent": "Transport",
       "hull_size": 15,
       "base_cannons": 5,
       "sail_speed": 5,
@@ -926,7 +926,7 @@
       "type": "Flute"
     },
     {
-      "base": "Artillery",
+      "parent": "Artillery",
       "offensive_morale": 4,
       "defensive_morale": 4,
       "offensive_fire": 4,
@@ -937,7 +937,7 @@
       "tech": 29
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 4,
       "defensive_morale": 4,
@@ -949,7 +949,7 @@
       "tech": 26
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Western",
       "offensive_morale": 3,
       "defensive_morale": 4,
@@ -961,7 +961,7 @@
       "tech": 26
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Western",
       "offensive_morale": 2,
       "defensive_morale": 2,
@@ -972,7 +972,7 @@
       "tech": 14
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Western",
       "offensive_morale": 4,
       "defensive_morale": 5,
@@ -984,7 +984,7 @@
       "tech": 28
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Western",
       "offensive_morale": 4,
       "defensive_morale": 4,
@@ -996,7 +996,7 @@
       "tech": 23
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 4,
       "defensive_morale": 4,
@@ -1008,7 +1008,7 @@
       "tech": 28
     },
     {
-      "base": "Light Ship",
+      "parent": "Light Ship",
       "hull_size": 16,
       "base_cannons": 20,
       "sail_speed": 10,
@@ -1017,7 +1017,7 @@
       "type": "Frigate"
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 3,
       "defensive_morale": 1,
@@ -1029,7 +1029,7 @@
       "tech": 12
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 2,
       "offensive_shock": 1,
@@ -1037,7 +1037,7 @@
       "tech": 5
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 2,
       "defensive_morale": 1,
@@ -1046,7 +1046,7 @@
       "tech": 9
     },
     {
-      "base": "Galley",
+      "parent": "Galley",
       "hull_size": 16,
       "base_cannons": 24,
       "sail_speed": 8,
@@ -1054,7 +1054,7 @@
       "type": "Galiot"
     },
     {
-      "base": "Galley",
+      "parent": "Galley",
       "hull_size": 12,
       "base_cannons": 18,
       "sail_speed": 8,
@@ -1062,7 +1062,7 @@
       "type": "Galleass"
     },
     {
-      "base": "Heavy Ship",
+      "parent": "Heavy Ship",
       "hull_size": 30,
       "base_cannons": 60,
       "sail_speed": 5,
@@ -1070,7 +1070,7 @@
       "type": "Galleon"
     },
     {
-      "base": "Galley",
+      "parent": "Galley",
       "hull_size": 8,
       "base_cannons": 12,
       "sail_speed": 8,
@@ -1078,7 +1078,7 @@
       "type": "Galley"
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Eastern",
       "offensive_morale": 1,
       "defensive_morale": 2,
@@ -1088,7 +1088,7 @@
       "tech": 9
     },
     {
-      "base": "Light Ship",
+      "parent": "Light Ship",
       "hull_size": 24,
       "base_cannons": 30,
       "sail_speed": 10,
@@ -1097,7 +1097,7 @@
       "type": "Great Frigate"
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 1,
       "offensive_shock": 1,
@@ -1105,7 +1105,7 @@
       "tech": 1
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Chinese",
       "offensive_morale": 2,
       "defensive_morale": 2,
@@ -1118,7 +1118,7 @@
     },
     {
       "culture": "High American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_fire": 4,
       "defensive_fire": 3,
       "offensive_shock": 2,
@@ -1130,7 +1130,7 @@
     },
     {
       "culture": "High American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_fire": 4,
       "defensive_fire": 4,
       "offensive_shock": 3,
@@ -1142,7 +1142,7 @@
     },
     {
       "culture": "High American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_fire": 2,
       "defensive_fire": 1,
       "offensive_shock": 1,
@@ -1153,7 +1153,7 @@
     },
     {
       "culture": "High American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_fire": 4,
       "defensive_fire": 4,
       "offensive_shock": 4,
@@ -1165,7 +1165,7 @@
     },
     {
       "culture": "High American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_fire": 1,
       "defensive_fire": 1,
       "defensive_shock": 1,
@@ -1175,7 +1175,7 @@
     },
     {
       "culture": "High American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_fire": 3,
       "defensive_fire": 3,
       "offensive_shock": 2,
@@ -1187,7 +1187,7 @@
     },
     {
       "culture": "High American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_fire": 3,
       "defensive_fire": 2,
       "offensive_shock": 1,
@@ -1199,7 +1199,7 @@
     },
     {
       "culture": "High American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_fire": 3,
       "defensive_fire": 3,
       "offensive_shock": 2,
@@ -1210,7 +1210,7 @@
       "tech": 18
     },
     {
-      "base": "Light Ship",
+      "parent": "Light Ship",
       "hull_size": 20,
       "base_cannons": 25,
       "sail_speed": 10,
@@ -1220,7 +1220,7 @@
     },
     {
       "culture": "High American",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 4,
       "defensive_morale": 4,
       "offensive_fire": 4,
@@ -1232,7 +1232,7 @@
     },
     {
       "culture": "High American",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 1,
       "defensive_morale": 1,
       "offensive_fire": 1,
@@ -1243,7 +1243,7 @@
     },
     {
       "culture": "High American",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 3,
       "defensive_morale": 2,
       "offensive_fire": 2,
@@ -1255,7 +1255,7 @@
     },
     {
       "culture": "High American",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 2,
       "defensive_morale": 2,
       "offensive_fire": 2,
@@ -1267,7 +1267,7 @@
     },
     {
       "culture": "High American",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 3,
       "defensive_morale": 2,
       "offensive_fire": 3,
@@ -1278,14 +1278,14 @@
       "tech": 19
     },
     {
-      "base": "Artillery",
+      "parent": "Artillery",
       "defensive_morale": 1,
       "offensive_fire": 1,
       "type": "Houfnice",
       "tech": 7
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Eastern",
       "offensive_morale": 3,
       "defensive_morale": 2,
@@ -1296,7 +1296,7 @@
     },
     {
       "culture": "North American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 3,
       "defensive_morale": 2,
       "offensive_fire": 2,
@@ -1308,7 +1308,7 @@
     },
     {
       "culture": "South American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 1,
       "offensive_shock": 1,
@@ -1317,7 +1317,7 @@
     },
     {
       "culture": "South American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 3,
       "offensive_fire": 2,
@@ -1329,7 +1329,7 @@
     },
     {
       "culture": "South American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 1,
       "offensive_shock": 2,
       "defensive_shock": 1,
@@ -1338,7 +1338,7 @@
     },
     {
       "culture": "South American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "defensive_morale": 2,
       "defensive_shock": 2,
       "type": "Inca Mountain Warfare",
@@ -1346,7 +1346,7 @@
     },
     {
       "culture": "Indian",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 1,
       "defensive_morale": 1,
       "offensive_shock": 1,
@@ -1354,7 +1354,7 @@
       "tech": 1
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Indian",
       "offensive_morale": 1,
       "offensive_fire": 1,
@@ -1365,7 +1365,7 @@
     },
     {
       "culture": "Indian",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 2,
       "defensive_morale": 2,
       "offensive_fire": 1,
@@ -1375,7 +1375,7 @@
       "tech": 10
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Indian",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -1384,7 +1384,7 @@
       "tech": 1
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Indian",
       "offensive_morale": 3,
       "defensive_morale": 4,
@@ -1397,7 +1397,7 @@
     },
     {
       "culture": "Indian",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 4,
       "defensive_morale": 3,
       "offensive_fire": 1,
@@ -1408,7 +1408,7 @@
       "tech": 23
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 3,
       "defensive_morale": 2,
@@ -1421,7 +1421,7 @@
     },
     {
       "culture": "New World",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 2,
       "offensive_fire": 3,
@@ -1432,7 +1432,7 @@
     },
     {
       "culture": "North American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 2,
       "offensive_fire": 3,
@@ -1443,7 +1443,7 @@
       "tech": 19
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -1453,7 +1453,7 @@
       "tech": 9
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Chinese",
       "defensive_morale": 1,
       "offensive_shock": 1,
@@ -1461,7 +1461,7 @@
       "tech": 1
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Chinese",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -1471,7 +1471,7 @@
       "tech": 5
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Chinese",
       "offensive_morale": 2,
       "defensive_morale": 1,
@@ -1481,14 +1481,14 @@
       "tech": 6
     },
     {
-      "base": "Artillery",
+      "parent": "Artillery",
       "offensive_morale": 1,
       "offensive_fire": 1,
       "type": "Large Cast Bronze Mortar",
       "tech": 7
     },
     {
-      "base": "Artillery",
+      "parent": "Artillery",
       "offensive_morale": 1,
       "defensive_morale": 2,
       "offensive_fire": 2,
@@ -1497,7 +1497,7 @@
       "tech": 13
     },
     {
-      "base": "Artillery",
+      "parent": "Artillery",
       "offensive_morale": 2,
       "defensive_morale": 2,
       "offensive_fire": 2,
@@ -1508,7 +1508,7 @@
       "tech": 18
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Indian",
       "offensive_morale": 3,
       "defensive_morale": 2,
@@ -1519,7 +1519,7 @@
       "tech": 17
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Indian",
       "offensive_morale": 2,
       "defensive_morale": 3,
@@ -1532,7 +1532,7 @@
     },
     {
       "culture": "Sub Saharan",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 1,
       "defensive_morale": 1,
       "offensive_shock": 2,
@@ -1541,7 +1541,7 @@
       "tech": 5
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Muslim",
       "defensive_morale": 1,
       "offensive_shock": 1,
@@ -1550,7 +1550,7 @@
       "tech": 1
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Muslim",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -1560,7 +1560,7 @@
     },
     {
       "culture": "Muslim",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 1,
       "defensive_morale": 1,
       "offensive_shock": 1,
@@ -1569,7 +1569,7 @@
       "tech": 5
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Muslim",
       "offensive_morale": 3,
       "defensive_morale": 2,
@@ -1581,7 +1581,7 @@
       "tech": 18
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Chinese",
       "offensive_morale": 3,
       "defensive_morale": 3,
@@ -1594,7 +1594,7 @@
     },
     {
       "culture": "Mesoamerican",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 2,
       "offensive_shock": 2,
@@ -1604,7 +1604,7 @@
     },
     {
       "culture": "Mesoamerican",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 2,
       "offensive_fire": 3,
@@ -1616,7 +1616,7 @@
     },
     {
       "culture": "Mesoamerican",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 2,
       "offensive_fire": 2,
@@ -1628,7 +1628,7 @@
     },
     {
       "culture": "Mesoamerican",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 1,
       "defensive_morale": 1,
       "offensive_shock": 1,
@@ -1637,7 +1637,7 @@
       "tech": 5
     },
     {
-      "base": "Transport",
+      "parent": "Transport",
       "hull_size": 24,
       "base_cannons": 8,
       "sail_speed": 5,
@@ -1646,7 +1646,7 @@
     },
     {
       "culture": "Mesoamerican",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 1,
       "defensive_morale": 1,
       "offensive_shock": 1,
@@ -1655,7 +1655,7 @@
     },
     {
       "culture": "Mesoamerican",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 3,
       "defensive_morale": 3,
       "offensive_fire": 2,
@@ -1667,7 +1667,7 @@
     },
     {
       "culture": "Western",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 4,
       "defensive_morale": 4,
       "offensive_fire": 4,
@@ -1678,7 +1678,7 @@
       "tech": 30
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Chinese",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -1687,7 +1687,7 @@
       "tech": 1
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Nomad Group",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -1697,7 +1697,7 @@
       "tech": 1
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Nomad Group",
       "offensive_morale": 2,
       "defensive_morale": 2,
@@ -1707,7 +1707,7 @@
       "tech": 1
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Nomad Group",
       "offensive_morale": 2,
       "defensive_morale": 1,
@@ -1717,7 +1717,7 @@
       "tech": 1
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Indian",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -1727,7 +1727,7 @@
       "tech": 6
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Indian",
       "offensive_morale": 2,
       "defensive_morale": 1,
@@ -1739,7 +1739,7 @@
       "tech": 9
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Eastern",
       "offensive_morale": 3,
       "defensive_morale": 3,
@@ -1750,7 +1750,7 @@
       "tech": 14
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Eastern",
       "offensive_morale": 4,
       "defensive_morale": 4,
@@ -1762,7 +1762,7 @@
       "tech": 22
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Eastern",
       "offensive_morale": 3,
       "defensive_morale": 2,
@@ -1774,7 +1774,7 @@
       "tech": 12
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Eastern",
       "offensive_morale": 3,
       "defensive_morale": 2,
@@ -1786,7 +1786,7 @@
       "tech": 15
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Muslim",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -1796,7 +1796,7 @@
       "tech": 1
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Muslim",
       "offensive_morale": 3,
       "defensive_morale": 4,
@@ -1808,7 +1808,7 @@
       "tech": 23
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Muslim",
       "offensive_morale": 3,
       "defensive_morale": 3,
@@ -1821,7 +1821,7 @@
     },
     {
       "culture": "Western",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 5,
       "defensive_morale": 4,
       "defensive_fire": 2,
@@ -1832,7 +1832,7 @@
     },
     {
       "culture": "Western",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 4,
       "defensive_morale": 3,
       "offensive_fire": 4,
@@ -1844,7 +1844,7 @@
     },
     {
       "culture": "North American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 1,
       "defensive_morale": 1,
       "offensive_shock": 1,
@@ -1853,7 +1853,7 @@
     },
     {
       "culture": "North American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 1,
       "defensive_morale": 1,
       "defensive_shock": 1,
@@ -1862,7 +1862,7 @@
     },
     {
       "culture": "North American",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 1,
       "defensive_morale": 1,
       "offensive_shock": 2,
@@ -1872,7 +1872,7 @@
     },
     {
       "culture": "North American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 1,
       "offensive_fire": 1,
@@ -1884,7 +1884,7 @@
     },
     {
       "culture": "North American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 1,
       "defensive_morale": 1,
       "offensive_shock": 1,
@@ -1894,7 +1894,7 @@
     },
     {
       "culture": "Sub Saharan",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 2,
       "offensive_fire": 1,
@@ -1906,7 +1906,7 @@
     },
     {
       "culture": "Sub Saharan",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 3,
       "defensive_morale": 2,
       "offensive_fire": 3,
@@ -1918,7 +1918,7 @@
     },
     {
       "culture": "Sub Saharan",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 2,
       "offensive_fire": 3,
@@ -1930,7 +1930,7 @@
     },
     {
       "culture": "Sub Saharan",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 2,
       "offensive_shock": 1,
@@ -1940,7 +1940,7 @@
     },
     {
       "culture": "North American",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 4,
       "defensive_morale": 4,
       "offensive_fire": 2,
@@ -1951,7 +1951,7 @@
     },
     {
       "culture": "North American",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 1,
       "defensive_morale": 1,
       "offensive_shock": 2,
@@ -1960,7 +1960,7 @@
     },
     {
       "culture": "North American",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 3,
       "defensive_morale": 2,
       "offensive_fire": 1,
@@ -1972,7 +1972,7 @@
     },
     {
       "culture": "North American",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 2,
       "defensive_morale": 2,
       "defensive_fire": 1,
@@ -1983,7 +1983,7 @@
     },
     {
       "culture": "North American",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 3,
       "defensive_morale": 2,
       "offensive_fire": 1,
@@ -1994,7 +1994,7 @@
     },
     {
       "culture": "Western",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 5,
       "defensive_morale": 5,
       "offensive_fire": 2,
@@ -2005,7 +2005,7 @@
       "tech": 28
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Ottoman",
       "offensive_morale": 2,
       "defensive_morale": 1,
@@ -2015,7 +2015,7 @@
       "tech": 5
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Ottoman",
       "offensive_morale": 2,
       "defensive_morale": 2,
@@ -2026,7 +2026,7 @@
       "tech": 9
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Ottoman",
       "offensive_morale": 5,
       "defensive_morale": 3,
@@ -2038,7 +2038,7 @@
       "tech": 28
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Ottoman",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -2048,7 +2048,7 @@
       "tech": 1
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Ottoman",
       "offensive_morale": 4,
       "defensive_morale": 4,
@@ -2060,7 +2060,7 @@
       "tech": 30
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Ottoman",
       "offensive_morale": 3,
       "defensive_morale": 3,
@@ -2072,7 +2072,7 @@
       "tech": 23
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Ottoman",
       "offensive_morale": 3,
       "defensive_morale": 2,
@@ -2084,7 +2084,7 @@
       "tech": 19
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Ottoman",
       "offensive_morale": 3,
       "defensive_morale": 3,
@@ -2096,7 +2096,7 @@
       "tech": 18
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Ottoman",
       "offensive_morale": 2,
       "defensive_morale": 3,
@@ -2108,7 +2108,7 @@
       "tech": 12
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Ottoman",
       "offensive_morale": 3,
       "defensive_morale": 2,
@@ -2118,7 +2118,7 @@
       "tech": 10
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Ottoman",
       "offensive_morale": 2,
       "defensive_morale": 1,
@@ -2128,7 +2128,7 @@
       "tech": 6
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Ottoman",
       "offensive_morale": 4,
       "defensive_morale": 4,
@@ -2140,7 +2140,7 @@
       "tech": 28
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Ottoman",
       "offensive_morale": 4,
       "defensive_morale": 3,
@@ -2151,7 +2151,7 @@
       "tech": 23
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Ottoman",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -2160,7 +2160,7 @@
       "tech": 1
     },
     {
-      "base": "Artillery",
+      "parent": "Artillery",
       "offensive_morale": 1,
       "defensive_morale": 1,
       "offensive_fire": 1,
@@ -2169,7 +2169,7 @@
       "tech": 10
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Muslim",
       "offensive_morale": 2,
       "defensive_morale": 1,
@@ -2178,7 +2178,7 @@
       "tech": 1
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Muslim",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -2187,7 +2187,7 @@
       "tech": 1
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Muslim",
       "offensive_morale": 4,
       "defensive_morale": 4,
@@ -2199,7 +2199,7 @@
       "tech": 30
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Muslim",
       "offensive_morale": 2,
       "defensive_morale": 2,
@@ -2210,7 +2210,7 @@
     },
     {
       "culture": "South American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 3,
       "defensive_morale": 3,
       "offensive_fire": 2,
@@ -2221,7 +2221,7 @@
       "tech": 19
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Eastern",
       "offensive_morale": 2,
       "defensive_morale": 2,
@@ -2233,7 +2233,7 @@
       "tech": 14
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Eastern",
       "offensive_morale": 2,
       "defensive_morale": 2,
@@ -2245,7 +2245,7 @@
       "tech": 12
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Eastern",
       "offensive_morale": 2,
       "defensive_morale": 3,
@@ -2257,7 +2257,7 @@
       "tech": 15
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Eastern",
       "offensive_morale": 4,
       "defensive_morale": 3,
@@ -2268,7 +2268,7 @@
       "tech": 22
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 4,
       "defensive_morale": 4,
@@ -2280,7 +2280,7 @@
       "tech": 30
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 4,
       "defensive_morale": 3,
@@ -2292,7 +2292,7 @@
       "tech": 26
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Western",
       "offensive_morale": 4,
       "defensive_morale": 3,
@@ -2305,7 +2305,7 @@
     },
     {
       "culture": "North American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 1,
       "offensive_shock": 1,
@@ -2313,7 +2313,7 @@
       "tech": 5
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Muslim",
       "offensive_morale": 3,
       "defensive_morale": 2,
@@ -2323,7 +2323,7 @@
       "tech": 10
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Indian",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -2333,7 +2333,7 @@
     },
     {
       "culture": "Indian",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 2,
       "offensive_fire": 2,
@@ -2344,7 +2344,7 @@
       "tech": 12
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Chinese",
       "offensive_morale": 3,
       "defensive_morale": 4,
@@ -2356,7 +2356,7 @@
       "tech": 28
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Chinese",
       "offensive_morale": 3,
       "defensive_morale": 3,
@@ -2368,7 +2368,7 @@
       "tech": 26
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Chinese",
       "offensive_morale": 4,
       "defensive_morale": 4,
@@ -2380,7 +2380,7 @@
       "tech": 28
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Indian",
       "offensive_morale": 3,
       "defensive_morale": 2,
@@ -2391,7 +2391,7 @@
       "tech": 14
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Indian",
       "offensive_morale": 3,
       "defensive_morale": 2,
@@ -2403,7 +2403,7 @@
       "tech": 12
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Nomad Group",
       "offensive_morale": 4,
       "defensive_morale": 4,
@@ -2416,7 +2416,7 @@
     },
     {
       "culture": "South American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 3,
       "defensive_morale": 3,
       "offensive_fire": 4,
@@ -2427,7 +2427,7 @@
       "tech": 30
     },
     {
-      "base": "Artillery",
+      "parent": "Artillery",
       "offensive_morale": 3,
       "defensive_morale": 3,
       "offensive_fire": 4,
@@ -2438,7 +2438,7 @@
       "tech": 25
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Eastern",
       "offensive_morale": 5,
       "defensive_morale": 4,
@@ -2450,7 +2450,7 @@
       "tech": 28
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Eastern",
       "offensive_morale": 4,
       "defensive_morale": 4,
@@ -2462,19 +2462,7 @@
       "tech": 28
     },
     {
-      "base": "Infantry",
-      "culture": "Eastern",
-      "offensive_morale": 4,
-      "defensive_morale": 4,
-      "offensive_fire": 3,
-      "defensive_fire": 3,
-      "offensive_shock": 3,
-      "defensive_shock": 3,
-      "type": "Russian Green Coat",
-      "tech": 26
-    },
-    {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Eastern",
       "offensive_morale": 4,
       "defensive_morale": 4,
@@ -2485,7 +2473,7 @@
       "tech": 26
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Eastern",
       "offensive_morale": 4,
       "defensive_morale": 3,
@@ -2497,7 +2485,19 @@
       "tech": 30
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
+      "culture": "Eastern",
+      "offensive_morale": 4,
+      "defensive_morale": 4,
+      "offensive_fire": 3,
+      "defensive_fire": 3,
+      "offensive_shock": 3,
+      "defensive_shock": 3,
+      "type": "Russian Green Coat",
+      "tech": 26
+    },
+    {
+      "parent": "Infantry",
       "culture": "Eastern",
       "offensive_morale": 3,
       "defensive_morale": 3,
@@ -2509,7 +2509,7 @@
       "tech": 23
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Eastern",
       "offensive_morale": 2,
       "defensive_morale": 2,
@@ -2521,7 +2521,7 @@
       "tech": 19
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Western",
       "offensive_morale": 2,
       "defensive_morale": 2,
@@ -2532,7 +2532,7 @@
       "tech": 10
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 4,
       "defensive_morale": 2,
@@ -2544,7 +2544,7 @@
       "tech": 19
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Muslim",
       "offensive_morale": 1,
       "defensive_morale": 2,
@@ -2554,7 +2554,7 @@
       "tech": 6
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Indian",
       "offensive_morale": 3,
       "defensive_morale": 2,
@@ -2566,7 +2566,7 @@
       "tech": 18
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Indian",
       "offensive_morale": 3,
       "defensive_morale": 4,
@@ -2579,7 +2579,7 @@
     },
     {
       "culture": "North American",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 4,
       "defensive_morale": 4,
       "offensive_fire": 2,
@@ -2590,7 +2590,7 @@
       "tech": 23
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Eastern",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -2600,7 +2600,7 @@
       "tech": 6
     },
     {
-      "base": "Artillery",
+      "parent": "Artillery",
       "offensive_morale": 2,
       "defensive_morale": 1,
       "offensive_fire": 1,
@@ -2611,7 +2611,7 @@
     },
     {
       "culture": "Sub Saharan",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 1,
       "defensive_morale": 2,
       "offensive_shock": 1,
@@ -2621,7 +2621,7 @@
     },
     {
       "culture": "South American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 1,
       "offensive_fire": 1,
@@ -2633,7 +2633,7 @@
     },
     {
       "culture": "South American",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 4,
       "defensive_morale": 4,
       "offensive_fire": 2,
@@ -2645,7 +2645,7 @@
     },
     {
       "culture": "South American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 1,
       "defensive_morale": 1,
       "offensive_shock": 1,
@@ -2655,7 +2655,7 @@
     },
     {
       "culture": "South American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 1,
       "defensive_morale": 2,
       "offensive_fire": 1,
@@ -2667,7 +2667,7 @@
     },
     {
       "culture": "South American",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 1,
       "defensive_morale": 1,
       "offensive_shock": 2,
@@ -2677,7 +2677,7 @@
     },
     {
       "culture": "South American",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 3,
       "defensive_morale": 2,
       "offensive_fire": 1,
@@ -2689,7 +2689,7 @@
     },
     {
       "culture": "South American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 2,
       "offensive_fire": 2,
@@ -2701,7 +2701,7 @@
     },
     {
       "culture": "South American",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 2,
       "defensive_morale": 2,
       "defensive_fire": 1,
@@ -2712,7 +2712,7 @@
     },
     {
       "culture": "South American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 1,
       "offensive_shock": 1,
       "defensive_shock": 1,
@@ -2721,7 +2721,7 @@
     },
     {
       "culture": "South American",
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "offensive_morale": 3,
       "defensive_morale": 2,
       "offensive_fire": 1,
@@ -2733,7 +2733,7 @@
     },
     {
       "culture": "South American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 1,
       "defensive_morale": 1,
       "defensive_shock": 1,
@@ -2741,7 +2741,7 @@
       "tech": 1
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Indian",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -2753,7 +2753,7 @@
       "tech": 9
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 2,
       "defensive_morale": 2,
@@ -2765,7 +2765,7 @@
       "tech": 12
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Nomad Group",
       "offensive_morale": 3,
       "defensive_morale": 3,
@@ -2777,7 +2777,7 @@
       "tech": 23
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Nomad Group",
       "offensive_morale": 2,
       "defensive_morale": 2,
@@ -2789,7 +2789,7 @@
       "tech": 12
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Nomad Group",
       "offensive_morale": 3,
       "defensive_morale": 2,
@@ -2801,7 +2801,7 @@
       "tech": 19
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Nomad Group",
       "offensive_morale": 3,
       "defensive_morale": 3,
@@ -2811,7 +2811,7 @@
       "tech": 14
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Nomad Group",
       "offensive_morale": 3,
       "defensive_morale": 3,
@@ -2822,7 +2822,7 @@
       "tech": 18
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Nomad Group",
       "offensive_morale": 2,
       "defensive_morale": 2,
@@ -2834,7 +2834,7 @@
       "tech": 15
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Nomad Group",
       "offensive_morale": 1,
       "defensive_morale": 2,
@@ -2844,7 +2844,7 @@
       "tech": 9
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Nomad Group",
       "offensive_morale": 3,
       "defensive_morale": 2,
@@ -2854,7 +2854,7 @@
       "tech": 10
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Nomad Group",
       "offensive_morale": 4,
       "defensive_morale": 4,
@@ -2866,7 +2866,7 @@
       "tech": 26
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Nomad Group",
       "offensive_morale": 4,
       "defensive_morale": 3,
@@ -2878,7 +2878,7 @@
       "tech": 28
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Western",
       "offensive_morale": 5,
       "defensive_morale": 3,
@@ -2890,7 +2890,7 @@
       "tech": 23
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 3,
       "defensive_morale": 3,
@@ -2902,7 +2902,7 @@
       "tech": 23
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Western",
       "offensive_morale": 3,
       "defensive_morale": 3,
@@ -2914,7 +2914,7 @@
       "tech": 18
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 3,
       "defensive_morale": 2,
@@ -2926,7 +2926,7 @@
       "tech": 19
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 1,
       "defensive_morale": 2,
@@ -2936,7 +2936,7 @@
       "tech": 9
     },
     {
-      "base": "Artillery",
+      "parent": "Artillery",
       "offensive_morale": 3,
       "defensive_morale": 2,
       "offensive_fire": 3,
@@ -2947,7 +2947,7 @@
       "tech": 20
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Eastern",
       "offensive_morale": 4,
       "defensive_morale": 4,
@@ -2959,7 +2959,7 @@
       "tech": 26
     },
     {
-      "base": "Heavy Ship",
+      "parent": "Heavy Ship",
       "hull_size": 60,
       "base_cannons": 120,
       "sail_speed": 5,
@@ -2967,7 +2967,7 @@
       "type": "Threedecker"
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Indian",
       "offensive_morale": 4,
       "defensive_morale": 3,
@@ -2979,7 +2979,7 @@
       "tech": 30
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Muslim",
       "offensive_morale": 2,
       "defensive_morale": 3,
@@ -2991,7 +2991,7 @@
       "tech": 12
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Muslim",
       "offensive_morale": 3,
       "defensive_morale": 2,
@@ -3002,7 +3002,7 @@
       "tech": 14
     },
     {
-      "base": "Transport",
+      "parent": "Transport",
       "hull_size": 30,
       "base_cannons": 10,
       "sail_speed": 5,
@@ -3010,7 +3010,7 @@
       "type": "Trabakul"
     },
     {
-      "base": "Heavy Ship",
+      "parent": "Heavy Ship",
       "hull_size": 50,
       "base_cannons": 100,
       "sail_speed": 5,
@@ -3018,7 +3018,7 @@
       "type": "Twodecker"
     },
     {
-      "base": "Heavy Ship",
+      "parent": "Heavy Ship",
       "hull_size": 40,
       "base_cannons": 80,
       "sail_speed": 5,
@@ -3026,7 +3026,7 @@
       "type": "Wargalleon"
     },
     {
-      "base": "Galley",
+      "parent": "Galley",
       "hull_size": 10,
       "base_cannons": 15,
       "sail_speed": 8,
@@ -3035,7 +3035,7 @@
     },
     {
       "culture": "Sub Saharan",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 3,
       "defensive_morale": 4,
       "offensive_fire": 4,
@@ -3047,7 +3047,7 @@
     },
     {
       "culture": "Mesoamerican",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 3,
       "defensive_morale": 4,
       "offensive_fire": 3,
@@ -3059,7 +3059,7 @@
     },
     {
       "culture": "Sub Saharan",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 3,
       "defensive_morale": 3,
       "offensive_fire": 4,
@@ -3071,7 +3071,7 @@
     },
     {
       "culture": "Sub Saharan",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 3,
       "defensive_morale": 3,
       "offensive_fire": 3,
@@ -3083,7 +3083,7 @@
     },
     {
       "culture": "South American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 3,
       "defensive_morale": 3,
       "offensive_fire": 4,
@@ -3095,7 +3095,7 @@
     },
     {
       "culture": "Mesoamerican",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 3,
       "defensive_morale": 4,
       "offensive_fire": 4,
@@ -3107,7 +3107,7 @@
     },
     {
       "culture": "Sub Saharan",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 4,
       "defensive_morale": 3,
       "offensive_fire": 3,
@@ -3119,7 +3119,7 @@
     },
     {
       "culture": "South American",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 3,
       "defensive_morale": 4,
       "offensive_fire": 3,
@@ -3131,7 +3131,7 @@
     },
     {
       "culture": "Mesoamerican",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 3,
       "defensive_morale": 2,
       "offensive_fire": 4,
@@ -3142,7 +3142,7 @@
       "tech": 26
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -3151,7 +3151,7 @@
       "tech": 5
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -3159,7 +3159,7 @@
       "tech": 1
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Western",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -3168,7 +3168,7 @@
       "tech": 1
     },
     {
-      "base": "Infantry",
+      "parent": "Infantry",
       "culture": "Western",
       "offensive_morale": 1,
       "defensive_morale": 1,
@@ -3177,7 +3177,7 @@
       "tech": 5
     },
     {
-      "base": "Cavalry",
+      "parent": "Cavalry",
       "culture": "Eastern",
       "offensive_morale": 2,
       "defensive_morale": 3,
@@ -3189,7 +3189,7 @@
     },
     {
       "culture": "Mesoamerican",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 3,
       "defensive_morale": 3,
       "offensive_fire": 2,
@@ -3201,7 +3201,7 @@
     },
     {
       "culture": "Mesoamerican",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 3,
       "defensive_morale": 2,
       "offensive_shock": 1,
@@ -3211,7 +3211,7 @@
     },
     {
       "culture": "Mesoamerican",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 2,
       "defensive_morale": 1,
       "offensive_shock": 1,
@@ -3220,7 +3220,7 @@
     },
     {
       "culture": "Sub Saharan",
-      "base": "Infantry",
+      "parent": "Infantry",
       "offensive_morale": 3,
       "defensive_morale": 1,
       "offensive_shock": 2,

@@ -49,7 +49,6 @@ const getPercent = key => {
   return undefined;
 }
 
-const TECH_FILE = path.join('tech', 'mil.txt');
 let tech_level = -1;
 
 const handleTech = (key, value, result) => {
@@ -79,7 +78,7 @@ function transformer(result) {
 }
 
 const parsers = {
-  [path.join('euiv', TECH_FILE)]: handleTech
+  [path.join('euiv', 'tech', 'mil.txt')]: handleTech
 };
 
 exports.run = () => core.parseFiles(parsers, transformer, path.join('euiv', 'tech.json'));

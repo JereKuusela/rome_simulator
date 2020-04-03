@@ -2,7 +2,7 @@ import { TacticType, TacticValueType, ValuesType, Mode, TacticDefinition, Tactic
 import { addValuesWithMutate } from "definition_values"
 import { getTacticIcon } from "data"
 
-export const setTacticBaseValue = (tactic: TacticDefinition, key: string, attribute: TacticValueType, value: number) => {
+export const setTacticValue = (tactic: TacticDefinition, key: string, attribute: TacticValueType, value: number) => {
   addValuesWithMutate(tactic, ValuesType.Base, key, [[attribute, value]])
 }
 

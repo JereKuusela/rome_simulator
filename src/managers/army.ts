@@ -1,5 +1,5 @@
 import { calculateValue, clearAllValues, calculateBase, addValues, regenerateValues, addValuesWithMutate, filterValues } from 'definition_values'
-import { Mode, GeneralAttribute, UnitType, UnitAttribute, GeneralDefinition, Army, ArmyType, BaseCohort, ValuesType, UnitValueType, TacticType, UnitPreferenceType, General, BaseReserve, ScopeType, Modifier, BaseDefeated, BaseFrontLine, GeneralValueType, CombatPhase, isAttributeEnabled, Units, Setting, UnitRole, Unit, CombatUnitTypes, CombatCohortDefinition, SiteSettings } from 'types'
+import { Mode, GeneralAttribute, UnitType, UnitAttribute, GeneralDefinition, Army, ArmyType, CohortDefinition, ValuesType, UnitValueType, TacticType, UnitPreferenceType, General, ReserveDefinition, ScopeType, Modifier, DefeatedDefinition, FrontlineDefinition, GeneralValueType, CombatPhase, isAttributeEnabled, Units, Setting, UnitRole, Unit, CombatUnitTypes, CombatCohortDefinition, SiteSettings } from 'types'
 import { map, forEach, keys, toObj, toArr, toSet, ObjSet, values } from 'utils'
 import { findLastIndex, sortBy } from 'lodash'
 
@@ -38,23 +38,23 @@ export const overrideRoleWithPreferences = (army: Army, units: Units, latest: { 
   })
 }
 
-export const getUnitList = (units: CombatUnitTypes, mode: Mode, _tech: number, filter_base: boolean, settings: SiteSettings) => {
-  const base_units = getBaseUnits(units)
-  let list = settings[Setting.Tech] ? [units[UnitType.Land]].concat(getArchetypes(units, mode)) : sortBy(toArr(units), unit => unitSorter(unit, mode, base_units))
-  list = filter_base ? list.filter(unit => !base_units[unit.type]) : list
+export const getUnitList = (units: CombatUnitTypes, mode: Mode, _tech: number, filter_parents: boolean, settings: SiteSettings) => {
+  const parents = getParents(units)
+  let list = settings[Setting.Tech] ? [units[UnitType.Land]].concat(getArchetypes(units, mode)) : sortBy(toArr(units), unit => unitSorter(unit, mode, parents))
+  list = filter_parents ? list.filter(unit => !parents[unit.type]) : list
   return list
 }
 
-export const getUnitList2 = (units: Units, mode: Mode, _tech: number, filter_base: boolean, settings: SiteSettings) => {
-  const base_units = getBaseUnits(units)
-  let list = settings[Setting.Tech] ? [units[UnitType.Land]].concat(getArchetypes2(units, mode)) : sortBy(toArr(units), unit => unitSorter2(unit, mode, base_units))
-  list = filter_base ? list.filter(unit => !base_units[unit.type]) : list
+export const getUnitList2 = (units: Units, mode: Mode, _tech: number, filter_parents: boolean, settings: SiteSettings) => {
+  const parents = getParents(units)
+  let list = settings[Setting.Tech] ? [units[UnitType.Land]].concat(getArchetypes2(units, mode)) : sortBy(toArr(units), unit => unitSorter2(unit, mode, parents))
+  list = filter_parents ? list.filter(unit => !parents[unit.type]) : list
   return list
 }
 
 export const getAllUnitList = (units: Units, mode: Mode) => {
-  const base_units = getBaseUnits(units)
-  return sortBy(toArr(units), unit => unitSorter2(unit, mode, base_units))
+  const parents = getParents(units)
+  return sortBy(toArr(units), unit => unitSorter2(unit, mode, parents))
 }
 
 
@@ -72,13 +72,13 @@ export const getLatestUnits2 = (units: Units, tech: number) => {
 }
 
 
-/** Returns available child units of a base unit.  */
-export const getChildUnits = (units: CombatUnitTypes, tech: number, base_unit: UnitType) => {
-  return sortBy(filterByTech(toArr(units).filter(unit => unit.base === base_unit), tech), techSorter)
+/** Returns available child units of a parent unit.  */
+export const getChildUnits = (units: CombatUnitTypes, tech: number, parent: UnitType) => {
+  return sortBy(filterByTech(toArr(units).filter(unit => unit.parent === parent), tech), techSorter)
 }
 
-export const getChildUnits2 = (units: Units, tech: number, base_unit: UnitType) => {
-  return sortBy(filterByTech2(toArr(units).filter(unit => unit.parent === base_unit), tech), techSorter)
+export const getChildUnits2 = (units: Units, tech: number, parent: UnitType) => {
+  return sortBy(filterByTech2(toArr(units).filter(unit => unit.parent === parent), tech), techSorter)
 }
 
 
@@ -86,42 +86,42 @@ const techSorter = (unit: { tech?: number, type: UnitType }) => {
   return (99 - (unit.tech ?? 0)) + unit.type
 }
 
-const unitSorter = (unit: CombatCohortDefinition, mode: Mode, base_units?: ObjSet) => {
-  if (base_units && base_units[unit.type])
+const unitSorter = (unit: CombatCohortDefinition, mode: Mode, parents?: ObjSet) => {
+  if (parents && parents[unit.type])
     return ''
   if (mode === Mode.Naval)
     return unit[UnitAttribute.Cost]
   return techSorter(unit)
 }
 
-const unitSorter2 = (unit: Unit, mode: Mode, base_units?: ObjSet) => {
-  if (base_units && base_units[unit.type])
+const unitSorter2 = (unit: Unit, mode: Mode, parents?: ObjSet) => {
+  if (parents && parents[unit.type])
     return ''
   if (mode === Mode.Naval)
     return calculateBase(unit, UnitAttribute.Cost)
   return techSorter(unit)
 }
 
-export const getArchetypes = (units: CombatUnitTypes, mode: Mode) => toArr(units).filter(unit => mode === Mode.Naval ? unit.base === UnitType.Naval : unit.base === UnitType.Land)
+export const getArchetypes = (units: CombatUnitTypes, mode: Mode) => toArr(units).filter(unit => mode === Mode.Naval ? unit.parent === UnitType.Naval : unit.parent === UnitType.Land)
 export const getArchetypes2 = (units: Units, mode: Mode) => toArr(units).filter(unit => mode === Mode.Naval ? unit.parent === UnitType.Naval : unit.parent === UnitType.Land)
 
 
 export const getActualUnits = (units: CombatUnitTypes, mode: Mode) => {
-  const base_units = getBaseUnits(units)
-  return sortBy(toArr(units).filter(unit => !base_units[unit.type]), unit => unitSorter(unit, mode))
+  const parents = getParents(units)
+  return sortBy(toArr(units).filter(unit => !parents[unit.type]), unit => unitSorter(unit, mode))
 }
 
 export const getActualUnits2 = (units: Units, mode: Mode) => {
-  const base_units = getBaseUnits(units)
-  return sortBy(toArr(units).filter(unit => !base_units[unit.type]), unit => unitSorter2(unit, mode))
+  const parents = getParents(units)
+  return sortBy(toArr(units).filter(unit => !parents[unit.type]), unit => unitSorter2(unit, mode))
 }
 
-const getBaseUnits = (units: Units) => toSet(units, unit => unit.parent || unit.type)
+const getParents = (units: Units) => toSet(units, unit => unit.parent || unit.type)
 
 const filterByTech = (units: CombatCohortDefinition[], tech: number) => units.filter(unit => unit.tech === undefined || unit.tech <= tech)
 const filterByTech2 = (units: Unit[], tech: number) => units.filter(unit => unit.tech === undefined || unit.tech <= tech)
 
-export const mapCohorts = (army: Army, mapper: (cohort: BaseCohort) => BaseCohort) => {
+export const mapCohorts = (army: Army, mapper: (cohort: CohortDefinition) => CohortDefinition) => {
   return {
     frontline: map(army.frontline, row => map(row, mapper)),
     reserve: army.reserve.map(mapper),
@@ -129,7 +129,7 @@ export const mapCohorts = (army: Army, mapper: (cohort: BaseCohort) => BaseCohor
   }
 }
 
-const findFromFrontline = (frontline: BaseFrontLine, criteria: number | ((cohort: BaseCohort) => boolean)): [number, number][] => {
+const findFromFrontline = (frontline: FrontlineDefinition, criteria: number | ((cohort: CohortDefinition) => boolean)): [number, number][] => {
   let ret: [number, number][] = []
   forEach(frontline, (row, row_index) => forEach(row, (unit, column_index) => {
     if (typeof criteria === 'number' ? unit.id === criteria : criteria(unit))
@@ -138,15 +138,15 @@ const findFromFrontline = (frontline: BaseFrontLine, criteria: number | ((cohort
   return ret
 }
 
-const findFromReserve = (reserve: BaseReserve, criteria: number | ((cohort: BaseCohort) => boolean)) => {
+const findFromReserve = (reserve: ReserveDefinition, criteria: number | ((cohort: CohortDefinition) => boolean)) => {
   return reserve.map((cohort, index) => [typeof criteria === 'number' ? cohort.id === criteria : criteria(cohort), index]).filter(pair => pair[0]).map(pair => pair[1] as number)
 }
-const findFromDefeated = (defeated: BaseDefeated, criteria: number | ((cohort: BaseCohort) => boolean)) => {
+const findFromDefeated = (defeated: DefeatedDefinition, criteria: number | ((cohort: CohortDefinition) => boolean)) => {
   return defeated.map((cohort, index) => [typeof criteria === 'number' ? cohort.id === criteria : criteria(cohort), index]).filter(pair => pair[0]).map(pair => pair[1] as number)
 }
 
 
-const update = (army: Army, criteria: number | ((cohort: BaseCohort) => boolean), updater: (unit: BaseCohort) => BaseCohort): void => {
+const update = (army: Army, criteria: number | ((cohort: CohortDefinition) => boolean), updater: (unit: CohortDefinition) => CohortDefinition): void => {
   for (let location of findFromFrontline(army.frontline, criteria)) {
     const [row, column] = location
     army.frontline[row][column] = updater(army.frontline[row][column])
@@ -157,7 +157,7 @@ const update = (army: Army, criteria: number | ((cohort: BaseCohort) => boolean)
     army.defeated[index] = updater(army.defeated[index])
 }
 
-export const selectCohort = (army: Army, type: ArmyType, row: number, column: number, cohort: BaseCohort) => {
+export const selectCohort = (army: Army, type: ArmyType, row: number, column: number, cohort: CohortDefinition) => {
   if (type === ArmyType.Frontline) {
     if (!army.frontline[row])
       army.frontline[row] = {}
@@ -185,7 +185,7 @@ export const changeCohortType = (army: Army, id: number, type: UnitType) => {
   update(army, id, unit => ({ ...unit, type }))
 }
 
-export const editCohort = (army: Army, unit: BaseCohort) => {
+export const editCohort = (army: Army, unit: CohortDefinition) => {
   update(army, unit.id, () => unit)
 }
 
@@ -202,14 +202,14 @@ export const deleteCohort = (army: Army, id: number) => {
     army.defeated.splice(index, 1)
 }
 
-export const removeFromReserve = (army: { reserve: BaseReserve }, types: UnitType[]) => {
+export const removeFromReserve = (army: { reserve: ReserveDefinition }, types: UnitType[]) => {
   for (const type of types) {
     const index = findLastIndex(army.reserve, value => value.type === type)
     army.reserve = army.reserve.filter((_, i) => i !== index)
   }
 }
 
-export const addToReserve = (army: { reserve: BaseReserve }, cohorts: BaseCohort[]) => {
+export const addToReserve = (army: { reserve: ReserveDefinition }, cohorts: CohortDefinition[]) => {
   army.reserve = army.reserve.concat(cohorts)
 }
 
@@ -231,7 +231,7 @@ export const setFlankSize = (army: Army, flank_size: number) => {
   army.flank_size = flank_size
 }
 
-export const setGeneralBaseStat = (army: Army, attribute: GeneralValueType, value: number) => {
+export const setGeneralStat = (army: Army, attribute: GeneralValueType, value: number) => {
   setGeneralValue(army, BASE_STAT_KEY, attribute, value)
 }
 

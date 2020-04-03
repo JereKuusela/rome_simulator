@@ -14,7 +14,7 @@ import { getValue, explainShort } from 'definition_values'
 interface IProps {
   custom_value_key: string
   terrain: TerrainDefinition
-  onCustomBaseValueChange: (key: string, attribute: TerrainValueType, value: number) => void
+  onCustomValueChange: (key: string, attribute: TerrainValueType, value: number) => void
   onTypeChange: (type: TerrainType) => void
   onLocationChange: (location: LocationType) => void
   onImageChange: (image: string) => void
@@ -49,14 +49,14 @@ export default class TerrainDetail extends Component<IProps> {
   }
 
   renderRow = (tactic: TerrainDefinition, attribute: TerrainValueType) => {
-    const { custom_value_key, onCustomBaseValueChange } = this.props
-    const base_value = getValue(ValuesType.Base, tactic, attribute, custom_value_key)
+    const { custom_value_key, onCustomValueChange } = this.props
+    const value = getValue(ValuesType.Base, tactic, attribute, custom_value_key)
 
     return (
       <PaddedRow key={attribute} cells={this.CELLS}>
         {attribute}
         {terrainValueToString(tactic, attribute)}
-        <Input value={String(base_value)} onChange={value => onCustomBaseValueChange(custom_value_key, attribute, Number(value))} />
+        <Input value={String(value)} onChange={value => onCustomValueChange(custom_value_key, attribute, Number(value))} />
         {explainShort(tactic, attribute)}
       </PaddedRow>
     )

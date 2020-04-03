@@ -19,7 +19,7 @@ interface IProps {
   custom_value_key: string
   unit: Cohort
   unit_types?: UnitType[]
-  unit_types_with_base?: UnitType[]
+  unit_types_with_parent?: UnitType[]
   show_statistics: boolean
   terrain_types?: TerrainType[]
   unit_types_as_dropdown?: boolean
@@ -28,7 +28,7 @@ interface IProps {
   onCustomModifierValueChange: (key: string, attribute: UnitValueType, value: number) => void
   onCustomLossModifierValueChange: (key: string, attribute: UnitValueType, value: number) => void
   onTypeChange?: (type: UnitType) => void
-  onBaseTypeChange?: (type: UnitType) => void
+  onParentChange?: (type: UnitType) => void
   onImageChange?: (image: string) => void
   onChangeDeployment?: (deployment: UnitRole) => void
   onIsLoyalToggle?: () => void
@@ -48,9 +48,9 @@ export default class UnitDetail extends Component<IProps> {
   readonly CELLS = 6
 
   render() {
-    const { unit, onTypeChange, onBaseTypeChange, onImageChange, onChangeDeployment, onIsLoyalToggle } = this.props
-    const { terrain_types, unit_types, unit_types_with_base, unit_types_as_dropdown, settings } = this.props
-    const { id, type, mode, parent: base, image, role: deployment, is_loyal, culture, tech } = unit
+    const { unit, onTypeChange, onParentChange, onImageChange, onChangeDeployment, onIsLoyalToggle } = this.props
+    const { terrain_types, unit_types, unit_types_with_parent, unit_types_as_dropdown, settings } = this.props
+    const { id, type, mode, parent, image, role, is_loyal, culture, tech } = unit
     return (
       <Table celled selectable unstackable>
         <Headers values={this.headers} />
@@ -61,9 +61,9 @@ export default class UnitDetail extends Component<IProps> {
           {mode && <DetailTextRow text='Mode' cells={this.CELLS} value={mode} />}
           {settings[Setting.Culture] && culture && <DetailTextRow text='Culture' cells={this.CELLS} value={culture} />}
           {settings[Setting.Tech] && tech && <DetailTextRow text='Tech' cells={this.CELLS} value={tech} />}
-          {base && unit_types_with_base && onBaseTypeChange && <DetailDropdownRow text='Base type' cells={this.CELLS} value={base} values={unit_types_with_base} onChange={onBaseTypeChange} />}
+          {parent && unit_types_with_parent && onParentChange && <DetailDropdownRow text='Base type' cells={this.CELLS} value={parent} values={unit_types_with_parent} onChange={onParentChange} />}
           {onImageChange && <DetailInputRow text='Image' cells={this.CELLS} value={image} onChange={onImageChange} />}
-          {onChangeDeployment && deployment && <DetailDropdownRow text='Deployment' cells={this.CELLS} value={deployment} values={this.deployments} onChange={onChangeDeployment} />}
+          {onChangeDeployment && role && <DetailDropdownRow text='Deployment' cells={this.CELLS} value={role} values={this.deployments} onChange={onChangeDeployment} />}
           {settings[Setting.AttributeLoyal] && <DetailToggleRow text='Is loyal?' cells={this.CELLS} value={!!is_loyal} onChange={onIsLoyalToggle} />}
           {this.attributes.map(this.renderRow)}
           {settings[Setting.AttributeUnitType] && unit_types && unit_types.map(this.renderRow)}

@@ -13,7 +13,7 @@ const tactics = makeContainerReducer(getDefaultTacticState(), tacticsMapping)
 
 const tacticMapping: ActionToFunction<TacticDefinition, TacticType> = {}
 
-export const setTacticBaseValue = makeActionReplaceFirst(manager.setTacticBaseValue, tacticMapping)
+export const setTacticValue = makeActionReplaceFirst(manager.setTacticValue, tacticMapping)
 export const setTacticImage = makeActionReplaceFirst(manager.setTacticImage, tacticMapping)
 export const setTacticMode = makeActionReplaceFirst(manager.setTacticMode, tacticMapping)
 

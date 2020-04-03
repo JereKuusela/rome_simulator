@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Grid, TextArea, Checkbox, List, Header, Button, Input } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { AppState, resetMissing, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits, setIds, restoreBaseSettings } from 'state'
+import { AppState, resetMissing, restoreDefaultTactics, restoreDefaultTerrains, restoreDefaultUnits, setIds, restoreDefaultSettings } from 'state'
 import { values, keys } from 'utils'
 import { ExportKey } from 'types'
 import { exportState, saveToFile } from 'managers/transfer'
@@ -135,10 +135,10 @@ const mapDispatchToProps = (dispatch: any) => ({
       json.transfer = undefined
       json.ui = undefined
       json.countries = json.countries && setIds(json.countries)
-      json.tactics = json.tactics && restoreBaseTactics(json.tactics)
-      json.terrains = json.terrains && restoreBaseTerrains(json.terrains)
-      json.units = json.units && restoreBaseUnits(json.units)
-      json.units = json.settings && restoreBaseSettings(json.settings)
+      json.tactics = json.tactics && restoreDefaultTactics(json.tactics)
+      json.terrains = json.terrains && restoreDefaultTerrains(json.terrains)
+      json.units = json.units && restoreDefaultUnits(json.units)
+      json.units = json.settings && restoreDefaultSettings(json.settings)
       if (reset_missing)
         resetMissing(json)
       keys(json).filter(key => !json[key]).forEach(key => delete json[key])

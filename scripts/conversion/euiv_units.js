@@ -12,7 +12,7 @@ const convertKey = key =>  {
   }
 }
 
-const TECH_FILE = path.join('tech', 'mil.txt');
+const TECH_FILE = 'mil.txt';
 let tech_level = -1;
 
 const handleTech = (key, value, result) => {
@@ -43,7 +43,7 @@ const transformer = result => {
 
 const parsers = {
   [path.join('euiv', 'units')]: handleUnit,
-  [path.join('euiv', TECH_FILE)]: handleTech
+  [path.join('euiv', 'tech', TECH_FILE)]: handleTech
 };
 
 exports.run = () => core.parseFiles(parsers, transformer, path.join('euiv', 'units.json'));

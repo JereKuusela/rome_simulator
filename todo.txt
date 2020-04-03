@@ -2,7 +2,9 @@
 Release 7:
 
 Changelog:
-
+ 
+ UI:
+  - Improved unit definition modal: 
 
 TODO:
 

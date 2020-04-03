@@ -3,8 +3,8 @@ import { mergeValues, shrinkValues } from 'definition_values'
 import { map, filter } from 'utils'
 import { applyDynamicAttributes } from 'managers/units'
 
-/** Merges base cohorts with their units to get actual cohorts. */
-export const convertBaseCohorts = (settings: SiteSettings, cohorts: Cohorts, units: Units): Cohorts => {
+/** Merges cohort definitions with their units to get actual cohorts. */
+export const convertCohortDefinitions = (settings: SiteSettings, cohorts: Cohorts, units: Units): Cohorts => {
   units = shrinkUnits(units)
   return {
     frontline: cohorts.frontline.map(row => row.map(cohort => cohort && applyDynamicAttributes(mergeValues(units[cohort.type], cohort), settings))),
