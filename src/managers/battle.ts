@@ -1,4 +1,4 @@
-import { Battle, TerrainType, Side, CountryName, ArmyForCombatConversion, Terrain, Settings, TacticCalc, Setting, UnitPreferences, CombatPhase, CombatParticipant } from "types"
+import { Battle, TerrainType, Side, CountryName, ArmyForCombatConversion, TerrainDefinition, Settings, TacticCalc, Setting, UnitPreferences, CombatPhase, CombatParticipant } from "types"
 import { forEach, toArr, toObj, values, map } from "utils"
 import { convertCohorts, calculateGeneralPips, getTerrainPips, getUnitDefinition } from "combat"
 import { calculateValue } from "definition_values"
@@ -52,7 +52,7 @@ export const selectArmy = (battle: Battle, side: Side, name: CountryName) => {
 }
 
 
-export const convertParticipant = (side: Side, army: ArmyForCombatConversion, enemy: ArmyForCombatConversion, terrains: Terrain[], settings: Settings): CombatParticipant => {
+export const convertParticipant = (side: Side, army: ArmyForCombatConversion, enemy: ArmyForCombatConversion, terrains: TerrainDefinition[], settings: Settings): CombatParticipant => {
   const enemy_types = toArr(enemy.definitions, unit => unit.type)
   const tactic_casualties = calculateValue(army.tactic, TacticCalc.Casualties) + calculateValue(enemy.tactic, TacticCalc.Casualties)
   const cohorts = convertCohorts(army, settings, tactic_casualties, terrains, enemy_types, settings[Setting.CustomDeployment] ? army.unit_preferences : {} as UnitPreferences)

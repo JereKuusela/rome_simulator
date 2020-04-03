@@ -1,9 +1,9 @@
 import { getDefaultTerrainState } from 'data'
-import { Terrains, Terrain, TerrainType } from 'types'
+import { TerrainDefinitions, TerrainDefinition, TerrainType } from 'types'
 import * as manager from 'managers/terrains'
 import { makeActionRemoveFirst, makeContainerReducer, ActionToFunction, makeActionReplaceFirst, makeEntityReducer, compose } from './utils'
 
-const terrainsMapping: ActionToFunction<Terrains> = {}
+const terrainsMapping: ActionToFunction<TerrainDefinitions> = {}
 
 export const createTerrain = makeActionRemoveFirst(manager.createTerrain, terrainsMapping)
 export const setTerrainType = makeActionRemoveFirst(manager.setTerrainType, terrainsMapping)
@@ -11,7 +11,7 @@ export const deleteTerrain = makeActionRemoveFirst(manager.deleteTerrain, terrai
 
 const terrains = makeContainerReducer(getDefaultTerrainState(), terrainsMapping)
 
-const terrainMapping: ActionToFunction<Terrain, TerrainType> = {}
+const terrainMapping: ActionToFunction<TerrainDefinition, TerrainType> = {}
 
 export const setTerrainImage = makeActionReplaceFirst(manager.setTerrainImage, terrainMapping)
 export const setTerrainLocation = makeActionReplaceFirst(manager.setTerrainLocation, terrainMapping)

@@ -3,9 +3,44 @@ Release 7:
 
 Changelog:
 
-EUIV:
- - Morale retreat limit?
- - Tooltip needs to show source of losses (to include daily loss)
+
+TODO:
+
+Tests:
+ - Mechanics tested. Create a complex base scenario with all mechanics turned off. Then test turning them on individually. Also the tooltip should be tested to match the result.
+  * This verifies that the combat calculations work as intended.
+  * This verifies that the mechanics settings work as intended.
+  * This verifies that the tooltip matches actual result.
+
+Mechanics:
+ - Stack wipe. Destroyed the whole army.
+  * IR: 10/1 rule checked at fight start and fight end. One side must have more than 10x strength of the enemy.
+  * IR: If defender is defeated before 6th round.
+  * IR: If attacker is defeated before 3th round.
+  * IR: If both would stackwipe, attacker wins.
+  * EU4: 10/1 rule checked at fight start. Maybe fight end too.
+  * EU4: If defender loses before 12th round.
+
+UI:
+ - Merge Unit, Tactic and Terrain definition to a same page (with tabs): These pages are given too much emphasis considering their low priority.
+ - Togglable stats rows to show individual units or hide unit types.
+ - Unit tooltip should somehow show sources for losses (to include daily loss from EUIV and damage from different units).
+ - Unit type selector should automatically upgrade/downgrade selected unit to a similar unit. Up to 4 choices but with no clear typing. Also remove Latest. + Setting for this.
+  * Sometimes units have same offensive/defensive allocation but focuses on different attribute. Sometimes same attribute allocation but different offensive/defensive focus.
+  * Seems mostly a problem for Western with so many unit types.
+  * One heuristic could be: Count offensive and defensive pips of all stats, and then count offensive/defensive for two biggest stats as tiebreaker.
+  * When selecting unit store its primary and secondary type as the selection. When upgrading/downgrading use these types to select the unit.
+
+Countries:
+ - Finish converters for relevant information.
+ - Remove religion and omens. Simply add Deity of Discipline, etc.
+  * Selecting religion is cumbersome and just adds extra maintenance.
+ - Inventions to show tag specific (without actually implementing tags).
+  * These inventions are extra. Perhaps a 4th slot for toggle? Or just implement scrolling?
+ - Heritages should probably also be limited to military ones.
+
+
+
 
 Release++:
 
@@ -25,8 +60,7 @@ Todo:
  - Combat things to combat reducer. Perhaps state as parameter when needed? Since it only changes same things as battle reducer,
  - Stats to show amount of traditions, trade, etc..
  - Definition functions probably all could mutate (mostly used in reducers?)
- - Winrate could automatically set precision based on unit count
- - Custom dice roll to affect all phases, add button for modal to override individual phases.
+ - Winrate could automatically set precision based on unit count (or some other heuristic like timing first batch).
  - A button for random setup
 
 Tests:
@@ -40,7 +74,6 @@ Tags:
   * Flanking (attacking without being attacked)
   * No target (red sign)
  - Battle stats to show amount of tags acquired (hopefully gives a better view of the battle)
- - Battle stats to show individual units
 
 Army management:
 - Probably needed for multi-army battles because countries need to have multiple armies
@@ -51,10 +84,6 @@ Army management:
 - Accordion for unit definitions?
 
 - Accordions to more places?? (unit detail?)
-
-Countries:
-- Tag selector for tech (some inventions are tag specific)
-- Tag preset selector for common tags (selects tradition, tag for tech and religion)
 
 Land battle:
 - Deployment order based also on manpower!! (before index), need to to test whether full strength is prioritized for both deploy and reinforce

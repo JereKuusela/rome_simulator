@@ -16,7 +16,7 @@ const convertKey = (key, value) => {
     case 'gold':
       return 'cost';
     case 'category':
-      return 'base';
+      return 'parent';
     case 'is_flank':
     case 'support':
       return 'role';
@@ -95,7 +95,7 @@ const handleUnit = (key, value, result) => {
 const transformer = result => {
   Object.keys(result).forEach(key => {
     const unit = result[key];
-    unit['base'] = unit['base'] || 'Land Unit';
+    unit['parent'] = unit['parent'] || 'Land Unit';
     Object.keys(unit).forEach(key => {
       if (!unit[key])
         delete unit[key];

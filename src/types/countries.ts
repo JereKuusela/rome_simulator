@@ -1,7 +1,7 @@
 import { ObjSet } from "utils"
 import { CultureType, GovermentType, ReligionType } from "./modifiers"
 import { Armies } from "./armies"
-import { BaseUnits, UnitAttribute } from "./units"
+import { UnitDefinitions, UnitAttribute } from "./units"
 import { DefinitionValues } from "definition_values"
 
 export type WearinessAttribute = UnitAttribute.Morale | UnitAttribute.Strength
@@ -31,7 +31,7 @@ export interface CountryDefinition extends DefinitionValues<CountryAttribute> {
   office_morale: number
   armies: Armies
   tech_level: number
-  units: BaseUnits
+  units: UnitDefinitions
   weariness: WearinessAttributes
 }
 

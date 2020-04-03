@@ -1,6 +1,6 @@
 
 import { sumBy, values } from 'lodash'
-import { TacticDefinition, Terrain, UnitType, Cohort, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, UnitValueType, CombatCohorts, CombatCohort, CombatCohortCalculated, CombatCohortDefinition, CombatParticipant, CombatFrontline, CombatDefeated } from 'types'
+import { TacticDefinition, TerrainDefinition, UnitType, Cohort, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, UnitValueType, CombatCohorts, CombatCohort, CombatCohortCalculated, CombatCohortDefinition, CombatParticipant, CombatFrontline, CombatDefeated } from 'types'
 import { toObj, map, noZero } from 'utils'
 import { calculateValue, calculateValueWithoutLoss, calculateBase } from 'definition_values'
 import { calculateExperienceReduction, getCombatPhase, calculateCohortPips, getDailyIncrease } from './combat_utils'
@@ -48,14 +48,14 @@ const applyDamageTypes = (unit: Cohort, settings: Settings, casualties_multiplie
   }
 }
 
-const getDamages = (settings: Settings, casualties_multiplier: number, terrains: Terrain[], unit_types: UnitType[], cohort: Cohort) => (
+const getDamages = (settings: Settings, casualties_multiplier: number, terrains: TerrainDefinition[], unit_types: UnitType[], cohort: Cohort) => (
   applyDamageTypes(cohort, settings, casualties_multiplier, applyUnitTypes(cohort, unit_types, settings, applyPhaseDamage(cohort, precalculateDamage(terrains, cohort, settings))))
 )
 
 /**
  * Returns a precalculated info about a given unit.
  */
-const precalculateUnit = (settings: Settings, casualties_multiplier: number, terrains: Terrain[], unit_types: UnitType[], cohort: Cohort) => {
+const precalculateUnit = (settings: Settings, casualties_multiplier: number, terrains: TerrainDefinition[], unit_types: UnitType[], cohort: Cohort) => {
   const damage_reduction = precalculateDamageReduction(cohort, settings)
   const info: CombatCohortCalculated = {
     damage: getDamages(settings, casualties_multiplier, terrains, unit_types, cohort),
@@ -69,7 +69,7 @@ const precalculateUnit = (settings: Settings, casualties_multiplier: number, ter
 const getValue = (unit: Cohort, attribute: UnitValueType, enabled: boolean) => 1.0 + getMultiplier(unit, attribute, enabled)
 const getMultiplier = (unit: Cohort, attribute: UnitValueType, enabled: boolean) => enabled ? calculateValue(unit, attribute) : 0
 
-export const getUnitDefinition = (combatSettings: Settings, terrains: Terrain[], unit_types: UnitType[], cohort: Cohort): CombatCohortDefinition => {
+export const getUnitDefinition = (combatSettings: Settings, terrains: TerrainDefinition[], unit_types: UnitType[], cohort: Cohort): CombatCohortDefinition => {
   const info = {
     id: cohort.id,
     type: cohort.type,
@@ -84,7 +84,7 @@ export const getUnitDefinition = (combatSettings: Settings, terrains: Terrain[],
     tech: cohort.tech,
     mode: cohort.mode,
     role: cohort.role,
-    base: cohort.base
+    base: cohort.parent
   } as CombatCohortDefinition
   values(UnitAttribute).forEach(calc => { info[calc] = calculateValue(cohort, calc) })
   values(CombatPhase).forEach(calc => { info[calc] = calculateValue(cohort, calc) })
@@ -96,7 +96,7 @@ export const getUnitDefinition = (combatSettings: Settings, terrains: Terrain[],
 /**
  * Transforms a unit to a combat unit.
  */
-export const getCombatUnit = (combatSettings: Settings, casualties_multiplier: number, terrains: Terrain[], unit_types: UnitType[], cohort: Cohort | null): CombatCohort | null => {
+export const getCombatUnit = (combatSettings: Settings, casualties_multiplier: number, terrains: TerrainDefinition[], unit_types: UnitType[], cohort: Cohort | null): CombatCohort | null => {
   if (!cohort)
     return null
   const combat_unit: CombatCohort = {
@@ -342,7 +342,7 @@ const attack = (frontline: CombatFrontline, roll: number, dynamic_multiplier: nu
   }
 }
 
-const precalculateDamage = (terrains: Terrain[], unit: Cohort, settings: Settings) => (
+const precalculateDamage = (terrains: TerrainDefinition[], unit: Cohort, settings: Settings) => (
   settings[Setting.Precision]
   * getValue(unit, UnitAttribute.Discipline, true)
   * getValue(unit, UnitAttribute.CombatAbility, settings[Setting.AttributeCombatAbility])

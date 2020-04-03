@@ -1,5 +1,5 @@
 import { Mode } from 'types'
-import { mergeValues, addValues, ValuesType, clearAllValues, clearValues, regenerateValues, calculateValue, calculateValueWithoutLoss, calculateBase, calculateModifier, calculateLoss, explainShort, getValue, DefinitionValues } from 'definition_values'
+import { mergeValues, addValues, ValuesType, clearAllValues, clearValues, regenerateValues, calculateValue, calculateValueWithoutLoss, calculateBase, calculateModifier, calculateLoss, explainShort, getValue, DefinitionValues, shrinkValues } from 'definition_values'
 import EmptyIcon from 'images/empty.png'
 import UnknownIcon from 'images/unknown.png'
 import { size } from 'lodash'
@@ -104,6 +104,24 @@ describe('mergeValues', () => {
     expect(result.modifier_values['attribute']['key1']).toEqual(2)
     expect(result.loss_values['attribute']['key1']).toEqual(3)
     expect(result.loss_modifier_values['attribute']['key1']).toEqual(4)
+  })
+})
+
+describe('shrinkValues', () => {
+  it('works with undefined', () => {
+    const result = shrinkValues({ type: 'test', image: '', base_values: undefined, modifier_values: undefined, loss_values: undefined, loss_modifier_values: undefined }, 'key')
+    expect(result.base_values).toBeFalsy
+    expect(result.modifier_values).toBeFalsy
+    expect(result.loss_values).toBeFalsy
+    expect(result.loss_modifier_values).toBeFalsy
+  })
+
+  it('works', () => {
+    const result = shrinkValues({ type: 'test', image: '', base_values: get(1, 2), modifier_values: get(3, 4), loss_values: get(5, 6), loss_modifier_values: get(7, 8) }, 'key')
+    expect(result.base_values['attribute']['key']).toEqual(3)
+    expect(result.modifier_values['attribute']['key']).toEqual(7)
+    expect(result.loss_values['attribute']['key']).toEqual(11)
+    expect(result.loss_modifier_values['attribute']['key']).toEqual(15)
   })
 })
 
@@ -328,11 +346,11 @@ describe('calculateBase', () => {
 describe('calculateModifier', () => {
   it('works for base + modifier + loss + loss modifier value', () => {
     const result = calculateModifier(initDefinition(1, 0.5, 0.75, 0.25), 'attribute')
-    expect(result).toEqual(1.5)
+    expect(result).toEqual(0.5)
   })
   it('works for multiple values', () => {
     const result = calculateModifier(initModifier(1, 0.5), 'attribute')
-    expect(result).toEqual(2.5)
+    expect(result).toEqual(1.5)
   })
 })
 

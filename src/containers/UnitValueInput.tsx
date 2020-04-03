@@ -26,7 +26,7 @@ class UnitValueInput extends Component<IProps> {
     if (values_type === ValuesType.Base)
       value = calculateBase(unit, attribute)
     else
-      value = calculateModifier(unit, attribute) - 1
+      value = calculateModifier(unit, attribute)
     return (
       <DelayedNumericInput value={value} onChange={this.onChange} percent={percent} />
     )

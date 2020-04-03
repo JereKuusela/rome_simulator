@@ -78,7 +78,7 @@ export const getChildUnits = (units: CombatUnitTypes, tech: number, base_unit: U
 }
 
 export const getChildUnits2 = (units: Units, tech: number, base_unit: UnitType) => {
-  return sortBy(filterByTech2(toArr(units).filter(unit => unit.base === base_unit), tech), techSorter)
+  return sortBy(filterByTech2(toArr(units).filter(unit => unit.parent === base_unit), tech), techSorter)
 }
 
 
@@ -103,7 +103,7 @@ const unitSorter2 = (unit: Unit, mode: Mode, base_units?: ObjSet) => {
 }
 
 export const getArchetypes = (units: CombatUnitTypes, mode: Mode) => toArr(units).filter(unit => mode === Mode.Naval ? unit.base === UnitType.Naval : unit.base === UnitType.Land)
-export const getArchetypes2 = (units: Units, mode: Mode) => toArr(units).filter(unit => mode === Mode.Naval ? unit.base === UnitType.Naval : unit.base === UnitType.Land)
+export const getArchetypes2 = (units: Units, mode: Mode) => toArr(units).filter(unit => mode === Mode.Naval ? unit.parent === UnitType.Naval : unit.parent === UnitType.Land)
 
 
 export const getActualUnits = (units: CombatUnitTypes, mode: Mode) => {
@@ -116,7 +116,7 @@ export const getActualUnits2 = (units: Units, mode: Mode) => {
   return sortBy(toArr(units).filter(unit => !base_units[unit.type]), unit => unitSorter2(unit, mode))
 }
 
-const getBaseUnits = (units: Units) => toSet(units, unit => unit.base || unit.type)
+const getBaseUnits = (units: Units) => toSet(units, unit => unit.parent || unit.type)
 
 const filterByTech = (units: CombatCohortDefinition[], tech: number) => units.filter(unit => unit.tech === undefined || unit.tech <= tech)
 const filterByTech2 = (units: Unit[], tech: number) => units.filter(unit => unit.tech === undefined || unit.tech <= tech)

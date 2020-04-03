@@ -1,4 +1,4 @@
-import { ValuesType, UnitType, BaseUnit, UnitAttribute, UnitValueType, UnitRole, TerrainType, BaseUnits, Mode, CultureType, CombatPhase } from 'types'
+import { ValuesType, UnitType, UnitDefinition, UnitAttribute, UnitValueType, UnitRole, TerrainType, UnitDefinitions, Mode, CultureType, CombatPhase } from 'types'
 import { addValues } from 'definition_values'
 import { toObj, removeUndefined, filter, toArr } from 'utils'
 
@@ -62,13 +62,13 @@ export const getUnitIcon = (type: UnitType) => unit_to_icon[type] || ''
 
 export const GlobalKey = 'Base'
 
-const createUnitFromJson = (data: UnitData): BaseUnit => {
-  let unit: BaseUnit = {
+const createUnitFromJson = (data: UnitData): UnitDefinition => {
+  let unit: UnitDefinition = {
     type: data.type as UnitType,
     mode: data.mode as Mode | undefined,
     image: unit_to_icon[data.type as UnitType] ?? unit_to_icon[data.base as UnitType] ?? '',
     role: data.role ? data.role as UnitRole : undefined,
-    base: data.base ? data.base as UnitType : undefined,
+    parent: data.base ? data.base as UnitType : undefined,
     culture: data.culture ? data.culture as CultureType : undefined,
     tech: data.tech
   }
@@ -123,7 +123,7 @@ const createUnitFromJson = (data: UnitData): BaseUnit => {
   return unit
 }
 
-const initializeDefaultUnits = (): BaseUnits => {
+const initializeDefaultUnits = (): UnitDefinitions => {
   if (process.env.REACT_APP_GAME === 'euiv')
     return toObj(euiv_basedata.units.map(createUnitFromJson).concat(euiv_data.units.map(createUnitFromJson)), unit => unit.type)
   else
@@ -133,8 +133,8 @@ const defaultUnits = initializeDefaultUnits()
 
 export const getCultures = () => uniq(toArr(defaultUnits, value => value.culture).filter(culture => culture) as CultureType[]).sort()
 
-export const getDefaultUnits = (culture?: CultureType): BaseUnits => culture ? filter(defaultUnits, unit => !unit.culture || unit.culture === culture) : defaultUnits
-export const getDefaultUnit = (type: UnitType): BaseUnit => defaultUnits[type]
+export const getDefaultUnits = (culture?: CultureType): UnitDefinitions => culture ? filter(defaultUnits, unit => !unit.culture || unit.culture === culture) : defaultUnits
+export const getDefaultUnit = (type: UnitType): UnitDefinition => defaultUnits[type]
 
 interface UnitData {
   base: string | null

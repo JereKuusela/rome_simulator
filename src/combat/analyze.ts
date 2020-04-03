@@ -1,4 +1,4 @@
-import { Terrain, UnitType, Setting, UnitAttribute, Side, Settings, Cohorts, UnitPreferences, ResourceLosses, WinRateProgress, CasualtiesProgress, ResourceLossesProgress, CombatParticipant, CombatCohorts, CombatUnitTypes, SortedReserve, CombatFrontline, CombatDefeated } from 'types'
+import { TerrainDefinition, UnitType, Setting, UnitAttribute, Side, Settings, Cohorts, UnitPreferences, ResourceLosses, WinRateProgress, CasualtiesProgress, ResourceLossesProgress, CombatParticipant, CombatCohorts, CombatUnitTypes, SortedReserve, CombatFrontline, CombatDefeated } from 'types'
 import { getCombatUnit, doBattleFast } from './combat'
 import { mapRange } from 'utils'
 import { deploy, sortReserve, reserveSize } from './deployment'
@@ -154,7 +154,7 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
   worker()
 }
 
-export const convertCohorts = (cohorts: Cohorts, settings: Settings, casualties_multiplier: number, terrains: Terrain[], unit_types: UnitType[], unit_preferences: UnitPreferences): CombatCohorts => ({
+export const convertCohorts = (cohorts: Cohorts, settings: Settings, casualties_multiplier: number, terrains: TerrainDefinition[], unit_types: UnitType[], unit_preferences: UnitPreferences): CombatCohorts => ({
   frontline: cohorts.frontline.map(row => row.map(cohort => getCombatUnit(settings, casualties_multiplier, terrains, unit_types, cohort))),
   reserve: sortReserve(cohorts.reserve.map(cohort => getCombatUnit(settings, casualties_multiplier, terrains, unit_types, cohort)!), unit_preferences),
   defeated: cohorts.defeated.map(cohort => getCombatUnit(settings, casualties_multiplier, terrains, unit_types, cohort)!),

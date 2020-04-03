@@ -1,31 +1,33 @@
-import { Cohorts, Mode, UnitDefinitionValues, ArmyType, Side, BaseUnits, UnitType, Units, Unit, CombatCohorts, SiteSettings } from 'types'
-import { mergeValues } from 'definition_values'
+import { Cohorts, Mode, UnitDefinitionValues, ArmyType, Side, UnitDefinitions, UnitType, Units, Unit, CombatCohorts, SiteSettings } from 'types'
+import { mergeValues, shrinkValues } from 'definition_values'
 import { map, filter } from 'utils'
 import { applyDynamicAttributes } from 'managers/units'
 
-/**
- * Merges base units with their definitions resulting in real units.
- * @param cohorts Base units to merge. 
- * @param units Definitions to merge.
- */
-export const mergeBaseUnitsWithDefinitions = (settings: SiteSettings, cohorts: Cohorts, units: Units): Cohorts => ({
-  frontline: cohorts.frontline.map(row => row.map(cohort => cohort && applyDynamicAttributes(mergeValues(units[cohort.type], cohort), settings))),
-  reserve: cohorts.reserve.map(cohort => cohort && applyDynamicAttributes(mergeValues(units[cohort.type], cohort), settings)),
-  defeated: cohorts.defeated.map(cohort => cohort && applyDynamicAttributes(mergeValues(units[cohort.type], cohort), settings))
-})
-
-export const mergeDefinitions = (settings: SiteSettings, units: BaseUnits, general: UnitDefinitionValues): Units => {
-  return map(units, (_, type) => mergeDefinition(settings, units, general, type))
+/** Merges base cohorts with their units to get actual cohorts. */
+export const convertBaseCohorts = (settings: SiteSettings, cohorts: Cohorts, units: Units): Cohorts => {
+  units = shrinkUnits(units)
+  return {
+    frontline: cohorts.frontline.map(row => row.map(cohort => cohort && applyDynamicAttributes(mergeValues(units[cohort.type], cohort), settings))),
+    reserve: cohorts.reserve.map(cohort => cohort && applyDynamicAttributes(mergeValues(units[cohort.type], cohort), settings)),
+    defeated: cohorts.defeated.map(cohort => cohort && applyDynamicAttributes(mergeValues(units[cohort.type], cohort), settings))
+  }
 }
 
-export const mergeDefinition = (settings: SiteSettings, units: BaseUnits, general: UnitDefinitionValues, type: UnitType): Unit => {
-  let unit = mergeValues(units[type], general[type])
-  let base = unit.base
+/** Shrinks definition values under name of the unit, preventing values being overwritten when merging definitions. */
+export const shrinkUnits = <T extends UnitDefinitions | Units>(definitions: T) => map(definitions, unit => shrinkValues(unit, unit.type)) as T
+
+export const convertUnitDefinitions = (settings: SiteSettings, definitions: UnitDefinitions, general: UnitDefinitionValues): Units => {
+  return map(definitions, (_, type) => convertUnitDefinition(settings, definitions, shrinkUnits(definitions), general, type))
+}
+
+export const convertUnitDefinition = (settings: SiteSettings, definitions: UnitDefinitions, parents: UnitDefinitions, general: UnitDefinitionValues, type: UnitType): Unit => {
+  let unit = mergeValues(definitions[type], general[type])
+  let parent = unit.parent
   const merged = [type]
-  while (base && !merged.includes(base)) {
-    merged.push(base)
-    unit = mergeValues(mergeValues(unit, units[base]), general[base])
-    base = units[base]?.base
+  while (parent && !merged.includes(parent)) {
+    merged.push(parent)
+    unit = mergeValues(mergeValues(unit, parents[parent]), general[parent])
+    parent = parents[parent]?.parent
   }
   return applyDynamicAttributes(unit, settings) as Unit
 }

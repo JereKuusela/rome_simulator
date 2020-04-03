@@ -52,6 +52,20 @@ export const mergeValues = <D1 extends BD | undefined, D2 extends BD | undefined
   return { ...to_merge, ...definition, base_values, modifier_values, loss_values, loss_modifier_values }
 }
 
+
+/**
+ * Merges all values under a given key.
+ */
+export const shrinkValues = <D extends BD>(definition: D, key: string): D => {
+  return {
+    ...definition,
+    base_values: definition.base_values && map(definition.base_values, (_, attribute) => ({ [key]: calculateBase(definition, attribute) })),
+    modifier_values: definition.modifier_values && map(definition.modifier_values, (_, attribute) => ({ [key]: calculateModifier(definition, attribute) })),
+    loss_modifier_values: definition.loss_modifier_values && map(definition.loss_modifier_values, (_, attribute) => ({ [key]: calculateLossModifier(definition, attribute) })),
+    loss_values: definition.loss_values && map(definition.loss_values, (_, attribute) => ({ [key]: calculateLoss(definition, attribute) }))
+  }
+}
+
 /**
  * Adds base, modifier or loss values.
  */
@@ -210,7 +224,7 @@ const subFilterValues = (values: Values<any> | undefined, filter_key: string) =>
 export const calculateValue = <D extends BD, A extends string>(definition: D | undefined, attribute: A): number => {
   if (!definition)
     return 0.0
-  let value = calculateBase(definition, attribute) * calculateModifier(definition, attribute) * (1 - calculateLossModifier(definition, attribute)) - calculateLoss(definition, attribute)
+  let value = calculateBase(definition, attribute) * (1 + calculateModifier(definition, attribute)) * (1 - calculateLossModifier(definition, attribute)) - calculateLoss(definition, attribute)
   return round(value, PRECISION)
 }
 
@@ -222,7 +236,7 @@ export const calculateValue = <D extends BD, A extends string>(definition: D | u
 export const calculateValueWithoutLoss = <D extends BD, A extends string>(definition: D | undefined, attribute: A): number => {
   if (!definition)
     return 0.0
-  let value = calculateBase(definition, attribute) * calculateModifier(definition, attribute)
+  let value = calculateBase(definition, attribute) * (1 + calculateModifier(definition, attribute))
   return round(value, PRECISION)
 }
 
@@ -231,28 +245,28 @@ export const calculateValueWithoutLoss = <D extends BD, A extends string>(defini
  * @param definition 
  * @param attribute 
  */
-export const calculateBase = <D extends BD, A extends string>(definition: D, attribute: A): number => calculateValueSub(definition.base_values, attribute, 0)
+export const calculateBase = <D extends BD, A extends string>(definition: D, attribute: A): number => calculateValueSub(definition.base_values, attribute)
 
 /**
  * Calculates the modifier value of an attribute.
  * @param definition 
  * @param attribute 
  */
-export const calculateModifier = <D extends BD, A extends string>(definition: D, attribute: A): number => calculateValueSub(definition.modifier_values, attribute, 1.0)
+export const calculateModifier = <D extends BD, A extends string>(definition: D, attribute: A): number => calculateValueSub(definition.modifier_values, attribute)
 
 /**
  * Calculates the loss value of an attribute.
  * @param definition 
  * @param attribute 
  */
-export const calculateLoss = <D extends BD, A extends string>(definition: D, attribute: A): number => calculateValueSub(definition.loss_values, attribute, 0)
+export const calculateLoss = <D extends BD, A extends string>(definition: D, attribute: A): number => calculateValueSub(definition.loss_values, attribute)
 
 /**
  * Calculates the loss modifier value of an attribute.
  * @param definition 
  * @param attribute 
  */
-export const calculateLossModifier = <D extends BD, A extends string>(definition: D, attribute: A): number => calculateValueSub(definition.loss_modifier_values, attribute, 0)
+export const calculateLossModifier = <D extends BD, A extends string>(definition: D, attribute: A): number => calculateValueSub(definition.loss_modifier_values, attribute)
 
 /**
  * Shared implementation for calculating the value of an attribute.
@@ -260,8 +274,8 @@ export const calculateLossModifier = <D extends BD, A extends string>(definition
  * @param attribute 
  * @param initial Initial value. For example modifiers have 1.0.
  */
-const calculateValueSub = <A extends string>(container: Values<A> | undefined, attribute: A, initial: number): number => {
-  let result = initial
+const calculateValueSub = <A extends string>(container: Values<A> | undefined, attribute: A): number => {
+  let result = 0
   if (!container)
     return result
   const values = container[attribute]

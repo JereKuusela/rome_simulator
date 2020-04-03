@@ -1,30 +1,30 @@
-import { TerrainValueType, ValuesType, Terrain, LocationType, Mode, Terrains, TerrainType } from "types"
+import { TerrainValueType, ValuesType, TerrainDefinition, LocationType, Mode, TerrainDefinitions, TerrainType } from "types"
 import { addValuesWithMutate } from "definition_values"
 
-export const setTerrainValue = (terrain: Terrain, type: ValuesType, key: string, attribute: TerrainValueType, value: number) => {
+export const setTerrainValue = (terrain: TerrainDefinition, type: ValuesType, key: string, attribute: TerrainValueType, value: number) => {
   addValuesWithMutate(terrain, type, key, [[attribute, value]])
 }
 
-export const setTerrainLocation = (terrain: Terrain, location: LocationType) => {
+export const setTerrainLocation = (terrain: TerrainDefinition, location: LocationType) => {
   terrain.location = location
 }
 
-export const setTerrainImage = (terrain: Terrain, image: string) => {
+export const setTerrainImage = (terrain: TerrainDefinition, image: string) => {
   terrain.image = image
 }
 
-export const setTerrainMode = (terrain: Terrain, mode: Mode) => {
+export const setTerrainMode = (terrain: TerrainDefinition, mode: Mode) => {
   terrain.mode = mode
 }
 
-export const deleteTerrain = (terrains: Terrains, type: TerrainType) => {
+export const deleteTerrain = (terrains: TerrainDefinitions, type: TerrainType) => {
   delete terrains[type]
 }
 
-export const createTerrain = (terrains: Terrains, type: TerrainType, mode: Mode) => {
+export const createTerrain = (terrains: TerrainDefinitions, type: TerrainType, mode: Mode) => {
   terrains[type] = { type, mode, image: '', location: LocationType.Border }
 }
 
-export const setTerrainType = (terrains: Terrains, old_type: TerrainType, type: TerrainType) => {
+export const setTerrainType = (terrains: TerrainDefinitions, old_type: TerrainType, type: TerrainType) => {
   delete Object.assign(terrains, { [type]: { ...terrains[old_type], type } })[old_type]
 }

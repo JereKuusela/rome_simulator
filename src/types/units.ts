@@ -1,5 +1,5 @@
 import { DefinitionValues, calculateValue } from 'definition_values'
-import { TerrainType, Definition, CountryName, Mode } from 'types'
+import { TerrainType, Definition, Mode } from 'types'
 import { toNumber, toPercent, toSignedPercent, toMultiplier } from 'formatters'
 import { CombatPhase } from './battle'
 import { CultureType } from './modifiers'
@@ -92,16 +92,16 @@ export interface BaseCohort extends DefinitionValues<UnitValueType> {
 }
 
 /** A single (sub) unit definition. Used to store data but shouldn't be used for anything else. */
-export interface BaseUnit extends Definition<UnitType>, DefinitionValues<UnitValueType> {
+export interface UnitDefinition extends Definition<UnitType>, DefinitionValues<UnitValueType> {
   role?: UnitRole
   is_loyal?: boolean
-  base?: UnitType
+  parent?: UnitType
   culture?: CultureType
   tech?: number
 }
 
 /** A full unit definition (merged with definitions of country, general and base unit types). */
-export interface Unit extends BaseUnit {
+export interface Unit extends UnitDefinition {
   mode: Mode
 }
 
@@ -134,6 +134,5 @@ export const unitValueToString = (definition: DefinitionValues<UnitValueType>, t
   }
 }
 
-export type UnitState = { [key in CountryName]: BaseUnits }
-export type BaseUnits = { [key in UnitType]: BaseUnit }
+export type UnitDefinitions = { [key in UnitType]: UnitDefinition }
 export type Units = { [key in UnitType]: Unit }

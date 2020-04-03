@@ -3,6 +3,7 @@ import { devToolsEnhancer } from 'redux-devtools-extension'
 import { rootReducer, restoreBaseTactics, restoreBaseTerrains, restoreBaseUnits, stripRounds, setIds, restoreBaseSettings } from 'state'
 import { persistStore, persistReducer, createTransform, createMigrate } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
+import { map } from 'utils'
 
 const TacticsTransform = createTransform(
   (inboundState) => inboundState,
@@ -24,8 +25,8 @@ const BattleTransform = createTransform(
 
 const CountriesTransform = createTransform(
   (inboundState: any) => inboundState,
-  (outboundState: any) => ({ ...setIds(outboundState), units: restoreBaseUnits(outboundState.units) }),
-  { whitelist: ['countries'] }
+  (outboundState: any) => map(setIds(outboundState), country => ({...country, units: restoreBaseUnits(country.units) })),
+{ whitelist: ['countries'] }
 )
 
 const SettingsTransform = createTransform(
@@ -41,7 +42,7 @@ const DataTransform = createTransform(
 )
 
 const migrations = {
-  9: () => rootReducer(undefined, { type: 'dummy'}) as any
+  9: () => rootReducer(undefined, { type: 'dummy' }) as any
 }
 
 const persistConfig = {

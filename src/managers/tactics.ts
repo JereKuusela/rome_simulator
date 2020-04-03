@@ -1,4 +1,4 @@
-import { TacticType, TacticValueType, ValuesType, Mode, TacticDefinition, Tactics } from "types"
+import { TacticType, TacticValueType, ValuesType, Mode, TacticDefinition, TacticDefinitions } from "types"
 import { addValuesWithMutate } from "definition_values"
 import { getTacticIcon } from "data"
 
@@ -6,15 +6,15 @@ export const setTacticBaseValue = (tactic: TacticDefinition, key: string, attrib
   addValuesWithMutate(tactic, ValuesType.Base, key, [[attribute, value]])
 }
 
-export const deleteTactic = (tactics: Tactics, type: TacticType) => {
+export const deleteTactic = (tactics: TacticDefinitions, type: TacticType) => {
   delete tactics[type]
 }
 
-export const createTactic = (tactics: Tactics, type: TacticType, mode: Mode) => {
+export const createTactic = (tactics: TacticDefinitions, type: TacticType, mode: Mode) => {
   tactics[type] = { type, mode, image: getTacticIcon(type) }
 }
 
-export const setTacticType = (tactics: Tactics, old_type: TacticType, type: TacticType) => {
+export const setTacticType = (tactics: TacticDefinitions, old_type: TacticType, type: TacticType) => {
   delete Object.assign(tactics, { [type]: { ...tactics[old_type], type } })[old_type]
 }
 

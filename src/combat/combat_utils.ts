@@ -1,6 +1,6 @@
 
 import { sumBy } from 'lodash'
-import { Terrain, TerrainCalc, Setting, UnitAttribute, BaseUnit, CombatPhase, GeneralAttribute, Side, LocationType, General, CombatCohortDefinition, SiteSettings } from 'types'
+import { TerrainDefinition, TerrainCalc, Setting, UnitAttribute, UnitDefinition, CombatPhase, GeneralAttribute, Side, LocationType, General, CombatCohortDefinition, SiteSettings } from 'types'
 import { calculateValue } from 'definition_values'
 
 /**
@@ -13,7 +13,7 @@ export const calculateGeneralPips = (general: General, enemy: General, phase: Co
   return Math.max(0, martial_pip + phase_pip)
 }
 
-export const getTerrainPips = (terrains: Terrain[], side: Side, general: General, enemy: General) => {
+export const getTerrainPips = (terrains: TerrainDefinition[], side: Side, general: General, enemy: General) => {
   const enable_tiles = side === Side.Attacker
   const enable_borders = side === Side.Attacker || general.total_values[GeneralAttribute.Maneuver] <= enemy.total_values[GeneralAttribute.Maneuver]
   terrains = terrains.filter(terrain => terrain.location === LocationType.Border ? enable_borders : enable_tiles)
@@ -51,7 +51,7 @@ export const getDefensiveSupportCohortPips = (cohort: CombatCohortDefinition | n
   return cohort ?  Math.ceil(cohort[UnitAttribute.DefensiveSupport] * getDefensiveCohortPips(cohort, type, phase)) : 0
 }
 
-export const calculateExperienceReduction = (settings: SiteSettings, target: BaseUnit) => {
+export const calculateExperienceReduction = (settings: SiteSettings, target: UnitDefinition) => {
   let damage_reduction_per_experience = settings[Setting.ExperienceDamageReduction]
   // Bug in game which makes morale damage taken and strength damage taken affect damage reduction from experience.
   if (!settings[Setting.FixExperience])

@@ -1,7 +1,7 @@
 import { AppState } from './index'
 import { toArr, filter, arrGet, toObj, forEach2, keys } from 'utils'
-import { filterUnitDefinitions, getArmyPart, mergeBaseUnitsWithDefinitions, mergeDefinitions, mergeDefinition } from '../army_utils'
-import { Mode, CountryName, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, TacticDefinition, UnitPreferences, Participant, Terrain, Settings, Battle, Terrains, Tactics, Cohorts, ArmyName, General, Countries, Setting, Reserve, Defeated, CountryAttribute, Units, Unit, GeneralDefinition, Country, CountryDefinition, CombatCohort, CombatCohorts, CombatParticipant } from 'types'
+import { filterUnitDefinitions, getArmyPart, convertBaseCohorts, convertUnitDefinitions, convertUnitDefinition, shrinkUnits } from '../army_utils'
+import { Mode, CountryName, Side, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, TacticDefinition, UnitPreferences, Participant, TerrainDefinition, Settings, Battle, TerrainDefinitions, TacticDefinitions, Cohorts, ArmyName, General, Countries, Setting, Reserve, Defeated, CountryAttribute, Units, Unit, GeneralDefinition, Country, CountryDefinition, CombatCohort, CombatCohorts, CombatParticipant } from 'types'
 import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticState, getDefaultTerrainState } from 'data'
 import { uniq, flatten } from 'lodash'
 import * as manager from 'managers/army'
@@ -97,7 +97,7 @@ export const filterTerrainTypes = (state: AppState): TerrainType[] => {
  * Returns terrains for the current mode.
  * @param state Application state.
  */
-export const filterTerrains = (state: AppState, location?: LocationType): Terrains => {
+export const filterTerrains = (state: AppState, location?: LocationType): TerrainDefinitions => {
   return filter(state.terrains, terrain => terrain.mode === state.settings.mode && (!location || terrain.location === location))
 }
 
@@ -113,7 +113,7 @@ export const filterTacticTypes = (state: AppState): TacticType[] => {
  * Returns tactics for the current mode.
  * @param state Application state.
  */
-export const filterTactics = (state: AppState): Tactics => {
+export const filterTactics = (state: AppState): TacticDefinitions => {
   return filter(state.tactics, tactic => tactic.mode === state.settings.mode)
 }
 
@@ -238,12 +238,12 @@ export const getCohorts = (state: AppState, side: Side, originals?: boolean): Co
   }
   forEach2(base.frontline, (item, row, column) => cohorts.frontline[Number(row)][Number(column)] = item as Cohort)
   const units = getUnits(state, country)
-  return mergeBaseUnitsWithDefinitions(settings, cohorts, units)
+  return convertBaseCohorts(settings, cohorts, units)
 }
 
 export const getParticipant = (state: AppState, type: Side): Participant => getBattle(state).participants[type]
 
-export const getSelectedTerrains = (state: AppState): Terrain[] => getBattle(state).terrains.map(value => state.terrains[value])
+export const getSelectedTerrains = (state: AppState): TerrainDefinition[] => getBattle(state).terrains.map(value => state.terrains[value])
 
 /**
  * Returns unit definitions for the current mode and side.
@@ -258,7 +258,7 @@ export const getUnits = (state: AppState, country?: CountryName): Units => {
   const mode = state.settings.mode
   const base_units = getBaseUnits(state, country)
   const general = getGeneralDefinition(state, country).definitions
-  const units = mergeDefinitions(settings, base_units, general)
+  const units = convertUnitDefinitions(settings, base_units, general)
   return filterUnitDefinitions(mode, units)
 }
 
@@ -276,7 +276,8 @@ export const getUnit = (state: AppState, unit_type: UnitType, country?: CountryN
   const settings = getSiteSettings(state)
   country = country ?? state.settings.country
   const general = getGeneralDefinition(state, country).definitions
-  return mergeDefinition(settings, getBaseUnits(state, country), general, unit_type)
+  const units = getBaseUnits(state, country)
+  return convertUnitDefinition(settings, units, shrinkUnits(units), general, unit_type)
 }
 
 export const getUnitImages = (state: AppState): { [key in UnitType]: string[] } => {

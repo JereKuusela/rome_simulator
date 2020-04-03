@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { TerrainType, Terrain, TerrainCalc, SiteSettings } from 'types'
+import { TerrainType, TerrainDefinition, TerrainCalc, SiteSettings } from 'types'
 import { calculateValue } from 'definition_values'
 import DropdownTable from './DropdownTable'
 import StyledNumber from 'components/Utils/StyledNumber'
@@ -8,14 +8,14 @@ import LabelItem from 'components/Utils/LabelUnit'
 
 type IProps = {
   value: TerrainType
-  values: Terrain[]
+  values: TerrainDefinition[]
   onSelect: (type: TerrainType) => void
   settings: SiteSettings
 }
 
 export default class DropdownTerrain extends Component<IProps> {
 
-  getContent = (terrain: Terrain) => ([
+  getContent = (terrain: TerrainDefinition) => ([
     <LabelItem item={terrain} />,
     <StyledNumber
       value={calculateValue(terrain, TerrainCalc.Roll)}

@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { Table, List, Icon } from 'semantic-ui-react'
 import { toNumber } from 'lodash'
 
-import { Mode, CountryName, UnitType, TerrainType, BaseUnit, UnitAttribute, UnitValueType, Unit, filterAttributes, SiteSettings, Setting } from 'types'
-import { calculateValue, calculateBase, calculateModifier, calculateLoss } from 'definition_values'
+import { Mode, CountryName, UnitType, TerrainType, UnitDefinition, UnitAttribute, Unit, filterAttributes, SiteSettings, Setting } from 'types'
+import { calculateValue } from 'definition_values'
 import { toPercent, toManpower, toSignedPercent } from 'formatters'
 
 import StyledNumber from './Utils/StyledNumber'
@@ -19,7 +19,7 @@ interface IProps {
   images: { [key in UnitType]: string[] }
   unit_types: UnitType[]
   terrains: TerrainType[]
-  onRowClick: (unit: BaseUnit) => void
+  onRowClick: (unit: UnitDefinition) => void
 }
 
 // Display component for showing unit definitions for an army.
@@ -90,7 +90,7 @@ export default class UnitDefinitions extends Component<IProps> {
     )
   }
 
-  renderRow = (unit: BaseUnit) => {
+  renderRow = (unit: UnitDefinition) => {
     const { settings, onRowClick, mode } = this.props
     return (
       <Table.Row key={unit.type} onClick={() => onRowClick(unit)}>
@@ -147,44 +147,6 @@ export default class UnitDefinitions extends Component<IProps> {
           </Table.Cell>
         }
       </Table.Row>
-    )
-  }
-
-  renderAttributeList = (unit: BaseUnit, attribute: UnitValueType): JSX.Element => {
-    const base = calculateBase(unit, attribute)
-    let base_str = String(base)
-    if (this.props.mode === Mode.Naval && attribute === UnitAttribute.Strength)
-      base_str = String(base * 100) + '%'
-    if (this.props.mode !== Mode.Naval && attribute === UnitAttribute.Strength)
-      base_str = String(base * 1000)
-    const modifier = calculateModifier(unit, attribute)
-    const loss = calculateLoss(unit, attribute)
-    let loss_str = String(base)
-    if (this.props.mode === Mode.Naval && attribute === UnitAttribute.Strength)
-      loss_str = String(loss * 100) + '%'
-    if (this.props.mode !== Mode.Naval && attribute === UnitAttribute.Strength)
-      loss_str = String(loss * 1000)
-    return (
-      <List>
-        {
-          base !== 0 &&
-          <List.Item style={{ whiteSpace: 'nowrap' }}>
-            {'Base: ' + base_str}
-          </List.Item>
-        }
-        {
-          modifier !== 1.0 &&
-          <List.Item style={{ whiteSpace: 'nowrap' }}>
-            {'Mod: ' + modifier}
-          </List.Item>
-        }
-        {
-          loss !== 0 &&
-          <List.Item style={{ whiteSpace: 'nowrap' }}>
-            {'Loss: ' + loss_str}
-          </List.Item>
-        }
-      </List>
     )
   }
 }

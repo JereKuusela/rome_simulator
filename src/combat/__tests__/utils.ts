@@ -1,7 +1,7 @@
 import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultParticipant, getDefaultArmy, getDefaultUnit } from 'data'
 import { map, mapRange, resize, toObj } from 'utils'
 import { mergeValues } from 'definition_values'
-import { Mode, CountryName, Participant, Terrain, TacticType, Setting, Side, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, Settings, Cohort, CombatPhase, CultureType, General, GeneralAttribute, UnitPreferences, ArmyForCombatConversion, CombatCohort, CombatParticipant } from 'types'
+import { Mode, CountryName, Participant, TerrainDefinition, TacticType, Setting, Side, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, Settings, Cohort, CombatPhase, CultureType, General, GeneralAttribute, UnitPreferences, ArmyForCombatConversion, CombatCohort, CombatParticipant } from 'types'
 import { doBattleFast, deploy, reinforce } from 'combat'
 import { convertParticipant } from 'managers/battle'
 
@@ -18,7 +18,7 @@ export interface TestInfo {
   defender: Participant
   army_a: ArmyForCombatConversion
   army_d: ArmyForCombatConversion
-  terrains: Terrain[]
+  terrains: TerrainDefinition[]
   settings: Settings
 }
 

@@ -50,7 +50,7 @@ export default class UnitDetail extends Component<IProps> {
   render() {
     const { unit, onTypeChange, onBaseTypeChange, onImageChange, onChangeDeployment, onIsLoyalToggle } = this.props
     const { terrain_types, unit_types, unit_types_with_base, unit_types_as_dropdown, settings } = this.props
-    const { id, type, mode, base, image, role: deployment, is_loyal, culture, tech } = unit
+    const { id, type, mode, parent: base, image, role: deployment, is_loyal, culture, tech } = unit
     return (
       <Table celled selectable unstackable>
         <Headers values={this.headers} />

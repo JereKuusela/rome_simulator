@@ -6,7 +6,7 @@ const convertKey = key =>  {
     case 'unit_type':
       return 'culture';
     case 'type':
-      return 'base';
+      return 'parent';
     default:
       return key;
   }

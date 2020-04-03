@@ -23,7 +23,7 @@ export enum TacticType {
   ProbingAttack = 'Probing Attack'
 }
 
-export type Tactics = { [key in TacticType]: TacticDefinition }
+export type TacticDefinitions = { [key in TacticType]: TacticDefinition }
 
 export type TacticValueType = UnitType | TacticCalc | TacticType
 

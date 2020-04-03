@@ -6,7 +6,7 @@ import Headers from './Utils/Headers'
 import DetailDropdownRow from './Detail/DetailDropdownRow'
 import DetailInputRow from './Detail/DetailInputRow'
 import Images from './Utils/Images'
-import { Mode, ValuesType, TacticType, UnitType, TacticDefinition, TacticCalc, TacticValueType, Tactics } from 'types'
+import { Mode, ValuesType, TacticType, UnitType, TacticDefinition, TacticCalc, TacticValueType, TacticDefinitions } from 'types'
 import { values, getImage } from 'utils'
 import { getValue, calculateValue, explainShort } from 'definition_values'
 import { toSignedPercent, toPercent } from 'formatters'
@@ -14,7 +14,7 @@ import { toSignedPercent, toPercent } from 'formatters'
 
 interface IProps {
   tactic_types: TacticType[]
-  tactics: Tactics
+  tactics: TacticDefinitions
   unit_types: UnitType[]
   images: { [key in UnitType]: string[] }
   custom_value_key: string
