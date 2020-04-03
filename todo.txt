@@ -4,7 +4,8 @@ Release 7:
 Changelog:
  
  UI:
-  - Improved unit definition modal: 
+  - Improved unit definition modal: Information about unit definition and parent unit definition are now shrunk to make the "Explained" column easier to read.
+  - Improved navigation: Units, Terrains and Tactics pages merged under Definitions page to indicate that they aren't the primary way to apply modifiers.
 
 TODO:
 

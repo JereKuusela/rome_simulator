@@ -8,13 +8,20 @@ import { Modal } from 'semantic-ui-react'
 type Props = {
   type: ModalType
   basic?: boolean
+  header?: string
 }
 
 class BaseModal extends Component<IProps> {
+
+  shouldComponentUpdate(prevProps: IProps) {
+    return !(!this.props.visible && !prevProps.visible)
+  }
+
   render() {
-    const { type, basic, visible, children, closeModal } = this.props
+    const { basic, visible, children, closeModal, header } = this.props
     return (
-      <Modal basic={basic} onClose={() => closeModal(type)} open={visible} centered={false} >
+      <Modal basic={basic} onClose={() => closeModal()} open={visible} centered={false} >
+        {header && <Modal.Header>{header}</Modal.Header>}
         <Modal.Content>
           {children}
         </Modal.Content>

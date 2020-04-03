@@ -2,12 +2,17 @@ import { Side } from "./battle"
 import { ArmyType } from "./armies"
 import { CountryName } from "./countries"
 import { UnitType } from "./units"
+import { TerrainType } from "./terrains"
+import { TacticType } from "./tactics"
 
 export enum ModalType {
   DiceRolls = 'DiceRolls',
   CohortSelector = 'CohortSelector',
   CohortDetail = 'CohortDetail',
-  UnitDetail = 'UnitDetail'
+  UnitDetail = 'UnitDetail',
+  TerrainDetail = 'TerrainDetail',
+  TacticDetail = 'TacticDetail',
+  Value = 'Value'
 }
 
 export type Modals = {
@@ -28,5 +33,17 @@ export type Modals = {
     country: CountryName,
     type: UnitType,
     remove?: boolean
+  }
+  [ModalType.TerrainDetail]?: {
+    type: TerrainType
+  }
+  [ModalType.TacticDetail]?: {
+    type: TacticType
+  }
+  [ModalType.Value]?: {
+    onSuccess: (value: string) => void
+    message: string
+    button_message: string
+    initial: string
   }
 }

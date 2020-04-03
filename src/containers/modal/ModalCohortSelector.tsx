@@ -28,7 +28,7 @@ class ModalCohortSelector extends Component<IProps> {
     if (country)
       selectCohort(country, type, row, column, { id: getNextId(), type: unit })
     invalidate()
-    closeModal(ModalType.CohortSelector)
+    closeModal()
   }
 }
 

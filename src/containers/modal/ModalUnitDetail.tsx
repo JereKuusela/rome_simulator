@@ -58,7 +58,7 @@ class ModalUnitDetail extends Component<IProps> {
   remove = () => {
     const { country, deleteUnit, invalidate, unit_type, closeModal } = this.props
     deleteUnit(country, unit_type)
-    closeModal(ModalType.UnitDetail)
+    closeModal()
     invalidate()
   }
 

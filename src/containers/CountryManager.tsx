@@ -2,17 +2,15 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Dropdown from 'components/Dropdowns/Dropdown'
 import ValueDropdownModal from 'components/ValueDropdownModal'
-import ValueModal from 'components/ValueModal'
 import { AppState } from 'state'
 import { Grid, Button } from 'semantic-ui-react'
 import Confirmation from 'components/Confirmation'
-import { CountryName } from 'types'
+import { CountryName, ModalType } from 'types'
 import { keys } from 'utils'
-import { createCountry, changeCountryName, deleteCountry, selectCountry } from 'reducers'
+import { createCountry, changeCountryName, deleteCountry, selectCountry, openModal } from 'reducers'
 
 interface IState {
   open_create_country: boolean
-  open_edit_country: boolean
   open_delete_country: boolean
 }
 
@@ -23,11 +21,11 @@ class CountryManager extends Component<IProps, IState> {
     this.state = this.initialState
   }
 
-  initialState = { open_create_country: false, open_delete_country: false, open_edit_country: false }
+  initialState = { open_create_country: false, open_delete_country: false }
 
   render() {
     const { countries, selected_country, selectCountry, children } = this.props
-    const { open_create_country, open_edit_country, open_delete_country } = this.state
+    const { open_create_country, open_delete_country } = this.state
     return (
       <Grid>
         <ValueDropdownModal
@@ -41,14 +39,6 @@ class CountryManager extends Component<IProps, IState> {
           button_message='Create'
           value_label='Name '
           dropdown_label='Copy country: '
-        />
-        <ValueModal
-          open={open_edit_country}
-          onSuccess={this.changeCountryName}
-          onClose={this.onClose}
-          message='Rename country'
-          button_message='Edit'
-          initial={selected_country}
         />
         <Confirmation
           open={open_delete_country}
@@ -72,7 +62,7 @@ class CountryManager extends Component<IProps, IState> {
           {
             selected_country &&
             <Grid.Column>
-              <Button primary onClick={() => this.setState({ open_edit_country: true })}>
+              <Button primary onClick={this.openEditCountry}>
                 Rename country
               </Button>
             </Grid.Column>
@@ -97,6 +87,13 @@ class CountryManager extends Component<IProps, IState> {
       </Grid>
     )
   }
+
+  openEditCountry = () => this.props.openModal(ModalType.Value, {
+    onSuccess: country => this.changeCountryName(country as CountryName),
+    message: 'Rename country',
+    button_message: 'Edit',
+    initial: this.props.selected_country
+  })
 
   onClose = () => this.setState(this.initialState)
 
@@ -124,7 +121,7 @@ const mapStateToProps = (state: AppState) => ({
   countries: state.countries
 })
 
-const actions = { selectCountry, createCountry, changeCountryName, deleteCountry }
+const actions = { selectCountry, createCountry, changeCountryName, deleteCountry, openModal }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

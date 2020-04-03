@@ -3,10 +3,8 @@ import { Provider } from 'react-redux'
 import { Store } from 'redux'
 import { BrowserRouter, Route } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
-import Units from './pages/Units'
+import Definitions from './pages/Definitions'
 import Battle from './pages/Battle'
-import Tactics from './pages/Tactics'
-import Terrains from './pages/Terrains'
 import Navigation from './pages/Navigation'
 import Transfer from './pages/Transfer'
 import Countries from './pages/Countries'
@@ -35,9 +33,7 @@ const Root = ({ store, persistor }: MainProps) => {
               <Modals/>
               <Route path='/' component={Navigation} />
               <Route path='/' exact component={Battle} />
-              <Route path='/Units' component={Units} />
-              <Route path='/Tactics' component={Tactics} />
-              <Route path='/Terrains' component={Terrains} />
+              <Route path='/Definitions' component={Definitions} />
               <Route path='/Analyze' component={Analyze} />
               <Route path='/Transfer' component={Transfer} />
               <Route path='/Countries' component={process.env.REACT_APP_GAME === 'euiv' ? CountriesEUIV : Countries} />

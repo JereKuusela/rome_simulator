@@ -61,7 +61,7 @@ export default class UnitDetail extends Component<IProps> {
           {mode && <DetailTextRow text='Mode' cells={this.CELLS} value={mode} />}
           {settings[Setting.Culture] && culture && <DetailTextRow text='Culture' cells={this.CELLS} value={culture} />}
           {settings[Setting.Tech] && tech && <DetailTextRow text='Tech' cells={this.CELLS} value={tech} />}
-          {parent && unit_types_with_parent && onParentChange && <DetailDropdownRow text='Base type' cells={this.CELLS} value={parent} values={unit_types_with_parent} onChange={onParentChange} />}
+          {parent && unit_types_with_parent && onParentChange && <DetailDropdownRow text='Parent' cells={this.CELLS} value={parent} values={unit_types_with_parent} onChange={onParentChange} />}
           {onImageChange && <DetailInputRow text='Image' cells={this.CELLS} value={image} onChange={onImageChange} />}
           {onChangeDeployment && role && <DetailDropdownRow text='Deployment' cells={this.CELLS} value={role} values={this.deployments} onChange={onChangeDeployment} />}
           {settings[Setting.AttributeLoyal] && <DetailToggleRow text='Is loyal?' cells={this.CELLS} value={!!is_loyal} onChange={onIsLoyalToggle} />}

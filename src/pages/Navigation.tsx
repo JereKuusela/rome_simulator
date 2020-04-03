@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { AppState, getMode, getSiteSettings } from 'state'
+import { AppState, getMode } from 'state'
 import { toggleMode } from 'reducers'
 import { Menu, Image, Button } from 'semantic-ui-react'
 import IconLand from 'images/land_combat.png'
 import IconNaval from 'images/naval_combat.png'
-import { Mode, Setting } from 'types'
+import { Mode } from 'types'
 
 interface Props { }
 
@@ -15,7 +15,7 @@ interface Props { }
 class Navigation extends Component<IProps> {
 
   render() {
-    const { settings, mode, toggleMode } = this.props
+    const { mode, toggleMode } = this.props
     const path = (this.props as any).location.pathname
     const history = (this.props as any).history
     return (
@@ -30,18 +30,9 @@ class Navigation extends Component<IProps> {
           <Menu.Item active={path === '/countries'} onClick={() => history.push('/countries')}>
             Countries
           </Menu.Item>
-          <Menu.Item active={path === '/units'} onClick={() => history.push('/units')}>
-            Units
+          <Menu.Item active={path === '/definitions'} onClick={() => history.push('/definitions')}>
+            Definitions
           </Menu.Item>
-          <Menu.Item active={path === '/terrains'} onClick={() => history.push('/terrains')}>
-            Terrains
-          </Menu.Item>
-          {
-            settings[Setting.Tactics] &&
-            <Menu.Item active={path === '/tactics'} onClick={() => history.push('/tactics')}>
-              Tactics
-            </Menu.Item>
-          }
           <Menu.Item active={path === '/settings'} onClick={() => history.push('/settings')}>
             Settings
           </Menu.Item>
@@ -70,8 +61,7 @@ class Navigation extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  mode: getMode(state),
-  settings: getSiteSettings(state)
+  mode: getMode(state)
 })
 
 const actions = { toggleMode }

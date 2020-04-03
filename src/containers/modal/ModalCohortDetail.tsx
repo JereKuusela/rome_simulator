@@ -46,7 +46,7 @@ class ModalCohortDetail extends Component<IProps> {
     const { id, country, deleteCohort, invalidate, closeModal } = this.props
     deleteCohort(country, id)
     invalidate()
-    closeModal(ModalType.CohortDetail)
+    closeModal()
   }
 
   setBaseValue = (key: string, attribute: UnitValueType, value: number) => {

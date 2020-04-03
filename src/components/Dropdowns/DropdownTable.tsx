@@ -32,7 +32,7 @@ export default class DropdownTable<T extends string> extends Component<IProps<T>
   render() {
     const { value, values, headers, trigger } = this.props
     return (
-      <Dropdown text={value} value={value} scrolling trigger={trigger}>
+      <Dropdown text={trigger ? undefined: value} value={value} scrolling trigger={trigger}>
         <Dropdown.Menu>
           <Table selectable celled>
             {headers.length ? this.getHeader() : null}
