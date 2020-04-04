@@ -17,7 +17,7 @@ export enum Setting {
   Precision = 'Calculation precision',
   CombatWidth = 'Base combat width',
   DefenderAdvantage = 'Defender\'s advantage',
-  DisciplineDamageReduction = 'Discipline also reduces damage',
+  AttributeDiscipline = 'Enable discipline',
   DailyMoraleLoss = 'Daily morale loss',
   DailyDamageIncrease = 'Daily damage increase',
   FixExperience = 'Fix damage reduction from experience',
@@ -69,6 +69,12 @@ export enum SimulationSpeed {
   Normal = 'Normal',
   Fast = 'Fast',
   VeryFast = 'Very fast'
+}
+
+export enum DisciplineValue {
+  Off = 'Disabled',
+  Damage = 'Only damage done',
+  Both = 'Both damage done and taken'
 }
 
 export const parameterToDescription = (parameter: Setting, value: string | number | boolean): string => {
@@ -161,11 +167,13 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Every 25% of lost strength reduces maneuveur by 25% (EUIV).'
       else
         return 'Cohort strength has no effect on maneuver (Imperator).'
-    case Setting.DisciplineDamageReduction:
-      if (value)
-        return 'Discipline increases damage done and reduces damage taken (EUIV).'
-      else
+    case Setting.AttributeDiscipline:
+      if (value === DisciplineValue.Damage)
         return 'Discipline only increases damage done (Imperator).'
+      else if (value === DisciplineValue.Both)
+        return 'Discipline increaes damage done and reduces damage taken (EUIV).'
+      else
+        return 'Discipline has no effect.'
     case Setting.UseMaxMorale:
       if (value)
         return 'Morale damage is based on the maximum morale (EUIV).'
@@ -339,7 +347,7 @@ export type SiteSettings = {
   [Setting.UseMaxMorale]: boolean,
   [Setting.StrengthBasedFlank]: boolean,
   [Setting.InsufficientSupportPenalty]: number,
-  [Setting.DisciplineDamageReduction]: boolean,
+  [Setting.AttributeDiscipline]: DisciplineValue,
   [Setting.FireAndShock]: boolean,
   [Setting.SupportPhase]: boolean,
   [Setting.DailyMoraleLoss]: number,

@@ -1,4 +1,4 @@
-import { Mode, CombatSettings, Setting, SiteSettings, SimulationSpeed, CountryName, SettingsAndOptions } from 'types'
+import { Mode, CombatSettings, Setting, SiteSettings, SimulationSpeed, CountryName, SettingsAndOptions, DisciplineValue } from 'types'
 
 export const getDefaultSettings = (): SettingsAndOptions => ({
   combatSettings: { [Mode.Land]: getDefaultLandSettings(), [Mode.Naval]: getDefaultNavalSettings() },
@@ -61,7 +61,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.DynamicTargeting]: true,
       [Setting.BackRowRetreat]: false,
       [Setting.StrengthBasedFlank]: true,
-      [Setting.DisciplineDamageReduction]: true,
+      [Setting.AttributeDiscipline]: DisciplineValue.Both,
       [Setting.DailyMoraleLoss]: 0.03,
       [Setting.DailyDamageIncrease]: 0.01,
       [Setting.UseMaxMorale]: true,
@@ -133,7 +133,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.CalculateCasualties]: true,
       [Setting.CalculateResourceLosses]: true,
       [Setting.ShowGraphs]: false,
-      [Setting.DisciplineDamageReduction]: false,
+      [Setting.AttributeDiscipline]: DisciplineValue.Damage,
       [Setting.DailyMoraleLoss]: 0,
       [Setting.DailyDamageIncrease]: 0,
       [Setting.UseMaxMorale]: false,

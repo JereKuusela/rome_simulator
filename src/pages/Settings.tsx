@@ -6,7 +6,7 @@ import { AppState, getMode } from 'state'
 
 import Dropdown from 'components/Dropdowns/Dropdown'
 import { toArr, keys, values, filterKeys } from 'utils'
-import { Mode, Setting, parameterToDescription, SimulationSpeed, CombatSettings, SiteSettings } from 'types'
+import { Mode, Setting, parameterToDescription, SimulationSpeed, CombatSettings, SiteSettings, DisciplineValue } from 'types'
 import { changeCombatParameter, changeSiteParameter, invalidate } from 'reducers'
 import { getDefaultSiteSettings, getDefaultLandSettings } from 'data'
 
@@ -31,7 +31,7 @@ const damage = [
 const attributes = [
   Setting.AttributeCombatAbility, Setting.AttributeDamage, Setting.AttributeUnitType, Setting.AttributeTerrainType, Setting.AttributeStrengthDamage,
   Setting.AttributeMoraleDamage, Setting.AttributeOffenseDefense, Setting.AttributeMilitaryTactics, Setting.AttributeExperience, Setting.AttributeDrill,
-  Setting.DisciplineDamageReduction
+  Setting.AttributeDiscipline
 ]
 
 const defaultSettings = { ...getDefaultLandSettings(), ...getDefaultSiteSettings() }
@@ -143,6 +143,16 @@ class Settings extends Component<IProps> {
           value={value}
           style={{ width: 100 }}
           values={values(SimulationSpeed)}
+          onChange={value => onChange(key, value)}
+        />
+      )
+    }
+    if (key === Setting.AttributeDiscipline) {
+      return (
+        <Dropdown
+          value={value}
+          style={{ width: 200 }}
+          values={values(DisciplineValue)}
           onChange={value => onChange(key, value)}
         />
       )

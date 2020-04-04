@@ -4,7 +4,7 @@ import { Popup, List } from 'semantic-ui-react'
 
 import StyledNumber from 'components/Utils/StyledNumber'
 
-import { Side, ArmyType, UnitAttribute, UnitType, Setting, TacticCalc, TerrainType, CombatPhase, Mode, CombatCohortDefinition, CombatCohortRoundInfo, CombatCohort } from 'types'
+import { Side, ArmyType, UnitAttribute, UnitType, Setting, TacticCalc, TerrainType, CombatPhase, Mode, CombatCohortDefinition, CombatCohortRoundInfo, CombatCohort, DisciplineValue } from 'types'
 import { calculateCohortPips, getOffensiveCohortPips, getDefensiveCohortPips, getCombatPhase, getDailyIncrease, getDefensiveSupportCohortPips } from 'combat'
 import { toSignedPercent, strengthToValue, toNumber, addSign, toMultiplier, toMorale } from 'formatters'
 import { calculateValue } from 'definition_values'
@@ -139,12 +139,12 @@ class CombatTooltip extends Component<IProps, IState> {
       {this.renderStyledItem('Tactic', tactic_bonus, toSignedPercent)}
       {this.renderStyledItem('Enemy insufficient support', flank_ratio_bonus, toSignedPercent)}
       {this.renderStyledItem('Loyal', is_loyal ? 0.1 : 0, toSignedPercent)}
-      {this.getAttribute(source, UnitAttribute.Discipline)}
+      {settings[Setting.AttributeDiscipline] !== DisciplineValue.Off && this.getAttribute(source, UnitAttribute.Discipline)}
       {settings[Setting.AttributeDamage] && this.getAttribute(source, UnitAttribute.DamageDone)}
       {settings[Setting.AttributeCombatAbility] && this.getAttribute(source, UnitAttribute.CombatAbility)}
       {this.renderStyledItem(target.type, target_type, toSignedPercent)}
       {this.renderStyledItem('Offense vs Defense', offense_vs_defense, toSignedPercent)}
-      {settings[Setting.DisciplineDamageReduction] && this.renderStyledItem('Target discipline', 1 / noZero(target[UnitAttribute.Discipline] + 1) - 1, toSignedPercent)}
+      {settings[Setting.AttributeDiscipline] === DisciplineValue.Both && this.renderStyledItem('Target discipline', 1 / noZero(target[UnitAttribute.Discipline] + 1) - 1, toSignedPercent)}
       {this.renderStyledItem('Enemy experience', experience_reduction, toSignedPercent)}
       {settings[Setting.AttributeDamage] && this.getAttribute(target, UnitAttribute.DamageTaken)}
       {terrain_types.map(terrain => this.getAttribute(source, terrain))}

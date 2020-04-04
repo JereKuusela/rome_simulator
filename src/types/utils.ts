@@ -1,7 +1,7 @@
 
 import { CombatPhase, GeneralAttribute, CountryAttribute, UnitAttribute, Setting, Mode, ValuesType } from 'types'
 import { toPercent } from 'formatters'
-import { SiteSettings } from './settings'
+import { SiteSettings, DisciplineValue } from './settings'
 
 export const formatAttribute = (value: number, attribute: string) => {
   if (attribute === CountryAttribute.CombatWidth || attribute in GeneralAttribute || attribute in CombatPhase)
@@ -55,6 +55,8 @@ export const isAttributeEnabled = (attribute: string, settings: SiteSettings, mo
   if (!settings[Setting.InsufficientSupportPenalty] && attribute === CountryAttribute.FlankRatio)
     return false
   if (attribute === CombatPhase.Default)
+    return false
+  if (settings[Setting.AttributeDiscipline] === DisciplineValue.Off && attribute === UnitAttribute.Discipline)
     return false
   return true
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Image, Popup, Header } from 'semantic-ui-react'
-import { UnitAttribute, Mode, CombatPhase, CountryAttribute, SiteSettings, isAttributeEnabled, Setting } from 'types'
+import { UnitAttribute, Mode, CombatPhase, CountryAttribute, SiteSettings, isAttributeEnabled, Setting, DisciplineValue } from 'types'
 
 import IconDiscipline from 'images/discipline.png'
 import IconOffense from 'images/offense.png'
@@ -113,7 +113,7 @@ const getExplanation = (attribute: string, settings: SiteSettings, mode?: Mode) 
     case CombatPhase.Shock:
       return attribute
     case UnitAttribute.Discipline:
-      return settings[Setting.DisciplineDamageReduction] ? 'Increases damage done and reduces damage taken' : 'Increases damage'
+      return settings[Setting.AttributeDiscipline] === DisciplineValue.Both ? 'Increases damage done and reduces damage taken' : 'Increases damage'
     default:
       return null
   }

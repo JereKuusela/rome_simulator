@@ -1,6 +1,6 @@
 
 import { sumBy, values } from 'lodash'
-import { TacticDefinition, TerrainDefinition, UnitType, Cohort, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, UnitValueType, CombatCohorts, CombatCohort, CombatCohortCalculated, CombatCohortDefinition, CombatParticipant, CombatFrontline, CombatDefeated } from 'types'
+import { TacticDefinition, TerrainDefinition, UnitType, Cohort, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, UnitValueType, CombatCohorts, CombatCohort, CombatCohortCalculated, CombatCohortDefinition, CombatParticipant, CombatFrontline, CombatDefeated, DisciplineValue } from 'types'
 import { toObj, map, noZero } from 'utils'
 import { calculateValue, calculateValueWithoutLoss, calculateBase } from 'definition_values'
 import { calculateExperienceReduction, getCombatPhase, calculateCohortPips, getDailyIncrease } from './combat_utils'
@@ -132,8 +132,8 @@ export const doBattleFast = (a: CombatParticipant, d: CombatParticipant, mark_de
   a.round = round
   d.round = round
   const daily_multiplier = 1 + getDailyIncrease(round, settings)
-  a.tactic_bonus = calculateTactic(a.cohorts, a.tactic, d.tactic)
-  d.tactic_bonus = calculateTactic(d.cohorts, d.tactic, a.tactic)
+  a.tactic_bonus = settings[Setting.Tactics] ? calculateTactic(a.cohorts, a.tactic, d.tactic) : 0.0
+  d.tactic_bonus = settings[Setting.Tactics] ? calculateTactic(d.cohorts, d.tactic, a.tactic) : 0.0
   a.flank_ratio_bonus = calculateFlankRatioPenalty(d.cohorts, d.flank_ratio, settings)
   d.flank_ratio_bonus = calculateFlankRatioPenalty(a.cohorts, a.flank_ratio, settings)
   const multiplier_a = (1 + a.tactic_bonus) * daily_multiplier * (1 + a.flank_ratio_bonus)
@@ -344,7 +344,7 @@ const attack = (frontline: CombatFrontline, roll: number, dynamic_multiplier: nu
 
 const precalculateDamage = (terrains: TerrainDefinition[], unit: Cohort, settings: Settings) => (
   settings[Setting.Precision]
-  * getValue(unit, UnitAttribute.Discipline, true)
+  * getValue(unit, UnitAttribute.Discipline, settings[Setting.AttributeDiscipline] === DisciplineValue.Both || settings[Setting.AttributeDiscipline] === DisciplineValue.Damage)
   * getValue(unit, UnitAttribute.CombatAbility, settings[Setting.AttributeCombatAbility])
   * getValue(unit, UnitAttribute.DamageDone, settings[Setting.AttributeDamage])
   * (1.0 + sumBy(terrains, terrain => getMultiplier(unit, terrain.type, settings[Setting.AttributeTerrainType])))
@@ -354,7 +354,7 @@ const precalculateDamage = (terrains: TerrainDefinition[], unit: Cohort, setting
 const precalculateDamageReduction = (unit: Cohort, settings: Settings) => (
   (settings[Setting.AttributeExperience] ? 1.0 + calculateExperienceReduction(settings, unit) : 1.0)
   * getValue(unit, UnitAttribute.DamageTaken, settings[Setting.AttributeDamage])
-  / noZero(getValue(unit, UnitAttribute.Discipline, settings[Setting.DisciplineDamageReduction]))
+  / noZero(getValue(unit, UnitAttribute.Discipline, settings[Setting.AttributeDiscipline] === DisciplineValue.Both))
   / noZero(getMultiplier(unit, UnitAttribute.MilitaryTactics, settings[Setting.AttributeMilitaryTactics]))
 )
 

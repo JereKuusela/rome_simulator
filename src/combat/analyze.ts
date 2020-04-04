@@ -1,7 +1,7 @@
-import { TerrainDefinition, UnitType, Setting, UnitAttribute, Side, Settings, Cohorts, UnitPreferences, ResourceLosses, WinRateProgress, CasualtiesProgress, ResourceLossesProgress, CombatParticipant, CombatCohorts, CombatUnitTypes, SortedReserve, CombatFrontline, CombatDefeated } from 'types'
-import { getCombatUnit, doBattleFast } from './combat'
+import { Setting, UnitAttribute, Side, Settings, ResourceLosses, WinRateProgress, CasualtiesProgress, ResourceLossesProgress, CombatParticipant, CombatCohorts, CombatUnitTypes, SortedReserve, CombatFrontline, CombatDefeated } from 'types'
+import { doBattleFast } from './combat'
 import { mapRange } from 'utils'
-import { deploy, sortReserve, reserveSize } from './deployment'
+import { deploy, reserveSize } from './deployment'
 
 export const initResourceLosses = (): ResourceLosses => ({
   repair_maintenance: 0,
@@ -153,14 +153,6 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
   const worker = () => setTimeout(work, 0)
   worker()
 }
-
-export const convertCohorts = (cohorts: Cohorts, settings: Settings, casualties_multiplier: number, terrains: TerrainDefinition[], unit_types: UnitType[], unit_preferences: UnitPreferences): CombatCohorts => ({
-  frontline: cohorts.frontline.map(row => row.map(cohort => getCombatUnit(settings, casualties_multiplier, terrains, unit_types, cohort))),
-  reserve: sortReserve(cohorts.reserve.map(cohort => getCombatUnit(settings, casualties_multiplier, terrains, unit_types, cohort)!), unit_preferences),
-  defeated: cohorts.defeated.map(cohort => getCombatUnit(settings, casualties_multiplier, terrains, unit_types, cohort)!),
-  left_flank: 0,
-  right_flank: 0
-})
 
 /** Returns an array of valid dice numbers. */
 const getValidRolls = (minimum: number, maximum: number, halve_times: number) => {
