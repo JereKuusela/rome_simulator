@@ -7,6 +7,7 @@ Changelog:
   - Improved unit definition modal: Information about unit definition and parent unit definition are now shrunk to make the "Explained" column easier to read.
   - Improved navigation: Units, Terrains and Tactics pages merged under Definitions page to indicate that they aren't the primary way to apply modifiers.
   - Added dropdown setting for Discipline (Off, Only damage done, Both damage done and taken).
+  - Changed default analyze settings to be faster.
 
 Testing:
   - Added unit tests to verify that most mechanics works as intended.
@@ -22,11 +23,12 @@ Tests:
 Mechanics:
  - Stack wipe. Destroyed the whole army.
   * IR: 10/1 rule checked at fight start and fight end. One side must have more than 10x strength of the enemy.
-  * IR: If defender is defeated before 6th round.
-  * IR: If attacker is defeated before 3th round.
-  * IR: If both would stackwipe, attacker wins.
+  * IR: If retreat is not possible and winner has more than 2x strength of the enemy. Otherwise will retreat anyways.
+  * IR: If nothing deploys.
+  * IR: If both would stackwipe, attacker wins (defender checked first).
   * EU4: 10/1 rule checked at fight start. Maybe fight end too.
   * EU4: If defender loses before 12th round.
+  * EU4: Stack wipe from no retreat probably only happen if 2/1 ratio is met!
 
 UI:
  - Merge Unit, Tactic and Terrain definition to a same page (with tabs): These pages are given too much emphasis considering their low priority.
