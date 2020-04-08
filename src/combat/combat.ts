@@ -3,7 +3,7 @@ import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPha
 import { noZero } from 'utils'
 import { calculateValue } from 'definition_values'
 import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, calculateTotalStrength, stackWipe } from './combat_utils'
-import { reinforce } from './deployment'
+import { reinforce, reserveSize } from './deployment'
 
 /**
  * Makes given armies attach each other.
@@ -38,8 +38,8 @@ export const doBattle = (a: CombatParticipant, d: CombatParticipant, mark_defeat
 
   applyLosses(a.cohorts.frontline)
   applyLosses(d.cohorts.frontline)
-  a.alive = moveDefeated(a.cohorts.frontline, a.cohorts.defeated, mark_defeated, round, settings)
-  d.alive = moveDefeated(d.cohorts.frontline, d.cohorts.defeated, mark_defeated, round, settings)
+  a.alive = moveDefeated(a.cohorts.frontline, a.cohorts.defeated, mark_defeated, round, settings) || reserveSize(a.cohorts.reserve) > 0
+  d.alive = moveDefeated(d.cohorts.frontline, d.cohorts.defeated, mark_defeated, round, settings) || reserveSize(d.cohorts.reserve) > 0
   if (settings[Setting.Stackwipe] && !d.alive)
     checkHardStackWipe(d.cohorts, a.cohorts, settings, round < settings[Setting.StackwipeRounds])
   else if (settings[Setting.Stackwipe] && !a.alive)
