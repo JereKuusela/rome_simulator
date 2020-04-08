@@ -1,7 +1,7 @@
-import { Setting, UnitAttribute, Side, Settings, ResourceLosses, WinRateProgress, CasualtiesProgress, ResourceLossesProgress, CombatParticipant, CombatCohorts, CombatUnitTypes, SortedReserve, CombatFrontline, CombatDefeated } from 'types'
-import { doBattleFast } from './combat'
+import { Setting, UnitAttribute, Side, Settings, ResourceLosses, WinRateProgress, CasualtiesProgress, ResourceLossesProgress, CombatParticipant, CombatCohorts, CombatUnitTypes, CombatFrontline, CombatDefeated } from 'types'
+import { doBattle } from './combat'
 import { mapRange } from 'utils'
-import { deploy, reserveSize } from './deployment'
+import { deploy } from './deployment'
 
 export const initResourceLosses = (): ResourceLosses => ({
   repair_maintenance: 0,
@@ -32,7 +32,6 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
     calculating: true,
     attacker: 0.0,
     defender: 0.0,
-    draws: 0.0,
     incomplete: 0.0,
     progress: 0.0,
     iterations: 0,
@@ -56,9 +55,6 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
   const maxDepth = settings[Setting.MaxDepth]
   const fractions = mapRange(maxDepth + 1, value => 1.0 / Math.pow(dice_2, value))
 
-  // Deployment is shared for each iteration.
-  deploy(attacker, defender, settings)
-
   const total_a: State = { morale: 0, strength: 0 }
   const current_a: State = { morale: 0, strength: 0 }
   sumState(total_a, attacker.cohorts)
@@ -80,6 +76,9 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
     strength_a: {},
     strength_d: {}
   }
+
+  // Deployment is shared for each iteration.
+  deploy(attacker, defender, settings)
 
   // Overview of the algorithm:
   // Initial state is the first node.
@@ -243,7 +242,7 @@ const calculateResourceLoss = (frontline: CombatFrontline, defeated: CombatDefea
 }
 
 
-type Winner = Side | null | undefined
+type Winner = Side | undefined
 
 /**
  * Simulates one dice roll phase.
@@ -252,35 +251,16 @@ const doPhase = (depth: number, rounds_per_phase: number, attacker: CombatPartic
   let winner: Winner = undefined
   let round = 1
   for (; round <= rounds_per_phase; round++) {
-    doBattleFast(attacker, defender, false, settings, round + (depth - 1) * rounds_per_phase)
-    const alive_a = checkAlive(attacker.cohorts.frontline, attacker.cohorts.reserve)
-    const alive_d = checkAlive(defender.cohorts.frontline, defender.cohorts.reserve)
-    if (!alive_a && !alive_d)
-      winner = null
-    if (alive_a && !alive_d)
+    doBattle(attacker, defender, false, settings, round + (depth - 1) * rounds_per_phase)
+    if (!defender.alive)
       winner = Side.Attacker
-    if (!alive_a && alive_d)
+    else if (!attacker.alive)
       winner = Side.Defender
     // Custom check to prevent round going over phase limit.
     if (winner !== undefined || round === rounds_per_phase)
       break
   }
   return { winner, round: round + (depth - 1) * rounds_per_phase }
-}
-
-/**
- * Custom some function. Probably could use Lodash but better safe than sorry (since performance is so critical).
- */
-const checkAlive = (frontline: CombatFrontline, reserve: SortedReserve) => {
-  if (reserveSize(reserve))
-    return true
-  for (let row = 0; row < frontline.length; row++) {
-    for (let column = 0; column < frontline[row].length; column++) {
-      if (frontline[row][column])
-        return true
-    }
-  }
-  return false
 }
 
 type State = {
@@ -335,8 +315,6 @@ const updateProgress = (progress: WinRateProgress, amount: number, result: { win
     progress.attacker += amount
   else if (winner === Side.Defender)
     progress.defender += amount
-  else if (winner === null)
-    progress.draws += amount
   else
     progress.incomplete += amount
   progress.average_rounds += amount * round

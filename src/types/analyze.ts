@@ -5,7 +5,6 @@ export interface WinRateProgress {
   calculating: boolean
   attacker: number
   defender: number
-  draws: number
   incomplete: number
   progress: number
   iterations: number

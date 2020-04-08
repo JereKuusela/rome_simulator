@@ -7,10 +7,16 @@ Changelog:
   - Improved unit definition modal: Information about unit definition and parent unit definition are now shrunk to make the "Explained" column easier to read.
   - Improved navigation: Units, Terrains and Tactics pages merged under Definitions page to indicate that they aren't the primary way to apply modifiers.
   - Added dropdown setting for Discipline (Off, Only damage done, Both damage done and taken).
+  - Added new tab for stack wipe settings: On/Off, round limit for "soft" wipe, limits for "soft" and "hard" wipes.
   - Changed default analyze settings to be faster.
+
+Combat:
+  - Morale and strength no longer go below zero. This fixes slightly inflated losses on Analyze tool.
+  - Added checks for different stack wipes (no deploy, 10/1 limit, 2/1 limit on no retreat).
 
 Testing:
   - Added unit tests to verify that most mechanics works as intended.
+  - Added unit tests to verify stack wipe mechanics.
 
 TODO:
 
@@ -20,18 +26,7 @@ Tests:
   * This verifies that the mechanics settings work as intended.
   * This verifies that the tooltip matches actual result.
 
-Mechanics:
- - Stack wipe. Destroyed the whole army.
-  * IR: 10/1 rule checked at fight start and fight end. One side must have more than 10x strength of the enemy.
-  * IR: If retreat is not possible and winner has more than 2x strength of the enemy. Otherwise will retreat anyways.
-  * IR: If nothing deploys.
-  * IR: If both would stackwipe, attacker wins (defender checked first).
-  * EU4: 10/1 rule checked at fight start. Maybe fight end too.
-  * EU4: If defender loses before 12th round.
-  * EU4: Stack wipe from no retreat probably only happen if 2/1 ratio is met!
-
 UI:
- - Merge Unit, Tactic and Terrain definition to a same page (with tabs): These pages are given too much emphasis considering their low priority.
  - Togglable stats rows to show individual units or hide unit types.
  - Unit tooltip should somehow show sources for losses (to include daily loss from EUIV and damage from different units).
  - Unit type selector should automatically upgrade/downgrade selected unit to a similar unit. Up to 4 choices but with no clear typing. Also remove Latest. + Setting for this.

@@ -1,6 +1,6 @@
 import { AppState, getMode, getCurrentCombat, getSettings, getCombatParticipant, initializeCombatParticipants } from 'state'
-import { deploy, doBattleFast, removeDefeated, reserveSize, getCombatPhaseNumber } from 'combat'
-import { Battle, Side, Setting, Participant, Settings, CombatCohorts, CombatParticipant, CombatFrontline, SortedReserve } from 'types'
+import { deploy, doBattle, removeDefeated, getCombatPhaseNumber } from 'combat'
+import { Battle, Side, Setting, Participant, Settings, CombatCohorts, CombatParticipant } from 'types'
 import { createEntropy, MersenneTwister19937, Random } from 'random-js'
 
 const copyStatus = (status: CombatCohorts): CombatCohorts => ({
@@ -17,9 +17,7 @@ const copyStatus = (status: CombatCohorts): CombatCohorts => ({
 
 const copy = (participant: CombatParticipant): CombatParticipant => ({ ...participant, cohorts: copyStatus(participant.cohorts) })
 
-const checkAlive = (frontline: CombatFrontline, reserve: SortedReserve) => reserveSize(reserve) || frontline.some(row => row.some(value => value && !value.state.is_defeated))
-
-const doBattle = (state: AppState, battle: Battle, attacker: CombatParticipant, defender: CombatParticipant, settings: Settings, steps: number) => {
+const subBattle = (state: AppState, battle: Battle, attacker: CombatParticipant, defender: CombatParticipant, settings: Settings, steps: number) => {
 
   const participant_a = battle.participants[Side.Attacker]
   const participant_d = battle.participants[Side.Defender]
@@ -58,7 +56,7 @@ const doBattle = (state: AppState, battle: Battle, attacker: CombatParticipant, 
     battle.participants[Side.Defender].rounds = [defender]
     attacker = copy(attacker)
     defender = copy(defender)
-    battle.fight_over = !checkAlive(attacker.cohorts.frontline, attacker.cohorts.reserve) || !checkAlive(defender.cohorts.frontline, defender.cohorts.reserve)
+    battle.fight_over = !attacker.alive || !defender.alive
   } else {
     attacker.cohorts = copyStatus(getCurrentCombat(state, Side.Attacker))
     defender.cohorts = copyStatus(getCurrentCombat(state, Side.Defender))
@@ -81,9 +79,9 @@ const doBattle = (state: AppState, battle: Battle, attacker: CombatParticipant, 
     attacker.dice = rollDice(participant_a) ?? attacker.dice
     defender.dice = rollDice(participant_d) ?? defender.dice
 
-    doBattleFast(attacker, defender, true, settings, battle.round)
+    doBattle(attacker, defender, true, settings, battle.round)
 
-    battle.fight_over = !checkAlive(attacker.cohorts.frontline, attacker.cohorts.reserve) || !checkAlive(defender.cohorts.frontline, defender.cohorts.reserve)
+    battle.fight_over = !attacker.alive || !defender.alive
     if (battle.fight_over) {
       removeDefeated(attacker.cohorts.frontline)
       removeDefeated(defender.cohorts.frontline)
@@ -101,7 +99,7 @@ export const battle = (pair: [AppState, AppState], steps: number) => {
   const mode = getMode(state)
   const battle = draft.battle[mode]
   const settings = getSettings(state, mode)
-  doBattle(state, battle, getCombatParticipant(state, Side.Attacker), getCombatParticipant(state, Side.Defender), settings, steps)
+  subBattle(state, battle, getCombatParticipant(state, Side.Attacker), getCombatParticipant(state, Side.Defender), settings, steps)
 }
 
 export const refreshBattle = (pair: [AppState, AppState]) => {
@@ -113,5 +111,5 @@ export const refreshBattle = (pair: [AppState, AppState]) => {
   battle.round = -1
   battle.fight_over = false
   const [attacker, defender] = initializeCombatParticipants(state)
-  doBattle(state, battle, attacker, defender, settings, steps)
+  subBattle(state, battle, attacker, defender, settings, steps)
 }

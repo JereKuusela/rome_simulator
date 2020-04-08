@@ -22,11 +22,14 @@ const deployment = [Setting.CustomDeployment, Setting.DynamicFlanking, Setting.M
 const mechanics = [
   Setting.FireAndShock, Setting.StrengthBasedFlank, Setting.UseMaxMorale, Setting.InsufficientSupportPenalty, Setting.RollFrequency, Setting.CombatWidth,
   Setting.ExperienceDamageReduction, Setting.FixExperience, Setting.DefenderAdvantage, Setting.FixTargeting, Setting.BackRow, Setting.Culture, Setting.AttributeLoyal,
-  Setting.Tactics, Setting.Tech, Setting.Martial, Setting.Food, Setting.RetreatRounds, Setting.BackRowRetreat, Setting.FixFlankTargeting, Setting.SupportPhase
+  Setting.Tactics, Setting.Tech, Setting.Martial, Setting.Food, Setting.FixFlankTargeting, Setting.SupportPhase
 ]
 const damage = [
   Setting.DailyMoraleLoss, Setting.DailyDamageIncrease, Setting.Precision, Setting.BasePips, Setting.MaxGeneral,
   Setting.MaxPips, Setting.DiceMinimum, Setting.DiceMaximum, Setting.MinimumMorale, Setting.MinimumStrength
+]
+const stackwipe = [
+  Setting.Stackwipe, Setting.StackwipeRounds, Setting.SoftStackWipeLimit, Setting.HardStackWipeLimit, Setting.RetreatRounds, Setting.BackRowRetreat
 ]
 const attributes = [
   Setting.AttributeCombatAbility, Setting.AttributeDamage, Setting.AttributeUnitType, Setting.AttributeTerrainType, Setting.AttributeStrengthDamage,
@@ -46,7 +49,8 @@ class Settings extends Component<IProps> {
       this.getMenuItem('Damage', damage),
       this.getMenuItem('Deployment', deployment),
       this.getModeMenuItem(),
-      this.getMenuItem('Mechanics', mechanics)
+      this.getMenuItem('Mechanics', mechanics),
+      this.getMenuItem('Stack wipe & Retreat', stackwipe)
     ]
     return (
       <Tab panes={panes} defaultActiveIndex={keys(combatSettings).findIndex(mode => mode === this.props.mode)} />

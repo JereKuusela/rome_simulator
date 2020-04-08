@@ -1,6 +1,6 @@
 
 import { sumBy } from 'lodash'
-import { TerrainDefinition, TerrainCalc, Setting, UnitAttribute, UnitDefinition, CombatPhase, GeneralAttribute, Side, LocationType, General, CombatCohortDefinition, SiteSettings } from 'types'
+import { TerrainDefinition, TerrainCalc, Setting, UnitAttribute, UnitDefinition, CombatPhase, GeneralAttribute, Side, LocationType, General, CombatCohortDefinition, SiteSettings, CombatCohorts, CombatCohort, CombatFrontline } from 'types'
 import { calculateValue } from 'definition_values'
 
 /**
@@ -48,7 +48,7 @@ export const getDefensiveCohortPips = (cohort: CombatCohortDefinition, type: Uni
 }
 
 export const getDefensiveSupportCohortPips = (cohort: CombatCohortDefinition | null, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
-  return cohort ?  Math.ceil(cohort[UnitAttribute.DefensiveSupport] * getDefensiveCohortPips(cohort, type, phase)) : 0
+  return cohort ? Math.ceil(cohort[UnitAttribute.DefensiveSupport] * getDefensiveCohortPips(cohort, type, phase)) : 0
 }
 
 export const calculateExperienceReduction = (settings: SiteSettings, target: UnitDefinition) => {
@@ -68,6 +68,80 @@ export const getCombatPhase = (round: number, settings: SiteSettings) => {
   return CombatPhase.Default
 }
 
-export const getCombatPhaseNumber = (round: number, settings: SiteSettings) => Math.ceil(round  / settings[Setting.RollFrequency])
+export const getCombatPhaseNumber = (round: number, settings: SiteSettings) => Math.ceil(round / settings[Setting.RollFrequency])
 
 export const getDailyIncrease = (round: number, settings: SiteSettings) => settings[Setting.DailyDamageIncrease] * round
+
+export const stackWipe = (cohorts: CombatCohorts) => {
+  const { frontline, reserve, defeated } = cohorts
+
+  for (let i = 0; i < defeated.length; i++) {
+    defeated[i][UnitAttribute.Strength] = 0
+    defeated[i][UnitAttribute.Morale] = 0
+
+  }
+
+  const removeFromReserve = (part: CombatCohort[]) => {
+    for (let i = 0; i < part.length; i++) {
+      const cohort = part[i]
+      cohort[UnitAttribute.Strength] = 0
+      cohort[UnitAttribute.Morale] = 0
+      defeated.push(cohort)
+    }
+    part.length = 0
+  }
+
+  for (let i = 0; i < frontline.length; i++) {
+    for (let j = 0; j < frontline[i].length; j++) {
+      const cohort = frontline[i][j]
+      if (!cohort)
+        continue
+      cohort[UnitAttribute.Strength] = 0
+      cohort[UnitAttribute.Morale] = 0
+      if (!cohort.state.is_defeated)
+        defeated.push(cohort)
+      frontline[i][j] = null
+    }
+  }
+  removeFromReserve(reserve.front)
+  removeFromReserve(reserve.flank)
+  removeFromReserve(reserve.support)
+}
+
+export const calculateTotalStrength = (cohorts: CombatCohorts) => {
+  let strength = 0.0
+  const addRatio = (cohorts: (CombatCohort | null)[]) => {
+    for (let i = 0; i < cohorts.length; i++) {
+      const cohort = cohorts[i]
+      if (!cohort || cohort.state.is_defeated)
+        continue
+      strength += cohort[UnitAttribute.Strength]
+    }
+  }
+  iterateCohorts(cohorts, addRatio)
+  return strength
+}
+
+export const iterateCohorts = (cohorts: CombatCohorts, func: (cohorts: (CombatCohort | null)[]) => void) => {
+  for (let i = 0; i < cohorts.frontline.length; i++)
+    func(cohorts.frontline[i])
+  func(cohorts.reserve.front)
+  func(cohorts.reserve.flank)
+  func(cohorts.reserve.support)
+  func(cohorts.defeated)
+}
+
+/**
+ * Removes temporary defeated units from frontline.
+ */
+export const removeDefeated = (frontline: CombatFrontline) => {
+  for (let i = 0; i < frontline.length; i++) {
+    for (let j = 0; j < frontline[i].length; j++) {
+      const unit = frontline[i][j]
+      if (!unit)
+        continue
+      if (unit.state.is_defeated)
+        frontline[i][j] = null
+    }
+  }
+}

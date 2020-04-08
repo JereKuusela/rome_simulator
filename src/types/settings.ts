@@ -27,7 +27,11 @@ export enum Setting {
   BackRow = 'Enable backrow',
   BackRowRetreat = 'Enable retreating from backrow',
   RetreatRounds = 'Minimum rounds for retreat',
+  StackwipeRounds = 'Minimum rounds for soft stack wipe',
+  SoftStackWipeLimit = 'Strength required for soft stack wipe',
+  HardStackWipeLimit = 'Strength required for hard stack wipe',
   Tactics = 'Enable tactics',
+  Stackwipe = 'Enable stack wiping',
   Martial = 'Enable general martial',
   Tech = 'Enable tech based units',
   Food = 'Enable food attributes',
@@ -122,11 +126,22 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Only front row (Imperator).'
     case Setting.BackRowRetreat:
       if (value)
-        return 'Units from backrow can\'t retreat. (EUIV).'
+        return 'Units can retreat from backrow (EUIV).'
       else
-        return 'Units can retreat from backrow.'
+        return 'Units from backrow can\'t retreat.'
     case Setting.RetreatRounds:
       return 'How long the battle must last to enable retreat.'
+    case Setting.StackwipeRounds:
+      return 'How long the battle must last to disable soft stack wiping.'
+    case Setting.SoftStackWipeLimit:
+      return 'Strength multiplier for soft stack wiping.'
+    case Setting.HardStackWipeLimit:
+      return 'Strength multiplier for hard stack wiping.'
+    case Setting.Stackwipe:
+      if (value)
+        return 'Stacking wiping rules are checked (Imperator, EUIV).'
+      else
+        return 'Stack wiping is not possible.'
     case Setting.CustomDeployment:
       if (value)
         return 'Preferred unit types can be selected (Imperator).'
@@ -337,6 +352,10 @@ export type SiteSettings = {
   [Setting.BackRow]: boolean,
   [Setting.BackRowRetreat]: boolean,
   [Setting.RetreatRounds]: number,
+  [Setting.Stackwipe]: boolean,
+  [Setting.StackwipeRounds]: number,
+  [Setting.SoftStackWipeLimit]: number,
+  [Setting.HardStackWipeLimit]: number,
   [Setting.Tactics]: boolean,
   [Setting.Martial]: boolean,
   [Setting.Tech]: boolean,

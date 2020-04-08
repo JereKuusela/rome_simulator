@@ -20,6 +20,7 @@ export type CombatParticipant = {
   roll_pips: { [key in CombatPhase]: number }
   unit_preferences: UnitPreferences
   definitions: Units
+  alive: boolean
 }
 export type CombatFrontline = (CombatCohort | null)[][]
 export type CombatReserve = CombatCohort[]
@@ -71,7 +72,6 @@ export interface CombatCohortDefinition extends UnitCalcs {
   type: UnitType
   is_loyal: boolean
   experience: number
-  deployment: UnitRole
   max_strength: number
   max_morale: number
   experience_reduction: number

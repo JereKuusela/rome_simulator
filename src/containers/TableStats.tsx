@@ -154,7 +154,7 @@ class TableStats extends Component<IProps> {
     return `${toNumber(storage / consumption / 12)} years (${toNumber(storage)})`
   }
 
-  sum = (merged: CombatCohort[], getAttribute: (cohort: CombatCohort) => number): number => sumArr(merged, value => Math.max(0, getAttribute(value)))
+  sum = (merged: CombatCohort[], getAttribute: (cohort: CombatCohort) => number): number => sumArr(merged, getAttribute)
 
   // Flattens units to a single list. Also filters temporary 'defeated' units because they are copies of another unit.
   flatten = (cohorts: CombatCohorts, type?: UnitType): CombatCohort[] => (

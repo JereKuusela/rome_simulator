@@ -72,7 +72,8 @@ export const convertParticipant = (side: Side, army: ArmyForCombatConversion, en
     tactic_bonus: 0.0,
     round: 0,
     flank_ratio_bonus: 0.0,
-    definitions: army.definitions
+    definitions: army.definitions,
+    alive: true
   }
 }
 

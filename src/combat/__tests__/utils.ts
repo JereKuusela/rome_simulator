@@ -1,9 +1,10 @@
 import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultParticipant, getDefaultArmy, getDefaultUnit } from 'data'
-import { map, mapRange, resize, toObj } from 'utils'
+import { map, mapRange, resize, toObj, values } from 'utils'
 import { mergeValues } from 'definition_values'
-import { Mode, CountryName, Participant, TerrainDefinition, TacticType, Setting, Side, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, Settings, Cohort, CombatPhase, CultureType, General, GeneralAttribute, UnitPreferences, ArmyForCombatConversion, CombatCohort, CombatParticipant } from 'types'
-import { doBattleFast, deploy, reinforce } from 'combat'
+import { Mode, CountryName, Participant, TerrainDefinition, TacticType, Setting, Side, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, Settings, Cohort, CombatPhase, CultureType, General, GeneralAttribute, UnitPreferences, ArmyForCombatConversion, CombatCohort, CombatParticipant, UnitRole, DisciplineValue } from 'types'
+import { doBattle, deploy, reinforce } from 'combat'
 import { convertParticipant } from 'managers/battle'
+import { removeDefeated } from 'combat/combat_utils'
 
 const unitDefinitions = map(getDefaultUnits('' as CultureType), unit => mergeValues(unit, getDefaultUnit(UnitType.Land)))
 export const getDefinitions = () => ({ [CountryName.Country1]: unitDefinitions, [CountryName.Country2]: unitDefinitions })
@@ -14,6 +15,7 @@ const terrains = getDefaultTerrains()
  * Everything the combat tests might need to make tests convenient to write.
  */
 export interface TestInfo {
+  round: number
   attacker: Participant
   defender: Participant
   army_a: ArmyForCombatConversion
@@ -66,11 +68,25 @@ export const initInfo = () => {
     defender: getDefaultParticipant(CountryName.Country2),
     army_a: army(),
     army_d: army(),
-    round: 0,
+    round: 1,
     terrains: [],
     settings
   }
 }
+
+export const createCohort = (type: UnitType) => ({
+  type,
+  id: 1,
+  image: '',
+  mode: Mode.Land,
+  role: UnitRole.Front,
+  base_values: {
+    ...toObj(values(UnitType), type => type, () => ({ 'key': 0 })),
+    ...toObj(values(UnitAttribute), type => type, () => ({ 'key': 0 })),
+    ...toObj(values(TerrainType), type => type, () => ({ 'key': 0 })),
+    ...toObj(values(CombatPhase), type => type, () => ({ 'key': 0 }))
+  }
+})
 
 const errorPrefix = (identifier: string | number, side: Side, index: number) => (typeof identifier === 'number' ? 'Round ' : '') + identifier + ', ' + side + ' ' + index + ': '
 
@@ -233,7 +249,7 @@ export const every_type = [UnitType.Archers, UnitType.CamelCavalry, UnitType.Cha
  * Performs one combat round with a given test info.
  */
 const doRound = (info: TestInfo, a: CombatParticipant, d: CombatParticipant) => {
-  doBattleFast(a, d, false, info.settings, 1)
+  doBattle(a, d, true, info.settings, info.round++)
 }
 
 
@@ -265,25 +281,34 @@ export const testCombat = (info: TestInfo, rolls: number[][], attacker: Expected
       verifySide(round, Side.Defender, participant_d.cohorts.frontline[0], defender[round])
     }
   }
+  return [participant_a, participant_d]
 }
-export const testDeployment = (info: TestInfo, expected_a: ExpectedTypes, expected_d: ExpectedTypes) => {
+export const testDeployment = (info: TestInfo, expected_a?: ExpectedTypes, expected_d?: ExpectedTypes) => {
   const [participant_a, participant_d] = getParticipants(info)
   deploy(participant_a, participant_d, info.settings)
-  verifyDeployOrReinforce(info, Side.Attacker, participant_a, expected_a)
-  verifyDeployOrReinforce(info, Side.Defender, participant_d, expected_d)
+  if (expected_a)
+    verifyDeployOrReinforce(info, Side.Attacker, participant_a, expected_a)
+  if (expected_d)
+    verifyDeployOrReinforce(info, Side.Defender, participant_d, expected_d)
+  return [participant_a, participant_d]
 }
 
-export const testReinforcement = (rounds_to_skip: number, info: TestInfo, expected_a: ExpectedTypes, expected_d: ExpectedTypes) => {
+export const testReinforcement = (rounds_to_skip: number, info: TestInfo, expected_a?: ExpectedTypes, expected_d?: ExpectedTypes) => {
   const [participant_a, participant_d] = getParticipants(info)
   deploy(participant_a, participant_d, info.settings)
   participant_a.dice = 2
   participant_d.dice = 2
   for (let round = 0; round < rounds_to_skip; round++)
     doRound(info, participant_a, participant_d)
+  removeDefeated(participant_a.cohorts.frontline)
+  removeDefeated(participant_d.cohorts.frontline)
   reinforce(participant_a, info.settings)
   reinforce(participant_d, info.settings)
-  verifyDeployOrReinforce(info, Side.Attacker, participant_a, expected_a)
-  verifyDeployOrReinforce(info, Side.Defender, participant_d, expected_d)
+  if (expected_a)
+    verifyDeployOrReinforce(info, Side.Attacker, participant_a, expected_a)
+  if (expected_d)
+    verifyDeployOrReinforce(info, Side.Defender, participant_d, expected_d)
+  return [participant_a, participant_d]
 }
 
 const verifyDeployOrReinforce = (info: TestInfo, side: Side, participant: CombatParticipant, expected: ExpectedTypes) => {

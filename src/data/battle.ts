@@ -13,7 +13,7 @@ export const getDefaultParticipant = (name: CountryName): Participant => {
     country: name,
     rounds: [],
     rolls: [0],
-    dice: 3,
+    dice: (process.env.REACT_APP_GAME === 'euiv' ? 5 : 3),
     randomize_dice: false
   }
 }
