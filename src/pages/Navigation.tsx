@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { AppState, getMode } from 'state'
-import { toggleMode } from 'reducers'
+import { toggleMode, openModal } from 'reducers'
 import { Menu, Image, Button } from 'semantic-ui-react'
 import IconLand from 'images/land_combat.png'
 import IconNaval from 'images/naval_combat.png'
-import { Mode } from 'types'
+import { Mode, ModalType } from 'types'
 
 interface Props { }
 
@@ -39,6 +39,9 @@ class Navigation extends Component<IProps> {
           <Menu.Item active={path === '/transfer'} onClick={() => history.push('/transfer')}>
             Transfer
           </Menu.Item>
+          <Menu.Item onClick={() => this.props.openModal(ModalType.ImportCountry, {})}>
+            Import
+          </Menu.Item>
 
           <div id='menu-info'>
             {process.env.REACT_APP_GAME === 'ir' &&
@@ -51,7 +54,7 @@ class Navigation extends Component<IProps> {
                 <Image src={IconNaval} avatar style={{ marginRight: 0 }} />
               </Button>
             }
-            <div id='version'><div>Site version 0.6.4</div><div>Game version {process.env.REACT_APP_GAME === 'ir' ? '1.4.1' : '1.29.5'}</div></div>
+            <div id='version'><div>Site version 0.6.5</div><div>Game version {process.env.REACT_APP_GAME === 'ir' ? '1.4.2' : '1.29.5'}</div></div>
           </div>
         </Menu>
         <br />
@@ -64,7 +67,7 @@ const mapStateToProps = (state: AppState) => ({
   mode: getMode(state)
 })
 
-const actions = { toggleMode }
+const actions = { toggleMode, openModal }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

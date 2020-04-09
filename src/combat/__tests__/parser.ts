@@ -1,19 +1,6 @@
-import { UnitType } from 'types'
+import { UnitType, dictionaryUnitType } from 'types'
 import { forEach, mapRange } from 'utils'
 import { TestInfo, setFlankSizes, setUnitPreferences, setReserve, setGeneral } from './utils'
-
-const typeConversion: { [key: string]: UnitType | undefined } = {
-  archers: UnitType.Archers,
-  camels: UnitType.CamelCavalry,
-  chariots: UnitType.Chariots,
-  heavy_cavalry: UnitType.HeavyCavalry,
-  heavy_infantry: UnitType.HeavyInfantry,
-  horse_archers: UnitType.HorseArchers,
-  light_cavalry: UnitType.LightCavalry,
-  light_infantry: UnitType.LightInfantry,
-  warelephant: UnitType.WarElephants,
-  supply_train: UnitType.SupplyTrain
-}
 
 type InputUnits = UnitType[]
 
@@ -47,7 +34,7 @@ const parseInput = (input: string) => {
 const getUnits = (input: Input) => {
   const units: InputUnits = []
   forEach(input, (item, key) => {
-    const type = typeConversion[key]
+    const type = dictionaryUnitType[key]
     if (!type)
       return
     units.push(...mapRange(Number(item), () => type))
@@ -56,9 +43,9 @@ const getUnits = (input: Input) => {
 }
 
 const getUnitPrefences = (input: Input) => [
-  typeConversion[input['primary']] ?? null,
-  typeConversion[input['secondary']] ?? null,
-  typeConversion[input['flank']] ?? null
+  dictionaryUnitType[input['primary']] ?? null,
+  dictionaryUnitType[input['secondary']] ?? null,
+  dictionaryUnitType[input['flank']] ?? null
 ]
 
 const getFlankSize = (input: Input) => Number(input['flank_size'] ?? 0)

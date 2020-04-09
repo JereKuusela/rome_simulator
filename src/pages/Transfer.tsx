@@ -81,11 +81,11 @@ class Transfer extends Component<IProps, IState> {
                 Reset all data (battle, countries, units, tactics, terrains, settings)
               </List.Item>
               <List.Item>
-              <ConfirmationButton
-                negative text='Reset'
-                message='Do you really want to reset all data?'
-                onConfirm={() => this.props.importState('', true)}
-              />
+                <ConfirmationButton
+                  negative text='Reset'
+                  message='Do you really want to reset all data?'
+                  onConfirm={() => this.props.importState('', true)}
+                />
               </List.Item>
             </List>
           </Grid.Column>

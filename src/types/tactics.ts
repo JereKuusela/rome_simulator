@@ -38,3 +38,20 @@ export type Tactic = {
   casualties: number
   image: string
 }
+export const dictionaryTacticType: { [key: string]: TacticType } = {
+  shock_action: TacticType.ShockAction,
+  envelopment: TacticType.Envelopment,
+  skirmishing: TacticType.Skirmishing,
+  deception: TacticType.Deception,
+  bottleneck: TacticType.Bottleneck,
+  greek_phalanx: TacticType.Phalanx,
+  triplex_acies: TacticType.TriplexAcies,
+  cavalry_skirmish: TacticType.CavalrySkirmish,
+  padma_vyuha: TacticType.PadmaVyuha,
+  hit_and_run_tactics: TacticType.HitAndRun,
+  frontal_assault: TacticType.FrontalAssault,
+  naval_envelopment: TacticType.NavalEnvelopment,
+  close_ranks: TacticType.CloseRanks,
+  harassment: TacticType.Harassment,
+  probing_attack: TacticType.ProbingAttack
+}

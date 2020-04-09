@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Image, Popup, Header } from 'semantic-ui-react'
-import { UnitAttribute, Mode, CombatPhase, CountryAttribute, SiteSettings, isAttributeEnabled, Setting, DisciplineValue } from 'types'
+import { UnitAttribute, Mode, CombatPhase, CountryAttribute, SiteSettings, isAttributeEnabled, Setting, DisciplineValue, GeneralAttribute } from 'types'
 
 import IconDiscipline from 'images/discipline.png'
 import IconOffense from 'images/offense.png'
@@ -16,10 +16,11 @@ import IconCost from 'images/cost.png'
 import IconFoodConsumption from 'images/food.png'
 import IconFoodStorage from 'images/food_capacity.png'
 import IconSupplyLimit from 'images/supply_limit.png'
+import IconMartial from 'images/military_power.png'
 
 type IProps = {
   attribute: string
-  settings: SiteSettings
+  settings?: SiteSettings
   mode?: Mode
 }
 
@@ -60,6 +61,8 @@ const getFirstImage = (attribute: string, mode?: Mode) => {
       return IconFoodStorage
     case UnitAttribute.AttritionWeight:
       return IconSupplyLimit
+    case GeneralAttribute.Martial:
+      return IconMartial
     default:
       return null
   }
@@ -99,8 +102,8 @@ const getText = (attribute: string) => {
   }
 }
 
-const getExplanation = (attribute: string, settings: SiteSettings, mode?: Mode) => {
-  if (!isAttributeEnabled(attribute, settings))
+const getExplanation = (attribute: string, settings?: SiteSettings, mode?: Mode) => {
+  if (settings && !isAttributeEnabled(attribute, settings))
     return 'This attribute is currently disabled'
   switch (attribute) {
     case UnitAttribute.AttritionWeight:
@@ -113,7 +116,7 @@ const getExplanation = (attribute: string, settings: SiteSettings, mode?: Mode) 
     case CombatPhase.Shock:
       return attribute
     case UnitAttribute.Discipline:
-      return settings[Setting.AttributeDiscipline] === DisciplineValue.Both ? 'Increases damage done and reduces damage taken' : 'Increases damage'
+      return settings && settings[Setting.AttributeDiscipline] === DisciplineValue.Both ? 'Increases damage done and reduces damage taken' : 'Increases damage'
     default:
       return null
   }
@@ -148,11 +151,11 @@ export default class AttributeImage extends Component<IProps> {
       )
     }
     return (
-      <div>
+      <span>
         {first && <Image src={first} avatar />}
         {second && <Image src={second} avatar />}
         {!first && !second && getText(attribute)}
-      </ div>
+      </ span>
     )
 
   }

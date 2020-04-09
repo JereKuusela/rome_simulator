@@ -136,3 +136,22 @@ export const unitValueToString = (definition: DefinitionValues<UnitValueType>, t
 
 export type UnitDefinitions = { [key in UnitType]: UnitDefinition }
 export type Units = { [key in UnitType]: Unit }
+
+export const dictionaryUnitType: { [key: string]: UnitType } = {
+  archers: UnitType.Archers,
+  camels: UnitType.CamelCavalry,
+  chariots: UnitType.Chariots,
+  heavy_cavalry: UnitType.HeavyCavalry,
+  heavy_infantry: UnitType.HeavyInfantry,
+  horse_archers: UnitType.HorseArchers,
+  light_cavalry: UnitType.LightCavalry,
+  light_infantry: UnitType.LightInfantry,
+  warelephant: UnitType.WarElephants,
+  supply_train: UnitType.SupplyTrain,
+  liburnian: UnitType.Liburnian,
+  trireme: UnitType.Trireme,
+  tetrere: UnitType.Tetrere,
+  hexere: UnitType.Hexere,
+  octere: UnitType.Octere,
+  mega_galley: UnitType.MegaPolyreme
+}

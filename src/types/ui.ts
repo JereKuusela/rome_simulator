@@ -12,7 +12,8 @@ export enum ModalType {
   UnitDetail = 'UnitDetail',
   TerrainDetail = 'TerrainDetail',
   TacticDetail = 'TacticDetail',
-  Value = 'Value'
+  Value = 'Value',
+  ImportCountry = 'ImportCountry'
 }
 
 export type Modals = {
@@ -46,4 +47,5 @@ export type Modals = {
     button_message: string
     initial: string
   }
+  [ModalType.ImportCountry]?: {}
 }
