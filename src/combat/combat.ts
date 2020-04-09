@@ -204,7 +204,7 @@ const moveDefeated = (frontline: CombatFrontline, defeated: CombatDefeated, mark
         unit.is_weak = true
       if (settings[Setting.RetreatRounds] > round + 1)
         continue
-      unit.state.is_destroyed = unit[UnitAttribute.Strength] <= minimum_strength
+      unit.state.is_destroyed = unit[UnitAttribute.Strength] <= 0
       if (mark_defeated)
         frontline[i][j] = { ...unit, state: { ...unit.state, is_defeated: true } } // Temporary copy for UI purposes.
       else

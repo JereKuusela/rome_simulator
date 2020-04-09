@@ -33,7 +33,7 @@ export const getDefaultNavalSettings = (): CombatSettings => {
   else {
     return {
       [Setting.StrengthLostMultiplier]: 12,
-      [Setting.MoraleLostMultiplier]: 24
+      [Setting.MoraleLostMultiplier]: 30
     }
   }
 }

@@ -7,6 +7,7 @@ export interface WinRateProgress {
   defender: number
   incomplete: number
   progress: number
+  draws: number
   iterations: number
   average_rounds: number,
   rounds: { [key: number]: number }

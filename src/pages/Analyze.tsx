@@ -19,6 +19,7 @@ interface IState extends CasualtiesProgress {
   attacker_win_chance: number
   defender_win_chance: number
   incomplete: number
+  draws: number
   calculating: boolean
   iterations: number
   updates: number
@@ -41,7 +42,7 @@ class Analyze extends Component<IProps, IState> {
     super(props)
     this.state = {
       attacker_win_chance: 0, defender_win_chance: 0, incomplete: 0, calculating: false, progress: 0, updates: 0,
-      average_rounds: 0, rounds: {}, iterations: 0,
+      average_rounds: 0, rounds: {}, iterations: 0, draws: 0,
       avg_morale_a: 0, avg_morale_d: 0, avg_strength_a: 0, avg_strength_d: 0, max_morale_a: 1, max_morale_d: 1, max_strength_a: 1, max_strength_d: 1,
       morale_a: {}, morale_d: {}, strength_a: {}, strength_d: {}, losses_a: initResourceLosses(), losses_d: initResourceLosses()
     }
@@ -132,7 +133,7 @@ class Analyze extends Component<IProps, IState> {
   }
 
   renderWinchance = () => {
-    const { attacker_win_chance, defender_win_chance, incomplete, average_rounds } = this.state
+    const { attacker_win_chance, defender_win_chance, incomplete, draws, average_rounds } = this.state
     return (
       <Table>
         <Table.Header>
@@ -142,6 +143,9 @@ class Analyze extends Component<IProps, IState> {
             </Table.HeaderCell>
             <Table.HeaderCell>
               Defender win chance
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              Draws
             </Table.HeaderCell>
             <Table.HeaderCell>
               Incomplete
@@ -158,6 +162,9 @@ class Analyze extends Component<IProps, IState> {
             </Table.Cell>
             <Table.Cell>
               {this.toPercent(this.scale(defender_win_chance))}
+            </Table.Cell>
+            <Table.Cell>
+              {this.toPercent(this.scale(draws))}
             </Table.Cell>
             <Table.Cell>
               {this.toPercent(this.scale(incomplete))}
@@ -339,11 +346,12 @@ class Analyze extends Component<IProps, IState> {
   update = (update: WinRateProgress, casualties: CasualtiesProgress, resources: ResourceLossesProgress) => {
     if (this.willUnmount)
       return
-    const { attacker, defender, incomplete, progress, average_rounds, rounds, iterations, calculating } = update
+    const { attacker, defender, incomplete, progress, average_rounds, rounds, iterations, calculating, draws } = update
     this.setState({
       attacker_win_chance: attacker,
       defender_win_chance: defender,
       incomplete,
+      draws,
       average_rounds,
       progress: progress,
       calculating,

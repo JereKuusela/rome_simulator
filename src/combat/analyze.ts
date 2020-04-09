@@ -33,6 +33,7 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
     attacker: 0.0,
     defender: 0.0,
     incomplete: 0.0,
+    draws: 0.0,
     progress: 0.0,
     iterations: 0,
     average_rounds: 0,
@@ -242,7 +243,7 @@ const calculateResourceLoss = (frontline: CombatFrontline, defeated: CombatDefea
 }
 
 
-type Winner = Side | undefined
+type Winner = Side | null | undefined
 
 /**
  * Simulates one dice roll phase.
@@ -252,10 +253,12 @@ const doPhase = (depth: number, rounds_per_phase: number, attacker: CombatPartic
   let round = 1
   for (; round <= rounds_per_phase; round++) {
     doBattle(attacker, defender, false, settings, round + (depth - 1) * rounds_per_phase)
-    if (!defender.alive)
-      winner = Side.Attacker
+    if (!attacker.alive && !defender.alive)
+      winner = null
     else if (!attacker.alive)
       winner = Side.Defender
+    else if (!defender.alive)
+      winner = Side.Attacker
     // Custom check to prevent round going over phase limit.
     if (winner !== undefined || round === rounds_per_phase)
       break
@@ -315,6 +318,8 @@ const updateProgress = (progress: WinRateProgress, amount: number, result: { win
     progress.attacker += amount
   else if (winner === Side.Defender)
     progress.defender += amount
+  else if (winner === null)
+    progress.draws += amount
   else
     progress.incomplete += amount
   progress.average_rounds += amount * round

@@ -243,7 +243,7 @@ const moveUnits = (cohorts: CombatCohorts, ) => {
   // Only front cohorts can move on their row.
   const front = frontline[0]
   // Move units from left to center.
-  for (let unit_index = Math.ceil(front.length / 2.0); unit_index > 0; --unit_index) {
+  for (let unit_index = Math.floor(front.length / 2.0); unit_index > 0; --unit_index) {
     const unit = front[unit_index]
     if (unit)
       continue
