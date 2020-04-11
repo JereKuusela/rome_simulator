@@ -1,4 +1,4 @@
-import { UnitType, ValuesType } from 'types'
+import { UnitType, ValuesType, CultureType } from 'types'
 import { Mode } from './definition';
 
 export enum ModifierType {
@@ -17,8 +17,6 @@ export enum GovermentType {
 export enum ReligionType {
   Dummy = 'Dummy'
 }
-
-export enum CultureType {  Dummy = 'Dummy' }
 
 export enum TradeType {
   Country = 'Country',

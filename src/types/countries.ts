@@ -1,5 +1,5 @@
 import { ObjSet } from "utils"
-import { CultureType, GovermentType, ReligionType } from "./modifiers"
+import { GovermentType, ReligionType } from "./modifiers"
 import { Armies } from "./armies"
 import { UnitDefinitions, UnitAttribute } from "./units"
 import { DefinitionValues } from "definition_values"
@@ -40,4 +40,27 @@ export type Country = {
   tech_level: number
   culture: CultureType
   weariness: WearinessAttributes
+}
+
+export enum CultureType {
+  Default = 'Default',
+  Latin = 'Latin' ,
+  Greek = 'Greek' ,
+  Persian = 'Persian' ,
+  Levantine = 'Levantine' ,
+  Celtic = 'Celtic',
+  NorthAfrican = 'North African',
+  Mayruan = 'Mayruan'
+}
+
+export const dictionaryCultureType: { [key: string]: CultureType } = {
+  default_philosophy: CultureType.Default,
+  latin_philosophy: CultureType.Latin,
+  greek_philosophy: CultureType.Greek,
+  persian_philosophy: CultureType.Persian,
+  levantine_philosophy: CultureType.Levantine,
+  celtic_philosophy: CultureType.Celtic,
+  north_african_philosophy: CultureType.NorthAfrican,
+  mauryan_philosophy: CultureType.Mayruan
+
 }

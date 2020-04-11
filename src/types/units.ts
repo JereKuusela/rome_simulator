@@ -1,8 +1,7 @@
 import { DefinitionValues, calculateValue } from 'definition_values'
-import { TerrainType, Definition, Mode } from 'types'
+import { TerrainType, Definition, Mode, CultureType } from 'types'
 import { toNumber, toPercent, toSignedPercent, toMultiplier } from 'formatters'
 import { CombatPhase } from './battle'
-import { CultureType } from './modifiers'
 
 export enum UnitType {
   Archers = 'Archers',

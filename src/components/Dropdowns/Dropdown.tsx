@@ -8,20 +8,11 @@ interface IProps<T extends string> {
   clearable?: boolean
   style?: any
   search?: boolean
+  placeholder?: string
 }
 
 
 export default class Dropdown<T extends string> extends Component<IProps<T>> {
-
-  getCurrentText = () => {
-    const { value, values } = this.props
-    const item = values.find(item => typeof item === 'object' ? item.value === value : item === value)
-    if (typeof item === 'object')
-      return item.text
-    if (item)
-      return item
-    return ''
-  }
 
   getOptions = () => (
     this.props.values.map(item => {
@@ -33,10 +24,9 @@ export default class Dropdown<T extends string> extends Component<IProps<T>> {
   )
 
   render() {
-    const { value, clearable, onChange, style, search } = this.props
+    const { value, clearable, onChange, style, search, placeholder } = this.props
     return (
       <DropdownUI
-        text={this.getCurrentText()}
         className='selection'
         clearable={clearable}
         value={value}
@@ -46,6 +36,7 @@ export default class Dropdown<T extends string> extends Component<IProps<T>> {
         compact={!!style}
         search={search}
         options={this.getOptions()}
+        placeholder={placeholder}
       >
       </DropdownUI>
     )
