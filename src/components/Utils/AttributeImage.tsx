@@ -146,6 +146,7 @@ export default class AttributeImage extends Component<IProps> {
             content={this.getContent()}
             basic
             wide
+            mouseEnterDelay={350}
           />
         </>
       )

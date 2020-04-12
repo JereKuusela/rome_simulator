@@ -1,6 +1,6 @@
 
 import { sumBy } from 'lodash'
-import { TerrainDefinition, TerrainCalc, Setting, UnitAttribute, UnitDefinition, CombatPhase, GeneralAttribute, Side, LocationType, General, CombatCohortDefinition, SiteSettings, CombatCohorts, CombatCohort, CombatFrontline } from 'types'
+import { TerrainDefinition, TerrainCalc, Setting, UnitAttribute, UnitDefinition, CombatPhase, GeneralAttribute, Side, LocationType, General, CombatCohortDefinition, SiteSettings, CombatCohorts, CombatCohort, CombatFrontline, SortedReserve } from 'types'
 import { calculateValue } from 'definition_values'
 
 /**
@@ -145,3 +145,16 @@ export const removeDefeated = (frontline: CombatFrontline) => {
     }
   }
 }
+
+/**
+ * Calculates the next index when the order is from center to edges.
+ */
+export const nextIndex = (index: number, center: number) => index < center ? index + 2 * (center - index) : index - 2 * (index - center) - 1
+
+export const reserveSize = (reserve: SortedReserve) => reserve.front.length + reserve.flank.length + reserve.support.length
+
+export const armySize = (cohorts: CombatCohorts) => {
+  return cohorts.frontline[0].filter(unit => unit).length + reserveSize(cohorts.reserve)
+}
+
+

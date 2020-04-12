@@ -9,6 +9,8 @@ Changelog:
   - Added dropdown setting for Discipline (Off, Only damage done, Both damage done and taken).
   - Added new tab for stack wipe settings: On/Off, round limit for "soft" wipe, limits for "soft" and "hard" wipes.
   - Changed default analyze settings to be faster.
+  - Added a tooltip to the winrate button and result.
+  - Added delays to most tooltips to prevent them flickering when moving mouse.
 
 Combat:
   - Morale and strength no longer go below zero. This fixes slightly inflated losses on Analyze tool.

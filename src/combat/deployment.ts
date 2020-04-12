@@ -1,19 +1,6 @@
 import { UnitPreferences, UnitAttribute, UnitPreferenceType, UnitRole, Setting, Settings, SortedReserve, CombatReserve, CombatCohorts, CombatCohort, CombatParticipant } from 'types'
 import { sortBy, remove, clamp } from 'lodash'
-import { stackWipe, calculateTotalStrength } from './combat_utils'
-
-/**
- * Calculates the next index when the order is from center to edges.
- */
-export const nextIndex = (index: number, center: number) => index < center ? index + 2 * (center - index) : index - 2 * (index - center) - 1
-
-export const reserveSize = (reserve: SortedReserve) => reserve.front.length + reserve.flank.length + reserve.support.length
-
-const armySize = (cohorts: CombatCohorts) => {
-  return cohorts.frontline[0].filter(unit => unit).length + reserveSize(cohorts.reserve)
-}
-
-
+import { stackWipe, calculateTotalStrength, nextIndex, reserveSize, armySize } from './combat_utils'
 
 const armyFlankCount = (units: CombatCohorts) => {
   return units.frontline[0].filter(unit => unit && unit.definition.role === UnitRole.Flank).length
@@ -212,19 +199,19 @@ export const deploy = (attacker: CombatParticipant, defender: CombatParticipant,
   defender.cohorts.right_flank = right_flank_d
   deployCohorts(attacker.cohorts, settings)
   deployCohorts(defender.cohorts, settings)
+  attacker.alive = armySize(attacker.cohorts) > 0
+  defender.alive = armySize(defender.cohorts) > 0
   if (settings[Setting.Stackwipe])
-    checkInstantStackWipe(attacker.cohorts, defender.cohorts, settings)
+    checkInstantStackWipe(attacker, defender, settings)
 }
 
-const checkInstantStackWipe = (attacker: CombatCohorts, defender: CombatCohorts, settings: Settings) => {
-  const size_a = armySize(attacker)
-  const total_a = calculateTotalStrength(attacker)
-  const size_d = armySize(defender)
-  const total_d = calculateTotalStrength(defender)
-  if (size_d === 0 || total_a / total_d > settings[Setting.HardStackWipeLimit])
-    stackWipe(defender)
-  else if (size_a === 0 || total_d / total_a > settings[Setting.HardStackWipeLimit])
-    stackWipe(attacker)
+const checkInstantStackWipe = (attacker: CombatParticipant, defender: CombatParticipant, settings: Settings) => {
+  const total_a = calculateTotalStrength(attacker.cohorts)
+  const total_d = calculateTotalStrength(defender.cohorts)
+  if (!defender.alive || total_a / total_d > settings[Setting.HardStackWipeLimit])
+    stackWipe(defender.cohorts)
+  else if (!attacker.alive || total_d / total_a > settings[Setting.HardStackWipeLimit])
+    stackWipe(attacker.cohorts)
 }
 
 const moveUnits = (cohorts: CombatCohorts, ) => {

@@ -1,5 +1,5 @@
 import { AppState, getMode, getCurrentCombat, getSettings, getCombatParticipant, initializeCombatParticipants } from 'state'
-import { deploy, doBattle, removeDefeated, getCombatPhaseNumber } from 'combat'
+import { deploy, doBattle, removeDefeated, getCombatPhaseNumber, armySize } from 'combat'
 import { Battle, Side, Setting, Participant, Settings, CombatCohorts, CombatParticipant } from 'types'
 import { createEntropy, MersenneTwister19937, Random } from 'random-js'
 
@@ -56,6 +56,8 @@ const subBattle = (state: AppState, battle: Battle, attacker: CombatParticipant,
     battle.participants[Side.Defender].rounds = [defender]
     attacker = copy(attacker)
     defender = copy(defender)
+    attacker.alive = armySize(attacker.cohorts) > 0
+    defender.alive = armySize(defender.cohorts) > 0
     battle.fight_over = !attacker.alive || !defender.alive
   } else {
     attacker.cohorts = copyStatus(getCurrentCombat(state, Side.Attacker))
@@ -63,6 +65,7 @@ const subBattle = (state: AppState, battle: Battle, attacker: CombatParticipant,
   }
   if (battle.round === -1 && steps > 0 && !battle.fight_over) {
     deploy(attacker, defender, settings)
+    battle.fight_over = !attacker.alive || !defender.alive
     Object.freeze(attacker.cohorts)
     Object.freeze(defender.cohorts)
     battle.participants[Side.Attacker].rounds.push(attacker)

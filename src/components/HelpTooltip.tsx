@@ -22,6 +22,7 @@ export default class HelpTooltip extends Component<Props> {
         content={this.getContent()}
         basic
         wide
+        mouseEnterDelay={350}
       />
     )
   }
