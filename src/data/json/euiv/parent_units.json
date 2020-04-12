@@ -1,82 +1,82 @@
 {
   "units": [
     {
-      "type": "Land Unit",
-      "parent": null,
-      "mode": "Land",
-      "role": "Front",
-      "morale": 2.0,
-      "strength": 1.0,
-      "maintenance": 0.02,
-      "attrition_weight": 1.0,
-      "military_tactics": 0.5
+      "Type": "Land Unit",
+      "Parent": null,
+      "Mode": "Land",
+      "Role": "Front",
+      "Morale": 2.0,
+      "Strength": 1.0,
+      "Maintenance": 0.02,
+      "Attrition weight": 1.0,
+      "Military tactics": 0.5
     },
     {
-      "type": "Artillery",
-      "parent": "Land Unit",
-      "role": "Support",
-      "maneuver": 2,
-      "cost": 30,
-      "damage_taken": 1,
-      "back_row": 0.5
+      "Type": "Artillery",
+      "Parent": "Land Unit",
+      "Role": "Support",
+      "Maneuver": 2,
+      "Cost": 30,
+      "Damage taken": 1,
+      "Damage from backrow": 0.5
     },
     {
-      "type": "Cavalry",
-      "parent": "Land Unit",
-      "mode": "Land",
-      "role": "Flank",
-      "maneuver": 2,
-      "cost": 25,
-      "shock": 0.8
+      "Type": "Cavalry",
+      "Parent": "Land Unit",
+      "Mode": "Land",
+      "Role": "Flank",
+      "Maneuver": 2,
+      "Cost": 25,
+      "Shock": 0.8
     },
     {
-      "type": "Infantry",
-      "parent": "Land Unit",
-      "role": "Front",
-      "fire": 0.25,
-      "maneuver": 1,
-      "cost": 10,
-      "shock": 0.2
+      "Type": "Infantry",
+      "Parent": "Land Unit",
+      "Role": "Front",
+      "Fire": 0.25,
+      "Maneuver": 1,
+      "Cost": 10,
+      "Shock": 0.2
     },
     {
-      "type": "Light Ship",
-      "parent": null,
-      "mode": "Naval",
-      "role": "Front",
-      "morale": 3.0,
-      "strength": 1.0,
-      "maneuver": 1,
-      "cost": 0
+      "Type": "Light Ship",
+      "Parent": null,
+      "Mode": "Naval",
+      "Role": "Front",
+      "Morale": 3.0,
+      "Strength": 1.0,
+      "Maneuver": 1,
+      "Cost": 0
     },
     {
-      "type": "Heavy Ship",
-      "parent": null,
-      "mode": "Naval",
-      "role": "Front",
-      "morale": 3.0,
-      "strength": 1.0,
-      "maneuver": 1,
-      "cost": 0
+      "Type": "Heavy Ship",
+      "Parent": null,
+      "Mode": "Naval",
+      "Role": "Front",
+      "Morale": 3.0,
+      "Strength": 1.0,
+      "Maneuver": 1,
+      "Cost": 0
     },
     {
-      "type": "Galley",
-      "parent": null,
-      "mode": "Naval",
-      "role": "Front",
-      "morale": 3.0,
-      "strength": 1.0,
-      "maneuver": 1,
-      "cost": 0
+      "Type": "Galley",
+      "Parent": null,
+      "Mode": "Naval",
+      "Role": "Front",
+      "Morale": 3.0,
+      "Strength": 1.0,
+      "Maneuver": 1,
+      "Cost": 0
     },
     {
-      "type": "Transport",
-      "parent": null,
-      "mode": "Naval",
-      "role": "Front",
-      "morale": 3.0,
-      "strength": 1.0,
-      "maneuver": 1,
-      "cost": 0
+      "Type": "Transport",
+      "Parent": null,
+      "Mode": "Naval",
+      "Role": "Front",
+      "Morale": 3.0,
+      "Strength": 1.0,
+      "Maneuver": 1,
+      "Cost": 0
     }
   ]
 }

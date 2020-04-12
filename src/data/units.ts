@@ -1,6 +1,6 @@
 import { ValuesType, UnitType, UnitDefinition, UnitAttribute, UnitValueType, UnitRole, TerrainType, UnitDefinitions, Mode, CultureType, CombatPhase } from 'types'
 import { addValues } from 'definition_values'
-import { toObj, removeUndefined, filter, toArr } from 'utils'
+import { toObj, removeUndefined, filter, toArr, values } from 'utils'
 
 import * as ir_units from './json/ir/units.json'
 import * as ir_parents from './json/ir/parent_units.json'
@@ -60,63 +60,28 @@ const unit_to_icon: { [key in UnitType]: string } = {
 
 export const getUnitIcon = (type: UnitType) => unit_to_icon[type] || ''
 
+
 const createUnitFromJson = (data: UnitData): UnitDefinition => {
+
+  const handleAttributes = (attributes: any[]) => attributes.filter(type => (data as any)[type]).map(type => [type, (data as any)[type]] as [UnitValueType, number])
+
   let unit: UnitDefinition = {
-    type: data.type as UnitType,
-    mode: data.mode as Mode | undefined,
-    image: unit_to_icon[data.type as UnitType] ?? unit_to_icon[data.parent as UnitType] ?? '',
-    role: data.role ? data.role as UnitRole : undefined,
-    parent: data.parent ? data.parent as UnitType : undefined,
-    culture: data.culture ? data.culture as CultureType : undefined,
-    tech: data.tech
+    type: data.Type as UnitType,
+    mode: data.Mode as Mode | undefined,
+    image: unit_to_icon[data.Type as UnitType] ?? unit_to_icon[data.Parent as UnitType] ?? '',
+    role: data.Role ? data.Role as UnitRole : undefined,
+    parent: data.Parent ? data.Parent as UnitType : undefined,
+    culture: data.Culture ? data.Culture as CultureType : undefined,
+    tech: data.Tech
   }
   removeUndefined(unit)
   const base_values: [UnitValueType, number][] = [
-    [UnitAttribute.AttritionWeight, data.attrition_weight ?? 0],
-    [UnitAttribute.Cost, data.cost ?? 0],
-    [UnitAttribute.Maintenance, data.maintenance ?? 0],
-    [UnitAttribute.Strength, data.strength ?? 0],
-    [UnitAttribute.Morale, data.morale ?? 0],
-    [UnitAttribute.Maneuver, data.maneuver ?? 0],
-    [UnitAttribute.MoraleDamageTaken, data.morale_damage_taken ?? 0],
-    [UnitAttribute.StrengthDamageTaken, data.strength_damage_taken ?? 0],
-    [UnitAttribute.MoraleDamageDone, data.morale_damage_done ?? 0],
-    [UnitAttribute.StrengthDamageDone, data.strength_damage_done ?? 0],
-    [UnitAttribute.DamageDone, data.damage_done ?? 0],
-    [UnitAttribute.DamageTaken, data.damage_taken ?? 0],
-    [UnitAttribute.FoodConsumption, data.food_consumption ?? 0],
-    [UnitAttribute.FoodStorage, data.food_storage ?? 0],
-    [UnitAttribute.CaptureChance, data.capture_chance ?? 0],
-    [UnitAttribute.CaptureResist, data.capture_resist ?? 0],
-    [UnitAttribute.OffensiveFirePips, data.offensive_fire ?? 0],
-    [UnitAttribute.DefensiveFirePips, data.defensive_fire ?? 0],
-    [UnitAttribute.OffensiveMoralePips, data.offensive_morale ?? 0],
-    [UnitAttribute.DefensiveMoralePips, data.defensive_morale ?? 0],
-    [UnitAttribute.OffensiveShockPips, data.offensive_shock ?? 0],
-    [UnitAttribute.DefensiveShockPips, data.defensive_shock ?? 0],
-    [UnitAttribute.MilitaryTactics, data.military_tactics ?? 0],
-    [UnitAttribute.DefensiveSupport, data.back_row ?? 0],
-    [UnitAttribute.OffensiveSupport, data.back_row ?? 0],
-    [CombatPhase.Fire, data.fire ?? 0],
-    [CombatPhase.Shock, data.shock ?? 0],
-    [UnitType.Archers, data.archers ?? 0],
-    [UnitType.CamelCavalry, data.camel_cavalry ?? 0],
-    [UnitType.Chariots, data.chariots ?? 0],
-    [UnitType.HeavyCavalry, data.heavy_cavalry ?? 0],
-    [UnitType.HeavyInfantry, data.heavy_infantry ?? 0],
-    [UnitType.HorseArchers, data.horse_archers ?? 0],
-    [UnitType.LightCavalry, data.light_cavalry ?? 0],
-    [UnitType.LightInfantry, data.light_infantry ?? 0],
-    [UnitType.WarElephants, data.war_elephants ?? 0],
-    [UnitType.SupplyTrain, data.supply_train ?? 0],
-    [UnitType.Liburnian, data.liburnian ?? 0],
-    [UnitType.Trireme, data.trireme ?? 0],
-    [UnitType.Tetrere, data.tetrere ?? 0],
-    [UnitType.Hexere, data.hexere ?? 0],
-    [UnitType.Octere, data.octere ?? 0],
-    [UnitType.MegaPolyreme, data.mega_polyreme ?? 0],
-    [TerrainType.Riverine, data.riverine ?? 0]
+    ...handleAttributes(values(UnitAttribute)),
+    ...handleAttributes(values(TerrainType)),
+    ...handleAttributes(values(UnitType)),
+    ...handleAttributes(values(CombatPhase))
   ]
+  console.log(base_values)
   unit = addValues(unit, ValuesType.Base, unit.type, base_values)
   return unit
 }
@@ -135,53 +100,53 @@ export const getDefaultUnits = (culture?: CultureType): UnitDefinitions => cultu
 export const getDefaultUnit = (type: UnitType): UnitDefinition => defaultUnits[type]
 
 interface UnitData {
-  parent: string | null
-  type: string
-  mode?: string
-  culture?: string
-  morale?: number
-  strength?: number
-  cost?: number
-  role?: string
-  tech?: number
-  maintenance?: number
-  maneuver?: number
-  morale_damage_taken?: number
-  strength_damage_taken?: number
-  food_consumption?: number
-  food_storage?: number
-  capture_chance?: number
-  capture_resist?: number
-  damage_taken?: number
-  morale_damage_done?: number
-  strength_damage_done?: number
-  damage_done?: number
-  attrition_weight?: number
-  archers?: number
-  camel_cavalry?: number
-  chariots?: number
-  heavy_cavalry?: number
-  heavy_infantry?: number
-  horse_archers?: number
-  light_cavalry?: number
-  light_infantry?: number
-  war_elephants?: number
-  supply_train?: number
-  liburnian?: number
-  trireme?: number
-  tetrere?: number
-  hexere?: number
-  octere?: number
-  mega_polyreme?: number
-  riverine?: number
-  offensive_morale?: number
-  defensive_morale?: number
-  offensive_fire?: number
-  defensive_fire?: number
-  offensive_shock?: number
-  defensive_shock?: number
-  shock?: number
-  fire?: number
-  military_tactics?: number
-  back_row?: number
+  Parent: string | null
+  Type: string
+  Mode?: string
+  Culture?: string
+  [UnitAttribute.Morale]?: number
+  [UnitAttribute.Strength]?: number
+  [UnitAttribute.Cost]?: number
+  Role?: string
+  Tech?: number
+  [UnitAttribute.Maintenance]?: number
+  [UnitAttribute.Maneuver]?: number
+  [UnitAttribute.StrengthDamageDone]?: number
+  [UnitAttribute.StrengthDamageTaken]?: number
+  [UnitAttribute.FoodConsumption]?: number
+  [UnitAttribute.FoodStorage]?: number
+  [UnitAttribute.CaptureChance]?: number
+  [UnitAttribute.CaptureResist]?: number
+  [UnitAttribute.DamageTaken]?: number
+  [UnitAttribute.MoraleDamageDone]?: number
+  [UnitAttribute.MoraleDamageTaken]?: number
+  [UnitAttribute.DamageDone]?: number
+  [UnitAttribute.AttritionWeight]?: number
+  [UnitType.Archers]?: number
+  [UnitType.CamelCavalry]?: number
+  [UnitType.Chariots]?: number
+  [UnitType.HeavyCavalry]?: number
+  [UnitType.HeavyInfantry]?: number
+  [UnitType.HorseArchers]?: number
+  [UnitType.LightCavalry]?: number
+  [UnitType.LightInfantry]?: number
+  [UnitType.WarElephants]?: number
+  [UnitType.SupplyTrain]?: number
+  [UnitType.Liburnian]?: number
+  [UnitType.Trireme]?: number
+  [UnitType.Tetrere]?: number
+  [UnitType.Hexere]?: number
+  [UnitType.Octere]?: number
+  [UnitType.MegaPolyreme]?: number
+  [TerrainType.Riverine]?: number
+  [UnitAttribute.OffensiveMoralePips]?: number
+  [UnitAttribute.DefensiveMoralePips]?: number
+  [UnitAttribute.OffensiveFirePips]?: number
+  [UnitAttribute.DefensiveFirePips]?: number
+  [UnitAttribute.OffensiveShockPips]?: number
+  [UnitAttribute.DefensiveShockPips]?: number
+  [CombatPhase.Shock]?: number
+  [CombatPhase.Fire]?: number
+  [UnitAttribute.MilitaryTactics]?: number
+  [UnitAttribute.OffensiveSupport]?: number
 }

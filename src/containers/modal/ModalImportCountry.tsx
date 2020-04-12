@@ -424,6 +424,8 @@ class ModalImportCountry extends Component<IProps, IState> {
         country.militaryExperience = Number(value)
       if (key === 'units')
         country.armies = this.getNumberList(value)
+      // Index 9 is Roman special invention, others are military inventions.
+      // Probably need to check what other special inventions do.
       if (key === 'active_inventions')
         country.inventions = this.getTruthList(value).filter((_, index) => index === 9 || (75 < index && index < 138)).map(value => value)
       if (key === 'economic_policies') {

@@ -1,0 +1,845 @@
+{
+  "tech": [
+    {
+      "name": "Level 0",
+      "inventions": [
+        [],
+        [
+          {
+            "target": "Naval",
+            "attribute": "Damage taken",
+            "value": -0.05
+          }
+        ],
+        [
+          {
+            "target": "Global",
+            "attribute": "Experience",
+            "value": 0.075
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Supply limit",
+            "value": 0.1
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Level 1",
+      "inventions": [
+        [
+          {
+            "target": "Global",
+            "attribute": "Morale",
+            "no_percent": true,
+            "value": 0.1
+          },
+          {
+            "target": "Global",
+            "attribute": "Maintenance",
+            "negative": true,
+            "type": "modifier",
+            "value": 0.03
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Siege ability",
+            "value": 0.05
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Military investment cost",
+            "value": -0.1
+          }
+        ],
+        [
+          {
+            "target": "Heavy Infantry",
+            "attribute": "Discipline",
+            "value": 0.1
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Level 2",
+      "inventions": [
+        [
+          {
+            "target": "Global",
+            "attribute": "Morale",
+            "no_percent": true,
+            "value": 0.1
+          },
+          {
+            "target": "Global",
+            "attribute": "Maintenance",
+            "negative": true,
+            "type": "modifier",
+            "value": 0.03
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Siege engineers",
+            "value": 1
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Fort defense",
+            "value": 0.05
+          }
+        ],
+        [
+          {
+            "target": "Land",
+            "attribute": "Attrition weight",
+            "type": "modifier",
+            "value": -0.1
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Level 3",
+      "inventions": [
+        [
+          {
+            "target": "Global",
+            "attribute": "Morale",
+            "no_percent": true,
+            "value": 0.1
+          },
+          {
+            "target": "Global",
+            "attribute": "Maintenance",
+            "negative": true,
+            "type": "modifier",
+            "value": 0.03
+          }
+        ],
+        [
+          {
+            "target": "Global",
+            "attribute": "Discipline",
+            "value": 0.05
+          }
+        ],
+        [
+          {
+            "target": "Tetrere",
+            "attribute": "Discipline",
+            "value": 0.05
+          }
+        ],
+        [
+          {
+            "target": "Naval",
+            "attribute": "Maintenance",
+            "type": "modifier",
+            "value": -0.1
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Level 4",
+      "inventions": [
+        [
+          {
+            "target": "Global",
+            "attribute": "Morale",
+            "no_percent": true,
+            "value": 0.1
+          },
+          {
+            "target": "Global",
+            "attribute": "Maintenance",
+            "negative": true,
+            "type": "modifier",
+            "value": 0.03
+          }
+        ],
+        [
+          {
+            "target": "Land",
+            "attribute": "Maintenance",
+            "type": "modifier",
+            "value": -0.1
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Supply limit",
+            "value": 0.1
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Naval range",
+            "value": 0.15
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Level 5",
+      "inventions": [
+        [
+          {
+            "target": "Global",
+            "attribute": "Morale",
+            "no_percent": true,
+            "value": 0.1
+          },
+          {
+            "target": "Global",
+            "attribute": "Maintenance",
+            "negative": true,
+            "type": "modifier",
+            "value": 0.03
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Siege engineers",
+            "value": 1
+          }
+        ],
+        [
+          {
+            "target": "Global",
+            "attribute": "Experience",
+            "value": 0.05
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "General loyalty",
+            "no_percent": true,
+            "value": 5
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Level 6",
+      "inventions": [
+        [
+          {
+            "target": "Global",
+            "attribute": "Morale",
+            "no_percent": true,
+            "value": 0.1
+          },
+          {
+            "target": "Global",
+            "attribute": "Maintenance",
+            "negative": true,
+            "type": "modifier",
+            "value": 0.03
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Siege ability",
+            "value": 0.05
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Land Recruit speed",
+            "value": 0.2
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Level 7",
+      "inventions": [
+        [
+          {
+            "target": "Global",
+            "attribute": "Morale",
+            "no_percent": true,
+            "value": 0.1
+          },
+          {
+            "target": "Global",
+            "attribute": "Maintenance",
+            "negative": true,
+            "type": "modifier",
+            "value": 0.03
+          }
+        ],
+        [
+          {
+            "target": "Global",
+            "attribute": "Discipline",
+            "value": 0.05
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Fort defense",
+            "value": 0.05
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Assault ability",
+            "value": 0.05
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Level 8",
+      "inventions": [
+        [
+          {
+            "target": "Global",
+            "attribute": "Morale",
+            "no_percent": true,
+            "value": 0.1
+          },
+          {
+            "target": "Global",
+            "attribute": "Maintenance",
+            "negative": true,
+            "type": "modifier",
+            "value": 0.03
+          }
+        ],
+        [
+          {
+            "target": "Trireme",
+            "attribute": "Discipline",
+            "value": 0.1
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Siege engineers",
+            "value": 1
+          }
+        ],
+        [
+          {
+            "target": "Heavy Infantry",
+            "attribute": "Cost",
+            "value": -0.1
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Level 9",
+      "inventions": [
+        [
+          {
+            "target": "Global",
+            "attribute": "Morale",
+            "no_percent": true,
+            "value": 0.1
+          },
+          {
+            "target": "Global",
+            "attribute": "Maintenance",
+            "negative": true,
+            "type": "modifier",
+            "value": 0.03
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Siege ability",
+            "value": 0.05
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Naval Recruit speed",
+            "value": 0.2
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Land Movement speed",
+            "value": 0.1
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Level 10",
+      "inventions": [
+        [
+          {
+            "target": "Global",
+            "attribute": "Morale",
+            "no_percent": true,
+            "value": 0.1
+          },
+          {
+            "target": "Global",
+            "attribute": "Maintenance",
+            "negative": true,
+            "type": "modifier",
+            "value": 0.03
+          }
+        ],
+        [
+          {
+            "target": "Global",
+            "attribute": "Discipline",
+            "value": 0.05
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Naval Attrition",
+            "value": -0.1
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Experience decay",
+            "value": -0.005
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Level 11",
+      "inventions": [
+        [
+          {
+            "target": "Global",
+            "attribute": "Morale",
+            "no_percent": true,
+            "value": 0.1
+          },
+          {
+            "target": "Global",
+            "attribute": "Maintenance",
+            "negative": true,
+            "type": "modifier",
+            "value": 0.03
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Supply limit",
+            "value": 0.1
+          }
+        ],
+        [
+          {
+            "target": "Global",
+            "attribute": "Experience",
+            "value": 0.05
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Fort maintenance",
+            "value": -0.1
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Level 12",
+      "inventions": [
+        [
+          {
+            "target": "Global",
+            "attribute": "Morale",
+            "no_percent": true,
+            "value": 0.1
+          },
+          {
+            "target": "Global",
+            "attribute": "Maintenance",
+            "negative": true,
+            "type": "modifier",
+            "value": 0.03
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Fort defense",
+            "value": 0.05
+          }
+        ],
+        [
+          {
+            "target": "Land",
+            "attribute": "Maintenance",
+            "type": "modifier",
+            "value": -0.1
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Siege engineers",
+            "value": 1
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Level 13",
+      "inventions": [
+        [
+          {
+            "target": "Global",
+            "attribute": "Morale",
+            "no_percent": true,
+            "value": 0.1
+          },
+          {
+            "target": "Global",
+            "attribute": "Maintenance",
+            "negative": true,
+            "type": "modifier",
+            "value": 0.03
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Siege ability",
+            "value": 0.05
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Land Movement speed",
+            "value": 0.1
+          }
+        ],
+        [
+          {
+            "target": "Heavy Cavalry",
+            "attribute": "Discipline",
+            "value": 0.1
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Level 14",
+      "inventions": [
+        [
+          {
+            "target": "Global",
+            "attribute": "Morale",
+            "no_percent": true,
+            "value": 0.1
+          },
+          {
+            "target": "Global",
+            "attribute": "Maintenance",
+            "negative": true,
+            "type": "modifier",
+            "value": 0.03
+          }
+        ],
+        [
+          {
+            "target": "Global",
+            "attribute": "Discipline",
+            "value": 0.05
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Fort defense",
+            "value": 0.05
+          }
+        ],
+        [
+          {
+            "target": "Hexere",
+            "attribute": "Discipline",
+            "value": 0.05
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Level 15",
+      "inventions": [
+        [
+          {
+            "target": "Global",
+            "attribute": "Morale",
+            "no_percent": true,
+            "value": 0.1
+          },
+          {
+            "target": "Global",
+            "attribute": "Maintenance",
+            "negative": true,
+            "type": "modifier",
+            "value": 0.03
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Supply limit",
+            "value": 0.25
+          }
+        ],
+        [
+          {
+            "target": "Global",
+            "attribute": "Experience",
+            "value": 0.05
+          }
+        ],
+        [
+          {
+            "value": 0.05
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Level 16",
+      "inventions": [
+        [
+          {
+            "target": "Global",
+            "attribute": "Morale",
+            "no_percent": true,
+            "value": 0.1
+          },
+          {
+            "target": "Global",
+            "attribute": "Maintenance",
+            "negative": true,
+            "type": "modifier",
+            "value": 0.03
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Siege engineers",
+            "value": 1
+          }
+        ],
+        [
+          {
+            "value": -0.1
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Retreat delay",
+            "value": -2
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Level 17",
+      "inventions": [
+        [
+          {
+            "target": "Global",
+            "attribute": "Morale",
+            "no_percent": true,
+            "value": 0.1
+          },
+          {
+            "target": "Global",
+            "attribute": "Maintenance",
+            "negative": true,
+            "type": "modifier",
+            "value": 0.03
+          }
+        ],
+        [
+          {
+            "target": "Naval",
+            "attribute": "Damage taken",
+            "value": -0.05
+          }
+        ],
+        [
+          {
+            "target": "Liburnian",
+            "attribute": "Discipline",
+            "value": 0.1
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Naval range",
+            "value": 0.15
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Level 18",
+      "inventions": [
+        [
+          {
+            "target": "Global",
+            "attribute": "Morale",
+            "no_percent": true,
+            "value": 0.1
+          },
+          {
+            "target": "Global",
+            "attribute": "Maintenance",
+            "negative": true,
+            "type": "modifier",
+            "value": 0.03
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Siege ability",
+            "value": 0.05
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Experience decay",
+            "value": -0.005
+          }
+        ],
+        [
+          {
+            "target": "Global",
+            "attribute": "Blockade efficiency",
+            "value": 0.2
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Level 19",
+      "inventions": [
+        [
+          {
+            "target": "Global",
+            "attribute": "Morale",
+            "no_percent": true,
+            "value": 0.1
+          },
+          {
+            "target": "Global",
+            "attribute": "Maintenance",
+            "negative": true,
+            "type": "modifier",
+            "value": 0.03
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Fort defense",
+            "value": 0.2
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Supply limit",
+            "value": 0.25
+          }
+        ],
+        [
+          {
+            "target": "Text",
+            "attribute": "Siege engineers",
+            "value": 2
+          }
+        ]
+      ]
+    },
+    {
+      "name": "Level 20",
+      "inventions": [
+        [
+          {
+            "target": "Global",
+            "attribute": "Morale",
+            "no_percent": true,
+            "value": 0.1
+          },
+          {
+            "target": "Global",
+            "attribute": "Maintenance",
+            "negative": true,
+            "type": "modifier",
+            "value": 0.03
+          }
+        ],
+        [
+          {
+            "target": "Global",
+            "attribute": "Discipline",
+            "value": 0.1
+          }
+        ],
+        [
+          {
+            "target": "Global",
+            "attribute": "Experience",
+            "value": 0.05
+          }
+        ],
+        [
+          {
+            "target": "Naval",
+            "attribute": "Damage dpme",
+            "value": 0.1
+          }
+        ]
+      ]
+    }
+  ]
+}

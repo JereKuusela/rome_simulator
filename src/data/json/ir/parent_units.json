@@ -1,44 +1,44 @@
 {
   "units": [
     {
-      "type": "Land Unit",
-      "parent": null,
-      "mode": "Land",
-      "role": "Front",
-      "morale": 3.0,
-      "strength": 1.0,
-      "attrition_weight": 1.0,
-      "maintenance": 0.04166
+      "Type": "Land Unit",
+      "Parent": null,
+      "Mode": "Land",
+      "Role": "Front",
+      "Morale": 3.0,
+      "Strength": 1.0,
+      "Attrition weight": 1.0,
+      "Maintenance": 0.04166
     },
     {
-      "type": "Naval Unit",
-      "parent": null,
-      "mode": "Naval",
-      "role": "Front",
-      "morale": 3.0,
-      "strength": 1.0,
-      "attrition_weight": 1.0,
-      "maintenance": 0.02083,
-      "capture_chance": 0.06
+      "Type": "Naval Unit",
+      "Parent": null,
+      "Mode": "Naval",
+      "Role": "Front",
+      "Morale": 3.0,
+      "Strength": 1.0,
+      "Attrition weight": 1.0,
+      "Maintenance": 0.02083,
+      "Capture chance": 0.06
     },
     {
-      "type": "Light Ship",
-      "parent": "Naval Unit",
-      "capture_chance": 0.1,
-      "capture_resist": 0.1,
-      "riverine": 0.25
+      "Type": "Light Ship",
+      "Parent": "Naval Unit",
+      "Capture chance": 0.1,
+      "Capture resist": 0.1,
+      "Riverine": 0.25
     },
     {
-      "type": "Medium Ship",
-      "parent": "Naval Unit",
-      "capture_chance": 0.2,
-      "capture_resist": 0.2
+      "Type": "Medium Ship",
+      "Parent": "Naval Unit",
+      "Capture chance": 0.2,
+      "Capture resist": 0.2
     },
     {
-      "type": "Heavy Ship",
-      "parent": "Naval Unit",
-      "capture_chance": 0.3,
-      "capture_resist": 0.3
+      "Type": "Heavy Ship",
+      "Parent": "Naval Unit",
+      "Capture chance": 0.3,
+      "Capture resist": 0.3
     }
   ]
 }

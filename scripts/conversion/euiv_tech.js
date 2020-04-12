@@ -1,63 +1,28 @@
-const core = require('./core');
-const path = require('path');
+const core = require('./core')
+const path = require('path')
+const modifiers = require('./modifiers')
 
-const convertKey = key => {
-  switch (key) {
-    case 'infantry_fire':
-    case 'infantry_shock':
-    case 'cavalry_fire':
-    case 'cavalry_shock':
-    case 'artillery_fire':
-    case 'artillery_shock':
-    case 'land_morale':
-      return key;
-    case 'maneuver_value':
-      return 'maneuver';
-    case 'military_tactics':
-    case 'combat_width':
-      return key.replace(/_/g, ' ');
-    default:
-      return null;
-  }
-}
+let tech_level = -1
 
-const getTarget = key => {
-  const split = key.split('_');
-  if (split.length > 1)
-    return core.format(split[0]);
-  if (key === 'combat width')
-    return 'Country';
-  return 'Global';
-}
-
-const getAttribute = key => {
-  const split = key.split('_');
-  if (split.length > 1)
-    return core.format(split[1]);
-  return core.format(split[0]);
-}
-
-const getType = key => {
-  if (key === 'maneuver')
-    return 'Modifier';
-  return undefined;
-}
-
-const getPercent = key => {
-  if (key === 'land_morale' || key === 'combat width' || key === 'military tactics')
-    return true;
-  return undefined;
-}
-
-let tech_level = -1;
-
-const handleTech = (key, value, result) => {
+const handleTech = (results, data) => {
+  const levels = data.technology
+  levels.forEach((values, level) => {
+    result[level] = {
+      name: 'Level ' + level,
+      modifiers: []
+    }
+    Object.keys(values).forEach(key => {
+      const value = values[key]
+      if (modifiers.getAttribute(key))
+        unit[modifiers.getAttribute(key)] = convertValue(key, value)
+    })
+  })
   if (key === 'technology') {
-    tech_level++;
+    tech_level++
     result[tech_level] = {
       name: 'Level ' + tech_level,
       modifiers: []
-    };
+    }
   }
   key = convertKey(key)
   if (key && tech_level > 0)
@@ -67,18 +32,18 @@ const handleTech = (key, value, result) => {
       type: getType(key),
       no_percent: getPercent(key),
       value
-    });
+    })
 }
 
 function transformer(result) {
   Object.keys(result).forEach(key => {
-    result[key] = Object.values(result[key]);
-  });
-  return Object.values(result)[0];
+    result[key] = Object.values(result[key])
+  })
+  return Object.values(result)[0]
 }
 
 const parsers = {
   [path.join('euiv', 'tech', 'mil.txt')]: handleTech
-};
+}
 
-exports.run = () => core.parseFiles(parsers, transformer, path.join('euiv', 'tech.json'));
+exports.run = () => core.parseFiles(parsers, transformer, path.join('euiv', 'tech.json'))

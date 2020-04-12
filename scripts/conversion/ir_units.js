@@ -1,58 +1,14 @@
-const core = require('./core');
-const path = require('path');
+const core = require('./core')
+const path = require('path')
+const modifiers = require('./modifiers')
 
-const convertKey = (key, value) => {
-  if (value === '{')
-    return 'type'
-  switch (key) {
-    case 'army':
-      return 'mode';
-    case 'camels':
-      return 'camel_cavalry';
-    case 'warelephant':
-      return 'war_elephants';
-    case 'mega_galley':
-      return 'mega_polyreme';
-    case 'gold':
-      return 'cost';
-    case 'category':
-      return 'parent';
-    case 'is_flank':
-    case 'support':
-      return 'role';
-    default:
-      return key;
-  }
-}
-
-const validRow = key => {
-  switch (key) {
-    case 'build_cost':
-    case 'allow':
-    case 'assault':
-    case 'movement_speed':
-    case 'build_time':
-    case 'enable':
-    case 'attrition_loss':
-    case 'ai_max_percentage':
-    case 'outside_of_naval_range_attrition':
-    case 'manpower':
-    case 'trade_good_surplus':
-    case 'merc_cohorts_required':
-    case 'default':
-    case 'setup_fraction':
-      return false;
-    default:
-      return true;
-  }
-}
 
 const convertValue = (key, value) => {
-  if (value === '{')
-    return core.format(convertKey(key));
   switch (key) {
     case 'army':
-      return value === 'Yes' ? 'Land' : 'Naval';
+      return value === 'yes' ? 'Land' : 'Naval'
+    case 'build_cost':
+      return value.gold
     case 'light_infantry':
     case 'heavy_infantry':
     case 'heavy_cavalry':
@@ -75,37 +31,48 @@ const convertValue = (key, value) => {
     case 'strength_damage_taken':
     case 'strength_damage_done':
     case 'attrition_weight':
-      return Math.round(100 * (Number(value) - 1)) / 100;
+      return Math.round(100 * (Number(value) - 1)) / 100
     case 'category':
-      return core.format(value + '_ship');
+      return core.format(value + '_ship')
     case 'is_flank':
-      return value === 'Yes' ? 'Flank' : '';
+      return value === 'Yes' ? 'Flank' : ''
     case 'support':
-      return value === 'Yes' ? 'Support' : '';
+      return value === 'Yes' ? 'Support' : ''
     default:
-      return value;
+      return value
   }
 }
 
-const handleUnit = (key, value, result) => {
-  if (validRow(key, value))
-    result[convertKey(key, value)] = convertValue(key, value);
+const handleUnit = (results, data) => {
+  Object.keys(data).forEach(key => {
+    const type = modifiers.getAttribute(key)
+    const values = data[key]
+    const unit = {
+      'Type': type
+    }
+    Object.keys(values).forEach(key => {
+      const value = values[key]
+      if (modifiers.getAttribute(key))
+        unit[modifiers.getAttribute(key)] = convertValue(key, value)
+    })
+    results[type] = unit
+  })
 }
 
 const transformer = result => {
   Object.keys(result).forEach(key => {
-    const unit = result[key];
-    unit['parent'] = unit['parent'] || 'Land Unit';
+    const unit = result[key]
+    unit['Parent'] = unit['Parent'] || 'Land Unit'
     Object.keys(unit).forEach(key => {
       if (!unit[key])
-        delete unit[key];
-    });
-  });
-  return Object.values(result);
+        delete unit[key]
+    })
+  })
+  return Object.values(result)
 }
 
 const parsers = {
   [path.join('ir', 'units')]: handleUnit
-};
+}
 
-exports.run = () => core.parseFiles(parsers, transformer, path.join('ir', 'units.json'));
+exports.run = () => core.parseFiles(parsers, transformer, path.join('ir', 'units.json'))

@@ -1,3 +1,5 @@
-const units = require('./ir_units');
+const units = require('./ir_units')
+const tech = require('./ir_tech')
 
-units.run();
+units.run()
+tech.run()

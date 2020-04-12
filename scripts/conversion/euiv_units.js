@@ -1,49 +1,49 @@
-const core = require('./core');
-const path = require('path');
+const core = require('./core')
+const path = require('path')
 
 const convertKey = key =>  {
   switch (key) {
     case 'unit_type':
-      return 'culture';
+      return 'culture'
     case 'type':
-      return 'parent';
+      return 'parent'
     default:
-      return key;
+      return key
   }
 }
 
-const TECH_FILE = 'mil.txt';
-let tech_level = -1;
+const TECH_FILE = 'mil.txt'
+let tech_level = -1
 
-const handleTech = (key, value, result) => {
+const handleTech = (results, data) => {
   if (key === 'technology')
-    tech_level++;
+    tech_level++
   else if (key === 'enable')
-    result[core.format(value)] = tech_level;
+    result[core.format(value)] = tech_level
 }
 
-const handleUnit = (key, value, result) => {
-  result[convertKey(key)] = value;
+const handleUnit = (results, data) => {
+  result[convertKey(key)] = value
 }
 
 const transformer = result => {
-  const techLevels = result[TECH_FILE];
+  const techLevels = result[TECH_FILE]
   Object.keys(result).forEach(key => {
-    const unit = result[key];
-    unit['type'] = core.format(key);
-    unit['tech'] = techLevels[unit.type] || 0;
+    const unit = result[key]
+    unit['type'] = core.format(key)
+    unit['tech'] = techLevels[unit.type] || 0
     Object.keys(unit).forEach(key => {
       if (key === 'maneuver' || !unit[key])
-        delete unit[key];
-    });
-  });
-  delete result[TECH_FILE];
-  return Object.values(result);
+        delete unit[key]
+    })
+  })
+  delete result[TECH_FILE]
+  return Object.values(result)
 }
 
 const parsers = {
   [path.join('euiv', 'units')]: handleUnit,
   [path.join('euiv', 'tech', TECH_FILE)]: handleTech
-};
+}
 
-exports.run = () => core.parseFiles(parsers, transformer, path.join('euiv', 'units.json'));
+exports.run = () => core.parseFiles(parsers, transformer, path.join('euiv', 'units.json'))
