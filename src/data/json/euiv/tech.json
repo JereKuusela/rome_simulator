@@ -44,7 +44,7 @@
       "name": "Level 3",
       "modifiers": [
         {
-          "target": "Land",
+          "target": "Global",
           "attribute": "Morale",
           "no_percent": true,
           "value": 0.5
@@ -55,7 +55,7 @@
       "name": "Level 4",
       "modifiers": [
         {
-          "target": "Land",
+          "target": "Global",
           "attribute": "Morale",
           "no_percent": true,
           "value": 0.5
@@ -247,7 +247,7 @@
       "name": "Level 15",
       "modifiers": [
         {
-          "target": "Land",
+          "target": "Global",
           "attribute": "Morale",
           "no_percent": true,
           "value": 1
@@ -435,7 +435,7 @@
       "name": "Level 26",
       "modifiers": [
         {
-          "target": "Land",
+          "target": "Global",
           "attribute": "Morale",
           "no_percent": true,
           "value": 1
@@ -488,7 +488,7 @@
           "value": 0.25
         },
         {
-          "target": "Land",
+          "target": "Global",
           "attribute": "Morale",
           "no_percent": true,
           "value": 1

@@ -5,8 +5,9 @@ const RECRUIT_SPEED = 'Recruit speed'
 const EXPERIENCE = 'Experience'
 const MORALE = 'Morale'
 const MANEUVER = 'Maneuver'
+const PARENT = 'Parent'
 const FIRE = 'Fire'
-const SHOCK = 'SHOCK'
+const SHOCK = 'Shock'
 const GLOBAL = 'Global'
 const NAVAL = 'Naval'
 const LAND = 'Land'
@@ -27,31 +28,39 @@ const TRI = 'Trireme'
 const HEX = 'Hexere'
 const LIB = 'Liburnian'
 const OCT = 'Octere'
-const MEG = 'Mega-Polyreme'
+const MEG = 'Mega Polyreme'
 const INF = 'Infantry'
 const CAV = 'Cavalry'
 const ART = 'Artillery'
 
 
 const attributes = {
-  'artillery_fire': FIRE, 
-  'artillery_shock': SHOCK, 
+  'artillery': ART,
+  'artillery_fire': FIRE,
+  'artillery_shock': SHOCK,
   'assault_ability': 'Assault ability',
   'attrition_weight': 'Attrition weight',
   'archers': A,
   'army': 'Mode',
-  'category': 'Parent',
+  'category': PARENT,
   'build_cost': 'Cost',
   'camels': CC,
-  'cavalry_fire': FIRE, 
-  'cavalry_shock': SHOCK, 
+  'cavalry': CAV,
+  'cavalry_fire': FIRE,
+  'cavalry_shock': SHOCK,
   'chariots': C,
-  'combat_width': 'Combat width', 
+  'combat_width': 'Combat width',
+  'defensive_fire': 'Defensive fire pips',
+  'defensive_morale': 'Defensive morale pips',
+  'defensive_shock': 'Defensive shock pips',
+  'heavy': 'Heavy Ship',
   'heavy_cavalry': HC,
   'heavy_infantry': HI,
   'horse_archers': HA,
-  'infantry_fire': FIRE, 
-  'infantry_shock': SHOCK, 
+  'infantry': INF,
+  'infantry_fire': FIRE,
+  'infantry_shock': SHOCK,
+  'light': 'Light Ship',
   'light_cavalry': LC,
   'light_infantry': LI,
   'supply_train': ST,
@@ -69,7 +78,7 @@ const attributes = {
   'global_cohort_recruit_speed': LAND + ' ' + RECRUIT_SPEED,
   'global_defensive': 'Fort defense',
   'global_start_experience': EXPERIENCE,
-  'global_ship_recruit_speed':  NAVAL + ' ' + RECRUIT_SPEED,
+  'global_ship_recruit_speed': NAVAL + ' ' + RECRUIT_SPEED,
   'global_supply_limit_modifier': 'Supply limit',
   'hexere': HEX,
   'hexere_discipline': DISCIPLINE,
@@ -83,6 +92,7 @@ const attributes = {
   'maintenance_cost': MAINTENANCE,
   'maneuver': MANEUVER,
   'maneuver_value': MANEUVER,
+  'medium': 'Medium Ship',
   'military_tactics': 'Military tactics',
   'mega_galley': MEG,
   'morale': MORALE,
@@ -95,6 +105,9 @@ const attributes = {
   'naval_unit_attrition': 'Naval Attrition',
   'navy_maintenance_cost': MAINTENANCE,
   'octere': OCT,
+  'offensive_fire': 'Offensive fire pips',
+  'offensive_morale': 'Offensive morale pips',
+  'offensive_shock': 'Offensive shock pips',
   'price_state_investment_military_cost_modifier': 'Military investment cost',
   'retreat_delay': 'Retreat delay',
   'siege_ability': 'Siege ability',
@@ -105,19 +118,21 @@ const attributes = {
   'tetrere_discipline': DISCIPLINE,
   'trireme': TRI,
   'trireme_discipline': DISCIPLINE,
+  'type': PARENT,
+  'unit_type': 'Culture'
 }
 
 const targets = {
-  'artillery_fire': ART, 
-  'artillery_shock': ART, 
+  'artillery_fire': ART,
+  'artillery_shock': ART,
   'assault_ability': TEXT,
   'army_maintenance_cost': LAND,
   'army_movement_speed': TEXT,
   'army_weight_modifier': LAND,
   'blockade_efficiency': GLOBAL,
-  'cavalry_fire': CAV, 
-  'cavalry_shock': CAV, 
-  'combat_width': COUNTRY, 
+  'cavalry_fire': CAV,
+  'cavalry_shock': CAV,
+  'combat_width': COUNTRY,
   'discipline': GLOBAL,
   'experience_decay': TEXT,
   'fort_maintenance_cost': TEXT,
@@ -132,8 +147,8 @@ const targets = {
   'heavy_cavalry_discipline': HC,
   'heavy_infantry_cost': HI,
   'heavy_infantry_discipline': HI,
-  'infantry_fire': INF, 
-  'infantry_shock': INF, 
+  'infantry_fire': INF,
+  'infantry_shock': INF,
   'land_morale': GLOBAL,
   'liburnian_discipline': LIB,
   'maintenance_cost': GLOBAL,
@@ -178,7 +193,7 @@ const negatives = {
   'retreat_delay': true,
 }
 
-const MODIFIER = 'modifier'
+const MODIFIER = 'Modifier'
 
 const types = {
   'army_maintenance_cost': MODIFIER,
@@ -188,14 +203,83 @@ const types = {
   'navy_maintenance_cost': MODIFIER
 }
 
-const multipliers = {
-  'global_start_experience': 0.01
+/**
+ * 
+ * @param {string} value 
+ */
+const format = value => {
+  let split = value.split('_')
+  split = split.map(part => part[0].toUpperCase() + part.substring(1))
+  return split.join(' ')
 }
 
-
+/**
+ * @param {string} key 
+ */
 exports.getAttribute = getAttribute = key => attributes[key]
+/**
+ * @param {string} key 
+ */
 exports.getTarget = getTarget = key => targets[key]
+/**
+ * @param {string} key 
+ */
 exports.getNoPercent = getNoPercent = key => noPercents[key]
-exports.getNegative = getNegative = key => negatives[key]
+/**
+ * @param {string} key 
+ * @param {string} value 
+ */
+exports.getNegative = getNegative = (key, value) => negatives[key] === value > 0 ? true : undefined
+/**
+ * @param {string} key 
+ */
 exports.getType = getType = key => types[key]
-exports.getMultiplier = getMultiplier = key => multipliers[key] || 1.0
+/**
+ * @param {string} key 
+ * @param {string} value 
+ */
+exports.getValue = getValue = (key, value) => {
+  switch (key) {
+    case 'global_start_experience':
+      return value * 0.01
+    case 'army':
+      return value === 'yes' ? 'Land' : 'Naval'
+    case 'build_cost':
+      return value.gold
+    case 'light_infantry':
+    case 'heavy_infantry':
+    case 'heavy_cavalry':
+    case 'warelephant':
+    case 'horse_archers':
+    case 'archers':
+    case 'camels':
+    case 'chariots':
+    case 'light_cavalry':
+    case 'supply_train':
+    case 'liburnian':
+    case 'trireme':
+    case 'liburnian':
+    case 'tetrere':
+    case 'hexere':
+    case 'octere':
+    case 'mega_galley':
+    case 'morale_damage_taken':
+    case 'morale_damage_done':
+    case 'strength_damage_taken':
+    case 'strength_damage_done':
+    case 'attrition_weight':
+      return Math.round(100 * (Number(value) - 1)) / 100
+    case 'category':
+    case 'type':
+      return getAttribute(value)
+    case 'unit_type':
+      return format(value)
+    case 'is_flank':
+      return value === 'Yes' ? 'Flank' : ''
+    case 'support':
+      return value === 'Yes' ? 'Support' : ''
+    default:
+      return value
+  }
+}
+

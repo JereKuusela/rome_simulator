@@ -15,6 +15,7 @@ Changelog:
 Combat:
   - Morale and strength no longer go below zero. This fixes slightly inflated losses on Analyze tool.
   - Added checks for different stack wipes (no deploy, 10/1 limit, 2/1 limit on no retreat).
+  - Fixed EUIV combat having dice rolls from 1 to 9 instead of from 0 to 9. This doesn't affect combat calculations that much but will slow down Analyze page because of more simulations.
 
 Testing:
   - Added unit tests to verify that most mechanics works as intended.

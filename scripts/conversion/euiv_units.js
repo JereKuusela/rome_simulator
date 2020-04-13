@@ -1,44 +1,50 @@
 const core = require('./core')
 const path = require('path')
-
-const convertKey = key =>  {
-  switch (key) {
-    case 'unit_type':
-      return 'culture'
-    case 'type':
-      return 'parent'
-    default:
-      return key
-  }
-}
+const modifiers = require('./modifiers')
 
 const TECH_FILE = 'mil.txt'
-let tech_level = -1
 
 const handleTech = (results, data) => {
-  if (key === 'technology')
-    tech_level++
-  else if (key === 'enable')
-    result[core.format(value)] = tech_level
-}
-
-const handleUnit = (results, data) => {
-  result[convertKey(key)] = value
-}
-
-const transformer = result => {
-  const techLevels = result[TECH_FILE]
-  Object.keys(result).forEach(key => {
-    const unit = result[key]
-    unit['type'] = core.format(key)
-    unit['tech'] = techLevels[unit.type] || 0
-    Object.keys(unit).forEach(key => {
-      if (key === 'maneuver' || !unit[key])
-        delete unit[key]
-    })
+  results[TECH_FILE] = {}
+  data.technology.forEach((values, level) => {
+    if (!values.enable)
+      return
+    if (Array.isArray(values.enable)) {
+      values.enable.forEach(unit => {
+        results[TECH_FILE][core.format(unit)] = level
+      })
+    }
+    else {
+      results[TECH_FILE][core.format(values.enable)] = level
+    }
   })
-  delete result[TECH_FILE]
-  return Object.values(result)
+}
+
+const handleUnit = (results, data, filename) => {
+  const type = core.format(filename)
+  const unit = {
+    'Type': type
+  }
+  Object.keys(data).forEach(key => {
+    const value = data[key]
+    if (key === 'maneuver')
+      return
+    if (modifiers.getAttribute(key))
+      unit[modifiers.getAttribute(key)] = modifiers.getValue(key, value)
+  })
+  if (!unit.Parent)
+    return
+  results[type] = unit
+}
+
+const transformer = results => {
+  const techLevels = results[TECH_FILE]
+  Object.keys(results).forEach(key => {
+    const unit = results[key]
+    unit['Tech'] = techLevels[unit.Type] || 0
+  })
+  delete results[TECH_FILE]
+  return Object.values(results)
 }
 
 const parsers = {

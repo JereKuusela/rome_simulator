@@ -1,6 +1,5 @@
 const core = require('./core')
 const path = require('path')
-const modifiers = require('./modifiers')
 
 const subHandle = (results, key, value, level, is_tech) => {
   if (!results[level]) {
@@ -15,14 +14,7 @@ const subHandle = (results, key, value, level, is_tech) => {
   if (!key)
     return
   const index = is_tech ? 0 : inventions.length - 1
-  inventions[index].push({
-    target: modifiers.getTarget(key),
-    attribute: modifiers.getAttribute(key),
-    no_percent: modifiers.getNoPercent(key),
-    negative: modifiers.getNegative(key) === value > 0 ? true : undefined ,
-    type: modifiers.getType(key),
-    value: typeof value === 'number' ? modifiers.getMultiplier(key) * value : value
-  })
+  inventions[index].push(core.getModifier(key, value))
 }
 
 const handleTech = (results, data) => {

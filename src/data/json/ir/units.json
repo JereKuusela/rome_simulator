@@ -193,7 +193,7 @@
       "Tetrere": -0.25,
       "Hexere": -0.35,
       "Octere": -0.4,
-      "Mega-Polyreme": -0.5,
+      "Mega Polyreme": -0.5,
       "Cost": 5
     },
     {
@@ -206,7 +206,7 @@
       "Tetrere": -0.1,
       "Hexere": -0.1,
       "Octere": -0.2,
-      "Mega-Polyreme": -0.2,
+      "Mega Polyreme": -0.2,
       "Cost": 8
     },
     {
@@ -217,7 +217,7 @@
       "Liburnian": 0.25,
       "Trireme": 0.1,
       "Octere": -0.1,
-      "Mega-Polyreme": -0.1,
+      "Mega Polyreme": -0.1,
       "Cost": 10
     },
     {
@@ -231,7 +231,7 @@
       "Trireme": 0.1,
       "Tetrere": 0.05,
       "Octere": -0.1,
-      "Mega-Polyreme": -0.1,
+      "Mega Polyreme": -0.1,
       "Cost": 15
     },
     {
@@ -243,11 +243,11 @@
       "Trireme": 0.2,
       "Tetrere": 0.1,
       "Hexere": 0.1,
-      "Mega-Polyreme": -0.1,
+      "Mega Polyreme": -0.1,
       "Cost": 25
     },
     {
-      "Type": "Mega-Polyreme",
+      "Type": "Mega Polyreme",
       "Mode": "Naval",
       "Parent": "Heavy Ship",
       "Strength damage done": 0.4,

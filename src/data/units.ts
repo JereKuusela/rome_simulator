@@ -104,49 +104,6 @@ interface UnitData {
   Type: string
   Mode?: string
   Culture?: string
-  [UnitAttribute.Morale]?: number
-  [UnitAttribute.Strength]?: number
-  [UnitAttribute.Cost]?: number
   Role?: string
   Tech?: number
-  [UnitAttribute.Maintenance]?: number
-  [UnitAttribute.Maneuver]?: number
-  [UnitAttribute.StrengthDamageDone]?: number
-  [UnitAttribute.StrengthDamageTaken]?: number
-  [UnitAttribute.FoodConsumption]?: number
-  [UnitAttribute.FoodStorage]?: number
-  [UnitAttribute.CaptureChance]?: number
-  [UnitAttribute.CaptureResist]?: number
-  [UnitAttribute.DamageTaken]?: number
-  [UnitAttribute.MoraleDamageDone]?: number
-  [UnitAttribute.MoraleDamageTaken]?: number
-  [UnitAttribute.DamageDone]?: number
-  [UnitAttribute.AttritionWeight]?: number
-  [UnitType.Archers]?: number
-  [UnitType.CamelCavalry]?: number
-  [UnitType.Chariots]?: number
-  [UnitType.HeavyCavalry]?: number
-  [UnitType.HeavyInfantry]?: number
-  [UnitType.HorseArchers]?: number
-  [UnitType.LightCavalry]?: number
-  [UnitType.LightInfantry]?: number
-  [UnitType.WarElephants]?: number
-  [UnitType.SupplyTrain]?: number
-  [UnitType.Liburnian]?: number
-  [UnitType.Trireme]?: number
-  [UnitType.Tetrere]?: number
-  [UnitType.Hexere]?: number
-  [UnitType.Octere]?: number
-  [UnitType.MegaPolyreme]?: number
-  [TerrainType.Riverine]?: number
-  [UnitAttribute.OffensiveMoralePips]?: number
-  [UnitAttribute.DefensiveMoralePips]?: number
-  [UnitAttribute.OffensiveFirePips]?: number
-  [UnitAttribute.DefensiveFirePips]?: number
-  [UnitAttribute.OffensiveShockPips]?: number
-  [UnitAttribute.DefensiveShockPips]?: number
-  [CombatPhase.Shock]?: number
-  [CombatPhase.Fire]?: number
-  [UnitAttribute.MilitaryTactics]?: number
-  [UnitAttribute.OffensiveSupport]?: number
 }

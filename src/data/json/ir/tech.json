@@ -40,8 +40,8 @@
           {
             "target": "Global",
             "attribute": "Maintenance",
+            "type": "Modifier",
             "negative": true,
-            "type": "modifier",
             "value": 0.03
           }
         ],
@@ -81,8 +81,8 @@
           {
             "target": "Global",
             "attribute": "Maintenance",
+            "type": "Modifier",
             "negative": true,
-            "type": "modifier",
             "value": 0.03
           }
         ],
@@ -104,7 +104,7 @@
           {
             "target": "Land",
             "attribute": "Attrition weight",
-            "type": "modifier",
+            "type": "Modifier",
             "value": -0.1
           }
         ]
@@ -123,8 +123,8 @@
           {
             "target": "Global",
             "attribute": "Maintenance",
+            "type": "Modifier",
             "negative": true,
-            "type": "modifier",
             "value": 0.03
           }
         ],
@@ -146,7 +146,7 @@
           {
             "target": "Naval",
             "attribute": "Maintenance",
-            "type": "modifier",
+            "type": "Modifier",
             "value": -0.1
           }
         ]
@@ -165,8 +165,8 @@
           {
             "target": "Global",
             "attribute": "Maintenance",
+            "type": "Modifier",
             "negative": true,
-            "type": "modifier",
             "value": 0.03
           }
         ],
@@ -174,7 +174,7 @@
           {
             "target": "Land",
             "attribute": "Maintenance",
-            "type": "modifier",
+            "type": "Modifier",
             "value": -0.1
           }
         ],
@@ -207,8 +207,8 @@
           {
             "target": "Global",
             "attribute": "Maintenance",
+            "type": "Modifier",
             "negative": true,
-            "type": "modifier",
             "value": 0.03
           }
         ],
@@ -249,8 +249,8 @@
           {
             "target": "Global",
             "attribute": "Maintenance",
+            "type": "Modifier",
             "negative": true,
-            "type": "modifier",
             "value": 0.03
           }
         ],
@@ -283,8 +283,8 @@
           {
             "target": "Global",
             "attribute": "Maintenance",
+            "type": "Modifier",
             "negative": true,
-            "type": "modifier",
             "value": 0.03
           }
         ],
@@ -324,8 +324,8 @@
           {
             "target": "Global",
             "attribute": "Maintenance",
+            "type": "Modifier",
             "negative": true,
-            "type": "modifier",
             "value": 0.03
           }
         ],
@@ -365,8 +365,8 @@
           {
             "target": "Global",
             "attribute": "Maintenance",
+            "type": "Modifier",
             "negative": true,
-            "type": "modifier",
             "value": 0.03
           }
         ],
@@ -406,8 +406,8 @@
           {
             "target": "Global",
             "attribute": "Maintenance",
+            "type": "Modifier",
             "negative": true,
-            "type": "modifier",
             "value": 0.03
           }
         ],
@@ -447,8 +447,8 @@
           {
             "target": "Global",
             "attribute": "Maintenance",
+            "type": "Modifier",
             "negative": true,
-            "type": "modifier",
             "value": 0.03
           }
         ],
@@ -488,8 +488,8 @@
           {
             "target": "Global",
             "attribute": "Maintenance",
+            "type": "Modifier",
             "negative": true,
-            "type": "modifier",
             "value": 0.03
           }
         ],
@@ -504,7 +504,7 @@
           {
             "target": "Land",
             "attribute": "Maintenance",
-            "type": "modifier",
+            "type": "Modifier",
             "value": -0.1
           }
         ],
@@ -530,8 +530,8 @@
           {
             "target": "Global",
             "attribute": "Maintenance",
+            "type": "Modifier",
             "negative": true,
-            "type": "modifier",
             "value": 0.03
           }
         ],
@@ -571,8 +571,8 @@
           {
             "target": "Global",
             "attribute": "Maintenance",
+            "type": "Modifier",
             "negative": true,
-            "type": "modifier",
             "value": 0.03
           }
         ],
@@ -612,8 +612,8 @@
           {
             "target": "Global",
             "attribute": "Maintenance",
+            "type": "Modifier",
             "negative": true,
-            "type": "modifier",
             "value": 0.03
           }
         ],
@@ -651,8 +651,8 @@
           {
             "target": "Global",
             "attribute": "Maintenance",
+            "type": "Modifier",
             "negative": true,
-            "type": "modifier",
             "value": 0.03
           }
         ],
@@ -690,8 +690,8 @@
           {
             "target": "Global",
             "attribute": "Maintenance",
+            "type": "Modifier",
             "negative": true,
-            "type": "modifier",
             "value": 0.03
           }
         ],
@@ -731,8 +731,8 @@
           {
             "target": "Global",
             "attribute": "Maintenance",
+            "type": "Modifier",
             "negative": true,
-            "type": "modifier",
             "value": 0.03
           }
         ],
@@ -772,8 +772,8 @@
           {
             "target": "Global",
             "attribute": "Maintenance",
+            "type": "Modifier",
             "negative": true,
-            "type": "modifier",
             "value": 0.03
           }
         ],
@@ -813,8 +813,8 @@
           {
             "target": "Global",
             "attribute": "Maintenance",
+            "type": "Modifier",
             "negative": true,
-            "type": "modifier",
             "value": 0.03
           }
         ],

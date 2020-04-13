@@ -44,7 +44,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.BasePips]: 3,
       [Setting.MaxPips]: 100,
       [Setting.MaxGeneral]: 6,
-      [Setting.DiceMinimum]: 1,
+      [Setting.DiceMinimum]: 0,
       [Setting.DiceMaximum]: 9,
       [Setting.RollFrequency]: 3,
       [Setting.RetreatRounds]: 12,
