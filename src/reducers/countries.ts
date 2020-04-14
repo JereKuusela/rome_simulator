@@ -14,7 +14,10 @@ const countries = makeContainerReducer(getDefaultCountryDefinitions(), countries
 const countryMapping: ActionToFunction<CountryDefinition, CountryName> = {}
 
 export const clearSelection = makeActionReplaceFirst(manager.clearSelection, countryMapping)
+export const clearSelections = makeActionReplaceFirst(manager.clearSelections, countryMapping)
+export const clearAllSelections = makeActionReplaceFirst(manager.clearAllSelections, countryMapping)
 export const enableSelection = makeActionReplaceFirst(manager.enableSelection, countryMapping)
+export const enableSelections = makeActionReplaceFirst(manager.enableSelections, countryMapping)
 export const selectCulture = makeActionReplaceFirst(manager.selectCulture, countryMapping)
 export const selectGovernment = makeActionReplaceFirst(manager.selectGovernment, countryMapping)
 export const selectReligion = makeActionReplaceFirst(manager.selectReligion, countryMapping)

@@ -39,11 +39,18 @@ export interface Modifier {
   no_percent?: boolean
   value: number
 }
+
 export interface ModifierWithKey extends Modifier {
   key: string
 }
 export interface Tradition {
   name: string
+  key: string
+  modifiers: Modifier[]
+}
+export interface Invention {
+  name: string
+  key: string
   modifiers: Modifier[]
 }
 export interface Path {
@@ -66,7 +73,7 @@ export interface HeritageDefinition {
 }
 export interface InventionDefinition {
   name: string
-  inventions: Modifier[][]
+  inventions: Invention[]
 }
 export interface OmenDefinition {
   name: string

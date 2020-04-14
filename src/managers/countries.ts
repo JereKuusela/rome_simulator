@@ -65,8 +65,20 @@ export const enableSelection = (country: CountryDefinition, key: string) => {
   country.selections[key] = true
 }
 
+export const enableSelections = (country: CountryDefinition, keys: string[]) => {
+  keys.forEach(key => enableSelection(country, key))
+}
+
 export const clearSelection = (country: CountryDefinition, key: string) => {
   delete country.selections[key]
+}
+
+export const clearSelections = (country: CountryDefinition, keys: string[]) => {
+  keys.forEach(key => clearSelection(country, key))
+}
+
+export const clearAllSelections = (country: CountryDefinition) => {
+  country.selections = {}
 }
 
 export const changeWeariness = (country: CountryDefinition, type: WearinessAttribute, min: number, max: number) => {

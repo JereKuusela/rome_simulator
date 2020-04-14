@@ -81,7 +81,6 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
     ...handleAttributes(values(UnitType)),
     ...handleAttributes(values(CombatPhase))
   ]
-  console.log(base_values)
   unit = addValues(unit, ValuesType.Base, unit.type, base_values)
   return unit
 }

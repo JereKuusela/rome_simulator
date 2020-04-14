@@ -10,18 +10,22 @@ const subHandle = (results, key, value, level, is_tech) => {
   }
   const inventions = results[level].inventions
   if (!is_tech || !inventions.length )
-    inventions.push([])
+    inventions.push({
+      name: is_tech ? '' : 'Invention ' + level + ' ' + inventions.length,
+      key: is_tech ? '' : 'Invention ' + level + ' ' + inventions.length,
+      modifiers: []
+    })
   if (!key)
     return
   const index = is_tech ? 0 : inventions.length - 1
-  inventions[index].push(core.getModifier(key, value))
+  inventions[index].modifiers.push(core.getModifier(key, value))
 }
 
 const handleTech = (results, data) => {
   const tech = data.military_tech
   for (let i = 0; i <= 20; i++) {
     if (i === 0) {
-      subHandle(results, '', 0, i, 0)
+      subHandle(results, '', 0, i, true)
       continue
     }
     if (tech.land_morale === tech.naval_morale)

@@ -5,7 +5,7 @@ import { AppState, getGeneralDefinition, getCountryDefinition, getSiteSettings }
 import { mapRange, ObjSet, has, values } from '../utils'
 
 import { ValuesType, Modifier, ScopeType, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, TechDefinitionEUIV, CountryName, Setting } from 'types'
-import { invalidate, enableCountryModifiers, clearCountryModifiers, setCountryValue, setTechLevel, enableSelection, clearSelection, enableUnitModifiers, enableGeneralModifiers, clearUnitModifiers, clearGeneralModifiers, setGeneralValue, selectCulture, selectReligion, selectGovernment, setHasGeneral } from 'reducers'
+import { clearAllSelections, invalidate, enableCountryModifiers, clearCountryModifiers, setCountryValue, setTechLevel, enableSelection, clearSelection, enableUnitModifiers, enableGeneralModifiers, clearUnitModifiers, clearGeneralModifiers, setGeneralValue, selectCulture, selectReligion, selectGovernment, setHasGeneral } from 'reducers'
 
 import AccordionToggle from 'containers/AccordionToggle'
 import CountryManager from 'containers/CountryManager'
@@ -13,14 +13,12 @@ import Dropdown from 'components/Dropdowns/Dropdown'
 import ConfirmationButton from 'components/ConfirmationButton'
 import TableAttributes from 'components/TableAttributes'
 import { getCultures } from 'data'
-import { mapModifiersToUnits, tech } from 'managers/modifiers'
+import { mapModifiersToUnits, tech_euiv } from 'managers/modifiers'
 import InputTechLevel from 'containers/InputTechLevel'
 
 const TECH_COLUMNS = 4
 const CUSTOM_KEY = 'Custom'
 const NO_GENERAL_KEY = 'No general'
-
-const KEYS = [NO_GENERAL_KEY, CUSTOM_KEY]
 
 const CELL_PADDING = '.78571429em .78571429em'
 
@@ -28,7 +26,6 @@ class Countries extends Component<IProps> {
 
   render() {
     const { settings, tech, general, country, selected_country } = this.props
-    const selections = country.selections
     return (
       <Container>
         <CountryManager>
@@ -36,7 +33,7 @@ class Countries extends Component<IProps> {
             message={'Are you sure you want to clear all selections from country ' + selected_country + '?'}
             negative
             text='Clear selections'
-            onConfirm={() => this.clearAll(selections)} />
+            onConfirm={this.clearAll} />
         </CountryManager>
         <Grid>
           <Grid.Row columns='3'>
@@ -169,12 +166,6 @@ class Countries extends Component<IProps> {
   )
 
   /**
-   * Clears modifiers starting with a given key.
-   */
-  clearModifiersStartingWith = (key: string, selections: ObjSet) => {
-    Object.keys(selections).filter(value => value.startsWith(key)).forEach(value => this.clearModifiers(value))
-  }
-  /**
    * Selects religion while also re-enabling current omen.
    */
   selectReligion = (value: ReligionType) => {
@@ -214,9 +205,9 @@ class Countries extends Component<IProps> {
   /**
    * Clears all selections.
    */
-  clearAll = (selections: ObjSet) => {
+  clearAll = () => {
     const { selected_country, clearCountryModifiers } = this.props
-    KEYS.forEach(key => this.clearModifiersStartingWith(key, selections))
+    this.exec(this.props.clearAllSelections, 0)
     this.exec(this.props.setHasGeneral, true)
     this.exec(this.props.setTechLevel, 0)
     clearCountryModifiers(selected_country, CUSTOM_KEY)
@@ -313,14 +304,14 @@ class Countries extends Component<IProps> {
 const mapStateToProps = (state: AppState) => ({
   country: getCountryDefinition(state, state.settings.country),
   selected_country: state.settings.country,
-  tech,
+  tech: tech_euiv,
   general: getGeneralDefinition(state, state.settings.country),
   settings: getSiteSettings(state)
 })
 
 const actions = {
   enableGeneralModifiers, clearGeneralModifiers, clearUnitModifiers, enableUnitModifiers, setGeneralValue, selectCulture, invalidate, setCountryValue,
-  selectReligion, selectGovernment, setHasGeneral, enableSelection, clearSelection, setTechLevel, clearCountryModifiers, enableCountryModifiers
+  clearAllSelections, selectReligion, selectGovernment, setHasGeneral, enableSelection, clearSelection, setTechLevel, clearCountryModifiers, enableCountryModifiers
 }
 
 type S = ReturnType<typeof mapStateToProps>

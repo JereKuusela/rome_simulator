@@ -8,7 +8,7 @@ import {
 import * as traditionData from './json/ir/traditions.json'
 import * as tradeData from './json/ir/trades.json'
 import * as heritageData from './json/ir/heritages.json'
-import * as inventionData from './json/ir/inventions.json'
+import * as techDataIR from './json/ir/tech.json'
 import * as omenData from './json/ir/omens.json'
 import * as traitData from './json/ir/traits.json'
 import * as lawData from './json/ir/laws.json'
@@ -23,7 +23,7 @@ const getTechDataEUIV = () => process.env.REACT_APP_GAME === 'euiv' ? Array.from
 const getTraditionData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(traditionData.traditions) : [] as TraditionData[]
 const getTradeData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(tradeData.trades) : [] as TradeData[]
 const getHeritageData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(heritageData.heritages) : [] as HeritageData[]
-const getInventionData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(inventionData.levels) : [] as InventionData[]
+const getTechDataIR = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(techDataIR.tech) : [] as InventionData[]
 const getOmenData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(omenData.religions) : [] as OmenData[]
 const getTraitData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(traitData.traits) : [] as TraitData[]
 const getLawData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(lawData.laws) : [] as LawData[]
@@ -64,9 +64,9 @@ export const getHeritageDefinitions = () => {
   return data
 }
 
-export const getInventionDefinitions = () => {
-  const data = sortBy<InventionData>(getInventionData(), () => 1) as InventionDefinition[]
-  data.forEach(level => level.inventions.forEach(invention => invention.forEach(modifier => setDefault(modifier))))
+export const getTechDefinitionsIR = () => {
+  const data = sortBy<InventionData>(getTechDataIR(), () => 1) as InventionDefinition[]
+  data.forEach(level => level.inventions.forEach(invention => invention.modifiers.forEach(modifier => setDefault(modifier))))
   return data
 }
 
@@ -142,7 +142,11 @@ interface HeritageData {
 
 interface InventionData {
   name: string
-  inventions: ModifierData[][]
+  inventions: {
+    name: string
+    key: string
+    modifiers: ModifierData[]
+  }[]
 }
 
 interface OmenData {

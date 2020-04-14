@@ -38,8 +38,9 @@ parseObject = tokens => {
 }
 
 exports.parseFile = data => {
-  const withoutComments = data.replace(/\h*#.*\r?(?:\n|$)/g, "")
-  const tokens = withoutComments.split(/[\n\r\s]+/)
+  const withoutComments = data.replace(/\h*#.*\r?(?:\n|$)/g, '')
+  const forceTokenizeEqualCharacter = data.replace(/=/g, ' = ')
+  const tokens = forceTokenizeEqualCharacter.split(/[\n\r\s]+/)
   i = -1
   return parseObject(tokens)
 }

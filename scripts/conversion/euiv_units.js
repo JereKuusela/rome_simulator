@@ -4,6 +4,15 @@ const modifiers = require('./modifiers')
 
 const TECH_FILE = 'mil.txt'
 
+const format = value => {
+  if (!isNaN(value))
+    return Number(value)
+  value = path.parse(value).name
+  let split = value.split('_')
+  split = split.map(part => part[0].toUpperCase() + part.substring(1))
+  return split.join(' ')
+}
+
 const handleTech = (results, data) => {
   results[TECH_FILE] = {}
   data.technology.forEach((values, level) => {
@@ -11,17 +20,17 @@ const handleTech = (results, data) => {
       return
     if (Array.isArray(values.enable)) {
       values.enable.forEach(unit => {
-        results[TECH_FILE][core.format(unit)] = level
+        results[TECH_FILE][format(unit)] = level
       })
     }
     else {
-      results[TECH_FILE][core.format(values.enable)] = level
+      results[TECH_FILE][format(values.enable)] = level
     }
   })
 }
 
 const handleUnit = (results, data, filename) => {
-  const type = core.format(filename)
+  const type = format(filename)
   const unit = {
     'Type': type
   }
