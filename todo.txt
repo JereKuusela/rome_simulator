@@ -21,6 +21,9 @@ Testing:
   - Added unit tests to verify that most mechanics works as intended.
   - Added unit tests to verify stack wipe mechanics.
 
+Refactor:
+  - Invalidate is now done automatically for all non-UI actions. Removes lots of low value code.
+
 TODO:
 
 Tests:

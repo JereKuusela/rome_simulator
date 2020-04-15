@@ -10,7 +10,7 @@ import TargetArrows from 'containers/TargetArrows'
 import TerrainSelector from 'containers/TerrainSelector'
 import WinRate from 'containers/WinRate'
 import {
-  invalidate, selectArmy, setDice, toggleRandomDice, clearCohorts, changeSiteParameter,
+  selectArmy, setDice, toggleRandomDice, clearCohorts, changeSiteParameter,
   undo, battle, refreshBattle, setSeed, setGeneralStat, resetState, selectCulture, openModal
 } from 'reducers'
 import { AppState, getBattle, getParticipant, getSettings } from 'state'
@@ -268,10 +268,9 @@ class Battle extends Component<IProps> {
   }
 
   clearCohorts = (): void => {
-    const { participant_a, participant_d, clearCohorts, invalidate } = this.props
+    const { participant_a, participant_d, clearCohorts } = this.props
     clearCohorts(participant_a.country)
     clearCohorts(participant_d.country)
-    invalidate()
   }
 
   undo = (rounds: number) => {
@@ -304,7 +303,7 @@ const mapStateToProps = (state: AppState) => {
   }
 }
 
-const actions = { openModal, changeSiteParameter, battle, undo, toggleRandomRoll: toggleRandomDice, setDice, setGeneralStat, invalidate, selectArmy, setSeed, refreshBattle, resetState, selectCulture, clearCohorts }
+const actions = { openModal, changeSiteParameter, battle, undo, toggleRandomRoll: toggleRandomDice, setDice, setGeneralStat, selectArmy, setSeed, refreshBattle, resetState, selectCulture, clearCohorts }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

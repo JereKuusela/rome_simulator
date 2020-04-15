@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { ModalType, Mode, TacticType, UnitPreferences, UnitPreferenceType, dictionaryUnitType, dictionaryTacticType, GeneralAttribute, UnitType, UnitAttribute, CultureType, dictionaryCultureType } from 'types'
-import { setPhaseDice, invalidate } from 'reducers'
+import { setPhaseDice } from 'reducers'
 import { Input, Button, Grid, Table } from 'semantic-ui-react'
 import BaseModal from './BaseModal'
 import Dropdown from 'components/Dropdowns/Dropdown'
@@ -605,7 +605,7 @@ const mapStateToProps = (state: AppState) => ({
   units: getDefaultUnits()
 })
 
-const actions = { setPhaseDice, invalidate }
+const actions = { setPhaseDice }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

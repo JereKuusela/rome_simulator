@@ -10,7 +10,7 @@ import { getImage, resize } from 'utils'
 import { AppState, getCurrentCombat, getCountryName, getBattle } from 'state'
 import { getArmyPart } from 'army_utils'
 import { last } from 'lodash'
-import { deleteCohort, invalidate } from 'reducers'
+import { deleteCohort } from 'reducers'
 
 type Props = {
   side: Side
@@ -135,9 +135,8 @@ class TableArmyPart extends Component<IProps, IState> {
   deleteCohort = (cohort: ICohort) => {
     if (!cohort)
       return
-    const { deleteCohort, invalidate, country } = this.props
+    const { deleteCohort, country } = this.props
     deleteCohort(country, cohort.id)
-    invalidate()
   }
 }
 
@@ -205,7 +204,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   timestamp: getBattle(state).timestamp
 })
 
-const actions = { deleteCohort, invalidate }
+const actions = { deleteCohort }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

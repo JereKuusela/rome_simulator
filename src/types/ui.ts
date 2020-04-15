@@ -4,6 +4,7 @@ import { CountryName } from "./countries"
 import { UnitType } from "./units"
 import { TerrainType } from "./terrains"
 import { TacticType } from "./tactics"
+import { ObjSet } from "utils"
 
 export enum ModalType {
   DiceRolls = 'DiceRolls',
@@ -14,6 +15,11 @@ export enum ModalType {
   TacticDetail = 'TacticDetail',
   Value = 'Value',
   ImportCountry = 'ImportCountry'
+}
+
+export type UI = {
+  accordions: ObjSet
+  modals: Modals
 }
 
 export type Modals = {

@@ -6,8 +6,8 @@ import { AppState, getMode } from 'state'
 
 import Dropdown from 'components/Dropdowns/Dropdown'
 import { toArr, keys, values, filterKeys } from 'utils'
-import { Mode, Setting, parameterToDescription, SimulationSpeed, CombatSettings, SiteSettings, DisciplineValue } from 'types'
-import { changeCombatParameter, changeSiteParameter, invalidate } from 'reducers'
+import { Mode, Setting, parameterToDescription, SimulationSpeed, SiteSettings, DisciplineValue } from 'types'
+import { changeCombatParameter, changeSiteParameter } from 'reducers'
 import { getDefaultSiteSettings, getDefaultLandSettings } from 'data'
 
 interface Props { }
@@ -73,11 +73,11 @@ class Settings extends Component<IProps> {
   }
 
   renderModeSettings = () => {
-    const { combatSettings } = this.props
+    const { combatSettings, changeCombatParameter } = this.props
     return (
       <Tab.Pane style={{ padding: 0 }}>
-        {this.renderRow(Mode.Land, combatSettings[Mode.Land], (key, str) => this.onCombatChange(Mode.Land, key, str))}
-        {this.renderRow(Mode.Naval, combatSettings[Mode.Naval], (key, str) => this.onCombatChange(Mode.Naval, key, str))}
+        {this.renderRow(Mode.Land, combatSettings[Mode.Land], (key, str) => changeCombatParameter(Mode.Land, key, str))}
+        {this.renderRow(Mode.Naval, combatSettings[Mode.Naval], (key, str) => changeCombatParameter(Mode.Naval, key, str))}
       </Tab.Pane>
     )
   }
@@ -85,7 +85,7 @@ class Settings extends Component<IProps> {
   renderSiteSettings = (key: string, settings: SiteSettings, attributes: Setting[]) => {
     return (
       <Tab.Pane style={{ padding: 0 }}>
-        {this.renderRow(key, filterKeys(settings, setting => attributes.includes(setting)), this.onSharedChange)}
+        {this.renderRow(key, filterKeys(settings, setting => attributes.includes(setting)), this.props.changeSiteParameter)}
       </Tab.Pane>
     )
   }
@@ -170,18 +170,6 @@ class Settings extends Component<IProps> {
       return
     onChange(key, value)
   }
-
-  onCombatChange = (mode: Mode, key: keyof CombatSettings, value: Values) => {
-    const { changeCombatParameter, invalidate } = this.props
-    changeCombatParameter(mode, key, value)
-    invalidate()
-  }
-
-  onSharedChange = (key: keyof SiteSettings, value: Values) => {
-    const { changeSiteParameter, invalidate } = this.props
-    changeSiteParameter(key, value)
-    invalidate()
-  }
 }
 
 const mapStateToProps = (state: AppState) => ({
@@ -190,7 +178,7 @@ const mapStateToProps = (state: AppState) => ({
   mode: getMode(state)
 })
 
-const actions = { changeCombatParameter, changeSiteParameter, invalidate }
+const actions = { changeCombatParameter, changeSiteParameter }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

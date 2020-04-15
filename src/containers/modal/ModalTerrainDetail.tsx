@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { AppState } from 'state'
 import TerrainDetail from 'components/TerrainDetail'
 import { Mode, TerrainType, LocationType, TerrainValueType, ModalType } from 'types'
-import { setTerrainLocation, setTerrainImage, setTerrainType, setTerrainMode, setTerrainValue, invalidate, deleteTerrain, closeModal } from 'reducers'
+import { setTerrainLocation, setTerrainImage, setTerrainType, setTerrainMode, setTerrainValue, deleteTerrain, closeModal } from 'reducers'
 import BaseModal from './BaseModal'
 import ItemRemover from 'components/ItemRemover'
 
@@ -30,45 +30,39 @@ class ModalTerrainDetail extends Component<IProps> {
   }
 
   delete = () => {
-    const { type, deleteTerrain, invalidate, closeModal } = this.props
+    const { type, deleteTerrain, closeModal } = this.props
     deleteTerrain(type)
-    invalidate()
     closeModal()
   }
   setValue = (key: string, attribute: TerrainValueType, value: number) => {
-    const { type, setTerrainValue, invalidate } = this.props
+    const { type, setTerrainValue } = this.props
     setTerrainValue(type, key, attribute, value)
-    invalidate()
   }
   setType = (new_type: TerrainType) => {
-    const { type, setTerrainType, invalidate } = this.props
+    const { type, setTerrainType } = this.props
     setTerrainType(type, new_type)
-    invalidate()
   }
   setLocation = (location: LocationType) => {
-    const { type, setTerrainLocation, invalidate } = this.props
+    const { type, setTerrainLocation } = this.props
     setTerrainLocation(type, location)
-    invalidate()
   }
   setImage = (image: string) => {
-    const { type, setTerrainImage, invalidate } = this.props
+    const { type, setTerrainImage } = this.props
     setTerrainImage(type, image)
-    invalidate()
   }
   setMode = (mode: Mode) => {
-    const { type, setTerrainMode, invalidate } = this.props
+    const { type, setTerrainMode } = this.props
     setTerrainMode(type, mode)
-    invalidate()
   }
 }
 
 const mapStateToProps = (state: AppState) => ({
-  type: state.ui[ModalType.TerrainDetail]?.type ?? TerrainType.None,
+  type: state.ui.modals[ModalType.TerrainDetail]?.type ?? TerrainType.None,
   terrains: state.terrains,
   mode: state.settings.mode
 })
 
-const actions = { setTerrainLocation, setTerrainImage, setTerrainType, setTerrainMode, setTerrainValue, invalidate, deleteTerrain, closeModal }
+const actions = { setTerrainLocation, setTerrainImage, setTerrainType, setTerrainMode, setTerrainValue, deleteTerrain, closeModal }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

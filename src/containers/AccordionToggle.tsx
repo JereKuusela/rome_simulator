@@ -35,7 +35,7 @@ class AccordionToggle extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  active: props.open ? !state.settings.accordions[props.identifier] : state.settings.accordions[props.identifier]
+  active: props.open ? !state.ui.accordions[props.identifier] : state.ui.accordions[props.identifier]
 })
 
 const actions = { toggleAccordion }

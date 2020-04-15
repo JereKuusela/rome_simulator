@@ -120,8 +120,6 @@ export const toSet = <V, R extends string>(object: { [key: string]: V}, key: (va
 
 export const merge = <K extends string, V>(object1: { [key in K]: V }, object2: { [key in K]: V }): { [key in K]: V} => ({ ...object1, ...object2 })
 
-export const has = <K extends string>(object: { [key in K]: any}, key: K ): boolean => object.hasOwnProperty(key)
-
 export type ObjSet<K extends string = string> = {
   [key in K]: true
 }

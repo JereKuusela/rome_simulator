@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { CountryName, CountryAttribute } from 'types'
-import { invalidate, setCountryValue } from 'reducers'
+import { setCountryValue } from 'reducers'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 import { filterValues, calculateBase } from 'definition_values'
 import { getCountries, AppState } from 'state'
@@ -29,10 +29,9 @@ class CountryValueInput extends Component<IProps> {
   getKey = () => this.props.identifier || 'Custom'
 
   onChange = (value: number) => {
-    const { definition, attribute, setCountryValue, invalidate, country } = this.props
+    const { definition, attribute, setCountryValue, country } = this.props
     const base = calculateBase(definition, attribute) - calculateBase(filterValues(definition, this.getKey()), attribute)
     setCountryValue(country, this.getKey(), attribute, value - base)
-    invalidate()
   }
 }
 
@@ -40,7 +39,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   definition: getCountries(state)[props.country]
 })
 
-const actions = { invalidate, setCountryValue }
+const actions = { setCountryValue }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

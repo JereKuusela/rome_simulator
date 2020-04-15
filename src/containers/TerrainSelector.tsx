@@ -8,7 +8,7 @@ import StyledNumber from 'components/Utils/StyledNumber'
 import { TerrainDefinition, TerrainCalc, TerrainType } from 'types'
 import { calculateValue } from 'definition_values'
 import { addSign } from 'formatters'
-import { selectTerrain, invalidate } from 'reducers'
+import { selectTerrain } from 'reducers'
 import DropdownTerrain from 'components/Dropdowns/DropdownTerrain'
 import { toArr } from 'utils'
 
@@ -69,9 +69,8 @@ class TerrainSelector extends Component<IProps> {
   }
 
   selectTerrain = (terrain_type: TerrainType, index: number): void => {
-    const { selectTerrain, invalidate } = this.props
+    const { selectTerrain } = this.props
     selectTerrain(index, terrain_type)
-    invalidate()
   }
 }
 
@@ -82,7 +81,7 @@ const mapStateToProps = (state: AppState) => ({
   settings: getSiteSettings(state)
 })
 
-const actions = { selectTerrain, invalidate }
+const actions = { selectTerrain }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

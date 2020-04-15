@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { AppState, filterTactics, filterTacticTypes, getUnitImages, mergeUnitTypes } from 'state'
 import TacticDetail from 'components/TacticDetail'
 import { Mode, TacticType, TacticValueType, ModalType } from 'types'
-import { setTacticValue, setTacticImage, setTacticMode, invalidate, deleteTactic, closeModal, setTacticType } from 'reducers'
+import { setTacticValue, setTacticImage, setTacticMode, deleteTactic, closeModal, setTacticType } from 'reducers'
 import BaseModal from './BaseModal'
 import ItemRemover from 'components/ItemRemover'
 
@@ -32,42 +32,37 @@ class ModalTacticDetail extends Component<IProps> {
   }
 
   delete = () => {
-    const { type, deleteTactic, invalidate, closeModal } = this.props
+    const { type, deleteTactic, closeModal } = this.props
     deleteTactic(type)
-    invalidate()
     closeModal()
   }
   setValue = (key: string, attribute: TacticValueType, value: number) => {
-    const { type, setTacticValue, invalidate } = this.props
+    const { type, setTacticValue } = this.props
     setTacticValue(type, key, attribute, value)
-    invalidate()
   }
   setType = (new_type: TacticType) => {
-    const { type, setTacticType, invalidate } = this.props
+    const { type, setTacticType } = this.props
     setTacticType(type, new_type)
-    invalidate()
   }
   setImage = (image: string) => {
-    const { type, setTacticImage, invalidate } = this.props
+    const { type, setTacticImage } = this.props
     setTacticImage(type, image)
-    invalidate()
   }
   setMode = (mode: Mode) => {
-    const { type, setTacticMode, invalidate } = this.props
+    const { type, setTacticMode } = this.props
     setTacticMode(type, mode)
-    invalidate()
   }
 }
 
 const mapStateToProps = (state: AppState) => ({
-  type: state.ui[ModalType.TacticDetail]?.type ?? TacticType.Bottleneck,
+  type: state.ui.modals[ModalType.TacticDetail]?.type ?? TacticType.Bottleneck,
   tactics: filterTactics(state),
   tactic_types: filterTacticTypes(state),
   images: getUnitImages(state),
   unit_types: mergeUnitTypes(state)
 })
 
-const actions = { setTacticValue, setTacticImage, setTacticMode, invalidate, deleteTactic, closeModal, setTacticType }
+const actions = { setTacticValue, setTacticImage, setTacticMode, deleteTactic, closeModal, setTacticType }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

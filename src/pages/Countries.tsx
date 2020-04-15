@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Container, Grid, Table, List, Input, Checkbox } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState, getGeneral, getGeneralDefinition, getSiteSettings } from 'state'
-import { mapRange, ObjSet, has, keys, values } from '../utils'
+import { mapRange, ObjSet, keys, values } from '../utils'
 
 import { addSignWithZero } from 'formatters'
 import {
@@ -10,7 +10,7 @@ import {
   AbilityDefinition, Modifier, Tradition, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, CountryName, Setting
 } from 'types'
 import {
-  clearCountryValues, clearAllCountrySelections, invalidate, setCountryValue, enableCountrySelections, enableCountrySelection, clearCountrySelections, clearCountrySelection, enableUnitModifiers,
+  clearCountryValues, clearAllCountrySelections, setCountryValue, enableCountrySelections, enableCountrySelection, clearCountrySelections, clearCountrySelection, enableUnitModifiers,
   clearUnitModifiers, setGeneralStat, setGeneralValue, selectCulture, selectReligion, selectGovernment, setHasGeneral,
   clearAllGeneralSelections, clearGeneralSelection, enableGeneralSelection, clearGeneralSelections
 } from 'reducers'
@@ -24,6 +24,7 @@ import TableAttributes from 'components/TableAttributes'
 import { mapModifiersToUnits, tech_ir, TRAIT_KEY, ABILITY_KEY, abilities_ir, traits_ir } from 'managers/modifiers'
 import { convertCountryDefinition } from 'managers/countries'
 import CountryValueInput from 'containers/CountryValueInput'
+import { has } from 'lodash'
 
 const TRADE_COLUMNS = 4
 const HERITAGE_COLUMNS = 4
@@ -496,20 +497,18 @@ class Countries extends Component<IProps> {
   )
 
   clearGeneralSelection = (key: string) => {
-    const { clearGeneralSelection, invalidate } = this.props
+    const { clearGeneralSelection } = this.props
     this.exec(clearGeneralSelection, key)
-    invalidate()
   }
 
   enableGeneralSelection = (key: string) => {
-    const { enableGeneralSelection, invalidate, abilities, clearGeneralSelections } = this.props
+    const { enableGeneralSelection, abilities, clearGeneralSelections } = this.props
     abilities.forEach(abilities => {
       const keys = abilities.options.map(ability => ABILITY_KEY + ability.name)
       if (keys.includes(key))
         this.exec(clearGeneralSelections, keys)
     })
     this.exec(enableGeneralSelection, key)
-    invalidate()
   }
 
   onTraitOrAbilityClick = (enabled: boolean) => enabled ? this.clearGeneralSelection : this.enableGeneralSelection
@@ -577,10 +576,10 @@ class Countries extends Component<IProps> {
   }
 
   enableTech = (level: number) => {
-    const { country, invalidate } = this.props
+    const { country } = this.props
+    console.log(country[CountryAttribute.TechLevel])
     if (level > country[CountryAttribute.TechLevel])
       this.setCountryValue('Custom', CountryAttribute.TechLevel, level)
-    invalidate()
   }
 
   clearTech = (level: number) => {
@@ -591,9 +590,8 @@ class Countries extends Component<IProps> {
   }
 
   clearInvention = (key: string) => {
-    const { clearCountrySelection: clearSelection, invalidate } = this.props
+    const { clearCountrySelection: clearSelection } = this.props
     this.exec(clearSelection, key)
-    invalidate()
   }
 
   /**
@@ -792,33 +790,29 @@ class Countries extends Component<IProps> {
   }
 
   enableModifiers = (key: string, modifiers: Modifier[]) => {
-    const { enableUnitModifiers, enableCountrySelection, clearGeneralSelection, invalidate, selected_country } = this.props
+    const { enableUnitModifiers, enableCountrySelection, clearGeneralSelection, selected_country } = this.props
     modifiers = mapModifiersToUnits(modifiers)
     enableUnitModifiers(selected_country, key, modifiers)
     this.exec(enableCountrySelection, key)
     this.exec(clearGeneralSelection, key)
-    invalidate()
   }
 
   clearModifiers = (key: string) => {
-    const { clearUnitModifiers, clearCountrySelection, clearGeneralSelection, invalidate } = this.props
+    const { clearUnitModifiers, clearCountrySelection, clearGeneralSelection } = this.props
     this.exec(clearUnitModifiers, key)
     this.exec(clearCountrySelection, key)
     this.exec(clearGeneralSelection, key)
-    invalidate()
   }
 
   setCountryValue = (key: string, attribute: CountryAttribute, value: number) => {
-    const { setCountryValue, selected_country, invalidate } = this.props
+    const { setCountryValue, selected_country } = this.props
     setCountryValue(selected_country, key, attribute, value)
-    invalidate()
   }
 
 
   setGeneralValue = (key: string, attribute: GeneralValueType, value: number) => {
-    const { setGeneralValue, invalidate } = this.props
+    const { setGeneralValue } = this.props
     setGeneralValue(this.props.selected_country, key, attribute, value)
-    invalidate()
   }
 }
 
@@ -842,7 +836,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const actions = {
-  clearGeneralSelections, clearUnitModifiers, enableUnitModifiers, setGeneralStat, setGeneralValue, selectCulture, invalidate, setCountryValue, clearAllGeneralSelections, clearGeneralSelection, enableGeneralSelection,
+  clearGeneralSelections, clearUnitModifiers, enableUnitModifiers, setGeneralStat, setGeneralValue, selectCulture, setCountryValue, clearAllGeneralSelections, clearGeneralSelection, enableGeneralSelection,
   clearCountryValues, clearAllCountrySelections, selectReligion, selectGovernment, setHasGeneral, enableCountrySelection, clearCountrySelection, enableCountrySelections, clearCountrySelections
 }
 

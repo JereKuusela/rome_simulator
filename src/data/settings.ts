@@ -4,8 +4,7 @@ export const getDefaultSettings = (): SettingsAndOptions => ({
   combatSettings: { [Mode.Land]: getDefaultLandSettings(), [Mode.Naval]: getDefaultNavalSettings() },
   siteSettings: getDefaultSiteSettings(),
   mode: Mode.Land,
-  country: CountryName.Country1,
-  accordions: {}
+  country: CountryName.Country1
 })
 
 export const getDefaultLandSettings = (): CombatSettings => {

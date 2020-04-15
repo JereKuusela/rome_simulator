@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { ValuesType, CountryName, UnitType, Cohort, UnitRole, UnitValueType, ModalType } from 'types'
 import UnitDetail from 'components/UnitDetail'
 import { AppState, getUnit, filterTerrainTypes, getMode, getUnitTypeList, getSiteSettings } from 'state'
-import { openModal, changeUnitType, deleteUnit, setUnitValue, changeUnitImage, changeParent, changeUnitDeployment, toggleUnitLoyality, invalidate, closeModal } from 'reducers'
+import { openModal, changeUnitType, deleteUnit, setUnitValue, changeUnitImage, changeParent, changeUnitDeployment, toggleUnitLoyality, closeModal } from 'reducers'
 import BaseModal from './BaseModal'
 import { getRootParent } from 'managers/units'
 import ItemRemover from 'components/ItemRemover'
@@ -49,17 +49,15 @@ class ModalUnitDetail extends Component<IProps> {
   }
 
   changeType = (type: UnitType) => {
-    const { country, changeUnitType, invalidate, unit_type, openModal } = this.props
+    const { country, changeUnitType, unit_type, openModal } = this.props
     changeUnitType(country, unit_type, type)
     openModal(ModalType.UnitDetail, { country, type })
-    invalidate()
   }
 
   remove = () => {
-    const { country, deleteUnit, invalidate, unit_type, closeModal } = this.props
+    const { country, deleteUnit, unit_type, closeModal } = this.props
     deleteUnit(country, unit_type)
     closeModal()
-    invalidate()
   }
 
   setBaseValue = (key: string, attribute: UnitValueType, value: number) => this.setValue(ValuesType.Base, key, attribute, value)
@@ -67,38 +65,33 @@ class ModalUnitDetail extends Component<IProps> {
   setLossModifierValue = (key: string, attribute: UnitValueType, value: number) => this.setValue(ValuesType.LossModifier, key, attribute, value)
 
   setValue = (type: ValuesType, key: string, attribute: UnitValueType, value: number) => {
-    const { setUnitValue, invalidate, unit_type, country } = this.props
+    const { setUnitValue, unit_type, country } = this.props
     setUnitValue(country!, unit_type!, type, key, attribute, value)
-    invalidate()
   }
 
   changeImage = (image: string) => {
-    const { changeUnitImage, invalidate, unit_type, country } = this.props
+    const { changeUnitImage, unit_type, country } = this.props
     changeUnitImage(country!, unit_type, image)
-    invalidate()
   }
 
   changeParent = (type: UnitType) => {
-    const { changeParent, invalidate, unit_type, country } = this.props
+    const { changeParent, unit_type, country } = this.props
     changeParent(country!, unit_type, type)
-    invalidate()
   }
 
   changeDeployment = (deployment: UnitRole) => {
-    const { changeUnitDeployment, invalidate, unit_type, country } = this.props
+    const { changeUnitDeployment, unit_type, country } = this.props
     changeUnitDeployment(country!, unit_type, deployment)
-    invalidate()
   }
 
   toggleIsLoyal = () => {
-    const { toggleUnitLoyality, invalidate, unit_type, country } = this.props
+    const { toggleUnitLoyality, unit_type, country } = this.props
     toggleUnitLoyality(country!, unit_type)
-    invalidate()
   }
 }
 
 const mapStateToProps = (state: AppState) => {
-  const data = state.ui[ModalType.UnitDetail]
+  const data = state.ui.modals[ModalType.UnitDetail]
   return {
     remove: data?.remove,
     country: data ? data.country : CountryName.Country1,
@@ -112,7 +105,7 @@ const mapStateToProps = (state: AppState) => {
   }
 }
 
-const actions = { closeModal, openModal, deleteUnit, changeUnitType, setUnitValue, changeUnitImage, changeParent, changeUnitDeployment, toggleUnitLoyality, invalidate }
+const actions = { closeModal, openModal, deleteUnit, changeUnitType, setUnitValue, changeUnitImage, changeParent, changeUnitDeployment, toggleUnitLoyality }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

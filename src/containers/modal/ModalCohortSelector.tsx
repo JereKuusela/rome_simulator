@@ -5,7 +5,7 @@ import ItemSelector from 'components/ItemSelector'
 import { ArmyType, UnitType, Setting, ModalType, CountryName, CombatUnitTypes } from 'types'
 import { getNextId } from 'army_utils'
 import { AppState, getMode, getCombatParticipant, getCountryName, getSiteSettings } from 'state'
-import { selectCohort, invalidate, closeModal } from 'reducers'
+import { selectCohort, closeModal } from 'reducers'
 import { getArchetypes, getActualUnits } from 'managers/army'
 import BaseModal from './BaseModal'
 
@@ -24,16 +24,15 @@ class ModalCohortSelector extends Component<IProps> {
   }
 
   selectUnit = (unit: UnitType) => {
-    const { selectCohort, invalidate, closeModal, country, type, row, column } = this.props
+    const { selectCohort, closeModal, country, type, row, column } = this.props
     if (country)
       selectCohort(country, type, row, column, { id: getNextId(), type: unit })
-    invalidate()
     closeModal()
   }
 }
 
 const mapStateToProps = (state: AppState) => {
-  const data = state.ui[ModalType.CohortSelector]
+  const data = state.ui.modals[ModalType.CohortSelector]
   if (data) {
     return {
       row: data.row,
@@ -56,7 +55,7 @@ const mapStateToProps = (state: AppState) => {
   }
 }
 
-const actions = { selectCohort, invalidate, closeModal }
+const actions = { selectCohort, closeModal }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

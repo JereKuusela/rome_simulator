@@ -1,10 +1,18 @@
-import { Modals, ModalType } from 'types'
+import { UI, ModalType, Modals } from 'types'
+import { has } from 'lodash'
 
-export const closeModal = (modals: Modals) => {
-  for (let key in modals)
-    (modals as any)[key] = undefined
+export const closeModal = (ui: UI) => {
+  for (let key in ui.modals)
+    (ui.modals as any)[key] = undefined
 }
 
-export const openModal = <T extends ModalType>(modals: Modals, key: T, object: NonNullable<Modals[T]>) => {
-  modals[key] = object
+export const openModal = <T extends ModalType>(ui: UI, key: T, object: NonNullable<Modals[T]>) => {
+  ui.modals[key] = object
+}
+
+export const toggleAccordion = (ui: UI, key: string) => {
+  if (has(ui.accordions, key))
+    delete ui.accordions[key]
+  else
+    ui.accordions[key] = true
 }

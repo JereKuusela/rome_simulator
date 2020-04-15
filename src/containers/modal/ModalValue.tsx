@@ -54,7 +54,7 @@ class ValueModal extends Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: AppState) => {
-  const data = state.ui[ModalType.Value]
+  const data = state.ui.modals[ModalType.Value]
   return {
     message: data?.message ?? '',
     onSuccess: data?.onSuccess ?? (() => { }),

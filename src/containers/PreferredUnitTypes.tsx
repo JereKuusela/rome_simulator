@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Table, Input } from 'semantic-ui-react'
 
 import { AppState, getCountryName, getUnitPreferences, getFlankSize, getMode, getUnitList, getSiteSettings } from 'state'
-import { setFlankSize, invalidate, setUnitPreference } from 'reducers'
+import { setFlankSize, setUnitPreference } from 'reducers'
 
 import { UnitPreferenceType, Side, UnitType, Unit } from 'types'
 import DropdownUnit from 'components/Dropdowns/DropdownUnit'
@@ -92,15 +92,13 @@ class Row extends Component<IProps> {
   }
 
   setFlankSize = (value: number) => {
-    const { setFlankSize, invalidate, country } = this.props
+    const { setFlankSize, country } = this.props
     setFlankSize(country, value)
-    invalidate()
   }
 
   setUnitPreference = (type: UnitPreferenceType, unit_type: UnitType): void => {
-    const { setUnitPreference, invalidate, country } = this.props
+    const { setUnitPreference, country } = this.props
     setUnitPreference(country, type, unit_type)
-    invalidate()
   }
 }
 
@@ -114,7 +112,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   settings: getSiteSettings(state)
 })
 
-const actions = { setFlankSize, invalidate, setUnitPreference }
+const actions = { setFlankSize, setUnitPreference }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

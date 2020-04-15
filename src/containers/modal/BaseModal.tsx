@@ -31,7 +31,7 @@ class BaseModal extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  visible: !!state.ui[props.type]
+  visible: !!state.ui.modals[props.type]
 })
 
 const actions = { closeModal }

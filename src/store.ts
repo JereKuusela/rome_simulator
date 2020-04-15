@@ -38,7 +38,7 @@ const SettingsTransform = createTransform(
 const DataTransform = createTransform(
   () => undefined,
   () => ({}),
-  { whitelist: ['data', 'ui'] }
+  { whitelist: ['data'] }
 )
 
 const migrations = {

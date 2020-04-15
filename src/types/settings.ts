@@ -1,5 +1,4 @@
 import { CountryName, Mode } from "types"
-import { ObjSet } from "utils"
 
 export enum Setting {
   StrengthLostMultiplier = 'Multiplier for strength damage',
@@ -397,5 +396,4 @@ export type SettingsAndOptions = {
   siteSettings: SiteSettings
   mode: Mode
   country: CountryName
-  accordions: ObjSet
 }

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { UnitAttribute, Unit, ValuesType, CountryName, getAttributeValuesType } from 'types'
-import { invalidate, setUnitValue } from 'reducers'
+import { setUnitValue } from 'reducers'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 import { filterValues, calculateBase, calculateModifier } from 'definition_values'
 
@@ -35,7 +35,7 @@ class UnitValueInput extends Component<IProps> {
   getKey = () => this.props.identifier || 'Custom'
 
   onChange = (value: number) => {
-    const { unit, attribute, setUnitValue, invalidate, country, type } = this.props
+    const { unit, attribute, setUnitValue, country, type } = this.props
     const values_type = type ?? getAttributeValuesType(attribute)
     let base = 0
     if (values_type === ValuesType.Base)
@@ -43,13 +43,12 @@ class UnitValueInput extends Component<IProps> {
     else
       base = calculateModifier(unit, attribute) - calculateModifier(filterValues(unit, this.getKey()), attribute)
     setUnitValue(country, unit.type, values_type, this.getKey(), attribute, value - base)
-    invalidate()
   }
 }
 
 const mapStateToProps = () => ({})
 
-const actions = { invalidate, setUnitValue }
+const actions = { setUnitValue }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

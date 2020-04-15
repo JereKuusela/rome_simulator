@@ -1,7 +1,7 @@
 import { Countries, CountryName, CountryDefinition, GovermentType, ReligionType, CultureType, CountryAttribute, ValuesType, WearinessAttribute, Country, isAttributeEnabled, ModifierWithKey, SiteSettings, ModifierType } from 'types'
 import { defaultCountry, getDefaultUnits } from 'data'
 import { addValuesWithMutate, clearAllValuesWithMutate, calculateValue, addValue } from 'definition_values'
-import { toObj } from 'utils'
+import { toObj, values } from 'utils'
 
 export const createCountry = (countries: Countries, country: CountryName, source_country?: CountryName) => {
   countries[country] = source_country ? countries[source_country] : defaultCountry
@@ -69,10 +69,10 @@ export const applyCountryModifiers = (country: CountryDefinition, modifiers: Mod
 }
 
 export const convertCountryDefinition = (country: CountryDefinition, settings: SiteSettings): Country => {
-  const attributes = [CountryAttribute.CombatWidth, CountryAttribute.FlankRatio]
-  const values = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) ? calculateValue(country, attribute) : 0)
+  const attributes = values(CountryAttribute)
+  const calculated = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) ? calculateValue(country, attribute) : 0)
   return {
-    ...values,
+    ...calculated,
     selections: country.selections,
     culture: country.culture,
     weariness: country.weariness,

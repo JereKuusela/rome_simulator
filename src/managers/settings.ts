@@ -1,6 +1,5 @@
 import { SettingsAndOptions, CombatSettings, SiteSettings, Setting, SimulationSpeed, Mode, CountryName } from "types"
 import { speedValues } from "data"
-import { has } from "utils"
 
 export const changeCombatParameter = (settings: SettingsAndOptions, mode: Mode, key: keyof CombatSettings, value: number | boolean | string) => {
   settings.combatSettings[mode][key] = value as never
@@ -24,11 +23,4 @@ export const toggleMode = (settings: SettingsAndOptions) => {
 
 export const selectCountry = (settings: SettingsAndOptions, country: CountryName) => {
   settings.country = country
-}
-
-export const toggleAccordion = (settings: SettingsAndOptions, key: string) => {
-  if (has(settings.accordions, key))
-    delete settings.accordions[key]
-  else
-    settings.accordions[key] = true
 }

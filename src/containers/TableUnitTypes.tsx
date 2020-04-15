@@ -5,7 +5,7 @@ import { Image, Table } from 'semantic-ui-react'
 import { Side, UnitRole, CountryName, UnitType, UnitAttribute, filterAttributes, Setting, Unit, Mode, CountryAttribute } from 'types'
 import { getImage, mapRange } from 'utils'
 import { AppState, getUnitPreferences, getCountry, getMode, getCombatParticipant, getArmyDefinitionWithOverriddenUnits, getSiteSettings } from 'state'
-import { addToReserve, removeFromReserve, invalidate, setUnitPreference } from 'reducers'
+import { addToReserve, removeFromReserve, setUnitPreference } from 'reducers'
 import { getArchetypes2, getActualUnits2, getLatestUnits2, getChildUnits2 } from 'managers/army'
 import UnitValueInput from './UnitValueInput'
 import AttributeImage from 'components/Utils/AttributeImage'
@@ -44,7 +44,7 @@ class TableUnitTypes extends Component<IProps> {
     const preference = preferences[role]
     const tech_requirement = preference && units[preference] && units[preference].tech
     if (tech_requirement && tech_requirement > tech) {
-      setUnitPreference(country, role, null) && invalidate()
+      setUnitPreference(country, role, null)
     }
   }
 
@@ -94,7 +94,7 @@ class TableUnitTypes extends Component<IProps> {
 
   renderRoleRow = (role: UnitRole, archetypes: Unit[]) => {
     // List of archetypes -> get archetype -> get image
-    const { units, setUnitPreference, country, invalidate, preferences, tech, settings, onRowClick } = this.props
+    const { units, setUnitPreference, country, preferences, tech, settings, onRowClick } = this.props
     const archetype = archetypes.find(unit => unit.role === role)
     const preference = preferences[role]
     if (!archetype || !preference)
@@ -114,7 +114,7 @@ class TableUnitTypes extends Component<IProps> {
             <DropdownArchetype
               value={preference}
               values={children}
-              onSelect={type => setUnitPreference(country, role, type) && invalidate()}
+              onSelect={type => setUnitPreference(country, role, type)}
               settings={settings}
             />
           </Table.Cell>
@@ -167,17 +167,15 @@ class TableUnitTypes extends Component<IProps> {
   }
 
   updateReserve = (type: UnitType, amount: number) => {
-    const { country, addToReserve, removeFromReserve, invalidate, reserve, weariness } = this.props
+    const { country, addToReserve, removeFromReserve, reserve, weariness } = this.props
     const previous = reserve.filter(cohort => cohort.type === type).length
     if (amount > previous) {
       const units = mapRange(amount - previous, _ => ({ id: getNextId(), type, image: '' }))
       addToReserve(country, applyLosses(weariness, units))
-      invalidate()
     }
     if (amount < previous) {
       const types = mapRange(previous - amount, _ => type)
       removeFromReserve(country, types)
-      invalidate()
     }
   }
 }
@@ -192,7 +190,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   mode: getMode(state)
 })
 
-const actions = { addToReserve, removeFromReserve, invalidate, setUnitPreference }
+const actions = { addToReserve, removeFromReserve, setUnitPreference }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

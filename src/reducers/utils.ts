@@ -10,7 +10,7 @@ export type Action<T = any> = {
 let typeCounter = 0
 const getActionType = (func: Function) => process.env.NODE_ENV === 'production' ? 'action' + typeCounter++ : func.name
 
-export type ActionToFunction<T, K1= any, K2= any> = { [key: string]: (entity: T, ...args: any) => void | undefined }
+export type ActionToFunction<T, K1 = any, K2 = any> = { [key: string]: (entity: T, ...args: any) => void | undefined }
 
 export const makeActionRemoveFirst = <T extends any[], E>(func: (entity: E, ...args: T) => any, actionToFunction: ActionToFunction<E>) => {
   const type = getActionType(func)
@@ -28,7 +28,7 @@ export const makeActionReplaceFirst = <T extends any[], K extends string, E>(fun
 export const makeActionReplaceFirstTwice = <T extends any[], K1 extends string, K2 extends string, E>(func: (entity: E, ...args: T) => any, actionToFunction: ActionToFunction<E, K1, K2>) => {
   const type = getActionType(func)
   actionToFunction[type] = func
-  const ret = (key1: K1, key2: K2,  ...args: T) => ({ type, payload: [key1, key2, ...args] } as {})
+  const ret = (key1: K1, key2: K2, ...args: T) => ({ type, payload: [key1, key2, ...args] } as {})
   return ret
 }
 
@@ -55,16 +55,16 @@ export const makeReducer = <S, E>(initial: S, actionToFunction: ActionToFunction
   }
 }
 
-export function makeEntityReducer <S extends {[key in K]: E}, E, K extends string>(initial: S, actionToFunction: ActionToFunction<E, K>): ReducerWithParam<S>
-export function makeEntityReducer <S, E>(initial: S, actionToFunction: ActionToFunction<E>, getEntity: GetEntity<S, E>): ReducerWithParam<S>
-export function makeEntityReducer <S, E>(initial: S, actionToFunction: ActionToFunction<E>, getEntity?: GetEntity<S, E>) {
+export function makeEntityReducer<S extends { [key in K]: E }, E, K extends string>(initial: S, actionToFunction: ActionToFunction<E, K>): ReducerWithParam<S>
+export function makeEntityReducer<S, E>(initial: S, actionToFunction: ActionToFunction<E>, getEntity: GetEntity<S, E>): ReducerWithParam<S>
+export function makeEntityReducer<S, E>(initial: S, actionToFunction: ActionToFunction<E>, getEntity?: GetEntity<S, E>) {
   return makeReducer(initial, actionToFunction, getEntity ? getEntity : getDefaultEntity, getEntityPayload)
 }
 
 
-export function makeContainerReducer <S>(initial: S, actionToFunction: ActionToFunction<S>): ReducerWithParam<S>
-export function makeContainerReducer <S, E>(initial: S, actionToFunction: ActionToFunction<E>, getContainer: GetEntity<S, E>): ReducerWithParam<S>
-export function makeContainerReducer <S, E>(initial: S, actionToFunction: ActionToFunction<E>, getContainer?: GetEntity<S, E>) {
+export function makeContainerReducer<S>(initial: S, actionToFunction: ActionToFunction<S>): ReducerWithParam<S>
+export function makeContainerReducer<S, E>(initial: S, actionToFunction: ActionToFunction<E>, getContainer: GetEntity<S, E>): ReducerWithParam<S>
+export function makeContainerReducer<S, E>(initial: S, actionToFunction: ActionToFunction<E>, getContainer?: GetEntity<S, E>) {
   return makeReducer(initial, actionToFunction, getContainer ? getContainer : getDefaultContainer)
 }
 
@@ -82,16 +82,25 @@ export const compose = <State>(...reducers: ReducerWithParam<State>[]): ReducerW
 
 type ReducerWithParam<State> = (state: State | undefined, action: any, params: ReducerParams) => State
 
-export function combine<S>(reducers: {[K in keyof S]: ReducerWithParam<S[K]>}): Reducer<CombinedState<S>> {
+export function combine<S>(reducers: { [K in keyof S]: ReducerWithParam<S[K]> }): Reducer<CombinedState<S>> {
   const reducerKeys = Object.keys(reducers) as (keyof S)[];
 
   return function combination(state: S = {} as S, action) {
-    const nextState: S = {} as S
-    const settings: ReducerParams =  { mode: (state as any)?.settings?.mode }
+    let nextState: S = {} as S
+    const settings: ReducerParams = { mode: (state as any)?.settings?.mode }
 
+    let invalidated = false
     for (let key of reducerKeys) {
       const reducer = reducers[key] as any
       nextState[key] = reducer(state[key], action, settings)
+      if (action.type && nextState[key] !== state[key] && key !== 'ui' && key !== 'transfer')
+        invalidated = true
+    }
+    if (invalidated) {
+      console.log('f')
+      nextState = produce(nextState, (draft: any) => {
+        draft['battle'][settings.mode].outdated = true
+      })
     }
     return nextState
   }

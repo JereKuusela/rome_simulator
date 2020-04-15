@@ -7,10 +7,6 @@ export const selectTerrain = (battle: Battle, index: number, terrain: TerrainTyp
   battle.terrains[index] = terrain
 }
 
-export const invalidate = (battle: Battle) => {
-  battle.outdated = true
-}
-
 export const setSeed = (battle: Battle, seed: number) => {
   battle.custom_seed = seed || undefined
   battle.seed = seed
