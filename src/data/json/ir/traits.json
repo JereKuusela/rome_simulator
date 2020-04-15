@@ -1,73 +1,55 @@
 {
   "traits": [
     {
-      "name": "Aggressive",
+      "name": "Original Thinker",
       "modifiers": [
-        {
-          "target": "Light Cavalry",
-          "attribute": "Discipline",
-          "value": 0.05
-        },
-        {
-          "target": "Camel Cavalry",
-          "attribute": "Discipline",
-          "value": 0.05
-        },
         {
           "target": "General",
           "attribute": "Martial",
           "no_percent": true,
           "value": 1
+        },
+        {
+          "target": "Text",
+          "attribute": "Siege ability",
+          "value": 0.1
         }
       ]
     },
     {
-      "name": "Brave",
+      "name": "Tactically Inflexible",
       "modifiers": [
         {
-          "target": "Land",
-          "attribute": "Morale",
-          "type": "Modifier",
-          "value": 0.05
-        },
-        {
-          "target": "Text",
-          "attribute": "Loyalty gain chance",
+          "target": "General",
+          "attribute": "Martial",
           "negative": true,
-          "value": 0.02
-        },
-        {
-          "target": "General",
-          "attribute": "Martial",
           "no_percent": true,
-          "value": 1
-        }
-      ]
-    },
-    {
-      "name": "Coastal Raider",
-      "modifiers": [
-        {
-          "target": "Liburnian",
-          "attribute": "Discipline",
-          "value": 0.05
-        },
-        {
-          "target": "Trireme",
-          "attribute": "Discipline",
-          "value": 0.05
+          "value": -1
         },
         {
           "target": "Text",
-          "attribute": "Monthly Wealth",
-          "no_percent": true,
-          "value": 1
+          "attribute": "Land Reinforcement",
+          "negative": true,
+          "value": -0.1
         }
       ]
     },
     {
       "name": "Confident",
       "modifiers": [
+        {
+          "target": "General",
+          "attribute": "Loyalty",
+          "negative": true,
+          "no_percent": true,
+          "value": -5
+        },
+        {
+          "target": "General",
+          "attribute": "Martial",
+          "no_percent": true,
+          "value": 1
+        },
         {
           "target": "Heavy Cavalry",
           "attribute": "Discipline",
@@ -77,175 +59,18 @@
           "target": "Chariots",
           "attribute": "Discipline",
           "value": 0.05
-        },
-        {
-          "target": "General",
-          "attribute": "Martial",
-          "no_percent": true,
-          "value": 1
-        }
-      ]
-    },
-    {
-      "name": "Coward",
-      "modifiers": [
-        {
-          "target": "Global",
-          "attribute": "Morale",
-          "type": "Modifier",
-          "negative": true,
-          "value": -0.05
-        },
-        {
-          "target": "Text",
-          "attribute": "Loyalty gain chance",
-          "value": -0.02
-        },
-        {
-          "target": "General",
-          "attribute": "Martial",
-          "no_percent": true,
-          "value": 1
-        }
-      ]
-    },
-    {
-      "name": "Daring",
-      "modifiers": [
-        {
-          "target": "Naval",
-          "attribute": "Damage done",
-          "value": 0.05
-        },
-        {
-          "target": "General",
-          "attribute": "Martial",
-          "no_percent": true,
-          "value": 1
-        }
-      ]
-    },
-    {
-      "name": "Disciplined",
-      "modifiers": [
-        {
-          "target": "Global",
-          "attribute": "Discipline",
-          "value": 0.05
-        },
-        {
-          "target": "General",
-          "attribute": "Martial",
-          "no_percent": true,
-          "value": 1
-        }
-      ]
-    },
-    {
-      "name": "Improviser",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Ship repair at sea",
-          "value": 0.01
-        },
-        {
-          "target": "General",
-          "attribute": "Zeal",
-          "no_percent": true,
-          "value": 1
-        }
-      ]
-    },
-    {
-      "name": "Oarmaster",
-      "modifiers": [
-        {
-          "target": "Naval",
-          "attribute": "Movement speed",
-          "value": 0.1
-        },
-        {
-          "target": "General",
-          "attribute": "Martial",
-          "no_percent": true,
-          "value": 1
-        }
-      ]
-    },
-    {
-      "name": "Original Thinker",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Siege ability",
-          "value": 0.1
-        },
-        {
-          "target": "General",
-          "attribute": "Martial",
-          "no_percent": true,
-          "value": 1
-        }
-      ]
-    },
-    {
-      "name": "Princeps",
-      "modifiers": [
-        {
-          "target": "Octere",
-          "attribute": "Discipline",
-          "value": 0.05
-        },
-        {
-          "target": "Mega-Polyreme",
-          "attribute": "Discipline",
-          "value": 0.05
-        },
-        {
-          "target": "General",
-          "attribute": "Finesse",
-          "no_percent": true,
-          "value": 1
-        }
-      ]
-    },
-    {
-      "name": "Sea Dog",
-      "modifiers": [
-        {
-          "target": "Naval",
-          "attribute": "Capture Chance",
-          "value": 0.1
-        },
-        {
-          "target": "General",
-          "attribute": "Martial",
-          "no_percent": true,
-          "value": 1
-        }
-      ]
-    },
-    {
-      "name": "Tactically Inflexible",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Reinforcement speed",
-          "negative": true,
-          "value": -0.1
-        },
-        {
-          "target": "General",
-          "attribute": "Martial",
-          "no_percent": true,
-          "value": -1
         }
       ]
     },
     {
       "name": "Tactician",
       "modifiers": [
+        {
+          "target": "General",
+          "attribute": "Martial",
+          "no_percent": true,
+          "value": 1
+        },
         {
           "target": "Archers",
           "attribute": "Discipline",
@@ -260,12 +85,155 @@
           "target": "Horse Archers",
           "attribute": "Discipline",
           "value": 0.05
-        },
+        }
+      ]
+    },
+    {
+      "name": "Disciplined",
+      "modifiers": [
         {
           "target": "General",
           "attribute": "Martial",
           "no_percent": true,
           "value": 1
+        },
+        {
+          "target": "Global",
+          "attribute": "Discipline",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Steadfast",
+      "modifiers": [
+        {
+          "target": "General",
+          "attribute": "Martial",
+          "no_percent": true,
+          "value": 1
+        },
+        {
+          "target": "General",
+          "attribute": "Loyalty",
+          "no_percent": true,
+          "value": 5
+        },
+        {
+          "target": "Heavy Infantry",
+          "attribute": "Discipline",
+          "value": 0.05
+        },
+        {
+          "target": "War Elephants",
+          "attribute": "Discipline",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Aggressive",
+      "modifiers": [
+        {
+          "target": "General",
+          "attribute": "Martial",
+          "no_percent": true,
+          "value": 1
+        },
+        {
+          "target": "Light Cavalry",
+          "attribute": "Discipline",
+          "value": 0.05
+        },
+        {
+          "target": "Camel Cavalry",
+          "attribute": "Discipline",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Brave",
+      "modifiers": [
+        {
+          "target": "General",
+          "attribute": "Martial",
+          "no_percent": true,
+          "value": 1
+        },
+        {
+          "target": "General",
+          "attribute": "Loyalty",
+          "negative": true,
+          "no_percent": true,
+          "value": -5
+        },
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Loyalty chance",
+          "negative": true,
+          "value": 0.02
+        }
+      ]
+    },
+    {
+      "name": "Coward",
+      "modifiers": [
+        {
+          "target": "General",
+          "attribute": "Loyalty",
+          "no_percent": true,
+          "value": 5
+        },
+        {
+          "target": "General",
+          "attribute": "Martial",
+          "negative": true,
+          "no_percent": true,
+          "value": -1
+        },
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "negative": true,
+          "value": -0.05
+        },
+        {
+          "target": "Naval",
+          "attribute": "Morale",
+          "negative": true,
+          "value": -0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Loyalty chance",
+          "value": -0.02
+        }
+      ]
+    },
+    {
+      "name": "Coastal Raider",
+      "modifiers": [
+        {
+          "target": "General",
+          "attribute": "Monthly wealth",
+          "no_percent": true,
+          "value": 1
+        },
+        {
+          "target": "Liburnian",
+          "attribute": "Discipline",
+          "value": 0.05
+        },
+        {
+          "target": "Trireme",
+          "attribute": "Discipline",
+          "value": 0.05
         }
       ]
     },
@@ -281,33 +249,82 @@
           "target": "Hexere",
           "attribute": "Discipline",
           "value": 0.05
-        },
-        {
-          "target": "General",
-          "attribute": "Charisma",
-          "no_percent": true,
-          "value": 1
         }
       ]
     },
     {
-      "name": "Steadfast",
+      "name": "Princeps",
       "modifiers": [
         {
-          "target": "Heavy Infantry",
+          "target": "General",
+          "attribute": "Finesse",
+          "no_percent": true,
+          "value": 1
+        },
+        {
+          "target": "Octere",
           "attribute": "Discipline",
           "value": 0.05
         },
         {
-          "target": "War Elephants",
+          "target": "Mega Polyreme",
           "attribute": "Discipline",
           "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Oarmaster",
+      "modifiers": [
+        {
+          "target": "General",
+          "attribute": "Martial",
+          "no_percent": true,
+          "value": 1
+        },
+        {
+          "target": "Text",
+          "attribute": "Naval Movement speed",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Seadog",
+      "modifiers": [
+        {
+          "target": "General",
+          "attribute": "Martial",
+          "no_percent": true,
+          "value": 1
+        },
+        {
+          "target": "Naval",
+          "attribute": "Capture chance",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Daring",
+      "modifiers": [
+        {
+          "target": "General",
+          "attribute": "Loyalty",
+          "negative": true,
+          "no_percent": true,
+          "value": -5
         },
         {
           "target": "General",
           "attribute": "Martial",
           "no_percent": true,
           "value": 1
+        },
+        {
+          "target": "Naval",
+          "attribute": "Damage done",
+          "value": 0.05
         }
       ]
     },
@@ -315,15 +332,31 @@
       "name": "Tough",
       "modifiers": [
         {
+          "target": "General",
+          "attribute": "Monthly health",
+          "no_percent": true,
+          "value": 0.01
+        },
+        {
           "target": "Naval",
           "attribute": "Damage taken",
           "value": -0.05
-        },
+        }
+      ]
+    },
+    {
+      "name": "Improviser",
+      "modifiers": [
         {
           "target": "General",
-          "attribute": "Martial",
+          "attribute": "Zeal",
           "no_percent": true,
           "value": 1
+        },
+        {
+          "target": "Text",
+          "attribute": "Ship repair at sea",
+          "value": 0.01
         }
       ]
     }

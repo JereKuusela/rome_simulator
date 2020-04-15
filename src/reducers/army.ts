@@ -7,6 +7,10 @@ import { ActionToFunction, makeActionReplaceFirst, makeReducer, Action, ReducerP
 
 const actionToFunction: ActionToFunction<Army, CountryName> = {}
 
+export const clearAllGeneralSelections = makeActionReplaceFirst(manager.clearAllGeneralSelections, actionToFunction)
+export const clearGeneralSelection = makeActionReplaceFirst(manager.clearGeneralSelection, actionToFunction)
+export const clearGeneralSelections = makeActionReplaceFirst(manager.clearGeneralSelections, actionToFunction)
+export const enableGeneralSelection = makeActionReplaceFirst(manager.enableGeneralSelection, actionToFunction)
 export const selectCohort = makeActionReplaceFirst(manager.selectCohort, actionToFunction)
 export const toggleCohortLoyality = makeActionReplaceFirst(manager.toggleCohortLoyality, actionToFunction)
 export const setCohortValue = makeActionReplaceFirst(manager.setCohortValue, actionToFunction)

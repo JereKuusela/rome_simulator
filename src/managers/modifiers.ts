@@ -1,7 +1,9 @@
-import { Modifier, ModifierType, Mode, ModifierWithKey, TechDefinitionEUIV, InventionDefinition } from 'types'
+import { Modifier, ModifierType, Mode, ModifierWithKey, TechDefinitionEUIV, InventionDefinition, CountryAttribute, ValuesType, UnitAttribute, UnitType, AbilityDefinition, TraitDefinition, GeneralDefinition, CountryDefinition, GeneralAttribute } from 'types'
 import { getRootParent } from './units'
-import { getTechDefinitionsEUIV, getTechDefinitionsIR } from 'data'
+import { getTechDefinitionsEUIV, getTechDefinitionsIR, getAbilityDefinitions, getTraitDefinitions } from 'data'
 import { ObjSet } from 'utils'
+import { calculateValue } from 'definition_values'
+import { martialToCaptureChance } from './army'
 
 /*
 const traditions = getTraditionDefinitions()
@@ -9,17 +11,20 @@ const trades = getTradeDefinitions()
 const heritages = getHeritageDefinitions()
 const inventions = getInventionDefinitions()
 const omens = getOmenDefinitions()
-const traits = getTraitDefinitions()
 const economy = getEconomyDefinitions()
 const laws = getLawDefinitions()
 const ideas = getIdeaDefinitions()
-const abilities = getAbilityDefinitions()
 */
+export const abilities_ir = process.env.REACT_APP_GAME === 'ir' ? getAbilityDefinitions() : {} as AbilityDefinition[]
+export const traits_ir = process.env.REACT_APP_GAME === 'ir' ? getTraitDefinitions() : {} as TraitDefinition[]
 
 export const tech_ir = process.env.REACT_APP_GAME === 'ir' ? getTechDefinitionsIR() : {} as InventionDefinition[]
 export const tech_euiv = process.env.REACT_APP_GAME === 'euiv' ? getTechDefinitionsEUIV() : {} as TechDefinitionEUIV[]
 
-const TECH_KEY = 'Tech_'
+export const TECH_KEY = 'Tech '
+export const TRAIT_KEY = 'Trait '
+export const ABILITY_KEY = 'Ability '
+
 
 export const mapModifiersToUnits = (modifiers: Modifier[]) => {
   const mapped: Modifier[] = []
@@ -59,13 +64,17 @@ export const mapModifiersToUnits2 = (modifiers: ModifierWithKey[]) => {
   return mapped
 }
 
-export const getModifiers = (selections: ObjSet, tech_level: Number): ModifierWithKey[] => {
-  const modifiers: ModifierWithKey[] = []
+const mapModifiers = (key: string, modifiers: Modifier[]) => modifiers.map(value => ({ key, ...value })) as ModifierWithKey[]
+
+
+const getTechModifiers = (modifiers: ModifierWithKey[], country: CountryDefinition) => {
+  const selections = country.selections
+  const tech_level = calculateValue(country, CountryAttribute.TechLevel)
   if (process.env.REACT_APP_GAME === 'euiv') {
     tech_euiv.forEach((tech, level) => {
       if (level > tech_level)
         return
-      modifiers.push(...tech.modifiers.map(value => ({ key: TECH_KEY + level, ...value })))
+      modifiers.push(...mapModifiers(TECH_KEY + level, tech.modifiers))
     })
   }
   else {
@@ -73,11 +82,92 @@ export const getModifiers = (selections: ObjSet, tech_level: Number): ModifierWi
       if (level > tech_level)
         return
       tech.inventions.forEach((invention, index) => {
-        const key = index === 0 ? TECH_KEY + level : invention.key
+        const key = index === 0 ? TECH_KEY + level : invention.name
         if (index === 0 || selections[key])
-          modifiers.push(...invention.modifiers.map(value => ({ key, ...value })))
+          modifiers.push(...mapModifiers(key, invention.modifiers))
 
       })
+    })
+  }
+  return modifiers
+}
+
+const getModifiersSub = (modifiers: ModifierWithKey[], selections: ObjSet, parentKey: string, entities: { name: string, modifiers: Modifier[] }[]) => {
+  entities.forEach(entity => {
+    const key = parentKey + entity.name
+    if (selections[key])
+      modifiers.push(...mapModifiers(key, entity.modifiers))
+  })
+}
+
+const getOfficeModifiers = (modifiers: ModifierWithKey[], country: CountryDefinition) => {
+  const morale = calculateValue(country, CountryAttribute.OfficeMorale)
+  const discipline = calculateValue(country, CountryAttribute.OfficeDiscipline)
+  const militaryExperience = calculateValue(country, CountryAttribute.MilitaryExperience)
+  if (discipline) {
+    modifiers.push({
+      target: ModifierType.Global,
+      type: ValuesType.Base,
+      attribute: UnitAttribute.Discipline,
+      value: discipline / 100.0,
+      key: 'Office job'
+    })
+  }
+  if (morale) {
+    modifiers.push({
+      target: UnitType.Land,
+      type: ValuesType.Base,
+      attribute: UnitAttribute.Morale,
+      value: morale / 100.0,
+      key: 'Office job'
+    })
+  }
+  if (militaryExperience) {
+    modifiers.push({
+      target: UnitType.Land,
+      type: ValuesType.Base,
+      attribute: UnitAttribute.Morale,
+      value: militaryExperience / 1000.0,
+      key: 'Military experience'
+    })
+  }
+
+}
+
+export const getCountryModifiers = (country: CountryDefinition): ModifierWithKey[] => {
+  const modifiers: ModifierWithKey[] = []
+  getTechModifiers(modifiers, country)
+  getOfficeModifiers(modifiers, country)
+  return modifiers
+}
+
+export const getGeneralModifiers = (general: GeneralDefinition): ModifierWithKey[] => {
+  const modifiers: ModifierWithKey[] = []
+  if (general.enabled) {
+    if (process.env.REACT_APP_GAME === 'euiv') {
+    }
+    else {
+      getModifiersSub(modifiers, general.selections, TRAIT_KEY, traits_ir)
+      abilities_ir.forEach(abilities => getModifiersSub(modifiers, general.selections, ABILITY_KEY, abilities.options))
+      const martial = calculateValue(general, GeneralAttribute.Martial)
+      if (martial) {
+        modifiers.push({
+          target: UnitType.Naval,
+          type: ValuesType.Base,
+          attribute: UnitAttribute.CaptureChance,
+          value: martialToCaptureChance(martial),
+          key: 'Martial'
+        })
+      }
+    }
+  }
+  else {
+    modifiers.push({
+      target: ModifierType.Global,
+      type: ValuesType.Base,
+      attribute: UnitAttribute.Morale,
+      value: -0.25,
+      key: 'No general'
     })
   }
   return modifiers

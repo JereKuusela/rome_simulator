@@ -25,14 +25,8 @@ export enum TradeType {
   Capital = 'Capital'
 }
 
-export enum ScopeType {
-  Country = 'Country',
-  Army = 'Army'
-}
-
 export interface Modifier {
   target: UnitType | ModifierType | Mode 
-  scope: ScopeType
   attribute: string
   negative?: boolean
   type: ValuesType
@@ -45,12 +39,10 @@ export interface ModifierWithKey extends Modifier {
 }
 export interface Tradition {
   name: string
-  key: string
   modifiers: Modifier[]
 }
 export interface Invention {
   name: string
-  key: string
   modifiers: Modifier[]
 }
 export interface Path {

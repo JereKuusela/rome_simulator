@@ -13,23 +13,17 @@ const countries = makeContainerReducer(getDefaultCountryDefinitions(), countries
 
 const countryMapping: ActionToFunction<CountryDefinition, CountryName> = {}
 
-export const clearSelection = makeActionReplaceFirst(manager.clearSelection, countryMapping)
-export const clearSelections = makeActionReplaceFirst(manager.clearSelections, countryMapping)
-export const clearAllSelections = makeActionReplaceFirst(manager.clearAllSelections, countryMapping)
-export const enableSelection = makeActionReplaceFirst(manager.enableSelection, countryMapping)
-export const enableSelections = makeActionReplaceFirst(manager.enableSelections, countryMapping)
+export const clearCountrySelection = makeActionReplaceFirst(manager.clearCountrySelection, countryMapping)
+export const clearCountrySelections = makeActionReplaceFirst(manager.clearCountrySelections, countryMapping)
+export const clearAllCountrySelections = makeActionReplaceFirst(manager.clearAllCountrySelections, countryMapping)
+export const enableCountrySelection = makeActionReplaceFirst(manager.enableCountrySelection, countryMapping)
+export const enableCountrySelections = makeActionReplaceFirst(manager.enableCountrySelections, countryMapping)
 export const selectCulture = makeActionReplaceFirst(manager.selectCulture, countryMapping)
 export const selectGovernment = makeActionReplaceFirst(manager.selectGovernment, countryMapping)
 export const selectReligion = makeActionReplaceFirst(manager.selectReligion, countryMapping)
-export const setMilitaryPower = makeActionReplaceFirst(manager.setMilitaryPower, countryMapping)
-export const setOfficeDiscipline = makeActionReplaceFirst(manager.setOfficeDiscipline, countryMapping)
-export const setOfficeMorale = makeActionReplaceFirst(manager.setOfficeMorale, countryMapping)
-export const setOmenPower = makeActionReplaceFirst(manager.setOmenPower, countryMapping)
 export const setCountryValue = makeActionReplaceFirst(manager.setCountryValue, countryMapping)
-export const setTechLevel = makeActionReplaceFirst(manager.setTechLevel, countryMapping)
+export const clearCountryValues = makeActionReplaceFirst(manager.clearCountryValues, countryMapping)
 export const changeWeariness = makeActionReplaceFirst(manager.changeWeariness, countryMapping)
-export const enableCountryModifiers = makeActionReplaceFirst(manager.enableCountryModifiers, countryMapping)
-export const clearCountryModifiers = makeActionReplaceFirst(manager.clearCountryModifiers, countryMapping)
 
 const country = makeEntityReducer(getDefaultCountryDefinitions(), countryMapping)
 

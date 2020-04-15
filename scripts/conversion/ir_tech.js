@@ -12,7 +12,6 @@ const subHandle = (results, key, value, level, is_tech) => {
   if (!is_tech || !inventions.length )
     inventions.push({
       name: is_tech ? '' : 'Invention ' + level + ' ' + inventions.length,
-      key: is_tech ? '' : 'Invention ' + level + ' ' + inventions.length,
       modifiers: []
     })
   if (!key)

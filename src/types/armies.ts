@@ -3,6 +3,7 @@ import { UnitType, CohortDefinition, Cohort, UnitDefinitionValues, UnitRole, Uni
 import { Mode } from "types/definition"
 import { TacticType, TacticDefinition } from "./tactics"
 import { CombatPhase } from "./battle"
+import { ObjSet } from "utils"
 
 export enum ArmyName {
   Army1 = 'Army 1'
@@ -14,6 +15,7 @@ export enum GeneralAttribute {
 }
 
 export type General = {
+  selections: ObjSet
   enabled: boolean
   base_values: { [key in GeneralValueType]: number }
   extra_values: { [key in GeneralValueType]: number }
@@ -25,6 +27,7 @@ export type GeneralValueType = GeneralAttribute | CombatPhase
 export type Armies = { [key in Mode]: { [key in ArmyName]: Army } }
 
 export interface GeneralDefinition extends DefinitionValues<GeneralValueType> {
+  selections: ObjSet
   enabled: boolean
   definitions: UnitDefinitionValues
 }

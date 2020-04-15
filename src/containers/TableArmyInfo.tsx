@@ -9,7 +9,6 @@ import { invalidate, selectArmy, selectCulture, toggleRandomDice, setDice, setGe
 import Dropdown from 'components/Dropdowns/Dropdown'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TacticSelector from './TacticSelector'
-import InputTechLevel from './InputTechLevel'
 import { getCultures } from 'data'
 import { getTerrainPips, calculateGeneralPips, getCombatPhase, getCombatPhaseNumber } from 'combat'
 import { addSign } from 'formatters'
@@ -118,7 +117,7 @@ class TableArmyInfo extends Component<IProps> {
         {
           settings[Setting.Tech] &&
           <Table.Cell collapsing>
-            <InputTechLevel country={participant.country} tech={country.tech_level} />
+            <CountryValueInput country={participant.country} attribute={CountryAttribute.TechLevel} />
           </Table.Cell>
         }
         {

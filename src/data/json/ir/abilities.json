@@ -5,6 +5,7 @@
       "options": [
         {
           "name": "Boarding Tactics",
+          "key": "Ability Boarding Tactics",
           "modifiers": [
             {
               "target": "Naval",
@@ -21,6 +22,7 @@
         },
         {
           "name": "Ramming Tactics",
+          "key": "Ability Ramming Tactics",
           "modifiers": [
             {
               "target": "Naval",

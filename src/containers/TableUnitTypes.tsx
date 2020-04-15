@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table } from 'semantic-ui-react'
 
-import { Side, UnitRole, CountryName, UnitType, UnitAttribute, filterAttributes, Setting, Unit, Mode } from 'types'
+import { Side, UnitRole, CountryName, UnitType, UnitAttribute, filterAttributes, Setting, Unit, Mode, CountryAttribute } from 'types'
 import { getImage, mapRange } from 'utils'
 import { AppState, getUnitPreferences, getCountry, getMode, getCombatParticipant, getArmyDefinitionWithOverriddenUnits, getSiteSettings } from 'state'
 import { addToReserve, removeFromReserve, invalidate, setUnitPreference } from 'reducers'
@@ -186,7 +186,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   preferences: getUnitPreferences(state, props.side),
   reserve: getArmyDefinitionWithOverriddenUnits(state, props.country, true).reserve,
   units: getCombatParticipant(state, props.side).definitions,
-  tech: getCountry(state, props.country).tech_level,
+  tech: getCountry(state, props.country)[CountryAttribute.TechLevel],
   settings: getSiteSettings(state),
   weariness: getCountry(state, props.country).weariness,
   mode: getMode(state)

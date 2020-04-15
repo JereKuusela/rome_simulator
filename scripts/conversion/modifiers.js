@@ -13,58 +13,52 @@ const NAVAL = 'Naval'
 const LAND = 'Land'
 const TEXT = 'Text'
 const COUNTRY = 'Country'
-const A = 'Archers'
-const CC = 'Camel Cavalry'
-const C = 'Chariots'
-const HA = 'Horse Archers'
-const HI = 'Heavy Infantry'
-const HC = 'Heavy Cavalry'
-const LC = 'Light Cavalry'
-const LI = 'Light Infantry'
-const ST = 'Supply Train'
-const WE = 'War Elephants'
-const TET = 'Tetrere'
-const TRI = 'Trireme'
-const HEX = 'Hexere'
-const LIB = 'Liburnian'
-const OCT = 'Octere'
-const MEG = 'Mega Polyreme'
-const INF = 'Infantry'
-const CAV = 'Cavalry'
-const ART = 'Artillery'
+const GENERAL = 'General'
 
+const generalStats = {
+  'martial': 'Martial',
+  'zeal': 'Zeal',
+  'finesse': 'Finesse',
+  'chariasma': 'Charisma',
+  'character_loyalty': 'Loyalty',
+  'monthly_character_wealth': 'Monthly wealth',
+  'health': 'Monthly health'
+}
+
+const units = {
+  'archers': 'Archers',
+  'camels': 'Camel Cavalry',
+  'chariots': 'Chariots',
+  'horse_archers': 'Horse Archers',
+  'heavy_infantry': 'Heavy Infantry',
+  'heavy_cavalry': 'Heavy Cavalry',
+  'light_cavalry': 'Light Cavalry',
+  'light_infantry': 'Light Infantry',
+  'supply_train': 'Supply Train',
+  'warelephant': 'War Elephants',
+  'liburnian': 'Liburnian',
+  'trireme': 'Trireme',
+  'tetrere': 'Tetrere',
+  'hexere': 'Hexere',
+  'octere': 'Octere',
+  'mega_galley': 'Mega Polyreme',
+  'artillery': 'Artillery',
+  'cavalry': 'Cavalry',
+  'infantry': 'Infantry',
+}
 
 const attributes = {
-  'artillery': ART,
-  'artillery_fire': FIRE,
-  'artillery_shock': SHOCK,
   'assault_ability': 'Assault ability',
   'attrition_weight': 'Attrition weight',
-  'archers': A,
   'army': 'Mode',
   'category': PARENT,
   'build_cost': 'Cost',
-  'camels': CC,
-  'cavalry': CAV,
-  'cavalry_fire': FIRE,
-  'cavalry_shock': SHOCK,
-  'chariots': C,
   'combat_width': 'Combat width',
   'defensive_fire': 'Defensive fire pips',
   'defensive_morale': 'Defensive morale pips',
   'defensive_shock': 'Defensive shock pips',
   'heavy': 'Heavy Ship',
-  'heavy_cavalry': HC,
-  'heavy_infantry': HI,
-  'horse_archers': HA,
-  'infantry': INF,
-  'infantry_fire': FIRE,
-  'infantry_shock': SHOCK,
   'light': 'Light Ship',
-  'light_cavalry': LC,
-  'light_infantry': LI,
-  'supply_train': ST,
-  'warelephant': WE,
   'army_maintenance_cost': MAINTENANCE,
   'army_movement_speed': LAND + ' Movement speed',
   'army_weight_modifier': 'Attrition weight',
@@ -81,60 +75,63 @@ const attributes = {
   'global_start_experience': EXPERIENCE,
   'global_ship_recruit_speed': NAVAL + ' ' + RECRUIT_SPEED,
   'global_supply_limit_modifier': 'Supply limit',
-  'hexere': HEX,
-  'hexere_discipline': DISCIPLINE,
-  'heavy_cavalry_discipline': DISCIPLINE,
-  'heavy_infantry_cost': COST,
-  'heavy_infantry_discipline': DISCIPLINE,
   'hostile_attrition': 'Hostile attrition',
   'land_morale': MORALE,
+  'land_morale_modifier': MORALE,
   'land_unit_attrition': 'Land Attrition',
-  'liburnian': LIB,
-  'liburnian_discipline': DISCIPLINE,
+  'loyalty_gain_chance': 'Loyalty chance',
   'maintenance_cost': MAINTENANCE,
   'maneuver': MANEUVER,
   'maneuver_value': MANEUVER,
   'medium': 'Medium Ship',
   'military_tactics': 'Military tactics',
-  'mega_galley': MEG,
   'morale': MORALE,
   'morale_damage_done': 'Morale damage done',
   'morale_damage_taken': 'Morale damage taken',
   'naval_damage_done': 'Damage done',
   'naval_damage_taken': 'Damage taken',
   'naval_morale': MORALE,
+  'naval_morale_modifier': MORALE,
   'naval_range': 'Naval range',
   'naval_unit_attrition': 'Naval Attrition',
+  'navy_movement_speed': NAVAL + ' Movement speed',
   'navy_maintenance_cost': MAINTENANCE,
-  'octere': OCT,
   'offensive_fire': 'Offensive fire pips',
   'offensive_morale': 'Offensive morale pips',
   'offensive_shock': 'Offensive shock pips',
   'price_state_investment_military_cost_modifier': 'Military investment cost',
   'retreat_delay': 'Retreat delay',
+  'ship_capture_chance': 'Capture chance',
+  'ship_repair_at_sea': 'Ship repair at sea',
   'siege_ability': 'Siege ability',
   'siege_engineers': 'Siege engineers',
   'strength_damage_done': 'Strength damage done',
   'strength_damage_taken': 'Strength damage taken',
-  'tetrere': TET,
-  'tetrere_discipline': DISCIPLINE,
-  'trireme': TRI,
-  'trireme_discipline': DISCIPLINE,
   'type': PARENT,
   'unit_type': 'Culture'
 }
 
+Object.keys(units).forEach(key => {
+  const value = units[key]
+  attributes[key] = value
+  attributes[key + '_discipline'] = DISCIPLINE
+  attributes[key + '_fire'] = FIRE
+  attributes[key + '_shock'] = SHOCK
+  attributes[key + '_cost'] = COST
+})
+
+Object.keys(generalStats).forEach(key => {
+  const value = generalStats[key]
+  attributes[key] = value
+})
+
 const targets = {
-  'artillery_fire': ART,
-  'artillery_shock': ART,
   'assault_ability': TEXT,
   'army_maintenance_cost': LAND,
   'army_movement_speed': TEXT,
   'army_weight_modifier': LAND,
   'blockade_efficiency': TEXT,
   'cohort_reinforcement_speed': TEXT,
-  'cavalry_fire': CAV,
-  'cavalry_shock': CAV,
   'combat_width': COUNTRY,
   'discipline': GLOBAL,
   'experience_decay': TEXT,
@@ -145,16 +142,11 @@ const targets = {
   'global_start_experience': GLOBAL,
   'global_ship_recruit_speed': TEXT,
   'global_supply_limit_modifier': TEXT,
-  'hexere_discipline': HEX,
   'hostile_attrition': TEXT,
-  'heavy_cavalry_discipline': HC,
-  'heavy_infantry_cost': HI,
-  'heavy_infantry_discipline': HI,
-  'infantry_fire': INF,
-  'infantry_shock': INF,
-  'land_morale': GLOBAL,
+  'land_morale': LAND,
+  'land_morale_modifier': LAND,
   'land_unit_attrition': TEXT,
-  'liburnian_discipline': LIB,
+  'loyalty_gain_chance': TEXT,
   'maintenance_cost': GLOBAL,
   'maneuver_value': GLOBAL,
   'military_tactics': GLOBAL,
@@ -162,16 +154,30 @@ const targets = {
   'naval_damage_done': NAVAL,
   'naval_damage_taken': NAVAL,
   'naval_morale': NAVAL,
+  'naval_morale_modifier': NAVAL,
   'naval_range': TEXT,
   'naval_unit_attrition': TEXT,
+  'navy_movement_speed': TEXT,
   'navy_maintenance_cost': NAVAL,
   'price_state_investment_military_cost_modifier': TEXT,
   'retreat_delay': TEXT,
+  'ship_capture_chance': NAVAL,
+  'ship_repair_at_sea': TEXT,
   'siege_ability': TEXT,
-  'siege_engineers': TEXT,
-  'tetrere_discipline': TET,
-  'trireme_discipline': TRI,
+  'siege_engineers': TEXT
 }
+
+Object.keys(generalStats).forEach(key => {
+  targets[key] = GENERAL
+})
+
+Object.keys(units).forEach(key => {
+  const value = units[key]
+  targets[key + '_discipline'] = value
+  targets[key + '_fire'] = value
+  targets[key + '_shock'] = value
+  targets[key + '_cost'] = value
+})
 
 const noPercents = {
   'combat_width': true,
@@ -185,6 +191,10 @@ const noPercents = {
   'retreat_delay': true
 }
 
+Object.keys(generalStats).forEach(key => {
+  noPercents[key] = true
+})
+
 const negatives = {
   'army_maintenance_cost': true,
   'army_weight_modifier': true,
@@ -197,6 +207,7 @@ const negatives = {
   'naval_unit_attrition': true,
   'price_state_investment_military_cost_modifier': true,
   'retreat_delay': true,
+  'loyalty_gain_chance': true
 }
 
 const MODIFIER = 'Modifier'
@@ -219,6 +230,8 @@ const format = value => {
   return split.join(' ')
 }
 
+exports.format = format
+
 /**
  * @param {string} key 
  */
@@ -235,7 +248,7 @@ exports.getNoPercent = getNoPercent = key => noPercents[key]
  * @param {string} key 
  * @param {string} value 
  */
-exports.getNegative = getNegative = (key, value) => negatives[key] === value > 0 ? true : undefined
+exports.getNegative = getNegative = (key, value) => !!negatives[key] === value > 0 ? true : undefined
 /**
  * @param {string} key 
  */

@@ -2,7 +2,7 @@ import { sortBy } from 'lodash'
 import { toObj, map, forEach } from 'utils'
 import {
   ValuesType, CultureType, ReligionType, LawDefinition, EconomyDefinition, IdeaDefinition, AbilityDefinition,
-  TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, Modifier, ScopeType, TechDefinitionEUIV
+  TraditionDefinition, TradeDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, Modifier, TechDefinitionEUIV
 } from 'types'
 
 import * as traditionData from './json/ir/traditions.json'
@@ -34,8 +34,7 @@ const getAbilityData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(ab
 type Traditions = { [key in CultureType]: TraditionDefinition }
 type Omens = { [key in ReligionType]: OmenDefinition[] }
 
-const setDefault = (modifier: Modifier, scope: ScopeType = ScopeType.Country) => {
-  modifier.scope = modifier.scope ?? scope
+const setDefault = (modifier: Modifier) => {
   modifier.type = modifier.type ?? ValuesType.Base
 }
 
@@ -78,7 +77,7 @@ export const getOmenDefinitions = () => {
 
 export const getTraitDefinitions = () => {
   const data = sortBy<TraitData>(getTraitData(), value => value.name) as TraitDefinition[]
-  data.forEach(trait => trait.modifiers.forEach(modifier => setDefault(modifier, ScopeType.Army)))
+  data.forEach(trait => trait.modifiers.forEach(modifier => setDefault(modifier)))
   return data
 }
 
@@ -102,7 +101,7 @@ export const getIdeaDefinitions = () => {
 
 export const getAbilityDefinitions = () => {
   const data = sortBy<AbilityData>(getAbilityData(), () => 1) as AbilityDefinition[]
-  data.forEach(ability => ability.options.forEach(option => option.modifiers.forEach(modifier => setDefault(modifier, ScopeType.Army))))
+  data.forEach(ability => ability.options.forEach(option => option.modifiers.forEach(modifier => setDefault(modifier))))
   return data
 }
 
@@ -144,7 +143,6 @@ interface InventionData {
   name: string
   inventions: {
     name: string
-    key: string
     modifiers: ModifierData[]
   }[]
 }
@@ -158,35 +156,35 @@ interface OmenData {
 }
 
 interface TraitData {
-  name: string,
+  name: string
   modifiers: ModifierData[]
 }
 
 interface LawData {
-  name: string,
+  name: string
   options: {
-    name: string,
+    name: string
     modifiers: ModifierData[]
   }[]
 }
 
 interface EconomyData {
-  name: string,
+  name: string
   options: {
-    name: string,
+    name: string
     modifiers: ModifierData[]
   }[]
 }
 
 interface IdeaData {
-  name: string,
+  name: string
   modifiers: ModifierData[]
 }
 
 interface AbilityData {
   name: string,
   options: {
-    name: string,
+    name: string
     modifiers: ModifierData[]
   }[]
 }

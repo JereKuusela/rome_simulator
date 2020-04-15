@@ -1,4 +1,4 @@
-import { ValuesType, UnitValueType, UnitType, UnitRole, Modifier, ScopeType, UnitDefinition, UnitDefinitions, Mode, Setting, UnitAttribute, WearinessAttributes, ReserveDefinition, ModifierWithKey, SiteSettings } from "types"
+import { ValuesType, UnitValueType, UnitType, UnitRole, Modifier, UnitDefinition, UnitDefinitions, Mode, Setting, UnitAttribute, WearinessAttributes, ReserveDefinition, ModifierWithKey, SiteSettings } from "types"
 import { addValuesWithMutate, regenerateValues, clearValues, DefinitionValues, calculateValue, addValues, addValue } from "definition_values"
 import { getUnitIcon } from "data"
 import { forEach, toArr, round, randomWithinRange } from "utils"
@@ -37,7 +37,6 @@ export const changeParent = (unit: UnitDefinition, parent: UnitType) => {
 }
 
 export const enableUnitModifiers = (units: UnitDefinitions, key: string, modifiers: Modifier[]) => {
-  modifiers = modifiers.filter(value => value.scope === ScopeType.Country)
   forEach(units, (unit, type) => {
     const values = modifiers.filter(value => type === value.target)
     const base_values = values.filter(value => value.type !== ValuesType.Modifier).map(value => [value.attribute, value.value] as [UnitValueType, number])
@@ -78,7 +77,7 @@ export const applyLosses = (values: WearinessAttributes, units: ReserveDefinitio
 export const applyUnitModifiers = (units: UnitDefinitions, modifiers: ModifierWithKey[]): UnitDefinitions => {
   modifiers = mapModifiersToUnits2(modifiers)
   let result = { ...units }
-  modifiers.filter(value => value.scope === ScopeType.Country).forEach(value => {
+  modifiers.forEach(value => {
     const type = value.target as UnitType
     if (!result[type])
       return

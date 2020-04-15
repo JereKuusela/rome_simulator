@@ -8,16 +8,17 @@ export const defaultCountry: CountryDefinition =
   government: GovermentType.Republic,
   religion: 'Hellenic' as ReligionType,
   culture: (process.env.REACT_APP_GAME === 'euiv' ? 'Western' : 'Greek') as CultureType,
-  omen_power: 100,
-  military_power: 0,
-  office_discipline: 0,
-  office_morale: 0,
-  tech_level: 3,
   armies: getDefaultArmies(),
   units: getDefaultUnits((process.env.REACT_APP_GAME === 'euiv' ? 'Western' : undefined) as CultureType),
   base_values: {
     [CountryAttribute.FlankRatio]: {
       'Base': 0.5
+    },
+    [CountryAttribute.OmenPower]: {
+      'Base': 100
+    },
+    [CountryAttribute.TechLevel]: {
+      'Base': (process.env.REACT_APP_GAME === 'euiv' ? 3 : 0)
     }
   } as any,
   weariness: { [UnitAttribute.Morale]: { min: 0, max: 0 }, [UnitAttribute.Strength]: { min: 0, max: 0 } }
