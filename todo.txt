@@ -23,6 +23,7 @@ Testing:
 
 Refactor:
   - Invalidate is now done automatically for all non-UI actions. Removes lots of low value code.
+  - Accordiong toggling moved under UI actions.
 
 TODO:
 
