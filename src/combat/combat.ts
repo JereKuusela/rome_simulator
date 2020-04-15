@@ -197,12 +197,16 @@ const moveDefeated = (frontline: CombatFrontline, defeated: CombatDefeated, mark
         alive = true
         continue
       }
-      if (i > 0 && !settings[Setting.BackRowRetreat])
+      if (i > 0 && !settings[Setting.BackRowRetreat]) {
+        alive = true
         continue
+      }
       if (settings[Setting.DynamicTargeting])
         unit.is_weak = true
-      if (settings[Setting.RetreatRounds] > round + 1)
+      if (settings[Setting.RetreatRounds] > round + 1) {
+        alive = true
         continue
+      }
       unit.state.is_destroyed = unit[UnitAttribute.Strength] <= 0
       if (mark_defeated)
         frontline[i][j] = { ...unit, state: { ...unit.state, is_defeated: true } } // Temporary copy for UI purposes.
