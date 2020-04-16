@@ -169,8 +169,14 @@
           "value": -5
         },
         {
+          "target": "Text",
+          "attribute": "Attraction as Heir",
+          "value": 1
+        },
+        {
           "target": "Land",
           "attribute": "Morale",
+          "type": "Modifier",
           "value": 0.05
         },
         {
@@ -184,6 +190,12 @@
     {
       "name": "Coward",
       "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Attraction as Heir",
+          "negative": true,
+          "value": -1
+        },
         {
           "target": "General",
           "attribute": "Loyalty",
@@ -200,12 +212,14 @@
         {
           "target": "Land",
           "attribute": "Morale",
+          "type": "Modifier",
           "negative": true,
           "value": -0.05
         },
         {
           "target": "Naval",
           "attribute": "Morale",
+          "type": "Modifier",
           "negative": true,
           "value": -0.05
         },
@@ -241,6 +255,11 @@
       "name": "Squadron Leader",
       "modifiers": [
         {
+          "target": "Text",
+          "attribute": "Charisma",
+          "value": 1
+        },
+        {
           "target": "Tetrere",
           "attribute": "Discipline",
           "value": 0.05
@@ -267,7 +286,7 @@
           "value": 0.05
         },
         {
-          "target": "Mega Polyreme",
+          "target": "Mega-Polyreme",
           "attribute": "Discipline",
           "value": 0.05
         }

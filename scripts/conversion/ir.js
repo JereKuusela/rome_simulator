@@ -1,7 +1,11 @@
+const core = require('./core')
 const units = require('./ir_units')
 const tech = require('./ir_tech')
 const traits = require('./ir_traits')
+const traditions = require('./ir_traditions')
 
+core.loadLocalizations('ir')
 units.run()
 tech.run()
 traits.run()
+traditions.run()

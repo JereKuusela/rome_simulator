@@ -53,7 +53,7 @@ const transformer = results => {
     unit['Tech'] = techLevels[unit.Type] || 0
   })
   delete results[TECH_FILE]
-  return Object.values(results)
+  return results
 }
 
 const parsers = {

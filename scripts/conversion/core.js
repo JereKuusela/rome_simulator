@@ -23,7 +23,7 @@ exports.parseFiles = (parsers, transformer, filename) => {
   const results = {}
   Object.keys(parsers).map(key => parseFiles(parsers[key], key, results))
   const text = JSON.stringify({
-    [path.parse(filename).name]: transformer(results)
+    [path.parse(filename).name]: Object.values(transformer ? transformer(results) : results)
   }, undefined, 2)
   const file = path.join(resultPath, filename)
   fs.writeFile(file, text, err => {
@@ -52,9 +52,23 @@ exports.parseFiles = (parsers, transformer, filename) => {
  */
 exports.getModifier = (key, value) => ({
   target: modifiers.getTarget(key),
-  attribute: modifiers.getAttribute(key),
+  attribute: modifiers.getAttribute(key, value),
   type: modifiers.getType(key),
   negative: modifiers.getNegative(key, value),
   no_percent: modifiers.getNoPercent(key),
   value: modifiers.getValue(key, value)
 })
+
+/**
+ * Loads localization files for a given game.
+ * @param game {string}
+ */
+exports.loadLocalizations = game => {
+  const directory = path.join(directoryPath, game, 'localization', 'english')
+  const files = fs.readdirSync(directory)
+  files.forEach(file => {
+    const data = fs.readFileSync(path.join(directory, file)).toString()
+    const localization = converter.parseLocalization(data)
+    modifiers.loadLocalization(localization, file)
+  })
+}

@@ -23,7 +23,7 @@
             {
               "target": "Global",
               "attribute": "Experience",
-              "value": 0.075
+              "value": 7.5
             }
           ]
         },
@@ -52,10 +52,7 @@
               "value": 0.1
             },
             {
-              "target": "Global",
-              "attribute": "Maintenance",
-              "type": "Modifier",
-              "negative": true,
+              "target": "Text",
               "value": 0.03
             }
           ]
@@ -105,10 +102,7 @@
               "value": 0.1
             },
             {
-              "target": "Global",
-              "attribute": "Maintenance",
-              "type": "Modifier",
-              "negative": true,
+              "target": "Text",
               "value": 0.03
             }
           ]
@@ -160,10 +154,7 @@
               "value": 0.1
             },
             {
-              "target": "Global",
-              "attribute": "Maintenance",
-              "type": "Modifier",
-              "negative": true,
+              "target": "Text",
               "value": 0.03
             }
           ]
@@ -214,10 +205,7 @@
               "value": 0.1
             },
             {
-              "target": "Global",
-              "attribute": "Maintenance",
-              "type": "Modifier",
-              "negative": true,
+              "target": "Text",
               "value": 0.03
             }
           ]
@@ -268,10 +256,7 @@
               "value": 0.1
             },
             {
-              "target": "Global",
-              "attribute": "Maintenance",
-              "type": "Modifier",
-              "negative": true,
+              "target": "Text",
               "value": 0.03
             }
           ]
@@ -293,7 +278,7 @@
             {
               "target": "Global",
               "attribute": "Experience",
-              "value": 0.05
+              "value": 5
             }
           ]
         },
@@ -302,7 +287,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "General loyalty",
+              "attribute": "Loyalty of Generals",
               "no_percent": true,
               "value": 5
             }
@@ -323,10 +308,7 @@
               "value": 0.1
             },
             {
-              "target": "Global",
-              "attribute": "Maintenance",
-              "type": "Modifier",
-              "negative": true,
+              "target": "Text",
               "value": 0.03
             }
           ]
@@ -377,10 +359,7 @@
               "value": 0.1
             },
             {
-              "target": "Global",
-              "attribute": "Maintenance",
-              "type": "Modifier",
-              "negative": true,
+              "target": "Text",
               "value": 0.03
             }
           ]
@@ -430,10 +409,7 @@
               "value": 0.1
             },
             {
-              "target": "Global",
-              "attribute": "Maintenance",
-              "type": "Modifier",
-              "negative": true,
+              "target": "Text",
               "value": 0.03
             }
           ]
@@ -465,7 +441,7 @@
             {
               "target": "Heavy Infantry",
               "attribute": "Cost",
-              "negative": true,
+              "type": "Modifier",
               "value": -0.1
             }
           ]
@@ -485,10 +461,7 @@
               "value": 0.1
             },
             {
-              "target": "Global",
-              "attribute": "Maintenance",
-              "type": "Modifier",
-              "negative": true,
+              "target": "Text",
               "value": 0.03
             }
           ]
@@ -538,10 +511,7 @@
               "value": 0.1
             },
             {
-              "target": "Global",
-              "attribute": "Maintenance",
-              "type": "Modifier",
-              "negative": true,
+              "target": "Text",
               "value": 0.03
             }
           ]
@@ -591,10 +561,7 @@
               "value": 0.1
             },
             {
-              "target": "Global",
-              "attribute": "Maintenance",
-              "type": "Modifier",
-              "negative": true,
+              "target": "Text",
               "value": 0.03
             }
           ]
@@ -615,7 +582,7 @@
             {
               "target": "Global",
               "attribute": "Experience",
-              "value": 0.05
+              "value": 5
             }
           ]
         },
@@ -644,10 +611,7 @@
               "value": 0.1
             },
             {
-              "target": "Global",
-              "attribute": "Maintenance",
-              "type": "Modifier",
-              "negative": true,
+              "target": "Text",
               "value": 0.03
             }
           ]
@@ -699,10 +663,7 @@
               "value": 0.1
             },
             {
-              "target": "Global",
-              "attribute": "Maintenance",
-              "type": "Modifier",
-              "negative": true,
+              "target": "Text",
               "value": 0.03
             }
           ]
@@ -752,10 +713,7 @@
               "value": 0.1
             },
             {
-              "target": "Global",
-              "attribute": "Maintenance",
-              "type": "Modifier",
-              "negative": true,
+              "target": "Text",
               "value": 0.03
             }
           ]
@@ -805,10 +763,7 @@
               "value": 0.1
             },
             {
-              "target": "Global",
-              "attribute": "Maintenance",
-              "type": "Modifier",
-              "negative": true,
+              "target": "Text",
               "value": 0.03
             }
           ]
@@ -829,7 +784,7 @@
             {
               "target": "Global",
               "attribute": "Experience",
-              "value": 0.05
+              "value": 5
             }
           ]
         },
@@ -858,10 +813,7 @@
               "value": 0.1
             },
             {
-              "target": "Global",
-              "attribute": "Maintenance",
-              "type": "Modifier",
-              "negative": true,
+              "target": "Text",
               "value": 0.03
             }
           ]
@@ -913,10 +865,7 @@
               "value": 0.1
             },
             {
-              "target": "Global",
-              "attribute": "Maintenance",
-              "type": "Modifier",
-              "negative": true,
+              "target": "Text",
               "value": 0.03
             }
           ]
@@ -966,10 +915,7 @@
               "value": 0.1
             },
             {
-              "target": "Global",
-              "attribute": "Maintenance",
-              "type": "Modifier",
-              "negative": true,
+              "target": "Text",
               "value": 0.03
             }
           ]
@@ -1019,10 +965,7 @@
               "value": 0.1
             },
             {
-              "target": "Global",
-              "attribute": "Maintenance",
-              "type": "Modifier",
-              "negative": true,
+              "target": "Text",
               "value": 0.03
             }
           ]
@@ -1073,10 +1016,7 @@
               "value": 0.1
             },
             {
-              "target": "Global",
-              "attribute": "Maintenance",
-              "type": "Modifier",
-              "negative": true,
+              "target": "Text",
               "value": 0.03
             }
           ]
@@ -1097,7 +1037,7 @@
             {
               "target": "Global",
               "attribute": "Experience",
-              "value": 0.05
+              "value": 5
             }
           ]
         },

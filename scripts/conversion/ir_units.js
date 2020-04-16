@@ -18,16 +18,16 @@ const handleUnit = (results, data) => {
   })
 }
 
-const transformer = result => {
-  Object.keys(result).forEach(key => {
-    const unit = result[key]
+const transformer = results => {
+  Object.keys(results).forEach(key => {
+    const unit = results[key]
     unit['Parent'] = unit['Parent'] || 'Land Unit'
     Object.keys(unit).forEach(key => {
       if (!unit[key])
         delete unit[key]
     })
   })
-  return Object.values(result)
+  return results
 }
 
 const parsers = {

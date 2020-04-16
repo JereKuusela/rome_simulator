@@ -21,10 +21,8 @@ const handleTech = (results, data) => {
   })
 }
 
-const transformer = result => Object.values(result)
-
 const parsers = {
   [path.join('euiv', 'tech', 'mil.txt')]: handleTech
 }
 
-exports.run = () => core.parseFiles(parsers, transformer, path.join('euiv', 'tech.json'))
+exports.run = () => core.parseFiles(parsers, undefined, path.join('euiv', 'tech.json'))

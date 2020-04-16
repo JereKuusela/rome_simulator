@@ -28,10 +28,8 @@ const handleTraits = (results, data) => {
   })
 }
 
-const transformer = result => Object.values(result)
-
 const parsers = {
   [path.join('ir', 'traits', '00_military.txt')]: handleTraits
 }
 
-exports.run = () => core.parseFiles(parsers, transformer, path.join('ir', 'traits.json'))
+exports.run = () => core.parseFiles(parsers, undefined, path.join('ir', 'traits.json'))

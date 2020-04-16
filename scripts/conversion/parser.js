@@ -39,8 +39,29 @@ parseObject = tokens => {
 
 exports.parseFile = data => {
   const withoutComments = data.replace(/\h*#.*\r?(?:\n|$)/g, '')
-  const forceTokenizeEqualCharacter = data.replace(/=/g, ' = ')
+  const forceTokenizeEqualCharacter = withoutComments.replace(/=/g, ' = ')
   const tokens = forceTokenizeEqualCharacter.split(/[\n\r\s]+/)
   i = -1
   return parseObject(tokens)
+}
+
+/**
+ * @param data {string}
+ */
+exports.parseLocalization = data => {
+  const withoutDataLinebreaks = data.replace(/\\n/g, '')
+  const withoutComments = withoutDataLinebreaks.replace(/^#.?$/g, '')
+  const withoutSentences = withoutComments.replace(/\./g, '')
+  const lines = withoutSentences.split('\n')
+  const results = {}
+  lines.forEach(line => {
+    const tokens = line.split(/:\d/)
+    if (tokens.length > 1) {
+      const trimmed = tokens[1].trim()
+      if (tokens[0].trim().toLowerCase().startsWith('#'))
+        console.log('alert')
+      results[tokens[0].trim().toLowerCase()] = trimmed.substr(1, trimmed.length - 2)
+    }
+  })
+  return results
 }

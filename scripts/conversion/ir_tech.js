@@ -53,11 +53,9 @@ const handleInvention = (results, data) => {
   })
 }
 
-const transformer = result => Object.values(result)
-
 const parsers = {
   [path.join('ir', 'technology_tables', '0_martial_table.txt')]: handleTech,
   [path.join('ir', 'inventions', '00_martial_inventions.txt')]: handleInvention
 }
 
-exports.run = () => core.parseFiles(parsers, transformer, path.join('ir', 'tech.json'))
+exports.run = () => core.parseFiles(parsers, undefined, path.join('ir', 'tech.json'))
