@@ -1,7 +1,7 @@
 {
   "traditions": [
     {
-      "type": "Barbarian Traditions",
+      "type": "Barbarian",
       "modifiers": [
         {
           "target": "Text",
@@ -11,9 +11,12 @@
       ],
       "paths": [
         {
+          "name": "Britannic",
+          "key": "tradition_path_0",
           "traditions": [
             {
-              "name": "Scythed Chariots",
+              "name": "Tradition Scythed Chariots",
+              "key": "tradition_path_0_0",
               "modifiers": [
                 {
                   "target": "Chariots",
@@ -23,7 +26,8 @@
               ]
             },
             {
-              "name": "Coming of Age",
+              "name": "Tradition Coming of Age",
+              "key": "tradition_path_0_1",
               "modifiers": [
                 {
                   "target": "Light Infantry",
@@ -33,7 +37,8 @@
               ]
             },
             {
-              "name": "Living off the Land",
+              "name": "Tradition Living off the Land",
+              "key": "tradition_path_0_2",
               "modifiers": [
                 {
                   "target": "Text",
@@ -43,7 +48,8 @@
               ]
             },
             {
-              "name": "Word of Mouth",
+              "name": "Tradition Word of Mouth",
+              "key": "tradition_path_0_3",
               "modifiers": [
                 {
                   "target": "Text",
@@ -53,7 +59,8 @@
               ]
             },
             {
-              "name": "Chariot Mastery",
+              "name": "Tradition Chariot Mastery",
+              "key": "tradition_path_0_4",
               "modifiers": [
                 {
                   "target": "Chariots",
@@ -64,7 +71,8 @@
               ]
             },
             {
-              "name": "Selective Breeding",
+              "name": "Tradition Selective Breeding",
+              "key": "tradition_path_0_5",
               "modifiers": [
                 {
                   "target": "Light Cavalry",
@@ -75,7 +83,8 @@
               ]
             },
             {
-              "name": "Take up Arms",
+              "name": "Tradition Take up Arms",
+              "key": "tradition_path_0_6",
               "modifiers": [
                 {
                   "target": "Archers",
@@ -86,6 +95,8 @@
               ]
             },
             {
+              "name": "Tradition undefined",
+              "key": "tradition_path_0_7",
               "modifiers": [
                 {
                   "target": "Light Cavalry",
@@ -102,9 +113,12 @@
           ]
         },
         {
+          "name": "Germanic",
+          "key": "tradition_path_1",
           "traditions": [
             {
-              "name": "Strike and Withdraw",
+              "name": "Tradition Strike and Withdraw",
+              "key": "tradition_path_1_0",
               "modifiers": [
                 {
                   "target": "Light Infantry",
@@ -115,7 +129,8 @@
               ]
             },
             {
-              "name": "Natural Resources",
+              "name": "Tradition Natural Resources",
+              "key": "tradition_path_1_1",
               "modifiers": [
                 {
                   "target": "Light Cavalry",
@@ -132,7 +147,8 @@
               ]
             },
             {
-              "name": "The Glory of the Hunt",
+              "name": "Tradition The Glory of the Hunt",
+              "key": "tradition_path_1_2",
               "modifiers": [
                 {
                   "target": "Text",
@@ -147,7 +163,8 @@
               ]
             },
             {
-              "name": "Ambush",
+              "name": "Tradition Ambush",
+              "key": "tradition_path_1_3",
               "modifiers": [
                 {
                   "target": "Text",
@@ -167,7 +184,8 @@
               ]
             },
             {
-              "name": "Shield Wall",
+              "name": "Tradition Shield Wall",
+              "key": "tradition_path_1_4",
               "modifiers": [
                 {
                   "target": "Heavy Infantry",
@@ -177,7 +195,8 @@
               ]
             },
             {
-              "name": "The Young Must Serve",
+              "name": "Tradition The Young Must Serve",
+              "key": "tradition_path_1_5",
               "modifiers": [
                 {
                   "target": "Light Infantry",
@@ -188,7 +207,8 @@
               ]
             },
             {
-              "name": "Hail of Stones",
+              "name": "Tradition Hail of Stones",
+              "key": "tradition_path_1_6",
               "modifiers": [
                 {
                   "target": "Archers",
@@ -198,6 +218,8 @@
               ]
             },
             {
+              "name": "Tradition undefined",
+              "key": "tradition_path_1_7",
               "modifiers": [
                 {
                   "target": "Light Infantry",
@@ -209,9 +231,12 @@
           ]
         },
         {
+          "name": "Gallic",
+          "key": "tradition_path_2",
           "traditions": [
             {
-              "name": "Strike From Afar",
+              "name": "Tradition Strike From Afar",
+              "key": "tradition_path_2_0",
               "modifiers": [
                 {
                   "target": "Archers",
@@ -221,7 +246,8 @@
               ]
             },
             {
-              "name": "Confederations",
+              "name": "Tradition Confederations",
+              "key": "tradition_path_2_1",
               "modifiers": [
                 {
                   "target": "Text",
@@ -231,7 +257,8 @@
               ]
             },
             {
-              "name": "The Plains Fight With us",
+              "name": "Tradition The Plains Fight With us",
+              "key": "tradition_path_2_2",
               "modifiers": [
                 {
                   "target": "Light Infantry",
@@ -246,7 +273,8 @@
               ]
             },
             {
-              "name": "In Defense of our Home",
+              "name": "Tradition In Defense of our Home",
+              "key": "tradition_path_2_3",
               "modifiers": [
                 {
                   "target": "Text",
@@ -256,7 +284,8 @@
               ]
             },
             {
-              "name": "A People on the Move",
+              "name": "Tradition A People on the Move",
+              "key": "tradition_path_2_4",
               "modifiers": [
                 {
                   "target": "Text",
@@ -271,7 +300,8 @@
               ]
             },
             {
-              "name": "Strong Arm",
+              "name": "Tradition Strong Arm",
+              "key": "tradition_path_2_5",
               "modifiers": [
                 {
                   "target": "Heavy Infantry",
@@ -281,7 +311,8 @@
               ]
             },
             {
-              "name": "Scale the Walls!",
+              "name": "Tradition Scale the Walls!",
+              "key": "tradition_path_2_6",
               "modifiers": [
                 {
                   "target": "Text",
@@ -291,6 +322,8 @@
               ]
             },
             {
+              "name": "Tradition undefined",
+              "key": "tradition_path_2_7",
               "modifiers": [
                 {
                   "target": "Land",
@@ -305,7 +338,7 @@
       ]
     },
     {
-      "type": "Greek Traditions",
+      "type": "Greek",
       "modifiers": [
         {
           "target": "Text",
@@ -315,9 +348,12 @@
       ],
       "paths": [
         {
+          "name": "Seleucid",
+          "key": "tradition_path_0",
           "traditions": [
             {
-              "name": "Agema",
+              "name": "Tradition Agema",
+              "key": "tradition_path_0_0",
               "modifiers": [
                 {
                   "target": "Heavy Cavalry",
@@ -328,7 +364,8 @@
               ]
             },
             {
-              "name": "Arms for Hire",
+              "name": "Tradition Arms for Hire",
+              "key": "tradition_path_0_1",
               "modifiers": [
                 {
                   "target": "Text",
@@ -344,7 +381,8 @@
               ]
             },
             {
-              "name": "Phoenician Sailors",
+              "name": "Tradition Phoenician Sailors",
+              "key": "tradition_path_0_2",
               "modifiers": [
                 {
                   "target": "Naval",
@@ -354,7 +392,8 @@
               ]
             },
             {
-              "name": "The Companion Cavalry",
+              "name": "Tradition The Companion Cavalry",
+              "key": "tradition_path_0_3",
               "modifiers": [
                 {
                   "target": "Text",
@@ -364,7 +403,8 @@
               ]
             },
             {
-              "name": "Kataphraktoi",
+              "name": "Tradition Kataphraktoi",
+              "key": "tradition_path_0_4",
               "modifiers": [
                 {
                   "target": "Heavy Cavalry",
@@ -374,7 +414,8 @@
               ]
             },
             {
-              "name": "Thyreophoroi",
+              "name": "Tradition Thyreophoroi",
+              "key": "tradition_path_0_5",
               "modifiers": [
                 {
                   "target": "Light Infantry",
@@ -385,7 +426,8 @@
               ]
             },
             {
-              "name": "The Hipparchos",
+              "name": "Tradition The Hipparchos",
+              "key": "tradition_path_0_6",
               "modifiers": [
                 {
                   "target": "Heavy Cavalry",
@@ -402,6 +444,8 @@
               ]
             },
             {
+              "name": "Tradition undefined",
+              "key": "tradition_path_0_7",
               "modifiers": [
                 {
                   "target": "Text",
@@ -418,9 +462,12 @@
           ]
         },
         {
+          "name": "States",
+          "key": "tradition_path_1",
           "traditions": [
             {
-              "name": "The Sarissa",
+              "name": "Tradition The Sarissa",
+              "key": "tradition_path_1_0",
               "modifiers": [
                 {
                   "target": "Heavy Infantry",
@@ -431,7 +478,8 @@
               ]
             },
             {
-              "name": "Veterans of the Great Campaign",
+              "name": "Tradition Veterans of the Great Campaign",
+              "key": "tradition_path_1_1",
               "modifiers": [
                 {
                   "target": "Land",
@@ -446,7 +494,8 @@
               ]
             },
             {
-              "name": "Tarentine Advance",
+              "name": "Tradition Tarentine Advance",
+              "key": "tradition_path_1_2",
               "modifiers": [
                 {
                   "target": "Light Cavalry",
@@ -456,7 +505,8 @@
               ]
             },
             {
-              "name": "Military Colonies",
+              "name": "Tradition Military Colonies",
+              "key": "tradition_path_1_3",
               "modifiers": [
                 {
                   "target": "Text",
@@ -466,7 +516,8 @@
               ]
             },
             {
-              "name": "The Nobility Ride",
+              "name": "Tradition The Nobility Ride",
+              "key": "tradition_path_1_4",
               "modifiers": [
                 {
                   "target": "Light Cavalry",
@@ -476,7 +527,8 @@
               ]
             },
             {
-              "name": "City State Fortifications",
+              "name": "Tradition City State Fortifications",
+              "key": "tradition_path_1_5",
               "modifiers": [
                 {
                   "target": "Text",
@@ -486,7 +538,8 @@
               ]
             },
             {
-              "name": "Centuries of War",
+              "name": "Tradition Centuries of War",
+              "key": "tradition_path_1_6",
               "modifiers": [
                 {
                   "target": "Heavy Infantry",
@@ -497,6 +550,8 @@
               ]
             },
             {
+              "name": "Tradition undefined",
+              "key": "tradition_path_1_7",
               "modifiers": [
                 {
                   "target": "Heavy Infantry",
@@ -508,9 +563,12 @@
           ]
         },
         {
+          "name": "Antigonid",
+          "key": "tradition_path_2",
           "traditions": [
             {
-              "name": "Proud Shipwrights",
+              "name": "Tradition Proud Shipwrights",
+              "key": "tradition_path_2_0",
               "modifiers": [
                 {
                   "target": "Naval",
@@ -526,7 +584,8 @@
               ]
             },
             {
-              "name": "Mine's Bigger Than Yours",
+              "name": "Tradition Mine's Bigger Than Yours",
+              "key": "tradition_path_2_1",
               "modifiers": [
                 {
                   "target": "Text",
@@ -536,7 +595,8 @@
               ]
             },
             {
-              "name": "Peltasts",
+              "name": "Tradition Peltasts",
+              "key": "tradition_path_2_2",
               "modifiers": [
                 {
                   "target": "Light Infantry",
@@ -546,7 +606,8 @@
               ]
             },
             {
-              "name": "The Victor's Spoils",
+              "name": "Tradition The Victor's Spoils",
+              "key": "tradition_path_2_3",
               "modifiers": [
                 {
                   "target": "Text",
@@ -561,7 +622,8 @@
               ]
             },
             {
-              "name": "Siegecraft",
+              "name": "Tradition Siegecraft",
+              "key": "tradition_path_2_4",
               "modifiers": [
                 {
                   "target": "Text",
@@ -571,7 +633,8 @@
               ]
             },
             {
-              "name": "Specialist Infantry",
+              "name": "Tradition Specialist Infantry",
+              "key": "tradition_path_2_5",
               "modifiers": [
                 {
                   "target": "Archers",
@@ -581,7 +644,8 @@
               ]
             },
             {
-              "name": "Mastery of the Mountains",
+              "name": "Tradition Mastery of the Mountains",
+              "key": "tradition_path_2_6",
               "modifiers": [
                 {
                   "target": "Archers",
@@ -601,6 +665,8 @@
               ]
             },
             {
+              "name": "Tradition undefined",
+              "key": "tradition_path_2_7",
               "modifiers": [
                 {
                   "target": "Light Infantry",
@@ -619,7 +685,7 @@
       ]
     },
     {
-      "type": "Italic Traditions",
+      "type": "Italic",
       "modifiers": [
         {
           "target": "Text",
@@ -629,9 +695,12 @@
       ],
       "paths": [
         {
+          "name": "Tribal",
+          "key": "tradition_path_0",
           "traditions": [
             {
-              "name": "Artisanal Bronzework",
+              "name": "Tradition Artisanal Bronzework",
+              "key": "tradition_path_0_0",
               "modifiers": [
                 {
                   "target": "Light Infantry",
@@ -641,7 +710,8 @@
               ]
             },
             {
-              "name": "The Equestrian Order",
+              "name": "Tradition The Equestrian Order",
+              "key": "tradition_path_0_1",
               "modifiers": [
                 {
                   "target": "Light Cavalry",
@@ -651,7 +721,8 @@
               ]
             },
             {
-              "name": "Pietas",
+              "name": "Tradition Pietas",
+              "key": "tradition_path_0_2",
               "modifiers": [
                 {
                   "target": "Text",
@@ -661,7 +732,8 @@
               ]
             },
             {
-              "name": "The Acquisition of Wealth",
+              "name": "Tradition The Acquisition of Wealth",
+              "key": "tradition_path_0_3",
               "modifiers": [
                 {
                   "target": "Text",
@@ -676,7 +748,8 @@
               ]
             },
             {
-              "name": "The Aulos",
+              "name": "Tradition The Aulos",
+              "key": "tradition_path_0_4",
               "modifiers": [
                 {
                   "target": "Light Infantry",
@@ -687,7 +760,8 @@
               ]
             },
             {
-              "name": "Mare Nostrum",
+              "name": "Tradition Mare Nostrum",
+              "key": "tradition_path_0_5",
               "modifiers": [
                 {
                   "target": "Naval",
@@ -698,7 +772,8 @@
               ]
             },
             {
-              "name": "Rousing Oratory",
+              "name": "Tradition Rousing Oratory",
+              "key": "tradition_path_0_6",
               "modifiers": [
                 {
                   "target": "Text",
@@ -708,6 +783,8 @@
               ]
             },
             {
+              "name": "Tradition undefined",
+              "key": "tradition_path_0_7",
               "modifiers": [
                 {
                   "target": "Light Infantry",
@@ -724,9 +801,12 @@
           ]
         },
         {
+          "name": "Support",
+          "key": "tradition_path_1",
           "traditions": [
             {
-              "name": "State Navy",
+              "name": "Tradition State Navy",
+              "key": "tradition_path_1_0",
               "modifiers": [
                 {
                   "target": "Naval",
@@ -737,7 +817,8 @@
               ]
             },
             {
-              "name": "The Fabri",
+              "name": "Tradition The Fabri",
+              "key": "tradition_path_1_1",
               "modifiers": [
                 {
                   "target": "Text",
@@ -748,7 +829,8 @@
               ]
             },
             {
-              "name": "Scale the Walls",
+              "name": "Tradition Scale the Walls",
+              "key": "tradition_path_1_2",
               "modifiers": [
                 {
                   "target": "Text",
@@ -758,7 +840,8 @@
               ]
             },
             {
-              "name": "Castra",
+              "name": "Tradition Castra",
+              "key": "tradition_path_1_3",
               "modifiers": [
                 {
                   "target": "Text",
@@ -768,7 +851,8 @@
               ]
             },
             {
-              "name": "Logistics of State",
+              "name": "Tradition Logistics of State",
+              "key": "tradition_path_1_4",
               "modifiers": [
                 {
                   "target": "Light Infantry",
@@ -791,7 +875,8 @@
               ]
             },
             {
-              "name": "Scutum",
+              "name": "Tradition Scutum",
+              "key": "tradition_path_1_5",
               "modifiers": [
                 {
                   "target": "Heavy Infantry",
@@ -801,7 +886,8 @@
               ]
             },
             {
-              "name": "Foederati",
+              "name": "Tradition Foederati",
+              "key": "tradition_path_1_6",
               "modifiers": [
                 {
                   "target": "Light Cavalry",
@@ -816,6 +902,8 @@
               ]
             },
             {
+              "name": "Tradition undefined",
+              "key": "tradition_path_1_7",
               "modifiers": [
                 {
                   "target": "Text",
@@ -833,9 +921,12 @@
           ]
         },
         {
+          "name": "Roman",
+          "key": "tradition_path_2",
           "traditions": [
             {
-              "name": "Principes",
+              "name": "Tradition Principes",
+              "key": "tradition_path_2_0",
               "modifiers": [
                 {
                   "target": "Heavy Infantry",
@@ -845,7 +936,8 @@
               ]
             },
             {
-              "name": "Triplex Acies",
+              "name": "Tradition Triplex Acies",
+              "key": "tradition_path_2_1",
               "modifiers": [
                 {
                   "target": "Text",
@@ -855,7 +947,8 @@
               ]
             },
             {
-              "name": "Triarii",
+              "name": "Tradition Triarii",
+              "key": "tradition_path_2_2",
               "modifiers": [
                 {
                   "target": "Heavy Infantry",
@@ -865,7 +958,8 @@
               ]
             },
             {
-              "name": "Roman Roads",
+              "name": "Tradition Roman Roads",
+              "key": "tradition_path_2_3",
               "modifiers": [
                 {
                   "target": "Text",
@@ -875,7 +969,8 @@
               ]
             },
             {
-              "name": "Professional Soldiers",
+              "name": "Tradition Professional Soldiers",
+              "key": "tradition_path_2_4",
               "modifiers": [
                 {
                   "target": "Text",
@@ -886,7 +981,8 @@
               ]
             },
             {
-              "name": "Velites",
+              "name": "Tradition Velites",
+              "key": "tradition_path_2_5",
               "modifiers": [
                 {
                   "target": "Light Infantry",
@@ -896,7 +992,8 @@
               ]
             },
             {
-              "name": "The Honor of Service",
+              "name": "Tradition The Honor of Service",
+              "key": "tradition_path_2_6",
               "modifiers": [
                 {
                   "target": "Text",
@@ -906,6 +1003,8 @@
               ]
             },
             {
+              "name": "Tradition undefined",
+              "key": "tradition_path_2_7",
               "modifiers": [
                 {
                   "target": "Land",
@@ -920,7 +1019,7 @@
       ]
     },
     {
-      "type": "Levantine and Arabian Traditions",
+      "type": "Levantine",
       "modifiers": [
         {
           "target": "Text",
@@ -930,9 +1029,12 @@
       ],
       "paths": [
         {
+          "name": "Arabian",
+          "key": "tradition_path_0",
           "traditions": [
             {
-              "name": "Desert Sands",
+              "name": "Tradition Desert Sands",
+              "key": "tradition_path_0_0",
               "modifiers": [
                 {
                   "target": "Text",
@@ -943,7 +1045,8 @@
               ]
             },
             {
-              "name": "The Spear of the Kingdom",
+              "name": "Tradition The Spear of the Kingdom",
+              "key": "tradition_path_0_1",
               "modifiers": [
                 {
                   "target": "Light Infantry",
@@ -953,7 +1056,8 @@
               ]
             },
             {
-              "name": "Merchant Coast",
+              "name": "Tradition Merchant Coast",
+              "key": "tradition_path_0_2",
               "modifiers": [
                 {
                   "target": "Naval",
@@ -964,7 +1068,8 @@
               ]
             },
             {
-              "name": "Beasts of Burden",
+              "name": "Tradition Beasts of Burden",
+              "key": "tradition_path_0_3",
               "modifiers": [
                 {
                   "target": "Camel Cavalry",
@@ -974,7 +1079,8 @@
               ]
             },
             {
-              "name": "Ships of the Desert",
+              "name": "Tradition Ships of the Desert",
+              "key": "tradition_path_0_4",
               "modifiers": [
                 {
                   "target": "Camel Cavalry",
@@ -994,7 +1100,8 @@
               ]
             },
             {
-              "name": "Legacy of the Builders",
+              "name": "Tradition Legacy of the Builders",
+              "key": "tradition_path_0_5",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1005,7 +1112,8 @@
               ]
             },
             {
-              "name": "Oasis Trade",
+              "name": "Tradition Oasis Trade",
+              "key": "tradition_path_0_6",
               "modifiers": [
                 {
                   "target": "Light Cavalry",
@@ -1028,6 +1136,8 @@
               ]
             },
             {
+              "name": "Tradition undefined",
+              "key": "tradition_path_0_7",
               "modifiers": [
                 {
                   "target": "Camel Cavalry",
@@ -1039,9 +1149,12 @@
           ]
         },
         {
+          "name": "Egyptian",
+          "key": "tradition_path_1",
           "traditions": [
             {
-              "name": "Sturdy Design",
+              "name": "Tradition Sturdy Design",
+              "key": "tradition_path_1_0",
               "modifiers": [
                 {
                   "target": "Naval",
@@ -1056,7 +1169,8 @@
               ]
             },
             {
-              "name": "Arms Race",
+              "name": "Tradition Arms Race",
+              "key": "tradition_path_1_1",
               "modifiers": [
                 {
                   "target": "Trireme",
@@ -1076,7 +1190,8 @@
               ]
             },
             {
-              "name": "Stonemovers",
+              "name": "Tradition Stonemovers",
+              "key": "tradition_path_1_2",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1086,7 +1201,8 @@
               ]
             },
             {
-              "name": "Colonial Integration",
+              "name": "Tradition Colonial Integration",
+              "key": "tradition_path_1_3",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1096,7 +1212,8 @@
               ]
             },
             {
-              "name": "The Blood of Egypt",
+              "name": "Tradition The Blood of Egypt",
+              "key": "tradition_path_1_4",
               "modifiers": [
                 {
                   "target": "Naval",
@@ -1107,7 +1224,8 @@
               ]
             },
             {
-              "name": "Thick Hide",
+              "name": "Tradition Thick Hide",
+              "key": "tradition_path_1_5",
               "modifiers": [
                 {
                   "target": "Camel Cavalry",
@@ -1117,7 +1235,8 @@
               ]
             },
             {
-              "name": "Cradle of Civilization",
+              "name": "Tradition Cradle of Civilization",
+              "key": "tradition_path_1_6",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1127,6 +1246,8 @@
               ]
             },
             {
+              "name": "Tradition undefined",
+              "key": "tradition_path_1_7",
               "modifiers": [
                 {
                   "target": "Light Infantry",
@@ -1143,9 +1264,12 @@
           ]
         },
         {
+          "name": "Greco",
+          "key": "tradition_path_2",
           "traditions": [
             {
-              "name": "Surfeit of War",
+              "name": "Tradition Surfeit of War",
+              "key": "tradition_path_2_0",
               "modifiers": [
                 {
                   "target": "Heavy Infantry",
@@ -1156,7 +1280,8 @@
               ]
             },
             {
-              "name": "Thorakitai",
+              "name": "Tradition Thorakitai",
+              "key": "tradition_path_2_1",
               "modifiers": [
                 {
                   "target": "Light Infantry",
@@ -1166,7 +1291,8 @@
               ]
             },
             {
-              "name": "Machimoi Epilektoi",
+              "name": "Tradition Machimoi Epilektoi",
+              "key": "tradition_path_2_2",
               "modifiers": [
                 {
                   "target": "Heavy Infantry",
@@ -1176,7 +1302,8 @@
               ]
             },
             {
-              "name": "Greek Warfare",
+              "name": "Tradition Greek Warfare",
+              "key": "tradition_path_2_3",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1186,7 +1313,8 @@
               ]
             },
             {
-              "name": "Good Reputation",
+              "name": "Tradition Good Reputation",
+              "key": "tradition_path_2_4",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1196,7 +1324,8 @@
               ]
             },
             {
-              "name": "Ramming Speed",
+              "name": "Tradition Ramming Speed",
+              "key": "tradition_path_2_5",
               "modifiers": [
                 {
                   "target": "Naval",
@@ -1206,7 +1335,8 @@
               ]
             },
             {
-              "name": "Unending Riches",
+              "name": "Tradition Unending Riches",
+              "key": "tradition_path_2_6",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1217,6 +1347,8 @@
               ]
             },
             {
+              "name": "Tradition undefined",
+              "key": "tradition_path_2_7",
               "modifiers": [
                 {
                   "target": "Heavy Infantry",
@@ -1235,7 +1367,7 @@
       ]
     },
     {
-      "type": "Indian Traditions",
+      "type": "Indian",
       "modifiers": [
         {
           "target": "Text",
@@ -1245,9 +1377,12 @@
       ],
       "paths": [
         {
+          "name": "Mauryas",
+          "key": "tradition_path_0",
           "traditions": [
             {
-              "name": "Versatile Infantry",
+              "name": "Tradition Versatile Infantry",
+              "key": "tradition_path_0_0",
               "modifiers": [
                 {
                   "target": "Archers",
@@ -1257,7 +1392,8 @@
               ]
             },
             {
-              "name": "Descendents of Airavata",
+              "name": "Tradition Descendents of Airavata",
+              "key": "tradition_path_0_1",
               "modifiers": [
                 {
                   "target": "War Elephants",
@@ -1267,7 +1403,8 @@
               ]
             },
             {
-              "name": "Warhost of the Empire",
+              "name": "Tradition Warhost of the Empire",
+              "key": "tradition_path_0_2",
               "modifiers": [
                 {
                   "target": "Light Infantry",
@@ -1278,7 +1415,8 @@
               ]
             },
             {
-              "name": "Natural Pathfinders",
+              "name": "Tradition Natural Pathfinders",
+              "key": "tradition_path_0_3",
               "modifiers": [
                 {
                   "target": "War Elephants",
@@ -1293,7 +1431,8 @@
               ]
             },
             {
-              "name": "Dedicated Archers",
+              "name": "Tradition Dedicated Archers",
+              "key": "tradition_path_0_4",
               "modifiers": [
                 {
                   "target": "Archers",
@@ -1303,7 +1442,8 @@
               ]
             },
             {
-              "name": "Homeland of our Fathers",
+              "name": "Tradition Homeland of our Fathers",
+              "key": "tradition_path_0_5",
               "modifiers": [
                 {
                   "target": "Heavy Infantry",
@@ -1328,7 +1468,8 @@
               ]
             },
             {
-              "name": "Integrating the Tribes",
+              "name": "Tradition Integrating the Tribes",
+              "key": "tradition_path_0_6",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1338,6 +1479,8 @@
               ]
             },
             {
+              "name": "Tradition undefined",
+              "key": "tradition_path_0_7",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1350,9 +1493,12 @@
           ]
         },
         {
+          "name": "Coastal",
+          "key": "tradition_path_1",
           "traditions": [
             {
-              "name": "Natural Harbors",
+              "name": "Tradition Natural Harbors",
+              "key": "tradition_path_1_0",
               "modifiers": [
                 {
                   "target": "Naval",
@@ -1363,7 +1509,8 @@
               ]
             },
             {
-              "name": "The Vyuha System",
+              "name": "Tradition The Vyuha System",
+              "key": "tradition_path_1_1",
               "modifiers": [
                 {
                   "target": "Archers",
@@ -1374,7 +1521,8 @@
               ]
             },
             {
-              "name": "Masters of the Sea",
+              "name": "Tradition Masters of the Sea",
+              "key": "tradition_path_1_2",
               "modifiers": [
                 {
                   "target": "Naval",
@@ -1385,7 +1533,8 @@
               ]
             },
             {
-              "name": "Plunder!",
+              "name": "Tradition Plunder!",
+              "key": "tradition_path_1_3",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1400,7 +1549,8 @@
               ]
             },
             {
-              "name": "Flexible Divisions",
+              "name": "Tradition Flexible Divisions",
+              "key": "tradition_path_1_4",
               "modifiers": [
                 {
                   "target": "Land",
@@ -1411,7 +1561,8 @@
               ]
             },
             {
-              "name": "City of the World's Desire",
+              "name": "Tradition City of the World's Desire",
+              "key": "tradition_path_1_5",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1421,7 +1572,8 @@
               ]
             },
             {
-              "name": "State Artisans",
+              "name": "Tradition State Artisans",
+              "key": "tradition_path_1_6",
               "modifiers": [
                 {
                   "target": "Archers",
@@ -1438,6 +1590,8 @@
               ]
             },
             {
+              "name": "Tradition undefined",
+              "key": "tradition_path_1_7",
               "modifiers": [
                 {
                   "target": "Naval",
@@ -1454,9 +1608,12 @@
           ]
         },
         {
+          "name": "Noble",
+          "key": "tradition_path_2",
           "traditions": [
             {
-              "name": "Fit for a King",
+              "name": "Tradition Fit for a King",
+              "key": "tradition_path_2_0",
               "modifiers": [
                 {
                   "target": "Chariots",
@@ -1466,7 +1623,8 @@
               ]
             },
             {
-              "name": "Trained to Kill",
+              "name": "Tradition Trained to Kill",
+              "key": "tradition_path_2_1",
               "modifiers": [
                 {
                   "target": "War Elephants",
@@ -1476,7 +1634,8 @@
               ]
             },
             {
-              "name": "Armored Archers",
+              "name": "Tradition Armored Archers",
+              "key": "tradition_path_2_2",
               "modifiers": [
                 {
                   "target": "Archers",
@@ -1486,7 +1645,8 @@
               ]
             },
             {
-              "name": "Padma Vyuha",
+              "name": "Tradition Padma Vyuha",
+              "key": "tradition_path_2_3",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1496,7 +1656,8 @@
               ]
             },
             {
-              "name": "Imported Horses",
+              "name": "Tradition Imported Horses",
+              "key": "tradition_path_2_4",
               "modifiers": [
                 {
                   "target": "Chariots",
@@ -1506,7 +1667,8 @@
               ]
             },
             {
-              "name": "Elephantine Abundance",
+              "name": "Tradition Elephantine Abundance",
+              "key": "tradition_path_2_5",
               "modifiers": [
                 {
                   "target": "War Elephants",
@@ -1517,7 +1679,8 @@
               ]
             },
             {
-              "name": "Exotic Soldiers",
+              "name": "Tradition Exotic Soldiers",
+              "key": "tradition_path_2_6",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1527,6 +1690,8 @@
               ]
             },
             {
+              "name": "Tradition undefined",
+              "key": "tradition_path_2_7",
               "modifiers": [
                 {
                   "target": "War Elephants",
@@ -1541,7 +1706,7 @@
       ]
     },
     {
-      "type": "North African Traditions",
+      "type": "North",
       "modifiers": [
         {
           "target": "Naval",
@@ -1552,9 +1717,12 @@
       ],
       "paths": [
         {
+          "name": "African",
+          "key": "tradition_path_0",
           "traditions": [
             {
-              "name": "Born in the Saddle",
+              "name": "Tradition Born in the Saddle",
+              "key": "tradition_path_0_0",
               "modifiers": [
                 {
                   "target": "Light Cavalry",
@@ -1564,7 +1732,8 @@
               ]
             },
             {
-              "name": "Man and Horse",
+              "name": "Tradition Man and Horse",
+              "key": "tradition_path_0_1",
               "modifiers": [
                 {
                   "target": "Light Cavalry",
@@ -1584,7 +1753,8 @@
               ]
             },
             {
-              "name": "Sure-footed, as Wild Horses",
+              "name": "Tradition Sure-footed, as Wild Horses",
+              "key": "tradition_path_0_2",
               "modifiers": [
                 {
                   "target": "Light Cavalry",
@@ -1595,7 +1765,8 @@
               ]
             },
             {
-              "name": "Wild Charge",
+              "name": "Tradition Wild Charge",
+              "key": "tradition_path_0_3",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1605,7 +1776,8 @@
               ]
             },
             {
-              "name": "Local Knowledge",
+              "name": "Tradition Local Knowledge",
+              "key": "tradition_path_0_4",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1615,7 +1787,8 @@
               ]
             },
             {
-              "name": "Call to Arms",
+              "name": "Tradition Call to Arms",
+              "key": "tradition_path_0_5",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1625,7 +1798,8 @@
               ]
             },
             {
-              "name": "Ululating Cry",
+              "name": "Tradition Ululating Cry",
+              "key": "tradition_path_0_6",
               "modifiers": [
                 {
                   "target": "Light Cavalry",
@@ -1635,6 +1809,8 @@
               ]
             },
             {
+              "name": "Tradition undefined",
+              "key": "tradition_path_0_7",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1651,9 +1827,12 @@
           ]
         },
         {
+          "name": "African",
+          "key": "tradition_path_1",
           "traditions": [
             {
-              "name": "Phoenician Heritage",
+              "name": "Tradition Phoenician Heritage",
+              "key": "tradition_path_1_0",
               "modifiers": [
                 {
                   "target": "Naval",
@@ -1663,7 +1842,8 @@
               ]
             },
             {
-              "name": "Iberian Draft",
+              "name": "Tradition Iberian Draft",
+              "key": "tradition_path_1_1",
               "modifiers": [
                 {
                   "target": "Light Infantry",
@@ -1673,7 +1853,8 @@
               ]
             },
             {
-              "name": "Naval Dominance",
+              "name": "Tradition Naval Dominance",
+              "key": "tradition_path_1_2",
               "modifiers": [
                 {
                   "target": "Naval",
@@ -1683,7 +1864,8 @@
               ]
             },
             {
-              "name": "A Life at Sea",
+              "name": "Tradition A Life at Sea",
+              "key": "tradition_path_1_3",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1693,7 +1875,8 @@
               ]
             },
             {
-              "name": "Noble Warlords",
+              "name": "Tradition Noble Warlords",
+              "key": "tradition_path_1_4",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1710,7 +1893,8 @@
               ]
             },
             {
-              "name": "Imposing Edifices",
+              "name": "Tradition Imposing Edifices",
+              "key": "tradition_path_1_5",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1720,7 +1904,8 @@
               ]
             },
             {
-              "name": "Putting our People to Work",
+              "name": "Tradition Putting our People to Work",
+              "key": "tradition_path_1_6",
               "modifiers": [
                 {
                   "target": "Naval",
@@ -1731,6 +1916,8 @@
               ]
             },
             {
+              "name": "Tradition undefined",
+              "key": "tradition_path_1_7",
               "modifiers": [
                 {
                   "target": "Trireme",
@@ -1747,9 +1934,12 @@
           ]
         },
         {
+          "name": "African",
+          "key": "tradition_path_2",
           "traditions": [
             {
-              "name": "Skilled Recruiters",
+              "name": "Tradition Skilled Recruiters",
+              "key": "tradition_path_2_0",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1764,7 +1954,8 @@
               ]
             },
             {
-              "name": "Professional Marines",
+              "name": "Tradition Professional Marines",
+              "key": "tradition_path_2_1",
               "modifiers": [
                 {
                   "target": "Naval",
@@ -1775,7 +1966,8 @@
               ]
             },
             {
-              "name": "The Sacred Band",
+              "name": "Tradition The Sacred Band",
+              "key": "tradition_path_2_2",
               "modifiers": [
                 {
                   "target": "Heavy Infantry",
@@ -1785,7 +1977,8 @@
               ]
             },
             {
-              "name": "Uneasy Relations",
+              "name": "Tradition Uneasy Relations",
+              "key": "tradition_path_2_3",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1801,7 +1994,8 @@
               ]
             },
             {
-              "name": "The African Elephant",
+              "name": "Tradition The African Elephant",
+              "key": "tradition_path_2_4",
               "modifiers": [
                 {
                   "target": "War Elephants",
@@ -1812,7 +2006,8 @@
               ]
             },
             {
-              "name": "Numidian Cavalry",
+              "name": "Tradition Numidian Cavalry",
+              "key": "tradition_path_2_5",
               "modifiers": [
                 {
                   "target": "Heavy Cavalry",
@@ -1823,7 +2018,8 @@
               ]
             },
             {
-              "name": "Devastating Charge",
+              "name": "Tradition Devastating Charge",
+              "key": "tradition_path_2_6",
               "modifiers": [
                 {
                   "target": "War Elephants",
@@ -1833,6 +2029,8 @@
               ]
             },
             {
+              "name": "Tradition undefined",
+              "key": "tradition_path_2_7",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1846,7 +2044,7 @@
       ]
     },
     {
-      "type": "Persian Traditions",
+      "type": "Persian",
       "modifiers": [
         {
           "target": "Horse Archers",
@@ -1857,9 +2055,12 @@
       ],
       "paths": [
         {
+          "name": "Scythian",
+          "key": "tradition_path_0",
           "traditions": [
             {
-              "name": "The Parthian Shot",
+              "name": "Tradition The Parthian Shot",
+              "key": "tradition_path_0_0",
               "modifiers": [
                 {
                   "target": "Horse Archers",
@@ -1869,7 +2070,8 @@
               ]
             },
             {
-              "name": "Nomadic Lifestyle",
+              "name": "Tradition Nomadic Lifestyle",
+              "key": "tradition_path_0_1",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1885,7 +2087,8 @@
               ]
             },
             {
-              "name": "Hit and Run",
+              "name": "Tradition Hit and Run",
+              "key": "tradition_path_0_2",
               "modifiers": [
                 {
                   "target": "Horse Archers",
@@ -1896,7 +2099,8 @@
               ]
             },
             {
-              "name": "Cavalry Skirmish",
+              "name": "Tradition Cavalry Skirmish",
+              "key": "tradition_path_0_3",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1906,7 +2110,8 @@
               ]
             },
             {
-              "name": "Cataphracts",
+              "name": "Tradition Cataphracts",
+              "key": "tradition_path_0_4",
               "modifiers": [
                 {
                   "target": "Heavy Cavalry",
@@ -1917,7 +2122,8 @@
               ]
             },
             {
-              "name": "Steppe Mastery",
+              "name": "Tradition Steppe Mastery",
+              "key": "tradition_path_0_5",
               "modifiers": [
                 {
                   "target": "Land",
@@ -1928,7 +2134,8 @@
               ]
             },
             {
-              "name": "Footsloggers",
+              "name": "Tradition Footsloggers",
+              "key": "tradition_path_0_6",
               "modifiers": [
                 {
                   "target": "Light Infantry",
@@ -1938,6 +2145,8 @@
               ]
             },
             {
+              "name": "Tradition undefined",
+              "key": "tradition_path_0_7",
               "modifiers": [
                 {
                   "target": "Heavy Cavalry",
@@ -1954,9 +2163,12 @@
           ]
         },
         {
+          "name": "Achaemenid",
+          "key": "tradition_path_1",
           "traditions": [
             {
-              "name": "Legacy of Cyrus",
+              "name": "Tradition Legacy of Cyrus",
+              "key": "tradition_path_1_0",
               "modifiers": [
                 {
                   "target": "Text",
@@ -1966,7 +2178,8 @@
               ]
             },
             {
-              "name": "The Immortals",
+              "name": "Tradition The Immortals",
+              "key": "tradition_path_1_1",
               "modifiers": [
                 {
                   "target": "Heavy Infantry",
@@ -1976,7 +2189,8 @@
               ]
             },
             {
-              "name": "Reform of the Navy",
+              "name": "Tradition Reform of the Navy",
+              "key": "tradition_path_1_2",
               "modifiers": [
                 {
                   "target": "Naval",
@@ -1992,7 +2206,8 @@
               ]
             },
             {
-              "name": "Reactive Recruitment",
+              "name": "Tradition Reactive Recruitment",
+              "key": "tradition_path_1_3",
               "modifiers": [
                 {
                   "target": "Text",
@@ -2002,7 +2217,8 @@
               ]
             },
             {
-              "name": "Royal Line",
+              "name": "Tradition Royal Line",
+              "key": "tradition_path_1_4",
               "modifiers": [
                 {
                   "target": "Land",
@@ -2018,7 +2234,8 @@
               ]
             },
             {
-              "name": "To Blot Out the Sun",
+              "name": "Tradition To Blot Out the Sun",
+              "key": "tradition_path_1_5",
               "modifiers": [
                 {
                   "target": "Archers",
@@ -2028,7 +2245,8 @@
               ]
             },
             {
-              "name": "Kardakes",
+              "name": "Tradition Kardakes",
+              "key": "tradition_path_1_6",
               "modifiers": [
                 {
                   "target": "Heavy Infantry",
@@ -2039,6 +2257,8 @@
               ]
             },
             {
+              "name": "Tradition undefined",
+              "key": "tradition_path_1_7",
               "modifiers": [
                 {
                   "target": "Text",
@@ -2050,9 +2270,12 @@
           ]
         },
         {
+          "name": "Bactrian",
+          "key": "tradition_path_2",
           "traditions": [
             {
-              "name": "Bactrian Horsemen",
+              "name": "Tradition Bactrian Horsemen",
+              "key": "tradition_path_2_0",
               "modifiers": [
                 {
                   "target": "Light Cavalry",
@@ -2062,7 +2285,8 @@
               ]
             },
             {
-              "name": "Greco-Bactria",
+              "name": "Tradition Greco-Bactria",
+              "key": "tradition_path_2_1",
               "modifiers": [
                 {
                   "target": "Text",
@@ -2072,7 +2296,8 @@
               ]
             },
             {
-              "name": "Perfect Storm",
+              "name": "Tradition Perfect Storm",
+              "key": "tradition_path_2_2",
               "modifiers": [
                 {
                   "target": "Heavy Infantry",
@@ -2082,7 +2307,8 @@
               ]
             },
             {
-              "name": "Kleruchoi",
+              "name": "Tradition Kleruchoi",
+              "key": "tradition_path_2_3",
               "modifiers": [
                 {
                   "target": "Text",
@@ -2092,7 +2318,8 @@
               ]
             },
             {
-              "name": "Titans of Battle",
+              "name": "Tradition Titans of Battle",
+              "key": "tradition_path_2_4",
               "modifiers": [
                 {
                   "target": "War Elephants",
@@ -2102,7 +2329,8 @@
               ]
             },
             {
-              "name": "Hippotoxotai",
+              "name": "Tradition Hippotoxotai",
+              "key": "tradition_path_2_5",
               "modifiers": [
                 {
                   "target": "Horse Archers",
@@ -2112,7 +2340,8 @@
               ]
             },
             {
-              "name": "Heartland",
+              "name": "Tradition Heartland",
+              "key": "tradition_path_2_6",
               "modifiers": [
                 {
                   "target": "Text",
@@ -2122,6 +2351,8 @@
               ]
             },
             {
+              "name": "Tradition undefined",
+              "key": "tradition_path_2_7",
               "modifiers": [
                 {
                   "target": "Text",

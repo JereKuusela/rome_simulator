@@ -1,11 +1,11 @@
-const core = require('./core')
+const { parseFiles, getModifier } = require('./core')
 const path = require('path')
-const modifiers = require('./modifiers')
+const { getAttribute } = require('./modifiers')
 
 
 const handleTraits = (results, data) => {
   Object.keys(data).forEach(key => {
-    const name = modifiers.format(key)
+    const name = getAttribute(key)
     const trait = data[key]
     const entity = {
       name,
@@ -17,12 +17,12 @@ const handleTraits = (results, data) => {
         return
       if (key === 'unit') {
         Object.keys(attribute).forEach(key => {
-            entity.modifiers.push(core.getModifier(key, attribute[key]))
+          entity.modifiers.push(getModifier(key, attribute[key]))
         })
         return
       }
-      if (modifiers.getAttribute(key))
-        entity.modifiers.push(core.getModifier(key, attribute))
+      if (getAttribute(key))
+        entity.modifiers.push(getModifier(key, attribute))
     })
     results[name] = entity
   })
@@ -32,4 +32,4 @@ const parsers = {
   [path.join('ir', 'traits', '00_military.txt')]: handleTraits
 }
 
-exports.run = () => core.parseFiles(parsers, undefined, path.join('ir', 'traits.json'))
+exports.run = () => parseFiles(parsers, undefined, path.join('ir', 'traits.json'))

@@ -1,6 +1,7 @@
 const DISCIPLINE = 'Discipline'
 const OFFENSE = 'Offense'
 const DEFENSE = 'Defense'
+const ATTRITION = 'Attrition Weight'
 const MOD_MAINTENANCE = '_maintenance_cost'
 const MAINTENANCE = 'Maintenance'
 const MOD_COST = '_cost'
@@ -24,16 +25,7 @@ const GENERAL = 'General'
 const localizations = {
 }
 
-/** @type {Object.<string, string>} */
-const generalStats = {
-  'martial': 'Martial',
-  'zeal': 'Zeal',
-  'finesse': 'Finesse',
-  'chariasma': 'Charisma',
-  'character_loyalty': 'Loyalty',
-  'monthly_character_wealth': 'Monthly Wealth',
-  'health': 'Monthly Health'
-}
+const generalStats = [ 'martial', 'zeal', 'finesse', 'charisma', 'character_loyalty', 'monthly_character_wealth', 'health' ]
 
 /** @type {Object.<string, string>} */
 const units = {
@@ -60,7 +52,7 @@ const units = {
 
 /** @type {Object.<string, string>} */
 const attributes = {
-  'attrition_weight': 'Attrition Weight',
+  'attrition_weight': ATTRITION,
   'army': 'Mode',
   'category': PARENT,
   ['build' + MOD_COST]: COST,
@@ -71,16 +63,14 @@ const attributes = {
   'heavy': 'Heavy Ship',
   'light': 'Light Ship',
   ['army' + MOD_MAINTENANCE]: MAINTENANCE,
-  'army_weight_modifier': 'Attrition Weight',
-  'discipline': DISCIPLINE,
-  'experience_decay': EXPERIENCE + ' Decay',
+  'army_weight_modifier': ATTRITION,
   'food_consumption': 'Food Consumption',
   'food_storage': 'Food Storage',
   'global_cohort_start_experience': EXPERIENCE,
   'global_start_experience': EXPERIENCE,
   ['land' + MOD_MORALE]: MORALE,
   ['land' + MOD_MORALE + MOD_MODIFIER]: MORALE,
-  MOD_MAINTENANCE: MAINTENANCE,
+  'maintenance_cost': MAINTENANCE,
   'maneuver': MANEUVER,
   'maneuver_value': MANEUVER,
   'medium': 'Medium Ship',
@@ -102,7 +92,8 @@ const attributes = {
   'strength_damage_done': 'Strength Damage Done',
   'strength_damage_taken': 'Strength Damage Taken',
   'type': PARENT,
-  'unit_type': 'Culture'
+  'unit_type': 'Culture',
+  'character_loyalty': 'Loyalty'
 }
 
 Object.keys(units).forEach(key => {
@@ -118,11 +109,6 @@ Object.keys(units).forEach(key => {
   attributes[key + MOD_COST] = COST
 })
 
-Object.keys(generalStats).forEach(key => {
-  const value = generalStats[key]
-  attributes[key] = value
-})
-
 /** @type {Object.<string, string>} */
 const targets = {
   ['army' + MOD_MAINTENANCE]: LAND,
@@ -133,7 +119,7 @@ const targets = {
   'global_start_experience': GLOBAL,
   ['land' + MOD_MORALE]: LAND,
   ['land' + MOD_MORALE + MOD_MODIFIER]: LAND,
-  MOD_MAINTENANCE: GLOBAL,
+  'maintenance_cost': GLOBAL,
   'maneuver_value': GLOBAL,
   'military_tactics': GLOBAL,
   'morale': GLOBAL,
@@ -146,7 +132,7 @@ const targets = {
   'ship_capture_chance': NAVAL
 }
 
-Object.keys(generalStats).forEach(key => {
+generalStats.forEach(key => {
   targets[key] = GENERAL
 })
 
@@ -178,7 +164,7 @@ const noPercents = new Set([
   'subject_loyalty'
 ])
 
-Object.keys(generalStats).forEach(key => {
+generalStats.forEach(key => {
   noPercents.add(key)
 })
 
@@ -188,7 +174,7 @@ const negatives = new Set([
   'experience_decay',
   'fort' + MOD_MAINTENANCE,
   'land_unit_attrition',
-  MOD_MAINTENANCE,
+  'maintenance_cost',
   'naval_damage_taken',
   'navy' + MOD_MAINTENANCE,
   'naval_unit_attrition',
@@ -213,7 +199,7 @@ const types = new Set([
   'army' + MOD_MAINTENANCE,
   'army_weight_modifier',
   'land' + MOD_MORALE + MOD_MODIFIER,
-  MOD_MAINTENANCE,
+  'maintenance_cost',
   'maneuver_value',
   'navy' + MOD_MAINTENANCE,
   'naval' + MOD_MORALE + MOD_MODIFIER,

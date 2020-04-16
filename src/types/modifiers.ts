@@ -39,14 +39,17 @@ export interface ModifierWithKey extends Modifier {
 }
 export interface Tradition {
   name: string
+  key: string
   modifiers: Modifier[]
 }
 export interface Invention {
   name: string
+  key: string
   modifiers: Modifier[]
 }
 export interface Path {
   name: string
+  key: string
   traditions: Tradition[]
 }
 export interface TraditionDefinition {

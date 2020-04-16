@@ -116,8 +116,10 @@ interface TraditionData {
   modifiers: ModifierData[]
   paths: {
     name: string
+    key: string
     traditions: {
       name: string
+      key: string
       modifiers: ModifierData[]
     }[]
   }[]
@@ -143,6 +145,7 @@ interface InventionData {
   name: string
   inventions: {
     name: string
+    key: string
     modifiers: ModifierData[]
   }[]
 }

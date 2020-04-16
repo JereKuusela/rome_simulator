@@ -1,7 +1,8 @@
 const core = require('./core')
+const { getAttribute } = require('./modifiers')
 const path = require('path')
 
-const subHandle = (results, key, value, level, is_tech) => {
+const subHandle = (results, key, value, level, name) => {
   if (!results[level]) {
     results[level] = {
       name: 'Level ' + level,
@@ -9,14 +10,15 @@ const subHandle = (results, key, value, level, is_tech) => {
     }
   }
   const inventions = results[level].inventions
-  if (!is_tech || !inventions.length )
+  if (name || !inventions.length )
     inventions.push({
-      name: is_tech ? '' : 'Invention ' + level + ' ' + inventions.length,
+      name: name ? getAttribute(name): '',
+      key: name || '',
       modifiers: []
     })
   if (!key)
     return
-  const index = is_tech ? 0 : inventions.length - 1
+  const index = name ? inventions.length - 1 : 0
   inventions[index].modifiers.push(core.getModifier(key, value))
 }
 
@@ -24,31 +26,31 @@ const handleTech = (results, data) => {
   const tech = data.military_tech
   for (let i = 0; i <= 20; i++) {
     if (i === 0) {
-      subHandle(results, '', 0, i, true)
+      subHandle(results, '', 0, i)
       continue
     }
     if (tech.land_morale === tech.naval_morale)
-      subHandle(results, 'morale', tech.land_morale, i, true)
+      subHandle(results, 'morale', tech.land_morale, i)
     else {
-      subHandle(results, 'land_morale', tech.land_morale, i, true)
-      subHandle(results, 'naval_morale', tech.naval_morale, i, true)
+      subHandle(results, 'land_morale', tech.land_morale, i)
+      subHandle(results, 'naval_morale', tech.naval_morale, i)
     }
     if (tech.army_maintenance_cost === tech.navy_maintenance_cost)
-      subHandle(results, 'maintenance_cost', tech.army_maintenance_cost, i, true)
+      subHandle(results, 'maintenance_cost', tech.army_maintenance_cost, i)
     else {
-      subHandle(results, 'army_maintenance_cost', tech.army_maintenance_cost, i, true)
-      subHandle(results, 'navy_maintenance_cost', tech.navy_maintenance_cost, i, true)
+      subHandle(results, 'army_maintenance_cost', tech.army_maintenance_cost, i)
+      subHandle(results, 'navy_maintenance_cost', tech.navy_maintenance_cost, i)
     }
   }
 }
 
 const handleInvention = (results, data) => {
-  Object.keys(data).forEach(key => {
-    const value = data[key]
+  Object.keys(data).forEach(name => {
+    const value = data[name]
     Object.keys(value).forEach(key => {
       if (key === 'military_tech')
         return
-      subHandle(results, key, value[key], value.military_tech)
+      subHandle(results, key, value[key], value.military_tech, name)
     })
   })
 }

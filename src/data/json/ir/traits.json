@@ -252,11 +252,12 @@
       ]
     },
     {
-      "name": "Squadron Leader",
+      "name": "Fleet Commander",
       "modifiers": [
         {
-          "target": "Text",
+          "target": "General",
           "attribute": "Charisma",
+          "no_percent": true,
           "value": 1
         },
         {
@@ -309,7 +310,7 @@
       ]
     },
     {
-      "name": "Seadog",
+      "name": "Sea Dog",
       "modifiers": [
         {
           "target": "General",
@@ -352,7 +353,7 @@
       "modifiers": [
         {
           "target": "General",
-          "attribute": "Monthly Health",
+          "attribute": "Health",
           "no_percent": true,
           "value": 0.01
         },

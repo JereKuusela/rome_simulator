@@ -5,10 +5,12 @@
       "inventions": [
         {
           "name": "",
+          "key": "",
           "modifiers": []
         },
         {
-          "name": "Invention 0 1",
+          "name": "Professional Sailors",
+          "key": "trireme_discipline_inv_1",
           "modifiers": [
             {
               "target": "Naval",
@@ -18,7 +20,8 @@
           ]
         },
         {
-          "name": "Invention 0 2",
+          "name": "Learning on the Job",
+          "key": "global_start_experience_inv_1",
           "modifiers": [
             {
               "target": "Global",
@@ -28,7 +31,8 @@
           ]
         },
         {
-          "name": "Invention 0 3",
+          "name": "Supernumerarii",
+          "key": "global_supply_limit_modifier_inv_1",
           "modifiers": [
             {
               "target": "Text",
@@ -44,6 +48,7 @@
       "inventions": [
         {
           "name": "",
+          "key": "",
           "modifiers": [
             {
               "target": "Global",
@@ -52,13 +57,17 @@
               "value": 0.1
             },
             {
-              "target": "Text",
+              "target": "Global",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "negative": true,
               "value": 0.03
             }
           ]
         },
         {
-          "name": "Invention 1 1",
+          "name": "Extraordinary Ordnance",
+          "key": "siege_speed_inv_1",
           "modifiers": [
             {
               "target": "Text",
@@ -68,7 +77,8 @@
           ]
         },
         {
-          "name": "Invention 1 2",
+          "name": "Military Artisans",
+          "key": "military_tech_investment_inv_1",
           "modifiers": [
             {
               "target": "Text",
@@ -78,7 +88,8 @@
           ]
         },
         {
-          "name": "Invention 1 3",
+          "name": "Fustuarium",
+          "key": "heavy_infantry_discipline_inv",
           "modifiers": [
             {
               "target": "Heavy Infantry",
@@ -94,6 +105,7 @@
       "inventions": [
         {
           "name": "",
+          "key": "",
           "modifiers": [
             {
               "target": "Global",
@@ -102,13 +114,17 @@
               "value": 0.1
             },
             {
-              "target": "Text",
+              "target": "Global",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "negative": true,
               "value": 0.03
             }
           ]
         },
         {
-          "name": "Invention 2 1",
+          "name": "Sapping",
+          "key": "siege_engineers_inv_1",
           "modifiers": [
             {
               "target": "Text",
@@ -119,7 +135,8 @@
           ]
         },
         {
-          "name": "Invention 2 2",
+          "name": "Pentaspastos",
+          "key": "global_defensive_inv_1",
           "modifiers": [
             {
               "target": "Text",
@@ -129,7 +146,8 @@
           ]
         },
         {
-          "name": "Invention 2 3",
+          "name": "Material Science",
+          "key": "buy_military_tradition_inv",
           "modifiers": [
             {
               "target": "Land",
@@ -146,6 +164,7 @@
       "inventions": [
         {
           "name": "",
+          "key": "",
           "modifiers": [
             {
               "target": "Global",
@@ -154,13 +173,17 @@
               "value": 0.1
             },
             {
-              "target": "Text",
+              "target": "Global",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "negative": true,
               "value": 0.03
             }
           ]
         },
         {
-          "name": "Invention 3 1",
+          "name": "Boeotian Helmet",
+          "key": "discipline_inv_1",
           "modifiers": [
             {
               "target": "Global",
@@ -170,7 +193,8 @@
           ]
         },
         {
-          "name": "Invention 3 2",
+          "name": "Centuria",
+          "key": "trireme_discipline_inv_2",
           "modifiers": [
             {
               "target": "Tetrere",
@@ -180,7 +204,8 @@
           ]
         },
         {
-          "name": "Invention 3 3",
+          "name": "Galley Slaves",
+          "key": "navy_maintenance_cost_inv_1",
           "modifiers": [
             {
               "target": "Naval",
@@ -197,6 +222,7 @@
       "inventions": [
         {
           "name": "",
+          "key": "",
           "modifiers": [
             {
               "target": "Global",
@@ -205,13 +231,17 @@
               "value": 0.1
             },
             {
-              "target": "Text",
+              "target": "Global",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "negative": true,
               "value": 0.03
             }
           ]
         },
         {
-          "name": "Invention 4 1",
+          "name": "Paymasters",
+          "key": "army_maintenance_cost_inv_1",
           "modifiers": [
             {
               "target": "Land",
@@ -222,7 +252,8 @@
           ]
         },
         {
-          "name": "Invention 4 2",
+          "name": "Fighting Season",
+          "key": "global_supply_limit_modifier_inv_2",
           "modifiers": [
             {
               "target": "Text",
@@ -232,7 +263,8 @@
           ]
         },
         {
-          "name": "Invention 4 3",
+          "name": "Astral Navigation",
+          "key": "pirate_spawn_chance_inv_1",
           "modifiers": [
             {
               "target": "Text",
@@ -248,6 +280,7 @@
       "inventions": [
         {
           "name": "",
+          "key": "",
           "modifiers": [
             {
               "target": "Global",
@@ -256,13 +289,17 @@
               "value": 0.1
             },
             {
-              "target": "Text",
+              "target": "Global",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "negative": true,
               "value": 0.03
             }
           ]
         },
         {
-          "name": "Invention 5 1",
+          "name": "Naval Supply Lines",
+          "key": "siege_engineers_inv_2",
           "modifiers": [
             {
               "target": "Text",
@@ -273,7 +310,8 @@
           ]
         },
         {
-          "name": "Invention 5 2",
+          "name": "Basic Training",
+          "key": "global_start_experience_inv_2",
           "modifiers": [
             {
               "target": "Global",
@@ -283,7 +321,8 @@
           ]
         },
         {
-          "name": "Invention 5 3",
+          "name": "Military Sponsors",
+          "key": "general_loyalty_inv",
           "modifiers": [
             {
               "target": "Text",
@@ -300,6 +339,7 @@
       "inventions": [
         {
           "name": "",
+          "key": "",
           "modifiers": [
             {
               "target": "Global",
@@ -308,13 +348,17 @@
               "value": 0.1
             },
             {
-              "target": "Text",
+              "target": "Global",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "negative": true,
               "value": 0.03
             }
           ]
         },
         {
-          "name": "Invention 6 1",
+          "name": "Siege Towers",
+          "key": "siege_speed_inv_2",
           "modifiers": [
             {
               "target": "Text",
@@ -324,7 +368,8 @@
           ]
         },
         {
-          "name": "Invention 6 2",
+          "name": "Scorched Earth",
+          "key": "hostile_attrition_inv",
           "modifiers": [
             {
               "target": "Text",
@@ -335,7 +380,8 @@
           ]
         },
         {
-          "name": "Invention 6 3",
+          "name": "Professional Training",
+          "key": "global_cohort_recruit_speed_inv",
           "modifiers": [
             {
               "target": "Text",
@@ -351,6 +397,7 @@
       "inventions": [
         {
           "name": "",
+          "key": "",
           "modifiers": [
             {
               "target": "Global",
@@ -359,13 +406,17 @@
               "value": 0.1
             },
             {
-              "target": "Text",
+              "target": "Global",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "negative": true,
               "value": 0.03
             }
           ]
         },
         {
-          "name": "Invention 7 1",
+          "name": "Manipular Legion",
+          "key": "discipline_inv_2",
           "modifiers": [
             {
               "target": "Global",
@@ -375,7 +426,8 @@
           ]
         },
         {
-          "name": "Invention 7 2",
+          "name": "Vault and Dome",
+          "key": "global_defensive_inv_2",
           "modifiers": [
             {
               "target": "Text",
@@ -385,7 +437,8 @@
           ]
         },
         {
-          "name": "Invention 7 3",
+          "name": "Siege Ladders",
+          "key": "assault_ability_inv",
           "modifiers": [
             {
               "target": "Text",
@@ -401,6 +454,7 @@
       "inventions": [
         {
           "name": "",
+          "key": "",
           "modifiers": [
             {
               "target": "Global",
@@ -409,13 +463,17 @@
               "value": 0.1
             },
             {
-              "target": "Text",
+              "target": "Global",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "negative": true,
               "value": 0.03
             }
           ]
         },
         {
-          "name": "Invention 8 1",
+          "name": "Squadrons",
+          "key": "trireme_discipline_inv_3",
           "modifiers": [
             {
               "target": "Trireme",
@@ -425,7 +483,8 @@
           ]
         },
         {
-          "name": "Invention 8 2",
+          "name": "Scorpio",
+          "key": "siege_engineers_inv_3",
           "modifiers": [
             {
               "target": "Text",
@@ -436,7 +495,8 @@
           ]
         },
         {
-          "name": "Invention 8 3",
+          "name": "Blacksmith Apprentices",
+          "key": "heavy_infantry_cost_inv",
           "modifiers": [
             {
               "target": "Heavy Infantry",
@@ -453,6 +513,7 @@
       "inventions": [
         {
           "name": "",
+          "key": "",
           "modifiers": [
             {
               "target": "Global",
@@ -461,13 +522,17 @@
               "value": 0.1
             },
             {
-              "target": "Text",
+              "target": "Global",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "negative": true,
               "value": 0.03
             }
           ]
         },
         {
-          "name": "Invention 9 1",
+          "name": "Investment",
+          "key": "siege_speed_inv_3",
           "modifiers": [
             {
               "target": "Text",
@@ -477,7 +542,8 @@
           ]
         },
         {
-          "name": "Invention 9 2",
+          "name": "Patterned Construction",
+          "key": "global_ship_recruit_speed_inv",
           "modifiers": [
             {
               "target": "Text",
@@ -487,7 +553,8 @@
           ]
         },
         {
-          "name": "Invention 9 3",
+          "name": "Praefectus Fabrum",
+          "key": "military_tech_investment_inv_2",
           "modifiers": [
             {
               "target": "Text",
@@ -503,6 +570,7 @@
       "inventions": [
         {
           "name": "",
+          "key": "",
           "modifiers": [
             {
               "target": "Global",
@@ -511,13 +579,17 @@
               "value": 0.1
             },
             {
-              "target": "Text",
+              "target": "Global",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "negative": true,
               "value": 0.03
             }
           ]
         },
         {
-          "name": "Invention 10 1",
+          "name": "Veteran Enticements",
+          "key": "discipline_inv_3",
           "modifiers": [
             {
               "target": "Global",
@@ -527,7 +599,8 @@
           ]
         },
         {
-          "name": "Invention 10 2",
+          "name": "Ship's Surgeon",
+          "key": "naval_unit_attrition_inv",
           "modifiers": [
             {
               "target": "Text",
@@ -537,7 +610,8 @@
           ]
         },
         {
-          "name": "Invention 10 3",
+          "name": "Active Drill",
+          "key": "experience_decay_inv_1",
           "modifiers": [
             {
               "target": "Text",
@@ -553,6 +627,7 @@
       "inventions": [
         {
           "name": "",
+          "key": "",
           "modifiers": [
             {
               "target": "Global",
@@ -561,13 +636,17 @@
               "value": 0.1
             },
             {
-              "target": "Text",
+              "target": "Global",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "negative": true,
               "value": 0.03
             }
           ]
         },
         {
-          "name": "Invention 11 1",
+          "name": "Logistics Division",
+          "key": "global_supply_limit_modifier_inv_3",
           "modifiers": [
             {
               "target": "Text",
@@ -577,7 +656,8 @@
           ]
         },
         {
-          "name": "Invention 11 2",
+          "name": "Recruitment Standards",
+          "key": "global_start_experience_inv_3",
           "modifiers": [
             {
               "target": "Global",
@@ -587,11 +667,12 @@
           ]
         },
         {
-          "name": "Invention 11 3",
+          "name": "Standardized Provisioning",
+          "key": "fort_maintenance_cost_inv",
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Fort Maintenance",
+              "attribute": "Extensive Brick-yards",
               "value": -0.1
             }
           ]
@@ -603,6 +684,7 @@
       "inventions": [
         {
           "name": "",
+          "key": "",
           "modifiers": [
             {
               "target": "Global",
@@ -611,13 +693,17 @@
               "value": 0.1
             },
             {
-              "target": "Text",
+              "target": "Global",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "negative": true,
               "value": 0.03
             }
           ]
         },
         {
-          "name": "Invention 12 1",
+          "name": "Fortified Camps",
+          "key": "global_defensive_inv_3",
           "modifiers": [
             {
               "target": "Text",
@@ -627,7 +713,8 @@
           ]
         },
         {
-          "name": "Invention 12 2",
+          "name": "Retirement Opportunities",
+          "key": "army_maintenance_cost_inv_2",
           "modifiers": [
             {
               "target": "Land",
@@ -638,7 +725,8 @@
           ]
         },
         {
-          "name": "Invention 12 3",
+          "name": "Tormenta",
+          "key": "siege_engineers_inv_4",
           "modifiers": [
             {
               "target": "Text",
@@ -655,6 +743,7 @@
       "inventions": [
         {
           "name": "",
+          "key": "",
           "modifiers": [
             {
               "target": "Global",
@@ -663,13 +752,17 @@
               "value": 0.1
             },
             {
-              "target": "Text",
+              "target": "Global",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "negative": true,
               "value": 0.03
             }
           ]
         },
         {
-          "name": "Invention 13 1",
+          "name": "Contravallation",
+          "key": "siege_speed_inv_4",
           "modifiers": [
             {
               "target": "Text",
@@ -679,7 +772,8 @@
           ]
         },
         {
-          "name": "Invention 13 2",
+          "name": "Quick March",
+          "key": "army_movement_speed_inv",
           "modifiers": [
             {
               "target": "Text",
@@ -689,7 +783,8 @@
           ]
         },
         {
-          "name": "Invention 13 3",
+          "name": "Scythian Saddles",
+          "key": "heavy_cavalry_discipline_inv",
           "modifiers": [
             {
               "target": "Heavy Cavalry",
@@ -705,6 +800,7 @@
       "inventions": [
         {
           "name": "",
+          "key": "",
           "modifiers": [
             {
               "target": "Global",
@@ -713,13 +809,17 @@
               "value": 0.1
             },
             {
-              "target": "Text",
+              "target": "Global",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "negative": true,
               "value": 0.03
             }
           ]
         },
         {
-          "name": "Invention 14 1",
+          "name": "Promotion Through Valor",
+          "key": "discipline_inv_4",
           "modifiers": [
             {
               "target": "Global",
@@ -729,7 +829,8 @@
           ]
         },
         {
-          "name": "Invention 14 2",
+          "name": "Entrenchment",
+          "key": "global_defensive_inv_4",
           "modifiers": [
             {
               "target": "Text",
@@ -739,7 +840,8 @@
           ]
         },
         {
-          "name": "Invention 14 3",
+          "name": "Reinforced Rostra",
+          "key": "trireme_discipline_inv_4",
           "modifiers": [
             {
               "target": "Hexere",
@@ -755,6 +857,7 @@
       "inventions": [
         {
           "name": "",
+          "key": "",
           "modifiers": [
             {
               "target": "Global",
@@ -763,13 +866,17 @@
               "value": 0.1
             },
             {
-              "target": "Text",
+              "target": "Global",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "negative": true,
               "value": 0.03
             }
           ]
         },
         {
-          "name": "Invention 15 1",
+          "name": "Delayed Baggage Train",
+          "key": "global_supply_limit_modifier_inv_4",
           "modifiers": [
             {
               "target": "Text",
@@ -779,7 +886,8 @@
           ]
         },
         {
-          "name": "Invention 15 2",
+          "name": "Elite Recruitment Standards",
+          "key": "global_start_experience_inv_4",
           "modifiers": [
             {
               "target": "Global",
@@ -789,7 +897,8 @@
           ]
         },
         {
-          "name": "Invention 15 3",
+          "name": "Enhanced Training Grounds",
+          "key": "cohort_reinforcement_speed_inv",
           "modifiers": [
             {
               "target": "Text",
@@ -805,6 +914,7 @@
       "inventions": [
         {
           "name": "",
+          "key": "",
           "modifiers": [
             {
               "target": "Global",
@@ -813,13 +923,17 @@
               "value": 0.1
             },
             {
-              "target": "Text",
+              "target": "Global",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "negative": true,
               "value": 0.03
             }
           ]
         },
         {
-          "name": "Invention 16 1",
+          "name": "Siege Ramps",
+          "key": "siege_engineers_inv_5",
           "modifiers": [
             {
               "target": "Text",
@@ -830,7 +944,8 @@
           ]
         },
         {
-          "name": "Invention 16 2",
+          "name": "Army Surgeons",
+          "key": "land_unit_attrition_inv",
           "modifiers": [
             {
               "target": "Text",
@@ -840,7 +955,8 @@
           ]
         },
         {
-          "name": "Invention 16 3",
+          "name": "Tactical Withdrawal",
+          "key": "retreat_delay_inv",
           "modifiers": [
             {
               "target": "Text",
@@ -857,6 +973,7 @@
       "inventions": [
         {
           "name": "",
+          "key": "",
           "modifiers": [
             {
               "target": "Global",
@@ -865,13 +982,17 @@
               "value": 0.1
             },
             {
-              "target": "Text",
+              "target": "Global",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "negative": true,
               "value": 0.03
             }
           ]
         },
         {
-          "name": "Invention 17 1",
+          "name": "Honesta Missio",
+          "key": "navy_maintenance_cost_inv_2",
           "modifiers": [
             {
               "target": "Naval",
@@ -881,7 +1002,8 @@
           ]
         },
         {
-          "name": "Invention 17 2",
+          "name": "Lateen Sails",
+          "key": "navy_movement_speed_inv",
           "modifiers": [
             {
               "target": "Liburnian",
@@ -891,7 +1013,8 @@
           ]
         },
         {
-          "name": "Invention 17 3",
+          "name": "Tacking",
+          "key": "pirate_spawn_chance_inv_2",
           "modifiers": [
             {
               "target": "Text",
@@ -907,6 +1030,7 @@
       "inventions": [
         {
           "name": "",
+          "key": "",
           "modifiers": [
             {
               "target": "Global",
@@ -915,13 +1039,17 @@
               "value": 0.1
             },
             {
-              "target": "Text",
+              "target": "Global",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "negative": true,
               "value": 0.03
             }
           ]
         },
         {
-          "name": "Invention 18 1",
+          "name": "Ballistae",
+          "key": "siege_speed_inv_5",
           "modifiers": [
             {
               "target": "Text",
@@ -931,7 +1059,8 @@
           ]
         },
         {
-          "name": "Invention 18 2",
+          "name": "Veteran Reassignment",
+          "key": "experience_decay_inv_2",
           "modifiers": [
             {
               "target": "Text",
@@ -941,7 +1070,8 @@
           ]
         },
         {
-          "name": "Invention 18 3",
+          "name": "Experienced Seafarers",
+          "key": "blockade_efficiency_inv",
           "modifiers": [
             {
               "target": "Text",
@@ -957,6 +1087,7 @@
       "inventions": [
         {
           "name": "",
+          "key": "",
           "modifiers": [
             {
               "target": "Global",
@@ -965,13 +1096,17 @@
               "value": 0.1
             },
             {
-              "target": "Text",
+              "target": "Global",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "negative": true,
               "value": 0.03
             }
           ]
         },
         {
-          "name": "Invention 19 1",
+          "name": "Polyspaston",
+          "key": "global_defensive_inv_5",
           "modifiers": [
             {
               "target": "Text",
@@ -981,7 +1116,8 @@
           ]
         },
         {
-          "name": "Invention 19 2",
+          "name": "Central Reserve",
+          "key": "global_supply_limit_modifier_inv_5",
           "modifiers": [
             {
               "target": "Text",
@@ -991,7 +1127,8 @@
           ]
         },
         {
-          "name": "Invention 19 3",
+          "name": "Mangonel",
+          "key": "siege_engineers_inv_6",
           "modifiers": [
             {
               "target": "Text",
@@ -1008,6 +1145,7 @@
       "inventions": [
         {
           "name": "",
+          "key": "",
           "modifiers": [
             {
               "target": "Global",
@@ -1016,13 +1154,17 @@
               "value": 0.1
             },
             {
-              "target": "Text",
+              "target": "Global",
+              "attribute": "Maintenance",
+              "type": "Modifier",
+              "negative": true,
               "value": 0.03
             }
           ]
         },
         {
-          "name": "Invention 20 1",
+          "name": "Cohorts",
+          "key": "discipline_inv_5",
           "modifiers": [
             {
               "target": "Global",
@@ -1032,7 +1174,8 @@
           ]
         },
         {
-          "name": "Invention 20 2",
+          "name": "Multi-Discipline Training",
+          "key": "global_start_experience_inv_5",
           "modifiers": [
             {
               "target": "Global",
@@ -1042,7 +1185,8 @@
           ]
         },
         {
-          "name": "Invention 20 3",
+          "name": "Harpax",
+          "key": "trireme_discipline_inv_5",
           "modifiers": [
             {
               "target": "Naval",
