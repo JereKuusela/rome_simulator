@@ -11,7 +11,7 @@
         },
         {
           "target": "Text",
-          "attribute": "Siege ability",
+          "attribute": "Siege Ability",
           "value": 0.1
         }
       ]
@@ -28,7 +28,7 @@
         },
         {
           "target": "Text",
-          "attribute": "Land Reinforcement",
+          "attribute": "Reinforcement Speed",
           "negative": true,
           "value": -0.1
         }
@@ -181,7 +181,7 @@
         },
         {
           "target": "Text",
-          "attribute": "Loyalty chance",
+          "attribute": "Loyalty Gain Chance",
           "negative": true,
           "value": 0.02
         }
@@ -225,7 +225,7 @@
         },
         {
           "target": "Text",
-          "attribute": "Loyalty chance",
+          "attribute": "Loyalty Gain Chance",
           "value": -0.02
         }
       ]
@@ -235,7 +235,7 @@
       "modifiers": [
         {
           "target": "General",
-          "attribute": "Monthly wealth",
+          "attribute": "Monthly Wealth",
           "no_percent": true,
           "value": 1
         },
@@ -303,7 +303,7 @@
         },
         {
           "target": "Text",
-          "attribute": "Naval Movement speed",
+          "attribute": "Naval Movement Speed",
           "value": 0.1
         }
       ]
@@ -319,7 +319,7 @@
         },
         {
           "target": "Naval",
-          "attribute": "Capture chance",
+          "attribute": "Capture Chance",
           "value": 0.1
         }
       ]
@@ -342,7 +342,7 @@
         },
         {
           "target": "Naval",
-          "attribute": "Damage done",
+          "attribute": "Damage Done",
           "value": 0.05
         }
       ]
@@ -352,13 +352,13 @@
       "modifiers": [
         {
           "target": "General",
-          "attribute": "Monthly health",
+          "attribute": "Monthly Health",
           "no_percent": true,
           "value": 0.01
         },
         {
           "target": "Naval",
-          "attribute": "Damage taken",
+          "attribute": "Damage Taken",
           "value": -0.05
         }
       ]
@@ -374,7 +374,7 @@
         },
         {
           "target": "Text",
-          "attribute": "Ship repair at sea",
+          "attribute": "Ship Repair at Sea",
           "value": 0.01
         }
       ]

@@ -12,7 +12,7 @@
           "modifiers": [
             {
               "target": "Naval",
-              "attribute": "Damage taken",
+              "attribute": "Damage Taken",
               "value": -0.05
             }
           ]
@@ -32,7 +32,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Supply limit",
+              "attribute": "Supply Limit",
               "value": 0.1
             }
           ]
@@ -62,7 +62,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Siege ability",
+              "attribute": "Siege Ability",
               "value": 0.05
             }
           ]
@@ -72,7 +72,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Military investment cost",
+              "attribute": "Military Provincial Investment Cost",
               "value": -0.1
             }
           ]
@@ -112,7 +112,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Siege engineers",
+              "attribute": "Siege Engineers",
               "no_percent": true,
               "value": 1
             }
@@ -123,7 +123,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Fort defense",
+              "attribute": "Fort Defense",
               "value": 0.05
             }
           ]
@@ -133,7 +133,7 @@
           "modifiers": [
             {
               "target": "Land",
-              "attribute": "Attrition weight",
+              "attribute": "Attrition Weight",
               "type": "Modifier",
               "value": -0.1
             }
@@ -226,7 +226,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Supply limit",
+              "attribute": "Supply Limit",
               "value": 0.1
             }
           ]
@@ -236,7 +236,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Naval range",
+              "attribute": "Naval Range",
               "value": 0.15
             }
           ]
@@ -266,7 +266,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Siege engineers",
+              "attribute": "Siege Engineers",
               "no_percent": true,
               "value": 1
             }
@@ -318,7 +318,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Siege ability",
+              "attribute": "Siege Ability",
               "value": 0.05
             }
           ]
@@ -328,7 +328,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Hostile attrition",
+              "attribute": "Hostile Attrition",
               "no_percent": true,
               "value": 1
             }
@@ -339,7 +339,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Land Recruit speed",
+              "attribute": "Cohort Recruit Speed",
               "value": 0.2
             }
           ]
@@ -379,7 +379,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Fort defense",
+              "attribute": "Fort Defense",
               "value": 0.05
             }
           ]
@@ -389,7 +389,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Assault ability",
+              "attribute": "Assault Ability",
               "value": 0.05
             }
           ]
@@ -429,7 +429,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Siege engineers",
+              "attribute": "Siege Engineers",
               "no_percent": true,
               "value": 1
             }
@@ -471,7 +471,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Siege ability",
+              "attribute": "Siege Ability",
               "value": 0.05
             }
           ]
@@ -481,7 +481,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Naval Recruit speed",
+              "attribute": "Ship Recruit Speed",
               "value": 0.2
             }
           ]
@@ -491,7 +491,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Land Movement speed",
+              "attribute": "Army Movement Speed",
               "value": 0.1
             }
           ]
@@ -531,7 +531,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Naval Attrition",
+              "attribute": "Navy Attrition",
               "value": -0.1
             }
           ]
@@ -541,7 +541,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Experience decay",
+              "attribute": "Experience Decay",
               "value": -0.005
             }
           ]
@@ -571,7 +571,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Supply limit",
+              "attribute": "Supply Limit",
               "value": 0.1
             }
           ]
@@ -591,7 +591,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Fort maintenance",
+              "attribute": "Fort Maintenance",
               "value": -0.1
             }
           ]
@@ -621,7 +621,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Fort defense",
+              "attribute": "Fort Defense",
               "value": 0.05
             }
           ]
@@ -642,7 +642,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Siege engineers",
+              "attribute": "Siege Engineers",
               "no_percent": true,
               "value": 1
             }
@@ -673,7 +673,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Siege ability",
+              "attribute": "Siege Ability",
               "value": 0.05
             }
           ]
@@ -683,7 +683,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Land Movement speed",
+              "attribute": "Army Movement Speed",
               "value": 0.1
             }
           ]
@@ -733,7 +733,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Fort defense",
+              "attribute": "Fort Defense",
               "value": 0.05
             }
           ]
@@ -773,7 +773,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Supply limit",
+              "attribute": "Supply Limit",
               "value": 0.25
             }
           ]
@@ -793,7 +793,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Land Reinforcement",
+              "attribute": "Reinforcement Speed",
               "value": 0.05
             }
           ]
@@ -823,7 +823,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Siege engineers",
+              "attribute": "Siege Engineers",
               "no_percent": true,
               "value": 1
             }
@@ -834,7 +834,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Land Attrition",
+              "attribute": "Army Attrition",
               "value": -0.1
             }
           ]
@@ -844,7 +844,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Retreat delay",
+              "attribute": "Retreat Delay",
               "no_percent": true,
               "value": -2
             }
@@ -875,7 +875,7 @@
           "modifiers": [
             {
               "target": "Naval",
-              "attribute": "Damage taken",
+              "attribute": "Damage Taken",
               "value": -0.05
             }
           ]
@@ -895,7 +895,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Naval range",
+              "attribute": "Naval Range",
               "value": 0.15
             }
           ]
@@ -925,7 +925,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Siege ability",
+              "attribute": "Siege Ability",
               "value": 0.05
             }
           ]
@@ -935,7 +935,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Experience decay",
+              "attribute": "Experience Decay",
               "value": -0.005
             }
           ]
@@ -945,7 +945,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Blockade efficiency",
+              "attribute": "Blockade Efficiency",
               "value": 0.2
             }
           ]
@@ -975,7 +975,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Fort defense",
+              "attribute": "Fort Defense",
               "value": 0.2
             }
           ]
@@ -985,7 +985,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Supply limit",
+              "attribute": "Supply Limit",
               "value": 0.25
             }
           ]
@@ -995,7 +995,7 @@
           "modifiers": [
             {
               "target": "Text",
-              "attribute": "Siege engineers",
+              "attribute": "Siege Engineers",
               "no_percent": true,
               "value": 2
             }
@@ -1046,7 +1046,7 @@
           "modifiers": [
             {
               "target": "Naval",
-              "attribute": "Damage done",
+              "attribute": "Damage Done",
               "value": 0.1
             }
           ]

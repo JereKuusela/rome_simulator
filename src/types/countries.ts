@@ -16,13 +16,13 @@ export enum CountryName {
 export type Countries = { [key in CountryName]: CountryDefinition }
 
 export enum CountryAttribute {
-  CombatWidth = 'Combat width',
-  FlankRatio = 'Flank ratio',
-  MilitaryExperience = 'Military experience',
-  OmenPower = 'Omen power',
-  TechLevel = 'Tech level',
-  OfficeMorale = 'Morale office',
-  OfficeDiscipline = 'Discipline office'
+  CombatWidth = 'Combat Width',
+  FlankRatio = 'Flank Ratio',
+  MilitaryExperience = 'Military Experience',
+  OmenPower = 'Omen Power',
+  TechLevel = 'Tech Tevel',
+  OfficeMorale = 'Morale Office',
+  OfficeDiscipline = 'Discipline Office'
 }
 
 export interface CountryDefinition extends DefinitionValues<CountryAttribute> {
