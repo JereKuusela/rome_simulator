@@ -187,7 +187,7 @@ class CombatTooltip extends Component<IProps, IState> {
     const morale_damage = source.morale_dealt
 
     return (<>
-      {this.renderStyledItem('Target strength', 1 / (target.Strength + target.strength_loss), toMultiplier)}
+      {this.renderStyledItem('Target strength', 1 / (target[UnitAttribute.Strength] + target.strength_loss), toMultiplier)}
       {this.renderModifier('Constant', morale_lost_multiplier / 1000.0, this.toMultiplier)}
       {settings[Setting.AttributeMoraleDamage] && this.getAttribute(source, UnitAttribute.MoraleDamageDone)}
       {settings[Setting.AttributeMoraleDamage] && this.getAttribute(target, UnitAttribute.MoraleDamageTaken)}
