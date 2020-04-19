@@ -36,9 +36,6 @@ class Navigation extends Component<IProps> {
           <Menu.Item active={path === '/settings'} onClick={() => history.push('/settings')}>
             Settings
           </Menu.Item>
-          <Menu.Item active={path === '/transfer'} onClick={() => history.push('/transfer')}>
-            Transfer
-          </Menu.Item>
           <Menu.Item onClick={() => this.props.openModal(ModalType.ImportCountry, {})}>
             Import
           </Menu.Item>

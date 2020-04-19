@@ -9,6 +9,7 @@ import { toArr, keys, values, filterKeys } from 'utils'
 import { Mode, Setting, parameterToDescription, SimulationSpeed, SiteSettings, DisciplineValue } from 'types'
 import { changeCombatParameter, changeSiteParameter } from 'reducers'
 import { getDefaultSiteSettings, getDefaultLandSettings } from 'data'
+import Transfer from 'containers/Transfer'
 
 interface Props { }
 
@@ -22,7 +23,7 @@ const deployment = [Setting.CustomDeployment, Setting.DynamicFlanking, Setting.M
 const mechanics = [
   Setting.FireAndShock, Setting.StrengthBasedFlank, Setting.UseMaxMorale, Setting.InsufficientSupportPenalty, Setting.RollFrequency, Setting.CombatWidth,
   Setting.ExperienceDamageReduction, Setting.FixExperience, Setting.DefenderAdvantage, Setting.FixTargeting, Setting.BackRow, Setting.Culture, Setting.AttributeLoyal,
-  Setting.Tactics, Setting.Tech, Setting.Martial, Setting.Food, Setting.FixFlankTargeting, Setting.SupportPhase
+  Setting.Tactics, Setting.Tech, Setting.Martial, Setting.Food, Setting.FixFlankTargeting, Setting.SupportPhase, Setting.MoraleDamageBasedOnTargetStrength, Setting.DamageLossForMissingMorale
 ]
 const damage = [
   Setting.DailyMoraleLoss, Setting.DailyDamageIncrease, Setting.Precision, Setting.BasePips, Setting.MaxGeneral,
@@ -50,7 +51,8 @@ class Settings extends Component<IProps> {
       this.getMenuItem('Deployment', deployment),
       this.getModeMenuItem(),
       this.getMenuItem('Mechanics', mechanics),
-      this.getMenuItem('Stack wipe & Retreat', stackwipe)
+      this.getMenuItem('Stack wipe & Retreat', stackwipe),
+      this.getTransferMenuItem()
     ]
     return (
       <Tab panes={panes} defaultActiveIndex={keys(combatSettings).findIndex(mode => mode === this.props.mode)} />
@@ -69,6 +71,13 @@ class Settings extends Component<IProps> {
     return {
       menuItem: 'Land / Naval',
       render: () => this.renderModeSettings()
+    }
+  }
+
+  getTransferMenuItem = () => {
+    return {
+      menuItem: 'Import / Export',
+      render: () => <Transfer />
     }
   }
 

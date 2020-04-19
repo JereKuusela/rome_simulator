@@ -250,6 +250,10 @@ const calculateCohortDamageMultiplier = (source: CombatCohort, target: CombatCoh
 
 const calculateDamageMultiplier = (source: CombatCohort, target: CombatCohort, dynamic_multiplier: number, is_support: boolean, phase: CombatPhase, settings: Settings) => {
   dynamic_multiplier *= calculateCohortDamageMultiplier(source, target, is_support, settings)
+  if (settings[Setting.DamageLossForMissingMorale]) {
+    const morale = source[UnitAttribute.Morale] / source.definition.max_morale
+    dynamic_multiplier *= 1 + (morale - 1) * settings[Setting.DamageLossForMissingMorale]
+  }
   source.state.damage_multiplier = dynamic_multiplier * source.calculated.damage['Damage'][target.definition.type][phase] * target.calculated.damage_taken_multiplier / settings[Setting.Precision]
   return dynamic_multiplier
 }
@@ -262,7 +266,9 @@ const calculatePips = (roll: number, max_pips: number, source: CombatCohort, tar
 const calculateMoraleLosses = (source: CombatCohort, target: CombatCohort, target_support: CombatCohort | null, roll: number, dynamic_multiplier: number, phase: CombatPhase, settings: Settings) => {
   const pips = calculatePips(roll, settings[Setting.MaxPips], source, target, target_support, UnitAttribute.Morale)
   const morale = settings[Setting.UseMaxMorale] ? source.definition.max_morale : source[UnitAttribute.Morale]
-  const damage = pips * dynamic_multiplier * source.calculated.damage[UnitAttribute.Morale][target.definition.type][phase] * morale * target.calculated.morale_taken_multiplier
+  let damage = pips * dynamic_multiplier * source.calculated.damage[UnitAttribute.Morale][target.definition.type][phase] * morale * target.calculated.morale_taken_multiplier
+  if (settings[Setting.MoraleDamageBasedOnTargetStrength])
+    damage /= target[UnitAttribute.Strength]
 
   source.state.morale_dealt = Math.floor(damage) / settings[Setting.Precision]
   source.state.total_morale_dealt += source.state.morale_dealt

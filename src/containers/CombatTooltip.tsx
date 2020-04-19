@@ -134,8 +134,11 @@ class CombatTooltip extends Component<IProps, IState> {
     const target_type = settings[Setting.AttributeUnitType] ? source[target.type] : 0
     const is_loyal = source.is_loyal
     const multiplier = source.damage_multiplier
+    const morale = (source[UnitAttribute.Morale] + source.morale_loss) / source.max_morale
+    const test = morale / 2 - 0.5
 
     return (<>
+      {this.renderStyledItem('Lost morale', test, toSignedPercent)}
       {this.renderStyledItem('Tactic', tactic_bonus, toSignedPercent)}
       {this.renderStyledItem('Enemy insufficient support', flank_ratio_bonus, toSignedPercent)}
       {this.renderStyledItem('Loyal', is_loyal ? 0.1 : 0, toSignedPercent)}
@@ -184,6 +187,7 @@ class CombatTooltip extends Component<IProps, IState> {
     const morale_damage = source.morale_dealt
 
     return (<>
+      {this.renderStyledItem('Target strength', 1 / (target.Strength + target.strength_loss), toMultiplier)}
       {this.renderModifier('Constant', morale_lost_multiplier / 1000.0, this.toMultiplier)}
       {settings[Setting.AttributeMoraleDamage] && this.getAttribute(source, UnitAttribute.MoraleDamageDone)}
       {settings[Setting.AttributeMoraleDamage] && this.getAttribute(target, UnitAttribute.MoraleDamageTaken)}

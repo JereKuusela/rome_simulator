@@ -11,6 +11,7 @@ export enum Setting {
   MaxGeneral = 'Maximum skill of generals',
   MinimumMorale = 'Minimum morale for combat',
   MinimumStrength = 'Minimum strength for combat',
+  DamageLossForMissingMorale = 'Damage loss for missing morale',
   MoraleHitForNonSecondaryReinforcement = 'Morale damage for non-secondary reinforcements',
   RollFrequency = 'Length of combat phases',
   Precision = 'Calculation precision',
@@ -53,6 +54,7 @@ export enum Setting {
   AttributeStrengthDamage = 'Enable Strength damage done and Strength damage taken attributes',
   AttributeTerrainType = 'Enable terrain type based attributes',
   AttributeUnitType = 'Enable unit type based attributes',
+  MoraleDamageBasedOnTargetStrength = 'Enable morale damaged based on target strength',
   Performance = 'Performance',
   MaxDepth = 'Maximum depth',
   PhaseLengthMultiplier = 'Multiplier for phase length',
@@ -106,7 +108,9 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
     case Setting.StrengthLostMultiplier:
       return 'Multiplier for strength damage. Affects how much strength damage units deal.'
     case Setting.MinimumStrength:
-      return 'Strength required for combat.Affects how quicky units retreat.'
+      return 'Strength required for combat. Affects how quicky units retreat.'
+    case Setting.DamageLossForMissingMorale:
+      return 'Reduced damage done for lost morale.'
     case Setting.MoraleHitForNonSecondaryReinforcement:
       return 'Percentage of total morale lost when non-secondary units reinforce (Imperator).'
     case Setting.MinimumMorale:
@@ -141,6 +145,11 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Stacking wiping rules are checked (Imperator, EUIV).'
       else
         return 'Stack wiping is not possible.'
+    case Setting.MoraleDamageBasedOnTargetStrength:
+      if (value)
+        return 'Lower strength increases morale damage taken (experimental).'
+      else
+        return 'Strength doesn\'t affect morale damage taken (Imperator, EUIV).'
     case Setting.CustomDeployment:
       if (value)
         return 'Preferred unit types can be selected (Imperator).'
@@ -355,6 +364,8 @@ export type SiteSettings = {
   [Setting.StackwipeRounds]: number,
   [Setting.SoftStackWipeLimit]: number,
   [Setting.HardStackWipeLimit]: number,
+  [Setting.MoraleDamageBasedOnTargetStrength]: boolean,
+  [Setting.DamageLossForMissingMorale]: number,
   [Setting.Tactics]: boolean,
   [Setting.Martial]: boolean,
   [Setting.Tech]: boolean,

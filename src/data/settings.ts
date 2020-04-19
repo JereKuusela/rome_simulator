@@ -91,6 +91,8 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.Food]: false,
       [Setting.Precision]: 3,
       [Setting.AutoRefresh]: true,
+      [Setting.MoraleDamageBasedOnTargetStrength]: false, 
+      [Setting.DamageLossForMissingMorale]: 0,
       // Analyze
       [Setting.Performance]: SimulationSpeed.Fast,
       [Setting.ChunkSize]: 10000,
@@ -164,7 +166,9 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.Tech]: false,
       [Setting.Culture]: false,
       [Setting.Food]: true,
-      [Setting.AutoRefresh]: true
+      [Setting.AutoRefresh]: true,
+      [Setting.MoraleDamageBasedOnTargetStrength]: false, 
+      [Setting.DamageLossForMissingMorale]: 0,
     }
   }
 }
