@@ -25,7 +25,7 @@ const GENERAL = 'General'
 const localizations = {
 }
 
-const generalStats = [ 'martial', 'zeal', 'finesse', 'charisma', 'character_loyalty', 'monthly_character_wealth', 'health' ]
+const generalStats = ['martial', 'zeal', 'finesse', 'charisma', 'character_loyalty', 'monthly_character_wealth', 'health']
 
 /** @type {Object.<string, string>} */
 const units = {
@@ -53,6 +53,7 @@ const units = {
 /** @type {Object.<string, string>} */
 const attributes = {
   'global_monthly_food_modifier': 'National Food',
+  'create_trade_route_cost_modifier': 'Trade Route Cost',
   'attrition_weight': ATTRITION,
   'army': 'Mode',
   'category': PARENT,
@@ -196,6 +197,7 @@ const negatives = new Set([
   'hold_triumph_cost_modifier',
   'war_exhaustion',
   'mercenary_land_maintenance_cost',
+  'mercenary_naval_maintenance_cost',
   'recruit_mercenary_cost_modifier',
   'loyalty_gain_chance_modifier',
   'price_found_city_cost_modifier',
@@ -251,6 +253,8 @@ exports.format = value => {
 exports.getAttribute = (key, value) => {
   if (key === 'mercenary_land_maintenance_cost')
     key = 'modifier_land_mercenary_maintenance_cost'
+  if (key === 'mercenary_naval_maintenance_cost')
+    key = 'modifier_naval_mercenary_maintenance_cost'
   let attribute = attributes[key] || localizations['modifier_' + key] || localizations[key]
   switch (key) {
     case 'allow_unit_type':
@@ -259,7 +263,7 @@ exports.getAttribute = (key, value) => {
       return attribute.replace('$WHICH|Y$', attributes[value] || localizations[value])
     // Units have different name for build cost.
     case 'build_cost':
-      return value && value.gold ? attribute :  localizations['modifier_' + key] || localizations[key]
+      return value && value.gold ? attribute : localizations['modifier_' + key] || localizations[key]
     default:
       return attribute
   }
@@ -294,7 +298,7 @@ exports.getValue = (key, value) => {
     case 'enable_tactic':
       return 0
     case 'omen_power':
-        return 100 * value
+      return 100 * value
     case 'cohort_start_experience':
     case 'global_cohort_start_experience':
       return value * 0.01

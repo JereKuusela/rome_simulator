@@ -1097,6 +1097,12 @@
       "key": "byzantine_heritage",
       "modifiers": [
         {
+          "target": "Text",
+          "attribute": "Trade Route Cost",
+          "negative": true,
+          "value": -0.25
+        },
+        {
           "target": "Naval",
           "attribute": "Cost",
           "type": "Modifier",
@@ -1522,6 +1528,11 @@
       "name": "Pirate Heritage",
       "key": "pirate_heritage",
       "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Pirate Fleet Maintenance",
+          "value": -0.1
+        },
         {
           "target": "Text",
           "attribute": "Naval Range",
