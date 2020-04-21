@@ -97,7 +97,6 @@ export function combine<S>(reducers: { [K in keyof S]: ReducerWithParam<S[K]> })
         invalidated = true
     }
     if (invalidated) {
-      console.log('f')
       nextState = produce(nextState, (draft: any) => {
         draft['battle'][settings.mode].outdated = true
       })

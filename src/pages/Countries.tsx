@@ -21,7 +21,7 @@ import Dropdown from 'components/Dropdowns/Dropdown'
 import ConfirmationButton from 'components/ConfirmationButton'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TableAttributes from 'components/TableAttributes'
-import { mapModifiersToUnits, tech_ir, TRAIT_KEY, ABILITY_KEY, abilities_ir, traits_ir } from 'managers/modifiers'
+import { mapModifiersToUnits, tech_ir, TRAIT_KEY, ABILITY_KEY, abilities_ir, traits_ir, heritages_ir } from 'managers/modifiers'
 import { convertCountryDefinition } from 'managers/countries'
 import CountryValueInput from 'containers/CountryValueInput'
 import { has } from 'lodash'
@@ -298,34 +298,6 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderHeritages = (heritages: HeritageDefinition[], selections: ObjSet) => {
-    const rows = Math.ceil(heritages.length / HERITAGE_COLUMNS)
-    return (
-      <Table celled unstackable fixed>
-        <Table.Body>
-          {
-            mapRange(rows, number => number).map(row => (
-              <Table.Row key={row}>
-                {
-                  mapRange(HERITAGE_COLUMNS, number => number).map(column => {
-                    const index = row * HERITAGE_COLUMNS + column
-                    const heritage = heritages[index]
-                    if (!heritage)
-                      return (<Table.Cell key={HERITAGE_KEY + index}></Table.Cell>)
-                    const modifiers = heritage.modifiers
-                    const key = HERITAGE_KEY + heritage.name
-                    return this.renderCell(key, heritage.name, selections[key], modifiers,
-                      () => this.enableHeritage(key, modifiers, selections), undefined, '\u00a0\u00a0\u00a0\u00a0')
-                  })
-                }
-              </Table.Row>
-            ))
-          }
-        </Table.Body>
-      </Table >
-    )
-  }
-
   renderInventions = (inventions: InventionDefinition[], tech: number, selections: ObjSet) => {
     return (
       <Table celled unstackable definition fixed>
@@ -399,8 +371,13 @@ class Countries extends Component<IProps> {
   }
 
 
-  renderTraits = (traits: TraitDefinition[], selections: ObjSet, disabled: boolean) => {
-    const rows = Math.ceil(traits.length / TRAIT_COLUMNS)
+  renderTraits = (traits: TraitDefinition[], selections: ObjSet, disabled: boolean) => this.renderList(traits, selections, TRAIT_COLUMNS, TRAIT_KEY, this.onGeneralItemClick, disabled)
+  renderHeritages = (heritages: HeritageDefinition[], selections: ObjSet) => this.renderList(heritages, selections, HERITAGE_COLUMNS, '', this.onCountryItemClick, false, '\u00a0\u00a0\u00a0\u00a0')
+
+
+  renderList = (entities: { name: string, key: string, modifiers: Modifier[] }[], selections: ObjSet, columns: number, parent_key: string, onClick: (enabled: boolean) => ((key: string) => void), disabled: boolean, padding?: string) => {
+    entities = entities.filter(entity => entity.modifiers.length)
+    const rows = Math.ceil(entities.length / columns)
     return (
       <Table celled unstackable fixed>
         <Table.Body>
@@ -408,14 +385,14 @@ class Countries extends Component<IProps> {
             mapRange(rows, number => number).map(row => (
               <Table.Row key={row}>
                 {
-                  mapRange(TRAIT_COLUMNS, number => number).map(column => {
-                    const index = row * TRAIT_COLUMNS + column
-                    const trait = traits[index]
-                    if (!trait)
+                  mapRange(columns, number => number).map(column => {
+                    const index = row * columns + column
+                    const entity = entities[index]
+                    if (!entity)
                       return (<Table.Cell key={TRAIT_KEY + index}></Table.Cell>)
-                    const modifiers = trait.modifiers
-                    const key = TRAIT_KEY + trait.name
-                    return this.renderCell2(key, trait.name, selections[key], modifiers, this.onTraitOrAbilityClick, undefined, disabled)
+                    const modifiers = entity.modifiers
+                    const key = parent_key + entity.key
+                    return this.renderCell2(key, entity.name, selections[key], modifiers, onClick, padding, disabled)
                   })
                 }
               </Table.Row>
@@ -425,7 +402,6 @@ class Countries extends Component<IProps> {
       </Table >
     )
   }
-
   renderEconomy = (economy: EconomyDefinition[], selections: ObjSet) => this.renderOptions(ECONOMY_KEY, economy, selections, 2)
 
   renderLaws = (laws: LawDefinition[], selections: ObjSet) => this.renderOptions(LAW_KEY, laws, selections, 4)
@@ -443,9 +419,9 @@ class Countries extends Component<IProps> {
               <Table.Row key={options.name}>
                 {
                   options.options.map(option => {
-                    const key = modifier_key + option.name
+                    const key = modifier_key + option.key
                     const modifiers = option.modifiers
-                    return this.renderCell2(key, option.name, selections[key], modifiers, this.onTraitOrAbilityClick)
+                    return this.renderCell2(key, option.name, selections[key], modifiers, this.onGeneralItemClick)
                   })
                 }
                 {
@@ -459,7 +435,7 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderOptions = (modifier_key: string, definitions: (EconomyDefinition | LawDefinition | AbilityDefinition)[], selections: ObjSet, columns: number) => {
+  renderOptions = (modifier_key: string, definitions: (EconomyDefinition | LawDefinition)[], selections: ObjSet, columns: number) => {
     return (
       <Table celled unstackable fixed>
         <Table.Body>
@@ -504,14 +480,29 @@ class Countries extends Component<IProps> {
   enableGeneralSelection = (key: string) => {
     const { enableGeneralSelection, abilities, clearGeneralSelections } = this.props
     abilities.forEach(abilities => {
-      const keys = abilities.options.map(ability => ABILITY_KEY + ability.name)
+      const keys = abilities.options.map(ability => ABILITY_KEY + ability.key)
       if (keys.includes(key))
         this.exec(clearGeneralSelections, keys)
     })
     this.exec(enableGeneralSelection, key)
   }
 
-  onTraitOrAbilityClick = (enabled: boolean) => enabled ? this.clearGeneralSelection : this.enableGeneralSelection
+  onGeneralItemClick = (enabled: boolean) => enabled ? this.clearGeneralSelection : this.enableGeneralSelection
+
+  clearCountrySelection = (key: string) => {
+    const { clearCountrySelection } = this.props
+    this.exec(clearCountrySelection, key)
+  }
+
+  enableCountrySelection = (key: string) => {
+    const { enableCountrySelection, heritages, clearCountrySelections } = this.props
+    const keys = heritages.map(heritage => heritage.key)
+    this.exec(clearCountrySelections, keys)
+    this.exec(enableCountrySelection, key)
+  }
+
+
+  onCountryItemClick = (enabled: boolean) => enabled ? this.clearCountrySelection : this.enableCountrySelection
 
   renderCell2 = (key: string, name: string | null, enabled: boolean, modifiers: Modifier[], onClick: (enabled: boolean) => ((key: string) => void), padding?: string, disabled?: boolean, width?: number) => (
     <Table.Cell
@@ -819,7 +810,7 @@ class Countries extends Component<IProps> {
 const mapStateToProps = (state: AppState) => ({
   traditions: state.data.traditions,
   trades: state.data.trades,
-  heritages: state.data.heritages,
+  heritages: heritages_ir,
   inventions: tech_ir,
   omens: state.data.omens,
   country_definition: state.countries[state.settings.country],

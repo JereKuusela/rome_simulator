@@ -9,6 +9,7 @@ const handleTraits = (results, data) => {
     const trait = data[key]
     const entity = {
       name,
+      key,
       modifiers: []
     }
     Object.keys(trait).forEach(key => {
@@ -17,19 +18,25 @@ const handleTraits = (results, data) => {
         return
       if (key === 'unit') {
         Object.keys(attribute).forEach(key => {
-          entity.modifiers.push(getModifier(key, attribute[key]))
+          const modifier = getModifier(key, attribute[key])
+          if (modifier.target !== 'Text')
+            entity.modifiers.push(modifier)
         })
         return
       }
-      if (getAttribute(key))
-        entity.modifiers.push(getModifier(key, attribute))
+      if (getAttribute(key)) {
+        const modifier = getModifier(key, attribute)
+        if (modifier.target !== 'Text')
+          entity.modifiers.push(modifier)
+
+      }
     })
     results[name] = entity
   })
 }
 
 const parsers = {
-  [path.join('ir', 'traits', '00_military.txt')]: handleTraits
+  [path.join('ir', 'traits')]: handleTraits
 }
 
 exports.run = () => parseFiles(parsers, undefined, path.join('ir', 'traits.json'))

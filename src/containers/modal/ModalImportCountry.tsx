@@ -11,6 +11,7 @@ import { AppState } from 'state'
 import { getDefaultUnits } from 'data'
 import AttributeImage from 'components/Utils/AttributeImage'
 import { toObj, toArr } from 'utils'
+import { heritages_ir, traits_ir } from 'managers/modifiers'
 
 type Entry<T extends Tag | Army> = {
   entity: T
@@ -165,7 +166,7 @@ class ModalImportCountry extends Component<IProps, IState> {
             Heritage
           </Table.Cell>
           <Table.Cell>
-            {entity.heritage}
+            {heritages_ir.find(heritage => heritage.key ===  entity.heritage)?.name}
           </Table.Cell>
         </Table.Row>
         <Table.Row>
@@ -258,7 +259,7 @@ class ModalImportCountry extends Component<IProps, IState> {
             {entity.leader ? <><AttributeImage attribute={GeneralAttribute.Martial} />{' ' + entity.leader.martial}</> : ''}
           </Table.Cell>
           <Table.Cell>
-            {entity.leader ? entity.leader.traits.join(', ') : ''}
+            {entity.leader ? entity.leader.traits.map(trait => traits_ir.find(item => item.key === trait)?.name).join(', ') : ''}
           </Table.Cell>
         </Table.Row>
         <Table.Row>
@@ -536,7 +537,7 @@ class ModalImportCountry extends Component<IProps, IState> {
         if (key === 'martial')
           character.martial = Number(value)
         if (key === 'traits')
-          character.traits = this.nonStringify(value).trim().split(' ').map(this.nonStringify).map(upperFirst)
+          character.traits = this.nonStringify(value).trim().split(' ').map(this.nonStringify)
       }
     }
     return character

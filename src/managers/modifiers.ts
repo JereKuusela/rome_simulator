@@ -1,6 +1,6 @@
-import { Modifier, ModifierType, Mode, ModifierWithKey, TechDefinitionEUIV, InventionDefinition, CountryAttribute, ValuesType, UnitAttribute, UnitType, AbilityDefinition, TraitDefinition, GeneralDefinition, CountryDefinition, GeneralAttribute } from 'types'
+import { Modifier, ModifierType, Mode, ModifierWithKey, TechDefinitionEUIV, InventionDefinition, CountryAttribute, ValuesType, UnitAttribute, UnitType, AbilityDefinition, TraitDefinition, GeneralDefinition, CountryDefinition, GeneralAttribute, HeritageDefinition } from 'types'
 import { getRootParent } from './units'
-import { getTechDefinitionsEUIV, getTechDefinitionsIR, getAbilityDefinitions, getTraitDefinitions } from 'data'
+import { getTechDefinitionsEUIV, getTechDefinitionsIR, getAbilityDefinitions, getTraitDefinitions, getHeritageDefinitions } from 'data'
 import { ObjSet } from 'utils'
 import { calculateValue } from 'definition_values'
 import { martialToCaptureChance } from './army'
@@ -8,7 +8,6 @@ import { martialToCaptureChance } from './army'
 /*
 const traditions = getTraditionDefinitions()
 const trades = getTradeDefinitions()
-const heritages = getHeritageDefinitions()
 const inventions = getInventionDefinitions()
 const omens = getOmenDefinitions()
 const economy = getEconomyDefinitions()
@@ -17,6 +16,7 @@ const ideas = getIdeaDefinitions()
 */
 export const abilities_ir = process.env.REACT_APP_GAME === 'ir' ? getAbilityDefinitions() : {} as AbilityDefinition[]
 export const traits_ir = process.env.REACT_APP_GAME === 'ir' ? getTraitDefinitions() : {} as TraitDefinition[]
+export const heritages_ir = process.env.REACT_APP_GAME === 'ir' ? getHeritageDefinitions() : {} as HeritageDefinition[]
 
 export const tech_ir = process.env.REACT_APP_GAME === 'ir' ? getTechDefinitionsIR() : {} as InventionDefinition[]
 export const tech_euiv = process.env.REACT_APP_GAME === 'euiv' ? getTechDefinitionsEUIV() : {} as TechDefinitionEUIV[]
@@ -92,11 +92,11 @@ const getTechModifiers = (modifiers: ModifierWithKey[], country: CountryDefiniti
   return modifiers
 }
 
-const getModifiersSub = (modifiers: ModifierWithKey[], selections: ObjSet, parentKey: string, entities: { name: string, modifiers: Modifier[] }[]) => {
+const getModifiersSub = (modifiers: ModifierWithKey[], selections: ObjSet, parentKey: string, entities: { name: string, key: string, modifiers: Modifier[] }[]) => {
   entities.forEach(entity => {
-    const key = parentKey + entity.name
+    const key = parentKey + entity.key
     if (selections[key])
-      modifiers.push(...mapModifiers(key, entity.modifiers))
+      modifiers.push(...mapModifiers(entity.name, entity.modifiers))
   })
 }
 
@@ -138,6 +138,11 @@ export const getCountryModifiers = (country: CountryDefinition): ModifierWithKey
   const modifiers: ModifierWithKey[] = []
   getTechModifiers(modifiers, country)
   getOfficeModifiers(modifiers, country)
+  if (process.env.REACT_APP_GAME === 'euiv') {
+  }
+  else {
+    getModifiersSub(modifiers, country.selections, '', heritages_ir)
+  }
   return modifiers
 }
 

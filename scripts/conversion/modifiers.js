@@ -132,12 +132,9 @@ const targets = {
   ['naval' + MOD_MORALE + MOD_MODIFIER]: NAVAL,
   ['navy' + MOD_MAINTENANCE]: NAVAL,
   ['ship' + MOD_COST]: NAVAL,
-  'ship_capture_chance': NAVAL
+  'ship_capture_chance': NAVAL,
+  'martial': GENERAL
 }
-
-generalStats.forEach(key => {
-  targets[key] = GENERAL
-})
 
 Object.keys(units).forEach(key => {
   const value = units[key]
@@ -289,6 +286,8 @@ exports.getType = key => types.has(key) ? MODIFIER : undefined
  * @param {string} value 
  */
 exports.getValue = (key, value) => {
+  if (Array.isArray(value))
+    value = value[0]
   switch (key) {
     case 'allow_unit_type':
     case 'enable_ability':
@@ -336,7 +335,7 @@ exports.getValue = (key, value) => {
     case 'support':
       return value === 'yes' ? 'Support' : ''
     default:
-      return value
+      return value === 'yes' ? 0 : value
   }
 }
 

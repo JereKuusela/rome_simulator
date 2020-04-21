@@ -64,6 +64,7 @@ export interface TradeDefinition {
 }
 export interface HeritageDefinition {
   name: string
+  key: string
   modifiers: Modifier[]
 }
 export interface InventionDefinition {
@@ -76,12 +77,14 @@ export interface OmenDefinition {
 }
 export interface TraitDefinition {
   name: string
+  key: string
   modifiers: Modifier[]
  }
 export interface LawDefinition {
   name: string
   options: {
     name: string
+    key: string
     modifiers: Modifier[]
   }[]
 }
@@ -89,6 +92,7 @@ export interface EconomyDefinition {
   name: string
   options: {
     name: string
+    key: string
     modifiers: Modifier[]
   }[]
 }
@@ -100,6 +104,7 @@ export interface AbilityDefinition {
   name: string
   options: {
     name: string
+    key: string
     modifiers: Modifier[]
   }[]
 }
