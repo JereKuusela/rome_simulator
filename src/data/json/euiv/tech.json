@@ -34,7 +34,7 @@
         },
         {
           "target": "Country",
-          "attribute": "Combat width",
+          "attribute": "Combat Width",
           "no_percent": true,
           "value": 5
         }
@@ -62,7 +62,7 @@
         },
         {
           "target": "Global",
-          "attribute": "Military tactics",
+          "attribute": "Military Tactics",
           "no_percent": true,
           "value": 0.25
         }
@@ -83,7 +83,7 @@
         },
         {
           "target": "Country",
-          "attribute": "Combat width",
+          "attribute": "Combat Width",
           "no_percent": true,
           "value": 2
         }
@@ -94,7 +94,7 @@
       "modifiers": [
         {
           "target": "Global",
-          "attribute": "Military tactics",
+          "attribute": "Military Tactics",
           "no_percent": true,
           "value": 0.25
         },
@@ -110,7 +110,7 @@
         },
         {
           "target": "Country",
-          "attribute": "Combat width",
+          "attribute": "Combat Width",
           "no_percent": true,
           "value": 2
         }
@@ -131,7 +131,7 @@
         },
         {
           "target": "Global",
-          "attribute": "Military tactics",
+          "attribute": "Military Tactics",
           "no_percent": true,
           "value": 0.25
         }
@@ -157,13 +157,13 @@
       "modifiers": [
         {
           "target": "Global",
-          "attribute": "Military tactics",
+          "attribute": "Military Tactics",
           "no_percent": true,
           "value": 0.25
         },
         {
           "target": "Country",
-          "attribute": "Combat width",
+          "attribute": "Combat Width",
           "no_percent": true,
           "value": 1
         }
@@ -195,7 +195,7 @@
         },
         {
           "target": "Country",
-          "attribute": "Combat width",
+          "attribute": "Combat Width",
           "no_percent": true,
           "value": 2
         }
@@ -206,7 +206,7 @@
       "modifiers": [
         {
           "target": "Global",
-          "attribute": "Military tactics",
+          "attribute": "Military Tactics",
           "no_percent": true,
           "value": 0.25
         }
@@ -237,7 +237,7 @@
         },
         {
           "target": "Country",
-          "attribute": "Combat width",
+          "attribute": "Combat Width",
           "no_percent": true,
           "value": 2
         }
@@ -254,7 +254,7 @@
         },
         {
           "target": "Global",
-          "attribute": "Military tactics",
+          "attribute": "Military Tactics",
           "no_percent": true,
           "value": 0.25
         }
@@ -275,7 +275,7 @@
         },
         {
           "target": "Country",
-          "attribute": "Combat width",
+          "attribute": "Combat Width",
           "no_percent": true,
           "value": 1
         }
@@ -302,7 +302,7 @@
         },
         {
           "target": "Country",
-          "attribute": "Combat width",
+          "attribute": "Combat Width",
           "no_percent": true,
           "value": 2
         }
@@ -313,7 +313,7 @@
       "modifiers": [
         {
           "target": "Global",
-          "attribute": "Military tactics",
+          "attribute": "Military Tactics",
           "no_percent": true,
           "value": 0.25
         }
@@ -329,7 +329,7 @@
         },
         {
           "target": "Country",
-          "attribute": "Combat width",
+          "attribute": "Combat Width",
           "no_percent": true,
           "value": 2
         }
@@ -340,7 +340,7 @@
       "modifiers": [
         {
           "target": "Global",
-          "attribute": "Military tactics",
+          "attribute": "Military Tactics",
           "no_percent": true,
           "value": 0.25
         },
@@ -371,7 +371,7 @@
         },
         {
           "target": "Country",
-          "attribute": "Combat width",
+          "attribute": "Combat Width",
           "no_percent": true,
           "value": 2
         }
@@ -387,7 +387,7 @@
         },
         {
           "target": "Global",
-          "attribute": "Military tactics",
+          "attribute": "Military Tactics",
           "no_percent": true,
           "value": 0.25
         },
@@ -404,13 +404,13 @@
       "modifiers": [
         {
           "target": "Global",
-          "attribute": "Military tactics",
+          "attribute": "Military Tactics",
           "no_percent": true,
           "value": 0.25
         },
         {
           "target": "Country",
-          "attribute": "Combat width",
+          "attribute": "Combat Width",
           "no_percent": true,
           "value": 2
         }
@@ -442,7 +442,7 @@
         },
         {
           "target": "Country",
-          "attribute": "Combat width",
+          "attribute": "Combat Width",
           "no_percent": true,
           "value": 2
         }
@@ -483,7 +483,7 @@
       "modifiers": [
         {
           "target": "Global",
-          "attribute": "Military tactics",
+          "attribute": "Military Tactics",
           "no_percent": true,
           "value": 0.25
         },
@@ -521,7 +521,7 @@
       "modifiers": [
         {
           "target": "Global",
-          "attribute": "Military tactics",
+          "attribute": "Military Tactics",
           "no_percent": true,
           "value": 0.25
         },

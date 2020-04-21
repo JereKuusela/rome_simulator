@@ -62,6 +62,8 @@ const attributes = {
   'defensive_shock': 'Defensive Shock Pips',
   'heavy': 'Heavy Ship',
   'light': 'Light Ship',
+  'is_flank': 'Role',
+  'support': 'Role',
   ['army' + MOD_MAINTENANCE]: MAINTENANCE,
   'army_weight_modifier': ATTRITION,
   'food_consumption': 'Food Consumption',
@@ -301,9 +303,9 @@ exports.getValue = (key, value) => {
     case 'unit_type':
       return exports.format(value)
     case 'is_flank':
-      return value === 'Yes' ? 'Flank' : ''
+      return value === 'yes' ? 'Flank' : ''
     case 'support':
-      return value === 'Yes' ? 'Support' : ''
+      return value === 'yes' ? 'Support' : ''
     default:
       return value
   }

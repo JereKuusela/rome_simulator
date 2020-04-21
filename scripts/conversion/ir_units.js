@@ -11,7 +11,7 @@ const handleUnit = (results, data) => {
     }
     Object.keys(values).forEach(key => {
       const value = values[key]
-      if (modifiers.getAttribute(key))
+      if (modifiers.getAttribute(key) && modifiers.getValue(key, value))
         unit[modifiers.getAttribute(key)] = modifiers.getValue(key, value)
     })
     results[type] = unit

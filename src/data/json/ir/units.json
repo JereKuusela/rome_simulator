@@ -21,6 +21,7 @@
     {
       "Type": "Camel Cavalry",
       "Mode": "Land",
+      "Role": "Flank",
       "Maneuver": 4,
       "Build Time": 40,
       "Light Infantry": 0.1,
@@ -96,6 +97,7 @@
     {
       "Type": "Horse Archers",
       "Mode": "Land",
+      "Role": "Flank",
       "Maneuver": 5,
       "Build Time": 60,
       "Light Infantry": 0.25,
@@ -117,6 +119,7 @@
     {
       "Type": "Light Cavalry",
       "Mode": "Land",
+      "Role": "Flank",
       "Maneuver": 3,
       "Build Time": 45,
       "Light Infantry": 0.25,
@@ -155,6 +158,7 @@
     {
       "Type": "Supply Train",
       "Mode": "Land",
+      "Role": "Support",
       "Maneuver": 1,
       "Build Time": 120,
       "Light Infantry": -0.9,
