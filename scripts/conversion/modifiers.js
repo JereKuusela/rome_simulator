@@ -52,6 +52,7 @@ const units = {
 
 /** @type {Object.<string, string>} */
 const attributes = {
+  'global_monthly_food_modifier': 'National Food',
   'attrition_weight': ATTRITION,
   'army': 'Mode',
   'category': PARENT,
@@ -163,7 +164,16 @@ const noPercents = new Set([
   'retreat_delay',
   'war_exhaustion',
   'global_building_slot',
-  'subject_loyalty'
+  'subject_loyalty',
+  'diplomatic_reputation',
+  'diplomatic_relations',
+  'subject_opinions',
+  'country_civilization_value',
+  'ruler_popularity_gain',
+  'governor_loyalty',
+  'global_capital_trade_routes',
+  'omen_power',
+  'loyalty_to_overlord'
 ])
 
 generalStats.forEach(key => {
@@ -181,13 +191,26 @@ const negatives = new Set([
   'navy' + MOD_MAINTENANCE,
   'naval_unit_attrition',
   'price_state_investment_military_cost_modifier',
+  'price_state_investment_oratory_cost_modifier',
+  'price_state_investment_civic_cost_modifier',
   'retreat_delay',
   'ship' + MOD_COST,
   'loyalty_gain_chance',
   'hold_triumph_cost_modifier',
   'war_exhaustion',
   'mercenary_land_maintenance_cost',
-  'recruit_mercenary_cost_modifier'
+  'recruit_mercenary_cost_modifier',
+  'loyalty_gain_chance_modifier',
+  'price_found_city_cost_modifier',
+  'agressive_expansion_impact',
+  'build_cost',
+  'war_score_cost',
+  'monthly_tyranny',
+  'enact_law_cost_modifier',
+  'stability_cost_modifier',
+  'increase_legitimacy_cost_modifier',
+  'loyalty_to_overlord',
+  'fortress_building_cost'
 ])
 
 Object.keys(units).forEach(key => {
@@ -226,16 +249,20 @@ exports.format = value => {
 
 /**
  * @param {string} key 
+ * @param {string} value 
  */
 exports.getAttribute = (key, value) => {
   if (key === 'mercenary_land_maintenance_cost')
     key = 'modifier_land_mercenary_maintenance_cost'
-  const attribute = attributes[key] || localizations[key] || localizations['modifier_' + key]
+  let attribute = attributes[key] || localizations['modifier_' + key] || localizations[key]
   switch (key) {
     case 'allow_unit_type':
     case 'enable_ability':
     case 'enable_tactic':
       return attribute.replace('$WHICH|Y$', attributes[value] || localizations[value])
+    // Units have different name for build cost.
+    case 'build_cost':
+      return value && value.gold ? attribute :  localizations['modifier_' + key] || localizations[key]
     default:
       return attribute
   }
@@ -267,13 +294,15 @@ exports.getValue = (key, value) => {
     case 'enable_ability':
     case 'enable_tactic':
       return 0
+    case 'omen_power':
+        return 100 * value
     case 'cohort_start_experience':
     case 'global_cohort_start_experience':
       return value * 0.01
     case 'army':
       return value === 'yes' ? 'Land' : 'Naval'
     case 'build_cost':
-      return value.gold
+      return value.gold || value
     case 'light_infantry':
     case 'heavy_infantry':
     case 'heavy_cavalry':

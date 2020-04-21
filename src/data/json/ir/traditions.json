@@ -727,7 +727,8 @@
                 {
                   "target": "Text",
                   "attribute": "Omen Power",
-                  "value": 0.15
+                  "no_percent": true,
+                  "value": 15
                 }
               ]
             },
@@ -974,7 +975,7 @@
               "modifiers": [
                 {
                   "target": "Text",
-                  "attribute": "War Exhaustion",
+                  "attribute": "Monthly War Exhaustion",
                   "no_percent": true,
                   "value": -0.01
                 }
@@ -1484,7 +1485,7 @@
               "modifiers": [
                 {
                   "target": "Text",
-                  "attribute": "War Exhaustion",
+                  "attribute": "Monthly War Exhaustion",
                   "no_percent": true,
                   "value": -0.01
                 }
@@ -2080,7 +2081,7 @@
                 },
                 {
                   "target": "Text",
-                  "attribute": "War Exhaustion",
+                  "attribute": "Monthly War Exhaustion",
                   "no_percent": true,
                   "value": -0.01
                 }
@@ -2228,7 +2229,8 @@
                 },
                 {
                   "target": "Text",
-                  "attribute": "Ruler Popularity Gain",
+                  "attribute": "Monthly Ruler Popularity Gain",
+                  "no_percent": true,
                   "value": 0.05
                 }
               ]

@@ -217,6 +217,7 @@ class ModalImportCountry extends Component<IProps, IState> {
           <Table.Cell colSpan='3'>
             {entity.laws.join(', ')}
           </Table.Cell>
+        </Table.Row>
         <Table.Row>
           <Table.Cell>
             Religion
@@ -230,7 +231,6 @@ class ModalImportCountry extends Component<IProps, IState> {
           <Table.Cell>
             Not implemented
           </Table.Cell>
-        </Table.Row>
         </Table.Row>
       </>
     )
@@ -427,7 +427,7 @@ class ModalImportCountry extends Component<IProps, IState> {
       // Index 9 is Roman special invention, others are military inventions.
       // Probably need to check what other special inventions do.
       if (key === 'active_inventions')
-        country.inventions = this.getTruthList(value).filter((_, index) => index === 9 || (75 < index && index < 138)).map(value => value)
+        country.inventions = this.getTruthList(value).filter((_, index) => index === 9 || (75 < index && index < 138))
       if (key === 'economic_policies') {
         const policies = this.getNumberList(value)
         country.armyMaintenance = policies[4]
@@ -582,7 +582,7 @@ class ModalImportCountry extends Component<IProps, IState> {
 
   getNumberList = (value: string) => this.nonStringify(value).trim().split(' ').map(Number)
 
-  getTruthList = (value: string) => this.nonStringify(value).trim().split(' ').map(Boolean)
+  getTruthList = (value: string) => this.nonStringify(value).trim().split(' ').map(value => Number(value) > 0)
 
   maintenanceToString = (value: number) => {
     switch (value) {

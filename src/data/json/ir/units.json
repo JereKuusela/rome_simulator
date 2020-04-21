@@ -13,7 +13,7 @@
       "Supply Train": 1,
       "Attrition Weight": -0.1,
       "Morale Damage Taken": 0.25,
-      "Cost": 6,
+      "Build Cost": 6,
       "Food Consumption": 0.1,
       "Food Storage": 2.4,
       "Parent": "Land Unit"
@@ -31,7 +31,7 @@
       "War Elephants": -0.5,
       "Horse Archers": 0.1,
       "Archers": 0.1,
-      "Cost": 13,
+      "Build Cost": 13,
       "Supply Train": 1,
       "Food Consumption": 0.2,
       "Food Storage": 3.6,
@@ -50,7 +50,7 @@
       "Archers": 0.2,
       "Light Cavalry": 0.1,
       "Camel Cavalry": -0.1,
-      "Cost": 6,
+      "Build Cost": 6,
       "Supply Train": 1,
       "Food Consumption": 0.2,
       "Food Storage": 2.4,
@@ -70,7 +70,7 @@
       "Archers": 0.5,
       "Supply Train": 1,
       "Attrition Weight": 1,
-      "Cost": 14,
+      "Build Cost": 14,
       "Food Consumption": 0.25,
       "Food Storage": 2.4,
       "Parent": "Land Unit"
@@ -89,7 +89,7 @@
       "Supply Train": 1,
       "Attrition Weight": 0.5,
       "Morale Damage Taken": -0.1,
-      "Cost": 14,
+      "Build Cost": 14,
       "Food Consumption": 0.2,
       "Food Storage": 2.4,
       "Parent": "Land Unit"
@@ -111,7 +111,7 @@
       "Supply Train": 1,
       "Attrition Weight": 0.5,
       "Morale Damage Taken": 0.25,
-      "Cost": 14,
+      "Build Cost": 14,
       "Food Consumption": 0.25,
       "Food Storage": 3,
       "Parent": "Land Unit"
@@ -131,7 +131,7 @@
       "Archers": 0.25,
       "Supply Train": 1,
       "Attrition Weight": 0.5,
-      "Cost": 7,
+      "Build Cost": 7,
       "Food Consumption": 0.25,
       "Food Storage": 2.4,
       "Parent": "Land Unit"
@@ -152,7 +152,7 @@
       "Food Consumption": 0.1,
       "Food Storage": 2.4,
       "Morale Damage Taken": -0.25,
-      "Cost": 6,
+      "Build Cost": 6,
       "Parent": "Land Unit"
     },
     {
@@ -173,7 +173,7 @@
       "Food Consumption": 0.05,
       "Food Storage": 50,
       "Morale Damage Taken": 1,
-      "Cost": 16,
+      "Build Cost": 16,
       "Parent": "Land Unit"
     },
     {
@@ -192,7 +192,7 @@
       "Attrition Weight": 2,
       "Strength Damage Taken": -0.5,
       "Morale Damage Taken": 0.2,
-      "Cost": 26,
+      "Build Cost": 26,
       "Food Consumption": 0.3,
       "Food Storage": 1,
       "Parent": "Land Unit"
@@ -209,7 +209,7 @@
       "Hexere": -0.35,
       "Octere": -0.4,
       "Mega-Polyreme": -0.5,
-      "Cost": 5
+      "Build Cost": 5
     },
     {
       "Type": "Trireme",
@@ -223,7 +223,7 @@
       "Hexere": -0.1,
       "Octere": -0.2,
       "Mega-Polyreme": -0.2,
-      "Cost": 8
+      "Build Cost": 8
     },
     {
       "Type": "Tetrere",
@@ -235,7 +235,7 @@
       "Trireme": 0.1,
       "Octere": -0.1,
       "Mega-Polyreme": -0.1,
-      "Cost": 10
+      "Build Cost": 10
     },
     {
       "Type": "Hexere",
@@ -250,7 +250,7 @@
       "Tetrere": 0.05,
       "Octere": -0.1,
       "Mega-Polyreme": -0.1,
-      "Cost": 15
+      "Build Cost": 15
     },
     {
       "Type": "Octere",
@@ -263,7 +263,7 @@
       "Tetrere": 0.1,
       "Hexere": 0.1,
       "Mega-Polyreme": -0.1,
-      "Cost": 25
+      "Build Cost": 25
     },
     {
       "Type": "Mega-Polyreme",
@@ -277,7 +277,7 @@
       "Tetrere": 0.2,
       "Hexere": 0.2,
       "Octere": 0.1,
-      "Cost": 32
+      "Build Cost": 32
     }
   ]
 }
