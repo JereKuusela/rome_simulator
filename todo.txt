@@ -12,10 +12,18 @@ Changelog:
   - Added a tooltip to the winrate button and result.
   - Added delays to most tooltips to prevent them flickering when moving mouse.
 
+Analyze:
+  - Added stack wipe chance to statistics.
+
 Combat:
   - Morale and strength no longer go below zero. This fixes slightly inflated losses on Analyze tool.
   - Added checks for different stack wipes (no deploy, 10/1 limit, 2/1 limit on no retreat).
   - Fixed EUIV combat having dice rolls from 1 to 9 instead of from 0 to 9. This doesn't affect combat calculations that much but will slow down Analyze page because of more simulations.
+
+Countries:
+  - Created a parser which converts Imperator data files to a format suitable for the simulator. This makes maintenaning much easier and data much more accurate.
+  - Added new heritages.
+  - Added all general traits which affect combat (mainly health traits which reduce martial).
 
 Testing:
   - Added unit tests to verify that most mechanics works as intended.
@@ -23,7 +31,7 @@ Testing:
 
 Refactor:
   - Invalidate is now done automatically for all non-UI actions. Removes lots of low value code.
-  - Accordiong toggling moved under UI actions.
+  - Accordion toggling moved under UI actions.
 
 TODO:
 

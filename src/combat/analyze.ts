@@ -4,11 +4,11 @@ import { mapRange } from 'utils'
 import { deploy } from './deployment'
 
 export const initResourceLosses = (): ResourceLosses => ({
-  repair_maintenance: 0,
-  destroyed_cost: 0,
-  captured_cost: 0,
-  seized_cost: 0,
-  seized_repair_maintenance: 0,
+  repairMaintenance: 0,
+  destroyedCost: 0,
+  capturedCost: 0,
+  seizedCost: 0,
+  seizedRepairMaintenance: 0,
 })
 
 let interruptSimulation = false
@@ -36,7 +36,8 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
     draws: 0.0,
     progress: 0.0,
     iterations: 0,
-    average_rounds: 0,
+    averageRounds: 0,
+    stackWipes: 0,
     rounds: {}
   }
   interruptSimulation = false
@@ -44,8 +45,8 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
   const losses_a = initResourceLosses()
   const losses_d = initResourceLosses()
   const resurce_losses: ResourceLossesProgress = {
-    losses_a,
-    losses_d
+    lossesA: losses_a,
+    lossesD: losses_d
   }
 
   // Performance is critical. Precalculate as many things as possible.
@@ -64,18 +65,18 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
   sumState(total_d, defender.cohorts)
 
   const casualties: CasualtiesProgress = {
-    avg_morale_a: 0,
-    avg_morale_d: 0,
-    avg_strength_a: 0,
-    avg_strength_d: 0,
-    max_morale_a: total_a.morale,
-    max_morale_d: total_d.morale,
-    max_strength_a: total_a.strength,
-    max_strength_d: total_d.strength,
-    morale_a: {},
-    morale_d: {},
-    strength_a: {},
-    strength_d: {}
+    avgMoraleA: 0,
+    avgMoraleD: 0,
+    avgStrengthA: 0,
+    avgStrengthD: 0,
+    maxMoraleA: total_a.morale,
+    maxMoraleD: total_d.morale,
+    maxStrengthA: total_a.strength,
+    maxStrengthD: total_d.strength,
+    moraleA: {},
+    moraleD: {},
+    strengthA: {},
+    strengthD: {}
   }
 
   // Deployment is shared for each iteration.
@@ -95,6 +96,7 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
   const nodes = [{ status_a: attacker.cohorts, status_d: defender.cohorts, branch: 0, depth: 1 }]
 
   progressCallback(progress, casualties, resurce_losses)
+  console.log(fractions)
 
   const work = () => {
     for (let i = 0; (i < chunkSize) && nodes.length && !interruptSimulation; i++) {
@@ -137,7 +139,7 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
         calculateResourceLoss(attacker.cohorts.frontline, attacker.cohorts.defeated, fractions[depth], losses_a, losses_d, attacker.unit_types, defender.unit_types)
         calculateResourceLoss(defender.cohorts.frontline, defender.cohorts.defeated, fractions[depth], losses_d, losses_a, defender.unit_types, attacker.unit_types)
       }
-      updateProgress(progress, fractions[depth], result)
+      updateProgress(progress, fractions[depth], result, current_a.strength === 0 || current_d.strength === 0)
     }
     if (!nodes.length) {
       progress.calculating = false
@@ -213,32 +215,33 @@ const calculateResourceLoss = (frontline: CombatFrontline, defeated: CombatDefea
       const unit = frontline[i][j]
       if (!unit)
         continue
-      own.repair_maintenance += amount * (unit.definition.max_strength - unit[UnitAttribute.Strength]) * unit.definition[UnitAttribute.Maintenance] * unit.definition[UnitAttribute.Cost] / REPAIR_PER_MONTH
+      own.repairMaintenance += amount * (unit.definition.max_strength - unit[UnitAttribute.Strength]) * unit.definition[UnitAttribute.Maintenance] * unit.definition[UnitAttribute.Cost] / REPAIR_PER_MONTH
     }
   }
   for (let i = 0; i < defeated.length; i++) {
     const unit = defeated[i]
     const unit_cost = amount * unit.definition[UnitAttribute.Cost]
+    console.log(unit.definition[UnitAttribute.Cost])
     if (unit.state.is_destroyed) {
-      own.destroyed_cost += unit_cost
+      own.destroyedCost += unit_cost
       continue
     }
     const capture = (unit.state.capture_chance ?? 0.0) - unit.definition[UnitAttribute.CaptureResist]
     const repair = (unit.definition.max_strength - unit[UnitAttribute.Strength]) * unit.definition[UnitAttribute.Maintenance] * unit_cost / REPAIR_PER_MONTH
     if (capture <= 0.0) {
-      own.repair_maintenance += repair
+      own.repairMaintenance += repair
       continue
     }
     // If captured then the unit doesn't have to be repaired.
-    own.repair_maintenance += (1 - capture) * repair
+    own.repairMaintenance += (1 - capture) * repair
     // If captured then the full cost of unit is lost.
-    own.captured_cost += capture * unit_cost
+    own.capturedCost += capture * unit_cost
     const enemy_unit_cost = amount * (unit.definition[UnitAttribute.Cost] - own_types[unit.definition.type][UnitAttribute.Cost] + enemy_types[unit.definition.type][UnitAttribute.Cost])
     const enemy_repair = (unit.definition.max_strength - unit[UnitAttribute.Strength]) * (unit.definition[UnitAttribute.Maintenance] - own_types[unit.definition.type][UnitAttribute.Maintenance] + enemy_types[unit.definition.type][UnitAttribute.Maintenance]) * enemy_unit_cost / REPAIR_PER_MONTH
     // If captured then the enemy gainst full cost of the unit.
-    enemy.seized_cost -= capture * enemy_unit_cost
+    enemy.seizedCost -= capture * enemy_unit_cost
     // But enemy also has to repair the unit.
-    enemy.seized_repair_maintenance += capture * enemy_repair
+    enemy.seizedRepairMaintenance += capture * enemy_repair
   }
 }
 
@@ -311,7 +314,7 @@ const sumState = (state: State, units: CombatCohorts) => {
 /**
  * Updates progress of the calculation.
  */
-const updateProgress = (progress: WinRateProgress, amount: number, result: { winner: Winner, round: number }) => {
+const updateProgress = (progress: WinRateProgress, amount: number, result: { winner: Winner, round: number }, stackWipe: boolean) => {
   const { winner, round } = result
   progress.progress += amount
   if (winner === Side.Attacker)
@@ -322,7 +325,9 @@ const updateProgress = (progress: WinRateProgress, amount: number, result: { win
     progress.draws += amount
   else
     progress.incomplete += amount
-  progress.average_rounds += amount * round
+  if (stackWipe)
+    progress.stackWipes += amount
+  progress.averageRounds += amount * round
   progress.rounds[round] = (progress.rounds[round] || 0) + amount
 }
 
@@ -330,17 +335,17 @@ const updateProgress = (progress: WinRateProgress, amount: number, result: { win
  * Updates casualties of the calculation.
  */
 const updateCasualties = (casualties: CasualtiesProgress, amount: number, total_a: State, total_d: State, current_a: State, current_d: State) => {
-  casualties.avg_morale_a += (total_a.morale - current_a.morale) * amount
-  casualties.avg_morale_d += (total_d.morale - current_d.morale) * amount
-  casualties.avg_strength_a += (total_a.strength - current_a.strength) * amount
-  casualties.avg_strength_d += (total_d.strength - current_d.strength) * amount
+  casualties.avgMoraleA += (total_a.morale - current_a.morale) * amount
+  casualties.avgMoraleD += (total_d.morale - current_d.morale) * amount
+  casualties.avgStrengthA += (total_a.strength - current_a.strength) * amount
+  casualties.avgStrengthD += (total_d.strength - current_d.strength) * amount
 
   const morale_a = (Math.max(0, current_a.morale)).toFixed(1)
   const morale_d = (Math.max(0, current_d.morale)).toFixed(1)
   const strength_a = (Math.max(0, current_a.strength)).toFixed(2)
   const strength_d = (Math.max(0, current_d.strength)).toFixed(2)
-  casualties.morale_a[morale_a] = (casualties.morale_a[morale_a] || 0) + amount
-  casualties.morale_d[morale_d] = (casualties.morale_d[morale_d] || 0) + amount
-  casualties.strength_a[strength_a] = (casualties.strength_a[strength_a] || 0) + amount
-  casualties.strength_d[strength_d] = (casualties.strength_d[strength_d] || 0) + amount
+  casualties.moraleA[morale_a] = (casualties.moraleA[morale_a] || 0) + amount
+  casualties.moraleD[morale_d] = (casualties.moraleD[morale_d] || 0) + amount
+  casualties.strengthA[strength_a] = (casualties.strengthA[strength_a] || 0) + amount
+  casualties.strengthD[strength_d] = (casualties.strengthD[strength_d] || 0) + amount
 }

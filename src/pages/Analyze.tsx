@@ -16,18 +16,19 @@ import HelpTooltip from 'components/HelpTooltip'
 interface Props { }
 
 interface IState extends CasualtiesProgress {
-  attacker_win_chance: number
-  defender_win_chance: number
+  attackerWinChance: number
+  defenderWinChance: number
   incomplete: number
   draws: number
   calculating: boolean
   iterations: number
   updates: number
   progress: number
-  average_rounds: number
+  averageRounds: number
+  stackWipes: number
   rounds: { [key: number]: number }
-  losses_a: ResourceLosses
-  losses_d: ResourceLosses
+  lossesA: ResourceLosses
+  lossesD: ResourceLosses
 }
 
 const DOTS = 6
@@ -41,10 +42,10 @@ class Analyze extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
-      attacker_win_chance: 0, defender_win_chance: 0, incomplete: 0, calculating: false, progress: 0, updates: 0,
-      average_rounds: 0, rounds: {}, iterations: 0, draws: 0,
-      avg_morale_a: 0, avg_morale_d: 0, avg_strength_a: 0, avg_strength_d: 0, max_morale_a: 1, max_morale_d: 1, max_strength_a: 1, max_strength_d: 1,
-      morale_a: {}, morale_d: {}, strength_a: {}, strength_d: {}, losses_a: initResourceLosses(), losses_d: initResourceLosses()
+      attackerWinChance: 0, defenderWinChance: 0, incomplete: 0, calculating: false, progress: 0, updates: 0,
+      averageRounds: 0, rounds: {}, iterations: 0, draws: 0, stackWipes: 0,
+      avgMoraleA: 0, avgMoraleD: 0, avgStrengthA: 0, avgStrengthD: 0, maxMoraleA: 1, maxMoraleD: 1, maxStrengthA: 1, maxStrengthD: 1,
+      moraleA: {}, moraleD: {}, strengthA: {}, strengthD: {}, lossesA: initResourceLosses(), lossesD: initResourceLosses()
     }
   }
 
@@ -133,7 +134,7 @@ class Analyze extends Component<IProps, IState> {
   }
 
   renderWinchance = () => {
-    const { attacker_win_chance, defender_win_chance, incomplete, draws, average_rounds } = this.state
+    const { attackerWinChance, defenderWinChance, incomplete, draws, averageRounds, stackWipes } = this.state
     return (
       <Table>
         <Table.Header>
@@ -153,15 +154,18 @@ class Analyze extends Component<IProps, IState> {
             <Table.HeaderCell>
               Average rounds
             </Table.HeaderCell>
+            <Table.HeaderCell>
+              Stack wipes
+            </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
           <Table.Row>
             <Table.Cell>
-              {this.toPercent(this.scale(attacker_win_chance))}
+              {this.toPercent(this.scale(attackerWinChance))}
             </Table.Cell>
             <Table.Cell>
-              {this.toPercent(this.scale(defender_win_chance))}
+              {this.toPercent(this.scale(defenderWinChance))}
             </Table.Cell>
             <Table.Cell>
               {this.toPercent(this.scale(draws))}
@@ -170,7 +174,10 @@ class Analyze extends Component<IProps, IState> {
               {this.toPercent(this.scale(incomplete))}
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(average_rounds))}
+              {this.toNumber(this.scale(averageRounds))}
+            </Table.Cell>
+            <Table.Cell>
+              {this.toPercent(this.scale(stackWipes))}
             </Table.Cell>
           </Table.Row>
         </Table.Body>
@@ -179,7 +186,7 @@ class Analyze extends Component<IProps, IState> {
   }
 
   renderCasualties = () => {
-    const { avg_morale_a, avg_morale_d, avg_strength_a, avg_strength_d, max_morale_a, max_morale_d, max_strength_a, max_strength_d } = this.state
+    const { avgMoraleA, avgMoraleD, avgStrengthA, avgStrengthD, maxMoraleA, maxMoraleD, maxStrengthA, maxStrengthD } = this.state
     return (
       <Table>
         <Table.Header>
@@ -201,16 +208,16 @@ class Analyze extends Component<IProps, IState> {
         <Table.Body>
           <Table.Row>
             <Table.Cell>
-              {this.toNumber(this.scale(avg_morale_a)) + ' (' + this.toPercent(this.scale(avg_morale_a / max_morale_a)) + ')'}
+              {this.toNumber(this.scale(avgMoraleA)) + ' (' + this.toPercent(this.scale(avgMoraleA / maxMoraleA)) + ')'}
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(avg_strength_a)) + ' (' + this.toPercent(this.scale(avg_strength_a / max_strength_a)) + ')'}
+              {this.toNumber(this.scale(avgStrengthA)) + ' (' + this.toPercent(this.scale(avgStrengthA / maxStrengthA)) + ')'}
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(avg_morale_d)) + ' (' + this.toPercent(this.scale(avg_morale_d / max_morale_d)) + ')'}
+              {this.toNumber(this.scale(avgMoraleD)) + ' (' + this.toPercent(this.scale(avgMoraleD / maxMoraleD)) + ')'}
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(avg_strength_d)) + ' (' + this.toPercent(this.scale(avg_strength_d / max_strength_d)) + ')'}
+              {this.toNumber(this.scale(avgStrengthD)) + ' (' + this.toPercent(this.scale(avgStrengthD / maxStrengthD)) + ')'}
             </Table.Cell>
           </Table.Row>
         </Table.Body>
@@ -219,7 +226,7 @@ class Analyze extends Component<IProps, IState> {
   }
 
   renderResourceLosses = () => {
-    const { losses_a, losses_d } = this.state
+    const { lossesA, lossesD } = this.state
     const resource = ' gold'
     return (
       <Table>
@@ -243,10 +250,10 @@ class Analyze extends Component<IProps, IState> {
               <HelpTooltip value='Cost of destroyed units' formula='sum(cost)' />
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(losses_a.destroyed_cost))}{resource}
+              {this.toNumber(this.scale(lossesA.destroyedCost))}{resource}
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(losses_d.destroyed_cost))}{resource}
+              {this.toNumber(this.scale(lossesD.destroyedCost))}{resource}
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -255,10 +262,10 @@ class Analyze extends Component<IProps, IState> {
               <HelpTooltip value='Maintenance cost of repairs for non-captured units' formula='sum((1 - capture%) * maintenance * damage / 10%)' />
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(losses_a.repair_maintenance))}{resource}
+              {this.toNumber(this.scale(lossesA.repairMaintenance))}{resource}
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(losses_d.repair_maintenance))}{resource}
+              {this.toNumber(this.scale(lossesD.repairMaintenance))}{resource}
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -267,10 +274,10 @@ class Analyze extends Component<IProps, IState> {
               <HelpTooltip value='Cost of captured units' formula='sum(capture% * cost)' />
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(losses_a.captured_cost))}{resource}
+              {this.toNumber(this.scale(lossesA.capturedCost))}{resource}
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(losses_d.captured_cost))}{resource}
+              {this.toNumber(this.scale(lossesD.capturedCost))}{resource}
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -279,10 +286,10 @@ class Analyze extends Component<IProps, IState> {
               <HelpTooltip value='Cost of captured enemy units' formula='sum(capture% * -cost)' />
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(losses_a.seized_cost))}{resource}
+              {this.toNumber(this.scale(lossesA.seizedCost))}{resource}
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(losses_d.seized_cost))}{resource}
+              {this.toNumber(this.scale(lossesD.seizedCost))}{resource}
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -291,10 +298,10 @@ class Analyze extends Component<IProps, IState> {
               <HelpTooltip value='Repair cost of captured enemy units' formula='sum(capture% * maintenance * damage / 10%)' />
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(losses_a.seized_repair_maintenance))}{resource}
+              {this.toNumber(this.scale(lossesA.seizedRepairMaintenance))}{resource}
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(losses_d.seized_repair_maintenance))}{resource}
+              {this.toNumber(this.scale(lossesD.seizedRepairMaintenance))}{resource}
             </Table.Cell>
           </Table.Row>
           <Table.Row>
@@ -303,10 +310,10 @@ class Analyze extends Component<IProps, IState> {
               <HelpTooltip value='Total cost of all gains and losses' />
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(losses_a.destroyed_cost + losses_a.repair_maintenance + losses_a.captured_cost + losses_a.seized_cost + losses_a.seized_repair_maintenance))}{resource}
+              {this.toNumber(this.scale(lossesA.destroyedCost + lossesA.repairMaintenance + lossesA.capturedCost + lossesA.seizedCost + lossesA.seizedRepairMaintenance))}{resource}
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(losses_d.destroyed_cost + losses_d.repair_maintenance + losses_d.captured_cost + losses_d.seized_cost + losses_d.seized_repair_maintenance))}{resource}
+              {this.toNumber(this.scale(lossesD.destroyedCost + lossesD.repairMaintenance + lossesD.capturedCost + lossesD.seizedCost + lossesD.seizedRepairMaintenance))}{resource}
             </Table.Cell>
           </Table.Row>
         </Table.Body>
@@ -315,7 +322,7 @@ class Analyze extends Component<IProps, IState> {
   }
 
   renderGraphs = () => {
-    const { progress, rounds, morale_a, morale_d, max_morale_a, max_morale_d, strength_a, strength_d, max_strength_a, max_strength_d } = this.state
+    const { progress, rounds, moraleA, moraleD, maxMoraleA, maxMoraleD, strengthA, strengthD, maxStrengthA, maxStrengthD } = this.state
     return (
       <Grid>
         <Grid.Row columns='2'>
@@ -329,13 +336,13 @@ class Analyze extends Component<IProps, IState> {
           <Grid.Column>
             <CumulativePercentChart
               progress={progress} type='morale'
-              a={morale_a} d={morale_d} max_a={max_morale_a} max_d={max_morale_d}
+              a={moraleA} d={moraleD} maxA={maxMoraleA} maxD={maxMoraleD}
             />
           </Grid.Column>
           <Grid.Column>
             <CumulativePercentChart
               progress={progress} type='strength'
-              a={strength_a} d={strength_d} max_a={max_strength_a} max_d={max_strength_d}
+              a={strengthA} d={strengthD} maxA={maxStrengthA} maxD={maxStrengthD}
             />
           </Grid.Column>
         </Grid.Row>
@@ -346,16 +353,17 @@ class Analyze extends Component<IProps, IState> {
   update = (update: WinRateProgress, casualties: CasualtiesProgress, resources: ResourceLossesProgress) => {
     if (this.willUnmount)
       return
-    const { attacker, defender, incomplete, progress, average_rounds, rounds, iterations, calculating, draws } = update
+    const { attacker, defender, incomplete, progress, averageRounds, rounds, iterations, calculating, draws, stackWipes } = update
     this.setState({
-      attacker_win_chance: attacker,
-      defender_win_chance: defender,
+      attackerWinChance: attacker,
+      defenderWinChance: defender,
       incomplete,
       draws,
-      average_rounds,
-      progress: progress,
+      averageRounds,
+      progress,
       calculating,
       rounds,
+      stackWipes,
       iterations,
       updates: calculating ? (this.state.updates + 1) % DOTS : 0,
       ...casualties,

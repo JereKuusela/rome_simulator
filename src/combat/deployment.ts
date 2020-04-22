@@ -68,7 +68,6 @@ const deployCohorts = (cohorts: CombatCohorts, settings: Settings, preferences?:
   if (frontline.length % 2)
     flank_starting_index = left_flank >= right_flank ? left_flank - 1 : frontline.length - right_flank
   const deploy_support = !settings[Setting.SupportPhase] || (reserve.front.length === 0 && reserve.flank.length === 0 && !frontline.some(cohort => cohort))
-  console.log(deploy_support)
   const max_support_backline = Math.floor(reserveSize(reserve) / 2)
   if (backline)
     deployBoth(reserve.support, backline, center, max_support_backline, settings, preferences)

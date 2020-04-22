@@ -38,8 +38,8 @@ const handleUnit = (results, data, filename) => {
     const value = data[key]
     if (key === 'maneuver')
       return
-    if (modifiers.getAttribute(key))
-      unit[modifiers.getAttribute(key)] = modifiers.getValue(key, value)
+    if (modifiers.getAttribute(key, value))
+      unit[modifiers.getAttribute(key, value)] = modifiers.getValue(key, value)
   })
   if (!unit.Parent)
     return

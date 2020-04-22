@@ -9,34 +9,35 @@ export interface WinRateProgress {
   progress: number
   draws: number
   iterations: number
-  average_rounds: number,
+  averageRounds: number
+  stackWipes: number
   rounds: { [key: number]: number }
 }
 
 export interface CasualtiesProgress {
-  avg_morale_a: number
-  avg_strength_a: number
-  avg_morale_d: number
-  avg_strength_d: number
-  max_morale_a: number
-  max_strength_a: number
-  max_morale_d: number
-  max_strength_d: number
-  morale_a: { [key: string]: number }
-  morale_d: { [key: string]: number }
-  strength_a: { [key: string]: number }
-  strength_d: { [key: string]: number }
+  avgMoraleA: number
+  avgStrengthA: number
+  avgMoraleD: number
+  avgStrengthD: number
+  maxMoraleA: number
+  maxStrengthA: number
+  maxMoraleD: number
+  maxStrengthD: number
+  moraleA: { [key: string]: number }
+  moraleD: { [key: string]: number }
+  strengthA: { [key: string]: number }
+  strengthD: { [key: string]: number }
 }
 
 export interface ResourceLossesProgress {
-  losses_a: ResourceLosses
-  losses_d: ResourceLosses
+  lossesA: ResourceLosses
+  lossesD: ResourceLosses
 }
 
 export type ResourceLosses = {
-  repair_maintenance: number
-  destroyed_cost: number
-  captured_cost: number
-  seized_cost: number
-  seized_repair_maintenance: number
+  repairMaintenance: number
+  destroyedCost: number
+  capturedCost: number
+  seizedCost: number
+  seizedRepairMaintenance: number
 }

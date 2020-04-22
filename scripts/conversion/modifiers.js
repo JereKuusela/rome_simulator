@@ -262,8 +262,8 @@ exports.getAttribute = (key, value) => {
     case 'enable_tactic':
       return attribute.replace('$WHICH|Y$', attributes[value] || localizations[value])
     // Units have different name for build cost.
-    case 'build_cost':
-      return value && value.gold ? attribute : localizations['modifier_' + key] || localizations[key]
+    case 'build' + MOD_COST:
+      return value && value.gold ? attributes[key] : localizations['modifier_' + key] || localizations[key]
     default:
       return attribute
   }

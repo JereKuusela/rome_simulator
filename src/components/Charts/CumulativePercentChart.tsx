@@ -11,8 +11,8 @@ import { Side } from 'types'
 interface IProps {
   a: { [key: string]: number }
   d: { [key: string]: number }
-  max_a: number
-  max_d: number
+  maxA: number
+  maxD: number
   progress: number
   type: string
 }
@@ -61,11 +61,11 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
   }
 
   render() {
-    const { a, d, max_a, max_d, type, progress } = this.props
+    const { a, d, maxA, maxD, type, progress } = this.props
     const { label } = this.state
 
-    const data_a = this.calculate(a, max_a, progress, true)
-    const data_d = this.calculate(d, max_d, progress, false)
+    const dataA = this.calculate(a, maxA, progress, true)
+    const dataD = this.calculate(d, maxD, progress, false)
 
     const ticks = mapRange(9, value => value / 4)
 
@@ -83,7 +83,7 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
           />
           <VictoryArea
             interpolation='natural'
-            data={data_a.cumulative}
+            data={dataA.cumulative}
             style={{
               data: { fill: '#FFAA00AA' }
             }}
@@ -91,7 +91,7 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
           />
           <VictoryArea
             interpolation='natural'
-            data={data_a.percent}
+            data={dataA.percent}
             style={{
               data: { fill: '#FFAA00' }
             }}
@@ -99,7 +99,7 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
           />
           <VictoryArea
             interpolation='natural'
-            data={data_d.cumulative}
+            data={dataD.cumulative}
             style={{
               data: { fill: '#00AAFFAA' }
             }}
@@ -107,7 +107,7 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
           />
           <VictoryArea
             interpolation='natural'
-            data={data_d.percent}
+            data={dataD.percent}
             style={{
               data: { fill: '#00AAFF' }
             }}
