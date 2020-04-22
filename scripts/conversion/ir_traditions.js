@@ -22,9 +22,10 @@ const handleTraditions = (results, data) => {
         traditions
       }
     })
-    const type = getAttribute(key).split(' ')[0]
-    results[type] = {
-      type,
+    const name = getAttribute(key).split(' ')[0]
+    results[name] = {
+      name,
+      key,
       modifiers: Object.keys(tradition.start).map(key => core.getModifier(key, tradition.start[key])),
       paths
     }

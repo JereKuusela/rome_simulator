@@ -31,7 +31,7 @@ const getEconomyData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(ec
 const getIdeaData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(ideaData.ideas) : [] as IdeaData[]
 const getAbilityData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(abilityData.abilities) : [] as AbilityData[]
 
-type Traditions = { [key in CultureType]: TraditionDefinition }
+export type Traditions = { [key in CultureType ]: TraditionDefinition }
 type Omens = { [key in ReligionType]: OmenDefinition[] }
 
 const setDefault = (modifier: Modifier) => {
@@ -45,7 +45,7 @@ export const getTechDefinitionsEUIV = () => {
 }
 
 export const getTraditionDefinitions = () => {
-  const data = toObj(sortBy<TraditionData>(getTraditionData(), value => value.type), value => value.type) as Traditions
+  const data = toObj(sortBy<TraditionData>(getTraditionData(), value => value.name), value => value.key) as Traditions
   forEach(data, tradition => tradition.modifiers.forEach(modifier => setDefault(modifier)))
   forEach(data, tradition => tradition.paths.forEach(path => path.traditions.forEach(tradition => tradition.modifiers.forEach(modifier => setDefault(modifier)))))
   return data
@@ -112,7 +112,8 @@ interface ModifierData {
 }
 
 interface TraditionData {
-  type: string
+  name: string
+  key: string
   modifiers: ModifierData[]
   paths: {
     name: string

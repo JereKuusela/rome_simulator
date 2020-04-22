@@ -1,10 +1,14 @@
-import { Countries, CountryName, CountryDefinition, GovermentType, ReligionType, CultureType, CountryAttribute, ValuesType, WearinessAttribute, Country, isAttributeEnabled, ModifierWithKey, SiteSettings, ModifierType } from 'types'
+import { Countries, CountryName, CountryDefinition, GovermentType, ReligionType, CultureType, CountryAttribute, ValuesType, WearinessAttribute, Country, isAttributeEnabled, ModifierWithKey, SiteSettings, ModifierType, SelectionType, Selections } from 'types'
 import { defaultCountry, getDefaultUnits } from 'data'
 import { addValuesWithMutate, clearAllValuesWithMutate, calculateValue, addValue } from 'definition_values'
 import { toObj, values } from 'utils'
 
 export const createCountry = (countries: Countries, country: CountryName, source_country?: CountryName) => {
   countries[country] = source_country ? countries[source_country] : defaultCountry
+}
+
+export const importCountry = (countries: Countries, name: CountryName, country: CountryDefinition) => {
+  countries[name] = country
 }
 
 export const deleteCountry = (countries: Countries, country: CountryName) => {
@@ -36,24 +40,29 @@ export const selectCulture = (country: CountryDefinition, culture: CultureType, 
   country.units = getDefaultUnits(load_all_units ? undefined : culture)
 }
 
-export const enableCountrySelection = (country: CountryDefinition, key: string) => {
-  country.selections[key] = true
+export const enableCountrySelection = (country: CountryDefinition, type: SelectionType, key: string) => {
+  if (!country.selections[type])
+    country.selections[type] = {}
+  country.selections[type][key] = true
 }
 
-export const enableCountrySelections = (country: CountryDefinition, keys: string[]) => {
-  keys.forEach(key => enableCountrySelection(country, key))
+export const enableCountrySelections = (country: CountryDefinition, type: SelectionType, keys: string[]) => {
+  keys.forEach(key => enableCountrySelection(country, type, key))
 }
 
-export const clearCountrySelection = (country: CountryDefinition, key: string) => {
-  delete country.selections[key]
+export const clearCountrySelection = (country: CountryDefinition, type: SelectionType, key: string) => {
+  delete country.selections[type][key]
 }
 
-export const clearCountrySelections = (country: CountryDefinition, keys: string[]) => {
-  keys.forEach(key => clearCountrySelection(country, key))
+export const clearCountrySelections = (country: CountryDefinition, type: SelectionType, keys?: string[]) => {
+  if (keys)
+    keys.forEach(key => clearCountrySelection(country, type, key))
+  else
+    delete country.selections[type]
 }
 
 export const clearAllCountrySelections = (country: CountryDefinition) => {
-  country.selections = {}
+  country.selections = {} as Selections
 }
 
 export const changeWeariness = (country: CountryDefinition, type: WearinessAttribute, min: number, max: number) => {

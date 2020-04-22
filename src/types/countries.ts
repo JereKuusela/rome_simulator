@@ -1,5 +1,4 @@
-import { ObjSet } from "utils"
-import { GovermentType, ReligionType } from "./modifiers"
+import { GovermentType, ReligionType, Selections } from "./modifiers"
 import { Armies } from "./armies"
 import { UnitDefinitions, UnitAttribute } from "./units"
 import { DefinitionValues } from "definition_values"
@@ -26,7 +25,7 @@ export enum CountryAttribute {
 }
 
 export interface CountryDefinition extends DefinitionValues<CountryAttribute> {
-  selections: ObjSet
+  selections: Selections
   culture: CultureType
   government: GovermentType
   religion: ReligionType
@@ -36,31 +35,10 @@ export interface CountryDefinition extends DefinitionValues<CountryAttribute> {
 }
 
 export type Country = { [key in CountryAttribute]: number } & {
-  selections: ObjSet
+  selections: Selections
   culture: CultureType
   weariness: WearinessAttributes
   religion: ReligionType
 }
 
-export enum CultureType {
-  Default = 'Default',
-  Latin = 'Latin' ,
-  Greek = 'Greek' ,
-  Persian = 'Persian' ,
-  Levantine = 'Levantine' ,
-  Celtic = 'Celtic',
-  NorthAfrican = 'North African',
-  Mayruan = 'Mayruan'
-}
-
-export const dictionaryCultureType: { [key: string]: CultureType } = {
-  default_philosophy: CultureType.Default,
-  latin_philosophy: CultureType.Latin,
-  greek_philosophy: CultureType.Greek,
-  persian_philosophy: CultureType.Persian,
-  levantine_philosophy: CultureType.Levantine,
-  celtic_philosophy: CultureType.Celtic,
-  north_african_philosophy: CultureType.NorthAfrican,
-  mauryan_philosophy: CultureType.Mayruan
-
-}
+export enum CultureType { Dummy = 'Dummy' }

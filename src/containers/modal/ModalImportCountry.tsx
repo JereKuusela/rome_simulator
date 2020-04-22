@@ -1,17 +1,17 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { ModalType, Mode, TacticType, UnitPreferences, UnitPreferenceType, dictionaryUnitType, dictionaryTacticType, GeneralAttribute, UnitType, UnitAttribute, CultureType, dictionaryCultureType } from 'types'
-import { setPhaseDice } from 'reducers'
+import { ModalType, Mode, TacticType, UnitPreferences, UnitPreferenceType, dictionaryUnitType, dictionaryTacticType, GeneralAttribute, UnitType, UnitAttribute, CultureType, CountryName, CountryAttribute, SelectionType } from 'types'
+import { createCountry, setCountryValue, selectCulture, enableCountrySelections } from 'reducers'
 import { Input, Button, Grid, Table } from 'semantic-ui-react'
 import BaseModal from './BaseModal'
 import Dropdown from 'components/Dropdowns/Dropdown'
-import { sortBy, uniq, sum } from 'lodash'
+import { sortBy, uniq, sum, union } from 'lodash'
 import LabelItem from 'components/Utils/LabelUnit'
 import { AppState } from 'state'
 import { getDefaultUnits } from 'data'
 import AttributeImage from 'components/Utils/AttributeImage'
-import { toObj, toArr } from 'utils'
-import { heritages_ir, traits_ir } from 'managers/modifiers'
+import { toObj, toArr, mapRange } from 'utils'
+import { heritages_ir, traits_ir, traditions_ir } from 'managers/modifiers'
 
 type Entry<T extends Tag | Army> = {
   entity: T
@@ -24,7 +24,7 @@ type Tag = {
 }
 
 type Country = {
-  name: string
+  name: CountryName
   tradition: CultureType
   traditions: number[]
   heritage: string
@@ -114,7 +114,7 @@ class ModalImportCountry extends Component<IProps, IState> {
               onChange={armies.length ? this.selectArmy : undefined}
               placeholder='Select army'
             />
-            <Button>Import</Button>
+            <Button onClick={this.importCountry} disabled={!this.country}>Import</Button>
           </Grid.Row>
           <Grid.Row>
             {this.renderArmy()}
@@ -137,6 +137,7 @@ class ModalImportCountry extends Component<IProps, IState> {
 
   renderCountry = () => {
     const entity = this.country
+    console.log(traditions_ir)
     if (!entity)
       return null
     return (
@@ -160,13 +161,13 @@ class ModalImportCountry extends Component<IProps, IState> {
             Culture
           </Table.Cell>
           <Table.Cell>
-            {entity.tradition}
+            {traditions_ir[entity.tradition].name}
           </Table.Cell>
           <Table.Cell>
             Heritage
           </Table.Cell>
           <Table.Cell>
-            {heritages_ir.find(heritage => heritage.key ===  entity.heritage)?.name}
+            {heritages_ir.find(heritage => heritage.key === entity.heritage)?.name}
           </Table.Cell>
         </Table.Row>
         <Table.Row>
@@ -395,9 +396,9 @@ class ModalImportCountry extends Component<IProps, IState> {
       inventions: [],
       heritage: '',
       militaryExperience: 0,
-      name: '',
+      name: '' as CountryName,
       tech: 0,
-      tradition: CultureType.Default,
+      tradition: CultureType.Dummy,
       armyMaintenance: 0,
       navalMaintenance: 0,
       traditions: [],
@@ -409,10 +410,10 @@ class ModalImportCountry extends Component<IProps, IState> {
     let tech = false
     for (let line = start + 1; line < end; line++) {
       const [key, value] = this.handleLine(lines[line])
-      if (key === 'name')
-        country.name = this.nonStringify(value)
+      if (key === 'name' && !country.name)
+        country.name = this.nonStringify(value) as CountryName
       if (key === 'military_tradition')
-        country.tradition = dictionaryCultureType[this.nonStringify(value)]
+        country.tradition = this.nonStringify(value) as CultureType
       if (key === 'heritage')
         country.heritage = this.nonStringify(value)
       if (key === 'military_tech')
@@ -596,17 +597,30 @@ class ModalImportCountry extends Component<IProps, IState> {
     }
   }
 
-  importArmy = () => {
-
+  importCountry = () => {
+    const { createCountry, setCountryValue, selectCulture, enableCountrySelections } = this.props
+    console.log(this.country)
+    const name = this.country?.name
+    if (this.country && name) {
+      createCountry(name)
+      setCountryValue(name, 'Custom', CountryAttribute.TechLevel, this.country.tech)
+      setCountryValue(name, 'Custom', CountryAttribute.MilitaryExperience, this.country.militaryExperience)
+      selectCulture(name, this.country.tradition, false)
+      const traditions = union(...this.country.traditions.map((value, index) => (
+        mapRange(value, value => 'tradition_path_' + (index + 1) + '_' + (value + 1))
+      )))
+      enableCountrySelections(name, SelectionType.Tradition, traditions)
+    }
   }
 }
 
 const mapStateToProps = (state: AppState) => ({
   tactics: state.tactics,
+  countries: state.countries,
   units: getDefaultUnits()
 })
 
-const actions = { setPhaseDice }
+const actions = { createCountry, setCountryValue, selectCulture, enableCountrySelections }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

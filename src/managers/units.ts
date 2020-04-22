@@ -1,7 +1,7 @@
-import { ValuesType, UnitValueType, UnitType, UnitRole, Modifier, UnitDefinition, UnitDefinitions, Mode, Setting, UnitAttribute, WearinessAttributes, ReserveDefinition, ModifierWithKey, SiteSettings } from "types"
-import { addValuesWithMutate, regenerateValues, clearValues, DefinitionValues, calculateValue, addValues, addValue } from "definition_values"
+import { ValuesType, UnitValueType, UnitType, UnitRole, UnitDefinition, UnitDefinitions, Mode, Setting, UnitAttribute, WearinessAttributes, ReserveDefinition, ModifierWithKey, SiteSettings } from "types"
+import { addValuesWithMutate, DefinitionValues, calculateValue, addValues, addValue } from "definition_values"
 import { getUnitIcon } from "data"
-import { forEach, toArr, round, randomWithinRange } from "utils"
+import { toArr, round, randomWithinRange } from "utils"
 import { mapModifiersToUnits2 } from "./modifiers"
 
 export const setUnitValue = (unit: UnitDefinition, values_type: ValuesType, key: string, attribute: UnitValueType, value: number) => {
@@ -34,22 +34,6 @@ export const toggleUnitLoyality = (unit: UnitDefinition) => {
 
 export const changeParent = (unit: UnitDefinition, parent: UnitType) => {
   unit.parent = parent
-}
-
-export const enableUnitModifiers = (units: UnitDefinitions, key: string, modifiers: Modifier[]) => {
-  forEach(units, (unit, type) => {
-    const values = modifiers.filter(value => type === value.target)
-    const base_values = values.filter(value => value.type !== ValuesType.Modifier).map(value => [value.attribute, value.value] as [UnitValueType, number])
-    const modifier_values = values.filter(value => value.type === ValuesType.Modifier).map(value => [value.attribute, value.value] as [UnitValueType, number])
-    regenerateValues(unit, ValuesType.Modifier, key, modifier_values)
-    regenerateValues(unit, ValuesType.Base, key, base_values)
-  })
-}
-
-export const clearUnitModifiers = (units: UnitDefinitions, key: string) => {
-  forEach(units, (unit, type) => {
-    units[type] = clearValues(clearValues(unit, ValuesType.Base, key), ValuesType.Modifier, key)
-  })
 }
 
 export const getRootParent = (mode: Mode) => mode === Mode.Naval ? UnitType.Naval : UnitType.Land

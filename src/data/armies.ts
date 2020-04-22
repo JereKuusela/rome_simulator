@@ -1,6 +1,4 @@
-import { Mode, Army, TacticType, UnitPreferences, UnitPreferenceType, UnitType, Armies, ArmyName, UnitRole } from 'types'
-import { ObjSet } from 'utils'
-
+import { Mode, Army, TacticType, UnitPreferences, UnitPreferenceType, UnitType, Armies, ArmyName, UnitRole, Selections } from 'types'
 
 const getDefaultTactic = (mode: Mode): TacticType => mode === Mode.Land ? TacticType.Deception : TacticType.FrontalAssault
 
@@ -37,7 +35,7 @@ const initializeDefaultArmy = (mode: Mode): Army => ({
   flank_size: 5,
   general: {
     enabled: true,
-    selections: {} as ObjSet,
+    selections: {} as Selections,
     definitions: {} as any
   }
 })

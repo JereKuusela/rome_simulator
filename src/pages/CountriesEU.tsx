@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import { Container, Grid, Table, List, Checkbox } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState, getGeneralDefinition, getCountryDefinition, getSiteSettings, getCountry } from 'state'
-import { mapRange, ObjSet, values } from '../utils'
+import { mapRange, values } from '../utils'
 
-import { ValuesType, Modifier, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, TechDefinitionEUIV, CountryName, Setting } from 'types'
-import { clearAllCountrySelections, setCountryValue, enableCountrySelection, clearCountrySelection, enableUnitModifiers, enableGeneralModifiers, clearUnitModifiers, clearGeneralModifiers, setGeneralValue, selectCulture, selectReligion, selectGovernment, setHasGeneral } from 'reducers'
+import { Modifier, ReligionType, CultureType, ModifierType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, TechDefinitionEUIV, CountryName, Setting } from 'types'
+import { clearAllCountrySelections, setCountryValue, enableCountrySelection, clearCountrySelection, setGeneralValue, selectCulture, selectReligion, selectGovernment, setHasGeneral } from 'reducers'
 
 import AccordionToggle from 'containers/AccordionToggle'
 import CountryManager from 'containers/CountryManager'
@@ -13,13 +13,11 @@ import Dropdown from 'components/Dropdowns/Dropdown'
 import ConfirmationButton from 'components/ConfirmationButton'
 import TableAttributes from 'components/TableAttributes'
 import { getCultures } from 'data'
-import { mapModifiersToUnits, tech_euiv } from 'managers/modifiers'
+import { tech_euiv } from 'managers/modifiers'
 import CountryValueInput from 'containers/CountryValueInput'
-import { has } from 'lodash'
 
 const TECH_COLUMNS = 4
-const CUSTOM_KEY = 'Custom'
-const NO_GENERAL_KEY = 'No general'
+const CUSTOM_KEY = 'Base'
 
 const CELL_PADDING = '.78571429em .78571429em'
 
@@ -124,24 +122,6 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderCell = (key: string, name: string | null, selections: ObjSet, modifiers: Modifier[], enable?: (() => void), clear?: (() => void), padding?: string, disabled?: boolean, width?: number) => (
-    <Table.Cell
-      disabled={disabled}
-      key={key}
-      positive={has(selections, key)}
-      selectable
-      colSpan={width || 1}
-      onClick={
-        has(selections, key)
-          ? (clear ? clear : () => this.clearModifiers(key))
-          : (enable ? enable : () => this.enableModifiers(key, modifiers))
-      }
-      style={{ padding: CELL_PADDING }}
-    >
-      {this.renderModifiers(name, modifiers, padding)}
-    </Table.Cell>
-  )
-
   renderModifiers = (name: string | null, modifiers: Modifier[], padding?: string) => (
     <List>
       {name &&
@@ -193,25 +173,23 @@ class Countries extends Component<IProps> {
    */
   clearTech = (level: number) => {
     level = level || 1
-    this.exec(this.props.setCountryValue, CountryAttribute.TechLevel, level - 1)
+    this.exec(this.props.setCountryValue, 'Base', CountryAttribute.TechLevel, level - 1)
   }
 
   /**
    * Enables tech levels to a given level.
    */
   enableTech = (level: number) => {
-    this.exec(this.props.setCountryValue, CountryAttribute.TechLevel, level)
+    this.exec(this.props.setCountryValue, 'Base', CountryAttribute.TechLevel, level)
   }
 
   /**
    * Clears all selections.
    */
   clearAll = () => {
-    const { selected_country } = this.props
     this.exec(this.props.clearAllCountrySelections, 0)
     this.exec(this.props.setHasGeneral, true)
-    this.exec(this.props.setCountryValue, CountryAttribute.TechLevel, 0)
-    clearGeneralModifiers(selected_country, CUSTOM_KEY)
+    this.clearTech(0)
   }
 
   getText = (modifier: Modifier) => {
@@ -246,21 +224,6 @@ class Countries extends Component<IProps> {
     return key.substring(0, index)
   }
 
-  enableModifiers = (key: string, modifiers: Modifier[]) => {
-    const { enableGeneralModifiers, enableUnitModifiers, enableCountrySelection, selected_country } = this.props
-    modifiers = mapModifiersToUnits(modifiers)
-    enableGeneralModifiers(selected_country, key, modifiers)
-    enableUnitModifiers(selected_country, key, modifiers)
-    enableCountrySelection(selected_country, key)
-  }
-
-  clearModifiers = (key: string) => {
-    const { clearGeneralModifiers, clearUnitModifiers, clearCountrySelection, selected_country } = this.props
-    clearGeneralModifiers(selected_country, key)
-    clearUnitModifiers(selected_country, key)
-    clearCountrySelection(selected_country, key)
-  }
-
   setCountryValue = (key: string, attribute: CountryAttribute, value: number) => {
     const { setCountryValue, selected_country } = this.props
     setCountryValue(selected_country, key, attribute, value)
@@ -283,7 +246,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const actions = {
-  enableGeneralModifiers, clearGeneralModifiers, clearUnitModifiers, enableUnitModifiers, setGeneralValue, selectCulture, setCountryValue,
+  setGeneralValue, selectCulture, setCountryValue,
   clearAllCountrySelections, selectReligion, selectGovernment, setHasGeneral, enableCountrySelection, clearCountrySelection
 }
 

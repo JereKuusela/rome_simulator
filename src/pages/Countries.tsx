@@ -6,12 +6,12 @@ import { mapRange, ObjSet, keys, values } from '../utils'
 
 import { addSignWithZero } from 'formatters'
 import {
-  ValuesType, TraditionDefinition, TradeDefinition, IdeaDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, EconomyDefinition, LawDefinition,
-  AbilityDefinition, Modifier, Tradition, UnitAttribute, ReligionType, CultureType, ModifierType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, CountryName, Setting
+  TraditionDefinition, TradeDefinition, IdeaDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, EconomyDefinition, LawDefinition,
+  AbilityDefinition, Modifier, Tradition, ReligionType, CultureType, ModifierType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, CountryName, Setting, SelectionType
 } from 'types'
 import {
-  clearCountryValues, clearAllCountrySelections, setCountryValue, enableCountrySelections, enableCountrySelection, clearCountrySelections, clearCountrySelection, enableUnitModifiers,
-  clearUnitModifiers, setGeneralStat, setGeneralValue, selectCulture, selectReligion, selectGovernment, setHasGeneral,
+  clearCountryValues, clearAllCountrySelections, setCountryValue, enableCountrySelections, enableCountrySelection, clearCountrySelections, clearCountrySelection,
+  setGeneralStat, setGeneralValue, selectCulture, selectReligion, selectGovernment, setHasGeneral,
   clearAllGeneralSelections, clearGeneralSelection, enableGeneralSelection, clearGeneralSelections
 } from 'reducers'
 
@@ -21,10 +21,9 @@ import Dropdown from 'components/Dropdowns/Dropdown'
 import ConfirmationButton from 'components/ConfirmationButton'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TableAttributes from 'components/TableAttributes'
-import { mapModifiersToUnits, tech_ir, TRAIT_KEY, ABILITY_KEY, abilities_ir, traits_ir, heritages_ir } from 'managers/modifiers'
+import { tech_ir, abilities_ir, traits_ir, heritages_ir, traditions_ir } from 'managers/modifiers'
 import { convertCountryDefinition } from 'managers/countries'
 import CountryValueInput from 'containers/CountryValueInput'
-import { has } from 'lodash'
 
 const TRADE_COLUMNS = 4
 const HERITAGE_COLUMNS = 4
@@ -33,9 +32,6 @@ const TRAIT_COLUMNS = 4
 const IDEA_COLUMNS = 3
 
 const TRADE_KEY = 'Trade_'
-const TRADITION_KEY = 'Tradition_'
-const TRADITION_BASE_KEY = TRADITION_KEY + 'Base'
-const HERITAGE_KEY = 'Heritage_'
 const OMEN_KEY = 'Omen_'
 const ECONOMY_KEY = 'Economy_'
 const LAW_KEY = 'Law_'
@@ -46,10 +42,10 @@ const CELL_PADDING = '.78571429em .78571429em'
 class Countries extends Component<IProps> {
 
   render() {
-    const { settings, general_definition, general, inventions, trades, selected_country, setHasGeneral,
-      traditions, omens, traits, abilities, heritages, economy, ideas, laws, country_definition, country } = this.props
+    const { settings, general_definition, general, trades, selected_country, setHasGeneral,
+      omens, economy, ideas, laws, country_definition, country } = this.props
     const selections = country_definition.selections
-    const tradition = traditions[country.culture]
+    const tradition = traditions_ir[country.culture]
     const omen = omens[country.religion]
     return (
       <Container>
@@ -64,16 +60,16 @@ class Countries extends Component<IProps> {
           <Grid.Row columns='3'>
             <Grid.Column>
               <Dropdown
-                values={keys(traditions)}
+                values={Object.values(traditions_ir).map(tradition => ({ value: tradition.key, text: tradition.name }))}
                 value={country.culture}
-                onChange={item => this.selectCulture(item, selections)}
+                onChange={this.selectCulture}
               />
             </Grid.Column>
             <Grid.Column>
               <Dropdown
                 values={keys(omens)}
                 value={country.religion}
-                onChange={item => this.selectReligion(item, country[CountryAttribute.OmenPower], selections)}
+                onChange={this.selectReligion}
               />
             </Grid.Column>
           </Grid.Row>
@@ -90,20 +86,20 @@ class Countries extends Component<IProps> {
                 Base martial: <Input disabled={!general.enabled} type='number' value={general.base_values[GeneralAttribute.Martial]} onChange={(_, { value }) => this.setGeneralMartial(value)} />
                 {' '}with <StyledNumber value={general.extra_values[GeneralAttribute.Martial]} formatter={addSignWithZero} /> from traits
                 {
-                  this.renderTraits(traits, general.selections, !general.enabled)
+                  this.renderTraits(traits_ir, general.selections[SelectionType.Trait], !general.enabled)
                 }
                 {
-                  this.renderAbilities(abilities, general.selections)
+                  this.renderAbilities(abilities_ir, general.selections[SelectionType.Ability])
                 }
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <AccordionToggle title={'Traditions (' + country.culture + ')'} identifier='countries_tradition'>
+              <AccordionToggle title={'Traditions (' + tradition.name + ')'} identifier='countries_tradition'>
                 Military experience: <CountryValueInput attribute={CountryAttribute.MilitaryExperience} country={selected_country} />
                 {
-                  this.renderTraditions(tradition, selections)
+                  this.renderTraditions(tradition, selections[SelectionType.Tradition])
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -112,7 +108,7 @@ class Countries extends Component<IProps> {
             <Grid.Column>
               <AccordionToggle title='Trade' identifier='countries_trade'>
                 {
-                  this.renderTrades(trades, selections)
+                  this.renderTrades(trades, selections[SelectionType.Trade])
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -121,7 +117,7 @@ class Countries extends Component<IProps> {
             <Grid.Column>
               <AccordionToggle title='Technology & Inventions' identifier='countries_invention'>
                 {
-                  this.renderInventions(inventions, country[CountryAttribute.TechLevel], selections)
+                  this.renderInventions(tech_ir, country[CountryAttribute.TechLevel], selections[SelectionType.Invention])
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -144,7 +140,7 @@ class Countries extends Component<IProps> {
                   <List.Item><b>Total: From -30 to 300</b></List.Item>
                 </List>
                 {
-                  this.renderOmens(omen, selections, country[CountryAttribute.OmenPower])
+                  this.renderOmens(omen, selections[SelectionType.Omen], country[CountryAttribute.OmenPower])
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -166,13 +162,13 @@ class Countries extends Component<IProps> {
                   </Table.Body>
                 </Table>
                 {
-                  this.renderLaws(laws, selections)
+                  this.renderLaws(laws, selections[SelectionType.Law])
                 }
                 {
-                  this.renderEconomy(economy, selections)
+                  this.renderEconomy(economy, selections[SelectionType.Econonomy])
                 }
                 {
-                  this.renderIdeas(ideas, selections)
+                  this.renderIdeas(ideas, selections[SelectionType.Idea])
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -181,7 +177,7 @@ class Countries extends Component<IProps> {
             <Grid.Column>
               <AccordionToggle title='Heritage' identifier='countries_heritage'>
                 {
-                  this.renderHeritages(heritages, selections)
+                  this.renderHeritages(heritages_ir, selections[SelectionType.Heritage])
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -189,8 +185,8 @@ class Countries extends Component<IProps> {
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title='Attributes' identifier='countries_attributes'>
-                <TableAttributes attributes={filterAttributes(values(CountryAttribute), settings)} custom_value_key='Custom' definition={country_definition} onChange={this.setCountryValue} />
-                <TableAttributes attributes={filterAttributes((values(GeneralAttribute) as GeneralValueType[]).concat(values(CombatPhase)), settings)} custom_value_key='Custom' definition={general_definition} onChange={this.setGeneralValue} />
+                <TableAttributes attributes={filterAttributes(values(CountryAttribute), settings)} custom_value_key='Base' definition={country_definition} onChange={this.setCountryValue} />
+                <TableAttributes attributes={filterAttributes((values(GeneralAttribute) as GeneralValueType[]).concat(values(CombatPhase)), settings)} custom_value_key='Base' definition={general_definition} onChange={this.setGeneralValue} />
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
@@ -217,22 +213,22 @@ class Countries extends Component<IProps> {
         <Table.Body>
           <Table.Row key={'base'} textAlign='center'>
             {
-              this.renderCell(TRADITION_BASE_KEY, null, selections[TRADITION_BASE_KEY], traditions.modifiers,
-                undefined, () => this.clearModifiersStartingWith(TRADITION_KEY, selections), undefined, undefined, 3)
+              this.renderCell('base', null, !!selections, traditions.modifiers,
+                this.activateTradition, this.deactivateTradition, undefined, undefined, 3)
             }
           </Table.Row>
           {
             mapRange(rows, number => number).map(row => (
               <Table.Row key={row}>
                 {
-                  traditions.paths.map((path, column) => {
+                  traditions.paths.map(path => {
                     const tradition = path.traditions[row]
                     if (!tradition)
                       return null
-                    const key = TRADITION_KEY + column + '_' + row
+                    const key = tradition.key
                     const modifiers = tradition.modifiers
-                    return this.renderCell(key, null, selections[key], modifiers,
-                      () => this.enableTradition(path.traditions, traditions.modifiers, column, row, selections), () => this.enableTradition(path.traditions, traditions.modifiers, column, row - 1, selections))
+                    return this.renderCell(key, null, selections && selections[key], modifiers,
+                      () => this.enableTradition(path.traditions, key), () => this.clearTradition(path.traditions, key))
                   })
                 }
               </Table.Row>
@@ -259,7 +255,7 @@ class Countries extends Component<IProps> {
                       return (<Table.Cell key={TRADE_KEY + index}></Table.Cell>)
                     const key = TRADE_KEY + trade.type + '_' + trade.name
                     const modifiers = [trade.modifier]
-                    return this.renderCell(key, trade.type + ': ' + trade.name, selections[key], modifiers)
+                    return this.renderCell(key, trade.type + ': ' + trade.name, selections && selections[key], modifiers)
                   })
                 }
               </Table.Row>
@@ -286,7 +282,7 @@ class Countries extends Component<IProps> {
                       return (<Table.Cell key={IDEA_KEY + index}></Table.Cell>)
                     const key = IDEA_KEY + index
                     const modifiers = idea.modifiers
-                    return this.renderCell(key, idea.name, selections[key], modifiers)
+                    return this.renderCell(key, idea.name, selections && selections[key], modifiers)
                   })
                 }
               </Table.Row>
@@ -330,7 +326,7 @@ class Countries extends Component<IProps> {
                     if (column === 0)
                       return this.renderTechLevel(row, row <= tech, invention.modifiers)
                     const key = invention.name
-                    return this.renderCell(key, null, selections[key] && row <= tech, invention.modifiers,
+                    return this.renderCell(key, null, selections && selections[key] && row <= tech, invention.modifiers,
                       () => this.enableInvention(key, row), () => this.clearInvention(key))
                   })
                 }
@@ -358,7 +354,7 @@ class Countries extends Component<IProps> {
                     if (!omen)
                       return (<Table.Cell key={key}></Table.Cell>)
                     const modifiers = [{ ...omen.modifier, value: omen.modifier.value * power / 100.0 }]
-                    return this.renderCell(key, omen.name, selections[key], modifiers, () => this.enableOmen(key, modifiers, selections))
+                    return this.renderCell(key, omen.name, selections && selections[key], modifiers, () => this.enableOmen(key, modifiers, selections))
                   })
                 }
               </Table.Row>
@@ -370,11 +366,11 @@ class Countries extends Component<IProps> {
   }
 
 
-  renderTraits = (traits: TraitDefinition[], selections: ObjSet, disabled: boolean) => this.renderList(traits, selections, TRAIT_COLUMNS, TRAIT_KEY, this.onGeneralItemClick, disabled)
-  renderHeritages = (heritages: HeritageDefinition[], selections: ObjSet) => this.renderList(heritages, selections, HERITAGE_COLUMNS, '', this.onCountryItemClick, false, '\u00a0\u00a0\u00a0\u00a0')
+  renderTraits = (traits: TraitDefinition[], selections: ObjSet, disabled: boolean) => this.renderList(SelectionType.Trait, traits, selections, TRAIT_COLUMNS, this.onGeneralItemClick, disabled)
+  renderHeritages = (heritages: HeritageDefinition[], selections: ObjSet) => this.renderList(SelectionType.Heritage, heritages, selections, HERITAGE_COLUMNS, this.onCountryItemClick, false, '\u00a0\u00a0\u00a0\u00a0')
 
 
-  renderList = (entities: { name: string, key: string, modifiers: Modifier[] }[], selections: ObjSet, columns: number, parent_key: string, onClick: (enabled: boolean) => ((key: string) => void), disabled: boolean, padding?: string) => {
+  renderList = (type: SelectionType, entities: { name: string, key: string, modifiers: Modifier[] }[], selections: ObjSet, columns: number, onClick: (enabled: boolean) => ((type: SelectionType, key: string) => void), disabled: boolean, padding?: string) => {
     entities = entities.filter(entity => entity.modifiers.length)
     const rows = Math.ceil(entities.length / columns)
     return (
@@ -388,10 +384,10 @@ class Countries extends Component<IProps> {
                     const index = row * columns + column
                     const entity = entities[index]
                     if (!entity)
-                      return (<Table.Cell key={TRAIT_KEY + index}></Table.Cell>)
+                      return (<Table.Cell key={index}></Table.Cell>)
                     const modifiers = entity.modifiers
-                    const key = parent_key + entity.key
-                    return this.renderCell2(key, entity.name, selections[key], modifiers, onClick, padding, disabled)
+                    const key = entity.key
+                    return this.renderCell2(type, key, entity.name, selections && selections[key], modifiers, onClick, padding, disabled)
                   })
                 }
               </Table.Row>
@@ -406,7 +402,6 @@ class Countries extends Component<IProps> {
   renderLaws = (laws: LawDefinition[], selections: ObjSet) => this.renderOptions(LAW_KEY, laws, selections, 4)
 
   renderAbilities = (abilities: AbilityDefinition[], selections: ObjSet) => {
-    const modifier_key = ABILITY_KEY
     const definitions = abilities
     const columns = 2
 
@@ -418,9 +413,9 @@ class Countries extends Component<IProps> {
               <Table.Row key={options.name}>
                 {
                   options.options.map(option => {
-                    const key = modifier_key + option.key
+                    const key = option.key
                     const modifiers = option.modifiers
-                    return this.renderCell2(key, option.name, selections[key], modifiers, this.onGeneralItemClick)
+                    return this.renderCell2(SelectionType.Ability, key, option.name, selections && selections[key], modifiers, this.onGeneralItemClick)
                   })
                 }
                 {
@@ -445,8 +440,8 @@ class Countries extends Component<IProps> {
                   options.options.map(option => {
                     const key = modifier_key + options.name + '_' + option.name
                     const modifiers = option.modifiers
-                    return this.renderCell(key, option.name, selections[key], modifiers,
-                      () => this.enableOption(key, modifiers, selections), () => this.clearModifiers(key))
+                    return this.renderCell(key, option.name, selections && selections[key], modifiers,
+                      () => this.enableOption(key, modifiers, selections), () => { })
                   })
                 }
                 {
@@ -471,46 +466,43 @@ class Countries extends Component<IProps> {
     </Table.Cell>
   )
 
-  clearGeneralSelection = (key: string) => {
+  clearGeneralSelection = (type: SelectionType, key: string) => {
     const { clearGeneralSelection } = this.props
-    this.exec(clearGeneralSelection, key)
+    this.exec(clearGeneralSelection, type, key)
   }
 
-  enableGeneralSelection = (key: string) => {
-    const { enableGeneralSelection, abilities, clearGeneralSelections } = this.props
-    abilities.forEach(abilities => {
-      const keys = abilities.options.map(ability => ABILITY_KEY + ability.key)
-      if (keys.includes(key))
-        this.exec(clearGeneralSelections, keys)
-    })
-    this.exec(enableGeneralSelection, key)
+  enableGeneralSelection = (type: SelectionType, key: string) => {
+    const { enableGeneralSelection, clearGeneralSelections } = this.props
+    if (type === SelectionType.Ability)
+      this.exec(clearGeneralSelections, type)
+    this.exec(enableGeneralSelection, type, key)
   }
 
   onGeneralItemClick = (enabled: boolean) => enabled ? this.clearGeneralSelection : this.enableGeneralSelection
 
-  clearCountrySelection = (key: string) => {
+  clearCountrySelection = (type: SelectionType, key: string) => {
     const { clearCountrySelection } = this.props
-    this.exec(clearCountrySelection, key)
+    this.exec(clearCountrySelection, type, key)
   }
 
-  enableCountrySelection = (key: string) => {
-    const { enableCountrySelection, heritages, clearCountrySelections } = this.props
-    const keys = heritages.map(heritage => heritage.key)
-    this.exec(clearCountrySelections, keys)
-    this.exec(enableCountrySelection, key)
+  enableCountrySelection = (type: SelectionType, key: string) => {
+    const { enableCountrySelection, clearCountrySelections } = this.props
+    if (type === SelectionType.Heritage)
+      this.exec(clearCountrySelections, type)
+    this.exec(enableCountrySelection, type, key)
   }
 
 
   onCountryItemClick = (enabled: boolean) => enabled ? this.clearCountrySelection : this.enableCountrySelection
 
-  renderCell2 = (key: string, name: string | null, enabled: boolean, modifiers: Modifier[], onClick: (enabled: boolean) => ((key: string) => void), padding?: string, disabled?: boolean, width?: number) => (
+  renderCell2 = (type: SelectionType, key: string, name: string | null, enabled: boolean, modifiers: Modifier[], onClick: (enabled: boolean) => ((type: SelectionType, key: string) => void), padding?: string, disabled?: boolean, width?: number) => (
     <Table.Cell
       disabled={disabled}
       key={key}
       positive={enabled}
       selectable
       colSpan={width || 1}
-      onClick={() => onClick(enabled)(key)}
+      onClick={() => onClick(enabled)(type, key)}
       style={{ padding: CELL_PADDING }}
     >
       {this.renderModifiers(name, modifiers, padding)}
@@ -526,8 +518,8 @@ class Countries extends Component<IProps> {
       colSpan={width || 1}
       onClick={
         enabled
-          ? (clear ? clear : () => this.clearModifiers(key))
-          : (enable ? enable : () => this.enableModifiers(key, modifiers))
+          ? (clear ? clear : () => { })
+          : (enable ? enable : () => { })
       }
       style={{ padding: CELL_PADDING }}
     >
@@ -560,141 +552,98 @@ class Countries extends Component<IProps> {
   )
 
   enableInvention = (key: string, level: number) => {
-    const { enableCountrySelection: enableSelection } = this.props
-    this.exec(enableSelection, key)
+    const { enableCountrySelection } = this.props
+    this.exec(enableCountrySelection, SelectionType.Invention, key)
     this.enableTech(level)
   }
 
   enableTech = (level: number) => {
     const { country } = this.props
-    console.log(country[CountryAttribute.TechLevel])
     if (level > country[CountryAttribute.TechLevel])
-      this.setCountryValue('Custom', CountryAttribute.TechLevel, level)
+      this.setCountryValue('Base', CountryAttribute.TechLevel, level)
   }
 
   clearTech = (level: number) => {
-    const { country, inventions, clearCountrySelections: clearSelections } = this.props
-    const keys = inventions.filter((_, index) => level <= index && index <= country[CountryAttribute.TechLevel]).reduce((prev, curr) => prev.concat(curr.inventions.map(value => value.name)), [] as string[])
-    this.exec(clearSelections, keys)
-    this.setCountryValue('Custom', CountryAttribute.TechLevel, level - 1)
+    const { country, clearCountrySelections } = this.props
+    const keys = tech_ir.filter((_, index) => level <= index && index <= country[CountryAttribute.TechLevel]).reduce((prev, curr) => prev.concat(curr.inventions.map(value => value.name)), [] as string[])
+    this.exec(clearCountrySelections, SelectionType.Invention, keys)
+    this.setCountryValue('Base', CountryAttribute.TechLevel, level - 1)
   }
 
   clearInvention = (key: string) => {
-    const { clearCountrySelection: clearSelection } = this.props
-    this.exec(clearSelection, key)
+    const { clearCountrySelection } = this.props
+    this.exec(clearCountrySelection, SelectionType.Invention, key)
   }
 
-  /**
-   * Clears traditions from a given column above a given row.
-   */
-  clearTraditions = (column: number, row: number, selections: ObjSet) => {
-    const key = TRADITION_KEY + column
-    keys(selections).filter(value => value.startsWith(key) && !value.startsWith(TRADITION_BASE_KEY) && this.getNumberFromKey(value, 2) > row)
-      .forEach(value => this.clearModifiers(value))
+  /** Clears traditions starting from a given tradition. */
+  clearTradition = (traditions: Tradition[], key: string) => {
+    const { enableCountrySelections, clearCountrySelections } = this.props
+    this.activateTradition()
+    let add = true
+    const toAdd: string[] = []
+    const toRemove: string[] = []
+    traditions.forEach(tradition => {
+      if (tradition.key === key)
+        add = false
+      if (add)
+        toAdd.push(tradition.key)
+      else
+        toRemove.push(tradition.key)
+    })
+    this.exec(enableCountrySelections, SelectionType.Tradition, toAdd)
+    this.exec(clearCountrySelections, SelectionType.Tradition, toRemove)
   }
 
-  /**
-   * Enables traditions from a given column up to a given row.
-   */
-  enableTraditions = (traditions: Tradition[], column: number, row: number, selections: ObjSet) => {
-    mapRange(row + 1, number => number).filter(value => !has(selections, TRADITION_KEY + column + '_' + value))
-      .forEach(value => this.enableModifiers(TRADITION_KEY + column + '_' + value, traditions[value].modifiers))
+  /** Enables traditions up to a given tradition. */
+  enableTradition = (traditions: Tradition[], key: string) => {
+    const { enableCountrySelections, clearCountrySelections } = this.props
+    this.activateTradition()
+    let add = true
+    const toAdd: string[] = []
+    const toRemove: string[] = []
+    traditions.forEach(tradition => {
+      if (add)
+        toAdd.push(tradition.key)
+      else
+        toRemove.push(tradition.key)
+      if (tradition.key === key)
+        add = false
+    })
+    this.exec(enableCountrySelections, SelectionType.Tradition, toAdd)
+    this.exec(clearCountrySelections, SelectionType.Tradition, toRemove)
   }
 
-  /**
-   * Enables a tradition and enables traditions before it.
-   */
-  enableTradition = (traditions: Tradition[], base: Modifier[], column: number, row: number, selections: ObjSet) => {
-    this.clearTraditions(column, row, selections)
-    if (!has(selections, TRADITION_BASE_KEY))
-      this.enableModifiers(TRADITION_BASE_KEY, base)
-    this.enableTraditions(traditions, column, row, selections)
+  activateTradition = () => {
+    const { enableCountrySelection } = this.props
+    this.exec(enableCountrySelection, SelectionType.Tradition, 'base')
   }
 
-  /**
-   * Enables a heritage and clears any existing heritages.
-   */
-  enableHeritage = (key: string, modifiers: Modifier[], selections: ObjSet) => {
-    this.clearModifiersStartingWith(HERITAGE_KEY, selections)
-    this.enableModifiers(key, modifiers)
-  }
-
-  /**
-   * Clears modifiers starting with a given key.
-   */
-  clearModifiersStartingWith = (key: string, selections: ObjSet) => {
-    Object.keys(selections).filter(value => value.startsWith(key)).forEach(value => this.clearModifiers(value))
+  deactivateTradition = () => {
+    const { clearCountrySelections } = this.props
+    this.exec(clearCountrySelections, SelectionType.Tradition)
   }
 
   /**
    * Enables an option and clears any existing options.
    */
   enableOption = (key: string, modifiers: Modifier[], selections: ObjSet) => {
-    this.clearModifiersStartingWith(this.getUpperKey(key) + '_', selections)
-    this.enableModifiers(key, modifiers)
   }
 
   /**
    * Enables a omen and clears any existing omens.
    */
   enableOmen = (key: string, modifiers: Modifier[], selections: ObjSet) => {
-    this.clearModifiersStartingWith(OMEN_KEY, selections)
-    this.enableModifiers(key, modifiers)
-  }
-
-  /**
-   * Refreshes active omens to update their buff.
-   */
-  refreshOmens = (selections: ObjSet, power: number, omens?: OmenDefinition[]) => {
-    if (!omens)
-      return
-    Object.keys(selections).filter(value => value.startsWith(OMEN_KEY)).forEach(value => {
-      const index = this.getNumberFromKey(value, 1)
-      const omen = omens[index]
-      if (omen)
-        this.enableModifiers(value, [this.scaleModifier(omen.modifier, power)])
-      else
-        this.clearModifiers(value)
-    })
-  }
-
-  /**
-   * Refreshes active traditions to update their buff.
-   */
-  refreshTraditions = (selections: ObjSet, traditions?: TraditionDefinition) => {
-    if (!traditions)
-      return
-    Object.keys(selections).filter(value => value.startsWith(TRADITION_KEY) && !value.startsWith(TRADITION_BASE_KEY)).forEach(value => {
-      this.clearModifiers(value)
-      const column = this.getNumberFromKey(value, 1)
-      const path = traditions.paths[column]
-      if (!path)
-        return
-      const row = this.getNumberFromKey(value, 2)
-      const tradition = path.traditions[row]
-      if (!tradition)
-        return
-      this.enableModifiers(value, tradition.modifiers)
-    })
-    if (selections.hasOwnProperty(TRADITION_BASE_KEY))
-      this.enableModifiers(TRADITION_BASE_KEY, traditions.modifiers)
   }
 
   /**
    * Selects religion while also re-enabling current omen.
    */
-  selectReligion = (value: ReligionType, power: number, selections: ObjSet) => {
+  selectReligion = (value: ReligionType) => {
     this.exec(this.props.selectReligion, value)
-    const omens = this.props.omens[value]
-    this.refreshOmens(selections, power, omens)
   }
 
-  /**
-   * Selects culture while also re-enabling tradition.
-   */
-  selectCulture = (value: CultureType, selections: ObjSet) => {
+  selectCulture = (value: CultureType) => {
     this.exec(this.props.selectCulture, value, !this.props.settings[Setting.Culture])
-    this.refreshTraditions(selections, this.props.traditions[value])
   }
 
   /** Executes a given function with currently selected country. */
@@ -711,7 +660,7 @@ class Countries extends Component<IProps> {
   clearAll = () => {
     this.exec(this.props.clearAllCountrySelections, 0)
     this.exec(this.props.clearAllGeneralSelections, 0)
-    this.exec(this.props.clearCountryValues, 'Custom')
+    this.exec(this.props.clearCountryValues, 'Base')
     this.exec(this.props.setHasGeneral, true)
     this.exec(this.props.setGeneralStat, GeneralAttribute.Martial, 0)
   }
@@ -758,26 +707,10 @@ class Countries extends Component<IProps> {
     return key.substring(0, index)
   }
 
-  enableModifiers = (key: string, modifiers: Modifier[]) => {
-    const { enableUnitModifiers, enableCountrySelection, clearGeneralSelection, selected_country } = this.props
-    modifiers = mapModifiersToUnits(modifiers)
-    enableUnitModifiers(selected_country, key, modifiers)
-    this.exec(enableCountrySelection, key)
-    this.exec(clearGeneralSelection, key)
-  }
-
-  clearModifiers = (key: string) => {
-    const { clearUnitModifiers, clearCountrySelection, clearGeneralSelection } = this.props
-    this.exec(clearUnitModifiers, key)
-    this.exec(clearCountrySelection, key)
-    this.exec(clearGeneralSelection, key)
-  }
-
   setCountryValue = (key: string, attribute: CountryAttribute, value: number) => {
     const { setCountryValue, selected_country } = this.props
     setCountryValue(selected_country, key, attribute, value)
   }
-
 
   setGeneralValue = (key: string, attribute: GeneralValueType, value: number) => {
     const { setGeneralValue } = this.props
@@ -786,26 +719,21 @@ class Countries extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  traditions: state.data.traditions,
   trades: state.data.trades,
-  heritages: heritages_ir,
-  inventions: tech_ir,
   omens: state.data.omens,
   country_definition: state.countries[state.settings.country],
   country: convertCountryDefinition(state.countries[state.settings.country], state.settings.siteSettings),
   selected_country: state.settings.country,
   laws: state.data.laws,
   economy: state.data.economy,
-  traits: traits_ir,
   ideas: state.data.ideas,
-  abilities: abilities_ir,
   general_definition: getGeneralDefinition(state, state.settings.country),
   general: getGeneral(state, state.settings.country),
   settings: getSiteSettings(state)
 })
 
 const actions = {
-  clearGeneralSelections, clearUnitModifiers, enableUnitModifiers, setGeneralStat, setGeneralValue, selectCulture, setCountryValue, clearAllGeneralSelections, clearGeneralSelection, enableGeneralSelection,
+  clearGeneralSelections, setGeneralStat, setGeneralValue, selectCulture, setCountryValue, clearAllGeneralSelections, clearGeneralSelection, enableGeneralSelection,
   clearCountryValues, clearAllCountrySelections, selectReligion, selectGovernment, setHasGeneral, enableCountrySelection, clearCountrySelection, enableCountrySelections, clearCountrySelections
 }
 

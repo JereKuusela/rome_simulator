@@ -26,7 +26,7 @@ class CountryValueInput extends Component<IProps> {
     )
   }
 
-  getKey = () => this.props.identifier || 'Custom'
+  getKey = () => this.props.identifier || 'Base'
 
   onChange = (value: number) => {
     const { definition, attribute, setCountryValue, country } = this.props

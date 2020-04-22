@@ -1,13 +1,13 @@
-import { CountryDefinition, GovermentType, ReligionType, CountryName, CultureType, CountryAttribute, UnitAttribute } from 'types'
+import { CountryDefinition, GovermentType, ReligionType, CountryName, CultureType, CountryAttribute, UnitAttribute, Selections } from 'types'
 import { getDefaultArmies } from 'data'
 import { getDefaultUnits } from './units'
 
 export const defaultCountry: CountryDefinition =
 {
-  selections: {},
+  selections: {} as Selections,
   government: GovermentType.Republic,
   religion: 'Hellenic' as ReligionType,
-  culture: (process.env.REACT_APP_GAME === 'euiv' ? 'Western' : 'Greek') as CultureType,
+  culture: (process.env.REACT_APP_GAME === 'euiv' ? 'Western' : 'latin_philosophy') as CultureType,
   armies: getDefaultArmies(),
   units: getDefaultUnits((process.env.REACT_APP_GAME === 'euiv' ? 'Western' : undefined) as CultureType),
   base_values: {

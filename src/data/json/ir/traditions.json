@@ -1,7 +1,8 @@
 {
   "traditions": [
     {
-      "type": "Barbarian",
+      "name": "Barbarian",
+      "key": "celtic_philosophy",
       "modifiers": [
         {
           "target": "Text",
@@ -338,7 +339,8 @@
       ]
     },
     {
-      "type": "Greek",
+      "name": "Greek",
+      "key": "greek_philosophy",
       "modifiers": [
         {
           "target": "Text",
@@ -685,7 +687,8 @@
       ]
     },
     {
-      "type": "Italic",
+      "name": "Italic",
+      "key": "latin_philosophy",
       "modifiers": [
         {
           "target": "Text",
@@ -1020,7 +1023,8 @@
       ]
     },
     {
-      "type": "Levantine",
+      "name": "Levantine",
+      "key": "levantine_philosophy",
       "modifiers": [
         {
           "target": "Text",
@@ -1368,7 +1372,8 @@
       ]
     },
     {
-      "type": "Indian",
+      "name": "Indian",
+      "key": "mauryan_philosophy",
       "modifiers": [
         {
           "target": "Text",
@@ -1707,7 +1712,8 @@
       ]
     },
     {
-      "type": "North",
+      "name": "North",
+      "key": "north_african_philosophy",
       "modifiers": [
         {
           "target": "Naval",
@@ -2045,7 +2051,8 @@
       ]
     },
     {
-      "type": "Persian",
+      "name": "Persian",
+      "key": "persian_philosophy",
       "modifiers": [
         {
           "target": "Horse Archers",

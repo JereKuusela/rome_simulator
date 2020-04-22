@@ -1,12 +1,11 @@
-import { Modifier, ModifierType, Mode, ModifierWithKey, TechDefinitionEUIV, InventionDefinition, CountryAttribute, ValuesType, UnitAttribute, UnitType, AbilityDefinition, TraitDefinition, GeneralDefinition, CountryDefinition, GeneralAttribute, HeritageDefinition } from 'types'
+import { Modifier, ModifierType, Mode, ModifierWithKey, TechDefinitionEUIV, InventionDefinition, CountryAttribute, ValuesType, UnitAttribute, UnitType, AbilityDefinition, TraitDefinition, GeneralDefinition, CountryDefinition, GeneralAttribute, HeritageDefinition, SelectionType } from 'types'
 import { getRootParent } from './units'
-import { getTechDefinitionsEUIV, getTechDefinitionsIR, getAbilityDefinitions, getTraitDefinitions, getHeritageDefinitions } from 'data'
+import { getTechDefinitionsEUIV, getTechDefinitionsIR, getAbilityDefinitions, getTraitDefinitions, getHeritageDefinitions, getTraditionDefinitions, Traditions } from 'data'
 import { ObjSet } from 'utils'
 import { calculateValue } from 'definition_values'
 import { martialToCaptureChance } from './army'
 
 /*
-const traditions = getTraditionDefinitions()
 const trades = getTradeDefinitions()
 const inventions = getInventionDefinitions()
 const omens = getOmenDefinitions()
@@ -17,13 +16,12 @@ const ideas = getIdeaDefinitions()
 export const abilities_ir = process.env.REACT_APP_GAME === 'ir' ? getAbilityDefinitions() : {} as AbilityDefinition[]
 export const traits_ir = process.env.REACT_APP_GAME === 'ir' ? getTraitDefinitions() : {} as TraitDefinition[]
 export const heritages_ir = process.env.REACT_APP_GAME === 'ir' ? getHeritageDefinitions() : {} as HeritageDefinition[]
+export const traditions_ir = process.env.REACT_APP_GAME === 'ir' ? getTraditionDefinitions() : {} as Traditions
 
 export const tech_ir = process.env.REACT_APP_GAME === 'ir' ? getTechDefinitionsIR() : {} as InventionDefinition[]
 export const tech_euiv = process.env.REACT_APP_GAME === 'euiv' ? getTechDefinitionsEUIV() : {} as TechDefinitionEUIV[]
 
 export const TECH_KEY = 'Tech '
-export const TRAIT_KEY = 'Trait '
-export const ABILITY_KEY = 'Ability '
 
 
 export const mapModifiersToUnits = (modifiers: Modifier[]) => {
@@ -68,7 +66,7 @@ const mapModifiers = (key: string, modifiers: Modifier[]) => modifiers.map(value
 
 
 const getTechModifiers = (modifiers: ModifierWithKey[], country: CountryDefinition) => {
-  const selections = country.selections
+  const selections = country.selections[SelectionType.Invention] ?? {}
   const tech_level = calculateValue(country, CountryAttribute.TechLevel)
   if (process.env.REACT_APP_GAME === 'euiv') {
     tech_euiv.forEach((tech, level) => {
@@ -92,10 +90,9 @@ const getTechModifiers = (modifiers: ModifierWithKey[], country: CountryDefiniti
   return modifiers
 }
 
-const getModifiersSub = (modifiers: ModifierWithKey[], selections: ObjSet, parentKey: string, entities: { name: string, key: string, modifiers: Modifier[] }[]) => {
+const getModifiersSub = (modifiers: ModifierWithKey[], selections: ObjSet, entities: { name: string, key: string, modifiers: Modifier[] }[]) => {
   entities.forEach(entity => {
-    const key = parentKey + entity.key
-    if (selections[key])
+    if (selections && selections[entity.key])
       modifiers.push(...mapModifiers(entity.name, entity.modifiers))
   })
 }
@@ -141,7 +138,7 @@ export const getCountryModifiers = (country: CountryDefinition): ModifierWithKey
   if (process.env.REACT_APP_GAME === 'euiv') {
   }
   else {
-    getModifiersSub(modifiers, country.selections, '', heritages_ir)
+    getModifiersSub(modifiers, country.selections[SelectionType.Heritage], heritages_ir)
   }
   return modifiers
 }
@@ -152,8 +149,8 @@ export const getGeneralModifiers = (general: GeneralDefinition): ModifierWithKey
     if (process.env.REACT_APP_GAME === 'euiv') {
     }
     else {
-      getModifiersSub(modifiers, general.selections, TRAIT_KEY, traits_ir)
-      abilities_ir.forEach(abilities => getModifiersSub(modifiers, general.selections, ABILITY_KEY, abilities.options))
+      getModifiersSub(modifiers, general.selections[SelectionType.Trait], traits_ir)
+      abilities_ir.forEach(abilities => getModifiersSub(modifiers, general.selections[SelectionType.Ability], abilities.options))
       const martial = calculateValue(general, GeneralAttribute.Martial)
       if (martial) {
         modifiers.push({

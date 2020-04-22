@@ -1,5 +1,21 @@
 import { UnitType, ValuesType, CultureType } from 'types'
 import { Mode } from './definition';
+import { ObjSet } from 'utils';
+
+export enum SelectionType {
+  Trait = 'Trait',
+  Ability = 'Ability',
+  Tradition = 'Tradition',
+  Invention = 'Invention',
+  Heritage = 'Heritage',
+  Law = 'Law',
+  Omen = 'Omen',
+  Econonomy = 'Econonomy',
+  Idea = 'Idea',
+  Trade = 'Trade'
+}
+
+export type Selections = { [key in SelectionType]: ObjSet }
 
 export enum ModifierType {
   Text = 'Text',
@@ -53,7 +69,8 @@ export interface Path {
   traditions: Tradition[]
 }
 export interface TraditionDefinition {
-  type: CultureType
+  name: string
+  key: CultureType
   paths: Path[]
   modifiers: Modifier[]
 }

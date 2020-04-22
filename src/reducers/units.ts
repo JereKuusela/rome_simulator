@@ -8,8 +8,6 @@ const unitsMapping: ActionToFunction<UnitDefinitions, CountryName> = {}
 export const createUnit = makeActionReplaceFirst(manager.createUnit, unitsMapping)
 export const deleteUnit = makeActionReplaceFirst(manager.deleteUnit, unitsMapping)
 export const changeUnitType = makeActionReplaceFirst(manager.changeUnitType, unitsMapping)
-export const enableUnitModifiers = makeActionReplaceFirst(manager.enableUnitModifiers, unitsMapping)
-export const clearUnitModifiers = makeActionReplaceFirst(manager.clearUnitModifiers, unitsMapping)
 
 const getUnits = (draft: Countries, action: Action<CountryName>) => draft[action.payload[0]].units
 
