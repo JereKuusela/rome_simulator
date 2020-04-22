@@ -40,14 +40,13 @@ const OMEN_KEY = 'Omen_'
 const ECONOMY_KEY = 'Economy_'
 const LAW_KEY = 'Law_'
 const IDEA_KEY = 'Idea_'
-const NO_GENERAL_KEY = 'No general'
 
 const CELL_PADDING = '.78571429em .78571429em'
 
 class Countries extends Component<IProps> {
 
   render() {
-    const { settings, general_definition, general, inventions, trades, selected_country,
+    const { settings, general_definition, general, inventions, trades, selected_country, setHasGeneral,
       traditions, omens, traits, abilities, heritages, economy, ideas, laws, country_definition, country } = this.props
     const selections = country_definition.selections
     const tradition = traditions[country.culture]
@@ -85,7 +84,7 @@ class Countries extends Component<IProps> {
                   toggle
                   label='General'
                   checked={general.enabled}
-                  onChange={general.enabled ? this.disableGeneral : this.enableGeneral}
+                  onChange={general.enabled ? () => this.exec(setHasGeneral, false) : () => this.exec(setHasGeneral, true)}
                   style={{ float: 'right' }}
                 />
                 Base martial: <Input disabled={!general.enabled} type='number' value={general.base_values[GeneralAttribute.Martial]} onChange={(_, { value }) => this.setGeneralMartial(value)} />
@@ -725,27 +724,6 @@ class Countries extends Component<IProps> {
     if (isNaN(skill))
       return
     this.props.setGeneralStat(this.props.selected_country, GeneralAttribute.Martial, skill)
-  }
-
-  /**
-   * Toggles has general while removing no general debuff.
-   */
-  enableGeneral = () => {
-    this.clearModifiers(NO_GENERAL_KEY)
-    this.props.setHasGeneral(this.props.selected_country, true)
-  }
-
-  /**
-   * Toggles has general while enabling no general debuff.
-   */
-  disableGeneral = () => {
-    this.enableModifiers(NO_GENERAL_KEY, [{
-      target: ModifierType.Global,
-      attribute: UnitAttribute.Morale,
-      type: ValuesType.Modifier,
-      value: -0.25
-    }])
-    this.props.setHasGeneral(this.props.selected_country, false)
   }
 
   getText = (modifier: Modifier) => {

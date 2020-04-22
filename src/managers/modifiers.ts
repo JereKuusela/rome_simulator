@@ -169,7 +169,7 @@ export const getGeneralModifiers = (general: GeneralDefinition): ModifierWithKey
   else {
     modifiers.push({
       target: ModifierType.Global,
-      type: ValuesType.Base,
+      type: ValuesType.Modifier,
       attribute: UnitAttribute.Morale,
       value: -0.25,
       key: 'No general'

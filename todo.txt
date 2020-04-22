@@ -10,10 +10,13 @@ Changelog:
   - Added new tab for stack wipe settings: On/Off, round limit for "soft" wipe, limits for "soft" and "hard" wipes.
   - Changed default analyze settings to be faster.
   - Added a tooltip to the winrate button and result.
-  - Added delays to most tooltips to prevent them flickering when moving mouse.
+  - Added delays to most tooltips to prevent them flickering when moving mouse. 
+  - Added stack wipe chance to Analyze.
 
-Analyze:
-  - Added stack wipe chance to statistics.
+Save game importer:
+ - New page to import save games.
+ - Only works for non-compressed saves (-debug_mode must be enabled).
+ - Compressed saves should be technically possible but takes more work.
 
 Combat:
   - Morale and strength no longer go below zero. This fixes slightly inflated losses on Analyze tool.
@@ -22,7 +25,7 @@ Combat:
 
 Countries:
   - Created a parser which converts Imperator data files to a format suitable for the simulator. This makes maintenaning much easier and data much more accurate.
-  - Added new heritages.
+  - Added all heritages.
   - Added all general traits which affect combat (mainly health traits which reduce martial).
 
 Testing:
@@ -32,6 +35,8 @@ Testing:
 Refactor:
   - Invalidate is now done automatically for all non-UI actions. Removes lots of low value code.
   - Accordion toggling moved under UI actions.
+  - Country modifiers are no longer directly saved on units. This is required for multi-army battles (where some modifiers are shared between armies).
+  - Above also fixes modifiers getting out of sync if they are updated (edge case but important for reliability).
 
 TODO:
 

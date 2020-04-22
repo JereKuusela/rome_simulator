@@ -7,7 +7,7 @@
       "Role": "Front",
       "Morale": 3.0,
       "Strength": 1.0,
-      "Attrition weight": 1.0,
+      "Attrition Weight": 1.0,
       "Maintenance": 0.04166
     },
     {
@@ -17,28 +17,28 @@
       "Role": "Front",
       "Morale": 3.0,
       "Strength": 1.0,
-      "Attrition weight": 1.0,
+      "Attrition Weight": 1.0,
       "Maintenance": 0.02083,
-      "Capture chance": 0.06
+      "Capture Chance": 0.06
     },
     {
       "Type": "Light Ship",
       "Parent": "Naval Unit",
-      "Capture chance": 0.1,
-      "Capture resist": 0.1,
+      "Capture Chance": 0.1,
+      "Capture Resist": 0.1,
       "Riverine": 0.25
     },
     {
       "Type": "Medium Ship",
       "Parent": "Naval Unit",
-      "Capture chance": 0.2,
-      "Capture resist": 0.2
+      "Capture Chance": 0.2,
+      "Capture Resist": 0.2
     },
     {
       "Type": "Heavy Ship",
       "Parent": "Naval Unit",
-      "Capture chance": 0.3,
-      "Capture resist": 0.3
+      "Capture Chance": 0.3,
+      "Capture Resist": 0.3
     }
   ]
 }

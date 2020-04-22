@@ -26,7 +26,7 @@ const CELL_PADDING = '.78571429em .78571429em'
 class Countries extends Component<IProps> {
 
   render() {
-    const { settings, tech, general, country, selected_country, country_definition } = this.props
+    const { settings, tech, general, country, selected_country, country_definition, setHasGeneral } = this.props
     return (
       <Container>
         <CountryManager>
@@ -53,7 +53,7 @@ class Countries extends Component<IProps> {
                   toggle
                   label='General'
                   checked={general.enabled}
-                  onChange={general.enabled ? this.disableGeneral : this.enableGeneral}
+                  onChange={general.enabled ? () => this.exec(setHasGeneral, false) : () => this.exec(setHasGeneral, true)}
                   style={{ float: 'right' }}
                 />
               </AccordionToggle>
@@ -212,27 +212,6 @@ class Countries extends Component<IProps> {
     this.exec(this.props.setHasGeneral, true)
     this.exec(this.props.setCountryValue, CountryAttribute.TechLevel, 0)
     clearGeneralModifiers(selected_country, CUSTOM_KEY)
-  }
-
-  /**
-   * Toggles has general while removing no general debuff.
-   */
-  enableGeneral = () => {
-    this.clearModifiers(NO_GENERAL_KEY)
-    this.exec(this.props.setHasGeneral, true)
-  }
-
-  /**
-   * Toggles has general while enabling no general debuff.
-   */
-  disableGeneral = () => {
-    this.enableModifiers(NO_GENERAL_KEY, [{
-      target: ModifierType.Global,
-      attribute: UnitAttribute.Morale,
-      type: ValuesType.Modifier,
-      value: -0.25
-    }])
-    this.exec(this.props.setHasGeneral, false)
   }
 
   getText = (modifier: Modifier) => {
