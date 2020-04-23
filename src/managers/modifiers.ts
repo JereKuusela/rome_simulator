@@ -1,23 +1,21 @@
-import { Modifier, ModifierType, Mode, ModifierWithKey, CountryAttribute, ValuesType, UnitAttribute, UnitType, AbilityDefinition, GeneralDefinition, CountryDefinition, GeneralAttribute, SelectionType, TradeDefinition, ListDefinition, TechDefinition } from 'types'
+import { Modifier, ModifierType, Mode, ModifierWithKey, CountryAttribute, ValuesType, UnitAttribute, UnitType, GeneralDefinition, CountryDefinition, GeneralAttribute, SelectionType } from 'types'
 import { getRootParent } from './units'
-import { getTechDefinitionsEUIV, getTechDefinitionsIR, getAbilityDefinitions, getTraitDefinitions, getHeritageDefinitions, getTraditionDefinitions, Traditions, getTradeDefinitions, getIdeaDefinitions, getLawDefinitions } from 'data'
+import { getTechDefinitionsEUIV, getTechDefinitionsIR, getAbilityDefinitions, getTraitDefinitions, getHeritageDefinitions, getTraditionDefinitions, getTradeDefinitions, getIdeaDefinitions, getLawDefinitions, getPolicyDefinitions } from 'data'
 import { ObjSet } from 'utils'
 import { calculateValue } from 'definition_values'
 import { martialToCaptureChance } from './army'
 
-/*
-const economy = getEconomyDefinitions()
-*/
-export const abilities_ir = process.env.REACT_APP_GAME === 'ir' ? getAbilityDefinitions() : {} as AbilityDefinition[]
-export const traits_ir = process.env.REACT_APP_GAME === 'ir' ? getTraitDefinitions() : {} as ListDefinition[]
-export const heritages_ir = process.env.REACT_APP_GAME === 'ir' ? getHeritageDefinitions() : {} as ListDefinition[]
-export const trades_ir = process.env.REACT_APP_GAME === 'ir' ? getTradeDefinitions() : {} as TradeDefinition[]
-export const traditions_ir = process.env.REACT_APP_GAME === 'ir' ? getTraditionDefinitions() : {} as Traditions
-export const ideas_ir = process.env.REACT_APP_GAME === 'ir' ? getIdeaDefinitions() : {} as ListDefinition[]
-export const laws_ir = process.env.REACT_APP_GAME === 'ir' ? getLawDefinitions() : {} as ListDefinition[]
+export const abilities_ir = getAbilityDefinitions()
+export const traits_ir = getTraitDefinitions()
+export const heritages_ir =  getHeritageDefinitions()
+export const trades_ir = getTradeDefinitions()
+export const traditions_ir = getTraditionDefinitions()
+export const ideas_ir = getIdeaDefinitions() 
+export const laws_ir = getLawDefinitions()
+export const policies_ir = getPolicyDefinitions()
 
-export const tech_ir = process.env.REACT_APP_GAME === 'ir' ? getTechDefinitionsIR() : {} as TechDefinition[]
-export const tech_euiv = process.env.REACT_APP_GAME === 'euiv' ? getTechDefinitionsEUIV() : {} as ListDefinition[]
+export const tech_ir = getTechDefinitionsIR()
+export const tech_euiv = getTechDefinitionsEUIV() 
 
 export const TECH_KEY = 'Tech '
 
@@ -155,6 +153,7 @@ export const getCountryModifiers = (country: CountryDefinition): ModifierWithKey
     getModifiersSub(modifiers, country.selections[SelectionType.Trade], trades_ir)
     getModifiersSub(modifiers, country.selections[SelectionType.Idea], ideas_ir)
     getModifiersSub(modifiers, country.selections[SelectionType.Law], laws_ir)
+    policies_ir.forEach(policy => getModifiersSub(modifiers, country.selections[SelectionType.Policy], policy))
     getTraditionModifiers(modifiers, country)
   }
   return modifiers
@@ -167,7 +166,7 @@ export const getGeneralModifiers = (general: GeneralDefinition): ModifierWithKey
     }
     else {
       getModifiersSub(modifiers, general.selections[SelectionType.Trait], traits_ir)
-      abilities_ir.forEach(abilities => getModifiersSub(modifiers, general.selections[SelectionType.Ability], abilities.options))
+      abilities_ir.forEach(abilities => getModifiersSub(modifiers, general.selections[SelectionType.Ability], abilities))
       const martial = calculateValue(general, GeneralAttribute.Martial)
       if (martial) {
         modifiers.push({

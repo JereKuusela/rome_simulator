@@ -56,6 +56,7 @@ const attributes = {
   'create_trade_route_cost_modifier': 'Trade Route Cost',
   'attrition_weight': ATTRITION,
   'army': 'Mode',
+  'non_retinue_morale_modifier': MORALE,
   'category': PARENT,
   ['build' + MOD_COST]: COST,
   'combat_width': 'Combat Width',
@@ -117,6 +118,7 @@ Object.keys(units).forEach(key => {
 const targets = {
   ['army' + MOD_MAINTENANCE]: LAND,
   'army_weight_modifier': LAND,
+  'non_retinue_morale_modifier': LAND,
   'combat_width': COUNTRY,
   'discipline': GLOBAL,
   'global_cohort_start_experience': LAND,

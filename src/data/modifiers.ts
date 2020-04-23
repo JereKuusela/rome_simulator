@@ -1,7 +1,7 @@
 import { sortBy } from 'lodash'
 import { toObj, map, forEach } from 'utils'
 import {
-  ValuesType, CultureType, ReligionType, EconomyDefinition, ListDefinition, AbilityDefinition,
+  ValuesType, CultureType, ReligionType, ListDefinition, OptionDefinition,
   TraditionDefinition, TradeDefinition, OmenDefinition, Modifier, TechDefinition
 } from 'types'
 
@@ -12,7 +12,7 @@ import * as techDataIR from './json/ir/tech.json'
 import * as omenData from './json/ir/omens.json'
 import * as traitData from './json/ir/traits.json'
 import * as lawData from './json/ir/laws.json'
-import * as economyData from './json/ir/economy.json'
+import * as policyData from './json/ir/policies.json'
 import * as ideaData from './json/ir/ideas.json'
 import * as abilityData from './json/ir/abilities.json'
 
@@ -25,11 +25,11 @@ const getTradeData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(trad
 const getHeritageData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(heritageData.heritages) : [] as ListData[]
 const getTechDataIR = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(techDataIR.tech) : [] as InventionData[]
 const getOmenData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(omenData.religions) : [] as OmenData[]
-const getTraitData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(traitData.traits) : [] as TraitData[]
+const getTraitData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(traitData.traits) : [] as ListData[]
 const getLawData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(lawData.laws) : [] as ListData[]
-const getEconomyData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(economyData.economy) : [] as EconomyData[]
+const getPolicyData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(policyData.policies) : [] as OptionData[]
 const getIdeaData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(ideaData.ideas) : [] as ListData[]
-const getAbilityData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(abilityData.abilities) : [] as AbilityData[]
+const getAbilityData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(abilityData.abilities) : [] as OptionData[]
 
 export type Traditions = { [key in CultureType ]: TraditionDefinition }
 type Omens = { [key in ReligionType]: OmenDefinition[] }
@@ -76,7 +76,7 @@ export const getOmenDefinitions = () => {
 }
 
 export const getTraitDefinitions = () => {
-  const data = sortBy<TraitData>(getTraitData(), value => value.name) as ListDefinition[]
+  const data = sortBy<ListData>(getTraitData(), value => value.name) as ListDefinition[]
   data.forEach(trait => trait.modifiers.forEach(modifier => setDefault(modifier)))
   return data
 }
@@ -87,9 +87,9 @@ export const getLawDefinitions = () => {
   return data
 }
 
-export const getEconomyDefinitions = () => {
-  const data = sortBy<EconomyData>(getEconomyData(), () => 1) as EconomyDefinition[]
-  data.forEach(economy => economy.options.forEach(option => option.modifiers.forEach(modifier => setDefault(modifier))))
+export const getPolicyDefinitions = () => {
+  const data = sortBy<OptionData>(getPolicyData(), () => 1) as OptionDefinition[]
+  data.forEach(option => option.forEach(option => option.modifiers.forEach(modifier => setDefault(modifier))))
   return data
 }
 
@@ -100,8 +100,8 @@ export const getIdeaDefinitions = () => {
 }
 
 export const getAbilityDefinitions = () => {
-  const data = sortBy<AbilityData>(getAbilityData(), () => 1) as AbilityDefinition[]
-  data.forEach(ability => ability.options.forEach(option => option.modifiers.forEach(modifier => setDefault(modifier))))
+  const data = sortBy<OptionData>(getAbilityData(), () => 1) as OptionDefinition[]
+  data.forEach(option => option.forEach(option => option.modifiers.forEach(modifier => setDefault(modifier))))
   return data
 }
 
@@ -156,29 +156,10 @@ interface OmenData {
   }[]
 }
 
-interface TraitData {
-  name: string
-  modifiers: ModifierData[]
-}
-
-interface ListData {
+type ListData = {
   name: string
   key: string
   modifiers: ModifierData[]
 }
 
-interface EconomyData {
-  name: string
-  options: {
-    name: string
-    modifiers: ModifierData[]
-  }[]
-}
-
-interface AbilityData {
-  name: string,
-  options: {
-    name: string
-    modifiers: ModifierData[]
-  }[]
-}
+type OptionData = ListData[]

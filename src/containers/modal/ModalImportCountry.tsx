@@ -11,7 +11,7 @@ import { AppState } from 'state'
 import { getDefaultUnits } from 'data'
 import AttributeImage from 'components/Utils/AttributeImage'
 import { toObj, toArr, mapRange } from 'utils'
-import { heritages_ir, traits_ir, traditions_ir, tech_ir, trades_ir, laws_ir } from 'managers/modifiers'
+import { heritages_ir, traits_ir, traditions_ir, tech_ir, trades_ir, laws_ir, policies_ir } from 'managers/modifiers'
 
 type Entry<T extends Tag | Army> = {
   entity: T
@@ -32,8 +32,8 @@ type Country = {
   armies: number[]
   inventions: boolean[]
   militaryExperience: number
-  armyMaintenance: number
-  navalMaintenance: number
+  armyMaintenance: string
+  navalMaintenance: string
   available_laws: boolean[]
   laws: string[]
   ideas: string[]
@@ -175,13 +175,13 @@ class ModalImportCountry extends Component<IProps, IState> {
             Army
           </Table.Cell>
           <Table.Cell>
-            {this.maintenanceToString(entity.armyMaintenance)}
+            {policies_ir.find(policy => policy.find(option => option.key === entity.armyMaintenance))?.find(option => option.key === entity.armyMaintenance)?.name}
           </Table.Cell>
           <Table.Cell>
             Navy
           </Table.Cell>
           <Table.Cell>
-            {this.maintenanceToString(entity.navalMaintenance)}
+            {policies_ir.find(policy => policy.find(option => option.key === entity.navalMaintenance))?.find(option => option.key === entity.navalMaintenance)?.name}
           </Table.Cell>
         </Table.Row>
         <Table.Row>
@@ -399,8 +399,8 @@ class ModalImportCountry extends Component<IProps, IState> {
       name: '' as CountryName,
       tech: 0,
       tradition: CultureType.Dummy,
-      armyMaintenance: 0,
-      navalMaintenance: 0,
+      armyMaintenance: '',
+      navalMaintenance: '',
       traditions: [],
       laws: [],
       available_laws: [],
@@ -435,8 +435,8 @@ class ModalImportCountry extends Component<IProps, IState> {
         country.inventions = this.getTruthList(value).filter((_, index) => index === 9 || (75 < index && index < 138))
       if (key === 'economic_policies') {
         const policies = this.getNumberList(value)
-        country.armyMaintenance = policies[4]
-        country.navalMaintenance = policies[5]
+        country.armyMaintenance = 'expense_army_' + this.maintenanceToKey(policies[4])
+        country.navalMaintenance = 'expense_navy_' + this.maintenanceToKey(policies[5])
       }
       if (key === 'military_tradition_levels')
         country.traditions = this.getNumberList(value).filter((_, index) => index < 3)
@@ -591,14 +591,14 @@ class ModalImportCountry extends Component<IProps, IState> {
 
   getTruthList = (value: string) => this.nonStringify(value).trim().split(' ').map(value => Number(value) > 0)
 
-  maintenanceToString = (value: number) => {
+  maintenanceToKey = (value: number) => {
     switch (value) {
       case 1:
-        return 'High maintenance'
+        return 'high'
       case -1:
-        return 'Low maintenance'
+        return 'low'
       default:
-        return 'Normal maintenance'
+        return 'default'
     }
   }
 
@@ -625,6 +625,8 @@ class ModalImportCountry extends Component<IProps, IState> {
       enableCountrySelections(name, SelectionType.Trade, trades)
       enableCountrySelections(name, SelectionType.Idea, this.country.ideas)
       enableCountrySelections(name, SelectionType.Law, this.country.laws)
+      enableCountrySelection(name, SelectionType.Policy, this.country.armyMaintenance)
+      enableCountrySelection(name, SelectionType.Policy, this.country.navalMaintenance)
     }
   }
 }

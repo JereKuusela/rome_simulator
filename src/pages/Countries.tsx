@@ -6,8 +6,8 @@ import { mapRange, ObjSet, keys, values } from '../utils'
 
 import { addSignWithZero } from 'formatters'
 import {
-  TraditionDefinition, TradeDefinition, OmenDefinition, EconomyDefinition, ListDefinition,
-  AbilityDefinition, Modifier, ReligionType, CultureType, ModifierType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, CountryName, Setting, SelectionType, TechDefinition
+  TraditionDefinition, TradeDefinition, OmenDefinition, ListDefinition,
+  OptionDefinition, Modifier, ReligionType, CultureType, ModifierType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, CountryName, Setting, SelectionType, TechDefinition
 } from 'types'
 import {
   clearCountryValues, clearAllCountrySelections, setCountryValue, enableCountrySelections, enableCountrySelection, clearCountrySelections, clearCountrySelection,
@@ -21,13 +21,12 @@ import Dropdown from 'components/Dropdowns/Dropdown'
 import ConfirmationButton from 'components/ConfirmationButton'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TableAttributes from 'components/TableAttributes'
-import { tech_ir, abilities_ir, traits_ir, heritages_ir, traditions_ir, ideas_ir } from 'managers/modifiers'
+import { tech_ir, abilities_ir, traits_ir, heritages_ir, traditions_ir, ideas_ir, policies_ir, laws_ir } from 'managers/modifiers'
 import { convertCountryDefinition } from 'managers/countries'
 import CountryValueInput from 'containers/CountryValueInput'
 
 const OMEN_COLUMNS = 4
 const OMEN_KEY = 'Omen_'
-const ECONOMY_KEY = 'Economy_'
 
 const PERCENT_PADDING = '\u00a0\u00a0\u00a0\u00a0'
 
@@ -37,7 +36,7 @@ class Countries extends Component<IProps> {
 
   render() {
     const { settings, general_definition, general, trades, selected_country, setHasGeneral,
-      omens, economy, laws, country_definition, country } = this.props
+      omens, country_definition, country } = this.props
     const selections = country_definition.selections
     const tradition = traditions_ir[country.culture]
     const omen = omens[country.religion]
@@ -156,10 +155,10 @@ class Countries extends Component<IProps> {
                   </Table.Body>
                 </Table>
                 {
-                  this.renderLaws(laws, selections[SelectionType.Law])
+                  this.renderLaws(laws_ir, selections[SelectionType.Law])
                 }
                 {
-                  this.renderEconomy(economy, selections[SelectionType.Econonomy])
+                  this.renderPolicies(policies_ir, selections[SelectionType.Policy])
                 }
                 {
                   this.renderIdeas(ideas_ir, selections[SelectionType.Idea])
@@ -312,9 +311,9 @@ class Countries extends Component<IProps> {
   renderIdeas = (ideas: ListDefinition[], selections: ObjSet) => this.renderList(SelectionType.Idea, ideas, selections, 3, this.onCountryItemClick, false, PERCENT_PADDING)
   renderLaws = (laws: ListDefinition[], selections: ObjSet) => this.renderList(SelectionType.Law, laws, selections, 3, this.onCountryItemClick, false, PERCENT_PADDING)
 
-  renderList = (type: SelectionType, entities: { name: string, key: string, modifiers: Modifier[] }[], selections: ObjSet, columns: number, onClick: (enabled: boolean) => ((type: SelectionType, key: string) => void), disabled: boolean, padding?: string) => {
-    entities = entities.filter(entity => entity.modifiers.length)
-    const rows = Math.ceil(entities.length / columns)
+  renderList = (type: SelectionType, items: ListDefinition[], selections: ObjSet, columns: number, onClick: (enabled: boolean) => ((type: SelectionType, key: string) => void), disabled: boolean, padding?: string) => {
+    items = items.filter(entity => entity.modifiers.length)
+    const rows = Math.ceil(items.length / columns)
     return (
       <Table celled unstackable fixed>
         <Table.Body>
@@ -324,7 +323,7 @@ class Countries extends Component<IProps> {
                 {
                   mapRange(columns, number => number).map(column => {
                     const index = row * columns + column
-                    const entity = entities[index]
+                    const entity = items[index]
                     if (!entity)
                       return (<Table.Cell key={index}></Table.Cell>)
                     const modifiers = entity.modifiers
@@ -339,53 +338,27 @@ class Countries extends Component<IProps> {
       </Table >
     )
   }
-  renderEconomy = (economy: EconomyDefinition[], selections: ObjSet) => this.renderOptions(ECONOMY_KEY, economy, selections, 2)
 
-  renderAbilities = (abilities: AbilityDefinition[], selections: ObjSet) => {
-    const definitions = abilities
-    const columns = 2
+  renderPolicies = (policies: OptionDefinition[], selections: ObjSet) => this.renderOptions(SelectionType.Policy, policies, selections, 3, this.onCountryItemClick, false, PERCENT_PADDING)
+  renderAbilities = (abilities: OptionDefinition[], selections: ObjSet) => this.renderOptions(SelectionType.Ability, abilities, selections, 2, this.onGeneralItemClick, false, PERCENT_PADDING)
+
+  renderOptions = (type: SelectionType, options: OptionDefinition[], selections: ObjSet, columns: number, onClick: (enabled: boolean) => ((type: SelectionType, key: string) => void), disabled: boolean, padding?: string) => {
+
 
     return (
       <Table celled unstackable fixed>
         <Table.Body>
           {
-            definitions.map(options => (
-              <Table.Row key={options.name}>
+            options.map((option, index) => (
+              <Table.Row key={index}>
                 {
-                  options.options.map(option => {
-                    const key = option.key
-                    const modifiers = option.modifiers
-                    return this.renderCell2(SelectionType.Ability, key, option.name, selections && selections[key], modifiers, this.onGeneralItemClick)
+                  option.map(item => {
+                    const key = item.key
+                    return this.renderCell2(type, key, item.name, selections && selections[key], item.modifiers, onClick, padding, disabled)
                   })
                 }
                 {
-                  mapRange(columns - options.options.length, (value) => <Table.Cell key={value} />)
-                }
-              </Table.Row>
-            ))
-          }
-        </Table.Body>
-      </Table >
-    )
-  }
-
-  renderOptions = (modifier_key: string, definitions: (EconomyDefinition)[], selections: ObjSet, columns: number) => {
-    return (
-      <Table celled unstackable fixed>
-        <Table.Body>
-          {
-            definitions.map(options => (
-              <Table.Row key={options.name}>
-                {
-                  options.options.map(option => {
-                    const key = modifier_key + options.name + '_' + option.name
-                    const modifiers = option.modifiers
-                    return this.renderCell(key, option.name, selections && selections[key], modifiers,
-                      () => this.enableOption(key, modifiers, selections), () => { })
-                  })
-                }
-                {
-                  mapRange(columns - options.options.length, (value) => <Table.Cell key={value} />)
+                  mapRange(columns - option.length, (value) => <Table.Cell key={value} />)
                 }
               </Table.Row>
             ))
@@ -411,10 +384,15 @@ class Countries extends Component<IProps> {
     this.exec(clearGeneralSelection, type, key)
   }
 
+  findOptionKeys = (options: OptionDefinition[], key: string) => options.find(policy => policy.find(option => option.key === key))?.map(option => option.key)
+
   enableGeneralSelection = (type: SelectionType, key: string) => {
     const { enableGeneralSelection, clearGeneralSelections } = this.props
-    if (type === SelectionType.Ability)
-      this.exec(clearGeneralSelections, type)
+    if (type === SelectionType.Ability) {
+      const keys = this.findOptionKeys(abilities_ir, key)
+      if (keys)
+        this.exec(clearGeneralSelections, type, keys)
+    }
     this.exec(enableGeneralSelection, type, key)
   }
 
@@ -429,6 +407,11 @@ class Countries extends Component<IProps> {
     const { enableCountrySelection, clearCountrySelections } = this.props
     if (type === SelectionType.Heritage)
       this.exec(clearCountrySelections, type)
+    if (type === SelectionType.Policy) {
+      const keys = this.findOptionKeys(policies_ir, key)
+      if (keys)
+        this.exec(clearCountrySelections, type, keys)
+    }
     this.exec(enableCountrySelection, type, key)
   }
 
@@ -664,8 +647,6 @@ const mapStateToProps = (state: AppState) => ({
   country_definition: state.countries[state.settings.country],
   country: convertCountryDefinition(state.countries[state.settings.country], state.settings.siteSettings),
   selected_country: state.settings.country,
-  laws: state.data.laws,
-  economy: state.data.economy,
   general_definition: getGeneralDefinition(state, state.settings.country),
   general: getGeneral(state, state.settings.country),
   settings: getSiteSettings(state)

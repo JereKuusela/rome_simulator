@@ -10,7 +10,7 @@ export enum SelectionType {
   Heritage = 'Heritage',
   Law = 'Law',
   Omen = 'Omen',
-  Econonomy = 'Econonomy',
+  Policy = 'Policy',
   Idea = 'Idea',
   Trade = 'Trade'
 }
@@ -72,22 +72,8 @@ export interface ListDefinition {
   key: string
   modifiers: Modifier[]
 }
-export interface EconomyDefinition {
-  name: string
-  options: {
-    name: string
-    key: string
-    modifiers: Modifier[]
-  }[]
-}
-export interface AbilityDefinition {
-  name: string
-  options: {
-    name: string
-    key: string
-    modifiers: Modifier[]
-  }[]
-}
+export type OptionDefinition = ListDefinition[]
+
 export interface TechDefinition {
   name: string
   inventions: Invention[]

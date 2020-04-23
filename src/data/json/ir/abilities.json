@@ -1,43 +1,40 @@
 {
   "abilities": [
-    {
-      "name": "Naval",
-      "options": [
-        {
-          "name": "Boarding Tactics",
-          "key": "Ability Boarding Tactics",
-          "modifiers": [
-            {
-              "target": "Naval",
-              "attribute": "Capture Chance",
-              "value": 0.1
-            },
-            {
-              "target": "Naval",
-              "attribute": "Damage done",
-              "negative": true,
-              "value": -0.1
-            }
-          ]
-        },
-        {
-          "name": "Ramming Tactics",
-          "key": "Ability Ramming Tactics",
-          "modifiers": [
-            {
-              "target": "Naval",
-              "attribute": "Damage done",
-              "value": 0.1
-            },
-            {
-              "target": "Naval",
-              "attribute": "Damage taken",
-              "negative": true,
-              "value": 0.1
-            }
-          ]
-        }
-      ]
-    }
+    [
+      {
+        "name": "Boarding Tactics",
+        "key": "boarding",
+        "modifiers": [
+          {
+            "target": "Naval",
+            "attribute": "Capture Chance",
+            "value": 0.1
+          },
+          {
+            "target": "Naval",
+            "attribute": "Damage done",
+            "negative": true,
+            "value": -0.1
+          }
+        ]
+      },
+      {
+        "name": "Ramming Tactics",
+        "key": "ramming",
+        "modifiers": [
+          {
+            "target": "Naval",
+            "attribute": "Damage done",
+            "value": 0.1
+          },
+          {
+            "target": "Naval",
+            "attribute": "Damage taken",
+            "negative": true,
+            "value": 0.1
+          }
+        ]
+      }
+    ]
   ]
 }
