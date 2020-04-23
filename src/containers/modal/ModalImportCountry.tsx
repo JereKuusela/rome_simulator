@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { ModalType, Mode, TacticType, UnitPreferences, UnitPreferenceType, dictionaryUnitType, dictionaryTacticType, GeneralAttribute, UnitType, UnitAttribute, CultureType, CountryName, CountryAttribute, SelectionType } from 'types'
-import { createCountry, setCountryValue, selectCulture, enableCountrySelections } from 'reducers'
+import { ModalType, Mode, TacticType, UnitPreferences, UnitPreferenceType, dictionaryUnitType, dictionaryTacticType, GeneralAttribute, UnitType, UnitAttribute, CultureType, CountryName, CountryAttribute, SelectionType, Invention } from 'types'
+import { createCountry, setCountryValue, selectCulture, enableCountrySelections, enableCountrySelection } from 'reducers'
 import { Input, Button, Grid, Table } from 'semantic-ui-react'
 import BaseModal from './BaseModal'
 import Dropdown from 'components/Dropdowns/Dropdown'
@@ -11,7 +11,7 @@ import { AppState } from 'state'
 import { getDefaultUnits } from 'data'
 import AttributeImage from 'components/Utils/AttributeImage'
 import { toObj, toArr, mapRange } from 'utils'
-import { heritages_ir, traits_ir, traditions_ir } from 'managers/modifiers'
+import { heritages_ir, traits_ir, traditions_ir, tech_ir } from 'managers/modifiers'
 
 type Entry<T extends Tag | Army> = {
   entity: T
@@ -137,7 +137,6 @@ class ModalImportCountry extends Component<IProps, IState> {
 
   renderCountry = () => {
     const entity = this.country
-    console.log(traditions_ir)
     if (!entity)
       return null
     return (
@@ -598,7 +597,7 @@ class ModalImportCountry extends Component<IProps, IState> {
   }
 
   importCountry = () => {
-    const { createCountry, setCountryValue, selectCulture, enableCountrySelections } = this.props
+    const { createCountry, setCountryValue, selectCulture, enableCountrySelections, enableCountrySelection } = this.props
     console.log(this.country)
     const name = this.country?.name
     if (this.country && name) {
@@ -606,10 +605,15 @@ class ModalImportCountry extends Component<IProps, IState> {
       setCountryValue(name, 'Custom', CountryAttribute.TechLevel, this.country.tech)
       setCountryValue(name, 'Custom', CountryAttribute.MilitaryExperience, this.country.militaryExperience)
       selectCulture(name, this.country.tradition, false)
-      const traditions = union(...this.country.traditions.map((value, index) => (
-        mapRange(value, value => 'tradition_path_' + (index + 1) + '_' + (value + 1))
+      const traditionsWithBonus = this.country.traditions.map(value => value === 7 ? 8 : value)
+      const traditions = union(...traditionsWithBonus.map((value, index) => (
+        mapRange(value, value => 'tradition_path_' + index + '_' + value)
       )))
       enableCountrySelections(name, SelectionType.Tradition, traditions)
+      const invention_list = sortBy(tech_ir.reduce((prev, curr) => prev.concat(curr.inventions.filter(invention => invention.index)), [] as Invention[]), invention => invention.index)
+      const inventions = this.country.inventions.map((value, index) => value && index ? invention_list[index - 1].key : '').filter(value => value)
+      enableCountrySelections(name, SelectionType.Invention, inventions)
+      enableCountrySelection(name, SelectionType.Heritage, this.country.heritage)
     }
   }
 }
@@ -620,7 +624,7 @@ const mapStateToProps = (state: AppState) => ({
   units: getDefaultUnits()
 })
 
-const actions = { createCountry, setCountryValue, selectCulture, enableCountrySelections }
+const actions = { createCountry, setCountryValue, selectCulture, enableCountrySelections, enableCountrySelection }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

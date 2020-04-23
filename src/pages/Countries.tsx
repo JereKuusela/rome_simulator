@@ -37,6 +37,8 @@ const ECONOMY_KEY = 'Economy_'
 const LAW_KEY = 'Law_'
 const IDEA_KEY = 'Idea_'
 
+const PERCENT_PADDING = '\u00a0\u00a0\u00a0\u00a0'
+
 const CELL_PADDING = '.78571429em .78571429em'
 
 class Countries extends Component<IProps> {
@@ -325,9 +327,9 @@ class Countries extends Component<IProps> {
                   definition.inventions.map((invention, column) => {
                     if (column === 0)
                       return this.renderTechLevel(row, row <= tech, invention.modifiers)
-                    const key = invention.name
+                    const key = invention.key
                     return this.renderCell(key, null, selections && selections[key] && row <= tech, invention.modifiers,
-                      () => this.enableInvention(key, row), () => this.clearInvention(key))
+                      () => this.enableInvention(key, row), () => this.clearInvention(key), PERCENT_PADDING)
                   })
                 }
               </Table.Row>
@@ -367,7 +369,7 @@ class Countries extends Component<IProps> {
 
 
   renderTraits = (traits: TraitDefinition[], selections: ObjSet, disabled: boolean) => this.renderList(SelectionType.Trait, traits, selections, TRAIT_COLUMNS, this.onGeneralItemClick, disabled)
-  renderHeritages = (heritages: HeritageDefinition[], selections: ObjSet) => this.renderList(SelectionType.Heritage, heritages, selections, HERITAGE_COLUMNS, this.onCountryItemClick, false, '\u00a0\u00a0\u00a0\u00a0')
+  renderHeritages = (heritages: HeritageDefinition[], selections: ObjSet) => this.renderList(SelectionType.Heritage, heritages, selections, HERITAGE_COLUMNS, this.onCountryItemClick, false, PERCENT_PADDING)
 
 
   renderList = (type: SelectionType, entities: { name: string, key: string, modifiers: Modifier[] }[], selections: ObjSet, columns: number, onClick: (enabled: boolean) => ((type: SelectionType, key: string) => void), disabled: boolean, padding?: string) => {
@@ -462,7 +464,7 @@ class Countries extends Component<IProps> {
       selectable
       onClick={enabled ? () => this.clearTech(level) : () => this.enableTech(level)}
     >
-      {this.renderModifiers(null, modifiers)}
+      {this.renderModifiers(null, modifiers, PERCENT_PADDING)}
     </Table.Cell>
   )
 

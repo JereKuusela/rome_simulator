@@ -2,6 +2,8 @@ const core = require('./core')
 const { getAttribute } = require('./modifiers')
 const path = require('path')
 
+let counter = 0
+
 const subHandle = (results, key, value, level, name) => {
   if (!results[level]) {
     results[level] = {
@@ -14,6 +16,7 @@ const subHandle = (results, key, value, level, name) => {
     inventions.push({
       name: name ? getAttribute(name): '',
       key: name || '',
+      index: name ? ++counter : 0,
       modifiers: []
     })
   if (!key)

@@ -147,6 +147,7 @@ interface InventionData {
   inventions: {
     name: string
     key: string
+    index: number
     modifiers: ModifierData[]
   }[]
 }

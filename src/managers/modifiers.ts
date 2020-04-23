@@ -80,12 +80,27 @@ const getTechModifiers = (modifiers: ModifierWithKey[], country: CountryDefiniti
       if (level > tech_level)
         return
       tech.inventions.forEach((invention, index) => {
-        const key = index === 0 ? TECH_KEY + level : invention.name
+        const key = index === 0 ? TECH_KEY + level : invention.key
         if (index === 0 || selections[key])
           modifiers.push(...mapModifiers(key, invention.modifiers))
 
       })
     })
+  }
+  return modifiers
+}
+
+const getTraditionModifiers = (modifiers: ModifierWithKey[], country: CountryDefinition) => {
+  const selections = country.selections[SelectionType.Tradition] ?? {}
+  const culture = country.culture
+  if (process.env.REACT_APP_GAME === 'euiv') {
+  }
+  else {
+    const tradition = traditions_ir[culture]
+    if (selections['base']) {
+      modifiers.push(...mapModifiers(tradition.name, tradition.modifiers))
+      tradition.paths.forEach(path => getModifiersSub(modifiers, selections, path.traditions))
+    }
   }
   return modifiers
 }
@@ -139,6 +154,7 @@ export const getCountryModifiers = (country: CountryDefinition): ModifierWithKey
   }
   else {
     getModifiersSub(modifiers, country.selections[SelectionType.Heritage], heritages_ir)
+    getTraditionModifiers(modifiers, country)
   }
   return modifiers
 }

@@ -60,6 +60,7 @@ export interface Tradition {
 }
 export interface Invention {
   name: string
+  index: number
   key: string
   modifiers: Modifier[]
 }

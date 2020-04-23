@@ -6,11 +6,13 @@
         {
           "name": "",
           "key": "",
+          "index": 0,
           "modifiers": []
         },
         {
           "name": "Professional Sailors",
           "key": "trireme_discipline_inv_1",
+          "index": 1,
           "modifiers": [
             {
               "target": "Naval",
@@ -22,10 +24,12 @@
         {
           "name": "Learning on the Job",
           "key": "global_start_experience_inv_1",
+          "index": 2,
           "modifiers": [
             {
               "target": "Global",
               "attribute": "Experience",
+              "no_percent": true,
               "value": 7.5
             }
           ]
@@ -33,6 +37,7 @@
         {
           "name": "Supernumerarii",
           "key": "global_supply_limit_modifier_inv_1",
+          "index": 3,
           "modifiers": [
             {
               "target": "Text",
@@ -49,6 +54,7 @@
         {
           "name": "",
           "key": "",
+          "index": 0,
           "modifiers": [
             {
               "target": "Global",
@@ -68,6 +74,7 @@
         {
           "name": "Extraordinary Ordnance",
           "key": "siege_speed_inv_1",
+          "index": 4,
           "modifiers": [
             {
               "target": "Text",
@@ -79,6 +86,7 @@
         {
           "name": "Military Artisans",
           "key": "military_tech_investment_inv_1",
+          "index": 5,
           "modifiers": [
             {
               "target": "Text",
@@ -90,6 +98,7 @@
         {
           "name": "Fustuarium",
           "key": "heavy_infantry_discipline_inv",
+          "index": 6,
           "modifiers": [
             {
               "target": "Heavy Infantry",
@@ -106,6 +115,7 @@
         {
           "name": "",
           "key": "",
+          "index": 0,
           "modifiers": [
             {
               "target": "Global",
@@ -125,6 +135,7 @@
         {
           "name": "Sapping",
           "key": "siege_engineers_inv_1",
+          "index": 7,
           "modifiers": [
             {
               "target": "Text",
@@ -137,6 +148,7 @@
         {
           "name": "Pentaspastos",
           "key": "global_defensive_inv_1",
+          "index": 8,
           "modifiers": [
             {
               "target": "Text",
@@ -148,6 +160,7 @@
         {
           "name": "Material Science",
           "key": "buy_military_tradition_inv",
+          "index": 9,
           "modifiers": [
             {
               "target": "Land",
@@ -165,6 +178,7 @@
         {
           "name": "",
           "key": "",
+          "index": 0,
           "modifiers": [
             {
               "target": "Global",
@@ -184,6 +198,7 @@
         {
           "name": "Boeotian Helmet",
           "key": "discipline_inv_1",
+          "index": 10,
           "modifiers": [
             {
               "target": "Global",
@@ -195,6 +210,7 @@
         {
           "name": "Centuria",
           "key": "trireme_discipline_inv_2",
+          "index": 11,
           "modifiers": [
             {
               "target": "Tetrere",
@@ -206,6 +222,7 @@
         {
           "name": "Galley Slaves",
           "key": "navy_maintenance_cost_inv_1",
+          "index": 12,
           "modifiers": [
             {
               "target": "Naval",
@@ -223,6 +240,7 @@
         {
           "name": "",
           "key": "",
+          "index": 0,
           "modifiers": [
             {
               "target": "Global",
@@ -242,6 +260,7 @@
         {
           "name": "Paymasters",
           "key": "army_maintenance_cost_inv_1",
+          "index": 13,
           "modifiers": [
             {
               "target": "Land",
@@ -254,6 +273,7 @@
         {
           "name": "Fighting Season",
           "key": "global_supply_limit_modifier_inv_2",
+          "index": 14,
           "modifiers": [
             {
               "target": "Text",
@@ -265,6 +285,7 @@
         {
           "name": "Astral Navigation",
           "key": "pirate_spawn_chance_inv_1",
+          "index": 15,
           "modifiers": [
             {
               "target": "Text",
@@ -281,6 +302,7 @@
         {
           "name": "",
           "key": "",
+          "index": 0,
           "modifiers": [
             {
               "target": "Global",
@@ -300,6 +322,7 @@
         {
           "name": "Naval Supply Lines",
           "key": "siege_engineers_inv_2",
+          "index": 16,
           "modifiers": [
             {
               "target": "Text",
@@ -312,10 +335,12 @@
         {
           "name": "Basic Training",
           "key": "global_start_experience_inv_2",
+          "index": 17,
           "modifiers": [
             {
               "target": "Global",
               "attribute": "Experience",
+              "no_percent": true,
               "value": 5
             }
           ]
@@ -323,6 +348,7 @@
         {
           "name": "Military Sponsors",
           "key": "general_loyalty_inv",
+          "index": 18,
           "modifiers": [
             {
               "target": "Text",
@@ -340,6 +366,7 @@
         {
           "name": "",
           "key": "",
+          "index": 0,
           "modifiers": [
             {
               "target": "Global",
@@ -359,6 +386,7 @@
         {
           "name": "Siege Towers",
           "key": "siege_speed_inv_2",
+          "index": 19,
           "modifiers": [
             {
               "target": "Text",
@@ -370,6 +398,7 @@
         {
           "name": "Scorched Earth",
           "key": "hostile_attrition_inv",
+          "index": 20,
           "modifiers": [
             {
               "target": "Text",
@@ -382,6 +411,7 @@
         {
           "name": "Professional Training",
           "key": "global_cohort_recruit_speed_inv",
+          "index": 21,
           "modifiers": [
             {
               "target": "Text",
@@ -398,6 +428,7 @@
         {
           "name": "",
           "key": "",
+          "index": 0,
           "modifiers": [
             {
               "target": "Global",
@@ -417,6 +448,7 @@
         {
           "name": "Manipular Legion",
           "key": "discipline_inv_2",
+          "index": 22,
           "modifiers": [
             {
               "target": "Global",
@@ -428,6 +460,7 @@
         {
           "name": "Vault and Dome",
           "key": "global_defensive_inv_2",
+          "index": 23,
           "modifiers": [
             {
               "target": "Text",
@@ -439,6 +472,7 @@
         {
           "name": "Siege Ladders",
           "key": "assault_ability_inv",
+          "index": 24,
           "modifiers": [
             {
               "target": "Text",
@@ -455,6 +489,7 @@
         {
           "name": "",
           "key": "",
+          "index": 0,
           "modifiers": [
             {
               "target": "Global",
@@ -474,6 +509,7 @@
         {
           "name": "Squadrons",
           "key": "trireme_discipline_inv_3",
+          "index": 25,
           "modifiers": [
             {
               "target": "Trireme",
@@ -485,6 +521,7 @@
         {
           "name": "Scorpio",
           "key": "siege_engineers_inv_3",
+          "index": 26,
           "modifiers": [
             {
               "target": "Text",
@@ -497,6 +534,7 @@
         {
           "name": "Blacksmith Apprentices",
           "key": "heavy_infantry_cost_inv",
+          "index": 27,
           "modifiers": [
             {
               "target": "Heavy Infantry",
@@ -514,6 +552,7 @@
         {
           "name": "",
           "key": "",
+          "index": 0,
           "modifiers": [
             {
               "target": "Global",
@@ -533,6 +572,7 @@
         {
           "name": "Investment",
           "key": "siege_speed_inv_3",
+          "index": 28,
           "modifiers": [
             {
               "target": "Text",
@@ -544,6 +584,7 @@
         {
           "name": "Patterned Construction",
           "key": "global_ship_recruit_speed_inv",
+          "index": 29,
           "modifiers": [
             {
               "target": "Text",
@@ -555,6 +596,7 @@
         {
           "name": "Praefectus Fabrum",
           "key": "military_tech_investment_inv_2",
+          "index": 30,
           "modifiers": [
             {
               "target": "Text",
@@ -571,6 +613,7 @@
         {
           "name": "",
           "key": "",
+          "index": 0,
           "modifiers": [
             {
               "target": "Global",
@@ -590,6 +633,7 @@
         {
           "name": "Veteran Enticements",
           "key": "discipline_inv_3",
+          "index": 31,
           "modifiers": [
             {
               "target": "Global",
@@ -601,6 +645,7 @@
         {
           "name": "Ship's Surgeon",
           "key": "naval_unit_attrition_inv",
+          "index": 32,
           "modifiers": [
             {
               "target": "Text",
@@ -612,6 +657,7 @@
         {
           "name": "Active Drill",
           "key": "experience_decay_inv_1",
+          "index": 33,
           "modifiers": [
             {
               "target": "Text",
@@ -628,6 +674,7 @@
         {
           "name": "",
           "key": "",
+          "index": 0,
           "modifiers": [
             {
               "target": "Global",
@@ -647,6 +694,7 @@
         {
           "name": "Logistics Division",
           "key": "global_supply_limit_modifier_inv_3",
+          "index": 34,
           "modifiers": [
             {
               "target": "Text",
@@ -658,10 +706,12 @@
         {
           "name": "Recruitment Standards",
           "key": "global_start_experience_inv_3",
+          "index": 35,
           "modifiers": [
             {
               "target": "Global",
               "attribute": "Experience",
+              "no_percent": true,
               "value": 5
             }
           ]
@@ -669,6 +719,7 @@
         {
           "name": "Standardized Provisioning",
           "key": "fort_maintenance_cost_inv",
+          "index": 36,
           "modifiers": [
             {
               "target": "Text",
@@ -685,6 +736,7 @@
         {
           "name": "",
           "key": "",
+          "index": 0,
           "modifiers": [
             {
               "target": "Global",
@@ -704,6 +756,7 @@
         {
           "name": "Fortified Camps",
           "key": "global_defensive_inv_3",
+          "index": 37,
           "modifiers": [
             {
               "target": "Text",
@@ -715,6 +768,7 @@
         {
           "name": "Retirement Opportunities",
           "key": "army_maintenance_cost_inv_2",
+          "index": 38,
           "modifiers": [
             {
               "target": "Land",
@@ -727,6 +781,7 @@
         {
           "name": "Tormenta",
           "key": "siege_engineers_inv_4",
+          "index": 39,
           "modifiers": [
             {
               "target": "Text",
@@ -744,6 +799,7 @@
         {
           "name": "",
           "key": "",
+          "index": 0,
           "modifiers": [
             {
               "target": "Global",
@@ -763,6 +819,7 @@
         {
           "name": "Contravallation",
           "key": "siege_speed_inv_4",
+          "index": 40,
           "modifiers": [
             {
               "target": "Text",
@@ -774,6 +831,7 @@
         {
           "name": "Quick March",
           "key": "army_movement_speed_inv",
+          "index": 41,
           "modifiers": [
             {
               "target": "Text",
@@ -785,6 +843,7 @@
         {
           "name": "Scythian Saddles",
           "key": "heavy_cavalry_discipline_inv",
+          "index": 42,
           "modifiers": [
             {
               "target": "Heavy Cavalry",
@@ -801,6 +860,7 @@
         {
           "name": "",
           "key": "",
+          "index": 0,
           "modifiers": [
             {
               "target": "Global",
@@ -820,6 +880,7 @@
         {
           "name": "Promotion Through Valor",
           "key": "discipline_inv_4",
+          "index": 43,
           "modifiers": [
             {
               "target": "Global",
@@ -831,6 +892,7 @@
         {
           "name": "Entrenchment",
           "key": "global_defensive_inv_4",
+          "index": 44,
           "modifiers": [
             {
               "target": "Text",
@@ -842,6 +904,7 @@
         {
           "name": "Reinforced Rostra",
           "key": "trireme_discipline_inv_4",
+          "index": 45,
           "modifiers": [
             {
               "target": "Hexere",
@@ -858,6 +921,7 @@
         {
           "name": "",
           "key": "",
+          "index": 0,
           "modifiers": [
             {
               "target": "Global",
@@ -877,6 +941,7 @@
         {
           "name": "Delayed Baggage Train",
           "key": "global_supply_limit_modifier_inv_4",
+          "index": 46,
           "modifiers": [
             {
               "target": "Text",
@@ -888,10 +953,12 @@
         {
           "name": "Elite Recruitment Standards",
           "key": "global_start_experience_inv_4",
+          "index": 47,
           "modifiers": [
             {
               "target": "Global",
               "attribute": "Experience",
+              "no_percent": true,
               "value": 5
             }
           ]
@@ -899,6 +966,7 @@
         {
           "name": "Enhanced Training Grounds",
           "key": "cohort_reinforcement_speed_inv",
+          "index": 48,
           "modifiers": [
             {
               "target": "Text",
@@ -915,6 +983,7 @@
         {
           "name": "",
           "key": "",
+          "index": 0,
           "modifiers": [
             {
               "target": "Global",
@@ -934,6 +1003,7 @@
         {
           "name": "Siege Ramps",
           "key": "siege_engineers_inv_5",
+          "index": 49,
           "modifiers": [
             {
               "target": "Text",
@@ -946,6 +1016,7 @@
         {
           "name": "Army Surgeons",
           "key": "land_unit_attrition_inv",
+          "index": 50,
           "modifiers": [
             {
               "target": "Text",
@@ -957,6 +1028,7 @@
         {
           "name": "Tactical Withdrawal",
           "key": "retreat_delay_inv",
+          "index": 51,
           "modifiers": [
             {
               "target": "Text",
@@ -974,6 +1046,7 @@
         {
           "name": "",
           "key": "",
+          "index": 0,
           "modifiers": [
             {
               "target": "Global",
@@ -993,6 +1066,7 @@
         {
           "name": "Honesta Missio",
           "key": "navy_maintenance_cost_inv_2",
+          "index": 52,
           "modifiers": [
             {
               "target": "Naval",
@@ -1004,6 +1078,7 @@
         {
           "name": "Lateen Sails",
           "key": "navy_movement_speed_inv",
+          "index": 53,
           "modifiers": [
             {
               "target": "Liburnian",
@@ -1015,6 +1090,7 @@
         {
           "name": "Tacking",
           "key": "pirate_spawn_chance_inv_2",
+          "index": 54,
           "modifiers": [
             {
               "target": "Text",
@@ -1031,6 +1107,7 @@
         {
           "name": "",
           "key": "",
+          "index": 0,
           "modifiers": [
             {
               "target": "Global",
@@ -1050,6 +1127,7 @@
         {
           "name": "Ballistae",
           "key": "siege_speed_inv_5",
+          "index": 55,
           "modifiers": [
             {
               "target": "Text",
@@ -1061,6 +1139,7 @@
         {
           "name": "Veteran Reassignment",
           "key": "experience_decay_inv_2",
+          "index": 56,
           "modifiers": [
             {
               "target": "Text",
@@ -1072,6 +1151,7 @@
         {
           "name": "Experienced Seafarers",
           "key": "blockade_efficiency_inv",
+          "index": 57,
           "modifiers": [
             {
               "target": "Text",
@@ -1088,6 +1168,7 @@
         {
           "name": "",
           "key": "",
+          "index": 0,
           "modifiers": [
             {
               "target": "Global",
@@ -1107,6 +1188,7 @@
         {
           "name": "Polyspaston",
           "key": "global_defensive_inv_5",
+          "index": 58,
           "modifiers": [
             {
               "target": "Text",
@@ -1118,6 +1200,7 @@
         {
           "name": "Central Reserve",
           "key": "global_supply_limit_modifier_inv_5",
+          "index": 59,
           "modifiers": [
             {
               "target": "Text",
@@ -1129,6 +1212,7 @@
         {
           "name": "Mangonel",
           "key": "siege_engineers_inv_6",
+          "index": 60,
           "modifiers": [
             {
               "target": "Text",
@@ -1146,6 +1230,7 @@
         {
           "name": "",
           "key": "",
+          "index": 0,
           "modifiers": [
             {
               "target": "Global",
@@ -1165,6 +1250,7 @@
         {
           "name": "Cohorts",
           "key": "discipline_inv_5",
+          "index": 61,
           "modifiers": [
             {
               "target": "Global",
@@ -1176,10 +1262,12 @@
         {
           "name": "Multi-Discipline Training",
           "key": "global_start_experience_inv_5",
+          "index": 62,
           "modifiers": [
             {
               "target": "Global",
               "attribute": "Experience",
+              "no_percent": true,
               "value": 5
             }
           ]
@@ -1187,6 +1275,7 @@
         {
           "name": "Harpax",
           "key": "trireme_discipline_inv_5",
+          "index": 63,
           "modifiers": [
             {
               "target": "Naval",

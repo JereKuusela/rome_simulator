@@ -486,6 +486,7 @@
                 {
                   "target": "Land",
                   "attribute": "Experience",
+                  "no_percent": true,
                   "value": 0.1
                 },
                 {

@@ -171,7 +171,9 @@ const noPercents = new Set([
   'governor_loyalty',
   'global_capital_trade_routes',
   'omen_power',
-  'loyalty_to_overlord'
+  'loyalty_to_overlord',
+  'global_cohort_start_experience',
+  'global_start_experience'
 ])
 
 generalStats.forEach(key => {
