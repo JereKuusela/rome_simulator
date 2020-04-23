@@ -46,21 +46,13 @@ export interface Modifier {
 export interface ModifierWithKey extends Modifier {
   key: string
 }
-export interface Tradition {
-  name: string
-  key: string
-  modifiers: Modifier[]
-}
-export interface Invention {
-  name: string
+export interface Invention extends ListDefinition{
   index: number
-  key: string
-  modifiers: Modifier[]
 }
 export interface Path {
   name: string
   key: string
-  traditions: Tradition[]
+  traditions: ListDefinition[]
 }
 export interface TraditionDefinition {
   name: string
@@ -68,37 +60,17 @@ export interface TraditionDefinition {
   paths: Path[]
   modifiers: Modifier[]
 }
-export interface TradeDefinition {
-  name: string
-  key: string
+export interface TradeDefinition extends ListDefinition{
   index: number
-  modifiers: Modifier[]
-}
-export interface HeritageDefinition {
-  name: string
-  key: string
-  modifiers: Modifier[]
-}
-export interface InventionDefinition {
-  name: string
-  inventions: Invention[]
 }
 export interface OmenDefinition {
   name: string
   modifier: Modifier
 }
-export interface TraitDefinition {
+export interface ListDefinition {
   name: string
   key: string
   modifiers: Modifier[]
- }
-export interface LawDefinition {
-  name: string
-  options: {
-    name: string
-    key: string
-    modifiers: Modifier[]
-  }[]
 }
 export interface EconomyDefinition {
   name: string
@@ -108,11 +80,6 @@ export interface EconomyDefinition {
     modifiers: Modifier[]
   }[]
 }
-export interface IdeaDefinition {
-  name: string
-  key: string
-  modifiers: Modifier[]
-}
 export interface AbilityDefinition {
   name: string
   options: {
@@ -121,7 +88,7 @@ export interface AbilityDefinition {
     modifiers: Modifier[]
   }[]
 }
-export interface TechDefinitionEUIV {
+export interface TechDefinition {
   name: string
-  modifiers: Modifier[]
+  inventions: Invention[]
 }

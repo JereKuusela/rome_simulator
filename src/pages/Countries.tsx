@@ -6,8 +6,8 @@ import { mapRange, ObjSet, keys, values } from '../utils'
 
 import { addSignWithZero } from 'formatters'
 import {
-  TraditionDefinition, TradeDefinition, IdeaDefinition, HeritageDefinition, InventionDefinition, OmenDefinition, TraitDefinition, EconomyDefinition, LawDefinition,
-  AbilityDefinition, Modifier, Tradition, ReligionType, CultureType, ModifierType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, CountryName, Setting, SelectionType
+  TraditionDefinition, TradeDefinition, OmenDefinition, EconomyDefinition, ListDefinition,
+  AbilityDefinition, Modifier, ReligionType, CultureType, ModifierType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, CountryName, Setting, SelectionType, TechDefinition
 } from 'types'
 import {
   clearCountryValues, clearAllCountrySelections, setCountryValue, enableCountrySelections, enableCountrySelection, clearCountrySelections, clearCountrySelection,
@@ -25,15 +25,9 @@ import { tech_ir, abilities_ir, traits_ir, heritages_ir, traditions_ir, ideas_ir
 import { convertCountryDefinition } from 'managers/countries'
 import CountryValueInput from 'containers/CountryValueInput'
 
-const TRADE_COLUMNS = 4
-const HERITAGE_COLUMNS = 4
 const OMEN_COLUMNS = 4
-const TRAIT_COLUMNS = 4
-const IDEA_COLUMNS = 3
-
 const OMEN_KEY = 'Omen_'
 const ECONOMY_KEY = 'Economy_'
-const LAW_KEY = 'Law_'
 
 const PERCENT_PADDING = '\u00a0\u00a0\u00a0\u00a0'
 
@@ -152,10 +146,10 @@ class Countries extends Component<IProps> {
                   <Table.Body>
                     <Table.Row>
                       <Table.Cell>
-                        Republic Global Discipline (0 - 7.5): <CountryValueInput attribute={CountryAttribute.OfficeDiscipline} country={selected_country} />
+                        Republic Discipline (0 - 7.5): <CountryValueInput attribute={CountryAttribute.OfficeDiscipline} country={selected_country} />
                       </Table.Cell>
                       <Table.Cell>
-                        Monarch Land Morale (0 - 15): <CountryValueInput attribute={CountryAttribute.OfficeMorale} country={selected_country} />>
+                        Monarch Land Morale (0 - 15): <CountryValueInput attribute={CountryAttribute.OfficeMorale} country={selected_country} />
                       </Table.Cell>
                       <Table.Cell />
                     </Table.Row>
@@ -239,7 +233,7 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderInventions = (inventions: InventionDefinition[], tech: number, selections: ObjSet) => {
+  renderInventions = (inventions: TechDefinition[], tech: number, selections: ObjSet) => {
     return (
       <Table celled unstackable definition fixed>
         <Table.Header>
@@ -312,10 +306,11 @@ class Countries extends Component<IProps> {
   }
 
 
-  renderTraits = (traits: TraitDefinition[], selections: ObjSet, disabled: boolean) => this.renderList(SelectionType.Trait, traits, selections, TRAIT_COLUMNS, this.onGeneralItemClick, disabled)
-  renderHeritages = (heritages: HeritageDefinition[], selections: ObjSet) => this.renderList(SelectionType.Heritage, heritages, selections, HERITAGE_COLUMNS, this.onCountryItemClick, false, PERCENT_PADDING)
-  renderTrades = (trades: TradeDefinition[], selections: ObjSet) => this.renderList(SelectionType.Trade, trades, selections, TRADE_COLUMNS, this.onCountryItemClick, false, PERCENT_PADDING)
-  renderIdeas = (ideas: IdeaDefinition[], selections: ObjSet) => this.renderList(SelectionType.Idea, ideas, selections, IDEA_COLUMNS, this.onCountryItemClick, false, PERCENT_PADDING)
+  renderTraits = (traits: ListDefinition[], selections: ObjSet, disabled: boolean) => this.renderList(SelectionType.Trait, traits, selections, 4, this.onGeneralItemClick, disabled)
+  renderHeritages = (heritages: ListDefinition[], selections: ObjSet) => this.renderList(SelectionType.Heritage, heritages, selections, 4, this.onCountryItemClick, false, PERCENT_PADDING)
+  renderTrades = (trades: TradeDefinition[], selections: ObjSet) => this.renderList(SelectionType.Trade, trades, selections, 3, this.onCountryItemClick, false, PERCENT_PADDING)
+  renderIdeas = (ideas: ListDefinition[], selections: ObjSet) => this.renderList(SelectionType.Idea, ideas, selections, 3, this.onCountryItemClick, false, PERCENT_PADDING)
+  renderLaws = (laws: ListDefinition[], selections: ObjSet) => this.renderList(SelectionType.Law, laws, selections, 3, this.onCountryItemClick, false, PERCENT_PADDING)
 
   renderList = (type: SelectionType, entities: { name: string, key: string, modifiers: Modifier[] }[], selections: ObjSet, columns: number, onClick: (enabled: boolean) => ((type: SelectionType, key: string) => void), disabled: boolean, padding?: string) => {
     entities = entities.filter(entity => entity.modifiers.length)
@@ -346,8 +341,6 @@ class Countries extends Component<IProps> {
   }
   renderEconomy = (economy: EconomyDefinition[], selections: ObjSet) => this.renderOptions(ECONOMY_KEY, economy, selections, 2)
 
-  renderLaws = (laws: LawDefinition[], selections: ObjSet) => this.renderOptions(LAW_KEY, laws, selections, 4)
-
   renderAbilities = (abilities: AbilityDefinition[], selections: ObjSet) => {
     const definitions = abilities
     const columns = 2
@@ -376,7 +369,7 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderOptions = (modifier_key: string, definitions: (EconomyDefinition | LawDefinition)[], selections: ObjSet, columns: number) => {
+  renderOptions = (modifier_key: string, definitions: (EconomyDefinition)[], selections: ObjSet, columns: number) => {
     return (
       <Table celled unstackable fixed>
         <Table.Body>
@@ -523,7 +516,7 @@ class Countries extends Component<IProps> {
   }
 
   /** Clears traditions starting from a given tradition. */
-  clearTradition = (traditions: Tradition[], key: string) => {
+  clearTradition = (traditions: ListDefinition[], key: string) => {
     const { enableCountrySelections, clearCountrySelections } = this.props
     this.activateTradition()
     let add = true
@@ -542,7 +535,7 @@ class Countries extends Component<IProps> {
   }
 
   /** Enables traditions up to a given tradition. */
-  enableTradition = (traditions: Tradition[], key: string) => {
+  enableTradition = (traditions: ListDefinition[], key: string) => {
     const { enableCountrySelections, clearCountrySelections } = this.props
     this.activateTradition()
     let add = true

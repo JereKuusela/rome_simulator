@@ -11,7 +11,7 @@ import { AppState } from 'state'
 import { getDefaultUnits } from 'data'
 import AttributeImage from 'components/Utils/AttributeImage'
 import { toObj, toArr, mapRange } from 'utils'
-import { heritages_ir, traits_ir, traditions_ir, tech_ir, trades_ir } from 'managers/modifiers'
+import { heritages_ir, traits_ir, traditions_ir, tech_ir, trades_ir, laws_ir } from 'managers/modifiers'
 
 type Entry<T extends Tag | Army> = {
   entity: T
@@ -217,7 +217,7 @@ class ModalImportCountry extends Component<IProps, IState> {
             Laws
           </Table.Cell>
           <Table.Cell colSpan='3'>
-            {entity.laws.join(', ')}
+            {entity.laws.map(key => laws_ir.find(law => key === law.key)?.name).join(', ')}
           </Table.Cell>
         </Table.Row>
         <Table.Row>
@@ -624,6 +624,7 @@ class ModalImportCountry extends Component<IProps, IState> {
       enableCountrySelection(name, SelectionType.Heritage, this.country.heritage)
       enableCountrySelections(name, SelectionType.Trade, trades)
       enableCountrySelections(name, SelectionType.Idea, this.country.ideas)
+      enableCountrySelections(name, SelectionType.Law, this.country.laws)
     }
   }
 }

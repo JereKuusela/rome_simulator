@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { AppState, getGeneralDefinition, getCountryDefinition, getSiteSettings, getCountry } from 'state'
 import { mapRange, values } from '../utils'
 
-import { Modifier, ReligionType, CultureType, ModifierType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, TechDefinitionEUIV, CountryName, Setting } from 'types'
+import { Modifier, ReligionType, CultureType, ModifierType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, ListDefinition, CountryName, Setting } from 'types'
 import { clearAllCountrySelections, setCountryValue, enableCountrySelection, clearCountrySelection, setGeneralValue, selectCulture, selectReligion, selectGovernment, setHasGeneral } from 'reducers'
 
 import AccordionToggle from 'containers/AccordionToggle'
@@ -80,7 +80,7 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderTech = (tech: TechDefinitionEUIV[], tech_level: number) => {
+  renderTech = (tech: ListDefinition[], tech_level: number) => {
     const rows = Math.ceil(tech.length / TECH_COLUMNS)
     return (
       <Table celled unstackable fixed>
