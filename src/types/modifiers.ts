@@ -34,13 +34,6 @@ export enum ReligionType {
   Dummy = 'Dummy'
 }
 
-export enum TradeType {
-  Country = 'Country',
-  Export = 'Export',
-  Province = 'Province',
-  Capital = 'Capital'
-}
-
 export interface Modifier {
   target: UnitType | ModifierType | Mode 
   attribute: string
@@ -77,8 +70,9 @@ export interface TraditionDefinition {
 }
 export interface TradeDefinition {
   name: string
-  type: TradeType
-  modifier: Modifier
+  key: string
+  index: number
+  modifiers: Modifier[]
 }
 export interface HeritageDefinition {
   name: string

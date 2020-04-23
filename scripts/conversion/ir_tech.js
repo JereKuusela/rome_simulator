@@ -1,15 +1,17 @@
-const core = require('./core')
+const { readFiles, writeFile, getModifier } = require('./core')
 const { getAttribute } = require('./modifiers')
 const path = require('path')
 
 let counter = 0
 
-const subHandle = (results, key, value, level, name) => {
-  if (!results[level]) {
-    results[level] = {
+const results = []
+
+const subHandle = (key, value, level, name) => {
+  if (results.length <= level) {
+    results.push({
       name: 'Level ' + level,
       inventions: []
-    }
+    })
   }
   const inventions = results[level].inventions
   if (name || !inventions.length )
@@ -22,45 +24,48 @@ const subHandle = (results, key, value, level, name) => {
   if (!key)
     return
   const index = name ? inventions.length - 1 : 0
-  inventions[index].modifiers.push(core.getModifier(key, value))
+  inventions[index].modifiers.push(getModifier(key, value))
 }
 
-const handleTech = (results, data) => {
+const handleTech = data => {
   const tech = data.military_tech
   for (let i = 0; i <= 20; i++) {
     if (i === 0) {
-      subHandle(results, '', 0, i)
+      subHandle('', 0, i)
       continue
     }
     if (tech.land_morale === tech.naval_morale)
-      subHandle(results, 'morale', tech.land_morale, i)
+      subHandle('morale', tech.land_morale, i)
     else {
-      subHandle(results, 'land_morale', tech.land_morale, i)
-      subHandle(results, 'naval_morale', tech.naval_morale, i)
+      subHandle('land_morale', tech.land_morale, i)
+      subHandle('naval_morale', tech.naval_morale, i)
     }
     if (tech.army_maintenance_cost === tech.navy_maintenance_cost)
-      subHandle(results, 'maintenance_cost', tech.army_maintenance_cost, i)
+      subHandle('maintenance_cost', tech.army_maintenance_cost, i)
     else {
-      subHandle(results, 'army_maintenance_cost', tech.army_maintenance_cost, i)
-      subHandle(results, 'navy_maintenance_cost', tech.navy_maintenance_cost, i)
+      subHandle('army_maintenance_cost', tech.army_maintenance_cost, i)
+      subHandle('navy_maintenance_cost', tech.navy_maintenance_cost, i)
     }
   }
 }
 
-const handleInvention = (results, data) => {
+const handleInvention = data => {
   Object.keys(data).forEach(name => {
     const value = data[name]
     Object.keys(value).forEach(key => {
       if (key === 'military_tech')
         return
-      subHandle(results, key, value[key], value.military_tech, name)
+      subHandle(key, value[key], value.military_tech, name)
     })
   })
 }
 
-const parsers = {
+const handlers = {
   [path.join('ir', 'technology_tables', '0_martial_table.txt')]: handleTech,
   [path.join('ir', 'inventions', '00_martial_inventions.txt')]: handleInvention
 }
 
-exports.run = () => core.parseFiles(parsers, undefined, path.join('ir', 'tech.json'))
+exports.run = () => {
+  readFiles(handlers)
+  writeFile(results, path.join('ir', 'tech.json'))
+}

@@ -11,7 +11,7 @@ import { AppState } from 'state'
 import { getDefaultUnits } from 'data'
 import AttributeImage from 'components/Utils/AttributeImage'
 import { toObj, toArr, mapRange } from 'utils'
-import { heritages_ir, traits_ir, traditions_ir, tech_ir } from 'managers/modifiers'
+import { heritages_ir, traits_ir, traditions_ir, tech_ir, trades_ir } from 'managers/modifiers'
 
 type Entry<T extends Tag | Army> = {
   entity: T
@@ -438,6 +438,8 @@ class ModalImportCountry extends Component<IProps, IState> {
         country.traditions = this.getNumberList(value).filter((_, index) => index < 3)
       if (key === 'laws')
         country.available_laws = this.getTruthList(value)
+      if (key === 'export')
+        country.exports = this.getTruthList(value)
       if (key === 'monarchy_military_reforms' && country.available_laws[1])
         country.laws.push(value)
       if (key === 'monarchy_economic_law' && country.available_laws[3])
@@ -612,8 +614,11 @@ class ModalImportCountry extends Component<IProps, IState> {
       enableCountrySelections(name, SelectionType.Tradition, traditions)
       const invention_list = sortBy(tech_ir.reduce((prev, curr) => prev.concat(curr.inventions.filter(invention => invention.index)), [] as Invention[]), invention => invention.index)
       const inventions = this.country.inventions.map((value, index) => value && index ? invention_list[index - 1].key : '').filter(value => value)
+      const exports = sortBy(trades_ir.filter(entity => entity.index), entity => entity.index)
+      const trades = this.country.exports.map((value, index) => value ? exports.find(entity => entity.index === index)?.key ?? '' : '').filter(value => value)
       enableCountrySelections(name, SelectionType.Invention, inventions)
       enableCountrySelection(name, SelectionType.Heritage, this.country.heritage)
+      enableCountrySelections(name, SelectionType.Trade, trades)
     }
   }
 }

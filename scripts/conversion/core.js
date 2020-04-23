@@ -5,25 +5,27 @@ const modifiers = require('./modifiers')
 const directoryPath = path.join(__dirname, '../../conversion')
 const resultPath = path.join(__dirname, '../../src/data/json')
 
-const parseFile = (file, parser, results) => {
+const parseFile = (file, parser) => {
   const data = fs.readFileSync(path.join(directoryPath, file)).toString()
-  parser(results, converter.parseFile(data), file)
+  parser(converter.parseFile(data), file)
 }
 
-const parseFiles = (parser, directory, results) => {
+const parseFiles = (parser, directory) => {
   if (path.parse(directory).ext)
-    parseFile(directory, parser, results)
+    parseFile(directory, parser)
   else {
     const files = fs.readdirSync(path.join(directoryPath, directory))
-    files.forEach(file => parseFile(path.join(directory, file), parser, results))
+    files.forEach(file => parseFile(path.join(directory, file), parser))
   }
 }
 
-exports.parseFiles = (parsers, transformer, filename) => {
-  const results = {}
-  Object.keys(parsers).map(key => parseFiles(parsers[key], key, results))
+exports.readFiles = (handlers) => {
+  Object.keys(handlers).map(key => parseFiles(handlers[key], key))
+}
+
+exports.writeFile = (results, filename) => {
   const text = JSON.stringify({
-    [path.parse(filename).name]: Object.values(transformer ? transformer(results) : results)
+    [path.parse(filename).name]: results
   }, undefined, 2)
   const file = path.join(resultPath, filename)
   fs.writeFile(file, text, err => {

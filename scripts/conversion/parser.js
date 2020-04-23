@@ -10,6 +10,9 @@ parseValue = tokens => {
     if (token === '{') {
       return parseObject(tokens)
     }
+    if (token === 'hsv') {
+      parseObject(tokens)
+    }
     return Number.isNaN(Number(token)) ? token : Number(token)
   }
 }
@@ -50,7 +53,7 @@ exports.parseFile = data => {
  */
 exports.parseLocalization = data => {
   const withoutDataLinebreaks = data.replace(/\\n/g, '')
-  const withoutComments = withoutDataLinebreaks.replace(/^#.?$/g, '')
+  const withoutComments = withoutDataLinebreaks.replace(/^#.*$/g, '')
   const withoutSentences = withoutComments.replace(/\./g, '')
   const lines = withoutSentences.split('\n')
   const results = {}
@@ -58,8 +61,11 @@ exports.parseLocalization = data => {
     const tokens = line.split(/:\d/)
     if (tokens.length > 1) {
       const trimmed = tokens[1].trim()
-      if (tokens[0].trim().toLowerCase().startsWith('#'))
+      if (tokens[0].trim().toLowerCase().startsWith('#')) {
+        console.log(tokens[0].trim().toLowerCase())
         console.log('alert')
+
+      }
       results[tokens[0].trim().toLowerCase()] = trimmed.substr(1, trimmed.length - 2)
     }
   })

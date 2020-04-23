@@ -53,7 +53,7 @@ export const getTraditionDefinitions = () => {
 
 export const getTradeDefinitions = () => {
   const data = sortBy<TradeData>(getTradeData(), value => value.name) as TradeDefinition[]
-  data.forEach(trade => setDefault(trade.modifier))
+  data.forEach(entity => entity.modifiers.forEach(modifier => setDefault(modifier)))
   return data
 }
 
@@ -127,9 +127,10 @@ interface TraditionData {
 }
 
 interface TradeData {
-  name: string
-  type: string
-  modifier: ModifierData
+  name: String
+  key: string
+  index: number
+  modifiers: ModifierData[]
 }
 
 interface TechDataEUIV {

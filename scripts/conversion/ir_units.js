@@ -1,8 +1,10 @@
-const core = require('./core')
+const { readFiles, writeFile } = require('./core')
 const path = require('path')
 const modifiers = require('./modifiers')
 
-const handleUnit = (results, data) => {
+const results = {}
+
+const handler = data => {
   Object.keys(data).forEach(key => {
     const type = modifiers.getAttribute(key)
     const values = data[key]
@@ -18,7 +20,7 @@ const handleUnit = (results, data) => {
   })
 }
 
-const transformer = results => {
+const transformer = () => {
   Object.keys(results).forEach(key => {
     const unit = results[key]
     unit['Parent'] = unit['Parent'] || 'Land Unit'
@@ -27,11 +29,14 @@ const transformer = results => {
         delete unit[key]
     })
   })
-  return results
+  return Object.values(results)
 }
 
-const parsers = {
-  [path.join('ir', 'units')]: handleUnit
+const handlers = {
+  [path.join('ir', 'units')]: handler
 }
 
-exports.run = () => core.parseFiles(parsers, transformer, path.join('ir', 'units.json'))
+exports.run = () => {
+  readFiles(handlers)
+  writeFile(transformer(), path.join('ir', 'units.json'))
+}

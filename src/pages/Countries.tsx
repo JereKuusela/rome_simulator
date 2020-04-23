@@ -241,33 +241,6 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderTrades = (trades: TradeDefinition[], selections: ObjSet) => {
-    const rows = Math.ceil(trades.length / TRADE_COLUMNS)
-    return (
-      <Table celled unstackable fixed>
-        <Table.Body>
-          {
-            mapRange(rows, number => number).map(row => (
-              <Table.Row key={row}>
-                {
-                  mapRange(TRADE_COLUMNS, number => number).map(column => {
-                    const index = row * TRADE_COLUMNS + column
-                    const trade = trades[index]
-                    if (!trade)
-                      return (<Table.Cell key={TRADE_KEY + index}></Table.Cell>)
-                    const key = TRADE_KEY + trade.type + '_' + trade.name
-                    const modifiers = [trade.modifier]
-                    return this.renderCell(key, trade.type + ': ' + trade.name, selections && selections[key], modifiers)
-                  })
-                }
-              </Table.Row>
-            ))
-          }
-        </Table.Body>
-      </Table >
-    )
-  }
-
   renderIdeas = (ideas: IdeaDefinition[], selections: ObjSet) => {
     const rows = Math.ceil(ideas.length / IDEA_COLUMNS)
     return (
@@ -370,7 +343,7 @@ class Countries extends Component<IProps> {
 
   renderTraits = (traits: TraitDefinition[], selections: ObjSet, disabled: boolean) => this.renderList(SelectionType.Trait, traits, selections, TRAIT_COLUMNS, this.onGeneralItemClick, disabled)
   renderHeritages = (heritages: HeritageDefinition[], selections: ObjSet) => this.renderList(SelectionType.Heritage, heritages, selections, HERITAGE_COLUMNS, this.onCountryItemClick, false, PERCENT_PADDING)
-
+  renderTrades = (trades: TradeDefinition[], selections: ObjSet) => this.renderList(SelectionType.Trade, trades, selections, TRADE_COLUMNS, this.onCountryItemClick, false, PERCENT_PADDING)
 
   renderList = (type: SelectionType, entities: { name: string, key: string, modifiers: Modifier[] }[], selections: ObjSet, columns: number, onClick: (enabled: boolean) => ((type: SelectionType, key: string) => void), disabled: boolean, padding?: string) => {
     entities = entities.filter(entity => entity.modifiers.length)

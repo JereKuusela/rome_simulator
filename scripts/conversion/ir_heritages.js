@@ -1,9 +1,10 @@
-const { parseFiles, getModifier } = require('./core')
+const { readFiles, writeFile, getModifier } = require('./core')
 const path = require('path')
 const { getAttribute } = require('./modifiers')
 
+const results = []
 
-const handleHeritages = (results, data) => {
+const handler = data => {
   Object.keys(data).forEach(key => {
     const name = getAttribute(key)
     const heritage = data[key]
@@ -17,12 +18,15 @@ const handleHeritages = (results, data) => {
       if (getAttribute(key))
         entity.modifiers.push(getModifier(key, attribute))
     })
-    results[name] = entity
+    results.push(entity)
   })
 }
 
-const parsers = {
-  [path.join('ir', 'heritage')]: handleHeritages
+const handlers = {
+  [path.join('ir', 'heritage')]: handler
 }
 
-exports.run = () => parseFiles(parsers, undefined, path.join('ir', 'heritages.json'))
+exports.run = () => {
+  readFiles(handlers)
+  writeFile(results, path.join('ir', 'heritages.json'))
+}

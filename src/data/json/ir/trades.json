@@ -1,242 +1,272 @@
 {
   "trades": [
     {
-      "name": "Salt",
-      "type": "Capital",
-      "modifier": {
-        "target": "Global",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "value": -0.05
-      }
+      "name": "Import: Salt",
+      "key": "Import salt",
+      "index": 0,
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.05
+        }
+      ]
     },
     {
-      "name": "Salt",
-      "type": "Export",
-      "modifier": {
-        "target": "Global",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "value": -0.025
-      }
+      "name": "Export: Salt",
+      "key": "Export salt",
+      "index": 1,
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.025
+        }
+      ]
     },
     {
-      "name": "Wine",
-      "type": "Capital",
-      "modifier": {
-        "target": "Global",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "value": -0.05
-      }
+      "name": "Import: Iron",
+      "key": "Import iron",
+      "index": 0,
+      "modifiers": [
+        {
+          "target": "Heavy Infantry",
+          "attribute": "Discipline",
+          "value": 0.1
+        }
+      ]
     },
     {
-      "name": "Wine",
-      "type": "Export",
-      "modifier": {
-        "target": "Global",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "value": -0.025
-      }
+      "name": "Export: Iron",
+      "key": "Export iron",
+      "index": 2,
+      "modifiers": [
+        {
+          "target": "Heavy Infantry",
+          "attribute": "Discipline",
+          "value": 0.05
+        }
+      ]
     },
     {
-      "name": "Iron",
-      "type": "Capital",
-      "modifier": {
-        "target": "Heavy Infantry",
-        "attribute": "Discipline",
-        "value": 0.1
-      }
+      "name": "Import: Horses",
+      "key": "Import horses",
+      "index": 0,
+      "modifiers": [
+        {
+          "target": "Light Cavalry",
+          "attribute": "Discipline",
+          "value": 0.1
+        }
+      ]
     },
     {
-      "name": "Iron",
-      "type": "Export",
-      "modifier": {
-        "target": "Heavy Infantry",
-        "attribute": "Discipline",
-        "value": 0.05
-      }
+      "name": "Export: Horses",
+      "key": "Export horses",
+      "index": 3,
+      "modifiers": [
+        {
+          "target": "Light Cavalry",
+          "attribute": "Discipline",
+          "value": 0.05
+        }
+      ]
     },
     {
-      "name": "Horses",
-      "type": "Capital",
-      "modifier": {
-        "target": "Light Cavalry",
-        "attribute": "Discipline",
-        "value": 0.1
-      }
+      "name": "Import: Wine",
+      "key": "Import wine",
+      "index": 0,
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.05
+        }
+      ]
     },
     {
-      "name": "Horses",
-      "type": "Export",
-      "modifier": {
-        "target": "Light Cavalry",
-        "attribute": "Discipline",
-        "value": 0.05
-      }
+      "name": "Export: Wine",
+      "key": "Export wine",
+      "index": 4,
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.025
+        }
+      ]
     },
     {
-      "name": "Elephants",
-      "type": "Capital",
-      "modifier": {
-        "target": "War Elephants",
-        "attribute": "Discipline",
-        "value": 0.1
-      }
+      "name": "Import: Elephants",
+      "key": "Import elephants",
+      "index": 0,
+      "modifiers": [
+        {
+          "target": "War Elephants",
+          "attribute": "Discipline",
+          "value": 0.1
+        }
+      ]
     },
     {
-      "name": "Elephants",
-      "type": "Export",
-      "modifier": {
-        "target": "War Elephants",
-        "attribute": "Discipline",
-        "value": 0.05
-      }
+      "name": "Export: Elephants",
+      "key": "Export elephants",
+      "index": 10,
+      "modifiers": [
+        {
+          "target": "War Elephants",
+          "attribute": "Discipline",
+          "value": 0.05
+        }
+      ]
     },
     {
-      "name": "Wild Game",
-      "type": "Capital",
-      "modifier": {
-        "target": "Archers",
-        "attribute": "Discipline",
-        "value": 0.1
-      }
+      "name": "Import: Wild Game",
+      "key": "Import wild_game",
+      "index": 0,
+      "modifiers": [
+        {
+          "target": "Archers",
+          "attribute": "Discipline",
+          "value": 0.1
+        }
+      ]
     },
     {
-      "name": "Wild Game",
-      "type": "Export",
-      "modifier": {
-        "target": "Archers",
-        "attribute": "Discipline",
-        "value": 0.05
-      }
+      "name": "Export: Wild Game",
+      "key": "Export wild_game",
+      "index": 13,
+      "modifiers": [
+        {
+          "target": "Archers",
+          "attribute": "Discipline",
+          "value": 0.05
+        }
+      ]
     },
     {
-      "name": "Steppe Horses",
-      "type": "Capital",
-      "modifier": {
-        "target": "Horse Archers",
-        "attribute": "Discipline",
-        "value": 0.1
-      }
+      "name": "Import: Steppe Horses",
+      "key": "Import steppe_horses",
+      "index": 0,
+      "modifiers": [
+        {
+          "target": "Horse Archers",
+          "attribute": "Discipline",
+          "value": 0.1
+        }
+      ]
     },
     {
-      "name": "Steppe Horses",
-      "type": "Export",
-      "modifier": {
-        "target": "Horse Archers",
-        "attribute": "Discipline",
-        "value": 0.05
-      }
+      "name": "Export: Steppe Horses",
+      "key": "Export steppe_horses",
+      "index": 15,
+      "modifiers": [
+        {
+          "target": "Horse Archers",
+          "attribute": "Discipline",
+          "value": 0.05
+        }
+      ]
     },
     {
-      "name": "Fur",
-      "type": "Import",
-      "modifier": {
-        "target": "Global",
-        "attribute": "Experience",
-        "value": 0.1
-      }
+      "name": "Import: Leather",
+      "key": "Import leather",
+      "index": 0,
+      "modifiers": [
+        {
+          "target": "Light Infantry",
+          "attribute": "Defense",
+          "value": 0.1
+        }
+      ]
     },
     {
-      "name": "Fur",
-      "type": "Province",
-      "modifier": {
-        "target": "Global",
-        "attribute": "Experience",
-        "value": 0.05
-      }
+      "name": "Export: Leather",
+      "key": "Export leather",
+      "index": 21,
+      "modifiers": [
+        {
+          "target": "Light Infantry",
+          "attribute": "Defense",
+          "value": 0.05
+        }
+      ]
     },
     {
-      "name": "Fur",
-      "type": "Capital",
-      "modifier": {
-        "target": "Global",
-        "attribute": "Experience",
-        "value": 0.1
-      }
+      "name": "Import: Base Metals",
+      "key": "Import base_metals",
+      "index": 0,
+      "modifiers": [
+        {
+          "target": "Light Infantry",
+          "attribute": "Offense",
+          "value": 0.1
+        }
+      ]
     },
     {
-      "name": "Fur",
-      "type": "Export",
-      "modifier": {
-        "target": "Global",
-        "attribute": "Experience",
-        "value": 0.05
-      }
+      "name": "Export: Base Metals",
+      "key": "Export base_metals",
+      "index": 22,
+      "modifiers": [
+        {
+          "target": "Light Infantry",
+          "attribute": "Offense",
+          "value": 0.05
+        }
+      ]
     },
     {
-      "name": "Leather",
-      "type": "Capital",
-      "modifier": {
-        "target": "Light Infantry",
-        "attribute": "Defense",
-        "value": 0.1
-      }
+      "name": "Import: Hemp",
+      "key": "Import hemp",
+      "index": 0,
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Damage Done",
+          "value": 0.1
+        }
+      ]
     },
     {
-      "name": "Leather",
-      "type": "Export",
-      "modifier": {
-        "target": "Light Infantry",
-        "attribute": "Defense",
-        "value": 0.05
-      }
+      "name": "Export: Hemp",
+      "key": "Export hemp",
+      "index": 27,
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Damage Taken",
+          "value": -0.1
+        }
+      ]
     },
     {
-      "name": "Base Metals",
-      "type": "Capital",
-      "modifier": {
-        "target": "Light Infantry",
-        "attribute": "Offense",
-        "value": 0.1
-      }
+      "name": "Import: Camels",
+      "key": "Import camel",
+      "index": 0,
+      "modifiers": [
+        {
+          "target": "Camel Cavalry",
+          "attribute": "Discipline",
+          "value": 0.1
+        }
+      ]
     },
     {
-      "name": "Base Metals",
-      "type": "Export",
-      "modifier": {
-        "target": "Light Infantry",
-        "attribute": "Offense",
-        "value": 0.05
-      }
-    },
-    {
-      "name": "Hemp",
-      "type": "Capital",
-      "modifier": {
-        "target": "Naval",
-        "attribute": "Damage done",
-        "value": 0.1
-      }
-    },
-    {
-      "name": "Hemp",
-      "type": "Export",
-      "modifier": {
-        "target": "Naval",
-        "attribute": "Damage taken",
-        "value": -0.1
-      }
-    },
-    {
-      "name": "Camel",
-      "type": "Capital",
-      "modifier": {
-        "target": "Camels",
-        "attribute": "Discipline",
-        "value": 0.1
-      }
-    },
-    {
-      "name": "Camel",
-      "type": "Export",
-      "modifier": {
-        "target": "Camels",
-        "attribute": "Discipline",
-        "value": 0.05
-      }
+      "name": "Export: Camels",
+      "key": "Export camel",
+      "index": 30,
+      "modifiers": [
+        {
+          "target": "Camel Cavalry",
+          "attribute": "Discipline",
+          "value": 0.05
+        }
+      ]
     }
   ]
 }
