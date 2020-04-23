@@ -184,6 +184,7 @@ interface EconomyData {
 
 interface IdeaData {
   name: string
+  key: string
   modifiers: ModifierData[]
 }
 

@@ -36,6 +36,7 @@ type Country = {
   navalMaintenance: number
   available_laws: boolean[]
   laws: string[]
+  ideas: string[]
   exports: boolean[]
   imports: boolean[]
 }
@@ -404,7 +405,8 @@ class ModalImportCountry extends Component<IProps, IState> {
       laws: [],
       available_laws: [],
       exports: [],
-      imports: []
+      imports: [],
+      ideas: []
     }
     let tech = false
     for (let line = start + 1; line < end; line++) {
@@ -425,6 +427,8 @@ class ModalImportCountry extends Component<IProps, IState> {
         country.militaryExperience = Number(value)
       if (key === 'units')
         country.armies = this.getNumberList(value)
+      if (key === 'idea' && value !== '{')
+        country.ideas.push(this.nonStringify(value))
       // Index 9 is Roman special invention, others are military inventions.
       // Probably need to check what other special inventions do.
       if (key === 'active_inventions')
@@ -619,6 +623,7 @@ class ModalImportCountry extends Component<IProps, IState> {
       enableCountrySelections(name, SelectionType.Invention, inventions)
       enableCountrySelection(name, SelectionType.Heritage, this.country.heritage)
       enableCountrySelections(name, SelectionType.Trade, trades)
+      enableCountrySelections(name, SelectionType.Idea, this.country.ideas)
     }
   }
 }

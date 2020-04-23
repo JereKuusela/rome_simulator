@@ -53,19 +53,18 @@ exports.parseFile = data => {
  */
 exports.parseLocalization = data => {
   const withoutDataLinebreaks = data.replace(/\\n/g, '')
-  const withoutComments = withoutDataLinebreaks.replace(/^#.*$/g, '')
+  const withoutComments = withoutDataLinebreaks.replace(/\h*#.*/g, '')
   const withoutSentences = withoutComments.replace(/\./g, '')
   const lines = withoutSentences.split('\n')
   const results = {}
   lines.forEach(line => {
+    if (line.trim().toLowerCase().startsWith('#')) {
+      console.log(line)
+      console.log('alert')
+    }
     const tokens = line.split(/:\d/)
     if (tokens.length > 1) {
       const trimmed = tokens[1].trim()
-      if (tokens[0].trim().toLowerCase().startsWith('#')) {
-        console.log(tokens[0].trim().toLowerCase())
-        console.log('alert')
-
-      }
       results[tokens[0].trim().toLowerCase()] = trimmed.substr(1, trimmed.length - 2)
     }
   })

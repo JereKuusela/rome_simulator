@@ -21,7 +21,7 @@ import Dropdown from 'components/Dropdowns/Dropdown'
 import ConfirmationButton from 'components/ConfirmationButton'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TableAttributes from 'components/TableAttributes'
-import { tech_ir, abilities_ir, traits_ir, heritages_ir, traditions_ir } from 'managers/modifiers'
+import { tech_ir, abilities_ir, traits_ir, heritages_ir, traditions_ir, ideas_ir } from 'managers/modifiers'
 import { convertCountryDefinition } from 'managers/countries'
 import CountryValueInput from 'containers/CountryValueInput'
 
@@ -31,11 +31,9 @@ const OMEN_COLUMNS = 4
 const TRAIT_COLUMNS = 4
 const IDEA_COLUMNS = 3
 
-const TRADE_KEY = 'Trade_'
 const OMEN_KEY = 'Omen_'
 const ECONOMY_KEY = 'Economy_'
 const LAW_KEY = 'Law_'
-const IDEA_KEY = 'Idea_'
 
 const PERCENT_PADDING = '\u00a0\u00a0\u00a0\u00a0'
 
@@ -45,7 +43,7 @@ class Countries extends Component<IProps> {
 
   render() {
     const { settings, general_definition, general, trades, selected_country, setHasGeneral,
-      omens, economy, ideas, laws, country_definition, country } = this.props
+      omens, economy, laws, country_definition, country } = this.props
     const selections = country_definition.selections
     const tradition = traditions_ir[country.culture]
     const omen = omens[country.religion]
@@ -170,7 +168,7 @@ class Countries extends Component<IProps> {
                   this.renderEconomy(economy, selections[SelectionType.Econonomy])
                 }
                 {
-                  this.renderIdeas(ideas, selections[SelectionType.Idea])
+                  this.renderIdeas(ideas_ir, selections[SelectionType.Idea])
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -238,33 +236,6 @@ class Countries extends Component<IProps> {
           }
         </Table.Body>
       </Table>
-    )
-  }
-
-  renderIdeas = (ideas: IdeaDefinition[], selections: ObjSet) => {
-    const rows = Math.ceil(ideas.length / IDEA_COLUMNS)
-    return (
-      <Table celled unstackable fixed>
-        <Table.Body>
-          {
-            mapRange(rows, number => number).map(row => (
-              <Table.Row key={row}>
-                {
-                  mapRange(IDEA_COLUMNS, number => number).map(column => {
-                    const index = row * IDEA_COLUMNS + column
-                    const idea = ideas[index]
-                    if (!idea)
-                      return (<Table.Cell key={IDEA_KEY + index}></Table.Cell>)
-                    const key = IDEA_KEY + index
-                    const modifiers = idea.modifiers
-                    return this.renderCell(key, idea.name, selections && selections[key], modifiers)
-                  })
-                }
-              </Table.Row>
-            ))
-          }
-        </Table.Body>
-      </Table >
     )
   }
 
@@ -344,6 +315,7 @@ class Countries extends Component<IProps> {
   renderTraits = (traits: TraitDefinition[], selections: ObjSet, disabled: boolean) => this.renderList(SelectionType.Trait, traits, selections, TRAIT_COLUMNS, this.onGeneralItemClick, disabled)
   renderHeritages = (heritages: HeritageDefinition[], selections: ObjSet) => this.renderList(SelectionType.Heritage, heritages, selections, HERITAGE_COLUMNS, this.onCountryItemClick, false, PERCENT_PADDING)
   renderTrades = (trades: TradeDefinition[], selections: ObjSet) => this.renderList(SelectionType.Trade, trades, selections, TRADE_COLUMNS, this.onCountryItemClick, false, PERCENT_PADDING)
+  renderIdeas = (ideas: IdeaDefinition[], selections: ObjSet) => this.renderList(SelectionType.Idea, ideas, selections, IDEA_COLUMNS, this.onCountryItemClick, false, PERCENT_PADDING)
 
   renderList = (type: SelectionType, entities: { name: string, key: string, modifiers: Modifier[] }[], selections: ObjSet, columns: number, onClick: (enabled: boolean) => ((type: SelectionType, key: string) => void), disabled: boolean, padding?: string) => {
     entities = entities.filter(entity => entity.modifiers.length)
@@ -701,7 +673,6 @@ const mapStateToProps = (state: AppState) => ({
   selected_country: state.settings.country,
   laws: state.data.laws,
   economy: state.data.economy,
-  ideas: state.data.ideas,
   general_definition: getGeneralDefinition(state, state.settings.country),
   general: getGeneral(state, state.settings.country),
   settings: getSiteSettings(state)

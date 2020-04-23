@@ -2,6 +2,7 @@
   "ideas": [
     {
       "name": "Martial Ethos",
+      "key": "idea_martial_ethos",
       "modifiers": [
         {
           "target": "Land",
@@ -13,6 +14,7 @@
     },
     {
       "name": "Thalassocracy",
+      "key": "idea_thalassocracy",
       "modifiers": [
         {
           "target": "Naval",
@@ -24,6 +26,7 @@
     },
     {
       "name": "Elite Soldiery",
+      "key": "idea_elite_soldiers",
       "modifiers": [
         {
           "target": "Global",
@@ -34,6 +37,7 @@
     },
     {
       "name": "Permanent Shipyards",
+      "key": "idea_permanent_shipyards",
       "modifiers": [
         {
           "target": "Naval",
@@ -45,19 +49,27 @@
     },
     {
       "name": "Conscription",
+      "key": "idea_conscription",
       "modifiers": [
         {
           "target": "Text",
-          "attribute": "Manpower",
+          "attribute": "National Manpower",
           "value": 0.1
         }
       ]
     },
     {
       "name": "Militarized Society",
+      "key": "idea_military_society",
       "modifiers": [
         {
-          "target": "Global",
+          "target": "Land",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.2
+        },
+        {
+          "target": "Naval",
           "attribute": "Maintenance",
           "type": "Modifier",
           "value": -0.2
@@ -66,35 +78,38 @@
     },
     {
       "name": "Ordered Retreat",
+      "key": "idea_retreat",
       "modifiers": [
         {
           "target": "Text",
-          "attribute": "Reinforcement speed",
+          "attribute": "Reinforcement Speed",
           "value": 0.1
         },
         {
           "target": "Text",
-          "attribute": "Land morale recovery",
+          "attribute": "Army Morale Recovery",
           "value": 0.05
         }
       ]
     },
     {
       "name": "Siege Training",
+      "key": "idea_siege_training",
       "modifiers": [
         {
           "target": "Text",
-          "attribute": "Siege interval",
-          "value": -0.15
+          "attribute": "Siege Ability",
+          "value": 0.15
         }
       ]
     },
     {
       "name": "Support of the People",
+      "key": "idea_triumph",
       "modifiers": [
         {
           "target": "Text",
-          "attribute": "Experience decay",
+          "attribute": "Experience Decay",
           "value": -0.01
         }
       ]

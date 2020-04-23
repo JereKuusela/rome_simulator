@@ -110,6 +110,7 @@ export interface EconomyDefinition {
 }
 export interface IdeaDefinition {
   name: string
+  key: string
   modifiers: Modifier[]
 }
 export interface AbilityDefinition {
