@@ -1,4 +1,4 @@
-import { Battle, TerrainType, Side, CountryName, ArmyForCombatConversion, TerrainDefinition, Settings, TacticCalc, Setting, UnitPreferences, CombatPhase, CombatParticipant, Cohorts, UnitType, CombatCohorts } from "types"
+import { Battle, TerrainType, Side, CountryName, ArmyForCombatConversion, TerrainDefinition, Settings, TacticCalc, Setting, UnitPreferences, CombatPhase, CombatParticipant, Cohorts, UnitType, CombatCohorts, ArmyName } from "types"
 import { forEach, toArr, toObj, values, map } from "utils"
 import { calculateGeneralPips, getTerrainPips, getUnitDefinition, getCombatUnit, sortReserve } from "combat"
 import { calculateValue } from "definition_values"
@@ -43,8 +43,12 @@ export const setPhaseDice = (battle: Battle, side: Side, phase: number, dice: nu
   rolls[phase] = dice
 }
 
-export const selectArmy = (battle: Battle, side: Side, name: CountryName) => {
+export const selectParticipantCountry = (battle: Battle, side: Side, name: CountryName) => {
   battle.participants[side].country = name
+}
+
+export const selectParticipantArmy = (battle: Battle, side: Side, name: ArmyName) => {
+  battle.participants[side].army = name
 }
 
 

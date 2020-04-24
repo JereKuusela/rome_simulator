@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { AppState, getCurrentCombat, getSelectedTactic, filterTactics, getCountryName, getSiteSettings } from 'state'
+import { AppState, getCurrentCombat, getSelectedTactic, filterTactics, getSiteSettings, getParticipant } from 'state'
 import { toArr } from 'utils'
 import { selectTactic } from 'reducers'
 import { Side, CombatCohorts, TacticDefinition, TacticCalc, TacticType, Tactic } from 'types'
@@ -22,8 +22,8 @@ class TacticSelector extends Component<IProps> {
   }
 
   selectTactic = (type: TacticType) => {
-    const { country, selectTactic } = this.props
-    selectTactic(country, type)
+    const { participant, selectTactic } = this.props
+    selectTactic(participant.country, participant.army, type)
   }
 }
 
@@ -45,7 +45,7 @@ const mapStateToProps = (state: AppState, props: Props) => {
   return {
     tactics: toArr(filterTactics(state), tactic => convertTactic(tactic, cohorts, opposing_tactic)),
     tactic: tactic.type,
-    country: getCountryName(state, props.side),
+    participant: getParticipant(state, props.side),
     settings: getSiteSettings(state)
   }
 }

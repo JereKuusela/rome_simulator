@@ -17,8 +17,8 @@ import { convertParticipant } from 'managers/battle'
  */
 export const getSettings = (state: AppState, mode?: Mode): Settings => {
   const settings = { ...state.settings.combatSettings[mode || state.settings.mode], ...state.settings.siteSettings }
-  const attacker = getCountry(state, getCountryName(state, Side.Attacker))
-  const defender = getCountry(state, getCountryName(state, Side.Defender))
+  const attacker = getCountry(state, getParticipant(state, Side.Attacker).country)
+  const defender = getCountry(state, getParticipant(state, Side.Defender).country)
   settings[Setting.CombatWidth] += Math.max(attacker[CountryAttribute.CombatWidth], defender[CountryAttribute.CombatWidth])
   settings[Setting.Precision] = Math.pow(10, settings[Setting.Precision])
   return settings
@@ -184,9 +184,6 @@ export const getFlankSize = (state: AppState, side: Side): number => {
   return army.flank_size
 }
 
-export const getCountryName = (state: AppState, side: Side): CountryName => {
-  return state.battle[state.settings.mode].participants[side].country
-}
 export const getCountry = (state: AppState, country: CountryName): Country => {
   const definition = getCountryDefinition(state, country)
   return convertCountryDefinition(definition, state.settings.siteSettings)
@@ -232,7 +229,7 @@ export const getArmyDefinitionWithOverriddenUnits = (state: AppState, name: Coun
 
 export const getCohorts = (state: AppState, side: Side, originals?: boolean): Cohorts => {
   const settings = getSettings(state)
-  const country = getCountryName(state, side)
+  const country = getParticipant(state, side).country
   const definition = getArmyDefinitionWithOverriddenUnits(state, country, originals)
   const frontline = [Array<Cohort | null>(settings[Setting.CombatWidth]).fill(null)]
   if (settings[Setting.BackRow])

@@ -2,14 +2,13 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { CountryName, CountryAttribute } from 'types'
-import { setCountryValue } from 'reducers'
+import { setCountryAttribute } from 'reducers'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 import { filterValues, calculateBase } from 'definition_values'
 import { getCountries, AppState } from 'state'
 
 type Props = {
   country: CountryName
-  identifier?: string
   attribute: CountryAttribute
   percent?: boolean
 }
@@ -25,13 +24,10 @@ class CountryValueInput extends Component<IProps> {
       <DelayedNumericInput value={value} onChange={this.onChange} percent={percent} />
     )
   }
-
-  getKey = () => this.props.identifier || 'Base'
-
   onChange = (value: number) => {
-    const { definition, attribute, setCountryValue, country } = this.props
-    const base = calculateBase(definition, attribute) - calculateBase(filterValues(definition, this.getKey()), attribute)
-    setCountryValue(country, this.getKey(), attribute, value - base)
+    const { definition, attribute, setCountryAttribute, country } = this.props
+    const base = calculateBase(definition, attribute) - calculateBase(filterValues(definition, 'Custom'), attribute)
+    setCountryAttribute(country, attribute, value - base)
   }
 }
 
@@ -39,7 +35,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   definition: getCountries(state)[props.country]
 })
 
-const actions = { setCountryValue }
+const actions = { setCountryAttribute }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table, Input } from 'semantic-ui-react'
 
-import { AppState, getCountryName, getUnitPreferences, getFlankSize, getMode, getUnitList, getSiteSettings } from 'state'
+import { AppState, getUnitPreferences, getFlankSize, getMode, getUnitList, getSiteSettings, getParticipant } from 'state'
 import { setFlankSize, setUnitPreference } from 'reducers'
 
 import { UnitPreferenceType, Side, UnitType, Unit } from 'types'
@@ -92,25 +92,29 @@ class Row extends Component<IProps> {
   }
 
   setFlankSize = (value: number) => {
-    const { setFlankSize, country } = this.props
-    setFlankSize(country, value)
+    const { setFlankSize, army, country } = this.props
+    setFlankSize(country, army, value)
   }
 
   setUnitPreference = (type: UnitPreferenceType, unit_type: UnitType): void => {
-    const { setUnitPreference, country } = this.props
-    setUnitPreference(country, type, unit_type)
+    const { setUnitPreference, army, country } = this.props
+    setUnitPreference(country, army, type, unit_type)
   }
 }
 
 
-const mapStateToProps = (state: AppState, props: Props) => ({
-  units: getUnitList(state, true, getCountryName(state, props.side)),
-  country: getCountryName(state, props.side),
-  flank_size: getFlankSize(state, props.side),
-  preferences: getUnitPreferences(state, props.side),
-  mode: getMode(state),
-  settings: getSiteSettings(state)
-})
+const mapStateToProps = (state: AppState, props: Props) => {
+  const participant = getParticipant(state, props.side)
+  return {
+    units: getUnitList(state, true, participant.country),
+    country: participant.country,
+    army: participant.army,
+    flank_size: getFlankSize(state, props.side),
+    preferences: getUnitPreferences(state, props.side),
+    mode: getMode(state),
+    settings: getSiteSettings(state)
+  }
+}
 
 const actions = { setFlankSize, setUnitPreference }
 

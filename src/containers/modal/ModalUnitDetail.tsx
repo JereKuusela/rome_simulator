@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { ValuesType, CountryName, UnitType, Cohort, UnitRole, UnitValueType, ModalType } from 'types'
+import { ValuesType, CountryName, UnitType, Cohort, UnitRole, UnitValueType, ModalType, ArmyName } from 'types'
 import UnitDetail from 'components/UnitDetail'
 import { AppState, getUnit, filterTerrainTypes, getMode, getUnitTypeList, getSiteSettings } from 'state'
 import { openModal, changeUnitType, deleteUnit, setUnitValue, changeUnitImage, changeParent, changeUnitDeployment, toggleUnitLoyality, closeModal } from 'reducers'
@@ -49,9 +49,9 @@ class ModalUnitDetail extends Component<IProps> {
   }
 
   changeType = (type: UnitType) => {
-    const { country, changeUnitType, unit_type, openModal } = this.props
+    const { country, army, changeUnitType, unit_type, openModal } = this.props
     changeUnitType(country, unit_type, type)
-    openModal(ModalType.UnitDetail, { country, type })
+    openModal(ModalType.UnitDetail, { country, army, type })
   }
 
   remove = () => {
@@ -95,6 +95,7 @@ const mapStateToProps = (state: AppState) => {
   return {
     remove: data?.remove,
     country: data ? data.country : CountryName.Country1,
+    army: data ? data.army : ArmyName.Army1,
     unit_type: data ? data.type : UnitType.Land,
     unit: data ? getUnit(state, data.type, data.country) : null,
     unit_types: getUnitTypeList(state, true, data?.country),

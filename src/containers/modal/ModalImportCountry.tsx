@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { ModalType, Mode, TacticType, UnitPreferences, UnitPreferenceType, dictionaryUnitType, dictionaryTacticType, GeneralAttribute, UnitType, UnitAttribute, CultureType, CountryName, CountryAttribute, SelectionType, Invention } from 'types'
-import { createCountry, setCountryValue, selectCulture, enableCountrySelections, enableCountrySelection } from 'reducers'
+import { ModalType, Mode, TacticType, UnitPreferences, UnitPreferenceType, dictionaryUnitType, dictionaryTacticType, GeneralAttribute, UnitType, UnitAttribute, CultureType, CountryName, CountryAttribute, SelectionType, Invention, ArmyName } from 'types'
+import { createCountry, setCountryAttribute, selectCulture, enableCountrySelections, enableCountrySelection, createArmy, setHasGeneral, setGeneralAttribute } from 'reducers'
 import { Input, Button, Grid, Table } from 'semantic-ui-react'
 import BaseModal from './BaseModal'
 import Dropdown from 'components/Dropdowns/Dropdown'
@@ -53,12 +53,13 @@ type Country = {
 type Character = {
   name: string
   martial: number
+  traitMartial: number
   experience: number
   traits: string[]
 }
 
 type Army = {
-  name: string
+  name: ArmyName
   cohorts: number[]
   mode: Mode
   tactic: TacticType
@@ -273,7 +274,7 @@ class ModalImportCountry extends Component<IProps, IState> {
             {entity.leader ? entity.leader.name : ''}
           </Table.Cell>
           <Table.Cell>
-            {entity.leader ? <><AttributeImage attribute={GeneralAttribute.Martial} />{' ' + entity.leader.martial}</> : ''}
+            {entity.leader ? <><AttributeImage attribute={GeneralAttribute.Martial} />{' ' + (entity.leader.martial + entity.leader.traitMartial)}</> : ''}
           </Table.Cell>
           <Table.Cell>
             {entity.leader ? entity.leader.traits.map(trait => traits_ir.find(item => item.key === trait)?.name).join(', ') : ''}
@@ -391,9 +392,9 @@ class ModalImportCountry extends Component<IProps, IState> {
       if (Number(value) === country.id) {
         const job = this.loadJob(lines, line)
         if (job.job === 'office_tribune_of_the_soldiers')
-          country.officeDiscipline = Math.floor(job.character.martial * job.character.experience / 100.0) / 2
+          country.officeDiscipline = Math.floor((job.character.martial + job.character.traitMartial) * job.character.experience / 100.0) / 2
         if (job.job === 'office_master_of_the_guard')
-          country.officeMorale = Math.floor(job.character.martial * job.character.experience / 100.0)
+          country.officeMorale = Math.floor((job.character.martial + job.character.traitMartial) * job.character.experience / 100.0)
       }
       // Assumes that jobs are 6 line blocks.
       line += 5
@@ -539,8 +540,9 @@ class ModalImportCountry extends Component<IProps, IState> {
   }
 
   loadArmy = (lines: string[], start: number, end: number) => {
+    let name = 'Army'
     const army: Army = {
-      name: 'Army',
+      name: 'Army' as ArmyName,
       cohorts: [],
       flankSize: 5,
       leader: null,
@@ -551,14 +553,14 @@ class ModalImportCountry extends Component<IProps, IState> {
     for (let line = start + 1; line < end; line++) {
       const [key, value] = this.handleLine(lines[line])
       if (key === 'ordinal')
-        army.name += ' ' + value
+        name += ' ' + value
       if (key === 'family')
-        army.name += ' ' + this.nonStringify(value)
+        name += ' ' + this.nonStringify(value)
       if (key === 'name') {
         if (value.startsWith('"RETINUE_ARMY_NAME'))
-          army.name = 'Retinue'
+          name = 'Retinue'
         else if (value.startsWith('"NAVY_NAME'))
-          army.name = 'Navy'
+          name = 'Navy'
       }
       if (key === 'cohort' || key === 'ship')
         army.cohorts.push(Number(value))
@@ -575,6 +577,7 @@ class ModalImportCountry extends Component<IProps, IState> {
       if (key === 'tactic')
         army.tactic = dictionaryTacticType[this.nonStringify(value)]
     }
+    army.name = name as ArmyName
     return army
   }
 
@@ -586,7 +589,8 @@ class ModalImportCountry extends Component<IProps, IState> {
       martial: 0,
       experience: 0,
       traits: [],
-      name: ''
+      name: '',
+      traitMartial: 0
     }
     for (let line = start + 1; line < end; line++) {
       const [key, value] = this.handleLine(lines[line])
@@ -611,7 +615,7 @@ class ModalImportCountry extends Component<IProps, IState> {
           character.traits = this.nonStringify(value).trim().split(' ').map(this.nonStringify)
       }
     }
-    character.martial += sum(character.traits.map(key => traits_ir.find(trait => trait.key === key)?.modifiers.find(modifier => modifier.attribute === GeneralAttribute.Martial)?.value ?? 0))
+    character.traitMartial = sum(character.traits.map(key => traits_ir.find(trait => trait.key === key)?.modifiers.find(modifier => modifier.attribute === GeneralAttribute.Martial)?.value ?? 0))
     return character
   }
 
@@ -669,13 +673,13 @@ class ModalImportCountry extends Component<IProps, IState> {
   }
 
   importCountry = () => {
-    const { createCountry, setCountryValue, selectCulture, enableCountrySelections, enableCountrySelection } = this.props
+    const { createCountry, setCountryAttribute, selectCulture, enableCountrySelections, enableCountrySelection, createArmy, setHasGeneral, setGeneralAttribute	 } = this.props
     console.log(this.country)
     const name = this.country?.name
     if (this.country && name) {
       createCountry(name)
-      setCountryValue(name, 'Custom', CountryAttribute.TechLevel, this.country.tech)
-      setCountryValue(name, 'Custom', CountryAttribute.MilitaryExperience, this.country.militaryExperience)
+      setCountryAttribute(name, CountryAttribute.TechLevel, this.country.tech)
+      setCountryAttribute(name, CountryAttribute.MilitaryExperience, this.country.militaryExperience)
       selectCulture(name, this.country.tradition, false)
       const traditionsWithBonus = this.country.traditions.map(value => value === 7 ? 8 : value)
       const traditions = union(...traditionsWithBonus.map((value, index) => (
@@ -693,8 +697,16 @@ class ModalImportCountry extends Component<IProps, IState> {
       enableCountrySelections(name, SelectionType.Law, this.country.laws)
       enableCountrySelection(name, SelectionType.Policy, this.country.armyMaintenance)
       enableCountrySelection(name, SelectionType.Policy, this.country.navalMaintenance)
-      setCountryValue(name, 'Custom', CountryAttribute.OfficeDiscipline, this.country.officeDiscipline)
-      setCountryValue(name, 'Custom', CountryAttribute.OfficeMorale, this.country.officeMorale)
+      setCountryAttribute(name, CountryAttribute.OfficeDiscipline, this.country.officeDiscipline)
+      setCountryAttribute(name, CountryAttribute.OfficeMorale, this.country.officeMorale)
+    }
+    if (this.combined && name) {
+      createArmy(name, this.combined.mode, this.combined.name)
+      if (this.combined.leader) {
+        setGeneralAttribute(name, this.combined.name, GeneralAttribute.Martial, this.combined.leader.martial)
+      } else {
+        setHasGeneral(name, this.combined.name, false)
+      }
     }
   }
 }
@@ -705,7 +717,7 @@ const mapStateToProps = (state: AppState) => ({
   units: getDefaultUnits()
 })
 
-const actions = { createCountry, setCountryValue, selectCulture, enableCountrySelections, enableCountrySelection }
+const actions = { createCountry, setCountryAttribute, selectCulture, enableCountrySelections, enableCountrySelection, createArmy, setHasGeneral, setGeneralAttribute }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

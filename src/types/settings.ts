@@ -1,4 +1,5 @@
 import { CountryName, Mode } from "types"
+import { ArmyName } from "./armies"
 
 export enum Setting {
   StrengthLostMultiplier = 'Multiplier for strength damage',
@@ -407,4 +408,5 @@ export type SettingsAndOptions = {
   siteSettings: SiteSettings
   mode: Mode
   country: CountryName
+  army: ArmyName
 }

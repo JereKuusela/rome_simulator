@@ -7,12 +7,12 @@ import { mapRange, ObjSet, keys, values } from '../utils'
 import { addSignWithZero } from 'formatters'
 import {
   TraditionDefinition, TradeDefinition, OmenDefinition, ListDefinition,
-  OptionDefinition, Modifier, ReligionType, CultureType, ModifierType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, CountryName, Setting, SelectionType, TechDefinition
+  OptionDefinition, Modifier, ReligionType, CultureType, ModifierType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, CountryName, Setting, SelectionType, TechDefinition, ArmyName
 } from 'types'
 import {
-  clearCountryValues, clearAllCountrySelections, setCountryValue, enableCountrySelections, enableCountrySelection, clearCountrySelections, clearCountrySelection,
-  setGeneralStat, setGeneralValue, selectCulture, selectReligion, selectGovernment, setHasGeneral,
-  clearAllGeneralSelections, clearGeneralSelection, enableGeneralSelection, clearGeneralSelections
+  clearCountryAttributes, setCountryAttribute, enableCountrySelections, enableCountrySelection, clearCountrySelections, clearCountrySelection,
+  setGeneralAttribute, selectCulture, selectReligion, selectGovernment, setHasGeneral, clearGeneralAttributes,
+  clearGeneralSelection, enableGeneralSelection, clearGeneralSelections
 } from 'reducers'
 
 import AccordionToggle from 'containers/AccordionToggle'
@@ -21,7 +21,7 @@ import Dropdown from 'components/Dropdowns/Dropdown'
 import ConfirmationButton from 'components/ConfirmationButton'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TableAttributes from 'components/TableAttributes'
-import { tech_ir, abilities_ir, traits_ir, heritages_ir, traditions_ir, ideas_ir, policies_ir, laws_ir } from 'managers/modifiers'
+import { tech_ir, abilities_ir, traits_ir, heritages_ir, traditions_ir, ideas_ir, policies_ir, laws_ir, trades_ir } from 'managers/modifiers'
 import { convertCountryDefinition } from 'managers/countries'
 import CountryValueInput from 'containers/CountryValueInput'
 
@@ -35,8 +35,8 @@ const CELL_PADDING = '.78571429em .78571429em'
 class Countries extends Component<IProps> {
 
   render() {
-    const { settings, general_definition, general, trades, selected_country, setHasGeneral,
-      omens, country_definition, country } = this.props
+    const { settings, generalDefinition: general_definition, general, selectedCountry: selected_country, setHasGeneral,
+      omens, countryDefinition: country_definition, country } = this.props
     const selections = country_definition.selections
     const tradition = traditions_ir[country.culture]
     const omen = omens[country.religion]
@@ -73,10 +73,10 @@ class Countries extends Component<IProps> {
                   toggle
                   label='General'
                   checked={general.enabled}
-                  onChange={general.enabled ? () => this.exec(setHasGeneral, false) : () => this.exec(setHasGeneral, true)}
+                  onChange={general.enabled ? () => this.execArmy(setHasGeneral, false) : () => this.execArmy(setHasGeneral, true)}
                   style={{ float: 'right' }}
                 />
-                Base martial: <Input disabled={!general.enabled} type='number' value={general.base_values[GeneralAttribute.Martial]} onChange={(_, { value }) => this.setGeneralMartial(value)} />
+                Base martial: <Input disabled={!general.enabled} type='number' value={general.base_values[GeneralAttribute.Martial]} onChange={(_, { value }) => this.setGeneralValue('Base', GeneralAttribute.Martial, Number(value))} />
                 {' '}with <StyledNumber value={general.extra_values[GeneralAttribute.Martial]} formatter={addSignWithZero} /> from traits
                 {
                   this.renderTraits(traits_ir, general.selections[SelectionType.Trait], !general.enabled)
@@ -101,7 +101,7 @@ class Countries extends Component<IProps> {
             <Grid.Column>
               <AccordionToggle title='Trade' identifier='countries_trade'>
                 {
-                  this.renderTrades(trades, selections[SelectionType.Trade])
+                  this.renderTrades(trades_ir, selections[SelectionType.Trade])
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -381,7 +381,7 @@ class Countries extends Component<IProps> {
 
   clearGeneralSelection = (type: SelectionType, key: string) => {
     const { clearGeneralSelection } = this.props
-    this.exec(clearGeneralSelection, type, key)
+    this.execArmy(clearGeneralSelection, type, key)
   }
 
   findOptionKeys = (options: OptionDefinition[], key: string) => options.find(policy => policy.find(option => option.key === key))?.map(option => option.key)
@@ -391,28 +391,28 @@ class Countries extends Component<IProps> {
     if (type === SelectionType.Ability) {
       const keys = this.findOptionKeys(abilities_ir, key)
       if (keys)
-        this.exec(clearGeneralSelections, type, keys)
+        this.execArmy(clearGeneralSelections, type, keys)
     }
-    this.exec(enableGeneralSelection, type, key)
+    this.execArmy(enableGeneralSelection, type, key)
   }
 
   onGeneralItemClick = (enabled: boolean) => enabled ? this.clearGeneralSelection : this.enableGeneralSelection
 
   clearCountrySelection = (type: SelectionType, key: string) => {
     const { clearCountrySelection } = this.props
-    this.exec(clearCountrySelection, type, key)
+    this.execCountry(clearCountrySelection, type, key)
   }
 
   enableCountrySelection = (type: SelectionType, key: string) => {
     const { enableCountrySelection, clearCountrySelections } = this.props
     if (type === SelectionType.Heritage)
-      this.exec(clearCountrySelections, type)
+      this.execCountry(clearCountrySelections, type)
     if (type === SelectionType.Policy) {
       const keys = this.findOptionKeys(policies_ir, key)
       if (keys)
-        this.exec(clearCountrySelections, type, keys)
+        this.execCountry(clearCountrySelections, type, keys)
     }
-    this.exec(enableCountrySelection, type, key)
+    this.execCountry(enableCountrySelection, type, key)
   }
 
 
@@ -476,26 +476,26 @@ class Countries extends Component<IProps> {
 
   enableInvention = (key: string, level: number) => {
     const { enableCountrySelection } = this.props
-    this.exec(enableCountrySelection, SelectionType.Invention, key)
+    this.execCountry(enableCountrySelection, SelectionType.Invention, key)
     this.enableTech(level)
   }
 
   enableTech = (level: number) => {
     const { country } = this.props
     if (level > country[CountryAttribute.TechLevel])
-      this.setCountryValue('Base', CountryAttribute.TechLevel, level)
+      this.setCountryValue('', CountryAttribute.TechLevel, level)
   }
 
   clearTech = (level: number) => {
     const { country, clearCountrySelections } = this.props
     const keys = tech_ir.filter((_, index) => level <= index && index <= country[CountryAttribute.TechLevel]).reduce((prev, curr) => prev.concat(curr.inventions.map(value => value.name)), [] as string[])
-    this.exec(clearCountrySelections, SelectionType.Invention, keys)
-    this.setCountryValue('Base', CountryAttribute.TechLevel, level - 1)
+    this.execCountry(clearCountrySelections, SelectionType.Invention, keys)
+    this.setCountryValue('', CountryAttribute.TechLevel, level - 1)
   }
 
   clearInvention = (key: string) => {
     const { clearCountrySelection } = this.props
-    this.exec(clearCountrySelection, SelectionType.Invention, key)
+    this.execCountry(clearCountrySelection, SelectionType.Invention, key)
   }
 
   /** Clears traditions starting from a given tradition. */
@@ -513,8 +513,8 @@ class Countries extends Component<IProps> {
       else
         toRemove.push(tradition.key)
     })
-    this.exec(enableCountrySelections, SelectionType.Tradition, toAdd)
-    this.exec(clearCountrySelections, SelectionType.Tradition, toRemove)
+    this.execCountry(enableCountrySelections, SelectionType.Tradition, toAdd)
+    this.execCountry(clearCountrySelections, SelectionType.Tradition, toRemove)
   }
 
   /** Enables traditions up to a given tradition. */
@@ -532,18 +532,18 @@ class Countries extends Component<IProps> {
       if (tradition.key === key)
         add = false
     })
-    this.exec(enableCountrySelections, SelectionType.Tradition, toAdd)
-    this.exec(clearCountrySelections, SelectionType.Tradition, toRemove)
+    this.execCountry(enableCountrySelections, SelectionType.Tradition, toAdd)
+    this.execCountry(clearCountrySelections, SelectionType.Tradition, toRemove)
   }
 
   activateTradition = () => {
     const { enableCountrySelection } = this.props
-    this.exec(enableCountrySelection, SelectionType.Tradition, 'base')
+    this.execCountry(enableCountrySelection, SelectionType.Tradition, 'base')
   }
 
   deactivateTradition = () => {
     const { clearCountrySelections } = this.props
-    this.exec(clearCountrySelections, SelectionType.Tradition)
+    this.execCountry(clearCountrySelections, SelectionType.Tradition)
   }
 
   /**
@@ -562,15 +562,16 @@ class Countries extends Component<IProps> {
    * Selects religion while also re-enabling current omen.
    */
   selectReligion = (value: ReligionType) => {
-    this.exec(this.props.selectReligion, value)
+    this.execCountry(this.props.selectReligion, value)
   }
 
   selectCulture = (value: CultureType) => {
-    this.exec(this.props.selectCulture, value, !this.props.settings[Setting.Culture])
+    this.execCountry(this.props.selectCulture, value, !this.props.settings[Setting.Culture])
   }
 
   /** Executes a given function with currently selected country. */
-  exec = <T extends any>(func: (country: CountryName, value: T, ...rest: any[]) => void, value: T, ...rest: any[]) => func(this.props.selected_country, value, ...rest)
+  execCountry = <T extends any>(func: (country: CountryName, value: T, ...rest: any[]) => void, value: T, ...rest: any[]) => func(this.props.selectedCountry, value, ...rest)
+  execArmy = <T extends any>(func: (country: CountryName, army: ArmyName, value: T, ...rest: any[]) => void, value: T, ...rest: any[]) => func(this.props.selectedCountry, this.props.selectedArmy, value, ...rest)
 
   /**
    * Scales modifier with a given power.
@@ -581,21 +582,11 @@ class Countries extends Component<IProps> {
    * Clears all selections.
    */
   clearAll = () => {
-    this.exec(this.props.clearAllCountrySelections, 0)
-    this.exec(this.props.clearAllGeneralSelections, 0)
-    this.exec(this.props.clearCountryValues, 'Base')
-    this.exec(this.props.setHasGeneral, true)
-    this.exec(this.props.setGeneralStat, GeneralAttribute.Martial, 0)
-  }
-
-  /**
-   * Sets generals martial skill level.
-   */
-  setGeneralMartial = (value: string) => {
-    const skill = Number(value)
-    if (isNaN(skill))
-      return
-    this.props.setGeneralStat(this.props.selected_country, GeneralAttribute.Martial, skill)
+    this.execCountry(this.props.clearCountrySelections, undefined)
+    this.execCountry(this.props.clearCountryAttributes, undefined)
+    this.execArmy(this.props.clearGeneralSelections, undefined)
+    this.execArmy(this.props.clearGeneralAttributes, undefined)
+    this.execArmy(this.props.setHasGeneral, true)
   }
 
   getText = (modifier: Modifier) => {
@@ -630,31 +621,25 @@ class Countries extends Component<IProps> {
     return key.substring(0, index)
   }
 
-  setCountryValue = (key: string, attribute: CountryAttribute, value: number) => {
-    const { setCountryValue, selected_country } = this.props
-    setCountryValue(selected_country, key, attribute, value)
-  }
+  setCountryValue = (_: string, attribute: CountryAttribute, value: number) => this.execCountry(this.props.setCountryAttribute, attribute, value)
 
-  setGeneralValue = (key: string, attribute: GeneralValueType, value: number) => {
-    const { setGeneralValue } = this.props
-    setGeneralValue(this.props.selected_country, key, attribute, value)
-  }
+  setGeneralValue = (_: string, attribute: GeneralValueType, value: number) => this.execArmy(this.props.setGeneralAttribute, attribute, value)
 }
 
 const mapStateToProps = (state: AppState) => ({
-  trades: state.data.trades,
   omens: state.data.omens,
-  country_definition: state.countries[state.settings.country],
+  countryDefinition: state.countries[state.settings.country],
   country: convertCountryDefinition(state.countries[state.settings.country], state.settings.siteSettings),
-  selected_country: state.settings.country,
-  general_definition: getGeneralDefinition(state, state.settings.country),
+  selectedCountry: state.settings.country,
+  selectedArmy: state.settings.army,
+  generalDefinition: getGeneralDefinition(state, state.settings.country),
   general: getGeneral(state, state.settings.country),
   settings: getSiteSettings(state)
 })
 
 const actions = {
-  clearGeneralSelections, setGeneralStat, setGeneralValue, selectCulture, setCountryValue, clearAllGeneralSelections, clearGeneralSelection, enableGeneralSelection,
-  clearCountryValues, clearAllCountrySelections, selectReligion, selectGovernment, setHasGeneral, enableCountrySelection, clearCountrySelection, enableCountrySelections, clearCountrySelections
+  clearGeneralSelections, setGeneralAttribute, selectCulture, setCountryAttribute, clearGeneralSelection, enableGeneralSelection,
+  clearCountryAttributes, clearGeneralAttributes, selectReligion, selectGovernment, setHasGeneral, enableCountrySelection, clearCountrySelection, enableCountrySelections, clearCountrySelections
 }
 
 type S = ReturnType<typeof mapStateToProps>

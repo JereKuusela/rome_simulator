@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table } from 'semantic-ui-react'
 
-import { Side, CountryName, UnitAttribute, CombatPhase, General, GeneralValueType, Mode, UnitType } from 'types'
+import { Side, CountryName, UnitAttribute, CombatPhase, General, GeneralValueType, Mode, UnitType, ArmyName } from 'types'
 import { AppState, getGeneral, getUnit, getMode, getSiteSettings } from 'state'
-import { setGeneralStat } from 'reducers'
+import { setGeneralAttribute } from 'reducers'
 import AttributeImage from 'components/Utils/AttributeImage'
 import StyledNumber from 'components/Utils/StyledNumber'
 import { addSign } from 'formatters'
@@ -14,6 +14,7 @@ import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 type Props = {
   side: Side
   country: CountryName
+  army: ArmyName
 }
 
 class TableDamageAttributes extends Component<IProps> {
@@ -86,8 +87,8 @@ class TableDamageAttributes extends Component<IProps> {
   )
 
   setGeneralStat = (attribute: GeneralValueType, value: number) => {
-    const { country, setGeneralStat } = this.props
-    setGeneralStat(country, attribute, value)
+    const { country, army, setGeneralAttribute } = this.props
+    setGeneralAttribute(country, army, attribute, value)
   }
 }
 
@@ -97,7 +98,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   settings: getSiteSettings(state)
 })
 
-const actions = { setGeneralStat }
+const actions = { setGeneralAttribute }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

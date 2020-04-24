@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 import ItemRemover from 'components/ItemRemover'
 import UnitDetail from 'components/UnitDetail'
 
-import { AppState, filterTerrainTypes, findCohortById, getCombatUnitForEachRound, getMode, getCombatParticipant, getSiteSettings, getCountryName } from 'state'
-import { ValuesType, CountryName, UnitType, Cohort, UnitAttribute, UnitValueType, CombatCohort, ModalType, SiteSettings } from 'types'
+import { AppState, filterTerrainTypes, findCohortById, getCombatUnitForEachRound, getMode, getCombatParticipant, getSiteSettings, getParticipant } from 'state'
+import { ValuesType, CountryName, UnitType, Cohort, UnitAttribute, UnitValueType, CombatCohort, ModalType, SiteSettings, ArmyName } from 'types'
 import { addValues } from 'definition_values'
 import { editCohort, deleteCohort, setCohortValue, changeCohortType, toggleCohortLoyality, closeModal } from 'reducers'
 import { applyDynamicAttributes } from 'managers/units'
@@ -43,35 +43,35 @@ class ModalCohortDetail extends Component<IProps> {
   }
 
   removeUnit = () => {
-    const { id, country, deleteCohort, closeModal } = this.props
-    deleteCohort(country, id)
+    const { id, country, army, deleteCohort, closeModal } = this.props
+    deleteCohort(country, army, id)
     closeModal()
   }
 
   setBaseValue = (key: string, attribute: UnitValueType, value: number) => {
-    const { country, id, setCohortValue } = this.props
-    setCohortValue(country, id, ValuesType.Base, key, attribute, value)
+    const { country, id, army, setCohortValue } = this.props
+    setCohortValue(country, army, id, ValuesType.Base, key, attribute, value)
   }
 
   setModifierValue = (key: string, attribute: UnitValueType, value: number) => {
-    const { country, id, setCohortValue } = this.props
-    setCohortValue(country, id, ValuesType.Modifier, key, attribute, value)
+    const { country, id, army, setCohortValue } = this.props
+    setCohortValue(country, army, id, ValuesType.Modifier, key, attribute, value)
   }
 
   setLossModifierValue = (key: string, attribute: UnitValueType, value: number) => {
-    const { country, id, setCohortValue } = this.props
-    setCohortValue(country, id, ValuesType.LossModifier, key, attribute, value)
+    const { country, id, army, setCohortValue } = this.props
+    setCohortValue(country, army, id, ValuesType.LossModifier, key, attribute, value)
 
   }
 
   changeType = (type: UnitType) => {
-    const { country, id, changeCohortType } = this.props
-    changeCohortType(country, id, type)
+    const { country, id, army, changeCohortType } = this.props
+    changeCohortType(country, army, id, type)
   }
 
   toggleIsLoyal = () => {
-    const { country, id, toggleCohortLoyality } = this.props
-    toggleCohortLoyality(country, id)
+    const { country, id, army, toggleCohortLoyality } = this.props
+    toggleCohortLoyality(country, army, id)
   }
 }
 
@@ -102,10 +102,12 @@ const mapStateToProps = (state: AppState) => {
   const settings = getSiteSettings(state)
   const mode = getMode(state)
   if (data) {
+    const participant = getParticipant(state, data.side)
     return {
       id: data.id,
       terrain_types: filterTerrainTypes(state),
-      country: getCountryName(state, data.side),
+      country: participant.country,
+      army: participant.army,
       unit_types: getActualUnits(getCombatParticipant(state, data.side).unit_types, mode).map(unit => unit.type),
       mode,
       cohort: convertCohort(settings, findCohortById(state, data.side, data.id), getCombatUnitForEachRound(state, data.side, data.id)),
@@ -116,6 +118,7 @@ const mapStateToProps = (state: AppState) => {
     id: 0,
     terrain_types: filterTerrainTypes(state),
     country: CountryName.Country1,
+    army: ArmyName.Army1,
     mode,
     settings,
     cohort: null,

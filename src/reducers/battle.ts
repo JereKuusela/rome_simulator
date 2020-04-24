@@ -6,7 +6,8 @@ import { ActionToFunction, makeActionRemoveFirst, Action, ReducerParams, makeRed
 
 const battleMapping: ActionToFunction<Battle> = {}
 
-export const selectArmy = makeActionRemoveFirst(manager.selectArmy, battleMapping)
+export const selectParticipantCountry = makeActionRemoveFirst(manager.selectParticipantCountry, battleMapping)
+export const selectParticipantArmy = makeActionRemoveFirst(manager.selectParticipantArmy, battleMapping)
 export const selectTerrain = makeActionRemoveFirst(manager.selectTerrain, battleMapping)
 export const setDice = makeActionRemoveFirst(manager.setDice, battleMapping)
 export const setPhaseDice = makeActionRemoveFirst(manager.setPhaseDice, battleMapping)

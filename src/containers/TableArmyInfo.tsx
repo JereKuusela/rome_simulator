@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table, Checkbox, Input, Button } from 'semantic-ui-react'
 
-import { Side, CountryName, Setting, Participant, General, GeneralAttribute, GeneralValueType, UnitAttribute, isAttributeEnabled, Mode, UnitType, Unit, ValuesType, CountryAttribute, Country, CultureType, CombatParticipant, ModalType } from 'types'
+import { Side, CountryName, Setting, Participant, General, GeneralAttribute, GeneralValueType, UnitAttribute, isAttributeEnabled, Mode, UnitType, Unit, ValuesType, CountryAttribute, Country, CultureType, CombatParticipant, ModalType, ArmyName } from 'types'
 import { keys } from 'utils'
-import { AppState, getCountry, getParticipant, getGeneral, getCountryName, getSelectedTerrains, getCountries, getBattle, getUnit, getMode, getCombatParticipant, getSiteSettings } from 'state'
-import { selectArmy, selectCulture, toggleRandomDice, setDice, setGeneralStat, openModal } from 'reducers'
+import { AppState, getCountry, getParticipant, getGeneral, getSelectedTerrains, getCountries, getBattle, getUnit, getMode, getCombatParticipant, getSiteSettings } from 'state'
+import { selectParticipantCountry, selectParticipantArmy, selectCulture, toggleRandomDice, setDice, openModal, setGeneralAttribute } from 'reducers'
 import Dropdown from 'components/Dropdowns/Dropdown'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TacticSelector from './TacticSelector'
@@ -35,6 +35,9 @@ class TableArmyInfo extends Component<IProps> {
           <Table.Row>
             <Table.HeaderCell>
               Country
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              Army
             </Table.HeaderCell>
             {
               settings[Setting.Martial] &&
@@ -96,18 +99,26 @@ class TableArmyInfo extends Component<IProps> {
 
 
   renderArmyInfo = (side: Side, participant: Participant, combat: CombatParticipant, country: Country, general: General, enemy: General, unit: Unit) => {
-    const { settings, selectArmy } = this.props
+    const { settings, selectParticipantArmy, selectParticipantCountry, mode } = this.props
     return (
       <Table.Row key={side}>
         <Table.Cell collapsing>
           <Dropdown
             values={keys(this.props.countries)}
             value={participant.country}
-            onChange={name => selectArmy(side, name)}
+            onChange={name => selectParticipantCountry(side, name)}
             style={{ width: 150 }}
           />
         </Table.Cell>
-        {settings[Setting.Martial] && this.renderGeneralAttribute(participant.country, general, GeneralAttribute.Martial)}
+        <Table.Cell collapsing>
+          <Dropdown
+            values={keys(this.props.countries[participant.country].armies[mode])}
+            value={participant.army}
+            onChange={name => selectParticipantArmy(side, name)}
+            style={{ width: 150 }}
+          />
+        </Table.Cell>
+        {settings[Setting.Martial] && this.renderGeneralAttribute(participant.country, participant.army, general, GeneralAttribute.Martial)}
         {
           settings[Setting.Tactics] &&
           <Table.Cell collapsing>
@@ -159,15 +170,15 @@ class TableArmyInfo extends Component<IProps> {
     )
   }
 
-  renderGeneralAttribute = (country: CountryName, general: General, attribute: GeneralValueType) => (
+  renderGeneralAttribute = (country: CountryName, army: ArmyName, general: General, attribute: GeneralValueType) => (
     <Table.Cell collapsing>
-      <Input disabled={!general.enabled} size='mini' className='small-input' type='number' value={general.base_values[attribute]} onChange={(_, { value }) => this.props.setGeneralStat(country, attribute, Number(value))} />
+      <Input disabled={!general.enabled} size='mini' className='small-input' type='number' value={general.base_values[attribute]} onChange={(_, { value }) => this.props.setGeneralAttribute(country, army, attribute, Number(value))} />
       {' '}<StyledNumber value={general.extra_values[attribute]} formatter={addSign} hide_zero />
     </Table.Cell>
   )
 
   renderRoll = (side: Side, participant: Participant, combat: CombatParticipant, general: General, opposing_general: General) => {
-    const { terrains, settings, round, openModal, setRoll } = this.props
+    const { terrains, settings, round, openModal, setDice } = this.props
     const terrain_pips = getTerrainPips(terrains, side, general, opposing_general)
     const general_pips = calculateGeneralPips(general, opposing_general, getCombatPhase(round, settings))
     const phase = getCombatPhaseNumber(round, settings)
@@ -175,7 +186,7 @@ class TableArmyInfo extends Component<IProps> {
     return (
       <div key={side}>
         <Image src={IconDice} avatar />
-        {is_dice_set ? combat.dice : <DelayedNumericInput type='number' value={participant.dice} onChange={value => setRoll(side, value)} />}
+        {is_dice_set ? combat.dice : <DelayedNumericInput type='number' value={participant.dice} onChange={value => setDice(side, value)} />}
         {
           general_pips !== 0 ?
             <span style={{ paddingLeft: '1em' }}>
@@ -204,7 +215,7 @@ class TableArmyInfo extends Component<IProps> {
 
   renderIsRollRandom = (side: Side, is_random: boolean) => {
     return (
-      <Checkbox toggle checked={is_random} onClick={() => this.props.toggleRandomRoll(side)} />
+      <Checkbox toggle checked={is_random} onClick={() => this.props.toggleRandomDice(side)} />
     )
   }
 
@@ -214,24 +225,29 @@ class TableArmyInfo extends Component<IProps> {
   }
 }
 
-const mapStateToProps = (state: AppState) => ({
-  participant_a: getParticipant(state, Side.Attacker),
-  participant_d: getParticipant(state, Side.Defender),
-  combat_a: getCombatParticipant(state, Side.Attacker),
-  combat_d: getCombatParticipant(state, Side.Defender),
-  general_a: getGeneral(state, getCountryName(state, Side.Attacker)),
-  general_d: getGeneral(state, getCountryName(state, Side.Defender)),
-  country_a: getCountry(state, getCountryName(state, Side.Attacker)),
-  country_d: getCountry(state, getCountryName(state, Side.Defender)),
-  terrains: getSelectedTerrains(state),
-  countries: getCountries(state),
-  round: getBattle(state).round,
-  unit_a: getUnit(state, getMode(state) === Mode.Naval ? UnitType.Naval : UnitType.Land, getParticipant(state, Side.Attacker).country),
-  unit_d: getUnit(state, getMode(state) === Mode.Naval ? UnitType.Naval : UnitType.Land, getParticipant(state, Side.Defender).country),
-  settings: getSiteSettings(state)
-})
+const mapStateToProps = (state: AppState) => {
+  const participant_a = getParticipant(state, Side.Attacker)
+  const participant_d = getParticipant(state, Side.Defender)
+  return {
+    participant_a,
+    participant_d,
+    combat_a: getCombatParticipant(state, Side.Attacker),
+    combat_d: getCombatParticipant(state, Side.Defender),
+    general_a: getGeneral(state, participant_a.country),
+    general_d: getGeneral(state, participant_d.country),
+    country_a: getCountry(state, participant_a.country),
+    country_d: getCountry(state, participant_d.country),
+    terrains: getSelectedTerrains(state),
+    countries: getCountries(state),
+    round: getBattle(state).round,
+    unit_a: getUnit(state, getMode(state) === Mode.Naval ? UnitType.Naval : UnitType.Land, getParticipant(state, Side.Attacker).country),
+    unit_d: getUnit(state, getMode(state) === Mode.Naval ? UnitType.Naval : UnitType.Land, getParticipant(state, Side.Defender).country),
+    settings: getSiteSettings(state),
+    mode: getMode(state)
+  }
+}
 
-const actions = { selectArmy, selectCulture, toggleRandomRoll: toggleRandomDice, setRoll: setDice, setGeneralStat, openModal }
+const actions = { selectParticipantCountry, selectParticipantArmy, selectCulture, toggleRandomDice, setDice, openModal, setGeneralAttribute }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

@@ -10,11 +10,11 @@ import TargetArrows from 'containers/TargetArrows'
 import TerrainSelector from 'containers/TerrainSelector'
 import WinRate from 'containers/WinRate'
 import {
-  selectArmy, setDice, toggleRandomDice, clearCohorts, changeSiteParameter,
-  undo, battle, refreshBattle, setSeed, setGeneralStat, resetState, selectCulture, openModal
+  selectParticipantCountry, setDice, toggleRandomDice, clearCohorts, changeSiteParameter,
+  undo, battle, refreshBattle, setSeed, resetState, selectCulture, openModal
 } from 'reducers'
 import { AppState, getBattle, getParticipant, getSettings } from 'state'
-import { ArmyType, CountryName, Setting, Side, CombatPhase, UnitType, ModalType } from 'types'
+import { ArmyType, CountryName, Setting, Side, CombatPhase, UnitType, ModalType, ArmyName } from 'types'
 import TableUnitTypes from 'containers/TableUnitTypes'
 import TableArmyInfo from 'containers/TableArmyInfo'
 import TableDamageAttributes from 'containers/TableDamageAttributes'
@@ -37,8 +37,8 @@ class Battle extends Component<IProps> {
       this.props.openModal(ModalType.CohortSelector, { side, type, row, column })
   }
 
-  openUnitDetails = (country: CountryName, type: UnitType): void => {
-    this.props.openModal(ModalType.UnitDetail, { country, type })
+  openUnitDetails = (country: CountryName, army: ArmyName, type: UnitType): void => {
+    this.props.openModal(ModalType.UnitDetail, { country, army, type })
   }
 
   componentDidUpdate() {
@@ -111,20 +111,20 @@ class Battle extends Component<IProps> {
             </Grid.Row>
             <Grid.Row columns={2}>
               <Grid.Column>
-                <TableUnitTypes side={Side.Attacker} country={participant_a.country} onRowClick={this.openUnitDetails} />
+                <TableUnitTypes side={Side.Attacker} country={participant_a.country} army={participant_a.army} onRowClick={this.openUnitDetails} />
               </Grid.Column>
               <Grid.Column>
-                <TableUnitTypes side={Side.Defender} country={participant_d.country} onRowClick={this.openUnitDetails} />
+                <TableUnitTypes side={Side.Defender} country={participant_d.country} army={participant_d.army}  onRowClick={this.openUnitDetails} />
               </Grid.Column>
             </Grid.Row>
             {
               settings[Setting.FireAndShock] &&
               <Grid.Row columns={2}>
                 <Grid.Column>
-                  <TableDamageAttributes side={Side.Attacker} country={participant_a.country} />
+                  <TableDamageAttributes side={Side.Attacker} country={participant_a.country} army={participant_a.army} />
                 </Grid.Column>
                 <Grid.Column>
-                  <TableDamageAttributes side={Side.Defender} country={participant_d.country} />
+                  <TableDamageAttributes side={Side.Defender} country={participant_d.country} army={participant_d.army} />
                 </Grid.Column>
               </Grid.Row>
 
@@ -269,8 +269,8 @@ class Battle extends Component<IProps> {
 
   clearCohorts = (): void => {
     const { participant_a, participant_d, clearCohorts } = this.props
-    clearCohorts(participant_a.country)
-    clearCohorts(participant_d.country)
+    clearCohorts(participant_a.country, participant_a.army)
+    clearCohorts(participant_d.country, participant_d.army)
   }
 
   undo = (rounds: number) => {
@@ -303,7 +303,7 @@ const mapStateToProps = (state: AppState) => {
   }
 }
 
-const actions = { openModal, changeSiteParameter, battle, undo, toggleRandomRoll: toggleRandomDice, setDice, setGeneralStat, selectArmy, setSeed, refreshBattle, resetState, selectCulture, clearCohorts }
+const actions = { openModal, changeSiteParameter, battle, undo, toggleRandomDice, setDice, selectParticipantCountry, setSeed, refreshBattle, resetState, selectCulture, clearCohorts }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

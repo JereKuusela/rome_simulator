@@ -1,4 +1,4 @@
-import { calculateValue, calculateBase, addValues, addValuesWithMutate, filterValues, addValue } from 'definition_values'
+import { calculateValue, calculateBase, addValues, addValuesWithMutate, filterValues, addValue, clearAllValuesWithMutate } from 'definition_values'
 import { Mode, GeneralAttribute, UnitType, UnitAttribute, GeneralDefinition, Army, ArmyType, CohortDefinition, ValuesType, UnitValueType, TacticType, UnitPreferenceType, General, ReserveDefinition, DefeatedDefinition, FrontlineDefinition, GeneralValueType, CombatPhase, isAttributeEnabled, Units, Setting, UnitRole, Unit, CombatUnitTypes, CombatCohortDefinition, SiteSettings, ModifierWithKey, ModifierType, Selections, SelectionType } from 'types'
 import { map, forEach, keys, toObj, toArr, toSet, ObjSet, values } from 'utils'
 import { findLastIndex, sortBy } from 'lodash'
@@ -232,16 +232,12 @@ export const setFlankSize = (army: Army, flank_size: number) => {
   army.flank_size = flank_size
 }
 
-export const setGeneralStat = (army: Army, attribute: GeneralValueType, value: number) => {
-  setGeneralValue(army, BASE_STAT_KEY, attribute, value)
+export const setGeneralAttribute = (army: Army, attribute: GeneralValueType, value: number) => {
+  addValuesWithMutate(army.general, ValuesType.Base, 'Custom', [[attribute, value]])
 }
 
-export const setGeneralValue = (army: Army, key: string, attribute: GeneralValueType, value: number) => {
-  addValuesWithMutate(army.general, ValuesType.Base, key, [[attribute, value]])
-}
-
-export const setGeneralBaseValue = (army: Army, key: string, attribute: GeneralValueType, value: number) => {
-  addValuesWithMutate(army.general, ValuesType.Base, key, [[attribute, value]])
+export const clearGeneralAttributes = (army: Army) => {
+  clearAllValuesWithMutate(army.general, 'Custom')
 }
 
 export const setHasGeneral = (army: Army, has_general: boolean) => {
@@ -258,15 +254,13 @@ export const clearGeneralSelection = (army: Army, type: SelectionType, key: stri
   delete army.general.selections[type][key]
 }
 
-export const clearGeneralSelections = (army: Army, type: SelectionType, keys?: string[]) => {
-  if (keys)
+export const clearGeneralSelections = (army: Army, type?: SelectionType, keys?: string[]) => {
+  if (keys && type)
     keys.forEach(key => clearGeneralSelection(army, type, key))
-  else
+  else if (type)
     delete army.general.selections[type]
-}
-
-export const clearAllGeneralSelections = (army: Army) => {
-  army.general.selections = {} as Selections
+  else
+    army.general.selections = {} as Selections
 }
 
 export const applyGeneralModifiers = (country: GeneralDefinition, modifiers: ModifierWithKey[]): GeneralDefinition => {

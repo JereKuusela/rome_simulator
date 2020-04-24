@@ -56,12 +56,15 @@ UI:
   * When selecting unit store its primary and secondary type as the selection. When upgrading/downgrading use these types to select the unit.
 
 Countries:
- - Finish converters for relevant information.
  - Remove religion and omens. Simply add Deity of Discipline, etc.
   * Selecting religion is cumbersome and just adds extra maintenance.
  - Inventions to show tag specific (without actually implementing tags).
   * These inventions are extra. Perhaps a 4th slot for toggle? Or just implement scrolling?
- - Heritages should probably also be limited to military ones.
+ - Heritages could be a dropdown.
+ - Republic leading faction (military gives morale) + empowerement (military gives discipline).
+ - Any other active modifiers?
+ - Importing capital surplus (have to calculate slaves required for surplus from laws, buildings and territory status, amount of slaves, trade routes).
+
 
 
 

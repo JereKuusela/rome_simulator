@@ -1,5 +1,5 @@
 import { Mode } from "types/definition"
-import { Battle, CountryName, Side, ModeState, TerrainType, Participant } from "types"
+import { Battle, CountryName, Side, ModeState, TerrainType, Participant, ArmyName } from "types"
 
 export const getInitialTerrains = (mode: Mode): TerrainType[] => {
   if (mode === Mode.Naval)
@@ -11,6 +11,7 @@ export const getInitialTerrains = (mode: Mode): TerrainType[] => {
 export const getDefaultParticipant = (name: CountryName): Participant => {
   return {
     country: name,
+    army: ArmyName.Army1,
     rounds: [],
     rolls: [0],
     dice: (process.env.REACT_APP_GAME === 'euiv' ? 5 : 3),

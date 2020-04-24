@@ -7,7 +7,7 @@ import CombatTooltip from './CombatTooltip'
 import IconDefeated from 'images/attrition.png'
 import { Side, ArmyType, UnitAttribute, CombatCohort } from 'types'
 import { getImage, resize } from 'utils'
-import { AppState, getCurrentCombat, getCountryName, getBattle } from 'state'
+import { AppState, getCurrentCombat, getBattle, getParticipant } from 'state'
 import { getArmyPart } from 'army_utils'
 import { last } from 'lodash'
 import { deleteCohort } from 'reducers'
@@ -135,8 +135,8 @@ class TableArmyPart extends Component<IProps, IState> {
   deleteCohort = (cohort: ICohort) => {
     if (!cohort)
       return
-    const { deleteCohort, country } = this.props
-    deleteCohort(country, cohort.id)
+    const { deleteCohort, participant } = this.props
+    deleteCohort(participant.country, participant.army, cohort.id)
   }
 }
 
@@ -200,7 +200,7 @@ const convertUnits = (units: (CombatCohort | null)[][]): ICohort[][] => (
 
 const mapStateToProps = (state: AppState, props: Props) => ({
   units: convertUnits(getArmyPart(getCurrentCombat(state, props.side), props.type)),
-  country: getCountryName(state, props.side),
+  participant: getParticipant(state, props.side),
   timestamp: getBattle(state).timestamp
 })
 

@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 import { AppState, getGeneralDefinition, getCountryDefinition, getSiteSettings, getCountry } from 'state'
 import { mapRange, values } from '../utils'
 
-import { Modifier, ReligionType, CultureType, ModifierType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, ListDefinition, CountryName, Setting } from 'types'
-import { clearAllCountrySelections, setCountryValue, enableCountrySelection, clearCountrySelection, setGeneralValue, selectCulture, selectReligion, selectGovernment, setHasGeneral } from 'reducers'
+import { Modifier, ReligionType, CultureType, ModifierType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, ListDefinition, CountryName, Setting, ArmyName } from 'types'
+import { clearGeneralSelections, clearCountrySelections, clearCountryAttributes, clearGeneralAttributes, setCountryAttribute, enableCountrySelection, clearCountrySelection, setGeneralAttribute, selectCulture, selectReligion, selectGovernment, setHasGeneral } from 'reducers'
 
 import AccordionToggle from 'containers/AccordionToggle'
 import CountryManager from 'containers/CountryManager'
@@ -24,7 +24,7 @@ const CELL_PADDING = '.78571429em .78571429em'
 class Countries extends Component<IProps> {
 
   render() {
-    const { settings, tech, general, country, selected_country, country_definition, setHasGeneral } = this.props
+    const { settings, tech, general, country, selectedCountry: selected_country, countryDefinition: country_definition, setHasGeneral } = this.props
     return (
       <Container>
         <CountryManager>
@@ -51,7 +51,7 @@ class Countries extends Component<IProps> {
                   toggle
                   label='General'
                   checked={general.enabled}
-                  onChange={general.enabled ? () => this.exec(setHasGeneral, false) : () => this.exec(setHasGeneral, true)}
+                  onChange={general.enabled ? () => this.execArmy(setHasGeneral, false) : () => this.execArmy(setHasGeneral, true)}
                   style={{ float: 'right' }}
                 />
               </AccordionToggle>
@@ -150,17 +150,18 @@ class Countries extends Component<IProps> {
    * Selects religion while also re-enabling current omen.
    */
   selectReligion = (value: ReligionType) => {
-    this.exec(this.props.selectReligion, value)
+    this.execCountry(this.props.selectReligion, value)
   }
 
   /** Executes a given function with currently selected country. */
-  exec = <T extends any>(func: (country: CountryName, value: T, ...rest: any[]) => void, value: T, ...rest: any[]) => func(this.props.selected_country, value, ...rest)
+  execCountry = <T extends any>(func: (country: CountryName, value: T, ...rest: any[]) => void, value: T, ...rest: any[]) => func(this.props.selectedCountry, value, ...rest)
+  execArmy = <T extends any>(func: (country: CountryName, army: ArmyName, value: T, ...rest: any[]) => void, value: T, ...rest: any[]) => func(this.props.selectedCountry, this.props.selectedArmy, value, ...rest)
 
   /**
    * Selects culture while also re-enabling tradition.
    */
   selectCulture = (value: CultureType) => {
-    this.exec(this.props.selectCulture, value, !this.props.settings[Setting.Culture])
+    this.execCountry(this.props.selectCulture, value, !this.props.settings[Setting.Culture])
   }
   /**
    * Scales modifier with a given power.
@@ -173,23 +174,25 @@ class Countries extends Component<IProps> {
    */
   clearTech = (level: number) => {
     level = level || 1
-    this.exec(this.props.setCountryValue, 'Base', CountryAttribute.TechLevel, level - 1)
+    this.execCountry(this.props.setCountryAttribute, CountryAttribute.TechLevel, level - 1)
   }
 
   /**
    * Enables tech levels to a given level.
    */
   enableTech = (level: number) => {
-    this.exec(this.props.setCountryValue, 'Base', CountryAttribute.TechLevel, level)
+    this.execCountry(this.props.setCountryAttribute, CountryAttribute.TechLevel, level)
   }
 
   /**
    * Clears all selections.
    */
   clearAll = () => {
-    this.exec(this.props.clearAllCountrySelections, 0)
-    this.exec(this.props.setHasGeneral, true)
-    this.clearTech(0)
+    this.execCountry(this.props.clearCountrySelections, undefined)
+    this.execCountry(this.props.clearCountryAttributes, undefined)
+    this.execArmy(this.props.clearGeneralSelections, undefined)
+    this.execArmy(this.props.clearGeneralAttributes, undefined)
+    this.execArmy(this.props.setHasGeneral, true)
   }
 
   getText = (modifier: Modifier) => {
@@ -224,30 +227,24 @@ class Countries extends Component<IProps> {
     return key.substring(0, index)
   }
 
-  setCountryValue = (key: string, attribute: CountryAttribute, value: number) => {
-    const { setCountryValue, selected_country } = this.props
-    setCountryValue(selected_country, key, attribute, value)
-  }
+  setCountryValue = (_: string, attribute: CountryAttribute, value: number) => this.execCountry(this.props.setCountryAttribute, attribute, value)
 
-
-  setGeneralValue = (key: string, attribute: GeneralValueType, value: number) => {
-    const { setGeneralValue } = this.props
-    setGeneralValue(this.props.selected_country, key, attribute, value)
-  }
+  setGeneralValue = (_: string, attribute: GeneralValueType, value: number) => this.execArmy(this.props.setGeneralAttribute, attribute, value)
 }
 
 const mapStateToProps = (state: AppState) => ({
-  country_definition: getCountryDefinition(state, state.settings.country),
+  countryDefinition: getCountryDefinition(state, state.settings.country),
   country: getCountry(state, state.settings.country),
-  selected_country: state.settings.country,
+  selectedCountry: state.settings.country,
+  selectedArmy: state.settings.army,
   tech: tech_euiv,
   general: getGeneralDefinition(state, state.settings.country),
   settings: getSiteSettings(state)
 })
 
 const actions = {
-  setGeneralValue, selectCulture, setCountryValue,
-  clearAllCountrySelections, selectReligion, selectGovernment, setHasGeneral, enableCountrySelection, clearCountrySelection
+  setGeneralAttribute, selectCulture, setCountryAttribute, clearCountryAttributes, clearGeneralAttributes, clearGeneralSelections,
+  selectReligion, selectGovernment, setHasGeneral, enableCountrySelection, clearCountrySelection, clearCountrySelections
 }
 
 type S = ReturnType<typeof mapStateToProps>

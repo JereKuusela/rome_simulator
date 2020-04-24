@@ -2,9 +2,9 @@ import { produce } from 'immer'
 import { Mode } from 'types'
 import { Reducer, CombinedState } from 'redux'
 
-export type Action<T = any> = {
+export type Action<T1 = any, T2 = any> = {
   type: string,
-  payload: [T, ...any[]]
+  payload: [T1, T2, ...any[]]
 }
 
 let typeCounter = 0

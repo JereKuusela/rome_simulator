@@ -1,5 +1,5 @@
 import { Side } from "./battle"
-import { ArmyType } from "./armies"
+import { ArmyType, ArmyName } from "./armies"
 import { CountryName } from "./countries"
 import { UnitType } from "./units"
 import { TerrainType } from "./terrains"
@@ -38,6 +38,7 @@ export type Modals = {
   }
   [ModalType.UnitDetail]?: {
     country: CountryName,
+    army: ArmyName,
     type: UnitType,
     remove?: boolean
   }

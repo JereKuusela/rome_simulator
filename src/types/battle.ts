@@ -1,4 +1,5 @@
 import { CountryName, Mode, TerrainType, CombatParticipant } from 'types'
+import { ArmyName } from './armies'
 
 export interface Battle {
   terrains: TerrainType[]
@@ -20,11 +21,12 @@ export enum CombatPhase {
 export type Participants = { [key in Side]: Participant }
 export type ModeState = { [key in Mode]: Battle }
 
-export interface Participant {
+export type Participant = {
   country: CountryName
-  rounds: CombatParticipant[],
-  rolls: number[],
-  dice: number,
+  army: ArmyName
+  rounds: CombatParticipant[]
+  rolls: number[]
+  dice: number
   randomize_dice: boolean
 }
 

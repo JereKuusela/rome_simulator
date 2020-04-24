@@ -1,14 +1,10 @@
-import { Countries, CountryName, CountryDefinition, GovermentType, ReligionType, CultureType, CountryAttribute, ValuesType, WearinessAttribute, Country, isAttributeEnabled, ModifierWithKey, SiteSettings, ModifierType, SelectionType, Selections } from 'types'
-import { defaultCountry, getDefaultUnits } from 'data'
+import { Countries, CountryName, CountryDefinition, GovermentType, ReligionType, CultureType, CountryAttribute, ValuesType, WearinessAttribute, Country, isAttributeEnabled, ModifierWithKey, SiteSettings, ModifierType, SelectionType, Selections, ArmyName, Mode } from 'types'
+import { defaultCountry, getDefaultUnits, getDefaultArmies } from 'data'
 import { addValuesWithMutate, clearAllValuesWithMutate, calculateValue, addValue } from 'definition_values'
 import { toObj, values } from 'utils'
 
 export const createCountry = (countries: Countries, country: CountryName, source_country?: CountryName) => {
   countries[country] = source_country ? countries[source_country] : defaultCountry
-}
-
-export const importCountry = (countries: Countries, name: CountryName, country: CountryDefinition) => {
-  countries[name] = country
 }
 
 export const deleteCountry = (countries: Countries, country: CountryName) => {
@@ -19,12 +15,12 @@ export const changeCountryName = (countries: Countries, old_country: CountryName
   delete Object.assign(countries, { [country]: countries[old_country] })[old_country]
 }
 
-export const setCountryValue = (country: CountryDefinition, key: string, attribute: CountryAttribute, value: number) => {
-  addValuesWithMutate(country, ValuesType.Base, key, [[attribute, value]])
+export const setCountryAttribute = (country: CountryDefinition, attribute: CountryAttribute, value: number) => {
+  addValuesWithMutate(country, ValuesType.Base, 'Custom', [[attribute, value]])
 }
 
-export const clearCountryValues = (country: CountryDefinition, key: string) => {
-  clearAllValuesWithMutate(country, key)
+export const clearCountryAttributes = (country: CountryDefinition) => {
+  clearAllValuesWithMutate(country, 'Custom')
 }
 
 export const selectGovernment = (country: CountryDefinition, government: GovermentType) => {
@@ -54,15 +50,13 @@ export const clearCountrySelection = (country: CountryDefinition, type: Selectio
   delete country.selections[type][key]
 }
 
-export const clearCountrySelections = (country: CountryDefinition, type: SelectionType, keys?: string[]) => {
-  if (keys)
+export const clearCountrySelections = (country: CountryDefinition, type?: SelectionType, keys?: string[]) => {
+  if (keys && type)
     keys.forEach(key => clearCountrySelection(country, type, key))
-  else
+  else if (type)
     delete country.selections[type]
-}
-
-export const clearAllCountrySelections = (country: CountryDefinition) => {
-  country.selections = {} as Selections
+  else
+    country.selections = {} as Selections
 }
 
 export const changeWeariness = (country: CountryDefinition, type: WearinessAttribute, min: number, max: number) => {
@@ -87,4 +81,12 @@ export const convertCountryDefinition = (country: CountryDefinition, settings: S
     weariness: country.weariness,
     religion: country.religion
   }
+}
+
+export const createArmy = (country: CountryDefinition, mode: Mode, army: ArmyName) => {
+  country.armies[mode][army] = getDefaultArmies()[mode][ArmyName.Army1]
+}
+
+export const deleteArmy = (country: CountryDefinition, mode: Mode, army: ArmyName) => {
+  delete country.armies[mode][army]
 }

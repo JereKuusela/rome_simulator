@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table } from 'semantic-ui-react'
 
-import { Side, UnitRole, CountryName, UnitType, UnitAttribute, filterAttributes, Setting, Unit, Mode, CountryAttribute } from 'types'
+import { Side, UnitRole, CountryName, UnitType, UnitAttribute, filterAttributes, Setting, Unit, Mode, CountryAttribute, ArmyName } from 'types'
 import { getImage, mapRange } from 'utils'
 import { AppState, getUnitPreferences, getCountry, getMode, getCombatParticipant, getArmyDefinitionWithOverriddenUnits, getSiteSettings } from 'state'
 import { addToReserve, removeFromReserve, setUnitPreference } from 'reducers'
@@ -17,7 +17,8 @@ import DropdownArchetype from 'components/Dropdowns/DropdownArchetype'
 type Props = {
   side: Side
   country: CountryName
-  onRowClick: (country: CountryName, type: UnitType) => void
+  army: ArmyName
+  onRowClick: (country: CountryName, army: ArmyName, type: UnitType) => void
 }
 
 class TableUnitTypes extends Component<IProps> {
@@ -40,11 +41,11 @@ class TableUnitTypes extends Component<IProps> {
   }
 
   checkPreference = (role: UnitRole) => {
-    const { units, preferences, tech, country } = this.props
+    const { units, preferences, tech, country, army } = this.props
     const preference = preferences[role]
     const tech_requirement = preference && units[preference] && units[preference].tech
     if (tech_requirement && tech_requirement > tech) {
-      setUnitPreference(country, role, null)
+      setUnitPreference(country, army, role, null)
     }
   }
 
@@ -94,7 +95,7 @@ class TableUnitTypes extends Component<IProps> {
 
   renderRoleRow = (role: UnitRole, archetypes: Unit[]) => {
     // List of archetypes -> get archetype -> get image
-    const { units, setUnitPreference, country, preferences, tech, settings, onRowClick } = this.props
+    const { units, setUnitPreference, country, army, preferences, tech, settings, onRowClick } = this.props
     const archetype = archetypes.find(unit => unit.role === role)
     const preference = preferences[role]
     if (!archetype || !preference)
@@ -106,7 +107,7 @@ class TableUnitTypes extends Component<IProps> {
     return (
       <>
         <Table.Row key={role}>
-          <Table.Cell onClick={() => onRowClick(country, archetype.type)} selectable>
+          <Table.Cell onClick={() => onRowClick(country, army, archetype.type)} selectable>
             <Image src={image} avatar />
             {archetype.type}
           </Table.Cell>
@@ -114,7 +115,7 @@ class TableUnitTypes extends Component<IProps> {
             <DropdownArchetype
               value={preference}
               values={children}
-              onSelect={type => setUnitPreference(country, role, type)}
+              onSelect={type => setUnitPreference(country, army, role, type)}
               settings={settings}
             />
           </Table.Cell>
@@ -134,13 +135,13 @@ class TableUnitTypes extends Component<IProps> {
   }
 
   renderUnitRow = (unit: Unit) => {
-    const { country, settings, onRowClick } = this.props
+    const { country, settings, army, onRowClick } = this.props
     if (!unit)
       return null
     const image = getImage(unit)
     return (
       <Table.Row key={unit.type}>
-        <Table.Cell onClick={() => onRowClick(country, unit.type)} selectable>
+        <Table.Cell onClick={() => onRowClick(country, army, unit.type)} selectable>
           <Image src={image} avatar />
           {unit.type}
         </Table.Cell>
@@ -167,15 +168,15 @@ class TableUnitTypes extends Component<IProps> {
   }
 
   updateReserve = (type: UnitType, amount: number) => {
-    const { country, addToReserve, removeFromReserve, reserve, weariness } = this.props
+    const { country, addToReserve, army, removeFromReserve, reserve, weariness } = this.props
     const previous = reserve.filter(cohort => cohort.type === type).length
     if (amount > previous) {
       const units = mapRange(amount - previous, _ => ({ id: getNextId(), type, image: '' }))
-      addToReserve(country, applyLosses(weariness, units))
+      addToReserve(country, army, applyLosses(weariness, units))
     }
     if (amount < previous) {
       const types = mapRange(previous - amount, _ => type)
-      removeFromReserve(country, types)
+      removeFromReserve(country, army, types)
     }
   }
 }

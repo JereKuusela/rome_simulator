@@ -28,7 +28,7 @@ class Definitions extends Component<IProps, IState> {
   initialState = { modal_country: undefined, modal_unit: undefined, open_create_unit: false }
 
   render() {
-    const { mode, country, terrains, units, images, unit_types, weariness, openModal, settings } = this.props
+    const { mode, country, army, terrains, units, images, unit_types, weariness, openModal, settings } = this.props
     return (
       <>
         <AccordionToggle identifier='definition_units' open title='Units'>
@@ -46,7 +46,7 @@ class Definitions extends Component<IProps, IState> {
             units={units}
             images={images}
             unit_types={unit_types}
-            onRowClick={unit => openModal(ModalType.UnitDetail, { country, type: unit.type, remove: true })}
+            onRowClick={unit => openModal(ModalType.UnitDetail, { country, army, type: unit.type, remove: true })}
           />
           <WearinessRange
             values={weariness}
@@ -86,6 +86,7 @@ const mapStateToProps = (state: AppState) => ({
   terrains: filterTerrainTypes(state),
   mode: getMode(state),
   country: state.settings.country,
+  army: state.settings.army,
   settings: getSiteSettings(state),
   weariness: getCountries(state)[state.settings.country].weariness
 })
