@@ -31,8 +31,8 @@ const getEntity = (draft: Countries, action: Action<CountryName, ArmyName>, para
   return draft[country].armies[params.mode][army]
 }
 
-const getEntityPayload = (action: Action<CountryName>) => {
-  const [, ...payload] = action.payload
+const getEntityPayload = (action: Action<CountryName, ArmyName>) => {
+  const [, , ...payload] = action.payload
   return payload
 }
 

@@ -183,7 +183,7 @@ class TableUnitTypes extends Component<IProps> {
 
 const mapStateToProps = (state: AppState, props: Props) => ({
   preferences: getUnitPreferences(state, props.side),
-  reserve: getArmyDefinitionWithOverriddenUnits(state, props.country, true).reserve,
+  reserve: getArmyDefinitionWithOverriddenUnits(state, props.country, props.army, true).reserve,
   units: getCombatParticipant(state, props.side).definitions,
   tech: getCountry(state, props.country)[CountryAttribute.TechLevel],
   settings: getSiteSettings(state),

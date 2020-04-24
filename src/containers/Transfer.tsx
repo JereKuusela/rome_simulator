@@ -5,7 +5,6 @@ import { AppState, resetMissing, restoreDefaultTactics, restoreDefaultTerrains, 
 import { values, keys } from 'utils'
 import { ExportKey } from 'types'
 import { exportState, saveToFile } from 'managers/transfer'
-import ConfirmationButton from 'components/ConfirmationButton'
 import { setExportKey, setResetMissing, importState } from 'reducers'
 
 
@@ -81,11 +80,7 @@ class Transfer extends Component<IProps, IState> {
                 Reset all data (battle, countries, units, tactics, terrains, settings)
               </List.Item>
               <List.Item>
-                <ConfirmationButton
-                  negative text='Reset'
-                  message='Do you really want to reset all data?'
-                  onConfirm={() => this.props.importState('', true)}
-                />
+                <Button negative onClick={() => this.props.importState('', true)}>Reset</Button>
               </List.Item>
             </List>
           </Grid.Column>

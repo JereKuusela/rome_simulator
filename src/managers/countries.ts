@@ -3,8 +3,8 @@ import { defaultCountry, getDefaultUnits, getDefaultArmies } from 'data'
 import { addValuesWithMutate, clearAllValuesWithMutate, calculateValue, addValue } from 'definition_values'
 import { toObj, values } from 'utils'
 
-export const createCountry = (countries: Countries, country: CountryName, source_country?: CountryName) => {
-  countries[country] = source_country ? countries[source_country] : defaultCountry
+export const createCountry = (countries: Countries, country: CountryName, source?: CountryName) => {
+  countries[country] = source ? countries[source] : defaultCountry
 }
 
 export const deleteCountry = (countries: Countries, country: CountryName) => {
@@ -83,10 +83,14 @@ export const convertCountryDefinition = (country: CountryDefinition, settings: S
   }
 }
 
-export const createArmy = (country: CountryDefinition, mode: Mode, army: ArmyName) => {
-  country.armies[mode][army] = getDefaultArmies()[mode][ArmyName.Army1]
+export const createArmy = (country: CountryDefinition, mode: Mode, army: ArmyName, source?: ArmyName) => {
+  country.armies[mode][army] = source ? country.armies[mode][source] : getDefaultArmies()[mode][ArmyName.Army1]
 }
 
 export const deleteArmy = (country: CountryDefinition, mode: Mode, army: ArmyName) => {
   delete country.armies[mode][army]
+}
+
+export const changeArmyName = (country: CountryDefinition, mode: Mode, old_army: ArmyName, army: ArmyName) => {
+  delete Object.assign(country.armies[mode], { [army]: country.armies[mode][old_army] })[old_army]
 }

@@ -4,14 +4,13 @@ import Dropdown from 'components/Dropdowns/Dropdown'
 import ValueDropdownModal from 'components/ValueDropdownModal'
 import { AppState } from 'state'
 import { Grid, Button } from 'semantic-ui-react'
-import Confirmation from 'components/Confirmation'
-import { CountryName, ModalType } from 'types'
+import { CountryName, ModalType, ArmyName } from 'types'
 import { keys } from 'utils'
-import { createCountry, changeCountryName, deleteCountry, selectCountry, openModal } from 'reducers'
+import { createCountry, changeCountryName, deleteCountry, createArmy, changeArmyName, deleteArmy, selectCountry, selectArmy, openModal } from 'reducers'
 
 interface IState {
-  open_create_country: boolean
-  open_delete_country: boolean
+  openCreateCountry: boolean
+  openCreateArmy: boolean
 }
 
 class CountryManager extends Component<IProps, IState> {
@@ -21,17 +20,17 @@ class CountryManager extends Component<IProps, IState> {
     this.state = this.initialState
   }
 
-  initialState = { open_create_country: false, open_delete_country: false }
+  initialState = { openCreateCountry: false, openCreateArmy: false }
 
   render() {
-    const { countries, selected_country, selectCountry, children } = this.props
-    const { open_create_country, open_delete_country } = this.state
+    const { countries, selectedCountry, selectedArmy, selectCountry, mode, selectArmy, children } = this.props
+    const { openCreateCountry, openCreateArmy } = this.state
     return (
       <Grid>
         <ValueDropdownModal
           value={'' as CountryName}
           selected={'' as CountryName}
-          open={open_create_country}
+          open={openCreateCountry}
           onSuccess={this.createCountry}
           onClose={this.onClose}
           items={keys(countries)}
@@ -40,27 +39,33 @@ class CountryManager extends Component<IProps, IState> {
           value_label='Name '
           dropdown_label='Copy country: '
         />
-        <Confirmation
-          open={open_delete_country}
+        <ValueDropdownModal
+          value={'' as ArmyName}
+          selected={'' as ArmyName}
+          open={openCreateArmy}
+          onSuccess={this.createArmy}
           onClose={this.onClose}
-          onConfirm={this.deleteCountry}
-          message={'Are you sure you want to remove country ' + selected_country + ' ?'}
+          items={keys(countries[selectedCountry].armies[mode])}
+          message='New army'
+          button_message='Create'
+          value_label='Name '
+          dropdown_label='Copy army: '
         />
         <Grid.Row columns='5'>
           <Grid.Column>
             <Dropdown
               values={keys(countries)}
-              value={selected_country}
+              value={selectedCountry}
               onChange={selectCountry}
             />
           </Grid.Column>
           <Grid.Column>
-            <Button primary onClick={() => this.setState({ open_create_country: true })}>
+            <Button primary onClick={() => this.setState({ openCreateCountry: true })}>
               New country
             </Button>
           </Grid.Column>
           {
-            selected_country &&
+            selectedCountry &&
             <Grid.Column>
               <Button primary onClick={this.openEditCountry}>
                 Rename country
@@ -68,9 +73,9 @@ class CountryManager extends Component<IProps, IState> {
             </Grid.Column>
           }
           {
-            selected_country &&
+            selectedCountry &&
             <Grid.Column>
-              <Button primary onClick={() => this.setState({ open_delete_country: true })}>
+              <Button primary onClick={() => this.deleteCountry()}>
                 Delete country
               </Button>
             </Grid.Column>
@@ -83,7 +88,36 @@ class CountryManager extends Component<IProps, IState> {
             ))
           }
         </Grid.Row>
-
+        <Grid.Row columns='5'>
+          <Grid.Column>
+            <Dropdown
+              values={keys(countries[selectedCountry].armies[mode])}
+              value={selectedArmy}
+              onChange={selectArmy}
+            />
+          </Grid.Column>
+          <Grid.Column>
+            <Button primary onClick={() => this.setState({ openCreateArmy: true })}>
+              New army
+            </Button>
+          </Grid.Column>
+          {
+            selectedArmy &&
+            <Grid.Column>
+              <Button primary onClick={this.openEditArmy}>
+                Rename army
+              </Button>
+            </Grid.Column>
+          }
+          {
+            selectedArmy &&
+            <Grid.Column>
+              <Button primary onClick={() => this.deleteArmy()}>
+                Delete army
+              </Button>
+            </Grid.Column>
+          }
+        </Grid.Row>
       </Grid>
     )
   }
@@ -92,7 +126,14 @@ class CountryManager extends Component<IProps, IState> {
     onSuccess: country => this.changeCountryName(country as CountryName),
     message: 'Rename country',
     button_message: 'Edit',
-    initial: this.props.selected_country
+    initial: this.props.selectedCountry
+  })
+
+  openEditArmy = () => this.props.openModal(ModalType.Value, {
+    onSuccess: army => this.changeArmyName(army as ArmyName),
+    message: 'Rename army',
+    button_message: 'Edit',
+    initial: this.props.selectedArmy
   })
 
   onClose = () => this.setState(this.initialState)
@@ -104,24 +145,44 @@ class CountryManager extends Component<IProps, IState> {
   }
 
   deleteCountry = () => {
-    const { selectCountry, deleteCountry, selected_country } = this.props
-    deleteCountry(selected_country)
+    const { selectCountry, deleteCountry, selectedCountry } = this.props
+    deleteCountry(selectedCountry)
     selectCountry('' as CountryName)
   }
 
   changeCountryName = (country: CountryName) => {
-    const { selectCountry, changeCountryName, selected_country } = this.props
-    changeCountryName(selected_country, country)
+    const { selectCountry, changeCountryName, selectedCountry } = this.props
+    changeCountryName(selectedCountry, country)
     selectCountry(country)
+  }
+
+  createArmy = (army: ArmyName, sourceArmy?: ArmyName) => {
+    const { createArmy, selectArmy, mode, selectedCountry } = this.props
+    createArmy(selectedCountry, mode, army, sourceArmy)
+    selectArmy(army)
+  }
+
+  deleteArmy = () => {
+    const { selectCountry, deleteCountry, selectedCountry } = this.props
+    deleteCountry(selectedCountry)
+    selectCountry('' as CountryName)
+  }
+
+  changeArmyName = (army: ArmyName) => {
+    const { changeArmyName, selectArmy, selectedArmy, mode, selectedCountry } = this.props
+    changeArmyName(selectedCountry, mode, selectedArmy, army)
+    selectArmy(army)
   }
 }
 
 const mapStateToProps = (state: AppState) => ({
-  selected_country: state.settings.country,
-  countries: state.countries
+  selectedCountry: state.settings.country,
+  countries: state.countries,
+  selectedArmy: state.settings.army,
+  mode: state.settings.mode
 })
 
-const actions = { selectCountry, createCountry, changeCountryName, deleteCountry, openModal }
+const actions = { selectCountry, createCountry, changeCountryName, deleteCountry, openModal, selectArmy, deleteArmy, changeArmyName, createArmy }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

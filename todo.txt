@@ -12,6 +12,8 @@ Changelog:
   - Added a tooltip to the winrate button and result.
   - Added delays to most tooltips to prevent them flickering when moving mouse. 
   - Added stack wipe chance to Analyze.
+  - Removed all confirmation modals. These used to avoid accidentally deleting lots of data. With save game importing this shouldn't matter any more.
+  - Country selectors now also include army selector.
 
 Save game importer:
  - New page to import save games.
@@ -24,7 +26,7 @@ Combat:
   - Fixed EUIV combat having dice rolls from 1 to 9 instead of from 0 to 9. This doesn't affect combat calculations that much but will slow down Analyze page because of more simulations.
 
 Countries:
-  - Created a parser which converts Imperator data files to a format suitable for the simulator. This makes maintenaning much easier and data much more accurate.
+  - Created a parser which converts Imperator data files to a format suitable for the simulator. This makes maintaining much easier and data much more accurate.
   - Added all heritages.
   - Added all general traits which affect combat (mainly health traits which reduce martial).
 

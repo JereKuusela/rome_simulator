@@ -19,11 +19,7 @@ class ModalUnitDetail extends Component<IProps> {
       <BaseModal basic type={ModalType.UnitDetail}>
         {
           remove && unit_type !== getRootParent(mode) ?
-            <ItemRemover
-              onRemove={this.remove}
-              confirm_remove={true}
-              item={'item definition ' + unit_type}
-            />
+            <ItemRemover onRemove={this.remove} />
             : null
         }
         <UnitDetail

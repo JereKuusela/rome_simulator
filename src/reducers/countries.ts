@@ -25,6 +25,7 @@ export const clearCountryAttributes = makeActionReplaceFirst(manager.clearCountr
 export const changeWeariness = makeActionReplaceFirst(manager.changeWeariness, countryMapping)
 export const createArmy = makeActionReplaceFirst(manager.createArmy, countryMapping)
 export const deleteArmy = makeActionReplaceFirst(manager.deleteArmy, countryMapping)
+export const changeArmyName = makeActionReplaceFirst(manager.changeArmyName, countryMapping)
 
 const country = makeEntityReducer(getDefaultCountryDefinitions(), countryMapping)
 

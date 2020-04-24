@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Grid, Table, List, Checkbox } from 'semantic-ui-react'
+import { Container, Grid, Table, List, Checkbox, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState, getGeneralDefinition, getCountryDefinition, getSiteSettings, getCountry } from 'state'
 import { mapRange, values } from '../utils'
@@ -10,7 +10,6 @@ import { clearGeneralSelections, clearCountrySelections, clearCountryAttributes,
 import AccordionToggle from 'containers/AccordionToggle'
 import CountryManager from 'containers/CountryManager'
 import Dropdown from 'components/Dropdowns/Dropdown'
-import ConfirmationButton from 'components/ConfirmationButton'
 import TableAttributes from 'components/TableAttributes'
 import { getCultures } from 'data'
 import { tech_euiv } from 'managers/modifiers'
@@ -28,11 +27,7 @@ class Countries extends Component<IProps> {
     return (
       <Container>
         <CountryManager>
-          <ConfirmationButton
-            message={'Are you sure you want to clear all selections from country ' + selected_country + '?'}
-            negative
-            text='Clear selections'
-            onConfirm={this.clearAll} />
+          <Button negative onClick={this.clearAll}>Clear selections</Button>
         </CountryManager>
         <Grid>
           <Grid.Row columns='3'>
@@ -238,7 +233,7 @@ const mapStateToProps = (state: AppState) => ({
   selectedCountry: state.settings.country,
   selectedArmy: state.settings.army,
   tech: tech_euiv,
-  general: getGeneralDefinition(state, state.settings.country),
+  general: getGeneralDefinition(state, state.settings.country, state.settings.army),
   settings: getSiteSettings(state)
 })
 

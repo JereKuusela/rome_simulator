@@ -78,10 +78,12 @@ export const getCombatUnitForEachRound = (state: AppState, side: Side, id: numbe
  */
 export const mergeUnitTypes = (state: AppState, ): UnitType[] => {
   const mode = getMode(state)
-  return Array.from(keys(state.countries).reduce((previous, current) => {
-    const units = manager.getActualUnits2(getUnits(state, current), mode)
-    units.filter(unit => unit.mode === mode).forEach(unit => previous.add(unit.type))
-    return previous
+  return Array.from(keys(state.countries).reduce((previous, countryName) => {
+    return keys(state.countries[countryName].armies[mode]).reduce((previous, armyName) => {
+      const units = manager.getActualUnits2(getUnits(state, countryName, armyName), mode)
+      units.filter(unit => unit.mode === mode).forEach(unit => previous.add(unit.type))
+      return previous
+    }, previous)
   }, new Set<UnitType>()))
 }
 
@@ -125,11 +127,11 @@ export const getBattle = (state: AppState): Battle => state.battle[state.setting
 
 export const getCountries = (state: AppState): Countries => state.countries
 
-const getUnitDefinitions = (state: AppState, country: CountryName) => {
-  const definition = state.countries[country]
-  const units = definition.units
-  const general = getGeneralDefinition(state, country)
-  const modifiers = getCountryModifiers(definition).concat(getGeneralModifiers(general))
+const getUnitDefinitions = (state: AppState, countryName: CountryName, armyName: ArmyName) => {
+  const country = state.countries[countryName]
+  const units = country.units
+  const general = getGeneralDefinition(state, countryName, armyName)
+  const modifiers = getCountryModifiers(country).concat(getGeneralModifiers(general))
   return applyUnitModifiers(units, modifiers)
 }
 
@@ -146,13 +148,14 @@ export const getCombatParticipant = (state: AppState, side: Side, round?: number
 /** Helper function, should be checked and refactored. */
 const getArmyForCombat = (state: AppState, side: Side, mode?: Mode) => {
   const participant = state.battle[mode ?? state.settings.mode].participants[side]
-  const country = participant.country
-  const army = getArmyDefinition(state, country)
+  const countryName = participant.country
+  const armyName = participant.army
+  const army = getArmyDefinition(state, countryName, armyName)
   const cohorts = getCohorts(state, side)
-  const general = getGeneral(state, country)
+  const general = getGeneral(state, countryName, armyName)
   const tactic = state.tactics[army.tactic]
-  const definitions = getUnits(state, country)
-  const flank_ratio = calculateValue(state.countries[country], CountryAttribute.FlankRatio)
+  const definitions = getUnits(state, countryName, armyName)
+  const flank_ratio = calculateValue(state.countries[countryName], CountryAttribute.FlankRatio)
   return { ...cohorts, tactic, general, flank_ratio, flank_size: army.flank_size, unit_preferences: army.unit_preferences, definitions }
 }
 
@@ -184,53 +187,54 @@ export const getFlankSize = (state: AppState, side: Side): number => {
   return army.flank_size
 }
 
-export const getCountry = (state: AppState, country: CountryName): Country => {
-  const definition = getCountryDefinition(state, country)
-  return convertCountryDefinition(definition, state.settings.siteSettings)
+export const getCountry = (state: AppState, countryName: CountryName): Country => {
+  const country = getCountryDefinition(state, countryName)
+  return convertCountryDefinition(country, state.settings.siteSettings)
 }
-export const getCountryDefinition = (state: AppState, country: CountryName): CountryDefinition => {
-  const definition = state.countries[country]
-  const modifiers = getCountryModifiers(definition)
-  return applyCountryModifiers(definition, modifiers)
+export const getCountryDefinition = (state: AppState, countryName: CountryName): CountryDefinition => {
+  const country = state.countries[countryName]
+  const modifiers = getCountryModifiers(country)
+  return applyCountryModifiers(country, modifiers)
 }
-const getArmyDefinition = (state: AppState, country: CountryName) => state.countries[country].armies[state.settings.mode][ArmyName.Army1]
+const getArmyDefinition = (state: AppState, countryName: CountryName, armyName: ArmyName) => state.countries[countryName].armies[state.settings.mode][armyName]
 
-export const getGeneralDefinition = (state: AppState, country: CountryName): GeneralDefinition => {
-  const definition = getArmyDefinition(state, country).general
-  const modifiers = getGeneralModifiers(definition)
-  return manager.applyGeneralModifiers(definition, modifiers)
+export const getGeneralDefinition = (state: AppState, countryName: CountryName, armyName: ArmyName): GeneralDefinition => {
+  const army = getArmyDefinition(state, countryName, armyName).general
+  const modifiers = getGeneralModifiers(army)
+  return manager.applyGeneralModifiers(army, modifiers)
 
 }
-export const getGeneral = (state: AppState, country: CountryName): General => manager.convertGeneralDefinition(getSiteSettings(state), getGeneralDefinition(state, country))
+export const getGeneral = (state: AppState, countryName: CountryName, armyName: ArmyName): General => manager.convertGeneralDefinition(getSiteSettings(state), getGeneralDefinition(state, countryName, armyName))
 
 export const getMode = (state: AppState): Mode => state.settings.mode
 
 const getArmyDefinitionBySide = (state: AppState, side: Side) => {
   const participant = state.battle[state.settings.mode].participants[side]
-  const country = participant.country
-  return getArmyDefinition(state, country)
+  return getArmyDefinition(state, participant.country, participant.army)
 }
 
 export const getTactic = (state: AppState, side: Side): TacticDefinition => {
-  const country = getParticipant(state, side).country
-  const army = getArmyDefinition(state, country)
+  const participant = getParticipant(state, side)
+  const army = getArmyDefinition(state, participant.country, participant.army)
   return state.tactics[army.tactic]
 }
 
-export const getArmyDefinitionWithOverriddenUnits = (state: AppState, name: CountryName, originals?: boolean) => {
-  const army = getArmyDefinition(state, name)
+export const getArmyDefinitionWithOverriddenUnits = (state: AppState, countryName: CountryName, armyName: ArmyName, originals?: boolean) => {
+  const army = getArmyDefinition(state, countryName, armyName)
   if (originals)
     return army
-  const units = getUnits(state, name)
-  const country = getCountry(state, name)
+  const units = getUnits(state, countryName, armyName)
+  const country = getCountry(state, countryName)
   const latest = manager.getLatestUnits2(units, country[CountryAttribute.TechLevel])
   return manager.overrideRoleWithPreferences(army, units, latest)
 }
 
 export const getCohorts = (state: AppState, side: Side, originals?: boolean): Cohorts => {
   const settings = getSettings(state)
-  const country = getParticipant(state, side).country
-  const definition = getArmyDefinitionWithOverriddenUnits(state, country, originals)
+  const participant = getParticipant(state, side)
+  const countryName = participant.country
+  const armyName = participant.army
+  const definition = getArmyDefinitionWithOverriddenUnits(state, countryName, armyName, originals)
   const frontline = [Array<Cohort | null>(settings[Setting.CombatWidth]).fill(null)]
   if (settings[Setting.BackRow])
     frontline.push([...frontline[0]])
@@ -240,7 +244,7 @@ export const getCohorts = (state: AppState, side: Side, originals?: boolean): Co
     defeated: definition.defeated as Defeated
   }
   forEach2(definition.frontline, (item, row, column) => cohorts.frontline[Number(row)][Number(column)] = item as Cohort)
-  const units = getUnits(state, country)
+  const units = getUnits(state, countryName, armyName)
   return convertCohortDefinitions(settings, cohorts, units)
 }
 
@@ -255,31 +259,34 @@ export const getSelectedTerrains = (state: AppState): TerrainDefinition[] => get
  */
 export const getUnitDefinitionsBySide = (state: AppState, side: Side): Units => getUnits(state, getParticipant(state, side).country)
 
-export const getUnits = (state: AppState, country?: CountryName): Units => {
+export const getUnits = (state: AppState, countryName?: CountryName, armyName?: ArmyName): Units => {
   const settings = getSiteSettings(state)
-  country = country ?? state.settings.country
+  countryName = countryName ?? state.settings.country
+  armyName = armyName ?? state.settings.army
   const mode = state.settings.mode
-  const definitions = getUnitDefinitions(state, country)
-  const general = getGeneralDefinition(state, country).definitions
+  const definitions = getUnitDefinitions(state, countryName, armyName)
+  const general = getGeneralDefinition(state, countryName, armyName).definitions
   const units = convertUnitDefinitions(settings, definitions, general)
   return filterUnitDefinitions(mode, units)
 }
 
-export const getUnitTypeList = (state: AppState, filter_parent: boolean, name?: CountryName) => getUnitList(state, filter_parent, name).map(unit => unit.type)
+export const getUnitTypeList = (state: AppState, filter_parent: boolean, countryName?: CountryName) => getUnitList(state, filter_parent, countryName).map(unit => unit.type)
 
-export const getUnitList = (state: AppState, filter_parent: boolean, name?: CountryName): Unit[] => {
+export const getUnitList = (state: AppState, filter_parent: boolean, countryName?: CountryName, armyName?: ArmyName): Unit[] => {
   const mode = getMode(state)
-  name = name ?? state.settings.country
-  const country = getCountry(state, name)
-  const units = getUnits(state, name)
+  countryName = countryName ?? state.settings.country
+  armyName = armyName ?? state.settings.army
+  const country = getCountry(state, countryName)
+  const units = getUnits(state, countryName, armyName)
   return manager.getUnitList2(units, mode, country[CountryAttribute.TechLevel], filter_parent, getSiteSettings(state))
 }
 
-export const getUnit = (state: AppState, unit_type: UnitType, country?: CountryName): Unit => {
+export const getUnit = (state: AppState, unit_type: UnitType, countryName?: CountryName, armyName?: ArmyName): Unit => {
   const settings = getSiteSettings(state)
-  country = country ?? state.settings.country
-  const general = getGeneralDefinition(state, country).definitions
-  const units = getUnitDefinitions(state, country)
+  countryName = countryName ?? state.settings.country
+  armyName = armyName ?? state.settings.army
+  const general = getGeneralDefinition(state, countryName, armyName).definitions
+  const units = getUnitDefinitions(state, countryName, armyName)
   return convertUnitDefinition(settings, units, shrinkUnits(units), general, unit_type)
 }
 

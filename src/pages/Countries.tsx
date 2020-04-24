@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Grid, Table, List, Input, Checkbox } from 'semantic-ui-react'
+import { Container, Grid, Table, List, Input, Checkbox, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState, getGeneral, getGeneralDefinition, getSiteSettings } from 'state'
 import { mapRange, ObjSet, keys, values } from '../utils'
@@ -18,7 +18,6 @@ import {
 import AccordionToggle from 'containers/AccordionToggle'
 import CountryManager from 'containers/CountryManager'
 import Dropdown from 'components/Dropdowns/Dropdown'
-import ConfirmationButton from 'components/ConfirmationButton'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TableAttributes from 'components/TableAttributes'
 import { tech_ir, abilities_ir, traits_ir, heritages_ir, traditions_ir, ideas_ir, policies_ir, laws_ir, trades_ir } from 'managers/modifiers'
@@ -35,19 +34,15 @@ const CELL_PADDING = '.78571429em .78571429em'
 class Countries extends Component<IProps> {
 
   render() {
-    const { settings, generalDefinition: general_definition, general, selectedCountry: selected_country, setHasGeneral,
-      omens, countryDefinition: country_definition, country } = this.props
-    const selections = country_definition.selections
+    const { settings, generalDefinition, general, selectedCountry, setHasGeneral,
+      omens, countryDefinition, country } = this.props
+    const countrySelections = countryDefinition.selections
     const tradition = traditions_ir[country.culture]
     const omen = omens[country.religion]
     return (
       <Container>
         <CountryManager>
-          <ConfirmationButton
-            message={'Are you sure you want to clear all selections from country ' + selected_country + '?'}
-            negative
-            text='Clear selections'
-            onConfirm={this.clearAll} />
+          <Button negative onClick={this.clearAll}>Clear selections</Button>
         </CountryManager>
         <Grid>
           <Grid.Row columns='3'>
@@ -90,9 +85,9 @@ class Countries extends Component<IProps> {
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title={'Traditions (' + tradition.name + ')'} identifier='countries_tradition'>
-                Military experience: <CountryValueInput attribute={CountryAttribute.MilitaryExperience} country={selected_country} />
+                Military experience: <CountryValueInput attribute={CountryAttribute.MilitaryExperience} country={selectedCountry} />
                 {
-                  this.renderTraditions(tradition, selections[SelectionType.Tradition])
+                  this.renderTraditions(tradition, countrySelections[SelectionType.Tradition])
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -101,7 +96,7 @@ class Countries extends Component<IProps> {
             <Grid.Column>
               <AccordionToggle title='Trade' identifier='countries_trade'>
                 {
-                  this.renderTrades(trades_ir, selections[SelectionType.Trade])
+                  this.renderTrades(trades_ir, countrySelections[SelectionType.Trade])
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -110,7 +105,7 @@ class Countries extends Component<IProps> {
             <Grid.Column>
               <AccordionToggle title='Technology & Inventions' identifier='countries_invention'>
                 {
-                  this.renderInventions(tech_ir, country[CountryAttribute.TechLevel], selections[SelectionType.Invention])
+                  this.renderInventions(tech_ir, country[CountryAttribute.TechLevel], countrySelections[SelectionType.Invention])
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -118,7 +113,7 @@ class Countries extends Component<IProps> {
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title={'Omens (' + country.religion + ')'} identifier='countries_omen'>
-                Omen power: <CountryValueInput attribute={CountryAttribute.OmenPower} country={selected_country} />
+                Omen power: <CountryValueInput attribute={CountryAttribute.OmenPower} country={selectedCountry} />
                 <List bulleted style={{ marginLeft: '2rem' }}>
                   <List.Item>Religional unity: 0 - 100</List.Item>
                   <List.Item>Tech level: 0 - 50</List.Item>
@@ -133,7 +128,7 @@ class Countries extends Component<IProps> {
                   <List.Item><b>Total: From -30 to 300</b></List.Item>
                 </List>
                 {
-                  this.renderOmens(omen, selections[SelectionType.Omen], country[CountryAttribute.OmenPower])
+                  this.renderOmens(omen, countrySelections[SelectionType.Omen], country[CountryAttribute.OmenPower])
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -145,23 +140,23 @@ class Countries extends Component<IProps> {
                   <Table.Body>
                     <Table.Row>
                       <Table.Cell>
-                        Republic Discipline (0 - 7.5): <CountryValueInput attribute={CountryAttribute.OfficeDiscipline} country={selected_country} />
+                        Republic Discipline (0 - 7.5): <CountryValueInput attribute={CountryAttribute.OfficeDiscipline} country={selectedCountry} />
                       </Table.Cell>
                       <Table.Cell>
-                        Monarch Land Morale (0 - 15): <CountryValueInput attribute={CountryAttribute.OfficeMorale} country={selected_country} />
+                        Monarch Land Morale (0 - 15): <CountryValueInput attribute={CountryAttribute.OfficeMorale} country={selectedCountry} />
                       </Table.Cell>
                       <Table.Cell />
                     </Table.Row>
                   </Table.Body>
                 </Table>
                 {
-                  this.renderLaws(laws_ir, selections[SelectionType.Law])
+                  this.renderLaws(laws_ir, countrySelections[SelectionType.Law])
                 }
                 {
-                  this.renderPolicies(policies_ir, selections[SelectionType.Policy])
+                  this.renderPolicies(policies_ir, countrySelections[SelectionType.Policy])
                 }
                 {
-                  this.renderIdeas(ideas_ir, selections[SelectionType.Idea])
+                  this.renderIdeas(ideas_ir, countrySelections[SelectionType.Idea])
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -170,7 +165,7 @@ class Countries extends Component<IProps> {
             <Grid.Column>
               <AccordionToggle title='Heritage' identifier='countries_heritage'>
                 {
-                  this.renderHeritages(heritages_ir, selections[SelectionType.Heritage])
+                  this.renderHeritages(heritages_ir, countrySelections[SelectionType.Heritage])
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -178,8 +173,8 @@ class Countries extends Component<IProps> {
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title='Attributes' identifier='countries_attributes'>
-                <TableAttributes attributes={filterAttributes(values(CountryAttribute), settings)} custom_value_key='Base' definition={country_definition} onChange={this.setCountryValue} />
-                <TableAttributes attributes={filterAttributes((values(GeneralAttribute) as GeneralValueType[]).concat(values(CombatPhase)), settings)} custom_value_key='Base' definition={general_definition} onChange={this.setGeneralValue} />
+                <TableAttributes attributes={filterAttributes(values(CountryAttribute), settings)} custom_value_key='Base' definition={countryDefinition} onChange={this.setCountryValue} />
+                <TableAttributes attributes={filterAttributes((values(GeneralAttribute) as GeneralValueType[]).concat(values(CombatPhase)), settings)} custom_value_key='Base' definition={generalDefinition} onChange={this.setGeneralValue} />
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
@@ -632,8 +627,8 @@ const mapStateToProps = (state: AppState) => ({
   country: convertCountryDefinition(state.countries[state.settings.country], state.settings.siteSettings),
   selectedCountry: state.settings.country,
   selectedArmy: state.settings.army,
-  generalDefinition: getGeneralDefinition(state, state.settings.country),
-  general: getGeneral(state, state.settings.country),
+  generalDefinition: getGeneralDefinition(state, state.settings.country, state.settings.army),
+  general: getGeneral(state, state.settings.country, state.settings.army),
   settings: getSiteSettings(state)
 })
 

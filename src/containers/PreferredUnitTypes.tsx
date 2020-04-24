@@ -106,7 +106,7 @@ class Row extends Component<IProps> {
 const mapStateToProps = (state: AppState, props: Props) => {
   const participant = getParticipant(state, props.side)
   return {
-    units: getUnitList(state, true, participant.country),
+    units: getUnitList(state, true, participant.country, participant.army),
     country: participant.country,
     army: participant.army,
     flank_size: getFlankSize(state, props.side),

@@ -93,7 +93,7 @@ class TableDamageAttributes extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  general: getGeneral(state, props.country),
+  general: getGeneral(state, props.country, props.army),
   unit: getUnit(state, getMode(state) === Mode.Naval ? UnitType.Naval : UnitType.Land, props.country),
   settings: getSiteSettings(state)
 })
