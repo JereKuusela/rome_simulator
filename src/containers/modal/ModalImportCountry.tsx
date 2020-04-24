@@ -1,17 +1,22 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { ModalType, Mode, TacticType, UnitPreferences, UnitPreferenceType, dictionaryUnitType, dictionaryTacticType, GeneralAttribute, UnitType, UnitAttribute, CultureType, CountryName, CountryAttribute, SelectionType, Invention, ArmyName } from 'types'
-import { createCountry, setCountryAttribute, selectCulture, enableCountrySelections, enableCountrySelection, createArmy, setHasGeneral, setGeneralAttribute } from 'reducers'
+import { ModalType, Mode, TacticType, UnitPreferences, UnitPreferenceType, dictionaryUnitType, dictionaryTacticType, GeneralAttribute, UnitType, UnitAttribute, CultureType, CountryName, CountryAttribute, SelectionType, Invention, ArmyName, CohortDefinition } from 'types'
+import {
+  enableGeneralSelections, createCountry, setCountryAttribute, selectCulture, enableCountrySelections, enableCountrySelection, createArmy, setHasGeneral, setGeneralAttribute,
+  setFlankSize, setUnitPreference, selectTactic, addToReserve, deleteArmy
+} from 'reducers'
 import { Input, Button, Grid, Table } from 'semantic-ui-react'
 import BaseModal from './BaseModal'
 import Dropdown from 'components/Dropdowns/Dropdown'
 import { sortBy, uniq, sum, union } from 'lodash'
 import LabelItem from 'components/Utils/LabelUnit'
-import { AppState } from 'state'
+import { AppState, getUnits } from 'state'
 import { getDefaultUnits } from 'data'
 import AttributeImage from 'components/Utils/AttributeImage'
-import { toObj, toArr, mapRange } from 'utils'
+import { toObj, toArr, mapRange, map } from 'utils'
 import { heritages_ir, traits_ir, traditions_ir, tech_ir, trades_ir, laws_ir, policies_ir } from 'managers/modifiers'
+import { getNextId } from 'army_utils'
+import { calculateValueWithoutLoss } from 'definition_values'
 
 type Entry<T extends Tag | Army> = {
   entity: T
@@ -101,7 +106,43 @@ class ModalImportCountry extends Component<IProps, IState> {
   bookmarks: Bookmarks = {}
   combined: Combined | null = null
   country: Country | null = null
+  // Importing must be done in two steps. First to import definitions and then cohorts (since their values are relative to definitions).
+  importing = false
 
+
+  componentDidUpdate() {
+    if (this.importing) {
+      const { state, addToReserve } = this.props
+      const countryName = this.country?.name
+      const armyName = this.combined?.name
+      if (countryName && armyName && this.combined) {
+        const units = getUnits(state, countryName, armyName)
+        const experiences = map(units, unit => calculateValueWithoutLoss(unit, UnitAttribute.Experience))
+        const maxStrengths = map(units, unit => calculateValueWithoutLoss(unit, UnitAttribute.Strength))
+        const maxMorales = map(units, unit => calculateValueWithoutLoss(unit, UnitAttribute.Morale))
+        const cohorts: CohortDefinition[] = this.combined.cohorts.map(cohort => ({
+          type: cohort.type,
+          id: getNextId(),
+          base_values: {
+            [UnitAttribute.Experience]: {
+              'Custom': cohort[UnitAttribute.Experience] - experiences[cohort.type]
+            }
+          } as any,
+          loss_values: {
+            [UnitAttribute.Morale]: {
+              'Custom': maxMorales[cohort.type] - cohort[UnitAttribute.Morale]
+            },
+            [UnitAttribute.Strength]: {
+              'Custom': maxStrengths[cohort.type] - cohort[UnitAttribute.Strength]
+            }
+          } as any
+        }))
+        addToReserve(countryName, armyName, cohorts)
+
+      }
+      this.importing = false
+    }
+  }
 
   render() {
     const { countries, country, army, armies } = this.state
@@ -313,7 +354,7 @@ class ModalImportCountry extends Component<IProps, IState> {
             Cohorts
           </Table.Cell>
           <Table.Cell colSpan='3'>
-            {toArr(counts, (value, key) => <><LabelItem key={key} item={units[key]} />{' x ' + value}</>)}
+            {toArr(counts, (value, key) => <span key={key}><LabelItem item={units[key]} />{' x ' + value}</span>)}
           </Table.Cell>
         </Table.Row>
       </>
@@ -469,6 +510,7 @@ class ModalImportCountry extends Component<IProps, IState> {
       id: entry.entity.id
     }
     let tech = false
+    let firstMilitaryExperience = true
     for (let line = start + 1; line < end; line++) {
       const [key, value] = this.handleLine(lines[line])
       if (key === 'name' && !country.name)
@@ -483,8 +525,10 @@ class ModalImportCountry extends Component<IProps, IState> {
         tech = false
         country.tech = Number(value)
       }
-      if (key === 'military_experience')
+      if (key === 'military_experience' && firstMilitaryExperience) {
+        firstMilitaryExperience = false
         country.militaryExperience = Number(value)
+      }
       if (key === 'units')
         country.armies = this.getNumberList(value)
       if (key === 'idea' && value !== '{')
@@ -673,40 +717,52 @@ class ModalImportCountry extends Component<IProps, IState> {
   }
 
   importCountry = () => {
-    const { createCountry, setCountryAttribute, selectCulture, enableCountrySelections, enableCountrySelection, createArmy, setHasGeneral, setGeneralAttribute	 } = this.props
+    const {
+      createCountry, setCountryAttribute, selectCulture, enableCountrySelections, enableCountrySelection, createArmy, setHasGeneral, setGeneralAttribute, enableGeneralSelections,
+      setFlankSize, setUnitPreference, selectTactic
+    } = this.props
     console.log(this.country)
-    const name = this.country?.name
-    if (this.country && name) {
-      createCountry(name)
-      setCountryAttribute(name, CountryAttribute.TechLevel, this.country.tech)
-      setCountryAttribute(name, CountryAttribute.MilitaryExperience, this.country.militaryExperience)
-      selectCulture(name, this.country.tradition, false)
+    const countryName = this.country?.name
+    const armyName = this.combined?.name
+    if (this.country && countryName) {
+      createCountry(countryName)
+      setCountryAttribute(countryName, CountryAttribute.TechLevel, this.country.tech)
+      setCountryAttribute(countryName, CountryAttribute.MilitaryExperience, this.country.militaryExperience)
+      selectCulture(countryName, this.country.tradition, false)
       const traditionsWithBonus = this.country.traditions.map(value => value === 7 ? 8 : value)
       const traditions = union(...traditionsWithBonus.map((value, index) => (
         mapRange(value, value => 'tradition_path_' + index + '_' + value)
       )))
-      enableCountrySelections(name, SelectionType.Tradition, traditions)
+      enableCountrySelections(countryName, SelectionType.Tradition, traditions)
       const invention_list = sortBy(tech_ir.reduce((prev, curr) => prev.concat(curr.inventions.filter(invention => invention.index)), [] as Invention[]), invention => invention.index)
       const inventions = this.country.inventions.map((value, index) => value && index ? invention_list[index - 1].key : '').filter(value => value)
       const exports = sortBy(trades_ir.filter(entity => entity.index), entity => entity.index)
       const trades = this.country.exports.map((value, index) => value ? exports.find(entity => entity.index === index)?.key ?? '' : '').filter(value => value)
-      enableCountrySelections(name, SelectionType.Invention, inventions)
-      enableCountrySelection(name, SelectionType.Heritage, this.country.heritage)
-      enableCountrySelections(name, SelectionType.Trade, trades)
-      enableCountrySelections(name, SelectionType.Idea, this.country.ideas)
-      enableCountrySelections(name, SelectionType.Law, this.country.laws)
-      enableCountrySelection(name, SelectionType.Policy, this.country.armyMaintenance)
-      enableCountrySelection(name, SelectionType.Policy, this.country.navalMaintenance)
-      setCountryAttribute(name, CountryAttribute.OfficeDiscipline, this.country.officeDiscipline)
-      setCountryAttribute(name, CountryAttribute.OfficeMorale, this.country.officeMorale)
+      enableCountrySelections(countryName, SelectionType.Invention, inventions)
+      enableCountrySelection(countryName, SelectionType.Heritage, this.country.heritage)
+      enableCountrySelections(countryName, SelectionType.Trade, trades)
+      enableCountrySelections(countryName, SelectionType.Idea, this.country.ideas)
+      enableCountrySelections(countryName, SelectionType.Law, this.country.laws)
+      enableCountrySelection(countryName, SelectionType.Policy, this.country.armyMaintenance)
+      enableCountrySelection(countryName, SelectionType.Policy, this.country.navalMaintenance)
+      setCountryAttribute(countryName, CountryAttribute.OfficeDiscipline, this.country.officeDiscipline)
+      setCountryAttribute(countryName, CountryAttribute.OfficeMorale, this.country.officeMorale)
     }
-    if (this.combined && name) {
-      createArmy(name, this.combined.mode, this.combined.name)
+    if (this.combined && armyName && countryName) {
+      deleteArmy(countryName, this.combined.mode, ArmyName.Army1)
+      createArmy(countryName, this.combined.mode, armyName)
       if (this.combined.leader) {
-        setGeneralAttribute(name, this.combined.name, GeneralAttribute.Martial, this.combined.leader.martial)
+        setGeneralAttribute(countryName, armyName, GeneralAttribute.Martial, this.combined.leader.martial)
+        enableGeneralSelections(countryName, armyName, SelectionType.Trait, this.combined.leader.traits)
       } else {
-        setHasGeneral(name, this.combined.name, false)
+        setHasGeneral(countryName, armyName, false)
       }
+      setFlankSize(countryName, armyName, this.combined.flankSize)
+      selectTactic(countryName, armyName, this.combined.tactic)
+      setUnitPreference(countryName, armyName, UnitPreferenceType.Primary, this.combined.preferences[UnitPreferenceType.Primary])
+      setUnitPreference(countryName, armyName, UnitPreferenceType.Secondary, this.combined.preferences[UnitPreferenceType.Secondary])
+      setUnitPreference(countryName, armyName, UnitPreferenceType.Flank, this.combined.preferences[UnitPreferenceType.Flank])
+      this.importing = true
     }
   }
 }
@@ -714,10 +770,14 @@ class ModalImportCountry extends Component<IProps, IState> {
 const mapStateToProps = (state: AppState) => ({
   tactics: state.tactics,
   countries: state.countries,
-  units: getDefaultUnits()
+  units: getDefaultUnits(),
+  state
 })
 
-const actions = { createCountry, setCountryAttribute, selectCulture, enableCountrySelections, enableCountrySelection, createArmy, setHasGeneral, setGeneralAttribute }
+const actions = {
+  createCountry, setCountryAttribute, selectCulture, enableCountrySelections, enableCountrySelection, createArmy, setHasGeneral, setGeneralAttribute, enableGeneralSelections,
+  setFlankSize, setUnitPreference, selectTactic, addToReserve, deleteArmy
+}
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

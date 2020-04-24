@@ -29,8 +29,7 @@
             {
               "target": "Global",
               "attribute": "Experience",
-              "no_percent": true,
-              "value": 7.5
+              "value": 0.075
             }
           ]
         },
@@ -340,8 +339,7 @@
             {
               "target": "Global",
               "attribute": "Experience",
-              "no_percent": true,
-              "value": 5
+              "value": 0.05
             }
           ]
         },
@@ -711,8 +709,7 @@
             {
               "target": "Global",
               "attribute": "Experience",
-              "no_percent": true,
-              "value": 5
+              "value": 0.05
             }
           ]
         },
@@ -958,8 +955,7 @@
             {
               "target": "Global",
               "attribute": "Experience",
-              "no_percent": true,
-              "value": 5
+              "value": 0.05
             }
           ]
         },
@@ -1267,8 +1263,7 @@
             {
               "target": "Global",
               "attribute": "Experience",
-              "no_percent": true,
-              "value": 5
+              "value": 0.05
             }
           ]
         },

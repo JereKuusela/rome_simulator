@@ -245,11 +245,13 @@ export const setHasGeneral = (army: Army, has_general: boolean) => {
 }
 
 export const enableGeneralSelection = (army: Army, type: SelectionType, key: string) => {
-  console.log(type)
-  console.log(key)
   if (!army.general.selections[type])
     army.general.selections[type] = {}
   army.general.selections[type][key] = true
+}
+
+export const enableGeneralSelections = (army: Army, type: SelectionType, keys: string[]) => {
+  keys.forEach(key => enableGeneralSelection(army, type, key))
 }
 
 export const clearGeneralSelection = (army: Army, type: SelectionType, key: string) => {

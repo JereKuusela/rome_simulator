@@ -106,7 +106,7 @@ class TableArmyInfo extends Component<IProps> {
           <Dropdown
             values={keys(this.props.countries)}
             value={participant.country}
-            onChange={name => selectParticipantCountry(side, name)}
+            onChange={name => selectParticipantCountry(side, name, Object.keys(this.props.countries[name].armies[mode])[0] as ArmyName)}
             style={{ width: 150 }}
           />
         </Table.Cell>

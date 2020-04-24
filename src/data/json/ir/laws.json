@@ -7,8 +7,7 @@
         {
           "target": "Global",
           "attribute": "Experience",
-          "no_percent": true,
-          "value": 10
+          "value": 0.1
         }
       ]
     },

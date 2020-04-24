@@ -43,12 +43,13 @@ export const setPhaseDice = (battle: Battle, side: Side, phase: number, dice: nu
   rolls[phase] = dice
 }
 
-export const selectParticipantCountry = (battle: Battle, side: Side, name: CountryName) => {
-  battle.participants[side].country = name
+export const selectParticipantCountry = (battle: Battle, side: Side, countryName: CountryName, armyName: ArmyName) => {
+  battle.participants[side].country = countryName
+  battle.participants[side].army = armyName
 }
 
-export const selectParticipantArmy = (battle: Battle, side: Side, name: ArmyName) => {
-  battle.participants[side].army = name
+export const selectParticipantArmy = (battle: Battle, side: Side, armyName: ArmyName) => {
+  battle.participants[side].army = armyName
 }
 
 

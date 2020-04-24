@@ -10,6 +10,7 @@ const actionToFunction: ActionToFunction<Army, CountryName, ArmyName> = {}
 export const clearGeneralSelection = makeActionReplaceFirstTwice(manager.clearGeneralSelection, actionToFunction)
 export const clearGeneralSelections = makeActionReplaceFirstTwice(manager.clearGeneralSelections, actionToFunction)
 export const enableGeneralSelection = makeActionReplaceFirstTwice(manager.enableGeneralSelection, actionToFunction)
+export const enableGeneralSelections = makeActionReplaceFirstTwice(manager.enableGeneralSelections, actionToFunction)
 export const selectCohort = makeActionReplaceFirstTwice(manager.selectCohort, actionToFunction)
 export const toggleCohortLoyality = makeActionReplaceFirstTwice(manager.toggleCohortLoyality, actionToFunction)
 export const setCohortValue = makeActionReplaceFirstTwice(manager.setCohortValue, actionToFunction)

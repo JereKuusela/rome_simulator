@@ -77,8 +77,9 @@ const getTechModifiers = (modifiers: ModifierWithKey[], country: CountryDefiniti
         return
       tech.inventions.forEach((invention, index) => {
         const key = index === 0 ? TECH_KEY + level : invention.key
+        const name = index === 0 ? TECH_KEY + level : invention.name
         if (index === 0 || selections[key])
-          modifiers.push(...mapModifiers(key, invention.modifiers))
+          modifiers.push(...mapModifiers(name, invention.modifiers))
 
       })
     })
@@ -124,7 +125,7 @@ const getOfficeModifiers = (modifiers: ModifierWithKey[], country: CountryDefini
   if (morale) {
     modifiers.push({
       target: UnitType.Land,
-      type: ValuesType.Base,
+      type: ValuesType.Modifier,
       attribute: UnitAttribute.Morale,
       value: morale / 100.0,
       key: 'Office job'
@@ -133,7 +134,7 @@ const getOfficeModifiers = (modifiers: ModifierWithKey[], country: CountryDefini
   if (militaryExperience) {
     modifiers.push({
       target: UnitType.Land,
-      type: ValuesType.Base,
+      type: ValuesType.Modifier,
       attribute: UnitAttribute.Morale,
       value: militaryExperience / 1000.0,
       key: 'Military experience'

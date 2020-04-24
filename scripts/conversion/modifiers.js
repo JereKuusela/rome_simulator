@@ -173,9 +173,7 @@ const noPercents = new Set([
   'governor_loyalty',
   'global_capital_trade_routes',
   'omen_power',
-  'loyalty_to_overlord',
-  'global_cohort_start_experience',
-  'global_start_experience'
+  'loyalty_to_overlord'
 ])
 
 generalStats.forEach(key => {
@@ -231,12 +229,13 @@ const types = new Set([
   'maneuver_value',
   'navy' + MOD_MAINTENANCE,
   'naval' + MOD_MORALE + MOD_MODIFIER,
-  'ship' + MOD_COST
+  'ship' + MOD_COST,
+  'non_retinue_morale_modifier'
 ])
 
 Object.keys(units).forEach(key => {
-  types.add(key + '_morale')
-  types.add(key + '_cost')
+  types.add(key + MOD_MORALE)
+  types.add(key + MOD_COST)
   types.add(key + MOD_MAINTENANCE)
 })
 
@@ -303,7 +302,7 @@ exports.getValue = (key, value) => {
       return 0
     case 'omen_power':
       return 100 * value
-    case 'cohort_start_experience':
+    case 'global_start_experience':
     case 'global_cohort_start_experience':
       return value * 0.01
     case 'army':

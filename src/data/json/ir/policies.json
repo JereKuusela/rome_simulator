@@ -8,6 +8,7 @@
           {
             "target": "Land",
             "attribute": "Morale",
+            "type": "Modifier",
             "negative": true,
             "value": -0.8
           },
@@ -31,6 +32,7 @@
           {
             "target": "Land",
             "attribute": "Morale",
+            "type": "Modifier",
             "value": 0.1
           },
           {

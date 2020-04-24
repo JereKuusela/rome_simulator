@@ -75,7 +75,7 @@ class CountryManager extends Component<IProps, IState> {
           {
             selectedCountry &&
             <Grid.Column>
-              <Button primary onClick={() => this.deleteCountry()}>
+              <Button primary onClick={this.deleteCountry}>
                 Delete country
               </Button>
             </Grid.Column>
@@ -112,7 +112,7 @@ class CountryManager extends Component<IProps, IState> {
           {
             selectedArmy &&
             <Grid.Column>
-              <Button primary onClick={() => this.deleteArmy()}>
+              <Button primary onClick={this.deleteArmy} disabled={keys(countries[selectedCountry].armies[mode]).length < 2}>
                 Delete army
               </Button>
             </Grid.Column>
