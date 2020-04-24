@@ -21,9 +21,16 @@ type Entry<T extends Tag | Army> = {
 
 type Tag = {
   tag: string
+  id: number
+}
+
+type Job = {
+  character: Character
+  job: string
 }
 
 type Country = {
+  id: number
   name: CountryName
   tradition: CultureType
   traditions: number[]
@@ -39,11 +46,14 @@ type Country = {
   ideas: string[]
   exports: boolean[]
   imports: boolean[]
+  officeDiscipline: number
+  officeMorale: number
 }
 
 type Character = {
   name: string
   martial: number
+  experience: number
   traits: string[]
 }
 
@@ -216,8 +226,14 @@ class ModalImportCountry extends Component<IProps, IState> {
           <Table.Cell>
             Laws
           </Table.Cell>
-          <Table.Cell colSpan='3'>
+          <Table.Cell>
             {entity.laws.map(key => laws_ir.find(law => key === law.key)?.name).join(', ')}
+          </Table.Cell>
+          <Table.Cell>
+            Office (Discipline / Morale)
+          </Table.Cell>
+          <Table.Cell>
+            {entity.officeMorale || entity.officeDiscipline}
           </Table.Cell>
         </Table.Row>
         <Table.Row>
@@ -296,7 +312,7 @@ class ModalImportCountry extends Component<IProps, IState> {
             Cohorts
           </Table.Cell>
           <Table.Cell colSpan='3'>
-            {toArr(counts, (value, key) => <><LabelItem item={units[key]} />{' x ' + value}</>)}
+            {toArr(counts, (value, key) => <><LabelItem key={key} item={units[key]} />{' x ' + value}</>)}
           </Table.Cell>
         </Table.Row>
       </>
@@ -306,7 +322,7 @@ class ModalImportCountry extends Component<IProps, IState> {
   selectCountry = (index: string) => {
     if (index) {
       const tag = this.state.countries[Number(index)]
-      this.country = this.loadCountry(this.lines, tag.start, tag.end)
+      this.country = this.loadCountry(this.lines, tag)
       const armies = this.loadArmies(this.lines, this.bookmarks['units_database'].start, this.bookmarks['units_database'].end, this.country.armies)
       this.setState({ country: index, armies, army: '' })
     } else {
@@ -321,7 +337,7 @@ class ModalImportCountry extends Component<IProps, IState> {
       const entity = this.state.armies[Number(index)].entity
       this.combined = {
         ...entity,
-        leader: entity.leader === null ? null : this.loadCharacter(this.lines, this.bookmarks['character_database'].start, this.bookmarks['character_database'].end, entity.leader),
+        leader: entity.leader === null ? null : this.loadCharacter(this.lines, entity.leader),
         cohorts: this.loadCohorts(this.lines, this.bookmarks['subunit_database'].start, this.bookmarks['subunit_database'].end, entity.cohorts)
       }
       this.setState({ army: index })
@@ -341,6 +357,7 @@ class ModalImportCountry extends Component<IProps, IState> {
 
   loadCountries = (lines: string[], bookmarks: Bookmarks) => {
     let countries: Entry<Tag>[] = []
+    let previousKey = ''
     for (let line = 0; line < lines.length; line++) {
       const [key, value] = this.handleLine(lines[line])
       if (key === 'tag') {
@@ -348,20 +365,57 @@ class ModalImportCountry extends Component<IProps, IState> {
         line = this.findEndOfSection(lines, line)
         countries.push({
           entity: {
-            tag: value.substr(1, value.length - 2)
+            tag: this.nonStringify(value),
+            id: Number(previousKey)
           },
           start,
           end: line
         })
       }
-      if (key === 'subunit_database' || key === 'units_database' || key === 'character_database' || key === 'provinces') {
+      if (key === 'subunit_database' || key === 'units_database' || key === 'character_database' || key === 'provinces' || key === 'jobs') {
         const start = line
         line = this.findEndOfSection(lines, line)
         bookmarks[key] = { start, end: line }
       }
+      previousKey = key
     }
     countries = sortBy(countries, entry => entry.entity.tag)
     this.setState({ countries: countries })
+  }
+
+  loadJobs = (country: Country, lines: string[]) => {
+    const start = this.bookmarks['jobs'].start
+    const end = this.bookmarks['jobs'].end
+    for (let line = start + 2; line < end; line++) {
+      const [, value] = this.handleLine(lines[line])
+      if (Number(value) === country.id) {
+        const job = this.loadJob(lines, line)
+        if (job.job === 'office_tribune_of_the_soldiers')
+          country.officeDiscipline = Math.floor(job.character.martial * job.character.experience / 100.0) / 2
+        if (job.job === 'office_master_of_the_guard')
+          country.officeMorale = Math.floor(job.character.martial * job.character.experience / 100.0)
+      }
+      // Assumes that jobs are 6 line blocks.
+      line += 5
+    }
+  }
+
+  loadJob = (lines: string[], start: number) => {
+    const job: Job = {
+      character: null as any as Character,
+      job: ''
+    }
+    for (let line = start + 1; line < lines.length; line++) {
+      const [key, value] = this.handleLine(lines[line])
+      if (key === 'character')
+        job.character = this.loadCharacter(lines, Number(value))
+
+      if (key === 'technology' || key === 'office')
+        job.job = this.nonStringify(value)
+      if (key === '}')
+        break
+    }
+    return job
   }
 
   findEndOfSection = (lines: string[], start: number) => {
@@ -390,7 +444,9 @@ class ModalImportCountry extends Component<IProps, IState> {
     return [key, value]
   }
 
-  loadCountry = (lines: string[], start: number, end: number) => {
+  loadCountry = (lines: string[], entry: Entry<Tag>) => {
+    const start = entry.start
+    const end = entry.end
     const country: Country = {
       armies: [],
       inventions: [],
@@ -406,7 +462,10 @@ class ModalImportCountry extends Component<IProps, IState> {
       available_laws: [],
       exports: [],
       imports: [],
-      ideas: []
+      ideas: [],
+      officeDiscipline: 0,
+      officeMorale: 0,
+      id: entry.entity.id
     }
     let tech = false
     for (let line = start + 1; line < end; line++) {
@@ -455,6 +514,7 @@ class ModalImportCountry extends Component<IProps, IState> {
       if (key === 'tribal_super_decentralized_laws' && country.available_laws[34])
         country.laws.push(value)
     }
+    this.loadJobs(country, lines)
     return country
   }
 
@@ -519,9 +579,12 @@ class ModalImportCountry extends Component<IProps, IState> {
   }
 
 
-  loadCharacter = (lines: string[], start: number, end: number, character_id: number) => {
+  loadCharacter = (lines: string[], character_id: number) => {
+    const start = this.bookmarks['character_database'].start
+    const end = this.bookmarks['character_database'].end
     const character: Character = {
       martial: 0,
+      experience: 0,
       traits: [],
       name: ''
     }
@@ -542,10 +605,13 @@ class ModalImportCountry extends Component<IProps, IState> {
           character.name += ' ' + this.nonStringify(value)
         if (key === 'martial')
           character.martial = Number(value)
+        if (key === 'character_experience')
+          character.experience = Number(value)
         if (key === 'traits')
           character.traits = this.nonStringify(value).trim().split(' ').map(this.nonStringify)
       }
     }
+    character.martial += sum(character.traits.map(key => traits_ir.find(trait => trait.key === key)?.modifiers.find(modifier => modifier.attribute === GeneralAttribute.Martial)?.value ?? 0))
     return character
   }
 
@@ -627,6 +693,8 @@ class ModalImportCountry extends Component<IProps, IState> {
       enableCountrySelections(name, SelectionType.Law, this.country.laws)
       enableCountrySelection(name, SelectionType.Policy, this.country.armyMaintenance)
       enableCountrySelection(name, SelectionType.Policy, this.country.navalMaintenance)
+      setCountryValue(name, 'Custom', CountryAttribute.OfficeDiscipline, this.country.officeDiscipline)
+      setCountryValue(name, 'Custom', CountryAttribute.OfficeMorale, this.country.officeMorale)
     }
   }
 }
