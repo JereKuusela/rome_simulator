@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
-import { AppState, mergeUnitTypes, filterTerrainTypes, getUnitImages, getMode, getCountries, getSiteSettings, getUnits } from 'state'
+import { AppState, mergeUnitTypes, filterTerrainTypes, getUnitImages, getMode, getCountries, getSiteSettings, getUnits, getSelectedArmy } from 'state'
 import { createUnit, deleteUnit, changeUnitType, changeWeariness, openModal } from 'reducers'
 import UnitDefinitions from 'components/UnitDefinitions'
 import CountryManager from 'containers/CountryManager'
@@ -86,7 +86,7 @@ const mapStateToProps = (state: AppState) => ({
   terrains: filterTerrainTypes(state),
   mode: getMode(state),
   country: state.settings.country,
-  army: state.settings.army,
+  army: getSelectedArmy(state),
   settings: getSiteSettings(state),
   weariness: getCountries(state)[state.settings.country].weariness
 })

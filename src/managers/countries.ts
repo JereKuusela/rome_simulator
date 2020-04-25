@@ -1,7 +1,7 @@
 import { Countries, CountryName, CountryDefinition, GovermentType, ReligionType, CultureType, CountryAttribute, ValuesType, WearinessAttribute, Country, isAttributeEnabled, ModifierWithKey, SiteSettings, ModifierType, SelectionType, Selections, ArmyName, Mode } from 'types'
 import { defaultCountry, getDefaultUnits, getDefaultArmies } from 'data'
 import { addValuesWithMutate, clearAllValuesWithMutate, calculateValue, addValue } from 'definition_values'
-import { toObj, values } from 'utils'
+import { toObj, values, filter } from 'utils'
 
 export const createCountry = (countries: Countries, country: CountryName, source?: CountryName) => {
   countries[country] = source ? countries[source] : defaultCountry
@@ -83,14 +83,16 @@ export const convertCountryDefinition = (country: CountryDefinition, settings: S
   }
 }
 
-export const createArmy = (country: CountryDefinition, mode: Mode, army: ArmyName, source?: ArmyName) => {
-  country.armies[mode][army] = source ? country.armies[mode][source] : getDefaultArmies()[mode][ArmyName.Army1]
+export const createArmy = (country: CountryDefinition, armyName: ArmyName, mode: Mode, source?: ArmyName) => {
+  country.armies[armyName] = source ? country.armies[source] : getDefaultArmies()[mode === Mode.Land ? ArmyName.Army : ArmyName.Navy]
 }
 
-export const deleteArmy = (country: CountryDefinition, mode: Mode, army: ArmyName) => {
-  delete country.armies[mode][army]
+export const deleteArmy = (country: CountryDefinition, armyName: ArmyName) => {
+  delete country.armies[armyName]
 }
 
-export const changeArmyName = (country: CountryDefinition, mode: Mode, old_army: ArmyName, army: ArmyName) => {
-  delete Object.assign(country.armies[mode], { [army]: country.armies[mode][old_army] })[old_army]
+export const changeArmyName = (country: CountryDefinition, oldArmyName: ArmyName, armyName: ArmyName) => {
+  delete Object.assign(country.armies, { [armyName]: country.armies[oldArmyName] })[oldArmyName]
 }
+
+export const filterArmies = (country: CountryDefinition, mode: Mode) => filter(country.armies, army => army.mode === mode)

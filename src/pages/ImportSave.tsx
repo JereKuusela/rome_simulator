@@ -3,13 +3,13 @@ import { connect } from 'react-redux'
 import { Mode, TacticType, UnitPreferences, UnitPreferenceType, dictionaryUnitType, dictionaryTacticType, GeneralAttribute, UnitType, UnitAttribute, CultureType, CountryName, CountryAttribute, SelectionType, Invention, ArmyName, CohortDefinition } from 'types'
 import {
   enableGeneralSelections, createCountry, setCountryAttribute, selectCulture, enableCountrySelections, enableCountrySelection, createArmy, setHasGeneral, setGeneralAttribute,
-  setFlankSize, setUnitPreference, selectTactic, addToReserve, deleteArmy
+  setFlankSize, setUnitPreference, selectTactic, addToReserve, deleteArmy, setMode
 } from 'reducers'
 import { Input, Button, Grid, Table } from 'semantic-ui-react'
 import Dropdown from 'components/Dropdowns/Dropdown'
 import { sortBy, uniq, sum, union } from 'lodash'
 import LabelItem from 'components/Utils/LabelUnit'
-import { AppState, getUnits } from 'state'
+import { AppState, getUnits, getMode } from 'state'
 import { getDefaultUnits } from 'data'
 import AttributeImage from 'components/Utils/AttributeImage'
 import { toObj, toArr, mapRange, map } from 'utils'
@@ -29,9 +29,11 @@ type Tag = {
 }
 
 type Job = {
-  character: Character
-  job: string
+  character: number
+  office: string
 }
+
+type Jobs = { [key: number]: { officeDiscipline: number, officeMorale: number } }
 
 type Country = {
   id: number
@@ -45,7 +47,7 @@ type Country = {
   militaryExperience: number
   armyMaintenance: string
   navalMaintenance: string
-  available_laws: boolean[]
+  availableLaws: boolean[]
   laws: string[]
   ideas: string[]
   exports: boolean[]
@@ -64,12 +66,12 @@ type Character = {
 
 type Army = {
   name: ArmyName
-  cohorts: number[]
+  cohorts: Cohort[]
   mode: Mode
   tactic: TacticType
   preferences: UnitPreferences
   flankSize: number
-  leader: number | null
+  leader: Character | null
 
 }
 
@@ -78,11 +80,6 @@ type Cohort = {
   [UnitAttribute.Morale]: number
   [UnitAttribute.Strength]: number
   [UnitAttribute.Experience]: number
-}
-
-type Combined = Omit<Army, 'leader' | 'cohorts'> & {
-  leader: Character | null
-  cohorts: Cohort[]
 }
 
 type IState = {
@@ -101,46 +98,26 @@ class ImportSave extends Component<IProps, IState> {
     this.state = { countries: [], country: '', army: '', armies: [] }
   }
 
+  // Jobs are cached so that they don't have to be reloaded whenever a country is chosen.
+  jobs: Jobs = {}
   lines: string[] = []
   bookmarks: Bookmarks = {}
-  combined: Combined | null = null
   country: Country | null = null
   // Importing must be done in two steps. First to import definitions and then cohorts (since their values are relative to definitions).
   importing = false
 
 
-  componentDidUpdate() {
-    if (this.importing) {
-      const { state, addToReserve } = this.props
-      const countryName = this.country?.name
-      const armyName = this.combined?.name
-      if (countryName && armyName && this.combined) {
-        const units = getUnits(state, countryName, armyName)
-        const experiences = map(units, unit => calculateValueWithoutLoss(unit, UnitAttribute.Experience))
-        const maxStrengths = map(units, unit => calculateValueWithoutLoss(unit, UnitAttribute.Strength))
-        const maxMorales = map(units, unit => calculateValueWithoutLoss(unit, UnitAttribute.Morale))
-        const cohorts: CohortDefinition[] = this.combined.cohorts.map(cohort => ({
-          type: cohort.type,
-          id: getNextId(),
-          base_values: {
-            [UnitAttribute.Experience]: {
-              'Custom': cohort[UnitAttribute.Experience] - experiences[cohort.type]
-            }
-          } as any,
-          loss_values: {
-            [UnitAttribute.Morale]: {
-              'Custom': maxMorales[cohort.type] - cohort[UnitAttribute.Morale]
-            },
-            [UnitAttribute.Strength]: {
-              'Custom': maxStrengths[cohort.type] - cohort[UnitAttribute.Strength]
-            }
-          } as any
-        }))
-        addToReserve(countryName, armyName, cohorts)
+  getArmy = (index?: string) => index ?? this.state.army ? this.state.armies[Number(index ?? this.state.army)].entity : null
 
-      }
-      this.importing = false
+  componentDidUpdate() {
+    if (this.importing && this.country) {
+      const countryName = this.country.name
+      if (this.state.army)
+        this.importArmyEnd(countryName, this.state.army)
+      else
+        this.state.armies.forEach((_, index) => this.importArmyEnd(countryName, String(index)))
     }
+    this.importing = false
   }
 
   getTagName = (tag: string) => countries_ir[tag.toLowerCase()] + ' (' + tag + ')'
@@ -175,21 +152,15 @@ class ImportSave extends Component<IProps, IState> {
         </Grid.Row>
         <Grid.Row>
           <Grid.Column>
-            {this.renderArmy()}
+            <Table>
+              <Table.Body>
+                {this.renderCountry()}
+                {this.state.army ? this.renderArmy(this.state.army) : this.state.armies.map((_, index) => this.renderArmy(String(index)))}
+              </Table.Body>
+            </Table>
           </Grid.Column>
         </Grid.Row>
       </Grid>
-    )
-  }
-
-  renderArmy = () => {
-    return (
-      <Table>
-        <Table.Body>
-          {this.renderCountry()}
-          {this.renderCombined()}
-        </Table.Body>
-      </Table>
     )
   }
 
@@ -301,17 +272,25 @@ class ImportSave extends Component<IProps, IState> {
     )
   }
 
-  renderCombined = () => {
+  renderArmy = (id: string) => {
     const { tactics, units } = this.props
-    const entity = this.combined
+    const entity = this.state.armies[Number(id)].entity
     if (!entity)
       return null
     const cohorts = entity.cohorts.map(cohort => cohort.type)
     const types = uniq(cohorts)
     const counts = toObj(types, type => type, type => cohorts.filter(item => item === type).length)
     return (
-      <>
+      <React.Fragment key={id}>
         <Table.Row><Table.Cell /><Table.Cell /><Table.Cell /><Table.Cell /></Table.Row>
+        <Table.Row>
+          <Table.Cell>
+            Name
+          </Table.Cell>
+          <Table.Cell colSpan='3'>
+            {entity.name}
+          </Table.Cell>
+        </Table.Row>
         <Table.Row>
           <Table.Cell>
             {entity.mode === Mode.Naval ? 'Adminal' : 'General'}
@@ -359,10 +338,10 @@ class ImportSave extends Component<IProps, IState> {
             Cohorts
           </Table.Cell>
           <Table.Cell colSpan='3'>
-            {toArr(counts, (value, key) => <span key={key}><LabelItem item={units[key]} />{' x ' + value}</span>)}
+            {toArr(counts, (value, key) => <span key={key} style={{ paddingRight: '1em' }}><LabelItem item={units[key]} />{' x ' + value}</span>)}
           </Table.Cell>
         </Table.Row>
-      </>
+      </React.Fragment>
     )
   }
 
@@ -374,28 +353,18 @@ class ImportSave extends Component<IProps, IState> {
       this.setState({ country: index, armies, army: '' })
     } else {
       this.country = null
-      this.combined = null
       this.setState({ country: index, armies: [], army: '' })
     }
   }
 
-  selectArmy = (index: string) => {
-    if (index) {
-      const entity = this.state.armies[Number(index)].entity
-      this.combined = {
-        ...entity,
-        leader: entity.leader === null ? null : this.loadCharacter(this.lines, entity.leader),
-        cohorts: this.loadCohorts(this.lines, this.bookmarks['subunit_database'].start, this.bookmarks['subunit_database'].end, entity.cohorts)
-      }
-      this.setState({ army: index })
-    } else {
-      this.combined = null
-      this.setState({ army: index })
-    }
-  }
+  selectArmy = (index: string) => this.setState({ army: index })
 
   loadContent = (file: File) => {
     const blob = file as any
+    if (!blob) {
+      this.setState({ countries: [], country: '', army: '', armies: [] })
+      return
+    }
     blob.text().then((data: string) => {
       this.lines = data.split(/\r?\n/)
       this.loadCountries(this.lines, this.bookmarks)
@@ -419,46 +388,64 @@ class ImportSave extends Component<IProps, IState> {
           end: line
         })
       }
-      if (key === 'subunit_database' || key === 'units_database' || key === 'character_database' || key === 'provinces' || key === 'jobs') {
+      if (key === 'subunit_database' || key === 'units_database' || key === 'character_database' || key === 'provinces') {
         const start = line
         line = this.findEndOfSection(lines, line)
         bookmarks[key] = { start, end: line }
       }
+      if (key === 'jobs') {
+        line = this.loadJobs(lines, line)
+      }
       previousKey = key
     }
     countries = sortBy(countries, entry => entry.entity.tag)
-    this.setState({ countries: countries })
+    this.setState({ countries })
   }
 
-  loadJobs = (country: Country, lines: string[]) => {
-    const start = this.bookmarks['jobs'].start
-    const end = this.bookmarks['jobs'].end
-    for (let line = start + 2; line < end; line++) {
-      const [, value] = this.handleLine(lines[line])
-      if (Number(value) === country.id) {
-        const job = this.loadJob(lines, line)
-        if (job.job === 'office_tribune_of_the_soldiers')
-          country.officeDiscipline = Math.floor((job.character.martial + job.character.traitMartial) * job.character.experience / 100.0) / 2
-        if (job.job === 'office_master_of_the_guard')
-          country.officeMorale = Math.floor((job.character.martial + job.character.traitMartial) * job.character.experience / 100.0)
+  loadJobs = (lines: string[], start: number) => {
+    let line = start + 2
+    for (; line < lines.length; line++) {
+      const [key, value] = this.handleLine(lines[line])
+      if (key !== 'who') {
+        // To get back to end of section.
+        line -= 1
+        break
+      }
+      const id = Number(value)
+      if (!this.jobs[id]) {
+        this.jobs[id] = {
+          officeDiscipline: 0,
+          officeMorale: 0
+        }
+      }
+      const job = this.loadJob(lines, line)
+      if (job) {
+        if (job.office === 'office_tribune_of_the_soldiers')
+          this.jobs[id].officeDiscipline = job.character
+        if (job.office === 'office_master_of_the_guard')
+          this.jobs[id].officeMorale = job.character
       }
       // Assumes that jobs are 6 line blocks.
       line += 5
     }
+    return line
   }
 
   loadJob = (lines: string[], start: number) => {
     const job: Job = {
-      character: null as any as Character,
-      job: ''
+      character: 0,
+      office: ''
     }
     for (let line = start + 1; line < lines.length; line++) {
       const [key, value] = this.handleLine(lines[line])
       if (key === 'character')
-        job.character = this.loadCharacter(lines, Number(value))
-
-      if (key === 'technology' || key === 'office')
-        job.job = this.nonStringify(value)
+        job.character = Number(value)
+      if (key === 'technology' || key === 'office') {
+        const office = this.nonStringify(value)
+        if (office !== 'office_tribune_of_the_soldiers' && office !== 'office_master_of_the_guard')
+          return null
+        job.office = office
+      }
       if (key === '}')
         break
     }
@@ -506,7 +493,7 @@ class ImportSave extends Component<IProps, IState> {
       navalMaintenance: '',
       traditions: [],
       laws: [],
-      available_laws: [],
+      availableLaws: [],
       exports: [],
       imports: [],
       ideas: [],
@@ -514,6 +501,16 @@ class ImportSave extends Component<IProps, IState> {
       officeMorale: 0,
       id: entry.entity.id
     }
+
+    if (this.jobs[entry.entity.id].officeDiscipline) {
+      const character = this.loadCharacter(lines, this.jobs[entry.entity.id].officeDiscipline)
+      country.officeDiscipline = Math.floor((character.martial + character.traitMartial) * character.experience / 100.0) / 2
+    }
+    if (this.jobs[entry.entity.id].officeMorale) {
+      const character = this.loadCharacter(lines, this.jobs[entry.entity.id].officeMorale)
+      country.officeMorale = Math.floor((character.martial + character.traitMartial) * character.experience / 100.0)
+    }
+
     let tech = false
     let firstMilitaryExperience = true
     for (let line = start + 1; line < end; line++) {
@@ -550,21 +547,20 @@ class ImportSave extends Component<IProps, IState> {
       if (key === 'military_tradition_levels')
         country.traditions = this.getNumberList(value).filter((_, index) => index < 3)
       if (key === 'laws')
-        country.available_laws = this.getTruthList(value)
+        country.availableLaws = this.getTruthList(value)
       if (key === 'export')
         country.exports = this.getTruthList(value)
-      if (key === 'monarchy_military_reforms' && country.available_laws[1])
+      if (key === 'monarchy_military_reforms' && country.availableLaws[1])
         country.laws.push(value)
-      if (key === 'monarchy_economic_law' && country.available_laws[3])
+      if (key === 'monarchy_economic_law' && country.availableLaws[3])
         country.laws.push(value)
-      if (key === 'republic_military_recruitment_laws' && country.available_laws[10])
+      if (key === 'republic_military_recruitment_laws' && country.availableLaws[10])
         country.laws.push(value)
-      if (key === 'republic_military_recruitment_laws_rom' && country.available_laws[18])
+      if (key === 'republic_military_recruitment_laws_rom' && country.availableLaws[18])
         country.laws.push(value)
-      if (key === 'tribal_super_decentralized_laws' && country.available_laws[34])
+      if (key === 'tribal_super_decentralized_laws' && country.availableLaws[34])
         country.laws.push(value)
     }
-    this.loadJobs(country, lines)
     return country
   }
 
@@ -599,6 +595,7 @@ class ImportSave extends Component<IProps, IState> {
       preferences: {} as UnitPreferences,
       tactic: TacticType.Bottleneck
     }
+    const cohorts: number[] = []
     for (let line = start + 1; line < end; line++) {
       const [key, value] = this.handleLine(lines[line])
       if (key === 'ordinal')
@@ -608,13 +605,15 @@ class ImportSave extends Component<IProps, IState> {
       if (key === 'name') {
         if (value.startsWith('"RETINUE_ARMY_NAME'))
           name = 'Retinue'
-        else if (value.startsWith('"NAVY_NAME'))
+        else if (value.startsWith('"NAVY_NAME')) {
           name = 'Navy'
+          army.mode = Mode.Naval
+        }
       }
       if (key === 'cohort' || key === 'ship')
-        army.cohorts.push(Number(value))
+        cohorts.push(Number(value))
       if (key === 'leader')
-        army.leader = Number(value)
+        army.leader = this.loadCharacter(this.lines, Number(value))
       if (key === 'flank_size')
         army.flankSize = Number(value)
       if (key === 'primary')
@@ -627,6 +626,7 @@ class ImportSave extends Component<IProps, IState> {
         army.tactic = dictionaryTacticType[this.nonStringify(value)]
     }
     army.name = name as ArmyName
+    army.cohorts = this.loadCohorts(this.lines, this.bookmarks['subunit_database'].start, this.bookmarks['subunit_database'].end, cohorts)
     return army
   }
 
@@ -722,14 +722,11 @@ class ImportSave extends Component<IProps, IState> {
   }
 
   importCountry = () => {
-    const {
-      createCountry, setCountryAttribute, selectCulture, enableCountrySelections, enableCountrySelection, createArmy, setHasGeneral, setGeneralAttribute, enableGeneralSelections,
-      setFlankSize, setUnitPreference, selectTactic
-    } = this.props
+    const { createCountry, setCountryAttribute, selectCulture, enableCountrySelections, enableCountrySelection } = this.props
     console.log(this.country)
-    const countryName = this.country?.name
-    const armyName = this.combined?.name
-    if (this.country && countryName) {
+    if (this.country) {
+      this.importing = true
+      const countryName = this.country.name
       createCountry(countryName)
       setCountryAttribute(countryName, CountryAttribute.TechLevel, this.country.tech)
       setCountryAttribute(countryName, CountryAttribute.MilitaryExperience, this.country.militaryExperience)
@@ -752,22 +749,74 @@ class ImportSave extends Component<IProps, IState> {
       enableCountrySelection(countryName, SelectionType.Policy, this.country.navalMaintenance)
       setCountryAttribute(countryName, CountryAttribute.OfficeDiscipline, this.country.officeDiscipline)
       setCountryAttribute(countryName, CountryAttribute.OfficeMorale, this.country.officeMorale)
+
+      if (this.state.army)
+        this.importArmyStart(countryName, this.state.army)
+      else
+        this.state.armies.forEach((_, index) => this.importArmyStart(countryName, String(index)))
     }
-    if (this.combined && armyName && countryName) {
-      deleteArmy(countryName, this.combined.mode, ArmyName.Army1)
-      createArmy(countryName, this.combined.mode, armyName)
-      if (this.combined.leader) {
-        setGeneralAttribute(countryName, armyName, GeneralAttribute.Martial, this.combined.leader.martial)
-        enableGeneralSelections(countryName, armyName, SelectionType.Trait, this.combined.leader.traits)
+  }
+
+  importArmyStart = (countryName: CountryName, index: string) => {
+    const { createArmy, deleteArmy, setHasGeneral, setGeneralAttribute, enableGeneralSelections, setFlankSize, setUnitPreference, selectTactic, mode, setMode } = this.props
+    const army = this.getArmy(index)
+    if (army) {
+      const armyName = army?.name
+      // Country must have at least one army per mode so only delete the default one if importing anything.
+      if (army.mode === Mode.Land)
+        deleteArmy(countryName, ArmyName.Army)
+      else
+        deleteArmy(countryName, ArmyName.Navy)
+      createArmy(countryName, armyName, army.mode)
+      if (mode !== army.mode)
+        setMode(army.mode)
+      if (army.leader) {
+        setGeneralAttribute(countryName, armyName, GeneralAttribute.Martial, army.leader.martial)
+        enableGeneralSelections(countryName, armyName, SelectionType.Trait, army.leader.traits)
       } else {
         setHasGeneral(countryName, armyName, false)
       }
-      setFlankSize(countryName, armyName, this.combined.flankSize)
-      selectTactic(countryName, armyName, this.combined.tactic)
-      setUnitPreference(countryName, armyName, UnitPreferenceType.Primary, this.combined.preferences[UnitPreferenceType.Primary])
-      setUnitPreference(countryName, armyName, UnitPreferenceType.Secondary, this.combined.preferences[UnitPreferenceType.Secondary])
-      setUnitPreference(countryName, armyName, UnitPreferenceType.Flank, this.combined.preferences[UnitPreferenceType.Flank])
-      this.importing = true
+      setFlankSize(countryName, armyName, army.flankSize)
+      selectTactic(countryName, armyName, army.tactic)
+      setUnitPreference(countryName, armyName, UnitPreferenceType.Primary, army.preferences[UnitPreferenceType.Primary])
+      setUnitPreference(countryName, armyName, UnitPreferenceType.Secondary, army.preferences[UnitPreferenceType.Secondary])
+      setUnitPreference(countryName, armyName, UnitPreferenceType.Flank, army.preferences[UnitPreferenceType.Flank])
+      if (mode !== army.mode)
+        setMode(mode)
+    }
+  }
+
+  importArmyEnd = (countryName: CountryName, index: string) => {
+    const { state, addToReserve, mode, setMode } = this.props
+    const army = this.getArmy(index)
+    if (army) {
+      const armyName = army.name
+      const units = getUnits(state, countryName, armyName, army.mode)
+      const experiences = map(units, unit => calculateValueWithoutLoss(unit, UnitAttribute.Experience))
+      const maxStrengths = map(units, unit => calculateValueWithoutLoss(unit, UnitAttribute.Strength))
+      const maxMorales = map(units, unit => calculateValueWithoutLoss(unit, UnitAttribute.Morale))
+      const cohorts: CohortDefinition[] = army.cohorts.map(cohort => ({
+        type: cohort.type,
+        id: getNextId(),
+        base_values: {
+          [UnitAttribute.Experience]: {
+            'Custom': cohort[UnitAttribute.Experience] - experiences[cohort.type]
+          }
+        } as any,
+        loss_values: {
+          [UnitAttribute.Morale]: {
+            'Custom': maxMorales[cohort.type] - cohort[UnitAttribute.Morale]
+          },
+          [UnitAttribute.Strength]: {
+            'Custom': maxStrengths[cohort.type] - cohort[UnitAttribute.Strength]
+          }
+        } as any
+      }))
+      if (mode !== army.mode)
+        setMode(army.mode)
+      addToReserve(countryName, armyName, cohorts)
+      if (mode !== army.mode)
+        setMode(mode)
     }
   }
 }
@@ -776,12 +825,13 @@ const mapStateToProps = (state: AppState) => ({
   tactics: state.tactics,
   countries: state.countries,
   units: getDefaultUnits(),
-  state
+  state,
+  mode: getMode(state)
 })
 
 const actions = {
   createCountry, setCountryAttribute, selectCulture, enableCountrySelections, enableCountrySelection, createArmy, setHasGeneral, setGeneralAttribute, enableGeneralSelections,
-  setFlankSize, setUnitPreference, selectTactic, addToReserve, deleteArmy
+  setFlankSize, setUnitPreference, selectTactic, addToReserve, deleteArmy, setMode
 }
 
 type S = ReturnType<typeof mapStateToProps>

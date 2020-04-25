@@ -6,7 +6,8 @@ import { CombatPhase } from "./battle"
 import { Selections } from "types"
 
 export enum ArmyName {
-  Army1 = 'Army 1'
+  Army = 'Army',
+  Navy = 'Navy'
 }
 
 export enum GeneralAttribute {
@@ -24,7 +25,7 @@ export type General = {
 
 export type GeneralValueType = GeneralAttribute | CombatPhase
 
-export type Armies = { [key in Mode]: { [key in ArmyName]: Army } }
+export type Armies = { [key in ArmyName]: Army }
 
 export interface GeneralDefinition extends DefinitionValues<GeneralValueType> {
   selections: Selections
@@ -35,6 +36,7 @@ export interface GeneralDefinition extends DefinitionValues<GeneralValueType> {
 export type UnitPreferences = { [key in UnitPreferenceType | UnitRole]: UnitType | null }
 
 export type Army = {
+  mode: Mode
   tactic: TacticType
   unit_preferences: UnitPreferences
   flank_size: number

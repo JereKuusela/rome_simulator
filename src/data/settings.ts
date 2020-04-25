@@ -1,10 +1,10 @@
-import { Mode, CombatSettings, Setting, SiteSettings, SimulationSpeed, CountryName, SettingsAndOptions, DisciplineValue, ArmyName } from 'types'
+import { Mode, CombatSettings, Setting, SiteSettings, SimulationSpeed, CountryName, SettingsAndOptions, DisciplineValue } from 'types'
 
 export const getDefaultSettings = (): SettingsAndOptions => ({
   combatSettings: { [Mode.Land]: getDefaultLandSettings(), [Mode.Naval]: getDefaultNavalSettings() },
   siteSettings: getDefaultSiteSettings(),
   mode: Mode.Land,
-  army: ArmyName.Army1,
+  army: 0,
   country: CountryName.Country1
 })
 

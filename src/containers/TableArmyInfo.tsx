@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table, Checkbox, Input, Button } from 'semantic-ui-react'
 
-import { Side, CountryName, Setting, Participant, General, GeneralAttribute, GeneralValueType, UnitAttribute, isAttributeEnabled, Mode, UnitType, Unit, ValuesType, CountryAttribute, Country, CultureType, CombatParticipant, ModalType, ArmyName } from 'types'
+import { Side, CountryName, Setting, Participant, General, GeneralAttribute, GeneralValueType, UnitAttribute, isAttributeEnabled, Mode, UnitType, Unit, ValuesType, CountryAttribute, Country, CultureType, CombatParticipant, ModalType, ArmyName, Armies } from 'types'
 import { keys } from 'utils'
-import { AppState, getCountry, getParticipant, getGeneral, getSelectedTerrains, getCountries, getBattle, getUnit, getMode, getCombatParticipant, getSiteSettings } from 'state'
+import { AppState, getCountry, getParticipant, getGeneral, getSelectedTerrains, getCountries, getBattle, getUnit, getMode, getCombatParticipant, getSiteSettings, getArmies } from 'state'
 import { selectParticipantCountry, selectParticipantArmy, selectCulture, toggleRandomDice, setDice, openModal, setGeneralAttribute } from 'reducers'
 import Dropdown from 'components/Dropdowns/Dropdown'
 import StyledNumber from 'components/Utils/StyledNumber'
@@ -19,6 +19,7 @@ import UnitValueInput from './UnitValueInput'
 import AttributeImage from 'components/Utils/AttributeImage'
 import CountryValueInput from './CountryValueInput'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
+import { filterArmies } from 'managers/countries'
 
 type Props = {
 }
@@ -28,7 +29,7 @@ class TableArmyInfo extends Component<IProps> {
   attributes = [UnitAttribute.Discipline]
 
   render() {
-    const { settings, participant_a, participant_d, country_a, country_d, general_a, general_d, unit_a, unit_d, combat_a, combat_d } = this.props
+    const { settings, participant_a, participant_d, country_a, country_d, armies_a, armies_d, general_a, general_d, unit_a, unit_d, combat_a, combat_d } = this.props
     return (
       <Table celled unstackable>
         <Table.Header>
@@ -90,29 +91,29 @@ class TableArmyInfo extends Component<IProps> {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {this.renderArmyInfo(Side.Attacker, participant_a, combat_a, country_a, general_a, general_d, unit_a)}
-          {this.renderArmyInfo(Side.Defender, participant_d, combat_d, country_d, general_d, general_a, unit_d)}
+          {this.renderArmyInfo(Side.Attacker, participant_a, combat_a, country_a, armies_a, general_a, general_d, unit_a)}
+          {this.renderArmyInfo(Side.Defender, participant_d, combat_d, country_d, armies_d, general_d, general_a, unit_d)}
         </Table.Body>
       </Table >
     )
   }
 
 
-  renderArmyInfo = (side: Side, participant: Participant, combat: CombatParticipant, country: Country, general: General, enemy: General, unit: Unit) => {
-    const { settings, selectParticipantArmy, selectParticipantCountry, mode } = this.props
+  renderArmyInfo = (side: Side, participant: Participant, combat: CombatParticipant, country: Country, armies: Armies, general: General, enemy: General, unit: Unit) => {
+    const { settings, selectParticipantArmy, selectParticipantCountry, countries, mode } = this.props
     return (
       <Table.Row key={side}>
         <Table.Cell collapsing>
           <Dropdown
-            values={keys(this.props.countries)}
+            values={keys(countries)}
             value={participant.country}
-            onChange={name => selectParticipantCountry(side, name, Object.keys(this.props.countries[name].armies[mode])[0] as ArmyName)}
+            onChange={name => selectParticipantCountry(side, name, Object.keys(filterArmies(countries[name], mode))[0] as ArmyName)}
             style={{ width: 150 }}
           />
         </Table.Cell>
         <Table.Cell collapsing>
           <Dropdown
-            values={keys(this.props.countries[participant.country].armies[mode])}
+            values={keys(armies)}
             value={participant.army}
             onChange={name => selectParticipantArmy(side, name)}
             style={{ width: 150 }}
@@ -239,6 +240,8 @@ const mapStateToProps = (state: AppState) => {
     country_d: getCountry(state, participant_d.country),
     terrains: getSelectedTerrains(state),
     countries: getCountries(state),
+    armies_a: getArmies(state, participant_a.country),
+    armies_d: getArmies(state, participant_d.country),
     round: getBattle(state).round,
     unit_a: getUnit(state, getMode(state) === Mode.Naval ? UnitType.Naval : UnitType.Land, participant_a.country, participant_a.army),
     unit_d: getUnit(state, getMode(state) === Mode.Naval ? UnitType.Naval : UnitType.Land, participant_d.country, participant_d.army),

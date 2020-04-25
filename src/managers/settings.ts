@@ -1,4 +1,4 @@
-import { SettingsAndOptions, CombatSettings, SiteSettings, Setting, SimulationSpeed, Mode, CountryName, ArmyName } from "types"
+import { SettingsAndOptions, CombatSettings, SiteSettings, Setting, SimulationSpeed, Mode, CountryName } from "types"
 import { speedValues } from "data"
 
 export const changeCombatParameter = (settings: SettingsAndOptions, mode: Mode, key: keyof CombatSettings, value: number | boolean | string) => {
@@ -17,15 +17,17 @@ export const changeSiteParameter = (settings: SettingsAndOptions, key: keyof Sit
   settings.siteSettings[key] = value as never
 }
 
-export const toggleMode = (settings: SettingsAndOptions) => {
-  settings.mode = settings.mode === Mode.Land ? Mode.Naval : Mode.Land
+export const setMode = (settings: SettingsAndOptions, mode: Mode) => {
+  settings.mode = mode
+  settings.army = 0
 }
 
-export const selectCountry = (settings: SettingsAndOptions, country: CountryName) => {
-  settings.country = country
+export const selectCountry = (settings: SettingsAndOptions, countryName: CountryName) => {
+  settings.country = countryName
+  settings.army = 0
 }
 
-export const selectArmy = (settings: SettingsAndOptions, army: ArmyName) => {
+export const selectArmy = (settings: SettingsAndOptions, army: number) => {
   settings.army = army
 }
 

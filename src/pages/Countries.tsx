@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Container, Grid, Table, List, Input, Checkbox, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { AppState, getGeneral, getGeneralDefinition, getSiteSettings } from 'state'
+import { AppState, getGeneral, getGeneralDefinition, getSiteSettings, getSelectedArmy, getMode } from 'state'
 import { mapRange, ObjSet, keys, values } from '../utils'
 
 import { addSignWithZero } from 'formatters'
@@ -621,16 +621,19 @@ class Countries extends Component<IProps> {
   setGeneralValue = (_: string, attribute: GeneralValueType, value: number) => this.execArmy(this.props.setGeneralAttribute, attribute, value)
 }
 
-const mapStateToProps = (state: AppState) => ({
-  omens: state.data.omens,
-  countryDefinition: state.countries[state.settings.country],
-  country: convertCountryDefinition(state.countries[state.settings.country], state.settings.siteSettings),
-  selectedCountry: state.settings.country,
-  selectedArmy: state.settings.army,
-  generalDefinition: getGeneralDefinition(state, state.settings.country, state.settings.army),
-  general: getGeneral(state, state.settings.country, state.settings.army),
-  settings: getSiteSettings(state)
-})
+const mapStateToProps = (state: AppState) => {
+  const selectedArmy = getSelectedArmy(state)
+  return {
+    omens: state.data.omens,
+    countryDefinition: state.countries[state.settings.country],
+    country: convertCountryDefinition(state.countries[state.settings.country], state.settings.siteSettings),
+    selectedCountry: state.settings.country,
+    selectedArmy,
+    generalDefinition: getGeneralDefinition(state, state.settings.country, selectedArmy),
+    general: getGeneral(state, state.settings.country, selectedArmy),
+    settings: getSiteSettings(state)
+  }
+}
 
 const actions = {
   clearGeneralSelections, setGeneralAttribute, selectCulture, setCountryAttribute, clearGeneralSelection, enableGeneralSelection,

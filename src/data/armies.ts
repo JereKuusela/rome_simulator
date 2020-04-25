@@ -37,7 +37,8 @@ const initializeDefaultArmy = (mode: Mode): Army => ({
     enabled: true,
     selections: {} as Selections,
     definitions: {} as any
-  }
+  },
+  mode
 })
 
 const defaultLandArmy = initializeDefaultArmy(Mode.Land)
@@ -50,10 +51,6 @@ export const getDefaultArmy = (mode: Mode): Army => {
 }
 
 export const getDefaultArmies = (): Armies => ({
-  [Mode.Land]: {
-    [ArmyName.Army1]: defaultLandArmy
-  },
-  [Mode.Naval]: {
-    [ArmyName.Army1]: defaultNavalArmy
-  }
+  [ArmyName.Army]: defaultLandArmy,
+  [ArmyName.Navy]: defaultNavalArmy
 })

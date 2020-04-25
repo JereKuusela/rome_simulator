@@ -8,10 +8,10 @@ export const getInitialTerrains = (mode: Mode): TerrainType[] => {
     return [TerrainType.None, process.env.REACT_APP_GAME === 'euiv' ? TerrainType.Grasslands : TerrainType.Plains]
 } 
 
-export const getDefaultParticipant = (name: CountryName): Participant => {
+export const getDefaultParticipant = (name: CountryName, mode: Mode): Participant => {
   return {
     country: name,
-    army: ArmyName.Army1,
+    army: mode === Mode.Land ? ArmyName.Army : ArmyName.Navy,
     rounds: [],
     rolls: [0],
     dice: (process.env.REACT_APP_GAME === 'euiv' ? 5 : 3),
@@ -20,7 +20,7 @@ export const getDefaultParticipant = (name: CountryName): Participant => {
 }
 
 export const getDefaultMode = (mode: Mode): Battle => ({
-  participants: { [Side.Attacker]: getDefaultParticipant(CountryName.Country1), [Side.Defender]: getDefaultParticipant(CountryName.Country2) },
+  participants: { [Side.Attacker]: getDefaultParticipant(CountryName.Country1, mode), [Side.Defender]: getDefaultParticipant(CountryName.Country2, mode) },
   terrains: getInitialTerrains(mode),
   round: -1,
   fight_over: true,

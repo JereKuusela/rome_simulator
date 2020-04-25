@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { AppState, getMode } from 'state'
-import { toggleMode } from 'reducers'
+import { setMode } from 'reducers'
 import { Menu, Image, Button } from 'semantic-ui-react'
 import IconLand from 'images/land_combat.png'
 import IconNaval from 'images/naval_combat.png'
@@ -15,7 +15,7 @@ interface Props { }
 class Navigation extends Component<IProps> {
 
   render() {
-    const { mode, toggleMode } = this.props
+    const { mode, setMode } = this.props
     const path = (this.props as any).location.pathname
     const history = (this.props as any).history
     return (
@@ -42,12 +42,12 @@ class Navigation extends Component<IProps> {
 
           <div id='menu-info'>
             {process.env.REACT_APP_GAME === 'ir' &&
-              <Button active={mode === Mode.Land} compact icon basic circular size='tiny' onClick={toggleMode}>
+              <Button active={mode === Mode.Land} compact icon basic circular size='tiny' onClick={() => setMode(Mode.Land)}>
                 <Image src={IconLand} avatar style={{ marginRight: 0 }} />
               </Button>
             }
             {process.env.REACT_APP_GAME === 'ir' &&
-              <Button active={mode === Mode.Naval} compact icon basic circular size='tiny' onClick={toggleMode}>
+              <Button active={mode === Mode.Naval} compact icon basic circular size='tiny' onClick={() => setMode(Mode.Naval)}>
                 <Image src={IconNaval} avatar style={{ marginRight: 0 }} />
               </Button>
             }
@@ -64,7 +64,7 @@ const mapStateToProps = (state: AppState) => ({
   mode: getMode(state)
 })
 
-const actions = { toggleMode }
+const actions = { setMode }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

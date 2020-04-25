@@ -118,7 +118,7 @@ const mapStateToProps = (state: AppState) => {
     id: 0,
     terrain_types: filterTerrainTypes(state),
     country: CountryName.Country1,
-    army: ArmyName.Army1,
+    army: ArmyName.Army,
     mode,
     settings,
     cohort: null,

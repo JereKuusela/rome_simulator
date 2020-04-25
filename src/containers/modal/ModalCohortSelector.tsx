@@ -51,7 +51,7 @@ const mapStateToProps = (state: AppState) => {
     column: 0,
     type: ArmyType.Frontline,
     country: CountryName.Country1,
-    army: ArmyName.Army1,
+    army: ArmyName.Army,
     mode: getMode(state),
     settings: getSiteSettings(state),
     units: {} as CombatUnitTypes,

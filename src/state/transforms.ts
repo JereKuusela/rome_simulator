@@ -19,10 +19,10 @@ export const stripRounds = (battle: ModeState): ModeState => map(battle, value =
 
 export const setIds = (countries: Countries): Countries => {
   return produce(countries, countries => {
-    forEach(countries, country => forEach(country.armies, mode => forEach(mode, army => {
+    forEach(countries, country => forEach(country.armies, army => {
       forEach(army.frontline, row => forEach(row, unit => unit.id = getNextId()))
       army.reserve.forEach(unit => unit.id = getNextId())
       army.defeated.forEach(unit => unit.id = getNextId())
-    })))
+    }))
   })
 }

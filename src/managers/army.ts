@@ -9,7 +9,7 @@ import { findLastIndex, sortBy } from 'lodash'
  */
 export const martialToCaptureChance = (martial: number) => 0.002 * martial
 
-const BASE_STAT_KEY = 'Base stat'
+const BASE_STAT_KEY = 'Custom'
 
 export const convertGeneralDefinition = (settings: SiteSettings, general: GeneralDefinition): General => {
   const base = filterValues(general, BASE_STAT_KEY)

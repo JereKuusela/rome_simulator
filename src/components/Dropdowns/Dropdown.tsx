@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Dropdown as DropdownUI } from 'semantic-ui-react'
 
-interface IProps<T extends string> {
+interface IProps<T extends string | number> {
   value: T
   values: ({ value: T, text: string } | T)[]
   onChange?: (value: T) => void
@@ -12,7 +12,7 @@ interface IProps<T extends string> {
 }
 
 
-export default class Dropdown<T extends string> extends Component<IProps<T>> {
+export default class Dropdown<T extends string | number> extends Component<IProps<T>> {
 
   getOptions = () => (
     this.props.values.map(item => {

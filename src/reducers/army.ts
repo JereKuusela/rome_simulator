@@ -3,7 +3,7 @@ import { Army, CountryName, Countries } from 'types'
 import { ArmyName } from 'types/armies'
 import * as manager from 'managers/army'
 import { getDefaultCountryDefinitions } from 'data'
-import { ActionToFunction, makeReducer, Action, ReducerParams, makeActionReplaceFirstTwice } from './utils'
+import { ActionToFunction, makeReducer, Action, makeActionReplaceFirstTwice } from './utils'
 
 const actionToFunction: ActionToFunction<Army, CountryName, ArmyName> = {}
 
@@ -27,9 +27,9 @@ export const setGeneralAttribute = makeActionReplaceFirstTwice(manager.setGenera
 export const clearGeneralAttributes = makeActionReplaceFirstTwice(manager.clearGeneralAttributes, actionToFunction)
 export const setHasGeneral = makeActionReplaceFirstTwice(manager.setHasGeneral, actionToFunction)
 
-const getEntity = (draft: Countries, action: Action<CountryName, ArmyName>, params: ReducerParams) => {
+const getEntity = (draft: Countries, action: Action<CountryName, ArmyName>) => {
   const [country, army] = action.payload
-  return draft[country].armies[params.mode][army]
+  return draft[country].armies[army]
 }
 
 const getEntityPayload = (action: Action<CountryName, ArmyName>) => {

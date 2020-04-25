@@ -91,7 +91,7 @@ const mapStateToProps = (state: AppState) => {
   return {
     remove: data?.remove,
     country: data ? data.country : CountryName.Country1,
-    army: data ? data.army : ArmyName.Army1,
+    army: data ? data.army : ArmyName.Army,
     unit_type: data ? data.type : UnitType.Land,
     unit: data ? getUnit(state, data.type, data.country) : null,
     unit_types: getUnitTypeList(state, true, data?.country),

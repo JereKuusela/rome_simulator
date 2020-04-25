@@ -10,6 +10,6 @@ export const changeCombatParameter = makeActionRemoveFirst(manager.changeCombatP
 export const changeSiteParameter = makeActionRemoveFirst(manager.changeSiteParameter, actionToFunction)
 export const selectCountry = makeActionRemoveFirst(manager.selectCountry, actionToFunction)
 export const selectArmy = makeActionRemoveFirst(manager.selectArmy, actionToFunction)
-export const toggleMode = makeActionRemoveFirst(manager.toggleMode, actionToFunction)
+export const setMode = makeActionRemoveFirst(manager.setMode, actionToFunction)
 
 export const settingsReducer = makeContainerReducer(getDefaultSettings(), actionToFunction)
