@@ -6,7 +6,6 @@ import ModalUnitDetail from 'containers/modal/ModalUnitDetail'
 import ModalTerrainDetail from 'containers/modal/ModalTerrainDetail'
 import ModalTacticDetail from 'containers/modal/ModalTacticDetail'
 import ModalValue from 'containers/modal/ModalValue'
-import ModalImportCountry from 'containers/modal/ModalImportCountry'
 
 /**
  * Global component for modals.
@@ -22,7 +21,6 @@ export default class Modals extends Component {
         <ModalTerrainDetail />
         <ModalTacticDetail />
         <ModalValue />
-        <ModalImportCountry />
       </>
     )
   }

@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { AppState, getMode } from 'state'
-import { toggleMode, openModal } from 'reducers'
+import { toggleMode } from 'reducers'
 import { Menu, Image, Button } from 'semantic-ui-react'
 import IconLand from 'images/land_combat.png'
 import IconNaval from 'images/naval_combat.png'
-import { Mode, ModalType } from 'types'
+import { Mode } from 'types'
 
 interface Props { }
 
@@ -36,8 +36,8 @@ class Navigation extends Component<IProps> {
           <Menu.Item active={path === '/settings'} onClick={() => history.push('/settings')}>
             Settings
           </Menu.Item>
-          <Menu.Item onClick={() => this.props.openModal(ModalType.ImportCountry, {})}>
-            Import
+          <Menu.Item active={path === '/import'} onClick={() => history.push('/import')}>
+            Import save
           </Menu.Item>
 
           <div id='menu-info'>
@@ -64,7 +64,7 @@ const mapStateToProps = (state: AppState) => ({
   mode: getMode(state)
 })
 
-const actions = { toggleMode, openModal }
+const actions = { toggleMode }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

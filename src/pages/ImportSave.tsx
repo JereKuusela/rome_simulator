@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { ModalType, Mode, TacticType, UnitPreferences, UnitPreferenceType, dictionaryUnitType, dictionaryTacticType, GeneralAttribute, UnitType, UnitAttribute, CultureType, CountryName, CountryAttribute, SelectionType, Invention, ArmyName, CohortDefinition } from 'types'
+import { Mode, TacticType, UnitPreferences, UnitPreferenceType, dictionaryUnitType, dictionaryTacticType, GeneralAttribute, UnitType, UnitAttribute, CultureType, CountryName, CountryAttribute, SelectionType, Invention, ArmyName, CohortDefinition } from 'types'
 import {
   enableGeneralSelections, createCountry, setCountryAttribute, selectCulture, enableCountrySelections, enableCountrySelection, createArmy, setHasGeneral, setGeneralAttribute,
   setFlankSize, setUnitPreference, selectTactic, addToReserve, deleteArmy
 } from 'reducers'
 import { Input, Button, Grid, Table } from 'semantic-ui-react'
-import BaseModal from './BaseModal'
 import Dropdown from 'components/Dropdowns/Dropdown'
 import { sortBy, uniq, sum, union } from 'lodash'
 import LabelItem from 'components/Utils/LabelUnit'
@@ -95,7 +94,7 @@ type IState = {
 
 type Bookmarks = { [key: string]: { start: number, end: number } }
 
-class ModalImportCountry extends Component<IProps, IState> {
+class ImportSave extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
@@ -149,12 +148,14 @@ class ModalImportCountry extends Component<IProps, IState> {
   render() {
     const { countries, country, army, armies } = this.state
     return (
-      <BaseModal type={ModalType.ImportCountry}>
-        <Grid>
-          <Grid.Row>
+      <Grid>
+        <Grid.Row>
+          <Grid.Column>
             <Input type='file' onChange={event => this.loadContent(event.target.files![0])} />
-          </Grid.Row>
-          <Grid.Row>
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column>
             <Dropdown
               value={country}
               values={countries.map((entry, index) => ({ text: this.getTagName(entry.entity.tag), value: String(index) }))}
@@ -170,12 +171,14 @@ class ModalImportCountry extends Component<IProps, IState> {
               placeholder='Select army'
             />
             <Button onClick={this.importCountry} disabled={!this.country}>Import</Button>
-          </Grid.Row>
-          <Grid.Row>
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column>
             {this.renderArmy()}
-          </Grid.Row>
-        </Grid>
-      </BaseModal>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     )
   }
 
@@ -785,4 +788,4 @@ type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
 interface IProps extends S, D { }
 
-export default connect(mapStateToProps, actions)(ModalImportCountry)
+export default connect(mapStateToProps, actions)(ImportSave)
