@@ -20,6 +20,10 @@ export default class DropdownArchetype extends Component<IProps> {
     calculateValue(unit, UnitAttribute.OffensiveMoralePips) + '/' + calculateValue(unit, UnitAttribute.DefensiveMoralePips)
   ])
 
+  isActive = (item: Unit) => item.type === this.props.value
+
+  getValue = (item: Unit) => item.type
+
   headers = ['Unit', 'Tech', CombatPhase.Fire, CombatPhase.Shock, UnitAttribute.Morale]
 
   render() {
@@ -28,6 +32,8 @@ export default class DropdownArchetype extends Component<IProps> {
       <DropdownTable value={value} values={values}
         headers={this.headers}
         getContent={this.getContent}
+        isActive={this.isActive}
+        getValue={this.getValue}
         onSelect={onSelect}
         settings={settings}
       />

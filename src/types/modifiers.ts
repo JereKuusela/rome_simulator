@@ -12,7 +12,8 @@ export enum SelectionType {
   Deity = 'Deity',
   Policy = 'Policy',
   Idea = 'Idea',
-  Trade = 'Trade'
+  Trade = 'Trade',
+  Religion = 'Religion'
 }
 
 export type Selections = { [key in SelectionType]: ObjSet }
@@ -28,10 +29,6 @@ export enum GovermentType {
   Republic = 'Republic',
   Monarch = 'Monarch',
   Tribe = 'Tribe'
-}
-
-export enum ReligionType {
-  Dummy = 'Dummy'
 }
 
 export interface Modifier {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Mode, TacticType, UnitPreferences, UnitPreferenceType, dictionaryUnitType, dictionaryTacticType, GeneralAttribute, UnitType, UnitAttribute, CultureType, CountryName, CountryAttribute, SelectionType, Invention, ArmyName, CohortDefinition, ReligionType, GovermentType } from 'types'
+import { Mode, TacticType, UnitPreferences, UnitPreferenceType, dictionaryUnitType, dictionaryTacticType, GeneralAttribute, UnitType, UnitAttribute, CultureType, CountryName, CountryAttribute, SelectionType, Invention, ArmyName, CohortDefinition, GovermentType } from 'types'
 import {
   enableGeneralSelections, createCountry, setCountryAttribute, selectCulture, enableCountrySelections, enableCountrySelection, createArmy, setHasGeneral, setGeneralAttribute,
   setFlankSize, setUnitPreference, selectTactic, addToReserve, deleteArmy, setMode
@@ -13,7 +13,7 @@ import { AppState, getUnits, getMode } from 'state'
 import { getDefaultUnits } from 'data'
 import AttributeImage from 'components/Utils/AttributeImage'
 import { toObj, toArr, mapRange, map } from 'utils'
-import { heritages_ir, traits_ir, traditions_ir, tech_ir, trades_ir, laws_ir, policies_ir, countries_ir, deities_ir } from 'managers/modifiers'
+import { heritages_ir, traits_ir, traditions_ir, tech_ir, trades_ir, laws_ir, policies_ir, countries_ir, deities_ir, religions_ir } from 'managers/modifiers'
 import { getNextId } from 'army_utils'
 import { calculateValueWithoutLoss } from 'definition_values'
 
@@ -40,7 +40,7 @@ type Country = {
   id: number
   name: CountryName
   tradition: CultureType
-  religion: ReligionType
+  religion: string
   government: GovermentType
   party: string
   traditions: number[]
@@ -307,7 +307,7 @@ class ImportSave extends Component<IProps, IState> {
             Religion
           </Table.Cell>
           <Table.Cell>
-            {entity.religion} ({entity.religiousUnity.toPrecision(3)}%)
+            {religions_ir.find(religion => religion.key === entity.religion)?.name} ({entity.religiousUnity.toPrecision(3)}%)
           </Table.Cell>
           <Table.Cell>
             Deities
@@ -568,7 +568,7 @@ class ImportSave extends Component<IProps, IState> {
       id: entry.entity.id,
       deities: [],
       religiousUnity: 100,
-      religion: '' as ReligionType,
+      religion: '' as string,
       government: '' as GovermentType,
       party: ''
     }
@@ -636,7 +636,7 @@ class ImportSave extends Component<IProps, IState> {
       if (key === 'religious_unity')
         country.religiousUnity = 100.0 * Number(value)
       if (key === 'religion')
-        country.religion = this.nonStringify(value) as ReligionType
+        country.religion = this.nonStringify(value)
       if (key === 'government') {
         const government = this.nonStringify(value)
         if (government.endsWith('republic'))
@@ -836,6 +836,7 @@ class ImportSave extends Component<IProps, IState> {
       enableCountrySelections(countryName, SelectionType.Deity, this.country.deities)
       enableCountrySelection(countryName, SelectionType.Policy, this.country.armyMaintenance)
       enableCountrySelection(countryName, SelectionType.Policy, this.country.navalMaintenance)
+      enableCountrySelection(countryName, SelectionType.Religion, this.country.religion)
       setCountryAttribute(countryName, CountryAttribute.OfficeDiscipline, this.country.officeDiscipline)
       setCountryAttribute(countryName, CountryAttribute.OfficeMorale, this.country.officeMorale)
       setCountryAttribute(countryName, CountryAttribute.OmenPower, this.country.religiousUnity - 100)

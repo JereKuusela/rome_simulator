@@ -3,17 +3,33 @@ import { Dropdown, Table } from 'semantic-ui-react'
 import AttributeImage from '../Utils/AttributeImage'
 import { SiteSettings } from 'types'
 
-interface IProps<T extends string> {
+interface IProps<T extends string, E> {
   value: T
   trigger?: React.ReactNode
-  values: { type: T }[]
+  values: E[]
   headers: string[]
-  getContent: (value: any) => (string | number | JSX.Element)[]
+  getContent: (value: E, search: string) => (string | number | JSX.Element)[] | null
+  getText?: (value: E) => string
+  isActive: (value: E) => boolean
+  getValue: (value: E) => T
   onSelect: (type: T) => void
   settings: SiteSettings
+  clearable?: boolean
+  search?: boolean
+  placeholder?: string
 }
 
-export default class DropdownTable<T extends string> extends Component<IProps<T>> {
+type IState = {
+  search: string
+  open: boolean
+}
+
+export default class DropdownTable<T extends string, E> extends Component<IProps<T, E>, IState> {
+
+  constructor(props: IProps<T, E>) {
+    super(props)
+    this.state = { search: '', open: false }
+  }
 
   getHeader = () => (
     <Table.Header>
@@ -23,16 +39,37 @@ export default class DropdownTable<T extends string> extends Component<IProps<T>
     </Table.Header>
   )
 
-  getContent = (value: { type: T }) => (
-    <Table.Row key={value.type} onClick={() => this.props.onSelect(value.type)} active={this.props.value === value.type}>
-      {this.props.getContent(value).map((cell, index) => <Table.Cell key={index}>{cell}</Table.Cell>)}
-    </Table.Row>
-  )
+  search = (_: any, data: any) => this.setState({ search: data.searchQuery })
 
-  render() {
-    const { value, values, headers, trigger } = this.props
+  onOpen = () => this.setState({ search: '', open: true })
+  onClose = () => this.setState({ search: '', open: false })
+
+  getContent = (item: E, index: number) => {
+    const content = this.props.getContent(item, this.state.search)
+    if (!content)
+      return null
     return (
-      <Dropdown text={trigger ? undefined: value} value={value} scrolling trigger={trigger}>
+      <Table.Row key={index} onClick={() => this.onClick(item)} active={this.props.isActive(item)}>
+        {content.map((cell, index) => <Table.Cell key={index}>{cell}</Table.Cell>)}
+      </Table.Row>
+    )
+  }
+
+  onClick = (item: E) => {
+    this.props.onSelect(this.props.getValue(item))
+    this.setState({ open: false, search: '' })
+  }
+  onChange = () => {
+    this.props.onSelect('' as T)
+    this.setState({ open: false, search: '' })
+  }
+  render() {
+    const { value, values, headers, trigger, clearable, getText, search, placeholder } = this.props
+    const selected = values.find(this.props.isActive)
+    const text = trigger ? undefined : selected && getText ? getText(selected) : ''
+    return (
+      <Dropdown open={this.state.open} clearable={clearable} onChange={this.onChange} search={search} searchQuery={this.state.search} onSearchChange={this.search} onOpen={this.onOpen} onBlur={this.onClose}
+        text={text} value={value} scrolling trigger={trigger} className={trigger ? '' : 'selection'} placeholder={placeholder}>
         <Dropdown.Menu>
           <Table selectable celled>
             {headers.length ? this.getHeader() : null}

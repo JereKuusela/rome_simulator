@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { Container, Grid, Table, List, Checkbox, Button } from 'semantic-ui-react'
+import { Container, Grid, Table, Checkbox, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState, getGeneralDefinition, getCountryDefinition, getSiteSettings, getCountry, getSelectedArmy } from 'state'
 import { mapRange, values } from '../utils'
 
-import { Modifier, ReligionType, CultureType, ModifierType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, ListDefinition, CountryName, Setting, ArmyName } from 'types'
-import { clearGeneralSelections, clearCountrySelections, clearCountryAttributes, clearGeneralAttributes, setCountryAttribute, enableCountrySelection, clearCountrySelection, setGeneralAttribute, selectCulture, selectReligion, selectGovernment, setHasGeneral } from 'reducers'
+import { CultureType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, ListDefinition, CountryName, Setting, ArmyName } from 'types'
+import { clearGeneralSelections, clearCountrySelections, clearCountryAttributes, clearGeneralAttributes, setCountryAttribute, enableCountrySelection, clearCountrySelection, setGeneralAttribute, selectCulture, selectGovernment, setHasGeneral } from 'reducers'
 
 import AccordionToggle from 'containers/AccordionToggle'
 import CountryManager from 'containers/CountryManager'
@@ -14,6 +14,7 @@ import TableAttributes from 'components/TableAttributes'
 import { getCultures } from 'data'
 import { tech_euiv } from 'managers/modifiers'
 import CountryValueInput from 'containers/CountryValueInput'
+import ListModifier from 'components/Utils/ListModifier'
 
 const TECH_COLUMNS = 4
 const CUSTOM_KEY = 'Base'
@@ -104,7 +105,7 @@ class Countries extends Component<IProps> {
                         }
                         style={{ padding: CELL_PADDING }}
                       >
-                        {this.renderModifiers(level.name, level.modifiers)}
+                        <ListModifier name={level.name} modifiers={level.modifiers} />
                       </Table.Cell>
                     )
                   })
@@ -117,37 +118,6 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderModifiers = (name: string | null, modifiers: Modifier[], padding?: string) => (
-    <List>
-      {name &&
-        <List.Item key='name'>
-          <List.Header>
-            {name}
-          </List.Header>
-        </List.Item>
-      }
-      {
-        modifiers.map((modifier, index) => (
-          <List.Item key={index}>
-            {
-              this.getText(modifier)
-            }
-            {
-              this.getValue(modifier, padding)
-            }
-          </List.Item>
-        ))
-      }
-    </List>
-  )
-
-  /**
-   * Selects religion while also re-enabling current omen.
-   */
-  selectReligion = (value: ReligionType) => {
-    this.execCountry(this.props.selectReligion, value)
-  }
-
   /** Executes a given function with currently selected country. */
   execCountry = <T extends any>(func: (country: CountryName, value: T, ...rest: any[]) => void, value: T, ...rest: any[]) => func(this.props.selectedCountry, value, ...rest)
   execArmy = <T extends any>(func: (country: CountryName, army: ArmyName, value: T, ...rest: any[]) => void, value: T, ...rest: any[]) => func(this.props.selectedCountry, this.props.selectedArmy, value, ...rest)
@@ -158,12 +128,6 @@ class Countries extends Component<IProps> {
   selectCulture = (value: CultureType) => {
     this.execCountry(this.props.selectCulture, value, !this.props.settings[Setting.Culture])
   }
-  /**
-   * Scales modifier with a given power.
-   */
-  scaleModifier = (modifier: Modifier, power: number) => ({ ...modifier, value: modifier.value * power / 100.0 })
-
-
   /**
    * Clears tech above a given tech level.
    */
@@ -190,38 +154,6 @@ class Countries extends Component<IProps> {
     this.execArmy(this.props.setHasGeneral, true)
   }
 
-  getText = (modifier: Modifier) => {
-    if (modifier.target in ModifierType)
-      return <span>{modifier.attribute}</span>
-    return <span>{modifier.target + ' ' + modifier.attribute}</span>
-  }
-
-  getValue = (modifier: Modifier, padding: string = '') => {
-    if (!modifier.value)
-      return null
-    const sign = modifier.value > 0 ? '+' : '-'
-    const value = Math.abs(modifier.value)
-    const str = modifier.no_percent ? value + padding : +(value * 100).toFixed(2) + ' %'
-    return <span className={modifier.negative ? 'color-negative' : 'color-positive'} style={{ float: 'right' }}>{sign + str}</span>
-  }
-
-  getNumberFromKey = (key: string, index: number) => {
-    const split = key.split('_')
-    if (split.length > index)
-      return Number(split[index])
-    return -1
-  }
-
-  /**
-   * Returns the given key without last prefix.
-   */
-  getUpperKey = (key: string) => {
-    const index = key.lastIndexOf('_')
-    if (index < 0)
-      return ''
-    return key.substring(0, index)
-  }
-
   setCountryValue = (_: string, attribute: CountryAttribute, value: number) => this.execCountry(this.props.setCountryAttribute, attribute, value)
 
   setGeneralValue = (_: string, attribute: GeneralValueType, value: number) => this.execArmy(this.props.setGeneralAttribute, attribute, value)
@@ -242,7 +174,7 @@ const mapStateToProps = (state: AppState) => {
 
 const actions = {
   setGeneralAttribute, selectCulture, setCountryAttribute, clearCountryAttributes, clearGeneralAttributes, clearGeneralSelections,
-  selectReligion, selectGovernment, setHasGeneral, enableCountrySelection, clearCountrySelection, clearCountrySelections
+  selectGovernment, setHasGeneral, enableCountrySelection, clearCountrySelection, clearCountrySelections
 }
 
 type S = ReturnType<typeof mapStateToProps>

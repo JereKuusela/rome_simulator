@@ -1,6 +1,6 @@
 import { Modifier, ModifierType, Mode, ModifierWithKey, CountryAttribute, ValuesType, UnitAttribute, UnitType, GeneralDefinition, CountryDefinition, GeneralAttribute, SelectionType, DeityDefinition } from 'types'
 import { getRootParent } from './units'
-import { getTechDefinitionsEUIV, getTechDefinitionsIR, getAbilityDefinitions, getTraitDefinitions, getHeritageDefinitions, getTraditionDefinitions, getTradeDefinitions, getIdeaDefinitions, getLawDefinitions, getPolicyDefinitions, getCountryNames, getDeityDefinitions } from 'data'
+import { getTechDefinitionsEUIV, getTechDefinitionsIR, getAbilityDefinitions, getTraitDefinitions, getHeritageDefinitions, getTraditionDefinitions, getTradeDefinitions, getIdeaDefinitions, getLawDefinitions, getPolicyDefinitions, getCountryNames, getDeityDefinitions, getReligionDefinitions } from 'data'
 import { ObjSet } from 'utils'
 import { calculateValue } from 'definition_values'
 import { martialToCaptureChance } from './army'
@@ -16,6 +16,7 @@ export const laws_ir = getLawDefinitions()
 export const deities_ir = getDeityDefinitions()
 export const policies_ir = getPolicyDefinitions()
 export const countries_ir = getCountryNames()
+export const religions_ir = getReligionDefinitions()
 
 export const tech_ir = getTechDefinitionsIR()
 export const tech_euiv = getTechDefinitionsEUIV()
@@ -164,6 +165,7 @@ export const getCountryModifiers = (country: CountryDefinition): ModifierWithKey
     getModifiersSub(modifiers, country.selections[SelectionType.Trade], trades_ir)
     getModifiersSub(modifiers, country.selections[SelectionType.Idea], ideas_ir)
     getModifiersSub(modifiers, country.selections[SelectionType.Law], laws_ir)
+    getModifiersSub(modifiers, country.selections[SelectionType.Religion], religions_ir)
     getDeityModifiers(modifiers, country.selections[SelectionType.Deity], deities_ir, calculateValue(country, CountryAttribute.OmenPower))
     policies_ir.forEach(policy => getModifiersSub(modifiers, country.selections[SelectionType.Policy], policy))
     getTraditionModifiers(modifiers, country)

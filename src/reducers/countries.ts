@@ -19,7 +19,6 @@ export const enableCountrySelection = makeActionReplaceFirst(manager.enableCount
 export const enableCountrySelections = makeActionReplaceFirst(manager.enableCountrySelections, countryMapping)
 export const selectCulture = makeActionReplaceFirst(manager.selectCulture, countryMapping)
 export const selectGovernment = makeActionReplaceFirst(manager.selectGovernment, countryMapping)
-export const selectReligion = makeActionReplaceFirst(manager.selectReligion, countryMapping)
 export const setCountryAttribute = makeActionReplaceFirst(manager.setCountryAttribute, countryMapping)
 export const clearCountryAttributes = makeActionReplaceFirst(manager.clearCountryAttributes, countryMapping)
 export const changeWeariness = makeActionReplaceFirst(manager.changeWeariness, countryMapping)

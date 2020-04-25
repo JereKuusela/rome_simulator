@@ -32,6 +32,11 @@ export default class DropdownTactic extends Component<IProps> {
     />
   ])
 
+  isActive = (item: Tactic) => item.type === this.props.value
+
+  getValue = (item: Tactic) => item.type
+
+
   headers = ['Tactic', 'Effect', 'Damage', 'Casualties']
 
   render() {
@@ -40,6 +45,8 @@ export default class DropdownTactic extends Component<IProps> {
       <DropdownTable value={value} values={values}
         headers={this.headers}
         getContent={this.getContent}
+        isActive={this.isActive}
+        getValue={this.getValue}
         onSelect={onSelect}
         trigger={<LabelItem item={values.find(tactic => tactic.type === value)} />}
         settings={settings}

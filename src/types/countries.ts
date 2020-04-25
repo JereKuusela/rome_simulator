@@ -1,4 +1,4 @@
-import { GovermentType, ReligionType, Selections } from "./modifiers"
+import { GovermentType, Selections } from "./modifiers"
 import { Armies } from "./armies"
 import { UnitDefinitions, UnitAttribute } from "./units"
 import { DefinitionValues } from "definition_values"
@@ -28,7 +28,6 @@ export interface CountryDefinition extends DefinitionValues<CountryAttribute> {
   selections: Selections
   culture: CultureType
   government: GovermentType
-  religion: ReligionType
   armies: Armies
   units: UnitDefinitions
   weariness: WearinessAttributes
@@ -38,7 +37,6 @@ export type Country = { [key in CountryAttribute]: number } & {
   selections: Selections
   culture: CultureType
   weariness: WearinessAttributes
-  religion: ReligionType
 }
 
 export enum CultureType { Dummy = 'Dummy' }

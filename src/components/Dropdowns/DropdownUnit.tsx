@@ -16,6 +16,11 @@ export default class DropdownUnit extends Component<IProps> {
     <LabelItem item={unit} />
   ])
 
+  isActive = (item: Unit) => item.type === this.props.value
+
+  getValue = (item: Unit) => item.type
+
+
   headers = []
 
   render() {
@@ -24,6 +29,8 @@ export default class DropdownUnit extends Component<IProps> {
       <DropdownTable value={value} values={values}
         headers={this.headers}
         getContent={this.getContent}
+        isActive={this.isActive}
+        getValue={this.getValue}
         onSelect={onSelect}
         trigger={<LabelItem item={values.find(unit => unit.type === value)} />}
         settings={settings}

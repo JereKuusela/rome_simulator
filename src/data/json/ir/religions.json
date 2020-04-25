@@ -1,0 +1,263 @@
+{
+  "religions": [
+    {
+      "name": "Hellenic",
+      "key": "roman_pantheon",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "National Citizen Happiness",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Kemetic",
+      "key": "egyptian_pantheon",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Monthly Ruler Popularity Gain",
+          "no_percent": true,
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Canaanite",
+      "key": "carthaginian_pantheon",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.1
+        }
+      ]
+    },
+    {
+      "name": "Zalmoxian",
+      "key": "shamanism",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "National Tribesman Output",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Armazic",
+      "key": "caucasian_religion",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Fort Defense",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Chaldean",
+      "key": "mesopotamian_religion",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Monthly Civilization Change",
+          "value": 0.01
+        }
+      ]
+    },
+    {
+      "name": "Khaldic",
+      "key": "armenian_religion",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "National Freeman Output",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Cybelene",
+      "key": "anatolian_religion",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Wrong Culture Happiness",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Druidic",
+      "key": "druidism",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "State Religion Happiness",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Iberic",
+      "key": "animism",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Import Value",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Jewish",
+      "key": "judaism",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Pop Assimilation Speed",
+          "value": 0.2
+        },
+        {
+          "target": "Text",
+          "attribute": "Omen Duration",
+          "value": 0.5
+        },
+        {
+          "target": "Text",
+          "attribute": "Omen Power",
+          "no_percent": true,
+          "value": 15
+        }
+      ]
+    },
+    {
+      "name": "Zoroastrian",
+      "key": "zoroaster",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.05
+        }
+      ]
+    },
+    {
+      "name": "Megalithic",
+      "key": "berber_religion",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "State Religion Happiness",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Tuistic",
+      "key": "germanic_religion",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Migration Cost",
+          "negative": true,
+          "value": -0.1
+        }
+      ]
+    },
+    {
+      "name": "Heptadic",
+      "key": "indo_iranian_religion",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Monthly Military Experience",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Arabic",
+      "key": "arabian_pantheon",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "National Tribesman Happiness",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Buddhist",
+      "key": "buddhism",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Pop Conversion Speed",
+          "value": 0.3
+        }
+      ]
+    },
+    {
+      "name": "Hindu",
+      "key": "hindu",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Diplomatic Reputation",
+          "no_percent": true,
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "Ritualistic",
+      "key": "eastern_animism",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Diplomatic Relations",
+          "no_percent": true,
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "Bon",
+      "key": "bon_religion",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Build Cost",
+          "value": -0.1
+        }
+      ]
+    },
+    {
+      "name": "Matrist",
+      "key": "matrist_religion",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Manpower Recovery Speed",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Jain",
+      "key": "jainism",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Pop Promotion Speed",
+          "value": 0.25
+        }
+      ]
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import { Countries, CountryName, CountryDefinition, GovermentType, ReligionType, CultureType, CountryAttribute, ValuesType, WearinessAttribute, Country, isAttributeEnabled, ModifierWithKey, SiteSettings, ModifierType, SelectionType, Selections, ArmyName, Mode } from 'types'
+import { Countries, CountryName, CountryDefinition, GovermentType, CultureType, CountryAttribute, ValuesType, WearinessAttribute, Country, isAttributeEnabled, ModifierWithKey, SiteSettings, ModifierType, SelectionType, Selections, ArmyName, Mode } from 'types'
 import { defaultCountry, getDefaultUnits, getDefaultArmies } from 'data'
 import { addValuesWithMutate, clearAllValuesWithMutate, calculateValue, addValue } from 'definition_values'
 import { toObj, values, filter } from 'utils'
@@ -25,10 +25,6 @@ export const clearCountryAttributes = (country: CountryDefinition) => {
 
 export const selectGovernment = (country: CountryDefinition, government: GovermentType) => {
   country.government = government
-}
-
-export const selectReligion = (country: CountryDefinition, religion: ReligionType) => {
-  country.religion = religion
 }
 
 export const selectCulture = (country: CountryDefinition, culture: CultureType, load_all_units: boolean) => {
@@ -78,8 +74,7 @@ export const convertCountryDefinition = (country: CountryDefinition, settings: S
     ...calculated,
     selections: country.selections,
     culture: country.culture,
-    weariness: country.weariness,
-    religion: country.religion
+    weariness: country.weariness
   }
 }
 
