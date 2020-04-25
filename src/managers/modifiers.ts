@@ -1,10 +1,11 @@
 import { Modifier, ModifierType, Mode, ModifierWithKey, CountryAttribute, ValuesType, UnitAttribute, UnitType, GeneralDefinition, CountryDefinition, GeneralAttribute, SelectionType } from 'types'
 import { getRootParent } from './units'
-import { getTechDefinitionsEUIV, getTechDefinitionsIR, getAbilityDefinitions, getTraitDefinitions, getHeritageDefinitions, getTraditionDefinitions, getTradeDefinitions, getIdeaDefinitions, getLawDefinitions, getPolicyDefinitions } from 'data'
+import { getTechDefinitionsEUIV, getTechDefinitionsIR, getAbilityDefinitions, getTraitDefinitions, getHeritageDefinitions, getTraditionDefinitions, getTradeDefinitions, getIdeaDefinitions, getLawDefinitions, getPolicyDefinitions, getCountryNames } from 'data'
 import { ObjSet } from 'utils'
 import { calculateValue } from 'definition_values'
 import { martialToCaptureChance } from './army'
 
+// These should be in data?
 export const abilities_ir = getAbilityDefinitions()
 export const traits_ir = getTraitDefinitions()
 export const heritages_ir =  getHeritageDefinitions()
@@ -13,6 +14,7 @@ export const traditions_ir = getTraditionDefinitions()
 export const ideas_ir = getIdeaDefinitions() 
 export const laws_ir = getLawDefinitions()
 export const policies_ir = getPolicyDefinitions()
+export const countries_ir = getCountryNames()
 
 export const tech_ir = getTechDefinitionsIR()
 export const tech_euiv = getTechDefinitionsEUIV() 

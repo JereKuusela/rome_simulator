@@ -14,7 +14,7 @@ import { AppState, getUnits } from 'state'
 import { getDefaultUnits } from 'data'
 import AttributeImage from 'components/Utils/AttributeImage'
 import { toObj, toArr, mapRange, map } from 'utils'
-import { heritages_ir, traits_ir, traditions_ir, tech_ir, trades_ir, laws_ir, policies_ir } from 'managers/modifiers'
+import { heritages_ir, traits_ir, traditions_ir, tech_ir, trades_ir, laws_ir, policies_ir, countries_ir } from 'managers/modifiers'
 import { getNextId } from 'army_utils'
 import { calculateValueWithoutLoss } from 'definition_values'
 
@@ -144,6 +144,8 @@ class ModalImportCountry extends Component<IProps, IState> {
     }
   }
 
+  getTagName = (tag: string) => countries_ir[tag.toLowerCase()] + ' (' + tag + ')'
+
   render() {
     const { countries, country, army, armies } = this.state
     return (
@@ -155,7 +157,7 @@ class ModalImportCountry extends Component<IProps, IState> {
           <Grid.Row>
             <Dropdown
               value={country}
-              values={countries.map((entry, index) => ({ text: entry.entity.tag, value: String(index) }))}
+              values={countries.map((entry, index) => ({ text: this.getTagName(entry.entity.tag), value: String(index) }))}
               clearable search
               onChange={countries.length ? this.selectCountry : undefined}
               placeholder='Select country'
@@ -514,7 +516,7 @@ class ModalImportCountry extends Component<IProps, IState> {
     for (let line = start + 1; line < end; line++) {
       const [key, value] = this.handleLine(lines[line])
       if (key === 'name' && !country.name)
-        country.name = this.nonStringify(value) as CountryName
+        country.name = countries_ir[this.nonStringify(value).toLowerCase()] as CountryName
       if (key === 'military_tradition')
         country.tradition = this.nonStringify(value) as CultureType
       if (key === 'heritage')

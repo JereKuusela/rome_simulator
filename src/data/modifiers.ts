@@ -15,6 +15,7 @@ import * as lawData from './json/ir/laws.json'
 import * as policyData from './json/ir/policies.json'
 import * as ideaData from './json/ir/ideas.json'
 import * as abilityData from './json/ir/abilities.json'
+import * as countryData from './json/ir/countries.json'
 
 import * as techDataEUIV from './json/euiv/tech.json'
 
@@ -30,6 +31,7 @@ const getLawData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(lawDat
 const getPolicyData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(policyData.policies) : [] as OptionData[]
 const getIdeaData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(ideaData.ideas) : [] as ListData[]
 const getAbilityData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(abilityData.abilities) : [] as OptionData[]
+const getCountryData = () => process.env.REACT_APP_GAME === 'ir' ? countryData.countries : {} as DictionaryData
 
 export type Traditions = { [key in CultureType ]: TraditionDefinition }
 type Omens = { [key in ReligionType]: OmenDefinition[] }
@@ -105,6 +107,9 @@ export const getAbilityDefinitions = () => {
   return data
 }
 
+export const getCountryNames = () => getCountryData()
+
+
 interface ModifierData {
   target: string
   attribute: string
@@ -163,3 +168,5 @@ type ListData = {
 }
 
 type OptionData = ListData[]
+
+type DictionaryData = { [key: string]: string }

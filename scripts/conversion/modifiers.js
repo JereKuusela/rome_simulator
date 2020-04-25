@@ -346,11 +346,23 @@ exports.getValue = (key, value) => {
   }
 }
 
+let countries = {}
+
+exports.getCountries = () => countries
+
 /**
  * @param {{}} localization 
  * @param {string} file 
  */
 exports.loadLocalization = (localization, file) => {
+  if (file === 'countries_l_english.yml') {
+    countries = localization
+    Object.keys(localization).forEach(key => {
+      if (key.length > 3)
+        delete countries[key]
+    })
+    return
+  }
   Object.assign(localizations, localization)
   if (file === 'terrains_l_english.yml') {
     Object.keys(units).forEach(unit => {
