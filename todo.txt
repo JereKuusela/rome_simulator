@@ -60,7 +60,6 @@ UI:
 Countries:
  - Inventions to show tag specific (without actually implementing tags).
   * These inventions are extra. Perhaps a 4th slot for toggle? Or just implement scrolling?
- - Heritages could be a dropdown.
  - Republic leading faction (military gives morale) + empowerement (military gives discipline).
  - Any other active modifiers? Like events?
  - Importing capital surplus (have to calculate slaves required for surplus from laws, buildings and territory status, amount of slaves, trade routes).
