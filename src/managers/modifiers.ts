@@ -1,6 +1,6 @@
 import { Modifier, ModifierType, Mode, ModifierWithKey, CountryAttribute, ValuesType, UnitAttribute, UnitType, GeneralDefinition, CountryDefinition, GeneralAttribute, SelectionType, DeityDefinition } from 'types'
 import { getRootParent } from './units'
-import { getTechDefinitionsEUIV, getFactionDefinitions, getTechDefinitionsIR, getAbilityDefinitions, getTraitDefinitions, getHeritageDefinitions, getTraditionDefinitions, getTradeDefinitions, getIdeaDefinitions, getLawDefinitions, getPolicyDefinitions, getCountryNames, getDeityDefinitions, getReligionDefinitions } from 'data'
+import { getTechDefinitionsEUIV, getFactionDefinitions, getModifierDefinitions, getTechDefinitionsIR, getAbilityDefinitions, getTraitDefinitions, getHeritageDefinitions, getTraditionDefinitions, getTradeDefinitions, getIdeaDefinitions, getLawDefinitions, getPolicyDefinitions, getCountryNames, getDeityDefinitions, getReligionDefinitions } from 'data'
 import { ObjSet } from 'utils'
 import { calculateValue } from 'definition_values'
 import { martialToCaptureChance } from './army'
@@ -18,6 +18,7 @@ export const policies_ir = getPolicyDefinitions()
 export const countries_ir = getCountryNames()
 export const religions_ir = getReligionDefinitions()
 export const factions_ir = getFactionDefinitions()
+export const modifiers_ir = getModifierDefinitions()
 
 export const tech_ir = getTechDefinitionsIR()
 export const tech_euiv = getTechDefinitionsEUIV()
@@ -168,6 +169,7 @@ export const getCountryModifiers = (country: CountryDefinition): ModifierWithKey
     getModifiersSub(modifiers, country.selections[SelectionType.Law], laws_ir)
     getModifiersSub(modifiers, country.selections[SelectionType.Religion], religions_ir)
     getModifiersSub(modifiers, country.selections[SelectionType.Faction], factions_ir)
+    getModifiersSub(modifiers, country.selections[SelectionType.Modifier], modifiers_ir)
     policies_ir.forEach(policy => getModifiersSub(modifiers, country.selections[SelectionType.Policy], policy))
     getTraditionModifiers(modifiers, country)
   }

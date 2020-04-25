@@ -13,7 +13,7 @@ import { AppState, getUnits, getMode } from 'state'
 import { getDefaultUnits } from 'data'
 import AttributeImage from 'components/Utils/AttributeImage'
 import { toObj, toArr, mapRange, map } from 'utils'
-import { heritages_ir, traits_ir, traditions_ir, tech_ir, trades_ir, laws_ir, policies_ir, countries_ir, deities_ir, religions_ir, factions_ir } from 'managers/modifiers'
+import { heritages_ir, traits_ir, traditions_ir, tech_ir, trades_ir, laws_ir, policies_ir, countries_ir, deities_ir, religions_ir, factions_ir, modifiers_ir } from 'managers/modifiers'
 import { getNextId } from 'army_utils'
 import { calculateValueWithoutLoss } from 'definition_values'
 
@@ -60,6 +60,7 @@ type Country = {
   officeDiscipline: number
   officeMorale: number
   deities: string[]
+  modifiers: string[]
 }
 
 type Character = {
@@ -314,6 +315,14 @@ class ImportSave extends Component<IProps, IState> {
           </Table.Cell>
           <Table.Cell>
             {entity.deities.map(key => deities_ir.find(deity => key === deity.key)?.name).filter(value => value).join(', ')}
+          </Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>
+            Modifiers
+          </Table.Cell>
+          <Table.Cell width='3'>
+            {entity.modifiers.map(key => modifiers_ir.find(modifier => key === modifier.key)?.name).filter(value => value).join(', ')}
           </Table.Cell>
         </Table.Row>
       </>
@@ -609,7 +618,8 @@ class ImportSave extends Component<IProps, IState> {
       religiousUnity: 100,
       religion: '' as string,
       government: '' as GovermentType,
-      faction: ''
+      faction: '',
+      modifiers: []
     }
 
     if (this.jobs[entry.entity.id]?.officeDiscipline) {
@@ -645,6 +655,8 @@ class ImportSave extends Component<IProps, IState> {
         country.armies = this.getNumberList(value)
       if (key === 'idea' && value !== '{')
         country.ideas.push(this.nonStringify(value))
+      if (key === 'modifier' && value !== '{')
+        country.modifiers.push(this.nonStringify(value))
       // Index 9 is Roman special invention, others are military inventions.
       // Probably need to check what other special inventions do.
       if (key === 'active_inventions')
@@ -660,7 +672,7 @@ class ImportSave extends Component<IProps, IState> {
         country.availableLaws = this.getTruthList(value)
       if (key === 'export')
         country.exports = this.getTruthList(value)
-      if (this.laws.includes(key) && country.availableLaws[this.laws.indexOf(key)]) 
+      if (this.laws.includes(key) && country.availableLaws[this.laws.indexOf(key)])
         country.laws.push(value)
       if (key === 'deity')
         country.deities.push(this.deities[Number(value)])
@@ -865,6 +877,7 @@ class ImportSave extends Component<IProps, IState> {
       enableCountrySelections(countryName, SelectionType.Idea, this.country.ideas)
       enableCountrySelections(countryName, SelectionType.Law, this.country.laws)
       enableCountrySelections(countryName, SelectionType.Deity, this.country.deities)
+      enableCountrySelections(countryName, SelectionType.Modifier, this.country.modifiers)
       enableCountrySelection(countryName, SelectionType.Policy, this.country.armyMaintenance)
       enableCountrySelection(countryName, SelectionType.Policy, this.country.navalMaintenance)
       enableCountrySelection(countryName, SelectionType.Religion, this.country.religion)

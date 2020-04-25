@@ -20,7 +20,7 @@ import CountryManager from 'containers/CountryManager'
 import Dropdown from 'components/Dropdowns/Dropdown'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TableAttributes from 'components/TableAttributes'
-import { tech_ir, abilities_ir, traits_ir, heritages_ir, traditions_ir, ideas_ir, policies_ir, laws_ir, trades_ir, deities_ir, religions_ir, factions_ir } from 'managers/modifiers'
+import { tech_ir, abilities_ir, traits_ir, heritages_ir, traditions_ir, ideas_ir, policies_ir, laws_ir, trades_ir, deities_ir, religions_ir, factions_ir, modifiers_ir } from 'managers/modifiers'
 import { convertCountryDefinition } from 'managers/countries'
 import CountryValueInput from 'containers/CountryValueInput'
 import ListModifier from 'components/Utils/ListModifier'
@@ -164,6 +164,15 @@ class Countries extends Component<IProps> {
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
+              <AccordionToggle title='Modifiers & Events' identifier='countries_modifiers'>
+                {
+                  this.renderModifiers(modifiers_ir, countrySelections[SelectionType.Modifier])
+                }
+              </AccordionToggle>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns='1'>
+            <Grid.Column>
               <AccordionToggle title='Attributes' identifier='countries_attributes'>
                 <TableAttributes attributes={filterAttributes(values(CountryAttribute), settings)} custom_value_key='Custom' definition={countryDefinition} onChange={this.setCountryValue} />
                 <TableAttributes attributes={filterAttributes((values(GeneralAttribute) as GeneralValueType[]).concat(values(CombatPhase)), settings)} custom_value_key='Custom' definition={generalDefinition} onChange={this.setGeneralValue} />
@@ -296,6 +305,7 @@ class Countries extends Component<IProps> {
   renderTrades = (trades: TradeDefinition[], selections: ObjSet) => this.renderList(SelectionType.Trade, trades, selections, 3, this.onCountryItemClick, false, PERCENT_PADDING)
   renderIdeas = (ideas: ListDefinition[], selections: ObjSet) => this.renderList(SelectionType.Idea, ideas, selections, 3, this.onCountryItemClick, false, PERCENT_PADDING)
   renderLaws = (laws: ListDefinition[], selections: ObjSet) => this.renderList(SelectionType.Law, laws, selections, 3, this.onCountryItemClick, false, PERCENT_PADDING)
+  renderModifiers = (modifiers: ListDefinition[], selections: ObjSet) => this.renderList(SelectionType.Modifier, modifiers, selections, 4, this.onCountryItemClick, false, PERCENT_PADDING)
 
   renderList = (type: SelectionType, items: ListDefinition[], selections: ObjSet, columns: number, onClick: (enabled: boolean) => ((type: SelectionType, key: string) => void), disabled: boolean, padding?: string) => {
     items = items.filter(entity => entity.modifiers.length)

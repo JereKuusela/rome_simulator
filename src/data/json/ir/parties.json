@@ -8,6 +8,12 @@
           "target": "Text",
           "attribute": "National Tax",
           "value": 0.2
+        },
+        {
+          "target": "Text",
+          "attribute": "Empower Civic Faction Cost",
+          "negative": true,
+          "value": -0.5
         }
       ]
     },
@@ -26,6 +32,12 @@
           "attribute": "Morale",
           "type": "Modifier",
           "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Empower Military Faction Cost",
+          "negative": true,
+          "value": -0.5
         }
       ]
     },
@@ -43,6 +55,12 @@
           "attribute": "Diplomatic Reputation",
           "no_percent": true,
           "value": 2
+        },
+        {
+          "target": "Text",
+          "attribute": "Empower Mercantile Faction Cost",
+          "negative": true,
+          "value": -0.5
         }
       ]
     },
@@ -55,6 +73,12 @@
           "attribute": "Omen Power",
           "no_percent": true,
           "value": 10
+        },
+        {
+          "target": "Text",
+          "attribute": "Empower Religious Faction Cost",
+          "negative": true,
+          "value": -0.5
         }
       ]
     },

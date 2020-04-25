@@ -56,6 +56,7 @@ const units = {
 
 /** @type {Object.<string, string>} */
 const attributes = {
+  'nation_rank_0': 'Migratory',
   'global_monthly_food_modifier': 'National Food',
   'create_trade_route_cost_modifier': 'Trade Route Cost',
   'attrition_weight': ATTRITION,

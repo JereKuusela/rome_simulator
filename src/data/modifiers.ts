@@ -18,6 +18,8 @@ import * as countryData from './json/ir/countries.json'
 import * as deityData from './json/ir/deities.json'
 import * as religionData from './json/ir/religions.json'
 import * as factionData from './json/ir/parties.json'
+import * as modifierData from './json/ir/modifiers.json'
+
 
 import * as techDataEUIV from './json/euiv/tech.json'
 
@@ -36,6 +38,7 @@ const getAbilityData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(ab
 const getCountryData = () => process.env.REACT_APP_GAME === 'ir' ? countryData.countries : {} as DictionaryData
 const getDeityData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(deityData.deities) : [] as DeityData[]
 const getFactionData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(factionData.parties) : [] as ListData[]
+const getModifierData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(modifierData.modifiers) : [] as ListData[]
 
 export type Traditions = { [key in CultureType ]: TraditionDefinition }
 
@@ -89,6 +92,12 @@ export const getReligionDefinitions = () => {
 export const getFactionDefinitions = () => {
   const data = sortBy<ListData>(getFactionData(), value => value.name) as ListDefinition[]
   data.forEach(faction => faction.modifiers.forEach(modifier => setDefault(modifier)))
+  return data
+}
+
+export const getModifierDefinitions = () => {
+  const data = sortBy<ListData>(getModifierData(), value => value.name) as ListDefinition[]
+  data.forEach(modifier => modifier.modifiers.forEach(modifier => setDefault(modifier)))
   return data
 }
 
