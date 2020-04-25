@@ -5,7 +5,7 @@ import { CountryName, CountryAttribute } from 'types'
 import { setCountryAttribute } from 'reducers'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 import { filterValues, calculateBase } from 'definition_values'
-import { getCountries, AppState } from 'state'
+import { AppState, getCountryDefinition } from 'state'
 
 type Props = {
   country: CountryName
@@ -32,7 +32,7 @@ class CountryValueInput extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  definition: getCountries(state)[props.country]
+  definition: getCountryDefinition(state, props.country)
 })
 
 const actions = { setCountryAttribute }

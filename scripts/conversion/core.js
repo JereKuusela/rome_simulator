@@ -67,11 +67,20 @@ exports.getModifier = (key, value) => ({
  */
 exports.loadLocalizations = game => {
   const directory = path.join(directoryPath, game, 'localization', 'english')
+  loadDirectory(directory)
+}
+
+const loadDirectory = directory => {
   const files = fs.readdirSync(directory)
   files.forEach(file => {
-    const data = fs.readFileSync(path.join(directory, file)).toString()
-    const localization = converter.parseLocalization(data)
-    modifiers.loadLocalization(localization, file)
+    if (path.extname(file)) {
+      const data = fs.readFileSync(path.join(directory, file)).toString()
+      const localization = converter.parseLocalization(data)
+      modifiers.loadLocalization(localization, file)
+    }
+    else {
+      loadDirectory(path.join(directory, file))
+    }
   })
 }
 

@@ -52,7 +52,7 @@
       "isOmen": true
     },
     {
-      "name": "Battle Omen",
+      "name": "Spirits of Battle Omen",
       "key": "omendeity_battle",
       "modifiers": [
         {
@@ -65,7 +65,7 @@
       "isOmen": true
     },
     {
-      "name": "Endurance",
+      "name": "Spirits of Endurance",
       "key": "deity_endurance",
       "modifiers": [
         {
@@ -90,7 +90,7 @@
       "isOmen": false
     },
     {
-      "name": "Bodh",
+      "name": "Enlightenment of Buddha",
       "key": "deity_bodh",
       "modifiers": [
         {
@@ -427,7 +427,7 @@
       "isOmen": true
     },
     {
-      "name": "Heracles Omen",
+      "name": "Herakles Omen",
       "key": "omendeity_heracles",
       "modifiers": [
         {
@@ -465,7 +465,7 @@
       "isOmen": false
     },
     {
-      "name": "Harpocrates Omen",
+      "name": "Harpokrates Omen",
       "key": "omendeity_harpocrates",
       "modifiers": [
         {
@@ -828,7 +828,7 @@
       "isOmen": true
     },
     {
-      "name": "Diwali Omen",
+      "name": "Diwali Festival Omen",
       "key": "omendeity_diwali",
       "modifiers": [
         {
@@ -941,7 +941,7 @@
       "isOmen": true
     },
     {
-      "name": "Medeine Omen",
+      "name": "Medeiné Omen",
       "key": "omendeity_medeine",
       "modifiers": [
         {
@@ -954,7 +954,7 @@
       "isOmen": true
     },
     {
-      "name": "Perkunas",
+      "name": "Mother Goddess",
       "key": "deity_perkunas",
       "modifiers": [
         {
@@ -1004,7 +1004,7 @@
       "isOmen": true
     },
     {
-      "name": "Infusion Of War",
+      "name": "Infusion of War",
       "key": "deity_infusion_of_war",
       "modifiers": [
         {
@@ -1016,7 +1016,7 @@
       "isOmen": false
     },
     {
-      "name": "Rites Adult",
+      "name": "Rites to Adulthood",
       "key": "deity_rites_adult",
       "modifiers": [
         {
@@ -1028,7 +1028,7 @@
       "isOmen": false
     },
     {
-      "name": "Rites Adult Omen",
+      "name": "Rites to Adulthood Omen",
       "key": "omendeity_rites_adult",
       "modifiers": [
         {

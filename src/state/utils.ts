@@ -6,7 +6,7 @@ import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefa
 import { uniq, flatten } from 'lodash'
 import * as manager from 'managers/army'
 import { calculateValue } from 'definition_values'
-import { getCountryModifiers, getGeneralModifiers } from 'managers/modifiers'
+import { getCountryModifiers, getGeneralModifiers, getSecondaryCountryModifiers } from 'managers/modifiers'
 import { convertCountryDefinition, applyCountryModifiers, filterArmies } from 'managers/countries'
 import { applyUnitModifiers } from 'managers/units'
 import { convertParticipant } from 'managers/battle'
@@ -131,8 +131,10 @@ const getUnitDefinitions = (state: AppState, countryName: CountryName, armyName:
   const country = state.countries[countryName]
   const units = country.units
   const general = getGeneralDefinition(state, countryName, armyName)
-  const modifiers = getCountryModifiers(country).concat(getGeneralModifiers(general))
-  return applyUnitModifiers(units, modifiers)
+  const countryModifiers = getCountryModifiers(country)
+  const secondaryCountryModifiers = getSecondaryCountryModifiers(applyCountryModifiers(country, countryModifiers))
+  const generalModifiers = getGeneralModifiers(general)
+  return applyUnitModifiers(units, countryModifiers.concat(secondaryCountryModifiers).concat(generalModifiers))
 }
 
 export const getCurrentCombat = (state: AppState, side: Side): CombatCohorts => {
@@ -192,9 +194,10 @@ export const getCountry = (state: AppState, countryName: CountryName): Country =
   return convertCountryDefinition(country, state.settings.siteSettings)
 }
 export const getCountryDefinition = (state: AppState, countryName: CountryName): CountryDefinition => {
-  const country = state.countries[countryName]
+  let country = state.countries[countryName]
   const modifiers = getCountryModifiers(country)
-  return applyCountryModifiers(country, modifiers)
+  country = applyCountryModifiers(country, modifiers)
+  return applyCountryModifiers(country, getSecondaryCountryModifiers(country))
 }
 const getArmyDefinition = (state: AppState, countryName: CountryName, armyName: ArmyName) => state.countries[countryName].armies[armyName]
 

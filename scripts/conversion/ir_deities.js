@@ -9,13 +9,13 @@ const handler = data => {
   Object.keys(data).forEach(key => {
     const deity = data[key]
     const active = {
-      name: format(key.substr(6)) + ' Omen',
+      name: getAttribute(key) + ' Omen',
       key: 'omen' + key,
       modifiers: [],
       isOmen: true
     }
     const passive = {
-      name: format(key.substr(6)),
+      name: getAttribute(key),
       key,
       modifiers: [],
       isOmen: false

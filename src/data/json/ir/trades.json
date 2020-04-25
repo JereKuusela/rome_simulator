@@ -221,6 +221,19 @@
       ]
     },
     {
+      "name": "Export: Incense",
+      "key": "Export incense",
+      "index": 26,
+      "modifiers": [
+        {
+          "target": "Country",
+          "attribute": "Omen Power",
+          "no_percent": true,
+          "value": 5
+        }
+      ]
+    },
+    {
       "name": "Import: Hemp",
       "key": "Import hemp",
       "index": 0,

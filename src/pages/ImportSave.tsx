@@ -13,7 +13,7 @@ import { AppState, getUnits, getMode } from 'state'
 import { getDefaultUnits } from 'data'
 import AttributeImage from 'components/Utils/AttributeImage'
 import { toObj, toArr, mapRange, map } from 'utils'
-import { heritages_ir, traits_ir, traditions_ir, tech_ir, trades_ir, laws_ir, policies_ir, countries_ir, deities_ir, religions_ir } from 'managers/modifiers'
+import { heritages_ir, traits_ir, traditions_ir, tech_ir, trades_ir, laws_ir, policies_ir, countries_ir, deities_ir, religions_ir, factions_ir } from 'managers/modifiers'
 import { getNextId } from 'army_utils'
 import { calculateValueWithoutLoss } from 'definition_values'
 
@@ -42,7 +42,7 @@ type Country = {
   tradition: CultureType
   religion: string
   government: GovermentType
-  party: string
+  faction: string
   traditions: number[]
   heritage: string
   tech: number
@@ -296,10 +296,10 @@ class ImportSave extends Component<IProps, IState> {
             {entity.government}
           </Table.Cell>
           <Table.Cell>
-            Ruler
+            Faction
           </Table.Cell>
           <Table.Cell>
-            {entity.party}
+            {factions_ir.find(faction => faction.key === entity.faction)?.name}
           </Table.Cell>
         </Table.Row>
         <Table.Row>
@@ -544,6 +544,45 @@ class ImportSave extends Component<IProps, IState> {
     return [key, value]
   }
 
+  laws = [
+    'succession_law',
+    'monarchy_military_reforms',
+    'monarchy_maritime_laws',
+    'monarchy_economic_law',
+    'monarchy_citizen_law',
+    'monarchy_religious_laws',
+    'monarchy_legitimacy_laws',
+    'monarchy_contract_law',
+    'monarchy_divinity_statutes',
+    'monarchy_subject_laws',
+    'republic_military_recruitment_laws',
+    'republic_election_reforms',
+    'corruption_laws',
+    'republican_mediterranean_laws',
+    'republican_religious_laws',
+    'republic_integration_laws',
+    'republic_citizen_laws',
+    'republican_land_reforms',
+    'republic_military_recruitment_laws_rom',
+    'republic_election_reforms_rom',
+    'corruption_laws_rom',
+    'republican_mediterranean_laws_rom',
+    'republican_religious_laws_rom',
+    'republic_integration_laws_rom',
+    'republic_citizen_laws_rom',
+    'republican_land_reforms_rom',
+    'tribal_religious_law',
+    'tribal_currency_laws',
+    'tribal_centralization_law',
+    'tribal_authority_laws',
+    'tribal_autonomy_laws',
+    'tribal_domestic_laws',
+    'tribal_decentralized_laws',
+    'tribal_centralized_laws',
+    'tribal_super_decentralized_laws',
+    'tribal_super_centralized_laws'
+  ]
+
   loadCountry = (lines: string[], entry: Entry<Tag>) => {
     const start = entry.start
     const end = entry.end
@@ -570,7 +609,7 @@ class ImportSave extends Component<IProps, IState> {
       religiousUnity: 100,
       religion: '' as string,
       government: '' as GovermentType,
-      party: ''
+      faction: ''
     }
 
     if (this.jobs[entry.entity.id]?.officeDiscipline) {
@@ -621,15 +660,7 @@ class ImportSave extends Component<IProps, IState> {
         country.availableLaws = this.getTruthList(value)
       if (key === 'export')
         country.exports = this.getTruthList(value)
-      if (key === 'monarchy_military_reforms' && country.availableLaws[1])
-        country.laws.push(value)
-      if (key === 'monarchy_economic_law' && country.availableLaws[3])
-        country.laws.push(value)
-      if (key === 'republic_military_recruitment_laws' && country.availableLaws[10])
-        country.laws.push(value)
-      if (key === 'republic_military_recruitment_laws_rom' && country.availableLaws[18])
-        country.laws.push(value)
-      if (key === 'tribal_super_decentralized_laws' && country.availableLaws[34])
+      if (this.laws.includes(key) && country.availableLaws[this.laws.indexOf(key)]) 
         country.laws.push(value)
       if (key === 'deity')
         country.deities.push(this.deities[Number(value)])
@@ -647,7 +678,7 @@ class ImportSave extends Component<IProps, IState> {
           country.government = GovermentType.Tribe
       }
       if (key === 'party')
-        country.party = this.nonStringify(value)
+        country.faction = this.nonStringify(value)
     }
     return country
   }
@@ -837,6 +868,7 @@ class ImportSave extends Component<IProps, IState> {
       enableCountrySelection(countryName, SelectionType.Policy, this.country.armyMaintenance)
       enableCountrySelection(countryName, SelectionType.Policy, this.country.navalMaintenance)
       enableCountrySelection(countryName, SelectionType.Religion, this.country.religion)
+      enableCountrySelection(countryName, SelectionType.Faction, this.country.faction)
       setCountryAttribute(countryName, CountryAttribute.OfficeDiscipline, this.country.officeDiscipline)
       setCountryAttribute(countryName, CountryAttribute.OfficeMorale, this.country.officeMorale)
       setCountryAttribute(countryName, CountryAttribute.OmenPower, this.country.religiousUnity - 100)

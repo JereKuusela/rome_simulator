@@ -13,7 +13,8 @@ export enum SelectionType {
   Policy = 'Policy',
   Idea = 'Idea',
   Trade = 'Trade',
-  Religion = 'Religion'
+  Religion = 'Religion',
+  Faction = 'Faction'
 }
 
 export type Selections = { [key in SelectionType]: ObjSet }

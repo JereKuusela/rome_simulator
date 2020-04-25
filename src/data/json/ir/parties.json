@@ -1,0 +1,74 @@
+{
+  "parties": [
+    {
+      "name": "Civic Faction",
+      "key": "civic_party",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "National Tax",
+          "value": 0.2
+        }
+      ]
+    },
+    {
+      "name": "Military Faction",
+      "key": "military_party",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.1
+        },
+        {
+          "target": "Naval",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Mercantile Faction",
+      "key": "mercantile_party",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "National Commerce Income",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Diplomatic Reputation",
+          "no_percent": true,
+          "value": 2
+        }
+      ]
+    },
+    {
+      "name": "Religious Faction",
+      "key": "religious_party",
+      "modifiers": [
+        {
+          "target": "Country",
+          "attribute": "Omen Power",
+          "no_percent": true,
+          "value": 10
+        }
+      ]
+    },
+    {
+      "name": "Populist Faction",
+      "key": "populist_party",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Monthly Political Influence",
+          "negative": true,
+          "value": -0.33
+        }
+      ]
+    }
+  ]
+}

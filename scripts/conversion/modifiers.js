@@ -142,7 +142,8 @@ const targets = {
   ['navy' + MOD_MAINTENANCE]: NAVAL,
   ['ship' + MOD_COST]: NAVAL,
   'ship_capture_chance': NAVAL,
-  'martial': GENERAL
+  'martial': GENERAL,
+  'omen_power': COUNTRY
 }
 
 Object.keys(units).forEach(key => {
@@ -265,6 +266,10 @@ exports.getAttribute = (key, value) => {
   if (key === 'mercenary_naval_maintenance_cost')
     key = 'modifier_naval_mercenary_maintenance_cost'
   let attribute = attributes[key] || localizations['modifier_' + key] || localizations[key]
+  if (attribute && attribute.startsWith('$')) {
+    key = attribute.substr(1, attribute.length - 2)
+    attribute = attributes[key] || localizations['modifier_' + key] || localizations[key]
+  }
   switch (key) {
     case 'allow_unit_type':
     case 'enable_ability':

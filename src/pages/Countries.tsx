@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Container, Grid, Table, List, Input, Checkbox, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { AppState, getGeneral, getGeneralDefinition, getSiteSettings, getSelectedArmy } from 'state'
+import { AppState, getGeneral, getGeneralDefinition, getSiteSettings, getSelectedArmy, getCountryDefinition } from 'state'
 import { mapRange, ObjSet, values, keys } from '../utils'
 
 import { addSignWithZero } from 'formatters'
@@ -20,7 +20,7 @@ import CountryManager from 'containers/CountryManager'
 import Dropdown from 'components/Dropdowns/Dropdown'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TableAttributes from 'components/TableAttributes'
-import { tech_ir, abilities_ir, traits_ir, heritages_ir, traditions_ir, ideas_ir, policies_ir, laws_ir, trades_ir, deities_ir, religions_ir } from 'managers/modifiers'
+import { tech_ir, abilities_ir, traits_ir, heritages_ir, traditions_ir, ideas_ir, policies_ir, laws_ir, trades_ir, deities_ir, religions_ir, factions_ir } from 'managers/modifiers'
 import { convertCountryDefinition } from 'managers/countries'
 import CountryValueInput from 'containers/CountryValueInput'
 import ListModifier from 'components/Utils/ListModifier'
@@ -130,20 +130,26 @@ class Countries extends Component<IProps> {
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title='Heritage, Government, Economy & Ideas' identifier='countries_government'>
-                {this.renderHeritages()}
-                <Table fixed singleLine basic='very' style={{ paddingLeft: '0.785714em' }}>
-                  <Table.Body>
-                    <Table.Row>
-                      <Table.Cell>
-                        Republic Discipline (0 - 7.5): <CountryValueInput attribute={CountryAttribute.OfficeDiscipline} country={selectedCountry} />
-                      </Table.Cell>
-                      <Table.Cell>
-                        Monarch Land Morale (0 - 15): <CountryValueInput attribute={CountryAttribute.OfficeMorale} country={selectedCountry} />
-                      </Table.Cell>
-                      <Table.Cell />
-                    </Table.Row>
-                  </Table.Body>
-                </Table>
+                <Grid padded>
+                  <Grid.Row columns='3'>
+                    <Grid.Column>
+                      {this.renderHeritages()}
+                    </Grid.Column>
+                    <Grid.Column>
+                      {this.renderFactions()}
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+                <Grid padded>
+                  <Grid.Row columns='3'>
+                    <Grid.Column>
+                      Republic Discipline (0 - 7.5): <CountryValueInput attribute={CountryAttribute.OfficeDiscipline} country={selectedCountry} />
+                    </Grid.Column>
+                    <Grid.Column>
+                      Monarch Land Morale (0 - 15): <CountryValueInput attribute={CountryAttribute.OfficeMorale} country={selectedCountry} />
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
                 {
                   this.renderLaws(laws_ir, countrySelections[SelectionType.Law])
                 }
@@ -321,6 +327,7 @@ class Countries extends Component<IProps> {
 
   renderHeritages = () => this.renderDropdown(SelectionType.Heritage, heritages_ir)
   renderReligions = () => this.renderDropdown(SelectionType.Religion, religions_ir)
+  renderFactions = () => this.renderDropdown(SelectionType.Faction, factions_ir)
 
   renderDropdown = (type: SelectionType, items: ListDefinition[]) => {
     const selections = this.props.country.selections[type]
@@ -402,7 +409,7 @@ class Countries extends Component<IProps> {
 
   enableCountrySelection = (type: SelectionType, key: string) => {
     const { enableCountrySelection, clearCountrySelections } = this.props
-    if (type === SelectionType.Heritage || type === SelectionType.Religion)
+    if (type === SelectionType.Heritage || type === SelectionType.Religion || type === SelectionType.Faction)
       this.execCountry(clearCountrySelections, type)
     if (type === SelectionType.Policy) {
       const keys = this.findOptionKeys(policies_ir, key)
@@ -545,9 +552,10 @@ class Countries extends Component<IProps> {
 
 const mapStateToProps = (state: AppState) => {
   const selectedArmy = getSelectedArmy(state)
+  const countryDefinition = getCountryDefinition(state, state.settings.country)
   return {
-    countryDefinition: state.countries[state.settings.country],
-    country: convertCountryDefinition(state.countries[state.settings.country], state.settings.siteSettings),
+    countryDefinition,
+    country: convertCountryDefinition(countryDefinition, state.settings.siteSettings),
     selectedCountry: state.settings.country,
     selectedArmy,
     generalDefinition: getGeneralDefinition(state, state.settings.country, selectedArmy),

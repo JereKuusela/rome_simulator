@@ -759,7 +759,7 @@
           "value": 0.1
         },
         {
-          "target": "Text",
+          "target": "Country",
           "attribute": "Omen Power",
           "no_percent": true,
           "value": 5
@@ -851,7 +851,7 @@
           "value": 0.05
         },
         {
-          "target": "Text",
+          "target": "Country",
           "attribute": "Omen Power",
           "no_percent": true,
           "value": 10
@@ -943,7 +943,7 @@
           "value": -0.05
         },
         {
-          "target": "Text",
+          "target": "Country",
           "attribute": "Omen Power",
           "no_percent": true,
           "value": 10

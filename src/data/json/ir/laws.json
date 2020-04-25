@@ -81,6 +81,18 @@
       ]
     },
     {
+      "name": "Priestly Status",
+      "key": "republican_religious_2",
+      "modifiers": [
+        {
+          "target": "Country",
+          "attribute": "Omen Power",
+          "no_percent": true,
+          "value": 15
+        }
+      ]
+    },
+    {
       "name": "Testamentum Militis",
       "key": "testamentum_militis",
       "modifiers": [
@@ -123,6 +135,30 @@
           "target": "Global",
           "attribute": "Discipline",
           "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Lex Ogulnia",
+      "key": "lex_ogulnia",
+      "modifiers": [
+        {
+          "target": "Country",
+          "attribute": "Omen Power",
+          "no_percent": true,
+          "value": 15
+        }
+      ]
+    },
+    {
+      "name": "Adopt Human Sacrifices",
+      "key": "adopt_human_sacrifice_law_tribal",
+      "modifiers": [
+        {
+          "target": "Country",
+          "attribute": "Omen Power",
+          "no_percent": true,
+          "value": 10
         }
       ]
     },

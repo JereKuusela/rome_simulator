@@ -728,7 +728,7 @@
               "key": "tradition_path_0_2",
               "modifiers": [
                 {
-                  "target": "Text",
+                  "target": "Country",
                   "attribute": "Omen Power",
                   "no_percent": true,
                   "value": 15

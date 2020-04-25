@@ -127,7 +127,7 @@
           "value": 0.5
         },
         {
-          "target": "Text",
+          "target": "Country",
           "attribute": "Omen Power",
           "no_percent": true,
           "value": 15
