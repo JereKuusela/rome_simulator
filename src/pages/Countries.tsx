@@ -2,12 +2,12 @@ import React, { Component } from 'react'
 import { Container, Grid, Table, List, Input, Checkbox, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { AppState, getGeneral, getGeneralDefinition, getSiteSettings, getSelectedArmy } from 'state'
-import { mapRange, ObjSet, keys, values } from '../utils'
+import { mapRange, ObjSet, values } from '../utils'
 
 import { addSignWithZero } from 'formatters'
 import {
-  TraditionDefinition, TradeDefinition, OmenDefinition, ListDefinition,
-  OptionDefinition, Modifier, ReligionType, CultureType, ModifierType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, CountryName, Setting, SelectionType, TechDefinition, ArmyName
+  TraditionDefinition, TradeDefinition, ListDefinition,
+  OptionDefinition, Modifier, ReligionType, CultureType, ModifierType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, CountryName, Setting, SelectionType, TechDefinition, ArmyName, DeityDefinition
 } from 'types'
 import {
   clearCountryAttributes, setCountryAttribute, enableCountrySelections, enableCountrySelection, clearCountrySelections, clearCountrySelection,
@@ -20,12 +20,9 @@ import CountryManager from 'containers/CountryManager'
 import Dropdown from 'components/Dropdowns/Dropdown'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TableAttributes from 'components/TableAttributes'
-import { tech_ir, abilities_ir, traits_ir, heritages_ir, traditions_ir, ideas_ir, policies_ir, laws_ir, trades_ir } from 'managers/modifiers'
+import { tech_ir, abilities_ir, traits_ir, heritages_ir, traditions_ir, ideas_ir, policies_ir, laws_ir, trades_ir, deities_ir } from 'managers/modifiers'
 import { convertCountryDefinition } from 'managers/countries'
 import CountryValueInput from 'containers/CountryValueInput'
-
-const OMEN_COLUMNS = 4
-const OMEN_KEY = 'Omen_'
 
 const PERCENT_PADDING = '\u00a0\u00a0\u00a0\u00a0'
 
@@ -35,10 +32,9 @@ class Countries extends Component<IProps> {
 
   render() {
     const { settings, generalDefinition, general, selectedCountry, setHasGeneral,
-      omens, countryDefinition, country } = this.props
+      countryDefinition, country } = this.props
     const countrySelections = countryDefinition.selections
     const tradition = traditions_ir[country.culture]
-    const omen = omens[country.religion]
     return (
       <Container>
         <CountryManager>
@@ -51,13 +47,6 @@ class Countries extends Component<IProps> {
                 values={Object.values(traditions_ir).map(tradition => ({ value: tradition.key, text: tradition.name }))}
                 value={country.culture}
                 onChange={this.selectCulture}
-              />
-            </Grid.Column>
-            <Grid.Column>
-              <Dropdown
-                values={keys(omens)}
-                value={country.religion}
-                onChange={this.selectReligion}
               />
             </Grid.Column>
           </Grid.Row>
@@ -112,7 +101,7 @@ class Countries extends Component<IProps> {
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <AccordionToggle title={'Omens (' + country.religion + ')'} identifier='countries_omen'>
+              <AccordionToggle title={'Deities'} identifier='countries_deities'>
                 Omen power: <CountryValueInput attribute={CountryAttribute.OmenPower} country={selectedCountry} />
                 <List bulleted style={{ marginLeft: '2rem' }}>
                   <List.Item>Religional unity: 0 - 100</List.Item>
@@ -128,7 +117,7 @@ class Countries extends Component<IProps> {
                   <List.Item><b>Total: From -30 to 300</b></List.Item>
                 </List>
                 {
-                  this.renderOmens(omen, countrySelections[SelectionType.Omen], country[CountryAttribute.OmenPower])
+                  this.renderDeities(deities_ir, countrySelections[SelectionType.Deity], country[CountryAttribute.OmenPower])
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -272,8 +261,8 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderOmens = (omens: OmenDefinition[], selections: ObjSet, power: number) => {
-    const rows = Math.ceil(omens.length / OMEN_COLUMNS)
+  renderDeities = (omens: DeityDefinition[], selections: ObjSet, power: number) => {
+    const rows = Math.ceil(omens.length / 4)
     return (
       <Table celled unstackable fixed>
         <Table.Body>
@@ -281,21 +270,21 @@ class Countries extends Component<IProps> {
             mapRange(rows, number => number).map(row => (
               <Table.Row key={row}>
                 {
-                  mapRange(OMEN_COLUMNS, number => number).map(column => {
-                    const index = row * OMEN_COLUMNS + column
-                    const omen = omens[index]
-                    const key = OMEN_KEY + index
-                    if (!omen)
-                      return (<Table.Cell key={key}></Table.Cell>)
-                    const modifiers = [{ ...omen.modifier, value: omen.modifier.value * power / 100.0 }]
-                    return this.renderCell(key, omen.name, selections && selections[key], modifiers, () => this.enableOmen(key, modifiers, selections))
+                  mapRange(4, number => number).map(column => {
+                    const index = row * 4 + column
+                    const entity = omens[index]
+                    if (!entity)
+                      return (<Table.Cell key={index}></Table.Cell>)
+                    const key = entity.key
+                    const modifiers = entity.isOmen ? entity.modifiers.map(modifier => ({...modifier, value: modifier.value * power / 100})) : entity.modifiers
+                    return this.renderCell2(SelectionType.Deity, key, entity.name, selections && selections[key], modifiers, this.onCountryItemClick, PERCENT_PADDING)
                   })
                 }
               </Table.Row>
             ))
           }
         </Table.Body>
-      </Table >
+      </Table>
     )
   }
 
@@ -330,7 +319,7 @@ class Countries extends Component<IProps> {
             ))
           }
         </Table.Body>
-      </Table >
+      </Table>
     )
   }
 
@@ -624,7 +613,6 @@ class Countries extends Component<IProps> {
 const mapStateToProps = (state: AppState) => {
   const selectedArmy = getSelectedArmy(state)
   return {
-    omens: state.data.omens,
     countryDefinition: state.countries[state.settings.country],
     country: convertCountryDefinition(state.countries[state.settings.country], state.settings.siteSettings),
     selectedCountry: state.settings.country,

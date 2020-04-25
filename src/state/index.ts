@@ -1,4 +1,4 @@
-import { armyReducer, countriesReducer, unitsReducer, tacticsReducer, terrainsReducer, battleReducer, transferReducer, importReducer, dataReducer, settingsReducer, combatReducer, uiReducer } from 'reducers'
+import { armyReducer, countriesReducer, unitsReducer, tacticsReducer, terrainsReducer, battleReducer, transferReducer, importReducer, settingsReducer, combatReducer, uiReducer } from 'reducers'
 import { combine, compose } from 'reducers/utils'
 import { Reducer } from 'react'
 
@@ -8,7 +8,6 @@ const combined = combine({
   battle: battleReducer,
   transfer: transferReducer,
   countries: compose(countriesReducer, armyReducer, unitsReducer),
-  data: dataReducer,
   settings: settingsReducer,
   ui: uiReducer
 })

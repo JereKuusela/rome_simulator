@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Mode, TacticType, UnitPreferences, UnitPreferenceType, dictionaryUnitType, dictionaryTacticType, GeneralAttribute, UnitType, UnitAttribute, CultureType, CountryName, CountryAttribute, SelectionType, Invention, ArmyName, CohortDefinition } from 'types'
+import { Mode, TacticType, UnitPreferences, UnitPreferenceType, dictionaryUnitType, dictionaryTacticType, GeneralAttribute, UnitType, UnitAttribute, CultureType, CountryName, CountryAttribute, SelectionType, Invention, ArmyName, CohortDefinition, ReligionType, GovermentType } from 'types'
 import {
   enableGeneralSelections, createCountry, setCountryAttribute, selectCulture, enableCountrySelections, enableCountrySelection, createArmy, setHasGeneral, setGeneralAttribute,
   setFlankSize, setUnitPreference, selectTactic, addToReserve, deleteArmy, setMode
@@ -13,7 +13,7 @@ import { AppState, getUnits, getMode } from 'state'
 import { getDefaultUnits } from 'data'
 import AttributeImage from 'components/Utils/AttributeImage'
 import { toObj, toArr, mapRange, map } from 'utils'
-import { heritages_ir, traits_ir, traditions_ir, tech_ir, trades_ir, laws_ir, policies_ir, countries_ir } from 'managers/modifiers'
+import { heritages_ir, traits_ir, traditions_ir, tech_ir, trades_ir, laws_ir, policies_ir, countries_ir, deities_ir } from 'managers/modifiers'
 import { getNextId } from 'army_utils'
 import { calculateValueWithoutLoss } from 'definition_values'
 
@@ -34,11 +34,15 @@ type Job = {
 }
 
 type Jobs = { [key: number]: { officeDiscipline: number, officeMorale: number } }
+type Deities = { [key: number]: string }
 
 type Country = {
   id: number
   name: CountryName
   tradition: CultureType
+  religion: ReligionType
+  government: GovermentType
+  party: string
   traditions: number[]
   heritage: string
   tech: number
@@ -48,12 +52,14 @@ type Country = {
   armyMaintenance: string
   navalMaintenance: string
   availableLaws: boolean[]
+  religiousUnity: number
   laws: string[]
   ideas: string[]
   exports: boolean[]
   imports: boolean[]
   officeDiscipline: number
   officeMorale: number
+  deities: string[]
 }
 
 type Character = {
@@ -98,8 +104,9 @@ class ImportSave extends Component<IProps, IState> {
     this.state = { countries: [], country: '', army: '', armies: [] }
   }
 
-  // Jobs are cached so that they don't have to be reloaded whenever a country is chosen.
+  // Jobs and deities are cached so that they don't have to be reloaded whenever a country is chosen.
   jobs: Jobs = {}
+  deities: Deities = {}
   lines: string[] = []
   bookmarks: Bookmarks = {}
   country: Country | null = null
@@ -216,7 +223,7 @@ class ImportSave extends Component<IProps, IState> {
             Culture
           </Table.Cell>
           <Table.Cell>
-            {traditions_ir[entity.tradition].name}
+            {traditions_ir[entity.tradition]?.name}
           </Table.Cell>
           <Table.Cell>
             Heritage
@@ -283,16 +290,30 @@ class ImportSave extends Component<IProps, IState> {
         </Table.Row>
         <Table.Row>
           <Table.Cell>
+            Government
+          </Table.Cell>
+          <Table.Cell>
+            {entity.government}
+          </Table.Cell>
+          <Table.Cell>
+            Ruler
+          </Table.Cell>
+          <Table.Cell>
+            {entity.party}
+          </Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>
             Religion
           </Table.Cell>
           <Table.Cell>
-            Not implemented
+            {entity.religion} ({entity.religiousUnity.toPrecision(3)}%)
           </Table.Cell>
           <Table.Cell>
-            Gods
+            Deities
           </Table.Cell>
           <Table.Cell>
-            Not implemented
+            {entity.deities.map(key => deities_ir.find(deity => key === deity.key)?.name).filter(value => value).join(', ')}
           </Table.Cell>
         </Table.Row>
       </>
@@ -420,9 +441,10 @@ class ImportSave extends Component<IProps, IState> {
         line = this.findEndOfSection(lines, line)
         bookmarks[key] = { start, end: line }
       }
-      if (key === 'jobs') {
+      if (key === 'jobs')
         line = this.loadJobs(lines, line)
-      }
+      if (key === 'deities_database')
+        line = this.loadDeities(lines, line)
       previousKey = key
     }
     countries = sortBy(countries, entry => entry.entity.tag)
@@ -479,6 +501,23 @@ class ImportSave extends Component<IProps, IState> {
     return job
   }
 
+  loadDeities = (lines: string[], start: number) => {
+    let line = start + 1
+    for (; line < lines.length; line++) {
+      const [key, value] = this.handleLine(lines[line])
+      if (value !== '{') {
+        // To get back to end of section.
+        line -= 1
+        break
+      }
+      const [, deity] = this.handleLine(lines[line + 5])
+      this.deities[Number(key)] = this.nonStringify(deity)
+      // Assumes that deities are 7 line blocks.
+      line += 6
+    }
+    return line
+  }
+
   findEndOfSection = (lines: string[], start: number) => {
     let level = 0
     for (let line = start + 1; line < lines.length; line++) {
@@ -526,14 +565,19 @@ class ImportSave extends Component<IProps, IState> {
       ideas: [],
       officeDiscipline: 0,
       officeMorale: 0,
-      id: entry.entity.id
+      id: entry.entity.id,
+      deities: [],
+      religiousUnity: 100,
+      religion: '' as ReligionType,
+      government: '' as GovermentType,
+      party: ''
     }
 
-    if (this.jobs[entry.entity.id].officeDiscipline) {
+    if (this.jobs[entry.entity.id]?.officeDiscipline) {
       const character = this.loadCharacter(lines, this.jobs[entry.entity.id].officeDiscipline)
       country.officeDiscipline = Math.floor((character.martial + character.traitMartial) * character.experience / 100.0) / 2
     }
-    if (this.jobs[entry.entity.id].officeMorale) {
+    if (this.jobs[entry.entity.id]?.officeMorale) {
       const character = this.loadCharacter(lines, this.jobs[entry.entity.id].officeMorale)
       country.officeMorale = Math.floor((character.martial + character.traitMartial) * character.experience / 100.0)
     }
@@ -587,6 +631,23 @@ class ImportSave extends Component<IProps, IState> {
         country.laws.push(value)
       if (key === 'tribal_super_decentralized_laws' && country.availableLaws[34])
         country.laws.push(value)
+      if (key === 'deity')
+        country.deities.push(this.deities[Number(value)])
+      if (key === 'religious_unity')
+        country.religiousUnity = 100.0 * Number(value)
+      if (key === 'religion')
+        country.religion = this.nonStringify(value) as ReligionType
+      if (key === 'government') {
+        const government = this.nonStringify(value)
+        if (government.endsWith('republic'))
+          country.government = GovermentType.Republic
+        else if (government.endsWith('monarchy'))
+          country.government = GovermentType.Monarch
+        else
+          country.government = GovermentType.Tribe
+      }
+      if (key === 'party')
+        country.party = this.nonStringify(value)
     }
     return country
   }
@@ -679,7 +740,7 @@ class ImportSave extends Component<IProps, IState> {
         continue
       for (let line = start + 1; line < end; line++) {
         const [key, value] = this.handleLine(lines[line])
-        if (key === 'name' && !character.name )
+        if (key === 'name' && !character.name)
           character.name = this.nonStringify(value)
         if (key === 'family_name' && value.length > 2)
           character.name += ' ' + this.nonStringify(value)
@@ -772,10 +833,12 @@ class ImportSave extends Component<IProps, IState> {
       enableCountrySelections(countryName, SelectionType.Trade, trades)
       enableCountrySelections(countryName, SelectionType.Idea, this.country.ideas)
       enableCountrySelections(countryName, SelectionType.Law, this.country.laws)
+      enableCountrySelections(countryName, SelectionType.Deity, this.country.deities)
       enableCountrySelection(countryName, SelectionType.Policy, this.country.armyMaintenance)
       enableCountrySelection(countryName, SelectionType.Policy, this.country.navalMaintenance)
       setCountryAttribute(countryName, CountryAttribute.OfficeDiscipline, this.country.officeDiscipline)
       setCountryAttribute(countryName, CountryAttribute.OfficeMorale, this.country.officeMorale)
+      setCountryAttribute(countryName, CountryAttribute.OmenPower, this.country.religiousUnity - 100)
 
       this.importArmy()
     }

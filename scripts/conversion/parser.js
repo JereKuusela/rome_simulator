@@ -70,3 +70,20 @@ exports.parseLocalization = data => {
   })
   return results
 }
+
+/**
+ * @param data {string}
+ */
+exports.parseScriptValues = data => {
+  const withoutComments = data.replace(/\h*#.*/g, '')
+  const lines = withoutComments.split('\n')
+  const results = {}
+  lines.forEach(line => {
+    const tokens = line.split('=')
+    if (tokens.length > 1) {
+      const trimmed = tokens[1].trim()
+      results[tokens[0].trim().toLowerCase()] = Number(trimmed)
+    }
+  })
+  return results
+}

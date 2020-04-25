@@ -74,3 +74,17 @@ exports.loadLocalizations = game => {
     modifiers.loadLocalization(localization, file)
   })
 }
+
+/**
+ * Loads script values for a given game.
+ * @param game {string}
+ */
+exports.loadScriptValues = game => {
+  const directory = path.join(directoryPath, game, 'script_values')
+  const files = fs.readdirSync(directory)
+  files.forEach(file => {
+    const data = fs.readFileSync(path.join(directory, file)).toString()
+    const localization = converter.parseScriptValues(data)
+    modifiers.loadScriptValue(localization, file)
+  })
+}

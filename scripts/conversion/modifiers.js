@@ -25,6 +25,10 @@ const GENERAL = 'General'
 const localizations = {
 }
 
+/** @type {Object.<string, number>} */
+const scriptValues = {
+}
+
 const generalStats = ['martial', 'zeal', 'finesse', 'charisma', 'character_loyalty', 'monthly_character_wealth', 'health']
 
 /** @type {Object.<string, string>} */
@@ -72,6 +76,7 @@ const attributes = {
   'food_consumption': 'Food Consumption',
   'food_storage': 'Food Storage',
   'global_cohort_start_experience': EXPERIENCE,
+  'global_ship_start_experience': EXPERIENCE,
   'global_start_experience': EXPERIENCE,
   ['land' + MOD_MORALE]: MORALE,
   ['land' + MOD_MORALE + MOD_MODIFIER]: MORALE,
@@ -122,6 +127,7 @@ const targets = {
   'combat_width': COUNTRY,
   'discipline': GLOBAL,
   'global_cohort_start_experience': LAND,
+  'global_ship_start_experience': NAVAL,
   'global_start_experience': GLOBAL,
   ['land' + MOD_MORALE]: LAND,
   ['land' + MOD_MORALE + MOD_MODIFIER]: LAND,
@@ -295,6 +301,8 @@ exports.getType = key => types.has(key) ? MODIFIER : undefined
 exports.getValue = (key, value) => {
   if (Array.isArray(value))
     value = value[0]
+  if (typeof value === 'string' && scriptValues[value])
+    value = scriptValues[value]
   switch (key) {
     case 'allow_unit_type':
     case 'enable_ability':
@@ -304,6 +312,7 @@ exports.getValue = (key, value) => {
       return 100 * value
     case 'global_start_experience':
     case 'global_cohort_start_experience':
+    case 'global_ship_start_experience':
       return value * 0.01
     case 'army':
       return value === 'yes' ? 'Land' : 'Naval'
@@ -372,4 +381,12 @@ exports.loadLocalization = (localization, file) => {
       })
     })
   }
+}
+
+/**
+ * @param {{}} scriptValue
+ * @param {string} file 
+ */
+exports.loadScriptValue = (scriptValue) => {
+  Object.assign(scriptValues, scriptValue)
 }

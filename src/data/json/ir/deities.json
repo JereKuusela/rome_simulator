@@ -1,0 +1,1109 @@
+{
+  "deities": [
+    {
+      "name": "Alilat",
+      "key": "deity_alilat",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Experience",
+          "value": 0.1
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Alilat Omen",
+      "key": "omendeity_alilat",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Zadeni Omen",
+      "key": "omendeity_zadeni",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Gacim Omen",
+      "key": "omendeity_gacim",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Attrition Weight",
+          "type": "Modifier",
+          "value": -0.1
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Battle Omen",
+      "key": "omendeity_battle",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Endurance",
+      "key": "deity_endurance",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Experience",
+          "value": 0.05
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Viriya Parami",
+      "key": "deity_viriya_parami",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.05
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Bodh",
+      "key": "deity_bodh",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.025
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Anat Omen",
+      "key": "omendeity_anat",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Yam Omen",
+      "key": "omendeity_yam",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Damage Done",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Tanit Omen",
+      "key": "omendeity_tanit",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Discipline",
+          "value": 0.04
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Attar",
+      "key": "deity_attar",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Discipline",
+          "value": 0.03
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Attar Omen",
+      "key": "omendeity_attar",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Ninurta",
+      "key": "deity_ninurta",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.05
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Ishtar Omen",
+      "key": "omendeity_ishtar",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Ashshur Omen",
+      "key": "omendeity_ashshur",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Discipline",
+          "value": 0.04
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Agdistis Omen",
+      "key": "omendeity_agdistis",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Discipline",
+          "value": 0.04
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Kakasbos Omen",
+      "key": "omendeity_kakasbos",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Damage Taken",
+          "value": -0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Ma",
+      "key": "deity_ma",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.025
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Ma Omen",
+      "key": "omendeity_ma",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Discipline",
+          "value": 0.04
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Taranis",
+      "key": "deity_taranis",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Discipline",
+          "value": 0.03
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Toutatis",
+      "key": "deity_toutatis",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Experience",
+          "value": 0.1
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Cichol",
+      "key": "deity_cichol",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.025
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Nantosuelta",
+      "key": "deity_nantosuelta",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Discipline",
+          "value": 0.03
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Nemetona Omen",
+      "key": "omendeity_nemetona",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Mari Omen",
+      "key": "omendeity_mari",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Damage Taken",
+          "value": -0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Brigantia Omen",
+      "key": "omendeity_brigantia",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Andraste",
+      "key": "deity_andraste",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.05
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Nodens",
+      "key": "deity_nodens",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.05
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Camulus Omen",
+      "key": "omendeity_camulus",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Discipline",
+          "value": 0.04
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Ares",
+      "key": "deity_ares",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Experience",
+          "value": 0.1
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Ares Omen",
+      "key": "omendeity_ares",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Poseidon",
+      "key": "deity_poseidon",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Experience",
+          "value": 0.1
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Poseidon Omen",
+      "key": "omendeity_poseidon",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Heracles Omen",
+      "key": "omendeity_heracles",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Discipline",
+          "value": 0.04
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Zeus Naios Omen",
+      "key": "omendeity_zeus_naios",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Zeus Stratios",
+      "key": "deity_zeus_stratios",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.05
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Harpocrates Omen",
+      "key": "omendeity_harpocrates",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Athena Polioukhos",
+      "key": "deity_athena_polioukhos",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.025
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Athena Polioukhos Omen",
+      "key": "omendeity_athena_polioukhos",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Discipline",
+          "value": 0.04
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Athena Promachos",
+      "key": "deity_athena_promachos",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.05
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Athena Promachos Omen",
+      "key": "omendeity_athena_promachos",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Discipline",
+          "value": 0.04
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Athena Nikephoros Omen",
+      "key": "omendeity_athena_nikephoros",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Diktynna Omen",
+      "key": "omendeity_diktynna",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Laran Omen",
+      "key": "omendeity_laran",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Nethuns",
+      "key": "deity_nethuns",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Experience",
+          "value": 0.1
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Nethuns Omen",
+      "key": "omendeity_nethuns",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Damage Done",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Hercle",
+      "key": "deity_hercle",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.025
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Hercle Omen",
+      "key": "omendeity_hercle",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Discipline",
+          "value": 0.04
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Mars",
+      "key": "deity_mars",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.05
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Mars Omen",
+      "key": "omendeity_mars",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Discipline",
+          "value": 0.04
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Minerva Omen",
+      "key": "omendeity_minerva",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Vulcan",
+      "key": "deity_vulcan",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.025
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Neptune",
+      "key": "deity_neptune",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Experience",
+          "value": 0.1
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Neptune Omen",
+      "key": "omendeity_neptune",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Damage Done",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Hercules",
+      "key": "deity_hercules",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Experience",
+          "value": 0.05
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Hercules Omen",
+      "key": "omendeity_hercules",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Discipline",
+          "value": 0.04
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Thagimasadas Omen",
+      "key": "omendeity_thagimasadas",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Shiva",
+      "key": "deity_shiva",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Experience",
+          "value": 0.05
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Shiva Omen",
+      "key": "omendeity_shiva",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Discipline",
+          "value": 0.04
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Brahma Omen",
+      "key": "omendeity_brahma",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Samudra",
+      "key": "deity_samudra",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Damage Taken",
+          "value": -0.05
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Soma Omen",
+      "key": "omendeity_soma",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Rama Omen",
+      "key": "omendeity_rama",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Semnocosus Omen",
+      "key": "omendeity_semnocosus",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Discipline",
+          "value": 0.04
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Candamius Omen",
+      "key": "omendeity_candamius",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Diwali Omen",
+      "key": "omendeity_diwali",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Deborah Omen",
+      "key": "omendeity_deborah",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Moses",
+      "key": "deity_moses",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Experience",
+          "value": 0.05
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Sekhmet",
+      "key": "deity_sekhmet",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Discipline",
+          "value": 0.03
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Anhur Omen",
+      "key": "omendeity_anhur",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Discipline",
+          "value": 0.04
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Theispas Omen",
+      "key": "omendeity_theispas",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Nane Omen",
+      "key": "omendeity_nane",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Vahagn",
+      "key": "deity_vahagn",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.05
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Vahagn Omen",
+      "key": "omendeity_vahagn",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Discipline",
+          "value": 0.04
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Medeine Omen",
+      "key": "omendeity_medeine",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Perkunas",
+      "key": "deity_perkunas",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Experience",
+          "value": 0.05
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Gurzil",
+      "key": "deity_gurzil",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Discipline",
+          "value": 0.03
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Shaheded Omen",
+      "key": "omendeity_shaheded",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Sinifere Omen",
+      "key": "omendeity_sinifere",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Infusion Of War",
+      "key": "deity_infusion_of_war",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Discipline",
+          "value": 0.03
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Rites Adult",
+      "key": "deity_rites_adult",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Experience",
+          "value": 0.05
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Rites Adult Omen",
+      "key": "omendeity_rites_adult",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Baduhenna",
+      "key": "deity_baduhenna",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.05
+        }
+      ],
+      "isOmen": false
+    },
+    {
+      "name": "Vagdavercustis Omen",
+      "key": "omendeity_vagdavercustis",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Pleistoros Omen",
+      "key": "omendeity_pleistoros",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Verethragna Omen",
+      "key": "omendeity_verethragna",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.08
+        }
+      ],
+      "isOmen": true
+    },
+    {
+      "name": "Alexander",
+      "key": "deity_alexander",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.05
+        }
+      ],
+      "isOmen": false
+    }
+  ]
+}

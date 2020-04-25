@@ -1,21 +1,21 @@
 import { sortBy } from 'lodash'
-import { toObj, map, forEach } from 'utils'
+import { toObj, forEach } from 'utils'
 import {
-  ValuesType, CultureType, ReligionType, ListDefinition, OptionDefinition,
-  TraditionDefinition, TradeDefinition, OmenDefinition, Modifier, TechDefinition
+  ValuesType, CultureType, ListDefinition, OptionDefinition,
+  TraditionDefinition, TradeDefinition, Modifier, TechDefinition, DeityDefinition
 } from 'types'
 
 import * as traditionData from './json/ir/traditions.json'
 import * as tradeData from './json/ir/trades.json'
 import * as heritageData from './json/ir/heritages.json'
 import * as techDataIR from './json/ir/tech.json'
-import * as omenData from './json/ir/omens.json'
 import * as traitData from './json/ir/traits.json'
 import * as lawData from './json/ir/laws.json'
 import * as policyData from './json/ir/policies.json'
 import * as ideaData from './json/ir/ideas.json'
 import * as abilityData from './json/ir/abilities.json'
 import * as countryData from './json/ir/countries.json'
+import * as deityData from './json/ir/deities.json'
 
 import * as techDataEUIV from './json/euiv/tech.json'
 
@@ -25,16 +25,15 @@ const getTraditionData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(
 const getTradeData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(tradeData.trades) : [] as TradeData[]
 const getHeritageData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(heritageData.heritages) : [] as ListData[]
 const getTechDataIR = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(techDataIR.tech) : [] as InventionData[]
-const getOmenData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(omenData.religions) : [] as OmenData[]
 const getTraitData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(traitData.traits) : [] as ListData[]
 const getLawData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(lawData.laws) : [] as ListData[]
 const getPolicyData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(policyData.policies) : [] as OptionData[]
 const getIdeaData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(ideaData.ideas) : [] as ListData[]
 const getAbilityData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(abilityData.abilities) : [] as OptionData[]
 const getCountryData = () => process.env.REACT_APP_GAME === 'ir' ? countryData.countries : {} as DictionaryData
+const getDeityData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(deityData.deities) : [] as DeityData[]
 
 export type Traditions = { [key in CultureType ]: TraditionDefinition }
-type Omens = { [key in ReligionType]: OmenDefinition[] }
 
 const setDefault = (modifier: Modifier) => {
   modifier.type = modifier.type ?? ValuesType.Base
@@ -71,12 +70,6 @@ export const getTechDefinitionsIR = () => {
   return data
 }
 
-export const getOmenDefinitions = () => {
-  const data = map(toObj(sortBy<OmenData>(getOmenData(), value => value.type), value => value.type), value => value.omens) as Omens
-  forEach(data, omens => omens.forEach(omen => setDefault(omen.modifier)))
-  return data
-}
-
 export const getTraitDefinitions = () => {
   const data = sortBy<ListData>(getTraitData(), value => value.name) as ListDefinition[]
   data.forEach(trait => trait.modifiers.forEach(modifier => setDefault(modifier)))
@@ -98,6 +91,12 @@ export const getPolicyDefinitions = () => {
 export const getIdeaDefinitions = () => {
   const data = sortBy<ListData>(getIdeaData(), () => 1) as ListDefinition[]
   data.forEach(idea => idea.modifiers.forEach(modifier => setDefault(modifier)))
+  return data
+}
+
+export const getDeityDefinitions = () => {
+  const data = sortBy<DeityData>(getDeityData(), () => 1) as DeityDefinition[]
+  data.forEach(deity => deity.modifiers.forEach(modifier => setDefault(modifier)))
   return data
 }
 
@@ -153,18 +152,14 @@ interface InventionData {
   }[]
 }
 
-interface OmenData {
-  type: string
-  omens: {
-    name: string
-    modifier: ModifierData
-  }[]
-}
-
 type ListData = {
   name: string
   key: string
   modifiers: ModifierData[]
+}
+
+type DeityData = ListData & {
+  isOmen: boolean
 }
 
 type OptionData = ListData[]

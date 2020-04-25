@@ -9,7 +9,7 @@ export enum SelectionType {
   Invention = 'Invention',
   Heritage = 'Heritage',
   Law = 'Law',
-  Omen = 'Omen',
+  Deity = 'Deity',
   Policy = 'Policy',
   Idea = 'Idea',
   Trade = 'Trade'
@@ -63,14 +63,13 @@ export interface TraditionDefinition {
 export interface TradeDefinition extends ListDefinition{
   index: number
 }
-export interface OmenDefinition {
-  name: string
-  modifier: Modifier
-}
 export interface ListDefinition {
   name: string
   key: string
   modifiers: Modifier[]
+}
+export type DeityDefinition = ListDefinition & {
+ isOmen: boolean
 }
 export type OptionDefinition = ListDefinition[]
 
