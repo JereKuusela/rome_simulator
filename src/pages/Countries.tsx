@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Container, Grid, Table, List, Input, Checkbox, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { AppState, getGeneral, getGeneralDefinition, getSiteSettings, getSelectedArmy, getMode } from 'state'
+import { AppState, getGeneral, getGeneralDefinition, getSiteSettings, getSelectedArmy } from 'state'
 import { mapRange, ObjSet, keys, values } from '../utils'
 
 import { addSignWithZero } from 'formatters'

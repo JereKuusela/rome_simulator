@@ -122,6 +122,26 @@ class ImportSave extends Component<IProps, IState> {
 
   getTagName = (tag: string) => countries_ir[tag.toLowerCase()] + ' (' + tag + ')'
 
+  getCountryImportString = () => {
+    if (this.country) {
+      if (this.state.army)
+        return 'Import ' + this.country.name + ' and ' + this.getArmy()?.name
+      else
+        return 'Import ' + this.country.name + ' and all armies'
+    }
+    return 'Import countries'
+  }
+
+  getArmyImportString = () => {
+    if (this.country) {
+      if (this.state.army)
+        return 'Import ' + this.getArmy()?.name
+      else
+        return 'Import all armies'
+    }
+    return 'Import only armies'
+  }
+
   render() {
     const { countries, country, army, armies } = this.state
     return (
@@ -131,7 +151,7 @@ class ImportSave extends Component<IProps, IState> {
             <Input type='file' onChange={event => this.loadContent(event.target.files![0])} />
           </Grid.Column>
         </Grid.Row>
-        <Grid.Row>
+        <Grid.Row columns='4'>
           <Grid.Column>
             <Dropdown
               value={country}
@@ -140,6 +160,8 @@ class ImportSave extends Component<IProps, IState> {
               onChange={countries.length ? this.selectCountry : undefined}
               placeholder='Select country'
             />
+          </Grid.Column>
+          <Grid.Column>
             <Dropdown
               value={army}
               values={armies.map((entry, index) => ({ text: entry.entity.name, value: String(index) }))}
@@ -147,7 +169,12 @@ class ImportSave extends Component<IProps, IState> {
               onChange={armies.length ? this.selectArmy : undefined}
               placeholder='Select army'
             />
-            <Button onClick={this.importCountry} disabled={!this.country}>Import</Button>
+          </Grid.Column>
+          <Grid.Column>
+            <Button onClick={this.importCountry} disabled={!this.country}>{this.getCountryImportString()}</Button>
+          </Grid.Column>
+          <Grid.Column>
+            <Button onClick={this.importArmy} disabled={!this.country || !this.props.countries[this.country.name]}>{this.getArmyImportString()}</Button>
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
@@ -245,7 +272,7 @@ class ImportSave extends Component<IProps, IState> {
             Laws
           </Table.Cell>
           <Table.Cell>
-            {entity.laws.map(key => laws_ir.find(law => key === law.key)?.name).join(', ')}
+            {entity.laws.map(key => laws_ir.find(law => key === law.key)?.name).filter(value => value).join(', ')}
           </Table.Cell>
           <Table.Cell>
             Office (Discipline / Morale)
@@ -652,9 +679,9 @@ class ImportSave extends Component<IProps, IState> {
         continue
       for (let line = start + 1; line < end; line++) {
         const [key, value] = this.handleLine(lines[line])
-        if (key === 'name')
+        if (key === 'name' && !character.name )
           character.name = this.nonStringify(value)
-        if (key === 'family_name')
+        if (key === 'family_name' && value.length > 2)
           character.name += ' ' + this.nonStringify(value)
         if (key === 'martial')
           character.martial = Number(value)
@@ -750,6 +777,14 @@ class ImportSave extends Component<IProps, IState> {
       setCountryAttribute(countryName, CountryAttribute.OfficeDiscipline, this.country.officeDiscipline)
       setCountryAttribute(countryName, CountryAttribute.OfficeMorale, this.country.officeMorale)
 
+      this.importArmy()
+    }
+  }
+
+  importArmy = () => {
+    if (this.country) {
+      this.importing = true
+      const countryName = this.country.name
       if (this.state.army)
         this.importArmyStart(countryName, this.state.army)
       else
