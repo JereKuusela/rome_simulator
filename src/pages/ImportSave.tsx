@@ -190,7 +190,6 @@ class ImportSave extends Component<IProps, IState> {
     if (!this.state.country)
       return null
     const country = this.state.country
-    console.log(country.surplus)
     return (
       <>
         <Table.Row>
@@ -423,7 +422,6 @@ class ImportSave extends Component<IProps, IState> {
     }
     blob.text().then((data: string) => {
       const file = parseFile(data)
-      console.log(file)
       this.setState({ file })
     })
   }
@@ -441,7 +439,6 @@ class ImportSave extends Component<IProps, IState> {
   loadCountry = (id: string) => {
     const deities = this.state.file.deity_manager.deities_database
     const data = this.state.file.country?.country_database[id]
-    console.log(data)
     const availableLaws = data.laws.map((value: any) => !!value)
     const country: Country = {
       armies: data.units,
@@ -595,7 +592,6 @@ class ImportSave extends Component<IProps, IState> {
 
   loadArmy = (id: string) => {
     const data = this.state.file.armies?.units_database[id]
-    console.log(data)
     const army: Army = {
       id,
       name: this.getArmyName(data.unit_name) as ArmyName,
@@ -630,7 +626,6 @@ class ImportSave extends Component<IProps, IState> {
     if (!country)
       return
 
-    console.log(country)
     this.importing = true
     const countryName = country.name
     createCountry(countryName)
@@ -683,7 +678,6 @@ class ImportSave extends Component<IProps, IState> {
   importArmyStart = (countryName: CountryName, army: Army) => {
     const { createArmy, deleteArmy, setHasGeneral, setGeneralAttribute, enableGeneralSelections, setFlankSize, setUnitPreference, selectTactic, mode, setMode } = this.props
     const armyName = army.name
-    console.log(army)
     // Country must have at least one army per mode so only delete the default one if importing anything.
     if (army.mode === Mode.Land)
       deleteArmy(countryName, ArmyName.Army)

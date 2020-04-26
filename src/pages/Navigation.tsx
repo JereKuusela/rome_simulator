@@ -36,9 +36,11 @@ class Navigation extends Component<IProps> {
           <Menu.Item active={path === '/settings'} onClick={() => history.push('/settings')}>
             Settings
           </Menu.Item>
-          <Menu.Item active={path === '/import'} onClick={() => history.push('/import')}>
-            Import save
+          {process.env.REACT_APP_GAME === 'ir' &&
+            <Menu.Item active={path === '/import'} onClick={() => history.push('/import')}>
+              Import save
           </Menu.Item>
+          }
 
           <div id='menu-info'>
             {process.env.REACT_APP_GAME === 'ir' &&
@@ -51,7 +53,7 @@ class Navigation extends Component<IProps> {
                 <Image src={IconNaval} avatar style={{ marginRight: 0 }} />
               </Button>
             }
-            <div id='version'><div>Site version 0.6.5</div><div>Game version {process.env.REACT_APP_GAME === 'ir' ? '1.4.2' : '1.29.5'}</div></div>
+            <div id='version'><div>Site version 0.6.6</div><div>Game version {process.env.REACT_APP_GAME === 'ir' ? '1.4.2' : '1.29.5'}</div></div>
           </div>
         </Menu>
         <br />
