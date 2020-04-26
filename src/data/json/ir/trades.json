@@ -134,3 +134,169 @@
     "key": "Import wild_game",
     "index": 0,
     "modifiers": [
+      {
+        "target": "Archers",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Export: Wild Game",
+    "key": "Export wild_game",
+    "index": 13,
+    "modifiers": [
+      {
+        "target": "Archers",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Import: Steppe Horses",
+    "key": "Import steppe_horses",
+    "index": 0,
+    "modifiers": [
+      {
+        "target": "Horse Archers",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Export: Steppe Horses",
+    "key": "Export steppe_horses",
+    "index": 15,
+    "modifiers": [
+      {
+        "target": "Horse Archers",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Import: Leather",
+    "key": "Import leather",
+    "index": 0,
+    "modifiers": [
+      {
+        "target": "Light Infantry",
+        "attribute": "Defense",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Export: Leather",
+    "key": "Export leather",
+    "index": 21,
+    "modifiers": [
+      {
+        "target": "Light Infantry",
+        "attribute": "Defense",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Import: Base Metals",
+    "key": "Import base_metals",
+    "index": 0,
+    "modifiers": [
+      {
+        "target": "Light Infantry",
+        "attribute": "Offense",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Export: Base Metals",
+    "key": "Export base_metals",
+    "index": 22,
+    "modifiers": [
+      {
+        "target": "Light Infantry",
+        "attribute": "Offense",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Export: Incense",
+    "key": "Export incense",
+    "index": 26,
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "no_percent": true,
+        "value": 5
+      }
+    ]
+  },
+  {
+    "name": "Import: Hemp",
+    "key": "Import hemp",
+    "index": 0,
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Damage Done",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Export: Hemp",
+    "key": "Export hemp",
+    "index": 27,
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Damage Taken",
+        "type": "Base",
+        "value": -0.1
+      }
+    ]
+  },
+  {
+    "name": "Import: Camels",
+    "key": "Import camel",
+    "index": 0,
+    "modifiers": [
+      {
+        "target": "Camel Cavalry",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Export: Camels",
+    "key": "Export camel",
+    "index": 30,
+    "modifiers": [
+      {
+        "target": "Camel Cavalry",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  }
+]

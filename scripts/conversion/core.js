@@ -23,7 +23,7 @@ exports.readFiles = (handlers) => {
   Object.keys(handlers).map(key => parseFiles(handlers[key], key))
 }
 
-const sort = (results) => {
+exports.sort = (results) => {
   if (Array.isArray(results))
     return results
   const sorted = {}
