@@ -1,570 +1,12 @@
-[
-  {
-    "name": "Roman Heritage",
-    "key": "roman_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Manpower Recovery Speed",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Integration Speed",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Naval",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "negative": true,
-        "value": -0.05
-      }
-    ]
-  },
-  {
-    "name": "Spartan Heritage",
-    "key": "spartan_heritage",
-    "modifiers": [
-      {
-        "target": "Land",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "value": 0.05
-      },
-      {
-        "target": "Global",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "National Slave Output",
-        "type": "Base",
-        "negative": true,
-        "value": -0.05
-      }
-    ]
-  },
-  {
-    "name": "Carthaginian Heritage",
-    "key": "carthaginian_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Export Value",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Naval",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "value": -0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Loyalty Gain Chance",
-        "type": "Base",
-        "negative": true,
-        "value": 0.05
-      }
-    ]
-  },
-  {
-    "name": "Heritage of Antigonos",
-    "key": "antigonid_heritage",
+{
+  "achaean_heritage": {
+    "name": "Achaean Heritage",
+    "key": "achaean_heritage",
     "modifiers": [
       {
         "target": "Text",
         "attribute": "Siege Ability",
         "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Diplomatic Reputation",
-        "type": "Base",
-        "no_percent": true,
-        "value": 2
-      },
-      {
-        "target": "Text",
-        "attribute": "Fort Defense",
-        "type": "Base",
-        "negative": true,
-        "value": -0.1
-      }
-    ]
-  },
-  {
-    "name": "Heritage of Kassandros",
-    "key": "cassanders_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Diplomatic Relations",
-        "type": "Base",
-        "no_percent": true,
-        "value": 2
-      },
-      {
-        "target": "Text",
-        "attribute": "National Manpower",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Diplomatic Reputation",
-        "type": "Base",
-        "negative": true,
-        "no_percent": true,
-        "value": -2
-      }
-    ]
-  },
-  {
-    "name": "Heritage of Ptolemaios",
-    "key": "ptolemys_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "State Religion Happiness",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Found City Cost Modifier",
-        "type": "Base",
-        "value": -0.15
-      },
-      {
-        "target": "Text",
-        "attribute": "Pop Assimilation Speed",
-        "type": "Base",
-        "negative": true,
-        "value": -0.15
-      }
-    ]
-  },
-  {
-    "name": "Heritage of Seleukos",
-    "key": "seleucus_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Wrong Culture-Group Happiness",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Monthly Ruler Popularity Gain",
-        "type": "Base",
-        "no_percent": true,
-        "value": 0.04
-      },
-      {
-        "target": "Text",
-        "attribute": "Pop Assimilation Speed",
-        "type": "Base",
-        "negative": true,
-        "value": -0.15
-      }
-    ]
-  },
-  {
-    "name": "Heritage of Chandragupta",
-    "key": "maurya_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Population Capacity",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Religious Tech Investment",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Aggressive Expansion Impact",
-        "type": "Base",
-        "negative": true,
-        "value": 0.15
-      }
-    ]
-  },
-  {
-    "name": "Judean Heritage",
-    "key": "judea_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Fort Defense",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Religious Tech Investment",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Pop Conversion Speed",
-        "type": "Base",
-        "negative": true,
-        "value": -0.25
-      }
-    ]
-  },
-  {
-    "name": "Heritage of Tartessos",
-    "key": "tartessian_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Export Value",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Civic Tech Investment",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Build Cost",
-        "type": "Base",
-        "negative": true,
-        "value": 0.05
-      }
-    ]
-  },
-  {
-    "name": "Heritage of Byblos",
-    "key": "byblos_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Oratory Provincial Investment Cost",
-        "type": "Base",
-        "value": -0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "National Commerce Income",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Pop Assimilation Speed",
-        "type": "Base",
-        "negative": true,
-        "value": -0.05
-      }
-    ]
-  },
-  {
-    "name": "Armenian Heritage",
-    "key": "armenian_heritage",
-    "modifiers": [
-      {
-        "target": "Light Cavalry",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "value": -0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Manpower Recovery Speed",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Subject Opinion of Us",
-        "type": "Base",
-        "negative": true,
-        "no_percent": true,
-        "value": -10
-      }
-    ]
-  },
-  {
-    "name": "Epirote Heritage",
-    "key": "epirote_heritage",
-    "modifiers": [
-      {
-        "target": "Light Infantry",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "National Freeman Output",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "National Commerce Income",
-        "type": "Base",
-        "negative": true,
-        "value": -0.05
-      }
-    ]
-  },
-  {
-    "name": "Heritage of Lysimachos",
-    "key": "thrace_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "War score Cost",
-        "type": "Base",
-        "value": -0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Civic Provincial Investment Cost",
-        "type": "Base",
-        "value": -0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Subject Opinion of Us",
-        "type": "Base",
-        "negative": true,
-        "no_percent": true,
-        "value": -10
-      }
-    ]
-  },
-  {
-    "name": "Rhodian Heritage",
-    "key": "rhodian_heritage",
-    "modifiers": [
-      {
-        "target": "Naval",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "value": -0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Fort Defense",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Fort Maintenance",
-        "type": "Base",
-        "negative": true,
-        "value": 0.1
-      }
-    ]
-  },
-  {
-    "name": "Athenian Heritage",
-    "key": "athenian_heritage",
-    "modifiers": [
-      {
-        "target": "Naval",
-        "attribute": "Damage Taken",
-        "type": "Base",
-        "value": -0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Monthly Tyranny",
-        "type": "Base",
-        "value": -0.02
-      },
-      {
-        "target": "Text",
-        "attribute": "Enact Law Cost",
-        "type": "Base",
-        "negative": true,
-        "value": 0.1
-      }
-    ]
-  },
-  {
-    "name": "Etruscan Heritage",
-    "key": "etruscan_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Found City Cost Modifier",
-        "type": "Base",
-        "value": -0.25
-      },
-      {
-        "target": "Text",
-        "attribute": "Monthly Civilization Change",
-        "type": "Base",
-        "value": 0.02
-      },
-      {
-        "target": "Text",
-        "attribute": "Military Provincial Investment Cost",
-        "type": "Base",
-        "negative": true,
-        "value": 0.05
-      }
-    ]
-  },
-  {
-    "name": "Syracusan Heritage",
-    "key": "syracusan_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Mercenary Army Maintenance",
-        "type": "Base",
-        "value": -0.1
-      },
-      {
-        "target": "Naval",
-        "attribute": "Damage Taken",
-        "type": "Base",
-        "value": -0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "National Citizen Happiness",
-        "type": "Base",
-        "negative": true,
-        "value": -0.05
-      }
-    ]
-  },
-  {
-    "name": "Iceni Heritage",
-    "key": "icenian_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Country Civilization Level",
-        "type": "Base",
-        "no_percent": true,
-        "value": 5
-      },
-      {
-        "target": "Text",
-        "attribute": "National Tax",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Improve Opinion Maximum",
-        "type": "Base",
-        "negative": true,
-        "value": -0.1
-      }
-    ]
-  },
-  {
-    "name": "Arvernian Heritage",
-    "key": "arvernia_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Diplomatic Relations",
-        "type": "Base",
-        "no_percent": true,
-        "value": 1
-      },
-      {
-        "target": "Heavy Infantry",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "value": -0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Enslavement Efficiency",
-        "type": "Base",
-        "negative": true,
-        "value": -0.1
-      }
-    ]
-  },
-  {
-    "name": "Heritage of Atropates",
-    "key": "atropatenian_heritage",
-    "modifiers": [
-      {
-        "target": "Heavy Infantry",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "value": -0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "National Citizen Output",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "National Slave Happiness",
-        "type": "Base",
-        "negative": true,
-        "value": -0.05
-      }
-    ]
-  },
-  {
-    "name": "Tarentine Heritage",
-    "key": "tarentine_heritage",
-    "modifiers": [
-      {
-        "target": "Light Cavalry",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Improve Opinion Maximum",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Import Value",
-        "type": "Base",
-        "negative": true,
-        "value": -0.05
-      }
-    ]
-  },
-  {
-    "name": "Theban Heritage",
-    "key": "theban_heritage",
-    "modifiers": [
-      {
-        "target": "Heavy Infantry",
-        "attribute": "Discipline",
-        "type": "Base",
         "value": 0.1
       },
       {
@@ -574,288 +16,6 @@
         "value": 0.05
       },
       {
-        "target": "Heavy Infantry",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "negative": true,
-        "value": 0.05
-      }
-    ]
-  },
-  {
-    "name": "Argive Heritage",
-    "key": "argive_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Monthly Ruler Popularity Gain",
-        "type": "Base",
-        "no_percent": true,
-        "value": 0.04
-      },
-      {
-        "target": "Global",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Fort Defense",
-        "type": "Base",
-        "negative": true,
-        "value": -0.1
-      }
-    ]
-  },
-  {
-    "name": "Pontic Heritage",
-    "key": "pontic_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Wrong Culture-Group Happiness",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Monthly Ruler Popularity Gain",
-        "type": "Base",
-        "no_percent": true,
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Civic Provincial Investment Cost",
-        "type": "Base",
-        "negative": true,
-        "value": 0.15
-      }
-    ]
-  },
-  {
-    "name": "Iberian Heritage",
-    "key": "iberian_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "State Religion Happiness",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Diplomatic Relations",
-        "type": "Base",
-        "no_percent": true,
-        "value": 1
-      },
-      {
-        "target": "Text",
-        "attribute": "Loyalty of Governors",
-        "type": "Base",
-        "negative": true,
-        "no_percent": true,
-        "value": -10
-      }
-    ]
-  },
-  {
-    "name": "Massilian Heritage",
-    "key": "massalian_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Fort Defense",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Wrong Culture-Group Happiness",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Manpower Recovery Speed",
-        "type": "Base",
-        "negative": true,
-        "value": -0.05
-      }
-    ]
-  },
-  {
-    "name": "Minoan Heritage",
-    "key": "minoan_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Capital Import Routes",
-        "type": "Base",
-        "no_percent": true,
-        "value": 1
-      },
-      {
-        "target": "Text",
-        "attribute": "Primary Culture Happiness",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Military Provincial Investment Cost",
-        "type": "Base",
-        "negative": true,
-        "value": 0.15
-      }
-    ]
-  },
-  {
-    "name": "Kushite Heritage",
-    "key": "kushite_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "National Manpower",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Build Cost",
-        "type": "Base",
-        "value": -0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Military Provincial Investment Cost",
-        "type": "Base",
-        "negative": true,
-        "value": 0.05
-      }
-    ]
-  },
-  {
-    "name": "Nabatean Heritage",
-    "key": "nabatean_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Pop Migration Speed",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "National Commerce Income",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Pop Conversion Speed",
-        "type": "Base",
-        "negative": true,
-        "value": -0.05
-      }
-    ]
-  },
-  {
-    "name": "Helot Heritage",
-    "key": "helot_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "National Freeman Happiness",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Pop Promotion Speed",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "National Commerce Income",
-        "type": "Base",
-        "negative": true,
-        "value": -0.05
-      }
-    ]
-  },
-  {
-    "name": "Kalingan Heritage",
-    "key": "kalingan_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "National Tribesman Happiness",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Pop Assimilation Speed",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Diplomatic Reputation",
-        "type": "Base",
-        "negative": true,
-        "no_percent": true,
-        "value": -2
-      }
-    ]
-  },
-  {
-    "name": "Heraclean Heritage",
-    "key": "heraclea_pontican_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Found City Cost Modifier",
-        "type": "Base",
-        "value": -0.25
-      },
-      {
-        "target": "Text",
-        "attribute": "National Citizen Happiness",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Loyalty Gain Chance",
-        "type": "Base",
-        "negative": true,
-        "value": 0.05
-      }
-    ]
-  },
-  {
-    "name": "Religious State",
-    "key": "religious_enclave_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "State Religion Happiness",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Country",
-        "attribute": "Omen Power",
-        "type": "Base",
-        "no_percent": true,
-        "value": 5
-      },
-      {
         "target": "Text",
         "attribute": "Diplomatic Relations",
         "type": "Base",
@@ -865,187 +25,7 @@
       }
     ]
   },
-  {
-    "name": "Cyrenaican Heritage",
-    "key": "cyrenaican_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "State Religion Happiness",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Build Cost",
-        "type": "Base",
-        "value": -0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Diplomatic Relations",
-        "type": "Base",
-        "negative": true,
-        "no_percent": true,
-        "value": -1
-      }
-    ]
-  },
-  {
-    "name": "Ionian Heritage",
-    "key": "ionian_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Research Points",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Wrong Culture-Group Happiness",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "National Slave Output",
-        "type": "Base",
-        "negative": true,
-        "value": -0.05
-      }
-    ]
-  },
-  {
-    "name": "Aeolian Heritage",
-    "key": "aeolian_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Diplomatic Reputation",
-        "type": "Base",
-        "no_percent": true,
-        "value": 2
-      },
-      {
-        "target": "Text",
-        "attribute": "National Citizen Output",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Fort Defense",
-        "type": "Base",
-        "negative": true,
-        "value": -0.1
-      }
-    ]
-  },
-  {
-    "name": "Delphic Heritage",
-    "key": "delphic_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "State Religion Happiness",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Country",
-        "attribute": "Omen Power",
-        "type": "Base",
-        "no_percent": true,
-        "value": 10
-      },
-      {
-        "target": "Text",
-        "attribute": "Diplomatic Relations",
-        "type": "Base",
-        "negative": true,
-        "no_percent": true,
-        "value": -1
-      }
-    ]
-  },
-  {
-    "name": "Boeotian Heritage",
-    "key": "boeotian_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Diplomatic Relations",
-        "type": "Base",
-        "no_percent": true,
-        "value": 1
-      },
-      {
-        "target": "Text",
-        "attribute": "Fort Defense",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Stability Cost",
-        "type": "Base",
-        "negative": true,
-        "value": 0.1
-      }
-    ]
-  },
-  {
-    "name": "Elean Heritage",
-    "key": "elean_heritage",
-    "modifiers": [
-      {
-        "target": "Naval",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "value": -0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Religious Tech Investment",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Pop Promotion Speed",
-        "type": "Base",
-        "negative": true,
-        "value": -0.1
-      }
-    ]
-  },
-  {
-    "name": "Crotine Heritage",
-    "key": "crotine_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "National Citizen Happiness",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Civic Tech Investment",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Global",
-        "attribute": "Discipline",
-        "type": "Base",
-        "negative": true,
-        "value": -0.05
-      }
-    ]
-  },
-  {
+  "akragantine_heritage": {
     "name": "Acragantine Heritage",
     "key": "akragantine_heritage",
     "modifiers": [
@@ -1071,7 +51,58 @@
       }
     ]
   },
-  {
+  "aegean_heritage": {
+    "name": "Aegean Heritage",
+    "key": "aegean_heritage",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Cost",
+        "type": "Modifier",
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "National Commerce Income",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "negative": true,
+        "value": -0.05
+      }
+    ]
+  },
+  "aeolian_heritage": {
+    "name": "Aeolian Heritage",
+    "key": "aeolian_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Reputation",
+        "type": "Base",
+        "no_percent": true,
+        "value": 2
+      },
+      {
+        "target": "Text",
+        "attribute": "National Citizen Output",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Fort Defense",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
+      }
+    ]
+  },
+  "aetolian_heritage": {
     "name": "Aetolian Heritage",
     "key": "aetolian_heritage",
     "modifiers": [
@@ -1097,10 +128,16 @@
       }
     ]
   },
-  {
-    "name": "Megaran Heritage",
-    "key": "megaran_heritage",
+  "arcadian_heritage": {
+    "name": "Arcadian Heritage",
+    "key": "arcadian_heritage",
     "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Food",
+        "type": "Base",
+        "value": 0.1
+      },
       {
         "target": "Text",
         "attribute": "Fort Defense",
@@ -1109,83 +146,27 @@
       },
       {
         "target": "Text",
-        "attribute": "Oratory Tech Investment",
+        "attribute": "National Citizen Output",
         "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Land",
-        "attribute": "Morale",
-        "type": "Modifier",
         "negative": true,
-        "value": -0.1
+        "value": -0.05
       }
     ]
   },
-  {
-    "name": "Eleian Heritage",
-    "key": "eleian_heritage",
+  "argive_heritage": {
+    "name": "Argive Heritage",
+    "key": "argive_heritage",
     "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "National Citizen Happiness",
-        "type": "Base",
-        "value": 0.1
-      },
       {
         "target": "Text",
         "attribute": "Monthly Ruler Popularity Gain",
         "type": "Base",
         "no_percent": true,
-        "value": 0.05
+        "value": 0.04
       },
       {
-        "target": "Text",
-        "attribute": "Manpower Recovery Speed",
-        "type": "Base",
-        "negative": true,
-        "value": -0.1
-      }
-    ]
-  },
-  {
-    "name": "Milesian Heritage",
-    "key": "milesian_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Research Points",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Build Cost",
-        "type": "Base",
-        "value": -0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "National Tax",
-        "type": "Base",
-        "negative": true,
-        "value": -0.05
-      }
-    ]
-  },
-  {
-    "name": "Epidauran Heritage",
-    "key": "epidauran_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Civic Tech Investment",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "National Population Growth",
+        "target": "Global",
+        "attribute": "Discipline",
         "type": "Base",
         "value": 0.05
       },
@@ -1198,32 +179,162 @@
       }
     ]
   },
-  {
-    "name": "Eretrian Heritage",
-    "key": "eretrian_heritage",
+  "armenian_heritage": {
+    "name": "Armenian Heritage",
+    "key": "armenian_heritage",
     "modifiers": [
       {
-        "target": "Naval",
+        "target": "Light Cavalry",
         "attribute": "Maintenance",
         "type": "Modifier",
         "value": -0.1
       },
       {
         "target": "Text",
-        "attribute": "National Slave Output",
+        "attribute": "Manpower Recovery Speed",
         "type": "Base",
         "value": 0.05
       },
       {
         "target": "Text",
-        "attribute": "Fort Defense",
+        "attribute": "Subject Opinion of Us",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -10
+      }
+    ]
+  },
+  "arvernia_heritage": {
+    "name": "Arvernian Heritage",
+    "key": "arvernia_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Relations",
+        "type": "Base",
+        "no_percent": true,
+        "value": 1
+      },
+      {
+        "target": "Heavy Infantry",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Enslavement Efficiency",
         "type": "Base",
         "negative": true,
         "value": -0.1
       }
     ]
   },
-  {
+  "athenian_heritage": {
+    "name": "Athenian Heritage",
+    "key": "athenian_heritage",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Damage Taken",
+        "type": "Base",
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Tyranny",
+        "type": "Base",
+        "value": -0.02
+      },
+      {
+        "target": "Text",
+        "attribute": "Enact Law Cost",
+        "type": "Base",
+        "negative": true,
+        "value": 0.1
+      }
+    ]
+  },
+  "bithynian_heritage": {
+    "name": "Bithynian Heritage",
+    "key": "bithynian_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Commerce Income",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Build Cost",
+        "type": "Base",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty to Overlord",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": 30
+      }
+    ]
+  },
+  "boeotian_heritage": {
+    "name": "Boeotian Heritage",
+    "key": "boeotian_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Relations",
+        "type": "Base",
+        "no_percent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Fort Defense",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Stability Cost",
+        "type": "Base",
+        "negative": true,
+        "value": 0.1
+      }
+    ]
+  },
+  "bosporan_heritage": {
+    "name": "Bosporan Heritage",
+    "key": "bosporan_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Pop Promotion Speed",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Capital Import Routes",
+        "type": "Base",
+        "no_percent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Pop Assimilation Speed",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
+      }
+    ]
+  },
+  "byzantine_heritage": {
     "name": "Byzantine Heritage",
     "key": "byzantine_heritage",
     "modifiers": [
@@ -1249,64 +360,39 @@
       }
     ]
   },
-  {
-    "name": "Heritage of Zipoetes",
-    "key": "bithynia_heritage",
+  "carthaginian_heritage": {
+    "name": "Carthaginian Heritage",
+    "key": "carthaginian_heritage",
     "modifiers": [
       {
         "target": "Text",
-        "attribute": "Found City Cost Modifier",
-        "type": "Base",
-        "value": -0.25
-      },
-      {
-        "target": "Text",
-        "attribute": "Siege Ability",
+        "attribute": "Export Value",
         "type": "Base",
         "value": 0.1
       },
       {
+        "target": "Naval",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.1
+      },
+      {
         "target": "Text",
-        "attribute": "National Manpower",
+        "attribute": "Loyalty Gain Chance",
         "type": "Base",
         "negative": true,
-        "value": -0.05
+        "value": 0.05
       }
     ]
   },
-  {
-    "name": "Heritage of Spartokos",
-    "key": "spartocid_heritage",
+  "ciusan_heritage": {
+    "name": "Ciusan Heritage",
+    "key": "ciusan_heritage",
     "modifiers": [
       {
-        "target": "Text",
-        "attribute": "Fort Defense",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Wrong Culture-Group Happiness",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Increase Legitimacy Cost",
-        "type": "Base",
-        "negative": true,
-        "value": 0.15
-      }
-    ]
-  },
-  {
-    "name": "Halicarnassan Heritage",
-    "key": "halikarnassan_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Build Cost",
-        "type": "Base",
+        "target": "Naval",
+        "attribute": "Maintenance",
+        "type": "Modifier",
         "value": -0.1
       },
       {
@@ -1324,32 +410,7 @@
       }
     ]
   },
-  {
-    "name": "Metapontine Heritage",
-    "key": "metapontine_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "National Citizen Happiness",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "National Population Growth",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Global",
-        "attribute": "Discipline",
-        "type": "Base",
-        "negative": true,
-        "value": -0.1
-      }
-    ]
-  },
-  {
+  "cnidusian_heritage": {
     "name": "Cnidusian Heritage",
     "key": "cnidusian_heritage",
     "modifiers": [
@@ -1376,386 +437,7 @@
       }
     ]
   },
-  {
-    "name": "Ciusan Heritage",
-    "key": "ciusan_heritage",
-    "modifiers": [
-      {
-        "target": "Naval",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "value": -0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "National Population Growth",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Fort Defense",
-        "type": "Base",
-        "negative": true,
-        "value": -0.1
-      }
-    ]
-  },
-  {
-    "name": "Achaean Heritage",
-    "key": "achaean_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Siege Ability",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "National Freeman Happiness",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Diplomatic Relations",
-        "type": "Base",
-        "negative": true,
-        "no_percent": true,
-        "value": -1
-      }
-    ]
-  },
-  {
-    "name": "Arcadian Heritage",
-    "key": "arcadian_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "National Food",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Fort Defense",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "National Citizen Output",
-        "type": "Base",
-        "negative": true,
-        "value": -0.05
-      }
-    ]
-  },
-  {
-    "name": "Siceliote Heritage",
-    "key": "siceliote_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Monthly Ruler Popularity Gain",
-        "type": "Base",
-        "no_percent": true,
-        "value": 0.2
-      },
-      {
-        "target": "Text",
-        "attribute": "National Citizen Output",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Loyalty Gain Chance",
-        "type": "Base",
-        "negative": true,
-        "value": 0.2
-      }
-    ]
-  },
-  {
-    "name": "Italiote Heritage",
-    "key": "italiote_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Research Points",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Recruit Mercenary Cost",
-        "type": "Base",
-        "value": -0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "National Manpower",
-        "type": "Base",
-        "negative": true,
-        "value": -0.05
-      }
-    ]
-  },
-  {
-    "name": "Cretan Heritage",
-    "key": "cretan_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Fort Defense",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Primary Culture Happiness",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Land",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "negative": true,
-        "value": 0.1
-      }
-    ]
-  },
-  {
-    "name": "Aegean Heritage",
-    "key": "aegean_heritage",
-    "modifiers": [
-      {
-        "target": "Naval",
-        "attribute": "Cost",
-        "type": "Modifier",
-        "value": -0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "National Commerce Income",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Land",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "negative": true,
-        "value": -0.05
-      }
-    ]
-  },
-  {
-    "name": "Graeco-Pontic Heritage",
-    "key": "graeco_pontic_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Wrong Culture-Group Happiness",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "National Commerce Income",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Fort Maintenance",
-        "type": "Base",
-        "negative": true,
-        "value": 0.25
-      }
-    ]
-  },
-  {
-    "name": "Bosporan Heritage",
-    "key": "bosporan_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Pop Promotion Speed",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Capital Import Routes",
-        "type": "Base",
-        "no_percent": true,
-        "value": 1
-      },
-      {
-        "target": "Text",
-        "attribute": "Pop Assimilation Speed",
-        "type": "Base",
-        "negative": true,
-        "value": -0.1
-      }
-    ]
-  },
-  {
-    "name": "Euboean Heritage",
-    "key": "euboean_heritage",
-    "modifiers": [
-      {
-        "target": "Naval",
-        "attribute": "Damage Done",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Fort Defense",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "National Population Growth",
-        "type": "Base",
-        "negative": true,
-        "value": -0.1
-      }
-    ]
-  },
-  {
-    "name": "Bithynian Heritage",
-    "key": "bithynian_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "National Commerce Income",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Build Cost",
-        "type": "Base",
-        "value": -0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Loyalty to Overlord",
-        "type": "Base",
-        "negative": true,
-        "no_percent": true,
-        "value": 30
-      }
-    ]
-  },
-  {
-    "name": "Hellenistic Heritage",
-    "key": "hellenistic_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Wrong Culture-Group Happiness",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Monthly Civilization Change",
-        "type": "Base",
-        "value": 0.01
-      },
-      {
-        "target": "Text",
-        "attribute": "Pop Assimilation Speed",
-        "type": "Base",
-        "negative": true,
-        "value": -0.15
-      }
-    ]
-  },
-  {
-    "name": "Dahae Heritage",
-    "key": "arsacid_dahae_heritage",
-    "modifiers": [
-      {
-        "target": "Horse Archers",
-        "attribute": "Offense",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "National Freeman Happiness",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Loyalty Gain Chance",
-        "type": "Base",
-        "negative": true,
-        "value": 0.05
-      }
-    ]
-  },
-  {
-    "name": "Pirate Heritage",
-    "key": "pirate_heritage",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Pirate Fleet Maintenance",
-        "type": "Base",
-        "value": -0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Naval Range",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Land",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "negative": true,
-        "value": 0.05
-      }
-    ]
-  },
-  {
-    "name": "Seafaring Heritage",
-    "key": "seafaring_heritage",
-    "modifiers": [
-      {
-        "target": "Naval",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "value": -0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Naval Range",
-        "type": "Base",
-        "value": 0.25
-      },
-      {
-        "target": "Text",
-        "attribute": "National Manpower",
-        "type": "Base",
-        "negative": true,
-        "value": -0.05
-      }
-    ]
-  },
-  {
+  "coastal_heritage": {
     "name": "Coastal Heritage",
     "key": "coastal_heritage",
     "modifiers": [
@@ -1780,15 +462,15 @@
       }
     ]
   },
-  {
-    "name": "Heritage of the River Plains",
-    "key": "river_plain_heritage",
+  "corinthian_heritage": {
+    "name": "Corinthian Heritage",
+    "key": "corinthian_heritage",
     "modifiers": [
       {
         "target": "Text",
-        "attribute": "Population Capacity",
+        "attribute": "Fort Maintenance",
         "type": "Base",
-        "value": 0.1
+        "value": -0.33
       },
       {
         "target": "Text",
@@ -1798,89 +480,169 @@
       },
       {
         "target": "Text",
-        "attribute": "Fort Defense",
+        "attribute": "Diplomatic Relations",
         "type": "Base",
         "negative": true,
-        "value": -0.1
+        "no_percent": true,
+        "value": -1
       }
     ]
   },
-  {
-    "name": "Steppe Heritage",
-    "key": "steppe_heritage",
+  "cretan_heritage": {
+    "name": "Cretan Heritage",
+    "key": "cretan_heritage",
     "modifiers": [
       {
-        "target": "Light Cavalry",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "value": -0.1
+        "target": "Text",
+        "attribute": "Fort Defense",
+        "type": "Base",
+        "value": 0.05
       },
       {
         "target": "Text",
-        "attribute": "Enslavement Efficiency",
+        "attribute": "Primary Culture Happiness",
         "type": "Base",
-        "value": 0.05
+        "value": 0.1
       },
       {
         "target": "Land",
-        "attribute": "Attrition Weight",
+        "attribute": "Maintenance",
         "type": "Modifier",
         "negative": true,
-        "value": 0.05
+        "value": 0.1
       }
     ]
   },
-  {
-    "name": "Rural Heritage",
-    "key": "rural_heritage",
+  "crotine_heritage": {
+    "name": "Crotine Heritage",
+    "key": "crotine_heritage",
     "modifiers": [
       {
         "target": "Text",
-        "attribute": "Found City Cost Modifier",
+        "attribute": "National Citizen Happiness",
         "type": "Base",
-        "value": -0.2
+        "value": 0.05
       },
       {
         "target": "Text",
-        "attribute": "Military Provincial Investment Cost",
+        "attribute": "Civic Tech Investment",
         "type": "Base",
-        "value": -0.1
+        "value": 0.1
       },
       {
-        "target": "Text",
-        "attribute": "National Tribesman Happiness",
+        "target": "Global",
+        "attribute": "Discipline",
         "type": "Base",
         "negative": true,
         "value": -0.05
       }
     ]
   },
-  {
-    "name": "Montane Heritage",
-    "key": "montane_heritage",
+  "cyrenaican_heritage": {
+    "name": "Cyrenaican Heritage",
+    "key": "cyrenaican_heritage",
     "modifiers": [
       {
         "target": "Text",
-        "attribute": "Fort Maintenance",
+        "attribute": "State Religion Happiness",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Build Cost",
         "type": "Base",
         "value": -0.05
       },
       {
         "target": "Text",
-        "attribute": "Fort Defense",
+        "attribute": "Diplomatic Relations",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -1
+      }
+    ]
+  },
+  "arsacid_dahae_heritage": {
+    "name": "Dahae Heritage",
+    "key": "arsacid_dahae_heritage",
+    "modifiers": [
+      {
+        "target": "Horse Archers",
+        "attribute": "Offense",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "National Freeman Happiness",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty Gain Chance",
+        "type": "Base",
+        "negative": true,
+        "value": 0.05
+      }
+    ]
+  },
+  "decapolian_heritage": {
+    "name": "Decapolian Heritage",
+    "key": "decapolian_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Wrong Culture-Group Happiness",
         "type": "Base",
         "value": 0.05
       },
       {
         "target": "Text",
-        "attribute": "Improve Opinion Maximum",
+        "attribute": "Pop Assimilation Speed",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty to Overlord",
         "type": "Base",
         "negative": true,
-        "value": -0.1
+        "no_percent": true,
+        "value": 10
       }
     ]
   },
-  {
+  "delphic_heritage": {
+    "name": "Delphic Heritage",
+    "key": "delphic_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "State Religion Happiness",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "no_percent": true,
+        "value": 10
+      },
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Relations",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -1
+      }
+    ]
+  },
+  "desert_heritage": {
     "name": "Desert Heritage",
     "key": "desert_heritage",
     "modifiers": [
@@ -1905,71 +667,46 @@
       }
     ]
   },
-  {
-    "name": "Jungle Heritage",
-    "key": "jungle_heritage",
+  "elean_heritage": {
+    "name": "Elean Heritage",
+    "key": "elean_heritage",
     "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Hostile Attrition",
-        "type": "Base",
-        "no_percent": true,
-        "value": 0.1
-      },
-      {
-        "target": "War Elephants",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "value": -0.1
-      },
       {
         "target": "Naval",
         "attribute": "Maintenance",
         "type": "Modifier",
-        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Religious Tech Investment",
+        "type": "Base",
         "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Pop Promotion Speed",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
       }
     ]
   },
-  {
-    "name": "Forest Heritage",
-    "key": "forest_heritage",
+  "eleian_heritage": {
+    "name": "Eleian Heritage",
+    "key": "eleian_heritage",
     "modifiers": [
       {
-        "target": "Archers",
-        "attribute": "Offense",
+        "target": "Text",
+        "attribute": "National Citizen Happiness",
         "type": "Base",
         "value": 0.1
       },
       {
         "target": "Text",
-        "attribute": "National Tribesman Happiness",
+        "attribute": "Monthly Ruler Popularity Gain",
         "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Text",
-        "attribute": "Build Cost",
-        "type": "Base",
-        "negative": true,
-        "value": 0.1
-      }
-    ]
-  },
-  {
-    "name": "Marshland Heritage",
-    "key": "marshland_heritage",
-    "modifiers": [
-      {
-        "target": "Light Infantry",
-        "attribute": "Defense",
-        "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "National Tax",
-        "type": "Base",
+        "no_percent": true,
         "value": 0.05
       },
       {
@@ -1977,36 +714,36 @@
         "attribute": "Manpower Recovery Speed",
         "type": "Base",
         "negative": true,
-        "value": -0.05
+        "value": -0.1
       }
     ]
   },
-  {
-    "name": "Highland Heritage",
-    "key": "highland_heritage",
+  "epidauran_heritage": {
+    "name": "Epidauran Heritage",
+    "key": "epidauran_heritage",
     "modifiers": [
       {
         "target": "Text",
-        "attribute": "Fortress Building Cost",
+        "attribute": "Civic Tech Investment",
         "type": "Base",
-        "value": -0.1
+        "value": 0.1
       },
       {
         "target": "Text",
-        "attribute": "Civic Provincial Investment Cost",
+        "attribute": "National Population Growth",
         "type": "Base",
-        "value": -0.05
+        "value": 0.05
       },
       {
-        "target": "Naval",
-        "attribute": "Damage Taken",
+        "target": "Text",
+        "attribute": "Fort Defense",
         "type": "Base",
         "negative": true,
-        "value": 0.05
+        "value": -0.1
       }
     ]
   },
-  {
+  "epikrateia_heritage": {
     "name": "Epikrateia Heritage",
     "key": "epikrateia_heritage",
     "modifiers": [
@@ -2033,21 +770,1059 @@
       }
     ]
   },
-  {
-    "name": "Corinthian Heritage",
-    "key": "corinthian_heritage",
+  "epirote_heritage": {
+    "name": "Epirote Heritage",
+    "key": "epirote_heritage",
     "modifiers": [
+      {
+        "target": "Light Infantry",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "National Freeman Output",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "National Commerce Income",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      }
+    ]
+  },
+  "eretrian_heritage": {
+    "name": "Eretrian Heritage",
+    "key": "eretrian_heritage",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "National Slave Output",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Fort Defense",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
+      }
+    ]
+  },
+  "etruscan_heritage": {
+    "name": "Etruscan Heritage",
+    "key": "etruscan_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Found City Cost Modifier",
+        "type": "Base",
+        "value": -0.25
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Civilization Change",
+        "type": "Base",
+        "value": 0.02
+      },
+      {
+        "target": "Text",
+        "attribute": "Military Provincial Investment Cost",
+        "type": "Base",
+        "negative": true,
+        "value": 0.05
+      }
+    ]
+  },
+  "euboean_heritage": {
+    "name": "Euboean Heritage",
+    "key": "euboean_heritage",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Damage Done",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Fort Defense",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "National Population Growth",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
+      }
+    ]
+  },
+  "forest_heritage": {
+    "name": "Forest Heritage",
+    "key": "forest_heritage",
+    "modifiers": [
+      {
+        "target": "Archers",
+        "attribute": "Offense",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "National Tribesman Happiness",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Build Cost",
+        "type": "Base",
+        "negative": true,
+        "value": 0.1
+      }
+    ]
+  },
+  "graeco_pontic_heritage": {
+    "name": "Graeco-Pontic Heritage",
+    "key": "graeco_pontic_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Wrong Culture-Group Happiness",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "National Commerce Income",
+        "type": "Base",
+        "value": 0.1
+      },
       {
         "target": "Text",
         "attribute": "Fort Maintenance",
         "type": "Base",
-        "value": -0.33
+        "negative": true,
+        "value": 0.25
+      }
+    ]
+  },
+  "halikarnassan_heritage": {
+    "name": "Halicarnassan Heritage",
+    "key": "halikarnassan_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Build Cost",
+        "type": "Base",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "National Population Growth",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Fort Defense",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
+      }
+    ]
+  },
+  "hellenistic_heritage": {
+    "name": "Hellenistic Heritage",
+    "key": "hellenistic_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Wrong Culture-Group Happiness",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Civilization Change",
+        "type": "Base",
+        "value": 0.01
+      },
+      {
+        "target": "Text",
+        "attribute": "Pop Assimilation Speed",
+        "type": "Base",
+        "negative": true,
+        "value": -0.15
+      }
+    ]
+  },
+  "helot_heritage": {
+    "name": "Helot Heritage",
+    "key": "helot_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Freeman Happiness",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Pop Promotion Speed",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "National Commerce Income",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      }
+    ]
+  },
+  "heraclea_pontican_heritage": {
+    "name": "Heraclean Heritage",
+    "key": "heraclea_pontican_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Found City Cost Modifier",
+        "type": "Base",
+        "value": -0.25
+      },
+      {
+        "target": "Text",
+        "attribute": "National Citizen Happiness",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty Gain Chance",
+        "type": "Base",
+        "negative": true,
+        "value": 0.05
+      }
+    ]
+  },
+  "antigonid_heritage": {
+    "name": "Heritage of Antigonos",
+    "key": "antigonid_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Siege Ability",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Reputation",
+        "type": "Base",
+        "no_percent": true,
+        "value": 2
+      },
+      {
+        "target": "Text",
+        "attribute": "Fort Defense",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
+      }
+    ]
+  },
+  "atropatenian_heritage": {
+    "name": "Heritage of Atropates",
+    "key": "atropatenian_heritage",
+    "modifiers": [
+      {
+        "target": "Heavy Infantry",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "National Citizen Output",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "National Slave Happiness",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      }
+    ]
+  },
+  "byblos_heritage": {
+    "name": "Heritage of Byblos",
+    "key": "byblos_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Oratory Provincial Investment Cost",
+        "type": "Base",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "National Commerce Income",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Pop Assimilation Speed",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      }
+    ]
+  },
+  "maurya_heritage": {
+    "name": "Heritage of Chandragupta",
+    "key": "maurya_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Population Capacity",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Religious Tech Investment",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Aggressive Expansion Impact",
+        "type": "Base",
+        "negative": true,
+        "value": 0.15
+      }
+    ]
+  },
+  "cassanders_heritage": {
+    "name": "Heritage of Kassandros",
+    "key": "cassanders_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Relations",
+        "type": "Base",
+        "no_percent": true,
+        "value": 2
+      },
+      {
+        "target": "Text",
+        "attribute": "National Manpower",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Reputation",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -2
+      }
+    ]
+  },
+  "thrace_heritage": {
+    "name": "Heritage of Lysimachos",
+    "key": "thrace_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "War score Cost",
+        "type": "Base",
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Civic Provincial Investment Cost",
+        "type": "Base",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Subject Opinion of Us",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -10
+      }
+    ]
+  },
+  "ptolemys_heritage": {
+    "name": "Heritage of Ptolemaios",
+    "key": "ptolemys_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "State Religion Happiness",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Found City Cost Modifier",
+        "type": "Base",
+        "value": -0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Pop Assimilation Speed",
+        "type": "Base",
+        "negative": true,
+        "value": -0.15
+      }
+    ]
+  },
+  "seleucus_heritage": {
+    "name": "Heritage of Seleukos",
+    "key": "seleucus_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Wrong Culture-Group Happiness",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Ruler Popularity Gain",
+        "type": "Base",
+        "no_percent": true,
+        "value": 0.04
+      },
+      {
+        "target": "Text",
+        "attribute": "Pop Assimilation Speed",
+        "type": "Base",
+        "negative": true,
+        "value": -0.15
+      }
+    ]
+  },
+  "spartocid_heritage": {
+    "name": "Heritage of Spartokos",
+    "key": "spartocid_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Fort Defense",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Wrong Culture-Group Happiness",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Increase Legitimacy Cost",
+        "type": "Base",
+        "negative": true,
+        "value": 0.15
+      }
+    ]
+  },
+  "tartessian_heritage": {
+    "name": "Heritage of Tartessos",
+    "key": "tartessian_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Export Value",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Civic Tech Investment",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Build Cost",
+        "type": "Base",
+        "negative": true,
+        "value": 0.05
+      }
+    ]
+  },
+  "river_plain_heritage": {
+    "name": "Heritage of the River Plains",
+    "key": "river_plain_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Population Capacity",
+        "type": "Base",
+        "value": 0.1
       },
       {
         "target": "Text",
         "attribute": "Manpower Recovery Speed",
         "type": "Base",
         "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Fort Defense",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
+      }
+    ]
+  },
+  "bithynia_heritage": {
+    "name": "Heritage of Zipoetes",
+    "key": "bithynia_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Found City Cost Modifier",
+        "type": "Base",
+        "value": -0.25
+      },
+      {
+        "target": "Text",
+        "attribute": "Siege Ability",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "National Manpower",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      }
+    ]
+  },
+  "highland_heritage": {
+    "name": "Highland Heritage",
+    "key": "highland_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Fortress Building Cost",
+        "type": "Base",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Civic Provincial Investment Cost",
+        "type": "Base",
+        "value": -0.05
+      },
+      {
+        "target": "Naval",
+        "attribute": "Damage Taken",
+        "type": "Base",
+        "negative": true,
+        "value": 0.05
+      }
+    ]
+  },
+  "iberian_heritage": {
+    "name": "Iberian Heritage",
+    "key": "iberian_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "State Religion Happiness",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Relations",
+        "type": "Base",
+        "no_percent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty of Governors",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -10
+      }
+    ]
+  },
+  "icenian_heritage": {
+    "name": "Iceni Heritage",
+    "key": "icenian_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Country Civilization Level",
+        "type": "Base",
+        "no_percent": true,
+        "value": 5
+      },
+      {
+        "target": "Text",
+        "attribute": "National Tax",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Improve Opinion Maximum",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
+      }
+    ]
+  },
+  "ionian_heritage": {
+    "name": "Ionian Heritage",
+    "key": "ionian_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Research Points",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Wrong Culture-Group Happiness",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "National Slave Output",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      }
+    ]
+  },
+  "italiote_heritage": {
+    "name": "Italiote Heritage",
+    "key": "italiote_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Research Points",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Recruit Mercenary Cost",
+        "type": "Base",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "National Manpower",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      }
+    ]
+  },
+  "judea_heritage": {
+    "name": "Judean Heritage",
+    "key": "judea_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Fort Defense",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Religious Tech Investment",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Pop Conversion Speed",
+        "type": "Base",
+        "negative": true,
+        "value": -0.25
+      }
+    ]
+  },
+  "jungle_heritage": {
+    "name": "Jungle Heritage",
+    "key": "jungle_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Hostile Attrition",
+        "type": "Base",
+        "no_percent": true,
+        "value": 0.1
+      },
+      {
+        "target": "War Elephants",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.1
+      },
+      {
+        "target": "Naval",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "negative": true,
+        "value": 0.1
+      }
+    ]
+  },
+  "kalingan_heritage": {
+    "name": "Kalingan Heritage",
+    "key": "kalingan_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Tribesman Happiness",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Pop Assimilation Speed",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Reputation",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -2
+      }
+    ]
+  },
+  "kushite_heritage": {
+    "name": "Kushite Heritage",
+    "key": "kushite_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Manpower",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Build Cost",
+        "type": "Base",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Military Provincial Investment Cost",
+        "type": "Base",
+        "negative": true,
+        "value": 0.05
+      }
+    ]
+  },
+  "marshland_heritage": {
+    "name": "Marshland Heritage",
+    "key": "marshland_heritage",
+    "modifiers": [
+      {
+        "target": "Light Infantry",
+        "attribute": "Defense",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "National Tax",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Manpower Recovery Speed",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      }
+    ]
+  },
+  "massalian_heritage": {
+    "name": "Massilian Heritage",
+    "key": "massalian_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Fort Defense",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Wrong Culture-Group Happiness",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Manpower Recovery Speed",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      }
+    ]
+  },
+  "megaran_heritage": {
+    "name": "Megaran Heritage",
+    "key": "megaran_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Fort Defense",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Oratory Tech Investment",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "negative": true,
+        "value": -0.1
+      }
+    ]
+  },
+  "metapontine_heritage": {
+    "name": "Metapontine Heritage",
+    "key": "metapontine_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Citizen Happiness",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "National Population Growth",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Global",
+        "attribute": "Discipline",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
+      }
+    ]
+  },
+  "milesian_heritage": {
+    "name": "Milesian Heritage",
+    "key": "milesian_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Research Points",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Build Cost",
+        "type": "Base",
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "National Tax",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      }
+    ]
+  },
+  "minoan_heritage": {
+    "name": "Minoan Heritage",
+    "key": "minoan_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Capital Import Routes",
+        "type": "Base",
+        "no_percent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Primary Culture Happiness",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Military Provincial Investment Cost",
+        "type": "Base",
+        "negative": true,
+        "value": 0.15
+      }
+    ]
+  },
+  "montane_heritage": {
+    "name": "Montane Heritage",
+    "key": "montane_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Fort Maintenance",
+        "type": "Base",
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Fort Defense",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Improve Opinion Maximum",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
+      }
+    ]
+  },
+  "nabatean_heritage": {
+    "name": "Nabatean Heritage",
+    "key": "nabatean_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Pop Migration Speed",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "National Commerce Income",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Pop Conversion Speed",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      }
+    ]
+  },
+  "pirate_heritage": {
+    "name": "Pirate Heritage",
+    "key": "pirate_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Pirate Fleet Maintenance",
+        "type": "Base",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Naval Range",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Land",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "negative": true,
+        "value": 0.05
+      }
+    ]
+  },
+  "pontic_heritage": {
+    "name": "Pontic Heritage",
+    "key": "pontic_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Wrong Culture-Group Happiness",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Ruler Popularity Gain",
+        "type": "Base",
+        "no_percent": true,
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Civic Provincial Investment Cost",
+        "type": "Base",
+        "negative": true,
+        "value": 0.15
+      }
+    ]
+  },
+  "religious_enclave_heritage": {
+    "name": "Religious State",
+    "key": "religious_enclave_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "State Religion Happiness",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "no_percent": true,
+        "value": 5
       },
       {
         "target": "Text",
@@ -2059,30 +1834,255 @@
       }
     ]
   },
-  {
-    "name": "Decapolian Heritage",
-    "key": "decapolian_heritage",
+  "rhodian_heritage": {
+    "name": "Rhodian Heritage",
+    "key": "rhodian_heritage",
     "modifiers": [
       {
-        "target": "Text",
-        "attribute": "Wrong Culture-Group Happiness",
-        "type": "Base",
-        "value": 0.05
+        "target": "Naval",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.1
       },
       {
         "target": "Text",
-        "attribute": "Pop Assimilation Speed",
+        "attribute": "Fort Defense",
         "type": "Base",
         "value": 0.1
       },
       {
         "target": "Text",
-        "attribute": "Loyalty to Overlord",
+        "attribute": "Fort Maintenance",
         "type": "Base",
         "negative": true,
+        "value": 0.1
+      }
+    ]
+  },
+  "roman_heritage": {
+    "name": "Roman Heritage",
+    "key": "roman_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Manpower Recovery Speed",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Integration Speed",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Naval",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "negative": true,
+        "value": -0.05
+      }
+    ]
+  },
+  "rural_heritage": {
+    "name": "Rural Heritage",
+    "key": "rural_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Found City Cost Modifier",
+        "type": "Base",
+        "value": -0.2
+      },
+      {
+        "target": "Text",
+        "attribute": "Military Provincial Investment Cost",
+        "type": "Base",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "National Tribesman Happiness",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      }
+    ]
+  },
+  "seafaring_heritage": {
+    "name": "Seafaring Heritage",
+    "key": "seafaring_heritage",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Naval Range",
+        "type": "Base",
+        "value": 0.25
+      },
+      {
+        "target": "Text",
+        "attribute": "National Manpower",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      }
+    ]
+  },
+  "siceliote_heritage": {
+    "name": "Siceliote Heritage",
+    "key": "siceliote_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Ruler Popularity Gain",
+        "type": "Base",
         "no_percent": true,
-        "value": 10
+        "value": 0.2
+      },
+      {
+        "target": "Text",
+        "attribute": "National Citizen Output",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty Gain Chance",
+        "type": "Base",
+        "negative": true,
+        "value": 0.2
+      }
+    ]
+  },
+  "spartan_heritage": {
+    "name": "Spartan Heritage",
+    "key": "spartan_heritage",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
+      },
+      {
+        "target": "Global",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "National Slave Output",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      }
+    ]
+  },
+  "steppe_heritage": {
+    "name": "Steppe Heritage",
+    "key": "steppe_heritage",
+    "modifiers": [
+      {
+        "target": "Light Cavalry",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Enslavement Efficiency",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Land",
+        "attribute": "Attrition Weight",
+        "type": "Modifier",
+        "negative": true,
+        "value": 0.05
+      }
+    ]
+  },
+  "syracusan_heritage": {
+    "name": "Syracusan Heritage",
+    "key": "syracusan_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Mercenary Army Maintenance",
+        "type": "Base",
+        "value": -0.1
+      },
+      {
+        "target": "Naval",
+        "attribute": "Damage Taken",
+        "type": "Base",
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "National Citizen Happiness",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      }
+    ]
+  },
+  "tarentine_heritage": {
+    "name": "Tarentine Heritage",
+    "key": "tarentine_heritage",
+    "modifiers": [
+      {
+        "target": "Light Cavalry",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Improve Opinion Maximum",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Import Value",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      }
+    ]
+  },
+  "theban_heritage": {
+    "name": "Theban Heritage",
+    "key": "theban_heritage",
+    "modifiers": [
+      {
+        "target": "Heavy Infantry",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "National Freeman Happiness",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Heavy Infantry",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "negative": true,
+        "value": 0.05
       }
     ]
   }
-]
+}

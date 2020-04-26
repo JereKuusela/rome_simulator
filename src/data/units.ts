@@ -2,10 +2,10 @@ import { ValuesType, UnitType, UnitDefinition, UnitAttribute, UnitValueType, Uni
 import { addValues } from 'definition_values'
 import { toObj, removeUndefined, filter, toArr, values } from 'utils'
 
-import * as ir_units from './json/ir/units.json'
-import * as ir_parents from './json/ir/parent_units.json'
-import * as euiv_parents from './json/euiv/parent_units.json'
-import * as euiv_units from './json/euiv/units.json'
+import ir_units from './json/ir/units.json'
+import ir_parents from './json/ir/parent_units.json'
+import euiv_parents from './json/euiv/parent_units.json'
+import euiv_units from './json/euiv/units.json'
 import IconArcher from 'images/archers.png'
 import IconCamelCavalry from 'images/camel_cavalry.png'
 import IconChariots from 'images/chariots.png'
@@ -87,9 +87,9 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
 
 const initializeDefaultUnits = (): UnitDefinitions => {
   if (process.env.REACT_APP_GAME === 'euiv')
-    return toObj(euiv_parents.units.map(createUnitFromJson).concat(euiv_units.units.map(createUnitFromJson)), unit => unit.type)
+    return toObj(euiv_parents.map(createUnitFromJson).concat(euiv_units.map(createUnitFromJson)), unit => unit.type)
   else
-    return toObj(ir_parents.units.map(createUnitFromJson).concat(ir_units.units.map(createUnitFromJson)), unit => unit.type)
+    return toObj(ir_parents.map(createUnitFromJson).concat(ir_units.map(createUnitFromJson)), unit => unit.type)
 }
 const defaultUnits = initializeDefaultUnits()
 

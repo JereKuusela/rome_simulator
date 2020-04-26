@@ -1,134 +1,58 @@
-[
-  {
-    "name": "Hunchback",
-    "key": "hunchback",
+{
+  "abrasive": {
+    "name": "Abrasive",
+    "key": "abrasive",
+    "modifiers": []
+  },
+  "aggressive": {
+    "name": "Aggressive",
+    "key": "aggressive",
     "modifiers": [
       {
         "target": "General",
         "attribute": "Martial",
         "type": "Base",
-        "negative": true,
         "no_percent": true,
-        "value": -1
+        "value": 1
+      },
+      {
+        "target": "Light Cavalry",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Camel Cavalry",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
       }
     ]
   },
-  {
-    "name": "Lisp",
-    "key": "lisp",
-    "modifiers": []
-  },
-  {
-    "name": "Stutter",
-    "key": "stutter",
-    "modifiers": []
-  },
-  {
-    "name": "Fair",
-    "key": "fair",
-    "modifiers": []
-  },
-  {
-    "name": "Inbred",
-    "key": "inbred",
+  "ambitious": {
+    "name": "Ambitious",
+    "key": "ambitious",
     "modifiers": [
       {
         "target": "General",
         "attribute": "Martial",
         "type": "Base",
-        "negative": true,
         "no_percent": true,
-        "value": -1
+        "value": 1
       }
     ]
   },
-  {
-    "name": "Limp",
-    "key": "limp",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "no_percent": true,
-        "value": -2
-      }
-    ]
-  },
-  {
-    "name": "Ugly",
-    "key": "ugly",
+  "arbitrary": {
+    "name": "Arbitrary",
+    "key": "arbitrary",
     "modifiers": []
   },
-  {
-    "name": "Lunatic",
-    "key": "lunatic",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "no_percent": true,
-        "value": -2
-      }
-    ]
-  },
-  {
-    "name": "Stressed",
-    "key": "stressed",
+  "arrogant": {
+    "name": "Arrogant",
+    "key": "arrogant",
     "modifiers": []
   },
-  {
-    "name": "Maniac",
-    "key": "schizophrenic",
-    "modifiers": []
-  },
-  {
-    "name": "Invalid",
-    "key": "invalid",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "no_percent": true,
-        "value": -3
-      }
-    ]
-  },
-  {
-    "name": "Epileptic",
-    "key": "epileptic",
-    "modifiers": []
-  },
-  {
-    "name": "Bloody Flux",
-    "key": "hemorrhagic_fever",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "no_percent": true,
-        "value": -4
-      }
-    ]
-  },
-  {
-    "name": "Plague",
-    "key": "plague",
-    "modifiers": []
-  },
-  {
-    "name": "Mentagra",
-    "key": "mentagra",
-    "modifiers": []
-  },
-  {
+  "arthritis": {
     "name": "Arthritis",
     "key": "arthritis",
     "modifiers": [
@@ -142,84 +66,22 @@
       }
     ]
   },
-  {
-    "name": "Pox",
-    "key": "pox",
+  "assertive": {
+    "name": "Assertive",
+    "key": "assertive",
     "modifiers": []
   },
-  {
-    "name": "Dysentery",
-    "key": "dysentery",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "no_percent": true,
-        "value": -1
-      }
-    ]
-  },
-  {
-    "name": "Infection",
-    "key": "infection",
-    "modifiers": []
-  },
-  {
-    "name": "Inflammation",
-    "key": "inflammation",
-    "modifiers": []
-  },
-  {
-    "name": "Wounded",
-    "key": "wounded",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "no_percent": true,
-        "value": -1
-      }
-    ]
-  },
-  {
-    "name": "Lung Disease",
-    "key": "pneumonia",
-    "modifiers": []
-  },
-  {
-    "name": "Gangrene",
-    "key": "gangrene",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "no_percent": true,
-        "value": -3
-      }
-    ]
-  },
-  {
-    "name": "Leper",
-    "key": "leper",
-    "modifiers": []
-  },
-  {
+  "barren": {
     "name": "Barren",
     "key": "barren",
     "modifiers": []
   },
-  {
-    "name": "Castrated",
-    "key": "castrated",
+  "benefactor": {
+    "name": "Benefactor",
+    "key": "benefactor",
     "modifiers": []
   },
-  {
+  "blind": {
     "name": "Blind",
     "key": "blind",
     "modifiers": [
@@ -233,51 +95,55 @@
       }
     ]
   },
-  {
-    "name": "Maimed",
-    "key": "maimed",
+  "antigonids": {
+    "name": "Blood of Antigonos",
+    "key": "antigonids",
+    "modifiers": []
+  },
+  "antipatrid": {
+    "name": "Blood of Antipatros",
+    "key": "antipatrid",
+    "modifiers": []
+  },
+  "alcimachid": {
+    "name": "Blood of Lysimachos",
+    "key": "alcimachid",
     "modifiers": [
       {
         "target": "General",
         "attribute": "Martial",
         "type": "Base",
-        "negative": true,
         "no_percent": true,
-        "value": -2
+        "value": 1
       }
     ]
   },
-  {
-    "name": "One-Eyed",
-    "key": "one_eyed",
+  "seleucids": {
+    "name": "Blood of Seleukos",
+    "key": "seleucids",
+    "modifiers": []
+  },
+  "argeads": {
+    "name": "Blood of the Argeads",
+    "key": "argeads",
     "modifiers": [
       {
         "target": "General",
         "attribute": "Martial",
         "type": "Base",
-        "negative": true,
         "no_percent": true,
-        "value": -1
+        "value": 1
       }
     ]
   },
-  {
-    "name": "Frail",
-    "key": "frail",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "no_percent": true,
-        "value": -1
-      }
-    ]
+  "lagids": {
+    "name": "Blood of the Lagidai",
+    "key": "lagids",
+    "modifiers": []
   },
-  {
-    "name": "Paralysis",
-    "key": "paralysis",
+  "hemorrhagic_fever": {
+    "name": "Bloody Flux",
+    "key": "hemorrhagic_fever",
     "modifiers": [
       {
         "target": "General",
@@ -289,7 +155,12 @@
       }
     ]
   },
-  {
+  "blunt": {
+    "name": "Blunt",
+    "key": "blunt",
+    "modifiers": []
+  },
+  "brain_damaged": {
     "name": "Brain Damaged",
     "key": "brain_damaged",
     "modifiers": [
@@ -303,36 +174,26 @@
       }
     ]
   },
-  {
-    "name": "Seeking Treatment",
-    "key": "seeking_treatment_trait",
-    "modifiers": []
-  },
-  {
-    "name": "In Mourning",
-    "key": "mourning",
-    "modifiers": []
-  },
-  {
-    "name": "Depressed",
-    "key": "depressed",
-    "modifiers": []
-  },
-  {
-    "name": "Dementia",
-    "key": "dementia",
+  "brave": {
+    "name": "Brave",
+    "key": "brave",
     "modifiers": [
       {
         "target": "General",
         "attribute": "Martial",
         "type": "Base",
-        "negative": true,
         "no_percent": true,
-        "value": -2
+        "value": 1
+      },
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
       }
     ]
   },
-  {
+  "cancer": {
     "name": "Cancer",
     "key": "cancer",
     "modifiers": [
@@ -346,14 +207,14 @@
       }
     ]
   },
-  {
-    "name": "Diphtheria",
-    "key": "diphtheria",
+  "castrated": {
+    "name": "Castrated",
+    "key": "castrated",
     "modifiers": []
   },
-  {
-    "name": "Gout",
-    "key": "gout",
+  "cautious": {
+    "name": "Cautious",
+    "key": "cautious",
     "modifiers": [
       {
         "target": "General",
@@ -365,34 +226,35 @@
       }
     ]
   },
-  {
-    "name": "Original Thinker",
-    "key": "original_thinker",
+  "chaste": {
+    "name": "Chaste",
+    "key": "chaste",
+    "modifiers": []
+  },
+  "coastal_raider": {
+    "name": "Coastal Raider",
+    "key": "coastal_raider",
     "modifiers": [
       {
-        "target": "General",
-        "attribute": "Martial",
+        "target": "Liburnian",
+        "attribute": "Discipline",
         "type": "Base",
-        "no_percent": true,
-        "value": 1
+        "value": 0.05
+      },
+      {
+        "target": "Trireme",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
       }
     ]
   },
-  {
-    "name": "Tactically Inflexible",
-    "key": "tactically_inflexible",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "no_percent": true,
-        "value": -1
-      }
-    ]
+  "cold": {
+    "name": "Cold",
+    "key": "cold",
+    "modifiers": []
   },
-  {
+  "confident": {
     "name": "Confident",
     "key": "confident",
     "modifiers": [
@@ -417,7 +279,801 @@
       }
     ]
   },
-  {
+  "conqueror": {
+    "name": "Conqueror",
+    "key": "conqueror",
+    "modifiers": []
+  },
+  "content": {
+    "name": "Content",
+    "key": "content",
+    "modifiers": []
+  },
+  "corrupt": {
+    "name": "Corrupt",
+    "key": "corrupt",
+    "modifiers": []
+  },
+  "coward": {
+    "name": "Coward",
+    "key": "coward",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -1
+      },
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Naval",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "negative": true,
+        "value": -0.05
+      }
+    ]
+  },
+  "crafty": {
+    "name": "Crafty",
+    "key": "crafty",
+    "modifiers": []
+  },
+  "cruel": {
+    "name": "Cruel",
+    "key": "cruel",
+    "modifiers": []
+  },
+  "daring": {
+    "name": "Daring",
+    "key": "daring",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "no_percent": true,
+        "value": 1
+      },
+      {
+        "target": "Naval",
+        "attribute": "Damage Done",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  "deceitful": {
+    "name": "Deceitful",
+    "key": "deceitful",
+    "modifiers": []
+  },
+  "dementia": {
+    "name": "Dementia",
+    "key": "dementia",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -2
+      }
+    ]
+  },
+  "depressed": {
+    "name": "Depressed",
+    "key": "depressed",
+    "modifiers": []
+  },
+  "devout": {
+    "name": "Devout",
+    "key": "devout",
+    "modifiers": []
+  },
+  "diphtheria": {
+    "name": "Diphtheria",
+    "key": "diphtheria",
+    "modifiers": []
+  },
+  "disciplined": {
+    "name": "Disciplined",
+    "key": "disciplined",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "no_percent": true,
+        "value": 1
+      },
+      {
+        "target": "Global",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  "dumb": {
+    "name": "Dumb",
+    "key": "dumb",
+    "modifiers": []
+  },
+  "dysentery": {
+    "name": "Dysentery",
+    "key": "dysentery",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -1
+      }
+    ]
+  },
+  "energetic": {
+    "name": "Energetic",
+    "key": "energetic",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "no_percent": true,
+        "value": 1
+      }
+    ]
+  },
+  "epileptic": {
+    "name": "Epileptic",
+    "key": "epileptic",
+    "modifiers": []
+  },
+  "fair": {
+    "name": "Fair",
+    "key": "fair",
+    "modifiers": []
+  },
+  "squadron_leader": {
+    "name": "Fleet Commander",
+    "key": "squadron_leader",
+    "modifiers": [
+      {
+        "target": "Tetrere",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Hexere",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  "foolish": {
+    "name": "Foolish",
+    "key": "foolish",
+    "modifiers": []
+  },
+  "forgiving": {
+    "name": "Forgiving",
+    "key": "forgiving",
+    "modifiers": []
+  },
+  "founder": {
+    "name": "Founder",
+    "key": "founder",
+    "modifiers": []
+  },
+  "frail": {
+    "name": "Frail",
+    "key": "frail",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -1
+      }
+    ]
+  },
+  "gangrene": {
+    "name": "Gangrene",
+    "key": "gangrene",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -3
+      }
+    ]
+  },
+  "generous": {
+    "name": "Generous",
+    "key": "generous",
+    "modifiers": []
+  },
+  "good_natured": {
+    "name": "Good Natured",
+    "key": "good_natured",
+    "modifiers": []
+  },
+  "gout": {
+    "name": "Gout",
+    "key": "gout",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -1
+      }
+    ]
+  },
+  "gluttonous": {
+    "name": "Greedy",
+    "key": "gluttonous",
+    "modifiers": []
+  },
+  "guileless": {
+    "name": "Guileless",
+    "key": "guileless",
+    "modifiers": []
+  },
+  "harsh": {
+    "name": "Harsh",
+    "key": "harsh",
+    "modifiers": []
+  },
+  "honest": {
+    "name": "Honest",
+    "key": "honest",
+    "modifiers": []
+  },
+  "humble": {
+    "name": "Humble",
+    "key": "humble",
+    "modifiers": []
+  },
+  "hunchback": {
+    "name": "Hunchback",
+    "key": "hunchback",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -1
+      }
+    ]
+  },
+  "improviser": {
+    "name": "Improviser",
+    "key": "improviser",
+    "modifiers": []
+  },
+  "mourning": {
+    "name": "In Mourning",
+    "key": "mourning",
+    "modifiers": []
+  },
+  "inbred": {
+    "name": "Inbred",
+    "key": "inbred",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -1
+      }
+    ]
+  },
+  "incapable": {
+    "name": "Incapable",
+    "key": "incapable",
+    "modifiers": []
+  },
+  "infection": {
+    "name": "Infection",
+    "key": "infection",
+    "modifiers": []
+  },
+  "inflammation": {
+    "name": "Inflammation",
+    "key": "inflammation",
+    "modifiers": []
+  },
+  "intelligent": {
+    "name": "Intelligent",
+    "key": "intelligent",
+    "modifiers": []
+  },
+  "invalid": {
+    "name": "Invalid",
+    "key": "invalid",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -3
+      }
+    ]
+  },
+  "jealous": {
+    "name": "Jealous",
+    "key": "jealous",
+    "modifiers": []
+  },
+  "just": {
+    "name": "Just",
+    "key": "just",
+    "modifiers": []
+  },
+  "kindly": {
+    "name": "Kindly",
+    "key": "kindly",
+    "modifiers": []
+  },
+  "lapsed": {
+    "name": "Lapsed",
+    "key": "lapsed",
+    "modifiers": []
+  },
+  "lazy": {
+    "name": "Lazy",
+    "key": "lazy",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -1
+      }
+    ]
+  },
+  "leper": {
+    "name": "Leper",
+    "key": "leper",
+    "modifiers": []
+  },
+  "limp": {
+    "name": "Limp",
+    "key": "limp",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -2
+      }
+    ]
+  },
+  "lisp": {
+    "name": "Lisp",
+    "key": "lisp",
+    "modifiers": []
+  },
+  "loving": {
+    "name": "Loving",
+    "key": "loving",
+    "modifiers": []
+  },
+  "lunatic": {
+    "name": "Lunatic",
+    "key": "lunatic",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -2
+      }
+    ]
+  },
+  "pneumonia": {
+    "name": "Lung Disease",
+    "key": "pneumonia",
+    "modifiers": []
+  },
+  "lustful": {
+    "name": "Lustful",
+    "key": "lustful",
+    "modifiers": []
+  },
+  "maimed": {
+    "name": "Maimed",
+    "key": "maimed",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -2
+      }
+    ]
+  },
+  "schizophrenic": {
+    "name": "Maniac",
+    "key": "schizophrenic",
+    "modifiers": []
+  },
+  "mentagra": {
+    "name": "Mentagra",
+    "key": "mentagra",
+    "modifiers": []
+  },
+  "mercenary_trait": {
+    "name": "Mercenary",
+    "key": "mercenary_trait",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "no_percent": true,
+        "value": 5
+      }
+    ]
+  },
+  "merciful": {
+    "name": "Merciful",
+    "key": "merciful",
+    "modifiers": []
+  },
+  "miserly": {
+    "name": "Miserly",
+    "key": "miserly",
+    "modifiers": []
+  },
+  "modest": {
+    "name": "Modest",
+    "key": "modest",
+    "modifiers": []
+  },
+  "monotonous": {
+    "name": "Monotonous",
+    "key": "monotonous",
+    "modifiers": []
+  },
+  "narrowminded": {
+    "name": "Narrow-minded",
+    "key": "narrowminded",
+    "modifiers": []
+  },
+  "oarmaster": {
+    "name": "Oarmaster",
+    "key": "oarmaster",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "no_percent": true,
+        "value": 1
+      }
+    ]
+  },
+  "obsessive": {
+    "name": "Obsessive",
+    "key": "obsessive",
+    "modifiers": []
+  },
+  "olympic_competitor": {
+    "name": "Olympic Competitor",
+    "key": "olympic_competitor",
+    "modifiers": []
+  },
+  "one_eyed": {
+    "name": "One-Eyed",
+    "key": "one_eyed",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -1
+      }
+    ]
+  },
+  "orator": {
+    "name": "Orator",
+    "key": "orator",
+    "modifiers": []
+  },
+  "original_thinker": {
+    "name": "Original Thinker",
+    "key": "original_thinker",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "no_percent": true,
+        "value": 1
+      }
+    ]
+  },
+  "paralysis": {
+    "name": "Paralysis",
+    "key": "paralysis",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -4
+      }
+    ]
+  },
+  "pious": {
+    "name": "Pious",
+    "key": "pious",
+    "modifiers": []
+  },
+  "plague": {
+    "name": "Plague",
+    "key": "plague",
+    "modifiers": []
+  },
+  "plain_speaking": {
+    "name": "Plain-speaking",
+    "key": "plain_speaking",
+    "modifiers": []
+  },
+  "poet": {
+    "name": "Poet",
+    "key": "poet",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -1
+      }
+    ]
+  },
+  "polymath": {
+    "name": "Polymath",
+    "key": "polymath",
+    "modifiers": []
+  },
+  "pox": {
+    "name": "Pox",
+    "key": "pox",
+    "modifiers": []
+  },
+  "princeps": {
+    "name": "Princeps",
+    "key": "princeps",
+    "modifiers": [
+      {
+        "target": "Octere",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Mega-Polyreme",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  "prominent": {
+    "name": "Prominent",
+    "key": "prominent",
+    "modifiers": []
+  },
+  "proud": {
+    "name": "Proud",
+    "key": "proud",
+    "modifiers": []
+  },
+  "rash": {
+    "name": "Rash",
+    "key": "rash",
+    "modifiers": []
+  },
+  "reckless": {
+    "name": "Reckless",
+    "key": "reckless",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "no_percent": true,
+        "value": 1
+      }
+    ]
+  },
+  "righteous": {
+    "name": "Righteous",
+    "key": "righteous",
+    "modifiers": []
+  },
+  "sarcastic": {
+    "name": "Sarcastic",
+    "key": "sarcastic",
+    "modifiers": []
+  },
+  "scholar": {
+    "name": "Scholar",
+    "key": "scholar",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -1
+      }
+    ]
+  },
+  "seadog": {
+    "name": "Sea Dog",
+    "key": "seadog",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "no_percent": true,
+        "value": 1
+      },
+      {
+        "target": "Naval",
+        "attribute": "Capture Chance",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  "secure": {
+    "name": "Secure",
+    "key": "secure",
+    "modifiers": []
+  },
+  "seeking_treatment_trait": {
+    "name": "Seeking Treatment",
+    "key": "seeking_treatment_trait",
+    "modifiers": []
+  },
+  "self_controlled": {
+    "name": "Self-controlled",
+    "key": "self_controlled",
+    "modifiers": []
+  },
+  "selfish": {
+    "name": "Selfish",
+    "key": "selfish",
+    "modifiers": []
+  },
+  "shrewd": {
+    "name": "Shrewd",
+    "key": "shrewd",
+    "modifiers": []
+  },
+  "silver_tongued": {
+    "name": "Silver Tongued",
+    "key": "silver_tongued",
+    "modifiers": []
+  },
+  "sceptical": {
+    "name": "Skeptical",
+    "key": "sceptical",
+    "modifiers": []
+  },
+  "steadfast": {
+    "name": "Steadfast",
+    "key": "steadfast",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "no_percent": true,
+        "value": 1
+      },
+      {
+        "target": "Heavy Infantry",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "War Elephants",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  "stressed": {
+    "name": "Stressed",
+    "key": "stressed",
+    "modifiers": []
+  },
+  "stubborn": {
+    "name": "Stubborn",
+    "key": "stubborn",
+    "modifiers": []
+  },
+  "stutter": {
+    "name": "Stutter",
+    "key": "stutter",
+    "modifiers": []
+  },
+  "submissive": {
+    "name": "Submissive",
+    "key": "submissive",
+    "modifiers": []
+  },
+  "suspicious": {
+    "name": "Suspicious",
+    "key": "suspicious",
+    "modifiers": []
+  },
+  "tactically_inflexible": {
+    "name": "Tactically Inflexible",
+    "key": "tactically_inflexible",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "no_percent": true,
+        "value": -1
+      }
+    ]
+  },
+  "tactician": {
     "name": "Tactician",
     "key": "tactician",
     "modifiers": [
@@ -448,228 +1104,12 @@
       }
     ]
   },
-  {
-    "name": "Disciplined",
-    "key": "disciplined",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "no_percent": true,
-        "value": 1
-      },
-      {
-        "target": "Global",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
+  "tolerant": {
+    "name": "Tolerant",
+    "key": "tolerant",
+    "modifiers": []
   },
-  {
-    "name": "Steadfast",
-    "key": "steadfast",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "no_percent": true,
-        "value": 1
-      },
-      {
-        "target": "Heavy Infantry",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "War Elephants",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
-  },
-  {
-    "name": "Aggressive",
-    "key": "aggressive",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "no_percent": true,
-        "value": 1
-      },
-      {
-        "target": "Light Cavalry",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Camel Cavalry",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
-  },
-  {
-    "name": "Brave",
-    "key": "brave",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "no_percent": true,
-        "value": 1
-      },
-      {
-        "target": "Land",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "value": 0.05
-      }
-    ]
-  },
-  {
-    "name": "Coward",
-    "key": "coward",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "no_percent": true,
-        "value": -1
-      },
-      {
-        "target": "Land",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "negative": true,
-        "value": -0.05
-      },
-      {
-        "target": "Naval",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "negative": true,
-        "value": -0.05
-      }
-    ]
-  },
-  {
-    "name": "Coastal Raider",
-    "key": "coastal_raider",
-    "modifiers": [
-      {
-        "target": "Liburnian",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Trireme",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
-  },
-  {
-    "name": "Fleet Commander",
-    "key": "squadron_leader",
-    "modifiers": [
-      {
-        "target": "Tetrere",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Hexere",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
-  },
-  {
-    "name": "Princeps",
-    "key": "princeps",
-    "modifiers": [
-      {
-        "target": "Octere",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Mega-Polyreme",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
-  },
-  {
-    "name": "Oarmaster",
-    "key": "oarmaster",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "no_percent": true,
-        "value": 1
-      }
-    ]
-  },
-  {
-    "name": "Sea Dog",
-    "key": "seadog",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "no_percent": true,
-        "value": 1
-      },
-      {
-        "target": "Naval",
-        "attribute": "Capture Chance",
-        "type": "Base",
-        "value": 0.1
-      }
-    ]
-  },
-  {
-    "name": "Daring",
-    "key": "daring",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "no_percent": true,
-        "value": 1
-      },
-      {
-        "target": "Naval",
-        "attribute": "Damage Done",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
-  },
-  {
+  "tough": {
     "name": "Tough",
     "key": "tough",
     "modifiers": [
@@ -681,430 +1121,49 @@
       }
     ]
   },
-  {
-    "name": "Improviser",
-    "key": "improviser",
-    "modifiers": []
-  },
-  {
-    "name": "Abrasive",
-    "key": "abrasive",
-    "modifiers": []
-  },
-  {
-    "name": "Good Natured",
-    "key": "good_natured",
-    "modifiers": []
-  },
-  {
-    "name": "Silver Tongued",
-    "key": "silver_tongued",
-    "modifiers": []
-  },
-  {
-    "name": "Blunt",
-    "key": "blunt",
-    "modifiers": []
-  },
-  {
-    "name": "Crafty",
-    "key": "crafty",
-    "modifiers": []
-  },
-  {
-    "name": "Guileless",
-    "key": "guileless",
-    "modifiers": []
-  },
-  {
-    "name": "Skeptical",
-    "key": "sceptical",
-    "modifiers": []
-  },
-  {
-    "name": "Pious",
-    "key": "pious",
-    "modifiers": []
-  },
-  {
-    "name": "Zealous",
-    "key": "zealous",
-    "modifiers": []
-  },
-  {
-    "name": "Tolerant",
-    "key": "tolerant",
-    "modifiers": []
-  },
-  {
-    "name": "Devout",
-    "key": "devout",
-    "modifiers": []
-  },
-  {
-    "name": "Lapsed",
-    "key": "lapsed",
-    "modifiers": []
-  },
-  {
-    "name": "Just",
-    "key": "just",
-    "modifiers": []
-  },
-  {
-    "name": "Arbitrary",
-    "key": "arbitrary",
-    "modifiers": []
-  },
-  {
-    "name": "Cruel",
-    "key": "cruel",
-    "modifiers": []
-  },
-  {
-    "name": "Merciful",
-    "key": "merciful",
-    "modifiers": []
-  },
-  {
-    "name": "Righteous",
-    "key": "righteous",
-    "modifiers": []
-  },
-  {
-    "name": "Corrupt",
-    "key": "corrupt",
-    "modifiers": []
-  },
-  {
-    "name": "Founder",
-    "key": "founder",
-    "modifiers": []
-  },
-  {
-    "name": "Incapable",
-    "key": "incapable",
-    "modifiers": []
-  },
-  {
-    "name": "Benefactor",
-    "key": "benefactor",
-    "modifiers": []
-  },
-  {
-    "name": "Harsh",
-    "key": "harsh",
-    "modifiers": []
-  },
-  {
-    "name": "Scholar",
-    "key": "scholar",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "no_percent": true,
-        "value": -1
-      }
-    ]
-  },
-  {
-    "name": "Narrow-minded",
-    "key": "narrowminded",
-    "modifiers": []
-  },
-  {
-    "name": "Lustful",
-    "key": "lustful",
-    "modifiers": []
-  },
-  {
-    "name": "Chaste",
-    "key": "chaste",
-    "modifiers": []
-  },
-  {
-    "name": "Proud",
-    "key": "proud",
-    "modifiers": []
-  },
-  {
-    "name": "Humble",
-    "key": "humble",
-    "modifiers": []
-  },
-  {
-    "name": "Vengeful",
-    "key": "vengeful",
-    "modifiers": []
-  },
-  {
-    "name": "Forgiving",
-    "key": "forgiving",
-    "modifiers": []
-  },
-  {
-    "name": "Assertive",
-    "key": "assertive",
-    "modifiers": []
-  },
-  {
-    "name": "Submissive",
-    "key": "submissive",
-    "modifiers": []
-  },
-  {
-    "name": "Intelligent",
-    "key": "intelligent",
-    "modifiers": []
-  },
-  {
-    "name": "Dumb",
-    "key": "dumb",
-    "modifiers": []
-  },
-  {
-    "name": "Generous",
-    "key": "generous",
-    "modifiers": []
-  },
-  {
-    "name": "Selfish",
-    "key": "selfish",
-    "modifiers": []
-  },
-  {
-    "name": "Miserly",
-    "key": "miserly",
-    "modifiers": []
-  },
-  {
-    "name": "Honest",
-    "key": "honest",
-    "modifiers": []
-  },
-  {
-    "name": "Deceitful",
-    "key": "deceitful",
-    "modifiers": []
-  },
-  {
-    "name": "Energetic",
-    "key": "energetic",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "no_percent": true,
-        "value": 1
-      }
-    ]
-  },
-  {
-    "name": "Lazy",
-    "key": "lazy",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "no_percent": true,
-        "value": -1
-      }
-    ]
-  },
-  {
-    "name": "Cautious",
-    "key": "cautious",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "no_percent": true,
-        "value": -1
-      }
-    ]
-  },
-  {
-    "name": "Reckless",
-    "key": "reckless",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "no_percent": true,
-        "value": 1
-      }
-    ]
-  },
-  {
-    "name": "Shrewd",
-    "key": "shrewd",
-    "modifiers": []
-  },
-  {
-    "name": "Foolish",
-    "key": "foolish",
-    "modifiers": []
-  },
-  {
-    "name": "Greedy",
-    "key": "gluttonous",
-    "modifiers": []
-  },
-  {
-    "name": "Self-controlled",
-    "key": "self_controlled",
-    "modifiers": []
-  },
-  {
-    "name": "Arrogant",
-    "key": "arrogant",
-    "modifiers": []
-  },
-  {
-    "name": "Modest",
-    "key": "modest",
-    "modifiers": []
-  },
-  {
-    "name": "Prominent",
-    "key": "prominent",
-    "modifiers": []
-  },
-  {
-    "name": "Unnoticeable",
-    "key": "unnoticeable",
-    "modifiers": []
-  },
-  {
-    "name": "Loving",
-    "key": "loving",
-    "modifiers": []
-  },
-  {
-    "name": "Cold",
-    "key": "cold",
-    "modifiers": []
-  },
-  {
-    "name": "Ambitious",
-    "key": "ambitious",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "no_percent": true,
-        "value": 1
-      }
-    ]
-  },
-  {
-    "name": "Content",
-    "key": "content",
-    "modifiers": []
-  },
-  {
-    "name": "Suspicious",
-    "key": "suspicious",
-    "modifiers": []
-  },
-  {
+  "trusting": {
     "name": "Trusting",
     "key": "trusting",
     "modifiers": []
   },
-  {
-    "name": "Wise",
-    "key": "wise",
+  "ugly": {
+    "name": "Ugly",
+    "key": "ugly",
     "modifiers": []
   },
-  {
-    "name": "Rash",
-    "key": "rash",
-    "modifiers": []
-  },
-  {
-    "name": "Jealous",
-    "key": "jealous",
-    "modifiers": []
-  },
-  {
-    "name": "Secure",
-    "key": "secure",
-    "modifiers": []
-  },
-  {
-    "name": "Sarcastic",
-    "key": "sarcastic",
-    "modifiers": []
-  },
-  {
-    "name": "Plain-speaking",
-    "key": "plain_speaking",
-    "modifiers": []
-  },
-  {
-    "name": "Stubborn",
-    "key": "stubborn",
-    "modifiers": []
-  },
-  {
-    "name": "Weak-willed",
-    "key": "weak_willed",
-    "modifiers": []
-  },
-  {
-    "name": "Monotonous",
-    "key": "monotonous",
-    "modifiers": []
-  },
-  {
-    "name": "Kindly",
-    "key": "kindly",
-    "modifiers": []
-  },
-  {
+  "uncaring": {
     "name": "Uncaring",
     "key": "uncaring",
     "modifiers": []
   },
-  {
-    "name": "Polymath",
-    "key": "polymath",
+  "unnoticeable": {
+    "name": "Unnoticeable",
+    "key": "unnoticeable",
     "modifiers": []
   },
-  {
-    "name": "Obsessive",
-    "key": "obsessive",
+  "vengeful": {
+    "name": "Vengeful",
+    "key": "vengeful",
     "modifiers": []
   },
-  {
+  "victorious": {
     "name": "Victorious",
     "key": "victorious",
     "modifiers": []
   },
-  {
-    "name": "Conqueror",
-    "key": "conqueror",
+  "weak_willed": {
+    "name": "Weak-willed",
+    "key": "weak_willed",
     "modifiers": []
   },
-  {
-    "name": "Orator",
-    "key": "orator",
+  "wise": {
+    "name": "Wise",
+    "key": "wise",
     "modifiers": []
   },
-  {
-    "name": "Poet",
-    "key": "poet",
+  "wounded": {
+    "name": "Wounded",
+    "key": "wounded",
     "modifiers": [
       {
         "target": "General",
@@ -1116,68 +1175,9 @@
       }
     ]
   },
-  {
-    "name": "Olympic Competitor",
-    "key": "olympic_competitor",
+  "zealous": {
+    "name": "Zealous",
+    "key": "zealous",
     "modifiers": []
-  },
-  {
-    "name": "Blood of Lysimachos",
-    "key": "alcimachid",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "no_percent": true,
-        "value": 1
-      }
-    ]
-  },
-  {
-    "name": "Blood of Antigonos",
-    "key": "antigonids",
-    "modifiers": []
-  },
-  {
-    "name": "Blood of Antipatros",
-    "key": "antipatrid",
-    "modifiers": []
-  },
-  {
-    "name": "Blood of the Argeads",
-    "key": "argeads",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "no_percent": true,
-        "value": 1
-      }
-    ]
-  },
-  {
-    "name": "Blood of the Lagidai",
-    "key": "lagids",
-    "modifiers": []
-  },
-  {
-    "name": "Blood of Seleukos",
-    "key": "seleucids",
-    "modifiers": []
-  },
-  {
-    "name": "Mercenary",
-    "key": "mercenary_trait",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "no_percent": true,
-        "value": 5
-      }
-    ]
   }
-]
+}

@@ -1,5 +1,5 @@
-[
-  {
+{
+  "idea_martial_ethos": {
     "name": "Martial Ethos",
     "key": "idea_martial_ethos",
     "modifiers": [
@@ -11,7 +11,7 @@
       }
     ]
   },
-  {
+  "idea_thalassocracy": {
     "name": "Thalassocracy",
     "key": "idea_thalassocracy",
     "modifiers": [
@@ -23,7 +23,7 @@
       }
     ]
   },
-  {
+  "idea_elite_soldiers": {
     "name": "Elite Soldiery",
     "key": "idea_elite_soldiers",
     "modifiers": [
@@ -35,7 +35,7 @@
       }
     ]
   },
-  {
+  "idea_permanent_shipyards": {
     "name": "Permanent Shipyards",
     "key": "idea_permanent_shipyards",
     "modifiers": [
@@ -47,7 +47,7 @@
       }
     ]
   },
-  {
+  "idea_conscription": {
     "name": "Conscription",
     "key": "idea_conscription",
     "modifiers": [
@@ -59,7 +59,7 @@
       }
     ]
   },
-  {
+  "idea_military_society": {
     "name": "Militarized Society",
     "key": "idea_military_society",
     "modifiers": [
@@ -77,7 +77,7 @@
       }
     ]
   },
-  {
+  "idea_retreat": {
     "name": "Ordered Retreat",
     "key": "idea_retreat",
     "modifiers": [
@@ -95,7 +95,7 @@
       }
     ]
   },
-  {
+  "idea_siege_training": {
     "name": "Siege Training",
     "key": "idea_siege_training",
     "modifiers": [
@@ -107,7 +107,7 @@
       }
     ]
   },
-  {
+  "idea_triumph": {
     "name": "Support of the People",
     "key": "idea_triumph",
     "modifiers": [
@@ -119,4 +119,4 @@
       }
     ]
   }
-]
+}

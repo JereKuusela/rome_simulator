@@ -362,21 +362,22 @@ exports.getValue = (key, value) => {
   }
 }
 
+/** @type {Object<string, string>} */
 let countries = {}
 
 exports.getCountries = () => countries
 
 /**
- * @param {{}} localization 
+ * @param {Object<string, string>} localization 
  * @param {string} file 
  */
 exports.loadLocalization = (localization, file) => {
   if (file === 'countries_l_english.yml') {
-    countries = localization
     Object.keys(localization).forEach(key => {
       if (key.length > 3)
-        delete countries[key]
+        delete localization[key]
     })
+    Object.keys(localization).sort((a, b) => localization[a].localeCompare(localization[b])).forEach(key => countries[key] = localization[key])
     return
   }
   Object.assign(localizations, localization)

@@ -1,9 +1,9 @@
-const { readFiles, writeFile, getModifier } = require('./core')
+const { readFiles, writeFile, getModifier, sort } = require('./core')
 const path = require('path')
 const { getAttribute } = require('./modifiers')
 
 
-const results = []
+const results = {}
 let counter = 0
 
 const handleTradeSub = (type, key, modifiers) => {
@@ -22,7 +22,7 @@ const handleTradeSub = (type, key, modifiers) => {
     }
   })
   if (entity.modifiers.length)
-    results.push(entity)
+    results[key] = entity
 }
 
 const handler = data => {
@@ -39,5 +39,5 @@ const handlers = {
 
 exports.run = () => {
   readFiles(handlers)
-  writeFile(results, path.join('ir', 'trades.json'))
+  writeFile(sort(results), path.join('ir', 'trades.json'))
 }

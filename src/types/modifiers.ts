@@ -1,6 +1,6 @@
 import { UnitType, ValuesType, CultureType } from 'types'
-import { Mode } from './definition';
-import { ObjSet } from 'utils';
+import { Mode } from './definition'
+import { ObjSet } from 'utils'
 
 export enum SelectionType {
   Trait = 'Trait',
@@ -59,18 +59,17 @@ export interface TraditionDefinition {
   paths: Path[]
   modifiers: Modifier[]
 }
-export interface TradeDefinition extends ListDefinition {
-  index: number
-}
+export type TradeDefinition = ListDefinition & { index: number }
+export type TradeDefinitions = { [key: string]: TradeDefinition }
 export interface ListDefinition {
   name: string
   key: string
   modifiers: Modifier[]
 }
 export type ListDefinition2 = { [key: string]: ListDefinition }
-export type DeityDefinition = ListDefinition & {
-  isOmen: boolean
-}
+export type DeityDefinition = ListDefinition & { isOmen: boolean }
+export type DeityDefinitions = { [key: string]: DeityDefinition }
+
 export type OptionDefinition = ListDefinition[]
 
 export interface TechDefinition {

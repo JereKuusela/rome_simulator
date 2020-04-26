@@ -27,7 +27,7 @@ exports.sort = (results) => {
   if (Array.isArray(results))
     return results
   const sorted = {}
-  Object.keys(results).sort((a, b) => a.localeCompare(b)).forEach(key => sorted[key] = results[key])
+  Object.keys(results).sort((a, b) => results[a].name.localeCompare(results[b].name)).forEach(key => sorted[key] = results[key])
   return sorted
 }
 

@@ -10,10 +10,9 @@ import Dropdown from 'components/Dropdowns/Dropdown'
 import { sortBy, uniq, sum, union } from 'lodash'
 import LabelItem from 'components/Utils/LabelUnit'
 import { AppState, getUnits, getMode } from 'state'
-import { getDefaultUnits } from 'data'
+import { getDefaultUnits, countries_ir, traditions_ir, heritages_ir, policies_ir, laws_ir, factions_ir, religions_ir, deities_ir, modifiers_ir, traits_ir, tech_ir, trades_ir } from 'data'
 import AttributeImage from 'components/Utils/AttributeImage'
-import { toObj, toArr, mapRange, map } from 'utils'
-import { heritages_ir, traits_ir, traditions_ir, tech_ir, trades_ir, laws_ir, policies_ir, countries_ir, deities_ir, religions_ir, factions_ir, modifiers_ir } from 'managers/modifiers'
+import { toObj, toArr, mapRange, map, values } from 'utils'
 import { getNextId } from 'army_utils'
 import { calculateValueWithoutLoss } from 'definition_values'
 
@@ -230,7 +229,7 @@ class ImportSave extends Component<IProps, IState> {
             Heritage
           </Table.Cell>
           <Table.Cell>
-            {heritages_ir.find(heritage => heritage.key === entity.heritage)?.name}
+            {heritages_ir[entity.heritage]?.name}
           </Table.Cell>
         </Table.Row>
         <Table.Row>
@@ -280,7 +279,7 @@ class ImportSave extends Component<IProps, IState> {
             Laws
           </Table.Cell>
           <Table.Cell>
-            {entity.laws.map(key => laws_ir.find(law => key === law.key)?.name).filter(value => value).join(', ')}
+            {entity.laws.map(key => laws_ir[key]?.name).filter(value => value).join(', ')}
           </Table.Cell>
           <Table.Cell>
             Office (Discipline / Morale)
@@ -300,7 +299,7 @@ class ImportSave extends Component<IProps, IState> {
             Faction
           </Table.Cell>
           <Table.Cell>
-            {factions_ir.find(faction => faction.key === entity.faction)?.name}
+            {factions_ir[entity.faction]?.name}
           </Table.Cell>
         </Table.Row>
         <Table.Row>
@@ -308,13 +307,13 @@ class ImportSave extends Component<IProps, IState> {
             Religion
           </Table.Cell>
           <Table.Cell>
-            {religions_ir.find(religion => religion.key === entity.religion)?.name} ({entity.religiousUnity.toPrecision(3)}%)
+            {religions_ir[entity.religion]?.name} ({entity.religiousUnity.toPrecision(3)}%)
           </Table.Cell>
           <Table.Cell>
             Deities
           </Table.Cell>
           <Table.Cell>
-            {entity.deities.map(key => deities_ir.find(deity => key === deity.key)?.name).filter(value => value).join(', ')}
+            {entity.deities.map(key => deities_ir[key]?.name).filter(value => value).join(', ')}
           </Table.Cell>
         </Table.Row>
         <Table.Row>
@@ -322,7 +321,7 @@ class ImportSave extends Component<IProps, IState> {
             Modifiers
           </Table.Cell>
           <Table.Cell width='3'>
-            {entity.modifiers.map(key => modifiers_ir.find(modifier => key === modifier.key)?.name).filter(value => value).join(', ')}
+            {entity.modifiers.map(key => modifiers_ir[key]?.name).filter(value => value).join(', ')}
           </Table.Cell>
         </Table.Row>
       </>
@@ -358,8 +357,8 @@ class ImportSave extends Component<IProps, IState> {
           <Table.Cell>
             {entity.leader ? <><AttributeImage attribute={GeneralAttribute.Martial} />{' ' + (entity.leader.martial + entity.leader.traitMartial)}</> : ''}
           </Table.Cell>
-          <Table.Cell>
-            {entity.leader ? entity.leader.traits.map(trait => traits_ir.find(item => item.key === trait)?.name).join(', ') : ''}
+          <Table.Cell>k
+            {entity.leader ? entity.leader.traits.map(key => traits_ir[key]?.name).join(', ') : ''}
           </Table.Cell>
         </Table.Row>
         <Table.Row>
@@ -795,7 +794,7 @@ class ImportSave extends Component<IProps, IState> {
           character.traits = this.nonStringify(value).trim().split(' ').map(this.nonStringify)
       }
     }
-    character.traitMartial = sum(character.traits.map(key => traits_ir.find(trait => trait.key === key)?.modifiers.find(modifier => modifier.attribute === GeneralAttribute.Martial)?.value ?? 0))
+    character.traitMartial = sum(character.traits.map(key => traits_ir[key]?.modifiers.find(modifier => modifier.attribute === GeneralAttribute.Martial)?.value ?? 0))
     return character
   }
 
@@ -869,7 +868,7 @@ class ImportSave extends Component<IProps, IState> {
       enableCountrySelections(countryName, SelectionType.Tradition, traditions)
       const invention_list = sortBy(tech_ir.reduce((prev, curr) => prev.concat(curr.inventions.filter(invention => invention.index)), [] as Invention[]), invention => invention.index)
       const inventions = this.country.inventions.map((value, index) => value && index ? invention_list[index - 1].key : '').filter(value => value)
-      const exports = sortBy(trades_ir.filter(entity => entity.index), entity => entity.index)
+      const exports = sortBy(values(trades_ir).filter(entity => entity.index), entity => entity.index)
       const trades = this.country.exports.map((value, index) => value ? exports.find(entity => entity.index === index)?.key ?? '' : '').filter(value => value)
       enableCountrySelections(countryName, SelectionType.Invention, inventions)
       enableCountrySelection(countryName, SelectionType.Heritage, this.country.heritage)

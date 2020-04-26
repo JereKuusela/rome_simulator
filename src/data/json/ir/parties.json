@@ -18,31 +18,6 @@
       }
     ]
   },
-  "military_party": {
-    "name": "Military Faction",
-    "key": "military_party",
-    "modifiers": [
-      {
-        "target": "Land",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "value": 0.1
-      },
-      {
-        "target": "Naval",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Empower Military Faction Cost",
-        "type": "Base",
-        "negative": true,
-        "value": -0.5
-      }
-    ]
-  },
   "mercantile_party": {
     "name": "Mercantile Faction",
     "key": "mercantile_party",
@@ -69,6 +44,44 @@
       }
     ]
   },
+  "military_party": {
+    "name": "Military Faction",
+    "key": "military_party",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.1
+      },
+      {
+        "target": "Naval",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Empower Military Faction Cost",
+        "type": "Base",
+        "negative": true,
+        "value": -0.5
+      }
+    ]
+  },
+  "populist_party": {
+    "name": "Populist Faction",
+    "key": "populist_party",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Political Influence",
+        "type": "Base",
+        "negative": true,
+        "value": -0.33
+      }
+    ]
+  },
   "religious_party": {
     "name": "Religious Faction",
     "key": "religious_party",
@@ -86,19 +99,6 @@
         "type": "Base",
         "negative": true,
         "value": -0.5
-      }
-    ]
-  },
-  "populist_party": {
-    "name": "Populist Faction",
-    "key": "populist_party",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Monthly Political Influence",
-        "type": "Base",
-        "negative": true,
-        "value": -0.33
       }
     ]
   }

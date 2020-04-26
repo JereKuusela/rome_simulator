@@ -6,8 +6,8 @@ import { mapRange, ObjSet, values, keys } from '../utils'
 
 import { addSignWithZero } from 'formatters'
 import {
-  TraditionDefinition, TradeDefinition, ListDefinition,
-  OptionDefinition, Modifier, CultureType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, CountryName, Setting, SelectionType, TechDefinition, ArmyName, DeityDefinition
+  TraditionDefinition, ListDefinition,
+  OptionDefinition, Modifier, CultureType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, CountryName, Setting, SelectionType, TechDefinition, ArmyName
 } from 'types'
 import {
   clearCountryAttributes, setCountryAttribute, enableCountrySelections, enableCountrySelection, clearCountrySelections, clearCountrySelection,
@@ -64,12 +64,8 @@ class Countries extends Component<IProps> {
                 />
                 Base martial: <Input disabled={!general.enabled} type='number' value={general.base_values[GeneralAttribute.Martial]} onChange={(_, { value }) => this.setGeneralValue('Base', GeneralAttribute.Martial, Number(value))} />
                 {' '}with <StyledNumber value={general.extra_values[GeneralAttribute.Martial]} formatter={addSignWithZero} /> from traits
-                {
-                  this.renderTraits(traits_ir, general.selections[SelectionType.Trait], !general.enabled)
-                }
-                {
-                  this.renderAbilities(abilities_ir, general.selections[SelectionType.Ability])
-                }
+                {this.renderTraits()}
+                {this.renderAbilities()}
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
@@ -86,9 +82,7 @@ class Countries extends Component<IProps> {
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title='Trade' identifier='countries_trade'>
-                {
-                  this.renderTrades(trades_ir, countrySelections[SelectionType.Trade])
-                }
+                {this.renderTrades()}
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
@@ -121,9 +115,7 @@ class Countries extends Component<IProps> {
                   <List.Item>Heritage: 0 / 5)</List.Item>
                   <List.Item><b>Total from -30 to 300</b></List.Item>
                 </List>
-                {
-                  this.renderDeities(deities_ir, countrySelections[SelectionType.Deity], country[CountryAttribute.OmenPower])
-                }
+                {this.renderDeities()}
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
@@ -150,24 +142,16 @@ class Countries extends Component<IProps> {
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
-                {
-                  this.renderLaws(laws_ir, countrySelections[SelectionType.Law])
-                }
-                {
-                  this.renderPolicies(policies_ir, countrySelections[SelectionType.Policy])
-                }
-                {
-                  this.renderIdeas(ideas_ir, countrySelections[SelectionType.Idea])
-                }
+                {this.renderLaws()}
+                {this.renderPolicies()}
+                {this.renderIdeas()}
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title='Modifiers & Events' identifier='countries_modifiers'>
-                {
-                  this.renderModifiers(modifiers_ir, countrySelections[SelectionType.Modifier])
-                }
+                {this.renderModifiers()}
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
@@ -273,8 +257,11 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderDeities = (omens: DeityDefinition[], selections: ObjSet, power: number) => {
-    const rows = Math.ceil(omens.length / 4)
+  renderDeities = () => {
+    const deities = values(deities_ir)
+    const rows = Math.ceil(deities.length / 4)
+    const power = this.props.country[CountryAttribute.OmenPower]
+    const selections = this.props.country.selections[SelectionType.Deity]
     return (
       <Table celled unstackable fixed>
         <Table.Body>
@@ -284,7 +271,7 @@ class Countries extends Component<IProps> {
                 {
                   mapRange(4, number => number).map(column => {
                     const index = row * 4 + column
-                    const entity = omens[index]
+                    const entity = deities[index]
                     if (!entity)
                       return (<Table.Cell key={index}></Table.Cell>)
                     const key = entity.key
@@ -301,13 +288,14 @@ class Countries extends Component<IProps> {
   }
 
 
-  renderTraits = (traits: ListDefinition[], selections: ObjSet, disabled: boolean) => this.renderList(SelectionType.Trait, traits, selections, 4, this.onGeneralItemClick, disabled)
-  renderTrades = (trades: TradeDefinition[], selections: ObjSet) => this.renderList(SelectionType.Trade, trades, selections, 3, this.onCountryItemClick, false, PERCENT_PADDING)
-  renderIdeas = (ideas: ListDefinition[], selections: ObjSet) => this.renderList(SelectionType.Idea, ideas, selections, 3, this.onCountryItemClick, false, PERCENT_PADDING)
-  renderLaws = (laws: ListDefinition[], selections: ObjSet) => this.renderList(SelectionType.Law, laws, selections, 3, this.onCountryItemClick, false, PERCENT_PADDING)
-  renderModifiers = (modifiers: ListDefinition[], selections: ObjSet) => this.renderList(SelectionType.Modifier, modifiers, selections, 4, this.onCountryItemClick, false, PERCENT_PADDING)
+  renderTraits = () => this.renderList(SelectionType.Trait, values(traits_ir), 4, this.onGeneralItemClick, !this.props.general.enabled)
+  renderTrades = () => this.renderList(SelectionType.Trade, values(trades_ir), 3, this.onCountryItemClick, false, PERCENT_PADDING)
+  renderIdeas = () => this.renderList(SelectionType.Idea, values(ideas_ir), 3, this.onCountryItemClick, false, PERCENT_PADDING)
+  renderLaws = () => this.renderList(SelectionType.Law, values(laws_ir), 3, this.onCountryItemClick, false, PERCENT_PADDING)
+  renderModifiers = () => this.renderList(SelectionType.Modifier, values(modifiers_ir), 4, this.onCountryItemClick, false, PERCENT_PADDING)
 
-  renderList = (type: SelectionType, items: ListDefinition[], selections: ObjSet, columns: number, onClick: (enabled: boolean) => ((type: SelectionType, key: string) => void), disabled: boolean, padding?: string) => {
+  renderList = (type: SelectionType, items: ListDefinition[], columns: number, onClick: (enabled: boolean) => ((type: SelectionType, key: string) => void), disabled: boolean, padding?: string) => {
+    const selections = this.props.country.selections[type]
     items = items.filter(entity => entity.modifiers.length)
     const rows = Math.ceil(items.length / columns)
     return (
@@ -335,8 +323,8 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderHeritages = () => this.renderDropdown(SelectionType.Heritage, heritages_ir)
-  renderReligions = () => this.renderDropdown(SelectionType.Religion, religions_ir)
+  renderHeritages = () => this.renderDropdown(SelectionType.Heritage,  values(heritages_ir))
+  renderReligions = () => this.renderDropdown(SelectionType.Religion, values(religions_ir))
   renderFactions = () => this.renderDropdown(SelectionType.Faction, values(factions_ir))
 
   renderDropdown = (type: SelectionType, items: ListDefinition[]) => {
@@ -353,12 +341,11 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderPolicies = (policies: OptionDefinition[], selections: ObjSet) => this.renderOptions(SelectionType.Policy, policies, selections, 3, this.onCountryItemClick, false, PERCENT_PADDING)
-  renderAbilities = (abilities: OptionDefinition[], selections: ObjSet) => this.renderOptions(SelectionType.Ability, abilities, selections, 2, this.onGeneralItemClick, false, PERCENT_PADDING)
+  renderPolicies = () => this.renderOptions(SelectionType.Policy, policies_ir, 3, this.onCountryItemClick, false, PERCENT_PADDING)
+  renderAbilities = () => this.renderOptions(SelectionType.Ability, abilities_ir, 2, this.onGeneralItemClick, false, PERCENT_PADDING)
 
-  renderOptions = (type: SelectionType, options: OptionDefinition[], selections: ObjSet, columns: number, onClick: (enabled: boolean) => ((type: SelectionType, key: string) => void), disabled: boolean, padding?: string) => {
-
-
+  renderOptions = (type: SelectionType, options: OptionDefinition[], columns: number, onClick: (enabled: boolean) => ((type: SelectionType, key: string) => void), disabled: boolean, padding?: string) => {
+    const selections = this.props.country.selections[type]
     return (
       <Table celled unstackable fixed>
         <Table.Body>

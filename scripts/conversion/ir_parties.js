@@ -1,4 +1,4 @@
-const { readFiles, writeFile, getModifier } = require('./core')
+const { readFiles, writeFile, getModifier, sort } = require('./core')
 const path = require('path')
 const { getAttribute } = require('./modifiers')
 
@@ -31,5 +31,5 @@ const handlers = {
 
 exports.run = () => {
   readFiles(handlers)
-  writeFile(results, path.join('ir', 'parties.json'))
+  writeFile(sort(results), path.join('ir', 'parties.json'))
 }

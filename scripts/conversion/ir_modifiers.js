@@ -1,8 +1,8 @@
-const { readFiles, writeFile, getModifier } = require('./core')
+const { readFiles, writeFile, getModifier, sort } = require('./core')
 const path = require('path')
 const { getAttribute } = require('./modifiers')
 
-const results = []
+const results = {}
 
 const handler = data => {
   Object.keys(data).forEach(key => {
@@ -22,7 +22,7 @@ const handler = data => {
       }
     })
     if (entity.modifiers.length)
-      results.push(entity)
+      results[key] = entity
   })
 }
 
@@ -32,5 +32,5 @@ const handlers = {
 
 exports.run = () => {
   readFiles(handlers)
-  writeFile(results, path.join('ir', 'modifiers.json'))
+  writeFile(sort(results), path.join('ir', 'modifiers.json'))
 }
