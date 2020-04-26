@@ -9,7 +9,7 @@ let counter = 0
 const handleTradeSub = (type, key, modifiers) => {
   const entity = {
     name: type + ': ' + getAttribute(key),
-    key: type + ' ' + key,
+    key: type.toLowerCase() + '_' + key,
     index: type === 'Export' ? counter++ : 0,
     modifiers: []
   }
@@ -22,13 +22,13 @@ const handleTradeSub = (type, key, modifiers) => {
     }
   })
   if (entity.modifiers.length)
-    results[key] = entity
+    results[type.toLowerCase() + '_' + key] = entity
 }
 
 const handler = data => {
   Object.keys(data).forEach(key => {
     const trade = data[key]
-    handleTradeSub('Import', key, trade.country)
+    handleTradeSub('Surplus', key, trade.country)
     handleTradeSub('Export', key, trade.export)
   })
 }

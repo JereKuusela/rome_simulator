@@ -60,11 +60,6 @@ UI:
 Countries:
  - Inventions to show tag specific (without actually implementing tags).
   * These inventions are extra. Perhaps a 4th slot for toggle? Or just implement scrolling?
- - Republic leading faction (military gives morale) + empowerement (military gives discipline).
- - Any other active modifiers? Like events?
-  * Some are useful, others are settings. So have to filter manually.
-  * Save file contains played_country at bottom and also difficulty -> difficulty modifiers (from hardcoded)
- - Importing capital surplus (have to calculate slaves required for surplus from laws, buildings and territory status, amount of slaves, trade routes).
 
 
 

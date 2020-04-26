@@ -1,7 +1,7 @@
 {
-  "base_metals": {
+  "export_base_metals": {
     "name": "Export: Base Metals",
-    "key": "Export base_metals",
+    "key": "export_base_metals",
     "index": 22,
     "modifiers": [
       {
@@ -12,9 +12,9 @@
       }
     ]
   },
-  "camel": {
+  "export_camel": {
     "name": "Export: Camels",
-    "key": "Export camel",
+    "key": "export_camel",
     "index": 30,
     "modifiers": [
       {
@@ -25,9 +25,9 @@
       }
     ]
   },
-  "elephants": {
+  "export_elephants": {
     "name": "Export: Elephants",
-    "key": "Export elephants",
+    "key": "export_elephants",
     "index": 10,
     "modifiers": [
       {
@@ -38,9 +38,9 @@
       }
     ]
   },
-  "hemp": {
+  "export_hemp": {
     "name": "Export: Hemp",
-    "key": "Export hemp",
+    "key": "export_hemp",
     "index": 27,
     "modifiers": [
       {
@@ -51,9 +51,9 @@
       }
     ]
   },
-  "horses": {
+  "export_horses": {
     "name": "Export: Horses",
-    "key": "Export horses",
+    "key": "export_horses",
     "index": 3,
     "modifiers": [
       {
@@ -64,9 +64,9 @@
       }
     ]
   },
-  "incense": {
+  "export_incense": {
     "name": "Export: Incense",
-    "key": "Export incense",
+    "key": "export_incense",
     "index": 26,
     "modifiers": [
       {
@@ -78,9 +78,9 @@
       }
     ]
   },
-  "iron": {
+  "export_iron": {
     "name": "Export: Iron",
-    "key": "Export iron",
+    "key": "export_iron",
     "index": 2,
     "modifiers": [
       {
@@ -91,9 +91,9 @@
       }
     ]
   },
-  "leather": {
+  "export_leather": {
     "name": "Export: Leather",
-    "key": "Export leather",
+    "key": "export_leather",
     "index": 21,
     "modifiers": [
       {
@@ -104,9 +104,9 @@
       }
     ]
   },
-  "salt": {
+  "export_salt": {
     "name": "Export: Salt",
-    "key": "Export salt",
+    "key": "export_salt",
     "index": 1,
     "modifiers": [
       {
@@ -117,9 +117,9 @@
       }
     ]
   },
-  "steppe_horses": {
+  "export_steppe_horses": {
     "name": "Export: Steppe Horses",
-    "key": "Export steppe_horses",
+    "key": "export_steppe_horses",
     "index": 15,
     "modifiers": [
       {
@@ -130,9 +130,9 @@
       }
     ]
   },
-  "wild_game": {
+  "export_wild_game": {
     "name": "Export: Wild Game",
-    "key": "Export wild_game",
+    "key": "export_wild_game",
     "index": 13,
     "modifiers": [
       {
@@ -143,9 +143,9 @@
       }
     ]
   },
-  "wine": {
+  "export_wine": {
     "name": "Export: Wine",
-    "key": "Export wine",
+    "key": "export_wine",
     "index": 4,
     "modifiers": [
       {
@@ -153,6 +153,149 @@
         "attribute": "Maintenance",
         "type": "Modifier",
         "value": -0.025
+      }
+    ]
+  },
+  "surplus_base_metals": {
+    "name": "Surplus: Base Metals",
+    "key": "surplus_base_metals",
+    "index": 0,
+    "modifiers": [
+      {
+        "target": "Light Infantry",
+        "attribute": "Offense",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  "surplus_camel": {
+    "name": "Surplus: Camels",
+    "key": "surplus_camel",
+    "index": 0,
+    "modifiers": [
+      {
+        "target": "Camel Cavalry",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  "surplus_elephants": {
+    "name": "Surplus: Elephants",
+    "key": "surplus_elephants",
+    "index": 0,
+    "modifiers": [
+      {
+        "target": "War Elephants",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  "surplus_hemp": {
+    "name": "Surplus: Hemp",
+    "key": "surplus_hemp",
+    "index": 0,
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Damage Done",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  "surplus_horses": {
+    "name": "Surplus: Horses",
+    "key": "surplus_horses",
+    "index": 0,
+    "modifiers": [
+      {
+        "target": "Light Cavalry",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  "surplus_iron": {
+    "name": "Surplus: Iron",
+    "key": "surplus_iron",
+    "index": 0,
+    "modifiers": [
+      {
+        "target": "Heavy Infantry",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  "surplus_leather": {
+    "name": "Surplus: Leather",
+    "key": "surplus_leather",
+    "index": 0,
+    "modifiers": [
+      {
+        "target": "Light Infantry",
+        "attribute": "Defense",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  "surplus_salt": {
+    "name": "Surplus: Salt",
+    "key": "surplus_salt",
+    "index": 0,
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.05
+      }
+    ]
+  },
+  "surplus_steppe_horses": {
+    "name": "Surplus: Steppe Horses",
+    "key": "surplus_steppe_horses",
+    "index": 0,
+    "modifiers": [
+      {
+        "target": "Horse Archers",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  "surplus_wild_game": {
+    "name": "Surplus: Wild Game",
+    "key": "surplus_wild_game",
+    "index": 0,
+    "modifiers": [
+      {
+        "target": "Archers",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  "surplus_wine": {
+    "name": "Surplus: Wine",
+    "key": "surplus_wine",
+    "index": 0,
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.05
       }
     ]
   }

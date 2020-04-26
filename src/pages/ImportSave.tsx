@@ -12,7 +12,7 @@ import LabelItem from 'components/Utils/LabelUnit'
 import { AppState, getUnits, getMode } from 'state'
 import { getDefaultUnits, countries_ir, traditions_ir, heritages_ir, policies_ir, laws_ir, factions_ir, religions_ir, deities_ir, modifiers_ir, traits_ir, tech_ir, trades_ir, ideas_ir } from 'data'
 import AttributeImage from 'components/Utils/AttributeImage'
-import { toObj, toArr, mapRange, map, values, keys } from 'utils'
+import { toObj, toArr, mapRange, map, values, keys, filter } from 'utils'
 import { getNextId } from 'army_utils'
 import { calculateValueWithoutLoss } from 'definition_values'
 import { parseFile } from 'managers/importer'
@@ -36,13 +36,12 @@ type Country = {
   laws: string[]
   ideas: string[]
   exports: boolean[]
-  imports: boolean[]
+  surplus: string[]
   officeDiscipline: number
   officeMorale: number
   deities: string[]
   modifiers: string[]
-  isPlayer: boolean,
-  capital: number
+  isPlayer: boolean
 }
 
 type Character = {
@@ -191,6 +190,7 @@ class ImportSave extends Component<IProps, IState> {
     if (!this.state.country)
       return null
     const country = this.state.country
+    console.log(country.surplus)
     return (
       <>
         <Table.Row>
@@ -265,16 +265,16 @@ class ImportSave extends Component<IProps, IState> {
         </Table.Row>
         <Table.Row>
           <Table.Cell>
-            Imports
+            Capital surplus
           </Table.Cell>
           <Table.Cell>
-            Not implemented
+            {country.surplus.map(key => trades_ir['surplus_' + key]?.name.substr(8)).filter(value => value).join(', ')}
           </Table.Cell>
           <Table.Cell>
             Exports
           </Table.Cell>
           <Table.Cell>
-            {country.exports.filter(value => value).length}
+            {this.getExports(country).map(key => trades_ir[key]?.name.substr(8)).filter(value => value).join(', ')}
           </Table.Cell>
         </Table.Row>
         <Table.Row>
@@ -458,19 +458,18 @@ class ImportSave extends Component<IProps, IState> {
       traditions: this.arrayify(data.military_tradition_levels).filter((_, index) => index < 3),
       laws: [],
       exports: data.export.map((value: any) => !!value),
-      imports: [],
+      surplus: [],
       ideas: this.arrayify(data.ideas?.idea).map((idea: any) => idea.idea),
       officeDiscipline: 0,
       officeMorale: 0,
       id,
-      deities: data.pantheon?.deity.map((index: number) => deities[index].deity) ?? [], 
+      deities: data.pantheon?.deity.map((index: number) => deities[index].deity) ?? [],
       religiousUnity: data.religious_unity * 100,
       religion: data.religion,
       government: '' as GovermentType,
       faction: data.ruler_term?.party ?? '',
       modifiers: this.arrayify(data.modifier).map((modifier: any) => modifier.modifier),
-      isPlayer: !!this.arrayify(this.state.file.played_country).find(player => player.country === Number(id)),
-      capital: data.capital
+      isPlayer: !!this.arrayify(this.state.file.played_country).find(player => player.country === Number(id))
     }
     country.modifiers.push(this.state.file.game_configuration.difficulty + (country.isPlayer ? '_player' : '_ai'))
     this.laws.filter((_, index) => availableLaws[index]).forEach(key => {
@@ -496,6 +495,36 @@ class ImportSave extends Component<IProps, IState> {
       const character = characters[disciplineJob.character]
       country.officeMorale = Math.floor(this.getCharacterMartial(character) * character.experience / 100.0)
     }
+    if (data.capital) {
+      const province = this.state.file.provinces[data.capital].state
+      const territories = Object.values(this.state.file.provinces).filter((territory: any) => territory.state === province) as any[]
+      const pops = this.state.file.population.population
+      const goods: any[] = territories.reduce((prev, territory) => {
+        const slaves = territory.pop.filter((id: number) => pops[id].type == 'slaves').length
+        const goods = territory.trade_goods
+        let slavesForSurplus = 18
+        if (territory.province_rank === 'settlement')
+          slavesForSurplus -= 3
+        if (territory.buildings[16])
+          slavesForSurplus -= 5
+        if (territory.buildings[17])
+          slavesForSurplus -= 5
+        slavesForSurplus = Math.max(1, slavesForSurplus)
+        return prev.concat(Array(1 + Math.floor(slaves / slavesForSurplus)).fill(goods))
+      }, [] as any[])
+      const counts = toObj(goods, type => type, type => goods.filter(item => item === type).length)
+      const trade = this.state.file.trade.route as any[]
+      trade.forEach(route => {
+        if (route.from_state === province)
+          counts[route.trade_goods]--
+
+        if (route.to_state === province)
+          counts[route.trade_goods] = (counts[route.trade_goods] ?? 0) + 1
+
+      })
+      country.surplus = Object.keys(filter(counts, item => item > 1))
+    }
+
     return country
   }
 
@@ -615,11 +644,12 @@ class ImportSave extends Component<IProps, IState> {
     enableCountrySelections(countryName, SelectionType.Tradition, traditions)
     const invention_list = sortBy(tech_ir.reduce((prev, curr) => prev.concat(curr.inventions.filter(invention => invention.index)), [] as Invention[]), invention => invention.index)
     const inventions = country.inventions.map((value, index) => value && index ? invention_list[index - 1].key : '').filter(value => value)
-    const exports = sortBy(values(trades_ir).filter(entity => entity.index), entity => entity.index)
-    const trades = country.exports.map((value, index) => value ? exports.find(entity => entity.index === index)?.key ?? '' : '').filter(value => value)
+    const exports = this.getExports(country)
+    const imports = country.surplus.map(key => 'surplus_' + key)
     enableCountrySelections(countryName, SelectionType.Invention, inventions)
     enableCountrySelection(countryName, SelectionType.Heritage, country.heritage)
-    enableCountrySelections(countryName, SelectionType.Trade, trades)
+    enableCountrySelections(countryName, SelectionType.Trade, exports)
+    enableCountrySelections(countryName, SelectionType.Trade, imports)
     enableCountrySelections(countryName, SelectionType.Idea, country.ideas)
     enableCountrySelections(countryName, SelectionType.Law, country.laws)
     enableCountrySelections(countryName, SelectionType.Deity, country.deities)
@@ -632,6 +662,11 @@ class ImportSave extends Component<IProps, IState> {
     setCountryAttribute(countryName, CountryAttribute.OfficeMorale, country.officeMorale)
     setCountryAttribute(countryName, CountryAttribute.OmenPower, country.religiousUnity - 100)
     this.importArmy()
+  }
+
+  getExports = (country: Country) => {
+    const exports = sortBy(values(trades_ir).filter(entity => entity.index), entity => entity.index)
+    return country.exports.map((value, index) => value ? exports.find(entity => entity.index === index)?.key ?? '' : '').filter(value => value)
   }
 
   importArmy = () => {
