@@ -6,6 +6,8 @@ const results = {}
 
 const handler = data => {
   Object.keys(data).forEach(key => {
+    if (key === 'army_leader_less' || key === 'navy_leader_less' || key === 'base_values' || key === 'military_experience' || key === 'religious_unity')
+      return
     const name = getAttribute(key)
     const modifier = data[key]
     const entity = {

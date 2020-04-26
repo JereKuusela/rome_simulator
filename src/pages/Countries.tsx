@@ -295,7 +295,7 @@ class Countries extends Component<IProps> {
   renderModifiers = () => this.renderList(SelectionType.Modifier, values(modifiers_ir), 4, this.onCountryItemClick, false, PERCENT_PADDING)
 
   renderList = (type: SelectionType, items: ListDefinition[], columns: number, onClick: (enabled: boolean) => ((type: SelectionType, key: string) => void), disabled: boolean, padding?: string) => {
-    const selections = this.props.country.selections[type]
+    const selections = this.props.country.selections[type] ?? this.props.general.selections[type]
     items = items.filter(entity => entity.modifiers.length)
     const rows = Math.ceil(items.length / columns)
     return (
@@ -328,7 +328,7 @@ class Countries extends Component<IProps> {
   renderFactions = () => this.renderDropdown(SelectionType.Faction, values(factions_ir))
 
   renderDropdown = (type: SelectionType, items: ListDefinition[]) => {
-    const selections = this.props.country.selections[type]
+    const selections = this.props.country.selections[type] ?? this.props.general.selections[type]
     const value = selections && keys(selections).length ? keys(selections)[0] : ''
     return (
       <DropdownListDefinition
@@ -345,7 +345,7 @@ class Countries extends Component<IProps> {
   renderAbilities = () => this.renderOptions(SelectionType.Ability, abilities_ir, 2, this.onGeneralItemClick, false, PERCENT_PADDING)
 
   renderOptions = (type: SelectionType, options: OptionDefinition[], columns: number, onClick: (enabled: boolean) => ((type: SelectionType, key: string) => void), disabled: boolean, padding?: string) => {
-    const selections = this.props.country.selections[type]
+    const selections = this.props.country.selections[type] ?? this.props.general.selections[type]
     return (
       <Table celled unstackable fixed>
         <Table.Body>

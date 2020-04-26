@@ -179,30 +179,6 @@
       }
     ]
   },
-  "base_values": {
-    "name": "Base",
-    "key": "base_values",
-    "modifiers": [
-      {
-        "target": "Liburnian",
-        "attribute": "River",
-        "type": "Base",
-        "value": 0.25
-      },
-      {
-        "target": "Trireme",
-        "attribute": "River",
-        "type": "Base",
-        "value": 0.25
-      },
-      {
-        "target": "Naval",
-        "attribute": "Capture Chance",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
-  },
   "better_morale": {
     "name": "Better Troops",
     "key": "better_morale",
@@ -1332,19 +1308,6 @@
       }
     ]
   },
-  "navy_leader_less": {
-    "name": "Lack of Admiral",
-    "key": "navy_leader_less",
-    "modifiers": [
-      {
-        "target": "Naval",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "negative": true,
-        "value": -0.25
-      }
-    ]
-  },
   "lack_of_equipment": {
     "name": "Lack of Equipment",
     "key": "lack_of_equipment",
@@ -1370,19 +1333,6 @@
         "negative": true,
         "no_percent": true,
         "value": -10
-      }
-    ]
-  },
-  "army_leader_less": {
-    "name": "Lack of General",
-    "key": "army_leader_less",
-    "modifiers": [
-      {
-        "target": "Land",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "negative": true,
-        "value": -0.25
       }
     ]
   },
@@ -1674,18 +1624,6 @@
         "attribute": "Cost",
         "type": "Modifier",
         "value": -0.2
-      }
-    ]
-  },
-  "military_experience": {
-    "name": "Military Experience",
-    "key": "military_experience",
-    "modifiers": [
-      {
-        "target": "Land",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "value": 0.001
       }
     ]
   },
@@ -2166,19 +2104,6 @@
         "type": "Base",
         "no_percent": true,
         "value": 10
-      }
-    ]
-  },
-  "religious_unity": {
-    "name": "Religious Unity",
-    "key": "religious_unity",
-    "modifiers": [
-      {
-        "target": "Country",
-        "attribute": "Omen Power",
-        "type": "Base",
-        "no_percent": true,
-        "value": 100
       }
     ]
   },
