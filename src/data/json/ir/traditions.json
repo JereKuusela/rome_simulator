@@ -1,2378 +1,2549 @@
-{
-  "traditions": [
-    {
-      "name": "Barbarian",
-      "key": "celtic_philosophy",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Allows 'Chariots' Units",
-          "value": 0
-        }
-      ],
-      "paths": [
-        {
-          "name": "Britannic",
-          "key": "tradition_path_0",
-          "traditions": [
-            {
-              "name": "Tradition Scythed Chariots",
-              "key": "tradition_path_0_0",
-              "modifiers": [
-                {
-                  "target": "Chariots",
-                  "attribute": "Offense",
-                  "value": 0.2
-                }
-              ]
-            },
-            {
-              "name": "Tradition Coming of Age",
-              "key": "tradition_path_0_1",
-              "modifiers": [
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Defense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Living off the Land",
-              "key": "tradition_path_0_2",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Army Attrition",
-                  "value": -0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Word of Mouth",
-              "key": "tradition_path_0_3",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Manpower Recovery Speed",
-                  "value": 0.05
-                }
-              ]
-            },
-            {
-              "name": "Tradition Chariot Mastery",
-              "key": "tradition_path_0_4",
-              "modifiers": [
-                {
-                  "target": "Chariots",
-                  "attribute": "Morale",
-                  "type": "Modifier",
-                  "value": 0.2
-                }
-              ]
-            },
-            {
-              "name": "Tradition Selective Breeding",
-              "key": "tradition_path_0_5",
-              "modifiers": [
-                {
-                  "target": "Light Cavalry",
-                  "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Take up Arms",
-              "key": "tradition_path_0_6",
-              "modifiers": [
-                {
-                  "target": "Archers",
-                  "attribute": "Morale",
-                  "type": "Modifier",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition undefined",
-              "key": "tradition_path_0_7",
-              "modifiers": [
-                {
-                  "target": "Light Cavalry",
-                  "attribute": "Offense",
-                  "value": 0.1
-                },
-                {
-                  "target": "Chariots",
-                  "attribute": "Defense",
-                  "value": 0.2
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Germanic",
-          "key": "tradition_path_1",
-          "traditions": [
-            {
-              "name": "Tradition Strike and Withdraw",
-              "key": "tradition_path_1_0",
-              "modifiers": [
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Morale",
-                  "type": "Modifier",
-                  "value": 0.2
-                }
-              ]
-            },
-            {
-              "name": "Tradition Natural Resources",
-              "key": "tradition_path_1_1",
-              "modifiers": [
-                {
-                  "target": "Light Cavalry",
-                  "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.15
-                },
-                {
-                  "target": "Chariots",
-                  "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition The Glory of the Hunt",
-              "key": "tradition_path_1_2",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Enslavement Efficiency",
-                  "value": 0.05
-                },
-                {
-                  "target": "Text",
-                  "attribute": "National Slave Output",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Ambush",
-              "key": "tradition_path_1_3",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Enables the 'Hit-and-Run' Tactic",
-                  "value": 0
-                },
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Forest",
-                  "value": 0.33
-                },
-                {
-                  "target": "Archers",
-                  "attribute": "Forest",
-                  "value": 0.33
-                }
-              ]
-            },
-            {
-              "name": "Tradition Shield Wall",
-              "key": "tradition_path_1_4",
-              "modifiers": [
-                {
-                  "target": "Heavy Infantry",
-                  "attribute": "Defense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition The Young Must Serve",
-              "key": "tradition_path_1_5",
-              "modifiers": [
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Hail of Stones",
-              "key": "tradition_path_1_6",
-              "modifiers": [
-                {
-                  "target": "Archers",
-                  "attribute": "Defense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition undefined",
-              "key": "tradition_path_1_7",
-              "modifiers": [
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Discipline",
-                  "value": 0.1
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Gallic",
-          "key": "tradition_path_2",
-          "traditions": [
-            {
-              "name": "Tradition Strike From Afar",
-              "key": "tradition_path_2_0",
-              "modifiers": [
-                {
-                  "target": "Archers",
-                  "attribute": "Offense",
-                  "value": 0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Confederations",
-              "key": "tradition_path_2_1",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "National Manpower",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition The Plains Fight With us",
-              "key": "tradition_path_2_2",
-              "modifiers": [
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Plains",
-                  "value": 0.15
-                },
-                {
-                  "target": "Chariots",
-                  "attribute": "Plains",
-                  "value": 0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition In Defense of our Home",
-              "key": "tradition_path_2_3",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Enables the 'Raise Levies' Ability",
-                  "value": 0
-                }
-              ]
-            },
-            {
-              "name": "Tradition A People on the Move",
-              "key": "tradition_path_2_4",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Cohort Recruit Speed",
-                  "value": 0.25
-                },
-                {
-                  "target": "Text",
-                  "attribute": "Wrong Culture Happiness",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Strong Arm",
-              "key": "tradition_path_2_5",
-              "modifiers": [
-                {
-                  "target": "Heavy Infantry",
-                  "attribute": "Offense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Scale the Walls!",
-              "key": "tradition_path_2_6",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Siege Ability",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition undefined",
-              "key": "tradition_path_2_7",
-              "modifiers": [
-                {
-                  "target": "Land",
-                  "attribute": "Morale",
-                  "type": "Modifier",
-                  "value": 0.1
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Greek",
-      "key": "greek_philosophy",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Enables the 'Phalanx' Tactic",
-          "value": 0
-        }
-      ],
-      "paths": [
-        {
-          "name": "Seleucid",
-          "key": "tradition_path_0",
-          "traditions": [
-            {
-              "name": "Tradition Agema",
-              "key": "tradition_path_0_0",
-              "modifiers": [
-                {
-                  "target": "Heavy Cavalry",
-                  "attribute": "Maintenance",
-                  "type": "Modifier",
-                  "value": -0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Arms for Hire",
-              "key": "tradition_path_0_1",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Recruit Mercenary Cost",
-                  "value": -0.15
-                },
-                {
-                  "target": "Land",
-                  "attribute": "Morale",
-                  "type": "Modifier",
-                  "value": 0.05
-                }
-              ]
-            },
-            {
-              "name": "Tradition Phoenician Sailors",
-              "key": "tradition_path_0_2",
-              "modifiers": [
-                {
-                  "target": "Naval",
-                  "attribute": "Damage Done",
-                  "value": 0.05
-                }
-              ]
-            },
-            {
-              "name": "Tradition The Companion Cavalry",
-              "key": "tradition_path_0_3",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Enables the 'Cavalry Skirmish' Tactic",
-                  "value": 0
-                }
-              ]
-            },
-            {
-              "name": "Tradition Kataphraktoi",
-              "key": "tradition_path_0_4",
-              "modifiers": [
-                {
-                  "target": "Heavy Cavalry",
-                  "attribute": "Offense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Thyreophoroi",
-              "key": "tradition_path_0_5",
-              "modifiers": [
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Morale",
-                  "type": "Modifier",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition The Hipparchos",
-              "key": "tradition_path_0_6",
-              "modifiers": [
-                {
-                  "target": "Heavy Cavalry",
-                  "attribute": "Morale",
-                  "type": "Modifier",
-                  "value": 0.1
-                },
-                {
-                  "target": "Light Cavalry",
-                  "attribute": "Morale",
-                  "type": "Modifier",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition undefined",
-              "key": "tradition_path_0_7",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Mercenary Army Maintenance",
-                  "value": -0.15
-                },
-                {
-                  "target": "Heavy Cavalry",
-                  "attribute": "Discipline",
-                  "value": 0.1
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "States",
-          "key": "tradition_path_1",
-          "traditions": [
-            {
-              "name": "Tradition The Sarissa",
-              "key": "tradition_path_1_0",
-              "modifiers": [
-                {
-                  "target": "Heavy Infantry",
-                  "attribute": "Morale",
-                  "type": "Modifier",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Veterans of the Great Campaign",
-              "key": "tradition_path_1_1",
-              "modifiers": [
-                {
-                  "target": "Land",
-                  "attribute": "Experience",
-                  "value": 0.1
-                },
-                {
-                  "target": "Text",
-                  "attribute": "Experience Decay",
-                  "value": -0.005
-                }
-              ]
-            },
-            {
-              "name": "Tradition Tarentine Advance",
-              "key": "tradition_path_1_2",
-              "modifiers": [
-                {
-                  "target": "Light Cavalry",
-                  "attribute": "Defense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Military Colonies",
-              "key": "tradition_path_1_3",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Enables the 'Military Colonies' Ability",
-                  "value": 0
-                }
-              ]
-            },
-            {
-              "name": "Tradition The Nobility Ride",
-              "key": "tradition_path_1_4",
-              "modifiers": [
-                {
-                  "target": "Light Cavalry",
-                  "attribute": "Offense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition City State Fortifications",
-              "key": "tradition_path_1_5",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Fort Defense",
-                  "value": 0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Centuries of War",
-              "key": "tradition_path_1_6",
-              "modifiers": [
-                {
-                  "target": "Heavy Infantry",
-                  "attribute": "Maintenance",
-                  "type": "Modifier",
-                  "value": -0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition undefined",
-              "key": "tradition_path_1_7",
-              "modifiers": [
-                {
-                  "target": "Heavy Infantry",
-                  "attribute": "Offense",
-                  "value": 0.1
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Antigonid",
-          "key": "tradition_path_2",
-          "traditions": [
-            {
-              "name": "Tradition Proud Shipwrights",
-              "key": "tradition_path_2_0",
-              "modifiers": [
-                {
-                  "target": "Naval",
-                  "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.15
-                },
-                {
-                  "target": "Text",
-                  "attribute": "Allows 'Octere' Units",
-                  "value": 0
-                }
-              ]
-            },
-            {
-              "name": "Tradition Mine's Bigger Than Yours",
-              "key": "tradition_path_2_1",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Allows 'Mega-Polyreme' Units",
-                  "value": 0
-                }
-              ]
-            },
-            {
-              "name": "Tradition Peltasts",
-              "key": "tradition_path_2_2",
-              "modifiers": [
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Offense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition The Victor's Spoils",
-              "key": "tradition_path_2_3",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Enables the 'Slave Raid' Ability",
-                  "value": 0
-                },
-                {
-                  "target": "Text",
-                  "attribute": "Enslavement Efficiency",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Siegecraft",
-              "key": "tradition_path_2_4",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Siege Ability",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Specialist Infantry",
-              "key": "tradition_path_2_5",
-              "modifiers": [
-                {
-                  "target": "Archers",
-                  "attribute": "Discipline",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Mastery of the Mountains",
-              "key": "tradition_path_2_6",
-              "modifiers": [
-                {
-                  "target": "Archers",
-                  "attribute": "Hills",
-                  "value": 0.15
-                },
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Hills",
-                  "value": 0.15
-                },
-                {
-                  "target": "Heavy Infantry",
-                  "attribute": "Hills",
-                  "value": 0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition undefined",
-              "key": "tradition_path_2_7",
-              "modifiers": [
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Offense",
-                  "value": 0.1
-                },
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Defense",
-                  "value": 0.1
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Italic",
-      "key": "latin_philosophy",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Fort Defense",
-          "value": 0.15
-        }
-      ],
-      "paths": [
-        {
-          "name": "Tribal",
-          "key": "tradition_path_0",
-          "traditions": [
-            {
-              "name": "Tradition Artisanal Bronzework",
-              "key": "tradition_path_0_0",
-              "modifiers": [
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Defense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition The Equestrian Order",
-              "key": "tradition_path_0_1",
-              "modifiers": [
-                {
-                  "target": "Light Cavalry",
-                  "attribute": "Offense",
-                  "value": 0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Pietas",
-              "key": "tradition_path_0_2",
-              "modifiers": [
-                {
-                  "target": "Country",
-                  "attribute": "Omen Power",
-                  "no_percent": true,
-                  "value": 15
-                }
-              ]
-            },
-            {
-              "name": "Tradition The Acquisition of Wealth",
-              "key": "tradition_path_0_3",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Enslavement Efficiency",
-                  "value": 0.1
-                },
-                {
-                  "target": "Text",
-                  "attribute": "National Slave Output",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition The Aulos",
-              "key": "tradition_path_0_4",
-              "modifiers": [
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Morale",
-                  "type": "Modifier",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Mare Nostrum",
-              "key": "tradition_path_0_5",
-              "modifiers": [
-                {
-                  "target": "Naval",
-                  "attribute": "Maintenance",
-                  "type": "Modifier",
-                  "value": -0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Rousing Oratory",
-              "key": "tradition_path_0_6",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "National Manpower",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition undefined",
-              "key": "tradition_path_0_7",
-              "modifiers": [
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Hills",
-                  "value": 0.15
-                },
-                {
-                  "target": "Archers",
-                  "attribute": "Hills",
-                  "value": 0.15
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Support",
-          "key": "tradition_path_1",
-          "traditions": [
-            {
-              "name": "Tradition State Navy",
-              "key": "tradition_path_1_0",
-              "modifiers": [
-                {
-                  "target": "Naval",
-                  "attribute": "Morale",
-                  "type": "Modifier",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition The Fabri",
-              "key": "tradition_path_1_1",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Siege Engineers",
-                  "no_percent": true,
-                  "value": 1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Scale the Walls",
-              "key": "tradition_path_1_2",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Siege Ability",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Castra",
-              "key": "tradition_path_1_3",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Enables the 'Construct Border Fort' Ability",
-                  "value": 0
-                }
-              ]
-            },
-            {
-              "name": "Tradition Logistics of State",
-              "key": "tradition_path_1_4",
-              "modifiers": [
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.1
-                },
-                {
-                  "target": "Heavy Infantry",
-                  "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.1
-                },
-                {
-                  "target": "Archers",
-                  "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Scutum",
-              "key": "tradition_path_1_5",
-              "modifiers": [
-                {
-                  "target": "Heavy Infantry",
-                  "attribute": "Defense",
-                  "value": 0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Foederati",
-              "key": "tradition_path_1_6",
-              "modifiers": [
-                {
-                  "target": "Light Cavalry",
-                  "attribute": "Defense",
-                  "value": 0.1
-                },
-                {
-                  "target": "Horse Archers",
-                  "attribute": "Defense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition undefined",
-              "key": "tradition_path_1_7",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Hold Triumph Cost",
-                  "value": -0.5
-                },
-                {
-                  "target": "Text",
-                  "attribute": "Loyalty of Generals",
-                  "no_percent": true,
-                  "value": 5
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Roman",
-          "key": "tradition_path_2",
-          "traditions": [
-            {
-              "name": "Tradition Principes",
-              "key": "tradition_path_2_0",
-              "modifiers": [
-                {
-                  "target": "Heavy Infantry",
-                  "attribute": "Offense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Triplex Acies",
-              "key": "tradition_path_2_1",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Enables the 'Triplex Acies' Tactic",
-                  "value": 0
-                }
-              ]
-            },
-            {
-              "name": "Tradition Triarii",
-              "key": "tradition_path_2_2",
-              "modifiers": [
-                {
-                  "target": "Heavy Infantry",
-                  "attribute": "Discipline",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Roman Roads",
-              "key": "tradition_path_2_3",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Enables the 'Build Military Road' Ability",
-                  "value": 0
-                }
-              ]
-            },
-            {
-              "name": "Tradition Professional Soldiers",
-              "key": "tradition_path_2_4",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Monthly War Exhaustion",
-                  "no_percent": true,
-                  "value": -0.01
-                }
-              ]
-            },
-            {
-              "name": "Tradition Velites",
-              "key": "tradition_path_2_5",
-              "modifiers": [
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Offense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition The Honor of Service",
-              "key": "tradition_path_2_6",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Manpower Recovery Speed",
-                  "value": 0.05
-                }
-              ]
-            },
-            {
-              "name": "Tradition undefined",
-              "key": "tradition_path_2_7",
-              "modifiers": [
-                {
-                  "target": "Land",
-                  "attribute": "Morale",
-                  "type": "Modifier",
-                  "value": 0.1
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Levantine",
-      "key": "levantine_philosophy",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Army Attrition",
-          "value": -0.15
-        }
-      ],
-      "paths": [
-        {
-          "name": "Arabian",
-          "key": "tradition_path_0",
-          "traditions": [
-            {
-              "name": "Tradition Desert Sands",
-              "key": "tradition_path_0_0",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Hostile Attrition",
-                  "no_percent": true,
-                  "value": 1
-                }
-              ]
-            },
-            {
-              "name": "Tradition The Spear of the Kingdom",
-              "key": "tradition_path_0_1",
-              "modifiers": [
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Discipline",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Merchant Coast",
-              "key": "tradition_path_0_2",
-              "modifiers": [
-                {
-                  "target": "Naval",
-                  "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Beasts of Burden",
-              "key": "tradition_path_0_3",
-              "modifiers": [
-                {
-                  "target": "Camel Cavalry",
-                  "attribute": "Offense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Ships of the Desert",
-              "key": "tradition_path_0_4",
-              "modifiers": [
-                {
-                  "target": "Camel Cavalry",
-                  "attribute": "Desert",
-                  "value": 0.15
-                },
-                {
-                  "target": "Light Cavalry",
-                  "attribute": "Desert",
-                  "value": 0.15
-                },
-                {
-                  "target": "Heavy Cavalry",
-                  "attribute": "Desert",
-                  "value": 0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Legacy of the Builders",
-              "key": "tradition_path_0_5",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "City Building Slots",
-                  "no_percent": true,
-                  "value": 1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Oasis Trade",
-              "key": "tradition_path_0_6",
-              "modifiers": [
-                {
-                  "target": "Light Cavalry",
-                  "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.15
-                },
-                {
-                  "target": "Camel Cavalry",
-                  "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.15
-                },
-                {
-                  "target": "Heavy Cavalry",
-                  "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition undefined",
-              "key": "tradition_path_0_7",
-              "modifiers": [
-                {
-                  "target": "Camel Cavalry",
-                  "attribute": "Discipline",
-                  "value": 0.1
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Egyptian",
-          "key": "tradition_path_1",
-          "traditions": [
-            {
-              "name": "Tradition Sturdy Design",
-              "key": "tradition_path_1_0",
-              "modifiers": [
-                {
-                  "target": "Naval",
-                  "attribute": "Damage Taken",
-                  "value": -0.1
-                },
-                {
-                  "target": "Text",
-                  "attribute": "Allows 'Octere' Units",
-                  "value": 0
-                }
-              ]
-            },
-            {
-              "name": "Tradition Arms Race",
-              "key": "tradition_path_1_1",
-              "modifiers": [
-                {
-                  "target": "Trireme",
-                  "attribute": "Discipline",
-                  "value": 0.1
-                },
-                {
-                  "target": "Liburnian",
-                  "attribute": "Discipline",
-                  "value": 0.1
-                },
-                {
-                  "target": "Text",
-                  "attribute": "Allows 'Mega-Polyreme' Units",
-                  "value": 0
-                }
-              ]
-            },
-            {
-              "name": "Tradition Stonemovers",
-              "key": "tradition_path_1_2",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Fort Defense",
-                  "value": 0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Colonial Integration",
-              "key": "tradition_path_1_3",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Enables the 'Military Colonies' Ability",
-                  "value": 0
-                }
-              ]
-            },
-            {
-              "name": "Tradition The Blood of Egypt",
-              "key": "tradition_path_1_4",
-              "modifiers": [
-                {
-                  "target": "Naval",
-                  "attribute": "Morale",
-                  "type": "Modifier",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Thick Hide",
-              "key": "tradition_path_1_5",
-              "modifiers": [
-                {
-                  "target": "Camel Cavalry",
-                  "attribute": "Defense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Cradle of Civilization",
-              "key": "tradition_path_1_6",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "National Manpower",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition undefined",
-              "key": "tradition_path_1_7",
-              "modifiers": [
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Offense",
-                  "value": 0.1
-                },
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Defense",
-                  "value": 0.1
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Greco",
-          "key": "tradition_path_2",
-          "traditions": [
-            {
-              "name": "Tradition Surfeit of War",
-              "key": "tradition_path_2_0",
-              "modifiers": [
-                {
-                  "target": "Heavy Infantry",
-                  "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Thorakitai",
-              "key": "tradition_path_2_1",
-              "modifiers": [
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Offense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Machimoi Epilektoi",
-              "key": "tradition_path_2_2",
-              "modifiers": [
-                {
-                  "target": "Heavy Infantry",
-                  "attribute": "Offense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Greek Warfare",
-              "key": "tradition_path_2_3",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Enables the 'Phalanx' Tactic",
-                  "value": 0
-                }
-              ]
-            },
-            {
-              "name": "Tradition Good Reputation",
-              "key": "tradition_path_2_4",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Mercenary Army Maintenance",
-                  "value": -0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Ramming Speed",
-              "key": "tradition_path_2_5",
-              "modifiers": [
-                {
-                  "target": "Naval",
-                  "attribute": "Damage Done",
-                  "value": 0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Unending Riches",
-              "key": "tradition_path_2_6",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Loyalty of Generals",
-                  "no_percent": true,
-                  "value": 5
-                }
-              ]
-            },
-            {
-              "name": "Tradition undefined",
-              "key": "tradition_path_2_7",
-              "modifiers": [
-                {
-                  "target": "Heavy Infantry",
-                  "attribute": "Offense",
-                  "value": 0.1
-                },
-                {
-                  "target": "Heavy Infantry",
-                  "attribute": "Defense",
-                  "value": 0.1
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Indian",
-      "key": "mauryan_philosophy",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Allows 'Chariots' Units",
-          "value": 0
-        }
-      ],
-      "paths": [
-        {
-          "name": "Mauryas",
-          "key": "tradition_path_0",
-          "traditions": [
-            {
-              "name": "Tradition Versatile Infantry",
-              "key": "tradition_path_0_0",
-              "modifiers": [
-                {
-                  "target": "Archers",
-                  "attribute": "Offense",
-                  "value": 0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Descendents of Airavata",
-              "key": "tradition_path_0_1",
-              "modifiers": [
-                {
-                  "target": "War Elephants",
-                  "attribute": "Defense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Warhost of the Empire",
-              "key": "tradition_path_0_2",
-              "modifiers": [
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Morale",
-                  "type": "Modifier",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Natural Pathfinders",
-              "key": "tradition_path_0_3",
-              "modifiers": [
-                {
-                  "target": "War Elephants",
-                  "attribute": "Jungle",
-                  "value": 0.15
-                },
-                {
-                  "target": "War Elephants",
-                  "attribute": "Forest",
-                  "value": 0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Dedicated Archers",
-              "key": "tradition_path_0_4",
-              "modifiers": [
-                {
-                  "target": "Archers",
-                  "attribute": "Discipline",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Homeland of our Fathers",
-              "key": "tradition_path_0_5",
-              "modifiers": [
-                {
-                  "target": "Heavy Infantry",
-                  "attribute": "Forest",
-                  "value": 0.15
-                },
-                {
-                  "target": "Heavy Infantry",
-                  "attribute": "Jungle",
-                  "value": 0.15
-                },
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Forest",
-                  "value": 0.15
-                },
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Jungle",
-                  "value": 0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Integrating the Tribes",
-              "key": "tradition_path_0_6",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "National Tribesman Happiness",
-                  "value": 0.2
-                }
-              ]
-            },
-            {
-              "name": "Tradition undefined",
-              "key": "tradition_path_0_7",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Monthly War Exhaustion",
-                  "no_percent": true,
-                  "value": -0.01
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Coastal",
-          "key": "tradition_path_1",
-          "traditions": [
-            {
-              "name": "Tradition Natural Harbors",
-              "key": "tradition_path_1_0",
-              "modifiers": [
-                {
-                  "target": "Naval",
-                  "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition The Vyuha System",
-              "key": "tradition_path_1_1",
-              "modifiers": [
-                {
-                  "target": "Archers",
-                  "attribute": "Morale",
-                  "type": "Modifier",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Masters of the Sea",
-              "key": "tradition_path_1_2",
-              "modifiers": [
-                {
-                  "target": "Naval",
-                  "attribute": "Morale",
-                  "type": "Modifier",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Plunder!",
-              "key": "tradition_path_1_3",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Enables the 'Slave Raid' Ability",
-                  "value": 0
-                },
-                {
-                  "target": "Text",
-                  "attribute": "Enslavement Efficiency",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Flexible Divisions",
-              "key": "tradition_path_1_4",
-              "modifiers": [
-                {
-                  "target": "Land",
-                  "attribute": "Morale",
-                  "type": "Modifier",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition City of the World's Desire",
-              "key": "tradition_path_1_5",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Fort Defense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition State Artisans",
-              "key": "tradition_path_1_6",
-              "modifiers": [
-                {
-                  "target": "Archers",
-                  "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.1
-                },
-                {
-                  "target": "Chariots",
-                  "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition undefined",
-              "key": "tradition_path_1_7",
-              "modifiers": [
-                {
-                  "target": "Naval",
-                  "attribute": "Damage Done",
-                  "value": 0.1
-                },
-                {
-                  "target": "Text",
-                  "attribute": "Allows 'Octere' Units",
-                  "value": 0
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Noble",
-          "key": "tradition_path_2",
-          "traditions": [
-            {
-              "name": "Tradition Fit for a King",
-              "key": "tradition_path_2_0",
-              "modifiers": [
-                {
-                  "target": "Chariots",
-                  "attribute": "Defense",
-                  "value": 0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Trained to Kill",
-              "key": "tradition_path_2_1",
-              "modifiers": [
-                {
-                  "target": "War Elephants",
-                  "attribute": "Discipline",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Armored Archers",
-              "key": "tradition_path_2_2",
-              "modifiers": [
-                {
-                  "target": "Archers",
-                  "attribute": "Defense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Padma Vyuha",
-              "key": "tradition_path_2_3",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Enables the 'Padma Vyuha' Tactic",
-                  "value": 0
-                }
-              ]
-            },
-            {
-              "name": "Tradition Imported Horses",
-              "key": "tradition_path_2_4",
-              "modifiers": [
-                {
-                  "target": "Chariots",
-                  "attribute": "Discipline",
-                  "value": 0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Elephantine Abundance",
-              "key": "tradition_path_2_5",
-              "modifiers": [
-                {
-                  "target": "War Elephants",
-                  "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Exotic Soldiers",
-              "key": "tradition_path_2_6",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Mercenary Army Maintenance",
-                  "value": -0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition undefined",
-              "key": "tradition_path_2_7",
-              "modifiers": [
-                {
-                  "target": "War Elephants",
-                  "attribute": "Morale",
-                  "type": "Modifier",
-                  "value": 0.1
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "North",
-      "key": "north_african_philosophy",
-      "modifiers": [
-        {
-          "target": "Naval",
-          "attribute": "Cost",
-          "type": "Modifier",
-          "value": -0.15
-        }
-      ],
-      "paths": [
-        {
-          "name": "African",
-          "key": "tradition_path_0",
-          "traditions": [
-            {
-              "name": "Tradition Born in the Saddle",
-              "key": "tradition_path_0_0",
-              "modifiers": [
-                {
-                  "target": "Light Cavalry",
-                  "attribute": "Offense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Man and Horse",
-              "key": "tradition_path_0_1",
-              "modifiers": [
-                {
-                  "target": "Light Cavalry",
-                  "attribute": "Plains",
-                  "value": 0.15
-                },
-                {
-                  "target": "Heavy Cavalry",
-                  "attribute": "Plains",
-                  "value": 0.15
-                },
-                {
-                  "target": "Camel Cavalry",
-                  "attribute": "Plains",
-                  "value": 0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Sure-footed, as Wild Horses",
-              "key": "tradition_path_0_2",
-              "modifiers": [
-                {
-                  "target": "Light Cavalry",
-                  "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Wild Charge",
-              "key": "tradition_path_0_3",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Enables the 'Cavalry Skirmish' Tactic",
-                  "value": 0
-                }
-              ]
-            },
-            {
-              "name": "Tradition Local Knowledge",
-              "key": "tradition_path_0_4",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Army Attrition",
-                  "value": -0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Call to Arms",
-              "key": "tradition_path_0_5",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "National Manpower",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Ululating Cry",
-              "key": "tradition_path_0_6",
-              "modifiers": [
-                {
-                  "target": "Light Cavalry",
-                  "attribute": "Discipline",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition undefined",
-              "key": "tradition_path_0_7",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "National Tribesman Output",
-                  "value": 0.1
-                },
-                {
-                  "target": "Text",
-                  "attribute": "National Tribesman Happiness",
-                  "value": 0.1
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "African",
-          "key": "tradition_path_1",
-          "traditions": [
-            {
-              "name": "Tradition Phoenician Heritage",
-              "key": "tradition_path_1_0",
-              "modifiers": [
-                {
-                  "target": "Naval",
-                  "attribute": "Damage Done",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Iberian Draft",
-              "key": "tradition_path_1_1",
-              "modifiers": [
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Defense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Naval Dominance",
-              "key": "tradition_path_1_2",
-              "modifiers": [
-                {
-                  "target": "Naval",
-                  "attribute": "Damage Taken",
-                  "value": -0.2
-                }
-              ]
-            },
-            {
-              "name": "Tradition A Life at Sea",
-              "key": "tradition_path_1_3",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Ship Repair at Sea",
-                  "value": 0.05
-                }
-              ]
-            },
-            {
-              "name": "Tradition Noble Warlords",
-              "key": "tradition_path_1_4",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Loyalty of Generals",
-                  "no_percent": true,
-                  "value": 5
-                },
-                {
-                  "target": "Text",
-                  "attribute": "Loyalty of Admirals",
-                  "no_percent": true,
-                  "value": 5
-                }
-              ]
-            },
-            {
-              "name": "Tradition Imposing Edifices",
-              "key": "tradition_path_1_5",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Fort Defense",
-                  "value": 0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Putting our People to Work",
-              "key": "tradition_path_1_6",
-              "modifiers": [
-                {
-                  "target": "Naval",
-                  "attribute": "Maintenance",
-                  "type": "Modifier",
-                  "value": -0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition undefined",
-              "key": "tradition_path_1_7",
-              "modifiers": [
-                {
-                  "target": "Trireme",
-                  "attribute": "Offense",
-                  "value": 0.1
-                },
-                {
-                  "target": "Liburnian",
-                  "attribute": "Offense",
-                  "value": 0.1
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "African",
-          "key": "tradition_path_2",
-          "traditions": [
-            {
-              "name": "Tradition Skilled Recruiters",
-              "key": "tradition_path_2_0",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Mercenary Army Maintenance",
-                  "value": -0.1
-                },
-                {
-                  "target": "Text",
-                  "attribute": "Recruit Mercenary Cost",
-                  "value": -0.25
-                }
-              ]
-            },
-            {
-              "name": "Tradition Professional Marines",
-              "key": "tradition_path_2_1",
-              "modifiers": [
-                {
-                  "target": "Naval",
-                  "attribute": "Morale",
-                  "type": "Modifier",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition The Sacred Band",
-              "key": "tradition_path_2_2",
-              "modifiers": [
-                {
-                  "target": "Heavy Infantry",
-                  "attribute": "Offense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Uneasy Relations",
-              "key": "tradition_path_2_3",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Tribute Income",
-                  "value": 0.1
-                },
-                {
-                  "target": "Text",
-                  "attribute": "Loyalty of Subject States",
-                  "no_percent": true,
-                  "value": 10
-                }
-              ]
-            },
-            {
-              "name": "Tradition The African Elephant",
-              "key": "tradition_path_2_4",
-              "modifiers": [
-                {
-                  "target": "War Elephants",
-                  "attribute": "Maintenance",
-                  "type": "Modifier",
-                  "value": -0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Numidian Cavalry",
-              "key": "tradition_path_2_5",
-              "modifiers": [
-                {
-                  "target": "Heavy Cavalry",
-                  "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Devastating Charge",
-              "key": "tradition_path_2_6",
-              "modifiers": [
-                {
-                  "target": "War Elephants",
-                  "attribute": "Offense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition undefined",
-              "key": "tradition_path_2_7",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Mercenary Army Maintenance",
-                  "value": -0.15
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Persian",
-      "key": "persian_philosophy",
-      "modifiers": [
-        {
-          "target": "Horse Archers",
-          "attribute": "Cost",
-          "type": "Modifier",
-          "value": -0.15
-        }
-      ],
-      "paths": [
-        {
-          "name": "Scythian",
-          "key": "tradition_path_0",
-          "traditions": [
-            {
-              "name": "Tradition The Parthian Shot",
-              "key": "tradition_path_0_0",
-              "modifiers": [
-                {
-                  "target": "Horse Archers",
-                  "attribute": "Offense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Nomadic Lifestyle",
-              "key": "tradition_path_0_1",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Cohort Recruit Speed",
-                  "value": 0.25
-                },
-                {
-                  "target": "Text",
-                  "attribute": "Monthly War Exhaustion",
-                  "no_percent": true,
-                  "value": -0.01
-                }
-              ]
-            },
-            {
-              "name": "Tradition Hit and Run",
-              "key": "tradition_path_0_2",
-              "modifiers": [
-                {
-                  "target": "Horse Archers",
-                  "attribute": "Morale",
-                  "type": "Modifier",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Cavalry Skirmish",
-              "key": "tradition_path_0_3",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Enables the 'Cavalry Skirmish' Tactic",
-                  "value": 0
-                }
-              ]
-            },
-            {
-              "name": "Tradition Cataphracts",
-              "key": "tradition_path_0_4",
-              "modifiers": [
-                {
-                  "target": "Heavy Cavalry",
-                  "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.2
-                }
-              ]
-            },
-            {
-              "name": "Tradition Steppe Mastery",
-              "key": "tradition_path_0_5",
-              "modifiers": [
-                {
-                  "target": "Land",
-                  "attribute": "Attrition Weight",
-                  "type": "Modifier",
-                  "value": -0.2
-                }
-              ]
-            },
-            {
-              "name": "Tradition Footsloggers",
-              "key": "tradition_path_0_6",
-              "modifiers": [
-                {
-                  "target": "Light Infantry",
-                  "attribute": "Defense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition undefined",
-              "key": "tradition_path_0_7",
-              "modifiers": [
-                {
-                  "target": "Heavy Cavalry",
-                  "attribute": "Offense",
-                  "value": 0.1
-                },
-                {
-                  "target": "Horse Archers",
-                  "attribute": "Discipline",
-                  "value": 0.1
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Achaemenid",
-          "key": "tradition_path_1",
-          "traditions": [
-            {
-              "name": "Tradition Legacy of Cyrus",
-              "key": "tradition_path_1_0",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "National Manpower",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition The Immortals",
-              "key": "tradition_path_1_1",
-              "modifiers": [
-                {
-                  "target": "Heavy Infantry",
-                  "attribute": "Defense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Reform of the Navy",
-              "key": "tradition_path_1_2",
-              "modifiers": [
-                {
-                  "target": "Naval",
-                  "attribute": "Morale",
-                  "type": "Modifier",
-                  "value": 0.1
-                },
-                {
-                  "target": "Text",
-                  "attribute": "Allows 'Octere' Units",
-                  "value": 0
-                }
-              ]
-            },
-            {
-              "name": "Tradition Reactive Recruitment",
-              "key": "tradition_path_1_3",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Enables the 'Raise Levies' Ability",
-                  "value": 0
-                }
-              ]
-            },
-            {
-              "name": "Tradition Royal Line",
-              "key": "tradition_path_1_4",
-              "modifiers": [
-                {
-                  "target": "Land",
-                  "attribute": "Morale",
-                  "type": "Modifier",
-                  "value": 0.05
-                },
-                {
-                  "target": "Text",
-                  "attribute": "Monthly Ruler Popularity Gain",
-                  "no_percent": true,
-                  "value": 0.05
-                }
-              ]
-            },
-            {
-              "name": "Tradition To Blot Out the Sun",
-              "key": "tradition_path_1_5",
-              "modifiers": [
-                {
-                  "target": "Archers",
-                  "attribute": "Offense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Kardakes",
-              "key": "tradition_path_1_6",
-              "modifiers": [
-                {
-                  "target": "Heavy Infantry",
-                  "attribute": "Cost",
-                  "type": "Modifier",
-                  "value": -0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition undefined",
-              "key": "tradition_path_1_7",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Siege Ability",
-                  "value": 0.1
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Bactrian",
-          "key": "tradition_path_2",
-          "traditions": [
-            {
-              "name": "Tradition Bactrian Horsemen",
-              "key": "tradition_path_2_0",
-              "modifiers": [
-                {
-                  "target": "Light Cavalry",
-                  "attribute": "Offense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Greco-Bactria",
-              "key": "tradition_path_2_1",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Fort Defense",
-                  "value": 0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition Perfect Storm",
-              "key": "tradition_path_2_2",
-              "modifiers": [
-                {
-                  "target": "Heavy Infantry",
-                  "attribute": "Offense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Kleruchoi",
-              "key": "tradition_path_2_3",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Enables the 'Military Colonies' Ability",
-                  "value": 0
-                }
-              ]
-            },
-            {
-              "name": "Tradition Titans of Battle",
-              "key": "tradition_path_2_4",
-              "modifiers": [
-                {
-                  "target": "War Elephants",
-                  "attribute": "Defense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Hippotoxotai",
-              "key": "tradition_path_2_5",
-              "modifiers": [
-                {
-                  "target": "Horse Archers",
-                  "attribute": "Defense",
-                  "value": 0.1
-                }
-              ]
-            },
-            {
-              "name": "Tradition Heartland",
-              "key": "tradition_path_2_6",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Army Attrition",
-                  "value": -0.15
-                }
-              ]
-            },
-            {
-              "name": "Tradition undefined",
-              "key": "tradition_path_2_7",
-              "modifiers": [
-                {
-                  "target": "Text",
-                  "attribute": "Mercenary Army Maintenance",
-                  "value": -0.15
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
+[
+  {
+    "name": "Barbarian",
+    "key": "celtic_philosophy",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Allows 'Chariots' Units",
+        "type": "Base",
+        "value": 0
+      }
+    ],
+    "paths": [
+      {
+        "name": "Britannic",
+        "key": "tradition_path_0",
+        "traditions": [
+          {
+            "name": "Tradition Scythed Chariots",
+            "key": "tradition_path_0_0",
+            "modifiers": [
+              {
+                "target": "Chariots",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.2
+              }
+            ]
+          },
+          {
+            "name": "Tradition Coming of Age",
+            "key": "tradition_path_0_1",
+            "modifiers": [
+              {
+                "target": "Light Infantry",
+                "attribute": "Defense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Living off the Land",
+            "key": "tradition_path_0_2",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Army Attrition",
+                "type": "Base",
+                "value": -0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Word of Mouth",
+            "key": "tradition_path_0_3",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Manpower Recovery Speed",
+                "type": "Base",
+                "value": 0.05
+              }
+            ]
+          },
+          {
+            "name": "Tradition Chariot Mastery",
+            "key": "tradition_path_0_4",
+            "modifiers": [
+              {
+                "target": "Chariots",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.2
+              }
+            ]
+          },
+          {
+            "name": "Tradition Selective Breeding",
+            "key": "tradition_path_0_5",
+            "modifiers": [
+              {
+                "target": "Light Cavalry",
+                "attribute": "Cost",
+                "type": "Modifier",
+                "value": -0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Take up Arms",
+            "key": "tradition_path_0_6",
+            "modifiers": [
+              {
+                "target": "Archers",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition undefined",
+            "key": "tradition_path_0_7",
+            "modifiers": [
+              {
+                "target": "Light Cavalry",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              },
+              {
+                "target": "Chariots",
+                "attribute": "Defense",
+                "type": "Base",
+                "value": 0.2
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Germanic",
+        "key": "tradition_path_1",
+        "traditions": [
+          {
+            "name": "Tradition Strike and Withdraw",
+            "key": "tradition_path_1_0",
+            "modifiers": [
+              {
+                "target": "Light Infantry",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.2
+              }
+            ]
+          },
+          {
+            "name": "Tradition Natural Resources",
+            "key": "tradition_path_1_1",
+            "modifiers": [
+              {
+                "target": "Light Cavalry",
+                "attribute": "Cost",
+                "type": "Modifier",
+                "value": -0.15
+              },
+              {
+                "target": "Chariots",
+                "attribute": "Cost",
+                "type": "Modifier",
+                "value": -0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition The Glory of the Hunt",
+            "key": "tradition_path_1_2",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Enslavement Efficiency",
+                "type": "Base",
+                "value": 0.05
+              },
+              {
+                "target": "Text",
+                "attribute": "National Slave Output",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Ambush",
+            "key": "tradition_path_1_3",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Enables the 'Hit-and-Run' Tactic",
+                "type": "Base",
+                "value": 0
+              },
+              {
+                "target": "Light Infantry",
+                "attribute": "Forest",
+                "type": "Base",
+                "value": 0.33
+              },
+              {
+                "target": "Archers",
+                "attribute": "Forest",
+                "type": "Base",
+                "value": 0.33
+              }
+            ]
+          },
+          {
+            "name": "Tradition Shield Wall",
+            "key": "tradition_path_1_4",
+            "modifiers": [
+              {
+                "target": "Heavy Infantry",
+                "attribute": "Defense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition The Young Must Serve",
+            "key": "tradition_path_1_5",
+            "modifiers": [
+              {
+                "target": "Light Infantry",
+                "attribute": "Cost",
+                "type": "Modifier",
+                "value": -0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Hail of Stones",
+            "key": "tradition_path_1_6",
+            "modifiers": [
+              {
+                "target": "Archers",
+                "attribute": "Defense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition undefined",
+            "key": "tradition_path_1_7",
+            "modifiers": [
+              {
+                "target": "Light Infantry",
+                "attribute": "Discipline",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Gallic",
+        "key": "tradition_path_2",
+        "traditions": [
+          {
+            "name": "Tradition Strike From Afar",
+            "key": "tradition_path_2_0",
+            "modifiers": [
+              {
+                "target": "Archers",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Confederations",
+            "key": "tradition_path_2_1",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "National Manpower",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition The Plains Fight With us",
+            "key": "tradition_path_2_2",
+            "modifiers": [
+              {
+                "target": "Light Infantry",
+                "attribute": "Plains",
+                "type": "Base",
+                "value": 0.15
+              },
+              {
+                "target": "Chariots",
+                "attribute": "Plains",
+                "type": "Base",
+                "value": 0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition In Defense of our Home",
+            "key": "tradition_path_2_3",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Enables the 'Raise Levies' Ability",
+                "type": "Base",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "name": "Tradition A People on the Move",
+            "key": "tradition_path_2_4",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Cohort Recruit Speed",
+                "type": "Base",
+                "value": 0.25
+              },
+              {
+                "target": "Text",
+                "attribute": "Wrong Culture Happiness",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Strong Arm",
+            "key": "tradition_path_2_5",
+            "modifiers": [
+              {
+                "target": "Heavy Infantry",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Scale the Walls!",
+            "key": "tradition_path_2_6",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Siege Ability",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition undefined",
+            "key": "tradition_path_2_7",
+            "modifiers": [
+              {
+                "target": "Land",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.1
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Greek",
+    "key": "greek_philosophy",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Enables the 'Phalanx' Tactic",
+        "type": "Base",
+        "value": 0
+      }
+    ],
+    "paths": [
+      {
+        "name": "Seleucid",
+        "key": "tradition_path_0",
+        "traditions": [
+          {
+            "name": "Tradition Agema",
+            "key": "tradition_path_0_0",
+            "modifiers": [
+              {
+                "target": "Heavy Cavalry",
+                "attribute": "Maintenance",
+                "type": "Modifier",
+                "value": -0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Arms for Hire",
+            "key": "tradition_path_0_1",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Recruit Mercenary Cost",
+                "type": "Base",
+                "value": -0.15
+              },
+              {
+                "target": "Land",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.05
+              }
+            ]
+          },
+          {
+            "name": "Tradition Phoenician Sailors",
+            "key": "tradition_path_0_2",
+            "modifiers": [
+              {
+                "target": "Naval",
+                "attribute": "Damage Done",
+                "type": "Base",
+                "value": 0.05
+              }
+            ]
+          },
+          {
+            "name": "Tradition The Companion Cavalry",
+            "key": "tradition_path_0_3",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Enables the 'Cavalry Skirmish' Tactic",
+                "type": "Base",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "name": "Tradition Kataphraktoi",
+            "key": "tradition_path_0_4",
+            "modifiers": [
+              {
+                "target": "Heavy Cavalry",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Thyreophoroi",
+            "key": "tradition_path_0_5",
+            "modifiers": [
+              {
+                "target": "Light Infantry",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition The Hipparchos",
+            "key": "tradition_path_0_6",
+            "modifiers": [
+              {
+                "target": "Heavy Cavalry",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.1
+              },
+              {
+                "target": "Light Cavalry",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition undefined",
+            "key": "tradition_path_0_7",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Mercenary Army Maintenance",
+                "type": "Base",
+                "value": -0.15
+              },
+              {
+                "target": "Heavy Cavalry",
+                "attribute": "Discipline",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "States",
+        "key": "tradition_path_1",
+        "traditions": [
+          {
+            "name": "Tradition The Sarissa",
+            "key": "tradition_path_1_0",
+            "modifiers": [
+              {
+                "target": "Heavy Infantry",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Veterans of the Great Campaign",
+            "key": "tradition_path_1_1",
+            "modifiers": [
+              {
+                "target": "Land",
+                "attribute": "Experience",
+                "type": "Base",
+                "value": 0.1
+              },
+              {
+                "target": "Text",
+                "attribute": "Experience Decay",
+                "type": "Base",
+                "value": -0.005
+              }
+            ]
+          },
+          {
+            "name": "Tradition Tarentine Advance",
+            "key": "tradition_path_1_2",
+            "modifiers": [
+              {
+                "target": "Light Cavalry",
+                "attribute": "Defense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Military Colonies",
+            "key": "tradition_path_1_3",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Enables the 'Military Colonies' Ability",
+                "type": "Base",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "name": "Tradition The Nobility Ride",
+            "key": "tradition_path_1_4",
+            "modifiers": [
+              {
+                "target": "Light Cavalry",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition City State Fortifications",
+            "key": "tradition_path_1_5",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Fort Defense",
+                "type": "Base",
+                "value": 0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Centuries of War",
+            "key": "tradition_path_1_6",
+            "modifiers": [
+              {
+                "target": "Heavy Infantry",
+                "attribute": "Maintenance",
+                "type": "Modifier",
+                "value": -0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition undefined",
+            "key": "tradition_path_1_7",
+            "modifiers": [
+              {
+                "target": "Heavy Infantry",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Antigonid",
+        "key": "tradition_path_2",
+        "traditions": [
+          {
+            "name": "Tradition Proud Shipwrights",
+            "key": "tradition_path_2_0",
+            "modifiers": [
+              {
+                "target": "Naval",
+                "attribute": "Cost",
+                "type": "Modifier",
+                "value": -0.15
+              },
+              {
+                "target": "Text",
+                "attribute": "Allows 'Octere' Units",
+                "type": "Base",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "name": "Tradition Mine's Bigger Than Yours",
+            "key": "tradition_path_2_1",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Allows 'Mega-Polyreme' Units",
+                "type": "Base",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "name": "Tradition Peltasts",
+            "key": "tradition_path_2_2",
+            "modifiers": [
+              {
+                "target": "Light Infantry",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition The Victor's Spoils",
+            "key": "tradition_path_2_3",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Enables the 'Slave Raid' Ability",
+                "type": "Base",
+                "value": 0
+              },
+              {
+                "target": "Text",
+                "attribute": "Enslavement Efficiency",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Siegecraft",
+            "key": "tradition_path_2_4",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Siege Ability",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Specialist Infantry",
+            "key": "tradition_path_2_5",
+            "modifiers": [
+              {
+                "target": "Archers",
+                "attribute": "Discipline",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Mastery of the Mountains",
+            "key": "tradition_path_2_6",
+            "modifiers": [
+              {
+                "target": "Archers",
+                "attribute": "Hills",
+                "type": "Base",
+                "value": 0.15
+              },
+              {
+                "target": "Light Infantry",
+                "attribute": "Hills",
+                "type": "Base",
+                "value": 0.15
+              },
+              {
+                "target": "Heavy Infantry",
+                "attribute": "Hills",
+                "type": "Base",
+                "value": 0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition undefined",
+            "key": "tradition_path_2_7",
+            "modifiers": [
+              {
+                "target": "Light Infantry",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              },
+              {
+                "target": "Light Infantry",
+                "attribute": "Defense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Italic",
+    "key": "latin_philosophy",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Fort Defense",
+        "type": "Base",
+        "value": 0.15
+      }
+    ],
+    "paths": [
+      {
+        "name": "Tribal",
+        "key": "tradition_path_0",
+        "traditions": [
+          {
+            "name": "Tradition Artisanal Bronzework",
+            "key": "tradition_path_0_0",
+            "modifiers": [
+              {
+                "target": "Light Infantry",
+                "attribute": "Defense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition The Equestrian Order",
+            "key": "tradition_path_0_1",
+            "modifiers": [
+              {
+                "target": "Light Cavalry",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Pietas",
+            "key": "tradition_path_0_2",
+            "modifiers": [
+              {
+                "target": "Country",
+                "attribute": "Omen Power",
+                "type": "Base",
+                "no_percent": true,
+                "value": 15
+              }
+            ]
+          },
+          {
+            "name": "Tradition The Acquisition of Wealth",
+            "key": "tradition_path_0_3",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Enslavement Efficiency",
+                "type": "Base",
+                "value": 0.1
+              },
+              {
+                "target": "Text",
+                "attribute": "National Slave Output",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition The Aulos",
+            "key": "tradition_path_0_4",
+            "modifiers": [
+              {
+                "target": "Light Infantry",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Mare Nostrum",
+            "key": "tradition_path_0_5",
+            "modifiers": [
+              {
+                "target": "Naval",
+                "attribute": "Maintenance",
+                "type": "Modifier",
+                "value": -0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Rousing Oratory",
+            "key": "tradition_path_0_6",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "National Manpower",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition undefined",
+            "key": "tradition_path_0_7",
+            "modifiers": [
+              {
+                "target": "Light Infantry",
+                "attribute": "Hills",
+                "type": "Base",
+                "value": 0.15
+              },
+              {
+                "target": "Archers",
+                "attribute": "Hills",
+                "type": "Base",
+                "value": 0.15
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Support",
+        "key": "tradition_path_1",
+        "traditions": [
+          {
+            "name": "Tradition State Navy",
+            "key": "tradition_path_1_0",
+            "modifiers": [
+              {
+                "target": "Naval",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition The Fabri",
+            "key": "tradition_path_1_1",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Siege Engineers",
+                "type": "Base",
+                "no_percent": true,
+                "value": 1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Scale the Walls",
+            "key": "tradition_path_1_2",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Siege Ability",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Castra",
+            "key": "tradition_path_1_3",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Enables the 'Construct Border Fort' Ability",
+                "type": "Base",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "name": "Tradition Logistics of State",
+            "key": "tradition_path_1_4",
+            "modifiers": [
+              {
+                "target": "Light Infantry",
+                "attribute": "Cost",
+                "type": "Modifier",
+                "value": -0.1
+              },
+              {
+                "target": "Heavy Infantry",
+                "attribute": "Cost",
+                "type": "Modifier",
+                "value": -0.1
+              },
+              {
+                "target": "Archers",
+                "attribute": "Cost",
+                "type": "Modifier",
+                "value": -0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Scutum",
+            "key": "tradition_path_1_5",
+            "modifiers": [
+              {
+                "target": "Heavy Infantry",
+                "attribute": "Defense",
+                "type": "Base",
+                "value": 0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Foederati",
+            "key": "tradition_path_1_6",
+            "modifiers": [
+              {
+                "target": "Light Cavalry",
+                "attribute": "Defense",
+                "type": "Base",
+                "value": 0.1
+              },
+              {
+                "target": "Horse Archers",
+                "attribute": "Defense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition undefined",
+            "key": "tradition_path_1_7",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Hold Triumph Cost",
+                "type": "Base",
+                "value": -0.5
+              },
+              {
+                "target": "Text",
+                "attribute": "Loyalty of Generals",
+                "type": "Base",
+                "no_percent": true,
+                "value": 5
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Roman",
+        "key": "tradition_path_2",
+        "traditions": [
+          {
+            "name": "Tradition Principes",
+            "key": "tradition_path_2_0",
+            "modifiers": [
+              {
+                "target": "Heavy Infantry",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Triplex Acies",
+            "key": "tradition_path_2_1",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Enables the 'Triplex Acies' Tactic",
+                "type": "Base",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "name": "Tradition Triarii",
+            "key": "tradition_path_2_2",
+            "modifiers": [
+              {
+                "target": "Heavy Infantry",
+                "attribute": "Discipline",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Roman Roads",
+            "key": "tradition_path_2_3",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Enables the 'Build Military Road' Ability",
+                "type": "Base",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "name": "Tradition Professional Soldiers",
+            "key": "tradition_path_2_4",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Monthly War Exhaustion",
+                "type": "Base",
+                "no_percent": true,
+                "value": -0.01
+              }
+            ]
+          },
+          {
+            "name": "Tradition Velites",
+            "key": "tradition_path_2_5",
+            "modifiers": [
+              {
+                "target": "Light Infantry",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition The Honor of Service",
+            "key": "tradition_path_2_6",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Manpower Recovery Speed",
+                "type": "Base",
+                "value": 0.05
+              }
+            ]
+          },
+          {
+            "name": "Tradition undefined",
+            "key": "tradition_path_2_7",
+            "modifiers": [
+              {
+                "target": "Land",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.1
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Levantine",
+    "key": "levantine_philosophy",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Army Attrition",
+        "type": "Base",
+        "value": -0.15
+      }
+    ],
+    "paths": [
+      {
+        "name": "Arabian",
+        "key": "tradition_path_0",
+        "traditions": [
+          {
+            "name": "Tradition Desert Sands",
+            "key": "tradition_path_0_0",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Hostile Attrition",
+                "type": "Base",
+                "no_percent": true,
+                "value": 1
+              }
+            ]
+          },
+          {
+            "name": "Tradition The Spear of the Kingdom",
+            "key": "tradition_path_0_1",
+            "modifiers": [
+              {
+                "target": "Light Infantry",
+                "attribute": "Discipline",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Merchant Coast",
+            "key": "tradition_path_0_2",
+            "modifiers": [
+              {
+                "target": "Naval",
+                "attribute": "Cost",
+                "type": "Modifier",
+                "value": -0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Beasts of Burden",
+            "key": "tradition_path_0_3",
+            "modifiers": [
+              {
+                "target": "Camel Cavalry",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Ships of the Desert",
+            "key": "tradition_path_0_4",
+            "modifiers": [
+              {
+                "target": "Camel Cavalry",
+                "attribute": "Desert",
+                "type": "Base",
+                "value": 0.15
+              },
+              {
+                "target": "Light Cavalry",
+                "attribute": "Desert",
+                "type": "Base",
+                "value": 0.15
+              },
+              {
+                "target": "Heavy Cavalry",
+                "attribute": "Desert",
+                "type": "Base",
+                "value": 0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Legacy of the Builders",
+            "key": "tradition_path_0_5",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "City Building Slots",
+                "type": "Base",
+                "no_percent": true,
+                "value": 1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Oasis Trade",
+            "key": "tradition_path_0_6",
+            "modifiers": [
+              {
+                "target": "Light Cavalry",
+                "attribute": "Cost",
+                "type": "Modifier",
+                "value": -0.15
+              },
+              {
+                "target": "Camel Cavalry",
+                "attribute": "Cost",
+                "type": "Modifier",
+                "value": -0.15
+              },
+              {
+                "target": "Heavy Cavalry",
+                "attribute": "Cost",
+                "type": "Modifier",
+                "value": -0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition undefined",
+            "key": "tradition_path_0_7",
+            "modifiers": [
+              {
+                "target": "Camel Cavalry",
+                "attribute": "Discipline",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Egyptian",
+        "key": "tradition_path_1",
+        "traditions": [
+          {
+            "name": "Tradition Sturdy Design",
+            "key": "tradition_path_1_0",
+            "modifiers": [
+              {
+                "target": "Naval",
+                "attribute": "Damage Taken",
+                "type": "Base",
+                "value": -0.1
+              },
+              {
+                "target": "Text",
+                "attribute": "Allows 'Octere' Units",
+                "type": "Base",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "name": "Tradition Arms Race",
+            "key": "tradition_path_1_1",
+            "modifiers": [
+              {
+                "target": "Trireme",
+                "attribute": "Discipline",
+                "type": "Base",
+                "value": 0.1
+              },
+              {
+                "target": "Liburnian",
+                "attribute": "Discipline",
+                "type": "Base",
+                "value": 0.1
+              },
+              {
+                "target": "Text",
+                "attribute": "Allows 'Mega-Polyreme' Units",
+                "type": "Base",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "name": "Tradition Stonemovers",
+            "key": "tradition_path_1_2",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Fort Defense",
+                "type": "Base",
+                "value": 0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Colonial Integration",
+            "key": "tradition_path_1_3",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Enables the 'Military Colonies' Ability",
+                "type": "Base",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "name": "Tradition The Blood of Egypt",
+            "key": "tradition_path_1_4",
+            "modifiers": [
+              {
+                "target": "Naval",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Thick Hide",
+            "key": "tradition_path_1_5",
+            "modifiers": [
+              {
+                "target": "Camel Cavalry",
+                "attribute": "Defense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Cradle of Civilization",
+            "key": "tradition_path_1_6",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "National Manpower",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition undefined",
+            "key": "tradition_path_1_7",
+            "modifiers": [
+              {
+                "target": "Light Infantry",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              },
+              {
+                "target": "Light Infantry",
+                "attribute": "Defense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Greco",
+        "key": "tradition_path_2",
+        "traditions": [
+          {
+            "name": "Tradition Surfeit of War",
+            "key": "tradition_path_2_0",
+            "modifiers": [
+              {
+                "target": "Heavy Infantry",
+                "attribute": "Cost",
+                "type": "Modifier",
+                "value": -0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Thorakitai",
+            "key": "tradition_path_2_1",
+            "modifiers": [
+              {
+                "target": "Light Infantry",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Machimoi Epilektoi",
+            "key": "tradition_path_2_2",
+            "modifiers": [
+              {
+                "target": "Heavy Infantry",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Greek Warfare",
+            "key": "tradition_path_2_3",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Enables the 'Phalanx' Tactic",
+                "type": "Base",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "name": "Tradition Good Reputation",
+            "key": "tradition_path_2_4",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Mercenary Army Maintenance",
+                "type": "Base",
+                "value": -0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Ramming Speed",
+            "key": "tradition_path_2_5",
+            "modifiers": [
+              {
+                "target": "Naval",
+                "attribute": "Damage Done",
+                "type": "Base",
+                "value": 0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Unending Riches",
+            "key": "tradition_path_2_6",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Loyalty of Generals",
+                "type": "Base",
+                "no_percent": true,
+                "value": 5
+              }
+            ]
+          },
+          {
+            "name": "Tradition undefined",
+            "key": "tradition_path_2_7",
+            "modifiers": [
+              {
+                "target": "Heavy Infantry",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              },
+              {
+                "target": "Heavy Infantry",
+                "attribute": "Defense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Indian",
+    "key": "mauryan_philosophy",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Allows 'Chariots' Units",
+        "type": "Base",
+        "value": 0
+      }
+    ],
+    "paths": [
+      {
+        "name": "Mauryas",
+        "key": "tradition_path_0",
+        "traditions": [
+          {
+            "name": "Tradition Versatile Infantry",
+            "key": "tradition_path_0_0",
+            "modifiers": [
+              {
+                "target": "Archers",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Descendents of Airavata",
+            "key": "tradition_path_0_1",
+            "modifiers": [
+              {
+                "target": "War Elephants",
+                "attribute": "Defense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Warhost of the Empire",
+            "key": "tradition_path_0_2",
+            "modifiers": [
+              {
+                "target": "Light Infantry",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Natural Pathfinders",
+            "key": "tradition_path_0_3",
+            "modifiers": [
+              {
+                "target": "War Elephants",
+                "attribute": "Jungle",
+                "type": "Base",
+                "value": 0.15
+              },
+              {
+                "target": "War Elephants",
+                "attribute": "Forest",
+                "type": "Base",
+                "value": 0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Dedicated Archers",
+            "key": "tradition_path_0_4",
+            "modifiers": [
+              {
+                "target": "Archers",
+                "attribute": "Discipline",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Homeland of our Fathers",
+            "key": "tradition_path_0_5",
+            "modifiers": [
+              {
+                "target": "Heavy Infantry",
+                "attribute": "Forest",
+                "type": "Base",
+                "value": 0.15
+              },
+              {
+                "target": "Heavy Infantry",
+                "attribute": "Jungle",
+                "type": "Base",
+                "value": 0.15
+              },
+              {
+                "target": "Light Infantry",
+                "attribute": "Forest",
+                "type": "Base",
+                "value": 0.15
+              },
+              {
+                "target": "Light Infantry",
+                "attribute": "Jungle",
+                "type": "Base",
+                "value": 0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Integrating the Tribes",
+            "key": "tradition_path_0_6",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "National Tribesman Happiness",
+                "type": "Base",
+                "value": 0.2
+              }
+            ]
+          },
+          {
+            "name": "Tradition undefined",
+            "key": "tradition_path_0_7",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Monthly War Exhaustion",
+                "type": "Base",
+                "no_percent": true,
+                "value": -0.01
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Coastal",
+        "key": "tradition_path_1",
+        "traditions": [
+          {
+            "name": "Tradition Natural Harbors",
+            "key": "tradition_path_1_0",
+            "modifiers": [
+              {
+                "target": "Naval",
+                "attribute": "Cost",
+                "type": "Modifier",
+                "value": -0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition The Vyuha System",
+            "key": "tradition_path_1_1",
+            "modifiers": [
+              {
+                "target": "Archers",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Masters of the Sea",
+            "key": "tradition_path_1_2",
+            "modifiers": [
+              {
+                "target": "Naval",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Plunder!",
+            "key": "tradition_path_1_3",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Enables the 'Slave Raid' Ability",
+                "type": "Base",
+                "value": 0
+              },
+              {
+                "target": "Text",
+                "attribute": "Enslavement Efficiency",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Flexible Divisions",
+            "key": "tradition_path_1_4",
+            "modifiers": [
+              {
+                "target": "Land",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition City of the World's Desire",
+            "key": "tradition_path_1_5",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Fort Defense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition State Artisans",
+            "key": "tradition_path_1_6",
+            "modifiers": [
+              {
+                "target": "Archers",
+                "attribute": "Cost",
+                "type": "Modifier",
+                "value": -0.1
+              },
+              {
+                "target": "Chariots",
+                "attribute": "Cost",
+                "type": "Modifier",
+                "value": -0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition undefined",
+            "key": "tradition_path_1_7",
+            "modifiers": [
+              {
+                "target": "Naval",
+                "attribute": "Damage Done",
+                "type": "Base",
+                "value": 0.1
+              },
+              {
+                "target": "Text",
+                "attribute": "Allows 'Octere' Units",
+                "type": "Base",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Noble",
+        "key": "tradition_path_2",
+        "traditions": [
+          {
+            "name": "Tradition Fit for a King",
+            "key": "tradition_path_2_0",
+            "modifiers": [
+              {
+                "target": "Chariots",
+                "attribute": "Defense",
+                "type": "Base",
+                "value": 0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Trained to Kill",
+            "key": "tradition_path_2_1",
+            "modifiers": [
+              {
+                "target": "War Elephants",
+                "attribute": "Discipline",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Armored Archers",
+            "key": "tradition_path_2_2",
+            "modifiers": [
+              {
+                "target": "Archers",
+                "attribute": "Defense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Padma Vyuha",
+            "key": "tradition_path_2_3",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Enables the 'Padma Vyuha' Tactic",
+                "type": "Base",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "name": "Tradition Imported Horses",
+            "key": "tradition_path_2_4",
+            "modifiers": [
+              {
+                "target": "Chariots",
+                "attribute": "Discipline",
+                "type": "Base",
+                "value": 0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Elephantine Abundance",
+            "key": "tradition_path_2_5",
+            "modifiers": [
+              {
+                "target": "War Elephants",
+                "attribute": "Cost",
+                "type": "Modifier",
+                "value": -0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Exotic Soldiers",
+            "key": "tradition_path_2_6",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Mercenary Army Maintenance",
+                "type": "Base",
+                "value": -0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition undefined",
+            "key": "tradition_path_2_7",
+            "modifiers": [
+              {
+                "target": "War Elephants",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.1
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "North",
+    "key": "north_african_philosophy",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Cost",
+        "type": "Modifier",
+        "value": -0.15
+      }
+    ],
+    "paths": [
+      {
+        "name": "African",
+        "key": "tradition_path_0",
+        "traditions": [
+          {
+            "name": "Tradition Born in the Saddle",
+            "key": "tradition_path_0_0",
+            "modifiers": [
+              {
+                "target": "Light Cavalry",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Man and Horse",
+            "key": "tradition_path_0_1",
+            "modifiers": [
+              {
+                "target": "Light Cavalry",
+                "attribute": "Plains",
+                "type": "Base",
+                "value": 0.15
+              },
+              {
+                "target": "Heavy Cavalry",
+                "attribute": "Plains",
+                "type": "Base",
+                "value": 0.15
+              },
+              {
+                "target": "Camel Cavalry",
+                "attribute": "Plains",
+                "type": "Base",
+                "value": 0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Sure-footed, as Wild Horses",
+            "key": "tradition_path_0_2",
+            "modifiers": [
+              {
+                "target": "Light Cavalry",
+                "attribute": "Cost",
+                "type": "Modifier",
+                "value": -0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Wild Charge",
+            "key": "tradition_path_0_3",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Enables the 'Cavalry Skirmish' Tactic",
+                "type": "Base",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "name": "Tradition Local Knowledge",
+            "key": "tradition_path_0_4",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Army Attrition",
+                "type": "Base",
+                "value": -0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Call to Arms",
+            "key": "tradition_path_0_5",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "National Manpower",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Ululating Cry",
+            "key": "tradition_path_0_6",
+            "modifiers": [
+              {
+                "target": "Light Cavalry",
+                "attribute": "Discipline",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition undefined",
+            "key": "tradition_path_0_7",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "National Tribesman Output",
+                "type": "Base",
+                "value": 0.1
+              },
+              {
+                "target": "Text",
+                "attribute": "National Tribesman Happiness",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "African",
+        "key": "tradition_path_1",
+        "traditions": [
+          {
+            "name": "Tradition Phoenician Heritage",
+            "key": "tradition_path_1_0",
+            "modifiers": [
+              {
+                "target": "Naval",
+                "attribute": "Damage Done",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Iberian Draft",
+            "key": "tradition_path_1_1",
+            "modifiers": [
+              {
+                "target": "Light Infantry",
+                "attribute": "Defense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Naval Dominance",
+            "key": "tradition_path_1_2",
+            "modifiers": [
+              {
+                "target": "Naval",
+                "attribute": "Damage Taken",
+                "type": "Base",
+                "value": -0.2
+              }
+            ]
+          },
+          {
+            "name": "Tradition A Life at Sea",
+            "key": "tradition_path_1_3",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Ship Repair at Sea",
+                "type": "Base",
+                "value": 0.05
+              }
+            ]
+          },
+          {
+            "name": "Tradition Noble Warlords",
+            "key": "tradition_path_1_4",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Loyalty of Generals",
+                "type": "Base",
+                "no_percent": true,
+                "value": 5
+              },
+              {
+                "target": "Text",
+                "attribute": "Loyalty of Admirals",
+                "type": "Base",
+                "no_percent": true,
+                "value": 5
+              }
+            ]
+          },
+          {
+            "name": "Tradition Imposing Edifices",
+            "key": "tradition_path_1_5",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Fort Defense",
+                "type": "Base",
+                "value": 0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Putting our People to Work",
+            "key": "tradition_path_1_6",
+            "modifiers": [
+              {
+                "target": "Naval",
+                "attribute": "Maintenance",
+                "type": "Modifier",
+                "value": -0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition undefined",
+            "key": "tradition_path_1_7",
+            "modifiers": [
+              {
+                "target": "Trireme",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              },
+              {
+                "target": "Liburnian",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "African",
+        "key": "tradition_path_2",
+        "traditions": [
+          {
+            "name": "Tradition Skilled Recruiters",
+            "key": "tradition_path_2_0",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Mercenary Army Maintenance",
+                "type": "Base",
+                "value": -0.1
+              },
+              {
+                "target": "Text",
+                "attribute": "Recruit Mercenary Cost",
+                "type": "Base",
+                "value": -0.25
+              }
+            ]
+          },
+          {
+            "name": "Tradition Professional Marines",
+            "key": "tradition_path_2_1",
+            "modifiers": [
+              {
+                "target": "Naval",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition The Sacred Band",
+            "key": "tradition_path_2_2",
+            "modifiers": [
+              {
+                "target": "Heavy Infantry",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Uneasy Relations",
+            "key": "tradition_path_2_3",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Tribute Income",
+                "type": "Base",
+                "value": 0.1
+              },
+              {
+                "target": "Text",
+                "attribute": "Loyalty of Subject States",
+                "type": "Base",
+                "no_percent": true,
+                "value": 10
+              }
+            ]
+          },
+          {
+            "name": "Tradition The African Elephant",
+            "key": "tradition_path_2_4",
+            "modifiers": [
+              {
+                "target": "War Elephants",
+                "attribute": "Maintenance",
+                "type": "Modifier",
+                "value": -0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Numidian Cavalry",
+            "key": "tradition_path_2_5",
+            "modifiers": [
+              {
+                "target": "Heavy Cavalry",
+                "attribute": "Cost",
+                "type": "Modifier",
+                "value": -0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Devastating Charge",
+            "key": "tradition_path_2_6",
+            "modifiers": [
+              {
+                "target": "War Elephants",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition undefined",
+            "key": "tradition_path_2_7",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Mercenary Army Maintenance",
+                "type": "Base",
+                "value": -0.15
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Persian",
+    "key": "persian_philosophy",
+    "modifiers": [
+      {
+        "target": "Horse Archers",
+        "attribute": "Cost",
+        "type": "Modifier",
+        "value": -0.15
+      }
+    ],
+    "paths": [
+      {
+        "name": "Scythian",
+        "key": "tradition_path_0",
+        "traditions": [
+          {
+            "name": "Tradition The Parthian Shot",
+            "key": "tradition_path_0_0",
+            "modifiers": [
+              {
+                "target": "Horse Archers",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Nomadic Lifestyle",
+            "key": "tradition_path_0_1",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Cohort Recruit Speed",
+                "type": "Base",
+                "value": 0.25
+              },
+              {
+                "target": "Text",
+                "attribute": "Monthly War Exhaustion",
+                "type": "Base",
+                "no_percent": true,
+                "value": -0.01
+              }
+            ]
+          },
+          {
+            "name": "Tradition Hit and Run",
+            "key": "tradition_path_0_2",
+            "modifiers": [
+              {
+                "target": "Horse Archers",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Cavalry Skirmish",
+            "key": "tradition_path_0_3",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Enables the 'Cavalry Skirmish' Tactic",
+                "type": "Base",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "name": "Tradition Cataphracts",
+            "key": "tradition_path_0_4",
+            "modifiers": [
+              {
+                "target": "Heavy Cavalry",
+                "attribute": "Cost",
+                "type": "Modifier",
+                "value": -0.2
+              }
+            ]
+          },
+          {
+            "name": "Tradition Steppe Mastery",
+            "key": "tradition_path_0_5",
+            "modifiers": [
+              {
+                "target": "Land",
+                "attribute": "Attrition Weight",
+                "type": "Modifier",
+                "value": -0.2
+              }
+            ]
+          },
+          {
+            "name": "Tradition Footsloggers",
+            "key": "tradition_path_0_6",
+            "modifiers": [
+              {
+                "target": "Light Infantry",
+                "attribute": "Defense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition undefined",
+            "key": "tradition_path_0_7",
+            "modifiers": [
+              {
+                "target": "Heavy Cavalry",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              },
+              {
+                "target": "Horse Archers",
+                "attribute": "Discipline",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Achaemenid",
+        "key": "tradition_path_1",
+        "traditions": [
+          {
+            "name": "Tradition Legacy of Cyrus",
+            "key": "tradition_path_1_0",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "National Manpower",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition The Immortals",
+            "key": "tradition_path_1_1",
+            "modifiers": [
+              {
+                "target": "Heavy Infantry",
+                "attribute": "Defense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Reform of the Navy",
+            "key": "tradition_path_1_2",
+            "modifiers": [
+              {
+                "target": "Naval",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.1
+              },
+              {
+                "target": "Text",
+                "attribute": "Allows 'Octere' Units",
+                "type": "Base",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "name": "Tradition Reactive Recruitment",
+            "key": "tradition_path_1_3",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Enables the 'Raise Levies' Ability",
+                "type": "Base",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "name": "Tradition Royal Line",
+            "key": "tradition_path_1_4",
+            "modifiers": [
+              {
+                "target": "Land",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.05
+              },
+              {
+                "target": "Text",
+                "attribute": "Monthly Ruler Popularity Gain",
+                "type": "Base",
+                "no_percent": true,
+                "value": 0.05
+              }
+            ]
+          },
+          {
+            "name": "Tradition To Blot Out the Sun",
+            "key": "tradition_path_1_5",
+            "modifiers": [
+              {
+                "target": "Archers",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Kardakes",
+            "key": "tradition_path_1_6",
+            "modifiers": [
+              {
+                "target": "Heavy Infantry",
+                "attribute": "Cost",
+                "type": "Modifier",
+                "value": -0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition undefined",
+            "key": "tradition_path_1_7",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Siege Ability",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Bactrian",
+        "key": "tradition_path_2",
+        "traditions": [
+          {
+            "name": "Tradition Bactrian Horsemen",
+            "key": "tradition_path_2_0",
+            "modifiers": [
+              {
+                "target": "Light Cavalry",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Greco-Bactria",
+            "key": "tradition_path_2_1",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Fort Defense",
+                "type": "Base",
+                "value": 0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition Perfect Storm",
+            "key": "tradition_path_2_2",
+            "modifiers": [
+              {
+                "target": "Heavy Infantry",
+                "attribute": "Offense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Kleruchoi",
+            "key": "tradition_path_2_3",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Enables the 'Military Colonies' Ability",
+                "type": "Base",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "name": "Tradition Titans of Battle",
+            "key": "tradition_path_2_4",
+            "modifiers": [
+              {
+                "target": "War Elephants",
+                "attribute": "Defense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Hippotoxotai",
+            "key": "tradition_path_2_5",
+            "modifiers": [
+              {
+                "target": "Horse Archers",
+                "attribute": "Defense",
+                "type": "Base",
+                "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Heartland",
+            "key": "tradition_path_2_6",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Army Attrition",
+                "type": "Base",
+                "value": -0.15
+              }
+            ]
+          },
+          {
+            "name": "Tradition undefined",
+            "key": "tradition_path_2_7",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "Mercenary Army Maintenance",
+                "type": "Base",
+                "value": -0.15
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

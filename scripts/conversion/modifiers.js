@@ -227,6 +227,7 @@ Object.keys(units).forEach(key => {
   negatives.add(key + MOD_MAINTENANCE)
 })
 
+const BASE = 'Base'
 const MODIFIER = 'Modifier'
 
 const types = new Set([
@@ -299,7 +300,7 @@ exports.getNegative = (key, value) => typeof value === 'number' && negatives.has
 /**
  * @param {string} key 
  */
-exports.getType = key => types.has(key) ? MODIFIER : undefined
+exports.getType = key => types.has(key) ? MODIFIER : BASE
 /**
  * @param {string} key 
  * @param {string} value 

@@ -1,27 +1,9 @@
-import { Modifier, ModifierType, Mode, ModifierWithKey, CountryAttribute, ValuesType, UnitAttribute, UnitType, GeneralDefinition, CountryDefinition, GeneralAttribute, SelectionType, DeityDefinition } from 'types'
+import { Modifier, ModifierType, Mode, ModifierWithKey, CountryAttribute, ValuesType, UnitAttribute, UnitType, GeneralDefinition, CountryDefinition, GeneralAttribute, SelectionType, DeityDefinition, ListDefinition2 } from 'types'
 import { getRootParent } from './units'
-import { getTechDefinitionsEUIV, getFactionDefinitions, getModifierDefinitions, getTechDefinitionsIR, getAbilityDefinitions, getTraitDefinitions, getHeritageDefinitions, getTraditionDefinitions, getTradeDefinitions, getIdeaDefinitions, getLawDefinitions, getPolicyDefinitions, getCountryNames, getDeityDefinitions, getReligionDefinitions } from 'data'
-import { ObjSet } from 'utils'
+import { ObjSet, keys } from 'utils'
 import { calculateValue } from 'definition_values'
 import { martialToCaptureChance } from './army'
-
-// These should be in data?
-export const abilities_ir = getAbilityDefinitions()
-export const traits_ir = getTraitDefinitions()
-export const heritages_ir = getHeritageDefinitions()
-export const trades_ir = getTradeDefinitions()
-export const traditions_ir = getTraditionDefinitions()
-export const ideas_ir = getIdeaDefinitions()
-export const laws_ir = getLawDefinitions()
-export const deities_ir = getDeityDefinitions()
-export const policies_ir = getPolicyDefinitions()
-export const countries_ir = getCountryNames()
-export const religions_ir = getReligionDefinitions()
-export const factions_ir = getFactionDefinitions()
-export const modifiers_ir = getModifierDefinitions()
-
-export const tech_ir = getTechDefinitionsIR()
-export const tech_euiv = getTechDefinitionsEUIV()
+import { tech_euiv, tech_ir, traditions_ir, heritages_ir, trades_ir, ideas_ir, laws_ir, religions_ir, factions_ir, modifiers_ir, policies_ir, deities_ir, traits_ir, abilities_ir } from 'data'
 
 export const TECH_KEY = 'Tech '
 
@@ -122,6 +104,13 @@ const getDeityModifiers = (modifiers: ModifierWithKey[], selections: ObjSet, ent
   })
 }
 
+const getModifiersSub2 = (modifiers: ModifierWithKey[], selections: ObjSet | undefined, items: ListDefinition2) => {
+  const selectedKeys = keys(selections ?? {})
+  selectedKeys.forEach(key => {
+    if (items[key])
+      modifiers.push(...mapModifiers(items[key].name, items[key].modifiers))
+  })
+}
 const getOfficeModifiers = (modifiers: ModifierWithKey[], country: CountryDefinition) => {
   const morale = calculateValue(country, CountryAttribute.OfficeMorale)
   const discipline = calculateValue(country, CountryAttribute.OfficeDiscipline)
@@ -168,7 +157,7 @@ export const getCountryModifiers = (country: CountryDefinition): ModifierWithKey
     getModifiersSub(modifiers, country.selections[SelectionType.Idea], ideas_ir)
     getModifiersSub(modifiers, country.selections[SelectionType.Law], laws_ir)
     getModifiersSub(modifiers, country.selections[SelectionType.Religion], religions_ir)
-    getModifiersSub(modifiers, country.selections[SelectionType.Faction], factions_ir)
+    getModifiersSub2(modifiers, country.selections[SelectionType.Faction], factions_ir)
     getModifiersSub(modifiers, country.selections[SelectionType.Modifier], modifiers_ir)
     policies_ir.forEach(policy => getModifiersSub(modifiers, country.selections[SelectionType.Policy], policy))
     getTraditionModifiers(modifiers, country)

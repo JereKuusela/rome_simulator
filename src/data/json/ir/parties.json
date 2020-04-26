@@ -1,98 +1,105 @@
 {
-  "parties": [
-    {
-      "name": "Civic Faction",
-      "key": "civic_party",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "National Tax",
-          "value": 0.2
-        },
-        {
-          "target": "Text",
-          "attribute": "Empower Civic Faction Cost",
-          "negative": true,
-          "value": -0.5
-        }
-      ]
-    },
-    {
-      "name": "Military Faction",
-      "key": "military_party",
-      "modifiers": [
-        {
-          "target": "Land",
-          "attribute": "Morale",
-          "type": "Modifier",
-          "value": 0.1
-        },
-        {
-          "target": "Naval",
-          "attribute": "Morale",
-          "type": "Modifier",
-          "value": 0.1
-        },
-        {
-          "target": "Text",
-          "attribute": "Empower Military Faction Cost",
-          "negative": true,
-          "value": -0.5
-        }
-      ]
-    },
-    {
-      "name": "Mercantile Faction",
-      "key": "mercantile_party",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "National Commerce Income",
-          "value": 0.1
-        },
-        {
-          "target": "Text",
-          "attribute": "Diplomatic Reputation",
-          "no_percent": true,
-          "value": 2
-        },
-        {
-          "target": "Text",
-          "attribute": "Empower Mercantile Faction Cost",
-          "negative": true,
-          "value": -0.5
-        }
-      ]
-    },
-    {
-      "name": "Religious Faction",
-      "key": "religious_party",
-      "modifiers": [
-        {
-          "target": "Country",
-          "attribute": "Omen Power",
-          "no_percent": true,
-          "value": 10
-        },
-        {
-          "target": "Text",
-          "attribute": "Empower Religious Faction Cost",
-          "negative": true,
-          "value": -0.5
-        }
-      ]
-    },
-    {
-      "name": "Populist Faction",
-      "key": "populist_party",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Monthly Political Influence",
-          "negative": true,
-          "value": -0.33
-        }
-      ]
-    }
-  ]
+  "civic_party": {
+    "name": "Civic Faction",
+    "key": "civic_party",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Tax",
+        "type": "Base",
+        "value": 0.2
+      },
+      {
+        "target": "Text",
+        "attribute": "Empower Civic Faction Cost",
+        "type": "Base",
+        "negative": true,
+        "value": -0.5
+      }
+    ]
+  },
+  "military_party": {
+    "name": "Military Faction",
+    "key": "military_party",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.1
+      },
+      {
+        "target": "Naval",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Empower Military Faction Cost",
+        "type": "Base",
+        "negative": true,
+        "value": -0.5
+      }
+    ]
+  },
+  "mercantile_party": {
+    "name": "Mercantile Faction",
+    "key": "mercantile_party",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Commerce Income",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Reputation",
+        "type": "Base",
+        "no_percent": true,
+        "value": 2
+      },
+      {
+        "target": "Text",
+        "attribute": "Empower Mercantile Faction Cost",
+        "type": "Base",
+        "negative": true,
+        "value": -0.5
+      }
+    ]
+  },
+  "religious_party": {
+    "name": "Religious Faction",
+    "key": "religious_party",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "no_percent": true,
+        "value": 10
+      },
+      {
+        "target": "Text",
+        "attribute": "Empower Religious Faction Cost",
+        "type": "Base",
+        "negative": true,
+        "value": -0.5
+      }
+    ]
+  },
+  "populist_party": {
+    "name": "Populist Faction",
+    "key": "populist_party",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Political Influence",
+        "type": "Base",
+        "negative": true,
+        "value": -0.33
+      }
+    ]
+  }
 }

@@ -23,10 +23,16 @@ exports.readFiles = (handlers) => {
   Object.keys(handlers).map(key => parseFiles(handlers[key], key))
 }
 
+const sort = (results) => {
+  if (Array.isArray(results))
+    return results
+  const sorted = {}
+  Object.keys(results).sort((a, b) => a.localeCompare(b)).forEach(key => sorted[key] = results[key])
+  return sorted
+}
+
 exports.writeFile = (results, filename) => {
-  const text = JSON.stringify({
-    [path.parse(filename).name]: results
-  }, undefined, 2)
+  const text = JSON.stringify(results, undefined, 2)
   const file = path.join(resultPath, filename)
   fs.writeFile(file, text, err => {
     if (err)

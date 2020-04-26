@@ -20,11 +20,11 @@ import CountryManager from 'containers/CountryManager'
 import Dropdown from 'components/Dropdowns/Dropdown'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TableAttributes from 'components/TableAttributes'
-import { tech_ir, abilities_ir, traits_ir, heritages_ir, traditions_ir, ideas_ir, policies_ir, laws_ir, trades_ir, deities_ir, religions_ir, factions_ir, modifiers_ir } from 'managers/modifiers'
 import { convertCountryDefinition } from 'managers/countries'
 import CountryValueInput from 'containers/CountryValueInput'
 import ListModifier from 'components/Utils/ListModifier'
 import DropdownListDefinition from 'components/Dropdowns/DropdownListDefinition'
+import { traditions_ir, traits_ir, abilities_ir, trades_ir, tech_ir, deities_ir, laws_ir, policies_ir, ideas_ir, modifiers_ir, heritages_ir, religions_ir, factions_ir } from 'data'
 
 const PERCENT_PADDING = '\u00a0\u00a0\u00a0\u00a0'
 
@@ -337,7 +337,7 @@ class Countries extends Component<IProps> {
 
   renderHeritages = () => this.renderDropdown(SelectionType.Heritage, heritages_ir)
   renderReligions = () => this.renderDropdown(SelectionType.Religion, religions_ir)
-  renderFactions = () => this.renderDropdown(SelectionType.Faction, factions_ir)
+  renderFactions = () => this.renderDropdown(SelectionType.Faction, values(factions_ir))
 
   renderDropdown = (type: SelectionType, items: ListDefinition[]) => {
     const selections = this.props.country.selections[type]

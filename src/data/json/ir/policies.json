@@ -1,94 +1,92 @@
-{
-  "policies": [
-    [
-      {
-        "name": "Decreased Pay",
-        "key": "expense_army_low",
-        "modifiers": [
-          {
-            "target": "Land",
-            "attribute": "Morale",
-            "type": "Modifier",
-            "negative": true,
-            "value": -0.8
-          },
-          {
-            "target": "Land",
-            "attribute": "Maintenance",
-            "type": "Modifier",
-            "value": -0.33
-          }
-        ]
-      },
-      {
-        "name": "Default",
-        "key": "expense_army_default",
-        "modifiers": []
-      },
-      {
-        "name": "Increased Pay",
-        "key": "expense_army_high",
-        "modifiers": [
-          {
-            "target": "Land",
-            "attribute": "Morale",
-            "type": "Modifier",
-            "value": 0.1
-          },
-          {
-            "target": "Land",
-            "attribute": "Maintenance",
-            "type": "Modifier",
-            "negative": true,
-            "value": 0.5
-          }
-        ]
-      }
-    ],
-    [
-      {
-        "name": "Decreased Pay",
-        "key": "expense_navy_low",
-        "modifiers": [
-          {
-            "target": "Naval",
-            "attribute": "Morale",
-            "type": "Modifier",
-            "negative": true,
-            "value": -0.8
-          },
-          {
-            "target": "Naval",
-            "attribute": "Maintenance",
-            "type": "Modifier",
-            "value": -0.5
-          }
-        ]
-      },
-      {
-        "name": "Default",
-        "key": "expense_navy_default",
-        "modifiers": []
-      },
-      {
-        "name": "Increased Pay",
-        "key": "expense_navy_high",
-        "modifiers": [
-          {
-            "target": "Naval",
-            "attribute": "Morale",
-            "type": "Modifier",
-            "value": 0.1
-          },
-          {
-            "target": "Naval",
-            "attribute": "Maintenance",
-            "type": "Modifier",
-            "negative": true,
-            "value": 0.5
-          }
-        ]
-      }
-    ]
+[
+  [
+    {
+      "name": "Decreased Pay",
+      "key": "expense_army_low",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "negative": true,
+          "value": -0.8
+        },
+        {
+          "target": "Land",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.33
+        }
+      ]
+    },
+    {
+      "name": "Default",
+      "key": "expense_army_default",
+      "modifiers": []
+    },
+    {
+      "name": "Increased Pay",
+      "key": "expense_army_high",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.1
+        },
+        {
+          "target": "Land",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "negative": true,
+          "value": 0.5
+        }
+      ]
+    }
+  ],
+  [
+    {
+      "name": "Decreased Pay",
+      "key": "expense_navy_low",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "negative": true,
+          "value": -0.8
+        },
+        {
+          "target": "Naval",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.5
+        }
+      ]
+    },
+    {
+      "name": "Default",
+      "key": "expense_navy_default",
+      "modifiers": []
+    },
+    {
+      "name": "Increased Pay",
+      "key": "expense_navy_high",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.1
+        },
+        {
+          "target": "Naval",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "negative": true,
+          "value": 0.5
+        }
+      ]
+    }
   ]
-}
+]

@@ -1,178 +1,185 @@
-{
-  "laws": [
-    {
-      "name": "Martial Education",
-      "key": "relaxed_recruiting_standards",
-      "modifiers": [
-        {
-          "target": "Global",
-          "attribute": "Experience",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Nobility Admission Law",
-      "key": "recruit_from_nobles",
-      "modifiers": [
-        {
-          "target": "Global",
-          "attribute": "Discipline",
-          "value": 0.05
-        }
-      ]
-    },
-    {
-      "name": "Exemption for Nobility",
-      "key": "heritage_tax_exemption",
-      "modifiers": [
-        {
-          "target": "Land",
-          "attribute": "Maintenance",
-          "type": "Modifier",
-          "value": -0.15
-        }
-      ]
-    },
-    {
-      "name": "Noble Elite",
-      "key": "republican_recruitment_1",
-      "modifiers": [
-        {
-          "target": "Land",
-          "attribute": "Morale",
-          "type": "Modifier",
-          "value": 0.05
-        }
-      ]
-    },
-    {
-      "name": "Provisioning Act",
-      "key": "republican_recruitment_2",
-      "modifiers": [
-        {
-          "target": "Land",
-          "attribute": "Maintenance",
-          "type": "Modifier",
-          "value": -0.15
-        }
-      ]
-    },
-    {
-      "name": "Draft Act",
-      "key": "republican_recruitment_3",
-      "modifiers": [
-        {
-          "target": "Naval",
-          "attribute": "Damage Done",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Military Modernization",
-      "key": "republican_recruitment_4",
-      "modifiers": [
-        {
-          "target": "Global",
-          "attribute": "Discipline",
-          "value": 0.05
-        }
-      ]
-    },
-    {
-      "name": "Priestly Status",
-      "key": "republican_religious_2",
-      "modifiers": [
-        {
-          "target": "Country",
-          "attribute": "Omen Power",
-          "no_percent": true,
-          "value": 15
-        }
-      ]
-    },
-    {
-      "name": "Testamentum Militis",
-      "key": "testamentum_militis",
-      "modifiers": [
-        {
-          "target": "Land",
-          "attribute": "Morale",
-          "type": "Modifier",
-          "value": 0.05
-        }
-      ]
-    },
-    {
-      "name": "Lex Porcia",
-      "key": "lex_porcia",
-      "modifiers": [
-        {
-          "target": "Land",
-          "attribute": "Maintenance",
-          "type": "Modifier",
-          "value": -0.15
-        }
-      ]
-    },
-    {
-      "name": "Punic Reforms",
-      "key": "punic_reforms",
-      "modifiers": [
-        {
-          "target": "Naval",
-          "attribute": "Damage Done",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Marian Reforms",
-      "key": "marian_reforms",
-      "modifiers": [
-        {
-          "target": "Global",
-          "attribute": "Discipline",
-          "value": 0.05
-        }
-      ]
-    },
-    {
-      "name": "Lex Ogulnia",
-      "key": "lex_ogulnia",
-      "modifiers": [
-        {
-          "target": "Country",
-          "attribute": "Omen Power",
-          "no_percent": true,
-          "value": 15
-        }
-      ]
-    },
-    {
-      "name": "Adopt Human Sacrifices",
-      "key": "adopt_human_sacrifice_law_tribal",
-      "modifiers": [
-        {
-          "target": "Country",
-          "attribute": "Omen Power",
-          "no_percent": true,
-          "value": 10
-        }
-      ]
-    },
-    {
-      "name": "Honor in Battle",
-      "key": "super_decentralized_law_three",
-      "modifiers": [
-        {
-          "target": "Land",
-          "attribute": "Morale",
-          "type": "Modifier",
-          "value": 0.1
-        }
-      ]
-    }
-  ]
-}
+[
+  {
+    "name": "Martial Education",
+    "key": "relaxed_recruiting_standards",
+    "modifiers": [
+      {
+        "target": "Global",
+        "attribute": "Experience",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Nobility Admission Law",
+    "key": "recruit_from_nobles",
+    "modifiers": [
+      {
+        "target": "Global",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Exemption for Nobility",
+    "key": "heritage_tax_exemption",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.15
+      }
+    ]
+  },
+  {
+    "name": "Noble Elite",
+    "key": "republican_recruitment_1",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Provisioning Act",
+    "key": "republican_recruitment_2",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.15
+      }
+    ]
+  },
+  {
+    "name": "Draft Act",
+    "key": "republican_recruitment_3",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Damage Done",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Military Modernization",
+    "key": "republican_recruitment_4",
+    "modifiers": [
+      {
+        "target": "Global",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Priestly Status",
+    "key": "republican_religious_2",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "no_percent": true,
+        "value": 15
+      }
+    ]
+  },
+  {
+    "name": "Testamentum Militis",
+    "key": "testamentum_militis",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Lex Porcia",
+    "key": "lex_porcia",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.15
+      }
+    ]
+  },
+  {
+    "name": "Punic Reforms",
+    "key": "punic_reforms",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Damage Done",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Marian Reforms",
+    "key": "marian_reforms",
+    "modifiers": [
+      {
+        "target": "Global",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Lex Ogulnia",
+    "key": "lex_ogulnia",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "no_percent": true,
+        "value": 15
+      }
+    ]
+  },
+  {
+    "name": "Adopt Human Sacrifices",
+    "key": "adopt_human_sacrifice_law_tribal",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "no_percent": true,
+        "value": 10
+      }
+    ]
+  },
+  {
+    "name": "Honor in Battle",
+    "key": "super_decentralized_law_three",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.1
+      }
+    ]
+  }
+]

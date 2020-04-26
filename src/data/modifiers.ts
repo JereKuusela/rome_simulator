@@ -1,8 +1,8 @@
 import { sortBy } from 'lodash'
-import { toObj, forEach } from 'utils'
+import { toObj, forEach, values } from 'utils'
 import {
   ValuesType, CultureType, ListDefinition, OptionDefinition,
-  TraditionDefinition, TradeDefinition, Modifier, TechDefinition, DeityDefinition
+  TraditionDefinition, TradeDefinition, Modifier, TechDefinition, DeityDefinition, ListDefinition2
 } from 'types'
 
 import * as traditionData from './json/ir/traditions.json'
@@ -24,114 +24,108 @@ import * as modifierData from './json/ir/modifiers.json'
 import * as techDataEUIV from './json/euiv/tech.json'
 
 // Bit ugly but these enable tree shaking based on the game.
-const getTechDataEUIV = () => process.env.REACT_APP_GAME === 'euiv' ? Array.from(techDataEUIV.tech) : [] as TechDataEUIV[]
-const getTraditionData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(traditionData.traditions) : [] as TraditionData[]
-const getTradeData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(tradeData.trades) : [] as TradeData[]
-const getHeritageData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(heritageData.heritages) : [] as ListData[]
-const getTechDataIR = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(techDataIR.tech) : [] as InventionData[]
-const getTraitData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(traitData.traits) : [] as ListData[]
-const getLawData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(lawData.laws) : [] as ListData[]
-const getPolicyData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(policyData.policies) : [] as OptionData[]
-const getIdeaData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(ideaData.ideas) : [] as ListData[]
-const getReligionData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(religionData.religions) : [] as ListData[]
+const getTechDataEUIV = () => process.env.REACT_APP_GAME === 'euiv' ? Array.from(techDataEUIV) : [] as TechDataEUIV[]
+const getTraditionData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(traditionData) : [] as TraditionData[]
+const getTradeData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(tradeData) : [] as TradeData[]
+const getHeritageData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(heritageData) : [] as ListData[]
+const getTechDataIR = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(techDataIR) : [] as InventionData[]
+const getTraitData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(traitData) : [] as ListData[]
+const getLawData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(lawData) : [] as ListData[]
+const getPolicyData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(policyData) : [] as OptionData[]
+const getIdeaData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(ideaData) : [] as ListData[]
+const getReligionData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(religionData) : [] as ListData[]
 const getAbilityData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(abilityData.abilities) : [] as OptionData[]
-const getCountryData = () => process.env.REACT_APP_GAME === 'ir' ? countryData.countries : {} as DictionaryData
-const getDeityData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(deityData.deities) : [] as DeityData[]
-const getFactionData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(factionData.parties) : [] as ListData[]
-const getModifierData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(modifierData.modifiers) : [] as ListData[]
+const getCountryData = () => process.env.REACT_APP_GAME === 'ir' ? countryData : {} as DictionaryData
+const getDeityData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(deityData) : [] as DeityData[]
+const getModifierData = () => process.env.REACT_APP_GAME === 'ir' ? Array.from(modifierData) : [] as ListData[]
 
-export type Traditions = { [key in CultureType ]: TraditionDefinition }
+export type Traditions = { [key in CultureType]: TraditionDefinition }
 
-const setDefault = (modifier: Modifier) => {
-  modifier.type = modifier.type ?? ValuesType.Base
-}
-
-export const getTechDefinitionsEUIV = () => {
+const getTechDefinitionsEUIV = () => {
   const data = sortBy<TechDataEUIV>(getTechDataEUIV(), () => 1) as ListDefinition[]
-  data.forEach(level => level.modifiers.forEach(modifier => setDefault(modifier)))
   return data
 }
 
 export const getTraditionDefinitions = () => {
   const data = toObj(sortBy<TraditionData>(getTraditionData(), value => value.name), value => value.key) as Traditions
-  forEach(data, tradition => tradition.modifiers.forEach(modifier => setDefault(modifier)))
-  forEach(data, tradition => tradition.paths.forEach(path => path.traditions.forEach(tradition => tradition.modifiers.forEach(modifier => setDefault(modifier)))))
   return data
 }
 
-export const getTradeDefinitions = () => {
+const getTradeDefinitions = () => {
   const data = sortBy<TradeData>(getTradeData(), value => value.name) as TradeDefinition[]
-  data.forEach(entity => entity.modifiers.forEach(modifier => setDefault(modifier)))
   return data
 }
 
-export const getHeritageDefinitions = () => {
+const getHeritageDefinitions = () => {
   const data = sortBy<ListData>(getHeritageData(), value => value.name) as ListDefinition[]
-  data.forEach(heritage => heritage.modifiers.forEach(modifier => setDefault(modifier)))
   return data
 }
 
-export const getTechDefinitionsIR = () => {
+const getTechDefinitionsIR = () => {
   const data = sortBy<InventionData>(getTechDataIR(), () => 1) as TechDefinition[]
-  data.forEach(level => level.inventions.forEach(invention => invention.modifiers.forEach(modifier => setDefault(modifier))))
   return data
 }
 
-export const getTraitDefinitions = () => {
+const getTraitDefinitions = () => {
   const data = sortBy<ListData>(getTraitData(), value => value.name) as ListDefinition[]
-  data.forEach(trait => trait.modifiers.forEach(modifier => setDefault(modifier)))
   return data
 }
 
-export const getReligionDefinitions = () => {
+const getReligionDefinitions = () => {
   const data = sortBy<ListData>(getReligionData(), value => value.name) as ListDefinition[]
-  data.forEach(trait => trait.modifiers.forEach(modifier => setDefault(modifier)))
   return data
 }
 
-export const getFactionDefinitions = () => {
-  const data = sortBy<ListData>(getFactionData(), value => value.name) as ListDefinition[]
-  data.forEach(faction => faction.modifiers.forEach(modifier => setDefault(modifier)))
-  return data
-}
+const getFactionDefinitions = () => process.env.REACT_APP_GAME === 'ir' ? factionData as ListDefinition2 : {}
 
-export const getModifierDefinitions = () => {
+const getModifierDefinitions = () => {
   const data = sortBy<ListData>(getModifierData(), value => value.name) as ListDefinition[]
-  data.forEach(modifier => modifier.modifiers.forEach(modifier => setDefault(modifier)))
   return data
 }
 
-export const getLawDefinitions = () => {
+const getLawDefinitions = () => {
   const data = sortBy<ListData>(getLawData(), () => 1) as ListDefinition[]
-  data.forEach(trait => trait.modifiers.forEach(modifier => setDefault(modifier)))
   return data
 }
 
-export const getPolicyDefinitions = () => {
+const getPolicyDefinitions = () => {
   const data = sortBy<OptionData>(getPolicyData(), () => 1) as OptionDefinition[]
-  data.forEach(option => option.forEach(option => option.modifiers.forEach(modifier => setDefault(modifier))))
   return data
 }
 
-export const getIdeaDefinitions = () => {
+const getIdeaDefinitions = () => {
   const data = sortBy<ListData>(getIdeaData(), () => 1) as ListDefinition[]
-  data.forEach(idea => idea.modifiers.forEach(modifier => setDefault(modifier)))
   return data
 }
 
-export const getDeityDefinitions = () => {
+const getDeityDefinitions = () => {
   const data = sortBy<DeityData>(getDeityData(), () => 1) as DeityDefinition[]
-  data.forEach(deity => deity.modifiers.forEach(modifier => setDefault(modifier)))
   return data
 }
 
-export const getAbilityDefinitions = () => {
+const getAbilityDefinitions = () => {
   const data = sortBy<OptionData>(getAbilityData(), () => 1) as OptionDefinition[]
-  data.forEach(option => option.forEach(option => option.modifiers.forEach(modifier => setDefault(modifier))))
   return data
 }
 
-export const getCountryNames = () => getCountryData()
+const getCountryNames = () => getCountryData()
+
+export const abilities_ir = getAbilityDefinitions()
+export const traits_ir = getTraitDefinitions()
+export const heritages_ir = getHeritageDefinitions()
+export const trades_ir = getTradeDefinitions()
+export const traditions_ir = getTraditionDefinitions()
+export const ideas_ir = getIdeaDefinitions()
+export const laws_ir = getLawDefinitions()
+export const deities_ir = getDeityDefinitions()
+export const policies_ir = getPolicyDefinitions()
+export const countries_ir = getCountryNames()
+export const religions_ir = getReligionDefinitions()
+export const factions_ir = getFactionDefinitions()
+export const modifiers_ir = getModifierDefinitions()
+
+export const tech_ir = getTechDefinitionsIR()
+export const tech_euiv = getTechDefinitionsEUIV()
 
 
 interface ModifierData {
@@ -182,6 +176,8 @@ type ListData = {
   key: string
   modifiers: ModifierData[]
 }
+
+type ListData2 = { [key: string]: ListData }
 
 type DeityData = ListData & {
   isOmen: boolean

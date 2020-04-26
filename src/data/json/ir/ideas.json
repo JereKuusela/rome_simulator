@@ -1,118 +1,122 @@
-{
-  "ideas": [
-    {
-      "name": "Martial Ethos",
-      "key": "idea_martial_ethos",
-      "modifiers": [
-        {
-          "target": "Land",
-          "attribute": "Morale",
-          "type": "Modifier",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Thalassocracy",
-      "key": "idea_thalassocracy",
-      "modifiers": [
-        {
-          "target": "Naval",
-          "attribute": "Morale",
-          "type": "Modifier",
-          "value": 0.2
-        }
-      ]
-    },
-    {
-      "name": "Elite Soldiery",
-      "key": "idea_elite_soldiers",
-      "modifiers": [
-        {
-          "target": "Global",
-          "attribute": "Discipline",
-          "value": 0.05
-        }
-      ]
-    },
-    {
-      "name": "Permanent Shipyards",
-      "key": "idea_permanent_shipyards",
-      "modifiers": [
-        {
-          "target": "Naval",
-          "attribute": "Cost",
-          "type": "Modifier",
-          "value": -0.25
-        }
-      ]
-    },
-    {
-      "name": "Conscription",
-      "key": "idea_conscription",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "National Manpower",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Militarized Society",
-      "key": "idea_military_society",
-      "modifiers": [
-        {
-          "target": "Land",
-          "attribute": "Maintenance",
-          "type": "Modifier",
-          "value": -0.2
-        },
-        {
-          "target": "Naval",
-          "attribute": "Maintenance",
-          "type": "Modifier",
-          "value": -0.2
-        }
-      ]
-    },
-    {
-      "name": "Ordered Retreat",
-      "key": "idea_retreat",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Reinforcement Speed",
-          "value": 0.1
-        },
-        {
-          "target": "Text",
-          "attribute": "Army Morale Recovery",
-          "value": 0.05
-        }
-      ]
-    },
-    {
-      "name": "Siege Training",
-      "key": "idea_siege_training",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Siege Ability",
-          "value": 0.15
-        }
-      ]
-    },
-    {
-      "name": "Support of the People",
-      "key": "idea_triumph",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Experience Decay",
-          "value": -0.01
-        }
-      ]
-    }
-  ]
-}
+[
+  {
+    "name": "Martial Ethos",
+    "key": "idea_martial_ethos",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Thalassocracy",
+    "key": "idea_thalassocracy",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.2
+      }
+    ]
+  },
+  {
+    "name": "Elite Soldiery",
+    "key": "idea_elite_soldiers",
+    "modifiers": [
+      {
+        "target": "Global",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Permanent Shipyards",
+    "key": "idea_permanent_shipyards",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Cost",
+        "type": "Modifier",
+        "value": -0.25
+      }
+    ]
+  },
+  {
+    "name": "Conscription",
+    "key": "idea_conscription",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Manpower",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Militarized Society",
+    "key": "idea_military_society",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.2
+      },
+      {
+        "target": "Naval",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.2
+      }
+    ]
+  },
+  {
+    "name": "Ordered Retreat",
+    "key": "idea_retreat",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Reinforcement Speed",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Army Morale Recovery",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Siege Training",
+    "key": "idea_siege_training",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Siege Ability",
+        "type": "Base",
+        "value": 0.15
+      }
+    ]
+  },
+  {
+    "name": "Support of the People",
+    "key": "idea_triumph",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Experience Decay",
+        "type": "Base",
+        "value": -0.01
+      }
+    ]
+  }
+]

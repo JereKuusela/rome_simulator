@@ -34,7 +34,7 @@ export enum GovermentType {
 }
 
 export interface Modifier {
-  target: UnitType | ModifierType | Mode 
+  target: UnitType | ModifierType | Mode
   attribute: string
   negative?: boolean
   type: ValuesType
@@ -45,7 +45,7 @@ export interface Modifier {
 export interface ModifierWithKey extends Modifier {
   key: string
 }
-export interface Invention extends ListDefinition{
+export interface Invention extends ListDefinition {
   index: number
 }
 export interface Path {
@@ -59,7 +59,7 @@ export interface TraditionDefinition {
   paths: Path[]
   modifiers: Modifier[]
 }
-export interface TradeDefinition extends ListDefinition{
+export interface TradeDefinition extends ListDefinition {
   index: number
 }
 export interface ListDefinition {
@@ -67,8 +67,9 @@ export interface ListDefinition {
   key: string
   modifiers: Modifier[]
 }
+export type ListDefinition2 = { [key: string]: ListDefinition }
 export type DeityDefinition = ListDefinition & {
- isOmen: boolean
+  isOmen: boolean
 }
 export type OptionDefinition = ListDefinition[]
 
