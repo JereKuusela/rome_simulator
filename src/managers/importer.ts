@@ -4,6 +4,8 @@ import { uniq } from 'lodash'
 import stringTokens from 'data/json/ir/binary.json'
 
 let i = 0
+let data: Uint8Array = new Uint8Array()
+let errors: string[] | null = null
 
 const parseToken = (token: string) => {
   const isNumber = !Number.isNaN(Number(token))
@@ -94,16 +96,15 @@ const tokens = {
   ...toObj(keys(stringTokens), key => parseInt(key, 16), key => stringTokens[key])
 }
 
-let errors: string[] | null = null
-
-export const binaryToPlain = (data: Uint8Array, getErrors: boolean): [string, string[]] => {
+export const binaryToPlain = (buffer: Uint8Array, getErrors: boolean): [string, string[]] => {
   i = 0
+  data = buffer
   errors = getErrors ? [] : null
   const result = parseBinaryText(data)
   return [result.join(''), errors ? uniq(errors) : []]
 }
 
-const getBinaryToken = (data: Uint8Array) => {
+const getBinaryToken = () => {
   const code = data[i++] * 256 + data[i++]
   if (tokens[code])
     return tokens[code]
@@ -111,15 +112,19 @@ const getBinaryToken = (data: Uint8Array) => {
   return 'x_' + code.toString(16).toUpperCase()
 }
 
-const getBinaryBoolean = (data: Uint8Array) => data[i++] ? 'yes' : 'no'
-const getBinaryLength = (data: Uint8Array) => data[i++] + (data[i++] << 8)
-const getBinaryInteger = (data: Uint8Array) => data[i++] + (data[i++] << 8) + (data[i++] << 16) + (data[i++] << 24)
-const getBigInteger = (data: Uint8Array) => (
-  data[i++] + (data[i++] << 8) + (data[i++] << 16) + (data[i++] << 24)
-  + (data[i++] << 32) + (data[i++] << 40) + (data[i++] << 48) + (data[i++] << 56)
+/** Looks up the next token. If it's '=' then previous token is a key. */
+const isKeyValuePair = () => tokens[data[i] * 256 + data[i + 1]] === '='
+
+const getBinaryBoolean = () => data[i++] ? 'yes' : 'no'
+// Bitwise can't be used because of only 32 bytes.
+const getBinaryLength = () => data[i++] + (data[i++] * 256)
+const getBinaryInteger = () => data[i++] + (data[i++] * 256) + (data[i++] * 65536) + (data[i++] * 16777216)
+const getBigInteger = () => (
+  data[i++] + (data[i++] * 256) + (data[i++] * 65536) + (data[i++] * 16777216)
+  + (data[i++] * 4294967296) + (data[i++] * 4294967296 * 256) + (data[i++] * 4294967296 * 65536 ) + (data[i++] * 4294967296* 16777216)
 )
 
-const getBinaryString = (data: Uint8Array, length: number) => {
+const getBinaryString = (length: number) => {
   let string = ''
   for (let j = 0; j < length; j++)
     string += String.fromCharCode(data[i + j])
@@ -127,25 +132,25 @@ const getBinaryString = (data: Uint8Array, length: number) => {
   return string
 }
 
-const parseBinaryValue = (data: Uint8Array, type: string) => {
+const parseBinaryValue = (type: string) => {
   if (type === 'Integer') {
-    return getBinaryInteger(data)
+    return getBinaryInteger()
   }
   if (type === 'String') {
-    const length = getBinaryLength(data)
-    return getBinaryString(data, length)
+    const length = getBinaryLength()
+    return getBinaryString(length)
   }
   if (type === 'Float') {
-    return getBinaryInteger(data) / 100000.0
+    return getBinaryInteger() / 100000.0
   }
   if (type === 'BigInteger') {
-    return getBigInteger(data)
+    return getBigInteger()
   }
   if (type === 'BigFloat') {
-    return getBigInteger(data) / 100000.0
+    return getBigInteger() / 100000.0
   }
   if (type === 'Boolean') {
-    return getBinaryBoolean(data)
+    return getBinaryBoolean()
   }
   return type
 }
@@ -153,67 +158,73 @@ const parseBinaryValue = (data: Uint8Array, type: string) => {
 // Date is not its own data format so the keys must be hard coded.
 const dates = new Set([
   'date', 'birthdate', 'death_date', 'start_date', 'last_trade_route_creation_date', 'arrived_here_date', 'stall_date',
-  'leader_date', 'budget_dates', 'last_employed_date'
+  'leader_date', 'budget_dates', 'last_employed_date', 'last_owner_change', 'last_controller_change', 'looted', 'plundered'
 ])
 
 const parseBinaryText = (data: Uint8Array) => {
   const tokens = [''] as any[]
   let pad = ''
-  let counter = 0
   let key = ''
+  let previous: string | number = ''
+  let inArray = false
   while (i < data.length) {
-    let token: string | number | {} = getBinaryToken(data)
+    let token: string | number = getBinaryToken()
     if (token === '=') {
-      counter = -1
-      key = tokens[tokens.length - 1]
       tokens.push(token)
     }
     else if (token === 'String' || token === 'Integer' || token === 'BigInteger' || token === 'Float' || token === 'BigFloat' || token === 'Boolean') {
-      // If token used as key then not stringified, must detect is array or not which requires storing state...
-      if (token === 'String')
-        token = '"' + parseBinaryValue(data, String(token)) + '"'
+      const value = parseBinaryValue(String(token))
+      if (token === 'String' && !isKeyValuePair())
+        token = '"' + value + '"'
       else if (dates.has(key))
-        token = decodateDate(Number(parseBinaryValue(data, String(token))))
+        token = decodateDate(Number(value))
       else
-        token = parseBinaryValue(data, String(token))
-      if (pad && tokens[tokens.length - 1] === '\n')
-        tokens.push(pad)
-      if (counter > 0)
-        tokens.push(' ')
-      tokens.push(token)
-      if (counter === -1) {
-        key = ''
+        token = value
+
+      if (isKeyValuePair()) {
+        key = String(token)
         tokens.push('\n')
+        if (pad)
+          tokens.push(pad)
       }
-      counter++
+      else if (previous !== '=') {
+        inArray = true
+        tokens.push(' ')
+      }
+
+      tokens.push(token)
     }
     else if (token === '{' || token === '}') {
       if (token === '}') {
-        if (tokens[tokens.length - 1] !== '\n')
+        key = ''
+        if (tokens[tokens.length - 1] !== '\n' && !inArray)
           tokens.push('\n')
         pad = pad.substr(1)
-        if (pad)
+        if (pad && !inArray)
           tokens.push(pad)
-        key = ''
+        if (inArray)
+          tokens.push(' ')
+        inArray = false
       }
       tokens.push(token)
-      tokens.push('\n')
       if (token === '{')
         pad += '\t'
-      counter = 0
     }
     else {
-      if (pad && tokens[tokens.length - 1] === '\n')
-        tokens.push(pad)
-      if (counter > 0)
-        tokens.push(' ')
-      tokens.push(token)
-      if (counter === -1) {
-        key = ''
+      if (isKeyValuePair()) {
+        key = token
         tokens.push('\n')
+        if (pad)
+          tokens.push(pad)
       }
-      counter++
+      else if (previous !== '=') {
+        inArray = true
+        tokens.push(' ')
+      }
+
+      tokens.push(token)
     }
+    previous = token
   }
   return tokens
 }

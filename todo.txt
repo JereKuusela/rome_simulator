@@ -17,8 +17,6 @@ Changelog:
 
 Save game importer:
  - New page to import save games.
- - Only works for non-compressed saves (-debug_mode must be enabled).
- - Compressed saves should be technically possible but takes more work.
 
 Combat:
   - Morale and strength no longer go below zero. This fixes slightly inflated losses on Analyze tool.
