@@ -12,7 +12,7 @@ import Settings from './pages/Settings'
 import Error from './pages/Error'
 import { AppState } from 'state'
 import Analyze from './pages/Analyze'
-import ImportSave from 'pages/ImportSave'
+import SaveTool from 'pages/SaveTool'
 import { Container } from 'semantic-ui-react'
 import Modals from 'pages/Modals'
 
@@ -37,7 +37,7 @@ const Root = ({ store, persistor }: MainProps) => {
               <Route path='/Analyze' component={Analyze} />
               <Route path='/Countries' component={process.env.REACT_APP_GAME === 'euiv' ? CountriesEUIV : Countries} />
               <Route path='/Settings' component={Settings} />
-              <Route path='/Import' component={ImportSave} />
+              <Route path='/Import' component={SaveTool} />
               <br />
               <br />
               <br />
