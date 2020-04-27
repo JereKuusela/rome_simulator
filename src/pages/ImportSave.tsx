@@ -15,7 +15,7 @@ import AttributeImage from 'components/Utils/AttributeImage'
 import { toObj, toArr, mapRange, map, values, keys, filter } from 'utils'
 import { getNextId } from 'army_utils'
 import { calculateValueWithoutLoss } from 'definition_values'
-import { parseFile } from 'managers/importer'
+import { parseFile, parseBinary } from 'managers/importer'
 
 type Country = {
   id: string
@@ -415,15 +415,44 @@ class ImportSave extends Component<IProps, IState> {
   selectArmy = (id: string) => this.setState({ army: id ? this.loadArmy(id) : null })
 
   loadContent = (file: File) => {
-    const blob = file as any
-    if (!blob) {
+    if (!file) {
       this.setState({ country: null, army: null, armies: [], file: {} })
       return
     }
-    blob.text().then((data: string) => {
-      const file = parseFile(data)
-      this.setState({ file })
-    })
+    if (file.name.endsWith('.rome')) {
+      file.text().then(data => {
+        const file = parseFile(data)
+        const keys = Object.keys(file)
+        console.log(keys)
+        this.setState({ file })
+      })
+    }
+    else {
+      file.arrayBuffer().then(buffer => {
+        const data = parseBinary(buffer)
+        const file = parseFile(data)
+        const mapping = {} as { [key: string]: string }
+        this.mapper(mapping, file, this.state.file)
+        console.log(mapping)
+        const blob = new Blob([JSON.stringify(mapping, undefined, 2)], { type: 'text/plain;charset=utf-8' })
+        saveAs(blob, 'test.txt');
+      })
+    }
+  }
+
+  mapper = (mapping: { [key: string]: string }, obj1: { [key: string]: any }, obj2: { [key: string]: any }) => {
+    const keys = Object.keys(obj1)
+    const correctKeys = Object.keys(obj2)
+    for (let i = 0; i < keys.length; i++) {
+      if (keys[i] !== correctKeys[i])
+        mapping[keys[i].substr(2).padStart(4, '0')] = correctKeys[i]
+      if (typeof obj1[keys[i]] === 'object')
+        this.mapper(mapping, obj1[keys[i]], obj2[correctKeys[i]])
+      else if (typeof obj1[keys[i]] === 'string' && obj1[keys[i]].startsWith('x_')) {
+        if (obj1[keys[i]] !== obj2[correctKeys[i]])
+          mapping[obj1[keys[i]].substr(2).padStart(4, '0')] = obj2[correctKeys[i]]
+      }
+    }
   }
 
   getCountryList = () => {
@@ -497,7 +526,7 @@ class ImportSave extends Component<IProps, IState> {
       const territories = Object.values(this.state.file.provinces).filter((territory: any) => territory.state === province) as any[]
       const pops = this.state.file.population.population
       const goods: any[] = territories.reduce((prev, territory) => {
-        const slaves = territory.pop.filter((id: number) => pops[id].type == 'slaves').length
+        const slaves = territory.pop.filter((id: number) => pops[id].type === 'slaves').length
         const goods = territory.trade_goods
         let slavesForSurplus = 18
         if (territory.province_rank === 'settlement')
