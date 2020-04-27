@@ -37,14 +37,13 @@ export default class ConvertSave extends Component<{}, IState> {
   }
 
   loadSave = async (file: File) => {
-    const firstRow = await file.slice(0, 22).text()
     new JSZip().loadAsync(file).then(zip => {
       const unzipped = zip.file('gamestate')
       if (unzipped) {
         unzipped.async('uint8array').then(buffer => {
           const [data, errors] = binaryToPlain(buffer, true)
           this.setState({ errors })
-          const blob = new Blob([firstRow  + '\n' + data], { type: 'text/plain;charset=utf-8' })
+          const blob = new Blob([data], { type: 'text/plain;charset=utf-8' })
           saveAs(blob, 'plain_' + file.name)
         })
       }
