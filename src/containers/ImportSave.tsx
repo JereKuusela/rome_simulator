@@ -37,13 +37,52 @@ type Country = {
   laws: string[]
   ideas: string[]
   exports: boolean[]
-  surplus: string[]
+  surplus: TradeGood[]
   officeDiscipline: number
   officeMorale: number
   deities: string[]
   modifiers: string[]
   isPlayer: boolean
   omen: string
+}
+
+type SaveJob = {
+  who: number
+  character: number
+  office: string
+}
+
+type SaveTerritory = {
+  trade_goods: TradeGood
+  province_rank: 'settlement' | 'city'
+  buildings: number[]
+  pop: number[]
+  state: number
+}
+
+type SaveCharacter = {
+  experience: number
+  attributes: {
+    martial: number
+    finesse: number
+    charisma: number
+    zeal: number
+  }
+  first_name_loc: {
+    name: string
+  }
+  family_name: string
+  traits: string[]
+}
+
+enum TradeGood {
+  Dummy = 'Dummy'
+}
+
+type SaveRoute = {
+  from_state: number
+  to_state: number
+  trade_goods: TradeGood
 }
 
 type Character = {
@@ -72,18 +111,33 @@ type Cohort = {
   [UnitAttribute.Experience]: number
 }
 
+type Save = { [key: string]: any } & {
+  jobs: {
+    office_job: SaveJob[],
+    techoffice_job: SaveJob[],
+    province_job: SaveJob[]
+  }
+  character: {
+    character_database: { [key: number]: SaveCharacter }
+  }
+  provinces: { [key: number]: SaveTerritory }
+  trade: {
+    route: SaveRoute[]
+  }
+}
+
 type IState = {
   country: Country | null
   armies: Army[]
   army: Army | null
-  file: { [key: string]: any }
+  file: Save
 }
 
 class ImportSave extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    this.state = { country: null, army: null, armies: [], file: {} }
+    this.state = { country: null, army: null, armies: [], file: {} as Save }
   }
 
   // Importing must be done in two steps. First to import definitions and then cohorts (since their values are relative to definitions).
@@ -145,8 +199,8 @@ class ImportSave extends Component<IProps, IState> {
       <Grid padded>
         <Grid.Row>
           <Grid.Column verticalAlign='middle'>
-            <Header style={{display: 'inline'}} >Select a save game to import </Header>
-            <Input style={{display: 'inline'}} type='file' onChange={event => this.loadContent(event.target.files![0])} />
+            <Header style={{ display: 'inline' }} >Select a save game to import </Header>
+            <Input style={{ display: 'inline' }} type='file' onChange={event => this.loadContent(event.target.files![0])} />
           </Grid.Column>
         </Grid.Row>
         <Grid.Row columns='4'>
@@ -419,21 +473,21 @@ class ImportSave extends Component<IProps, IState> {
 
   loadContent = (file: File) => {
     if (!file) {
-      this.setState({ country: null, army: null, armies: [], file: {} })
+      this.setState({ country: null, army: null, armies: [], file: {} as Save })
       return
     }
     new JSZip().loadAsync(file).then(zip => {
       const file = zip.file('gamestate')
       if (file) {
         file.async('uint8array').then(buffer => {
-          const file = parseFile(binaryToPlain(buffer, false)[0])
+          const file = parseFile(binaryToPlain(buffer, false)[0]) as Save
           console.log(file)
           this.setState({ file })
         })
       }
     }).catch(() => {
       file.text().then(data => {
-        const file = parseFile(data)
+        const file = parseFile(data) as Save
         this.setState({ file })
       })
     })
@@ -496,21 +550,22 @@ class ImportSave extends Component<IProps, IState> {
 
     const jobs = this.state.file.jobs.office_job
     const characters = this.state.file.character.character_database
-    const disciplineJob = jobs.find((job: any) => job.who === country.id && job.office === 'office_tribune_of_the_soldiers')
-    const moraleJob = jobs.find((job: any) => job.who === country.id && job.office === 'office_master_of_the_guard')
+    const disciplineJob = jobs.find(job => job.who === Number(id) && job.office === 'office_tribune_of_the_soldiers')
+    const moraleJob = jobs.find(job => job.who === Number(id) && job.office === 'office_master_of_the_guard')
     if (disciplineJob) {
       const character = characters[disciplineJob.character]
+      console.log(character)
       country.officeDiscipline = Math.floor(this.getCharacterMartial(character) * character.experience / 100.0) / 2
     }
     if (moraleJob) {
-      const character = characters[disciplineJob.character]
+      const character = characters[moraleJob.character]
       country.officeMorale = Math.floor(this.getCharacterMartial(character) * character.experience / 100.0)
     }
     if (data.capital) {
       const province = this.state.file.provinces[data.capital].state
-      const territories = Object.values(this.state.file.provinces).filter((territory: any) => territory.state === province) as any[]
+      const territories = Object.values(this.state.file.provinces).filter(territory => territory.state === province)
       const pops = this.state.file.population.population
-      const goods: any[] = territories.reduce((prev, territory) => {
+      const goods = territories.reduce((prev, territory) => {
         const slaves = territory.pop.filter((id: number) => pops[id].type === 'slaves').length
         const goods = territory.trade_goods
         let slavesForSurplus = 18
@@ -520,12 +575,18 @@ class ImportSave extends Component<IProps, IState> {
           slavesForSurplus -= 5
         if (territory.buildings[17])
           slavesForSurplus -= 5
+        if (country.laws.includes('formalized_industry_law_tribal'))
+          slavesForSurplus -= 1
+        if (country.laws.includes('lex_sempronia_agraria'))
+          slavesForSurplus -= 2
+        if (country.laws.includes('republican_land_reform_3'))
+          slavesForSurplus -= 2
         slavesForSurplus = Math.max(1, slavesForSurplus)
         return prev.concat(Array(1 + Math.floor(slaves / slavesForSurplus)).fill(goods))
-      }, [] as any[])
+      }, [] as TradeGood[])
       const counts = toObj(goods, type => type, type => goods.filter(item => item === type).length)
-      const trade = this.state.file.trade.route as any[]
-      trade.forEach(route => {
+      const tradeRoutes = this.state.file.trade.route
+      tradeRoutes.forEach(route => {
         if (route.from_state === province)
           counts[route.trade_goods]--
 
@@ -533,15 +594,15 @@ class ImportSave extends Component<IProps, IState> {
           counts[route.trade_goods] = (counts[route.trade_goods] ?? 0) + 1
 
       })
-      country.surplus = Object.keys(filter(counts, item => item > 1))
+      country.surplus = keys(filter(counts, item => item > 1))
     }
 
     return country
   }
 
-  getCharacterMartial = (character: any) => character.attributes.martial + sum(character.traits.map((key: string) => traits_ir[key]?.modifiers.find(modifier => modifier.attribute === GeneralAttribute.Martial)?.value ?? 0))
+  getCharacterMartial = (character: SaveCharacter) => character.attributes.martial + sum(character.traits.map((key: string) => traits_ir[key]?.modifiers.find(modifier => modifier.attribute === GeneralAttribute.Martial)?.value ?? 0))
 
-  getCharacterName = (character: any) => character.first_name_loc.name + (character.family_name ? ' ' + character.family_name : '')
+  getCharacterName = (character: SaveCharacter) => character.first_name_loc.name + (character.family_name ? ' ' + character.family_name : '')
 
   arrayify = (data: any) => data ? (Array.isArray(data) ? data : [data]) : []
 

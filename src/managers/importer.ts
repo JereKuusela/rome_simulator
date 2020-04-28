@@ -159,7 +159,7 @@ const parseBinaryValue = (type: string) => {
 const dates = new Set([
   'date', 'birthdate', 'death_date', 'start_date', 'last_trade_route_creation_date', 'arrived_here_date', 'stall_date',
   'leader_date', 'budget_dates', 'last_employed_date', 'last_owner_change', 'last_controller_change', 'looted', 'plundered',
-  'deity_elevated', 'last_war', 'last_peace', 'last_battle_won', 'omen_start', 'omen_duration', 'deify_ruler'
+  'deity_elevated', 'last_war', 'last_peace', 'last_battle_won', 'omen_start', 'omen_duration', 'deify_ruler', 'idle'
 ])
 
 const parseBinaryText = (data: Uint8Array) => {

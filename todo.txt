@@ -40,12 +40,6 @@ Refactor:
 
 TODO:
 
-Tests:
- - Mechanics tested. Create a complex base scenario with all mechanics turned off. Then test turning them on individually. Also the tooltip should be tested to match the result.
-  * This verifies that the combat calculations work as intended.
-  * This verifies that the mechanics settings work as intended.
-  * This verifies that the tooltip matches actual result.
-
 UI:
  - Togglable stats rows to show individual units or hide unit types.
  - Unit tooltip should somehow show sources for losses (to include daily loss from EUIV and damage from different units).
@@ -71,12 +65,11 @@ Settings:
  - general: martial, fire&shock, both
  - Show on main page current settings set (Imperator, EUIV, mixed), tooltip to show individual (or only changed?)
  - New settings for deployment / reinforcement order/attribute.
- - More sections for settings (at least new section for deployment and reinforcement, game mechanics, simulation settings).
+ - Settings from hardcoded.txt with auto generation.
 
 Todo:
  - Transfer could only show non-base stats for units, terrains and tactics (since base stats are supposed to regenerate?), currently it shows way too much information.
  - Refactor simluation to update only single parameter, also parameters split should make more sense
- - Some sort of place for business logic rules
  - Rowtype selectors could show unit priority? Different colors for main and flank. Frontline could slightly color tiles based on main/flank.
  - Combat things to combat reducer. Perhaps state as parameter when needed? Since it only changes same things as battle reducer,
  - Stats to show amount of traditions, trade, etc..
@@ -95,16 +88,6 @@ Tags:
   * Flanking (attacking without being attacked)
   * No target (red sign)
  - Battle stats to show amount of tags acquired (hopefully gives a better view of the battle)
-
-Army management:
-- Probably needed for multi-army battles because countries need to have multiple armies
-- General selector to units page, renamed to army?
-- Custom changes for whole country, renamed to country?
-- Accordion for general?
-- Accordion for reserve?
-- Accordion for unit definitions?
-
-- Accordions to more places?? (unit detail?)
 
 Land battle:
 - Deployment order based also on manpower!! (before index), need to to test whether full strength is prioritized for both deploy and reinforce

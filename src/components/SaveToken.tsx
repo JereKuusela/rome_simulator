@@ -3,6 +3,8 @@ import JSZip from 'jszip'
 import { Input, Grid, Header } from 'semantic-ui-react'
 import { binaryToPlain, parseFile } from 'managers/importer'
 
+import tokens from 'data/json/ir/binary.json'
+
 type IState = {
   errors: string[]
 }
@@ -59,7 +61,7 @@ export default class SaveToken extends Component<{}, IState> {
         zip.file('gamestate')?.async('uint8array').then(buffer => {
           const compressedFile = parseFile(binaryToPlain(buffer, false)[0])
 
-          const mapping: { [key: string]: string } = {}
+          const mapping: { [key: string]: string } = tokens
           this.mapper(mapping, compressedFile, plainFile)
           const blob = new Blob([JSON.stringify(mapping, undefined, 2)], { type: 'text/plain;charset=utf-8' })
           saveAs(blob, 'tokens.json');
@@ -72,6 +74,8 @@ export default class SaveToken extends Component<{}, IState> {
   }
 
   mapper = (mapping: { [key: string]: string }, compressed: { [key: string]: any }, plain: { [key: string]: any }) => {
+    if (!compressed || !plain)
+      return
     const keys = Object.keys(compressed)
     const correctKeys = Object.keys(plain)
     for (let i = 0; i < keys.length; i++) {
