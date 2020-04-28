@@ -62,6 +62,7 @@ export default class SaveToken extends Component<{}, IState> {
           const compressedFile = parseFile(binaryToPlain(buffer, false)[0])
 
           const mapping: { [key: string]: string } = tokens
+
           this.mapper(mapping, compressedFile, plainFile)
           const blob = new Blob([JSON.stringify(mapping, undefined, 2)], { type: 'text/plain;charset=utf-8' })
           saveAs(blob, 'tokens.json');
@@ -76,16 +77,24 @@ export default class SaveToken extends Component<{}, IState> {
   mapper = (mapping: { [key: string]: string }, compressed: { [key: string]: any }, plain: { [key: string]: any }) => {
     if (!compressed || !plain)
       return
-    const keys = Object.keys(compressed)
-    const correctKeys = Object.keys(plain)
+    // Ironman key doesn't exist on plain save.
+    const keys = Object.keys(compressed).filter(key => key !== 'ironman')
+    const correctKeys = Object.keys(plain).filter(key => key !== 'ironman')
     for (let i = 0; i < keys.length; i++) {
       if (keys[i] !== correctKeys[i])
         mapping[keys[i].substr(2).padStart(4, '0')] = correctKeys[i]
       if (typeof compressed[keys[i]] === 'object')
         this.mapper(mapping, compressed[keys[i]], plain[correctKeys[i]])
-      else if (typeof compressed[keys[i]] === 'string' && compressed[keys[i]].startsWith('x_')) {
-        if (compressed[keys[i]] !== plain[correctKeys[i]])
-          mapping[compressed[keys[i]].substr(2).padStart(4, '0')] = plain[correctKeys[i]]
+      else {
+        if (typeof compressed[keys[i]] === 'string' && compressed[keys[i]].startsWith('x_')) {
+          if (compressed[keys[i]] !== plain[correctKeys[i]])
+            mapping[compressed[keys[i]].substr(2).padStart(4, '0')] = plain[correctKeys[i]]
+        }
+        else if (compressed[keys[i]] !== plain[correctKeys[i]]) {
+          console.log(keys[i])
+          console.log(compressed[keys[i]])
+          console.log(compressed)
+        }
       }
     }
   }

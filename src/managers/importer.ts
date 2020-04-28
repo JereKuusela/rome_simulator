@@ -35,11 +35,10 @@ const parseObject = (tokens: string[]) => {
   // Object syntax is also used for arrays. Fill both and decide at end which works better.
   const resultArray = [] as any[]
   let previous = ''
-  let extras = 0
   for (i = i + 1; i < tokens.length; i++) {
     const token = tokens[i]
     if (token === '{') {
-      extras++
+      resultArray.push(parseObject(tokens))
     }
     else if (token === '=') {
       const value = parseValue(tokens)
@@ -53,9 +52,6 @@ const parseObject = (tokens: string[]) => {
       }
     }
     else if (token === '}') {
-      if (extras)
-        extras--
-      else
         break
     }
     else {
@@ -84,7 +80,7 @@ const formatTokens = {
   '0D00': 'Float',
   '0E00': 'Boolean',
   '0F00': 'String',
-  '1400': 'Integer',
+  '1400': 'UnsignedInteger',
   '1700': 'String',
   '6701': 'BigFloat',
   '9001': 'BigFloat',
@@ -118,11 +114,30 @@ const isKeyValuePair = () => tokens[data[i] * 256 + data[i + 1]] === '='
 const getBinaryBoolean = () => data[i++] ? 'yes' : 'no'
 // Bitwise can't be used because of only 32 bytes.
 const getBinaryLength = () => data[i++] + (data[i++] * 256)
-const getBinaryInteger = () => data[i++] + (data[i++] * 256) + (data[i++] * 65536) + (data[i++] * 16777216)
-const getBigInteger = () => (
-  data[i++] + (data[i++] * 256) + (data[i++] * 65536) + (data[i++] * 16777216)
-  + (data[i++] * 4294967296) + (data[i++] * 4294967296 * 256) + (data[i++] * 4294967296 * 65536 ) + (data[i++] * 4294967296* 16777216)
-)
+const getBinaryUnsigned = () => {
+  const value = getHex(i + 3) + getHex(i + 2) + getHex(i + 1) + getHex(i)
+  i += 4
+  return hexToUnsigned(value)
+}
+const getBinarySigned = () => {
+  const value = getHex(i + 3) + getHex(i + 2) + getHex(i + 1) + getHex(i)
+  i += 4
+  return hexToSigned(value)
+}
+
+const getBinaryBigSigned = () => {
+  const value = getHex(i + 7) + getHex(i + 6) + getHex(i + 5) + getHex(i + 4) + getHex(i + 3) + getHex(i + 2) + getHex(i + 1) + getHex(i)
+  i += 8
+  return hexToSigned(value)
+}
+
+const getBinaryFloat = () => {
+  const v = new DataView(new ArrayBuffer(4))
+  v.setUint32(0, Number(getBinaryUnsigned()))
+  return v.getFloat32(0)
+}
+
+const getHex = (index: number) => data[index].toString(16).padStart(2, '0')
 
 const getBinaryString = (length: number) => {
   let string = ''
@@ -132,22 +147,25 @@ const getBinaryString = (length: number) => {
   return string
 }
 
-const parseBinaryValue = (type: string) => {
+const parseBinaryValue = (type: string): string => {
+  if (type === 'UnsignedInteger') {
+      return getBinaryUnsigned().toString()
+  }
   if (type === 'Integer') {
-    return getBinaryInteger()
+    return getBinarySigned().toString()
   }
   if (type === 'String') {
     const length = getBinaryLength()
     return getBinaryString(length)
   }
   if (type === 'Float') {
-    return getBinaryInteger() / 100000.0
+    return String(+getBinaryFloat().toFixed(3))
   }
   if (type === 'BigInteger') {
-    return getBigInteger()
+    return getBinaryBigSigned().toString()
   }
   if (type === 'BigFloat') {
-    return getBigInteger() / 100000.0
+    return (Number(getBinaryBigSigned()) / 100000.0).toString()
   }
   if (type === 'Boolean') {
     return getBinaryBoolean()
@@ -157,15 +175,17 @@ const parseBinaryValue = (type: string) => {
 
 // Date is not its own data format so the keys must be hard coded.
 const dates = new Set([
-  'date', 'birthdate', 'death_date', 'start_date', 'last_trade_route_creation_date', 'arrived_here_date', 'stall_date',
+  'date', 'death_date', 'start_date', 'last_trade_route_creation_date', 'arrived_here_date', 'stall_date', 'ignored',
   'leader_date', 'budget_dates', 'last_employed_date', 'last_owner_change', 'last_controller_change', 'looted', 'plundered',
-  'deity_elevated', 'last_war', 'last_peace', 'last_battle_won', 'omen_start', 'omen_duration', 'deify_ruler', 'idle'
+  'deity_elevated', 'last_war', 'last_peace', 'last_battle_won', 'omen_start', 'omen_duration', 'idle', 'birth_date',
+  'last_send_diplomat', 'move_pop_command', 'building_construction', 'disband_army', 'spouse_death_date'
 ])
 
 const parseBinaryText = (data: Uint8Array) => {
   const tokens = [''] as any[]
   let pad = ''
   let key = ''
+  let parentKey = ''
   let previous: string | number = ''
   let inArray = false
   while (i < data.length) {
@@ -173,16 +193,17 @@ const parseBinaryText = (data: Uint8Array) => {
     if (token === '=') {
       tokens.push(token)
     }
-    else if (token === 'String' || token === 'Integer' || token === 'BigInteger' || token === 'Float' || token === 'BigFloat' || token === 'Boolean') {
+    else if (token === 'String' || token === 'Integer' || token === 'BigInteger' || token === 'Float' || token === 'BigFloat' || token === 'BigFloat' || token === 'Boolean' || token === 'UnsignedInteger') {
       const value = parseBinaryValue(String(token))
       if (token === 'String' && !isKeyValuePair())
         token = '"' + value + '"'
-      else if (dates.has(key))
+      else if (key && (dates.has(key) || parentKey === 'breaking_alliances'))
         token = decodateDate(Number(value))
       else
         token = value
 
       if (isKeyValuePair()) {
+        parentKey = key
         key = String(token)
         tokens.push('\n')
         if (pad)
@@ -197,6 +218,7 @@ const parseBinaryText = (data: Uint8Array) => {
     }
     else if (token === '{' || token === '}') {
       if (token === '}') {
+        parentKey = key
         key = ''
         if (tokens[tokens.length - 1] !== '\n' && !inArray)
           tokens.push('\n')
@@ -215,6 +237,7 @@ const parseBinaryText = (data: Uint8Array) => {
     }
     else {
       if (isKeyValuePair()) {
+        parentKey = key
         key = token
         tokens.push('\n')
         if (pad)
@@ -251,4 +274,26 @@ const decodateDate = (input: number) => {
     }
   }
   return year + "." + month + "." + day
+}
+
+const hexToSigned = (hex: string) => {
+  if (hex.length % 2)
+    hex = '0' + hex
+
+  const highbyte = parseInt(hex.slice(0, 2), 16)
+  let bn = BigInt('0x' + hex);
+
+  if (0x80 & highbyte) {
+    bn = BigInt('0b' + bn.toString(2).split('').map(i => '0' === i ? 1 : 0).join('')) + BigInt(1)
+    bn = -bn
+  }
+
+  return bn
+}
+
+const hexToUnsigned = (hex: string) => {
+  if (hex.length % 2)
+    hex = '0' + hex
+
+  return BigInt('0x' + hex)
 }

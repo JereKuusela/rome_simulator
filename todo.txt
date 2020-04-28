@@ -54,7 +54,8 @@ Countries:
   * These inventions are extra. Perhaps a 4th slot for toggle? Or just implement scrolling?
 
 
-
+TODO:
+ - inventions + army active ability!
 
 
 Release++:
