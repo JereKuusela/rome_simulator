@@ -1,7 +1,7 @@
 {
-  "omendeity_agdistis": {
+  "omen_agdistis": {
     "name": "Agdistis Omen",
-    "key": "omendeity_agdistis",
+    "key": "omen_agdistis",
     "modifiers": [
       {
         "target": "Global",
@@ -38,9 +38,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_alilat": {
+  "omen_alilat": {
     "name": "Alilat Omen",
-    "key": "omendeity_alilat",
+    "key": "omen_alilat",
     "modifiers": [
       {
         "target": "Land",
@@ -51,9 +51,9 @@
     ],
     "isOmen": true
   },
-  "omendeity_anat": {
+  "omen_anat": {
     "name": "Anat Omen",
-    "key": "omendeity_anat",
+    "key": "omen_anat",
     "modifiers": [
       {
         "target": "Land",
@@ -77,9 +77,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_anhur": {
+  "omen_anhur": {
     "name": "Anhur Omen",
-    "key": "omendeity_anhur",
+    "key": "omen_anhur",
     "modifiers": [
       {
         "target": "Global",
@@ -103,9 +103,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_ares": {
+  "omen_ares": {
     "name": "Ares Omen",
-    "key": "omendeity_ares",
+    "key": "omen_ares",
     "modifiers": [
       {
         "target": "Land",
@@ -116,9 +116,9 @@
     ],
     "isOmen": true
   },
-  "omendeity_ashshur": {
+  "omen_ashshur": {
     "name": "Ashshur Omen",
-    "key": "omendeity_ashshur",
+    "key": "omen_ashshur",
     "modifiers": [
       {
         "target": "Global",
@@ -129,9 +129,9 @@
     ],
     "isOmen": true
   },
-  "omendeity_athena_nikephoros": {
+  "omen_athena_nikephoros": {
     "name": "Athena Nikephoros Omen",
-    "key": "omendeity_athena_nikephoros",
+    "key": "omen_athena_nikephoros",
     "modifiers": [
       {
         "target": "Land",
@@ -155,9 +155,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_athena_polioukhos": {
+  "omen_athena_polioukhos": {
     "name": "Athena Polioukhos Omen",
-    "key": "omendeity_athena_polioukhos",
+    "key": "omen_athena_polioukhos",
     "modifiers": [
       {
         "target": "Global",
@@ -181,9 +181,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_athena_promachos": {
+  "omen_athena_promachos": {
     "name": "Athena Promachos Omen",
-    "key": "omendeity_athena_promachos",
+    "key": "omen_athena_promachos",
     "modifiers": [
       {
         "target": "Global",
@@ -207,9 +207,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_attar": {
+  "omen_attar": {
     "name": "Attar Omen",
-    "key": "omendeity_attar",
+    "key": "omen_attar",
     "modifiers": [
       {
         "target": "Land",
@@ -233,9 +233,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_brahma": {
+  "omen_brahma": {
     "name": "Brahma Omen",
-    "key": "omendeity_brahma",
+    "key": "omen_brahma",
     "modifiers": [
       {
         "target": "Land",
@@ -246,9 +246,9 @@
     ],
     "isOmen": true
   },
-  "omendeity_brigantia": {
+  "omen_brigantia": {
     "name": "Brigantia Omen",
-    "key": "omendeity_brigantia",
+    "key": "omen_brigantia",
     "modifiers": [
       {
         "target": "Land",
@@ -259,9 +259,9 @@
     ],
     "isOmen": true
   },
-  "omendeity_camulus": {
+  "omen_camulus": {
     "name": "Camulus Omen",
-    "key": "omendeity_camulus",
+    "key": "omen_camulus",
     "modifiers": [
       {
         "target": "Global",
@@ -272,9 +272,9 @@
     ],
     "isOmen": true
   },
-  "omendeity_candamius": {
+  "omen_candamius": {
     "name": "Candamius Omen",
-    "key": "omendeity_candamius",
+    "key": "omen_candamius",
     "modifiers": [
       {
         "target": "Land",
@@ -298,9 +298,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_deborah": {
+  "omen_deborah": {
     "name": "Deborah Omen",
-    "key": "omendeity_deborah",
+    "key": "omen_deborah",
     "modifiers": [
       {
         "target": "Land",
@@ -311,9 +311,9 @@
     ],
     "isOmen": true
   },
-  "omendeity_diktynna": {
+  "omen_diktynna": {
     "name": "Diktynna Omen",
-    "key": "omendeity_diktynna",
+    "key": "omen_diktynna",
     "modifiers": [
       {
         "target": "Land",
@@ -324,9 +324,9 @@
     ],
     "isOmen": true
   },
-  "omendeity_diwali": {
+  "omen_diwali": {
     "name": "Diwali Festival Omen",
-    "key": "omendeity_diwali",
+    "key": "omen_diwali",
     "modifiers": [
       {
         "target": "Land",
@@ -350,9 +350,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_gacim": {
+  "omen_gacim": {
     "name": "Gacim Omen",
-    "key": "omendeity_gacim",
+    "key": "omen_gacim",
     "modifiers": [
       {
         "target": "Land",
@@ -376,9 +376,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_harpocrates": {
+  "omen_harpocrates": {
     "name": "Harpokrates Omen",
-    "key": "omendeity_harpocrates",
+    "key": "omen_harpocrates",
     "modifiers": [
       {
         "target": "Land",
@@ -389,9 +389,9 @@
     ],
     "isOmen": true
   },
-  "omendeity_heracles": {
+  "omen_heracles": {
     "name": "Herakles Omen",
-    "key": "omendeity_heracles",
+    "key": "omen_heracles",
     "modifiers": [
       {
         "target": "Global",
@@ -415,9 +415,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_hercle": {
+  "omen_hercle": {
     "name": "Hercle Omen",
-    "key": "omendeity_hercle",
+    "key": "omen_hercle",
     "modifiers": [
       {
         "target": "Global",
@@ -441,9 +441,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_hercules": {
+  "omen_hercules": {
     "name": "Hercules Omen",
-    "key": "omendeity_hercules",
+    "key": "omen_hercules",
     "modifiers": [
       {
         "target": "Global",
@@ -467,9 +467,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_ishtar": {
+  "omen_ishtar": {
     "name": "Ishtar Omen",
-    "key": "omendeity_ishtar",
+    "key": "omen_ishtar",
     "modifiers": [
       {
         "target": "Land",
@@ -480,9 +480,9 @@
     ],
     "isOmen": true
   },
-  "omendeity_kakasbos": {
+  "omen_kakasbos": {
     "name": "Kakasbos Omen",
-    "key": "omendeity_kakasbos",
+    "key": "omen_kakasbos",
     "modifiers": [
       {
         "target": "Naval",
@@ -493,9 +493,9 @@
     ],
     "isOmen": true
   },
-  "omendeity_laran": {
+  "omen_laran": {
     "name": "Laran Omen",
-    "key": "omendeity_laran",
+    "key": "omen_laran",
     "modifiers": [
       {
         "target": "Land",
@@ -519,9 +519,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_ma": {
+  "omen_ma": {
     "name": "Ma Omen",
-    "key": "omendeity_ma",
+    "key": "omen_ma",
     "modifiers": [
       {
         "target": "Global",
@@ -532,9 +532,9 @@
     ],
     "isOmen": true
   },
-  "omendeity_mari": {
+  "omen_mari": {
     "name": "Mari Omen",
-    "key": "omendeity_mari",
+    "key": "omen_mari",
     "modifiers": [
       {
         "target": "Naval",
@@ -558,9 +558,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_mars": {
+  "omen_mars": {
     "name": "Mars Omen",
-    "key": "omendeity_mars",
+    "key": "omen_mars",
     "modifiers": [
       {
         "target": "Global",
@@ -571,9 +571,9 @@
     ],
     "isOmen": true
   },
-  "omendeity_medeine": {
+  "omen_medeine": {
     "name": "Medeiné Omen",
-    "key": "omendeity_medeine",
+    "key": "omen_medeine",
     "modifiers": [
       {
         "target": "Land",
@@ -584,9 +584,9 @@
     ],
     "isOmen": true
   },
-  "omendeity_minerva": {
+  "omen_minerva": {
     "name": "Minerva Omen",
-    "key": "omendeity_minerva",
+    "key": "omen_minerva",
     "modifiers": [
       {
         "target": "Land",
@@ -623,9 +623,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_nane": {
+  "omen_nane": {
     "name": "Nane Omen",
-    "key": "omendeity_nane",
+    "key": "omen_nane",
     "modifiers": [
       {
         "target": "Land",
@@ -649,9 +649,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_nemetona": {
+  "omen_nemetona": {
     "name": "Nemetona Omen",
-    "key": "omendeity_nemetona",
+    "key": "omen_nemetona",
     "modifiers": [
       {
         "target": "Land",
@@ -675,9 +675,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_neptune": {
+  "omen_neptune": {
     "name": "Neptune Omen",
-    "key": "omendeity_neptune",
+    "key": "omen_neptune",
     "modifiers": [
       {
         "target": "Naval",
@@ -701,9 +701,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_nethuns": {
+  "omen_nethuns": {
     "name": "Nethuns Omen",
-    "key": "omendeity_nethuns",
+    "key": "omen_nethuns",
     "modifiers": [
       {
         "target": "Naval",
@@ -740,9 +740,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_pleistoros": {
+  "omen_pleistoros": {
     "name": "Pleistoros Omen",
-    "key": "omendeity_pleistoros",
+    "key": "omen_pleistoros",
     "modifiers": [
       {
         "target": "Land",
@@ -766,9 +766,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_poseidon": {
+  "omen_poseidon": {
     "name": "Poseidon Omen",
-    "key": "omendeity_poseidon",
+    "key": "omen_poseidon",
     "modifiers": [
       {
         "target": "Naval",
@@ -779,9 +779,9 @@
     ],
     "isOmen": true
   },
-  "omendeity_rama": {
+  "omen_rama": {
     "name": "Rama Omen",
-    "key": "omendeity_rama",
+    "key": "omen_rama",
     "modifiers": [
       {
         "target": "Land",
@@ -805,9 +805,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_rites_adult": {
+  "omen_rites_adult": {
     "name": "Rites to Adulthood Omen",
-    "key": "omendeity_rites_adult",
+    "key": "omen_rites_adult",
     "modifiers": [
       {
         "target": "Land",
@@ -844,9 +844,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_semnocosus": {
+  "omen_semnocosus": {
     "name": "Semnocosus Omen",
-    "key": "omendeity_semnocosus",
+    "key": "omen_semnocosus",
     "modifiers": [
       {
         "target": "Global",
@@ -857,9 +857,9 @@
     ],
     "isOmen": true
   },
-  "omendeity_shaheded": {
+  "omen_shaheded": {
     "name": "Shaheded Omen",
-    "key": "omendeity_shaheded",
+    "key": "omen_shaheded",
     "modifiers": [
       {
         "target": "Naval",
@@ -883,9 +883,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_shiva": {
+  "omen_shiva": {
     "name": "Shiva Omen",
-    "key": "omendeity_shiva",
+    "key": "omen_shiva",
     "modifiers": [
       {
         "target": "Global",
@@ -896,9 +896,9 @@
     ],
     "isOmen": true
   },
-  "omendeity_sinifere": {
+  "omen_sinifere": {
     "name": "Sinifere Omen",
-    "key": "omendeity_sinifere",
+    "key": "omen_sinifere",
     "modifiers": [
       {
         "target": "Land",
@@ -909,9 +909,9 @@
     ],
     "isOmen": true
   },
-  "omendeity_soma": {
+  "omen_soma": {
     "name": "Soma Omen",
-    "key": "omendeity_soma",
+    "key": "omen_soma",
     "modifiers": [
       {
         "target": "Naval",
@@ -922,9 +922,9 @@
     ],
     "isOmen": true
   },
-  "omendeity_battle": {
+  "omen_battle": {
     "name": "Spirits of Battle Omen",
-    "key": "omendeity_battle",
+    "key": "omen_battle",
     "modifiers": [
       {
         "target": "Land",
@@ -948,9 +948,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_tanit": {
+  "omen_tanit": {
     "name": "Tanit Omen",
-    "key": "omendeity_tanit",
+    "key": "omen_tanit",
     "modifiers": [
       {
         "target": "Global",
@@ -974,9 +974,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_thagimasadas": {
+  "omen_thagimasadas": {
     "name": "Thagimasadas Omen",
-    "key": "omendeity_thagimasadas",
+    "key": "omen_thagimasadas",
     "modifiers": [
       {
         "target": "Naval",
@@ -987,9 +987,9 @@
     ],
     "isOmen": true
   },
-  "omendeity_theispas": {
+  "omen_theispas": {
     "name": "Theispas Omen",
-    "key": "omendeity_theispas",
+    "key": "omen_theispas",
     "modifiers": [
       {
         "target": "Land",
@@ -1013,9 +1013,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_vagdavercustis": {
+  "omen_vagdavercustis": {
     "name": "Vagdavercustis Omen",
-    "key": "omendeity_vagdavercustis",
+    "key": "omen_vagdavercustis",
     "modifiers": [
       {
         "target": "Land",
@@ -1039,9 +1039,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_vahagn": {
+  "omen_vahagn": {
     "name": "Vahagn Omen",
-    "key": "omendeity_vahagn",
+    "key": "omen_vahagn",
     "modifiers": [
       {
         "target": "Global",
@@ -1052,9 +1052,9 @@
     ],
     "isOmen": true
   },
-  "omendeity_verethragna": {
+  "omen_verethragna": {
     "name": "Verethragna Omen",
-    "key": "omendeity_verethragna",
+    "key": "omen_verethragna",
     "modifiers": [
       {
         "target": "Land",
@@ -1091,9 +1091,9 @@
     ],
     "isOmen": false
   },
-  "omendeity_yam": {
+  "omen_yam": {
     "name": "Yam Omen",
-    "key": "omendeity_yam",
+    "key": "omen_yam",
     "modifiers": [
       {
         "target": "Naval",
@@ -1104,9 +1104,9 @@
     ],
     "isOmen": true
   },
-  "omendeity_zadeni": {
+  "omen_zadeni": {
     "name": "Zadeni Omen",
-    "key": "omendeity_zadeni",
+    "key": "omen_zadeni",
     "modifiers": [
       {
         "target": "Land",
@@ -1117,9 +1117,9 @@
     ],
     "isOmen": true
   },
-  "omendeity_zeus_naios": {
+  "omen_zeus_naios": {
     "name": "Zeus Naios Omen",
-    "key": "omendeity_zeus_naios",
+    "key": "omen_zeus_naios",
     "modifiers": [
       {
         "target": "Land",

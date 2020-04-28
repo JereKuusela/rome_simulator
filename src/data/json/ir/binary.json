@@ -529,5 +529,8 @@
   "D327": "player_event",
   "0B00": "id",
   "D106": "immediate",
-  "C105": "ironman"
+  "C105": "ironman",
+  "462E": "omen",
+  "492E": "omen_start",
+  "9A30": "omen_duration"
 }

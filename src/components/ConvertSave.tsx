@@ -20,7 +20,9 @@ export default class ConvertSave extends Component<{}, IState> {
       <Grid padded>
         <Grid.Row columns='2'>
           <Grid.Column verticalAlign='middle'>
-            <Header>Select a save game to decompress:</Header>
+            <Header>Select a save game to decompress</Header>
+            Experimental tool that let's you turn save games into plain text and inspect them with a text editor.
+            Playing these saves is not recommended.
           </Grid.Column>
           <Grid.Column>
             <Input type='file' onChange={event => this.loadSave(event.target.files![0])} />

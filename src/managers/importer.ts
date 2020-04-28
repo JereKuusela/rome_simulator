@@ -158,7 +158,8 @@ const parseBinaryValue = (type: string) => {
 // Date is not its own data format so the keys must be hard coded.
 const dates = new Set([
   'date', 'birthdate', 'death_date', 'start_date', 'last_trade_route_creation_date', 'arrived_here_date', 'stall_date',
-  'leader_date', 'budget_dates', 'last_employed_date', 'last_owner_change', 'last_controller_change', 'looted', 'plundered'
+  'leader_date', 'budget_dates', 'last_employed_date', 'last_owner_change', 'last_controller_change', 'looted', 'plundered',
+  'deity_elevated', 'last_war', 'last_peace', 'last_battle_won', 'omen_start', 'omen_duration', 'deify_ruler'
 ])
 
 const parseBinaryText = (data: Uint8Array) => {
@@ -206,6 +207,8 @@ const parseBinaryText = (data: Uint8Array) => {
           tokens.push(' ')
         inArray = false
       }
+      if (token === '{' && tokens[tokens.length - 1] !== '=')
+        tokens.push(' ')
       tokens.push(token)
       if (token === '{')
         pad += '\t'

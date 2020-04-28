@@ -5,7 +5,7 @@ import {
   enableGeneralSelections, createCountry, setCountryAttribute, selectCulture, enableCountrySelections, enableCountrySelection, createArmy, setHasGeneral, setGeneralAttribute,
   setFlankSize, setUnitPreference, selectTactic, addToReserve, deleteArmy, setMode
 } from 'reducers'
-import { Input, Button, Grid, Table } from 'semantic-ui-react'
+import { Input, Button, Grid, Table, Header } from 'semantic-ui-react'
 import Dropdown from 'components/Dropdowns/Dropdown'
 import { sortBy, uniq, sum, union } from 'lodash'
 import LabelItem from 'components/Utils/LabelUnit'
@@ -43,6 +43,7 @@ type Country = {
   deities: string[]
   modifiers: string[]
   isPlayer: boolean
+  omen: string
 }
 
 type Character = {
@@ -141,10 +142,11 @@ class ImportSave extends Component<IProps, IState> {
     const countries = this.getCountryList()
     const armies = this.getArmyList()
     return (
-      <Grid>
+      <Grid padded>
         <Grid.Row>
-          <Grid.Column>
-            <Input type='file' onChange={event => this.loadContent(event.target.files![0])} />
+          <Grid.Column verticalAlign='middle'>
+            <Header style={{display: 'inline'}} >Select a save game to import </Header>
+            <Input style={{display: 'inline'}} type='file' onChange={event => this.loadContent(event.target.files![0])} />
           </Grid.Column>
         </Grid.Row>
         <Grid.Row columns='4'>
@@ -316,7 +318,7 @@ class ImportSave extends Component<IProps, IState> {
             Deities
           </Table.Cell>
           <Table.Cell>
-            {country.deities.map(key => deities_ir[key]?.name).filter(value => value).join(', ')}
+            {country.deities.map(key => deities_ir[key] ? deities_ir[key].name + (country.omen.substr(4) === key.substr(5) ? ' (with omen)' : '') : null).filter(value => value).join(', ')}
           </Table.Cell>
         </Table.Row>
         <Table.Row>
@@ -425,6 +427,7 @@ class ImportSave extends Component<IProps, IState> {
       if (file) {
         file.async('uint8array').then(buffer => {
           const file = parseFile(binaryToPlain(buffer, false)[0])
+          console.log(file)
           this.setState({ file })
         })
       }
@@ -447,7 +450,7 @@ class ImportSave extends Component<IProps, IState> {
   getArmyList = () => this.state.armies.map(army => ({ text: army.name, value: army.id }))
 
   loadCountry = (id: string) => {
-    const deities = this.state.file.deity_manager.deities_database
+    const deities = this.state.file.deity_manager?.deities_database
     const data = this.state.file.country?.country_database[id]
     const availableLaws = data.laws.map((value: any) => !!value)
     const country: Country = {
@@ -470,7 +473,8 @@ class ImportSave extends Component<IProps, IState> {
       officeDiscipline: 0,
       officeMorale: 0,
       id,
-      deities: data.pantheon?.deity.map((index: number) => deities[index].deity) ?? [],
+      deities: deities ? (data.pantheon?.deity.map((index: number) => deities[index].deity) ?? []) : [],
+      omen: deities && data.omen ? deities[data.omen].key : '',
       religiousUnity: data.religious_unity * 100,
       religion: data.religion,
       government: '' as GovermentType,
@@ -658,6 +662,8 @@ class ImportSave extends Component<IProps, IState> {
     enableCountrySelections(countryName, SelectionType.Idea, country.ideas)
     enableCountrySelections(countryName, SelectionType.Law, country.laws)
     enableCountrySelections(countryName, SelectionType.Deity, country.deities)
+    if (country.omen)
+      enableCountrySelection(countryName, SelectionType.Deity, 'omen' + country.omen)
     enableCountrySelections(countryName, SelectionType.Modifier, country.modifiers)
     enableCountrySelection(countryName, SelectionType.Policy, country.armyMaintenance)
     enableCountrySelection(countryName, SelectionType.Policy, country.navalMaintenance)

@@ -10,7 +10,7 @@ const handler = data => {
     const deity = data[key]
     const active = {
       name: getAttribute(key) + ' Omen',
-      key: 'omen' + key,
+      key: 'omen' + key.substr(5),
       modifiers: [],
       isOmen: true
     }
