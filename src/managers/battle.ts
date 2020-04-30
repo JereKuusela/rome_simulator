@@ -1,4 +1,4 @@
-import { Battle, TerrainType, Side, CountryName, ArmyForCombatConversion, TerrainDefinition, Settings, TacticCalc, Setting, UnitPreferences, CombatPhase, CombatParticipant, Cohorts, UnitType, CombatCohorts, ArmyName } from "types"
+import { Battle, TerrainType, SideType, CountryName, ArmyForCombatConversion, TerrainDefinition, Settings, TacticCalc, Setting, UnitPreferences, CombatPhase, CombatParticipant, Cohorts, UnitType, CombatCohorts, ArmyName } from "types"
 import { forEach, toArr, toObj, values, map } from "utils"
 import { calculateGeneralPips, getTerrainPips, getUnitDefinition, getCombatUnit, sortReserve } from "combat"
 import { calculateValue } from "definition_values"
@@ -17,8 +17,8 @@ export const undo = (battle: Battle, steps: number) => {
     let seed: number = battle.seed
     if (battle.round < 2)
       seed = battle.custom_seed ? battle.custom_seed : 0
-    forEach(battle.participants, value => {
-      value.rounds.pop()
+    forEach(battle.sides, side => {
+      side.rounds.pop()
     })
     battle.round--
     battle.seed = seed
@@ -27,33 +27,33 @@ export const undo = (battle: Battle, steps: number) => {
   }
 }
 
-export const toggleRandomDice = (battle: Battle, side: Side) => {
-  const participant = battle.participants[side]
-  participant.randomize_dice = !participant.randomize_dice
+export const toggleRandomDice = (battle: Battle, sideType: SideType) => {
+  const side = battle.sides[sideType]
+  side.randomize_dice = !side.randomize_dice
 }
 
-export const setDice = (battle: Battle, side: Side, dice: number) => {
-  battle.participants[side].dice = dice
+export const setDice = (battle: Battle, sideType: SideType, dice: number) => {
+  battle.sides[sideType].dice = dice
 }
 
-export const setPhaseDice = (battle: Battle, side: Side, phase: number, dice: number) => {
-  const rolls = battle.participants[side].rolls
+export const setPhaseDice = (battle: Battle, sideType: SideType, phase: number, dice: number) => {
+  const rolls = battle.sides[sideType].rolls
   while (rolls.length - 1 < phase)
     rolls.push(0)
   rolls[phase] = dice
 }
 
-export const selectParticipantCountry = (battle: Battle, side: Side, countryName: CountryName, armyName: ArmyName) => {
-  battle.participants[side].country = countryName
-  battle.participants[side].army = armyName
+export const selectParticipantCountry = (battle: Battle, sideType: SideType, index: number, countryName: CountryName, armyName: ArmyName) => {
+  battle.sides[sideType].participants[index].country = countryName
+  battle.sides[sideType].participants[index].army = armyName
 }
 
-export const selectParticipantArmy = (battle: Battle, side: Side, armyName: ArmyName) => {
-  battle.participants[side].army = armyName
+export const selectParticipantArmy = (battle: Battle, sideType: SideType, index: number, armyName: ArmyName) => {
+  battle.sides[sideType].participants[index].army = armyName
 }
 
 
-export const convertParticipant = (side: Side, army: ArmyForCombatConversion, enemy: ArmyForCombatConversion, terrains: TerrainDefinition[], settings: Settings): CombatParticipant => {
+export const convertParticipant = (side: SideType, army: ArmyForCombatConversion, enemy: ArmyForCombatConversion, terrains: TerrainDefinition[], settings: Settings): CombatParticipant => {
   const enemy_types = toArr(enemy.definitions, unit => unit.type)
   const tactic_casualties = settings[Setting.Tactics] ? calculateValue(army.tactic, TacticCalc.Casualties) + calculateValue(enemy.tactic, TacticCalc.Casualties) : 0
   const cohorts = convertCohorts(army, settings, tactic_casualties, terrains, enemy_types, settings[Setting.CustomDeployment] ? army.unit_preferences : {} as UnitPreferences)

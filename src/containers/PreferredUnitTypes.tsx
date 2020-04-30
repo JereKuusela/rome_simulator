@@ -5,7 +5,7 @@ import { Table, Input } from 'semantic-ui-react'
 import { AppState, getUnitPreferences, getFlankSize, getMode, getUnitList, getSiteSettings, getParticipant } from 'state'
 import { setFlankSize, setUnitPreference } from 'reducers'
 
-import { UnitPreferenceType, Side, UnitType, Unit } from 'types'
+import { UnitPreferenceType, SideType, UnitType, Unit } from 'types'
 import DropdownUnit from 'components/Dropdowns/DropdownUnit'
 import { getUnitIcon } from 'data'
 
@@ -36,8 +36,8 @@ export default class PreferredUnitTypes extends Component {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          <ConnectedRow side={Side.Attacker} />
-          <ConnectedRow side={Side.Defender} />
+          <ConnectedRow side={SideType.Attacker} />
+          <ConnectedRow side={SideType.Defender} />
         </Table.Body>
       </Table>
     )
@@ -45,7 +45,7 @@ export default class PreferredUnitTypes extends Component {
 }
 
 type Props = {
-  side: Side
+  side: SideType
 }
 
 /**

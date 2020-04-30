@@ -26,6 +26,7 @@ export default class DropdownTerrain extends Component<IProps> {
   isActive = (item: TerrainDefinition) => item.type === this.props.value
 
   getValue = (item: TerrainDefinition) => item.type
+  getText = (item: TerrainDefinition) => item.type
 
 
   headers = ['Terrain', 'Attacker roll']
@@ -40,6 +41,7 @@ export default class DropdownTerrain extends Component<IProps> {
         settings={settings}
         isActive={this.isActive}
         getValue={this.getValue}
+        getText={this.getText}
       />
     )
   }

@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table } from 'semantic-ui-react'
 
-import { Side, UnitRole, CountryName, UnitType, UnitAttribute, filterAttributes, Setting, Unit, Mode, CountryAttribute, ArmyName } from 'types'
+import { SideType, UnitRole, CountryName, UnitType, UnitAttribute, filterAttributes, Setting, Unit, Mode, CountryAttribute, ArmyName } from 'types'
 import { getImage, mapRange } from 'utils'
 import { AppState, getUnitPreferences, getCountry, getMode, getCombatParticipant, getArmyDefinitionWithOverriddenUnits, getSiteSettings } from 'state'
 import { addToReserve, removeFromReserve, setUnitPreference } from 'reducers'
-import { getArchetypes2, getActualUnits2, getLatestUnits2, getChildUnits2 } from 'managers/army'
+import { getArchetypes2, getActualUnits2, getLatestUnits2, getChildUnits2, getRootUnit } from 'managers/army'
 import UnitValueInput from './UnitValueInput'
 import AttributeImage from 'components/Utils/AttributeImage'
 import { getNextId } from 'army_utils'
@@ -15,7 +15,7 @@ import { applyLosses } from 'managers/units'
 import DropdownArchetype from 'components/Dropdowns/DropdownArchetype'
 
 type Props = {
-  side: Side
+  side: SideType
   country: CountryName
   army: ArmyName
   onRowClick: (country: CountryName, army: ArmyName, type: UnitType) => void
@@ -84,6 +84,7 @@ class TableUnitTypes extends Component<IProps> {
           </Table.Row>
         </Table.Header>
         <Table.Body>
+          {!settings[Setting.Tech] && this.renderRootUnitRow(getRootUnit(units, mode))}
           {!settings[Setting.Tech] && unit_list.map(this.renderUnitRow)}
           {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Front, unit_list)}
           {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Flank, unit_list)}
@@ -147,6 +148,31 @@ class TableUnitTypes extends Component<IProps> {
         </Table.Cell>
         <Table.Cell>
           {this.renderCohortCount(unit.type)}
+        </Table.Cell>
+        {
+          filterAttributes(this.getAttributes(), settings).map(attribute => (
+            <Table.Cell key={attribute}>
+              <UnitValueInput unit={unit} attribute={attribute} country={country} percent />
+            </Table.Cell>
+          ))
+        }
+      </Table.Row>
+    )
+  }
+
+  renderRootUnitRow = (unit: Unit) => {
+    const { country, settings, army, onRowClick } = this.props
+    if (!unit)
+      return null
+    const image = getImage(unit)
+    return (
+      <Table.Row key={unit.type}>
+        <Table.Cell onClick={() => onRowClick(country, army, unit.type)} selectable>
+          <Image src={image} avatar />
+          Army
+        </Table.Cell>
+        <Table.Cell>
+
         </Table.Cell>
         {
           filterAttributes(this.getAttributes(), settings).map(attribute => (

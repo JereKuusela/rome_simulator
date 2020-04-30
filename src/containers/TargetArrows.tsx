@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import LineTo from 'react-lineto'
 
 import { AppState, getCurrentCombat } from 'state'
-import { ArmyType, Side, CombatCohort } from 'types'
+import { ArmyType, SideType, CombatCohort } from 'types'
 import { getArmyPart } from 'army_utils'
 
 type Props = {
@@ -32,16 +32,16 @@ class TargetArrows extends Component<IProps> {
   renderAttacker = (unit: IUnit, color: string) => {
     if (!unit || !unit.target)
       return null
-    const from_str = Side.Attacker + '-' + ArmyType.Frontline + '-' + unit.id
-    const to_str = Side.Defender + '-' + ArmyType.Frontline + '-' + unit.target
+    const from_str = SideType.Attacker + '-' + ArmyType.Frontline + '-' + unit.id
+    const to_str = SideType.Defender + '-' + ArmyType.Frontline + '-' + unit.target
     return this.renderArrow(from_str, to_str, 'bottom', 'top', color)
   }
 
   renderDefender = (unit: IUnit, color: string) => {
     if (!unit || !unit.target)
       return null
-    const from_str = Side.Defender + '-' + ArmyType.Frontline + '-' + unit.id
-    const to_str = Side.Attacker + '-' + ArmyType.Frontline + '-' + unit.target
+    const from_str = SideType.Defender + '-' + ArmyType.Frontline + '-' + unit.id
+    const to_str = SideType.Attacker + '-' + ArmyType.Frontline + '-' + unit.target
     return this.renderArrow(from_str, to_str, 'top', 'bottom', color)
   }
 
@@ -69,8 +69,8 @@ const convertUnits = (units: (CombatCohort | null)[][]): IUnit[][] => (
 )
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  attacker: convertUnits(getArmyPart(getCurrentCombat(state, Side.Attacker), props.type)),
-  defender: convertUnits(getArmyPart(getCurrentCombat(state, Side.Defender), props.type)),
+  attacker: convertUnits(getArmyPart(getCurrentCombat(state, SideType.Attacker), props.type)),
+  defender: convertUnits(getArmyPart(getCurrentCombat(state, SideType.Defender), props.type)),
 })
 
 const actions = {}

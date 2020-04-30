@@ -1,6 +1,6 @@
 
 import { sumBy } from 'lodash'
-import { TerrainDefinition, TerrainCalc, Setting, UnitAttribute, UnitDefinition, CombatPhase, GeneralAttribute, Side, LocationType, General, CombatCohortDefinition, SiteSettings, CombatCohorts, CombatCohort, CombatFrontline, SortedReserve } from 'types'
+import { TerrainDefinition, TerrainCalc, Setting, UnitAttribute, UnitDefinition, CombatPhase, GeneralAttribute, SideType, LocationType, General, CombatCohortDefinition, SiteSettings, CombatCohorts, CombatCohort, CombatFrontline, SortedReserve } from 'types'
 import { calculateValue } from 'definition_values'
 
 /**
@@ -13,9 +13,9 @@ export const calculateGeneralPips = (general: General, enemy: General, phase: Co
   return Math.max(0, martial_pip + phase_pip)
 }
 
-export const getTerrainPips = (terrains: TerrainDefinition[], side: Side, general: General, enemy: General) => {
-  const enable_tiles = side === Side.Attacker
-  const enable_borders = side === Side.Attacker || general.total_values[GeneralAttribute.Maneuver] <= enemy.total_values[GeneralAttribute.Maneuver]
+export const getTerrainPips = (terrains: TerrainDefinition[], side: SideType, general: General, enemy: General) => {
+  const enable_tiles = side === SideType.Attacker
+  const enable_borders = side === SideType.Attacker || general.total_values[GeneralAttribute.Maneuver] <= enemy.total_values[GeneralAttribute.Maneuver]
   terrains = terrains.filter(terrain => terrain.location === LocationType.Border ? enable_borders : enable_tiles)
   return sumBy(terrains, terrain => calculateValue(terrain, TerrainCalc.Roll))
 }

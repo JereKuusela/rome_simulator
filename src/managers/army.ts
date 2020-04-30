@@ -119,6 +119,8 @@ export const getActualUnits2 = (units: Units, mode: Mode) => {
 
 const getParents = (units: Units) => toSet(units, unit => unit.parent || unit.type)
 
+export const getRootUnit = (units: Units, mode: Mode) => mode === Mode.Naval ? units[UnitType.Naval] : units[UnitType.Land]
+
 const filterByTech = (units: CombatCohortDefinition[], tech: number) => units.filter(unit => unit.tech === undefined || unit.tech <= tech)
 const filterByTech2 = (units: Unit[], tech: number) => units.filter(unit => unit.tech === undefined || unit.tech <= tech)
 

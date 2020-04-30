@@ -1,5 +1,7 @@
-import { TacticDefinition, CombatPhase, UnitPreferences, UnitType, UnitAttribute, UnitRole, Mode, UnitValueType } from "types"
+import { TacticDefinition, CombatPhase, UnitPreferences, UnitType, UnitAttribute, UnitRole, Mode, UnitValueType, General } from "types"
 import { Units } from "./units"
+import { Side } from "./battle"
+import { TacticType } from "./tactics"
 
 /**
  * Information required for fast combat calculation.
@@ -22,6 +24,12 @@ export type CombatParticipant = {
   definitions: Units
   alive: boolean
 }
+
+export type CombatSide = Side & {
+  general: General
+  tactic: TacticType
+}
+
 export type CombatFrontline = (CombatCohort | null)[][]
 export type CombatReserve = CombatCohort[]
 export type CombatDefeated = CombatCohort[]

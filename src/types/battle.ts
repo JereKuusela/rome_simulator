@@ -1,9 +1,9 @@
 import { CountryName, Mode, TerrainType, CombatParticipant } from 'types'
 import { ArmyName } from './armies'
 
-export interface Battle {
+export type Battle = {
   terrains: TerrainType[]
-  participants: Participants
+  sides: Sides
   round: number
   fight_over: boolean
   seed: number
@@ -18,19 +18,25 @@ export enum CombatPhase {
   Default = 'Default'
 }
 
-export type Participants = { [key in Side]: Participant }
-export type ModeState = { [key in Mode]: Battle }
-
-export type Participant = {
-  country: CountryName
-  army: ArmyName
+export type Side = {
+  type: SideType
+  participants: Participant[]
   rounds: CombatParticipant[]
   rolls: number[]
   dice: number
   randomize_dice: boolean
 }
 
-export enum Side {
+export type Sides = { [key in SideType]: Side }
+export type ModeState = { [key in Mode]: Battle }
+
+export type Participant = {
+  country: CountryName
+  army: ArmyName
+  daysUntilBattle: number
+}
+
+export enum SideType {
   Attacker = 'Attacker',
   Defender = 'Defender'
 }

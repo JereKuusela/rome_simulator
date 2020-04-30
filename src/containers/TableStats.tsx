@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Image, Table } from 'semantic-ui-react'
 
 import IconEmpty from 'images/empty.png'
-import { Side, UnitType, UnitAttribute, isAttributeEnabled, CombatCohorts, CombatCohort } from 'types'
+import { SideType, UnitType, UnitAttribute, isAttributeEnabled, CombatCohorts, CombatCohort } from 'types'
 import { strengthToValue, toNumber } from 'formatters'
 import { getImage, round, sumArr } from 'utils'
 import { AppState, getCurrentCombat, getMode, getBattle, getSiteSettings } from 'state'
@@ -21,13 +21,13 @@ class TableStats extends Component<IProps> {
   render() {
     return (
       <>
-        {this.renderArmy(Side.Attacker, this.props.cohorts_a)}
-        {this.renderArmy(Side.Defender, this.props.cohorts_d)}
+        {this.renderArmy(SideType.Attacker, this.props.cohorts_a)}
+        {this.renderArmy(SideType.Defender, this.props.cohorts_d)}
       </>
     )
   }
 
-  renderArmy = (side: Side, cohorts: CombatCohorts) => {
+  renderArmy = (side: SideType, cohorts: CombatCohorts) => {
     const { mode, settings } = this.props
     const flatten = this.flatten(cohorts)
     const types = uniq(flatten.map(cohort => cohort.definition.type))
@@ -166,8 +166,8 @@ class TableStats extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  cohorts_a: getCurrentCombat(state, Side.Attacker),
-  cohorts_d: getCurrentCombat(state, Side.Defender),
+  cohorts_a: getCurrentCombat(state, SideType.Attacker),
+  cohorts_d: getCurrentCombat(state, SideType.Defender),
   mode: getMode(state),
   settings: getSiteSettings(state),
   timestamp: getBattle(state).timestamp

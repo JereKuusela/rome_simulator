@@ -3,14 +3,14 @@ import { connect } from 'react-redux'
 import { AppState, getCurrentCombat, getSelectedTactic, filterTactics, getSiteSettings, getParticipant } from 'state'
 import { toArr } from 'utils'
 import { selectTactic } from 'reducers'
-import { Side, CombatCohorts, TacticDefinition, TacticCalc, TacticType, Tactic } from 'types'
+import { SideType, CombatCohorts, TacticDefinition, TacticCalc, TacticType, Tactic } from 'types'
 import { calculateTactic } from 'combat'
 import { getOpponent } from 'army_utils'
 import { calculateValue } from 'definition_values'
 import DropdownTactic from 'components/Dropdowns/DropdownTactic'
 
 type Props = {
-  side: Side
+  side: SideType
 }
 
 class TacticSelector extends Component<IProps> {

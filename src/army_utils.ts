@@ -1,4 +1,4 @@
-import { Cohorts, Mode, UnitDefinitionValues, ArmyType, Side, UnitDefinitions, UnitType, Units, Unit, CombatCohorts, SiteSettings } from 'types'
+import { Cohorts, Mode, UnitDefinitionValues, ArmyType, SideType, UnitDefinitions, UnitType, Units, Unit, CombatCohorts, SiteSettings } from 'types'
 import { mergeValues, shrinkValues } from 'definition_values'
 import { map, filter } from 'utils'
 import { applyDynamicAttributes } from 'managers/units'
@@ -54,4 +54,4 @@ export const getArmyPart = (units: CombatCohorts, type: ArmyType) => {
   return [units.defeated]
 }
 
-export const getOpponent = (side: Side) => side === Side.Attacker ? Side.Defender : Side.Attacker
+export const getOpponent = (side: SideType) => side === SideType.Attacker ? SideType.Defender : SideType.Attacker

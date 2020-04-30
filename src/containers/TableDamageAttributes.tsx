@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table } from 'semantic-ui-react'
 
-import { Side, CountryName, UnitAttribute, CombatPhase, General, GeneralValueType, Mode, UnitType, ArmyName } from 'types'
+import { SideType, CountryName, UnitAttribute, CombatPhase, General, GeneralValueType, Mode, UnitType, ArmyName } from 'types'
 import { AppState, getGeneral, getUnit, getMode, getSiteSettings } from 'state'
 import { setGeneralAttribute } from 'reducers'
 import AttributeImage from 'components/Utils/AttributeImage'
@@ -12,7 +12,7 @@ import UnitValueInput from './UnitValueInput'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 
 type Props = {
-  side: Side
+  side: SideType
   country: CountryName
   army: ArmyName
 }

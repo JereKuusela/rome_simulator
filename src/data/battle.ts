@@ -1,17 +1,17 @@
 import { Mode } from "types/definition"
-import { Battle, CountryName, Side, ModeState, TerrainType, Participant, ArmyName } from "types"
+import { Battle, CountryName, SideType, ModeState, TerrainType, Participant, ArmyName, Side } from "types"
 
 export const getInitialTerrains = (mode: Mode): TerrainType[] => {
   if (mode === Mode.Naval)
     return [TerrainType.Ocean]
   else
     return [TerrainType.None, process.env.REACT_APP_GAME === 'euiv' ? TerrainType.Grasslands : TerrainType.Plains]
-} 
+}
 
-export const getDefaultParticipant = (name: CountryName, mode: Mode): Participant => {
+export const getDefaultSide = (type: SideType, name: CountryName, mode: Mode): Side => {
   return {
-    country: name,
-    army: mode === Mode.Land ? ArmyName.Army : ArmyName.Navy,
+    type,
+    participants: [getDefaultParticipant(name, mode)],
     rounds: [],
     rolls: [0],
     dice: (process.env.REACT_APP_GAME === 'euiv' ? 5 : 3),
@@ -19,8 +19,16 @@ export const getDefaultParticipant = (name: CountryName, mode: Mode): Participan
   }
 }
 
+export const getDefaultParticipant = (name: CountryName, mode: Mode): Participant => {
+  return {
+    country: name,
+    army: mode === Mode.Land ? ArmyName.Army : ArmyName.Navy,
+    daysUntilBattle: 0
+  }
+}
+
 export const getDefaultMode = (mode: Mode): Battle => ({
-  participants: { [Side.Attacker]: getDefaultParticipant(CountryName.Country1, mode), [Side.Defender]: getDefaultParticipant(CountryName.Country2, mode) },
+  sides: { [SideType.Attacker]: getDefaultSide(SideType.Attacker, CountryName.Country1, mode), [SideType.Defender]: getDefaultSide(SideType.Defender, CountryName.Country2, mode) },
   terrains: getInitialTerrains(mode),
   round: -1,
   fight_over: true,

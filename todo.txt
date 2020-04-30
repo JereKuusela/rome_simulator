@@ -1,44 +1,31 @@
 
-Release 7:
+Release 8:
 
 Changelog:
- 
- UI:
-  - Improved unit definition modal: Information about unit definition and parent unit definition are now shrunk to make the "Explained" column easier to read.
-  - Improved navigation: Units, Terrains and Tactics pages merged under Definitions page to indicate that they aren't the primary way to apply modifiers.
-  - Added dropdown setting for Discipline (Off, Only damage done, Both damage done and taken).
-  - Added new tab for stack wipe settings: On/Off, round limit for "soft" wipe, limits for "soft" and "hard" wipes.
-  - Changed default analyze settings to be faster.
-  - Added a tooltip to the winrate button and result.
-  - Added delays to most tooltips to prevent them flickering when moving mouse. 
-  - Added stack wipe chance to Analyze.
-  - Removed all confirmation modals. These used to avoid accidentally deleting lots of data. With save game importing this shouldn't matter any more.
-  - Country selectors now also include army selector.
 
-Save game importer:
- - New page to import save games.
+UI:
+ * Added a new component for side information (shows active general, active tactic and dice roll).
+ * Moved randomize dice checkbox and input for rng seed under dice extra settings (plus icon).
+ * Moved morale and discipline inputs from army information component to unit information component.
+ * Fixed terrain selector not showing the selection.
 
-Combat:
-  - Morale and strength no longer go below zero. This fixes slightly inflated losses on Analyze tool.
-  - Added checks for different stack wipes (no deploy, 10/1 limit, 2/1 limit on no retreat).
-  - Fixed EUIV combat having dice rolls from 1 to 9 instead of from 0 to 9. This doesn't affect combat calculations that much but will slow down Analyze page because of more simulations.
+Refactor
+ * Side and participant separated. Side now contains multiple participants.
 
-Countries:
-  - Created a parser which converts Imperator data files to a format suitable for the simulator. This makes maintaining much easier and data much more accurate.
-  - Added all heritages.
-  - Added all general traits which affect combat (mainly health traits which reduce martial).
+Todo: 
 
-Testing:
-  - Added unit tests to verify that most mechanics works as intended.
-  - Added unit tests to verify stack wipe mechanics.
+Multiarmy:
+ - Battle has two sides and terrain.
+ - Each side includes dice (+ related things), N participants and rounds list.
+ - Each participant includes country, army and days until battle.
+ - CombatSide also includes active tactic and active general martial.
 
-Refactor:
-  - Invalidate is now done automatically for all non-UI actions. Removes lots of low value code.
-  - Accordion toggling moved under UI actions.
-  - Country modifiers are no longer directly saved on units. This is required for multi-army battles (where some modifiers are shared between armies).
-  - Above also fixes modifiers getting out of sync if they are updated (edge case but important for reliability).
+ - UI needs component for side: For dice and showing active martial / tactic (with damage effect).
+ - UI needs a table for participants (with a way to add and delete).
+ - Quick selectors need a redesign. They currently work only for one army. Still show components for both attacker and defender? But with an army selector?
 
-TODO:
+ - Deployment needs rework. Need to first figure out how units from multiple armies are pooled.
+ - Must also work with battle possibly restarting times (stack wipes!).
 
 UI:
  - Togglable stats rows to show individual units or hide unit types.
@@ -52,10 +39,6 @@ UI:
 Countries:
  - Inventions to show tag specific (without actually implementing tags).
   * These inventions are extra. Perhaps a 4th slot for toggle? Or just implement scrolling?
-
-
-TODO:
- - inventions + army active ability!
 
 
 Release++:
@@ -76,6 +59,8 @@ Todo:
  - Stats to show amount of traditions, trade, etc..
  - Definition functions probably all could mutate (mostly used in reducers?)
  - Winrate could automatically set precision based on unit count (or some other heuristic like timing first batch).
+  * Could also reduce amount of units if full combat (to reduce unnecessarily large battles).
+ - Save import to load battles and automatically import participants (sets those armies active and sets correct round value).
  - A button for random setup
 
 Tests:
@@ -84,7 +69,7 @@ Tests:
 
 Tags:
  - Icons to frontline to show various things, with tooltips:
-  * Defender's advantage (some kind of ninja icon?) - This is expected to be fixed so shouldn't waste time.
+  * Defender's advantage (some kind of ninja icon?) - Needed for EUIV.
   * Very bad matchup, bad match up, good matchup, very good matchup (red or green arrows)
   * Flanking (attacking without being attacked)
   * No target (red sign)

@@ -3,14 +3,14 @@ import { connect } from 'react-redux'
 import { Mode, TacticType, UnitPreferences, UnitPreferenceType, dictionaryUnitType, dictionaryTacticType, GeneralAttribute, UnitType, UnitAttribute, CultureType, CountryName, CountryAttribute, SelectionType, Invention, ArmyName, CohortDefinition, GovermentType } from 'types'
 import {
   enableGeneralSelections, createCountry, setCountryAttribute, selectCulture, enableCountrySelections, enableCountrySelection, createArmy, setHasGeneral, setGeneralAttribute,
-  setFlankSize, setUnitPreference, selectTactic, addToReserve, deleteArmy, setMode
+  setFlankSize, setUnitPreference, selectTactic, addToReserve, deleteArmy, setMode, enableGeneralSelection
 } from 'reducers'
 import { Input, Button, Grid, Table, Header } from 'semantic-ui-react'
 import Dropdown from 'components/Dropdowns/Dropdown'
 import { sortBy, uniq, sum, union } from 'lodash'
 import LabelItem from 'components/Utils/LabelUnit'
 import { AppState, getUnits, getMode } from 'state'
-import { getDefaultUnits, countries_ir, traditions_ir, heritages_ir, policies_ir, laws_ir, factions_ir, religions_ir, deities_ir, modifiers_ir, traits_ir, tech_ir, trades_ir, ideas_ir } from 'data'
+import { getDefaultUnits, countries_ir, traditions_ir, heritages_ir, policies_ir, laws_ir, factions_ir, religions_ir, deities_ir, modifiers_ir, traits_ir, tech_ir, trades_ir, ideas_ir, abilities_ir } from 'data'
 import AttributeImage from 'components/Utils/AttributeImage'
 import { toObj, toArr, mapRange, map, values, keys, filter } from 'utils'
 import { getNextId } from 'army_utils'
@@ -61,7 +61,7 @@ type SaveTerritory = {
 }
 
 type SaveCharacter = {
-  experience: number
+  character_experience: number
   attributes: {
     martial: number
     finesse: number
@@ -85,6 +85,10 @@ type SaveRoute = {
   trade_goods: TradeGood
 }
 
+type SaveCountryDeity = {
+  deity: number
+}
+
 type Character = {
   name: string
   martial: number
@@ -101,7 +105,7 @@ type Army = {
   preferences: UnitPreferences
   flankSize: number
   leader: Character | null
-
+  ability: string
 }
 
 type Cohort = {
@@ -398,6 +402,7 @@ class ImportSave extends Component<IProps, IState> {
     const cohorts = army.cohorts.map(cohort => cohort.type)
     const types = uniq(cohorts)
     const counts = toObj(types, type => type, type => cohorts.filter(item => item === type).length)
+    const ability = abilities_ir.find(abilities => abilities.find(ability => ability.key === army.ability))?.find((ability => ability.key === army.ability))?.name
     return (
       <React.Fragment key={army.id}>
         <Table.Row><Table.Cell /><Table.Cell /><Table.Cell /><Table.Cell /></Table.Row>
@@ -425,10 +430,11 @@ class ImportSave extends Component<IProps, IState> {
         </Table.Row>
         <Table.Row>
           <Table.Cell>
-            Tactic
+            Tactic / Ability
             </Table.Cell>
           <Table.Cell>
             <LabelItem item={tactics[army.tactic]} />
+            {ability ? ' / ' + ability : null}
           </Table.Cell>
           <Table.Cell>
             Flank size
@@ -481,7 +487,6 @@ class ImportSave extends Component<IProps, IState> {
       if (file) {
         file.async('uint8array').then(buffer => {
           const file = parseFile(binaryToPlain(buffer, false)[0]) as Save
-          console.log(file)
           this.setState({ file })
         })
       }
@@ -512,31 +517,32 @@ class ImportSave extends Component<IProps, IState> {
       // Index 9 is Roman special invention, others are military inventions.
       // Probably need to check what other special inventions do.
       inventions: this.arrayify(data.active_inventions).filter((_, index) => index === 9 || (75 < index && index < 138)).map(value => !!value),
-      heritage: data.heritage,
-      militaryExperience: data.currency_data.military_experience,
-      name: countries_ir[data.country_name.name.toLowerCase()] as CountryName,
-      tech: data.technology.military_tech.level,
-      tradition: data.military_tradition as CultureType,
+      heritage: data.heritage ?? '',
+      militaryExperience: data?.currency_data.military_experience ?? 0,
+      name: (countries_ir[data?.country_name.name.toLowerCase() ?? ''] ?? '') as CountryName,
+      tech: data.technology?.military_tech?.level ?? 0,
+      tradition: (data.military_tradition ?? '') as CultureType,
       armyMaintenance: 'expense_army_' + this.maintenanceToKey(data.economic_policies[4]),
       navalMaintenance: 'expense_navy_' + this.maintenanceToKey(data.economic_policies[5]),
       traditions: this.arrayify(data.military_tradition_levels).filter((_, index) => index < 3),
       laws: [],
-      exports: data.export.map((value: any) => !!value),
+      exports: this.arrayify(data.export).map((value: any) => !!value),
       surplus: [],
       ideas: this.arrayify(data.ideas?.idea).map((idea: any) => idea.idea),
       officeDiscipline: 0,
       officeMorale: 0,
       id,
-      deities: deities ? (data.pantheon?.deity.map((index: number) => deities[index].deity) ?? []) : [],
+      deities: deities ? this.arrayify(data.pantheon).map((deity: SaveCountryDeity) => deities[deity.deity].deity) : [],
       omen: deities && data.omen ? deities[data.omen].key : '',
-      religiousUnity: data.religious_unity * 100,
-      religion: data.religion,
+      religiousUnity: data.religious_unity * 100 ?? 0,
+      religion: data.religion ?? '',
       government: '' as GovermentType,
       faction: data.ruler_term?.party ?? '',
       modifiers: this.arrayify(data.modifier).map((modifier: any) => modifier.modifier),
       isPlayer: !!this.arrayify(this.state.file.played_country).find(player => player.country === Number(id))
     }
-    country.modifiers.push(this.state.file.game_configuration.difficulty + (country.isPlayer ? '_player' : '_ai'))
+    if (this.state.file.game_configuration?.difficulty)
+      country.modifiers.push(this.state.file.game_configuration.difficulty + (country.isPlayer ? '_player' : '_ai'))
     this.laws.filter((_, index) => availableLaws[index]).forEach(key => {
       country.laws.push(data[key])
     })
@@ -548,23 +554,22 @@ class ImportSave extends Component<IProps, IState> {
     else
       country.government = GovermentType.Tribe
 
-    const jobs = this.state.file.jobs.office_job
-    const characters = this.state.file.character.character_database
+    const jobs = this.state.file.jobs?.office_job ?? []
+    const characters = this.state.file.character?.character_database ?? {}
     const disciplineJob = jobs.find(job => job.who === Number(id) && job.office === 'office_tribune_of_the_soldiers')
     const moraleJob = jobs.find(job => job.who === Number(id) && job.office === 'office_master_of_the_guard')
     if (disciplineJob) {
       const character = characters[disciplineJob.character]
-      console.log(character)
-      country.officeDiscipline = Math.floor(this.getCharacterMartial(character) * character.experience / 100.0) / 2
+      country.officeDiscipline = Math.floor(this.getCharacterMartial(character) * character.character_experience / 100.0) / 2
     }
     if (moraleJob) {
       const character = characters[moraleJob.character]
-      country.officeMorale = Math.floor(this.getCharacterMartial(character) * character.experience / 100.0)
+      country.officeMorale = Math.floor(this.getCharacterMartial(character) * character.character_experience / 100.0)
     }
-    if (data.capital) {
-      const province = this.state.file.provinces[data.capital].state
+    const pops = this.state.file.population?.population
+    if (data.capital && this.state.file.provinces && pops) {
+      const province = this.state.file.provinces[data.capital]?.state ?? 0
       const territories = Object.values(this.state.file.provinces).filter(territory => territory.state === province)
-      const pops = this.state.file.population.population
       const goods = territories.reduce((prev, territory) => {
         const slaves = territory.pop.filter((id: number) => pops[id].type === 'slaves').length
         const goods = territory.trade_goods
@@ -585,7 +590,7 @@ class ImportSave extends Component<IProps, IState> {
         return prev.concat(Array(1 + Math.floor(slaves / slavesForSurplus)).fill(goods))
       }, [] as TradeGood[])
       const counts = toObj(goods, type => type, type => goods.filter(item => item === type).length)
-      const tradeRoutes = this.state.file.trade.route
+      const tradeRoutes = this.state.file.trade?.route ?? []
       tradeRoutes.forEach(route => {
         if (route.from_state === province)
           counts[route.trade_goods]--
@@ -600,7 +605,7 @@ class ImportSave extends Component<IProps, IState> {
     return country
   }
 
-  getCharacterMartial = (character: SaveCharacter) => character.attributes.martial + sum(character.traits.map((key: string) => traits_ir[key]?.modifiers.find(modifier => modifier.attribute === GeneralAttribute.Martial)?.value ?? 0))
+  getCharacterMartial = (character: SaveCharacter) => character.attributes.martial + sum(this.arrayify(character.traits).map((key: string) => traits_ir[key]?.modifiers.find(modifier => modifier.attribute === GeneralAttribute.Martial)?.value ?? 0))
 
   getCharacterName = (character: SaveCharacter) => character.first_name_loc.name + (character.family_name ? ' ' + character.family_name : '')
 
@@ -651,7 +656,7 @@ class ImportSave extends Component<IProps, IState> {
       martial: character.attributes.martial,
       traitMartial: this.getCharacterMartial(character) - character.attributes.martial,
       name: this.getCharacterName(character),
-      traits: character.traits
+      traits: character.traits ?? []
     }
   }
 
@@ -679,7 +684,8 @@ class ImportSave extends Component<IProps, IState> {
         [UnitPreferenceType.Secondary]: dictionaryUnitType[data.second],
         [UnitPreferenceType.Flank]: dictionaryUnitType[data.flank]
       } as UnitPreferences,
-      tactic: dictionaryTacticType[data.tactic]
+      tactic: dictionaryTacticType[data.tactic],
+      ability: data.unit_ability?.which ?? ''
     }
     return army
   }
@@ -753,7 +759,7 @@ class ImportSave extends Component<IProps, IState> {
   }
 
   importArmyStart = (countryName: CountryName, army: Army) => {
-    const { createArmy, deleteArmy, setHasGeneral, setGeneralAttribute, enableGeneralSelections, setFlankSize, setUnitPreference, selectTactic, mode, setMode } = this.props
+    const { createArmy, deleteArmy, setHasGeneral, setGeneralAttribute, enableGeneralSelections, setFlankSize, setUnitPreference, selectTactic, mode, setMode, enableGeneralSelection } = this.props
     const armyName = army.name
     // Country must have at least one army per mode so only delete the default one if importing anything.
     if (army.mode === Mode.Land)
@@ -765,6 +771,7 @@ class ImportSave extends Component<IProps, IState> {
       setMode(army.mode)
     if (army.leader) {
       setGeneralAttribute(countryName, armyName, GeneralAttribute.Martial, army.leader.martial)
+      enableGeneralSelection(countryName, armyName, SelectionType.Ability, army.ability)
       enableGeneralSelections(countryName, armyName, SelectionType.Trait, army.leader.traits)
     } else {
       setHasGeneral(countryName, armyName, false)
@@ -820,7 +827,7 @@ const mapStateToProps = (state: AppState) => ({
 
 const actions = {
   createCountry, setCountryAttribute, selectCulture, enableCountrySelections, enableCountrySelection, createArmy, setHasGeneral, setGeneralAttribute, enableGeneralSelections,
-  setFlankSize, setUnitPreference, selectTactic, addToReserve, deleteArmy, setMode
+  setFlankSize, setUnitPreference, selectTactic, addToReserve, deleteArmy, setMode, enableGeneralSelection
 }
 
 type S = ReturnType<typeof mapStateToProps>

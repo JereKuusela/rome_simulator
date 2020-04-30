@@ -1,4 +1,4 @@
-import { Side } from "./battle"
+import { SideType } from "./battle"
 import { ArmyType, ArmyName } from "./armies"
 import { CountryName } from "./countries"
 import { UnitType } from "./units"
@@ -23,16 +23,16 @@ export type UI = {
 
 export type Modals = {
   [ModalType.DiceRolls]?: {
-    side: Side
+    side: SideType
   }
   [ModalType.CohortSelector]?: {
-    side: Side,
+    side: SideType,
     type: ArmyType,
     row: number,
     column: number
   }
   [ModalType.CohortDetail]?: {
-    side: Side,
+    side: SideType,
     id: number
   }
   [ModalType.UnitDetail]?: {

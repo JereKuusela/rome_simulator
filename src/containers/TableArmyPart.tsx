@@ -5,7 +5,7 @@ import { Table, Image, Icon } from 'semantic-ui-react'
 
 import CombatTooltip from './CombatTooltip'
 import IconDefeated from 'images/attrition.png'
-import { Side, ArmyType, UnitAttribute, CombatCohort } from 'types'
+import { SideType, ArmyType, UnitAttribute, CombatCohort } from 'types'
 import { getImage, resize } from 'utils'
 import { AppState, getCurrentCombat, getBattle, getParticipant } from 'state'
 import { getArmyPart } from 'army_utils'
@@ -13,7 +13,7 @@ import { last } from 'lodash'
 import { deleteCohort } from 'reducers'
 
 type Props = {
-  side: Side
+  side: SideType
   row_width: number
   reverse: boolean
   onClick?: (row: number, column: number, id: number | undefined) => void

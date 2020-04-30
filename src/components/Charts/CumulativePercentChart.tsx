@@ -6,7 +6,7 @@ import { sortBy, capitalize } from 'lodash'
 import BaseChart from './BaseChart'
 import { toPercent } from 'formatters'
 import { toArr, mapRange } from 'utils'
-import { Side } from 'types'
+import { SideType } from 'types'
 
 interface IProps {
   a: { [key: string]: number }
@@ -87,7 +87,7 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
             style={{
               data: { fill: '#FFAA00AA' }
             }}
-            name={this.cumulative(Side.Attacker)}
+            name={this.cumulative(SideType.Attacker)}
           />
           <VictoryArea
             interpolation='natural'
@@ -95,7 +95,7 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
             style={{
               data: { fill: '#FFAA00' }
             }}
-            name={this.percent(Side.Attacker)}
+            name={this.percent(SideType.Attacker)}
           />
           <VictoryArea
             interpolation='natural'
@@ -103,7 +103,7 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
             style={{
               data: { fill: '#00AAFFAA' }
             }}
-            name={this.cumulative(Side.Defender)}
+            name={this.cumulative(SideType.Defender)}
           />
           <VictoryArea
             interpolation='natural'
@@ -111,7 +111,7 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
             style={{
               data: { fill: '#00AAFF' }
             }}
-            name={this.percent(Side.Defender)}
+            name={this.percent(SideType.Defender)}
           />
         </BaseChart>
       </>
@@ -152,9 +152,9 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
     return ''
   }
 
-  isPercent = (name: string) => name === this.percent(Side.Attacker) || name === this.percent(Side.Defender)
-  isCumulative = (name: string) => name === this.cumulative(Side.Attacker) || name === this.cumulative(Side.Defender)
+  isPercent = (name: string) => name === this.percent(SideType.Attacker) || name === this.percent(SideType.Defender)
+  isCumulative = (name: string) => name === this.cumulative(SideType.Attacker) || name === this.cumulative(SideType.Defender)
 
-  cumulative = (side: Side) => `Cumulative_${this.props.type}_${side}`
-  percent = (side: Side) => `Percent_${this.props.type}_${side}`
+  cumulative = (side: SideType) => `Cumulative_${this.props.type}_${side}`
+  percent = (side: SideType) => `Percent_${this.props.type}_${side}`
 }

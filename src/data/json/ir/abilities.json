@@ -3,7 +3,7 @@
     [
       {
         "name": "Boarding Tactics",
-        "key": "boarding",
+        "key": "boarding_tactics",
         "modifiers": [
           {
             "target": "Naval",
@@ -20,7 +20,7 @@
       },
       {
         "name": "Ramming Tactics",
-        "key": "ramming",
+        "key": "ramming_speed",
         "modifiers": [
           {
             "target": "Naval",
