@@ -1,7 +1,5 @@
-import { TacticDefinition, CombatPhase, UnitPreferences, UnitType, UnitAttribute, UnitRole, Mode, UnitValueType, General } from "types"
-import { Units } from "./units"
-import { Side } from "./battle"
-import { TacticType } from "./tactics"
+import { TacticDefinition, CombatPhase, UnitPreferences, UnitType, UnitAttribute, UnitRole, Mode, UnitValueType } from 'types'
+import { Units } from './units'
 
 /**
  * Information required for fast combat calculation.
@@ -9,25 +7,27 @@ import { TacticType } from "./tactics"
  */
 export type CombatParticipant = {
   cohorts: CombatCohorts
-  tactic_bonus: number
-  round: number
-  unit_types: CombatUnitTypes
-  tactic: TacticDefinition
-  flank_ratio: number
-  flank_ratio_bonus: number
-  flank: number
-  dice: number
-  terrain_pips: number
-  general_pips: { [key in CombatPhase]: number }
-  roll_pips: { [key in CombatPhase]: number }
-  unit_preferences: UnitPreferences
+  unitTypes: CombatUnitTypes
+  flankSize: number
+  unitPreferences: UnitPreferences
   definitions: Units
-  alive: boolean
+  arrival: number
 }
 
-export type CombatSide = Side & {
-  general: General
-  tactic: TacticType
+export type CombatSide = {
+  dice: number
+  terrainPips: number
+  generalPips: { [key in CombatPhase]: number }
+  rollPips: { [key in CombatPhase]: number }
+  tactic: TacticDefinition
+  alive: boolean
+  tacticBonus: number
+  round: number
+  participants: CombatParticipant[]
+  flankRatio: number
+  flankRatioBonus: number
+  cohorts: CombatCohorts
+  unitPreferences: UnitPreferences
 }
 
 export type CombatFrontline = (CombatCohort | null)[][]
@@ -39,8 +39,8 @@ export type CombatCohorts = {
   frontline: CombatFrontline
   reserve: SortedReserve
   defeated: CombatDefeated
-  left_flank: number
-  right_flank: number
+  leftFlank: number
+  rightFlank: number
 }
 
 export type SortedReserve = {

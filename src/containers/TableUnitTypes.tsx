@@ -4,7 +4,7 @@ import { Image, Table } from 'semantic-ui-react'
 
 import { SideType, UnitRole, CountryName, UnitType, UnitAttribute, filterAttributes, Setting, Unit, Mode, CountryAttribute, ArmyName } from 'types'
 import { getImage, mapRange } from 'utils'
-import { AppState, getUnitPreferences, getCountry, getMode, getCombatParticipant, getArmyDefinitionWithOverriddenUnits, getSiteSettings } from 'state'
+import { AppState, getUnitPreferences, getCountry, getMode, getCombatSide, getArmyDefinitionWithOverriddenUnits, getSiteSettings } from 'state'
 import { addToReserve, removeFromReserve, setUnitPreference } from 'reducers'
 import { getArchetypes2, getActualUnits2, getLatestUnits2, getChildUnits2, getRootUnit } from 'managers/army'
 import UnitValueInput from './UnitValueInput'
@@ -210,7 +210,7 @@ class TableUnitTypes extends Component<IProps> {
 const mapStateToProps = (state: AppState, props: Props) => ({
   preferences: getUnitPreferences(state, props.side),
   reserve: getArmyDefinitionWithOverriddenUnits(state, props.country, props.army, true).reserve,
-  units: getCombatParticipant(state, props.side).definitions,
+  units: getCombatSide(state, props.side).definitions,
   tech: getCountry(state, props.country)[CountryAttribute.TechLevel],
   settings: getSiteSettings(state),
   weariness: getCountry(state, props.country).weariness,

@@ -8,7 +8,7 @@ import { SideType, ArmyType, UnitAttribute, UnitType, Setting, TacticCalc, Terra
 import { calculateCohortPips, getOffensiveCohortPips, getDefensiveCohortPips, getCombatPhase, getDailyIncrease, getDefensiveSupportCohortPips } from 'combat'
 import { toSignedPercent, strengthToValue, toNumber, addSign, toMultiplier, toMorale } from 'formatters'
 import { calculateValue } from 'definition_values'
-import { AppState, getSettings, getSelectedTerrains, getTactic, getCombatUnit, getCombatParticipant } from 'state'
+import { AppState, getSettings, getSelectedTerrains, getTactic, getCombatUnit, getCombatSide } from 'state'
 import { getOpponent } from 'army_utils'
 import { noZero } from 'utils'
 
@@ -303,7 +303,7 @@ const convertUnit = (cohort: CombatCohort | null, convert_target: boolean = true
 
 const mapStateToProps = (state: AppState, props: Props) => ({
   source: convertUnit(getCombatUnit(state, props.side, props.army, props.id)),
-  participant: getCombatParticipant(state, props.side),
+  participant: getCombatSide(state, props.side),
   settings: getSettings(state),
   terrains: getSelectedTerrains(state),
   tactic_s: getTactic(state, props.side),

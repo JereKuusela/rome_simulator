@@ -136,7 +136,7 @@ class TableArmyPart extends Component<IProps, IState> {
     if (!cohort)
       return
     const { deleteCohort, participant } = this.props
-    deleteCohort(participant.country, participant.army, cohort.id)
+    deleteCohort(participant.countryName, participant.armyName, cohort.id)
   }
 }
 
@@ -200,7 +200,7 @@ const convertUnits = (units: (CombatCohort | null)[][]): ICohort[][] => (
 
 const mapStateToProps = (state: AppState, props: Props) => ({
   units: convertUnits(getArmyPart(getCurrentCombat(state, props.side), props.type)),
-  participant: getParticipant(state, props.side),
+  participant: getParticipant(state, props.side, 0),
   timestamp: getBattle(state).timestamp
 })
 

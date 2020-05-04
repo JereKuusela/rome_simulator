@@ -27,6 +27,14 @@ Multiarmy:
  - Deployment needs rework. Need to first figure out how units from multiple armies are pooled.
  - Must also work with battle possibly restarting times (stack wipes!).
 
+ - Army joining battle triggers deploy (without secondary penalty), remaining units get pooled together.
+ - Currently pooling is done first, so can't detect reinforcement from late deploy. Units should know the turn they arrive?
+  * If unit deploys during first phase and when it arrives, no penalty.
+  * If unit deploys as reinforcement and after retreat, no penalty if secondary.
+  * If unit deploys instantly but late, late penalty.
+  * Pooled reinforcements use the leading generals settings, instant deploys current generals settings. So unit would need to know its general...
+ - Needs different logic -> when army joins -> sort reserve -> deploy with its settings -> then merge to common reserve -> at end sort reserve.
+
 UI:
  - Togglable stats rows to show individual units or hide unit types.
  - Unit tooltip should somehow show sources for losses (to include daily loss from EUIV and damage from different units).

@@ -8,6 +8,8 @@ const battleMapping: ActionToFunction<Battle> = {}
 
 export const selectParticipantCountry = makeActionRemoveFirst(manager.selectParticipantCountry, battleMapping)
 export const selectParticipantArmy = makeActionRemoveFirst(manager.selectParticipantArmy, battleMapping)
+export const addParticipant = makeActionRemoveFirst(manager.addParticipant, battleMapping)
+export const deleteParticipant = makeActionRemoveFirst(manager.deleteParticipant, battleMapping)
 export const selectTerrain = makeActionRemoveFirst(manager.selectTerrain, battleMapping)
 export const setDice = makeActionRemoveFirst(manager.setDice, battleMapping)
 export const setPhaseDice = makeActionRemoveFirst(manager.setPhaseDice, battleMapping)

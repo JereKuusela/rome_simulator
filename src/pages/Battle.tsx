@@ -123,20 +123,20 @@ class Battle extends Component<IProps> {
             </Grid.Row>
             <Grid.Row columns={2}>
               <Grid.Column>
-                <TableUnitTypes side={SideType.Attacker} country={participant_a.country} army={participant_a.army} onRowClick={this.openUnitDetails} />
+                <TableUnitTypes side={SideType.Attacker} country={participant_a.countryName} army={participant_a.armyName} onRowClick={this.openUnitDetails} />
               </Grid.Column>
               <Grid.Column>
-                <TableUnitTypes side={SideType.Defender} country={participant_d.country} army={participant_d.army} onRowClick={this.openUnitDetails} />
+                <TableUnitTypes side={SideType.Defender} country={participant_d.countryName} army={participant_d.armyName} onRowClick={this.openUnitDetails} />
               </Grid.Column>
             </Grid.Row>
             {
               settings[Setting.FireAndShock] &&
               <Grid.Row columns={2}>
                 <Grid.Column>
-                  <TableDamageAttributes side={SideType.Attacker} country={participant_a.country} army={participant_a.army} />
+                  <TableDamageAttributes side={SideType.Attacker} country={participant_a.countryName} army={participant_a.armyName} />
                 </Grid.Column>
                 <Grid.Column>
-                  <TableDamageAttributes side={SideType.Defender} country={participant_d.country} army={participant_d.army} />
+                  <TableDamageAttributes side={SideType.Defender} country={participant_d.countryName} army={participant_d.armyName} />
                 </Grid.Column>
               </Grid.Row>
 
@@ -265,8 +265,8 @@ class Battle extends Component<IProps> {
 
   clearCohorts = (): void => {
     const { participant_a, participant_d, clearCohorts } = this.props
-    clearCohorts(participant_a.country, participant_a.army)
-    clearCohorts(participant_d.country, participant_d.army)
+    clearCohorts(participant_a.countryName, participant_a.armyName)
+    clearCohorts(participant_d.countryName, participant_d.armyName)
   }
 
   undo = (rounds: number) => {
@@ -287,8 +287,8 @@ class Battle extends Component<IProps> {
 const mapStateToProps = (state: AppState) => {
   const battle = getBattle(state)
   return {
-    participant_a: getParticipant(state, SideType.Attacker),
-    participant_d: getParticipant(state, SideType.Defender),
+    participant_a: getParticipant(state, SideType.Attacker, 0),
+    participant_d: getParticipant(state, SideType.Defender, 0),
     is_undo: battle.round > -1,
     round: battle.round,
     outdated: battle.outdated,

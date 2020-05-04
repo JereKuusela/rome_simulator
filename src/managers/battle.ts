@@ -43,13 +43,25 @@ export const setPhaseDice = (battle: Battle, sideType: SideType, phase: number, 
   rolls[phase] = dice
 }
 
+export const addParticipant = (battle: Battle, sideType: SideType, countryName: CountryName, armyName: ArmyName) => {
+  battle.sides[sideType].participants.push({
+    armyName,
+    countryName,
+    daysUntilBattle: 0
+  })
+}
+
+export const deleteParticipant = (battle: Battle, sideType: SideType, index: number) => {
+  battle.sides[sideType].participants.splice(index, 1)
+}
+
 export const selectParticipantCountry = (battle: Battle, sideType: SideType, index: number, countryName: CountryName, armyName: ArmyName) => {
-  battle.sides[sideType].participants[index].country = countryName
-  battle.sides[sideType].participants[index].army = armyName
+  battle.sides[sideType].participants[index].countryName = countryName
+  battle.sides[sideType].participants[index].armyName = armyName
 }
 
 export const selectParticipantArmy = (battle: Battle, sideType: SideType, index: number, armyName: ArmyName) => {
-  battle.sides[sideType].participants[index].army = armyName
+  battle.sides[sideType].participants[index].armyName = armyName
 }
 
 
@@ -63,13 +75,13 @@ export const convertParticipant = (side: SideType, army: ArmyForCombatConversion
     cohorts,
     dice: 0,
     flank_ratio: army.flank_ratio,
-    flank: army.flank_size,
+    flankSize: army.flank_size,
     tactic: army.tactic!,
     terrain_pips,
     general_pips,
     roll_pips: toObj(values(CombatPhase), phase => phase, phase => general_pips[phase] + terrain_pips + settings[Setting.BasePips]),
-    unit_preferences: army.unit_preferences,
-    unit_types: map(army.definitions, unit => getUnitDefinition(settings, terrains, enemy_types, { ...unit, id: -1 })),
+    unitPreferences: army.unit_preferences,
+    unitTypes: map(army.definitions, unit => getUnitDefinition(settings, terrains, enemy_types, { ...unit, id: -1 })),
     tactic_bonus: 0.0,
     round: 0,
     flank_ratio_bonus: 0.0,
@@ -82,6 +94,6 @@ const convertCohorts = (cohorts: Cohorts, settings: Settings, casualties_multipl
   frontline: cohorts.frontline.map(row => row.map(cohort => getCombatUnit(settings, casualties_multiplier, terrains, unit_types, cohort))),
   reserve: sortReserve(cohorts.reserve.map(cohort => getCombatUnit(settings, casualties_multiplier, terrains, unit_types, cohort)!), unit_preferences),
   defeated: cohorts.defeated.map(cohort => getCombatUnit(settings, casualties_multiplier, terrains, unit_types, cohort)!),
-  left_flank: 0,
-  right_flank: 0
+  leftFlank: 0,
+  rightFlank: 0
 })

@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Table, Input } from 'semantic-ui-react'
+import { Table, Input, Button } from 'semantic-ui-react'
 
-import { SideType, CountryName, Setting, General, GeneralAttribute, GeneralValueType, isAttributeEnabled, Mode, UnitType, CountryAttribute, CultureType, ArmyName } from 'types'
+import { SideType, CountryName, Setting, General, GeneralAttribute, GeneralValueType, isAttributeEnabled, CountryAttribute, CultureType, ArmyName, Country, Armies, Participant } from 'types'
 import { keys } from 'utils'
-import { AppState, getCountry, getParticipant, getGeneral, getCountries, getUnit, getMode, getSiteSettings, getArmies } from 'state'
-import { selectParticipantCountry, selectParticipantArmy, selectCulture, setGeneralAttribute } from 'reducers'
+import { AppState, getCountry, getGeneral, getCountries, getMode, getSiteSettings, getArmies, getSide } from 'state'
+import { selectParticipantCountry, selectParticipantArmy, selectCulture, setGeneralAttribute, deleteParticipant, addParticipant } from 'reducers'
 import Dropdown from 'components/Dropdowns/Dropdown'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TacticSelector from './TacticSelector'
@@ -22,7 +22,8 @@ type Props = {
 class TableArmyInfo extends Component<IProps> {
 
   render() {
-    const { settings } = this.props
+    const { settings, participants, addParticipant, type } = this.props
+    const last = participants[participants.length - 1]
     return (
       <Table celled unstackable>
         <Table.Header>
@@ -66,50 +67,60 @@ class TableArmyInfo extends Component<IProps> {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {this.renderArmyInfo()}
+          {participants.map(this.renderArmyInfo)}
+          <Table.Row>
+            <Table.Cell>
+              <Button size='mini' icon={'plus'} onClick={() => addParticipant(type, last.countryName, last.armyName)} />
+            </Table.Cell>
+            <Table.Cell />
+            <Table.Cell />
+            <Table.Cell />
+          </Table.Row>
         </Table.Body>
-      </Table >
+      </Table>
     )
   }
 
 
-  renderArmyInfo = () => {
-    const { settings, selectParticipantArmy, selectParticipantCountry, countries, mode, type, participant, armies, general, country } = this.props
+  renderArmyInfo = (participant: Entity, index: number) => {
+    const { settings, selectParticipantArmy, selectParticipantCountry, countries, mode, type, deleteParticipant, clearable } = this.props
+    const { country, armies, general, countryName, armyName } = participant
     return (
-      <Table.Row key={type}>
+      <Table.Row key={participant.countryName + '_' + participant.armyName + index}>
         <Table.Cell collapsing>
           <Dropdown
             values={keys(countries)}
-            value={participant.country}
-            onChange={name => selectParticipantCountry(type, 0, name, Object.keys(filterArmies(countries[name], mode))[0] as ArmyName)}
+            value={countryName}
+            onChange={name => name ? selectParticipantCountry(type, index, name, Object.keys(filterArmies(countries[name], mode))[0] as ArmyName) : deleteParticipant(type, index)}
             style={{ width: 100 }}
+            clearable={clearable}
           />
         </Table.Cell>
         <Table.Cell collapsing>
           <Dropdown
             values={keys(armies)}
-            value={participant.army}
-            onChange={name => selectParticipantArmy(type, 0, name)}
+            value={armyName}
+            onChange={name => selectParticipantArmy(type, index, name)}
             style={{ width: 100 }}
           />
         </Table.Cell>
-        {settings[Setting.Martial] && this.renderGeneralAttribute(participant.country, participant.army, general, GeneralAttribute.Martial)}
+        {settings[Setting.Martial] && this.renderGeneralAttribute(countryName, armyName, general, GeneralAttribute.Martial)}
         {
           settings[Setting.Tactics] &&
           <Table.Cell collapsing>
-            <TacticSelector side={type} />
+            <TacticSelector side={type} index={index} />
           </Table.Cell>
         }
         {
           settings[Setting.Tech] &&
           <Table.Cell collapsing>
-            <CountryValueInput country={participant.country} attribute={CountryAttribute.TechLevel} />
+            <CountryValueInput country={countryName} attribute={CountryAttribute.TechLevel} />
           </Table.Cell>
         }
         {
           isAttributeEnabled(CountryAttribute.FlankRatio, settings) &&
           <Table.Cell>
-            <CountryValueInput attribute={CountryAttribute.FlankRatio} country={participant.country} percent />
+            <CountryValueInput attribute={CountryAttribute.FlankRatio} country={countryName} percent />
           </Table.Cell>
         }
         {
@@ -118,7 +129,7 @@ class TableArmyInfo extends Component<IProps> {
             <Dropdown
               values={getCultures()}
               value={country.culture}
-              onChange={item => this.selectCulture(participant.country, item)}
+              onChange={item => this.selectCulture(countryName, item)}
               style={{ width: 150 }}
             />
           </Table.Cell>
@@ -140,21 +151,29 @@ class TableArmyInfo extends Component<IProps> {
   }
 }
 
+type Entity = Participant & {
+  general: General
+  country: Country
+  armies: Armies
+}
+
 const mapStateToProps = (state: AppState, props: Props) => {
-  const participant = getParticipant(state, props.type)
+  const side = getSide(state, props.type)
   return {
-    participant,
-    general: getGeneral(state, participant.country, participant.army),
-    country: getCountry(state, participant.country),
+    participants: side.participants.map(participant => ({
+      ...participant,
+      general: getGeneral(state, participant.countryName, participant.armyName),
+      country: getCountry(state, participant.countryName),
+      armies: getArmies(state, participant.countryName),
+    })),
+    clearable: side.participants.length > 1,
     countries: getCountries(state),
-    armies: getArmies(state, participant.country),
-    unit: getUnit(state, getMode(state) === Mode.Naval ? UnitType.Naval : UnitType.Land, participant.country, participant.army),
     settings: getSiteSettings(state),
     mode: getMode(state)
   }
 }
 
-const actions = { selectParticipantCountry, selectParticipantArmy, selectCulture, setGeneralAttribute }
+const actions = { selectParticipantCountry, selectParticipantArmy, selectCulture, setGeneralAttribute, deleteParticipant, addParticipant }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

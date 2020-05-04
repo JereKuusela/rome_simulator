@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { AppState, getCurrentCombat, getSelectedTactic, filterTactics, getSiteSettings, getParticipant } from 'state'
+import { AppState, getCurrentCombat, getSelectedTactic, filterTactics, getSiteSettings, getParticipant, getLeadingGeneral } from 'state'
 import { toArr } from 'utils'
 import { selectTactic } from 'reducers'
 import { SideType, CombatCohorts, TacticDefinition, TacticCalc, TacticType, Tactic } from 'types'
@@ -11,6 +11,7 @@ import DropdownTactic from 'components/Dropdowns/DropdownTactic'
 
 type Props = {
   side: SideType
+  index: number
 }
 
 class TacticSelector extends Component<IProps> {
@@ -23,7 +24,7 @@ class TacticSelector extends Component<IProps> {
 
   selectTactic = (type: TacticType) => {
     const { participant, selectTactic } = this.props
-    selectTactic(participant.country, participant.army, type)
+    selectTactic(participant.countryName, participant.armyName, type)
   }
 }
 
@@ -40,12 +41,12 @@ const convertTactic = (tactic: TacticDefinition, cohorts: CombatCohorts, opposin
 
 const mapStateToProps = (state: AppState, props: Props) => {
   const cohorts = getCurrentCombat(state, props.side)
-  const tactic = getSelectedTactic(state, props.side)
-  const opposing_tactic = getSelectedTactic(state, getOpponent(props.side))
+  const tactic = getSelectedTactic(state, props.side, props.index)
+  const opponent = getLeadingGeneral(state, getOpponent(props.side))
   return {
-    tactics: toArr(filterTactics(state), tactic => convertTactic(tactic, cohorts, opposing_tactic)),
+    tactics: toArr(filterTactics(state), tactic => convertTactic(tactic, cohorts, opponent.tactic)),
     tactic: tactic.type,
-    participant: getParticipant(state, props.side),
+    participant: getParticipant(state, props.side, props.index),
     settings: getSiteSettings(state)
   }
 }

@@ -16,6 +16,7 @@ export enum GeneralAttribute {
 }
 
 export type General = {
+  tactic: TacticDefinition
   selections: Selections
   enabled: boolean
   base_values: { [key in GeneralValueType]: number }
@@ -28,6 +29,7 @@ export type GeneralValueType = GeneralAttribute | CombatPhase
 export type Armies = { [key in ArmyName]: Army }
 
 export interface GeneralDefinition extends DefinitionValues<GeneralValueType> {
+  tactic: TacticType
   selections: Selections
   enabled: boolean
   definitions: UnitDefinitionValues
@@ -37,7 +39,6 @@ export type UnitPreferences = { [key in UnitPreferenceType | UnitRole]: UnitType
 
 export type Army = {
   mode: Mode
-  tactic: TacticType
   unit_preferences: UnitPreferences
   flank_size: number
   general: GeneralDefinition

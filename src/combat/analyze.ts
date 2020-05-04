@@ -80,7 +80,7 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
   }
 
   // Deployment is shared for each iteration.
-  deploy(attacker, defender, settings)
+  deploy(0, attacker, defender, settings)
 
   // Overview of the algorithm:
   // Initial state is the first node.
@@ -136,8 +136,8 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
       if (settings[Setting.CalculateCasualties])
         updateCasualties(casualties, fractions[depth], total_a, total_d, current_a, current_d)
       if (settings[Setting.CalculateResourceLosses]) {
-        calculateResourceLoss(attacker.cohorts.frontline, attacker.cohorts.defeated, fractions[depth], losses_a, losses_d, attacker.unit_types, defender.unit_types)
-        calculateResourceLoss(defender.cohorts.frontline, defender.cohorts.defeated, fractions[depth], losses_d, losses_a, defender.unit_types, attacker.unit_types)
+        calculateResourceLoss(attacker.cohorts.frontline, attacker.cohorts.defeated, fractions[depth], losses_a, losses_d, attacker.unitTypes, defender.unitTypes)
+        calculateResourceLoss(defender.cohorts.frontline, defender.cohorts.defeated, fractions[depth], losses_d, losses_a, defender.unitTypes, attacker.unitTypes)
       }
       updateProgress(progress, fractions[depth], result, current_a.strength === 0 || current_d.strength === 0)
     }
@@ -200,8 +200,8 @@ const copyStatus = (status: CombatCohorts): CombatCohorts => ({
     support: status.reserve.support.map(value => ({ ...value }))
   },
   defeated: status.defeated.map(value => ({ ...value })),
-  left_flank: status.left_flank,
-  right_flank: status.right_flank
+  leftFlank: status.leftFlank,
+  rightFlank: status.rightFlank
 })
 
 const REPAIR_PER_MONTH = 0.1

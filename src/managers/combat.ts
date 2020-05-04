@@ -1,4 +1,4 @@
-import { AppState, getMode, getCurrentCombat, getSettings, getCombatParticipant, initializeCombatParticipants } from 'state'
+import { AppState, getMode, getCurrentCombat, getSettings, getCombatSide, initializeCombatParticipants } from 'state'
 import { deploy, doBattle, removeDefeated, getCombatPhaseNumber, armySize } from 'combat'
 import { Battle, SideType, Setting, Settings, CombatCohorts, CombatParticipant, Side } from 'types'
 import { createEntropy, MersenneTwister19937, Random } from 'random-js'
@@ -11,8 +11,8 @@ const copyStatus = (status: CombatCohorts): CombatCohorts => ({
     support: status.reserve.support.map(value => ({ ...value, state: { ...value.state } }))
   },
   defeated: status.defeated.map(value => ({ ...value, state: { ...value.state } })),
-  left_flank: status.left_flank,
-  right_flank: status.right_flank
+  leftFlank: status.leftFlank,
+  rightFlank: status.rightFlank
 })
 
 const copy = (participant: CombatParticipant): CombatParticipant => ({ ...participant, cohorts: copyStatus(participant.cohorts) })
@@ -102,7 +102,7 @@ export const battle = (pair: [AppState, AppState], steps: number) => {
   const mode = getMode(state)
   const battle = draft.battle[mode]
   const settings = getSettings(state, mode)
-  subBattle(state, battle, getCombatParticipant(state, SideType.Attacker), getCombatParticipant(state, SideType.Defender), settings, steps)
+  subBattle(state, battle, getCombatSide(state, SideType.Attacker), getCombatSide(state, SideType.Defender), settings, steps)
 }
 
 export const refreshBattle = (pair: [AppState, AppState]) => {

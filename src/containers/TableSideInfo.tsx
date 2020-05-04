@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Image, Table, Button } from 'semantic-ui-react'
 
 import { SideType, CountryName, Setting, GeneralAttribute, UnitAttribute, CultureType, ModalType } from 'types'
-import { AppState, getBattle, getMode, getCombatParticipant, getSiteSettings, getCombatSide } from 'state'
+import { AppState, getBattle, getMode, getCombatSide, getSiteSettings, getLeadingGeneral, getSide } from 'state'
 import { selectParticipantCountry, selectParticipantArmy, selectCulture, toggleRandomDice, setDice, openModal, setGeneralAttribute } from 'reducers'
 import StyledNumber from 'components/Utils/StyledNumber'
 import { getTerrainPips, calculateGeneralPips, getCombatPhase, getCombatPhaseNumber } from 'combat'
@@ -56,17 +56,17 @@ class TableSideInfo extends Component<IProps> {
 
 
   renderSide = () => {
-    const { settings, side, tactic } = this.props
+    const { settings, side, general } = this.props
     return (
       <Table.Row key={side.type}>
         <Table.Cell>
-          {side.general.total_values[GeneralAttribute.Martial]}
+          {general.total_values[GeneralAttribute.Martial]}
           <AttributeImage attribute={GeneralAttribute.Martial} />
         </Table.Cell>
         {
           settings[Setting.Tactics] &&
           <Table.Cell collapsing>
-            <LabelItem item={tactic} />
+            <LabelItem item={general.tactic} />
           </Table.Cell>
         }
         <Table.Cell>
@@ -77,9 +77,9 @@ class TableSideInfo extends Component<IProps> {
   }
 
   renderRoll = () => {
-    const { terrains, settings, round, openModal, setDice, side, opponent, combat } = this.props
-    const terrain_pips = getTerrainPips(terrains, side.type, side.general, opponent.general)
-    const general_pips = calculateGeneralPips(side.general, opponent.general, getCombatPhase(round, settings))
+    const { terrains, settings, round, openModal, setDice, side, combat, general, opponent  } = this.props
+    const terrain_pips = getTerrainPips(terrains, side.type, general, opponent)
+    const general_pips = calculateGeneralPips(general, opponent, getCombatPhase(round, settings))
     const phase = getCombatPhaseNumber(round, settings)
     const is_dice_set = side.randomize_dice || (side.rolls.length > phase && side.rolls[phase])
     return (
@@ -120,17 +120,15 @@ class TableSideInfo extends Component<IProps> {
 
 const mapStateToProps = (state: AppState, props: Props) => {
   const battle = getBattle(state)
-  const side = getCombatSide(state, props.type)
-  const opponent = getCombatSide(state, getOpponent(props.type))
-  return {
-    side,
-    opponent,
-    tactic: state.tactics[side.tactic],
+  return { 
+    side: getSide(state, props.type),
+    general: getLeadingGeneral(state, props.type),
+    opponent: getLeadingGeneral(state, getOpponent(props.type)),
     round: battle.round,
     terrains: battle.terrains.map(type => state.terrains[type]),
     settings: getSiteSettings(state),
     mode: getMode(state),
-    combat: getCombatParticipant(state, props.type)
+    combat: getCombatSide(state, props.type)
   }
 }
 

@@ -11,7 +11,7 @@ export const getInitialTerrains = (mode: Mode): TerrainType[] => {
 export const getDefaultSide = (type: SideType, name: CountryName, mode: Mode): Side => {
   return {
     type,
-    participants: [getDefaultParticipant(name, mode)],
+    participants: [getDefaultParticipant(name, mode), getDefaultParticipant(name, mode)],
     rounds: [],
     rolls: [0],
     dice: (process.env.REACT_APP_GAME === 'euiv' ? 5 : 3),
@@ -21,8 +21,8 @@ export const getDefaultSide = (type: SideType, name: CountryName, mode: Mode): S
 
 export const getDefaultParticipant = (name: CountryName, mode: Mode): Participant => {
   return {
-    country: name,
-    army: mode === Mode.Land ? ArmyName.Army : ArmyName.Navy,
+    countryName: name,
+    armyName: mode === Mode.Land ? ArmyName.Army : ArmyName.Navy,
     daysUntilBattle: 0
   }
 }

@@ -1,5 +1,5 @@
 import { calculateValue, calculateBase, addValues, addValuesWithMutate, filterValues, addValue, clearAllValuesWithMutate } from 'definition_values'
-import { Mode, GeneralAttribute, UnitType, UnitAttribute, GeneralDefinition, Army, ArmyType, CohortDefinition, ValuesType, UnitValueType, TacticType, UnitPreferenceType, General, ReserveDefinition, DefeatedDefinition, FrontlineDefinition, GeneralValueType, CombatPhase, isAttributeEnabled, Units, Setting, UnitRole, Unit, CombatUnitTypes, CombatCohortDefinition, SiteSettings, ModifierWithKey, ModifierType, Selections, SelectionType } from 'types'
+import { Mode, GeneralAttribute, UnitType, UnitAttribute, GeneralDefinition, Army, ArmyType, CohortDefinition, ValuesType, UnitValueType, TacticType, UnitPreferenceType, General, ReserveDefinition, DefeatedDefinition, FrontlineDefinition, GeneralValueType, CombatPhase, isAttributeEnabled, Units, Setting, UnitRole, Unit, CombatUnitTypes, CombatCohortDefinition, SiteSettings, ModifierWithKey, ModifierType, Selections, SelectionType, TacticDefinitions } from 'types'
 import { map, forEach, keys, toObj, toArr, toSet, ObjSet, values } from 'utils'
 import { findLastIndex, sortBy } from 'lodash'
 
@@ -11,13 +11,14 @@ export const martialToCaptureChance = (martial: number) => 0.002 * martial
 
 const BASE_STAT_KEY = 'Custom'
 
-export const convertGeneralDefinition = (settings: SiteSettings, general: GeneralDefinition): General => {
+export const convertGeneralDefinition = (settings: SiteSettings, general: GeneralDefinition, tactics: TacticDefinitions): General => {
   const base = filterValues(general, BASE_STAT_KEY)
   const attributes = [GeneralAttribute.Maneuver, GeneralAttribute.Martial, CombatPhase.Fire, CombatPhase.Shock, CombatPhase.Default]
   const base_values = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) ? calculateValue(base, attribute) : 0)
   const extra_values = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) && general.enabled ? calculateValue(general, attribute) - calculateValue(base, attribute) : 0)
   const total_values = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) && general.enabled ? Math.min(calculateValue(general, attribute), settings[Setting.MaxGeneral]) : 0)
   return {
+    tactic: tactics[general.tactic],
     enabled: general.enabled,
     base_values,
     total_values,
@@ -223,7 +224,7 @@ export const clearCohorts = (army: Army) => {
 }
 
 export const selectTactic = (army: Army, tactic: TacticType) => {
-  army.tactic = tactic
+  army.general.tactic = tactic
 }
 
 export const setUnitPreference = (army: Army, preference_type: UnitPreferenceType | UnitRole, unit: UnitType | null) => {

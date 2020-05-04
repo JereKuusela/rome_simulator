@@ -1,7 +1,7 @@
 import { AppState } from './index'
 import { toArr, filter, arrGet, toObj, forEach2, keys } from 'utils'
 import { filterUnitDefinitions, getArmyPart, convertCohortDefinitions, convertUnitDefinitions, convertUnitDefinition, shrinkUnits } from '../army_utils'
-import { Mode, CountryName, SideType, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, TacticDefinition, UnitPreferences, Participant, TerrainDefinition, Settings, Battle, TerrainDefinitions, TacticDefinitions, Cohorts, ArmyName, General, Countries, Setting, Reserve, Defeated, CountryAttribute, Units, Unit, GeneralDefinition, Country, CountryDefinition, CombatCohort, CombatCohorts, CombatParticipant, Side, CombatSide } from 'types'
+import { Mode, CountryName, SideType, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, TacticDefinition, UnitPreferences, Participant, TerrainDefinition, Settings, Battle, TerrainDefinitions, TacticDefinitions, Cohorts, ArmyName, General, Countries, Setting, Reserve, Defeated, CountryAttribute, Units, Unit, GeneralDefinition, Country, CountryDefinition, CombatCohort, CombatCohorts, CombatParticipant, Side, GeneralAttribute, CombatSide } from 'types'
 import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticState, getDefaultTerrainState } from 'data'
 import { uniq, flatten } from 'lodash'
 import * as manager from 'managers/army'
@@ -17,8 +17,8 @@ import { convertParticipant } from 'managers/battle'
  */
 export const getSettings = (state: AppState, mode?: Mode): Settings => {
   const settings = { ...state.settings.combatSettings[mode || state.settings.mode], ...state.settings.siteSettings }
-  const attacker = getCountry(state, getParticipant(state, SideType.Attacker).country)
-  const defender = getCountry(state, getParticipant(state, SideType.Defender).country)
+  const attacker = getCountry(state, getParticipant(state, SideType.Attacker, 0).countryName)
+  const defender = getCountry(state, getParticipant(state, SideType.Defender, 0).countryName)
   settings[Setting.CombatWidth] += Math.max(attacker[CountryAttribute.CombatWidth], defender[CountryAttribute.CombatWidth])
   settings[Setting.Precision] = Math.pow(10, settings[Setting.Precision])
   return settings
@@ -139,26 +139,25 @@ const getUnitDefinitions = (state: AppState, countryName: CountryName, armyName:
 
 export const getCurrentCombat = (state: AppState, sideType: SideType): CombatCohorts => {
   const side = getSide(state, sideType)
-  return arrGet(side.rounds, -1)?.cohorts ?? { frontline: [], reserve: { front: [], flank: [], support: [] }, defeated: [], left_flank: 0, right_flank: 0 }
+  return arrGet(side.rounds, -1)?.cohorts ?? { frontline: [], reserve: { front: [], flank: [], support: [] }, defeated: [], leftFlank: 0, rightFlank: 0 }
 }
 
-export const getCombatParticipant = (state: AppState, sideType: SideType, round?: number): CombatParticipant => {
+export const getCombatSide = (state: AppState, sideType: SideType, round?: number): CombatSide => {
   const side = getSide(state, sideType)
   return side.rounds[round ? round + 1 : side.rounds.length - 1]
 }
 
 /** Helper function, should be checked and refactored. */
 const getArmyForCombat = (state: AppState, sideType: SideType, mode?: Mode) => {
-  const participant = getParticipant(state, sideType, mode)
-  const countryName = participant.country
-  const armyName = participant.army
+  const participant = getParticipant(state, sideType, 0, mode)
+  const countryName = participant.countryName
+  const armyName = participant.armyName
   const army = getArmyDefinition(state, countryName, armyName)
   const cohorts = getCohorts(state, sideType)
   const general = getGeneral(state, countryName, armyName)
-  const tactic = state.tactics[army.tactic]
   const definitions = getUnits(state, countryName, armyName)
   const flank_ratio = calculateValue(state.countries[countryName], CountryAttribute.FlankRatio)
-  return { ...cohorts, tactic, general, flank_ratio, flank_size: army.flank_size, unit_preferences: army.unit_preferences, definitions }
+  return { ...cohorts, general, flank_ratio, flank_size: army.flank_size, unit_preferences: army.unit_preferences, definitions }
 }
 
 export const initializeCombatParticipants = (state: AppState): CombatParticipant[] => {
@@ -174,9 +173,10 @@ export const initializeCombatParticipants = (state: AppState): CombatParticipant
   ]
 }
 
-export const getSelectedTactic = (state: AppState, side: SideType): TacticDefinition => {
-  const army = getArmyDefinitionBySide(state, side)
-  return state.tactics[army.tactic]
+export const getSelectedTactic = (state: AppState, side: SideType, index: number): TacticDefinition => {
+  const participant = getParticipant(state, side, index)
+  const general = getGeneralDefinition(state, participant.countryName, participant.armyName)
+  return state.tactics[general.tactic]
 }
 
 export const getUnitPreferences = (state: AppState, side: SideType): UnitPreferences => {
@@ -207,7 +207,7 @@ export const getGeneralDefinition = (state: AppState, countryName: CountryName, 
   return manager.applyGeneralModifiers(army, modifiers)
 
 }
-export const getGeneral = (state: AppState, countryName: CountryName, armyName: ArmyName): General => manager.convertGeneralDefinition(getSiteSettings(state), getGeneralDefinition(state, countryName, armyName))
+export const getGeneral = (state: AppState, countryName: CountryName, armyName: ArmyName): General => manager.convertGeneralDefinition(getSiteSettings(state), getGeneralDefinition(state, countryName, armyName), state.tactics)
 
 export const getMode = (state: AppState): Mode => state.settings.mode
 export const getSelectedArmy = (state: AppState): ArmyName => keys(getArmies(state))[state.settings.army]
@@ -215,13 +215,13 @@ export const getSelectedArmy = (state: AppState): ArmyName => keys(getArmies(sta
 export const getArmies = (state: AppState, countryName?: CountryName) => filterArmies(state.countries[countryName ?? state.settings.country], state.settings.mode)
 
 const getArmyDefinitionBySide = (state: AppState, side: SideType) => {
-  const participant = getParticipant(state, side)
-  return getArmyDefinition(state, participant.country, participant.army)
+  const participant = getParticipant(state, side, 0)
+  return getArmyDefinition(state, participant.countryName, participant.armyName)
 }
 
 export const getTactic = (state: AppState, side: SideType): TacticDefinition => {
-  const participant = getParticipant(state, side)
-  const army = getArmyDefinition(state, participant.country, participant.army)
+  const participant = getParticipant(state, side, 0)
+  const army = getGeneralDefinition(state, participant.countryName, participant.armyName)
   return state.tactics[army.tactic]
 }
 
@@ -237,9 +237,9 @@ export const getArmyDefinitionWithOverriddenUnits = (state: AppState, countryNam
 
 export const getCohorts = (state: AppState, side: SideType, originals?: boolean): Cohorts => {
   const settings = getSettings(state)
-  const participant = getParticipant(state, side)
-  const countryName = participant.country
-  const armyName = participant.army
+  const participant = getParticipant(state, side, 0)
+  const countryName = participant.countryName
+  const armyName = participant.armyName
   const definition = getArmyDefinitionWithOverriddenUnits(state, countryName, armyName, originals)
   const frontline = [Array<Cohort | null>(settings[Setting.CombatWidth]).fill(null)]
   if (settings[Setting.BackRow])
@@ -254,19 +254,13 @@ export const getCohorts = (state: AppState, side: SideType, originals?: boolean)
   return convertCohortDefinitions(settings, cohorts, units)
 }
 
-export const getParticipant = (state: AppState, type: SideType, mode?: Mode): Participant => getSide(state, type, mode).participants[0]
+export const getParticipant = (state: AppState, type: SideType, index: number, mode?: Mode): Participant => getSide(state, type, mode).participants[index]
 export const getSide = (state: AppState, type: SideType, mode?: Mode): Side => getBattle(state, mode).sides[type]
 
-export const getCombatSide = (state: AppState, type: SideType, mode?: Mode): CombatSide => {
+export const getLeadingGeneral = (state: AppState, type: SideType, mode?: Mode): General => {
   const side = getSide(state, type, mode)
-  const participant = getParticipant(state, type)
-  const army = getArmyDefinition(state,  participant.country, participant.army)
-  const general = getGeneral(state, participant.country, participant.army)
-  return {
-    ...side,
-    general,
-    tactic: army.tactic
-  }
+  const generals = side.participants.map(participant => getGeneral(state, participant.countryName, participant.armyName))
+  return generals.sort((a , b) => b.total_values[GeneralAttribute.Martial] - a.total_values[GeneralAttribute.Martial])[0]
 }
 
 
@@ -277,7 +271,7 @@ export const getSelectedTerrains = (state: AppState): TerrainDefinition[] => get
  * @param state Application state.
  * @param side Attacker or defender.
  */
-export const getUnitDefinitionsBySide = (state: AppState, side: SideType): Units => getUnits(state, getParticipant(state, side).country)
+export const getUnitDefinitionsBySide = (state: AppState, side: SideType): Units => getUnits(state, getParticipant(state, side, 0).countryName)
 
 export const getUnits = (state: AppState, countryName?: CountryName, armyName?: ArmyName, mode?: Mode): Units => {
   const settings = getSiteSettings(state)

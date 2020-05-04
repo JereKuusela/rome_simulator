@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import ItemRemover from 'components/ItemRemover'
 import UnitDetail from 'components/UnitDetail'
 
-import { AppState, filterTerrainTypes, findCohortById, getCombatUnitForEachRound, getMode, getCombatParticipant, getSiteSettings, getParticipant } from 'state'
+import { AppState, filterTerrainTypes, findCohortById, getCombatUnitForEachRound, getMode, getCombatSide, getSiteSettings, getParticipant } from 'state'
 import { ValuesType, CountryName, UnitType, Cohort, UnitAttribute, UnitValueType, CombatCohort, ModalType, SiteSettings, ArmyName } from 'types'
 import { addValues } from 'definition_values'
 import { editCohort, deleteCohort, setCohortValue, changeCohortType, toggleCohortLoyality, closeModal } from 'reducers'
@@ -102,13 +102,13 @@ const mapStateToProps = (state: AppState) => {
   const settings = getSiteSettings(state)
   const mode = getMode(state)
   if (data) {
-    const participant = getParticipant(state, data.side)
+    const participant = getParticipant(state, data.side, 0)
     return {
       id: data.id,
       terrain_types: filterTerrainTypes(state),
-      country: participant.country,
-      army: participant.army,
-      unit_types: getActualUnits(getCombatParticipant(state, data.side).unit_types, mode).map(unit => unit.type),
+      country: participant.countryName,
+      army: participant.armyName,
+      unit_types: getActualUnits(getCombatSide(state, data.side).unitTypes, mode).map(unit => unit.type),
       mode,
       cohort: convertCohort(settings, findCohortById(state, data.side, data.id), getCombatUnitForEachRound(state, data.side, data.id)),
       settings

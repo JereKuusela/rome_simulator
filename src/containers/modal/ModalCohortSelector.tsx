@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import ItemSelector from 'components/ItemSelector'
 import { ArmyType, UnitType, Setting, ModalType, CountryName, CombatUnitTypes, ArmyName } from 'types'
 import { getNextId } from 'army_utils'
-import { AppState, getMode, getCombatParticipant, getSiteSettings, getParticipant } from 'state'
+import { AppState, getMode, getCombatSide, getSiteSettings, getParticipant } from 'state'
 import { selectCohort, closeModal } from 'reducers'
 import { getArchetypes, getActualUnits } from 'managers/army'
 import BaseModal from './BaseModal'
@@ -34,14 +34,14 @@ class ModalCohortSelector extends Component<IProps> {
 const mapStateToProps = (state: AppState) => {
   const data = state.ui.modals[ModalType.CohortSelector]
   if (data) {
-    const participant = getParticipant(state, data.side)
+    const participant = getParticipant(state, data.side, 0)
     return {
       row: data.row,
       column: data.column,
       type: data.type,
-      country: participant.country,
-      army: participant.army,
-      units: getCombatParticipant(state, data.side).unit_types,
+      country: participant.countryName,
+      army: participant.armyName,
+      units: getCombatSide(state, data.side).unitTypes,
       mode: getMode(state),
       settings: getSiteSettings(state)
     }

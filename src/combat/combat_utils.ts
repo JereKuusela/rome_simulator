@@ -1,6 +1,6 @@
 
-import { sumBy } from 'lodash'
-import { TerrainDefinition, TerrainCalc, Setting, UnitAttribute, UnitDefinition, CombatPhase, GeneralAttribute, SideType, LocationType, General, CombatCohortDefinition, SiteSettings, CombatCohorts, CombatCohort, CombatFrontline, SortedReserve } from 'types'
+import { sumBy, sum } from 'lodash'
+import { TerrainDefinition, TerrainCalc, Setting, UnitAttribute, UnitDefinition, CombatPhase, GeneralAttribute, SideType, LocationType, General, CombatCohortDefinition, SiteSettings, CombatCohorts, CombatCohort, CombatFrontline, SortedReserve, CombatSide } from 'types'
 import { calculateValue } from 'definition_values'
 
 /**
@@ -72,7 +72,10 @@ export const getCombatPhaseNumber = (round: number, settings: SiteSettings) => M
 
 export const getDailyIncrease = (round: number, settings: SiteSettings) => settings[Setting.DailyDamageIncrease] * round
 
-export const stackWipe = (cohorts: CombatCohorts) => {
+export const stackWipe = (side: CombatSide) => {
+  side.participants.forEach(participant => stackWipeSub(participant.cohorts))
+}
+const stackWipeSub = (cohorts: CombatCohorts) => {
   const { frontline, reserve, defeated } = cohorts
 
   for (let i = 0; i < defeated.length; i++) {
@@ -153,8 +156,7 @@ export const nextIndex = (index: number, center: number) => index < center ? ind
 
 export const reserveSize = (reserve: SortedReserve) => reserve.front.length + reserve.flank.length + reserve.support.length
 
-export const armySize = (cohorts: CombatCohorts) => {
-  return cohorts.frontline[0].filter(unit => unit).length + reserveSize(cohorts.reserve)
+export const armySize = (side: CombatSide, round: number) => {
+  return sum(side.participants.map(participant => participant.arrival <= round ? participant.cohorts.frontline[0].filter(unit => unit).length + reserveSize(participant.cohorts.reserve) : 0))
+    + side.cohorts.frontline[0].filter(unit => unit).length + reserveSize(side.cohorts.reserve)
 }
-
-

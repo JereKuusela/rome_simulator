@@ -1,5 +1,5 @@
-import { UnitPreferences, UnitAttribute, UnitPreferenceType, UnitRole, Setting, Settings, SortedReserve, CombatReserve, CombatCohorts, CombatCohort, CombatParticipant } from 'types'
-import { sortBy, remove, clamp } from 'lodash'
+import { UnitPreferences, UnitAttribute, UnitPreferenceType, UnitRole, Setting, Settings, SortedReserve, CombatReserve, CombatCohorts, CombatCohort, CombatParticipant, CombatSide, Participant } from 'types'
+import { sortBy, remove, clamp, sum } from 'lodash'
 import { stackWipe, calculateTotalStrength, nextIndex, reserveSize, armySize } from './combat_utils'
 
 const armyFlankCount = (units: CombatCohorts) => {
@@ -59,10 +59,10 @@ const applyReinforcementPenalty = (cohort: CombatCohort, preferences: UnitPrefer
     cohort[UnitAttribute.Morale] -= cohort.definition.max_morale * settings[Setting.MoraleHitForNonSecondaryReinforcement]
 }
 
-const deployCohorts = (cohorts: CombatCohorts, settings: Settings, preferences?: UnitPreferences) => {
-  const { left_flank, right_flank, reserve } = cohorts
-  const frontline = cohorts.frontline[0]
-  const backline = cohorts.frontline.length > 1 ? cohorts.frontline[1] : null
+const deployCohorts = (target: CombatCohorts, source: CombatCohorts, settings: Settings, preferences?: UnitPreferences) => {
+  const { leftFlank: left_flank, rightFlank: right_flank, reserve } = source
+  const frontline = target.frontline[0]
+  const backline = target.frontline.length > 1 ? target.frontline[1] : null
   const center = Math.floor(frontline.length / 2.0)
   let flank_starting_index = left_flank > right_flank ? left_flank - 1 : frontline.length - right_flank
   if (frontline.length % 2)
@@ -134,8 +134,9 @@ const isAlive = (unit: CombatCohort, minimum_morale: number, minimum_strength: n
   unit[UnitAttribute.Morale] > minimum_morale && unit[UnitAttribute.Strength] > minimum_strength
 )
 
-const removeDefeated = (cohorts: CombatCohorts, minimum_morale: number, minimum_strength: number) => {
-  const { frontline, reserve, defeated } = cohorts
+const removeDefeated = (source: CombatCohorts, target: CombatCohorts, minimum_morale: number, minimum_strength: number) => {
+  const { frontline, reserve } = source
+  const { defeated } = target
 
   const removeFromReserve = (part: CombatCohort[]) => {
     for (let i = 0; i < part.length; i++) {
@@ -162,6 +163,7 @@ const removeDefeated = (cohorts: CombatCohorts, minimum_morale: number, minimum_
   removeFromReserve(reserve.front)
   removeFromReserve(reserve.flank)
   removeFromReserve(reserve.support)
+  removeFromReserve(source.defeated)
 }
 
 /**
@@ -171,8 +173,8 @@ const removeDefeated = (cohorts: CombatCohorts, minimum_morale: number, minimum_
  * @param reserve Sorted reserve to get amount of flanking units.
  * @param enemy_units Enemy units to calculate space on the battlefield.
  */
-const calculateFlankSizes = (combat_width: number, preferred_flank_size: number, enemy_units?: CombatCohorts): [number, number] => {
-  const free_space = enemy_units ? combat_width - armySize(enemy_units) : 0
+const calculateFlankSizes = (combat_width: number, preferred_flank_size: number, enemyArmySize?: number): [number, number] => {
+  const free_space = enemyArmySize ? combat_width - enemyArmySize : 0
   const left_side_free_space = Math.ceil(free_space / 2.0)
   const right_side_free_space = Math.floor(free_space / 2.0)
   // Max space checks needed for low combat widths.
@@ -187,31 +189,62 @@ const calculatePreferredFlankSize = (settings: Settings, custom_value: number, a
   return settings[Setting.CustomDeployment] ? custom_value : Math.min(armyFlankCount(army) / 2, Math.floor(settings[Setting.CombatWidth] / 4))
 }
 
-export const deploy = (attacker: CombatParticipant, defender: CombatParticipant, settings: Settings) => {
-  removeDefeated(attacker.cohorts, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength])
-  removeDefeated(defender.cohorts, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength])
-
-  const [left_flank_a, right_flank_a] = calculateFlankSizes(settings[Setting.CombatWidth], calculatePreferredFlankSize(settings, attacker.flank, attacker.cohorts), settings[Setting.DynamicFlanking] ? defender.cohorts : undefined)
-  const [left_flank_d, right_flank_d] = calculateFlankSizes(settings[Setting.CombatWidth], calculatePreferredFlankSize(settings, defender.flank, defender.cohorts), settings[Setting.DynamicFlanking] ? attacker.cohorts : undefined)
-  attacker.cohorts.left_flank = left_flank_a
-  attacker.cohorts.right_flank = right_flank_a
-  defender.cohorts.left_flank = left_flank_d
-  defender.cohorts.right_flank = right_flank_d
-  deployCohorts(attacker.cohorts, settings)
-  deployCohorts(defender.cohorts, settings)
-  attacker.alive = armySize(attacker.cohorts) > 0
-  defender.alive = armySize(defender.cohorts) > 0
-  if (settings[Setting.Stackwipe])
-    checkInstantStackWipe(attacker, defender, settings)
+export const removeAllDefeated = (attacker: CombatSide, defender: CombatSide, settings: Settings) => {
+  attacker.participants.forEach(participant => removeDefeated(participant.cohorts, attacker.cohorts, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength]))
+  defender.participants.forEach(participant => removeDefeated(participant.cohorts, defender.cohorts, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength]))
 }
 
-const checkInstantStackWipe = (attacker: CombatParticipant, defender: CombatParticipant, settings: Settings) => {
-  const total_a = calculateTotalStrength(attacker.cohorts)
-  const total_d = calculateTotalStrength(defender.cohorts)
-  if (!defender.alive || total_a / total_d > settings[Setting.HardStackWipeLimit])
-    stackWipe(defender.cohorts)
-  else if (!attacker.alive || total_d / total_a > settings[Setting.HardStackWipeLimit])
-    stackWipe(attacker.cohorts)
+export const deploy = (round: number, attacker: CombatSide, defender: CombatSide, settings: Settings) => {
+  const sizeA = armySize(attacker, round)
+  const sizeD = armySize(defender, round)
+  const attackerPool: CombatCohort[] = []
+  const defenderPool: CombatCohort[] = []
+  while (attacker.participants.length && attacker.participants[attacker.participants.length - 1].arrival <= round) {
+    const participant = attacker.participants.pop()!
+    deploySub(attacker, participant, settings, sizeD)
+    attackerPool.push(...participant.cohorts.reserve.flank)
+    attackerPool.push(...participant.cohorts.reserve.front)
+    attackerPool.push(...participant.cohorts.reserve.support)
+  }
+  while (defender.participants.length && defender.participants[defender.participants.length - 1].arrival <= round) {
+    const participant = defender.participants.pop()!
+    deploySub(defender, participant, settings, sizeA)
+    defenderPool.push(...participant.cohorts.reserve.flank)
+    defenderPool.push(...participant.cohorts.reserve.front)
+    defenderPool.push(...participant.cohorts.reserve.support)
+  }
+  attacker.alive = sizeA > 0
+  defender.alive = sizeD > 0
+  if (settings[Setting.Stackwipe])
+    checkInstantStackWipe(attacker, defender, settings)
+  if (attackerPool) {
+    attackerPool.push(...attacker.cohorts.reserve.flank)
+    attackerPool.push(...attacker.cohorts.reserve.front)
+    attackerPool.push(...attacker.cohorts.reserve.support)
+    attacker.cohorts.reserve = sortReserve(attackerPool, attacker.unitPreferences)
+  }
+  if (defenderPool) {
+    defenderPool.push(...defender.cohorts.reserve.flank)
+    defenderPool.push(...defender.cohorts.reserve.front)
+    defenderPool.push(...defender.cohorts.reserve.support)
+    defender.cohorts.reserve = sortReserve(defenderPool, defender.unitPreferences)
+  }
+}
+
+const deploySub = (side: CombatSide, participant: CombatParticipant, settings: Settings, enemyArmySize: number) => {
+  const [leftFlank, rightFlank] = calculateFlankSizes(settings[Setting.CombatWidth], calculatePreferredFlankSize(settings, participant.flankSize, participant.cohorts), settings[Setting.DynamicFlanking] ? enemyArmySize : undefined)
+  participant.cohorts.leftFlank = leftFlank
+  participant.cohorts.rightFlank = rightFlank
+  deployCohorts(side.cohorts, participant.cohorts, settings)
+}
+
+const checkInstantStackWipe = (attacker: CombatSide, defender: CombatSide, settings: Settings) => {
+  const strengthA = sum(attacker.participants.map(participant => calculateTotalStrength(participant.cohorts)))
+  const strengthD = sum(defender.participants.map(participant => calculateTotalStrength(participant.cohorts)))
+  if (!defender.alive || strengthA / strengthD > settings[Setting.HardStackWipeLimit])
+    stackWipe(defender)
+  else if (!attacker.alive || strengthD / strengthA > settings[Setting.HardStackWipeLimit])
+    stackWipe(attacker)
 }
 
 const moveUnits = (cohorts: CombatCohorts, ) => {
@@ -257,8 +290,8 @@ const moveUnits = (cohorts: CombatCohorts, ) => {
 * Reinforces a given army based on reinforcement rules.
 * First priority is to move units from reserve. Then units move towards center.
 */
-export const reinforce = (participant: CombatParticipant, settings: Settings) => {
-  if (reserveSize(participant.cohorts.reserve))
-    deployCohorts(participant.cohorts, settings, participant.unit_preferences)
-  moveUnits(participant.cohorts)
+export const reinforce = (side: CombatSide, settings: Settings) => {
+  if (reserveSize(side.cohorts.reserve))
+    deployCohorts(side.cohorts, side.cohorts, settings, side.unitPreferences)
+  moveUnits(side.cohorts)
 }
