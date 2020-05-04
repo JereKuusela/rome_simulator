@@ -2,14 +2,13 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table, Button } from 'semantic-ui-react'
 
-import { SideType, CountryName, Setting, GeneralAttribute, UnitAttribute, CultureType, ModalType } from 'types'
+import { SideType, CountryName, Setting, GeneralAttribute, UnitAttribute, CultureType, ModalType, General, CombatPhase } from 'types'
 import { AppState, getBattle, getMode, getCombatParticipant, getSiteSettings, getCombatSide } from 'state'
 import { selectParticipantCountry, selectParticipantArmy, selectCulture, toggleRandomDice, setDice, openModal, setGeneralAttribute } from 'reducers'
 import StyledNumber from 'components/Utils/StyledNumber'
 import { getTerrainPips, calculateGeneralPips, getCombatPhase, getCombatPhaseNumber } from 'combat'
 import { addSign } from 'formatters'
 import IconDice from 'images/chance.png'
-import IconGeneral from 'images/military_power.png'
 import IconTerrain from 'images/terrain.png'
 import AttributeImage from 'components/Utils/AttributeImage'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
@@ -37,6 +36,12 @@ class TableSideInfo extends Component<IProps> {
               </Table.HeaderCell>
             }
             {
+              settings[Setting.FireAndShock] &&
+              <Table.HeaderCell>
+                General
+              </Table.HeaderCell>
+            }
+            {
               settings[Setting.Tactics] &&
               <Table.HeaderCell>
                 Tactic
@@ -56,13 +61,11 @@ class TableSideInfo extends Component<IProps> {
 
 
   renderSide = () => {
-    const { settings, side, tactic } = this.props
+    const { settings, side, tactic, round } = this.props
     return (
       <Table.Row key={side.type}>
-        <Table.Cell>
-          {side.general.total_values[GeneralAttribute.Martial]}
-          <AttributeImage attribute={GeneralAttribute.Martial} />
-        </Table.Cell>
+        {settings[Setting.Martial] && this.renderGeneral(side.general, GeneralAttribute.Martial)}
+        {settings[Setting.FireAndShock] && this.renderGeneral(side.general, getCombatPhase(round, settings) === CombatPhase.Shock ? CombatPhase.Shock : CombatPhase.Fire)}
         {
           settings[Setting.Tactics] &&
           <Table.Cell collapsing>
@@ -73,6 +76,15 @@ class TableSideInfo extends Component<IProps> {
           {this.renderRoll()}
         </Table.Cell>
       </Table.Row >
+    )
+  }
+
+  renderGeneral = (general: General, attribute: GeneralAttribute | CombatPhase) => {
+    return (
+      <Table.Cell>
+        <AttributeImage attribute={attribute} />
+        {general.total_values[attribute]}
+      </Table.Cell>
     )
   }
 
@@ -87,9 +99,15 @@ class TableSideInfo extends Component<IProps> {
         <Image src={IconDice} avatar />
         {is_dice_set ? combat.dice : <DelayedNumericInput type='number' value={side.dice} onChange={value => setDice(side.type, value)} />}
         {
+          !side.randomize_dice &&
+          <span style={{ paddingLeft: '1em' }}>
+            <Button size='mini' icon={'plus'} onClick={() => openModal(ModalType.DiceRolls, { side: side.type })} />
+          </span>
+        }
+        {
           general_pips !== 0 ?
             <span style={{ paddingLeft: '1em' }}>
-              <Image src={IconGeneral} avatar />
+              <AttributeImage attribute={getCombatPhase(round, settings)} />
               <StyledNumber value={general_pips} formatter={addSign} />
             </span>
             : null
@@ -101,12 +119,6 @@ class TableSideInfo extends Component<IProps> {
               <StyledNumber value={terrain_pips} formatter={addSign} />
             </span>
             : null
-        }
-        {
-          !side.randomize_dice &&
-          <span style={{ paddingLeft: '1em' }}>
-            <Button size='mini' icon={'plus'} onClick={() => openModal(ModalType.DiceRolls, { side: side.type })} />
-          </span>
         }
       </div >
     )

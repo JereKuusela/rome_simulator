@@ -15,7 +15,7 @@ export const restoreDefaultSettings = (state: SettingsAndOptions): SettingsAndOp
   return { ...defaultSettings, ...state, siteSettings: { ...defaultSettings.siteSettings, ...state.siteSettings }, combatSettings: map(defaultSettings.combatSettings, ((_, mode) => ({ ...defaultSettings.combatSettings[mode], ...state.combatSettings[mode] }))) }
 }
 
-export const stripRounds = (battle: ModeState): ModeState => map(battle, value => ({ ...value, outdated: true, timestamp: 0, participants: map(value.sides, value => ({ ...value, rounds: [] })) }))
+export const stripRounds = (battle: ModeState): ModeState => map(battle, value => ({ ...value, outdated: true, timestamp: 0, sides: map(value.sides, value => ({ ...value, rounds: [] })) }))
 
 export const setIds = (countries: Countries): Countries => {
   return produce(countries, countries => {

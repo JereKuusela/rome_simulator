@@ -9,7 +9,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
 
     let info: TestInfo
     beforeEach(() => {
-      info = initInfo()
+      info = initInfo(false)
       unit = createCohort(UnitType.Archers)
       unit.is_loyal = true
       unit.base_values![UnitAttribute.Morale] = { 'key': 3 }
@@ -28,6 +28,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       unit.base_values![UnitAttribute.DamageTaken] = { 'key': 0.5 }
       unit.base_values![UnitAttribute.Discipline] = { 'key': 0.75 }
       unit.base_values![UnitType.Archers] = { 'key': 0.2 }
+      unit.base_values![UnitAttribute.OffensiveSupport] = { 'key': 0.5 }
 
       info.settings = map(info.settings, item => typeof item === 'boolean' ? false : item) as Settings
       info.settings[Setting.AttributeDiscipline] = DisciplineValue.Off
@@ -103,6 +104,10 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     it('discipline damage done and taken', () => {
       info.settings[Setting.AttributeDiscipline] = DisciplineValue.Both
       test(0, 0, 0, 0)
+    })
+    it('backrow damage', () => {
+      info.army_a.frontline[1][15] = unit
+      test(0.5, 0, 0, 0)
     })
   })
 }

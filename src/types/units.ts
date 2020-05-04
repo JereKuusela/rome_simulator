@@ -61,7 +61,7 @@ export enum UnitAttribute {
   DefensiveFirePips = 'Defensive Fire Pips',
   DefensiveShockPips = 'Defensive Shock Pips',
   DefensiveMoralePips = 'Defensive Morale Pips',
-  OffensiveSupport = 'Damage From Backrow',
+  OffensiveSupport = 'Damage from Backrow',
   DefensiveSupport = 'Defensive Pips to Frontrow',
   MilitaryTactics = 'Military Tactics',
   CombatAbility = 'Combat Ability',

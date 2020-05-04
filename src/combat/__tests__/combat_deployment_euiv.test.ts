@@ -8,7 +8,7 @@ if (process.env.REACT_APP_GAME === 'euiv') {
   describe('initial deployment', () => {
 
     let info: TestInfo
-    beforeEach(() => { info = initInfo() })
+    beforeEach(() => { info = initInfo(false) })
 
     const add = (army: ArmyForCombatConversion, infantry: number, cavalry: number, artillery: number) => {
       army.reserve.push(...mapRange(infantry, () => getUnit(UnitType.Infantry)))

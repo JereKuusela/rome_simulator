@@ -76,41 +76,42 @@ const pickTargets = (source: CombatFrontline, target: CombatFrontline, settings:
       // No need to select targets for units without effect.
       if (i > 0 && !unit.definition[UnitAttribute.OffensiveSupport])
         continue
-      if (target[0][j] && !target[0][j]?.is_weak) {
-        state.target = target[0][j]
-        state.target_support = getBackTarget(target, j)
+
+      // Targets are prioritised based two things.
+      // 1st: Is target considered primary (healthy).
+      // 2nd: Is target directly on front.
+      let primaryTarget: number | null = null
+      let secondaryTarget: number | null = null
+      if (target[0][j]) {
+        if (target[0][j]?.is_weak)
+          secondaryTarget = j
+        else
+          primaryTarget = j
       }
-      else {
+      // Primary target on front has the highest priority so no need to check flanks.
+      if (primaryTarget === null) {
         const maneuver = Math.floor(unit.definition[UnitAttribute.Maneuver])
+        let direction = -1
+        let min = Math.max(0, j - maneuver)
+        let max = Math.min(target_length - 1, j + maneuver)
         if (!settings[Setting.FixFlankTargeting] || (settings[Setting.FixTargeting] ? j < source_length / 2 : j <= source_length / 2)) {
-          const start = Math.max(0, j - maneuver)
-          const end = Math.min(target_length - 1, j + maneuver)
-          for (let index = start; index <= end; ++index) {
-            if (target[0][index] && !target[0][index]?.is_weak) {
-              state.target = target[0][index]
-              state.flanking = true
-              state.target_support = getBackTarget(target, index)
-              break
-            }
-          }
+          direction = 1
         }
-        else {
-          const start = Math.min(target_length - 1, j + maneuver)
-          const end = Math.max(0, j - maneuver)
-          for (let index = start; index >= end; --index) {
-            if (target[0][index] && !target[0][index]?.is_weak) {
-              state.target = target[0][index]
-              state.flanking = true
-              state.target_support = getBackTarget(target, index)
-              break
-            }
+        for (let index = direction > 0 ? min : max; min <= index && index <= max; index += direction) {
+          const isWeak = target[0][index]?.is_weak
+          if (target[0][index] && (isWeak ? !secondaryTarget : !primaryTarget)) {
+            if (isWeak)
+              secondaryTarget = index
+            else
+              primaryTarget = index
+            state.flanking = true
           }
         }
       }
-      // Fallback if all targets are considered weak.
-      if (!state.target && target[0][j]) {
-        state.target = target[0][j]
-        state.target_support = getBackTarget(target, j)
+      const targetIndex = primaryTarget ?? secondaryTarget
+      if (targetIndex !== null) {
+        state.target = target[0][targetIndex]
+        state.target_support = getBackTarget(target, targetIndex)
       }
     }
   }

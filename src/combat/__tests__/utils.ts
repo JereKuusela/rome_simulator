@@ -1,7 +1,7 @@
-import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultParticipant, getDefaultArmy, getDefaultUnit } from 'data'
+import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultParticipant, getDefaultArmy, getDefaultUnit, getDefaultSide } from 'data'
 import { map, mapRange, resize, toObj, values } from 'utils'
 import { mergeValues } from 'definition_values'
-import { Mode, CountryName, Participant, TerrainDefinition, TacticType, Setting, SideType, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, Settings, Cohort, CombatPhase, CultureType, General, GeneralAttribute, UnitPreferences, ArmyForCombatConversion, CombatCohort, CombatParticipant, UnitRole, DisciplineValue, Selections } from 'types'
+import { Mode, CountryName, Participant, TerrainDefinition, TacticType, Setting, SideType, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, Settings, Cohort, CombatPhase, CultureType, General, GeneralAttribute, UnitPreferences, ArmyForCombatConversion, CombatCohort, CombatParticipant, UnitRole, DisciplineValue, Selections, Side } from 'types'
 import { doBattle, deploy, reinforce } from 'combat'
 import { convertParticipant } from 'managers/battle'
 import { removeDefeated } from 'combat/combat_utils'
@@ -18,6 +18,8 @@ export interface TestInfo {
   round: number
   attacker: Participant
   defender: Participant
+  side_a: Side
+  side_d: Side
   army_a: ArmyForCombatConversion
   army_d: ArmyForCombatConversion
   terrains: TerrainDefinition[]
@@ -36,7 +38,7 @@ export interface ExpectedTypes {
 /**
  * Returns a clean combat state for tests.
  */
-export const initInfo = () => {
+export const initInfo = (singleRow: boolean = true) => {
   const settings = { ...getDefaultLandSettings(), ...getDefaultSiteSettings(), [Setting.Precision]: 100000 }
   const general = (): General => ({
     enabled: true,
@@ -54,7 +56,7 @@ export const initInfo = () => {
   const army = (): ArmyForCombatConversion => ({
     ...getDefaultArmy(Mode.Land),
     // Frontline must be cloned to prevent tests mutating the source.
-    frontline: process.env.REACT_APP_GAME === 'euiv' ? [Array(30).fill(null), Array(30).fill(null)] : [Array(30).fill(null)],
+    frontline: singleRow ?  [Array(30).fill(null)] : [Array(30).fill(null), Array(30).fill(null)],
     reserve: [],
     defeated: [],
     unit_preferences: getUnitPreferences(),
@@ -67,6 +69,8 @@ export const initInfo = () => {
   return {
     attacker: getDefaultParticipant(CountryName.Country1, Mode.Land),
     defender: getDefaultParticipant(CountryName.Country2, Mode.Land),
+    side_a: getDefaultSide(SideType.Attacker, CountryName.Country1, Mode.Land),
+    side_d: getDefaultSide(SideType.Defender, CountryName.Country1, Mode.Land),
     army_a: army(),
     army_d: army(),
     round: 1,
@@ -149,8 +153,8 @@ export const verifyType = (identifier: string | number, side: SideType, index: n
  * Sets rolls for combat.
  */
 export const setRolls = (info: TestInfo, roll_a: number, roll_d: number) => {
-  info.attacker = { ...info.attacker, dice: roll_a }
-  info.defender = { ...info.defender, dice: roll_d }
+  info.side_a = { ...info.side_a, dice: roll_a }
+  info.side_d = { ...info.side_d, dice: roll_d }
 }
 /**
  * Sets tactics for combat.

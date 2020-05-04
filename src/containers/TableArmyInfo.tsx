@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table, Input } from 'semantic-ui-react'
 
-import { SideType, CountryName, Setting, General, GeneralAttribute, GeneralValueType, isAttributeEnabled, Mode, UnitType, CountryAttribute, CultureType, ArmyName } from 'types'
+import { SideType, CountryName, Setting, General, GeneralAttribute, GeneralValueType, Mode, UnitType, CountryAttribute, CultureType, ArmyName } from 'types'
 import { keys } from 'utils'
 import { AppState, getCountry, getParticipant, getGeneral, getCountries, getUnit, getMode, getSiteSettings, getArmies } from 'state'
 import { selectParticipantCountry, selectParticipantArmy, selectCulture, setGeneralAttribute } from 'reducers'
@@ -11,9 +11,9 @@ import StyledNumber from 'components/Utils/StyledNumber'
 import TacticSelector from './TacticSelector'
 import { getCultures } from 'data'
 import { addSign } from 'formatters'
-import AttributeImage from 'components/Utils/AttributeImage'
 import CountryValueInput from './CountryValueInput'
 import { filterArmies } from 'managers/countries'
+import OverflowGuard from 'components/Utils/OverflowGuard'
 
 type Props = {
   type: SideType
@@ -24,51 +24,47 @@ class TableArmyInfo extends Component<IProps> {
   render() {
     const { settings } = this.props
     return (
-      <Table celled unstackable>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>
-              Country
+      <OverflowGuard>
+        <Table celled unstackable>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>
+                Country
             </Table.HeaderCell>
-            <Table.HeaderCell>
-              Army
+              <Table.HeaderCell>
+                Army
             </Table.HeaderCell>
-            {
-              settings[Setting.Martial] &&
-              <Table.HeaderCell collapsing>
-                General skill
+              {
+                settings[Setting.Martial] &&
+                <Table.HeaderCell collapsing>
+                  General skill
               </Table.HeaderCell>
-            }
-            {
-              settings[Setting.Tactics] &&
-              <Table.HeaderCell>
-                Tactic
+              }
+              {
+                settings[Setting.Tactics] &&
+                <Table.HeaderCell>
+                  Tactic
               </Table.HeaderCell>
-            }
-            {
-              settings[Setting.Tech] &&
-              <Table.HeaderCell>
-                Tech
+              }
+              {
+                settings[Setting.Tech] &&
+                <Table.HeaderCell>
+                  Tech
               </Table.HeaderCell>
-            }
-            {
-              isAttributeEnabled(CountryAttribute.FlankRatio, settings) &&
-              <Table.HeaderCell >
-                <AttributeImage attribute={CountryAttribute.FlankRatio} settings={settings} />
+              }
+              {
+                settings[Setting.Culture] &&
+                <Table.HeaderCell>
+                  Culture
               </Table.HeaderCell>
-            }
-            {
-              settings[Setting.Culture] &&
-              <Table.HeaderCell>
-                Culture
-              </Table.HeaderCell>
-            }
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {this.renderArmyInfo()}
-        </Table.Body>
-      </Table >
+              }
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {this.renderArmyInfo()}
+          </Table.Body>
+        </Table>
+      </OverflowGuard>
     )
   }
 
@@ -104,12 +100,6 @@ class TableArmyInfo extends Component<IProps> {
           settings[Setting.Tech] &&
           <Table.Cell collapsing>
             <CountryValueInput country={participant.country} attribute={CountryAttribute.TechLevel} />
-          </Table.Cell>
-        }
-        {
-          isAttributeEnabled(CountryAttribute.FlankRatio, settings) &&
-          <Table.Cell>
-            <CountryValueInput attribute={CountryAttribute.FlankRatio} country={participant.country} percent />
           </Table.Cell>
         }
         {
