@@ -176,11 +176,11 @@ export const getDefaultSiteSettings = (): SiteSettings => {
 
 export const speedValues: { [key: string]: number[] } = process.env.REACT_APP_GAME === 'euiv' ?
   {
-    [SimulationSpeed.VeryAccurate]: [1.0, 8, 1],
-    [SimulationSpeed.Accurate]: [1.0, 7, 1],
-    [SimulationSpeed.Normal]: [1.0, 7, 2],
-    [SimulationSpeed.Fast]: [1.0, 7, 3],
-    [SimulationSpeed.VeryFast]: [1.0, 5, 3]
+    [SimulationSpeed.VeryAccurate]: [1.0, 15, 1],
+    [SimulationSpeed.Accurate]: [1.0, 15, 2],
+    [SimulationSpeed.Normal]: [1.0, 10, 2],
+    [SimulationSpeed.Fast]: [1.0, 15, 3],
+    [SimulationSpeed.VeryFast]: [1.0, 10, 3]
   } :
   {
     [SimulationSpeed.VeryAccurate]: [1.0, 5, 0],

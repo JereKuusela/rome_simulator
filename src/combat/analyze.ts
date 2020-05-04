@@ -96,7 +96,6 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
   const nodes = [{ status_a: attacker.cohorts, status_d: defender.cohorts, branch: 0, depth: 1 }]
 
   progressCallback(progress, casualties, resurce_losses)
-  console.log(fractions)
 
   const work = () => {
     for (let i = 0; (i < chunkSize) && nodes.length && !interruptSimulation; i++) {
@@ -158,7 +157,7 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
 
 /** Returns an array of valid dice numbers. */
 const getValidRolls = (minimum: number, maximum: number, halve_times: number) => {
-  let valid_rolls = mapRange(maximum - minimum + 1, value => value + 1)
+  let valid_rolls = mapRange(maximum - minimum + 1, value => value + minimum)
   for (let i = 0; i < halve_times; i++) {
     const length = valid_rolls.length
     if (length % 2)
@@ -221,7 +220,6 @@ const calculateResourceLoss = (frontline: CombatFrontline, defeated: CombatDefea
   for (let i = 0; i < defeated.length; i++) {
     const unit = defeated[i]
     const unit_cost = amount * unit.definition[UnitAttribute.Cost]
-    console.log(unit.definition[UnitAttribute.Cost])
     if (unit.state.is_destroyed) {
       own.destroyedCost += unit_cost
       continue
