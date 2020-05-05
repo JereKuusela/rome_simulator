@@ -73,3 +73,22 @@ code {
 .small-input {
   width: 55px;
 }
+
+.ui.table tbody tr td.selectable {
+  padding: .78571429em .78571429em
+}
+
+
+.ui.table tbody tr td.selectable .absolute {
+  position: absolute;
+  margin-top: -5px;
+  min-width: 180px;
+  max-width: 180px;
+  max-height: 1em;
+  white-space: nowrap;
+}
+
+.ui.table tbody tr td.selectable .absolute > .text {
+  width: 100%;
+  overflow: hidden;
+}

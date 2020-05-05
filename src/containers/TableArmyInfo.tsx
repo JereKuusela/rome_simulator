@@ -2,18 +2,19 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table, Input } from 'semantic-ui-react'
 
-import { SideType, CountryName, Setting, General, GeneralAttribute, GeneralValueType, Mode, UnitType, CountryAttribute, CultureType, ArmyName } from 'types'
+import { SideType, CountryName, Setting, General, GeneralAttribute, GeneralValueType, CountryAttribute, ArmyName, UnitAttribute, isAttributeEnabled, filterAttributes } from 'types'
 import { keys } from 'utils'
-import { AppState, getCountry, getParticipant, getGeneral, getCountries, getUnit, getMode, getSiteSettings, getArmies } from 'state'
-import { selectParticipantCountry, selectParticipantArmy, selectCulture, setGeneralAttribute } from 'reducers'
+import { AppState, getCountry, getParticipant, getGeneral, getCountries, getMode, getSiteSettings, getArmies, getUnits } from 'state'
+import { selectParticipantCountry, selectParticipantArmy, setGeneralAttribute } from 'reducers'
 import Dropdown from 'components/Dropdowns/Dropdown'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TacticSelector from './TacticSelector'
-import { getCultures } from 'data'
 import { addSign } from 'formatters'
 import CountryValueInput from './CountryValueInput'
 import { filterArmies } from 'managers/countries'
-import OverflowGuard from 'components/Utils/OverflowGuard'
+import AttributeImage from 'components/Utils/AttributeImage'
+import UnitValueInput from './UnitValueInput'
+import { getRootUnit } from 'managers/army'
 
 type Props = {
   type: SideType
@@ -21,56 +22,69 @@ type Props = {
 
 class TableArmyInfo extends Component<IProps> {
 
+  getAttributes = () => {
+    if (process.env.REACT_APP_GAME === 'euiv')
+      return [UnitAttribute.Morale, UnitAttribute.Discipline]
+    else {
+      return []
+    }
+  }
+
   render() {
     const { settings } = this.props
     return (
-      <OverflowGuard>
-        <Table celled unstackable>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>
-                Country
+      <Table celled>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>
+              Country
             </Table.HeaderCell>
-              <Table.HeaderCell>
-                Army
+            <Table.HeaderCell>
+              Army
             </Table.HeaderCell>
-              {
-                settings[Setting.Martial] &&
-                <Table.HeaderCell collapsing>
-                  General skill
+            {
+              settings[Setting.Martial] &&
+              <Table.HeaderCell collapsing>
+                General skill
               </Table.HeaderCell>
-              }
-              {
-                settings[Setting.Tactics] &&
-                <Table.HeaderCell>
-                  Tactic
+            }
+            {
+              settings[Setting.Tactics] &&
+              <Table.HeaderCell>
+                Tactic
               </Table.HeaderCell>
-              }
-              {
-                settings[Setting.Tech] &&
-                <Table.HeaderCell>
-                  Tech
+            }
+            {
+              settings[Setting.Tech] &&
+              <Table.HeaderCell>
+                Tech
               </Table.HeaderCell>
-              }
-              {
-                settings[Setting.Culture] &&
-                <Table.HeaderCell>
-                  Culture
+            }
+            {
+              filterAttributes(this.getAttributes(), settings).map(attribute => (
+                <Table.HeaderCell key={attribute}>
+                  <AttributeImage attribute={attribute} settings={settings} />
+                </Table.HeaderCell>
+              ))
+            }
+            {
+              isAttributeEnabled(CountryAttribute.FlankRatio, settings) &&
+              <Table.HeaderCell >
+                <AttributeImage attribute={CountryAttribute.FlankRatio} settings={settings} />
               </Table.HeaderCell>
-              }
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {this.renderArmyInfo()}
-          </Table.Body>
-        </Table>
-      </OverflowGuard>
+            }
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {this.renderArmyInfo()}
+        </Table.Body>
+      </Table>
     )
   }
 
 
   renderArmyInfo = () => {
-    const { settings, selectParticipantArmy, selectParticipantCountry, countries, mode, type, participant, armies, general, country } = this.props
+    const { settings, selectParticipantArmy, selectParticipantCountry, countries, mode, type, participant, armies, general, unit } = this.props
     return (
       <Table.Row key={type}>
         <Table.Cell collapsing>
@@ -103,14 +117,16 @@ class TableArmyInfo extends Component<IProps> {
           </Table.Cell>
         }
         {
-          settings[Setting.Culture] &&
-          <Table.Cell collapsing>
-            <Dropdown
-              values={getCultures()}
-              value={country.culture}
-              onChange={item => this.selectCulture(participant.country, item)}
-              style={{ width: 150 }}
-            />
+          filterAttributes(this.getAttributes(), settings).map(attribute => (
+            <Table.Cell key={attribute}>
+              <UnitValueInput unit={unit} attribute={attribute} country={participant.country} percent />
+            </Table.Cell>
+          ))
+        }
+        {
+          isAttributeEnabled(CountryAttribute.FlankRatio, settings) &&
+          <Table.Cell>
+            <CountryValueInput attribute={CountryAttribute.FlankRatio} country={participant.country} percent />
           </Table.Cell>
         }
       </Table.Row >
@@ -123,11 +139,6 @@ class TableArmyInfo extends Component<IProps> {
       {' '}<StyledNumber value={general.extra_values[attribute]} formatter={addSign} hide_zero />
     </Table.Cell>
   )
-
-  selectCulture = (country: CountryName, culture: CultureType) => {
-    const { selectCulture } = this.props
-    selectCulture(country, culture, false)
-  }
 }
 
 const mapStateToProps = (state: AppState, props: Props) => {
@@ -138,13 +149,13 @@ const mapStateToProps = (state: AppState, props: Props) => {
     country: getCountry(state, participant.country),
     countries: getCountries(state),
     armies: getArmies(state, participant.country),
-    unit: getUnit(state, getMode(state) === Mode.Naval ? UnitType.Naval : UnitType.Land, participant.country, participant.army),
+    unit: getRootUnit(getUnits(state, participant.country, participant.army), getMode(state)),
     settings: getSiteSettings(state),
     mode: getMode(state)
   }
 }
 
-const actions = { selectParticipantCountry, selectParticipantArmy, selectCulture, setGeneralAttribute }
+const actions = { selectParticipantCountry, selectParticipantArmy, setGeneralAttribute }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
