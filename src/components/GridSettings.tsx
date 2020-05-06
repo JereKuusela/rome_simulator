@@ -9,7 +9,6 @@ import { getDefaultLandSettings, getDefaultSiteSettings } from 'data'
 type Values = string | number | boolean
 
 type IProps<T extends Setting> = {
-  key?: SimulationSpeed
   settings: { [key in T]: Values }
   onChange: (key: T, str: Values) => void
 }
@@ -22,9 +21,9 @@ export default class GridSettings<T extends Setting> extends Component<IProps<T>
   headers = ['Attribute', 'Value', 'Custom value', 'Explained']
 
   render() {
-    const { settings, onChange, key } = this.props
+    const { settings, onChange } = this.props
     return (
-      <Grid padded celled key={key}>
+      <Grid padded celled>
         <Grid.Row columns='2'>
           {
             toArr(settings, (value, key) => {

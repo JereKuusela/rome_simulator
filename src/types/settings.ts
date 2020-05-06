@@ -13,7 +13,7 @@ export enum Setting {
   MinimumStrength = 'Minimum strength for combat',
   DamageLossForMissingMorale = 'Damage loss for missing morale',
   MoraleHitForNonSecondaryReinforcement = 'Morale damage for non-secondary reinforcements',
-  RollFrequency = 'Length of combat phases',
+  PhaseLength = 'Length of combat phases',
   Precision = 'Calculation precision',
   CombatWidth = 'Base combat width',
   DefenderAdvantage = 'Defender\'s advantage',
@@ -56,8 +56,8 @@ export enum Setting {
   AttributeUnitType = 'Enable unit type based attributes',
   MoraleDamageBasedOnTargetStrength = 'Enable morale damaged based on target strength',
   Performance = 'Performance',
-  MaxDepth = 'Maximum depth',
-  PhaseLengthMultiplier = 'Multiplier for phase length',
+  MaxPhases = 'Maximum phases',
+  PhasesPerRoll = 'Amount of phases affected by each dice roll',
   ChunkSize = 'Chunk size',
   CalculateWinChance = 'Calculate win chance',
   CalculateCasualties = 'Calculate casualties',
@@ -216,7 +216,7 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
       return 'Amount of morale lost each round (EUIV).'
     case Setting.DailyDamageIncrease:
       return 'How much damage increases every round (EUIV).'
-    case Setting.RollFrequency:
+    case Setting.PhaseLength:
       return 'How often dice rolls and phases change.'
     case Setting.InsufficientSupportPenalty:
       return 'How much damage taken is increased for having too many flanking units (EUIV).'
@@ -290,9 +290,9 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Unit types may increase or decrease damage done (Imperator).'
       else
         return 'Unit types are ignored (EUIV).'
-    case Setting.MaxDepth:
+    case Setting.MaxPhases:
       return 'How many phases are simulated.\nIncrease for higher accuracy and less incomplete rounds.\nDecrease forg faster speed.'
-    case Setting.PhaseLengthMultiplier:
+    case Setting.PhasesPerRoll:
       return 'Scales length of phases.\nIncrease for faster speed and less incomplete rounds.\nDecrease for higher accuracy.'
     case Setting.ChunkSize:
       return 'How many battles are simulated in a row. Higher values slightly increase performance but make the UI less responsive.'
@@ -346,7 +346,7 @@ export type SiteSettings = {
   [Setting.MinimumStrength]: number,
   [Setting.MoraleHitForNonSecondaryReinforcement]: number,
   [Setting.MinimumMorale]: number,
-  [Setting.RollFrequency]: number,
+  [Setting.PhaseLength]: number,
   [Setting.FixTargeting]: boolean,
   [Setting.DynamicTargeting]: boolean,
   [Setting.FixFlankTargeting]: boolean,
@@ -354,8 +354,8 @@ export type SiteSettings = {
   [Setting.FixExperience]: boolean,
   [Setting.Precision]: number,
   [Setting.ChunkSize]: number,
-  [Setting.MaxDepth]: number,
-  [Setting.PhaseLengthMultiplier]: number,
+  [Setting.MaxPhases]: number,
+  [Setting.PhasesPerRoll]: number,
   [Setting.ShowGraphs]: boolean,
   [Setting.BackRow]: boolean,
   [Setting.BackRowRetreat]: boolean,

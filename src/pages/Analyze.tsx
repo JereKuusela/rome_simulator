@@ -38,7 +38,7 @@ const DOTS = 6
 const simulationSpeeds = values(SimulationSpeed)
 
 const attributes = [
-  Setting.PhaseLengthMultiplier, Setting.ReduceRolls, Setting.MaxDepth, Setting.ChunkSize
+  Setting.PhasesPerRoll, Setting.ReduceRolls, Setting.MaxPhases, Setting.ChunkSize
 ]
 /**
  * Calculates win rate for the current battle.

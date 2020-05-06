@@ -68,7 +68,16 @@ export const getCombatPhase = (round: number, settings: SiteSettings) => {
   return CombatPhase.Default
 }
 
-export const getCombatPhaseNumber = (round: number, settings: SiteSettings) => Math.ceil(round / settings[Setting.RollFrequency])
+export const getCombatPhaseByPhaseNumber = (phase: number, settings: SiteSettings) => {
+  if (settings[Setting.FireAndShock]) {
+    if (phase)
+      return phase % 2 ? CombatPhase.Fire : CombatPhase.Shock
+  }
+  return CombatPhase.Default
+}
+
+
+export const getCombatPhaseNumber = (round: number, settings: SiteSettings) => Math.ceil(round / settings[Setting.PhaseLength])
 
 export const getDailyIncrease = (round: number, settings: SiteSettings) => settings[Setting.DailyDamageIncrease] * round
 

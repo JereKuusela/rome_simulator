@@ -7,8 +7,8 @@ export const changeCombatParameter = (settings: SettingsAndOptions, mode: Mode, 
 
 export const changeSiteParameter = (settings: SettingsAndOptions, key: keyof SiteSettings, value: number | boolean | string) => {
   if (key === Setting.Performance && typeof value === 'string' && speedValues[value]) {
-    settings.siteSettings[Setting.PhaseLengthMultiplier] = speedValues[value][0]
-    settings.siteSettings[Setting.MaxDepth] = speedValues[value][1]
+    settings.siteSettings[Setting.PhasesPerRoll] = speedValues[value][0]
+    settings.siteSettings[Setting.MaxPhases] = speedValues[value][1]
     settings.siteSettings[Setting.ReduceRolls] = speedValues[value][2]
   }
   settings.siteSettings[key] = value as never

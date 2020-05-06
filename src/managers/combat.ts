@@ -26,7 +26,7 @@ const subBattle = (state: AppState, battle: Battle, attacker: CombatParticipant,
   battle.timestamp = new Date().getMilliseconds()
   const minimum_roll = settings[Setting.DiceMinimum]
   const maximum_roll = settings[Setting.DiceMaximum]
-  const roll_frequency = settings[Setting.RollFrequency]
+  const roll_frequency = settings[Setting.PhaseLength]
   // Regenerate seed for the first roll (undo resets it when going back to deployment).
   if (battle.round + steps > 0 && !battle.seed)
     battle.seed = battle.custom_seed ?? Math.abs(createEntropy(undefined, 1)[0])

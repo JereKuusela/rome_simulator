@@ -46,7 +46,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.MaxGeneral]: 6,
       [Setting.DiceMinimum]: 0,
       [Setting.DiceMaximum]: 9,
-      [Setting.RollFrequency]: 3,
+      [Setting.PhaseLength]: 3,
       [Setting.RetreatRounds]: 12,
       [Setting.StackwipeRounds]: 12,
       [Setting.Stackwipe]: true,
@@ -96,9 +96,9 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.DamageLossForMissingMorale]: 0,
       // Analyze
       [Setting.Performance]: SimulationSpeed.Fast,
-      [Setting.ChunkSize]: 10000,
-      [Setting.MaxDepth]: speedValues[SimulationSpeed.Fast][1],
-      [Setting.PhaseLengthMultiplier]: speedValues[SimulationSpeed.Fast][0],
+      [Setting.ChunkSize]: 1000,
+      [Setting.MaxPhases]: speedValues[SimulationSpeed.Fast][1],
+      [Setting.PhasesPerRoll]: speedValues[SimulationSpeed.Fast][0],
       [Setting.ReduceRolls]: speedValues[SimulationSpeed.Fast][2],
       [Setting.CalculateWinChance]: true,
       [Setting.CalculateCasualties]: true,
@@ -113,7 +113,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.MaxGeneral]: 100,
       [Setting.DiceMinimum]: 1,
       [Setting.DiceMaximum]: 6,
-      [Setting.RollFrequency]: 5,
+      [Setting.PhaseLength]: 5,
       [Setting.RetreatRounds]: 0,
       [Setting.StackwipeRounds]: 5,
       [Setting.Stackwipe]: true,
@@ -134,9 +134,9 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.StrengthBasedFlank]: false,
       [Setting.SupportPhase]: true,
       [Setting.Precision]: 5,
-      [Setting.ChunkSize]: 10000,
-      [Setting.MaxDepth]: speedValues[SimulationSpeed.Fast][1],
-      [Setting.PhaseLengthMultiplier]: speedValues[SimulationSpeed.Fast][0],
+      [Setting.ChunkSize]: 1000,
+      [Setting.MaxPhases]: speedValues[SimulationSpeed.Fast][1],
+      [Setting.PhasesPerRoll]: speedValues[SimulationSpeed.Fast][0],
       [Setting.Performance]: SimulationSpeed.Fast,
       [Setting.ReduceRolls]: speedValues[SimulationSpeed.Fast][2],
       [Setting.CalculateWinChance]: true,
@@ -176,16 +176,16 @@ export const getDefaultSiteSettings = (): SiteSettings => {
 
 export const speedValues: { [key: string]: number[] } = process.env.REACT_APP_GAME === 'euiv' ?
   {
-    [SimulationSpeed.VeryAccurate]: [1.0, 15, 1],
-    [SimulationSpeed.Accurate]: [1.0, 15, 2],
-    [SimulationSpeed.Normal]: [1.0, 10, 2],
-    [SimulationSpeed.Fast]: [1.0, 15, 3],
-    [SimulationSpeed.VeryFast]: [1.0, 10, 3]
+    [SimulationSpeed.VeryAccurate]: [1, 10, 0],
+    [SimulationSpeed.Accurate]: [1, 10, 1],
+    [SimulationSpeed.Normal]: [2, 10, 1],
+    [SimulationSpeed.Fast]: [2, 10, 2],
+    [SimulationSpeed.VeryFast]: [2, 10, 3]
   } :
   {
-    [SimulationSpeed.VeryAccurate]: [1.0, 5, 0],
-    [SimulationSpeed.Accurate]: [1.0, 4, 0],
-    [SimulationSpeed.Normal]: [1.5, 4, 0],
-    [SimulationSpeed.Fast]: [2.0, 4, 0],
-    [SimulationSpeed.VeryFast]: [3.0, 3, 1]
+    [SimulationSpeed.VeryAccurate]: [1, 6, 0],
+    [SimulationSpeed.Accurate]: [1, 6, 0],
+    [SimulationSpeed.Normal]: [2, 6, 0],
+    [SimulationSpeed.Fast]: [2, 6, 1],
+    [SimulationSpeed.VeryFast]: [2, 6, 2]
   }

@@ -14,6 +14,12 @@ UI:
 Refactor
  * Side and participant separated. Side now contains multiple participants.
 
+Analyze
+ * Phase length multiplier setting changed to phases per roll setting. The effect is similar but also works with EUIV fire and shock phases.
+ * Preset performance setting updated to work with the new setting (EUIV works now much faster).
+ * Max rounds for each preset changed to 30. This should be more than enough for full combat width battles.
+
+
 Todo: 
 
 Multiarmy:

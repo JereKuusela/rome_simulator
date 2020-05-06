@@ -53,7 +53,7 @@ class Navigation extends Component<IProps> {
                 <Image src={IconNaval} avatar style={{ marginRight: 0 }} />
               </Button>
             }
-            <div id='version'><div>Site version 0.7.1</div><div>Game version {process.env.REACT_APP_GAME === 'ir' ? '1.4.2' : '1.29.6'}</div></div>
+            <div id='version'><div>Site version 0.7.2</div><div>Game version {process.env.REACT_APP_GAME === 'ir' ? '1.4.2' : '1.29.6'}</div></div>
           </div>
         </Menu>
         <br />

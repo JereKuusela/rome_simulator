@@ -49,13 +49,14 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
     lossesD: losses_d
   }
 
-  // Performance is critical. Precalculate as many things as possible.
+  //// Performance is critical. Precalculate as many things as possible.
   const rolls = getRolls(settings[Setting.DiceMinimum], settings[Setting.DiceMaximum], settings[Setting.ReduceRolls])
+  //const debugRolls = Array<number>(settings[Setting.DiceMaximum] + 1).fill(0)
   const dice_2 = rolls.length
-  const phaseLength = Math.floor(settings[Setting.RollFrequency] * settings[Setting.PhaseLengthMultiplier])
+  const phasesPerRoll = Math.floor(settings[Setting.PhasesPerRoll])
   const chunkSize = settings[Setting.ChunkSize]
-  const maxDepth = settings[Setting.MaxDepth]
-  const fractions = mapRange(maxDepth + 1, value => 1.0 / Math.pow(dice_2, value))
+  const maxPhase = settings[Setting.MaxPhases]
+  const fractions = mapRange(maxPhase + 1, value => 1.0 / Math.pow(dice_2, value))
 
   const total_a: State = { morale: 0, strength: 0 }
   const current_a: State = { morale: 0, strength: 0 }
@@ -93,7 +94,7 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
   // Nodes know their depth which determines their weight for win rate.
 
   // Nodes also cache state of units, only store what is absolutely necessary.
-  const nodes = [{ status_a: attacker.cohorts, status_d: defender.cohorts, branch: 0, depth: 1 }]
+  const nodes = [{ status_a: attacker.cohorts, status_d: defender.cohorts, branch: 0, phase: 1, merged: 0 }]
 
   progressCallback(progress, casualties, resurce_losses)
 
@@ -108,37 +109,50 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
       const [roll_a, roll_d] = rolls[node.branch]
       attacker.dice = roll_a
       defender.dice = roll_d
+      //debugRolls[roll_a]++
       attacker.cohorts = cohorts_a
       defender.cohorts = cohorts_d
-      let result = doPhase(node.depth, phaseLength, attacker, defender, settings)
+      let result = doPhase(node.phase, attacker, defender, settings)
+
+      let phase = node.phase
+      let merged = node.merged
+      let branch = node.branch
 
       node.branch++
       if (node.branch === dice_2)
         nodes.pop()
-
-      let depth = node.depth
-      while (result.winner === undefined && depth < maxDepth) {
-        depth++
+      while (result.winner === undefined && phase < maxPhase) {
+        let doBranch = true
+        if (phase % phasesPerRoll === 1) {
+          doBranch = false
+        }
+        phase++
         // Current node will be still used so the cache must be deep cloned.  
         // Branch starts at 1 because the current execution is 0.
-        if (dice_2 > 1)
-          nodes.push({ status_a: copyStatus(cohorts_a), status_d: copyStatus(cohorts_d), branch: 1, depth })
-        const [roll_a, roll_d] = rolls[0]
+        if (doBranch && dice_2 > 1) {
+          branch = 0
+          nodes.push({ status_a: copyStatus(cohorts_a), status_d: copyStatus(cohorts_d), branch: 1, phase, merged })
+        }
+        else
+          merged++
+        const [roll_a, roll_d] = rolls[branch]
         attacker.dice = roll_a
         defender.dice = roll_d
+        //debugRolls[roll_a]++
         attacker.cohorts = cohorts_a
         defender.cohorts = cohorts_d
-        result = doPhase(depth, phaseLength, attacker, defender, settings)
+        result = doPhase(phase, attacker, defender, settings)
       }
       sumState(current_a, attacker.cohorts)
       sumState(current_d, defender.cohorts)
+      const fraction = phase - merged
       if (settings[Setting.CalculateCasualties])
-        updateCasualties(casualties, fractions[depth], total_a, total_d, current_a, current_d)
+        updateCasualties(casualties, fractions[fraction], total_a, total_d, current_a, current_d)
       if (settings[Setting.CalculateResourceLosses]) {
-        calculateResourceLoss(attacker.cohorts.frontline, attacker.cohorts.defeated, fractions[depth], losses_a, losses_d, attacker.unit_types, defender.unit_types)
-        calculateResourceLoss(defender.cohorts.frontline, defender.cohorts.defeated, fractions[depth], losses_d, losses_a, defender.unit_types, attacker.unit_types)
+        calculateResourceLoss(attacker.cohorts.frontline, attacker.cohorts.defeated, fractions[fraction], losses_a, losses_d, attacker.unit_types, defender.unit_types)
+        calculateResourceLoss(defender.cohorts.frontline, defender.cohorts.defeated, fractions[fraction], losses_d, losses_a, defender.unit_types, attacker.unit_types)
       }
-      updateProgress(progress, fractions[depth], result, current_a.strength === 0 || current_d.strength === 0)
+      updateProgress(progress, fractions[fraction], result, current_a.strength === 0 || current_d.strength === 0)
     }
     if (!nodes.length) {
       progress.calculating = false
@@ -249,11 +263,13 @@ type Winner = SideType | null | undefined
 /**
  * Simulates one dice roll phase.
  */
-const doPhase = (depth: number, rounds_per_phase: number, attacker: CombatParticipant, defender: CombatParticipant, settings: Settings) => {
+const doPhase = (phase: number, attacker: CombatParticipant, defender: CombatParticipant, settings: Settings) => {
   let winner: Winner = undefined
-  let round = 1
-  for (; round <= rounds_per_phase; round++) {
-    doBattle(attacker, defender, false, settings, round + (depth - 1) * rounds_per_phase)
+  const phaseLength = settings[Setting.PhaseLength]
+  const maxRound = phase * phaseLength
+  let round = (phase - 1) * phaseLength + 1
+  for (; round <= maxRound; round++) {
+    doBattle(attacker, defender, false, settings, round)
     if (!attacker.alive && !defender.alive)
       winner = null
     else if (!attacker.alive)
@@ -261,10 +277,12 @@ const doPhase = (depth: number, rounds_per_phase: number, attacker: CombatPartic
     else if (!defender.alive)
       winner = SideType.Attacker
     // Custom check to prevent round going over phase limit.
-    if (winner !== undefined || round === rounds_per_phase)
+    if (winner !== undefined || round === maxRound)
       break
   }
-  return { winner, round: round + (depth - 1) * rounds_per_phase }
+  if (round > maxRound)
+    console.log('danger')
+  return { winner, round }
 }
 
 type State = {
