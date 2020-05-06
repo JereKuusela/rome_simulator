@@ -1,4 +1,4 @@
-import { SettingsAndOptions, CombatSettings, SiteSettings, Setting, SimulationSpeed, Mode, CountryName } from "types"
+import { SettingsAndOptions, CombatSettings, SiteSettings, Setting, Mode, CountryName } from "types"
 import { speedValues } from "data"
 
 export const changeCombatParameter = (settings: SettingsAndOptions, mode: Mode, key: keyof CombatSettings, value: number | boolean | string) => {
@@ -10,9 +10,6 @@ export const changeSiteParameter = (settings: SettingsAndOptions, key: keyof Sit
     settings.siteSettings[Setting.PhaseLengthMultiplier] = speedValues[value][0]
     settings.siteSettings[Setting.MaxDepth] = speedValues[value][1]
     settings.siteSettings[Setting.ReduceRolls] = speedValues[value][2]
-  }
-  if (key === Setting.PhaseLengthMultiplier || key === Setting.MaxDepth) {
-    settings.siteSettings[Setting.Performance] = SimulationSpeed.Custom
   }
   settings.siteSettings[key] = value as never
 }

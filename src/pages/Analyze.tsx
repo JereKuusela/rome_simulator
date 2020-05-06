@@ -4,7 +4,7 @@ import { Grid, Button, Table, Header, Checkbox } from 'semantic-ui-react'
 
 import { AppState, getSettings, getMode, initializeCombatParticipants, getSiteSettings } from 'state'
 import { interrupt, calculateWinRate, initResourceLosses } from 'combat'
-import { values, showProgress } from 'utils'
+import { values, showProgress, filterKeys } from 'utils'
 import { SimulationSpeed, Setting, Mode, CasualtiesProgress, ResourceLosses, WinRateProgress, ResourceLossesProgress } from 'types'
 import { toPercent, toNumber, toFlooredPercent } from 'formatters'
 import SimpleRange from 'components/SimpleRange'
@@ -12,6 +12,8 @@ import RoundChart from 'components/Charts/RoundChart'
 import CumulativePercentChart from 'components/Charts/CumulativePercentChart'
 import { changeSiteParameter, refreshBattle } from 'reducers'
 import HelpTooltip from 'components/HelpTooltip'
+import AccordionToggle from 'containers/AccordionToggle'
+import GridSettings from 'components/GridSettings'
 
 interface Props { }
 
@@ -35,6 +37,9 @@ const DOTS = 6
 
 const simulationSpeeds = values(SimulationSpeed)
 
+const attributes = [
+  Setting.PhaseLengthMultiplier, Setting.ReduceRolls, Setting.MaxDepth, Setting.ChunkSize
+]
 /**
  * Calculates win rate for the current battle.
  */
@@ -125,15 +130,26 @@ class Analyze extends Component<IProps, IState> {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-        {settings[Setting.CalculateWinChance] && this.renderWinchance()}
+        {settings[Setting.CalculateWinChance] && this.renderWinChance()}
         {settings[Setting.CalculateResourceLosses] && mode === Mode.Naval && this.renderResourceLosses()}
         {settings[Setting.CalculateCasualties] && this.renderCasualties()}
         {settings[Setting.ShowGraphs] && this.renderGraphs()}
+        <br />
+        <AccordionToggle title='Settings' identifier='AnalyzeSettings' open>
+          <GridSettings key={settings[Setting.Performance]} settings={filterKeys(settings, setting => attributes.includes(setting))} onChange={this.changeAnalyzeParameter} />
+          <br /><br />
+        </AccordionToggle>
       </>
     )
   }
 
-  renderWinchance = () => {
+  changeAnalyzeParameter = (key: any, value: string | number | boolean) => {
+    const { changeSiteParameter } = this.props
+    changeSiteParameter(Setting.Performance, SimulationSpeed.Custom)
+    changeSiteParameter(key, value)
+  }
+
+  renderWinChance = () => {
     const { attackerWinChance, defenderWinChance, incomplete, draws, averageRounds, stackWipes } = this.state
     return (
       <Table>

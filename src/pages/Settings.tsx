@@ -1,24 +1,17 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Grid, Input, Table, Header, Checkbox, Tab } from 'semantic-ui-react'
+import { Tab } from 'semantic-ui-react'
 
 import { AppState, getMode } from 'state'
 
-import Dropdown from 'components/Dropdowns/Dropdown'
-import { toArr, keys, values, filterKeys } from 'utils'
-import { Mode, Setting, parameterToDescription, SimulationSpeed, SiteSettings, DisciplineValue } from 'types'
+import { keys, filterKeys } from 'utils'
+import { Mode, Setting, SiteSettings } from 'types'
 import { changeCombatParameter, changeSiteParameter } from 'reducers'
-import { getDefaultSiteSettings, getDefaultLandSettings } from 'data'
 import Transfer from 'containers/Transfer'
+import GridSettings from 'components/GridSettings'
 
 interface Props { }
 
-type Values = string | number | boolean
-
-const analyze = [
-  Setting.Performance, Setting.PhaseLengthMultiplier, Setting.ReduceRolls, Setting.MaxDepth, Setting.ChunkSize, Setting.ShowGraphs,
-  Setting.CalculateWinChance, Setting.CalculateCasualties, Setting.CalculateResourceLosses
-]
 const deployment = [Setting.CustomDeployment, Setting.DynamicFlanking, Setting.MoraleHitForNonSecondaryReinforcement, Setting.SupportPhase]
 const mechanics = [
   Setting.FireAndShock, Setting.StrengthBasedFlank, Setting.UseMaxMorale, Setting.InsufficientSupportPenalty, Setting.RollFrequency, Setting.CombatWidth,
@@ -38,14 +31,11 @@ const attributes = [
   Setting.AttributeDiscipline
 ]
 
-const defaultSettings = { ...getDefaultLandSettings(), ...getDefaultSiteSettings() }
-
 class Settings extends Component<IProps> {
 
   render() {
     const { combatSettings } = this.props
     const panes = [
-      this.getMenuItem('Analyze', analyze),
       this.getMenuItem('Attributes', attributes),
       this.getMenuItem('Damage', damage),
       this.getMenuItem('Deployment', deployment),
@@ -63,7 +53,7 @@ class Settings extends Component<IProps> {
     const { siteSettings } = this.props
     return {
       menuItem: key,
-      render: () => this.renderSiteSettings(key, siteSettings, attributes)
+      render: () => this.renderSiteSettings(siteSettings, attributes)
     }
   }
 
@@ -85,99 +75,18 @@ class Settings extends Component<IProps> {
     const { combatSettings, changeCombatParameter } = this.props
     return (
       <Tab.Pane style={{ padding: 0 }}>
-        {this.renderRow(Mode.Land, combatSettings[Mode.Land], (key, str) => changeCombatParameter(Mode.Land, key, str))}
-        {this.renderRow(Mode.Naval, combatSettings[Mode.Naval], (key, str) => changeCombatParameter(Mode.Naval, key, str))}
+        <GridSettings settings={combatSettings[Mode.Land]} onChange={(key, str) => changeCombatParameter(Mode.Land, key, str)} />
+        <GridSettings settings={combatSettings[Mode.Naval]} onChange={(key, str) => changeCombatParameter(Mode.Naval, key, str)} />
       </Tab.Pane>
     )
   }
 
-  renderSiteSettings = (key: string, settings: SiteSettings, attributes: Setting[]) => {
+  renderSiteSettings = (settings: SiteSettings, attributes: Setting[]) => {
     return (
       <Tab.Pane style={{ padding: 0 }}>
-        {this.renderRow(key, filterKeys(settings, setting => attributes.includes(setting)), this.props.changeSiteParameter)}
+        <GridSettings settings={filterKeys(settings, setting => attributes.includes(setting))} onChange={this.props.changeSiteParameter} />
       </Tab.Pane>
     )
-  }
-
-  renderRow = <T extends Setting>(key: string, settings: { [key in T]: Values }, onChange: (key: T, str: Values) => void) => (
-    <Grid padded celled key={key}>
-      <Grid.Row columns='2'>
-        {
-          toArr(settings, (value, key) => {
-            return (
-              <Grid.Column key={key}>
-                <Table basic='very'>
-                  <Table.Body>
-                    <Table.Row>
-                      <Table.Cell collapsing style={{ width: 100 }} textAlign='center' >
-                        {this.renderSetting(key, value, onChange)}
-                      </Table.Cell>
-                      <Table.Cell key={key + '_description'} style={{ whiteSpace: 'pre-line' }} >
-                        <Header size='tiny'>{key}</Header>
-                        {parameterToDescription(key, value)}
-                      </Table.Cell>
-                    </Table.Row>
-                  </Table.Body>
-                </Table>
-              </Grid.Column>
-            )
-          })
-        }
-        {
-          toArr(settings).length % 2 ? <Grid.Column /> : null
-        }
-      </Grid.Row>
-    </Grid>
-  )
-
-  renderSetting = <T extends Setting>(key: T, value: Values, onChange: (key: T, str: Values) => void) => {
-    if (typeof value === 'number') {
-      return (
-        <Input
-          size='mini'
-          style={{ width: 60 }}
-          defaultValue={value}
-          placeholder={defaultSettings[key]}
-          onChange={(_, { value }) => this.onInputChange(key, value, onChange)}
-        />
-      )
-    }
-    if (typeof value === 'boolean') {
-      return (
-        <Checkbox
-          checked={value}
-          onChange={(_, { checked }) => onChange(key, !!checked)}
-        />
-      )
-    }
-    if (key === Setting.Performance) {
-      return (
-        <Dropdown
-          value={value}
-          style={{ width: 100 }}
-          values={values(SimulationSpeed)}
-          onChange={value => onChange(key, value)}
-        />
-      )
-    }
-    if (key === Setting.AttributeDiscipline) {
-      return (
-        <Dropdown
-          value={value}
-          style={{ width: 200 }}
-          values={values(DisciplineValue)}
-          onChange={value => onChange(key, value)}
-        />
-      )
-    }
-    return null
-  }
-
-  onInputChange = <T extends Setting>(key: T, str: string, onChange: (key: T, value: number) => void) => {
-    const value = str.length ? +str : Number(defaultSettings[key])
-    if (isNaN(value))
-      return
-    onChange(key, value)
   }
 }
 

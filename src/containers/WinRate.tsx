@@ -45,7 +45,7 @@ class WinRate extends Component<IProps, IState> {
   }
 
   render() {
-    const { attacker, defender, calculating, progress, updates } = this.state
+    const { attacker, defender, calculating, progress, updates, draws, incomplete } = this.state
     return (
       <Grid>
         <Grid.Row verticalAlign='middle'>
@@ -69,9 +69,9 @@ class WinRate extends Component<IProps, IState> {
                     <span>
                       <b>Win rate</b>
                       <br />
-                      <StyledNumber value={this.scale(attacker)} positive_color={ATTACKER_COLOR} neutral_color={ATTACKER_COLOR} formatter={this.toPercent} />
+                      <StyledNumber value={this.scale(attacker + draws / 2 + incomplete / 2)} positive_color={ATTACKER_COLOR} neutral_color={ATTACKER_COLOR} formatter={this.toPercent} />
                       {' / '}
-                      <StyledNumber value={this.scale(defender)} positive_color={DEFENDER_COLOR} neutral_color={DEFENDER_COLOR} formatter={this.toPercent} />
+                      <StyledNumber value={this.scale(defender + draws / 2 + incomplete / 2)} positive_color={DEFENDER_COLOR} neutral_color={DEFENDER_COLOR} formatter={this.toPercent} />
                     </span>
                   </Tooltip>
                 </Grid.Column>

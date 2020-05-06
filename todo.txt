@@ -8,6 +8,8 @@ UI:
  * Moved randomize dice checkbox and input for rng seed under dice extra settings (plus icon).
  * Moved morale and discipline inputs from army information component to unit information component.
  * Fixed terrain selector not showing the selection.
+ * Win rate now also includes draws and incomplete battles (so the total should always be 100%), the tooltip still separates them.
+ * Analyze settings moved from Settings page to Analyze page.
 
 Refactor
  * Side and participant separated. Side now contains multiple participants.
@@ -60,6 +62,11 @@ Todo:
  - Definition functions probably all could mutate (mostly used in reducers?)
  - Winrate could automatically set precision based on unit count (or some other heuristic like timing first batch).
   * Could also reduce amount of units if full combat (to reduce unnecessarily large battles).
+ - Analyze width compress:
+  * Deploy, check that all units have same type, fight one round, check that all units have same strength/morale -> can be simulated 1v1.
+  * Do above until units run out -> Amount of possible 1v1.
+  * Improves performance up to 30x.
+  * Similar thing could also be done for left and right side (but only 2x performance and flanking/movement needs special implementation.
  - Save import to load battles and automatically import participants (sets those armies active and sets correct round value).
  - A button for random setup
 
