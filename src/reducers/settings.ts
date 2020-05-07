@@ -4,12 +4,12 @@ import { makeActionRemoveFirst, makeContainerReducer, ActionToFunction } from '.
 import { SettingsAndOptions } from 'types'
 import { getDefaultSettings } from 'data'
 
-const actionToFunction: ActionToFunction<SettingsAndOptions> = {}
+const mapping: ActionToFunction<SettingsAndOptions> = {}
 
-export const changeCombatParameter = makeActionRemoveFirst(manager.changeCombatParameter, actionToFunction)
-export const changeSiteParameter = makeActionRemoveFirst(manager.changeSiteParameter, actionToFunction)
-export const selectCountry = makeActionRemoveFirst(manager.selectCountry, actionToFunction)
-export const selectArmy = makeActionRemoveFirst(manager.selectArmy, actionToFunction)
-export const setMode = makeActionRemoveFirst(manager.setMode, actionToFunction)
+export const changeCombatParameter = makeActionRemoveFirst(manager.changeCombatParameter, mapping)
+export const changeSiteParameter = makeActionRemoveFirst(manager.changeSiteParameter, mapping)
+export const selectCountry = makeActionRemoveFirst(manager.selectCountry, mapping)
+export const selectArmy = makeActionRemoveFirst(manager.selectArmy, mapping)
+export const setMode = makeActionRemoveFirst(manager.setMode, mapping)
 
-export const settingsReducer = makeContainerReducer(getDefaultSettings(), actionToFunction)
+export const settingsReducer = makeContainerReducer(getDefaultSettings(), mapping)

@@ -2,6 +2,7 @@ import { AppState, getMode, getCurrentCombat, getSettings, getCombatParticipant,
 import { deploy, doBattle, removeDefeated, getCombatPhaseNumber, armySize } from 'combat'
 import { Battle, SideType, Setting, Settings, CombatCohorts, CombatParticipant, Side } from 'types'
 import { createEntropy, MersenneTwister19937, Random } from 'random-js'
+import { forEach } from 'utils'
 
 const copyStatus = (status: CombatCohorts): CombatCohorts => ({
   frontline: status.frontline.map(row => row.map(value => value ? { ...value, state: { ...value.state } } : null)),
@@ -115,4 +116,22 @@ export const refreshBattle = (pair: [AppState, AppState]) => {
   battle.fight_over = false
   const [attacker, defender] = initializeCombatParticipants(state)
   subBattle(state, battle, attacker, defender, settings, steps)
+}
+
+export const undo = (pair: [AppState, AppState], steps: number) => {
+  const [state, draft] = pair
+  const mode = getMode(state)
+  const battle = draft.battle[mode]
+  for (let step = 0; step < steps && battle.round > -1; ++step) {
+    let seed: number = battle.seed
+    if (battle.round < 2)
+      seed = battle.custom_seed ? battle.custom_seed : 0
+    forEach(battle.sides, side => {
+      side.rounds.pop()
+    })
+    battle.round--
+    battle.seed = seed
+    battle.fight_over = false
+    battle.timestamp = new Date().getMilliseconds()
+  }
 }

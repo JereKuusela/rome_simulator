@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Dropdown as DropdownUI } from 'semantic-ui-react'
+import { Dropdown } from 'semantic-ui-react'
 
 interface IProps<T extends string | number> {
   value: T
@@ -12,7 +12,7 @@ interface IProps<T extends string | number> {
 }
 
 
-export default class Dropdown<T extends string | number> extends Component<IProps<T>> {
+export default class SimpleDropdown<T extends string | number> extends Component<IProps<T>> {
 
   getOptions = () => (
     this.props.values.map(item => {
@@ -24,9 +24,10 @@ export default class Dropdown<T extends string | number> extends Component<IProp
   )
 
   render() {
-    const { value, clearable, onChange, style, search, placeholder } = this.props
+    const { value, clearable, onChange, search, placeholder } = this.props
+    const style = this.props.style ?? { minWidth: 170, maxWidth: 170 }
     return (
-      <DropdownUI
+      <Dropdown
         className='selection'
         clearable={clearable}
         value={value}
@@ -38,7 +39,7 @@ export default class Dropdown<T extends string | number> extends Component<IProp
         options={this.getOptions()}
         placeholder={placeholder}
       >
-      </DropdownUI>
+      </Dropdown>
     )
   }
 }

@@ -50,6 +50,7 @@ export default class DropdownTactic extends Component<IProps> {
         onSelect={onSelect}
         trigger={<LabelItem item={values.find(tactic => tactic.type === value)} />}
         settings={settings}
+        width={150}
       />
     )
   }

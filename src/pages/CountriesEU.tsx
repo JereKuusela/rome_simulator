@@ -9,7 +9,7 @@ import { clearGeneralSelections, clearCountrySelections, clearCountryAttributes,
 
 import AccordionToggle from 'containers/AccordionToggle'
 import CountryManager from 'containers/CountryManager'
-import Dropdown from 'components/Dropdowns/Dropdown'
+import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 import TableAttributes from 'components/TableAttributes'
 import { getCultures, tech_euiv } from 'data'
 import CountryValueInput from 'containers/CountryValueInput'
@@ -32,7 +32,7 @@ class Countries extends Component<IProps> {
         <Grid>
           <Grid.Row columns='3'>
             <Grid.Column>
-              <Dropdown
+              <SimpleDropdown
                 values={getCultures()}
                 value={country.culture}
                 onChange={item => this.selectCulture(item)}

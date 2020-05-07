@@ -1,5 +1,5 @@
 import { Battle, TerrainType, SideType, CountryName, ArmyForCombatConversion, TerrainDefinition, Settings, TacticCalc, Setting, UnitPreferences, CombatPhase, CombatParticipant, Cohorts, UnitType, CombatCohorts, ArmyName } from "types"
-import { forEach, toArr, toObj, values, map } from "utils"
+import { toArr, toObj, values, map } from "utils"
 import { calculateGeneralPips, getTerrainPips, getUnitDefinition, getCombatUnit, sortReserve } from "combat"
 import { calculateValue } from "definition_values"
 
@@ -11,22 +11,6 @@ export const setSeed = (battle: Battle, seed: number) => {
   battle.custom_seed = seed || undefined
   battle.seed = seed
 }
-
-export const undo = (battle: Battle, steps: number) => {
-  for (let step = 0; step < steps && battle.round > -1; ++step) {
-    let seed: number = battle.seed
-    if (battle.round < 2)
-      seed = battle.custom_seed ? battle.custom_seed : 0
-    forEach(battle.sides, side => {
-      side.rounds.pop()
-    })
-    battle.round--
-    battle.seed = seed
-    battle.fight_over = false
-    battle.timestamp = new Date().getMilliseconds()
-  }
-}
-
 export const toggleRandomDice = (battle: Battle, sideType: SideType) => {
   const side = battle.sides[sideType]
   side.randomize_dice = !side.randomize_dice

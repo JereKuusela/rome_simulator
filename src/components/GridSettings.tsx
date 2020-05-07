@@ -3,7 +3,7 @@ import { Table, Grid, Checkbox, Header, Input } from 'semantic-ui-react'
 
 import { Setting, parameterToDescription, SimulationSpeed, DisciplineValue } from 'types'
 import { toArr, values } from 'utils'
-import Dropdown from './Dropdowns/Dropdown'
+import SimpleDropdown from './Dropdowns/SimpleDropdown'
 import { getDefaultLandSettings, getDefaultSiteSettings } from 'data'
 
 type Values = string | number | boolean
@@ -75,7 +75,7 @@ export default class GridSettings<T extends Setting> extends Component<IProps<T>
     }
     if (key === Setting.Performance) {
       return (
-        <Dropdown
+        <SimpleDropdown
           value={value}
           style={{ width: 100 }}
           values={values(SimulationSpeed)}
@@ -85,7 +85,7 @@ export default class GridSettings<T extends Setting> extends Component<IProps<T>
     }
     if (key === Setting.AttributeDiscipline) {
       return (
-        <Dropdown
+        <SimpleDropdown
           value={value}
           style={{ width: 200 }}
           values={values(DisciplineValue)}

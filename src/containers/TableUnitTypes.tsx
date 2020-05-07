@@ -14,7 +14,7 @@ import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 import { applyLosses } from 'managers/units'
 import DropdownArchetype from 'components/Dropdowns/DropdownArchetype'
 import { getCultures } from 'data'
-import Dropdown from 'components/Dropdowns/Dropdown'
+import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 
 type Props = {
   side: SideType
@@ -34,7 +34,7 @@ class TableUnitTypes extends Component<IProps> {
   getAttributes = () => {
     const { mode } = this.props
     if (process.env.REACT_APP_GAME === 'euiv')
-      return [UnitAttribute.CombatAbility, UnitAttribute.OffensiveSupport]
+      return [UnitAttribute.Discipline, UnitAttribute.Morale, UnitAttribute.CombatAbility]
     else {
       if (mode === Mode.Naval)
         return [UnitAttribute.Discipline, UnitAttribute.Morale, UnitAttribute.DamageDone, UnitAttribute.DamageTaken]
@@ -164,11 +164,10 @@ class TableUnitTypes extends Component<IProps> {
           <Image src={image} avatar />
           {
             settings[Setting.Culture] ?
-              <Dropdown
+              <SimpleDropdown
                 values={getCultures()}
                 value={culture}
                 onChange={item => this.selectCulture(country, item)}
-                style={{ width: 150 }}
               /> : 'Army'
           }
         </Table.Cell>

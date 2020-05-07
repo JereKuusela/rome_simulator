@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Modal, Input, Grid, Button } from 'semantic-ui-react'
-import Dropdown from './Dropdowns/Dropdown'
+import SimpleDropdown from './Dropdowns/SimpleDropdown'
 
 interface IProps<T, S> {
   onSuccess: (value: T, selected: S) => void
@@ -50,7 +50,7 @@ export default class ValueDropdownModal<T extends string, S extends string> exte
                 {
                   dropdown_label
                 }
-                <Dropdown
+                <SimpleDropdown
                   value={selected}
                   values={items}
                   clearable

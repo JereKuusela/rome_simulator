@@ -17,7 +17,7 @@ import {
 
 import AccordionToggle from 'containers/AccordionToggle'
 import CountryManager from 'containers/CountryManager'
-import Dropdown from 'components/Dropdowns/Dropdown'
+import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TableAttributes from 'components/TableAttributes'
 import { convertCountryDefinition } from 'managers/countries'
@@ -45,7 +45,7 @@ class Countries extends Component<IProps> {
         <Grid>
           <Grid.Row columns='3'>
             <Grid.Column>
-              <Dropdown
+              <SimpleDropdown
                 values={Object.values(traditions_ir).map(tradition => ({ value: tradition.key, text: tradition.name }))}
                 value={country.culture}
                 onChange={this.selectCulture}

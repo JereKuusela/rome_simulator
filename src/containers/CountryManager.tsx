@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import Dropdown from 'components/Dropdowns/Dropdown'
+import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 import ValueDropdownModal from 'components/ValueDropdownModal'
 import { AppState, getArmies, getMode } from 'state'
 import { Grid, Button } from 'semantic-ui-react'
@@ -53,7 +53,7 @@ class CountryManager extends Component<IProps, IState> {
         />
         <Grid.Row columns='5'>
           <Grid.Column>
-            <Dropdown
+            <SimpleDropdown
               values={keys(countries)}
               value={selectedCountry}
               onChange={name => selectCountry(name)}
@@ -90,7 +90,7 @@ class CountryManager extends Component<IProps, IState> {
         </Grid.Row>
         <Grid.Row columns='5'>
           <Grid.Column>
-            <Dropdown
+            <SimpleDropdown
               values={armies.map((key, index) => ({ text: key, value: index }))}
               value={selectedArmy}
               onChange={selectArmy}

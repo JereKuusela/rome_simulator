@@ -6,7 +6,7 @@ import {
   setFlankSize, setUnitPreference, selectTactic, addToReserve, deleteArmy, setMode, enableGeneralSelection
 } from 'reducers'
 import { Input, Button, Grid, Table, Header } from 'semantic-ui-react'
-import Dropdown from 'components/Dropdowns/Dropdown'
+import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 import { sortBy, uniq, sum, union } from 'lodash'
 import LabelItem from 'components/Utils/LabelUnit'
 import { AppState, getUnits, getMode } from 'state'
@@ -209,7 +209,7 @@ class ImportSave extends Component<IProps, IState> {
         </Grid.Row>
         <Grid.Row columns='4'>
           <Grid.Column>
-            <Dropdown
+            <SimpleDropdown
               value={country?.id ?? ''}
               values={countries}
               clearable search
@@ -218,7 +218,7 @@ class ImportSave extends Component<IProps, IState> {
             />
           </Grid.Column>
           <Grid.Column>
-            <Dropdown
+            <SimpleDropdown
               value={army?.id ?? ''}
               values={armies}
               clearable search
