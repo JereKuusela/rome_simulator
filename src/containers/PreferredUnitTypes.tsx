@@ -73,9 +73,9 @@ class Row extends Component<IProps> {
     const unit = preferences[type]
     const empty = { type: UnitType.None, image: getUnitIcon(UnitType.None) } as Unit
     return (
-      <Table.Cell selectable onClick={() => this.setState({ modal_type: type })}>
+      <Table.Cell selectable onClick={() => this.setState({ modalType: type })}>
         <DropdownUnit value={unit ?? UnitType.None} values={[empty].concat(units)}
-          onSelect={unit_type => this.setUnitPreference(type, unit_type)}
+          onSelect={unitType => this.setUnitPreference(type, unitType)}
           settings={settings}
         />
       </Table.Cell>
@@ -83,10 +83,10 @@ class Row extends Component<IProps> {
   }
 
   renderFlankSize = () => {
-    const { flank_size } = this.props
+    const { flankSize } = this.props
     return (
       <Table.Cell collapsing>
-        <Input size='mini' style={{ width: 100 }} type='number' value={flank_size} onChange={(_, data) => this.setFlankSize(Number(data.value))} />
+        <Input size='mini' style={{ width: 100 }} type='number' value={flankSize} onChange={(_, data) => this.setFlankSize(Number(data.value))} />
       </Table.Cell>
     )
   }
@@ -96,9 +96,9 @@ class Row extends Component<IProps> {
     setFlankSize(country, army, value)
   }
 
-  setUnitPreference = (type: UnitPreferenceType, unit_type: UnitType): void => {
+  setUnitPreference = (type: UnitPreferenceType, unitType: UnitType): void => {
     const { setUnitPreference, army, country } = this.props
-    setUnitPreference(country, army, type, unit_type)
+    setUnitPreference(country, army, type, unitType)
   }
 }
 
@@ -109,7 +109,7 @@ const mapStateToProps = (state: AppState, props: Props) => {
     units: getUnitList(state, true, participant.countryName, participant.armyName),
     country: participant.countryName,
     army: participant.armyName,
-    flank_size: getFlankSize(state, props.side),
+    flankSize: getFlankSize(state, props.side),
     preferences: getUnitPreferences(state, props.side),
     mode: getMode(state),
     settings: getSiteSettings(state)

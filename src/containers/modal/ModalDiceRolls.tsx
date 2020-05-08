@@ -92,7 +92,7 @@ const mapStateToProps = (state: AppState) => {
     return {
       side: data.side,
       rolls: side.rolls.concat(0),
-      isRandom: side.randomize_dice,
+      isRandom: side.randomizeDice,
       seed: battle.seed
     }
   }

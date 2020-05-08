@@ -14,21 +14,21 @@ import { deleteCohort } from 'reducers'
 
 type Props = {
   side: SideType
-  row_width: number
+  rowWidth: number
   reverse: boolean
   onClick?: (row: number, column: number, id: number | undefined) => void
   type: ArmyType
   color: string
   // Prevents adding units.
-  disable_add?: boolean
+  disableAdd?: boolean
   // Renders full rows for a cleaner look.
-  full_rows?: boolean
+  fullRows?: boolean
 }
 
 type IState = {
-  tooltip_index: number | null
-  tooltip_context: Element | null
-  tooltip_is_support: boolean
+  tooltipIndex: number | null
+  tooltipContext: Element | null
+  tooltipIsSupport: boolean
 }
 
 const MORALE_COLOR = 'rgba(200,55,55,0.60)'
@@ -39,48 +39,49 @@ const WHITE_COLOR = 'rgba(255,255,255,0)'
 class TableArmyPart extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
-    this.state = { tooltip_index: null, tooltip_context: null, tooltip_is_support: false }
+    this.state = { tooltipIndex: null, tooltipContext: null, tooltipIsSupport: false }
   }
 
   shouldComponentUpdate(prevProps: IProps, prevState: IState) {
-    return prevProps.timestamp !== this.props.timestamp || prevState.tooltip_index !== this.state.tooltip_index
+    return prevProps.timestamp !== this.props.timestamp || prevState.tooltipIndex !== this.state.tooltipIndex
   }
 
   render() {
-    const { row_width, side, type, full_rows, reverse } = this.props
-    const { tooltip_index, tooltip_context, tooltip_is_support } = this.state
+    const { rowWidth, side, type, fullRows, reverse } = this.props
+    const { tooltipIndex, tooltipContext, tooltipIsSupport } = this.state
     let units = this.props.units
-    let index_offset = 0
-    if (full_rows) {
-      units = units.map(arr => resize(arr, row_width, null))
+    let indexOffset = 0
+    if (fullRows) {
+      units = units.map(arr => resize(arr, rowWidth, null))
       if (last(last(units)))
-        units.push(Array(row_width).fill(null))
+        units.push(Array(rowWidth).fill(null))
 
     } else {
-      const filler = Math.max(0, row_width - units[0].length)
-      const left_filler = index_offset = Math.ceil(filler / 2.0)
-      const right_filler = Math.floor(filler / 2.0)
-      units = units.map(row => Array(left_filler).fill(undefined).concat(row).concat(Array(right_filler).fill(undefined)))
+      // For display purposes, smaller combat width turns extra slots grey instead of removing them.
+      const filler = Math.max(0, rowWidth - units[0].length)
+      const leftFiller = indexOffset = Math.ceil(filler / 2.0)
+      const rightFiller = Math.floor(filler / 2.0)
+      units = units.map(row => Array(leftFiller).fill(undefined).concat(row).concat(Array(rightFiller).fill(undefined)))
     }
     if (reverse)
       units.reverse()
     return (
       <>
-        <CombatTooltip id={tooltip_index} context={tooltip_context} is_support={tooltip_is_support} side={side} army={type} />
+        <CombatTooltip id={tooltipIndex} context={tooltipContext} isSupport={tooltipIsSupport} side={side} army={type} />
         <Table compact celled definition unstackable>
           <Table.Body>
             {
-              units.map((row, row_index) => {
-                row_index = reverse ? units.length - 1 - row_index : row_index
+              units.map((row, rowIndex) => {
+                rowIndex = reverse ? units.length - 1 - rowIndex : rowIndex
                 return (
-                  < Table.Row key={row_index} textAlign='center' >
+                  < Table.Row key={rowIndex} textAlign='center' >
                     <Table.Cell>
                       <Icon fitted size='small' name={this.getIcon()} style={{ color: this.props.color }}></Icon>
                     </Table.Cell>
                     {
-                      row.map((cohort, index) => {
-                        index = index - index_offset
-                        return this.renderCell(row_index, index, cohort, row_index > 0)
+                      row.map((cohort, columnIndex) => {
+                        columnIndex -= indexOffset
+                        return this.renderCell(rowIndex, columnIndex, cohort, rowIndex > 0)
                       })
                     }
                   </Table.Row>
@@ -93,29 +94,29 @@ class TableArmyPart extends Component<IProps, IState> {
     )
   }
 
-  renderCell = (row: number, column: number, cohort: ICohort, is_support: boolean) => {
-    const { side, type, disable_add, onClick } = this.props
+  renderCell = (row: number, column: number, cohort: ICohort, isSupport: boolean) => {
+    const { side, type, disableAdd, onClick } = this.props
     const filler = cohort === undefined
     return (
       <Table.Cell
         className={side + '-' + type + '-' + cohort?.id}
         textAlign='center'
         key={column}
-        disabled={filler || (disable_add && !cohort)}
+        disabled={filler || (disableAdd && !cohort)}
         selectable={!!onClick}
         style={{ backgroundColor: filler ? '#DDDDDD' : 'white', padding: 0 }}
         onClick={() => onClick && onClick(row, column, cohort?.id)}
-        onMouseOver={(e: React.MouseEvent) => cohort && this.setState({ tooltip_index: cohort.id, tooltip_context: e.currentTarget, tooltip_is_support: is_support })}
-        onMouseLeave={() => cohort && this.state.tooltip_index === cohort.id && this.setState({ tooltip_index: null, tooltip_context: null })}
+        onMouseOver={(e: React.MouseEvent) => cohort && this.setState({ tooltipIndex: cohort.id, tooltipContext: e.currentTarget, tooltipIsSupport: isSupport })}
+        onMouseLeave={() => cohort && this.state.tooltipIndex === cohort.id && this.setState({ tooltipIndex: null, tooltipContext: null })}
         onContextMenu={(e: any) => e.preventDefault() || this.deleteCohort(cohort)}
       >
         <Cell
           image={cohort?.image || null}
-          is_defeated={cohort?.is_defeated || false}
+          isDefeated={cohort?.isDefeated || false}
           morale={cohort?.morale || 0}
-          max_morale={cohort?.max_morale || 0}
+          maxMorale={cohort?.maxMorale || 0}
           strength={cohort?.strength || 0}
-          max_strength={cohort?.max_strength || 0}
+          maxStrength={cohort?.maxStrength || 0}
         />
       </Table.Cell>
     )
@@ -142,10 +143,10 @@ class TableArmyPart extends Component<IProps, IState> {
 
 type CellProps = {
   strength: number
-  max_strength: number
+  maxStrength: number
   morale: number
-  max_morale: number
-  is_defeated: boolean
+  maxMorale: number
+  isDefeated: boolean
   image: string | null
 }
 
@@ -153,14 +154,14 @@ type CellProps = {
 class Cell extends PureComponent<CellProps> {
 
   render() {
-    const { strength, max_strength, morale, max_morale, is_defeated, image } = this.props
+    const { strength, maxStrength, morale, maxMorale, isDefeated, image } = this.props
     if (!image)
       return this.renderImage(getImage(null))
-    if (is_defeated)
+    if (isDefeated)
       return this.renderImage(IconDefeated)
     return (
-      <div style={{ background: this.gradient(MANPOWER_COLOR, strength, max_strength) }}>
-        <div style={{ background: this.gradient(MORALE_COLOR, morale, max_morale) }}>
+      <div style={{ background: this.gradient(MANPOWER_COLOR, strength, maxStrength) }}>
+        <div style={{ background: this.gradient(MORALE_COLOR, morale, maxMorale) }}>
           {this.renderImage(getImage({ image }))}
         </div>
       </div>
@@ -178,10 +179,10 @@ class Cell extends PureComponent<CellProps> {
 
 type ICohort = {
   id: number
-  is_defeated: boolean
+  isDefeated: boolean
   image?: string
-  max_morale: number
-  max_strength: number
+  maxMorale: number
+  maxStrength: number
   morale: number
   strength: number
 } | null | undefined
@@ -189,12 +190,12 @@ type ICohort = {
 const convertUnits = (units: (CombatCohort | null)[][]): ICohort[][] => (
   units.map(row => row.map(unit => unit && {
     id: unit.definition.id,
-    is_defeated: unit.state.is_defeated,
+    isDefeated: unit.state.isDefeated,
     image: unit.definition.image,
     morale: unit[UnitAttribute.Morale],
-    max_morale: unit.definition.max_morale,
+    maxMorale: unit.definition.maxMorale,
     strength: unit[UnitAttribute.Strength],
-    max_strength: unit.definition.max_strength
+    maxStrength: unit.definition.maxStrength
   }))
 )
 

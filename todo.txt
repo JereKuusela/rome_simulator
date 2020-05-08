@@ -7,10 +7,23 @@ UI:
  * Added a new component for side information (shows active general, active tactic and dice roll).
  * Moved randomize dice checkbox and input for rng seed under dice extra settings (plus icon).
  * Moved morale and discipline inputs from army information component to unit information component.
+ * EUIV: Moved culture selection to unit information component.
+ * EUIV: Moved Backrow efficiency to army information component.
  * Fixed terrain selector not showing the selection.
+ * Win rate now also includes draws and incomplete battles (so the total should always be 100%), the tooltip still separates them.
+ * Win rate tooltip now also shows how many battles were done.
+ * Analyze settings moved from Settings page to Analyze page (no need to move between pages when tweaking things).
+ * Going backwards in battle is now much faster (previously recalculated whole battle).
 
 Refactor
  * Side and participant separated. Side now contains multiple participants.
+ * All variable names renamed to have same casing.
+
+Analyze
+ * Phase length multiplier setting changed to phases per roll setting. The effect is similar but also works with EUIV fire and shock phases.
+ * Preset performance setting updated to work with the new setting (EUIV works now much faster).
+ * Max rounds for each preset changed to 30. This should be more than enough for full combat width battles.
+
 
 Todo: 
 
@@ -66,8 +79,12 @@ Todo:
  - Combat things to combat reducer. Perhaps state as parameter when needed? Since it only changes same things as battle reducer,
  - Stats to show amount of traditions, trade, etc..
  - Definition functions probably all could mutate (mostly used in reducers?)
- - Winrate could automatically set precision based on unit count (or some other heuristic like timing first batch).
-  * Could also reduce amount of units if full combat (to reduce unnecessarily large battles).
+ - Analyze could automatically set precision based on unit count (or some other heuristic like timing first batch).
+ - Analyze width compress:
+  * Deploy, check that all units have same type, fight one round, check that all units have same strength/morale -> can be simulated 1v1.
+  * Do above until units run out -> Amount of possible 1v1.
+  * Improves performance up to 30x.
+  * Similar thing could also be done for left and right side (but only 2x performance and flanking/movement needs special implementation.
  - Save import to load battles and automatically import participants (sets those armies active and sets correct round value).
  - A button for random setup
 

@@ -3,31 +3,31 @@ import { saveAs } from 'file-saver'
 import { AppState, stripRounds, resetMissing, resetAll } from 'state'
 import { Mode, ExportKey, ExportKeys, TransferState } from 'types'
 
-const filterState = (state: AppState, export_keys?: ExportKeys): any => {
+const filterState = (state: AppState, exportKeys?: ExportKeys): any => {
   const filtered: any = { ...state }
   filtered._persist = undefined
   filtered.transfer = undefined
   filtered.data = undefined
   filtered.ui = undefined
   filtered.battle = stripRounds(filtered.battle)
-  if (export_keys && !export_keys[ExportKey.Countries])
+  if (exportKeys && !exportKeys[ExportKey.Countries])
     filtered.countries = undefined
-  if (export_keys && !export_keys[ExportKey.Terrains])
+  if (exportKeys && !exportKeys[ExportKey.Terrains])
     filtered.terrains = undefined
-  if (export_keys && !export_keys[ExportKey.Tactics])
+  if (exportKeys && !exportKeys[ExportKey.Tactics])
     filtered.tactics = undefined
-  if (export_keys && !export_keys[ExportKey.Settings])
+  if (exportKeys && !exportKeys[ExportKey.Settings])
     filtered.settings = undefined
-  if (export_keys && !export_keys[ExportKey.Land])
+  if (exportKeys && !exportKeys[ExportKey.Land])
     delete filtered.battle[Mode.Land]
-  if (export_keys && !export_keys[ExportKey.Naval])
+  if (exportKeys && !exportKeys[ExportKey.Naval])
     delete filtered.battle[Mode.Naval]
-  if (export_keys && !export_keys[ExportKey.Land] && !export_keys[ExportKey.Naval])
+  if (exportKeys && !exportKeys[ExportKey.Land] && !exportKeys[ExportKey.Naval])
     filtered.battle = undefined
   return filtered
 }
 
-export const exportState = (state: AppState, export_keys?: ExportKeys): string => JSON.stringify(filterState(state, export_keys), undefined, 2)
+export const exportState = (state: AppState, exportKeys?: ExportKeys): string => JSON.stringify(filterState(state, exportKeys), undefined, 2)
 
 const pad = (value: number) => String(value).padStart(2, '0')
 
@@ -39,19 +39,19 @@ export const saveToFile = (data: string) => {
 }
 
 export const setExportKey = (transfer: TransferState, key: ExportKey, value: boolean) => {
-  transfer.export_keys[key] = value
+  transfer.exportKeys[key] = value
 }
 
 export const setResetMissing = (transfer: TransferState, value: boolean) => {
-  transfer.reset_missing = value
+  transfer.resetMissing = value
 }
 
 export const resetState = (state: AppState) => {
   resetAll(state)
 }
 
-export const importState = (state: AppState, imported: any, reset_missing: boolean) => {
-  if (reset_missing)
+export const importState = (state: AppState, imported: any, resetMissing: boolean) => {
+  if (resetMissing)
     state = { ...state, transfer: state.transfer, ...imported }
   else
     // Bit complicated logic needed to allow adding and partially updating definitions.

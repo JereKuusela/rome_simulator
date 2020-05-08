@@ -30,8 +30,8 @@ const initializeDefaultArmy = (mode: Mode): Army => ({
   frontline: {},
   reserve: [],
   defeated: [],
-  unit_preferences: getDefaultUnitPreferences(mode),
-  flank_size: 5,
+  unitPreferences: getDefaultUnitPreferences(mode),
+  flankFize: 5,
   general: {
     enabled: true,
     selections: {} as Selections,

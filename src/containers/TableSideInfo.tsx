@@ -2,14 +2,13 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table, Button } from 'semantic-ui-react'
 
-import { SideType, CountryName, Setting, GeneralAttribute, UnitAttribute, CultureType, ModalType } from 'types'
+import { SideType, CountryName, Setting, GeneralAttribute, UnitAttribute, CultureType, ModalType, General, CombatPhase } from 'types'
 import { AppState, getBattle, getMode, getCombatSide, getSiteSettings, getLeadingGeneral, getSide } from 'state'
 import { selectParticipantCountry, selectParticipantArmy, selectCulture, toggleRandomDice, setDice, openModal, setGeneralAttribute } from 'reducers'
 import StyledNumber from 'components/Utils/StyledNumber'
 import { getTerrainPips, calculateGeneralPips, getCombatPhase, getCombatPhaseNumber } from 'combat'
 import { addSign } from 'formatters'
 import IconDice from 'images/chance.png'
-import IconGeneral from 'images/military_power.png'
 import IconTerrain from 'images/terrain.png'
 import AttributeImage from 'components/Utils/AttributeImage'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
@@ -32,6 +31,12 @@ class TableSideInfo extends Component<IProps> {
           <Table.Row>
             {
               settings[Setting.Martial] &&
+              <Table.HeaderCell>
+                General
+              </Table.HeaderCell>
+            }
+            {
+              settings[Setting.FireAndShock] &&
               <Table.HeaderCell>
                 General
               </Table.HeaderCell>
@@ -60,7 +65,7 @@ class TableSideInfo extends Component<IProps> {
     return (
       <Table.Row key={side.type}>
         <Table.Cell>
-          {general.total_values[GeneralAttribute.Martial]}
+          {general.totalValues[GeneralAttribute.Martial]}
           <AttributeImage attribute={GeneralAttribute.Martial} />
         </Table.Cell>
         {
@@ -76,37 +81,46 @@ class TableSideInfo extends Component<IProps> {
     )
   }
 
+  renderGeneral = (general: General, attribute: GeneralAttribute | CombatPhase) => {
+    return (
+      <Table.Cell>
+        <AttributeImage attribute={attribute} />
+        {general.totalValues[attribute]}
+      </Table.Cell>
+    )
+  }
+
   renderRoll = () => {
     const { terrains, settings, round, openModal, setDice, side, combat, general, opponent  } = this.props
-    const terrain_pips = getTerrainPips(terrains, side.type, general, opponent)
-    const general_pips = calculateGeneralPips(general, opponent, getCombatPhase(round, settings))
+    const terrainPips = getTerrainPips(terrains, side.type, general, opponent)
+    const generalPips = calculateGeneralPips(general, opponent, getCombatPhase(round, settings))
     const phase = getCombatPhaseNumber(round, settings)
-    const is_dice_set = side.randomize_dice || (side.rolls.length > phase && side.rolls[phase])
+    const isDiceSet = side.randomizeDice || (side.rolls.length > phase && side.rolls[phase])
     return (
       <div key={side.type}>
         <Image src={IconDice} avatar />
-        {is_dice_set ? combat.dice : <DelayedNumericInput type='number' value={side.dice} onChange={value => setDice(side.type, value)} />}
+        {isDiceSet ? combat.dice : <DelayedNumericInput type='number' value={side.dice} onChange={value => setDice(side.type, value)} />}
         {
-          general_pips !== 0 ?
-            <span style={{ paddingLeft: '1em' }}>
-              <Image src={IconGeneral} avatar />
-              <StyledNumber value={general_pips} formatter={addSign} />
-            </span>
-            : null
-        }
-        {
-          terrain_pips !== 0 ?
-            <span style={{ paddingLeft: '1em' }}>
-              <Image src={IconTerrain} avatar />
-              <StyledNumber value={terrain_pips} formatter={addSign} />
-            </span>
-            : null
-        }
-        {
-          !side.randomize_dice &&
+          !side.randomizeDice &&
           <span style={{ paddingLeft: '1em' }}>
             <Button size='mini' icon={'plus'} onClick={() => openModal(ModalType.DiceRolls, { side: side.type })} />
           </span>
+        }
+        {
+          generalPips !== 0 ?
+            <span style={{ paddingLeft: '1em' }}>
+              <AttributeImage attribute={getCombatPhase(round, settings)} />
+              <StyledNumber value={generalPips} formatter={addSign} />
+            </span>
+            : null
+        }
+        {
+          terrainPips !== 0 ?
+            <span style={{ paddingLeft: '1em' }}>
+              <Image src={IconTerrain} avatar />
+              <StyledNumber value={terrainPips} formatter={addSign} />
+            </span>
+            : null
         }
       </div >
     )

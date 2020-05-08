@@ -9,11 +9,13 @@
       {
         "target": "Infantry",
         "attribute": "Shock",
+        "type": "Base",
         "value": 0.1
       },
       {
         "target": "Infantry",
         "attribute": "Fire",
+        "type": "Base",
         "value": 0.1
       }
     ]
@@ -24,16 +26,19 @@
       {
         "target": "Infantry",
         "attribute": "Shock",
+        "type": "Base",
         "value": 0.2
       },
       {
         "target": "Cavalry",
         "attribute": "Shock",
+        "type": "Base",
         "value": 0.2
       },
       {
         "target": "Country",
         "attribute": "Combat Width",
+        "type": "Base",
         "no_percent": true,
         "value": 5
       }
@@ -45,6 +50,7 @@
       {
         "target": "Land",
         "attribute": "Morale",
+        "type": "Base",
         "no_percent": true,
         "value": 0.5
       }
@@ -56,12 +62,14 @@
       {
         "target": "Land",
         "attribute": "Morale",
+        "type": "Base",
         "no_percent": true,
         "value": 0.5
       },
       {
         "target": "Global",
         "attribute": "Military Tactics",
+        "type": "Base",
         "no_percent": true,
         "value": 0.25
       }
@@ -73,16 +81,19 @@
       {
         "target": "Infantry",
         "attribute": "Shock",
+        "type": "Base",
         "value": 0.15
       },
       {
         "target": "Cavalry",
         "attribute": "Shock",
+        "type": "Base",
         "value": 0.2
       },
       {
         "target": "Country",
         "attribute": "Combat Width",
+        "type": "Base",
         "no_percent": true,
         "value": 2
       }
@@ -94,22 +105,26 @@
       {
         "target": "Global",
         "attribute": "Military Tactics",
+        "type": "Base",
         "no_percent": true,
         "value": 0.25
       },
       {
         "target": "Infantry",
         "attribute": "Shock",
+        "type": "Base",
         "value": 0.3
       },
       {
         "target": "Infantry",
         "attribute": "Fire",
+        "type": "Base",
         "value": 0.2
       },
       {
         "target": "Country",
         "attribute": "Combat Width",
+        "type": "Base",
         "no_percent": true,
         "value": 2
       }
@@ -121,16 +136,19 @@
       {
         "target": "Artillery",
         "attribute": "Fire",
+        "type": "Base",
         "value": 1
       },
       {
         "target": "Artillery",
         "attribute": "Shock",
+        "type": "Base",
         "value": 0.05
       },
       {
         "target": "Global",
         "attribute": "Military Tactics",
+        "type": "Base",
         "no_percent": true,
         "value": 0.25
       }
@@ -142,11 +160,13 @@
       {
         "target": "Infantry",
         "attribute": "Fire",
+        "type": "Base",
         "value": 0.25
       },
       {
         "target": "Cavalry",
         "attribute": "Shock",
+        "type": "Base",
         "value": 0.8
       }
     ]
@@ -157,12 +177,14 @@
       {
         "target": "Global",
         "attribute": "Military Tactics",
+        "type": "Base",
         "no_percent": true,
         "value": 0.25
       },
       {
         "target": "Country",
         "attribute": "Combat Width",
+        "type": "Base",
         "no_percent": true,
         "value": 1
       }
@@ -185,16 +207,19 @@
       {
         "target": "Infantry",
         "attribute": "Shock",
+        "type": "Base",
         "value": 0.2
       },
       {
         "target": "Cavalry",
         "attribute": "Fire",
+        "type": "Base",
         "value": 0.5
       },
       {
         "target": "Country",
         "attribute": "Combat Width",
+        "type": "Base",
         "no_percent": true,
         "value": 2
       }
@@ -206,6 +231,7 @@
       {
         "target": "Global",
         "attribute": "Military Tactics",
+        "type": "Base",
         "no_percent": true,
         "value": 0.25
       }
@@ -217,11 +243,13 @@
       {
         "target": "Artillery",
         "attribute": "Shock",
+        "type": "Base",
         "value": 0.1
       },
       {
         "target": "Artillery",
         "attribute": "Fire",
+        "type": "Base",
         "value": 0.4
       }
     ]
@@ -232,11 +260,13 @@
       {
         "target": "Infantry",
         "attribute": "Fire",
+        "type": "Base",
         "value": 0.3
       },
       {
         "target": "Country",
         "attribute": "Combat Width",
+        "type": "Base",
         "no_percent": true,
         "value": 2
       }
@@ -248,12 +278,14 @@
       {
         "target": "Land",
         "attribute": "Morale",
+        "type": "Base",
         "no_percent": true,
         "value": 1
       },
       {
         "target": "Global",
         "attribute": "Military Tactics",
+        "type": "Base",
         "no_percent": true,
         "value": 0.25
       }
@@ -265,16 +297,19 @@
       {
         "target": "Artillery",
         "attribute": "Shock",
+        "type": "Base",
         "value": 0.1
       },
       {
         "target": "Artillery",
         "attribute": "Fire",
+        "type": "Base",
         "value": 1
       },
       {
         "target": "Country",
         "attribute": "Combat Width",
+        "type": "Base",
         "no_percent": true,
         "value": 1
       }
@@ -286,6 +321,7 @@
       {
         "target": "Cavalry",
         "attribute": "Shock",
+        "type": "Base",
         "value": 1
       }
     ]
@@ -302,6 +338,7 @@
       {
         "target": "Country",
         "attribute": "Combat Width",
+        "type": "Base",
         "no_percent": true,
         "value": 2
       }
@@ -313,6 +350,7 @@
       {
         "target": "Global",
         "attribute": "Military Tactics",
+        "type": "Base",
         "no_percent": true,
         "value": 0.25
       }
@@ -324,11 +362,13 @@
       {
         "target": "Infantry",
         "attribute": "Fire",
+        "type": "Base",
         "value": 0.5
       },
       {
         "target": "Country",
         "attribute": "Combat Width",
+        "type": "Base",
         "no_percent": true,
         "value": 2
       }
@@ -340,12 +380,14 @@
       {
         "target": "Global",
         "attribute": "Military Tactics",
+        "type": "Base",
         "no_percent": true,
         "value": 0.25
       },
       {
         "target": "Infantry",
         "attribute": "Shock",
+        "type": "Base",
         "value": 0.5
       }
     ]
@@ -356,21 +398,25 @@
       {
         "target": "Cavalry",
         "attribute": "Fire",
+        "type": "Base",
         "value": 0.5
       },
       {
         "target": "Artillery",
         "attribute": "Shock",
+        "type": "Base",
         "value": 0.1
       },
       {
         "target": "Artillery",
         "attribute": "Fire",
+        "type": "Base",
         "value": 2
       },
       {
         "target": "Country",
         "attribute": "Combat Width",
+        "type": "Base",
         "no_percent": true,
         "value": 2
       }
@@ -382,11 +428,13 @@
       {
         "target": "Cavalry",
         "attribute": "Shock",
+        "type": "Base",
         "value": 1
       },
       {
         "target": "Global",
         "attribute": "Military Tactics",
+        "type": "Base",
         "no_percent": true,
         "value": 0.25
       },
@@ -404,12 +452,14 @@
       {
         "target": "Global",
         "attribute": "Military Tactics",
+        "type": "Base",
         "no_percent": true,
         "value": 0.25
       },
       {
         "target": "Country",
         "attribute": "Combat Width",
+        "type": "Base",
         "no_percent": true,
         "value": 2
       }
@@ -421,11 +471,13 @@
       {
         "target": "Artillery",
         "attribute": "Shock",
+        "type": "Base",
         "value": 0.1
       },
       {
         "target": "Artillery",
         "attribute": "Fire",
+        "type": "Base",
         "value": 2
       }
     ]
@@ -436,12 +488,14 @@
       {
         "target": "Land",
         "attribute": "Morale",
+        "type": "Base",
         "no_percent": true,
         "value": 1
       },
       {
         "target": "Country",
         "attribute": "Combat Width",
+        "type": "Base",
         "no_percent": true,
         "value": 2
       }
@@ -453,6 +507,7 @@
       {
         "target": "Infantry",
         "attribute": "Fire",
+        "type": "Base",
         "value": 0.5
       }
     ]
@@ -469,6 +524,7 @@
       {
         "target": "Infantry",
         "attribute": "Shock",
+        "type": "Base",
         "value": 0.5
       }
     ]
@@ -483,12 +539,14 @@
       {
         "target": "Global",
         "attribute": "Military Tactics",
+        "type": "Base",
         "no_percent": true,
         "value": 0.25
       },
       {
         "target": "Land",
         "attribute": "Morale",
+        "type": "Base",
         "no_percent": true,
         "value": 1
       },
@@ -506,11 +564,13 @@
       {
         "target": "Cavalry",
         "attribute": "Shock",
+        "type": "Base",
         "value": 1
       },
       {
         "target": "Infantry",
         "attribute": "Fire",
+        "type": "Base",
         "value": 1
       }
     ]
@@ -521,17 +581,20 @@
       {
         "target": "Global",
         "attribute": "Military Tactics",
+        "type": "Base",
         "no_percent": true,
         "value": 0.25
       },
       {
         "target": "Artillery",
         "attribute": "Shock",
+        "type": "Base",
         "value": 0.1
       },
       {
         "target": "Artillery",
         "attribute": "Fire",
+        "type": "Base",
         "value": 2
       }
     ]

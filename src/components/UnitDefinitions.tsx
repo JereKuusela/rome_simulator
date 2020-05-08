@@ -17,7 +17,7 @@ interface IProps {
   units: Unit[]
   settings: SiteSettings
   images: { [key in UnitType]: string[] }
-  unit_types: UnitType[]
+  unitTypes: UnitType[]
   terrains: TerrainType[]
   onRowClick: (unit: UnitDefinition) => void
 }
@@ -111,7 +111,7 @@ export default class UnitDefinitions extends Component<IProps> {
             <Table.Cell key={attribute}>
               <StyledNumber
                 value={calculateValue(unit, attribute)}
-                formatter={toSignedPercent} hide_zero
+                formatter={toSignedPercent} hideZero
                 reverse={this.isDamageTaken(attribute)}
               />
             </Table.Cell>
@@ -123,7 +123,7 @@ export default class UnitDefinitions extends Component<IProps> {
             <VersusList
               item={unit}
               images={this.props.images}
-              unit_types={this.props.unit_types}
+              unitTypes={this.props.unitTypes}
               styled
             />
           </Table.Cell>

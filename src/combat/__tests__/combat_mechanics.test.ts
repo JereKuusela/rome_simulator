@@ -9,25 +9,26 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
 
     let info: TestInfo
     beforeEach(() => {
-      info = initInfo()
+      info = initInfo(false)
       unit = createCohort(UnitType.Archers)
-      unit.is_loyal = true
-      unit.base_values![UnitAttribute.Morale] = { 'key': 3 }
-      unit.base_values![UnitAttribute.Strength] = { 'key': 1 }
-      unit.base_values![UnitAttribute.MoraleDamageTaken] = { 'key': 0.25 }
-      unit.base_values![UnitAttribute.MoraleDamageDone] = { 'key': 0.25 }
-      unit.base_values![UnitAttribute.StrengthDamageDone] = { 'key': 0.25 }
-      unit.base_values![UnitAttribute.StrengthDamageTaken] = { 'key': 0.25 }
-      unit.base_values![UnitAttribute.CombatAbility] = { 'key': 0.3 }
-      unit.base_values![CombatPhase.Fire] = { 'key': 0.5 }
-      unit.base_values![UnitAttribute.FireDamageDone] = { 'key': 0.2 }
-      unit.base_values![UnitAttribute.FireDamageTaken] = { 'key': -0.5 }
-      unit.base_values![UnitAttribute.Offense] = { 'key': 0.6 }
-      unit.base_values![UnitAttribute.Defense] = { 'key': 0.5 }
-      unit.base_values![UnitAttribute.DamageDone] = { 'key': 0.6 }
-      unit.base_values![UnitAttribute.DamageTaken] = { 'key': 0.5 }
-      unit.base_values![UnitAttribute.Discipline] = { 'key': 0.75 }
-      unit.base_values![UnitType.Archers] = { 'key': 0.2 }
+      unit.isLoyal = true
+      unit.baseValues![UnitAttribute.Morale] = { 'key': 3 }
+      unit.baseValues![UnitAttribute.Strength] = { 'key': 1 }
+      unit.baseValues![UnitAttribute.MoraleDamageTaken] = { 'key': 0.25 }
+      unit.baseValues![UnitAttribute.MoraleDamageDone] = { 'key': 0.25 }
+      unit.baseValues![UnitAttribute.StrengthDamageDone] = { 'key': 0.25 }
+      unit.baseValues![UnitAttribute.StrengthDamageTaken] = { 'key': 0.25 }
+      unit.baseValues![UnitAttribute.CombatAbility] = { 'key': 0.3 }
+      unit.baseValues![CombatPhase.Fire] = { 'key': 0.5 }
+      unit.baseValues![UnitAttribute.FireDamageDone] = { 'key': 0.2 }
+      unit.baseValues![UnitAttribute.FireDamageTaken] = { 'key': -0.5 }
+      unit.baseValues![UnitAttribute.Offense] = { 'key': 0.6 }
+      unit.baseValues![UnitAttribute.Defense] = { 'key': 0.5 }
+      unit.baseValues![UnitAttribute.DamageDone] = { 'key': 0.6 }
+      unit.baseValues![UnitAttribute.DamageTaken] = { 'key': 0.5 }
+      unit.baseValues![UnitAttribute.Discipline] = { 'key': 0.75 }
+      unit.baseValues![UnitType.Archers] = { 'key': 0.2 }
+      unit.baseValues![UnitAttribute.OffensiveSupport] = { 'key': 0.5 }
 
       info.settings = map(info.settings, item => typeof item === 'boolean' ? false : item) as Settings
       info.settings[Setting.AttributeDiscipline] = DisciplineValue.Off
@@ -35,19 +36,19 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       setCenterUnits(info, unit, unit)
     })
 
-    const test = (damage_multiplier_a: number, damage_multiplier_d: number, strength_multiplier: number, morale_multiplier: number) => {
+    const test = (damageMultiplierA: number, damageMultiplierD: number, strengthMultiplier: number, moraleMultiplier: number) => {
       const rolls = [[3, 3]]
       const { attacker, defender } = initSide(1)
 
-      const strength = 33.6 * (1 + strength_multiplier)
-      const morale = 0.378 * (1 + morale_multiplier)
-      const strength_a = Math.floor(1000 - strength * (1 + damage_multiplier_d))
-      const strength_d = Math.floor(1000 - strength * (1 + damage_multiplier_a))
-      const morale_a = (3.0 - morale * (1 + damage_multiplier_d)) / 2
-      const morale_d = (3.0 - morale * (1 + damage_multiplier_a)) / 2
+      const strength = 33.6 * (1 + strengthMultiplier)
+      const morale = 0.378 * (1 + moraleMultiplier)
+      const strengthA = Math.floor(1000 - strength * (1 + damageMultiplierD))
+      const strengthD = Math.floor(1000 - strength * (1 + damageMultiplierA))
+      const moraleA = (3.0 - morale * (1 + damageMultiplierD)) / 2
+      const moraleD = (3.0 - morale * (1 + damageMultiplierA)) / 2
 
-      attacker[0][15] = [unit.type, strength_a, morale_a]
-      defender[0][15] = [unit.type, strength_d, morale_d]
+      attacker[0][15] = [unit.type, strengthA, moraleA]
+      defender[0][15] = [unit.type, strengthD, moraleD]
 
       testCombat(info, rolls, attacker, defender)
 
@@ -103,6 +104,10 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     it('discipline damage done and taken', () => {
       info.settings[Setting.AttributeDiscipline] = DisciplineValue.Both
       test(0, 0, 0, 0)
+    })
+    it('backrow damage', () => {
+      info.armyA.frontline[1][15] = unit
+      test(0.5, 0, 0, 0)
     })
   })
 }

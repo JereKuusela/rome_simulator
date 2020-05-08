@@ -1,3 +1,5 @@
+import { CombatCohorts } from "types"
+
 /**
  * Status of the win rate calculation. Most values are percents, only iterations is integer.
  */
@@ -8,7 +10,7 @@ export interface WinRateProgress {
   incomplete: number
   progress: number
   draws: number
-  iterations: number
+  battles: number
   averageRounds: number
   stackWipes: number
   rounds: { [key: number]: number }
@@ -40,4 +42,15 @@ export type ResourceLosses = {
   capturedCost: number
   seizedCost: number
   seizedRepairMaintenance: number
+}
+
+export type CombatNode = {
+  cohortsA: CombatCohorts,
+  cohortsD: CombatCohorts,
+  // Each node iterates over all branches (each branch has different dice rolls).
+  branchIndex: number,
+  // Combat phase of this node, used to calculate combat round.
+  combatPhase: number,
+  // Deeper nodes (longer battles) have less impact on the result (more branches).
+  weightIndex: number
 }

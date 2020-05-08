@@ -7,8 +7,8 @@
     "Morale": 2.0,
     "Strength": 1.0,
     "Maintenance": 0.02,
-    "Attrition weight": 1.0,
-    "Military tactics": 0.5
+    "Attrition Weight": 1.0,
+    "Military Tactics": 0.5
   },
   {
     "Type": "Artillery",
@@ -16,8 +16,9 @@
     "Role": "Support",
     "Maneuver": 2,
     "Cost": 30,
-    "Damage taken": 1,
-    "Damage from backrow": 0.5
+    "Damage Taken": 1,
+    "Damage from Backrow": 0.5,
+    "Defensive Pips to Frontrow": 0.5
   },
   {
     "Type": "Cavalry",

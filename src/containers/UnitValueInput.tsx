@@ -21,9 +21,9 @@ type Props = {
 class UnitValueInput extends Component<IProps> {
   render() {
     const { unit, attribute, percent, type } = this.props
-    const values_type = type ?? getAttributeValuesType(attribute)
+    const valuesType = type ?? getAttributeValuesType(attribute)
     let value = 0
-    if (values_type === ValuesType.Base)
+    if (valuesType === ValuesType.Base)
       value = calculateBase(unit, attribute)
     else
       value = calculateModifier(unit, attribute)
@@ -36,13 +36,13 @@ class UnitValueInput extends Component<IProps> {
 
   onChange = (value: number) => {
     const { unit, attribute, setUnitValue, country, type } = this.props
-    const values_type = type ?? getAttributeValuesType(attribute)
+    const valuesType = type ?? getAttributeValuesType(attribute)
     let base = 0
-    if (values_type === ValuesType.Base)
+    if (valuesType === ValuesType.Base)
       base = calculateBase(unit, attribute) - calculateBase(filterValues(unit, this.getKey()), attribute)
     else
       base = calculateModifier(unit, attribute) - calculateModifier(filterValues(unit, this.getKey()), attribute)
-    setUnitValue(country, unit.type, values_type, this.getKey(), attribute, value - base)
+    setUnitValue(country, unit.type, valuesType, this.getKey(), attribute, value - base)
   }
 }
 

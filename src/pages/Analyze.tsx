@@ -4,7 +4,7 @@ import { Grid, Button, Table, Header, Checkbox } from 'semantic-ui-react'
 
 import { AppState, getSettings, getMode, initializeCombatParticipants, getSiteSettings } from 'state'
 import { interrupt, calculateWinRate, initResourceLosses } from 'combat'
-import { values, showProgress } from 'utils'
+import { values, showProgress, filterKeys } from 'utils'
 import { SimulationSpeed, Setting, Mode, CasualtiesProgress, ResourceLosses, WinRateProgress, ResourceLossesProgress } from 'types'
 import { toPercent, toNumber, toFlooredPercent } from 'formatters'
 import SimpleRange from 'components/SimpleRange'
@@ -12,6 +12,8 @@ import RoundChart from 'components/Charts/RoundChart'
 import CumulativePercentChart from 'components/Charts/CumulativePercentChart'
 import { changeSiteParameter, refreshBattle } from 'reducers'
 import HelpTooltip from 'components/HelpTooltip'
+import AccordionToggle from 'containers/AccordionToggle'
+import GridSettings from 'components/GridSettings'
 
 interface Props { }
 
@@ -21,7 +23,7 @@ interface IState extends CasualtiesProgress {
   incomplete: number
   draws: number
   calculating: boolean
-  iterations: number
+  battles: number
   updates: number
   progress: number
   averageRounds: number
@@ -35,6 +37,9 @@ const DOTS = 6
 
 const simulationSpeeds = values(SimulationSpeed)
 
+const attributes = [
+  Setting.PhasesPerRoll, Setting.ReduceRolls, Setting.MaxPhases, Setting.ChunkSize
+]
 /**
  * Calculates win rate for the current battle.
  */
@@ -43,7 +48,7 @@ class Analyze extends Component<IProps, IState> {
     super(props)
     this.state = {
       attackerWinChance: 0, defenderWinChance: 0, incomplete: 0, calculating: false, progress: 0, updates: 0,
-      averageRounds: 0, rounds: {}, iterations: 0, draws: 0, stackWipes: 0,
+      averageRounds: 0, rounds: {}, battles: 0, draws: 0, stackWipes: 0,
       avgMoraleA: 0, avgMoraleD: 0, avgStrengthA: 0, avgStrengthD: 0, maxMoraleA: 1, maxMoraleD: 1, maxStrengthA: 1, maxStrengthD: 1,
       moraleA: {}, moraleD: {}, strengthA: {}, strengthD: {}, lossesA: initResourceLosses(), lossesD: initResourceLosses()
     }
@@ -64,7 +69,7 @@ class Analyze extends Component<IProps, IState> {
   }
 
   render() {
-    const { iterations, calculating, progress, updates } = this.state
+    const { battles, calculating, progress, updates } = this.state
     const { settings, changeSiteParameter, mode } = this.props
     return (
       <>
@@ -91,7 +96,7 @@ class Analyze extends Component<IProps, IState> {
               />
             </Grid.Column>
             <Grid.Column width='2' floated='right'>
-              Iterations {iterations}
+              Battles: {battles}
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns='4'>
@@ -125,15 +130,26 @@ class Analyze extends Component<IProps, IState> {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-        {settings[Setting.CalculateWinChance] && this.renderWinchance()}
+        {settings[Setting.CalculateWinChance] && this.renderWinChance()}
         {settings[Setting.CalculateResourceLosses] && mode === Mode.Naval && this.renderResourceLosses()}
         {settings[Setting.CalculateCasualties] && this.renderCasualties()}
         {settings[Setting.ShowGraphs] && this.renderGraphs()}
+        <br />
+        <AccordionToggle title='Settings' identifier='AnalyzeSettings' open>
+          <GridSettings key={settings[Setting.Performance]} settings={filterKeys(settings, setting => attributes.includes(setting))} onChange={this.changeAnalyzeParameter} />
+          <br /><br />
+        </AccordionToggle>
       </>
     )
   }
 
-  renderWinchance = () => {
+  changeAnalyzeParameter = (key: any, value: string | number | boolean) => {
+    const { changeSiteParameter } = this.props
+    changeSiteParameter(Setting.Performance, SimulationSpeed.Custom)
+    changeSiteParameter(key, value)
+  }
+
+  renderWinChance = () => {
     const { attackerWinChance, defenderWinChance, incomplete, draws, averageRounds, stackWipes } = this.state
     return (
       <Table>
@@ -353,7 +369,7 @@ class Analyze extends Component<IProps, IState> {
   update = (update: WinRateProgress, casualties: CasualtiesProgress, resources: ResourceLossesProgress) => {
     if (this.willUnmount)
       return
-    const { attacker, defender, incomplete, progress, averageRounds, rounds, iterations, calculating, draws, stackWipes } = update
+    const { attacker, defender, incomplete, progress, averageRounds, rounds, battles, calculating, draws, stackWipes } = update
     this.setState({
       attackerWinChance: attacker,
       defenderWinChance: defender,
@@ -364,7 +380,7 @@ class Analyze extends Component<IProps, IState> {
       calculating,
       rounds,
       stackWipes,
-      iterations,
+      battles,
       updates: calculating ? (this.state.updates + 1) % DOTS : 0,
       ...casualties,
       ...resources

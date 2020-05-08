@@ -61,7 +61,7 @@ export enum UnitAttribute {
   DefensiveFirePips = 'Defensive Fire Pips',
   DefensiveShockPips = 'Defensive Shock Pips',
   DefensiveMoralePips = 'Defensive Morale Pips',
-  OffensiveSupport = 'Damage From Backrow',
+  OffensiveSupport = 'Damage from Backrow',
   DefensiveSupport = 'Defensive Pips to Frontrow',
   MilitaryTactics = 'Military Tactics',
   CombatAbility = 'Combat Ability',
@@ -87,13 +87,13 @@ export type UnitDefinitionValue = DefinitionValues<UnitValueType>
 export interface CohortDefinition extends DefinitionValues<UnitValueType> {
   type: UnitType
   id: number
-  is_loyal?: boolean
+  isLoyal?: boolean
 }
 
 /** A single (sub) unit definition. Used to store data but shouldn't be used for anything else. */
 export interface UnitDefinition extends Definition<UnitType>, DefinitionValues<UnitValueType> {
   role?: UnitRole
-  is_loyal?: boolean
+  isLoyal?: boolean
   parent?: UnitType
   culture?: CultureType
   tech?: number

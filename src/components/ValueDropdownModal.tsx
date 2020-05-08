@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import { Modal, Input, Grid, Button } from 'semantic-ui-react'
-import Dropdown from './Dropdowns/Dropdown'
+import SimpleDropdown from './Dropdowns/SimpleDropdown'
 
 interface IProps<T, S> {
   onSuccess: (value: T, selected: S) => void
   onClose: () => void
   message: string
-  value_label?: string
-  dropdown_label?: string
-  button_message: string
+  valueLabel?: string
+  dropdownLabel?: string
+  buttonMessage: string
   open: boolean
   value: T
   selected: S
@@ -31,7 +31,7 @@ export default class ValueDropdownModal<T extends string, S extends string> exte
   }
 
   render() {
-    const { onClose, open, message, items, value_label, dropdown_label, button_message } = this.props
+    const { onClose, open, message, items, valueLabel, dropdownLabel, buttonMessage } = this.props
     const { value, selected } = this.state
     return (
       <Modal onClose={onClose} open={open}>
@@ -42,15 +42,15 @@ export default class ValueDropdownModal<T extends string, S extends string> exte
               <Grid.Column>
                 <Input
                   value={value}
-                  placeholder={value_label}
+                  placeholder={valueLabel}
                   onChange={(_, { value }) => this.setState({ value: value as T })}
                 />
               </Grid.Column>
               <Grid.Column>
                 {
-                  dropdown_label
+                  dropdownLabel
                 }
-                <Dropdown
+                <SimpleDropdown
                   value={selected}
                   values={items}
                   clearable
@@ -60,7 +60,7 @@ export default class ValueDropdownModal<T extends string, S extends string> exte
             </Grid.Row>
             <Grid.Row>
               <Button onClick={this.onSuccess} disabled={!value}>
-                {button_message}
+                {buttonMessage}
               </Button>
             </Grid.Row>
           </Grid>

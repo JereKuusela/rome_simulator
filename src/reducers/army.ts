@@ -5,27 +5,27 @@ import * as manager from 'managers/army'
 import { getDefaultCountryDefinitions } from 'data'
 import { ActionToFunction, makeReducer, Action, makeActionReplaceFirstTwice } from './utils'
 
-const actionToFunction: ActionToFunction<Army, CountryName, ArmyName> = {}
+const mapping: ActionToFunction<Army, CountryName, ArmyName> = {}
 
-export const clearGeneralSelection = makeActionReplaceFirstTwice(manager.clearGeneralSelection, actionToFunction)
-export const clearGeneralSelections = makeActionReplaceFirstTwice(manager.clearGeneralSelections, actionToFunction)
-export const enableGeneralSelection = makeActionReplaceFirstTwice(manager.enableGeneralSelection, actionToFunction)
-export const enableGeneralSelections = makeActionReplaceFirstTwice(manager.enableGeneralSelections, actionToFunction)
-export const selectCohort = makeActionReplaceFirstTwice(manager.selectCohort, actionToFunction)
-export const toggleCohortLoyality = makeActionReplaceFirstTwice(manager.toggleCohortLoyality, actionToFunction)
-export const setCohortValue = makeActionReplaceFirstTwice(manager.setCohortValue, actionToFunction)
-export const changeCohortType = makeActionReplaceFirstTwice(manager.changeCohortType, actionToFunction)
-export const editCohort = makeActionReplaceFirstTwice(manager.editCohort, actionToFunction)
-export const deleteCohort = makeActionReplaceFirstTwice(manager.deleteCohort, actionToFunction)
-export const removeFromReserve = makeActionReplaceFirstTwice(manager.removeFromReserve, actionToFunction)
-export const addToReserve = makeActionReplaceFirstTwice(manager.addToReserve, actionToFunction)
-export const clearCohorts = makeActionReplaceFirstTwice(manager.clearCohorts, actionToFunction)
-export const selectTactic = makeActionReplaceFirstTwice(manager.selectTactic, actionToFunction)
-export const setFlankSize = makeActionReplaceFirstTwice(manager.setFlankSize, actionToFunction)
-export const setUnitPreference = makeActionReplaceFirstTwice(manager.setUnitPreference, actionToFunction)
-export const setGeneralAttribute = makeActionReplaceFirstTwice(manager.setGeneralAttribute, actionToFunction)
-export const clearGeneralAttributes = makeActionReplaceFirstTwice(manager.clearGeneralAttributes, actionToFunction)
-export const setHasGeneral = makeActionReplaceFirstTwice(manager.setHasGeneral, actionToFunction)
+export const clearGeneralSelection = makeActionReplaceFirstTwice(manager.clearGeneralSelection, mapping)
+export const clearGeneralSelections = makeActionReplaceFirstTwice(manager.clearGeneralSelections, mapping)
+export const enableGeneralSelection = makeActionReplaceFirstTwice(manager.enableGeneralSelection, mapping)
+export const enableGeneralSelections = makeActionReplaceFirstTwice(manager.enableGeneralSelections, mapping)
+export const selectCohort = makeActionReplaceFirstTwice(manager.selectCohort, mapping)
+export const toggleCohortLoyality = makeActionReplaceFirstTwice(manager.toggleCohortLoyality, mapping)
+export const setCohortValue = makeActionReplaceFirstTwice(manager.setCohortValue, mapping)
+export const changeCohortType = makeActionReplaceFirstTwice(manager.changeCohortType, mapping)
+export const editCohort = makeActionReplaceFirstTwice(manager.editCohort, mapping)
+export const deleteCohort = makeActionReplaceFirstTwice(manager.deleteCohort, mapping)
+export const removeFromReserve = makeActionReplaceFirstTwice(manager.removeFromReserve, mapping)
+export const addToReserve = makeActionReplaceFirstTwice(manager.addToReserve, mapping)
+export const clearCohorts = makeActionReplaceFirstTwice(manager.clearCohorts, mapping)
+export const selectTactic = makeActionReplaceFirstTwice(manager.selectTactic, mapping)
+export const setFlankSize = makeActionReplaceFirstTwice(manager.setFlankSize, mapping)
+export const setUnitPreference = makeActionReplaceFirstTwice(manager.setUnitPreference, mapping)
+export const setGeneralAttribute = makeActionReplaceFirstTwice(manager.setGeneralAttribute, mapping)
+export const clearGeneralAttributes = makeActionReplaceFirstTwice(manager.clearGeneralAttributes, mapping)
+export const setHasGeneral = makeActionReplaceFirstTwice(manager.setHasGeneral, mapping)
 
 const getEntity = (draft: Countries, action: Action<CountryName, ArmyName>) => {
   const [country, army] = action.payload
@@ -37,4 +37,4 @@ const getEntityPayload = (action: Action<CountryName, ArmyName>) => {
   return payload
 }
 
-export const armyReducer = makeReducer(getDefaultCountryDefinitions(), actionToFunction, getEntity, getEntityPayload)
+export const armyReducer = makeReducer(getDefaultCountryDefinitions(), mapping, getEntity, getEntityPayload)

@@ -16,14 +16,14 @@ import DelayedNumericInput from './Detail/DelayedNumericInput'
 interface IProps {
   mode: Mode
   settings: SiteSettings
-  custom_value_key: string
+  customValueKey: string
   unit: Cohort
-  unit_types?: UnitType[]
-  unit_types_with_parent?: UnitType[]
-  show_statistics: boolean
-  terrain_types?: TerrainType[]
-  unit_types_as_dropdown?: boolean
-  disable_base_values?: boolean
+  unitTypes?: UnitType[]
+  unitTypesWithParent?: UnitType[]
+  showStatistics: boolean
+  terrainTypes?: TerrainType[]
+  unitTypesAsDropdown?: boolean
+  disableBaseValues?: boolean
   onCustomBaseValueChange: (key: string, attribute: UnitValueType, value: number) => void
   onCustomModifierValueChange: (key: string, attribute: UnitValueType, value: number) => void
   onCustomLossModifierValueChange: (key: string, attribute: UnitValueType, value: number) => void
@@ -49,25 +49,25 @@ export default class UnitDetail extends Component<IProps> {
 
   render() {
     const { unit, onTypeChange, onParentChange, onImageChange, onChangeDeployment, onIsLoyalToggle } = this.props
-    const { terrain_types, unit_types, unit_types_with_parent, unit_types_as_dropdown, settings } = this.props
-    const { id, type, mode, parent, image, role, is_loyal, culture, tech } = unit
+    const { terrainTypes, unitTypes, unitTypesWithParent, unitTypesAsDropdown, settings } = this.props
+    const { id, type, mode, parent, image, role, isLoyal, culture, tech } = unit
     return (
       <Table celled selectable unstackable>
         <Headers values={this.headers} />
         <Table.Body>
           {id && <DetailTextRow text='Identifier' cells={this.CELLS} value={id} />}
-          {onTypeChange && unit_types && unit_types_as_dropdown && <DetailDropdownRow text='Type' cells={this.CELLS} value={type} values={unit_types} onChange={onTypeChange} />}
-          {onTypeChange && unit_types && !unit_types_as_dropdown && <DetailInputRow text='Name' cells={this.CELLS} value={type} onChange={onTypeChange} />}
+          {onTypeChange && unitTypes && unitTypesAsDropdown && <DetailDropdownRow text='Type' cells={this.CELLS} value={type} values={unitTypes} onChange={onTypeChange} />}
+          {onTypeChange && unitTypes && !unitTypesAsDropdown && <DetailInputRow text='Name' cells={this.CELLS} value={type} onChange={onTypeChange} />}
           {mode && <DetailTextRow text='Mode' cells={this.CELLS} value={mode} />}
           {settings[Setting.Culture] && culture && <DetailTextRow text='Culture' cells={this.CELLS} value={culture} />}
           {settings[Setting.Tech] && tech && <DetailTextRow text='Tech' cells={this.CELLS} value={tech} />}
-          {parent && unit_types_with_parent && onParentChange && <DetailDropdownRow text='Parent' cells={this.CELLS} value={parent} values={unit_types_with_parent} onChange={onParentChange} />}
+          {parent && unitTypesWithParent && onParentChange && <DetailDropdownRow text='Parent' cells={this.CELLS} value={parent} values={unitTypesWithParent} onChange={onParentChange} />}
           {onImageChange && <DetailInputRow text='Image' cells={this.CELLS} value={image} onChange={onImageChange} />}
           {onChangeDeployment && role && <DetailDropdownRow text='Deployment' cells={this.CELLS} value={role} values={this.deployments} onChange={onChangeDeployment} />}
-          {settings[Setting.AttributeLoyal] && <DetailToggleRow text='Is loyal?' cells={this.CELLS} value={!!is_loyal} onChange={onIsLoyalToggle} />}
+          {settings[Setting.AttributeLoyal] && <DetailToggleRow text='Is loyal?' cells={this.CELLS} value={!!isLoyal} onChange={onIsLoyalToggle} />}
           {this.attributes.map(this.renderRow)}
-          {settings[Setting.AttributeUnitType] && unit_types && unit_types.map(this.renderRow)}
-          {settings[Setting.AttributeTerrainType] && terrain_types && terrain_types.map(this.renderRow)}
+          {settings[Setting.AttributeUnitType] && unitTypes && unitTypes.map(this.renderRow)}
+          {settings[Setting.AttributeTerrainType] && terrainTypes && terrainTypes.map(this.renderRow)}
           {[CombatPhase.Fire, CombatPhase.Shock].map(this.renderRow)}
         </Table.Body>
       </Table>
@@ -75,27 +75,27 @@ export default class UnitDetail extends Component<IProps> {
   }
 
   renderRow = (attribute: UnitValueType) => {
-    const { unit, custom_value_key, onCustomBaseValueChange, onCustomModifierValueChange, onCustomLossModifierValueChange: onCustomLossValueChange, disable_base_values, settings, mode, show_statistics } = this.props
-    if (!isAttributeEnabled(attribute, settings, mode, show_statistics))
+    const { unit, customValueKey, onCustomBaseValueChange, onCustomModifierValueChange, onCustomLossModifierValueChange: onCustomLossValueChange, disableBaseValues, settings, mode, showStatistics } = this.props
+    if (!isAttributeEnabled(attribute, settings, mode, showStatistics))
       return null
-    const base_value = getValue(ValuesType.Base, unit, attribute, custom_value_key)
-    const modifier_value = getValue(ValuesType.Modifier, unit, attribute, custom_value_key)
-    const loss_value = getValue(ValuesType.LossModifier, unit, attribute, custom_value_key)
+    const baseValue = getValue(ValuesType.Base, unit, attribute, customValueKey)
+    const modifierValue = getValue(ValuesType.Modifier, unit, attribute, customValueKey)
+    const lossValue = getValue(ValuesType.LossModifier, unit, attribute, customValueKey)
     let value = unitValueToString(unit, attribute)
     if (attribute === UnitAttribute.Maintenance)
       value += ' (' + toMaintenance(calculateValue(unit, UnitAttribute.Cost) * calculateValue(unit, UnitAttribute.Maintenance)) + ')'
 
-    const enable_loss = attribute === UnitAttribute.Morale || attribute === UnitAttribute.Strength
-    const enable_modifier = enable_loss || attribute === UnitAttribute.Maintenance || attribute === UnitAttribute.Cost || attribute === UnitAttribute.AttritionWeight
-    const enable_base = !disable_base_values || !enable_modifier
+    const enableLoss = attribute === UnitAttribute.Morale || attribute === UnitAttribute.Strength
+    const enableModifier = enableLoss || attribute === UnitAttribute.Maintenance || attribute === UnitAttribute.Cost || attribute === UnitAttribute.AttritionWeight
+    const enableBase = !disableBaseValues || !enableModifier
 
     return (
       <PaddedRow key={attribute} cells={this.CELLS}>
         {attribute}
         {value}
-        {enable_base && <DelayedNumericInput value={base_value} onChange={value => onCustomBaseValueChange(custom_value_key, attribute, value)} />}
-        {enable_modifier && <DelayedNumericInput value={modifier_value} onChange={value => onCustomModifierValueChange(custom_value_key, attribute, value)} />}
-        {enable_loss && <DelayedNumericInput value={loss_value} onChange={value => onCustomLossValueChange(custom_value_key, attribute, value)} />}
+        {enableBase && <DelayedNumericInput value={baseValue} onChange={value => onCustomBaseValueChange(customValueKey, attribute, value)} />}
+        {enableModifier && <DelayedNumericInput value={modifierValue} onChange={value => onCustomModifierValueChange(customValueKey, attribute, value)} />}
+        {enableLoss && <DelayedNumericInput value={lossValue} onChange={value => onCustomLossValueChange(customValueKey, attribute, value)} />}
         {explain(unit, attribute)}
       </PaddedRow>
     )

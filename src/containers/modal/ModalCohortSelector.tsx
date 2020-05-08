@@ -12,12 +12,12 @@ import BaseModal from './BaseModal'
 class ModalCohortSelector extends Component<IProps> {
   render() {
     const { units, settings, mode } = this.props
-    let unit_list = settings[Setting.Tech] ? getArchetypes(units, mode) : getActualUnits(units, mode)
+    let unitList = settings[Setting.Tech] ? getArchetypes(units, mode) : getActualUnits(units, mode)
     return (
       <BaseModal basic type={ModalType.CohortSelector}>
         <ItemSelector
           onSelection={this.selectUnit}
-          items={unit_list}
+          items={unitList}
         />
       </BaseModal>
     )

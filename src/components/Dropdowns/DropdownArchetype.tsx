@@ -24,6 +24,8 @@ export default class DropdownArchetype extends Component<IProps> {
 
   getValue = (item: Unit) => item.type
 
+  getText = (item: Unit) => item.type + ' (' + (item.tech ?? 0) + ')'
+
   headers = ['Unit', 'Tech', CombatPhase.Fire, CombatPhase.Shock, UnitAttribute.Morale]
 
   render() {
@@ -34,6 +36,7 @@ export default class DropdownArchetype extends Component<IProps> {
         getContent={this.getContent}
         isActive={this.isActive}
         getValue={this.getValue}
+        getText={this.getText}
         onSelect={onSelect}
         settings={settings}
       />

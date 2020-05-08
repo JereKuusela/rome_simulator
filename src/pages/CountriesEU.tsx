@@ -9,9 +9,9 @@ import { clearGeneralSelections, clearCountrySelections, clearCountryAttributes,
 
 import AccordionToggle from 'containers/AccordionToggle'
 import CountryManager from 'containers/CountryManager'
-import Dropdown from 'components/Dropdowns/Dropdown'
+import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 import TableAttributes from 'components/TableAttributes'
-import { getCultures, tech_euiv } from 'data'
+import { getCultures, techEUIV } from 'data'
 import CountryValueInput from 'containers/CountryValueInput'
 import ListModifier from 'components/Utils/ListModifier'
 
@@ -23,7 +23,7 @@ const CELL_PADDING = '.78571429em .78571429em'
 class Countries extends Component<IProps> {
 
   render() {
-    const { settings, tech, general, country, selectedCountry: selected_country, countryDefinition: country_definition, setHasGeneral } = this.props
+    const { settings, tech, general, country, selectedCountry, countryDefinition, setHasGeneral } = this.props
     return (
       <Container>
         <CountryManager>
@@ -32,7 +32,7 @@ class Countries extends Component<IProps> {
         <Grid>
           <Grid.Row columns='3'>
             <Grid.Column>
-              <Dropdown
+              <SimpleDropdown
                 values={getCultures()}
                 value={country.culture}
                 onChange={item => this.selectCulture(item)}
@@ -41,7 +41,7 @@ class Countries extends Component<IProps> {
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <AccordionToggle title='General' identifier='countries_traits'>
+              <AccordionToggle title='General' identifier='countriesTraits'>
                 <Checkbox
                   toggle
                   label='General'
@@ -54,8 +54,8 @@ class Countries extends Component<IProps> {
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <AccordionToggle title='Tech' identifier='countries_tech'>
-                Tech level: <CountryValueInput country={selected_country} attribute={CountryAttribute.TechLevel} />
+              <AccordionToggle title='Tech' identifier='countriesTech'>
+                Tech level: <CountryValueInput country={selectedCountry} attribute={CountryAttribute.TechLevel} />
                 {
                   this.renderTech(tech, country[CountryAttribute.TechLevel])
                 }
@@ -64,9 +64,9 @@ class Countries extends Component<IProps> {
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <AccordionToggle title='Attributes' identifier='countries_attributes'>
-                <TableAttributes attributes={filterAttributes(values(CountryAttribute), settings)} custom_value_key={CUSTOM_KEY} definition={country_definition} onChange={this.setCountryValue} />
-                <TableAttributes attributes={filterAttributes((values(GeneralAttribute) as GeneralValueType[]).concat(values(CombatPhase)), settings)} custom_value_key={CUSTOM_KEY} definition={general} onChange={this.setGeneralValue} />
+              <AccordionToggle title='Attributes' identifier='countriesAttributes'>
+                <TableAttributes attributes={filterAttributes(values(CountryAttribute), settings)} customValueKey={CUSTOM_KEY} definition={countryDefinition} onChange={this.setCountryValue} />
+                <TableAttributes attributes={filterAttributes((values(GeneralAttribute) as GeneralValueType[]).concat(values(CombatPhase)), settings)} customValueKey={CUSTOM_KEY} definition={general} onChange={this.setGeneralValue} />
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
@@ -75,7 +75,7 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderTech = (tech: ListDefinition[], tech_level: number) => {
+  renderTech = (tech: ListDefinition[], techLevel: number) => {
     const rows = Math.ceil(tech.length / TECH_COLUMNS)
     return (
       <Table celled unstackable fixed>
@@ -90,7 +90,7 @@ class Countries extends Component<IProps> {
                     const key = 'Tech' + index
                     if (!level)
                       return (<Table.Cell key={key}></Table.Cell>)
-                    const enabled = index <= tech_level
+                    const enabled = index <= techLevel
                     return (
                       <Table.Cell
                         key={key}
@@ -165,7 +165,7 @@ const mapStateToProps = (state: AppState) => {
     country: getCountry(state, state.settings.country),
     selectedCountry: state.settings.country,
     selectedArmy,
-    tech: tech_euiv,
+    tech: techEUIV,
     general: getGeneralDefinition(state, state.settings.country, selectedArmy),
     settings: getSiteSettings(state)
   }

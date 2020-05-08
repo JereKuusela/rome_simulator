@@ -3,7 +3,7 @@ import { getRootParent } from './units'
 import { ObjSet, keys } from 'utils'
 import { calculateValue } from 'definition_values'
 import { martialToCaptureChance } from './army'
-import { tech_euiv, tech_ir, traditions_ir, heritages_ir, trades_ir, ideas_ir, laws_ir, religions_ir, factions_ir, modifiers_ir, policies_ir, deities_ir, traits_ir, abilities_ir } from 'data'
+import { techEUIV, techIR, traditionsIR, heritagesIR, tradesIR, ideasIR, lawsIR, religionsIR, factionsIR, modifiersIR, policiesIR, deitiesIR, traitsIR, abilitiesIR } from 'data'
 
 export const TECH_KEY = 'Tech '
 
@@ -51,17 +51,17 @@ const mapModifiers = (key: string, modifiers: Modifier[]) => modifiers.map(value
 
 const getTechModifiers = (modifiers: ModifierWithKey[], country: CountryDefinition) => {
   const selections = country.selections[SelectionType.Invention] ?? {}
-  const tech_level = calculateValue(country, CountryAttribute.TechLevel)
+  const techLevel = calculateValue(country, CountryAttribute.TechLevel)
   if (process.env.REACT_APP_GAME === 'euiv') {
-    tech_euiv.forEach((tech, level) => {
-      if (level > tech_level)
+    techEUIV.forEach((tech, level) => {
+      if (level > techLevel)
         return
       modifiers.push(...mapModifiers(TECH_KEY + level, tech.modifiers))
     })
   }
   else {
-    tech_ir.forEach((tech, level) => {
-      if (level > tech_level)
+    techIR.forEach((tech, level) => {
+      if (level > techLevel)
         return
       tech.inventions.forEach((invention, index) => {
         const key = index === 0 ? TECH_KEY + level : invention.key
@@ -81,7 +81,7 @@ const getTraditionModifiers = (modifiers: ModifierWithKey[], country: CountryDef
   if (process.env.REACT_APP_GAME === 'euiv') {
   }
   else {
-    const tradition = traditions_ir[culture]
+    const tradition = traditionsIR[culture]
     if (selections['base']) {
       modifiers.push(...mapModifiers(tradition.name, tradition.modifiers))
       tradition.paths.forEach(path => getModifiersSub(modifiers, selections, path.traditions))
@@ -155,14 +155,14 @@ export const getCountryModifiers = (country: CountryDefinition): ModifierWithKey
   if (process.env.REACT_APP_GAME === 'euiv') {
   }
   else {
-    getModifiersSub2(modifiers, country.selections[SelectionType.Heritage], heritages_ir)
-    getModifiersSub2(modifiers, country.selections[SelectionType.Trade], trades_ir)
-    getModifiersSub2(modifiers, country.selections[SelectionType.Idea], ideas_ir)
-    getModifiersSub2(modifiers, country.selections[SelectionType.Law], laws_ir)
-    getModifiersSub2(modifiers, country.selections[SelectionType.Religion], religions_ir)
-    getModifiersSub2(modifiers, country.selections[SelectionType.Faction], factions_ir)
-    getModifiersSub2(modifiers, country.selections[SelectionType.Modifier], modifiers_ir)
-    policies_ir.forEach(policy => getModifiersSub(modifiers, country.selections[SelectionType.Policy], policy))
+    getModifiersSub2(modifiers, country.selections[SelectionType.Heritage], heritagesIR)
+    getModifiersSub2(modifiers, country.selections[SelectionType.Trade], tradesIR)
+    getModifiersSub2(modifiers, country.selections[SelectionType.Idea], ideasIR)
+    getModifiersSub2(modifiers, country.selections[SelectionType.Law], lawsIR)
+    getModifiersSub2(modifiers, country.selections[SelectionType.Religion], religionsIR)
+    getModifiersSub2(modifiers, country.selections[SelectionType.Faction], factionsIR)
+    getModifiersSub2(modifiers, country.selections[SelectionType.Modifier], modifiersIR)
+    policiesIR.forEach(policy => getModifiersSub(modifiers, country.selections[SelectionType.Policy], policy))
     getTraditionModifiers(modifiers, country)
   }
   return modifiers
@@ -177,7 +177,7 @@ export const getSecondaryCountryModifiers = (country: CountryDefinition): Modifi
   if (process.env.REACT_APP_GAME === 'euiv') {
   }
   else {
-    getDeityModifiers(modifiers, country.selections[SelectionType.Deity], deities_ir, calculateValue(country, CountryAttribute.OmenPower))
+    getDeityModifiers(modifiers, country.selections[SelectionType.Deity], deitiesIR, calculateValue(country, CountryAttribute.OmenPower))
   }
   return modifiers
 }
@@ -188,8 +188,8 @@ export const getGeneralModifiers = (general: GeneralDefinition): ModifierWithKey
     if (process.env.REACT_APP_GAME === 'euiv') {
     }
     else {
-      getModifiersSub2(modifiers, general.selections[SelectionType.Trait], traits_ir)
-      abilities_ir.forEach(abilities => getModifiersSub(modifiers, general.selections[SelectionType.Ability], abilities))
+      getModifiersSub2(modifiers, general.selections[SelectionType.Trait], traitsIR)
+      abilitiesIR.forEach(abilities => getModifiersSub(modifiers, general.selections[SelectionType.Ability], abilities))
       const martial = calculateValue(general, GeneralAttribute.Martial)
       if (martial) {
         modifiers.push({

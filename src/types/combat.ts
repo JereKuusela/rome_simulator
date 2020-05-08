@@ -56,7 +56,7 @@ export interface CombatCohort {
   [UnitAttribute.Morale]: number
   [UnitAttribute.Strength]: number
   /** Is the cohort considered weak for targeting.  */
-  is_weak: boolean
+  isWeak: boolean
   calculated: CombatCohortCalculated
   state: CombatCohortRoundInfo
   definition: CombatCohortDefinition
@@ -67,9 +67,9 @@ export interface CombatCohort {
  */
 export interface CombatCohortCalculated {
   damage: { [key in UnitAttribute.Strength | UnitAttribute.Morale | 'Damage']: { [key in UnitType]: { [key in CombatPhase]: number } } }  // Damage multiplier for each damage type, versus each unit and for each phase.
-  damage_taken_multiplier: number
-  morale_taken_multiplier: number
-  strength_taken_multiplier: { [key in CombatPhase]: number }
+  damageTakenMultiplier: number
+  moraleTakenMultiplier: number
+  strengthTakenMultiplier: { [key in CombatPhase]: number }
 }
 
 type UnitCalcs = { [key in (UnitValueType)]: number }
@@ -78,12 +78,12 @@ export interface CombatCohortDefinition extends UnitCalcs {
   id: number
   image: string
   type: UnitType
-  is_loyal: boolean
+  isLoyal: boolean
   experience: number
-  max_strength: number
-  max_morale: number
-  experience_reduction: number
-  deployment_cost: number
+  maxStrength: number
+  maxMorale: number
+  experienceReduction: number
+  deploymentCost: number
   parent?: UnitType
   mode: Mode
   tech?: number
@@ -97,25 +97,25 @@ export interface CombatCohortRoundInfo {
   /** Targeted enemy cohort. */
   target: CombatCohort | null
   /** Support cohort behind the targeted enemy. */
-  target_support: CombatCohort | null
+  targetSupport: CombatCohort | null
   /** Lost morale this round. */
-  morale_loss: number
+  moraleLoss: number
   /** Lost strength this round. */
-  strength_loss: number
+  strengthLoss: number
   /** Morale losses inflicted this round. */
-  morale_dealt: number
+  moraleDealt: number
   /** Strength losses inflicted this round. */
-  strength_dealt: number
+  strengthDealt: number
   /** Damage multiplier. */
-  damage_multiplier: number
+  damageMultiplier: number
   /** Did the cohort get defeated. */
-  is_defeated: boolean
+  isDefeated: boolean
   /** Did the cohort get destroyed.  */
-  is_destroyed: boolean
+  isDestroyed: boolean
   /** Total morale losses inflicted during the battle. */
-  total_morale_dealt: number
+  totalMoraleDealt: number
   /** Total strength losses inflicted during the battle. */
-  total_strength_dealt: number
+  totalStrengthDealt: number
   /** Chance to get captured in case of getting defeated.  */
-  capture_chance?: number
+  captureChance?: number
 }

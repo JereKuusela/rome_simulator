@@ -11,16 +11,16 @@ const CUSTOM_VALUE_KEY = 'Custom'
 
 class ModalTacticDetail extends Component<IProps> {
   render() {
-    const { type, images, tactics, tactic_types, unit_types } = this.props
+    const { type, images, tactics, tacticTypes, unitTypes } = this.props
     return (
       <BaseModal basic type={ModalType.TacticDetail}>
         <ItemRemover onRemove={this.delete} />
         <TacticDetail
           tactics={tactics}
-          tactic_types={tactic_types}
-          unit_types={unit_types}
+          tacticTypes={tacticTypes}
+          unitTypes={unitTypes}
           images={images}
-          custom_value_key={CUSTOM_VALUE_KEY}
+          customValueKey={CUSTOM_VALUE_KEY}
           tactic={tactics[type]}
           onCustomValueChange={this.setValue}
           onTypeChange={this.setType}
@@ -40,9 +40,9 @@ class ModalTacticDetail extends Component<IProps> {
     const { type, setTacticValue } = this.props
     setTacticValue(type, key, attribute, value)
   }
-  setType = (new_type: TacticType) => {
+  setType = (newType: TacticType) => {
     const { type, setTacticType } = this.props
-    setTacticType(type, new_type)
+    setTacticType(type, newType)
   }
   setImage = (image: string) => {
     const { type, setTacticImage } = this.props
@@ -57,9 +57,9 @@ class ModalTacticDetail extends Component<IProps> {
 const mapStateToProps = (state: AppState) => ({
   type: state.ui.modals[ModalType.TacticDetail]?.type ?? TacticType.Bottleneck,
   tactics: filterTactics(state),
-  tactic_types: filterTacticTypes(state),
+  tacticTypes: filterTacticTypes(state),
   images: getUnitImages(state),
-  unit_types: mergeUnitTypes(state)
+  unitTypes: mergeUnitTypes(state)
 })
 
 const actions = { setTacticValue, setTacticImage, setTacticMode, deleteTactic, closeModal, setTacticType }

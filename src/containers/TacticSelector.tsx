@@ -29,11 +29,11 @@ class TacticSelector extends Component<IProps> {
 }
 
 
-const convertTactic = (tactic: TacticDefinition, cohorts: CombatCohorts, opposing_tactic: TacticDefinition): Tactic => {
+const convertTactic = (tactic: TacticDefinition, cohorts: CombatCohorts, opposingTactic: TacticDefinition): Tactic => {
   return {
     type: tactic.type,
     effect: calculateTactic(cohorts, tactic),
-    damage: calculateTactic(cohorts, tactic, opposing_tactic),
+    damage: calculateTactic(cohorts, tactic, opposingTactic),
     casualties: calculateValue(tactic, TacticCalc.Casualties),
     image: tactic.image
   }

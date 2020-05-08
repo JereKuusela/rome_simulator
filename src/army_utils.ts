@@ -39,12 +39,12 @@ export const convertUnitDefinition = (settings: SiteSettings, definitions: UnitD
  */
 export const filterUnitDefinitions = (mode: Mode, definitions: Units): Units => filter(definitions, unit => unit.mode === mode)
 
-let unit_id = 0
+let unitId = 0
 /**
  * Returns a new id.
  * This is only meant for non-persisted ids because any existing ids are not considered.
  */
-export const getNextId = () => ++unit_id
+export const getNextId = () => ++unitId
 
 export const getArmyPart = (units: CombatCohorts, type: ArmyType) => {
   if (type === ArmyType.Frontline)

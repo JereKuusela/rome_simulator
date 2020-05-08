@@ -156,20 +156,20 @@ const getArmyForCombat = (state: AppState, sideType: SideType, mode?: Mode) => {
   const cohorts = getCohorts(state, sideType)
   const general = getGeneral(state, countryName, armyName)
   const definitions = getUnits(state, countryName, armyName)
-  const flank_ratio = calculateValue(state.countries[countryName], CountryAttribute.FlankRatio)
-  return { ...cohorts, general, flank_ratio, flank_size: army.flank_size, unit_preferences: army.unit_preferences, definitions }
+  const flankRatio = calculateValue(state.countries[countryName], CountryAttribute.FlankRatio)
+  return { ...cohorts, general, flankRatio, flankSize: army.flankSize, unitPreferences: army.unitPreferences, definitions }
 }
 
 export const initializeCombatParticipants = (state: AppState): CombatParticipant[] => {
   const mode = getMode(state)
   const battle = getBattle(state)
-  const army_a = getArmyForCombat(state, SideType.Attacker, mode)
-  const army_d = getArmyForCombat(state, SideType.Defender, mode)
+  const armyA = getArmyForCombat(state, SideType.Attacker, mode)
+  const armyD = getArmyForCombat(state, SideType.Defender, mode)
   const terrains = battle.terrains.map(value => state.terrains[value])
   const settings = getSettings(state)
   return [
-    convertParticipant(SideType.Attacker, army_a, army_d, terrains, settings),
-    convertParticipant(SideType.Defender, army_d, army_a, terrains, settings)
+    convertParticipant(SideType.Attacker, armyA, armyD, terrains, settings),
+    convertParticipant(SideType.Defender, armyD, armyA, terrains, settings)
   ]
 }
 
@@ -181,12 +181,12 @@ export const getSelectedTactic = (state: AppState, side: SideType, index: number
 
 export const getUnitPreferences = (state: AppState, side: SideType): UnitPreferences => {
   const army = getArmyDefinitionBySide(state, side)
-  return army.unit_preferences
+  return army.unitPreferences
 }
 
 export const getFlankSize = (state: AppState, side: SideType): number => {
   const army = getArmyDefinitionBySide(state, side)
-  return army.flank_size
+  return army.flankSize
 }
 
 export const getCountry = (state: AppState, countryName: CountryName): Country => {
@@ -285,30 +285,29 @@ export const getUnits = (state: AppState, countryName?: CountryName, armyName?: 
   return filterUnitDefinitions(mode, units)
 }
 
-export const getUnitTypeList = (state: AppState, filter_parent: boolean, countryName?: CountryName) => getUnitList(state, filter_parent, countryName).map(unit => unit.type)
+export const getUnitTypeList = (state: AppState, filterParent: boolean, countryName?: CountryName) => getUnitList(state, filterParent, countryName).map(unit => unit.type)
 
-export const getUnitList = (state: AppState, filter_parent: boolean, countryName?: CountryName, armyName?: ArmyName): Unit[] => {
+export const getUnitList = (state: AppState, filterParent: boolean, countryName?: CountryName, armyName?: ArmyName): Unit[] => {
   const mode = getMode(state)
   countryName = countryName ?? state.settings.country
   armyName = armyName ?? getSelectedArmy(state)
-  const country = getCountry(state, countryName)
   const units = getUnits(state, countryName, armyName)
-  return manager.getUnitList2(units, mode, country[CountryAttribute.TechLevel], filter_parent, getSiteSettings(state))
+  return manager.getUnitList2(units, mode, filterParent, getSiteSettings(state))
 }
 
-export const getUnit = (state: AppState, unit_type: UnitType, countryName?: CountryName, armyName?: ArmyName): Unit => {
+export const getUnit = (state: AppState, unitType: UnitType, countryName?: CountryName, armyName?: ArmyName): Unit => {
   const settings = getSiteSettings(state)
   countryName = countryName ?? state.settings.country
   armyName = armyName ?? getSelectedArmy(state)
   const general = getGeneralDefinition(state, countryName, armyName).definitions
   const units = getUnitDefinitions(state, countryName, armyName)
-  return convertUnitDefinition(settings, units, shrinkUnits(units), general, unit_type)
+  return convertUnitDefinition(settings, units, shrinkUnits(units), general, unitType)
 }
 
 export const getUnitImages = (state: AppState): { [key in UnitType]: string[] } => {
   const definitions = toArr(state.countries).map(definitions => toArr(definitions.units)).flat(1)
-  const unit_types = mergeUnitTypes(state)
-  return toObj(unit_types, type => type, type => uniq(definitions.filter(value => value.type === type).map(value => value.image)))
+  const unitTypes = mergeUnitTypes(state)
+  return toObj(unitTypes, type => type, type => uniq(definitions.filter(value => value.type === type).map(value => value.image)))
 }
 
 /**

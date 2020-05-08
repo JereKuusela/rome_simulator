@@ -39,12 +39,12 @@ class TacticDefinitions extends Component<IProps> {
   onClick = () => this.props.openModal(ModalType.Value, {
     onSuccess: type => this.props.createTactic(type as TacticType, this.props.mode),
     message: 'New tactic type',
-    button_message: 'Create',
+    buttonMessage: 'Create',
     initial: ''
   })
 
   renderRow = (definition: TacticDefinition) => {
-    const { images, unit_types } = this.props
+    const { images, unitTypes } = this.props
     return (
       <Table.Row key={definition.type} onClick={() => this.openModal(definition)}>
         <Table.Cell>
@@ -55,7 +55,7 @@ class TacticDefinitions extends Component<IProps> {
           <VersusList
             item={definition}
             images={images}
-            unit_types={unit_types}
+            unitTypes={unitTypes}
           />
         </Table.Cell>
         <Table.Cell singleLine>
@@ -66,20 +66,20 @@ class TacticDefinitions extends Component<IProps> {
         <Table.Cell>
           <StyledNumber
             value={calculateValue(definition, TacticCalc.Casualties)}
-            formatter={toSignedPercent} hide_zero reverse
+            formatter={toSignedPercent} hideZero reverse
           />
         </Table.Cell>
       </Table.Row>
     )
   }
 
-  renderVersus = (tactic: TacticDefinition) => {
-    const filtered = this.props.tactics.filter(versus => calculateValue(tactic, versus.type))
+  renderVersus = (definition: TacticDefinition) => {
+    const filtered = this.props.tactics.filter(versus => calculateValue(definition, versus.type))
     return filtered.map(versus => (
       <List.Item key={versus.type} style={{ marginLeft: 0, marginRight: '1em' }}>
         <Image src={getImage(versus)} avatar />
         <StyledNumber
-          value={calculateValue(tactic, versus.type)}
+          value={calculateValue(definition, versus.type)}
           formatter={toSignedPercent}
         />
       </List.Item>
@@ -92,7 +92,7 @@ class TacticDefinitions extends Component<IProps> {
 const mapStateToProps = (state: AppState) => ({
   tactics: toArr(filterTactics(state)),
   images: getUnitImages(state),
-  unit_types: mergeUnitTypes(state),
+  unitTypes: mergeUnitTypes(state),
   mode: getMode(state)
 })
 

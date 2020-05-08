@@ -17,6 +17,8 @@ interface IProps<T extends string, E> {
   clearable?: boolean
   search?: boolean
   placeholder?: string
+  absolute?: boolean
+  width?: number
 }
 
 type IState = {
@@ -64,12 +66,19 @@ export default class DropdownTable<T extends string, E> extends Component<IProps
     this.setState({ open: false, search: '' })
   }
   render() {
-    const { value, values, headers, trigger, clearable, getText, search, placeholder } = this.props
+    const { value, values, headers, trigger, width,  clearable, getText, search, placeholder, absolute } = this.props
     const selected = values.find(this.props.isActive)
     const text = trigger ? undefined : selected && getText ? getText(selected) : ''
+    const style = { minWidth: width ?? 170, maxWidth: width ?? 170 }
+    let classNames = []
+    if (absolute)
+      classNames.push('absolute')
+    if (!trigger)
+      classNames.push('selection')
     return (
+      //<span style={{ minWidth: 180, maxWidth: 180, display: 'inline-block', verticalAlign: 'top' }}>
       <Dropdown open={this.state.open} clearable={clearable} onChange={this.onChange} search={search} searchQuery={this.state.search} onSearchChange={this.search} onOpen={this.onOpen} onBlur={this.onClose}
-        text={text} value={value} scrolling trigger={trigger} className={trigger ? '' : 'selection'} placeholder={placeholder}>
+        text={text} value={value} scrolling trigger={trigger} className={classNames.join(' ')} placeholder={placeholder} style={style}>
         <Dropdown.Menu>
           <Table selectable celled>
             {headers.length ? this.getHeader() : null}
@@ -79,6 +88,7 @@ export default class DropdownTable<T extends string, E> extends Component<IProps
           </Table>
         </Dropdown.Menu>
       </Dropdown>
+      //</span>
     )
   }
 }

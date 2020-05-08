@@ -23,12 +23,12 @@ export default class DropdownTactic extends Component<IProps> {
     <StyledNumber
       value={tactic.damage}
       formatter={toSignedPercent}
-      hide_zero
+      hideZero
     />,
     <StyledNumber
       value={tactic.casualties}
       formatter={toSignedPercent}
-      hide_zero
+      hideZero
     />
   ])
 
@@ -50,6 +50,7 @@ export default class DropdownTactic extends Component<IProps> {
         onSelect={onSelect}
         trigger={<LabelItem item={values.find(tactic => tactic.type === value)} />}
         settings={settings}
+        width={150}
       />
     )
   }

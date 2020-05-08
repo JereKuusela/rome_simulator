@@ -9,8 +9,8 @@ import { getArmyPart } from 'army_utils'
 type Props = {
   type: ArmyType
   visible: boolean
-  attacker_color: string
-  defender_color: string
+  attackerColor: string
+  defenderColor: string
 }
 
 /**
@@ -19,30 +19,30 @@ type Props = {
 class TargetArrows extends Component<IProps> {
 
   render() {
-    const { attacker, defender, attacker_color, defender_color, visible } = this.props
+    const { attacker, defender, attackerColor, defenderColor, visible } = this.props
     if (!visible)
       return null
     return (
       <>
-        {attacker.map(row => row.map(unit => this.renderAttacker(unit, attacker_color)))}
-        {defender.map(row => row.map(unit => this.renderDefender(unit, defender_color)))}
+        {attacker.map(row => row.map(unit => this.renderAttacker(unit, attackerColor)))}
+        {defender.map(row => row.map(unit => this.renderDefender(unit, defenderColor)))}
       </>
     )
   }
   renderAttacker = (unit: IUnit, color: string) => {
     if (!unit || !unit.target)
       return null
-    const from_str = SideType.Attacker + '-' + ArmyType.Frontline + '-' + unit.id
-    const to_str = SideType.Defender + '-' + ArmyType.Frontline + '-' + unit.target
-    return this.renderArrow(from_str, to_str, 'bottom', 'top', color)
+    const fromStr = SideType.Attacker + '-' + ArmyType.Frontline + '-' + unit.id
+    const toStr = SideType.Defender + '-' + ArmyType.Frontline + '-' + unit.target
+    return this.renderArrow(fromStr, toStr, 'bottom', 'top', color)
   }
 
   renderDefender = (unit: IUnit, color: string) => {
     if (!unit || !unit.target)
       return null
-    const from_str = SideType.Defender + '-' + ArmyType.Frontline + '-' + unit.id
-    const to_str = SideType.Attacker + '-' + ArmyType.Frontline + '-' + unit.target
-    return this.renderArrow(from_str, to_str, 'top', 'bottom', color)
+    const fromStr = SideType.Defender + '-' + ArmyType.Frontline + '-' + unit.id
+    const toStr = SideType.Attacker + '-' + ArmyType.Frontline + '-' + unit.target
+    return this.renderArrow(fromStr, toStr, 'top', 'bottom', color)
   }
 
   renderArrow = (from: string, to: string, fromAnchor: string, toAnchor: string, borderColor: string) => (

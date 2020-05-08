@@ -137,11 +137,11 @@ export default class AttributeImage extends Component<IProps> {
         <>
           <Popup
             trigger={
-              <div>
+              <span>
                 {first && <Image src={first} avatar />}
                 {second && <Image src={second} avatar />}
                 {!first && !second && getText(attribute)}
-              </ div>
+              </ span>
             }
             content={this.getContent()}
             basic

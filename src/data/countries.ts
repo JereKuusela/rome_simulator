@@ -9,7 +9,7 @@ export const defaultCountry: CountryDefinition =
   culture: (process.env.REACT_APP_GAME === 'euiv' ? 'Western' : 'latin_philosophy') as CultureType,
   armies: getDefaultArmies(),
   units: getDefaultUnits((process.env.REACT_APP_GAME === 'euiv' ? 'Western' : undefined) as CultureType),
-  base_values: {
+  baseValues: {
     [CountryAttribute.FlankRatio]: {
       'Base': 0.5
     },

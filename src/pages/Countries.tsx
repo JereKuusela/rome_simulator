@@ -17,14 +17,14 @@ import {
 
 import AccordionToggle from 'containers/AccordionToggle'
 import CountryManager from 'containers/CountryManager'
-import Dropdown from 'components/Dropdowns/Dropdown'
+import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TableAttributes from 'components/TableAttributes'
 import { convertCountryDefinition } from 'managers/countries'
 import CountryValueInput from 'containers/CountryValueInput'
 import ListModifier from 'components/Utils/ListModifier'
 import DropdownListDefinition from 'components/Dropdowns/DropdownListDefinition'
-import { traditions_ir, traits_ir, abilities_ir, trades_ir, tech_ir, deities_ir, laws_ir, policies_ir, ideas_ir, modifiers_ir, heritages_ir, religions_ir, factions_ir } from 'data'
+import { traditionsIR, traitsIR, abilitiesIR, tradesIR, techIR, deitiesIR, lawsIR, policiesIR, ideasIR, modifiersIR, heritagesIR, religionsIR, factionsIR } from 'data'
 
 const PERCENT_PADDING = '\u00a0\u00a0\u00a0\u00a0'
 
@@ -36,7 +36,7 @@ class Countries extends Component<IProps> {
     const { settings, generalDefinition, general, selectedCountry, setHasGeneral,
       countryDefinition, country } = this.props
     const countrySelections = countryDefinition.selections
-    const tradition = traditions_ir[country.culture]
+    const tradition = traditionsIR[country.culture]
     return (
       <Container>
         <CountryManager>
@@ -45,8 +45,8 @@ class Countries extends Component<IProps> {
         <Grid>
           <Grid.Row columns='3'>
             <Grid.Column>
-              <Dropdown
-                values={Object.values(traditions_ir).map(tradition => ({ value: tradition.key, text: tradition.name }))}
+              <SimpleDropdown
+                values={Object.values(traditionsIR).map(tradition => ({ value: tradition.key, text: tradition.name }))}
                 value={country.culture}
                 onChange={this.selectCulture}
               />
@@ -54,7 +54,7 @@ class Countries extends Component<IProps> {
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <AccordionToggle title='General' identifier='countries_traits'>
+              <AccordionToggle title='General' identifier='countriesTraits'>
                 <Checkbox
                   toggle
                   label='General'
@@ -62,8 +62,8 @@ class Countries extends Component<IProps> {
                   onChange={general.enabled ? () => this.execArmy(setHasGeneral, false) : () => this.execArmy(setHasGeneral, true)}
                   style={{ float: 'right' }}
                 />
-                Base martial: <Input disabled={!general.enabled} type='number' value={general.base_values[GeneralAttribute.Martial]} onChange={(_, { value }) => this.setGeneralValue('Base', GeneralAttribute.Martial, Number(value))} />
-                {' '}with <StyledNumber value={general.extra_values[GeneralAttribute.Martial]} formatter={addSignWithZero} /> from traits
+                Base martial: <Input disabled={!general.enabled} type='number' value={general.baseValues[GeneralAttribute.Martial]} onChange={(_, { value }) => this.setGeneralValue('Base', GeneralAttribute.Martial, Number(value))} />
+                {' '}with <StyledNumber value={general.extraValues[GeneralAttribute.Martial]} formatter={addSignWithZero} /> from traits
                 {this.renderTraits()}
                 {this.renderAbilities()}
               </AccordionToggle>
@@ -71,7 +71,7 @@ class Countries extends Component<IProps> {
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <AccordionToggle title={'Traditions (' + tradition.name + ')'} identifier='countries_tradition'>
+              <AccordionToggle title={'Traditions (' + tradition.name + ')'} identifier='countriesTradition'>
                 Military experience: <CountryValueInput attribute={CountryAttribute.MilitaryExperience} country={selectedCountry} />
                 {
                   this.renderTraditions(tradition, countrySelections[SelectionType.Tradition])
@@ -81,23 +81,23 @@ class Countries extends Component<IProps> {
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <AccordionToggle title='Trade' identifier='countries_trade'>
+              <AccordionToggle title='Trade' identifier='countriesTrade'>
                 {this.renderTrades()}
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <AccordionToggle title='Technology & Inventions' identifier='countries_invention'>
+              <AccordionToggle title='Technology & Inventions' identifier='countriesInvention'>
                 {
-                  this.renderInventions(tech_ir, country[CountryAttribute.TechLevel], countrySelections[SelectionType.Invention])
+                  this.renderInventions(techIR, country[CountryAttribute.TechLevel], countrySelections[SelectionType.Invention])
                 }
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <AccordionToggle title='Religion & Deities' identifier='countries_deities'>
+              <AccordionToggle title='Religion & Deities' identifier='countriesDeities'>
                 {this.renderReligions()}
                 <br />
                 <br />
@@ -121,7 +121,7 @@ class Countries extends Component<IProps> {
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <AccordionToggle title='Heritage, Government, Economy & Ideas' identifier='countries_government'>
+              <AccordionToggle title='Heritage, Government, Economy & Ideas' identifier='countriesGovernment'>
                 <Grid padded>
                   <Grid.Row columns='3'>
                     <Grid.Column>
@@ -158,8 +158,8 @@ class Countries extends Component<IProps> {
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title='Attributes' identifier='countries_attributes'>
-                <TableAttributes attributes={filterAttributes(values(CountryAttribute), settings)} custom_value_key='Custom' definition={countryDefinition} onChange={this.setCountryValue} />
-                <TableAttributes attributes={filterAttributes((values(GeneralAttribute) as GeneralValueType[]).concat(values(CombatPhase)), settings)} custom_value_key='Custom' definition={generalDefinition} onChange={this.setGeneralValue} />
+                <TableAttributes attributes={filterAttributes(values(CountryAttribute), settings)} customValueKey='Custom' definition={countryDefinition} onChange={this.setCountryValue} />
+                <TableAttributes attributes={filterAttributes((values(GeneralAttribute) as GeneralValueType[]).concat(values(CombatPhase)), settings)} customValueKey='Custom' definition={generalDefinition} onChange={this.setGeneralValue} />
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
@@ -258,7 +258,7 @@ class Countries extends Component<IProps> {
   }
 
   renderDeities = () => {
-    const deities = values(deities_ir)
+    const deities = values(deitiesIR)
     const rows = Math.ceil(deities.length / 4)
     const power = this.props.country[CountryAttribute.OmenPower]
     const selections = this.props.country.selections[SelectionType.Deity]
@@ -288,11 +288,11 @@ class Countries extends Component<IProps> {
   }
 
 
-  renderTraits = () => this.renderList(SelectionType.Trait, values(traits_ir), 4, this.onGeneralItemClick, !this.props.general.enabled)
-  renderTrades = () => this.renderList(SelectionType.Trade, values(trades_ir), 3, this.onCountryItemClick, false, PERCENT_PADDING)
-  renderIdeas = () => this.renderList(SelectionType.Idea, values(ideas_ir), 3, this.onCountryItemClick, false, PERCENT_PADDING)
-  renderLaws = () => this.renderList(SelectionType.Law, values(laws_ir), 3, this.onCountryItemClick, false, PERCENT_PADDING)
-  renderModifiers = () => this.renderList(SelectionType.Modifier, values(modifiers_ir), 4, this.onCountryItemClick, false, PERCENT_PADDING)
+  renderTraits = () => this.renderList(SelectionType.Trait, values(traitsIR), 4, this.onGeneralItemClick, !this.props.general.enabled)
+  renderTrades = () => this.renderList(SelectionType.Trade, values(tradesIR), 3, this.onCountryItemClick, false, PERCENT_PADDING)
+  renderIdeas = () => this.renderList(SelectionType.Idea, values(ideasIR), 3, this.onCountryItemClick, false, PERCENT_PADDING)
+  renderLaws = () => this.renderList(SelectionType.Law, values(lawsIR), 3, this.onCountryItemClick, false, PERCENT_PADDING)
+  renderModifiers = () => this.renderList(SelectionType.Modifier, values(modifiersIR), 4, this.onCountryItemClick, false, PERCENT_PADDING)
 
   renderList = (type: SelectionType, items: ListDefinition[], columns: number, onClick: (enabled: boolean) => ((type: SelectionType, key: string) => void), disabled: boolean, padding?: string) => {
     const selections = this.props.country.selections[type] ?? this.props.general.selections[type]
@@ -323,9 +323,9 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderHeritages = () => this.renderDropdown(SelectionType.Heritage,  values(heritages_ir))
-  renderReligions = () => this.renderDropdown(SelectionType.Religion, values(religions_ir))
-  renderFactions = () => this.renderDropdown(SelectionType.Faction, values(factions_ir))
+  renderHeritages = () => this.renderDropdown(SelectionType.Heritage,  values(heritagesIR))
+  renderReligions = () => this.renderDropdown(SelectionType.Religion, values(religionsIR))
+  renderFactions = () => this.renderDropdown(SelectionType.Faction, values(factionsIR))
 
   renderDropdown = (type: SelectionType, items: ListDefinition[]) => {
     const selections = this.props.country.selections[type] ?? this.props.general.selections[type]
@@ -341,8 +341,8 @@ class Countries extends Component<IProps> {
     )
   }
 
-  renderPolicies = () => this.renderOptions(SelectionType.Policy, policies_ir, 3, this.onCountryItemClick, false, PERCENT_PADDING)
-  renderAbilities = () => this.renderOptions(SelectionType.Ability, abilities_ir, 2, this.onGeneralItemClick, false, PERCENT_PADDING)
+  renderPolicies = () => this.renderOptions(SelectionType.Policy, policiesIR, 3, this.onCountryItemClick, false, PERCENT_PADDING)
+  renderAbilities = () => this.renderOptions(SelectionType.Ability, abilitiesIR, 2, this.onGeneralItemClick, false, PERCENT_PADDING)
 
   renderOptions = (type: SelectionType, options: OptionDefinition[], columns: number, onClick: (enabled: boolean) => ((type: SelectionType, key: string) => void), disabled: boolean, padding?: string) => {
     const selections = this.props.country.selections[type] ?? this.props.general.selections[type]
@@ -390,7 +390,7 @@ class Countries extends Component<IProps> {
   enableGeneralSelection = (type: SelectionType, key: string) => {
     const { enableGeneralSelection, clearGeneralSelections } = this.props
     if (type === SelectionType.Ability) {
-      const keys = this.findOptionKeys(abilities_ir, key)
+      const keys = this.findOptionKeys(abilitiesIR, key)
       if (keys)
         this.execArmy(clearGeneralSelections, type, keys)
     }
@@ -409,7 +409,7 @@ class Countries extends Component<IProps> {
     if (type === SelectionType.Heritage || type === SelectionType.Religion || type === SelectionType.Faction)
       this.execCountry(clearCountrySelections, type)
     if (type === SelectionType.Policy) {
-      const keys = this.findOptionKeys(policies_ir, key)
+      const keys = this.findOptionKeys(policiesIR, key)
       if (keys)
         this.execCountry(clearCountrySelections, type, keys)
     }
@@ -465,7 +465,7 @@ class Countries extends Component<IProps> {
 
   clearTech = (level: number) => {
     const { country, clearCountrySelections } = this.props
-    const keys = tech_ir.filter((_, index) => level <= index && index <= country[CountryAttribute.TechLevel]).reduce((prev, curr) => prev.concat(curr.inventions.map(value => value.name)), [] as string[])
+    const keys = techIR.filter((_, index) => level <= index && index <= country[CountryAttribute.TechLevel]).reduce((prev, curr) => prev.concat(curr.inventions.map(value => value.name)), [] as string[])
     this.execCountry(clearCountrySelections, SelectionType.Invention, keys)
     this.setCountryValue('', CountryAttribute.TechLevel, level - 1)
   }

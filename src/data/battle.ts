@@ -15,7 +15,7 @@ export const getDefaultSide = (type: SideType, name: CountryName, mode: Mode): S
     rounds: [],
     rolls: [0],
     dice: (process.env.REACT_APP_GAME === 'euiv' ? 5 : 3),
-    randomize_dice: false
+    randomizeDice: false
   }
 }
 
@@ -31,9 +31,9 @@ export const getDefaultMode = (mode: Mode): Battle => ({
   sides: { [SideType.Attacker]: getDefaultSide(SideType.Attacker, CountryName.Country1, mode), [SideType.Defender]: getDefaultSide(SideType.Defender, CountryName.Country2, mode) },
   terrains: getInitialTerrains(mode),
   round: -1,
-  fight_over: true,
+  fightOver: true,
   seed: 0,
-  custom_seed: undefined,
+  customSeed: undefined,
   outdated: true,
   timestamp: 0
 })

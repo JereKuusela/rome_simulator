@@ -19,9 +19,9 @@ export type General = {
   tactic: TacticDefinition
   selections: Selections
   enabled: boolean
-  base_values: { [key in GeneralValueType]: number }
-  extra_values: { [key in GeneralValueType]: number }
-  total_values: { [key in GeneralValueType]: number }
+  baseValues: { [key in GeneralValueType]: number }
+  extraValues: { [key in GeneralValueType]: number }
+  totalValues: { [key in GeneralValueType]: number }
 }
 
 export type GeneralValueType = GeneralAttribute | CombatPhase
@@ -39,8 +39,8 @@ export type UnitPreferences = { [key in UnitPreferenceType | UnitRole]: UnitType
 
 export type Army = {
   mode: Mode
-  unit_preferences: UnitPreferences
-  flank_size: number
+  unitPreferences: UnitPreferences
+  flankSize: number
   general: GeneralDefinition
   frontline: FrontlineDefinition
   reserve: ReserveDefinition
@@ -78,7 +78,7 @@ export interface ArmyForCombatConversion extends Cohorts {
   tactic?: TacticDefinition
   definitions: Units
   general: General
-  unit_preferences: UnitPreferences
-  flank_size: number
-  flank_ratio: number
+  unitPreferences: UnitPreferences
+  flankSize: number
+  flankRatio: number
 }

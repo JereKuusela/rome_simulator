@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table } from 'semantic-ui-react'
 
-import { SideType, UnitRole, CountryName, UnitType, UnitAttribute, filterAttributes, Setting, Unit, Mode, CountryAttribute, ArmyName } from 'types'
+import { SideType, UnitRole, CountryName, UnitType, UnitAttribute, filterAttributes, Setting, Unit, Mode, CountryAttribute, ArmyName, CultureType } from 'types'
 import { getImage, mapRange } from 'utils'
 import { AppState, getUnitPreferences, getCountry, getMode, getCombatSide, getArmyDefinitionWithOverriddenUnits, getSiteSettings } from 'state'
-import { addToReserve, removeFromReserve, setUnitPreference } from 'reducers'
+import { addToReserve, removeFromReserve, setUnitPreference, selectCulture } from 'reducers'
 import { getArchetypes2, getActualUnits2, getLatestUnits2, getChildUnits2, getRootUnit } from 'managers/army'
 import UnitValueInput from './UnitValueInput'
 import AttributeImage from 'components/Utils/AttributeImage'
@@ -13,6 +13,8 @@ import { getNextId } from 'army_utils'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 import { applyLosses } from 'managers/units'
 import DropdownArchetype from 'components/Dropdowns/DropdownArchetype'
+import { getCultures } from 'data'
+import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 
 type Props = {
   side: SideType
@@ -32,7 +34,7 @@ class TableUnitTypes extends Component<IProps> {
   getAttributes = () => {
     const { mode } = this.props
     if (process.env.REACT_APP_GAME === 'euiv')
-      return [UnitAttribute.CombatAbility, UnitAttribute.OffensiveSupport]
+      return [UnitAttribute.Discipline, UnitAttribute.Morale, UnitAttribute.CombatAbility]
     else {
       if (mode === Mode.Naval)
         return [UnitAttribute.Discipline, UnitAttribute.Morale, UnitAttribute.DamageDone, UnitAttribute.DamageTaken]
@@ -43,8 +45,8 @@ class TableUnitTypes extends Component<IProps> {
   checkPreference = (role: UnitRole) => {
     const { units, preferences, tech, country, army } = this.props
     const preference = preferences[role]
-    const tech_requirement = preference && units[preference] && units[preference].tech
-    if (tech_requirement && tech_requirement > tech) {
+    const techRequirement = preference && units[preference] && units[preference].tech
+    if (techRequirement && techRequirement > tech) {
       setUnitPreference(country, army, role, null)
     }
   }
@@ -57,20 +59,14 @@ class TableUnitTypes extends Component<IProps> {
 
   render() {
     const { side, settings, units, mode } = this.props
-    const unit_list = settings[Setting.Tech] ? getArchetypes2(units, mode) : getActualUnits2(units, mode)
+    const unitList = settings[Setting.Tech] ? getArchetypes2(units, mode) : getActualUnits2(units, mode)
     return (
-      <Table celled unstackable key={side}>
+      <Table celled key={side} singleLine>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>
               {side}
             </Table.HeaderCell>
-            {
-              settings[Setting.Tech] &&
-              <Table.HeaderCell>
-                Type
-              </Table.HeaderCell>
-            }
             <Table.HeaderCell>
               Amount
             </Table.HeaderCell>
@@ -84,11 +80,11 @@ class TableUnitTypes extends Component<IProps> {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {!settings[Setting.Tech] && this.renderRootUnitRow(getRootUnit(units, mode))}
-          {!settings[Setting.Tech] && unit_list.map(this.renderUnitRow)}
-          {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Front, unit_list)}
-          {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Flank, unit_list)}
-          {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Support, unit_list)}
+          {this.renderRootUnitRow(getRootUnit(units, mode))}
+          {!settings[Setting.Tech] && unitList.map(this.renderUnitRow)}
+          {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Front, unitList)}
+          {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Flank, unitList)}
+          {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Support, unitList)}
         </Table.Body>
       </Table>
     )
@@ -102,17 +98,14 @@ class TableUnitTypes extends Component<IProps> {
     if (!archetype || !preference)
       return null
     const image = getImage(archetype)
-    const latest_type = getLatestUnits2(units, tech)
-    const latest = { ...units[latest_type[role] || archetype.type], type: UnitType.Latest }
+    const latestType = getLatestUnits2(units, tech)
+    const latest = { ...units[latestType[role] || archetype.type], type: UnitType.Latest }
     const children = [latest].concat(...getChildUnits2(units, tech, archetype.type))
     return (
       <>
         <Table.Row key={role}>
-          <Table.Cell onClick={() => onRowClick(country, army, archetype.type)} selectable>
+          <Table.Cell onClick={() => onRowClick(country, army, archetype.type)} selectable className='padding'>
             <Image src={image} avatar />
-            {archetype.type}
-          </Table.Cell>
-          <Table.Cell>
             <DropdownArchetype
               value={preference}
               values={children}
@@ -161,7 +154,7 @@ class TableUnitTypes extends Component<IProps> {
   }
 
   renderRootUnitRow = (unit: Unit) => {
-    const { country, settings, army, onRowClick } = this.props
+    const { country, settings, army, onRowClick, culture } = this.props
     if (!unit)
       return null
     const image = getImage(unit)
@@ -169,11 +162,16 @@ class TableUnitTypes extends Component<IProps> {
       <Table.Row key={unit.type}>
         <Table.Cell onClick={() => onRowClick(country, army, unit.type)} selectable>
           <Image src={image} avatar />
-          Army
+          {
+            settings[Setting.Culture] ?
+              <SimpleDropdown
+                values={getCultures()}
+                value={culture}
+                onChange={item => this.selectCulture(country, item)}
+              /> : 'Army'
+          }
         </Table.Cell>
-        <Table.Cell>
-
-        </Table.Cell>
+        <Table.Cell />
         {
           filterAttributes(this.getAttributes(), settings).map(attribute => (
             <Table.Cell key={attribute}>
@@ -205,19 +203,25 @@ class TableUnitTypes extends Component<IProps> {
       removeFromReserve(country, army, types)
     }
   }
+
+  selectCulture = (country: CountryName, culture: CultureType) => {
+    const { selectCulture } = this.props
+    selectCulture(country, culture, false)
+  }
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
   preferences: getUnitPreferences(state, props.side),
   reserve: getArmyDefinitionWithOverriddenUnits(state, props.country, props.army, true).reserve,
   units: getCombatSide(state, props.side).definitions,
+  culture: getCountry(state, props.country).culture,
   tech: getCountry(state, props.country)[CountryAttribute.TechLevel],
   settings: getSiteSettings(state),
   weariness: getCountry(state, props.country).weariness,
   mode: getMode(state)
 })
 
-const actions = { addToReserve, removeFromReserve, setUnitPreference }
+const actions = { addToReserve, removeFromReserve, setUnitPreference, selectCulture }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

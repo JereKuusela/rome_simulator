@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import Dropdown from 'components/Dropdowns/Dropdown'
+import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 import ValueDropdownModal from 'components/ValueDropdownModal'
 import { AppState, getArmies, getMode } from 'state'
 import { Grid, Button } from 'semantic-ui-react'
@@ -35,9 +35,9 @@ class CountryManager extends Component<IProps, IState> {
           onClose={this.onClose}
           items={keys(countries)}
           message='New country'
-          button_message='Create'
-          value_label='Name '
-          dropdown_label='Copy country: '
+          buttonMessage='Create'
+          valueLabel='Name '
+          dropdownLabel='Copy country: '
         />
         <ValueDropdownModal
           value={'' as ArmyName}
@@ -47,13 +47,13 @@ class CountryManager extends Component<IProps, IState> {
           onClose={this.onClose}
           items={armies}
           message='New army'
-          button_message='Create'
-          value_label='Name '
-          dropdown_label='Copy army: '
+          buttonMessage='Create'
+          valueLabel='Name '
+          dropdownLabel='Copy army: '
         />
         <Grid.Row columns='5'>
           <Grid.Column>
-            <Dropdown
+            <SimpleDropdown
               values={keys(countries)}
               value={selectedCountry}
               onChange={name => selectCountry(name)}
@@ -90,7 +90,7 @@ class CountryManager extends Component<IProps, IState> {
         </Grid.Row>
         <Grid.Row columns='5'>
           <Grid.Column>
-            <Dropdown
+            <SimpleDropdown
               values={armies.map((key, index) => ({ text: key, value: index }))}
               value={selectedArmy}
               onChange={selectArmy}
@@ -119,22 +119,22 @@ class CountryManager extends Component<IProps, IState> {
   openEditCountry = () => this.props.openModal(ModalType.Value, {
     onSuccess: country => this.changeCountryName(country as CountryName),
     message: 'Rename country',
-    button_message: 'Edit',
+    buttonMessage: 'Edit',
     initial: this.props.selectedCountry
   })
 
   openEditArmy = () => this.props.openModal(ModalType.Value, {
     onSuccess: army => this.changeArmyName(army as ArmyName),
     message: 'Rename army',
-    button_message: 'Edit',
+    buttonMessage: 'Edit',
     initial: this.props.armies[this.props.selectedArmy]
   })
 
   onClose = () => this.setState(this.initialState)
 
-  createCountry = (country: CountryName, source_country?: CountryName) => {
+  createCountry = (country: CountryName, source?: CountryName) => {
     const { selectCountry, createCountry } = this.props
-    createCountry(country, source_country)
+    createCountry(country, source)
     selectCountry(country)
   }
 

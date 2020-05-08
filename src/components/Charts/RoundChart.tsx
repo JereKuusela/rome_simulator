@@ -59,7 +59,7 @@ export default class RoundChart extends Component<IProps, IState> {
     const { rounds, progress } = this.props
     const { label } = this.state
     const data = this.calculate(rounds, progress)
-    const round_ticks = mapRange(data.cumulative.length ? data.cumulative[data.cumulative.length - 1].x + 1 : 11, value => value)
+    const roundTicks = mapRange(data.cumulative.length ? data.cumulative[data.cumulative.length - 1].x + 1 : 11, value => value)
 
     return (
       <>
@@ -67,7 +67,7 @@ export default class RoundChart extends Component<IProps, IState> {
         <Header textAlign='center' >{label}</Header>
         <BaseChart onActivated={this.onActivated} getTooltip={this.getTooltip}>
           <VictoryAxis
-            tickValues={round_ticks}
+            tickValues={roundTicks}
           />
           <VictoryAxis
             dependentAxis

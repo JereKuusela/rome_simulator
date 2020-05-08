@@ -11,8 +11,8 @@ export const deleteCountry = (countries: Countries, country: CountryName) => {
   delete countries[country]
 }
 
-export const changeCountryName = (countries: Countries, old_country: CountryName, country: CountryName) => {
-  delete Object.assign(countries, { [country]: countries[old_country] })[old_country]
+export const changeCountryName = (countries: Countries, oldCountry: CountryName, country: CountryName) => {
+  delete Object.assign(countries, { [country]: countries[oldCountry] })[oldCountry]
 }
 
 export const setCountryAttribute = (country: CountryDefinition, attribute: CountryAttribute, value: number) => {
@@ -27,9 +27,9 @@ export const selectGovernment = (country: CountryDefinition, government: Goverme
   country.government = government
 }
 
-export const selectCulture = (country: CountryDefinition, culture: CultureType, load_all_units: boolean) => {
+export const selectCulture = (country: CountryDefinition, culture: CultureType, loadAllUnits: boolean) => {
   country.culture = culture
-  country.units = getDefaultUnits(load_all_units ? undefined : culture)
+  country.units = getDefaultUnits(loadAllUnits ? undefined : culture)
 }
 
 export const enableCountrySelection = (country: CountryDefinition, type: SelectionType, key: string) => {

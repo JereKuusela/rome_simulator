@@ -12,28 +12,28 @@ const CUSTOM_VALUE_KEY = 'Custom'
 
 class ModalUnitDetail extends Component<IProps> {
   render() {
-    const { mode, unit, settings, remove, unit_type, unit_types_with_parent, terrain_types, unit_types } = this.props
+    const { mode, unit, settings, remove, unitType, unitTypesWithParent, terrainTypes, unitTypes } = this.props
     if (!unit)
       return null
     return (
       <BaseModal basic type={ModalType.UnitDetail}>
         {
-          remove && unit_type !== getRootParent(mode) ?
+          remove && unitType !== getRootParent(mode) ?
             <ItemRemover onRemove={this.remove} />
             : null
         }
         <UnitDetail
           mode={mode}
           settings={settings}
-          terrain_types={terrain_types}
-          custom_value_key={CUSTOM_VALUE_KEY}
+          terrainTypes={terrainTypes}
+          customValueKey={CUSTOM_VALUE_KEY}
           unit={unit as Cohort}
-          unit_types={unit_types}
-          unit_types_with_parent={unit_types_with_parent}
+          unitTypes={unitTypes}
+          unitTypesWithParent={unitTypesWithParent}
           onCustomBaseValueChange={this.setBaseValue}
           onCustomModifierValueChange={this.setModifierValue}
           onCustomLossModifierValueChange={this.setLossModifierValue}
-          show_statistics={false}
+          showStatistics={false}
           onTypeChange={this.changeType}
           onImageChange={this.changeImage}
           onParentChange={this.changeParent}
@@ -45,14 +45,14 @@ class ModalUnitDetail extends Component<IProps> {
   }
 
   changeType = (type: UnitType) => {
-    const { country, army, changeUnitType, unit_type, openModal } = this.props
-    changeUnitType(country, unit_type, type)
+    const { country, army, changeUnitType, unitType, openModal } = this.props
+    changeUnitType(country, unitType, type)
     openModal(ModalType.UnitDetail, { country, army, type })
   }
 
   remove = () => {
-    const { country, deleteUnit, unit_type, closeModal } = this.props
-    deleteUnit(country, unit_type)
+    const { country, deleteUnit, unitType, closeModal } = this.props
+    deleteUnit(country, unitType)
     closeModal()
   }
 
@@ -61,28 +61,28 @@ class ModalUnitDetail extends Component<IProps> {
   setLossModifierValue = (key: string, attribute: UnitValueType, value: number) => this.setValue(ValuesType.LossModifier, key, attribute, value)
 
   setValue = (type: ValuesType, key: string, attribute: UnitValueType, value: number) => {
-    const { setUnitValue, unit_type, country } = this.props
-    setUnitValue(country!, unit_type!, type, key, attribute, value)
+    const { setUnitValue, unitType, country } = this.props
+    setUnitValue(country!, unitType, type, key, attribute, value)
   }
 
   changeImage = (image: string) => {
-    const { changeUnitImage, unit_type, country } = this.props
-    changeUnitImage(country!, unit_type, image)
+    const { changeUnitImage, unitType, country } = this.props
+    changeUnitImage(country!, unitType, image)
   }
 
   changeParent = (type: UnitType) => {
-    const { changeParent, unit_type, country } = this.props
-    changeParent(country!, unit_type, type)
+    const { changeParent, unitType, country } = this.props
+    changeParent(country!, unitType, type)
   }
 
   changeDeployment = (deployment: UnitRole) => {
-    const { changeUnitDeployment, unit_type, country } = this.props
-    changeUnitDeployment(country!, unit_type, deployment)
+    const { changeUnitDeployment, unitType, country } = this.props
+    changeUnitDeployment(country!, unitType, deployment)
   }
 
   toggleIsLoyal = () => {
-    const { toggleUnitLoyality, unit_type, country } = this.props
-    toggleUnitLoyality(country!, unit_type)
+    const { toggleUnitLoyality, unitType, country } = this.props
+    toggleUnitLoyality(country!, unitType)
   }
 }
 
@@ -92,11 +92,11 @@ const mapStateToProps = (state: AppState) => {
     remove: data?.remove,
     country: data ? data.country : CountryName.Country1,
     army: data ? data.army : ArmyName.Army,
-    unit_type: data ? data.type : UnitType.Land,
+    unitType: data ? data.type : UnitType.Land,
     unit: data ? getUnit(state, data.type, data.country) : null,
-    unit_types: getUnitTypeList(state, true, data?.country),
-    unit_types_with_parent: getUnitTypeList(state, false, data?.country).filter(type => type !== data?.type),
-    terrain_types: filterTerrainTypes(state),
+    unitTypes: getUnitTypeList(state, true, data?.country),
+    unitTypesWithParent: getUnitTypeList(state, false, data?.country).filter(type => type !== data?.type),
+    terrainTypes: filterTerrainTypes(state),
     mode: getMode(state),
     settings: getSiteSettings(state)
   }

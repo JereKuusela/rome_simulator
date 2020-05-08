@@ -14,19 +14,19 @@ type IState = {
 /**
  * Component for setting a value in a modal.
  */
-class ValueModal extends Component<IProps, IState> {
+class ModalValue extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
     this.state = { value: props.initial }
   }
 
-  componentWillReceiveProps() {
-    this.setState({ value: this.props.initial })
+  static getDerivedStateFromProps(props: IProps) {
+    return { value: props.initial }
   }
 
   render() {
-    const { message, button_message } = this.props
+    const { message, buttonMessage } = this.props
     const { value } = this.state
     return (
       <BaseModal type={ModalType.Value} header={message}>
@@ -36,7 +36,7 @@ class ValueModal extends Component<IProps, IState> {
           </Grid.Row>
           <Grid.Row>
             <Button onClick={this.onSuccess} disabled={!value}>
-              {button_message}
+              {buttonMessage}
             </Button>
           </Grid.Row>
         </Grid>
@@ -59,7 +59,7 @@ const mapStateToProps = (state: AppState) => {
     message: data?.message ?? '',
     onSuccess: data?.onSuccess ?? (() => { }),
     initial: data?.initial ?? '',
-    button_message: data?.button_message ?? ''
+    buttonMessage: data?.buttonMessage ?? ''
   }
 }
 
@@ -69,4 +69,4 @@ type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
 interface IProps extends S, D { }
 
-export default connect(mapStateToProps, actions)(ValueModal)
+export default connect(mapStateToProps, actions)(ModalValue)

@@ -21,6 +21,7 @@ type IState = {
   calculating: boolean
   progress: number
   updates: number
+  battles: number
 }
 
 const DOTS = 6
@@ -32,7 +33,7 @@ const DEFENDER_COLOR = 'color-defender'
 class WinRate extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
-    this.state = { attacker: 0, defender: 0, calculating: false, progress: 0, updates: 0, draws: 0, incomplete: 0 }
+    this.state = { attacker: 0, defender: 0, calculating: false, progress: 0, updates: 0, draws: 0, incomplete: 0, battles: 0 }
   }
 
   toPercent = (value: number) => toPercent(value, 0)
@@ -45,7 +46,7 @@ class WinRate extends Component<IProps, IState> {
   }
 
   render() {
-    const { attacker, defender, calculating, progress, updates } = this.state
+    const { attacker, defender, calculating, progress, updates, draws, incomplete } = this.state
     return (
       <Grid>
         <Grid.Row verticalAlign='middle'>
@@ -69,9 +70,9 @@ class WinRate extends Component<IProps, IState> {
                     <span>
                       <b>Win rate</b>
                       <br />
-                      <StyledNumber value={this.scale(attacker)} positive_color={ATTACKER_COLOR} neutral_color={ATTACKER_COLOR} formatter={this.toPercent} />
+                      <StyledNumber value={this.scale(attacker + draws / 2 + incomplete / 2)} positiveColor={ATTACKER_COLOR} neutralColor={ATTACKER_COLOR} formatter={this.toPercent} />
                       {' / '}
-                      <StyledNumber value={this.scale(defender)} positive_color={DEFENDER_COLOR} neutral_color={DEFENDER_COLOR} formatter={this.toPercent} />
+                      <StyledNumber value={this.scale(defender + draws / 2 + incomplete / 2)} positiveColor={DEFENDER_COLOR} neutralColor={DEFENDER_COLOR} formatter={this.toPercent} />
                     </span>
                   </Tooltip>
                 </Grid.Column>
@@ -94,15 +95,15 @@ class WinRate extends Component<IProps, IState> {
   }
 
   getResultsTooltip = () => {
-    const { attacker, defender, draws, incomplete } = this.state
+    const { attacker, defender, draws, incomplete, battles } = this.state
     return (
       <div>
         <List>
           <List.Item>
-            Attacker: {<StyledNumber value={this.scale(attacker)} positive_color={ATTACKER_COLOR} neutral_color={ATTACKER_COLOR} formatter={this.toTooltipPercent} />}
+            Attacker: {<StyledNumber value={this.scale(attacker)} positiveColor={ATTACKER_COLOR} neutralColor={ATTACKER_COLOR} formatter={this.toTooltipPercent} />}
           </List.Item>
           <List.Item>
-            Defender: {<StyledNumber value={this.scale(defender)} positive_color={DEFENDER_COLOR} neutral_color={DEFENDER_COLOR} formatter={this.toTooltipPercent} />}
+            Defender: {<StyledNumber value={this.scale(defender)} positiveColor={DEFENDER_COLOR} neutralColor={DEFENDER_COLOR} formatter={this.toTooltipPercent} />}
           </List.Item>
           {
             this.scale(draws) > 0.0005 ?
@@ -119,6 +120,9 @@ class WinRate extends Component<IProps, IState> {
               : null
           }
         </List>
+          <List.Item>
+            Battles: {battles}
+          </List.Item>
       </div>
     )
   }
@@ -126,8 +130,8 @@ class WinRate extends Component<IProps, IState> {
   update = (update: WinRateProgress) => {
     if (this.willUnmount)
       return
-    const { attacker, defender, progress, calculating, draws, incomplete } = update
-    this.setState({ attacker, defender, progress, calculating, draws, incomplete, updates: calculating ? (this.state.updates + 1) % DOTS : 0 })
+    const { attacker, defender, progress, calculating, draws, incomplete, battles } = update
+    this.setState({ attacker, defender, progress, calculating, draws, incomplete, updates: calculating ? (this.state.updates + 1) % DOTS : 0, battles })
   }
 
   calculate = () => {
@@ -135,8 +139,8 @@ class WinRate extends Component<IProps, IState> {
     // Initialization done here to prevent it happening on every render.
     const [attacker, defender] = initializeCombatParticipants(state)
     const settings = getSettings(state)
-    const modified_settings = { ...settings, [Setting.CalculateWinChance]: true, [Setting.CalculateCasualties]: false, [Setting.CalculateResourceLosses]: false }
-    calculateWinRate(modified_settings, this.update, attacker, defender)
+    const modifiedSettings = { ...settings, [Setting.CalculateWinChance]: true, [Setting.CalculateCasualties]: false, [Setting.CalculateResourceLosses]: false }
+    calculateWinRate(modifiedSettings, this.update, attacker, defender)
   }
 
   scale = (value: number) => this.state.progress ? value / this.state.progress : 0

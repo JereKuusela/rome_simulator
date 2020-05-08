@@ -38,7 +38,7 @@ class TerrainDefinitions extends Component<IProps> {
   onClick = () => this.props.openModal(ModalType.Value, {
     onSuccess: type => this.props.createTerrain(type as TerrainType, this.props.mode),
     message: 'New terrain type',
-    button_message: 'Create',
+    buttonMessage: 'Create',
     initial: ''
   })
 
@@ -57,10 +57,10 @@ class TerrainDefinitions extends Component<IProps> {
     )
   }
 
-  renderAttributes = (terrain: TerrainDefinition) => (
+  renderAttributes = (definition: TerrainDefinition) => (
     this.attributes.map(type => (
       <Table.Cell key={type}>
-        <StyledNumber value={calculateValue(terrain, type)} formatter={addSign} hide_zero />
+        <StyledNumber value={calculateValue(definition, type)} formatter={addSign} hideZero />
       </Table.Cell>
     ))
   )

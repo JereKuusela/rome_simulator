@@ -8,7 +8,7 @@ if (process.env.REACT_APP_GAME === 'euiv') {
   describe('initial deployment', () => {
 
     let info: TestInfo
-    beforeEach(() => { info = initInfo() })
+    beforeEach(() => { info = initInfo(false) })
 
     const add = (army: ArmyForCombatConversion, infantry: number, cavalry: number, artillery: number) => {
       army.reserve.push(...mapRange(infantry, () => getUnit(UnitType.Infantry)))
@@ -18,8 +18,8 @@ if (process.env.REACT_APP_GAME === 'euiv') {
 
     it('more cavalry than flank size (+ backrow flank)', () => {
       setCombatWidth(info, 22)
-      add(info.army_a, 26, 0, 0)
-      add(info.army_d, 14, 16, 0)
+      add(info.armyA, 26, 0, 0)
+      add(info.armyD, 14, 16, 0)
       const attacker = {
         front: createExpected([UnitType.Infantry, 22]),
         back: createExpected([UnitType.Infantry, 4])
@@ -32,8 +32,8 @@ if (process.env.REACT_APP_GAME === 'euiv') {
     })
     it('less cavalry than flank size', () => {
       setCombatWidth(info, 22)
-      add(info.army_a, 22, 0, 0)
-      add(info.army_d, 22, 2, 0)
+      add(info.armyA, 22, 0, 0)
+      add(info.armyD, 22, 2, 0)
       const attacker = {
         front: createExpected([UnitType.Infantry, 22])
       }
@@ -45,8 +45,8 @@ if (process.env.REACT_APP_GAME === 'euiv') {
     })
     it('combat width not filled', () => {
       setCombatWidth(info, 22)
-      add(info.army_a, 2, 3, 0)
-      add(info.army_d, 1, 0, 0)
+      add(info.armyA, 2, 3, 0)
+      add(info.armyD, 1, 0, 0)
       const attacker = {
         front: createExpected(UnitType.Infantry, [UnitType.Cavalry, 3]),
         back: createExpected([UnitType.Infantry, 1])
@@ -58,8 +58,8 @@ if (process.env.REACT_APP_GAME === 'euiv') {
     })
     it('artillery fills backline (both front and flank)', () => {
       setCombatWidth(info, 24)
-      add(info.army_a, 6, 6, 6)
-      add(info.army_d, 2, 0, 0)
+      add(info.armyA, 6, 6, 6)
+      add(info.armyD, 2, 0, 0)
       const attacker = {
         front: createExpected([UnitType.Infantry, 2], [UnitType.Cavalry, 6], [UnitType.Infantry, 4]),
         back: createExpected([UnitType.Artillery, 6])
@@ -71,8 +71,8 @@ if (process.env.REACT_APP_GAME === 'euiv') {
     })
     it('artillery backline doesn\'t exceend frontline', () => {
       setCombatWidth(info, 24)
-      add(info.army_a, 6, 0, 12)
-      add(info.army_d, 2, 0, 0)
+      add(info.armyA, 6, 0, 12)
+      add(info.armyD, 2, 0, 0)
       const attacker = {
         front: createExpected([UnitType.Infantry, 6], [UnitType.Artillery, 3]),
         back: createExpected([UnitType.Artillery, 9])
@@ -84,8 +84,8 @@ if (process.env.REACT_APP_GAME === 'euiv') {
     })
     it('infantry only', () => {
       setCombatWidth(info, 24)
-      add(info.army_a, 6, 0, 0)
-      add(info.army_d, 2, 0, 0)
+      add(info.armyA, 6, 0, 0)
+      add(info.armyD, 2, 0, 0)
       const attacker = {
         front: createExpected([UnitType.Infantry, 6])
       }

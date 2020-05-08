@@ -81,8 +81,8 @@ class TableDamageAttributes extends Component<IProps> {
 
   renderGeneralAttribute = (general: General, attribute: GeneralValueType) => (
     <>
-      <DelayedNumericInput disabled={!general.enabled}  type='number' value={general.base_values[attribute]} onChange={value => this.setGeneralStat(attribute, Number(value))}/>
-      {' '} <StyledNumber value={general.extra_values[attribute]} formatter={addSign} hide_zero />
+      <DelayedNumericInput disabled={!general.enabled}  type='number' value={general.baseValues[attribute]} onChange={value => this.setGeneralStat(attribute, Number(value))}/>
+      {' '} <StyledNumber value={general.extraValues[attribute]} formatter={addSign} hideZero />
     </>
   )
 
