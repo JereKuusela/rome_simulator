@@ -23,7 +23,7 @@ interface IState extends CasualtiesProgress {
   incomplete: number
   draws: number
   calculating: boolean
-  iterations: number
+  battles: number
   updates: number
   progress: number
   averageRounds: number
@@ -48,7 +48,7 @@ class Analyze extends Component<IProps, IState> {
     super(props)
     this.state = {
       attackerWinChance: 0, defenderWinChance: 0, incomplete: 0, calculating: false, progress: 0, updates: 0,
-      averageRounds: 0, rounds: {}, iterations: 0, draws: 0, stackWipes: 0,
+      averageRounds: 0, rounds: {}, battles: 0, draws: 0, stackWipes: 0,
       avgMoraleA: 0, avgMoraleD: 0, avgStrengthA: 0, avgStrengthD: 0, maxMoraleA: 1, maxMoraleD: 1, maxStrengthA: 1, maxStrengthD: 1,
       moraleA: {}, moraleD: {}, strengthA: {}, strengthD: {}, lossesA: initResourceLosses(), lossesD: initResourceLosses()
     }
@@ -69,7 +69,7 @@ class Analyze extends Component<IProps, IState> {
   }
 
   render() {
-    const { iterations, calculating, progress, updates } = this.state
+    const { battles, calculating, progress, updates } = this.state
     const { settings, changeSiteParameter, mode } = this.props
     return (
       <>
@@ -96,7 +96,7 @@ class Analyze extends Component<IProps, IState> {
               />
             </Grid.Column>
             <Grid.Column width='2' floated='right'>
-              Iterations {iterations}
+              Battles: {battles}
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns='4'>
@@ -369,7 +369,7 @@ class Analyze extends Component<IProps, IState> {
   update = (update: WinRateProgress, casualties: CasualtiesProgress, resources: ResourceLossesProgress) => {
     if (this.willUnmount)
       return
-    const { attacker, defender, incomplete, progress, averageRounds, rounds, iterations, calculating, draws, stackWipes } = update
+    const { attacker, defender, incomplete, progress, averageRounds, rounds, battles, calculating, draws, stackWipes } = update
     this.setState({
       attackerWinChance: attacker,
       defenderWinChance: defender,
@@ -380,7 +380,7 @@ class Analyze extends Component<IProps, IState> {
       calculating,
       rounds,
       stackWipes,
-      iterations,
+      battles,
       updates: calculating ? (this.state.updates + 1) % DOTS : 0,
       ...casualties,
       ...resources

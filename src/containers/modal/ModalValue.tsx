@@ -26,7 +26,7 @@ class ModalValue extends Component<IProps, IState> {
   }
 
   render() {
-    const { message, button_message } = this.props
+    const { message, buttonMessage } = this.props
     const { value } = this.state
     return (
       <BaseModal type={ModalType.Value} header={message}>
@@ -36,7 +36,7 @@ class ModalValue extends Component<IProps, IState> {
           </Grid.Row>
           <Grid.Row>
             <Button onClick={this.onSuccess} disabled={!value}>
-              {button_message}
+              {buttonMessage}
             </Button>
           </Grid.Row>
         </Grid>
@@ -59,7 +59,7 @@ const mapStateToProps = (state: AppState) => {
     message: data?.message ?? '',
     onSuccess: data?.onSuccess ?? (() => { }),
     initial: data?.initial ?? '',
-    button_message: data?.button_message ?? ''
+    buttonMessage: data?.buttonMessage ?? ''
   }
 }
 

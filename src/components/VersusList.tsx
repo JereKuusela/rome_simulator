@@ -9,7 +9,7 @@ import { toSignedPercent } from 'formatters'
 
 interface IProps {
   images: { [key in UnitType]: string[] }
-  unit_types: UnitType[]
+  unitTypes: UnitType[]
   item: UnitDefinition | TacticDefinition
   styled?: boolean
 }
@@ -20,11 +20,11 @@ interface IProps {
 export default class VersusList extends Component<IProps> {
 
   render() {
-    const { unit_types, item, images, styled } = this.props
+    const { unitTypes, item, images, styled } = this.props
     return (
       <List horizontal>
         {
-          unit_types.filter(type => calculateValue(item, type)).map(type => (
+          unitTypes.filter(type => calculateValue(item, type)).map(type => (
             <List.Item key={type} style={{ marginLeft: 0, width: '50%' }}>
               <Images values={images[type]} />
               {styled ?

@@ -9,12 +9,12 @@ export const formatAttribute = (value: number, attribute: string) => {
   return toPercent(value)
 }
 
-export const filterAttributes = <T extends string>(attributes: T[], settings: SiteSettings, mode?: Mode, show_statistics?: boolean): T[] => attributes.filter(attribute => isAttributeEnabled(attribute, settings, mode, show_statistics))
+export const filterAttributes = <T extends string>(attributes: T[], settings: SiteSettings, mode?: Mode, showStatistics?: boolean): T[] => attributes.filter(attribute => isAttributeEnabled(attribute, settings, mode, showStatistics))
 
 export const getAttributeValuesType = (attribute: UnitAttribute) => attribute === UnitAttribute.Morale ? ValuesType.Modifier : ValuesType.Base
 
-export const isAttributeEnabled = (attribute: string, settings: SiteSettings, mode?: Mode, show_statistics?: boolean) => {
-  if (!show_statistics && (attribute === UnitAttribute.StrengthDepleted || attribute === UnitAttribute.MoraleDepleted))
+export const isAttributeEnabled = (attribute: string, settings: SiteSettings, mode?: Mode, showStatistics?: boolean) => {
+  if (!showStatistics && (attribute === UnitAttribute.StrengthDepleted || attribute === UnitAttribute.MoraleDepleted))
     return false
   if (!settings[Setting.BackRow] && (attribute === UnitAttribute.OffensiveSupport || attribute === UnitAttribute.DefensiveSupport))
     return false

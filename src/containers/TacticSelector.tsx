@@ -28,11 +28,11 @@ class TacticSelector extends Component<IProps> {
 }
 
 
-const convertTactic = (tactic: TacticDefinition, cohorts: CombatCohorts, opposing_tactic: TacticDefinition): Tactic => {
+const convertTactic = (tactic: TacticDefinition, cohorts: CombatCohorts, opposingTactic: TacticDefinition): Tactic => {
   return {
     type: tactic.type,
     effect: calculateTactic(cohorts, tactic),
-    damage: calculateTactic(cohorts, tactic, opposing_tactic),
+    damage: calculateTactic(cohorts, tactic, opposingTactic),
     casualties: calculateValue(tactic, TacticCalc.Casualties),
     image: tactic.image
   }
@@ -41,9 +41,9 @@ const convertTactic = (tactic: TacticDefinition, cohorts: CombatCohorts, opposin
 const mapStateToProps = (state: AppState, props: Props) => {
   const cohorts = getCurrentCombat(state, props.side)
   const tactic = getSelectedTactic(state, props.side)
-  const opposing_tactic = getSelectedTactic(state, getOpponent(props.side))
+  const opposingTactic = getSelectedTactic(state, getOpponent(props.side))
   return {
-    tactics: toArr(filterTactics(state), tactic => convertTactic(tactic, cohorts, opposing_tactic)),
+    tactics: toArr(filterTactics(state), tactic => convertTactic(tactic, cohorts, opposingTactic)),
     tactic: tactic.type,
     participant: getParticipant(state, props.side),
     settings: getSiteSettings(state)

@@ -10,7 +10,7 @@ import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 import { sortBy, uniq, sum, union } from 'lodash'
 import LabelItem from 'components/Utils/LabelUnit'
 import { AppState, getUnits, getMode } from 'state'
-import { getDefaultUnits, countries_ir, traditions_ir, heritages_ir, policies_ir, laws_ir, factions_ir, religions_ir, deities_ir, modifiers_ir, traits_ir, tech_ir, trades_ir, ideas_ir, abilities_ir } from 'data'
+import { getDefaultUnits, countriesIR, traditionsIR, heritagesIR, policiesIR, lawsIR, factionsIR, religionsIR, deitiesIR, modifiersIR, traitsIR, techIR, tradesIR, ideasIR, abilitiesIR } from 'data'
 import AttributeImage from 'components/Utils/AttributeImage'
 import { toObj, toArr, mapRange, map, values, keys, filter } from 'utils'
 import { getNextId } from 'army_utils'
@@ -158,7 +158,7 @@ class ImportSave extends Component<IProps, IState> {
     this.importing = false
   }
 
-  getTagName = (tag: string) => countries_ir[tag.toLowerCase()] ? countries_ir[tag.toLowerCase()] + ' (' + tag + ')' : tag
+  getTagName = (tag: string) => countriesIR[tag.toLowerCase()] ? countriesIR[tag.toLowerCase()] + ' (' + tag + ')' : tag
 
   getArmyName = (army: any) => {
     let name = army.name
@@ -286,13 +286,13 @@ class ImportSave extends Component<IProps, IState> {
             Culture
           </Table.Cell>
           <Table.Cell>
-            {traditions_ir[country.tradition]?.name}
+            {traditionsIR[country.tradition]?.name}
           </Table.Cell>
           <Table.Cell>
             Heritage
           </Table.Cell>
           <Table.Cell>
-            {heritages_ir[country.heritage]?.name}
+            {heritagesIR[country.heritage]?.name}
           </Table.Cell>
         </Table.Row>
         <Table.Row>
@@ -300,13 +300,13 @@ class ImportSave extends Component<IProps, IState> {
             Army
           </Table.Cell>
           <Table.Cell>
-            {policies_ir.find(policy => policy.find(option => option.key === country.armyMaintenance))?.find(option => option.key === country.armyMaintenance)?.name}
+            {policiesIR.find(policy => policy.find(option => option.key === country.armyMaintenance))?.find(option => option.key === country.armyMaintenance)?.name}
           </Table.Cell>
           <Table.Cell>
             Navy
           </Table.Cell>
           <Table.Cell>
-            {policies_ir.find(policy => policy.find(option => option.key === country.navalMaintenance))?.find(option => option.key === country.navalMaintenance)?.name}
+            {policiesIR.find(policy => policy.find(option => option.key === country.navalMaintenance))?.find(option => option.key === country.navalMaintenance)?.name}
           </Table.Cell>
         </Table.Row>
         <Table.Row>
@@ -328,13 +328,13 @@ class ImportSave extends Component<IProps, IState> {
             Capital surplus
           </Table.Cell>
           <Table.Cell>
-            {country.surplus.map(key => trades_ir['surplus_' + key]?.name.substr(8)).filter(value => value).join(', ')}
+            {country.surplus.map(key => tradesIR['surplus_' + key]?.name.substr(8)).filter(value => value).join(', ')}
           </Table.Cell>
           <Table.Cell>
             Exports
           </Table.Cell>
           <Table.Cell>
-            {this.getExports(country).map(key => trades_ir[key]?.name.substr(8)).filter(value => value).join(', ')}
+            {this.getExports(country).map(key => tradesIR[key]?.name.substr(8)).filter(value => value).join(', ')}
           </Table.Cell>
         </Table.Row>
         <Table.Row>
@@ -342,7 +342,7 @@ class ImportSave extends Component<IProps, IState> {
             Laws
           </Table.Cell>
           <Table.Cell>
-            {country.laws.map(key => laws_ir[key]?.name).filter(value => value).join(', ')}
+            {country.laws.map(key => lawsIR[key]?.name).filter(value => value).join(', ')}
           </Table.Cell>
           <Table.Cell>
             Office (Discipline / Morale)
@@ -362,7 +362,7 @@ class ImportSave extends Component<IProps, IState> {
             Faction
           </Table.Cell>
           <Table.Cell>
-            {factions_ir[country.faction]?.name}
+            {factionsIR[country.faction]?.name}
           </Table.Cell>
         </Table.Row>
         <Table.Row>
@@ -370,13 +370,13 @@ class ImportSave extends Component<IProps, IState> {
             Religion
           </Table.Cell>
           <Table.Cell>
-            {religions_ir[country.religion]?.name} ({country.religiousUnity.toPrecision(3)}%)
+            {religionsIR[country.religion]?.name} ({country.religiousUnity.toPrecision(3)}%)
           </Table.Cell>
           <Table.Cell>
             Deities
           </Table.Cell>
           <Table.Cell>
-            {country.deities.map(key => deities_ir[key] ? deities_ir[key].name + (country.omen.substr(4) === key.substr(5) ? ' (with omen)' : '') : null).filter(value => value).join(', ')}
+            {country.deities.map(key => deitiesIR[key] ? deitiesIR[key].name + (country.omen.substr(4) === key.substr(5) ? ' (with omen)' : '') : null).filter(value => value).join(', ')}
           </Table.Cell>
         </Table.Row>
         <Table.Row>
@@ -384,13 +384,13 @@ class ImportSave extends Component<IProps, IState> {
             Ideas
           </Table.Cell>
           <Table.Cell>
-            {country.ideas.map(key => ideas_ir[key]?.name).filter(value => value).join(', ')}
+            {country.ideas.map(key => ideasIR[key]?.name).filter(value => value).join(', ')}
           </Table.Cell>
           <Table.Cell>
             Modifiers
           </Table.Cell>
           <Table.Cell>
-            {country.modifiers.map(key => modifiers_ir[key]?.name).filter(value => value).join(', ')}
+            {country.modifiers.map(key => modifiersIR[key]?.name).filter(value => value).join(', ')}
           </Table.Cell>
         </Table.Row>
       </>
@@ -402,7 +402,7 @@ class ImportSave extends Component<IProps, IState> {
     const cohorts = army.cohorts.map(cohort => cohort.type)
     const types = uniq(cohorts)
     const counts = toObj(types, type => type, type => cohorts.filter(item => item === type).length)
-    const ability = abilities_ir.find(abilities => abilities.find(ability => ability.key === army.ability))?.find((ability => ability.key === army.ability))?.name
+    const ability = abilitiesIR.find(abilities => abilities.find(ability => ability.key === army.ability))?.find((ability => ability.key === army.ability))?.name
     return (
       <React.Fragment key={army.id}>
         <Table.Row><Table.Cell /><Table.Cell /><Table.Cell /><Table.Cell /></Table.Row>
@@ -425,7 +425,7 @@ class ImportSave extends Component<IProps, IState> {
             {army.leader ? <><AttributeImage attribute={GeneralAttribute.Martial} />{' ' + (army.leader.martial + army.leader.traitMartial)}</> : ''}
           </Table.Cell>
           <Table.Cell>
-            {army.leader ? army.leader.traits.map(key => traits_ir[key]?.name).join(', ') : ''}
+            {army.leader ? army.leader.traits.map(key => traitsIR[key]?.name).join(', ') : ''}
           </Table.Cell>
         </Table.Row>
         <Table.Row>
@@ -519,7 +519,7 @@ class ImportSave extends Component<IProps, IState> {
       inventions: this.arrayify(data.active_inventions).filter((_, index) => index === 9 || (75 < index && index < 138)).map(value => !!value),
       heritage: data.heritage ?? '',
       militaryExperience: data?.currency_data.military_experience ?? 0,
-      name: (countries_ir[data?.country_name.name.toLowerCase() ?? ''] ?? '') as CountryName,
+      name: (countriesIR[data?.country_name.name.toLowerCase() ?? ''] ?? '') as CountryName,
       tech: data.technology?.military_tech?.level ?? 0,
       tradition: (data.military_tradition ?? '') as CultureType,
       armyMaintenance: 'expense_army_' + this.maintenanceToKey(data.economic_policies[4]),
@@ -605,7 +605,7 @@ class ImportSave extends Component<IProps, IState> {
     return country
   }
 
-  getCharacterMartial = (character: SaveCharacter) => character.attributes.martial + sum(this.arrayify(character.traits).map((key: string) => traits_ir[key]?.modifiers.find(modifier => modifier.attribute === GeneralAttribute.Martial)?.value ?? 0))
+  getCharacterMartial = (character: SaveCharacter) => character.attributes.martial + sum(this.arrayify(character.traits).map((key: string) => traitsIR[key]?.modifiers.find(modifier => modifier.attribute === GeneralAttribute.Martial)?.value ?? 0))
 
   getCharacterName = (character: SaveCharacter) => character.first_name_loc.name + (character.family_name ? ' ' + character.family_name : '')
 
@@ -718,7 +718,7 @@ class ImportSave extends Component<IProps, IState> {
       mapRange(value, value => 'tradition_path_' + index + '_' + value)
     )))
     enableCountrySelections(countryName, SelectionType.Tradition, traditions)
-    const invention_list = sortBy(tech_ir.reduce((prev, curr) => prev.concat(curr.inventions.filter(invention => invention.index)), [] as Invention[]), invention => invention.index)
+    const invention_list = sortBy(techIR.reduce((prev, curr) => prev.concat(curr.inventions.filter(invention => invention.index)), [] as Invention[]), invention => invention.index)
     const inventions = country.inventions.map((value, index) => value && index ? invention_list[index - 1].key : '').filter(value => value)
     const exports = this.getExports(country)
     const imports = country.surplus.map(key => 'surplus_' + key)
@@ -743,7 +743,7 @@ class ImportSave extends Component<IProps, IState> {
   }
 
   getExports = (country: Country) => {
-    const exports = sortBy(values(trades_ir).filter(entity => entity.index), entity => entity.index)
+    const exports = sortBy(values(tradesIR).filter(entity => entity.index), entity => entity.index)
     return country.exports.map((value, index) => value ? exports.find(entity => entity.index === index)?.key ?? '' : '').filter(value => value)
   }
 
@@ -795,12 +795,12 @@ class ImportSave extends Component<IProps, IState> {
     const cohorts: CohortDefinition[] = army.cohorts.map(cohort => ({
       type: cohort.type,
       id: getNextId(),
-      base_values: {
+      baseValues: {
         [UnitAttribute.Experience]: {
           'Custom': cohort[UnitAttribute.Experience] - experiences[cohort.type]
         }
       } as any,
-      loss_values: {
+      lossValues: {
         [UnitAttribute.Morale]: {
           'Custom': maxMorales[cohort.type] - cohort[UnitAttribute.Morale]
         },

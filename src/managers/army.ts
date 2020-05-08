@@ -14,20 +14,20 @@ const BASE_STAT_KEY = 'Custom'
 export const convertGeneralDefinition = (settings: SiteSettings, general: GeneralDefinition): General => {
   const base = filterValues(general, BASE_STAT_KEY)
   const attributes = [GeneralAttribute.Maneuver, GeneralAttribute.Martial, CombatPhase.Fire, CombatPhase.Shock, CombatPhase.Default]
-  const base_values = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) ? calculateValue(base, attribute) : 0)
-  const extra_values = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) && general.enabled ? calculateValue(general, attribute) - calculateValue(base, attribute) : 0)
-  const total_values = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) && general.enabled ? Math.min(calculateValue(general, attribute), settings[Setting.MaxGeneral]) : 0)
+  const baseValues = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) ? calculateValue(base, attribute) : 0)
+  const extraValues = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) && general.enabled ? calculateValue(general, attribute) - calculateValue(base, attribute) : 0)
+  const totalValues = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) && general.enabled ? Math.min(calculateValue(general, attribute), settings[Setting.MaxGeneral]) : 0)
   return {
     enabled: general.enabled,
-    base_values,
-    total_values,
-    extra_values,
+    baseValues,
+    totalValues,
+    extraValues,
     selections: general.selections
   }
 }
 
 export const overrideRoleWithPreferences = (army: Army, units: Units, latest: { [key in UnitRole]: UnitType | undefined }) => {
-  const preferences = army.unit_preferences
+  const preferences = army.unitPreferences
   return mapCohorts(army, cohort => {
     const role = units[cohort.type]?.role
     let override = role && preferences[role]
@@ -39,17 +39,17 @@ export const overrideRoleWithPreferences = (army: Army, units: Units, latest: { 
   })
 }
 
-export const getUnitList = (units: CombatUnitTypes, mode: Mode, _tech: number, filter_parents: boolean, settings: SiteSettings) => {
+export const getUnitList = (units: CombatUnitTypes, mode: Mode, filterParents: boolean, settings: SiteSettings) => {
   const parents = getParents(units)
   let list = settings[Setting.Tech] ? [units[UnitType.Land]].concat(getArchetypes(units, mode)) : sortBy(toArr(units), unit => unitSorter(unit, mode, parents))
-  list = filter_parents ? list.filter(unit => !parents[unit.type]) : list
+  list = filterParents ? list.filter(unit => !parents[unit.type]) : list
   return list
 }
 
-export const getUnitList2 = (units: Units, mode: Mode, _tech: number, filter_parents: boolean, settings: SiteSettings) => {
+export const getUnitList2 = (units: Units, mode: Mode, filterParents: boolean, settings: SiteSettings) => {
   const parents = getParents(units)
   let list = settings[Setting.Tech] ? [units[UnitType.Land]].concat(getArchetypes2(units, mode)) : sortBy(toArr(units), unit => unitSorter2(unit, mode, parents))
-  list = filter_parents ? list.filter(unit => !parents[unit.type]) : list
+  list = filterParents ? list.filter(unit => !parents[unit.type]) : list
   return list
 }
 
@@ -134,9 +134,9 @@ export const mapCohorts = (army: Army, mapper: (cohort: CohortDefinition) => Coh
 
 const findFromFrontline = (frontline: FrontlineDefinition, criteria: number | ((cohort: CohortDefinition) => boolean)): [number, number][] => {
   let ret: [number, number][] = []
-  forEach(frontline, (row, row_index) => forEach(row, (unit, column_index) => {
+  forEach(frontline, (row, rowIndex) => forEach(row, (unit, columnIndex) => {
     if (typeof criteria === 'number' ? unit.id === criteria : criteria(unit))
-      ret.push([Number(row_index), Number(column_index)])
+      ret.push([Number(rowIndex), Number(columnIndex)])
   }))
   return ret
 }
@@ -177,11 +177,11 @@ export const selectCohort = (army: Army, type: ArmyType, row: number, column: nu
 }
 
 export const toggleCohortLoyality = (army: Army, id: number) => {
-  update(army, id, unit => ({ ...unit, is_loyal: !unit.is_loyal }))
+  update(army, id, unit => ({ ...unit, isLoyal: !unit.isLoyal }))
 }
 
-export const setCohortValue = (army: Army, id: number, values_type: ValuesType, key: string, attribute: UnitValueType, value: number) => {
-  update(army, id, unit => addValues(unit, values_type, key, [[attribute, value]]))
+export const setCohortValue = (army: Army, id: number, valuesType: ValuesType, key: string, attribute: UnitValueType, value: number) => {
+  update(army, id, unit => addValues(unit, valuesType, key, [[attribute, value]]))
 }
 
 export const changeCohortType = (army: Army, id: number, type: UnitType) => {
@@ -226,12 +226,12 @@ export const selectTactic = (army: Army, tactic: TacticType) => {
   army.tactic = tactic
 }
 
-export const setUnitPreference = (army: Army, preference_type: UnitPreferenceType | UnitRole, unit: UnitType | null) => {
-  army.unit_preferences[preference_type] = unit
+export const setUnitPreference = (army: Army, preferenceType: UnitPreferenceType | UnitRole, unit: UnitType | null) => {
+  army.unitPreferences[preferenceType] = unit
 }
 
-export const setFlankSize = (army: Army, flank_size: number) => {
-  army.flank_size = flank_size
+export const setFlankSize = (army: Army, flankFize: number) => {
+  army.flankSize = flankFize
 }
 
 export const setGeneralAttribute = (army: Army, attribute: GeneralValueType, value: number) => {
@@ -242,8 +242,8 @@ export const clearGeneralAttributes = (army: Army) => {
   clearAllValuesWithMutate(army.general, 'Custom')
 }
 
-export const setHasGeneral = (army: Army, has_general: boolean) => {
-  army.general.enabled = has_general
+export const setHasGeneral = (army: Army, hasGeneral: boolean) => {
+  army.general.enabled = hasGeneral
 }
 
 export const enableGeneralSelection = (army: Army, type: SelectionType, key: string) => {

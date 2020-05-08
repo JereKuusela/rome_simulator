@@ -44,18 +44,18 @@ class TerrainSelector extends Component<IProps> {
     )
   }
 
-  renderTerrain = (terrain: TerrainDefinition, index: number) => {
+  renderTerrain = (definition: TerrainDefinition, index: number) => {
     const { terrains, settings } = this.props
-    const roll = calculateValue(terrain, TerrainCalc.Roll)
+    const roll = calculateValue(definition, TerrainCalc.Roll)
     return (
-      <Table.Row key={terrain.location}>
+      <Table.Row key={definition.location}>
         <Table.Cell>
-          {terrain.location}
+          {definition.location}
         </Table.Cell>
         <Table.Cell>
           <DropdownTerrain
-            value={terrain.type}
-            values={terrains.filter(item => item.location === terrain.location)}
+            value={definition.type}
+            values={terrains.filter(item => item.location === definition.location)}
             onSelect={type => this.selectTerrain(type, index)}
             settings={settings}
           />
@@ -68,9 +68,9 @@ class TerrainSelector extends Component<IProps> {
     )
   }
 
-  selectTerrain = (terrain_type: TerrainType, index: number): void => {
+  selectTerrain = (type: TerrainType, index: number): void => {
     const { selectTerrain } = this.props
-    selectTerrain(index, terrain_type)
+    selectTerrain(index, type)
   }
 }
 

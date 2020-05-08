@@ -69,22 +69,22 @@ const getAbilityDefinitions = () => {
 
 const getCountryNames = () => process.env.REACT_APP_GAME === 'ir' ? countryData : {} as DictionaryData
 
-export const abilities_ir = getAbilityDefinitions()
-export const traits_ir = getTraitDefinitions()
-export const heritages_ir = getHeritageDefinitions()
-export const trades_ir = getTradeDefinitions()
-export const traditions_ir = getTraditionDefinitions()
-export const ideas_ir = getIdeaDefinitions()
-export const laws_ir = getLawDefinitions()
-export const deities_ir = getDeityDefinitions()
-export const policies_ir = getPolicyDefinitions()
-export const countries_ir = getCountryNames()
-export const religions_ir = getReligionDefinitions()
-export const factions_ir = getFactionDefinitions()
-export const modifiers_ir = getModifierDefinitions()
+export const abilitiesIR = getAbilityDefinitions()
+export const traitsIR = getTraitDefinitions()
+export const heritagesIR = getHeritageDefinitions()
+export const tradesIR = getTradeDefinitions()
+export const traditionsIR = getTraditionDefinitions()
+export const ideasIR = getIdeaDefinitions()
+export const lawsIR = getLawDefinitions()
+export const deitiesIR = getDeityDefinitions()
+export const policiesIR = getPolicyDefinitions()
+export const countriesIR = getCountryNames()
+export const religionsIR = getReligionDefinitions()
+export const factionsIR = getFactionDefinitions()
+export const modifiersIR = getModifierDefinitions()
 
-export const tech_ir = getTechDefinitionsIR()
-export const tech_euiv = getTechDefinitionsEUIV()
+export const techIR = getTechDefinitionsIR()
+export const techEUIV = getTechDefinitionsEUIV()
 
 
 interface ModifierData {

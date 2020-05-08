@@ -81,16 +81,16 @@ export default class DelayedNumericInput extends Component<IProps, IState> {
 
   update = () => {
     const { value, onChange, percent } = this.props
-    let new_value = Number(percent ? this.state.value.replace('%', '') : this.state.value)
+    let newValue = Number(percent ? this.state.value.replace('%', '') : this.state.value)
     if (percent)
-      new_value /= 100.0
+      newValue /= 100.0
     // Non-numeric values should just reset the previous value.
-    if (Number.isNaN(new_value))
+    if (Number.isNaN(newValue))
       this.setState({ value: this.convertValue(value) })
     else {
-      this.setState({ value: this.convertValue(new_value) })
-      if (value !== new_value)
-        onChange(new_value)
+      this.setState({ value: this.convertValue(newValue) })
+      if (value !== newValue)
+        onChange(newValue)
     }
   }
 }

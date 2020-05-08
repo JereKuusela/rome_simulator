@@ -49,60 +49,60 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     })
 
     it('increased morale damage taken, terrain bonus and discipline', () => {
-      const unit_a = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.Discipline, 0.045]])
-      const unit_d = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.Discipline, 0.14], [TerrainType.Forest, 0.15]])
+      const unitA = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.Discipline, 0.045]])
+      const unitD = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.Discipline, 0.14], [TerrainType.Forest, 0.15]])
       setTerrain(info, TerrainType.Forest)
-      setCenterUnits(info, unit_a, unit_d)
+      setCenterUnits(info, unitA, unitD)
       const rolls = [[4, 4]]
       const { attacker, defender } = initSide(4)
 
-      attacker[0][15] = [unit_a.type, 958, 0.9644]
-      attacker[1][15] = [unit_a.type, 917, 0.7668]
-      attacker[2][15] = [unit_a.type, 877, 0.5984]
-      attacker[3][15] = [unit_a.type, 839, 0.4521]
+      attacker[0][15] = [unitA.type, 958, 0.9644]
+      attacker[1][15] = [unitA.type, 917, 0.7668]
+      attacker[2][15] = [unitA.type, 877, 0.5984]
+      attacker[3][15] = [unitA.type, 839, 0.4521]
 
-      defender[0][15] = [unit_d.type, 970, 1.0353]
-      defender[1][15] = [unit_d.type, 942, 0.9086]
-      defender[2][15] = [unit_d.type, 915, 0.8121]
-      defender[3][15] = [unit_d.type, 890, 0.7401]
+      defender[0][15] = [unitD.type, 970, 1.0353]
+      defender[1][15] = [unitD.type, 942, 0.9086]
+      defender[2][15] = [unitD.type, 915, 0.8121]
+      defender[3][15] = [unitD.type, 890, 0.7401]
 
       testCombat(info, rolls, attacker, defender)
     })
 
     it('reduced morale damage taken, offense/defense and experience', () => {
-      const unit_a = addValues(infantry, ValuesType.Base, 'Test', [[UnitAttribute.Offense, 0.1], [UnitAttribute.Defense, 0.15], [UnitAttribute.Experience, 0.0001]])
-      const unit_d = addValues(infantry, ValuesType.Base, 'Test', [[UnitAttribute.Offense, 0.05], [UnitAttribute.Defense, 0.05], [UnitAttribute.Experience, 0.0004]])
-      setCenterUnits(info, unit_a, unit_d)
+      const unitA = addValues(infantry, ValuesType.Base, 'Test', [[UnitAttribute.Offense, 0.1], [UnitAttribute.Defense, 0.15], [UnitAttribute.Experience, 0.0001]])
+      const unitD = addValues(infantry, ValuesType.Base, 'Test', [[UnitAttribute.Offense, 0.05], [UnitAttribute.Defense, 0.05], [UnitAttribute.Experience, 0.0004]])
+      setCenterUnits(info, unitA, unitD)
       const rolls = [[6, 1]]
       const { attacker, defender } = initSide(4)
 
       attacker[0] = null as any
-      attacker[1][15] = [unit_a.type, 964, 1.0199]
-      attacker[2][15] = [unit_a.type, 948, 0.9796]
-      attacker[3][15] = [unit_a.type, 932, 0.9462]
+      attacker[1][15] = [unitA.type, 964, 1.0199]
+      attacker[2][15] = [unitA.type, 948, 0.9796]
+      attacker[3][15] = [unitA.type, 932, 0.9462]
 
       defender[0] = null as any
-      defender[1][15] = [unit_d.type, 916, 0.8684]
-      defender[2][15] = [unit_d.type, 876, 0.7521]
-      defender[3][15] = [unit_d.type, 836, 0.6424]
+      defender[1][15] = [unitD.type, 916, 0.8684]
+      defender[2][15] = [unitD.type, 876, 0.7521]
+      defender[3][15] = [unitD.type, 836, 0.6424]
 
       testCombat(info, rolls, attacker, defender)
     })
 
     it('versus damage and increased morale damage taken', () => {
-      const unit_a = addValues(cavalry, ValuesType.Base, 'Test', [])
-      const unit_d = addValues(archer, ValuesType.Base, 'Test', [])
-      setCenterUnits(info, unit_a, unit_d)
+      const unitA = addValues(cavalry, ValuesType.Base, 'Test', [])
+      const unitD = addValues(archer, ValuesType.Base, 'Test', [])
+      setCenterUnits(info, unitA, unitD)
       const rolls = [[4, 4]]
       const { attacker, defender } = initSide(3)
 
-      attacker[0][15] = [unit_a.type, 971, 1.0704]
-      attacker[1][15] = [unit_a.type, 943, 0.9693]
-      attacker[2][15] = [unit_a.type, 917, 0.8917]
+      attacker[0][15] = [unitA.type, 971, 1.0704]
+      attacker[1][15] = [unitA.type, 943, 0.9693]
+      attacker[2][15] = [unitA.type, 917, 0.8917]
 
-      defender[0][15] = [unit_d.type, 960, 0.9750]
-      defender[1][15] = [unit_d.type, 921, 0.7800]
-      defender[2][15] = [unit_d.type, 883, 0.6086]
+      defender[0][15] = [unitD.type, 960, 0.9750]
+      defender[1][15] = [unitD.type, 921, 0.7800]
+      defender[2][15] = [unitD.type, 883, 0.6086]
 
       testCombat(info, rolls, attacker, defender)
     })

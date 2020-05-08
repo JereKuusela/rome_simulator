@@ -10,21 +10,21 @@ const parseInput = (input: string) => {
   const rows = input.split(/\r?\n/)
   const attacker: Input = {}
   const defender: Input = {}
-  let parsing_attacker = false
-  let parsing_defender = false
+  let parsingAttacker = false
+  let parsingDefender = false
   for (let row of rows) {
     const trimmed = row.trim()
     const split = trimmed.split('=')
     const key = split[0].trim()
     const value = split.length > 1 ? split[1].trim() : ''
     if (key === 'attacker')
-      parsing_attacker = true
+      parsingAttacker = true
     else if (key === 'defender')
-      parsing_defender = true
+      parsingDefender = true
     else if (key === '}')
-      parsing_attacker = parsing_defender = false
-    else if (value && (parsing_attacker || parsing_defender)) {
-      const input = parsing_attacker ? attacker : defender
+      parsingAttacker = parsingDefender = false
+    else if (value && (parsingAttacker || parsingDefender)) {
+      const input = parsingAttacker ? attacker : defender
       input[key] = value
     }
   }

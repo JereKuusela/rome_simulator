@@ -38,7 +38,7 @@ export interface Modifier {
   attribute: string
   negative?: boolean
   type: ValuesType
-  no_percent?: boolean
+  noPercent?: boolean
   value: number
 }
 

@@ -8,23 +8,23 @@ import { calculateValue } from 'definition_values'
  * Every two levels increase dice roll by one (rounded down).
  */
 export const calculateGeneralPips = (general: General, enemy: General, phase: CombatPhase): number => {
-  const martial_pip = Math.floor((general.total_values[GeneralAttribute.Martial] - enemy.total_values[GeneralAttribute.Martial]) / 2.0)
-  const phase_pip = general.total_values[phase] - enemy.total_values[phase]
-  return Math.max(0, martial_pip + phase_pip)
+  const martialPip = Math.floor((general.totalValues[GeneralAttribute.Martial] - enemy.totalValues[GeneralAttribute.Martial]) / 2.0)
+  const phasePip = general.totalValues[phase] - enemy.totalValues[phase]
+  return Math.max(0, martialPip + phasePip)
 }
 
 export const getTerrainPips = (terrains: TerrainDefinition[], side: SideType, general: General, enemy: General) => {
-  const enable_tiles = side === SideType.Attacker
-  const enable_borders = side === SideType.Attacker || general.total_values[GeneralAttribute.Maneuver] <= enemy.total_values[GeneralAttribute.Maneuver]
-  terrains = terrains.filter(terrain => terrain.location === LocationType.Border ? enable_borders : enable_tiles)
+  const enableTiles = side === SideType.Attacker
+  const enableBorders = side === SideType.Attacker || general.totalValues[GeneralAttribute.Maneuver] <= enemy.totalValues[GeneralAttribute.Maneuver]
+  terrains = terrains.filter(terrain => terrain.location === LocationType.Border ? enableBorders : enableTiles)
   return sumBy(terrains, terrain => calculateValue(terrain, TerrainCalc.Roll))
 }
 
 /**
  * Calculates the roll modifier from unit pips.
  */
-export const calculateCohortPips = (source: CombatCohortDefinition, target: CombatCohortDefinition, target_support: CombatCohortDefinition | null, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
-  return getOffensiveCohortPips(source, type, phase) + getDefensiveCohortPips(target, type, phase) + getDefensiveSupportCohortPips(target_support, type, phase)
+export const calculateCohortPips = (source: CombatCohortDefinition, target: CombatCohortDefinition, targetSupport: CombatCohortDefinition | null, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
+  return getOffensiveCohortPips(source, type, phase) + getDefensiveCohortPips(target, type, phase) + getDefensiveSupportCohortPips(targetSupport, type, phase)
 }
 
 export const getOffensiveCohortPips = (cohort: CombatCohortDefinition, type: UnitAttribute.Strength | UnitAttribute.Morale, phase?: CombatPhase): number => {
@@ -52,11 +52,11 @@ export const getDefensiveSupportCohortPips = (cohort: CombatCohortDefinition | n
 }
 
 export const calculateExperienceReduction = (settings: SiteSettings, target: UnitDefinition) => {
-  let damage_reduction_per_experience = settings[Setting.ExperienceDamageReduction]
+  let damageReductionPerExperience = settings[Setting.ExperienceDamageReduction]
   // Bug in game which makes morale damage taken and strength damage taken affect damage reduction from experience.
   if (!settings[Setting.FixExperience])
-    damage_reduction_per_experience *= (2.0 + calculateValue(target, UnitAttribute.MoraleDamageTaken) + calculateValue(target, UnitAttribute.StrengthDamageTaken)) * 0.5
-  return -damage_reduction_per_experience * calculateValue(target, UnitAttribute.Experience)
+    damageReductionPerExperience *= (2.0 + calculateValue(target, UnitAttribute.MoraleDamageTaken) + calculateValue(target, UnitAttribute.StrengthDamageTaken)) * 0.5
+  return -damageReductionPerExperience * calculateValue(target, UnitAttribute.Experience)
 }
 
 export const getCombatPhase = (round: number, settings: SiteSettings) => {
@@ -107,7 +107,7 @@ export const stackWipe = (cohorts: CombatCohorts) => {
         continue
       cohort[UnitAttribute.Strength] = 0
       cohort[UnitAttribute.Morale] = 0
-      if (!cohort.state.is_defeated)
+      if (!cohort.state.isDefeated)
         defeated.push(cohort)
       frontline[i][j] = null
     }
@@ -122,7 +122,7 @@ export const calculateTotalStrength = (cohorts: CombatCohorts) => {
   const addRatio = (cohorts: (CombatCohort | null)[]) => {
     for (let i = 0; i < cohorts.length; i++) {
       const cohort = cohorts[i]
-      if (!cohort || cohort.state.is_defeated)
+      if (!cohort || cohort.state.isDefeated)
         continue
       strength += cohort[UnitAttribute.Strength]
     }
@@ -149,7 +149,7 @@ export const removeDefeated = (frontline: CombatFrontline) => {
       const unit = frontline[i][j]
       if (!unit)
         continue
-      if (unit.state.is_defeated)
+      if (unit.state.isDefeated)
         frontline[i][j] = null
     }
   }

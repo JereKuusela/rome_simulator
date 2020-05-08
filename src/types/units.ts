@@ -87,13 +87,13 @@ export type UnitDefinitionValue = DefinitionValues<UnitValueType>
 export interface CohortDefinition extends DefinitionValues<UnitValueType> {
   type: UnitType
   id: number
-  is_loyal?: boolean
+  isLoyal?: boolean
 }
 
 /** A single (sub) unit definition. Used to store data but shouldn't be used for anything else. */
 export interface UnitDefinition extends Definition<UnitType>, DefinitionValues<UnitValueType> {
   role?: UnitRole
-  is_loyal?: boolean
+  isLoyal?: boolean
   parent?: UnitType
   culture?: CultureType
   tech?: number

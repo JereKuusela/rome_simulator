@@ -4,8 +4,8 @@ import { getUnitIcon } from "data"
 import { toArr, round, randomWithinRange } from "utils"
 import { mapModifiersToUnits2 } from "./modifiers"
 
-export const setUnitValue = (unit: UnitDefinition, values_type: ValuesType, key: string, attribute: UnitValueType, value: number) => {
-  addValuesWithMutate(unit, values_type, key, [[attribute, value]])
+export const setUnitValue = (unit: UnitDefinition, valuesType: ValuesType, key: string, attribute: UnitValueType, value: number) => {
+  addValuesWithMutate(unit, valuesType, key, [[attribute, value]])
 }
 
 export const deleteUnit = (units: UnitDefinitions, type: UnitType) => {
@@ -16,8 +16,8 @@ export const createUnit = (units: UnitDefinitions, mode: Mode, type: UnitType) =
   units[type] = { type, image: getUnitIcon(type), role: UnitRole.Front, parent: getRootParent(mode) }
 }
 
-export const changeUnitType = (units: UnitDefinitions, old_type: UnitType, type: UnitType) => {
-  delete Object.assign(units, { [type]: { ...units[old_type], type } })[old_type]
+export const changeUnitType = (units: UnitDefinitions, oldType: UnitType, type: UnitType) => {
+  delete Object.assign(units, { [type]: { ...units[oldType], type } })[oldType]
 }
 
 export const changeUnitImage = (unit: UnitDefinition, image: string) => {
@@ -29,7 +29,7 @@ export const changeUnitDeployment = (unit: UnitDefinition, deployment: UnitRole)
 }
 
 export const toggleUnitLoyality = (unit: UnitDefinition) => {
-  unit.is_loyal = !unit.is_loyal
+  unit.isLoyal = !unit.isLoyal
 }
 
 export const changeParent = (unit: UnitDefinition, parent: UnitType) => {

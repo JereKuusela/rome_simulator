@@ -125,8 +125,8 @@ class TableArmyInfo extends Component<IProps> {
 
   renderGeneralAttribute = (country: CountryName, army: ArmyName, general: General, attribute: GeneralValueType) => (
     <Table.Cell collapsing>
-      <Input disabled={!general.enabled} size='mini' className='small-input' type='number' value={general.base_values[attribute]} onChange={(_, { value }) => this.props.setGeneralAttribute(country, army, attribute, Number(value))} />
-      {' '}<StyledNumber value={general.extra_values[attribute]} formatter={addSign} hide_zero />
+      <Input disabled={!general.enabled} size='mini' className='small-input' type='number' value={general.baseValues[attribute]} onChange={(_, { value }) => this.props.setGeneralAttribute(country, army, attribute, Number(value))} />
+      {' '}<StyledNumber value={general.extraValues[attribute]} formatter={addSign} hideZero />
     </Table.Cell>
   )
 }

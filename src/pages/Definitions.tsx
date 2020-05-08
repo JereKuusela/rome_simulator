@@ -14,8 +14,8 @@ import TerrainDefinitions from 'containers/TerrainDefinitions'
 import TacticDefinitions from 'containers/TacticDefinitions'
 
 interface IState {
-  modal_country: CountryName | undefined
-  open_create_unit: boolean
+  modalCountry: CountryName | undefined
+  openCreateUnit: boolean
 }
 
 class Definitions extends Component<IProps, IState> {
@@ -25,15 +25,15 @@ class Definitions extends Component<IProps, IState> {
     this.state = this.initialState
   }
 
-  initialState = { modal_country: undefined, modal_unit: undefined, open_create_unit: false }
+  initialState = { modalCountry: undefined, openCreateUnit: false }
 
   render() {
-    const { mode, country, army, terrains, units, images, unit_types, weariness, openModal, settings } = this.props
+    const { mode, country, army, terrains, units, images, unitTypes, weariness, openModal, settings } = this.props
     return (
       <>
-        <AccordionToggle identifier='definition_units' open title='Units'>
+        <AccordionToggle identifier='definitionUnits' open title='Units'>
           <CountryManager>
-            <Button primary onClick={() => this.setState({ open_create_unit: true })}>
+            <Button primary onClick={() => this.setState({ openCreateUnit: true })}>
               New unit
           </Button>
           </CountryManager>
@@ -45,7 +45,7 @@ class Definitions extends Component<IProps, IState> {
             terrains={terrains}
             units={units}
             images={images}
-            unit_types={unit_types}
+            unitTypes={unitTypes}
             onRowClick={unit => openModal(ModalType.UnitDetail, { country, army, type: unit.type, remove: true })}
           />
           <WearinessRange
@@ -55,14 +55,14 @@ class Definitions extends Component<IProps, IState> {
           <br /><br />
         </AccordionToggle>
         <br />
-        <AccordionToggle identifier='definition_terrains' title='Terrains'>
+        <AccordionToggle identifier='definitionTerrains' title='Terrains'>
           <TerrainDefinitions />
           <br /><br />
         </AccordionToggle>
         <br />
         {
           settings[Setting.Tactics] &&
-          <AccordionToggle identifier='definition_tactics' title='Tactics'>
+          <AccordionToggle identifier='definitionTactics' title='Tactics'>
             <TacticDefinitions />
             <br /><br />
           </AccordionToggle>
@@ -74,7 +74,7 @@ class Definitions extends Component<IProps, IState> {
   onClick = () => this.props.openModal(ModalType.Value, {
     onSuccess: type => this.props.createUnit(this.props.country, this.props.mode, type as UnitType),
     message: 'New unit type',
-    button_message: 'Create',
+    buttonMessage: 'Create',
     initial: ''
   })
 }
@@ -82,7 +82,7 @@ class Definitions extends Component<IProps, IState> {
 const mapStateToProps = (state: AppState) => ({
   units: getAllUnitList(getUnits(state), getMode(state)),
   images: getUnitImages(state),
-  unit_types: mergeUnitTypes(state),
+  unitTypes: mergeUnitTypes(state),
   terrains: filterTerrainTypes(state),
   mode: getMode(state),
   country: state.settings.country,

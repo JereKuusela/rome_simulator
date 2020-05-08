@@ -39,23 +39,23 @@ const get = (value1?: number, value2?: number): Values => {
 }
 
 const initDefinition = (value1: number | undefined, value2: number | undefined, value3: number | undefined, value4: number | undefined) => (
-  { type: 'test', image: '', base_values: get(value1), modifier_values: get(value2), loss_values: get(value3), loss_modifier_values: get(value4) }
+  { type: 'test', image: '', baseValues: get(value1), modifierValues: get(value2), lossValues: get(value3), lossModifierValues: get(value4) }
 )
 
 const initBase = (value1: number, value2?: number) => (
-  { type: 'test', image: '', base_values: get(value1, value2) }
+  { type: 'test', image: '', baseValues: get(value1, value2) }
 )
 
 const initModifier = (value1: number, value2?: number) => (
-  { type: 'test', image: '', modifier_values: get(value1, value2) }
+  { type: 'test', image: '', modifierValues: get(value1, value2) }
 )
 
 const initLoss = (value1: number, value2?: number) => (
-  { type: 'test', image: '', loss_values: get(value1, value2) }
+  { type: 'test', image: '', lossValues: get(value1, value2) }
 )
 
 const initLossModifier = (value1: number, value2?: number) => (
-  { type: 'test', image: '', loss_modifier_values: get(value1, value2) }
+  { type: 'test', image: '', lossModifierValues: get(value1, value2) }
 )
 
 describe('mergeValues', () => {
@@ -72,190 +72,190 @@ describe('mergeValues', () => {
     expect(result.type).toEqual('test1')
   })
   it('generates empty values', () => {
-    const definition = { type: 'test', image: '', base_values: undefined, modifier_values: undefined, loss_values: undefined, loss_modifier_values: undefined }
+    const definition = { type: 'test', image: '', baseValues: undefined, modifierValues: undefined, lossValues: undefined, lossModifierValues: undefined }
     const result = mergeValues(definition, undefined) as any
-    expect(result.base_values).toBeTruthy()
-    expect(result.modifier_values).toBeTruthy()
-    expect(result.loss_values).toBeTruthy()
-    expect(result.loss_modifier_values).toBeTruthy()
+    expect(result.baseValues).toBeTruthy()
+    expect(result.modifierValues).toBeTruthy()
+    expect(result.lossValues).toBeTruthy()
+    expect(result.lossModifierValues).toBeTruthy()
   })
   it('merges different values', () => {
-    const definition = { type: 'test', image: '', base_values: initValues('test1', 'key1', 0), modifier_values: initValues('test1', 'key2', 0), loss_values: initValues('test1', 'key3', 0), loss_modifier_values: initValues('test1', 'key4', 0) }
-    const toMerge = { type: 'test', image: '', base_values: initValues('test2', 'key1', 0), modifier_values: initValues('test2', 'key2', 0), loss_values: initValues('test2', 'key3', 0), loss_modifier_values: initValues('test2', 'key4', 0) }
+    const definition = { type: 'test', image: '', baseValues: initValues('test1', 'key1', 0), modifierValues: initValues('test1', 'key2', 0), lossValues: initValues('test1', 'key3', 0), lossModifierValues: initValues('test1', 'key4', 0) }
+    const toMerge = { type: 'test', image: '', baseValues: initValues('test2', 'key1', 0), modifierValues: initValues('test2', 'key2', 0), lossValues: initValues('test2', 'key3', 0), lossModifierValues: initValues('test2', 'key4', 0) }
     const result = mergeValues(definition, toMerge)
-    expect(size(result.base_values)).toEqual(2)
-    expect(size(result.modifier_values)).toEqual(2)
-    expect(size(result.loss_values)).toEqual(2)
-    expect(size(result.base_values['test1'])).toEqual(1)
-    expect(size(result.modifier_values['test1'])).toEqual(1)
-    expect(size(result.loss_values['test1'])).toEqual(1)
-    expect(size(result.base_values['test2'])).toEqual(1)
-    expect(size(result.modifier_values['test2'])).toEqual(1)
-    expect(size(result.loss_values['test2'])).toEqual(1)
-    expect(size(result.loss_modifier_values['test2'])).toEqual(1)
+    expect(size(result.baseValues)).toEqual(2)
+    expect(size(result.modifierValues)).toEqual(2)
+    expect(size(result.lossValues)).toEqual(2)
+    expect(size(result.baseValues['test1'])).toEqual(1)
+    expect(size(result.modifierValues['test1'])).toEqual(1)
+    expect(size(result.lossValues['test1'])).toEqual(1)
+    expect(size(result.baseValues['test2'])).toEqual(1)
+    expect(size(result.modifierValues['test2'])).toEqual(1)
+    expect(size(result.lossValues['test2'])).toEqual(1)
+    expect(size(result.lossModifierValues['test2'])).toEqual(1)
   })
   it('merges same values', () => {
     const result = mergeValues(initDefinition(0, 0, 0, 0), initDefinition(1, 2, 3, 4))
-    expect(size(result.base_values['attribute'])).toEqual(1)
-    expect(size(result.modifier_values['attribute'])).toEqual(1)
-    expect(size(result.loss_values['attribute'])).toEqual(1)
-    expect(size(result.loss_modifier_values['attribute'])).toEqual(1)
-    expect(result.base_values['attribute']['key1']).toEqual(1)
-    expect(result.modifier_values['attribute']['key1']).toEqual(2)
-    expect(result.loss_values['attribute']['key1']).toEqual(3)
-    expect(result.loss_modifier_values['attribute']['key1']).toEqual(4)
+    expect(size(result.baseValues['attribute'])).toEqual(1)
+    expect(size(result.modifierValues['attribute'])).toEqual(1)
+    expect(size(result.lossValues['attribute'])).toEqual(1)
+    expect(size(result.lossModifierValues['attribute'])).toEqual(1)
+    expect(result.baseValues['attribute']['key1']).toEqual(1)
+    expect(result.modifierValues['attribute']['key1']).toEqual(2)
+    expect(result.lossValues['attribute']['key1']).toEqual(3)
+    expect(result.lossModifierValues['attribute']['key1']).toEqual(4)
   })
 })
 
 describe('shrinkValues', () => {
   it('works with undefined', () => {
-    const result = shrinkValues({ type: 'test', image: '', base_values: undefined, modifier_values: undefined, loss_values: undefined, loss_modifier_values: undefined }, 'key')
-    expect(result.base_values).toBeFalsy
-    expect(result.modifier_values).toBeFalsy
-    expect(result.loss_values).toBeFalsy
-    expect(result.loss_modifier_values).toBeFalsy
+    const result = shrinkValues({ type: 'test', image: '', baseValues: undefined, modifierValues: undefined, lossValues: undefined, lossModifierValues: undefined }, 'key')
+    expect(result.baseValues).toBeFalsy
+    expect(result.modifierValues).toBeFalsy
+    expect(result.lossValues).toBeFalsy
+    expect(result.lossModifierValues).toBeFalsy
   })
 
   it('works', () => {
-    const result = shrinkValues({ type: 'test', image: '', base_values: get(1, 2), modifier_values: get(3, 4), loss_values: get(5, 6), loss_modifier_values: get(7, 8) }, 'key')
-    expect(result.base_values['attribute']['key']).toEqual(3)
-    expect(result.modifier_values['attribute']['key']).toEqual(7)
-    expect(result.loss_values['attribute']['key']).toEqual(11)
-    expect(result.loss_modifier_values['attribute']['key']).toEqual(15)
+    const result = shrinkValues({ type: 'test', image: '', baseValues: get(1, 2), modifierValues: get(3, 4), lossValues: get(5, 6), lossModifierValues: get(7, 8) }, 'key')
+    expect(result.baseValues['attribute']['key']).toEqual(3)
+    expect(result.modifierValues['attribute']['key']).toEqual(7)
+    expect(result.lossValues['attribute']['key']).toEqual(11)
+    expect(result.lossModifierValues['attribute']['key']).toEqual(15)
   })
 })
 
 describe('addValues', () => {
   it('generates empty base values', () => {
-    const result = addValues({ type: 'test', image: '', base_values: undefined }, ValuesType.Base, 'key1', [])
-    expect(result.base_values).toBeTruthy
+    const result = addValues({ type: 'test', image: '', baseValues: undefined }, ValuesType.Base, 'key1', [])
+    expect(result.baseValues).toBeTruthy
   })
   it('generates empty modifier values', () => {
-    const result = addValues({ type: 'test', image: '', modifier_values: undefined }, ValuesType.Modifier, 'key1', [])
-    expect(result.modifier_values).toBeTruthy
+    const result = addValues({ type: 'test', image: '', modifierValues: undefined }, ValuesType.Modifier, 'key1', [])
+    expect(result.modifierValues).toBeTruthy
   })
   it('generates empty loss values', () => {
-    const result = addValues({ type: 'test', image: '', loss_values: undefined }, ValuesType.Loss, 'key1', [])
-    expect(result.loss_values).toBeTruthy
+    const result = addValues({ type: 'test', image: '', lossValues: undefined }, ValuesType.Loss, 'key1', [])
+    expect(result.lossValues).toBeTruthy
   })
   it('generates empty loss modifier values', () => {
-    const result = addValues({ type: 'test', image: '', loss_modifier_values: undefined }, ValuesType.LossModifier, 'key1', [])
-    expect(result.loss_modifier_values).toBeTruthy
+    const result = addValues({ type: 'test', image: '', lossModifierValues: undefined }, ValuesType.LossModifier, 'key1', [])
+    expect(result.lossModifierValues).toBeTruthy
   })
   it('adds to base values', () => {
     const result = addValues(initBase(0), ValuesType.Base, 'key2', [['attribute', 1]])
-    expect(size(result.base_values)).toEqual(1)
-    expect(size(result.base_values['attribute'])).toEqual(2)
-    expect(result.base_values['attribute']['key1']).toEqual(0)
-    expect(result.base_values['attribute']['key2']).toEqual(1)
+    expect(size(result.baseValues)).toEqual(1)
+    expect(size(result.baseValues['attribute'])).toEqual(2)
+    expect(result.baseValues['attribute']['key1']).toEqual(0)
+    expect(result.baseValues['attribute']['key2']).toEqual(1)
   })
   it('adds to modifier values', () => {
     const result = addValues(initModifier(0), ValuesType.Modifier, 'key2', [['attribute', 1]])
-    expect(size(result.modifier_values)).toEqual(1)
-    expect(size(result.modifier_values['attribute'])).toEqual(2)
-    expect(result.modifier_values['attribute']['key1']).toEqual(0)
-    expect(result.modifier_values['attribute']['key2']).toEqual(1)
+    expect(size(result.modifierValues)).toEqual(1)
+    expect(size(result.modifierValues['attribute'])).toEqual(2)
+    expect(result.modifierValues['attribute']['key1']).toEqual(0)
+    expect(result.modifierValues['attribute']['key2']).toEqual(1)
   })
   it('adds to loss values', () => {
     const result = addValues(initLoss(0), ValuesType.Loss, 'key2', [['attribute', 1]])
-    expect(size(result.loss_values)).toEqual(1)
-    expect(size(result.loss_values['attribute'])).toEqual(2)
-    expect(result.loss_values['attribute']['key1']).toEqual(0)
-    expect(result.loss_values['attribute']['key2']).toEqual(1)
+    expect(size(result.lossValues)).toEqual(1)
+    expect(size(result.lossValues['attribute'])).toEqual(2)
+    expect(result.lossValues['attribute']['key1']).toEqual(0)
+    expect(result.lossValues['attribute']['key2']).toEqual(1)
   })
   it('adds to loss modifier values', () => {
     const result = addValues(initLossModifier(0), ValuesType.LossModifier, 'key2', [['attribute', 1]])
-    expect(size(result.loss_modifier_values)).toEqual(1)
-    expect(size(result.loss_modifier_values['attribute'])).toEqual(2)
-    expect(result.loss_modifier_values['attribute']['key1']).toEqual(0)
-    expect(result.loss_modifier_values['attribute']['key2']).toEqual(1)
+    expect(size(result.lossModifierValues)).toEqual(1)
+    expect(size(result.lossModifierValues['attribute'])).toEqual(2)
+    expect(result.lossModifierValues['attribute']['key1']).toEqual(0)
+    expect(result.lossModifierValues['attribute']['key2']).toEqual(1)
   })
   it('merges to base values', () => {
     const result = addValues(initBase(0), ValuesType.Base, 'key1', [['attribute', 1]])
-    expect(size(result.base_values)).toEqual(1)
-    expect(size(result.base_values['attribute'])).toEqual(1)
-    expect(result.base_values['attribute']['key1']).toEqual(1)
+    expect(size(result.baseValues)).toEqual(1)
+    expect(size(result.baseValues['attribute'])).toEqual(1)
+    expect(result.baseValues['attribute']['key1']).toEqual(1)
   })
   it('merges to modifier values', () => {
     const result = addValues(initModifier(0), ValuesType.Modifier, 'key1', [['attribute', 1]])
-    expect(size(result.modifier_values)).toEqual(1)
-    expect(size(result.modifier_values['attribute'])).toEqual(1)
-    expect(result.modifier_values['attribute']['key1']).toEqual(1)
+    expect(size(result.modifierValues)).toEqual(1)
+    expect(size(result.modifierValues['attribute'])).toEqual(1)
+    expect(result.modifierValues['attribute']['key1']).toEqual(1)
   })
   it('merges to loss values', () => {
     const result = addValues(initLoss(0), ValuesType.Loss, 'key1', [['attribute', 1]])
-    expect(size(result.loss_values)).toEqual(1)
-    expect(size(result.loss_values['attribute'])).toEqual(1)
-    expect(result.loss_values['attribute']['key1']).toEqual(1)
+    expect(size(result.lossValues)).toEqual(1)
+    expect(size(result.lossValues['attribute'])).toEqual(1)
+    expect(result.lossValues['attribute']['key1']).toEqual(1)
   })
   it('merges to loss modifier values', () => {
     const result = addValues(initLossModifier(0), ValuesType.LossModifier, 'key1', [['attribute', 1]])
-    expect(size(result.loss_modifier_values)).toEqual(1)
-    expect(size(result.loss_modifier_values['attribute'])).toEqual(1)
-    expect(result.loss_modifier_values['attribute']['key1']).toEqual(1)
+    expect(size(result.lossModifierValues)).toEqual(1)
+    expect(size(result.lossModifierValues['attribute'])).toEqual(1)
+    expect(result.lossModifierValues['attribute']['key1']).toEqual(1)
   })
 })
 
 describe('clearAllValues', () => {
   it('resets empty values', () => {
-    const result = clearAllValues({ type: 'test', image: '', base_values: undefined, modifier_values: undefined, loss_values: undefined, loss_modifier_values: undefined }, 'key1')
-    expect(result.base_values).toBeTruthy
-    expect(result.modifier_values).toBeTruthy
-    expect(result.loss_values).toBeTruthy
-    expect(result.loss_modifier_values).toBeTruthy
+    const result = clearAllValues({ type: 'test', image: '', baseValues: undefined, modifierValues: undefined, lossValues: undefined, lossModifierValues: undefined }, 'key1')
+    expect(result.baseValues).toBeTruthy
+    expect(result.modifierValues).toBeTruthy
+    expect(result.lossValues).toBeTruthy
+    expect(result.lossModifierValues).toBeTruthy
   })
   it('clears all values', () => {
     const result = clearAllValues(initDefinition(0, 0, 0, 0), 'key1')
-    expect(size(result.base_values)).toEqual(1)
-    expect(size(result.base_values['attribute'])).toEqual(0)
-    expect(size(result.modifier_values)).toEqual(1)
-    expect(size(result.modifier_values['attribute'])).toEqual(0)
-    expect(size(result.loss_values)).toEqual(1)
-    expect(size(result.loss_values['attribute'])).toEqual(0)
-    expect(size(result.loss_modifier_values)).toEqual(1)
-    expect(size(result.loss_modifier_values['attribute'])).toEqual(0)
+    expect(size(result.baseValues)).toEqual(1)
+    expect(size(result.baseValues['attribute'])).toEqual(0)
+    expect(size(result.modifierValues)).toEqual(1)
+    expect(size(result.modifierValues['attribute'])).toEqual(0)
+    expect(size(result.lossValues)).toEqual(1)
+    expect(size(result.lossValues['attribute'])).toEqual(0)
+    expect(size(result.lossModifierValues)).toEqual(1)
+    expect(size(result.lossModifierValues['attribute'])).toEqual(0)
   })
   it('leaves other values', () => {
     const result = clearAllValues(initDefinition(0, 0, 0, 0), 'key2')
-    expect(size(result.base_values)).toEqual(1)
-    expect(size(result.base_values['attribute'])).toEqual(1)
-    expect(size(result.modifier_values)).toEqual(1)
-    expect(size(result.modifier_values['attribute'])).toEqual(1)
-    expect(size(result.loss_values)).toEqual(1)
-    expect(size(result.loss_values['attribute'])).toEqual(1)
-    expect(size(result.loss_modifier_values)).toEqual(1)
-    expect(size(result.loss_modifier_values['attribute'])).toEqual(1)
+    expect(size(result.baseValues)).toEqual(1)
+    expect(size(result.baseValues['attribute'])).toEqual(1)
+    expect(size(result.modifierValues)).toEqual(1)
+    expect(size(result.modifierValues['attribute'])).toEqual(1)
+    expect(size(result.lossValues)).toEqual(1)
+    expect(size(result.lossValues['attribute'])).toEqual(1)
+    expect(size(result.lossModifierValues)).toEqual(1)
+    expect(size(result.lossModifierValues['attribute'])).toEqual(1)
   })
 })
 
 describe('clearValues', () => {
   it('clears base values', () => {
     const result = clearValues(initDefinition(0, 0, 0, 0), ValuesType.Base, 'key1')
-    expect(size(result.base_values['attribute'])).toEqual(0)
-    expect(size(result.modifier_values['attribute'])).toEqual(1)
-    expect(size(result.loss_values['attribute'])).toEqual(1)
-    expect(size(result.loss_modifier_values['attribute'])).toEqual(1)
+    expect(size(result.baseValues['attribute'])).toEqual(0)
+    expect(size(result.modifierValues['attribute'])).toEqual(1)
+    expect(size(result.lossValues['attribute'])).toEqual(1)
+    expect(size(result.lossModifierValues['attribute'])).toEqual(1)
   })
   it('clears modifier values', () => {
     const result = clearValues(initDefinition(0, 0, 0, 0), ValuesType.Modifier, 'key1')
-    expect(size(result.base_values['attribute'])).toEqual(1)
-    expect(size(result.modifier_values['attribute'])).toEqual(0)
-    expect(size(result.loss_values['attribute'])).toEqual(1)
-    expect(size(result.loss_modifier_values['attribute'])).toEqual(1)
+    expect(size(result.baseValues['attribute'])).toEqual(1)
+    expect(size(result.modifierValues['attribute'])).toEqual(0)
+    expect(size(result.lossValues['attribute'])).toEqual(1)
+    expect(size(result.lossModifierValues['attribute'])).toEqual(1)
   })
   it('clears loss values', () => {
     const result = clearValues(initDefinition(0, 0, 0, 0), ValuesType.Loss, 'key1')
-    expect(size(result.base_values['attribute'])).toEqual(1)
-    expect(size(result.modifier_values['attribute'])).toEqual(1)
-    expect(size(result.loss_values['attribute'])).toEqual(0)
-    expect(size(result.loss_modifier_values['attribute'])).toEqual(1)
+    expect(size(result.baseValues['attribute'])).toEqual(1)
+    expect(size(result.modifierValues['attribute'])).toEqual(1)
+    expect(size(result.lossValues['attribute'])).toEqual(0)
+    expect(size(result.lossModifierValues['attribute'])).toEqual(1)
   })
   it('clears loss modifier values', () => {
     const result = clearValues(initDefinition(0, 0, 0, 0), ValuesType.LossModifier, 'key1')
-    expect(size(result.base_values['attribute'])).toEqual(1)
-    expect(size(result.modifier_values['attribute'])).toEqual(1)
-    expect(size(result.loss_values['attribute'])).toEqual(1)
-    expect(size(result.loss_modifier_values['attribute'])).toEqual(0)
+    expect(size(result.baseValues['attribute'])).toEqual(1)
+    expect(size(result.modifierValues['attribute'])).toEqual(1)
+    expect(size(result.lossValues['attribute'])).toEqual(1)
+    expect(size(result.lossModifierValues['attribute'])).toEqual(0)
   })
 })
 
@@ -263,50 +263,50 @@ describe('regenerateValues', () => {
   it('regenerates base values', () => {
     const result = initDefinition(0, 0, 0, 0)
     regenerateValues(result, ValuesType.Base, 'key1', [['attribute2', 1]])
-    expect(size(result.base_values['attribute'])).toEqual(0)
-    expect(size(result.base_values['attribute2'])).toEqual(1)
-    expect(size(result.modifier_values['attribute'])).toEqual(1)
-    expect(result.modifier_values['attribute2']).toBeUndefined()
-    expect(size(result.loss_values['attribute'])).toEqual(1)
-    expect(result.loss_values['attribute2']).toBeUndefined()
-    expect(size(result.loss_modifier_values['attribute'])).toEqual(1)
-    expect(result.loss_modifier_values['attribute2']).toBeUndefined()
+    expect(size(result.baseValues['attribute'])).toEqual(0)
+    expect(size(result.baseValues['attribute2'])).toEqual(1)
+    expect(size(result.modifierValues['attribute'])).toEqual(1)
+    expect(result.modifierValues['attribute2']).toBeUndefined()
+    expect(size(result.lossValues['attribute'])).toEqual(1)
+    expect(result.lossValues['attribute2']).toBeUndefined()
+    expect(size(result.lossModifierValues['attribute'])).toEqual(1)
+    expect(result.lossModifierValues['attribute2']).toBeUndefined()
   })
   it('regenerates modifier values', () => {
     const result = initDefinition(0, 0, 0, 0)
     regenerateValues(result, ValuesType.Modifier, 'key1', [['attribute2', 1]])
-    expect(size(result.base_values['attribute'])).toEqual(1)
-    expect(result.base_values['attribute2']).toBeUndefined()
-    expect(size(result.modifier_values['attribute'])).toEqual(0)
-    expect(size(result.modifier_values['attribute2'])).toEqual(1)
-    expect(size(result.loss_values['attribute'])).toEqual(1)
-    expect(result.loss_values['attribute2']).toBeUndefined()
-    expect(size(result.loss_modifier_values['attribute'])).toEqual(1)
-    expect(result.loss_modifier_values['attribute2']).toBeUndefined()
+    expect(size(result.baseValues['attribute'])).toEqual(1)
+    expect(result.baseValues['attribute2']).toBeUndefined()
+    expect(size(result.modifierValues['attribute'])).toEqual(0)
+    expect(size(result.modifierValues['attribute2'])).toEqual(1)
+    expect(size(result.lossValues['attribute'])).toEqual(1)
+    expect(result.lossValues['attribute2']).toBeUndefined()
+    expect(size(result.lossModifierValues['attribute'])).toEqual(1)
+    expect(result.lossModifierValues['attribute2']).toBeUndefined()
   })
   it('regenerates loss values', () => {
     const result = initDefinition(0, 0, 0, 0)
     regenerateValues(result, ValuesType.Loss, 'key1', [['attribute2', 1]])
-    expect(size(result.base_values['attribute'])).toEqual(1)
-    expect(result.base_values['attribute2']).toBeUndefined()
-    expect(size(result.modifier_values['attribute'])).toEqual(1)
-    expect(result.modifier_values['attribute2']).toBeUndefined()
-    expect(size(result.loss_values['attribute'])).toEqual(0)
-    expect(size(result.loss_values['attribute2'])).toEqual(1)
-    expect(size(result.loss_modifier_values['attribute'])).toEqual(1)
-    expect(result.loss_modifier_values['attribute2']).toBeUndefined()
+    expect(size(result.baseValues['attribute'])).toEqual(1)
+    expect(result.baseValues['attribute2']).toBeUndefined()
+    expect(size(result.modifierValues['attribute'])).toEqual(1)
+    expect(result.modifierValues['attribute2']).toBeUndefined()
+    expect(size(result.lossValues['attribute'])).toEqual(0)
+    expect(size(result.lossValues['attribute2'])).toEqual(1)
+    expect(size(result.lossModifierValues['attribute'])).toEqual(1)
+    expect(result.lossModifierValues['attribute2']).toBeUndefined()
   })
   it('regenerates loss modifier values', () => {
     const result = initDefinition(0, 0, 0, 0)
     regenerateValues(result, ValuesType.LossModifier, 'key1', [['attribute2', 1]])
-    expect(size(result.base_values['attribute'])).toEqual(1)
-    expect(result.base_values['attribute2']).toBeUndefined()
-    expect(size(result.modifier_values['attribute'])).toEqual(1)
-    expect(result.modifier_values['attribute2']).toBeUndefined()
-    expect(size(result.loss_values['attribute'])).toEqual(1)
-    expect(result.loss_values['attribute2']).toBeUndefined()
-    expect(size(result.loss_modifier_values['attribute'])).toEqual(0)
-    expect(size(result.loss_modifier_values['attribute2'])).toEqual(1)
+    expect(size(result.baseValues['attribute'])).toEqual(1)
+    expect(result.baseValues['attribute2']).toBeUndefined()
+    expect(size(result.modifierValues['attribute'])).toEqual(1)
+    expect(result.modifierValues['attribute2']).toBeUndefined()
+    expect(size(result.lossValues['attribute'])).toEqual(1)
+    expect(result.lossValues['attribute2']).toBeUndefined()
+    expect(size(result.lossModifierValues['attribute'])).toEqual(0)
+    expect(size(result.lossModifierValues['attribute2'])).toEqual(1)
   })
 })
 
@@ -437,7 +437,7 @@ describe('explainShort', () => {
     expect(result).toEqual('Base value 0 multiplied by 150% (key1: 50%) reduced by losses 0.75 (key1: 0.75)')
   })
   it('works for multiple base + modifier + loss values', () => {
-    const result = explain({ type: 'test', image: '', base_values: get(1, 1.5), modifier_values: get(2, 2.5), loss_values: get(3, 3.5) }, 'attribute')
+    const result = explain({ type: 'test', image: '', baseValues: get(1, 1.5), modifierValues: get(2, 2.5), lossValues: get(3, 3.5) }, 'attribute')
     expect(result).toEqual('Base value 2.5 (key1: 1, key2: 1.5) multiplied by 550% (key1: 200%, key2: 250%) reduced by losses 6.5 (key1: 3, key2: 3.5)')
   })
 })*/

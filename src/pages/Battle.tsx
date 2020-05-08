@@ -49,7 +49,7 @@ class Battle extends Component<IProps> {
   }
 
   render() {
-    const { participant_a, participant_d, round, is_undo, fight_over, settings, timestamp, changeSiteParameter } = this.props
+    const { participantA, participantD, round, isUndo, fightOver, settings, timestamp, changeSiteParameter } = this.props
     if (!timestamp)
       return null
     return (
@@ -70,10 +70,10 @@ class Battle extends Component<IProps> {
               <WinRate />
             </Grid.Column>
             <Grid.Column floated='right' textAlign='right' width='4'>
-              <Button circular icon='angle double left' color='black' size='huge' disabled={!is_undo} onClick={() => this.undo(10)} />
-              <Button circular icon='angle left' color='black' size='huge' disabled={!is_undo} onClick={() => this.undo(1)} />
-              <Button circular icon='angle right' color='black' size='huge' disabled={fight_over} onClick={() => this.battle(1)} />
-              <Button circular icon='angle double right' color='black' size='huge' disabled={fight_over} onClick={() => this.battle(10)} />
+              <Button circular icon='angle double left' color='black' size='huge' disabled={!isUndo} onClick={() => this.undo(10)} />
+              <Button circular icon='angle left' color='black' size='huge' disabled={!isUndo} onClick={() => this.undo(1)} />
+              <Button circular icon='angle right' color='black' size='huge' disabled={fightOver} onClick={() => this.battle(1)} />
+              <Button circular icon='angle double right' color='black' size='huge' disabled={fightOver} onClick={() => this.battle(10)} />
             </Grid.Column>
 
           </Grid.Row>
@@ -88,9 +88,9 @@ class Battle extends Component<IProps> {
             <Grid.Column>
               <TargetArrows
                 type={ArmyType.Frontline}
-                visible={!fight_over}
-                attacker_color={ATTACKER_COLOR}
-                defender_color={DEFENDER_COLOR}
+                visible={!fightOver}
+                attackerColor={ATTACKER_COLOR}
+                defenderColor={DEFENDER_COLOR}
               />
             </Grid.Column>
           </Grid.Row>
@@ -123,20 +123,20 @@ class Battle extends Component<IProps> {
             </Grid.Row>
             <Grid.Row columns={2}>
               <Grid.Column>
-                <TableUnitTypes side={SideType.Attacker} country={participant_a.country} army={participant_a.army} onRowClick={this.openUnitDetails} />
+                <TableUnitTypes side={SideType.Attacker} country={participantA.country} army={participantA.army} onRowClick={this.openUnitDetails} />
               </Grid.Column>
               <Grid.Column>
-                <TableUnitTypes side={SideType.Defender} country={participant_d.country} army={participant_d.army} onRowClick={this.openUnitDetails} />
+                <TableUnitTypes side={SideType.Defender} country={participantD.country} army={participantD.army} onRowClick={this.openUnitDetails} />
               </Grid.Column>
             </Grid.Row>
             {
               settings[Setting.FireAndShock] &&
               <Grid.Row columns={2}>
                 <Grid.Column>
-                  <TableDamageAttributes side={SideType.Attacker} country={participant_a.country} army={participant_a.army} />
+                  <TableDamageAttributes side={SideType.Attacker} country={participantA.country} army={participantA.army} />
                 </Grid.Column>
                 <Grid.Column>
-                  <TableDamageAttributes side={SideType.Defender} country={participant_d.country} army={participant_d.army} />
+                  <TableDamageAttributes side={SideType.Defender} country={participantD.country} army={participantD.army} />
                 </Grid.Column>
               </Grid.Row>
 
@@ -221,16 +221,16 @@ class Battle extends Component<IProps> {
   }
 
   renderFrontline = (side: SideType) => {
-    const combat_width = this.props.settings[Setting.CombatWidth]
+    const combatWidth = this.props.settings[Setting.CombatWidth]
     return (
       <TableArmyPart
         color={side === SideType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
         side={side}
         onClick={(row, column, id) => this.openCohortModal(side, ArmyType.Frontline, row, column, id)}
-        row_width={Math.max(30, combat_width)}
+        rowWidth={Math.max(30, combatWidth)}
         reverse={side === SideType.Attacker}
         type={ArmyType.Frontline}
-        disable_add={this.props.round > -1}
+        disableAdd={this.props.round > -1}
       />
     )
   }
@@ -241,10 +241,10 @@ class Battle extends Component<IProps> {
         color={side === SideType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
         side={side}
         onClick={(row, column, id) => this.openCohortModal(side, ArmyType.Reserve, row, column + 30 * row, id)}
-        row_width={30}
+        rowWidth={30}
         reverse={false}
         type={ArmyType.Reserve}
-        full_rows
+        fullRows
       />
     )
   }
@@ -255,18 +255,18 @@ class Battle extends Component<IProps> {
         color={side === SideType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
         side={side}
         onClick={(row, column, id) => this.openCohortModal(side, ArmyType.Defeated, row, column + 30 * row, id)}
-        row_width={30}
+        rowWidth={30}
         reverse={false}
         type={ArmyType.Defeated}
-        full_rows
+        fullRows
       />
     )
   }
 
   clearCohorts = (): void => {
-    const { participant_a, participant_d, clearCohorts } = this.props
-    clearCohorts(participant_a.country, participant_a.army)
-    clearCohorts(participant_d.country, participant_d.army)
+    const { participantA, participantD, clearCohorts } = this.props
+    clearCohorts(participantA.country, participantA.army)
+    clearCohorts(participantD.country, participantD.army)
   }
 
   undo = (rounds: number) => {
@@ -287,13 +287,13 @@ class Battle extends Component<IProps> {
 const mapStateToProps = (state: AppState) => {
   const battle = getBattle(state)
   return {
-    participant_a: getParticipant(state, SideType.Attacker),
-    participant_d: getParticipant(state, SideType.Defender),
-    is_undo: battle.round > -1,
+    participantA: getParticipant(state, SideType.Attacker),
+    participantD: getParticipant(state, SideType.Defender),
+    isUndo: battle.round > -1,
     round: battle.round,
     outdated: battle.outdated,
     timestamp: battle.timestamp,
-    fight_over: battle.fight_over,
+    fightOver: battle.fightOver,
     settings: getSettings(state)
   }
 }

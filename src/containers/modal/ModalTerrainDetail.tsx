@@ -17,7 +17,7 @@ class ModalTerrainDetail extends Component<IProps> {
       <BaseModal basic type={ModalType.TerrainDetail}>
         <ItemRemover onRemove={this.delete} />
         <TerrainDetail
-          custom_value_key={CUSTOM_VALUE_KEY}
+          customValueKey={CUSTOM_VALUE_KEY}
           terrain={terrain}
           onCustomValueChange={this.setValue}
           onTypeChange={this.setType}
@@ -38,9 +38,9 @@ class ModalTerrainDetail extends Component<IProps> {
     const { type, setTerrainValue } = this.props
     setTerrainValue(type, key, attribute, value)
   }
-  setType = (new_type: TerrainType) => {
+  setType = (newType: TerrainType) => {
     const { type, setTerrainType } = this.props
-    setTerrainType(type, new_type)
+    setTerrainType(type, newType)
   }
   setLocation = (location: LocationType) => {
     const { type, setTerrainLocation } = this.props

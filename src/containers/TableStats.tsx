@@ -21,8 +21,8 @@ class TableStats extends Component<IProps> {
   render() {
     return (
       <>
-        {this.renderArmy(SideType.Attacker, this.props.cohorts_a)}
-        {this.renderArmy(SideType.Defender, this.props.cohorts_d)}
+        {this.renderArmy(SideType.Attacker, this.props.cohortsA)}
+        {this.renderArmy(SideType.Defender, this.props.cohortsD)}
       </>
     )
   }
@@ -110,16 +110,16 @@ class TableStats extends Component<IProps> {
     return (
       <>
         <Table.Cell width='3'>
-          {strengthToValue(mode, this.sum(cohorts, cohort => cohort[UnitAttribute.Strength]))} / {strengthToValue(mode, this.sum(cohorts, cohort => cohort.definition.max_strength))}
+          {strengthToValue(mode, this.sum(cohorts, cohort => cohort[UnitAttribute.Strength]))} / {strengthToValue(mode, this.sum(cohorts, cohort => cohort.definition.maxStrength))}
         </Table.Cell>
         <Table.Cell width='3'>
-          {round(this.sum(cohorts, cohort => cohort[UnitAttribute.Morale]), 100.0)} / {round(this.sum(cohorts, cohort => cohort.definition.max_morale), 100.0)}
+          {round(this.sum(cohorts, cohort => cohort[UnitAttribute.Morale]), 100.0)} / {round(this.sum(cohorts, cohort => cohort.definition.maxMorale), 100.0)}
         </Table.Cell>
         <Table.Cell width='3'>
-          {strengthToValue(mode, this.sum(cohorts, cohort => cohort.state.total_strength_dealt))}
+          {strengthToValue(mode, this.sum(cohorts, cohort => cohort.state.totalStrengthDealt))}
         </Table.Cell>
         <Table.Cell width='3'>
-          {round(this.sum(cohorts, cohort => cohort.state.total_morale_dealt), 100.0)}
+          {round(this.sum(cohorts, cohort => cohort.state.totalMoraleDealt), 100.0)}
         </Table.Cell>
         {this.renderCell(cohorts, UnitAttribute.Cost)}
         <Table.Cell width='3'>
@@ -162,12 +162,12 @@ class TableStats extends Component<IProps> {
       .concat(cohorts.defeated.filter(cohort => this.filter(cohort, type)).concat(flatten(cohorts.frontline).filter(cohort => this.filter(cohort, type)) as CombatCohort[]))
   )
 
-  filter = (cohort: CombatCohort | null, type?: UnitType) => cohort && !cohort.state.is_defeated && (!type || cohort.definition.type === type)
+  filter = (cohort: CombatCohort | null, type?: UnitType) => cohort && !cohort.state.isDefeated && (!type || cohort.definition.type === type)
 }
 
 const mapStateToProps = (state: AppState) => ({
-  cohorts_a: getCurrentCombat(state, SideType.Attacker),
-  cohorts_d: getCurrentCombat(state, SideType.Defender),
+  cohortsA: getCurrentCombat(state, SideType.Attacker),
+  cohortsD: getCurrentCombat(state, SideType.Defender),
   mode: getMode(state),
   settings: getSiteSettings(state),
   timestamp: getBattle(state).timestamp

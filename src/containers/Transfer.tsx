@@ -19,16 +19,16 @@ class Transfer extends Component<IProps, IState> {
     this.state = { data: '' }
   }
 
-  last_data = ''
+  lastData = ''
 
   readonly attributes = values(ExportKey)
 
   render() {
-    const json = exportState(this.props.state, this.props.export_keys)
-    if (this.last_data !== json) {
+    const json = exportState(this.props.state, this.props.exportKeys)
+    if (this.lastData !== json) {
       // Hack to make data editable manually or when exported settings change.
       // This could probably be moved to trigger when export keys change?
-      this.last_data = json
+      this.lastData = json
       this.setState({ data: json })
     }
     return (
@@ -63,15 +63,15 @@ class Transfer extends Component<IProps, IState> {
                 <Checkbox
                   toggle
                   label='Reset missing data'
-                  checked={this.props.reset_missing}
-                  onChange={() => this.props.setResetMissing(!this.props.reset_missing)}
+                  checked={this.props.resetMissing}
+                  onChange={() => this.props.setResetMissing(!this.props.resetMissing)}
                 />
               </List.Item>
               <List.Item>
                 3. Push the button
               </List.Item>
               <List.Item>
-                <Button primary onClick={() => this.props.importState(this.state.data, this.props.reset_missing)}>Import</Button>
+                <Button primary onClick={() => this.props.importState(this.state.data, this.props.resetMissing)}>Import</Button>
               </List.Item>
             </List>
             <Header>Reset</Header>
@@ -101,8 +101,8 @@ class Transfer extends Component<IProps, IState> {
           key={key}
           toggle
           label={key}
-          checked={this.props.export_keys[key]}
-          onChange={() => this.props.setExportKey(key, !this.props.export_keys[key])}
+          checked={this.props.exportKeys[key]}
+          onChange={() => this.props.setExportKey(key, !this.props.exportKeys[key])}
         />
       </List.Item>)
   }
@@ -115,14 +115,14 @@ class Transfer extends Component<IProps, IState> {
 
 const mapStateToProps = (state: AppState) => ({
   state: state,
-  export_keys: state.transfer.export_keys,
-  reset_missing: state.transfer.reset_missing
+  exportKeys: state.transfer.exportKeys,
+  resetMissing: state.transfer.resetMissing
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
   setExportKey: (key: ExportKey, value: boolean) => dispatch(setExportKey(key, value)),
   setResetMissing: (value: boolean) => dispatch(setResetMissing(value)),
-  importState: (data: string, reset_missing: boolean) => {
+  importState: (data: string, doResetMissing: boolean) => {
     try {
       if (!data)
         data = '{}'
@@ -134,10 +134,10 @@ const mapDispatchToProps = (dispatch: any) => ({
       json.terrains = json.terrains && restoreDefaultTerrains(json.terrains)
       json.units = json.units && restoreDefaultUnits(json.units)
       json.units = json.settings && restoreDefaultSettings(json.settings)
-      if (reset_missing)
+      if (doResetMissing)
         resetMissing(json)
       keys(json).filter(key => !json[key]).forEach(key => delete json[key])
-      dispatch(importState(json, reset_missing))
+      dispatch(importState(json, doResetMissing))
     }
     catch (err) {
       console.error(err)

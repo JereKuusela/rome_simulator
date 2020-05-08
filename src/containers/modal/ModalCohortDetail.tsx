@@ -16,7 +16,7 @@ const CUSTOM_VALUE_KEY = 'Unit'
 class ModalCohortDetail extends Component<IProps> {
 
   render() {
-    const { mode, unit_types, terrain_types, cohort, settings } = this.props
+    const { mode, unitTypes, terrainTypes, cohort, settings } = this.props
     if (!cohort)
       return null
     return (
@@ -25,18 +25,18 @@ class ModalCohortDetail extends Component<IProps> {
         <UnitDetail
           mode={mode}
           settings={settings}
-          terrain_types={terrain_types}
-          custom_value_key={CUSTOM_VALUE_KEY}
+          terrainTypes={terrainTypes}
+          customValueKey={CUSTOM_VALUE_KEY}
           unit={cohort}
-          unit_types={unit_types}
-          unit_types_as_dropdown={true}
+          unitTypes={unitTypes}
+          unitTypesAsDropdown={true}
           onTypeChange={this.changeType}
           onCustomBaseValueChange={this.setBaseValue}
           onCustomModifierValueChange={this.setModifierValue}
           onCustomLossModifierValueChange={this.setLossModifierValue}
           onIsLoyalToggle={this.toggleIsLoyal}
-          show_statistics={true}
-          disable_base_values={true}
+          showStatistics={true}
+          disableBaseValues={true}
         />
       </BaseModal>
     )
@@ -83,12 +83,12 @@ const convertCohort = (settings: SiteSettings, definition: Cohort | null, rounds
     if (!combat)
       return
     const lossValues: [string, number][] = [
-      [UnitAttribute.Morale, combat.state.morale_loss],
-      [UnitAttribute.Strength, combat.state.strength_loss]
+      [UnitAttribute.Morale, combat.state.moraleLoss],
+      [UnitAttribute.Strength, combat.state.strengthLoss]
     ]
     const dealtValues: [string, number][] = [
-      [UnitAttribute.MoraleDepleted, combat.state.morale_dealt],
-      [UnitAttribute.StrengthDepleted, combat.state.strength_dealt]
+      [UnitAttribute.MoraleDepleted, combat.state.moraleDealt],
+      [UnitAttribute.StrengthDepleted, combat.state.strengthDealt]
     ]
     definition = addValues(definition!, ValuesType.Loss, 'Round ' + (round - 1), lossValues)
     definition = addValues(definition!, ValuesType.Base, 'Round ' + (round - 1), dealtValues)
@@ -105,10 +105,10 @@ const mapStateToProps = (state: AppState) => {
     const participant = getParticipant(state, data.side)
     return {
       id: data.id,
-      terrain_types: filterTerrainTypes(state),
+      terrainTypes: filterTerrainTypes(state),
       country: participant.country,
       army: participant.army,
-      unit_types: getActualUnits(getCombatParticipant(state, data.side).unit_types, mode).map(unit => unit.type),
+      unitTypes: getActualUnits(getCombatParticipant(state, data.side).unitTypes, mode).map(unit => unit.type),
       mode,
       cohort: convertCohort(settings, findCohortById(state, data.side, data.id), getCombatUnitForEachRound(state, data.side, data.id)),
       settings
@@ -116,13 +116,13 @@ const mapStateToProps = (state: AppState) => {
   }
   return {
     id: 0,
-    terrain_types: filterTerrainTypes(state),
+    terrainTypes: filterTerrainTypes(state),
     country: CountryName.Country1,
     army: ArmyName.Army,
     mode,
     settings,
     cohort: null,
-    unit_types: [],
+    unitTypes: [],
   }
 }
 

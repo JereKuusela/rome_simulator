@@ -83,40 +83,40 @@ class TableSideInfo extends Component<IProps> {
     return (
       <Table.Cell>
         <AttributeImage attribute={attribute} />
-        {general.total_values[attribute]}
+        {general.totalValues[attribute]}
       </Table.Cell>
     )
   }
 
   renderRoll = () => {
     const { terrains, settings, round, openModal, setDice, side, opponent, combat } = this.props
-    const terrain_pips = getTerrainPips(terrains, side.type, side.general, opponent.general)
-    const general_pips = calculateGeneralPips(side.general, opponent.general, getCombatPhase(round, settings))
+    const terrainPips = getTerrainPips(terrains, side.type, side.general, opponent.general)
+    const generalPips = calculateGeneralPips(side.general, opponent.general, getCombatPhase(round, settings))
     const phase = getCombatPhaseNumber(round, settings)
-    const is_dice_set = side.randomize_dice || (side.rolls.length > phase && side.rolls[phase])
+    const isDiceSet = side.randomizeDice || (side.rolls.length > phase && side.rolls[phase])
     return (
       <div key={side.type}>
         <Image src={IconDice} avatar />
-        {is_dice_set ? combat.dice : <DelayedNumericInput type='number' value={side.dice} onChange={value => setDice(side.type, value)} />}
+        {isDiceSet ? combat.dice : <DelayedNumericInput type='number' value={side.dice} onChange={value => setDice(side.type, value)} />}
         {
-          !side.randomize_dice &&
+          !side.randomizeDice &&
           <span style={{ paddingLeft: '1em' }}>
             <Button size='mini' icon={'plus'} onClick={() => openModal(ModalType.DiceRolls, { side: side.type })} />
           </span>
         }
         {
-          general_pips !== 0 ?
+          generalPips !== 0 ?
             <span style={{ paddingLeft: '1em' }}>
               <AttributeImage attribute={getCombatPhase(round, settings)} />
-              <StyledNumber value={general_pips} formatter={addSign} />
+              <StyledNumber value={generalPips} formatter={addSign} />
             </span>
             : null
         }
         {
-          terrain_pips !== 0 ?
+          terrainPips !== 0 ?
             <span style={{ paddingLeft: '1em' }}>
               <Image src={IconTerrain} avatar />
-              <StyledNumber value={terrain_pips} formatter={addSign} />
+              <StyledNumber value={terrainPips} formatter={addSign} />
             </span>
             : null
         }

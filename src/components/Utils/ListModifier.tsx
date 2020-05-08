@@ -49,7 +49,7 @@ export default class ListModifier extends Component<IProps> {
       return null
     const sign = modifier.value > 0 ? '+' : '-'
     const value = Math.abs(modifier.value)
-    const str = modifier.no_percent ? value + padding : +(value * 100).toFixed(2) + ' %'
+    const str = modifier.noPercent ? value + padding : +(value * 100).toFixed(2) + ' %'
     return <span className={modifier.negative ? 'color-negative' : 'color-positive'} style={{ float: 'right' }}>{sign + str}</span>
   }
 }

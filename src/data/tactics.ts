@@ -19,7 +19,7 @@ import IconProbingAttack from 'images/probing_attack.png'
 import IconCloseRanks from 'images/close_ranks.png'
 import { addValues } from '../definition_values'
 
-const tactic_to_icon: { [ key in TacticType ]: string } = {
+const tacticToIcon: { [ key in TacticType ]: string } = {
   [TacticType.Bottleneck]: IconBottleneck,
   [TacticType.CavalrySkirmish]: IconCavalrySkirmish,
   [TacticType.Deception]: IconDeception,
@@ -37,11 +37,11 @@ const tactic_to_icon: { [ key in TacticType ]: string } = {
   [TacticType.CloseRanks]: IconCloseRanks
 }
 
-export const getTacticIcon = (type: TacticType) => tactic_to_icon[type] || ''
+export const getTacticIcon = (type: TacticType) => tacticToIcon[type] || ''
 
 const createTacticFromJson = (data: TacticData): TacticDefinition => {
-  let tactic: TacticDefinition = { type: data.type as TacticType, mode: data.mode as Mode, image: tactic_to_icon[data.type as TacticType] || '' }
-  const base_values: [TacticValueType, number][] = [
+  let tactic: TacticDefinition = { type: data.type as TacticType, mode: data.mode as Mode, image: tacticToIcon[data.type as TacticType] || '' }
+  const baseValues: [TacticValueType, number][] = [
     [UnitType.Archers, data.archers || 0],
     [UnitType.CamelCavalry, data.camel_cavalry || 0],
     [UnitType.Chariots, data.chariots || 0],
@@ -75,7 +75,7 @@ const createTacticFromJson = (data: TacticData): TacticDefinition => {
     [TacticType.ProbingAttack, data.probing_attack || 0]
 
   ]
-  return addValues(tactic, ValuesType.Base, tactic.type, base_values)
+  return addValues(tactic, ValuesType.Base, tactic.type, baseValues)
 }
 
 const defaultTactics = toObj(data.tactics.map(createTacticFromJson), unit => unit.type)

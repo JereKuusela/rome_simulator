@@ -13,11 +13,11 @@ import { toSignedPercent, toPercent } from 'formatters'
 
 
 interface IProps {
-  tactic_types: TacticType[]
+  tacticTypes: TacticType[]
   tactics: TacticDefinitions
-  unit_types: UnitType[]
+  unitTypes: UnitType[]
   images: { [key in UnitType]: string[] }
-  custom_value_key: string
+  customValueKey: string
   tactic: TacticDefinition
   onCustomValueChange: (key: string, attribute: TacticValueType, value: number) => void
   onTypeChange: (type: TacticType) => void
@@ -37,7 +37,7 @@ export default class TacticDetail extends Component<IProps> {
   readonly CELLS = 4
 
   render() {
-    const { tactic, unit_types, tactic_types, onTypeChange, onModeChange, onImageChange, images, tactics } = this.props
+    const { tactic, unitTypes, tacticTypes, onTypeChange, onModeChange, onImageChange, images, tactics } = this.props
     const { type, mode, image } = tactic
     return (
       <Table celled unstackable>
@@ -47,9 +47,9 @@ export default class TacticDetail extends Component<IProps> {
           <DetailDropdownRow text='Mode' value={mode} values={this.modes} onChange={onModeChange} cells={this.CELLS} />
           <DetailInputRow text='Image' value={image} onChange={onImageChange} cells={this.CELLS} />
           {
-            unit_types.map(type => this.renderRow(tactic, type, false, images[type]))
+            unitTypes.map(type => this.renderRow(tactic, type, false, images[type]))
           }
-          {tactic_types.map(value => this.renderRow(tactic, value, true, [getImage(tactics[value])]))}
+          {tacticTypes.map(value => this.renderRow(tactic, value, true, [getImage(tactics[value])]))}
           {this.attributes.map(value => this.renderRow(tactic, value, true, [getImage(null)]))}
         </Table.Body>
       </Table>
@@ -57,8 +57,8 @@ export default class TacticDetail extends Component<IProps> {
   }
 
   renderRow = (tactic: TacticDefinition, attribute: TacticValueType, relative: boolean, images: string[]) => {
-    const { custom_value_key, onCustomValueChange } = this.props
-    const base_value = getValue(ValuesType.Base, tactic, attribute, custom_value_key)
+    const { customValueKey, onCustomValueChange } = this.props
+    const baseValue = getValue(ValuesType.Base, tactic, attribute, customValueKey)
     const value = calculateValue(tactic, attribute)
 
     return (
@@ -71,7 +71,7 @@ export default class TacticDetail extends Component<IProps> {
           {relative ? toSignedPercent(value) : toPercent(value)}
         </Table.Cell>
         <Table.Cell collapsing>
-          <Input value={String(base_value)} onChange={value => onCustomValueChange(custom_value_key, attribute, Number(value))} />
+          <Input value={String(baseValue)} onChange={value => onCustomValueChange(customValueKey, attribute, Number(value))} />
         </Table.Cell>
         <Table.Cell>
           {explainShort(tactic, attribute)}

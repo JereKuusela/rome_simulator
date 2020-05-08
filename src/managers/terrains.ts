@@ -25,6 +25,6 @@ export const createTerrain = (terrains: TerrainDefinitions, type: TerrainType, m
   terrains[type] = { type, mode, image: '', location: LocationType.Border }
 }
 
-export const setTerrainType = (terrains: TerrainDefinitions, old_type: TerrainType, type: TerrainType) => {
-  delete Object.assign(terrains, { [type]: { ...terrains[old_type], type } })[old_type]
+export const setTerrainType = (terrains: TerrainDefinitions, oldType: TerrainType, type: TerrainType) => {
+  delete Object.assign(terrains, { [type]: { ...terrains[oldType], type } })[oldType]
 }

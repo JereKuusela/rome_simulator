@@ -5,9 +5,9 @@ export type Battle = {
   terrains: TerrainType[]
   sides: Sides
   round: number
-  fight_over: boolean
+  fightOver: boolean
   seed: number
-  custom_seed?: number
+  customSeed?: number
   outdated: boolean
   timestamp: number
 }
@@ -24,7 +24,7 @@ export type Side = {
   rounds: CombatParticipant[]
   rolls: number[]
   dice: number
-  randomize_dice: boolean
+  randomizeDice: boolean
 }
 
 export type Sides = { [key in SideType]: Side }

@@ -50,7 +50,7 @@ export type Modals = {
   [ModalType.Value]?: {
     onSuccess: (value: string) => void
     message: string
-    button_message: string
+    buttonMessage: string
     initial: string
   }
 }

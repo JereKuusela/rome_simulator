@@ -45,8 +45,8 @@ class TableUnitTypes extends Component<IProps> {
   checkPreference = (role: UnitRole) => {
     const { units, preferences, tech, country, army } = this.props
     const preference = preferences[role]
-    const tech_requirement = preference && units[preference] && units[preference].tech
-    if (tech_requirement && tech_requirement > tech) {
+    const techRequirement = preference && units[preference] && units[preference].tech
+    if (techRequirement && techRequirement > tech) {
       setUnitPreference(country, army, role, null)
     }
   }
@@ -59,7 +59,7 @@ class TableUnitTypes extends Component<IProps> {
 
   render() {
     const { side, settings, units, mode } = this.props
-    const unit_list = settings[Setting.Tech] ? getArchetypes2(units, mode) : getActualUnits2(units, mode)
+    const unitList = settings[Setting.Tech] ? getArchetypes2(units, mode) : getActualUnits2(units, mode)
     return (
       <Table celled key={side} singleLine>
         <Table.Header>
@@ -81,10 +81,10 @@ class TableUnitTypes extends Component<IProps> {
         </Table.Header>
         <Table.Body>
           {this.renderRootUnitRow(getRootUnit(units, mode))}
-          {!settings[Setting.Tech] && unit_list.map(this.renderUnitRow)}
-          {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Front, unit_list)}
-          {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Flank, unit_list)}
-          {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Support, unit_list)}
+          {!settings[Setting.Tech] && unitList.map(this.renderUnitRow)}
+          {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Front, unitList)}
+          {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Flank, unitList)}
+          {settings[Setting.Tech] && this.renderRoleRow(UnitRole.Support, unitList)}
         </Table.Body>
       </Table>
     )
@@ -98,8 +98,8 @@ class TableUnitTypes extends Component<IProps> {
     if (!archetype || !preference)
       return null
     const image = getImage(archetype)
-    const latest_type = getLatestUnits2(units, tech)
-    const latest = { ...units[latest_type[role] || archetype.type], type: UnitType.Latest }
+    const latestType = getLatestUnits2(units, tech)
+    const latest = { ...units[latestType[role] || archetype.type], type: UnitType.Latest }
     const children = [latest].concat(...getChildUnits2(units, tech, archetype.type))
     return (
       <>

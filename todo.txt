@@ -11,11 +11,13 @@ UI:
  * EUIV: Moved Backrow efficiency to army information component.
  * Fixed terrain selector not showing the selection.
  * Win rate now also includes draws and incomplete battles (so the total should always be 100%), the tooltip still separates them.
+ * Win rate tooltip now also shows how many battles were done.
  * Analyze settings moved from Settings page to Analyze page (no need to move between pages when tweaking things).
  * Going backwards in battle is now much faster (previously recalculated whole battle).
 
 Refactor
  * Side and participant separated. Side now contains multiple participants.
+ * All variable names renamed to have same casing.
 
 Analyze
  * Phase length multiplier setting changed to phases per roll setting. The effect is similar but also works with EUIV fire and shock phases.

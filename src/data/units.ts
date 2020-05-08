@@ -1,11 +1,12 @@
 import { ValuesType, UnitType, UnitDefinition, UnitAttribute, UnitValueType, UnitRole, TerrainType, UnitDefinitions, Mode, CultureType, CombatPhase } from 'types'
 import { addValues } from 'definition_values'
 import { toObj, removeUndefined, filter, toArr, values } from 'utils'
+import { uniq } from 'lodash'
 
-import ir_units from './json/ir/units.json'
-import ir_parents from './json/ir/parent_units.json'
-import euiv_parents from './json/euiv/parent_units.json'
-import euiv_units from './json/euiv/units.json'
+import unitsIR from './json/ir/units.json'
+import parentsIR from './json/ir/parent_units.json'
+import parentsEUIV from './json/euiv/parent_units.json'
+import unitsEUIV from './json/euiv/units.json'
 import IconArcher from 'images/archers.png'
 import IconCamelCavalry from 'images/camel_cavalry.png'
 import IconChariots from 'images/chariots.png'
@@ -27,9 +28,8 @@ import IconArtillery from 'images/artillery.png'
 import IconCavalry from 'images/cavalry.png'
 import IconInfantry from 'images/infantry.png'
 import IconEmpty from 'images/empty.png'
-import { uniq } from 'lodash'
 
-const unit_to_icon: { [key in UnitType]: string } = {
+const unitToIcon: { [key in UnitType]: string } = {
   [UnitType.Archers]: IconArcher,
   [UnitType.CamelCavalry]: IconCamelCavalry,
   [UnitType.Chariots]: IconChariots,
@@ -58,7 +58,7 @@ const unit_to_icon: { [key in UnitType]: string } = {
   [UnitType.None]: IconEmpty
 }
 
-export const getUnitIcon = (type: UnitType) => unit_to_icon[type] || ''
+export const getUnitIcon = (type: UnitType) => unitToIcon[type] || ''
 
 
 const createUnitFromJson = (data: UnitData): UnitDefinition => {
@@ -68,28 +68,28 @@ const createUnitFromJson = (data: UnitData): UnitDefinition => {
   let unit: UnitDefinition = {
     type: data.Type as UnitType,
     mode: data.Mode as Mode | undefined,
-    image: unit_to_icon[data.Type as UnitType] ?? unit_to_icon[data.Parent as UnitType] ?? '',
+    image: unitToIcon[data.Type as UnitType] ?? unitToIcon[data.Parent as UnitType] ?? '',
     role: data.Role ? data.Role as UnitRole : undefined,
     parent: data.Parent ? data.Parent as UnitType : undefined,
     culture: data.Culture ? data.Culture as CultureType : undefined,
     tech: data.Tech
   }
   removeUndefined(unit)
-  const base_values: [UnitValueType, number][] = [
+  const baseValues: [UnitValueType, number][] = [
     ...handleAttributes(values(UnitAttribute)),
     ...handleAttributes(values(TerrainType)),
     ...handleAttributes(values(UnitType)),
     ...handleAttributes(values(CombatPhase))
   ]
-  unit = addValues(unit, ValuesType.Base, unit.type, base_values)
+  unit = addValues(unit, ValuesType.Base, unit.type, baseValues)
   return unit
 }
 
 const initializeDefaultUnits = (): UnitDefinitions => {
   if (process.env.REACT_APP_GAME === 'euiv')
-    return toObj(euiv_parents.map(createUnitFromJson).concat(euiv_units.map(createUnitFromJson)), unit => unit.type)
+    return toObj(parentsEUIV.map(createUnitFromJson).concat(unitsEUIV.map(createUnitFromJson)), unit => unit.type)
   else
-    return toObj(ir_parents.map(createUnitFromJson).concat(ir_units.map(createUnitFromJson)), unit => unit.type)
+    return toObj(parentsIR.map(createUnitFromJson).concat(unitsIR.map(createUnitFromJson)), unit => unit.type)
 }
 const defaultUnits = initializeDefaultUnits()
 
