@@ -1,21 +1,21 @@
 
 import { sumBy, sum } from 'lodash'
-import { TerrainDefinition, TerrainCalc, Setting, UnitAttribute, UnitDefinition, CombatPhase, GeneralAttribute, SideType, LocationType, General, CombatCohortDefinition, SiteSettings, CombatCohorts, CombatCohort, CombatFrontline, SortedReserve, CombatSide } from 'types'
+import { TerrainDefinition, TerrainCalc, Setting, UnitAttribute, UnitDefinition, CombatPhase, GeneralAttribute, SideType, LocationType, General, CombatCohortDefinition, SiteSettings, CombatCohorts, CombatCohort, CombatFrontline, SortedReserve, CombatSide, GeneralValues } from 'types'
 import { calculateValue } from 'definition_values'
 
 /**
  * Calculates the roll modifier based on skill level difference of generals.
  * Every two levels increase dice roll by one (rounded down).
  */
-export const calculateGeneralPips = (general: General, enemy: General, phase: CombatPhase): number => {
-  const martialPip = Math.floor((general.totalValues[GeneralAttribute.Martial] - enemy.totalValues[GeneralAttribute.Martial]) / 2.0)
-  const phasePip = general.totalValues[phase] - enemy.totalValues[phase]
+export const calculateGeneralPips = (values: GeneralValues, enemy: GeneralValues, phase: CombatPhase): number => {
+  const martialPip = Math.floor((values[GeneralAttribute.Martial] - enemy[GeneralAttribute.Martial]) / 2.0)
+  const phasePip = values[phase] - enemy[phase]
   return Math.max(0, martialPip + phasePip)
 }
 
-export const getTerrainPips = (terrains: TerrainDefinition[], side: SideType, general: General, enemy: General) => {
+export const getTerrainPips = (terrains: TerrainDefinition[], side: SideType, values: GeneralValues, enemy: GeneralValues) => {
   const enableTiles = side === SideType.Attacker
-  const enableBorders = side === SideType.Attacker || general.totalValues[GeneralAttribute.Maneuver] <= enemy.totalValues[GeneralAttribute.Maneuver]
+  const enableBorders = side === SideType.Attacker || values[GeneralAttribute.Maneuver] <= enemy[GeneralAttribute.Maneuver]
   terrains = terrains.filter(terrain => terrain.location === LocationType.Border ? enableBorders : enableTiles)
   return sumBy(terrains, terrain => calculateValue(terrain, TerrainCalc.Roll))
 }
@@ -81,10 +81,7 @@ export const getCombatPhaseNumber = (round: number, settings: SiteSettings) => M
 
 export const getDailyIncrease = (round: number, settings: SiteSettings) => settings[Setting.DailyDamageIncrease] * round
 
-export const stackWipe = (side: CombatSide) => {
-  side.participants.forEach(participant => stackWipeSub(participant.cohorts))
-}
-const stackWipeSub = (cohorts: CombatCohorts) => {
+export const stackWipe = (cohorts: CombatCohorts) => {
   const { frontline, reserve, defeated } = cohorts
 
   for (let i = 0; i < defeated.length; i++) {
@@ -166,6 +163,6 @@ export const nextIndex = (index: number, center: number) => index < center ? ind
 export const reserveSize = (reserve: SortedReserve) => reserve.front.length + reserve.flank.length + reserve.support.length
 
 export const armySize = (side: CombatSide, round: number) => {
-  return sum(side.participants.map(participant => participant.arrival <= round ? participant.cohorts.frontline[0].filter(unit => unit).length + reserveSize(participant.cohorts.reserve) : 0))
+  return sum(side.participants.map(participant => participant.arrival <= round ? reserveSize(participant.reserve) : 0))
     + side.cohorts.frontline[0].filter(unit => unit).length + reserveSize(side.cohorts.reserve)
 }

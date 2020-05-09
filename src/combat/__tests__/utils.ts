@@ -45,7 +45,7 @@ export const initInfo = (singleRow: boolean = true) => {
     selections: {} as Selections,
     baseValues: {} as any,
     extraValues: {} as any,
-    totalValues: {
+    values: {
       [GeneralAttribute.Martial]: 0,
       [GeneralAttribute.Maneuver]: 0,
       [CombatPhase.Default]: 0,
@@ -193,8 +193,8 @@ export const setFlankSizes = (info: TestInfo, flankA: number, flankD: number) =>
  * Sets general martial.
  */
 export const setGeneral = (info: TestInfo, generalA: number, generalD: number) => {
-  info.armyA.general.totalValues[GeneralAttribute.Martial] = generalA
-  info.armyD.general.totalValues[GeneralAttribute.Martial] = generalD
+  info.armyA.general.values[GeneralAttribute.Martial] = generalA
+  info.armyD.general.values[GeneralAttribute.Martial] = generalD
 }
 /**
  * Sets flank sizes for combat.

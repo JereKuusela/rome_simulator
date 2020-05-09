@@ -1,16 +1,12 @@
-import { Cohorts, Mode, UnitDefinitionValues, ArmyType, SideType, UnitDefinitions, UnitType, Units, Unit, CombatCohorts, SiteSettings } from 'types'
+import { Mode, UnitDefinitionValues, ArmyType, SideType, UnitDefinitions, UnitType, Units, Unit, CombatCohorts, SiteSettings, Reserve } from 'types'
 import { mergeValues, shrinkValues } from 'definition_values'
 import { map, filter } from 'utils'
 import { applyDynamicAttributes } from 'managers/units'
 
 /** Merges cohort definitions with their units to get actual cohorts. */
-export const convertCohortDefinitions = (settings: SiteSettings, cohorts: Cohorts, units: Units): Cohorts => {
+export const convertReserveDefinitions = (settings: SiteSettings, reserve: Reserve, units: Units): Reserve => {
   units = shrinkUnits(units)
-  return {
-    frontline: cohorts.frontline.map(row => row.map(cohort => cohort && applyDynamicAttributes(mergeValues(units[cohort.type], cohort), settings))),
-    reserve: cohorts.reserve.map(cohort => cohort && applyDynamicAttributes(mergeValues(units[cohort.type], cohort), settings)),
-    defeated: cohorts.defeated.map(cohort => cohort && applyDynamicAttributes(mergeValues(units[cohort.type], cohort), settings))
-  }
+  return reserve.map(cohort => cohort && applyDynamicAttributes(mergeValues(units[cohort.type], cohort), settings))
 }
 
 /** Shrinks definition values under name of the unit, preventing values being overwritten when merging definitions. */

@@ -1,46 +1,65 @@
-import { TacticDefinition, CombatPhase, UnitPreferences, UnitType, UnitAttribute, UnitRole, Mode, UnitValueType } from 'types'
+import { TacticDefinition, CombatPhase, UnitPreferences, UnitType, UnitAttribute, UnitRole, Mode, UnitValueType, General, GeneralValueType } from 'types'
 import { Units } from './units'
+import { SideType } from './battle'
+import { TerrainDefinition } from './terrains'
 
 /**
  * Information required for fast combat calculation.
  * CombatUnits contain most of the information precalculated.
  */
 export type CombatParticipant = {
-  cohorts: CombatCohorts
-  unitTypes: CombatUnitTypes
+  reserve: SortedReserve
   flankSize: number
-  unitPreferences: UnitPreferences
   definitions: Units
   arrival: number
+  strength: number
+  general: CombatGeneral
+}
+
+/** Information affecting both sides of combat. */
+export type CombatField = {
+  round: number
+  terrains: TerrainDefinition[]
+}
+
+/** Results from combat (mainly for tooltips). */
+export type CombatResults = {
+  round: number
+  tacticBonus: number
+  flankRatioBonus: number
+  dailyMultiplier: number
+  terrainPips: number
+  generalPips: number
+  dice: number
+}
+
+export type CombatGeneral = {
+  unitPreferences: UnitPreferences
+  leftFlank: number
+  rightFlank: number
+  priority: number
+  tactic: TacticDefinition
+  values: { [key in GeneralValueType]: number }
 }
 
 export type CombatSide = {
-  dice: number
-  terrainPips: number
-  generalPips: { [key in CombatPhase]: number }
-  rollPips: { [key in CombatPhase]: number }
-  tactic: TacticDefinition
+  results: CombatResults
   alive: boolean
-  tacticBonus: number
-  round: number
   participants: CombatParticipant[]
   flankRatio: number
-  flankRatioBonus: number
+  generals: CombatGeneral[]
   cohorts: CombatCohorts
-  unitPreferences: UnitPreferences
+  type: SideType
 }
 
 export type CombatFrontline = (CombatCohort | null)[][]
 export type CombatReserve = CombatCohort[]
 export type CombatDefeated = CombatCohort[]
-export type CombatUnitTypes = { [key in UnitType]: CombatCohortDefinition }
 
 export type CombatCohorts = {
   frontline: CombatFrontline
   reserve: SortedReserve
   defeated: CombatDefeated
-  leftFlank: number
-  rightFlank: number
 }
 
 export type SortedReserve = {

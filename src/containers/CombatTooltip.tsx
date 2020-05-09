@@ -79,8 +79,8 @@ class CombatTooltip extends Component<IProps, IState> {
   toMultiplier = (value: number) => toMultiplier(value, 3)
 
   getBaseDamageSection = (source: IUnit, target: IUnit, targetSupport: IUnit | null) => {
-    const { participant, settings } = this.props
-    const { round } = participant
+    const { results, settings } = this.props
+    const { round } = results
     const phase = getCombatPhase(round, settings)
     const phaseRoll = calculateCohortPips(source, target, targetSupport, UnitAttribute.Strength, phase)
     const moraleRoll = calculateCohortPips(source, target, targetSupport, UnitAttribute.Morale)
@@ -99,13 +99,13 @@ class CombatTooltip extends Component<IProps, IState> {
   }
 
   getBaseDamageSubSection = (source: IUnit, target: IUnit, targetSupport: IUnit | null, type: UnitAttribute.Strength | UnitAttribute.Morale | '', phase: CombatPhase) => {
-    const { settings, participant } = this.props
-    const { dice, terrainPips, generalPips } = participant
+    const { settings, results } = this.props
+    const { dice, terrainPips, generalPips } = results
     const basePips = settings[Setting.BasePips]
     const sourcePips = type ? getOffensiveCohortPips(source, type, phase) : 0
     const targetPips = type ? getDefensiveCohortPips(target, type, phase) : 0
     const targetSupportPips = type ? getDefensiveSupportCohortPips(targetSupport, type, phase) : 0
-    const totalPips = basePips + dice + terrainPips + generalPips[phase] + sourcePips + targetPips + targetSupportPips
+    const totalPips = basePips + dice + terrainPips + generalPips + sourcePips + targetPips + targetSupportPips
     const cappedPips =  Math.min(totalPips, settings[Setting.MaxPips])
     const reductionToCap = Math.min(0, settings[Setting.MaxPips] - cappedPips)
     const text = type === UnitAttribute.Morale ? UnitAttribute.Morale : phase
@@ -113,7 +113,7 @@ class CombatTooltip extends Component<IProps, IState> {
       {this.renderModifier('Base pips', basePips, this.toAdd)}
       {this.renderModifier('Dice', dice, this.toAdd)}
       {this.renderModifier('Terrain pips', terrainPips, this.toAdd)}
-      {this.renderModifier('General pips', generalPips[phase], this.toAdd)}
+      {this.renderModifier('General pips', generalPips, this.toAdd)}
       {this.renderModifier(text + ' pips', sourcePips, this.toAdd)}
       {this.renderModifier('Enemy ' + text.toLowerCase() + ' pips', targetPips, this.toAdd)}
       {this.renderModifier('Backrow ' + text.toLowerCase() + ' pips', targetSupportPips, this.toAdd)}
@@ -123,10 +123,9 @@ class CombatTooltip extends Component<IProps, IState> {
   }
 
   getDamageMultiplierSection = (source: IUnit, target: IUnit, isSupport: boolean) => {
-    const { terrains, settings, participant } = this.props
-    const { round, tacticBonus, flankRatioBonus } = participant
+    const { terrains, settings, results } = this.props
+    const { round, tacticBonus, flankRatioBonus, dailyMultiplier } = results
     const phase = getCombatPhase(round, settings)
-    const dailyDamage = getDailyIncrease(round, settings)
     const terrainTypes = settings[Setting.AttributeTerrainType] ? terrains.map(value => value.type) : []
     const strength = source[UnitAttribute.Strength] + source.strengthLoss
     const offenseVsDefense = settings[Setting.AttributeOffenseDefense] ? source[UnitAttribute.Offense] - target[UnitAttribute.Defense] : 0
@@ -152,7 +151,7 @@ class CombatTooltip extends Component<IProps, IState> {
       {settings[Setting.AttributeDamage] && this.getAttribute(target, UnitAttribute.DamageTaken)}
       {terrainTypes.map(terrain => this.getAttribute(source, terrain))}
       {isSupport && this.renderStyledItem(UnitAttribute.OffensiveSupport, source[UnitAttribute.OffensiveSupport] - 1, toSignedPercent)}
-      {this.renderStyledItem('Battle length', dailyDamage, toSignedPercent)}
+      {this.renderStyledItem('Battle length', dailyMultiplier, toSignedPercent)}
       {settings[Setting.FireAndShock] && this.renderModifier(phase, source[phase], this.toMultiplier)}
       {settings[Setting.AttributeMilitaryTactics] && this.renderModifier('Target military tactics', 1 / noZero(target[UnitAttribute.MilitaryTactics]), this.toMultiplier)}
       {this.renderModifier('Unit strength', strength, this.toMultiplier)}
@@ -161,8 +160,8 @@ class CombatTooltip extends Component<IProps, IState> {
   }
 
   getStrengthSection = (source: IUnit, target: IUnit) => {
-    const { settings, tacticS, tacticT, mode, participant } = this.props
-    const { round } = participant
+    const { settings, tacticS, tacticT, mode, results } = this.props
+    const { round } = results
     const phase = getCombatPhase(round, settings)
     const strengthLostMultiplier = mode === Mode.Land ? settings[Setting.StrengthLostMultiplier] : settings[Setting.StrengthLostMultiplier] / 1000
     const tacticCasualties = calculateValue(tacticS, TacticCalc.Casualties) + calculateValue(tacticT, TacticCalc.Casualties)
@@ -303,7 +302,7 @@ const convertUnit = (cohort: CombatCohort | null, convertTarget: boolean = true)
 
 const mapStateToProps = (state: AppState, props: Props) => ({
   source: convertUnit(getCombatUnit(state, props.side, props.army, props.id)),
-  participant: getCombatSide(state, props.side),
+  results: getCombatSide(state, props.side).results,
   settings: getSettings(state),
   terrains: getSelectedTerrains(state),
   tacticS: getTactic(state, props.side),

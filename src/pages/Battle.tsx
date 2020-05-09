@@ -34,8 +34,6 @@ class Battle extends Component<IProps> {
   openCohortModal = (side: SideType, type: ArmyType, row: number, column: number, id: number | undefined): void => {
     if (id)
       this.props.openModal(ModalType.CohortDetail, { side, id })
-    else
-      this.props.openModal(ModalType.CohortSelector, { side, type, row, column })
   }
 
   openUnitDetails = (country: CountryName, army: ArmyName, type: UnitType): void => {

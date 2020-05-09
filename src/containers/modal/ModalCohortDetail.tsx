@@ -11,6 +11,7 @@ import { editCohort, deleteCohort, setCohortValue, changeCohortType, toggleCohor
 import { applyDynamicAttributes } from 'managers/units'
 import BaseModal from './BaseModal'
 import { getActualUnits } from 'managers/army'
+import { toArr } from 'utils'
 const CUSTOM_VALUE_KEY = 'Unit'
 
 class ModalCohortDetail extends Component<IProps> {
@@ -103,14 +104,15 @@ const mapStateToProps = (state: AppState) => {
   const mode = getMode(state)
   if (data) {
     const participant = getParticipant(state, data.side, 0)
+    const cohort = findCohortById(state, data.side, data.id)
     return {
       id: data.id,
       terrainTypes: filterTerrainTypes(state),
       country: participant.countryName,
       army: participant.armyName,
-      unitTypes: getActualUnits(getCombatSide(state, data.side).unitTypes, mode).map(unit => unit.type),
+      unitTypes: toArr(state.countries[CountryName.Country1].units, unit => unit.type),
       mode,
-      cohort: convertCohort(settings, findCohortById(state, data.side, data.id), getCombatUnitForEachRound(state, data.side, data.id)),
+      cohort: convertCohort(settings, cohort, getCombatUnitForEachRound(state, data.side, data.id)),
       settings
     }
   }

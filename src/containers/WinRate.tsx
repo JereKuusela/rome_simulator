@@ -4,7 +4,7 @@ import { Grid, Button, List } from 'semantic-ui-react'
 
 import StyledNumber from 'components/Utils/StyledNumber'
 
-import { AppState, getSettings, initializeCombatParticipants } from 'state'
+import { AppState, getSettings, initializeCombatParticipants, initializeCombatSides } from 'state'
 import { toPercent, toFlooredPercent } from 'formatters'
 import { interrupt, calculateWinRate } from 'combat'
 import { showProgress } from 'utils'
@@ -137,7 +137,7 @@ class WinRate extends Component<IProps, IState> {
   calculate = () => {
     const { state } = this.props
     // Initialization done here to prevent it happening on every render.
-    const [attacker, defender] = initializeCombatParticipants(state)
+    const [attacker, defender] = initializeCombatSides(state)
     const settings = getSettings(state)
     const modifiedSettings = { ...settings, [Setting.CalculateWinChance]: true, [Setting.CalculateCasualties]: false, [Setting.CalculateResourceLosses]: false }
     calculateWinRate(modifiedSettings, this.update, attacker, defender)

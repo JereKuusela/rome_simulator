@@ -1,4 +1,4 @@
-import { Battle, TerrainType, SideType, CountryName, ArmyForCombatConversion, TerrainDefinition, Settings, TacticCalc, Setting, UnitPreferences, CombatPhase, CombatParticipant, Cohorts, UnitType, CombatCohorts, ArmyName } from "types"
+import { Battle, TerrainType, SideType, CountryName, ArmyForCombatConversion, TerrainDefinition, Settings, TacticCalc, Setting, UnitPreferences, CombatPhase, CombatParticipant, UnitType, CombatCohorts, ArmyName, SortedReserve, Reserve, Side, CombatSide } from "types"
 import { toArr, toObj, values, map } from "utils"
 import { calculateGeneralPips, getTerrainPips, getUnitDefinition, getCombatUnit, sortReserve } from "combat"
 import { calculateValue } from "definition_values"
@@ -48,36 +48,43 @@ export const selectParticipantArmy = (battle: Battle, sideType: SideType, index:
   battle.sides[sideType].participants[index].armyName = armyName
 }
 
+export const convertSide  = (side: Side): CombatSide => {
+  return {
+    alive: true,
+    cohorts: {
+      frontline: [],
+      defeated: [],
+      reserve: {
+        front: [],
+        flank: [],
+        support: []
+      }
+    },
+    dice: 0,
+    flankRatio: 0,
+    flankRatioBonus: 0,
+    participants: [],
+    round: 0,
+    tacticBonus: 0,
+    generals: [],
+    type: side.type
+  }
+}
 
 export const convertParticipant = (side: SideType, army: ArmyForCombatConversion, enemy: ArmyForCombatConversion, terrains: TerrainDefinition[], settings: Settings): CombatParticipant => {
   const enemyTypes = toArr(enemy.definitions, unit => unit.type)
   const tacticCasualties = settings[Setting.Tactics] ? calculateValue(army.tactic, TacticCalc.Casualties) + calculateValue(enemy.tactic, TacticCalc.Casualties) : 0
-  const cohorts = convertCohorts(army, settings, tacticCasualties, terrains, enemyTypes, settings[Setting.CustomDeployment] ? army.unitPreferences : {} as UnitPreferences)
-  const generalPips = toObj(values(CombatPhase), phase => phase, phase => calculateGeneralPips(army.general, enemy.general, phase))
-  const terrainPips = getTerrainPips(terrains, side, army.general, enemy.general)
+  const reserve = convertReserve(army.reserve, settings, tacticCasualties, terrains, enemyTypes, settings[Setting.CustomDeployment] ? army.unitPreferences : {} as UnitPreferences)
   return {
-    cohorts,
-    dice: 0,
-    flankRatio: army.flankRatio,
+    reserve,
     flankSize: army.flankSize,
-    tactic: army.tactic!,
-    terrainPips,
-    generalPips,
-    roll_pips: toObj(values(CombatPhase), phase => phase, phase => generalPips[phase] + terrainPips + settings[Setting.BasePips]),
-    unitPreferences: army.unitPreferences,
-    unitTypes: map(army.definitions, unit => getUnitDefinition(settings, terrains, enemyTypes, { ...unit, id: -1 })),
-    tactic_bonus: 0.0,
-    round: 0,
-    flankRatioBonus: 0.0,
+    general: {} as any,
     definitions: army.definitions,
-    alive: true
+    arrival: 0,
+    strength: 0
   }
 }
 
-const convertCohorts = (cohorts: Cohorts, settings: Settings, casualtiesMultiplier: number, terrains: TerrainDefinition[], unitTypes: UnitType[], unitPreferences: UnitPreferences): CombatCohorts => ({
-  frontline: cohorts.frontline.map(row => row.map(cohort => getCombatUnit(settings, casualtiesMultiplier, terrains, unitTypes, cohort))),
-  reserve: sortReserve(cohorts.reserve.map(cohort => getCombatUnit(settings, casualtiesMultiplier, terrains, unitTypes, cohort)!), unitPreferences),
-  defeated: cohorts.defeated.map(cohort => getCombatUnit(settings, casualtiesMultiplier, terrains, unitTypes, cohort)!),
-  leftFlank: 0,
-  rightFlank: 0
-})
+const convertReserve = (reserve: Reserve, settings: Settings, casualtiesMultiplier: number, terrains: TerrainDefinition[], unitTypes: UnitType[], unitPreferences: UnitPreferences): SortedReserve => (
+  sortReserve(reserve.map(cohort => getCombatUnit(settings, casualtiesMultiplier, terrains, unitTypes, cohort)!), unitPreferences)
+)

@@ -65,7 +65,7 @@ class TableSideInfo extends Component<IProps> {
     return (
       <Table.Row key={side.type}>
         <Table.Cell>
-          {general.totalValues[GeneralAttribute.Martial]}
+          {general.values[GeneralAttribute.Martial]}
           <AttributeImage attribute={GeneralAttribute.Martial} />
         </Table.Cell>
         {
@@ -85,21 +85,21 @@ class TableSideInfo extends Component<IProps> {
     return (
       <Table.Cell>
         <AttributeImage attribute={attribute} />
-        {general.totalValues[attribute]}
+        {general.values[attribute]}
       </Table.Cell>
     )
   }
 
   renderRoll = () => {
     const { terrains, settings, round, openModal, setDice, side, combat, general, opponent  } = this.props
-    const terrainPips = getTerrainPips(terrains, side.type, general, opponent)
-    const generalPips = calculateGeneralPips(general, opponent, getCombatPhase(round, settings))
+    const terrainPips = getTerrainPips(terrains, side.type, general.values, opponent.values)
+    const generalPips = calculateGeneralPips(general.values, opponent.values, getCombatPhase(round, settings))
     const phase = getCombatPhaseNumber(round, settings)
     const isDiceSet = side.randomizeDice || (side.rolls.length > phase && side.rolls[phase])
     return (
       <div key={side.type}>
         <Image src={IconDice} avatar />
-        {isDiceSet ? combat.dice : <DelayedNumericInput type='number' value={side.dice} onChange={value => setDice(side.type, value)} />}
+        {isDiceSet ? combat.results.dice : <DelayedNumericInput type='number' value={side.dice} onChange={value => setDice(side.type, value)} />}
         {
           !side.randomizeDice &&
           <span style={{ paddingLeft: '1em' }}>

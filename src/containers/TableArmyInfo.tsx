@@ -13,7 +13,7 @@ import CountryValueInput from './CountryValueInput'
 import { filterArmies } from 'managers/countries'
 import AttributeImage from 'components/Utils/AttributeImage'
 import UnitValueInput from './UnitValueInput'
-import { getArchetypes2 } from 'managers/army'
+import { getArchetypes } from 'managers/army'
 import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 
 type Props = {
@@ -158,7 +158,7 @@ const mapStateToProps = (state: AppState, props: Props) => {
       general: getGeneral(state, participant.countryName, participant.armyName),
       country: getCountry(state, participant.countryName),
       armies: getArmies(state, participant.countryName),
-      artillery: getArchetypes2(getUnits(state, participant.countryName, participant.armyName), mode).find(unit => unit.type === UnitType.Artillery)
+      artillery: getArchetypes(getUnits(state, participant.countryName, participant.armyName), mode).find(unit => unit.type === UnitType.Artillery)
     })),
     clearable: side.participants.length > 1,
     countries: getCountries(state),

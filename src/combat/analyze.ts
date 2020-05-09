@@ -1,4 +1,4 @@
-import { Setting, UnitAttribute, SideType, Settings, ResourceLosses, WinRateProgress, CasualtiesProgress, ResourceLossesProgress, CombatParticipant, CombatCohorts, CombatUnitTypes, CombatFrontline, CombatDefeated, CombatNode } from 'types'
+import { Setting, UnitAttribute, SideType, Settings, ResourceLosses, WinRateProgress, CasualtiesProgress, ResourceLossesProgress, CombatCohorts, CombatFrontline, CombatDefeated, CombatNode, CombatSide, TerrainDefinition, CombatField } from 'types'
 import { doBattle } from './combat'
 import { mapRange } from 'utils'
 import { deploy } from './deployment'
@@ -27,7 +27,7 @@ export const interrupt = () => interruptSimulation = true
  * @param defender Defender information.
  * @param terrains Current terrains.
  */
-export const calculateWinRate = (settings: Settings, progressCallback: (progress: WinRateProgress, casualties: CasualtiesProgress, losses: ResourceLossesProgress) => void, attacker: CombatParticipant, defender: CombatParticipant) => {
+export const calculateWinRate = (settings: Settings, progressCallback: (progress: WinRateProgress, casualties: CasualtiesProgress, losses: ResourceLossesProgress) => void, field: CombatField, attacker: CombatSide, defender: CombatSide) => {
   const progress: WinRateProgress = {
     calculating: true,
     attacker: 0.0,
@@ -103,11 +103,11 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
       const cohortsD = copyCohortState(node.cohortsD)
 
       const [rollA, rollD] = rolls[node.branchIndex]
-      attacker.dice = rollA
-      defender.dice = rollD
+      attacker.results.dice = rollA
+      defender.results.dice = rollD
       attacker.cohorts = cohortsA
       defender.cohorts = cohortsD
-      let result = doPhase(node.combatPhase, attacker, defender, settings)
+      let result = doPhase(field, attacker, defender, settings, node.combatPhase)
 
       let combatPhase = node.combatPhase
       let branchIndex = node.branchIndex
@@ -130,19 +130,19 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
           nodes.push({ cohortsA: copyCohortState(cohortsA), cohortsD: copyCohortState(cohortsD), branchIndex: 1, combatPhase, weightIndex })
         }
         const [rollA, rollD] = rolls[branchIndex]
-        attacker.dice = rollA
-        defender.dice = rollD
+        attacker.results.dice = rollA
+        defender.results.dice = rollD
         attacker.cohorts = cohortsA
         defender.cohorts = cohortsD
-        result = doPhase(combatPhase, attacker, defender, settings)
+        result = doPhase(field, attacker, defender, settings, combatPhase)
       }
       sumState(currentA, attacker.cohorts)
       sumState(currentD, defender.cohorts)
       if (settings[Setting.CalculateCasualties])
         updateCasualties(casualties, weights[weightIndex], totalA, totalD, currentA, currentD)
       if (settings[Setting.CalculateResourceLosses]) {
-        calculateResourceLoss(attacker.cohorts.frontline, attacker.cohorts.defeated, weights[weightIndex], lossesA, lossesD, attacker.unitTypes, defender.unitTypes)
-        calculateResourceLoss(defender.cohorts.frontline, defender.cohorts.defeated, weights[weightIndex], lossesD, lossesA, defender.unitTypes, attacker.unitTypes)
+        //calculateResourceLoss(attacker.cohorts.frontline, attacker.cohorts.defeated, weights[weightIndex], lossesA, lossesD, attacker.unitTypes, defender.unitTypes)
+        //calculateResourceLoss(defender.cohorts.frontline, defender.cohorts.defeated, weights[weightIndex], lossesD, lossesA, defender.unitTypes, attacker.unitTypes)
       }
       updateProgress(progress, weights[weightIndex], result, currentA.strength === 0 || currentD.strength === 0)
     }
@@ -204,16 +204,14 @@ const copyCohortState = (status: CombatCohorts): CombatCohorts => ({
     flank: status.reserve.flank.map(value => ({ ...value })),
     support: status.reserve.support.map(value => ({ ...value }))
   },
-  defeated: status.defeated.map(value => ({ ...value })),
-  leftFlank: status.leftFlank,
-  rightFlank: status.rightFlank
+  defeated: status.defeated.map(value => ({ ...value }))
 })
 
 const REPAIR_PER_MONTH = 0.1
 
 /**
  * Calculates repair and other resource losses.
- */
+
 const calculateResourceLoss = (frontline: CombatFrontline, defeated: CombatDefeated, amount: number, own: ResourceLosses, enemy: ResourceLosses, ownTypes: CombatUnitTypes, enemyTypes: CombatUnitTypes) => {
   for (let i = 0; i < frontline.length; i++) {
     for (let j = 0; j < frontline[i].length; j++) {
@@ -248,20 +246,21 @@ const calculateResourceLoss = (frontline: CombatFrontline, defeated: CombatDefea
     enemy.seizedRepairMaintenance += capture * enemyRepairCost
   }
 }
-
+ */
 
 type Winner = SideType | null | undefined
 
 /**
  * Simulates one dice roll phase.
  */
-const doPhase = (phase: number, attacker: CombatParticipant, defender: CombatParticipant, settings: Settings) => {
+const doPhase = (field: CombatField, attacker: CombatSide, defender: CombatSide, settings: Settings, phase: number) => {
   let winner: Winner = undefined
   const phaseLength = settings[Setting.PhaseLength]
   const maxRound = phase * phaseLength
   let round = (phase - 1) * phaseLength + 1
   for (; round <= maxRound; round++) {
-    doBattle(attacker, defender, false, settings, round)
+    field.round = round
+    doBattle(field, attacker, defender, false, settings)
     if (!attacker.alive && !defender.alive)
       winner = null
     else if (!attacker.alive)

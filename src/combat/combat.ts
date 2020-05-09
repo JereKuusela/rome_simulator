@@ -1,14 +1,14 @@
 
-import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, CombatCohorts, CombatCohort, CombatParticipant, CombatFrontline, CombatDefeated } from 'types'
+import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, CombatCohorts, CombatCohort, CombatFrontline, CombatDefeated, CombatSide, TerrainDefinition, CombatField } from 'types'
 import { noZero } from 'utils'
 import { calculateValue } from 'definition_values'
-import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, calculateTotalStrength, stackWipe, reserveSize, reinforce } from 'combat'
+import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, calculateTotalStrength, stackWipe, reserveSize, reinforce, calculateGeneralPips, getTerrainPips } from 'combat'
 
 /**
  * Makes given armies attach each other.
  */
-export const doBattle = (a: CombatParticipant, d: CombatParticipant, markDefeated: boolean, settings: Settings, round: number) => {
-  const phase = getCombatPhase(round, settings)
+export const doBattle = (field: CombatField, a: CombatSide, d: CombatSide, markDefeated: boolean, settings: Settings) => {
+  const phase = getCombatPhase(field.round, settings)
   if (markDefeated) {
     removeDefeated(a.cohorts.frontline)
     removeDefeated(d.cohorts.frontline)
@@ -23,26 +23,22 @@ export const doBattle = (a: CombatParticipant, d: CombatParticipant, markDefeate
 
   // Tactic bonus changes dynamically when units lose strength so it can't be precalculated.
   // If this is a problem a fast mode can be implemeted where to bonus is only calculated once.
-  a.round = round
-  d.round = round
-  const dailyMultiplier = 1 + getDailyIncrease(round, settings)
-  a.tacticBonus = settings[Setting.Tactics] ? calculateTactic(a.cohorts, a.tactic, d.tactic) : 0.0
-  d.tacticBonus = settings[Setting.Tactics] ? calculateTactic(d.cohorts, d.tactic, a.tactic) : 0.0
-  a.flankRatioBonus = calculateFlankRatioPenalty(d.cohorts, d.flankRatio, settings)
-  d.flankRatioBonus = calculateFlankRatioPenalty(a.cohorts, a.flankRatio, settings)
-  const multiplierA = (1 + a.tacticBonus) * dailyMultiplier * (1 + a.flankRatioBonus)
-  const multiplierD = (1 + d.tacticBonus) * dailyMultiplier * (1 + d.flankRatioBonus)
-  attack(a.cohorts.frontline, a.dice + a.rollPips[phase], multiplierA, phase, settings)
-  attack(d.cohorts.frontline, d.dice + d.rollPips[phase], multiplierD, phase, settings)
+  a.results.round = field.round
+  d.results.round = field.round
+  const dailyMultiplier = 1 + getDailyIncrease(field.round, settings)
+  a.results.dailyMultiplier = dailyMultiplier
+  d.results.dailyMultiplier = dailyMultiplier
+  attack(a, d, dailyMultiplier, field.terrains, phase, settings)
+  attack(d, a, dailyMultiplier, field.terrains, phase, settings)
 
   applyLosses(a.cohorts.frontline)
   applyLosses(d.cohorts.frontline)
-  a.alive = moveDefeated(a.cohorts.frontline, a.cohorts.defeated, markDefeated, round, settings) || reserveSize(a.cohorts.reserve) > 0
-  d.alive = moveDefeated(d.cohorts.frontline, d.cohorts.defeated, markDefeated, round, settings) || reserveSize(d.cohorts.reserve) > 0
+  a.alive = moveDefeated(a.cohorts.frontline, a.cohorts.defeated, markDefeated, field.round, settings) || reserveSize(a.cohorts.reserve) > 0
+  d.alive = moveDefeated(d.cohorts.frontline, d.cohorts.defeated, markDefeated, field.round, settings) || reserveSize(d.cohorts.reserve) > 0
   if (settings[Setting.Stackwipe] && !d.alive)
-    checkHardStackWipe(d.cohorts, a.cohorts, settings, round < settings[Setting.StackwipeRounds])
+    checkHardStackWipe(d.cohorts, a.cohorts, settings, field.round < settings[Setting.StackwipeRounds])
   else if (settings[Setting.Stackwipe] && !a.alive)
-    checkHardStackWipe(a.cohorts, d.cohorts, settings, round < settings[Setting.StackwipeRounds])
+    checkHardStackWipe(a.cohorts, d.cohorts, settings, field.round < settings[Setting.StackwipeRounds])
 }
 
 const checkHardStackWipe = (defeated: CombatCohorts, enemy: CombatCohorts, settings: Settings, soft: boolean) => {
@@ -220,10 +216,25 @@ const moveDefeated = (frontline: CombatFrontline, defeated: CombatDefeated, mark
   return alive
 }
 
+const attack = (source: CombatSide, target: CombatSide, dailyMultiplier: number, terrains: TerrainDefinition[], phase: CombatPhase, settings: Settings) => {
+  // Tactic bonus changes dynamically when units lose strength so it can't be precalculated.
+  // If this is a problem a fast mode can be implemeted where to bonus is only calculated once.
+  const generalS = source.generals[0]
+  const generalT = target.generals[0]
+  const generalPips =  calculateGeneralPips(generalS.values, generalT.values, phase)
+  const terrainPips = getTerrainPips(terrains, source.type, generalS.values, generalT.values)
+
+ 
+  source.results.tacticBonus = settings[Setting.Tactics] ? calculateTactic(source.cohorts, generalS.tactic, generalT.tactic) : 0.0
+  source.results.flankRatioBonus = calculateFlankRatioPenalty(target.cohorts, target.flankRatio, settings)
+  const multiplier = (1 + source.results.tacticBonus) * dailyMultiplier * (1 + source.results.flankRatioBonus)
+  attackSub(source.cohorts.frontline, source.results.dice + generalPips + terrainPips, multiplier, phase, settings)
+}
+
 /**
  * Calculates losses when units attack their targets.
  */
-const attack = (frontline: CombatFrontline, roll: number, dynamicMultiplier: number, phase: CombatPhase, settings: Settings) => {
+const attackSub = (frontline: CombatFrontline, roll: number, dynamicMultiplier: number, phase: CombatPhase, settings: Settings) => {
   for (let i = 0; i < frontline.length; i++) {
     for (let j = 0; j < frontline[i].length; j++) {
       const source = frontline[i][j]

@@ -8,7 +8,6 @@ import { ObjSet } from "utils"
 
 export enum ModalType {
   DiceRolls = 'DiceRolls',
-  CohortSelector = 'CohortSelector',
   CohortDetail = 'CohortDetail',
   UnitDetail = 'UnitDetail',
   TerrainDetail = 'TerrainDetail',
@@ -24,12 +23,6 @@ export type UI = {
 export type Modals = {
   [ModalType.DiceRolls]?: {
     side: SideType
-  }
-  [ModalType.CohortSelector]?: {
-    side: SideType,
-    type: ArmyType,
-    row: number,
-    column: number
   }
   [ModalType.CohortDetail]?: {
     side: SideType,

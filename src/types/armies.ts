@@ -19,10 +19,12 @@ export type General = {
   tactic: TacticDefinition
   selections: Selections
   enabled: boolean
-  baseValues: { [key in GeneralValueType]: number }
-  extraValues: { [key in GeneralValueType]: number }
-  totalValues: { [key in GeneralValueType]: number }
+  baseValues: GeneralValues
+  extraValues: GeneralValues
+  values: GeneralValues
 }
+
+export type GeneralValues = { [key in GeneralValueType]: number }
 
 export type GeneralValueType = GeneralAttribute | CombatPhase
 
@@ -42,9 +44,7 @@ export type Army = {
   unitPreferences: UnitPreferences
   flankSize: number
   general: GeneralDefinition
-  frontline: FrontlineDefinition
   reserve: ReserveDefinition
-  defeated: DefeatedDefinition
 }
 
 export enum ArmyType {
@@ -53,28 +53,18 @@ export enum ArmyType {
   Defeated = 'Defeated'
 }
 
-
 export enum UnitPreferenceType {
   Primary = 'Primary',
   Secondary = 'Secondary',
   Flank = 'PrimaryFlank'
 }
 
-export type FrontlineDefinition = { [key: string]: { [key: string]: CohortDefinition } }
 export type ReserveDefinition = CohortDefinition[]
-export type DefeatedDefinition = CohortDefinition[]
-export type FrontLine = (Cohort | null)[][]
 export type Reserve = Cohort[]
-export type Defeated = Cohort[]
 
-export interface Cohorts {
-  frontline: FrontLine
+
+export interface ArmyForCombatConversion {
   reserve: Reserve
-  defeated: Defeated
-}
-
-
-export interface ArmyForCombatConversion extends Cohorts {
   tactic?: TacticDefinition
   definitions: Units
   general: General

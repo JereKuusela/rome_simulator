@@ -1,5 +1,5 @@
 import { calculateValue, calculateBase, addValues, addValuesWithMutate, filterValues, addValue, clearAllValuesWithMutate } from 'definition_values'
-import { Mode, GeneralAttribute, UnitType, UnitAttribute, GeneralDefinition, Army, ArmyType, CohortDefinition, ValuesType, UnitValueType, TacticType, UnitPreferenceType, General, ReserveDefinition, DefeatedDefinition, FrontlineDefinition, GeneralValueType, CombatPhase, isAttributeEnabled, Units, Setting, UnitRole, Unit, CombatUnitTypes, CombatCohortDefinition, SiteSettings, ModifierWithKey, ModifierType, Selections, SelectionType, TacticDefinitions } from 'types'
+import { Mode, GeneralAttribute, UnitType, UnitAttribute, GeneralDefinition, Army, ArmyType, CohortDefinition, ValuesType, UnitValueType, TacticType, UnitPreferenceType, General, ReserveDefinition, GeneralValueType, CombatPhase, isAttributeEnabled, Units, Setting, UnitRole, Unit, CombatCohortDefinition, SiteSettings, ModifierWithKey, ModifierType, Selections, SelectionType, TacticDefinitions } from 'types'
 import { map, forEach, keys, toObj, toArr, toSet, ObjSet, values } from 'utils'
 import { findLastIndex, sortBy } from 'lodash'
 
@@ -21,7 +21,7 @@ export const convertGeneralDefinition = (settings: SiteSettings, general: Genera
     tactic: tactics[general.tactic],
     enabled: general.enabled,
     baseValues,
-    totalValues,
+    values: totalValues,
     extraValues,
     selections: general.selections
   }
@@ -29,7 +29,7 @@ export const convertGeneralDefinition = (settings: SiteSettings, general: Genera
 
 export const overrideRoleWithPreferences = (army: Army, units: Units, latest: { [key in UnitRole]: UnitType | undefined }) => {
   const preferences = army.unitPreferences
-  return mapCohorts(army, cohort => {
+  return army.reserve.map(cohort => {
     const role = units[cohort.type]?.role
     let override = role && preferences[role]
     if (role && override === UnitType.Latest)
@@ -40,47 +40,27 @@ export const overrideRoleWithPreferences = (army: Army, units: Units, latest: { 
   })
 }
 
-export const getUnitList = (units: CombatUnitTypes, mode: Mode, filterParents: boolean, settings: SiteSettings) => {
+export const getUnitList2 = (units: Units, mode: Mode, filterParents: boolean, settings: SiteSettings) => {
   const parents = getParents(units)
   let list = settings[Setting.Tech] ? [units[UnitType.Land]].concat(getArchetypes(units, mode)) : sortBy(toArr(units), unit => unitSorter(unit, mode, parents))
   list = filterParents ? list.filter(unit => !parents[unit.type]) : list
   return list
 }
 
-export const getUnitList2 = (units: Units, mode: Mode, filterParents: boolean, settings: SiteSettings) => {
-  const parents = getParents(units)
-  let list = settings[Setting.Tech] ? [units[UnitType.Land]].concat(getArchetypes2(units, mode)) : sortBy(toArr(units), unit => unitSorter2(unit, mode, parents))
-  list = filterParents ? list.filter(unit => !parents[unit.type]) : list
-  return list
-}
-
 export const getAllUnitList = (units: Units, mode: Mode) => {
   const parents = getParents(units)
-  return sortBy(toArr(units), unit => unitSorter2(unit, mode, parents))
+  return sortBy(toArr(units), unit => unitSorter(unit, mode, parents))
 }
-
 
 
 /** Returns latest available unit for each role. */
-export const getLatestUnits = (units: CombatUnitTypes, tech: number) => {
+export const getLatestUnits = (units: Units, tech: number) => {
   const sorted = sortBy(filterByTech(toArr(units), tech), techSorter)
   return toObj(values(UnitRole), role => role, role => sorted.find(unit => unit.role === role)?.type)
 }
 
-/** Returns latest available unit for each role. */
-export const getLatestUnits2 = (units: Units, tech: number) => {
-  const sorted = sortBy(filterByTech2(toArr(units), tech), techSorter)
-  return toObj(values(UnitRole), role => role, role => sorted.find(unit => unit.role === role)?.type)
-}
-
-
-/** Returns available child units of a parent unit.  */
-export const getChildUnits = (units: CombatUnitTypes, tech: number, parent: UnitType) => {
+export const getChildUnits = (units: Units, tech: number, parent: UnitType) => {
   return sortBy(filterByTech(toArr(units).filter(unit => unit.parent === parent), tech), techSorter)
-}
-
-export const getChildUnits2 = (units: Units, tech: number, parent: UnitType) => {
-  return sortBy(filterByTech2(toArr(units).filter(unit => unit.parent === parent), tech), techSorter)
 }
 
 
@@ -88,15 +68,7 @@ const techSorter = (unit: { tech?: number, type: UnitType }) => {
   return (99 - (unit.tech ?? 0)) + unit.type
 }
 
-const unitSorter = (unit: CombatCohortDefinition, mode: Mode, parents?: ObjSet) => {
-  if (parents && parents[unit.type])
-    return ''
-  if (mode === Mode.Naval)
-    return unit[UnitAttribute.Cost]
-  return techSorter(unit)
-}
-
-const unitSorter2 = (unit: Unit, mode: Mode, parents?: ObjSet) => {
+const unitSorter = (unit: Unit, mode: Mode, parents?: ObjSet) => {
   if (parents && parents[unit.type])
     return ''
   if (mode === Mode.Naval)
@@ -104,77 +76,34 @@ const unitSorter2 = (unit: Unit, mode: Mode, parents?: ObjSet) => {
   return techSorter(unit)
 }
 
-export const getArchetypes = (units: CombatUnitTypes, mode: Mode) => toArr(units).filter(unit => mode === Mode.Naval ? unit.parent === UnitType.Naval : unit.parent === UnitType.Land)
-export const getArchetypes2 = (units: Units, mode: Mode) => toArr(units).filter(unit => mode === Mode.Naval ? unit.parent === UnitType.Naval : unit.parent === UnitType.Land)
+export const getArchetypes = (units: Units, mode: Mode) => toArr(units).filter(unit => mode === Mode.Naval ? unit.parent === UnitType.Naval : unit.parent === UnitType.Land)
 
-
-export const getActualUnits = (units: CombatUnitTypes, mode: Mode) => {
+export const getActualUnits = (units: Units, mode: Mode) => {
   const parents = getParents(units)
   return sortBy(toArr(units).filter(unit => !parents[unit.type]), unit => unitSorter(unit, mode))
-}
-
-export const getActualUnits2 = (units: Units, mode: Mode) => {
-  const parents = getParents(units)
-  return sortBy(toArr(units).filter(unit => !parents[unit.type]), unit => unitSorter2(unit, mode))
 }
 
 const getParents = (units: Units) => toSet(units, unit => unit.parent || unit.type)
 
 export const getRootUnit = (units: Units, mode: Mode) => mode === Mode.Naval ? units[UnitType.Naval] : units[UnitType.Land]
 
-const filterByTech = (units: CombatCohortDefinition[], tech: number) => units.filter(unit => unit.tech === undefined || unit.tech <= tech)
-const filterByTech2 = (units: Unit[], tech: number) => units.filter(unit => unit.tech === undefined || unit.tech <= tech)
+const filterByTech = (units: Unit[], tech: number) => units.filter(unit => unit.tech === undefined || unit.tech <= tech)
 
-export const mapCohorts = (army: Army, mapper: (cohort: CohortDefinition) => CohortDefinition) => {
-  return {
-    frontline: map(army.frontline, row => map(row, mapper)),
-    reserve: army.reserve.map(mapper),
-    defeated: army.defeated.map(mapper)
-  }
-}
-
-const findFromFrontline = (frontline: FrontlineDefinition, criteria: number | ((cohort: CohortDefinition) => boolean)): [number, number][] => {
-  let ret: [number, number][] = []
-  forEach(frontline, (row, rowIndex) => forEach(row, (unit, columnIndex) => {
-    if (typeof criteria === 'number' ? unit.id === criteria : criteria(unit))
-      ret.push([Number(rowIndex), Number(columnIndex)])
-  }))
-  return ret
-}
 
 const findFromReserve = (reserve: ReserveDefinition, criteria: number | ((cohort: CohortDefinition) => boolean)) => {
   return reserve.map((cohort, index) => [typeof criteria === 'number' ? cohort.id === criteria : criteria(cohort), index]).filter(pair => pair[0]).map(pair => pair[1] as number)
 }
-const findFromDefeated = (defeated: DefeatedDefinition, criteria: number | ((cohort: CohortDefinition) => boolean)) => {
-  return defeated.map((cohort, index) => [typeof criteria === 'number' ? cohort.id === criteria : criteria(cohort), index]).filter(pair => pair[0]).map(pair => pair[1] as number)
-}
-
 
 const update = (army: Army, criteria: number | ((cohort: CohortDefinition) => boolean), updater: (unit: CohortDefinition) => CohortDefinition): void => {
-  for (let location of findFromFrontline(army.frontline, criteria)) {
-    const [row, column] = location
-    army.frontline[row][column] = updater(army.frontline[row][column])
-  }
   for (let index of findFromReserve(army.reserve, criteria))
     army.reserve[index] = updater(army.reserve[index])
-  for (let index of findFromDefeated(army.defeated, criteria))
-    army.defeated[index] = updater(army.defeated[index])
 }
 
-export const selectCohort = (army: Army, type: ArmyType, row: number, column: number, cohort: CohortDefinition) => {
-  if (type === ArmyType.Frontline) {
-    if (!army.frontline[row])
-      army.frontline[row] = {}
-    army.frontline[row][column] = cohort
-  }
-  else if (type === ArmyType.Reserve && cohort && column > army.reserve.length)
+export const selectCohort = (army: Army, index: number, cohort: CohortDefinition) => {
+  if (cohort && index > army.reserve.length)
     army.reserve.push(cohort)
-  else if (type === ArmyType.Reserve && cohort)
-    army.reserve[column] = cohort
-  else if (type === ArmyType.Defeated && cohort)
-    army.defeated[column] = cohort
-  else if (type === ArmyType.Defeated && cohort && column > army.defeated.length)
-    army.defeated.push(cohort)
+  else if (cohort)
+    army.reserve[index] = cohort
 }
 
 export const toggleCohortLoyality = (army: Army, id: number) => {
@@ -194,16 +123,8 @@ export const editCohort = (army: Army, unit: CohortDefinition) => {
 }
 
 export const deleteCohort = (army: Army, id: number) => {
-  for (let location of findFromFrontline(army.frontline, id)) {
-    const [row, column] = location
-    delete army.frontline[row][column]
-    if (!keys(army.frontline[row]).length)
-      delete army.frontline[row]
-  }
   for (let index of findFromReserve(army.reserve, id))
     army.reserve.splice(index, 1)
-  for (let index of findFromDefeated(army.defeated, id))
-    army.defeated.splice(index, 1)
 }
 
 export const removeFromReserve = (army: { reserve: ReserveDefinition }, types: UnitType[]) => {
@@ -218,9 +139,7 @@ export const addToReserve = (army: { reserve: ReserveDefinition }, cohorts: Coho
 }
 
 export const clearCohorts = (army: Army) => {
-  army.frontline = {}
   army.reserve = []
-  army.defeated = []
 }
 
 export const selectTactic = (army: Army, tactic: TacticType) => {
