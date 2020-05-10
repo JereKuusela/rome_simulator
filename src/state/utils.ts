@@ -1,7 +1,7 @@
 import { AppState } from './index'
 import { toArr, filter, arrGet, toObj, keys } from 'utils'
 import { filterUnitDefinitions, getArmyPart, convertReserveDefinitions, convertUnitDefinitions, convertUnitDefinition, shrinkUnits } from '../army_utils'
-import { Mode, CountryName, SideType, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, TacticDefinition, UnitPreferences, Participant, TerrainDefinition, Settings, Battle, TerrainDefinitions, TacticDefinitions, ArmyName, General, Countries, Setting, Reserve, CountryAttribute, Units, Unit, GeneralDefinition, Country, CountryDefinition, CombatCohort, CombatCohorts, CombatParticipant, Side, GeneralAttribute, CombatSide } from 'types'
+import { Mode, CountryName, SideType, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, TacticDefinition, UnitPreferences, Participant, TerrainDefinition, Settings, Battle, TerrainDefinitions, TacticDefinitions, ArmyName, General, Countries, Setting, Reserve, CountryAttribute, Units, Unit, GeneralDefinition, Country, CountryDefinition, CombatCohort, CombatCohorts, CombatParticipant, Side, GeneralAttribute, CombatSide, CombatField } from 'types'
 import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticState, getDefaultTerrainState } from 'data'
 import { uniq, flatten } from 'lodash'
 import * as manager from 'managers/army'
@@ -175,6 +175,17 @@ export const initializeCombatSides = (state: AppState): CombatSide[] => {
     //convertParticipant(SideType.Attacker, armyA, armyD, terrains, settings),
    //convertParticipant(SideType.Defender, armyD, armyA, terrains, settings)
   ]
+}
+
+export const getCombatField = (state: AppState): CombatField => {
+  const battle = getBattle(state)
+  const terrains = battle.terrains.map(value => state.terrains[value])
+  const settings = getSettings(state)
+  return {
+    round: 0,
+    terrains,
+    settings
+  }
 }
 
 export const getSelectedTactic = (state: AppState, side: SideType, index: number): TacticDefinition => {

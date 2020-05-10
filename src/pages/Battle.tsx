@@ -31,9 +31,8 @@ class Battle extends Component<IProps> {
     this.props.refreshBattle()
   }
 
-  openCohortModal = (side: SideType, type: ArmyType, row: number, column: number, id: number | undefined): void => {
-    if (id)
-      this.props.openModal(ModalType.CohortDetail, { side, id })
+  openCohortModal = (side: SideType, id: number): void => {
+    this.props.openModal(ModalType.CohortDetail, { side, id })
   }
 
   openUnitDetails = (country: CountryName, army: ArmyName, type: UnitType): void => {
@@ -224,11 +223,10 @@ class Battle extends Component<IProps> {
       <TableArmyPart
         color={side === SideType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
         side={side}
-        onClick={(row, column, id) => this.openCohortModal(side, ArmyType.Frontline, row, column, id)}
+        onClick={id => this.openCohortModal(side, id)}
         rowWidth={Math.max(30, combatWidth)}
         reverse={side === SideType.Attacker}
         type={ArmyType.Frontline}
-        disableAdd={this.props.round > -1}
       />
     )
   }
@@ -238,7 +236,7 @@ class Battle extends Component<IProps> {
       <TableArmyPart
         color={side === SideType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
         side={side}
-        onClick={(row, column, id) => this.openCohortModal(side, ArmyType.Reserve, row, column + 30 * row, id)}
+        onClick={id => this.openCohortModal(side, id)}
         rowWidth={30}
         reverse={false}
         type={ArmyType.Reserve}
@@ -252,7 +250,7 @@ class Battle extends Component<IProps> {
       <TableArmyPart
         color={side === SideType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
         side={side}
-        onClick={(row, column, id) => this.openCohortModal(side, ArmyType.Defeated, row, column + 30 * row, id)}
+        onClick={id => this.openCohortModal(side, id)}
         rowWidth={30}
         reverse={false}
         type={ArmyType.Defeated}

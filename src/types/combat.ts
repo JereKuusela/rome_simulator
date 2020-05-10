@@ -1,7 +1,8 @@
-import { TacticDefinition, CombatPhase, UnitPreferences, UnitType, UnitAttribute, UnitRole, Mode, UnitValueType, General, GeneralValueType } from 'types'
+import { TacticDefinition, CombatPhase, UnitPreferences, UnitType, UnitAttribute, UnitRole, Mode, UnitValueType, GeneralValueType } from 'types'
 import { Units } from './units'
 import { SideType } from './battle'
 import { TerrainDefinition } from './terrains'
+import { Settings } from './settings'
 
 /**
  * Information required for fast combat calculation.
@@ -20,6 +21,7 @@ export type CombatParticipant = {
 export type CombatField = {
   round: number
   terrains: TerrainDefinition[]
+  settings: Settings
 }
 
 /** Results from combat (mainly for tooltips). */

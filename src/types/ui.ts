@@ -1,5 +1,5 @@
 import { SideType } from "./battle"
-import { ArmyType, ArmyName } from "./armies"
+import { ArmyName } from "./armies"
 import { CountryName } from "./countries"
 import { UnitType } from "./units"
 import { TerrainType } from "./terrains"

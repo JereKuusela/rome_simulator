@@ -5,7 +5,7 @@ import { Popup, List } from 'semantic-ui-react'
 import StyledNumber from 'components/Utils/StyledNumber'
 
 import { SideType, ArmyType, UnitAttribute, UnitType, Setting, TacticCalc, TerrainType, CombatPhase, Mode, CombatCohortDefinition, CombatCohortRoundInfo, CombatCohort, DisciplineValue } from 'types'
-import { calculateCohortPips, getOffensiveCohortPips, getDefensiveCohortPips, getCombatPhase, getDailyIncrease, getDefensiveSupportCohortPips } from 'combat'
+import { calculateCohortPips, getOffensiveCohortPips, getDefensiveCohortPips, getCombatPhase, getDefensiveSupportCohortPips } from 'combat'
 import { toSignedPercent, strengthToValue, toNumber, addSign, toMultiplier, toMorale } from 'formatters'
 import { calculateValue } from 'definition_values'
 import { AppState, getSettings, getSelectedTerrains, getTactic, getCombatUnit, getCombatSide } from 'state'

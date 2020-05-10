@@ -1,6 +1,6 @@
 
 import { sumBy, sum } from 'lodash'
-import { TerrainDefinition, TerrainCalc, Setting, UnitAttribute, UnitDefinition, CombatPhase, GeneralAttribute, SideType, LocationType, General, CombatCohortDefinition, SiteSettings, CombatCohorts, CombatCohort, CombatFrontline, SortedReserve, CombatSide, GeneralValues } from 'types'
+import { TerrainDefinition, TerrainCalc, Setting, UnitAttribute, UnitDefinition, CombatPhase, GeneralAttribute, SideType, LocationType, CombatCohortDefinition, SiteSettings, CombatCohorts, CombatCohort, CombatFrontline, SortedReserve, CombatSide, GeneralValues } from 'types'
 import { calculateValue } from 'definition_values'
 
 /**

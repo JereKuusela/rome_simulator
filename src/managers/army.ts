@@ -1,6 +1,6 @@
 import { calculateValue, calculateBase, addValues, addValuesWithMutate, filterValues, addValue, clearAllValuesWithMutate } from 'definition_values'
-import { Mode, GeneralAttribute, UnitType, UnitAttribute, GeneralDefinition, Army, ArmyType, CohortDefinition, ValuesType, UnitValueType, TacticType, UnitPreferenceType, General, ReserveDefinition, GeneralValueType, CombatPhase, isAttributeEnabled, Units, Setting, UnitRole, Unit, CombatCohortDefinition, SiteSettings, ModifierWithKey, ModifierType, Selections, SelectionType, TacticDefinitions } from 'types'
-import { map, forEach, keys, toObj, toArr, toSet, ObjSet, values } from 'utils'
+import { Mode, GeneralAttribute, UnitType, UnitAttribute, GeneralDefinition, Army, CohortDefinition, ValuesType, UnitValueType, TacticType, UnitPreferenceType, General, ReserveDefinition, GeneralValueType, CombatPhase, isAttributeEnabled, Units, Setting, UnitRole, Unit, SiteSettings, ModifierWithKey, ModifierType, Selections, SelectionType, TacticDefinitions } from 'types'
+import { toObj, toArr, toSet, ObjSet, values } from 'utils'
 import { findLastIndex, sortBy } from 'lodash'
 
 /**

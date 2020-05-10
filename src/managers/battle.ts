@@ -1,6 +1,6 @@
-import { Battle, TerrainType, SideType, CountryName, ArmyForCombatConversion, TerrainDefinition, Settings, TacticCalc, Setting, UnitPreferences, CombatPhase, CombatParticipant, UnitType, CombatCohorts, ArmyName, SortedReserve, Reserve, Side, CombatSide } from "types"
-import { toArr, toObj, values, map } from "utils"
-import { calculateGeneralPips, getTerrainPips, getUnitDefinition, getCombatUnit, sortReserve } from "combat"
+import { Battle, TerrainType, SideType, CountryName, ArmyForCombatConversion, TerrainDefinition, Settings, TacticCalc, Setting, UnitPreferences, CombatParticipant, UnitType, ArmyName, SortedReserve, Reserve, Side, CombatSide } from "types"
+import { toArr } from "utils"
+import { getCombatUnit, sortReserve } from "combat"
 import { calculateValue } from "definition_values"
 
 export const selectTerrain = (battle: Battle, index: number, terrain: TerrainType) => {
@@ -60,14 +60,19 @@ export const convertSide  = (side: Side): CombatSide => {
         support: []
       }
     },
-    dice: 0,
     flankRatio: 0,
-    flankRatioBonus: 0,
     participants: [],
-    round: 0,
-    tacticBonus: 0,
     generals: [],
-    type: side.type
+    type: side.type,
+    results: {
+      dailyMultiplier: 0,
+      dice: 0,
+      flankRatioBonus: 0,
+      generalPips: 0,
+      round: 0,
+      tacticBonus: 0,
+      terrainPips: 0
+    }
   }
 }
 

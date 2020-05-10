@@ -9,18 +9,15 @@ import { SideType, ArmyType, UnitAttribute, CombatCohort } from 'types'
 import { getImage, resize } from 'utils'
 import { AppState, getCurrentCombat, getBattle, getParticipant } from 'state'
 import { getArmyPart } from 'army_utils'
-import { last } from 'lodash'
 import { deleteCohort } from 'reducers'
 
 type Props = {
   side: SideType
   rowWidth: number
   reverse: boolean
-  onClick?: (row: number, column: number, id: number | undefined) => void
+  onClick: (id: number) => void
   type: ArmyType
   color: string
-  // Prevents adding units.
-  disableAdd?: boolean
   // Renders full rows for a cleaner look.
   fullRows?: boolean
 }
@@ -53,8 +50,6 @@ class TableArmyPart extends Component<IProps, IState> {
     let indexOffset = 0
     if (fullRows) {
       units = units.map(arr => resize(arr, rowWidth, null))
-      if (last(last(units)))
-        units.push(Array(rowWidth).fill(null))
 
     } else {
       // For display purposes, smaller combat width turns extra slots grey instead of removing them.
@@ -95,17 +90,17 @@ class TableArmyPart extends Component<IProps, IState> {
   }
 
   renderCell = (row: number, column: number, cohort: ICohort, isSupport: boolean) => {
-    const { side, type, disableAdd, onClick } = this.props
+    const { side, type, onClick } = this.props
     const filler = cohort === undefined
     return (
       <Table.Cell
         className={side + '-' + type + '-' + cohort?.id}
         textAlign='center'
-        key={column}
-        disabled={filler || (disableAdd && !cohort)}
+        key={row + '_' + column}
+        disabled={filler || !cohort}
         selectable={!!onClick}
         style={{ backgroundColor: filler ? '#DDDDDD' : 'white', padding: 0 }}
-        onClick={() => onClick && onClick(row, column, cohort?.id)}
+        onClick={() => cohort && onClick(cohort.id)}
         onMouseOver={(e: React.MouseEvent) => cohort && this.setState({ tooltipIndex: cohort.id, tooltipContext: e.currentTarget, tooltipIsSupport: isSupport })}
         onMouseLeave={() => cohort && this.state.tooltipIndex === cohort.id && this.setState({ tooltipIndex: null, tooltipContext: null })}
         onContextMenu={(e: any) => e.preventDefault() || this.deleteCohort(cohort)}

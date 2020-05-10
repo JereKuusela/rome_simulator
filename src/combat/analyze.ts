@@ -1,4 +1,4 @@
-import { Setting, UnitAttribute, SideType, Settings, ResourceLosses, WinRateProgress, CasualtiesProgress, ResourceLossesProgress, CombatCohorts, CombatFrontline, CombatDefeated, CombatNode, CombatSide, TerrainDefinition, CombatField } from 'types'
+import { Setting, UnitAttribute, SideType, ResourceLosses, WinRateProgress, CasualtiesProgress, ResourceLossesProgress, CombatCohorts, CombatNode, CombatSide, CombatField } from 'types'
 import { doBattle } from './combat'
 import { mapRange } from 'utils'
 import { deploy } from './deployment'
@@ -27,7 +27,7 @@ export const interrupt = () => interruptSimulation = true
  * @param defender Defender information.
  * @param terrains Current terrains.
  */
-export const calculateWinRate = (settings: Settings, progressCallback: (progress: WinRateProgress, casualties: CasualtiesProgress, losses: ResourceLossesProgress) => void, field: CombatField, attacker: CombatSide, defender: CombatSide) => {
+export const calculateWinRate = (progressCallback: (progress: WinRateProgress, casualties: CasualtiesProgress, losses: ResourceLossesProgress) => void, field: CombatField, attacker: CombatSide, defender: CombatSide) => {
   const progress: WinRateProgress = {
     calculating: true,
     attacker: 0.0,
@@ -41,6 +41,8 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
     rounds: {}
   }
   interruptSimulation = false
+
+  const settings = field.settings
 
   const lossesA = initResourceLosses()
   const lossesD = initResourceLosses()
@@ -77,7 +79,7 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
   }
 
   // Deployment is shared for each iteration.
-  deploy(0, attacker, defender, settings)
+  deploy(field, attacker, defender)
 
   // Overview of the algorithm:
   // Initial state is the first node.
@@ -107,7 +109,7 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
       defender.results.dice = rollD
       attacker.cohorts = cohortsA
       defender.cohorts = cohortsD
-      let result = doPhase(field, attacker, defender, settings, node.combatPhase)
+      let result = doPhase(field, attacker, defender, node.combatPhase)
 
       let combatPhase = node.combatPhase
       let branchIndex = node.branchIndex
@@ -134,7 +136,7 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
         defender.results.dice = rollD
         attacker.cohorts = cohortsA
         defender.cohorts = cohortsD
-        result = doPhase(field, attacker, defender, settings, combatPhase)
+        result = doPhase(field, attacker, defender, combatPhase)
       }
       sumState(currentA, attacker.cohorts)
       sumState(currentD, defender.cohorts)
@@ -253,14 +255,14 @@ type Winner = SideType | null | undefined
 /**
  * Simulates one dice roll phase.
  */
-const doPhase = (field: CombatField, attacker: CombatSide, defender: CombatSide, settings: Settings, phase: number) => {
+const doPhase = (field: CombatField, attacker: CombatSide, defender: CombatSide, phase: number) => {
   let winner: Winner = undefined
-  const phaseLength = settings[Setting.PhaseLength]
+  const phaseLength = field.settings[Setting.PhaseLength]
   const maxRound = phase * phaseLength
   let round = (phase - 1) * phaseLength + 1
   for (; round <= maxRound; round++) {
     field.round = round
-    doBattle(field, attacker, defender, false, settings)
+    doBattle(field, attacker, defender, false)
     if (!attacker.alive && !defender.alive)
       winner = null
     else if (!attacker.alive)

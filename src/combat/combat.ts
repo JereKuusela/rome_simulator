@@ -7,18 +7,19 @@ import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, 
 /**
  * Makes given armies attach each other.
  */
-export const doBattle = (field: CombatField, a: CombatSide, d: CombatSide, markDefeated: boolean, settings: Settings) => {
+export const doBattle = (field: CombatField, a: CombatSide, d: CombatSide, markDefeated: boolean) => {
+  const settings = field.settings
   const phase = getCombatPhase(field.round, settings)
   if (markDefeated) {
     removeDefeated(a.cohorts.frontline)
     removeDefeated(d.cohorts.frontline)
   }
-  reinforce(a, settings)
+  reinforce(field, a)
   if (!settings[Setting.DefenderAdvantage])
-    reinforce(d, settings)
+    reinforce(field, d)
   pickTargets(a.cohorts.frontline, d.cohorts.frontline, settings)
   if (settings[Setting.DefenderAdvantage])
-    reinforce(d, settings)
+    reinforce(field, d)
   pickTargets(d.cohorts.frontline, a.cohorts.frontline, settings)
 
   // Tactic bonus changes dynamically when units lose strength so it can't be precalculated.

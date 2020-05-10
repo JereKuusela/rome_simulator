@@ -48,6 +48,10 @@ Multiarmy:
   * Pooled reinforcements use the leading generals settings, instant deploys current generals settings. So unit would need to know its general...
  - Needs different logic -> when army joins -> sort reserve -> deploy with its settings -> then merge to common reserve -> at end sort reserve.
 
+Test:
+ - Targeting (strength based flank, weak targets)
+ - Check that reinforcement is stable (higher key ends in right position)
+
 UI:
  - Togglable stats rows to show individual units or hide unit types.
  - Unit tooltip should somehow show sources for losses (to include daily loss from EUIV and damage from different units).
@@ -60,6 +64,9 @@ UI:
 Countries:
  - Inventions to show tag specific (without actually implementing tags).
   * These inventions are extra. Perhaps a 4th slot for toggle? Or just implement scrolling?
+
+Land battle:
+- Deployment order based also on manpower!! (before index), need to to test whether full strength is prioritized for both deploy and reinforce
 
 
 Release++:
@@ -76,7 +83,6 @@ Todo:
  - Transfer could only show non-base stats for units, terrains and tactics (since base stats are supposed to regenerate?), currently it shows way too much information.
  - Refactor simluation to update only single parameter, also parameters split should make more sense
  - Rowtype selectors could show unit priority? Different colors for main and flank. Frontline could slightly color tiles based on main/flank.
- - Combat things to combat reducer. Perhaps state as parameter when needed? Since it only changes same things as battle reducer,
  - Stats to show amount of traditions, trade, etc..
  - Definition functions probably all could mutate (mostly used in reducers?)
  - Analyze could automatically set precision based on unit count (or some other heuristic like timing first batch).
@@ -90,7 +96,6 @@ Todo:
 
 Tests:
 - utils tested
-- check that reinforcement is stable (higher key ends in right position)
 
 Tags:
  - Icons to frontline to show various things, with tooltips:
@@ -99,9 +104,6 @@ Tags:
   * Flanking (attacking without being attacked)
   * No target (red sign)
  - Battle stats to show amount of tags acquired (hopefully gives a better view of the battle)
-
-Land battle:
-- Deployment order based also on manpower!! (before index), need to to test whether full strength is prioritized for both deploy and reinforce
 
 Combat calculations:
 - In the game, integer calculations are used so the result is rounded down after each step.

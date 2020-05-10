@@ -1,6 +1,6 @@
-import { UnitPreferences, UnitAttribute, UnitPreferenceType, UnitRole, Setting, Settings, SortedReserve, CombatReserve, CombatCohorts, CombatCohort, CombatParticipant, CombatSide, Participant, CombatDefeated } from 'types'
+import { UnitPreferences, UnitAttribute, UnitPreferenceType, UnitRole, Setting, Settings, SortedReserve, CombatReserve, CombatCohorts, CombatCohort, CombatParticipant, CombatSide, CombatDefeated, CombatField } from 'types'
 import { sortBy, remove, clamp, sum } from 'lodash'
-import { stackWipe, calculateTotalStrength, nextIndex, reserveSize, armySize } from './combat_utils'
+import { stackWipe, nextIndex, reserveSize, armySize } from './combat_utils'
 
 const armyFlankCount = (reserve: SortedReserve) => {
   return reserve.front.filter(cohort => cohort.definition.role === UnitRole.Flank).length
@@ -178,7 +178,8 @@ export const removeAllDefeated = (attacker: CombatSide, defender: CombatSide, se
   defender.participants.forEach(participant => removeDefeated(participant.reserve, defender.cohorts.defeated, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength]))
 }
 
-export const deploy = (round: number, attacker: CombatSide, defender: CombatSide, settings: Settings) => {
+export const deploy = (field: CombatField, attacker: CombatSide, defender: CombatSide) => {
+  const { round, settings } = field
   const sizeA = armySize(attacker, round)
   const sizeD = armySize(defender, round)
   const attackerPool: CombatCohort[] = []
@@ -274,7 +275,8 @@ const moveUnits = (cohorts: CombatCohorts) => {
 * Reinforces a given army based on reinforcement rules.
 * First priority is to move units from reserve. Then units move towards center.
 */
-export const reinforce = (side: CombatSide, settings: Settings) => {
+export const reinforce = (field: CombatField, side: CombatSide) => {
+  const { settings } = field
   const general = side.generals[0]
   if (reserveSize(side.cohorts.reserve))
     deployCohorts(side.cohorts, side.cohorts.reserve, general.leftFlank, general.rightFlank, settings, general.unitPreferences)

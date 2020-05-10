@@ -1,4 +1,4 @@
-import { CountryName, Mode, TerrainType, CombatParticipant } from 'types'
+import { CountryName, Mode, TerrainType } from 'types'
 import { ArmyName } from './armies'
 import { CombatSide } from './combat'
 
