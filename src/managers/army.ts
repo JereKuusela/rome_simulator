@@ -1,5 +1,5 @@
 import { calculateValue, calculateBase, addValues, addValuesWithMutate, filterValues, addValue, clearAllValuesWithMutate } from 'definition_values'
-import { Mode, GeneralAttribute, UnitType, UnitAttribute, GeneralDefinition, Army, CohortDefinition, ValuesType, UnitValueType, TacticType, UnitPreferenceType, General, ReserveDefinition, GeneralValueType, CombatPhase, isAttributeEnabled, Units, Setting, UnitRole, Unit, SiteSettings, ModifierWithKey, ModifierType, Selections, SelectionType, TacticDefinitions } from 'types'
+import { Mode, GeneralAttribute, UnitType, UnitAttribute, GeneralDefinition, ArmyDefinition, CohortDefinition, ValuesType, UnitValueType, TacticType, UnitPreferenceType, General, ReserveDefinition, GeneralValueType, CombatPhase, isAttributeEnabled, Units, Setting, UnitRole, Unit, SiteSettings, ModifierWithKey, ModifierType, Selections, SelectionType, TacticDefinitions } from 'types'
 import { toObj, toArr, toSet, ObjSet, values } from 'utils'
 import { findLastIndex, sortBy } from 'lodash'
 
@@ -27,7 +27,7 @@ export const convertGeneralDefinition = (settings: SiteSettings, general: Genera
   }
 }
 
-export const overrideRoleWithPreferences = (army: Army, units: Units, latest: { [key in UnitRole]: UnitType | undefined }) => {
+export const overrideRoleWithPreferences = (army: ArmyDefinition, units: Units, latest: { [key in UnitRole]: UnitType | undefined }) => {
   const preferences = army.unitPreferences
   return army.reserve.map(cohort => {
     const role = units[cohort.type]?.role
@@ -94,35 +94,35 @@ const findFromReserve = (reserve: ReserveDefinition, criteria: number | ((cohort
   return reserve.map((cohort, index) => [typeof criteria === 'number' ? cohort.id === criteria : criteria(cohort), index]).filter(pair => pair[0]).map(pair => pair[1] as number)
 }
 
-const update = (army: Army, criteria: number | ((cohort: CohortDefinition) => boolean), updater: (unit: CohortDefinition) => CohortDefinition): void => {
+const update = (army: ArmyDefinition, criteria: number | ((cohort: CohortDefinition) => boolean), updater: (unit: CohortDefinition) => CohortDefinition): void => {
   for (let index of findFromReserve(army.reserve, criteria))
     army.reserve[index] = updater(army.reserve[index])
 }
 
-export const selectCohort = (army: Army, index: number, cohort: CohortDefinition) => {
+export const selectCohort = (army: ArmyDefinition, index: number, cohort: CohortDefinition) => {
   if (cohort && index > army.reserve.length)
     army.reserve.push(cohort)
   else if (cohort)
     army.reserve[index] = cohort
 }
 
-export const toggleCohortLoyality = (army: Army, id: number) => {
+export const toggleCohortLoyality = (army: ArmyDefinition, id: number) => {
   update(army, id, unit => ({ ...unit, isLoyal: !unit.isLoyal }))
 }
 
-export const setCohortValue = (army: Army, id: number, valuesType: ValuesType, key: string, attribute: UnitValueType, value: number) => {
+export const setCohortValue = (army: ArmyDefinition, id: number, valuesType: ValuesType, key: string, attribute: UnitValueType, value: number) => {
   update(army, id, unit => addValues(unit, valuesType, key, [[attribute, value]]))
 }
 
-export const changeCohortType = (army: Army, id: number, type: UnitType) => {
+export const changeCohortType = (army: ArmyDefinition, id: number, type: UnitType) => {
   update(army, id, unit => ({ ...unit, type }))
 }
 
-export const editCohort = (army: Army, unit: CohortDefinition) => {
+export const editCohort = (army: ArmyDefinition, unit: CohortDefinition) => {
   update(army, unit.id, () => unit)
 }
 
-export const deleteCohort = (army: Army, id: number) => {
+export const deleteCohort = (army: ArmyDefinition, id: number) => {
   for (let index of findFromReserve(army.reserve, id))
     army.reserve.splice(index, 1)
 }
@@ -138,49 +138,49 @@ export const addToReserve = (army: { reserve: ReserveDefinition }, cohorts: Coho
   army.reserve = army.reserve.concat(cohorts)
 }
 
-export const clearCohorts = (army: Army) => {
+export const clearCohorts = (army: ArmyDefinition) => {
   army.reserve = []
 }
 
-export const selectTactic = (army: Army, tactic: TacticType) => {
+export const selectTactic = (army: ArmyDefinition, tactic: TacticType) => {
   army.general.tactic = tactic
 }
 
-export const setUnitPreference = (army: Army, preferenceType: UnitPreferenceType | UnitRole, unit: UnitType | null) => {
+export const setUnitPreference = (army: ArmyDefinition, preferenceType: UnitPreferenceType | UnitRole, unit: UnitType | null) => {
   army.unitPreferences[preferenceType] = unit
 }
 
-export const setFlankSize = (army: Army, flankFize: number) => {
+export const setFlankSize = (army: ArmyDefinition, flankFize: number) => {
   army.flankSize = flankFize
 }
 
-export const setGeneralAttribute = (army: Army, attribute: GeneralValueType, value: number) => {
+export const setGeneralAttribute = (army: ArmyDefinition, attribute: GeneralValueType, value: number) => {
   addValuesWithMutate(army.general, ValuesType.Base, 'Custom', [[attribute, value]])
 }
 
-export const clearGeneralAttributes = (army: Army) => {
+export const clearGeneralAttributes = (army: ArmyDefinition) => {
   clearAllValuesWithMutate(army.general, 'Custom')
 }
 
-export const setHasGeneral = (army: Army, hasGeneral: boolean) => {
+export const setHasGeneral = (army: ArmyDefinition, hasGeneral: boolean) => {
   army.general.enabled = hasGeneral
 }
 
-export const enableGeneralSelection = (army: Army, type: SelectionType, key: string) => {
+export const enableGeneralSelection = (army: ArmyDefinition, type: SelectionType, key: string) => {
   if (!army.general.selections[type])
     army.general.selections[type] = {}
   army.general.selections[type][key] = true
 }
 
-export const enableGeneralSelections = (army: Army, type: SelectionType, keys: string[]) => {
+export const enableGeneralSelections = (army: ArmyDefinition, type: SelectionType, keys: string[]) => {
   keys.forEach(key => enableGeneralSelection(army, type, key))
 }
 
-export const clearGeneralSelection = (army: Army, type: SelectionType, key: string) => {
+export const clearGeneralSelection = (army: ArmyDefinition, type: SelectionType, key: string) => {
   delete army.general.selections[type][key]
 }
 
-export const clearGeneralSelections = (army: Army, type?: SelectionType, keys?: string[]) => {
+export const clearGeneralSelections = (army: ArmyDefinition, type?: SelectionType, keys?: string[]) => {
   if (keys && type)
     keys.forEach(key => clearGeneralSelection(army, type, key))
   else if (type)

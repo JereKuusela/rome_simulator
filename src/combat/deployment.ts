@@ -1,4 +1,4 @@
-import { UnitPreferences, UnitAttribute, UnitPreferenceType, UnitRole, Setting, Settings, SortedReserve, CombatReserve, CombatCohorts, CombatCohort, CombatParticipant, CombatSide, CombatDefeated, CombatField } from 'types'
+import { UnitPreferences, UnitAttribute, UnitPreferenceType, UnitRole, Setting, Settings, SortedReserve, CombatReserve, CombatCohorts, CombatCohort, CombatArmy, CombatSide, CombatDefeated, CombatField } from 'types'
 import { sortBy, remove, clamp, sum } from 'lodash'
 import { stackWipe, nextIndex, reserveSize, armySize } from './combat_utils'
 
@@ -174,8 +174,8 @@ const calculatePreferredFlankSize = (settings: Settings, customValue: number, re
 }
 
 export const removeAllDefeated = (attacker: CombatSide, defender: CombatSide, settings: Settings) => {
-  attacker.participants.forEach(participant => removeDefeated(participant.reserve, attacker.cohorts.defeated, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength]))
-  defender.participants.forEach(participant => removeDefeated(participant.reserve, defender.cohorts.defeated, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength]))
+  attacker.armies.forEach(participant => removeDefeated(participant.reserve, attacker.cohorts.defeated, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength]))
+  defender.armies.forEach(participant => removeDefeated(participant.reserve, defender.cohorts.defeated, settings[Setting.MinimumMorale], settings[Setting.MinimumStrength]))
 }
 
 export const deploy = (field: CombatField, attacker: CombatSide, defender: CombatSide) => {
@@ -184,15 +184,15 @@ export const deploy = (field: CombatField, attacker: CombatSide, defender: Comba
   const sizeD = armySize(defender, round)
   const attackerPool: CombatCohort[] = []
   const defenderPool: CombatCohort[] = []
-  while (attacker.participants.length && attacker.participants[attacker.participants.length - 1].arrival <= round) {
-    const participant = attacker.participants.pop()!
+  while (attacker.armies.length && attacker.armies[attacker.armies.length - 1].arrival <= round) {
+    const participant = attacker.armies.pop()!
     deploySub(attacker, participant, settings, sizeD)
     attackerPool.push(...participant.reserve.flank)
     attackerPool.push(...participant.reserve.front)
     attackerPool.push(...participant.reserve.support)
   }
-  while (defender.participants.length && defender.participants[defender.participants.length - 1].arrival <= round) {
-    const participant = defender.participants.pop()!
+  while (defender.armies.length && defender.armies[defender.armies.length - 1].arrival <= round) {
+    const participant = defender.armies.pop()!
     deploySub(defender, participant, settings, sizeA)
     defenderPool.push(...participant.reserve.flank)
     defenderPool.push(...participant.reserve.front)
@@ -216,7 +216,7 @@ export const deploy = (field: CombatField, attacker: CombatSide, defender: Comba
   }
 }
 
-const deploySub = (side: CombatSide, participant: CombatParticipant, settings: Settings, enemyArmySize: number) => {
+const deploySub = (side: CombatSide, participant: CombatArmy, settings: Settings, enemyArmySize: number) => {
   const [leftFlank, rightFlank] = calculateFlankSizes(settings[Setting.CombatWidth], calculatePreferredFlankSize(settings, participant.flankSize, participant.reserve), settings[Setting.DynamicFlanking] ? enemyArmySize : undefined)
   participant.general.leftFlank = leftFlank
   participant.general.rightFlank = rightFlank
@@ -224,8 +224,8 @@ const deploySub = (side: CombatSide, participant: CombatParticipant, settings: S
 }
 
 const checkInstantStackWipe = (attacker: CombatSide, defender: CombatSide, settings: Settings) => {
-  const strengthA = sum(attacker.participants.map(participant => participant.strength))
-  const strengthD = sum(defender.participants.map(participant => participant.strength))
+  const strengthA = sum(attacker.armies.map(participant => participant.strength))
+  const strengthD = sum(defender.armies.map(participant => participant.strength))
   if (!defender.alive || strengthA / strengthD > settings[Setting.HardStackWipeLimit])
     stackWipe(defender.cohorts)
   else if (!attacker.alive || strengthD / strengthA > settings[Setting.HardStackWipeLimit])

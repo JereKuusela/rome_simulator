@@ -13,7 +13,7 @@ import {
   selectParticipantCountry, setDice, toggleRandomDice, clearCohorts, changeSiteParameter,
   undo, battle, refreshBattle, resetState, selectCulture, openModal
 } from 'reducers'
-import { AppState, getBattle, getParticipant, getSettings } from 'state'
+import { AppState, getBattle, getSettings, getFirstParticipant } from 'state'
 import { ArmyType, CountryName, Setting, SideType, CombatPhase, UnitType, ModalType, ArmyName } from 'types'
 import TableUnitTypes from 'containers/TableUnitTypes'
 import TableArmyInfo from 'containers/TableArmyInfo'
@@ -120,10 +120,10 @@ class Battle extends Component<IProps> {
             </Grid.Row>
             <Grid.Row columns={2}>
               <Grid.Column>
-                <TableUnitTypes side={SideType.Attacker} country={participantA.countryName} army={participantA.armyName} onRowClick={this.openUnitDetails} />
+                <TableUnitTypes side={SideType.Attacker} countryName={participantA.countryName} armyName={participantA.armyName} onRowClick={this.openUnitDetails} />
               </Grid.Column>
               <Grid.Column>
-                <TableUnitTypes side={SideType.Defender} country={participantD.countryName} army={participantD.armyName} onRowClick={this.openUnitDetails} />
+                <TableUnitTypes side={SideType.Defender} countryName={participantD.countryName} armyName={participantD.armyName} onRowClick={this.openUnitDetails} />
               </Grid.Column>
             </Grid.Row>
             {
@@ -283,8 +283,8 @@ class Battle extends Component<IProps> {
 const mapStateToProps = (state: AppState) => {
   const battle = getBattle(state)
   return {
-    participantA: getParticipant(state, SideType.Attacker, 0),
-    participantD: getParticipant(state, SideType.Defender, 0),
+    participantA: getFirstParticipant(state, SideType.Attacker),
+    participantD: getFirstParticipant(state, SideType.Defender),
     isUndoAvailable: battle.round > -1,
     round: battle.round,
     outdated: battle.outdated,

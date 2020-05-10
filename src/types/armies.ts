@@ -28,7 +28,7 @@ export type GeneralValues = { [key in GeneralValueType]: number }
 
 export type GeneralValueType = GeneralAttribute | CombatPhase
 
-export type Armies = { [key in ArmyName]: Army }
+export type Armies = { [key in ArmyName]: ArmyDefinition }
 
 export interface GeneralDefinition extends DefinitionValues<GeneralValueType> {
   tactic: TacticType
@@ -39,12 +39,19 @@ export interface GeneralDefinition extends DefinitionValues<GeneralValueType> {
 
 export type UnitPreferences = { [key in UnitPreferenceType | UnitRole]: UnitType | null }
 
-export type Army = {
+export type ArmyDefinition = {
   mode: Mode
   unitPreferences: UnitPreferences
   flankSize: number
   general: GeneralDefinition
   reserve: ReserveDefinition
+}
+
+export type Army = {
+  unitPreferences: UnitPreferences
+  flankSize: number
+  general: General
+  reserve: Reserve
 }
 
 export enum ArmyType {

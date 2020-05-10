@@ -2,12 +2,11 @@ import React, { Component, PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { Table, Image, Icon } from 'semantic-ui-react'
 
-
 import CombatTooltip from './CombatTooltip'
 import IconDefeated from 'images/attrition.png'
 import { SideType, ArmyType, UnitAttribute, CombatCohort } from 'types'
 import { getImage, resize } from 'utils'
-import { AppState, getCurrentCombat, getBattle, getParticipant } from 'state'
+import { AppState, getCurrentCombat, getBattle, getFirstParticipant } from 'state'
 import { getArmyPart } from 'army_utils'
 import { deleteCohort } from 'reducers'
 
@@ -196,7 +195,7 @@ const convertUnits = (units: (CombatCohort | null)[][]): ICohort[][] => (
 
 const mapStateToProps = (state: AppState, props: Props) => ({
   units: convertUnits(getArmyPart(getCurrentCombat(state, props.side), props.type)),
-  participant: getParticipant(state, props.side, 0),
+  participant: getFirstParticipant(state, props.side),
   timestamp: getBattle(state).timestamp
 })
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Grid, Button, Table, Header, Checkbox } from 'semantic-ui-react'
 
-import { AppState, getMode, getSiteSettings, getCombatField, initializeCombatSides } from 'state'
+import { AppState, getMode, getSiteSettings, getCombatField, convertSides } from 'state'
 import { interrupt, calculateWinRate, initResourceLosses } from 'combat'
 import { values, showProgress, filterKeys } from 'utils'
 import { SimulationSpeed, Setting, Mode, CasualtiesProgress, ResourceLosses, WinRateProgress, ResourceLossesProgress } from 'types'
@@ -391,7 +391,7 @@ class Analyze extends Component<IProps, IState> {
     const { state } = this.props
     // Initialization done here to reset status.
     const field = getCombatField(state)
-    const [attacker, defender] = initializeCombatSides(state)
+    const [attacker, defender] = convertSides(state)
     calculateWinRate(this.update, field, attacker, defender)
   }
 

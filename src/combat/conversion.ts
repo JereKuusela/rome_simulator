@@ -31,13 +31,13 @@ export const getUnitDefinition = (combatSettings: Settings, terrains: TerrainDef
 /**
  * Transforms a unit to a combat unit.
  */
-export const getCombatUnit = (combatSettings: Settings, casualtiesMultiplier: number, terrains: TerrainDefinition[], unitTypes: UnitType[], cohort: Cohort | null): CombatCohort | null => {
+export const getCombatUnit = (combatSettings: Settings, terrains: TerrainDefinition[], unitTypes: UnitType[], cohort: Cohort | null): CombatCohort | null => {
   if (!cohort)
     return null
   const combatUnit: CombatCohort = {
     [UnitAttribute.Morale]: calculateValue(cohort, UnitAttribute.Morale),
     [UnitAttribute.Strength]: calculateValue(cohort, UnitAttribute.Strength),
-    calculated: precalculateUnit(combatSettings, casualtiesMultiplier, terrains, unitTypes, cohort),
+    calculated: precalculateUnit(combatSettings, terrains, unitTypes, cohort),
     state: { target: null, targetSupport: null, flanking: false, moraleLoss: 0, strengthLoss: 0, moraleDealt: 0, strengthDealt: 0, damageMultiplier: 0, isDefeated: false, isDestroyed: false, totalMoraleDealt: 0, totalStrengthDealt: 0 },
     definition: getUnitDefinition(combatSettings, terrains, unitTypes, cohort),
     isWeak: false
@@ -67,9 +67,9 @@ const applyUnitTypes = (unit: Cohort, unitTypes: UnitType[], settings: Settings,
   toObj(unitTypes, type => type, type => map(values, damage => damage * getValue(unit, type, settings[Setting.AttributeUnitType])))
 )
 
-const applyDamageTypes = (unit: Cohort, settings: Settings, casualtiesMultiplier: number, values: { [key in UnitType]: { [key in CombatPhase]: number } }) => {
+const applyDamageTypes = (unit: Cohort, settings: Settings, values: { [key in UnitType]: { [key in CombatPhase]: number } }) => {
   const moraleDone = getValue(unit, UnitAttribute.MoraleDamageDone, settings[Setting.AttributeMoraleDamage]) * settings[Setting.MoraleLostMultiplier] / 1000.0
-  const strengthDone = applyPhaseDamageDone(unit, getValue(unit, UnitAttribute.StrengthDamageDone, settings[Setting.AttributeStrengthDamage]) * settings[Setting.StrengthLostMultiplier] * (1.0 + casualtiesMultiplier) / 1000.0)
+  const strengthDone = applyPhaseDamageDone(unit, getValue(unit, UnitAttribute.StrengthDamageDone, settings[Setting.AttributeStrengthDamage]) * settings[Setting.StrengthLostMultiplier] / 1000.0)
   return {
     [UnitAttribute.Strength]: map(values, values => map(values, (value, phase) => value * strengthDone[phase])),
     [UnitAttribute.Morale]: map(values, values => map(values, value => value * moraleDone)),
@@ -77,17 +77,17 @@ const applyDamageTypes = (unit: Cohort, settings: Settings, casualtiesMultiplier
   }
 }
 
-const getDamages = (settings: Settings, casualtiesMultiplier: number, terrains: TerrainDefinition[], unitTypes: UnitType[], cohort: Cohort) => (
-  applyDamageTypes(cohort, settings, casualtiesMultiplier, applyUnitTypes(cohort, unitTypes, settings, applyPhaseDamage(cohort, precalculateDamage(terrains, cohort, settings))))
+const getDamages = (settings: Settings, terrains: TerrainDefinition[], unitTypes: UnitType[], cohort: Cohort) => (
+  applyDamageTypes(cohort, settings, applyUnitTypes(cohort, unitTypes, settings, applyPhaseDamage(cohort, precalculateDamage(terrains, cohort, settings))))
 )
 
 /**
  * Returns a precalculated info about a given unit.
  */
-const precalculateUnit = (settings: Settings, casualtiesMultiplier: number, terrains: TerrainDefinition[], unitTypes: UnitType[], cohort: Cohort) => {
+const precalculateUnit = (settings: Settings, terrains: TerrainDefinition[], unitTypes: UnitType[], cohort: Cohort) => {
   const damageReduction = precalculateDamageReduction(cohort, settings)
   const info: CombatCohortCalculated = {
-    damage: getDamages(settings, casualtiesMultiplier, terrains, unitTypes, cohort),
+    damage: getDamages(settings, terrains, unitTypes, cohort),
     damageTakenMultiplier: damageReduction,
     moraleTakenMultiplier: damageReduction * getValue(cohort, UnitAttribute.MoraleDamageTaken, settings[Setting.AttributeMoraleDamage]),
     strengthTakenMultiplier: applyPhaseDamageTaken(cohort, damageReduction * getValue(cohort, UnitAttribute.StrengthDamageTaken, settings[Setting.AttributeStrengthDamage]))

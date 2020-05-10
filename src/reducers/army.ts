@@ -1,11 +1,11 @@
 
-import { Army, CountryName, Countries } from 'types'
+import { ArmyDefinition, CountryName, Countries } from 'types'
 import { ArmyName } from 'types/armies'
 import * as manager from 'managers/army'
 import { getDefaultCountryDefinitions } from 'data'
 import { ActionToFunction, makeReducer, Action, makeActionReplaceFirstTwice } from './utils'
 
-const mapping: ActionToFunction<Army, CountryName, ArmyName> = {}
+const mapping: ActionToFunction<ArmyDefinition, CountryName, ArmyName> = {}
 
 export const clearGeneralSelection = makeActionReplaceFirstTwice(manager.clearGeneralSelection, mapping)
 export const clearGeneralSelections = makeActionReplaceFirstTwice(manager.clearGeneralSelections, mapping)

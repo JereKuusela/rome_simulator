@@ -1,5 +1,5 @@
 
-import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, CombatCohorts, CombatCohort, CombatFrontline, CombatDefeated, CombatSide, TerrainDefinition, CombatField } from 'types'
+import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, CombatCohorts, CombatCohort, CombatFrontline, CombatDefeated, CombatSide, TerrainDefinition, CombatField, TacticCalc } from 'types'
 import { noZero } from 'utils'
 import { calculateValue } from 'definition_values'
 import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, calculateTotalStrength, stackWipe, reserveSize, reinforce, calculateGeneralPips, getTerrainPips } from 'combat'
@@ -27,10 +27,11 @@ export const doBattle = (field: CombatField, a: CombatSide, d: CombatSide, markD
   a.results.round = field.round
   d.results.round = field.round
   const dailyMultiplier = 1 + getDailyIncrease(field.round, settings)
+  const tacticStrengthDamageMultiplier = settings[Setting.Tactics] ? 1.0 + calculateValue(a.generals[0].tactic, TacticCalc.Casualties) + calculateValue(d.generals[0].tactic, TacticCalc.Casualties) : 1.0
   a.results.dailyMultiplier = dailyMultiplier
   d.results.dailyMultiplier = dailyMultiplier
-  attack(a, d, dailyMultiplier, field.terrains, phase, settings)
-  attack(d, a, dailyMultiplier, field.terrains, phase, settings)
+  attack(a, d, dailyMultiplier, tacticStrengthDamageMultiplier, field.terrains, phase, settings)
+  attack(d, a, dailyMultiplier, tacticStrengthDamageMultiplier, field.terrains, phase, settings)
 
   applyLosses(a.cohorts.frontline)
   applyLosses(d.cohorts.frontline)
@@ -217,7 +218,7 @@ const moveDefeated = (frontline: CombatFrontline, defeated: CombatDefeated, mark
   return alive
 }
 
-const attack = (source: CombatSide, target: CombatSide, dailyMultiplier: number, terrains: TerrainDefinition[], phase: CombatPhase, settings: Settings) => {
+const attack = (source: CombatSide, target: CombatSide, dailyMultiplier: number, tacticStrengthDamageMultiplier: number, terrains: TerrainDefinition[], phase: CombatPhase, settings: Settings) => {
   // Tactic bonus changes dynamically when units lose strength so it can't be precalculated.
   // If this is a problem a fast mode can be implemeted where to bonus is only calculated once.
   const generalS = source.generals[0]
@@ -225,17 +226,17 @@ const attack = (source: CombatSide, target: CombatSide, dailyMultiplier: number,
   const generalPips =  calculateGeneralPips(generalS.values, generalT.values, phase)
   const terrainPips = getTerrainPips(terrains, source.type, generalS.values, generalT.values)
 
- 
+  source.results.tacticStrengthDamageMultiplier = tacticStrengthDamageMultiplier
   source.results.tacticBonus = settings[Setting.Tactics] ? calculateTactic(source.cohorts, generalS.tactic, generalT.tactic) : 0.0
   source.results.flankRatioBonus = calculateFlankRatioPenalty(target.cohorts, target.flankRatio, settings)
   const multiplier = (1 + source.results.tacticBonus) * dailyMultiplier * (1 + source.results.flankRatioBonus)
-  attackSub(source.cohorts.frontline, source.results.dice + generalPips + terrainPips, multiplier, phase, settings)
+  attackSub(source.cohorts.frontline, source.results.dice + generalPips + terrainPips, multiplier, tacticStrengthDamageMultiplier, phase, settings)
 }
 
 /**
  * Calculates losses when units attack their targets.
  */
-const attackSub = (frontline: CombatFrontline, roll: number, dynamicMultiplier: number, phase: CombatPhase, settings: Settings) => {
+const attackSub = (frontline: CombatFrontline, roll: number, dynamicMultiplier: number, strengthMultiplier: number, phase: CombatPhase, settings: Settings) => {
   for (let i = 0; i < frontline.length; i++) {
     for (let j = 0; j < frontline[i].length; j++) {
       const source = frontline[i][j]
@@ -247,7 +248,7 @@ const attackSub = (frontline: CombatFrontline, roll: number, dynamicMultiplier: 
       target.state.captureChance = source.definition[UnitAttribute.CaptureChance]
       const multiplier = calculateDamageMultiplier(source, target, dynamicMultiplier, i > 0, phase, settings)
       calculateMoraleLosses(source, target, source.state.targetSupport, roll, multiplier, phase, settings)
-      calculateStrengthLosses(source, target, source.state.targetSupport, roll, multiplier, phase, settings)
+      calculateStrengthLosses(source, target, source.state.targetSupport, roll, multiplier * strengthMultiplier, phase, settings)
     }
   }
 }

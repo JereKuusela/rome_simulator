@@ -4,12 +4,10 @@ import { Popup, List } from 'semantic-ui-react'
 
 import StyledNumber from 'components/Utils/StyledNumber'
 
-import { SideType, ArmyType, UnitAttribute, UnitType, Setting, TacticCalc, TerrainType, CombatPhase, Mode, CombatCohortDefinition, CombatCohortRoundInfo, CombatCohort, DisciplineValue } from 'types'
+import { SideType, ArmyType, UnitAttribute, UnitType, Setting, TerrainType, CombatPhase, Mode, CombatCohortDefinition, CombatCohortRoundInfo, CombatCohort, DisciplineValue } from 'types'
 import { calculateCohortPips, getOffensiveCohortPips, getDefensiveCohortPips, getCombatPhase, getDefensiveSupportCohortPips } from 'combat'
 import { toSignedPercent, strengthToValue, toNumber, addSign, toMultiplier, toMorale } from 'formatters'
-import { calculateValue } from 'definition_values'
-import { AppState, getSettings, getSelectedTerrains, getTactic, getCombatUnit, getCombatSide } from 'state'
-import { getOpponent } from 'army_utils'
+import { AppState, getSettings, getSelectedTerrains, getCombatUnit, getCombatSide } from 'state'
 import { noZero } from 'utils'
 
 type Props = {
@@ -160,16 +158,15 @@ class CombatTooltip extends Component<IProps, IState> {
   }
 
   getStrengthSection = (source: IUnit, target: IUnit) => {
-    const { settings, tacticS, tacticT, mode, results } = this.props
-    const { round } = results
+    const { settings, mode, results } = this.props
+    const { round, tacticStrengthDamageMultiplier } = results
     const phase = getCombatPhase(round, settings)
     const strengthLostMultiplier = mode === Mode.Land ? settings[Setting.StrengthLostMultiplier] : settings[Setting.StrengthLostMultiplier] / 1000
-    const tacticCasualties = calculateValue(tacticS, TacticCalc.Casualties) + calculateValue(tacticT, TacticCalc.Casualties)
     const strengthDamage = source.strengthDealt
 
     return (<>
       {this.renderModifier('Constant', strengthLostMultiplier, this.toMultiplier)}
-      {this.renderStyledItem('Tactic casualties', tacticCasualties, toSignedPercent)}
+      {this.renderStyledItem('Tactic casualties', tacticStrengthDamageMultiplier, toSignedPercent)}
       {settings[Setting.FireAndShock] && this.getAttribute(source, phase === CombatPhase.Shock ? UnitAttribute.ShockDamageDone : UnitAttribute.FireDamageDone)}
       {settings[Setting.FireAndShock] && this.getAttribute(target, phase === CombatPhase.Shock ? UnitAttribute.ShockDamageTaken : UnitAttribute.FireDamageTaken)}
       {settings[Setting.AttributeStrengthDamage] && this.getAttribute(source, UnitAttribute.StrengthDamageDone)}
@@ -305,8 +302,6 @@ const mapStateToProps = (state: AppState, props: Props) => ({
   results: getCombatSide(state, props.side).results,
   settings: getSettings(state),
   terrains: getSelectedTerrains(state),
-  tacticS: getTactic(state, props.side),
-  tacticT: getTactic(state, getOpponent(props.side)),
   mode: state.settings.mode
 })
 

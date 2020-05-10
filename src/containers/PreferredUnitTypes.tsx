@@ -2,16 +2,13 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table, Input } from 'semantic-ui-react'
 
-import { AppState, getUnitPreferences, getFlankSize, getMode, getUnitList, getSiteSettings, getParticipant } from 'state'
+import { AppState, getUnitPreferences, getFlankSize, getMode, getUnitList, getSiteSettings, getFirstParticipant } from 'state'
 import { setFlankSize, setUnitPreference } from 'reducers'
-
+import { getUnitIcon } from 'data'
 import { UnitPreferenceType, SideType, UnitType, Unit } from 'types'
 import DropdownUnit from 'components/Dropdowns/DropdownUnit'
-import { getUnitIcon } from 'data'
 
-/**
- * Table with row types and flank sizes.
- */
+/**Table with row types and flank sizes. */
 export default class PreferredUnitTypes extends Component {
   render() {
     return (
@@ -92,25 +89,26 @@ class Row extends Component<IProps> {
   }
 
   setFlankSize = (value: number) => {
-    const { setFlankSize, army, country } = this.props
-    setFlankSize(country, army, value)
+    const { setFlankSize, armyName, countryName } = this.props
+    setFlankSize(countryName, armyName, value)
   }
 
   setUnitPreference = (type: UnitPreferenceType, unitType: UnitType): void => {
-    const { setUnitPreference, army, country } = this.props
-    setUnitPreference(country, army, type, unitType)
+    const { setUnitPreference, armyName, countryName } = this.props
+    setUnitPreference(countryName, armyName, type, unitType)
   }
 }
 
 
 const mapStateToProps = (state: AppState, props: Props) => {
-  const participant = getParticipant(state, props.side, 0)
+  const participant = getFirstParticipant(state, props.side)
+  const { countryName, armyName } = participant
   return {
-    units: getUnitList(state, true, participant.countryName, participant.armyName),
-    country: participant.countryName,
-    army: participant.armyName,
-    flankSize: getFlankSize(state, props.side),
-    preferences: getUnitPreferences(state, props.side),
+    units: getUnitList(state, true,  countryName, armyName),
+    countryName,
+    armyName,
+    flankSize: getFlankSize(state, countryName, armyName),
+    preferences: getUnitPreferences(state, countryName, armyName),
     mode: getMode(state),
     settings: getSiteSettings(state)
   }

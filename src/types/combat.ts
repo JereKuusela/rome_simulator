@@ -1,5 +1,4 @@
 import { TacticDefinition, CombatPhase, UnitPreferences, UnitType, UnitAttribute, UnitRole, Mode, UnitValueType, GeneralValueType } from 'types'
-import { Units } from './units'
 import { SideType } from './battle'
 import { TerrainDefinition } from './terrains'
 import { Settings } from './settings'
@@ -8,10 +7,9 @@ import { Settings } from './settings'
  * Information required for fast combat calculation.
  * CombatUnits contain most of the information precalculated.
  */
-export type CombatParticipant = {
+export type CombatArmy = {
   reserve: SortedReserve
   flankSize: number
-  definitions: Units
   arrival: number
   strength: number
   general: CombatGeneral
@@ -30,6 +28,7 @@ export type CombatResults = {
   tacticBonus: number
   flankRatioBonus: number
   dailyMultiplier: number
+  tacticStrengthDamageMultiplier: number
   terrainPips: number
   generalPips: number
   dice: number
@@ -47,7 +46,7 @@ export type CombatGeneral = {
 export type CombatSide = {
   results: CombatResults
   alive: boolean
-  participants: CombatParticipant[]
+  armies: CombatArmy[]
   flankRatio: number
   generals: CombatGeneral[]
   cohorts: CombatCohorts

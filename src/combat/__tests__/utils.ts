@@ -1,9 +1,9 @@
 import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultParticipant, getDefaultArmy, getDefaultUnit, getDefaultSide } from 'data'
 import { map, mapRange, resize, toObj, values } from 'utils'
 import { mergeValues } from 'definition_values'
-import { Mode, CountryName, Participant, TerrainDefinition, TacticType, Setting, SideType, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, Settings, Cohort, CombatPhase, CultureType, General, GeneralAttribute, UnitPreferences, ArmyForCombatConversion, CombatCohort, CombatParticipant, UnitRole, DisciplineValue, Selections, Side } from 'types'
+import { Mode, CountryName, Participant, TerrainDefinition, TacticType, Setting, SideType, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, Settings, Cohort, CombatPhase, CultureType, General, GeneralAttribute, UnitPreferences, ArmyForCombatConversion, CombatCohort, CombatArmy, UnitRole, DisciplineValue, Selections, Side } from 'types'
 import { doBattle, deploy, reinforce } from 'combat'
-import { convertParticipant } from 'managers/battle'
+import { convertArmy } from 'managers/battle'
 import { removeDefeated } from 'combat/combat_utils'
 
 const unitDefinitions = map(getDefaultUnits('' as CultureType), unit => mergeValues(unit, getDefaultUnit(UnitType.Land)))
@@ -253,7 +253,7 @@ export const everyType = [UnitType.Archers, UnitType.CamelCavalry, UnitType.Char
 /**
  * Performs one combat round with a given test info.
  */
-const doRound = (info: TestInfo, a: CombatParticipant, d: CombatParticipant) => {
+const doRound = (info: TestInfo, a: CombatArmy, d: CombatArmy) => {
   doBattle(a, d, true, info.settings, info.round++)
 }
 
@@ -262,8 +262,8 @@ type ExpectedUnits = ([UnitType | null, number | null, number | null] | null)
 type Expected = (ExpectedUnits[] | null)
 
 const getParticipants = (info: TestInfo) => {
-  const participantA = convertParticipant(SideType.Attacker, info.armyA, info.armyD, info.terrains, info.settings)
-  const participantD = convertParticipant(SideType.Defender, info.armyD, info.armyA, info.terrains, info.settings)
+  const participantA = convertArmy(SideType.Attacker, info.armyA, info.armyD, info.terrains, info.settings)
+  const participantD = convertArmy(SideType.Defender, info.armyD, info.armyA, info.terrains, info.settings)
   return [participantA, participantD]
 }
 
@@ -316,7 +316,7 @@ export const testReinforcement = (roundsToSkip: number, info: TestInfo, expected
   return [participantA, participantD]
 }
 
-const verifyDeployOrReinforce = (info: TestInfo, side: SideType, participant: CombatParticipant, expected: ExpectedTypes) => {
+const verifyDeployOrReinforce = (info: TestInfo, side: SideType, participant: CombatArmy, expected: ExpectedTypes) => {
   verifyTypes('Front', info, expected.front ?? [], side, participant.cohorts.frontline[0])
   verifyTypes('Back', info, expected.back ?? [], side, participant.cohorts.frontline.length ? participant.cohorts.frontline[1] : [])
   verifyTypes('Reserve front', info, expected.reserveFront ?? [], side, participant.cohorts.reserve.front)

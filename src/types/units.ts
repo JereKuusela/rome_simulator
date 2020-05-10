@@ -105,7 +105,7 @@ export interface Unit extends UnitDefinition {
 }
 
 /** A full cohort (merged with unit definition). */
-export interface Cohort extends CohortDefinition, Unit { }
+export interface Cohort extends CohortDefinition, Unit {}
 
 
 export const unitValueToString = (definition: DefinitionValues<UnitValueType>, type: UnitValueType): string => {

@@ -163,6 +163,6 @@ export const nextIndex = (index: number, center: number) => index < center ? ind
 export const reserveSize = (reserve: SortedReserve) => reserve.front.length + reserve.flank.length + reserve.support.length
 
 export const armySize = (side: CombatSide, round: number) => {
-  return sum(side.participants.map(participant => participant.arrival <= round ? reserveSize(participant.reserve) : 0))
+  return sum(side.armies.map(participant => participant.arrival <= round ? reserveSize(participant.reserve) : 0))
     + side.cohorts.frontline[0].filter(unit => unit).length + reserveSize(side.cohorts.reserve)
 }

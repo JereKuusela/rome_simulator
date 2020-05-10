@@ -1,7 +1,5 @@
-import { Battle, TerrainType, SideType, CountryName, ArmyForCombatConversion, TerrainDefinition, Settings, TacticCalc, Setting, UnitPreferences, CombatParticipant, UnitType, ArmyName, SortedReserve, Reserve, Side, CombatSide } from "types"
-import { toArr } from "utils"
+import { Battle, TerrainType, SideType, CountryName, TerrainDefinition, Settings, Setting, UnitPreferences, CombatArmy, UnitType, ArmyName, SortedReserve, Reserve, Side, CombatSide, Army } from "types"
 import { getCombatUnit, sortReserve } from "combat"
-import { calculateValue } from "definition_values"
 
 export const selectTerrain = (battle: Battle, index: number, terrain: TerrainType) => {
   battle.terrains[index] = terrain
@@ -48,7 +46,7 @@ export const selectParticipantArmy = (battle: Battle, sideType: SideType, index:
   battle.sides[sideType].participants[index].armyName = armyName
 }
 
-export const convertSide  = (side: Side): CombatSide => {
+export const convertSide  = (side: Side, armies: CombatArmy[]): CombatSide => {
   return {
     alive: true,
     cohorts: {
@@ -61,8 +59,8 @@ export const convertSide  = (side: Side): CombatSide => {
       }
     },
     flankRatio: 0,
-    participants: [],
-    generals: [],
+    armies,
+    generals: armies.map(army => army.general).sort((a, b) => a.priority - b.priority),
     type: side.type,
     results: {
       dailyMultiplier: 0,
@@ -71,25 +69,23 @@ export const convertSide  = (side: Side): CombatSide => {
       generalPips: 0,
       round: 0,
       tacticBonus: 0,
-      terrainPips: 0
+      terrainPips: 0,
+      tacticStrengthDamageMultiplier: 0
     }
   }
 }
 
-export const convertParticipant = (side: SideType, army: ArmyForCombatConversion, enemy: ArmyForCombatConversion, terrains: TerrainDefinition[], settings: Settings): CombatParticipant => {
-  const enemyTypes = toArr(enemy.definitions, unit => unit.type)
-  const tacticCasualties = settings[Setting.Tactics] ? calculateValue(army.tactic, TacticCalc.Casualties) + calculateValue(enemy.tactic, TacticCalc.Casualties) : 0
-  const reserve = convertReserve(army.reserve, settings, tacticCasualties, terrains, enemyTypes, settings[Setting.CustomDeployment] ? army.unitPreferences : {} as UnitPreferences)
+export const convertArmy = (army: Army, enemyTypes: UnitType[], terrains: TerrainDefinition[], settings: Settings): CombatArmy => {
+  const reserve = convertReserve(army.reserve, settings, terrains, enemyTypes, settings[Setting.CustomDeployment] ? army.unitPreferences : {} as UnitPreferences)
   return {
     reserve,
     flankSize: army.flankSize,
     general: {} as any,
-    definitions: army.definitions,
     arrival: 0,
     strength: 0
   }
 }
 
-const convertReserve = (reserve: Reserve, settings: Settings, casualtiesMultiplier: number, terrains: TerrainDefinition[], unitTypes: UnitType[], unitPreferences: UnitPreferences): SortedReserve => (
-  sortReserve(reserve.map(cohort => getCombatUnit(settings, casualtiesMultiplier, terrains, unitTypes, cohort)!), unitPreferences)
+const convertReserve = (reserve: Reserve, settings: Settings, terrains: TerrainDefinition[], unitTypes: UnitType[], unitPreferences: UnitPreferences): SortedReserve => (
+  sortReserve(reserve.map(cohort => getCombatUnit(settings, terrains, unitTypes, cohort)!), unitPreferences)
 )
