@@ -2,6 +2,8 @@ import { TacticDefinition, CombatPhase, UnitPreferences, UnitType, UnitAttribute
 import { SideType } from './battle'
 import { TerrainDefinition } from './terrains'
 import { Settings } from './settings'
+import { CountryName } from './countries'
+import { ArmyName } from './armies'
 
 /**
  * Information required for fast combat calculation.
@@ -95,7 +97,10 @@ export interface CombatCohortCalculated {
 type UnitCalcs = { [key in (UnitValueType)]: number }
 
 export interface CombatCohortDefinition extends UnitCalcs {
-  id: number
+  participantIndex: number
+  countryName: CountryName
+  armyName: ArmyName
+  index: number
   image: string
   type: UnitType
   isLoyal: boolean

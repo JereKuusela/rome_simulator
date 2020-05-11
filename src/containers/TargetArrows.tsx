@@ -3,11 +3,12 @@ import { connect } from 'react-redux'
 import LineTo from 'react-lineto'
 
 import { AppState, getCurrentCombat } from 'state'
-import { ArmyType, SideType, CombatCohort } from 'types'
-import { getArmyPart } from 'army_utils'
+import { ArmyPart, SideType, CombatCohort } from 'types'
+import { getArmyPart, getOpponent } from 'army_utils'
+import { getCohortId } from 'managers/units'
 
 type Props = {
-  type: ArmyType
+  type: ArmyPart
   visible: boolean
   attackerColor: string
   defenderColor: string
@@ -32,16 +33,16 @@ class TargetArrows extends Component<IProps> {
   renderAttacker = (unit: IUnit, color: string) => {
     if (!unit || !unit.target)
       return null
-    const fromStr = SideType.Attacker + '-' + ArmyType.Frontline + '-' + unit.id
-    const toStr = SideType.Defender + '-' + ArmyType.Frontline + '-' + unit.target
+    const fromStr = unit.id
+    const toStr =  unit.target
     return this.renderArrow(fromStr, toStr, 'bottom', 'top', color)
   }
 
   renderDefender = (unit: IUnit, color: string) => {
     if (!unit || !unit.target)
       return null
-    const fromStr = SideType.Defender + '-' + ArmyType.Frontline + '-' + unit.id
-    const toStr = SideType.Attacker + '-' + ArmyType.Frontline + '-' + unit.target
+    const fromStr = unit.id
+    const toStr = unit.target
     return this.renderArrow(fromStr, toStr, 'top', 'bottom', color)
   }
 
@@ -60,17 +61,17 @@ class TargetArrows extends Component<IProps> {
 }
 
 type IUnit = {
-  id: number
-  target: number | null | undefined
+  id: string
+  target: string | null
 } | null
 
-const convertUnits = (units: (CombatCohort | null)[][]): IUnit[][] => (
-  units.map(row => row.map(unit => unit ? { id: unit.definition.id, target: unit.state.target?.definition.id } : null))
+const convertUnits = (side: SideType, units: (CombatCohort | null)[][]): IUnit[][] => (
+  units.map(row => row.map(cohort => cohort ? { id: getCohortId(side, cohort.definition), target: cohort.state.target ? getCohortId(getOpponent(side), cohort.state.target.definition) : null } : null))
 )
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  attacker: convertUnits(getArmyPart(getCurrentCombat(state, SideType.Attacker), props.type)),
-  defender: convertUnits(getArmyPart(getCurrentCombat(state, SideType.Defender), props.type)),
+  attacker: convertUnits(SideType.Attacker, getArmyPart(getCurrentCombat(state, SideType.Attacker), props.type)),
+  defender: convertUnits(SideType.Defender, getArmyPart(getCurrentCombat(state, SideType.Defender), props.type)),
 })
 
 const actions = {}

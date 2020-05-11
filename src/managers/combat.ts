@@ -1,4 +1,4 @@
-import { AppState, getMode, getCurrentCombat, getCombatSide, getCombatField } from 'state'
+import { AppState, getMode, getCurrentCombat, getCombatSide, getCombatField, convertSides } from 'state'
 import { deploy, doBattle, removeDefeated, getCombatPhaseNumber, armySize } from 'combat'
 import { Battle, SideType, Setting, CombatCohorts, Side, CombatSide, CombatField } from 'types'
 import { createEntropy, MersenneTwister19937, Random } from 'random-js'
@@ -64,6 +64,7 @@ const subBattle = (state: AppState, battle: Battle, field: CombatField, attacker
     defender.cohorts = copyStatus(getCurrentCombat(state, SideType.Defender))
   }
   if (battle.round === -1 && steps > 0 && !battle.fightOver) {
+    battle.round++
     field.round = battle.round
     deploy(field, attacker, defender)
     battle.fightOver = !attacker.alive || !defender.alive
@@ -71,7 +72,6 @@ const subBattle = (state: AppState, battle: Battle, field: CombatField, attacker
     Object.freeze(defender.cohorts)
     sideA.rounds.push(attacker)
     sideD.rounds.push(defender)
-    battle.round++
     steps--
   }
 
@@ -112,7 +112,8 @@ export const refreshBattle = (pair: [AppState, AppState]) => {
   const steps = battle.round + 1
   battle.round = -1
   battle.fightOver = false
-  subBattle(state, battle, getCombatField(state), getCombatSide(state, SideType.Attacker), getCombatSide(state, SideType.Defender), steps)
+  const [attacker, defender] = convertSides(state)
+  subBattle(state, battle, getCombatField(state), attacker, defender, steps)
 }
 
 export const undo = (pair: [AppState, AppState], steps: number) => {

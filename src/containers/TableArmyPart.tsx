@@ -4,25 +4,26 @@ import { Table, Image, Icon } from 'semantic-ui-react'
 
 import CombatTooltip from './CombatTooltip'
 import IconDefeated from 'images/attrition.png'
-import { SideType, ArmyType, UnitAttribute, CombatCohort } from 'types'
+import { SideType, ArmyPart, UnitAttribute, CombatCohort, CountryName, ArmyName } from 'types'
 import { getImage, resize } from 'utils'
-import { AppState, getCurrentCombat, getBattle, getFirstParticipant } from 'state'
+import { AppState, getCurrentCombat, getBattle } from 'state'
 import { getArmyPart } from 'army_utils'
 import { deleteCohort } from 'reducers'
+import { getCohortId } from 'managers/units'
 
 type Props = {
   side: SideType
   rowWidth: number
   reverse: boolean
-  onClick: (id: number) => void
-  type: ArmyType
+  onClick: (side: SideType, part: ArmyPart, country: CountryName, army: ArmyName, index: number) => void
+  part: ArmyPart
   color: string
   // Renders full rows for a cleaner look.
   fullRows?: boolean
 }
 
 type IState = {
-  tooltipIndex: number | null
+  tooltipCohort: ICohort
   tooltipContext: Element | null
   tooltipIsSupport: boolean
 }
@@ -35,16 +36,16 @@ const WHITE_COLOR = 'rgba(255,255,255,0)'
 class TableArmyPart extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
-    this.state = { tooltipIndex: null, tooltipContext: null, tooltipIsSupport: false }
+    this.state = { tooltipCohort: null, tooltipContext: null, tooltipIsSupport: false }
   }
 
   shouldComponentUpdate(prevProps: IProps, prevState: IState) {
-    return prevProps.timestamp !== this.props.timestamp || prevState.tooltipIndex !== this.state.tooltipIndex
+    return prevProps.timestamp !== this.props.timestamp || prevState.tooltipCohort !== this.state.tooltipCohort
   }
 
   render() {
-    const { rowWidth, side, type, fullRows, reverse } = this.props
-    const { tooltipIndex, tooltipContext, tooltipIsSupport } = this.state
+    const { rowWidth, side, part, fullRows, reverse } = this.props
+    const { tooltipCohort, tooltipContext, tooltipIsSupport } = this.state
     let units = this.props.units
     let indexOffset = 0
     if (fullRows) {
@@ -61,7 +62,7 @@ class TableArmyPart extends Component<IProps, IState> {
       units.reverse()
     return (
       <>
-        <CombatTooltip id={tooltipIndex} context={tooltipContext} isSupport={tooltipIsSupport} side={side} army={type} />
+        <CombatTooltip cohort={tooltipCohort} context={tooltipContext} isSupport={tooltipIsSupport} side={side} part={part} />
         <Table compact celled definition unstackable>
           <Table.Body>
             {
@@ -89,19 +90,19 @@ class TableArmyPart extends Component<IProps, IState> {
   }
 
   renderCell = (row: number, column: number, cohort: ICohort, isSupport: boolean) => {
-    const { side, type, onClick } = this.props
+    const { side, part, onClick } = this.props
     const filler = cohort === undefined
     return (
       <Table.Cell
-        className={side + '-' + type + '-' + cohort?.id}
+        className={cohort ? getCohortId(side, cohort) : ''}
         textAlign='center'
         key={row + '_' + column}
         disabled={filler || !cohort}
         selectable={!!onClick}
         style={{ backgroundColor: filler ? '#DDDDDD' : 'white', padding: 0 }}
-        onClick={() => cohort && onClick(cohort.id)}
-        onMouseOver={(e: React.MouseEvent) => cohort && this.setState({ tooltipIndex: cohort.id, tooltipContext: e.currentTarget, tooltipIsSupport: isSupport })}
-        onMouseLeave={() => cohort && this.state.tooltipIndex === cohort.id && this.setState({ tooltipIndex: null, tooltipContext: null })}
+        onClick={() => cohort && onClick(side, part, cohort.countryName, cohort.armyName, cohort.index)}
+        onMouseOver={(e: React.MouseEvent) => cohort && this.setState({ tooltipCohort: cohort, tooltipContext: e.currentTarget, tooltipIsSupport: isSupport })}
+        onMouseLeave={() => cohort && this.state.tooltipCohort === cohort && this.setState({ tooltipCohort: null, tooltipContext: null })}
         onContextMenu={(e: any) => e.preventDefault() || this.deleteCohort(cohort)}
       >
         <Cell
@@ -117,12 +118,12 @@ class TableArmyPart extends Component<IProps, IState> {
   }
 
   getIcon = () => {
-    const { type, reverse } = this.props
-    if (type === ArmyType.Frontline)
+    const { part: type, reverse } = this.props
+    if (type === ArmyPart.Frontline)
       return reverse ? 'arrow down' : 'arrow up'
-    if (type === ArmyType.Reserve)
+    if (type === ArmyPart.Reserve)
       return 'home'
-    if (type === ArmyType.Defeated)
+    if (type === ArmyPart.Defeated)
       return 'heartbeat'
     return 'square full'
   }
@@ -130,8 +131,8 @@ class TableArmyPart extends Component<IProps, IState> {
   deleteCohort = (cohort: ICohort) => {
     if (!cohort)
       return
-    const { deleteCohort, participant } = this.props
-    deleteCohort(participant.countryName, participant.armyName, cohort.id)
+    const { deleteCohort } = this.props
+    deleteCohort(cohort.countryName, cohort.armyName, cohort.index)
   }
 }
 
@@ -172,18 +173,24 @@ class Cell extends PureComponent<CellProps> {
 }
 
 type ICohort = {
-  id: number
+  countryName: CountryName
+  armyName: ArmyName
+  participantIndex: number
+  index: number
   isDefeated: boolean
   image?: string
   maxMorale: number
   maxStrength: number
   morale: number
   strength: number
-} | null | undefined
+} | null
 
 const convertUnits = (units: (CombatCohort | null)[][]): ICohort[][] => (
   units.map(row => row.map(unit => unit && {
-    id: unit.definition.id,
+    index: unit.definition.index,
+    participantIndex: unit.definition.participantIndex,
+    armyName: unit.definition.armyName,
+    countryName: unit.definition.countryName,
     isDefeated: unit.state.isDefeated,
     image: unit.definition.image,
     morale: unit[UnitAttribute.Morale],
@@ -194,8 +201,7 @@ const convertUnits = (units: (CombatCohort | null)[][]): ICohort[][] => (
 )
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  units: convertUnits(getArmyPart(getCurrentCombat(state, props.side), props.type)),
-  participant: getFirstParticipant(state, props.side),
+  units: convertUnits(getArmyPart(getCurrentCombat(state, props.side), props.part)),
   timestamp: getBattle(state).timestamp
 })
 

@@ -1,5 +1,6 @@
-import { Battle, TerrainType, SideType, CountryName, TerrainDefinition, Settings, Setting, UnitPreferences, CombatArmy, UnitType, ArmyName, SortedReserve, Reserve, Side, CombatSide, Army } from "types"
-import { getCombatUnit, sortReserve } from "combat"
+import { Battle, TerrainType, SideType, CountryName, TerrainDefinition, Settings, Setting, CombatArmy, UnitType, ArmyName, Side, CombatSide, Army, UnitAttribute, CombatGeneral, General, GeneralAttribute, Participant } from 'types'
+import { getCombatUnit, sortReserve } from 'combat'
+import { sum } from 'lodash'
 
 export const selectTerrain = (battle: Battle, index: number, terrain: TerrainType) => {
   battle.terrains[index] = terrain
@@ -46,11 +47,11 @@ export const selectParticipantArmy = (battle: Battle, sideType: SideType, index:
   battle.sides[sideType].participants[index].armyName = armyName
 }
 
-export const convertSide  = (side: Side, armies: CombatArmy[]): CombatSide => {
+export const convertSide = (side: Side, armies: CombatArmy[], settings: Settings): CombatSide => {
   return {
     alive: true,
     cohorts: {
-      frontline: [],
+      frontline: [Array(settings[Setting.CombatWidth]).fill(null)],
       defeated: [],
       reserve: {
         front: [],
@@ -75,17 +76,25 @@ export const convertSide  = (side: Side, armies: CombatArmy[]): CombatSide => {
   }
 }
 
-export const convertArmy = (army: Army, enemyTypes: UnitType[], terrains: TerrainDefinition[], settings: Settings): CombatArmy => {
-  const reserve = convertReserve(army.reserve, settings, terrains, enemyTypes, settings[Setting.CustomDeployment] ? army.unitPreferences : {} as UnitPreferences)
+export const convertArmy = (participantIndex: number, participant: Participant, army: Army, enemyTypes: UnitType[], terrains: TerrainDefinition[], settings: Settings): CombatArmy => {
+  const reserve = army.reserve.map((cohort, index) => getCombatUnit(participant.countryName, participant.armyName, participantIndex, index, settings, terrains, enemyTypes, cohort))
+  const sorted = sortReserve(reserve, army.unitPreferences)
   return {
-    reserve,
+    reserve: sorted,
     flankSize: army.flankSize,
-    general: {} as any,
+    general: convertGeneral(army, army.general),
     arrival: 0,
-    strength: 0
+    strength: sum(reserve.map(cohort => cohort[UnitAttribute.Strength]))
   }
 }
 
-const convertReserve = (reserve: Reserve, settings: Settings, terrains: TerrainDefinition[], unitTypes: UnitType[], unitPreferences: UnitPreferences): SortedReserve => (
-  sortReserve(reserve.map(cohort => getCombatUnit(settings, terrains, unitTypes, cohort)!), unitPreferences)
-)
+const convertGeneral = (army: Army, general: General): CombatGeneral => {
+  return {
+    leftFlank: army.flankSize,
+    rightFlank: army.flankSize,
+    priority: general.values[GeneralAttribute.Martial],
+    tactic: general.tactic,
+    unitPreferences: army.unitPreferences,
+    values: general.values
+  }
+}

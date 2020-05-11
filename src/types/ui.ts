@@ -1,5 +1,5 @@
 import { SideType } from "./battle"
-import { ArmyName } from "./armies"
+import { ArmyName, ArmyPart } from "./armies"
 import { CountryName } from "./countries"
 import { UnitType } from "./units"
 import { TerrainType } from "./terrains"
@@ -26,7 +26,10 @@ export type Modals = {
   }
   [ModalType.CohortDetail]?: {
     side: SideType,
-    id: number
+    part: ArmyPart,
+    country: CountryName,
+    army: ArmyName,
+    index: number
   }
   [ModalType.UnitDetail]?: {
     country: CountryName,

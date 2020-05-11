@@ -185,18 +185,18 @@ export const deploy = (field: CombatField, attacker: CombatSide, defender: Comba
   const attackerPool: CombatCohort[] = []
   const defenderPool: CombatCohort[] = []
   while (attacker.armies.length && attacker.armies[attacker.armies.length - 1].arrival <= round) {
-    const participant = attacker.armies.pop()!
-    deploySub(attacker, participant, settings, sizeD)
-    attackerPool.push(...participant.reserve.flank)
-    attackerPool.push(...participant.reserve.front)
-    attackerPool.push(...participant.reserve.support)
+    const army = attacker.armies.pop()!
+    deploySub(attacker, army, settings, sizeD)
+    attackerPool.push(...army.reserve.flank)
+    attackerPool.push(...army.reserve.front)
+    attackerPool.push(...army.reserve.support)
   }
   while (defender.armies.length && defender.armies[defender.armies.length - 1].arrival <= round) {
-    const participant = defender.armies.pop()!
-    deploySub(defender, participant, settings, sizeA)
-    defenderPool.push(...participant.reserve.flank)
-    defenderPool.push(...participant.reserve.front)
-    defenderPool.push(...participant.reserve.support)
+    const army = defender.armies.pop()!
+    deploySub(defender, army, settings, sizeA)
+    defenderPool.push(...army.reserve.flank)
+    defenderPool.push(...army.reserve.front)
+    defenderPool.push(...army.reserve.support)
   }
   attacker.alive = sizeA > 0
   defender.alive = sizeD > 0
@@ -216,11 +216,11 @@ export const deploy = (field: CombatField, attacker: CombatSide, defender: Comba
   }
 }
 
-const deploySub = (side: CombatSide, participant: CombatArmy, settings: Settings, enemyArmySize: number) => {
-  const [leftFlank, rightFlank] = calculateFlankSizes(settings[Setting.CombatWidth], calculatePreferredFlankSize(settings, participant.flankSize, participant.reserve), settings[Setting.DynamicFlanking] ? enemyArmySize : undefined)
-  participant.general.leftFlank = leftFlank
-  participant.general.rightFlank = rightFlank
-  deployCohorts(side.cohorts, participant.reserve, leftFlank, rightFlank,  settings)
+const deploySub = (side: CombatSide, army: CombatArmy, settings: Settings, enemyArmySize: number) => {
+  const [leftFlank, rightFlank] = calculateFlankSizes(settings[Setting.CombatWidth], calculatePreferredFlankSize(settings, army.flankSize, army.reserve), settings[Setting.DynamicFlanking] ? enemyArmySize : undefined)
+  army.general.leftFlank = leftFlank
+  army.general.rightFlank = rightFlank
+  deployCohorts(side.cohorts, army.reserve, leftFlank, rightFlank,  settings)
 }
 
 const checkInstantStackWipe = (attacker: CombatSide, defender: CombatSide, settings: Settings) => {

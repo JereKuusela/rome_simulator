@@ -14,7 +14,7 @@ import {
   undo, battle, refreshBattle, resetState, selectCulture, openModal
 } from 'reducers'
 import { AppState, getBattle, getSettings, getFirstParticipant } from 'state'
-import { ArmyType, CountryName, Setting, SideType, CombatPhase, UnitType, ModalType, ArmyName } from 'types'
+import { ArmyPart, CountryName, Setting, SideType, CombatPhase, UnitType, ModalType, ArmyName } from 'types'
 import TableUnitTypes from 'containers/TableUnitTypes'
 import TableArmyInfo from 'containers/TableArmyInfo'
 import TableSideInfo from 'containers/TableSideInfo'
@@ -31,12 +31,12 @@ class Battle extends Component<IProps> {
     this.props.refreshBattle()
   }
 
-  openCohortModal = (side: SideType, id: number): void => {
-    this.props.openModal(ModalType.CohortDetail, { side, id })
+  openCohortModal = (side: SideType, part: ArmyPart, country: CountryName, army: ArmyName, index: number): void => {
+    this.props.openModal(ModalType.CohortDetail, { side, part, country, army, index })
   }
 
-  openUnitDetails = (country: CountryName, army: ArmyName, type: UnitType): void => {
-    this.props.openModal(ModalType.UnitDetail, { country, army, type })
+  openUnitDetails = (countryName: CountryName, armyName: ArmyName, type: UnitType): void => {
+    this.props.openModal(ModalType.UnitDetail, { country: countryName, army: armyName, type })
   }
 
   componentDidUpdate() {
@@ -84,7 +84,7 @@ class Battle extends Component<IProps> {
           <Grid.Row columns={1} style={{ padding: 0 }}>
             <Grid.Column>
               <TargetArrows
-                type={ArmyType.Frontline}
+                type={ArmyPart.Frontline}
                 visible={!fightOver}
                 attackerColor={ATTACKER_COLOR}
                 defenderColor={DEFENDER_COLOR}
@@ -223,10 +223,10 @@ class Battle extends Component<IProps> {
       <TableArmyPart
         color={side === SideType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
         side={side}
-        onClick={id => this.openCohortModal(side, id)}
+        onClick={this.openCohortModal}
         rowWidth={Math.max(30, combatWidth)}
         reverse={side === SideType.Attacker}
-        type={ArmyType.Frontline}
+        part={ArmyPart.Frontline}
       />
     )
   }
@@ -236,10 +236,10 @@ class Battle extends Component<IProps> {
       <TableArmyPart
         color={side === SideType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
         side={side}
-        onClick={id => this.openCohortModal(side, id)}
+        onClick={this.openCohortModal}
         rowWidth={30}
         reverse={false}
-        type={ArmyType.Reserve}
+        part={ArmyPart.Reserve}
         fullRows
       />
     )
@@ -250,10 +250,10 @@ class Battle extends Component<IProps> {
       <TableArmyPart
         color={side === SideType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
         side={side}
-        onClick={id => this.openCohortModal(side, id)}
+        onClick={this.openCohortModal}
         rowWidth={30}
         reverse={false}
-        type={ArmyType.Defeated}
+        part={ArmyPart.Defeated}
         fullRows
       />
     )

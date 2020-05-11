@@ -18,6 +18,7 @@ UI:
 Refactor
  * Side and participant separated. Side now contains multiple participants.
  * All variable names renamed to have same casing.
+ * Cohort id system redesigned. Units now get ids based on their index instead of a running number. This makes code much cleaner and unit searching much faster.
 
 Analyze
  * Phase length multiplier setting changed to phases per roll setting. The effect is similar but also works with EUIV fire and shock phases.

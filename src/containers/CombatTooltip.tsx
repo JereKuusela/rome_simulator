@@ -4,18 +4,19 @@ import { Popup, List } from 'semantic-ui-react'
 
 import StyledNumber from 'components/Utils/StyledNumber'
 
-import { SideType, ArmyType, UnitAttribute, UnitType, Setting, TerrainType, CombatPhase, Mode, CombatCohortDefinition, CombatCohortRoundInfo, CombatCohort, DisciplineValue } from 'types'
+import { SideType, ArmyPart, UnitAttribute, UnitType, Setting, TerrainType, CombatPhase, Mode, CombatCohortDefinition, CombatCohortRoundInfo, CombatCohort, DisciplineValue, CountryName, ArmyName } from 'types'
 import { calculateCohortPips, getOffensiveCohortPips, getDefensiveCohortPips, getCombatPhase, getDefensiveSupportCohortPips } from 'combat'
 import { toSignedPercent, strengthToValue, toNumber, addSign, toMultiplier, toMorale } from 'formatters'
-import { AppState, getSettings, getSelectedTerrains, getCombatUnit, getCombatSide } from 'state'
+import { AppState, getSettings, getSelectedTerrains, getCombatUnit, getCombatSide, getMode } from 'state'
 import { noZero } from 'utils'
+import { getCohortName } from 'managers/units'
 
 type Props = {
-  id: number | null
+  cohort: { index: number, countryName: CountryName, armyName: ArmyName } | null
   isSupport: boolean
   context: Element | null
   side: SideType
-  army: ArmyType
+  part: ArmyPart
 }
 
 type IState = {
@@ -33,12 +34,12 @@ class CombatTooltip extends Component<IProps, IState> {
   }
 
   render() {
-    const { id, context, isSupport } = this.props
+    const { cohort, context, isSupport } = this.props
     return (
       <Popup
-        open={id != null}
+        open={cohort != null}
         context={context!}
-        content={this.getExplanation(id, isSupport)}
+        content={cohort ? this.getExplanation(isSupport) : null}
         inverted
       />
     )
@@ -48,9 +49,7 @@ class CombatTooltip extends Component<IProps, IState> {
   ORANGE = 'color-orange'
   RED = 'color-red'
 
-  getExplanation = (id: number | null, isSupport: boolean) => {
-    if (id === null)
-      return null
+  getExplanation = (isSupport: boolean) => {
     const { source } = this.props
     if (!source)
       return null
@@ -104,7 +103,7 @@ class CombatTooltip extends Component<IProps, IState> {
     const targetPips = type ? getDefensiveCohortPips(target, type, phase) : 0
     const targetSupportPips = type ? getDefensiveSupportCohortPips(targetSupport, type, phase) : 0
     const totalPips = basePips + dice + terrainPips + generalPips + sourcePips + targetPips + targetSupportPips
-    const cappedPips =  Math.min(totalPips, settings[Setting.MaxPips])
+    const cappedPips = Math.min(totalPips, settings[Setting.MaxPips])
     const reductionToCap = Math.min(0, settings[Setting.MaxPips] - cappedPips)
     const text = type === UnitAttribute.Morale ? UnitAttribute.Morale : phase
     return (<>
@@ -205,9 +204,7 @@ class CombatTooltip extends Component<IProps, IState> {
     const strengthLoss = -source.strengthLoss
     return (<>
       <List.Item>
-        {source.type}
-        {' '}
-        {source.id}
+        {getCohortName(source)}
       </List.Item>
       <List.Item>
         {'Strength: '}
@@ -238,7 +235,7 @@ class CombatTooltip extends Component<IProps, IState> {
       </List.Item>
       <List.Item>
         {'Target: '}
-        <span className={this.ORANGE}>{target ? target.type + ' ' + target.id : 'No target'}</span>
+        <span className={this.ORANGE}>{target ? getCohortName(target) : 'No target'}</span>
       </List.Item>
     </>)
   }
@@ -298,11 +295,11 @@ const convertUnit = (cohort: CombatCohort | null, convertTarget: boolean = true)
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  source: convertUnit(getCombatUnit(state, props.side, props.army, props.id)),
+  source: props.cohort ? convertUnit(getCombatUnit(state, props.side, props.part, props.cohort.countryName, props.cohort.armyName, props.cohort.index)) : null,
   results: getCombatSide(state, props.side).results,
   settings: getSettings(state),
   terrains: getSelectedTerrains(state),
-  mode: state.settings.mode
+  mode: getMode(state)
 })
 
 const actions = {}

@@ -1,4 +1,4 @@
-import { Mode, UnitDefinitionValues, ArmyType, SideType, UnitDefinitions, UnitType, Units, Unit, CombatCohorts, SiteSettings, Reserve, Cohort, CohortDefinition } from 'types'
+import { Mode, UnitDefinitionValues, ArmyPart, SideType, UnitDefinitions, UnitType, Units, Unit, CombatCohorts, SiteSettings, Reserve, Cohort, CohortDefinition } from 'types'
 import { mergeValues, shrinkValues } from 'definition_values'
 import { map, filter } from 'utils'
 import { applyDynamicAttributes } from 'managers/units'
@@ -34,17 +34,10 @@ export const convertUnitDefinition = (settings: SiteSettings, definitions: UnitD
  */
 export const filterUnitDefinitions = (mode: Mode, definitions: Units): Units => filter(definitions, unit => unit.mode === mode)
 
-let unitId = 0
-/**
- * Returns a new id.
- * This is only meant for non-persisted ids because any existing ids are not considered.
- */
-export const getNextId = () => ++unitId
-
-export const getArmyPart = (units: CombatCohorts, type: ArmyType) => {
-  if (type === ArmyType.Frontline)
+export const getArmyPart = (units: CombatCohorts, type: ArmyPart) => {
+  if (type === ArmyPart.Frontline)
     return units.frontline
-  if (type === ArmyType.Reserve)
+  if (type === ArmyPart.Reserve)
     return [units.reserve.front.concat(units.reserve.flank).concat(units.reserve.support)]
   return [units.defeated]
 }

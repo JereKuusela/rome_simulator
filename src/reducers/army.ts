@@ -15,7 +15,6 @@ export const selectCohort = makeActionReplaceFirstTwice(manager.selectCohort, ma
 export const toggleCohortLoyality = makeActionReplaceFirstTwice(manager.toggleCohortLoyality, mapping)
 export const setCohortValue = makeActionReplaceFirstTwice(manager.setCohortValue, mapping)
 export const changeCohortType = makeActionReplaceFirstTwice(manager.changeCohortType, mapping)
-export const editCohort = makeActionReplaceFirstTwice(manager.editCohort, mapping)
 export const deleteCohort = makeActionReplaceFirstTwice(manager.deleteCohort, mapping)
 export const removeFromReserve = makeActionReplaceFirstTwice(manager.removeFromReserve, mapping)
 export const addToReserve = makeActionReplaceFirstTwice(manager.addToReserve, mapping)

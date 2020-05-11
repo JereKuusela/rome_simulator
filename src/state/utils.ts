@@ -1,7 +1,7 @@
 import { AppState } from './index'
 import { toArr, filter, arrGet, toObj, keys } from 'utils'
-import { filterUnitDefinitions, getArmyPart, convertReserveDefinitions, convertUnitDefinitions, convertUnitDefinition, shrinkUnits, convertCohortDefinition } from '../army_utils'
-import { Mode, CountryName, SideType, Cohort, ArmyType, UnitType, TerrainType, LocationType, TacticType, TacticDefinition, UnitPreferences, Participant, TerrainDefinition, Settings, Battle, TerrainDefinitions, TacticDefinitions, ArmyName, General, Countries, Setting, Reserve, CountryAttribute, Units, Unit, GeneralDefinition, Country, CountryDefinition, CombatCohort, CombatCohorts, Side, GeneralAttribute, CombatSide, CombatField, Army } from 'types'
+import { filterUnitDefinitions, getArmyPart, convertReserveDefinitions, convertUnitDefinitions, convertUnitDefinition, shrinkUnits } from '../army_utils'
+import { Mode, CountryName, SideType, Cohort, ArmyPart, UnitType, TerrainType, LocationType, TacticType, TacticDefinition, UnitPreferences, Participant, TerrainDefinition, Settings, Battle, TerrainDefinitions, TacticDefinitions, ArmyName, General, Countries, Setting, Reserve, CountryAttribute, Units, Unit, GeneralDefinition, Country, CountryDefinition, CombatCohort, CombatCohorts, Side, GeneralAttribute, CombatSide, CombatField, Army } from 'types'
 import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticState, getDefaultTerrainState } from 'data'
 import { uniq, flatten } from 'lodash'
 import * as manager from 'managers/army'
@@ -25,59 +25,25 @@ export const getSettings = (state: AppState, mode?: Mode): Settings => {
 
 export const getSiteSettings = (state: AppState) => state.settings.siteSettings
 
-export const findCohortById = (state: AppState, side: SideType, id: number): [CountryName, ArmyName, Cohort] | null => {
-  let result: [CountryName, ArmyName, Cohort] | null = null
-  getSide(state, side).participants.forEach(participant => {
-    if (result)
-      return
-    const { countryName, armyName } = participant
-    const definitions = getOverridenReserveDefinitions(state, countryName, armyName, true)
-    const cohortDefinition = definitions.find(cohort => cohort.id === id)
-    if (cohortDefinition) {
-      const units = getUnits(state, countryName, armyName)
-      result = [countryName, armyName, convertCohortDefinition(getSiteSettings(state), cohortDefinition, units)]
-    }
-  })
-  return result
+export const getCohort = (state: AppState, country: CountryName, army: ArmyName, index: number): Cohort => getReserve(state, country, army)[index]
+
+export const getCombatUnit = (state: AppState, side: SideType, part: ArmyPart, country: CountryName, arny: ArmyName, index: number): CombatCohort | null => getCombatUnitSub(getCurrentCombat(state, side), part, country, arny, index)
+
+const getCombatUnitSub = (cohorts: CombatCohorts, part: ArmyPart, country: CountryName, army: ArmyName, index: number): CombatCohort | null => {
+  const armyPart = getArmyPart(cohorts, part)
+  return flatten(armyPart).find(unit => unit?.definition.index === index && unit?.definition.countryName === country && unit?.definition.armyName === army) ?? null
 }
 
-export const getCombatUnit = (state: AppState, side: SideType, type: ArmyType, id: number | null): CombatCohort | null => {
-  if (id === null)
-    return null
-  const units = getCurrentCombat(state, side)
-  const army = getArmyPart(units, type)
-  return flatten(army).find(unit => unit?.definition.id === id) ?? null
-}
-
-const findCombatUnit = (units: CombatCohorts, id: number): CombatCohort | null => {
-  let unit = units.reserve.front.find(unit => unit.definition.id === id) || null
-  if (unit)
-    return unit
-  unit = units.reserve.flank.find(unit => unit.definition.id === id) || null
-  if (unit)
-    return unit
-  unit = units.reserve.support.find(unit => unit.definition.id === id) || null
-  if (unit)
-    return unit
-  unit = flatten(units.frontline).find(unit => unit ? unit.definition.id === id : false) || null
-  if (unit)
-    return unit
-  unit = units.defeated.find(unit => unit.definition.id === id) || null
-  if (unit)
-    return unit
-  return null
-}
-
-export const getCombatUnitForEachRound = (state: AppState, side: SideType, id: number) => {
+export const getCombatUnitForEachRound = (state: AppState, side: SideType, part: ArmyPart, country: CountryName, army: ArmyName, index: number) => {
   const rounds = state.battle[state.settings.mode].sides[side].rounds
-  return rounds.map(participant => findCombatUnit(participant.cohorts, id))
+  return rounds.map(side => getCombatUnitSub(side.cohorts, part, country, army, index))
 }
 
 /**
  * Returns unit types for the current mode from all armies.
  * @param state Application state.
  */
-export const mergeUnitTypes = (state: AppState, ): UnitType[] => {
+export const mergeUnitTypes = (state: AppState): UnitType[] => {
   const mode = getMode(state)
   return Array.from(keys(state.countries).reduce((previous, countryName) => {
     return keys(getArmies(state, countryName)).reduce((previous, armyName) => {
@@ -150,20 +116,21 @@ export const getCombatSide = (state: AppState, sideType: SideType, round?: numbe
   return side.rounds[round ? round + 1 : side.rounds.length - 1]
 }
 
-const getArmy = (state: AppState, participant: Participant): Army => {
-  const countryName = participant.countryName
-  const armyName = participant.armyName
+const getArmy = (state: AppState, countryName: CountryName, armyName: ArmyName): Army => {
   const army = getArmyDefinition(state, countryName, armyName)
-  const reserve = getReserve(state, participant)
+  const reserve = getReserve(state, countryName, armyName)
   const general = getGeneral(state, countryName, armyName)
+  const settings = getSiteSettings(state)
+  const unitPreferences = settings[Setting.CustomDeployment] ? army.unitPreferences : {} as UnitPreferences
   //const flankRatio = calculateValue(state.countries[countryName], CountryAttribute.FlankRatio)
-  return { reserve, general, flankSize: army.flankSize, unitPreferences: army.unitPreferences }
+  return { reserve, general, flankSize: army.flankSize, unitPreferences }
 }
 
 export const convertSides = (state: AppState): CombatSide[] => {
   const attacker = getSide(state, SideType.Attacker)
   const defender = getSide(state, SideType.Defender)
   const settings = getSettings(state)
+  console.log(convertSidesSub(state, attacker, defender, settings))
   return [
     convertSidesSub(state, attacker, defender, settings),
     convertSidesSub(state, defender, attacker, settings)
@@ -173,8 +140,8 @@ export const convertSides = (state: AppState): CombatSide[] => {
 const convertSidesSub = (state: AppState, side: Side, enemy: Side, settings: Settings): CombatSide => {
   const terrains = getSelectedTerrains(state)
   const enemyTypes = uniq(flatten(enemy.participants.map(participant => getUnitTypes(state, participant.countryName))))
-  const armies = side.participants.map(participant => convertArmy(getArmy(state, participant), enemyTypes, terrains, settings))
-  return convertSide(side, armies)
+  const armies = side.participants.map((participant, index) => convertArmy(index, participant, getArmy(state, participant.countryName, participant.armyName), enemyTypes, terrains, settings))
+  return convertSide(side, armies, settings)
 }
 
 export const getCombatField = (state: AppState): CombatField => {
@@ -235,10 +202,8 @@ export const getOverridenReserveDefinitions = (state: AppState, countryName: Cou
   return manager.overrideRoleWithPreferences(army, units, latest)
 }
 
-export const getReserve = (state: AppState, participant: Participant, originals?: boolean): Reserve => {
+export const getReserve = (state: AppState, countryName: CountryName, armyName: ArmyName, originals?: boolean): Reserve => {
   const settings = getSettings(state)
-  const countryName = participant.countryName
-  const armyName = participant.armyName
   const definition = getOverridenReserveDefinitions(state, countryName, armyName, originals)
   const units = getUnits(state, countryName, armyName)
   return convertReserveDefinitions(settings, definition as Reserve, units)

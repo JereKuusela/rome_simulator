@@ -86,7 +86,6 @@ export type UnitDefinitionValue = DefinitionValues<UnitValueType>
 /** An identity of a cohort. Used to store data but shouldn't be used for anything else. */
 export interface CohortDefinition extends DefinitionValues<UnitValueType> {
   type: UnitType
-  id: number
   isLoyal?: boolean
 }
 

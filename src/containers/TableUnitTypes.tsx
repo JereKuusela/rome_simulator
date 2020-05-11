@@ -9,7 +9,6 @@ import { addToReserve, removeFromReserve, setUnitPreference, selectCulture } fro
 import { getArchetypes, getActualUnits, getLatestUnits, getChildUnits, getRootUnit } from 'managers/army'
 import UnitValueInput from './UnitValueInput'
 import AttributeImage from 'components/Utils/AttributeImage'
-import { getNextId } from 'army_utils'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 import { applyLosses } from 'managers/units'
 import DropdownArchetype from 'components/Dropdowns/DropdownArchetype'
@@ -195,7 +194,7 @@ class TableUnitTypes extends Component<IProps> {
     const { countryName: country, addToReserve, armyName: army, removeFromReserve, reserve, weariness } = this.props
     const previous = reserve.filter(cohort => cohort.type === type).length
     if (amount > previous) {
-      const units = mapRange(amount - previous, _ => ({ id: getNextId(), type, image: '' }))
+      const units = mapRange(amount - previous, _ => ({ type, image: '' }))
       addToReserve(country, army, applyLosses(weariness, units))
     }
     if (amount < previous) {

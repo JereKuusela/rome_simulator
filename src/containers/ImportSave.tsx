@@ -13,7 +13,6 @@ import { AppState, getUnits, getMode } from 'state'
 import { getDefaultUnits, countriesIR, traditionsIR, heritagesIR, policiesIR, lawsIR, factionsIR, religionsIR, deitiesIR, modifiersIR, traitsIR, techIR, tradesIR, ideasIR, abilitiesIR } from 'data'
 import AttributeImage from 'components/Utils/AttributeImage'
 import { toObj, toArr, mapRange, map, values, keys, filter } from 'utils'
-import { getNextId } from 'army_utils'
 import { calculateValueWithoutLoss } from 'definition_values'
 import { parseFile, binaryToPlain } from 'managers/importer'
 import JSZip from 'jszip'
@@ -794,7 +793,6 @@ class ImportSave extends Component<IProps, IState> {
     const maxMorales = map(units, unit => calculateValueWithoutLoss(unit, UnitAttribute.Morale))
     const cohorts: CohortDefinition[] = army.cohorts.map(cohort => ({
       type: cohort.type,
-      id: getNextId(),
       baseValues: {
         [UnitAttribute.Experience]: {
           'Custom': cohort[UnitAttribute.Experience] - experiences[cohort.type]

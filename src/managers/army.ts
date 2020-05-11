@@ -1,4 +1,4 @@
-import { calculateValue, calculateBase, addValues, addValuesWithMutate, filterValues, addValue, clearAllValuesWithMutate } from 'definition_values'
+import { calculateValue, calculateBase, addValuesWithMutate, filterValues, addValue, clearAllValuesWithMutate } from 'definition_values'
 import { Mode, GeneralAttribute, UnitType, UnitAttribute, GeneralDefinition, ArmyDefinition, CohortDefinition, ValuesType, UnitValueType, TacticType, UnitPreferenceType, General, ReserveDefinition, GeneralValueType, CombatPhase, isAttributeEnabled, Units, Setting, UnitRole, Unit, SiteSettings, ModifierWithKey, ModifierType, Selections, SelectionType, TacticDefinitions } from 'types'
 import { toObj, toArr, toSet, ObjSet, values } from 'utils'
 import { findLastIndex, sortBy } from 'lodash'
@@ -89,16 +89,6 @@ export const getRootUnit = (units: Units, mode: Mode) => mode === Mode.Naval ? u
 
 const filterByTech = (units: Unit[], tech: number) => units.filter(unit => unit.tech === undefined || unit.tech <= tech)
 
-
-const findFromReserve = (reserve: ReserveDefinition, criteria: number | ((cohort: CohortDefinition) => boolean)) => {
-  return reserve.map((cohort, index) => [typeof criteria === 'number' ? cohort.id === criteria : criteria(cohort), index]).filter(pair => pair[0]).map(pair => pair[1] as number)
-}
-
-const update = (army: ArmyDefinition, criteria: number | ((cohort: CohortDefinition) => boolean), updater: (unit: CohortDefinition) => CohortDefinition): void => {
-  for (let index of findFromReserve(army.reserve, criteria))
-    army.reserve[index] = updater(army.reserve[index])
-}
-
 export const selectCohort = (army: ArmyDefinition, index: number, cohort: CohortDefinition) => {
   if (cohort && index > army.reserve.length)
     army.reserve.push(cohort)
@@ -106,25 +96,20 @@ export const selectCohort = (army: ArmyDefinition, index: number, cohort: Cohort
     army.reserve[index] = cohort
 }
 
-export const toggleCohortLoyality = (army: ArmyDefinition, id: number) => {
-  update(army, id, unit => ({ ...unit, isLoyal: !unit.isLoyal }))
+export const toggleCohortLoyality = (army: ArmyDefinition, index: number) => {
+  army.reserve[index].isLoyal = !army.reserve[index].isLoyal
 }
 
-export const setCohortValue = (army: ArmyDefinition, id: number, valuesType: ValuesType, key: string, attribute: UnitValueType, value: number) => {
-  update(army, id, unit => addValues(unit, valuesType, key, [[attribute, value]]))
+export const setCohortValue = (army: ArmyDefinition, index: number, valuesType: ValuesType, key: string, attribute: UnitValueType, value: number) => {
+  addValuesWithMutate(army.reserve[index], valuesType, key, [[attribute, value]])
 }
 
-export const changeCohortType = (army: ArmyDefinition, id: number, type: UnitType) => {
-  update(army, id, unit => ({ ...unit, type }))
+export const changeCohortType = (army: ArmyDefinition, index: number, type: UnitType) => {
+  army.reserve[index].type = type
 }
 
-export const editCohort = (army: ArmyDefinition, unit: CohortDefinition) => {
-  update(army, unit.id, () => unit)
-}
-
-export const deleteCohort = (army: ArmyDefinition, id: number) => {
-  for (let index of findFromReserve(army.reserve, id))
-    army.reserve.splice(index, 1)
+export const deleteCohort = (army: ArmyDefinition, index: number) => {
+  army.reserve.splice(index, 1)
 }
 
 export const removeFromReserve = (army: { reserve: ReserveDefinition }, types: UnitType[]) => {

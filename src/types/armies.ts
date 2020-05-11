@@ -54,7 +54,7 @@ export type Army = {
   reserve: Reserve
 }
 
-export enum ArmyType {
+export enum ArmyPart {
   Frontline = 'Frontline',
   Reserve = 'Reserve',
   Defeated = 'Defeated'

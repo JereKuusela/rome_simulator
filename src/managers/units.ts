@@ -1,4 +1,4 @@
-import { ValuesType, UnitValueType, UnitType, UnitRole, UnitDefinition, UnitDefinitions, Mode, Setting, UnitAttribute, WearinessAttributes, ReserveDefinition, ModifierWithKey, SiteSettings } from "types"
+import { ValuesType, UnitValueType, UnitType, UnitRole, UnitDefinition, UnitDefinitions, Mode, Setting, UnitAttribute, WearinessAttributes, ReserveDefinition, ModifierWithKey, SiteSettings, SideType } from "types"
 import { addValuesWithMutate, DefinitionValues, calculateValue, addValues, addValue } from "definition_values"
 import { getUnitIcon } from "data"
 import { toArr, round, randomWithinRange } from "utils"
@@ -71,3 +71,6 @@ export const applyUnitModifiers = (units: UnitDefinitions, modifiers: ModifierWi
 }
 
 const generateLosses = (values: WearinessAttributes): [string, number][] => toArr(values, (range, type) => [type, round(randomWithinRange(range.min, range.max), 100)])
+
+export const getCohortId = (side: SideType, cohort: { index: number, participantIndex: number }) => side + '-' + cohort.participantIndex + '-' + cohort.index
+export const getCohortName = (cohort: { type: UnitType, index: number, participantIndex: number }) => cohort.type + ' ' + (1000 * cohort.participantIndex + cohort.index)
