@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import LineTo from 'react-lineto'
 
 import { AppState, getCurrentCombat } from 'state'
-import { ArmyPart, SideType, CombatCohort } from 'types'
+import { ArmyPart, SideType, Cohort } from 'types'
 import { getArmyPart, getOpponent } from 'army_utils'
 import { getCohortId } from 'managers/units'
 
@@ -65,8 +65,8 @@ type IUnit = {
   target: string | null
 } | null
 
-const convertUnits = (side: SideType, units: (CombatCohort | null)[][]): IUnit[][] => (
-  units.map(row => row.map(cohort => cohort ? { id: getCohortId(side, cohort.definition), target: cohort.state.target ? getCohortId(getOpponent(side), cohort.state.target.definition) : null } : null))
+const convertUnits = (side: SideType, units: (Cohort | null)[][]): IUnit[][] => (
+  units.map(row => row.map(cohort => cohort ? { id: getCohortId(side, cohort.properties), target: cohort.state.target ? getCohortId(getOpponent(side), cohort.state.target.properties) : null } : null))
 )
 
 const mapStateToProps = (state: AppState, props: Props) => ({

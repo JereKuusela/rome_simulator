@@ -1,4 +1,4 @@
-import { CombatCohorts } from "types"
+import { Cohorts } from "types"
 
 /**
  * Status of the win rate calculation. Most values are percents, only iterations is integer.
@@ -45,8 +45,8 @@ export type ResourceLosses = {
 }
 
 export type CombatNode = {
-  cohortsA: CombatCohorts,
-  cohortsD: CombatCohorts,
+  cohortsA: Cohorts,
+  cohortsD: Cohorts,
   // Each node iterates over all branches (each branch has different dice rolls).
   branchIndex: number,
   // Combat phase of this node, used to calculate combat round.

@@ -4,7 +4,7 @@ import { Popup, List } from 'semantic-ui-react'
 
 import StyledNumber from 'components/Utils/StyledNumber'
 
-import { SideType, ArmyPart, UnitAttribute, UnitType, Setting, TerrainType, CombatPhase, Mode, CombatCohortDefinition, CombatCohortRoundInfo, CombatCohort, DisciplineValue } from 'types'
+import { SideType, ArmyPart, UnitAttribute, UnitType, Setting, TerrainType, CombatPhase, Mode, CohortProperties, CohortRoundInfo, Cohort, DisciplineValue } from 'types'
 import { calculateCohortPips, getOffensiveCohortPips, getDefensiveCohortPips, getCombatPhase, getDefensiveSupportCohortPips } from 'combat'
 import { toSignedPercent, strengthToValue, toNumber, addSign, toMultiplier, toMorale } from 'formatters'
 import { AppState, getSettings, getSelectedTerrains, getCombatUnit, getCombatSide, getMode } from 'state'
@@ -278,16 +278,16 @@ class CombatTooltip extends Component<IProps, IState> {
 }
 
 
-interface IUnit extends CombatCohortDefinition, Omit<CombatCohortRoundInfo, 'target' | 'targetSupport'> {
+interface IUnit extends CohortProperties, Omit<CohortRoundInfo, 'target' | 'targetSupport'> {
   target: IUnit | null
   targetSupport: IUnit | null
 }
 
-const convertUnit = (cohort: CombatCohort | null, convertTarget: boolean = true): IUnit | null => {
+const convertUnit = (cohort: Cohort | null, convertTarget: boolean = true): IUnit | null => {
   if (!cohort)
     return null
   return {
-    ...cohort.definition,
+    ...cohort.properties,
     ...cohort.state,
     ...cohort,
     target: convertTarget ? convertUnit(cohort.state.target, false) : null,

@@ -1,10 +1,9 @@
-import { CountryName, Mode, TerrainType } from 'types'
-import { ArmyName } from './armies'
-import { CombatSide } from './combat'
+import { CountryName, Mode, TerrainType, TerrainDefinition, Settings, Cohorts } from 'types'
+import { ArmyName, Army, General } from './armies'
 
 export type Battle = {
   terrains: TerrainType[]
-  sides: Sides
+  sides: { [key in SideType]: SideData }
   round: number
   fightOver: boolean
   seed: number
@@ -19,16 +18,15 @@ export enum CombatPhase {
   Default = 'Default'
 }
 
-export type Side = {
+export type SideData = {
   type: SideType
   participants: Participant[]
-  rounds: CombatSide[]
+  rounds: Side[]
   rolls: number[]
   dice: number
   randomizeDice: boolean
 }
 
-export type Sides = { [key in SideType]: Side }
 export type ModeState = { [key in Mode]: Battle }
 
 export type Participant = {
@@ -40,4 +38,33 @@ export type Participant = {
 export enum SideType {
   Attacker = 'Attacker',
   Defender = 'Defender'
+}
+
+/** Information affecting both sides of combat. */
+export type Environment = {
+  round: number
+  terrains: TerrainDefinition[]
+  settings: Settings
+}
+
+/** Results from combat (mainly for tooltips). */
+export type SideRoundInfo = {
+  round: number
+  tacticBonus: number
+  flankRatioBonus: number
+  dailyMultiplier: number
+  tacticStrengthDamageMultiplier: number
+  terrainPips: number
+  generalPips: number
+  dice: number
+}
+
+export type Side = {
+  results: SideRoundInfo
+  alive: boolean
+  armies: Army[]
+  flankRatio: number
+  generals: General[]
+  cohorts: Cohorts
+  type: SideType
 }

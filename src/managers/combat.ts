@@ -1,27 +1,27 @@
 import { AppState, getMode, getCurrentCombat, getCombatSide, getCombatField, convertSides } from 'state'
 import { deploy, doBattle, removeDefeated, getCombatPhaseNumber, armySize } from 'combat'
-import { Battle, SideType, Setting, CombatCohorts, Side, CombatSide, CombatField, CombatArmy, SortedReserve } from 'types'
+import { Battle, SideType, Setting, Cohorts, SideData, Side, Environment, Army, Reserve } from 'types'
 import { createEntropy, MersenneTwister19937, Random } from 'random-js'
 import { forEach } from 'utils'
 
-const copyCohorts = (cohorts: CombatCohorts): CombatCohorts => ({
+const copyCohorts = (cohorts: Cohorts): Cohorts => ({
   frontline: cohorts.frontline.map(row => row.map(value => value ? { ...value, state: { ...value.state } } : null)),
   reserve: copyReserve(cohorts.reserve),
   defeated: cohorts.defeated.map(value => ({ ...value, state: { ...value.state } }))
 })
 
-const copyReserve = (reserve: SortedReserve): SortedReserve => ({
+const copyReserve = (reserve: Reserve): Reserve => ({
   front: reserve.front.map(value => ({ ...value, state: { ...value.state } })),
   flank: reserve.flank.map(value => ({ ...value, state: { ...value.state } })),
   support: reserve.support.map(value => ({ ...value, state: { ...value.state } }))
 })
-const copyArmies = (armies: CombatArmy[]): CombatArmy[] => (
+const copyArmies = (armies: Army[]): Army[] => (
   armies.map(army => ({ ...army, reserve: copyReserve(army.reserve) }))
 )
 
-const copy = (side: CombatSide): CombatSide => ({ ...side, cohorts: copyCohorts(side.cohorts), armies: copyArmies(side.armies), results: { ...side.results } })
+const copy = (side: Side): Side => ({ ...side, cohorts: copyCohorts(side.cohorts), armies: copyArmies(side.armies), results: { ...side.results } })
 
-const subBattle = (state: AppState, battle: Battle, field: CombatField, attacker: CombatSide, defender: CombatSide, steps: number) => {
+const subBattle = (state: AppState, battle: Battle, field: Environment, attacker: Side, defender: Side, steps: number) => {
 
   const sideA = battle.sides[SideType.Attacker]
   const sideD = battle.sides[SideType.Defender]
@@ -40,7 +40,7 @@ const subBattle = (state: AppState, battle: Battle, field: CombatField, attacker
   const rng = new Random(engine)
 
 
-  const rollDice = (side: Side) => {
+  const rollDice = (side: SideData) => {
     if ((battle.round - 1) % rollFrequency !== 0)
       return null
     // Always throw dice so that manually setting one side won't affect the other.

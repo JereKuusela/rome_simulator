@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { AppState, getCurrentCombat, getSelectedTactic, filterTactics, getSiteSettings, getParticipant, getCombatSide } from 'state'
 import { toArr } from 'utils'
 import { selectTactic } from 'reducers'
-import { SideType, CombatCohorts, TacticDefinition, TacticCalc, TacticType, Tactic } from 'types'
+import { SideType, Cohorts, TacticDefinition, TacticCalc, TacticType, Tactic } from 'types'
 import { calculateTactic } from 'combat'
 import { getOpponent } from 'army_utils'
 import { calculateValue } from 'definition_values'
@@ -30,7 +30,7 @@ class TacticSelector extends Component<IProps> {
 }
 
 
-const convertTactic = (tactic: TacticDefinition, cohorts: CombatCohorts, opposingTactic: TacticDefinition): Tactic => {
+const convertTactic = (tactic: TacticDefinition, cohorts: Cohorts, opposingTactic: TacticDefinition): Tactic => {
   return {
     type: tactic.type,
     effect: calculateTactic(cohorts, tactic),

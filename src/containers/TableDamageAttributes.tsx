@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table } from 'semantic-ui-react'
 
-import { SideType, CountryName, UnitAttribute, CombatPhase, General, GeneralValueType, Mode, UnitType, ArmyName } from 'types'
+import { SideType, CountryName, UnitAttribute, CombatPhase, GeneralDefinition, GeneralValueType, Mode, UnitType, ArmyName } from 'types'
 import { AppState, getGeneral, getUnit, getMode, getSiteSettings } from 'state'
 import { setGeneralAttribute } from 'reducers'
 import AttributeImage from 'components/Utils/AttributeImage'
@@ -79,7 +79,7 @@ class TableDamageAttributes extends Component<IProps> {
     )
   }
 
-  renderGeneralAttribute = (general: General, attribute: GeneralValueType) => (
+  renderGeneralAttribute = (general: GeneralDefinition, attribute: GeneralValueType) => (
     <>
       <DelayedNumericInput disabled={!general.enabled}  type='number' value={general.baseValues[attribute]} onChange={value => this.setGeneralStat(attribute, Number(value))}/>
       {' '} <StyledNumber value={general.extraValues[attribute]} formatter={addSign} hideZero />

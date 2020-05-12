@@ -1,4 +1,4 @@
-import { ValuesType, UnitType, UnitDefinition, UnitAttribute, UnitValueType, UnitRole, TerrainType, UnitDefinitions, Mode, CultureType, CombatPhase } from 'types'
+import { ValuesType, UnitType, UnitData, UnitAttribute, UnitValueType, UnitRole, TerrainType, UnitDefinitions, Mode, CultureType, CombatPhase } from 'types'
 import { addValues } from 'definition_values'
 import { toObj, removeUndefined, filter, toArr, values } from 'utils'
 import { uniq } from 'lodash'
@@ -61,11 +61,11 @@ const unitToIcon: { [key in UnitType]: string } = {
 export const getUnitIcon = (type: UnitType) => unitToIcon[type] || ''
 
 
-const createUnitFromJson = (data: UnitData): UnitDefinition => {
+const createUnitFromJson = (data: UnitJSON): UnitData => {
 
   const handleAttributes = (attributes: any[]) => attributes.filter(type => (data as any)[type]).map(type => [type, (data as any)[type]] as [UnitValueType, number])
 
-  let unit: UnitDefinition = {
+  let unit: UnitData = {
     type: data.Type as UnitType,
     mode: data.Mode as Mode | undefined,
     image: unitToIcon[data.Type as UnitType] ?? unitToIcon[data.Parent as UnitType] ?? '',
@@ -96,9 +96,9 @@ const defaultUnits = initializeDefaultUnits()
 export const getCultures = () => uniq(toArr(defaultUnits, value => value.culture).filter(culture => culture) as CultureType[]).sort()
 
 export const getDefaultUnits = (culture?: CultureType): UnitDefinitions => culture ? filter(defaultUnits, unit => !unit.culture || unit.culture === culture) : defaultUnits
-export const getDefaultUnit = (type: UnitType): UnitDefinition => defaultUnits[type]
+export const getDefaultUnit = (type: UnitType): UnitData => defaultUnits[type]
 
-interface UnitData {
+interface UnitJSON {
   Parent: string | null
   Type: string
   Mode?: string

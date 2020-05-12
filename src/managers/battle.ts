@@ -1,4 +1,4 @@
-import { Battle, TerrainType, SideType, CountryName, TerrainDefinition, Settings, Setting, CombatArmy, UnitType, ArmyName, Side, CombatSide, Army, UnitAttribute, CombatGeneral, General, GeneralAttribute, Participant } from 'types'
+import { Battle, TerrainType, SideType, CountryName, TerrainDefinition, Settings, Setting, Army, UnitType, ArmyName, SideData, Side, ArmyDefinition, UnitAttribute, General, GeneralDefinition, GeneralAttribute, Participant } from 'types'
 import { getCombatUnit, sortReserve } from 'combat'
 import { sum } from 'lodash'
 
@@ -51,7 +51,7 @@ export const selectParticipantArmy = (battle: Battle, sideType: SideType, index:
   battle.sides[sideType].participants[index].armyName = armyName
 }
 
-export const convertSide = (side: Side, armies: CombatArmy[], settings: Settings): CombatSide => {
+export const convertSide = (side: SideData, armies: Army[], settings: Settings): Side => {
   return {
     alive: true,
     cohorts: {
@@ -80,7 +80,7 @@ export const convertSide = (side: Side, armies: CombatArmy[], settings: Settings
   }
 }
 
-export const convertArmy = (participantIndex: number, participant: Participant, army: Army, enemyTypes: UnitType[], terrains: TerrainDefinition[], settings: Settings): CombatArmy => {
+export const convertArmy = (participantIndex: number, participant: Participant, army: ArmyDefinition, enemyTypes: UnitType[], terrains: TerrainDefinition[], settings: Settings): Army => {
   const reserve = army.reserve.map((cohort, index) => getCombatUnit(participant.countryName, participant.armyName, participantIndex, index, settings, terrains, enemyTypes, cohort))
   const sorted = sortReserve(reserve, army.unitPreferences)
   return {
@@ -92,7 +92,7 @@ export const convertArmy = (participantIndex: number, participant: Participant, 
   }
 }
 
-const convertGeneral = (army: Army, general: General, arrival: number): CombatGeneral => {
+const convertGeneral = (army: ArmyDefinition, general: GeneralDefinition, arrival: number): General => {
   return {
     leftFlank: army.flankSize,
     rightFlank: army.flankSize,
@@ -104,4 +104,4 @@ const convertGeneral = (army: Army, general: General, arrival: number): CombatGe
   }
 }
 
-export const getLeadingGeneral = (side: CombatSide): CombatGeneral => side.generals.filter(general => general.arrival <= side.results.round)[0]
+export const getLeadingGeneral = (side: Side): General => side.generals.filter(general => general.arrival <= side.results.round)[0]

@@ -5,7 +5,7 @@ import ItemRemover from 'components/ItemRemover'
 import UnitDetail from 'components/UnitDetail'
 
 import { AppState, filterTerrainTypes, getCombatUnitForEachRound, getMode, getSiteSettings, getCohort } from 'state'
-import { ValuesType, CountryName, UnitType, Cohort, UnitAttribute, UnitValueType, CombatCohort, ModalType, SiteSettings, ArmyName } from 'types'
+import { ValuesType, CountryName, UnitType, CohortDefinition, UnitAttribute, UnitValueType, Cohort, ModalType, SiteSettings, ArmyName } from 'types'
 import { addValues } from 'definition_values'
 import { deleteCohort, setCohortValue, changeCohortType, toggleCohortLoyality, closeModal } from 'reducers'
 import { applyDynamicAttributes } from 'managers/units'
@@ -76,7 +76,7 @@ class ModalCohortDetail extends Component<IProps> {
 }
 
 
-const convertCohort = (settings: SiteSettings, definition: Cohort | null, rounds: (CombatCohort | null)[]): Cohort | null => {
+const convertCohort = (settings: SiteSettings, definition: CohortDefinition | null, rounds: (Cohort | null)[]): CohortDefinition | null => {
   if (!definition)
     return null
   rounds.forEach((combat, round) => {

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table, Input, Button } from 'semantic-ui-react'
 
-import { SideType, CountryName, Setting, General, GeneralAttribute, GeneralValueType, isAttributeEnabled, CountryAttribute, ArmyName, Country, Armies, Participant, UnitType, UnitAttribute, Unit } from 'types'
+import { SideType, CountryName, Setting, GeneralDefinition, GeneralAttribute, GeneralValueType, isAttributeEnabled, CountryAttribute, ArmyName, Country, Armies, Participant, UnitType, UnitAttribute, UnitDefinition } from 'types'
 import { keys } from 'utils'
 import { AppState, getCountry, getGeneral, getCountries, getMode, getSiteSettings, getArmies, getSide, getUnits } from 'state'
 import { selectParticipantCountry, selectParticipantArmy, setGeneralAttribute, deleteParticipant, addParticipant, setDaysUntilBattle } from 'reducers'
@@ -142,7 +142,7 @@ class TableArmyInfo extends Component<IProps> {
     )
   }
 
-  renderGeneralAttribute = (country: CountryName, army: ArmyName, general: General, attribute: GeneralValueType) => (
+  renderGeneralAttribute = (country: CountryName, army: ArmyName, general: GeneralDefinition, attribute: GeneralValueType) => (
     <Table.Cell collapsing>
       <Input disabled={!general.enabled} size='mini' className='small-input' type='number' value={general.baseValues[attribute]} onChange={(_, { value }) => this.props.setGeneralAttribute(country, army, attribute, Number(value))} />
       {' '}<StyledNumber value={general.extraValues[attribute]} formatter={addSign} hideZero />
@@ -155,10 +155,10 @@ class TableArmyInfo extends Component<IProps> {
 }
 
 type Entity = Participant & {
-  general: General
+  general: GeneralDefinition
   country: Country
   armies: Armies
-  artillery?: Unit
+  artillery?: UnitDefinition
 }
 
 const mapStateToProps = (state: AppState, props: Props) => {

@@ -7,7 +7,7 @@ import DetailTextRow from './Detail/DetailTextRow'
 import DetailInputRow from './Detail/DetailInputRow'
 import DetailDropdownRow from './Detail/DetailDropdownRow'
 import Headers from './Utils/Headers'
-import { Mode, ValuesType, Cohort, UnitType, TerrainType, UnitRole, UnitAttribute, UnitValueType, unitValueToString, Setting, CombatPhase, isAttributeEnabled, SiteSettings } from 'types'
+import { Mode, ValuesType, CohortDefinition, UnitType, TerrainType, UnitRole, UnitAttribute, UnitValueType, unitValueToString, Setting, CombatPhase, isAttributeEnabled, SiteSettings } from 'types'
 import { values } from 'utils'
 import { getValue, calculateValue, explain } from 'definition_values'
 import { toMaintenance } from 'formatters'
@@ -17,7 +17,7 @@ interface IProps {
   mode: Mode
   settings: SiteSettings
   customValueKey: string
-  unit: Cohort
+  unit: CohortDefinition
   unitTypes?: UnitType[]
   unitTypesWithParent?: UnitType[]
   showStatistics: boolean

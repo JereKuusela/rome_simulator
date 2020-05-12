@@ -4,7 +4,7 @@ import { Table, Image, Icon } from 'semantic-ui-react'
 
 import CombatTooltip from './CombatTooltip'
 import IconDefeated from 'images/attrition.png'
-import { SideType, ArmyPart, UnitAttribute, CombatCohort, CountryName, ArmyName } from 'types'
+import { SideType, ArmyPart, UnitAttribute, Cohort, CountryName, ArmyName } from 'types'
 import { getImage, resize } from 'utils'
 import { AppState, getCurrentCombat, getBattle } from 'state'
 import { getArmyPart } from 'army_utils'
@@ -187,18 +187,18 @@ type ICohort = {
   strength: number
 } | null
 
-const convertUnits = (units: (CombatCohort | null)[][]): ICohort[][] => (
+const convertUnits = (units: (Cohort | null)[][]): ICohort[][] => (
   units.map(row => row.map(unit => unit && {
-    index: unit.definition.index,
-    participantIndex: unit.definition.participantIndex,
-    armyName: unit.definition.armyName,
-    countryName: unit.definition.countryName,
+    index: unit.properties.index,
+    participantIndex: unit.properties.participantIndex,
+    armyName: unit.properties.armyName,
+    countryName: unit.properties.countryName,
     isDefeated: unit.state.isDefeated,
-    image: unit.definition.image,
+    image: unit.properties.image,
     morale: unit[UnitAttribute.Morale],
-    maxMorale: unit.definition.maxMorale,
+    maxMorale: unit.properties.maxMorale,
     strength: unit[UnitAttribute.Strength],
-    maxStrength: unit.definition.maxStrength
+    maxStrength: unit.properties.maxStrength
   }))
 )
 

@@ -1,5 +1,5 @@
 import { calculateValue, calculateBase, addValuesWithMutate, filterValues, addValue, clearAllValuesWithMutate } from 'definition_values'
-import { Mode, GeneralAttribute, UnitType, UnitAttribute, GeneralDefinition, ArmyDefinition, CohortDefinition, ValuesType, UnitValueType, TacticType, UnitPreferenceType, General, ReserveDefinition, GeneralValueType, CombatPhase, isAttributeEnabled, Units, Setting, UnitRole, Unit, SiteSettings, ModifierWithKey, ModifierType, Selections, SelectionType, TacticDefinitions } from 'types'
+import { Mode, GeneralAttribute, UnitType, UnitAttribute, GeneralData, ArmyData, CohortData, ValuesType, UnitValueType, TacticType, UnitPreferenceType, GeneralDefinition, ReserveData, GeneralValueType, CombatPhase, isAttributeEnabled, Units, Setting, UnitRole, UnitDefinition, SiteSettings, ModifierWithKey, ModifierType, Selections, SelectionType, TacticDefinitions } from 'types'
 import { toObj, toArr, toSet, ObjSet, values } from 'utils'
 import { findLastIndex, sortBy } from 'lodash'
 
@@ -11,7 +11,7 @@ export const martialToCaptureChance = (martial: number) => 0.002 * martial
 
 const BASE_STAT_KEY = 'Custom'
 
-export const convertGeneralDefinition = (settings: SiteSettings, general: GeneralDefinition, tactics: TacticDefinitions): General => {
+export const convertGeneralDefinition = (settings: SiteSettings, general: GeneralData, tactics: TacticDefinitions): GeneralDefinition => {
   const base = filterValues(general, BASE_STAT_KEY)
   const attributes = [GeneralAttribute.Maneuver, GeneralAttribute.Martial, CombatPhase.Fire, CombatPhase.Shock, CombatPhase.Default]
   const baseValues = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) ? calculateValue(base, attribute) : 0)
@@ -27,7 +27,7 @@ export const convertGeneralDefinition = (settings: SiteSettings, general: Genera
   }
 }
 
-export const overrideRoleWithPreferences = (army: ArmyDefinition, units: Units, latest: { [key in UnitRole]: UnitType | undefined }) => {
+export const overrideRoleWithPreferences = (army: ArmyData, units: Units, latest: { [key in UnitRole]: UnitType | undefined }) => {
   const preferences = army.unitPreferences
   return army.reserve.map(cohort => {
     const role = units[cohort.type]?.role
@@ -68,7 +68,7 @@ const techSorter = (unit: { tech?: number, type: UnitType }) => {
   return (99 - (unit.tech ?? 0)) + unit.type
 }
 
-const unitSorter = (unit: Unit, mode: Mode, parents?: ObjSet) => {
+const unitSorter = (unit: UnitDefinition, mode: Mode, parents?: ObjSet) => {
   if (parents && parents[unit.type])
     return ''
   if (mode === Mode.Naval)
@@ -87,85 +87,85 @@ const getParents = (units: Units) => toSet(units, unit => unit.parent || unit.ty
 
 export const getRootUnit = (units: Units, mode: Mode) => mode === Mode.Naval ? units[UnitType.Naval] : units[UnitType.Land]
 
-const filterByTech = (units: Unit[], tech: number) => units.filter(unit => unit.tech === undefined || unit.tech <= tech)
+const filterByTech = (units: UnitDefinition[], tech: number) => units.filter(unit => unit.tech === undefined || unit.tech <= tech)
 
-export const selectCohort = (army: ArmyDefinition, index: number, cohort: CohortDefinition) => {
+export const selectCohort = (army: ArmyData, index: number, cohort: CohortData) => {
   if (cohort && index > army.reserve.length)
     army.reserve.push(cohort)
   else if (cohort)
     army.reserve[index] = cohort
 }
 
-export const toggleCohortLoyality = (army: ArmyDefinition, index: number) => {
+export const toggleCohortLoyality = (army: ArmyData, index: number) => {
   army.reserve[index].isLoyal = !army.reserve[index].isLoyal
 }
 
-export const setCohortValue = (army: ArmyDefinition, index: number, valuesType: ValuesType, key: string, attribute: UnitValueType, value: number) => {
+export const setCohortValue = (army: ArmyData, index: number, valuesType: ValuesType, key: string, attribute: UnitValueType, value: number) => {
   addValuesWithMutate(army.reserve[index], valuesType, key, [[attribute, value]])
 }
 
-export const changeCohortType = (army: ArmyDefinition, index: number, type: UnitType) => {
+export const changeCohortType = (army: ArmyData, index: number, type: UnitType) => {
   army.reserve[index].type = type
 }
 
-export const deleteCohort = (army: ArmyDefinition, index: number) => {
+export const deleteCohort = (army: ArmyData, index: number) => {
   army.reserve.splice(index, 1)
 }
 
-export const removeFromReserve = (army: { reserve: ReserveDefinition }, types: UnitType[]) => {
+export const removeFromReserve = (army: { reserve: ReserveData }, types: UnitType[]) => {
   for (const type of types) {
     const index = findLastIndex(army.reserve, value => value.type === type)
     army.reserve = army.reserve.filter((_, i) => i !== index)
   }
 }
 
-export const addToReserve = (army: { reserve: ReserveDefinition }, cohorts: CohortDefinition[]) => {
+export const addToReserve = (army: { reserve: ReserveData }, cohorts: CohortData[]) => {
   army.reserve = army.reserve.concat(cohorts)
 }
 
-export const clearCohorts = (army: ArmyDefinition) => {
+export const clearCohorts = (army: ArmyData) => {
   army.reserve = []
 }
 
-export const selectTactic = (army: ArmyDefinition, tactic: TacticType) => {
+export const selectTactic = (army: ArmyData, tactic: TacticType) => {
   army.general.tactic = tactic
 }
 
-export const setUnitPreference = (army: ArmyDefinition, preferenceType: UnitPreferenceType | UnitRole, unit: UnitType | null) => {
+export const setUnitPreference = (army: ArmyData, preferenceType: UnitPreferenceType | UnitRole, unit: UnitType | null) => {
   army.unitPreferences[preferenceType] = unit
 }
 
-export const setFlankSize = (army: ArmyDefinition, flankFize: number) => {
+export const setFlankSize = (army: ArmyData, flankFize: number) => {
   army.flankSize = flankFize
 }
 
-export const setGeneralAttribute = (army: ArmyDefinition, attribute: GeneralValueType, value: number) => {
+export const setGeneralAttribute = (army: ArmyData, attribute: GeneralValueType, value: number) => {
   addValuesWithMutate(army.general, ValuesType.Base, 'Custom', [[attribute, value]])
 }
 
-export const clearGeneralAttributes = (army: ArmyDefinition) => {
+export const clearGeneralAttributes = (army: ArmyData) => {
   clearAllValuesWithMutate(army.general, 'Custom')
 }
 
-export const setHasGeneral = (army: ArmyDefinition, hasGeneral: boolean) => {
+export const setHasGeneral = (army: ArmyData, hasGeneral: boolean) => {
   army.general.enabled = hasGeneral
 }
 
-export const enableGeneralSelection = (army: ArmyDefinition, type: SelectionType, key: string) => {
+export const enableGeneralSelection = (army: ArmyData, type: SelectionType, key: string) => {
   if (!army.general.selections[type])
     army.general.selections[type] = {}
   army.general.selections[type][key] = true
 }
 
-export const enableGeneralSelections = (army: ArmyDefinition, type: SelectionType, keys: string[]) => {
+export const enableGeneralSelections = (army: ArmyData, type: SelectionType, keys: string[]) => {
   keys.forEach(key => enableGeneralSelection(army, type, key))
 }
 
-export const clearGeneralSelection = (army: ArmyDefinition, type: SelectionType, key: string) => {
+export const clearGeneralSelection = (army: ArmyData, type: SelectionType, key: string) => {
   delete army.general.selections[type][key]
 }
 
-export const clearGeneralSelections = (army: ArmyDefinition, type?: SelectionType, keys?: string[]) => {
+export const clearGeneralSelections = (army: ArmyData, type?: SelectionType, keys?: string[]) => {
   if (keys && type)
     keys.forEach(key => clearGeneralSelection(army, type, key))
   else if (type)
@@ -174,7 +174,7 @@ export const clearGeneralSelections = (army: ArmyDefinition, type?: SelectionTyp
     army.general.selections = {} as Selections
 }
 
-export const applyGeneralModifiers = (country: GeneralDefinition, modifiers: ModifierWithKey[]): GeneralDefinition => {
+export const applyGeneralModifiers = (country: GeneralData, modifiers: ModifierWithKey[]): GeneralData => {
   modifiers.filter(value => value.target === ModifierType.General).forEach(value => {
     country = addValue(country, value.type, value.key, value.attribute, value.value)
   })

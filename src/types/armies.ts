@@ -1,9 +1,8 @@
-import { DefinitionValues } from "definition_values"
-import { UnitType, CohortDefinition, Cohort, UnitDefinitionValues, UnitRole, Units } from "./units"
-import { Mode } from "types/definition"
-import { TacticType, TacticDefinition } from "./tactics"
-import { CombatPhase } from "./battle"
-import { Selections } from "types"
+import { DefinitionValues } from 'definition_values'
+import { Mode } from 'types/definition'
+import { TacticType, TacticDefinition } from './tactics'
+import { CombatPhase } from './battle'
+import { Selections, UnitValues, UnitRole, UnitType, Reserve, ReserveData, ReserveDefinition } from 'types'
 
 export enum ArmyName {
   Army = 'Army',
@@ -15,7 +14,7 @@ export enum GeneralAttribute {
   Maneuver = 'Maneuver'
 }
 
-export type General = {
+export type GeneralDefinition = {
   tactic: TacticDefinition
   selections: Selections
   enabled: boolean
@@ -28,30 +27,30 @@ export type GeneralValues = { [key in GeneralValueType]: number }
 
 export type GeneralValueType = GeneralAttribute | CombatPhase
 
-export type Armies = { [key in ArmyName]: ArmyDefinition }
+export type Armies = { [key in ArmyName]: ArmyData }
 
-export interface GeneralDefinition extends DefinitionValues<GeneralValueType> {
+export interface GeneralData extends DefinitionValues<GeneralValueType> {
   tactic: TacticType
   selections: Selections
   enabled: boolean
-  definitions: UnitDefinitionValues
+  definitions: UnitValues
 }
 
 export type UnitPreferences = { [key in UnitPreferenceType | UnitRole]: UnitType | null }
 
-export type ArmyDefinition = {
+export type ArmyData = {
   mode: Mode
+  unitPreferences: UnitPreferences
+  flankSize: number
+  general: GeneralData
+  reserve: ReserveData
+}
+
+export type ArmyDefinition = {
   unitPreferences: UnitPreferences
   flankSize: number
   general: GeneralDefinition
   reserve: ReserveDefinition
-}
-
-export type Army = {
-  unitPreferences: UnitPreferences
-  flankSize: number
-  general: General
-  reserve: Reserve
 }
 
 export enum ArmyPart {
@@ -66,16 +65,24 @@ export enum UnitPreferenceType {
   Flank = 'PrimaryFlank'
 }
 
-export type ReserveDefinition = CohortDefinition[]
-export type Reserve = Cohort[]
-
-
-export interface ArmyForCombatConversion {
+/**
+ * Information required for fast combat calculation.
+ * CombatUnits contain most of the information precalculated.
+ */
+export type Army = {
   reserve: Reserve
-  tactic?: TacticDefinition
-  definitions: Units
-  general: General
-  unitPreferences: UnitPreferences
   flankSize: number
-  flankRatio: number
+  arrival: number
+  strength: number
+  general: General
+}
+
+export type General = {
+  unitPreferences: UnitPreferences
+  leftFlank: number
+  rightFlank: number
+  priority: number
+  tactic: TacticDefinition
+  arrival: number
+  values: { [key in GeneralValueType]: number }
 }

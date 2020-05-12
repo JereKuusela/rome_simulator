@@ -1,5 +1,5 @@
 import { Mode } from "types/definition"
-import { Battle, CountryName, SideType, ModeState, TerrainType, Participant, ArmyName, Side } from "types"
+import { Battle, CountryName, SideType, ModeState, TerrainType, Participant, ArmyName, SideData } from "types"
 
 export const getInitialTerrains = (mode: Mode): TerrainType[] => {
   if (mode === Mode.Naval)
@@ -8,7 +8,7 @@ export const getInitialTerrains = (mode: Mode): TerrainType[] => {
     return [TerrainType.None, process.env.REACT_APP_GAME === 'euiv' ? TerrainType.Grasslands : TerrainType.Plains]
 }
 
-export const getDefaultSide = (type: SideType, name: CountryName, mode: Mode): Side => {
+export const getDefaultSide = (type: SideType, name: CountryName, mode: Mode): SideData => {
   return {
     type,
     participants: [getDefaultParticipant(name, mode), getDefaultParticipant(name, mode)],

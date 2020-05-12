@@ -5,7 +5,7 @@ import { Table, Input } from 'semantic-ui-react'
 import { AppState, getUnitPreferences, getFlankSize, getMode, getUnitList, getSiteSettings, getFirstParticipant } from 'state'
 import { setFlankSize, setUnitPreference } from 'reducers'
 import { getUnitIcon } from 'data'
-import { UnitPreferenceType, SideType, UnitType, Unit } from 'types'
+import { UnitPreferenceType, SideType, UnitType, UnitDefinition } from 'types'
 import DropdownUnit from 'components/Dropdowns/DropdownUnit'
 
 /**Table with row types and flank sizes. */
@@ -68,7 +68,7 @@ class Row extends Component<IProps> {
   renderCell = (type: UnitPreferenceType) => {
     const { units, preferences, settings } = this.props
     const unit = preferences[type]
-    const empty = { type: UnitType.None, image: getUnitIcon(UnitType.None) } as Unit
+    const empty = { type: UnitType.None, image: getUnitIcon(UnitType.None) } as UnitDefinition
     return (
       <Table.Cell selectable onClick={() => this.setState({ modalType: type })}>
         <DropdownUnit value={unit ?? UnitType.None} values={[empty].concat(units)}

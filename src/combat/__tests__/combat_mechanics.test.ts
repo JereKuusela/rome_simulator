@@ -1,11 +1,11 @@
 import { TestInfo, initInfo, setTactics, setCenterUnits, initSide, testCombat, createCohort } from './utils'
-import { UnitType, UnitAttribute, TacticType, Cohort, CombatPhase, Settings, Setting, DisciplineValue } from 'types'
+import { UnitType, UnitAttribute, TacticType, CohortDefinition, CombatPhase, Settings, Setting, DisciplineValue } from 'types'
 import { map } from 'utils'
 
 if (process.env.REACT_APP_GAME !== 'euiv') {
 
   describe('mechanics', () => {
-    let unit = null as any as Cohort
+    let unit = null as any as CohortDefinition
 
     let info: TestInfo
     beforeEach(() => {

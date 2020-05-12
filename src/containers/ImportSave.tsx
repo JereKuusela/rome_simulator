@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Mode, TacticType, UnitPreferences, UnitPreferenceType, dictionaryUnitType, dictionaryTacticType, GeneralAttribute, UnitType, UnitAttribute, CultureType, CountryName, CountryAttribute, SelectionType, Invention, ArmyName, CohortDefinition, GovermentType } from 'types'
+import { Mode, TacticType, UnitPreferences, UnitPreferenceType, dictionaryUnitType, dictionaryTacticType, GeneralAttribute, UnitType, UnitAttribute, CultureType, CountryName, CountryAttribute, SelectionType, Invention, ArmyName, CohortData, GovermentType } from 'types'
 import {
   enableGeneralSelections, createCountry, setCountryAttribute, selectCulture, enableCountrySelections, enableCountrySelection, createArmy, setHasGeneral, setGeneralAttribute,
   setFlankSize, setUnitPreference, selectTactic, addToReserve, deleteArmy, setMode, enableGeneralSelection
@@ -791,7 +791,7 @@ class ImportSave extends Component<IProps, IState> {
     const experiences = map(units, unit => calculateValueWithoutLoss(unit, UnitAttribute.Experience))
     const maxStrengths = map(units, unit => calculateValueWithoutLoss(unit, UnitAttribute.Strength))
     const maxMorales = map(units, unit => calculateValueWithoutLoss(unit, UnitAttribute.Morale))
-    const cohorts: CohortDefinition[] = army.cohorts.map(cohort => ({
+    const cohorts: CohortData[] = army.cohorts.map(cohort => ({
       type: cohort.type,
       baseValues: {
         [UnitAttribute.Experience]: {

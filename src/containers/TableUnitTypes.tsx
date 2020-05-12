@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table } from 'semantic-ui-react'
 
-import { SideType, UnitRole, CountryName, UnitType, UnitAttribute, filterAttributes, Setting, Unit, Mode, CountryAttribute, ArmyName, CultureType } from 'types'
+import { SideType, UnitRole, CountryName, UnitType, UnitAttribute, filterAttributes, Setting, UnitDefinition, Mode, CountryAttribute, ArmyName, CultureType } from 'types'
 import { getImage, mapRange } from 'utils'
 import { AppState, getUnitPreferences, getCountry, getMode, getOverridenReserveDefinitions, getSiteSettings, getUnits } from 'state'
 import { addToReserve, removeFromReserve, setUnitPreference, selectCulture } from 'reducers'
@@ -89,7 +89,7 @@ class TableUnitTypes extends Component<IProps> {
     )
   }
 
-  renderRoleRow = (role: UnitRole, archetypes: Unit[]) => {
+  renderRoleRow = (role: UnitRole, archetypes: UnitDefinition[]) => {
     // List of archetypes -> get archetype -> get image
     const { units, setUnitPreference, countryName: country, armyName: army, preferences, tech, settings, onRowClick } = this.props
     const archetype = archetypes.find(unit => unit.role === role)
@@ -127,7 +127,7 @@ class TableUnitTypes extends Component<IProps> {
     )
   }
 
-  renderUnitRow = (unit: Unit) => {
+  renderUnitRow = (unit: UnitDefinition) => {
     const { countryName: country, settings, armyName: army, onRowClick } = this.props
     if (!unit)
       return null
@@ -152,7 +152,7 @@ class TableUnitTypes extends Component<IProps> {
     )
   }
 
-  renderRootUnitRow = (unit: Unit) => {
+  renderRootUnitRow = (unit: UnitDefinition) => {
     const { countryName: country, settings, armyName: army, onRowClick, culture } = this.props
     if (!unit)
       return null

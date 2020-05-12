@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { UnitAttribute, Unit, ValuesType, CountryName, getAttributeValuesType } from 'types'
+import { UnitAttribute, UnitDefinition, ValuesType, CountryName, getAttributeValuesType } from 'types'
 import { setUnitValue } from 'reducers'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 import { filterValues, calculateBase, calculateModifier } from 'definition_values'
 
 type Props = {
-  unit: Unit
+  unit: UnitDefinition
   country: CountryName
   identifier?: string
   attribute: UnitAttribute

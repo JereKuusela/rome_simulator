@@ -1,4 +1,4 @@
-import { Modifier, ModifierType, Mode, ModifierWithKey, CountryAttribute, ValuesType, UnitAttribute, UnitType, GeneralDefinition, CountryDefinition, GeneralAttribute, SelectionType, ListDefinition2, DeityDefinitions } from 'types'
+import { Modifier, ModifierType, Mode, ModifierWithKey, CountryAttribute, ValuesType, UnitAttribute, UnitType, GeneralData, CountryDefinition, GeneralAttribute, SelectionType, ListDefinition2, DeityDefinitions } from 'types'
 import { getRootParent } from './units'
 import { ObjSet, keys } from 'utils'
 import { calculateValue } from 'definition_values'
@@ -182,7 +182,7 @@ export const getSecondaryCountryModifiers = (country: CountryDefinition): Modifi
   return modifiers
 }
 
-export const getGeneralModifiers = (general: GeneralDefinition): ModifierWithKey[] => {
+export const getGeneralModifiers = (general: GeneralData): ModifierWithKey[] => {
   const modifiers: ModifierWithKey[] = []
   if (general.enabled) {
     if (process.env.REACT_APP_GAME === 'euiv') {

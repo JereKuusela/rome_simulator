@@ -1,15 +1,15 @@
 import { TestInfo, initInfo, createCohort, testReinforcement } from './utils'
-import { UnitType, UnitAttribute, Cohort, Setting } from 'types'
+import { UnitType, UnitAttribute, CohortDefinition, Setting } from 'types'
 
 if (process.env.REACT_APP_GAME !== 'euiv') {
 
   describe('stack wipe', () => {
-    let lowMorale = null as any as Cohort
-    let hardLimit = null as any as Cohort
-    let hardStrengthLimit = null as any as Cohort
-    let softLimit = null as any as Cohort
-    let lowStrength = null as any as Cohort
-    let normal = null as any as Cohort
+    let lowMorale = null as any as CohortDefinition
+    let hardLimit = null as any as CohortDefinition
+    let hardStrengthLimit = null as any as CohortDefinition
+    let softLimit = null as any as CohortDefinition
+    let lowStrength = null as any as CohortDefinition
+    let normal = null as any as CohortDefinition
 
     const FULL_STRENGTH = 1.0
     const LOW_STRENGTH = 0.05

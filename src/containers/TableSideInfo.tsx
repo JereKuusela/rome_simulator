@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table, Button } from 'semantic-ui-react'
 
-import { SideType, CountryName, Setting, GeneralAttribute, UnitAttribute, CultureType, ModalType, General, CombatPhase } from 'types'
+import { SideType, CountryName, Setting, GeneralAttribute, UnitAttribute, CultureType, ModalType, GeneralDefinition, CombatPhase } from 'types'
 import { AppState, getBattle, getMode, getCombatSide, getSiteSettings, getSide } from 'state'
 import { selectParticipantCountry, selectParticipantArmy, selectCulture, toggleRandomDice, setDice, openModal, setGeneralAttribute } from 'reducers'
 import StyledNumber from 'components/Utils/StyledNumber'
@@ -82,7 +82,7 @@ class TableSideInfo extends Component<IProps> {
     )
   }
 
-  renderGeneral = (general: General, attribute: GeneralAttribute | CombatPhase) => {
+  renderGeneral = (general: GeneralDefinition, attribute: GeneralAttribute | CombatPhase) => {
     return (
       <Table.Cell>
         <AttributeImage attribute={attribute} />

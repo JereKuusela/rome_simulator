@@ -1,4 +1,4 @@
-import { Setting, UnitAttribute, SideType, ResourceLosses, WinRateProgress, CasualtiesProgress, ResourceLossesProgress, CombatCohorts, CombatNode, CombatSide, CombatField } from 'types'
+import { Setting, UnitAttribute, SideType, ResourceLosses, WinRateProgress, CasualtiesProgress, ResourceLossesProgress, Cohorts, CombatNode, Side, Environment } from 'types'
 import { doBattle } from './combat'
 import { mapRange } from 'utils'
 import { deploy } from './deployment'
@@ -27,7 +27,7 @@ export const interrupt = () => interruptSimulation = true
  * @param defender Defender information.
  * @param terrains Current terrains.
  */
-export const calculateWinRate = (progressCallback: (progress: WinRateProgress, casualties: CasualtiesProgress, losses: ResourceLossesProgress) => void, field: CombatField, attacker: CombatSide, defender: CombatSide) => {
+export const calculateWinRate = (progressCallback: (progress: WinRateProgress, casualties: CasualtiesProgress, losses: ResourceLossesProgress) => void, field: Environment, attacker: Side, defender: Side) => {
   const progress: WinRateProgress = {
     calculating: true,
     attacker: 0.0,
@@ -199,7 +199,7 @@ const getRolls = (minimum: number, maximum: number, halveTimes: number) => {
 /**
  * Custom clone function to only copy state and keep references to constant data same.
  */
-const copyCohortState = (status: CombatCohorts): CombatCohorts => ({
+const copyCohortState = (status: Cohorts): Cohorts => ({
   frontline: status.frontline.map(row => row.map(value => value ? { ...value } : null)),
   reserve: {
     front: status.reserve.front.map(value => ({ ...value })),
@@ -255,7 +255,7 @@ type Winner = SideType | null | undefined
 /**
  * Simulates one dice roll phase.
  */
-const doPhase = (field: CombatField, attacker: CombatSide, defender: CombatSide, phase: number) => {
+const doPhase = (field: Environment, attacker: Side, defender: Side, phase: number) => {
   let winner: Winner = undefined
   const phaseLength = field.settings[Setting.PhaseLength]
   const maxRound = phase * phaseLength
@@ -286,7 +286,7 @@ type State = {
 /**
  * Counts total morale and strength of units.
  */
-const sumState = (state: State, units: CombatCohorts) => {
+const sumState = (state: State, units: Cohorts) => {
   state.strength = 0
   state.morale = 0
   for (let i = 0; i < units.frontline.length; i++) {
