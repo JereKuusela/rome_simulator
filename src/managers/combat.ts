@@ -1,20 +1,25 @@
 import { AppState, getMode, getCurrentCombat, getCombatSide, getCombatField, convertSides } from 'state'
 import { deploy, doBattle, removeDefeated, getCombatPhaseNumber, armySize } from 'combat'
-import { Battle, SideType, Setting, CombatCohorts, Side, CombatSide, CombatField } from 'types'
+import { Battle, SideType, Setting, CombatCohorts, Side, CombatSide, CombatField, CombatArmy, SortedReserve } from 'types'
 import { createEntropy, MersenneTwister19937, Random } from 'random-js'
 import { forEach } from 'utils'
 
-const copyStatus = (status: CombatCohorts): CombatCohorts => ({
-  frontline: status.frontline.map(row => row.map(value => value ? { ...value, state: { ...value.state } } : null)),
-  reserve: {
-    front: status.reserve.front.map(value => ({ ...value, state: { ...value.state } })),
-    flank: status.reserve.flank.map(value => ({ ...value, state: { ...value.state } })),
-    support: status.reserve.support.map(value => ({ ...value, state: { ...value.state } }))
-  },
-  defeated: status.defeated.map(value => ({ ...value, state: { ...value.state } }))
+const copyCohorts = (cohorts: CombatCohorts): CombatCohorts => ({
+  frontline: cohorts.frontline.map(row => row.map(value => value ? { ...value, state: { ...value.state } } : null)),
+  reserve: copyReserve(cohorts.reserve),
+  defeated: cohorts.defeated.map(value => ({ ...value, state: { ...value.state } }))
 })
 
-const copy = (side: CombatSide): CombatSide => ({ ...side, cohorts: copyStatus(side.cohorts) })
+const copyReserve = (reserve: SortedReserve): SortedReserve => ({
+  front: reserve.front.map(value => ({ ...value, state: { ...value.state } })),
+  flank: reserve.flank.map(value => ({ ...value, state: { ...value.state } })),
+  support: reserve.support.map(value => ({ ...value, state: { ...value.state } }))
+})
+const copyArmies = (armies: CombatArmy[]): CombatArmy[] => (
+  armies.map(army => ({ ...army, reserve: copyReserve(army.reserve) }))
+)
+
+const copy = (side: CombatSide): CombatSide => ({ ...side, cohorts: copyCohorts(side.cohorts), armies: copyArmies(side.armies), results: { ...side.results } })
 
 const subBattle = (state: AppState, battle: Battle, field: CombatField, attacker: CombatSide, defender: CombatSide, steps: number) => {
 
@@ -50,6 +55,8 @@ const subBattle = (state: AppState, battle: Battle, field: CombatField, attacker
   }
 
   if (battle.round === -1) {
+    Object.freeze(attacker.armies)
+    Object.freeze(defender.armies)
     Object.freeze(attacker.cohorts)
     Object.freeze(defender.cohorts)
     sideA.rounds = [attacker]
@@ -60,14 +67,16 @@ const subBattle = (state: AppState, battle: Battle, field: CombatField, attacker
     defender.alive = armySize(defender, battle.round) > 0
     battle.fightOver = !attacker.alive || !defender.alive
   } else {
-    attacker.cohorts = copyStatus(getCurrentCombat(state, SideType.Attacker))
-    defender.cohorts = copyStatus(getCurrentCombat(state, SideType.Defender))
+    attacker.cohorts = copyCohorts(getCurrentCombat(state, SideType.Attacker))
+    defender.cohorts = copyCohorts(getCurrentCombat(state, SideType.Defender))
   }
   if (battle.round === -1 && steps > 0 && !battle.fightOver) {
     battle.round++
     field.round = battle.round
     deploy(field, attacker, defender)
     battle.fightOver = !attacker.alive || !defender.alive
+    Object.freeze(attacker.armies)
+    Object.freeze(defender.armies)
     Object.freeze(attacker.cohorts)
     Object.freeze(defender.cohorts)
     sideA.rounds.push(attacker)
@@ -91,6 +100,8 @@ const subBattle = (state: AppState, battle: Battle, field: CombatField, attacker
       removeDefeated(defender.cohorts.frontline)
     }
 
+    Object.freeze(attacker.armies)
+    Object.freeze(defender.armies)
     Object.freeze(attacker.cohorts)
     Object.freeze(defender.cohorts)
     sideA.rounds.push(attacker)

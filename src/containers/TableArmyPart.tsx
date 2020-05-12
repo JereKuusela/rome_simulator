@@ -15,7 +15,8 @@ type Props = {
   side: SideType
   rowWidth: number
   reverse: boolean
-  onClick: (side: SideType, part: ArmyPart, country: CountryName, army: ArmyName, index: number) => void
+  // SideType, participantIndex and index are needed to find the combat unit. CountryName, ArmyName and index are needed to find the definition.
+  onClick: (side: SideType, participantIndex: number, index: number, country: CountryName, army: ArmyName) => void
   part: ArmyPart
   color: string
   // Renders full rows for a cleaner look.
@@ -23,7 +24,8 @@ type Props = {
 }
 
 type IState = {
-  tooltipCohort: ICohort
+  tooltipRow: number | null
+  tooltipColumn: number | null
   tooltipContext: Element | null
   tooltipIsSupport: boolean
 }
@@ -36,16 +38,16 @@ const WHITE_COLOR = 'rgba(255,255,255,0)'
 class TableArmyPart extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
-    this.state = { tooltipCohort: null, tooltipContext: null, tooltipIsSupport: false }
+    this.state = { tooltipRow: null, tooltipColumn: null, tooltipContext: null, tooltipIsSupport: false }
   }
 
   shouldComponentUpdate(prevProps: IProps, prevState: IState) {
-    return prevProps.timestamp !== this.props.timestamp || prevState.tooltipCohort !== this.state.tooltipCohort
+    return prevProps.timestamp !== this.props.timestamp || prevState.tooltipRow !== this.state.tooltipRow || prevState.tooltipColumn !== this.state.tooltipColumn
   }
 
   render() {
     const { rowWidth, side, part, fullRows, reverse } = this.props
-    const { tooltipCohort, tooltipContext, tooltipIsSupport } = this.state
+    const { tooltipRow, tooltipColumn, tooltipContext, tooltipIsSupport } = this.state
     let units = this.props.units
     let indexOffset = 0
     if (fullRows) {
@@ -62,7 +64,7 @@ class TableArmyPart extends Component<IProps, IState> {
       units.reverse()
     return (
       <>
-        <CombatTooltip cohort={tooltipCohort} context={tooltipContext} isSupport={tooltipIsSupport} side={side} part={part} />
+        <CombatTooltip row={tooltipRow} column={tooltipColumn} context={tooltipContext} isSupport={tooltipIsSupport} side={side} part={part} />
         <Table compact celled definition unstackable>
           <Table.Body>
             {
@@ -90,7 +92,7 @@ class TableArmyPart extends Component<IProps, IState> {
   }
 
   renderCell = (row: number, column: number, cohort: ICohort, isSupport: boolean) => {
-    const { side, part, onClick } = this.props
+    const { side, onClick } = this.props
     const filler = cohort === undefined
     return (
       <Table.Cell
@@ -100,9 +102,9 @@ class TableArmyPart extends Component<IProps, IState> {
         disabled={filler || !cohort}
         selectable={!!onClick}
         style={{ backgroundColor: filler ? '#DDDDDD' : 'white', padding: 0 }}
-        onClick={() => cohort && onClick(side, part, cohort.countryName, cohort.armyName, cohort.index)}
-        onMouseOver={(e: React.MouseEvent) => cohort && this.setState({ tooltipCohort: cohort, tooltipContext: e.currentTarget, tooltipIsSupport: isSupport })}
-        onMouseLeave={() => cohort && this.state.tooltipCohort === cohort && this.setState({ tooltipCohort: null, tooltipContext: null })}
+        onClick={() => cohort && onClick(side, cohort.participantIndex, cohort.index, cohort.countryName, cohort.armyName)}
+        onMouseOver={(e: React.MouseEvent) => cohort && this.setState({ tooltipRow: row, tooltipColumn: column, tooltipContext: e.currentTarget, tooltipIsSupport: isSupport })}
+        onMouseLeave={() => cohort && this.state.tooltipRow === row && this.state.tooltipColumn === column && this.setState({ tooltipRow: null, tooltipColumn: null, tooltipContext: null })}
         onContextMenu={(e: any) => e.preventDefault() || this.deleteCohort(cohort)}
       >
         <Cell

@@ -12,6 +12,7 @@ export const addParticipant = makeActionRemoveFirst(manager.addParticipant, mapp
 export const deleteParticipant = makeActionRemoveFirst(manager.deleteParticipant, mapping)
 export const selectTerrain = makeActionRemoveFirst(manager.selectTerrain, mapping)
 export const setDice = makeActionRemoveFirst(manager.setDice, mapping)
+export const setDaysUntilBattle = makeActionRemoveFirst(manager.setDaysUntilBattle, mapping)
 export const setPhaseDice = makeActionRemoveFirst(manager.setPhaseDice, mapping)
 export const toggleRandomDice = makeActionRemoveFirst(manager.toggleRandomDice, mapping)
 export const setSeed = makeActionRemoveFirst(manager.setSeed, mapping)

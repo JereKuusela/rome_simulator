@@ -31,8 +31,8 @@ class Battle extends Component<IProps> {
     this.props.refreshBattle()
   }
 
-  openCohortModal = (side: SideType, part: ArmyPart, country: CountryName, army: ArmyName, index: number): void => {
-    this.props.openModal(ModalType.CohortDetail, { side, part, country, army, index })
+  openCohortModal = (side: SideType, participantIndex: number, index: number, country: CountryName, army: ArmyName): void => {
+    this.props.openModal(ModalType.CohortDetail, { side, country, army, index, participantIndex })
   }
 
   openUnitDetails = (countryName: CountryName, armyName: ArmyName, type: UnitType): void => {

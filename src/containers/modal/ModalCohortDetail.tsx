@@ -111,7 +111,7 @@ const mapStateToProps = (state: AppState) => {
         army: data.army,
         unitTypes: toArr(state.countries[CountryName.Country1].units, unit => unit.type),
         mode,
-        cohort: convertCohort(settings, cohort, getCombatUnitForEachRound(state, data.side, data.part, data.country, data.army, data.index)),
+        cohort: convertCohort(settings, cohort, getCombatUnitForEachRound(state, data.side, data.participantIndex, data.index)),
         settings
       }
 

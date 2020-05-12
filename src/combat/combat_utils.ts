@@ -119,25 +119,30 @@ export const stackWipe = (cohorts: CombatCohorts) => {
 
 export const calculateTotalStrength = (cohorts: CombatCohorts) => {
   let strength = 0.0
-  const addRatio = (cohorts: (CombatCohort | null)[]) => {
-    for (let i = 0; i < cohorts.length; i++) {
-      const cohort = cohorts[i]
-      if (!cohort || cohort.state.isDefeated)
-        continue
+  const addRatio = (cohort: CombatCohort) => {
+    if (!cohort.state.isDefeated)
       strength += cohort[UnitAttribute.Strength]
-    }
   }
   iterateCohorts(cohorts, addRatio)
   return strength
 }
 
-export const iterateCohorts = (cohorts: CombatCohorts, func: (cohorts: (CombatCohort | null)[]) => void) => {
-  for (let i = 0; i < cohorts.frontline.length; i++)
-    func(cohorts.frontline[i])
-  func(cohorts.reserve.front)
-  func(cohorts.reserve.flank)
-  func(cohorts.reserve.support)
-  func(cohorts.defeated)
+/** Calls a function for every cohort.  */
+export const iterateCohorts = (cohorts: CombatCohorts, func: (cohort: CombatCohort) => void) => {
+  let i = 0, j = 0
+  let length = cohorts.frontline.length
+  let length2 = cohorts.frontline[0].length
+  for (; i < length; i++) {
+    for (; j < length2; j++) {
+      if (cohorts.frontline[i][j])
+        func(cohorts.frontline[i][j]!)
+    }
+  }
+  cohorts.reserve.front.forEach(func)
+  cohorts.reserve.front.forEach(func)
+  cohorts.reserve.flank.forEach(func)
+  cohorts.reserve.support.forEach(func)
+  cohorts.defeated.forEach(func)
 }
 
 /**

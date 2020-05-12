@@ -3,6 +3,8 @@ import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPha
 import { noZero } from 'utils'
 import { calculateValue } from 'definition_values'
 import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, calculateTotalStrength, stackWipe, reserveSize, reinforce, calculateGeneralPips, getTerrainPips } from 'combat'
+import { deploy } from './deployment'
+import { getLeadingGeneral } from 'managers/battle'
 
 /**
  * Makes given armies attach each other.
@@ -14,6 +16,7 @@ export const doBattle = (field: CombatField, a: CombatSide, d: CombatSide, markD
     removeDefeated(a.cohorts.frontline)
     removeDefeated(d.cohorts.frontline)
   }
+  deploy(field, a, d)
   reinforce(field, a)
   if (!settings[Setting.DefenderAdvantage])
     reinforce(field, d)
@@ -125,11 +128,8 @@ export const calculateTactic = (army: CombatCohorts, tactic: TacticDefinition, c
     let totalStrength = 0
     let totalWeight = 0.0
 
-    const addWeight = (cohorts: (CombatCohort | null)[]) => {
-      for (let i = 0; i < cohorts.length; i++) {
-        const cohort = cohorts[i]
-        if (!cohort || cohort.state.isDefeated)
-          continue
+    const addWeight = (cohort: CombatCohort) => {
+      if (!cohort.state.isDefeated) {
         totalStrength += cohort[UnitAttribute.Strength]
         totalWeight += calculateValue(tactic, cohort.definition.type) * cohort[UnitAttribute.Strength]
       }
@@ -150,16 +150,13 @@ const calculateFlankRatio = (army: CombatCohorts): number => {
   let infantry = 0.0
   let flank = 0.0
 
-  const addRatio = (cohorts: (CombatCohort | null)[]) => {
-    for (let i = 0; i < cohorts.length; i++) {
-      const cohort = cohorts[i]
-      if (!cohort || cohort.state.isDefeated)
-        continue
-      if (cohort.definition.role === UnitRole.Front)
-        infantry += cohort[UnitAttribute.Strength]
-      if (cohort.definition.role === UnitRole.Flank)
-        flank += cohort[UnitAttribute.Strength]
-    }
+  const addRatio = (cohort: CombatCohort) => {
+    if (cohort.state.isDefeated)
+      return
+    if (cohort.definition.role === UnitRole.Front)
+      infantry += cohort[UnitAttribute.Strength]
+    if (cohort.definition.role === UnitRole.Flank)
+      flank += cohort[UnitAttribute.Strength]
   }
   iterateCohorts(army, addRatio)
   return flank / noZero(flank + infantry)
@@ -221,11 +218,13 @@ const moveDefeated = (frontline: CombatFrontline, defeated: CombatDefeated, mark
 const attack = (source: CombatSide, target: CombatSide, dailyMultiplier: number, tacticStrengthDamageMultiplier: number, terrains: TerrainDefinition[], phase: CombatPhase, settings: Settings) => {
   // Tactic bonus changes dynamically when units lose strength so it can't be precalculated.
   // If this is a problem a fast mode can be implemeted where to bonus is only calculated once.
-  const generalS = source.generals[0]
-  const generalT = target.generals[0]
-  const generalPips =  calculateGeneralPips(generalS.values, generalT.values, phase)
+  const generalS = getLeadingGeneral(source)
+  const generalT = getLeadingGeneral(target)
+  const generalPips = calculateGeneralPips(generalS.values, generalT.values, phase)
   const terrainPips = getTerrainPips(terrains, source.type, generalS.values, generalT.values)
 
+  source.results.generalPips = generalPips
+  source.results.terrainPips = terrainPips
   source.results.tacticStrengthDamageMultiplier = tacticStrengthDamageMultiplier
   source.results.tacticBonus = settings[Setting.Tactics] ? calculateTactic(source.cohorts, generalS.tactic, generalT.tactic) : 0.0
   source.results.flankRatioBonus = calculateFlankRatioPenalty(target.cohorts, target.flankRatio, settings)

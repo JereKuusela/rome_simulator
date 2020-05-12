@@ -42,6 +42,7 @@ export type CombatGeneral = {
   rightFlank: number
   priority: number
   tactic: TacticDefinition
+  arrival: number
   values: { [key in GeneralValueType]: number }
 }
 

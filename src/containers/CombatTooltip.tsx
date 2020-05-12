@@ -4,7 +4,7 @@ import { Popup, List } from 'semantic-ui-react'
 
 import StyledNumber from 'components/Utils/StyledNumber'
 
-import { SideType, ArmyPart, UnitAttribute, UnitType, Setting, TerrainType, CombatPhase, Mode, CombatCohortDefinition, CombatCohortRoundInfo, CombatCohort, DisciplineValue, CountryName, ArmyName } from 'types'
+import { SideType, ArmyPart, UnitAttribute, UnitType, Setting, TerrainType, CombatPhase, Mode, CombatCohortDefinition, CombatCohortRoundInfo, CombatCohort, DisciplineValue } from 'types'
 import { calculateCohortPips, getOffensiveCohortPips, getDefensiveCohortPips, getCombatPhase, getDefensiveSupportCohortPips } from 'combat'
 import { toSignedPercent, strengthToValue, toNumber, addSign, toMultiplier, toMorale } from 'formatters'
 import { AppState, getSettings, getSelectedTerrains, getCombatUnit, getCombatSide, getMode } from 'state'
@@ -12,7 +12,8 @@ import { noZero } from 'utils'
 import { getCohortName } from 'managers/units'
 
 type Props = {
-  cohort: { index: number, countryName: CountryName, armyName: ArmyName } | null
+  row: number | null
+  column: number | null
   isSupport: boolean
   context: Element | null
   side: SideType
@@ -34,12 +35,12 @@ class CombatTooltip extends Component<IProps, IState> {
   }
 
   render() {
-    const { cohort, context, isSupport } = this.props
+    const { source, context, isSupport } = this.props
     return (
       <Popup
-        open={cohort != null}
+        open={source !== null}
         context={context!}
-        content={cohort ? this.getExplanation(isSupport) : null}
+        content={this.getExplanation(isSupport)}
         inverted
       />
     )
@@ -295,7 +296,7 @@ const convertUnit = (cohort: CombatCohort | null, convertTarget: boolean = true)
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  source: props.cohort ? convertUnit(getCombatUnit(state, props.side, props.part, props.cohort.countryName, props.cohort.armyName, props.cohort.index)) : null,
+  source: (props.row !== null && props.column !== null) ? convertUnit(getCombatUnit(state, props.side, props.part, props.row, props.column)) : null,
   results: getCombatSide(state, props.side).results,
   settings: getSettings(state),
   terrains: getSelectedTerrains(state),

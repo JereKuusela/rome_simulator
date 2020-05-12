@@ -19,6 +19,10 @@ export const setDice = (battle: Battle, sideType: SideType, dice: number) => {
   battle.sides[sideType].dice = dice
 }
 
+export const setDaysUntilBattle = (battle: Battle, sideType: SideType, index: number, daysUntilBattle: number) => {
+  battle.sides[sideType].participants[index].daysUntilBattle = daysUntilBattle
+}
+
 export const setPhaseDice = (battle: Battle, sideType: SideType, phase: number, dice: number) => {
   const rolls = battle.sides[sideType].rolls
   while (rolls.length - 1 < phase)
@@ -61,7 +65,7 @@ export const convertSide = (side: Side, armies: CombatArmy[], settings: Settings
     },
     flankRatio: 0,
     armies,
-    generals: armies.map(army => army.general).sort((a, b) => a.priority - b.priority),
+    generals: armies.map(army => army.general).sort((a, b) => b.priority - a.priority),
     type: side.type,
     results: {
       dailyMultiplier: 0,
@@ -82,19 +86,22 @@ export const convertArmy = (participantIndex: number, participant: Participant, 
   return {
     reserve: sorted,
     flankSize: army.flankSize,
-    general: convertGeneral(army, army.general),
-    arrival: 0,
+    general: convertGeneral(army, army.general, participant.daysUntilBattle),
+    arrival: participant.daysUntilBattle,
     strength: sum(reserve.map(cohort => cohort[UnitAttribute.Strength]))
   }
 }
 
-const convertGeneral = (army: Army, general: General): CombatGeneral => {
+const convertGeneral = (army: Army, general: General, arrival: number): CombatGeneral => {
   return {
     leftFlank: army.flankSize,
     rightFlank: army.flankSize,
     priority: general.values[GeneralAttribute.Martial],
     tactic: general.tactic,
     unitPreferences: army.unitPreferences,
-    values: general.values
+    values: general.values,
+    arrival
   }
 }
+
+export const getLeadingGeneral = (side: CombatSide): CombatGeneral => side.generals.filter(general => general.arrival <= side.results.round)[0]

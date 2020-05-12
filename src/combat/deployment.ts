@@ -226,9 +226,9 @@ const deploySub = (side: CombatSide, army: CombatArmy, settings: Settings, enemy
 const checkInstantStackWipe = (attacker: CombatSide, defender: CombatSide, settings: Settings) => {
   const strengthA = sum(attacker.armies.map(participant => participant.strength))
   const strengthD = sum(defender.armies.map(participant => participant.strength))
-  if (!defender.alive || strengthA / strengthD > settings[Setting.HardStackWipeLimit])
+  if (!defender.alive || (strengthD && strengthA / strengthD > settings[Setting.HardStackWipeLimit]))
     stackWipe(defender.cohorts)
-  else if (!attacker.alive || strengthD / strengthA > settings[Setting.HardStackWipeLimit])
+  else if (!attacker.alive || (strengthA && strengthD / strengthA > settings[Setting.HardStackWipeLimit]))
     stackWipe(attacker.cohorts)
 }
 

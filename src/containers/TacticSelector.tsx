@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { AppState, getCurrentCombat, getSelectedTactic, filterTactics, getSiteSettings, getParticipant, getLeadingGeneral } from 'state'
+import { AppState, getCurrentCombat, getSelectedTactic, filterTactics, getSiteSettings, getParticipant, getCombatSide } from 'state'
 import { toArr } from 'utils'
 import { selectTactic } from 'reducers'
 import { SideType, CombatCohorts, TacticDefinition, TacticCalc, TacticType, Tactic } from 'types'
@@ -8,6 +8,7 @@ import { calculateTactic } from 'combat'
 import { getOpponent } from 'army_utils'
 import { calculateValue } from 'definition_values'
 import DropdownTactic from 'components/Dropdowns/DropdownTactic'
+import { getLeadingGeneral } from 'managers/battle'
 
 type Props = {
   side: SideType
@@ -42,7 +43,7 @@ const convertTactic = (tactic: TacticDefinition, cohorts: CombatCohorts, opposin
 const mapStateToProps = (state: AppState, props: Props) => {
   const cohorts = getCurrentCombat(state, props.side)
   const tactic = getSelectedTactic(state, props.side, props.index)
-  const opponent = getLeadingGeneral(state, getOpponent(props.side))
+  const opponent = getLeadingGeneral(getCombatSide(state, getOpponent(props.side)))
   return {
     tactics: toArr(filterTactics(state), tactic => convertTactic(tactic, cohorts, opponent.tactic)),
     tactic: tactic.type,

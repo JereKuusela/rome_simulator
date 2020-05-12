@@ -5,7 +5,7 @@ import { Table, Input, Button } from 'semantic-ui-react'
 import { SideType, CountryName, Setting, General, GeneralAttribute, GeneralValueType, isAttributeEnabled, CountryAttribute, ArmyName, Country, Armies, Participant, UnitType, UnitAttribute, Unit } from 'types'
 import { keys } from 'utils'
 import { AppState, getCountry, getGeneral, getCountries, getMode, getSiteSettings, getArmies, getSide, getUnits } from 'state'
-import { selectParticipantCountry, selectParticipantArmy, setGeneralAttribute, deleteParticipant, addParticipant } from 'reducers'
+import { selectParticipantCountry, selectParticipantArmy, setGeneralAttribute, deleteParticipant, addParticipant, setDaysUntilBattle } from 'reducers'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TacticSelector from './TacticSelector'
 import { addSign } from 'formatters'
@@ -15,6 +15,7 @@ import AttributeImage from 'components/Utils/AttributeImage'
 import UnitValueInput from './UnitValueInput'
 import { getArchetypes } from 'managers/army'
 import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
+import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 
 type Props = {
   type: SideType
@@ -65,6 +66,9 @@ class TableArmyInfo extends Component<IProps> {
                 <AttributeImage attribute={UnitAttribute.OffensiveSupport} settings={settings} />
               </Table.HeaderCell>
             }
+            <Table.HeaderCell>
+              Days
+            </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -73,6 +77,7 @@ class TableArmyInfo extends Component<IProps> {
             <Table.Cell>
               <Button size='mini' icon={'plus'} onClick={() => addParticipant(type, last.countryName, last.armyName)} />
             </Table.Cell>
+            <Table.Cell />
             <Table.Cell />
             <Table.Cell />
             <Table.Cell />
@@ -130,6 +135,9 @@ class TableArmyInfo extends Component<IProps> {
             <UnitValueInput unit={artillery} attribute={UnitAttribute.OffensiveSupport} country={participant.countryName} percent />
           </Table.Cell>
         }
+        <Table.Cell>
+          <DelayedNumericInput value={participant.daysUntilBattle} onChange={value => this.setDaysUntilBattle(index, value)} type='number' />
+        </Table.Cell>
       </Table.Row >
     )
   }
@@ -140,6 +148,10 @@ class TableArmyInfo extends Component<IProps> {
       {' '}<StyledNumber value={general.extraValues[attribute]} formatter={addSign} hideZero />
     </Table.Cell>
   )
+
+  setDaysUntilBattle = (index: number, value: number) => {
+    this.props.setDaysUntilBattle(this.props.type, index, value)
+  }
 }
 
 type Entity = Participant & {
@@ -167,7 +179,7 @@ const mapStateToProps = (state: AppState, props: Props) => {
   }
 }
 
-const actions = { selectParticipantCountry, selectParticipantArmy, setGeneralAttribute, deleteParticipant, addParticipant }
+const actions = { selectParticipantCountry, selectParticipantArmy, setGeneralAttribute, deleteParticipant, addParticipant, setDaysUntilBattle }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
