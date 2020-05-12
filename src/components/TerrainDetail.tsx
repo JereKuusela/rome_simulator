@@ -7,13 +7,13 @@ import DetailDropdownRow from './Detail/DetailDropdownRow'
 import Input from './Utils/Input'
 import Headers from './Utils/Headers'
 
-import { Mode, ValuesType, TerrainDefinition, TerrainType, LocationType, TerrainCalc, TerrainValueType, terrainValueToString } from 'types'
+import { Mode, ValuesType, Terrain, TerrainType, LocationType, TerrainCalc, TerrainValueType, terrainValueToString } from 'types'
 import { values } from 'utils'
 import { getValue, explainShort } from 'definition_values'
 
 interface IProps {
   customValueKey: string
-  terrain: TerrainDefinition
+  terrain: Terrain
   onCustomValueChange: (key: string, attribute: TerrainValueType, value: number) => void
   onTypeChange: (type: TerrainType) => void
   onLocationChange: (location: LocationType) => void
@@ -48,16 +48,16 @@ export default class TerrainDetail extends Component<IProps> {
     )
   }
 
-  renderRow = (tactic: TerrainDefinition, attribute: TerrainValueType) => {
+  renderRow = (terrain: Terrain, attribute: TerrainValueType) => {
     const { customValueKey, onCustomValueChange } = this.props
-    const value = getValue(ValuesType.Base, tactic, attribute, customValueKey)
+    const value = getValue(ValuesType.Base, terrain, attribute, customValueKey)
 
     return (
       <PaddedRow key={attribute} cells={this.CELLS}>
         {attribute}
-        {terrainValueToString(tactic, attribute)}
+        {terrainValueToString(terrain, attribute)}
         <Input value={String(value)} onChange={value => onCustomValueChange(customValueKey, attribute, Number(value))} />
-        {explainShort(tactic, attribute)}
+        {explainShort(terrain, attribute)}
       </PaddedRow>
     )
   }

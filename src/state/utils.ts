@@ -1,7 +1,7 @@
 import { AppState } from './index'
-import { toArr, filter, arrGet, toObj, keys } from 'utils'
+import { toArr, toObj, keys } from 'utils'
 import { filterUnitDefinitions, getArmyPart, convertReserveDefinitions, convertUnitDefinitions, convertUnitDefinition, shrinkUnits } from '../army_utils'
-import { Mode, CountryName, SideType, CohortDefinition, ArmyPart, UnitType, TerrainType, LocationType, TacticType, TacticDefinition, UnitPreferences, Participant, TerrainDefinition, Settings, Battle, TerrainDefinitions, TacticDefinitions, ArmyName, GeneralDefinition, Countries, Setting, ReserveDefinition, CountryAttribute, Units, UnitDefinition, GeneralData, Country, CountryDefinition, Cohort, Cohorts, SideData, Side, Environment, ArmyDefinition } from 'types'
+import { Mode, CountryName, SideType, CohortDefinition, ArmyPart, UnitType, TerrainType, LocationType, TacticType, TacticDefinition, UnitPreferences, Participant, Terrain, Settings, Battle, ArmyName, GeneralDefinition, Countries, Setting, ReserveDefinition, CountryAttribute, Units, UnitDefinition, GeneralData, Country, CountryDefinition, Cohort, Cohorts, SideData, Side, Environment, ArmyDefinition } from 'types'
 import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticState, getDefaultTerrainState } from 'data'
 import { uniq, flatten } from 'lodash'
 import * as manager from 'managers/army'
@@ -26,13 +26,11 @@ export const getSettings = (state: AppState, mode?: Mode): Settings => {
 
 export const getSiteSettings = (state: AppState) => state.settings.siteSettings
 
-export const getCohort = (state: AppState, country: CountryName, army: ArmyName, index: number): CohortDefinition => getReserve(state, country, army)[index]
+export const getCohortDefinition = (state: AppState, country: CountryName, army: ArmyName, index: number): CohortDefinition => getReserve(state, country, army)[index]
 
-/** Returns combat unit  */
-export const getCombatUnit = (state: AppState, side: SideType, part: ArmyPart, row: number, column: number): Cohort | null => getArmyPart(getCurrentCombat(state, side), part)[row][column]
+export const getCohort = (state: AppState, side: SideType, part: ArmyPart, row: number, column: number): Cohort | null => getArmyPart(getCohorts(state, side), part)[row][column]
 
-// Note this doesn't work because units may move (should use participant index and index to search..., from all parts).
-export const getCombatUnitForEachRound = (state: AppState, side: SideType, participantIndex: number, index: number) => {
+export const getCohortForEachRound = (state: AppState, side: SideType, participantIndex: number, index: number) => {
   const rounds = state.battle[state.settings.mode].sides[side].rounds
   return rounds.map(side => {
     let result = null
@@ -59,37 +57,47 @@ export const mergeUnitTypes = (state: AppState): UnitType[] => {
   }, new Set<UnitType>()))
 }
 
-/**
- * Returns terrain types for the current mode.
- * @param state Application state.
- */
-export const filterTerrainTypes = (state: AppState): TerrainType[] => {
-  return toArr(filterTerrains(state), terrain => terrain.type)
-}
+//#region Terrains
 
 /**
- * Returns terrains for the current mode.
- * @param state Application state.
+ * Returns terrain types.
+ * @param location Location filter (ignored if not given).
+ * @param mode Mode filter (current mode if not given).
  */
-export const filterTerrains = (state: AppState, location?: LocationType): TerrainDefinitions => {
-  return filter(state.terrains, terrain => terrain.mode === state.settings.mode && (!location || terrain.location === location))
-}
+export const getTerrainTypes = (state: AppState, location?: LocationType, mode?: Mode): TerrainType[] => getTerrains(state, location, mode).map(terrain => terrain.type)
 
 /**
- * Returns tactic types for the current mode.
- * @param state Application state.
+ * Returns terrain .
+ * @param location Location filter (ignored if not given).
+ * @param mode Mode filter (current mode if not given).
  */
-export const filterTacticTypes = (state: AppState): TacticType[] => {
-  return toArr(filterTactics(state), tactic => tactic.type)
+export const getTerrains = (state: AppState, location?: LocationType, mode?: Mode): Terrain[] => {
+  const terrains = toArr(state.terrains)
+  mode = mode ?? state.settings.mode
+  return terrains.filter(terrain => terrain.mode === mode && (!location || terrain.location === location))
 }
 
+//#endregion
+
+//#region Tactics
+
 /**
- * Returns tactics for the current mode.
- * @param state Application state.
+ * Returns tactic types.
+ * @param mode Mode filter (current mode if not given).
  */
-export const filterTactics = (state: AppState): TacticDefinitions => {
-  return filter(state.tactics, tactic => tactic.mode === state.settings.mode)
+export const getTacticTypes = (state: AppState, mode?: Mode): TacticType[] => getTactics(state, mode).map(tactic => tactic.type)
+
+/**
+ * Returns tactics.
+ * @param mode Mode filter (current mode if not given).
+ */
+export const getTactics = (state: AppState, mode?: Mode): TacticDefinition[] => {
+  const tactics = toArr(state.tactics)
+  mode = mode ?? state.settings.mode
+  return tactics.filter(tactic => tactic.mode === state.settings.mode)
 }
+
+////#endregion
 
 /**
  * Returns armies of the current mode.
@@ -111,10 +119,7 @@ export const getUnitDefinitions = (state: AppState, countryName: CountryName, ar
 
 const getUnitTypes = (state: AppState, countryName: CountryName) => toArr(state.countries[countryName].units, unit => unit).filter(unit => unit.mode === state.settings.mode).map(unit => unit.type)
 
-export const getCurrentCombat = (state: AppState, sideType: SideType): Cohorts => {
-  const side = getSide(state, sideType)
-  return arrGet(side.rounds, -1)?.cohorts ?? { frontline: [], reserve: { front: [], flank: [], support: [] }, defeated: [] }
-}
+export const getCohorts = (state: AppState, sideType: SideType, round?: number): Cohorts => getCombatSide(state, sideType, round).cohorts
 
 export const getCombatSide = (state: AppState, sideType: SideType, round?: number): Side => {
   const side = getSide(state, sideType)
@@ -219,7 +224,7 @@ export const getFirstParticipant = (state: AppState, type: SideType, mode?: Mode
 
 export const getSide = (state: AppState, type: SideType, mode?: Mode): SideData => getBattle(state, mode).sides[type]
 
-export const getSelectedTerrains = (state: AppState): TerrainDefinition[] => getBattle(state).terrains.map(value => state.terrains[value])
+export const getSelectedTerrains = (state: AppState): Terrain[] => getBattle(state).terrains.map(value => state.terrains[value])
 
 export const getUnits = (state: AppState, countryName?: CountryName, armyName?: ArmyName, mode?: Mode): Units => {
   const settings = getSiteSettings(state)

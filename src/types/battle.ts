@@ -1,4 +1,4 @@
-import { CountryName, Mode, TerrainType, TerrainDefinition, Settings, Cohorts } from 'types'
+import { CountryName, Mode, TerrainType, Terrain, Settings, Cohorts } from 'types'
 import { ArmyName, Army, General } from './armies'
 
 export type Battle = {
@@ -43,7 +43,7 @@ export enum SideType {
 /** Information affecting both sides of combat. */
 export type Environment = {
   round: number
-  terrains: TerrainDefinition[]
+  terrains: Terrain[]
   settings: Settings
 }
 

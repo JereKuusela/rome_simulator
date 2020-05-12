@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import ItemRemover from 'components/ItemRemover'
 import UnitDetail from 'components/UnitDetail'
 
-import { AppState, filterTerrainTypes, getCombatUnitForEachRound, getMode, getSiteSettings, getCohort } from 'state'
+import { AppState, getTerrainTypes, getCohortForEachRound, getMode, getSiteSettings, getCohortDefinition } from 'state'
 import { ValuesType, CountryName, UnitType, CohortDefinition, UnitAttribute, UnitValueType, Cohort, ModalType, SiteSettings, ArmyName } from 'types'
 import { addValues } from 'definition_values'
 import { deleteCohort, setCohortValue, changeCohortType, toggleCohortLoyality, closeModal } from 'reducers'
@@ -102,16 +102,16 @@ const mapStateToProps = (state: AppState) => {
   const settings = getSiteSettings(state)
   const mode = getMode(state)
   if (data) {
-    const cohort = getCohort(state, data.country, data.army, data.index)
+    const cohort = getCohortDefinition(state, data.country, data.army, data.index)
     if (cohort) {
       return {
         index: data.index,
-        terrainTypes: filterTerrainTypes(state),
+        terrainTypes: getTerrainTypes(state),
         country: data.country,
         army: data.army,
         unitTypes: toArr(state.countries[CountryName.Country1].units, unit => unit.type),
         mode,
-        cohort: convertCohort(settings, cohort, getCombatUnitForEachRound(state, data.side, data.participantIndex, data.index)),
+        cohort: convertCohort(settings, cohort, getCohortForEachRound(state, data.side, data.participantIndex, data.index)),
         settings
       }
 
@@ -119,7 +119,7 @@ const mapStateToProps = (state: AppState) => {
   }
   return {
     index: 0,
-    terrainTypes: filterTerrainTypes(state),
+    terrainTypes: getTerrainTypes(state),
     country: CountryName.Country1,
     army: ArmyName.Army,
     mode,

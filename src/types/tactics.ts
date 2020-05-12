@@ -38,6 +38,7 @@ export type Tactic = {
   casualties: number
   image: string
 }
+
 export const dictionaryTacticType: { [key: string]: TacticType } = {
   shock_action: TacticType.ShockAction,
   envelopment: TacticType.Envelopment,

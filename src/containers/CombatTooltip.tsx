@@ -7,7 +7,7 @@ import StyledNumber from 'components/Utils/StyledNumber'
 import { SideType, ArmyPart, UnitAttribute, UnitType, Setting, TerrainType, CombatPhase, Mode, CohortProperties, CohortRoundInfo, Cohort, DisciplineValue } from 'types'
 import { calculateCohortPips, getOffensiveCohortPips, getDefensiveCohortPips, getCombatPhase, getDefensiveSupportCohortPips } from 'combat'
 import { toSignedPercent, strengthToValue, toNumber, addSign, toMultiplier, toMorale } from 'formatters'
-import { AppState, getSettings, getSelectedTerrains, getCombatUnit, getCombatSide, getMode } from 'state'
+import { AppState, getSettings, getSelectedTerrains, getCohort, getCombatSide, getMode } from 'state'
 import { noZero } from 'utils'
 import { getCohortName } from 'managers/units'
 
@@ -296,7 +296,7 @@ const convertUnit = (cohort: Cohort | null, convertTarget: boolean = true): IUni
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  source: (props.row !== null && props.column !== null) ? convertUnit(getCombatUnit(state, props.side, props.part, props.row, props.column)) : null,
+  source: (props.row !== null && props.column !== null) ? convertUnit(getCohort(state, props.side, props.part, props.row, props.column)) : null,
   results: getCombatSide(state, props.side).results,
   settings: getSettings(state),
   terrains: getSelectedTerrains(state),

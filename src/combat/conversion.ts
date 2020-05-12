@@ -1,11 +1,11 @@
 
 import { sumBy, values } from 'lodash'
-import { TerrainDefinition, UnitType, CohortDefinition, UnitAttribute, Setting, Settings, CombatPhase, UnitValueType, Cohort, CohortProperties, DisciplineValue, CountryName, ArmyName } from 'types'
+import { Terrain, UnitType, CohortDefinition, UnitAttribute, Setting, Settings, CombatPhase, UnitValueType, Cohort, CohortProperties, DisciplineValue, CountryName, ArmyName } from 'types'
 import { toObj, map, noZero } from 'utils'
 import { calculateValue, calculateValueWithoutLoss, calculateBase } from 'definition_values'
 import { calculateExperienceReduction } from './combat_utils'
 
-export const getProperties = (countryName: CountryName, armyName: ArmyName, participantIndex: number, index: number, settings: Settings, terrains: TerrainDefinition[], unitTypes: UnitType[], cohort: CohortDefinition): CohortProperties => {
+export const getProperties = (countryName: CountryName, armyName: ArmyName, participantIndex: number, index: number, settings: Settings, terrains: Terrain[], unitTypes: UnitType[], cohort: CohortDefinition): CohortProperties => {
   const damageReduction = precalculateDamageReduction(cohort, settings)
   const properties = {
     index,
@@ -39,7 +39,7 @@ export const getProperties = (countryName: CountryName, armyName: ArmyName, part
 /**
  * Transforms a unit to a combat unit.
  */
-export const getCombatUnit = (countryName: CountryName, armyName: ArmyName, participantIndex: number, index: number, settings: Settings, terrains: TerrainDefinition[], unitTypes: UnitType[], cohort: CohortDefinition): Cohort => ({
+export const getCombatUnit = (countryName: CountryName, armyName: ArmyName, participantIndex: number, index: number, settings: Settings, terrains: Terrain[], unitTypes: UnitType[], cohort: CohortDefinition): Cohort => ({
   [UnitAttribute.Morale]: calculateValue(cohort, UnitAttribute.Morale),
   [UnitAttribute.Strength]: calculateValue(cohort, UnitAttribute.Strength),
   state: { target: null, targetSupport: null, flanking: false, moraleLoss: 0, strengthLoss: 0, moraleDealt: 0, strengthDealt: 0, damageMultiplier: 0, isDefeated: false, isDestroyed: false, totalMoraleDealt: 0, totalStrengthDealt: 0 },
@@ -79,14 +79,14 @@ const applyDamageTypes = (unit: CohortDefinition, settings: Settings, values: { 
   }
 }
 
-const getDamages = (settings: Settings, terrains: TerrainDefinition[], unitTypes: UnitType[], cohort: CohortDefinition) => (
+const getDamages = (settings: Settings, terrains: Terrain[], unitTypes: UnitType[], cohort: CohortDefinition) => (
   applyDamageTypes(cohort, settings, applyUnitTypes(cohort, unitTypes, settings, applyPhaseDamage(cohort, precalculateDamage(terrains, cohort, settings))))
 )
 
 const getValue = (unit: CohortDefinition, attribute: UnitValueType, enabled: boolean) => 1.0 + getMultiplier(unit, attribute, enabled)
 const getMultiplier = (unit: CohortDefinition, attribute: UnitValueType, enabled: boolean) => enabled ? calculateValue(unit, attribute) : 0
 
-const precalculateDamage = (terrains: TerrainDefinition[], unit: CohortDefinition, settings: Settings) => (
+const precalculateDamage = (terrains: Terrain[], unit: CohortDefinition, settings: Settings) => (
   settings[Setting.Precision]
   * getValue(unit, UnitAttribute.Discipline, settings[Setting.AttributeDiscipline] === DisciplineValue.Both || settings[Setting.AttributeDiscipline] === DisciplineValue.Damage)
   * getValue(unit, UnitAttribute.CombatAbility, settings[Setting.AttributeCombatAbility])

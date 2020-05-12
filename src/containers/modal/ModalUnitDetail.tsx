@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { ValuesType, CountryName, UnitType, CohortDefinition, UnitRole, UnitValueType, ModalType, ArmyName } from 'types'
 import UnitDetail from 'components/UnitDetail'
-import { AppState, getUnit, filterTerrainTypes, getMode, getUnitTypeList, getSiteSettings } from 'state'
+import { AppState, getUnit, getTerrainTypes, getMode, getUnitTypeList, getSiteSettings } from 'state'
 import { openModal, changeUnitType, deleteUnit, setUnitValue, changeUnitImage, changeParent, changeUnitDeployment, toggleUnitLoyality, closeModal } from 'reducers'
 import BaseModal from './BaseModal'
 import { getRootParent } from 'managers/units'
@@ -96,7 +96,7 @@ const mapStateToProps = (state: AppState) => {
     unit: data ? getUnit(state, data.type, data.country) : null,
     unitTypes: getUnitTypeList(state, true, data?.country),
     unitTypesWithParent: getUnitTypeList(state, false, data?.country).filter(type => type !== data?.type),
-    terrainTypes: filterTerrainTypes(state),
+    terrainTypes: getTerrainTypes(state),
     mode: getMode(state),
     settings: getSiteSettings(state)
   }

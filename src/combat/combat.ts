@@ -1,5 +1,5 @@
 
-import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, Cohorts, Cohort, Frontline, Defeated, Side, TerrainDefinition, Environment, TacticCalc } from 'types'
+import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, Cohorts, Cohort, Frontline, Defeated, Side, Terrain, Environment, TacticCalc } from 'types'
 import { noZero } from 'utils'
 import { calculateValue } from 'definition_values'
 import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, calculateTotalStrength, stackWipe, reserveSize, reinforce, calculateGeneralPips, getTerrainPips } from 'combat'
@@ -215,7 +215,7 @@ const moveDefeated = (frontline: Frontline, defeated: Defeated, markDefeated: bo
   return alive
 }
 
-const attack = (source: Side, target: Side, dailyMultiplier: number, tacticStrengthDamageMultiplier: number, terrains: TerrainDefinition[], phase: CombatPhase, settings: Settings) => {
+const attack = (source: Side, target: Side, dailyMultiplier: number, tacticStrengthDamageMultiplier: number, terrains: Terrain[], phase: CombatPhase, settings: Settings) => {
   // Tactic bonus changes dynamically when units lose strength so it can't be precalculated.
   // If this is a problem a fast mode can be implemeted where to bonus is only calculated once.
   const generalS = getLeadingGeneral(source)

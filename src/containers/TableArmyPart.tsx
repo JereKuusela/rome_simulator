@@ -6,7 +6,7 @@ import CombatTooltip from './CombatTooltip'
 import IconDefeated from 'images/attrition.png'
 import { SideType, ArmyPart, UnitAttribute, Cohort, CountryName, ArmyName } from 'types'
 import { getImage, resize } from 'utils'
-import { AppState, getCurrentCombat, getBattle } from 'state'
+import { AppState, getCohorts, getBattle } from 'state'
 import { getArmyPart } from 'army_utils'
 import { deleteCohort } from 'reducers'
 import { getCohortId } from 'managers/units'
@@ -203,7 +203,7 @@ const convertUnits = (units: (Cohort | null)[][]): ICohort[][] => (
 )
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  units: convertUnits(getArmyPart(getCurrentCombat(state, props.side), props.part)),
+  units: convertUnits(getArmyPart(getCohorts(state, props.side), props.part)),
   timestamp: getBattle(state).timestamp
 })
 

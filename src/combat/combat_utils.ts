@@ -1,6 +1,6 @@
 
 import { sumBy, sum } from 'lodash'
-import { TerrainDefinition, TerrainCalc, Setting, UnitAttribute, UnitData, CombatPhase, GeneralAttribute, SideType, LocationType, CohortProperties, SiteSettings, Cohorts, Cohort, Frontline, Reserve, Side, GeneralValues } from 'types'
+import { Terrain, TerrainCalc, Setting, UnitAttribute, UnitData, CombatPhase, GeneralAttribute, SideType, LocationType, CohortProperties, SiteSettings, Cohorts, Cohort, Frontline, Reserve, Side, GeneralValues } from 'types'
 import { calculateValue } from 'definition_values'
 
 /**
@@ -13,7 +13,7 @@ export const calculateGeneralPips = (values: GeneralValues, enemy: GeneralValues
   return Math.max(0, martialPip + phasePip)
 }
 
-export const getTerrainPips = (terrains: TerrainDefinition[], side: SideType, values: GeneralValues, enemy: GeneralValues) => {
+export const getTerrainPips = (terrains: Terrain[], side: SideType, values: GeneralValues, enemy: GeneralValues) => {
   const enableTiles = side === SideType.Attacker
   const enableBorders = side === SideType.Attacker || values[GeneralAttribute.Maneuver] <= enemy[GeneralAttribute.Maneuver]
   terrains = terrains.filter(terrain => terrain.location === LocationType.Border ? enableBorders : enableTiles)

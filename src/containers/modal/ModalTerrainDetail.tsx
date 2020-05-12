@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { AppState } from 'state'
+import { AppState, getMode } from 'state'
 import TerrainDetail from 'components/TerrainDetail'
 import { Mode, TerrainType, LocationType, TerrainValueType, ModalType } from 'types'
 import { setTerrainLocation, setTerrainImage, setTerrainType, setTerrainMode, setTerrainValue, deleteTerrain, closeModal } from 'reducers'
@@ -11,8 +11,7 @@ const CUSTOM_VALUE_KEY = 'Custom'
 
 class ModalTerrainDetail extends Component<IProps> {
   render() {
-    const { terrains, type } = this.props
-    const terrain = terrains[type]
+    const { terrain } = this.props
     return (
       <BaseModal basic type={ModalType.TerrainDetail}>
         <ItemRemover onRemove={this.delete} />
@@ -56,11 +55,14 @@ class ModalTerrainDetail extends Component<IProps> {
   }
 }
 
-const mapStateToProps = (state: AppState) => ({
-  type: state.ui.modals[ModalType.TerrainDetail]?.type ?? TerrainType.None,
-  terrains: state.terrains,
-  mode: state.settings.mode
-})
+const mapStateToProps = (state: AppState) => {
+  const type = state.ui.modals[ModalType.TerrainDetail]?.type ?? TerrainType.None
+  return {
+    type,
+    terrain: state.terrains[type],
+    mode: getMode(state)
+  }
+}
 
 const actions = { setTerrainLocation, setTerrainImage, setTerrainType, setTerrainMode, setTerrainValue, deleteTerrain, closeModal }
 

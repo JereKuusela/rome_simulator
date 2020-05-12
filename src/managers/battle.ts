@@ -1,4 +1,4 @@
-import { Battle, TerrainType, SideType, CountryName, TerrainDefinition, Settings, Setting, Army, UnitType, ArmyName, SideData, Side, ArmyDefinition, UnitAttribute, General, GeneralDefinition, GeneralAttribute, Participant } from 'types'
+import { Battle, TerrainType, SideType, CountryName, Terrain, Settings, Setting, Army, UnitType, ArmyName, SideData, Side, ArmyDefinition, UnitAttribute, General, GeneralDefinition, GeneralAttribute, Participant } from 'types'
 import { getCombatUnit, sortReserve } from 'combat'
 import { sum } from 'lodash'
 
@@ -80,7 +80,7 @@ export const convertSide = (side: SideData, armies: Army[], settings: Settings):
   }
 }
 
-export const convertArmy = (participantIndex: number, participant: Participant, army: ArmyDefinition, enemyTypes: UnitType[], terrains: TerrainDefinition[], settings: Settings): Army => {
+export const convertArmy = (participantIndex: number, participant: Participant, army: ArmyDefinition, enemyTypes: UnitType[], terrains: Terrain[], settings: Settings): Army => {
   const reserve = army.reserve.map((cohort, index) => getCombatUnit(participant.countryName, participant.armyName, participantIndex, index, settings, terrains, enemyTypes, cohort))
   const sorted = sortReserve(reserve, army.unitPreferences)
   return {

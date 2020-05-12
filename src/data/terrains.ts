@@ -1,4 +1,4 @@
-import { ValuesType, Mode, TerrainType, LocationType, TerrainCalc, TerrainDefinition, TerrainValueType, TerrainDefinitions } from 'types'
+import { ValuesType, Mode, TerrainType, LocationType, TerrainCalc, Terrain, TerrainValueType, TerrainDefinitions } from 'types'
 import { addValues } from 'definition_values'
 import { toObj } from 'utils'
 
@@ -6,8 +6,8 @@ import * as dataIR from './json/ir/terrains.json'
 import * as dataEUIV from './json/euiv/terrains.json'
 import IconTerrain from 'images/terrain.png'
 
-const createTerrainFromJson = (data: TerrainData): TerrainDefinition => {
-  let terrain: TerrainDefinition = { type: data.type as TerrainType, mode: data.mode as Mode, image: IconTerrain, location: data.location as LocationType }
+const createTerrainFromJson = (data: TerrainData): Terrain => {
+  let terrain: Terrain = { type: data.type as TerrainType, mode: data.mode as Mode, image: IconTerrain, location: data.location as LocationType }
   const baseValues: [TerrainValueType, number][] = [
     [TerrainCalc.Roll, data.roll]
   ]
@@ -24,7 +24,7 @@ const initializeDefaultTerrains = (): TerrainDefinitions => {
 const defaultTerrains = initializeDefaultTerrains()
 
 export const getDefaultTerrains = () => defaultTerrains
-export const getDefaultTerrain = (type: TerrainType): TerrainDefinition => defaultTerrains[type]
+export const getDefaultTerrain = (type: TerrainType): Terrain => defaultTerrains[type]
 
 interface TerrainData {
   type: string
