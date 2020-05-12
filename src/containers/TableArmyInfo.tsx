@@ -136,7 +136,7 @@ class TableArmyInfo extends Component<IProps> {
           </Table.Cell>
         }
         <Table.Cell>
-          <DelayedNumericInput value={participant.daysUntilBattle} onChange={value => this.setDaysUntilBattle(index, value)} type='number' />
+          <DelayedNumericInput disabled={index === 0} value={participant.daysUntilBattle} onChange={value => this.setDaysUntilBattle(index, value)} type='number' />
         </Table.Cell>
       </Table.Row >
     )

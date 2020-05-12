@@ -104,4 +104,4 @@ const convertGeneral = (army: ArmyDefinition, general: GeneralDefinition, arriva
   }
 }
 
-export const getLeadingGeneral = (side: Side): General => side.generals.filter(general => general.arrival <= side.results.round)[0]
+export const getLeadingGeneral = (side: Side): General | null => side.generals.length ? side.generals[0] : null

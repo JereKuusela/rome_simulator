@@ -5,6 +5,9 @@ export type Battle = {
   terrains: TerrainType[]
   sides: { [key in SideType]: SideData }
   round: number
+  rounds: {
+    duration: number
+  }[]
   fightOver: boolean
   seed: number
   customSeed?: number
@@ -43,6 +46,7 @@ export enum SideType {
 /** Information affecting both sides of combat. */
 export type Environment = {
   round: number
+  duration: number
   terrains: Terrain[]
   settings: Settings
 }

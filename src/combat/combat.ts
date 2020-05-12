@@ -30,7 +30,9 @@ export const doBattle = (field: Environment, a: Side, d: Side, markDefeated: boo
   a.results.round = field.round
   d.results.round = field.round
   const dailyMultiplier = 1 + getDailyIncrease(field.round, settings)
-  const tacticStrengthDamageMultiplier = settings[Setting.Tactics] ? 1.0 + calculateValue(a.generals[0].tactic, TacticCalc.Casualties) + calculateValue(d.generals[0].tactic, TacticCalc.Casualties) : 1.0
+  const generalA = getLeadingGeneral(a)
+  const generalD = getLeadingGeneral(d)
+  const tacticStrengthDamageMultiplier = generalA && generalD && settings[Setting.Tactics] ? 1.0 + calculateValue(generalA.tactic, TacticCalc.Casualties) + calculateValue(generalD.tactic, TacticCalc.Casualties) : 1.0
   a.results.dailyMultiplier = dailyMultiplier
   d.results.dailyMultiplier = dailyMultiplier
   attack(a, d, dailyMultiplier, tacticStrengthDamageMultiplier, field.terrains, phase, settings)
@@ -38,19 +40,25 @@ export const doBattle = (field: Environment, a: Side, d: Side, markDefeated: boo
 
   applyLosses(a.cohorts.frontline)
   applyLosses(d.cohorts.frontline)
+
   a.alive = moveDefeated(a.cohorts.frontline, a.cohorts.defeated, markDefeated, field.round, settings) || reserveSize(a.cohorts.reserve) > 0
   d.alive = moveDefeated(d.cohorts.frontline, d.cohorts.defeated, markDefeated, field.round, settings) || reserveSize(d.cohorts.reserve) > 0
   if (settings[Setting.Stackwipe] && !d.alive)
-    checkHardStackWipe(d.cohorts, a.cohorts, settings, field.round < settings[Setting.StackwipeRounds])
+    checkHardStackWipe(d, a.cohorts, settings, field.round < settings[Setting.StackwipeRounds])
   else if (settings[Setting.Stackwipe] && !a.alive)
-    checkHardStackWipe(a.cohorts, d.cohorts, settings, field.round < settings[Setting.StackwipeRounds])
+    checkHardStackWipe(a, d.cohorts, settings, field.round < settings[Setting.StackwipeRounds])
+  if (!a.alive || !d.alive)
+    field.duration = 0
+  // Check if a new battle can started.
+  a.alive = a.alive || a.armies.length > 0
+  d.alive = d.alive || d.armies.length > 0
 }
 
-const checkHardStackWipe = (defeated: Cohorts, enemy: Cohorts, settings: Settings, soft: boolean) => {
-  const total = calculateTotalStrength(defeated)
+const checkHardStackWipe = (side: Side, enemy: Cohorts, settings: Settings, soft: boolean) => {
+  const total = calculateTotalStrength(side.cohorts)
   const totalEnemy = calculateTotalStrength(enemy)
-  if (totalEnemy / total > (soft ? settings[Setting.SoftStackWipeLimit] : settings[Setting.HardStackWipeLimit]))
-    stackWipe(defeated)
+  if (totalEnemy / total > (soft ? settings[Setting.SoftStackWipeLimit] : settings[Setting.HardStackWipeLimit])) {}
+    stackWipe(side)
 }
 
 const getBackTarget = (target: Frontline, index: number) => target.length > 1 ? target[1][index] : null
@@ -220,13 +228,13 @@ const attack = (source: Side, target: Side, dailyMultiplier: number, tacticStren
   // If this is a problem a fast mode can be implemeted where to bonus is only calculated once.
   const generalS = getLeadingGeneral(source)
   const generalT = getLeadingGeneral(target)
-  const generalPips = calculateGeneralPips(generalS.values, generalT.values, phase)
-  const terrainPips = getTerrainPips(terrains, source.type, generalS.values, generalT.values)
+  const generalPips = generalS && generalT ? calculateGeneralPips(generalS.values, generalT.values, phase) : 0
+  const terrainPips = generalS && generalT ? getTerrainPips(terrains, source.type, generalS.values, generalT.values) : 0
 
   source.results.generalPips = generalPips
   source.results.terrainPips = terrainPips
   source.results.tacticStrengthDamageMultiplier = tacticStrengthDamageMultiplier
-  source.results.tacticBonus = settings[Setting.Tactics] ? calculateTactic(source.cohorts, generalS.tactic, generalT.tactic) : 0.0
+  source.results.tacticBonus = settings[Setting.Tactics] && generalS && generalT ? calculateTactic(source.cohorts, generalS.tactic, generalT.tactic) : 0.0
   source.results.flankRatioBonus = calculateFlankRatioPenalty(target.cohorts, target.flankRatio, settings)
   const multiplier = (1 + source.results.tacticBonus) * dailyMultiplier * (1 + source.results.flankRatioBonus)
   attackSub(source.cohorts.frontline, source.results.dice + generalPips + terrainPips, multiplier, tacticStrengthDamageMultiplier, phase, settings)

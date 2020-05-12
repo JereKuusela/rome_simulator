@@ -66,13 +66,13 @@ class TableSideInfo extends Component<IProps> {
     return (
       <Table.Row key={side.type}>
         <Table.Cell>
-          {general.values[GeneralAttribute.Martial]}
+          {general ? general.values[GeneralAttribute.Martial] : 0}
           <AttributeImage attribute={GeneralAttribute.Martial} />
         </Table.Cell>
         {
           settings[Setting.Tactics] &&
           <Table.Cell collapsing>
-            <LabelItem item={general.tactic} />
+            {general ? <LabelItem item={general.tactic} /> : null}
           </Table.Cell>
         }
         <Table.Cell>
@@ -92,9 +92,9 @@ class TableSideInfo extends Component<IProps> {
   }
 
   renderRoll = () => {
-    const { terrains, settings, round, openModal, setDice, side, combat, general, opponent  } = this.props
-    const terrainPips = getTerrainPips(terrains, side.type, general.values, opponent.values)
-    const generalPips = calculateGeneralPips(general.values, opponent.values, getCombatPhase(round, settings))
+    const { terrains, settings, round, openModal, setDice, side, combat, general, opponent } = this.props
+    const terrainPips = general && opponent ? getTerrainPips(terrains, side.type, general.values, opponent.values) : 0
+    const generalPips = general && opponent ? calculateGeneralPips(general.values, opponent.values, getCombatPhase(round, settings)) : 0
     const phase = getCombatPhaseNumber(round, settings)
     const isDiceSet = side.randomizeDice || (side.rolls.length > phase && side.rolls[phase])
     return (
@@ -137,7 +137,7 @@ const mapStateToProps = (state: AppState, props: Props) => {
   const battle = getBattle(state)
   const combat = getCombatSide(state, props.type)
   const opponent = getCombatSide(state, getOpponent(props.type))
-  return { 
+  return {
     side: getSide(state, props.type),
     general: getLeadingGeneral(combat),
     opponent: getLeadingGeneral(opponent),

@@ -73,6 +73,7 @@ const subBattle = (state: AppState, battle: Battle, field: Environment, attacker
   if (battle.round === -1 && steps > 0 && !battle.fightOver) {
     battle.round++
     field.round = battle.round
+    field.duration = 0
     deploy(field, attacker, defender)
     battle.fightOver = !attacker.alive || !defender.alive
     Object.freeze(attacker.armies)
@@ -138,6 +139,7 @@ export const undo = (pair: [AppState, AppState], steps: number) => {
     forEach(battle.sides, side => {
       side.rounds.pop()
     })
+    battle.rounds.pop()
     battle.round--
     battle.seed = seed
     battle.fightOver = false

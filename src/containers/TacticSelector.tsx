@@ -44,7 +44,7 @@ const mapStateToProps = (state: AppState, props: Props) => {
   const tactic = getSelectedTactic(state, props.side, props.index)
   const opponent = getLeadingGeneral(getCombatSide(state, getOpponent(props.side)))
   return {
-    tactics: getTactics(state).map(tactic => convertTactic(tactic, cohorts, opponent.tactic)),
+    tactics: getTactics(state).map(tactic => opponent ? convertTactic(tactic, cohorts, opponent.tactic) : 0),
     tactic: tactic.type,
     participant: getParticipant(state, props.side, props.index),
     settings: getSiteSettings(state)

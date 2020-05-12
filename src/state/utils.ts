@@ -160,6 +160,7 @@ export const getCombatField = (state: AppState): Environment => {
   const settings = getSettings(state)
   return {
     round: 0,
+    duration: battle.rounds.length ? battle.rounds[battle.rounds.length - 1].duration : 0,
     terrains,
     settings
   }

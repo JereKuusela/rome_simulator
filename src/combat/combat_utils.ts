@@ -81,8 +81,10 @@ export const getCombatPhaseNumber = (round: number, settings: SiteSettings) => M
 
 export const getDailyIncrease = (round: number, settings: SiteSettings) => settings[Setting.DailyDamageIncrease] * round
 
-export const stackWipe = (cohorts: Cohorts) => {
-  const { frontline, reserve, defeated } = cohorts
+export const stackWipe = (side: Side) => {
+  side.alive = false
+  side.generals = []
+  const { frontline, reserve, defeated } = side.cohorts
 
   for (let i = 0; i < defeated.length; i++) {
     defeated[i][UnitAttribute.Strength] = 0

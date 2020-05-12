@@ -29,6 +29,13 @@ Analyze
 Todo: 
 
 Multiarmy:
+ - Test:
+  * Stack wipes during battle (cohorts run out before reinforcements arrive)
+  * Leading general (especially when cohorts run out during battle): dealt damage, deployment
+  * Multiarmy deployment, redeployment after cohortsr run out (fresh units prioritized)
+  * Big stackwipes (defeated and reserve get stackwiped properly too)
+  * Combat phases also have to reset (be based on duration, probably have to store previous phase number so that dice rolls don't repeat from start)
+
  - Battle has two sides and terrain.
  - Each side includes dice (+ related things), N participants and rounds list.
  - Each participant includes country, army and days until battle.

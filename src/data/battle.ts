@@ -35,7 +35,8 @@ export const getDefaultMode = (mode: Mode): Battle => ({
   seed: 0,
   customSeed: undefined,
   outdated: true,
-  timestamp: 0
+  timestamp: 0,
+  rounds: []
 })
 
 export const getDefaultBattle = (): ModeState => battleState

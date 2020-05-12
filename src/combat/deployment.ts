@@ -1,6 +1,7 @@
 import { UnitPreferences, UnitAttribute, UnitPreferenceType, UnitRole, Setting, Settings, Reserve, Cohorts, Cohort, Army, Side, Defeated, Environment } from 'types'
-import { sortBy, remove, clamp, sum } from 'lodash'
-import { stackWipe, nextIndex, reserveSize, armySize } from './combat_utils'
+import { sortBy, remove, clamp, flatten } from 'lodash'
+import { stackWipe, nextIndex, reserveSize, armySize, calculateTotalStrength } from './combat_utils'
+import { getLeadingGeneral } from 'managers/battle'
 
 const armyFlankCount = (reserve: Reserve) => {
   return reserve.front.filter(cohort => cohort.properties.role === UnitRole.Flank).length
@@ -182,11 +183,13 @@ export const deploy = (field: Environment, attacker: Side, defender: Side) => {
   const { round, settings } = field
   const sizeA = armySize(attacker, round)
   const sizeD = armySize(defender, round)
+  // These should be done on subfunction (no copy paste).
   const attackerPool: Cohort[] = []
   const defenderPool: Cohort[] = []
   while (attacker.armies.length && attacker.armies[attacker.armies.length - 1].arrival <= round) {
     const army = attacker.armies.pop()!
     deploySub(attacker, army, settings, sizeD)
+    attacker.generals.push(army.general)
     attackerPool.push(...army.reserve.flank)
     attackerPool.push(...army.reserve.front)
     attackerPool.push(...army.reserve.support)
@@ -194,42 +197,68 @@ export const deploy = (field: Environment, attacker: Side, defender: Side) => {
   while (defender.armies.length && defender.armies[defender.armies.length - 1].arrival <= round) {
     const army = defender.armies.pop()!
     deploySub(defender, army, settings, sizeA)
+    defender.generals.push(army.general)
     defenderPool.push(...army.reserve.flank)
     defenderPool.push(...army.reserve.front)
     defenderPool.push(...army.reserve.support)
   }
-  attacker.alive = sizeA > 0
-  defender.alive = sizeD > 0
-  if (settings[Setting.Stackwipe])
-    checkInstantStackWipe(attacker, defender, settings)
   if (attackerPool) {
     attackerPool.push(...attacker.cohorts.reserve.flank)
     attackerPool.push(...attacker.cohorts.reserve.front)
     attackerPool.push(...attacker.cohorts.reserve.support)
-    attacker.cohorts.reserve = sortReserve(attackerPool, attacker.generals[0].unitPreferences)
+    attacker.generals.sort((a, b) => b.priority - a.priority)
+    const general = getLeadingGeneral(attacker)
+    if (general)
+      attacker.cohorts.reserve = sortReserve(attackerPool, general.unitPreferences)
   }
   if (defenderPool) {
     defenderPool.push(...defender.cohorts.reserve.flank)
     defenderPool.push(...defender.cohorts.reserve.front)
     defenderPool.push(...defender.cohorts.reserve.support)
-    defender.cohorts.reserve = sortReserve(defenderPool, defender.generals[0].unitPreferences)
+    defender.generals.sort((a, b) => b.priority - a.priority)
+    const general = getLeadingGeneral(defender)
+    if (general)
+      defender.cohorts.reserve = sortReserve(defenderPool, general.unitPreferences)
   }
+  attacker.alive = sizeA > 0
+  defender.alive = sizeD > 0
+  if (field.duration === 0 && settings[Setting.Stackwipe])
+    checkInstantStackWipe(attacker, defender, settings)
+  // This logic probably should only be in general combat function?
+  field.duration++
+  if (!attacker.alive || !defender.alive) {
+    field.duration = 0
+    // Undeploying.
+    const a = attacker.cohorts.reserve.front.concat(attacker.cohorts.reserve.flank).concat(attacker.cohorts.reserve.support).concat((flatten(attacker.cohorts.frontline) as Cohort[]).filter(unit => unit))
+    attacker.cohorts.frontline = attacker.cohorts.frontline.map(row => row.map(() => null))
+    const generalA = getLeadingGeneral(attacker)
+    if (generalA)
+      attacker.cohorts.reserve = sortReserve(a, generalA.unitPreferences)
+    const d = defender.cohorts.reserve.front.concat(defender.cohorts.reserve.flank).concat(defender.cohorts.reserve.support).concat((flatten(defender.cohorts.frontline) as Cohort[]).filter(unit => unit))
+    defender.cohorts.frontline = defender.cohorts.frontline.map(row => row.map(() => null))
+    const generalD = getLeadingGeneral(defender)
+    if (generalD)
+      defender.cohorts.reserve = sortReserve(d, generalD.unitPreferences)
+  }
+  // Check if a new battle can be started.
+  attacker.alive = attacker.alive || attacker.armies.length > 0
+  defender.alive = defender.alive || defender.armies.length > 0
 }
 
 const deploySub = (side: Side, army: Army, settings: Settings, enemyArmySize: number) => {
   const [leftFlank, rightFlank] = calculateFlankSizes(settings[Setting.CombatWidth], calculatePreferredFlankSize(settings, army.flankSize, army.reserve), settings[Setting.DynamicFlanking] ? enemyArmySize : undefined)
   army.general.leftFlank = leftFlank
   army.general.rightFlank = rightFlank
-  deployCohorts(side.cohorts, army.reserve, leftFlank, rightFlank,  settings)
+  deployCohorts(side.cohorts, army.reserve, leftFlank, rightFlank, settings)
 }
 
 const checkInstantStackWipe = (attacker: Side, defender: Side, settings: Settings) => {
-  const strengthA = sum(attacker.armies.map(participant => participant.strength))
-  const strengthD = sum(defender.armies.map(participant => participant.strength))
+  const strengthA = calculateTotalStrength(attacker.cohorts)
+  const strengthD = calculateTotalStrength(defender.cohorts)
   if (!defender.alive || (strengthD && strengthA / strengthD > settings[Setting.HardStackWipeLimit]))
-    stackWipe(defender.cohorts)
+    stackWipe(defender)
   else if (!attacker.alive || (strengthA && strengthD / strengthA > settings[Setting.HardStackWipeLimit]))
-    stackWipe(attacker.cohorts)
+    stackWipe(attacker)
 }
 
 const moveUnits = (cohorts: Cohorts) => {
@@ -277,8 +306,8 @@ const moveUnits = (cohorts: Cohorts) => {
 */
 export const reinforce = (field: Environment, side: Side) => {
   const { settings } = field
-  const general = side.generals[0]
-  if (reserveSize(side.cohorts.reserve))
+  const general = getLeadingGeneral(side)
+  if (general && reserveSize(side.cohorts.reserve))
     deployCohorts(side.cohorts, side.cohorts.reserve, general.leftFlank, general.rightFlank, settings, general.unitPreferences)
   moveUnits(side.cohorts)
 }
