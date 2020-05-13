@@ -2,8 +2,8 @@
 import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, Cohorts, Cohort, Frontline, Defeated, Side, Terrain, Environment, TacticCalc } from 'types'
 import { noZero } from 'utils'
 import { calculateValue } from 'definition_values'
-import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, calculateTotalStrength, stackWipe, reserveSize, reinforce, calculateGeneralPips, getTerrainPips } from 'combat'
-import { deploy } from './deployment'
+import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, reserveSize, reinforce, calculateGeneralPips, getTerrainPips, checkInstantStackWipe, checkStackWipe } from 'combat'
+import { deploy, undeploy } from './deployment'
 import { getLeadingGeneral } from 'managers/battle'
 
 /**
@@ -16,49 +16,54 @@ export const doBattle = (field: Environment, a: Side, d: Side, markDefeated: boo
     removeDefeated(a.cohorts.frontline)
     removeDefeated(d.cohorts.frontline)
   }
+  if (field.duration === 0) {
+    undeploy(a)
+    undeploy(d)
+  }
   deploy(field, a, d)
-  reinforce(field, a)
-  if (!settings[Setting.DefenderAdvantage])
-    reinforce(field, d)
-  pickTargets(a.cohorts.frontline, d.cohorts.frontline, settings)
-  if (settings[Setting.DefenderAdvantage])
-    reinforce(field, d)
-  pickTargets(d.cohorts.frontline, a.cohorts.frontline, settings)
+  if (field.duration === 0) {
+    if (settings[Setting.Stackwipe])
+      checkInstantStackWipe(a, d, settings)
+  }
+  else {
+    reinforce(field, a)
+    if (!settings[Setting.DefenderAdvantage])
+      reinforce(field, d)
+    pickTargets(a.cohorts.frontline, d.cohorts.frontline, settings)
+    if (settings[Setting.DefenderAdvantage])
+      reinforce(field, d)
+    pickTargets(d.cohorts.frontline, a.cohorts.frontline, settings)
 
-  // Tactic bonus changes dynamically when units lose strength so it can't be precalculated.
-  // If this is a problem a fast mode can be implemeted where to bonus is only calculated once.
-  a.results.round = field.round
-  d.results.round = field.round
-  const dailyMultiplier = 1 + getDailyIncrease(field.round, settings)
-  const generalA = getLeadingGeneral(a)
-  const generalD = getLeadingGeneral(d)
-  const tacticStrengthDamageMultiplier = generalA && generalD && settings[Setting.Tactics] ? 1.0 + calculateValue(generalA.tactic, TacticCalc.Casualties) + calculateValue(generalD.tactic, TacticCalc.Casualties) : 1.0
-  a.results.dailyMultiplier = dailyMultiplier
-  d.results.dailyMultiplier = dailyMultiplier
-  attack(a, d, dailyMultiplier, tacticStrengthDamageMultiplier, field.terrains, phase, settings)
-  attack(d, a, dailyMultiplier, tacticStrengthDamageMultiplier, field.terrains, phase, settings)
+    // Tactic bonus changes dynamically when units lose strength so it can't be precalculated.
+    // If this is a problem a fast mode can be implemeted where to bonus is only calculated once.
+    a.results.round = field.round
+    d.results.round = field.round
+    const dailyMultiplier = 1 + getDailyIncrease(field.round, settings)
+    const generalA = getLeadingGeneral(a)
+    const generalD = getLeadingGeneral(d)
+    const tacticStrengthDamageMultiplier = generalA && generalD && settings[Setting.Tactics] ? 1.0 + calculateValue(generalA.tactic, TacticCalc.Casualties) + calculateValue(generalD.tactic, TacticCalc.Casualties) : 1.0
+    a.results.dailyMultiplier = dailyMultiplier
+    d.results.dailyMultiplier = dailyMultiplier
+    attack(a, d, dailyMultiplier, tacticStrengthDamageMultiplier, field.terrains, phase, settings)
+    attack(d, a, dailyMultiplier, tacticStrengthDamageMultiplier, field.terrains, phase, settings)
 
-  applyLosses(a.cohorts.frontline)
-  applyLosses(d.cohorts.frontline)
+    applyLosses(a.cohorts.frontline)
+    applyLosses(d.cohorts.frontline)
 
-  a.alive = moveDefeated(a.cohorts.frontline, a.cohorts.defeated, markDefeated, field.round, settings) || reserveSize(a.cohorts.reserve) > 0
-  d.alive = moveDefeated(d.cohorts.frontline, d.cohorts.defeated, markDefeated, field.round, settings) || reserveSize(d.cohorts.reserve) > 0
-  if (settings[Setting.Stackwipe] && !d.alive)
-    checkHardStackWipe(d, a.cohorts, settings, field.round < settings[Setting.StackwipeRounds])
-  else if (settings[Setting.Stackwipe] && !a.alive)
-    checkHardStackWipe(a, d.cohorts, settings, field.round < settings[Setting.StackwipeRounds])
+    a.alive = moveDefeated(a.cohorts.frontline, a.cohorts.defeated, markDefeated, field.round, settings) || reserveSize(a.cohorts.reserve) > 0
+    d.alive = moveDefeated(d.cohorts.frontline, d.cohorts.defeated, markDefeated, field.round, settings) || reserveSize(d.cohorts.reserve) > 0
+
+    if (settings[Setting.Stackwipe] && !d.alive)
+      checkStackWipe(d, a.cohorts, settings, field.duration < settings[Setting.StackwipeRounds])
+    else if (settings[Setting.Stackwipe] && !a.alive)
+      checkStackWipe(a, d.cohorts, settings, field.duration < settings[Setting.StackwipeRounds])
+  }
+  field.duration++
   if (!a.alive || !d.alive)
     field.duration = 0
   // Check if a new battle can started.
   a.alive = a.alive || a.armies.length > 0
   d.alive = d.alive || d.armies.length > 0
-}
-
-const checkHardStackWipe = (side: Side, enemy: Cohorts, settings: Settings, soft: boolean) => {
-  const total = calculateTotalStrength(side.cohorts)
-  const totalEnemy = calculateTotalStrength(enemy)
-  if (totalEnemy / total > (soft ? settings[Setting.SoftStackWipeLimit] : settings[Setting.HardStackWipeLimit])) {}
-    stackWipe(side)
 }
 
 const getBackTarget = (target: Frontline, index: number) => target.length > 1 ? target[1][index] : null

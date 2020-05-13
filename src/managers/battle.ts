@@ -65,6 +65,7 @@ export const convertSide = (side: SideData, armies: Army[], settings: Settings):
     },
     flankRatio: 0,
     armies,
+    deployedArmies: [],
     generals: armies.map(army => army.general).sort((a, b) => b.priority - a.priority),
     type: side.type,
     results: {

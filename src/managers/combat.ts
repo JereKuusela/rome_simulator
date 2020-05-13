@@ -71,10 +71,10 @@ const subBattle = (state: AppState, battle: Battle, field: Environment, attacker
     defender.cohorts = copyCohorts(getCohorts(state, SideType.Defender))
   }
   if (battle.round === -1 && steps > 0 && !battle.fightOver) {
-    battle.round++
-    field.round = battle.round
+    battle.round = 0
+    field.round = 0
     field.duration = 0
-    deploy(field, attacker, defender)
+    doBattle(field, attacker, defender, true)
     battle.fightOver = !attacker.alive || !defender.alive
     Object.freeze(attacker.armies)
     Object.freeze(defender.armies)
@@ -82,6 +82,7 @@ const subBattle = (state: AppState, battle: Battle, field: Environment, attacker
     Object.freeze(defender.cohorts)
     sideA.rounds.push(attacker)
     sideD.rounds.push(defender)
+    battle.rounds.push({ duration: field.duration })
     steps--
   }
 
@@ -107,6 +108,7 @@ const subBattle = (state: AppState, battle: Battle, field: Environment, attacker
     Object.freeze(defender.cohorts)
     sideA.rounds.push(attacker)
     sideD.rounds.push(defender)
+    battle.rounds.push({ duration: field.duration })
   }
 }
 

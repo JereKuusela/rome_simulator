@@ -67,6 +67,7 @@ export type Side = {
   results: SideRoundInfo
   alive: boolean
   armies: Army[]
+  deployedArmies: Army[]
   flankRatio: number
   generals: General[]
   cohorts: Cohorts

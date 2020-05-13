@@ -81,48 +81,10 @@ export const getCombatPhaseNumber = (round: number, settings: SiteSettings) => M
 
 export const getDailyIncrease = (round: number, settings: SiteSettings) => settings[Setting.DailyDamageIncrease] * round
 
-export const stackWipe = (side: Side) => {
-  side.alive = false
-  side.generals = []
-  const { frontline, reserve, defeated } = side.cohorts
-
-  for (let i = 0; i < defeated.length; i++) {
-    defeated[i][UnitAttribute.Strength] = 0
-    defeated[i][UnitAttribute.Morale] = 0
-
-  }
-
-  const removeFromReserve = (part: Cohort[]) => {
-    for (let i = 0; i < part.length; i++) {
-      const cohort = part[i]
-      cohort[UnitAttribute.Strength] = 0
-      cohort[UnitAttribute.Morale] = 0
-      defeated.push(cohort)
-    }
-    part.length = 0
-  }
-
-  for (let i = 0; i < frontline.length; i++) {
-    for (let j = 0; j < frontline[i].length; j++) {
-      const cohort = frontline[i][j]
-      if (!cohort)
-        continue
-      cohort[UnitAttribute.Strength] = 0
-      cohort[UnitAttribute.Morale] = 0
-      if (!cohort.state.isDefeated)
-        defeated.push(cohort)
-      frontline[i][j] = null
-    }
-  }
-  removeFromReserve(reserve.front)
-  removeFromReserve(reserve.flank)
-  removeFromReserve(reserve.support)
-}
-
-export const calculateTotalStrength = (cohorts: Cohorts) => {
+export const calculateTotalStrength = (cohorts: Cohorts, includeDefeated: boolean) => {
   let strength = 0.0
   const addRatio = (cohort: Cohort) => {
-    if (!cohort.state.isDefeated)
+    if (includeDefeated || !cohort.state.isDefeated)
       strength += cohort[UnitAttribute.Strength]
   }
   iterateCohorts(cohorts, addRatio)
