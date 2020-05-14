@@ -74,6 +74,8 @@ export interface CohortRoundInfo {
   damageMultiplier: number
   /** Did the cohort get defeated. */
   isDefeated: boolean
+  /** The round of defeat. */
+  defeatedRound: number 
   /** Did the cohort get destroyed.  */
   isDestroyed: boolean
   /** Total morale losses inflicted during the battle. */

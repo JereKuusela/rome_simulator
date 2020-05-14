@@ -1,6 +1,6 @@
 
 import { sumBy, sum } from 'lodash'
-import { Terrain, TerrainCalc, Setting, UnitAttribute, UnitData, CombatPhase, GeneralAttribute, SideType, LocationType, CohortProperties, SiteSettings, Cohorts, Cohort, Frontline, Reserve, Side, GeneralValues } from 'types'
+import { Terrain, TerrainCalc, Setting, UnitAttribute, UnitData, CombatPhase, GeneralAttribute, SideType, LocationType, CohortProperties, SiteSettings, Cohorts, Cohort, Frontline, Reserve, Side, GeneralValues, Environment } from 'types'
 import { calculateValue } from 'definition_values'
 
 /**
@@ -134,4 +134,18 @@ export const reserveSize = (reserve: Reserve) => reserve.front.length + reserve.
 export const armySize = (side: Side, round: number) => {
   return sum(side.armies.map(army => (round === -1 || army.arrival <= round) ? reserveSize(army.reserve) : 0))
     + side.cohorts.frontline[0].filter(unit => unit).length + reserveSize(side.cohorts.reserve)
+}
+
+export const defeatCohort = (environment: Environment, cohort: Cohort) => {
+  // Defeating a defeated cohort shouldn't change the time of defeat.
+  if (!cohort.state.isDefeated)
+    cohort.state.defeatedRound = environment.round
+  cohort.state.isDefeated = true
+  cohort.state.isDestroyed = cohort[UnitAttribute.Strength] <= 0
+}
+
+export const wipeCohort = (environment: Environment, cohort: Cohort) => {
+  cohort[UnitAttribute.Morale] = 0
+  cohort[UnitAttribute.Strength] = 0
+  defeatCohort(environment, cohort)
 }

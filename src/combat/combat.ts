@@ -2,65 +2,73 @@
 import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, Cohorts, Cohort, Frontline, Defeated, Side, Terrain, Environment, TacticCalc } from 'types'
 import { noZero } from 'utils'
 import { calculateValue } from 'definition_values'
-import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, reserveSize, reinforce, calculateGeneralPips, getTerrainPips, checkInstantStackWipe, checkStackWipe } from 'combat'
+import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, reserveSize, reinforce, calculateGeneralPips, getTerrainPips, checkInstantStackWipe, checkStackWipe, defeatCohort } from 'combat'
 import { deploy, undeploy } from './deployment'
 import { getLeadingGeneral } from 'managers/battle'
 
 /**
  * Makes given armies attach each other.
  */
-export const doBattle = (field: Environment, a: Side, d: Side, markDefeated: boolean) => {
-  const settings = field.settings
-  const phase = getCombatPhase(field.round, settings)
+export const doBattle = (env: Environment, a: Side, d: Side, markDefeated: boolean) => {
+  const settings = env.settings
+  const phase = getCombatPhase(env.round, settings)
   if (markDefeated) {
     removeDefeated(a.cohorts.frontline)
     removeDefeated(d.cohorts.frontline)
   }
-  if (field.duration === 0) {
+  if (env.duration === 0) {
     undeploy(a)
     undeploy(d)
   }
-  deploy(field, a, d)
-  if (field.duration === 0) {
+  deploy(env, a, d)
+  if (env.duration === 0) {
     if (settings[Setting.Stackwipe])
-      checkInstantStackWipe(a, d, settings)
+      checkInstantStackWipe(env, a, d)
   }
   else {
-    reinforce(field, a)
+    reinforce(env, a)
     if (!settings[Setting.DefenderAdvantage])
-      reinforce(field, d)
-    pickTargets(a.cohorts.frontline, d.cohorts.frontline, settings)
+      reinforce(env, d)
+    pickTargets(env, a.cohorts.frontline, d.cohorts.frontline)
     if (settings[Setting.DefenderAdvantage])
-      reinforce(field, d)
-    pickTargets(d.cohorts.frontline, a.cohorts.frontline, settings)
+      reinforce(env, d)
+    pickTargets(env, d.cohorts.frontline, a.cohorts.frontline)
 
     // Tactic bonus changes dynamically when units lose strength so it can't be precalculated.
     // If this is a problem a fast mode can be implemeted where to bonus is only calculated once.
-    a.results.round = field.round
-    d.results.round = field.round
-    const dailyMultiplier = 1 + getDailyIncrease(field.round, settings)
+    a.results.round = env.round
+    d.results.round = env.round
+    const dailyMultiplier = 1 + getDailyIncrease(env.round, settings)
     const generalA = getLeadingGeneral(a)
     const generalD = getLeadingGeneral(d)
     const tacticStrengthDamageMultiplier = generalA && generalD && settings[Setting.Tactics] ? 1.0 + calculateValue(generalA.tactic, TacticCalc.Casualties) + calculateValue(generalD.tactic, TacticCalc.Casualties) : 1.0
     a.results.dailyMultiplier = dailyMultiplier
     d.results.dailyMultiplier = dailyMultiplier
-    attack(a, d, dailyMultiplier, tacticStrengthDamageMultiplier, field.terrains, phase, settings)
-    attack(d, a, dailyMultiplier, tacticStrengthDamageMultiplier, field.terrains, phase, settings)
+    attack(a, d, dailyMultiplier, tacticStrengthDamageMultiplier, env.terrains, phase, settings)
+    attack(d, a, dailyMultiplier, tacticStrengthDamageMultiplier, env.terrains, phase, settings)
 
     applyLosses(a.cohorts.frontline)
     applyLosses(d.cohorts.frontline)
 
-    a.alive = moveDefeated(a.cohorts.frontline, a.cohorts.defeated, markDefeated, field.round, settings) || reserveSize(a.cohorts.reserve) > 0
-    d.alive = moveDefeated(d.cohorts.frontline, d.cohorts.defeated, markDefeated, field.round, settings) || reserveSize(d.cohorts.reserve) > 0
+    a.alive = moveDefeated(env, a.cohorts.frontline, a.cohorts.defeated, markDefeated) || reserveSize(a.cohorts.reserve) > 0
+    d.alive = moveDefeated(env, d.cohorts.frontline, d.cohorts.defeated, markDefeated) || reserveSize(d.cohorts.reserve) > 0
 
     if (settings[Setting.Stackwipe] && !d.alive)
-      checkStackWipe(d, a.cohorts, settings, field.duration < settings[Setting.StackwipeRounds])
+      checkStackWipe(env, d, a.cohorts)
     else if (settings[Setting.Stackwipe] && !a.alive)
-      checkStackWipe(a, d.cohorts, settings, field.duration < settings[Setting.StackwipeRounds])
+      checkStackWipe(env, a, d.cohorts)
+    if (!a.alive) {
+      a.deployedArmies = []
+      a.generals = []
+    }
+    if (!d.alive) {
+      d.deployedArmies = []
+      d.generals = []
+    }
   }
-  field.duration++
+  env.duration++
   if (!a.alive || !d.alive)
-    field.duration = 0
+    env.duration = 0
   // Check if a new battle can started.
   a.alive = a.alive || a.armies.length > 0
   d.alive = d.alive || d.armies.length > 0
@@ -71,7 +79,8 @@ const getBackTarget = (target: Frontline, index: number) => target.length > 1 ? 
 /**
  * Selects targets for units.
  */
-const pickTargets = (source: Frontline, target: Frontline, settings: Settings) => {
+const pickTargets = (environment: Environment, source: Frontline, target: Frontline) => {
+  const settings = environment.settings
   const sourceLength = source[0].length
   const targetLength = target[0].length
   for (let i = 0; i < source.length; i++) {
@@ -193,16 +202,17 @@ const applyLosses = (frontline: Frontline) => {
 /**
  * Moves defeated units from a frontline to defeated.
  */
-const moveDefeated = (frontline: Frontline, defeated: Defeated, markDefeated: boolean, round: number, settings: Settings) => {
+const moveDefeated = (environment: Environment, frontline: Frontline, defeated: Defeated, markDefeated: boolean) => {
+  const settings = environment.settings
   const minimumMorale = settings[Setting.MinimumMorale]
   const minimumStrength = settings[Setting.MinimumStrength]
   let alive = false
   for (let i = 0; i < frontline.length; i++) {
     for (let j = 0; j < frontline[i].length; j++) {
-      const unit = frontline[i][j]
-      if (!unit)
+      const cohort = frontline[i][j]
+      if (!cohort)
         continue
-      if (unit[UnitAttribute.Strength] > minimumStrength && unit[UnitAttribute.Morale] > minimumMorale) {
+      if (cohort[UnitAttribute.Strength] > minimumStrength && cohort[UnitAttribute.Morale] > minimumMorale) {
         alive = true
         continue
       }
@@ -211,18 +221,16 @@ const moveDefeated = (frontline: Frontline, defeated: Defeated, markDefeated: bo
         continue
       }
       if (settings[Setting.DynamicTargeting])
-        unit.isWeak = true
-      if (settings[Setting.RetreatRounds] > round + 1) {
+        cohort.isWeak = true
+      if (settings[Setting.RetreatRounds] > environment.round + 1) {
         alive = true
         continue
       }
-      unit.state.isDestroyed = unit[UnitAttribute.Strength] <= 0
-      if (markDefeated)
-        frontline[i][j] = { ...unit, state: { ...unit.state, isDefeated: true } } // Temporary copy for UI purposes.
-      else
+      defeatCohort(environment, cohort)
+      if (!markDefeated)
         frontline[i][j] = null
-      unit.state.target = null
-      defeated.push(unit)
+      cohort.state.target = null
+      defeated.push(cohort)
     }
   }
   return alive

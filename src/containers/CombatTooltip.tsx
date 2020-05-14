@@ -207,6 +207,7 @@ class CombatTooltip extends Component<IProps, IState> {
       <List.Item>
         {getCohortName(source)}
       </List.Item>
+      {source.isDefeated ? <List.Item>{'Defeated at round ' + source.defeatedRound}</List.Item> : null}
       <List.Item>
         {'Strength: '}
         <span className={this.ORANGE}>{strengthToValue(mode, strengthCurrent)}</span>

@@ -227,6 +227,7 @@ class Battle extends Component<IProps> {
         rowWidth={Math.max(30, combatWidth)}
         reverse={side === SideType.Attacker}
         part={ArmyPart.Frontline}
+        markDefeated
       />
     )
   }

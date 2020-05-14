@@ -1,5 +1,5 @@
 import { UnitPreferences, UnitAttribute, UnitPreferenceType, UnitRole, Setting, Settings, Reserve, Cohorts, Cohort, Side, Defeated, Environment } from 'types'
-import { sortBy, remove, clamp, flatten } from 'lodash'
+import { sortBy, remove, clamp } from 'lodash'
 import { nextIndex, reserveSize, armySize } from './combat_utils'
 import { getLeadingGeneral } from 'managers/battle'
 
@@ -186,14 +186,15 @@ export const deploy = (field: Environment, attacker: Side, defender: Side) => {
 
   attacker.alive = sizeA > 0
   defender.alive = sizeD > 0
-  deploySub(field.round, attacker, settings, sizeD)
-  deploySub(field.round, defender, settings, sizeA)
+  if (attacker.alive && defender.alive) {
+    deploySub(field.round, attacker, settings, sizeD)
+    deploySub(field.round, defender, settings, sizeA)
+  }
 }
 
 export const undeploy = (side: Side) => {
   side.armies.push(...side.deployedArmies)
   side.deployedArmies = []
-  console.log(side.type + ' ' + side.armies.length)
   side.cohorts.frontline = side.cohorts.frontline.map(row => row.map(() => null))
   resortReserve(side, [])
 }

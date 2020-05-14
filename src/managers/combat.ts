@@ -1,5 +1,5 @@
 import { AppState, getMode, getCohorts, getCombatSide, getCombatField, convertSides } from 'state'
-import { deploy, doBattle, removeDefeated, getCombatPhaseNumber, armySize } from 'combat'
+import { doBattle, removeDefeated, getCombatPhaseNumber, armySize } from 'combat'
 import { Battle, SideType, Setting, Cohorts, SideData, Side, Environment, Army, Reserve } from 'types'
 import { createEntropy, MersenneTwister19937, Random } from 'random-js'
 import { forEach } from 'utils'
@@ -19,7 +19,9 @@ const copyArmies = (armies: Army[]): Army[] => (
   armies.map(army => ({ ...army, reserve: copyReserve(army.reserve) }))
 )
 
-const copy = (side: Side): Side => ({ ...side, cohorts: copyCohorts(side.cohorts), armies: copyArmies(side.armies), results: { ...side.results } })
+// Copy is needed because of freezing stuff.
+// And freezing is needed because of some immer issue. 
+const copy = (side: Side): Side => ({ ...side, cohorts: copyCohorts(side.cohorts), armies: copyArmies(side.armies), deployedArmies: copyArmies(side.deployedArmies), results: { ...side.results } })
 
 const subBattle = (state: AppState, battle: Battle, field: Environment, attacker: Side, defender: Side, steps: number) => {
 
@@ -57,6 +59,8 @@ const subBattle = (state: AppState, battle: Battle, field: Environment, attacker
   if (battle.round === -1) {
     Object.freeze(attacker.armies)
     Object.freeze(defender.armies)
+    Object.freeze(attacker.deployedArmies)
+    Object.freeze(defender.deployedArmies)
     Object.freeze(attacker.cohorts)
     Object.freeze(defender.cohorts)
     sideA.rounds = [attacker]
@@ -78,6 +82,8 @@ const subBattle = (state: AppState, battle: Battle, field: Environment, attacker
     battle.fightOver = !attacker.alive || !defender.alive
     Object.freeze(attacker.armies)
     Object.freeze(defender.armies)
+    Object.freeze(attacker.deployedArmies)
+    Object.freeze(defender.deployedArmies)
     Object.freeze(attacker.cohorts)
     Object.freeze(defender.cohorts)
     sideA.rounds.push(attacker)
@@ -104,6 +110,8 @@ const subBattle = (state: AppState, battle: Battle, field: Environment, attacker
 
     Object.freeze(attacker.armies)
     Object.freeze(defender.armies)
+    Object.freeze(attacker.deployedArmies)
+    Object.freeze(defender.deployedArmies)
     Object.freeze(attacker.cohorts)
     Object.freeze(defender.cohorts)
     sideA.rounds.push(attacker)

@@ -14,6 +14,7 @@ UI:
  * Win rate tooltip now also shows how many battles were done.
  * Analyze settings moved from Settings page to Analyze page (no need to move between pages when tweaking things).
  * Going backwards in battle is now much faster (previously recalculated whole battle).
+ * Unit tooltips now show the round of defeated for defeated units.
 
 Refactor
  * Side and participant separated. Side now contains multiple participants.
@@ -25,6 +26,10 @@ Analyze
  * Preset performance setting updated to work with the new setting (EUIV works now much faster).
  * Max rounds for each preset changed to 30. This should be more than enough for full combat width battles.
 
+Combat
+ * Added support for multiple separate battles.
+ * If one side runs out of units then the battle ends. Losers deployed armies are removed and stack wiping checked.
+ * If the losing side still has undeployed armies a new battle starts when an army arrives.
 
 Todo: 
 
@@ -35,7 +40,7 @@ Multiarmy:
   * Leading general (especially when cohorts run out during battle): dealt damage, deployment
   * Multiarmy deployment, redeployment after cohortsr run out (fresh units prioritized)
   * Big stackwipes (defeated and reserve get stackwiped properly too)
-  * Combat phases also have to reset (be based on duration, probably have to store previous phase number so that dice rolls don't repeat from start)
+  * !!Combat phases also have to reset (be based on duration, probably have to store previous phase number so that dice rolls don't repeat from start)
 
  - Battle has two sides and terrain.
  - Each side includes dice (+ related things), N participants and rounds list.

@@ -1,40 +1,45 @@
-import { Side, Settings, Setting, Cohorts, UnitAttribute, Cohort } from 'types'
+import { Side, Setting, Cohorts, Cohort, Environment } from 'types'
 import { calculateTotalStrength } from 'combat'
+import { wipeCohort } from './combat_utils'
 
-export const checkInstantStackWipe = (attacker: Side, defender: Side, settings: Settings) => {
+export const checkInstantStackWipe = (environment: Environment, attacker: Side, defender: Side) => {
+  const settings = environment.settings
   const strengthA = calculateTotalStrength(attacker.cohorts, false)
   const strengthD = calculateTotalStrength(defender.cohorts, false)
   if (!defender.alive || (strengthD && strengthA / strengthD > settings[Setting.HardStackWipeLimit]))
-    stackWipe(defender)
+    stackWipe(environment, defender)
   else if (!attacker.alive || (strengthA && strengthD / strengthA > settings[Setting.HardStackWipeLimit]))
-    stackWipe(attacker)
+    stackWipe(environment, attacker)
 }
 
-export const checkStackWipe = (side: Side, enemy: Cohorts, settings: Settings, soft: boolean) => {
+export const checkStackWipe = (environment: Environment, side: Side, enemy: Cohorts) => {
+  const settings = environment.settings
+  const soft = environment.duration < settings[Setting.StackwipeRounds]
   const total = calculateTotalStrength(side.cohorts, true)
   const totalEnemy = calculateTotalStrength(enemy, true)
   if (totalEnemy / total > (soft ? settings[Setting.SoftStackWipeLimit] : settings[Setting.HardStackWipeLimit]))
-    stackWipe(side)
+    stackWipe(environment, side)
 }
 
-export const stackWipe = (side: Side) => {
+const wasDefeatedDuringCurrentBattle = (environment: Environment, cohort: Cohort) => cohort.state.defeatedRound >= environment.round - environment.duration
+
+export const stackWipe = (environment: Environment, side: Side) => {
   side.alive = false
   side.generals = []
   side.deployedArmies = []
   const { frontline, reserve, defeated } = side.cohorts
 
   for (let i = 0; i < defeated.length; i++) {
-    defeated[i][UnitAttribute.Strength] = 0
-    defeated[i][UnitAttribute.Morale] = 0
-
+    if (wasDefeatedDuringCurrentBattle(environment, defeated[i])) {
+      wipeCohort(environment, defeated[i])
+    }
   }
 
   const removeFromReserve = (part: Cohort[]) => {
     for (let i = 0; i < part.length; i++) {
       const cohort = part[i]
-      cohort[UnitAttribute.Strength] = 0
-      cohort[UnitAttribute.Morale] = 0
       defeated.push(cohort)
+      wipeCohort(environment, cohort)
     }
     part.length = 0
   }
@@ -44,11 +49,11 @@ export const stackWipe = (side: Side) => {
       const cohort = frontline[i][j]
       if (!cohort)
         continue
-      cohort[UnitAttribute.Strength] = 0
-      cohort[UnitAttribute.Morale] = 0
+      // Already defeated is a proxy for UI purposes, just clean it up.
       if (!cohort.state.isDefeated)
         defeated.push(cohort)
       frontline[i][j] = null
+      wipeCohort(environment, cohort)
     }
   }
   removeFromReserve(reserve.front)

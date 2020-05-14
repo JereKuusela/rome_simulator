@@ -21,6 +21,7 @@ type Props = {
   color: string
   // Renders full rows for a cleaner look.
   fullRows?: boolean
+  markDefeated?: boolean
 }
 
 type IState = {
@@ -92,7 +93,7 @@ class TableArmyPart extends Component<IProps, IState> {
   }
 
   renderCell = (row: number, column: number, cohort: ICohort, isSupport: boolean) => {
-    const { side, onClick } = this.props
+    const { side, onClick, markDefeated } = this.props
     const filler = cohort === undefined
     return (
       <Table.Cell
@@ -109,7 +110,7 @@ class TableArmyPart extends Component<IProps, IState> {
       >
         <Cell
           image={cohort?.image || null}
-          isDefeated={cohort?.isDefeated || false}
+          isDefeated={(markDefeated && cohort?.isDefeated) || false}
           morale={cohort?.morale || 0}
           maxMorale={cohort?.maxMorale || 0}
           strength={cohort?.strength || 0}
