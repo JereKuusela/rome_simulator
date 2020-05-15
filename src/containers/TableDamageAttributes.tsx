@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Table } from 'semantic-ui-react'
 
 import { SideType, CountryName, UnitAttribute, CombatPhase, GeneralDefinition, GeneralValueType, Mode, UnitType, ArmyName } from 'types'
-import { AppState, getGeneral, getUnit, getMode, getSiteSettings } from 'state'
+import { AppState, getGeneral, getUnitDefinition, getMode, getSiteSettings } from 'state'
 import { setGeneralAttribute } from 'reducers'
 import AttributeImage from 'components/Utils/AttributeImage'
 import StyledNumber from 'components/Utils/StyledNumber'
@@ -94,7 +94,7 @@ class TableDamageAttributes extends Component<IProps> {
 
 const mapStateToProps = (state: AppState, props: Props) => ({
   general: getGeneral(state, props.country, props.army),
-  unit: getUnit(state, getMode(state) === Mode.Naval ? UnitType.Naval : UnitType.Land, props.country),
+  unit: getUnitDefinition(state, getMode(state) === Mode.Naval ? UnitType.Naval : UnitType.Land, props.country),
   settings: getSiteSettings(state)
 })
 

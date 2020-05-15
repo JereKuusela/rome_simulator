@@ -30,7 +30,6 @@ export const getDefaultParticipant = (name: CountryName, mode: Mode): Participan
 export const getDefaultMode = (mode: Mode): Battle => ({
   sides: { [SideType.Attacker]: getDefaultSide(SideType.Attacker, CountryName.Country1, mode), [SideType.Defender]: getDefaultSide(SideType.Defender, CountryName.Country2, mode) },
   terrains: getInitialTerrains(mode),
-  round: -1,
   fightOver: true,
   seed: 0,
   customSeed: undefined,

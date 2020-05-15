@@ -122,8 +122,8 @@ export const unitValueToString = (definition: DefinitionValues<UnitValueType>, t
   }
 }
 
-export type UnitDefinitions = { [key in UnitType]: UnitData }
-export type Units = { [key in UnitType]: UnitDefinition }
+export type UnitsData = { [key in UnitType]: UnitData }
+export type UnitDefinitions = { [key in UnitType]: UnitDefinition }
 
 export const dictionaryUnitType: { [key: string]: UnitType } = {
   archers: UnitType.Archers,

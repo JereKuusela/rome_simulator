@@ -4,7 +4,7 @@ import { Image, Table } from 'semantic-ui-react'
 
 import { SideType, UnitRole, CountryName, UnitType, UnitAttribute, filterAttributes, Setting, UnitDefinition, Mode, CountryAttribute, ArmyName, CultureType } from 'types'
 import { getImage, mapRange } from 'utils'
-import { AppState, getUnitPreferences, getCountry, getMode, getOverridenReserveDefinitions, getSiteSettings, getUnits } from 'state'
+import { AppState, getUnitPreferences, getCountry, getMode, getOverridenReserveDefinitions, getSiteSettings, getUnitDefinitions } from 'state'
 import { addToReserve, removeFromReserve, setUnitPreference, selectCulture } from 'reducers'
 import { getArchetypes, getActualUnits, getLatestUnits, getChildUnits, getRootUnit } from 'managers/army'
 import UnitValueInput from './UnitValueInput'
@@ -214,7 +214,7 @@ const mapStateToProps = (state: AppState, props: Props) => {
   return {
     preferences: getUnitPreferences(state, countryName, armyName),
     reserve: getOverridenReserveDefinitions(state, countryName, armyName, true),
-    units: getUnits(state, countryName, armyName),
+    units: getUnitDefinitions(state, countryName, armyName),
     culture: getCountry(state, countryName).culture,
     tech: getCountry(state, countryName)[CountryAttribute.TechLevel],
     settings: getSiteSettings(state),

@@ -1,5 +1,5 @@
 import { calculateValue, calculateBase, addValuesWithMutate, filterValues, addValue, clearAllValuesWithMutate } from 'definition_values'
-import { Mode, GeneralAttribute, UnitType, UnitAttribute, GeneralData, ArmyData, CohortData, ValuesType, UnitValueType, TacticType, UnitPreferenceType, GeneralDefinition, ReserveData, GeneralValueType, CombatPhase, isAttributeEnabled, Units, Setting, UnitRole, UnitDefinition, SiteSettings, ModifierWithKey, ModifierType, Selections, SelectionType, TacticDefinitions } from 'types'
+import { Mode, GeneralAttribute, UnitType, UnitAttribute, GeneralData, ArmyData, CohortData, ValuesType, UnitValueType, TacticType, UnitPreferenceType, GeneralDefinition, ReserveData, GeneralValueType, CombatPhase, isAttributeEnabled, UnitDefinitions, Setting, UnitRole, UnitDefinition, SiteSettings, ModifierWithKey, ModifierType, Selections, SelectionType, TacticDefinitions } from 'types'
 import { toObj, toArr, toSet, ObjSet, values } from 'utils'
 import { findLastIndex, sortBy } from 'lodash'
 
@@ -27,7 +27,7 @@ export const convertGeneralDefinition = (settings: SiteSettings, general: Genera
   }
 }
 
-export const overrideRoleWithPreferences = (army: ArmyData, units: Units, latest: { [key in UnitRole]: UnitType | undefined }) => {
+export const overrideRoleWithPreferences = (army: ArmyData, units: UnitDefinitions, latest: { [key in UnitRole]: UnitType | undefined }) => {
   const preferences = army.unitPreferences
   return army.reserve.map(cohort => {
     const role = units[cohort.type]?.role
@@ -40,26 +40,26 @@ export const overrideRoleWithPreferences = (army: ArmyData, units: Units, latest
   })
 }
 
-export const getUnitList2 = (units: Units, mode: Mode, filterParents: boolean, settings: SiteSettings) => {
+export const getUnitList = (units: UnitDefinitions, mode: Mode, filterParents: boolean, settings: SiteSettings) => {
   const parents = getParents(units)
   let list = settings[Setting.Tech] ? [units[UnitType.Land]].concat(getArchetypes(units, mode)) : sortBy(toArr(units), unit => unitSorter(unit, mode, parents))
   list = filterParents ? list.filter(unit => !parents[unit.type]) : list
   return list
 }
 
-export const getAllUnitList = (units: Units, mode: Mode) => {
+export const getAllUnitList = (units: UnitDefinitions, mode: Mode) => {
   const parents = getParents(units)
   return sortBy(toArr(units), unit => unitSorter(unit, mode, parents))
 }
 
 
 /** Returns latest available unit for each role. */
-export const getLatestUnits = (units: Units, tech: number) => {
+export const getLatestUnits = (units: UnitDefinitions, tech: number) => {
   const sorted = sortBy(filterByTech(toArr(units), tech), techSorter)
   return toObj(values(UnitRole), role => role, role => sorted.find(unit => unit.role === role)?.type)
 }
 
-export const getChildUnits = (units: Units, tech: number, parent: UnitType) => {
+export const getChildUnits = (units: UnitDefinitions, tech: number, parent: UnitType) => {
   return sortBy(filterByTech(toArr(units).filter(unit => unit.parent === parent), tech), techSorter)
 }
 
@@ -76,16 +76,16 @@ const unitSorter = (unit: UnitDefinition, mode: Mode, parents?: ObjSet) => {
   return techSorter(unit)
 }
 
-export const getArchetypes = (units: Units, mode: Mode) => toArr(units).filter(unit => mode === Mode.Naval ? unit.parent === UnitType.Naval : unit.parent === UnitType.Land)
+export const getArchetypes = (units: UnitDefinitions, mode: Mode) => toArr(units).filter(unit => mode === Mode.Naval ? unit.parent === UnitType.Naval : unit.parent === UnitType.Land)
 
-export const getActualUnits = (units: Units, mode: Mode) => {
+export const getActualUnits = (units: UnitDefinitions, mode: Mode) => {
   const parents = getParents(units)
   return sortBy(toArr(units).filter(unit => !parents[unit.type]), unit => unitSorter(unit, mode))
 }
 
-const getParents = (units: Units) => toSet(units, unit => unit.parent || unit.type)
+const getParents = (units: UnitDefinitions) => toSet(units, unit => unit.parent || unit.type)
 
-export const getRootUnit = (units: Units, mode: Mode) => mode === Mode.Naval ? units[UnitType.Naval] : units[UnitType.Land]
+export const getRootUnit = (units: UnitDefinitions, mode: Mode) => mode === Mode.Naval ? units[UnitType.Naval] : units[UnitType.Land]
 
 const filterByTech = (units: UnitDefinition[], tech: number) => units.filter(unit => unit.tech === undefined || unit.tech <= tech)
 

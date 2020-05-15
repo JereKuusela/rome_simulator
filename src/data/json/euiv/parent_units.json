@@ -23,7 +23,6 @@
   {
     "Type": "Cavalry",
     "Parent": "Land Unit",
-    "Mode": "Land",
     "Role": "Flank",
     "Maneuver": 2,
     "Cost": 25,

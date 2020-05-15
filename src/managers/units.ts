@@ -1,4 +1,4 @@
-import { ValuesType, UnitValueType, UnitType, UnitRole, UnitData, UnitDefinitions, Mode, Setting, UnitAttribute, WearinessAttributes, ReserveData, ModifierWithKey, SiteSettings, SideType } from "types"
+import { ValuesType, UnitValueType, UnitType, UnitRole, UnitData, UnitsData, Mode, Setting, UnitAttribute, WearinessAttributes, ReserveData, ModifierWithKey, SiteSettings, SideType } from "types"
 import { addValuesWithMutate, DefinitionValues, calculateValue, addValues, addValue } from "definition_values"
 import { getUnitIcon } from "data"
 import { toArr, round, randomWithinRange } from "utils"
@@ -8,15 +8,15 @@ export const setUnitValue = (unit: UnitData, valuesType: ValuesType, key: string
   addValuesWithMutate(unit, valuesType, key, [[attribute, value]])
 }
 
-export const deleteUnit = (units: UnitDefinitions, type: UnitType) => {
+export const deleteUnit = (units: UnitsData, type: UnitType) => {
   delete units[type]
 }
 
-export const createUnit = (units: UnitDefinitions, mode: Mode, type: UnitType) => {
+export const createUnit = (units: UnitsData, mode: Mode, type: UnitType) => {
   units[type] = { type, image: getUnitIcon(type), role: UnitRole.Front, parent: getRootParent(mode) }
 }
 
-export const changeUnitType = (units: UnitDefinitions, oldType: UnitType, type: UnitType) => {
+export const changeUnitType = (units: UnitsData, oldType: UnitType, type: UnitType) => {
   delete Object.assign(units, { [type]: { ...units[oldType], type } })[oldType]
 }
 
@@ -58,7 +58,7 @@ export const applyLosses = (values: WearinessAttributes, units: ReserveData) => 
   units.map(unit => addValues(unit, ValuesType.LossModifier, 'Custom', generateLosses(values)))
 )
 
-export const applyUnitModifiers = (units: UnitDefinitions, modifiers: ModifierWithKey[]): UnitDefinitions => {
+export const applyUnitModifiers = (units: UnitsData, modifiers: ModifierWithKey[]): UnitsData => {
   modifiers = mapModifiersToUnits2(modifiers)
   let result = { ...units }
   modifiers.forEach(value => {

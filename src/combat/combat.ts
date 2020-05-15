@@ -190,11 +190,11 @@ const calculateFlankRatio = (army: Cohorts): number => {
 const applyLosses = (frontline: Frontline) => {
   for (let i = 0; i < frontline.length; i++) {
     for (let j = 0; j < frontline[i].length; j++) {
-      const unit = frontline[i][j]
-      if (!unit)
+      const cohort = frontline[i][j]
+      if (!cohort)
         continue
-      unit[UnitAttribute.Morale] = Math.max(0, unit[UnitAttribute.Morale] - unit.state.moraleLoss)
-      unit[UnitAttribute.Strength] = Math.max(0, unit[UnitAttribute.Strength] - unit.state.strengthLoss)
+      cohort[UnitAttribute.Morale] = Math.max(0, cohort[UnitAttribute.Morale] - cohort.state.moraleLoss)
+      cohort[UnitAttribute.Strength] = Math.max(0, cohort[UnitAttribute.Strength] - cohort.state.strengthLoss)
     }
   }
 }
@@ -250,7 +250,7 @@ const attack = (source: Side, target: Side, dailyMultiplier: number, tacticStren
   source.results.tacticBonus = settings[Setting.Tactics] && generalS && generalT ? calculateTactic(source.cohorts, generalS.tactic, generalT.tactic) : 0.0
   source.results.flankRatioBonus = calculateFlankRatioPenalty(target.cohorts, target.flankRatio, settings)
   const multiplier = (1 + source.results.tacticBonus) * dailyMultiplier * (1 + source.results.flankRatioBonus)
-  attackSub(source.cohorts.frontline, source.results.dice + generalPips + terrainPips, multiplier, tacticStrengthDamageMultiplier, phase, settings)
+  attackSub(source.cohorts.frontline, settings[Setting.BasePips] + source.results.dice + generalPips + terrainPips, multiplier, tacticStrengthDamageMultiplier, phase, settings)
 }
 
 /**

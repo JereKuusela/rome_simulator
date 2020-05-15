@@ -9,7 +9,7 @@ import { Input, Button, Grid, Table, Header } from 'semantic-ui-react'
 import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 import { sortBy, uniq, sum, union } from 'lodash'
 import LabelItem from 'components/Utils/LabelUnit'
-import { AppState, getUnits, getMode } from 'state'
+import { AppState, getUnitDefinitions, getMode } from 'state'
 import { getDefaultUnits, countriesIR, traditionsIR, heritagesIR, policiesIR, lawsIR, factionsIR, religionsIR, deitiesIR, modifiersIR, traitsIR, techIR, tradesIR, ideasIR, abilitiesIR } from 'data'
 import AttributeImage from 'components/Utils/AttributeImage'
 import { toObj, toArr, mapRange, map, values, keys, filter } from 'utils'
@@ -787,7 +787,7 @@ class ImportSave extends Component<IProps, IState> {
   importArmyEnd = (countryName: CountryName, army: Army) => {
     const { state, addToReserve, mode, setMode } = this.props
     const armyName = army.name
-    const units = getUnits(state, countryName, armyName, army.mode)
+    const units = getUnitDefinitions(state, countryName, armyName, army.mode)
     const experiences = map(units, unit => calculateValueWithoutLoss(unit, UnitAttribute.Experience))
     const maxStrengths = map(units, unit => calculateValueWithoutLoss(unit, UnitAttribute.Strength))
     const maxMorales = map(units, unit => calculateValueWithoutLoss(unit, UnitAttribute.Morale))

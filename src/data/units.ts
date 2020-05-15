@@ -1,4 +1,4 @@
-import { ValuesType, UnitType, UnitData, UnitAttribute, UnitValueType, UnitRole, TerrainType, UnitDefinitions, Mode, CultureType, CombatPhase } from 'types'
+import { ValuesType, UnitType, UnitData, UnitAttribute, UnitValueType, UnitRole, TerrainType, UnitsData, Mode, CultureType, CombatPhase } from 'types'
 import { addValues } from 'definition_values'
 import { toObj, removeUndefined, filter, toArr, values } from 'utils'
 import { uniq } from 'lodash'
@@ -85,7 +85,7 @@ const createUnitFromJson = (data: UnitJSON): UnitData => {
   return unit
 }
 
-const initializeDefaultUnits = (): UnitDefinitions => {
+const initializeDefaultUnits = (): UnitsData => {
   if (process.env.REACT_APP_GAME === 'euiv')
     return toObj(parentsEUIV.map(createUnitFromJson).concat(unitsEUIV.map(createUnitFromJson)), unit => unit.type)
   else
@@ -95,7 +95,7 @@ const defaultUnits = initializeDefaultUnits()
 
 export const getCultures = () => uniq(toArr(defaultUnits, value => value.culture).filter(culture => culture) as CultureType[]).sort()
 
-export const getDefaultUnits = (culture?: CultureType): UnitDefinitions => culture ? filter(defaultUnits, unit => !unit.culture || unit.culture === culture) : defaultUnits
+export const getDefaultUnits = (culture?: CultureType): UnitsData => culture ? filter(defaultUnits, unit => !unit.culture || unit.culture === culture) : defaultUnits
 export const getDefaultUnit = (type: UnitType): UnitData => defaultUnits[type]
 
 interface UnitJSON {

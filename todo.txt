@@ -15,6 +15,7 @@ UI:
  * Analyze settings moved from Settings page to Analyze page (no need to move between pages when tweaking things).
  * Going backwards in battle is now much faster (previously recalculated whole battle).
  * Unit tooltips now show the round of defeated for defeated units.
+ * Removed ability to manually add units to frontline or defeated. Multiple armies can be used if you need to micro the deployment.
 
 Refactor
  * Side and participant separated. Side now contains multiple participants.
@@ -27,11 +28,16 @@ Analyze
  * Max rounds for each preset changed to 30. This should be more than enough for full combat width battles.
 
 Combat
+ * Removed round number -1 (predeployment). This makes the simulator easier to use because units instantly appear on the screen.
  * Added support for multiple separate battles.
  * If one side runs out of units then the battle ends. Losers deployed armies are removed and stack wiping checked.
  * If the losing side still has undeployed armies a new battle starts when an army arrives.
 
 Todo: 
+
+Data:
+ * IR units have mode (should be derived from base)
+ * Some tradition modifiers are incorrectly percents!
 
 Multiarmy:
  - Test:
@@ -107,6 +113,8 @@ Todo:
   * Similar thing could also be done for left and right side (but only 2x performance and flanking/movement needs special implementation.
  - Save import to load battles and automatically import participants (sets those armies active and sets correct round value).
  - A button for random setup
+ - Stackwipe capturing probably doesn't work for analyze
+ - Combat reducer without immer? Need to solve the mess anyways.
 
 Tests:
 - utils tested

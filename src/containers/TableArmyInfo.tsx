@@ -4,7 +4,7 @@ import { Table, Input, Button } from 'semantic-ui-react'
 
 import { SideType, CountryName, Setting, GeneralDefinition, GeneralAttribute, GeneralValueType, isAttributeEnabled, CountryAttribute, ArmyName, Country, Armies, Participant, UnitType, UnitAttribute, UnitDefinition } from 'types'
 import { keys } from 'utils'
-import { AppState, getCountry, getGeneral, getCountries, getMode, getSiteSettings, getArmies, getSide, getUnits } from 'state'
+import { AppState, getCountry, getGeneral, getCountries, getMode, getSiteSettings, getArmies, getSide, getUnitDefinitions } from 'state'
 import { selectParticipantCountry, selectParticipantArmy, setGeneralAttribute, deleteParticipant, addParticipant, setDaysUntilBattle } from 'reducers'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TacticSelector from './TacticSelector'
@@ -170,7 +170,7 @@ const mapStateToProps = (state: AppState, props: Props) => {
       general: getGeneral(state, participant.countryName, participant.armyName),
       country: getCountry(state, participant.countryName),
       armies: getArmies(state, participant.countryName),
-      artillery: getArchetypes(getUnits(state, participant.countryName, participant.armyName), mode).find(unit => unit.type === UnitType.Artillery)
+      artillery: getArchetypes(getUnitDefinitions(state, participant.countryName, participant.armyName), mode).find(unit => unit.type === UnitType.Artillery)
     })),
     clearable: side.participants.length > 1,
     countries: getCountries(state),

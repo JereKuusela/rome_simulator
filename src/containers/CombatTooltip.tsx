@@ -149,7 +149,7 @@ class CombatTooltip extends Component<IProps, IState> {
       {settings[Setting.AttributeDamage] && this.getAttribute(target, UnitAttribute.DamageTaken)}
       {terrainTypes.map(terrain => this.getAttribute(source, terrain))}
       {isSupport && this.renderStyledItem(UnitAttribute.OffensiveSupport, source[UnitAttribute.OffensiveSupport] - 1, toSignedPercent)}
-      {this.renderStyledItem('Battle length', dailyMultiplier, toSignedPercent)}
+      {this.renderStyledItem('Battle length', dailyMultiplier - 1, toSignedPercent)}
       {settings[Setting.FireAndShock] && this.renderModifier(phase, source[phase], this.toMultiplier)}
       {settings[Setting.AttributeMilitaryTactics] && this.renderModifier('Target military tactics', 1 / noZero(target[UnitAttribute.MilitaryTactics]), this.toMultiplier)}
       {this.renderModifier('Unit strength', strength, this.toMultiplier)}
@@ -166,7 +166,7 @@ class CombatTooltip extends Component<IProps, IState> {
 
     return (<>
       {this.renderModifier('Constant', strengthLostMultiplier, this.toMultiplier)}
-      {this.renderStyledItem('Tactic casualties', tacticStrengthDamageMultiplier, toSignedPercent)}
+      {this.renderStyledItem('Tactic casualties', tacticStrengthDamageMultiplier - 1, toSignedPercent)}
       {settings[Setting.FireAndShock] && this.getAttribute(source, phase === CombatPhase.Shock ? UnitAttribute.ShockDamageDone : UnitAttribute.FireDamageDone)}
       {settings[Setting.FireAndShock] && this.getAttribute(target, phase === CombatPhase.Shock ? UnitAttribute.ShockDamageTaken : UnitAttribute.FireDamageTaken)}
       {settings[Setting.AttributeStrengthDamage] && this.getAttribute(source, UnitAttribute.StrengthDamageDone)}

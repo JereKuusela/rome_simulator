@@ -106,3 +106,5 @@ const convertGeneral = (army: ArmyDefinition, general: GeneralDefinition, arriva
 }
 
 export const getLeadingGeneral = (side: Side): General | null => side.generals.length ? side.generals[0] : null
+
+export const getRound = (battle: Battle) => battle.rounds.length - 1

@@ -4,7 +4,6 @@ import { ArmyName, Army, General } from './armies'
 export type Battle = {
   terrains: TerrainType[]
   sides: { [key in SideType]: SideData }
-  round: number
   rounds: {
     duration: number
   }[]

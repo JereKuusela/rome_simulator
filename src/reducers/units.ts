@@ -1,9 +1,9 @@
-import { UnitDefinitions, UnitData, Countries, UnitType, CountryName } from 'types'
+import { UnitsData, UnitData, Countries, UnitType, CountryName } from 'types'
 import { getDefaultCountryDefinitions } from 'data'
 import * as manager from 'managers/units'
 import { ActionToFunction, makeActionReplaceFirst, makeEntityReducer, Action, makeActionReplaceFirstTwice, compose, makeReducer } from './utils'
 
-const unitsMapping: ActionToFunction<UnitDefinitions, CountryName> = {}
+const unitsMapping: ActionToFunction<UnitsData, CountryName> = {}
 
 export const createUnit = makeActionReplaceFirst(manager.createUnit, unitsMapping)
 export const deleteUnit = makeActionReplaceFirst(manager.deleteUnit, unitsMapping)

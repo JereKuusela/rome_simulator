@@ -20,6 +20,7 @@ import TableArmyInfo from 'containers/TableArmyInfo'
 import TableSideInfo from 'containers/TableSideInfo'
 import TableDamageAttributes from 'containers/TableDamageAttributes'
 import AccordionToggle from 'containers/AccordionToggle'
+import { getRound } from 'managers/battle'
 
 const ATTACKER_COLOR = '#FFAA00AA'
 const DEFENDER_COLOR = '#00AAFFAA'
@@ -208,8 +209,6 @@ class Battle extends Component<IProps> {
   }
 
   roundName = (round: number, phase: CombatPhase): string => {
-    if (round < 0)
-      return 'Before combat'
     if (!round)
       return 'Deployment'
     if (phase !== CombatPhase.Default)
@@ -283,11 +282,12 @@ class Battle extends Component<IProps> {
 
 const mapStateToProps = (state: AppState) => {
   const battle = getBattle(state)
+  const round = getRound(battle)
   return {
     participantA: getFirstParticipant(state, SideType.Attacker),
     participantD: getFirstParticipant(state, SideType.Defender),
-    isUndoAvailable: battle.round > -1,
-    round: battle.round,
+    isUndoAvailable: round > 0,
+    round: round,
     outdated: battle.outdated,
     timestamp: battle.timestamp,
     fightOver: battle.fightOver,
