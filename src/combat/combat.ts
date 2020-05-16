@@ -10,18 +10,19 @@ import { getLeadingGeneral } from 'managers/battle'
  * Makes given armies attach each other.
  */
 export const doBattle = (env: Environment, a: Side, d: Side, markDefeated: boolean) => {
+  env.round++
   const settings = env.settings
   const phase = getCombatPhase(env.round, settings)
   if (markDefeated) {
     removeDefeated(a.cohorts.frontline)
     removeDefeated(d.cohorts.frontline)
   }
-  if (env.duration === 0) {
+  if (env.round === 0) {
     undeploy(a)
     undeploy(d)
   }
   deploy(env, a, d)
-  if (env.duration === 0) {
+  if (env.round === 0) {
     if (settings[Setting.Stackwipe])
       checkInstantStackWipe(env, a, d)
   }
@@ -66,9 +67,8 @@ export const doBattle = (env: Environment, a: Side, d: Side, markDefeated: boole
       d.generals = []
     }
   }
-  env.duration++
   if (!a.alive || !d.alive)
-    env.duration = 0
+    env.round = -1
   // Check if a new battle can started.
   a.alive = a.alive || a.armies.length > 0
   d.alive = d.alive || d.armies.length > 0

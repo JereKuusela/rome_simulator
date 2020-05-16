@@ -180,15 +180,15 @@ export const removeAllDefeated = (attacker: Side, defender: Side, settings: Sett
 }
 
 export const deploy = (field: Environment, attacker: Side, defender: Side) => {
-  const { round, settings } = field
+  const { day: round, settings } = field
   const sizeA = armySize(attacker, round)
   const sizeD = armySize(defender, round)
 
   attacker.alive = sizeA > 0
   defender.alive = sizeD > 0
   if (attacker.alive && defender.alive) {
-    deploySub(field.round, attacker, settings, sizeD)
-    deploySub(field.round, defender, settings, sizeA)
+    deploySub(field.day, attacker, settings, sizeD)
+    deploySub(field.day, defender, settings, sizeA)
   }
 }
 

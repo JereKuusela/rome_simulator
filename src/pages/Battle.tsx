@@ -20,7 +20,7 @@ import TableArmyInfo from 'containers/TableArmyInfo'
 import TableSideInfo from 'containers/TableSideInfo'
 import TableDamageAttributes from 'containers/TableDamageAttributes'
 import AccordionToggle from 'containers/AccordionToggle'
-import { getRound } from 'managers/battle'
+import { getDay, getRound } from 'managers/battle'
 
 const ATTACKER_COLOR = '#FFAA00AA'
 const DEFENDER_COLOR = '#00AAFFAA'
@@ -47,7 +47,7 @@ class Battle extends Component<IProps> {
   }
 
   render() {
-    const { participantA, participantD, round, isUndoAvailable, fightOver, settings, timestamp, changeSiteParameter } = this.props
+    const { participantA, participantD, round, isUndoAvailable, fightOver, settings, timestamp, day, changeSiteParameter } = this.props
     if (!timestamp)
       return null
     return (
@@ -55,7 +55,7 @@ class Battle extends Component<IProps> {
         <Grid verticalAlign='middle'>
           <Grid.Row>
             <Grid.Column floated='left' width='3'>
-              <Header>{'Round: ' + this.roundName(round, getCombatPhase(round, settings))}</Header>
+              <Header>{this.roundName(day, round, getCombatPhase(round, settings))}</Header>
             </Grid.Column>
             <Grid.Column textAlign='center' width='4'>
               <Checkbox
@@ -208,12 +208,18 @@ class Battle extends Component<IProps> {
     )
   }
 
-  roundName = (round: number, phase: CombatPhase): string => {
-    if (!round)
-      return 'Deployment'
-    if (phase !== CombatPhase.Default)
-      return String(round) + ' (' + phase + ')'
-    return String(round)
+  roundName = (day: number, round: number, phase: CombatPhase): string => {
+    const dayStr = day === round ? '' : ', Day ' + day
+    let roundStr = ''
+    if (round === -1)
+      roundStr = 'Waiting for enemies'
+    else if (!round)
+      roundStr = 'Deployment'
+    else if (phase !== CombatPhase.Default)
+      roundStr = 'Round ' + String(round) + ' (' + phase + ')'
+    else
+      roundStr = 'Round ' + String(round)
+    return roundStr + dayStr
   }
 
   renderFrontline = (side: SideType) => {
@@ -282,12 +288,14 @@ class Battle extends Component<IProps> {
 
 const mapStateToProps = (state: AppState) => {
   const battle = getBattle(state)
+  const day = getDay(battle)
   const round = getRound(battle)
   return {
     participantA: getFirstParticipant(state, SideType.Attacker),
     participantD: getFirstParticipant(state, SideType.Defender),
-    isUndoAvailable: round > 0,
-    round: round,
+    isUndoAvailable: day > 0,
+    round,
+    day,
     outdated: battle.outdated,
     timestamp: battle.timestamp,
     fightOver: battle.fightOver,

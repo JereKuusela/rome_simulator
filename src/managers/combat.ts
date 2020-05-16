@@ -3,7 +3,7 @@ import { doBattle, removeDefeated, getCombatPhaseNumber } from 'combat'
 import { Battle, SideType, Setting, Cohorts, SideData, Side, Environment, Army, Reserve, General } from 'types'
 import { createEntropy, MersenneTwister19937, Random } from 'random-js'
 import { forEach } from 'utils'
-import { getRound } from './battle'
+import { getDay, getStartingPhaseNumber, getRound } from './battle'
 
 const copyCohorts = (cohorts: Cohorts): Cohorts => ({
   frontline: cohorts.frontline.map(row => row.map(value => value ? { ...value, state: { ...value.state } } : null)),
@@ -40,6 +40,8 @@ const subBattle = (battle: Battle, field: Environment, attacker: Side, defender:
   const sideD = battle.sides[SideType.Defender]
   const settings = field.settings
   const round = getRound(battle)
+  const day = getDay(battle)
+  const phaseNumber = getStartingPhaseNumber(battle) + getCombatPhaseNumber(getRound(battle), settings)
 
   battle.outdated = false
   battle.timestamp = new Date().getMilliseconds()
@@ -47,10 +49,10 @@ const subBattle = (battle: Battle, field: Environment, attacker: Side, defender:
   const maximumRoll = settings[Setting.DiceMaximum]
   const rollFrequency = settings[Setting.PhaseLength]
   // Regenerate seed for the first roll (undo resets it when going back to deployment).
-  if (round + steps > 0 && !battle.seed)
+  if (day + steps > 0 && !battle.seed)
     battle.seed = battle.customSeed ?? Math.abs(createEntropy(undefined, 1)[0])
   const engine = MersenneTwister19937.seed(battle.seed)
-  engine.discard(2 * Math.ceil((round) / rollFrequency))
+  engine.discard(2 * phaseNumber)
   const rng = new Random(engine)
 
 
@@ -59,7 +61,7 @@ const subBattle = (battle: Battle, field: Environment, attacker: Side, defender:
       return null
     // Always throw dice so that manually setting one side won't affect the other.
     const random = rng.integer(minimumRoll, maximumRoll)
-    const phase = getCombatPhaseNumber(getRound(battle), settings)
+    const phase = getStartingPhaseNumber(battle) + getCombatPhaseNumber(getRound(battle), settings)
     if (side.randomizeDice)
       return random
     else if (phase < side.rolls.length && side.rolls[phase])
@@ -68,18 +70,18 @@ const subBattle = (battle: Battle, field: Environment, attacker: Side, defender:
       return side.dice
   }
   
-  if (round === -1) {
+  if (day === -1) {
     attacker = copy(attacker)
     defender = copy(defender)
-    field.round = 0
-    field.duration = 0
+    field.day = 0
+    field.round = round
     doBattle(field, attacker, defender, true)
     battle.fightOver = !attacker.alive || !defender.alive
     freeseSize(attacker)
     freeseSize(defender)
-    sideA.rounds = [attacker]
-    sideD.rounds = [defender]
-    battle.rounds.push({ duration: field.duration })
+    sideA.days = [attacker]
+    sideD.days = [defender]
+    battle.days.push({ round: field.round, startingPhaseNumber: 0 })
   }
 
   for (let step = 0; step < steps && !battle.fightOver; ++step) {
@@ -87,7 +89,8 @@ const subBattle = (battle: Battle, field: Environment, attacker: Side, defender:
     defender = copy(defender)
     attacker.results.dice = rollDice(sideA) ?? attacker.results.dice
     defender.results.dice = rollDice(sideD) ?? defender.results.dice
-    field.round = getRound(battle) + 1
+    field.day = getDay(battle) + 1
+    field.round = getRound(battle)
     doBattle(field, attacker, defender, true)
 
     battle.fightOver = !attacker.alive || !defender.alive
@@ -95,12 +98,16 @@ const subBattle = (battle: Battle, field: Environment, attacker: Side, defender:
       removeDefeated(attacker.cohorts.frontline)
       removeDefeated(defender.cohorts.frontline)
     }
+    let startingPhaseNumber = getStartingPhaseNumber(battle)
+    if (field.round === -1) {
+      startingPhaseNumber += getCombatPhaseNumber(getRound(battle), settings)
+    }
 
     freeseSize(attacker)
     freeseSize(defender)
-    sideA.rounds.push(attacker)
-    sideD.rounds.push(defender)
-    battle.rounds.push({ duration: field.duration })
+    sideA.days.push(attacker)
+    sideD.days.push(defender)
+    battle.days.push({ round: field.round, startingPhaseNumber })
   }
 }
 
@@ -115,8 +122,8 @@ export const refreshBattle = (pair: [AppState, AppState]) => {
   const [state, draft] = pair
   const mode = getMode(state)
   const battle = draft.battle[mode]
-  const steps = getRound(battle)
-  battle.rounds = []
+  const steps = getDay(battle)
+  battle.days = []
   const [attacker, defender] = convertSides(state)
   subBattle(battle, getCombatField(state), attacker, defender, steps)
 }
@@ -125,14 +132,14 @@ export const undo = (pair: [AppState, AppState], steps: number) => {
   const [state, draft] = pair
   const mode = getMode(state)
   const battle = draft.battle[mode]
-  for (let step = 0; step < steps && battle.rounds.length > 1; ++step) {
+  for (let step = 0; step < steps && battle.days.length > 1; ++step) {
     let seed: number = battle.seed
-    if (getRound(battle) < 2)
+    if (getDay(battle) < 2)
       seed = battle.customSeed ? battle.customSeed : 0
     forEach(battle.sides, side => {
-      side.rounds.pop()
+      side.days.pop()
     })
-    battle.rounds.pop()
+    battle.days.pop()
     battle.seed = seed
     battle.fightOver = false
     battle.timestamp = new Date().getMilliseconds()

@@ -12,7 +12,7 @@ export const getDefaultSide = (type: SideType, name: CountryName, mode: Mode): S
   return {
     type,
     participants: [getDefaultParticipant(name, mode), getDefaultParticipant(name, mode)],
-    rounds: [],
+    days: [],
     rolls: [0],
     dice: (process.env.REACT_APP_GAME === 'euiv' ? 5 : 3),
     randomizeDice: false
@@ -35,7 +35,7 @@ export const getDefaultMode = (mode: Mode): Battle => ({
   customSeed: undefined,
   outdated: true,
   timestamp: 0,
-  rounds: []
+  days: []
 })
 
 export const getDefaultBattle = (): ModeState => battleState

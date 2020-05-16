@@ -14,7 +14,7 @@ import AttributeImage from 'components/Utils/AttributeImage'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 import LabelItem from 'components/Utils/LabelUnit'
 import { getOpponent } from 'army_utils'
-import { getLeadingGeneral, getRound } from 'managers/battle'
+import { getLeadingGeneral, getDay } from 'managers/battle'
 
 type Props = {
   type: SideType
@@ -141,7 +141,7 @@ const mapStateToProps = (state: AppState, props: Props) => {
     side: getSide(state, props.type),
     general: getLeadingGeneral(combat),
     opponent: getLeadingGeneral(opponent),
-    round: getRound(battle),
+    round: getDay(battle),
     terrains: battle.terrains.map(type => state.terrains[type]),
     settings: getSiteSettings(state),
     mode: getMode(state),

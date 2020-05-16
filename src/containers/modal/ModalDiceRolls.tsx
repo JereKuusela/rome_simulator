@@ -48,12 +48,12 @@ class ModalDiceRolls extends Component<IProps> {
               <Table.Row key={row}>
                 {
                   mapRange(4, column => {
-                    const phase = row * 4 + column + 1
+                    const phase = row * 4 + column
                     if (phase >= rolls.length)
                       return (<Table.Cell key={phase}></Table.Cell>)
                     return (
                       <Table.Cell key={phase}>
-                        Phase {phase}
+                        Phase {phase + 1}
                         <span style={{ paddingLeft: '1em' }}>
                           <DelayedNumericInput delay={0} value={rolls[phase]}
                             onChange={value => setPhaseDice(side, phase, value)}

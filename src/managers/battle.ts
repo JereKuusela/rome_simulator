@@ -107,4 +107,6 @@ const convertGeneral = (army: ArmyDefinition, general: GeneralDefinition, arriva
 
 export const getLeadingGeneral = (side: Side): General | null => side.generals.length ? side.generals[0] : null
 
-export const getRound = (battle: Battle) => battle.rounds.length - 1
+export const getDay = (battle: Battle) => battle.days.length - 1
+export const getStartingPhaseNumber = (battle: Battle) => battle.days.length ? battle.days[battle.days.length - 1].startingPhaseNumber : 0
+export const getRound = (battle: Battle) => battle.days.length ? battle.days[battle.days.length - 1].round : -1

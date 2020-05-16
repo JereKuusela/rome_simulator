@@ -4,8 +4,9 @@ import { ArmyName, Army, General } from './armies'
 export type Battle = {
   terrains: TerrainType[]
   sides: { [key in SideType]: SideData }
-  rounds: {
-    duration: number
+  days: {
+    round: number
+    startingPhaseNumber: number
   }[]
   fightOver: boolean
   seed: number
@@ -23,7 +24,7 @@ export enum CombatPhase {
 export type SideData = {
   type: SideType
   participants: Participant[]
-  rounds: Side[]
+  days: Side[]
   rolls: number[]
   dice: number
   randomizeDice: boolean
@@ -45,7 +46,7 @@ export enum SideType {
 /** Information affecting both sides of combat. */
 export type Environment = {
   round: number
-  duration: number
+  day: number
   terrains: Terrain[]
   settings: Settings
 }

@@ -139,7 +139,7 @@ export const armySize = (side: Side, round: number) => {
 export const defeatCohort = (environment: Environment, cohort: Cohort) => {
   // Defeating a defeated cohort shouldn't change the time of defeat.
   if (!cohort.state.isDefeated)
-    cohort.state.defeatedRound = environment.round
+    cohort.state.defeatedRound = environment.day
   cohort.state.isDefeated = true
   cohort.state.isDestroyed = cohort[UnitAttribute.Strength] <= 0
 }

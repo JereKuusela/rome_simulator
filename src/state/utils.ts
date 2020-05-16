@@ -31,7 +31,7 @@ export const getCohortDefinition = (state: AppState, country: CountryName, army:
 export const getCohort = (state: AppState, side: SideType, part: ArmyPart, row: number, column: number): Cohort | null => getArmyPart(getCohorts(state, side), part)[row][column]
 
 export const getCohortForEachRound = (state: AppState, side: SideType, participantIndex: number, index: number) => {
-  const rounds = state.battle[state.settings.mode].sides[side].rounds
+  const rounds = state.battle[state.settings.mode].sides[side].days
   return rounds.map(side => {
     let result = null
     iterateCohorts(side.cohorts, cohort => {
@@ -111,7 +111,7 @@ export const getCohorts = (state: AppState, sideType: SideType): Cohorts => getC
 
 export const getCombatSide = (state: AppState, sideType: SideType): Side => {
   const side = getSide(state, sideType)
-  return side.rounds[side.rounds.length - 1]
+  return side.days[side.days.length - 1]
 }
 
 const getArmy = (state: AppState, countryName: CountryName, armyName: ArmyName): ArmyDefinition => {
@@ -147,8 +147,8 @@ export const getCombatField = (state: AppState): Environment => {
   const terrains = battle.terrains.map(value => state.terrains[value])
   const settings = getSettings(state)
   return {
-    round: 0,
-    duration: battle.rounds.length ? battle.rounds[battle.rounds.length - 1].duration : 0,
+    day: 0,
+    round: battle.days.length ? battle.days[battle.days.length - 1].round : 0,
     terrains,
     settings
   }

@@ -261,7 +261,7 @@ const doPhase = (field: Environment, attacker: Side, defender: Side, phase: numb
   const maxRound = phase * phaseLength
   let round = (phase - 1) * phaseLength + 1
   for (; round <= maxRound; round++) {
-    field.round = round
+    field.day = round
     doBattle(field, attacker, defender, false)
     if (!attacker.alive && !defender.alive)
       winner = null

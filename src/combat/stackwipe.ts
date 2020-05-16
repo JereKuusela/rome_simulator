@@ -14,14 +14,14 @@ export const checkInstantStackWipe = (environment: Environment, attacker: Side, 
 
 export const checkStackWipe = (environment: Environment, side: Side, enemy: Cohorts) => {
   const settings = environment.settings
-  const soft = environment.duration < settings[Setting.StackwipeRounds]
+  const soft = environment.round < settings[Setting.StackwipeRounds]
   const total = calculateTotalStrength(side.cohorts, true)
   const totalEnemy = calculateTotalStrength(enemy, true)
   if (totalEnemy / total > (soft ? settings[Setting.SoftStackWipeLimit] : settings[Setting.HardStackWipeLimit]))
     stackWipe(environment, side)
 }
 
-const wasDefeatedDuringCurrentBattle = (environment: Environment, cohort: Cohort) => cohort.state.defeatedRound >= environment.round - environment.duration
+const wasDefeatedDuringCurrentBattle = (environment: Environment, cohort: Cohort) => cohort.state.defeatedRound >= environment.day - environment.round
 
 export const stackWipe = (environment: Environment, side: Side) => {
   side.alive = false
@@ -50,9 +50,10 @@ export const stackWipe = (environment: Environment, side: Side) => {
       if (!cohort)
         continue
       // Already defeated is a proxy for UI purposes, just clean it up.
-      if (!cohort.state.isDefeated)
+      if (!cohort.state.isDefeated) {
         defeated.push(cohort)
-      frontline[i][j] = null
+        frontline[i][j] = null
+      }
       wipeCohort(environment, cohort)
     }
   }
