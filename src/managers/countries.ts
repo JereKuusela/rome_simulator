@@ -43,7 +43,8 @@ export const enableCountrySelections = (country: CountryDefinition, type: Select
 }
 
 export const clearCountrySelection = (country: CountryDefinition, type: SelectionType, key: string) => {
-  delete country.selections[type][key]
+  if (country.selections[type])
+    delete country.selections[type][key]
 }
 
 export const clearCountrySelections = (country: CountryDefinition, type?: SelectionType, keys?: string[]) => {
