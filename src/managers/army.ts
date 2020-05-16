@@ -257,7 +257,8 @@ export const enableGeneralSelections = (army: Army, type: SelectionType, keys: s
 }
 
 export const clearGeneralSelection = (army: Army, type: SelectionType, key: string) => {
-  delete army.general.selections[type][key]
+  if (army.general.selections[type])
+    delete army.general.selections[type][key]
 }
 
 export const clearGeneralSelections = (army: Army, type?: SelectionType, keys?: string[]) => {
