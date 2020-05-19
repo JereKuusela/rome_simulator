@@ -5,7 +5,7 @@ import { Grid, Button, List } from 'semantic-ui-react'
 import StyledNumber from 'components/Utils/StyledNumber'
 
 import { AppState, getSettings, initializeCombatParticipants } from 'state'
-import { toPercent, toFlooredPercent, toNumber } from 'formatters'
+import { toPercent, toFlooredPercent, toNumber, toSignedPercent } from 'formatters'
 import { interrupt, calculateWinRate } from 'combat'
 import { showProgress } from 'utils'
 import { Setting, WinRateProgress, CasualtiesProgress } from 'types'
@@ -47,7 +47,8 @@ class WinRate extends Component<IProps, IState> {
 
   toPercent = (value: number) => toPercent(value, 0)
   toTooltipPercent = (value: number) => toPercent(value, 1)
-  toTooltipNumber = (value: number) => toNumber(value, 2)
+  toSignedTooltipPercent = (value: number) => toSignedPercent(value, 1)
+  toTooltipNumber = (value: number) => toNumber(value, 3)
 
   willUnmount = false
   componentWillUnmount() {
@@ -159,22 +160,28 @@ class WinRate extends Component<IProps, IState> {
           <List.Item>
             Attacker:{' '}
             {<StyledNumber value={this.scale(avgStrengthA / maxStrengthA)} positiveColor={ATTACKER_COLOR} neutralColor={ATTACKER_COLOR} formatter={this.toTooltipPercent} />}
-            {' '}(
+            {' ('}
             {<StyledNumber value={this.scale(avgStrengthA)} positiveColor={ATTACKER_COLOR} neutralColor={ATTACKER_COLOR} formatter={this.toTooltipNumber} />}
-            )
+            {')'}
           </List.Item>
           <List.Item>
             Defender:{' '}
             {<StyledNumber value={this.scale(avgStrengthD / maxStrengthD)} positiveColor={DEFENDER_COLOR} neutralColor={DEFENDER_COLOR} formatter={this.toTooltipPercent} />}
-            {' '}(
+            {' ('}
             {<StyledNumber value={this.scale(avgStrengthD)} positiveColor={DEFENDER_COLOR} neutralColor={DEFENDER_COLOR} formatter={this.toTooltipNumber} />}
-            )
+            {')'}
           </List.Item>
           <List.Item>
             Casualties win rate:{' '}
             {<StyledNumber value={this.scale(winRateA)} positiveColor={ATTACKER_COLOR} neutralColor={ATTACKER_COLOR} formatter={this.toTooltipPercent} />}
             {' / '}
             {<StyledNumber value={this.scale(winRateD)} positiveColor={DEFENDER_COLOR} neutralColor={DEFENDER_COLOR} formatter={this.toTooltipPercent} />}
+          </List.Item>
+          <List.Item>
+            Casualties balance:{' '}
+            {<StyledNumber reverse value={avgStrengthA / avgStrengthD - 1} formatter={this.toSignedTooltipPercent} />}
+            {' / '}
+            {<StyledNumber reverse value={avgStrengthD / avgStrengthA - 1} formatter={this.toSignedTooltipPercent} />}
           </List.Item>
         </List>
         <List.Item>

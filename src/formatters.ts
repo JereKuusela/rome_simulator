@@ -75,10 +75,10 @@ export const toFlooredPercent = (number?: number, decimals: number = 2): string 
     return ''
   return Math.floor(multipliers[decimals + 2] * number) / multipliers[decimals] + '%'
 }
-export const toSignedPercent = (number?: number): string => {
+export const toSignedPercent = (number?: number, fixed: number = 2): string => {
   if (number === undefined)
     return ''
-  const value = +(number * 100.0).toFixed(2)
+  const value = +(number * 100.0).toFixed(fixed)
   if (value >= 0)
     return '+' + String(value) + '%'
   return String(value) + '%'
