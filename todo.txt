@@ -12,6 +12,8 @@ UI:
  * Fixed terrain selector not showing the selection.
  * Win rate now also includes draws and incomplete battles (so the total should always be 100%), the tooltip still separates them.
  * Win rate tooltip now also shows how many battles were done.
+ * Added losses (from Analyze) to the main page (similar to win rate but shows percentage of strength lost).
+ * Losses tooltip also shows raw amount of strength lost, chance to lose less strength than the enemy and compare how much more/less strength was lost.
  * Analyze settings moved from Settings page to Analyze page (no need to move between pages when tweaking things).
  * Going backwards in battle is now much faster (previously recalculated whole battle).
  * Unit tooltips now show the round of defeated for defeated units.
@@ -37,8 +39,6 @@ Todo:
 
 Data:
  * IR units have mode (should be derived from base)
- * Some tradition modifiers are incorrectly percents!
- * African traditions are messed up
 
 Multiarmy:
  - Test:
