@@ -50,7 +50,8 @@ class Analyze extends Component<IProps, IState> {
       attackerWinChance: 0, defenderWinChance: 0, incomplete: 0, calculating: false, progress: 0, updates: 0,
       averageRounds: 0, rounds: {}, battles: 0, draws: 0, stackWipes: 0,
       avgMoraleA: 0, avgMoraleD: 0, avgStrengthA: 0, avgStrengthD: 0, maxMoraleA: 1, maxMoraleD: 1, maxStrengthA: 1, maxStrengthD: 1,
-      moraleA: {}, moraleD: {}, strengthA: {}, strengthD: {}, lossesA: initResourceLosses(), lossesD: initResourceLosses()
+      moraleA: {}, moraleD: {}, strengthA: {}, strengthD: {}, lossesA: initResourceLosses(), lossesD: initResourceLosses(),
+      winRateA: 0, winRateD: 0
     }
   }
 

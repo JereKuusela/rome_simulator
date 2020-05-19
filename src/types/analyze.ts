@@ -29,6 +29,8 @@ export interface CasualtiesProgress {
   moraleD: { [key: string]: number }
   strengthA: { [key: string]: number }
   strengthD: { [key: string]: number }
+  winRateA: number
+  winRateD: number
 }
 
 export interface ResourceLossesProgress {

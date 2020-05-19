@@ -59,14 +59,14 @@ class Battle extends Component<IProps> {
             <Grid.Column floated='left' width='3'>
               <Header>{'Round: ' + this.roundName(round, getCombatPhase(round, settings))}</Header>
             </Grid.Column>
-            <Grid.Column textAlign='center' width='4'>
+            <Grid.Column textAlign='center' width='3'>
               <Checkbox
                 label={Setting.AutoRefresh}
                 checked={settings[Setting.AutoRefresh]}
                 onChange={(_, { checked }) => changeSiteParameter(Setting.AutoRefresh, !!checked)}
               />
             </Grid.Column>
-            <Grid.Column width='5'>
+            <Grid.Column width='6'>
               <WinRate />
             </Grid.Column>
             <Grid.Column floated='right' textAlign='right' width='4'>
