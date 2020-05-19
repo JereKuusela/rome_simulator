@@ -1,6 +1,7 @@
 import { addValues } from 'definition_values'
-import { getUnit, TestInfo, initInfo, setCenterUnits, initSide, testCombat, setTerrain } from './utils'
-import { UnitType, UnitAttribute, TerrainType, ValuesType, Setting } from 'types'
+import { getUnit, TestState, initState, initSide, testCombat, setTerrain, getArmy } from './utils'
+import { UnitType, UnitAttribute, TerrainType, ValuesType, SideType } from 'types'
+import { addToReserve } from 'managers/army'
 
 if (process.env.REACT_APP_GAME !== 'euiv') {
 
@@ -10,16 +11,14 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     const infantry = addValues(getUnit(UnitType.LightInfantry), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.25]])
     const cavalry = addValues(getUnit(UnitType.LightCavalry), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.2]])
 
-    let info: TestInfo
-    beforeEach(() => {
-      info = initInfo()
-      info.settings[Setting.MoraleLostMultiplier] = info.settings[Setting.MoraleLostMultiplier] * 0.02 / 0.024
-      info.settings[Setting.StrengthLostMultiplier] = info.settings[Setting.StrengthLostMultiplier] * 0.02 / 0.024
-    })
+    let state: TestState
+    beforeEach(() => state = initState(true))
 
     it('no modifiers', () => {
       const unit = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.MoraleDamageTaken, -0.25]])
-      setCenterUnits(info, unit, unit)
+      addToReserve(getArmy(state, SideType.Attacker), [unit])
+      addToReserve(getArmy(state, SideType.Defender), [unit])
+
       const rolls = [[0, 2], [3, 2]]
       const { attacker, defender } = initSide(10)
 
@@ -45,14 +44,16 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       defender[8][15] = [unit.type, 828, 0.6886]
       defender[9][15] = [unit.type, 806, 0.6492]
 
-      testCombat(info, rolls, attacker, defender)
+      testCombat(state, rolls, attacker, defender)
     })
 
     it('increased morale damage taken, terrain bonus and discipline', () => {
       const unitA = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.Discipline, 0.045]])
       const unitD = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.Discipline, 0.14], [TerrainType.Forest, 0.15]])
-      setTerrain(info, TerrainType.Forest)
-      setCenterUnits(info, unitA, unitD)
+      setTerrain(state, TerrainType.Forest)
+      addToReserve(getArmy(state, SideType.Attacker), [unitA])
+      addToReserve(getArmy(state, SideType.Defender), [unitD])
+
       const rolls = [[4, 4]]
       const { attacker, defender } = initSide(4)
 
@@ -66,13 +67,15 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       defender[2][15] = [unitD.type, 915, 0.8121]
       defender[3][15] = [unitD.type, 890, 0.7401]
 
-      testCombat(info, rolls, attacker, defender)
+      testCombat(state, rolls, attacker, defender)
     })
 
     it('reduced morale damage taken, offense/defense and experience', () => {
       const unitA = addValues(infantry, ValuesType.Base, 'Test', [[UnitAttribute.Offense, 0.1], [UnitAttribute.Defense, 0.15], [UnitAttribute.Experience, 0.0001]])
       const unitD = addValues(infantry, ValuesType.Base, 'Test', [[UnitAttribute.Offense, 0.05], [UnitAttribute.Defense, 0.05], [UnitAttribute.Experience, 0.0004]])
-      setCenterUnits(info, unitA, unitD)
+      addToReserve(getArmy(state, SideType.Attacker), [unitA])
+      addToReserve(getArmy(state, SideType.Defender), [unitD])
+
       const rolls = [[6, 1]]
       const { attacker, defender } = initSide(4)
 
@@ -86,13 +89,15 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       defender[2][15] = [unitD.type, 876, 0.7521]
       defender[3][15] = [unitD.type, 836, 0.6424]
 
-      testCombat(info, rolls, attacker, defender)
+      testCombat(state, rolls, attacker, defender)
     })
 
     it('versus damage and increased morale damage taken', () => {
       const unitA = addValues(cavalry, ValuesType.Base, 'Test', [])
       const unitD = addValues(archer, ValuesType.Base, 'Test', [])
-      setCenterUnits(info, unitA, unitD)
+      addToReserve(getArmy(state, SideType.Attacker), [unitA])
+      addToReserve(getArmy(state, SideType.Defender), [unitD])
+
       const rolls = [[4, 4]]
       const { attacker, defender } = initSide(3)
 
@@ -104,7 +109,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       defender[1][15] = [unitD.type, 921, 0.7800]
       defender[2][15] = [unitD.type, 883, 0.6086]
 
-      testCombat(info, rolls, attacker, defender)
+      testCombat(state, rolls, attacker, defender)
     })
   })
 }

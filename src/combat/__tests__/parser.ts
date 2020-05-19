@@ -1,6 +1,6 @@
 import { UnitType, dictionaryUnitType } from 'types'
 import { forEach, mapRange } from 'utils'
-import { TestInfo, setFlankSizes, setUnitPreferences, setReserve, setGeneral } from './utils'
+import { TestState, setFlankSizes, setUnitPreferences, setReserve, setGeneral } from './utils'
 
 type InputUnits = UnitType[]
 
@@ -52,7 +52,7 @@ const getFlankSize = (input: Input) => Number(input['flank_size'] ?? 0)
 const getGeneral = (input: Input) => Number(input['general'] ?? 0)
 
 
-const setInfoFromInput = (info: TestInfo, attacker: Input, defender: Input) => {
+const setInfoFromInput = (info: TestState, attacker: Input, defender: Input) => {
   setFlankSizes(info, getFlankSize(attacker), getFlankSize(defender))
   setGeneral(info, getGeneral(attacker), getGeneral(defender))
   setUnitPreferences(info, getUnitPrefences(attacker), getUnitPrefences(defender))
@@ -63,7 +63,7 @@ const setInfoFromInput = (info: TestInfo, attacker: Input, defender: Input) => {
  * @param info 
  * @param data 
  */
-export const loadInput = (data: string, info: TestInfo) => {
+export const loadInput = (data: string, info: TestState) => {
   const [attacker, defender] = parseInput(data)
   setInfoFromInput(info, attacker, defender)
   setReserve(info, getUnits(attacker), getUnits(defender))

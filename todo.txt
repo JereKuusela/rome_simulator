@@ -38,6 +38,7 @@ Todo:
 Data:
  * IR units have mode (should be derived from base)
  * Some tradition modifiers are incorrectly percents!
+ * African traditions are messed up
 
 Multiarmy:
  - Test:

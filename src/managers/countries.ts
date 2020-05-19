@@ -1,10 +1,10 @@
 import { Countries, CountryName, CountryDefinition, GovermentType, CultureType, CountryAttribute, ValuesType, WearinessAttribute, Country, isAttributeEnabled, ModifierWithKey, SiteSettings, ModifierType, SelectionType, Selections, ArmyName, Mode } from 'types'
-import { defaultCountry, getDefaultUnits, getDefaultArmies } from 'data'
+import { getDefaultUnits, getDefaultArmies, getDefaultCountry } from 'data'
 import { addValuesWithMutate, clearAllValuesWithMutate, calculateValue, addValue } from 'definition_values'
 import { toObj, values, filter } from 'utils'
 
 export const createCountry = (countries: Countries, country: CountryName, source?: CountryName) => {
-  countries[country] = source ? countries[source] : defaultCountry
+  countries[country] = source ? countries[source] : getDefaultCountry()
 }
 
 export const deleteCountry = (countries: Countries, country: CountryName) => {

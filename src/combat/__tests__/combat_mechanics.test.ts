@@ -1,15 +1,16 @@
-import { TestInfo, initInfo, setTactics, setCenterUnits, initSide, testCombat, createCohort } from './utils'
-import { UnitType, UnitAttribute, TacticType, CohortDefinition, CombatPhase, Settings, Setting, DisciplineValue } from 'types'
+import { TestState, initState, initSide, testCombat, createCohort, getArmy, getSettings } from './utils'
+import { UnitType, UnitAttribute, TacticType, CohortDefinition, CombatPhase, Settings, Setting, DisciplineValue, CountryName, ArmyName, SideType } from 'types'
 import { map } from 'utils'
+import { selectTactic, addToReserve } from 'managers/army'
 
 if (process.env.REACT_APP_GAME !== 'euiv') {
 
   describe('mechanics', () => {
     let unit = null as any as CohortDefinition
 
-    let info: TestInfo
+    let state: TestState
     beforeEach(() => {
-      info = initInfo(false)
+      state = initState()
       unit = createCohort(UnitType.Archers)
       unit.isLoyal = true
       unit.baseValues![UnitAttribute.Morale] = { 'key': 3 }
@@ -30,10 +31,12 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       unit.baseValues![UnitType.Archers] = { 'key': 0.2 }
       unit.baseValues![UnitAttribute.OffensiveSupport] = { 'key': 0.5 }
 
-      info.settings = map(info.settings, item => typeof item === 'boolean' ? false : item) as Settings
-      info.settings[Setting.AttributeDiscipline] = DisciplineValue.Off
-      setTactics(info, TacticType.Bottleneck, TacticType.ShockAction)
-      setCenterUnits(info, unit, unit)
+      state.environment.settings = map(state.environment.settings, item => typeof item === 'boolean' ? false : item) as Settings
+      getSettings(state)[Setting.AttributeDiscipline] = DisciplineValue.Off
+      selectTactic(getArmy(state, SideType.Attacker), TacticType.Bottleneck)
+      selectTactic(getArmy(state, SideType.Defender), TacticType.ShockAction)
+      addToReserve(getArmy(state, SideType.Attacker), [unit])
+      addToReserve(getArmy(state, SideType.Defender), [unit])
     })
 
     const test = (damageMultiplierA: number, damageMultiplierD: number, strengthMultiplier: number, moraleMultiplier: number) => {
@@ -50,7 +53,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       attacker[0][15] = [unit.type, strengthA, moraleA]
       defender[0][15] = [unit.type, strengthD, moraleD]
 
-      testCombat(info, rolls, attacker, defender)
+      testCombat(state, rolls, attacker, defender)
 
     }
 
@@ -58,55 +61,55 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       test(0, 0, 0, 0)
     })
     it('tactics', () => {
-      info.settings[Setting.Tactics] = true
+      getSettings(state)[Setting.Tactics] = true
       test(0.1, -0.1, 0.1, 0)
     })
     it('unit types', () => {
-      info.settings[Setting.AttributeUnitType] = true
+      getSettings(state)[Setting.AttributeUnitType] = true
       test(0.2, 0.2, 0, 0)
     })
     it('morale damage', () => {
-      info.settings[Setting.AttributeMoraleDamage] = true
+      getSettings(state)[Setting.AttributeMoraleDamage] = true
       test(0, 0, 0, 1.25 * 1.25 - 1)
     })
     it('strength damage', () => {
-      info.settings[Setting.AttributeStrengthDamage] = true
+      getSettings(state)[Setting.AttributeStrengthDamage] = true
       test(0, 0, 1.25 * 1.25 - 1, 0)
     })
     it('combat ability', () => {
-      info.settings[Setting.AttributeCombatAbility] = true
+      getSettings(state)[Setting.AttributeCombatAbility] = true
       test(0.3, 0.3, 0, 0)
     })
     it('daily damage increase', () => {
-      info.settings[Setting.DailyDamageIncrease] = 0.1
+      getSettings(state)[Setting.DailyDamageIncrease] = 0.1
       test(0.1, 0.1, 0, 0)
     })
     it('phase damage', () => {
-      info.settings[Setting.FireAndShock] = true
+      getSettings(state)[Setting.FireAndShock] = true
       test(-0.5, -0.5, 1.2 * 0.5 - 1, 0)
     })
     it('offense / defense', () => {
-      info.settings[Setting.AttributeOffenseDefense] = true
+      getSettings(state)[Setting.AttributeOffenseDefense] = true
       test(0.1, 0.1, 0, 0)
     })
     it('damage done / taken', () => {
-      info.settings[Setting.AttributeDamage] = true
+      getSettings(state)[Setting.AttributeDamage] = true
       test(1.6 * 1.5 - 1, 1.6 * 1.5 - 1, 0, 0)
     })
     it('loyality', () => {
-      info.settings[Setting.AttributeLoyal] = true
+      getSettings(state)[Setting.AttributeLoyal] = true
       test(0.1, 0.1, 0, 0)
     })
     it('discipline damage done', () => {
-      info.settings[Setting.AttributeDiscipline] = DisciplineValue.Damage
+      getSettings(state)[Setting.AttributeDiscipline] = DisciplineValue.Damage
       test(0.75, 0.75, 0, 0)
     })
     it('discipline damage done and taken', () => {
-      info.settings[Setting.AttributeDiscipline] = DisciplineValue.Both
+      getSettings(state)[Setting.AttributeDiscipline] = DisciplineValue.Both
       test(0, 0, 0, 0)
     })
     it('backrow damage', () => {
-      info.armyA.frontline[1][15] = unit
+      addToReserve(getArmy(state, SideType.Attacker), [unit])
       test(0.5, 0, 0, 0)
     })
   })

@@ -1,4 +1,4 @@
-import { TestInfo, initInfo, getUnit, testDeployment, createExpected, setCombatWidth } from './utils'
+import { TestState, initState, getUnit, testDeployment, createExpected, setCombatWidth } from './utils'
 import { UnitType, ArmyForCombatConversion} from 'types'
 
 import { mapRange } from 'utils'
@@ -7,8 +7,8 @@ if (process.env.REACT_APP_GAME === 'euiv') {
 
   describe('initial deployment', () => {
 
-    let info: TestInfo
-    beforeEach(() => { info = initInfo(false) })
+    let info: TestState
+    beforeEach(() => { info = initState(false) })
 
     const add = (army: ArmyForCombatConversion, infantry: number, cavalry: number, artillery: number) => {
       army.reserve.push(...mapRange(infantry, () => getUnit(UnitType.Infantry)))

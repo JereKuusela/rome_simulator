@@ -1,6 +1,7 @@
 import { addValues } from 'definition_values'
-import { getUnit, TestInfo, initInfo, setAttacker, setDefender, initSide, testCombat } from './utils'
-import { UnitType, UnitAttribute, Setting, ValuesType } from 'types'
+import { getUnit, TestState, initState, setAttacker, setDefender, initSide, testCombat, getArmy } from './utils'
+import { UnitType, UnitAttribute, Setting, ValuesType, SideType } from 'types'
+import { addToReserve } from 'managers/army'
 
 if (process.env.REACT_APP_GAME !== 'euiv') {
 
@@ -9,20 +10,13 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     const light = addValues(getUnit(UnitType.LightCavalry), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.2]])
     const heavy = addValues(getUnit(UnitType.HeavyCavalry), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.2]])
 
-    let info: TestInfo
-    beforeEach(() => {
-      info = initInfo()
-      info.settings[Setting.MoraleLostMultiplier] = info.settings[Setting.MoraleLostMultiplier] * 0.02 / 0.024
-      info.settings[Setting.StrengthLostMultiplier] = info.settings[Setting.StrengthLostMultiplier] * 0.02 / 0.024
-    })
+    let state: TestState
+    beforeEach(() => state = initState(true))
 
     it('main and flanks', () => {
-      setAttacker(info, 14, archer)
-      setAttacker(info, 15, archer)
-      setDefender(info, 13, light)
-      setDefender(info, 14, archer)
-      setDefender(info, 15, archer)
-      setDefender(info, 16, light)
+      addToReserve(getArmy(state, SideType.Attacker), [archer, archer])
+      addToReserve(getArmy(state, SideType.Defender), [archer, archer, light, light])
+
       const rolls = [[5, 0]]
       const { attacker, defender } = initSide(1)
 
@@ -31,21 +25,16 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       defender[0][13] = defender[0][16] = [light.type, 1000, 1.2]
       defender[0][14] = defender[0][15] = [archer.type, 964, 0.9982]
 
-      testCombat(info, rolls, attacker, defender)
+      testCombat(state, rolls, attacker, defender)
     })
 
     it('inner flank', () => {
-      info.settings[Setting.FixTargeting] = false
-      info.settings[Setting.DefenderAdvantage] = true
+      state.environment.settings[Setting.FixTargeting] = false
+      state.environment.settings[Setting.DefenderAdvantage] = true
 
-      setAttacker(info, 13, archer)
-      setAttacker(info, 14, heavy)
-      setAttacker(info, 15, heavy)
-      setAttacker(info, 16, archer)
-      setDefender(info, 13, archer)
-      setDefender(info, 14, archer)
-      setDefender(info, 15, archer)
-      setDefender(info, 16, archer)
+      addToReserve(getArmy(state, SideType.Attacker), [heavy, heavy, archer, archer])
+      addToReserve(getArmy(state, SideType.Defender), [archer, archer, archer, archer])
+
       const rolls = [[5, 5], [0, 6]]
       const { attacker, defender } = initSide(6)
 
@@ -58,22 +47,17 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       defender[5][14] = [archer.type, 778, 0.3212]
       defender[5][15] = [archer.type, 819, 0.4788]
 
-      testCombat(info, rolls, attacker, defender)
+      testCombat(state, rolls, attacker, defender)
     })
 
     it('inner flank (fixed)', () => {
       // Can't be tested in game.
-      info.settings[Setting.FixTargeting] = true
-      info.settings[Setting.DefenderAdvantage] = true
+      state.environment.settings[Setting.FixTargeting] = true
+      state.environment.settings[Setting.DefenderAdvantage] = true
 
-      setAttacker(info, 13, archer)
-      setAttacker(info, 14, heavy)
-      setAttacker(info, 15, heavy)
-      setAttacker(info, 16, archer)
-      setDefender(info, 13, archer)
-      setDefender(info, 14, archer)
-      setDefender(info, 15, archer)
-      setDefender(info, 16, archer)
+      addToReserve(getArmy(state, SideType.Attacker), [heavy, heavy, archer, archer])
+      addToReserve(getArmy(state, SideType.Defender), [archer, archer, archer, archer])
+
       const rolls = [[5, 5], [0, 6]]
       const { attacker, defender } = initSide(6)
 
@@ -85,7 +69,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
 
       defender[5][14] = defender[5][15] = [archer.type, 798, 0.4]
 
-      testCombat(info, rolls, attacker, defender)
+      testCombat(state, rolls, attacker, defender)
     })
   })
 }

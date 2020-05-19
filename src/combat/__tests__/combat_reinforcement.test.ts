@@ -1,4 +1,4 @@
-import { TestInfo, initInfo, testReinforcement, createExpected } from './utils'
+import { TestState, initState, testReinforcement, createExpected, getSettings } from './utils'
 import { UnitType, Setting } from 'types'
 
 import unitPreferences from './input/reinforcement/unit_preferences.txt'
@@ -11,13 +11,11 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
 
   describe('reinforcement', () => {
 
-    let info: TestInfo
-    beforeEach(() => { info = initInfo() })
-
-
+    let state: TestState
+    beforeEach(() => { state = initState() })
 
     it('unit preferences', () => {
-      loadInput(unitPreferences, info)
+      loadInput(unitPreferences, state)
       const attacker = {
         front: createExpected([UnitType.LightInfantry, 30])
       }
@@ -25,12 +23,12 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
         front: createExpected(UnitType.SupplyTrain, UnitType.Archers),
         defeated: createExpected([UnitType.SupplyTrain, 30])
       }
-      testReinforcement(1, info, attacker, defender)
+      testReinforcement(1, state, attacker, defender)
     })
 
 
     it('support units only when nothing else is left', () => {
-      loadInput(supportLateReinforcement, info)
+      loadInput(supportLateReinforcement, state)
       const attacker = {
         front: createExpected([UnitType.HeavyCavalry, 30])
       }
@@ -38,13 +36,13 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
         front: createExpected(UnitType.SupplyTrain),
         defeated: createExpected([UnitType.Archers, 31])
       }
-      testReinforcement(3, info, attacker, defender)
+      testReinforcement(3, state, attacker, defender)
     })
 
     it('preferred flank size', () => {
-      loadInput(preferredFlankSize, info)
+      loadInput(preferredFlankSize, state)
       // Tweak to defeat whole enemy line during the same turn.
-      info.settings[Setting.MaxPips] = 20
+      getSettings(state)[Setting.MaxPips] = 20
       const attacker = {
         front: createExpected([UnitType.HeavyCavalry, 30])
       }
@@ -54,13 +52,13 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
         reserveFlank: createExpected([UnitType.LightCavalry, 52]),
         defeated: createExpected([UnitType.LightCavalry, 2], [UnitType.HeavyCavalry, 26], [UnitType.LightCavalry, 2])
       }
-      testReinforcement(3, info, attacker, defender)
+      testReinforcement(3, state, attacker, defender)
     })
 
     it('frontline is reinforced first', () => {
-      loadInput(flankOnly, info)
+      loadInput(flankOnly, state)
       // Tweak to defeat whole enemy line during the same turn.
-      info.settings[Setting.MaxPips] = 20
+      getSettings(state)[Setting.MaxPips] = 20
       const attacker = {
         front: createExpected([UnitType.HeavyCavalry, 30])
       }
@@ -68,7 +66,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
         front: createExpected([UnitType.LightCavalry, 10]),
         defeated: createExpected([UnitType.LightCavalry, 5], [UnitType.HeavyCavalry, 20], [UnitType.LightCavalry, 5])
       }
-      testReinforcement(3, info, attacker, defender)
+      testReinforcement(3, state, attacker, defender)
     })
   })
 }

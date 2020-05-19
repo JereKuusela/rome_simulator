@@ -24,6 +24,8 @@ export enum CountryAttribute {
   OfficeDiscipline = 'Discipline Office'
 }
 
+export type CountryDefinitions = { [key in CountryName]: CountryDefinition }
+
 export interface CountryDefinition extends DefinitionValues<CountryAttribute> {
   selections: Selections
   culture: CultureType

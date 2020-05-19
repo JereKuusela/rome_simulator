@@ -1,7 +1,7 @@
-import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultParticipant, getDefaultArmy, getDefaultUnit, getDefaultSide } from 'data'
+import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultUnit, getDefaultSide, getDefaultCountryDefinitions } from 'data'
 import { map, mapRange, resize, toObj, values } from 'utils'
 import { mergeValues } from 'definition_values'
-import { Mode, CountryName, Participant, Terrain, TacticType, Setting, SideType, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, Settings, CohortDefinition, CombatPhase, CultureType, GeneralDefinition, GeneralAttribute, UnitPreferences, ArmyForCombatConversion, Cohort, Army, UnitRole, DisciplineValue, Selections, SideData } from 'types'
+import { Mode, CountryName, TacticType, Setting, SideType, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, CohortDefinition, CombatPhase, CultureType, GeneralAttribute, UnitPreferences, Cohort, Army, UnitRole, SideData, Environment, CountryDefinitions, ArmyName } from 'types'
 import { doBattle, deploy, reinforce } from 'combat'
 import { convertArmy } from 'managers/battle'
 import { removeDefeated } from 'combat/combat_utils'
@@ -14,16 +14,11 @@ const terrains = getDefaultTerrains()
 /**
  * Everything the combat tests might need to make tests convenient to write.
  */
-export interface TestInfo {
-  round: number
-  attacker: Participant
-  defender: Participant
+export interface TestState {
+  environment: Environment
   sideA: SideData
   sideD: SideData
-  armyA: ArmyForCombatConversion
-  armyD: ArmyForCombatConversion
-  terrains: Terrain[]
-  settings: Settings
+  countries: CountryDefinitions
 }
 
 export interface ExpectedTypes {
@@ -36,48 +31,31 @@ export interface ExpectedTypes {
 }
 
 /**
- * Returns a clean combat state for tests.
+ * Returns initial state for a test.
+ * @param legacyDamage Older versions of Imperator had lower damage. This option should be removed once old tests are scaled properly.
  */
-export const initInfo = (singleRow: boolean = true) => {
+export const initState = (legacyDamage?: boolean): TestState => {
   const settings = { ...getDefaultLandSettings(), ...getDefaultSiteSettings(), [Setting.Precision]: 100000 }
-  const general = (): GeneralDefinition => ({
-    enabled: true,
-    selections: {} as Selections,
-    baseValues: {} as any,
-    extraValues: {} as any,
-    values: {
-      [GeneralAttribute.Martial]: 0,
-      [GeneralAttribute.Maneuver]: 0,
-      [CombatPhase.Default]: 0,
-      [CombatPhase.Fire]: 0,
-      [CombatPhase.Shock]: 0
-    }
-  })
-  const army = (): ArmyForCombatConversion => ({
-    ...getDefaultArmy(Mode.Land),
-    // Frontline must be cloned to prevent tests mutating the source.
-    frontline: singleRow ?  [Array(30).fill(null)] : [Array(30).fill(null), Array(30).fill(null)],
-    reserve: [],
-    defeated: [],
-    unitPreferences: getUnitPreferences(),
-    definitions: toObj(everyType, type => type, type => ({ type })) as any,
-    general: general(),
-    flankRatio: 0,
-    flankSize: 5,
-    tactic: tactics[TacticType.Envelopment]
-  })
-  return {
-    attacker: getDefaultParticipant(CountryName.Country1, Mode.Land),
-    defender: getDefaultParticipant(CountryName.Country2, Mode.Land),
-    sideA: getDefaultSide(SideType.Attacker, CountryName.Country1, Mode.Land),
-    sideD: getDefaultSide(SideType.Defender, CountryName.Country1, Mode.Land),
-    armyA: army(),
-    armyD: army(),
-    round: 1,
-    terrains: [],
-    settings
+  if (legacyDamage) {
+    settings[Setting.MoraleLostMultiplier] = settings[Setting.MoraleLostMultiplier] * 0.02 / 0.024
+    settings[Setting.StrengthLostMultiplier] = settings[Setting.StrengthLostMultiplier] * 0.02 / 0.024
   }
+  return {
+    sideA: getDefaultSide(SideType.Attacker, CountryName.Country1, Mode.Land),
+    sideD: getDefaultSide(SideType.Defender, CountryName.Country2, Mode.Land),
+    environment: {
+      day: 0,
+      round: 0,
+      settings,
+      terrains: []
+    },
+    countries: getDefaultCountryDefinitions()
+    }
 }
+
+export const getArmy = (state: TestState, side: SideType) => side === SideType.Attacker ? state.countries[CountryName.Country1].armies[ArmyName.Army] : state.countries[CountryName.Country2].armies[ArmyName.Army]
+
+export const getSettings = (state: TestState) => state.environment.settings
 
 export const createCohort = (type: UnitType) => ({
   type,
@@ -149,62 +127,30 @@ export const verifyType = (identifier: string | number, side: SideType, index: n
     }
   }
 }
-/**
- * Sets rolls for combat.
- */
-export const setRolls = (info: TestInfo, rollA: number, rollD: number) => {
-  info.sideA = { ...info.sideA, dice: rollA }
-  info.sideD = { ...info.sideD, dice: rollD }
-}
-/**
- * Sets tactics for combat.
- */
-export const setTactics = (info: TestInfo, tacticA: TacticType, tacticD: TacticType) => {
-  info.armyA = { ...info.armyA, tactic: tactics[tacticA] }
-  info.armyD = { ...info.armyD, tactic: tactics[tacticD] }
-}
-/**
- * Sets center units (useful for 1v1 tests).
- */
-export const setCenterUnits = (info: TestInfo, unitA: CohortDefinition, unitD: CohortDefinition) => {
-  info.armyA.frontline[0][15] = unitA
-  info.armyD.frontline[0][15] = unitD
-}
-/**
- * Sets an attacker unit (useful for more complex tests).
- */
-export const setAttacker = (info: TestInfo, index: number, unit: CohortDefinition) => {
-  info.armyA.frontline[0][index] = unit
-}
-/**
- * Sets a defender unit (useful for more complex tests).
- */
-export const setDefender = (info: TestInfo, index: number, unit: CohortDefinition) => {
-  info.armyD.frontline[0][index] = unit
-}
+
 /**
  * Sets flank sizes for deployment.
  */
-export const setFlankSizes = (info: TestInfo, flankA: number, flankD: number) => {
+export const setFlankSizes = (info: TestState, flankA: number, flankD: number) => {
   info.armyA = { ...info.armyA, flankSize: flankA }
   info.armyD = { ...info.armyD, flankSize: flankD }
 }
 /**
  * Sets general martial.
  */
-export const setGeneral = (info: TestInfo, generalA: number, generalD: number) => {
+export const setGeneral = (info: TestState, generalA: number, generalD: number) => {
   info.armyA.general.values[GeneralAttribute.Martial] = generalA
   info.armyD.general.values[GeneralAttribute.Martial] = generalD
 }
 /**
  * Sets flank sizes for combat.
  */
-export const setTerrain = (info: TestInfo, terrain: TerrainType) => {
+export const setTerrain = (info: TestState, terrain: TerrainType) => {
   info.terrains = []
   info.terrains.push(terrains[terrain])
 }
 
-export const setReserve = (info: TestInfo, attacker: UnitType[], defender: UnitType[]) => {
+export const setReserve = (info: TestState, attacker: UnitType[], defender: UnitType[]) => {
   info.armyA.reserve = info.armyA.reserve.concat(attacker.map(type => getUnit(type)))
   info.armyD.reserve = info.armyD.reserve.concat(defender.map(type => getUnit(type)))
 }
@@ -228,13 +174,13 @@ export const getUnitPreferences = (primary: UnitType | null = null, secondary: U
  * @param attacker Array of 3 unit types.
  * @param defender Array of 3 unit types.
  */
-export const setUnitPreferences = (info: TestInfo, attacker: (UnitType | null)[], defender: (UnitType | null)[]) => {
+export const setUnitPreferences = (info: TestState, attacker: (UnitType | null)[], defender: (UnitType | null)[]) => {
 
   info.armyA = { ...info.armyA, unitPreferences: { [UnitPreferenceType.Primary]: attacker[0], [UnitPreferenceType.Secondary]: attacker[1], [UnitPreferenceType.Flank]: attacker[2] } as UnitPreferences }
   info.armyD = { ...info.armyD, unitPreferences: { [UnitPreferenceType.Primary]: defender[0], [UnitPreferenceType.Secondary]: defender[1], [UnitPreferenceType.Flank]: defender[2] } as UnitPreferences }
 }
 
-export const setCombatWidth = (info: TestInfo, value: number) => {
+export const setCombatWidth = (info: TestState, value: number) => {
   info.settings[Setting.CombatWidth] = value
   info.armyA.frontline = info.armyA.frontline.map(row => resize(row, value, null))
   info.armyD.frontline = info.armyD.frontline.map(row => resize(row, value, null))
@@ -253,7 +199,7 @@ export const everyType = [UnitType.Archers, UnitType.CamelCavalry, UnitType.Char
 /**
  * Performs one combat round with a given test info.
  */
-const doRound = (info: TestInfo, a: Army, d: Army) => {
+const doRound = (info: TestState, a: Army, d: Army) => {
   doBattle(a, d, true, info.settings, info.round++)
 }
 
@@ -261,7 +207,7 @@ const doRound = (info: TestInfo, a: Army, d: Army) => {
 type ExpectedUnits = ([UnitType | null, number | null, number | null] | null)
 type Expected = (ExpectedUnits[] | null)
 
-const getParticipants = (info: TestInfo) => {
+const getParticipants = (info: TestState) => {
   const participantA = convertArmy(SideType.Attacker, info.armyA, info.armyD, info.terrains, info.settings)
   const participantD = convertArmy(SideType.Defender, info.armyD, info.armyA, info.terrains, info.settings)
   return [participantA, participantD]
@@ -274,7 +220,7 @@ const getParticipants = (info: TestInfo) => {
  * @param attacker Expected attacker units for every round. Nulls can be used to skip checks.
  * @param defender Expected defender units for every round. Nulls can be used to skip checks.
  */
-export const testCombat = (info: TestInfo, rolls: number[][], attacker: Expected[], defender: Expected[]) => {
+export const testCombat = (info: TestState, rolls: number[][], attacker: Expected[], defender: Expected[]) => {
   const [participantA, participantD] = getParticipants(info)
   for (let roll = 0; roll < rolls.length; roll++) {
     participantA.dice = rolls[roll][0]
@@ -288,7 +234,7 @@ export const testCombat = (info: TestInfo, rolls: number[][], attacker: Expected
   }
   return [participantA, participantD]
 }
-export const testDeployment = (info: TestInfo, expectedA?: ExpectedTypes, expectedD?: ExpectedTypes) => {
+export const testDeployment = (info: TestState, expectedA?: ExpectedTypes, expectedD?: ExpectedTypes) => {
   const [participantA, participantD] = getParticipants(info)
   deploy(participantA, participantD, info.settings)
   if (expectedA)
@@ -298,7 +244,7 @@ export const testDeployment = (info: TestInfo, expectedA?: ExpectedTypes, expect
   return [participantA, participantD]
 }
 
-export const testReinforcement = (roundsToSkip: number, info: TestInfo, expectedA?: ExpectedTypes, expectedD?: ExpectedTypes) => {
+export const testReinforcement = (roundsToSkip: number, info: TestState, expectedA?: ExpectedTypes, expectedD?: ExpectedTypes) => {
   const [participantA, participantD] = getParticipants(info)
   deploy(participantA, participantD, info.settings)
   participantA.dice = 2
@@ -316,7 +262,7 @@ export const testReinforcement = (roundsToSkip: number, info: TestInfo, expected
   return [participantA, participantD]
 }
 
-const verifyDeployOrReinforce = (info: TestInfo, side: SideType, participant: Army, expected: ExpectedTypes) => {
+const verifyDeployOrReinforce = (info: TestState, side: SideType, participant: Army, expected: ExpectedTypes) => {
   verifyTypes('Front', info, expected.front ?? [], side, participant.cohorts.frontline[0])
   verifyTypes('Back', info, expected.back ?? [], side, participant.cohorts.frontline.length ? participant.cohorts.frontline[1] : [])
   verifyTypes('Reserve front', info, expected.reserveFront ?? [], side, participant.cohorts.reserve.front)
@@ -327,7 +273,7 @@ const verifyDeployOrReinforce = (info: TestInfo, side: SideType, participant: Ar
 
 const nextIndex = (index: number, half: number) => index < half ? index + 2 * (half - index) : index - 2 * (index - half) - 1
 
-const verifyTypes = (identifier: string, info: TestInfo, types: (UnitType | null)[], side: SideType, cohorts: (Cohort | null)[]) => {
+const verifyTypes = (identifier: string, info: TestState, types: (UnitType | null)[], side: SideType, cohorts: (Cohort | null)[]) => {
   const isFront = identifier === 'Front' || identifier === 'Back'
   if (!isFront) {
     try {

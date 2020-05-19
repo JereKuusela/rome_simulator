@@ -1,9 +1,8 @@
-import { CountryDefinition, GovermentType, CountryName, CultureType, CountryAttribute, UnitAttribute, Selections } from 'types'
+import { GovermentType, CountryName, CultureType, CountryAttribute, UnitAttribute, Selections, CountryDefinitions } from 'types'
 import { getDefaultArmies } from 'data'
 import { getDefaultUnits } from './units'
 
-export const defaultCountry: CountryDefinition =
-{
+export const getDefaultCountry = () => ({
   selections: {} as Selections,
   government: GovermentType.Republic,
   culture: (process.env.REACT_APP_GAME === 'euiv' ? 'Western' : 'latin_philosophy') as CultureType,
@@ -21,9 +20,9 @@ export const defaultCountry: CountryDefinition =
     }
   } as any,
   weariness: { [UnitAttribute.Morale]: { min: 0, max: 0 }, [UnitAttribute.Strength]: { min: 0, max: 0 } }
-}
+})
 
-export const getDefaultCountryDefinitions = (): { [key in CountryName]: CountryDefinition } => ({
-  [CountryName.Country1]: defaultCountry,
-  [CountryName.Country2]: defaultCountry
+export const getDefaultCountryDefinitions = (): CountryDefinitions => ({
+  [CountryName.Country1]: getDefaultCountry(),
+  [CountryName.Country2]: getDefaultCountry()
 })

@@ -1,4 +1,4 @@
-import { TestInfo, initInfo, createCohort, testReinforcement } from './utils'
+import { TestState, initState, createCohort, testReinforcement } from './utils'
 import { UnitType, UnitAttribute, CohortDefinition, Setting } from 'types'
 
 if (process.env.REACT_APP_GAME !== 'euiv') {
@@ -20,9 +20,9 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     const LOW_MORALE = 0.1
     const NO_MORALE = 0.0
 
-    let info: TestInfo
+    let info: TestState
     beforeEach(() => {
-      info = initInfo()
+      info = initState()
       lowMorale = createCohort(UnitType.Archers)
       lowMorale.baseValues![UnitAttribute.Morale] = { 'key': LOW_MORALE }
       lowMorale.baseValues![UnitAttribute.Strength] = { 'key': FULL_STRENGTH }

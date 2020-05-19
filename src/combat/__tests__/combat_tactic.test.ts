@@ -1,23 +1,23 @@
 import { addValues } from 'definition_values'
-import { getUnit, TestInfo, initInfo, setTactics, setCenterUnits, initSide, testCombat } from './utils'
-import { UnitType, UnitAttribute, TacticType, ValuesType, Setting } from 'types'
+import { getUnit, TestState, initState, initSide, testCombat, getArmy } from './utils'
+import { UnitType, UnitAttribute, TacticType, ValuesType, SideType } from 'types'
+import { selectTactic, addToReserve } from 'managers/army'
 
 if (process.env.REACT_APP_GAME !== 'euiv') {
 
   describe('tactics', () => {
     const archer = addValues(getUnit(UnitType.Archers), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.2]])
-    const heavy = addValues(getUnit(UnitType.HeavyInfantry), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.2]])
+    const defeatedHeavyInfantry = addValues(getUnit(UnitType.HeavyInfantry), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -1]])
 
-    let info: TestInfo
-    beforeEach(() => {
-      info = initInfo()
-      info.settings[Setting.MoraleLostMultiplier] = info.settings[Setting.MoraleLostMultiplier] * 0.02 / 0.024
-      info.settings[Setting.StrengthLostMultiplier] = info.settings[Setting.StrengthLostMultiplier] * 0.02 / 0.024
-    })
+    let state: TestState
+    beforeEach(() => state = initState(true))
 
     it('increased casualties', () => {
-      setTactics(info, TacticType.ShockAction, TacticType.ShockAction)
-      setCenterUnits(info, archer, archer)
+      selectTactic(getArmy(state, SideType.Attacker), TacticType.ShockAction)
+      selectTactic(getArmy(state, SideType.Defender), TacticType.ShockAction)
+      addToReserve(getArmy(state, SideType.Attacker), [archer])
+      addToReserve(getArmy(state, SideType.Defender), [archer])
+
       const rolls = [[3, 2]]
       const { attacker, defender } = initSide(3)
 
@@ -29,12 +29,15 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       defender[1][15] = [archer.type, 933, 0.9067]
       defender[2][15] = [archer.type, 902, 0.7889]
 
-      testCombat(info, rolls, attacker, defender)
+      testCombat(state, rolls, attacker, defender)
     })
 
     it('mixed casualties', () => {
-      setTactics(info, TacticType.Skirmishing, TacticType.ShockAction)
-      setCenterUnits(info, archer, archer)
+      selectTactic(getArmy(state, SideType.Attacker), TacticType.Skirmishing)
+      selectTactic(getArmy(state, SideType.Defender), TacticType.ShockAction)
+      addToReserve(getArmy(state, SideType.Attacker), [archer])
+      addToReserve(getArmy(state, SideType.Defender), [archer])
+
       const rolls = [[3, 2]]
       const { attacker, defender } = initSide(3)
 
@@ -46,12 +49,15 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       defender[1][15] = [archer.type, 952, 0.9055]
       defender[2][15] = [archer.type, 930, 0.7858]
 
-      testCombat(info, rolls, attacker, defender)
+      testCombat(state, rolls, attacker, defender)
     })
 
     it('counters and effectiveness', () => {
-      setTactics(info, TacticType.Bottleneck, TacticType.ShockAction)
-      setCenterUnits(info, archer, archer)
+      selectTactic(getArmy(state, SideType.Attacker), TacticType.Bottleneck)
+      selectTactic(getArmy(state, SideType.Defender), TacticType.ShockAction)
+      addToReserve(getArmy(state, SideType.Attacker), [archer])
+      addToReserve(getArmy(state, SideType.Defender), [archer])
+
       const rolls = [[0, 4]]
       const { attacker, defender } = initSide(3)
 
@@ -63,28 +69,27 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       defender[1][15] = [archer.type, 961, 1.0180]
       defender[2][15] = [archer.type, 943, 0.9491]
 
-      testCombat(info, rolls, attacker, defender)
+      testCombat(state, rolls, attacker, defender)
     })
 
     it('varying effectiveness (manpower)', () => {
-      setTactics(info, TacticType.Bottleneck, TacticType.ShockAction)
-      setCenterUnits(info, archer, archer)
-      info.armyA.frontline[0][0] = heavy
+      selectTactic(getArmy(state, SideType.Attacker), TacticType.Bottleneck)
+      selectTactic(getArmy(state, SideType.Defender), TacticType.ShockAction)
+      addToReserve(getArmy(state, SideType.Attacker), [archer, defeatedHeavyInfantry])
+      addToReserve(getArmy(state, SideType.Defender), [archer])
+
       const rolls = [[5, 5]]
       const { attacker, defender } = initSide(3)
 
       attacker[0][15] = [archer.type, 964, 1.0177]
       attacker[1][15] = [archer.type, 930, 0.8775]
       attacker[2][15] = [archer.type, 897, 0.7702]
-      attacker[0][1] = [heavy.type, 1000, 1.2]
-      attacker[1][2] = [heavy.type, 1000, 1.2]
-      attacker[2][3] = [heavy.type, 1000, 1.2]
 
       defender[0][15] = [archer.type, 954, 0.9671]
       defender[1][15] = [archer.type, 910, 0.7765]
       defender[2][15] = [archer.type, 868, 0.6178]
 
-      testCombat(info, rolls, attacker, defender)
+      testCombat(state, rolls, attacker, defender)
     })
   })
 }
