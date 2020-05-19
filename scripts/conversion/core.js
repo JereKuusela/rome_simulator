@@ -63,7 +63,7 @@ exports.getModifier = (key, value) => ({
   attribute: modifiers.getAttribute(key, value),
   type: modifiers.getType(key),
   negative: modifiers.getNegative(key, value),
-  no_percent: modifiers.getNoPercent(key),
+  noPercent: modifiers.getNoPercent(key),
   value: modifiers.getValue(key, value)
 })
 
