@@ -1,4 +1,4 @@
-import { TestState, initState, createCohort, testReinforcement } from './utils'
+import { TestState, initState, createCohort, testReinforcement, getSettings } from './utils'
 import { UnitType, UnitAttribute, CohortDefinition, Setting } from 'types'
 
 if (process.env.REACT_APP_GAME !== 'euiv') {
@@ -20,9 +20,9 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     const LOW_MORALE = 0.1
     const NO_MORALE = 0.0
 
-    let info: TestState
+    let state: TestState
     beforeEach(() => {
-      info = initState()
+      state = initState()
       lowMorale = createCohort(UnitType.Archers)
       lowMorale.baseValues![UnitAttribute.Morale] = { 'key': LOW_MORALE }
       lowMorale.baseValues![UnitAttribute.Strength] = { 'key': FULL_STRENGTH }
@@ -41,12 +41,12 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       normal = createCohort(UnitType.Archers)
       normal.baseValues![UnitAttribute.Morale] = { 'key': FULL_MORALE }
       normal.baseValues![UnitAttribute.Strength] = { 'key': FULL_STRENGTH }
-      info.settings[Setting.DailyDamageIncrease] = 0
-      info.settings[Setting.StackwipeRounds] = 5
+      getSettings(state)[Setting.DailyDamageIncrease] = 0
+      getSettings(state)[Setting.StackwipeRounds] = 5
     })
 
     const testBothDefeated = (strengthA: number, strengthD: number, moraleA: number, moraleD: number, rounds: number = 0) => {
-      const [attacker, defender] = testReinforcement(rounds, info)
+      const [attacker, defender] = testReinforcement(rounds, state)
       expect(attacker.cohorts.defeated[0][UnitAttribute.Strength]).toBeCloseTo(strengthA)
       expect(attacker.cohorts.defeated[1][UnitAttribute.Strength]).toBeCloseTo(strengthA)
       expect(defender.cohorts.defeated[0][UnitAttribute.Strength]).toBeCloseTo(strengthD)
@@ -57,7 +57,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       expect(defender.cohorts.defeated[1][UnitAttribute.Morale]).toBeCloseTo(moraleD)
     }
     const testDefenderDefeated = (strengthA: number, strengthD: number, moraleA: number, moraleD: number, rounds: number = 0) => {
-      const [attacker, defender] = testReinforcement(rounds, info)
+      const [attacker, defender] = testReinforcement(rounds, state)
       expect(attacker.cohorts.frontline[0][14]![UnitAttribute.Strength]).toBeCloseTo(strengthA)
       expect(attacker.cohorts.frontline[0][15]![UnitAttribute.Strength]).toBeCloseTo(strengthA)
       expect(defender.cohorts.defeated[0][UnitAttribute.Strength]).toBeCloseTo(strengthD)
@@ -68,7 +68,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       expect(defender.cohorts.defeated[1][UnitAttribute.Morale]).toBeCloseTo(moraleD)
     }
     const testAttackerDefeated = (strengthA: number, strengthD: number, moraleA: number, moraleD: number, rounds: number = 0) => {
-      const [attacker, defender] = testReinforcement(rounds, info)
+      const [attacker, defender] = testReinforcement(rounds, state)
       expect(attacker.cohorts.defeated[0][UnitAttribute.Strength]).toBeCloseTo(strengthA)
       expect(attacker.cohorts.defeated[1][UnitAttribute.Strength]).toBeCloseTo(strengthA)
       expect(defender.cohorts.frontline[0][14]![UnitAttribute.Strength]).toBeCloseTo(strengthD)
@@ -79,7 +79,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       expect(defender.cohorts.frontline[0][15]![UnitAttribute.Morale]).toBeCloseTo(moraleD)
     }
     const testNoneDefeated = (strengthA: number, strengthD: number, moraleA: number, moraleD: number, rounds: number = 0) => {
-      const [attacker, defender] = testReinforcement(rounds, info)
+      const [attacker, defender] = testReinforcement(rounds, state)
       expect(attacker.cohorts.frontline[0][14]![UnitAttribute.Strength]).toBeCloseTo(strengthA)
       expect(attacker.cohorts.frontline[0][15]![UnitAttribute.Strength]).toBeCloseTo(strengthA)
       expect(defender.cohorts.frontline[0][14]![UnitAttribute.Strength]).toBeCloseTo(strengthD)
@@ -90,91 +90,91 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       expect(defender.cohorts.frontline[0][15]![UnitAttribute.Morale]).toBeCloseTo(moraleD)
     }
     it('attacker stack wipes if it can\'t deploy', () => {
-      info.armyA.reserve.push(lowMorale)
-      info.armyA.reserve.push(lowMorale)
-      info.armyD.reserve.push(normal)
-      info.armyD.reserve.push(normal)
+      state.armyA.reserve.push(lowMorale)
+      state.armyA.reserve.push(lowMorale)
+      state.armyD.reserve.push(normal)
+      state.armyD.reserve.push(normal)
       testAttackerDefeated(NO_STRENGTH, FULL_STRENGTH, NO_MORALE, FULL_MORALE)
     })
     it('defender stack wipes when no cohorts deploy', () => {
-      info.armyA.reserve.push(lowMorale)
-      info.armyA.reserve.push(lowMorale)
-      info.armyD.reserve.push(lowMorale)
-      info.armyD.reserve.push(lowMorale)
+      state.armyA.reserve.push(lowMorale)
+      state.armyA.reserve.push(lowMorale)
+      state.armyD.reserve.push(lowMorale)
+      state.armyD.reserve.push(lowMorale)
       testBothDefeated(FULL_STRENGTH, NO_STRENGTH, LOW_MORALE, NO_MORALE)
     })
     it('attacker stack wipes when defender can hard wipe', () => {
-      info.armyA.reserve.push(lowStrength)
-      info.armyA.reserve.push(lowStrength)
-      info.armyD.reserve.push(normal)
-      info.armyD.reserve.push(normal)
+      state.armyA.reserve.push(lowStrength)
+      state.armyA.reserve.push(lowStrength)
+      state.armyD.reserve.push(normal)
+      state.armyD.reserve.push(normal)
       testAttackerDefeated(NO_STRENGTH, FULL_STRENGTH, NO_MORALE, FULL_MORALE)
     })
     it('defender stack wipes when attacker can hard wipe but not deploy', () => {
-      info.armyA.reserve.push(lowMorale)
-      info.armyA.reserve.push(lowMorale)
-      info.armyD.reserve.push(lowStrength)
-      info.armyD.reserve.push(lowStrength)
+      state.armyA.reserve.push(lowMorale)
+      state.armyA.reserve.push(lowMorale)
+      state.armyD.reserve.push(lowStrength)
+      state.armyD.reserve.push(lowStrength)
       testBothDefeated(FULL_STRENGTH, NO_STRENGTH, LOW_MORALE, NO_MORALE)
     })
     it('attacker stack wipes when defender can hard wipe at end', () => {
-      info.armyA.reserve.push(hardLimit)
-      info.armyA.reserve.push(hardLimit)
-      info.armyD.reserve.push(normal)
-      info.armyD.reserve.push(normal)
+      state.armyA.reserve.push(hardLimit)
+      state.armyA.reserve.push(hardLimit)
+      state.armyD.reserve.push(normal)
+      state.armyD.reserve.push(normal)
       testAttackerDefeated(NO_STRENGTH, 0.99712, NO_MORALE, 2.9972, 1)
     })
     it('defender stack wipes when attacker can hard wipe at end', () => {
-      info.armyA.reserve.push(normal)
-      info.armyA.reserve.push(normal)
-      info.armyD.reserve.push(hardLimit)
-      info.armyD.reserve.push(hardLimit)
+      state.armyA.reserve.push(normal)
+      state.armyA.reserve.push(normal)
+      state.armyD.reserve.push(hardLimit)
+      state.armyD.reserve.push(hardLimit)
       testDefenderDefeated(0.99712, NO_STRENGTH, 2.9972, NO_MORALE, 1)
     })
     it('attacker survives during battle even when defender could hard wipe', () => {
-      info.armyA.reserve.push(hardStrengthLimit)
-      info.armyA.reserve.push(hardStrengthLimit)
-      info.armyD.reserve.push(normal)
-      info.armyD.reserve.push(normal)
+      state.armyA.reserve.push(hardStrengthLimit)
+      state.armyA.reserve.push(hardStrengthLimit)
+      state.armyD.reserve.push(normal)
+      state.armyD.reserve.push(normal)
       testNoneDefeated(0.07, 0.99712, 2.676, 2.97, 1)
     })
     it('defender survives during battle even when attacker could hard wipe', () => {
-      info.armyA.reserve.push(normal)
-      info.armyA.reserve.push(normal)
-      info.armyD.reserve.push(hardStrengthLimit)
-      info.armyD.reserve.push(hardStrengthLimit)
+      state.armyA.reserve.push(normal)
+      state.armyA.reserve.push(normal)
+      state.armyD.reserve.push(hardStrengthLimit)
+      state.armyD.reserve.push(hardStrengthLimit)
       testNoneDefeated(0.99712, 0.07, 2.97, 2.676, 1)
     })
     it('attacker survives when defender can soft wipe after retreat limit', () => {
-      info.armyA.reserve.push(softLimit)
-      info.armyA.reserve.push(softLimit)
-      info.armyD.reserve.push(normal)
-      info.armyD.reserve.push(normal)
-      info.round = info.settings[Setting.StackwipeRounds]
+      state.armyA.reserve.push(softLimit)
+      state.armyA.reserve.push(softLimit)
+      state.armyD.reserve.push(normal)
+      state.armyD.reserve.push(normal)
+      state.round = state.settings[Setting.StackwipeRounds]
       testAttackerDefeated(0.471, 0.986, 0, 2.99, 1)
     })
     it('defender survives when attacker can soft wipe after retreat limit', () => {
-      info.armyA.reserve.push(normal)
-      info.armyA.reserve.push(normal)
-      info.armyD.reserve.push(softLimit)
-      info.armyD.reserve.push(softLimit)
-      info.round = info.settings[Setting.StackwipeRounds]
+      state.armyA.reserve.push(normal)
+      state.armyA.reserve.push(normal)
+      state.armyD.reserve.push(softLimit)
+      state.armyD.reserve.push(softLimit)
+      state.round = state.settings[Setting.StackwipeRounds]
       testDefenderDefeated(0.986, 0.471, 2.99, 0, 1)
     })
     it('attacker stack wipes when defender can soft wipe before retreat limit', () => {
-      info.armyA.reserve.push(softLimit)
-      info.armyA.reserve.push(softLimit)
-      info.armyD.reserve.push(normal)
-      info.armyD.reserve.push(normal)
-      info.round = info.settings[Setting.StackwipeRounds] - 1
+      state.armyA.reserve.push(softLimit)
+      state.armyA.reserve.push(softLimit)
+      state.armyD.reserve.push(normal)
+      state.armyD.reserve.push(normal)
+      state.round = state.settings[Setting.StackwipeRounds] - 1
       testAttackerDefeated(NO_STRENGTH, 0.986, NO_MORALE, 2.99, 1)
     })
     it('defender stack wipes when attacker can soft wipe before retreat limit', () => {
-      info.armyA.reserve.push(normal)
-      info.armyA.reserve.push(normal)
-      info.armyD.reserve.push(softLimit)
-      info.armyD.reserve.push(softLimit)
-      info.round = info.settings[Setting.StackwipeRounds] - 1
+      state.armyA.reserve.push(normal)
+      state.armyA.reserve.push(normal)
+      state.armyD.reserve.push(softLimit)
+      state.armyD.reserve.push(softLimit)
+      state.round = state.settings[Setting.StackwipeRounds] - 1
       testDefenderDefeated(0.986, NO_STRENGTH, 2.99, NO_MORALE, 1)
     })
   })

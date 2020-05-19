@@ -1,10 +1,11 @@
-import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultUnit, getDefaultSide, getDefaultCountryDefinitions } from 'data'
+import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultUnit, getDefaultSide, getDefaultCountryDefinitions, getDefaultMode, getDefaultBattle } from 'data'
 import { map, mapRange, resize, toObj, values } from 'utils'
 import { mergeValues } from 'definition_values'
-import { Mode, CountryName, TacticType, Setting, SideType, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, CohortDefinition, CombatPhase, CultureType, GeneralAttribute, UnitPreferences, Cohort, Army, UnitRole, SideData, Environment, CountryDefinitions, ArmyName } from 'types'
+import { Mode, CountryName, TacticType, Setting, SideType, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, CohortDefinition, CombatPhase, CultureType, GeneralAttribute, UnitPreferences, Cohort, Army, UnitRole, SideData, Environment, CountryDefinitions, ArmyName, Battle, ModeState, SettingsAndOptions } from 'types'
 import { doBattle, deploy, reinforce } from 'combat'
-import { convertArmy } from 'managers/battle'
+import { convertArmy, convertSide } from 'managers/battle'
 import { removeDefeated } from 'combat/combat_utils'
+import { convertSides, AppState, getCombatField } from 'state'
 
 const unitDefinitions = map(getDefaultUnits('' as CultureType), unit => mergeValues(unit, getDefaultUnit(UnitType.Land)))
 export const getDefinitions = () => ({ [CountryName.Country1]: unitDefinitions, [CountryName.Country2]: unitDefinitions })
@@ -16,8 +17,8 @@ const terrains = getDefaultTerrains()
  */
 export interface TestState {
   environment: Environment
-  sideA: SideData
-  sideD: SideData
+  battle: ModeState
+  settings: SettingsAndOptions
   countries: CountryDefinitions
 }
 
@@ -41,8 +42,7 @@ export const initState = (legacyDamage?: boolean): TestState => {
     settings[Setting.StrengthLostMultiplier] = settings[Setting.StrengthLostMultiplier] * 0.02 / 0.024
   }
   return {
-    sideA: getDefaultSide(SideType.Attacker, CountryName.Country1, Mode.Land),
-    sideD: getDefaultSide(SideType.Defender, CountryName.Country2, Mode.Land),
+    battle: getDefaultBattle(),
     environment: {
       day: 0,
       round: 0,
@@ -128,33 +128,6 @@ export const verifyType = (identifier: string | number, side: SideType, index: n
   }
 }
 
-/**
- * Sets flank sizes for deployment.
- */
-export const setFlankSizes = (info: TestState, flankA: number, flankD: number) => {
-  info.armyA = { ...info.armyA, flankSize: flankA }
-  info.armyD = { ...info.armyD, flankSize: flankD }
-}
-/**
- * Sets general martial.
- */
-export const setGeneral = (info: TestState, generalA: number, generalD: number) => {
-  info.armyA.general.values[GeneralAttribute.Martial] = generalA
-  info.armyD.general.values[GeneralAttribute.Martial] = generalD
-}
-/**
- * Sets flank sizes for combat.
- */
-export const setTerrain = (info: TestState, terrain: TerrainType) => {
-  info.terrains = []
-  info.terrains.push(terrains[terrain])
-}
-
-export const setReserve = (info: TestState, attacker: UnitType[], defender: UnitType[]) => {
-  info.armyA.reserve = info.armyA.reserve.concat(attacker.map(type => getUnit(type)))
-  info.armyD.reserve = info.armyD.reserve.concat(defender.map(type => getUnit(type)))
-}
-
 // Dummy test to avoid an error.
 describe('utils', () => {
   it('works', () => { })
@@ -167,24 +140,6 @@ describe('utils', () => {
  * @param flank Selected flank tyoe or null.
  */
 export const getUnitPreferences = (primary: UnitType | null = null, secondary: UnitType | null = null, flank: UnitType | null = null) => ({ [UnitPreferenceType.Primary]: primary, [UnitPreferenceType.Secondary]: secondary, [UnitPreferenceType.Flank]: flank } as UnitPreferences)
-
-/**
- * Sets preferred unit types.
- * @param info 
- * @param attacker Array of 3 unit types.
- * @param defender Array of 3 unit types.
- */
-export const setUnitPreferences = (info: TestState, attacker: (UnitType | null)[], defender: (UnitType | null)[]) => {
-
-  info.armyA = { ...info.armyA, unitPreferences: { [UnitPreferenceType.Primary]: attacker[0], [UnitPreferenceType.Secondary]: attacker[1], [UnitPreferenceType.Flank]: attacker[2] } as UnitPreferences }
-  info.armyD = { ...info.armyD, unitPreferences: { [UnitPreferenceType.Primary]: defender[0], [UnitPreferenceType.Secondary]: defender[1], [UnitPreferenceType.Flank]: defender[2] } as UnitPreferences }
-}
-
-export const setCombatWidth = (info: TestState, value: number) => {
-  info.settings[Setting.CombatWidth] = value
-  info.armyA.frontline = info.armyA.frontline.map(row => resize(row, value, null))
-  info.armyD.frontline = info.armyD.frontline.map(row => resize(row, value, null))
-}
 
 /**
  * Returns a unit with a given type.
@@ -215,24 +170,26 @@ const getParticipants = (info: TestState) => {
 
 /**
  * Tester function for combat.
- * @param info Initial combat state.
+ * @param state Initial combat state.
  * @param rolls List of rolls.
  * @param attacker Expected attacker units for every round. Nulls can be used to skip checks.
  * @param defender Expected defender units for every round. Nulls can be used to skip checks.
  */
-export const testCombat = (info: TestState, rolls: number[][], attacker: Expected[], defender: Expected[]) => {
-  const [participantA, participantD] = getParticipants(info)
+export const testCombat = (state: TestState, rolls: number[][], attacker: Expected[], defender: Expected[]) => {
+  const [sideA, sideD] = convertSides(state as any)
+  const environment = getCombatField(state as any)
   for (let roll = 0; roll < rolls.length; roll++) {
-    participantA.dice = rolls[roll][0]
-    participantD.dice = rolls[roll][1]
+    sideA.results.dice = rolls[roll][0]
+    sideD.results.dice = rolls[roll][1]
     const limit = Math.min((roll + 1) * 5, attacker.length)
     for (let round = roll * 5; round < limit; round++) {
-      doRound(info, participantA, participantD)
+      doBattle( sideA, sideD, true)
+      doRound(state, participantA, participantD)
       verifySide(round, SideType.Attacker, participantA.cohorts.frontline[0], attacker[round])
       verifySide(round, SideType.Defender, participantD.cohorts.frontline[0], defender[round])
     }
   }
-  return [participantA, participantD]
+  return [sideA, sideD]
 }
 export const testDeployment = (info: TestState, expectedA?: ExpectedTypes, expectedD?: ExpectedTypes) => {
   const [participantA, participantD] = getParticipants(info)
