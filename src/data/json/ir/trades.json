@@ -73,7 +73,7 @@
         "target": "Country",
         "attribute": "Omen Power",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 5
       }
     ]

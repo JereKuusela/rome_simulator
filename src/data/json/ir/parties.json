@@ -32,7 +32,7 @@
         "target": "Text",
         "attribute": "Diplomatic Reputation",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 2
       },
       {
@@ -90,7 +90,7 @@
         "target": "Country",
         "attribute": "Omen Power",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 10
       },
       {

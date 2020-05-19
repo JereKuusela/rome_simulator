@@ -12,7 +12,7 @@
         "target": "General",
         "attribute": "Martial",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 1
       },
       {
@@ -37,7 +37,7 @@
         "target": "General",
         "attribute": "Martial",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 1
       }
     ]
@@ -61,7 +61,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -1
       }
     ]
@@ -90,7 +90,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -2
       }
     ]
@@ -113,7 +113,7 @@
         "target": "General",
         "attribute": "Martial",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 1
       }
     ]
@@ -131,7 +131,7 @@
         "target": "General",
         "attribute": "Martial",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 1
       }
     ]
@@ -150,7 +150,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -4
       }
     ]
@@ -169,7 +169,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -3
       }
     ]
@@ -182,7 +182,7 @@
         "target": "General",
         "attribute": "Martial",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 1
       },
       {
@@ -202,7 +202,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -2
       }
     ]
@@ -221,7 +221,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -1
       }
     ]
@@ -262,7 +262,7 @@
         "target": "General",
         "attribute": "Martial",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 1
       },
       {
@@ -303,7 +303,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -1
       },
       {
@@ -340,7 +340,7 @@
         "target": "General",
         "attribute": "Martial",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 1
       },
       {
@@ -365,7 +365,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -2
       }
     ]
@@ -393,7 +393,7 @@
         "target": "General",
         "attribute": "Martial",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 1
       },
       {
@@ -418,7 +418,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -1
       }
     ]
@@ -431,7 +431,7 @@
         "target": "General",
         "attribute": "Martial",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 1
       }
     ]
@@ -488,7 +488,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -1
       }
     ]
@@ -502,7 +502,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -3
       }
     ]
@@ -526,7 +526,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -1
       }
     ]
@@ -565,7 +565,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -1
       }
     ]
@@ -589,7 +589,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -1
       }
     ]
@@ -623,7 +623,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -3
       }
     ]
@@ -657,7 +657,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -1
       }
     ]
@@ -676,7 +676,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -2
       }
     ]
@@ -700,7 +700,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -2
       }
     ]
@@ -724,7 +724,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -2
       }
     ]
@@ -747,7 +747,7 @@
         "target": "General",
         "attribute": "Martial",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 5
       }
     ]
@@ -785,7 +785,7 @@
         "target": "General",
         "attribute": "Martial",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 1
       }
     ]
@@ -809,7 +809,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -1
       }
     ]
@@ -827,7 +827,7 @@
         "target": "General",
         "attribute": "Martial",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 1
       }
     ]
@@ -841,7 +841,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -4
       }
     ]
@@ -870,7 +870,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -1
       }
     ]
@@ -926,7 +926,7 @@
         "target": "General",
         "attribute": "Martial",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 1
       }
     ]
@@ -950,7 +950,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -1
       }
     ]
@@ -963,7 +963,7 @@
         "target": "General",
         "attribute": "Martial",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 1
       },
       {
@@ -1017,7 +1017,7 @@
         "target": "General",
         "attribute": "Martial",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 1
       },
       {
@@ -1068,7 +1068,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -1
       }
     ]
@@ -1081,7 +1081,7 @@
         "target": "General",
         "attribute": "Martial",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 1
       },
       {
@@ -1170,7 +1170,7 @@
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -1
       }
     ]

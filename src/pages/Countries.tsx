@@ -48,6 +48,7 @@ class Countries extends Component<IProps> {
               <SimpleDropdown
                 values={Object.values(traditionsIR).map(tradition => ({ value: tradition.key, text: tradition.name }))}
                 value={country.culture}
+                style={{width: 200}}
                 onChange={this.selectCulture}
               />
             </Grid.Column>

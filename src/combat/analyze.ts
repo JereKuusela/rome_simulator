@@ -75,7 +75,9 @@ export const calculateWinRate = (progressCallback: (progress: WinRateProgress, c
     moraleA: {},
     moraleD: {},
     strengthA: {},
-    strengthD: {}
+    strengthD: {},
+    winRateA: 0,
+    winRateD: 0
   }
 
   // Deployment is shared for each iteration.
@@ -344,10 +346,16 @@ const updateProgress = (progress: WinRateProgress, amount: number, result: { win
  * Updates casualties of the calculation.
  */
 const updateCasualties = (casualties: CasualtiesProgress, amount: number, totalA: State, totalD: State, currentA: State, currentD: State) => {
+  const lossA = totalA.strength - currentA.strength
+  const lossD = totalD.strength - currentD.strength
   casualties.avgMoraleA += (totalA.morale - currentA.morale) * amount
   casualties.avgMoraleD += (totalD.morale - currentD.morale) * amount
-  casualties.avgStrengthA += (totalA.strength - currentA.strength) * amount
-  casualties.avgStrengthD += (totalD.strength - currentD.strength) * amount
+  casualties.avgStrengthA += lossA * amount
+  casualties.avgStrengthD += lossD * amount
+  if (lossA < lossD)
+    casualties.winRateA += amount
+  if (lossA > lossD)
+    casualties.winRateD += amount
 
   const moraleA = (Math.max(0, currentA.morale)).toFixed(1)
   const moraleD = (Math.max(0, currentD.morale)).toFixed(1)

@@ -20,7 +20,7 @@
         "attribute": "Diplomatic Relations",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -1
       }
     ]
@@ -39,7 +39,7 @@
         "target": "Country",
         "attribute": "Omen Power",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 10
       },
       {
@@ -84,7 +84,7 @@
         "target": "Text",
         "attribute": "Diplomatic Reputation",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 2
       },
       {
@@ -123,7 +123,7 @@
         "attribute": "Diplomatic Relations",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -1
       }
     ]
@@ -161,7 +161,7 @@
         "target": "Text",
         "attribute": "Monthly Ruler Popularity Gain",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 0.04
       },
       {
@@ -200,7 +200,7 @@
         "attribute": "Subject Opinion of Us",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -10
       }
     ]
@@ -213,7 +213,7 @@
         "target": "Text",
         "attribute": "Diplomatic Relations",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 1
       },
       {
@@ -277,7 +277,7 @@
         "attribute": "Loyalty to Overlord",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": 30
       }
     ]
@@ -290,7 +290,7 @@
         "target": "Text",
         "attribute": "Diplomatic Relations",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 1
       },
       {
@@ -322,7 +322,7 @@
         "target": "Text",
         "attribute": "Capital Import Routes",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 1
       },
       {
@@ -418,7 +418,7 @@
         "target": "Text",
         "attribute": "Diplomatic Reputation",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 2
       },
       {
@@ -432,7 +432,7 @@
         "attribute": "Loyalty to Overlord",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": 30
       }
     ]
@@ -483,7 +483,7 @@
         "attribute": "Diplomatic Relations",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -1
       }
     ]
@@ -559,7 +559,7 @@
         "attribute": "Diplomatic Relations",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -1
       }
     ]
@@ -610,7 +610,7 @@
         "attribute": "Loyalty to Overlord",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": 10
       }
     ]
@@ -629,7 +629,7 @@
         "target": "Country",
         "attribute": "Omen Power",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 10
       },
       {
@@ -637,7 +637,7 @@
         "attribute": "Diplomatic Relations",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -1
       }
     ]
@@ -706,7 +706,7 @@
         "target": "Text",
         "attribute": "Monthly Ruler Popularity Gain",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 0.05
       },
       {
@@ -757,7 +757,7 @@
         "target": "Text",
         "attribute": "Capital Import Routes",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 1
       },
       {
@@ -765,7 +765,7 @@
         "attribute": "Loyalty to Overlord",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": 30
       }
     ]
@@ -1034,7 +1034,7 @@
         "target": "Text",
         "attribute": "Diplomatic Reputation",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 2
       },
       {
@@ -1129,7 +1129,7 @@
         "target": "Text",
         "attribute": "Diplomatic Relations",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 2
       },
       {
@@ -1143,7 +1143,7 @@
         "attribute": "Diplomatic Reputation",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -2
       }
     ]
@@ -1169,7 +1169,7 @@
         "attribute": "Subject Opinion of Us",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -10
       }
     ]
@@ -1213,7 +1213,7 @@
         "target": "Text",
         "attribute": "Monthly Ruler Popularity Gain",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 0.04
       },
       {
@@ -1364,7 +1364,7 @@
         "target": "Text",
         "attribute": "Diplomatic Relations",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 1
       },
       {
@@ -1372,7 +1372,7 @@
         "attribute": "Loyalty of Governors",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -10
       }
     ]
@@ -1385,7 +1385,7 @@
         "target": "Text",
         "attribute": "Country Civilization Level",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 5
       },
       {
@@ -1486,7 +1486,7 @@
         "target": "Text",
         "attribute": "Hostile Attrition",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 0.1
       },
       {
@@ -1525,7 +1525,7 @@
         "attribute": "Diplomatic Reputation",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -2
       }
     ]
@@ -1688,7 +1688,7 @@
         "target": "Text",
         "attribute": "Capital Import Routes",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 1
       },
       {
@@ -1795,7 +1795,7 @@
         "target": "Text",
         "attribute": "Monthly Ruler Popularity Gain",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 0.05
       },
       {
@@ -1821,7 +1821,7 @@
         "target": "Country",
         "attribute": "Omen Power",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 5
       },
       {
@@ -1829,7 +1829,7 @@
         "attribute": "Diplomatic Relations",
         "type": "Base",
         "negative": true,
-        "no_percent": true,
+        "noPercent": true,
         "value": -1
       }
     ]
@@ -1942,7 +1942,7 @@
         "target": "Text",
         "attribute": "Monthly Ruler Popularity Gain",
         "type": "Base",
-        "no_percent": true,
+        "noPercent": true,
         "value": 0.2
       },
       {

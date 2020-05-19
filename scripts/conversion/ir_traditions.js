@@ -18,15 +18,16 @@ const handler = data => {
           modifiers
         }
       })
+      const split = format(key).split(' ')
       return {
-        name: format(key).split(' ')[1],
+        name: split[split.length - 2],
         key: 'tradition_path_' + pathIndex,
         traditions
       }
     })
-    const name = getAttribute(key).split(' ')[0]
+    const name = getAttribute(key)
     results.push({
-      name,
+      name: name.substr(0 , name.length - ' Traditions'.length),
       key,
       modifiers: Object.keys(tradition.start).map(key => getModifier(key, tradition.start[key])),
       paths
