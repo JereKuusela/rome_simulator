@@ -8,7 +8,7 @@ import * as manager from 'managers/army'
 import { getCountryModifiers, getGeneralModifiers, getSecondaryCountryModifiers } from 'managers/modifiers'
 import { convertCountryDefinition, applyCountryModifiers, filterArmies } from 'managers/countries'
 import { applyUnitModifiers } from 'managers/units'
-import { convertArmy, convertSide } from 'managers/battle'
+import { convertArmy, convertSide, getRound } from 'managers/battle'
 import { iterateCohorts } from 'combat'
 
 /**
@@ -34,7 +34,7 @@ export const getCohortForEachRound = (state: AppState, side: SideType, participa
   const rounds = state.battle[state.settings.mode].sides[side].days
   return rounds.map(side => {
     let result = null
-    iterateCohorts(side.cohorts, cohort => {
+    iterateCohorts(side.cohorts, true, cohort => {
       if (cohort && cohort.properties.participantIndex === participantIndex && cohort.properties.index === index)
         result = cohort
     })
@@ -125,19 +125,21 @@ const getArmy = (state: AppState, countryName: CountryName, armyName: ArmyName):
 }
 
 export const convertSides = (state: AppState): Side[] => {
-  const attacker = getSide(state, SideType.Attacker)
-  const defender = getSide(state, SideType.Defender)
+  const sideA = getSide(state, SideType.Attacker)
+  const sideD = getSide(state, SideType.Defender)
+  const armyA = sideA.participants.map(participant => getArmy(state, participant.countryName, participant.armyName))
+  const armyD = sideD.participants.map(participant => getArmy(state, participant.countryName, participant.armyName))
   const settings = getSettings(state)
   return [
-    convertSidesSub(state, attacker, defender, settings),
-    convertSidesSub(state, defender, attacker, settings)
+    convertSidesSub(state, sideA, armyA, armyD, settings),
+    convertSidesSub(state, sideD, armyD, armyA, settings)
   ]
 }
 
-const convertSidesSub = (state: AppState, side: SideData, enemy: SideData, settings: Settings): Side => {
+const convertSidesSub = (state: AppState, side: SideData, armyDefinitions: ArmyDefinition[], enemyDefinitions: ArmyDefinition[], settings: Settings): Side => {
   const terrains = getSelectedTerrains(state)
-  const enemyTypes = uniq(flatten(enemy.participants.map(participant => toArr(getUnitDefinitions(state, participant.countryName, participant.armyName), unit => unit.type))))
-  const armies = side.participants.map((participant, index) => convertArmy(index, participant, getArmy(state, participant.countryName, participant.armyName), enemyTypes, terrains, settings))
+  const enemyTypes = uniq(flatten(enemyDefinitions.map(army => army.reserve.map(unit => unit.type))))
+  const armies = side.participants.map((participant, index) => convertArmy(index, participant, armyDefinitions[index], enemyTypes, terrains, settings))
   armies.sort((a, b) => b.arrival - a.arrival)
   return convertSide(side, armies, settings)
 }
@@ -148,7 +150,7 @@ export const getCombatField = (state: AppState): Environment => {
   const settings = getSettings(state)
   return {
     day: 0,
-    round: battle.days.length ? battle.days[battle.days.length - 1].round : 0,
+    round: getRound(battle),
     terrains,
     settings
   }

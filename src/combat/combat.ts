@@ -2,7 +2,7 @@
 import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, Cohorts, Cohort, Frontline, Defeated, Side, Terrain, Environment, TacticCalc } from 'types'
 import { noZero } from 'utils'
 import { calculateValue } from 'definition_values'
-import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, reserveSize, reinforce, calculateGeneralPips, getTerrainPips, checkInstantStackWipe, checkStackWipe, defeatCohort } from 'combat'
+import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, reserveSize, reinforce, calculateGeneralPips, getTerrainPips, checkStackWipe, defeatCohort, isAlive } from 'combat'
 import { deploy, undeploy } from './deployment'
 import { getLeadingGeneral } from 'managers/battle'
 
@@ -11,22 +11,19 @@ import { getLeadingGeneral } from 'managers/battle'
  */
 export const doBattle = (env: Environment, a: Side, d: Side, markDefeated: boolean) => {
   env.round++
+  const { round } = env
   const settings = env.settings
   const phase = getCombatPhase(env.round, settings)
   if (markDefeated) {
     removeDefeated(a.cohorts.frontline)
     removeDefeated(d.cohorts.frontline)
   }
-  if (env.round === 0) {
+  if (round === 0) {
     undeploy(a)
     undeploy(d)
   }
   deploy(env, a, d)
-  if (env.round === 0) {
-    if (settings[Setting.Stackwipe])
-      checkInstantStackWipe(env, a, d)
-  }
-  else {
+  if (round > 0) {
     reinforce(env, a)
     if (!settings[Setting.DefenderAdvantage])
       reinforce(env, d)
@@ -50,22 +47,20 @@ export const doBattle = (env: Environment, a: Side, d: Side, markDefeated: boole
 
     applyLosses(a.cohorts.frontline)
     applyLosses(d.cohorts.frontline)
+  }
+  a.alive = moveDefeated(env, a.cohorts.frontline, a.cohorts.defeated, markDefeated) || reserveSize(a.cohorts.reserve) > 0
+  d.alive = moveDefeated(env, d.cohorts.frontline, d.cohorts.defeated, markDefeated) || reserveSize(d.cohorts.reserve) > 0
 
-    a.alive = moveDefeated(env, a.cohorts.frontline, a.cohorts.defeated, markDefeated) || reserveSize(a.cohorts.reserve) > 0
-    d.alive = moveDefeated(env, d.cohorts.frontline, d.cohorts.defeated, markDefeated) || reserveSize(d.cohorts.reserve) > 0
-
-    if (settings[Setting.Stackwipe] && !d.alive)
-      checkStackWipe(env, d, a.cohorts)
-    else if (settings[Setting.Stackwipe] && !a.alive)
-      checkStackWipe(env, a, d.cohorts)
-    if (!a.alive) {
-      a.deployedArmies = []
-      a.generals = []
-    }
-    if (!d.alive) {
-      d.deployedArmies = []
-      d.generals = []
-    }
+  const defenderWiped = checkStackWipe(env, d, a.cohorts)
+  if (!defenderWiped)
+    checkStackWipe(env, a, d.cohorts)
+  if (!a.alive) {
+    a.deployedArmies = []
+    a.generals = []
+  }
+  if (!d.alive) {
+    d.deployedArmies = []
+    d.generals = []
   }
   if (!a.alive || !d.alive)
     env.round = -1
@@ -151,12 +146,10 @@ export const calculateTactic = (army: Cohorts, tactic: TacticDefinition, counter
     let totalWeight = 0.0
 
     const addWeight = (cohort: Cohort) => {
-      if (!cohort.state.isDefeated) {
-        totalStrength += cohort[UnitAttribute.Strength]
-        totalWeight += calculateValue(tactic, cohort.properties.type) * cohort[UnitAttribute.Strength]
-      }
+      totalStrength += cohort[UnitAttribute.Strength]
+      totalWeight += calculateValue(tactic, cohort.properties.type) * cohort[UnitAttribute.Strength]
     }
-    iterateCohorts(army, addWeight)
+    iterateCohorts(army, true, addWeight)
     if (totalStrength)
       averageWeight = totalWeight / totalStrength
   }
@@ -173,14 +166,12 @@ const calculateFlankRatio = (army: Cohorts): number => {
   let flank = 0.0
 
   const addRatio = (cohort: Cohort) => {
-    if (cohort.state.isDefeated)
-      return
     if (cohort.properties.role === UnitRole.Front)
       infantry += cohort[UnitAttribute.Strength]
     if (cohort.properties.role === UnitRole.Flank)
       flank += cohort[UnitAttribute.Strength]
   }
-  iterateCohorts(army, addRatio)
+  iterateCohorts(army, true, addRatio)
   return flank / noZero(flank + infantry)
 }
 
@@ -204,15 +195,13 @@ const applyLosses = (frontline: Frontline) => {
  */
 const moveDefeated = (environment: Environment, frontline: Frontline, defeated: Defeated, markDefeated: boolean) => {
   const settings = environment.settings
-  const minimumMorale = settings[Setting.MinimumMorale]
-  const minimumStrength = settings[Setting.MinimumStrength]
   let alive = false
   for (let i = 0; i < frontline.length; i++) {
     for (let j = 0; j < frontline[i].length; j++) {
       const cohort = frontline[i][j]
       if (!cohort)
         continue
-      if (cohort[UnitAttribute.Strength] > minimumStrength && cohort[UnitAttribute.Morale] > minimumMorale) {
+      if (isAlive(cohort, environment.settings)) {
         alive = true
         continue
       }

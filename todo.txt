@@ -43,6 +43,7 @@ Data:
 
 Multiarmy:
  - Test:
+  * !!! Attacker may become defender (if defender loses but has reinforcements), affects terrain bonus, defenders' advantage, UI?
   * Stack wiping should only affect cohorts defeated in current battle (another list for afterfight defeated? or track defeated round (to determine if part of current battle))
   * Stack wipes during battle (cohorts run out before reinforcements arrive)
   * Leading general (especially when cohorts run out during battle): dealt damage, deployment

@@ -1,6 +1,7 @@
-import { UnitType, dictionaryUnitType } from 'types'
+import { UnitType, dictionaryUnitType, SideType, GeneralAttribute, UnitPreferenceType } from 'types'
 import { forEach, mapRange } from 'utils'
-import { TestState, setFlankSizes, setUnitPreferences, setReserve, setGeneral } from './utils'
+import { TestState, getArmyTest, addToReserveTest, getUnit } from './utils'
+import { setFlankSize, setGeneralAttribute, setUnitPreference } from 'managers/army'
 
 type InputUnits = UnitType[]
 
@@ -52,19 +53,31 @@ const getFlankSize = (input: Input) => Number(input['flank_size'] ?? 0)
 const getGeneral = (input: Input) => Number(input['general'] ?? 0)
 
 
-const setInfoFromInput = (info: TestState, attacker: Input, defender: Input) => {
-  setFlankSizes(info, getFlankSize(attacker), getFlankSize(defender))
-  setGeneral(info, getGeneral(attacker), getGeneral(defender))
-  setUnitPreferences(info, getUnitPrefences(attacker), getUnitPrefences(defender))
+const setInfoFromInput = (state: TestState, attacker: Input, defender: Input) => {
+  const armyA = getArmyTest(state, SideType.Attacker)
+  const armyD = getArmyTest(state, SideType.Defender)
+  setFlankSize(armyA, getFlankSize(attacker))
+  setFlankSize(armyD, getFlankSize(defender))
+  setGeneralAttribute(armyA, GeneralAttribute.Martial, getGeneral(attacker))
+  setGeneralAttribute(armyD, GeneralAttribute.Martial, getGeneral(defender))
+  const preferencesA = getUnitPrefences(attacker)
+  setUnitPreference(armyA, UnitPreferenceType.Primary, preferencesA[0])
+  setUnitPreference(armyA, UnitPreferenceType.Secondary, preferencesA[1])
+  setUnitPreference(armyA, UnitPreferenceType.Flank, preferencesA[2])
+  const preferencesD = getUnitPrefences(defender)
+  setUnitPreference(armyD, UnitPreferenceType.Primary, preferencesD[0])
+  setUnitPreference(armyD, UnitPreferenceType.Secondary, preferencesD[1])
+  setUnitPreference(armyD, UnitPreferenceType.Flank, preferencesD[2])
 }
 
 /**
  * Loads a given input data to a given test info.
- * @param info 
+ * @param state 
  * @param data 
  */
-export const loadInput = (data: string, info: TestState) => {
+export const loadInput = (data: string, state: TestState) => {
   const [attacker, defender] = parseInput(data)
-  setInfoFromInput(info, attacker, defender)
-  setReserve(info, getUnits(attacker), getUnits(defender))
+  setInfoFromInput(state, attacker, defender)
+  addToReserveTest(state, SideType.Attacker, getUnits(attacker).map(getUnit))
+  addToReserveTest(state, SideType.Defender, getUnits(defender).map(getUnit))
 }

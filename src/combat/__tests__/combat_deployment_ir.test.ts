@@ -1,4 +1,4 @@
-import { TestState, initState, getUnit, testDeployment, createExpected, getArmy, getSettings } from './utils'
+import { TestState, initState, getUnit, testDeployment, createExpected, getSettingsTest, addToReserveTest, getArmyTest } from './utils'
 import { UnitType, Setting, SideType } from 'types'
 import { loadInput } from './parser'
 
@@ -11,7 +11,7 @@ import supportOnly from './input/deployment/support_only.txt'
 import flankOutnumbered from './input/deployment/flank_outnumbered.txt'
 import unitPreferences from './input/deployment/unit_preferences.txt'
 import unitPreferencesOrder from './input/deployment/unit_preferences_order.txt'
-import { setFlankSize, addToReserve } from 'managers/army'
+import { setFlankSize } from 'managers/army'
 
 if (process.env.REACT_APP_GAME !== 'euiv') {
 
@@ -63,7 +63,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     })
     it('deploys flank correctly when outnumbering the enemy, dynamic', () => {
       loadInput(flankOutnumbered, state)
-      getSettings(state)[Setting.DynamicFlanking] = true
+      getSettingsTest(state)[Setting.DynamicFlanking] = true
       const attacker = {
         front: createExpected([UnitType.Archers, 10], [UnitType.HorseArchers, 10], [UnitType.Archers, 10])
       }
@@ -74,7 +74,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     })
     it('deploys flank correctly when outnumbering the enemy, static', () => {
       loadInput(flankOutnumbered, state)
-      getSettings(state)[Setting.DynamicFlanking] = false
+      getSettingsTest(state)[Setting.DynamicFlanking] = false
       const attacker = {
         front: createExpected([UnitType.Archers, 20], [UnitType.HorseArchers, 10])
       }
@@ -119,7 +119,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       loadInput(flanksizeBigFlank, state)
       const attacker = {
         front: createExpected([UnitType.Archers, 20], [UnitType.HorseArchers, 5], [UnitType.Archers, 5]),
-        reserve_front: createExpected([UnitType.Archers, 5])
+        reserveFront: createExpected([UnitType.Archers, 5])
       }
       const defender = {
         front: createExpected([UnitType.Archers, 30])
@@ -128,13 +128,13 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     })
     it('reduced combat width', () => {
       const width = 5
-      getSettings(state)[Setting.CombatWidth] = width
-      setFlankSize(getArmy(state, SideType.Attacker), 2)
-      setFlankSize(getArmy(state, SideType.Defender), 0)
+      getSettingsTest(state)[Setting.CombatWidth] = width
+      setFlankSize(getArmyTest(state, SideType.Attacker), 2)
+      setFlankSize(getArmyTest(state, SideType.Defender), 0)
 
-      addToReserve(getArmy(state, SideType.Attacker), [UnitType.HorseArchers, UnitType.HorseArchers, UnitType.HorseArchers].map(type => getUnit(type)))
-      addToReserve(getArmy(state, SideType.Attacker), Array(width).fill(UnitType.Archers).map(type => getUnit(type)))
-      addToReserve(getArmy(state, SideType.Defender), Array(width).fill(UnitType.Archers).map(type => getUnit(type)))
+      addToReserveTest(state, SideType.Attacker, [UnitType.HorseArchers, UnitType.HorseArchers, UnitType.HorseArchers].map(type => getUnit(type)))
+      addToReserveTest(state, SideType.Attacker, Array(width).fill(UnitType.Archers).map(type => getUnit(type)))
+      addToReserveTest(state, SideType.Defender, Array(width).fill(UnitType.Archers).map(type => getUnit(type)))
 
       const attacker = {
         front: createExpected(UnitType.Archers, [UnitType.HorseArchers, 3], UnitType.Archers),

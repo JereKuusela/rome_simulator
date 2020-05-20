@@ -1,6 +1,6 @@
 
-import { sumBy, sum } from 'lodash'
-import { Terrain, TerrainCalc, Setting, UnitAttribute, UnitData, CombatPhase, GeneralAttribute, SideType, LocationType, CohortProperties, SiteSettings, Cohorts, Cohort, Frontline, Reserve, Side, GeneralValues, Environment } from 'types'
+import { sumBy } from 'lodash'
+import { Terrain, TerrainCalc, Setting, UnitAttribute, UnitData, CombatPhase, GeneralAttribute, SideType, LocationType, CohortProperties, SiteSettings, Cohorts, Cohort, Frontline, Reserve, GeneralValues, Environment, Settings } from 'types'
 import { calculateValue } from 'definition_values'
 
 /**
@@ -84,29 +84,28 @@ export const getDailyIncrease = (round: number, settings: SiteSettings) => setti
 export const calculateTotalStrength = (cohorts: Cohorts, includeDefeated: boolean) => {
   let strength = 0.0
   const addRatio = (cohort: Cohort) => {
-    if (includeDefeated || !cohort.state.isDefeated)
-      strength += cohort[UnitAttribute.Strength]
+    strength += cohort[UnitAttribute.Strength]
   }
-  iterateCohorts(cohorts, addRatio)
+  iterateCohorts(cohorts, includeDefeated, addRatio)
   return strength
 }
 
 /** Calls a function for every cohort.  */
-export const iterateCohorts = (cohorts: Cohorts, func: (cohort: Cohort) => void) => {
+export const iterateCohorts = (cohorts: Cohorts, includeDefeated: boolean, func: (cohort: Cohort) => void) => {
   let i = 0, j = 0
   let length = cohorts.frontline.length
   let length2 = cohorts.frontline[0].length
   for (; i < length; i++) {
     for (; j < length2; j++) {
-      if (cohorts.frontline[i][j])
+      if (cohorts.frontline[i][j] && !cohorts.frontline[i][j]?.state.isDefeated)
         func(cohorts.frontline[i][j]!)
     }
   }
   cohorts.reserve.front.forEach(func)
-  cohorts.reserve.front.forEach(func)
   cohorts.reserve.flank.forEach(func)
   cohorts.reserve.support.forEach(func)
-  cohorts.defeated.forEach(func)
+  if (includeDefeated)
+    cohorts.defeated.forEach(func)
 }
 
 /**
@@ -131,15 +130,10 @@ export const nextIndex = (index: number, center: number) => index < center ? ind
 
 export const reserveSize = (reserve: Reserve) => reserve.front.length + reserve.flank.length + reserve.support.length
 
-export const armySize = (side: Side, round: number) => {
-  return sum(side.armies.map(army => (round === -1 || army.arrival <= round) ? reserveSize(army.reserve) : 0))
-    + side.cohorts.frontline[0].filter(unit => unit).length + reserveSize(side.cohorts.reserve)
-}
-
 export const defeatCohort = (environment: Environment, cohort: Cohort) => {
   // Defeating a defeated cohort shouldn't change the time of defeat.
   if (!cohort.state.isDefeated)
-    cohort.state.defeatedRound = environment.day
+    cohort.state.defeatedDay = environment.day
   cohort.state.isDefeated = true
   cohort.state.isDestroyed = cohort[UnitAttribute.Strength] <= 0
 }
@@ -149,3 +143,7 @@ export const wipeCohort = (environment: Environment, cohort: Cohort) => {
   cohort[UnitAttribute.Strength] = 0
   defeatCohort(environment, cohort)
 }
+
+export const isAlive = (unit: Cohort, settings: Settings) => (
+  unit[UnitAttribute.Morale] > settings[Setting.MinimumMorale] && unit[UnitAttribute.Strength] > settings[Setting.MinimumStrength]
+)

@@ -1,7 +1,8 @@
 import { addValues } from 'definition_values'
-import { getUnit, TestState, initState, initSide, testCombat, setTerrain, getArmy } from './utils'
-import { UnitType, UnitAttribute, TerrainType, ValuesType, SideType } from 'types'
+import { getUnit, TestState, initState, initSide, testCombat, addToReserveTest } from './utils'
+import { UnitType, UnitAttribute, TerrainType, ValuesType, SideType, Mode } from 'types'
 import { addToReserve } from 'managers/army'
+import { selectTerrain } from 'managers/battle'
 
 if (process.env.REACT_APP_GAME !== 'euiv') {
 
@@ -16,8 +17,8 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
 
     it('no modifiers', () => {
       const unit = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.MoraleDamageTaken, -0.25]])
-      addToReserve(getArmy(state, SideType.Attacker), [unit])
-      addToReserve(getArmy(state, SideType.Defender), [unit])
+      addToReserveTest(state, SideType.Attacker, [unit])
+      addToReserveTest(state, SideType.Defender, [unit])
 
       const rolls = [[0, 2], [3, 2]]
       const { attacker, defender } = initSide(10)
@@ -50,9 +51,9 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     it('increased morale damage taken, terrain bonus and discipline', () => {
       const unitA = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.Discipline, 0.045]])
       const unitD = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.Discipline, 0.14], [TerrainType.Forest, 0.15]])
-      setTerrain(state, TerrainType.Forest)
-      addToReserve(getArmy(state, SideType.Attacker), [unitA])
-      addToReserve(getArmy(state, SideType.Defender), [unitD])
+      selectTerrain(state.battle[Mode.Land], 0, TerrainType.Forest)
+      addToReserveTest(state, SideType.Attacker, [unitA])
+      addToReserveTest(state, SideType.Defender, [unitD])
 
       const rolls = [[4, 4]]
       const { attacker, defender } = initSide(4)
@@ -73,8 +74,8 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     it('reduced morale damage taken, offense/defense and experience', () => {
       const unitA = addValues(infantry, ValuesType.Base, 'Test', [[UnitAttribute.Offense, 0.1], [UnitAttribute.Defense, 0.15], [UnitAttribute.Experience, 0.0001]])
       const unitD = addValues(infantry, ValuesType.Base, 'Test', [[UnitAttribute.Offense, 0.05], [UnitAttribute.Defense, 0.05], [UnitAttribute.Experience, 0.0004]])
-      addToReserve(getArmy(state, SideType.Attacker), [unitA])
-      addToReserve(getArmy(state, SideType.Defender), [unitD])
+      addToReserveTest(state, SideType.Attacker, [unitA])
+      addToReserveTest(state, SideType.Defender, [unitD])
 
       const rolls = [[6, 1]]
       const { attacker, defender } = initSide(4)
@@ -95,8 +96,8 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     it('versus damage and increased morale damage taken', () => {
       const unitA = addValues(cavalry, ValuesType.Base, 'Test', [])
       const unitD = addValues(archer, ValuesType.Base, 'Test', [])
-      addToReserve(getArmy(state, SideType.Attacker), [unitA])
-      addToReserve(getArmy(state, SideType.Defender), [unitD])
+      addToReserveTest(state, SideType.Attacker, [unitA])
+      addToReserveTest(state, SideType.Defender, [unitD])
 
       const rolls = [[4, 4]]
       const { attacker, defender } = initSide(3)

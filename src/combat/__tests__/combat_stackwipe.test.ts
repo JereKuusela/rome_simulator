@@ -1,7 +1,8 @@
-import { TestState, initState, createCohort, testReinforcement, getSettings } from './utils'
-import { UnitType, UnitAttribute, CohortDefinition, Setting } from 'types'
+import { TestState, initState, createCohort, testReinforcement, getSettingsTest, addToReserveTest, getBattleTest } from './utils'
+import { UnitType, UnitAttribute, CohortDefinition, Setting, SideType } from 'types'
 
 if (process.env.REACT_APP_GAME !== 'euiv') {
+
 
   describe('stack wipe', () => {
     let lowMorale = null as any as CohortDefinition
@@ -10,6 +11,8 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     let softLimit = null as any as CohortDefinition
     let lowStrength = null as any as CohortDefinition
     let normal = null as any as CohortDefinition
+    
+    const type = 'Test' as UnitType
 
     const FULL_STRENGTH = 1.0
     const LOW_STRENGTH = 0.05
@@ -23,27 +26,34 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     let state: TestState
     beforeEach(() => {
       state = initState()
-      lowMorale = createCohort(UnitType.Archers)
+      lowMorale = createCohort(type)
       lowMorale.baseValues![UnitAttribute.Morale] = { 'key': LOW_MORALE }
       lowMorale.baseValues![UnitAttribute.Strength] = { 'key': FULL_STRENGTH }
-      lowStrength = createCohort(UnitType.Archers)
+      lowStrength = createCohort(type)
       lowStrength.baseValues![UnitAttribute.Morale] = { 'key': FULL_MORALE }
       lowStrength.baseValues![UnitAttribute.Strength] = { 'key': LOW_STRENGTH }
-      hardLimit = createCohort(UnitType.Archers)
+      hardLimit = createCohort(type)
       hardLimit.baseValues![UnitAttribute.Morale] = { 'key': LIMIT_MORALE }
       hardLimit.baseValues![UnitAttribute.Strength] = { 'key': LIMIT_STRENGTH }
-      hardStrengthLimit = createCohort(UnitType.Archers)
+      hardStrengthLimit = createCohort(type)
       hardStrengthLimit.baseValues![UnitAttribute.Morale] = { 'key': FULL_MORALE }
       hardStrengthLimit.baseValues![UnitAttribute.Strength] = { 'key': LIMIT_STRENGTH }
-      softLimit = createCohort(UnitType.Archers)
+      softLimit = createCohort(type)
       softLimit.baseValues![UnitAttribute.Morale] = { 'key': LIMIT_MORALE }
       softLimit.baseValues![UnitAttribute.Strength] = { 'key': FULL_STRENGTH / 2 }
-      normal = createCohort(UnitType.Archers)
+      normal = createCohort(type)
       normal.baseValues![UnitAttribute.Morale] = { 'key': FULL_MORALE }
       normal.baseValues![UnitAttribute.Strength] = { 'key': FULL_STRENGTH }
-      getSettings(state)[Setting.DailyDamageIncrease] = 0
-      getSettings(state)[Setting.StackwipeRounds] = 5
+      getSettingsTest(state)[Setting.DailyDamageIncrease] = 0
+      getSettingsTest(state)[Setting.StackwipeRounds] = 5
     })
+
+    const setRound = (round: number) => {
+      getBattleTest(state).days.push({
+        round: round - 1,
+        startingPhaseNumber: 1
+      })
+    }
 
     const testBothDefeated = (strengthA: number, strengthD: number, moraleA: number, moraleD: number, rounds: number = 0) => {
       const [attacker, defender] = testReinforcement(rounds, state)
@@ -90,92 +100,70 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       expect(defender.cohorts.frontline[0][15]![UnitAttribute.Morale]).toBeCloseTo(moraleD)
     }
     it('attacker stack wipes if it can\'t deploy', () => {
-      state.armyA.reserve.push(lowMorale)
-      state.armyA.reserve.push(lowMorale)
-      state.armyD.reserve.push(normal)
-      state.armyD.reserve.push(normal)
+      addToReserveTest(state, SideType.Attacker, [lowMorale, lowMorale])
+      addToReserveTest(state, SideType.Defender, [normal, normal])
       testAttackerDefeated(NO_STRENGTH, FULL_STRENGTH, NO_MORALE, FULL_MORALE)
     })
     it('defender stack wipes when no cohorts deploy', () => {
-      state.armyA.reserve.push(lowMorale)
-      state.armyA.reserve.push(lowMorale)
-      state.armyD.reserve.push(lowMorale)
-      state.armyD.reserve.push(lowMorale)
+      addToReserveTest(state, SideType.Attacker, [lowMorale, lowMorale])
+      addToReserveTest(state, SideType.Defender, [lowMorale, lowMorale])
       testBothDefeated(FULL_STRENGTH, NO_STRENGTH, LOW_MORALE, NO_MORALE)
     })
     it('attacker stack wipes when defender can hard wipe', () => {
-      state.armyA.reserve.push(lowStrength)
-      state.armyA.reserve.push(lowStrength)
-      state.armyD.reserve.push(normal)
-      state.armyD.reserve.push(normal)
+      addToReserveTest(state, SideType.Attacker, [lowStrength, lowStrength])
+      addToReserveTest(state, SideType.Defender, [normal, normal])
       testAttackerDefeated(NO_STRENGTH, FULL_STRENGTH, NO_MORALE, FULL_MORALE)
     })
     it('defender stack wipes when attacker can hard wipe but not deploy', () => {
-      state.armyA.reserve.push(lowMorale)
-      state.armyA.reserve.push(lowMorale)
-      state.armyD.reserve.push(lowStrength)
-      state.armyD.reserve.push(lowStrength)
+      addToReserveTest(state, SideType.Attacker, [lowMorale, lowMorale])
+      addToReserveTest(state, SideType.Defender, [lowStrength, lowStrength])
       testBothDefeated(FULL_STRENGTH, NO_STRENGTH, LOW_MORALE, NO_MORALE)
     })
     it('attacker stack wipes when defender can hard wipe at end', () => {
-      state.armyA.reserve.push(hardLimit)
-      state.armyA.reserve.push(hardLimit)
-      state.armyD.reserve.push(normal)
-      state.armyD.reserve.push(normal)
-      testAttackerDefeated(NO_STRENGTH, 0.99712, NO_MORALE, 2.9972, 1)
+      addToReserveTest(state, SideType.Attacker, [hardLimit, hardLimit])
+      addToReserveTest(state, SideType.Defender, [normal, normal])
+      setRound(getSettingsTest(state)[Setting.StackwipeRounds])
+      testAttackerDefeated(NO_STRENGTH, 0.99712, NO_MORALE, 2.9972)
     })
     it('defender stack wipes when attacker can hard wipe at end', () => {
-      state.armyA.reserve.push(normal)
-      state.armyA.reserve.push(normal)
-      state.armyD.reserve.push(hardLimit)
-      state.armyD.reserve.push(hardLimit)
-      testDefenderDefeated(0.99712, NO_STRENGTH, 2.9972, NO_MORALE, 1)
+      addToReserveTest(state, SideType.Attacker, [normal, normal])
+      addToReserveTest(state, SideType.Defender, [hardLimit, hardLimit])
+      setRound(getSettingsTest(state)[Setting.StackwipeRounds])
+      testDefenderDefeated(0.99712, NO_STRENGTH, 2.9972, NO_MORALE)
     })
     it('attacker survives during battle even when defender could hard wipe', () => {
-      state.armyA.reserve.push(hardStrengthLimit)
-      state.armyA.reserve.push(hardStrengthLimit)
-      state.armyD.reserve.push(normal)
-      state.armyD.reserve.push(normal)
+      addToReserveTest(state, SideType.Attacker, [hardStrengthLimit, hardStrengthLimit])
+      addToReserveTest(state, SideType.Defender, [normal, normal])
       testNoneDefeated(0.07, 0.99712, 2.676, 2.97, 1)
     })
     it('defender survives during battle even when attacker could hard wipe', () => {
-      state.armyA.reserve.push(normal)
-      state.armyA.reserve.push(normal)
-      state.armyD.reserve.push(hardStrengthLimit)
-      state.armyD.reserve.push(hardStrengthLimit)
+      addToReserveTest(state, SideType.Attacker, [normal, normal])
+      addToReserveTest(state, SideType.Defender, [hardStrengthLimit, hardStrengthLimit])
       testNoneDefeated(0.99712, 0.07, 2.97, 2.676, 1)
     })
     it('attacker survives when defender can soft wipe after retreat limit', () => {
-      state.armyA.reserve.push(softLimit)
-      state.armyA.reserve.push(softLimit)
-      state.armyD.reserve.push(normal)
-      state.armyD.reserve.push(normal)
-      state.round = state.settings[Setting.StackwipeRounds]
-      testAttackerDefeated(0.471, 0.986, 0, 2.99, 1)
+      addToReserveTest(state, SideType.Attacker, [softLimit, softLimit])
+      addToReserveTest(state, SideType.Defender, [normal, normal])
+      setRound(getSettingsTest(state)[Setting.StackwipeRounds])
+      testAttackerDefeated(0.481, 0.986, 0.04, 2.99)
     })
     it('defender survives when attacker can soft wipe after retreat limit', () => {
-      state.armyA.reserve.push(normal)
-      state.armyA.reserve.push(normal)
-      state.armyD.reserve.push(softLimit)
-      state.armyD.reserve.push(softLimit)
-      state.round = state.settings[Setting.StackwipeRounds]
-      testDefenderDefeated(0.986, 0.471, 2.99, 0, 1)
+      addToReserveTest(state, SideType.Attacker, [normal, normal])
+      addToReserveTest(state, SideType.Defender, [softLimit, softLimit])
+      setRound(getSettingsTest(state)[Setting.StackwipeRounds])
+      testDefenderDefeated(0.986, 0.481, 2.99, 0.04)
     })
     it('attacker stack wipes when defender can soft wipe before retreat limit', () => {
-      state.armyA.reserve.push(softLimit)
-      state.armyA.reserve.push(softLimit)
-      state.armyD.reserve.push(normal)
-      state.armyD.reserve.push(normal)
-      state.round = state.settings[Setting.StackwipeRounds] - 1
-      testAttackerDefeated(NO_STRENGTH, 0.986, NO_MORALE, 2.99, 1)
+      addToReserveTest(state, SideType.Attacker, [softLimit, softLimit])
+      addToReserveTest(state, SideType.Defender, [normal, normal])
+      setRound(getSettingsTest(state)[Setting.StackwipeRounds] - 1)
+      testAttackerDefeated(NO_STRENGTH, 0.986, NO_MORALE, 2.99)
     })
     it('defender stack wipes when attacker can soft wipe before retreat limit', () => {
-      state.armyA.reserve.push(normal)
-      state.armyA.reserve.push(normal)
-      state.armyD.reserve.push(softLimit)
-      state.armyD.reserve.push(softLimit)
-      state.round = state.settings[Setting.StackwipeRounds] - 1
-      testDefenderDefeated(0.986, NO_STRENGTH, 2.99, NO_MORALE, 1)
+      addToReserveTest(state, SideType.Attacker, [normal, normal])
+      addToReserveTest(state, SideType.Defender, [softLimit, softLimit])
+      setRound(getSettingsTest(state)[Setting.StackwipeRounds] - 1)
+      testDefenderDefeated(0.986, NO_STRENGTH, 2.99, NO_MORALE)
     })
   })
 }

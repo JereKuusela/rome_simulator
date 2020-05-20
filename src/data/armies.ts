@@ -39,16 +39,10 @@ const initializeDefaultArmy = (mode: Mode): ArmyData => ({
   mode
 })
 
-const defaultLandArmy = initializeDefaultArmy(Mode.Land)
-const defaultNavalArmy = initializeDefaultArmy(Mode.Naval)
 
-export const getDefaultArmy = (mode: Mode): ArmyData => {
-  if (mode === Mode.Naval)
-    return defaultNavalArmy
-  return defaultLandArmy
-}
+export const getDefaultArmy = (mode: Mode): ArmyData => initializeDefaultArmy(mode)
 
 export const getDefaultArmies = (): Armies => ({
-  [ArmyName.Army]: defaultLandArmy,
-  [ArmyName.Navy]: defaultNavalArmy
+  [ArmyName.Army]: getDefaultArmy(Mode.Land),
+  [ArmyName.Navy]: getDefaultArmy(Mode.Naval)
 })

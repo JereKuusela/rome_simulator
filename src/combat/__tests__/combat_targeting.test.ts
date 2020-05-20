@@ -1,7 +1,7 @@
 import { addValues } from 'definition_values'
-import { getUnit, TestState, initState, setAttacker, setDefender, initSide, testCombat, getArmy } from './utils'
-import { UnitType, UnitAttribute, Setting, ValuesType, SideType } from 'types'
-import { addToReserve } from 'managers/army'
+import { getUnit, TestState, initState, initSide, testCombat, getSettingsTest, addToReserveTest, getArmyTest } from './utils'
+import { UnitType, UnitAttribute, Setting, ValuesType, SideType, UnitRole, UnitPreferenceType } from 'types'
+import { setUnitPreference } from 'managers/army'
 
 if (process.env.REACT_APP_GAME !== 'euiv') {
 
@@ -14,8 +14,8 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     beforeEach(() => state = initState(true))
 
     it('main and flanks', () => {
-      addToReserve(getArmy(state, SideType.Attacker), [archer, archer])
-      addToReserve(getArmy(state, SideType.Defender), [archer, archer, light, light])
+      addToReserveTest(state, SideType.Attacker, [archer, archer])
+      addToReserveTest(state, SideType.Defender, [archer, archer, light, light])
 
       const rolls = [[5, 0]]
       const { attacker, defender } = initSide(1)
@@ -29,11 +29,12 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     })
 
     it('inner flank', () => {
-      state.environment.settings[Setting.FixTargeting] = false
-      state.environment.settings[Setting.DefenderAdvantage] = true
+      getSettingsTest(state)[Setting.FixTargeting] = false
+      getSettingsTest(state)[Setting.DefenderAdvantage] = true
 
-      addToReserve(getArmy(state, SideType.Attacker), [heavy, heavy, archer, archer])
-      addToReserve(getArmy(state, SideType.Defender), [archer, archer, archer, archer])
+      addToReserveTest(state, SideType.Attacker, [heavy, heavy, archer, archer])
+      addToReserveTest(state, SideType.Defender, [archer, archer, archer, archer])
+      setUnitPreference(getArmyTest(state, SideType.Attacker), UnitPreferenceType.Primary, UnitType.HeavyCavalry)
 
       const rolls = [[5, 5], [0, 6]]
       const { attacker, defender } = initSide(6)
@@ -52,11 +53,12 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
 
     it('inner flank (fixed)', () => {
       // Can't be tested in game.
-      state.environment.settings[Setting.FixTargeting] = true
-      state.environment.settings[Setting.DefenderAdvantage] = true
+      getSettingsTest(state)[Setting.FixTargeting] = true
+      getSettingsTest(state)[Setting.DefenderAdvantage] = true
 
-      addToReserve(getArmy(state, SideType.Attacker), [heavy, heavy, archer, archer])
-      addToReserve(getArmy(state, SideType.Defender), [archer, archer, archer, archer])
+      addToReserveTest(state, SideType.Attacker, [heavy, heavy, archer, archer])
+      addToReserveTest(state, SideType.Defender, [archer, archer, archer, archer])
+      setUnitPreference(getArmyTest(state, SideType.Attacker), UnitPreferenceType.Primary, UnitType.HeavyCavalry)
 
       const rolls = [[5, 5], [0, 6]]
       const { attacker, defender } = initSide(6)

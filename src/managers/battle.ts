@@ -51,11 +51,14 @@ export const selectParticipantArmy = (battle: Battle, sideType: SideType, index:
   battle.sides[sideType].participants[index].armyName = armyName
 }
 
+const getRow = (width: number) => Array(width).fill(null)
+
 export const convertSide = (side: SideData, armies: Army[], settings: Settings): Side => {
+  const width = settings[Setting.CombatWidth]
   return {
     alive: true,
     cohorts: {
-      frontline: [Array(settings[Setting.CombatWidth]).fill(null)],
+      frontline: settings[Setting.BackRow] ? [getRow(width), getRow(width)] : [getRow(width)],
       defeated: [],
       reserve: {
         front: [],

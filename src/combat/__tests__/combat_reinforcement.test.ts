@@ -1,4 +1,4 @@
-import { TestState, initState, testReinforcement, createExpected, getSettings } from './utils'
+import { TestState, initState, testReinforcement, createExpected, getSettingsTest } from './utils'
 import { UnitType, Setting } from 'types'
 
 import unitPreferences from './input/reinforcement/unit_preferences.txt'
@@ -42,7 +42,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     it('preferred flank size', () => {
       loadInput(preferredFlankSize, state)
       // Tweak to defeat whole enemy line during the same turn.
-      getSettings(state)[Setting.MaxPips] = 20
+      getSettingsTest(state)[Setting.MaxPips] = 20
       const attacker = {
         front: createExpected([UnitType.HeavyCavalry, 30])
       }
@@ -58,7 +58,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     it('frontline is reinforced first', () => {
       loadInput(flankOnly, state)
       // Tweak to defeat whole enemy line during the same turn.
-      getSettings(state)[Setting.MaxPips] = 20
+      getSettingsTest(state)[Setting.MaxPips] = 20
       const attacker = {
         front: createExpected([UnitType.HeavyCavalry, 30])
       }
