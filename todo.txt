@@ -35,6 +35,7 @@ Combat
  * Added support for multiple separate battles.
  * If one side runs out of units then the battle ends. Losers deployed armies are removed and stack wiping checked.
  * If the losing side still has undeployed armies a new battle starts when an army arrives.
+ * Fixed border terrain affecting both sides.
 
 Todo: 
 
