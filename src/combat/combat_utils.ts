@@ -15,7 +15,7 @@ export const calculateGeneralPips = (values: GeneralValues, enemy: GeneralValues
 
 export const getTerrainPips = (terrains: Terrain[], isAttacker: boolean, values: GeneralValues, enemy: GeneralValues) => {
   const enableTiles = isAttacker
-  const enableBorders = isAttacker || values[GeneralAttribute.Maneuver] <= enemy[GeneralAttribute.Maneuver]
+  const enableBorders = isAttacker && values[GeneralAttribute.Maneuver] <= enemy[GeneralAttribute.Maneuver]
   terrains = terrains.filter(terrain => terrain.location === LocationType.Border ? enableBorders : enableTiles)
   return sumBy(terrains, terrain => calculateValue(terrain, TerrainCalc.Roll))
 }

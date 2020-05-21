@@ -61,6 +61,7 @@ const getFirstImage = (attribute: string, mode?: Mode) => {
       return IconFoodStorage
     case UnitAttribute.AttritionWeight:
       return IconSupplyLimit
+    case CombatPhase.Default:
     case GeneralAttribute.Martial:
       return IconMartial
     default:
