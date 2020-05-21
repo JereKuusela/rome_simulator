@@ -98,7 +98,7 @@ const mapStateToProps = (state: AppState) => {
   }
   return {
     rolls: [],
-    side: SideType.Attacker,
+    side: SideType.A,
     isRandom: false,
     seed: battle.seed
   }

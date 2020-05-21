@@ -19,8 +19,8 @@ if (process.env.REACT_APP_GAME === 'euiv') {
 
     it('more cavalry than flank size (+ backrow flank)', () => {
       getSettingsTest(state)[Setting.CombatWidth] = 22
-      add(SideType.Attacker, 26, 0, 0)
-      add(SideType.Defender, 14, 16, 0)
+      add(SideType.A, 26, 0, 0)
+      add(SideType.B, 14, 16, 0)
       const attacker = {
         front: createExpected([UnitType.Infantry, 22]),
         back: createExpected([UnitType.Infantry, 4])
@@ -33,8 +33,8 @@ if (process.env.REACT_APP_GAME === 'euiv') {
     })
     it('less cavalry than flank size', () => {
       getSettingsTest(state)[Setting.CombatWidth] = 22
-      add(SideType.Attacker, 22, 0, 0)
-      add(SideType.Defender, 22, 2, 0)
+      add(SideType.A, 22, 0, 0)
+      add(SideType.B, 22, 2, 0)
       const attacker = {
         front: createExpected([UnitType.Infantry, 22])
       }
@@ -46,8 +46,8 @@ if (process.env.REACT_APP_GAME === 'euiv') {
     })
     it('combat width not filled', () => {
       getSettingsTest(state)[Setting.CombatWidth] = 22
-      add(SideType.Attacker, 2, 3, 0)
-      add(SideType.Defender, 1, 0, 0)
+      add(SideType.A, 2, 3, 0)
+      add(SideType.B, 1, 0, 0)
       const attacker = {
         front: createExpected(UnitType.Infantry, [UnitType.Cavalry, 3]),
         back: createExpected([UnitType.Infantry, 1])
@@ -59,8 +59,8 @@ if (process.env.REACT_APP_GAME === 'euiv') {
     })
     it('artillery fills backline (both front and flank)', () => {
       getSettingsTest(state)[Setting.CombatWidth] = 24
-      add(SideType.Attacker, 6, 6, 6)
-      add(SideType.Defender, 2, 0, 0)
+      add(SideType.A, 6, 6, 6)
+      add(SideType.B, 2, 0, 0)
       const attacker = {
         front: createExpected([UnitType.Infantry, 2], [UnitType.Cavalry, 6], [UnitType.Infantry, 4]),
         back: createExpected([UnitType.Artillery, 6])
@@ -72,8 +72,8 @@ if (process.env.REACT_APP_GAME === 'euiv') {
     })
     it('artillery backline doesn\'t exceend frontline', () => {
       getSettingsTest(state)[Setting.CombatWidth] = 24
-      add(SideType.Attacker, 6, 0, 12)
-      add(SideType.Defender, 2, 0, 0)
+      add(SideType.A, 6, 0, 12)
+      add(SideType.B, 2, 0, 0)
       const attacker = {
         front: createExpected([UnitType.Infantry, 6], [UnitType.Artillery, 3]),
         back: createExpected([UnitType.Artillery, 9])
@@ -85,8 +85,8 @@ if (process.env.REACT_APP_GAME === 'euiv') {
     })
     it('infantry only', () => {
       getSettingsTest(state)[Setting.CombatWidth] = 24
-      add(SideType.Attacker, 6, 0, 0)
-      add(SideType.Defender, 2, 0, 0)
+      add(SideType.A, 6, 0, 0)
+      add(SideType.B, 2, 0, 0)
       const attacker = {
         front: createExpected([UnitType.Infantry, 6])
       }

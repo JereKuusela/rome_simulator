@@ -14,8 +14,8 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     beforeEach(() => state = initState(true))
 
     it('main and flanks', () => {
-      addToReserveTest(state, SideType.Attacker, [archer, archer])
-      addToReserveTest(state, SideType.Defender, [archer, archer, light, light])
+      addToReserveTest(state, SideType.A, [archer, archer])
+      addToReserveTest(state, SideType.B, [archer, archer, light, light])
 
       const rolls = [[5, 0]]
       const { attacker, defender } = initSide(1)
@@ -32,9 +32,9 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       getSettingsTest(state)[Setting.FixTargeting] = false
       getSettingsTest(state)[Setting.DefenderAdvantage] = true
 
-      addToReserveTest(state, SideType.Attacker, [heavy, heavy, archer, archer])
-      addToReserveTest(state, SideType.Defender, [archer, archer, archer, archer])
-      setUnitPreference(getArmyTest(state, SideType.Attacker), UnitPreferenceType.Primary, UnitType.HeavyCavalry)
+      addToReserveTest(state, SideType.A, [heavy, heavy, archer, archer])
+      addToReserveTest(state, SideType.B, [archer, archer, archer, archer])
+      setUnitPreference(getArmyTest(state, SideType.A), UnitPreferenceType.Primary, UnitType.HeavyCavalry)
 
       const rolls = [[5, 5], [0, 6]]
       const { attacker, defender } = initSide(6)
@@ -56,9 +56,9 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       getSettingsTest(state)[Setting.FixTargeting] = true
       getSettingsTest(state)[Setting.DefenderAdvantage] = true
 
-      addToReserveTest(state, SideType.Attacker, [heavy, heavy, archer, archer])
-      addToReserveTest(state, SideType.Defender, [archer, archer, archer, archer])
-      setUnitPreference(getArmyTest(state, SideType.Attacker), UnitPreferenceType.Primary, UnitType.HeavyCavalry)
+      addToReserveTest(state, SideType.A, [heavy, heavy, archer, archer])
+      addToReserveTest(state, SideType.B, [archer, archer, archer, archer])
+      setUnitPreference(getArmyTest(state, SideType.A), UnitPreferenceType.Primary, UnitType.HeavyCavalry)
 
       const rolls = [[5, 5], [0, 6]]
       const { attacker, defender } = initSide(6)

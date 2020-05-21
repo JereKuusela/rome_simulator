@@ -1,5 +1,5 @@
 import { Setting, UnitAttribute, SideType, ResourceLosses, WinRateProgress, CasualtiesProgress, ResourceLossesProgress, Cohorts, CombatNode, Side, Environment } from 'types'
-import { doBattle } from './combat'
+import { doCombatRound } from './combat'
 import { mapRange } from 'utils'
 import { deploy } from './deployment'
 
@@ -264,13 +264,13 @@ const doPhase = (field: Environment, attacker: Side, defender: Side, phase: numb
   let round = (phase - 1) * phaseLength + 1
   for (; round <= maxRound; round++) {
     field.day = round
-    doBattle(field, attacker, defender, false)
+    doCombatRound(field, attacker, defender, false)
     if (!attacker.alive && !defender.alive)
       winner = null
     else if (!attacker.alive)
-      winner = SideType.Defender
+      winner = SideType.B
     else if (!defender.alive)
-      winner = SideType.Attacker
+      winner = SideType.A
     // Custom check to prevent round going over phase limit.
     if (winner !== undefined || round === maxRound)
       break
@@ -328,9 +328,9 @@ const sumState = (state: State, units: Cohorts) => {
 const updateProgress = (progress: WinRateProgress, amount: number, result: { winner: Winner, round: number }, stackWipe: boolean) => {
   const { winner, round } = result
   progress.progress += amount
-  if (winner === SideType.Attacker)
+  if (winner === SideType.A)
     progress.attacker += amount
-  else if (winner === SideType.Defender)
+  else if (winner === SideType.B)
     progress.defender += amount
   else if (winner === null)
     progress.draws += amount

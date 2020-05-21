@@ -7,6 +7,7 @@ export type Battle = {
   days: {
     round: number
     startingPhaseNumber: number
+    attacker: SideType
   }[]
   fightOver: boolean
   seed: number
@@ -39,8 +40,8 @@ export type Participant = {
 }
 
 export enum SideType {
-  Attacker = 'Attacker',
-  Defender = 'Defender'
+  A = 'Attacker',
+  B = 'Defender'
 }
 
 /** Information affecting both sides of combat. */
@@ -49,6 +50,7 @@ export type Environment = {
   day: number
   terrains: Terrain[]
   settings: Settings
+  attacker: SideType
 }
 
 /** Results from combat (mainly for tooltips). */

@@ -33,8 +33,8 @@ export default class PreferredUnitTypes extends Component {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          <ConnectedRow side={SideType.Attacker} />
-          <ConnectedRow side={SideType.Defender} />
+          <ConnectedRow side={SideType.A} />
+          <ConnectedRow side={SideType.B} />
         </Table.Body>
       </Table>
     )

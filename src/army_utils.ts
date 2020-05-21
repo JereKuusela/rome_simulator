@@ -42,4 +42,4 @@ export const getArmyPart = (units: Cohorts, type: ArmyPart) => {
   return [units.defeated]
 }
 
-export const getOpponent = (side: SideType) => side === SideType.Attacker ? SideType.Defender : SideType.Attacker
+export const getOpponent = (side: SideType) => side === SideType.A ? SideType.B : SideType.A

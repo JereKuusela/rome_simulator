@@ -70,8 +70,8 @@ const convertUnits = (side: SideType, units: (Cohort | null)[][]): IUnit[][] => 
 )
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  attacker: convertUnits(SideType.Attacker, getArmyPart(getCohorts(state, SideType.Attacker), props.type)),
-  defender: convertUnits(SideType.Defender, getArmyPart(getCohorts(state, SideType.Defender), props.type)),
+  attacker: convertUnits(SideType.A, getArmyPart(getCohorts(state, SideType.A), props.type)),
+  defender: convertUnits(SideType.B, getArmyPart(getCohorts(state, SideType.B), props.type)),
 })
 
 const actions = {}

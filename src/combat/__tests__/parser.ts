@@ -54,8 +54,8 @@ const getGeneral = (input: Input) => Number(input['general'] ?? 0)
 
 
 const setInfoFromInput = (state: TestState, attacker: Input, defender: Input) => {
-  const armyA = getArmyTest(state, SideType.Attacker)
-  const armyD = getArmyTest(state, SideType.Defender)
+  const armyA = getArmyTest(state, SideType.A)
+  const armyD = getArmyTest(state, SideType.B)
   setFlankSize(armyA, getFlankSize(attacker))
   setFlankSize(armyD, getFlankSize(defender))
   setGeneralAttribute(armyA, GeneralAttribute.Martial, getGeneral(attacker))
@@ -78,6 +78,6 @@ const setInfoFromInput = (state: TestState, attacker: Input, defender: Input) =>
 export const loadInput = (data: string, state: TestState) => {
   const [attacker, defender] = parseInput(data)
   setInfoFromInput(state, attacker, defender)
-  addToReserveTest(state, SideType.Attacker, getUnits(attacker).map(getUnit))
-  addToReserveTest(state, SideType.Defender, getUnits(defender).map(getUnit))
+  addToReserveTest(state, SideType.A, getUnits(attacker).map(getUnit))
+  addToReserveTest(state, SideType.B, getUnits(defender).map(getUnit))
 }

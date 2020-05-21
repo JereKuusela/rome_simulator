@@ -78,7 +78,7 @@ class Battle extends Component<IProps> {
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderFrontline(SideType.Attacker)
+                this.renderFrontline(SideType.A)
               }
             </Grid.Column>
           </Grid.Row>
@@ -95,16 +95,16 @@ class Battle extends Component<IProps> {
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderFrontline(SideType.Defender)
+                this.renderFrontline(SideType.B)
               }
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={2}>
             <Grid.Column>
-              <TableSideInfo type={SideType.Attacker} />
+              <TableSideInfo type={SideType.A} />
             </Grid.Column>
             <Grid.Column>
-              <TableSideInfo type={SideType.Defender} />
+              <TableSideInfo type={SideType.B} />
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -113,28 +113,28 @@ class Battle extends Component<IProps> {
           <Grid>
             <Grid.Row columns={2}>
               <Grid.Column>
-                <TableArmyInfo type={SideType.Attacker} />
+                <TableArmyInfo type={SideType.A} />
               </Grid.Column>
               <Grid.Column>
-                <TableArmyInfo type={SideType.Defender} />
+                <TableArmyInfo type={SideType.B} />
               </Grid.Column>
             </Grid.Row>
             <Grid.Row columns={2}>
               <Grid.Column>
-                <TableUnitTypes side={SideType.Attacker} countryName={participantA.countryName} armyName={participantA.armyName} onRowClick={this.openUnitDetails} />
+                <TableUnitTypes side={SideType.A} countryName={participantA.countryName} armyName={participantA.armyName} onRowClick={this.openUnitDetails} />
               </Grid.Column>
               <Grid.Column>
-                <TableUnitTypes side={SideType.Defender} countryName={participantD.countryName} armyName={participantD.armyName} onRowClick={this.openUnitDetails} />
+                <TableUnitTypes side={SideType.B} countryName={participantD.countryName} armyName={participantD.armyName} onRowClick={this.openUnitDetails} />
               </Grid.Column>
             </Grid.Row>
             {
               settings[Setting.FireAndShock] &&
               <Grid.Row columns={2}>
                 <Grid.Column>
-                  <TableDamageAttributes side={SideType.Attacker} country={participantA.countryName} army={participantA.armyName} />
+                  <TableDamageAttributes side={SideType.A} country={participantA.countryName} army={participantA.armyName} />
                 </Grid.Column>
                 <Grid.Column>
-                  <TableDamageAttributes side={SideType.Defender} country={participantD.countryName} army={participantD.armyName} />
+                  <TableDamageAttributes side={SideType.B} country={participantD.countryName} army={participantD.armyName} />
                 </Grid.Column>
               </Grid.Row>
 
@@ -170,22 +170,22 @@ class Battle extends Component<IProps> {
           <Grid>
             <Grid.Row columns={1}>
               <Grid.Column>
-                {this.renderReserve(SideType.Attacker)}
+                {this.renderReserve(SideType.A)}
               </Grid.Column>
             </Grid.Row>
             <Grid.Row columns={1}>
               <Grid.Column>
-                {this.renderReserve(SideType.Defender)}
+                {this.renderReserve(SideType.B)}
               </Grid.Column>
             </Grid.Row>
             <Grid.Row columns={1}>
               <Grid.Column>
-                {this.renderDefeatedArmy(SideType.Attacker)}
+                {this.renderDefeatedArmy(SideType.A)}
               </Grid.Column>
             </Grid.Row>
             <Grid.Row columns={1}>
               <Grid.Column>
-                {this.renderDefeatedArmy(SideType.Defender)}
+                {this.renderDefeatedArmy(SideType.B)}
               </Grid.Column>
             </Grid.Row>
           </Grid>
@@ -226,11 +226,11 @@ class Battle extends Component<IProps> {
     const combatWidth = this.props.settings[Setting.CombatWidth]
     return (
       <TableArmyPart
-        color={side === SideType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
+        color={side === SideType.A ? ATTACKER_COLOR : DEFENDER_COLOR}
         side={side}
         onClick={this.openCohortModal}
         rowWidth={Math.max(30, combatWidth)}
-        reverse={side === SideType.Attacker}
+        reverse={side === SideType.A}
         part={ArmyPart.Frontline}
         markDefeated
       />
@@ -240,7 +240,7 @@ class Battle extends Component<IProps> {
   renderReserve = (side: SideType) => {
     return (
       <TableArmyPart
-        color={side === SideType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
+        color={side === SideType.A ? ATTACKER_COLOR : DEFENDER_COLOR}
         side={side}
         onClick={this.openCohortModal}
         rowWidth={30}
@@ -254,7 +254,7 @@ class Battle extends Component<IProps> {
   renderDefeatedArmy = (side: SideType) => {
     return (
       <TableArmyPart
-        color={side === SideType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
+        color={side === SideType.A ? ATTACKER_COLOR : DEFENDER_COLOR}
         side={side}
         onClick={this.openCohortModal}
         rowWidth={30}
@@ -291,8 +291,8 @@ const mapStateToProps = (state: AppState) => {
   const day = getDay(battle)
   const round = getRound(battle)
   return {
-    participantA: getFirstParticipant(state, SideType.Attacker),
-    participantD: getFirstParticipant(state, SideType.Defender),
+    participantA: getFirstParticipant(state, SideType.A),
+    participantD: getFirstParticipant(state, SideType.B),
     isUndoAvailable: day > 0,
     round,
     day,

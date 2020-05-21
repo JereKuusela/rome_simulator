@@ -113,3 +113,4 @@ export const getLeadingGeneral = (side: Side): General | null => side.generals.l
 export const getDay = (battle: Battle) => battle.days.length - 1
 export const getStartingPhaseNumber = (battle: Battle) => battle.days.length ? battle.days[battle.days.length - 1].startingPhaseNumber : 0
 export const getRound = (battle: Battle) => battle.days.length ? battle.days[battle.days.length - 1].round : -1
+export const getAttacker = (battle: Battle) => battle.days.length ? battle.days[battle.days.length - 1].attacker : SideType.A

@@ -129,12 +129,12 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     it('reduced combat width', () => {
       const width = 5
       getSettingsTest(state)[Setting.CombatWidth] = width
-      setFlankSize(getArmyTest(state, SideType.Attacker), 2)
-      setFlankSize(getArmyTest(state, SideType.Defender), 0)
+      setFlankSize(getArmyTest(state, SideType.A), 2)
+      setFlankSize(getArmyTest(state, SideType.B), 0)
 
-      addToReserveTest(state, SideType.Attacker, [UnitType.HorseArchers, UnitType.HorseArchers, UnitType.HorseArchers].map(type => getUnit(type)))
-      addToReserveTest(state, SideType.Attacker, Array(width).fill(UnitType.Archers).map(type => getUnit(type)))
-      addToReserveTest(state, SideType.Defender, Array(width).fill(UnitType.Archers).map(type => getUnit(type)))
+      addToReserveTest(state, SideType.A, [UnitType.HorseArchers, UnitType.HorseArchers, UnitType.HorseArchers].map(type => getUnit(type)))
+      addToReserveTest(state, SideType.A, Array(width).fill(UnitType.Archers).map(type => getUnit(type)))
+      addToReserveTest(state, SideType.B, Array(width).fill(UnitType.Archers).map(type => getUnit(type)))
 
       const attacker = {
         front: createExpected(UnitType.Archers, [UnitType.HorseArchers, 3], UnitType.Archers),

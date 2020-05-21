@@ -172,21 +172,21 @@ const removeDefeatedFromNewArmies = (environment: Environment, side: Side, armie
   })
 }
 
-export const deploy = (environment: Environment, sideA: Side, sideD: Side) => {
+export const deploy = (environment: Environment, sideA: Side, sideB: Side) => {
   const { day, settings, round } = environment
-  if (round === 0 && (!canFight(day, sideA) || !canFight(day, sideD)))
+  if (round === 0 && (!canFight(day, sideA) || !canFight(day, sideB)))
     return
   const armiesA = getDeployingArmies(day, sideA)
-  const armiesD = getDeployingArmies(day, sideD)
+  const armiesB = getDeployingArmies(day, sideB)
   removeDefeatedFromNewArmies(environment, sideA, armiesA)
-  removeDefeatedFromNewArmies(environment, sideD, armiesD)
-  const sizeD = settings[Setting.DynamicFlanking] ? countCohorts(sideD) + countReserve(armiesD) : undefined
+  removeDefeatedFromNewArmies(environment, sideB, armiesB)
   const sizeA = settings[Setting.DynamicFlanking] ? countCohorts(sideA) + countReserve(armiesA) : undefined
+  const sizeB = settings[Setting.DynamicFlanking] ? countCohorts(sideB) + countReserve(armiesB) : undefined
   if (armiesA.length) {
-    deploySub(sideA, armiesA, settings, sizeD)
+    deploySub(sideA, armiesA, settings, sizeB)
   }
-  if (armiesD.length) {
-    deploySub(sideD, armiesD, settings, sizeA)
+  if (armiesB.length) {
+    deploySub(sideB, armiesB, settings, sizeA)
   }
 }
 

@@ -51,7 +51,8 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     const setRound = (round: number) => {
       getBattleTest(state).days.push({
         round: round - 1,
-        startingPhaseNumber: 1
+        startingPhaseNumber: 1,
+        attacker: SideType.A
       })
     }
 
@@ -100,68 +101,68 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       expect(defender.cohorts.frontline[0][15]![UnitAttribute.Morale]).toBeCloseTo(moraleD)
     }
     it('attacker stack wipes if it can\'t deploy', () => {
-      addToReserveTest(state, SideType.Attacker, [lowMorale, lowMorale])
-      addToReserveTest(state, SideType.Defender, [normal, normal])
+      addToReserveTest(state, SideType.A, [lowMorale, lowMorale])
+      addToReserveTest(state, SideType.B, [normal, normal])
       testAttackerDefeated(NO_STRENGTH, FULL_STRENGTH, NO_MORALE, FULL_MORALE)
     })
     it('defender stack wipes when no cohorts deploy', () => {
-      addToReserveTest(state, SideType.Attacker, [lowMorale, lowMorale])
-      addToReserveTest(state, SideType.Defender, [lowMorale, lowMorale])
+      addToReserveTest(state, SideType.A, [lowMorale, lowMorale])
+      addToReserveTest(state, SideType.B, [lowMorale, lowMorale])
       testBothDefeated(FULL_STRENGTH, NO_STRENGTH, LOW_MORALE, NO_MORALE)
     })
     it('attacker stack wipes when defender can hard wipe', () => {
-      addToReserveTest(state, SideType.Attacker, [lowStrength, lowStrength])
-      addToReserveTest(state, SideType.Defender, [normal, normal])
+      addToReserveTest(state, SideType.A, [lowStrength, lowStrength])
+      addToReserveTest(state, SideType.B, [normal, normal])
       testAttackerDefeated(NO_STRENGTH, FULL_STRENGTH, NO_MORALE, FULL_MORALE)
     })
     it('defender stack wipes when attacker can hard wipe but not deploy', () => {
-      addToReserveTest(state, SideType.Attacker, [lowMorale, lowMorale])
-      addToReserveTest(state, SideType.Defender, [lowStrength, lowStrength])
+      addToReserveTest(state, SideType.A, [lowMorale, lowMorale])
+      addToReserveTest(state, SideType.B, [lowStrength, lowStrength])
       testBothDefeated(FULL_STRENGTH, NO_STRENGTH, LOW_MORALE, NO_MORALE)
     })
     it('attacker stack wipes when defender can hard wipe at end', () => {
-      addToReserveTest(state, SideType.Attacker, [hardLimit, hardLimit])
-      addToReserveTest(state, SideType.Defender, [normal, normal])
+      addToReserveTest(state, SideType.A, [hardLimit, hardLimit])
+      addToReserveTest(state, SideType.B, [normal, normal])
       setRound(getSettingsTest(state)[Setting.StackwipeRounds])
       testAttackerDefeated(NO_STRENGTH, 0.99712, NO_MORALE, 2.9972)
     })
     it('defender stack wipes when attacker can hard wipe at end', () => {
-      addToReserveTest(state, SideType.Attacker, [normal, normal])
-      addToReserveTest(state, SideType.Defender, [hardLimit, hardLimit])
+      addToReserveTest(state, SideType.A, [normal, normal])
+      addToReserveTest(state, SideType.B, [hardLimit, hardLimit])
       setRound(getSettingsTest(state)[Setting.StackwipeRounds])
       testDefenderDefeated(0.99712, NO_STRENGTH, 2.9972, NO_MORALE)
     })
     it('attacker survives during battle even when defender could hard wipe', () => {
-      addToReserveTest(state, SideType.Attacker, [hardStrengthLimit, hardStrengthLimit])
-      addToReserveTest(state, SideType.Defender, [normal, normal])
+      addToReserveTest(state, SideType.A, [hardStrengthLimit, hardStrengthLimit])
+      addToReserveTest(state, SideType.B, [normal, normal])
       testNoneDefeated(0.07, 0.99712, 2.676, 2.97, 1)
     })
     it('defender survives during battle even when attacker could hard wipe', () => {
-      addToReserveTest(state, SideType.Attacker, [normal, normal])
-      addToReserveTest(state, SideType.Defender, [hardStrengthLimit, hardStrengthLimit])
+      addToReserveTest(state, SideType.A, [normal, normal])
+      addToReserveTest(state, SideType.B, [hardStrengthLimit, hardStrengthLimit])
       testNoneDefeated(0.99712, 0.07, 2.97, 2.676, 1)
     })
     it('attacker survives when defender can soft wipe after retreat limit', () => {
-      addToReserveTest(state, SideType.Attacker, [softLimit, softLimit])
-      addToReserveTest(state, SideType.Defender, [normal, normal])
+      addToReserveTest(state, SideType.A, [softLimit, softLimit])
+      addToReserveTest(state, SideType.B, [normal, normal])
       setRound(getSettingsTest(state)[Setting.StackwipeRounds])
       testAttackerDefeated(0.481, 0.986, 0.04, 2.99)
     })
     it('defender survives when attacker can soft wipe after retreat limit', () => {
-      addToReserveTest(state, SideType.Attacker, [normal, normal])
-      addToReserveTest(state, SideType.Defender, [softLimit, softLimit])
+      addToReserveTest(state, SideType.A, [normal, normal])
+      addToReserveTest(state, SideType.B, [softLimit, softLimit])
       setRound(getSettingsTest(state)[Setting.StackwipeRounds])
       testDefenderDefeated(0.986, 0.481, 2.99, 0.04)
     })
     it('attacker stack wipes when defender can soft wipe before retreat limit', () => {
-      addToReserveTest(state, SideType.Attacker, [softLimit, softLimit])
-      addToReserveTest(state, SideType.Defender, [normal, normal])
+      addToReserveTest(state, SideType.A, [softLimit, softLimit])
+      addToReserveTest(state, SideType.B, [normal, normal])
       setRound(getSettingsTest(state)[Setting.StackwipeRounds] - 1)
       testAttackerDefeated(NO_STRENGTH, 0.986, NO_MORALE, 2.99)
     })
     it('defender stack wipes when attacker can soft wipe before retreat limit', () => {
-      addToReserveTest(state, SideType.Attacker, [normal, normal])
-      addToReserveTest(state, SideType.Defender, [softLimit, softLimit])
+      addToReserveTest(state, SideType.A, [normal, normal])
+      addToReserveTest(state, SideType.B, [softLimit, softLimit])
       setRound(getSettingsTest(state)[Setting.StackwipeRounds] - 1)
       testDefenderDefeated(0.986, NO_STRENGTH, 2.99, NO_MORALE)
     })

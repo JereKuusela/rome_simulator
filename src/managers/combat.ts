@@ -1,5 +1,5 @@
 import { AppState, getMode, getCombatSide, getCombatField, convertSides } from 'state'
-import { doBattle, removeDefeated, getCombatPhaseNumber } from 'combat'
+import { doCombatRound, removeDefeated, getCombatPhaseNumber } from 'combat'
 import { Battle, SideType, Setting, Cohorts, SideData, Side, Environment, Army, Reserve, General } from 'types'
 import { createEntropy, MersenneTwister19937, Random } from 'random-js'
 import { forEach } from 'utils'
@@ -34,11 +34,11 @@ const freeseSize = (side: Side) => {
 // And freezing is needed because of some immer issue. 
 const copy = (side: Side): Side => ({ ...side, generals: copyGenerals(side.generals), cohorts: copyCohorts(side.cohorts), armies: copyArmies(side.armies), deployedArmies: copyArmies(side.deployedArmies), results: { ...side.results } })
 
-const subBattle = (battle: Battle, field: Environment, attacker: Side, defender: Side, steps: number) => {
+const subBattle = (battle: Battle, env: Environment, attacker: Side, defender: Side, steps: number) => {
 
-  const sideA = battle.sides[SideType.Attacker]
-  const sideD = battle.sides[SideType.Defender]
-  const settings = field.settings
+  const sideA = battle.sides[SideType.A]
+  const sideD = battle.sides[SideType.B]
+  const settings = env.settings
   const round = getRound(battle)
   const day = getDay(battle)
   const phaseNumber = getStartingPhaseNumber(battle) + getCombatPhaseNumber(getRound(battle), settings)
@@ -73,15 +73,15 @@ const subBattle = (battle: Battle, field: Environment, attacker: Side, defender:
   if (day === -1) {
     attacker = copy(attacker)
     defender = copy(defender)
-    field.day = 0
-    field.round = round
-    doBattle(field, attacker, defender, true)
+    env.day = 0
+    env.round = round
+    doCombatRound(env, attacker, defender, true)
     battle.fightOver = !attacker.alive || !defender.alive
     freeseSize(attacker)
     freeseSize(defender)
     sideA.days = [attacker]
     sideD.days = [defender]
-    battle.days.push({ round: field.round, startingPhaseNumber: 0 })
+    battle.days.push({ round: env.round, startingPhaseNumber: 0, attacker: env.attacker })
   }
 
   for (let step = 0; step < steps && !battle.fightOver; ++step) {
@@ -89,9 +89,9 @@ const subBattle = (battle: Battle, field: Environment, attacker: Side, defender:
     defender = copy(defender)
     attacker.results.dice = rollDice(sideA) ?? attacker.results.dice
     defender.results.dice = rollDice(sideD) ?? defender.results.dice
-    field.day = getDay(battle) + 1
-    field.round = getRound(battle)
-    doBattle(field, attacker, defender, true)
+    env.day = getDay(battle) + 1
+    env.round = getRound(battle)
+    doCombatRound(env, attacker, defender, true)
 
     battle.fightOver = !attacker.alive || !defender.alive
     if (battle.fightOver) {
@@ -99,7 +99,7 @@ const subBattle = (battle: Battle, field: Environment, attacker: Side, defender:
       removeDefeated(defender.cohorts.frontline)
     }
     let startingPhaseNumber = getStartingPhaseNumber(battle)
-    if (field.round === -1) {
+    if (env.round === -1) {
       startingPhaseNumber += getCombatPhaseNumber(getRound(battle), settings)
     }
 
@@ -107,7 +107,7 @@ const subBattle = (battle: Battle, field: Environment, attacker: Side, defender:
     freeseSize(defender)
     sideA.days.push(attacker)
     sideD.days.push(defender)
-    battle.days.push({ round: field.round, startingPhaseNumber })
+    battle.days.push({ round: env.round, startingPhaseNumber, attacker: env.attacker })
   }
 }
 
@@ -115,7 +115,7 @@ export const battle = (pair: [AppState, AppState], steps: number) => {
   const [state, draft] = pair
   const mode = getMode(state)
   const battle = draft.battle[mode]
-  subBattle(battle, getCombatField(state), getCombatSide(state, SideType.Attacker), getCombatSide(state, SideType.Defender), steps)
+  subBattle(battle, getCombatField(state), getCombatSide(state, SideType.A), getCombatSide(state, SideType.B), steps)
 }
 
 export const refreshBattle = (pair: [AppState, AppState]) => {

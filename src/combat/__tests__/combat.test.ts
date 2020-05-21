@@ -17,8 +17,8 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
 
     it('no modifiers', () => {
       const unit = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.MoraleDamageTaken, -0.25]])
-      addToReserveTest(state, SideType.Attacker, [unit])
-      addToReserveTest(state, SideType.Defender, [unit])
+      addToReserveTest(state, SideType.A, [unit])
+      addToReserveTest(state, SideType.B, [unit])
 
       const rolls = [[0, 2], [3, 2]]
       const { attacker, defender } = initSide(10)
@@ -52,8 +52,8 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       const unitA = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.Discipline, 0.045]])
       const unitD = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.Discipline, 0.14], [TerrainType.Forest, 0.15]])
       selectTerrain(state.battle[Mode.Land], 0, TerrainType.Forest)
-      addToReserveTest(state, SideType.Attacker, [unitA])
-      addToReserveTest(state, SideType.Defender, [unitD])
+      addToReserveTest(state, SideType.A, [unitA])
+      addToReserveTest(state, SideType.B, [unitD])
 
       const rolls = [[4, 4]]
       const { attacker, defender } = initSide(4)
@@ -74,8 +74,8 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     it('reduced morale damage taken, offense/defense and experience', () => {
       const unitA = addValues(infantry, ValuesType.Base, 'Test', [[UnitAttribute.Offense, 0.1], [UnitAttribute.Defense, 0.15], [UnitAttribute.Experience, 0.0001]])
       const unitD = addValues(infantry, ValuesType.Base, 'Test', [[UnitAttribute.Offense, 0.05], [UnitAttribute.Defense, 0.05], [UnitAttribute.Experience, 0.0004]])
-      addToReserveTest(state, SideType.Attacker, [unitA])
-      addToReserveTest(state, SideType.Defender, [unitD])
+      addToReserveTest(state, SideType.A, [unitA])
+      addToReserveTest(state, SideType.B, [unitD])
 
       const rolls = [[6, 1]]
       const { attacker, defender } = initSide(4)
@@ -96,8 +96,8 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     it('versus damage and increased morale damage taken', () => {
       const unitA = addValues(cavalry, ValuesType.Base, 'Test', [])
       const unitD = addValues(archer, ValuesType.Base, 'Test', [])
-      addToReserveTest(state, SideType.Attacker, [unitA])
-      addToReserveTest(state, SideType.Defender, [unitD])
+      addToReserveTest(state, SideType.A, [unitA])
+      addToReserveTest(state, SideType.B, [unitD])
 
       const rolls = [[4, 4]]
       const { attacker, defender } = initSide(3)

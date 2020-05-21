@@ -21,8 +21,8 @@ class TableStats extends Component<IProps> {
   render() {
     return (
       <>
-        {this.renderArmy(SideType.Attacker, this.props.cohortsA)}
-        {this.renderArmy(SideType.Defender, this.props.cohortsD)}
+        {this.renderArmy(SideType.A, this.props.cohortsA)}
+        {this.renderArmy(SideType.B, this.props.cohortsD)}
       </>
     )
   }
@@ -166,8 +166,8 @@ class TableStats extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  cohortsA: getCohorts(state, SideType.Attacker),
-  cohortsD: getCohorts(state, SideType.Defender),
+  cohortsA: getCohorts(state, SideType.A),
+  cohortsD: getCohorts(state, SideType.B),
   mode: getMode(state),
   settings: getSiteSettings(state),
   timestamp: getBattle(state).timestamp

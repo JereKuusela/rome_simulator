@@ -8,7 +8,7 @@ import * as manager from 'managers/army'
 import { getCountryModifiers, getGeneralModifiers, getSecondaryCountryModifiers } from 'managers/modifiers'
 import { convertCountryDefinition, applyCountryModifiers, filterArmies } from 'managers/countries'
 import { applyUnitModifiers } from 'managers/units'
-import { convertArmy, convertSide, getRound } from 'managers/battle'
+import { convertArmy, convertSide, getRound, getAttacker } from 'managers/battle'
 import { iterateCohorts } from 'combat'
 
 /**
@@ -17,8 +17,8 @@ import { iterateCohorts } from 'combat'
  */
 export const getSettings = (state: AppState, mode?: Mode): Settings => {
   const settings = { ...state.settings.combatSettings[mode || state.settings.mode], ...state.settings.siteSettings }
-  const attacker = getCountry(state, getParticipant(state, SideType.Attacker, 0).countryName)
-  const defender = getCountry(state, getParticipant(state, SideType.Defender, 0).countryName)
+  const attacker = getCountry(state, getParticipant(state, SideType.A, 0).countryName)
+  const defender = getCountry(state, getParticipant(state, SideType.B, 0).countryName)
   settings[Setting.CombatWidth] += Math.max(attacker[CountryAttribute.CombatWidth], defender[CountryAttribute.CombatWidth])
   settings[Setting.Precision] = Math.pow(10, settings[Setting.Precision])
   return settings
@@ -125,8 +125,8 @@ const getArmy = (state: AppState, countryName: CountryName, armyName: ArmyName):
 }
 
 export const convertSides = (state: AppState): Side[] => {
-  const sideA = getSide(state, SideType.Attacker)
-  const sideD = getSide(state, SideType.Defender)
+  const sideA = getSide(state, SideType.A)
+  const sideD = getSide(state, SideType.B)
   const armyA = sideA.participants.map(participant => getArmy(state, participant.countryName, participant.armyName))
   const armyD = sideD.participants.map(participant => getArmy(state, participant.countryName, participant.armyName))
   const settings = getSettings(state)
@@ -152,7 +152,8 @@ export const getCombatField = (state: AppState): Environment => {
     day: 0,
     round: getRound(battle),
     terrains,
-    settings
+    settings,
+    attacker: getAttacker(battle)
   }
 }
 

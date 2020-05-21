@@ -40,10 +40,10 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       getSettingsTest(state)[Setting.SupportPhase] = false
 
       state.tactics[TacticType.Bottleneck].baseValues![type] = { 'key': 0.5 }
-      selectTactic(getArmyTest(state, SideType.Attacker), TacticType.Bottleneck)
-      selectTactic(getArmyTest(state, SideType.Defender), TacticType.ShockAction)
-      addToReserveTest(state, SideType.Attacker, [unit])
-      addToReserveTest(state, SideType.Defender, [unit])
+      selectTactic(getArmyTest(state, SideType.A), TacticType.Bottleneck)
+      selectTactic(getArmyTest(state, SideType.B), TacticType.ShockAction)
+      addToReserveTest(state, SideType.A, [unit])
+      addToReserveTest(state, SideType.B, [unit])
     })
 
     const test = (damageMultiplierA: number, damageMultiplierD: number, strengthMultiplier: number, moraleMultiplier: number) => {
@@ -116,7 +116,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       test(0, 0, 0, 0)
     })
     it('backrow damage', () => {
-      addToReserveTest(state, SideType.Attacker, [unit])
+      addToReserveTest(state, SideType.A, [unit])
       test(0.5, 0, 0, 0)
     })
   })

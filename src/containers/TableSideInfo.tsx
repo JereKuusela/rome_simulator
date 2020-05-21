@@ -6,14 +6,13 @@ import { SideType, CountryName, Setting, GeneralAttribute, UnitAttribute, Cultur
 import { AppState, getBattle, getMode, getCombatSide, getSiteSettings, getSide } from 'state'
 import { selectParticipantCountry, selectParticipantArmy, selectCulture, toggleRandomDice, setDice, openModal, setGeneralAttribute } from 'reducers'
 import StyledNumber from 'components/Utils/StyledNumber'
-import { getTerrainPips, calculateGeneralPips, getCombatPhase, getCombatPhaseNumber } from 'combat'
+import { getCombatPhase, getCombatPhaseNumber } from 'combat'
 import { addSign } from 'formatters'
 import IconDice from 'images/chance.png'
 import IconTerrain from 'images/terrain.png'
 import AttributeImage from 'components/Utils/AttributeImage'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 import LabelItem from 'components/Utils/LabelUnit'
-import { getOpponent } from 'army_utils'
 import { getLeadingGeneral, getDay } from 'managers/battle'
 
 type Props = {
@@ -92,9 +91,9 @@ class TableSideInfo extends Component<IProps> {
   }
 
   renderRoll = () => {
-    const { terrains, settings, round, openModal, setDice, side, combat, general, opponent } = this.props
-    const terrainPips = general && opponent ? getTerrainPips(terrains, side.type, general.values, opponent.values) : 0
-    const generalPips = general && opponent ? calculateGeneralPips(general.values, opponent.values, getCombatPhase(round, settings)) : 0
+    const { settings, round, openModal, setDice, side, combat } = this.props
+    const terrainPips = combat.results.terrainPips
+    const generalPips = combat.results.generalPips
     const phase = getCombatPhaseNumber(round, settings)
     const isDiceSet = side.randomizeDice || (side.rolls.length > phase && side.rolls[phase])
     return (
@@ -136,13 +135,10 @@ class TableSideInfo extends Component<IProps> {
 const mapStateToProps = (state: AppState, props: Props) => {
   const battle = getBattle(state)
   const combat = getCombatSide(state, props.type)
-  const opponent = getCombatSide(state, getOpponent(props.type))
   return {
     side: getSide(state, props.type),
     general: getLeadingGeneral(combat),
-    opponent: getLeadingGeneral(opponent),
     round: getDay(battle),
-    terrains: battle.terrains.map(type => state.terrains[type]),
     settings: getSiteSettings(state),
     mode: getMode(state),
     combat

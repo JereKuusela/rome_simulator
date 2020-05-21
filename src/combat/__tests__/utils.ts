@@ -1,7 +1,7 @@
 import { getDefaultTactics, getDefaultTerrains, getDefaultCountryDefinitions, getDefaultBattle, getDefaultSettings } from 'data'
 import { mapRange, toObj, values } from 'utils'
 import { Mode, CountryName, Setting, SideType, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, CombatPhase, UnitPreferences, Cohort, UnitRole, CountryDefinitions, ArmyName, ModeState, SettingsAndOptions, Side, Settings, TacticDefinitions, TerrainDefinitions, CohortData } from 'types'
-import { doBattle, reinforce } from 'combat'
+import { doCombatRound, reinforce } from 'combat'
 import { removeDefeated } from 'combat/combat_utils'
 import { convertSides, getCombatField } from 'state'
 import { addToReserve } from 'managers/army'
@@ -45,7 +45,7 @@ export const initState = (legacyDamage?: boolean): TestState => {
   }
 }
 
-export const getArmyTest = (state: TestState, side: SideType) => side === SideType.Attacker ? state.countries[CountryName.Country1].armies[ArmyName.Army] : state.countries[CountryName.Country2].armies[ArmyName.Army]
+export const getArmyTest = (state: TestState, side: SideType) => side === SideType.A ? state.countries[CountryName.Country1].armies[ArmyName.Army] : state.countries[CountryName.Country2].armies[ArmyName.Army]
 
 export const getSettingsTest = (state: TestState) => state.settings.siteSettings
 
@@ -160,15 +160,15 @@ type Expected = (ExpectedUnits[] | null)
 export const testCombat = (state: TestState, rolls: number[][], attacker: Expected[], defender: Expected[]) => {
   const [sideA, sideD] = convertSides(state as any)
   const environment = getCombatField(state as any)
-  doBattle(environment, sideA, sideD, true)
+  doCombatRound(environment, sideA, sideD, true)
   for (let roll = 0; roll < rolls.length; roll++) {
     sideA.results.dice = rolls[roll][0]
     sideD.results.dice = rolls[roll][1]
     const limit = Math.min((roll + 1) * 5, attacker.length)
     for (let round = roll * 5; round < limit; round++) {
-      doBattle(environment, sideA, sideD, true)
-      verifySide(round, SideType.Attacker, sideA.cohorts.frontline[0], attacker[round])
-      verifySide(round, SideType.Defender, sideD.cohorts.frontline[0], defender[round])
+      doCombatRound(environment, sideA, sideD, true)
+      verifySide(round, SideType.A, sideA.cohorts.frontline[0], attacker[round])
+      verifySide(round, SideType.B, sideD.cohorts.frontline[0], defender[round])
     }
   }
   return [sideA, sideD]
@@ -176,30 +176,30 @@ export const testCombat = (state: TestState, rolls: number[][], attacker: Expect
 export const testDeployment = (state: TestState, expectedA?: ExpectedTypes, expectedD?: ExpectedTypes) => {
   const [sideA, sideD] = convertSides(state as any)
   const environment = getCombatField(state as any)
-  doBattle(environment, sideA, sideD, true)
+  doCombatRound(environment, sideA, sideD, true)
   if (expectedA)
-    verifyDeployOrReinforce(environment.settings, SideType.Attacker, sideA, expectedA)
+    verifyDeployOrReinforce(environment.settings, SideType.A, sideA, expectedA)
   if (expectedD)
-    verifyDeployOrReinforce(environment.settings, SideType.Defender, sideD, expectedD)
+    verifyDeployOrReinforce(environment.settings, SideType.B, sideD, expectedD)
   return [sideA, sideD]
 }
 
 export const testReinforcement = (roundsToSkip: number, state: TestState, expectedA?: ExpectedTypes, expectedD?: ExpectedTypes) => {
   const [sideA, sideD] = convertSides(state as any)
   const environment = getCombatField(state as any)
-  doBattle(environment, sideA, sideD, true)
+  doCombatRound(environment, sideA, sideD, true)
   sideA.results.dice = 2
   sideD.results.dice = 2
   for (let round = 0; round < roundsToSkip; round++)
-    doBattle(environment, sideA, sideD, true)
+    doCombatRound(environment, sideA, sideD, true)
   removeDefeated(sideD.cohorts.frontline)
   removeDefeated(sideD.cohorts.frontline)
   reinforce(environment, sideA)
   reinforce(environment, sideD)
   if (expectedA)
-    verifyDeployOrReinforce(environment.settings, SideType.Attacker, sideA, expectedA)
+    verifyDeployOrReinforce(environment.settings, SideType.A, sideA, expectedA)
   if (expectedD)
-    verifyDeployOrReinforce(environment.settings, SideType.Defender, sideD, expectedD)
+    verifyDeployOrReinforce(environment.settings, SideType.B, sideD, expectedD)
   return [sideA, sideD]
 }
 

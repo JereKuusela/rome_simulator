@@ -1,5 +1,5 @@
 
-import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, Cohorts, Cohort, Frontline, Defeated, Side, Terrain, Environment, TacticCalc } from 'types'
+import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, Cohorts, Cohort, Frontline, Defeated, Side, Environment, TacticCalc } from 'types'
 import { noZero } from 'utils'
 import { calculateValue } from 'definition_values'
 import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, reserveSize, reinforce, calculateGeneralPips, getTerrainPips, checkStackWipe, defeatCohort, isAlive } from 'combat'
@@ -9,11 +9,14 @@ import { getLeadingGeneral } from 'managers/battle'
 /**
  * Makes given armies attach each other.
  */
-export const doBattle = (env: Environment, a: Side, d: Side, markDefeated: boolean) => {
+export const doCombatRound = (env: Environment, sideA: Side, sideB: Side, markDefeated: boolean) => {
   env.round++
   const { round } = env
   const settings = env.settings
   const phase = getCombatPhase(env.round, settings)
+  // Defender advantage requires detecting which one is the defender.
+  const a = sideA.type === env.attacker ? sideA : sideB
+  const d = sideA.type === env.attacker ? sideB : sideA
   if (markDefeated) {
     removeDefeated(a.cohorts.frontline)
     removeDefeated(d.cohorts.frontline)
@@ -42,14 +45,14 @@ export const doBattle = (env: Environment, a: Side, d: Side, markDefeated: boole
     const tacticStrengthDamageMultiplier = generalA && generalD && settings[Setting.Tactics] ? 1.0 + calculateValue(generalA.tactic, TacticCalc.Casualties) + calculateValue(generalD.tactic, TacticCalc.Casualties) : 1.0
     a.results.dailyMultiplier = dailyMultiplier
     d.results.dailyMultiplier = dailyMultiplier
-    attack(a, d, dailyMultiplier, tacticStrengthDamageMultiplier, env.terrains, phase, settings)
-    attack(d, a, dailyMultiplier, tacticStrengthDamageMultiplier, env.terrains, phase, settings)
+    attack(env, a, d, dailyMultiplier, tacticStrengthDamageMultiplier, phase)
+    attack(env, d, a, dailyMultiplier, tacticStrengthDamageMultiplier, phase)
 
     applyLosses(a.cohorts.frontline)
     applyLosses(d.cohorts.frontline)
   }
   a.alive = moveDefeated(env, a.cohorts.frontline, a.cohorts.defeated, markDefeated) || reserveSize(a.cohorts.reserve) > 0
-  d.alive = moveDefeated(env, d.cohorts.frontline, d.cohorts.defeated, markDefeated) || reserveSize(d.cohorts.reserve) > 0
+  d.alive = moveDefeated(env, a.cohorts.frontline, d.cohorts.defeated, markDefeated) || reserveSize(d.cohorts.reserve) > 0
 
   const defenderWiped = checkStackWipe(env, d, a.cohorts)
   if (!defenderWiped)
@@ -57,13 +60,15 @@ export const doBattle = (env: Environment, a: Side, d: Side, markDefeated: boole
   if (!a.alive) {
     a.deployedArmies = []
     a.generals = []
+    env.round = -1
+    env.attacker = a.type
   }
   if (!d.alive) {
     d.deployedArmies = []
     d.generals = []
-  }
-  if (!a.alive || !d.alive)
     env.round = -1
+    env.attacker = d.type
+  }
   // Check if a new battle can started.
   a.alive = a.alive || a.armies.length > 0
   d.alive = d.alive || d.armies.length > 0
@@ -225,13 +230,14 @@ const moveDefeated = (environment: Environment, frontline: Frontline, defeated: 
   return alive
 }
 
-const attack = (source: Side, target: Side, dailyMultiplier: number, tacticStrengthDamageMultiplier: number, terrains: Terrain[], phase: CombatPhase, settings: Settings) => {
+const attack = (environment: Environment, source: Side, target: Side, dailyMultiplier: number, tacticStrengthDamageMultiplier: number, phase: CombatPhase) => {
+  const { settings, terrains, attacker } = environment
   // Tactic bonus changes dynamically when units lose strength so it can't be precalculated.
   // If this is a problem a fast mode can be implemeted where to bonus is only calculated once.
   const generalS = getLeadingGeneral(source)
   const generalT = getLeadingGeneral(target)
   const generalPips = generalS && generalT ? calculateGeneralPips(generalS.values, generalT.values, phase) : 0
-  const terrainPips = generalS && generalT ? getTerrainPips(terrains, source.type, generalS.values, generalT.values) : 0
+  const terrainPips = generalS && generalT ? getTerrainPips(terrains, source.type === attacker, generalS.values, generalT.values) : 0
 
   source.results.generalPips = generalPips
   source.results.terrainPips = terrainPips
