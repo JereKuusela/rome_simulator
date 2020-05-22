@@ -140,7 +140,8 @@ const convertSidesSub = (state: AppState, side: SideData, armyDefinitions: ArmyD
   const terrains = getSelectedTerrains(state)
   const enemyTypes = uniq(flatten(enemyDefinitions.map(army => army.reserve.map(unit => unit.type))))
   const armies = side.participants.map((participant, index) => convertArmy(index, participant, armyDefinitions[index], enemyTypes, terrains, settings))
-  armies.sort((a, b) => b.arrival - a.arrival)
+  // Ascending + reverse ensures that smaller index gets at end.
+  armies.sort((a, b) => a.arrival - b.arrival).reverse()
   return convertSide(side, armies, settings)
 }
 

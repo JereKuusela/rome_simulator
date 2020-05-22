@@ -11,6 +11,8 @@ import supportOnly from './input/deployment/support_only.txt'
 import flankOutnumbered from './input/deployment/flank_outnumbered.txt'
 import unitPreferences from './input/deployment/unit_preferences.txt'
 import unitPreferencesOrder from './input/deployment/unit_preferences_order.txt'
+import multiArmy from './input/deployment/multi_army.txt'
+import multiArmyPooling from './input/deployment/multi_army_pooling.txt'
 import { setFlankSize } from 'managers/army'
 
 if (process.env.REACT_APP_GAME !== 'euiv') {
@@ -144,6 +146,24 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
         front: createExpected([UnitType.Archers, 5])
       }
       testDeployment(state, attacker, defender)
+    })
+    it('multiple armies with different preferences', () => {
+      loadInput(multiArmy, state)
+      const expected = {
+        front: createExpected([UnitType.Archers, 10], [UnitType.HeavyInfantry, 10], [UnitType.HorseArchers, 5], [UnitType.HeavyInfantry, 1], [UnitType.HorseArchers, 4]),
+        reserveFront: createExpected([UnitType.HeavyInfantry, 4]),
+        reserveFlank: createExpected([UnitType.HorseArchers, 1])
+      }
+      testDeployment(state, expected, expected)
+    })
+    it('multiple armies with pooling', () => {
+      loadInput(multiArmyPooling, state)
+      const expected = {
+        front: createExpected([UnitType.Archers, 20], [UnitType.HorseArchers, 10]),
+        reserveFront: createExpected([UnitType.HorseArchers, 30]),
+        reserveFlank: createExpected([UnitType.Archers, 20])
+      }
+      testDeployment(state, expected, expected)
     })
   })
 }

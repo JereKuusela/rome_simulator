@@ -10,6 +10,7 @@ import { AppState, getCohorts, getBattle } from 'state'
 import { getArmyPart } from 'army_utils'
 import { deleteCohort } from 'reducers'
 import { getCohortId } from 'managers/units'
+import { chunk, flatten } from 'lodash'
 
 type Props = {
   side: SideType
@@ -49,28 +50,31 @@ class TableArmyPart extends Component<IProps, IState> {
   render() {
     const { rowWidth, side, part, fullRows, reverse } = this.props
     const { tooltipRow, tooltipColumn, tooltipContext, tooltipIsSupport } = this.state
-    let units = this.props.units
+    let cohorts = this.props.cohorts
     let indexOffset = 0
+    cohorts = flatten(cohorts.map(arr => chunk(arr, rowWidth)))
+    if (cohorts.length === 0)
+      cohorts.push([])
     if (fullRows) {
-      units = units.map(arr => resize(arr, rowWidth, null))
+      cohorts = cohorts.map(arr => resize(arr, rowWidth, null))
 
     } else {
       // For display purposes, smaller combat width turns extra slots grey instead of removing them.
-      const filler = Math.max(0, rowWidth - units[0].length)
+      const filler = Math.max(0, rowWidth - cohorts[0].length)
       const leftFiller = indexOffset = Math.ceil(filler / 2.0)
       const rightFiller = Math.floor(filler / 2.0)
-      units = units.map(row => Array(leftFiller).fill(undefined).concat(row).concat(Array(rightFiller).fill(undefined)))
+      cohorts = cohorts.map(row => Array(leftFiller).fill(undefined).concat(row).concat(Array(rightFiller).fill(undefined)))
     }
     if (reverse)
-      units.reverse()
+      cohorts.reverse()
     return (
       <>
         <CombatTooltip row={tooltipRow} column={tooltipColumn} context={tooltipContext} isSupport={tooltipIsSupport} side={side} part={part} />
         <Table compact celled definition unstackable>
           <Table.Body>
             {
-              units.map((row, rowIndex) => {
-                rowIndex = reverse ? units.length - 1 - rowIndex : rowIndex
+              cohorts.map((row, rowIndex) => {
+                rowIndex = reverse ? cohorts.length - 1 - rowIndex : rowIndex
                 return (
                   < Table.Row key={rowIndex} textAlign='center' >
                     <Table.Cell>
@@ -79,7 +83,10 @@ class TableArmyPart extends Component<IProps, IState> {
                     {
                       row.map((cohort, columnIndex) => {
                         columnIndex -= indexOffset
-                        return this.renderCell(rowIndex, columnIndex, cohort, rowIndex > 0)
+                        if (part === ArmyPart.Frontline)
+                          return this.renderCell(rowIndex, columnIndex, cohort, rowIndex > 0)
+                        else
+                          return this.renderCell(0, rowIndex * rowWidth + columnIndex, cohort, rowIndex > 0)
                       })
                     }
                   </Table.Row>
@@ -188,23 +195,23 @@ type ICohort = {
   strength: number
 } | null
 
-const convertUnits = (units: (Cohort | null)[][]): ICohort[][] => (
-  units.map(row => row.map(unit => unit && {
-    index: unit.properties.index,
-    participantIndex: unit.properties.participantIndex,
-    armyName: unit.properties.armyName,
-    countryName: unit.properties.countryName,
-    isDefeated: unit.state.isDefeated,
-    image: unit.properties.image,
-    morale: unit[UnitAttribute.Morale],
-    maxMorale: unit.properties.maxMorale,
-    strength: unit[UnitAttribute.Strength],
-    maxStrength: unit.properties.maxStrength
+const convertCohorts = (cohorts: (Cohort | null)[][]): ICohort[][] => (
+  cohorts.map(row => row.map(cohort => cohort && {
+    index: cohort.properties.index,
+    participantIndex: cohort.properties.participantIndex,
+    armyName: cohort.properties.armyName,
+    countryName: cohort.properties.countryName,
+    isDefeated: cohort.state.isDefeated,
+    image: cohort.properties.image,
+    morale: cohort[UnitAttribute.Morale],
+    maxMorale: cohort.properties.maxMorale,
+    strength: cohort[UnitAttribute.Strength],
+    maxStrength: cohort.properties.maxStrength
   }))
 )
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  units: convertUnits(getArmyPart(getCohorts(state, props.side), props.part)),
+  cohorts: convertCohorts(getArmyPart(getCohorts(state, props.side), props.part)),
   timestamp: getBattle(state).timestamp
 })
 

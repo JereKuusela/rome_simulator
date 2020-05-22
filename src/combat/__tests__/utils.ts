@@ -5,6 +5,8 @@ import { doCombatRound, reinforce } from 'combat'
 import { removeDefeated } from 'combat/combat_utils'
 import { convertSides, getCombatField } from 'state'
 import { addToReserve } from 'managers/army'
+import { flatten } from 'lodash'
+import { createArmy } from 'managers/countries'
 
 /**
  * Everything the combat tests might need to make tests convenient to write.
@@ -45,7 +47,25 @@ export const initState = (legacyDamage?: boolean): TestState => {
   }
 }
 
-export const getArmyTest = (state: TestState, side: SideType) => side === SideType.A ? state.countries[CountryName.Country1].armies[ArmyName.Army] : state.countries[CountryName.Country2].armies[ArmyName.Army]
+const getCountryNameTest = (side: SideType) => side === SideType.A ? CountryName.Country1 : CountryName.Country2
+const getCountryTest = (state: TestState, side: SideType) => state.countries[getCountryNameTest(side)]
+
+export const getArmyTest = (state: TestState, side: SideType, index: number = 0) => getCountryTest(state, side).armies[getArmyNameTest(index)]
+
+const getArmyNameTest = (index: number) => index === 0 ? ArmyName.Army : ('Test' + index) as ArmyName
+
+export const createArmyTest = (state: TestState, side: SideType) => {
+  const country = getCountryTest(state, side)
+  const participants = state.battle[Mode.Land].sides[side].participants
+  const armyName = getArmyNameTest(participants.length)
+  createArmy(country, armyName, Mode.Land)
+  participants.push({
+    armyName,
+    countryName: getCountryNameTest(side),
+    daysUntilBattle: 0
+  })
+}
+
 
 export const getSettingsTest = (state: TestState) => state.settings.siteSettings
 
@@ -125,7 +145,7 @@ describe('utils', () => {
   it('works', () => { })
 })
 
-export const addToReserveTest = (state: TestState, side: SideType, cohorts: CohortData[]) => addToReserve(getArmyTest(state, side), cohorts)
+export const addToReserveTest = (state: TestState, side: SideType, cohorts: CohortData[], index: number = 0) => addToReserve(getArmyTest(state, side, index), cohorts)
 
 /**
  * Returns unit prerefences object with given selections.
@@ -177,6 +197,7 @@ export const testDeployment = (state: TestState, expectedA?: ExpectedTypes, expe
   const [sideA, sideD] = convertSides(state as any)
   const environment = getCombatField(state as any)
   doCombatRound(environment, sideA, sideD, true)
+  //console.log(sideA.cohorts.frontline[0].map(c => c ? c.properties.type : ''))
   if (expectedA)
     verifyDeployOrReinforce(environment.settings, SideType.A, sideA, expectedA)
   if (expectedD)

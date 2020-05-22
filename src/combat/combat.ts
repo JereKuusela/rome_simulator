@@ -52,7 +52,7 @@ export const doCombatRound = (env: Environment, sideA: Side, sideB: Side, markDe
     applyLosses(d.cohorts.frontline)
   }
   a.alive = moveDefeated(env, a.cohorts.frontline, a.cohorts.defeated, markDefeated) || reserveSize(a.cohorts.reserve) > 0
-  d.alive = moveDefeated(env, a.cohorts.frontline, d.cohorts.defeated, markDefeated) || reserveSize(d.cohorts.reserve) > 0
+  d.alive = moveDefeated(env, d.cohorts.frontline, d.cohorts.defeated, markDefeated) || reserveSize(d.cohorts.reserve) > 0
 
   const defenderWiped = checkStackWipe(env, d, a.cohorts)
   if (!defenderWiped)
