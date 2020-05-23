@@ -35,7 +35,6 @@ const freeseSize = (side: Side) => {
 const copy = (side: Side): Side => ({ ...side, generals: copyGenerals(side.generals), cohorts: copyCohorts(side.cohorts), armies: copyArmies(side.armies), deployedArmies: copyArmies(side.deployedArmies), results: { ...side.results } })
 
 const subBattle = (battle: Battle, env: Environment, attacker: Side, defender: Side, steps: number) => {
-
   const sideA = battle.sides[SideType.A]
   const sideD = battle.sides[SideType.B]
   const settings = env.settings
@@ -125,7 +124,7 @@ export const refreshBattle = (pair: [AppState, AppState]) => {
   const steps = getDay(battle)
   battle.days = []
   const [attacker, defender] = convertSides(state)
-  subBattle(battle, getCombatField(state), attacker, defender, steps)
+  subBattle(battle, getCombatField(draft), attacker, defender, steps)
 }
 
 export const undo = (pair: [AppState, AppState], steps: number) => {

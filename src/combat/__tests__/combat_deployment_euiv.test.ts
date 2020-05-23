@@ -9,7 +9,7 @@ if (process.env.REACT_APP_GAME === 'euiv') {
   describe('initial deployment', () => {
 
     let state: TestState
-    beforeEach(() => { state = initState(false) })
+    beforeEach(() => { state = initState() })
 
     const add = (side: SideType, infantry: number, cavalry: number, artillery: number) => {
       addToReserveTest(state, side, mapRange(infantry, () => getUnit(UnitType.Infantry)))

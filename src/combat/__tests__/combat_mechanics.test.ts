@@ -1,4 +1,4 @@
-import { TestState, initState, initSide, testCombat, createCohort, getArmyTest, getSettingsTest, addToReserveTest } from './utils'
+import { TestState, initState, initExpected, testCombat, createCohort, getArmyTest, getSettingsTest, addToReserveTest } from './utils'
 import { UnitType, UnitAttribute, TacticType, CohortDefinition, CombatPhase, Settings, Setting, DisciplineValue, SideType, UnitRole } from 'types'
 import { map } from 'utils'
 import { selectTactic } from 'managers/army'
@@ -48,14 +48,14 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
 
     const test = (damageMultiplierA: number, damageMultiplierD: number, strengthMultiplier: number, moraleMultiplier: number) => {
       const rolls = [[3, 3]]
-      const { attacker, defender } = initSide(1)
+      const { attacker, defender } = initExpected(0)
 
       const strength = 33.6 * (1 + strengthMultiplier)
       const morale = 0.378 * (1 + moraleMultiplier)
       const strengthA = Math.floor(1000 - strength * (1 + damageMultiplierD))
       const strengthD = Math.floor(1000 - strength * (1 + damageMultiplierA))
-      const moraleA = (3.0 - morale * (1 + damageMultiplierD)) / 2
-      const moraleD = (3.0 - morale * (1 + damageMultiplierA)) / 2
+      const moraleA = 3.0 - morale * (1 + damageMultiplierD)
+      const moraleD = 3.0 - morale * (1 + damageMultiplierA)
 
       attacker[0][15] = [unit.type, strengthA, moraleA]
       defender[0][15] = [unit.type, strengthD, moraleD]

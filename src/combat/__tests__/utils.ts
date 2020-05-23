@@ -32,15 +32,10 @@ export interface ExpectedTypes {
  * Returns initial state for a test.
  * @param legacyDamage Older versions of Imperator had lower damage. This option should be removed once old tests are scaled properly.
  */
-export const initState = (legacyDamage?: boolean): TestState => {
-  const settings = getDefaultSettings()
-  if (legacyDamage) {
-    settings.combatSettings[Mode.Land][Setting.MoraleLostMultiplier] = settings.combatSettings[Mode.Land][Setting.MoraleLostMultiplier] * 0.02 / 0.024
-    settings.combatSettings[Mode.Land][Setting.StrengthLostMultiplier] = settings.combatSettings[Mode.Land][Setting.StrengthLostMultiplier] * 0.02 / 0.024
-  }
+export const initState = (): TestState => {
   return {
     battle: getDefaultBattle(1),
-    settings,
+    settings: getDefaultSettings(),
     countries: getDefaultCountryDefinitions(),
     terrains: getDefaultTerrains(),
     tactics: getDefaultTactics()
@@ -98,10 +93,10 @@ const verifyFast = (identifier: string | number, side: SideType, index: number, 
   }
   const unitMorale = unit[UnitAttribute.Morale]
   try {
-    expect(Math.abs(unitMorale - 2 * morale)).toBeLessThan(0.002)
+    expect(Math.abs(unitMorale - morale)).toBeLessThan(0.002)
   }
   catch (e) {
-    throw new Error(errorPrefix(identifier, side, index) + 'Morale ' + unitMorale + ' should be ' + 2 * morale)
+    throw new Error(errorPrefix(identifier, side, index) + 'Morale ' + unitMorale + ' should be ' + morale)
   }
 }
 
@@ -279,9 +274,13 @@ const verifySide = (round: number, side: SideType, frontline: (Cohort | null)[],
  * Inits expected units with empty values.
  * @param rounds Amount of rounds to init.
  */
-export const initSide = (rounds: number) => ({
-  attacker: mapRange(rounds, initFrontline), defender: mapRange(rounds, initFrontline)
-})
+export const initExpected = (...rounds: number[]) => {
+  const expected = () => mapRange(rounds[rounds.length - 1] + 1, round => rounds.includes(round) ? initFrontline() : null as any)
+  return {
+    attacker: expected(),
+    defender: expected()
+  }
+}
 
 /**
  * Returns empty values for one round.

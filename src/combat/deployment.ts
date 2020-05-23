@@ -231,7 +231,7 @@ const deploySub = (side: Side, deploying: Army[], settings: Settings, enemyArmyS
     pool.push(...army.reserve.front)
     pool.push(...army.reserve.support)
   })
-  side.generals.sort((a, b) => b.priority - a.priority)
+  side.generals.sort((a, b) => a.priority - b.priority).reverse()
   pool.push(...side.cohorts.reserve.flank)
   pool.push(...side.cohorts.reserve.front)
   pool.push(...side.cohorts.reserve.support)

@@ -1,5 +1,5 @@
 import { addValues } from 'definition_values'
-import { getUnit, TestState, initState, initSide, testCombat, addToReserveTest } from './utils'
+import { getUnit, TestState, initState, initExpected, testCombat, addToReserveTest } from './utils'
 import { UnitType, UnitAttribute, TerrainType, ValuesType, SideType, Mode } from 'types'
 import { addToReserve } from 'managers/army'
 import { selectTerrain } from 'managers/battle'
@@ -13,7 +13,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     const cavalry = addValues(getUnit(UnitType.LightCavalry), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.2]])
 
     let state: TestState
-    beforeEach(() => state = initState(true))
+    beforeEach(() => state = initState())
 
     it('no modifiers', () => {
       const unit = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.MoraleDamageTaken, -0.25]])
@@ -21,29 +21,15 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       addToReserveTest(state, SideType.B, [unit])
 
       const rolls = [[0, 2], [3, 2]]
-      const { attacker, defender } = initSide(10)
+      const { attacker, defender } = initExpected(0, 5, 9)
 
-      attacker[0][15] = [unit.type, 976, 1.0920]
-      attacker[1][15] = [unit.type, 952, 0.9921]
-      attacker[2][15] = [unit.type, 929, 0.8993]
-      attacker[3][15] = [unit.type, 906, 0.8129]
-      attacker[4][15] = [unit.type, 883, 0.7321]
-      attacker[5][15] = [unit.type, 861, 0.6562]
-      attacker[6][15] = [unit.type, 840, 0.5878]
-      attacker[7][15] = [unit.type, 819, 0.5260]
-      attacker[8][15] = [unit.type, 798, 0.4697]
-      attacker[9][15] = [unit.type, 778, 0.4184]
+      attacker[0][15] = [unit.type, 971, 2.1408]
+      attacker[5][15] = [unit.type, 835, 1.1355]
+      attacker[9][15] = [unit.type, 738, 0.6123]
 
-      defender[0][15] = [unit.type, 984, 1.1280]
-      defender[1][15] = [unit.type, 968, 1.0640]
-      defender[2][15] = [unit.type, 953, 1.0073]
-      defender[3][15] = [unit.type, 938, 0.9572]
-      defender[4][15] = [unit.type, 923, 0.9130]
-      defender[5][15] = [unit.type, 899, 0.8450]
-      defender[6][15] = [unit.type, 874, 0.7857]
-      defender[7][15] = [unit.type, 851, 0.7338]
-      defender[8][15] = [unit.type, 828, 0.6886]
-      defender[9][15] = [unit.type, 806, 0.6492]
+      defender[0][15] = [unit.type, 980, 2.2272]
+      defender[5][15] = [unit.type, 880, 1.5998]
+      defender[9][15] = [unit.type, 773, 1.2266]
 
       testCombat(state, rolls, attacker, defender)
     })
@@ -56,17 +42,13 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       addToReserveTest(state, SideType.B, [unitD])
 
       const rolls = [[4, 4]]
-      const { attacker, defender } = initSide(4)
+      const { attacker, defender } = initExpected(0, 3)
 
-      attacker[0][15] = [unitA.type, 958, 0.9644]
-      attacker[1][15] = [unitA.type, 917, 0.7668]
-      attacker[2][15] = [unitA.type, 877, 0.5984]
-      attacker[3][15] = [unitA.type, 839, 0.4521]
+      attacker[0][15] = [unitA.type, 949, 1.8337]
+      attacker[3][15] = [unitA.type, 808, 0.6778]
 
-      defender[0][15] = [unitD.type, 970, 1.0353]
-      defender[1][15] = [unitD.type, 942, 0.9086]
-      defender[2][15] = [unitD.type, 915, 0.8121]
-      defender[3][15] = [unitD.type, 890, 0.7401]
+      defender[0][15] = [unitD.type, 964, 2.0050]
+      defender[3][15] = [unitD.type, 869, 1.3737]
 
       testCombat(state, rolls, attacker, defender)
     })
@@ -78,17 +60,13 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       addToReserveTest(state, SideType.B, [unitD])
 
       const rolls = [[6, 1]]
-      const { attacker, defender } = initSide(4)
+      const { attacker, defender } = initExpected(1, 3)
 
-      attacker[0] = null as any
-      attacker[1][15] = [unitA.type, 964, 1.0199]
-      attacker[2][15] = [unitA.type, 948, 0.9796]
-      attacker[3][15] = [unitA.type, 932, 0.9462]
+      attacker[1][15] = [unitA.type, 957, 2.0019]
+      attacker[3][15] = [unitA.type, 920, 1.8416]
 
-      defender[0] = null as any
-      defender[1][15] = [unitD.type, 916, 0.8684]
-      defender[2][15] = [unitD.type, 876, 0.7521]
-      defender[3][15] = [unitD.type, 836, 0.6424]
+      defender[1][15] = [unitD.type, 900, 1.6380]
+      defender[3][15] = [unitD.type, 804, 1.1119]
 
       testCombat(state, rolls, attacker, defender)
     })
@@ -100,15 +78,13 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       addToReserveTest(state, SideType.B, [unitD])
 
       const rolls = [[4, 4]]
-      const { attacker, defender } = initSide(3)
+      const { attacker, defender } = initExpected(0, 2)
 
-      attacker[0][15] = [unitA.type, 971, 1.0704]
-      attacker[1][15] = [unitA.type, 943, 0.9693]
-      attacker[2][15] = [unitA.type, 917, 0.8917]
+      attacker[0][15] = [unitA.type, 965, 2.0890]
+      attacker[2][15] = [unitA.type, 901, 1.6944]
 
-      defender[0][15] = [unitD.type, 960, 0.9750]
-      defender[1][15] = [unitD.type, 921, 0.7800]
-      defender[2][15] = [unitD.type, 883, 0.6086]
+      defender[0][15] = [unitD.type, 952, 1.8600]
+      defender[2][15] = [unitD.type, 860, 1.0161]
 
       testCombat(state, rolls, attacker, defender)
     })

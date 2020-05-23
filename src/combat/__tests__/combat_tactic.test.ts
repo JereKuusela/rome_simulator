@@ -1,5 +1,5 @@
 import { addValues } from 'definition_values'
-import { getUnit, TestState, initState, initSide, testCombat, getArmyTest } from './utils'
+import { getUnit, TestState, initState, initExpected, testCombat, getArmyTest } from './utils'
 import { UnitType, UnitAttribute, TacticType, ValuesType, SideType } from 'types'
 import { selectTactic, addToReserve } from 'managers/army'
 
@@ -10,7 +10,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     const defeatedHeavyInfantry = addValues(getUnit(UnitType.HeavyInfantry), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -1]])
 
     let state: TestState
-    beforeEach(() => state = initState(true))
+    beforeEach(() => state = initState())
 
     it('increased casualties', () => {
       selectTactic(getArmyTest(state, SideType.A), TacticType.ShockAction)
@@ -19,15 +19,13 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       addToReserve(getArmyTest(state, SideType.B), [archer])
 
       const rolls = [[3, 2]]
-      const { attacker, defender } = initSide(3)
+      const { attacker, defender } = initExpected(0, 2)
 
-      attacker[0][15] = [archer.type, 971, 1.0650]
-      attacker[1][15] = [archer.type, 943, 0.9516]
-      attacker[2][15] = [archer.type, 916, 0.8564]
+      attacker[0][15] = [archer.type, 965, 2.0760]
+      attacker[2][15] = [archer.type, 900, 1.6020]
 
-      defender[0][15] = [archer.type, 966, 1.0425]
-      defender[1][15] = [archer.type, 933, 0.9067]
-      defender[2][15] = [archer.type, 902, 0.7889]
+      defender[0][15] = [archer.type, 959, 2.0220]
+      defender[2][15] = [archer.type, 883, 1.4400]
 
       testCombat(state, rolls, attacker, defender)
     })
@@ -39,15 +37,13 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       addToReserve(getArmyTest(state, SideType.B), [archer])
 
       const rolls = [[3, 2]]
-      const { attacker, defender } = initSide(3)
+      const { attacker, defender } = initExpected(0, 2)
 
-      attacker[0][15] = [archer.type, 979, 1.0650]
-      attacker[1][15] = [archer.type, 959, 0.9505]
-      attacker[2][15] = [archer.type, 940, 0.8534]
+      attacker[0][15] = [archer.type, 975, 2.0760]
+      attacker[2][15] = [archer.type, 928, 1.5939]
 
-      defender[0][15] = [archer.type, 976, 1.0425]
-      defender[1][15] = [archer.type, 952, 0.9055]
-      defender[2][15] = [archer.type, 930, 0.7858]
+      defender[0][15] = [archer.type, 971, 2.0220]
+      defender[2][15] = [archer.type, 916, 1.4316]
 
       testCombat(state, rolls, attacker, defender)
     })
@@ -59,15 +55,13 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       addToReserve(getArmyTest(state, SideType.B), [archer])
 
       const rolls = [[0, 4]]
-      const { attacker, defender } = initSide(3)
+      const { attacker, defender } = initExpected(0, 2)
 
-      attacker[0][15] = [archer.type, 968, 1.0380]
-      attacker[1][15] = [archer.type, 937, 0.8922]
-      attacker[2][15] = [archer.type, 906, 0.7600]
+      attacker[0][15] = [archer.type, 961, 2.0112]
+      attacker[2][15] = [archer.type, 888, 1.3643]
 
-      defender[0][15] = [archer.type, 980, 1.1010]
-      defender[1][15] = [archer.type, 961, 1.0180]
-      defender[2][15] = [archer.type, 943, 0.9491]
+      defender[0][15] = [archer.type, 976, 2.1624]
+      defender[2][15] = [archer.type, 932, 1.8181]
 
       testCombat(state, rolls, attacker, defender)
     })
@@ -79,15 +73,13 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       addToReserve(getArmyTest(state, SideType.B), [archer])
 
       const rolls = [[5, 5]]
-      const { attacker, defender } = initSide(3)
+      const { attacker, defender } = initExpected(0, 2)
 
-      attacker[0][15] = [archer.type, 964, 1.0177]
-      attacker[1][15] = [archer.type, 930, 0.8775]
-      attacker[2][15] = [archer.type, 897, 0.7702]
+      attacker[0][15] = [archer.type, 957, 1.9626]
+      attacker[2][15] = [archer.type, 878, 1.4171]
 
-      defender[0][15] = [archer.type, 954, 0.9671]
-      defender[1][15] = [archer.type, 910, 0.7765]
-      defender[2][15] = [archer.type, 868, 0.6178]
+      defender[0][15] = [archer.type, 945, 1.8411]
+      defender[2][15] = [archer.type, 842, 1.0512]
 
       testCombat(state, rolls, attacker, defender)
     })
