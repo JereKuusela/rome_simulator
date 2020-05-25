@@ -90,8 +90,8 @@ const convertCohort = (settings: SiteSettings, definition: CohortDefinition | nu
       [UnitAttribute.MoraleDepleted, combat.state.moraleDealt],
       [UnitAttribute.StrengthDepleted, combat.state.strengthDealt]
     ]
-    definition = addValues(definition!, ValuesType.Loss, 'Round ' + (round - 1), lossValues)
-    definition = addValues(definition!, ValuesType.Base, 'Round ' + (round - 1), dealtValues)
+    definition = addValues(definition!, ValuesType.Loss, 'Round ' + round, lossValues)
+    definition = addValues(definition!, ValuesType.Base, 'Round ' + round, dealtValues)
 
   })
   return applyDynamicAttributes(definition, settings)

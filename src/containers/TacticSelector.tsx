@@ -7,7 +7,7 @@ import { calculateTactic } from 'combat'
 import { getOpponent } from 'army_utils'
 import { calculateValue } from 'definition_values'
 import DropdownTactic from 'components/Dropdowns/DropdownTactic'
-import { getLeadingGeneral } from 'managers/battle'
+import { getLeadingArmy } from 'managers/battle'
 
 type Props = {
   side: SideType
@@ -42,7 +42,7 @@ const convertTactic = (tactic: TacticDefinition, cohorts: Cohorts, opposingTacti
 const mapStateToProps = (state: AppState, props: Props) => {
   const cohorts = getCohorts(state, props.side)
   const tactic = getSelectedTactic(state, props.side, props.index)
-  const opponent = getLeadingGeneral(getCombatSide(state, getOpponent(props.side)))
+  const opponent = getLeadingArmy(getCombatSide(state, getOpponent(props.side)))
   return {
     tactics: opponent ? getTactics(state).map(tactic => convertTactic(tactic, cohorts, opponent.tactic)) : [],
     tactic: tactic.type,

@@ -1,6 +1,6 @@
 import { AppState, getMode, getCombatSide, getCombatField, convertSides } from 'state'
 import { doCombatRound, removeDefeated, getCombatPhaseNumber } from 'combat'
-import { Battle, SideType, Setting, Cohorts, SideData, Side, Environment, Army, Reserve, General } from 'types'
+import { Battle, SideType, Setting, Cohorts, SideData, Side, Environment, Army, Reserve } from 'types'
 import { createEntropy, MersenneTwister19937, Random } from 'random-js'
 import { forEach } from 'utils'
 import { getDay, getStartingPhaseNumber, getRound } from './battle'
@@ -17,22 +17,18 @@ const copyReserve = (reserve: Reserve): Reserve => ({
   support: reserve.support.map(value => ({ ...value, state: { ...value.state } }))
 })
 const copyArmies = (armies: Army[]): Army[] => (
-  armies.map(army => ({ ...army, reserve: copyReserve(army.reserve), general: { ...army.general } }))
-)
-const copyGenerals = (generals: General[]): General[] => (
-  generals.map(general => ({ ...general }))
+  armies.map(army => ({ ...army, reserve: copyReserve(army.reserve) }))
 )
 
 const freeseSize = (side: Side) => {
   Object.freeze(side.armies)
-  Object.freeze(side.deployedArmies)
   Object.freeze(side.cohorts)
-  Object.freeze(side.generals)
+  Object.freeze(side.deployed)
 }
 
 // Copy is needed because of freezing stuff.
 // And freezing is needed because of some immer issue. 
-const copy = (side: Side): Side => ({ ...side, generals: copyGenerals(side.generals), cohorts: copyCohorts(side.cohorts), armies: copyArmies(side.armies), deployedArmies: copyArmies(side.deployedArmies), results: { ...side.results } })
+const copy = (side: Side): Side => ({ ...side, deployed: copyArmies(side.deployed), cohorts: copyCohorts(side.cohorts), armies: copyArmies(side.armies), results: { ...side.results } })
 
 const subBattle = (battle: Battle, env: Environment, attacker: Side, defender: Side, steps: number) => {
   const sideA = battle.sides[SideType.A]

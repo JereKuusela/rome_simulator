@@ -73,16 +73,11 @@ export type Army = {
   reserve: Reserve
   flankSize: number
   arrival: number
-  strength: number
-  general: General
-}
-
-export type General = {
   unitPreferences: UnitPreferences
   leftFlank: number
   rightFlank: number
   priority: number
   tactic: TacticDefinition
-  arrival: number
-  values: { [key in GeneralValueType]: number }
+  participantIndex: number
+  general: { [key in GeneralValueType]: number }
 }

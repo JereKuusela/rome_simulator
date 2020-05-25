@@ -5,7 +5,6 @@ import { doCombatRound, reinforce } from 'combat'
 import { removeDefeated } from 'combat/combat_utils'
 import { convertSides, getCombatField } from 'state'
 import { addToReserve } from 'managers/army'
-import { flatten } from 'lodash'
 import { createArmy } from 'managers/countries'
 
 /**
@@ -49,7 +48,7 @@ export const getArmyTest = (state: TestState, side: SideType, index: number = 0)
 
 const getArmyNameTest = (index: number) => index === 0 ? ArmyName.Army : ('Test' + index) as ArmyName
 
-export const createArmyTest = (state: TestState, side: SideType) => {
+export const createArmyTest = (state: TestState, side: SideType, daysUntilBattle: number = 0) => {
   const country = getCountryTest(state, side)
   const participants = state.battle[Mode.Land].sides[side].participants
   const armyName = getArmyNameTest(participants.length)
@@ -57,7 +56,7 @@ export const createArmyTest = (state: TestState, side: SideType) => {
   participants.push({
     armyName,
     countryName: getCountryNameTest(side),
-    daysUntilBattle: 0
+    daysUntilBattle
   })
 }
 
@@ -176,14 +175,17 @@ export const testCombat = (state: TestState, rolls: number[][], attacker: Expect
   const [sideA, sideD] = convertSides(state as any)
   const environment = getCombatField(state as any)
   doCombatRound(environment, sideA, sideD, true)
+  verifySide(0, SideType.A, sideA.cohorts.frontline[0], attacker[0])
+  verifySide(0, SideType.B, sideD.cohorts.frontline[0], defender[0])
   for (let roll = 0; roll < rolls.length; roll++) {
     sideA.results.dice = rolls[roll][0]
     sideD.results.dice = rolls[roll][1]
     const limit = Math.min((roll + 1) * 5, attacker.length)
-    for (let round = roll * 5; round < limit; round++) {
+    for (let day = roll * 5; day < limit; day++) {
+      environment.day++
       doCombatRound(environment, sideA, sideD, true)
-      verifySide(round, SideType.A, sideA.cohorts.frontline[0], attacker[round])
-      verifySide(round, SideType.B, sideD.cohorts.frontline[0], defender[round])
+      verifySide(day + 1, SideType.A, sideA.cohorts.frontline[0], attacker[day + 1])
+      verifySide(day + 1, SideType.B, sideD.cohorts.frontline[0], defender[day + 1])
     }
   }
   return [sideA, sideD]

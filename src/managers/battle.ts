@@ -1,6 +1,5 @@
-import { Battle, TerrainType, SideType, CountryName, Terrain, Settings, Setting, Army, UnitType, ArmyName, SideData, Side, ArmyDefinition, UnitAttribute, General, GeneralDefinition, GeneralAttribute, Participant } from 'types'
+import { Battle, TerrainType, SideType, CountryName, Terrain, Settings, Setting, Army, UnitType, ArmyName, SideData, Side, ArmyDefinition, GeneralAttribute, Participant } from 'types'
 import { getCombatUnit, sortReserve } from 'combat'
-import { sum } from 'lodash'
 
 export const selectTerrain = (battle: Battle, index: number, terrain: TerrainType) => {
   battle.terrains[index] = terrain
@@ -68,8 +67,7 @@ export const convertSide = (side: SideData, armies: Army[], settings: Settings):
     },
     flankRatio: 0,
     armies,
-    deployedArmies: [],
-    generals: armies.map(army => army.general).sort((a, b) => b.priority - a.priority),
+    deployed: [],
     type: side.type,
     results: {
       dailyMultiplier: 0,
@@ -90,25 +88,18 @@ export const convertArmy = (participantIndex: number, participant: Participant, 
   return {
     reserve: sorted,
     flankSize: army.flankSize,
-    general: convertGeneral(army, army.general, participant.daysUntilBattle),
     arrival: participant.daysUntilBattle,
-    strength: sum(reserve.map(cohort => cohort[UnitAttribute.Strength]))
-  }
-}
-
-const convertGeneral = (army: ArmyDefinition, general: GeneralDefinition, arrival: number): General => {
-  return {
     leftFlank: army.flankSize,
     rightFlank: army.flankSize,
-    priority: general.values[GeneralAttribute.Martial],
-    tactic: general.tactic,
+    priority: army.general.values[GeneralAttribute.Martial],
+    tactic: army.general.tactic,
     unitPreferences: army.unitPreferences,
-    values: general.values,
-    arrival
+    general: army.general.values,
+    participantIndex
   }
 }
 
-export const getLeadingGeneral = (side: Side): General | null => side.generals.length ? side.generals[0] : null
+export const getLeadingArmy = (side: Side): Army | null => side.deployed.length ? side.deployed[0] : null
 
 export const getDay = (battle: Battle) => battle.days.length - 1
 export const getStartingPhaseNumber = (battle: Battle) => battle.days.length ? battle.days[battle.days.length - 1].startingPhaseNumber : 0

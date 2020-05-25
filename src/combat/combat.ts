@@ -4,7 +4,7 @@ import { noZero } from 'utils'
 import { calculateValue } from 'definition_values'
 import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, reserveSize, reinforce, calculateGeneralPips, getTerrainPips, checkStackWipe, defeatCohort, isAlive } from 'combat'
 import { deploy, undeploy } from './deployment'
-import { getLeadingGeneral } from 'managers/battle'
+import { getLeadingArmy } from 'managers/battle'
 
 /**
  * Makes given armies attach each other.
@@ -21,6 +21,8 @@ export const doCombatRound = (env: Environment, sideA: Side, sideB: Side, markDe
     removeDefeated(a.cohorts.frontline)
     removeDefeated(d.cohorts.frontline)
   }
+  clearState(a.cohorts.frontline)
+  clearState(d.cohorts.frontline)
   if (round === 0) {
     undeploy(a)
     undeploy(d)
@@ -40,8 +42,8 @@ export const doCombatRound = (env: Environment, sideA: Side, sideB: Side, markDe
     a.results.round = env.round
     d.results.round = env.round
     const dailyMultiplier = 1 + getDailyIncrease(env.round, settings)
-    const generalA = getLeadingGeneral(a)
-    const generalD = getLeadingGeneral(d)
+    const generalA = getLeadingArmy(a)
+    const generalD = getLeadingArmy(d)
     const tacticStrengthDamageMultiplier = generalA && generalD && settings[Setting.Tactics] ? 1.0 + calculateValue(generalA.tactic, TacticCalc.Casualties) + calculateValue(generalD.tactic, TacticCalc.Casualties) : 1.0
     a.results.dailyMultiplier = dailyMultiplier
     d.results.dailyMultiplier = dailyMultiplier
@@ -58,16 +60,16 @@ export const doCombatRound = (env: Environment, sideA: Side, sideB: Side, markDe
   if (!defenderWiped)
     checkStackWipe(env, a, d.cohorts)
   if (!a.alive) {
-    a.deployedArmies = []
-    a.generals = []
+    a.deployed = []
     env.round = -1
-    env.attacker = a.type
+    if (d.alive)
+      env.attacker = a.type
   }
   if (!d.alive) {
-    d.deployedArmies = []
-    d.generals = []
+    d.deployed = []
     env.round = -1
-    env.attacker = d.type
+    if (a.alive)
+      env.attacker = d.type
   }
   // Check if a new battle can started.
   a.alive = a.alive || a.armies.length > 0
@@ -75,6 +77,24 @@ export const doCombatRound = (env: Environment, sideA: Side, sideB: Side, markDe
 }
 
 const getBackTarget = (target: Frontline, index: number) => target.length > 1 ? target[1][index] : null
+
+const clearState = (source: Frontline) => {
+  for (let i = 0; i < source.length; i++) {
+    for (let j = 0; j < source[i].length; j++) {
+      const cohort = source[i][j]
+      if (!cohort)
+        continue
+        const state = cohort.state
+        state.damageMultiplier = 0
+        state.moraleDealt = 0
+        state.strengthDealt = 0
+        state.moraleLoss = 0
+        state.strengthLoss = 0
+        state.target = null
+        state.flanking = false
+    }
+  }
+}
 
 /**
  * Selects targets for units.
@@ -85,19 +105,13 @@ const pickTargets = (environment: Environment, source: Frontline, target: Frontl
   const targetLength = target[0].length
   for (let i = 0; i < source.length; i++) {
     for (let j = 0; j < source[i].length; j++) {
-      const unit = source[i][j]
-      if (!unit)
+      const cohort = source[i][j]
+      if (!cohort)
         continue
-      const state = unit.state
-      state.damageMultiplier = 0
-      state.moraleDealt = 0
-      state.strengthDealt = 0
-      state.moraleLoss = settings[Setting.DailyMoraleLoss] * (1 - unit.properties[UnitAttribute.DailyLossResist])
-      state.strengthLoss = 0
-      state.target = null
-      state.flanking = false
+      const state = cohort.state
+      state.moraleLoss = settings[Setting.DailyMoraleLoss] * (1 - cohort.properties[UnitAttribute.DailyLossResist])
       // No need to select targets for units without effect.
-      if (i > 0 && !unit.properties[UnitAttribute.OffensiveSupport])
+      if (i > 0 && !cohort.properties[UnitAttribute.OffensiveSupport])
         continue
 
       // Targets are prioritised based two things.
@@ -113,7 +127,7 @@ const pickTargets = (environment: Environment, source: Frontline, target: Frontl
       }
       // Primary target on front has the highest priority so no need to check flanks.
       if (primaryTarget === null) {
-        const maneuver = Math.floor(unit.properties[UnitAttribute.Maneuver])
+        const maneuver = Math.floor(cohort.properties[UnitAttribute.Maneuver])
         let direction = -1
         let min = Math.max(0, j - maneuver)
         let max = Math.min(targetLength - 1, j + maneuver)
@@ -234,15 +248,15 @@ const attack = (environment: Environment, source: Side, target: Side, dailyMulti
   const { settings, terrains, attacker } = environment
   // Tactic bonus changes dynamically when units lose strength so it can't be precalculated.
   // If this is a problem a fast mode can be implemeted where to bonus is only calculated once.
-  const generalS = getLeadingGeneral(source)
-  const generalT = getLeadingGeneral(target)
-  const generalPips = generalS && generalT ? calculateGeneralPips(generalS.values, generalT.values, phase) : 0
-  const terrainPips = generalS && generalT ? getTerrainPips(terrains, source.type === attacker, generalS.values, generalT.values) : 0
+  const armyS = getLeadingArmy(source)
+  const armyT = getLeadingArmy(target)
+  const generalPips = armyS && armyT ? calculateGeneralPips(armyS.general, armyT.general, phase) : 0
+  const terrainPips = armyS && armyT ? getTerrainPips(terrains, source.type === attacker, armyS.general, armyT.general) : 0
 
   source.results.generalPips = generalPips
   source.results.terrainPips = terrainPips
   source.results.tacticStrengthDamageMultiplier = tacticStrengthDamageMultiplier
-  source.results.tacticBonus = settings[Setting.Tactics] && generalS && generalT ? calculateTactic(source.cohorts, generalS.tactic, generalT.tactic) : 0.0
+  source.results.tacticBonus = settings[Setting.Tactics] && armyS && armyT ? calculateTactic(source.cohorts, armyS.tactic, armyT.tactic) : 0.0
   source.results.flankRatioBonus = calculateFlankRatioPenalty(target.cohorts, target.flankRatio, settings)
   const multiplier = (1 + source.results.tacticBonus) * dailyMultiplier * (1 + source.results.flankRatioBonus)
   attackSub(source.cohorts.frontline, settings[Setting.BasePips] + source.results.dice + generalPips + terrainPips, multiplier, tacticStrengthDamageMultiplier, phase, settings)

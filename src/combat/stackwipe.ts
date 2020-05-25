@@ -22,8 +22,7 @@ const wasDefeatedDuringCurrentBattle = (environment: Environment, cohort: Cohort
 
 export const stackWipe = (environment: Environment, side: Side) => {
   side.alive = false
-  side.generals = []
-  side.deployedArmies = []
+  side.deployed = []
   const { frontline, reserve, defeated } = side.cohorts
 
   for (let i = 0; i < defeated.length; i++) {

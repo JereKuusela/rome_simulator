@@ -13,7 +13,7 @@ import IconTerrain from 'images/terrain.png'
 import AttributeImage from 'components/Utils/AttributeImage'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 import LabelItem from 'components/Utils/LabelUnit'
-import { getLeadingGeneral, getDay } from 'managers/battle'
+import { getLeadingArmy, getDay } from 'managers/battle'
 
 type Props = {
   type: SideType
@@ -61,17 +61,17 @@ class TableSideInfo extends Component<IProps> {
 
 
   renderSide = () => {
-    const { settings, side, general } = this.props
+    const { settings, side, army } = this.props
     return (
       <Table.Row key={side.type}>
         <Table.Cell>
-          {general ? general.values[GeneralAttribute.Martial] : 0}
+          {army ? army.general[GeneralAttribute.Martial] : 0}
           <AttributeImage attribute={GeneralAttribute.Martial} />
         </Table.Cell>
         {
           settings[Setting.Tactics] &&
           <Table.Cell collapsing>
-            {general ? <LabelItem item={general.tactic} /> : null}
+            {army ? <LabelItem item={army.tactic} /> : null}
           </Table.Cell>
         }
         <Table.Cell>
@@ -137,7 +137,7 @@ const mapStateToProps = (state: AppState, props: Props) => {
   const combat = getCombatSide(state, props.type)
   return {
     side: getSide(state, props.type),
-    general: getLeadingGeneral(combat),
+    army: getLeadingArmy(combat),
     round: getDay(battle),
     settings: getSiteSettings(state),
     mode: getMode(state),

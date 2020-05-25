@@ -1,5 +1,5 @@
 import { CountryName, Mode, TerrainType, Terrain, Settings, Cohorts } from 'types'
-import { ArmyName, Army, General } from './armies'
+import { ArmyName, Army } from './armies'
 
 export type Battle = {
   terrains: TerrainType[]
@@ -69,9 +69,8 @@ export type Side = {
   results: SideRoundInfo
   alive: boolean
   armies: Army[]
-  deployedArmies: Army[]
   flankRatio: number
-  generals: General[]
+  deployed: Army[]
   cohorts: Cohorts
   type: SideType
 }

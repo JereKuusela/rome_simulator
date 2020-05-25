@@ -1,7 +1,7 @@
 import { UnitPreferences, UnitAttribute, UnitPreferenceType, UnitRole, Setting, Settings, Reserve, Cohorts, Cohort, Side, Environment, Army } from 'types'
-import { sortBy, remove, clamp, sum } from 'lodash'
+import { sortBy, remove, clamp, sum, flatten } from 'lodash'
 import { nextIndex, reserveSize, defeatCohort, isAlive } from './combat_utils'
-import { getLeadingGeneral } from 'managers/battle'
+import { getLeadingArmy } from 'managers/battle'
 
 const armyFlankCount = (reserve: Reserve) => {
   return reserve.front.filter(cohort => cohort.properties.role === UnitRole.Flank).length
@@ -174,7 +174,7 @@ const removeDefeatedFromNewArmies = (environment: Environment, side: Side, armie
 
 export const deploy = (environment: Environment, sideA: Side, sideB: Side) => {
   const { day, settings, round } = environment
-  if (round === 0 && (!canFight(day, sideA) || !canFight(day, sideB)))
+  if (round === 0 && (!canDeploy(day, sideA) || !canDeploy(day, sideB)))
     return
   const armiesA = getDeployingArmies(day, sideA)
   const armiesB = getDeployingArmies(day, sideB)
@@ -194,14 +194,23 @@ const countCohorts = (side: Side) => reserveSize(side.cohorts.reserve) + side.co
 const countReserve = (armies: Army[]) => sum(armies.map(army => reserveSize(army.reserve)))
 
 export const undeploy = (side: Side) => {
-  side.armies.push(...side.deployedArmies)
-  side.deployedArmies = []
+  const reserve: Cohort[] = []
+  reserve.push(...flatten(side.cohorts.frontline.map(row => row.filter(cohort => cohort) as Cohort[])))
+  reserve.push(...side.cohorts.reserve.flank)
+  reserve.push(...side.cohorts.reserve.front)
+  reserve.push(...side.cohorts.reserve.support)
+  side.deployed.forEach(army => {
+    army.reserve = sortReserve(reserve.filter(cohort => cohort.properties.participantIndex === army.participantIndex), army.unitPreferences)
+    side.armies.push(army)
+  })
+
+  side.deployed = []
   side.cohorts.frontline = side.cohorts.frontline.map(row => row.map(() => null))
   resortReserve(side, [])
 }
 
-const canFight = (day: number, side: Side) => {
-  return side.deployedArmies.length > 0 || (side.armies.length && side.armies[side.armies.length - 1].arrival <= day)
+const canDeploy = (day: number, side: Side) => {
+  return side.armies.length && side.armies[side.armies.length - 1].arrival <= day
 }
 
 const getDeployingArmies = (day: number, side: Side) => {
@@ -215,31 +224,24 @@ const getDeployingArmies = (day: number, side: Side) => {
 const deploySub = (side: Side, deploying: Army[], settings: Settings, enemyArmySize?: number) => {
   const pool: Cohort[] = []
   deploying.forEach(army => {
-    side.deployedArmies.push({
-      ...army, reserve: {
-        front: [...army.reserve.front],
-        flank: [...army.reserve.flank],
-        support: [...army.reserve.support]
-      }
-    })
     const [leftFlank, rightFlank] = calculateFlankSizes(settings[Setting.CombatWidth], calculatePreferredFlankSize(settings, army.flankSize, army.reserve), enemyArmySize)
-    army.general.leftFlank = leftFlank
-    army.general.rightFlank = rightFlank
+    army.leftFlank = leftFlank
+    army.rightFlank = rightFlank
     deployCohorts(side.cohorts, army.reserve, leftFlank, rightFlank, settings)
-    side.generals.push(army.general)
-    pool.push(...army.reserve.flank)
+    side.deployed.push(army)
     pool.push(...army.reserve.front)
+    pool.push(...army.reserve.flank)
     pool.push(...army.reserve.support)
   })
-  side.generals.sort((a, b) => a.priority - b.priority).reverse()
-  pool.push(...side.cohorts.reserve.flank)
+  side.deployed.sort((a, b) => a.priority - b.priority).reverse()
   pool.push(...side.cohorts.reserve.front)
+  pool.push(...side.cohorts.reserve.flank)
   pool.push(...side.cohorts.reserve.support)
   resortReserve(side, pool)
 }
 
 const resortReserve = (side: Side, reserve: Cohort[]) => {
-  const general = getLeadingGeneral(side)
+  const general = getLeadingArmy(side)
   // Without general there also won't be any cohorts (so sorting is not needed).
   if (general)
     side.cohorts.reserve = sortReserve(reserve, general.unitPreferences)
@@ -296,7 +298,7 @@ const moveUnits = (cohorts: Cohorts) => {
 */
 export const reinforce = (field: Environment, side: Side) => {
   const { settings } = field
-  const general = getLeadingGeneral(side)
+  const general = getLeadingArmy(side)
   if (general && reserveSize(side.cohorts.reserve))
     deployCohorts(side.cohorts, side.cohorts.reserve, general.leftFlank, general.rightFlank, settings, general.unitPreferences)
   moveUnits(side.cohorts)
