@@ -1,4 +1,4 @@
-import { TestState, initState, createCohort, testReinforcement, getSettingsTest, addToReserveTest, getBattleTest } from './utils'
+import { TestState, initState, createCohort, getSettingsTest, addToReserveTest, getBattleTest, initExpected, testCombat } from './utils'
 import { UnitType, UnitAttribute, CohortDefinition, Setting, SideType } from 'types'
 
 if (process.env.REACT_APP_GAME !== 'euiv') {
@@ -57,48 +57,28 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     }
 
     const testBothDefeated = (strengthA: number, strengthD: number, moraleA: number, moraleD: number, rounds: number = 0) => {
-      const [attacker, defender] = testReinforcement(rounds, state)
-      expect(attacker.cohorts.defeated[0][UnitAttribute.Strength]).toBeCloseTo(strengthA)
-      expect(attacker.cohorts.defeated[1][UnitAttribute.Strength]).toBeCloseTo(strengthA)
-      expect(defender.cohorts.defeated[0][UnitAttribute.Strength]).toBeCloseTo(strengthD)
-      expect(defender.cohorts.defeated[1][UnitAttribute.Strength]).toBeCloseTo(strengthD)
-      expect(attacker.cohorts.defeated[0][UnitAttribute.Morale]).toBeCloseTo(moraleA)
-      expect(attacker.cohorts.defeated[1][UnitAttribute.Morale]).toBeCloseTo(moraleA)
-      expect(defender.cohorts.defeated[0][UnitAttribute.Morale]).toBeCloseTo(moraleD)
-      expect(defender.cohorts.defeated[1][UnitAttribute.Morale]).toBeCloseTo(moraleD)
+      const { expectedA, expectedB } = initExpected(rounds)
+      expectedA[rounds].defeated = [[type, strengthA, moraleA], [type, strengthA, moraleA]]
+      expectedB[rounds].defeated = [[type, strengthD, moraleD], [type, strengthD, moraleD]]
+      testCombat(state, [], expectedA, expectedB)
     }
     const testDefenderDefeated = (strengthA: number, strengthD: number, moraleA: number, moraleD: number, rounds: number = 0) => {
-      const [attacker, defender] = testReinforcement(rounds, state)
-      expect(attacker.cohorts.frontline[0][14]![UnitAttribute.Strength]).toBeCloseTo(strengthA)
-      expect(attacker.cohorts.frontline[0][15]![UnitAttribute.Strength]).toBeCloseTo(strengthA)
-      expect(defender.cohorts.defeated[0][UnitAttribute.Strength]).toBeCloseTo(strengthD)
-      expect(defender.cohorts.defeated[1][UnitAttribute.Strength]).toBeCloseTo(strengthD)
-      expect(attacker.cohorts.frontline[0][14]![UnitAttribute.Morale]).toBeCloseTo(moraleA)
-      expect(attacker.cohorts.frontline[0][15]![UnitAttribute.Morale]).toBeCloseTo(moraleA)
-      expect(defender.cohorts.defeated[0][UnitAttribute.Morale]).toBeCloseTo(moraleD)
-      expect(defender.cohorts.defeated[1][UnitAttribute.Morale]).toBeCloseTo(moraleD)
+      const { expectedA, expectedB } = initExpected(rounds)
+      expectedA[rounds].front = [[type, strengthA, moraleA], [type, strengthA, moraleA]]
+      expectedB[rounds].defeated = [[type, strengthD, moraleD], [type, strengthD, moraleD]]
+      testCombat(state, [], expectedA, expectedB)
     }
     const testAttackerDefeated = (strengthA: number, strengthD: number, moraleA: number, moraleD: number, rounds: number = 0) => {
-      const [attacker, defender] = testReinforcement(rounds, state)
-      expect(attacker.cohorts.defeated[0][UnitAttribute.Strength]).toBeCloseTo(strengthA)
-      expect(attacker.cohorts.defeated[1][UnitAttribute.Strength]).toBeCloseTo(strengthA)
-      expect(defender.cohorts.frontline[0][14]![UnitAttribute.Strength]).toBeCloseTo(strengthD)
-      expect(defender.cohorts.frontline[0][15]![UnitAttribute.Strength]).toBeCloseTo(strengthD)
-      expect(attacker.cohorts.defeated[0][UnitAttribute.Morale]).toBeCloseTo(moraleA)
-      expect(attacker.cohorts.defeated[1][UnitAttribute.Morale]).toBeCloseTo(moraleA)
-      expect(defender.cohorts.frontline[0][14]![UnitAttribute.Morale]).toBeCloseTo(moraleD)
-      expect(defender.cohorts.frontline[0][15]![UnitAttribute.Morale]).toBeCloseTo(moraleD)
+      const { expectedA, expectedB } = initExpected(rounds)
+      expectedA[rounds].defeated = [[type, strengthA, moraleA], [type, strengthA, moraleA]]
+      expectedB[rounds].front = [[type, strengthD, moraleD], [type, strengthD, moraleD]]
+      testCombat(state, [], expectedA, expectedB)
     }
     const testNoneDefeated = (strengthA: number, strengthD: number, moraleA: number, moraleD: number, rounds: number = 0) => {
-      const [attacker, defender] = testReinforcement(rounds, state)
-      expect(attacker.cohorts.frontline[0][14]![UnitAttribute.Strength]).toBeCloseTo(strengthA)
-      expect(attacker.cohorts.frontline[0][15]![UnitAttribute.Strength]).toBeCloseTo(strengthA)
-      expect(defender.cohorts.frontline[0][14]![UnitAttribute.Strength]).toBeCloseTo(strengthD)
-      expect(defender.cohorts.frontline[0][15]![UnitAttribute.Strength]).toBeCloseTo(strengthD)
-      expect(attacker.cohorts.frontline[0][14]![UnitAttribute.Morale]).toBeCloseTo(moraleA)
-      expect(attacker.cohorts.frontline[0][15]![UnitAttribute.Morale]).toBeCloseTo(moraleA)
-      expect(defender.cohorts.frontline[0][14]![UnitAttribute.Morale]).toBeCloseTo(moraleD)
-      expect(defender.cohorts.frontline[0][15]![UnitAttribute.Morale]).toBeCloseTo(moraleD)
+      const { expectedA, expectedB } = initExpected(rounds)
+      expectedA[rounds].front = [[type, strengthA, moraleA], [type, strengthA, moraleA]]
+      expectedB[rounds].front = [[type, strengthD, moraleD], [type, strengthD, moraleD]]
+      testCombat(state, [], expectedA, expectedB)
     }
     it('attacker stack wipes if it can\'t deploy', () => {
       addToReserveTest(state, SideType.A, [lowMorale, lowMorale])
@@ -135,36 +115,36 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     it('attacker survives during battle even when defender could hard wipe', () => {
       addToReserveTest(state, SideType.A, [hardStrengthLimit, hardStrengthLimit])
       addToReserveTest(state, SideType.B, [normal, normal])
-      testNoneDefeated(0.07, 0.99712, 2.676, 2.97, 1)
+      testNoneDefeated(0.071, 0.99712, 2.676, 2.97, 1)
     })
     it('defender survives during battle even when attacker could hard wipe', () => {
       addToReserveTest(state, SideType.A, [normal, normal])
       addToReserveTest(state, SideType.B, [hardStrengthLimit, hardStrengthLimit])
-      testNoneDefeated(0.99712, 0.07, 2.97, 2.676, 1)
+      testNoneDefeated(0.99712, 0.071, 2.97, 2.676, 1)
     })
     it('attacker survives when defender can soft wipe after retreat limit', () => {
       addToReserveTest(state, SideType.A, [softLimit, softLimit])
       addToReserveTest(state, SideType.B, [normal, normal])
       setRound(getSettingsTest(state)[Setting.StackwipeRounds])
-      testAttackerDefeated(0.481, 0.986, 0.04, 2.99)
+      testAttackerDefeated(0.471, 0.985, 0.0, 2.99)
     })
     it('defender survives when attacker can soft wipe after retreat limit', () => {
       addToReserveTest(state, SideType.A, [normal, normal])
       addToReserveTest(state, SideType.B, [softLimit, softLimit])
       setRound(getSettingsTest(state)[Setting.StackwipeRounds])
-      testDefenderDefeated(0.986, 0.481, 2.99, 0.04)
+      testDefenderDefeated(0.985, 0.471, 2.99, 0.0)
     })
     it('attacker stack wipes when defender can soft wipe before retreat limit', () => {
       addToReserveTest(state, SideType.A, [softLimit, softLimit])
       addToReserveTest(state, SideType.B, [normal, normal])
       setRound(getSettingsTest(state)[Setting.StackwipeRounds] - 1)
-      testAttackerDefeated(NO_STRENGTH, 0.986, NO_MORALE, 2.99)
+      testAttackerDefeated(NO_STRENGTH, 0.985, NO_MORALE, 2.99)
     })
     it('defender stack wipes when attacker can soft wipe before retreat limit', () => {
       addToReserveTest(state, SideType.A, [normal, normal])
       addToReserveTest(state, SideType.B, [softLimit, softLimit])
       setRound(getSettingsTest(state)[Setting.StackwipeRounds] - 1)
-      testDefenderDefeated(0.986, NO_STRENGTH, 2.99, NO_MORALE)
+      testDefenderDefeated(0.985, NO_STRENGTH, 2.99, NO_MORALE)
     })
   })
 }

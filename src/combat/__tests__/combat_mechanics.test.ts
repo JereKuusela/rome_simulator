@@ -48,19 +48,19 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
 
     const test = (damageMultiplierA: number, damageMultiplierD: number, strengthMultiplier: number, moraleMultiplier: number) => {
       const rolls = [[3, 3]]
-      const { attacker, defender } = initExpected(1)
+      const { expectedA, expectedB } = initExpected(1)
 
-      const strength = 33.6 * (1 + strengthMultiplier)
+      const strength = 0.0336 * (1 + strengthMultiplier)
       const morale = 0.378 * (1 + moraleMultiplier)
-      const strengthA = Math.floor(1000 - strength * (1 + damageMultiplierD))
-      const strengthD = Math.floor(1000 - strength * (1 + damageMultiplierA))
+      const strengthA = 1.0 - strength * (1 + damageMultiplierD)
+      const strengthD = 1.0 - strength * (1 + damageMultiplierA)
       const moraleA = 3.0 - morale * (1 + damageMultiplierD)
       const moraleD = 3.0 - morale * (1 + damageMultiplierA)
 
-      attacker[1][15] = [unit.type, strengthA, moraleA]
-      defender[1][15] = [unit.type, strengthD, moraleD]
+      expectedA[1].front = [[unit.type, strengthA, moraleA]]
+      expectedB[1].front = [[unit.type, strengthD, moraleD]]
 
-      testCombat(state, rolls, attacker, defender)
+      testCombat(state, rolls, expectedA, expectedB)
 
     }
 

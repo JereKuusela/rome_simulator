@@ -1,11 +1,12 @@
 import { getDefaultTactics, getDefaultTerrains, getDefaultCountryDefinitions, getDefaultBattle, getDefaultSettings } from 'data'
 import { mapRange, toObj, values } from 'utils'
-import { Mode, CountryName, Setting, SideType, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, CombatPhase, UnitPreferences, Cohort, UnitRole, CountryDefinitions, ArmyName, ModeState, SettingsAndOptions, Side, Settings, TacticDefinitions, TerrainDefinitions, CohortData } from 'types'
+import { Mode, CountryName, Setting, SideType, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, CombatPhase, UnitPreferences, Cohort, UnitRole, CountryDefinitions, ArmyName, ModeState, SettingsAndOptions, Side, Settings, TacticDefinitions, TerrainDefinitions, CohortData, Environment } from 'types'
 import { doCombatRound, reinforce } from 'combat'
 import { removeDefeated } from 'combat/combat_utils'
 import { convertSides, getCombatField } from 'state'
 import { addToReserve } from 'managers/army'
 import { createArmy } from 'managers/countries'
+import { flatten } from 'lodash'
 
 /**
  * Everything the combat tests might need to make tests convenient to write.
@@ -17,16 +18,6 @@ export interface TestState {
   tactics: TacticDefinitions
   terrains: TerrainDefinitions
 }
-
-export interface ExpectedTypes {
-  front?: (UnitType | null)[]
-  back?: (UnitType | null)[]
-  reserveFront?: UnitType[]
-  reserveFlank?: UnitType[]
-  reserveSupport?: UnitType[]
-  defeated?: UnitType[]
-}
-
 /**
  * Returns initial state for a test.
  * @param legacyDamage Older versions of Imperator had lower damage. This option should be removed once old tests are scaled properly.
@@ -77,63 +68,6 @@ export const createCohort = (type: UnitType) => ({
   }
 })
 
-const errorPrefix = (identifier: string | number, side: SideType, index: number) => (typeof identifier === 'number' ? 'Round ' : '') + identifier + ', ' + side + ' ' + index + ': '
-
-const verifyFast = (identifier: string | number, side: SideType, index: number, unit: Cohort | null, strength: number, morale: number) => {
-  expect(unit).toBeTruthy()
-  if (!unit)
-    return
-  const unitStrength = Math.floor(1000 * unit[UnitAttribute.Strength])
-  try {
-    expect(Math.floor(unitStrength)).toEqual(strength)
-  }
-  catch (e) {
-    throw new Error(errorPrefix(identifier, side, index) + 'Strength ' + unitStrength + ' should be ' + strength)
-  }
-  const unitMorale = unit[UnitAttribute.Morale]
-  try {
-    expect(Math.abs(unitMorale - morale)).toBeLessThan(0.002)
-  }
-  catch (e) {
-    throw new Error(errorPrefix(identifier, side, index) + 'Morale ' + unitMorale + ' should be ' + morale)
-  }
-}
-
-/**
- * Verifies that the unit has a correct type.
- * @param identifier Round number or other identifier for debugging purposes.
- * @param side Side for debugging purposes.
- * @param index Unit location of frontline for debugging purposes.
- * @param unit Unit to check.
- * @param type Expected type.
- * @param message Custom message on error.
- */
-export const verifyType = (identifier: string | number, side: SideType, index: number, unit: { type: UnitType } | null | undefined, type: UnitType | null, message: string = '') => {
-  if (type) {
-    try {
-      expect(unit).toBeTruthy()
-    }
-    catch (e) {
-      throw new Error(errorPrefix(identifier, side, index) + 'Unit should exist')
-    }
-    try {
-      expect(unit!.type + message).toEqual(type + message)
-    }
-    catch (e) {
-      throw new Error(errorPrefix(identifier, side, index) + 'Type ' + unit!.type + ' should be ' + type)
-    }
-
-  }
-  else {
-    try {
-      expect(unit).toBeFalsy()
-    }
-    catch (e) {
-      throw new Error(errorPrefix(identifier, side, index) + 'Unit shouldn\'t exist')
-    }
-  }
-}
-
 // Dummy test to avoid an error.
 describe('utils', () => {
   it('works', () => { })
@@ -161,136 +95,155 @@ export const getBattleTest = (state: TestState) => state.battle[Mode.Land]
  */
 export const everyType = [UnitType.Archers, UnitType.CamelCavalry, UnitType.Chariots, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.HorseArchers, UnitType.LightCavalry, UnitType.LightInfantry, UnitType.WarElephants, UnitType.SupplyTrain]
 
-type ExpectedUnits = ([UnitType | null, number | null, number | null] | null)
-type Expected = (ExpectedUnits[] | null)
+type ExpectedCohort = ([UnitType, number, number] | UnitType | null)
+
+type Expected = {
+  front?: ExpectedCohort[]
+  back?: ExpectedCohort[]
+  reserveFront?: ExpectedCohort[]
+  reserveFlank?: ExpectedCohort[]
+  reserveSupport?: ExpectedCohort[]
+  defeated?: ExpectedCohort[]
+}
+
+export const testCombat = (state: TestState, rolls: number[][], expectedA: Expected[], expectedB: Expected[]) => {
+  const rollsPerDay = flatten(rolls.map(rolls => Array(5).fill(rolls) as [number, number][]))
+  return testCombatSub(state, rollsPerDay, expectedA, expectedB)
+}
+export const testDeployment = (state: TestState, expectedA: Expected, expectedB: Expected) => testCombatSub(state, [], [expectedA], [expectedB])
+
+export const testReinforcement = (roundsToSkip: number, state: TestState, expectedA: Expected, expectedB: Expected) => {
+  return testCombatSub(state, Array(Math.max(0, roundsToSkip - 1)).fill([2, 2]).concat([[-1000, -1000]]), Array(roundsToSkip).fill(null).concat(expectedA), Array(roundsToSkip).fill(null).concat(expectedB))
+}
 
 /**
  * Tester function for combat.
  * @param state Initial combat state.
  * @param rolls List of rolls.
- * @param attacker Expected attacker units for every round. Nulls can be used to skip checks.
- * @param defender Expected defender units for every round. Nulls can be used to skip checks.
+ * @param expectedA Expected attacker units for every round. Nulls can be used to skip checks.
+ * @param expectedB Expected defender units for every round. Nulls can be used to skip checks.
  */
-export const testCombat = (state: TestState, rolls: number[][], attacker: Expected[], defender: Expected[]) => {
-  const [sideA, sideD] = convertSides(state as any)
-  const environment = getCombatField(state as any)
-  doCombatRound(environment, sideA, sideD, true)
-  verifySide(0, SideType.A, sideA.cohorts.frontline[0], attacker[0])
-  verifySide(0, SideType.B, sideD.cohorts.frontline[0], defender[0])
-  for (let roll = 0; roll < rolls.length; roll++) {
-    sideA.results.dice = rolls[roll][0]
-    sideD.results.dice = rolls[roll][1]
-    const limit = Math.min((roll + 1) * 5, attacker.length)
-    for (let day = roll * 5; day < limit; day++) {
-      environment.day++
-      doCombatRound(environment, sideA, sideD, true)
-      verifySide(day + 1, SideType.A, sideA.cohorts.frontline[0], attacker[day + 1])
-      verifySide(day + 1, SideType.B, sideD.cohorts.frontline[0], defender[day + 1])
+const testCombatSub = (state: TestState, rolls: [number, number][], expectedA: Expected[], expectedB: Expected[]) => {
+  const [sideA, sideB] = convertSides(state as any)
+  const env = getCombatField(state as any)
+  for (; env.day < expectedA.length; env.day++) {
+    [sideA.results.dice, sideB.results.dice] = getRolls(rolls, env.day)
+    doCombatRound(env, sideA, sideB, true)
+    verify(env, sideA, expectedA[env.day])
+    verify(env, sideB, expectedB[env.day])
+  }
+  return [sideA, sideB]
+}
+
+const getRolls = (rolls: number[][], day: number): [number, number] => {
+  if (0 < day && day - 1 < rolls.length)
+    return [rolls[day - 1][0], rolls[day - 1][1]]
+  return [2, 2]
+}
+
+const verify = (env: Environment, side: Side, expected: Expected) => {
+  // No need to check anything if nothing is expected.
+  if (!expected)
+    return
+  verifyPart('Front', env, expected.front ?? [], side.type, side.cohorts.frontline[0])
+  verifyPart('Back', env, expected.back ?? [], side.type, side.cohorts.frontline.length ? side.cohorts.frontline[1] : [])
+  verifyPart('Reserve front', env, expected.reserveFront ?? [], side.type, side.cohorts.reserve.front)
+  verifyPart('Reserve flank', env, expected.reserveFlank ?? [], side.type, side.cohorts.reserve.flank)
+  verifyPart('Reserve support', env, expected.reserveSupport ?? [], side.type, side.cohorts.reserve.support)
+  verifyPart('Defeated', env, expected.defeated ?? [], side.type, side.cohorts.defeated)
+}
+
+const errorPrefix = (day: string | number, side: SideType, part: string, index?: number) => (typeof day === 'number' ? 'Round ' : '') + day + ', ' + side + ' ' + part + (index === undefined ? '' : ' ' + index) + ': '
+
+const verifyCohort = (cohort: Cohort | null, strength: number, morale: number) => {
+  expect(cohort).toBeTruthy()
+  if (!cohort)
+    return
+  strength = Math.floor(1000 * strength) / 1000
+  const unitStrength = Math.floor(1000 * cohort[UnitAttribute.Strength]) / 1000
+  try {
+    expect(unitStrength).toBeCloseTo(strength, 3)
+  }
+  catch (e) {
+    throw new Error('Strength ' + unitStrength + ' should be ' + strength)
+  }
+  const unitMorale = cohort[UnitAttribute.Morale]
+  try {
+    expect(unitMorale).toBeCloseTo(morale, 2)
+  }
+  catch (e) {
+    throw new Error('Morale ' + unitMorale + ' should be ' + morale)
+  }
+}
+
+const verifyType = (type: UnitType | undefined, expected: UnitType | null) => {
+  if (expected) {
+    try {
+      expect(type).toBeTruthy()
+    }
+    catch (e) {
+      throw new Error('Cohort should exist.')
+    }
+    try {
+      expect(type).toEqual(expected)
+    }
+    catch (e) {
+      throw new Error('Type ' + type + ' should be ' + expected)
+    }
+
+  }
+  else {
+    try {
+      expect(type).toBeFalsy()
+    }
+    catch (e) {
+      throw new Error('Cohort shouldn\'t exist.')
     }
   }
-  return [sideA, sideD]
-}
-export const testDeployment = (state: TestState, expectedA?: ExpectedTypes, expectedD?: ExpectedTypes) => {
-  const [sideA, sideD] = convertSides(state as any)
-  const environment = getCombatField(state as any)
-  doCombatRound(environment, sideA, sideD, true)
-  //console.log(sideA.cohorts.frontline[0].map(c => c ? c.properties.type : ''))
-  if (expectedA)
-    verifyDeployOrReinforce(environment.settings, SideType.A, sideA, expectedA)
-  if (expectedD)
-    verifyDeployOrReinforce(environment.settings, SideType.B, sideD, expectedD)
-  return [sideA, sideD]
-}
-
-export const testReinforcement = (roundsToSkip: number, state: TestState, expectedA?: ExpectedTypes, expectedD?: ExpectedTypes) => {
-  const [sideA, sideD] = convertSides(state as any)
-  const environment = getCombatField(state as any)
-  doCombatRound(environment, sideA, sideD, true)
-  sideA.results.dice = 2
-  sideD.results.dice = 2
-  for (let round = 0; round < roundsToSkip; round++)
-    doCombatRound(environment, sideA, sideD, true)
-  removeDefeated(sideD.cohorts.frontline)
-  removeDefeated(sideD.cohorts.frontline)
-  reinforce(environment, sideA)
-  reinforce(environment, sideD)
-  if (expectedA)
-    verifyDeployOrReinforce(environment.settings, SideType.A, sideA, expectedA)
-  if (expectedD)
-    verifyDeployOrReinforce(environment.settings, SideType.B, sideD, expectedD)
-  return [sideA, sideD]
-}
-
-const verifyDeployOrReinforce = (settings: Settings, side: SideType, participant: Side, expected: ExpectedTypes) => {
-  verifyTypes('Front', settings, expected.front ?? [], side, participant.cohorts.frontline[0])
-  verifyTypes('Back', settings, expected.back ?? [], side, participant.cohorts.frontline.length ? participant.cohorts.frontline[1] : [])
-  verifyTypes('Reserve front', settings, expected.reserveFront ?? [], side, participant.cohorts.reserve.front)
-  verifyTypes('Reserve flank', settings, expected.reserveFlank ?? [], side, participant.cohorts.reserve.flank)
-  verifyTypes('Reserve support', settings, expected.reserveSupport ?? [], side, participant.cohorts.reserve.support)
-  verifyTypes('Defeated', settings, expected.defeated ?? [], side, participant.cohorts.defeated)
 }
 
 const nextIndex = (index: number, half: number) => index < half ? index + 2 * (half - index) : index - 2 * (index - half) - 1
 
-const verifyTypes = (identifier: string, settings: Settings, types: (UnitType | null)[], side: SideType, cohorts: (Cohort | null)[]) => {
-  const isFront = identifier === 'Front' || identifier === 'Back'
+const verifyPart = (part: string, env: Environment, expected: ExpectedCohort[], side: SideType, cohorts: (Cohort | null)[]) => {
+  const isFront = part === 'Front' || part === 'Back'
   if (!isFront) {
     try {
-      expect(cohorts.length).toEqual(types.length)
+      expect(cohorts.length).toEqual(expected.length)
     }
     catch (e) {
-      throw new Error(side + ' ' + identifier + ' length ' + cohorts.length + ' should be ' + types.length + '.')
+      throw new Error(errorPrefix(env.day, side, part) + 'length ' + cohorts.length + ' should be ' + expected.length + '.')
     }
   }
-  const half = Math.floor(settings[Setting.CombatWidth] / 2.0)
+  const half = Math.floor(env.settings[Setting.CombatWidth] / 2.0)
   let index = isFront ? half : 0
-  for (const type of types) {
-    verifyType(identifier, side, index, cohorts[index]?.properties, type, ' at index ' + index)
+  for (const exp of expected) {
+    try {
+      if (Array.isArray(exp)) {
+        verifyType(cohorts[index]?.properties?.type, exp[0])
+        if (exp[1] !== null && exp[2] !== null)
+          verifyCohort(cohorts[index], exp[1], exp[2])
+      } else {
+        verifyType(cohorts[index]?.properties?.type, exp)
+      }
+    }
+    catch (e) {
+      throw new Error(errorPrefix(env.day, side, part, index) + (e as Error).message)
+    }
+
     index = isFront ? nextIndex(index, half) : index + 1
   }
 }
 
 /**
- * Verifies one round for one side.
- * @param round Round to verify.
- * @param side Side to verify (for debugging purposes).
- * @param frontline Units to check.
- * @param expected Expected units. Check is skipped if null.
- */
-const verifySide = (round: number, side: SideType, frontline: (Cohort | null)[], expected: Expected | null) => {
-  // Data might be missing or not relevant for the test..
-  if (!expected)
-    return
-  expected.forEach((unit, index) => {
-    if (unit) {
-      const type = unit[0]
-      verifyType(round, side, index, frontline[index]?.properties, type)
-      if (unit[1] !== null && unit[2] !== null)
-        verifyFast(round, side, index, frontline[index], unit[1], unit[2])
-    }
-    else
-      verifyType(round, side, index, frontline[index]?.properties, null)
-  })
-}
-/**
  * Inits expected units with empty values.
- * @param rounds Amount of rounds to init.
+ * @param rounds List of days to init, in ascending order.
  */
 export const initExpected = (...rounds: number[]) => {
-  const expected = () => mapRange(rounds[rounds.length - 1] + 1, round => rounds.includes(round) ? initFrontline() : null as any)
+  const expected = (): Expected[] => mapRange(rounds[rounds.length - 1] + 1, round => rounds.includes(round) ? {} : null as any)
   return {
-    attacker: expected(),
-    defender: expected()
+    expectedA: expected(),
+    expectedB: expected()
   }
 }
-
-/**
- * Returns empty values for one round.
- */
-const initFrontline = (): ExpectedUnits[] => (
-  [null, null, null, null, null, null, null, null, null, null,
-    null, null, null, null, null, null, null, null, null, null,
-    null, null, null, null, null, null, null, null, null, null]
-)
 
 export const createExpected = (...types: ([UnitType | null, number] | UnitType)[]) => types.reduce((prev, current) => prev.concat(Array.isArray(current) ? Array(current[1]).fill(current[0]) : [current]), [] as UnitType[])

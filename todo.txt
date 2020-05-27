@@ -42,6 +42,37 @@ Todo:
 Data:
  * IR units have mode (should be derived from base)
 
+Needed tests:
+ * Guide lines:
+  - Tests with in-game are fairly useless? Testing different mechanics would verify that combat formula is accurate but is it worth it?
+  - Tests should verify that the code works as intended, not that the result matches in game. Matching must be done manually anyways if the game changes.
+  - Combat loop should be same but called from different functions depending what is tested (targeting, unit types, strength/morale)
+ * Tests:
+  - Precision. In-game test with many rounds to verify that calculation accuracy matches the game.
+  - Different mechanics, no in-game comparison required since all are just damage modifiers.
+ * Targeting:
+  - Strength based flank (tests also flank)
+  - Weak targeting (primary weak, secondary weak, all weak)
+  - Defender's advantage (with multiarmy to check aggressor change)
+  - Flank direction with different settings (EUIV, Imperator, fixed Imperator), both in and outside flank
+* Leader:
+  - Order of leaders with multiarmy: index, day of arrival, martial
+  - With multiple battles (some leaders retreat)
+  - Terrain with maneuver and aggressor change
+  - Dice with different martials
+* Tactic:
+  - Tactic overwriting when stronger general joins
+  - Efficiency, casulties, etc.
+  - Dynamic strength
+* Deployment
+  - Many scenarios
+  - Late deployment (with and without penalty)
+* Reinforcement
+  - Non-secondary penalty
+  - Better general changing order
+  - 
+
+
 Multiarmy:
  - Test:
   * Late deploy / reinforcement penalties

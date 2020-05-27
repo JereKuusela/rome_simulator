@@ -23,7 +23,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
         front: createExpected(UnitType.SupplyTrain, UnitType.Archers),
         defeated: createExpected([UnitType.SupplyTrain, 30])
       }
-      testReinforcement(1, state, attacker, defender)
+      testReinforcement(2, state, attacker, defender)
     })
 
 
@@ -36,7 +36,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
         front: createExpected(UnitType.SupplyTrain),
         defeated: createExpected([UnitType.Archers, 31])
       }
-      testReinforcement(3, state, attacker, defender)
+      testReinforcement(4, state, attacker, defender)
     })
 
     it('preferred flank size', () => {
@@ -52,7 +52,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
         reserveFlank: createExpected([UnitType.LightCavalry, 52]),
         defeated: createExpected([UnitType.LightCavalry, 2], [UnitType.HeavyCavalry, 26], [UnitType.LightCavalry, 2])
       }
-      testReinforcement(3, state, attacker, defender)
+      testReinforcement(4, state, attacker, defender)
     })
 
     it('frontline is reinforced first', () => {
@@ -66,7 +66,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
         front: createExpected([UnitType.LightCavalry, 10]),
         defeated: createExpected([UnitType.LightCavalry, 5], [UnitType.HeavyCavalry, 20], [UnitType.LightCavalry, 5])
       }
-      testReinforcement(3, state, attacker, defender)
+      testReinforcement(4, state, attacker, defender)
     })
   })
 }

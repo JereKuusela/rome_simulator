@@ -19,15 +19,15 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       addToReserve(getArmyTest(state, SideType.B), [archer])
 
       const rolls = [[3, 2]]
-      const { attacker, defender } = initExpected(1, 3)
+      const { expectedA, expectedB } = initExpected(1, 3)
 
-      attacker[1][15] = [archer.type, 965, 2.0760]
-      attacker[3][15] = [archer.type, 900, 1.6020]
+      expectedA[1].front = [[archer.type, 0.965, 2.0760]]
+      expectedA[3].front = [[archer.type, 0.900, 1.6020]]
 
-      defender[1][15] = [archer.type, 959, 2.0220]
-      defender[3][15] = [archer.type, 883, 1.4400]
+      expectedB[1].front = [[archer.type, 0.959, 2.0220]]
+      expectedB[3].front = [[archer.type, 0.883, 1.4400]]
 
-      testCombat(state, rolls, attacker, defender)
+      testCombat(state, rolls, expectedA, expectedB)
     })
 
     it('mixed casualties', () => {
@@ -37,15 +37,15 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       addToReserve(getArmyTest(state, SideType.B), [archer])
 
       const rolls = [[3, 2]]
-      const { attacker, defender } = initExpected(1, 3)
+      const { expectedA, expectedB } = initExpected(1, 3)
 
-      attacker[1][15] = [archer.type, 975, 2.0760]
-      attacker[3][15] = [archer.type, 928, 1.5939]
+      expectedA[1].front = [[archer.type, 0.975, 2.0760]]
+      expectedA[3].front = [[archer.type, 0.928, 1.5939]]
 
-      defender[1][15] = [archer.type, 971, 2.0220]
-      defender[3][15] = [archer.type, 916, 1.4316]
+      expectedB[1].front = [[archer.type, 0.971, 2.0220]]
+      expectedB[3].front = [[archer.type, 0.916, 1.4316]]
 
-      testCombat(state, rolls, attacker, defender)
+      testCombat(state, rolls, expectedA, expectedB)
     })
 
     it('counters and effectiveness', () => {
@@ -55,15 +55,15 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       addToReserve(getArmyTest(state, SideType.B), [archer])
 
       const rolls = [[0, 4]]
-      const { attacker, defender } = initExpected(1, 3)
+      const { expectedA, expectedB } = initExpected(1, 3)
 
-      attacker[1][15] = [archer.type, 961, 2.0112]
-      attacker[3][15] = [archer.type, 888, 1.3643]
+      expectedA[1].front = [[archer.type, 0.961, 2.0112]]
+      expectedA[3].front = [[archer.type, 0.888, 1.3643]]
 
-      defender[1][15] = [archer.type, 976, 2.1624]
-      defender[3][15] = [archer.type, 932, 1.8181]
+      expectedB[1].front = [[archer.type, 0.976, 2.1624]]
+      expectedB[3].front = [[archer.type, 0.932, 1.8181]]
 
-      testCombat(state, rolls, attacker, defender)
+      testCombat(state, rolls, expectedA, expectedB)
     })
 
     it('varying effectiveness (manpower)', () => {
@@ -73,15 +73,17 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       addToReserve(getArmyTest(state, SideType.B), [archer])
 
       const rolls = [[5, 5]]
-      const { attacker, defender } = initExpected(1, 3)
+      const { expectedA, expectedB } = initExpected(1, 3)
 
-      attacker[1][15] = [archer.type, 957, 1.9626]
-      attacker[3][15] = [archer.type, 878, 1.4171]
+      expectedA[1].front = [[archer.type, 0.957, 1.9626]]
+      expectedA[1].defeated = [defeatedHeavyInfantry.type]
+      expectedA[3].front = [[archer.type, 0.878, 1.4171]]
+      expectedA[3].defeated = [defeatedHeavyInfantry.type]
 
-      defender[1][15] = [archer.type, 945, 1.8411]
-      defender[3][15] = [archer.type, 842, 1.0512]
+      expectedB[1].front = [[archer.type, 0.945, 1.8411]]
+      expectedB[3].front = [[archer.type, 0.842, 1.0512]]
 
-      testCombat(state, rolls, attacker, defender)
+      testCombat(state, rolls, expectedA, expectedB)
     })
   })
 }

@@ -21,17 +21,17 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       addToReserveTest(state, SideType.B, [unit])
 
       const rolls = [[0, 2], [3, 2]]
-      const { attacker, defender } = initExpected(1, 6, 10)
+      const { expectedA, expectedB } = initExpected(1, 6, 10)
 
-      attacker[1][15] = [unit.type, 971, 2.1408]
-      attacker[6][15] = [unit.type, 835, 1.1355]
-      attacker[10][15] = [unit.type, 738, 0.6123]
+      expectedA[1].front = [[unit.type, 0.971, 2.1408]]
+      expectedA[6].front = [[unit.type, 0.835, 1.1355]]
+      expectedA[10].front = [[unit.type, 0.738, 0.6123]]
 
-      defender[1][15] = [unit.type, 980, 2.2272]
-      defender[6][15] = [unit.type, 880, 1.5998]
-      defender[10][15] = [unit.type, 773, 1.2266]
+      expectedB[1].front = [[unit.type, 0.980, 2.2272]]
+      expectedB[6].front = [[unit.type, 0.880, 1.5998]]
+      expectedB[10].front = [[unit.type, 0.773, 1.2266]]
 
-      testCombat(state, rolls, attacker, defender)
+      testCombat(state, rolls, expectedA, expectedB)
     })
 
     it('increased morale damage taken, terrain bonus and discipline', () => {
@@ -42,15 +42,15 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       addToReserveTest(state, SideType.B, [unitD])
 
       const rolls = [[4, 4]]
-      const { attacker, defender } = initExpected(1, 4)
+      const { expectedA, expectedB } = initExpected(1, 4)
 
-      attacker[1][15] = [unitA.type, 949, 1.8337]
-      attacker[4][15] = [unitA.type, 808, 0.6778]
+      expectedA[1].front = [[unitA.type, 0.949, 1.8337]]
+      expectedA[4].front = [[unitA.type, 0.808, 0.6778]]
 
-      defender[1][15] = [unitD.type, 964, 2.0050]
-      defender[4][15] = [unitD.type, 869, 1.3737]
+      expectedB[1].front = [[unitD.type, 0.964, 2.0050]]
+      expectedB[4].front = [[unitD.type, 0.869, 1.3737]]
 
-      testCombat(state, rolls, attacker, defender)
+      testCombat(state, rolls, expectedA, expectedB)
     })
 
     it('reduced morale damage taken, offense/defense and experience', () => {
@@ -60,15 +60,15 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       addToReserveTest(state, SideType.B, [unitD])
 
       const rolls = [[6, 1]]
-      const { attacker, defender } = initExpected(2, 4)
+      const { expectedA, expectedB } = initExpected(2, 4)
 
-      attacker[2][15] = [unitA.type, 957, 2.0019]
-      attacker[4][15] = [unitA.type, 920, 1.8416]
+      expectedA[2].front = [[unitA.type, 0.957, 2.0019]]
+      expectedA[4].front = [[unitA.type, 0.920, 1.8416]]
 
-      defender[2][15] = [unitD.type, 900, 1.6380]
-      defender[4][15] = [unitD.type, 804, 1.1119]
+      expectedB[2].front = [[unitD.type, 0.900, 1.6380]]
+      expectedB[4].front = [[unitD.type, 0.804, 1.1119]]
 
-      testCombat(state, rolls, attacker, defender)
+      testCombat(state, rolls, expectedA, expectedB)
     })
 
     it('versus damage and increased morale damage taken', () => {
@@ -78,15 +78,15 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       addToReserveTest(state, SideType.B, [unitD])
 
       const rolls = [[4, 4]]
-      const { attacker, defender } = initExpected(1, 3)
+      const { expectedA, expectedB } = initExpected(1, 3)
 
-      attacker[1][15] = [unitA.type, 965, 2.0890]
-      attacker[3][15] = [unitA.type, 901, 1.6944]
+      expectedA[1].front = [[unitA.type, 0.965, 2.0890]]
+      expectedA[3].front = [[unitA.type, 0.901, 1.6944]]
 
-      defender[1][15] = [unitD.type, 952, 1.8600]
-      defender[3][15] = [unitD.type, 860, 1.0161]
+      expectedB[1].front = [[unitD.type, 0.952, 1.8600]]
+      expectedB[3].front = [[unitD.type, 0.860, 1.0161]]
 
-      testCombat(state, rolls, attacker, defender)
+      testCombat(state, rolls, expectedA, expectedB)
     })
   })
 }
