@@ -6,7 +6,7 @@
     "connected-react-router": "^6.7.0",
     "file-saver": "^2.0.2",
     "jszip": "^3.4.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "percentile": "^1.2.2",
     "random-js": "^2.1.0",
     "react": "^16.12.0",
