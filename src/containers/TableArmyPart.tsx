@@ -1,6 +1,6 @@
 import React, { Component, PureComponent } from 'react'
 import { connect } from 'react-redux'
-import { Table, Image, Icon } from 'semantic-ui-react'
+import { Table, Image, Icon, Grid } from 'semantic-ui-react'
 
 import CombatTooltip from './CombatTooltip'
 import IconDefeated from 'images/attrition.png'
@@ -23,6 +23,7 @@ type Props = {
   // Renders full rows for a cleaner look.
   fullRows?: boolean
   markDefeated?: boolean
+  hideIfEmpty?: boolean
 }
 
 type IState = {
@@ -48,12 +49,14 @@ class TableArmyPart extends Component<IProps, IState> {
   }
 
   render() {
-    const { rowWidth, side, part, fullRows, reverse } = this.props
+    const { rowWidth, side, part, fullRows, reverse, hideIfEmpty } = this.props
     const { tooltipRow, tooltipColumn, tooltipContext, tooltipIsSupport } = this.state
     let cohorts = this.props.cohorts
     let indexOffset = 0
     cohorts = flatten(cohorts.map(arr => chunk(arr, rowWidth)))
-    if (cohorts.length === 0)
+    if (hideIfEmpty && !cohorts.length)
+      return null
+    if (!cohorts.length)
       cohorts.push([])
     if (fullRows) {
       cohorts = cohorts.map(arr => resize(arr, rowWidth, null))
@@ -68,34 +71,36 @@ class TableArmyPart extends Component<IProps, IState> {
     if (reverse)
       cohorts.reverse()
     return (
-      <>
-        <CombatTooltip row={tooltipRow} column={tooltipColumn} context={tooltipContext} isSupport={tooltipIsSupport} side={side} part={part} />
-        <Table compact celled definition unstackable>
-          <Table.Body>
-            {
-              cohorts.map((row, rowIndex) => {
-                rowIndex = reverse ? cohorts.length - 1 - rowIndex : rowIndex
-                return (
-                  < Table.Row key={rowIndex} textAlign='center' >
-                    <Table.Cell>
-                      <Icon fitted size='small' name={this.getIcon()} style={{ color: this.props.color }}></Icon>
-                    </Table.Cell>
-                    {
-                      row.map((cohort, columnIndex) => {
-                        columnIndex -= indexOffset
-                        if (part === ArmyPart.Frontline)
-                          return this.renderCell(rowIndex, columnIndex, cohort, rowIndex > 0)
-                        else
-                          return this.renderCell(0, rowIndex * rowWidth + columnIndex, cohort, rowIndex > 0)
-                      })
-                    }
-                  </Table.Row>
-                )
-              })
-            }
-          </Table.Body>
-        </Table>
-      </>
+      <Grid.Row columns={1}>
+        <Grid.Column>
+          <CombatTooltip row={tooltipRow} column={tooltipColumn} context={tooltipContext} isSupport={tooltipIsSupport} side={side} part={part} />
+          <Table compact celled definition unstackable>
+            <Table.Body>
+              {
+                cohorts.map((row, rowIndex) => {
+                  rowIndex = reverse ? cohorts.length - 1 - rowIndex : rowIndex
+                  return (
+                    < Table.Row key={rowIndex} textAlign='center' >
+                      <Table.Cell>
+                        <Icon fitted size='small' name={this.getIcon()} style={{ color: this.props.color }}></Icon>
+                      </Table.Cell>
+                      {
+                        row.map((cohort, columnIndex) => {
+                          columnIndex -= indexOffset
+                          if (part === ArmyPart.Frontline)
+                            return this.renderCell(rowIndex, columnIndex, cohort, rowIndex > 0)
+                          else
+                            return this.renderCell(0, rowIndex * rowWidth + columnIndex, cohort, rowIndex > 0)
+                        })
+                      }
+                    </Table.Row>
+                  )
+                })
+              }
+            </Table.Body>
+          </Table>
+        </Grid.Column>
+      </Grid.Row>
     )
   }
 
@@ -135,6 +140,8 @@ class TableArmyPart extends Component<IProps, IState> {
       return 'home'
     if (type === ArmyPart.Defeated)
       return 'heartbeat'
+    if (type === ArmyPart.Retreated)
+      return 'trash'
     return 'square full'
   }
 

@@ -199,6 +199,7 @@ export const undeploy = (side: Side) => {
   reserve.push(...side.cohorts.reserve.flank)
   reserve.push(...side.cohorts.reserve.front)
   reserve.push(...side.cohorts.reserve.support)
+  reserve.push(...side.cohorts.defeated)
   side.deployed.forEach(army => {
     army.reserve = sortReserve(reserve.filter(cohort => cohort.properties.participantIndex === army.participantIndex), army.unitPreferences)
     side.armies.push(army)
@@ -206,7 +207,14 @@ export const undeploy = (side: Side) => {
 
   side.deployed = []
   side.cohorts.frontline = side.cohorts.frontline.map(row => row.map(() => null))
+  side.cohorts.defeated = []
   resortReserve(side, [])
+}
+
+
+export const moveDefeatedToRetreated = (cohorts: Cohorts) => {
+  cohorts.retreated.push(...cohorts.defeated)
+  cohorts.defeated = []
 }
 
 const canDeploy = (day: number, side: Side) => {
@@ -233,7 +241,7 @@ const deploySub = (side: Side, deploying: Army[], settings: Settings, enemyArmyS
     pool.push(...army.reserve.flank)
     pool.push(...army.reserve.support)
   })
-  side.deployed.sort((a, b) => a.priority - b.priority).reverse()
+  side.deployed.sort((a, b) => b.priority - a.priority)
   pool.push(...side.cohorts.reserve.front)
   pool.push(...side.cohorts.reserve.flank)
   pool.push(...side.cohorts.reserve.support)

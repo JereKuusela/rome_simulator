@@ -89,7 +89,8 @@ export interface CohortRoundInfo {
 export type Cohorts = {
   frontline: Frontline
   reserve: Reserve
-  defeated: Defeated
+  defeated: Cohort[]
+  retreated: Cohort[]
 }
 
 export type ReserveData = CohortData[]
@@ -102,4 +103,3 @@ export type Reserve = {
 }
 
 export type Frontline = (Cohort | null)[][]
-export type Defeated = Cohort[]

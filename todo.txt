@@ -46,7 +46,7 @@ Needed tests:
  * Guide lines:
   - Tests with in-game are fairly useless? Testing different mechanics would verify that combat formula is accurate but is it worth it?
   - Tests should verify that the code works as intended, not that the result matches in game. Matching must be done manually anyways if the game changes.
-  - Combat loop should be same but called from different functions depending what is tested (targeting, unit types, strength/morale)
+  - Custom unit types with neutral values by default.
  * Tests:
   - Precision. In-game test with many rounds to verify that calculation accuracy matches the game.
   - Different mechanics, no in-game comparison required since all are just damage modifiers.
@@ -64,6 +64,7 @@ Needed tests:
   - Tactic overwriting when stronger general joins
   - Efficiency, casulties, etc.
   - Dynamic strength
+  - Retreated armies don't count.
 * Deployment
   - Many scenarios
   - Late deployment (with and without penalty)
@@ -71,6 +72,8 @@ Needed tests:
   - Non-secondary penalty
   - Better general changing order
   - 
+* Mechanics
+  - Flank ratio
 
 
 Multiarmy:

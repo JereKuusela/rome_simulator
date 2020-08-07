@@ -56,7 +56,8 @@ export type ArmyDefinition = {
 export enum ArmyPart {
   Frontline = 'Frontline',
   Reserve = 'Reserve',
-  Defeated = 'Defeated'
+  Defeated = 'Defeated',
+  Retreated = 'Retreated'
 }
 
 export enum UnitPreferenceType {

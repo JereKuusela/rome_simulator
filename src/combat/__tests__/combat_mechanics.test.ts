@@ -1,4 +1,4 @@
-import { TestState, initState, initExpected, testCombat, createCohort, getArmyTest, getSettingsTest, addToReserveTest } from './utils'
+import { TestState, initState, initExpected, testCombatWithCustomRolls, createCohort, getArmyTest, getSettingsTest, addToReserveTest } from './utils'
 import { UnitType, UnitAttribute, TacticType, CohortDefinition, CombatPhase, Settings, Setting, DisciplineValue, SideType, UnitRole } from 'types'
 import { map } from 'utils'
 import { selectTactic } from 'managers/army'
@@ -37,7 +37,6 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       state.settings.siteSettings = map(state.settings.siteSettings , item => typeof item === 'boolean' ? false : item) as Settings
       getSettingsTest(state)[Setting.AttributeDiscipline] = DisciplineValue.Off
       getSettingsTest(state)[Setting.BackRow] = true
-      getSettingsTest(state)[Setting.SupportPhase] = false
 
       state.tactics[TacticType.Bottleneck].baseValues![type] = { 'key': 0.5 }
       selectTactic(getArmyTest(state, SideType.A), TacticType.Bottleneck)
@@ -48,7 +47,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
 
     const test = (damageMultiplierA: number, damageMultiplierD: number, strengthMultiplier: number, moraleMultiplier: number) => {
       const rolls = [[3, 3]]
-      const { expectedA, expectedB } = initExpected(1)
+      const expected = initExpected(1)
 
       const strength = 0.0336 * (1 + strengthMultiplier)
       const morale = 0.378 * (1 + moraleMultiplier)
@@ -57,10 +56,10 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       const moraleA = 3.0 - morale * (1 + damageMultiplierD)
       const moraleD = 3.0 - morale * (1 + damageMultiplierA)
 
-      expectedA[1].front = [[unit.type, strengthA, moraleA]]
-      expectedB[1].front = [[unit.type, strengthD, moraleD]]
+      expected[1].A.front = [[unit.type, strengthA, moraleA]]
+      expected[1].B.front = [[unit.type, strengthD, moraleD]]
 
-      testCombat(state, rolls, expectedA, expectedB)
+      testCombatWithCustomRolls(state, rolls, expected)
 
     }
 

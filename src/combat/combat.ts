@@ -1,9 +1,9 @@
 
-import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, Cohorts, Cohort, Frontline, Defeated, Side, Environment, TacticCalc } from 'types'
+import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, Cohorts, Cohort, Frontline, Side, Environment, TacticCalc } from 'types'
 import { noZero } from 'utils'
 import { calculateValue } from 'definition_values'
 import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, reserveSize, reinforce, calculateGeneralPips, getTerrainPips, checkStackWipe, defeatCohort, isAlive } from 'combat'
-import { deploy, undeploy } from './deployment'
+import { deploy, undeploy, moveDefeatedToRetreated } from './deployment'
 import { getLeadingArmy } from 'managers/battle'
 
 /**
@@ -61,12 +61,14 @@ export const doCombatRound = (env: Environment, sideA: Side, sideB: Side, markDe
     checkStackWipe(env, a, d.cohorts)
   if (!a.alive) {
     a.deployed = []
+    moveDefeatedToRetreated(a.cohorts)
     env.round = -1
     if (d.alive)
       env.attacker = a.type
   }
   if (!d.alive) {
     d.deployed = []
+    moveDefeatedToRetreated(d.cohorts)
     env.round = -1
     if (a.alive)
       env.attacker = d.type
@@ -212,7 +214,7 @@ const applyLosses = (frontline: Frontline) => {
 /**
  * Moves defeated units from a frontline to defeated.
  */
-const moveDefeated = (environment: Environment, frontline: Frontline, defeated: Defeated, markDefeated: boolean) => {
+const moveDefeated = (environment: Environment, frontline: Frontline, defeated: Cohort[], markDefeated: boolean) => {
   const settings = environment.settings
   let alive = false
   for (let i = 0; i < frontline.length; i++) {

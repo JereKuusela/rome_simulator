@@ -8,7 +8,8 @@ import { getDay, getStartingPhaseNumber, getRound } from './battle'
 const copyCohorts = (cohorts: Cohorts): Cohorts => ({
   frontline: cohorts.frontline.map(row => row.map(value => value ? { ...value, state: { ...value.state } } : null)),
   reserve: copyReserve(cohorts.reserve),
-  defeated: cohorts.defeated.map(value => ({ ...value, state: { ...value.state } }))
+  defeated: cohorts.defeated.map(value => ({ ...value, state: { ...value.state } })),
+  retreated: cohorts.retreated.map(value => ({ ...value, state: { ...value.state } }))
 })
 
 const copyReserve = (reserve: Reserve): Reserve => ({

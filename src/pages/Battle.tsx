@@ -168,26 +168,12 @@ class Battle extends Component<IProps> {
         <br />
         <AccordionToggle title='Reserve & Defeated' identifier='Reserve'>
           <Grid>
-            <Grid.Row columns={1}>
-              <Grid.Column>
                 {this.renderReserve(SideType.A)}
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row columns={1}>
-              <Grid.Column>
                 {this.renderReserve(SideType.B)}
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row columns={1}>
-              <Grid.Column>
-                {this.renderDefeatedArmy(SideType.A)}
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row columns={1}>
-              <Grid.Column>
-                {this.renderDefeatedArmy(SideType.B)}
-              </Grid.Column>
-            </Grid.Row>
+                {this.renderDefeatedCohorts(SideType.A)}
+                {this.renderDefeatedCohorts(SideType.B)}
+                {this.renderRetreatedCohorts(SideType.A)}
+                {this.renderRetreatedCohorts(SideType.B)}
           </Grid>
           <br /><br />
         </AccordionToggle>
@@ -251,7 +237,7 @@ class Battle extends Component<IProps> {
     )
   }
 
-  renderDefeatedArmy = (side: SideType) => {
+  renderDefeatedCohorts = (side: SideType) => {
     return (
       <TableArmyPart
         color={side === SideType.A ? ATTACKER_COLOR : DEFENDER_COLOR}
@@ -261,6 +247,21 @@ class Battle extends Component<IProps> {
         reverse={false}
         part={ArmyPart.Defeated}
         fullRows
+      />
+    )
+  }
+
+  renderRetreatedCohorts = (side: SideType) => {
+    return (
+      <TableArmyPart
+        color={side === SideType.A ? ATTACKER_COLOR : DEFENDER_COLOR}
+        side={side}
+        onClick={this.openCohortModal}
+        rowWidth={30}
+        reverse={false}
+        part={ArmyPart.Retreated}
+        fullRows
+        hideIfEmpty
       />
     )
   }

@@ -1,5 +1,5 @@
 import { addValues } from 'definition_values'
-import { getUnit, TestState, initState, initExpected, testCombat, addToReserveTest } from './utils'
+import { getUnit, TestState, initState, initExpected, testCombatWithCustomRolls, addToReserveTest } from './utils'
 import { UnitType, UnitAttribute, TerrainType, ValuesType, SideType, Mode } from 'types'
 import { addToReserve } from 'managers/army'
 import { selectTerrain } from 'managers/battle'
@@ -21,17 +21,17 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       addToReserveTest(state, SideType.B, [unit])
 
       const rolls = [[0, 2], [3, 2]]
-      const { expectedA, expectedB } = initExpected(1, 6, 10)
+      const expected = initExpected(1, 6, 10)
 
-      expectedA[1].front = [[unit.type, 0.971, 2.1408]]
-      expectedA[6].front = [[unit.type, 0.835, 1.1355]]
-      expectedA[10].front = [[unit.type, 0.738, 0.6123]]
+      expected[1].A.front = [[unit.type, 0.971, 2.1408]]
+      expected[6].A.front = [[unit.type, 0.835, 1.1355]]
+      expected[10].A.front = [[unit.type, 0.738, 0.6123]]
 
-      expectedB[1].front = [[unit.type, 0.980, 2.2272]]
-      expectedB[6].front = [[unit.type, 0.880, 1.5998]]
-      expectedB[10].front = [[unit.type, 0.773, 1.2266]]
+      expected[1].B.front = [[unit.type, 0.980, 2.2272]]
+      expected[6].B.front = [[unit.type, 0.880, 1.5998]]
+      expected[10].B.front = [[unit.type, 0.773, 1.2266]]
 
-      testCombat(state, rolls, expectedA, expectedB)
+      testCombatWithCustomRolls(state, rolls, expected)
     })
 
     it('increased morale damage taken, terrain bonus and discipline', () => {
@@ -42,15 +42,15 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       addToReserveTest(state, SideType.B, [unitD])
 
       const rolls = [[4, 4]]
-      const { expectedA, expectedB } = initExpected(1, 4)
+      const expected = initExpected(1, 4)
 
-      expectedA[1].front = [[unitA.type, 0.949, 1.8337]]
-      expectedA[4].front = [[unitA.type, 0.808, 0.6778]]
+      expected[1].A.front = [[unitA.type, 0.949, 1.8337]]
+      expected[4].A.front = [[unitA.type, 0.808, 0.6778]]
 
-      expectedB[1].front = [[unitD.type, 0.964, 2.0050]]
-      expectedB[4].front = [[unitD.type, 0.869, 1.3737]]
+      expected[1].B.front = [[unitD.type, 0.964, 2.0050]]
+      expected[4].B.front = [[unitD.type, 0.869, 1.3737]]
 
-      testCombat(state, rolls, expectedA, expectedB)
+      testCombatWithCustomRolls(state, rolls, expected)
     })
 
     it('reduced morale damage taken, offense/defense and experience', () => {
@@ -60,15 +60,15 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       addToReserveTest(state, SideType.B, [unitD])
 
       const rolls = [[6, 1]]
-      const { expectedA, expectedB } = initExpected(2, 4)
+      const expected = initExpected(2, 4)
 
-      expectedA[2].front = [[unitA.type, 0.957, 2.0019]]
-      expectedA[4].front = [[unitA.type, 0.920, 1.8416]]
+      expected[2].A.front = [[unitA.type, 0.957, 2.0019]]
+      expected[4].A.front = [[unitA.type, 0.920, 1.8416]]
 
-      expectedB[2].front = [[unitD.type, 0.900, 1.6380]]
-      expectedB[4].front = [[unitD.type, 0.804, 1.1119]]
+      expected[2].B.front = [[unitD.type, 0.900, 1.6380]]
+      expected[4].B.front = [[unitD.type, 0.804, 1.1119]]
 
-      testCombat(state, rolls, expectedA, expectedB)
+      testCombatWithCustomRolls(state, rolls, expected)
     })
 
     it('versus damage and increased morale damage taken', () => {
@@ -78,15 +78,15 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       addToReserveTest(state, SideType.B, [unitD])
 
       const rolls = [[4, 4]]
-      const { expectedA, expectedB } = initExpected(1, 3)
+      const expected = initExpected(1, 3)
 
-      expectedA[1].front = [[unitA.type, 0.965, 2.0890]]
-      expectedA[3].front = [[unitA.type, 0.901, 1.6944]]
+      expected[1].A.front = [[unitA.type, 0.965, 2.0890]]
+      expected[3].A.front = [[unitA.type, 0.901, 1.6944]]
 
-      expectedB[1].front = [[unitD.type, 0.952, 1.8600]]
-      expectedB[3].front = [[unitD.type, 0.860, 1.0161]]
+      expected[1].B.front = [[unitD.type, 0.952, 1.8600]]
+      expected[3].B.front = [[unitD.type, 0.860, 1.0161]]
 
-      testCombat(state, rolls, expectedA, expectedB)
+      testCombatWithCustomRolls(state, rolls, expected)
     })
   })
 }

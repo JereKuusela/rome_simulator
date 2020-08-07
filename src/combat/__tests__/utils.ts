@@ -1,10 +1,10 @@
 import { getDefaultTactics, getDefaultTerrains, getDefaultCountryDefinitions, getDefaultBattle, getDefaultSettings } from 'data'
-import { mapRange, toObj, values } from 'utils'
-import { Mode, CountryName, Setting, SideType, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, CombatPhase, UnitPreferences, Cohort, UnitRole, CountryDefinitions, ArmyName, ModeState, SettingsAndOptions, Side, Settings, TacticDefinitions, TerrainDefinitions, CohortData, Environment } from 'types'
+import { mapRange, toObj, values, map } from 'utils'
+import { Mode, CountryName, Setting, SideType, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, CombatPhase, UnitPreferences, Cohort, UnitRole, CountryDefinitions, ArmyName, ModeState, SettingsAndOptions, Side, Settings, TacticDefinitions, TerrainDefinitions, CohortData, Environment, DisciplineValue, CohortDefinition, TacticType, GeneralAttribute } from 'types'
 import { doCombatRound, reinforce } from 'combat'
 import { removeDefeated } from 'combat/combat_utils'
 import { convertSides, getCombatField } from 'state'
-import { addToReserve } from 'managers/army'
+import { addToReserve, selectTactic, setGeneralAttribute } from 'managers/army'
 import { createArmy } from 'managers/countries'
 import { flatten } from 'lodash'
 
@@ -20,12 +20,27 @@ export interface TestState {
 }
 /**
  * Returns initial state for a test.
- * @param legacyDamage Older versions of Imperator had lower damage. This option should be removed once old tests are scaled properly.
  */
 export const initState = (): TestState => {
   return {
     battle: getDefaultBattle(1),
     settings: getDefaultSettings(),
+    countries: getDefaultCountryDefinitions(),
+    terrains: getDefaultTerrains(),
+    tactics: getDefaultTactics()
+  }
+}
+
+/**
+ * Returns a clean state for a test. All mechanics turned off.
+ */
+export const initCleanState = (): TestState => {
+  const settings = getDefaultSettings()
+  settings.siteSettings = map(settings.siteSettings, item => typeof item === 'boolean' ? false : item) as Settings
+  settings.siteSettings[Setting.AttributeDiscipline] = DisciplineValue.Off
+  return {
+    battle: getDefaultBattle(1),
+    settings,
     countries: getDefaultCountryDefinitions(),
     terrains: getDefaultTerrains(),
     tactics: getDefaultTactics()
@@ -54,19 +69,33 @@ export const createArmyTest = (state: TestState, side: SideType, daysUntilBattle
 
 export const getSettingsTest = (state: TestState) => state.settings.siteSettings
 
-export const createCohort = (type: UnitType) => ({
-  type,
-  id: 1,
-  image: '',
-  mode: Mode.Land,
-  role: UnitRole.Front,
-  baseValues: {
-    ...toObj(values(UnitType), type => type, () => ({ 'key': 0 })),
-    ...toObj(values(UnitAttribute), type => type, () => ({ 'key': 0 })),
-    ...toObj(values(TerrainType), type => type, () => ({ 'key': 0 })),
-    ...toObj(values(CombatPhase), type => type, () => ({ 'key': 0 }))
+export const createCohort = (type: UnitType, initStuff = false): CohortDefinition => {
+
+  const cohort = {
+    type,
+    image: '',
+    mode: Mode.Land,
+    role: UnitRole.Front,
+    baseValues: {
+      ...toObj(values(UnitType), type => type, () => ({ 'key': 0 })),
+      ...toObj(values(UnitAttribute), type => type, () => ({ 'key': 0 })),
+      ...toObj(values(TerrainType), type => type, () => ({ 'key': 0 })),
+      ...toObj(values(CombatPhase), type => type, () => ({ 'key': 0 }))
+    }
   }
-})
+  if (initStuff) {
+    cohort.baseValues[UnitAttribute.Morale] = { 'key': 1 }
+    cohort.baseValues[UnitAttribute.Strength] = { 'key': 1 }
+  }
+  return cohort
+}
+export const createDefeatedCohort = (type: UnitType): CohortDefinition => {
+
+  const cohort = createCohort(type)
+  cohort.baseValues![UnitAttribute.Morale] = { 'key': 0 }
+  cohort.baseValues![UnitAttribute.Strength] = { 'key': 1 }
+  return cohort
+}
 
 // Dummy test to avoid an error.
 describe('utils', () => {
@@ -74,6 +103,8 @@ describe('utils', () => {
 })
 
 export const addToReserveTest = (state: TestState, side: SideType, cohorts: CohortData[], index: number = 0) => addToReserve(getArmyTest(state, side, index), cohorts)
+export const selectTacticTest = (state: TestState, side: SideType, tactic: TacticType, index: number = 0) => selectTactic(getArmyTest(state, side, index), tactic)
+export const setGeneralAttributeTest = (state: TestState, side: SideType, attribute: GeneralAttribute, value: number, index: number = 0) => setGeneralAttribute(getArmyTest(state, side, index), attribute, value)
 
 /**
  * Returns unit prerefences object with given selections.
@@ -97,7 +128,7 @@ export const everyType = [UnitType.Archers, UnitType.CamelCavalry, UnitType.Char
 
 type ExpectedCohort = ([UnitType, number, number] | UnitType | null)
 
-type Expected = {
+type ExpectedArmy = {
   front?: ExpectedCohort[]
   back?: ExpectedCohort[]
   reserveFront?: ExpectedCohort[]
@@ -106,14 +137,22 @@ type Expected = {
   defeated?: ExpectedCohort[]
 }
 
-export const testCombat = (state: TestState, rolls: number[][], expectedA: Expected[], expectedB: Expected[]) => {
-  const rollsPerDay = flatten(rolls.map(rolls => Array(5).fill(rolls) as [number, number][]))
-  return testCombatSub(state, rollsPerDay, expectedA, expectedB)
+type Expected = {
+  A: ExpectedArmy,
+  B: ExpectedArmy
 }
-export const testDeployment = (state: TestState, expectedA: Expected, expectedB: Expected) => testCombatSub(state, [], [expectedA], [expectedB])
 
-export const testReinforcement = (roundsToSkip: number, state: TestState, expectedA: Expected, expectedB: Expected) => {
-  return testCombatSub(state, Array(Math.max(0, roundsToSkip - 1)).fill([2, 2]).concat([[-1000, -1000]]), Array(roundsToSkip).fill(null).concat(expectedA), Array(roundsToSkip).fill(null).concat(expectedB))
+export const testCombatWithDefaultRolls = (state: TestState, expected: Expected[]) => {
+  return testCombatSub(state, [], expected)
+}
+export const testCombatWithCustomRolls = (state: TestState, rolls: number[][], expected: Expected[]) => {
+  const rollsPerDay = flatten(rolls.map(rolls => Array(5).fill(rolls) as [number, number][]))
+  return testCombatSub(state, rollsPerDay, expected)
+}
+export const testDeployment = (state: TestState, A: ExpectedArmy, B: ExpectedArmy) => testCombatSub(state, [], [{ A, B }])
+
+export const testReinforcement = (roundsToSkip: number, state: TestState, A: ExpectedArmy, B: ExpectedArmy) => {
+  return testCombatSub(state, Array(Math.max(0, roundsToSkip - 1)).fill([2, 2]).concat([[-1000, -1000]]), Array(roundsToSkip).fill(null).concat({ A, B }))
 }
 
 /**
@@ -123,14 +162,14 @@ export const testReinforcement = (roundsToSkip: number, state: TestState, expect
  * @param expectedA Expected attacker units for every round. Nulls can be used to skip checks.
  * @param expectedB Expected defender units for every round. Nulls can be used to skip checks.
  */
-const testCombatSub = (state: TestState, rolls: [number, number][], expectedA: Expected[], expectedB: Expected[]) => {
+const testCombatSub = (state: TestState, rolls: [number, number][], expected: Expected[]) => {
   const [sideA, sideB] = convertSides(state as any)
   const env = getCombatField(state as any)
-  for (; env.day < expectedA.length; env.day++) {
+  for (; env.day < expected.length; env.day++) {
     [sideA.results.dice, sideB.results.dice] = getRolls(rolls, env.day)
     doCombatRound(env, sideA, sideB, true)
-    verify(env, sideA, expectedA[env.day])
-    verify(env, sideB, expectedB[env.day])
+    verify(env, sideA, expected[env.day]?.A)
+    verify(env, sideB, expected[env.day]?.B)
   }
   return [sideA, sideB]
 }
@@ -141,7 +180,7 @@ const getRolls = (rolls: number[][], day: number): [number, number] => {
   return [2, 2]
 }
 
-const verify = (env: Environment, side: Side, expected: Expected) => {
+const verify = (env: Environment, side: Side, expected: ExpectedArmy) => {
   // No need to check anything if nothing is expected.
   if (!expected)
     return
@@ -150,7 +189,7 @@ const verify = (env: Environment, side: Side, expected: Expected) => {
   verifyPart('Reserve front', env, expected.reserveFront ?? [], side.type, side.cohorts.reserve.front)
   verifyPart('Reserve flank', env, expected.reserveFlank ?? [], side.type, side.cohorts.reserve.flank)
   verifyPart('Reserve support', env, expected.reserveSupport ?? [], side.type, side.cohorts.reserve.support)
-  verifyPart('Defeated', env, expected.defeated ?? [], side.type, side.cohorts.defeated)
+  verifyPart('Defeated', env, expected.defeated ?? [], side.type, side.cohorts.defeated.concat(side.cohorts.retreated))
 }
 
 const errorPrefix = (day: string | number, side: SideType, part: string, index?: number) => (typeof day === 'number' ? 'Round ' : '') + day + ', ' + side + ' ' + part + (index === undefined ? '' : ' ' + index) + ': '
@@ -238,12 +277,16 @@ const verifyPart = (part: string, env: Environment, expected: ExpectedCohort[], 
  * Inits expected units with empty values.
  * @param rounds List of days to init, in ascending order.
  */
-export const initExpected = (...rounds: number[]) => {
-  const expected = (): Expected[] => mapRange(rounds[rounds.length - 1] + 1, round => rounds.includes(round) ? {} : null as any)
-  return {
-    expectedA: expected(),
-    expectedB: expected()
-  }
+export const initExpected = (...rounds: number[]): Expected[] => {
+  return mapRange(rounds[rounds.length - 1] + 1, round => {
+    const includes = rounds.includes(round)
+    return {
+      A: initExpectedArmy(includes),
+      B: initExpectedArmy(includes)
+    }
+  })
 }
+
+const initExpectedArmy = (included: boolean): ExpectedArmy => included ? {} : null as any
 
 export const createExpected = (...types: ([UnitType | null, number] | UnitType)[]) => types.reduce((prev, current) => prev.concat(Array.isArray(current) ? Array(current[1]).fill(current[0]) : [current]), [] as UnitType[])

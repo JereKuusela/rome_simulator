@@ -39,7 +39,9 @@ export const getArmyPart = (units: Cohorts, type: ArmyPart) => {
     return units.frontline
   if (type === ArmyPart.Reserve)
     return [units.reserve.front.concat(units.reserve.flank).concat(units.reserve.support)]
-  return [units.defeated]
+  if (type === ArmyPart.Defeated)
+    return [units.defeated]
+  return [units.retreated]
 }
 
 export const getOpponent = (side: SideType) => side === SideType.A ? SideType.B : SideType.A

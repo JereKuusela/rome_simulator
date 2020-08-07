@@ -1,4 +1,4 @@
-import { TestState, initState, createCohort, getSettingsTest, addToReserveTest, getBattleTest, initExpected, testCombat } from './utils'
+import { TestState, initState, createCohort, getSettingsTest, addToReserveTest, getBattleTest, initExpected, testCombatWithCustomRolls } from './utils'
 import { UnitType, UnitAttribute, CohortDefinition, Setting, SideType } from 'types'
 
 if (process.env.REACT_APP_GAME !== 'euiv') {
@@ -56,29 +56,29 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       })
     }
 
-    const testBothDefeated = (strengthA: number, strengthD: number, moraleA: number, moraleD: number, rounds: number = 0) => {
-      const { expectedA, expectedB } = initExpected(rounds)
-      expectedA[rounds].defeated = [[type, strengthA, moraleA], [type, strengthA, moraleA]]
-      expectedB[rounds].defeated = [[type, strengthD, moraleD], [type, strengthD, moraleD]]
-      testCombat(state, [], expectedA, expectedB)
+    const testBothDefeated = (strengthA: number, strengthB: number, moraleA: number, moraleB: number, rounds: number = 0) => {
+      const expected = initExpected(rounds)
+      expected[rounds].A.defeated = [[type, strengthA, moraleA], [type, strengthA, moraleA]]
+      expected[rounds].B.defeated = [[type, strengthB, moraleB], [type, strengthB, moraleB]]
+      testCombatWithCustomRolls(state, [], expected)
     }
-    const testDefenderDefeated = (strengthA: number, strengthD: number, moraleA: number, moraleD: number, rounds: number = 0) => {
-      const { expectedA, expectedB } = initExpected(rounds)
-      expectedA[rounds].front = [[type, strengthA, moraleA], [type, strengthA, moraleA]]
-      expectedB[rounds].defeated = [[type, strengthD, moraleD], [type, strengthD, moraleD]]
-      testCombat(state, [], expectedA, expectedB)
+    const testDefenderDefeated = (strengthA: number, strengthB: number, moraleA: number, moraleB: number, rounds: number = 0) => {
+      const expected = initExpected(rounds)
+      expected[rounds].A.front = [[type, strengthA, moraleA], [type, strengthA, moraleA]]
+      expected[rounds].B.defeated = [[type, strengthB, moraleB], [type, strengthB, moraleB]]
+      testCombatWithCustomRolls(state, [], expected)
     }
-    const testAttackerDefeated = (strengthA: number, strengthD: number, moraleA: number, moraleD: number, rounds: number = 0) => {
-      const { expectedA, expectedB } = initExpected(rounds)
-      expectedA[rounds].defeated = [[type, strengthA, moraleA], [type, strengthA, moraleA]]
-      expectedB[rounds].front = [[type, strengthD, moraleD], [type, strengthD, moraleD]]
-      testCombat(state, [], expectedA, expectedB)
+    const testAttackerDefeated = (strengthA: number, strengthB: number, moraleA: number, moraleB: number, rounds: number = 0) => {
+      const expected = initExpected(rounds)
+      expected[rounds].A.defeated = [[type, strengthA, moraleA], [type, strengthA, moraleA]]
+      expected[rounds].B.front = [[type, strengthB, moraleB], [type, strengthB, moraleB]]
+      testCombatWithCustomRolls(state, [], expected)
     }
-    const testNoneDefeated = (strengthA: number, strengthD: number, moraleA: number, moraleD: number, rounds: number = 0) => {
-      const { expectedA, expectedB } = initExpected(rounds)
-      expectedA[rounds].front = [[type, strengthA, moraleA], [type, strengthA, moraleA]]
-      expectedB[rounds].front = [[type, strengthD, moraleD], [type, strengthD, moraleD]]
-      testCombat(state, [], expectedA, expectedB)
+    const testNoneDefeated = (strengthA: number, strengthB: number, moraleA: number, moraleB: number, rounds: number = 0) => {
+      const expected = initExpected(rounds)
+      expected[rounds].A.front = [[type, strengthA, moraleA], [type, strengthA, moraleA]]
+      expected[rounds].B.front = [[type, strengthB, moraleB], [type, strengthB, moraleB]]
+      testCombatWithCustomRolls(state, [], expected)
     }
     it('attacker stack wipes if it can\'t deploy', () => {
       addToReserveTest(state, SideType.A, [lowMorale, lowMorale])

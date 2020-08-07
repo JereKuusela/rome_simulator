@@ -1,5 +1,5 @@
 import { addValues } from 'definition_values'
-import { getUnit, TestState, initState, initExpected, testCombat, getSettingsTest, addToReserveTest, getArmyTest, createArmyTest } from './utils'
+import { getUnit, TestState, initState, initExpected, testCombatWithCustomRolls, getSettingsTest, addToReserveTest, getArmyTest, createArmyTest } from './utils'
 import { UnitType, UnitAttribute, Setting, ValuesType, SideType, UnitPreferenceType } from 'types'
 import { setUnitPreference } from 'managers/army'
 
@@ -18,12 +18,12 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       addToReserveTest(state, SideType.B, [archer, archer, light, light])
 
       const rolls = [[5, 0]]
-      const { expectedA, expectedB } = initExpected(1)
+      const expected = initExpected(1)
 
-      expectedA[1].front = [[archer.type, 0.956, 1.9140], [archer.type, 0.956, 1.9140]]
-      expectedB[1].front = [[archer.type, 0.956, 1.914], [archer.type, 0.956, 1.914], [light.type, 1, 2.4], [light.type, 1, 2.4]]
+      expected[1].A.front = [[archer.type, 0.956, 1.9140], [archer.type, 0.956, 1.9140]]
+      expected[1].B.front = [[archer.type, 0.956, 1.914], [archer.type, 0.956, 1.914], [light.type, 1, 2.4], [light.type, 1, 2.4]]
 
-      testCombat(state, rolls, expectedA, expectedB)
+      testCombatWithCustomRolls(state, rolls, expected)
     })
 
     it('inner flank', () => {
@@ -35,14 +35,14 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       setUnitPreference(getArmyTest(state, SideType.A), UnitPreferenceType.Primary, UnitType.HeavyCavalry)
 
       const rolls = [[5, 5]]
-      const { expectedA, expectedB } = initExpected(5)
+      const expected = initExpected(5)
 
-      expectedA[5].front = [[heavy.type, 0.826, 1.4929], [heavy.type, 0.826, 1.4929], [archer.type, 0.838, 1.0341], [archer.type, 0.838, 1.0341]]
+      expected[5].A.front = [[heavy.type, 0.826, 1.4929], [heavy.type, 0.826, 1.4929], [archer.type, 0.838, 1.0341], [archer.type, 0.838, 1.0341]]
       // Front line contains one defeated proxy cohort.
-      expectedB[5].front = [[archer.type, 0.801, 0.8586], [archer.type, 0.690, 0.0134]]
-      expectedB[5].defeated = [archer.type, archer.type, archer.type]
+      expected[5].B.front = [[archer.type, 0.801, 0.8586], [archer.type, 0.690, 0.0134]]
+      expected[5].B.defeated = [archer.type, archer.type, archer.type]
 
-      testCombat(state, rolls, expectedA, expectedB)
+      testCombatWithCustomRolls(state, rolls, expected)
     })
 
     it('inner flank (fixed)', () => {
@@ -55,13 +55,13 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       setUnitPreference(getArmyTest(state, SideType.A), UnitPreferenceType.Primary, UnitType.HeavyCavalry)
 
       const rolls = [[5, 5], [0, 6]]
-      const { expectedA, expectedB } = initExpected(5)
+      const expected = initExpected(5)
 
-      expectedA[5].front = [[heavy.type, 0.826, 1.4929], [heavy.type, 0.826, 1.4929], [archer.type, 0.838, 1.0341], [archer.type, 0.838, 1.0341]]
-      expectedB[5].front = [[archer.type, 0.746, 0.4360], [archer.type, 0.746, 0.4360]]
-      expectedB[5].defeated = [archer.type, archer.type]
+      expected[5].A.front = [[heavy.type, 0.826, 1.4929], [heavy.type, 0.826, 1.4929], [archer.type, 0.838, 1.0341], [archer.type, 0.838, 1.0341]]
+      expected[5].B.front = [[archer.type, 0.746, 0.4360], [archer.type, 0.746, 0.4360]]
+      expected[5].B.defeated = [archer.type, archer.type]
 
-      testCombat(state, rolls, expectedA, expectedB)
+      testCombatWithCustomRolls(state, rolls, expected)
     })
 
     it('defender\'s advantage', () => {
@@ -78,20 +78,20 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       addToReserveTest(state, SideType.B, [archer, archer], 1)
 
       const rolls = [[6, 1], [6, 1], [1, 6], [1, 6]]
-      const { expectedA, expectedB } = initExpected(4, 15)
+      const expected = initExpected(4, 15)
 
-      expectedA[4].front = [[heavy.type, 0.918, 1.83]]
-      expectedA[4].reserveFront = [archer.type]
-      expectedB[4].front = [[archer.type, 1, 2.4]]
-      expectedB[4].defeated = [archer.type]
+      expected[4].A.front = [[heavy.type, 0.918, 1.83]]
+      expected[4].A.reserveFront = [archer.type]
+      expected[4].B.front = [[archer.type, 1, 2.4]]
+      expected[4].B.defeated = [archer.type]
 
-      expectedA[15].front = [[archer.type, 1, 2.4]]
-      expectedA[15].defeated = [heavy.type]
-      expectedB[15].front = [[archer.type, 0.866, 1.72]]
-      expectedB[15].reserveFront = [archer.type]
-      expectedB[15].defeated = [archer.type, archer.type]
+      expected[15].A.front = [[archer.type, 1, 2.4]]
+      expected[15].A.defeated = [heavy.type]
+      expected[15].B.front = [[archer.type, 0.866, 1.72]]
+      expected[15].B.reserveFront = [archer.type]
+      expected[15].B.defeated = [archer.type, archer.type]
 
-      testCombat(state, rolls, expectedA, expectedB)
+      testCombatWithCustomRolls(state, rolls, expected)
     })
   })
 }

@@ -208,7 +208,8 @@ const copyCohortState = (status: Cohorts): Cohorts => ({
     flank: status.reserve.flank.map(value => ({ ...value })),
     support: status.reserve.support.map(value => ({ ...value }))
   },
-  defeated: status.defeated.map(value => ({ ...value }))
+  defeated: status.defeated.map(value => ({ ...value })),
+  retreated: status.retreated.map(value => ({ ...value }))
 })
 
 const REPAIR_PER_MONTH = 0.1
