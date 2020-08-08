@@ -5,10 +5,10 @@ import { wipeCohort } from './combat_utils'
 export const checkStackWipe = (environment: Environment, side: Side, enemy: Cohorts) => {
   if (!environment.settings[Setting.Stackwipe])
     return false
-  if (environment.round > 0 && side.alive)
+  if (environment.round > 0 && !side.isDefeated)
     return false
   const settings = environment.settings
-  const noDeploy = environment.round === 0 && !side.alive
+  const noDeploy = environment.round === 0 && side.isDefeated
   const soft = 0 < environment.round && environment.round < settings[Setting.StackwipeRounds]
   const total = calculateTotalStrength(side.cohorts, true)
   const totalEnemy = calculateTotalStrength(enemy, true)
@@ -21,8 +21,7 @@ export const checkStackWipe = (environment: Environment, side: Side, enemy: Coho
 const wasDefeatedDuringCurrentBattle = (environment: Environment, cohort: Cohort) => cohort.state.defeatedDay >= environment.day - environment.round
 
 export const stackWipe = (environment: Environment, side: Side) => {
-  side.alive = false
-  side.deployed = []
+  side.isDefeated = true
   const { frontline, reserve, defeated } = side.cohorts
 
   for (let i = 0; i < defeated.length; i++) {

@@ -6,6 +6,7 @@ import { Mode } from './definition'
 export enum TerrainType {
   Grasslands = 'Grasslands',
   Forest = 'Forest',
+  Naval = 'Naval',
   None = 'None',
   Plains = 'Plains',
   Riverine = 'Riverine',

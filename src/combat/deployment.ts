@@ -194,16 +194,18 @@ const countCohorts = (side: Side) => reserveSize(side.cohorts.reserve) + side.co
 const countReserve = (armies: Army[]) => sum(armies.map(army => reserveSize(army.reserve)))
 
 export const undeploy = (side: Side) => {
-  const reserve: Cohort[] = []
-  reserve.push(...flatten(side.cohorts.frontline.map(row => row.filter(cohort => cohort) as Cohort[])))
-  reserve.push(...side.cohorts.reserve.flank)
-  reserve.push(...side.cohorts.reserve.front)
-  reserve.push(...side.cohorts.reserve.support)
-  reserve.push(...side.cohorts.defeated)
-  side.deployed.forEach(army => {
-    army.reserve = sortReserve(reserve.filter(cohort => cohort.properties.participantIndex === army.participantIndex), army.unitPreferences)
-    side.armies.push(army)
-  })
+  if (!side.isDefeated) {
+    const reserve: Cohort[] = []
+    reserve.push(...flatten(side.cohorts.frontline.map(row => row.filter(cohort => cohort) as Cohort[])))
+    reserve.push(...side.cohorts.reserve.flank)
+    reserve.push(...side.cohorts.reserve.front)
+    reserve.push(...side.cohorts.reserve.support)
+    reserve.push(...side.cohorts.defeated)
+    side.deployed.forEach(army => {
+      army.reserve = sortReserve(reserve.filter(cohort => cohort.properties.participantIndex === army.participantIndex), army.unitPreferences)
+      side.armies.push(army)
+    })
+  }
 
   side.deployed = []
   side.cohorts.frontline = side.cohorts.frontline.map(row => row.map(() => null))

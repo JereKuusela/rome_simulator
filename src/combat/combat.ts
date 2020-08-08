@@ -4,7 +4,7 @@ import { noZero } from 'utils'
 import { calculateValue } from 'definition_values'
 import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, reserveSize, reinforce, calculateGeneralPips, getTerrainPips, checkStackWipe, defeatCohort, isAlive } from 'combat'
 import { deploy, undeploy, moveDefeatedToRetreated } from './deployment'
-import { getLeadingArmy } from 'managers/battle'
+import { getLeadingArmy, getDefaultCombatResults } from 'managers/battle'
 
 /**
  * Makes given armies attach each other.
@@ -25,7 +25,9 @@ export const doCombatRound = (env: Environment, sideA: Side, sideB: Side, markDe
   clearState(d.cohorts.frontline)
   if (round === 0) {
     undeploy(a)
+    a.results = getDefaultCombatResults()
     undeploy(d)
+    d.results = getDefaultCombatResults()
   }
   deploy(env, a, d)
   if (round > 0) {
@@ -53,29 +55,27 @@ export const doCombatRound = (env: Environment, sideA: Side, sideB: Side, markDe
     applyLosses(a.cohorts.frontline)
     applyLosses(d.cohorts.frontline)
   }
-  a.alive = moveDefeated(env, a.cohorts.frontline, a.cohorts.defeated, markDefeated) || reserveSize(a.cohorts.reserve) > 0
-  d.alive = moveDefeated(env, d.cohorts.frontline, d.cohorts.defeated, markDefeated) || reserveSize(d.cohorts.reserve) > 0
+  a.isDefeated = moveDefeated(env, a.cohorts.frontline, a.cohorts.defeated, markDefeated) && reserveSize(a.cohorts.reserve) === 0
+  d.isDefeated = moveDefeated(env, d.cohorts.frontline, d.cohorts.defeated, markDefeated) && reserveSize(d.cohorts.reserve) === 0
+  const noCombat = a.isDefeated && d.isDefeated
 
   const defenderWiped = checkStackWipe(env, d, a.cohorts)
   if (!defenderWiped)
     checkStackWipe(env, a, d.cohorts)
-  if (!a.alive) {
-    a.deployed = []
+  a.armiesRemaining = !a.isDefeated || a.armies.length > 0
+  d.armiesRemaining = !d.isDefeated || d.armies.length > 0
+  if (a.isDefeated) {
     moveDefeatedToRetreated(a.cohorts)
     env.round = -1
-    if (d.alive)
+    if (!noCombat)
       env.attacker = a.type
   }
-  if (!d.alive) {
-    d.deployed = []
+  if (d.isDefeated) {
     moveDefeatedToRetreated(d.cohorts)
     env.round = -1
-    if (a.alive)
+    if (!noCombat)
       env.attacker = d.type
   }
-  // Check if a new battle can started.
-  a.alive = a.alive || a.armies.length > 0
-  d.alive = d.alive || d.armies.length > 0
 }
 
 const getBackTarget = (target: Frontline, index: number) => target.length > 1 ? target[1][index] : null
@@ -86,14 +86,14 @@ const clearState = (source: Frontline) => {
       const cohort = source[i][j]
       if (!cohort)
         continue
-        const state = cohort.state
-        state.damageMultiplier = 0
-        state.moraleDealt = 0
-        state.strengthDealt = 0
-        state.moraleLoss = 0
-        state.strengthLoss = 0
-        state.target = null
-        state.flanking = false
+      const state = cohort.state
+      state.damageMultiplier = 0
+      state.moraleDealt = 0
+      state.strengthDealt = 0
+      state.moraleLoss = 0
+      state.strengthLoss = 0
+      state.target = null
+      state.flanking = false
     }
   }
 }
@@ -216,24 +216,24 @@ const applyLosses = (frontline: Frontline) => {
  */
 const moveDefeated = (environment: Environment, frontline: Frontline, defeated: Cohort[], markDefeated: boolean) => {
   const settings = environment.settings
-  let alive = false
+  let cohortsAlive = false
   for (let i = 0; i < frontline.length; i++) {
     for (let j = 0; j < frontline[i].length; j++) {
       const cohort = frontline[i][j]
       if (!cohort)
         continue
       if (isAlive(cohort, environment.settings)) {
-        alive = true
+        cohortsAlive = true
         continue
       }
       if (i > 0 && !settings[Setting.BackRowRetreat]) {
-        alive = true
+        cohortsAlive = true
         continue
       }
       if (settings[Setting.DynamicTargeting])
         cohort.isWeak = true
       if (settings[Setting.RetreatRounds] > environment.round + 1) {
-        alive = true
+        cohortsAlive = true
         continue
       }
       defeatCohort(environment, cohort)
@@ -243,7 +243,7 @@ const moveDefeated = (environment: Environment, frontline: Frontline, defeated: 
       defeated.push(cohort)
     }
   }
-  return alive
+  return !cohortsAlive
 }
 
 const attack = (environment: Environment, source: Side, target: Side, dailyMultiplier: number, tacticStrengthDamageMultiplier: number, phase: CombatPhase) => {

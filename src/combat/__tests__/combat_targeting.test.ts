@@ -90,6 +90,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       expected[15].B.front = [[archer.type, 0.866, 1.72]]
       expected[15].B.reserveFront = [archer.type]
       expected[15].B.defeated = [archer.type, archer.type]
+      expected[15].attackerFlipped = true
 
       testCombatWithCustomRolls(state, rolls, expected)
     })

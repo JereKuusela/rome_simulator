@@ -1,4 +1,4 @@
-import { Battle, TerrainType, SideType, CountryName, Terrain, Settings, Setting, Army, UnitType, ArmyName, SideData, Side, ArmyDefinition, GeneralAttribute, Participant } from 'types'
+import { Battle, TerrainType, SideType, CountryName, Terrain, Settings, Setting, Army, UnitType, ArmyName, SideData, Side, ArmyDefinition, GeneralAttribute, Participant, CombatPhase } from 'types'
 import { getCombatUnit, sortReserve } from 'combat'
 
 export const selectTerrain = (battle: Battle, index: number, terrain: TerrainType) => {
@@ -52,10 +52,22 @@ export const selectParticipantArmy = (battle: Battle, sideType: SideType, index:
 
 const getRow = (width: number) => Array(width).fill(null)
 
+export const getDefaultCombatResults = () => ({
+  dailyMultiplier: 0,
+  dice: 0,
+  flankRatioBonus: 0,
+  generalPips: 0,
+  round: 0,
+  tacticBonus: 0,
+  terrainPips: 0,
+  tacticStrengthDamageMultiplier: 0
+})
+
 export const convertSide = (side: SideData, armies: Army[], settings: Settings): Side => {
   const width = settings[Setting.CombatWidth]
   return {
-    alive: true,
+    armiesRemaining: true,
+    isDefeated: false,
     cohorts: {
       frontline: settings[Setting.BackRow] ? [getRow(width), getRow(width)] : [getRow(width)],
       defeated: [],
@@ -70,16 +82,7 @@ export const convertSide = (side: SideData, armies: Army[], settings: Settings):
     armies,
     deployed: [],
     type: side.type,
-    results: {
-      dailyMultiplier: 0,
-      dice: 0,
-      flankRatioBonus: 0,
-      generalPips: 0,
-      round: 0,
-      tacticBonus: 0,
-      terrainPips: 0,
-      tacticStrengthDamageMultiplier: 0
-    }
+    results: getDefaultCombatResults()
   }
 }
 
@@ -92,7 +95,7 @@ export const convertArmy = (participantIndex: number, participant: Participant, 
     arrival: participant.daysUntilBattle,
     leftFlank: army.flankSize,
     rightFlank: army.flankSize,
-    priority: army.general.values[GeneralAttribute.Martial],
+    priority: army.general.values[GeneralAttribute.Martial] + army.general.values[CombatPhase.Fire] + army.general.values[CombatPhase.Shock],
     tactic: army.general.tactic,
     unitPreferences: army.unitPreferences,
     general: army.general.values,

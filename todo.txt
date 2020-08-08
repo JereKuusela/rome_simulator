@@ -55,16 +55,6 @@ Needed tests:
   - Weak targeting (primary weak, secondary weak, all weak)
   - Defender's advantage (with multiarmy to check aggressor change)
   - Flank direction with different settings (EUIV, Imperator, fixed Imperator), both in and outside flank
-* Leader:
-  - Order of leaders with multiarmy: index, day of arrival, martial
-  - With multiple battles (some leaders retreat)
-  - Terrain with maneuver and aggressor change
-  - Dice with different martials
-* Tactic:
-  - Tactic overwriting when stronger general joins
-  - Efficiency, casulties, etc.
-  - Dynamic strength
-  - Retreated armies don't count.
 * Deployment
   - Many scenarios
   - Late deployment (with and without penalty)

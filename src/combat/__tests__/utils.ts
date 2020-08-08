@@ -1,12 +1,12 @@
 import { getDefaultTactics, getDefaultTerrains, getDefaultCountryDefinitions, getDefaultBattle, getDefaultSettings } from 'data'
 import { mapRange, toObj, values, map } from 'utils'
-import { Mode, CountryName, Setting, SideType, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, CombatPhase, UnitPreferences, Cohort, UnitRole, CountryDefinitions, ArmyName, ModeState, SettingsAndOptions, Side, Settings, TacticDefinitions, TerrainDefinitions, CohortData, Environment, DisciplineValue, CohortDefinition, TacticType, GeneralAttribute } from 'types'
-import { doCombatRound, reinforce } from 'combat'
-import { removeDefeated } from 'combat/combat_utils'
+import { Mode, CountryName, Setting, SideType, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, CombatPhase, UnitPreferences, Cohort, UnitRole, CountryDefinitions, ArmyName, ModeState, SettingsAndOptions, Side, Settings, TacticDefinitions, TerrainDefinitions, CohortData, Environment, DisciplineValue, CohortDefinition, TacticType, GeneralAttribute, GeneralValueType } from 'types'
+import { doCombatRound } from 'combat'
 import { convertSides, getCombatField } from 'state'
 import { addToReserve, selectTactic, setGeneralAttribute } from 'managers/army'
 import { createArmy } from 'managers/countries'
 import { flatten } from 'lodash'
+import { getLeadingArmy, selectTerrain } from 'managers/battle'
 
 /**
  * Everything the combat tests might need to make tests convenient to write.
@@ -89,10 +89,19 @@ export const createCohort = (type: UnitType, initStuff = false): CohortDefinitio
   }
   return cohort
 }
+
 export const createDefeatedCohort = (type: UnitType): CohortDefinition => {
 
   const cohort = createCohort(type)
   cohort.baseValues![UnitAttribute.Morale] = { 'key': 0 }
+  cohort.baseValues![UnitAttribute.Strength] = { 'key': 1 }
+  return cohort
+}
+
+export const createStrongCohort = (type: UnitType): CohortDefinition => {
+
+  const cohort = createCohort(type)
+  cohort.baseValues![UnitAttribute.Morale] = { 'key': 20 }
   cohort.baseValues![UnitAttribute.Strength] = { 'key': 1 }
   return cohort
 }
@@ -104,7 +113,8 @@ describe('utils', () => {
 
 export const addToReserveTest = (state: TestState, side: SideType, cohorts: CohortData[], index: number = 0) => addToReserve(getArmyTest(state, side, index), cohorts)
 export const selectTacticTest = (state: TestState, side: SideType, tactic: TacticType, index: number = 0) => selectTactic(getArmyTest(state, side, index), tactic)
-export const setGeneralAttributeTest = (state: TestState, side: SideType, attribute: GeneralAttribute, value: number, index: number = 0) => setGeneralAttribute(getArmyTest(state, side, index), attribute, value)
+export const selectTerrainTest = (state: TestState, terrain: TerrainType, index: number = 0) => selectTerrain(state.battle[Mode.Land], index, terrain)
+export const setGeneralAttributeTest = (state: TestState, side: SideType, attribute: GeneralValueType, value: number, index: number = 0) => setGeneralAttribute(getArmyTest(state, side, index), attribute, value)
 
 /**
  * Returns unit prerefences object with given selections.
@@ -135,11 +145,14 @@ type ExpectedArmy = {
   reserveFlank?: ExpectedCohort[]
   reserveSupport?: ExpectedCohort[]
   defeated?: ExpectedCohort[]
+  leader?: number
+  roll?: number
 }
 
-type Expected = {
+export type Expected = {
   A: ExpectedArmy,
-  B: ExpectedArmy
+  B: ExpectedArmy,
+  attackerFlipped?: boolean
 }
 
 export const testCombatWithDefaultRolls = (state: TestState, expected: Expected[]) => {
@@ -170,6 +183,8 @@ const testCombatSub = (state: TestState, rolls: [number, number][], expected: Ex
     doCombatRound(env, sideA, sideB, true)
     verify(env, sideA, expected[env.day]?.A)
     verify(env, sideB, expected[env.day]?.B)
+    if (expected[env.day]?.attackerFlipped !== undefined)
+      expect(env.attacker).toEqual(expected[env.day].attackerFlipped ? SideType.B : SideType.A)
   }
   return [sideA, sideB]
 }
@@ -190,6 +205,14 @@ const verify = (env: Environment, side: Side, expected: ExpectedArmy) => {
   verifyPart('Reserve flank', env, expected.reserveFlank ?? [], side.type, side.cohorts.reserve.flank)
   verifyPart('Reserve support', env, expected.reserveSupport ?? [], side.type, side.cohorts.reserve.support)
   verifyPart('Defeated', env, expected.defeated ?? [], side.type, side.cohorts.defeated.concat(side.cohorts.retreated))
+  if (expected.leader !== undefined)
+    verifyLeader(side, expected.leader)
+  if (expected.roll !== undefined)
+    expect(side.results.dice + side.results.terrainPips + side.results.generalPips).toEqual(expected.roll)
+}
+
+const verifyLeader = (side: Side, expected: number) => {
+  expect(getLeadingArmy(side)?.participantIndex).toEqual(expected)
 }
 
 const errorPrefix = (day: string | number, side: SideType, part: string, index?: number) => (typeof day === 'number' ? 'Round ' : '') + day + ', ' + side + ' ' + part + (index === undefined ? '' : ' ' + index) + ': '

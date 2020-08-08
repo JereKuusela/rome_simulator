@@ -266,11 +266,11 @@ const doPhase = (field: Environment, attacker: Side, defender: Side, phase: numb
   for (; round <= maxRound; round++) {
     field.day = round
     doCombatRound(field, attacker, defender, false)
-    if (!attacker.alive && !defender.alive)
+    if (!attacker.armiesRemaining && !defender.armiesRemaining)
       winner = null
-    else if (!attacker.alive)
+    else if (!attacker.armiesRemaining)
       winner = SideType.B
-    else if (!defender.alive)
+    else if (!defender.armiesRemaining)
       winner = SideType.A
     // Custom check to prevent round going over phase limit.
     if (winner !== undefined || round === maxRound)

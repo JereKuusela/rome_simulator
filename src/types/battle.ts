@@ -67,7 +67,8 @@ export type SideRoundInfo = {
 
 export type Side = {
   results: SideRoundInfo
-  alive: boolean
+  armiesRemaining: boolean
+  isDefeated: boolean
   armies: Army[]
   flankRatio: number
   deployed: Army[]

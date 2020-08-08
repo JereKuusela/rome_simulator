@@ -72,7 +72,7 @@ const subBattle = (battle: Battle, env: Environment, attacker: Side, defender: S
     env.day = 0
     env.round = round
     doCombatRound(env, attacker, defender, true)
-    battle.fightOver = !attacker.alive || !defender.alive
+    battle.fightOver = !attacker.armiesRemaining || !defender.armiesRemaining
     freeseSize(attacker)
     freeseSize(defender)
     sideA.days = [attacker]
@@ -89,7 +89,7 @@ const subBattle = (battle: Battle, env: Environment, attacker: Side, defender: S
     env.round = getRound(battle)
     doCombatRound(env, attacker, defender, true)
 
-    battle.fightOver = !attacker.alive || !defender.alive
+    battle.fightOver = !attacker.armiesRemaining || !defender.armiesRemaining
     if (battle.fightOver) {
       removeDefeated(attacker.cohorts.frontline)
       removeDefeated(defender.cohorts.frontline)
