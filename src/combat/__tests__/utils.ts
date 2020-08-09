@@ -37,6 +37,7 @@ export const initState = (): TestState => {
 export const initCleanState = (): TestState => {
   const settings = getDefaultSettings()
   settings.siteSettings = map(settings.siteSettings, item => typeof item === 'boolean' ? false : item) as Settings
+  settings.siteSettings[Setting.MoraleHitForNonSecondaryReinforcement] = 0
   settings.siteSettings[Setting.AttributeDiscipline] = DisciplineValue.Off
   return {
     battle: getDefaultBattle(1),
@@ -69,7 +70,7 @@ export const createArmyTest = (state: TestState, side: SideType, daysUntilBattle
 
 export const getSettingsTest = (state: TestState) => state.settings.siteSettings
 
-export const createCohort = (type: UnitType, initStuff = false): CohortDefinition => {
+export const createCohort = (type: UnitType): CohortDefinition => {
 
   const cohort = {
     type,
@@ -83,21 +84,31 @@ export const createCohort = (type: UnitType, initStuff = false): CohortDefinitio
       ...toObj(values(CombatPhase), type => type, () => ({ 'key': 0 }))
     }
   }
-  if (initStuff) {
-    cohort.baseValues[UnitAttribute.Morale] = { 'key': 1 }
-    cohort.baseValues[UnitAttribute.Strength] = { 'key': 1 }
-  }
+  cohort.baseValues[UnitAttribute.Morale] = { 'key': 1 }
+  cohort.baseValues[UnitAttribute.Strength] = { 'key': 1 }
+  cohort.baseValues[UnitAttribute.Maneuver] = { 'key': 1 }
   return cohort
 }
 
 export const createDefeatedCohort = (type: UnitType): CohortDefinition => {
-
   const cohort = createCohort(type)
   cohort.baseValues![UnitAttribute.Morale] = { 'key': 0 }
   cohort.baseValues![UnitAttribute.Strength] = { 'key': 1 }
   return cohort
 }
 
+export const createWeakCohort = (type: UnitType): CohortDefinition => {
+  const cohort = createCohort(type)
+  cohort.baseValues![UnitAttribute.Morale] = { 'key': 0.3 }
+  cohort.baseValues![UnitAttribute.Strength] = { 'key': 1 }
+  return cohort
+}
+export const createFlankingCohort = (type: UnitType): CohortDefinition => {
+  const cohort = createCohort(type)
+  cohort.baseValues![UnitAttribute.Maneuver] = { 'key': 4 }
+  cohort.role = UnitRole.Flank
+  return cohort
+}
 export const createStrongCohort = (type: UnitType): CohortDefinition => {
 
   const cohort = createCohort(type)
@@ -136,10 +147,11 @@ export const getBattleTest = (state: TestState) => state.battle[Mode.Land]
  */
 export const everyType = [UnitType.Archers, UnitType.CamelCavalry, UnitType.Chariots, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.HorseArchers, UnitType.LightCavalry, UnitType.LightInfantry, UnitType.WarElephants, UnitType.SupplyTrain]
 
-type ExpectedCohort = ([UnitType, number, number] | UnitType | null)
+type ExpectedCohort = ([UnitType, number, number] | UnitType | CohortDefinition | null)
 
 type ExpectedArmy = {
   front?: ExpectedCohort[]
+  targeting?: (number | undefined)[]
   back?: ExpectedCohort[]
   reserveFront?: ExpectedCohort[]
   reserveFlank?: ExpectedCohort[]
@@ -205,10 +217,29 @@ const verify = (env: Environment, side: Side, expected: ExpectedArmy) => {
   verifyPart('Reserve flank', env, expected.reserveFlank ?? [], side.type, side.cohorts.reserve.flank)
   verifyPart('Reserve support', env, expected.reserveSupport ?? [], side.type, side.cohorts.reserve.support)
   verifyPart('Defeated', env, expected.defeated ?? [], side.type, side.cohorts.defeated.concat(side.cohorts.retreated))
+  if (expected.targeting !== undefined)
+    verifyTargeting(env, side.type, side.cohorts.frontline[0], expected.targeting)
   if (expected.leader !== undefined)
     verifyLeader(side, expected.leader)
   if (expected.roll !== undefined)
     expect(side.results.dice + side.results.terrainPips + side.results.generalPips).toEqual(expected.roll)
+}
+
+const verifyTargeting = (env: Environment, side: SideType, cohorts: (Cohort | null)[], expected: (number | undefined)[]) => {
+  const half = Math.floor(env.settings[Setting.CombatWidth] / 2.0)
+  let index = half
+  for (const exp of expected) {
+    const target = cohorts[index]?.state.target?.properties
+    const targetIndex = target ? target.index + 1000 * target.participantIndex : undefined
+    try {
+      expect(targetIndex).toEqual(exp)
+    }
+    catch (e) {
+      throw new Error(errorPrefix(env.day, side, 'Front', index) + 'Cohort should target ' + exp + ' instead of ' + targetIndex)
+    }
+
+    index = nextIndex(index, half)
+  }
 }
 
 const verifyLeader = (side: Side, expected: number) => {
@@ -284,6 +315,8 @@ const verifyPart = (part: string, env: Environment, expected: ExpectedCohort[], 
         verifyType(cohorts[index]?.properties?.type, exp[0])
         if (exp[1] !== null && exp[2] !== null)
           verifyCohort(cohorts[index], exp[1], exp[2])
+      } else if (typeof exp === 'object' && exp) {
+        verifyType(cohorts[index]?.properties?.type, exp.type)
       } else {
         verifyType(cohorts[index]?.properties?.type, exp)
       }

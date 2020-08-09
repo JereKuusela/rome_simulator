@@ -133,7 +133,7 @@ const pickTargets = (environment: Environment, source: Frontline, target: Frontl
         let direction = -1
         let min = Math.max(0, j - maneuver)
         let max = Math.min(targetLength - 1, j + maneuver)
-        if (!settings[Setting.FixFlankTargeting] || (settings[Setting.FixTargeting] ? j < sourceLength / 2 : j <= sourceLength / 2)) {
+        if (!settings[Setting.FixFlankTargeting] || j < sourceLength / 2) {
           direction = 1
         }
         for (let index = direction > 0 ? min : max; min <= index && index <= max; index += direction) {
@@ -239,7 +239,6 @@ const moveDefeated = (environment: Environment, frontline: Frontline, defeated: 
       defeatCohort(environment, cohort)
       if (!markDefeated)
         frontline[i][j] = null
-      cohort.state.target = null
       defeated.push(cohort)
     }
   }

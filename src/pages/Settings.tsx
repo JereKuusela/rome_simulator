@@ -15,7 +15,7 @@ interface Props { }
 const deployment = [Setting.CustomDeployment, Setting.DynamicFlanking, Setting.MoraleHitForNonSecondaryReinforcement, Setting.SupportPhase]
 const mechanics = [
   Setting.FireAndShock, Setting.StrengthBasedFlank, Setting.UseMaxMorale, Setting.InsufficientSupportPenalty, Setting.PhaseLength, Setting.CombatWidth,
-  Setting.ExperienceDamageReduction, Setting.FixExperience, Setting.DefenderAdvantage, Setting.FixTargeting, Setting.BackRow, Setting.Culture, Setting.AttributeLoyal,
+  Setting.ExperienceDamageReduction, Setting.FixExperience, Setting.DefenderAdvantage, Setting.BackRow, Setting.Culture, Setting.AttributeLoyal,
   Setting.Tactics, Setting.Tech, Setting.Martial, Setting.Food, Setting.FixFlankTargeting, Setting.MoraleDamageBasedOnTargetStrength, Setting.DamageLossForMissingMorale
 ]
 const damage = [

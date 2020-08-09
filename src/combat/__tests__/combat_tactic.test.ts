@@ -7,7 +7,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     const type = 'Type' as UnitType
     const neutralType = 'Neutral' as UnitType
 
-    const cohort = createCohort(type, true)
+    const cohort = createCohort(type)
     const neutralCohort = createDefeatedCohort(neutralType)
 
     let state: TestState

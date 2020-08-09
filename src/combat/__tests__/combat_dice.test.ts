@@ -5,7 +5,7 @@ import { UnitType, SideType, Setting, GeneralAttribute, CombatPhase, TerrainType
 if (process.env.REACT_APP_GAME !== 'euiv') {
 
   describe('dice', () => {
-    const cohort = createCohort('Type' as UnitType, true)
+    const cohort = createCohort('Type' as UnitType)
     const weakCohort = createDefeatedCohort('Defeated' as UnitType)
 
     let expected: Expected[]

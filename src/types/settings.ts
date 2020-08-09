@@ -21,7 +21,6 @@ export enum Setting {
   DailyMoraleLoss = 'Daily morale loss',
   DailyDamageIncrease = 'Daily damage increase',
   FixExperience = 'Fix damage reduction from experience',
-  FixTargeting = 'Fix targeting',
   FixFlankTargeting = 'Fix targeting',
   DynamicTargeting = 'Dynamic targeting',
   BackRow = 'Enable backrow',
@@ -220,11 +219,6 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
       return 'How often dice rolls and phases change.'
     case Setting.InsufficientSupportPenalty:
       return 'How much damage taken is increased for having too many flanking units (EUIV).'
-    case Setting.FixTargeting:
-      if (value)
-        return 'Targeting is fixed.\nLeft and right flanks work exactly same.'
-      else
-        return '16th unit uses wrong targeting direction.\nLeft and right flanks behave slightly differently.'
     case Setting.FixFlankTargeting:
       if (value)
         return 'Targeting is fixed.\nLeft and right flanks work exactly same (Imperator).'
@@ -347,7 +341,6 @@ export type SiteSettings = {
   [Setting.MoraleHitForNonSecondaryReinforcement]: number,
   [Setting.MinimumMorale]: number,
   [Setting.PhaseLength]: number,
-  [Setting.FixTargeting]: boolean,
   [Setting.DynamicTargeting]: boolean,
   [Setting.FixFlankTargeting]: boolean,
   [Setting.DefenderAdvantage]: boolean,

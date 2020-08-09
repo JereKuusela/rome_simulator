@@ -53,7 +53,6 @@ Needed tests:
  * Targeting:
   - Strength based flank (tests also flank)
   - Weak targeting (primary weak, secondary weak, all weak)
-  - Defender's advantage (with multiarmy to check aggressor change)
   - Flank direction with different settings (EUIV, Imperator, fixed Imperator), both in and outside flank
 * Deployment
   - Many scenarios
