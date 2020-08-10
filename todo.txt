@@ -50,10 +50,6 @@ Needed tests:
  * Tests:
   - Precision. In-game test with many rounds to verify that calculation accuracy matches the game.
   - Different mechanics, no in-game comparison required since all are just damage modifiers.
- * Targeting:
-  - Strength based flank (tests also flank)
-  - Weak targeting (primary weak, secondary weak, all weak)
-  - Flank direction with different settings (EUIV, Imperator, fixed Imperator), both in and outside flank
 * Deployment
   - Many scenarios
   - Late deployment (with and without penalty)

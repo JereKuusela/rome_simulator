@@ -38,6 +38,8 @@ export const initCleanState = (): TestState => {
   const settings = getDefaultSettings()
   settings.siteSettings = map(settings.siteSettings, item => typeof item === 'boolean' ? false : item) as Settings
   settings.siteSettings[Setting.MoraleHitForNonSecondaryReinforcement] = 0
+  settings.siteSettings[Setting.FixFlankTargeting] = true
+  settings.siteSettings[Setting.CustomDeployment] = true
   settings.siteSettings[Setting.AttributeDiscipline] = DisciplineValue.Off
   return {
     battle: getDefaultBattle(1),
@@ -109,6 +111,7 @@ export const createFlankingCohort = (type: UnitType): CohortDefinition => {
   cohort.role = UnitRole.Flank
   return cohort
 }
+
 export const createStrongCohort = (type: UnitType): CohortDefinition => {
 
   const cohort = createCohort(type)
