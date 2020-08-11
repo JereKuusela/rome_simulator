@@ -273,6 +273,10 @@ exports.getAttribute = (key, value) => {
     attribute = attributes[key] || localizations['modifier_' + key] || localizations[key]
   }
   switch (key) {
+    case 'movement_speed':
+    case 'build_time':
+    case 'outside_of_naval_range_attrition':
+        return undefined
     case 'allow_unit_type':
     case 'enable_ability':
     case 'enable_tactic':

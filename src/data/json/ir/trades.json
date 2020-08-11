@@ -1,165 +1,7 @@
 {
-  "export_base_metals": {
-    "name": "Export: Base Metals",
-    "key": "export_base_metals",
-    "index": 22,
-    "modifiers": [
-      {
-        "target": "Light Infantry",
-        "attribute": "Offense",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
-  },
-  "export_camel": {
-    "name": "Export: Camels",
-    "key": "export_camel",
-    "index": 30,
-    "modifiers": [
-      {
-        "target": "Camel Cavalry",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
-  },
-  "export_elephants": {
-    "name": "Export: Elephants",
-    "key": "export_elephants",
-    "index": 10,
-    "modifiers": [
-      {
-        "target": "War Elephants",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
-  },
-  "export_hemp": {
-    "name": "Export: Hemp",
-    "key": "export_hemp",
-    "index": 27,
-    "modifiers": [
-      {
-        "target": "Naval",
-        "attribute": "Damage Taken",
-        "type": "Base",
-        "value": -0.1
-      }
-    ]
-  },
-  "export_horses": {
-    "name": "Export: Horses",
-    "key": "export_horses",
-    "index": 3,
-    "modifiers": [
-      {
-        "target": "Light Cavalry",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
-  },
-  "export_incense": {
-    "name": "Export: Incense",
-    "key": "export_incense",
-    "index": 26,
-    "modifiers": [
-      {
-        "target": "Country",
-        "attribute": "Omen Power",
-        "type": "Base",
-        "noPercent": true,
-        "value": 5
-      }
-    ]
-  },
-  "export_iron": {
-    "name": "Export: Iron",
-    "key": "export_iron",
-    "index": 2,
-    "modifiers": [
-      {
-        "target": "Heavy Infantry",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
-  },
-  "export_leather": {
-    "name": "Export: Leather",
-    "key": "export_leather",
-    "index": 21,
-    "modifiers": [
-      {
-        "target": "Light Infantry",
-        "attribute": "Defense",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
-  },
-  "export_salt": {
-    "name": "Export: Salt",
-    "key": "export_salt",
-    "index": 1,
-    "modifiers": [
-      {
-        "target": "Land",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "value": -0.025
-      }
-    ]
-  },
-  "export_steppe_horses": {
-    "name": "Export: Steppe Horses",
-    "key": "export_steppe_horses",
-    "index": 15,
-    "modifiers": [
-      {
-        "target": "Horse Archers",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
-  },
-  "export_wild_game": {
-    "name": "Export: Wild Game",
-    "key": "export_wild_game",
-    "index": 13,
-    "modifiers": [
-      {
-        "target": "Archers",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
-  },
-  "export_wine": {
-    "name": "Export: Wine",
-    "key": "export_wine",
-    "index": 4,
-    "modifiers": [
-      {
-        "target": "Land",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "value": -0.025
-      }
-    ]
-  },
-  "surplus_base_metals": {
-    "name": "Surplus: Base Metals",
-    "key": "surplus_base_metals",
-    "index": 0,
+  "base_metals": {
+    "name": "Base Metals",
+    "key": "base_metals",
     "modifiers": [
       {
         "target": "Light Infantry",
@@ -169,10 +11,9 @@
       }
     ]
   },
-  "surplus_camel": {
-    "name": "Surplus: Camels",
-    "key": "surplus_camel",
-    "index": 0,
+  "camel": {
+    "name": "Camels",
+    "key": "camel",
     "modifiers": [
       {
         "target": "Camel Cavalry",
@@ -182,10 +23,9 @@
       }
     ]
   },
-  "surplus_elephants": {
-    "name": "Surplus: Elephants",
-    "key": "surplus_elephants",
-    "index": 0,
+  "elephants": {
+    "name": "Elephants",
+    "key": "elephants",
     "modifiers": [
       {
         "target": "War Elephants",
@@ -195,10 +35,9 @@
       }
     ]
   },
-  "surplus_hemp": {
-    "name": "Surplus: Hemp",
-    "key": "surplus_hemp",
-    "index": 0,
+  "hemp": {
+    "name": "Hemp",
+    "key": "hemp",
     "modifiers": [
       {
         "target": "Naval",
@@ -208,23 +47,21 @@
       }
     ]
   },
-  "surplus_horses": {
-    "name": "Surplus: Horses",
-    "key": "surplus_horses",
-    "index": 0,
+  "horses": {
+    "name": "Horses",
+    "key": "horses",
     "modifiers": [
       {
-        "target": "Light Cavalry",
+        "target": "Heavy Cavalry",
         "attribute": "Discipline",
         "type": "Base",
         "value": 0.1
       }
     ]
   },
-  "surplus_iron": {
-    "name": "Surplus: Iron",
-    "key": "surplus_iron",
-    "index": 0,
+  "iron": {
+    "name": "Iron",
+    "key": "iron",
     "modifiers": [
       {
         "target": "Heavy Infantry",
@@ -234,10 +71,9 @@
       }
     ]
   },
-  "surplus_leather": {
-    "name": "Surplus: Leather",
-    "key": "surplus_leather",
-    "index": 0,
+  "leather": {
+    "name": "Leather",
+    "key": "leather",
     "modifiers": [
       {
         "target": "Light Infantry",
@@ -247,10 +83,9 @@
       }
     ]
   },
-  "surplus_salt": {
-    "name": "Surplus: Salt",
-    "key": "surplus_salt",
-    "index": 0,
+  "salt": {
+    "name": "Salt",
+    "key": "salt",
     "modifiers": [
       {
         "target": "Land",
@@ -260,10 +95,9 @@
       }
     ]
   },
-  "surplus_steppe_horses": {
-    "name": "Surplus: Steppe Horses",
-    "key": "surplus_steppe_horses",
-    "index": 0,
+  "steppe_horses": {
+    "name": "Steppe Horses",
+    "key": "steppe_horses",
     "modifiers": [
       {
         "target": "Horse Archers",
@@ -273,10 +107,9 @@
       }
     ]
   },
-  "surplus_wild_game": {
-    "name": "Surplus: Wild Game",
-    "key": "surplus_wild_game",
-    "index": 0,
+  "wild_game": {
+    "name": "Wild Game",
+    "key": "wild_game",
     "modifiers": [
       {
         "target": "Archers",
@@ -286,10 +119,9 @@
       }
     ]
   },
-  "surplus_wine": {
-    "name": "Surplus: Wine",
-    "key": "surplus_wine",
-    "index": 0,
+  "wine": {
+    "name": "Wine",
+    "key": "wine",
     "modifiers": [
       {
         "target": "Land",

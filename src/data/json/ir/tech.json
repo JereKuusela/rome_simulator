@@ -62,14 +62,14 @@
             "attribute": "Morale",
             "type": "Base",
             "noPercent": true,
-            "value": 0.1
+            "value": 0.075
           },
           {
             "target": "Global",
             "attribute": "Maintenance",
             "type": "Modifier",
             "negative": true,
-            "value": 0.03
+            "value": 0.05
           }
         ]
       },
@@ -127,14 +127,14 @@
             "attribute": "Morale",
             "type": "Base",
             "noPercent": true,
-            "value": 0.1
+            "value": 0.075
           },
           {
             "target": "Global",
             "attribute": "Maintenance",
             "type": "Modifier",
             "negative": true,
-            "value": 0.03
+            "value": 0.05
           }
         ]
       },
@@ -193,14 +193,14 @@
             "attribute": "Morale",
             "type": "Base",
             "noPercent": true,
-            "value": 0.1
+            "value": 0.075
           },
           {
             "target": "Global",
             "attribute": "Maintenance",
             "type": "Modifier",
             "negative": true,
-            "value": 0.03
+            "value": 0.05
           }
         ]
       },
@@ -258,14 +258,14 @@
             "attribute": "Morale",
             "type": "Base",
             "noPercent": true,
-            "value": 0.1
+            "value": 0.075
           },
           {
             "target": "Global",
             "attribute": "Maintenance",
             "type": "Modifier",
             "negative": true,
-            "value": 0.03
+            "value": 0.05
           }
         ]
       },
@@ -323,14 +323,14 @@
             "attribute": "Morale",
             "type": "Base",
             "noPercent": true,
-            "value": 0.1
+            "value": 0.075
           },
           {
             "target": "Global",
             "attribute": "Maintenance",
             "type": "Modifier",
             "negative": true,
-            "value": 0.03
+            "value": 0.05
           }
         ]
       },
@@ -390,14 +390,14 @@
             "attribute": "Morale",
             "type": "Base",
             "noPercent": true,
-            "value": 0.1
+            "value": 0.075
           },
           {
             "target": "Global",
             "attribute": "Maintenance",
             "type": "Modifier",
             "negative": true,
-            "value": 0.03
+            "value": 0.05
           }
         ]
       },
@@ -456,14 +456,14 @@
             "attribute": "Morale",
             "type": "Base",
             "noPercent": true,
-            "value": 0.1
+            "value": 0.075
           },
           {
             "target": "Global",
             "attribute": "Maintenance",
             "type": "Modifier",
             "negative": true,
-            "value": 0.03
+            "value": 0.05
           }
         ]
       },
@@ -521,14 +521,14 @@
             "attribute": "Morale",
             "type": "Base",
             "noPercent": true,
-            "value": 0.1
+            "value": 0.075
           },
           {
             "target": "Global",
             "attribute": "Maintenance",
             "type": "Modifier",
             "negative": true,
-            "value": 0.03
+            "value": 0.05
           }
         ]
       },
@@ -587,14 +587,14 @@
             "attribute": "Morale",
             "type": "Base",
             "noPercent": true,
-            "value": 0.1
+            "value": 0.075
           },
           {
             "target": "Global",
             "attribute": "Maintenance",
             "type": "Modifier",
             "negative": true,
-            "value": 0.03
+            "value": 0.05
           }
         ]
       },
@@ -652,14 +652,14 @@
             "attribute": "Morale",
             "type": "Base",
             "noPercent": true,
-            "value": 0.1
+            "value": 0.075
           },
           {
             "target": "Global",
             "attribute": "Maintenance",
             "type": "Modifier",
             "negative": true,
-            "value": 0.03
+            "value": 0.05
           }
         ]
       },
@@ -717,14 +717,14 @@
             "attribute": "Morale",
             "type": "Base",
             "noPercent": true,
-            "value": 0.1
+            "value": 0.075
           },
           {
             "target": "Global",
             "attribute": "Maintenance",
             "type": "Modifier",
             "negative": true,
-            "value": 0.03
+            "value": 0.05
           }
         ]
       },
@@ -782,14 +782,14 @@
             "attribute": "Morale",
             "type": "Base",
             "noPercent": true,
-            "value": 0.1
+            "value": 0.075
           },
           {
             "target": "Global",
             "attribute": "Maintenance",
             "type": "Modifier",
             "negative": true,
-            "value": 0.03
+            "value": 0.05
           }
         ]
       },
@@ -848,14 +848,14 @@
             "attribute": "Morale",
             "type": "Base",
             "noPercent": true,
-            "value": 0.1
+            "value": 0.075
           },
           {
             "target": "Global",
             "attribute": "Maintenance",
             "type": "Modifier",
             "negative": true,
-            "value": 0.03
+            "value": 0.05
           }
         ]
       },
@@ -913,14 +913,14 @@
             "attribute": "Morale",
             "type": "Base",
             "noPercent": true,
-            "value": 0.1
+            "value": 0.075
           },
           {
             "target": "Global",
             "attribute": "Maintenance",
             "type": "Modifier",
             "negative": true,
-            "value": 0.03
+            "value": 0.05
           }
         ]
       },
@@ -978,14 +978,14 @@
             "attribute": "Morale",
             "type": "Base",
             "noPercent": true,
-            "value": 0.1
+            "value": 0.075
           },
           {
             "target": "Global",
             "attribute": "Maintenance",
             "type": "Modifier",
             "negative": true,
-            "value": 0.03
+            "value": 0.05
           }
         ]
       },
@@ -1043,14 +1043,14 @@
             "attribute": "Morale",
             "type": "Base",
             "noPercent": true,
-            "value": 0.1
+            "value": 0.075
           },
           {
             "target": "Global",
             "attribute": "Maintenance",
             "type": "Modifier",
             "negative": true,
-            "value": 0.03
+            "value": 0.05
           }
         ]
       },
@@ -1110,14 +1110,14 @@
             "attribute": "Morale",
             "type": "Base",
             "noPercent": true,
-            "value": 0.1
+            "value": 0.075
           },
           {
             "target": "Global",
             "attribute": "Maintenance",
             "type": "Modifier",
             "negative": true,
-            "value": 0.03
+            "value": 0.05
           }
         ]
       },
@@ -1175,14 +1175,14 @@
             "attribute": "Morale",
             "type": "Base",
             "noPercent": true,
-            "value": 0.1
+            "value": 0.075
           },
           {
             "target": "Global",
             "attribute": "Maintenance",
             "type": "Modifier",
             "negative": true,
-            "value": 0.03
+            "value": 0.05
           }
         ]
       },
@@ -1240,14 +1240,14 @@
             "attribute": "Morale",
             "type": "Base",
             "noPercent": true,
-            "value": 0.1
+            "value": 0.075
           },
           {
             "target": "Global",
             "attribute": "Maintenance",
             "type": "Modifier",
             "negative": true,
-            "value": 0.03
+            "value": 0.05
           }
         ]
       },
@@ -1306,14 +1306,14 @@
             "attribute": "Morale",
             "type": "Base",
             "noPercent": true,
-            "value": 0.1
+            "value": 0.075
           },
           {
             "target": "Global",
             "attribute": "Maintenance",
             "type": "Modifier",
             "negative": true,
-            "value": 0.03
+            "value": 0.05
           }
         ]
       },

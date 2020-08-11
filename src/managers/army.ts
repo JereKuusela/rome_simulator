@@ -7,7 +7,7 @@ import { findLastIndex, sortBy } from 'lodash'
  * Returns how much capture chance given martial skill gives.
  * @param martial 
  */
-export const martialToCaptureChance = (martial: number) => 0.002 * martial
+export const martialToCaptureChance = (martial: number) => 0.005 * martial
 
 const BASE_STAT_KEY = 'Custom'
 

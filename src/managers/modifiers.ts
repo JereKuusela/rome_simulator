@@ -207,7 +207,7 @@ export const getGeneralModifiers = (general: GeneralData): ModifierWithKey[] => 
       target: ModifierType.Global,
       type: ValuesType.Modifier,
       attribute: UnitAttribute.Morale,
-      value: -0.25,
+      value: -0.15,
       key: 'No general'
     })
   }

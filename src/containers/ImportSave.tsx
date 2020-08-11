@@ -12,7 +12,7 @@ import LabelItem from 'components/Utils/LabelUnit'
 import { AppState, getUnitDefinitions, getMode } from 'state'
 import { getDefaultUnits, countriesIR, traditionsIR, heritagesIR, policiesIR, lawsIR, factionsIR, religionsIR, deitiesIR, modifiersIR, traitsIR, techIR, tradesIR, ideasIR, abilitiesIR } from 'data'
 import AttributeImage from 'components/Utils/AttributeImage'
-import { toObj, toArr, mapRange, map, values, keys, filter } from 'utils'
+import { toObj, toArr, mapRange, map, keys, filter } from 'utils'
 import { calculateValueWithoutLoss } from 'definition_values'
 import { parseFile, binaryToPlain } from 'managers/importer'
 import JSZip from 'jszip'
@@ -333,7 +333,6 @@ class ImportSave extends Component<IProps, IState> {
             Exports
           </Table.Cell>
           <Table.Cell>
-            {this.getExports(country).map(key => tradesIR[key]?.name.substr(8)).filter(value => value).join(', ')}
           </Table.Cell>
         </Table.Row>
         <Table.Row>
@@ -719,12 +718,9 @@ class ImportSave extends Component<IProps, IState> {
     enableCountrySelections(countryName, SelectionType.Tradition, traditions)
     const invention_list = sortBy(techIR.reduce((prev, curr) => prev.concat(curr.inventions.filter(invention => invention.index)), [] as Invention[]), invention => invention.index)
     const inventions = country.inventions.map((value, index) => value && index ? invention_list[index - 1].key : '').filter(value => value)
-    const exports = this.getExports(country)
-    const imports = country.surplus.map(key => 'surplus_' + key)
     enableCountrySelections(countryName, SelectionType.Invention, inventions)
     enableCountrySelection(countryName, SelectionType.Heritage, country.heritage)
-    enableCountrySelections(countryName, SelectionType.Trade, exports)
-    enableCountrySelections(countryName, SelectionType.Trade, imports)
+    enableCountrySelections(countryName, SelectionType.Trade, country.surplus)
     enableCountrySelections(countryName, SelectionType.Idea, country.ideas)
     enableCountrySelections(countryName, SelectionType.Law, country.laws)
     enableCountrySelections(countryName, SelectionType.Deity, country.deities)
@@ -739,11 +735,6 @@ class ImportSave extends Component<IProps, IState> {
     setCountryAttribute(countryName, CountryAttribute.OfficeMorale, country.officeMorale)
     setCountryAttribute(countryName, CountryAttribute.OmenPower, country.religiousUnity - 100)
     this.importArmy()
-  }
-
-  getExports = (country: Country) => {
-    const exports = sortBy(values(tradesIR).filter(entity => entity.index), entity => entity.index)
-    return country.exports.map((value, index) => value ? exports.find(entity => entity.index === index)?.key ?? '' : '').filter(value => value)
   }
 
   importArmy = () => {

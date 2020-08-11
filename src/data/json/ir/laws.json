@@ -44,7 +44,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.1
+        "value": 0.05
       }
     ]
   },
@@ -129,7 +129,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.05
+        "value": 0.025
       }
     ]
   },
@@ -178,7 +178,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.05
+        "value": 0.025
       }
     ]
   }

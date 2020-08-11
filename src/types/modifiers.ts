@@ -59,8 +59,7 @@ export interface TraditionDefinition {
   paths: Path[]
   modifiers: Modifier[]
 }
-export type TradeDefinition = ListDefinition & { index: number }
-export type TradeDefinitions = { [key: string]: TradeDefinition }
+export type TradeDefinitions = { [key: string]: ListDefinition }
 export interface ListDefinition {
   name: string
   key: string

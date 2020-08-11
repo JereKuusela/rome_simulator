@@ -4,13 +4,11 @@ const { getAttribute } = require('./modifiers')
 
 
 const results = {}
-let counter = 0
 
-const handleTradeSub = (type, key, modifiers) => {
+const handleTradeSub = (key, modifiers) => {
   const entity = {
-    name: type + ': ' + getAttribute(key),
-    key: type.toLowerCase() + '_' + key,
-    index: type === 'Export' ? counter++ : 0,
+    name: getAttribute(key),
+    key,
     modifiers: []
   }
   Object.keys(modifiers).forEach(key => {
@@ -22,14 +20,13 @@ const handleTradeSub = (type, key, modifiers) => {
     }
   })
   if (entity.modifiers.length)
-    results[type.toLowerCase() + '_' + key] = entity
+    results[key] = entity
 }
 
 const handler = data => {
   Object.keys(data).forEach(key => {
     const trade = data[key]
-    handleTradeSub('Surplus', key, trade.country)
-    handleTradeSub('Export', key, trade.export)
+    handleTradeSub(key, trade.country)
   })
 }
 

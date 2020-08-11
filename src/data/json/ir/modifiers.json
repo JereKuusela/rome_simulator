@@ -53,6 +53,18 @@
       }
     ]
   },
+  "epirus_2_8_cmod": {
+    "name": "An Ionian Fleet",
+    "key": "epirus_2_8_cmod",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.1
+      }
+    ]
+  },
   "country_improvement_appeased_maat": {
     "name": "Appeased Maat",
     "key": "country_improvement_appeased_maat",
@@ -74,7 +86,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.1
+        "value": 0.05
       }
     ]
   },
@@ -110,8 +122,7 @@
       {
         "target": "Land",
         "attribute": "Morale",
-        "type": "Base",
-        "noPercent": true,
+        "type": "Modifier",
         "value": 0.05
       }
     ]
@@ -123,8 +134,7 @@
       {
         "target": "Land",
         "attribute": "Morale",
-        "type": "Base",
-        "noPercent": true,
+        "type": "Modifier",
         "value": 0.15
       },
       {
@@ -142,8 +152,7 @@
       {
         "target": "Land",
         "attribute": "Morale",
-        "type": "Base",
-        "noPercent": true,
+        "type": "Modifier",
         "value": 0.1
       }
     ]
@@ -163,6 +172,18 @@
         "attribute": "Cost",
         "type": "Modifier",
         "value": -0.05
+      }
+    ]
+  },
+  "epirus_2_1_cmod": {
+    "name": "Avenge Alexandros",
+    "key": "epirus_2_1_cmod",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
       }
     ]
   },
@@ -187,7 +208,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.15
+        "value": 0.1
       }
     ]
   },
@@ -367,16 +388,14 @@
       {
         "target": "Naval",
         "attribute": "Morale",
-        "type": "Base",
+        "type": "Modifier",
         "negative": true,
-        "noPercent": true,
         "value": -0.08
       },
       {
         "target": "Land",
         "attribute": "Morale",
-        "type": "Base",
-        "noPercent": true,
+        "type": "Modifier",
         "value": 0.04
       }
     ]
@@ -388,31 +407,15 @@
       {
         "target": "Land",
         "attribute": "Morale",
-        "type": "Base",
+        "type": "Modifier",
         "negative": true,
-        "noPercent": true,
         "value": -0.08
       },
       {
         "target": "Naval",
         "attribute": "Morale",
-        "type": "Base",
-        "noPercent": true,
+        "type": "Modifier",
         "value": 0.04
-      }
-    ]
-  },
-  "pbc_event_9_civic_modifier": {
-    "name": "Civic Faction Project",
-    "key": "pbc_event_9_civic_modifier",
-    "modifiers": [
-      {
-        "target": "Country",
-        "attribute": "Omen Power",
-        "type": "Base",
-        "negative": true,
-        "noPercent": true,
-        "value": -3
       }
     ]
   },
@@ -493,10 +496,9 @@
       {
         "target": "Land",
         "attribute": "Morale",
-        "type": "Base",
+        "type": "Modifier",
         "negative": true,
-        "noPercent": true,
-        "value": -0.15
+        "value": -0.1
       }
     ]
   },
@@ -575,9 +577,8 @@
       {
         "target": "Land",
         "attribute": "Morale",
-        "type": "Base",
+        "type": "Modifier",
         "negative": true,
-        "noPercent": true,
         "value": -0.05
       }
     ]
@@ -628,9 +629,8 @@
       {
         "target": "Land",
         "attribute": "Morale",
-        "type": "Base",
+        "type": "Modifier",
         "negative": true,
-        "noPercent": true,
         "value": -0.15
       }
     ]
@@ -772,6 +772,18 @@
         "attribute": "Morale",
         "type": "Modifier",
         "value": 0.1
+      }
+    ]
+  },
+  "me_epi_1_6_cmod": {
+    "name": "Expand Royal Kennels",
+    "key": "me_epi_1_6_cmod",
+    "modifiers": [
+      {
+        "target": "Light Infantry",
+        "attribute": "Offense",
+        "type": "Base",
+        "value": 0.05
       }
     ]
   },
@@ -935,8 +947,7 @@
       {
         "target": "Land",
         "attribute": "Morale",
-        "type": "Base",
-        "noPercent": true,
+        "type": "Modifier",
         "value": 0.1
       }
     ]
@@ -973,13 +984,32 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.1
+        "value": 0.05
       },
       {
         "target": "Naval",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.1
+        "value": 0.05
+      }
+    ]
+  },
+  "epirus_3_greece_cmod": {
+    "name": "Hellenic Contender",
+    "key": "epirus_3_greece_cmod",
+    "modifiers": [
+      {
+        "target": "Global",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
       }
     ]
   },
@@ -1027,6 +1057,36 @@
       }
     ]
   },
+  "epirus_3_greece_3_cmod_1": {
+    "name": "Impressed Oarsmen",
+    "key": "epirus_3_greece_3_cmod_1",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.2
+      },
+      {
+        "target": "Naval",
+        "attribute": "Cost",
+        "type": "Modifier",
+        "value": -0.1
+      }
+    ]
+  },
+  "epirus_3_greece_3_cmod_2": {
+    "name": "Impressed Soldiery",
+    "key": "epirus_3_greece_3_cmod_2",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.2
+      }
+    ]
+  },
   "is_exiled": {
     "name": "In Exile",
     "key": "is_exiled",
@@ -1060,9 +1120,8 @@
       {
         "target": "Land",
         "attribute": "Morale",
-        "type": "Base",
-        "noPercent": true,
-        "value": 0.15
+        "type": "Modifier",
+        "value": 0.1
       }
     ]
   },
@@ -1073,8 +1132,7 @@
       {
         "target": "Land",
         "attribute": "Morale",
-        "type": "Base",
-        "noPercent": true,
+        "type": "Modifier",
         "value": 0.15
       }
     ]
@@ -1086,8 +1144,7 @@
       {
         "target": "Land",
         "attribute": "Morale",
-        "type": "Base",
-        "noPercent": true,
+        "type": "Modifier",
         "value": 0.2
       },
       {
@@ -1154,8 +1211,7 @@
       {
         "target": "Land",
         "attribute": "Morale",
-        "type": "Base",
-        "noPercent": true,
+        "type": "Modifier",
         "value": 0.3
       }
     ]
@@ -1269,6 +1325,18 @@
       }
     ]
   },
+  "me_epi_2_6_cmod": {
+    "name": "Italic Glory",
+    "key": "me_epi_2_6_cmod",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
+      }
+    ]
+  },
   "country_improvement_jainism_charity": {
     "name": "Jainism: Charitable",
     "key": "country_improvement_jainism_charity",
@@ -1315,9 +1383,8 @@
       {
         "target": "Land",
         "attribute": "Morale",
-        "type": "Base",
+        "type": "Modifier",
         "negative": true,
-        "noPercent": true,
         "value": -0.1
       }
     ]
@@ -1399,8 +1466,7 @@
       {
         "target": "Naval",
         "attribute": "Morale",
-        "type": "Base",
-        "noPercent": true,
+        "type": "Modifier",
         "value": 0.1
       }
     ]
@@ -1457,7 +1523,19 @@
         "attribute": "Morale",
         "type": "Modifier",
         "negative": true,
-        "value": -0.1
+        "value": -0.05
+      }
+    ]
+  },
+  "me_epi_1_14_cmod": {
+    "name": "Macedonian Lessons",
+    "key": "me_epi_1_14_cmod",
+    "modifiers": [
+      {
+        "target": "Heavy Cavalry",
+        "attribute": "Offense",
+        "type": "Base",
+        "value": 0.1
       }
     ]
   },
@@ -1511,7 +1589,7 @@
         "target": "Naval",
         "attribute": "Capture Chance",
         "type": "Base",
-        "value": 0.002
+        "value": 0.005
       }
     ]
   },
@@ -1536,20 +1614,6 @@
         "attribute": "Morale",
         "type": "Modifier",
         "value": 0.1
-      }
-    ]
-  },
-  "pbc_event_9_mercantile_modifier": {
-    "name": "Mercantile Faction Project",
-    "key": "pbc_event_9_mercantile_modifier",
-    "modifiers": [
-      {
-        "target": "Country",
-        "attribute": "Omen Power",
-        "type": "Base",
-        "negative": true,
-        "noPercent": true,
-        "value": -3
       }
     ]
   },
@@ -1636,32 +1700,6 @@
         "attribute": "Experience",
         "type": "Base",
         "value": 0.1
-      }
-    ]
-  },
-  "empowered_military_party_gui_mod": {
-    "name": "Military Faction Empowered",
-    "key": "empowered_military_party_gui_mod",
-    "modifiers": [
-      {
-        "target": "Global",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.025
-      }
-    ]
-  },
-  "pbc_event_9_military_modifier": {
-    "name": "Military Faction Project",
-    "key": "pbc_event_9_military_modifier",
-    "modifiers": [
-      {
-        "target": "Country",
-        "attribute": "Omen Power",
-        "type": "Base",
-        "negative": true,
-        "noPercent": true,
-        "value": -3
       }
     ]
   },
@@ -1758,8 +1796,7 @@
       {
         "target": "Land",
         "attribute": "Morale",
-        "type": "Base",
-        "noPercent": true,
+        "type": "Modifier",
         "value": 0.1
       }
     ]
@@ -1771,8 +1808,7 @@
       {
         "target": "Naval",
         "attribute": "Morale",
-        "type": "Base",
-        "noPercent": true,
+        "type": "Modifier",
         "value": 0.1
       }
     ]
@@ -1784,9 +1820,8 @@
       {
         "target": "Land",
         "attribute": "Morale",
-        "type": "Base",
+        "type": "Modifier",
         "negative": true,
-        "noPercent": true,
         "value": -0.1
       }
     ]
@@ -1810,7 +1845,7 @@
     ]
   },
   "dhe_carthage_roman_threat_modifier": {
-    "name": "Naval Preperations",
+    "name": "Naval Preparations",
     "key": "dhe_carthage_roman_threat_modifier",
     "modifiers": [
       {
@@ -1906,9 +1941,8 @@
       {
         "target": "Land",
         "attribute": "Morale",
-        "type": "Base",
+        "type": "Modifier",
         "negative": true,
-        "noPercent": true,
         "value": -0.5
       }
     ]
@@ -1934,20 +1968,6 @@
         "attribute": "Cost",
         "type": "Modifier",
         "value": -0.05
-      }
-    ]
-  },
-  "pbc_event_9_populist_modifier": {
-    "name": "Populist Faction Project",
-    "key": "pbc_event_9_populist_modifier",
-    "modifiers": [
-      {
-        "target": "Country",
-        "attribute": "Omen Power",
-        "type": "Base",
-        "negative": true,
-        "noPercent": true,
-        "value": -3
       }
     ]
   },
@@ -2037,8 +2057,7 @@
       {
         "target": "Land",
         "attribute": "Morale",
-        "type": "Base",
-        "noPercent": true,
+        "type": "Modifier",
         "value": 0.05
       }
     ]
@@ -2094,32 +2113,6 @@
       }
     ]
   },
-  "pbc_event_9_religious_modifier": {
-    "name": "Religious Faction Project",
-    "key": "pbc_event_9_religious_modifier",
-    "modifiers": [
-      {
-        "target": "Country",
-        "attribute": "Omen Power",
-        "type": "Base",
-        "noPercent": true,
-        "value": 10
-      }
-    ]
-  },
-  "recent_convert_modifier": {
-    "name": "Religious Zeal",
-    "key": "recent_convert_modifier",
-    "modifiers": [
-      {
-        "target": "Country",
-        "attribute": "Omen Power",
-        "type": "Base",
-        "noPercent": true,
-        "value": 25
-      }
-    ]
-  },
   "dhe_judea_resurgent_expansionist_cm": {
     "name": "Resurgent Judea",
     "key": "dhe_judea_resurgent_expansionist_cm",
@@ -2127,8 +2120,7 @@
       {
         "target": "Land",
         "attribute": "Morale",
-        "type": "Base",
-        "noPercent": true,
+        "type": "Modifier",
         "value": 0.1
       }
     ]
@@ -2414,8 +2406,7 @@
       {
         "target": "Land",
         "attribute": "Morale",
-        "type": "Base",
-        "noPercent": true,
+        "type": "Modifier",
         "value": 0.5
       }
     ]
@@ -2617,6 +2608,24 @@
       }
     ]
   },
+  "me_epi_3_4_cmod_2": {
+    "name": "Thessalian Retinue",
+    "key": "me_epi_3_4_cmod_2",
+    "modifiers": [
+      {
+        "target": "Light Cavalry",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Light Cavalry",
+        "attribute": "Offense",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
   "threat_of_punishment": {
     "name": "Threat of Punishment",
     "key": "threat_of_punishment",
@@ -2626,6 +2635,24 @@
         "attribute": "Discipline",
         "type": "Base",
         "value": 0.05
+      }
+    ]
+  },
+  "me_epi_2_5_cmod": {
+    "name": "To The Last Man",
+    "key": "me_epi_2_5_cmod",
+    "modifiers": [
+      {
+        "target": "Light Cavalry",
+        "attribute": "Offense",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Heavy Infantry",
+        "attribute": "Offense",
+        "type": "Base",
+        "value": 0.1
       }
     ]
   },
@@ -2660,9 +2687,8 @@
       {
         "target": "Land",
         "attribute": "Morale",
-        "type": "Base",
+        "type": "Modifier",
         "negative": true,
-        "noPercent": true,
         "value": -0.08
       }
     ]
@@ -2764,6 +2790,18 @@
         "attribute": "Maintenance",
         "type": "Modifier",
         "value": -0.1
+      }
+    ]
+  },
+  "me_epi_2_11_cmod": {
+    "name": "Western Hegemon",
+    "key": "me_epi_2_11_cmod",
+    "modifiers": [
+      {
+        "target": "Global",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.1
       }
     ]
   },

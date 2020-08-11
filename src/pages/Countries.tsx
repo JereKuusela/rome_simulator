@@ -82,7 +82,7 @@ class Countries extends Component<IProps> {
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <AccordionToggle title='Trade' identifier='countriesTrade'>
+              <AccordionToggle title='Trade surplus' identifier='countriesTrade'>
                 {this.renderTrades()}
               </AccordionToggle>
             </Grid.Column>

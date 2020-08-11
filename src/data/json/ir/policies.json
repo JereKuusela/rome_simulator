@@ -15,7 +15,7 @@
           "target": "Land",
           "attribute": "Maintenance",
           "type": "Modifier",
-          "value": -0.33
+          "value": -0.2
         }
       ]
     },
@@ -32,7 +32,7 @@
           "target": "Land",
           "attribute": "Morale",
           "type": "Modifier",
-          "value": 0.1
+          "value": 0.05
         },
         {
           "target": "Land",
@@ -77,7 +77,7 @@
           "target": "Naval",
           "attribute": "Morale",
           "type": "Modifier",
-          "value": 0.1
+          "value": 0.05
         },
         {
           "target": "Naval",

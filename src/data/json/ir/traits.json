@@ -95,6 +95,19 @@
       }
     ]
   },
+  "aeacidae": {
+    "name": "Blood of Aiakos",
+    "key": "aeacidae",
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      }
+    ]
+  },
   "antigonids": {
     "name": "Blood of Antigonos",
     "key": "antigonids",

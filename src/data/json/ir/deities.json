@@ -1,4 +1,30 @@
 {
+  "deity_achilles": {
+    "name": "Achilles",
+    "key": "deity_achilles",
+    "modifiers": [
+      {
+        "target": "Global",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.03
+      }
+    ],
+    "isOmen": false
+  },
+  "omen_achilles": {
+    "name": "Achilles Omen",
+    "key": "omen_achilles",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
+      }
+    ],
+    "isOmen": true
+  },
   "omen_agdistis": {
     "name": "Agdistis Omen",
     "key": "omen_agdistis",
@@ -7,7 +33,7 @@
         "target": "Global",
         "attribute": "Discipline",
         "type": "Base",
-        "value": 0.04
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -20,7 +46,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.05
+        "value": 0.03
       }
     ],
     "isOmen": false
@@ -46,7 +72,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -59,7 +85,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -72,7 +98,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.05
+        "value": 0.03
       }
     ],
     "isOmen": false
@@ -85,10 +111,23 @@
         "target": "Global",
         "attribute": "Discipline",
         "type": "Base",
-        "value": 0.04
+        "value": 0.05
       }
     ],
     "isOmen": true
+  },
+  "deity_apollo_aktiakos": {
+    "name": "Apollo Aktiakos",
+    "key": "deity_apollo_aktiakos",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.025
+      }
+    ],
+    "isOmen": false
   },
   "deity_ares": {
     "name": "Ares",
@@ -111,7 +150,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -124,7 +163,7 @@
         "target": "Global",
         "attribute": "Discipline",
         "type": "Base",
-        "value": 0.04
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -137,7 +176,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -163,7 +202,7 @@
         "target": "Global",
         "attribute": "Discipline",
         "type": "Base",
-        "value": 0.04
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -176,7 +215,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.05
+        "value": 0.03
       }
     ],
     "isOmen": false
@@ -189,10 +228,23 @@
         "target": "Global",
         "attribute": "Discipline",
         "type": "Base",
-        "value": 0.04
+        "value": 0.05
       }
     ],
     "isOmen": true
+  },
+  "deity_ati_muwer": {
+    "name": "Ati Muwer",
+    "key": "deity_ati_muwer",
+    "modifiers": [
+      {
+        "target": "Global",
+        "attribute": "Experience",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "isOmen": false
   },
   "deity_attar": {
     "name": "Attar",
@@ -215,7 +267,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -228,7 +280,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.05
+        "value": 0.03
       }
     ],
     "isOmen": false
@@ -241,7 +293,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -254,7 +306,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -267,7 +319,7 @@
         "target": "Global",
         "attribute": "Discipline",
         "type": "Base",
-        "value": 0.04
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -280,13 +332,26 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
   },
+  "deity_cariocecus": {
+    "name": "Cariocecus",
+    "key": "deity_cariocecus",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.025
+      }
+    ],
+    "isOmen": false
+  },
   "deity_cichol": {
-    "name": "Cichol",
+    "name": "Cicollus",
     "key": "deity_cichol",
     "modifiers": [
       {
@@ -306,7 +371,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -319,7 +384,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -332,10 +397,23 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
+  },
+  "deity_drablai_gyalmo": {
+    "name": "Drablai Gyalmo",
+    "key": "deity_drablai_gyalmo",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.025
+      }
+    ],
+    "isOmen": false
   },
   "deity_bodh": {
     "name": "Enlightenment of Buddha",
@@ -363,6 +441,19 @@
     ],
     "isOmen": true
   },
+  "omen_gekho": {
+    "name": "Gekhö Omen",
+    "key": "omen_gekho",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
+      }
+    ],
+    "isOmen": true
+  },
   "deity_gurzil": {
     "name": "Gurzil",
     "key": "deity_gurzil",
@@ -384,7 +475,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -397,7 +488,7 @@
         "target": "Global",
         "attribute": "Discipline",
         "type": "Base",
-        "value": 0.04
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -423,7 +514,7 @@
         "target": "Global",
         "attribute": "Discipline",
         "type": "Base",
-        "value": 0.04
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -434,25 +525,12 @@
     "modifiers": [
       {
         "target": "Global",
-        "attribute": "Experience",
+        "attribute": "Discipline",
         "type": "Base",
-        "value": 0.05
+        "value": 0.03
       }
     ],
     "isOmen": false
-  },
-  "omen_hercules": {
-    "name": "Hercules Omen",
-    "key": "omen_hercules",
-    "modifiers": [
-      {
-        "target": "Global",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.04
-      }
-    ],
-    "isOmen": true
   },
   "deity_infusion_of_war": {
     "name": "Infusion of War",
@@ -475,7 +553,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -501,7 +579,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -527,7 +605,7 @@
         "target": "Global",
         "attribute": "Discipline",
         "type": "Base",
-        "value": 0.04
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -553,7 +631,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.05
+        "value": 0.03
       }
     ],
     "isOmen": false
@@ -566,7 +644,7 @@
         "target": "Global",
         "attribute": "Discipline",
         "type": "Base",
-        "value": 0.04
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -579,7 +657,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -592,7 +670,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -600,19 +678,6 @@
   "deity_moses": {
     "name": "Moses",
     "key": "deity_moses",
-    "modifiers": [
-      {
-        "target": "Global",
-        "attribute": "Experience",
-        "type": "Base",
-        "value": 0.05
-      }
-    ],
-    "isOmen": false
-  },
-  "deity_perkunas": {
-    "name": "Mother Goddess",
-    "key": "deity_perkunas",
     "modifiers": [
       {
         "target": "Global",
@@ -631,7 +696,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -657,7 +722,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -722,7 +787,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.05
+        "value": 0.03
       }
     ],
     "isOmen": false
@@ -735,6 +800,19 @@
         "target": "Naval",
         "attribute": "Morale",
         "type": "Modifier",
+        "value": 0.03
+      }
+    ],
+    "isOmen": false
+  },
+  "deity_perkunas": {
+    "name": "Perkunas",
+    "key": "deity_perkunas",
+    "modifiers": [
+      {
+        "target": "Global",
+        "attribute": "Experience",
+        "type": "Base",
         "value": 0.05
       }
     ],
@@ -748,7 +826,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -774,7 +852,7 @@
         "target": "Naval",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -787,7 +865,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -813,7 +891,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -852,7 +930,7 @@
         "target": "Global",
         "attribute": "Discipline",
         "type": "Base",
-        "value": 0.04
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -865,23 +943,10 @@
         "target": "Naval",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
-      }
-    ],
-    "isOmen": true
-  },
-  "deity_shiva": {
-    "name": "Shiva",
-    "key": "deity_shiva",
-    "modifiers": [
-      {
-        "target": "Global",
-        "attribute": "Experience",
-        "type": "Base",
         "value": 0.05
       }
     ],
-    "isOmen": false
+    "isOmen": true
   },
   "omen_shiva": {
     "name": "Shiva Omen",
@@ -891,7 +956,7 @@
         "target": "Global",
         "attribute": "Discipline",
         "type": "Base",
-        "value": 0.04
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -904,7 +969,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -917,36 +982,10 @@
         "target": "Naval",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
-      }
-    ],
-    "isOmen": true
-  },
-  "omen_battle": {
-    "name": "Spirits of Battle Omen",
-    "key": "omen_battle",
-    "modifiers": [
-      {
-        "target": "Land",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "value": 0.08
-      }
-    ],
-    "isOmen": true
-  },
-  "deity_endurance": {
-    "name": "Spirits of Endurance",
-    "key": "deity_endurance",
-    "modifiers": [
-      {
-        "target": "Global",
-        "attribute": "Experience",
-        "type": "Base",
         "value": 0.05
       }
     ],
-    "isOmen": false
+    "isOmen": true
   },
   "omen_tanit": {
     "name": "Tanit Omen",
@@ -956,7 +995,7 @@
         "target": "Global",
         "attribute": "Discipline",
         "type": "Base",
-        "value": 0.04
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -982,7 +1021,7 @@
         "target": "Naval",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -995,7 +1034,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -1021,7 +1060,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -1034,7 +1073,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.05
+        "value": 0.03
       }
     ],
     "isOmen": false
@@ -1047,7 +1086,7 @@
         "target": "Global",
         "attribute": "Discipline",
         "type": "Base",
-        "value": 0.04
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -1060,7 +1099,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -1073,7 +1112,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.05
+        "value": 0.03
       }
     ],
     "isOmen": false
@@ -1112,7 +1151,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -1125,7 +1164,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.08
+        "value": 0.05
       }
     ],
     "isOmen": true
@@ -1138,7 +1177,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.05
+        "value": 0.03
       }
     ],
     "isOmen": false
