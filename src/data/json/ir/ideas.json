@@ -7,7 +7,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.1
+        "value": 0.05
       }
     ]
   },
@@ -19,7 +19,7 @@
         "target": "Naval",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.2
+        "value": 0.1
       }
     ]
   },

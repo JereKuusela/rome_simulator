@@ -28,14 +28,20 @@
             ]
           },
           {
-            "name": "Tradition Coming of Age",
+            "name": "Tradition The Glory of the Hunt",
             "key": "tradition_path_0_1",
             "modifiers": [
               {
-                "target": "Light Infantry",
-                "attribute": "Defense",
+                "target": "Text",
+                "attribute": "Enslavement Efficiency",
                 "type": "Base",
-                "value": 0.1
+                "value": 0.05
+              },
+              {
+                "target": "Text",
+                "attribute": "National Slave Output",
+                "type": "Base",
+                "value": 0.06
               }
             ]
           },
@@ -71,7 +77,7 @@
                 "target": "Chariots",
                 "attribute": "Morale",
                 "type": "Modifier",
-                "value": 0.2
+                "value": 0.1
               }
             ]
           },
@@ -88,14 +94,20 @@
             ]
           },
           {
-            "name": "Tradition Take up Arms",
+            "name": "Tradition A People on the Move",
             "key": "tradition_path_0_6",
             "modifiers": [
               {
-                "target": "Archers",
-                "attribute": "Morale",
-                "type": "Modifier",
-                "value": 0.1
+                "target": "Text",
+                "attribute": "Cohort Recruit Speed",
+                "type": "Base",
+                "value": 0.25
+              },
+              {
+                "target": "Text",
+                "attribute": "Unintegrated Culture Happiness",
+                "type": "Base",
+                "value": 0.06
               }
             ]
           },
@@ -131,43 +143,31 @@
                 "target": "Light Infantry",
                 "attribute": "Morale",
                 "type": "Modifier",
-                "value": 0.2
+                "value": 0.1
               }
             ]
           },
           {
-            "name": "Tradition Natural Resources",
+            "name": "Tradition Coming of Age",
             "key": "tradition_path_1_1",
             "modifiers": [
               {
-                "target": "Light Cavalry",
-                "attribute": "Cost",
-                "type": "Modifier",
-                "value": -0.15
-              },
-              {
-                "target": "Chariots",
-                "attribute": "Cost",
-                "type": "Modifier",
-                "value": -0.15
+                "target": "Light Infantry",
+                "attribute": "Defense",
+                "type": "Base",
+                "value": 0.1
               }
             ]
           },
           {
-            "name": "Tradition The Glory of the Hunt",
+            "name": "Tradition Strike From Afar",
             "key": "tradition_path_1_2",
             "modifiers": [
               {
-                "target": "Text",
-                "attribute": "Enslavement Efficiency",
+                "target": "Archers",
+                "attribute": "Offense",
                 "type": "Base",
-                "value": 0.05
-              },
-              {
-                "target": "Text",
-                "attribute": "National Slave Output",
-                "type": "Base",
-                "value": 0.1
+                "value": 0.15
               }
             ]
           },
@@ -196,14 +196,14 @@
             ]
           },
           {
-            "name": "Tradition Shield Wall",
+            "name": "Tradition Take up Arms",
             "key": "tradition_path_1_4",
             "modifiers": [
               {
-                "target": "Heavy Infantry",
-                "attribute": "Defense",
-                "type": "Base",
-                "value": 0.1
+                "target": "Archers",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.05
               }
             ]
           },
@@ -250,14 +250,20 @@
         "key": "tradition_path_2",
         "traditions": [
           {
-            "name": "Tradition Strike From Afar",
+            "name": "Tradition Natural Resources",
             "key": "tradition_path_2_0",
             "modifiers": [
               {
-                "target": "Archers",
-                "attribute": "Offense",
-                "type": "Base",
-                "value": 0.15
+                "target": "Light Cavalry",
+                "attribute": "Cost",
+                "type": "Modifier",
+                "value": -0.15
+              },
+              {
+                "target": "Chariots",
+                "attribute": "Cost",
+                "type": "Modifier",
+                "value": -0.15
               }
             ]
           },
@@ -304,18 +310,12 @@
             ]
           },
           {
-            "name": "Tradition A People on the Move",
+            "name": "Tradition Shield Wall",
             "key": "tradition_path_2_4",
             "modifiers": [
               {
-                "target": "Text",
-                "attribute": "Cohort Recruit Speed",
-                "type": "Base",
-                "value": 0.25
-              },
-              {
-                "target": "Text",
-                "attribute": "Wrong Culture Happiness",
+                "target": "Heavy Infantry",
+                "attribute": "Defense",
                 "type": "Base",
                 "value": 0.1
               }
@@ -353,7 +353,7 @@
                 "target": "Land",
                 "attribute": "Morale",
                 "type": "Modifier",
-                "value": 0.1
+                "value": 0.05
               }
             ]
           }
@@ -802,7 +802,7 @@
                 "target": "Text",
                 "attribute": "National Slave Output",
                 "type": "Base",
-                "value": 0.1
+                "value": 0.06
               }
             ]
           },
@@ -1087,7 +1087,7 @@
                 "target": "Land",
                 "attribute": "Morale",
                 "type": "Modifier",
-                "value": 0.1
+                "value": 0.05
               }
             ]
           }
@@ -1313,7 +1313,7 @@
                 "target": "Naval",
                 "attribute": "Morale",
                 "type": "Modifier",
-                "value": 0.1
+                "value": 0.05
               }
             ]
           },
@@ -1501,13 +1501,13 @@
             ]
           },
           {
-            "name": "Tradition Descendents of Airavata",
+            "name": "Tradition The Vyuha System",
             "key": "tradition_path_0_1",
             "modifiers": [
               {
-                "target": "War Elephants",
-                "attribute": "Defense",
-                "type": "Base",
+                "target": "Archers",
+                "attribute": "Morale",
+                "type": "Modifier",
                 "value": 0.1
               }
             ]
@@ -1517,7 +1517,7 @@
             "key": "tradition_path_0_2",
             "modifiers": [
               {
-                "target": "Light Infantry",
+                "target": "Heavy Infantry",
                 "attribute": "Morale",
                 "type": "Modifier",
                 "value": 0.1
@@ -1525,20 +1525,14 @@
             ]
           },
           {
-            "name": "Tradition Natural Pathfinders",
+            "name": "Tradition Padma Vyuha",
             "key": "tradition_path_0_3",
             "modifiers": [
               {
-                "target": "War Elephants",
-                "attribute": "Jungle",
+                "target": "Text",
+                "attribute": "Enables the 'Padma Vyuha' Tactic",
                 "type": "Base",
-                "value": 0.15
-              },
-              {
-                "target": "War Elephants",
-                "attribute": "Forest",
-                "type": "Base",
-                "value": 0.15
+                "value": 0
               }
             ]
           },
@@ -1555,44 +1549,44 @@
             ]
           },
           {
-            "name": "Tradition Homeland of our Fathers",
+            "name": "Tradition Armored Archers",
             "key": "tradition_path_0_5",
             "modifiers": [
               {
-                "target": "Heavy Infantry",
-                "attribute": "Forest",
+                "target": "Archers",
+                "attribute": "Defense",
                 "type": "Base",
-                "value": 0.15
-              },
-              {
-                "target": "Heavy Infantry",
-                "attribute": "Jungle",
-                "type": "Base",
-                "value": 0.15
-              },
-              {
-                "target": "Light Infantry",
-                "attribute": "Forest",
-                "type": "Base",
-                "value": 0.15
-              },
-              {
-                "target": "Light Infantry",
-                "attribute": "Jungle",
-                "type": "Base",
-                "value": 0.15
+                "value": 0.1
               }
             ]
           },
           {
-            "name": "Tradition Integrating the Tribes",
+            "name": "Tradition Homeland of our Fathers",
             "key": "tradition_path_0_6",
             "modifiers": [
               {
-                "target": "Text",
-                "attribute": "National Tribesman Happiness",
+                "target": "Heavy Infantry",
+                "attribute": "Forest",
                 "type": "Base",
-                "value": 0.2
+                "value": 0.15
+              },
+              {
+                "target": "Heavy Infantry",
+                "attribute": "Jungle",
+                "type": "Base",
+                "value": 0.15
+              },
+              {
+                "target": "Light Infantry",
+                "attribute": "Forest",
+                "type": "Base",
+                "value": 0.15
+              },
+              {
+                "target": "Light Infantry",
+                "attribute": "Jungle",
+                "type": "Base",
+                "value": 0.15
               }
             ]
           },
@@ -1628,14 +1622,14 @@
             ]
           },
           {
-            "name": "Tradition The Vyuha System",
+            "name": "Tradition Exotic Soldiers",
             "key": "tradition_path_1_1",
             "modifiers": [
               {
-                "target": "Archers",
-                "attribute": "Morale",
-                "type": "Modifier",
-                "value": 0.1
+                "target": "Text",
+                "attribute": "Mercenary Army Maintenance",
+                "type": "Base",
+                "value": -0.15
               }
             ]
           },
@@ -1670,26 +1664,26 @@
             ]
           },
           {
-            "name": "Tradition Flexible Divisions",
-            "key": "tradition_path_1_4",
-            "modifiers": [
-              {
-                "target": "Land",
-                "attribute": "Morale",
-                "type": "Modifier",
-                "value": 0.1
-              }
-            ]
-          },
-          {
             "name": "Tradition City of the World's Desire",
-            "key": "tradition_path_1_5",
+            "key": "tradition_path_1_4",
             "modifiers": [
               {
                 "target": "Text",
                 "attribute": "Fort Defense",
                 "type": "Base",
                 "value": 0.1
+              }
+            ]
+          },
+          {
+            "name": "Tradition Integrating the Tribes",
+            "key": "tradition_path_1_5",
+            "modifiers": [
+              {
+                "target": "Text",
+                "attribute": "National Tribesman Happiness",
+                "type": "Base",
+                "value": 0.12
               }
             ]
           },
@@ -1748,23 +1742,23 @@
             ]
           },
           {
-            "name": "Tradition Trained to Kill",
+            "name": "Tradition Imported Horses",
             "key": "tradition_path_2_1",
             "modifiers": [
               {
-                "target": "War Elephants",
+                "target": "Chariots",
                 "attribute": "Discipline",
                 "type": "Base",
-                "value": 0.1
+                "value": 0.15
               }
             ]
           },
           {
-            "name": "Tradition Armored Archers",
+            "name": "Tradition Descendents of Airavata",
             "key": "tradition_path_2_2",
             "modifiers": [
               {
-                "target": "Archers",
+                "target": "War Elephants",
                 "attribute": "Defense",
                 "type": "Base",
                 "value": 0.1
@@ -1772,26 +1766,32 @@
             ]
           },
           {
-            "name": "Tradition Padma Vyuha",
+            "name": "Tradition Natural Pathfinders",
             "key": "tradition_path_2_3",
             "modifiers": [
               {
-                "target": "Text",
-                "attribute": "Enables the 'Padma Vyuha' Tactic",
+                "target": "War Elephants",
+                "attribute": "Jungle",
                 "type": "Base",
-                "value": 0
+                "value": 0.15
+              },
+              {
+                "target": "War Elephants",
+                "attribute": "Forest",
+                "type": "Base",
+                "value": 0.15
               }
             ]
           },
           {
-            "name": "Tradition Imported Horses",
+            "name": "Tradition Trained to Kill",
             "key": "tradition_path_2_4",
             "modifiers": [
               {
-                "target": "Chariots",
+                "target": "War Elephants",
                 "attribute": "Discipline",
                 "type": "Base",
-                "value": 0.15
+                "value": 0.1
               }
             ]
           },
@@ -1808,14 +1808,14 @@
             ]
           },
           {
-            "name": "Tradition Exotic Soldiers",
+            "name": "Tradition Flexible Divisions",
             "key": "tradition_path_2_6",
             "modifiers": [
               {
-                "target": "Text",
-                "attribute": "Mercenary Army Maintenance",
-                "type": "Base",
-                "value": -0.15
+                "target": "Land",
+                "attribute": "Morale",
+                "type": "Modifier",
+                "value": 0.05
               }
             ]
           },
@@ -1955,13 +1955,13 @@
                 "target": "Text",
                 "attribute": "National Tribesman Output",
                 "type": "Base",
-                "value": 0.1
+                "value": 0.06
               },
               {
                 "target": "Text",
                 "attribute": "National Tribesman Happiness",
                 "type": "Base",
-                "value": 0.1
+                "value": 0.08
               }
             ]
           }

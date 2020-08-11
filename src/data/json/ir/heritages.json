@@ -13,7 +13,7 @@
         "target": "Text",
         "attribute": "National Freeman Happiness",
         "type": "Base",
-        "value": 0.05
+        "value": 0.08
       },
       {
         "target": "Text",
@@ -44,7 +44,7 @@
       },
       {
         "target": "Text",
-        "attribute": "Loyalty Gain Chance",
+        "attribute": "Cohort Loyalty Gain Chance",
         "type": "Base",
         "negative": true,
         "value": 0.1
@@ -91,7 +91,7 @@
         "target": "Text",
         "attribute": "National Citizen Output",
         "type": "Base",
-        "value": 0.1
+        "value": 0.06
       },
       {
         "target": "Text",
@@ -356,7 +356,7 @@
         "attribute": "Morale",
         "type": "Modifier",
         "negative": true,
-        "value": -0.1
+        "value": -0.05
       }
     ]
   },
@@ -378,7 +378,7 @@
       },
       {
         "target": "Text",
-        "attribute": "Loyalty Gain Chance",
+        "attribute": "Cohort Loyalty Gain Chance",
         "type": "Base",
         "negative": true,
         "value": 0.05
@@ -500,7 +500,7 @@
       },
       {
         "target": "Text",
-        "attribute": "Primary Culture Happiness",
+        "attribute": "Integrated Culture Happiness",
         "type": "Base",
         "value": 0.1
       },
@@ -521,7 +521,7 @@
         "target": "Text",
         "attribute": "National Citizen Happiness",
         "type": "Base",
-        "value": 0.05
+        "value": 0.08
       },
       {
         "target": "Text",
@@ -578,11 +578,11 @@
         "target": "Text",
         "attribute": "National Freeman Happiness",
         "type": "Base",
-        "value": 0.1
+        "value": 0.08
       },
       {
         "target": "Text",
-        "attribute": "Loyalty Gain Chance",
+        "attribute": "Cohort Loyalty Gain Chance",
         "type": "Base",
         "negative": true,
         "value": 0.05
@@ -595,9 +595,9 @@
     "modifiers": [
       {
         "target": "Text",
-        "attribute": "Wrong Culture-Group Happiness",
+        "attribute": "Unintegrated Culture Group Happiness",
         "type": "Base",
-        "value": 0.05
+        "value": 0.06
       },
       {
         "target": "Text",
@@ -700,7 +700,7 @@
         "target": "Text",
         "attribute": "National Citizen Happiness",
         "type": "Base",
-        "value": 0.1
+        "value": 0.6
       },
       {
         "target": "Text",
@@ -749,9 +749,9 @@
     "modifiers": [
       {
         "target": "Text",
-        "attribute": "Wrong Culture-Group Happiness",
+        "attribute": "Unintegrated Culture Group Happiness",
         "type": "Base",
-        "value": 0.1
+        "value": 0.06
       },
       {
         "target": "Text",
@@ -784,7 +784,7 @@
         "target": "Text",
         "attribute": "National Freeman Output",
         "type": "Base",
-        "value": 0.05
+        "value": 0.03
       },
       {
         "target": "Text",
@@ -809,7 +809,7 @@
         "target": "Text",
         "attribute": "National Slave Output",
         "type": "Base",
-        "value": 0.05
+        "value": 0.03
       },
       {
         "target": "Text",
@@ -884,7 +884,7 @@
         "target": "Text",
         "attribute": "National Tribesman Happiness",
         "type": "Base",
-        "value": 0.05
+        "value": 0.08
       },
       {
         "target": "Text",
@@ -901,9 +901,9 @@
     "modifiers": [
       {
         "target": "Text",
-        "attribute": "Wrong Culture-Group Happiness",
+        "attribute": "Unintegrated Culture Group Happiness",
         "type": "Base",
-        "value": 0.05
+        "value": 0.06
       },
       {
         "target": "Text",
@@ -951,9 +951,9 @@
     "modifiers": [
       {
         "target": "Text",
-        "attribute": "Wrong Culture-Group Happiness",
+        "attribute": "Unintegrated Culture Group Happiness",
         "type": "Base",
-        "value": 0.1
+        "value": 0.06
       },
       {
         "target": "Text",
@@ -978,7 +978,7 @@
         "target": "Text",
         "attribute": "National Freeman Happiness",
         "type": "Base",
-        "value": 0.05
+        "value": 0.08
       },
       {
         "target": "Text",
@@ -1009,11 +1009,11 @@
         "target": "Text",
         "attribute": "National Citizen Happiness",
         "type": "Base",
-        "value": 0.05
+        "value": 0.08
       },
       {
         "target": "Text",
-        "attribute": "Loyalty Gain Chance",
+        "attribute": "Cohort Loyalty Gain Chance",
         "type": "Base",
         "negative": true,
         "value": 0.05
@@ -1060,14 +1060,13 @@
         "target": "Text",
         "attribute": "National Citizen Output",
         "type": "Base",
-        "value": 0.1
+        "value": 0.06
       },
       {
         "target": "Text",
         "attribute": "National Slave Happiness",
         "type": "Base",
-        "negative": true,
-        "value": -0.05
+        "value": -0.04
       }
     ]
   },
@@ -1205,9 +1204,9 @@
     "modifiers": [
       {
         "target": "Text",
-        "attribute": "Wrong Culture-Group Happiness",
+        "attribute": "Unintegrated Culture Group Happiness",
         "type": "Base",
-        "value": 0.1
+        "value": 0.06
       },
       {
         "target": "Text",
@@ -1237,9 +1236,9 @@
       },
       {
         "target": "Text",
-        "attribute": "Wrong Culture-Group Happiness",
+        "attribute": "Unintegrated Culture Group Happiness",
         "type": "Base",
-        "value": 0.1
+        "value": 0.06
       },
       {
         "target": "Text",
@@ -1415,9 +1414,9 @@
       },
       {
         "target": "Text",
-        "attribute": "Wrong Culture-Group Happiness",
+        "attribute": "Unintegrated Culture Group Happiness",
         "type": "Base",
-        "value": 0.05
+        "value": 0.03
       },
       {
         "target": "Text",
@@ -1512,7 +1511,7 @@
         "target": "Text",
         "attribute": "National Tribesman Happiness",
         "type": "Base",
-        "value": 0.1
+        "value": 0.08
       },
       {
         "target": "Text",
@@ -1592,9 +1591,9 @@
       },
       {
         "target": "Text",
-        "attribute": "Wrong Culture-Group Happiness",
+        "attribute": "Unintegrated Culture Group Happiness",
         "type": "Base",
-        "value": 0.05
+        "value": 0.03
       },
       {
         "target": "Text",
@@ -1626,7 +1625,7 @@
         "attribute": "Morale",
         "type": "Modifier",
         "negative": true,
-        "value": -0.1
+        "value": -0.05
       }
     ]
   },
@@ -1638,7 +1637,7 @@
         "target": "Text",
         "attribute": "National Citizen Happiness",
         "type": "Base",
-        "value": 0.1
+        "value": 0.08
       },
       {
         "target": "Text",
@@ -1693,7 +1692,7 @@
       },
       {
         "target": "Text",
-        "attribute": "Primary Culture Happiness",
+        "attribute": "Integrated Culture Happiness",
         "type": "Base",
         "value": 0.05
       },
@@ -1787,9 +1786,9 @@
     "modifiers": [
       {
         "target": "Text",
-        "attribute": "Wrong Culture-Group Happiness",
+        "attribute": "Unintegrated Culture Group Happiness",
         "type": "Base",
-        "value": 0.05
+        "value": 0.03
       },
       {
         "target": "Text",
@@ -1904,8 +1903,7 @@
         "target": "Text",
         "attribute": "National Tribesman Happiness",
         "type": "Base",
-        "negative": true,
-        "value": -0.05
+        "value": -0.04
       }
     ]
   },
@@ -1949,11 +1947,11 @@
         "target": "Text",
         "attribute": "National Citizen Output",
         "type": "Base",
-        "value": 0.05
+        "value": 0.03
       },
       {
         "target": "Text",
-        "attribute": "Loyalty Gain Chance",
+        "attribute": "Cohort Loyalty Gain Chance",
         "type": "Base",
         "negative": true,
         "value": 0.2
@@ -1968,7 +1966,7 @@
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
-        "value": 0.05
+        "value": 0.025
       },
       {
         "target": "Global",
@@ -2030,8 +2028,7 @@
         "target": "Text",
         "attribute": "National Citizen Happiness",
         "type": "Base",
-        "negative": true,
-        "value": -0.05
+        "value": -0.04
       }
     ]
   },
@@ -2074,7 +2071,7 @@
         "target": "Text",
         "attribute": "National Freeman Happiness",
         "type": "Base",
-        "value": 0.05
+        "value": 0.08
       },
       {
         "target": "Heavy Infantry",
@@ -2082,6 +2079,32 @@
         "type": "Modifier",
         "negative": true,
         "value": 0.05
+      }
+    ]
+  },
+  "default_heritage": {
+    "name": "Unremarkable Heritage",
+    "key": "default_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Population Happiness",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "National Tax",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Relations",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
       }
     ]
   }

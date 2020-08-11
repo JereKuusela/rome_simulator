@@ -1,90 +1,68 @@
 {
-  "civic_party": {
-    "name": "Civic Faction",
-    "key": "civic_party",
+  "boni_party": {
+    "name": "Boni",
+    "key": "boni_party",
     "modifiers": [
       {
         "target": "Text",
-        "attribute": "National Tax",
-        "type": "Base",
-        "value": 0.2
-      },
-      {
-        "target": "Text",
-        "attribute": "Empower Civic Faction Cost",
+        "attribute": "Monthly Wages for Characters",
         "type": "Base",
         "negative": true,
-        "value": -0.5
+        "value": -0.1
       }
     ]
   },
-  "mercantile_party": {
-    "name": "Mercantile Faction",
-    "key": "mercantile_party",
+  "democratic_party": {
+    "name": "Democrats",
+    "key": "democratic_party",
     "modifiers": [
       {
         "target": "Text",
-        "attribute": "National Commerce Income",
+        "attribute": "National Citizen Output",
         "type": "Base",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Diplomatic Reputation",
-        "type": "Base",
-        "noPercent": true,
-        "value": 2
-      },
-      {
-        "target": "Text",
-        "attribute": "Empower Mercantile Faction Cost",
-        "type": "Base",
-        "negative": true,
-        "value": -0.5
+        "value": 0.12
       }
     ]
   },
-  "military_party": {
-    "name": "Military Faction",
-    "key": "military_party",
-    "modifiers": [
-      {
-        "target": "Land",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "value": 0.1
-      },
-      {
-        "target": "Naval",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "value": 0.1
-      },
-      {
-        "target": "Text",
-        "attribute": "Empower Military Faction Cost",
-        "type": "Base",
-        "negative": true,
-        "value": -0.5
-      }
-    ]
-  },
-  "populist_party": {
-    "name": "Populist Faction",
-    "key": "populist_party",
+  "oligarchic_party": {
+    "name": "Oligarchs",
+    "key": "oligarchic_party",
     "modifiers": [
       {
         "target": "Text",
-        "attribute": "Monthly Political Influence",
+        "attribute": "National Noble Happiness",
         "type": "Base",
-        "negative": true,
-        "value": -0.33
+        "value": 0.08
       }
     ]
   },
-  "religious_party": {
-    "name": "Religious Faction",
-    "key": "religious_party",
+  "optimates_party": {
+    "name": "Optimates",
+    "key": "optimates_party",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Noble Output",
+        "type": "Base",
+        "value": 0.12
+      }
+    ]
+  },
+  "populares_party": {
+    "name": "Populares",
+    "key": "populares_party",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Freeman Happiness",
+        "type": "Base",
+        "value": 0.08
+      }
+    ]
+  },
+  "traditionalist_party": {
+    "name": "Traditionalists",
+    "key": "traditionalist_party",
     "modifiers": [
       {
         "target": "Country",
@@ -92,13 +70,6 @@
         "type": "Base",
         "noPercent": true,
         "value": 10
-      },
-      {
-        "target": "Text",
-        "attribute": "Empower Religious Faction Cost",
-        "type": "Base",
-        "negative": true,
-        "value": -0.5
       }
     ]
   }
