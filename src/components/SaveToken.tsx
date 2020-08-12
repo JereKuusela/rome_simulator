@@ -25,9 +25,11 @@ export default class SaveToken extends Component<{}, IState> {
       <Grid padded>
         <Grid.Row columns='2'>
           <Grid.Column>
+            Plain
             <Input type='file' onChange={event => this.loadPlain(event.target.files![0])} />
           </Grid.Column>
           <Grid.Column>
+            Compressed
             <Input type='file' onChange={event => this.loadSave(event.target.files![0])} />
           </Grid.Column>
         </Grid.Row>
@@ -64,7 +66,9 @@ export default class SaveToken extends Component<{}, IState> {
           const mapping: { [key: string]: string } = tokens
 
           this.mapper(mapping, compressedFile, plainFile)
-          const blob = new Blob([JSON.stringify(mapping, undefined, 2)], { type: 'text/plain;charset=utf-8' })
+          const sortedMapping: { [key: string]: string } = {}
+          Object.keys(mapping).sort().forEach(key => sortedMapping[key] = mapping[key])
+          const blob = new Blob([JSON.stringify(sortedMapping, undefined, 2)], { type: 'text/plain;charset=utf-8' })
           saveAs(blob, 'tokens.json');
 
           this.plain = null
@@ -81,19 +85,26 @@ export default class SaveToken extends Component<{}, IState> {
     const keys = Object.keys(compressed).filter(key => key !== 'ironman')
     const correctKeys = Object.keys(plain).filter(key => key !== 'ironman')
     for (let i = 0; i < keys.length; i++) {
-      if (keys[i] !== correctKeys[i])
-        mapping[keys[i].substr(2).padStart(4, '0')] = correctKeys[i]
-      if (typeof compressed[keys[i]] === 'object')
-        this.mapper(mapping, compressed[keys[i]], plain[correctKeys[i]])
+      const key = keys[i]
+      const correctKey = correctKeys[i]
+      const value = compressed[keys[i]]
+      const correctValue = plain[correctKeys[i]]
+      if (key !== correctKey)
+        mapping[key.substr(2).padStart(4, '0')] = correctKey
+      if (typeof value === 'object')
+        this.mapper(mapping, value, correctValue)
       else {
-        if (typeof compressed[keys[i]] === 'string' && compressed[keys[i]].startsWith('x_')) {
-          if (compressed[keys[i]] !== plain[correctKeys[i]])
-            mapping[compressed[keys[i]].substr(2).padStart(4, '0')] = plain[correctKeys[i]]
+        if (typeof value === 'string' && value.startsWith('x_')) {
+          if (value !== correctValue)
+            mapping[value.substr(2).padStart(4, '0')] = correctValue
         }
-        else if (compressed[keys[i]] !== plain[correctKeys[i]]) {
-          console.log(keys[i])
-          console.log(compressed[keys[i]])
+        else if (value !== correctValue) {
+          console.log(key)
+          console.log(value)
           console.log(compressed)
+          console.log(correctKey)
+          console.log(correctValue)
+          console.log(plain)
         }
       }
     }

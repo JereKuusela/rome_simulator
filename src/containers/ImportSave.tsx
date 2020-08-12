@@ -35,7 +35,6 @@ type Country = {
   religiousUnity: number
   laws: string[]
   ideas: string[]
-  exports: boolean[]
   surplus: TradeGood[]
   officeDiscipline: number
   officeMorale: number
@@ -327,12 +326,13 @@ class ImportSave extends Component<IProps, IState> {
             Capital surplus
           </Table.Cell>
           <Table.Cell>
-            {country.surplus.map(key => tradesIR['surplus_' + key]?.name.substr(8)).filter(value => value).join(', ')}
+            {country.surplus.map(key => tradesIR[key]?.name).filter(value => value).join(', ')}
           </Table.Cell>
           <Table.Cell>
-            Exports
+            Ideas
           </Table.Cell>
           <Table.Cell>
+            {country.ideas.map(key => ideasIR[key]?.name).filter(value => value).join(', ')}
           </Table.Cell>
         </Table.Row>
         <Table.Row>
@@ -379,15 +379,9 @@ class ImportSave extends Component<IProps, IState> {
         </Table.Row>
         <Table.Row>
           <Table.Cell>
-            Ideas
-          </Table.Cell>
-          <Table.Cell>
-            {country.ideas.map(key => ideasIR[key]?.name).filter(value => value).join(', ')}
-          </Table.Cell>
-          <Table.Cell>
             Modifiers
           </Table.Cell>
-          <Table.Cell>
+          <Table.Cell colSpan='3'>
             {country.modifiers.map(key => modifiersIR[key]?.name).filter(value => value).join(', ')}
           </Table.Cell>
         </Table.Row>
@@ -524,7 +518,6 @@ class ImportSave extends Component<IProps, IState> {
       navalMaintenance: 'expense_navy_' + this.maintenanceToKey(data.economic_policies[5]),
       traditions: this.arrayify(data.military_tradition_levels).filter((_, index) => index < 3),
       laws: [],
-      exports: this.arrayify(data.export).map((value: any) => !!value),
       surplus: [],
       ideas: this.arrayify(data.ideas?.idea).map((idea: any) => idea.idea),
       officeDiscipline: 0,
@@ -566,11 +559,21 @@ class ImportSave extends Component<IProps, IState> {
     }
     const pops = this.state.file.population?.population
     if (data.capital && this.state.file.provinces && pops) {
-      const province = this.state.file.provinces[data.capital]?.state ?? 0
+      country.surplus = this.countSurplus(data.capital, pops, country)
+    }
+
+    return country
+  }
+
+  countSurplus = (capital: number, pops: any, country: Country) => {
+    const province = this.state.file.provinces[capital]?.state ?? 0
       const territories = Object.values(this.state.file.provinces).filter(territory => territory.state === province)
       const goods = territories.reduce((prev, territory) => {
         const slaves = territory.pop.filter((id: number) => pops[id].type === 'slaves').length
         const goods = territory.trade_goods
+        let baseAmount = 1
+        if (territory.province_rank === 'city')
+          baseAmount++
         let slavesForSurplus = 18
         if (territory.province_rank === 'settlement')
           slavesForSurplus -= 3
@@ -585,7 +588,7 @@ class ImportSave extends Component<IProps, IState> {
         if (country.laws.includes('republican_land_reform_3'))
           slavesForSurplus -= 2
         slavesForSurplus = Math.max(1, slavesForSurplus)
-        return prev.concat(Array(1 + Math.floor(slaves / slavesForSurplus)).fill(goods))
+        return prev.concat(Array(baseAmount + Math.floor(slaves / slavesForSurplus)).fill(goods))
       }, [] as TradeGood[])
       const counts = toObj(goods, type => type, type => goods.filter(item => item === type).length)
       const tradeRoutes = this.state.file.trade?.route ?? []
@@ -597,10 +600,7 @@ class ImportSave extends Component<IProps, IState> {
           counts[route.trade_goods] = (counts[route.trade_goods] ?? 0) + 1
 
       })
-      country.surplus = keys(filter(counts, item => item > 1))
-    }
-
-    return country
+      return keys(filter(counts, item => item > 1))
   }
 
   getCharacterMartial = (character: SaveCharacter) => character.attributes.martial + sum(this.arrayify(character.traits).map((key: string) => traitsIR[key]?.modifiers.find(modifier => modifier.attribute === GeneralAttribute.Martial)?.value ?? 0))
