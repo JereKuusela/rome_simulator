@@ -3,6 +3,24 @@ import { uniq } from 'lodash'
 
 import stringTokens from 'data/json/ir/binary.json'
 
+enum DataType {
+  Integer = 'Integer',
+  Float = 'Float',
+  Boolean = 'Boolean',
+  String = 'String',
+  UnsignedInteger = 'UnsignedInteger',
+  BigFloat = 'BigFloat',
+  BigInteger = 'BigInteger',
+  BigUnsignedInteger = 'BigUnsignedInteger'
+}
+
+enum ControlType {
+  Separator = '=',
+  SectionStart = '{',
+  SectionEnd = '}',
+  None = ''
+}
+
 let i = 0
 let data: Uint8Array = new Uint8Array()
 let errors: string[] | null = null
@@ -40,7 +58,7 @@ const parseObject = (tokens: string[]) => {
     if (token === '{') {
       resultArray.push(parseObject(tokens))
     }
-    else if (token === '=') {
+    else if (token === ControlType.Separator) {
       const value = parseValue(tokens)
       if (result[previous]) {
         if (!Array.isArray(result[previous]))
@@ -52,7 +70,7 @@ const parseObject = (tokens: string[]) => {
       }
     }
     else if (token === '}') {
-        break
+      break
     }
     else {
       resultArray.push(parseToken(token))
@@ -72,19 +90,19 @@ export const parseFile = (data: string) => {
 }
 
 const formatTokens = {
-  '0000': '',
-  '0100': '=',
-  '0300': '{',
-  '0400': '}',
-  '0C00': 'Integer',
-  '0D00': 'Float',
-  '0E00': 'Boolean',
-  '0F00': 'String',
-  '1400': 'UnsignedInteger',
-  '1700': 'String',
-  '6701': 'BigFloat',
-  '9001': 'BigFloat',
-  '9C02': 'BigInteger'
+  '0000': ControlType.None,
+  '0100': ControlType.Separator,
+  '0300': ControlType.SectionStart,
+  '0400': ControlType.SectionEnd,
+  '0C00': DataType.Integer,
+  '0D00': DataType.Float,
+  '0E00': DataType.Boolean,
+  '0F00': DataType.String,
+  '1400': DataType.UnsignedInteger,
+  '1700': DataType.String,
+  '6701': DataType.BigFloat,
+  '9001': DataType.BigFloat,
+  '9C02': DataType.BigInteger
 }
 
 const tokens = {
@@ -108,8 +126,8 @@ const getBinaryToken = () => {
   return 'x_' + code.toString(16).toUpperCase()
 }
 
-/** Looks up the next token. If it's '=' then previous token is a key. */
-const isKeyValuePair = () => tokens[data[i] * 256 + data[i + 1]] === '='
+/** Looks up the next token. If it's separator then previous token is a key. */
+const isKeyValuePair = () => tokens[data[i] * 256 + data[i + 1]] === ControlType.Separator
 
 const getBinaryBoolean = () => data[i++] ? 'yes' : 'no'
 // Bitwise can't be used because of only 32 bytes.
@@ -124,7 +142,11 @@ const getBinarySigned = () => {
   i += 4
   return hexToSigned(value)
 }
-
+const getBinaryBigUnsigned = () => {
+  const value = getHex(i + 7) + getHex(i + 6) + getHex(i + 5) + getHex(i + 4) + getHex(i + 3) + getHex(i + 2) + getHex(i + 1) + getHex(i)
+  i += 8
+  return hexToUnsigned(value)
+}
 const getBinaryBigSigned = () => {
   const value = getHex(i + 7) + getHex(i + 6) + getHex(i + 5) + getHex(i + 4) + getHex(i + 3) + getHex(i + 2) + getHex(i + 1) + getHex(i)
   i += 8
@@ -148,26 +170,29 @@ const getBinaryString = (length: number) => {
 }
 
 const parseBinaryValue = (type: string): string => {
-  if (type === 'UnsignedInteger') {
-      return getBinaryUnsigned().toString()
+  if (type === DataType.UnsignedInteger) {
+    return getBinaryUnsigned().toString()
   }
-  if (type === 'Integer') {
+  if (type === DataType.Integer) {
     return getBinarySigned().toString()
   }
-  if (type === 'String') {
+  if (type === DataType.String) {
     const length = getBinaryLength()
     return getBinaryString(length)
   }
-  if (type === 'Float') {
-    return String(+getBinaryFloat().toFixed(3))
+  if (type === DataType.Float) {
+    return String(+getBinaryFloat().toFixed(5))
   }
-  if (type === 'BigInteger') {
+  if (type === DataType.BigInteger) {
     return getBinaryBigSigned().toString()
   }
-  if (type === 'BigFloat') {
+  if (type === DataType.BigUnsignedInteger) {
+    return getBinaryBigUnsigned().toString()
+  }
+  if (type === DataType.BigFloat) {
     return (Number(getBinaryBigSigned()) / 100000.0).toString()
   }
-  if (type === 'Boolean') {
+  if (type === DataType.Boolean) {
     return getBinaryBoolean()
   }
   return type
@@ -178,8 +203,24 @@ const dates = new Set([
   'date', 'death_date', 'start_date', 'last_trade_route_creation_date', 'arrived_here_date', 'stall_date', 'ignored',
   'leader_date', 'budget_dates', 'last_employed_date', 'last_owner_change', 'last_controller_change', 'looted', 'plundered',
   'deity_elevated', 'last_war', 'last_peace', 'last_battle_won', 'omen_start', 'omen_duration', 'idle', 'birth_date',
-  'last_send_diplomat', 'move_pop_command', 'building_construction', 'disband_army', 'spouse_death_date'
+  'last_send_diplomat', 'move_pop_command', 'building_construction', 'disband_army', 'spouse_death_date', 'last_victory',
+  'next_year_update', 'next_quarter_update', 'last_enslavement', 'fixed_date', 'regret', 'end_date', 'gather_date',
+  'last_command_date', 'deadline',
 ])
+
+const isDate = (key: string, parentKey: string, token: string, value: string) => {
+  if (key && token === DataType.Integer) {
+
+    if (dates.has(key))
+      return true
+    if (parentKey === 'breaking_alliances')
+      return true
+    // HACK: Dates are always a big number and other uses of 'action' seem to use low numbers.
+    if (key === 'action' && Number(value) > 100000)
+      return true
+  }
+  return false
+}
 
 const parseBinaryText = (data: Uint8Array) => {
   const tokens = [''] as any[]
@@ -190,35 +231,36 @@ const parseBinaryText = (data: Uint8Array) => {
   let inArray = false
   while (i < data.length) {
     let token: string | number = getBinaryToken()
-    if (token === '=') {
+    if (key === 'identity' && token === DataType.BigInteger)
+      token = DataType.BigUnsignedInteger
+    if (token === ControlType.Separator) {
       tokens.push(token)
     }
-    else if (token === 'String' || token === 'Integer' || token === 'BigInteger' || token === 'Float' || token === 'BigFloat' || token === 'BigFloat' || token === 'Boolean' || token === 'UnsignedInteger') {
+    else if (token in DataType) {
       const value = parseBinaryValue(String(token))
-      if (token === 'String' && !isKeyValuePair())
+      if (token === DataType.String && !isKeyValuePair())
         token = '"' + value + '"'
-      else if (key && (dates.has(key) || parentKey === 'breaking_alliances'))
+      else if (isDate(key, parentKey, token, value))
         token = decodateDate(Number(value))
       else
         token = value
 
       if (isKeyValuePair()) {
-        parentKey = key
         key = String(token)
         tokens.push('\n')
         if (pad)
           tokens.push(pad)
       }
-      else if (previous !== '=') {
+      else if (previous !== ControlType.Separator) {
         inArray = true
         tokens.push(' ')
       }
 
       tokens.push(token)
     }
-    else if (token === '{' || token === '}') {
-      if (token === '}') {
-        parentKey = key
+    else if (token === ControlType.SectionStart || token === ControlType.SectionEnd) {
+      if (token === ControlType.SectionEnd) {
+        parentKey = ''
         key = ''
         if (tokens[tokens.length - 1] !== '\n' && !inArray)
           tokens.push('\n')
@@ -229,21 +271,22 @@ const parseBinaryText = (data: Uint8Array) => {
           tokens.push(' ')
         inArray = false
       }
-      if (token === '{' && tokens[tokens.length - 1] !== '=')
+      if (token === ControlType.SectionStart && tokens[tokens.length - 1] !== ControlType.Separator)
         tokens.push(' ')
       tokens.push(token)
-      if (token === '{')
+      if (token === ControlType.SectionStart) {
         pad += '\t'
+        parentKey = key
+      }
     }
     else {
       if (isKeyValuePair()) {
-        parentKey = key
         key = token
         tokens.push('\n')
         if (pad)
           tokens.push(pad)
       }
-      else if (previous !== '=') {
+      else if (previous !== ControlType.Separator) {
         inArray = true
         tokens.push(' ')
       }
