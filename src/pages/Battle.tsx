@@ -13,7 +13,7 @@ import {
   selectParticipantCountry, setDice, toggleRandomDice, clearCohorts, changeSiteParameter,
   undo, battle, refreshBattle, resetState, selectCulture, openModal
 } from 'reducers'
-import { AppState, getBattle, getSettings, getFirstParticipant } from 'state'
+import { AppState, getBattle, getSettings, getParticipantSafely } from 'state'
 import { ArmyPart, CountryName, Setting, SideType, CombatPhase, UnitType, ModalType, ArmyName } from 'types'
 import TableUnitTypes from 'containers/TableUnitTypes'
 import TableArmyInfo from 'containers/TableArmyInfo'
@@ -21,6 +21,7 @@ import TableSideInfo from 'containers/TableSideInfo'
 import TableDamageAttributes from 'containers/TableDamageAttributes'
 import AccordionToggle from 'containers/AccordionToggle'
 import { getDay, getRound } from 'managers/battle'
+import ParticipantSelector from 'containers/ParticipantSelector'
 
 const ATTACKER_COLOR = '#FFAA00AA'
 const DEFENDER_COLOR = '#00AAFFAA'
@@ -47,7 +48,7 @@ class Battle extends Component<IProps> {
   }
 
   render() {
-    const { participantA, participantD, round, isUndoAvailable, fightOver, settings, timestamp, day, changeSiteParameter } = this.props
+    const { participantA, participantB: participantD, round, isUndoAvailable, fightOver, settings, timestamp, day, changeSiteParameter } = this.props
     if (!timestamp)
       return null
     return (
@@ -121,9 +122,11 @@ class Battle extends Component<IProps> {
             </Grid.Row>
             <Grid.Row columns={2}>
               <Grid.Column>
+                <ParticipantSelector side={SideType.A} />
                 <TableUnitTypes side={SideType.A} countryName={participantA.countryName} armyName={participantA.armyName} onRowClick={this.openUnitDetails} />
               </Grid.Column>
               <Grid.Column>
+                <ParticipantSelector side={SideType.B} />
                 <TableUnitTypes side={SideType.B} countryName={participantD.countryName} armyName={participantD.armyName} onRowClick={this.openUnitDetails} />
               </Grid.Column>
             </Grid.Row>
@@ -168,12 +171,12 @@ class Battle extends Component<IProps> {
         <br />
         <AccordionToggle title='Reserve & Defeated' identifier='Reserve'>
           <Grid>
-                {this.renderReserve(SideType.A)}
-                {this.renderReserve(SideType.B)}
-                {this.renderDefeatedCohorts(SideType.A)}
-                {this.renderDefeatedCohorts(SideType.B)}
-                {this.renderRetreatedCohorts(SideType.A)}
-                {this.renderRetreatedCohorts(SideType.B)}
+            {this.renderReserve(SideType.A)}
+            {this.renderReserve(SideType.B)}
+            {this.renderDefeatedCohorts(SideType.A)}
+            {this.renderDefeatedCohorts(SideType.B)}
+            {this.renderRetreatedCohorts(SideType.A)}
+            {this.renderRetreatedCohorts(SideType.B)}
           </Grid>
           <br /><br />
         </AccordionToggle>
@@ -197,10 +200,10 @@ class Battle extends Component<IProps> {
   roundName = (day: number, round: number, phase: CombatPhase): string => {
     const dayStr = day === round ? '' : ', Day ' + day
     let roundStr = ''
-    if (round === -1)
-      roundStr = 'Waiting for enemies'
-    else if (!round)
+    if (day === 0 || round === 0)
       roundStr = 'Deployment'
+    else if (round === -1)
+      roundStr = 'Waiting for enemies'
     else if (phase !== CombatPhase.Default)
       roundStr = 'Round ' + String(round) + ' (' + phase + ')'
     else
@@ -267,7 +270,7 @@ class Battle extends Component<IProps> {
   }
 
   clearCohorts = (): void => {
-    const { participantA, participantD, clearCohorts } = this.props
+    const { participantA, participantB: participantD, clearCohorts } = this.props
     clearCohorts(participantA.countryName, participantA.armyName)
     clearCohorts(participantD.countryName, participantD.armyName)
   }
@@ -292,8 +295,8 @@ const mapStateToProps = (state: AppState) => {
   const day = getDay(battle)
   const round = getRound(battle)
   return {
-    participantA: getFirstParticipant(state, SideType.A),
-    participantD: getFirstParticipant(state, SideType.B),
+    participantA: getParticipantSafely(state, SideType.A, state.ui.selectedParticipantIndex[SideType.A]),
+    participantB: getParticipantSafely(state, SideType.B, state.ui.selectedParticipantIndex[SideType.B]),
     isUndoAvailable: day > 0,
     round,
     day,

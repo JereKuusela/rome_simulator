@@ -43,10 +43,6 @@ Data:
  * IR units have mode (should be derived from base)
 
 Needed tests:
- * Guide lines:
-  - Tests with in-game are fairly useless? Testing different mechanics would verify that combat formula is accurate but is it worth it?
-  - Tests should verify that the code works as intended, not that the result matches in game. Matching must be done manually anyways if the game changes.
-  - Custom unit types with neutral values by default.
  * Tests:
   - Precision. In-game test with many rounds to verify that calculation accuracy matches the game.
   - Different mechanics, no in-game comparison required since all are just damage modifiers.
@@ -56,22 +52,12 @@ Needed tests:
 * Reinforcement
   - Non-secondary penalty
   - Better general changing order
-  - 
 * Mechanics
   - Flank ratio
 
 
 Multiarmy:
- - Test:
-  * Late deploy / reinforcement penalties
-  * !!! Attacker may become defender (if defender loses but has reinforcements), affects terrain bonus, defenders' advantage, UI?
-  * Stack wiping should only affect cohorts defeated in current battle (another list for afterfight defeated? or track defeated round (to determine if part of current battle))
-  * Stack wipes during battle (cohorts run out before reinforcements arrive)
-  * Leading general (especially when cohorts run out during battle): dealt damage, deployment
-  * Multiarmy deployment, redeployment after cohortsr run out (fresh units prioritized)
-  * Big stackwipes (defeated and reserve get stackwiped properly too)
-  * !!Combat phases also have to reset (be based on duration, probably have to store previous phase number so that dice rolls don't repeat from start)
-
+ - Late deploy penalty implemented?
  - Battle has two sides and terrain.
  - Each side includes dice (+ related things), N participants and rounds list.
  - Each participant includes country, army and days until battle.
@@ -80,21 +66,6 @@ Multiarmy:
  - UI needs component for side: For dice and showing active martial / tactic (with damage effect).
  - UI needs a table for participants (with a way to add and delete).
  - Quick selectors need a redesign. They currently work only for one army. Still show components for both attacker and defender? But with an army selector?
-
- - Deployment needs rework. Need to first figure out how units from multiple armies are pooled.
- - Must also work with battle possibly restarting times (stack wipes!).
-
- - Army joining battle triggers deploy (without secondary penalty), remaining units get pooled together.
- - Currently pooling is done first, so can't detect reinforcement from late deploy. Units should know the turn they arrive?
-  * If unit deploys during first phase and when it arrives, no penalty.
-  * If unit deploys as reinforcement and after retreat, no penalty if secondary.
-  * If unit deploys instantly but late, late penalty.
-  * Pooled reinforcements use the leading generals settings, instant deploys current generals settings. So unit would need to know its general...
- - Needs different logic -> when army joins -> sort reserve -> deploy with its settings -> then merge to common reserve -> at end sort reserve.
-
-Test:
- - Targeting (strength based flank, weak targets)
- - Check that reinforcement is stable (higher key ends in right position)
 
 UI:
  - Togglable stats rows to show individual units or hide unit types.

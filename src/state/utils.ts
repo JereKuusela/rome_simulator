@@ -213,7 +213,7 @@ export const getReserve = (state: AppState, countryName: CountryName, armyName: 
 }
 
 export const getParticipant = (state: AppState, type: SideType, index: number, mode?: Mode): Participant => getSide(state, type, mode).participants[index]
-export const getFirstParticipant = (state: AppState, type: SideType, mode?: Mode): Participant => getSide(state, type, mode).participants[0]
+export const getParticipantSafely = (state: AppState, type: SideType, index: number, mode?: Mode): Participant => getParticipant(state, type, index, mode) ?? getParticipant(state, type, 0, mode)
 
 export const getSide = (state: AppState, type: SideType, mode?: Mode): SideData => getBattle(state, mode).sides[type]
 

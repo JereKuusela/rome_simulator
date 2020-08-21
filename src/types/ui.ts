@@ -18,6 +18,7 @@ export enum ModalType {
 export type UI = {
   accordions: ObjSet
   modals: Modals
+  selectedParticipantIndex: {[key in SideType]: number}
 }
 
 export type Modals = {

@@ -105,6 +105,7 @@ export const convertArmy = (participantIndex: number, participant: Participant, 
 
 export const getLeadingArmy = (side: Side): Army | null => side.deployed.length ? side.deployed[0] : null
 
+export const getParticipantName = (participant: Participant) => participant.countryName + ': ' + participant.armyName
 export const getDay = (battle: Battle) => battle.days.length - 1
 export const getStartingPhaseNumber = (battle: Battle) => battle.days.length ? battle.days[battle.days.length - 1].startingPhaseNumber : 0
 export const getRound = (battle: Battle) => battle.days.length ? battle.days[battle.days.length - 1].round : -1

@@ -1,4 +1,4 @@
-import { UI, ModalType, Modals } from 'types'
+import { UI, ModalType, Modals, SideType } from 'types'
 import { has } from 'lodash'
 
 export const closeModal = (ui: UI) => {
@@ -8,6 +8,10 @@ export const closeModal = (ui: UI) => {
 
 export const openModal = <T extends ModalType>(ui: UI, key: T, object: NonNullable<Modals[T]>) => {
   ui.modals[key] = object
+}
+
+export const selectParticipant = (ui: UI, side: SideType, index: number) => {
+  ui.selectedParticipantIndex[side] = index
 }
 
 export const toggleAccordion = (ui: UI, key: string) => {

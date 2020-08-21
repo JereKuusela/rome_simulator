@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table, Button } from 'semantic-ui-react'
 
-import { SideType, CountryName, Setting, GeneralAttribute, UnitAttribute, CultureType, ModalType, GeneralDefinition, CombatPhase } from 'types'
+import { SideType, Setting, GeneralAttribute, UnitAttribute, ModalType, GeneralDefinition, CombatPhase } from 'types'
 import { AppState, getBattle, getMode, getCombatSide, getSiteSettings, getSide } from 'state'
-import { selectParticipantCountry, selectParticipantArmy, selectCulture, toggleRandomDice, setDice, openModal, setGeneralAttribute } from 'reducers'
+import { setDice, openModal } from 'reducers'
 import StyledNumber from 'components/Utils/StyledNumber'
 import { getCombatPhase, getCombatPhaseNumber } from 'combat'
 import { addSign } from 'formatters'
@@ -13,7 +13,7 @@ import IconTerrain from 'images/terrain.png'
 import AttributeImage from 'components/Utils/AttributeImage'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 import LabelItem from 'components/Utils/LabelUnit'
-import { getLeadingArmy, getDay } from 'managers/battle'
+import { getLeadingArmy, getDay, getParticipantName } from 'managers/battle'
 
 type Props = {
   type: SideType
@@ -29,6 +29,9 @@ class TableSideInfo extends Component<IProps> {
       <Table celled unstackable>
         <Table.Header>
           <Table.Row>
+            <Table.HeaderCell>
+              Leader
+            </Table.HeaderCell>
             {
               settings[Setting.Martial] &&
               <Table.HeaderCell>
@@ -62,11 +65,15 @@ class TableSideInfo extends Component<IProps> {
 
   renderSide = () => {
     const { settings, side, army } = this.props
+    const participantIndex = army?.participantIndex ?? 0
     return (
       <Table.Row key={side.type}>
         <Table.Cell>
-          {army ? army.general[GeneralAttribute.Martial] : 0}
+          {getParticipantName(side.participants[participantIndex])}
+        </Table.Cell>
+        <Table.Cell>
           <AttributeImage attribute={GeneralAttribute.Martial} />
+          {army ? army.general[GeneralAttribute.Martial] : 0}
         </Table.Cell>
         {
           settings[Setting.Tactics] &&
@@ -125,11 +132,6 @@ class TableSideInfo extends Component<IProps> {
       </div >
     )
   }
-
-  selectCulture = (country: CountryName, culture: CultureType) => {
-    const { selectCulture } = this.props
-    selectCulture(country, culture, false)
-  }
 }
 
 const mapStateToProps = (state: AppState, props: Props) => {
@@ -145,7 +147,7 @@ const mapStateToProps = (state: AppState, props: Props) => {
   }
 }
 
-const actions = { selectParticipantCountry, selectParticipantArmy, selectCulture, toggleRandomDice, setDice, openModal, setGeneralAttribute }
+const actions = { setDice, openModal }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

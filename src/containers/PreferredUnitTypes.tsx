@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table, Input } from 'semantic-ui-react'
 
-import { AppState, getUnitPreferences, getFlankSize, getMode, getUnitList, getSiteSettings, getFirstParticipant } from 'state'
+import { AppState, getUnitPreferences, getFlankSize, getMode, getUnitList, getSiteSettings, getParticipantSafely } from 'state'
 import { setFlankSize, setUnitPreference } from 'reducers'
 import { getUnitIcon } from 'data'
 import { UnitPreferenceType, SideType, UnitType, UnitDefinition } from 'types'
@@ -101,7 +101,7 @@ class Row extends Component<IProps> {
 
 
 const mapStateToProps = (state: AppState, props: Props) => {
-  const participant = getFirstParticipant(state, props.side)
+  const participant = getParticipantSafely(state, props.side, state.ui.selectedParticipantIndex[props.side])
   const { countryName, armyName } = participant
   return {
     units: getUnitList(state, true,  countryName, armyName),
