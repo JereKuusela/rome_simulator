@@ -5,7 +5,7 @@ import { Table, Input, Button } from 'semantic-ui-react'
 import { SideType, CountryName, Setting, GeneralDefinition, GeneralAttribute, GeneralValueType, isAttributeEnabled, CountryAttribute, ArmyName, Country, Armies, Participant, UnitType, UnitAttribute, UnitDefinition } from 'types'
 import { keys } from 'utils'
 import { AppState, getCountry, getGeneral, getCountries, getMode, getSiteSettings, getArmies, getSide, getUnitDefinitions } from 'state'
-import { selectParticipantCountry, selectParticipantArmy, setGeneralAttribute, deleteParticipant, addParticipant, setDaysUntilBattle } from 'reducers'
+import { selectParticipantCountry, selectParticipantArmy, setGeneralAttribute, deleteParticipant, addParticipant, setDaysUntilBattle, createArmy, createCountry } from 'reducers'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TacticSelector from './TacticSelector'
 import { addSign } from 'formatters'
@@ -16,6 +16,7 @@ import UnitValueInput from './UnitValueInput'
 import { getArchetypes } from 'managers/army'
 import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
+import { getDefaultArmyName } from 'data'
 
 type Props = {
   type: SideType
@@ -89,7 +90,7 @@ class TableArmyInfo extends Component<IProps> {
 
 
   renderArmyInfo = (participant: Entity, index: number) => {
-    const { settings, selectParticipantArmy, selectParticipantCountry, countries, mode, type, deleteParticipant, clearable } = this.props
+    const { settings, selectParticipantArmy, selectParticipantCountry, countries, mode, type, deleteParticipant, clearable, createArmy, createCountry } = this.props
     const { armies, general, countryName, armyName, artillery } = participant
     return (
       <Table.Row key={participant.countryName + '_' + participant.armyName + index}>
@@ -97,8 +98,9 @@ class TableArmyInfo extends Component<IProps> {
           <SimpleDropdown
             values={keys(countries)}
             value={countryName}
-            onChange={name => name ? selectParticipantCountry(type, index, name, Object.keys(filterArmies(countries[name], mode))[0] as ArmyName) : deleteParticipant(type, index)}
+            onChange={name => name ? selectParticipantCountry(type, index, name, countries[name] ? Object.keys(filterArmies(countries[name], mode))[0] as ArmyName : getDefaultArmyName(mode)) : deleteParticipant(type, index)}
             style={{ width: 100 }}
+            onAdd={name => createCountry(name)}
             clearable={clearable}
           />
         </Table.Cell>
@@ -107,6 +109,7 @@ class TableArmyInfo extends Component<IProps> {
             values={keys(armies)}
             value={armyName}
             onChange={name => selectParticipantArmy(type, index, name)}
+            onAdd={name => createArmy(countryName, name, mode)}
             style={{ width: 100 }}
           />
         </Table.Cell>
@@ -179,7 +182,7 @@ const mapStateToProps = (state: AppState, props: Props) => {
   }
 }
 
-const actions = { selectParticipantCountry, selectParticipantArmy, setGeneralAttribute, deleteParticipant, addParticipant, setDaysUntilBattle }
+const actions = { selectParticipantCountry, selectParticipantArmy, setGeneralAttribute, deleteParticipant, addParticipant, setDaysUntilBattle, createArmy, createCountry }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
