@@ -700,7 +700,7 @@
         "target": "Text",
         "attribute": "National Citizen Happiness",
         "type": "Base",
-        "value": 0.6
+        "value": 0.08
       },
       {
         "target": "Text",
