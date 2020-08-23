@@ -1,6 +1,6 @@
 import { GovermentType, Selections } from "./modifiers"
 import { Armies } from "./armies"
-import { UnitDefinitions, UnitAttribute } from "./units"
+import { UnitsData, UnitAttribute } from "./units"
 import { DefinitionValues } from "definition_values"
 
 export type WearinessAttribute = UnitAttribute.Morale | UnitAttribute.Strength
@@ -24,12 +24,14 @@ export enum CountryAttribute {
   OfficeDiscipline = 'Discipline Office'
 }
 
+export type CountryDefinitions = { [key in CountryName]: CountryDefinition }
+
 export interface CountryDefinition extends DefinitionValues<CountryAttribute> {
   selections: Selections
   culture: CultureType
   government: GovermentType
   armies: Armies
-  units: UnitDefinitions
+  units: UnitsData
   weariness: WearinessAttributes
 }
 

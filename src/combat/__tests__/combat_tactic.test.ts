@@ -1,90 +1,112 @@
-import { addValues } from 'definition_values'
-import { getUnit, TestInfo, initInfo, setTactics, setCenterUnits, initSide, testCombat } from './utils'
-import { UnitType, UnitAttribute, TacticType, ValuesType, Setting } from 'types'
+import { TestState, initCleanState, initExpected, getSettingsTest, createCohort, createDefeatedCohort, testCombatWithDefaultRolls, addToReserveTest, selectTacticTest, createArmyTest, setGeneralAttributeTest, getArmyTest } from './utils'
+import { UnitType, TacticType, SideType, Setting, Mode, GeneralAttribute } from 'types'
 
 if (process.env.REACT_APP_GAME !== 'euiv') {
 
   describe('tactics', () => {
-    const archer = addValues(getUnit(UnitType.Archers), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.2]])
-    const heavy = addValues(getUnit(UnitType.HeavyInfantry), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.2]])
+    const type = 'Type' as UnitType
+    const neutralType = 'Neutral' as UnitType
 
-    let info: TestInfo
+    const cohort = createCohort(type)
+    const neutralCohort = createDefeatedCohort(neutralType)
+
+    let state: TestState
     beforeEach(() => {
-      info = initInfo()
-      info.settings[Setting.MoraleLostMultiplier] = info.settings[Setting.MoraleLostMultiplier] * 0.02 / 0.024
-      info.settings[Setting.StrengthLostMultiplier] = info.settings[Setting.StrengthLostMultiplier] * 0.02 / 0.024
+      state = initCleanState()
+      getSettingsTest(state)[Setting.Tactics] = true
+      getSettingsTest(state)[Setting.DefenderAdvantage] = false
+      getSettingsTest(state)[Setting.Martial] = true
+      state.settings.combatSettings[Mode.Land][Setting.MoraleLostMultiplier] = 50/3
+      state.settings.combatSettings[Mode.Land][Setting.StrengthLostMultiplier] = 50/3
     })
 
-    it('increased casualties', () => {
-      setTactics(info, TacticType.ShockAction, TacticType.ShockAction)
-      setCenterUnits(info, archer, archer)
-      const rolls = [[3, 2]]
-      const { attacker, defender } = initSide(3)
+    it('mixed casualties add up correctly', () => {
+      selectTacticTest(state, SideType.A, TacticType.Skirmishing)
+      selectTacticTest(state, SideType.B, TacticType.ShockAction)
+      addToReserveTest(state, SideType.A, [cohort])
+      addToReserveTest(state, SideType.B, [cohort])
 
-      attacker[0][15] = [archer.type, 971, 1.0650]
-      attacker[1][15] = [archer.type, 943, 0.9516]
-      attacker[2][15] = [archer.type, 916, 0.8564]
+      const expected = initExpected(1)
+      expected[1].A.front = [[cohort.type, 0.915, 0.9]]
+      expected[1].B.front = [[cohort.type, 0.915, 0.9]]
 
-      defender[0][15] = [archer.type, 966, 1.0425]
-      defender[1][15] = [archer.type, 933, 0.9067]
-      defender[2][15] = [archer.type, 902, 0.7889]
-
-      testCombat(info, rolls, attacker, defender)
+      testCombatWithDefaultRolls(state, expected)
     })
 
-    it('mixed casualties', () => {
-      setTactics(info, TacticType.Skirmishing, TacticType.ShockAction)
-      setCenterUnits(info, archer, archer)
-      const rolls = [[3, 2]]
-      const { attacker, defender } = initSide(3)
+    it('tactic efficiency changes based on manpower', () => {
+      state.tactics[TacticType.ShockAction].baseValues![type] = { 'key': 1 }
+      selectTacticTest(state, SideType.A, TacticType.ShockAction)
+      selectTacticTest(state, SideType.B, TacticType.PadmaVyuha)
+      addToReserveTest(state, SideType.A, [cohort, neutralCohort])
+      addToReserveTest(state, SideType.B, [cohort])
 
-      attacker[0][15] = [archer.type, 979, 1.0650]
-      attacker[1][15] = [archer.type, 959, 0.9505]
-      attacker[2][15] = [archer.type, 940, 0.8534]
+      const expected = initExpected(1, 2)
 
-      defender[0][15] = [archer.type, 976, 1.0425]
-      defender[1][15] = [archer.type, 952, 0.9055]
-      defender[2][15] = [archer.type, 930, 0.7858]
+      expected[1].A.front = [[cohort.type, 0.91, 0.91]]
+      expected[1].A.defeated = [neutralCohort.type]
+      expected[2].A.front = [[cohort.type, 0.829, 0.83872]]
+      expected[2].A.defeated = [neutralCohort.type]
 
-      testCombat(info, rolls, attacker, defender)
+      expected[1].B.front = [[cohort.type, 0.89, 0.89]]
+      expected[2].B.front = [[cohort.type, 0.79, 0.7993]]
+
+      testCombatWithDefaultRolls(state, expected)
     })
 
-    it('counters and effectiveness', () => {
-      setTactics(info, TacticType.Bottleneck, TacticType.ShockAction)
-      setCenterUnits(info, archer, archer)
-      const rolls = [[0, 4]]
-      const { attacker, defender } = initSide(3)
+    it('retreated armies have no effect on efficiency', () => {
+      state.tactics[TacticType.ShockAction].baseValues![type] = { 'key': 1 }
+      createArmyTest(state, SideType.A, 1)
+      selectTacticTest(state, SideType.A, TacticType.ShockAction)
+      selectTacticTest(state, SideType.A, TacticType.ShockAction, 1)
+      selectTacticTest(state, SideType.B, TacticType.PadmaVyuha)
+      addToReserveTest(state, SideType.A, [neutralCohort])
+      addToReserveTest(state, SideType.A, [cohort], 1)
+      addToReserveTest(state, SideType.B, [cohort])
 
-      attacker[0][15] = [archer.type, 968, 1.0380]
-      attacker[1][15] = [archer.type, 937, 0.8922]
-      attacker[2][15] = [archer.type, 906, 0.7600]
+      const expected = initExpected(1, 2)
+      expected[1].A.front = []
+      expected[1].A.defeated = [neutralCohort.type]
+      expected[2].A.front = [[cohort.type, 0.91, 0.91]]
+      expected[2].A.defeated = [neutralCohort.type]
+      expected[2].B.front = [[cohort.type, 0.88, 0.88]]
 
-      defender[0][15] = [archer.type, 980, 1.1010]
-      defender[1][15] = [archer.type, 961, 1.0180]
-      defender[2][15] = [archer.type, 943, 0.9491]
-
-      testCombat(info, rolls, attacker, defender)
+      testCombatWithDefaultRolls(state, expected)
     })
 
-    it('varying effectiveness (manpower)', () => {
-      setTactics(info, TacticType.Bottleneck, TacticType.ShockAction)
-      setCenterUnits(info, archer, archer)
-      info.armyA.frontline[0][0] = heavy
-      const rolls = [[5, 5]]
-      const { attacker, defender } = initSide(3)
+    it('incoming armies have no effect on efficiency', () => {
+      state.tactics[TacticType.ShockAction].baseValues![type] = { 'key': 1 }
+      createArmyTest(state, SideType.A, 2)
+      selectTacticTest(state, SideType.A, TacticType.ShockAction)
+      selectTacticTest(state, SideType.A, TacticType.ShockAction, 1)
+      selectTacticTest(state, SideType.B, TacticType.PadmaVyuha)
+      addToReserveTest(state, SideType.A, [cohort])
+      addToReserveTest(state, SideType.A, [neutralCohort], 1)
+      addToReserveTest(state, SideType.B, [cohort])
 
-      attacker[0][15] = [archer.type, 964, 1.0177]
-      attacker[1][15] = [archer.type, 930, 0.8775]
-      attacker[2][15] = [archer.type, 897, 0.7702]
-      attacker[0][1] = [heavy.type, 1000, 1.2]
-      attacker[1][2] = [heavy.type, 1000, 1.2]
-      attacker[2][3] = [heavy.type, 1000, 1.2]
+      const expected = initExpected(1)
+      expected[1].A.front = [[cohort.type, 0.91, 0.91]]
+      expected[1].B.front = [[cohort.type, 0.88, 0.88]]
 
-      defender[0][15] = [archer.type, 954, 0.9671]
-      defender[1][15] = [archer.type, 910, 0.7765]
-      defender[2][15] = [archer.type, 868, 0.6178]
+      testCombatWithDefaultRolls(state, expected)
+    })
 
-      testCombat(info, rolls, attacker, defender)
+    it('tactic changes when a stronger general joins', () => {
+      state.tactics[TacticType.ShockAction].baseValues![type] = { 'key': 1 }
+      createArmyTest(state, SideType.A, 2)
+      selectTacticTest(state, SideType.A, TacticType.Bottleneck)
+      selectTacticTest(state, SideType.A, TacticType.ShockAction, 1)
+      selectTacticTest(state, SideType.B, TacticType.PadmaVyuha)
+      setGeneralAttributeTest(state, SideType.A, GeneralAttribute.Martial, 1, 1)
+      addToReserveTest(state, SideType.A, [cohort])
+      addToReserveTest(state, SideType.B, [cohort])
+
+      const expected = initExpected(1, 2)
+      expected[1].A.front = [[cohort.type, 0.91, 0.9]]
+      expected[1].B.front = [[cohort.type, 0.91, 0.9]]
+      expected[2].A.front = [[cohort.type, 0.828, 0.82629]]
+      expected[2].B.front = [[cohort.type, 0.8, 0.80172]]
+
+      testCombatWithDefaultRolls(state, expected)
     })
   })
 }

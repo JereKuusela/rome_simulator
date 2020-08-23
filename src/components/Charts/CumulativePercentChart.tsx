@@ -87,7 +87,7 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
             style={{
               data: { fill: '#FFAA00AA' }
             }}
-            name={this.cumulative(SideType.Attacker)}
+            name={this.cumulative(SideType.A)}
           />
           <VictoryArea
             interpolation='natural'
@@ -95,7 +95,7 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
             style={{
               data: { fill: '#FFAA00' }
             }}
-            name={this.percent(SideType.Attacker)}
+            name={this.percent(SideType.A)}
           />
           <VictoryArea
             interpolation='natural'
@@ -103,7 +103,7 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
             style={{
               data: { fill: '#00AAFFAA' }
             }}
-            name={this.cumulative(SideType.Defender)}
+            name={this.cumulative(SideType.B)}
           />
           <VictoryArea
             interpolation='natural'
@@ -111,7 +111,7 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
             style={{
               data: { fill: '#00AAFF' }
             }}
-            name={this.percent(SideType.Defender)}
+            name={this.percent(SideType.B)}
           />
         </BaseChart>
       </>
@@ -152,8 +152,8 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
     return ''
   }
 
-  isPercent = (name: string) => name === this.percent(SideType.Attacker) || name === this.percent(SideType.Defender)
-  isCumulative = (name: string) => name === this.cumulative(SideType.Attacker) || name === this.cumulative(SideType.Defender)
+  isPercent = (name: string) => name === this.percent(SideType.A) || name === this.percent(SideType.B)
+  isCumulative = (name: string) => name === this.cumulative(SideType.A) || name === this.cumulative(SideType.B)
 
   cumulative = (side: SideType) => `Cumulative_${this.props.type}_${side}`
   percent = (side: SideType) => `Percent_${this.props.type}_${side}`

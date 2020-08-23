@@ -1,5 +1,5 @@
 import { SideType } from "./battle"
-import { ArmyType, ArmyName } from "./armies"
+import { ArmyName } from "./armies"
 import { CountryName } from "./countries"
 import { UnitType } from "./units"
 import { TerrainType } from "./terrains"
@@ -8,7 +8,6 @@ import { ObjSet } from "utils"
 
 export enum ModalType {
   DiceRolls = 'DiceRolls',
-  CohortSelector = 'CohortSelector',
   CohortDetail = 'CohortDetail',
   UnitDetail = 'UnitDetail',
   TerrainDetail = 'TerrainDetail',
@@ -19,21 +18,19 @@ export enum ModalType {
 export type UI = {
   accordions: ObjSet
   modals: Modals
+  selectedParticipantIndex: {[key in SideType]: number}
 }
 
 export type Modals = {
   [ModalType.DiceRolls]?: {
     side: SideType
   }
-  [ModalType.CohortSelector]?: {
-    side: SideType,
-    type: ArmyType,
-    row: number,
-    column: number
-  }
   [ModalType.CohortDetail]?: {
-    side: SideType,
-    id: number
+    side: SideType
+    participantIndex: number
+    index: number
+    country: CountryName
+    army: ArmyName
   }
   [ModalType.UnitDetail]?: {
     country: CountryName,

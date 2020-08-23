@@ -1,80 +1,119 @@
 
-import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, CombatCohorts, CombatCohort, CombatParticipant, CombatFrontline, CombatDefeated } from 'types'
+import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, Cohorts, Cohort, Frontline, Side, Environment, TacticCalc } from 'types'
 import { noZero } from 'utils'
 import { calculateValue } from 'definition_values'
-import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, calculateTotalStrength, stackWipe, reserveSize, reinforce } from 'combat'
+import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, reserveSize, reinforce, calculateGeneralPips, getTerrainPips, checkStackWipe, defeatCohort, isAlive } from 'combat'
+import { deploy, undeploy, moveDefeatedToRetreated } from './deployment'
+import { getLeadingArmy, getDefaultCombatResults } from 'managers/battle'
 
 /**
  * Makes given armies attach each other.
  */
-export const doBattle = (a: CombatParticipant, d: CombatParticipant, markDefeated: boolean, settings: Settings, round: number) => {
-  const phase = getCombatPhase(round, settings)
+export const doCombatRound = (env: Environment, sideA: Side, sideB: Side, markDefeated: boolean) => {
+  env.round++
+  const { round } = env
+  const settings = env.settings
+  const phase = getCombatPhase(env.round, settings)
+  // Defender advantage requires detecting which one is the defender.
+  const a = sideA.type === env.attacker ? sideA : sideB
+  const d = sideA.type === env.attacker ? sideB : sideA
   if (markDefeated) {
     removeDefeated(a.cohorts.frontline)
     removeDefeated(d.cohorts.frontline)
   }
-  reinforce(a, settings)
-  if (!settings[Setting.DefenderAdvantage])
-    reinforce(d, settings)
-  pickTargets(a.cohorts.frontline, d.cohorts.frontline, settings)
-  if (settings[Setting.DefenderAdvantage])
-    reinforce(d, settings)
-  pickTargets(d.cohorts.frontline, a.cohorts.frontline, settings)
+  clearState(a.cohorts.frontline)
+  clearState(d.cohorts.frontline)
+  if (round === 0) {
+    undeploy(a)
+    a.results = getDefaultCombatResults()
+    undeploy(d)
+    d.results = getDefaultCombatResults()
+  }
+  deploy(env, a, d)
+  if (round > 0) {
+    reinforce(env, a)
+    if (!settings[Setting.DefenderAdvantage])
+      reinforce(env, d)
+    pickTargets(env, a.cohorts.frontline, d.cohorts.frontline)
+    if (settings[Setting.DefenderAdvantage])
+      reinforce(env, d)
+    pickTargets(env, d.cohorts.frontline, a.cohorts.frontline)
 
-  // Tactic bonus changes dynamically when units lose strength so it can't be precalculated.
-  // If this is a problem a fast mode can be implemeted where to bonus is only calculated once.
-  a.round = round
-  d.round = round
-  const dailyMultiplier = 1 + getDailyIncrease(round, settings)
-  a.tacticBonus = settings[Setting.Tactics] ? calculateTactic(a.cohorts, a.tactic, d.tactic) : 0.0
-  d.tacticBonus = settings[Setting.Tactics] ? calculateTactic(d.cohorts, d.tactic, a.tactic) : 0.0
-  a.flankRatioBonus = calculateFlankRatioPenalty(d.cohorts, d.flankRatio, settings)
-  d.flankRatioBonus = calculateFlankRatioPenalty(a.cohorts, a.flankRatio, settings)
-  const multiplierA = (1 + a.tacticBonus) * dailyMultiplier * (1 + a.flankRatioBonus)
-  const multiplierD = (1 + d.tacticBonus) * dailyMultiplier * (1 + d.flankRatioBonus)
-  attack(a.cohorts.frontline, a.dice + a.rollPips[phase], multiplierA, phase, settings)
-  attack(d.cohorts.frontline, d.dice + d.rollPips[phase], multiplierD, phase, settings)
+    // Tactic bonus changes dynamically when units lose strength so it can't be precalculated.
+    // If this is a problem a fast mode can be implemeted where to bonus is only calculated once.
+    a.results.round = env.round
+    d.results.round = env.round
+    const dailyMultiplier = 1 + getDailyIncrease(env.round, settings)
+    const generalA = getLeadingArmy(a)
+    const generalD = getLeadingArmy(d)
+    const tacticStrengthDamageMultiplier = generalA && generalD && settings[Setting.Tactics] ? 1.0 + calculateValue(generalA.tactic, TacticCalc.Casualties) + calculateValue(generalD.tactic, TacticCalc.Casualties) : 1.0
+    a.results.dailyMultiplier = dailyMultiplier
+    d.results.dailyMultiplier = dailyMultiplier
+    attack(env, a, d, dailyMultiplier, tacticStrengthDamageMultiplier, phase)
+    attack(env, d, a, dailyMultiplier, tacticStrengthDamageMultiplier, phase)
 
-  applyLosses(a.cohorts.frontline)
-  applyLosses(d.cohorts.frontline)
-  a.alive = moveDefeated(a.cohorts.frontline, a.cohorts.defeated, markDefeated, round, settings) || reserveSize(a.cohorts.reserve) > 0
-  d.alive = moveDefeated(d.cohorts.frontline, d.cohorts.defeated, markDefeated, round, settings) || reserveSize(d.cohorts.reserve) > 0
-  if (settings[Setting.Stackwipe] && !d.alive)
-    checkHardStackWipe(d.cohorts, a.cohorts, settings, round < settings[Setting.StackwipeRounds])
-  else if (settings[Setting.Stackwipe] && !a.alive)
-    checkHardStackWipe(a.cohorts, d.cohorts, settings, round < settings[Setting.StackwipeRounds])
+    applyLosses(a.cohorts.frontline)
+    applyLosses(d.cohorts.frontline)
+  }
+  a.isDefeated = moveDefeated(env, a.cohorts.frontline, a.cohorts.defeated, markDefeated) && reserveSize(a.cohorts.reserve) === 0
+  d.isDefeated = moveDefeated(env, d.cohorts.frontline, d.cohorts.defeated, markDefeated) && reserveSize(d.cohorts.reserve) === 0
+  const noCombat = a.isDefeated && d.isDefeated
+
+  const defenderWiped = checkStackWipe(env, d, a.cohorts)
+  if (!defenderWiped)
+    checkStackWipe(env, a, d.cohorts)
+  a.armiesRemaining = !a.isDefeated || a.armies.length > 0
+  d.armiesRemaining = !d.isDefeated || d.armies.length > 0
+  if (a.isDefeated) {
+    moveDefeatedToRetreated(a.cohorts)
+    env.round = -1
+    if (!noCombat)
+      env.attacker = a.type
+  }
+  if (d.isDefeated) {
+    moveDefeatedToRetreated(d.cohorts)
+    env.round = -1
+    if (!noCombat)
+      env.attacker = d.type
+  }
 }
 
-const checkHardStackWipe = (defeated: CombatCohorts, enemy: CombatCohorts, settings: Settings, soft: boolean) => {
-  const total = calculateTotalStrength(defeated)
-  const totalEnemy = calculateTotalStrength(enemy)
-  if (totalEnemy / total > (soft ? settings[Setting.SoftStackWipeLimit] : settings[Setting.HardStackWipeLimit]))
-    stackWipe(defeated)
-}
+const getBackTarget = (target: Frontline, index: number) => target.length > 1 ? target[1][index] : null
 
-const getBackTarget = (target: CombatFrontline, index: number) => target.length > 1 ? target[1][index] : null
+const clearState = (source: Frontline) => {
+  for (let i = 0; i < source.length; i++) {
+    for (let j = 0; j < source[i].length; j++) {
+      const cohort = source[i][j]
+      if (!cohort)
+        continue
+      const state = cohort.state
+      state.damageMultiplier = 0
+      state.moraleDealt = 0
+      state.strengthDealt = 0
+      state.moraleLoss = 0
+      state.strengthLoss = 0
+      state.target = null
+      state.flanking = false
+    }
+  }
+}
 
 /**
  * Selects targets for units.
  */
-const pickTargets = (source: CombatFrontline, target: CombatFrontline, settings: Settings) => {
+const pickTargets = (environment: Environment, source: Frontline, target: Frontline) => {
+  const settings = environment.settings
   const sourceLength = source[0].length
   const targetLength = target[0].length
   for (let i = 0; i < source.length; i++) {
     for (let j = 0; j < source[i].length; j++) {
-      const unit = source[i][j]
-      if (!unit)
+      const cohort = source[i][j]
+      if (!cohort)
         continue
-      const state = unit.state
-      state.damageMultiplier = 0
-      state.moraleDealt = 0
-      state.strengthDealt = 0
-      state.moraleLoss = settings[Setting.DailyMoraleLoss] * (1 - unit.definition[UnitAttribute.DailyLossResist])
-      state.strengthLoss = 0
-      state.target = null
-      state.flanking = false
+      const state = cohort.state
+      state.moraleLoss = settings[Setting.DailyMoraleLoss] * (1 - cohort.properties[UnitAttribute.DailyLossResist])
       // No need to select targets for units without effect.
-      if (i > 0 && !unit.definition[UnitAttribute.OffensiveSupport])
+      if (i > 0 && !cohort.properties[UnitAttribute.OffensiveSupport])
         continue
 
       // Targets are prioritised based two things.
@@ -90,11 +129,11 @@ const pickTargets = (source: CombatFrontline, target: CombatFrontline, settings:
       }
       // Primary target on front has the highest priority so no need to check flanks.
       if (primaryTarget === null) {
-        const maneuver = Math.floor(unit.definition[UnitAttribute.Maneuver])
+        const maneuver = Math.floor(cohort.properties[UnitAttribute.Maneuver])
         let direction = -1
         let min = Math.max(0, j - maneuver)
         let max = Math.min(targetLength - 1, j + maneuver)
-        if (!settings[Setting.FixFlankTargeting] || (settings[Setting.FixTargeting] ? j < sourceLength / 2 : j <= sourceLength / 2)) {
+        if (!settings[Setting.FixFlankTargeting] || j < sourceLength / 2) {
           direction = 1
         }
         for (let index = direction > 0 ? min : max; min <= index && index <= max; index += direction) {
@@ -120,23 +159,18 @@ const pickTargets = (source: CombatFrontline, target: CombatFrontline, settings:
 /**
  * Calculates effectiveness of a tactic against another tactic with a given army.
  */
-export const calculateTactic = (army: CombatCohorts, tactic: TacticDefinition, counterTactic?: TacticDefinition): number => {
+export const calculateTactic = (army: Cohorts, tactic: TacticDefinition, counterTactic?: TacticDefinition): number => {
   const effectiveness = counterTactic ? calculateValue(tactic, counterTactic.type) : 1.0
   let averageWeight = 1.0
   if (effectiveness > 0 && tactic && army) {
     let totalStrength = 0
     let totalWeight = 0.0
 
-    const addWeight = (cohorts: (CombatCohort | null)[]) => {
-      for (let i = 0; i < cohorts.length; i++) {
-        const cohort = cohorts[i]
-        if (!cohort || cohort.state.isDefeated)
-          continue
-        totalStrength += cohort[UnitAttribute.Strength]
-        totalWeight += calculateValue(tactic, cohort.definition.type) * cohort[UnitAttribute.Strength]
-      }
+    const addWeight = (cohort: Cohort) => {
+      totalStrength += cohort[UnitAttribute.Strength]
+      totalWeight += calculateValue(tactic, cohort.properties.type) * cohort[UnitAttribute.Strength]
     }
-    iterateCohorts(army, addWeight)
+    iterateCohorts(army, true, addWeight)
     if (totalStrength)
       averageWeight = totalWeight / totalStrength
   }
@@ -144,40 +178,35 @@ export const calculateTactic = (army: CombatCohorts, tactic: TacticDefinition, c
   return effectiveness * Math.min(1.0, averageWeight)
 }
 
-const calculateFlankRatioPenalty = (army: CombatCohorts, ratio: number, setting: Settings) => {
+const calculateFlankRatioPenalty = (army: Cohorts, ratio: number, setting: Settings) => {
   return ratio && calculateFlankRatio(army) > ratio ? setting[Setting.InsufficientSupportPenalty] / (1 - setting[Setting.InsufficientSupportPenalty]) : 0.0
 }
 
-const calculateFlankRatio = (army: CombatCohorts): number => {
+const calculateFlankRatio = (army: Cohorts): number => {
   let infantry = 0.0
   let flank = 0.0
 
-  const addRatio = (cohorts: (CombatCohort | null)[]) => {
-    for (let i = 0; i < cohorts.length; i++) {
-      const cohort = cohorts[i]
-      if (!cohort || cohort.state.isDefeated)
-        continue
-      if (cohort.definition.role === UnitRole.Front)
-        infantry += cohort[UnitAttribute.Strength]
-      if (cohort.definition.role === UnitRole.Flank)
-        flank += cohort[UnitAttribute.Strength]
-    }
+  const addRatio = (cohort: Cohort) => {
+    if (cohort.properties.role === UnitRole.Front)
+      infantry += cohort[UnitAttribute.Strength]
+    if (cohort.properties.role === UnitRole.Flank)
+      flank += cohort[UnitAttribute.Strength]
   }
-  iterateCohorts(army, addRatio)
+  iterateCohorts(army, true, addRatio)
   return flank / noZero(flank + infantry)
 }
 
 /**
  * Applies stored losses to units.
  */
-const applyLosses = (frontline: CombatFrontline) => {
+const applyLosses = (frontline: Frontline) => {
   for (let i = 0; i < frontline.length; i++) {
     for (let j = 0; j < frontline[i].length; j++) {
-      const unit = frontline[i][j]
-      if (!unit)
+      const cohort = frontline[i][j]
+      if (!cohort)
         continue
-      unit[UnitAttribute.Morale] = Math.max(0, unit[UnitAttribute.Morale] - unit.state.moraleLoss)
-      unit[UnitAttribute.Strength] = Math.max(0, unit[UnitAttribute.Strength] - unit.state.strengthLoss)
+      cohort[UnitAttribute.Morale] = Math.max(0, cohort[UnitAttribute.Morale] - cohort.state.moraleLoss)
+      cohort[UnitAttribute.Strength] = Math.max(0, cohort[UnitAttribute.Strength] - cohort.state.strengthLoss)
     }
   }
 }
@@ -185,45 +214,59 @@ const applyLosses = (frontline: CombatFrontline) => {
 /**
  * Moves defeated units from a frontline to defeated.
  */
-const moveDefeated = (frontline: CombatFrontline, defeated: CombatDefeated, markDefeated: boolean, round: number, settings: Settings) => {
-  const minimumMorale = settings[Setting.MinimumMorale]
-  const minimumStrength = settings[Setting.MinimumStrength]
-  let alive = false
+const moveDefeated = (environment: Environment, frontline: Frontline, defeated: Cohort[], markDefeated: boolean) => {
+  const settings = environment.settings
+  let cohortsAlive = false
   for (let i = 0; i < frontline.length; i++) {
     for (let j = 0; j < frontline[i].length; j++) {
-      const unit = frontline[i][j]
-      if (!unit)
+      const cohort = frontline[i][j]
+      if (!cohort)
         continue
-      if (unit[UnitAttribute.Strength] > minimumStrength && unit[UnitAttribute.Morale] > minimumMorale) {
-        alive = true
+      if (isAlive(cohort, environment.settings)) {
+        cohortsAlive = true
         continue
       }
       if (i > 0 && !settings[Setting.BackRowRetreat]) {
-        alive = true
+        cohortsAlive = true
         continue
       }
       if (settings[Setting.DynamicTargeting])
-        unit.isWeak = true
-      if (settings[Setting.RetreatRounds] > round + 1) {
-        alive = true
+        cohort.isWeak = true
+      if (settings[Setting.RetreatRounds] > environment.round + 1) {
+        cohortsAlive = true
         continue
       }
-      unit.state.isDestroyed = unit[UnitAttribute.Strength] <= 0
-      if (markDefeated)
-        frontline[i][j] = { ...unit, state: { ...unit.state, isDefeated: true } } // Temporary copy for UI purposes.
-      else
+      defeatCohort(environment, cohort)
+      if (!markDefeated)
         frontline[i][j] = null
-      unit.state.target = null
-      defeated.push(unit)
+      defeated.push(cohort)
     }
   }
-  return alive
+  return !cohortsAlive
+}
+
+const attack = (environment: Environment, source: Side, target: Side, dailyMultiplier: number, tacticStrengthDamageMultiplier: number, phase: CombatPhase) => {
+  const { settings, terrains, attacker } = environment
+  // Tactic bonus changes dynamically when units lose strength so it can't be precalculated.
+  // If this is a problem a fast mode can be implemeted where to bonus is only calculated once.
+  const armyS = getLeadingArmy(source)
+  const armyT = getLeadingArmy(target)
+  const generalPips = armyS && armyT ? calculateGeneralPips(armyS.general, armyT.general, phase) : 0
+  const terrainPips = armyS && armyT ? getTerrainPips(terrains, source.type === attacker, armyS.general, armyT.general) : 0
+
+  source.results.generalPips = generalPips
+  source.results.terrainPips = terrainPips
+  source.results.tacticStrengthDamageMultiplier = tacticStrengthDamageMultiplier
+  source.results.tacticBonus = settings[Setting.Tactics] && armyS && armyT ? calculateTactic(source.cohorts, armyS.tactic, armyT.tactic) : 0.0
+  source.results.flankRatioBonus = calculateFlankRatioPenalty(target.cohorts, target.flankRatio, settings)
+  const multiplier = (1 + source.results.tacticBonus) * dailyMultiplier * (1 + source.results.flankRatioBonus)
+  attackSub(source.cohorts.frontline, settings[Setting.BasePips] + source.results.dice + generalPips + terrainPips, multiplier, tacticStrengthDamageMultiplier, phase, settings)
 }
 
 /**
  * Calculates losses when units attack their targets.
  */
-const attack = (frontline: CombatFrontline, roll: number, dynamicMultiplier: number, phase: CombatPhase, settings: Settings) => {
+const attackSub = (frontline: Frontline, roll: number, dynamicMultiplier: number, strengthMultiplier: number, phase: CombatPhase, settings: Settings) => {
   for (let i = 0; i < frontline.length; i++) {
     for (let j = 0; j < frontline[i].length; j++) {
       const source = frontline[i][j]
@@ -232,42 +275,42 @@ const attack = (frontline: CombatFrontline, roll: number, dynamicMultiplier: num
       const target = source.state.target
       if (!target)
         continue
-      target.state.captureChance = source.definition[UnitAttribute.CaptureChance]
+      target.state.captureChance = source.properties[UnitAttribute.CaptureChance]
       const multiplier = calculateDamageMultiplier(source, target, dynamicMultiplier, i > 0, phase, settings)
       calculateMoraleLosses(source, target, source.state.targetSupport, roll, multiplier, phase, settings)
-      calculateStrengthLosses(source, target, source.state.targetSupport, roll, multiplier, phase, settings)
+      calculateStrengthLosses(source, target, source.state.targetSupport, roll, multiplier * strengthMultiplier, phase, settings)
     }
   }
 }
 
-const calculateCohortDamageMultiplier = (source: CombatCohort, target: CombatCohort, isSupport: boolean, settings: Settings) => {
-  const definitionS = source.definition
-  const definitionT = target.definition
+const calculateCohortDamageMultiplier = (source: Cohort, target: Cohort, isSupport: boolean, settings: Settings) => {
+  const definitionS = source.properties
+  const definitionT = target.properties
 
   return source[UnitAttribute.Strength]
     * (settings[Setting.AttributeOffenseDefense] ? 1.0 + definitionS[UnitAttribute.Offense] - definitionT[UnitAttribute.Defense] : 1.0)
     * (isSupport ? definitionS[UnitAttribute.OffensiveSupport] : 1.0)
 }
 
-const calculateDamageMultiplier = (source: CombatCohort, target: CombatCohort, dynamicMultiplier: number, isSupport: boolean, phase: CombatPhase, settings: Settings) => {
+const calculateDamageMultiplier = (source: Cohort, target: Cohort, dynamicMultiplier: number, isSupport: boolean, phase: CombatPhase, settings: Settings) => {
   dynamicMultiplier *= calculateCohortDamageMultiplier(source, target, isSupport, settings)
   if (settings[Setting.DamageLossForMissingMorale]) {
-    const morale = source[UnitAttribute.Morale] / source.definition.maxMorale
+    const morale = source[UnitAttribute.Morale] / source.properties.maxMorale
     dynamicMultiplier *= 1 + (morale - 1) * settings[Setting.DamageLossForMissingMorale]
   }
-  source.state.damageMultiplier = dynamicMultiplier * source.calculated.damage['Damage'][target.definition.type][phase] * target.calculated.damageTakenMultiplier / settings[Setting.Precision]
+  source.state.damageMultiplier = dynamicMultiplier * source.properties.damage['Damage'][target.properties.type][phase] * target.properties.damageTakenMultiplier / settings[Setting.Precision]
   return dynamicMultiplier
 }
 
 
-const calculatePips = (roll: number, maxPips: number, source: CombatCohort, target: CombatCohort, targetSupport: CombatCohort | null, type: UnitAttribute.Morale | UnitAttribute.Strength, phase?: CombatPhase) => {
-  return Math.min(maxPips, Math.max(0, roll + calculateCohortPips(source.definition, target.definition, targetSupport ? targetSupport.definition : null, type, phase)))
+const calculatePips = (roll: number, maxPips: number, source: Cohort, target: Cohort, targetSupport: Cohort | null, type: UnitAttribute.Morale | UnitAttribute.Strength, phase?: CombatPhase) => {
+  return Math.min(maxPips, Math.max(0, roll + calculateCohortPips(source.properties, target.properties, targetSupport ? targetSupport.properties : null, type, phase)))
 }
 
-const calculateMoraleLosses = (source: CombatCohort, target: CombatCohort, targetSupport: CombatCohort | null, roll: number, dynamicMultiplier: number, phase: CombatPhase, settings: Settings) => {
+const calculateMoraleLosses = (source: Cohort, target: Cohort, targetSupport: Cohort | null, roll: number, dynamicMultiplier: number, phase: CombatPhase, settings: Settings) => {
   const pips = calculatePips(roll, settings[Setting.MaxPips], source, target, targetSupport, UnitAttribute.Morale)
-  const morale = settings[Setting.UseMaxMorale] ? source.definition.maxMorale : source[UnitAttribute.Morale]
-  let damage = pips * dynamicMultiplier * source.calculated.damage[UnitAttribute.Morale][target.definition.type][phase] * morale * target.calculated.moraleTakenMultiplier
+  const morale = settings[Setting.UseMaxMorale] ? source.properties.maxMorale : source[UnitAttribute.Morale]
+  let damage = pips * dynamicMultiplier * source.properties.damage[UnitAttribute.Morale][target.properties.type][phase] * morale * target.properties.moraleTakenMultiplier
   if (settings[Setting.MoraleDamageBasedOnTargetStrength])
     damage /= target[UnitAttribute.Strength]
 
@@ -279,9 +322,9 @@ const calculateMoraleLosses = (source: CombatCohort, target: CombatCohort, targe
     targetSupport.state.moraleLoss += source.state.moraleDealt
 }
 
-const calculateStrengthLosses = (source: CombatCohort, target: CombatCohort, targetSupport: CombatCohort | null, roll: number, dynamicMultiplier: number, phase: CombatPhase, settings: Settings) => {
+const calculateStrengthLosses = (source: Cohort, target: Cohort, targetSupport: Cohort | null, roll: number, dynamicMultiplier: number, phase: CombatPhase, settings: Settings) => {
   const pips = calculatePips(roll, settings[Setting.MaxPips], source, target, targetSupport, UnitAttribute.Strength, phase)
-  const damage = pips * dynamicMultiplier * source.calculated.damage[UnitAttribute.Strength][target.definition.type][phase] * target.calculated.strengthTakenMultiplier[phase]
+  const damage = pips * dynamicMultiplier * source.properties.damage[UnitAttribute.Strength][target.properties.type][phase] * target.properties.strengthTakenMultiplier[phase]
 
   source.state.strengthDealt = Math.floor(damage) / settings[Setting.Precision]
   source.state.totalStrengthDealt += source.state.strengthDealt

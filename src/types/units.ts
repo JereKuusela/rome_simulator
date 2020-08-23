@@ -80,18 +80,11 @@ export enum UnitAttribute {
 }
 
 export type UnitValueType = UnitAttribute | UnitType | TerrainType | CombatPhase
-export type UnitDefinitionValues = { [key in UnitType]: UnitDefinitionValue }
-export type UnitDefinitionValue = DefinitionValues<UnitValueType>
-
-/** An identity of a cohort. Used to store data but shouldn't be used for anything else. */
-export interface CohortDefinition extends DefinitionValues<UnitValueType> {
-  type: UnitType
-  id: number
-  isLoyal?: boolean
-}
+export type UnitValues = { [key in UnitType]: UnitValue }
+export type UnitValue = DefinitionValues<UnitValueType>
 
 /** A single (sub) unit definition. Used to store data but shouldn't be used for anything else. */
-export interface UnitDefinition extends Definition<UnitType>, DefinitionValues<UnitValueType> {
+export interface UnitData extends Definition<UnitType>, DefinitionValues<UnitValueType> {
   role?: UnitRole
   isLoyal?: boolean
   parent?: UnitType
@@ -100,13 +93,9 @@ export interface UnitDefinition extends Definition<UnitType>, DefinitionValues<U
 }
 
 /** A full unit definition (merged with definitions of country, general and parent unit types). */
-export interface Unit extends UnitDefinition {
+export interface UnitDefinition extends UnitData {
   mode: Mode
 }
-
-/** A full cohort (merged with unit definition). */
-export interface Cohort extends CohortDefinition, Unit { }
-
 
 export const unitValueToString = (definition: DefinitionValues<UnitValueType>, type: UnitValueType): string => {
   const value = calculateValue(definition, type)
@@ -133,8 +122,8 @@ export const unitValueToString = (definition: DefinitionValues<UnitValueType>, t
   }
 }
 
+export type UnitsData = { [key in UnitType]: UnitData }
 export type UnitDefinitions = { [key in UnitType]: UnitDefinition }
-export type Units = { [key in UnitType]: Unit }
 
 export const dictionaryUnitType: { [key: string]: UnitType } = {
   archers: UnitType.Archers,

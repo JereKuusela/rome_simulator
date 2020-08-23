@@ -6,6 +6,7 @@ interface IProps<T extends string | number> {
   values: ({ value: T, text: string } | T)[]
   onChange?: (value: T) => void
   clearable?: boolean
+  onAdd?: (value: T) => void
   style?: any
   search?: boolean
   placeholder?: string
@@ -24,7 +25,7 @@ export default class SimpleDropdown<T extends string | number> extends Component
   )
 
   render() {
-    const { value, clearable, onChange, search, placeholder } = this.props
+    const { value, clearable, onChange, onAdd, search, placeholder } = this.props
     const style = this.props.style ?? { minWidth: 170, maxWidth: 170 }
     return (
       <Dropdown
@@ -32,14 +33,16 @@ export default class SimpleDropdown<T extends string | number> extends Component
         clearable={clearable}
         value={value}
         disabled={!onChange}
+        onAddItem={(_, { value }) => onAdd && onAdd(value as T)}
         onChange={(_, { value }) => onChange && onChange(value as T)}
         style={style}
         compact={!!style}
-        search={search}
+        search={search || !!onAdd}
+        selection
         options={this.getOptions()}
         placeholder={placeholder}
-      >
-      </Dropdown>
+        allowAdditions={!!onAdd}
+      />
     )
   }
 }

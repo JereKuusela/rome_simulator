@@ -1,19 +1,19 @@
-import { TerrainValueType, ValuesType, TerrainDefinition, LocationType, Mode, TerrainDefinitions, TerrainType } from "types"
+import { TerrainValueType, ValuesType, Terrain, LocationType, Mode, TerrainDefinitions, TerrainType } from "types"
 import { addValuesWithMutate } from "definition_values"
 
-export const setTerrainValue = (terrain: TerrainDefinition, key: string, attribute: TerrainValueType, value: number) => {
+export const setTerrainValue = (terrain: Terrain, key: string, attribute: TerrainValueType, value: number) => {
   addValuesWithMutate(terrain, ValuesType.Base, key, [[attribute, value]])
 }
 
-export const setTerrainLocation = (terrain: TerrainDefinition, location: LocationType) => {
+export const setTerrainLocation = (terrain: Terrain, location: LocationType) => {
   terrain.location = location
 }
 
-export const setTerrainImage = (terrain: TerrainDefinition, image: string) => {
+export const setTerrainImage = (terrain: Terrain, image: string) => {
   terrain.image = image
 }
 
-export const setTerrainMode = (terrain: TerrainDefinition, mode: Mode) => {
+export const setTerrainMode = (terrain: Terrain, mode: Mode) => {
   terrain.mode = mode
 }
 

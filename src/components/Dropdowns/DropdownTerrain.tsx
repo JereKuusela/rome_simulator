@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { TerrainType, TerrainDefinition, TerrainCalc, SiteSettings } from 'types'
+import { TerrainType, Terrain, TerrainCalc, SiteSettings } from 'types'
 import { calculateValue } from 'definition_values'
 import DropdownTable from './DropdownTable'
 import StyledNumber from 'components/Utils/StyledNumber'
@@ -8,14 +8,14 @@ import LabelItem from 'components/Utils/LabelUnit'
 
 type IProps = {
   value: TerrainType
-  values: TerrainDefinition[]
+  values: Terrain[]
   onSelect: (type: TerrainType) => void
   settings: SiteSettings
 }
 
 export default class DropdownTerrain extends Component<IProps> {
 
-  getContent = (terrain: TerrainDefinition) => ([
+  getContent = (terrain: Terrain) => ([
     <LabelItem item={terrain} />,
     <StyledNumber
       value={calculateValue(terrain, TerrainCalc.Roll)}
@@ -23,10 +23,10 @@ export default class DropdownTerrain extends Component<IProps> {
     />
   ])
 
-  isActive = (item: TerrainDefinition) => item.type === this.props.value
+  isActive = (item: Terrain) => item.type === this.props.value
 
-  getValue = (item: TerrainDefinition) => item.type
-  getText = (item: TerrainDefinition) => item.type
+  getValue = (item: Terrain) => item.type
+  getText = (item: Terrain) => item.type
 
 
   headers = ['Terrain', 'Attacker roll']

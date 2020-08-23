@@ -5,7 +5,7 @@ import { Button, Grid, Header, Checkbox } from 'semantic-ui-react'
 import { getCombatPhase } from 'combat'
 import PreferredUnitTypes from 'containers/PreferredUnitTypes'
 import TableStats from 'containers/TableStats'
-import TableArmyPart from 'containers/TableArmyPart'
+import TableArmyPart from 'containers/GridRowArmyPart'
 import TargetArrows from 'containers/TargetArrows'
 import TerrainSelector from 'containers/TerrainSelector'
 import WinRate from 'containers/WinRate'
@@ -13,13 +13,15 @@ import {
   selectParticipantCountry, setDice, toggleRandomDice, clearCohorts, changeSiteParameter,
   undo, battle, refreshBattle, resetState, selectCulture, openModal
 } from 'reducers'
-import { AppState, getBattle, getParticipant, getSettings } from 'state'
-import { ArmyType, CountryName, Setting, SideType, CombatPhase, UnitType, ModalType, ArmyName } from 'types'
+import { AppState, getBattle, getSettings, getParticipantSafely } from 'state'
+import { ArmyPart, CountryName, Setting, SideType, CombatPhase, UnitType, ModalType, ArmyName } from 'types'
 import TableUnitTypes from 'containers/TableUnitTypes'
 import TableArmyInfo from 'containers/TableArmyInfo'
 import TableSideInfo from 'containers/TableSideInfo'
 import TableDamageAttributes from 'containers/TableDamageAttributes'
 import AccordionToggle from 'containers/AccordionToggle'
+import { getDay, getRound } from 'managers/battle'
+import ParticipantSelector from 'containers/ParticipantSelector'
 
 const ATTACKER_COLOR = '#FFAA00AA'
 const DEFENDER_COLOR = '#00AAFFAA'
@@ -31,15 +33,12 @@ class Battle extends Component<IProps> {
     this.props.refreshBattle()
   }
 
-  openCohortModal = (side: SideType, type: ArmyType, row: number, column: number, id: number | undefined): void => {
-    if (id)
-      this.props.openModal(ModalType.CohortDetail, { side, id })
-    else
-      this.props.openModal(ModalType.CohortSelector, { side, type, row, column })
+  openCohortModal = (side: SideType, participantIndex: number, index: number, country: CountryName, army: ArmyName): void => {
+    this.props.openModal(ModalType.CohortDetail, { side, country, army, index, participantIndex })
   }
 
-  openUnitDetails = (country: CountryName, army: ArmyName, type: UnitType): void => {
-    this.props.openModal(ModalType.UnitDetail, { country, army, type })
+  openUnitDetails = (countryName: CountryName, armyName: ArmyName, type: UnitType): void => {
+    this.props.openModal(ModalType.UnitDetail, { country: countryName, army: armyName, type })
   }
 
   componentDidUpdate() {
@@ -49,7 +48,7 @@ class Battle extends Component<IProps> {
   }
 
   render() {
-    const { participantA, participantD, round, isUndo, fightOver, settings, timestamp, changeSiteParameter } = this.props
+    const { participantA, participantB: participantD, round, isUndoAvailable, fightOver, settings, timestamp, day, changeSiteParameter } = this.props
     if (!timestamp)
       return null
     return (
@@ -57,7 +56,7 @@ class Battle extends Component<IProps> {
         <Grid verticalAlign='middle'>
           <Grid.Row>
             <Grid.Column floated='left' width='3'>
-              <Header>{'Round: ' + this.roundName(round, getCombatPhase(round, settings))}</Header>
+              <Header>{this.roundName(day, round, getCombatPhase(round, settings))}</Header>
             </Grid.Column>
             <Grid.Column textAlign='center' width='3'>
               <Checkbox
@@ -70,8 +69,8 @@ class Battle extends Component<IProps> {
               <WinRate />
             </Grid.Column>
             <Grid.Column floated='right' textAlign='right' width='4'>
-              <Button circular icon='angle double left' color='black' size='huge' disabled={!isUndo} onClick={() => this.undo(10)} />
-              <Button circular icon='angle left' color='black' size='huge' disabled={!isUndo} onClick={() => this.undo(1)} />
+              <Button circular icon='angle double left' color='black' size='huge' disabled={!isUndoAvailable} onClick={() => this.undo(10)} />
+              <Button circular icon='angle left' color='black' size='huge' disabled={!isUndoAvailable} onClick={() => this.undo(1)} />
               <Button circular icon='angle right' color='black' size='huge' disabled={fightOver} onClick={() => this.battle(1)} />
               <Button circular icon='angle double right' color='black' size='huge' disabled={fightOver} onClick={() => this.battle(10)} />
             </Grid.Column>
@@ -80,14 +79,14 @@ class Battle extends Component<IProps> {
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderFrontline(SideType.Attacker)
+                this.renderFrontline(SideType.A)
               }
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1} style={{ padding: 0 }}>
             <Grid.Column>
               <TargetArrows
-                type={ArmyType.Frontline}
+                type={ArmyPart.Frontline}
                 visible={!fightOver}
                 attackerColor={ATTACKER_COLOR}
                 defenderColor={DEFENDER_COLOR}
@@ -97,16 +96,16 @@ class Battle extends Component<IProps> {
           <Grid.Row columns={1}>
             <Grid.Column>
               {
-                this.renderFrontline(SideType.Defender)
+                this.renderFrontline(SideType.B)
               }
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={2}>
             <Grid.Column>
-              <TableSideInfo type={SideType.Attacker} />
+              <TableSideInfo type={SideType.A} />
             </Grid.Column>
             <Grid.Column>
-              <TableSideInfo type={SideType.Defender} />
+              <TableSideInfo type={SideType.B} />
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -115,28 +114,30 @@ class Battle extends Component<IProps> {
           <Grid>
             <Grid.Row columns={2}>
               <Grid.Column>
-                <TableArmyInfo type={SideType.Attacker} />
+                <TableArmyInfo type={SideType.A} />
               </Grid.Column>
               <Grid.Column>
-                <TableArmyInfo type={SideType.Defender} />
+                <TableArmyInfo type={SideType.B} />
               </Grid.Column>
             </Grid.Row>
             <Grid.Row columns={2}>
               <Grid.Column>
-                <TableUnitTypes side={SideType.Attacker} country={participantA.country} army={participantA.army} onRowClick={this.openUnitDetails} />
+                <ParticipantSelector side={SideType.A} />
+                <TableUnitTypes side={SideType.A} countryName={participantA.countryName} armyName={participantA.armyName} onRowClick={this.openUnitDetails} />
               </Grid.Column>
               <Grid.Column>
-                <TableUnitTypes side={SideType.Defender} country={participantD.country} army={participantD.army} onRowClick={this.openUnitDetails} />
+                <ParticipantSelector side={SideType.B} />
+                <TableUnitTypes side={SideType.B} countryName={participantD.countryName} armyName={participantD.armyName} onRowClick={this.openUnitDetails} />
               </Grid.Column>
             </Grid.Row>
             {
               settings[Setting.FireAndShock] &&
               <Grid.Row columns={2}>
                 <Grid.Column>
-                  <TableDamageAttributes side={SideType.Attacker} country={participantA.country} army={participantA.army} />
+                  <TableDamageAttributes side={SideType.A} country={participantA.countryName} army={participantA.armyName} />
                 </Grid.Column>
                 <Grid.Column>
-                  <TableDamageAttributes side={SideType.Defender} country={participantD.country} army={participantD.army} />
+                  <TableDamageAttributes side={SideType.B} country={participantD.countryName} army={participantD.armyName} />
                 </Grid.Column>
               </Grid.Row>
 
@@ -170,26 +171,12 @@ class Battle extends Component<IProps> {
         <br />
         <AccordionToggle title='Reserve & Defeated' identifier='Reserve'>
           <Grid>
-            <Grid.Row columns={1}>
-              <Grid.Column>
-                {this.renderReserve(SideType.Attacker)}
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row columns={1}>
-              <Grid.Column>
-                {this.renderReserve(SideType.Defender)}
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row columns={1}>
-              <Grid.Column>
-                {this.renderDefeatedArmy(SideType.Attacker)}
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row columns={1}>
-              <Grid.Column>
-                {this.renderDefeatedArmy(SideType.Defender)}
-              </Grid.Column>
-            </Grid.Row>
+            {this.renderReserve(SideType.A)}
+            {this.renderReserve(SideType.B)}
+            {this.renderDefeatedCohorts(SideType.A)}
+            {this.renderDefeatedCohorts(SideType.B)}
+            {this.renderRetreatedCohorts(SideType.A)}
+            {this.renderRetreatedCohorts(SideType.B)}
           </Grid>
           <br /><br />
         </AccordionToggle>
@@ -210,27 +197,31 @@ class Battle extends Component<IProps> {
     )
   }
 
-  roundName = (round: number, phase: CombatPhase): string => {
-    if (round < 0)
-      return 'Before combat'
-    if (!round)
-      return 'Deployment'
-    if (phase !== CombatPhase.Default)
-      return String(round) + ' (' + phase + ')'
-    return String(round)
+  roundName = (day: number, round: number, phase: CombatPhase): string => {
+    const dayStr = day === round ? '' : ', Day ' + day
+    let roundStr = ''
+    if (day === 0 || round === 0)
+      roundStr = 'Deployment'
+    else if (round === -1)
+      roundStr = 'Waiting for enemies'
+    else if (phase !== CombatPhase.Default)
+      roundStr = 'Round ' + String(round) + ' (' + phase + ')'
+    else
+      roundStr = 'Round ' + String(round)
+    return roundStr + dayStr
   }
 
   renderFrontline = (side: SideType) => {
     const combatWidth = this.props.settings[Setting.CombatWidth]
     return (
       <TableArmyPart
-        color={side === SideType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
+        color={side === SideType.A ? ATTACKER_COLOR : DEFENDER_COLOR}
         side={side}
-        onClick={(row, column, id) => this.openCohortModal(side, ArmyType.Frontline, row, column, id)}
+        onClick={this.openCohortModal}
         rowWidth={Math.max(30, combatWidth)}
-        reverse={side === SideType.Attacker}
-        type={ArmyType.Frontline}
-        disableAdd={this.props.round > -1}
+        reverse={side === SideType.A}
+        part={ArmyPart.Frontline}
+        markDefeated
       />
     )
   }
@@ -238,35 +229,50 @@ class Battle extends Component<IProps> {
   renderReserve = (side: SideType) => {
     return (
       <TableArmyPart
-        color={side === SideType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
+        color={side === SideType.A ? ATTACKER_COLOR : DEFENDER_COLOR}
         side={side}
-        onClick={(row, column, id) => this.openCohortModal(side, ArmyType.Reserve, row, column + 30 * row, id)}
+        onClick={this.openCohortModal}
         rowWidth={30}
         reverse={false}
-        type={ArmyType.Reserve}
+        part={ArmyPart.Reserve}
         fullRows
       />
     )
   }
 
-  renderDefeatedArmy = (side: SideType) => {
+  renderDefeatedCohorts = (side: SideType) => {
     return (
       <TableArmyPart
-        color={side === SideType.Attacker ? ATTACKER_COLOR : DEFENDER_COLOR}
+        color={side === SideType.A ? ATTACKER_COLOR : DEFENDER_COLOR}
         side={side}
-        onClick={(row, column, id) => this.openCohortModal(side, ArmyType.Defeated, row, column + 30 * row, id)}
+        onClick={this.openCohortModal}
         rowWidth={30}
         reverse={false}
-        type={ArmyType.Defeated}
+        part={ArmyPart.Defeated}
         fullRows
+      />
+    )
+  }
+
+  renderRetreatedCohorts = (side: SideType) => {
+    return (
+      <TableArmyPart
+        color={side === SideType.A ? ATTACKER_COLOR : DEFENDER_COLOR}
+        side={side}
+        onClick={this.openCohortModal}
+        rowWidth={30}
+        reverse={false}
+        part={ArmyPart.Retreated}
+        fullRows
+        hideIfEmpty
       />
     )
   }
 
   clearCohorts = (): void => {
-    const { participantA, participantD, clearCohorts } = this.props
-    clearCohorts(participantA.country, participantA.army)
-    clearCohorts(participantD.country, participantD.army)
+    const { participantA, participantB: participantD, clearCohorts } = this.props
+    clearCohorts(participantA.countryName, participantA.armyName)
+    clearCohorts(participantD.countryName, participantD.armyName)
   }
 
   undo = (rounds: number) => {
@@ -286,11 +292,14 @@ class Battle extends Component<IProps> {
 
 const mapStateToProps = (state: AppState) => {
   const battle = getBattle(state)
+  const day = getDay(battle)
+  const round = getRound(battle)
   return {
-    participantA: getParticipant(state, SideType.Attacker),
-    participantD: getParticipant(state, SideType.Defender),
-    isUndo: battle.round > -1,
-    round: battle.round,
+    participantA: getParticipantSafely(state, SideType.A, state.ui.selectedParticipantIndex[SideType.A]),
+    participantB: getParticipantSafely(state, SideType.B, state.ui.selectedParticipantIndex[SideType.B]),
+    isUndoAvailable: day > 0,
+    round,
+    day,
     outdated: battle.outdated,
     timestamp: battle.timestamp,
     fightOver: battle.fightOver,

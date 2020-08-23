@@ -1,33 +1,36 @@
 import React, { Component, PureComponent } from 'react'
-import { connect } from 'react-redux'
 import { Table, Image, Icon } from 'semantic-ui-react'
 
-
-import CombatTooltip from './CombatTooltip'
 import IconDefeated from 'images/attrition.png'
-import { SideType, ArmyType, UnitAttribute, CombatCohort } from 'types'
+import { SideType, ArmyPart, CountryName, ArmyName } from 'types'
 import { getImage, resize } from 'utils'
-import { AppState, getCurrentCombat, getBattle, getParticipant } from 'state'
-import { getArmyPart } from 'army_utils'
-import { last } from 'lodash'
-import { deleteCohort } from 'reducers'
+import { getCohortId } from 'managers/units'
+import { chunk, flatten } from 'lodash'
+import CombatTooltip from 'containers/CombatTooltip'
 
-type Props = {
+export type SharedProps = {
   side: SideType
   rowWidth: number
   reverse: boolean
-  onClick?: (row: number, column: number, id: number | undefined) => void
-  type: ArmyType
+  // SideType, participantIndex and index are needed to find the combat unit. CountryName, ArmyName and index are needed to find the definition.
+  onClick: (side: SideType, participantIndex: number, index: number, country: CountryName, army: ArmyName) => void
+  part: ArmyPart
   color: string
-  // Prevents adding units.
-  disableAdd?: boolean
   // Renders full rows for a cleaner look.
   fullRows?: boolean
+  markDefeated?: boolean
+}
+
+type IProps = SharedProps & {
+  cohorts: ICohort[][]
+  timestamp: number
+  onDeleteCohort: (cohort: ICohort) => void
 }
 
 type IState = {
-  tooltipIndex: number | null
-  tooltipContext: Element | null
+  tooltipRow: number | null
+  tooltipColumn: number | null
+  tooltipContext: HTMLElement | null
   tooltipIsSupport: boolean
 }
 
@@ -35,44 +38,47 @@ const MORALE_COLOR = 'rgba(200,55,55,0.60)'
 const MANPOWER_COLOR = 'rgba(0,0,0,0.90)'
 const WHITE_COLOR = 'rgba(255,255,255,0)'
 
-// Shows a part of an army (frontline, reserve or defeated).
-class TableArmyPart extends Component<IProps, IState> {
+/**
+ * Shows a table of cohorts of an army (frontline, reserve, defeated or retreated).
+ */
+export default class TableArmyPart extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
-    this.state = { tooltipIndex: null, tooltipContext: null, tooltipIsSupport: false }
+    this.state = { tooltipRow: null, tooltipColumn: null, tooltipContext: null, tooltipIsSupport: false }
   }
 
   shouldComponentUpdate(prevProps: IProps, prevState: IState) {
-    return prevProps.timestamp !== this.props.timestamp || prevState.tooltipIndex !== this.state.tooltipIndex
+    return prevProps.timestamp !== this.props.timestamp || prevState.tooltipRow !== this.state.tooltipRow || prevState.tooltipColumn !== this.state.tooltipColumn
   }
 
   render() {
-    const { rowWidth, side, type, fullRows, reverse } = this.props
-    const { tooltipIndex, tooltipContext, tooltipIsSupport } = this.state
-    let units = this.props.units
+    const { rowWidth, side, part, fullRows, reverse } = this.props
+    const { tooltipRow, tooltipColumn, tooltipContext, tooltipIsSupport } = this.state
+    let cohorts = this.props.cohorts
     let indexOffset = 0
+    cohorts = flatten(cohorts.map(arr => chunk(arr, rowWidth)))
+    if (!cohorts.length)
+      cohorts.push([])
     if (fullRows) {
-      units = units.map(arr => resize(arr, rowWidth, null))
-      if (last(last(units)))
-        units.push(Array(rowWidth).fill(null))
+      cohorts = cohorts.map(arr => resize(arr, rowWidth, null))
 
     } else {
       // For display purposes, smaller combat width turns extra slots grey instead of removing them.
-      const filler = Math.max(0, rowWidth - units[0].length)
+      const filler = Math.max(0, rowWidth - cohorts[0].length)
       const leftFiller = indexOffset = Math.ceil(filler / 2.0)
       const rightFiller = Math.floor(filler / 2.0)
-      units = units.map(row => Array(leftFiller).fill(undefined).concat(row).concat(Array(rightFiller).fill(undefined)))
+      cohorts = cohorts.map(row => Array(leftFiller).fill(undefined).concat(row).concat(Array(rightFiller).fill(undefined)))
     }
     if (reverse)
-      units.reverse()
+      cohorts.reverse()
     return (
       <>
-        <CombatTooltip id={tooltipIndex} context={tooltipContext} isSupport={tooltipIsSupport} side={side} army={type} />
+        <CombatTooltip row={tooltipRow} column={tooltipColumn} context={tooltipContext} isSupport={tooltipIsSupport} side={side} part={part} />
         <Table compact celled definition unstackable>
           <Table.Body>
             {
-              units.map((row, rowIndex) => {
-                rowIndex = reverse ? units.length - 1 - rowIndex : rowIndex
+              cohorts.map((row, rowIndex) => {
+                rowIndex = reverse ? cohorts.length - 1 - rowIndex : rowIndex
                 return (
                   < Table.Row key={rowIndex} textAlign='center' >
                     <Table.Cell>
@@ -81,7 +87,10 @@ class TableArmyPart extends Component<IProps, IState> {
                     {
                       row.map((cohort, columnIndex) => {
                         columnIndex -= indexOffset
-                        return this.renderCell(rowIndex, columnIndex, cohort, rowIndex > 0)
+                        if (part === ArmyPart.Frontline)
+                          return this.renderCell(rowIndex, columnIndex, cohort, rowIndex > 0)
+                        else
+                          return this.renderCell(0, rowIndex * rowWidth + columnIndex, cohort, rowIndex > 0)
                       })
                     }
                   </Table.Row>
@@ -95,24 +104,24 @@ class TableArmyPart extends Component<IProps, IState> {
   }
 
   renderCell = (row: number, column: number, cohort: ICohort, isSupport: boolean) => {
-    const { side, type, disableAdd, onClick } = this.props
+    const { side, onClick, markDefeated, onDeleteCohort } = this.props
     const filler = cohort === undefined
     return (
       <Table.Cell
-        className={side + '-' + type + '-' + cohort?.id}
+        className={cohort ? getCohortId(side, cohort) : ''}
         textAlign='center'
-        key={column}
-        disabled={filler || (disableAdd && !cohort)}
+        key={row + '_' + column}
+        disabled={filler || !cohort}
         selectable={!!onClick}
         style={{ backgroundColor: filler ? '#DDDDDD' : 'white', padding: 0 }}
-        onClick={() => onClick && onClick(row, column, cohort?.id)}
-        onMouseOver={(e: React.MouseEvent) => cohort && this.setState({ tooltipIndex: cohort.id, tooltipContext: e.currentTarget, tooltipIsSupport: isSupport })}
-        onMouseLeave={() => cohort && this.state.tooltipIndex === cohort.id && this.setState({ tooltipIndex: null, tooltipContext: null })}
-        onContextMenu={(e: any) => e.preventDefault() || this.deleteCohort(cohort)}
+        onClick={() => cohort && onClick(side, cohort.participantIndex, cohort.index, cohort.countryName, cohort.armyName)}
+        onMouseOver={(e: React.MouseEvent) => cohort && this.setState({ tooltipRow: row, tooltipColumn: column, tooltipContext: e.currentTarget as HTMLElement, tooltipIsSupport: isSupport })}
+        onMouseLeave={() => cohort && this.state.tooltipRow === row && this.state.tooltipColumn === column && this.setState({ tooltipRow: null, tooltipColumn: null, tooltipContext: null })}
+        onContextMenu={(e: any) => e.preventDefault() || onDeleteCohort(cohort)}
       >
         <Cell
           image={cohort?.image || null}
-          isDefeated={cohort?.isDefeated || false}
+          isDefeated={(markDefeated && cohort?.isDefeated) || false}
           morale={cohort?.morale || 0}
           maxMorale={cohort?.maxMorale || 0}
           strength={cohort?.strength || 0}
@@ -123,21 +132,16 @@ class TableArmyPart extends Component<IProps, IState> {
   }
 
   getIcon = () => {
-    const { type, reverse } = this.props
-    if (type === ArmyType.Frontline)
+    const { part: type, reverse } = this.props
+    if (type === ArmyPart.Frontline)
       return reverse ? 'arrow down' : 'arrow up'
-    if (type === ArmyType.Reserve)
+    if (type === ArmyPart.Reserve)
       return 'home'
-    if (type === ArmyType.Defeated)
+    if (type === ArmyPart.Defeated)
       return 'heartbeat'
+    if (type === ArmyPart.Retreated)
+      return 'trash'
     return 'square full'
-  }
-
-  deleteCohort = (cohort: ICohort) => {
-    if (!cohort)
-      return
-    const { deleteCohort, participant } = this.props
-    deleteCohort(participant.country, participant.army, cohort.id)
   }
 }
 
@@ -177,38 +181,16 @@ class Cell extends PureComponent<CellProps> {
   percent = (current: number, max: number) => 100.0 - 100.0 * current / max
 }
 
-type ICohort = {
-  id: number
+export type ICohort = {
+  countryName: CountryName
+  armyName: ArmyName
+  participantIndex: number
+  index: number
   isDefeated: boolean
   image?: string
   maxMorale: number
   maxStrength: number
   morale: number
   strength: number
-} | null | undefined
+} | null
 
-const convertUnits = (units: (CombatCohort | null)[][]): ICohort[][] => (
-  units.map(row => row.map(unit => unit && {
-    id: unit.definition.id,
-    isDefeated: unit.state.isDefeated,
-    image: unit.definition.image,
-    morale: unit[UnitAttribute.Morale],
-    maxMorale: unit.definition.maxMorale,
-    strength: unit[UnitAttribute.Strength],
-    maxStrength: unit.definition.maxStrength
-  }))
-)
-
-const mapStateToProps = (state: AppState, props: Props) => ({
-  units: convertUnits(getArmyPart(getCurrentCombat(state, props.side), props.type)),
-  participant: getParticipant(state, props.side),
-  timestamp: getBattle(state).timestamp
-})
-
-const actions = { deleteCohort }
-
-type S = ReturnType<typeof mapStateToProps>
-type D = typeof actions
-type IProps = Props & S & D
-
-export default connect(mapStateToProps, actions)(TableArmyPart)

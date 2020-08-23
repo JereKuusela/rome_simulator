@@ -2,18 +2,18 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table, Button } from 'semantic-ui-react'
 
-import { SideType, CountryName, Setting, GeneralAttribute, UnitAttribute, CultureType, ModalType, General, CombatPhase } from 'types'
-import { AppState, getBattle, getMode, getCombatParticipant, getSiteSettings, getCombatSide } from 'state'
-import { selectParticipantCountry, selectParticipantArmy, selectCulture, toggleRandomDice, setDice, openModal, setGeneralAttribute } from 'reducers'
+import { SideType, Setting, GeneralAttribute, UnitAttribute, ModalType, GeneralDefinition, CombatPhase } from 'types'
+import { AppState, getBattle, getMode, getCombatSide, getSiteSettings, getSide } from 'state'
+import { setDice, openModal } from 'reducers'
 import StyledNumber from 'components/Utils/StyledNumber'
-import { getTerrainPips, calculateGeneralPips, getCombatPhase, getCombatPhaseNumber } from 'combat'
+import { getCombatPhase, getCombatPhaseNumber } from 'combat'
 import { addSign } from 'formatters'
 import IconDice from 'images/chance.png'
 import IconTerrain from 'images/terrain.png'
 import AttributeImage from 'components/Utils/AttributeImage'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 import LabelItem from 'components/Utils/LabelUnit'
-import { getOpponent } from 'army_utils'
+import { getLeadingArmy, getDay, getParticipantName } from 'managers/battle'
 
 type Props = {
   type: SideType
@@ -29,6 +29,9 @@ class TableSideInfo extends Component<IProps> {
       <Table celled unstackable>
         <Table.Header>
           <Table.Row>
+            <Table.HeaderCell>
+              Leader
+            </Table.HeaderCell>
             {
               settings[Setting.Martial] &&
               <Table.HeaderCell>
@@ -61,15 +64,21 @@ class TableSideInfo extends Component<IProps> {
 
 
   renderSide = () => {
-    const { settings, side, tactic, round } = this.props
+    const { settings, side, army } = this.props
+    const participantIndex = army?.participantIndex ?? 0
     return (
       <Table.Row key={side.type}>
-        {settings[Setting.Martial] && this.renderGeneral(side.general, GeneralAttribute.Martial)}
-        {settings[Setting.FireAndShock] && this.renderGeneral(side.general, getCombatPhase(round, settings) === CombatPhase.Shock ? CombatPhase.Shock : CombatPhase.Fire)}
+        <Table.Cell>
+          {getParticipantName(side.participants[participantIndex])}
+        </Table.Cell>
+        <Table.Cell>
+          <AttributeImage attribute={GeneralAttribute.Martial} />
+          {army ? army.general[GeneralAttribute.Martial] : 0}
+        </Table.Cell>
         {
           settings[Setting.Tactics] &&
           <Table.Cell collapsing>
-            <LabelItem item={tactic} />
+            {army ? <LabelItem item={army.tactic} /> : null}
           </Table.Cell>
         }
         <Table.Cell>
@@ -79,25 +88,25 @@ class TableSideInfo extends Component<IProps> {
     )
   }
 
-  renderGeneral = (general: General, attribute: GeneralAttribute | CombatPhase) => {
+  renderGeneral = (general: GeneralDefinition, attribute: GeneralAttribute | CombatPhase) => {
     return (
       <Table.Cell>
         <AttributeImage attribute={attribute} />
-        {general.totalValues[attribute]}
+        {general.values[attribute]}
       </Table.Cell>
     )
   }
 
   renderRoll = () => {
-    const { terrains, settings, round, openModal, setDice, side, opponent, combat } = this.props
-    const terrainPips = getTerrainPips(terrains, side.type, side.general, opponent.general)
-    const generalPips = calculateGeneralPips(side.general, opponent.general, getCombatPhase(round, settings))
+    const { settings, round, openModal, setDice, side, combat } = this.props
+    const terrainPips = combat.results.terrainPips
+    const generalPips = combat.results.generalPips
     const phase = getCombatPhaseNumber(round, settings)
     const isDiceSet = side.randomizeDice || (side.rolls.length > phase && side.rolls[phase])
     return (
       <div key={side.type}>
         <Image src={IconDice} avatar />
-        {isDiceSet ? combat.dice : <DelayedNumericInput type='number' value={side.dice} onChange={value => setDice(side.type, value)} />}
+        {isDiceSet ? combat.results.dice : <DelayedNumericInput type='number' value={side.dice} onChange={value => setDice(side.type, value)} />}
         {
           !side.randomizeDice &&
           <span style={{ paddingLeft: '1em' }}>
@@ -123,30 +132,22 @@ class TableSideInfo extends Component<IProps> {
       </div >
     )
   }
-
-  selectCulture = (country: CountryName, culture: CultureType) => {
-    const { selectCulture } = this.props
-    selectCulture(country, culture, false)
-  }
 }
 
 const mapStateToProps = (state: AppState, props: Props) => {
   const battle = getBattle(state)
-  const side = getCombatSide(state, props.type)
-  const opponent = getCombatSide(state, getOpponent(props.type))
+  const combat = getCombatSide(state, props.type)
   return {
-    side,
-    opponent,
-    tactic: state.tactics[side.tactic],
-    round: battle.round,
-    terrains: battle.terrains.map(type => state.terrains[type]),
+    side: getSide(state, props.type),
+    army: getLeadingArmy(combat),
+    round: getDay(battle),
     settings: getSiteSettings(state),
     mode: getMode(state),
-    combat: getCombatParticipant(state, props.type)
+    combat
   }
 }
 
-const actions = { selectParticipantCountry, selectParticipantArmy, selectCulture, toggleRandomDice, setDice, openModal, setGeneralAttribute }
+const actions = { setDice, openModal }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions

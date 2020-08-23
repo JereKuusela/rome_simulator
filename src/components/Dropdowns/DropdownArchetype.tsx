@@ -1,18 +1,18 @@
 import React, { Component } from 'react'
-import { UnitType, UnitAttribute, CombatPhase, SiteSettings, Unit } from 'types'
+import { UnitType, UnitAttribute, CombatPhase, SiteSettings, UnitDefinition } from 'types'
 import DropdownTable from './DropdownTable'
 import { calculateValue } from 'definition_values'
 
 interface IProps {
   value: UnitType
-  values: Unit[]
+  values: UnitDefinition[]
   onSelect: (type: UnitType) => void
   settings: SiteSettings
 }
 
 export default class DropdownArchetype extends Component<IProps> {
 
-  getContent = (unit: Unit) => ([
+  getContent = (unit: UnitDefinition) => ([
     unit.type,
     unit.tech ?? '',
     calculateValue(unit, UnitAttribute.OffensiveFirePips) + '/' + calculateValue(unit, UnitAttribute.DefensiveFirePips),
@@ -20,11 +20,11 @@ export default class DropdownArchetype extends Component<IProps> {
     calculateValue(unit, UnitAttribute.OffensiveMoralePips) + '/' + calculateValue(unit, UnitAttribute.DefensiveMoralePips)
   ])
 
-  isActive = (item: Unit) => item.type === this.props.value
+  isActive = (item: UnitDefinition) => item.type === this.props.value
 
-  getValue = (item: Unit) => item.type
+  getValue = (item: UnitDefinition) => item.type
 
-  getText = (item: Unit) => item.type + ' (' + (item.tech ?? 0) + ')'
+  getText = (item: UnitDefinition) => item.type + ' (' + (item.tech ?? 0) + ')'
 
   headers = ['Unit', 'Tech', CombatPhase.Fire, CombatPhase.Shock, UnitAttribute.Morale]
 

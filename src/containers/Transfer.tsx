@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Grid, TextArea, Checkbox, List, Header, Button, Input } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { AppState, resetMissing, restoreDefaultTactics, restoreDefaultTerrains, restoreDefaultUnits, setIds, restoreDefaultSettings } from 'state'
+import { AppState, resetMissing, restoreDefaultTactics, restoreDefaultTerrains, restoreDefaultUnits, restoreDefaultSettings } from 'state'
 import { values, keys } from 'utils'
 import { ExportKey } from 'types'
 import { exportState, saveToFile } from 'managers/transfer'
@@ -129,7 +129,6 @@ const mapDispatchToProps = (dispatch: any) => ({
       let json = JSON.parse(data)
       json.transfer = undefined
       json.ui = undefined
-      json.countries = json.countries && setIds(json.countries)
       json.tactics = json.tactics && restoreDefaultTactics(json.tactics)
       json.terrains = json.terrains && restoreDefaultTerrains(json.terrains)
       json.units = json.units && restoreDefaultUnits(json.units)

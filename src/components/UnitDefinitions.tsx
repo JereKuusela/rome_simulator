@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Table, List, Icon } from 'semantic-ui-react'
 import { toNumber } from 'lodash'
 
-import { Mode, CountryName, UnitType, TerrainType, UnitDefinition, UnitAttribute, Unit, filterAttributes, SiteSettings, Setting } from 'types'
+import { Mode, CountryName, UnitType, TerrainType, UnitData, UnitAttribute, UnitDefinition, filterAttributes, SiteSettings, Setting } from 'types'
 import { calculateValue } from 'definition_values'
 import { toPercent, toManpower, toSignedPercent } from 'formatters'
 
@@ -14,12 +14,12 @@ import AttributeImage from './Utils/AttributeImage'
 interface IProps {
   mode: Mode
   country: CountryName
-  units: Unit[]
+  units: UnitDefinition[]
   settings: SiteSettings
   images: { [key in UnitType]: string[] }
   unitTypes: UnitType[]
   terrains: TerrainType[]
-  onRowClick: (unit: UnitDefinition) => void
+  onRowClick: (unit: UnitData) => void
 }
 
 // Display component for showing unit definitions for an army.
@@ -90,7 +90,7 @@ export default class UnitDefinitions extends Component<IProps> {
     )
   }
 
-  renderRow = (unit: UnitDefinition) => {
+  renderRow = (unit: UnitData) => {
     const { settings, onRowClick, mode } = this.props
     return (
       <Table.Row key={unit.type} onClick={() => onRowClick(unit)}>

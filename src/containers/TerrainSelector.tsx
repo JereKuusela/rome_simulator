@@ -5,7 +5,7 @@ import { Image, Table } from 'semantic-ui-react'
 import { AppState, getMode, getSelectedTerrains, getSiteSettings } from 'state'
 import IconDice from 'images/chance.png'
 import StyledNumber from 'components/Utils/StyledNumber'
-import { TerrainDefinition, TerrainCalc, TerrainType } from 'types'
+import { Terrain, TerrainCalc, TerrainType } from 'types'
 import { calculateValue } from 'definition_values'
 import { addSign } from 'formatters'
 import { selectTerrain } from 'reducers'
@@ -44,7 +44,7 @@ class TerrainSelector extends Component<IProps> {
     )
   }
 
-  renderTerrain = (definition: TerrainDefinition, index: number) => {
+  renderTerrain = (definition: Terrain, index: number) => {
     const { terrains, settings } = this.props
     const roll = calculateValue(definition, TerrainCalc.Roll)
     return (

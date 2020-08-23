@@ -1,6 +1,8 @@
 import { addValues } from 'definition_values'
-import { getUnit, TestInfo, initInfo, setCenterUnits, initSide, testCombat, setTerrain } from './utils'
-import { UnitType, UnitAttribute, TerrainType, ValuesType, Setting } from 'types'
+import { getUnit, TestState, initState, initExpected, testCombatWithCustomRolls, addToReserveTest } from './utils'
+import { UnitType, UnitAttribute, TerrainType, ValuesType, SideType, Mode } from 'types'
+import { addToReserve } from 'managers/army'
+import { selectTerrain } from 'managers/battle'
 
 if (process.env.REACT_APP_GAME !== 'euiv') {
 
@@ -10,101 +12,81 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     const infantry = addValues(getUnit(UnitType.LightInfantry), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.25]])
     const cavalry = addValues(getUnit(UnitType.LightCavalry), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.2]])
 
-    let info: TestInfo
-    beforeEach(() => {
-      info = initInfo()
-      info.settings[Setting.MoraleLostMultiplier] = info.settings[Setting.MoraleLostMultiplier] * 0.02 / 0.024
-      info.settings[Setting.StrengthLostMultiplier] = info.settings[Setting.StrengthLostMultiplier] * 0.02 / 0.024
-    })
+    let state: TestState
+    beforeEach(() => state = initState())
 
     it('no modifiers', () => {
       const unit = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.MoraleDamageTaken, -0.25]])
-      setCenterUnits(info, unit, unit)
+      addToReserveTest(state, SideType.A, [unit])
+      addToReserveTest(state, SideType.B, [unit])
+
       const rolls = [[0, 2], [3, 2]]
-      const { attacker, defender } = initSide(10)
+      const expected = initExpected(1, 6, 10)
 
-      attacker[0][15] = [unit.type, 976, 1.0920]
-      attacker[1][15] = [unit.type, 952, 0.9921]
-      attacker[2][15] = [unit.type, 929, 0.8993]
-      attacker[3][15] = [unit.type, 906, 0.8129]
-      attacker[4][15] = [unit.type, 883, 0.7321]
-      attacker[5][15] = [unit.type, 861, 0.6562]
-      attacker[6][15] = [unit.type, 840, 0.5878]
-      attacker[7][15] = [unit.type, 819, 0.5260]
-      attacker[8][15] = [unit.type, 798, 0.4697]
-      attacker[9][15] = [unit.type, 778, 0.4184]
+      expected[1].A.front = [[unit.type, 0.971, 2.1408]]
+      expected[6].A.front = [[unit.type, 0.835, 1.1355]]
+      expected[10].A.front = [[unit.type, 0.738, 0.6123]]
 
-      defender[0][15] = [unit.type, 984, 1.1280]
-      defender[1][15] = [unit.type, 968, 1.0640]
-      defender[2][15] = [unit.type, 953, 1.0073]
-      defender[3][15] = [unit.type, 938, 0.9572]
-      defender[4][15] = [unit.type, 923, 0.9130]
-      defender[5][15] = [unit.type, 899, 0.8450]
-      defender[6][15] = [unit.type, 874, 0.7857]
-      defender[7][15] = [unit.type, 851, 0.7338]
-      defender[8][15] = [unit.type, 828, 0.6886]
-      defender[9][15] = [unit.type, 806, 0.6492]
+      expected[1].B.front = [[unit.type, 0.980, 2.2272]]
+      expected[6].B.front = [[unit.type, 0.880, 1.5998]]
+      expected[10].B.front = [[unit.type, 0.773, 1.2266]]
 
-      testCombat(info, rolls, attacker, defender)
+      testCombatWithCustomRolls(state, rolls, expected)
     })
 
     it('increased morale damage taken, terrain bonus and discipline', () => {
       const unitA = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.Discipline, 0.045]])
       const unitD = addValues(archer, ValuesType.Base, 'Test', [[UnitAttribute.Discipline, 0.14], [TerrainType.Forest, 0.15]])
-      setTerrain(info, TerrainType.Forest)
-      setCenterUnits(info, unitA, unitD)
+      selectTerrain(state.battle[Mode.Land], 0, TerrainType.Forest)
+      addToReserveTest(state, SideType.A, [unitA])
+      addToReserveTest(state, SideType.B, [unitD])
+
       const rolls = [[4, 4]]
-      const { attacker, defender } = initSide(4)
+      const expected = initExpected(1, 4)
 
-      attacker[0][15] = [unitA.type, 958, 0.9644]
-      attacker[1][15] = [unitA.type, 917, 0.7668]
-      attacker[2][15] = [unitA.type, 877, 0.5984]
-      attacker[3][15] = [unitA.type, 839, 0.4521]
+      expected[1].A.front = [[unitA.type, 0.949, 1.8337]]
+      expected[4].A.front = [[unitA.type, 0.808, 0.6778]]
 
-      defender[0][15] = [unitD.type, 970, 1.0353]
-      defender[1][15] = [unitD.type, 942, 0.9086]
-      defender[2][15] = [unitD.type, 915, 0.8121]
-      defender[3][15] = [unitD.type, 890, 0.7401]
+      expected[1].B.front = [[unitD.type, 0.964, 2.0050]]
+      expected[4].B.front = [[unitD.type, 0.869, 1.3737]]
 
-      testCombat(info, rolls, attacker, defender)
+      testCombatWithCustomRolls(state, rolls, expected)
     })
 
     it('reduced morale damage taken, offense/defense and experience', () => {
       const unitA = addValues(infantry, ValuesType.Base, 'Test', [[UnitAttribute.Offense, 0.1], [UnitAttribute.Defense, 0.15], [UnitAttribute.Experience, 0.0001]])
       const unitD = addValues(infantry, ValuesType.Base, 'Test', [[UnitAttribute.Offense, 0.05], [UnitAttribute.Defense, 0.05], [UnitAttribute.Experience, 0.0004]])
-      setCenterUnits(info, unitA, unitD)
+      addToReserveTest(state, SideType.A, [unitA])
+      addToReserveTest(state, SideType.B, [unitD])
+
       const rolls = [[6, 1]]
-      const { attacker, defender } = initSide(4)
+      const expected = initExpected(2, 4)
 
-      attacker[0] = null as any
-      attacker[1][15] = [unitA.type, 964, 1.0199]
-      attacker[2][15] = [unitA.type, 948, 0.9796]
-      attacker[3][15] = [unitA.type, 932, 0.9462]
+      expected[2].A.front = [[unitA.type, 0.957, 2.0019]]
+      expected[4].A.front = [[unitA.type, 0.920, 1.8416]]
 
-      defender[0] = null as any
-      defender[1][15] = [unitD.type, 916, 0.8684]
-      defender[2][15] = [unitD.type, 876, 0.7521]
-      defender[3][15] = [unitD.type, 836, 0.6424]
+      expected[2].B.front = [[unitD.type, 0.900, 1.6380]]
+      expected[4].B.front = [[unitD.type, 0.804, 1.1119]]
 
-      testCombat(info, rolls, attacker, defender)
+      testCombatWithCustomRolls(state, rolls, expected)
     })
 
     it('versus damage and increased morale damage taken', () => {
       const unitA = addValues(cavalry, ValuesType.Base, 'Test', [])
       const unitD = addValues(archer, ValuesType.Base, 'Test', [])
-      setCenterUnits(info, unitA, unitD)
+      addToReserveTest(state, SideType.A, [unitA])
+      addToReserveTest(state, SideType.B, [unitD])
+
       const rolls = [[4, 4]]
-      const { attacker, defender } = initSide(3)
+      const expected = initExpected(1, 3)
 
-      attacker[0][15] = [unitA.type, 971, 1.0704]
-      attacker[1][15] = [unitA.type, 943, 0.9693]
-      attacker[2][15] = [unitA.type, 917, 0.8917]
+      expected[1].A.front = [[unitA.type, 0.965, 2.0890]]
+      expected[3].A.front = [[unitA.type, 0.901, 1.6944]]
 
-      defender[0][15] = [unitD.type, 960, 0.9750]
-      defender[1][15] = [unitD.type, 921, 0.7800]
-      defender[2][15] = [unitD.type, 883, 0.6086]
+      expected[1].B.front = [[unitD.type, 0.952, 1.8600]]
+      expected[3].B.front = [[unitD.type, 0.860, 1.0161]]
 
-      testCombat(info, rolls, attacker, defender)
+      testCombatWithCustomRolls(state, rolls, expected)
     })
   })
 }

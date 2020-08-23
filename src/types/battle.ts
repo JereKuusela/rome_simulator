@@ -1,10 +1,14 @@
-import { CountryName, Mode, TerrainType, CombatParticipant } from 'types'
-import { ArmyName } from './armies'
+import { CountryName, Mode, TerrainType, Terrain, Settings, Cohorts } from 'types'
+import { ArmyName, Army } from './armies'
 
 export type Battle = {
   terrains: TerrainType[]
-  sides: Sides
-  round: number
+  sides: { [key in SideType]: SideData }
+  days: {
+    round: number
+    startingPhaseNumber: number
+    attacker: SideType
+  }[]
   fightOver: boolean
   seed: number
   customSeed?: number
@@ -18,25 +22,56 @@ export enum CombatPhase {
   Default = 'Default'
 }
 
-export type Side = {
+export type SideData = {
   type: SideType
   participants: Participant[]
-  rounds: CombatParticipant[]
+  days: Side[]
   rolls: number[]
   dice: number
   randomizeDice: boolean
 }
 
-export type Sides = { [key in SideType]: Side }
 export type ModeState = { [key in Mode]: Battle }
 
 export type Participant = {
-  country: CountryName
-  army: ArmyName
+  countryName: CountryName
+  armyName: ArmyName
   daysUntilBattle: number
 }
 
 export enum SideType {
-  Attacker = 'Attacker',
-  Defender = 'Defender'
+  A = 'Attacker',
+  B = 'Defender'
+}
+
+/** Information affecting both sides of combat. */
+export type Environment = {
+  round: number
+  day: number
+  terrains: Terrain[]
+  settings: Settings
+  attacker: SideType
+}
+
+/** Results from combat (mainly for tooltips). */
+export type SideRoundInfo = {
+  round: number
+  tacticBonus: number
+  flankRatioBonus: number
+  dailyMultiplier: number
+  tacticStrengthDamageMultiplier: number
+  terrainPips: number
+  generalPips: number
+  dice: number
+}
+
+export type Side = {
+  results: SideRoundInfo
+  armiesRemaining: boolean
+  isDefeated: boolean
+  armies: Army[]
+  flankRatio: number
+  deployed: Army[]
+  cohorts: Cohorts
+  type: SideType
 }

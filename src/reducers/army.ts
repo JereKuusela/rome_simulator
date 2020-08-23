@@ -1,11 +1,11 @@
 
-import { Army, CountryName, Countries } from 'types'
+import { ArmyData, CountryName, Countries } from 'types'
 import { ArmyName } from 'types/armies'
 import * as manager from 'managers/army'
 import { getDefaultCountryDefinitions } from 'data'
 import { ActionToFunction, makeReducer, Action, makeActionReplaceFirstTwice } from './utils'
 
-const mapping: ActionToFunction<Army, CountryName, ArmyName> = {}
+const mapping: ActionToFunction<ArmyData, CountryName, ArmyName> = {}
 
 export const clearGeneralSelection = makeActionReplaceFirstTwice(manager.clearGeneralSelection, mapping)
 export const clearGeneralSelections = makeActionReplaceFirstTwice(manager.clearGeneralSelections, mapping)
@@ -15,7 +15,6 @@ export const selectCohort = makeActionReplaceFirstTwice(manager.selectCohort, ma
 export const toggleCohortLoyality = makeActionReplaceFirstTwice(manager.toggleCohortLoyality, mapping)
 export const setCohortValue = makeActionReplaceFirstTwice(manager.setCohortValue, mapping)
 export const changeCohortType = makeActionReplaceFirstTwice(manager.changeCohortType, mapping)
-export const editCohort = makeActionReplaceFirstTwice(manager.editCohort, mapping)
 export const deleteCohort = makeActionReplaceFirstTwice(manager.deleteCohort, mapping)
 export const removeFromReserve = makeActionReplaceFirstTwice(manager.removeFromReserve, mapping)
 export const addToReserve = makeActionReplaceFirstTwice(manager.addToReserve, mapping)

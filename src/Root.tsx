@@ -29,7 +29,7 @@ const Root = ({ store, persistor }: MainProps) => {
       <PersistGate loading={null} persistor={persistor}>
         <Error>
           <BrowserRouter>
-            <Container>
+            <Container style={{width: 1280}}>
               <Modals/>
               <Route path='/' component={Navigation} />
               <Route path='/' exact component={Battle} />

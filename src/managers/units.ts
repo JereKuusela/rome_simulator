@@ -1,38 +1,38 @@
-import { ValuesType, UnitValueType, UnitType, UnitRole, UnitDefinition, UnitDefinitions, Mode, Setting, UnitAttribute, WearinessAttributes, ReserveDefinition, ModifierWithKey, SiteSettings } from "types"
+import { ValuesType, UnitValueType, UnitType, UnitRole, UnitData, UnitsData, Mode, Setting, UnitAttribute, WearinessAttributes, ReserveData, ModifierWithKey, SiteSettings, SideType } from "types"
 import { addValuesWithMutate, DefinitionValues, calculateValue, addValues, addValue } from "definition_values"
 import { getUnitIcon } from "data"
 import { toArr, round, randomWithinRange } from "utils"
 import { mapModifiersToUnits2 } from "./modifiers"
 
-export const setUnitValue = (unit: UnitDefinition, valuesType: ValuesType, key: string, attribute: UnitValueType, value: number) => {
+export const setUnitValue = (unit: UnitData, valuesType: ValuesType, key: string, attribute: UnitValueType, value: number) => {
   addValuesWithMutate(unit, valuesType, key, [[attribute, value]])
 }
 
-export const deleteUnit = (units: UnitDefinitions, type: UnitType) => {
+export const deleteUnit = (units: UnitsData, type: UnitType) => {
   delete units[type]
 }
 
-export const createUnit = (units: UnitDefinitions, mode: Mode, type: UnitType) => {
+export const createUnit = (units: UnitsData, mode: Mode, type: UnitType) => {
   units[type] = { type, image: getUnitIcon(type), role: UnitRole.Front, parent: getRootParent(mode) }
 }
 
-export const changeUnitType = (units: UnitDefinitions, oldType: UnitType, type: UnitType) => {
+export const changeUnitType = (units: UnitsData, oldType: UnitType, type: UnitType) => {
   delete Object.assign(units, { [type]: { ...units[oldType], type } })[oldType]
 }
 
-export const changeUnitImage = (unit: UnitDefinition, image: string) => {
+export const changeUnitImage = (unit: UnitData, image: string) => {
   unit.image = image
 }
 
-export const changeUnitDeployment = (unit: UnitDefinition, deployment: UnitRole) => {
+export const changeUnitDeployment = (unit: UnitData, deployment: UnitRole) => {
   unit.role = deployment
 }
 
-export const toggleUnitLoyality = (unit: UnitDefinition) => {
+export const toggleUnitLoyality = (unit: UnitData) => {
   unit.isLoyal = !unit.isLoyal
 }
 
-export const changeParent = (unit: UnitDefinition, parent: UnitType) => {
+export const changeParent = (unit: UnitData, parent: UnitType) => {
   unit.parent = parent
 }
 
@@ -54,11 +54,11 @@ export const applyDynamicAttributes = <T extends DefinitionValues<UnitValueType>
 
 export const getStrengthBasedFlank = (strength: number) => Math.pow(0.5, 4 - Math.ceil(strength * 4.0))
 
-export const applyLosses = (values: WearinessAttributes, units: ReserveDefinition) => (
+export const applyLosses = (values: WearinessAttributes, units: ReserveData) => (
   units.map(unit => addValues(unit, ValuesType.LossModifier, 'Custom', generateLosses(values)))
 )
 
-export const applyUnitModifiers = (units: UnitDefinitions, modifiers: ModifierWithKey[]): UnitDefinitions => {
+export const applyUnitModifiers = (units: UnitsData, modifiers: ModifierWithKey[]): UnitsData => {
   modifiers = mapModifiersToUnits2(modifiers)
   let result = { ...units }
   modifiers.forEach(value => {
@@ -71,3 +71,6 @@ export const applyUnitModifiers = (units: UnitDefinitions, modifiers: ModifierWi
 }
 
 const generateLosses = (values: WearinessAttributes): [string, number][] => toArr(values, (range, type) => [type, round(randomWithinRange(range.min, range.max), 100)])
+
+export const getCohortId = (side: SideType, cohort: { index: number, participantIndex: number }) => side + '-' + cohort.participantIndex + '-' + cohort.index
+export const getCohortName = (cohort: { type: UnitType, index: number, participantIndex: number }) => cohort.type + ' ' + (1000 * cohort.participantIndex + cohort.index)

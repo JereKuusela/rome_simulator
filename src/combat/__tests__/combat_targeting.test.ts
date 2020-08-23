@@ -1,93 +1,189 @@
-import { addValues } from 'definition_values'
-import { getUnit, TestInfo, initInfo, setAttacker, setDefender, initSide, testCombat } from './utils'
-import { UnitType, UnitAttribute, Setting, ValuesType } from 'types'
+import { TestState, initExpected, getSettingsTest, addToReserveTest, createArmyTest, testCombatWithDefaultRolls, createCohort, createWeakCohort, initCleanState, createFlankingCohort } from './utils'
+import { UnitType, Setting, SideType, UnitAttribute } from 'types'
 
-if (process.env.REACT_APP_GAME !== 'euiv') {
+describe('targeting', () => {
+  const cohort = createCohort('Type' as UnitType)
+  const weakCohort = createWeakCohort('Weak' as UnitType)
+  const flankingCohort = createFlankingCohort('Flanking' as UnitType)
 
-  describe('targeting', () => {
-    const archer = addValues(getUnit(UnitType.Archers), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.2]])
-    const light = addValues(getUnit(UnitType.LightCavalry), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.2]])
-    const heavy = addValues(getUnit(UnitType.HeavyCavalry), ValuesType.Modifier, 'Initial', [[UnitAttribute.Morale, -0.2]])
+  let state: TestState
+  beforeEach(() => state = initCleanState())
 
-    let info: TestInfo
-    beforeEach(() => {
-      info = initInfo()
-      info.settings[Setting.MoraleLostMultiplier] = info.settings[Setting.MoraleLostMultiplier] * 0.02 / 0.024
-      info.settings[Setting.StrengthLostMultiplier] = info.settings[Setting.StrengthLostMultiplier] * 0.02 / 0.024
-    })
+  it('main and flanks (Imperator targeting)', () => {
+    getSettingsTest(state)[Setting.FixFlankTargeting] = true
+    addToReserveTest(state, SideType.A, [cohort, cohort])
+    addToReserveTest(state, SideType.B, [flankingCohort, flankingCohort, flankingCohort, flankingCohort])
 
-    it('main and flanks', () => {
-      setAttacker(info, 14, archer)
-      setAttacker(info, 15, archer)
-      setDefender(info, 13, light)
-      setDefender(info, 14, archer)
-      setDefender(info, 15, archer)
-      setDefender(info, 16, light)
-      const rolls = [[5, 0]]
-      const { attacker, defender } = initSide(1)
+    const expected = initExpected(1)
+    expected[1].A.targeting = [3, 2]
+    expected[1].B.targeting = [1, 0, 1, 0]
 
-      attacker[0][14] = attacker[0][15] = [archer.type, 964, 0.9983]
-
-      defender[0][13] = defender[0][16] = [light.type, 1000, 1.2]
-      defender[0][14] = defender[0][15] = [archer.type, 964, 0.9982]
-
-      testCombat(info, rolls, attacker, defender)
-    })
-
-    it('inner flank', () => {
-      info.settings[Setting.FixTargeting] = false
-      info.settings[Setting.DefenderAdvantage] = true
-
-      setAttacker(info, 13, archer)
-      setAttacker(info, 14, heavy)
-      setAttacker(info, 15, heavy)
-      setAttacker(info, 16, archer)
-      setDefender(info, 13, archer)
-      setDefender(info, 14, archer)
-      setDefender(info, 15, archer)
-      setDefender(info, 16, archer)
-      const rolls = [[5, 5], [0, 6]]
-      const { attacker, defender } = initSide(6)
-
-      attacker[0] = attacker[1] = attacker[2] = attacker[3] = attacker[4] = null as any
-      defender[0] = defender[1] = defender[2] = defender[3] = defender[4] = null as any
-
-      attacker[5][13] = attacker[5][16] = [archer.type, 832, 0.5106]
-      attacker[5][14] = attacker[5][15] = [heavy.type, 825, 0.7620]
-
-      defender[5][14] = [archer.type, 778, 0.3212]
-      defender[5][15] = [archer.type, 819, 0.4788]
-
-      testCombat(info, rolls, attacker, defender)
-    })
-
-    it('inner flank (fixed)', () => {
-      // Can't be tested in game.
-      info.settings[Setting.FixTargeting] = true
-      info.settings[Setting.DefenderAdvantage] = true
-
-      setAttacker(info, 13, archer)
-      setAttacker(info, 14, heavy)
-      setAttacker(info, 15, heavy)
-      setAttacker(info, 16, archer)
-      setDefender(info, 13, archer)
-      setDefender(info, 14, archer)
-      setDefender(info, 15, archer)
-      setDefender(info, 16, archer)
-      const rolls = [[5, 5], [0, 6]]
-      const { attacker, defender } = initSide(6)
-
-      attacker[0] = attacker[1] = attacker[2] = attacker[3] = attacker[4] = null as any
-      defender[0] = defender[1] = defender[2] = defender[3] = defender[4] = null as any
-
-      attacker[5][13] = attacker[5][16] = [archer.type, 832, 0.5106]
-      attacker[5][14] = attacker[5][15] = [heavy.type, 825, 0.7620]
-
-      defender[5][14] = defender[5][15] = [archer.type, 798, 0.4]
-
-      testCombat(info, rolls, attacker, defender)
-    })
+    testCombatWithDefaultRolls(state, expected)
   })
-}
+
+  it('main and flanks (EUIV targeting)', () => {
+    getSettingsTest(state)[Setting.FixFlankTargeting] = false
+    addToReserveTest(state, SideType.A, [cohort, cohort])
+    addToReserveTest(state, SideType.B, [flankingCohort, flankingCohort, flankingCohort, flankingCohort])
+
+    const expected = initExpected(1)
+    expected[1].A.targeting = [3, 2]
+    expected[1].B.targeting = [1, 0, 0, 0]
+
+    testCombatWithDefaultRolls(state, expected)
+  })
+
+  it('inner flank (Imperator targeting)', () => {
+    getSettingsTest(state)[Setting.FixFlankTargeting] = true
+    addToReserveTest(state, SideType.A, [flankingCohort, flankingCohort, flankingCohort, flankingCohort])
+    addToReserveTest(state, SideType.B, [weakCohort, weakCohort, weakCohort, weakCohort, weakCohort, weakCohort])
+
+    const expected = initExpected(2)
+    expected[2].A.targeting = [1, 0, 1, 0]
+    expected[2].B.targeting = [undefined, undefined, 1, 0]
+    expected[2].B.defeated = [weakCohort, weakCohort, weakCohort, weakCohort, weakCohort, weakCohort]
+
+    testCombatWithDefaultRolls(state, expected)
+  })
+
+  it('inner flank (EUIV targeting)', () => {
+    getSettingsTest(state)[Setting.FixFlankTargeting] = false
+    addToReserveTest(state, SideType.A, [flankingCohort, flankingCohort, flankingCohort, flankingCohort])
+    addToReserveTest(state, SideType.B, [weakCohort, weakCohort, weakCohort, weakCohort, weakCohort, weakCohort])
+
+    const expected = initExpected(2)
+    expected[2].A.targeting = [0, 0, 1, 0]
+    expected[2].B.targeting = [undefined, undefined, 1, 0]
+    expected[2].B.defeated = [weakCohort, weakCohort, weakCohort, weakCohort, weakCohort, weakCohort]
+
+    testCombatWithDefaultRolls(state, expected)
+  })
+
+  it('reinforcement', () => {
+    getSettingsTest(state)[Setting.CombatWidth] = 1
+    addToReserveTest(state, SideType.A, [cohort])
+    addToReserveTest(state, SideType.B, [weakCohort, weakCohort])
+
+    const expected = initExpected(1, 2)
+    expected[1].A.targeting = [1]
+    expected[1].B.targeting = [0]
+    expected[1].B.reserveFront = [weakCohort]
+    expected[1].B.defeated = [weakCohort]
+    expected[2].A.targeting = [0]
+    expected[2].B.targeting = [0]
+    expected[2].B.defeated = [weakCohort, weakCohort]
+
+    testCombatWithDefaultRolls(state, expected)
+  })
+
+  it('deployment after battle', () => {
+    getSettingsTest(state)[Setting.CombatWidth] = 1
+    addToReserveTest(state, SideType.A, [cohort])
+    addToReserveTest(state, SideType.B, [weakCohort])
+    createArmyTest(state, SideType.B, 2)
+    addToReserveTest(state, SideType.B, [weakCohort], 1)
+
+    const expected = initExpected(1, 2)
+    expected[1].A.targeting = [0]
+    expected[1].B.targeting = [0]
+    expected[1].B.defeated = [weakCohort]
+    expected[2].A.targeting = [undefined]
+    expected[2].B.targeting = [undefined]
+    expected[2].B.defeated = [weakCohort]
+    expected[2].attackerFlipped = true
+
+    testCombatWithDefaultRolls(state, expected)
+  })
+
+  it('deployment during battle', () => {
+    getSettingsTest(state)[Setting.CombatWidth] = 1
+    addToReserveTest(state, SideType.A, [cohort])
+    addToReserveTest(state, SideType.B, [weakCohort, weakCohort])
+    createArmyTest(state, SideType.B, 2)
+    addToReserveTest(state, SideType.B, [weakCohort], 1)
+
+    const expected = initExpected(1, 2)
+    expected[1].A.targeting = [1]
+    expected[1].B.targeting = [0]
+    expected[1].B.reserveFront = [weakCohort]
+    expected[1].B.defeated = [weakCohort]
+    expected[2].A.targeting = [1000]
+    expected[2].B.targeting = [0]
+    expected[2].B.reserveFront = [weakCohort]
+    expected[2].B.defeated = [weakCohort, weakCohort]
+
+    testCombatWithDefaultRolls(state, expected)
+  })
+
+  it('reinforcement with defender\'s advantage', () => {
+    getSettingsTest(state)[Setting.CombatWidth] = 1
+    getSettingsTest(state)[Setting.DefenderAdvantage] = true
+    addToReserveTest(state, SideType.A, [cohort])
+    addToReserveTest(state, SideType.B, [weakCohort, weakCohort])
+
+    const expected = initExpected(1, 2)
+    expected[1].A.targeting = [1]
+    expected[1].B.targeting = [0]
+    expected[1].B.reserveFront = [weakCohort]
+    expected[1].B.defeated = [weakCohort]
+    // Defender is untargetable right after reinforcing.
+    expected[2].A.targeting = [undefined]
+    expected[2].B.targeting = [0]
+    expected[2].B.defeated = [weakCohort]
+
+    testCombatWithDefaultRolls(state, expected)
+  })
+
+  const strengthBasedFlank = (amount: number, target: number) => {
+    getSettingsTest(state)[Setting.StrengthBasedFlank] = true
+    flankingCohort.baseValues![UnitAttribute.Strength] = { 'key': amount }
+    flankingCohort.baseValues![UnitAttribute.Morale] = { 'key': 10 }
+    addToReserveTest(state, SideType.A, [flankingCohort, flankingCohort, flankingCohort])
+    addToReserveTest(state, SideType.B, Array(30).fill(weakCohort))
+
+    const expected = initExpected(2)
+    expected[2].A.targeting = [target, 26, 25]
+    if (target === 25)
+      expected[2].B.defeated = [weakCohort, weakCohort, weakCohort, weakCohort, weakCohort]
+    else
+      expected[2].B.defeated = [weakCohort, weakCohort, weakCohort, weakCohort, weakCohort, weakCohort]
+
+    testCombatWithDefaultRolls(state, expected)
+  }
+
+  it('strength based flank 100%', () => {
+    strengthBasedFlank(1, 19)
+  })
+
+  it('strength based flank 75%', () => {
+    strengthBasedFlank(0.75, 23)
+  })
+
+  it('strength based flank 50%', () => {
+    strengthBasedFlank(0.5, 25)
+  })
+
+  it('strength based flank 25%', () => {
+    strengthBasedFlank(0.25, 25)
+  })
+
+  it('weak targeting', () => {
+    getSettingsTest(state)[Setting.DynamicTargeting] = true
+    getSettingsTest(state)[Setting.RetreatRounds] = 10
+    addToReserveTest(state, SideType.A, [cohort])
+    addToReserveTest(state, SideType.B, [weakCohort, weakCohort, weakCohort])
+
+    const expected = initExpected(1, 2, 3, 4)
+    expected[1].A.targeting = [2]
+    // Switches over to next target when the primary is weak.
+    expected[2].A.targeting = [0]
+    // Switches over to the next target.
+    expected[3].A.targeting = [1]
+    // Switches back to primary when all targets are weak.
+    expected[4].A.targeting = [2]
+
+    testCombatWithDefaultRolls(state, expected)
+  })
+})
 
 export default null

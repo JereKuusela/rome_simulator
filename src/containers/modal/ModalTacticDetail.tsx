@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { AppState, filterTactics, filterTacticTypes, getUnitImages, mergeUnitTypes } from 'state'
+import { AppState, getTactics, getUnitImages, mergeUnitTypes } from 'state'
 import TacticDetail from 'components/TacticDetail'
 import { Mode, TacticType, TacticValueType, ModalType } from 'types'
 import { setTacticValue, setTacticImage, setTacticMode, deleteTactic, closeModal, setTacticType } from 'reducers'
@@ -11,17 +11,16 @@ const CUSTOM_VALUE_KEY = 'Custom'
 
 class ModalTacticDetail extends Component<IProps> {
   render() {
-    const { type, images, tactics, tacticTypes, unitTypes } = this.props
+    const { tactic, images, tactics, unitTypes } = this.props
     return (
       <BaseModal basic type={ModalType.TacticDetail}>
         <ItemRemover onRemove={this.delete} />
         <TacticDetail
           tactics={tactics}
-          tacticTypes={tacticTypes}
           unitTypes={unitTypes}
           images={images}
           customValueKey={CUSTOM_VALUE_KEY}
-          tactic={tactics[type]}
+          tactic={tactic}
           onCustomValueChange={this.setValue}
           onTypeChange={this.setType}
           onImageChange={this.setImage}
@@ -54,13 +53,16 @@ class ModalTacticDetail extends Component<IProps> {
   }
 }
 
-const mapStateToProps = (state: AppState) => ({
-  type: state.ui.modals[ModalType.TacticDetail]?.type ?? TacticType.Bottleneck,
-  tactics: filterTactics(state),
-  tacticTypes: filterTacticTypes(state),
-  images: getUnitImages(state),
-  unitTypes: mergeUnitTypes(state)
-})
+const mapStateToProps = (state: AppState) => {
+  const type = state.ui.modals[ModalType.TacticDetail]?.type ?? TacticType.Bottleneck
+  return {
+    type,
+    tactic: state.tactics[type],
+    tactics: getTactics(state),
+    images: getUnitImages(state),
+    unitTypes: mergeUnitTypes(state)
+  }
+}
 
 const actions = { setTacticValue, setTacticImage, setTacticMode, deleteTactic, closeModal, setTacticType }
 

@@ -2,16 +2,13 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table, Input } from 'semantic-ui-react'
 
-import { AppState, getUnitPreferences, getFlankSize, getMode, getUnitList, getSiteSettings, getParticipant } from 'state'
+import { AppState, getUnitPreferences, getFlankSize, getMode, getUnitList, getSiteSettings, getParticipantSafely } from 'state'
 import { setFlankSize, setUnitPreference } from 'reducers'
-
-import { UnitPreferenceType, SideType, UnitType, Unit } from 'types'
-import DropdownUnit from 'components/Dropdowns/DropdownUnit'
 import { getUnitIcon } from 'data'
+import { UnitPreferenceType, SideType, UnitType, UnitDefinition } from 'types'
+import DropdownUnit from 'components/Dropdowns/DropdownUnit'
 
-/**
- * Table with row types and flank sizes.
- */
+/**Table with row types and flank sizes. */
 export default class PreferredUnitTypes extends Component {
   render() {
     return (
@@ -36,8 +33,8 @@ export default class PreferredUnitTypes extends Component {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          <ConnectedRow side={SideType.Attacker} />
-          <ConnectedRow side={SideType.Defender} />
+          <ConnectedRow side={SideType.A} />
+          <ConnectedRow side={SideType.B} />
         </Table.Body>
       </Table>
     )
@@ -71,7 +68,7 @@ class Row extends Component<IProps> {
   renderCell = (type: UnitPreferenceType) => {
     const { units, preferences, settings } = this.props
     const unit = preferences[type]
-    const empty = { type: UnitType.None, image: getUnitIcon(UnitType.None) } as Unit
+    const empty = { type: UnitType.None, image: getUnitIcon(UnitType.None) } as UnitDefinition
     return (
       <Table.Cell selectable onClick={() => this.setState({ modalType: type })}>
         <DropdownUnit value={unit ?? UnitType.None} values={[empty].concat(units)}
@@ -92,25 +89,26 @@ class Row extends Component<IProps> {
   }
 
   setFlankSize = (value: number) => {
-    const { setFlankSize, army, country } = this.props
-    setFlankSize(country, army, value)
+    const { setFlankSize, armyName, countryName } = this.props
+    setFlankSize(countryName, armyName, value)
   }
 
   setUnitPreference = (type: UnitPreferenceType, unitType: UnitType): void => {
-    const { setUnitPreference, army, country } = this.props
-    setUnitPreference(country, army, type, unitType)
+    const { setUnitPreference, armyName, countryName } = this.props
+    setUnitPreference(countryName, armyName, type, unitType)
   }
 }
 
 
 const mapStateToProps = (state: AppState, props: Props) => {
-  const participant = getParticipant(state, props.side)
+  const participant = getParticipantSafely(state, props.side, state.ui.selectedParticipantIndex[props.side])
+  const { countryName, armyName } = participant
   return {
-    units: getUnitList(state, true, participant.country, participant.army),
-    country: participant.country,
-    army: participant.army,
-    flankSize: getFlankSize(state, props.side),
-    preferences: getUnitPreferences(state, props.side),
+    units: getUnitList(state, true,  countryName, armyName),
+    countryName,
+    armyName,
+    flankSize: getFlankSize(state, countryName, armyName),
+    preferences: getUnitPreferences(state, countryName, armyName),
     mode: getMode(state),
     settings: getSiteSettings(state)
   }

@@ -7,7 +7,7 @@ import DetailTextRow from './Detail/DetailTextRow'
 import DetailInputRow from './Detail/DetailInputRow'
 import DetailDropdownRow from './Detail/DetailDropdownRow'
 import Headers from './Utils/Headers'
-import { Mode, ValuesType, Cohort, UnitType, TerrainType, UnitRole, UnitAttribute, UnitValueType, unitValueToString, Setting, CombatPhase, isAttributeEnabled, SiteSettings } from 'types'
+import { Mode, ValuesType, CohortDefinition, UnitType, TerrainType, UnitRole, UnitAttribute, UnitValueType, unitValueToString, Setting, CombatPhase, isAttributeEnabled, SiteSettings } from 'types'
 import { values } from 'utils'
 import { getValue, calculateValue, explain } from 'definition_values'
 import { toMaintenance } from 'formatters'
@@ -17,7 +17,7 @@ interface IProps {
   mode: Mode
   settings: SiteSettings
   customValueKey: string
-  unit: Cohort
+  unit: CohortDefinition
   unitTypes?: UnitType[]
   unitTypesWithParent?: UnitType[]
   showStatistics: boolean
@@ -50,7 +50,8 @@ export default class UnitDetail extends Component<IProps> {
   render() {
     const { unit, onTypeChange, onParentChange, onImageChange, onChangeDeployment, onIsLoyalToggle } = this.props
     const { terrainTypes, unitTypes, unitTypesWithParent, unitTypesAsDropdown, settings } = this.props
-    const { id, type, mode, parent, image, role, isLoyal, culture, tech } = unit
+    const { type, mode, parent, image, role, isLoyal, culture, tech } = unit
+    const id = 'test'
     return (
       <Table celled selectable unstackable>
         <Headers values={this.headers} />

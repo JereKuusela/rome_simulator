@@ -1,5 +1,5 @@
-import { Setting, UnitAttribute, SideType, Settings, ResourceLosses, WinRateProgress, CasualtiesProgress, ResourceLossesProgress, CombatParticipant, CombatCohorts, CombatUnitTypes, CombatFrontline, CombatDefeated, CombatNode } from 'types'
-import { doBattle } from './combat'
+import { Setting, UnitAttribute, SideType, ResourceLosses, WinRateProgress, CasualtiesProgress, ResourceLossesProgress, Cohorts, CombatNode, Side, Environment } from 'types'
+import { doCombatRound } from './combat'
 import { mapRange } from 'utils'
 import { deploy } from './deployment'
 
@@ -27,7 +27,7 @@ export const interrupt = () => interruptSimulation = true
  * @param defender Defender information.
  * @param terrains Current terrains.
  */
-export const calculateWinRate = (settings: Settings, progressCallback: (progress: WinRateProgress, casualties: CasualtiesProgress, losses: ResourceLossesProgress) => void, attacker: CombatParticipant, defender: CombatParticipant) => {
+export const calculateWinRate = (progressCallback: (progress: WinRateProgress, casualties: CasualtiesProgress, losses: ResourceLossesProgress) => void, field: Environment, attacker: Side, defender: Side) => {
   const progress: WinRateProgress = {
     calculating: true,
     attacker: 0.0,
@@ -41,6 +41,8 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
     rounds: {}
   }
   interruptSimulation = false
+
+  const settings = field.settings
 
   const lossesA = initResourceLosses()
   const lossesD = initResourceLosses()
@@ -79,7 +81,7 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
   }
 
   // Deployment is shared for each iteration.
-  deploy(attacker, defender, settings)
+  deploy(field, attacker, defender)
 
   // Overview of the algorithm:
   // Initial state is the first node.
@@ -105,11 +107,11 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
       const cohortsD = copyCohortState(node.cohortsD)
 
       const [rollA, rollD] = rolls[node.branchIndex]
-      attacker.dice = rollA
-      defender.dice = rollD
+      attacker.results.dice = rollA
+      defender.results.dice = rollD
       attacker.cohorts = cohortsA
       defender.cohorts = cohortsD
-      let result = doPhase(node.combatPhase, attacker, defender, settings)
+      let result = doPhase(field, attacker, defender, node.combatPhase)
 
       let combatPhase = node.combatPhase
       let branchIndex = node.branchIndex
@@ -132,19 +134,19 @@ export const calculateWinRate = (settings: Settings, progressCallback: (progress
           nodes.push({ cohortsA: copyCohortState(cohortsA), cohortsD: copyCohortState(cohortsD), branchIndex: 1, combatPhase, weightIndex })
         }
         const [rollA, rollD] = rolls[branchIndex]
-        attacker.dice = rollA
-        defender.dice = rollD
+        attacker.results.dice = rollA
+        defender.results.dice = rollD
         attacker.cohorts = cohortsA
         defender.cohorts = cohortsD
-        result = doPhase(combatPhase, attacker, defender, settings)
+        result = doPhase(field, attacker, defender, combatPhase)
       }
       sumState(currentA, attacker.cohorts)
       sumState(currentD, defender.cohorts)
       if (settings[Setting.CalculateCasualties])
         updateCasualties(casualties, weights[weightIndex], totalA, totalD, currentA, currentD)
       if (settings[Setting.CalculateResourceLosses]) {
-        calculateResourceLoss(attacker.cohorts.frontline, attacker.cohorts.defeated, weights[weightIndex], lossesA, lossesD, attacker.unitTypes, defender.unitTypes)
-        calculateResourceLoss(defender.cohorts.frontline, defender.cohorts.defeated, weights[weightIndex], lossesD, lossesA, defender.unitTypes, attacker.unitTypes)
+        //calculateResourceLoss(attacker.cohorts.frontline, attacker.cohorts.defeated, weights[weightIndex], lossesA, lossesD, attacker.unitTypes, defender.unitTypes)
+        //calculateResourceLoss(defender.cohorts.frontline, defender.cohorts.defeated, weights[weightIndex], lossesD, lossesA, defender.unitTypes, attacker.unitTypes)
       }
       updateProgress(progress, weights[weightIndex], result, currentA.strength === 0 || currentD.strength === 0)
     }
@@ -199,7 +201,7 @@ const getRolls = (minimum: number, maximum: number, halveTimes: number) => {
 /**
  * Custom clone function to only copy state and keep references to constant data same.
  */
-const copyCohortState = (status: CombatCohorts): CombatCohorts => ({
+const copyCohortState = (status: Cohorts): Cohorts => ({
   frontline: status.frontline.map(row => row.map(value => value ? { ...value } : null)),
   reserve: {
     front: status.reserve.front.map(value => ({ ...value })),
@@ -207,15 +209,14 @@ const copyCohortState = (status: CombatCohorts): CombatCohorts => ({
     support: status.reserve.support.map(value => ({ ...value }))
   },
   defeated: status.defeated.map(value => ({ ...value })),
-  leftFlank: status.leftFlank,
-  rightFlank: status.rightFlank
+  retreated: status.retreated.map(value => ({ ...value }))
 })
 
 const REPAIR_PER_MONTH = 0.1
 
 /**
  * Calculates repair and other resource losses.
- */
+
 const calculateResourceLoss = (frontline: CombatFrontline, defeated: CombatDefeated, amount: number, own: ResourceLosses, enemy: ResourceLosses, ownTypes: CombatUnitTypes, enemyTypes: CombatUnitTypes) => {
   for (let i = 0; i < frontline.length; i++) {
     for (let j = 0; j < frontline[i].length; j++) {
@@ -250,26 +251,27 @@ const calculateResourceLoss = (frontline: CombatFrontline, defeated: CombatDefea
     enemy.seizedRepairMaintenance += capture * enemyRepairCost
   }
 }
-
+ */
 
 type Winner = SideType | null | undefined
 
 /**
  * Simulates one dice roll phase.
  */
-const doPhase = (phase: number, attacker: CombatParticipant, defender: CombatParticipant, settings: Settings) => {
+const doPhase = (field: Environment, attacker: Side, defender: Side, phase: number) => {
   let winner: Winner = undefined
-  const phaseLength = settings[Setting.PhaseLength]
+  const phaseLength = field.settings[Setting.PhaseLength]
   const maxRound = phase * phaseLength
   let round = (phase - 1) * phaseLength + 1
   for (; round <= maxRound; round++) {
-    doBattle(attacker, defender, false, settings, round)
-    if (!attacker.alive && !defender.alive)
+    field.day = round
+    doCombatRound(field, attacker, defender, false)
+    if (!attacker.armiesRemaining && !defender.armiesRemaining)
       winner = null
-    else if (!attacker.alive)
-      winner = SideType.Defender
-    else if (!defender.alive)
-      winner = SideType.Attacker
+    else if (!attacker.armiesRemaining)
+      winner = SideType.B
+    else if (!defender.armiesRemaining)
+      winner = SideType.A
     // Custom check to prevent round going over phase limit.
     if (winner !== undefined || round === maxRound)
       break
@@ -287,7 +289,7 @@ type State = {
 /**
  * Counts total morale and strength of units.
  */
-const sumState = (state: State, units: CombatCohorts) => {
+const sumState = (state: State, units: Cohorts) => {
   state.strength = 0
   state.morale = 0
   for (let i = 0; i < units.frontline.length; i++) {
@@ -327,9 +329,9 @@ const sumState = (state: State, units: CombatCohorts) => {
 const updateProgress = (progress: WinRateProgress, amount: number, result: { winner: Winner, round: number }, stackWipe: boolean) => {
   const { winner, round } = result
   progress.progress += amount
-  if (winner === SideType.Attacker)
+  if (winner === SideType.A)
     progress.attacker += amount
-  else if (winner === SideType.Defender)
+  else if (winner === SideType.B)
     progress.defender += amount
   else if (winner === null)
     progress.draws += amount

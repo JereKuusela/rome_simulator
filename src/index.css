@@ -93,9 +93,11 @@ code {
   overflow: hidden;
 }
 
+/* Default color is hardly visible. */
 .ui.table td.positive {
   background: rgba(230, 255, 230, 1)!important
 }
+/* Default color is hardly visible. */
 .ui.table tr td.selectable.positive:hover {
   background: rgba(200, 255, 200, 1)!important
 }

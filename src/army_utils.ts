@@ -1,26 +1,21 @@
-import { Cohorts, Mode, UnitDefinitionValues, ArmyType, SideType, UnitDefinitions, UnitType, Units, Unit, CombatCohorts, SiteSettings } from 'types'
+import { Mode, UnitValues, ArmyPart, SideType, UnitsData, UnitType, UnitDefinitions, UnitDefinition, Cohorts, SiteSettings, ReserveDefinition, CohortDefinition, CohortData } from 'types'
 import { mergeValues, shrinkValues } from 'definition_values'
 import { map, filter } from 'utils'
 import { applyDynamicAttributes } from 'managers/units'
 
 /** Merges cohort definitions with their units to get actual cohorts. */
-export const convertCohortDefinitions = (settings: SiteSettings, cohorts: Cohorts, units: Units): Cohorts => {
-  units = shrinkUnits(units)
-  return {
-    frontline: cohorts.frontline.map(row => row.map(cohort => cohort && applyDynamicAttributes(mergeValues(units[cohort.type], cohort), settings))),
-    reserve: cohorts.reserve.map(cohort => cohort && applyDynamicAttributes(mergeValues(units[cohort.type], cohort), settings)),
-    defeated: cohorts.defeated.map(cohort => cohort && applyDynamicAttributes(mergeValues(units[cohort.type], cohort), settings))
-  }
-}
+export const convertReserveDefinitions = (settings: SiteSettings, reserve: ReserveDefinition, units: UnitDefinitions): ReserveDefinition => reserve.map(cohort => convertCohortDefinition(settings, cohort, units))
+
+export const convertCohortDefinition = (settings: SiteSettings, cohort: CohortData, units: UnitDefinitions): CohortDefinition => applyDynamicAttributes(mergeValues(units[cohort.type], cohort), settings)
 
 /** Shrinks definition values under name of the unit, preventing values being overwritten when merging definitions. */
-export const shrinkUnits = <T extends UnitDefinitions | Units>(definitions: T) => map(definitions, unit => shrinkValues(unit, unit.type)) as T
+export const shrinkUnits = <T extends UnitsData | UnitDefinitions>(definitions: T) => map(definitions, unit => shrinkValues(unit, unit.type)) as T
 
-export const convertUnitDefinitions = (settings: SiteSettings, definitions: UnitDefinitions, general: UnitDefinitionValues): Units => {
+export const convertUnitDefinitions = (settings: SiteSettings, definitions: UnitsData, general: UnitValues): UnitDefinitions => {
   return map(definitions, (_, type) => convertUnitDefinition(settings, definitions, shrinkUnits(definitions), general, type))
 }
 
-export const convertUnitDefinition = (settings: SiteSettings, definitions: UnitDefinitions, parents: UnitDefinitions, general: UnitDefinitionValues, type: UnitType): Unit => {
+export const convertUnitDefinition = (settings: SiteSettings, definitions: UnitsData, parents: UnitsData, general: UnitValues, type: UnitType): UnitDefinition => {
   let unit = mergeValues(definitions[type], general[type])
   let parent = unit.parent
   const merged = [type]
@@ -29,7 +24,7 @@ export const convertUnitDefinition = (settings: SiteSettings, definitions: UnitD
     unit = mergeValues(mergeValues(unit, parents[parent]), general[parent])
     parent = parents[parent]?.parent
   }
-  return applyDynamicAttributes(unit, settings) as Unit
+  return applyDynamicAttributes(unit, settings) as UnitDefinition
 }
 
 /**
@@ -37,21 +32,16 @@ export const convertUnitDefinition = (settings: SiteSettings, definitions: UnitD
  * @param mode
  * @param definitions 
  */
-export const filterUnitDefinitions = (mode: Mode, definitions: Units): Units => filter(definitions, unit => unit.mode === mode)
+export const filterUnitDefinitions = (mode: Mode, definitions: UnitDefinitions): UnitDefinitions => filter(definitions, unit => unit.mode === mode)
 
-let unitId = 0
-/**
- * Returns a new id.
- * This is only meant for non-persisted ids because any existing ids are not considered.
- */
-export const getNextId = () => ++unitId
-
-export const getArmyPart = (units: CombatCohorts, type: ArmyType) => {
-  if (type === ArmyType.Frontline)
+export const getArmyPart = (units: Cohorts, type: ArmyPart) => {
+  if (type === ArmyPart.Frontline)
     return units.frontline
-  if (type === ArmyType.Reserve)
+  if (type === ArmyPart.Reserve)
     return [units.reserve.front.concat(units.reserve.flank).concat(units.reserve.support)]
-  return [units.defeated]
+  if (type === ArmyPart.Defeated)
+    return [units.defeated]
+  return [units.retreated]
 }
 
-export const getOpponent = (side: SideType) => side === SideType.Attacker ? SideType.Defender : SideType.Attacker
+export const getOpponent = (side: SideType) => side === SideType.A ? SideType.B : SideType.A

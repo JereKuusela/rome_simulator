@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
-import { AppState, mergeUnitTypes, filterTerrainTypes, getUnitImages, getMode, getCountries, getSiteSettings, getUnits, getSelectedArmy } from 'state'
+import { AppState, mergeUnitTypes, getTerrainTypes, getUnitImages, getMode, getCountries, getSiteSettings, getUnitDefinitions, getSelectedArmy } from 'state'
 import { createUnit, deleteUnit, changeUnitType, changeWeariness, openModal } from 'reducers'
 import UnitDefinitions from 'components/UnitDefinitions'
 import CountryManager from 'containers/CountryManager'
@@ -80,10 +80,10 @@ class Definitions extends Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  units: getAllUnitList(getUnits(state), getMode(state)),
+  units: getAllUnitList(getUnitDefinitions(state), getMode(state)),
   images: getUnitImages(state),
   unitTypes: mergeUnitTypes(state),
-  terrains: filterTerrainTypes(state),
+  terrains: getTerrainTypes(state),
   mode: getMode(state),
   country: state.settings.country,
   army: getSelectedArmy(state),

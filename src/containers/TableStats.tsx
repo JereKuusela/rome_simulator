@@ -3,10 +3,10 @@ import { connect } from 'react-redux'
 import { Image, Table } from 'semantic-ui-react'
 
 import IconEmpty from 'images/empty.png'
-import { SideType, UnitType, UnitAttribute, isAttributeEnabled, CombatCohorts, CombatCohort } from 'types'
+import { SideType, UnitType, UnitAttribute, isAttributeEnabled, Cohorts, Cohort } from 'types'
 import { strengthToValue, toNumber } from 'formatters'
 import { getImage, round, sumArr } from 'utils'
-import { AppState, getCurrentCombat, getMode, getBattle, getSiteSettings } from 'state'
+import { AppState, getCohorts, getMode, getBattle, getSiteSettings } from 'state'
 import { flatten, uniq } from 'lodash'
 import AttributeImage from 'components/Utils/AttributeImage'
 
@@ -21,16 +21,16 @@ class TableStats extends Component<IProps> {
   render() {
     return (
       <>
-        {this.renderArmy(SideType.Attacker, this.props.cohortsA)}
-        {this.renderArmy(SideType.Defender, this.props.cohortsD)}
+        {this.renderArmy(SideType.A, this.props.cohortsA)}
+        {this.renderArmy(SideType.B, this.props.cohortsD)}
       </>
     )
   }
 
-  renderArmy = (side: SideType, cohorts: CombatCohorts) => {
+  renderArmy = (side: SideType, cohorts: Cohorts) => {
     const { mode, settings } = this.props
     const flatten = this.flatten(cohorts)
-    const types = uniq(flatten.map(cohort => cohort.definition.type))
+    const types = uniq(flatten.map(cohort => cohort.properties.type))
     const rows = types.map(type => this.renderRow(cohorts, type)).filter(row => row)
     return (
       <Table celled unstackable key={side} singleLine>
@@ -88,12 +88,12 @@ class TableStats extends Component<IProps> {
     )
   }
 
-  renderRow = (cohorts: CombatCohorts, type: UnitType) => {
+  renderRow = (cohorts: Cohorts, type: UnitType) => {
     const flatten = this.flatten(cohorts, type)
     const count = flatten.length
     if (count === 0)
       return null
-    const image = getImage(flatten[0].definition)
+    const image = getImage(flatten[0].properties)
     return (
       <Table.Row key={type}>
         <Table.Cell width='4'>
@@ -105,15 +105,15 @@ class TableStats extends Component<IProps> {
     )
   }
 
-  renderCells = (cohorts: CombatCohort[]) => {
+  renderCells = (cohorts: Cohort[]) => {
     const { mode } = this.props
     return (
       <>
         <Table.Cell width='3'>
-          {strengthToValue(mode, this.sum(cohorts, cohort => cohort[UnitAttribute.Strength]))} / {strengthToValue(mode, this.sum(cohorts, cohort => cohort.definition.maxStrength))}
+          {strengthToValue(mode, this.sum(cohorts, cohort => cohort[UnitAttribute.Strength]))} / {strengthToValue(mode, this.sum(cohorts, cohort => cohort.properties.maxStrength))}
         </Table.Cell>
         <Table.Cell width='3'>
-          {round(this.sum(cohorts, cohort => cohort[UnitAttribute.Morale]), 100.0)} / {round(this.sum(cohorts, cohort => cohort.definition.maxMorale), 100.0)}
+          {round(this.sum(cohorts, cohort => cohort[UnitAttribute.Morale]), 100.0)} / {round(this.sum(cohorts, cohort => cohort.properties.maxMorale), 100.0)}
         </Table.Cell>
         <Table.Cell width='3'>
           {strengthToValue(mode, this.sum(cohorts, cohort => cohort.state.totalStrengthDealt))}
@@ -123,7 +123,7 @@ class TableStats extends Component<IProps> {
         </Table.Cell>
         {this.renderCell(cohorts, UnitAttribute.Cost)}
         <Table.Cell width='3'>
-          {round(this.sum(cohorts, cohort => cohort.definition[UnitAttribute.Cost] * cohort.definition[UnitAttribute.Maintenance]), 100.0)}
+          {round(this.sum(cohorts, cohort => cohort.properties[UnitAttribute.Cost] * cohort.properties[UnitAttribute.Maintenance]), 100.0)}
         </Table.Cell>
         {this.renderCell(cohorts, UnitAttribute.AttritionWeight)}
         {this.renderCell(cohorts, UnitAttribute.FoodConsumption)}
@@ -132,7 +132,7 @@ class TableStats extends Component<IProps> {
     )
   }
 
-  renderCell = (cohorts: CombatCohort[], attribute: UnitAttribute, formatter?: (cohorts: CombatCohort[], attribute: UnitAttribute) => string) => {
+  renderCell = (cohorts: Cohort[], attribute: UnitAttribute, formatter?: (cohorts: Cohort[], attribute: UnitAttribute) => string) => {
     const { settings } = this.props
     if (isAttributeEnabled(attribute, settings)) {
       return (
@@ -144,30 +144,30 @@ class TableStats extends Component<IProps> {
     return null
   }
 
-  defaultFormatter = (cohorts: CombatCohort[], attribute: UnitAttribute) => {
-    return round(this.sum(cohorts, cohort => cohort.definition[attribute]), 100.0)
+  defaultFormatter = (cohorts: Cohort[], attribute: UnitAttribute) => {
+    return round(this.sum(cohorts, cohort => cohort.properties[attribute]), 100.0)
   }
 
-  storageFormatter = (cohorts: CombatCohort[]) => {
-    const storage = this.sum(cohorts, cohort => cohort.definition[UnitAttribute.FoodStorage])
-    const consumption = this.sum(cohorts, cohort => cohort.definition[UnitAttribute.FoodConsumption]) || 1.0
+  storageFormatter = (cohorts: Cohort[]) => {
+    const storage = this.sum(cohorts, cohort => cohort.properties[UnitAttribute.FoodStorage])
+    const consumption = this.sum(cohorts, cohort => cohort.properties[UnitAttribute.FoodConsumption]) || 1.0
     return `${toNumber(storage / consumption / 12)} years (${toNumber(storage)})`
   }
 
-  sum = (merged: CombatCohort[], getAttribute: (cohort: CombatCohort) => number): number => sumArr(merged, getAttribute)
+  sum = (merged: Cohort[], getAttribute: (cohort: Cohort) => number): number => sumArr(merged, getAttribute)
 
   // Flattens units to a single list. Also filters temporary 'defeated' units because they are copies of another unit.
-  flatten = (cohorts: CombatCohorts, type?: UnitType): CombatCohort[] => (
+  flatten = (cohorts: Cohorts, type?: UnitType): Cohort[] => (
     cohorts.reserve.front.filter(cohort => this.filter(cohort, type)).concat(cohorts.reserve.flank.filter(cohort => this.filter(cohort, type))).concat(cohorts.reserve.support.filter(cohort => this.filter(cohort, type)))
-      .concat(cohorts.defeated.filter(cohort => this.filter(cohort, type)).concat(flatten(cohorts.frontline).filter(cohort => this.filter(cohort, type)) as CombatCohort[]))
+      .concat(cohorts.defeated.filter(cohort => this.filter(cohort, type)).concat(flatten(cohorts.frontline).filter(cohort => this.filter(cohort, type)) as Cohort[]))
   )
 
-  filter = (cohort: CombatCohort | null, type?: UnitType) => cohort && !cohort.state.isDefeated && (!type || cohort.definition.type === type)
+  filter = (cohort: Cohort | null, type?: UnitType) => cohort && !cohort.state.isDefeated && (!type || cohort.properties.type === type)
 }
 
 const mapStateToProps = (state: AppState) => ({
-  cohortsA: getCurrentCombat(state, SideType.Attacker),
-  cohortsD: getCurrentCombat(state, SideType.Defender),
+  cohortsA: getCohorts(state, SideType.A),
+  cohortsD: getCohorts(state, SideType.B),
   mode: getMode(state),
   settings: getSiteSettings(state),
   timestamp: getBattle(state).timestamp

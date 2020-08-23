@@ -1,0 +1,47 @@
+combat_name = {
+	fast_combat = no
+	cleanup_combat = yes
+	random = no
+	attacker = { 
+		location = 2
+		archers = 10
+		heavy_infantry = 10
+		horse_archers = 5
+		primary = archers
+		secondary = heavy_infantry
+		flank = horse_archers
+		flank_size = 5
+		random_traits = no
+	}
+	attacker = { 
+		location = 2
+		heavy_infantry = 5
+		horse_archers = 5
+		primary = heavy_infantry
+		secondary = archers
+		flank = horse_archers
+		flank_size = 2
+		random_traits = no
+	}
+	defender = { 
+		location = 2
+		archers = 10
+		heavy_infantry = 10
+		horse_archers = 5
+		primary = archers
+		secondary = heavy_infantry
+		flank = horse_archers
+		flank_size = 5
+		random_traits = no
+	}
+	defender = { 
+		location = 2
+		heavy_infantry = 5
+		horse_archers = 5
+		primary = heavy_infantry
+		secondary = archers
+		flank = horse_archers
+		flank_size = 2
+		random_traits = no
+	}
+}

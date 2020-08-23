@@ -2,14 +2,13 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table } from 'semantic-ui-react'
 
-import { SideType, UnitRole, CountryName, UnitType, UnitAttribute, filterAttributes, Setting, Unit, Mode, CountryAttribute, ArmyName, CultureType } from 'types'
+import { SideType, UnitRole, CountryName, UnitType, UnitAttribute, filterAttributes, Setting, UnitDefinition, Mode, CountryAttribute, ArmyName, CultureType } from 'types'
 import { getImage, mapRange } from 'utils'
-import { AppState, getUnitPreferences, getCountry, getMode, getCombatParticipant, getArmyDefinitionWithOverriddenUnits, getSiteSettings } from 'state'
+import { AppState, getUnitPreferences, getCountry, getMode, getOverridenReserveDefinitions, getSiteSettings, getUnitDefinitions } from 'state'
 import { addToReserve, removeFromReserve, setUnitPreference, selectCulture } from 'reducers'
-import { getArchetypes2, getActualUnits2, getLatestUnits2, getChildUnits2, getRootUnit } from 'managers/army'
+import { getArchetypes, getActualUnits, getLatestUnits, getChildUnits, getRootUnit } from 'managers/army'
 import UnitValueInput from './UnitValueInput'
 import AttributeImage from 'components/Utils/AttributeImage'
-import { getNextId } from 'army_utils'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 import { applyLosses } from 'managers/units'
 import DropdownArchetype from 'components/Dropdowns/DropdownArchetype'
@@ -18,8 +17,8 @@ import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 
 type Props = {
   side: SideType
-  country: CountryName
-  army: ArmyName
+  countryName: CountryName
+  armyName: ArmyName
   onRowClick: (country: CountryName, army: ArmyName, type: UnitType) => void
 }
 
@@ -43,7 +42,7 @@ class TableUnitTypes extends Component<IProps> {
   }
 
   checkPreference = (role: UnitRole) => {
-    const { units, preferences, tech, country, army } = this.props
+    const { units, preferences, tech, countryName: country, armyName: army } = this.props
     const preference = preferences[role]
     const techRequirement = preference && units[preference] && units[preference].tech
     if (techRequirement && techRequirement > tech) {
@@ -59,7 +58,7 @@ class TableUnitTypes extends Component<IProps> {
 
   render() {
     const { side, settings, units, mode } = this.props
-    const unitList = settings[Setting.Tech] ? getArchetypes2(units, mode) : getActualUnits2(units, mode)
+    const unitList = settings[Setting.Tech] ? getArchetypes(units, mode) : getActualUnits(units, mode)
     return (
       <Table celled key={side} singleLine>
         <Table.Header>
@@ -90,17 +89,17 @@ class TableUnitTypes extends Component<IProps> {
     )
   }
 
-  renderRoleRow = (role: UnitRole, archetypes: Unit[]) => {
+  renderRoleRow = (role: UnitRole, archetypes: UnitDefinition[]) => {
     // List of archetypes -> get archetype -> get image
-    const { units, setUnitPreference, country, army, preferences, tech, settings, onRowClick } = this.props
+    const { units, setUnitPreference, countryName: country, armyName: army, preferences, tech, settings, onRowClick } = this.props
     const archetype = archetypes.find(unit => unit.role === role)
     const preference = preferences[role]
     if (!archetype || !preference)
       return null
     const image = getImage(archetype)
-    const latestType = getLatestUnits2(units, tech)
+    const latestType = getLatestUnits(units, tech)
     const latest = { ...units[latestType[role] || archetype.type], type: UnitType.Latest }
-    const children = [latest].concat(...getChildUnits2(units, tech, archetype.type))
+    const children = [latest].concat(...getChildUnits(units, tech, archetype.type))
     return (
       <>
         <Table.Row key={role}>
@@ -128,8 +127,8 @@ class TableUnitTypes extends Component<IProps> {
     )
   }
 
-  renderUnitRow = (unit: Unit) => {
-    const { country, settings, army, onRowClick } = this.props
+  renderUnitRow = (unit: UnitDefinition) => {
+    const { countryName: country, settings, armyName: army, onRowClick } = this.props
     if (!unit)
       return null
     const image = getImage(unit)
@@ -153,8 +152,8 @@ class TableUnitTypes extends Component<IProps> {
     )
   }
 
-  renderRootUnitRow = (unit: Unit) => {
-    const { country, settings, army, onRowClick, culture } = this.props
+  renderRootUnitRow = (unit: UnitDefinition) => {
+    const { countryName: country, settings, armyName: army, onRowClick, culture } = this.props
     if (!unit)
       return null
     const image = getImage(unit)
@@ -192,10 +191,10 @@ class TableUnitTypes extends Component<IProps> {
   }
 
   updateReserve = (type: UnitType, amount: number) => {
-    const { country, addToReserve, army, removeFromReserve, reserve, weariness } = this.props
+    const { countryName: country, addToReserve, armyName: army, removeFromReserve, reserve, weariness } = this.props
     const previous = reserve.filter(cohort => cohort.type === type).length
     if (amount > previous) {
-      const units = mapRange(amount - previous, _ => ({ id: getNextId(), type, image: '' }))
+      const units = mapRange(amount - previous, _ => ({ type, image: '' }))
       addToReserve(country, army, applyLosses(weariness, units))
     }
     if (amount < previous) {
@@ -210,16 +209,19 @@ class TableUnitTypes extends Component<IProps> {
   }
 }
 
-const mapStateToProps = (state: AppState, props: Props) => ({
-  preferences: getUnitPreferences(state, props.side),
-  reserve: getArmyDefinitionWithOverriddenUnits(state, props.country, props.army, true).reserve,
-  units: getCombatParticipant(state, props.side).definitions,
-  culture: getCountry(state, props.country).culture,
-  tech: getCountry(state, props.country)[CountryAttribute.TechLevel],
-  settings: getSiteSettings(state),
-  weariness: getCountry(state, props.country).weariness,
-  mode: getMode(state)
-})
+const mapStateToProps = (state: AppState, props: Props) => {
+  const { countryName, armyName } = props
+  return {
+    preferences: getUnitPreferences(state, countryName, armyName),
+    reserve: getOverridenReserveDefinitions(state, countryName, armyName, true),
+    units: getUnitDefinitions(state, countryName, armyName),
+    culture: getCountry(state, countryName).culture,
+    tech: getCountry(state, countryName)[CountryAttribute.TechLevel],
+    settings: getSiteSettings(state),
+    weariness: getCountry(state, countryName).weariness,
+    mode: getMode(state)
+  }
+}
 
 const actions = { addToReserve, removeFromReserve, setUnitPreference, selectCulture }
 

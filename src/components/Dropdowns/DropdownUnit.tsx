@@ -1,24 +1,24 @@
 import React, { Component } from 'react'
-import { Unit, UnitType, SiteSettings } from 'types'
+import { UnitDefinition, UnitType, SiteSettings } from 'types'
 import DropdownTable from './DropdownTable'
 import LabelItem from 'components/Utils/LabelUnit'
 
 type IProps = {
   value: UnitType
-  values: Unit[]
+  values: UnitDefinition[]
   onSelect: (type: UnitType) => void
   settings: SiteSettings
 }
 
 export default class DropdownUnit extends Component<IProps> {
 
-  getContent = (unit: Unit) => ([
+  getContent = (unit: UnitDefinition) => ([
     <LabelItem item={unit} />
   ])
 
-  isActive = (item: Unit) => item.type === this.props.value
+  isActive = (item: UnitDefinition) => item.type === this.props.value
 
-  getValue = (item: Unit) => item.type
+  getValue = (item: UnitDefinition) => item.type
 
 
   headers = []

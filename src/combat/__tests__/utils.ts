@@ -1,218 +1,134 @@
-import { getDefaultUnits, getDefaultTactics, getDefaultTerrains, getDefaultLandSettings, getDefaultSiteSettings, getDefaultParticipant, getDefaultArmy, getDefaultUnit, getDefaultSide } from 'data'
-import { map, mapRange, resize, toObj, values } from 'utils'
-import { mergeValues } from 'definition_values'
-import { Mode, CountryName, Participant, TerrainDefinition, TacticType, Setting, SideType, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, Settings, Cohort, CombatPhase, CultureType, General, GeneralAttribute, UnitPreferences, ArmyForCombatConversion, CombatCohort, CombatParticipant, UnitRole, DisciplineValue, Selections, Side } from 'types'
-import { doBattle, deploy, reinforce } from 'combat'
-import { convertParticipant } from 'managers/battle'
-import { removeDefeated } from 'combat/combat_utils'
-
-const unitDefinitions = map(getDefaultUnits('' as CultureType), unit => mergeValues(unit, getDefaultUnit(UnitType.Land)))
-export const getDefinitions = () => ({ [CountryName.Country1]: unitDefinitions, [CountryName.Country2]: unitDefinitions })
-const tactics = getDefaultTactics()
-const terrains = getDefaultTerrains()
+import { getDefaultTactics, getDefaultTerrains, getDefaultCountryDefinitions, getDefaultBattle, getDefaultSettings } from 'data'
+import { mapRange, toObj, values, map } from 'utils'
+import { Mode, CountryName, Setting, SideType, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, CombatPhase, UnitPreferences, Cohort, UnitRole, CountryDefinitions, ArmyName, ModeState, SettingsAndOptions, Side, Settings, TacticDefinitions, TerrainDefinitions, CohortData, Environment, DisciplineValue, CohortDefinition, TacticType, GeneralAttribute, GeneralValueType } from 'types'
+import { doCombatRound } from 'combat'
+import { convertSides, getCombatField } from 'state'
+import { addToReserve, selectTactic, setGeneralAttribute } from 'managers/army'
+import { createArmy } from 'managers/countries'
+import { flatten } from 'lodash'
+import { getLeadingArmy, selectTerrain } from 'managers/battle'
 
 /**
  * Everything the combat tests might need to make tests convenient to write.
  */
-export interface TestInfo {
-  round: number
-  attacker: Participant
-  defender: Participant
-  sideA: Side
-  sideD: Side
-  armyA: ArmyForCombatConversion
-  armyD: ArmyForCombatConversion
-  terrains: TerrainDefinition[]
-  settings: Settings
+export interface TestState {
+  battle: ModeState
+  settings: SettingsAndOptions
+  countries: CountryDefinitions
+  tactics: TacticDefinitions
+  terrains: TerrainDefinitions
 }
-
-export interface ExpectedTypes {
-  front?: (UnitType | null)[]
-  back?: (UnitType | null)[]
-  reserveFront?: UnitType[]
-  reserveFlank?: UnitType[]
-  reserveSupport?: UnitType[]
-  defeated?: UnitType[]
-}
-
 /**
- * Returns a clean combat state for tests.
+ * Returns initial state for a test.
  */
-export const initInfo = (singleRow: boolean = true) => {
-  const settings = { ...getDefaultLandSettings(), ...getDefaultSiteSettings(), [Setting.Precision]: 100000 }
-  const general = (): General => ({
-    enabled: true,
-    selections: {} as Selections,
-    baseValues: {} as any,
-    extraValues: {} as any,
-    totalValues: {
-      [GeneralAttribute.Martial]: 0,
-      [GeneralAttribute.Maneuver]: 0,
-      [CombatPhase.Default]: 0,
-      [CombatPhase.Fire]: 0,
-      [CombatPhase.Shock]: 0
-    }
-  })
-  const army = (): ArmyForCombatConversion => ({
-    ...getDefaultArmy(Mode.Land),
-    // Frontline must be cloned to prevent tests mutating the source.
-    frontline: singleRow ?  [Array(30).fill(null)] : [Array(30).fill(null), Array(30).fill(null)],
-    reserve: [],
-    defeated: [],
-    unitPreferences: getUnitPreferences(),
-    definitions: toObj(everyType, type => type, type => ({ type })) as any,
-    general: general(),
-    flankRatio: 0,
-    flankSize: 5,
-    tactic: tactics[TacticType.Envelopment]
-  })
+export const initState = (): TestState => {
   return {
-    attacker: getDefaultParticipant(CountryName.Country1, Mode.Land),
-    defender: getDefaultParticipant(CountryName.Country2, Mode.Land),
-    sideA: getDefaultSide(SideType.Attacker, CountryName.Country1, Mode.Land),
-    sideD: getDefaultSide(SideType.Defender, CountryName.Country1, Mode.Land),
-    armyA: army(),
-    armyD: army(),
-    round: 1,
-    terrains: [],
-    settings
-  }
-}
-
-export const createCohort = (type: UnitType) => ({
-  type,
-  id: 1,
-  image: '',
-  mode: Mode.Land,
-  role: UnitRole.Front,
-  baseValues: {
-    ...toObj(values(UnitType), type => type, () => ({ 'key': 0 })),
-    ...toObj(values(UnitAttribute), type => type, () => ({ 'key': 0 })),
-    ...toObj(values(TerrainType), type => type, () => ({ 'key': 0 })),
-    ...toObj(values(CombatPhase), type => type, () => ({ 'key': 0 }))
-  }
-})
-
-const errorPrefix = (identifier: string | number, side: SideType, index: number) => (typeof identifier === 'number' ? 'Round ' : '') + identifier + ', ' + side + ' ' + index + ': '
-
-const verifyFast = (identifier: string | number, side: SideType, index: number, unit: CombatCohort | null, strength: number, morale: number) => {
-  expect(unit).toBeTruthy()
-  if (!unit)
-    return
-  const unitStrength = Math.floor(1000 * unit[UnitAttribute.Strength])
-  try {
-    expect(Math.floor(unitStrength)).toEqual(strength)
-  }
-  catch (e) {
-    throw new Error(errorPrefix(identifier, side, index) + 'Strength ' + unitStrength + ' should be ' + strength)
-  }
-  const unitMorale = unit[UnitAttribute.Morale]
-  try {
-    expect(Math.abs(unitMorale - 2 * morale)).toBeLessThan(0.002)
-  }
-  catch (e) {
-    throw new Error(errorPrefix(identifier, side, index) + 'Morale ' + unitMorale + ' should be ' + 2 * morale)
+    battle: getDefaultBattle(1),
+    settings: getDefaultSettings(),
+    countries: getDefaultCountryDefinitions(),
+    terrains: getDefaultTerrains(),
+    tactics: getDefaultTactics()
   }
 }
 
 /**
- * Verifies that the unit has a correct type.
- * @param identifier Round number or other identifier for debugging purposes.
- * @param side Side for debugging purposes.
- * @param index Unit location of frontline for debugging purposes.
- * @param unit Unit to check.
- * @param type Expected type.
- * @param message Custom message on error.
+ * Returns a clean state for a test. All mechanics turned off.
  */
-export const verifyType = (identifier: string | number, side: SideType, index: number, unit: { type: UnitType } | null | undefined, type: UnitType | null, message: string = '') => {
-  if (type) {
-    try {
-      expect(unit).toBeTruthy()
-    }
-    catch (e) {
-      throw new Error(errorPrefix(identifier, side, index) + 'Unit should exist')
-    }
-    try {
-      expect(unit!.type + message).toEqual(type + message)
-    }
-    catch (e) {
-      throw new Error(errorPrefix(identifier, side, index) + 'Type ' + unit!.type + ' should be ' + type)
-    }
-
-  }
-  else {
-    try {
-      expect(unit).toBeFalsy()
-    }
-    catch (e) {
-      throw new Error(errorPrefix(identifier, side, index) + 'Unit shouldn\'t exist')
-    }
+export const initCleanState = (): TestState => {
+  const settings = getDefaultSettings()
+  settings.siteSettings = map(settings.siteSettings, item => typeof item === 'boolean' ? false : item) as Settings
+  settings.siteSettings[Setting.MoraleHitForNonSecondaryReinforcement] = 0
+  settings.siteSettings[Setting.FixFlankTargeting] = true
+  settings.siteSettings[Setting.CustomDeployment] = true
+  settings.siteSettings[Setting.AttributeDiscipline] = DisciplineValue.Off
+  return {
+    battle: getDefaultBattle(1),
+    settings,
+    countries: getDefaultCountryDefinitions(),
+    terrains: getDefaultTerrains(),
+    tactics: getDefaultTactics()
   }
 }
-/**
- * Sets rolls for combat.
- */
-export const setRolls = (info: TestInfo, rollA: number, rollD: number) => {
-  info.sideA = { ...info.sideA, dice: rollA }
-  info.sideD = { ...info.sideD, dice: rollD }
-}
-/**
- * Sets tactics for combat.
- */
-export const setTactics = (info: TestInfo, tacticA: TacticType, tacticD: TacticType) => {
-  info.armyA = { ...info.armyA, tactic: tactics[tacticA] }
-  info.armyD = { ...info.armyD, tactic: tactics[tacticD] }
-}
-/**
- * Sets center units (useful for 1v1 tests).
- */
-export const setCenterUnits = (info: TestInfo, unitA: Cohort, unitD: Cohort) => {
-  info.armyA.frontline[0][15] = unitA
-  info.armyD.frontline[0][15] = unitD
-}
-/**
- * Sets an attacker unit (useful for more complex tests).
- */
-export const setAttacker = (info: TestInfo, index: number, unit: Cohort) => {
-  info.armyA.frontline[0][index] = unit
-}
-/**
- * Sets a defender unit (useful for more complex tests).
- */
-export const setDefender = (info: TestInfo, index: number, unit: Cohort) => {
-  info.armyD.frontline[0][index] = unit
-}
-/**
- * Sets flank sizes for deployment.
- */
-export const setFlankSizes = (info: TestInfo, flankA: number, flankD: number) => {
-  info.armyA = { ...info.armyA, flankSize: flankA }
-  info.armyD = { ...info.armyD, flankSize: flankD }
-}
-/**
- * Sets general martial.
- */
-export const setGeneral = (info: TestInfo, generalA: number, generalD: number) => {
-  info.armyA.general.totalValues[GeneralAttribute.Martial] = generalA
-  info.armyD.general.totalValues[GeneralAttribute.Martial] = generalD
-}
-/**
- * Sets flank sizes for combat.
- */
-export const setTerrain = (info: TestInfo, terrain: TerrainType) => {
-  info.terrains = []
-  info.terrains.push(terrains[terrain])
+
+const getCountryNameTest = (side: SideType) => side === SideType.A ? CountryName.Country1 : CountryName.Country2
+const getCountryTest = (state: TestState, side: SideType) => state.countries[getCountryNameTest(side)]
+
+export const getArmyTest = (state: TestState, side: SideType, index: number = 0) => getCountryTest(state, side).armies[getArmyNameTest(index)]
+
+const getArmyNameTest = (index: number) => index === 0 ? ArmyName.Army : ('Test' + index) as ArmyName
+
+export const createArmyTest = (state: TestState, side: SideType, daysUntilBattle: number = 0) => {
+  const country = getCountryTest(state, side)
+  const participants = state.battle[Mode.Land].sides[side].participants
+  const armyName = getArmyNameTest(participants.length)
+  createArmy(country, armyName, Mode.Land)
+  participants.push({
+    armyName,
+    countryName: getCountryNameTest(side),
+    daysUntilBattle
+  })
 }
 
-export const setReserve = (info: TestInfo, attacker: UnitType[], defender: UnitType[]) => {
-  info.armyA.reserve = info.armyA.reserve.concat(attacker.map(type => getUnit(type)))
-  info.armyD.reserve = info.armyD.reserve.concat(defender.map(type => getUnit(type)))
+
+export const getSettingsTest = (state: TestState) => state.settings.siteSettings
+
+export const createCohort = (type: UnitType): CohortDefinition => {
+
+  const cohort = {
+    type,
+    image: '',
+    mode: Mode.Land,
+    role: UnitRole.Front,
+    baseValues: {
+      ...toObj(values(UnitType), type => type, () => ({ 'key': 0 })),
+      ...toObj(values(UnitAttribute), type => type, () => ({ 'key': 0 })),
+      ...toObj(values(TerrainType), type => type, () => ({ 'key': 0 })),
+      ...toObj(values(CombatPhase), type => type, () => ({ 'key': 0 }))
+    }
+  }
+  cohort.baseValues[UnitAttribute.Morale] = { 'key': 1 }
+  cohort.baseValues[UnitAttribute.Strength] = { 'key': 1 }
+  cohort.baseValues[UnitAttribute.Maneuver] = { 'key': 1 }
+  return cohort
+}
+
+export const createDefeatedCohort = (type: UnitType): CohortDefinition => {
+  const cohort = createCohort(type)
+  cohort.baseValues![UnitAttribute.Morale] = { 'key': 0 }
+  cohort.baseValues![UnitAttribute.Strength] = { 'key': 1 }
+  return cohort
+}
+
+export const createWeakCohort = (type: UnitType): CohortDefinition => {
+  const cohort = createCohort(type)
+  cohort.baseValues![UnitAttribute.Morale] = { 'key': 0.3 }
+  cohort.baseValues![UnitAttribute.Strength] = { 'key': 1 }
+  return cohort
+}
+export const createFlankingCohort = (type: UnitType): CohortDefinition => {
+  const cohort = createCohort(type)
+  cohort.baseValues![UnitAttribute.Maneuver] = { 'key': 4 }
+  cohort.role = UnitRole.Flank
+  return cohort
+}
+
+export const createStrongCohort = (type: UnitType): CohortDefinition => {
+
+  const cohort = createCohort(type)
+  cohort.baseValues![UnitAttribute.Morale] = { 'key': 20 }
+  cohort.baseValues![UnitAttribute.Strength] = { 'key': 1 }
+  return cohort
 }
 
 // Dummy test to avoid an error.
 describe('utils', () => {
   it('works', () => { })
 })
+
+export const addToReserveTest = (state: TestState, side: SideType, cohorts: CohortData[], index: number = 0) => addToReserve(getArmyTest(state, side, index), cohorts)
+export const selectTacticTest = (state: TestState, side: SideType, tactic: TacticType, index: number = 0) => selectTactic(getArmyTest(state, side, index), tactic)
+export const selectTerrainTest = (state: TestState, terrain: TerrainType, index: number = 0) => selectTerrain(state.battle[Mode.Land], index, terrain)
+export const setGeneralAttributeTest = (state: TestState, side: SideType, attribute: GeneralValueType, value: number, index: number = 0) => setGeneralAttribute(getArmyTest(state, side, index), attribute, value)
 
 /**
  * Returns unit prerefences object with given selections.
@@ -223,165 +139,213 @@ describe('utils', () => {
 export const getUnitPreferences = (primary: UnitType | null = null, secondary: UnitType | null = null, flank: UnitType | null = null) => ({ [UnitPreferenceType.Primary]: primary, [UnitPreferenceType.Secondary]: secondary, [UnitPreferenceType.Flank]: flank } as UnitPreferences)
 
 /**
- * Sets preferred unit types.
- * @param info 
- * @param attacker Array of 3 unit types.
- * @param defender Array of 3 unit types.
- */
-export const setUnitPreferences = (info: TestInfo, attacker: (UnitType | null)[], defender: (UnitType | null)[]) => {
-
-  info.armyA = { ...info.armyA, unitPreferences: { [UnitPreferenceType.Primary]: attacker[0], [UnitPreferenceType.Secondary]: attacker[1], [UnitPreferenceType.Flank]: attacker[2] } as UnitPreferences }
-  info.armyD = { ...info.armyD, unitPreferences: { [UnitPreferenceType.Primary]: defender[0], [UnitPreferenceType.Secondary]: defender[1], [UnitPreferenceType.Flank]: defender[2] } as UnitPreferences }
-}
-
-export const setCombatWidth = (info: TestInfo, value: number) => {
-  info.settings[Setting.CombatWidth] = value
-  info.armyA.frontline = info.armyA.frontline.map(row => resize(row, value, null))
-  info.armyD.frontline = info.armyD.frontline.map(row => resize(row, value, null))
-}
-
-/**
  * Returns a unit with a given type.
  */
-export const getUnit = (type: UnitType) => ({ ...unitDefinitions[type] } as any as Cohort)
+export const getUnit = (type: UnitType): CohortData => ({ type })
+
+export const getBattleTest = (state: TestState) => state.battle[Mode.Land]
 
 /**
  * List of every unit type for deployment/reinforcement tests.
  */
 export const everyType = [UnitType.Archers, UnitType.CamelCavalry, UnitType.Chariots, UnitType.HeavyCavalry, UnitType.HeavyInfantry, UnitType.HorseArchers, UnitType.LightCavalry, UnitType.LightInfantry, UnitType.WarElephants, UnitType.SupplyTrain]
 
-/**
- * Performs one combat round with a given test info.
- */
-const doRound = (info: TestInfo, a: CombatParticipant, d: CombatParticipant) => {
-  doBattle(a, d, true, info.settings, info.round++)
+type ExpectedCohort = ([UnitType, number, number] | UnitType | CohortDefinition | null)
+
+type ExpectedArmy = {
+  front?: ExpectedCohort[]
+  targeting?: (number | undefined)[]
+  back?: ExpectedCohort[]
+  reserveFront?: ExpectedCohort[]
+  reserveFlank?: ExpectedCohort[]
+  reserveSupport?: ExpectedCohort[]
+  defeated?: ExpectedCohort[]
+  leader?: number
+  roll?: number
 }
 
+export type Expected = {
+  A: ExpectedArmy,
+  B: ExpectedArmy,
+  attackerFlipped?: boolean
+}
 
-type ExpectedUnits = ([UnitType | null, number | null, number | null] | null)
-type Expected = (ExpectedUnits[] | null)
+export const testCombatWithDefaultRolls = (state: TestState, expected: Expected[]) => {
+  return testCombatSub(state, [], expected)
+}
+export const testCombatWithCustomRolls = (state: TestState, rolls: number[][], expected: Expected[]) => {
+  const rollsPerDay = flatten(rolls.map(rolls => Array(5).fill(rolls) as [number, number][]))
+  return testCombatSub(state, rollsPerDay, expected)
+}
+export const testDeployment = (state: TestState, A: ExpectedArmy, B: ExpectedArmy) => testCombatSub(state, [], [{ A, B }])
 
-const getParticipants = (info: TestInfo) => {
-  const participantA = convertParticipant(SideType.Attacker, info.armyA, info.armyD, info.terrains, info.settings)
-  const participantD = convertParticipant(SideType.Defender, info.armyD, info.armyA, info.terrains, info.settings)
-  return [participantA, participantD]
+export const testReinforcement = (roundsToSkip: number, state: TestState, A: ExpectedArmy, B: ExpectedArmy) => {
+  return testCombatSub(state, Array(Math.max(0, roundsToSkip - 1)).fill([2, 2]).concat([[-1000, -1000]]), Array(roundsToSkip).fill(null).concat({ A, B }))
 }
 
 /**
  * Tester function for combat.
- * @param info Initial combat state.
+ * @param state Initial combat state.
  * @param rolls List of rolls.
- * @param attacker Expected attacker units for every round. Nulls can be used to skip checks.
- * @param defender Expected defender units for every round. Nulls can be used to skip checks.
+ * @param expectedA Expected attacker units for every round. Nulls can be used to skip checks.
+ * @param expectedB Expected defender units for every round. Nulls can be used to skip checks.
  */
-export const testCombat = (info: TestInfo, rolls: number[][], attacker: Expected[], defender: Expected[]) => {
-  const [participantA, participantD] = getParticipants(info)
-  for (let roll = 0; roll < rolls.length; roll++) {
-    participantA.dice = rolls[roll][0]
-    participantD.dice = rolls[roll][1]
-    const limit = Math.min((roll + 1) * 5, attacker.length)
-    for (let round = roll * 5; round < limit; round++) {
-      doRound(info, participantA, participantD)
-      verifySide(round, SideType.Attacker, participantA.cohorts.frontline[0], attacker[round])
-      verifySide(round, SideType.Defender, participantD.cohorts.frontline[0], defender[round])
+const testCombatSub = (state: TestState, rolls: [number, number][], expected: Expected[]) => {
+  const [sideA, sideB] = convertSides(state as any)
+  const env = getCombatField(state as any)
+  for (; env.day < expected.length; env.day++) {
+    [sideA.results.dice, sideB.results.dice] = getRolls(rolls, env.day)
+    doCombatRound(env, sideA, sideB, true)
+    verify(env, sideA, expected[env.day]?.A)
+    verify(env, sideB, expected[env.day]?.B)
+    if (expected[env.day]?.attackerFlipped !== undefined)
+      expect(env.attacker).toEqual(expected[env.day].attackerFlipped ? SideType.B : SideType.A)
+  }
+  return [sideA, sideB]
+}
+
+const getRolls = (rolls: number[][], day: number): [number, number] => {
+  if (0 < day && day - 1 < rolls.length)
+    return [rolls[day - 1][0], rolls[day - 1][1]]
+  return [2, 2]
+}
+
+const verify = (env: Environment, side: Side, expected: ExpectedArmy) => {
+  // No need to check anything if nothing is expected.
+  if (!expected)
+    return
+  verifyPart('Front', env, expected.front ?? [], side.type, side.cohorts.frontline[0])
+  verifyPart('Back', env, expected.back ?? [], side.type, side.cohorts.frontline.length ? side.cohorts.frontline[1] : [])
+  verifyPart('Reserve front', env, expected.reserveFront ?? [], side.type, side.cohorts.reserve.front)
+  verifyPart('Reserve flank', env, expected.reserveFlank ?? [], side.type, side.cohorts.reserve.flank)
+  verifyPart('Reserve support', env, expected.reserveSupport ?? [], side.type, side.cohorts.reserve.support)
+  verifyPart('Defeated', env, expected.defeated ?? [], side.type, side.cohorts.defeated.concat(side.cohorts.retreated))
+  if (expected.targeting !== undefined)
+    verifyTargeting(env, side.type, side.cohorts.frontline[0], expected.targeting)
+  if (expected.leader !== undefined)
+    verifyLeader(side, expected.leader)
+  if (expected.roll !== undefined)
+    expect(side.results.dice + side.results.terrainPips + side.results.generalPips).toEqual(expected.roll)
+}
+
+const verifyTargeting = (env: Environment, side: SideType, cohorts: (Cohort | null)[], expected: (number | undefined)[]) => {
+  const half = Math.floor(env.settings[Setting.CombatWidth] / 2.0)
+  let index = half
+  for (const exp of expected) {
+    const target = cohorts[index]?.state.target?.properties
+    const targetIndex = target ? target.index + 1000 * target.participantIndex : undefined
+    try {
+      expect(targetIndex).toEqual(exp)
+    }
+    catch (e) {
+      throw new Error(errorPrefix(env.day, side, 'Front', index) + 'Cohort should target ' + exp + ' instead of ' + targetIndex)
+    }
+
+    index = nextIndex(index, half)
+  }
+}
+
+const verifyLeader = (side: Side, expected: number) => {
+  expect(getLeadingArmy(side)?.participantIndex).toEqual(expected)
+}
+
+const errorPrefix = (day: string | number, side: SideType, part: string, index?: number) => (typeof day === 'number' ? 'Round ' : '') + day + ', ' + side + ' ' + part + (index === undefined ? '' : ' ' + index) + ': '
+
+const verifyCohort = (cohort: Cohort | null, strength: number, morale: number) => {
+  expect(cohort).toBeTruthy()
+  if (!cohort)
+    return
+  strength = Math.floor(1000 * strength) / 1000
+  const unitStrength = Math.floor(1000 * cohort[UnitAttribute.Strength]) / 1000
+  try {
+    expect(unitStrength).toBeCloseTo(strength, 3)
+  }
+  catch (e) {
+    throw new Error('Strength ' + unitStrength + ' should be ' + strength)
+  }
+  const unitMorale = cohort[UnitAttribute.Morale]
+  try {
+    expect(unitMorale).toBeCloseTo(morale, 2)
+  }
+  catch (e) {
+    throw new Error('Morale ' + unitMorale + ' should be ' + morale)
+  }
+}
+
+const verifyType = (type: UnitType | undefined, expected: UnitType | null) => {
+  if (expected) {
+    try {
+      expect(type).toBeTruthy()
+    }
+    catch (e) {
+      throw new Error('Cohort should exist.')
+    }
+    try {
+      expect(type).toEqual(expected)
+    }
+    catch (e) {
+      throw new Error('Type ' + type + ' should be ' + expected)
+    }
+
+  }
+  else {
+    try {
+      expect(type).toBeFalsy()
+    }
+    catch (e) {
+      throw new Error('Cohort shouldn\'t exist.')
     }
   }
-  return [participantA, participantD]
-}
-export const testDeployment = (info: TestInfo, expectedA?: ExpectedTypes, expectedD?: ExpectedTypes) => {
-  const [participantA, participantD] = getParticipants(info)
-  deploy(participantA, participantD, info.settings)
-  if (expectedA)
-    verifyDeployOrReinforce(info, SideType.Attacker, participantA, expectedA)
-  if (expectedD)
-    verifyDeployOrReinforce(info, SideType.Defender, participantD, expectedD)
-  return [participantA, participantD]
-}
-
-export const testReinforcement = (roundsToSkip: number, info: TestInfo, expectedA?: ExpectedTypes, expectedD?: ExpectedTypes) => {
-  const [participantA, participantD] = getParticipants(info)
-  deploy(participantA, participantD, info.settings)
-  participantA.dice = 2
-  participantD.dice = 2
-  for (let round = 0; round < roundsToSkip; round++)
-    doRound(info, participantA, participantD)
-  removeDefeated(participantA.cohorts.frontline)
-  removeDefeated(participantD.cohorts.frontline)
-  reinforce(participantA, info.settings)
-  reinforce(participantD, info.settings)
-  if (expectedA)
-    verifyDeployOrReinforce(info, SideType.Attacker, participantA, expectedA)
-  if (expectedD)
-    verifyDeployOrReinforce(info, SideType.Defender, participantD, expectedD)
-  return [participantA, participantD]
-}
-
-const verifyDeployOrReinforce = (info: TestInfo, side: SideType, participant: CombatParticipant, expected: ExpectedTypes) => {
-  verifyTypes('Front', info, expected.front ?? [], side, participant.cohorts.frontline[0])
-  verifyTypes('Back', info, expected.back ?? [], side, participant.cohorts.frontline.length ? participant.cohorts.frontline[1] : [])
-  verifyTypes('Reserve front', info, expected.reserveFront ?? [], side, participant.cohorts.reserve.front)
-  verifyTypes('Reserve flank', info, expected.reserveFlank ?? [], side, participant.cohorts.reserve.flank)
-  verifyTypes('Reserve support', info, expected.reserveSupport ?? [], side, participant.cohorts.reserve.support)
-  verifyTypes('Defeated', info, expected.defeated ?? [], side, participant.cohorts.defeated)
 }
 
 const nextIndex = (index: number, half: number) => index < half ? index + 2 * (half - index) : index - 2 * (index - half) - 1
 
-const verifyTypes = (identifier: string, info: TestInfo, types: (UnitType | null)[], side: SideType, cohorts: (CombatCohort | null)[]) => {
-  const isFront = identifier === 'Front' || identifier === 'Back'
+const verifyPart = (part: string, env: Environment, expected: ExpectedCohort[], side: SideType, cohorts: (Cohort | null)[]) => {
+  const isFront = part === 'Front' || part === 'Back'
   if (!isFront) {
     try {
-      expect(cohorts.length).toEqual(types.length)
+      expect(cohorts.length).toEqual(expected.length)
     }
     catch (e) {
-      throw new Error(identifier + ' length ' + cohorts.length + ' should be ' + types.length + '.')
+      throw new Error(errorPrefix(env.day, side, part) + 'length ' + cohorts.length + ' should be ' + expected.length + '.')
     }
   }
-  const half = Math.floor(info.settings[Setting.CombatWidth] / 2.0)
+  const half = Math.floor(env.settings[Setting.CombatWidth] / 2.0)
   let index = isFront ? half : 0
-  for (const type of types) {
-    verifyType(identifier, side, index, cohorts[index]?.definition, type, ' at index ' + index)
+  for (const exp of expected) {
+    try {
+      if (Array.isArray(exp)) {
+        verifyType(cohorts[index]?.properties?.type, exp[0])
+        if (exp[1] !== null && exp[2] !== null)
+          verifyCohort(cohorts[index], exp[1], exp[2])
+      } else if (typeof exp === 'object' && exp) {
+        verifyType(cohorts[index]?.properties?.type, exp.type)
+      } else {
+        verifyType(cohorts[index]?.properties?.type, exp)
+      }
+    }
+    catch (e) {
+      throw new Error(errorPrefix(env.day, side, part, index) + (e as Error).message)
+    }
+
     index = isFront ? nextIndex(index, half) : index + 1
   }
 }
 
 /**
- * Verifies one round for one side.
- * @param round Round to verify.
- * @param side Side to verify (for debugging purposes).
- * @param frontline Units to check.
- * @param expected Expected units. Check is skipped if null.
+ * Inits expected units with empty values.
+ * @param rounds List of days to init, in ascending order.
  */
-const verifySide = (round: number, side: SideType, frontline: (CombatCohort | null)[], expected: Expected | null) => {
-  // Data might be missing or not relevant for the test..
-  if (!expected)
-    return
-  expected.forEach((unit, index) => {
-    if (unit) {
-      const type = unit[0]
-      verifyType(round, side, index, frontline[index]?.definition, type)
-      if (unit[1] !== null && unit[2] !== null)
-        verifyFast(round, side, index, frontline[index], unit[1], unit[2])
+export const initExpected = (...rounds: number[]): Expected[] => {
+  return mapRange(rounds[rounds.length - 1] + 1, round => {
+    const includes = rounds.includes(round)
+    return {
+      A: initExpectedArmy(includes),
+      B: initExpectedArmy(includes)
     }
-    else
-      verifyType(round, side, index, frontline[index]?.definition, null)
   })
 }
-/**
- * Inits expected units with empty values.
- * @param rounds Amount of rounds to init.
- */
-export const initSide = (rounds: number) => ({
-  attacker: mapRange(rounds, initFrontline), defender: mapRange(rounds, initFrontline)
-})
 
-/**
- * Returns empty values for one round.
- */
-const initFrontline = (): ExpectedUnits[] => (
-  [null, null, null, null, null, null, null, null, null, null,
-    null, null, null, null, null, null, null, null, null, null,
-    null, null, null, null, null, null, null, null, null, null]
-)
+const initExpectedArmy = (included: boolean): ExpectedArmy => included ? {} : null as any
 
 export const createExpected = (...types: ([UnitType | null, number] | UnitType)[]) => types.reduce((prev, current) => prev.concat(Array.isArray(current) ? Array(current[1]).fill(current[0]) : [current]), [] as UnitType[])

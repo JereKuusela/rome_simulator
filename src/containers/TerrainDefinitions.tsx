@@ -6,7 +6,7 @@ import { AppState, getMode } from 'state'
 import Headers from '../components/Utils/Headers'
 import StyledNumber from '../components/Utils/StyledNumber'
 
-import { TerrainDefinition, TerrainType, TerrainCalc, ModalType } from 'types'
+import { Terrain, TerrainType, TerrainCalc, ModalType } from 'types'
 import { keys, getImage, toArr } from 'utils'
 import { calculateValue } from 'definition_values'
 import { openModal, createTerrain } from 'reducers'
@@ -42,7 +42,7 @@ class TerrainDefinitions extends Component<IProps> {
     initial: ''
   })
 
-  renderRow = (definition: TerrainDefinition) => {
+  renderRow = (definition: Terrain) => {
     return (
       <Table.Row key={definition.type} onClick={() => this.openModal(definition)}>
         <Table.Cell>
@@ -57,7 +57,7 @@ class TerrainDefinitions extends Component<IProps> {
     )
   }
 
-  renderAttributes = (definition: TerrainDefinition) => (
+  renderAttributes = (definition: Terrain) => (
     this.attributes.map(type => (
       <Table.Cell key={type}>
         <StyledNumber value={calculateValue(definition, type)} formatter={addSign} hideZero />
@@ -65,7 +65,7 @@ class TerrainDefinitions extends Component<IProps> {
     ))
   )
 
-  openModal = (definition: TerrainDefinition) => this.props.openModal(ModalType.TerrainDetail, { type: definition.type })
+  openModal = (definition: Terrain) => this.props.openModal(ModalType.TerrainDetail, { type: definition.type })
 }
 
 const mapStateToProps = (state: AppState) => ({

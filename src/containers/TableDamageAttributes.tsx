@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table } from 'semantic-ui-react'
 
-import { SideType, CountryName, UnitAttribute, CombatPhase, General, GeneralValueType, Mode, UnitType, ArmyName } from 'types'
-import { AppState, getGeneral, getUnit, getMode, getSiteSettings } from 'state'
+import { SideType, CountryName, UnitAttribute, CombatPhase, GeneralDefinition, GeneralValueType, Mode, UnitType, ArmyName } from 'types'
+import { AppState, getGeneral, getUnitDefinition, getMode, getSiteSettings } from 'state'
 import { setGeneralAttribute } from 'reducers'
 import AttributeImage from 'components/Utils/AttributeImage'
 import StyledNumber from 'components/Utils/StyledNumber'
@@ -79,7 +79,7 @@ class TableDamageAttributes extends Component<IProps> {
     )
   }
 
-  renderGeneralAttribute = (general: General, attribute: GeneralValueType) => (
+  renderGeneralAttribute = (general: GeneralDefinition, attribute: GeneralValueType) => (
     <>
       <DelayedNumericInput disabled={!general.enabled}  type='number' value={general.baseValues[attribute]} onChange={value => this.setGeneralStat(attribute, Number(value))}/>
       {' '} <StyledNumber value={general.extraValues[attribute]} formatter={addSign} hideZero />
@@ -94,7 +94,7 @@ class TableDamageAttributes extends Component<IProps> {
 
 const mapStateToProps = (state: AppState, props: Props) => ({
   general: getGeneral(state, props.country, props.army),
-  unit: getUnit(state, getMode(state) === Mode.Naval ? UnitType.Naval : UnitType.Land, props.country),
+  unit: getUnitDefinition(state, getMode(state) === Mode.Naval ? UnitType.Naval : UnitType.Land, props.country),
   settings: getSiteSettings(state)
 })
 

@@ -1,4 +1,4 @@
-import { Mode, Army, TacticType, UnitPreferences, UnitPreferenceType, UnitType, Armies, ArmyName, UnitRole, Selections } from 'types'
+import { Mode, ArmyData, TacticType, UnitPreferences, UnitPreferenceType, UnitType, Armies, ArmyName, UnitRole, Selections } from 'types'
 
 const getDefaultTactic = (mode: Mode): TacticType => mode === Mode.Land ? TacticType.Deception : TacticType.FrontalAssault
 
@@ -26,31 +26,25 @@ const getDefaultUnitPreferences = (mode: Mode): UnitPreferences => {
   }
 }
 
-const initializeDefaultArmy = (mode: Mode): Army => ({
-  frontline: {},
+const initializeDefaultArmy = (mode: Mode): ArmyData => ({
   reserve: [],
-  defeated: [],
-  tactic: getDefaultTactic(mode),
   unitPreferences: getDefaultUnitPreferences(mode),
   flankSize: 5,
   general: {
     enabled: true,
     selections: {} as Selections,
-    definitions: {} as any
+    definitions: {} as any,
+    tactic: getDefaultTactic(mode)
   },
   mode
 })
 
-const defaultLandArmy = initializeDefaultArmy(Mode.Land)
-const defaultNavalArmy = initializeDefaultArmy(Mode.Naval)
 
-export const getDefaultArmy = (mode: Mode): Army => {
-  if (mode === Mode.Naval)
-    return defaultNavalArmy
-  return defaultLandArmy
-}
+export const getDefaultArmyName = (mode: Mode): ArmyName => mode === Mode.Land ? ArmyName.Army : ArmyName.Navy
+
+export const getDefaultArmy = (mode: Mode): ArmyData => initializeDefaultArmy(mode)
 
 export const getDefaultArmies = (): Armies => ({
-  [ArmyName.Army]: defaultLandArmy,
-  [ArmyName.Navy]: defaultNavalArmy
+  [ArmyName.Army]: getDefaultArmy(Mode.Land),
+  [ArmyName.Navy]: getDefaultArmy(Mode.Naval)
 })

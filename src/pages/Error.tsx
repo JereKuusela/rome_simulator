@@ -59,6 +59,6 @@ const actions = { resetState }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
-interface IProps extends Props, S, D { }
+interface IProps extends React.PropsWithChildren<Props>, S, D { }
 
 export default connect(mapStateToProps, actions)(Error)

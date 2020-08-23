@@ -4,20 +4,20 @@ import { Popup, List } from 'semantic-ui-react'
 
 import StyledNumber from 'components/Utils/StyledNumber'
 
-import { SideType, ArmyType, UnitAttribute, UnitType, Setting, TacticCalc, TerrainType, CombatPhase, Mode, CombatCohortDefinition, CombatCohortRoundInfo, CombatCohort, DisciplineValue } from 'types'
-import { calculateCohortPips, getOffensiveCohortPips, getDefensiveCohortPips, getCombatPhase, getDailyIncrease, getDefensiveSupportCohortPips } from 'combat'
+import { SideType, ArmyPart, UnitAttribute, UnitType, Setting, TerrainType, CombatPhase, Mode, CohortProperties, CohortRoundInfo, Cohort, DisciplineValue } from 'types'
+import { calculateCohortPips, getOffensiveCohortPips, getDefensiveCohortPips, getCombatPhase, getDefensiveSupportCohortPips } from 'combat'
 import { toSignedPercent, strengthToValue, toNumber, addSign, toMultiplier, toMorale } from 'formatters'
-import { calculateValue } from 'definition_values'
-import { AppState, getSettings, getSelectedTerrains, getTactic, getCombatUnit, getCombatParticipant } from 'state'
-import { getOpponent } from 'army_utils'
+import { AppState, getSettings, getSelectedTerrains, getCohort, getCombatSide, getMode } from 'state'
 import { noZero } from 'utils'
+import { getCohortName } from 'managers/units'
 
 type Props = {
-  id: number | null
+  row: number | null
+  column: number | null
   isSupport: boolean
-  context: Element | null
+  context: HTMLElement | null
   side: SideType
-  army: ArmyType
+  part: ArmyPart
 }
 
 type IState = {
@@ -35,12 +35,12 @@ class CombatTooltip extends Component<IProps, IState> {
   }
 
   render() {
-    const { id, context, isSupport } = this.props
+    const { source, context, isSupport } = this.props
     return (
       <Popup
-        open={id != null}
+        open={source !== null}
         context={context!}
-        content={this.getExplanation(id, isSupport)}
+        content={this.getExplanation(isSupport)}
         inverted
       />
     )
@@ -50,9 +50,7 @@ class CombatTooltip extends Component<IProps, IState> {
   ORANGE = 'color-orange'
   RED = 'color-red'
 
-  getExplanation = (id: number | null, isSupport: boolean) => {
-    if (id === null)
-      return null
+  getExplanation = (isSupport: boolean) => {
     const { source } = this.props
     if (!source)
       return null
@@ -79,8 +77,8 @@ class CombatTooltip extends Component<IProps, IState> {
   toMultiplier = (value: number) => toMultiplier(value, 3)
 
   getBaseDamageSection = (source: IUnit, target: IUnit, targetSupport: IUnit | null) => {
-    const { participant, settings } = this.props
-    const { round } = participant
+    const { results, settings } = this.props
+    const { round } = results
     const phase = getCombatPhase(round, settings)
     const phaseRoll = calculateCohortPips(source, target, targetSupport, UnitAttribute.Strength, phase)
     const moraleRoll = calculateCohortPips(source, target, targetSupport, UnitAttribute.Morale)
@@ -99,21 +97,21 @@ class CombatTooltip extends Component<IProps, IState> {
   }
 
   getBaseDamageSubSection = (source: IUnit, target: IUnit, targetSupport: IUnit | null, type: UnitAttribute.Strength | UnitAttribute.Morale | '', phase: CombatPhase) => {
-    const { settings, participant } = this.props
-    const { dice, terrainPips, generalPips } = participant
+    const { settings, results } = this.props
+    const { dice, terrainPips, generalPips } = results
     const basePips = settings[Setting.BasePips]
     const sourcePips = type ? getOffensiveCohortPips(source, type, phase) : 0
     const targetPips = type ? getDefensiveCohortPips(target, type, phase) : 0
     const targetSupportPips = type ? getDefensiveSupportCohortPips(targetSupport, type, phase) : 0
-    const totalPips = basePips + dice + terrainPips + generalPips[phase] + sourcePips + targetPips + targetSupportPips
-    const cappedPips =  Math.min(totalPips, settings[Setting.MaxPips])
+    const totalPips = basePips + dice + terrainPips + generalPips + sourcePips + targetPips + targetSupportPips
+    const cappedPips = Math.min(totalPips, settings[Setting.MaxPips])
     const reductionToCap = Math.min(0, settings[Setting.MaxPips] - cappedPips)
     const text = type === UnitAttribute.Morale ? UnitAttribute.Morale : phase
     return (<>
       {this.renderModifier('Base pips', basePips, this.toAdd)}
       {this.renderModifier('Dice', dice, this.toAdd)}
       {this.renderModifier('Terrain pips', terrainPips, this.toAdd)}
-      {this.renderModifier('General pips', generalPips[phase], this.toAdd)}
+      {this.renderModifier('General pips', generalPips, this.toAdd)}
       {this.renderModifier(text + ' pips', sourcePips, this.toAdd)}
       {this.renderModifier('Enemy ' + text.toLowerCase() + ' pips', targetPips, this.toAdd)}
       {this.renderModifier('Backrow ' + text.toLowerCase() + ' pips', targetSupportPips, this.toAdd)}
@@ -123,10 +121,9 @@ class CombatTooltip extends Component<IProps, IState> {
   }
 
   getDamageMultiplierSection = (source: IUnit, target: IUnit, isSupport: boolean) => {
-    const { terrains, settings, participant } = this.props
-    const { round, tacticBonus, flankRatioBonus } = participant
+    const { terrains, settings, results } = this.props
+    const { round, tacticBonus, flankRatioBonus, dailyMultiplier } = results
     const phase = getCombatPhase(round, settings)
-    const dailyDamage = getDailyIncrease(round, settings)
     const terrainTypes = settings[Setting.AttributeTerrainType] ? terrains.map(value => value.type) : []
     const strength = source[UnitAttribute.Strength] + source.strengthLoss
     const offenseVsDefense = settings[Setting.AttributeOffenseDefense] ? source[UnitAttribute.Offense] - target[UnitAttribute.Defense] : 0
@@ -152,7 +149,7 @@ class CombatTooltip extends Component<IProps, IState> {
       {settings[Setting.AttributeDamage] && this.getAttribute(target, UnitAttribute.DamageTaken)}
       {terrainTypes.map(terrain => this.getAttribute(source, terrain))}
       {isSupport && this.renderStyledItem(UnitAttribute.OffensiveSupport, source[UnitAttribute.OffensiveSupport] - 1, toSignedPercent)}
-      {this.renderStyledItem('Battle length', dailyDamage, toSignedPercent)}
+      {this.renderStyledItem('Battle length', dailyMultiplier - 1, toSignedPercent)}
       {settings[Setting.FireAndShock] && this.renderModifier(phase, source[phase], this.toMultiplier)}
       {settings[Setting.AttributeMilitaryTactics] && this.renderModifier('Target military tactics', 1 / noZero(target[UnitAttribute.MilitaryTactics]), this.toMultiplier)}
       {this.renderModifier('Unit strength', strength, this.toMultiplier)}
@@ -161,16 +158,15 @@ class CombatTooltip extends Component<IProps, IState> {
   }
 
   getStrengthSection = (source: IUnit, target: IUnit) => {
-    const { settings, tacticS, tacticT, mode, participant } = this.props
-    const { round } = participant
+    const { settings, mode, results } = this.props
+    const { round, tacticStrengthDamageMultiplier } = results
     const phase = getCombatPhase(round, settings)
     const strengthLostMultiplier = mode === Mode.Land ? settings[Setting.StrengthLostMultiplier] : settings[Setting.StrengthLostMultiplier] / 1000
-    const tacticCasualties = calculateValue(tacticS, TacticCalc.Casualties) + calculateValue(tacticT, TacticCalc.Casualties)
     const strengthDamage = source.strengthDealt
 
     return (<>
       {this.renderModifier('Constant', strengthLostMultiplier, this.toMultiplier)}
-      {this.renderStyledItem('Tactic casualties', tacticCasualties, toSignedPercent)}
+      {this.renderStyledItem('Tactic casualties', tacticStrengthDamageMultiplier - 1, toSignedPercent)}
       {settings[Setting.FireAndShock] && this.getAttribute(source, phase === CombatPhase.Shock ? UnitAttribute.ShockDamageDone : UnitAttribute.FireDamageDone)}
       {settings[Setting.FireAndShock] && this.getAttribute(target, phase === CombatPhase.Shock ? UnitAttribute.ShockDamageTaken : UnitAttribute.FireDamageTaken)}
       {settings[Setting.AttributeStrengthDamage] && this.getAttribute(source, UnitAttribute.StrengthDamageDone)}
@@ -209,10 +205,9 @@ class CombatTooltip extends Component<IProps, IState> {
     const strengthLoss = -source.strengthLoss
     return (<>
       <List.Item>
-        {source.type}
-        {' '}
-        {source.id}
+        {getCohortName(source)}
       </List.Item>
+      {source.isDefeated ? <List.Item>{'Defeated at round ' + source.defeatedDay}</List.Item> : null}
       <List.Item>
         {'Strength: '}
         <span className={this.ORANGE}>{strengthToValue(mode, strengthCurrent)}</span>
@@ -242,7 +237,7 @@ class CombatTooltip extends Component<IProps, IState> {
       </List.Item>
       <List.Item>
         {'Target: '}
-        <span className={this.ORANGE}>{target ? target.type + ' ' + target.id : 'No target'}</span>
+        <span className={this.ORANGE}>{target ? getCohortName(target) : 'No target'}</span>
       </List.Item>
     </>)
   }
@@ -284,16 +279,16 @@ class CombatTooltip extends Component<IProps, IState> {
 }
 
 
-interface IUnit extends CombatCohortDefinition, Omit<CombatCohortRoundInfo, 'target' | 'targetSupport'> {
+interface IUnit extends CohortProperties, Omit<CohortRoundInfo, 'target' | 'targetSupport'> {
   target: IUnit | null
   targetSupport: IUnit | null
 }
 
-const convertUnit = (cohort: CombatCohort | null, convertTarget: boolean = true): IUnit | null => {
+const convertUnit = (cohort: Cohort | null, convertTarget: boolean = true): IUnit | null => {
   if (!cohort)
     return null
   return {
-    ...cohort.definition,
+    ...cohort.properties,
     ...cohort.state,
     ...cohort,
     target: convertTarget ? convertUnit(cohort.state.target, false) : null,
@@ -302,13 +297,11 @@ const convertUnit = (cohort: CombatCohort | null, convertTarget: boolean = true)
 }
 
 const mapStateToProps = (state: AppState, props: Props) => ({
-  source: convertUnit(getCombatUnit(state, props.side, props.army, props.id)),
-  participant: getCombatParticipant(state, props.side),
+  source: (props.row !== null && props.column !== null) ? convertUnit(getCohort(state, props.side, props.part, props.row, props.column)) : null,
+  results: getCombatSide(state, props.side).results,
   settings: getSettings(state),
   terrains: getSelectedTerrains(state),
-  tacticS: getTactic(state, props.side),
-  tacticT: getTactic(state, getOpponent(props.side)),
-  mode: state.settings.mode
+  mode: getMode(state)
 })
 
 const actions = {}

@@ -6,19 +6,18 @@ import Headers from './Utils/Headers'
 import DetailDropdownRow from './Detail/DetailDropdownRow'
 import DetailInputRow from './Detail/DetailInputRow'
 import Images from './Utils/Images'
-import { Mode, ValuesType, TacticType, UnitType, TacticDefinition, TacticCalc, TacticValueType, TacticDefinitions } from 'types'
+import { Mode, ValuesType, TacticType, UnitType, TacticDefinition, TacticCalc, TacticValueType } from 'types'
 import { values, getImage } from 'utils'
 import { getValue, calculateValue, explainShort } from 'definition_values'
 import { toSignedPercent, toPercent } from 'formatters'
 
 
 interface IProps {
-  tacticTypes: TacticType[]
-  tactics: TacticDefinitions
+  tactics: TacticDefinition[]
+  tactic: TacticDefinition
   unitTypes: UnitType[]
   images: { [key in UnitType]: string[] }
   customValueKey: string
-  tactic: TacticDefinition
   onCustomValueChange: (key: string, attribute: TacticValueType, value: number) => void
   onTypeChange: (type: TacticType) => void
   onImageChange: (image: string) => void
@@ -37,7 +36,7 @@ export default class TacticDetail extends Component<IProps> {
   readonly CELLS = 4
 
   render() {
-    const { tactic, unitTypes, tacticTypes, onTypeChange, onModeChange, onImageChange, images, tactics } = this.props
+    const { tactic, unitTypes, onTypeChange, onModeChange, onImageChange, images, tactics } = this.props
     const { type, mode, image } = tactic
     return (
       <Table celled unstackable>
@@ -49,7 +48,7 @@ export default class TacticDetail extends Component<IProps> {
           {
             unitTypes.map(type => this.renderRow(tactic, type, false, images[type]))
           }
-          {tacticTypes.map(value => this.renderRow(tactic, value, true, [getImage(tactics[value])]))}
+          {tactics.map(value => this.renderRow(tactic, value.type, true, [getImage(value)]))}
           {this.attributes.map(value => this.renderRow(tactic, value, true, [getImage(null)]))}
         </Table.Body>
       </Table>
