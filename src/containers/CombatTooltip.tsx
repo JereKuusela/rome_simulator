@@ -15,7 +15,7 @@ type Props = {
   row: number | null
   column: number | null
   isSupport: boolean
-  context: Element | null
+  context: HTMLElement | null
   side: SideType
   part: ArmyPart
 }

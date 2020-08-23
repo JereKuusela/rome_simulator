@@ -30,7 +30,7 @@ type IProps = SharedProps & {
 type IState = {
   tooltipRow: number | null
   tooltipColumn: number | null
-  tooltipContext: Element | null
+  tooltipContext: HTMLElement | null
   tooltipIsSupport: boolean
 }
 
@@ -115,7 +115,7 @@ export default class TableArmyPart extends Component<IProps, IState> {
         selectable={!!onClick}
         style={{ backgroundColor: filler ? '#DDDDDD' : 'white', padding: 0 }}
         onClick={() => cohort && onClick(side, cohort.participantIndex, cohort.index, cohort.countryName, cohort.armyName)}
-        onMouseOver={(e: React.MouseEvent) => cohort && this.setState({ tooltipRow: row, tooltipColumn: column, tooltipContext: e.currentTarget, tooltipIsSupport: isSupport })}
+        onMouseOver={(e: React.MouseEvent) => cohort && this.setState({ tooltipRow: row, tooltipColumn: column, tooltipContext: e.currentTarget as HTMLElement, tooltipIsSupport: isSupport })}
         onMouseLeave={() => cohort && this.state.tooltipRow === row && this.state.tooltipColumn === column && this.setState({ tooltipRow: null, tooltipColumn: null, tooltipContext: null })}
         onContextMenu={(e: any) => e.preventDefault() || onDeleteCohort(cohort)}
       >
