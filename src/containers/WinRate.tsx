@@ -24,10 +24,10 @@ type IState = {
   battles: number
   avgStrengthA: number
   maxStrengthA: number
-  avgStrengthD: number
-  maxStrengthD: number
+  avgStrengthB: number
+  maxStrengthB: number
   winRateA: number
-  winRateD: number
+  winRateB: number
 }
 
 const DOTS = 6
@@ -41,7 +41,7 @@ class WinRate extends Component<IProps, IState> {
     super(props)
     this.state = {
       attacker: 0, defender: 0, calculating: false, progress: 0, updates: 0, draws: 0, incomplete: 0, battles: 0,
-      avgStrengthA: 0, maxStrengthA: 0, avgStrengthD: 0, maxStrengthD: 0, winRateA: 0, winRateD: 0
+      avgStrengthA: 0, maxStrengthA: 0, avgStrengthB: 0, maxStrengthB: 0, winRateA: 0, winRateB: 0
     }
   }
 
@@ -59,7 +59,7 @@ class WinRate extends Component<IProps, IState> {
   render() {
     const {
       attacker, defender, calculating, progress, updates, draws, incomplete,
-      avgStrengthA, maxStrengthA, avgStrengthD, maxStrengthD
+      avgStrengthA, maxStrengthA, avgStrengthB: avgStrengthD, maxStrengthB: maxStrengthD
     } = this.state
     return (
       <Grid>
@@ -153,7 +153,7 @@ class WinRate extends Component<IProps, IState> {
   }
 
   getCasualtiesTooltip = () => {
-    const { winRateA, winRateD, battles, avgStrengthA, maxStrengthA, avgStrengthD, maxStrengthD } = this.state
+    const { winRateA, winRateB, battles, avgStrengthA, maxStrengthA, avgStrengthB, maxStrengthB } = this.state
     return (
       <div>
         <List>
@@ -166,22 +166,22 @@ class WinRate extends Component<IProps, IState> {
           </List.Item>
           <List.Item>
             Defender:{' '}
-            {<StyledNumber value={this.scale(avgStrengthD / maxStrengthD)} positiveColor={DEFENDER_COLOR} neutralColor={DEFENDER_COLOR} formatter={this.toTooltipPercent} />}
+            {<StyledNumber value={this.scale(avgStrengthB / maxStrengthB)} positiveColor={DEFENDER_COLOR} neutralColor={DEFENDER_COLOR} formatter={this.toTooltipPercent} />}
             {' ('}
-            {<StyledNumber value={this.scale(avgStrengthD)} positiveColor={DEFENDER_COLOR} neutralColor={DEFENDER_COLOR} formatter={this.toTooltipNumber} />}
+            {<StyledNumber value={this.scale(avgStrengthB)} positiveColor={DEFENDER_COLOR} neutralColor={DEFENDER_COLOR} formatter={this.toTooltipNumber} />}
             {')'}
           </List.Item>
           <List.Item>
             Casualties win rate:{' '}
             {<StyledNumber value={this.scale(winRateA)} positiveColor={ATTACKER_COLOR} neutralColor={ATTACKER_COLOR} formatter={this.toTooltipPercent} />}
             {' / '}
-            {<StyledNumber value={this.scale(winRateD)} positiveColor={DEFENDER_COLOR} neutralColor={DEFENDER_COLOR} formatter={this.toTooltipPercent} />}
+            {<StyledNumber value={this.scale(winRateB)} positiveColor={DEFENDER_COLOR} neutralColor={DEFENDER_COLOR} formatter={this.toTooltipPercent} />}
           </List.Item>
           <List.Item>
             Casualties balance:{' '}
-            {<StyledNumber reverse value={avgStrengthA / avgStrengthD - 1} formatter={this.toSignedTooltipPercent} />}
+            {<StyledNumber reverse value={avgStrengthA / avgStrengthB - 1} formatter={this.toSignedTooltipPercent} />}
             {' / '}
-            {<StyledNumber reverse value={avgStrengthD / avgStrengthA - 1} formatter={this.toSignedTooltipPercent} />}
+            {<StyledNumber reverse value={avgStrengthB / avgStrengthA - 1} formatter={this.toSignedTooltipPercent} />}
           </List.Item>
         </List>
         <List.Item>

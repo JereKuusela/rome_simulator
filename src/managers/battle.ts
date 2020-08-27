@@ -1,5 +1,6 @@
 import { Battle, TerrainType, SideType, CountryName, Terrain, Settings, Setting, Army, UnitType, ArmyName, SideData, Side, ArmyDefinition, GeneralAttribute, Participant, CombatPhase } from 'types'
 import { getCombatUnit, sortReserve } from 'combat'
+import { map } from 'utils'
 
 export const selectTerrain = (battle: Battle, index: number, terrain: TerrainType) => {
   battle.terrains[index] = terrain
@@ -88,9 +89,11 @@ export const convertSide = (side: SideData, armies: Army[], settings: Settings):
 
 export const convertArmy = (participantIndex: number, participant: Participant, army: ArmyDefinition, enemyTypes: UnitType[], terrains: Terrain[], settings: Settings): Army => {
   const reserve = army.reserve.map((cohort, index) => getCombatUnit(participant.countryName, participant.armyName, participantIndex, index, settings, terrains, enemyTypes, cohort))
+  const unitProperties = map(army.unitDefinitions, unit => getCombatUnit(participant.countryName, participant.armyName, participantIndex, -1, settings, terrains, enemyTypes, unit).properties)
   const sorted = sortReserve(reserve, army.unitPreferences)
   return {
     reserve: sorted,
+    unitProperties,
     flankSize: army.flankSize,
     arrival: participant.daysUntilBattle,
     leftFlank: army.flankSize,

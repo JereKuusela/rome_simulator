@@ -12,13 +12,15 @@ export const getDefaultLandSettings = (): CombatSettings => {
   if (process.env.REACT_APP_GAME === 'euiv') {
     return {
       [Setting.StrengthLostMultiplier]: 5,
-      [Setting.MoraleLostMultiplier]: 25 / 2.7
+      [Setting.MoraleLostMultiplier]: 25 / 2.7,
+      [Setting.StackWipeCaptureChance]: 0
     }
   }
   else {
     return {
       [Setting.StrengthLostMultiplier]: 4.8,
-      [Setting.MoraleLostMultiplier]: 18
+      [Setting.MoraleLostMultiplier]: 18,
+      [Setting.StackWipeCaptureChance]: 0
     }
   }
 }
@@ -27,13 +29,15 @@ export const getDefaultNavalSettings = (): CombatSettings => {
   if (process.env.REACT_APP_GAME === 'euiv') {
     return {
       [Setting.StrengthLostMultiplier]: 5,
-      [Setting.MoraleLostMultiplier]: 25 / 2.7
+      [Setting.MoraleLostMultiplier]: 25 / 2.7,
+      [Setting.StackWipeCaptureChance]: 0
     }
   }
   else {
     return {
       [Setting.StrengthLostMultiplier]: 12,
-      [Setting.MoraleLostMultiplier]: 24
+      [Setting.MoraleLostMultiplier]: 30,
+      [Setting.StackWipeCaptureChance]: 0.2
     }
   }
 }

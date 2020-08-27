@@ -63,7 +63,8 @@ export enum Setting {
   CalculateResourceLosses = 'Calculate resource losses',
   ReduceRolls = 'Reduce possible dice rolls',
   ShowGraphs = 'Show graphs',
-  AutoRefresh = 'Automatic refresh'
+  AutoRefresh = 'Automatic refresh',
+  StackWipeCaptureChance = 'Capture chance when stack wiping'
 }
 
 export enum SimulationSpeed {
@@ -99,6 +100,8 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
       return 'Damage reduction given at 100% experience.'
     case Setting.Precision:
       return 'Precision of combat calculations. Advanced setting.'
+    case Setting.StackWipeCaptureChance:
+      return 'Additional unit capture chance when stack wiping an army.'
     case Setting.FixExperience:
       if (value)
         return 'Damage reduction from experience is fixed. All units benefit equally from the experience.'
@@ -326,7 +329,8 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
 
 export type CombatSettings = {
   [Setting.MoraleLostMultiplier]: number,
-  [Setting.StrengthLostMultiplier]: number
+  [Setting.StrengthLostMultiplier]: number,
+  [Setting.StackWipeCaptureChance]: number
 }
 
 export type SiteSettings = {

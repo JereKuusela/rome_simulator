@@ -19,23 +19,23 @@ export interface WinRateProgress {
 export interface CasualtiesProgress {
   avgMoraleA: number
   avgStrengthA: number
-  avgMoraleD: number
-  avgStrengthD: number
+  avgMoraleB: number
+  avgStrengthB: number
   maxMoraleA: number
   maxStrengthA: number
-  maxMoraleD: number
-  maxStrengthD: number
+  maxMoraleB: number
+  maxStrengthB: number
   moraleA: { [key: string]: number }
-  moraleD: { [key: string]: number }
+  moraleB: { [key: string]: number }
   strengthA: { [key: string]: number }
-  strengthD: { [key: string]: number }
+  strengthB: { [key: string]: number }
   winRateA: number
-  winRateD: number
+  winRateB: number
 }
 
 export interface ResourceLossesProgress {
   lossesA: ResourceLosses
-  lossesD: ResourceLosses
+  lossesB: ResourceLosses
 }
 
 export type ResourceLosses = {
@@ -48,7 +48,7 @@ export type ResourceLosses = {
 
 export type CombatNode = {
   cohortsA: Cohorts,
-  cohortsD: Cohorts,
+  cohortsB: Cohorts,
   // Each node iterates over all branches (each branch has different dice rolls).
   branchIndex: number,
   // Combat phase of this node, used to calculate combat round.

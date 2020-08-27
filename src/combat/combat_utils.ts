@@ -2,6 +2,7 @@
 import { sumBy } from 'lodash'
 import { Terrain, TerrainCalc, Setting, UnitAttribute, UnitData, CombatPhase, GeneralAttribute, LocationType, CohortProperties, SiteSettings, Cohorts, Cohort, Frontline, Reserve, GeneralValues, Environment, Settings } from 'types'
 import { calculateValue } from 'definition_values'
+import { multiplyChance } from 'utils'
 
 /**
  * Calculates the roll modifier based on skill level difference of generals.
@@ -138,10 +139,15 @@ export const defeatCohort = (environment: Environment, cohort: Cohort) => {
   cohort.state.isDestroyed = cohort[UnitAttribute.Strength] <= 0
 }
 
-export const wipeCohort = (environment: Environment, cohort: Cohort) => {
+export const wipeCohort = (environment: Environment, cohort: Cohort, captureChance: number) => {
   cohort[UnitAttribute.Morale] = 0
   cohort[UnitAttribute.Strength] = 0
+  cohort.state.captureChance = multiplyChance(cohort.state.captureChance, Math.max(0, captureChance - cohort.properties[UnitAttribute.CaptureResist]))
   defeatCohort(environment, cohort)
+}
+
+export const uncaptureCohort = (cohort: Cohort) => {
+  cohort.state.captureChance = 0
 }
 
 export const isAlive = (unit: Cohort, settings: Settings) => (

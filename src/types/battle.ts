@@ -47,6 +47,7 @@ export enum SideType {
 /** Information affecting both sides of combat. */
 export type Environment = {
   round: number
+  mode: Mode
   day: number
   terrains: Terrain[]
   settings: Settings

@@ -30,7 +30,7 @@ interface IState extends CasualtiesProgress {
   stackWipes: number
   rounds: { [key: number]: number }
   lossesA: ResourceLosses
-  lossesD: ResourceLosses
+  lossesB: ResourceLosses
 }
 
 const DOTS = 6
@@ -49,9 +49,9 @@ class Analyze extends Component<IProps, IState> {
     this.state = {
       attackerWinChance: 0, defenderWinChance: 0, incomplete: 0, calculating: false, progress: 0, updates: 0,
       averageRounds: 0, rounds: {}, battles: 0, draws: 0, stackWipes: 0,
-      avgMoraleA: 0, avgMoraleD: 0, avgStrengthA: 0, avgStrengthD: 0, maxMoraleA: 1, maxMoraleD: 1, maxStrengthA: 1, maxStrengthD: 1,
-      moraleA: {}, moraleD: {}, strengthA: {}, strengthD: {}, lossesA: initResourceLosses(), lossesD: initResourceLosses(),
-      winRateA: 0, winRateD: 0
+      avgMoraleA: 0, avgMoraleB: 0, avgStrengthA: 0, avgStrengthB: 0, maxMoraleA: 1, maxMoraleB: 1, maxStrengthA: 1, maxStrengthB: 1,
+      moraleA: {}, moraleB: {}, strengthA: {}, strengthB: {}, lossesA: initResourceLosses(), lossesB: initResourceLosses(),
+      winRateA: 0, winRateB: 0
     }
   }
 
@@ -203,7 +203,7 @@ class Analyze extends Component<IProps, IState> {
   }
 
   renderCasualties = () => {
-    const { avgMoraleA, avgMoraleD, avgStrengthA, avgStrengthD, maxMoraleA, maxMoraleD, maxStrengthA, maxStrengthD } = this.state
+    const { avgMoraleA, avgMoraleB: avgMoraleD, avgStrengthA, avgStrengthB: avgStrengthD, maxMoraleA, maxMoraleB: maxMoraleD, maxStrengthA, maxStrengthB: maxStrengthD } = this.state
     return (
       <Table>
         <Table.Header>
@@ -243,7 +243,7 @@ class Analyze extends Component<IProps, IState> {
   }
 
   renderResourceLosses = () => {
-    const { lossesA, lossesD } = this.state
+    const { lossesA, lossesB: lossesD } = this.state
     const resource = ' gold'
     return (
       <Table>
@@ -339,7 +339,7 @@ class Analyze extends Component<IProps, IState> {
   }
 
   renderGraphs = () => {
-    const { progress, rounds, moraleA, moraleD, maxMoraleA, maxMoraleD, strengthA, strengthD, maxStrengthA, maxStrengthD } = this.state
+    const { progress, rounds, moraleA, moraleB: moraleD, maxMoraleA, maxMoraleB: maxMoraleD, strengthA, strengthB: strengthD, maxStrengthA, maxStrengthB: maxStrengthD } = this.state
     return (
       <Grid>
         <Grid.Row columns='2'>

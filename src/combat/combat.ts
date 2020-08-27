@@ -1,5 +1,5 @@
 
-import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, Cohorts, Cohort, Frontline, Side, Environment, TacticCalc } from 'types'
+import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, Cohorts, Cohort, Frontline, Side, Environment, TacticCalc, UnitType } from 'types'
 import { noZero } from 'utils'
 import { calculateValue } from 'definition_values'
 import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, reserveSize, reinforce, calculateGeneralPips, getTerrainPips, checkStackWipe, defeatCohort, isAlive } from 'combat'
@@ -30,6 +30,8 @@ export const doCombatRound = (env: Environment, sideA: Side, sideB: Side, markDe
     d.results = getDefaultCombatResults()
   }
   deploy(env, a, d)
+  let stackWipeCaptureChanceA = 0
+  let stackWipeCaptureChanceB = 0
   if (round > 0) {
     reinforce(env, a)
     if (!settings[Setting.DefenderAdvantage])
@@ -59,9 +61,9 @@ export const doCombatRound = (env: Environment, sideA: Side, sideB: Side, markDe
   d.isDefeated = moveDefeated(env, d.cohorts.frontline, d.cohorts.defeated, markDefeated) && reserveSize(d.cohorts.reserve) === 0
   const noCombat = a.isDefeated && d.isDefeated
 
-  const defenderWiped = checkStackWipe(env, d, a.cohorts)
+  const defenderWiped = checkStackWipe(env, d, a)
   if (!defenderWiped)
-    checkStackWipe(env, a, d.cohorts)
+    checkStackWipe(env, a, d)
   a.armiesRemaining = !a.isDefeated || a.armies.length > 0
   d.armiesRemaining = !d.isDefeated || d.armies.length > 0
   if (a.isDefeated) {
@@ -275,7 +277,7 @@ const attackSub = (frontline: Frontline, roll: number, dynamicMultiplier: number
       const target = source.state.target
       if (!target)
         continue
-      target.state.captureChance = source.properties[UnitAttribute.CaptureChance]
+      target.state.captureChance = Math.max(0, source.properties[UnitAttribute.CaptureChance] - source.properties[UnitAttribute.CaptureResist])
       const multiplier = calculateDamageMultiplier(source, target, dynamicMultiplier, i > 0, phase, settings)
       calculateMoraleLosses(source, target, source.state.targetSupport, roll, multiplier, phase, settings)
       calculateStrengthLosses(source, target, source.state.targetSupport, roll, multiplier * strengthMultiplier, phase, settings)

@@ -116,12 +116,13 @@ export const getCombatSide = (state: AppState, sideType: SideType): Side => {
 
 const getArmy = (state: AppState, countryName: CountryName, armyName: ArmyName): ArmyDefinition => {
   const army = getArmyDefinition(state, countryName, armyName)
+  const unitDefinitions = getUnitDefinitions(state, countryName, armyName)
   const reserve = getReserve(state, countryName, armyName)
   const general = getGeneral(state, countryName, armyName)
   const settings = getSiteSettings(state)
   const unitPreferences = settings[Setting.CustomDeployment] ? army.unitPreferences : {} as UnitPreferences
   //const flankRatio = calculateValue(state.countries[countryName], CountryAttribute.FlankRatio)
-  return { reserve, general, flankSize: army.flankSize, unitPreferences }
+  return { reserve, general, flankSize: army.flankSize, unitPreferences, unitDefinitions }
 }
 
 export const convertSides = (state: AppState): Side[] => {
@@ -154,7 +155,8 @@ export const getCombatField = (state: AppState): Environment => {
     round: getRound(battle),
     terrains,
     settings,
-    attacker: getAttacker(battle)
+    attacker: getAttacker(battle),
+    mode: getMode(state)
   }
 }
 

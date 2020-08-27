@@ -13,6 +13,7 @@ export interface CohortData extends DefinitionValues<UnitValueType> {
 /** A full cohort (merged with unit definition). */
 export interface CohortDefinition extends CohortData, UnitDefinition {}
 
+export type UnitProperties = {[key in UnitType]: CohortProperties}
 
 /**
  * Interface designed for fast combat calculations. This data is cached in simulations (keep lightweight).
@@ -76,6 +77,8 @@ export interface CohortRoundInfo {
   isDefeated: boolean
   /** The round of defeat. */
   defeatedDay: number 
+  /** The cohort which defeated this cohort. */
+  defeatedBy: Cohort | null 
   /** Did the cohort get destroyed.  */
   isDestroyed: boolean
   /** Total morale losses inflicted during the battle. */

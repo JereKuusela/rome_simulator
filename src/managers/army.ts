@@ -2,6 +2,7 @@ import { calculateValue, calculateBase, addValuesWithMutate, filterValues, addVa
 import { Mode, GeneralAttribute, UnitType, UnitAttribute, GeneralData, ArmyData, CohortData, ValuesType, UnitValueType, TacticType, UnitPreferenceType, GeneralDefinition, ReserveData, GeneralValueType, CombatPhase, isAttributeEnabled, UnitDefinitions, Setting, UnitRole, UnitDefinition, SiteSettings, ModifierWithKey, ModifierType, Selections, SelectionType, TacticDefinitions } from 'types'
 import { toObj, toArr, toSet, ObjSet, values } from 'utils'
 import { findLastIndex, sortBy } from 'lodash'
+import { getRootParent } from './units'
 
 /**
  * Returns how much capture chance given martial skill gives.
@@ -76,7 +77,7 @@ const unitSorter = (unit: UnitDefinition, mode: Mode, parents?: ObjSet) => {
   return techSorter(unit)
 }
 
-export const getArchetypes = (units: UnitDefinitions, mode: Mode) => toArr(units).filter(unit => mode === Mode.Naval ? unit.parent === UnitType.Naval : unit.parent === UnitType.Land)
+export const getArchetypes = (units: UnitDefinitions, mode: Mode) => toArr(units).filter(unit => unit.parent === getRootParent(mode))
 
 export const getActualUnits = (units: UnitDefinitions, mode: Mode) => {
   const parents = getParents(units)

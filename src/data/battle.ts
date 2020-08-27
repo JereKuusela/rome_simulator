@@ -28,7 +28,7 @@ export const getDefaultParticipant = (name: CountryName, mode: Mode): Participan
   }
 }
 
-export const getDefaultMode = (mode: Mode, participants: number = 2): Battle => ({
+export const getDefaultMode = (mode: Mode, participants: number = 1): Battle => ({
   sides: { [SideType.A]: getDefaultSide(SideType.A, CountryName.Country1, mode, participants), [SideType.B]: getDefaultSide(SideType.B, CountryName.Country2, mode, participants) },
   terrains: getInitialTerrains(mode),
   fightOver: true,
