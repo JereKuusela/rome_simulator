@@ -11,9 +11,9 @@ export interface WinRateProgress {
   progress: number
   draws: number
   battles: number
-  averageRounds: number
+  averageDays: number
   stackWipes: number
-  rounds: { [key: number]: number }
+  days: { [key: number]: number }
 }
 
 export interface CasualtiesProgress {

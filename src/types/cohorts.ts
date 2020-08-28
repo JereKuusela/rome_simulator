@@ -1,4 +1,4 @@
-import { UnitType, UnitValueType, UnitDefinition, UnitAttribute, CombatPhase, CountryName, ArmyName, Mode, UnitRole } from 'types'
+import { UnitType, UnitValueType, UnitDefinition, UnitAttribute, CombatPhase, CountryName, ArmyName, Mode, UnitRole, Army } from 'types'
 import { DefinitionValues } from 'definition_values'
 
 
@@ -77,16 +77,20 @@ export interface CohortRoundInfo {
   isDefeated: boolean
   /** The round of defeat. */
   defeatedDay: number 
+  /** The cohort which targeted this cohort last. */
+  targetedBy: Cohort | null 
   /** The cohort which defeated this cohort. */
   defeatedBy: Cohort | null 
+  /** The army which stack wiped this cohort. */
+  stackWipedBy: Army | null 
   /** Did the cohort get destroyed.  */
   isDestroyed: boolean
   /** Total morale losses inflicted during the battle. */
   totalMoraleDealt: number
   /** Total strength losses inflicted during the battle. */
   totalStrengthDealt: number
-  /** Chance to get captured in case of getting defeated.  */
-  captureChance?: number
+  /** Chance of getting captured.  */
+  captureChance: number
 }
 
 export type Cohorts = {

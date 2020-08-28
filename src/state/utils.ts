@@ -146,7 +146,7 @@ const convertSidesSub = (state: AppState, side: SideData, armyDefinitions: ArmyD
   return convertSide(side, armies, settings)
 }
 
-export const getCombatField = (state: AppState): Environment => {
+export const getCombatEnvironment = (state: AppState): Environment => {
   const battle = getBattle(state)
   const terrains = battle.terrains.map(value => state.terrains[value])
   const settings = getSettings(state)

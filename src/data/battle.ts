@@ -39,4 +39,4 @@ export const getDefaultMode = (mode: Mode, participants: number = 1): Battle => 
   days: []
 })
 
-export const getDefaultBattle = (participants: number = 2): ModeState => ({ [Mode.Land]: getDefaultMode(Mode.Land, participants), [Mode.Naval]: getDefaultMode(Mode.Naval, participants) })
+export const getDefaultBattle = (participants: number = 1): ModeState => ({ [Mode.Land]: getDefaultMode(Mode.Land, participants), [Mode.Naval]: getDefaultMode(Mode.Naval, participants) })

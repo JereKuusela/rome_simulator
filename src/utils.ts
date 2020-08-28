@@ -71,7 +71,7 @@ export function arrGet<V1, V2>(arr: V1[], index: number, initial?: V2)
   return arr[index]
 }
 
-export const multiplyChance = (chance1?: number, chance2?: number) => chance1 && chance2 ? 1 - (1 - chance1) * (1 - chance2) : chance1 ? chance1 : chance2 ? chance2 : 0
+export const multiplyChance = (chance1?: number, chance2?: number) => chance1 && chance2 ? 1 - (1 - Math.max(0, chance1)) * (1 - Math.max(0, chance2)) : chance1 ? chance1 : chance2 ? chance2 : 0
 
 export const keys = <K extends string> (object: { [key in K]: any}) => Object.keys(object) as K[]
 const entries = <K extends string, V> (object: { [key in K]: V}) => Object.entries(object) as [K, V][]

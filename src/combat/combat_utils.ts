@@ -1,6 +1,6 @@
 
 import { sumBy } from 'lodash'
-import { Terrain, TerrainCalc, Setting, UnitAttribute, UnitData, CombatPhase, GeneralAttribute, LocationType, CohortProperties, SiteSettings, Cohorts, Cohort, Frontline, Reserve, GeneralValues, Environment, Settings } from 'types'
+import { Terrain, TerrainCalc, Setting, UnitAttribute, UnitData, CombatPhase, GeneralAttribute, LocationType, CohortProperties, SiteSettings, Cohorts, Cohort, Frontline, Reserve, GeneralValues, Environment, Settings, Army } from 'types'
 import { calculateValue } from 'definition_values'
 import { multiplyChance } from 'utils'
 
@@ -139,10 +139,11 @@ export const defeatCohort = (environment: Environment, cohort: Cohort) => {
   cohort.state.isDestroyed = cohort[UnitAttribute.Strength] <= 0
 }
 
-export const wipeCohort = (environment: Environment, cohort: Cohort, captureChance: number) => {
+export const wipeCohort = (environment: Environment, cohort: Cohort, enemy: Army | null, captureChance: number) => {
   cohort[UnitAttribute.Morale] = 0
   cohort[UnitAttribute.Strength] = 0
-  cohort.state.captureChance = multiplyChance(cohort.state.captureChance, Math.max(0, captureChance - cohort.properties[UnitAttribute.CaptureResist]))
+  cohort.state.stackWipedBy = enemy
+  cohort.state.captureChance = multiplyChance(cohort.state.captureChance, captureChance - cohort.properties[UnitAttribute.CaptureResist])
   defeatCohort(environment, cohort)
 }
 

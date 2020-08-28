@@ -1,4 +1,4 @@
-import { AppState, getMode, getCombatSide, getCombatField, convertSides } from 'state'
+import { AppState, getMode, getCombatSide, getCombatEnvironment, convertSides } from 'state'
 import { doCombatRound, removeDefeated, getCombatPhaseNumber } from 'combat'
 import { Battle, SideType, Setting, Cohorts, SideData, Side, Environment, Army, Reserve } from 'types'
 import { createEntropy, MersenneTwister19937, Random } from 'random-js'
@@ -111,7 +111,7 @@ export const battle = (pair: [AppState, AppState], steps: number) => {
   const [state, draft] = pair
   const mode = getMode(state)
   const battle = draft.battle[mode]
-  subBattle(battle, getCombatField(state), getCombatSide(state, SideType.A), getCombatSide(state, SideType.B), steps)
+  subBattle(battle, getCombatEnvironment(state), getCombatSide(state, SideType.A), getCombatSide(state, SideType.B), steps)
 }
 
 export const refreshBattle = (pair: [AppState, AppState]) => {
@@ -121,7 +121,7 @@ export const refreshBattle = (pair: [AppState, AppState]) => {
   const steps = getDay(battle)
   battle.days = []
   const [attacker, defender] = convertSides(state)
-  subBattle(battle, getCombatField(draft), attacker, defender, steps)
+  subBattle(battle, getCombatEnvironment(draft), attacker, defender, steps)
 }
 
 export const undo = (pair: [AppState, AppState], steps: number) => {

@@ -10,9 +10,9 @@ import { SideType } from 'types'
 
 interface IProps {
   a: { [key: string]: number }
-  d: { [key: string]: number }
+  b: { [key: string]: number }
   maxA: number
-  maxD: number
+  maxB: number
   progress: number
   type: string
 }
@@ -61,11 +61,11 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
   }
 
   render() {
-    const { a, d, maxA, maxD, type, progress } = this.props
+    const { a, b, maxA, maxB, type, progress } = this.props
     const { label } = this.state
 
     const dataA = this.calculate(a, maxA, progress, true)
-    const dataD = this.calculate(d, maxD, progress, false)
+    const dataB = this.calculate(b, maxB, progress, false)
 
     const ticks = mapRange(9, value => value / 4)
 
@@ -99,7 +99,7 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
           />
           <VictoryArea
             interpolation='natural'
-            data={dataD.cumulative}
+            data={dataB.cumulative}
             style={{
               data: { fill: '#00AAFFAA' }
             }}
@@ -107,7 +107,7 @@ export default class CumulativePercentChart extends Component<IProps, IState> {
           />
           <VictoryArea
             interpolation='natural'
-            data={dataD.percent}
+            data={dataB.percent}
             style={{
               data: { fill: '#00AAFF' }
             }}

@@ -3,6 +3,9 @@ Release 8:
 
 Changelog:
 
+General:
+ * IR data updated to 1.5.2
+
 UI:
  * Added a new component for side information (shows active general, active tactic and dice roll).
  * Moved randomize dice checkbox and input for rng seed under dice extra settings (plus icon).
@@ -98,6 +101,7 @@ Settings:
  - Settings from hardcoded.txt with auto generation.
 
 Todo:
+ - Analyze could be more optimized when both sides have a single army (the most common scenario?), no need to store deployed etc...
  - Transfer could only show non-base stats for units, terrains and tactics (since base stats are supposed to regenerate?), currently it shows way too much information.
  - Refactor simluation to update only single parameter, also parameters split should make more sense
  - Rowtype selectors could show unit priority? Different colors for main and flank. Frontline could slightly color tiles based on main/flank.

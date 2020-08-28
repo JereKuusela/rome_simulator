@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Grid, Button, Table, Header, Checkbox } from 'semantic-ui-react'
 
-import { AppState, getMode, getSiteSettings, getCombatField, convertSides } from 'state'
+import { AppState, getMode, getSiteSettings, getCombatEnvironment, convertSides } from 'state'
 import { interrupt, calculateWinRate, initResourceLosses } from 'combat'
 import { values, showProgress, filterKeys } from 'utils'
 import { SimulationSpeed, Setting, Mode, CasualtiesProgress, ResourceLosses, WinRateProgress, ResourceLossesProgress } from 'types'
@@ -203,7 +203,7 @@ class Analyze extends Component<IProps, IState> {
   }
 
   renderCasualties = () => {
-    const { avgMoraleA, avgMoraleB: avgMoraleD, avgStrengthA, avgStrengthB: avgStrengthD, maxMoraleA, maxMoraleB: maxMoraleD, maxStrengthA, maxStrengthB: maxStrengthD } = this.state
+    const { avgMoraleA, avgMoraleB, avgStrengthA, avgStrengthB, maxMoraleA, maxMoraleB, maxStrengthA, maxStrengthB } = this.state
     return (
       <Table>
         <Table.Header>
@@ -231,10 +231,10 @@ class Analyze extends Component<IProps, IState> {
               {this.toNumber(this.scale(avgStrengthA)) + ' (' + this.toPercent(this.scale(avgStrengthA / maxStrengthA)) + ')'}
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(avgMoraleD)) + ' (' + this.toPercent(this.scale(avgMoraleD / maxMoraleD)) + ')'}
+              {this.toNumber(this.scale(avgMoraleB)) + ' (' + this.toPercent(this.scale(avgMoraleB / maxMoraleB)) + ')'}
             </Table.Cell>
             <Table.Cell>
-              {this.toNumber(this.scale(avgStrengthD)) + ' (' + this.toPercent(this.scale(avgStrengthD / maxStrengthD)) + ')'}
+              {this.toNumber(this.scale(avgStrengthB)) + ' (' + this.toPercent(this.scale(avgStrengthB / maxStrengthB)) + ')'}
             </Table.Cell>
           </Table.Row>
         </Table.Body>
@@ -339,7 +339,7 @@ class Analyze extends Component<IProps, IState> {
   }
 
   renderGraphs = () => {
-    const { progress, rounds, moraleA, moraleB: moraleD, maxMoraleA, maxMoraleB: maxMoraleD, strengthA, strengthB: strengthD, maxStrengthA, maxStrengthB: maxStrengthD } = this.state
+    const { progress, rounds, moraleA, moraleB, maxMoraleA, maxMoraleB, strengthA, strengthB, maxStrengthA, maxStrengthB } = this.state
     return (
       <Grid>
         <Grid.Row columns='2'>
@@ -353,13 +353,13 @@ class Analyze extends Component<IProps, IState> {
           <Grid.Column>
             <CumulativePercentChart
               progress={progress} type='morale'
-              a={moraleA} d={moraleD} maxA={maxMoraleA} maxD={maxMoraleD}
+              a={moraleA} b={moraleB} maxA={maxMoraleA} maxB={maxMoraleB}
             />
           </Grid.Column>
           <Grid.Column>
             <CumulativePercentChart
               progress={progress} type='strength'
-              a={strengthA} d={strengthD} maxA={maxStrengthA} maxD={maxStrengthD}
+              a={strengthA} b={strengthB} maxA={maxStrengthA} maxB={maxStrengthB}
             />
           </Grid.Column>
         </Grid.Row>
@@ -370,7 +370,7 @@ class Analyze extends Component<IProps, IState> {
   update = (update: WinRateProgress, casualties: CasualtiesProgress, resources: ResourceLossesProgress) => {
     if (this.willUnmount)
       return
-    const { attacker, defender, incomplete, progress, averageRounds, rounds, battles, calculating, draws, stackWipes } = update
+    const { attacker, defender, incomplete, progress, averageDays: averageRounds, days: rounds, battles, calculating, draws, stackWipes } = update
     this.setState({
       attackerWinChance: attacker,
       defenderWinChance: defender,
@@ -391,7 +391,7 @@ class Analyze extends Component<IProps, IState> {
   calculate = () => {
     const { state } = this.props
     // Initialization done here to reset status.
-    const field = getCombatField(state)
+    const field = getCombatEnvironment(state)
     const [attacker, defender] = convertSides(state)
     calculateWinRate(this.update, field, attacker, defender)
   }

@@ -31,7 +31,7 @@ export const stackWipe = (environment: Environment, side: Side, enemy: Side) => 
 
   for (let i = 0; i < defeated.length; i++) {
     if (wasDefeatedDuringCurrentBattle(environment, defeated[i])) {
-      wipeCohort(environment, defeated[i], captureChance)
+      wipeCohort(environment, defeated[i], enemyArmy, captureChance)
     }
   }
 
@@ -39,7 +39,7 @@ export const stackWipe = (environment: Environment, side: Side, enemy: Side) => 
     for (let i = 0; i < part.length; i++) {
       const cohort = part[i]
       defeated.push(cohort)
-      wipeCohort(environment, cohort, captureChance)
+      wipeCohort(environment, cohort, enemyArmy, captureChance)
     }
     part.length = 0
   }
@@ -54,7 +54,7 @@ export const stackWipe = (environment: Environment, side: Side, enemy: Side) => 
         defeated.push(cohort)
         frontline[i][j] = null
       }
-      wipeCohort(environment, cohort, captureChance)
+      wipeCohort(environment, cohort, enemyArmy, captureChance)
     }
   }
   removeFromReserve(reserve.front)

@@ -1,6 +1,6 @@
 
 import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, Cohorts, Cohort, Frontline, Side, Environment, TacticCalc, UnitType } from 'types'
-import { noZero } from 'utils'
+import { multiplyChance, noZero } from 'utils'
 import { calculateValue } from 'definition_values'
 import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, reserveSize, reinforce, calculateGeneralPips, getTerrainPips, checkStackWipe, defeatCohort, isAlive } from 'combat'
 import { deploy, undeploy, moveDefeatedToRetreated } from './deployment'
@@ -30,8 +30,6 @@ export const doCombatRound = (env: Environment, sideA: Side, sideB: Side, markDe
     d.results = getDefaultCombatResults()
   }
   deploy(env, a, d)
-  let stackWipeCaptureChanceA = 0
-  let stackWipeCaptureChanceB = 0
   if (round > 0) {
     reinforce(env, a)
     if (!settings[Setting.DefenderAdvantage])
@@ -96,6 +94,8 @@ const clearState = (source: Frontline) => {
       state.strengthLoss = 0
       state.target = null
       state.flanking = false
+      state.targetedBy = null
+      state.captureChance = 0
     }
   }
 }
@@ -238,6 +238,10 @@ const moveDefeated = (environment: Environment, frontline: Frontline, defeated: 
         cohortsAlive = true
         continue
       }
+      if (cohort.state.targetedBy) {
+        cohort.state.defeatedBy = cohort.state.targetedBy
+        cohort.state.captureChance = multiplyChance(cohort.state.captureChance, cohort.state.targetedBy.properties[UnitAttribute.CaptureChance] - cohort.properties[UnitAttribute.CaptureResist])
+      }
       defeatCohort(environment, cohort)
       if (!markDefeated)
         frontline[i][j] = null
@@ -277,7 +281,7 @@ const attackSub = (frontline: Frontline, roll: number, dynamicMultiplier: number
       const target = source.state.target
       if (!target)
         continue
-      target.state.captureChance = Math.max(0, source.properties[UnitAttribute.CaptureChance] - source.properties[UnitAttribute.CaptureResist])
+      target.state.targetedBy = source
       const multiplier = calculateDamageMultiplier(source, target, dynamicMultiplier, i > 0, phase, settings)
       calculateMoraleLosses(source, target, source.state.targetSupport, roll, multiplier, phase, settings)
       calculateStrengthLosses(source, target, source.state.targetSupport, roll, multiplier * strengthMultiplier, phase, settings)

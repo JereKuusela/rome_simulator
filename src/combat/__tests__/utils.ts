@@ -2,7 +2,7 @@ import { getDefaultTactics, getDefaultTerrains, getDefaultCountryDefinitions, ge
 import { mapRange, toObj, values, map } from 'utils'
 import { Mode, CountryName, Setting, SideType, UnitAttribute, UnitType, TerrainType, UnitPreferenceType, CombatPhase, UnitPreferences, Cohort, UnitRole, CountryDefinitions, ArmyName, ModeState, SettingsAndOptions, Side, Settings, TacticDefinitions, TerrainDefinitions, CohortData, Environment, DisciplineValue, CohortDefinition, TacticType, GeneralAttribute, GeneralValueType } from 'types'
 import { doCombatRound } from 'combat'
-import { convertSides, getCombatField } from 'state'
+import { convertSides, getCombatEnvironment } from 'state'
 import { addToReserve, selectTactic, setGeneralAttribute } from 'managers/army'
 import { createArmy } from 'managers/countries'
 import { flatten } from 'lodash'
@@ -192,7 +192,7 @@ export const testReinforcement = (roundsToSkip: number, state: TestState, A: Exp
  */
 const testCombatSub = (state: TestState, rolls: [number, number][], expected: Expected[]) => {
   const [sideA, sideB] = convertSides(state as any)
-  const env = getCombatField(state as any)
+  const env = getCombatEnvironment(state as any)
   for (; env.day < expected.length; env.day++) {
     [sideA.results.dice, sideB.results.dice] = getRolls(rolls, env.day)
     doCombatRound(env, sideA, sideB, true)
