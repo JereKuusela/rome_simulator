@@ -11,7 +11,7 @@ import { openModal, createTactic } from 'reducers'
 import { toSignedPercent } from 'formatters'
 import { getImage } from 'utils'
 import { connect } from 'react-redux'
-import { AppState, getMode, getTactics, getUnitImages, mergeUnitTypes } from 'state'
+import { AppState, getMode, getTacticDefinitions, getUnitImages, mergeUnitTypes } from 'state'
 
 /**
  * Shows tactic definitions for both sides.
@@ -90,7 +90,7 @@ class TacticDefinitions extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  tactics: getTactics(state),
+  tactics: getTacticDefinitions(state),
   images: getUnitImages(state),
   unitTypes: mergeUnitTypes(state),
   mode: getMode(state)

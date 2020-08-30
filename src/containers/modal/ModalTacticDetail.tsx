@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { AppState, getTactics, getUnitImages, mergeUnitTypes } from 'state'
+import { AppState, getTacticDefinitions, getUnitImages, mergeUnitTypes } from 'state'
 import TacticDetail from 'components/TacticDetail'
 import { Mode, TacticType, TacticValueType, ModalType } from 'types'
 import { setTacticValue, setTacticImage, setTacticMode, deleteTactic, closeModal, setTacticType } from 'reducers'
@@ -58,7 +58,7 @@ const mapStateToProps = (state: AppState) => {
   return {
     type,
     tactic: state.tactics[type],
-    tactics: getTactics(state),
+    tactics: getTacticDefinitions(state),
     images: getUnitImages(state),
     unitTypes: mergeUnitTypes(state)
   }

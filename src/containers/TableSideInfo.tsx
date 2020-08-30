@@ -3,17 +3,17 @@ import { connect } from 'react-redux'
 import { Image, Table, Button } from 'semantic-ui-react'
 
 import { SideType, Setting, GeneralAttribute, UnitAttribute, ModalType, GeneralDefinition, CombatPhase } from 'types'
-import { AppState, getBattle, getMode, getCombatSide, getSiteSettings, getSide } from 'state'
+import { AppState, getBattle, getMode, getCombatSide, getSiteSettings, getSide, getTactic } from 'state'
 import { setDice, openModal } from 'reducers'
 import StyledNumber from 'components/Utils/StyledNumber'
 import { getCombatPhase, getCombatPhaseNumber } from 'combat'
-import { addSign } from 'formatters'
+import { addSign, toSignedPercent } from 'formatters'
 import IconDice from 'images/chance.png'
 import IconTerrain from 'images/terrain.png'
 import AttributeImage from 'components/Utils/AttributeImage'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
-import LabelItem from 'components/Utils/LabelUnit'
 import { getLeadingArmy, getDay, getParticipantName } from 'managers/battle'
+import { getImage } from 'utils'
 
 type Props = {
   type: SideType
@@ -64,7 +64,7 @@ class TableSideInfo extends Component<IProps> {
 
 
   renderSide = () => {
-    const { settings, side, army } = this.props
+    const { settings, side, army, tactic } = this.props
     const participantIndex = army?.participantIndex ?? 0
     return (
       <Table.Row key={side.type}>
@@ -78,7 +78,8 @@ class TableSideInfo extends Component<IProps> {
         {
           settings[Setting.Tactics] &&
           <Table.Cell collapsing>
-            {army ? <LabelItem item={army.tactic} /> : null}
+            {army ? <Image src={getImage(army.tactic)} avatar /> : null}
+            {tactic ? <StyledNumber  value={tactic.damage}  formatter={toSignedPercent}/> : null}
           </Table.Cell>
         }
         <Table.Cell>
@@ -137,9 +138,11 @@ class TableSideInfo extends Component<IProps> {
 const mapStateToProps = (state: AppState, props: Props) => {
   const battle = getBattle(state)
   const combat = getCombatSide(state, props.type)
+  const army = getLeadingArmy(combat)
   return {
     side: getSide(state, props.type),
-    army: getLeadingArmy(combat),
+    tactic: getTactic(state, combat.type),
+    army,
     round: getDay(battle),
     settings: getSiteSettings(state),
     mode: getMode(state),

@@ -31,9 +31,16 @@ export interface TacticDefinition extends Definition<TacticType>, DefinitionValu
   mode: Mode
 }
 
+export enum TacticMatch {
+  Neutral = 'Neutral',
+  Positive = 'Positive',
+  Negative = 'Negative'
+}
+
 export type Tactic = {
   type: TacticType
   effect: number
+  match: TacticMatch
   damage: number
   casualties: number
   image: string

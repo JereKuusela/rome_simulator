@@ -1,5 +1,5 @@
 
-import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, Cohorts, Cohort, Frontline, Side, Environment, TacticCalc, UnitType } from 'types'
+import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, Cohorts, Cohort, Frontline, Side, Environment, TacticCalc, UnitType, TacticMatch } from 'types'
 import { multiplyChance, noZero } from 'utils'
 import { calculateValue } from 'definition_values'
 import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, reserveSize, reinforce, calculateGeneralPips, getTerrainPips, checkStackWipe, defeatCohort, isAlive } from 'combat'
@@ -181,6 +181,15 @@ export const calculateTactic = (army: Cohorts, tactic: TacticDefinition, counter
   }
 
   return effectiveness * Math.min(1.0, averageWeight)
+}
+
+export const getTacticMatch = (tactic: TacticDefinition, counterTactic?: TacticDefinition): TacticMatch => {
+  const effectiveness = counterTactic ? calculateValue(tactic, counterTactic.type) : 1.0
+  if (effectiveness > 0)
+    return TacticMatch.Positive
+  if (effectiveness < 0)
+    return TacticMatch.Negative
+  return TacticMatch.Neutral
 }
 
 const calculateFlankRatioPenalty = (army: Cohorts, ratio: number, setting: Settings) => {

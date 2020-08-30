@@ -1,13 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { AppState, getCohorts, getSelectedTactic, getTactics, getSiteSettings, getParticipant, getCombatSide } from 'state'
+import { AppState, getSelectedTactic, getSiteSettings, getParticipant, getTactics } from 'state'
 import { selectTactic } from 'reducers'
-import { SideType, Cohorts, TacticDefinition, TacticCalc, TacticType, Tactic } from 'types'
-import { calculateTactic } from 'combat'
-import { getOpponent } from 'army_utils'
-import { calculateValue } from 'definition_values'
+import { SideType, TacticType } from 'types'
 import DropdownTactic from 'components/Dropdowns/DropdownTactic'
-import { getLeadingArmy } from 'managers/battle'
 
 type Props = {
   side: SideType
@@ -28,23 +24,10 @@ class TacticSelector extends Component<IProps> {
   }
 }
 
-
-const convertTactic = (tactic: TacticDefinition, cohorts: Cohorts, opposingTactic: TacticDefinition): Tactic => {
-  return {
-    type: tactic.type,
-    effect: calculateTactic(cohorts, tactic),
-    damage: calculateTactic(cohorts, tactic, opposingTactic),
-    casualties: calculateValue(tactic, TacticCalc.Casualties),
-    image: tactic.image
-  }
-}
-
 const mapStateToProps = (state: AppState, props: Props) => {
-  const cohorts = getCohorts(state, props.side)
   const tactic = getSelectedTactic(state, props.side, props.index)
-  const opponent = getLeadingArmy(getCombatSide(state, getOpponent(props.side)))
   return {
-    tactics: opponent ? getTactics(state).map(tactic => convertTactic(tactic, cohorts, opponent.tactic)) : [],
+    tactics: getTactics(state, props.side),
     tactic: tactic.type,
     participant: getParticipant(state, props.side, props.index),
     settings: getSiteSettings(state)

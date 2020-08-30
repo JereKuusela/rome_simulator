@@ -48,7 +48,7 @@ class Battle extends Component<IProps> {
   }
 
   render() {
-    const { participantA, participantB: participantD, round, isUndoAvailable, fightOver, settings, timestamp, day, changeSiteParameter } = this.props
+    const { participantA, participantB, round, isUndoAvailable, fightOver, settings, timestamp, day, changeSiteParameter } = this.props
     if (!timestamp)
       return null
     return (
@@ -56,7 +56,7 @@ class Battle extends Component<IProps> {
         <Grid verticalAlign='middle'>
           <Grid.Row>
             <Grid.Column floated='left' width='3'>
-              <Header>{this.roundName(day, round, getCombatPhase(round, settings))}</Header>
+              <Header>{this.roundName(day, round, fightOver, getCombatPhase(round, settings))}</Header>
             </Grid.Column>
             <Grid.Column textAlign='center' width='3'>
               <Checkbox
@@ -127,7 +127,7 @@ class Battle extends Component<IProps> {
               </Grid.Column>
               <Grid.Column>
                 <ParticipantSelector side={SideType.B} />
-                <TableUnitTypes side={SideType.B} countryName={participantD.countryName} armyName={participantD.armyName} onRowClick={this.openUnitDetails} />
+                <TableUnitTypes side={SideType.B} countryName={participantB.countryName} armyName={participantB.armyName} onRowClick={this.openUnitDetails} />
               </Grid.Column>
             </Grid.Row>
             {
@@ -137,7 +137,7 @@ class Battle extends Component<IProps> {
                   <TableDamageAttributes side={SideType.A} country={participantA.countryName} army={participantA.armyName} />
                 </Grid.Column>
                 <Grid.Column>
-                  <TableDamageAttributes side={SideType.B} country={participantD.countryName} army={participantD.armyName} />
+                  <TableDamageAttributes side={SideType.B} country={participantB.countryName} army={participantB.armyName} />
                 </Grid.Column>
               </Grid.Row>
 
@@ -197,10 +197,12 @@ class Battle extends Component<IProps> {
     )
   }
 
-  roundName = (day: number, round: number, phase: CombatPhase): string => {
+  roundName = (day: number, round: number, fightOver: boolean, phase: CombatPhase): string => {
     const dayStr = day === round ? '' : ', Day ' + day
     let roundStr = ''
-    if (day === 0 || round === 0)
+    if (fightOver)
+      roundStr = 'Fight over'
+    else if (day === 0 || round === 0)
       roundStr = 'Deployment'
     else if (round === -1)
       roundStr = 'Waiting for enemies'

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { TacticType, Tactic, SiteSettings } from 'types'
+import { TacticType, Tactic, SiteSettings, TacticMatch } from 'types'
 import DropdownTable from './DropdownTable'
 import StyledNumber from 'components/Utils/StyledNumber'
 import { toPercent, toSignedPercent } from 'formatters'
@@ -23,7 +23,8 @@ export default class DropdownTactic extends Component<IProps> {
     <StyledNumber
       value={tactic.damage}
       formatter={toSignedPercent}
-      hideZero
+      hideZero={tactic.match === TacticMatch.Neutral}
+      neutralColor='color-positive'
     />,
     <StyledNumber
       value={tactic.casualties}
@@ -33,6 +34,8 @@ export default class DropdownTactic extends Component<IProps> {
   ])
 
   isActive = (item: Tactic) => item.type === this.props.value
+  isPositive = (item: Tactic) => item.match === TacticMatch.Positive
+  isNegative = (item: Tactic) => item.match === TacticMatch.Negative
 
   getValue = (item: Tactic) => item.type
 
@@ -47,6 +50,8 @@ export default class DropdownTactic extends Component<IProps> {
         getContent={this.getContent}
         isActive={this.isActive}
         getValue={this.getValue}
+        isPositive={this.isPositive}
+        isNegative={this.isNegative}
         onSelect={onSelect}
         trigger={<LabelItem item={values.find(tactic => tactic.type === value)} />}
         settings={settings}

@@ -22,6 +22,9 @@ UI:
  * Unit tooltips now show the round of defeated for defeated units.
  * Removed ability to manually add units to frontline or defeated. Multiple armies can be used if you need to micro the deployment.
  * Selections on Countries page are now more darker (better visibility).
+ * Side info now shows the leading army.
+ * Side info now shows the tactic effect.
+ * Tactic selector now colors positive and negative tactics.
 
 Refactor
  * Side and participant separated. Side now contains multiple participants.

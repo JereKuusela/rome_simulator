@@ -9,6 +9,8 @@ interface IProps<T extends string, E> {
   values: E[]
   headers: string[]
   getContent: (value: E, search: string) => (string | number | JSX.Element)[] | null
+  isPositive?: (value: E) => boolean
+  isNegative?: (value: E) => boolean
   getText?: (value: E) => string
   isActive: (value: E) => boolean
   getValue: (value: E) => T
@@ -47,11 +49,12 @@ export default class DropdownTable<T extends string, E> extends Component<IProps
   onClose = () => this.setState({ search: '', open: false })
 
   getContent = (item: E, index: number) => {
-    const content = this.props.getContent(item, this.state.search)
+    const { getContent, isPositive, isNegative, isActive } = this.props
+    const content = getContent(item, this.state.search)
     if (!content)
       return null
     return (
-      <Table.Row key={index} onClick={() => this.onClick(item)} active={this.props.isActive(item)}>
+      <Table.Row key={index} onClick={() => this.onClick(item)} active={isActive(item)} positive={isPositive && isPositive(item)} negative={isNegative && isNegative(item)}>
         {content.map((cell, index) => <Table.Cell key={index}>{cell}</Table.Cell>)}
       </Table.Row>
     )
@@ -66,7 +69,7 @@ export default class DropdownTable<T extends string, E> extends Component<IProps
     this.setState({ open: false, search: '' })
   }
   render() {
-    const { value, values, headers, trigger, width,  clearable, getText, search, placeholder, absolute } = this.props
+    const { value, values, headers, trigger, width, clearable, getText, search, placeholder, absolute } = this.props
     const selected = values.find(this.props.isActive)
     const text = trigger ? undefined : selected && getText ? getText(selected) : ''
     const style = { minWidth: width ?? 170, maxWidth: width ?? 170 }

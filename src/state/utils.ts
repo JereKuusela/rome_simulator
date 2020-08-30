@@ -1,6 +1,6 @@
 import { AppState } from './index'
 import { toArr, toObj, keys } from 'utils'
-import { filterUnitDefinitions, getArmyPart, convertReserveDefinitions, convertUnitDefinitions, convertUnitDefinition, shrinkUnits } from '../army_utils'
+import { filterUnitDefinitions, getArmyPart, convertReserveDefinitions, convertUnitDefinitions, convertUnitDefinition, shrinkUnits, getOpponent } from '../army_utils'
 import { Mode, CountryName, SideType, CohortDefinition, ArmyPart, UnitType, TerrainType, LocationType, TacticType, TacticDefinition, UnitPreferences, Participant, Terrain, Settings, Battle, ArmyName, GeneralDefinition, Countries, Setting, ReserveDefinition, CountryAttribute, UnitDefinitions, UnitDefinition, GeneralData, Country, CountryDefinition, Cohort, Cohorts, SideData, Side, Environment, ArmyDefinition } from 'types'
 import { getDefaultBattle, getDefaultMode, getDefaultCountryDefinitions, getDefaultSettings, getDefaultTacticState, getDefaultTerrainState } from 'data'
 import { uniq, flatten } from 'lodash'
@@ -8,8 +8,9 @@ import * as manager from 'managers/army'
 import { getCountryModifiers, getGeneralModifiers, getSecondaryCountryModifiers } from 'managers/modifiers'
 import { convertCountryDefinition, applyCountryModifiers, filterArmies } from 'managers/countries'
 import { applyUnitModifiers } from 'managers/units'
-import { convertArmy, convertSide, getRound, getAttacker } from 'managers/battle'
+import { convertArmy, convertSide, getRound, getAttacker, getLeadingArmy } from 'managers/battle'
 import { iterateCohorts } from 'combat'
+import { convertTactic } from 'managers/tactics'
 
 /**
  * Returns settings of the current mode.
@@ -85,16 +86,22 @@ export const getTerrains = (state: AppState, location?: LocationType, mode?: Mod
  * Returns tactic types.
  * @param mode Mode filter (current mode if not given).
  */
-export const getTacticTypes = (state: AppState, mode?: Mode): TacticType[] => getTactics(state, mode).map(tactic => tactic.type)
+export const getTacticTypes = (state: AppState, mode?: Mode): TacticType[] => getTacticDefinitions(state, mode).map(tactic => tactic.type)
 
 /**
  * Returns tactics.
  * @param mode Mode filter (current mode if not given).
  */
-export const getTactics = (state: AppState, mode?: Mode): TacticDefinition[] => {
+export const getTacticDefinitions = (state: AppState, mode?: Mode): TacticDefinition[] => {
   const tactics = toArr(state.tactics)
   mode = mode ?? state.settings.mode
   return tactics.filter(tactic => tactic.mode === state.settings.mode)
+}
+
+export const getTactics = (state: AppState, side: SideType) => {
+  const cohorts = getCohorts(state, side)
+  const opponent = getLeadingArmy(getCombatSide(state, getOpponent(side)))
+  return  opponent ? getTacticDefinitions(state).map(tactic => convertTactic(tactic, cohorts, opponent.tactic)) : []
 }
 
 ////#endregion
@@ -195,7 +202,15 @@ export const getSelectedArmy = (state: AppState): ArmyName => keys(getArmies(sta
 
 export const getArmies = (state: AppState, countryName?: CountryName) => filterArmies(state.countries[countryName ?? state.settings.country], state.settings.mode)
 
-export const getTactic = (state: AppState, countryName: CountryName, armyName: ArmyName): TacticDefinition => state.tactics[getGeneralDefinition(state, countryName, armyName).tactic]
+export const getTacticDefinition = (state: AppState, countryName: CountryName, armyName: ArmyName): TacticDefinition => state.tactics[getGeneralDefinition(state, countryName, armyName).tactic]
+
+export const getTactic = (state: AppState, side: SideType) => {
+  const cohorts = getCohorts(state, side)
+  const tactic = getLeadingArmy(getCombatSide(state, side))?.tactic
+  const opponent = getLeadingArmy(getCombatSide(state, getOpponent(side)))
+  return tactic && opponent ? convertTactic(tactic, cohorts, opponent.tactic) : null
+}
+
 
 export const getOverridenReserveDefinitions = (state: AppState, countryName: CountryName, armyName: ArmyName, originals?: boolean) => {
   const army = getArmyDefinition(state, countryName, armyName)
