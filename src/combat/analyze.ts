@@ -1,7 +1,6 @@
-import { Setting, UnitAttribute, SideType, ResourceLosses, WinRateProgress, CasualtiesProgress, ResourceLossesProgress, Cohorts, CombatNode, Side, Environment, Frontline, Cohort, ArmyName, UnitDefinitions, UnitProperties } from 'types'
+import { Setting, UnitAttribute, SideType, ResourceLosses, WinRateProgress, CasualtiesProgress, ResourceLossesProgress, Cohorts, CombatNode, Side, Environment, Frontline, Cohort, ArmyName, UnitDefinitions, UnitProperties, Reserve, Army } from 'types'
 import { doCombatRound } from './combat'
 import { mapRange, toObj } from 'utils'
-import { deploy } from './deployment'
 
 export const initResourceLosses = (): ResourceLosses => ({
   repairMaintenance: 0,
@@ -19,6 +18,25 @@ let interruptSimulation = false
  * Interrupts current win rate calculation.
  */
 export const interrupt = () => interruptSimulation = true
+
+const createCombatNode = (environment: Environment, sideA: Side, sideB: Side, branchIndex: number = 0, combatPhase: number = 1, weightIndex: number = 1) => ({
+  cohortsA: copyCohortState(sideA.cohorts), deployedA: copyArmiesState(sideA.deployed), armiesA: copyArmiesState(sideA.armies),
+  cohortsB: copyCohortState(sideB.cohorts), deployedB: copyArmiesState(sideB.deployed), armiesB: copyArmiesState(sideB.armies),
+  branchIndex, combatPhase, weightIndex, round: environment.round, day: environment.day, attacker: environment.attacker
+})
+
+const updateFromCombatNode = (node: CombatNode, environment: Environment, sideA: Side, sideB: Side) => {
+  environment.day = node.day
+  environment.attacker = node.attacker
+  environment.round = node.round
+  // Most of the data is expected to change, so it's better to deep clone which allows mutations.
+  sideA.cohorts = copyCohortState(node.cohortsA)
+  sideA.deployed = copyArmiesState(node.deployedA)
+  sideA.armies = copyArmiesState(node.armiesA)
+  sideB.cohorts = copyCohortState(node.cohortsB)
+  sideB.deployed = copyArmiesState(node.deployedB)
+  sideB.armies = copyArmiesState(node.armiesB)
+}
 
 /**
  * Calculates win rate for the given battle.
@@ -47,7 +65,7 @@ export const calculateWinRate = (progressCallback: (progress: WinRateProgress, c
 
   const lossesA = initResourceLosses()
   const lossesB = initResourceLosses()
-  const resourceLosses: ResourceLossesProgress = { lossesA,  lossesB }
+  const resourceLosses: ResourceLossesProgress = { lossesA, lossesB }
   const unitPropertiesA = getParticipantIndexToProperties(sideA)
   const unitPropertiesB = getParticipantIndexToProperties(sideB)
 
@@ -65,13 +83,12 @@ export const calculateWinRate = (progressCallback: (progress: WinRateProgress, c
   environment.round = -1
   // Initial deployment is shared for each iteration.
   doCombatRound(environment, sideA, sideB, false)
-
   const totalA: State = { morale: 0, strength: 0 }
   const currentA: State = { morale: 0, strength: 0 }
-  sumState(totalA, sideA.cohorts)
+  sumState(totalA, sideA)
   const totalB: State = { morale: 0, strength: 0 }
   const currentB: State = { morale: 0, strength: 0 }
-  sumState(totalB, sideB.cohorts)
+  sumState(totalB, sideB)
   const casualties: CasualtiesProgress = {
     avgMoraleA: 0,
     avgMoraleB: 0,
@@ -100,7 +117,7 @@ export const calculateWinRate = (progressCallback: (progress: WinRateProgress, c
   // Nodes know their depth which determines their weight for win rate.
 
   // Nodes also cache state of units, only store what is absolutely necessary.
-  const nodes: CombatNode[] = [{ cohortsA: sideA.cohorts, cohortsB: sideB.cohorts, branchIndex: 0, combatPhase: 1, weightIndex: 1 }]
+  const nodes: CombatNode[] = [createCombatNode(environment, sideA, sideB)]
 
   progressCallback(progress, casualties, resourceLosses)
 
@@ -108,16 +125,11 @@ export const calculateWinRate = (progressCallback: (progress: WinRateProgress, c
     for (let i = 0; (i < chunkSize) && nodes.length && !interruptSimulation; i++) {
       progress.battles = progress.battles + 1
       const node = nodes[nodes.length - 1]
-      // Most of the data is expected to change, so it's better to deep clone which allows mutations.
-      const cohortsA = copyCohortState(node.cohortsA)
-      const cohortsB = copyCohortState(node.cohortsB)
-
+      updateFromCombatNode(node, environment, sideA, sideB)
       const [rollA, rollB] = rolls[node.branchIndex]
       sideA.results.dice = rollA
       sideB.results.dice = rollB
-      sideA.cohorts = cohortsA
-      sideB.cohorts = cohortsB
-      let result = doPhase(environment, sideA, sideB, node.combatPhase)
+      let winner = doPhase(environment, sideA, sideB)
 
       let combatPhase = node.combatPhase
       let branchIndex = node.branchIndex
@@ -126,7 +138,7 @@ export const calculateWinRate = (progressCallback: (progress: WinRateProgress, c
       node.branchIndex++
       if (node.branchIndex === dice2)
         nodes.pop()
-      while (result.winner === undefined && combatPhase < maxPhase) {
+      while (winner === undefined && combatPhase < maxPhase) {
         let doBranch = true
         if (combatPhase % phasesPerRoll === 1) {
           doBranch = false
@@ -137,24 +149,22 @@ export const calculateWinRate = (progressCallback: (progress: WinRateProgress, c
         if (doBranch && dice2 > 1) {
           branchIndex = 0
           weightIndex++
-          nodes.push({ cohortsA: copyCohortState(cohortsA), cohortsB: copyCohortState(cohortsB), branchIndex: 1, combatPhase, weightIndex })
+          nodes.push(createCombatNode(environment, sideA, sideB, 1, combatPhase, weightIndex))
         }
         const [rollA, rollB] = rolls[branchIndex]
         sideA.results.dice = rollA
         sideB.results.dice = rollB
-        sideA.cohorts = cohortsA
-        sideB.cohorts = cohortsB
-        result = doPhase(environment, sideA, sideB, combatPhase)
+        winner = doPhase(environment, sideA, sideB)
       }
-      sumState(currentA, sideA.cohorts)
-      sumState(currentB, sideB.cohorts)
+      sumState(currentA, sideA)
+      sumState(currentB, sideB)
       if (settings[Setting.CalculateCasualties])
         updateCasualties(casualties, weights[weightIndex], totalA, totalB, currentA, currentB)
       if (settings[Setting.CalculateResourceLosses]) {
         calculateResourceLoss(sideA.cohorts, weights[weightIndex], lossesA, lossesB, unitPropertiesB)
         calculateResourceLoss(sideB.cohorts, weights[weightIndex], lossesB, lossesA, unitPropertiesA)
       }
-      updateProgress(progress, weights[weightIndex], result, settings[Setting.Stackwipe] && (currentA.strength === 0 || currentB.strength === 0))
+      updateProgress(progress, weights[weightIndex], winner, environment, settings[Setting.Stackwipe] && (currentA.strength === 0 || currentB.strength === 0))
     }
     if (!nodes.length) {
       progress.calculating = false
@@ -207,47 +217,49 @@ const getRolls = (minimum: number, maximum: number, halveTimes: number) => {
 /**
  * Custom clone function to only copy state and keep references to constant data same.
  */
-const copyCohortState = (status: Cohorts): Cohorts => ({
-  frontline: status.frontline.map(row => row.map(value => value ? { ...value } : null)),
-  reserve: {
-    front: status.reserve.front.map(value => ({ ...value })),
-    flank: status.reserve.flank.map(value => ({ ...value })),
-    support: status.reserve.support.map(value => ({ ...value }))
-  },
-  defeated: status.defeated.map(value => ({ ...value })),
-  retreated: status.retreated.map(value => ({ ...value }))
+const copyCohortState = (cohorts: Cohorts): Cohorts => ({
+  frontline: cohorts.frontline.map(row => row.map(value => value ? { ...value } : null)),
+  reserve: copyReserveState(cohorts.reserve),
+  defeated: cohorts.defeated.map(value => ({ ...value })),
+  retreated: cohorts.retreated.map(value => ({ ...value }))
 })
+const copyReserveState = (reserve: Reserve): Reserve => ({
+  front: reserve.front.map(value => ({ ...value })),
+  flank: reserve.flank.map(value => ({ ...value })),
+  support: reserve.support.map(value => ({ ...value }))
+})
+const copyArmiesState = (armies: Army[]): Army[] => armies.map(army => ({ ...army, reserve: copyReserveState(army.reserve) }))
 
 const REPAIR_PER_MONTH = 0.1
 
 
 const calculateCaptureLoss = (cohort: Cohort, weight: number, own: ResourceLosses, enemy: ResourceLosses, enemyDefinitions: { [key: number]: UnitProperties }) => {
-    const enemyIndex = cohort.state.defeatedBy?.properties.participantIndex ?? cohort.state.stackWipedBy?.participantIndex
-    if (enemyIndex === undefined) {
-      throw 'Defeated should always get defeated by something.'
-    }
-    const cohortCost = weight * cohort.properties[UnitAttribute.Cost]
-    if (cohort.state.isDestroyed) {
-      own.destroyedCost += cohortCost
-      return
-    }
-    const capture = (cohort.state.captureChance ?? 0.0)
-    const repair = (cohort.properties.maxStrength - cohort[UnitAttribute.Strength]) * cohort.properties[UnitAttribute.Maintenance] * cohortCost / REPAIR_PER_MONTH
-    if (capture <= 0.0) {
-      own.repairMaintenance += repair
-      return
-    }
-    // If captured then the unit doesn't have to be repaired.
-    own.repairMaintenance += (1 - capture) * repair
-    // If captured then the full cost of unit is lost.
-    own.capturedCost += capture * cohortCost
-    const enemyProperties = enemyDefinitions[enemyIndex][cohort.properties.type]
-    const enemyUnitCost = weight * (cohort.properties[UnitAttribute.Cost] - cohort.properties[UnitAttribute.Cost] + enemyProperties[UnitAttribute.Cost])
-    const enemyRepairCost = (cohort.properties.maxStrength - cohort[UnitAttribute.Strength]) * (cohort.properties[UnitAttribute.Maintenance] - cohort.properties[UnitAttribute.Maintenance] + enemyProperties[UnitAttribute.Maintenance]) * enemyUnitCost / REPAIR_PER_MONTH
-    // If captured then the enemy gainst full cost of the unit.
-    enemy.seizedCost -= capture * enemyUnitCost
-    // But enemy also has to repair the unit.
-    enemy.seizedRepairMaintenance += capture * enemyRepairCost
+  const enemyIndex = cohort.state.defeatedBy?.properties.participantIndex ?? cohort.state.stackWipedBy?.participantIndex
+  if (enemyIndex === undefined) {
+    throw 'Defeated should always get defeated by something.'
+  }
+  const cohortCost = weight * cohort.properties[UnitAttribute.Cost]
+  if (cohort.state.isDestroyed) {
+    own.destroyedCost += cohortCost
+    return
+  }
+  const capture = (cohort.state.captureChance ?? 0.0)
+  const repair = (cohort.properties.maxStrength - cohort[UnitAttribute.Strength]) * cohort.properties[UnitAttribute.Maintenance] * cohortCost / REPAIR_PER_MONTH
+  if (capture <= 0.0) {
+    own.repairMaintenance += repair
+    return
+  }
+  // If captured then the unit doesn't have to be repaired.
+  own.repairMaintenance += (1 - capture) * repair
+  // If captured then the full cost of unit is lost.
+  own.capturedCost += capture * cohortCost
+  const enemyProperties = enemyDefinitions[enemyIndex][cohort.properties.type]
+  const enemyUnitCost = weight * (cohort.properties[UnitAttribute.Cost] - cohort.properties[UnitAttribute.Cost] + enemyProperties[UnitAttribute.Cost])
+  const enemyRepairCost = (cohort.properties.maxStrength - cohort[UnitAttribute.Strength]) * (cohort.properties[UnitAttribute.Maintenance] - cohort.properties[UnitAttribute.Maintenance] + enemyProperties[UnitAttribute.Maintenance]) * enemyUnitCost / REPAIR_PER_MONTH
+  // If captured then the enemy gainst full cost of the unit.
+  enemy.seizedCost -= capture * enemyUnitCost
+  // But enemy also has to repair the unit.
+  enemy.seizedRepairMaintenance += capture * enemyRepairCost
 }
 
 /**
@@ -278,32 +290,40 @@ type Winner = SideType | null | undefined
 /**
  * Simulates one dice roll phase.
  */
-const doPhase = (environment: Environment, attacker: Side, defender: Side, phase: number) => {
-  let winner: Winner = undefined
+const doPhase = (environment: Environment, sideA: Side, sideB: Side) => {
   const phaseLength = environment.settings[Setting.PhaseLength]
-  const limit = phase * phaseLength
-  let round = (phase - 1) * phaseLength
-  attacker.armiesRemaining = true
-  attacker.isDefeated = false
-  defender.armiesRemaining = true
-  defender.isDefeated = false
-  for (; round < limit; round++) {
-    environment.day = round
-    environment.round = round
-    doCombatRound(environment, attacker, defender, false)
-    if (!attacker.armiesRemaining && !defender.armiesRemaining)
-      winner = null
-    else if (!attacker.armiesRemaining)
-      winner = SideType.B
-    else if (!defender.armiesRemaining)
-      winner = SideType.A
-    // Custom check to prevent round going over phase limit.
-    if (winner !== undefined || round === limit)
+  // This is only called when combat is happening.
+  sideA.armiesRemaining = true
+  sideA.isDefeated = false
+  sideB.armiesRemaining = true
+  sideB.isDefeated = false
+  for (let i = 0; i < phaseLength; i++) {
+    environment.day++
+    doCombatRound(environment, sideA, sideB, false)
+    if (sideA.isDefeated || sideB.isDefeated)
       break
   }
-  if (round > limit)
-    throw 'Round should never get over the limit.'
-  return { winner, days: environment.day + 1 }
+  if (environment.round === -1 && sideA.armiesRemaining && sideB.armiesRemaining)
+    skipUntilNextCombatDay(environment, sideA, sideB)
+  return getWinner(sideA, sideB)
+}
+
+const getWinner = (sideA: Side, sideB: Side) => {
+  let winner: Winner = undefined
+  if (!sideA.armiesRemaining && !sideB.armiesRemaining)
+    winner = null
+  else if (!sideA.armiesRemaining)
+    winner = SideType.B
+  else if (!sideB.armiesRemaining)
+    winner = SideType.A
+  return winner
+}
+
+const skipUntilNextCombatDay = (environment: Environment, sideA: Side, sideB: Side) => {
+  while (environment.round === -1 && environment.day < 10000) {
+    environment.day++
+    doCombatRound(environment, sideA, sideB, false)
+  }
 }
 
 type State = {
@@ -311,12 +331,25 @@ type State = {
   strength: number
 }
 
-/**
- * Counts total morale and strength of units.
- */
-const sumState = (state: State, cohorts: Cohorts) => {
-  state.strength = 0
-  state.morale = 0
+const sumReserve = (state: State, reserve: Reserve) => {
+  for (let i = 0; i < reserve.front.length; i++) {
+    const cohort = reserve.front[i]
+    state.strength += cohort[UnitAttribute.Strength]
+    state.morale += cohort[UnitAttribute.Morale]
+  }
+  for (let i = 0; i < reserve.flank.length; i++) {
+    const cohort = reserve.flank[i]
+    state.strength += cohort[UnitAttribute.Strength]
+    state.morale += cohort[UnitAttribute.Morale]
+  }
+  for (let i = 0; i < reserve.support.length; i++) {
+    const cohort = reserve.support[i]
+    state.strength += cohort[UnitAttribute.Strength]
+    state.morale += cohort[UnitAttribute.Morale]
+  }
+}
+
+const sumCohorts = (state: State, cohorts: Cohorts) => {
   for (let i = 0; i < cohorts.frontline.length; i++) {
     for (let j = 0; j < cohorts.frontline[i].length; j++) {
       const cohort = cohorts.frontline[i][j]
@@ -326,21 +359,7 @@ const sumState = (state: State, cohorts: Cohorts) => {
       state.morale += cohort[UnitAttribute.Morale]
     }
   }
-  for (let i = 0; i < cohorts.reserve.front.length; i++) {
-    const cohort = cohorts.reserve.front[i]
-    state.strength += cohort[UnitAttribute.Strength]
-    state.morale += cohort[UnitAttribute.Morale]
-  }
-  for (let i = 0; i < cohorts.reserve.flank.length; i++) {
-    const cohort = cohorts.reserve.flank[i]
-    state.strength += cohort[UnitAttribute.Strength]
-    state.morale += cohort[UnitAttribute.Morale]
-  }
-  for (let i = 0; i < cohorts.reserve.support.length; i++) {
-    const cohort = cohorts.reserve.support[i]
-    state.strength += cohort[UnitAttribute.Strength]
-    state.morale += cohort[UnitAttribute.Morale]
-  }
+  sumReserve(state, cohorts.reserve)
   for (let i = 0; i < cohorts.defeated.length; i++) {
     const cohort = cohorts.defeated[i]
     state.strength += cohort[UnitAttribute.Strength]
@@ -354,23 +373,35 @@ const sumState = (state: State, cohorts: Cohorts) => {
 }
 
 /**
+ * Counts total morale and strength of units.
+ */
+const sumState = (state: State, side: Side) => {
+  state.strength = 0
+  state.morale = 0
+  sumCohorts(state, side.cohorts)
+  side.deployed.forEach(army => sumReserve(state, army.reserve))
+  side.armies.forEach(army => sumReserve(state, army.reserve))
+}
+
+/**
  * Updates progress of the calculation.
  */
-const updateProgress = (progress: WinRateProgress, amount: number, result: { winner: Winner, days: number }, stackWipe: boolean) => {
-  const { winner, days } = result
-  progress.progress += amount
+const updateProgress = (progress: WinRateProgress, weight: number, winner: Winner, environment: Environment, stackWipe: boolean) => {
+  progress.progress += weight
   if (winner === SideType.A)
-    progress.attacker += amount
+    progress.attacker += weight
   else if (winner === SideType.B)
-    progress.defender += amount
+    progress.defender += weight
   else if (winner === null)
-    progress.draws += amount
+    progress.draws += weight
   else
-    progress.incomplete += amount
+    progress.incomplete += weight
   if (stackWipe)
-    progress.stackWipes += amount
-  progress.averageDays += amount * days
-  progress.days[days] = (progress.days[days] || 0) + amount
+    progress.stackWipes += weight
+  // Environment tracks start day of the current round. +1 for the end day.
+  const days = environment.day + 1
+  progress.averageDays += weight * days
+  progress.days[days] = (progress.days[days] || 0) + weight
 }
 
 /**

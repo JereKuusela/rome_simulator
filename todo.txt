@@ -43,35 +43,30 @@ Combat
 
 Todo: 
 
-- Late deployment penalty, stack wipe capturing
+- Late deployment penalty
+- Setting to disable attacker switching
 
 Data:
  * IR units have mode (should be derived from base)
 
-Needed tests:
+
+
+Release++:
+
+Tests:
  * Tests:
   - Precision. In-game test with many rounds to verify that calculation accuracy matches the game.
   - Different mechanics, no in-game comparison required since all are just damage modifiers.
 * Deployment
   - Many scenarios
+  - Based also on manpower!! (before index), need to to test whether full strength is prioritized for both deploy and reinforce
   - Late deployment (with and without penalty)
 * Reinforcement
   - Non-secondary penalty
   - Better general changing order
 * Mechanics
   - Flank ratio
-
-
-Multiarmy:
- - Late deploy penalty implemented?
- - Battle has two sides and terrain.
- - Each side includes dice (+ related things), N participants and rounds list.
- - Each participant includes country, army and days until battle.
- - CombatSide also includes active tactic and active general martial.
-
- - UI needs component for side: For dice and showing active martial / tactic (with damage effect).
- - UI needs a table for participants (with a way to add and delete).
- - Quick selectors need a redesign. They currently work only for one army. Still show components for both attacker and defender? But with an army selector?
+* utils tested
 
 UI:
  - Togglable stats rows to show individual units or hide unit types.
@@ -86,40 +81,19 @@ Countries:
  - Inventions to show tag specific (without actually implementing tags).
   * These inventions are extra. Perhaps a 4th slot for toggle? Or just implement scrolling?
 
-Land battle:
-- Deployment order based also on manpower!! (before index), need to to test whether full strength is prioritized for both deploy and reinforce
-
-
-Release++:
 
 Settings:
- - discipline: Reduces damage, only increases damage, no effect.
- - general maneuver: Affects crossing, affects terrain, affects both, no effect.
- - general: martial, fire&shock, both
  - Show on main page current settings set (Imperator, EUIV, mixed), tooltip to show individual (or only changed?)
- - New settings for deployment / reinforcement order/attribute.
  - Settings from hardcoded.txt with auto generation.
 
 Todo:
- - Analyze could be more optimized when both sides have a single army (the most common scenario?), no need to store deployed etc...
  - Transfer could only show non-base stats for units, terrains and tactics (since base stats are supposed to regenerate?), currently it shows way too much information.
- - Refactor simluation to update only single parameter, also parameters split should make more sense
  - Rowtype selectors could show unit priority? Different colors for main and flank. Frontline could slightly color tiles based on main/flank.
  - Stats to show amount of traditions, trade, etc..
  - Definition functions probably all could mutate (mostly used in reducers?)
- - Analyze could automatically set precision based on unit count (or some other heuristic like timing first batch).
- - Analyze width compress:
-  * Deploy, check that all units have same type, fight one round, check that all units have same strength/morale -> can be simulated 1v1.
-  * Do above until units run out -> Amount of possible 1v1.
-  * Improves performance up to 30x.
-  * Similar thing could also be done for left and right side (but only 2x performance and flanking/movement needs special implementation.
  - Save import to load battles and automatically import participants (sets those armies active and sets correct round value).
  - A button for random setup
- - Stackwipe capturing probably doesn't work for analyze
- - Combat reducer without immer? Need to solve the mess anyways.
-
-Tests:
-- utils tested
+ - Excel export to get stats for each round?
 
 Tags:
  - Icons to frontline to show various things, with tooltips:
@@ -128,6 +102,19 @@ Tags:
   * Flanking (attacking without being attacked)
   * No target (red sign)
  - Battle stats to show amount of tags acquired (hopefully gives a better view of the battle)
+
+Analyze:
+ - Analyze could be more optimized when both sides have a single army (the most common scenario?), no need to store deployed etc...
+ - Saves nodes should probably clear the state to avoid weird combat situations.
+ - Refactor analyze to update only single parameter, also parameters split should make more sense.
+ - Analyze could automatically set precision based on unit count (or some other heuristic like timing first batch).
+ - Analyze width compress:
+  * Deploy, check that all units have same type, fight one round, check that all units have same strength/morale -> can be simulated 1v1.
+  * Do above until units run out -> Amount of possible 1v1.
+  * Improves performance up to 30x.
+  * Similar thing could also be done for left and right side (but only 2x performance and flanking/movement needs special implementation.
+ - Allow analyzing multiple armies against each other. Like if you want to know what is the best HI now you need to manually do comparisons.
+  * AgGrid or something required for better table support?
 
 Combat calculations:
 - In the game, integer calculations are used so the result is rounded down after each step.

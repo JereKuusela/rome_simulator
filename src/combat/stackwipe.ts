@@ -1,4 +1,4 @@
-import { Side, Setting, Cohorts, Cohort, Environment, UnitAttribute } from 'types'
+import { Side, Setting, Cohorts, Cohort, Environment, UnitAttribute, SideType } from 'types'
 import { calculateTotalStrength } from 'combat'
 import { uncaptureCohort, wipeCohort } from './combat_utils'
 import { getLeadingArmy } from 'managers/battle'

@@ -21,8 +21,6 @@ export const doCombatRound = (env: Environment, sideA: Side, sideB: Side, markDe
     removeDefeated(a.cohorts.frontline)
     removeDefeated(d.cohorts.frontline)
   }
-  clearState(a.cohorts.frontline)
-  clearState(d.cohorts.frontline)
   if (round === 0) {
     undeploy(a)
     a.results = getDefaultCombatResults()
@@ -30,6 +28,8 @@ export const doCombatRound = (env: Environment, sideA: Side, sideB: Side, markDe
     d.results = getDefaultCombatResults()
   }
   deploy(env, a, d)
+  clearState(a.cohorts.frontline)
+  clearState(d.cohorts.frontline)
   if (round > 0) {
     reinforce(env, a)
     if (!settings[Setting.DefenderAdvantage])
@@ -39,8 +39,6 @@ export const doCombatRound = (env: Environment, sideA: Side, sideB: Side, markDe
       reinforce(env, d)
     pickTargets(env, d.cohorts.frontline, a.cohorts.frontline)
 
-    // Tactic bonus changes dynamically when units lose strength so it can't be precalculated.
-    // If this is a problem a fast mode can be implemeted where to bonus is only calculated once.
     a.results.round = env.round
     d.results.round = env.round
     const dailyMultiplier = 1 + getDailyIncrease(env.round, settings)
@@ -96,6 +94,11 @@ const clearState = (source: Frontline) => {
       state.flanking = false
       state.targetedBy = null
       state.captureChance = 0
+      // Enemies in front should never be already defeated.
+      // This kind of state can come from Analyze tool because it doesn't reset the state.
+      state.isDefeated = false
+      state.defeatedBy = null
+      state.isDestroyed = false
     }
   }
 }
@@ -259,7 +262,6 @@ const attack = (environment: Environment, source: Side, target: Side, dailyMulti
   const armyT = getLeadingArmy(target)
   const generalPips = armyS && armyT ? calculateGeneralPips(armyS.general, armyT.general, phase) : 0
   const terrainPips = armyS && armyT ? getTerrainPips(terrains, source.type === attacker, armyS.general, armyT.general) : 0
-
   source.results.generalPips = generalPips
   source.results.terrainPips = terrainPips
   source.results.tacticStrengthDamageMultiplier = tacticStrengthDamageMultiplier

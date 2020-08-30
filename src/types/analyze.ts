@@ -1,4 +1,5 @@
-import { Cohorts } from "types"
+import { Army, Cohorts } from "types"
+import { SideType } from "./battle"
 
 /**
  * Status of the win rate calculation. Most values are percents, only iterations is integer.
@@ -47,12 +48,22 @@ export type ResourceLosses = {
 }
 
 export type CombatNode = {
-  cohortsA: Cohorts,
-  cohortsB: Cohorts,
+  cohortsA: Cohorts
+  cohortsB: Cohorts
   // Each node iterates over all branches (each branch has different dice rolls).
-  branchIndex: number,
-  // Combat phase of this node, used to calculate combat round.
-  combatPhase: number,
+  branchIndex: number
+  // Combat phase of this node, used to get dice rolls.
+  combatPhase: number
   // Deeper nodes (longer battles) have less impact on the result (more branches).
   weightIndex: number
+  // Round of the current combat may be different then the day.
+  round: number
+  // Day can't be calculatged from phase because these can be non-combat rounds.
+  day: number
+  // Attacker may change during the battle.
+  attacker: SideType
+  deployedA: Army[]
+  deployedB: Army[]
+  armiesA: Army[]
+  armiesB: Army[]
 }
