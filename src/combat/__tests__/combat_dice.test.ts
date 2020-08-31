@@ -85,6 +85,23 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       expected[3].B.defeated = [weakCohort.type]
       expected[3].attackerFlipped = true
     })
+
+    it('attacker wo\'t swap if not enabled', () => {
+      getSettingsTest(state)[Setting.AttackerSwapping] = false
+
+      createArmyTest(state, SideType.B, 2)
+      addToReserveTest(state, SideType.A, [cohort])
+      addToReserveTest(state, SideType.B, [weakCohort])
+      addToReserveTest(state, SideType.B, [cohort], 1)
+      selectTerrainTest(state, TerrainType.Forest)
+      
+      expected = initExpected(3)
+      expected[3].B.leader = 1
+      expected[3].A.roll = 1
+      expected[3].B.roll = 2
+      expected[3].B.defeated = [weakCohort.type]
+      expected[3].attackerFlipped = false
+    })
   })
 }
 

@@ -1,11 +1,11 @@
 import { TestState, initCleanState, initExpected, getSettingsTest, createCohort, testCombatWithDefaultRolls, addToReserveTest, createArmyTest, setGeneralAttributeTest, getArmyTest, Expected, createDefeatedCohort, createStrongCohort, selectTerrainTest } from './utils'
-import { UnitType, SideType, Setting, Mode, GeneralAttribute, CombatPhase, TerrainType } from 'types'
+import { UnitType, SideType, Setting, GeneralAttribute, CombatPhase } from 'types'
 
 
 if (process.env.REACT_APP_GAME !== 'euiv') {
 
   describe('leaders', () => {
-    const cohort = createCohort('Type' as UnitType, true)
+    const cohort = createCohort('Type' as UnitType)
     const strongCohort = createStrongCohort('Strong' as UnitType)
 
     let expected: Expected[]

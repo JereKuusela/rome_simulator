@@ -54,6 +54,14 @@ const deployBoth = (cohorts: Cohort[], row: (Cohort | null)[], center: number, l
   }
 }
 
+const applyLateDeploymentPenalty = (reserve: Reserve, round: number, settings: Settings) => {
+  if (round < settings[Setting.StackwipeRounds])
+    return
+  reserve.front.forEach(cohort => cohort[UnitAttribute.Morale] -= cohort.properties.maxMorale * settings[Setting.MoraleHitForLateDeployment])
+  reserve.flank.forEach(cohort => cohort[UnitAttribute.Morale] -= cohort.properties.maxMorale * settings[Setting.MoraleHitForLateDeployment])
+  reserve.support.forEach(cohort => cohort[UnitAttribute.Morale] -= cohort.properties.maxMorale * settings[Setting.MoraleHitForLateDeployment])
+}
+
 const applyReinforcementPenalty = (cohort: Cohort, preferences: UnitPreferences, settings: Settings) => {
   if (cohort.properties.type !== preferences[UnitPreferenceType.Secondary])
     cohort[UnitAttribute.Morale] -= cohort.properties.maxMorale * settings[Setting.MoraleHitForNonSecondaryReinforcement]
@@ -183,10 +191,10 @@ export const deploy = (environment: Environment, sideA: Side, sideB: Side) => {
   const sizeA = settings[Setting.DynamicFlanking] ? countCohorts(sideA) + countReserve(armiesA) : undefined
   const sizeB = settings[Setting.DynamicFlanking] ? countCohorts(sideB) + countReserve(armiesB) : undefined
   if (armiesA.length) {
-    deploySub(sideA, armiesA, settings, sizeB)
+    deploySub(sideA, armiesA, settings, environment.round, sizeB)
   }
   if (armiesB.length) {
-    deploySub(sideB, armiesB, settings, sizeA)
+    deploySub(sideB, armiesB, settings, environment.round, sizeA)
   }
 }
 
@@ -231,12 +239,13 @@ const getDeployingArmies = (day: number, side: Side) => {
   return armies
 }
 
-const deploySub = (side: Side, deploying: Army[], settings: Settings, enemyArmySize?: number) => {
+const deploySub = (side: Side, deploying: Army[], settings: Settings, round: number, enemyArmySize?: number) => {
   const pool: Cohort[] = []
   deploying.forEach(army => {
     const [leftFlank, rightFlank] = calculateFlankSizes(settings[Setting.CombatWidth], calculatePreferredFlankSize(settings, army.flankSize, army.reserve), enemyArmySize)
     army.leftFlank = leftFlank
     army.rightFlank = rightFlank
+    applyLateDeploymentPenalty(army.reserve, round, settings)
     deployCohorts(side.cohorts, army.reserve, leftFlank, rightFlank, settings)
     side.deployed.push(army)
     pool.push(...army.reserve.front)

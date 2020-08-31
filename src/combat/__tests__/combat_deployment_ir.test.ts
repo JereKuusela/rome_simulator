@@ -1,4 +1,4 @@
-import { TestState, initState, getUnit, testDeployment, createExpected, getSettingsTest, addToReserveTest, getArmyTest } from './utils'
+import { TestState, initState, getUnit, testDeployment, createExpected, getSettingsTest, addToReserveTest, getArmyTest, createArmyTest, initExpected, testCombatWithDefaultRolls } from './utils'
 import { UnitType, Setting, SideType } from 'types'
 import { loadInput } from './parser'
 
@@ -164,6 +164,19 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
         reserveFlank: createExpected([UnitType.Archers, 20])
       }
       testDeployment(state, expected, expected)
+    })
+    it('late deployment penalty', () => {
+      createArmyTest(state, SideType.A, 5)
+
+      addToReserveTest(state, SideType.A, [UnitType.LightInfantry].map(type => getUnit(type)))
+      addToReserveTest(state, SideType.A, [UnitType.LightInfantry].map(type => getUnit(type)), 1)
+      addToReserveTest(state, SideType.B, [UnitType.LightInfantry].map(type => getUnit(type)))
+
+      const expected = initExpected(5)
+      expected[5].A.front = [UnitType.LightInfantry, [UnitType.LightInfantry, 1.0, 2.7]]
+      expected[5].B.front = [UnitType.LightInfantry]
+
+      testCombatWithDefaultRolls(state, expected)
     })
   })
 }

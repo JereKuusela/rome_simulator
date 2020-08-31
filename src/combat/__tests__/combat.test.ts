@@ -1,7 +1,6 @@
 import { addValues } from 'definition_values'
 import { getUnit, TestState, initState, initExpected, testCombatWithCustomRolls, addToReserveTest } from './utils'
 import { UnitType, UnitAttribute, TerrainType, ValuesType, SideType, Mode } from 'types'
-import { addToReserve } from 'managers/army'
 import { selectTerrain } from 'managers/battle'
 
 if (process.env.REACT_APP_GAME !== 'euiv') {

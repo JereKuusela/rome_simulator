@@ -23,7 +23,8 @@ const handler = data => {
 const transformer = () => {
   Object.keys(results).forEach(key => {
     const unit = results[key]
-    unit['Parent'] = unit['Parent'] || 'Land Unit'
+    unit['Parent'] = unit['Parent'] || (unit['Mode'] === 'Land' ? 'Land Unit' : 'Naval Unit')
+    delete unit['Mode']
     Object.keys(unit).forEach(key => {
       if (!unit[key])
         delete unit[key]

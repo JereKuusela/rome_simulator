@@ -89,15 +89,6 @@ class TableSideInfo extends Component<IProps> {
     )
   }
 
-  renderGeneral = (general: GeneralDefinition, attribute: GeneralAttribute | CombatPhase) => {
-    return (
-      <Table.Cell>
-        <AttributeImage attribute={attribute} />
-        {general.values[attribute]}
-      </Table.Cell>
-    )
-  }
-
   renderRoll = () => {
     const { settings, round, openModal, setDice, side, combat } = this.props
     const terrainPips = combat.results.terrainPips

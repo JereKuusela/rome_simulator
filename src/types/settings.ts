@@ -13,6 +13,7 @@ export enum Setting {
   MinimumStrength = 'Minimum strength for combat',
   DamageLossForMissingMorale = 'Damage loss for missing morale',
   MoraleHitForNonSecondaryReinforcement = 'Morale damage for non-secondary reinforcements',
+  MoraleHitForLateDeployment = 'Morale damage for late deployment',
   PhaseLength = 'Length of combat phases',
   Precision = 'Calculation precision',
   CombatWidth = 'Base combat width',
@@ -29,6 +30,7 @@ export enum Setting {
   StackwipeRounds = 'Minimum rounds for soft stack wipe',
   SoftStackWipeLimit = 'Strength required for soft stack wipe',
   HardStackWipeLimit = 'Strength required for hard stack wipe',
+  AttackerSwapping = 'Enable attacker swapping',
   Tactics = 'Enable tactics',
   Stackwipe = 'Enable stack wiping',
   Martial = 'Enable general martial',
@@ -115,6 +117,8 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
       return 'Reduced damage done for lost morale.'
     case Setting.MoraleHitForNonSecondaryReinforcement:
       return 'Percentage of total morale lost when non-secondary units reinforce (Imperator).'
+    case Setting.MoraleHitForLateDeployment:
+      return 'Percentage of total morale lost when armies deploy after retreat is available (Imperator).'
     case Setting.MinimumMorale:
       return 'Morale required for combat.Affects how quicky units retreat.'
     case Setting.MoraleLostMultiplier:
@@ -167,6 +171,11 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Tactics not available (Imperator).'
       else
         return 'Tactics available (EUIV).'
+    case Setting.AttackerSwapping:
+      if (value)
+        return 'With multiple battles, the attacker becomes defender if it wins a battle (Imperator, EUIV).'
+      else
+        return 'With multiple battles, the original attacker always stays attacker.'
     case Setting.Martial:
       if (value)
         return 'Martial attribute available (Imperator).'
@@ -343,6 +352,7 @@ export type SiteSettings = {
   [Setting.ExperienceDamageReduction]: number,
   [Setting.MinimumStrength]: number,
   [Setting.MoraleHitForNonSecondaryReinforcement]: number,
+  [Setting.MoraleHitForLateDeployment]: number,
   [Setting.MinimumMorale]: number,
   [Setting.PhaseLength]: number,
   [Setting.DynamicTargeting]: boolean,
@@ -364,6 +374,7 @@ export type SiteSettings = {
   [Setting.MoraleDamageBasedOnTargetStrength]: boolean,
   [Setting.DamageLossForMissingMorale]: number,
   [Setting.Tactics]: boolean,
+  [Setting.AttackerSwapping]: boolean,
   [Setting.Martial]: boolean,
   [Setting.Tech]: boolean,
   [Setting.Culture]: boolean,

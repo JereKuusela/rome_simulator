@@ -46,6 +46,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       normal.baseValues![UnitAttribute.Strength] = { 'key': FULL_STRENGTH }
       getSettingsTest(state)[Setting.DailyDamageIncrease] = 0
       getSettingsTest(state)[Setting.StackwipeRounds] = 5
+      getSettingsTest(state)[Setting.MoraleHitForLateDeployment] = 0
     })
 
     const setRound = (round: number) => {

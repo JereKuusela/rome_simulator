@@ -39,8 +39,8 @@ class TableArmyInfo extends Component<IProps> {
             </Table.HeaderCell>
             {
               settings[Setting.Martial] &&
-              <Table.HeaderCell collapsing>
-                General skill
+              <Table.HeaderCell>
+                General
               </Table.HeaderCell>
             }
             {
@@ -57,7 +57,7 @@ class TableArmyInfo extends Component<IProps> {
             }
             {
               isAttributeEnabled(CountryAttribute.FlankRatio, settings) &&
-              <Table.HeaderCell >
+              <Table.HeaderCell>
                 <AttributeImage attribute={CountryAttribute.FlankRatio} settings={settings} />
               </Table.HeaderCell>
             }
@@ -94,17 +94,17 @@ class TableArmyInfo extends Component<IProps> {
     const { armies, general, countryName, armyName, artillery } = participant
     return (
       <Table.Row key={participant.countryName + '_' + participant.armyName + index}>
-        <Table.Cell collapsing>
+        <Table.Cell>
           <SimpleDropdown
             values={keys(countries)}
             value={countryName}
             onChange={name => name ? selectParticipantCountry(type, index, name, countries[name] ? Object.keys(filterArmies(countries[name], mode))[0] as ArmyName : getDefaultArmyName(mode)) : deleteParticipant(type, index)}
-            style={{ width: 100 }}
+            style={{ width: 110 }}
             onAdd={name => createCountry(name)}
             clearable={clearable}
           />
         </Table.Cell>
-        <Table.Cell collapsing>
+        <Table.Cell>
           <SimpleDropdown
             values={keys(armies)}
             value={armyName}
@@ -116,13 +116,13 @@ class TableArmyInfo extends Component<IProps> {
         {settings[Setting.Martial] && this.renderGeneralAttribute(countryName, armyName, general, GeneralAttribute.Martial)}
         {
           settings[Setting.Tactics] &&
-          <Table.Cell collapsing>
+          <Table.Cell>
             <TacticSelector side={type} index={index} />
           </Table.Cell>
         }
         {
           settings[Setting.Tech] &&
-          <Table.Cell collapsing>
+          <Table.Cell>
             <CountryValueInput country={countryName} attribute={CountryAttribute.TechLevel} />
           </Table.Cell>
         }
@@ -146,7 +146,7 @@ class TableArmyInfo extends Component<IProps> {
   }
 
   renderGeneralAttribute = (country: CountryName, army: ArmyName, general: GeneralDefinition, attribute: GeneralValueType) => (
-    <Table.Cell collapsing>
+    <Table.Cell>
       <Input disabled={!general.enabled} size='mini' className='small-input' type='number' value={general.baseValues[attribute]} onChange={(_, { value }) => this.props.setGeneralAttribute(country, army, attribute, Number(value))} />
       {' '}<StyledNumber value={general.extraValues[attribute]} formatter={addSign} hideZero />
     </Table.Cell>

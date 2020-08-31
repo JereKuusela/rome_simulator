@@ -3,9 +3,6 @@ Release 8:
 
 Changelog:
 
-General:
- * IR data updated to 1.5.2
-
 UI:
  * Added a new component for side information (shows active general, active tactic and dice roll).
  * Moved randomize dice checkbox and input for rng seed under dice extra settings (plus icon).
@@ -40,14 +37,14 @@ Analyze
 Combat
  * Removed round number -1 (predeployment). This makes the simulator easier to use because units instantly appear on the screen.
  * Added support for multiple separate battles.
- * If one side runs out of units then the battle ends. Losers deployed armies are removed and stack wiping checked.
+ * If one side runs out of units then the battle ends. Losers deployed armies are removed and stack wiping is checked.
  * If the losing side still has undeployed armies a new battle starts when an army arrives.
  * Fixed border terrain affecting both sides.
+ * Added support for late deployment morale penalty, also added a setting for it (IR).
+ * Added a setting to disable automatic attacker swapping if attacker wins when there are multiple battles.
+ * IR data updated to 1.5.2
 
 Todo: 
-
-- Late deployment penalty
-- Setting to disable attacker switching
 
 Data:
  * IR units have mode (should be derived from base)

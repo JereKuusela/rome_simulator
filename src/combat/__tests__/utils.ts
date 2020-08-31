@@ -40,6 +40,7 @@ export const initCleanState = (): TestState => {
   settings.siteSettings[Setting.MoraleHitForNonSecondaryReinforcement] = 0
   settings.siteSettings[Setting.FixFlankTargeting] = true
   settings.siteSettings[Setting.CustomDeployment] = true
+  settings.siteSettings[Setting.AttackerSwapping] = true
   settings.siteSettings[Setting.AttributeDiscipline] = DisciplineValue.Off
   return {
     battle: getDefaultBattle(1),

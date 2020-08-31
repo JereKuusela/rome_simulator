@@ -65,13 +65,13 @@ export const doCombatRound = (env: Environment, sideA: Side, sideB: Side, markDe
   if (a.isDefeated) {
     moveDefeatedToRetreated(a.cohorts)
     env.round = -1
-    if (!noCombat)
+    if (!noCombat && settings[Setting.AttackerSwapping])
       env.attacker = a.type
   }
   if (d.isDefeated) {
     moveDefeatedToRetreated(d.cohorts)
     env.round = -1
-    if (!noCombat)
+    if (!noCombat && settings[Setting.AttackerSwapping])
       env.attacker = d.type
   }
 }
