@@ -42,13 +42,13 @@ const DataTransform = createTransform(
 )
 
 const migrations = {
-  10: () => rootReducer(undefined, { type: 'dummy' }) as any
+  11: () => rootReducer(undefined, { type: 'dummy' }) as any
 }
 
 const persistConfig = {
   key: 'primary',
   storage: storage,
-  version: 10,
+  version: 11,
   migrate: createMigrate(migrations, { debug: false }),
   transforms: [
     TacticsTransform,

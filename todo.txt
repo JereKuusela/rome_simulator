@@ -3,52 +3,9 @@ Release 8:
 
 Changelog:
 
-UI:
- * Added a new component for side information (shows active general, active tactic and dice roll).
- * Moved randomize dice checkbox and input for rng seed under dice extra settings (plus icon).
- * Moved morale and discipline inputs from army information component to unit information component.
- * EUIV: Moved culture selection to unit information component.
- * EUIV: Moved Backrow efficiency to army information component.
- * Fixed terrain selector not showing the selection.
- * Win rate now also includes draws and incomplete battles (so the total should always be 100%), the tooltip still separates them.
- * Win rate tooltip now also shows how many battles were done.
- * Added losses (from Analyze) to the main page (similar to win rate but shows percentage of strength lost).
- * Losses tooltip also shows raw amount of strength lost, chance to lose less strength than the enemy and compare how much more/less strength was lost.
- * Analyze settings moved from Settings page to Analyze page (no need to move between pages when tweaking things).
- * Going backwards in battle is now much faster (previously recalculated whole battle).
- * Unit tooltips now show the round of defeated for defeated units.
- * Removed ability to manually add units to frontline or defeated. Multiple armies can be used if you need to micro the deployment.
- * Selections on Countries page are now more darker (better visibility).
- * Side info now shows the leading army.
- * Side info now shows the tactic effect.
- * Tactic selector now colors positive and negative tactics.
 
-Refactor
- * Side and participant separated. Side now contains multiple participants.
- * All variable names renamed to have same casing.
- * Cohort id system redesigned. Units now get ids based on their index instead of a running number. This makes code much cleaner and unit searching much faster.
-
-Analyze
- * Phase length multiplier setting changed to phases per roll setting. The effect is similar but also works with EUIV fire and shock phases.
- * Preset performance setting updated to work with the new setting (EUIV works now much faster).
- * Max rounds for each preset changed to 30. This should be more than enough for full combat width battles.
- * Ship capturing is now properly calculated when stack wipes happen. (IR).
-
-Combat
- * Removed round number -1 (predeployment). This makes the simulator easier to use because units instantly appear on the screen.
- * Added support for multiple separate battles.
- * If one side runs out of units then the battle ends. Losers deployed armies are removed and stack wiping is checked.
- * If the losing side still has undeployed armies a new battle starts when an army arrives.
- * Fixed border terrain affecting both sides.
- * Added support for late deployment morale penalty, also added a setting for it (IR).
- * Added a setting to disable automatic attacker swapping if attacker wins when there are multiple battles.
- * IR data updated to 1.5.2
 
 Todo: 
-
-Data:
- * IR units have mode (should be derived from base)
-
 
 
 Release++:
