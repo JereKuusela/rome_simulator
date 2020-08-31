@@ -15,6 +15,8 @@ export const getProperties = (countryName: CountryName, armyName: ArmyName, part
     type: cohort.type,
     isLoyal: !!cohort.isLoyal,
     image: cohort.image,
+    deploymentPenalty: 0,
+    reinforcementPenalty: 0,
     maxMorale: calculateValueWithoutLoss(cohort, UnitAttribute.Morale),
     maxStrength: calculateValueWithoutLoss(cohort, UnitAttribute.Strength),
     experienceReduction: calculateExperienceReduction(settings, cohort),

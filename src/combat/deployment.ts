@@ -54,17 +54,24 @@ const deployBoth = (cohorts: Cohort[], row: (Cohort | null)[], center: number, l
   }
 }
 
+const applyLateDeploymentPenaltySub = (cohort: Cohort, percent: number) => {
+  cohort[UnitAttribute.Morale] -= cohort.properties.maxMorale * percent
+  cohort.properties.deploymentPenalty = percent
+}
+
 const applyLateDeploymentPenalty = (reserve: Reserve, round: number, settings: Settings) => {
   if (round < settings[Setting.StackwipeRounds])
     return
-  reserve.front.forEach(cohort => cohort[UnitAttribute.Morale] -= cohort.properties.maxMorale * settings[Setting.MoraleHitForLateDeployment])
-  reserve.flank.forEach(cohort => cohort[UnitAttribute.Morale] -= cohort.properties.maxMorale * settings[Setting.MoraleHitForLateDeployment])
-  reserve.support.forEach(cohort => cohort[UnitAttribute.Morale] -= cohort.properties.maxMorale * settings[Setting.MoraleHitForLateDeployment])
+  reserve.front.forEach(cohort => applyLateDeploymentPenaltySub(cohort, settings[Setting.MoraleHitForLateDeployment]))
+  reserve.flank.forEach(cohort => applyLateDeploymentPenaltySub(cohort, settings[Setting.MoraleHitForLateDeployment]))
+  reserve.support.forEach(cohort => applyLateDeploymentPenaltySub(cohort, settings[Setting.MoraleHitForLateDeployment]))
 }
 
 const applyReinforcementPenalty = (cohort: Cohort, preferences: UnitPreferences, settings: Settings) => {
-  if (cohort.properties.type !== preferences[UnitPreferenceType.Secondary])
+  if (cohort.properties.type !== preferences[UnitPreferenceType.Secondary]) {
     cohort[UnitAttribute.Morale] -= cohort.properties.maxMorale * settings[Setting.MoraleHitForNonSecondaryReinforcement]
+    cohort.properties.reinforcementPenalty = settings[Setting.MoraleHitForNonSecondaryReinforcement]
+  }
 }
 
 const deployCohorts = (target: Cohorts, reserve: Reserve, leftFlank: number, rightFlank: number, settings: Settings, preferences?: UnitPreferences) => {

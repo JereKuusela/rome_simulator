@@ -6,7 +6,7 @@ import UnitDetail from 'components/UnitDetail'
 
 import { AppState, getTerrainTypes, getCohortForEachRound, getMode, getSiteSettings, getCohortDefinition } from 'state'
 import { ValuesType, CountryName, UnitType, CohortDefinition, UnitAttribute, UnitValueType, Cohort, ModalType, SiteSettings, ArmyName } from 'types'
-import { addValues } from 'definition_values'
+import { addValue, addValues } from 'definition_values'
 import { deleteCohort, setCohortValue, changeCohortType, toggleCohortLoyality, closeModal } from 'reducers'
 import { applyDynamicAttributes } from 'managers/units'
 import BaseModal from './BaseModal'
@@ -92,7 +92,10 @@ const convertCohort = (settings: SiteSettings, definition: CohortDefinition | nu
     ]
     definition = addValues(definition!, ValuesType.Loss, 'Round ' + round, lossValues)
     definition = addValues(definition!, ValuesType.Base, 'Round ' + round, dealtValues)
-
+    if (round === rounds.length - 1) {
+      definition = addValue(definition!, ValuesType.LossModifier, 'Late deployment', UnitAttribute.Morale, combat.properties.deploymentPenalty)
+      definition = addValue(definition!, ValuesType.LossModifier, 'Non-secondary reinforcement', UnitAttribute.Morale, combat.properties.reinforcementPenalty)
+    }
   })
   return applyDynamicAttributes(definition, settings)
 }

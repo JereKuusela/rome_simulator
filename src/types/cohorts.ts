@@ -36,6 +36,8 @@ export interface CohortProperties extends UnitCalcs {
   damage: { [key in UnitAttribute.Strength | UnitAttribute.Morale | 'Damage']: { [key in UnitType]: { [key in CombatPhase]: number } } }  // Damage multiplier for each damage type, versus each unit and for each phase.
   damageTakenMultiplier: number
   moraleTakenMultiplier: number
+  reinforcementPenalty: number
+  deploymentPenalty: number
   strengthTakenMultiplier: { [key in CombatPhase]: number }
   participantIndex: number
   countryName: CountryName
