@@ -28,6 +28,7 @@ import IconArtillery from 'images/artillery.png'
 import IconCavalry from 'images/cavalry.png'
 import IconInfantry from 'images/infantry.png'
 import IconEmpty from 'images/empty.png'
+import { getConfig } from './config'
 
 const unitToIcon: { [key in UnitType]: string } = {
   [UnitType.Archers]: IconArcher,
@@ -62,7 +63,6 @@ export const getUnitIcon = (type: UnitType) => unitToIcon[type] || ''
 
 
 const createUnitFromJson = (data: UnitJSON): UnitData => {
-
   const handleAttributes = (attributes: any[]) => attributes.filter(type => (data as any)[type]).map(type => [type, (data as any)[type]] as [UnitValueType, number])
 
   let unit: UnitData = {

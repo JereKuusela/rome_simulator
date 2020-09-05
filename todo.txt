@@ -1,11 +1,22 @@
 
-Release 8:
+Release 9:
 
 Changelog:
 
+ Refactor:
+   * IR: Configuration can now be generated from data files (easier maintenance with less errors).
+
+ Combat:
+   * IR: Loyalty now also decreases maintenance costs.
 
 
 Todo: 
+
+Saves:
+ - Add import from battle (involved armies) or war (all participants and all armies)
+
+Countries:
+ - Data converter for EUIV.
 
 
 Release++:
@@ -41,7 +52,6 @@ Countries:
 
 Settings:
  - Show on main page current settings set (Imperator, EUIV, mixed), tooltip to show individual (or only changed?)
- - Settings from hardcoded.txt with auto generation.
 
 Todo:
  - Transfer could only show non-base stats for units, terrains and tactics (since base stats are supposed to regenerate?), currently it shows way too much information.

@@ -3,6 +3,7 @@ import { addValuesWithMutate, DefinitionValues, calculateValue, addValues, addVa
 import { getUnitIcon } from "data"
 import { toArr, round, randomWithinRange } from "utils"
 import { mapModifiersToUnits2 } from "./modifiers"
+import { getConfig } from "data/config"
 
 export const setUnitValue = (unit: UnitData, valuesType: ValuesType, key: string, attribute: UnitValueType, value: number) => {
   addValuesWithMutate(unit, valuesType, key, [[attribute, value]])
@@ -38,7 +39,7 @@ export const changeParent = (unit: UnitData, parent: UnitType) => {
 
 export const getRootParent = (mode: Mode) => mode === Mode.Naval ? UnitType.Naval : UnitType.Land
 
-export const applyDynamicAttributes = <T extends DefinitionValues<UnitValueType>>(definition: T, settings: SiteSettings) => {
+export const applyDynamicAttributes = <T extends UnitData>(definition: T, settings: SiteSettings) => {
   if (settings[Setting.AttributeDrill]) {
     const drill = 0.1 * calculateValue(definition, UnitAttribute.Drill)
     definition = addValues(definition, ValuesType.Base, 'From drill', [[UnitAttribute.ShockDamageDone, drill], [UnitAttribute.FireDamageDone, drill], [UnitAttribute.ShockDamageTaken, -drill], [UnitAttribute.FireDamageTaken, -drill]])
@@ -49,6 +50,8 @@ export const applyDynamicAttributes = <T extends DefinitionValues<UnitValueType>
     if (calculateValue(definition, UnitAttribute.Maneuver) < 1)
       definition = addValues(definition, ValuesType.Loss, 'Minimum cap', [[UnitAttribute.Maneuver, -1]])
   }
+  if (definition.isLoyal)
+    definition = addValues(definition, ValuesType.Modifier, 'Loyal', [[UnitAttribute.Maintenance, getConfig().LoyalMaintenance - 1]])
   return definition
 }
 

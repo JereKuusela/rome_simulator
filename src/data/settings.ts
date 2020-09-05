@@ -1,4 +1,5 @@
 import { Mode, CombatSettings, Setting, SiteSettings, SimulationSpeed, CountryName, SettingsAndOptions, DisciplineValue } from 'types'
+import { getConfig } from './config'
 
 export const getDefaultSettings = (): SettingsAndOptions => ({
   combatSettings: { [Mode.Land]: getDefaultLandSettings(), [Mode.Naval]: getDefaultNavalSettings() },
@@ -18,9 +19,9 @@ export const getDefaultLandSettings = (): CombatSettings => {
   }
   else {
     return {
-      [Setting.StrengthLostMultiplier]: 4.8,
-      [Setting.MoraleLostMultiplier]: 18,
-      [Setting.StackWipeCaptureChance]: 0
+      [Setting.StrengthLostMultiplier]: getConfig().Land.StrengthDamage,
+      [Setting.MoraleLostMultiplier]: getConfig().Land.MoraleDamage,
+      [Setting.StackWipeCaptureChance]: getConfig().Land.StackWipeCaptureChance
     }
   }
 }
@@ -35,9 +36,9 @@ export const getDefaultNavalSettings = (): CombatSettings => {
   }
   else {
     return {
-      [Setting.StrengthLostMultiplier]: 12,
-      [Setting.MoraleLostMultiplier]: 30,
-      [Setting.StackWipeCaptureChance]: 0.2
+      [Setting.StrengthLostMultiplier]: getConfig().Naval.StrengthDamage,
+      [Setting.MoraleLostMultiplier]: getConfig().Naval.MoraleDamage,
+      [Setting.StackWipeCaptureChance]: getConfig().Naval.StackWipeCaptureChance
     }
   }
 }
@@ -113,23 +114,23 @@ export const getDefaultSiteSettings = (): SiteSettings => {
   }
   else {
     return {
-      [Setting.BasePips]: 4,
-      [Setting.MaxPips]: 15,
+      [Setting.BasePips]: getConfig().BasePips,
+      [Setting.MaxPips]: getConfig().MaxPips,
       [Setting.MaxGeneral]: 100,
-      [Setting.DiceMinimum]: 1,
-      [Setting.DiceMaximum]: 6,
-      [Setting.PhaseLength]: 5,
+      [Setting.DiceMinimum]: getConfig().DiceMinimum,
+      [Setting.DiceMaximum]: getConfig().DiceMaximum,
+      [Setting.PhaseLength]: getConfig().PhaseLength,
       [Setting.RetreatRounds]: 0,
-      [Setting.StackwipeRounds]: 5,
+      [Setting.StackwipeRounds]: getConfig().PhaseLength,
       [Setting.Stackwipe]: true,
-      [Setting.SoftStackWipeLimit]: 2,
-      [Setting.HardStackWipeLimit]: 10,
-      [Setting.CombatWidth]: 30,
-      [Setting.ExperienceDamageReduction]: 0.3,
-      [Setting.MinimumMorale]: 0.25,
-      [Setting.MinimumStrength]: 0,
-      [Setting.MoraleHitForNonSecondaryReinforcement]: 0.05,
-      [Setting.MoraleHitForLateDeployment]: 0.1,
+      [Setting.SoftStackWipeLimit]: getConfig().SoftStackWipeLimit,
+      [Setting.HardStackWipeLimit]: getConfig().HardStackWipeLimit,
+      [Setting.CombatWidth]: getConfig().CombatWidth,
+      [Setting.ExperienceDamageReduction]: getConfig().ExperienceDamageReduction,
+      [Setting.MinimumMorale]: getConfig().MinimumMorale,
+      [Setting.MinimumStrength]: getConfig().MinimumStrength,
+      [Setting.MoraleHitForNonSecondaryReinforcement]: getConfig().MoraleHitForNonSecondaryReinforcement,
+      [Setting.MoraleHitForLateDeployment]: getConfig().MoraleHitForLateDeployment,
       [Setting.FixExperience]: false,
       [Setting.DefenderAdvantage]: false,
       [Setting.FixFlankTargeting]: true,

@@ -4,6 +4,7 @@ import { Terrain, UnitType, CohortDefinition, UnitAttribute, Setting, Settings, 
 import { toObj, map, noZero } from 'utils'
 import { calculateValue, calculateValueWithoutLoss, calculateBase } from 'definition_values'
 import { calculateExperienceReduction } from './combat_utils'
+import { getConfig } from 'data/config'
 
 export const getProperties = (countryName: CountryName, armyName: ArmyName, participantIndex: number, index: number, settings: Settings, terrains: Terrain[], unitTypes: UnitType[], cohort: CohortDefinition): CohortProperties => {
   const damageReduction = precalculateDamageReduction(cohort, settings)
@@ -94,7 +95,7 @@ const precalculateDamage = (terrains: Terrain[], unit: CohortDefinition, setting
   * getValue(unit, UnitAttribute.CombatAbility, settings[Setting.AttributeCombatAbility])
   * getValue(unit, UnitAttribute.DamageDone, settings[Setting.AttributeDamage])
   * (1.0 + sumBy(terrains, terrain => getMultiplier(unit, terrain.type, settings[Setting.AttributeTerrainType])))
-  * (settings[Setting.AttributeLoyal] && unit.isLoyal ? 1.1 : 1.0)
+  * (1.0 + (settings[Setting.AttributeLoyal] && unit.isLoyal ? getConfig().LoyalDamage : 0))
 )
 
 const precalculateDamageReduction = (unit: CohortDefinition, settings: Settings) => (

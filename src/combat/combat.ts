@@ -5,6 +5,7 @@ import { calculateValue } from 'definition_values'
 import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, reserveSize, reinforce, calculateGeneralPips, getTerrainPips, checkStackWipe, defeatCohort, isAlive } from 'combat'
 import { deploy, undeploy, moveDefeatedToRetreated } from './deployment'
 import { getLeadingArmy, getDefaultCombatResults } from 'managers/battle'
+import { getConfig } from 'data/config'
 
 /**
  * Makes given armies attach each other.
@@ -165,22 +166,22 @@ const pickTargets = (environment: Environment, source: Frontline, target: Frontl
  * Calculates effectiveness of a tactic against another tactic with a given army.
  */
 export const calculateTactic = (army: Cohorts, tactic: TacticDefinition, counterTactic?: TacticDefinition): number => {
-  const effectiveness = counterTactic ? calculateValue(tactic, counterTactic.type) : 1.0
-  let averageWeight = 1.0
-  if (effectiveness > 0 && tactic && army) {
+  const versusDamage = counterTactic ? calculateValue(tactic, counterTactic.type) : 1.0
+  let averageEffectiveness = 1.0
+  if (versusDamage > 0 && tactic && army) {
     let totalStrength = 0
-    let totalWeight = 0.0
+    let totalEffectiveness = 0.0
 
-    const addWeight = (cohort: Cohort) => {
+    const addEffectiveness = (cohort: Cohort) => {
       totalStrength += cohort[UnitAttribute.Strength]
-      totalWeight += calculateValue(tactic, cohort.properties.type) * cohort[UnitAttribute.Strength]
+      totalEffectiveness += calculateValue(tactic, cohort.properties.type) * cohort[UnitAttribute.Strength]
     }
-    iterateCohorts(army, true, addWeight)
+    iterateCohorts(army, true, addEffectiveness)
     if (totalStrength)
-      averageWeight = totalWeight / totalStrength
+      averageEffectiveness = totalEffectiveness / totalStrength
   }
 
-  return effectiveness * Math.min(1.0, averageWeight)
+  return versusDamage * Math.max(getConfig().TacticMin, Math.min(getConfig().TacticMax, getConfig().TacticBase + averageEffectiveness))
 }
 
 export const getTacticMatch = (tactic: TacticDefinition, counterTactic?: TacticDefinition): TacticMatch => {

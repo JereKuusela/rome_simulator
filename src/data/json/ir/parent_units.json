@@ -4,20 +4,20 @@
     "Parent": null,
     "Mode": "Land",
     "Role": "Front",
-    "Morale": 3.0,
-    "Strength": 1.0,
-    "Attrition Weight": 1.0,
-    "Maintenance": 0.04166
+    "Attrition Weight": 1,
+    "Maintenance": 0.04166,
+    "Strength": 1,
+    "Morale": 3
   },
   {
     "Type": "Naval Unit",
     "Parent": null,
     "Mode": "Naval",
     "Role": "Front",
-    "Morale": 3.0,
-    "Strength": 1.0,
-    "Attrition Weight": 1.0,
+    "Attrition Weight": 1,
     "Maintenance": 0.02083,
+    "Strength": 1,
+    "Morale": 3,
     "Capture Chance": 0.06
   },
   {

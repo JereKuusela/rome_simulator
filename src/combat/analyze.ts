@@ -1,6 +1,7 @@
 import { Setting, UnitAttribute, SideType, ResourceLosses, WinRateProgress, CasualtiesProgress, ResourceLossesProgress, Cohorts, CombatNode, Side, Environment, Frontline, Cohort, ArmyName, UnitDefinitions, UnitProperties, Reserve, Army } from 'types'
 import { doCombatRound } from './combat'
 import { mapRange, toObj } from 'utils'
+import { getConfig } from 'data/config'
 
 export const initResourceLosses = (): ResourceLosses => ({
   repairMaintenance: 0,
@@ -230,9 +231,6 @@ const copyReserveState = (reserve: Reserve): Reserve => ({
 })
 const copyArmiesState = (armies: Army[]): Army[] => armies.map(army => ({ ...army, reserve: copyReserveState(army.reserve) }))
 
-const REPAIR_PER_MONTH = 0.1
-
-
 const calculateCaptureLoss = (cohort: Cohort, weight: number, own: ResourceLosses, enemy: ResourceLosses, enemyDefinitions: { [key: number]: UnitProperties }) => {
   const enemyIndex = cohort.state.defeatedBy?.properties.participantIndex ?? cohort.state.stackWipedBy?.participantIndex
   if (enemyIndex === undefined) {
@@ -244,7 +242,7 @@ const calculateCaptureLoss = (cohort: Cohort, weight: number, own: ResourceLosse
     return
   }
   const capture = (cohort.state.captureChance ?? 0.0)
-  const repair = (cohort.properties.maxStrength - cohort[UnitAttribute.Strength]) * cohort.properties[UnitAttribute.Maintenance] * cohortCost / REPAIR_PER_MONTH
+  const repair = (cohort.properties.maxStrength - cohort[UnitAttribute.Strength]) * cohort.properties[UnitAttribute.Maintenance] * cohortCost / getConfig().ShipRepair
   if (capture <= 0.0) {
     own.repairMaintenance += repair
     return
@@ -255,7 +253,7 @@ const calculateCaptureLoss = (cohort: Cohort, weight: number, own: ResourceLosse
   own.capturedCost += capture * cohortCost
   const enemyProperties = enemyDefinitions[enemyIndex][cohort.properties.type]
   const enemyUnitCost = weight * (cohort.properties[UnitAttribute.Cost] - cohort.properties[UnitAttribute.Cost] + enemyProperties[UnitAttribute.Cost])
-  const enemyRepairCost = (cohort.properties.maxStrength - cohort[UnitAttribute.Strength]) * (cohort.properties[UnitAttribute.Maintenance] - cohort.properties[UnitAttribute.Maintenance] + enemyProperties[UnitAttribute.Maintenance]) * enemyUnitCost / REPAIR_PER_MONTH
+  const enemyRepairCost = (cohort.properties.maxStrength - cohort[UnitAttribute.Strength]) * (cohort.properties[UnitAttribute.Maintenance] - cohort.properties[UnitAttribute.Maintenance] + enemyProperties[UnitAttribute.Maintenance]) * enemyUnitCost / getConfig().ShipRepair
   // If captured then the enemy gainst full cost of the unit.
   enemy.seizedCost -= capture * enemyUnitCost
   // But enemy also has to repair the unit.
@@ -272,7 +270,7 @@ const calculateResourceLoss = (cohorts: Cohorts, weight: number, own: ResourceLo
       const cohort = frontline[i][j]
       if (!cohort)
         continue
-      own.repairMaintenance += weight * (cohort.properties.maxStrength - cohort[UnitAttribute.Strength]) * cohort.properties[UnitAttribute.Maintenance] * cohort.properties[UnitAttribute.Cost] / REPAIR_PER_MONTH
+      own.repairMaintenance += weight * (cohort.properties.maxStrength - cohort[UnitAttribute.Strength]) * cohort.properties[UnitAttribute.Maintenance] * cohort.properties[UnitAttribute.Cost] / getConfig().ShipRepair
     }
   }
   for (let i = 0; i < defeated.length; i++) {
