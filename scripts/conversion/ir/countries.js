@@ -3,5 +3,5 @@ const path = require('path')
 const { getCountries } = require('./modifiers')
 
 exports.run = () => {
-  writeFile(getCountries(), path.join('ir', 'countries.json'))
+  writeFile(path.join('ir', 'countries.json'), getCountries())
 }

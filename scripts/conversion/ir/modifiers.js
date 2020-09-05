@@ -5,15 +5,13 @@ const ATTRITION = 'Attrition Weight'
 const MOD_MAINTENANCE = '_maintenance_cost'
 const MAINTENANCE = 'Maintenance'
 const MOD_COST = '_cost'
+const MANEUVER = 'Maneuver'
 const COST = 'Cost'
 const EXPERIENCE = 'Experience'
 const MOD_MODIFIER = '_modifier'
 const MOD_MORALE = '_morale'
 const MORALE = 'Morale'
-const MANEUVER = 'Maneuver'
 const PARENT = 'Parent'
-const FIRE = 'Fire'
-const SHOCK = 'Shock'
 const GLOBAL = 'Global'
 const NAVAL = 'Naval'
 const LAND = 'Land'
@@ -48,10 +46,7 @@ const units = {
   'tetrere': 'Tetrere',
   'hexere': 'Hexere',
   'octere': 'Octere',
-  'mega_galley': 'Mega-Polyreme',
-  'artillery': 'Artillery',
-  'cavalry': 'Cavalry',
-  'infantry': 'Infantry',
+  'mega_galley': 'Mega-Polyreme'
 }
 
 /** @type {Object.<string, string>} */
@@ -64,10 +59,6 @@ const attributes = {
   'non_retinue_morale_modifier': MORALE,
   'category': PARENT,
   ['build' + MOD_COST]: COST,
-  'combat_width': 'Combat Width',
-  'defensive_fire': 'Defensive Fire Pips',
-  ['defensive' + MOD_MORALE]: 'Defensive Morale Pips',
-  'defensive_shock': 'Defensive Shock Pips',
   'heavy': 'Heavy Ship',
   'light': 'Light Ship',
   'is_flank': 'Role',
@@ -83,9 +74,7 @@ const attributes = {
   ['land' + MOD_MORALE + MOD_MODIFIER]: MORALE,
   'maintenance_cost': MAINTENANCE,
   'maneuver': MANEUVER,
-  'maneuver_value': MANEUVER,
   'medium': 'Medium Ship',
-  'military_tactics': 'Military Tactics',
   'morale': MORALE,
   'morale_damage_done': 'Morale Damage Done',
   'morale_damage_taken': 'Morale Damage Taken',
@@ -94,16 +83,12 @@ const attributes = {
   ['naval' + MOD_MORALE]: MORALE,
   ['naval' + MOD_MORALE + MOD_MODIFIER]: MORALE,
   ['navy' + MOD_MAINTENANCE]: MAINTENANCE,
-  'offensive_fire': 'Offensive Fire Pips',
-  ['offensive' + MOD_MORALE]: 'Offensive Morale Pips',
-  'offensive_shock': 'Offensive Shock Pips',
   ['ship' + MOD_COST]: COST,
   'ship_capture_chance': 'Capture Chance',
   'ship_repair_at_sea': 'Ship Repair at Sea',
   'strength_damage_done': 'Strength Damage Done',
   'strength_damage_taken': 'Strength Damage Taken',
   'type': PARENT,
-  'unit_type': 'Culture',
   'character_loyalty': 'Loyalty'
 }
 
@@ -115,8 +100,6 @@ Object.keys(units).forEach(key => {
   attributes[key + '_discipline'] = DISCIPLINE
   attributes[key + '_offensive'] = OFFENSE
   attributes[key + '_defensive'] = DEFENSE
-  attributes[key + '_fire'] = FIRE
-  attributes[key + '_shock'] = SHOCK
   attributes[key + MOD_COST] = COST
 })
 
@@ -125,7 +108,6 @@ const targets = {
   ['army' + MOD_MAINTENANCE]: LAND,
   'army_weight_modifier': LAND,
   'non_retinue_morale_modifier': LAND,
-  'combat_width': COUNTRY,
   'discipline': GLOBAL,
   'global_cohort_start_experience': LAND,
   'global_ship_start_experience': NAVAL,
@@ -133,8 +115,6 @@ const targets = {
   ['land' + MOD_MORALE]: LAND,
   ['land' + MOD_MORALE + MOD_MODIFIER]: LAND,
   'maintenance_cost': GLOBAL,
-  'maneuver_value': GLOBAL,
-  'military_tactics': GLOBAL,
   'morale': GLOBAL,
   'naval_damage_done': NAVAL,
   'naval_damage_taken': NAVAL,
@@ -154,16 +134,12 @@ Object.keys(units).forEach(key => {
   targets[key + '_discipline'] = value
   targets[key + '_offensive'] = value
   targets[key + '_defensive'] = value
-  targets[key + '_fire'] = value
-  targets[key + '_shock'] = value
   targets[key + MOD_COST] = value
 })
 
 const noPercents = new Set([
-  'combat_width',
   'land' + MOD_MORALE,
   'morale',
-  'military_tactics',
   'naval' + MOD_MORALE,
   'general_loyalty',
   'admiral_loyalty',
@@ -355,8 +331,6 @@ exports.getValue = (key, value) => {
     case 'category':
     case 'type':
       return exports.getAttribute(value)
-    case 'unit_type':
-      return exports.format(value)
     case 'is_flank':
       return value === 'yes' ? 'Flank' : ''
     case 'support':

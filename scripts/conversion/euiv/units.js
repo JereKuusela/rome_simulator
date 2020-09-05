@@ -65,5 +65,5 @@ const handlers = {
 
 exports.run = () => {
   readFiles(handlers)
-  writeFile(transformer(), path.join('euiv', 'units.json'))
+  writeFile(path.join('euiv', 'units.json'), transformer())
 }

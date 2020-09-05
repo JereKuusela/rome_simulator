@@ -1,4 +1,4 @@
-const { readFiles, writeFile, getModifier, sort } = require('./core')
+const { readFiles, writeFile, getModifier } = require('./core')
 const path = require('path')
 const { getAttribute } = require('./modifiers')
 
@@ -7,15 +7,18 @@ const results = {}
 
 const handler = data => {
   Object.keys(data).forEach(key => {
-    const religion = data[key]
+    const name = getAttribute(key)
+    const idea = data[key]
+    if (idea.group !== 'military_ideas')
+      return
     const entity = {
-      name: getAttribute(key),
+      name,
       key,
       modifiers: []
     }
-    Object.keys(religion).forEach(key => {
-      const attribute = religion[key]
-      if (key === 'color' || key === 'religion_category' || key === 'sacrifice_icon' || key === 'sacrifice_sound')
+    Object.keys(idea).forEach(key => {
+      const attribute = idea[key]
+      if (key === 'trigger' || key === 'group' || key === 'soundeffect')
         return
       if (getAttribute(key)) {
         const modifier = getModifier(key, attribute)
@@ -27,10 +30,10 @@ const handler = data => {
 }
 
 const handlers = {
-  [path.join('ir', 'religions')]: handler
+  [path.join('ir', 'ideas', '00_ideas.txt')]: handler
 }
 
 exports.run = () => {
   readFiles(handlers)
-  writeFile(sort(results), path.join('ir', 'religions.json'))
+  writeFile(path.join('ir', 'ideas.json'), results)
 }

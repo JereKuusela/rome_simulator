@@ -1,0 +1,40 @@
+{
+  "the_court_of_wards_and_liveries": {
+    "name": "The Court of Wards and Liveries",
+    "key": "the_court_of_wards_and_liveries",
+    "modifiers": [
+      {
+        "target": "Cavalry",
+        "attribute": "Cost",
+        "type": "Modifier",
+        "value": -0.1
+      }
+    ]
+  },
+  "military_zeal_act": {
+    "name": "The Military Zeal Act",
+    "key": "military_zeal_act",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Base",
+        "noPercent": true,
+        "value": 0.05
+      }
+    ]
+  },
+  "field_priests": {
+    "name": "Field Priests and Soldier's Prayer Books",
+    "key": "field_priests",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Base",
+        "noPercent": true,
+        "value": 0.1
+      }
+    ]
+  }
+}

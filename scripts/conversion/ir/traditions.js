@@ -41,5 +41,5 @@ const handlers = {
 
 exports.run = () => {
   readFiles(handlers)
-  writeFile(results, path.join('ir', 'traditions.json'))
+  writeFile(path.join('ir', 'traditions.json'), results)
 }

@@ -5,6 +5,7 @@ Changelog:
 
  Refactor:
    * IR: Configuration can now be generated from data files (easier maintenance with less errors).
+   * Data generator was split to better support EUIV (modifier names got mixed up with IR modifiers).
 
  Combat:
    * IR: Loyalty now also decreases maintenance costs.
@@ -17,6 +18,10 @@ Saves:
 
 Countries:
  - Data converter for EUIV.
+  * Each country has tag / group specific ideas -> Dropdown with tag and group names -> 1 table with 1 x 7 ideas?
+  * Each country has access to same basic ideas -> ~15 available, 9 can be unlocked -> 3 tables with 5 groups x 7 ideas?
+   - Can filter ideas groups with no military buffs
+  * Completing basic ideas unlock policies -> A big list of options (like with IR Trade)
 
 
 Release++:

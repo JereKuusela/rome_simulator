@@ -66,5 +66,5 @@ const handlers = {
 
 exports.run = () => {
   readFiles(handlers)
-  writeFile(Object.values(results), path.join('ir', 'parent_units.json'))
+  writeFile(path.join('ir', 'parent_units.json'), Object.values(results))
 }
