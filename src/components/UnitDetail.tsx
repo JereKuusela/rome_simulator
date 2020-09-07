@@ -51,12 +51,10 @@ export default class UnitDetail extends Component<IProps> {
     const { unit, onTypeChange, onParentChange, onImageChange, onChangeDeployment, onIsLoyalToggle } = this.props
     const { terrainTypes, unitTypes, unitTypesWithParent, unitTypesAsDropdown, settings } = this.props
     const { type, mode, parent, image, role, isLoyal, culture, tech } = unit
-    const id = 'test'
     return (
       <Table celled selectable unstackable>
         <Headers values={this.headers} />
         <Table.Body>
-          {id && <DetailTextRow text='Identifier' cells={this.CELLS} value={id} />}
           {onTypeChange && unitTypes && unitTypesAsDropdown && <DetailDropdownRow text='Type' cells={this.CELLS} value={type} values={unitTypes} onChange={onTypeChange} />}
           {onTypeChange && unitTypes && !unitTypesAsDropdown && <DetailInputRow text='Name' cells={this.CELLS} value={type} onChange={onTypeChange} />}
           {mode && <DetailTextRow text='Mode' cells={this.CELLS} value={mode} />}

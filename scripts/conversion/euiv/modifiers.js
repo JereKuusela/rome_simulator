@@ -1,22 +1,26 @@
-const DISCIPLINE = 'Discipline'
-const OFFENSE = 'Offense'
-const DEFENSE = 'Defense'
-const MOD_MAINTENANCE = '_maintenance_cost'
-const MAINTENANCE = 'Maintenance'
-const MOD_COST = '_cost'
-const COST = 'Cost'
-const MOD_MODIFIER = '_modifier'
-const MOD_MORALE = '_morale'
-const MORALE = 'Morale'
+
+const MAINTENANCE = '_maintenance'
+const LAND = 'land'
+const MODIFIER = '_modifier'
+const MORALE = '_morale'
 const MANEUVER = 'Maneuver'
+const COST = '_cost'
 const PARENT = 'Parent'
-const FIRE = 'Fire'
-const SHOCK = 'Shock'
-const GLOBAL = 'Global'
-const LAND = 'Land'
+const COMBAT_ABILITY = '_power'
+const OFFENSE = 'offensive'
+const DEFENSE = 'defensive'
+const FIRE = '_fire'
+const SHOCK = '_shock'
+const ATTR_COST = 'Cost'
+const ATTR_MORALE = 'Morale'
+const ATTR_MAINTENANCE = 'Maintenance'
+const ATTR_DISCIPLINE = 'Discipline'
+const ATTR_COMBAT_ABILITY = 'Combat Ability'
+const ATTR_FIRE = 'Fire'
+const ATTR_SHOCK = 'Shock'
+const TARGET_LAND = 'Land'
 const TEXT = 'Text'
 const COUNTRY = 'Country'
-const GENERAL = 'General'
 
 /** @type {Object.<string, string>} */
 const localizations = {
@@ -25,8 +29,6 @@ const localizations = {
 /** @type {Object.<string, number>} */
 const scriptValues = {
 }
-
-const generalStats = ['martial', 'zeal', 'finesse', 'charisma', 'character_loyalty', 'monthly_character_wealth', 'health']
 
 /** @type {Object.<string, string>} */
 const units = {
@@ -37,25 +39,20 @@ const units = {
 
 /** @type {Object.<string, string>} */
 const attributes = {
-  'army': 'Mode',
-  'category': PARENT,
-  ['build' + MOD_COST]: COST,
   'combat_width': 'Combat Width',
-  'defensive_fire': 'Defensive Fire Pips',
-  ['defensive' + MOD_MORALE]: 'Defensive Morale Pips',
-  'defensive_shock': 'Defensive Shock Pips',
-  ['army' + MOD_MAINTENANCE]: MAINTENANCE,
-  ['land' + MOD_MORALE]: MORALE,
-  ['land' + MOD_MORALE + MOD_MODIFIER]: MORALE,
-  'maintenance_cost': MAINTENANCE,
+  'discipline': ATTR_DISCIPLINE,
+  [DEFENSE + FIRE]: 'Defensive Fire Pips',
+  [DEFENSE + MORALE]: 'Defensive Morale Pips',
+  [DEFENSE + SHOCK]: 'Defensive Shock Pips',
+  'global_regiment_cost': ATTR_COST,
+  [LAND + MAINTENANCE + MODIFIER]: ATTR_MAINTENANCE,
+  [LAND + MORALE]: ATTR_MORALE,
   'maneuver_value': MANEUVER,
   'military_tactics': 'Military Tactics',
-  'morale': MORALE,
-  'offensive_fire': 'Offensive Fire Pips',
-  ['offensive' + MOD_MORALE]: 'Offensive Morale Pips',
-  'offensive_shock': 'Offensive Shock Pips',
-  'strength_damage_done': 'Strength Damage Done',
-  'strength_damage_taken': 'Strength Damage Taken',
+  'morale': ATTR_MORALE,
+  [OFFENSE + FIRE]: 'Offensive Fire Pips',
+  [OFFENSE + MORALE]: 'Offensive Morale Pips',
+  [OFFENSE + SHOCK]: 'Offensive Shock Pips',
   'type': PARENT,
   'unit_type': 'Culture'
 }
@@ -63,124 +60,59 @@ const attributes = {
 Object.keys(units).forEach(key => {
   const value = units[key]
   attributes[key] = value
-  attributes[key + MOD_MORALE] = MORALE
-  attributes[key + MOD_MAINTENANCE] = MAINTENANCE
-  attributes[key + '_discipline'] = DISCIPLINE
-  attributes[key + '_fire'] = FIRE
-  attributes[key + '_shock'] = SHOCK
-  attributes[key + MOD_COST] = COST
+  attributes[key + FIRE] = ATTR_FIRE
+  attributes[key + SHOCK] = ATTR_SHOCK
+  attributes[key + COST] = ATTR_COST
+  attributes[key + COMBAT_ABILITY] = ATTR_COMBAT_ABILITY
 })
 
 /** @type {Object.<string, string>} */
 const targets = {
-  ['army' + MOD_MAINTENANCE]: LAND,
+  [LAND + MAINTENANCE + MODIFIER]: TARGET_LAND,
   'combat_width': COUNTRY,
-  'discipline': GLOBAL,
-  ['land' + MOD_MORALE]: LAND,
-  ['land' + MOD_MORALE + MOD_MODIFIER]: LAND,
-  'maintenance_cost': GLOBAL,
-  'maneuver_value': GLOBAL,
-  'military_tactics': GLOBAL,
-  'morale': GLOBAL
+  'discipline': TARGET_LAND,
+  'global_regiment_cost': TARGET_LAND,
+  [LAND + MORALE]: TARGET_LAND,
+  'maintenance_cost': TARGET_LAND,
+  'maneuver_value': TARGET_LAND,
+  'military_tactics': TARGET_LAND,
+  'morale': TARGET_LAND
 }
 
 Object.keys(units).forEach(key => {
   const value = units[key]
-  targets[key + MOD_MORALE] = value
-  targets[key + MOD_MAINTENANCE] = value
-  targets[key + '_discipline'] = value
-  targets[key + '_fire'] = value
-  targets[key + '_shock'] = value
-  targets[key + MOD_COST] = value
+  targets[key + FIRE] = value
+  targets[key + SHOCK] = value
+  targets[key + COST] = value
+  targets[key + COMBAT_ABILITY] = value
 })
 
 const noPercents = new Set([
   'combat_width',
-  'land' + MOD_MORALE,
-  'morale',
-  'military_tactics',
-  'naval' + MOD_MORALE,
-  'general_loyalty',
-  'admiral_loyalty',
-  'hostile_attrition',
-  'siege_engineers',
-  'retreat_delay',
-  'war_exhaustion',
-  'global_building_slot',
-  'subject_loyalty',
-  'diplomatic_reputation',
-  'diplomatic_relations',
-  'subject_opinions',
-  'country_civilization_value',
-  'ruler_popularity_gain',
-  'governor_loyalty',
-  'global_capital_trade_routes',
-  'omen_power',
-  'loyalty_to_overlord'
+  LAND + MORALE,
+  'military_tactics'
 ])
-
-generalStats.forEach(key => {
-  noPercents.add(key)
-})
 
 const negatives = new Set([
-  'army' + MOD_MAINTENANCE,
-  'army_weight_modifier',
-  'experience_decay',
-  'fort' + MOD_MAINTENANCE,
-  'land_unit_attrition',
-  'maintenance_cost',
-  'naval_damage_taken',
-  'navy' + MOD_MAINTENANCE,
-  'naval_unit_attrition',
-  'price_state_investment_military_cost_modifier',
-  'price_state_investment_oratory_cost_modifier',
-  'price_state_investment_civic_cost_modifier',
-  'retreat_delay',
-  'ship' + MOD_COST,
-  'loyalty_gain_chance',
-  'hold_triumph_cost_modifier',
-  'war_exhaustion',
-  'mercenary_land_maintenance_cost',
-  'mercenary_naval_maintenance_cost',
-  'recruit_mercenary_cost_modifier',
-  'loyalty_gain_chance_modifier',
-  'price_found_city_cost_modifier',
-  'agressive_expansion_impact',
-  'build_cost',
-  'war_score_cost',
-  'monthly_tyranny',
-  'enact_law_cost_modifier',
-  'stability_cost_modifier',
-  'increase_legitimacy_cost_modifier',
-  'loyalty_to_overlord',
-  'fortress_building_cost'
+  LAND + MAINTENANCE + MODIFIER,
+  'global_regiment_cost'
 ])
 
 Object.keys(units).forEach(key => {
-  negatives.add(key + MOD_COST)
-  negatives.add(key + MOD_MAINTENANCE)
+  negatives.add(key + COST)
 })
 
-const BASE = 'Base'
-const MODIFIER = 'Modifier'
+const TYPE_BASE = 'Base'
+const TYPE_MODIFIER = 'Modifier'
 
 const types = new Set([
-  'army' + MOD_MAINTENANCE,
-  'army_weight_modifier',
-  'land' + MOD_MORALE + MOD_MODIFIER,
-  'maintenance_cost',
-  'maneuver_value',
-  'navy' + MOD_MAINTENANCE,
-  'naval' + MOD_MORALE + MOD_MODIFIER,
-  'ship' + MOD_COST,
-  'non_retinue_morale_modifier'
+  LAND + MAINTENANCE + MODIFIER,
+  'global_regiment_cost',
+  'maneuver_value'
 ])
 
 Object.keys(units).forEach(key => {
-  types.add(key + MOD_MORALE)
-  types.add(key + MOD_COST)
-  types.add(key + MOD_MAINTENANCE)
+  types.add(key + COST)
 })
 
 /**
@@ -224,7 +156,7 @@ exports.getNegative = (key, value) => typeof value === 'number' && negatives.has
 /**
  * @param {string} key 
  */
-exports.getType = key => types.has(key) ? MODIFIER : BASE
+exports.getType = key => types.has(key) ? TYPE_MODIFIER : TYPE_BASE
 /**
  * @param {string} key 
  * @param {string} value 

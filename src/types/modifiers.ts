@@ -59,13 +59,12 @@ export interface TraditionDefinition {
   paths: Path[]
   modifiers: Modifier[]
 }
-export type TradeDefinitions = { [key: string]: ListDefinition }
 export interface ListDefinition {
   name: string
   key: string
   modifiers: Modifier[]
 }
-export type ListDefinition2 = { [key: string]: ListDefinition }
+export type ListDefinitions = { [key: string]: ListDefinition }
 export type DeityDefinition = ListDefinition & { isOmen: boolean }
 export type DeityDefinitions = { [key: string]: DeityDefinition }
 
@@ -75,3 +74,48 @@ export interface TechDefinition {
   name: string
   inventions: Invention[]
 }
+
+
+type ListData = {
+  name: string
+  key: string
+  modifiers: ModifierData[]
+}
+
+export type OptionData = ListData[]
+
+export type DictionaryData = { [key: string]: string }
+
+
+type ModifierData = {
+  target: string
+  attribute: string
+  value: number
+}
+export type TraditionData = {
+  name: string
+  key: string
+  modifiers: ModifierData[]
+  paths: {
+    name: string
+    key: string
+    traditions: {
+      name: string
+      key: string
+      modifiers: ModifierData[]
+    }[]
+  }[]
+}
+
+export type InventionData = {
+  name: string
+  inventions: {
+    name: string
+    key: string
+    index: number
+    modifiers: ModifierData[]
+  }[]
+}
+
+export type Traditions = { [key in CultureType]: TraditionDefinition }
+

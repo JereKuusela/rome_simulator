@@ -9,6 +9,7 @@ const handler = data => {
   levels.forEach((values, level) => {
     const entity = {
       name: 'Level ' + level,
+      key: 'level_' + level,
       modifiers: []
     }
     // Base values are already in base units.

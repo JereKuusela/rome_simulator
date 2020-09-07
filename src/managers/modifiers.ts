@@ -1,9 +1,9 @@
-import { Modifier, ModifierType, Mode, ModifierWithKey, CountryAttribute, ValuesType, UnitAttribute, UnitType, GeneralData, CountryDefinition, GeneralAttribute, SelectionType, ListDefinition2, DeityDefinitions } from 'types'
+import { Modifier, ModifierType, Mode, ModifierWithKey, CountryAttribute, ValuesType, UnitAttribute, UnitType, GeneralData, CountryDefinition, GeneralAttribute, SelectionType, ListDefinitions, DeityDefinitions } from 'types'
 import { getRootParent } from './units'
 import { ObjSet, keys } from 'utils'
 import { calculateValue } from 'definition_values'
 import { martialToCaptureChance } from './army'
-import { techEUIV, techIR, traditionsIR, heritagesIR, tradesIR, ideasIR, lawsIR, religionsIR, factionsIR, modifiersIR, policiesIR, deitiesIR, traitsIR, abilitiesIR } from 'data'
+import { techEUIV, techIR, traditionsIR, heritagesIR, tradesIR, ideasIR, lawsIR, religionsIR, factionsIR, modifiersIR, policiesIR, deitiesIR, traitsIR, abilitiesIR, policiesEUIV } from 'data'
 
 export const TECH_KEY = 'Tech '
 
@@ -107,7 +107,7 @@ const getDeityModifiers = (modifiers: ModifierWithKey[], selections: ObjSet, ite
   })
 }
 
-const getModifiersSub2 = (modifiers: ModifierWithKey[], selections: ObjSet | undefined, items: ListDefinition2) => {
+const getModifiersSub2 = (modifiers: ModifierWithKey[], selections: ObjSet | undefined, items: ListDefinitions) => {
   const selectedKeys = keys(selections ?? {})
   selectedKeys.forEach(key => {
     if (items[key])
@@ -153,6 +153,7 @@ export const getCountryModifiers = (country: CountryDefinition): ModifierWithKey
   getTechModifiers(modifiers, country)
   getOfficeModifiers(modifiers, country)
   if (process.env.REACT_APP_GAME === 'euiv') {
+    getModifiersSub2(modifiers, country.selections[SelectionType.Policy], policiesEUIV)
   }
   else {
     getModifiersSub2(modifiers, country.selections[SelectionType.Heritage], heritagesIR)

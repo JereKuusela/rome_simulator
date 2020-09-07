@@ -25,12 +25,13 @@ import CountryValueInput from 'containers/CountryValueInput'
 import ListModifier from 'components/Utils/ListModifier'
 import DropdownListDefinition from 'components/Dropdowns/DropdownListDefinition'
 import { traditionsIR, traitsIR, abilitiesIR, tradesIR, techIR, deitiesIR, lawsIR, policiesIR, ideasIR, modifiersIR, heritagesIR, religionsIR, factionsIR } from 'data'
+import { TableModifierList } from 'components/TableModifierList'
 
 const PERCENT_PADDING = '\u00a0\u00a0\u00a0\u00a0'
 
 const CELL_PADDING = '.78571429em .78571429em'
 
-class Countries extends Component<IProps> {
+class CountriesIR extends Component<IProps> {
 
   render() {
     const { settings, generalDefinition, general, selectedCountry, setHasGeneral,
@@ -48,7 +49,7 @@ class Countries extends Component<IProps> {
               <SimpleDropdown
                 values={Object.values(traditionsIR).map(tradition => ({ value: tradition.key, text: tradition.name }))}
                 value={country.culture}
-                style={{width: 200}}
+                style={{ width: 200 }}
                 onChange={this.selectCulture}
               />
             </Grid.Column>
@@ -65,7 +66,14 @@ class Countries extends Component<IProps> {
                 />
                 Base martial: <Input disabled={!general.enabled} type='number' value={general.baseValues[GeneralAttribute.Martial]} onChange={(_, { value }) => this.setGeneralValue('Base', GeneralAttribute.Martial, Number(value))} />
                 {' '}with <StyledNumber value={general.extraValues[GeneralAttribute.Martial]} formatter={addSignWithZero} /> from traits
-                {this.renderTraits()}
+                <TableModifierList
+                  selections={general.selections[SelectionType.Trait]}
+                  columns={4}
+                  type={SelectionType.Trait}
+                  onClick={this.onCountryItemClick}
+                  items={values(traitsIR)}
+                  disabled={!general.enabled}
+                />
                 {this.renderAbilities()}
               </AccordionToggle>
             </Grid.Column>
@@ -83,7 +91,14 @@ class Countries extends Component<IProps> {
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title='Trade surplus' identifier='countriesTrade'>
-                {this.renderTrades()}
+                <TableModifierList
+                  selections={country.selections[SelectionType.Trade]}
+                  columns={4}
+                  usePercentPadding
+                  type={SelectionType.Trade}
+                  onClick={this.onCountryItemClick}
+                  items={values(tradesIR)}
+                />
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
@@ -143,16 +158,37 @@ class Countries extends Component<IProps> {
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
-                {this.renderLaws()}
+                <TableModifierList
+                  selections={country.selections[SelectionType.Law]}
+                  columns={3}
+                  usePercentPadding
+                  type={SelectionType.Law}
+                  onClick={this.onCountryItemClick}
+                  items={values(lawsIR)}
+                />
                 {this.renderPolicies()}
-                {this.renderIdeas()}
+                <TableModifierList
+                  selections={country.selections[SelectionType.Idea]}
+                  columns={3}
+                  usePercentPadding
+                  type={SelectionType.Idea}
+                  onClick={this.onCountryItemClick}
+                  items={values(ideasIR)}
+                />
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title='Modifiers & Events' identifier='countries_modifiers'>
-                {this.renderModifiers()}
+                <TableModifierList
+                  selections={this.props.country.selections[SelectionType.Modifier]}
+                  columns={4}
+                  usePercentPadding
+                  type={SelectionType.Modifier}
+                  onClick={this.onCountryItemClick}
+                  items={values(modifiersIR)}
+                />
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
@@ -165,7 +201,7 @@ class Countries extends Component<IProps> {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-      </Container>
+      </Container >
     )
   }
 
@@ -288,43 +324,7 @@ class Countries extends Component<IProps> {
     )
   }
 
-
-  renderTraits = () => this.renderList(SelectionType.Trait, values(traitsIR), 4, this.onGeneralItemClick, !this.props.general.enabled)
-  renderTrades = () => this.renderList(SelectionType.Trade, values(tradesIR), 3, this.onCountryItemClick, false, PERCENT_PADDING)
-  renderIdeas = () => this.renderList(SelectionType.Idea, values(ideasIR), 3, this.onCountryItemClick, false, PERCENT_PADDING)
-  renderLaws = () => this.renderList(SelectionType.Law, values(lawsIR), 3, this.onCountryItemClick, false, PERCENT_PADDING)
-  renderModifiers = () => this.renderList(SelectionType.Modifier, values(modifiersIR), 4, this.onCountryItemClick, false, PERCENT_PADDING)
-
-  renderList = (type: SelectionType, items: ListDefinition[], columns: number, onClick: (enabled: boolean) => ((type: SelectionType, key: string) => void), disabled: boolean, padding?: string) => {
-    const selections = this.props.country.selections[type] ?? this.props.general.selections[type]
-    items = items.filter(entity => entity.modifiers.length)
-    const rows = Math.ceil(items.length / columns)
-    return (
-      <Table celled unstackable fixed>
-        <Table.Body>
-          {
-            mapRange(rows, number => number).map(row => (
-              <Table.Row key={row}>
-                {
-                  mapRange(columns, number => number).map(column => {
-                    const index = row * columns + column
-                    const entity = items[index]
-                    if (!entity)
-                      return (<Table.Cell key={index}></Table.Cell>)
-                    const modifiers = entity.modifiers
-                    const key = entity.key
-                    return this.renderCell2(type, key, entity.name, selections && selections[key], modifiers, onClick, padding, disabled)
-                  })
-                }
-              </Table.Row>
-            ))
-          }
-        </Table.Body>
-      </Table>
-    )
-  }
-
-  renderHeritages = () => this.renderDropdown(SelectionType.Heritage,  values(heritagesIR))
+  renderHeritages = () => this.renderDropdown(SelectionType.Heritage, values(heritagesIR))
   renderReligions = () => this.renderDropdown(SelectionType.Religion, values(religionsIR))
   renderFactions = () => this.renderDropdown(SelectionType.Faction, values(factionsIR))
 
@@ -571,4 +571,4 @@ type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
 type IProps = S & D
 
-export default connect(mapStateToProps, actions)(Countries)
+export default connect(mapStateToProps, actions)(CountriesIR)

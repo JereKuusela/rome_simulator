@@ -17,6 +17,10 @@ const handler = data => {
       const attribute = policy[key]
       if (getAttribute(key)) {
         const modifier = getModifier(key, attribute)
+        if (modifier.attribute === 'Morale') {
+          modifier.type = 'Modifier'
+          modifier.noPercent = undefined
+        }
         if (modifier.target !== 'Text')
           entity.modifiers.push(modifier)
       }

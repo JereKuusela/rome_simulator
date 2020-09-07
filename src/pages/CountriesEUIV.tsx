@@ -4,26 +4,27 @@ import { connect } from 'react-redux'
 import { AppState, getGeneralDefinition, getCountryDefinition, getSiteSettings, getCountry, getSelectedArmy } from 'state'
 import { mapRange, values } from '../utils'
 
-import { CultureType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, ListDefinition, CountryName, Setting, ArmyName } from 'types'
+import { CultureType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, ListDefinition, CountryName, Setting, ArmyName, SelectionType } from 'types'
 import { clearGeneralSelections, clearCountrySelections, clearCountryAttributes, clearGeneralAttributes, setCountryAttribute, enableCountrySelection, clearCountrySelection, setGeneralAttribute, selectCulture, selectGovernment, setHasGeneral } from 'reducers'
 
 import AccordionToggle from 'containers/AccordionToggle'
 import CountryManager from 'containers/CountryManager'
 import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 import TableAttributes from 'components/TableAttributes'
-import { getCultures, techEUIV } from 'data'
+import { getCultures, policiesEUIV, techEUIV } from 'data'
 import CountryValueInput from 'containers/CountryValueInput'
 import ListModifier from 'components/Utils/ListModifier'
+import { TableModifierList } from 'components/TableModifierList'
 
 const TECH_COLUMNS = 4
 const CUSTOM_KEY = 'Base'
 
 const CELL_PADDING = '.78571429em .78571429em'
 
-class Countries extends Component<IProps> {
+class CountriesEUIV extends Component<IProps> {
 
   render() {
-    const { settings, tech, general, country, selectedCountry, countryDefinition, setHasGeneral } = this.props
+    const { settings, general, country, selectedCountry, countryDefinition, setHasGeneral } = this.props
     return (
       <Container>
         <CountryManager>
@@ -57,8 +58,22 @@ class Countries extends Component<IProps> {
               <AccordionToggle title='Tech' identifier='countriesTech'>
                 Tech level: <CountryValueInput country={selectedCountry} attribute={CountryAttribute.TechLevel} />
                 {
-                  this.renderTech(tech, country[CountryAttribute.TechLevel])
+                  this.renderTech(techEUIV, country[CountryAttribute.TechLevel])
                 }
+              </AccordionToggle>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns='1'>
+            <Grid.Column>
+              <AccordionToggle title='Policies' identifier='countriesPolicies'>
+                <TableModifierList
+                  selections={country.selections[SelectionType.Policy]}
+                  columns={3}
+                  usePercentPadding
+                  type={SelectionType.Policy}
+                  onClick={this.onCountryItemClick}
+                  items={values(policiesEUIV)}
+                />
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
@@ -142,6 +157,19 @@ class Countries extends Component<IProps> {
     this.execCountry(this.props.setCountryAttribute, CountryAttribute.TechLevel, level)
   }
 
+  onCountryItemClick = (enabled: boolean) => enabled ? this.clearCountrySelection : this.enableCountrySelection
+
+  enableCountrySelection = (type: SelectionType, key: string) => {
+    const { enableCountrySelection } = this.props
+    this.execCountry(enableCountrySelection, type, key)
+  }
+
+  clearCountrySelection = (type: SelectionType, key: string) => {
+    const { clearCountrySelection } = this.props
+    this.execCountry(clearCountrySelection, type, key)
+  }
+
+
   /**
    * Clears all selections.
    */
@@ -165,7 +193,6 @@ const mapStateToProps = (state: AppState) => {
     country: getCountry(state, state.settings.country),
     selectedCountry: state.settings.country,
     selectedArmy,
-    tech: techEUIV,
     general: getGeneralDefinition(state, state.settings.country, selectedArmy),
     settings: getSiteSettings(state)
   }
@@ -180,4 +207,4 @@ type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
 type IProps = S & D
 
-export default connect(mapStateToProps, actions)(Countries)
+export default connect(mapStateToProps, actions)(CountriesEUIV)

@@ -11,6 +11,42 @@
       }
     ]
   },
+  "the_provincial_taxation_system": {
+    "name": "Provincial Taxation System",
+    "key": "the_provincial_taxation_system",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.05
+      }
+    ]
+  },
+  "horse_artillery": {
+    "name": "Horse Artillery",
+    "key": "horse_artillery",
+    "modifiers": [
+      {
+        "target": "Artillery",
+        "attribute": "Combat Ability",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  "modern_firearm_techniques": {
+    "name": "Modern Firearm Techniques",
+    "key": "modern_firearm_techniques",
+    "modifiers": [
+      {
+        "target": "Infantry",
+        "attribute": "Combat Ability",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
   "military_zeal_act": {
     "name": "The Military Zeal Act",
     "key": "military_zeal_act",
@@ -18,8 +54,7 @@
       {
         "target": "Land",
         "attribute": "Morale",
-        "type": "Base",
-        "noPercent": true,
+        "type": "Modifier",
         "value": 0.05
       }
     ]
@@ -31,9 +66,56 @@
       {
         "target": "Land",
         "attribute": "Morale",
-        "type": "Base",
-        "noPercent": true,
+        "type": "Modifier",
         "value": 0.1
+      }
+    ]
+  },
+  "local_army_organisation": {
+    "name": "Local Army Organization",
+    "key": "local_army_organisation",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Cost",
+        "type": "Modifier",
+        "value": -0.1
+      }
+    ]
+  },
+  "weapon_quality_standards": {
+    "name": "Weapon Quality Standards",
+    "key": "weapon_quality_standards",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  "noble_loyalty_act": {
+    "name": "Noble Loyalty Act",
+    "key": "noble_loyalty_act",
+    "modifiers": [
+      {
+        "target": "Cavalry",
+        "attribute": "Combat Ability",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  "trade_kontor_network": {
+    "name": "Trade Kontor Network",
+    "key": "trade_kontor_network",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Cost",
+        "type": "Modifier",
+        "value": -0.1
       }
     ]
   }

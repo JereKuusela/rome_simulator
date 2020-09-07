@@ -6,8 +6,8 @@ import { PersistGate } from 'redux-persist/integration/react'
 import Definitions from './pages/Definitions'
 import Battle from './pages/Battle'
 import Navigation from './pages/Navigation'
-import Countries from './pages/Countries'
-import CountriesEUIV from './pages/CountriesEU'
+import CountriesIR from './pages/CountriesIR'
+import CountriesEUIV from './pages/CountriesEUIV'
 import Settings from './pages/Settings'
 import Error from './pages/Error'
 import { AppState } from 'state'
@@ -35,7 +35,7 @@ const Root = ({ store, persistor }: MainProps) => {
               <Route path='/' exact component={Battle} />
               <Route path='/Definitions' component={Definitions} />
               <Route path='/Analyze' component={Analyze} />
-              <Route path='/Countries' component={process.env.REACT_APP_GAME === 'euiv' ? CountriesEUIV : Countries} />
+              <Route path='/Countries' component={process.env.REACT_APP_GAME === 'euiv' ? CountriesEUIV : CountriesIR} />
               <Route path='/Settings' component={Settings} />
               <Route path='/Import' component={SaveTool} />
               <br />

@@ -1,10 +1,12 @@
 [
   {
     "name": "Level 0",
+    "key": "level_0",
     "modifiers": []
   },
   {
     "name": "Level 1",
+    "key": "level_1",
     "modifiers": [
       {
         "target": "Infantry",
@@ -22,6 +24,7 @@
   },
   {
     "name": "Level 2",
+    "key": "level_2",
     "modifiers": [
       {
         "target": "Infantry",
@@ -46,6 +49,7 @@
   },
   {
     "name": "Level 3",
+    "key": "level_3",
     "modifiers": [
       {
         "target": "Land",
@@ -58,6 +62,7 @@
   },
   {
     "name": "Level 4",
+    "key": "level_4",
     "modifiers": [
       {
         "target": "Land",
@@ -67,7 +72,7 @@
         "value": 0.5
       },
       {
-        "target": "Global",
+        "target": "Land",
         "attribute": "Military Tactics",
         "type": "Base",
         "noPercent": true,
@@ -77,6 +82,7 @@
   },
   {
     "name": "Level 5",
+    "key": "level_5",
     "modifiers": [
       {
         "target": "Infantry",
@@ -101,9 +107,10 @@
   },
   {
     "name": "Level 6",
+    "key": "level_6",
     "modifiers": [
       {
-        "target": "Global",
+        "target": "Land",
         "attribute": "Military Tactics",
         "type": "Base",
         "noPercent": true,
@@ -132,6 +139,7 @@
   },
   {
     "name": "Level 7",
+    "key": "level_7",
     "modifiers": [
       {
         "target": "Artillery",
@@ -146,7 +154,7 @@
         "value": 0.05
       },
       {
-        "target": "Global",
+        "target": "Land",
         "attribute": "Military Tactics",
         "type": "Base",
         "noPercent": true,
@@ -156,6 +164,7 @@
   },
   {
     "name": "Level 8",
+    "key": "level_8",
     "modifiers": [
       {
         "target": "Infantry",
@@ -173,9 +182,10 @@
   },
   {
     "name": "Level 9",
+    "key": "level_9",
     "modifiers": [
       {
-        "target": "Global",
+        "target": "Land",
         "attribute": "Military Tactics",
         "type": "Base",
         "noPercent": true,
@@ -192,9 +202,10 @@
   },
   {
     "name": "Level 10",
+    "key": "level_10",
     "modifiers": [
       {
-        "target": "Global",
+        "target": "Land",
         "attribute": "Maneuver",
         "type": "Modifier",
         "value": 0.25
@@ -203,6 +214,7 @@
   },
   {
     "name": "Level 11",
+    "key": "level_11",
     "modifiers": [
       {
         "target": "Infantry",
@@ -227,9 +239,10 @@
   },
   {
     "name": "Level 12",
+    "key": "level_12",
     "modifiers": [
       {
-        "target": "Global",
+        "target": "Land",
         "attribute": "Military Tactics",
         "type": "Base",
         "noPercent": true,
@@ -239,6 +252,7 @@
   },
   {
     "name": "Level 13",
+    "key": "level_13",
     "modifiers": [
       {
         "target": "Artillery",
@@ -256,6 +270,7 @@
   },
   {
     "name": "Level 14",
+    "key": "level_14",
     "modifiers": [
       {
         "target": "Infantry",
@@ -274,6 +289,7 @@
   },
   {
     "name": "Level 15",
+    "key": "level_15",
     "modifiers": [
       {
         "target": "Land",
@@ -283,7 +299,7 @@
         "value": 1
       },
       {
-        "target": "Global",
+        "target": "Land",
         "attribute": "Military Tactics",
         "type": "Base",
         "noPercent": true,
@@ -293,6 +309,7 @@
   },
   {
     "name": "Level 16",
+    "key": "level_16",
     "modifiers": [
       {
         "target": "Artillery",
@@ -317,6 +334,7 @@
   },
   {
     "name": "Level 17",
+    "key": "level_17",
     "modifiers": [
       {
         "target": "Cavalry",
@@ -328,9 +346,10 @@
   },
   {
     "name": "Level 18",
+    "key": "level_18",
     "modifiers": [
       {
-        "target": "Global",
+        "target": "Land",
         "attribute": "Maneuver",
         "type": "Modifier",
         "value": 0.25
@@ -346,9 +365,10 @@
   },
   {
     "name": "Level 19",
+    "key": "level_19",
     "modifiers": [
       {
-        "target": "Global",
+        "target": "Land",
         "attribute": "Military Tactics",
         "type": "Base",
         "noPercent": true,
@@ -358,6 +378,7 @@
   },
   {
     "name": "Level 20",
+    "key": "level_20",
     "modifiers": [
       {
         "target": "Infantry",
@@ -376,9 +397,10 @@
   },
   {
     "name": "Level 21",
+    "key": "level_21",
     "modifiers": [
       {
-        "target": "Global",
+        "target": "Land",
         "attribute": "Military Tactics",
         "type": "Base",
         "noPercent": true,
@@ -394,6 +416,7 @@
   },
   {
     "name": "Level 22",
+    "key": "level_22",
     "modifiers": [
       {
         "target": "Cavalry",
@@ -424,6 +447,7 @@
   },
   {
     "name": "Level 23",
+    "key": "level_23",
     "modifiers": [
       {
         "target": "Cavalry",
@@ -432,14 +456,14 @@
         "value": 1
       },
       {
-        "target": "Global",
+        "target": "Land",
         "attribute": "Military Tactics",
         "type": "Base",
         "noPercent": true,
         "value": 0.25
       },
       {
-        "target": "Global",
+        "target": "Land",
         "attribute": "Maneuver",
         "type": "Modifier",
         "value": 0.5
@@ -448,9 +472,10 @@
   },
   {
     "name": "Level 24",
+    "key": "level_24",
     "modifiers": [
       {
-        "target": "Global",
+        "target": "Land",
         "attribute": "Military Tactics",
         "type": "Base",
         "noPercent": true,
@@ -467,6 +492,7 @@
   },
   {
     "name": "Level 25",
+    "key": "level_25",
     "modifiers": [
       {
         "target": "Artillery",
@@ -484,6 +510,7 @@
   },
   {
     "name": "Level 26",
+    "key": "level_26",
     "modifiers": [
       {
         "target": "Land",
@@ -503,6 +530,7 @@
   },
   {
     "name": "Level 27",
+    "key": "level_27",
     "modifiers": [
       {
         "target": "Infantry",
@@ -514,9 +542,10 @@
   },
   {
     "name": "Level 28",
+    "key": "level_28",
     "modifiers": [
       {
-        "target": "Global",
+        "target": "Land",
         "attribute": "Maneuver",
         "type": "Modifier",
         "value": 0.25
@@ -531,13 +560,15 @@
   },
   {
     "name": "Level 29",
+    "key": "level_29",
     "modifiers": []
   },
   {
     "name": "Level 30",
+    "key": "level_30",
     "modifiers": [
       {
-        "target": "Global",
+        "target": "Land",
         "attribute": "Military Tactics",
         "type": "Base",
         "noPercent": true,
@@ -551,7 +582,7 @@
         "value": 1
       },
       {
-        "target": "Global",
+        "target": "Land",
         "attribute": "Maneuver",
         "type": "Modifier",
         "value": 0.25
@@ -560,6 +591,7 @@
   },
   {
     "name": "Level 31",
+    "key": "level_31",
     "modifiers": [
       {
         "target": "Cavalry",
@@ -577,9 +609,10 @@
   },
   {
     "name": "Level 32",
+    "key": "level_32",
     "modifiers": [
       {
-        "target": "Global",
+        "target": "Land",
         "attribute": "Military Tactics",
         "type": "Base",
         "noPercent": true,
