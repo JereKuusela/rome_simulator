@@ -57,7 +57,7 @@ export default class ExportPops extends Component<{}, IState> {
     )
   }
 
-  selectCountry = (country: string) => this.setState({ country }, () => this.exportPops())
+  selectCountry = (country: string | number | null) => this.setState({ country }, () => this.exportPops())
 
 
   exportPops = () => {
@@ -83,6 +83,11 @@ export default class ExportPops extends Component<{}, IState> {
     saveAs(blob, `pops_${name}_${Date.now()}.csv`)
   }
 
+  setFile = (file: Save) => {
+    const firstPlayer = getFirstPlayedCountry(file);
+    this.setState({ file }, () => this.selectCountry(firstPlayer))
+  }
+
   loadContent = (file: File) => {
     if (!file) {
       this.setState({ country: null, file: {} as Save })
@@ -93,14 +98,13 @@ export default class ExportPops extends Component<{}, IState> {
       if (file) {
         file.async('uint8array').then(buffer => {
           const file = parseFile(binaryToPlain(buffer, false)[0]) as Save
-          const firstPlayer = getFirstPlayedCountry(file);
-          this.setState({ file }, () => this.selectCountry(String(firstPlayer)))
+          this.setFile(file)
         })
       }
     }).catch(() => {
       file.text().then(data => {
         const file = parseFile(data) as Save
-        this.setState({ file })
+        this.setFile(file)
       })
     })
   }

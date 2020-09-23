@@ -347,6 +347,11 @@ class ImportSave extends Component<IProps, IState> {
     this.setState({ army: id ? loadArmy(this.state.file, Number(id)) ?? null : null })
   }
 
+  setFile = (file: Save) => {
+    const firstPlayer = getFirstPlayedCountry(file);
+    this.setState({ file }, () => firstPlayer && this.selectCountry(String(firstPlayer)))
+  }
+
   loadContent = (file: File) => {
     if (!file) {
       this.setState({ country: null, army: null, armies: [], file: {} as Save })
@@ -357,16 +362,13 @@ class ImportSave extends Component<IProps, IState> {
       if (file) {
         file.async('uint8array').then(buffer => {
           const file = parseFile(binaryToPlain(buffer, false)[0]) as Save
-          this.setState({ file })
-          const firstPlayer = getFirstPlayedCountry(file);
-          if (firstPlayer)
-            this.selectCountry(String(firstPlayer))
+          this.setFile(file)
         })
       }
     }).catch(() => {
       file.text().then(data => {
         const file = parseFile(data) as Save
-        this.setState({ file })
+        this.setFile(file)
       })
     })
   }
