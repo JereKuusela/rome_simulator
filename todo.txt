@@ -3,12 +3,15 @@ Release 9:
 
 Changelog:
 
- Refactor:
-   * IR: Configuration can now be generated from data files (easier maintenance with less errors).
-   * Data generator was split to better support EUIV (modifier names got mixed up with IR modifiers).
+Refactor:
+  * IR: Configuration can now be generated from data files (easier maintenance with less errors).
+  * Data generator was split to better support EUIV (modifier names got mixed up with IR modifiers).
 
- Combat:
-   * IR: Loyalty now also decreases maintenance costs.
+Combat:
+  * IR: Loyalty now also decreases maintenance costs.
+
+Save import:
+  * Added a tool for exporting a table with territories and their pops.
 
 
 Todo: 

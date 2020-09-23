@@ -16,7 +16,7 @@ import { toObj, toArr, mapRange, map, keys, excludeMissing } from 'utils'
 import { calculateValueWithoutLoss } from 'definition_values'
 import { parseFile, binaryToPlain } from 'managers/importer'
 import JSZip from 'jszip'
-import { loadCountry, loadArmy } from 'managers/saves'
+import { loadCountry, loadArmy, getFirstPlayedCountry } from 'managers/saves'
 
 type IState = {
   country: SaveCountry | null
@@ -358,6 +358,9 @@ class ImportSave extends Component<IProps, IState> {
         file.async('uint8array').then(buffer => {
           const file = parseFile(binaryToPlain(buffer, false)[0]) as Save
           this.setState({ file })
+          const firstPlayer = getFirstPlayedCountry(file);
+          if (firstPlayer)
+            this.selectCountry(String(firstPlayer))
         })
       }
     }).catch(() => {

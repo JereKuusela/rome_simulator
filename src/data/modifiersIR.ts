@@ -1,12 +1,13 @@
 import { sortBy } from 'lodash'
 import { toObj } from 'utils'
 import {
-  CultureType, OptionDefinition, TraditionDefinition, TechDefinition, ListDefinitions, DeityDefinitions, DictionaryData, InventionData, OptionData, TraditionData, Traditions
+  OptionDefinition, TechDefinition, ListDefinitions, DeityDefinitions, DictionaryData, InventionData, OptionData, TraditionData, Traditions
 } from 'types'
 
 import traditionData from './json/ir/traditions.json'
 import tradeData from './json/ir/trades.json'
 import heritageData from './json/ir/heritages.json'
+import cultureData from './json/ir/cultures.json'
 import techDataIR from './json/ir/tech.json'
 import traitData from './json/ir/traits.json'
 import lawData from './json/ir/laws.json'
@@ -14,6 +15,7 @@ import policyData from './json/ir/policies.json'
 import ideaData from './json/ir/ideas.json'
 import abilityData from './json/ir/abilities.json'
 import countryData from './json/ir/countries.json'
+import territoryData from './json/ir/territories.json'
 import deityData from './json/ir/deities.json'
 import religionData from './json/ir/religions.json'
 import factionData from './json/ir/parties.json'
@@ -34,6 +36,8 @@ const getReligionDefinitionsIR = () => process.env.REACT_APP_GAME === 'ir' ? rel
 const getTraitDefinitionsIR = () => process.env.REACT_APP_GAME === 'ir' ? traitData as ListDefinitions : {}
 const getTradeDefinitionsIR = () => process.env.REACT_APP_GAME === 'ir' ? tradeData as ListDefinitions : {}
 const getCountryNames = () => process.env.REACT_APP_GAME === 'ir' ? countryData : {} as DictionaryData
+const getTerritoryNames = () => process.env.REACT_APP_GAME === 'ir' ? territoryData : {} as DictionaryData
+const getCultureNames = () => process.env.REACT_APP_GAME === 'ir' ? cultureData : {} as DictionaryData
 
 export const abilitiesIR = sortBy<OptionData>(getAbilityDataIR(), () => 1) as OptionDefinition[]
 export const traitsIR = getTraitDefinitionsIR()
@@ -45,7 +49,9 @@ export const lawsIR = getLawDefinitionsIR()
 export const deitiesIR = getDeityDefinitionsIR()
 export const policiesIR = sortBy<OptionData>(getPolicyDataIR(), () => 1) as OptionDefinition[]
 export const countriesIR = getCountryNames()
+export const territoriesIR = getTerritoryNames()
 export const religionsIR = getReligionDefinitionsIR()
 export const factionsIR = getFactionDefinitionsIR()
 export const modifiersIR = getModifierDefinitionsIR()
+export const culturesIR = getCultureNames()
 export const techIR = sortBy<InventionData>(getTechDataIR(), () => 1) as TechDefinition[]

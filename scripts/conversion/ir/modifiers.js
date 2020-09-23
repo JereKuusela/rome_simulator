@@ -252,7 +252,7 @@ exports.getAttribute = (key, value) => {
     case 'movement_speed':
     case 'build_time':
     case 'outside_of_naval_range_attrition':
-        return undefined
+      return undefined
     case 'allow_unit_type':
     case 'enable_ability':
     case 'enable_tactic':
@@ -341,9 +341,20 @@ exports.getValue = (key, value) => {
 }
 
 /** @type {Object<string, string>} */
+let cultures = {}
+
+exports.getCultures = () => cultures
+
+/** @type {Object<string, string>} */
 let countries = {}
 
 exports.getCountries = () => countries
+
+/** @type {Object<string, string>} */
+
+let territories = {}
+
+exports.getTerritories = () => territories
 
 /**
  * @param {Object<string, string>} localization 
@@ -356,6 +367,24 @@ exports.loadLocalization = (localization, file) => {
         delete localization[key]
     })
     Object.keys(localization).sort((a, b) => localization[a].localeCompare(localization[b])).forEach(key => countries[key] = localization[key])
+    return
+  }
+  if (file === 'cultures_l_english.yml') {
+    Object.keys(localization).forEach(key => {
+      if (localization[key].length === 0 || key.endsWith('name'))
+        delete localization[key]
+    })
+    Object.keys(localization).sort((a, b) => localization[a].localeCompare(localization[b])).forEach(key => cultures[key] = localization[key])
+    return
+  }
+  if (file === 'provincenames_l_english.yml') {
+    Object.keys(localization).forEach(key => {
+      if (localization[key].length === 0)
+        delete localization[key]
+      else if (localization[key].startsWith('$'))
+        localization[key] = localization[localization[key].substr(1, localization[key].length - 2).toLowerCase()]
+    })
+    Object.keys(localization).sort((a, b) => localization[a].localeCompare(localization[b])).forEach(key => territories[key] = localization[key])
     return
   }
   Object.assign(localizations, localization)

@@ -1,7 +1,7 @@
 import { countriesIR, laws, traitsIR } from 'data'
 import { sum } from 'lodash'
-import { ArmyName, Character, CountryName, CultureType, dictionaryTacticType, dictionaryUnitType, GeneralAttribute, GovermentType, Mode, Save, SaveArmy, SaveCharacter, SaveCohort, SaveCountry, SaveCountryDeity, SaveDataUnitName, TradeGood, UnitAttribute, UnitPreferences, UnitPreferenceType } from 'types'
-import { arrayify, excludeMissing, filter, keys, toObj } from 'utils'
+import { ArmyName, Character, CountryName, CultureType, dictionaryTacticType, dictionaryUnitType, GeneralAttribute, GovermentType, Mode, Save, SaveArmy, SaveCharacter, SaveCohort, SaveCountry, SaveCountryDeity, SaveDataUnitName, SavePop, Territory, TradeGood, UnitAttribute, UnitPreferences, UnitPreferenceType } from 'types'
+import { arrayify, excludeMissing, filter, keys, toArr, toObj } from 'utils'
 
 const getCharacterMartial = (character: SaveCharacter) => character.attributes.martial + sum(arrayify(character.traits).map((key: string) => traitsIR[key]?.modifiers.find(modifier => modifier.attribute === GeneralAttribute.Martial)?.value ?? 0))
 
@@ -14,6 +14,12 @@ const maintenanceToKey = (value: number) => {
     default:
       return 'default'
   }
+}
+
+export const getFirstPlayedCountry = (file: Save) => {
+  if (arrayify(file.played_country).length > 0)
+    return arrayify(file.played_country)[0].country
+  return null
 }
 
 export const loadCountry = (file: Save, id: number) => {
@@ -83,8 +89,34 @@ export const loadCountry = (file: Save, id: number) => {
   return country
 }
 
+export const loadPopsByTerritory = (file: Save, id: number): Territory[] => {
+  const pops = file.population?.population
+  if (!file.provinces || !pops)
+    return []
+  const territories = toArr(file.provinces, (territory, id) => ({ ...territory, id, pop: arrayify(territory.pop) }))
+  const ownTerritories = territories.filter(territory => territory.controller == id).sort((a, b) => b.pop.length - a.pop.length)
+  const territoryPops = ownTerritories.map(territory => ({
+    id: territory.id,
+    name: territory.province_name.name,
+    controller: territory.controller,
+    pops: countPops(pops, territory.pop),
+    totalPops: territory.pop.length,
+    rank: territory.province_rank
+  }))
+  return territoryPops
+}
 
-const countSurplus = (file: Save, capital: number, pops: any, country: SaveCountry) => {
+const countPops = (pops: { [key: number]: SavePop }, ids: number[]) => {
+  const counts: { [key: string]: number } = {}
+  ids.forEach(ids => {
+    const pop = pops[ids]
+    const category = `${pop.culture} ${pop.type}`
+    counts[category] = (counts[category] ?? 0) + 1
+  })
+  return counts
+}
+
+const countSurplus = (file: Save, capital: number, pops: { [key: number]: SavePop }, country: SaveCountry) => {
   if (!file.provinces)
     return []
   const province = file.provinces[capital]?.state

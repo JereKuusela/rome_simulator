@@ -34,12 +34,32 @@ type SaveJob = {
   office: string
 }
 
+export type SavePop = {
+  type: 'citizen' | 'slaves' | 'nobles' | 'tribesmen' | 'freemen'
+  culture: string
+  religion: string
+}
+
+export type Territory = {
+  id: string
+  name: string
+  controller: number
+  totalPops: number
+  pops: { [key: string]: number }
+  rank: string
+}
+
 type SaveTerritory = {
   trade_goods: TradeGood
   province_rank: 'settlement' | 'city'
   buildings: number[]
   pop: number[]
   state: number
+  owner: number
+  controller: number
+  province_name: {
+    name: string
+  }
 }
 
 export type SaveCharacter = {
@@ -214,5 +234,8 @@ export type Save = { [key: string]: any } & {
   }[],
   diplomacy?: {
     database: { [key: number]: SaveDataWar }
+  },
+  population?: {
+    population: { [key: number]: SavePop }
   }
 }
