@@ -51,6 +51,7 @@ export type ArmyDefinition = {
   unitPreferences: UnitPreferences
   unitDefinitions: UnitDefinitions
   flankSize: number
+  flankRatio: number
   general: GeneralDefinition
   reserve: ReserveDefinition
 }
@@ -75,6 +76,7 @@ export enum UnitPreferenceType {
 export type Army = {
   reserve: Reserve 
   flankSize: number
+  flankRatio: number
   arrival: number
   unitPreferences: UnitPreferences
   unitProperties: UnitProperties

@@ -122,7 +122,7 @@ class CombatTooltip extends Component<IProps, IState> {
 
   getDamageMultiplierSection = (source: IUnit, target: IUnit, isSupport: boolean) => {
     const { terrains, settings, results } = this.props
-    const { round, tacticBonus, flankRatioBonus, dailyMultiplier } = results
+    const { round, tacticBonus, dailyMultiplier } = results
     const phase = getCombatPhase(round, settings)
     const terrainTypes = settings[Setting.AttributeTerrainType] ? terrains.map(value => value.type) : []
     const strength = source[UnitAttribute.Strength] + source.strengthLoss
@@ -137,7 +137,7 @@ class CombatTooltip extends Component<IProps, IState> {
     return (<>
       {this.renderStyledItem('Lost morale', damageLossForMissingMorale, toSignedPercent)}
       {this.renderStyledItem('Tactic', tacticBonus, toSignedPercent)}
-      {this.renderStyledItem('Enemy insufficient support', flankRatioBonus, toSignedPercent)}
+      {this.renderStyledItem('Enemy insufficient support', target.flankRatioPenalty - 1, toSignedPercent)}
       {this.renderStyledItem('Loyal', isLoyal ? 0.1 : 0, toSignedPercent)}
       {settings[Setting.AttributeDiscipline] !== DisciplineValue.Off && this.getAttribute(source, UnitAttribute.Discipline)}
       {settings[Setting.AttributeDamage] && this.getAttribute(source, UnitAttribute.DamageDone)}

@@ -6,9 +6,15 @@ Changelog:
 Refactor:
   * IR: Configuration can now be generated from data files (easier maintenance with less errors).
   * Data generator was split to better support EUIV (modifier names got mixed up with IR modifiers).
+  * Added support for gaining attributes (opposite of losses), for example morale gain for winning a battle in EU4.
 
 Combat:
   * IR: Loyalty now also decreases maintenance costs.
+  * EU4: Fixed flank ratio to work with multiarmy battle. Ratio is calculated and penalty applied invidiually for each army.
+
+Settings:
+ * EU4: Added a setting for morale gain when winning a battle.
+
 
 Save import:
   * Added a tool for exporting a table with territories and their pops.
@@ -72,7 +78,6 @@ Todo:
 
 Tags:
  - Icons to frontline to show various things, with tooltips:
-  * Defender's advantage (some kind of ninja icon?) - Needed for EUIV.
   * Very bad matchup, bad match up, good matchup, very good matchup (red or green arrows)
   * Flanking (attacking without being attacked)
   * No target (red sign)

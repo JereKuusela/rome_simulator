@@ -14,10 +14,12 @@ export enum Setting {
   DamageLossForMissingMorale = 'Damage loss for missing morale',
   MoraleHitForNonSecondaryReinforcement = 'Morale damage for non-secondary reinforcements',
   MoraleHitForLateDeployment = 'Morale damage for late deployment',
+  MoraleGainForWinning = 'Morale gain for winning',
   PhaseLength = 'Length of combat phases',
   Precision = 'Calculation precision',
   CombatWidth = 'Base combat width',
   DefenderAdvantage = 'Defender\'s advantage',
+  RelativeDice = 'Defender\'s advantage',
   AttributeDiscipline = 'Enable discipline',
   DailyMoraleLoss = 'Daily morale loss',
   DailyDamageIncrease = 'Daily damage increase',
@@ -119,23 +121,30 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
       return 'Percentage of total morale lost when non-secondary units reinforce (Imperator).'
     case Setting.MoraleHitForLateDeployment:
       return 'Percentage of total morale lost when armies deploy after retreat is available (Imperator).'
+      case Setting.MoraleGainForWinning:
+        return 'Percentage of total morale gained when winning a battle (EU4).'
     case Setting.MinimumMorale:
       return 'Morale required for combat.Affects how quicky units retreat.'
     case Setting.MoraleLostMultiplier:
       return 'Multiplier for morale damage. Affects how much morale damage units deal.'
     case Setting.DefenderAdvantage:
       if (value)
-        return 'Defending units can\'t be targeted when they reinforce (EUIV).'
+        return 'Defending units can\'t be targeted when they reinforce (Legacy).'
       else
-        return 'Defender gets no undocumented benefits (Imperator).'
+        return 'Defender gets no undocumented benefits (Imperator, EU4).'
+    case Setting.RelativeDice:
+      if (value)
+        return 'The difference of dice is only applied to the side with higher roll (Experimental).'
+      else
+        return 'Dice is applied independently to both sides (Imperator, EU4).'
     case Setting.BackRow:
       if (value)
-        return 'Backrow enabled for support and reinforcement units (EUIV).'
+        return 'Backrow enabled for support and reinforcement units (EU4).'
       else
         return 'Only front row (Imperator).'
     case Setting.BackRowRetreat:
       if (value)
-        return 'Units can retreat from backrow (EUIV).'
+        return 'Units can retreat from backrow (EU4).'
       else
         return 'Units from backrow can\'t retreat.'
     case Setting.RetreatRounds:
@@ -148,154 +157,154 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
       return 'Strength multiplier for hard stack wiping.'
     case Setting.Stackwipe:
       if (value)
-        return 'Stacking wiping rules are checked (Imperator, EUIV).'
+        return 'Stacking wiping rules are checked (Imperator, EU4).'
       else
         return 'Stack wiping is not possible.'
     case Setting.MoraleDamageBasedOnTargetStrength:
       if (value)
         return 'Lower strength increases morale damage taken (experimental).'
       else
-        return 'Strength doesn\'t affect morale damage taken (Imperator, EUIV).'
+        return 'Strength doesn\'t affect morale damage taken (Imperator, EU4).'
     case Setting.CustomDeployment:
       if (value)
         return 'Preferred unit types can be selected (Imperator).'
       else
-        return 'Preferred unit types are not available (EUIV).'
+        return 'Preferred unit types are not available (EU4).'
     case Setting.DynamicFlanking:
       if (value)
-        return 'Enemy army size affects flanking slots (EUIV).'
+        return 'Enemy army size affects flanking slots (EU4).'
       else
         return 'Amount of flanking slots is only based on preferred flanking (Imperator).'
     case Setting.Tactics:
       if (value)
         return 'Tactics not available (Imperator).'
       else
-        return 'Tactics available (EUIV).'
+        return 'Tactics available (EU4).'
     case Setting.AttackerSwapping:
       if (value)
-        return 'With multiple battles, the attacker becomes defender if it wins a battle (Imperator, EUIV).'
+        return 'With multiple battles, the attacker becomes defender if it wins a battle (Imperator, EU4).'
       else
         return 'With multiple battles, the original attacker always stays attacker.'
     case Setting.Martial:
       if (value)
         return 'Martial attribute available (Imperator).'
       else
-        return 'Martial not available (EUIV).'
+        return 'Martial not available (EU4).'
     case Setting.Tech:
       if (value)
-        return 'Tech level affects available units (EUIV).'
+        return 'Tech level affects available units (EU4).'
       else
         return 'Units are available regardless of tech level (Imperator).'
     case Setting.Culture:
       if (value)
-        return 'Culture affects available units (EUIV).'
+        return 'Culture affects available units (EU4).'
       else
         return 'Units are available regardless of culture (Imperator).'
     case Setting.Food:
       if (value)
         return 'Food consumption and storage are shown (Imperator).'
       else
-        return 'Food attributes are not available (EUIV).'
+        return 'Food attributes are not available (EU4).'
     case Setting.StrengthBasedFlank:
       if (value)
-        return 'Every 25% of lost strength reduces maneuveur by 25% (EUIV).'
+        return 'Every 25% of lost strength reduces maneuveur by 25% (EU4).'
       else
         return 'Cohort strength has no effect on maneuver (Imperator).'
     case Setting.AttributeDiscipline:
       if (value === DisciplineValue.Damage)
         return 'Discipline only increases damage done (Imperator).'
       else if (value === DisciplineValue.Both)
-        return 'Discipline increaes damage done and reduces damage taken (EUIV).'
+        return 'Discipline increaes damage done and reduces damage taken (EU4).'
       else
         return 'Discipline has no effect.'
     case Setting.UseMaxMorale:
       if (value)
-        return 'Morale damage is based on the maximum morale (EUIV).'
+        return 'Morale damage is based on the maximum morale (EU4).'
       else
         return 'Morale damage is based on the current morale (Imperator).'
     case Setting.FireAndShock:
       if (value)
-        return 'Combat alternates between fire and shock phases (EUIV).'
+        return 'Combat alternates between fire and shock phases (EU4).'
       else
         return 'Combat only has one phase (Imperator).'
     case Setting.SupportPhase:
       if (value)
         return 'Support units are deployed when no other units are available (Imperator).'
       else
-        return 'Support units deploy with other units. (EUIV).'
+        return 'Support units deploy with other units. (EU4).'
     case Setting.DailyMoraleLoss:
-      return 'Amount of morale lost each round (EUIV).'
+      return 'Amount of morale lost each round (EU4).'
     case Setting.DailyDamageIncrease:
-      return 'How much damage increases every round (EUIV).'
+      return 'How much damage increases every round (EU4).'
     case Setting.PhaseLength:
       return 'How often dice rolls and phases change.'
     case Setting.InsufficientSupportPenalty:
-      return 'How much damage taken is increased for having too many flanking units (EUIV).'
+      return 'How much damage taken is increased for having too many flanking units (EU4).'
     case Setting.FixFlankTargeting:
       if (value)
         return 'Targeting is fixed.\nLeft and right flanks work exactly same (Imperator).'
       else
-        return 'Right flank prefers left-most units.\nLeft and right flanks behave differently (EUIV).'
+        return 'Right flank prefers left-most units.\nLeft and right flanks behave differently (EU4).'
     case Setting.DynamicTargeting:
       if (value)
-        return 'Units may flank if the main target is considered too weak (EUIV).'
+        return 'Units may flank if the main target is considered too weak (EU4).'
       else
         return 'Units always attack the main target (Imperator).'
     case Setting.AttributeCombatAbility:
       if (value)
-        return 'Combat ability increases damage done (EUIV).'
+        return 'Combat ability increases damage done (EU4).'
       else
         return 'Combat ability is ignored (Imperator).'
     case Setting.AttributeDamage:
       if (value)
-        return 'Damage done and Damage taken have an effect (Imperator, EUIV).'
+        return 'Damage done and Damage taken have an effect (Imperator, EU4).'
       else
         return 'Damage done and Damage taken are ignored.'
     case Setting.AttributeLoyal:
       if (value)
         return 'Loyalty increase damage done (Imperator).'
       else
-        return 'Loyalty is ignored (EUIV).'
+        return 'Loyalty is ignored (EU4).'
     case Setting.AttributeDrill:
       if (value)
-        return 'Drill increases damage done and reduces damage taken (EUIV).'
+        return 'Drill increases damage done and reduces damage taken (EU4).'
       else
         return 'Drill is ignored (Imperator).'
     case Setting.AttributeExperience:
       if (value)
         return 'Experience reduces damage taken (Imperator).'
       else
-        return 'Experience is ignored (EUIV).'
+        return 'Experience is ignored (EU4).'
     case Setting.AttributeMilitaryTactics:
       if (value)
-        return 'Military tactics reduces damage taken (EUIV).'
+        return 'Military tactics reduces damage taken (EU4).'
       else
         return 'Military tactics is ignored (Imperator).'
     case Setting.AttributeMoraleDamage:
       if (value)
         return 'Morale damage done and Morale damage taken have an effect (Imperator).'
       else
-        return 'Morale damage done and Morale damage taken are ignored (EUIV).'
+        return 'Morale damage done and Morale damage taken are ignored (EU4).'
     case Setting.AttributeOffenseDefense:
       if (value)
         return 'Offense increases damage done and Defense reduces damage taken (Imperator).'
       else
-        return 'Offense and Defense are ignored (EUIV).'
+        return 'Offense and Defense are ignored (EU4).'
     case Setting.AttributeStrengthDamage:
       if (value)
         return 'Strength damage done and Strength damage taken have an effect (Imperator).'
       else
-        return 'Strength damage done and Strength damage taken are ignored (EUIV).'
+        return 'Strength damage done and Strength damage taken are ignored (EU4).'
     case Setting.AttributeTerrainType:
       if (value)
         return 'Terrain types may also increase damage done (Imperator).'
       else
-        return 'Terrain types only affect dice rolls (EUIV).'
+        return 'Terrain types only affect dice rolls (EU4).'
     case Setting.AttributeUnitType:
       if (value)
         return 'Unit types may increase or decrease damage done (Imperator).'
       else
-        return 'Unit types are ignored (EUIV).'
+        return 'Unit types are ignored (EU4).'
     case Setting.MaxPhases:
       return 'How many phases are simulated.\nIncrease for higher accuracy and less incomplete rounds.\nDecrease forg faster speed.'
     case Setting.PhasesPerRoll:
@@ -353,6 +362,7 @@ export type SiteSettings = {
   [Setting.MinimumStrength]: number,
   [Setting.MoraleHitForNonSecondaryReinforcement]: number,
   [Setting.MoraleHitForLateDeployment]: number,
+  [Setting.MoraleGainForWinning]: number,
   [Setting.MinimumMorale]: number,
   [Setting.PhaseLength]: number,
   [Setting.DynamicTargeting]: boolean,
@@ -365,6 +375,7 @@ export type SiteSettings = {
   [Setting.PhasesPerRoll]: number,
   [Setting.ShowGraphs]: boolean,
   [Setting.BackRow]: boolean,
+  [Setting.RelativeDice]: boolean,
   [Setting.BackRowRetreat]: boolean,
   [Setting.RetreatRounds]: number,
   [Setting.Stackwipe]: boolean,

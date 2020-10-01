@@ -170,6 +170,7 @@ describe('targeting', () => {
   it('weak targeting', () => {
     getSettingsTest(state)[Setting.DynamicTargeting] = true
     getSettingsTest(state)[Setting.RetreatRounds] = 10
+    getSettingsTest(state)[Setting.MinimumMorale] = 0.25
     addToReserveTest(state, SideType.A, [cohort])
     addToReserveTest(state, SideType.B, [weakCohort, weakCohort, weakCohort])
 

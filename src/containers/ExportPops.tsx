@@ -38,7 +38,7 @@ export default class ExportPops extends Component<{}, IState> {
       <Grid padded>
         <Grid.Row>
           <Grid.Column verticalAlign='middle'>
-            <Header style={{ display: 'inline' }} >Select a save game to import</Header>
+            <Header style={{ display: 'inline' }} >Select a save game </Header>
             <Input style={{ display: 'inline' }} type='file' onChange={event => this.loadContent(event.target.files![0])} />
           </Grid.Column>
         </Grid.Row>

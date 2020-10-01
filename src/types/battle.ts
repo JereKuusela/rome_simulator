@@ -54,11 +54,12 @@ export type Environment = {
   attacker: SideType
 }
 
+export type FlankRatioPenalty = { [key: number]: number }
+
 /** Results from combat (mainly for tooltips). */
 export type SideRoundInfo = {
   round: number
   tacticBonus: number
-  flankRatioBonus: number
   dailyMultiplier: number
   tacticStrengthDamageMultiplier: number
   terrainPips: number

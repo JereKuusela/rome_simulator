@@ -2,6 +2,7 @@
 export enum ValuesType {
   Base = 'Base',
   Modifier = 'Modifier',
+  Gain = 'Gain',
   Loss = 'Loss',
   LossModifier = 'LossModifier'
 }

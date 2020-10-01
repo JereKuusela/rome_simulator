@@ -36,8 +36,6 @@ export interface CohortProperties extends UnitCalcs {
   damage: { [key in UnitAttribute.Strength | UnitAttribute.Morale | 'Damage']: { [key in UnitType]: { [key in CombatPhase]: number } } }  // Damage multiplier for each damage type, versus each unit and for each phase.
   damageTakenMultiplier: number
   moraleTakenMultiplier: number
-  reinforcementPenalty: number
-  deploymentPenalty: number
   strengthTakenMultiplier: { [key in CombatPhase]: number }
   participantIndex: number
   countryName: CountryName
@@ -55,6 +53,11 @@ export interface CohortProperties extends UnitCalcs {
   mode: Mode
   tech?: number
   role?: UnitRole
+
+  // These technically change during battle but are only needed for UI.
+  reinforcementPenalty: number
+  deploymentPenalty: number
+  winningMoraleBonus: number
 }
 
 /** Round specific state for a cohort. */
@@ -73,6 +76,8 @@ export interface CohortRoundInfo {
   moraleDealt: number
   /** Strength losses inflicted this round. */
   strengthDealt: number
+  /** Damage taken multiplier from insufficied support. */
+  flankRatioPenalty: number
   /** Damage multiplier. */
   damageMultiplier: number
   /** Did the cohort get defeated. */

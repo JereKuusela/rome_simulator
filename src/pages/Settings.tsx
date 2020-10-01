@@ -16,11 +16,12 @@ const deployment = [Setting.CustomDeployment, Setting.DynamicFlanking, Setting.M
 const mechanics = [
   Setting.FireAndShock, Setting.StrengthBasedFlank, Setting.UseMaxMorale, Setting.InsufficientSupportPenalty, Setting.PhaseLength, Setting.CombatWidth,
   Setting.ExperienceDamageReduction, Setting.FixExperience, Setting.DefenderAdvantage, Setting.BackRow, Setting.Culture, Setting.AttributeLoyal, Setting.AttackerSwapping,
-  Setting.Tactics, Setting.Tech, Setting.Martial, Setting.Food, Setting.FixFlankTargeting, Setting.MoraleDamageBasedOnTargetStrength, Setting.DamageLossForMissingMorale
+  Setting.Tactics, Setting.Tech, Setting.Martial, Setting.Food, Setting.FixFlankTargeting, Setting.MoraleDamageBasedOnTargetStrength, Setting.DamageLossForMissingMorale,
+  Setting.MoraleGainForWinning
 ]
 const damage = [
   Setting.DailyMoraleLoss, Setting.DailyDamageIncrease, Setting.Precision, Setting.BasePips, Setting.MaxGeneral,
-  Setting.MaxPips, Setting.DiceMinimum, Setting.DiceMaximum, Setting.MinimumMorale, Setting.MinimumStrength
+  Setting.MaxPips, Setting.DiceMinimum, Setting.DiceMaximum, Setting.MinimumMorale, Setting.MinimumStrength, Setting.RelativeDice
 ]
 const stackwipe = [
   Setting.Stackwipe, Setting.StackwipeRounds, Setting.SoftStackWipeLimit, Setting.HardStackWipeLimit, Setting.RetreatRounds, Setting.BackRowRetreat, Setting.StackWipeCaptureChance

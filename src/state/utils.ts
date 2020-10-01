@@ -11,6 +11,7 @@ import { applyUnitModifiers } from 'managers/units'
 import { convertArmy, convertSide, getRound, getAttacker, getLeadingArmy } from 'managers/battle'
 import { iterateCohorts } from 'combat'
 import { convertTactic } from 'managers/tactics'
+import { calculateValue } from 'definition_values'
 
 /**
  * Returns settings of the current mode.
@@ -128,8 +129,8 @@ const getArmy = (state: AppState, countryName: CountryName, armyName: ArmyName):
   const general = getGeneral(state, countryName, armyName)
   const settings = getSiteSettings(state)
   const unitPreferences = settings[Setting.CustomDeployment] ? army.unitPreferences : {} as UnitPreferences
-  //const flankRatio = calculateValue(state.countries[countryName], CountryAttribute.FlankRatio)
-  return { reserve, general, flankSize: army.flankSize, unitPreferences, unitDefinitions }
+  const flankRatio = calculateValue(state.countries[countryName], CountryAttribute.FlankRatio)
+  return { reserve, general, flankSize: army.flankSize, unitPreferences, unitDefinitions, flankRatio }
 }
 
 export const convertSides = (state: AppState): Side[] => {

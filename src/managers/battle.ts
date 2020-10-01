@@ -56,7 +56,6 @@ const getRow = (width: number) => Array(width).fill(null)
 export const getDefaultCombatResults = () => ({
   dailyMultiplier: 0,
   dice: 0,
-  flankRatioBonus: 0,
   generalPips: 0,
   round: 0,
   tacticBonus: 0,
@@ -93,6 +92,7 @@ export const convertArmy = (participantIndex: number, participant: Participant, 
   const sorted = sortReserve(reserve, army.unitPreferences)
   return {
     reserve: sorted,
+    flankRatio: army.flankRatio,
     unitProperties,
     flankSize: army.flankSize,
     arrival: participant.daysUntilBattle,

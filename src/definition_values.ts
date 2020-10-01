@@ -1,4 +1,4 @@
-import { toPercent } from './formatters'
+import { toNumber, toPercent } from './formatters'
 import { round, map, filter, forEach, filterKeys } from './utils'
 import { merge, has, size } from 'lodash'
 
@@ -6,6 +6,7 @@ export enum ValuesType {
   Base = 'Base',
   Modifier = 'Modifier',
   Loss = 'Loss',
+  Gain = 'Gain',
   LossModifier = 'LossModifier'
 }
 
@@ -17,6 +18,7 @@ type Values<S extends string> = { [key in S]: ValuesSub }
 export interface DefinitionValues<S extends string> {
   baseValues?: Values<S>
   modifierValues?: Values<S>
+  gainValues?: Values<S>
   lossValues?: Values<S>
   lossModifierValues?: Values<S>
 }
@@ -39,6 +41,11 @@ export const mergeValues = <D1 extends BD | undefined, D2 extends BD | undefined
     merge(modifierValues, definition.modifierValues)
   if (toMerge && toMerge.modifierValues)
     merge(modifierValues, toMerge.modifierValues)
+  let gainValues = initValues()
+  if (definition && definition.gainValues)
+    merge(gainValues, definition.gainValues)
+  if (toMerge && toMerge.gainValues)
+    merge(gainValues, toMerge.gainValues)
   let lossValues = initValues()
   if (definition && definition.lossValues)
     merge(lossValues, definition.lossValues)
@@ -49,7 +56,7 @@ export const mergeValues = <D1 extends BD | undefined, D2 extends BD | undefined
     merge(lossModifierValues, definition.lossModifierValues)
   if (toMerge && toMerge.lossModifierValues)
     merge(lossModifierValues, toMerge.lossModifierValues)
-  return { ...toMerge, ...definition, baseValues, modifierValues, lossValues, lossModifierValues }
+  return { ...toMerge, ...definition, baseValues, modifierValues, lossValues, gainValues, lossModifierValues }
 }
 
 
@@ -62,7 +69,8 @@ export const shrinkValues = <D extends BD>(definition: D, key: string): D => {
     baseValues: definition.baseValues && map(definition.baseValues, (_, attribute) => ({ [key]: calculateBase(definition, attribute) })),
     modifierValues: definition.modifierValues && map(definition.modifierValues, (_, attribute) => ({ [key]: calculateModifier(definition, attribute) })),
     lossModifierValues: definition.lossModifierValues && map(definition.lossModifierValues, (_, attribute) => ({ [key]: calculateLossModifier(definition, attribute) })),
-    lossValues: definition.lossValues && map(definition.lossValues, (_, attribute) => ({ [key]: calculateLoss(definition, attribute) }))
+    lossValues: definition.lossValues && map(definition.lossValues, (_, attribute) => ({ [key]: calculateLoss(definition, attribute) })),
+    gainValues: definition.gainValues && map(definition.gainValues, (_, attribute) => ({ [key]: calculateLoss(definition, attribute) }))
   }
 }
 
@@ -74,6 +82,8 @@ export const addValues = <D extends BD>(definition: D, type: ValuesType, key: st
     return { ...definition, baseValues: subAddValues(definition.baseValues, key, values) }
   if (type === ValuesType.Modifier)
     return { ...definition, modifierValues: subAddValues(definition.modifierValues, key, values) }
+  if (type === ValuesType.Gain)
+    return { ...definition, gainValues: subAddValues(definition.gainValues, key, values) }
   if (type === ValuesType.Loss)
     return { ...definition, lossValues: subAddValues(definition.lossValues, key, values) }
   if (type === ValuesType.LossModifier)
@@ -86,6 +96,8 @@ export const addValue = <D extends BD>(definition: D, type: ValuesType, key: str
     return { ...definition, baseValues: subAddValues(definition.baseValues, key, [[attribute, value]]) }
   if (type === ValuesType.Modifier)
     return { ...definition, modifierValues: subAddValues(definition.modifierValues, key, [[attribute, value]]) }
+  if (type === ValuesType.Gain)
+    return { ...definition, gainValues: subAddValues(definition.gainValues, key, [[attribute, value]]) }
   if (type === ValuesType.Loss)
     return { ...definition, lossValues: subAddValues(definition.lossValues, key, [[attribute, value]]) }
   if (type === ValuesType.LossModifier)
@@ -98,6 +110,8 @@ export const addValuesWithMutate = <D extends BD>(definition: D, type: ValuesTyp
     definition.baseValues = subAddValues(definition.baseValues, key, values)
   if (type === ValuesType.Modifier)
     definition.modifierValues = subAddValues(definition.modifierValues, key, values)
+  if (type === ValuesType.Gain)
+    definition.gainValues = subAddValues(definition.gainValues, key, values)
   if (type === ValuesType.Loss)
     definition.lossValues = subAddValues(definition.lossValues, key, values)
   if (type === ValuesType.LossModifier)
@@ -133,6 +147,7 @@ export const clearAllValues = <D extends BD>(definition: D, key: string): D => {
     ...definition,
     baseValues: subClearValues(definition.baseValues, key),
     modifierValues: subClearValues(definition.modifierValues, key),
+    gainValues: subClearValues(definition.gainValues, key),
     lossValues: subClearValues(definition.lossValues, key),
     lossModifierValues: subClearValues(definition.lossModifierValues, key)
   }
@@ -144,6 +159,7 @@ export const clearAllValues = <D extends BD>(definition: D, key: string): D => {
 export const clearAllValuesWithMutate = <D extends BD>(definition: D, key: string) => {
   definition.baseValues = subClearValues(definition.baseValues, key)
   definition.modifierValues = subClearValues(definition.modifierValues, key)
+  definition.gainValues = subClearValues(definition.gainValues, key)
   definition.lossValues = subClearValues(definition.lossValues, key)
   definition.lossModifierValues = subClearValues(definition.lossModifierValues, key)
 }
@@ -157,6 +173,8 @@ export const clearValues = <D extends BD>(definition: D, type: ValuesType, key: 
   const any = definition as any
   if (type === ValuesType.Modifier)
     return { ...definition, modifierValues: subClearValues(any.modifierValues, key) }
+  if (type === ValuesType.Gain)
+    return { ...definition, gainValues: subClearValues(any.gainValues, key) }
   if (type === ValuesType.Loss)
     return { ...definition, lossValues: subClearValues(any.lossValues, key) }
   if (type === ValuesType.LossModifier)
@@ -170,6 +188,8 @@ export const clearValuesWithMutate = <D extends BD>(definition: D, type: ValuesT
   const any = definition as any
   if (type === ValuesType.Modifier)
     definition.modifierValues = subClearValues(any.modifierValues, key)
+  if (type === ValuesType.Gain)
+    definition.gainValues = subClearValues(any.gainValues, key)
   if (type === ValuesType.Loss)
     definition.lossValues = subClearValues(any.lossValues, key)
   if (type === ValuesType.LossModifier)
@@ -209,6 +229,7 @@ export const filterValues = <D extends BD>(definition: D, key: string): D => {
     ...definition,
     baseValues: subFilterValues(definition.baseValues, key),
     modifierValues: subFilterValues(definition.modifierValues, key),
+    gainValues: subFilterValues(definition.gainValues, key),
     lossValues: subFilterValues(definition.lossValues, key),
     lossModifierValues: subFilterValues(definition.lossModifierValues, key)
   }
@@ -236,7 +257,7 @@ export const calculateValue = <D extends BD, A extends string>(definition: D | u
 export const calculateValueWithoutLoss = <D extends BD, A extends string>(definition: D | undefined, attribute: A): number => {
   if (!definition)
     return 0.0
-  let value = calculateBase(definition, attribute) * (1 + calculateModifier(definition, attribute))
+  let value = calculateBase(definition, attribute) * (1 + calculateModifier(definition, attribute)) + calculateGain(definition, attribute)
   return round(value, PRECISION)
 }
 
@@ -253,6 +274,13 @@ export const calculateBase = <D extends BD, A extends string>(definition: D, att
  * @param attribute 
  */
 export const calculateModifier = <D extends BD, A extends string>(definition: D, attribute: A): number => calculateValueSub(definition.modifierValues, attribute)
+
+/**
+ * Calculates the gain value of an attribute.
+ * @param definition 
+ * @param attribute 
+ */
+export const calculateGain = <D extends BD, A extends string>(definition: D, attribute: A): number => calculateValueSub(definition.gainValues, attribute)
 
 /**
  * Calculates the loss value of an attribute.
@@ -304,6 +332,8 @@ export const getValue = <D extends BD, A extends string>(type: ValuesType, defin
 const getContainer = <D extends BD, A extends string>(type: ValuesType, definition: D): Values<A> => {
   if (type === ValuesType.Modifier)
     return definition.modifierValues ?? {}
+  if (type === ValuesType.Gain)
+    return definition.gainValues ?? {}
   if (type === ValuesType.Loss)
     return definition.lossValues ?? {}
   if (type === ValuesType.LossModifier)
@@ -335,9 +365,10 @@ export const explainShort = <D extends BD, A extends string>(definition: D, attr
  */
 export const explain = <D extends BD, A extends string>(definition: D, attribute: A): string => {
   const valueModifier = definition.modifierValues ? definition.modifierValues[attribute] : undefined
+  const valueGain = definition.gainValues ? definition.gainValues[attribute] : undefined
   const valueLoss = definition.lossValues ? definition.lossValues[attribute] : undefined
   const valueLossModifier = definition.lossModifierValues ? definition.lossModifierValues[attribute] : undefined
-  if ((!valueModifier || size(valueModifier) === 0) && (!valueLoss || size(valueLoss) === 0) && (!valueLossModifier || size(valueLossModifier) === 0))
+  if ((!valueModifier || size(valueModifier) === 0) && (!valueGain || size(valueGain) === 0) && (!valueLoss || size(valueLoss) === 0) && (!valueLossModifier || size(valueLossModifier) === 0))
     return explainShort(definition, attribute)
   let explanation = ''
   let base = 0
@@ -368,25 +399,23 @@ export const explain = <D extends BD, A extends string>(definition: D, attribute
   const value = calculateValue(definition, attribute)
   const baseValue = calculateValueWithoutLoss(definition, attribute)
   const loss = baseValue - value
-  if ((size(valueLoss) + size(valueLossModifier)) > 0) {
-    if (loss < 0) {
-      explanation += ' increased by ' + +(-loss).toFixed(2)
-      explanation += ' ('
-      if (valueLoss)
-        forEach(valueLoss, (value, key) => explanation += key.replace(/_/g, ' ') + ': ' + -value + ', ')
-      if (valueLossModifier)
-        forEach(valueLossModifier, (value, key) => explanation += key.replace(/_/g, ' ') + ': ' + toPercent(-value) + ', ')
-      explanation = explanation.substring(0, explanation.length - 2) + ')'
+  const gain = calculateGain(definition, attribute)
+  if (size(valueGain) > 0) {
+    explanation += ' increased by ' + +(gain).toFixed(2)
+    explanation += ' ('
+    if (valueGain)
+      forEach(valueGain, (value, key) => explanation += key.replace(/_/g, ' ') + ': ' + toNumber(value) + ', ')
+    explanation = explanation.substring(0, explanation.length - 2) + ')'
 
-    } else {
-      explanation += ' reduced by losses ' + +(loss).toFixed(2)
-      explanation += ' ('
-      if (valueLoss)
-        forEach(valueLoss, (value, key) => explanation += key.replace(/_/g, ' ') + ': ' + value + ', ')
-      if (valueLossModifier)
-        forEach(valueLossModifier, (value, key) => explanation += key.replace(/_/g, ' ') + ': ' + toPercent(value) + ', ')
-      explanation = explanation.substring(0, explanation.length - 2) + ')'
-    }
+  }
+  if ((size(valueLoss) + size(valueLossModifier)) > 0) {
+    explanation += ' reduced by losses ' + +(loss).toFixed(2)
+    explanation += ' ('
+    if (valueLoss)
+      forEach(valueLoss, (value, key) => explanation += key.replace(/_/g, ' ') + ': ' + toNumber(value) + ', ')
+    if (valueLossModifier)
+      forEach(valueLossModifier, (value, key) => explanation += key.replace(/_/g, ' ') + ': ' + toPercent(value) + ', ')
+    explanation = explanation.substring(0, explanation.length - 2) + ')'
   }
   return explanation
 }

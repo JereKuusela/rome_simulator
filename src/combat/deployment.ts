@@ -56,11 +56,11 @@ const deployBoth = (cohorts: Cohort[], row: (Cohort | null)[], center: number, l
 
 const applyLateDeploymentPenaltySub = (cohort: Cohort, percent: number) => {
   cohort[UnitAttribute.Morale] -= cohort.properties.maxMorale * percent
-  cohort.properties.deploymentPenalty = percent
+  cohort.properties.deploymentPenalty += percent
 }
 
 const applyLateDeploymentPenalty = (reserve: Reserve, round: number, settings: Settings) => {
-  if (round < settings[Setting.StackwipeRounds])
+  if (round < settings[Setting.StackwipeRounds] || !settings[Setting.MoraleHitForLateDeployment])
     return
   reserve.front.forEach(cohort => applyLateDeploymentPenaltySub(cohort, settings[Setting.MoraleHitForLateDeployment]))
   reserve.flank.forEach(cohort => applyLateDeploymentPenaltySub(cohort, settings[Setting.MoraleHitForLateDeployment]))
@@ -68,9 +68,9 @@ const applyLateDeploymentPenalty = (reserve: Reserve, round: number, settings: S
 }
 
 const applyReinforcementPenalty = (cohort: Cohort, preferences: UnitPreferences, settings: Settings) => {
-  if (cohort.properties.type !== preferences[UnitPreferenceType.Secondary]) {
+  if (cohort.properties.type !== preferences[UnitPreferenceType.Secondary] && settings[Setting.MoraleHitForNonSecondaryReinforcement]) {
     cohort[UnitAttribute.Morale] -= cohort.properties.maxMorale * settings[Setting.MoraleHitForNonSecondaryReinforcement]
-    cohort.properties.reinforcementPenalty = settings[Setting.MoraleHitForNonSecondaryReinforcement]
+    cohort.properties.reinforcementPenalty += settings[Setting.MoraleHitForNonSecondaryReinforcement]
   }
 }
 
@@ -208,7 +208,7 @@ export const deploy = (environment: Environment, sideA: Side, sideB: Side) => {
 const countCohorts = (side: Side) => reserveSize(side.cohorts.reserve) + side.cohorts.frontline[0].filter(unit => unit).length
 const countReserve = (armies: Army[]) => sum(armies.map(army => reserveSize(army.reserve)))
 
-export const undeploy = (side: Side) => {
+export const undeploy = (environment: Environment, side: Side) => {
   if (!side.isDefeated) {
     const reserve: Cohort[] = []
     reserve.push(...flatten(side.cohorts.frontline.map(row => row.filter(cohort => cohort) as Cohort[])))
@@ -218,6 +218,7 @@ export const undeploy = (side: Side) => {
     reserve.push(...side.cohorts.defeated)
     side.deployed.forEach(army => {
       army.reserve = sortReserve(reserve.filter(cohort => cohort.properties.participantIndex === army.participantIndex), army.unitPreferences)
+      applyWinningMoraleBonus(army.reserve, environment.settings)
       side.armies.push(army)
     })
   }
@@ -226,6 +227,20 @@ export const undeploy = (side: Side) => {
   side.cohorts.frontline = side.cohorts.frontline.map(row => row.map(() => null))
   side.cohorts.defeated = []
   resortReserve(side, [])
+}
+
+const applyWinningMoraleBonusSub = (cohort: Cohort, percent: number) => {
+  const bonus = Math.min(cohort.properties.maxMorale * percent, cohort.properties.maxMorale - cohort[UnitAttribute.Morale])
+  cohort[UnitAttribute.Morale] += bonus
+  cohort.properties.winningMoraleBonus += bonus
+}
+
+const applyWinningMoraleBonus = (reserve: Reserve, settings: Settings) => {
+  if (!settings[Setting.MoraleGainForWinning])
+    return
+  reserve.front.forEach(cohort => applyWinningMoraleBonusSub(cohort, settings[Setting.MoraleGainForWinning]))
+  reserve.flank.forEach(cohort => applyWinningMoraleBonusSub(cohort, settings[Setting.MoraleGainForWinning]))
+  reserve.support.forEach(cohort => applyWinningMoraleBonusSub(cohort, settings[Setting.MoraleGainForWinning]))
 }
 
 

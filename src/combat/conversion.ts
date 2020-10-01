@@ -18,6 +18,7 @@ export const getProperties = (countryName: CountryName, armyName: ArmyName, part
     image: cohort.image,
     deploymentPenalty: 0,
     reinforcementPenalty: 0,
+    winningMoraleBonus: 0,
     maxMorale: calculateValueWithoutLoss(cohort, UnitAttribute.Morale),
     maxStrength: calculateValueWithoutLoss(cohort, UnitAttribute.Strength),
     experienceReduction: calculateExperienceReduction(settings, cohort),
@@ -45,7 +46,7 @@ export const getProperties = (countryName: CountryName, armyName: ArmyName, part
 export const getCombatUnit = (countryName: CountryName, armyName: ArmyName, participantIndex: number, index: number, settings: Settings, terrains: Terrain[], unitTypes: UnitType[], cohort: CohortDefinition): Cohort => ({
   [UnitAttribute.Morale]: calculateValue(cohort, UnitAttribute.Morale),
   [UnitAttribute.Strength]: calculateValue(cohort, UnitAttribute.Strength),
-  state: { captureChance: 0, target: null, targetSupport: null, flanking: false, moraleLoss: 0, strengthLoss: 0, moraleDealt: 0, strengthDealt: 0, damageMultiplier: 0, isDefeated: false, targetedBy: null, defeatedBy: null, defeatedDay: 0, stackWipedBy: null, isDestroyed: false, totalMoraleDealt: 0, totalStrengthDealt: 0 },
+  state: { flankRatioPenalty: 0, captureChance: 0, target: null, targetSupport: null, flanking: false, moraleLoss: 0, strengthLoss: 0, moraleDealt: 0, strengthDealt: 0, damageMultiplier: 0, isDefeated: false, targetedBy: null, defeatedBy: null, defeatedDay: 0, stackWipedBy: null, isDestroyed: false, totalMoraleDealt: 0, totalStrengthDealt: 0 },
   properties: getProperties(countryName, armyName, participantIndex, index, settings, terrains, unitTypes, cohort),
   isWeak: false
 })

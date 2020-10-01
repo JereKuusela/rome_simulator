@@ -1,6 +1,6 @@
 
-import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, Cohorts, Cohort, Frontline, Side, Environment, TacticCalc, UnitType, TacticMatch } from 'types'
-import { multiplyChance, noZero } from 'utils'
+import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, Cohorts, Cohort, Frontline, Side, Environment, TacticCalc, UnitType, TacticMatch, Army, FlankRatioPenalty } from 'types'
+import { multiplyChance, noZero, toObj } from 'utils'
 import { calculateValue } from 'definition_values'
 import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, reserveSize, reinforce, calculateGeneralPips, getTerrainPips, checkStackWipe, defeatCohort, isAlive } from 'combat'
 import { deploy, undeploy, moveDefeatedToRetreated } from './deployment'
@@ -23,9 +23,9 @@ export const doCombatRound = (env: Environment, sideA: Side, sideB: Side, markDe
     removeDefeated(d.cohorts.frontline)
   }
   if (round === 0) {
-    undeploy(a)
+    undeploy(env, a)
     a.results = getDefaultCombatResults()
-    undeploy(d)
+    undeploy(env, d)
     d.results = getDefaultCombatResults()
   }
   deploy(env, a, d)
@@ -94,6 +94,7 @@ const clearState = (source: Frontline) => {
       state.target = null
       state.flanking = false
       state.targetedBy = null
+      state.flankRatioPenalty = 0
       state.captureChance = 0
       // Enemies in front should never be already defeated.
       // This kind of state can come from Analyze tool because it doesn't reset the state.
@@ -193,22 +194,29 @@ export const getTacticMatch = (tactic: TacticDefinition, counterTactic?: TacticD
   return TacticMatch.Neutral
 }
 
-const calculateFlankRatioPenalty = (army: Cohorts, ratio: number, setting: Settings) => {
-  return ratio && calculateFlankRatio(army) > ratio ? setting[Setting.InsufficientSupportPenalty] / (1 - setting[Setting.InsufficientSupportPenalty]) : 0.0
+const calculateFlankRatioPenalty = (armies: Army[], cohorts: Cohorts, ratio: number, setting: Settings) => {
+  const ratios = calculateFlankRatios(cohorts)
+  return toObj(armies, army => army.participantIndex, army => (
+    army.flankRatio && ratios[army.participantIndex] > army.flankRatio ? setting[Setting.InsufficientSupportPenalty] / (1 - setting[Setting.InsufficientSupportPenalty]) : 0.0)
+  )
 }
 
-const calculateFlankRatio = (army: Cohorts): number => {
-  let infantry = 0.0
-  let flank = 0.0
+const calculateFlankRatios = (cohorts: Cohorts): { [key: string]: number } => {
+  const infantry = <{ [key: string]: number }>{}
+  const flank = <{ [key: string]: number }>{}
 
   const addRatio = (cohort: Cohort) => {
+    if (infantry[cohort.properties.participantIndex] === undefined)
+      infantry[cohort.properties.participantIndex] = 0
+    if (flank[cohort.properties.participantIndex] === undefined)
+      flank[cohort.properties.participantIndex] = 0
     if (cohort.properties.role === UnitRole.Front)
-      infantry += cohort[UnitAttribute.Strength]
+      infantry[cohort.properties.participantIndex] += cohort[UnitAttribute.Strength]
     if (cohort.properties.role === UnitRole.Flank)
-      flank += cohort[UnitAttribute.Strength]
+      flank[cohort.properties.participantIndex] += cohort[UnitAttribute.Strength]
   }
-  iterateCohorts(army, true, addRatio)
-  return flank / noZero(flank + infantry)
+  iterateCohorts(cohorts, true, addRatio)
+  return toObj(Object.keys(infantry), key => key, key => flank[key] / noZero(flank[key] + infantry[key]))
 }
 
 /**
@@ -276,15 +284,15 @@ const attack = (environment: Environment, source: Side, target: Side, dailyMulti
   source.results.terrainPips = terrainPips
   source.results.tacticStrengthDamageMultiplier = tacticStrengthDamageMultiplier
   source.results.tacticBonus = settings[Setting.Tactics] && armyS && armyT ? calculateTactic(source.cohorts, armyS.tactic, armyT.tactic) : 0.0
-  source.results.flankRatioBonus = calculateFlankRatioPenalty(target.cohorts, target.flankRatio, settings)
-  const multiplier = (1 + source.results.tacticBonus) * dailyMultiplier * (1 + source.results.flankRatioBonus)
-  attackSub(source.cohorts.frontline, settings[Setting.BasePips] + source.results.dice + generalPips + terrainPips, multiplier, tacticStrengthDamageMultiplier, phase, settings)
+  const flankRatioPenalty = calculateFlankRatioPenalty(target.deployed, target.cohorts, target.flankRatio, settings)
+  const multiplier = (1 + source.results.tacticBonus) * dailyMultiplier
+  attackSub(source.cohorts.frontline, settings[Setting.BasePips] + source.results.dice + generalPips + terrainPips, multiplier, tacticStrengthDamageMultiplier, phase, flankRatioPenalty, settings)
 }
 
 /**
  * Calculates losses when units attack their targets.
  */
-const attackSub = (frontline: Frontline, roll: number, dynamicMultiplier: number, strengthMultiplier: number, phase: CombatPhase, settings: Settings) => {
+const attackSub = (frontline: Frontline, roll: number, dynamicMultiplier: number, strengthMultiplier: number, phase: CombatPhase, flankRatioPenalty: FlankRatioPenalty, settings: Settings) => {
   for (let i = 0; i < frontline.length; i++) {
     for (let j = 0; j < frontline[i].length; j++) {
       const source = frontline[i][j]
@@ -294,6 +302,7 @@ const attackSub = (frontline: Frontline, roll: number, dynamicMultiplier: number
       if (!target)
         continue
       target.state.targetedBy = source
+      target.state.flankRatioPenalty = 1.0 + (flankRatioPenalty[target.properties.participantIndex] ?? 0.0)
       const multiplier = calculateDamageMultiplier(source, target, dynamicMultiplier, i > 0, phase, settings)
       calculateMoraleLosses(source, target, source.state.targetSupport, roll, multiplier, phase, settings)
       calculateStrengthLosses(source, target, source.state.targetSupport, roll, multiplier * strengthMultiplier, phase, settings)
@@ -307,7 +316,7 @@ const calculateCohortDamageMultiplier = (source: Cohort, target: Cohort, isSuppo
 
   return source[UnitAttribute.Strength]
     * (settings[Setting.AttributeOffenseDefense] ? 1.0 + definitionS[UnitAttribute.Offense] - definitionT[UnitAttribute.Defense] : 1.0)
-    * (isSupport ? definitionS[UnitAttribute.OffensiveSupport] : 1.0)
+    * (isSupport ? definitionS[UnitAttribute.OffensiveSupport] : 1.0) * target.state.flankRatioPenalty
 }
 
 const calculateDamageMultiplier = (source: Cohort, target: Cohort, dynamicMultiplier: number, isSupport: boolean, phase: CombatPhase, settings: Settings) => {

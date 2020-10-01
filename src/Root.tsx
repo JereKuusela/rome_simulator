@@ -13,6 +13,7 @@ import Error from './pages/Error'
 import { AppState } from 'state'
 import Analyze from './pages/Analyze'
 import SaveTool from 'pages/SaveTool'
+import ExportTool from 'pages/ExportTool'
 import { Container } from 'semantic-ui-react'
 import Modals from 'pages/Modals'
 
@@ -38,6 +39,7 @@ const Root = ({ store, persistor }: MainProps) => {
               <Route path='/Countries' component={process.env.REACT_APP_GAME === 'euiv' ? CountriesEUIV : CountriesIR} />
               <Route path='/Settings' component={Settings} />
               <Route path='/Import' component={SaveTool} />
+              <Route path='/Export' component={ExportTool} />
               <br />
               <br />
               <br />
