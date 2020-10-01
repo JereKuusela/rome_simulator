@@ -15,6 +15,8 @@ Combat:
 Settings:
  * EU4: Added a setting for morale gain when winning a battle.
 
+UI:
+ * Fixed dice extra settings button disappearing when random dice is enabled.
 
 Save import:
   * Added a tool for exporting a table with territories and their pops.

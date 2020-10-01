@@ -79,7 +79,7 @@ class TableSideInfo extends Component<IProps> {
           settings[Setting.Tactics] &&
           <Table.Cell collapsing>
             {army ? <Image src={getImage(army.tactic)} avatar /> : null}
-            {tactic ? <StyledNumber  value={tactic.damage}  formatter={toSignedPercent}/> : null}
+            {tactic ? <StyledNumber value={tactic.damage} formatter={toSignedPercent} /> : null}
           </Table.Cell>
         }
         <Table.Cell>
@@ -99,12 +99,9 @@ class TableSideInfo extends Component<IProps> {
       <div key={side.type}>
         <Image src={IconDice} avatar />
         {isDiceSet ? combat.results.dice : <DelayedNumericInput type='number' value={side.dice} onChange={value => setDice(side.type, value)} />}
-        {
-          !side.randomizeDice &&
-          <span style={{ paddingLeft: '1em' }}>
-            <Button size='mini' icon={'plus'} onClick={() => openModal(ModalType.DiceRolls, { side: side.type })} />
-          </span>
-        }
+        <span style={{ paddingLeft: '1em' }}>
+          <Button size='mini' icon={'plus'} onClick={() => openModal(ModalType.DiceRolls, { side: side.type })} />
+        </span>
         {
           generalPips !== 0 ?
             <span style={{ paddingLeft: '1em' }}>
