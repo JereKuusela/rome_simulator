@@ -82,6 +82,7 @@ class TableArmyInfo extends Component<IProps> {
             <Table.Cell />
             <Table.Cell />
             <Table.Cell />
+            <Table.Cell />
           </Table.Row>
         </Table.Body>
       </Table>
