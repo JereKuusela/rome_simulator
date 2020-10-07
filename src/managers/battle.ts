@@ -60,7 +60,9 @@ export const getDefaultCombatResults = () => ({
   round: 0,
   tacticBonus: 0,
   terrainPips: 0,
-  tacticStrengthDamageMultiplier: 0
+  tacticStrengthDamageMultiplier: 0,
+  totalBonusPips: 0,
+  actualBonusPips: 0
 })
 
 export const convertSide = (side: SideData, armies: Army[], settings: Settings): Side => {

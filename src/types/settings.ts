@@ -19,7 +19,7 @@ export enum Setting {
   Precision = 'Calculation precision',
   CombatWidth = 'Base combat width',
   DefenderAdvantage = 'Defender\'s advantage',
-  RelativeDice = 'Defender\'s advantage',
+  RelativePips = 'Relative pips',
   AttributeDiscipline = 'Enable discipline',
   DailyMoraleLoss = 'Daily morale loss',
   DailyDamageIncrease = 'Daily damage increase',
@@ -132,7 +132,7 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Defending units can\'t be targeted when they reinforce (Legacy).'
       else
         return 'Defender gets no undocumented benefits (Imperator, EU4).'
-    case Setting.RelativeDice:
+    case Setting.RelativePips:
       if (value)
         return 'The difference of dice is only applied to the side with higher roll (Experimental).'
       else
@@ -375,7 +375,7 @@ export type SiteSettings = {
   [Setting.PhasesPerRoll]: number,
   [Setting.ShowGraphs]: boolean,
   [Setting.BackRow]: boolean,
-  [Setting.RelativeDice]: boolean,
+  [Setting.RelativePips]: boolean,
   [Setting.BackRowRetreat]: boolean,
   [Setting.RetreatRounds]: number,
   [Setting.Stackwipe]: boolean,

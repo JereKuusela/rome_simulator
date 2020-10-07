@@ -48,6 +48,12 @@ export const doCombatRound = (env: Environment, sideA: Side, sideB: Side, markDe
     const tacticStrengthDamageMultiplier = generalA && generalD && settings[Setting.Tactics] ? 1.0 + calculateValue(generalA.tactic, TacticCalc.Casualties) + calculateValue(generalD.tactic, TacticCalc.Casualties) : 1.0
     a.results.dailyMultiplier = dailyMultiplier
     d.results.dailyMultiplier = dailyMultiplier
+    calculateArmyPips(env, a, d, phase)
+    calculateArmyPips(env, d, a, phase)
+    if (settings[Setting.RelativePips]) {
+      a.results.actualBonusPips = Math.max(0, a.results.totalBonusPips - d.results.totalBonusPips)
+      d.results.actualBonusPips = Math.max(0, d.results.totalBonusPips - a.results.totalBonusPips)
+    }
     attack(env, a, d, dailyMultiplier, tacticStrengthDamageMultiplier, phase)
     attack(env, d, a, dailyMultiplier, tacticStrengthDamageMultiplier, phase)
 
@@ -272,21 +278,29 @@ const moveDefeated = (environment: Environment, frontline: Frontline, defeated: 
   return !cohortsAlive
 }
 
-const attack = (environment: Environment, source: Side, target: Side, dailyMultiplier: number, tacticStrengthDamageMultiplier: number, phase: CombatPhase) => {
-  const { settings, terrains, attacker } = environment
-  // Tactic bonus changes dynamically when units lose strength so it can't be precalculated.
-  // If this is a problem a fast mode can be implemeted where to bonus is only calculated once.
+const calculateArmyPips = (environment: Environment, source: Side, target: Side, phase: CombatPhase) => {
+  const { terrains, attacker } = environment
   const armyS = getLeadingArmy(source)
   const armyT = getLeadingArmy(target)
   const generalPips = armyS && armyT ? calculateGeneralPips(armyS.general, armyT.general, phase) : 0
   const terrainPips = armyS && armyT ? getTerrainPips(terrains, source.type === attacker, armyS.general, armyT.general) : 0
   source.results.generalPips = generalPips
   source.results.terrainPips = terrainPips
+  source.results.totalBonusPips = source.results.dice + source.results.generalPips + source.results.terrainPips
+  source.results.actualBonusPips = source.results.totalBonusPips
+}
+
+const attack = (environment: Environment, source: Side, target: Side, dailyMultiplier: number, tacticStrengthDamageMultiplier: number, phase: CombatPhase) => {
+  const { settings } = environment
+  // Tactic bonus changes dynamically when units lose strength so it can't be precalculated.
+  // If this is a problem a fast mode can be implemeted where to bonus is only calculated once.
+  const armyS = getLeadingArmy(source)
+  const armyT = getLeadingArmy(target)
   source.results.tacticStrengthDamageMultiplier = tacticStrengthDamageMultiplier
   source.results.tacticBonus = settings[Setting.Tactics] && armyS && armyT ? calculateTactic(source.cohorts, armyS.tactic, armyT.tactic) : 0.0
   const flankRatioPenalty = calculateFlankRatioPenalty(target.deployed, target.cohorts, target.flankRatio, settings)
   const multiplier = (1 + source.results.tacticBonus) * dailyMultiplier
-  attackSub(source.cohorts.frontline, settings[Setting.BasePips] + source.results.dice + generalPips + terrainPips, multiplier, tacticStrengthDamageMultiplier, phase, flankRatioPenalty, settings)
+  attackSub(source.cohorts.frontline, settings[Setting.BasePips] + source.results.totalBonusPips, multiplier, tacticStrengthDamageMultiplier, phase, flankRatioPenalty, settings)
 }
 
 /**
@@ -330,12 +344,12 @@ const calculateDamageMultiplier = (source: Cohort, target: Cohort, dynamicMultip
 }
 
 
-const calculatePips = (roll: number, maxPips: number, source: Cohort, target: Cohort, targetSupport: Cohort | null, type: UnitAttribute.Morale | UnitAttribute.Strength, phase?: CombatPhase) => {
+const calculateTotalPips = (roll: number, maxPips: number, source: Cohort, target: Cohort, targetSupport: Cohort | null, type: UnitAttribute.Morale | UnitAttribute.Strength, phase?: CombatPhase) => {
   return Math.min(maxPips, Math.max(0, roll + calculateCohortPips(source.properties, target.properties, targetSupport ? targetSupport.properties : null, type, phase)))
 }
 
 const calculateMoraleLosses = (source: Cohort, target: Cohort, targetSupport: Cohort | null, roll: number, dynamicMultiplier: number, phase: CombatPhase, settings: Settings) => {
-  const pips = calculatePips(roll, settings[Setting.MaxPips], source, target, targetSupport, UnitAttribute.Morale)
+  const pips = calculateTotalPips(roll, settings[Setting.MaxPips], source, target, targetSupport, UnitAttribute.Morale)
   const morale = settings[Setting.UseMaxMorale] ? source.properties.maxMorale : source[UnitAttribute.Morale]
   let damage = pips * dynamicMultiplier * source.properties.damage[UnitAttribute.Morale][target.properties.type][phase] * morale * target.properties.moraleTakenMultiplier
   if (settings[Setting.MoraleDamageBasedOnTargetStrength])
@@ -350,7 +364,7 @@ const calculateMoraleLosses = (source: Cohort, target: Cohort, targetSupport: Co
 }
 
 const calculateStrengthLosses = (source: Cohort, target: Cohort, targetSupport: Cohort | null, roll: number, dynamicMultiplier: number, phase: CombatPhase, settings: Settings) => {
-  const pips = calculatePips(roll, settings[Setting.MaxPips], source, target, targetSupport, UnitAttribute.Strength, phase)
+  const pips = calculateTotalPips(roll, settings[Setting.MaxPips], source, target, targetSupport, UnitAttribute.Strength, phase)
   const damage = pips * dynamicMultiplier * source.properties.damage[UnitAttribute.Strength][target.properties.type][phase] * target.properties.strengthTakenMultiplier[phase]
 
   source.state.strengthDealt = Math.floor(damage) / settings[Setting.Precision]

@@ -98,12 +98,13 @@ class CombatTooltip extends Component<IProps, IState> {
 
   getBaseDamageSubSection = (source: IUnit, target: IUnit, targetSupport: IUnit | null, type: UnitAttribute.Strength | UnitAttribute.Morale | '', phase: CombatPhase) => {
     const { settings, results } = this.props
-    const { dice, terrainPips, generalPips } = results
+    const { dice, terrainPips, generalPips, actualBonusPips, totalBonusPips } = results
     const basePips = settings[Setting.BasePips]
     const sourcePips = type ? getOffensiveCohortPips(source, type, phase) : 0
     const targetPips = type ? getDefensiveCohortPips(target, type, phase) : 0
     const targetSupportPips = type ? getDefensiveSupportCohortPips(targetSupport, type, phase) : 0
-    const totalPips = basePips + dice + terrainPips + generalPips + sourcePips + targetPips + targetSupportPips
+    const totalPips = basePips + actualBonusPips + sourcePips + targetPips + targetSupportPips
+    const enemyReduction = actualBonusPips - totalBonusPips
     const cappedPips = Math.min(totalPips, settings[Setting.MaxPips])
     const reductionToCap = Math.min(0, settings[Setting.MaxPips] - cappedPips)
     const text = type === UnitAttribute.Morale ? UnitAttribute.Morale : phase
@@ -113,6 +114,7 @@ class CombatTooltip extends Component<IProps, IState> {
       {this.renderModifier('Terrain pips', terrainPips, this.toAdd)}
       {this.renderModifier('General pips', generalPips, this.toAdd)}
       {this.renderModifier(text + ' pips', sourcePips, this.toAdd)}
+      {this.renderModifier('Enemy pips', enemyReduction, this.toAdd)}
       {this.renderModifier('Enemy ' + text.toLowerCase() + ' pips', targetPips, this.toAdd)}
       {this.renderModifier('Backrow ' + text.toLowerCase() + ' pips', targetSupportPips, this.toAdd)}
       {this.renderModifier('Above maximum', reductionToCap, this.toAdd)}

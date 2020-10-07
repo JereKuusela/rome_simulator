@@ -64,6 +64,8 @@ export type SideRoundInfo = {
   tacticStrengthDamageMultiplier: number
   terrainPips: number
   generalPips: number
+  totalBonusPips: number
+  actualBonusPips: number
   dice: number
 }
 

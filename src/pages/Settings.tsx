@@ -21,7 +21,7 @@ const mechanics = [
 ]
 const damage = [
   Setting.DailyMoraleLoss, Setting.DailyDamageIncrease, Setting.Precision, Setting.BasePips, Setting.MaxGeneral,
-  Setting.MaxPips, Setting.DiceMinimum, Setting.DiceMaximum, Setting.MinimumMorale, Setting.MinimumStrength, Setting.RelativeDice
+  Setting.MaxPips, Setting.DiceMinimum, Setting.DiceMaximum, Setting.MinimumMorale, Setting.MinimumStrength, Setting.RelativePips
 ]
 const stackwipe = [
   Setting.Stackwipe, Setting.StackwipeRounds, Setting.SoftStackWipeLimit, Setting.HardStackWipeLimit, Setting.RetreatRounds, Setting.BackRowRetreat, Setting.StackWipeCaptureChance
