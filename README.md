@@ -18,7 +18,7 @@ In the project directory, you can run:
 
 or
 
-### `npm run start_euiv`
+### `npm run start_eu4`
 
 Runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -51,10 +51,10 @@ For IR:
 - Contents of game/common to conversion/ir (most folders are needed so easy to just copy all)
 - Contents of game/localization/english to conversion/ir/localization/english
 
-For EUIV:
+For EU4:
 
-- Contents of game/common to conversion/euiv (at least policies, tech and units)
-- Contents of game/localization/policies_l_english.yml to conversion/euiv/localization/english
+- Contents of game/common to conversion/eu4 (at least policies, tech and units)
+- Contents of game/localization/policies_l_english.yml to conversion/eu4/localization/english
 
 Then run 
 
@@ -62,4 +62,4 @@ Then run
 
 or
 
-### `npm run convert_euiv`
+### `npm run convert_eu4`

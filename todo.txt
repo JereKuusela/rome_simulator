@@ -5,7 +5,7 @@ Changelog:
 
 Refactor:
   * IR: Configuration can now be generated from data files (easier maintenance with less errors).
-  * Data generator was split to better support EUIV (modifier names got mixed up with IR modifiers).
+  * Data generator was split to better support EU4 (modifier names got mixed up with IR modifiers).
   * Added support for gaining attributes (opposite of losses), for example morale gain for winning a battle in EU4.
 
 Combat:
@@ -29,7 +29,7 @@ Saves:
  - Add import from battle (involved armies) or war (all participants and all armies)
 
 Countries:
- - Data converter for EUIV.
+ - Data converter for EU4.
   * Each country has tag / group specific ideas -> Dropdown with tag and group names -> 1 table with 1 x 7 ideas?
   * Each country has access to same basic ideas -> ~15 available, 9 can be unlocked -> 3 tables with 5 groups x 7 ideas?
    - Can filter ideas groups with no military buffs
@@ -55,7 +55,7 @@ Tests:
 
 UI:
  - Togglable stats rows to show individual units or hide unit types.
- - Unit tooltip should somehow show sources for losses (to include daily loss from EUIV and damage from different units).
+ - Unit tooltip should somehow show sources for losses (to include daily loss from EU4 and damage from different units).
  - Unit type selector should automatically upgrade/downgrade selected unit to a similar unit. Up to 4 choices but with no clear typing. Also remove Latest. + Setting for this.
   * Sometimes units have same offensive/defensive allocation but focuses on different attribute. Sometimes same attribute allocation but different offensive/defensive focus.
   * Seems mostly a problem for Western with so many unit types.
@@ -68,7 +68,7 @@ Countries:
 
 
 Settings:
- - Show on main page current settings set (Imperator, EUIV, mixed), tooltip to show individual (or only changed?)
+ - Show on main page current settings set (Imperator, EU4, mixed), tooltip to show individual (or only changed?)
 
 Todo:
  - Transfer could only show non-base stats for units, terrains and tactics (since base stats are supposed to regenerate?), currently it shows way too much information.
@@ -101,6 +101,6 @@ Analyze:
 
 Combat calculations:
 - In the game, integer calculations are used so the result is rounded down after each step.
-- This doesn't matter in Imperator because of higher precision but causes manpower to be bit off in EUIV.
+- This doesn't matter in Imperator because of higher precision but causes manpower to be bit off in EU4.
 - Implementing this slows down the combat a lot because precalculation won't be possible.
 - Also the exact order of calculations must be researched or acquired from devs to get accurate results.

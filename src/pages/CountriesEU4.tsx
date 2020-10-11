@@ -11,7 +11,7 @@ import AccordionToggle from 'containers/AccordionToggle'
 import CountryManager from 'containers/CountryManager'
 import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 import TableAttributes from 'components/TableAttributes'
-import { getCultures, policiesEUIV, techEUIV } from 'data'
+import { getCultures, policiesEU4, techEU4 } from 'data'
 import CountryValueInput from 'containers/CountryValueInput'
 import ListModifier from 'components/Utils/ListModifier'
 import { TableModifierList } from 'components/TableModifierList'
@@ -21,7 +21,7 @@ const CUSTOM_KEY = 'Base'
 
 const CELL_PADDING = '.78571429em .78571429em'
 
-class CountriesEUIV extends Component<IProps> {
+class CountriesEU4 extends Component<IProps> {
 
   render() {
     const { settings, general, country, selectedCountry, countryDefinition, setHasGeneral } = this.props
@@ -58,7 +58,7 @@ class CountriesEUIV extends Component<IProps> {
               <AccordionToggle title='Tech' identifier='countriesTech'>
                 Tech level: <CountryValueInput country={selectedCountry} attribute={CountryAttribute.TechLevel} />
                 {
-                  this.renderTech(techEUIV, country[CountryAttribute.TechLevel])
+                  this.renderTech(techEU4, country[CountryAttribute.TechLevel])
                 }
               </AccordionToggle>
             </Grid.Column>
@@ -72,7 +72,7 @@ class CountriesEUIV extends Component<IProps> {
                   usePercentPadding
                   type={SelectionType.Policy}
                   onClick={this.onCountryItemClick}
-                  items={values(policiesEUIV)}
+                  items={values(policiesEU4)}
                 />
               </AccordionToggle>
             </Grid.Column>
@@ -207,4 +207,4 @@ type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
 type IProps = S & D
 
-export default connect(mapStateToProps, actions)(CountriesEUIV)
+export default connect(mapStateToProps, actions)(CountriesEU4)

@@ -31,7 +31,7 @@
     "test_ir": "cross-env IMAGE_INLINE_SIZE_LIMIT=1 REACT_APP_GAME=ir react-scripts test",
     "test_eu4": "cross-env IMAGE_INLINE_SIZE_LIMIT=1 REACT_APP_GAME=eu4 react-scripts test",
     "eject": "react-scripts eject",
-    "convert_eu4": "node scripts/conversion/euiv/index.js",
+    "convert_eu4": "node scripts/conversion/eu4/index.js",
     "convert_ir": "node scripts/conversion/ir/index.js"
   },
   "eslintConfig": {

@@ -3,7 +3,7 @@ import { addValues } from 'definition_values'
 import { toObj } from 'utils'
 
 import * as dataIR from './json/ir/terrains.json'
-import * as dataEU4 from './json/euiv/terrains.json'
+import * as dataEU4 from './json/eu4/terrains.json'
 import IconTerrain from 'images/terrain.png'
 
 

@@ -1,8 +1,8 @@
 import {ListDefinition, ListDefinitions } from 'types'
 
 
-import techDataEU4 from './json/euiv/tech.json'
-import policyDataEU4 from './json/euiv/policies.json'
+import techDataEU4 from './json/eu4/tech.json'
+import policyDataEU4 from './json/eu4/policies.json'
 
 
 // Bit ugly but these enable tree shaking based on the game.
