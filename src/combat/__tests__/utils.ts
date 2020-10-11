@@ -230,7 +230,7 @@ const verify = (env: Environment, side: Side, expected: ExpectedArmy) => {
 }
 
 const verifyTargeting = (env: Environment, side: SideType, cohorts: (Cohort | null)[], expected: (number | undefined)[]) => {
-  const half = Math.floor(env.settings[Setting.CombatWidth] / 2.0)
+  const half = Math.floor(env.settings[Setting.BaseCombatWidth] / 2.0)
   let index = half
   for (const exp of expected) {
     const target = cohorts[index]?.state.target?.properties
@@ -311,7 +311,7 @@ const verifyPart = (part: string, env: Environment, expected: ExpectedCohort[], 
       throw new Error(errorPrefix(env.day, side, part) + 'length ' + cohorts.length + ' should be ' + expected.length + '.')
     }
   }
-  const half = Math.floor(env.settings[Setting.CombatWidth] / 2.0)
+  const half = Math.floor(env.settings[Setting.BaseCombatWidth] / 2.0)
   let index = isFront ? half : 0
   for (const exp of expected) {
     try {

@@ -46,7 +46,7 @@ export const getProperties = (countryName: CountryName, armyName: ArmyName, part
 export const getCombatUnit = (countryName: CountryName, armyName: ArmyName, participantIndex: number, index: number, settings: Settings, terrains: Terrain[], unitTypes: UnitType[], cohort: CohortDefinition): Cohort => ({
   [UnitAttribute.Morale]: calculateValue(cohort, UnitAttribute.Morale),
   [UnitAttribute.Strength]: calculateValue(cohort, UnitAttribute.Strength),
-  state: { flankRatioPenalty: 0, captureChance: 0, target: null, targetSupport: null, flanking: false, moraleLoss: 0, strengthLoss: 0, moraleDealt: 0, strengthDealt: 0, damageMultiplier: 0, isDefeated: false, targetedBy: null, defeatedBy: null, defeatedDay: 0, stackWipedBy: null, isDestroyed: false, totalMoraleDealt: 0, totalStrengthDealt: 0 },
+  state: { damageDealt: 0, flankRatioPenalty: 0, captureChance: 0, target: null, targetSupport: null, flanking: false, moraleLoss: 0, strengthLoss: 0, moraleDealt: 0, strengthDealt: 0, damageMultiplier: 0, isDefeated: false, targetedBy: null, defeatedBy: null, defeatedDay: 0, stackWipedBy: null, isDestroyed: false, totalMoraleDealt: 0, totalStrengthDealt: 0 },
   properties: getProperties(countryName, armyName, participantIndex, index, settings, terrains, unitTypes, cohort),
   isWeak: false
 })
@@ -70,7 +70,7 @@ const applyPhaseDamage = (unit: CohortDefinition, value: number) => ({
 })
 
 const applyUnitTypes = (unit: CohortDefinition, unitTypes: UnitType[], settings: Settings, values: { [key in CombatPhase]: number }) => (
-  toObj(unitTypes, type => type, type => map(values, damage => damage * getValue(unit, type, settings[Setting.AttributeUnitType])))
+  toObj(unitTypes, type => type, type => map(values, damage => damage * getValue(unit, type, settings[Setting.CounteringDamage] > 0)))
 )
 
 const applyDamageTypes = (unit: CohortDefinition, settings: Settings, values: { [key in UnitType]: { [key in CombatPhase]: number } }) => {

@@ -66,7 +66,7 @@ export const getDefaultCombatResults = () => ({
 })
 
 export const convertSide = (side: SideData, armies: Army[], settings: Settings): Side => {
-  const width = settings[Setting.CombatWidth]
+  const width = settings[Setting.BaseCombatWidth]
   return {
     armiesRemaining: true,
     isDefeated: false,

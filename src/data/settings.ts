@@ -1,4 +1,5 @@
-import { Mode, CombatSettings, Setting, SiteSettings, SimulationSpeed, CountryName, SettingsAndOptions, DisciplineValue } from 'types'
+
+import { Mode, CombatSettings, Setting, SiteSettings, SimulationSpeed, CountryName, SettingsAndOptions, DisciplineValue, SupportDeployValue, CounteringMode } from 'types'
 import { getConfig } from './config'
 
 export const getDefaultSettings = (): SettingsAndOptions => ({
@@ -10,7 +11,7 @@ export const getDefaultSettings = (): SettingsAndOptions => ({
 })
 
 export const getDefaultLandSettings = (): CombatSettings => {
-  if (process.env.REACT_APP_GAME === 'euiv') {
+  if (process.env.REACT_APP_GAME === 'EU4') {
     return {
       [Setting.StrengthLostMultiplier]: 5,
       [Setting.MoraleLostMultiplier]: 25 / 2.7,
@@ -27,7 +28,7 @@ export const getDefaultLandSettings = (): CombatSettings => {
 }
 
 export const getDefaultNavalSettings = (): CombatSettings => {
-  if (process.env.REACT_APP_GAME === 'euiv') {
+  if (process.env.REACT_APP_GAME === 'EU4') {
     return {
       [Setting.StrengthLostMultiplier]: 5,
       [Setting.MoraleLostMultiplier]: 25 / 2.7,
@@ -44,8 +45,12 @@ export const getDefaultNavalSettings = (): CombatSettings => {
 }
 
 export const getDefaultSiteSettings = (): SiteSettings => {
-  if (process.env.REACT_APP_GAME === 'euiv') {
+  if (process.env.REACT_APP_GAME === 'EU4') {
     return {
+      [Setting.GlobalTargeting]: false,
+      [Setting.MaxCountering]: 0,
+      [Setting.CounteringDamage]: 0,
+      [Setting.CounteringMode]: CounteringMode.Default,
       [Setting.BasePips]: 3,
       [Setting.MaxPips]: 100,
       [Setting.MaxGeneral]: 6,
@@ -57,7 +62,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.Stackwipe]: true,
       [Setting.SoftStackWipeLimit]: 2,
       [Setting.HardStackWipeLimit]: 10,
-      [Setting.CombatWidth]: 15,
+      [Setting.BaseCombatWidth]: 15,
       [Setting.ExperienceDamageReduction]: 0,
       [Setting.MinimumMorale]: 0,
       [Setting.MinimumStrength]: 0,
@@ -79,7 +84,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.FireAndShock]: true,
       [Setting.InsufficientSupportPenalty]: 0.25,
       [Setting.AttributeCombatAbility]: true,
-      [Setting.SupportPhase]: false,
+      [Setting.SupportPhase]: SupportDeployValue.On,
       [Setting.AttributeDamage]: true,
       [Setting.AttributeDrill]: true,
       [Setting.AttributeLoyal]: false,
@@ -89,7 +94,6 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.AttributeOffenseDefense]: false,
       [Setting.AttributeStrengthDamage]: false,
       [Setting.AttributeTerrainType]: false,
-      [Setting.AttributeUnitType]: false,
       [Setting.Tactics]: false,
       [Setting.Martial]: false,
       [Setting.AttackerSwapping]: true,
@@ -116,6 +120,10 @@ export const getDefaultSiteSettings = (): SiteSettings => {
   }
   else {
     return {
+      [Setting.GlobalTargeting]: false,
+      [Setting.MaxCountering]: 100,
+      [Setting.CounteringDamage]: 1,
+      [Setting.CounteringMode]: CounteringMode.Default,
       [Setting.BasePips]: getConfig().BasePips,
       [Setting.MaxPips]: getConfig().MaxPips,
       [Setting.MaxGeneral]: 100,
@@ -127,7 +135,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.Stackwipe]: true,
       [Setting.SoftStackWipeLimit]: getConfig().SoftStackWipeLimit,
       [Setting.HardStackWipeLimit]: getConfig().HardStackWipeLimit,
-      [Setting.CombatWidth]: getConfig().CombatWidth,
+      [Setting.BaseCombatWidth]: getConfig().CombatWidth,
       [Setting.ExperienceDamageReduction]: getConfig().ExperienceDamageReduction,
       [Setting.MinimumMorale]: getConfig().MinimumMorale,
       [Setting.MinimumStrength]: getConfig().MinimumStrength,
@@ -142,7 +150,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.RelativePips]: false,
       [Setting.BackRowRetreat]: false,
       [Setting.StrengthBasedFlank]: false,
-      [Setting.SupportPhase]: true,
+      [Setting.SupportPhase]: SupportDeployValue.Separately,
       [Setting.Precision]: 5,
       [Setting.ChunkSize]: 1000,
       [Setting.MaxPhases]: speedValues[SimulationSpeed.Fast][1],
@@ -169,7 +177,6 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.AttributeOffenseDefense]: true,
       [Setting.AttributeStrengthDamage]: true,
       [Setting.AttributeTerrainType]: true,
-      [Setting.AttributeUnitType]: true,
       [Setting.Tactics]: true,
       [Setting.Martial]: true,
       [Setting.AttackerSwapping]: true,
@@ -185,7 +192,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
   }
 }
 
-export const speedValues: { [key: string]: number[] } = process.env.REACT_APP_GAME === 'euiv' ?
+export const speedValues: { [key: string]: number[] } = process.env.REACT_APP_GAME === 'EU4' ?
   {
     [SimulationSpeed.VeryAccurate]: [1, 10, 0],
     [SimulationSpeed.Accurate]: [1, 10, 1],

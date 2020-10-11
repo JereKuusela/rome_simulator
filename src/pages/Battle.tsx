@@ -214,7 +214,7 @@ class Battle extends Component<IProps> {
   }
 
   renderFrontline = (side: SideType) => {
-    const combatWidth = this.props.settings[Setting.CombatWidth]
+    const combatWidth = this.props.settings[Setting.BaseCombatWidth]
     return (
       <TableArmyPart
         color={side === SideType.A ? ATTACKER_COLOR : DEFENDER_COLOR}

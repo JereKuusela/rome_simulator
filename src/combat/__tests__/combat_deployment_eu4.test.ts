@@ -2,9 +2,9 @@ import { TestState, initState, getUnit, testDeployment, createExpected, getSetti
 import { UnitType, SideType, Setting} from 'types'
 
 import { mapRange } from 'utils'
-import { addToReserve } from 'managers/army'
 
-if (process.env.REACT_APP_GAME === 'euiv') {
+
+if (process.env.REACT_APP_GAME === 'IR') {
 
   describe('initial deployment', () => {
 
@@ -21,7 +21,7 @@ if (process.env.REACT_APP_GAME === 'euiv') {
     }
 
     it('more cavalry than flank size (+ backrow flank)', () => {
-      getSettingsTest(state)[Setting.CombatWidth] = 22
+      getSettingsTest(state)[Setting.BaseCombatWidth] = 22
       add(SideType.A, 26, 0, 0)
       add(SideType.B, 14, 16, 0)
       const attacker = {
@@ -35,7 +35,7 @@ if (process.env.REACT_APP_GAME === 'euiv') {
       testDeployment(state, attacker, defender)
     })
     it('less cavalry than flank size', () => {
-      getSettingsTest(state)[Setting.CombatWidth] = 22
+      getSettingsTest(state)[Setting.BaseCombatWidth] = 22
       add(SideType.A, 22, 0, 0)
       add(SideType.B, 22, 2, 0)
       const attacker = {
@@ -48,7 +48,7 @@ if (process.env.REACT_APP_GAME === 'euiv') {
       testDeployment(state, attacker, defender)
     })
     it('combat width not filled', () => {
-      getSettingsTest(state)[Setting.CombatWidth] = 22
+      getSettingsTest(state)[Setting.BaseCombatWidth] = 22
       add(SideType.A, 2, 3, 0)
       add(SideType.B, 1, 0, 0)
       const attacker = {
@@ -61,7 +61,7 @@ if (process.env.REACT_APP_GAME === 'euiv') {
       testDeployment(state, attacker, defender)
     })
     it('artillery fills backline (both front and flank)', () => {
-      getSettingsTest(state)[Setting.CombatWidth] = 24
+      getSettingsTest(state)[Setting.BaseCombatWidth] = 24
       add(SideType.A, 6, 6, 6)
       add(SideType.B, 2, 0, 0)
       const attacker = {
@@ -74,7 +74,7 @@ if (process.env.REACT_APP_GAME === 'euiv') {
       testDeployment(state, attacker, defender)
     })
     it('artillery backline doesn\'t exceend frontline', () => {
-      getSettingsTest(state)[Setting.CombatWidth] = 24
+      getSettingsTest(state)[Setting.BaseCombatWidth] = 24
       add(SideType.A, 6, 0, 12)
       add(SideType.B, 2, 0, 0)
       const attacker = {
@@ -87,7 +87,7 @@ if (process.env.REACT_APP_GAME === 'euiv') {
       testDeployment(state, attacker, defender)
     })
     it('infantry only', () => {
-      getSettingsTest(state)[Setting.CombatWidth] = 24
+      getSettingsTest(state)[Setting.BaseCombatWidth] = 24
       add(SideType.A, 6, 0, 0)
       add(SideType.B, 2, 0, 0)
       const attacker = {

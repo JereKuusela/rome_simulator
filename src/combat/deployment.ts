@@ -165,7 +165,7 @@ const calculateFlankSizes = (combatWidth: number, preferredFlankSize: number, en
 }
 
 const calculatePreferredFlankSize = (settings: Settings, customValue: number, reserve: Reserve) => {
-  return settings[Setting.CustomDeployment] ? customValue : Math.min(armyFlankCount(reserve) / 2, Math.floor(settings[Setting.CombatWidth] / 4))
+  return settings[Setting.CustomDeployment] ? customValue : Math.min(armyFlankCount(reserve) / 2, Math.floor(settings[Setting.BaseCombatWidth] / 4))
 }
 
 const removeDefeatedFromNewArmies = (environment: Environment, side: Side, armies: Army[]) => {
@@ -264,7 +264,7 @@ const getDeployingArmies = (day: number, side: Side) => {
 const deploySub = (side: Side, deploying: Army[], settings: Settings, round: number, enemyArmySize?: number) => {
   const pool: Cohort[] = []
   deploying.forEach(army => {
-    const [leftFlank, rightFlank] = calculateFlankSizes(settings[Setting.CombatWidth], calculatePreferredFlankSize(settings, army.flankSize, army.reserve), enemyArmySize)
+    const [leftFlank, rightFlank] = calculateFlankSizes(settings[Setting.BaseCombatWidth], calculatePreferredFlankSize(settings, army.flankSize, army.reserve), enemyArmySize)
     army.leftFlank = leftFlank
     army.rightFlank = rightFlank
     applyLateDeploymentPenalty(army.reserve, round, settings)

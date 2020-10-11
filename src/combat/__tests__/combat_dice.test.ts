@@ -2,7 +2,8 @@ import { TestState, initCleanState, initExpected, getSettingsTest, createCohort,
 import { UnitType, SideType, Setting, GeneralAttribute, CombatPhase, TerrainType } from 'types'
 
 
-if (process.env.REACT_APP_GAME !== 'euiv') {
+
+if (process.env.REACT_APP_GAME === 'IR') {
 
   describe('dice', () => {
     const cohort = createCohort('Type' as UnitType)

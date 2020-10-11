@@ -21,7 +21,7 @@ export const getSettings = (state: AppState, mode?: Mode): Settings => {
   const settings = { ...state.settings.combatSettings[mode || state.settings.mode], ...state.settings.siteSettings }
   const attacker = getCountry(state, getParticipant(state, SideType.A, 0).countryName)
   const defender = getCountry(state, getParticipant(state, SideType.B, 0).countryName)
-  settings[Setting.CombatWidth] += Math.max(attacker[CountryAttribute.CombatWidth], defender[CountryAttribute.CombatWidth])
+  settings[Setting.BaseCombatWidth] += Math.max(attacker[CountryAttribute.CombatWidth], defender[CountryAttribute.CombatWidth])
   settings[Setting.Precision] = Math.pow(10, settings[Setting.Precision])
   return settings
 }

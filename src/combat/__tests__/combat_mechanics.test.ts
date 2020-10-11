@@ -3,7 +3,8 @@ import { UnitType, UnitAttribute, TacticType, CohortDefinition, CombatPhase, Set
 import { map } from 'utils'
 import { selectTactic } from 'managers/army'
 
-if (process.env.REACT_APP_GAME !== 'euiv') {
+
+if (process.env.REACT_APP_GAME === 'IR') {
 
   describe('mechanics', () => {
     let unit = null as any as CohortDefinition
@@ -35,6 +36,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       unit.baseValues![UnitAttribute.OffensiveSupport] = { 'key': 0.5 }
 
       state.settings.siteSettings = map(state.settings.siteSettings , item => typeof item === 'boolean' ? false : item) as Settings
+      getSettingsTest(state)[Setting.CounteringDamage] = 0
       getSettingsTest(state)[Setting.AttributeDiscipline] = DisciplineValue.Off
       getSettingsTest(state)[Setting.BackRow] = true
 
@@ -71,7 +73,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
       test(0.1, -0.1, 0.1, 0)
     })
     it('unit types', () => {
-      getSettingsTest(state)[Setting.AttributeUnitType] = true
+      getSettingsTest(state)[Setting.CounteringDamage] = 1.0
       test(0.2, 0.2, 0, 0)
     })
     it('morale damage', () => {

@@ -1,9 +1,10 @@
+
 import { Mode, ArmyData, TacticType, UnitPreferences, UnitPreferenceType, UnitType, Armies, ArmyName, UnitRole, Selections } from 'types'
 
 const getDefaultTactic = (mode: Mode): TacticType => mode === Mode.Land ? TacticType.Deception : TacticType.FrontalAssault
 
 const getDefaultUnitPreferences = (mode: Mode): UnitPreferences => {
-  if (process.env.REACT_APP_GAME === 'euiv') {
+  if (process.env.REACT_APP_GAME === 'EU4') {
     return {
       [UnitRole.Front]: UnitType.Latest,
       [UnitRole.Flank]: UnitType.Latest,

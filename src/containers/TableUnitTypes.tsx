@@ -32,7 +32,7 @@ class TableUnitTypes extends Component<IProps> {
 
   getAttributes = () => {
     const { mode } = this.props
-    if (process.env.REACT_APP_GAME === 'euiv')
+    if (process.env.REACT_APP_GAME === 'EU4')
       return [UnitAttribute.Discipline, UnitAttribute.Morale, UnitAttribute.CombatAbility]
     else {
       if (mode === Mode.Naval)

@@ -74,6 +74,8 @@ export interface CohortRoundInfo {
   strengthLoss: number
   /** Morale losses inflicted this round. */
   moraleDealt: number
+  /** Damage inflicted this round. */
+  damageDealt: number
   /** Strength losses inflicted this round. */
   strengthDealt: number
   /** Damage taken multiplier from insufficied support. */

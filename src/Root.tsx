@@ -7,7 +7,7 @@ import Definitions from './pages/Definitions'
 import Battle from './pages/Battle'
 import Navigation from './pages/Navigation'
 import CountriesIR from './pages/CountriesIR'
-import CountriesEUIV from './pages/CountriesEUIV'
+import CountriesEU4 from './pages/CountriesEU4'
 import Settings from './pages/Settings'
 import Error from './pages/Error'
 import { AppState } from 'state'
@@ -16,6 +16,7 @@ import SaveTool from 'pages/SaveTool'
 import ExportTool from 'pages/ExportTool'
 import { Container } from 'semantic-ui-react'
 import Modals from 'pages/Modals'
+
 
 // Any additional component props go here.
 interface MainProps {
@@ -36,7 +37,7 @@ const Root = ({ store, persistor }: MainProps) => {
               <Route path='/' exact component={Battle} />
               <Route path='/Definitions' component={Definitions} />
               <Route path='/Analyze' component={Analyze} />
-              <Route path='/Countries' component={process.env.REACT_APP_GAME === 'euiv' ? CountriesEUIV : CountriesIR} />
+              <Route path='/Countries' component={process.env.REACT_APP_GAME === 'EU4' ? CountriesEU4 : CountriesIR} />
               <Route path='/Settings' component={Settings} />
               <Route path='/Import' component={SaveTool} />
               <Route path='/Export' component={ExportTool} />

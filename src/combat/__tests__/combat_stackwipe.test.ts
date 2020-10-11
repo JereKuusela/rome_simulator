@@ -1,7 +1,8 @@
 import { TestState, initState, createCohort, getSettingsTest, addToReserveTest, getBattleTest, initExpected, testCombatWithCustomRolls } from './utils'
 import { UnitType, UnitAttribute, CohortDefinition, Setting, SideType } from 'types'
 
-if (process.env.REACT_APP_GAME !== 'euiv') {
+
+if (process.env.REACT_APP_GAME === 'IR') {
 
 
   describe('stack wipe', () => {

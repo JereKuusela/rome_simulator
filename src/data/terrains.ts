@@ -3,8 +3,9 @@ import { addValues } from 'definition_values'
 import { toObj } from 'utils'
 
 import * as dataIR from './json/ir/terrains.json'
-import * as dataEUIV from './json/euiv/terrains.json'
+import * as dataEU4 from './json/euiv/terrains.json'
 import IconTerrain from 'images/terrain.png'
+
 
 const createTerrainFromJson = (data: TerrainData): Terrain => {
   let terrain: Terrain = { type: data.type as TerrainType, mode: data.mode as Mode, image: IconTerrain, location: data.location as LocationType }
@@ -15,8 +16,8 @@ const createTerrainFromJson = (data: TerrainData): Terrain => {
 }
 
 const initializeDefaultTerrains = (): TerrainDefinitions => {
-  if (process.env.REACT_APP_GAME === 'euiv')
-    return toObj(dataEUIV.terrain.map(createTerrainFromJson), terrain => terrain.type)
+  if (process.env.REACT_APP_GAME === 'EU4')
+    return toObj(dataEU4.terrain.map(createTerrainFromJson), terrain => terrain.type)
   else
     return toObj(dataIR.terrain.map(createTerrainFromJson), terrain => terrain.type)
 }

@@ -21,7 +21,7 @@ describe('targeting', () => {
     testCombatWithDefaultRolls(state, expected)
   })
 
-  it('main and flanks (EUIV targeting)', () => {
+  it('main and flanks (EU4 targeting)', () => {
     getSettingsTest(state)[Setting.FixFlankTargeting] = false
     addToReserveTest(state, SideType.A, [cohort, cohort])
     addToReserveTest(state, SideType.B, [flankingCohort, flankingCohort, flankingCohort, flankingCohort])
@@ -33,7 +33,7 @@ describe('targeting', () => {
     testCombatWithDefaultRolls(state, expected)
   })
 
-  it('inner flank (Imperator targeting)', () => {
+  it('inner flank (IR targeting)', () => {
     getSettingsTest(state)[Setting.FixFlankTargeting] = true
     addToReserveTest(state, SideType.A, [flankingCohort, flankingCohort, flankingCohort, flankingCohort])
     addToReserveTest(state, SideType.B, [weakCohort, weakCohort, weakCohort, weakCohort, weakCohort, weakCohort])
@@ -46,7 +46,7 @@ describe('targeting', () => {
     testCombatWithDefaultRolls(state, expected)
   })
 
-  it('inner flank (EUIV targeting)', () => {
+  it('inner flank (EU4 targeting)', () => {
     getSettingsTest(state)[Setting.FixFlankTargeting] = false
     addToReserveTest(state, SideType.A, [flankingCohort, flankingCohort, flankingCohort, flankingCohort])
     addToReserveTest(state, SideType.B, [weakCohort, weakCohort, weakCohort, weakCohort, weakCohort, weakCohort])
@@ -60,7 +60,7 @@ describe('targeting', () => {
   })
 
   it('reinforcement', () => {
-    getSettingsTest(state)[Setting.CombatWidth] = 1
+    getSettingsTest(state)[Setting.BaseCombatWidth] = 1
     addToReserveTest(state, SideType.A, [cohort])
     addToReserveTest(state, SideType.B, [weakCohort, weakCohort])
 
@@ -77,7 +77,7 @@ describe('targeting', () => {
   })
 
   it('deployment after battle', () => {
-    getSettingsTest(state)[Setting.CombatWidth] = 1
+    getSettingsTest(state)[Setting.BaseCombatWidth] = 1
     addToReserveTest(state, SideType.A, [cohort])
     addToReserveTest(state, SideType.B, [weakCohort])
     createArmyTest(state, SideType.B, 2)
@@ -96,7 +96,7 @@ describe('targeting', () => {
   })
 
   it('deployment during battle', () => {
-    getSettingsTest(state)[Setting.CombatWidth] = 1
+    getSettingsTest(state)[Setting.BaseCombatWidth] = 1
     addToReserveTest(state, SideType.A, [cohort])
     addToReserveTest(state, SideType.B, [weakCohort, weakCohort])
     createArmyTest(state, SideType.B, 2)
@@ -116,7 +116,7 @@ describe('targeting', () => {
   })
 
   it('reinforcement with defender\'s advantage', () => {
-    getSettingsTest(state)[Setting.CombatWidth] = 1
+    getSettingsTest(state)[Setting.BaseCombatWidth] = 1
     getSettingsTest(state)[Setting.DefenderAdvantage] = true
     addToReserveTest(state, SideType.A, [cohort])
     addToReserveTest(state, SideType.B, [weakCohort, weakCohort])

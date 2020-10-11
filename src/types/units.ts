@@ -46,6 +46,8 @@ export enum UnitAttribute {
   Discipline = 'Discipline',
   Offense = 'Offense',
   Defense = 'Defense',
+  Damage = 'Damage',
+  Toughness = 'Toughness',
   Maneuver = 'Maneuver',
   MoraleDamageDone = 'Morale Damage Done',
   MoraleDamageTaken = 'Morale Damage Taken',

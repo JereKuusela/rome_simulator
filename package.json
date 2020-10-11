@@ -25,13 +25,13 @@
   },
   "scripts": {
     "start_ir": "cross-env IMAGE_INLINE_SIZE_LIMIT=1 REACT_APP_GAME=ir react-scripts start",
-    "start_euiv": "cross-env IMAGE_INLINE_SIZE_LIMIT=1 REACT_APP_GAME=euiv react-scripts start",
+    "start_eu4": "cross-env IMAGE_INLINE_SIZE_LIMIT=1 REACT_APP_GAME=eu4 react-scripts start",
     "build_ir": "cross-env IMAGE_INLINE_SIZE_LIMIT=1 REACT_APP_GAME=ir react-scripts build",
-    "build_euiv": "cross-env IMAGE_INLINE_SIZE_LIMIT=1 REACT_APP_GAME=euiv react-scripts build",
+    "build_eu4": "cross-env IMAGE_INLINE_SIZE_LIMIT=1 REACT_APP_GAME=eu4 react-scripts build",
     "test_ir": "cross-env IMAGE_INLINE_SIZE_LIMIT=1 REACT_APP_GAME=ir react-scripts test",
-    "test_euiv": "cross-env IMAGE_INLINE_SIZE_LIMIT=1 REACT_APP_GAME=euiv react-scripts test",
+    "test_eu4": "cross-env IMAGE_INLINE_SIZE_LIMIT=1 REACT_APP_GAME=eu4 react-scripts test",
     "eject": "react-scripts eject",
-    "convert_euiv": "node scripts/conversion/euiv/index.js",
+    "convert_eu4": "node scripts/conversion/euiv/index.js",
     "convert_ir": "node scripts/conversion/ir/index.js"
   },
   "eslintConfig": {

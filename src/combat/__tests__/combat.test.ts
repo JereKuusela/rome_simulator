@@ -3,7 +3,8 @@ import { getUnit, TestState, initState, initExpected, testCombatWithCustomRolls,
 import { UnitType, UnitAttribute, TerrainType, ValuesType, SideType, Mode } from 'types'
 import { selectTerrain } from 'managers/battle'
 
-if (process.env.REACT_APP_GAME !== 'euiv') {
+
+if (process.env.REACT_APP_GAME === 'IR') {
 
   describe('1 vs 1', () => {
 

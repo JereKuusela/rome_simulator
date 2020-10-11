@@ -5,8 +5,8 @@ import { uniq } from 'lodash'
 
 import unitsIR from './json/ir/units.json'
 import parentsIR from './json/ir/parent_units.json'
-import parentsEUIV from './json/euiv/parent_units.json'
-import unitsEUIV from './json/euiv/units.json'
+import parentsEU4 from './json/euiv/parent_units.json'
+import unitsEU4 from './json/euiv/units.json'
 import IconArcher from 'images/archers.png'
 import IconCamelCavalry from 'images/camel_cavalry.png'
 import IconChariots from 'images/chariots.png'
@@ -28,7 +28,7 @@ import IconArtillery from 'images/artillery.png'
 import IconCavalry from 'images/cavalry.png'
 import IconInfantry from 'images/infantry.png'
 import IconEmpty from 'images/empty.png'
-import { getConfig } from './config'
+
 
 const unitToIcon: { [key in UnitType]: string } = {
   [UnitType.Archers]: IconArcher,
@@ -86,8 +86,8 @@ const createUnitFromJson = (data: UnitJSON): UnitData => {
 }
 
 const initializeDefaultUnits = (): UnitsData => {
-  if (process.env.REACT_APP_GAME === 'euiv')
-    return toObj(parentsEUIV.map(createUnitFromJson).concat(unitsEUIV.map(createUnitFromJson)), unit => unit.type)
+  if (process.env.REACT_APP_GAME === 'EU4')
+    return toObj(parentsEU4.map(createUnitFromJson).concat(unitsEU4.map(createUnitFromJson)), unit => unit.type)
   else
     return toObj(parentsIR.map(createUnitFromJson).concat(unitsIR.map(createUnitFromJson)), unit => unit.type)
 }

@@ -15,7 +15,8 @@ import multiArmy from './input/deployment/multi_army.txt'
 import multiArmyPooling from './input/deployment/multi_army_pooling.txt'
 import { setFlankSize } from 'managers/army'
 
-if (process.env.REACT_APP_GAME !== 'euiv') {
+
+if (process.env.REACT_APP_GAME === 'IR') {
 
   describe('initial deployment', () => {
 
@@ -130,7 +131,7 @@ if (process.env.REACT_APP_GAME !== 'euiv') {
     })
     it('reduced combat width', () => {
       const width = 5
-      getSettingsTest(state)[Setting.CombatWidth] = width
+      getSettingsTest(state)[Setting.BaseCombatWidth] = width
       setFlankSize(getArmyTest(state, SideType.A), 2)
       setFlankSize(getArmyTest(state, SideType.B), 0)
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 /**
  * Helper to prevent item from overflowing.
- * These are needed to simplify UI development. Lots of things must be on the screen and Imperator / EUIV have different needs too.
+ * These are needed to simplify UI development. Lots of things must be on the screen and Imperator / EU4 have different needs too.
  */
 export default class OverflowGuard extends Component {
 

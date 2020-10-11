@@ -6,7 +6,7 @@ export const getInitialTerrains = (mode: Mode): TerrainType[] => {
   if (mode === Mode.Naval)
     return [TerrainType.Ocean]
   else
-    return [TerrainType.None, process.env.REACT_APP_GAME === 'euiv' ? TerrainType.Grasslands : TerrainType.Plains]
+    return [TerrainType.None, process.env.REACT_APP_GAME === 'EU4' ? TerrainType.Grasslands : TerrainType.Plains]
 }
 
 export const getDefaultSide = (type: SideType, name: CountryName, mode: Mode, participants: number): SideData => {
@@ -15,7 +15,7 @@ export const getDefaultSide = (type: SideType, name: CountryName, mode: Mode, pa
     participants: mapRange(participants, () => getDefaultParticipant(name, mode)),
     days: [],
     rolls: [0],
-    dice: (process.env.REACT_APP_GAME === 'euiv' ? 5 : 3),
+    dice: (process.env.REACT_APP_GAME === 'EU4' ? 5 : 3),
     randomizeDice: false
   }
 }

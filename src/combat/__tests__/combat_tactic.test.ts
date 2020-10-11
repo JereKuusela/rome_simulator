@@ -1,7 +1,8 @@
 import { TestState, initCleanState, initExpected, getSettingsTest, createCohort, createDefeatedCohort, testCombatWithDefaultRolls, addToReserveTest, selectTacticTest, createArmyTest, setGeneralAttributeTest, getArmyTest } from './utils'
 import { UnitType, TacticType, SideType, Setting, Mode, GeneralAttribute } from 'types'
 
-if (process.env.REACT_APP_GAME !== 'euiv') {
+
+if (process.env.REACT_APP_GAME === 'IR') {
 
   describe('tactics', () => {
     const type = 'Type' as UnitType

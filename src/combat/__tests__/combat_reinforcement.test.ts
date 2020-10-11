@@ -7,7 +7,8 @@ import preferredFlankSize from './input/reinforcement/preferred_flank_size.txt'
 import flankOnly from './input/reinforcement/flank_only.txt'
 import { loadInput } from './parser'
 
-if (process.env.REACT_APP_GAME !== 'euiv') {
+
+if (process.env.REACT_APP_GAME === 'IR') {
 
   describe('reinforcement', () => {
 

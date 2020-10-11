@@ -1,11 +1,12 @@
 
 import { TacticDefinition, UnitAttribute, Setting, UnitRole, Settings, CombatPhase, Cohorts, Cohort, Frontline, Side, Environment, TacticCalc, UnitType, TacticMatch, Army, FlankRatioPenalty } from 'types'
-import { multiplyChance, noZero, toObj } from 'utils'
+import { keys, map, multiplyChance, noZero, toArr, toObj } from 'utils'
 import { calculateValue } from 'definition_values'
-import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, reserveSize, reinforce, calculateGeneralPips, getTerrainPips, checkStackWipe, defeatCohort, isAlive } from 'combat'
+import { getCombatPhase, calculateCohortPips, getDailyIncrease, iterateCohorts, removeDefeated, reserveSize, reinforce, calculateGeneralPips, getTerrainPips, checkStackWipe, defeatCohort, isAlive, iterateFrontline } from 'combat'
 import { deploy, undeploy, moveDefeatedToRetreated } from './deployment'
 import { getLeadingArmy, getDefaultCombatResults } from 'managers/battle'
 import { getConfig } from 'data/config'
+import { clamp, sum } from 'lodash'
 
 /**
  * Makes given armies attach each other.
@@ -370,4 +371,84 @@ const calculateStrengthLosses = (source: Cohort, target: Cohort, targetSupport: 
   source.state.strengthDealt = Math.floor(damage) / settings[Setting.Precision]
   source.state.totalStrengthDealt += source.state.strengthDealt
   target.state.strengthLoss += source.state.strengthDealt
+}
+
+// Global targeting
+
+
+const sumArchetypeStrength = (frontline: Frontline) => {
+  const archetypes = <{ [key in UnitType]: number }>{}
+
+  const add = (cohort: Cohort) => {
+    const archetype = cohort.properties.parent ?? cohort.properties.type
+    archetypes[archetype] = (archetypes[archetype] ?? 0) + cohort[UnitAttribute.Strength]
+  }
+  iterateFrontline(frontline, add)
+  return archetypes
+}
+
+const sumArchetypeCounter = (frontline: Frontline, archetypes: UnitType[]) => {
+  const archetypeCounters = toObj(archetypes, key => key, () => 0)
+
+  const add = (cohort: Cohort) => {
+    const add2 = (type: UnitType) => {
+      archetypeCounters[type] += cohort.properties[type] * cohort[UnitAttribute.Strength]
+      archetypes.forEach(add2)
+    }
+  }
+  iterateFrontline(frontline, add)
+  return archetypeCounters
+}
+
+const calculateCounterPenalty = (archetypes: { [key in UnitType]: number }, counters: { [key in UnitType]: number }, settings: Settings) => {
+  return map(archetypes, (strength, type) => strength && clamp(counters[type] / strength, -settings[Setting.MaxCountering], settings[Setting.MaxCountering]) * settings[Setting.CounteringDamage])
+}
+
+const calculateDamages = (frontline: Frontline, counterPenalties: { [key in UnitType]: number }, pips: number, settings: Settings) => {
+  const multiplier = pips * settings[Setting.StrengthLostMultiplier]
+  let total = 0
+  const calculateDamage = (cohort: Cohort) => {
+    const damage =  cohort.properties[UnitAttribute.Damage] * cohort[UnitAttribute.Strength] * multiplier * (1 - counterPenalties[cohort.properties.type])
+    cohort.state.damageDealt = damage
+    total += damage
+  }
+  iterateFrontline(frontline, calculateDamage)
+  return total
+}
+
+const calculateLosses = (frontline: Frontline, totalStrength: number, totalDamage: number) => {
+  let total = 0
+  const calculateLoss = (cohort: Cohort) => {
+    const loss =  totalDamage * cohort[UnitAttribute.Strength] / totalStrength / cohort.properties[UnitAttribute.Toughness]
+    cohort.state.strengthLoss = loss
+    total += loss
+  }
+  iterateFrontline(frontline, calculateLoss)
+  return total
+}
+
+const calculateKills = (frontline: Frontline, totalKills: number, totalDamage: number) => {
+  const calculateLoss = (cohort: Cohort) => {
+    const kills =  totalKills * cohort.state.damageDealt / totalDamage
+    cohort.state.strengthDealt = kills
+  }
+  iterateFrontline(frontline, calculateLoss)
+}
+
+/**
+ * CK3 damage formula. Only uses CK3 stuff.
+ */
+const attackGlobalSub = (a: Frontline, b: Frontline, pipsA: number, pipsB: number, settings: Settings) => {
+  const archetypesA = sumArchetypeStrength(a)
+  const strengthA = sum(toArr(archetypesA))
+  const archetypesB = sumArchetypeStrength(b)
+  const strengthB = sum(toArr(archetypesA))
+  const counterPenaltyA = calculateCounterPenalty(archetypesA, sumArchetypeCounter(b, keys(archetypesA)), settings)
+  const counterPenaltyB = calculateCounterPenalty(archetypesB, sumArchetypeCounter(a, keys(archetypesB)), settings)
+  const totalDamageA = calculateDamages(a, counterPenaltyA, pipsA, settings)
+  const totalDamageB = calculateDamages(b, counterPenaltyB, pipsB, settings)
+  const totalLossA = calculateLosses(a, strengthA, totalDamageB)
+  const totalLossB = calculateLosses(b, strengthB, totalDamageA)
+  calculateKills(a, totalLossB, totalDamageA)
+  calculateKills(b, totalLossA, totalDamageB)
 }

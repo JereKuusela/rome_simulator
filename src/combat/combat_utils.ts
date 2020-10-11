@@ -93,20 +93,24 @@ export const calculateTotalStrength = (cohorts: Cohorts, includeDefeated: boolea
 
 /** Calls a function for every cohort.  */
 export const iterateCohorts = (cohorts: Cohorts, includeDefeated: boolean, func: (cohort: Cohort) => void) => {
-  let i = 0, j = 0
-  let length = cohorts.frontline.length
-  let length2 = cohorts.frontline[0].length
-  for (; i < length; i++) {
-    for (; j < length2; j++) {
-      if (cohorts.frontline[i][j] && !cohorts.frontline[i][j]?.state.isDefeated)
-        func(cohorts.frontline[i][j]!)
-    }
-  }
+  iterateFrontline(cohorts.frontline, func)
   cohorts.reserve.front.forEach(func)
   cohorts.reserve.flank.forEach(func)
   cohorts.reserve.support.forEach(func)
   if (includeDefeated)
     cohorts.defeated.forEach(func)
+}
+
+export const iterateFrontline = (frontline: Frontline, func: (cohort: Cohort) => void) => {
+  let i = 0, j = 0
+  let length = frontline.length
+  let length2 = frontline[0].length
+  for (; i < length; i++) {
+    for (; j < length2; j++) {
+      if (frontline[i][j] && !frontline[i][j]?.state.isDefeated)
+        func(frontline[i][j]!)
+    }
+  }
 }
 
 /**
