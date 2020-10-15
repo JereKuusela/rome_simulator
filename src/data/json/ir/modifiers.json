@@ -1319,8 +1319,8 @@
     "modifiers": [
       {
         "target": "Light Infantry",
-        "attribute": "Hills",
-        "type": "Base",
+        "attribute": "Hills Damage",
+        "type": "Modifier",
         "value": 0.1
       }
     ]
@@ -2271,14 +2271,14 @@
     "modifiers": [
       {
         "target": "Light Infantry",
-        "attribute": "Mountains",
-        "type": "Base",
+        "attribute": "Mountains Damage",
+        "type": "Modifier",
         "value": 0.1
       },
       {
         "target": "Light Infantry",
-        "attribute": "Hills",
-        "type": "Base",
+        "attribute": "Hills Damage",
+        "type": "Modifier",
         "value": 0.1
       },
       {

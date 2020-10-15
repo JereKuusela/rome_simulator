@@ -8,14 +8,16 @@ const results = {
     'Parent': null,
     'Mode': 'Land',
     'Role': 'Front',
-    'Attrition Weight': 1.0
+    'Attrition Weight': 1.0,
+    'Damage': 1.0
   },
   'Naval Unit': {
     'Type': 'Naval Unit',
     'Parent': null,
     'Mode': 'Naval',
     'Role': 'Front',
-    'Attrition Weight': 1.0
+    'Attrition Weight': 1.0,
+    'Damage': 1.0
   },
   'Light Ship': {
     'Type': 'Light Ship',
@@ -53,7 +55,7 @@ const definesHandler = data => {
 }
 
 const modifiersHandler = data => {
-  results['Light Ship']['Riverine'] = Number(data['base_values']['liburnian_riverine_terrain_combat_bonus'])
+  results['Light Ship']['Riverine Damage Modifier'] = Number(data['base_values']['liburnian_riverine_terrain_combat_bonus'])
   if (data['base_values']['liburnian_riverine_terrain_combat_bonus'] !== data['base_values']['trireme_riverine_terrain_combat_bonus'])
     throw 'Riverine bonus damage is different for light ships!'
   results['Naval Unit']['Capture Chance'] = cutDecimals(Number(data['base_values']['ship_capture_chance']) + 0.01, 2)

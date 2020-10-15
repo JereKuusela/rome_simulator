@@ -4,7 +4,7 @@ import { Popup, List } from 'semantic-ui-react'
 
 import StyledNumber from 'components/Utils/StyledNumber'
 
-import { SideType, ArmyPart, UnitAttribute, UnitType, Setting, TerrainType, CombatPhase, Mode, CohortProperties, CohortRoundInfo, Cohort, DisciplineValue } from 'types'
+import { SideType, ArmyPart, UnitAttribute, UnitType, Setting, TerrainType, CombatPhase, Mode, CohortProperties, CohortRoundInfo, Cohort, DisciplineValue, formTerrainAttribute, UnitValueType } from 'types'
 import { calculateCohortPips, getOffensiveCohortPips, getDefensiveCohortPips, getCombatPhase, getDefensiveSupportCohortPips } from 'combat'
 import { toSignedPercent, strengthToValue, toNumber, addSign, toMultiplier, toMorale } from 'formatters'
 import { AppState, getSettings, getSelectedTerrains, getCohort, getCombatSide, getMode } from 'state'
@@ -126,11 +126,11 @@ class CombatTooltip extends Component<IProps, IState> {
     const { terrains, settings, results } = this.props
     const { round, tacticBonus, dailyMultiplier } = results
     const phase = getCombatPhase(round, settings)
-    const terrainTypes = settings[Setting.AttributeTerrainType] ? terrains.map(value => value.type) : []
+    const terrainTypes = settings[Setting.AttributeTerrainType] ? terrains.map(value => formTerrainAttribute(value.type, UnitAttribute.Damage)) : []
     const strength = source[UnitAttribute.Strength] + source.strengthLoss
     const offenseVsDefense = settings[Setting.AttributeOffenseDefense] ? source[UnitAttribute.Offense] - target[UnitAttribute.Defense] : 0
     const experienceReduction = settings[Setting.AttributeExperience] ? target.experienceReduction : 0
-    const targetType = settings[Setting.AttributeUnitType] ? source[target.type] : 0
+    const targetType = settings[Setting.CounteringDamage] > 0 ? source[target.type] : 0
     const isLoyal = source.isLoyal
     const multiplier = source.damageMultiplier
     const morale = (source[UnitAttribute.Morale] + source.moraleLoss) / source.maxMorale
@@ -194,7 +194,7 @@ class CombatTooltip extends Component<IProps, IState> {
     </>)
   }
 
-  getAttribute = (unit: IUnit, attribute: UnitAttribute | UnitType | TerrainType) => (
+  getAttribute = (unit: IUnit, attribute: UnitValueType) => (
     this.renderStyledItem(attribute, unit[attribute], toSignedPercent)
   )
 

@@ -8,7 +8,8 @@
     "Strength": 1.0,
     "Maintenance": 0.02,
     "Attrition Weight": 1.0,
-    "Military Tactics": 0.5
+    "Military Tactics": 0.5,
+    "Damage": 1.0
   },
   {
     "Type": "Artillery",

@@ -7,11 +7,12 @@ import DetailTextRow from './Detail/DetailTextRow'
 import DetailInputRow from './Detail/DetailInputRow'
 import DetailDropdownRow from './Detail/DetailDropdownRow'
 import Headers from './Utils/Headers'
-import { Mode, ValuesType, CohortDefinition, UnitType, TerrainType, UnitRole, UnitAttribute, UnitValueType, unitValueToString, Setting, CombatPhase, isAttributeEnabled, SiteSettings } from 'types'
+import { Mode, ValuesType, CohortDefinition, UnitType, TerrainType, UnitRole, UnitAttribute, UnitValueType, unitValueToString, Setting, CombatPhase, isAttributeEnabled, SiteSettings, formTerrainAttribute } from 'types'
 import { values } from 'utils'
 import { getValue, calculateValue, explain } from 'definition_values'
 import { toMaintenance } from 'formatters'
 import DelayedNumericInput from './Detail/DelayedNumericInput'
+import { flatten } from 'lodash'
 
 interface IProps {
   mode: Mode
@@ -44,6 +45,7 @@ export default class UnitDetail extends Component<IProps> {
   readonly modes = values(Mode)
   readonly deployments = values(UnitRole)
   readonly headers = ['Attribute', 'Value', 'Custom base', 'Custom modifier', 'Custom losses', 'Explained']
+  readonly terrainAttributes = [UnitAttribute.Damage, UnitAttribute.Toughness, UnitAttribute.Pursuit, UnitAttribute.Screen]
 
   readonly CELLS = 6
 
@@ -51,6 +53,8 @@ export default class UnitDetail extends Component<IProps> {
     const { unit, onTypeChange, onParentChange, onImageChange, onChangeDeployment, onIsLoyalToggle } = this.props
     const { terrainTypes, unitTypes, unitTypesWithParent, unitTypesAsDropdown, settings } = this.props
     const { type, mode, parent, image, role, isLoyal, culture, tech } = unit
+
+    const terrains = terrainTypes && flatten(terrainTypes.map(terrain => this.terrainAttributes.map(attribute => formTerrainAttribute(terrain, attribute))))
     return (
       <Table celled selectable unstackable>
         <Headers values={this.headers} />
@@ -64,16 +68,22 @@ export default class UnitDetail extends Component<IProps> {
           {onImageChange && <DetailInputRow text='Image' cells={this.CELLS} value={image} onChange={onImageChange} />}
           {onChangeDeployment && role && <DetailDropdownRow text='Deployment' cells={this.CELLS} value={role} values={this.deployments} onChange={onChangeDeployment} />}
           {settings[Setting.AttributeLoyal] && <DetailToggleRow text='Is loyal?' cells={this.CELLS} value={!!isLoyal} onChange={onIsLoyalToggle} />}
-          {this.attributes.map(this.renderRow)}
-          {settings[Setting.AttributeUnitType] && unitTypes && unitTypes.map(this.renderRow)}
-          {settings[Setting.AttributeTerrainType] && terrainTypes && terrainTypes.map(this.renderRow)}
-          {[CombatPhase.Fire, CombatPhase.Shock].map(this.renderRow)}
+          {this.attributes.map(attribute => this.renderRow(attribute, this.allowBase(attribute), this.allowModifier(attribute), this.allowLoss(attribute)))}
+          {settings[Setting.CounteringDamage] > 0 && unitTypes && unitTypes.map(attribute => this.renderRow(attribute, true, false, false))}
+          {settings[Setting.AttributeTerrainType] && terrains && terrains.map(attribute => this.renderRow(attribute, true, true, false))}
+          {[CombatPhase.Fire, CombatPhase.Shock].map(attribute => this.renderRow(attribute, true, false, false))}
         </Table.Body>
       </Table>
     )
   }
 
-  renderRow = (attribute: UnitValueType) => {
+  allowLoss = (attribute: UnitAttribute) => attribute === UnitAttribute.Morale || attribute === UnitAttribute.Strength
+
+  allowModifier = (attribute: UnitAttribute) => attribute === UnitAttribute.Morale || attribute === UnitAttribute.Strength || attribute === UnitAttribute.Maintenance || attribute === UnitAttribute.Cost || attribute === UnitAttribute.AttritionWeight
+
+  allowBase = (attribute: UnitAttribute) => !this.allowModifier(attribute)
+
+  renderRow = (attribute: UnitValueType, allowBase: boolean, allowModifier: boolean, allowLoss: boolean) => {
     const { unit, customValueKey, onCustomBaseValueChange, onCustomModifierValueChange, onCustomLossModifierValueChange: onCustomLossValueChange, disableBaseValues, settings, mode, showStatistics } = this.props
     if (!isAttributeEnabled(attribute, settings, mode, showStatistics))
       return null
@@ -84,17 +94,13 @@ export default class UnitDetail extends Component<IProps> {
     if (attribute === UnitAttribute.Maintenance)
       value += ' (' + toMaintenance(calculateValue(unit, UnitAttribute.Cost) * calculateValue(unit, UnitAttribute.Maintenance)) + ')'
 
-    const enableLoss = attribute === UnitAttribute.Morale || attribute === UnitAttribute.Strength
-    const enableModifier = enableLoss || attribute === UnitAttribute.Maintenance || attribute === UnitAttribute.Cost || attribute === UnitAttribute.AttritionWeight
-    const enableBase = !disableBaseValues || !enableModifier
-
     return (
       <PaddedRow key={attribute} cells={this.CELLS}>
         {attribute}
         {value}
-        {enableBase && <DelayedNumericInput value={baseValue} onChange={value => onCustomBaseValueChange(customValueKey, attribute, value)} />}
-        {enableModifier && <DelayedNumericInput value={modifierValue} onChange={value => onCustomModifierValueChange(customValueKey, attribute, value)} />}
-        {enableLoss && <DelayedNumericInput value={lossValue} onChange={value => onCustomLossValueChange(customValueKey, attribute, value)} />}
+        {allowBase && <DelayedNumericInput value={baseValue} onChange={value => onCustomBaseValueChange(customValueKey, attribute, value)} />}
+        {allowModifier && <DelayedNumericInput value={modifierValue} onChange={value => onCustomModifierValueChange(customValueKey, attribute, value)} />}
+        {allowLoss && <DelayedNumericInput value={lossValue} onChange={value => onCustomLossValueChange(customValueKey, attribute, value)} />}
         {explain(unit, attribute)}
       </PaddedRow>
     )

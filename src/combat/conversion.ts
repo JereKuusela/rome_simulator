@@ -1,8 +1,8 @@
 
 import { sumBy, values } from 'lodash'
-import { Terrain, UnitType, CohortDefinition, UnitAttribute, Setting, Settings, CombatPhase, UnitValueType, Cohort, CohortProperties, DisciplineValue, CountryName, ArmyName } from 'types'
+import { Terrain, UnitType, CohortDefinition, UnitAttribute, Setting, Settings, CombatPhase, UnitValueType, Cohort, CohortProperties, DisciplineValue, CountryName, ArmyName, formTerrainAttribute } from 'types'
 import { toObj, map, noZero } from 'utils'
-import { calculateValue, calculateValueWithoutLoss, calculateBase } from 'definition_values'
+import { calculateValue, calculateValueWithoutLoss, calculateBase, calculateGain, calculateModifier } from 'definition_values'
 import { calculateExperienceReduction } from './combat_utils'
 import { getConfig } from 'data/config'
 
@@ -35,7 +35,13 @@ export const getProperties = (countryName: CountryName, armyName: ArmyName, part
   } as CohortProperties
   values(UnitAttribute).forEach(calc => { properties[calc] = calculateValue(cohort, calc) })
   values(CombatPhase).forEach(calc => { properties[calc] = calculateValue(cohort, calc) })
-  terrains.forEach(({ type }) => { properties[type] = calculateValue(cohort, type) })
+  // Todo: Single place to set terrain attribute thing (used in multiple places), should return all in a single array.
+  terrains.forEach(({ type }) => {
+    properties[formTerrainAttribute(type, UnitAttribute.Damage)] = calculateValue(cohort, formTerrainAttribute(type, UnitAttribute.Damage))
+    properties[formTerrainAttribute(type, UnitAttribute.Damage)] = calculateValue(cohort, formTerrainAttribute(type, UnitAttribute.Damage))
+    properties[formTerrainAttribute(type, UnitAttribute.Damage)] = calculateValue(cohort, formTerrainAttribute(type, UnitAttribute.Damage))
+    properties[formTerrainAttribute(type, UnitAttribute.Damage)] = calculateValue(cohort, formTerrainAttribute(type, UnitAttribute.Damage))
+  })
   unitTypes.forEach(calc => { properties[calc] = calculateValue(cohort, calc) })
   return properties
 }
@@ -89,16 +95,23 @@ const getDamages = (settings: Settings, terrains: Terrain[], unitTypes: UnitType
 
 const getValue = (unit: CohortDefinition, attribute: UnitValueType, enabled: boolean) => 1.0 + getMultiplier(unit, attribute, enabled)
 const getMultiplier = (unit: CohortDefinition, attribute: UnitValueType, enabled: boolean) => enabled ? calculateValue(unit, attribute) : 0
+const getBase = (unit: CohortDefinition, attribute: UnitValueType, enabled: boolean) => enabled ? calculateBase(unit, attribute) : 0
+const getModifier = (unit: CohortDefinition, attribute: UnitValueType, enabled: boolean) => enabled ? calculateModifier(unit, attribute) : 0
 
 const precalculateDamage = (terrains: Terrain[], unit: CohortDefinition, settings: Settings) => (
   settings[Setting.Precision]
+  * applyTerrain(unit, terrains, UnitAttribute.Damage, settings)
   * getValue(unit, UnitAttribute.Discipline, settings[Setting.AttributeDiscipline] === DisciplineValue.Both || settings[Setting.AttributeDiscipline] === DisciplineValue.Damage)
   * getValue(unit, UnitAttribute.CombatAbility, settings[Setting.AttributeCombatAbility])
   * getValue(unit, UnitAttribute.DamageDone, settings[Setting.AttributeDamage])
-  * (1.0 + sumBy(terrains, terrain => getMultiplier(unit, terrain.type, settings[Setting.AttributeTerrainType])))
   * (1.0 + (settings[Setting.AttributeLoyal] && unit.isLoyal ? getConfig().LoyalDamage : 0))
 )
 
+const applyTerrain = (unit: CohortDefinition, terrains: Terrain[], attribute: UnitAttribute, settings: Settings) => {
+  const base = calculateBase(unit, attribute) + sumBy(terrains, terrain => getBase(unit, formTerrainAttribute(terrain.type, attribute), settings[Setting.AttributeTerrainType]))
+  const multiplier = calculateModifier(unit, attribute) + sumBy(terrains, terrain => getModifier(unit, formTerrainAttribute(terrain.type, attribute), settings[Setting.AttributeTerrainType]))
+  return base * (1 + multiplier)
+}
 const precalculateDamageReduction = (unit: CohortDefinition, settings: Settings) => (
   (settings[Setting.AttributeExperience] ? 1.0 + calculateExperienceReduction(settings, unit) : 1.0)
   * getValue(unit, UnitAttribute.DamageTaken, settings[Setting.AttributeDamage])

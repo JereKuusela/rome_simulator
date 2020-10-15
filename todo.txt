@@ -53,6 +53,11 @@ Tests:
   - Flank ratio
 * utils tested
 
+Refactor:
+ -? Moving terrain attributes to terrain definitions:
+  - Could applied as a modifier to units when a terrain is selected, instead of showing separately on unit definition and requiring special handling.
+  - Downside is that in game the modifiers are shown next to units, so the UI would differ from the game.
+
 UI:
  - Togglable stats rows to show individual units or hide unit types.
  - Unit tooltip should somehow show sources for losses (to include daily loss from EU4 and damage from different units).

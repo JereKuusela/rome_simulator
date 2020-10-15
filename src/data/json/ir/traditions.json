@@ -183,14 +183,14 @@
               },
               {
                 "target": "Light Infantry",
-                "attribute": "Forest",
-                "type": "Base",
+                "attribute": "Forest Damage",
+                "type": "Modifier",
                 "value": 0.33
               },
               {
                 "target": "Archers",
-                "attribute": "Forest",
-                "type": "Base",
+                "attribute": "Forest Damage",
+                "type": "Modifier",
                 "value": 0.33
               }
             ]
@@ -285,14 +285,14 @@
             "modifiers": [
               {
                 "target": "Light Infantry",
-                "attribute": "Plains",
-                "type": "Base",
+                "attribute": "Plains Damage",
+                "type": "Modifier",
                 "value": 0.15
               },
               {
                 "target": "Chariots",
-                "attribute": "Plains",
-                "type": "Base",
+                "attribute": "Plains Damage",
+                "type": "Modifier",
                 "value": 0.15
               }
             ]
@@ -695,20 +695,20 @@
             "modifiers": [
               {
                 "target": "Archers",
-                "attribute": "Hills",
-                "type": "Base",
+                "attribute": "Hills Damage",
+                "type": "Modifier",
                 "value": 0.15
               },
               {
                 "target": "Light Infantry",
-                "attribute": "Hills",
-                "type": "Base",
+                "attribute": "Hills Damage",
+                "type": "Modifier",
                 "value": 0.15
               },
               {
                 "target": "Heavy Infantry",
-                "attribute": "Hills",
-                "type": "Base",
+                "attribute": "Hills Damage",
+                "type": "Modifier",
                 "value": 0.15
               }
             ]
@@ -848,14 +848,14 @@
             "modifiers": [
               {
                 "target": "Light Infantry",
-                "attribute": "Hills",
-                "type": "Base",
+                "attribute": "Hills Damage",
+                "type": "Modifier",
                 "value": 0.15
               },
               {
                 "target": "Archers",
-                "attribute": "Hills",
-                "type": "Base",
+                "attribute": "Hills Damage",
+                "type": "Modifier",
                 "value": 0.15
               }
             ]
@@ -1166,20 +1166,20 @@
             "modifiers": [
               {
                 "target": "Camel Cavalry",
-                "attribute": "Desert",
-                "type": "Base",
+                "attribute": "Desert Damage",
+                "type": "Modifier",
                 "value": 0.15
               },
               {
                 "target": "Light Cavalry",
-                "attribute": "Desert",
-                "type": "Base",
+                "attribute": "Desert Damage",
+                "type": "Modifier",
                 "value": 0.15
               },
               {
                 "target": "Heavy Cavalry",
-                "attribute": "Desert",
-                "type": "Base",
+                "attribute": "Desert Damage",
+                "type": "Modifier",
                 "value": 0.15
               }
             ]
@@ -1566,26 +1566,26 @@
             "modifiers": [
               {
                 "target": "Heavy Infantry",
-                "attribute": "Forest",
-                "type": "Base",
+                "attribute": "Forest Damage",
+                "type": "Modifier",
                 "value": 0.15
               },
               {
                 "target": "Heavy Infantry",
-                "attribute": "Jungle",
-                "type": "Base",
+                "attribute": "Jungle Damage",
+                "type": "Modifier",
                 "value": 0.15
               },
               {
                 "target": "Light Infantry",
-                "attribute": "Forest",
-                "type": "Base",
+                "attribute": "Forest Damage",
+                "type": "Modifier",
                 "value": 0.15
               },
               {
                 "target": "Light Infantry",
-                "attribute": "Jungle",
-                "type": "Base",
+                "attribute": "Jungle Damage",
+                "type": "Modifier",
                 "value": 0.15
               }
             ]
@@ -1771,14 +1771,14 @@
             "modifiers": [
               {
                 "target": "War Elephants",
-                "attribute": "Jungle",
-                "type": "Base",
+                "attribute": "Jungle Damage",
+                "type": "Modifier",
                 "value": 0.15
               },
               {
                 "target": "War Elephants",
-                "attribute": "Forest",
-                "type": "Base",
+                "attribute": "Forest Damage",
+                "type": "Modifier",
                 "value": 0.15
               }
             ]
@@ -1869,20 +1869,20 @@
             "modifiers": [
               {
                 "target": "Light Cavalry",
-                "attribute": "Plains",
-                "type": "Base",
+                "attribute": "Plains Damage",
+                "type": "Modifier",
                 "value": 0.15
               },
               {
                 "target": "Heavy Cavalry",
-                "attribute": "Plains",
-                "type": "Base",
+                "attribute": "Plains Damage",
+                "type": "Modifier",
                 "value": 0.15
               },
               {
                 "target": "Camel Cavalry",
-                "attribute": "Plains",
-                "type": "Base",
+                "attribute": "Plains Damage",
+                "type": "Modifier",
                 "value": 0.15
               }
             ]

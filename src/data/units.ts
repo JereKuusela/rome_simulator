@@ -7,6 +7,8 @@ import unitsIR from './json/ir/units.json'
 import parentsIR from './json/ir/parent_units.json'
 import parentsEU4 from './json/eu4/parent_units.json'
 import unitsEU4 from './json/eu4/units.json'
+import parentsCK3 from './json/ck3/parent_units.json'
+import unitsCK3 from './json/ck3/units.json'
 import IconArcher from 'images/archers.png'
 import IconCamelCavalry from 'images/camel_cavalry.png'
 import IconChariots from 'images/chariots.png'
@@ -79,15 +81,29 @@ const createUnitFromJson = (data: UnitJSON): UnitData => {
     ...handleAttributes(values(UnitAttribute)),
     ...handleAttributes(values(TerrainType)),
     ...handleAttributes(values(UnitType)),
-    ...handleAttributes(values(CombatPhase))
+    ...handleAttributes(values(CombatPhase)),
+    ...handleAttributes(values(TerrainType).map(terrain => `${terrain} ${UnitAttribute.Damage}`)),
+    ...handleAttributes(values(TerrainType).map(terrain => `${terrain} ${UnitAttribute.Toughness}`)),
+    ...handleAttributes(values(TerrainType).map(terrain => `${terrain} ${UnitAttribute.Pursuit}`)),
+    ...handleAttributes(values(TerrainType).map(terrain => `${terrain} ${UnitAttribute.Screen}`))
   ]
   unit = addValues(unit, ValuesType.Base, unit.type, baseValues)
+  
+  const modifierValues: [UnitValueType, number][] = [
+    ...handleAttributes(values(TerrainType).map(terrain => `${terrain} ${UnitAttribute.Damage} ${ValuesType.Modifier}`)),
+    ...handleAttributes(values(TerrainType).map(terrain => `${terrain} ${UnitAttribute.Toughness} ${ValuesType.Modifier}`)),
+    ...handleAttributes(values(TerrainType).map(terrain => `${terrain} ${UnitAttribute.Pursuit} ${ValuesType.Modifier}`)),
+    ...handleAttributes(values(TerrainType).map(terrain => `${terrain} ${UnitAttribute.Screen} ${ValuesType.Modifier}`)),
+  ]
+  unit = addValues(unit, ValuesType.Modifier, unit.type, modifierValues)
   return unit
 }
 
 const initializeDefaultUnits = (): UnitsData => {
   if (process.env.REACT_APP_GAME === 'EU4')
     return toObj(parentsEU4.map(createUnitFromJson).concat(unitsEU4.map(createUnitFromJson)), unit => unit.type)
+  else if (process.env.REACT_APP_GAME === 'CK3')
+    return toObj(parentsCK3.map(createUnitFromJson).concat(unitsCK3.map(createUnitFromJson)), unit => unit.type)
   else
     return toObj(parentsIR.map(createUnitFromJson).concat(unitsIR.map(createUnitFromJson)), unit => unit.type)
 }

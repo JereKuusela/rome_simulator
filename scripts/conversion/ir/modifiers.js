@@ -391,8 +391,10 @@ exports.loadLocalization = (localization, file) => {
   if (file === 'terrains_l_english.yml') {
     Object.keys(units).forEach(unit => {
       Object.keys(localization).filter(terrain => !terrain.endsWith('_desc')).forEach(terrain => {
-        attributes[unit + '_' + terrain + '_combat_bonus'] = localization[terrain]
-        targets[unit + '_' + terrain + '_combat_bonus'] = units[unit]
+        const key = `${unit}_${terrain}_combat_bonus`
+        attributes[key] = `${localization[terrain]} Damage`
+        targets[key] = units[unit]
+        types.add(key)
       })
     })
   }

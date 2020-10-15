@@ -70,7 +70,7 @@ export default class UnitDefinitions extends Component<IProps> {
               ))
             }
             {
-              settings[Setting.AttributeUnitType] &&
+              settings[Setting.CounteringDamage] > 0 &&
               <Table.HeaderCell>
                 Units
               </Table.HeaderCell>
@@ -118,7 +118,7 @@ export default class UnitDefinitions extends Component<IProps> {
           ))
         }
         {
-          settings[Setting.AttributeUnitType] &&
+          settings[Setting.CounteringDamage] > 0 &&
           <Table.Cell>
             <VersusList
               item={unit}

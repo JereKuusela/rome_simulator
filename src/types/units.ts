@@ -48,6 +48,8 @@ export enum UnitAttribute {
   Defense = 'Defense',
   Damage = 'Damage',
   Toughness = 'Toughness',
+  Pursuit = 'Pursuit',
+  Screen = 'Screen',
   Maneuver = 'Maneuver',
   MoraleDamageDone = 'Morale Damage Done',
   MoraleDamageTaken = 'Morale Damage Taken',
@@ -84,6 +86,8 @@ export enum UnitAttribute {
 export type UnitValueType = UnitAttribute | UnitType | TerrainType | CombatPhase
 export type UnitValues = { [key in UnitType]: UnitValue }
 export type UnitValue = DefinitionValues<UnitValueType>
+
+export const formTerrainAttribute = (terrain: TerrainType, attribute: UnitAttribute) => `${terrain} ${attribute}` as UnitValueType
 
 /** A single (sub) unit definition. Used to store data but shouldn't be used for anything else. */
 export interface UnitData extends Definition<UnitType>, DefinitionValues<UnitValueType> {

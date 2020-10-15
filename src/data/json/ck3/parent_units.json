@@ -1,0 +1,37 @@
+[
+  {
+    "Type": "Land Unit",
+    "Parent": null,
+    "Mode": "Land",
+    "Role": "Front"
+  },
+  {
+    "Type": "Skirmishers",
+    "Parent": "Land Unit"
+  },
+  {
+    "Type": "Archers",
+    "Parent": "Land Unit"
+  },
+  {
+    "Type": "Light Cavalry",
+    "Parent": "Land Unit"
+  },
+  {
+    "Type": "Heavy Cavalry'",
+    "Parent": "Land Unit"
+  },
+  {
+    "Type": "Pikemen",
+    "Parent": "Land Unit"
+  },
+  {
+    "Type": "Heavy Infantry",
+    "Parent": "Land Unit"
+  },
+  {
+    "Type": "Siege Weapon",
+    "Parent": "Land Unit",
+    "Role": "Support"
+  }
+]
