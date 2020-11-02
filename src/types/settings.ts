@@ -164,9 +164,9 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
         return 'Only front row. (CK3, IR)'
     case Setting.BackRowRetreat:
       if (value)
-        return 'Units can retreat from backrow. (EU4).'
+        return 'Units can retreat from backrow'
       else
-        return 'Units from backrow can\'t retreat.'
+        return 'Units from backrow can\'t retreat. (EU4)'
     case Setting.RetreatRounds:
       return 'How long the battle must last to enable retreat. (CK3, EU4, IR)'
     case Setting.StackwipeRounds:

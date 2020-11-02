@@ -50,18 +50,17 @@ export const resetState = (state: AppState) => {
   resetAll(state)
 }
 
+const combine = (a: any, b: any) => ({ ...(a ?? {}), ...(b ?? {}) })
+
 export const importState = (state: AppState, imported: any, resetMissing: boolean) => {
-  if (resetMissing)
-    state = { ...state, transfer: state.transfer, ...imported }
-  else
-    // Bit complicated logic needed to allow adding and partially updating definitions.
-    // TODO: this.state vs state really messy.
-    state = {
-      ...state,
-      ...imported,
-      tactics: state.tactics ? { ...state.tactics, ...imported.tactics } : imported.tactics,
-      terrains: state.terrains ? { ...state.terrains, ...imported.terrains } : imported.terrains
-    }
+  if (resetMissing) {
+    resetMissingState(imported)
+  }
+  state.battle = combine(state.battle, imported.battle)
+  state.countries = combine(state.countries, imported.countries)
+  state.settings = combine(state.settings, imported.settings)
+  state.tactics = combine(state.tactics, imported.tactics)
+  state.terrains = combine(state.terrains, imported.terrains)
 }
 
 export const resetMissingState = (state: AppState) => {

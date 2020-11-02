@@ -396,10 +396,8 @@ const updateProgress = (progress: WinRateProgress, weight: number, winner: Winne
     progress.incomplete += weight
   if (stackWipe)
     progress.stackWipes += weight
-  // Environment tracks start day of the current round. +1 for the end day.
-  const days = environment.day + 1
-  progress.averageDays += weight * days
-  progress.days[days] = (progress.days[days] || 0) + weight
+  progress.averageDays += weight * environment.day
+  progress.days[environment.day] = (progress.days[environment.day] || 0) + weight
 }
 
 /**

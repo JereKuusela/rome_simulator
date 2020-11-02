@@ -36,24 +36,24 @@ class Navigation extends Component<IProps> {
           <Menu.Item active={path === '/settings'} onClick={() => history.push('/settings')}>
             Settings
           </Menu.Item>
-          {process.env.REACT_APP_GAME === 'ir' &&
+          {process.env.REACT_APP_GAME === 'IR' &&
             <Menu.Item active={path === '/import'} onClick={() => history.push('/import')}>
               Import from save
           </Menu.Item>
           }
-          {process.env.REACT_APP_GAME === 'ir' &&
+          {process.env.REACT_APP_GAME === 'IR' &&
             <Menu.Item active={path === '/export'} onClick={() => history.push('/export')}>
               Export from save
           </Menu.Item>
           }
 
           <div id='menu-info'>
-            {process.env.REACT_APP_GAME === 'ir' &&
+            {process.env.REACT_APP_GAME === 'IR' &&
               <Button active={mode === Mode.Land} compact icon basic circular size='tiny' onClick={() => setMode(Mode.Land)}>
                 <Image src={IconLand} avatar style={{ marginRight: 0 }} />
               </Button>
             }
-            {process.env.REACT_APP_GAME === 'ir' &&
+            {process.env.REACT_APP_GAME === 'IR' &&
               <Button active={mode === Mode.Naval} compact icon basic circular size='tiny' onClick={() => setMode(Mode.Naval)}>
                 <Image src={IconNaval} avatar style={{ marginRight: 0 }} />
               </Button>

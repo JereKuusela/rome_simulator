@@ -15,6 +15,7 @@ Combat:
 Settings:
  * EU4: Added a setting for morale gain when winning a battle.
  * EU4: Defender's advantage is now disabled by default (fixed in the game).
+ * Fixed setting import/export not working.
 
 UI:
  * Fixed dice extra settings button disappearing when random dice is enabled.
