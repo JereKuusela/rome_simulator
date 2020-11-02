@@ -1,6 +1,6 @@
 
 import { sumBy, values } from 'lodash'
-import { Terrain, UnitType, CohortDefinition, UnitAttribute, Setting, Settings, CombatPhase, UnitValueType, Cohort, CohortProperties, DisciplineValue, CountryName, ArmyName, formTerrainAttribute } from 'types'
+import { Terrain, UnitType, CohortDefinition, UnitAttribute, Setting, Settings, CombatPhase, UnitValueType, Cohort, CohortProperties, DisciplineValue, CountryName, ArmyName, formTerrainAttribute, getTerrainAttributes } from 'types'
 import { toObj, map, noZero } from 'utils'
 import { calculateValue, calculateValueWithoutLoss, calculateBase, calculateGain, calculateModifier } from 'definition_values'
 import { calculateExperienceReduction } from './combat_utils'
@@ -35,13 +35,7 @@ export const getProperties = (countryName: CountryName, armyName: ArmyName, part
   } as CohortProperties
   values(UnitAttribute).forEach(calc => { properties[calc] = calculateValue(cohort, calc) })
   values(CombatPhase).forEach(calc => { properties[calc] = calculateValue(cohort, calc) })
-  // Todo: Single place to set terrain attribute thing (used in multiple places), should return all in a single array.
-  terrains.forEach(({ type }) => {
-    properties[formTerrainAttribute(type, UnitAttribute.Damage)] = calculateValue(cohort, formTerrainAttribute(type, UnitAttribute.Damage))
-    properties[formTerrainAttribute(type, UnitAttribute.Damage)] = calculateValue(cohort, formTerrainAttribute(type, UnitAttribute.Damage))
-    properties[formTerrainAttribute(type, UnitAttribute.Damage)] = calculateValue(cohort, formTerrainAttribute(type, UnitAttribute.Damage))
-    properties[formTerrainAttribute(type, UnitAttribute.Damage)] = calculateValue(cohort, formTerrainAttribute(type, UnitAttribute.Damage))
-  })
+  getTerrainAttributes(terrains).forEach(calc => { properties[calc] = calculateValue(cohort, calc) })
   unitTypes.forEach(calc => { properties[calc] = calculateValue(cohort, calc) })
   return properties
 }
@@ -108,8 +102,8 @@ const precalculateDamage = (terrains: Terrain[], unit: CohortDefinition, setting
 )
 
 const applyTerrain = (unit: CohortDefinition, terrains: Terrain[], attribute: UnitAttribute, settings: Settings) => {
-  const base = calculateBase(unit, attribute) + sumBy(terrains, terrain => getBase(unit, formTerrainAttribute(terrain.type, attribute), settings[Setting.AttributeTerrainType]))
-  const multiplier = calculateModifier(unit, attribute) + sumBy(terrains, terrain => getModifier(unit, formTerrainAttribute(terrain.type, attribute), settings[Setting.AttributeTerrainType]))
+  const base = calculateBase(unit, attribute) + sumBy(terrains, terrain => getBase(unit, formTerrainAttribute(terrain, attribute), settings[Setting.AttributeTerrainType]))
+  const multiplier = calculateModifier(unit, attribute) + sumBy(terrains, terrain => getModifier(unit, formTerrainAttribute(terrain, attribute), settings[Setting.AttributeTerrainType]))
   return base * (1 + multiplier)
 }
 const precalculateDamageReduction = (unit: CohortDefinition, settings: Settings) => (

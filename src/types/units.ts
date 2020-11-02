@@ -1,7 +1,8 @@
 import { DefinitionValues, calculateValue } from 'definition_values'
-import { TerrainType, Definition, Mode, CultureType } from 'types'
+import { TerrainType, Definition, Mode, CultureType, Terrain } from 'types'
 import { toNumber, toPercent, toSignedPercent, toMultiplier } from 'formatters'
 import { CombatPhase } from './battle'
+import { flatten } from 'lodash'
 
 export enum UnitType {
   Archers = 'Archers',
@@ -87,7 +88,21 @@ export type UnitValueType = UnitAttribute | UnitType | TerrainType | CombatPhase
 export type UnitValues = { [key in UnitType]: UnitValue }
 export type UnitValue = DefinitionValues<UnitValueType>
 
-export const formTerrainAttribute = (terrain: TerrainType, attribute: UnitAttribute) => `${terrain} ${attribute}` as UnitValueType
+export const formTerrainAttribute = (terrain: Terrain | TerrainType, attribute: UnitAttribute) => {
+  if (typeof terrain === 'object')
+    return `${terrain.type} ${attribute}` as UnitValueType
+  return `${terrain} ${attribute}` as UnitValueType
+}
+
+export const getTerrainAttributes = (terrains: (Terrain | TerrainType)[]) => {
+  return flatten(terrains.map(terrain => [
+    formTerrainAttribute(terrain, UnitAttribute.Damage),
+    formTerrainAttribute(terrain, UnitAttribute.Toughness),
+    formTerrainAttribute(terrain, UnitAttribute.Pursuit),
+    formTerrainAttribute(terrain, UnitAttribute.Screen)
+  ]))
+}
+
 
 /** A single (sub) unit definition. Used to store data but shouldn't be used for anything else. */
 export interface UnitData extends Definition<UnitType>, DefinitionValues<UnitValueType> {
@@ -107,7 +122,7 @@ export const unitValueToString = (definition: DefinitionValues<UnitValueType>, t
   const value = calculateValue(definition, type)
   switch (type) {
     case UnitAttribute.Maneuver:
-        return toNumber(Math.floor(value))
+      return toNumber(Math.floor(value))
     case UnitAttribute.Cost:
     case UnitAttribute.Strength:
     case UnitAttribute.StrengthDepleted:

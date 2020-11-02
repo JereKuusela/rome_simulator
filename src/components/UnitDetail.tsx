@@ -7,12 +7,11 @@ import DetailTextRow from './Detail/DetailTextRow'
 import DetailInputRow from './Detail/DetailInputRow'
 import DetailDropdownRow from './Detail/DetailDropdownRow'
 import Headers from './Utils/Headers'
-import { Mode, ValuesType, CohortDefinition, UnitType, TerrainType, UnitRole, UnitAttribute, UnitValueType, unitValueToString, Setting, CombatPhase, isAttributeEnabled, SiteSettings, formTerrainAttribute } from 'types'
+import { Mode, ValuesType, CohortDefinition, UnitType, TerrainType, UnitRole, UnitAttribute, UnitValueType, unitValueToString, Setting, CombatPhase, isAttributeEnabled, SiteSettings, getTerrainAttributes } from 'types'
 import { values } from 'utils'
 import { getValue, calculateValue, explain } from 'definition_values'
 import { toMaintenance } from 'formatters'
 import DelayedNumericInput from './Detail/DelayedNumericInput'
-import { flatten } from 'lodash'
 
 interface IProps {
   mode: Mode
@@ -45,7 +44,6 @@ export default class UnitDetail extends Component<IProps> {
   readonly modes = values(Mode)
   readonly deployments = values(UnitRole)
   readonly headers = ['Attribute', 'Value', 'Custom base', 'Custom modifier', 'Custom losses', 'Explained']
-  readonly terrainAttributes = [UnitAttribute.Damage, UnitAttribute.Toughness, UnitAttribute.Pursuit, UnitAttribute.Screen]
 
   readonly CELLS = 6
 
@@ -54,7 +52,7 @@ export default class UnitDetail extends Component<IProps> {
     const { terrainTypes, unitTypes, unitTypesWithParent, unitTypesAsDropdown, settings } = this.props
     const { type, mode, parent, image, role, isLoyal, culture, tech } = unit
 
-    const terrains = terrainTypes && flatten(terrainTypes.map(terrain => this.terrainAttributes.map(attribute => formTerrainAttribute(terrain, attribute))))
+    const terrains = terrainTypes && getTerrainAttributes(terrainTypes)
     return (
       <Table celled selectable unstackable>
         <Headers values={this.headers} />

@@ -1,4 +1,4 @@
-import { ValuesType, UnitType, UnitData, UnitAttribute, UnitValueType, UnitRole, TerrainType, UnitsData, Mode, CultureType, CombatPhase } from 'types'
+import { ValuesType, UnitType, UnitData, UnitAttribute, UnitValueType, UnitRole, TerrainType, UnitsData, Mode, CultureType, CombatPhase, getTerrainAttributes } from 'types'
 import { addValues } from 'definition_values'
 import { toObj, removeUndefined, filter, toArr, values } from 'utils'
 import { uniq } from 'lodash'
@@ -77,23 +77,18 @@ const createUnitFromJson = (data: UnitJSON): UnitData => {
     tech: data.Tech
   }
   removeUndefined(unit)
+
   const baseValues: [UnitValueType, number][] = [
     ...handleAttributes(values(UnitAttribute)),
     ...handleAttributes(values(TerrainType)),
     ...handleAttributes(values(UnitType)),
     ...handleAttributes(values(CombatPhase)),
-    ...handleAttributes(values(TerrainType).map(terrain => `${terrain} ${UnitAttribute.Damage}`)),
-    ...handleAttributes(values(TerrainType).map(terrain => `${terrain} ${UnitAttribute.Toughness}`)),
-    ...handleAttributes(values(TerrainType).map(terrain => `${terrain} ${UnitAttribute.Pursuit}`)),
-    ...handleAttributes(values(TerrainType).map(terrain => `${terrain} ${UnitAttribute.Screen}`))
+    ...handleAttributes(getTerrainAttributes(values(TerrainType)))
   ]
   unit = addValues(unit, ValuesType.Base, unit.type, baseValues)
-  
+
   const modifierValues: [UnitValueType, number][] = [
-    ...handleAttributes(values(TerrainType).map(terrain => `${terrain} ${UnitAttribute.Damage} ${ValuesType.Modifier}`)),
-    ...handleAttributes(values(TerrainType).map(terrain => `${terrain} ${UnitAttribute.Toughness} ${ValuesType.Modifier}`)),
-    ...handleAttributes(values(TerrainType).map(terrain => `${terrain} ${UnitAttribute.Pursuit} ${ValuesType.Modifier}`)),
-    ...handleAttributes(values(TerrainType).map(terrain => `${terrain} ${UnitAttribute.Screen} ${ValuesType.Modifier}`)),
+    ...handleAttributes(getTerrainAttributes(values(TerrainType)).map(attribute => `${attribute} ${ValuesType.Modifier}`))
   ]
   unit = addValues(unit, ValuesType.Modifier, unit.type, modifierValues)
   return unit
@@ -107,6 +102,8 @@ const initializeDefaultUnits = (): UnitsData => {
   else
     return toObj(parentsIR.map(createUnitFromJson).concat(unitsIR.map(createUnitFromJson)), unit => unit.type)
 }
+
+// Should default terrains be used here for loading? CK3 has lots of terrain stuff so otherwise TerrainType must be expanded...
 const defaultUnits = initializeDefaultUnits()
 
 export const getCultures = () => uniq(toArr(defaultUnits, value => value.culture).filter(culture => culture) as CultureType[]).sort()

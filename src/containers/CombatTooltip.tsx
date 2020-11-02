@@ -126,7 +126,7 @@ class CombatTooltip extends Component<IProps, IState> {
     const { terrains, settings, results } = this.props
     const { round, tacticBonus, dailyMultiplier } = results
     const phase = getCombatPhase(round, settings)
-    const terrainTypes = settings[Setting.AttributeTerrainType] ? terrains.map(value => formTerrainAttribute(value.type, UnitAttribute.Damage)) : []
+    const terrainTypes = settings[Setting.AttributeTerrainType] ? terrains.map(value => formTerrainAttribute(value, UnitAttribute.Damage)) : []
     const strength = source[UnitAttribute.Strength] + source.strengthLoss
     const offenseVsDefense = settings[Setting.AttributeOffenseDefense] ? source[UnitAttribute.Offense] - target[UnitAttribute.Defense] : 0
     const experienceReduction = settings[Setting.AttributeExperience] ? target.experienceReduction : 0
