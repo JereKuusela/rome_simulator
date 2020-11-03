@@ -1,16 +1,15 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Tab } from 'semantic-ui-react'
+import React, { useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Grid, Tab } from 'semantic-ui-react'
 
-import { AppState, getMode } from 'state'
+import { AppState } from 'state'
 
-import { keys, filterKeys } from 'utils'
-import { Mode, Setting, SiteSettings } from 'types'
+import { filterKeys } from 'utils'
+import { CombatSettings, Mode, Setting, SiteSettings } from 'types'
 import { changeCombatParameter, changeSiteParameter } from 'reducers'
 import Transfer from 'containers/Transfer'
 import GridSettings from 'components/GridSettings'
-
-interface Props { }
+import AccordionToggle from 'containers/AccordionToggle'
 
 const deployment = [Setting.CustomDeployment, Setting.DynamicFlanking, Setting.MoraleHitForNonSecondaryReinforcement, Setting.MoraleHitForLateDeployment, Setting.SupportPhase]
 const mechanics = [
@@ -32,75 +31,69 @@ const attributes = [
   Setting.AttributeDiscipline
 ]
 
-class Settings extends Component<IProps> {
 
-  render() {
-    const { combatSettings } = this.props
-    const panes = [
-      this.getMenuItem('Attributes', attributes),
-      this.getMenuItem('Damage', damage),
-      this.getMenuItem('Deployment', deployment),
-      this.getModeMenuItem(),
-      this.getMenuItem('Mechanics', mechanics),
-      this.getMenuItem('Stack wipe & Retreat', stackwipe),
-      this.getTransferMenuItem()
-    ]
+const Settings = () => {
+  const { combatSettings, siteSettings } = useSelector((state: AppState) => state.settings)
+  const dispatch = useDispatch()
+  const onChangeSiteParameter = useCallback((key: keyof SiteSettings, value: any) => dispatch(changeSiteParameter(key, value)), [dispatch])
+  const onChangeCombatParameter = useCallback((mode: Mode, key: keyof CombatSettings, value: any) => dispatch(changeCombatParameter(mode, key, value)), [dispatch])
+
+
+  const getSection = (key: string, attributes: Setting[]) => {
     return (
-      <Tab panes={panes} defaultActiveIndex={keys(combatSettings).findIndex(mode => mode === this.props.mode)} />
+      <Grid.Row>
+        <AccordionToggle title={key} identifier={key} open>
+          <GridSettings settings={filterKeys(siteSettings, setting => attributes.includes(setting))} onChange={onChangeSiteParameter} />
+        </AccordionToggle>
+      </Grid.Row>
     )
   }
 
-  getMenuItem = (key: string, attributes: Setting[]) => {
-    const { siteSettings } = this.props
+
+  const getSettingsMenuItem = () => {
     return {
-      menuItem: key,
-      render: () => this.renderSiteSettings(siteSettings, attributes)
+      menuItem: 'Settings',
+      render: () => {
+        return (
+          <Grid padded>
+            {getSection('Attributes', attributes)}
+            {getSection('Damage', damage)}
+            {getSection('Deployment', deployment)}
+            {renderModeSettings()}
+            {getSection('Mechanics', mechanics)}
+            {getSection('Stack wipe & Retreat', stackwipe)}
+          </Grid>
+        )
+      }
     }
   }
-
-  getModeMenuItem = () => {
-    return {
-      menuItem: 'Land / Naval',
-      render: () => this.renderModeSettings()
-    }
-  }
-
-  getTransferMenuItem = () => {
+  const getTransferMenuItem = () => {
     return {
       menuItem: 'Import / Export',
       render: () => <Transfer />
     }
   }
 
-  renderModeSettings = () => {
-    const { combatSettings, changeCombatParameter } = this.props
+
+  const renderModeSettings = () => {
     return (
-      <Tab.Pane style={{ padding: 0 }}>
-        <GridSettings settings={combatSettings[Mode.Land]} onChange={(key, str) => changeCombatParameter(Mode.Land, key, str)} />
-        <GridSettings settings={combatSettings[Mode.Naval]} onChange={(key, str) => changeCombatParameter(Mode.Naval, key, str)} />
-      </Tab.Pane>
+      <Grid.Row>
+        <AccordionToggle title={'Land / Naval'} identifier={'Land / Naval'} open>
+          <GridSettings settings={combatSettings[Mode.Land]} onChange={(key, str) => onChangeCombatParameter(Mode.Land, key, str)} />
+          <GridSettings settings={combatSettings[Mode.Naval]} onChange={(key, str) => onChangeCombatParameter(Mode.Naval, key, str)} />
+        </AccordionToggle>
+      </Grid.Row>
     )
   }
 
-  renderSiteSettings = (settings: SiteSettings, attributes: Setting[]) => {
-    return (
-      <Tab.Pane style={{ padding: 0 }}>
-        <GridSettings settings={filterKeys(settings, setting => attributes.includes(setting))} onChange={this.props.changeSiteParameter} />
-      </Tab.Pane>
-    )
-  }
+  const panes = [
+    getSettingsMenuItem(),
+    getTransferMenuItem()
+  ]
+  return (
+    <Tab panes={panes} />
+  )
+
 }
 
-const mapStateToProps = (state: AppState) => ({
-  combatSettings: state.settings.combatSettings,
-  siteSettings: state.settings.siteSettings,
-  mode: getMode(state)
-})
-
-const actions = { changeCombatParameter, changeSiteParameter }
-
-type S = ReturnType<typeof mapStateToProps>
-type D = typeof actions
-interface IProps extends React.PropsWithChildren<Props>, S, D { }
-
-export default connect(mapStateToProps, actions)(Settings)
+export default Settings

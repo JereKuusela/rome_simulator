@@ -17,9 +17,9 @@ const createTerrainFromJson = (data: TerrainData): Terrain => {
 
 const initializeDefaultTerrains = (): TerrainDefinitions => {
   if (process.env.REACT_APP_GAME === 'EU4')
-    return toObj(dataEU4.terrain.map(createTerrainFromJson), terrain => terrain.type)
+    return toObj(dataEU4.terrain.map(createTerrainFromJson), item => item.type)
   else
-    return toObj(dataIR.terrain.map(createTerrainFromJson), terrain => terrain.type)
+    return toObj(dataIR.terrain.map(createTerrainFromJson), item => item.type)
 }
 
 const defaultTerrains = initializeDefaultTerrains()

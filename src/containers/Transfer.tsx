@@ -32,7 +32,7 @@ class Transfer extends Component<IProps, IState> {
       this.setState({ data: json })
     }
     return (
-      <Grid>
+      <Grid padded>
         <Grid.Row columns='2'>
           <Grid.Column>
             <Header>Export</Header>
