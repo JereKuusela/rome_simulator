@@ -19,6 +19,7 @@ Settings:
 
 UI:
  * Fixed dice extra settings button disappearing when random dice is enabled.
+ * Changed settings page from tabs to accordions. This makes changing settings much easier because they all are on screen and can be searched with the browser.
 
 Save import:
   * Added a tool for exporting a table with territories and their pops.
