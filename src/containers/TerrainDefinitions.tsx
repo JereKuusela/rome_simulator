@@ -14,7 +14,6 @@ import { addSign } from 'formatters'
 
 // Display component for showing unit definitions for an army.
 class TerrainDefinitions extends Component<IProps> {
-
   readonly attributes = keys(TerrainCalc).map(k => TerrainCalc[k])
   readonly headers = ['Terrain', 'Location', 'Roll']
 
@@ -24,9 +23,7 @@ class TerrainDefinitions extends Component<IProps> {
       <>
         <Table celled selectable unstackable>
           <Headers values={this.headers} />
-          <Table.Body>
-            {terrains.map(this.renderRow)}
-          </Table.Body>
+          <Table.Body>{terrains.map(this.renderRow)}</Table.Body>
         </Table>
         <Button primary onClick={this.onClick}>
           Create new
@@ -35,12 +32,13 @@ class TerrainDefinitions extends Component<IProps> {
     )
   }
 
-  onClick = () => this.props.openModal(ModalType.Value, {
-    onSuccess: type => this.props.createTerrain(type as TerrainType, this.props.mode),
-    message: 'New terrain type',
-    buttonMessage: 'Create',
-    initial: ''
-  })
+  onClick = () =>
+    this.props.openModal(ModalType.Value, {
+      onSuccess: type => this.props.createTerrain(type as TerrainType, this.props.mode),
+      message: 'New terrain type',
+      buttonMessage: 'Create',
+      initial: ''
+    })
 
   renderRow = (definition: Terrain) => {
     return (
@@ -49,21 +47,18 @@ class TerrainDefinitions extends Component<IProps> {
           <Image src={getImage(definition)} avatar />
           {definition.type}
         </Table.Cell>
-        <Table.Cell>
-          {definition.location}
-        </Table.Cell>
+        <Table.Cell>{definition.location}</Table.Cell>
         {this.renderAttributes(definition)}
-      </Table.Row >
+      </Table.Row>
     )
   }
 
-  renderAttributes = (definition: Terrain) => (
+  renderAttributes = (definition: Terrain) =>
     this.attributes.map(type => (
       <Table.Cell key={type}>
         <StyledNumber value={calculateValue(definition, type)} formatter={addSign} hideZero />
       </Table.Cell>
     ))
-  )
 
   openModal = (definition: Terrain) => this.props.openModal(ModalType.TerrainDetail, { type: definition.type })
 }
@@ -74,7 +69,8 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const actions = {
-  openModal, createTerrain
+  openModal,
+  createTerrain
 }
 
 type S = ReturnType<typeof mapStateToProps>

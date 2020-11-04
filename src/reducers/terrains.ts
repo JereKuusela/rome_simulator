@@ -1,7 +1,14 @@
 import { getDefaultTerrainState } from 'data'
 import { TerrainDefinitions, Terrain, TerrainType } from 'types'
 import * as manager from 'managers/terrains'
-import { makeActionRemoveFirst, makeContainerReducer, ActionToFunction, makeActionReplaceFirst, makeEntityReducer, compose } from './utils'
+import {
+  makeActionRemoveFirst,
+  makeContainerReducer,
+  ActionToFunction,
+  makeActionReplaceFirst,
+  makeEntityReducer,
+  compose
+} from './utils'
 
 const terrainsMapping: ActionToFunction<TerrainDefinitions> = {}
 

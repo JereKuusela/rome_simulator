@@ -27,10 +27,8 @@ let errors: string[] | null = null
 
 const parseToken = (token: string) => {
   const isNumber = !Number.isNaN(Number(token))
-  if (isNumber)
-    return Number(token)
-  if (token.startsWith('"'))
-    return token.substr(1, token.length - 2)
+  if (isNumber) return Number(token)
+  if (token.startsWith('"')) return token.substr(1, token.length - 2)
   return token
 }
 
@@ -57,22 +55,17 @@ const parseObject = (tokens: string[]) => {
     const token = tokens[i]
     if (token === '{') {
       resultArray.push(parseObject(tokens))
-    }
-    else if (token === ControlType.Separator) {
+    } else if (token === ControlType.Separator) {
       const value = parseValue(tokens)
       if (result[previous]) {
-        if (!Array.isArray(result[previous]))
-          result[previous] = [result[previous]]
+        if (!Array.isArray(result[previous])) result[previous] = [result[previous]]
         result[previous].push(value)
-      }
-      else {
+      } else {
         result[previous] = value
       }
-    }
-    else if (token === '}') {
+    } else if (token === '}') {
       break
-    }
-    else {
+    } else {
       resultArray.push(parseToken(token))
     }
     previous = token
@@ -106,8 +99,16 @@ const formatTokens = {
 }
 
 const tokens = {
-  ...toObj(keys(formatTokens), key => parseInt(key, 16), key => formatTokens[key]),
-  ...toObj(keys(stringTokens), key => parseInt(key, 16), key => stringTokens[key])
+  ...toObj(
+    keys(formatTokens),
+    key => parseInt(key, 16),
+    key => formatTokens[key]
+  ),
+  ...toObj(
+    keys(stringTokens),
+    key => parseInt(key, 16),
+    key => stringTokens[key]
+  )
 }
 
 export const binaryToPlain = (buffer: Uint8Array, getErrors: boolean): [string, string[]] => {
@@ -120,8 +121,7 @@ export const binaryToPlain = (buffer: Uint8Array, getErrors: boolean): [string, 
 
 const getBinaryToken = () => {
   const code = data[i++] * 256 + data[i++]
-  if (tokens[code])
-    return tokens[code]
+  if (tokens[code]) return tokens[code]
   errors?.push('Token ' + code.toString(16).toUpperCase() + ' not recognized.')
   return 'x_' + code.toString(16).toUpperCase()
 }
@@ -129,9 +129,9 @@ const getBinaryToken = () => {
 /** Looks up the next token. If it's separator then previous token is a key. */
 const isKeyValuePair = () => tokens[data[i] * 256 + data[i + 1]] === ControlType.Separator
 
-const getBinaryBoolean = () => data[i++] ? 'yes' : 'no'
+const getBinaryBoolean = () => (data[i++] ? 'yes' : 'no')
 // Bitwise can't be used because of only 32 bytes.
-const getBinaryLength = () => data[i++] + (data[i++] * 256)
+const getBinaryLength = () => data[i++] + data[i++] * 256
 const getBinaryUnsigned = () => {
   const value = getHex(i + 3) + getHex(i + 2) + getHex(i + 1) + getHex(i)
   i += 4
@@ -143,12 +143,28 @@ const getBinarySigned = () => {
   return hexToSigned(value)
 }
 const getBinaryBigUnsigned = () => {
-  const value = getHex(i + 7) + getHex(i + 6) + getHex(i + 5) + getHex(i + 4) + getHex(i + 3) + getHex(i + 2) + getHex(i + 1) + getHex(i)
+  const value =
+    getHex(i + 7) +
+    getHex(i + 6) +
+    getHex(i + 5) +
+    getHex(i + 4) +
+    getHex(i + 3) +
+    getHex(i + 2) +
+    getHex(i + 1) +
+    getHex(i)
   i += 8
   return hexToUnsigned(value)
 }
 const getBinaryBigSigned = () => {
-  const value = getHex(i + 7) + getHex(i + 6) + getHex(i + 5) + getHex(i + 4) + getHex(i + 3) + getHex(i + 2) + getHex(i + 1) + getHex(i)
+  const value =
+    getHex(i + 7) +
+    getHex(i + 6) +
+    getHex(i + 5) +
+    getHex(i + 4) +
+    getHex(i + 3) +
+    getHex(i + 2) +
+    getHex(i + 1) +
+    getHex(i)
   i += 8
   return hexToSigned(value)
 }
@@ -163,8 +179,7 @@ const getHex = (index: number) => data[index].toString(16).padStart(2, '0')
 
 const getBinaryString = (length: number) => {
   let string = ''
-  for (let j = 0; j < length; j++)
-    string += String.fromCharCode(data[i + j])
+  for (let j = 0; j < length; j++) string += String.fromCharCode(data[i + j])
   i += length
   return string
 }
@@ -200,24 +215,51 @@ const parseBinaryValue = (type: string): string => {
 
 // Date is not its own data format so the keys must be hard coded.
 const dates = new Set([
-  'date', 'death_date', 'start_date', 'last_trade_route_creation_date', 'arrived_here_date', 'stall_date', 'ignored',
-  'leader_date', 'budget_dates', 'last_employed_date', 'last_owner_change', 'last_controller_change', 'looted', 'plundered',
-  'deity_elevated', 'last_war', 'last_peace', 'last_battle_won', 'omen_start', 'omen_duration', 'idle', 'birth_date',
-  'last_send_diplomat', 'move_pop_command', 'building_construction', 'disband_army', 'spouse_death_date', 'last_victory',
-  'next_year_update', 'next_quarter_update', 'last_enslavement', 'fixed_date', 'regret', 'end_date', 'gather_date',
-  'last_command_date', 'deadline',
+  'date',
+  'death_date',
+  'start_date',
+  'last_trade_route_creation_date',
+  'arrived_here_date',
+  'stall_date',
+  'ignored',
+  'leader_date',
+  'budget_dates',
+  'last_employed_date',
+  'last_owner_change',
+  'last_controller_change',
+  'looted',
+  'plundered',
+  'deity_elevated',
+  'last_war',
+  'last_peace',
+  'last_battle_won',
+  'omen_start',
+  'omen_duration',
+  'idle',
+  'birth_date',
+  'last_send_diplomat',
+  'move_pop_command',
+  'building_construction',
+  'disband_army',
+  'spouse_death_date',
+  'last_victory',
+  'next_year_update',
+  'next_quarter_update',
+  'last_enslavement',
+  'fixed_date',
+  'regret',
+  'end_date',
+  'gather_date',
+  'last_command_date',
+  'deadline'
 ])
 
 const isDate = (key: string, parentKey: string, token: string, value: string) => {
   if (key && token === DataType.Integer) {
-
-    if (dates.has(key))
-      return true
-    if (parentKey === 'breaking_alliances')
-      return true
+    if (dates.has(key)) return true
+    if (parentKey === 'breaking_alliances') return true
     // HACK: Dates are always a big number and other uses of 'action' seem to use low numbers.
-    if (key === 'action' && Number(value) > 100000)
-      return true
+    if (key === 'action' && Number(value) > 100000) return true
   }
   return false
 }
@@ -231,62 +273,47 @@ const parseBinaryText = (data: Uint8Array) => {
   let inArray = false
   while (i < data.length) {
     let token: string | number = getBinaryToken()
-    if (key === 'identity' && token === DataType.BigInteger)
-      token = DataType.BigUnsignedInteger
+    if (key === 'identity' && token === DataType.BigInteger) token = DataType.BigUnsignedInteger
     if (token === ControlType.Separator) {
       tokens.push(token)
-    }
-    else if (token in DataType) {
+    } else if (token in DataType) {
       const value = parseBinaryValue(String(token))
-      if (token === DataType.String && !isKeyValuePair())
-        token = '"' + value + '"'
-      else if (isDate(key, parentKey, token, value))
-        token = decodateDate(Number(value))
-      else
-        token = value
+      if (token === DataType.String && !isKeyValuePair()) token = '"' + value + '"'
+      else if (isDate(key, parentKey, token, value)) token = decodateDate(Number(value))
+      else token = value
 
       if (isKeyValuePair()) {
         key = String(token)
         tokens.push('\n')
-        if (pad)
-          tokens.push(pad)
-      }
-      else if (previous !== ControlType.Separator) {
+        if (pad) tokens.push(pad)
+      } else if (previous !== ControlType.Separator) {
         inArray = true
         tokens.push(' ')
       }
 
       tokens.push(token)
-    }
-    else if (token === ControlType.SectionStart || token === ControlType.SectionEnd) {
+    } else if (token === ControlType.SectionStart || token === ControlType.SectionEnd) {
       if (token === ControlType.SectionEnd) {
         parentKey = ''
         key = ''
-        if (tokens[tokens.length - 1] !== '\n' && !inArray)
-          tokens.push('\n')
+        if (tokens[tokens.length - 1] !== '\n' && !inArray) tokens.push('\n')
         pad = pad.substr(1)
-        if (pad && !inArray)
-          tokens.push(pad)
-        if (inArray)
-          tokens.push(' ')
+        if (pad && !inArray) tokens.push(pad)
+        if (inArray) tokens.push(' ')
         inArray = false
       }
-      if (token === ControlType.SectionStart && tokens[tokens.length - 1] !== ControlType.Separator)
-        tokens.push(' ')
+      if (token === ControlType.SectionStart && tokens[tokens.length - 1] !== ControlType.Separator) tokens.push(' ')
       tokens.push(token)
       if (token === ControlType.SectionStart) {
         pad += '\t'
         parentKey = key
       }
-    }
-    else {
+    } else {
       if (isKeyValuePair()) {
         key = token
         tokens.push('\n')
-        if (pad)
-          tokens.push(pad)
-      }
-      else if (previous !== ControlType.Separator) {
+        if (pad) tokens.push(pad)
+      } else if (previous !== ControlType.Separator) {
         inArray = true
         tokens.push(' ')
       }
@@ -303,31 +330,37 @@ const decodateDate = (input: number) => {
   const months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
   // let hour = input % 24
-  let year = Math.floor(-5000 + input / 24 / 365)
-  let day = Math.floor(1 + input / 24 % 365)
+  const year = Math.floor(-5000 + input / 24 / 365)
+  let day = Math.floor(1 + ((input / 24) % 365))
   let month = 1
 
   for (let i = 0; i < months.length; i++) {
     if (day > months[i]) {
       day -= months[i]
       month++
-    }
-    else {
+    } else {
       break
     }
   }
-  return year + "." + month + "." + day
+  return year + '.' + month + '.' + day
 }
 
 const hexToSigned = (hex: string) => {
-  if (hex.length % 2)
-    hex = '0' + hex
+  if (hex.length % 2) hex = '0' + hex
 
   const highbyte = parseInt(hex.slice(0, 2), 16)
-  let bn = BigInt('0x' + hex);
+  let bn = BigInt('0x' + hex)
 
   if (0x80 & highbyte) {
-    bn = BigInt('0b' + bn.toString(2).split('').map(i => '0' === i ? 1 : 0).join('')) + BigInt(1)
+    bn =
+      BigInt(
+        '0b' +
+          bn
+            .toString(2)
+            .split('')
+            .map(i => ('0' === i ? 1 : 0))
+            .join('')
+      ) + BigInt(1)
     bn = -bn
   }
 
@@ -335,8 +368,7 @@ const hexToSigned = (hex: string) => {
 }
 
 const hexToUnsigned = (hex: string) => {
-  if (hex.length % 2)
-    hex = '0' + hex
+  if (hex.length % 2) hex = '0' + hex
 
   return BigInt('0x' + hex)
 }

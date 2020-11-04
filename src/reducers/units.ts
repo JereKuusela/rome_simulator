@@ -1,7 +1,15 @@
 import { UnitsData, UnitData, Countries, UnitType, CountryName } from 'types'
 import { getDefaultCountryDefinitions } from 'data'
 import * as manager from 'managers/units'
-import { ActionToFunction, makeActionReplaceFirst, makeEntityReducer, Action, makeActionReplaceFirstTwice, compose, makeReducer } from './utils'
+import {
+  ActionToFunction,
+  makeActionReplaceFirst,
+  makeEntityReducer,
+  Action,
+  makeActionReplaceFirstTwice,
+  compose,
+  makeReducer
+} from './utils'
 
 const unitsMapping: ActionToFunction<UnitsData, CountryName> = {}
 

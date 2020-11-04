@@ -1,4 +1,13 @@
-import { ValuesType, Mode, TacticType, TacticCalc, TacticDefinition, TacticValueType, UnitType, TacticDefinitions } from 'types'
+import {
+  ValuesType,
+  Mode,
+  TacticType,
+  TacticCalc,
+  TacticDefinition,
+  TacticValueType,
+  UnitType,
+  TacticDefinitions
+} from 'types'
 import { toObj } from 'utils'
 
 import * as data from './json/ir/tactics.json'
@@ -40,7 +49,11 @@ const tacticToIcon: { [key in TacticType]: string } = {
 export const getTacticIcon = (type: TacticType) => tacticToIcon[type] || ''
 
 const createTacticFromJson = (data: TacticData): TacticDefinition => {
-  let tactic: TacticDefinition = { type: data.type as TacticType, mode: data.mode as Mode, image: tacticToIcon[data.type as TacticType] || '' }
+  const tactic: TacticDefinition = {
+    type: data.type as TacticType,
+    mode: data.mode as Mode,
+    image: tacticToIcon[data.type as TacticType] || ''
+  }
   const baseValues: [TacticValueType, number][] = [
     [UnitType.Archers, data.archers || 0],
     [UnitType.CamelCavalry, data.camel_cavalry || 0],
@@ -73,19 +86,14 @@ const createTacticFromJson = (data: TacticData): TacticDefinition => {
     [TacticType.CloseRanks, data.close_ranks || 0],
     [TacticType.Harassment, data.harassment || 0],
     [TacticType.ProbingAttack, data.probing_attack || 0]
-
   ]
   return addValues(tactic, ValuesType.Base, tactic.type, baseValues)
 }
 
-
 const initializeDefaultTerrains = (): TacticDefinitions => {
-  if (process.env.REACT_APP_GAME === 'EU4')
-    return {} as TacticDefinitions
-  else
-    return toObj(data.tactics.map(createTacticFromJson), item => item.type)
+  if (process.env.REACT_APP_GAME === 'EU4') return {} as TacticDefinitions
+  else return toObj(data.tactics.map(createTacticFromJson), item => item.type)
 }
-
 
 const defaultTactics = initializeDefaultTerrains()
 

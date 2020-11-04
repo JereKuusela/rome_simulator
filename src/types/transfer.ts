@@ -10,6 +10,6 @@ export enum ExportKey {
 export type ExportKeys = { [key in ExportKey]: boolean }
 
 export type TransferState = {
-  exportKeys: ExportKeys,
+  exportKeys: ExportKeys
   resetMissing: boolean
 }

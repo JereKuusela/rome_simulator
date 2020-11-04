@@ -9,7 +9,6 @@ interface IProps {
 }
 
 export default class DetailTextRow extends Component<IProps> {
-
   render() {
     const { text, value, cells, stretch } = this.props
     return (

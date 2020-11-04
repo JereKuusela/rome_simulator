@@ -1,23 +1,40 @@
-import { TestState, initState, getUnit, testDeployment, createExpected, getSettingsTest, addToReserveTest } from './utils'
-import { UnitType, SideType, Setting} from 'types'
+import {
+  TestState,
+  initState,
+  getUnit,
+  testDeployment,
+  createExpected,
+  getSettingsTest,
+  addToReserveTest
+} from './utils'
+import { UnitType, SideType, Setting } from 'types'
 
 import { mapRange } from 'utils'
 
-
 if (process.env.REACT_APP_GAME === 'IR') {
-
   describe('initial deployment', () => {
-
     let state: TestState
-    beforeEach(() => { 
+    beforeEach(() => {
       state = initState()
       getSettingsTest(state)[Setting.Culture] = false
     })
 
     const add = (side: SideType, infantry: number, cavalry: number, artillery: number) => {
-      addToReserveTest(state, side, mapRange(infantry, () => getUnit(UnitType.Infantry)))
-      addToReserveTest(state, side, mapRange(cavalry, () => getUnit(UnitType.Cavalry)))
-      addToReserveTest(state, side, mapRange(artillery, () => getUnit(UnitType.Artillery)))
+      addToReserveTest(
+        state,
+        side,
+        mapRange(infantry, () => getUnit(UnitType.Infantry))
+      )
+      addToReserveTest(
+        state,
+        side,
+        mapRange(cavalry, () => getUnit(UnitType.Cavalry))
+      )
+      addToReserveTest(
+        state,
+        side,
+        mapRange(artillery, () => getUnit(UnitType.Artillery))
+      )
     }
 
     it('more cavalry than flank size (+ backrow flank)', () => {
@@ -73,7 +90,7 @@ if (process.env.REACT_APP_GAME === 'IR') {
       }
       testDeployment(state, attacker, defender)
     })
-    it('artillery backline doesn\'t exceend frontline', () => {
+    it("artillery backline doesn't exceend frontline", () => {
       getSettingsTest(state)[Setting.BaseCombatWidth] = 24
       add(SideType.A, 6, 0, 12)
       add(SideType.B, 2, 0, 0)

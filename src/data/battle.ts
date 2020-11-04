@@ -1,12 +1,10 @@
-import { Mode } from "types/definition"
-import { Battle, CountryName, SideType, ModeState, TerrainType, Participant, ArmyName, SideData } from "types"
-import { mapRange } from "utils"
+import { Mode } from 'types/definition'
+import { Battle, CountryName, SideType, ModeState, TerrainType, Participant, ArmyName, SideData } from 'types'
+import { mapRange } from 'utils'
 
 export const getInitialTerrains = (mode: Mode): TerrainType[] => {
-  if (mode === Mode.Naval)
-    return [TerrainType.Ocean]
-  else
-    return [TerrainType.None, process.env.REACT_APP_GAME === 'EU4' ? TerrainType.Grasslands : TerrainType.Plains]
+  if (mode === Mode.Naval) return [TerrainType.Ocean]
+  else return [TerrainType.None, process.env.REACT_APP_GAME === 'EU4' ? TerrainType.Grasslands : TerrainType.Plains]
 }
 
 export const getDefaultSide = (type: SideType, name: CountryName, mode: Mode, participants: number): SideData => {
@@ -15,7 +13,7 @@ export const getDefaultSide = (type: SideType, name: CountryName, mode: Mode, pa
     participants: mapRange(participants, () => getDefaultParticipant(name, mode)),
     days: [],
     rolls: [0],
-    dice: (process.env.REACT_APP_GAME === 'EU4' ? 5 : 3),
+    dice: process.env.REACT_APP_GAME === 'EU4' ? 5 : 3,
     randomizeDice: false
   }
 }
@@ -28,8 +26,11 @@ export const getDefaultParticipant = (name: CountryName, mode: Mode): Participan
   }
 }
 
-export const getDefaultMode = (mode: Mode, participants: number = 1): Battle => ({
-  sides: { [SideType.A]: getDefaultSide(SideType.A, CountryName.Country1, mode, participants), [SideType.B]: getDefaultSide(SideType.B, CountryName.Country2, mode, participants) },
+export const getDefaultMode = (mode: Mode, participants = 1): Battle => ({
+  sides: {
+    [SideType.A]: getDefaultSide(SideType.A, CountryName.Country1, mode, participants),
+    [SideType.B]: getDefaultSide(SideType.B, CountryName.Country2, mode, participants)
+  },
   terrains: getInitialTerrains(mode),
   fightOver: true,
   seed: 0,
@@ -39,4 +40,7 @@ export const getDefaultMode = (mode: Mode, participants: number = 1): Battle => 
   days: []
 })
 
-export const getDefaultBattle = (participants: number = 1): ModeState => ({ [Mode.Land]: getDefaultMode(Mode.Land, participants), [Mode.Naval]: getDefaultMode(Mode.Naval, participants) })
+export const getDefaultBattle = (participants = 1): ModeState => ({
+  [Mode.Land]: getDefaultMode(Mode.Land, participants),
+  [Mode.Naval]: getDefaultMode(Mode.Naval, participants)
+})

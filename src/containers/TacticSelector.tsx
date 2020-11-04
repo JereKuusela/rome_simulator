@@ -13,9 +13,7 @@ type Props = {
 class TacticSelector extends Component<IProps> {
   render() {
     const { tactic, tactics, settings } = this.props
-    return (
-      <DropdownTactic values={tactics} value={tactic} onSelect={this.selectTactic} settings={settings} />
-    )
+    return <DropdownTactic values={tactics} value={tactic} onSelect={this.selectTactic} settings={settings} />
   }
 
   selectTactic = (type: TacticType) => {

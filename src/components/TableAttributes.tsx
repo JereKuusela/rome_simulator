@@ -17,7 +17,6 @@ interface IProps<D extends DefinitionValues<T>, T extends string> {
 
 // Display component for showing and changing some country details.
 export default class TableAttributes<D extends DefinitionValues<T>, T extends string> extends Component<IProps<D, T>> {
-
   headers = ['Attribute', 'Value', 'Custom value', 'Explained']
 
   CELLS = 4
@@ -27,9 +26,7 @@ export default class TableAttributes<D extends DefinitionValues<T>, T extends st
     return (
       <Table celled unstackable>
         <Headers values={this.headers} />
-        <Table.Body>
-          {attributes.map(this.renderRow)}
-        </Table.Body>
+        <Table.Body>{attributes.map(this.renderRow)}</Table.Body>
       </Table>
     )
   }

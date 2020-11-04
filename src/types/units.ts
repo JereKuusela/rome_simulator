@@ -89,20 +89,20 @@ export type UnitValues = { [key in UnitType]: UnitValue }
 export type UnitValue = DefinitionValues<UnitValueType>
 
 export const formTerrainAttribute = (terrain: Terrain | TerrainType, attribute: UnitAttribute) => {
-  if (typeof terrain === 'object')
-    return `${terrain.type} ${attribute}` as UnitValueType
+  if (typeof terrain === 'object') return `${terrain.type} ${attribute}` as UnitValueType
   return `${terrain} ${attribute}` as UnitValueType
 }
 
 export const getTerrainAttributes = (terrains: (Terrain | TerrainType)[]) => {
-  return flatten(terrains.map(terrain => [
-    formTerrainAttribute(terrain, UnitAttribute.Damage),
-    formTerrainAttribute(terrain, UnitAttribute.Toughness),
-    formTerrainAttribute(terrain, UnitAttribute.Pursuit),
-    formTerrainAttribute(terrain, UnitAttribute.Screen)
-  ]))
+  return flatten(
+    terrains.map(terrain => [
+      formTerrainAttribute(terrain, UnitAttribute.Damage),
+      formTerrainAttribute(terrain, UnitAttribute.Toughness),
+      formTerrainAttribute(terrain, UnitAttribute.Pursuit),
+      formTerrainAttribute(terrain, UnitAttribute.Screen)
+    ])
+  )
 }
-
 
 /** A single (sub) unit definition. Used to store data but shouldn't be used for anything else. */
 export interface UnitData extends Definition<UnitType>, DefinitionValues<UnitValueType> {

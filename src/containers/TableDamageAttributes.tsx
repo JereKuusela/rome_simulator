@@ -2,7 +2,17 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table } from 'semantic-ui-react'
 
-import { SideType, CountryName, UnitAttribute, CombatPhase, GeneralDefinition, GeneralValueType, Mode, UnitType, ArmyName } from 'types'
+import {
+  SideType,
+  CountryName,
+  UnitAttribute,
+  CombatPhase,
+  GeneralDefinition,
+  GeneralValueType,
+  Mode,
+  UnitType,
+  ArmyName
+} from 'types'
 import { AppState, getGeneral, getUnitDefinition, getMode, getSiteSettings } from 'state'
 import { setGeneralAttribute } from 'reducers'
 import AttributeImage from 'components/Utils/AttributeImage'
@@ -18,7 +28,6 @@ type Props = {
 }
 
 class TableDamageAttributes extends Component<IProps> {
-
   shouldComponentUpdate(prevProps: IProps) {
     return prevProps.country !== this.props.country
   }
@@ -29,9 +38,7 @@ class TableDamageAttributes extends Component<IProps> {
       <Table celled unstackable key={side}>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>
-              {side}
-            </Table.HeaderCell>
+            <Table.HeaderCell>{side}</Table.HeaderCell>
             <Table.HeaderCell>
               <AttributeImage attribute={CombatPhase.Fire} settings={settings} />
             </Table.HeaderCell>
@@ -42,20 +49,12 @@ class TableDamageAttributes extends Component<IProps> {
         </Table.Header>
         <Table.Body>
           <Table.Row>
-            <Table.Cell>
-              General
-            </Table.Cell>
-            <Table.Cell>
-              {this.renderGeneralAttribute(general, CombatPhase.Fire)}
-            </Table.Cell>
-            <Table.Cell>
-              {this.renderGeneralAttribute(general, CombatPhase.Shock)}
-            </Table.Cell>
+            <Table.Cell>General</Table.Cell>
+            <Table.Cell>{this.renderGeneralAttribute(general, CombatPhase.Fire)}</Table.Cell>
+            <Table.Cell>{this.renderGeneralAttribute(general, CombatPhase.Shock)}</Table.Cell>
           </Table.Row>
           <Table.Row>
-            <Table.Cell>
-              Damage done
-            </Table.Cell>
+            <Table.Cell>Damage done</Table.Cell>
             <Table.Cell>
               <UnitValueInput unit={unit} attribute={UnitAttribute.FireDamageDone} country={country} percent />
             </Table.Cell>
@@ -64,9 +63,7 @@ class TableDamageAttributes extends Component<IProps> {
             </Table.Cell>
           </Table.Row>
           <Table.Row>
-            <Table.Cell>
-              Damage taken
-            </Table.Cell>
+            <Table.Cell>Damage taken</Table.Cell>
             <Table.Cell>
               <UnitValueInput unit={unit} attribute={UnitAttribute.FireDamageTaken} country={country} percent />
             </Table.Cell>
@@ -81,8 +78,13 @@ class TableDamageAttributes extends Component<IProps> {
 
   renderGeneralAttribute = (general: GeneralDefinition, attribute: GeneralValueType) => (
     <>
-      <DelayedNumericInput disabled={!general.enabled}  type='number' value={general.baseValues[attribute]} onChange={value => this.setGeneralStat(attribute, Number(value))}/>
-      {' '} <StyledNumber value={general.extraValues[attribute]} formatter={addSign} hideZero />
+      <DelayedNumericInput
+        disabled={!general.enabled}
+        type='number'
+        value={general.baseValues[attribute]}
+        onChange={value => this.setGeneralStat(attribute, Number(value))}
+      />{' '}
+      <StyledNumber value={general.extraValues[attribute]} formatter={addSign} hideZero />
     </>
   )
 
@@ -102,6 +104,6 @@ const actions = { setGeneralAttribute }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
-interface IProps extends React.PropsWithChildren<Props>, S, D { }
+interface IProps extends React.PropsWithChildren<Props>, S, D {}
 
 export default connect(mapStateToProps, actions)(TableDamageAttributes)

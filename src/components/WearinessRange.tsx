@@ -19,7 +19,6 @@ const BACK = '#FFF'
  * Allows setting min and max value for weariness (random losses).
  */
 export default class WearinessRange extends Component<IProps> {
-
   readonly headers = ['', 'Morale', 'Strength']
 
   render() {
@@ -29,18 +28,16 @@ export default class WearinessRange extends Component<IProps> {
         <Headers values={this.headers} />
         <Table.Body>
           <Table.Row>
-            <Table.Cell width='6'>
-              Weariness
-            </Table.Cell>
-            {this.renderCell(UnitAttribute.Morale, values[UnitAttribute.Morale])}  
-            {this.renderCell(UnitAttribute.Strength, values[UnitAttribute.Strength])}  
+            <Table.Cell width='6'>Weariness</Table.Cell>
+            {this.renderCell(UnitAttribute.Morale, values[UnitAttribute.Morale])}
+            {this.renderCell(UnitAttribute.Strength, values[UnitAttribute.Strength])}
           </Table.Row>
         </Table.Body>
       </Table>
     )
   }
 
-  renderCell = (type: WearinessAttribute, range: { min: number, max: number }) => {
+  renderCell = (type: WearinessAttribute, range: { min: number; max: number }) => {
     const { onChange } = this.props
     return (
       <Table.Cell width='5'>
@@ -49,7 +46,6 @@ export default class WearinessRange extends Component<IProps> {
         </Header>
         {this.renderRange(range.min, range.max, (min, max) => onChange(type, min, max))}
       </Table.Cell>
-
     )
   }
 

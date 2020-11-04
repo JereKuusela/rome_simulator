@@ -1,11 +1,42 @@
 import React, { Component } from 'react'
 import { Container, Grid, Table, Checkbox, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { AppState, getGeneralDefinition, getCountryDefinition, getSiteSettings, getCountry, getSelectedArmy } from 'state'
+import {
+  AppState,
+  getGeneralDefinition,
+  getCountryDefinition,
+  getSiteSettings,
+  getCountry,
+  getSelectedArmy
+} from 'state'
 import { mapRange, values } from '../utils'
 
-import { CultureType, CountryAttribute, GeneralAttribute, CombatPhase, GeneralValueType, filterAttributes, ListDefinition, CountryName, Setting, ArmyName, SelectionType } from 'types'
-import { clearGeneralSelections, clearCountrySelections, clearCountryAttributes, clearGeneralAttributes, setCountryAttribute, enableCountrySelection, clearCountrySelection, setGeneralAttribute, selectCulture, selectGovernment, setHasGeneral } from 'reducers'
+import {
+  CultureType,
+  CountryAttribute,
+  GeneralAttribute,
+  CombatPhase,
+  GeneralValueType,
+  filterAttributes,
+  ListDefinition,
+  CountryName,
+  Setting,
+  ArmyName,
+  SelectionType
+} from 'types'
+import {
+  clearGeneralSelections,
+  clearCountrySelections,
+  clearCountryAttributes,
+  clearGeneralAttributes,
+  setCountryAttribute,
+  enableCountrySelection,
+  clearCountrySelection,
+  setGeneralAttribute,
+  selectCulture,
+  selectGovernment,
+  setHasGeneral
+} from 'reducers'
 
 import AccordionToggle from 'containers/AccordionToggle'
 import CountryManager from 'containers/CountryManager'
@@ -22,13 +53,14 @@ const CUSTOM_KEY = 'Base'
 const CELL_PADDING = '.78571429em .78571429em'
 
 class CountriesEU4 extends Component<IProps> {
-
   render() {
     const { settings, general, country, selectedCountry, countryDefinition, setHasGeneral } = this.props
     return (
       <Container>
         <CountryManager>
-          <Button negative onClick={this.clearAll}>Clear selections</Button>
+          <Button negative onClick={this.clearAll}>
+            Clear selections
+          </Button>
         </CountryManager>
         <Grid>
           <Grid.Row columns='3'>
@@ -47,7 +79,11 @@ class CountriesEU4 extends Component<IProps> {
                   toggle
                   label='General'
                   checked={general.enabled}
-                  onChange={general.enabled ? () => this.execArmy(setHasGeneral, false) : () => this.execArmy(setHasGeneral, true)}
+                  onChange={
+                    general.enabled
+                      ? () => this.execArmy(setHasGeneral, false)
+                      : () => this.execArmy(setHasGeneral, true)
+                  }
                   style={{ float: 'right' }}
                 />
               </AccordionToggle>
@@ -57,9 +93,7 @@ class CountriesEU4 extends Component<IProps> {
             <Grid.Column>
               <AccordionToggle title='Tech' identifier='countriesTech'>
                 Tech level: <CountryValueInput country={selectedCountry} attribute={CountryAttribute.TechLevel} />
-                {
-                  this.renderTech(techEU4, country[CountryAttribute.TechLevel])
-                }
+                {this.renderTech(techEU4, country[CountryAttribute.TechLevel])}
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
@@ -80,8 +114,21 @@ class CountriesEU4 extends Component<IProps> {
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title='Attributes' identifier='countriesAttributes'>
-                <TableAttributes attributes={filterAttributes(values(CountryAttribute), settings)} customValueKey={CUSTOM_KEY} definition={countryDefinition} onChange={this.setCountryValue} />
-                <TableAttributes attributes={filterAttributes((values(GeneralAttribute) as GeneralValueType[]).concat(values(CombatPhase)), settings)} customValueKey={CUSTOM_KEY} definition={general} onChange={this.setGeneralValue} />
+                <TableAttributes
+                  attributes={filterAttributes(values(CountryAttribute), settings)}
+                  customValueKey={CUSTOM_KEY}
+                  definition={countryDefinition}
+                  onChange={this.setCountryValue}
+                />
+                <TableAttributes
+                  attributes={filterAttributes(
+                    (values(GeneralAttribute) as GeneralValueType[]).concat(values(CombatPhase)),
+                    settings
+                  )}
+                  customValueKey={CUSTOM_KEY}
+                  definition={general}
+                  onChange={this.setGeneralValue}
+                />
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
@@ -95,46 +142,45 @@ class CountriesEU4 extends Component<IProps> {
     return (
       <Table celled unstackable fixed>
         <Table.Body>
-          {
-            mapRange(rows, number => number).map(row => (
-              <Table.Row key={row}>
-                {
-                  mapRange(TECH_COLUMNS, number => number).map(column => {
-                    const index = row * TECH_COLUMNS + column
-                    const level = tech[index]
-                    const key = 'Tech' + index
-                    if (!level)
-                      return (<Table.Cell key={key}></Table.Cell>)
-                    const enabled = index <= techLevel
-                    return (
-                      <Table.Cell
-                        key={key}
-                        positive={enabled}
-                        selectable
-                        colSpan={1}
-                        onClick={
-                          enabled
-                            ? () => this.clearTech(index)
-                            : () => this.enableTech(index)
-                        }
-                        style={{ padding: CELL_PADDING }}
-                      >
-                        <ListModifier name={level.name} modifiers={level.modifiers} />
-                      </Table.Cell>
-                    )
-                  })
-                }
-              </Table.Row>
-            ))
-          }
+          {mapRange(rows, number => number).map(row => (
+            <Table.Row key={row}>
+              {mapRange(TECH_COLUMNS, number => number).map(column => {
+                const index = row * TECH_COLUMNS + column
+                const level = tech[index]
+                const key = 'Tech' + index
+                if (!level) return <Table.Cell key={key}></Table.Cell>
+                const enabled = index <= techLevel
+                return (
+                  <Table.Cell
+                    key={key}
+                    positive={enabled}
+                    selectable
+                    colSpan={1}
+                    onClick={enabled ? () => this.clearTech(index) : () => this.enableTech(index)}
+                    style={{ padding: CELL_PADDING }}
+                  >
+                    <ListModifier name={level.name} modifiers={level.modifiers} />
+                  </Table.Cell>
+                )
+              })}
+            </Table.Row>
+          ))}
         </Table.Body>
-      </Table >
+      </Table>
     )
   }
 
   /** Executes a given function with currently selected country. */
-  execCountry = <T extends any>(func: (country: CountryName, value: T, ...rest: any[]) => void, value: T, ...rest: any[]) => func(this.props.selectedCountry, value, ...rest)
-  execArmy = <T extends any>(func: (country: CountryName, army: ArmyName, value: T, ...rest: any[]) => void, value: T, ...rest: any[]) => func(this.props.selectedCountry, this.props.selectedArmy, value, ...rest)
+  execCountry = <T extends any>(
+    func: (country: CountryName, value: T, ...rest: any[]) => void,
+    value: T,
+    ...rest: any[]
+  ) => func(this.props.selectedCountry, value, ...rest)
+  execArmy = <T extends any>(
+    func: (country: CountryName, army: ArmyName, value: T, ...rest: any[]) => void,
+    value: T,
+    ...rest: any[]
+  ) => func(this.props.selectedCountry, this.props.selectedArmy, value, ...rest)
 
   /**
    * Selects culture while also re-enabling tradition.
@@ -157,7 +203,7 @@ class CountriesEU4 extends Component<IProps> {
     this.execCountry(this.props.setCountryAttribute, CountryAttribute.TechLevel, level)
   }
 
-  onCountryItemClick = (enabled: boolean) => enabled ? this.clearCountrySelection : this.enableCountrySelection
+  onCountryItemClick = (enabled: boolean) => (enabled ? this.clearCountrySelection : this.enableCountrySelection)
 
   enableCountrySelection = (type: SelectionType, key: string) => {
     const { enableCountrySelection } = this.props
@@ -168,7 +214,6 @@ class CountriesEU4 extends Component<IProps> {
     const { clearCountrySelection } = this.props
     this.execCountry(clearCountrySelection, type, key)
   }
-
 
   /**
    * Clears all selections.
@@ -181,9 +226,11 @@ class CountriesEU4 extends Component<IProps> {
     this.execArmy(this.props.setHasGeneral, true)
   }
 
-  setCountryValue = (_: string, attribute: CountryAttribute, value: number) => this.execCountry(this.props.setCountryAttribute, attribute, value)
+  setCountryValue = (_: string, attribute: CountryAttribute, value: number) =>
+    this.execCountry(this.props.setCountryAttribute, attribute, value)
 
-  setGeneralValue = (_: string, attribute: GeneralValueType, value: number) => this.execArmy(this.props.setGeneralAttribute, attribute, value)
+  setGeneralValue = (_: string, attribute: GeneralValueType, value: number) =>
+    this.execArmy(this.props.setGeneralAttribute, attribute, value)
 }
 
 const mapStateToProps = (state: AppState) => {
@@ -199,8 +246,17 @@ const mapStateToProps = (state: AppState) => {
 }
 
 const actions = {
-  setGeneralAttribute, selectCulture, setCountryAttribute, clearCountryAttributes, clearGeneralAttributes, clearGeneralSelections,
-  selectGovernment, setHasGeneral, enableCountrySelection, clearCountrySelection, clearCountrySelections
+  setGeneralAttribute,
+  selectCulture,
+  setCountryAttribute,
+  clearCountryAttributes,
+  clearGeneralAttributes,
+  clearGeneralSelections,
+  selectGovernment,
+  setHasGeneral,
+  enableCountrySelection,
+  clearCountrySelection,
+  clearCountrySelections
 }
 
 type S = ReturnType<typeof mapStateToProps>

@@ -1,9 +1,28 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { ValuesType, CountryName, UnitType, CohortDefinition, UnitRole, UnitValueType, ModalType, ArmyName } from 'types'
+import {
+  ValuesType,
+  CountryName,
+  UnitType,
+  CohortDefinition,
+  UnitRole,
+  UnitValueType,
+  ModalType,
+  ArmyName
+} from 'types'
 import UnitDetail from 'components/UnitDetail'
 import { AppState, getUnitDefinition, getTerrainTypes, getMode, getUnitTypeList, getSiteSettings } from 'state'
-import { openModal, changeUnitType, deleteUnit, setUnitValue, changeUnitImage, changeParent, changeUnitDeployment, toggleUnitLoyality, closeModal } from 'reducers'
+import {
+  openModal,
+  changeUnitType,
+  deleteUnit,
+  setUnitValue,
+  changeUnitImage,
+  changeParent,
+  changeUnitDeployment,
+  toggleUnitLoyality,
+  closeModal
+} from 'reducers'
 import BaseModal from './BaseModal'
 import { getRootParent } from 'managers/units'
 import ItemRemover from 'components/ItemRemover'
@@ -13,15 +32,10 @@ const CUSTOM_VALUE_KEY = 'Custom'
 class ModalUnitDetail extends Component<IProps> {
   render() {
     const { mode, unit, settings, remove, unitType, unitTypesWithParent, terrainTypes, unitTypes } = this.props
-    if (!unit)
-      return null
+    if (!unit) return null
     return (
       <BaseModal basic type={ModalType.UnitDetail}>
-        {
-          remove && unitType !== getRootParent(mode) ?
-            <ItemRemover onRemove={this.remove} />
-            : null
-        }
+        {remove && unitType !== getRootParent(mode) ? <ItemRemover onRemove={this.remove} /> : null}
         <UnitDetail
           mode={mode}
           settings={settings}
@@ -56,9 +70,12 @@ class ModalUnitDetail extends Component<IProps> {
     closeModal()
   }
 
-  setBaseValue = (key: string, attribute: UnitValueType, value: number) => this.setValue(ValuesType.Base, key, attribute, value)
-  setModifierValue = (key: string, attribute: UnitValueType, value: number) => this.setValue(ValuesType.Modifier, key, attribute, value)
-  setLossModifierValue = (key: string, attribute: UnitValueType, value: number) => this.setValue(ValuesType.LossModifier, key, attribute, value)
+  setBaseValue = (key: string, attribute: UnitValueType, value: number) =>
+    this.setValue(ValuesType.Base, key, attribute, value)
+  setModifierValue = (key: string, attribute: UnitValueType, value: number) =>
+    this.setValue(ValuesType.Modifier, key, attribute, value)
+  setLossModifierValue = (key: string, attribute: UnitValueType, value: number) =>
+    this.setValue(ValuesType.LossModifier, key, attribute, value)
 
   setValue = (type: ValuesType, key: string, attribute: UnitValueType, value: number) => {
     const { setUnitValue, unitType, country } = this.props
@@ -102,10 +119,20 @@ const mapStateToProps = (state: AppState) => {
   }
 }
 
-const actions = { closeModal, openModal, deleteUnit, changeUnitType, setUnitValue, changeUnitImage, changeParent, changeUnitDeployment, toggleUnitLoyality }
+const actions = {
+  closeModal,
+  openModal,
+  deleteUnit,
+  changeUnitType,
+  setUnitValue,
+  changeUnitImage,
+  changeParent,
+  changeUnitDeployment,
+  toggleUnitLoyality
+}
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
-interface IProps extends S, D { }
+interface IProps extends S, D {}
 
 export default connect(mapStateToProps, actions)(ModalUnitDetail)

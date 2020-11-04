@@ -1,9 +1,20 @@
-import { TestState, initCleanState, initExpected, getSettingsTest, createCohort, createDefeatedCohort, testCombatWithDefaultRolls, addToReserveTest, selectTacticTest, createArmyTest, setGeneralAttributeTest, getArmyTest } from './utils'
+import {
+  TestState,
+  initCleanState,
+  initExpected,
+  getSettingsTest,
+  createCohort,
+  createDefeatedCohort,
+  testCombatWithDefaultRolls,
+  addToReserveTest,
+  selectTacticTest,
+  createArmyTest,
+  setGeneralAttributeTest,
+  getArmyTest
+} from './utils'
 import { UnitType, TacticType, SideType, Setting, Mode, GeneralAttribute } from 'types'
 
-
 if (process.env.REACT_APP_GAME === 'IR') {
-
   describe('tactics', () => {
     const type = 'Type' as UnitType
     const neutralType = 'Neutral' as UnitType
@@ -17,8 +28,8 @@ if (process.env.REACT_APP_GAME === 'IR') {
       getSettingsTest(state)[Setting.Tactics] = true
       getSettingsTest(state)[Setting.DefenderAdvantage] = false
       getSettingsTest(state)[Setting.Martial] = true
-      state.settings.combatSettings[Mode.Land][Setting.MoraleLostMultiplier] = 50/3
-      state.settings.combatSettings[Mode.Land][Setting.StrengthLostMultiplier] = 50/3
+      state.settings.combatSettings[Mode.Land][Setting.MoraleLostMultiplier] = 50 / 3
+      state.settings.combatSettings[Mode.Land][Setting.StrengthLostMultiplier] = 50 / 3
     })
 
     it('mixed casualties add up correctly', () => {
@@ -35,7 +46,7 @@ if (process.env.REACT_APP_GAME === 'IR') {
     })
 
     it('tactic efficiency changes based on manpower', () => {
-      state.tactics[TacticType.ShockAction].baseValues![type] = { 'key': 1 }
+      state.tactics[TacticType.ShockAction].baseValues![type] = { key: 1 }
       selectTacticTest(state, SideType.A, TacticType.ShockAction)
       selectTacticTest(state, SideType.B, TacticType.PadmaVyuha)
       addToReserveTest(state, SideType.A, [cohort, neutralCohort])
@@ -55,7 +66,7 @@ if (process.env.REACT_APP_GAME === 'IR') {
     })
 
     it('retreated armies have no effect on efficiency', () => {
-      state.tactics[TacticType.ShockAction].baseValues![type] = { 'key': 1 }
+      state.tactics[TacticType.ShockAction].baseValues![type] = { key: 1 }
       createArmyTest(state, SideType.A, 1)
       selectTacticTest(state, SideType.A, TacticType.ShockAction)
       selectTacticTest(state, SideType.A, TacticType.ShockAction, 1)
@@ -75,7 +86,7 @@ if (process.env.REACT_APP_GAME === 'IR') {
     })
 
     it('incoming armies have no effect on efficiency', () => {
-      state.tactics[TacticType.ShockAction].baseValues![type] = { 'key': 1 }
+      state.tactics[TacticType.ShockAction].baseValues![type] = { key: 1 }
       createArmyTest(state, SideType.A, 2)
       selectTacticTest(state, SideType.A, TacticType.ShockAction)
       selectTacticTest(state, SideType.A, TacticType.ShockAction, 1)
@@ -92,7 +103,7 @@ if (process.env.REACT_APP_GAME === 'IR') {
     })
 
     it('tactic changes when a stronger general joins', () => {
-      state.tactics[TacticType.ShockAction].baseValues![type] = { 'key': 1 }
+      state.tactics[TacticType.ShockAction].baseValues![type] = { key: 1 }
       createArmyTest(state, SideType.A, 2)
       selectTacticTest(state, SideType.A, TacticType.Bottleneck)
       selectTacticTest(state, SideType.A, TacticType.ShockAction, 1)

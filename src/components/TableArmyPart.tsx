@@ -48,7 +48,11 @@ export default class TableArmyPart extends Component<IProps, IState> {
   }
 
   shouldComponentUpdate(prevProps: IProps, prevState: IState) {
-    return prevProps.timestamp !== this.props.timestamp || prevState.tooltipRow !== this.state.tooltipRow || prevState.tooltipColumn !== this.state.tooltipColumn
+    return (
+      prevProps.timestamp !== this.props.timestamp ||
+      prevState.tooltipRow !== this.state.tooltipRow ||
+      prevState.tooltipColumn !== this.state.tooltipColumn
+    )
   }
 
   render() {
@@ -57,46 +61,46 @@ export default class TableArmyPart extends Component<IProps, IState> {
     let cohorts = this.props.cohorts
     let indexOffset = 0
     cohorts = flatten(cohorts.map(arr => chunk(arr, rowWidth)))
-    if (!cohorts.length)
-      cohorts.push([])
+    if (!cohorts.length) cohorts.push([])
     if (fullRows) {
       cohorts = cohorts.map(arr => resize(arr, rowWidth, null))
-
     } else {
       // For display purposes, smaller combat width turns extra slots grey instead of removing them.
       const filler = Math.max(0, rowWidth - cohorts[0].length)
-      const leftFiller = indexOffset = Math.ceil(filler / 2.0)
+      const leftFiller = (indexOffset = Math.ceil(filler / 2.0))
       const rightFiller = Math.floor(filler / 2.0)
-      cohorts = cohorts.map(row => Array(leftFiller).fill(undefined).concat(row).concat(Array(rightFiller).fill(undefined)))
+      cohorts = cohorts.map(row =>
+        Array(leftFiller).fill(undefined).concat(row).concat(Array(rightFiller).fill(undefined))
+      )
     }
-    if (reverse)
-      cohorts.reverse()
+    if (reverse) cohorts.reverse()
     return (
       <>
-        <CombatTooltip row={tooltipRow} column={tooltipColumn} context={tooltipContext} isSupport={tooltipIsSupport} side={side} part={part} />
+        <CombatTooltip
+          row={tooltipRow}
+          column={tooltipColumn}
+          context={tooltipContext}
+          isSupport={tooltipIsSupport}
+          side={side}
+          part={part}
+        />
         <Table compact celled definition unstackable>
           <Table.Body>
-            {
-              cohorts.map((row, rowIndex) => {
-                rowIndex = reverse ? cohorts.length - 1 - rowIndex : rowIndex
-                return (
-                  < Table.Row key={rowIndex} textAlign='center' >
-                    <Table.Cell>
-                      <Icon fitted size='small' name={this.getIcon()} style={{ color: this.props.color }}></Icon>
-                    </Table.Cell>
-                    {
-                      row.map((cohort, columnIndex) => {
-                        columnIndex -= indexOffset
-                        if (part === ArmyPart.Frontline)
-                          return this.renderCell(rowIndex, columnIndex, cohort, rowIndex > 0)
-                        else
-                          return this.renderCell(0, rowIndex * rowWidth + columnIndex, cohort, rowIndex > 0)
-                      })
-                    }
-                  </Table.Row>
-                )
-              })
-            }
+            {cohorts.map((row, rowIndex) => {
+              rowIndex = reverse ? cohorts.length - 1 - rowIndex : rowIndex
+              return (
+                <Table.Row key={rowIndex} textAlign='center'>
+                  <Table.Cell>
+                    <Icon fitted size='small' name={this.getIcon()} style={{ color: this.props.color }}></Icon>
+                  </Table.Cell>
+                  {row.map((cohort, columnIndex) => {
+                    columnIndex -= indexOffset
+                    if (part === ArmyPart.Frontline) return this.renderCell(rowIndex, columnIndex, cohort, rowIndex > 0)
+                    else return this.renderCell(0, rowIndex * rowWidth + columnIndex, cohort, rowIndex > 0)
+                  })}
+                </Table.Row>
+              )
+            })}
           </Table.Body>
         </Table>
       </>
@@ -114,9 +118,24 @@ export default class TableArmyPart extends Component<IProps, IState> {
         disabled={filler || !cohort}
         selectable={!!onClick}
         style={{ backgroundColor: filler ? '#DDDDDD' : 'white', padding: 0 }}
-        onClick={() => cohort && onClick(side, cohort.participantIndex, cohort.index, cohort.countryName, cohort.armyName)}
-        onMouseOver={(e: React.MouseEvent) => cohort && this.setState({ tooltipRow: row, tooltipColumn: column, tooltipContext: e.currentTarget as HTMLElement, tooltipIsSupport: isSupport })}
-        onMouseLeave={() => cohort && this.state.tooltipRow === row && this.state.tooltipColumn === column && this.setState({ tooltipRow: null, tooltipColumn: null, tooltipContext: null })}
+        onClick={() =>
+          cohort && onClick(side, cohort.participantIndex, cohort.index, cohort.countryName, cohort.armyName)
+        }
+        onMouseOver={(e: React.MouseEvent) =>
+          cohort &&
+          this.setState({
+            tooltipRow: row,
+            tooltipColumn: column,
+            tooltipContext: e.currentTarget as HTMLElement,
+            tooltipIsSupport: isSupport
+          })
+        }
+        onMouseLeave={() =>
+          cohort &&
+          this.state.tooltipRow === row &&
+          this.state.tooltipColumn === column &&
+          this.setState({ tooltipRow: null, tooltipColumn: null, tooltipContext: null })
+        }
         onContextMenu={(e: any) => e.preventDefault() || onDeleteCohort(cohort)}
       >
         <Cell
@@ -133,14 +152,10 @@ export default class TableArmyPart extends Component<IProps, IState> {
 
   getIcon = () => {
     const { part: type, reverse } = this.props
-    if (type === ArmyPart.Frontline)
-      return reverse ? 'arrow down' : 'arrow up'
-    if (type === ArmyPart.Reserve)
-      return 'home'
-    if (type === ArmyPart.Defeated)
-      return 'heartbeat'
-    if (type === ArmyPart.Retreated)
-      return 'trash'
+    if (type === ArmyPart.Frontline) return reverse ? 'arrow down' : 'arrow up'
+    if (type === ArmyPart.Reserve) return 'home'
+    if (type === ArmyPart.Defeated) return 'heartbeat'
+    if (type === ArmyPart.Retreated) return 'trash'
     return 'square full'
   }
 }
@@ -156,13 +171,10 @@ type CellProps = {
 
 /** Sub-component to hopefully help with performance (easier to prevent renders). */
 class Cell extends PureComponent<CellProps> {
-
   render() {
     const { strength, maxStrength, morale, maxMorale, isDefeated, image } = this.props
-    if (!image)
-      return this.renderImage(getImage(null))
-    if (isDefeated)
-      return this.renderImage(IconDefeated)
+    if (!image) return this.renderImage(getImage(null))
+    if (isDefeated) return this.renderImage(IconDefeated)
     return (
       <div style={{ background: this.gradient(MANPOWER_COLOR, strength, maxStrength) }}>
         <div style={{ background: this.gradient(MORALE_COLOR, morale, maxMorale) }}>
@@ -174,11 +186,22 @@ class Cell extends PureComponent<CellProps> {
 
   renderImage = (image: string) => <Image src={image} avatar style={{ margin: 0 }} />
 
-  gradient = (color: string, current: number, max: number) => (
-    'linear-gradient(0deg, ' + color + ' 0%, ' + color + ' ' + this.percent(current, max) + '%, ' + WHITE_COLOR + ' ' + this.percent(current, max) + '%, ' + WHITE_COLOR + ' 100%)'
-  )
+  gradient = (color: string, current: number, max: number) =>
+    'linear-gradient(0deg, ' +
+    color +
+    ' 0%, ' +
+    color +
+    ' ' +
+    this.percent(current, max) +
+    '%, ' +
+    WHITE_COLOR +
+    ' ' +
+    this.percent(current, max) +
+    '%, ' +
+    WHITE_COLOR +
+    ' 100%)'
 
-  percent = (current: number, max: number) => 100.0 - 100.0 * current / max
+  percent = (current: number, max: number) => 100.0 - (100.0 * current) / max
 }
 
 export type ICohort = {
@@ -193,4 +216,3 @@ export type ICohort = {
   morale: number
   strength: number
 } | null
-

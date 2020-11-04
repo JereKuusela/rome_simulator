@@ -11,14 +11,17 @@ interface IProps {
 }
 
 export default class DropdownArchetype extends Component<IProps> {
-
-  getContent = (unit: UnitDefinition) => ([
+  getContent = (unit: UnitDefinition) => [
     unit.type,
     unit.tech ?? '',
     calculateValue(unit, UnitAttribute.OffensiveFirePips) + '/' + calculateValue(unit, UnitAttribute.DefensiveFirePips),
-    calculateValue(unit, UnitAttribute.OffensiveShockPips) + '/' + calculateValue(unit, UnitAttribute.DefensiveShockPips),
-    calculateValue(unit, UnitAttribute.OffensiveMoralePips) + '/' + calculateValue(unit, UnitAttribute.DefensiveMoralePips)
-  ])
+    calculateValue(unit, UnitAttribute.OffensiveShockPips) +
+      '/' +
+      calculateValue(unit, UnitAttribute.DefensiveShockPips),
+    calculateValue(unit, UnitAttribute.OffensiveMoralePips) +
+      '/' +
+      calculateValue(unit, UnitAttribute.DefensiveMoralePips)
+  ]
 
   isActive = (item: UnitDefinition) => item.type === this.props.value
 
@@ -31,7 +34,9 @@ export default class DropdownArchetype extends Component<IProps> {
   render() {
     const { value, values, onSelect, settings } = this.props
     return (
-      <DropdownTable value={value} values={values}
+      <DropdownTable
+        value={value}
+        values={values}
         headers={this.headers}
         getContent={this.getContent}
         isActive={this.isActive}

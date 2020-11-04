@@ -1,5 +1,5 @@
-import { TerrainValueType, ValuesType, Terrain, LocationType, Mode, TerrainDefinitions, TerrainType } from "types"
-import { addValuesWithMutate } from "definition_values"
+import { TerrainValueType, ValuesType, Terrain, LocationType, Mode, TerrainDefinitions, TerrainType } from 'types'
+import { addValuesWithMutate } from 'definition_values'
 
 export const setTerrainValue = (terrain: Terrain, key: string, attribute: TerrainValueType, value: number) => {
   addValuesWithMutate(terrain, ValuesType.Base, key, [[attribute, value]])

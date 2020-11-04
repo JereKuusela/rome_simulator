@@ -1,7 +1,14 @@
 import * as manager from 'managers/countries'
 import { Countries, CountryDefinition, CountryName } from 'types'
 import { getDefaultCountryDefinitions } from 'data'
-import { makeContainerReducer, ActionToFunction, makeActionRemoveFirst, makeEntityReducer, compose, makeActionReplaceFirst } from './utils'
+import {
+  makeContainerReducer,
+  ActionToFunction,
+  makeActionRemoveFirst,
+  makeEntityReducer,
+  compose,
+  makeActionReplaceFirst
+} from './utils'
 
 const countriesMapping: ActionToFunction<Countries> = {}
 

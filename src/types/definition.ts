@@ -1,4 +1,3 @@
-
 export enum ValuesType {
   Base = 'Base',
   Modifier = 'Modifier',

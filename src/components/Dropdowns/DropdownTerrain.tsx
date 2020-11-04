@@ -14,27 +14,24 @@ type IProps = {
 }
 
 export default class DropdownTerrain extends Component<IProps> {
-
-  getContent = (terrain: Terrain) => ([
+  getContent = (terrain: Terrain) => [
     <LabelItem item={terrain} />,
-    <StyledNumber
-      value={calculateValue(terrain, TerrainCalc.Roll)}
-      formatter={addSign}
-    />
-  ])
+    <StyledNumber value={calculateValue(terrain, TerrainCalc.Roll)} formatter={addSign} />
+  ]
 
   isActive = (item: Terrain) => item.type === this.props.value
 
   getValue = (item: Terrain) => item.type
   getText = (item: Terrain) => item.type
 
-
   headers = ['Terrain', 'Attacker roll']
 
   render() {
     const { value, values, onSelect, settings } = this.props
     return (
-      <DropdownTable value={value} values={values}
+      <DropdownTable
+        value={value}
+        values={values}
         headers={this.headers}
         getContent={this.getContent}
         onSelect={onSelect}

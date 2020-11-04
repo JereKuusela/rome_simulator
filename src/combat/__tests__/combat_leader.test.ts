@@ -1,10 +1,22 @@
-import { TestState, initCleanState, initExpected, getSettingsTest, createCohort, testCombatWithDefaultRolls, addToReserveTest, createArmyTest, setGeneralAttributeTest, getArmyTest, Expected, createDefeatedCohort, createStrongCohort, selectTerrainTest } from './utils'
+import {
+  TestState,
+  initCleanState,
+  initExpected,
+  getSettingsTest,
+  createCohort,
+  testCombatWithDefaultRolls,
+  addToReserveTest,
+  createArmyTest,
+  setGeneralAttributeTest,
+  getArmyTest,
+  Expected,
+  createDefeatedCohort,
+  createStrongCohort,
+  selectTerrainTest
+} from './utils'
 import { UnitType, SideType, Setting, GeneralAttribute, CombatPhase } from 'types'
 
-
-
 if (process.env.REACT_APP_GAME === 'IR') {
-
   describe('leaders', () => {
     const cohort = createCohort('Type' as UnitType)
     const strongCohort = createStrongCohort('Strong' as UnitType)
@@ -62,9 +74,9 @@ if (process.env.REACT_APP_GAME === 'IR') {
       setGeneralAttributeTest(state, SideType.A, CombatPhase.Shock, 1, 1)
     })
 
-    it('retreated leader won\'t join the battle again', () => {
-      cohort.baseValues![CombatPhase.Fire] = { 'key': 1 }
-      strongCohort.baseValues![CombatPhase.Fire] = { 'key': 1 }
+    it("retreated leader won't join the battle again", () => {
+      cohort.baseValues![CombatPhase.Fire] = { key: 1 }
+      strongCohort.baseValues![CombatPhase.Fire] = { key: 1 }
       createArmyTest(state, SideType.A, 2)
       addToReserveTest(state, SideType.A, [strongCohort], 1)
       addToReserveTest(state, SideType.B, [strongCohort])

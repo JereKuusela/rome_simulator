@@ -16,15 +16,17 @@ interface IProps<T, S> {
 }
 
 interface IState<T, S> {
-  value: T,
+  value: T
   selected: S
 }
 
 /**
  * Component for choosing a dropdown value in a modal.
  */
-export default class ValueDropdownModal<T extends string, S extends string> extends Component<IProps<T, S>, IState<T, S>> {
-
+export default class ValueDropdownModal<T extends string, S extends string> extends Component<
+  IProps<T, S>,
+  IState<T, S>
+> {
   constructor(props: IProps<T, S>) {
     super(props)
     this.state = { value: this.props.value, selected: this.props.selected }
@@ -47,9 +49,7 @@ export default class ValueDropdownModal<T extends string, S extends string> exte
                 />
               </Grid.Column>
               <Grid.Column>
-                {
-                  dropdownLabel
-                }
+                {dropdownLabel}
                 <SimpleDropdown
                   value={selected}
                   values={items}
@@ -72,8 +72,7 @@ export default class ValueDropdownModal<T extends string, S extends string> exte
   onSuccess = () => {
     const { onSuccess, onClose } = this.props
     const { value, selected } = this.state
-    if (value)
-      onSuccess(value, selected)
+    if (value) onSuccess(value, selected)
     onClose()
   }
 }

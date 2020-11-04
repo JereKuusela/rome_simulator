@@ -17,7 +17,6 @@ import { AppState, getMode, getTacticDefinitions, getUnitImages, mergeUnitTypes 
  * Shows tactic definitions for both sides.
  */
 class TacticDefinitions extends Component<IProps> {
-
   readonly headers = ['Tactic', 'Unit effectiveness', 'Against other tactics', 'Casualties']
 
   render() {
@@ -25,9 +24,7 @@ class TacticDefinitions extends Component<IProps> {
       <>
         <Table celled selectable unstackable>
           <Headers values={this.headers} />
-          <Table.Body>
-            {this.props.tactics.map(this.renderRow)}
-          </Table.Body>
+          <Table.Body>{this.props.tactics.map(this.renderRow)}</Table.Body>
         </Table>
         <Button primary onClick={this.onClick}>
           Create new
@@ -36,12 +33,13 @@ class TacticDefinitions extends Component<IProps> {
     )
   }
 
-  onClick = () => this.props.openModal(ModalType.Value, {
-    onSuccess: type => this.props.createTactic(type as TacticType, this.props.mode),
-    message: 'New tactic type',
-    buttonMessage: 'Create',
-    initial: ''
-  })
+  onClick = () =>
+    this.props.openModal(ModalType.Value, {
+      onSuccess: type => this.props.createTactic(type as TacticType, this.props.mode),
+      message: 'New tactic type',
+      buttonMessage: 'Create',
+      initial: ''
+    })
 
   renderRow = (definition: TacticDefinition) => {
     const { images, unitTypes } = this.props
@@ -52,21 +50,17 @@ class TacticDefinitions extends Component<IProps> {
           {definition.type}
         </Table.Cell>
         <Table.Cell>
-          <VersusList
-            item={definition}
-            images={images}
-            unitTypes={unitTypes}
-          />
+          <VersusList item={definition} images={images} unitTypes={unitTypes} />
         </Table.Cell>
         <Table.Cell singleLine>
-          <List horizontal>
-            {this.renderVersus(definition)}
-          </List>
+          <List horizontal>{this.renderVersus(definition)}</List>
         </Table.Cell>
         <Table.Cell>
           <StyledNumber
             value={calculateValue(definition, TacticCalc.Casualties)}
-            formatter={toSignedPercent} hideZero reverse
+            formatter={toSignedPercent}
+            hideZero
+            reverse
           />
         </Table.Cell>
       </Table.Row>
@@ -78,10 +72,7 @@ class TacticDefinitions extends Component<IProps> {
     return filtered.map(versus => (
       <List.Item key={versus.type} style={{ marginLeft: 0, marginRight: '1em' }}>
         <Image src={getImage(versus)} avatar />
-        <StyledNumber
-          value={calculateValue(definition, versus.type)}
-          formatter={toSignedPercent}
-        />
+        <StyledNumber value={calculateValue(definition, versus.type)} formatter={toSignedPercent} />
       </List.Item>
     ))
   }
@@ -97,7 +88,8 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const actions = {
-  openModal, createTactic
+  openModal,
+  createTactic
 }
 
 type S = ReturnType<typeof mapStateToProps>

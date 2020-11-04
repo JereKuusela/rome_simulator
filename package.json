@@ -37,9 +37,6 @@
     "convert_ir": "node scripts/conversion/ir/index.js",
     "convert_ck3": "node scripts/conversion/ck3/index.js"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -66,12 +63,18 @@
     "@types/react-router-dom": "^5.1.5",
     "@types/redux-logger": "^3.0.8",
     "@types/victory": "^33.1.4",
+    "@typescript-eslint/eslint-plugin": "^4.6.1",
+    "@typescript-eslint/parser": "^4.6.1",
     "cross-env": "^7.0.2",
+    "eslint": "^7.12.1",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "jest-raw-loader": "^1.0.1",
-    "react-scripts": "^3.4.3",
+    "prettier": "^2.1.2",
+    "react-scripts": "^4.0.0",
     "redux-devtools-extension": "^2.13.8",
     "ts-essentials": "^7.0.0",
-    "typescript": "^4.0.2"
+    "typescript": "^4.0.5"
   },
   "jest": {
     "transform": {

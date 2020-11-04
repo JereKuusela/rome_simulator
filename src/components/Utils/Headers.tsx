@@ -9,21 +9,14 @@ interface IProps {
  * Creates a table row with a fixed amount of cells.
  */
 export default class Headers extends Component<IProps> {
-
   render() {
     const { values } = this.props
     return (
       <Table.Header>
-        <Table.Row>
-          {values.map(this.renderHeader)}
-        </Table.Row>
+        <Table.Row>{values.map(this.renderHeader)}</Table.Row>
       </Table.Header>
     )
   }
 
-  renderHeader = (value: string, index: number) => (
-    <Table.HeaderCell key={index}>
-      {value}
-    </Table.HeaderCell>
-  )
+  renderHeader = (value: string, index: number) => <Table.HeaderCell key={index}>{value}</Table.HeaderCell>
 }

@@ -3,7 +3,7 @@ import { Dropdown } from 'semantic-ui-react'
 
 interface IProps<T extends string | number> {
   value: T
-  values: ({ value: T, text: string } | T)[]
+  values: ({ value: T; text: string } | T)[]
   onChange?: (value: T) => void
   clearable?: boolean
   onAdd?: (value: T) => void
@@ -12,17 +12,12 @@ interface IProps<T extends string | number> {
   placeholder?: string
 }
 
-
 export default class SimpleDropdown<T extends string | number> extends Component<IProps<T>> {
-
-  getOptions = () => (
+  getOptions = () =>
     this.props.values.map(item => {
-      if (typeof item === 'object')
-        return { key: item.value, value: item.value, text: item.text }
-      else
-        return { key: item, value: item, text: item }
+      if (typeof item === 'object') return { key: item.value, value: item.value, text: item.text }
+      else return { key: item, value: item, text: item }
     })
-  )
 
   render() {
     const { value, clearable, onChange, onAdd, search, placeholder } = this.props

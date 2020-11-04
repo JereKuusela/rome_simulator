@@ -6,12 +6,13 @@ interface IProps {
 }
 
 export default class Images extends Component<IProps> {
-
   render() {
     const { values } = this.props
     return (
       <>
-        {values.map(image => <Image key={image} src={image} avatar />)}
+        {values.map(image => (
+          <Image key={image} src={image} avatar />
+        ))}
       </>
     )
   }

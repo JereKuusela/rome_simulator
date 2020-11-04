@@ -1,6 +1,16 @@
 import React, { Component } from 'react'
 import { Image, Popup, Header } from 'semantic-ui-react'
-import { UnitAttribute, Mode, CombatPhase, CountryAttribute, SiteSettings, isAttributeEnabled, Setting, DisciplineValue, GeneralAttribute } from 'types'
+import {
+  UnitAttribute,
+  Mode,
+  CombatPhase,
+  CountryAttribute,
+  SiteSettings,
+  isAttributeEnabled,
+  Setting,
+  DisciplineValue,
+  GeneralAttribute
+} from 'types'
 
 import IconDiscipline from 'images/discipline.png'
 import IconOffense from 'images/offense.png'
@@ -104,8 +114,7 @@ const getText = (attribute: string) => {
 }
 
 const getExplanation = (attribute: string, settings?: SiteSettings, mode?: Mode) => {
-  if (settings && !isAttributeEnabled(attribute, settings))
-    return 'This attribute is currently disabled'
+  if (settings && !isAttributeEnabled(attribute, settings)) return 'This attribute is currently disabled'
   switch (attribute) {
     case UnitAttribute.AttritionWeight:
       return 'Required supply'
@@ -117,7 +126,9 @@ const getExplanation = (attribute: string, settings?: SiteSettings, mode?: Mode)
     case CombatPhase.Shock:
       return attribute
     case UnitAttribute.Discipline:
-      return settings && settings[Setting.AttributeDiscipline] === DisciplineValue.Both ? 'Increases damage done and reduces damage taken' : 'Increases damage'
+      return settings && settings[Setting.AttributeDiscipline] === DisciplineValue.Both
+        ? 'Increases damage done and reduces damage taken'
+        : 'Increases damage'
     default:
       return null
   }
@@ -127,7 +138,6 @@ const getExplanation = (attribute: string, settings?: SiteSettings, mode?: Mode)
  * Helper component for showing images of atributes.
  */
 export default class AttributeImage extends Component<IProps> {
-
   render() {
     const { attribute, settings, mode } = this.props
     const first = getFirstImage(attribute, mode)
@@ -142,7 +152,7 @@ export default class AttributeImage extends Component<IProps> {
                 {first && <Image src={first} avatar />}
                 {second && <Image src={second} avatar />}
                 {!first && !second && getText(attribute)}
-              </ span>
+              </span>
             }
             content={this.getContent()}
             basic
@@ -157,9 +167,8 @@ export default class AttributeImage extends Component<IProps> {
         {first && <Image src={first} avatar />}
         {second && <Image src={second} avatar />}
         {!first && !second && getText(attribute)}
-      </ span>
+      </span>
     )
-
   }
 
   getContent = () => {
@@ -168,7 +177,9 @@ export default class AttributeImage extends Component<IProps> {
     if (attribute === explanation) {
       return (
         <span>
-          <Header sub style={{ margin: 0 }}>{getText(attribute)}</Header>
+          <Header sub style={{ margin: 0 }}>
+            {getText(attribute)}
+          </Header>
         </span>
       )
     }
@@ -179,5 +190,4 @@ export default class AttributeImage extends Component<IProps> {
       </span>
     )
   }
-
 }

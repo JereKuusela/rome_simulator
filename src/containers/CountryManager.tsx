@@ -6,7 +6,17 @@ import { AppState, getArmies, getMode } from 'state'
 import { Grid, Button } from 'semantic-ui-react'
 import { CountryName, ModalType, ArmyName } from 'types'
 import { keys } from 'utils'
-import { createCountry, changeCountryName, deleteCountry, createArmy, changeArmyName, deleteArmy, selectCountry, selectArmy, openModal } from 'reducers'
+import {
+  createCountry,
+  changeCountryName,
+  deleteCountry,
+  createArmy,
+  changeArmyName,
+  deleteArmy,
+  selectCountry,
+  selectArmy,
+  openModal
+} from 'reducers'
 
 interface IState {
   openCreateCountry: boolean
@@ -14,7 +24,6 @@ interface IState {
 }
 
 class CountryManager extends Component<IProps, IState> {
-
   constructor(props: IProps) {
     super(props)
     this.state = this.initialState
@@ -53,40 +62,30 @@ class CountryManager extends Component<IProps, IState> {
         />
         <Grid.Row columns='5'>
           <Grid.Column>
-            <SimpleDropdown
-              values={keys(countries)}
-              value={selectedCountry}
-              onChange={name => selectCountry(name)}
-            />
+            <SimpleDropdown values={keys(countries)} value={selectedCountry} onChange={name => selectCountry(name)} />
           </Grid.Column>
           <Grid.Column>
             <Button primary onClick={() => this.setState({ openCreateCountry: true })}>
               New country
             </Button>
           </Grid.Column>
-          {
-            selectedCountry &&
+          {selectedCountry && (
             <Grid.Column>
               <Button primary onClick={this.openEditCountry}>
                 Rename country
               </Button>
             </Grid.Column>
-          }
-          {
-            selectedCountry &&
+          )}
+          {selectedCountry && (
             <Grid.Column>
               <Button primary onClick={this.deleteCountry}>
                 Delete country
               </Button>
             </Grid.Column>
-          }
-          {
-            React.Children.map(children, elem => (
-              <Grid.Column>
-                {elem}
-              </Grid.Column>
-            ))
-          }
+          )}
+          {React.Children.map(children, elem => (
+            <Grid.Column>{elem}</Grid.Column>
+          ))}
         </Grid.Row>
         <Grid.Row columns='5'>
           <Grid.Column>
@@ -116,19 +115,21 @@ class CountryManager extends Component<IProps, IState> {
     )
   }
 
-  openEditCountry = () => this.props.openModal(ModalType.Value, {
-    onSuccess: country => this.changeCountryName(country as CountryName),
-    message: 'Rename country',
-    buttonMessage: 'Edit',
-    initial: this.props.selectedCountry
-  })
+  openEditCountry = () =>
+    this.props.openModal(ModalType.Value, {
+      onSuccess: country => this.changeCountryName(country as CountryName),
+      message: 'Rename country',
+      buttonMessage: 'Edit',
+      initial: this.props.selectedCountry
+    })
 
-  openEditArmy = () => this.props.openModal(ModalType.Value, {
-    onSuccess: army => this.changeArmyName(army as ArmyName),
-    message: 'Rename army',
-    buttonMessage: 'Edit',
-    initial: this.props.armies[this.props.selectedArmy]
-  })
+  openEditArmy = () =>
+    this.props.openModal(ModalType.Value, {
+      onSuccess: army => this.changeArmyName(army as ArmyName),
+      message: 'Rename army',
+      buttonMessage: 'Edit',
+      initial: this.props.armies[this.props.selectedArmy]
+    })
 
   onClose = () => this.setState(this.initialState)
 
@@ -176,10 +177,20 @@ const mapStateToProps = (state: AppState) => ({
   mode: getMode(state)
 })
 
-const actions = { selectCountry, createCountry, changeCountryName, deleteCountry, openModal, selectArmy, deleteArmy, changeArmyName, createArmy }
+const actions = {
+  selectCountry,
+  createCountry,
+  changeCountryName,
+  deleteCountry,
+  openModal,
+  selectArmy,
+  deleteArmy,
+  changeArmyName,
+  createArmy
+}
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
-interface IProps extends React.PropsWithChildren<{}>, S, D { }
+interface IProps extends React.PropsWithChildren<S>, D {}
 
 export default connect(mapStateToProps, actions)(CountryManager)

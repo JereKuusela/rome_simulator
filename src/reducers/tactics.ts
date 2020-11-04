@@ -1,7 +1,14 @@
 import { getDefaultTacticState } from 'data'
 import { TacticDefinitions, TacticDefinition, TacticType } from 'types'
 import * as manager from 'managers/tactics'
-import { makeActionRemoveFirst, makeContainerReducer, ActionToFunction, makeActionReplaceFirst, makeEntityReducer, compose } from './utils'
+import {
+  makeActionRemoveFirst,
+  makeContainerReducer,
+  ActionToFunction,
+  makeActionReplaceFirst,
+  makeEntityReducer,
+  compose
+} from './utils'
 
 const tacticsMapping: ActionToFunction<TacticDefinitions> = {}
 

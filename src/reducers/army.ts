@@ -1,4 +1,3 @@
-
 import { ArmyData, CountryName, Countries } from 'types'
 import { ArmyName } from 'types/armies'
 import * as manager from 'managers/army'

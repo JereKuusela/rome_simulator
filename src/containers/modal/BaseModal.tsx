@@ -12,7 +12,6 @@ type Props = {
 }
 
 class BaseModal extends Component<IProps> {
-
   shouldComponentUpdate(prevProps: IProps) {
     return !(!this.props.visible && !prevProps.visible)
   }
@@ -20,11 +19,9 @@ class BaseModal extends Component<IProps> {
   render() {
     const { basic, visible, children, closeModal, header } = this.props
     return (
-      <Modal basic={basic} onClose={() => closeModal()} open={visible} centered={false} >
+      <Modal basic={basic} onClose={() => closeModal()} open={visible} centered={false}>
         {header && <Modal.Header>{header}</Modal.Header>}
-        <Modal.Content>
-          {children}
-        </Modal.Content>
+        <Modal.Content>{children}</Modal.Content>
       </Modal>
     )
   }
@@ -38,6 +35,6 @@ const actions = { closeModal }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
-interface IProps extends React.PropsWithChildren<Props>, S, D { }
+interface IProps extends React.PropsWithChildren<Props>, S, D {}
 
 export default connect(mapStateToProps, actions)(BaseModal)

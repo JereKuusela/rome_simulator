@@ -11,7 +11,6 @@ import { values, getImage } from 'utils'
 import { getValue, calculateValue, explainShort } from 'definition_values'
 import { toSignedPercent, toPercent } from 'formatters'
 
-
 interface IProps {
   tactics: TacticDefinition[]
   tactic: TacticDefinition
@@ -28,7 +27,6 @@ interface IProps {
  * Shows and allows changing tactic properties.
  */
 export default class TacticDetail extends Component<IProps> {
-
   readonly attributes = values(TacticCalc)
   readonly modes = values(Mode)
   readonly headers = ['Attribute', 'Value', 'Custom value', 'Explained']
@@ -45,9 +43,7 @@ export default class TacticDetail extends Component<IProps> {
           <DetailInputRow text='Name' value={type} onChange={onTypeChange} cells={this.CELLS} />
           <DetailDropdownRow text='Mode' value={mode} values={this.modes} onChange={onModeChange} cells={this.CELLS} />
           <DetailInputRow text='Image' value={image} onChange={onImageChange} cells={this.CELLS} />
-          {
-            unitTypes.map(type => this.renderRow(tactic, type, false, images[type]))
-          }
+          {unitTypes.map(type => this.renderRow(tactic, type, false, images[type]))}
           {tactics.map(value => this.renderRow(tactic, value.type, true, [getImage(value)]))}
           {this.attributes.map(value => this.renderRow(tactic, value, true, [getImage(null)]))}
         </Table.Body>
@@ -66,15 +62,14 @@ export default class TacticDetail extends Component<IProps> {
           <Images values={images} />
           {attribute}
         </Table.Cell>
+        <Table.Cell collapsing>{relative ? toSignedPercent(value) : toPercent(value)}</Table.Cell>
         <Table.Cell collapsing>
-          {relative ? toSignedPercent(value) : toPercent(value)}
+          <Input
+            value={String(baseValue)}
+            onChange={value => onCustomValueChange(customValueKey, attribute, Number(value))}
+          />
         </Table.Cell>
-        <Table.Cell collapsing>
-          <Input value={String(baseValue)} onChange={value => onCustomValueChange(customValueKey, attribute, Number(value))} />
-        </Table.Cell>
-        <Table.Cell>
-          {explainShort(tactic, attribute)}
-        </Table.Cell>
+        <Table.Cell>{explainShort(tactic, attribute)}</Table.Cell>
       </Table.Row>
     )
   }

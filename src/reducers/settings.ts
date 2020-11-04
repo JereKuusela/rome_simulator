@@ -1,4 +1,3 @@
-
 import * as manager from 'managers/settings'
 import { makeActionRemoveFirst, makeContainerReducer, ActionToFunction } from './utils'
 import { SettingsAndOptions } from 'types'

@@ -1,4 +1,14 @@
-import { ArmyName, CountryName, CultureType, GovermentType, Mode, TacticType, UnitAttribute, UnitPreferences, UnitType } from "types"
+import {
+  ArmyName,
+  CountryName,
+  CultureType,
+  GovermentType,
+  Mode,
+  TacticType,
+  UnitAttribute,
+  UnitPreferences,
+  UnitType
+} from 'types'
 import { laws } from 'data'
 
 export type SaveCountry = {
@@ -146,11 +156,7 @@ type SaveDataArmy = {
   }
 }
 
-type ElementType<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<
-  infer ElementType
->
-  ? ElementType
-  : never
+type ElementType<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<infer ElementType> ? ElementType : never
 
 type SaveDataCountry = { [key in ElementType<typeof laws>]: string } & {
   laws?: number[]
@@ -208,8 +214,8 @@ type SaveDataWar = {
 
 export type Save = { [key: string]: any } & {
   jobs?: {
-    office_job: SaveJob[],
-    techoffice_job: SaveJob[],
+    office_job: SaveJob[]
+    techoffice_job: SaveJob[]
     province_job: SaveJob[]
   }
   character?: {
@@ -224,17 +230,17 @@ export type Save = { [key: string]: any } & {
     units_database: { [key: number]: SaveDataArmy }
   }
   deity_manager?: {
-    deities_database: { [key: number]: { deity: string, key: string } }
+    deities_database: { [key: number]: { deity: string; key: string } }
   }
   country?: {
     country_database: { [key: number]: SaveDataCountry }
-  },
+  }
   played_country?: {
     country: number
-  }[],
+  }[]
   diplomacy?: {
     database: { [key: number]: SaveDataWar }
-  },
+  }
   population?: {
     population: { [key: number]: SavePop }
   }

@@ -8,9 +8,7 @@ interface IProps {
   disabled?: boolean
 }
 
-
 export default class DetailValueInput extends Component<IProps> {
-
   render() {
     const { value, onChange, disabled } = this.props
     return (

@@ -1,7 +1,18 @@
+import {
+  Mode,
+  ArmyData,
+  TacticType,
+  UnitPreferences,
+  UnitPreferenceType,
+  UnitType,
+  Armies,
+  ArmyName,
+  UnitRole,
+  Selections
+} from 'types'
 
-import { Mode, ArmyData, TacticType, UnitPreferences, UnitPreferenceType, UnitType, Armies, ArmyName, UnitRole, Selections } from 'types'
-
-const getDefaultTactic = (mode: Mode): TacticType => mode === Mode.Land ? TacticType.Deception : TacticType.FrontalAssault
+const getDefaultTactic = (mode: Mode): TacticType =>
+  mode === Mode.Land ? TacticType.Deception : TacticType.FrontalAssault
 
 const getDefaultUnitPreferences = (mode: Mode): UnitPreferences => {
   if (process.env.REACT_APP_GAME === 'EU4') {
@@ -17,8 +28,7 @@ const getDefaultUnitPreferences = (mode: Mode): UnitPreferences => {
       [UnitPreferenceType.Secondary]: UnitType.MegaPolyreme,
       [UnitPreferenceType.Flank]: UnitType.MegaPolyreme
     } as UnitPreferences
-  }
-  else {
+  } else {
     return {
       [UnitPreferenceType.Primary]: UnitType.Archers,
       [UnitPreferenceType.Secondary]: UnitType.HeavyInfantry,
@@ -40,8 +50,7 @@ const initializeDefaultArmy = (mode: Mode): ArmyData => ({
   mode
 })
 
-
-export const getDefaultArmyName = (mode: Mode): ArmyName => mode === Mode.Land ? ArmyName.Army : ArmyName.Navy
+export const getDefaultArmyName = (mode: Mode): ArmyName => (mode === Mode.Land ? ArmyName.Army : ArmyName.Navy)
 
 export const getDefaultArmy = (mode: Mode): ArmyData => initializeDefaultArmy(mode)
 

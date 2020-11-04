@@ -1,4 +1,15 @@
-import { TestState, initExpected, getSettingsTest, addToReserveTest, createArmyTest, testCombatWithDefaultRolls, createCohort, createWeakCohort, initCleanState, createFlankingCohort } from './utils'
+import {
+  TestState,
+  initExpected,
+  getSettingsTest,
+  addToReserveTest,
+  createArmyTest,
+  testCombatWithDefaultRolls,
+  createCohort,
+  createWeakCohort,
+  initCleanState,
+  createFlankingCohort
+} from './utils'
 import { UnitType, Setting, SideType, UnitAttribute } from 'types'
 
 describe('targeting', () => {
@@ -7,7 +18,7 @@ describe('targeting', () => {
   const flankingCohort = createFlankingCohort('Flanking' as UnitType)
 
   let state: TestState
-  beforeEach(() => state = initCleanState())
+  beforeEach(() => (state = initCleanState()))
 
   it('main and flanks (Imperator targeting)', () => {
     getSettingsTest(state)[Setting.FixFlankTargeting] = true
@@ -115,7 +126,7 @@ describe('targeting', () => {
     testCombatWithDefaultRolls(state, expected)
   })
 
-  it('reinforcement with defender\'s advantage', () => {
+  it("reinforcement with defender's advantage", () => {
     getSettingsTest(state)[Setting.BaseCombatWidth] = 1
     getSettingsTest(state)[Setting.DefenderAdvantage] = true
     addToReserveTest(state, SideType.A, [cohort])
@@ -136,17 +147,15 @@ describe('targeting', () => {
 
   const strengthBasedFlank = (amount: number, target: number) => {
     getSettingsTest(state)[Setting.StrengthBasedFlank] = true
-    flankingCohort.baseValues![UnitAttribute.Strength] = { 'key': amount }
-    flankingCohort.baseValues![UnitAttribute.Morale] = { 'key': 10 }
+    flankingCohort.baseValues![UnitAttribute.Strength] = { key: amount }
+    flankingCohort.baseValues![UnitAttribute.Morale] = { key: 10 }
     addToReserveTest(state, SideType.A, [flankingCohort, flankingCohort, flankingCohort])
     addToReserveTest(state, SideType.B, Array(30).fill(weakCohort))
 
     const expected = initExpected(2)
     expected[2].A.targeting = [target, 26, 25]
-    if (target === 25)
-      expected[2].B.defeated = [weakCohort, weakCohort, weakCohort, weakCohort, weakCohort]
-    else
-      expected[2].B.defeated = [weakCohort, weakCohort, weakCohort, weakCohort, weakCohort, weakCohort]
+    if (target === 25) expected[2].B.defeated = [weakCohort, weakCohort, weakCohort, weakCohort, weakCohort]
+    else expected[2].B.defeated = [weakCohort, weakCohort, weakCohort, weakCohort, weakCohort, weakCohort]
 
     testCombatWithDefaultRolls(state, expected)
   }

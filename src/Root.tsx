@@ -17,7 +17,6 @@ import ExportTool from 'pages/ExportTool'
 import { Container } from 'semantic-ui-react'
 import Modals from 'pages/Modals'
 
-
 // Any additional component props go here.
 interface MainProps {
   store: Store<AppState>
@@ -31,8 +30,8 @@ const Root = ({ store, persistor }: MainProps) => {
       <PersistGate loading={null} persistor={persistor}>
         <Error>
           <BrowserRouter>
-            <Container style={{width: 1280}}>
-              <Modals/>
+            <Container style={{ width: 1280 }}>
+              <Modals />
               <Route path='/' component={Navigation} />
               <Route path='/' exact component={Battle} />
               <Route path='/Definitions' component={Definitions} />

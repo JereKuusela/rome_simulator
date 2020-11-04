@@ -9,13 +9,10 @@ type Props = {
  * Generic tooltip.
  */
 export default class Tooltip extends Component<Props> {
-
   render() {
     return (
       <Popup
-        trigger={
-          this.props.children
-        }
+        trigger={this.props.children}
         content={this.props.getContent()}
         basic
         wide

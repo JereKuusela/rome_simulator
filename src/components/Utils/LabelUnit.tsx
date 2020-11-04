@@ -1,5 +1,3 @@
-
-
 import React, { Component } from 'react'
 import { Image } from 'semantic-ui-react'
 import { getImage } from 'utils'
@@ -13,11 +11,9 @@ interface IProps {
 }
 
 export default class LabelItem extends Component<IProps> {
-
   render() {
     const { item } = this.props
-    if (!item)
-      return null
+    if (!item) return null
     return (
       <>
         {item.tech}

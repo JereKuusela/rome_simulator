@@ -1,5 +1,15 @@
-
-import { Mode, CombatSettings, Setting, SiteSettings, SimulationSpeed, CountryName, SettingsAndOptions, DisciplineValue, SupportDeployValue, CounteringMode } from 'types'
+import {
+  Mode,
+  CombatSettings,
+  Setting,
+  SiteSettings,
+  SimulationSpeed,
+  CountryName,
+  SettingsAndOptions,
+  DisciplineValue,
+  SupportDeployValue,
+  CounteringMode
+} from 'types'
 import { getConfig } from './config'
 
 export const getDefaultSettings = (): SettingsAndOptions => ({
@@ -17,8 +27,7 @@ export const getDefaultLandSettings = (): CombatSettings => {
       [Setting.MoraleLostMultiplier]: 25 / 2.7,
       [Setting.StackWipeCaptureChance]: 0
     }
-  }
-  else {
+  } else {
     return {
       [Setting.StrengthLostMultiplier]: getConfig().Land.StrengthDamage,
       [Setting.MoraleLostMultiplier]: getConfig().Land.MoraleDamage,
@@ -34,8 +43,7 @@ export const getDefaultNavalSettings = (): CombatSettings => {
       [Setting.MoraleLostMultiplier]: 25 / 2.7,
       [Setting.StackWipeCaptureChance]: 0
     }
-  }
-  else {
+  } else {
     return {
       [Setting.StrengthLostMultiplier]: getConfig().Naval.StrengthDamage,
       [Setting.MoraleLostMultiplier]: getConfig().Naval.MoraleDamage,
@@ -104,7 +112,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.Food]: false,
       [Setting.Precision]: 3,
       [Setting.AutoRefresh]: true,
-      [Setting.MoraleDamageBasedOnTargetStrength]: false, 
+      [Setting.MoraleDamageBasedOnTargetStrength]: false,
       [Setting.DamageLossForMissingMorale]: 0,
       // Analyze
       [Setting.Performance]: SimulationSpeed.Fast,
@@ -117,8 +125,7 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.CalculateResourceLosses]: true,
       [Setting.ShowGraphs]: false
     }
-  }
-  else {
+  } else {
     return {
       [Setting.GlobalTargeting]: false,
       [Setting.MaxCountering]: 100,
@@ -186,24 +193,25 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.Culture]: false,
       [Setting.Food]: true,
       [Setting.AutoRefresh]: true,
-      [Setting.MoraleDamageBasedOnTargetStrength]: false, 
-      [Setting.DamageLossForMissingMorale]: 0,
+      [Setting.MoraleDamageBasedOnTargetStrength]: false,
+      [Setting.DamageLossForMissingMorale]: 0
     }
   }
 }
 
-export const speedValues: { [key: string]: number[] } = process.env.REACT_APP_GAME === 'EU4' ?
-  {
-    [SimulationSpeed.VeryAccurate]: [1, 10, 0],
-    [SimulationSpeed.Accurate]: [1, 10, 1],
-    [SimulationSpeed.Normal]: [2, 10, 1],
-    [SimulationSpeed.Fast]: [2, 10, 2],
-    [SimulationSpeed.VeryFast]: [2, 10, 3]
-  } :
-  {
-    [SimulationSpeed.VeryAccurate]: [1, 6, 0],
-    [SimulationSpeed.Accurate]: [1, 6, 0],
-    [SimulationSpeed.Normal]: [2, 6, 0],
-    [SimulationSpeed.Fast]: [2, 6, 1],
-    [SimulationSpeed.VeryFast]: [2, 6, 2]
-  }
+export const speedValues: { [key: string]: number[] } =
+  process.env.REACT_APP_GAME === 'EU4'
+    ? {
+        [SimulationSpeed.VeryAccurate]: [1, 10, 0],
+        [SimulationSpeed.Accurate]: [1, 10, 1],
+        [SimulationSpeed.Normal]: [2, 10, 1],
+        [SimulationSpeed.Fast]: [2, 10, 2],
+        [SimulationSpeed.VeryFast]: [2, 10, 3]
+      }
+    : {
+        [SimulationSpeed.VeryAccurate]: [1, 6, 0],
+        [SimulationSpeed.Accurate]: [1, 6, 0],
+        [SimulationSpeed.Normal]: [2, 6, 0],
+        [SimulationSpeed.Fast]: [2, 6, 1],
+        [SimulationSpeed.VeryFast]: [2, 6, 2]
+      }

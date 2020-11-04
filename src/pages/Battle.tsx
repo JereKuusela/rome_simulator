@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Button, Grid, Header, Checkbox } from 'semantic-ui-react'
@@ -10,8 +9,17 @@ import TargetArrows from 'containers/TargetArrows'
 import TerrainSelector from 'containers/TerrainSelector'
 import WinRate from 'containers/WinRate'
 import {
-  selectParticipantCountry, setDice, toggleRandomDice, clearCohorts, changeSiteParameter,
-  undo, battle, refreshBattle, resetState, selectCulture, openModal
+  selectParticipantCountry,
+  setDice,
+  toggleRandomDice,
+  clearCohorts,
+  changeSiteParameter,
+  undo,
+  battle,
+  refreshBattle,
+  resetState,
+  selectCulture,
+  openModal
 } from 'reducers'
 import { AppState, getBattle, getSettings, getParticipantSafely } from 'state'
 import { ArmyPart, CountryName, Setting, SideType, CombatPhase, UnitType, ModalType, ArmyName } from 'types'
@@ -27,13 +35,18 @@ const ATTACKER_COLOR = '#FFAA00AA'
 const DEFENDER_COLOR = '#00AAFFAA'
 
 class Battle extends Component<IProps> {
-
   componentDidMount() {
     // Ensures that the setup is not outdated.
     this.props.refreshBattle()
   }
 
-  openCohortModal = (side: SideType, participantIndex: number, index: number, country: CountryName, army: ArmyName): void => {
+  openCohortModal = (
+    side: SideType,
+    participantIndex: number,
+    index: number,
+    country: CountryName,
+    army: ArmyName
+  ): void => {
     this.props.openModal(ModalType.CohortDetail, { side, country, army, index, participantIndex })
   }
 
@@ -43,14 +56,22 @@ class Battle extends Component<IProps> {
 
   componentDidUpdate() {
     const { outdated, refreshBattle, settings, round } = this.props
-    if (outdated && (settings[Setting.AutoRefresh] || round < 0))
-      refreshBattle()
+    if (outdated && (settings[Setting.AutoRefresh] || round < 0)) refreshBattle()
   }
 
   render() {
-    const { participantA, participantB, round, isUndoAvailable, fightOver, settings, timestamp, day, changeSiteParameter } = this.props
-    if (!timestamp)
-      return null
+    const {
+      participantA,
+      participantB,
+      round,
+      isUndoAvailable,
+      fightOver,
+      settings,
+      timestamp,
+      day,
+      changeSiteParameter
+    } = this.props
+    if (!timestamp) return null
     return (
       <>
         <Grid verticalAlign='middle'>
@@ -69,19 +90,42 @@ class Battle extends Component<IProps> {
               <WinRate />
             </Grid.Column>
             <Grid.Column floated='right' textAlign='right' width='4'>
-              <Button circular icon='angle double left' color='black' size='huge' disabled={!isUndoAvailable} onClick={() => this.undo(10)} />
-              <Button circular icon='angle left' color='black' size='huge' disabled={!isUndoAvailable} onClick={() => this.undo(1)} />
-              <Button circular icon='angle right' color='black' size='huge' disabled={fightOver} onClick={() => this.battle(1)} />
-              <Button circular icon='angle double right' color='black' size='huge' disabled={fightOver} onClick={() => this.battle(10)} />
+              <Button
+                circular
+                icon='angle double left'
+                color='black'
+                size='huge'
+                disabled={!isUndoAvailable}
+                onClick={() => this.undo(10)}
+              />
+              <Button
+                circular
+                icon='angle left'
+                color='black'
+                size='huge'
+                disabled={!isUndoAvailable}
+                onClick={() => this.undo(1)}
+              />
+              <Button
+                circular
+                icon='angle right'
+                color='black'
+                size='huge'
+                disabled={fightOver}
+                onClick={() => this.battle(1)}
+              />
+              <Button
+                circular
+                icon='angle double right'
+                color='black'
+                size='huge'
+                disabled={fightOver}
+                onClick={() => this.battle(10)}
+              />
             </Grid.Column>
-
           </Grid.Row>
           <Grid.Row columns={1}>
-            <Grid.Column>
-              {
-                this.renderFrontline(SideType.A)
-              }
-            </Grid.Column>
+            <Grid.Column>{this.renderFrontline(SideType.A)}</Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1} style={{ padding: 0 }}>
             <Grid.Column>
@@ -94,11 +138,7 @@ class Battle extends Component<IProps> {
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>
-            <Grid.Column>
-              {
-                this.renderFrontline(SideType.B)
-              }
-            </Grid.Column>
+            <Grid.Column>{this.renderFrontline(SideType.B)}</Grid.Column>
           </Grid.Row>
           <Grid.Row columns={2}>
             <Grid.Column>
@@ -109,7 +149,8 @@ class Battle extends Component<IProps> {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-        <br /><br />
+        <br />
+        <br />
         <AccordionToggle title='Setup' identifier='BattleSetup' open>
           <Grid>
             <Grid.Row columns={2}>
@@ -123,37 +164,53 @@ class Battle extends Component<IProps> {
             <Grid.Row columns={2}>
               <Grid.Column>
                 <ParticipantSelector side={SideType.A} />
-                <TableUnitTypes side={SideType.A} countryName={participantA.countryName} armyName={participantA.armyName} onRowClick={this.openUnitDetails} />
+                <TableUnitTypes
+                  side={SideType.A}
+                  countryName={participantA.countryName}
+                  armyName={participantA.armyName}
+                  onRowClick={this.openUnitDetails}
+                />
               </Grid.Column>
               <Grid.Column>
                 <ParticipantSelector side={SideType.B} />
-                <TableUnitTypes side={SideType.B} countryName={participantB.countryName} armyName={participantB.armyName} onRowClick={this.openUnitDetails} />
+                <TableUnitTypes
+                  side={SideType.B}
+                  countryName={participantB.countryName}
+                  armyName={participantB.armyName}
+                  onRowClick={this.openUnitDetails}
+                />
               </Grid.Column>
             </Grid.Row>
-            {
-              settings[Setting.FireAndShock] &&
+            {settings[Setting.FireAndShock] && (
               <Grid.Row columns={2}>
                 <Grid.Column>
-                  <TableDamageAttributes side={SideType.A} country={participantA.countryName} army={participantA.armyName} />
+                  <TableDamageAttributes
+                    side={SideType.A}
+                    country={participantA.countryName}
+                    army={participantA.armyName}
+                  />
                 </Grid.Column>
                 <Grid.Column>
-                  <TableDamageAttributes side={SideType.B} country={participantB.countryName} army={participantB.armyName} />
+                  <TableDamageAttributes
+                    side={SideType.B}
+                    country={participantB.countryName}
+                    army={participantB.armyName}
+                  />
                 </Grid.Column>
               </Grid.Row>
-
-            }
+            )}
             <Grid.Row columns={1}>
               <Grid.Column>
                 <TerrainSelector />
               </Grid.Column>
             </Grid.Row>
-            {settings[Setting.CustomDeployment] &&
+            {settings[Setting.CustomDeployment] && (
               <Grid.Row columns={1}>
                 <Grid.Column>
                   <PreferredUnitTypes />
                 </Grid.Column>
               </Grid.Row>
-            }
+            )}
           </Grid>
           <br />
         </AccordionToggle>
@@ -166,7 +223,8 @@ class Battle extends Component<IProps> {
               </Grid.Column>
             </Grid.Row>
           </Grid>
-          <br /><br />
+          <br />
+          <br />
         </AccordionToggle>
         <br />
         <AccordionToggle title='Reserve & Defeated' identifier='Reserve'>
@@ -178,7 +236,8 @@ class Battle extends Component<IProps> {
             {this.renderRetreatedCohorts(SideType.A)}
             {this.renderRetreatedCohorts(SideType.B)}
           </Grid>
-          <br /><br />
+          <br />
+          <br />
         </AccordionToggle>
         <br />
         <Grid>
@@ -192,7 +251,7 @@ class Battle extends Component<IProps> {
               </Button>
             </Grid.Column>
           </Grid.Row>
-        </Grid >
+        </Grid>
       </>
     )
   }
@@ -200,16 +259,11 @@ class Battle extends Component<IProps> {
   roundName = (day: number, round: number, fightOver: boolean, phase: CombatPhase): string => {
     const dayStr = day === round ? '' : ', Day ' + day
     let roundStr = ''
-    if (fightOver)
-      roundStr = 'Fight over'
-    else if (day === 0 || round === 0)
-      roundStr = 'Deployment'
-    else if (round === -1)
-      roundStr = 'Waiting for enemies'
-    else if (phase !== CombatPhase.Default)
-      roundStr = 'Round ' + String(round) + ' (' + phase + ')'
-    else
-      roundStr = 'Round ' + String(round)
+    if (fightOver) roundStr = 'Fight over'
+    else if (day === 0 || round === 0) roundStr = 'Deployment'
+    else if (round === -1) roundStr = 'Waiting for enemies'
+    else if (phase !== CombatPhase.Default) roundStr = 'Round ' + String(round) + ' (' + phase + ')'
+    else roundStr = 'Round ' + String(round)
     return roundStr + dayStr
   }
 
@@ -280,14 +334,12 @@ class Battle extends Component<IProps> {
   undo = (rounds: number) => {
     const { undo, outdated, refreshBattle } = this.props
     undo(rounds)
-    if (outdated)
-      refreshBattle()
+    if (outdated) refreshBattle()
   }
 
   battle = (rounds: number) => {
     const { battle, outdated, refreshBattle } = this.props
-    if (outdated)
-      refreshBattle()
+    if (outdated) refreshBattle()
     battle(rounds)
   }
 }
@@ -309,10 +361,22 @@ const mapStateToProps = (state: AppState) => {
   }
 }
 
-const actions = { openModal, changeSiteParameter, battle, undo, toggleRandomDice, setDice, selectParticipantCountry, refreshBattle, resetState, selectCulture, clearCohorts }
+const actions = {
+  openModal,
+  changeSiteParameter,
+  battle,
+  undo,
+  toggleRandomDice,
+  setDice,
+  selectParticipantCountry,
+  refreshBattle,
+  resetState,
+  selectCulture,
+  clearCohorts
+}
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
-interface IProps extends S, D { }
+interface IProps extends S, D {}
 
 export default connect(mapStateToProps, actions)(Battle)

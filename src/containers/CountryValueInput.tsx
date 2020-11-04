@@ -13,16 +13,14 @@ type Props = {
   percent?: boolean
 }
 
-/** 
+/**
  * Custom numeric input for setting attribute values for a country.
  */
 class CountryValueInput extends Component<IProps> {
   render() {
     const { attribute, percent, definition } = this.props
     const value = calculateBase(definition, attribute)
-    return (
-      <DelayedNumericInput value={value} onChange={this.onChange} percent={percent} />
-    )
+    return <DelayedNumericInput value={value} onChange={this.onChange} percent={percent} />
   }
   onChange = (value: number) => {
     const { definition, attribute, setCountryAttribute, country } = this.props
@@ -39,6 +37,6 @@ const actions = { setCountryAttribute }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
-interface IProps extends React.PropsWithChildren<Props>, S, D { }
+interface IProps extends React.PropsWithChildren<Props>, S, D {}
 
 export default connect(mapStateToProps, actions)(CountryValueInput)

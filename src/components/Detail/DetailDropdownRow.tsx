@@ -12,7 +12,6 @@ interface IProps<T extends string> {
 }
 
 export default class DetailDropdownRow<T extends string> extends Component<IProps<T>> {
-
   render() {
     const { text, value, values, onChange, cells, stretch } = this.props
     return (

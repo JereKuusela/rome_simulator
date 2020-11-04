@@ -2,7 +2,17 @@ import React, { Component } from 'react'
 import { Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
-import { AppState, mergeUnitTypes, getTerrainTypes, getUnitImages, getMode, getCountries, getSiteSettings, getUnitDefinitions, getSelectedArmy } from 'state'
+import {
+  AppState,
+  mergeUnitTypes,
+  getTerrainTypes,
+  getUnitImages,
+  getMode,
+  getCountries,
+  getSiteSettings,
+  getUnitDefinitions,
+  getSelectedArmy
+} from 'state'
 import { createUnit, deleteUnit, changeUnitType, changeWeariness, openModal } from 'reducers'
 import UnitDefinitions from 'components/UnitDefinitions'
 import CountryManager from 'containers/CountryManager'
@@ -19,7 +29,6 @@ interface IState {
 }
 
 class Definitions extends Component<IProps, IState> {
-
   constructor(props: IProps) {
     super(props)
     this.state = this.initialState
@@ -35,7 +44,7 @@ class Definitions extends Component<IProps, IState> {
           <CountryManager>
             <Button primary onClick={() => this.setState({ openCreateUnit: true })}>
               New unit
-          </Button>
+            </Button>
           </CountryManager>
           <br />
           <UnitDefinitions
@@ -52,31 +61,34 @@ class Definitions extends Component<IProps, IState> {
             values={weariness}
             onChange={(type, min, max) => this.props.changeWeariness(country, type, min, max)}
           />
-          <br /><br />
+          <br />
+          <br />
         </AccordionToggle>
         <br />
         <AccordionToggle identifier='definitionTerrains' title='Terrains'>
           <TerrainDefinitions />
-          <br /><br />
+          <br />
+          <br />
         </AccordionToggle>
         <br />
-        {
-          settings[Setting.Tactics] &&
+        {settings[Setting.Tactics] && (
           <AccordionToggle identifier='definitionTactics' title='Tactics'>
             <TacticDefinitions />
-            <br /><br />
+            <br />
+            <br />
           </AccordionToggle>
-        }
+        )}
       </>
     )
   }
 
-  onClick = () => this.props.openModal(ModalType.Value, {
-    onSuccess: type => this.props.createUnit(this.props.country, this.props.mode, type as UnitType),
-    message: 'New unit type',
-    buttonMessage: 'Create',
-    initial: ''
-  })
+  onClick = () =>
+    this.props.openModal(ModalType.Value, {
+      onSuccess: type => this.props.createUnit(this.props.country, this.props.mode, type as UnitType),
+      message: 'New unit type',
+      buttonMessage: 'Create',
+      initial: ''
+    })
 }
 
 const mapStateToProps = (state: AppState) => ({
@@ -92,7 +104,11 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const actions = {
-  openModal, deleteUnit, createUnit, changeUnitType, changeWeariness
+  openModal,
+  deleteUnit,
+  createUnit,
+  changeUnitType,
+  changeWeariness
 }
 
 type S = ReturnType<typeof mapStateToProps>

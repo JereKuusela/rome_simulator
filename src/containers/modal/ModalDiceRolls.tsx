@@ -14,27 +14,21 @@ class ModalDiceRolls extends Component<IProps> {
       <BaseModal type={ModalType.DiceRolls}>
         <Grid>
           <Grid.Row columns='2'>
-            <Grid.Column>
-              {this.renderIsRollRandom()}
-            </Grid.Column>
-            <Grid.Column>
-              {this.renderSeed()}
-            </Grid.Column>
+            <Grid.Column>{this.renderIsRollRandom()}</Grid.Column>
+            <Grid.Column>{this.renderSeed()}</Grid.Column>
           </Grid.Row>
           <Grid.Row>
             <Header>Custom rolls (overrides randomization)</Header>
             {this.renderCustomRolls()}
           </Grid.Row>
         </Grid>
-      </BaseModal >
+      </BaseModal>
     )
   }
 
   renderIsRollRandom = () => {
     const { side, isRandom, toggleRandomDice } = this.props
-    return (
-      <Checkbox label={'Randomize rolls'} toggle checked={isRandom} onClick={() => toggleRandomDice(side)} />
-    )
+    return <Checkbox label={'Randomize rolls'} toggle checked={isRandom} onClick={() => toggleRandomDice(side)} />
   }
 
   renderCustomRolls = () => {
@@ -43,29 +37,26 @@ class ModalDiceRolls extends Component<IProps> {
     return (
       <Table celled fixed>
         <Table.Body>
-          {
-            mapRange(rows, row => (
-              <Table.Row key={row}>
-                {
-                  mapRange(4, column => {
-                    const phase = row * 4 + column
-                    if (phase >= rolls.length)
-                      return (<Table.Cell key={phase}></Table.Cell>)
-                    return (
-                      <Table.Cell key={phase}>
-                        Phase {phase + 1}
-                        <span style={{ paddingLeft: '1em' }}>
-                          <DelayedNumericInput delay={0} value={rolls[phase]}
-                            onChange={value => setPhaseDice(side, phase, value)}
-                          />
-                        </span>
-                      </Table.Cell>
-                    )
-                  })
-                }
-              </Table.Row>
-            ))
-          }
+          {mapRange(rows, row => (
+            <Table.Row key={row}>
+              {mapRange(4, column => {
+                const phase = row * 4 + column
+                if (phase >= rolls.length) return <Table.Cell key={phase}></Table.Cell>
+                return (
+                  <Table.Cell key={phase}>
+                    Phase {phase + 1}
+                    <span style={{ paddingLeft: '1em' }}>
+                      <DelayedNumericInput
+                        delay={0}
+                        value={rolls[phase]}
+                        onChange={value => setPhaseDice(side, phase, value)}
+                      />
+                    </span>
+                  </Table.Cell>
+                )
+              })}
+            </Table.Row>
+          ))}
         </Table.Body>
       </Table>
     )
@@ -73,15 +64,18 @@ class ModalDiceRolls extends Component<IProps> {
 
   renderSeed = () => {
     return (
-      <Input type='number' value={this.props.seed} label='Seed for random generator' onChange={(_, { value }) => this.setSeed(value)} />
+      <Input
+        type='number'
+        value={this.props.seed}
+        label='Seed for random generator'
+        onChange={(_, { value }) => this.setSeed(value)}
+      />
     )
   }
 
   setSeed = (value: string): void => {
-    if (!isNaN(Number(value)))
-      this.props.setSeed(Number(value))
+    if (!isNaN(Number(value))) this.props.setSeed(Number(value))
   }
-
 }
 
 const mapStateToProps = (state: AppState) => {
@@ -108,6 +102,6 @@ const actions = { setPhaseDice, toggleRandomDice, setSeed }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
-interface IProps extends S, D { }
+interface IProps extends S, D {}
 
 export default connect(mapStateToProps, actions)(ModalDiceRolls)

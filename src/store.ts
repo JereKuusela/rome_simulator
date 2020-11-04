@@ -1,18 +1,25 @@
 import { createStore } from 'redux'
 import { devToolsEnhancer } from 'redux-devtools-extension'
-import { rootReducer, restoreDefaultTactics, restoreDefaultTerrains, restoreDefaultUnits, stripRounds, restoreDefaultSettings } from 'state'
-import { persistStore, persistReducer, createTransform, createMigrate } from 'redux-persist'
+import {
+  rootReducer,
+  restoreDefaultTactics,
+  restoreDefaultTerrains,
+  restoreDefaultUnits,
+  stripRounds,
+  restoreDefaultSettings
+} from 'state'
+import { persistStore, persistReducer, createTransform, createMigrate, Persistor } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import { map } from 'utils'
 
 const TacticsTransform = createTransform(
-  (inboundState) => inboundState,
+  inboundState => inboundState,
   (outboundState: any) => restoreDefaultTactics(outboundState),
   { whitelist: ['tactics'] }
 )
 
 const TerrainsTransform = createTransform(
-  (inboundState) => inboundState,
+  inboundState => inboundState,
   (outboundState: any) => restoreDefaultTerrains(outboundState),
   { whitelist: ['terrains'] }
 )
@@ -25,8 +32,9 @@ const BattleTransform = createTransform(
 
 const CountriesTransform = createTransform(
   (inboundState: any) => inboundState,
-  (outboundState: any) => map(outboundState, (country: any) => ({...country, units: restoreDefaultUnits(country.units) })),
-{ whitelist: ['countries'] }
+  (outboundState: any) =>
+    map(outboundState, (country: any) => ({ ...country, units: restoreDefaultUnits(country.units) })),
+  { whitelist: ['countries'] }
 )
 
 const SettingsTransform = createTransform(
@@ -62,10 +70,8 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
-export default function configureStore() {
-  const store = createStore(
-    persistedReducer, devToolsEnhancer({})
-  )
-  let persistor = persistStore(store)
+export default function configureStore(): { store: any; persistor: Persistor } {
+  const store = createStore(persistedReducer, devToolsEnhancer({}))
+  const persistor = persistStore(store)
   return { store, persistor }
 }

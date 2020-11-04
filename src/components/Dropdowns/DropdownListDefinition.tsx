@@ -12,14 +12,10 @@ type IProps = {
 }
 
 export default class DropdownListDefinition extends Component<IProps> {
-
-  getContent = (item: ListDefinition, search: string) => (item.name.toLowerCase().includes(search.toLowerCase()) ? [
-    item.name,
-    <ListModifier
-      name={null}
-      modifiers={item.modifiers}
-    />
-  ] : null)
+  getContent = (item: ListDefinition, search: string) =>
+    item.name.toLowerCase().includes(search.toLowerCase())
+      ? [item.name, <ListModifier name={null} modifiers={item.modifiers} />]
+      : null
 
   isActive = (item: ListDefinition) => item.key === this.props.value
 
@@ -32,7 +28,9 @@ export default class DropdownListDefinition extends Component<IProps> {
   render() {
     const { value, values, onSelect, settings, type } = this.props
     return (
-      <DropdownTable value={value} values={values}
+      <DropdownTable
+        value={value}
+        values={values}
         headers={this.getHeaders()}
         getContent={this.getContent}
         isActive={this.isActive}

@@ -29,7 +29,6 @@ type IState = {
 }
 
 export default class DropdownTable<T extends string, E> extends Component<IProps<T, E>, IState> {
-
   constructor(props: IProps<T, E>) {
     super(props)
     this.state = { search: '', open: false }
@@ -38,7 +37,11 @@ export default class DropdownTable<T extends string, E> extends Component<IProps
   getHeader = () => (
     <Table.Header>
       <Table.Row>
-        {this.props.headers.map(header => <Table.HeaderCell key={header}><AttributeImage attribute={header} settings={this.props.settings} /></Table.HeaderCell>)}
+        {this.props.headers.map(header => (
+          <Table.HeaderCell key={header}>
+            <AttributeImage attribute={header} settings={this.props.settings} />
+          </Table.HeaderCell>
+        ))}
       </Table.Row>
     </Table.Header>
   )
@@ -51,11 +54,18 @@ export default class DropdownTable<T extends string, E> extends Component<IProps
   getContent = (item: E, index: number) => {
     const { getContent, isPositive, isNegative, isActive } = this.props
     const content = getContent(item, this.state.search)
-    if (!content)
-      return null
+    if (!content) return null
     return (
-      <Table.Row key={index} onClick={() => this.onClick(item)} active={isActive(item)} positive={isPositive && isPositive(item)} negative={isNegative && isNegative(item)}>
-        {content.map((cell, index) => <Table.Cell key={index}>{cell}</Table.Cell>)}
+      <Table.Row
+        key={index}
+        onClick={() => this.onClick(item)}
+        active={isActive(item)}
+        positive={isPositive && isPositive(item)}
+        negative={isNegative && isNegative(item)}
+      >
+        {content.map((cell, index) => (
+          <Table.Cell key={index}>{cell}</Table.Cell>
+        ))}
       </Table.Row>
     )
   }
@@ -73,21 +83,32 @@ export default class DropdownTable<T extends string, E> extends Component<IProps
     const selected = values.find(this.props.isActive)
     const text = trigger ? undefined : selected && getText ? getText(selected) : ''
     const style = { minWidth: width ?? 170, maxWidth: width ?? 170 }
-    let classNames = []
-    if (absolute)
-      classNames.push('absolute')
-    if (!trigger)
-      classNames.push('selection')
+    const classNames = []
+    if (absolute) classNames.push('absolute')
+    if (!trigger) classNames.push('selection')
     return (
       //<span style={{ minWidth: 180, maxWidth: 180, display: 'inline-block', verticalAlign: 'top' }}>
-      <Dropdown open={this.state.open} clearable={clearable} onChange={this.onChange} search={search} searchQuery={this.state.search} onSearchChange={this.search} onOpen={this.onOpen} onBlur={this.onClose}
-        text={text} value={value} scrolling trigger={trigger} className={classNames.join(' ')} placeholder={placeholder} style={style}>
+      <Dropdown
+        open={this.state.open}
+        clearable={clearable}
+        onChange={this.onChange}
+        search={search}
+        searchQuery={this.state.search}
+        onSearchChange={this.search}
+        onOpen={this.onOpen}
+        onBlur={this.onClose}
+        text={text}
+        value={value}
+        scrolling
+        trigger={trigger}
+        className={classNames.join(' ')}
+        placeholder={placeholder}
+        style={style}
+      >
         <Dropdown.Menu>
           <Table selectable celled>
             {headers.length ? this.getHeader() : null}
-            <Table.Body>
-              {values.map(this.getContent)}
-            </Table.Body>
+            <Table.Body>{values.map(this.getContent)}</Table.Body>
           </Table>
         </Dropdown.Menu>
       </Dropdown>

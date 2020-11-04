@@ -6,7 +6,7 @@ import { forEach } from 'utils'
 import { getDay, getStartingPhaseNumber, getRound } from './battle'
 
 const copyCohorts = (cohorts: Cohorts): Cohorts => ({
-  frontline: cohorts.frontline.map(row => row.map(value => value ? { ...value, state: { ...value.state } } : null)),
+  frontline: cohorts.frontline.map(row => row.map(value => (value ? { ...value, state: { ...value.state } } : null))),
   reserve: copyReserve(cohorts.reserve),
   defeated: cohorts.defeated.map(value => ({ ...value, state: { ...value.state } })),
   retreated: cohorts.retreated.map(value => ({ ...value, state: { ...value.state } }))
@@ -17,9 +17,7 @@ const copyReserve = (reserve: Reserve): Reserve => ({
   flank: reserve.flank.map(value => ({ ...value, state: { ...value.state } })),
   support: reserve.support.map(value => ({ ...value, state: { ...value.state } }))
 })
-const copyArmies = (armies: Army[]): Army[] => (
-  armies.map(army => ({ ...army, reserve: copyReserve(army.reserve) }))
-)
+const copyArmies = (armies: Army[]): Army[] => armies.map(army => ({ ...army, reserve: copyReserve(army.reserve) }))
 
 const freeseSize = (side: Side) => {
   Object.freeze(side.armies)
@@ -28,8 +26,14 @@ const freeseSize = (side: Side) => {
 }
 
 // Copy is needed because of freezing stuff.
-// And freezing is needed because of some immer issue. 
-const copy = (side: Side): Side => ({ ...side, deployed: copyArmies(side.deployed), cohorts: copyCohorts(side.cohorts), armies: copyArmies(side.armies), results: { ...side.results } })
+// And freezing is needed because of some immer issue.
+const copy = (side: Side): Side => ({
+  ...side,
+  deployed: copyArmies(side.deployed),
+  cohorts: copyCohorts(side.cohorts),
+  armies: copyArmies(side.armies),
+  results: { ...side.results }
+})
 
 const subBattle = (battle: Battle, env: Environment, attacker: Side, defender: Side, steps: number) => {
   const sideA = battle.sides[SideType.A]
@@ -45,27 +49,21 @@ const subBattle = (battle: Battle, env: Environment, attacker: Side, defender: S
   const maximumRoll = settings[Setting.DiceMaximum]
   const rollFrequency = settings[Setting.PhaseLength]
   // Regenerate seed for the first roll (undo resets it when going back to deployment).
-  if (day + steps > 0 && !battle.seed)
-    battle.seed = battle.customSeed ?? Math.abs(createEntropy(undefined, 1)[0])
+  if (day + steps > 0 && !battle.seed) battle.seed = battle.customSeed ?? Math.abs(createEntropy(undefined, 1)[0])
   const engine = MersenneTwister19937.seed(battle.seed)
   engine.discard(2 * phaseNumber)
   const rng = new Random(engine)
 
-
   const rollDice = (side: SideData) => {
-    if (getRound(battle) % rollFrequency !== 0)
-      return null
+    if (getRound(battle) % rollFrequency !== 0) return null
     // Always throw dice so that manually setting one side won't affect the other.
     const random = rng.integer(minimumRoll, maximumRoll)
     const phase = getStartingPhaseNumber(battle) + getCombatPhaseNumber(getRound(battle), settings)
-    if (side.randomizeDice)
-      return random
-    else if (phase < side.rolls.length && side.rolls[phase])
-      return side.rolls[phase]
-    else
-      return side.dice
+    if (side.randomizeDice) return random
+    else if (phase < side.rolls.length && side.rolls[phase]) return side.rolls[phase]
+    else return side.dice
   }
-  
+
   if (day === -1) {
     attacker = copy(attacker)
     defender = copy(defender)
@@ -111,7 +109,13 @@ export const battle = (pair: [AppState, AppState], steps: number) => {
   const [state, draft] = pair
   const mode = getMode(state)
   const battle = draft.battle[mode]
-  subBattle(battle, getCombatEnvironment(state), getCombatSide(state, SideType.A), getCombatSide(state, SideType.B), steps)
+  subBattle(
+    battle,
+    getCombatEnvironment(state),
+    getCombatSide(state, SideType.A),
+    getCombatSide(state, SideType.B),
+    steps
+  )
 }
 
 export const refreshBattle = (pair: [AppState, AppState]) => {
@@ -130,8 +134,7 @@ export const undo = (pair: [AppState, AppState], steps: number) => {
   const battle = draft.battle[mode]
   for (let step = 0; step < steps && battle.days.length > 1; ++step) {
     let seed: number = battle.seed
-    if (getDay(battle) < 2)
-      seed = battle.customSeed ? battle.customSeed : 0
+    if (getDay(battle) < 2) seed = battle.customSeed ? battle.customSeed : 0
     forEach(battle.sides, side => {
       side.days.pop()
     })

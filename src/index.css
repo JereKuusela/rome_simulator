@@ -1,16 +1,14 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-y: overlay;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 .color-positive {
@@ -38,15 +36,15 @@ code {
   font-weight: bold;
 }
 .color-attacker {
-  color: #FFAA00AA;
+  color: #ffaa00aa;
   font-weight: bold;
 }
 .color-defender {
-  color: #00AAFFAA;
+  color: #00aaffaa;
   font-weight: bold;
 }
 .color-draw {
-  color: #AAAAAAAA;
+  color: #aaaaaaaa;
   font-weight: bold;
 }
 
@@ -67,7 +65,7 @@ code {
 }
 
 .ui.button:disabled.no-dim {
-  opacity: 1!important;
+  opacity: 1 !important;
 }
 
 .small-input {
@@ -75,9 +73,8 @@ code {
 }
 
 .ui.table tbody tr td.selectable {
-  padding: .78571429em .78571429em
+  padding: 0.78571429em 0.78571429em;
 }
-
 
 .ui.table tbody tr td.selectable .absolute {
   position: absolute;
@@ -95,9 +92,9 @@ code {
 
 /* Default color is hardly visible. */
 .ui.table td.positive {
-  background: rgba(230, 255, 230, 1)!important
+  background: rgba(230, 255, 230, 1) !important;
 }
 /* Default color is hardly visible. */
 .ui.table tr td.selectable.positive:hover {
-  background: rgba(200, 255, 200, 1)!important
+  background: rgba(200, 255, 200, 1) !important;
 }

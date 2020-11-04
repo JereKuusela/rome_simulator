@@ -12,35 +12,23 @@ import { selectTerrain } from 'reducers'
 import DropdownTerrain from 'components/Dropdowns/DropdownTerrain'
 import { toArr } from 'utils'
 
-type Props = {
-}
-
 /**
  * Table with row types and flank sizes.
  */
 class TerrainSelector extends Component<IProps> {
-
   render() {
     const { selected: terrains } = this.props
     return (
-      <Table celled unstackable >
+      <Table celled unstackable>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>
-              Location
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              Terrain
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              Roll modifier
-            </Table.HeaderCell>
+            <Table.HeaderCell>Location</Table.HeaderCell>
+            <Table.HeaderCell>Terrain</Table.HeaderCell>
+            <Table.HeaderCell>Roll modifier</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
-        <Table.Body>
-          {terrains.map(this.renderTerrain)}
-        </Table.Body>
-      </Table >
+        <Table.Body>{terrains.map(this.renderTerrain)}</Table.Body>
+      </Table>
     )
   }
 
@@ -49,9 +37,7 @@ class TerrainSelector extends Component<IProps> {
     const roll = calculateValue(definition, TerrainCalc.Roll)
     return (
       <Table.Row key={definition.location}>
-        <Table.Cell>
-          {definition.location}
-        </Table.Cell>
+        <Table.Cell>{definition.location}</Table.Cell>
         <Table.Cell>
           <DropdownTerrain
             value={definition.type}
@@ -85,6 +71,6 @@ const actions = { selectTerrain }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
-type IProps = Props & S & D
+type IProps = S & D
 
 export default connect(mapStateToProps, actions)(TerrainSelector)

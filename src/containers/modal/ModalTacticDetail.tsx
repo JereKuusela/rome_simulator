@@ -68,6 +68,6 @@ const actions = { setTacticValue, setTacticImage, setTacticMode, deleteTactic, c
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
-interface IProps extends S, D { }
+interface IProps extends S, D {}
 
 export default connect(mapStateToProps, actions)(ModalTacticDetail)

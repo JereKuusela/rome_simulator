@@ -1,5 +1,5 @@
-import { Army, Cohorts } from "types"
-import { SideType } from "./battle"
+import { Army, Cohorts } from 'types'
+import { SideType } from './battle'
 
 /**
  * Status of the win rate calculation. Most values are percents, only iterations is integer.

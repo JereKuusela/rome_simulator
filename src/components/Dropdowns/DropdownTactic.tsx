@@ -13,25 +13,17 @@ type IProps = {
 }
 
 export default class DropdownTactic extends Component<IProps> {
-
-  getContent = (tactic: Tactic) => ([
+  getContent = (tactic: Tactic) => [
     <LabelItem item={tactic} />,
-    <StyledNumber
-      value={tactic.effect}
-      formatter={toPercent}
-    />,
+    <StyledNumber value={tactic.effect} formatter={toPercent} />,
     <StyledNumber
       value={tactic.damage}
       formatter={toSignedPercent}
       hideZero={tactic.match === TacticMatch.Neutral}
       neutralColor='color-positive'
     />,
-    <StyledNumber
-      value={tactic.casualties}
-      formatter={toSignedPercent}
-      hideZero
-    />
-  ])
+    <StyledNumber value={tactic.casualties} formatter={toSignedPercent} hideZero />
+  ]
 
   isActive = (item: Tactic) => item.type === this.props.value
   isPositive = (item: Tactic) => item.match === TacticMatch.Positive
@@ -39,13 +31,14 @@ export default class DropdownTactic extends Component<IProps> {
 
   getValue = (item: Tactic) => item.type
 
-
   headers = ['Tactic', 'Effect', 'Damage', 'Casualties']
 
   render() {
     const { value, values, onSelect, settings } = this.props
     return (
-      <DropdownTable value={value} values={values}
+      <DropdownTable
+        value={value}
+        values={values}
         headers={this.headers}
         getContent={this.getContent}
         isActive={this.isActive}

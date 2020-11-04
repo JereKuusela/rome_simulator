@@ -10,7 +10,6 @@ interface Props {
  * Generic tooltip to show help.
  */
 export default class HelpTooltip extends Component<Props> {
-
   render() {
     return (
       <Popup

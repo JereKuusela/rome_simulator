@@ -1,4 +1,21 @@
-import { Battle, TerrainType, SideType, CountryName, Terrain, Settings, Setting, Army, UnitType, ArmyName, SideData, Side, ArmyDefinition, GeneralAttribute, Participant, CombatPhase } from 'types'
+import {
+  Battle,
+  TerrainType,
+  SideType,
+  CountryName,
+  Terrain,
+  Settings,
+  Setting,
+  Army,
+  UnitType,
+  ArmyName,
+  SideData,
+  Side,
+  ArmyDefinition,
+  GeneralAttribute,
+  Participant,
+  CombatPhase
+} from 'types'
 import { getCombatUnit, sortReserve } from 'combat'
 import { map } from 'utils'
 
@@ -25,8 +42,7 @@ export const setDaysUntilBattle = (battle: Battle, sideType: SideType, index: nu
 
 export const setPhaseDice = (battle: Battle, sideType: SideType, phase: number, dice: number) => {
   const rolls = battle.sides[sideType].rolls
-  while (rolls.length - 1 < phase)
-    rolls.push(0)
+  while (rolls.length - 1 < phase) rolls.push(0)
   rolls[phase] = dice
 }
 
@@ -42,7 +58,13 @@ export const deleteParticipant = (battle: Battle, sideType: SideType, index: num
   battle.sides[sideType].participants.splice(index, 1)
 }
 
-export const selectParticipantCountry = (battle: Battle, sideType: SideType, index: number, countryName: CountryName, armyName: ArmyName) => {
+export const selectParticipantCountry = (
+  battle: Battle,
+  sideType: SideType,
+  index: number,
+  countryName: CountryName,
+  armyName: ArmyName
+) => {
   battle.sides[sideType].participants[index].countryName = countryName
   battle.sides[sideType].participants[index].armyName = armyName
 }
@@ -88,9 +110,40 @@ export const convertSide = (side: SideData, armies: Army[], settings: Settings):
   }
 }
 
-export const convertArmy = (participantIndex: number, participant: Participant, army: ArmyDefinition, enemyTypes: UnitType[], terrains: Terrain[], settings: Settings): Army => {
-  const reserve = army.reserve.map((cohort, index) => getCombatUnit(participant.countryName, participant.armyName, participantIndex, index, settings, terrains, enemyTypes, cohort))
-  const unitProperties = map(army.unitDefinitions, unit => getCombatUnit(participant.countryName, participant.armyName, participantIndex, -1, settings, terrains, enemyTypes, unit).properties)
+export const convertArmy = (
+  participantIndex: number,
+  participant: Participant,
+  army: ArmyDefinition,
+  enemyTypes: UnitType[],
+  terrains: Terrain[],
+  settings: Settings
+): Army => {
+  const reserve = army.reserve.map((cohort, index) =>
+    getCombatUnit(
+      participant.countryName,
+      participant.armyName,
+      participantIndex,
+      index,
+      settings,
+      terrains,
+      enemyTypes,
+      cohort
+    )
+  )
+  const unitProperties = map(
+    army.unitDefinitions,
+    unit =>
+      getCombatUnit(
+        participant.countryName,
+        participant.armyName,
+        participantIndex,
+        -1,
+        settings,
+        terrains,
+        enemyTypes,
+        unit
+      ).properties
+  )
   const sorted = sortReserve(reserve, army.unitPreferences)
   return {
     reserve: sorted,
@@ -100,7 +153,10 @@ export const convertArmy = (participantIndex: number, participant: Participant, 
     arrival: participant.daysUntilBattle,
     leftFlank: army.flankSize,
     rightFlank: army.flankSize,
-    priority: army.general.values[GeneralAttribute.Martial] + army.general.values[CombatPhase.Fire] + army.general.values[CombatPhase.Shock],
+    priority:
+      army.general.values[GeneralAttribute.Martial] +
+      army.general.values[CombatPhase.Fire] +
+      army.general.values[CombatPhase.Shock],
     tactic: army.general.tactic,
     unitPreferences: army.unitPreferences,
     general: army.general.values,
@@ -108,10 +164,12 @@ export const convertArmy = (participantIndex: number, participant: Participant, 
   }
 }
 
-export const getLeadingArmy = (side: Side): Army | null => side.deployed.length ? side.deployed[0] : null
+export const getLeadingArmy = (side: Side): Army | null => (side.deployed.length ? side.deployed[0] : null)
 
 export const getParticipantName = (participant: Participant) => participant.countryName + ': ' + participant.armyName
 export const getDay = (battle: Battle) => battle.days.length - 1
-export const getStartingPhaseNumber = (battle: Battle) => battle.days.length ? battle.days[battle.days.length - 1].startingPhaseNumber : 0
-export const getRound = (battle: Battle) => battle.days.length ? battle.days[battle.days.length - 1].round : -1
-export const getAttacker = (battle: Battle) => battle.days.length ? battle.days[battle.days.length - 1].attacker : SideType.A
+export const getStartingPhaseNumber = (battle: Battle) =>
+  battle.days.length ? battle.days[battle.days.length - 1].startingPhaseNumber : 0
+export const getRound = (battle: Battle) => (battle.days.length ? battle.days[battle.days.length - 1].round : -1)
+export const getAttacker = (battle: Battle) =>
+  battle.days.length ? battle.days[battle.days.length - 1].attacker : SideType.A

@@ -1,6 +1,16 @@
-import { UnitType, UnitValueType, UnitDefinition, UnitAttribute, CombatPhase, CountryName, ArmyName, Mode, UnitRole, Army } from 'types'
+import {
+  UnitType,
+  UnitValueType,
+  UnitDefinition,
+  UnitAttribute,
+  CombatPhase,
+  CountryName,
+  ArmyName,
+  Mode,
+  UnitRole,
+  Army
+} from 'types'
 import { DefinitionValues } from 'definition_values'
-
 
 /** An identity of a cohort. Used to store data but shouldn't be used for anything else. */
 export interface CohortData extends DefinitionValues<UnitValueType> {
@@ -8,12 +18,10 @@ export interface CohortData extends DefinitionValues<UnitValueType> {
   isLoyal?: boolean
 }
 
-
-
 /** A full cohort (merged with unit definition). */
 export interface CohortDefinition extends CohortData, UnitDefinition {}
 
-export type UnitProperties = {[key in UnitType]: CohortProperties}
+export type UnitProperties = { [key in UnitType]: CohortProperties }
 
 /**
  * Interface designed for fast combat calculations. This data is cached in simulations (keep lightweight).
@@ -27,13 +35,17 @@ export interface Cohort {
   properties: CohortProperties
 }
 
-type UnitCalcs = { [key in (UnitValueType)]: number }
+type UnitCalcs = { [key in UnitValueType]: number }
 
 /**
  * Static part of a cohort. Properties which don't change during the battle.
  */
 export interface CohortProperties extends UnitCalcs {
-  damage: { [key in UnitAttribute.Strength | UnitAttribute.Morale | 'Damage']: { [key in UnitType]: { [key in CombatPhase]: number } } }  // Damage multiplier for each damage type, versus each unit and for each phase.
+  damage: {
+    [key in UnitAttribute.Strength | UnitAttribute.Morale | 'Damage']: {
+      [key in UnitType]: { [key in CombatPhase]: number }
+    }
+  } // Damage multiplier for each damage type, versus each unit and for each phase.
   damageTakenMultiplier: number
   moraleTakenMultiplier: number
   strengthTakenMultiplier: { [key in CombatPhase]: number }
@@ -85,13 +97,13 @@ export interface CohortRoundInfo {
   /** Did the cohort get defeated. */
   isDefeated: boolean
   /** The round of defeat. */
-  defeatedDay: number 
+  defeatedDay: number
   /** The cohort which targeted this cohort last. */
-  targetedBy: Cohort | null 
+  targetedBy: Cohort | null
   /** The cohort which defeated this cohort. */
-  defeatedBy: Cohort | null 
+  defeatedBy: Cohort | null
   /** The army which stack wiped this cohort. */
-  stackWipedBy: Army | null 
+  stackWipedBy: Army | null
   /** Did the cohort get destroyed.  */
   isDestroyed: boolean
   /** Total morale losses inflicted during the battle. */

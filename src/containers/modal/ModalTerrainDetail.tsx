@@ -3,7 +3,15 @@ import { connect } from 'react-redux'
 import { AppState, getMode } from 'state'
 import TerrainDetail from 'components/TerrainDetail'
 import { Mode, TerrainType, LocationType, TerrainValueType, ModalType } from 'types'
-import { setTerrainLocation, setTerrainImage, setTerrainType, setTerrainMode, setTerrainValue, deleteTerrain, closeModal } from 'reducers'
+import {
+  setTerrainLocation,
+  setTerrainImage,
+  setTerrainType,
+  setTerrainMode,
+  setTerrainValue,
+  deleteTerrain,
+  closeModal
+} from 'reducers'
 import BaseModal from './BaseModal'
 import ItemRemover from 'components/ItemRemover'
 
@@ -64,10 +72,18 @@ const mapStateToProps = (state: AppState) => {
   }
 }
 
-const actions = { setTerrainLocation, setTerrainImage, setTerrainType, setTerrainMode, setTerrainValue, deleteTerrain, closeModal }
+const actions = {
+  setTerrainLocation,
+  setTerrainImage,
+  setTerrainType,
+  setTerrainMode,
+  setTerrainValue,
+  deleteTerrain,
+  closeModal
+}
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
-interface IProps extends S, D { }
+interface IProps extends S, D {}
 
 export default connect(mapStateToProps, actions)(ModalTerrainDetail)

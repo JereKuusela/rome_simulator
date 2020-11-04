@@ -9,14 +9,12 @@ type State = {
   hasError: boolean
 }
 
-type Props = {}
-
 /**
  * Global error page to deal with crashes from corrupted data. Also hides bugs.
  */
 class Error extends Component<IProps, State> {
   constructor(props: IProps) {
-    super(props);
+    super(props)
     this.state = { hasError: false }
   }
 
@@ -25,18 +23,22 @@ class Error extends Component<IProps, State> {
   }
 
   render() {
-    if (!this.state.hasError)
-      return this.props.children
-    if (process.env.NODE_ENV === 'development')
-      return this.props.children
+    if (!this.state.hasError) return this.props.children
+    if (process.env.NODE_ENV === 'development') return this.props.children
     return (
       <>
-        <br/><br/>
+        <br />
+        <br />
         <Segment>
           <Header size='huge'>Something went wrong (probably a new version of the simulator)</Header>
-          <Button primary onClick={() => this.reset()}>Click here to reset the simulator</Button>
-          <Button primary onClick={() => this.download()}>Click here to download current data</Button>
-          <br/><br/>
+          <Button primary onClick={() => this.reset()}>
+            Click here to reset the simulator
+          </Button>
+          <Button primary onClick={() => this.download()}>
+            Click here to download current data
+          </Button>
+          <br />
+          <br />
           <p>If that doesn't help please clear the cache and then force refresh the site.</p>
         </Segment>
       </>
@@ -59,6 +61,6 @@ const actions = { resetState }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
-interface IProps extends React.PropsWithChildren<Props>, S, D { }
+interface IProps extends React.PropsWithChildren<S>, D {}
 
 export default connect(mapStateToProps, actions)(Error)

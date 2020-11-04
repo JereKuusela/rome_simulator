@@ -5,8 +5,6 @@ import ConvertSave from 'components/ConvertSave'
 import SaveToken from 'components/SaveToken'
 
 export default class SaveTool extends Component {
-
-
   render() {
     const panes = [
       {
@@ -24,8 +22,6 @@ export default class SaveTool extends Component {
         render: () => <SaveToken />
       })
     }
-    return (
-      <Tab panes={panes} defaultActiveIndex={0} />
-    )
+    return <Tab panes={panes} defaultActiveIndex={0} />
   }
 }

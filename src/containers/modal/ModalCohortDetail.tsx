@@ -5,7 +5,18 @@ import ItemRemover from 'components/ItemRemover'
 import UnitDetail from 'components/UnitDetail'
 
 import { AppState, getTerrainTypes, getCohortForEachRound, getMode, getSiteSettings, getCohortDefinition } from 'state'
-import { ValuesType, CountryName, UnitType, CohortDefinition, UnitAttribute, UnitValueType, Cohort, ModalType, SiteSettings, ArmyName } from 'types'
+import {
+  ValuesType,
+  CountryName,
+  UnitType,
+  CohortDefinition,
+  UnitAttribute,
+  UnitValueType,
+  Cohort,
+  ModalType,
+  SiteSettings,
+  ArmyName
+} from 'types'
 import { addValue, addValues } from 'definition_values'
 import { deleteCohort, setCohortValue, changeCohortType, toggleCohortLoyality, closeModal } from 'reducers'
 import { applyDynamicAttributes } from 'managers/units'
@@ -14,11 +25,9 @@ import { toArr } from 'utils'
 const CUSTOM_VALUE_KEY = 'Unit'
 
 class ModalCohortDetail extends Component<IProps> {
-
   render() {
     const { mode, unitTypes, terrainTypes, cohort, settings } = this.props
-    if (!cohort)
-      return null
+    if (!cohort) return null
     return (
       <BaseModal basic type={ModalType.CohortDetail}>
         <ItemRemover onRemove={this.removeUnit} />
@@ -61,7 +70,6 @@ class ModalCohortDetail extends Component<IProps> {
   setLossModifierValue = (key: string, attribute: UnitValueType, value: number) => {
     const { country, index, army, setCohortValue } = this.props
     setCohortValue(country, army, index, ValuesType.LossModifier, key, attribute, value)
-
   }
 
   changeType = (type: UnitType) => {
@@ -75,13 +83,14 @@ class ModalCohortDetail extends Component<IProps> {
   }
 }
 
-
-const convertCohort = (settings: SiteSettings, definition: CohortDefinition | null, rounds: (Cohort | null)[]): CohortDefinition | null => {
-  if (!definition)
-    return null
+const convertCohort = (
+  settings: SiteSettings,
+  definition: CohortDefinition | null,
+  rounds: (Cohort | null)[]
+): CohortDefinition | null => {
+  if (!definition) return null
   rounds.forEach((combat, round) => {
-    if (!combat)
-      return
+    if (!combat) return
     const lossValues: [string, number][] = [
       [UnitAttribute.Morale, combat.state.moraleLoss],
       [UnitAttribute.Strength, combat.state.strengthLoss]
@@ -93,9 +102,27 @@ const convertCohort = (settings: SiteSettings, definition: CohortDefinition | nu
     definition = addValues(definition!, ValuesType.Loss, 'Round ' + round, lossValues)
     definition = addValues(definition!, ValuesType.Base, 'Round ' + round, dealtValues)
     if (round === rounds.length - 1) {
-      definition = addValue(definition!, ValuesType.Gain, 'Winning', UnitAttribute.Morale, combat.properties.winningMoraleBonus)
-      definition = addValue(definition!, ValuesType.LossModifier, 'Late deployment', UnitAttribute.Morale, combat.properties.deploymentPenalty)
-      definition = addValue(definition!, ValuesType.LossModifier, 'Non-secondary reinforcement', UnitAttribute.Morale, combat.properties.reinforcementPenalty)
+      definition = addValue(
+        definition!,
+        ValuesType.Gain,
+        'Winning',
+        UnitAttribute.Morale,
+        combat.properties.winningMoraleBonus
+      )
+      definition = addValue(
+        definition!,
+        ValuesType.LossModifier,
+        'Late deployment',
+        UnitAttribute.Morale,
+        combat.properties.deploymentPenalty
+      )
+      definition = addValue(
+        definition!,
+        ValuesType.LossModifier,
+        'Non-secondary reinforcement',
+        UnitAttribute.Morale,
+        combat.properties.reinforcementPenalty
+      )
     }
   })
   return applyDynamicAttributes(definition, settings)
@@ -115,10 +142,13 @@ const mapStateToProps = (state: AppState) => {
         army: data.army,
         unitTypes: toArr(state.countries[CountryName.Country1].units, unit => unit.type),
         mode,
-        cohort: convertCohort(settings, cohort, getCohortForEachRound(state, data.side, data.participantIndex, data.index)),
+        cohort: convertCohort(
+          settings,
+          cohort,
+          getCohortForEachRound(state, data.side, data.participantIndex, data.index)
+        ),
         settings
       }
-
     }
   }
   return {
@@ -129,7 +159,7 @@ const mapStateToProps = (state: AppState) => {
     mode,
     settings,
     cohort: null,
-    unitTypes: [],
+    unitTypes: []
   }
 }
 
@@ -137,6 +167,6 @@ const actions = { deleteCohort, setCohortValue, changeCohortType, toggleCohortLo
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
-interface IProps extends S, D { }
+interface IProps extends S, D {}
 
 export default connect(mapStateToProps, actions)(ModalCohortDetail)

@@ -8,9 +8,8 @@ type IState = {
 }
 
 /** Converts a compressed binary save to plain text. */
-export default class ConvertSave extends Component<{}, IState> {
-
-  constructor(props: {}) {
+export default class ConvertSave extends Component<unknown, IState> {
+  constructor(props: unknown) {
     super(props)
     this.state = { errors: [] }
   }
@@ -31,7 +30,9 @@ export default class ConvertSave extends Component<{}, IState> {
         <Grid.Row>
           <Grid.Column>
             {this.state.errors.length ? <Header>Errors:</Header> : null}
-            {this.state.errors.map((error, index) => <p key={index}>{error}</p>)}
+            {this.state.errors.map((error, index) => (
+              <p key={index}>{error}</p>
+            ))}
           </Grid.Column>
         </Grid.Row>
       </Grid>
@@ -39,22 +40,23 @@ export default class ConvertSave extends Component<{}, IState> {
   }
 
   loadSave = async (file: File) => {
-    new JSZip().loadAsync(file).then(zip => {
-      const unzipped = zip.file('gamestate')
-      if (unzipped) {
-        unzipped.async('uint8array').then(buffer => {
-          const [data, errors] = binaryToPlain(buffer, true)
-          this.setState({ errors })
-          const blob = new Blob([data], { type: 'text/plain;charset=utf-8' })
-          saveAs(blob, 'plain_' + file.name)
-        })
-      }
-      else {
-        this.setState({ errors: ['File is not save file.'] })
-      }
-
-    }).catch(() => {
-      this.setState({ errors: ['File is not a compressed save file.'] })
-    })
+    new JSZip()
+      .loadAsync(file)
+      .then(zip => {
+        const unzipped = zip.file('gamestate')
+        if (unzipped) {
+          unzipped.async('uint8array').then(buffer => {
+            const [data, errors] = binaryToPlain(buffer, true)
+            this.setState({ errors })
+            const blob = new Blob([data], { type: 'text/plain;charset=utf-8' })
+            saveAs(blob, 'plain_' + file.name)
+          })
+        } else {
+          this.setState({ errors: ['File is not save file.'] })
+        }
+      })
+      .catch(() => {
+        this.setState({ errors: ['File is not a compressed save file.'] })
+      })
   }
 }

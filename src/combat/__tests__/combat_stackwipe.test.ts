@@ -1,18 +1,24 @@
-import { TestState, initState, createCohort, getSettingsTest, addToReserveTest, getBattleTest, initExpected, testCombatWithCustomRolls } from './utils'
+import {
+  TestState,
+  initState,
+  createCohort,
+  getSettingsTest,
+  addToReserveTest,
+  getBattleTest,
+  initExpected,
+  testCombatWithCustomRolls
+} from './utils'
 import { UnitType, UnitAttribute, CohortDefinition, Setting, SideType } from 'types'
 
-
 if (process.env.REACT_APP_GAME === 'IR') {
-
-
   describe('stack wipe', () => {
-    let lowMorale = null as any as CohortDefinition
-    let hardLimit = null as any as CohortDefinition
-    let hardStrengthLimit = null as any as CohortDefinition
-    let softLimit = null as any as CohortDefinition
-    let lowStrength = null as any as CohortDefinition
-    let normal = null as any as CohortDefinition
-    
+    let lowMorale = (null as any) as CohortDefinition
+    let hardLimit = (null as any) as CohortDefinition
+    let hardStrengthLimit = (null as any) as CohortDefinition
+    let softLimit = (null as any) as CohortDefinition
+    let lowStrength = (null as any) as CohortDefinition
+    let normal = (null as any) as CohortDefinition
+
     const type = 'Test' as UnitType
 
     const FULL_STRENGTH = 1.0
@@ -28,23 +34,23 @@ if (process.env.REACT_APP_GAME === 'IR') {
     beforeEach(() => {
       state = initState()
       lowMorale = createCohort(type)
-      lowMorale.baseValues![UnitAttribute.Morale] = { 'key': LOW_MORALE }
-      lowMorale.baseValues![UnitAttribute.Strength] = { 'key': FULL_STRENGTH }
+      lowMorale.baseValues![UnitAttribute.Morale] = { key: LOW_MORALE }
+      lowMorale.baseValues![UnitAttribute.Strength] = { key: FULL_STRENGTH }
       lowStrength = createCohort(type)
-      lowStrength.baseValues![UnitAttribute.Morale] = { 'key': FULL_MORALE }
-      lowStrength.baseValues![UnitAttribute.Strength] = { 'key': LOW_STRENGTH }
+      lowStrength.baseValues![UnitAttribute.Morale] = { key: FULL_MORALE }
+      lowStrength.baseValues![UnitAttribute.Strength] = { key: LOW_STRENGTH }
       hardLimit = createCohort(type)
-      hardLimit.baseValues![UnitAttribute.Morale] = { 'key': LIMIT_MORALE }
-      hardLimit.baseValues![UnitAttribute.Strength] = { 'key': LIMIT_STRENGTH }
+      hardLimit.baseValues![UnitAttribute.Morale] = { key: LIMIT_MORALE }
+      hardLimit.baseValues![UnitAttribute.Strength] = { key: LIMIT_STRENGTH }
       hardStrengthLimit = createCohort(type)
-      hardStrengthLimit.baseValues![UnitAttribute.Morale] = { 'key': FULL_MORALE }
-      hardStrengthLimit.baseValues![UnitAttribute.Strength] = { 'key': LIMIT_STRENGTH }
+      hardStrengthLimit.baseValues![UnitAttribute.Morale] = { key: FULL_MORALE }
+      hardStrengthLimit.baseValues![UnitAttribute.Strength] = { key: LIMIT_STRENGTH }
       softLimit = createCohort(type)
-      softLimit.baseValues![UnitAttribute.Morale] = { 'key': LIMIT_MORALE }
-      softLimit.baseValues![UnitAttribute.Strength] = { 'key': FULL_STRENGTH / 2 }
+      softLimit.baseValues![UnitAttribute.Morale] = { key: LIMIT_MORALE }
+      softLimit.baseValues![UnitAttribute.Strength] = { key: FULL_STRENGTH / 2 }
       normal = createCohort(type)
-      normal.baseValues![UnitAttribute.Morale] = { 'key': FULL_MORALE }
-      normal.baseValues![UnitAttribute.Strength] = { 'key': FULL_STRENGTH }
+      normal.baseValues![UnitAttribute.Morale] = { key: FULL_MORALE }
+      normal.baseValues![UnitAttribute.Strength] = { key: FULL_STRENGTH }
       getSettingsTest(state)[Setting.DailyDamageIncrease] = 0
       getSettingsTest(state)[Setting.StackwipeRounds] = 5
       getSettingsTest(state)[Setting.MoraleHitForLateDeployment] = 0
@@ -58,31 +64,67 @@ if (process.env.REACT_APP_GAME === 'IR') {
       })
     }
 
-    const testBothDefeated = (strengthA: number, strengthB: number, moraleA: number, moraleB: number, rounds: number = 0) => {
+    const testBothDefeated = (strengthA: number, strengthB: number, moraleA: number, moraleB: number, rounds = 0) => {
       const expected = initExpected(rounds)
-      expected[rounds].A.defeated = [[type, strengthA, moraleA], [type, strengthA, moraleA]]
-      expected[rounds].B.defeated = [[type, strengthB, moraleB], [type, strengthB, moraleB]]
+      expected[rounds].A.defeated = [
+        [type, strengthA, moraleA],
+        [type, strengthA, moraleA]
+      ]
+      expected[rounds].B.defeated = [
+        [type, strengthB, moraleB],
+        [type, strengthB, moraleB]
+      ]
       testCombatWithCustomRolls(state, [], expected)
     }
-    const testDefenderDefeated = (strengthA: number, strengthB: number, moraleA: number, moraleB: number, rounds: number = 0) => {
+    const testDefenderDefeated = (
+      strengthA: number,
+      strengthB: number,
+      moraleA: number,
+      moraleB: number,
+      rounds = 0
+    ) => {
       const expected = initExpected(rounds)
-      expected[rounds].A.front = [[type, strengthA, moraleA], [type, strengthA, moraleA]]
-      expected[rounds].B.defeated = [[type, strengthB, moraleB], [type, strengthB, moraleB]]
+      expected[rounds].A.front = [
+        [type, strengthA, moraleA],
+        [type, strengthA, moraleA]
+      ]
+      expected[rounds].B.defeated = [
+        [type, strengthB, moraleB],
+        [type, strengthB, moraleB]
+      ]
       testCombatWithCustomRolls(state, [], expected)
     }
-    const testAttackerDefeated = (strengthA: number, strengthB: number, moraleA: number, moraleB: number, rounds: number = 0) => {
+    const testAttackerDefeated = (
+      strengthA: number,
+      strengthB: number,
+      moraleA: number,
+      moraleB: number,
+      rounds = 0
+    ) => {
       const expected = initExpected(rounds)
-      expected[rounds].A.defeated = [[type, strengthA, moraleA], [type, strengthA, moraleA]]
-      expected[rounds].B.front = [[type, strengthB, moraleB], [type, strengthB, moraleB]]
+      expected[rounds].A.defeated = [
+        [type, strengthA, moraleA],
+        [type, strengthA, moraleA]
+      ]
+      expected[rounds].B.front = [
+        [type, strengthB, moraleB],
+        [type, strengthB, moraleB]
+      ]
       testCombatWithCustomRolls(state, [], expected)
     }
-    const testNoneDefeated = (strengthA: number, strengthB: number, moraleA: number, moraleB: number, rounds: number = 0) => {
+    const testNoneDefeated = (strengthA: number, strengthB: number, moraleA: number, moraleB: number, rounds = 0) => {
       const expected = initExpected(rounds)
-      expected[rounds].A.front = [[type, strengthA, moraleA], [type, strengthA, moraleA]]
-      expected[rounds].B.front = [[type, strengthB, moraleB], [type, strengthB, moraleB]]
+      expected[rounds].A.front = [
+        [type, strengthA, moraleA],
+        [type, strengthA, moraleA]
+      ]
+      expected[rounds].B.front = [
+        [type, strengthB, moraleB],
+        [type, strengthB, moraleB]
+      ]
       testCombatWithCustomRolls(state, [], expected)
     }
-    it('attacker stack wipes if it can\'t deploy', () => {
+    it("attacker stack wipes if it can't deploy", () => {
       addToReserveTest(state, SideType.A, [lowMorale, lowMorale])
       addToReserveTest(state, SideType.B, [normal, normal])
       testAttackerDefeated(NO_STRENGTH, FULL_STRENGTH, NO_MORALE, FULL_MORALE)

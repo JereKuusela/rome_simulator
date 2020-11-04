@@ -1,11 +1,32 @@
-import { ValuesType, UnitValueType, UnitType, UnitRole, UnitData, UnitsData, Mode, Setting, UnitAttribute, WearinessAttributes, ReserveData, ModifierWithKey, SiteSettings, SideType } from "types"
-import { addValuesWithMutate, DefinitionValues, calculateValue, addValues, addValue } from "definition_values"
-import { getUnitIcon } from "data"
-import { toArr, round, randomWithinRange } from "utils"
-import { mapModifiersToUnits2 } from "./modifiers"
-import { getConfig } from "data/config"
+import {
+  ValuesType,
+  UnitValueType,
+  UnitType,
+  UnitRole,
+  UnitData,
+  UnitsData,
+  Mode,
+  Setting,
+  UnitAttribute,
+  WearinessAttributes,
+  ReserveData,
+  ModifierWithKey,
+  SiteSettings,
+  SideType
+} from 'types'
+import { addValuesWithMutate, calculateValue, addValues, addValue } from 'definition_values'
+import { getUnitIcon } from 'data'
+import { toArr, round, randomWithinRange } from 'utils'
+import { mapModifiersToUnits2 } from './modifiers'
+import { getConfig } from 'data/config'
 
-export const setUnitValue = (unit: UnitData, valuesType: ValuesType, key: string, attribute: UnitValueType, value: number) => {
+export const setUnitValue = (
+  unit: UnitData,
+  valuesType: ValuesType,
+  key: string,
+  attribute: UnitValueType,
+  value: number
+) => {
   addValuesWithMutate(unit, valuesType, key, [[attribute, value]])
 }
 
@@ -37,12 +58,17 @@ export const changeParent = (unit: UnitData, parent: UnitType) => {
   unit.parent = parent
 }
 
-export const getRootParent = (mode: Mode) => mode === Mode.Naval ? UnitType.Naval : UnitType.Land
+export const getRootParent = (mode: Mode) => (mode === Mode.Naval ? UnitType.Naval : UnitType.Land)
 
 export const applyDynamicAttributes = <T extends UnitData>(definition: T, settings: SiteSettings) => {
   if (settings[Setting.AttributeDrill]) {
     const drill = 0.1 * calculateValue(definition, UnitAttribute.Drill)
-    definition = addValues(definition, ValuesType.Base, 'From drill', [[UnitAttribute.ShockDamageDone, drill], [UnitAttribute.FireDamageDone, drill], [UnitAttribute.ShockDamageTaken, -drill], [UnitAttribute.FireDamageTaken, -drill]])
+    definition = addValues(definition, ValuesType.Base, 'From drill', [
+      [UnitAttribute.ShockDamageDone, drill],
+      [UnitAttribute.FireDamageDone, drill],
+      [UnitAttribute.ShockDamageTaken, -drill],
+      [UnitAttribute.FireDamageTaken, -drill]
+    ])
   }
   if (settings[Setting.StrengthBasedFlank]) {
     const maneuver = getStrengthBasedFlank(calculateValue(definition, UnitAttribute.Strength)) - 1
@@ -51,29 +77,32 @@ export const applyDynamicAttributes = <T extends UnitData>(definition: T, settin
       definition = addValues(definition, ValuesType.Loss, 'Minimum cap', [[UnitAttribute.Maneuver, -1]])
   }
   if (definition.isLoyal)
-    definition = addValues(definition, ValuesType.Modifier, 'Loyal', [[UnitAttribute.Maintenance, getConfig().LoyalMaintenance - 1]])
+    definition = addValues(definition, ValuesType.Modifier, 'Loyal', [
+      [UnitAttribute.Maintenance, getConfig().LoyalMaintenance - 1]
+    ])
   return definition
 }
 
 export const getStrengthBasedFlank = (strength: number) => Math.pow(0.5, 4 - Math.ceil(strength * 4.0))
 
-export const applyLosses = (values: WearinessAttributes, units: ReserveData) => (
+export const applyLosses = (values: WearinessAttributes, units: ReserveData) =>
   units.map(unit => addValues(unit, ValuesType.LossModifier, 'Custom', generateLosses(values)))
-)
 
 export const applyUnitModifiers = (units: UnitsData, modifiers: ModifierWithKey[]): UnitsData => {
   modifiers = mapModifiersToUnits2(modifiers)
-  let result = { ...units }
+  const result = { ...units }
   modifiers.forEach(value => {
     const type = value.target as UnitType
-    if (!result[type])
-      return
+    if (!result[type]) return
     result[type] = addValue(result[type], value.type, value.key, value.attribute, value.value)
   })
   return result
 }
 
-const generateLosses = (values: WearinessAttributes): [string, number][] => toArr(values, (range, type) => [type, round(randomWithinRange(range.min, range.max), 100)])
+const generateLosses = (values: WearinessAttributes): [string, number][] =>
+  toArr(values, (range, type) => [type, round(randomWithinRange(range.min, range.max), 100)])
 
-export const getCohortId = (side: SideType, cohort: { index: number, participantIndex: number }) => side + '-' + cohort.participantIndex + '-' + cohort.index
-export const getCohortName = (cohort: { type: UnitType, index: number, participantIndex: number }) => cohort.type + ' ' + (1000 * cohort.participantIndex + cohort.index)
+export const getCohortId = (side: SideType, cohort: { index: number; participantIndex: number }) =>
+  side + '-' + cohort.participantIndex + '-' + cohort.index
+export const getCohortName = (cohort: { type: UnitType; index: number; participantIndex: number }) =>
+  cohort.type + ' ' + (1000 * cohort.participantIndex + cohort.index)

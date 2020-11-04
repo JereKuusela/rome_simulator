@@ -13,7 +13,9 @@ interface Item<T extends ItemType> {
 
 type ItemType = UnitType | TerrainType | TacticType
 
-export type SelectorAttributes<T extends ItemType> = { [key: string]: { [key in T]: number | string | JSX.Element | null } }
+export type SelectorAttributes<T extends ItemType> = {
+  [key: string]: { [key in T]: number | string | JSX.Element | null }
+}
 
 interface IProps<T extends ItemType> {
   items: Item<T>[]
@@ -25,14 +27,11 @@ interface IProps<T extends ItemType> {
  * Component for selecting items.
  */
 export default class ItemSelector<T extends ItemType> extends Component<IProps<T>> {
-
   render() {
     const { items } = this.props
     return (
       <Table celled selectable unstackable>
-        <Table.Body>
-          {items.map(this.renderRow)}
-        </Table.Body>
+        <Table.Body>{items.map(this.renderRow)}</Table.Body>
       </Table>
     )
   }
@@ -49,13 +48,12 @@ export default class ItemSelector<T extends ItemType> extends Component<IProps<T
     )
   }
 
-  renderAttributes = (item: Item<T>, attributes: SelectorAttributes<T>) => (
+  renderAttributes = (item: Item<T>, attributes: SelectorAttributes<T>) =>
     toArr(attributes, (values, key) => (
       <Table.Cell key={key}>
         {/* This might be a React Element so must be rendered separately.*/}
         {values[item.type]}
-        {values[item.type] ? (' ' + key) : null}
+        {values[item.type] ? ' ' + key : null}
       </Table.Cell>
     ))
-  )
 }

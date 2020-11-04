@@ -75,7 +75,6 @@ export interface TechDefinition {
   inventions: Invention[]
 }
 
-
 type ListData = {
   name: string
   key: string
@@ -85,7 +84,6 @@ type ListData = {
 export type OptionData = ListData[]
 
 export type DictionaryData = { [key: string]: string }
-
 
 type ModifierData = {
   target: string
@@ -118,4 +116,3 @@ export type InventionData = {
 }
 
 export type Traditions = { [key in CultureType]: TraditionDefinition }
-

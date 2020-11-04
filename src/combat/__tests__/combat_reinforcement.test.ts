@@ -7,13 +7,12 @@ import preferredFlankSize from './input/reinforcement/preferred_flank_size.txt'
 import flankOnly from './input/reinforcement/flank_only.txt'
 import { loadInput } from './parser'
 
-
 if (process.env.REACT_APP_GAME === 'IR') {
-
   describe('reinforcement', () => {
-
     let state: TestState
-    beforeEach(() => { state = initState() })
+    beforeEach(() => {
+      state = initState()
+    })
 
     it('unit preferences', () => {
       loadInput(unitPreferences, state)
@@ -26,7 +25,6 @@ if (process.env.REACT_APP_GAME === 'IR') {
       }
       testReinforcement(2, state, attacker, defender)
     })
-
 
     it('support units only when nothing else is left', () => {
       loadInput(supportLateReinforcement, state)

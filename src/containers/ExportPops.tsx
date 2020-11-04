@@ -13,21 +13,20 @@ type IState = {
   file: Save
 }
 
-export default class ExportPops extends Component<{}, IState> {
-
-  constructor(props: {}) {
+export default class ExportPops extends Component<unknown, IState> {
+  constructor(props: unknown) {
     super(props)
     this.state = { country: null, file: {} as Save }
   }
 
-  getTagName = (tag: string) => countriesIR[tag.toLowerCase()] ? countriesIR[tag.toLowerCase()] + ' (' + tag + ')' : tag
-  getTerritoryName = (name: string) => territoriesIR[name.toLowerCase()] ? territoriesIR[name.toLowerCase()] : name
+  getTagName = (tag: string) =>
+    countriesIR[tag.toLowerCase()] ? countriesIR[tag.toLowerCase()] + ' (' + tag + ')' : tag
+  getTerritoryName = (name: string) => (territoriesIR[name.toLowerCase()] ? territoriesIR[name.toLowerCase()] : name)
   getCategoryName = (name: string) => {
     const split = name.split(' ')
     const rawCulture = split[0].toLowerCase()
     const culture = culturesIR[rawCulture] ?? rawCulture
-    if (split.length > 1)
-      return `${culture} ${split[1]}`
+    if (split.length > 1) return `${culture} ${split[1]}`
     return culture
   }
 
@@ -38,8 +37,12 @@ export default class ExportPops extends Component<{}, IState> {
       <Grid padded>
         <Grid.Row>
           <Grid.Column verticalAlign='middle'>
-            <Header style={{ display: 'inline' }} >Select a save game </Header>
-            <Input style={{ display: 'inline' }} type='file' onChange={event => this.loadContent(event.target.files![0])} />
+            <Header style={{ display: 'inline' }}>Select a save game </Header>
+            <Input
+              style={{ display: 'inline' }}
+              type='file'
+              onChange={event => this.loadContent(event.target.files![0])}
+            />
           </Grid.Column>
         </Grid.Row>
         <Grid.Row columns='4'>
@@ -47,7 +50,8 @@ export default class ExportPops extends Component<{}, IState> {
             <SimpleDropdown
               value={String(country ?? '')}
               values={countries}
-              clearable search
+              clearable
+              search
               onChange={countries.length ? this.selectCountry : undefined}
               placeholder='Select country'
             />
@@ -59,17 +63,17 @@ export default class ExportPops extends Component<{}, IState> {
 
   selectCountry = (country: string | number | null) => this.setState({ country }, () => this.exportPops())
 
-
   exportPops = () => {
-    if (!this.state.country)
-      return
+    if (!this.state.country) return
     const name = this.getTagName(this.state.file.country?.country_database[Number(this.state.country)].tag ?? '')
 
     const territories = loadPopsByTerritory(this.state.file, Number(this.state.country))
     const total: { [key: string]: number } = {}
-    territories.forEach(territory => forEach(territory.pops, (amount, category) => {
-      total[category] = (total[category] ?? 0) + amount
-    }))
+    territories.forEach(territory =>
+      forEach(territory.pops, (amount, category) => {
+        total[category] = (total[category] ?? 0) + amount
+      })
+    )
     const sorted = toArr(total, (amount, category) => ({ amount, category })).sort((a, b) => b.amount - a.amount)
     const categories = sorted.map(item => item.category)
     let data = ',Rank,'
@@ -84,7 +88,7 @@ export default class ExportPops extends Component<{}, IState> {
   }
 
   setFile = (file: Save) => {
-    const firstPlayer = getFirstPlayedCountry(file);
+    const firstPlayer = getFirstPlayedCountry(file)
     this.setState({ file }, () => this.selectCountry(firstPlayer))
   }
 
@@ -93,20 +97,23 @@ export default class ExportPops extends Component<{}, IState> {
       this.setState({ country: null, file: {} as Save })
       return
     }
-    new JSZip().loadAsync(file).then(zip => {
-      const file = zip.file('gamestate')
-      if (file) {
-        file.async('uint8array').then(buffer => {
-          const file = parseFile(binaryToPlain(buffer, false)[0]) as Save
+    new JSZip()
+      .loadAsync(file)
+      .then(zip => {
+        const file = zip.file('gamestate')
+        if (file) {
+          file.async('uint8array').then(buffer => {
+            const file = parseFile(binaryToPlain(buffer, false)[0]) as Save
+            this.setFile(file)
+          })
+        }
+      })
+      .catch(() => {
+        file.text().then(data => {
+          const file = parseFile(data) as Save
           this.setFile(file)
         })
-      }
-    }).catch(() => {
-      file.text().then(data => {
-        const file = parseFile(data) as Save
-        this.setFile(file)
       })
-    })
   }
 
   getCountryList = () => {
@@ -117,4 +124,3 @@ export default class ExportPops extends Component<{}, IState> {
     return []
   }
 }
-

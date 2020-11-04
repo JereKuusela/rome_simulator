@@ -2,7 +2,16 @@ import { DefinitionValues } from 'definition_values'
 import { Mode } from 'types/definition'
 import { TacticType, TacticDefinition } from './tactics'
 import { CombatPhase } from './battle'
-import { Selections, UnitValues, UnitRole, UnitType, Reserve, ReserveData, ReserveDefinition, UnitProperties } from 'types'
+import {
+  Selections,
+  UnitValues,
+  UnitRole,
+  UnitType,
+  Reserve,
+  ReserveData,
+  ReserveDefinition,
+  UnitProperties
+} from 'types'
 import { UnitDefinitions } from './units'
 
 export enum ArmyName {
@@ -74,7 +83,7 @@ export enum UnitPreferenceType {
  * CombatUnits contain most of the information precalculated.
  */
 export type Army = {
-  reserve: Reserve 
+  reserve: Reserve
   flankSize: number
   flankRatio: number
   arrival: number

@@ -11,7 +11,6 @@ interface IProps {
 }
 
 export default class DetailToggleRow extends Component<IProps> {
-
   render() {
     const { text, value, onChange, cells, stretch } = this.props
     return (

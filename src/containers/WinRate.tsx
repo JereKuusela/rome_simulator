@@ -11,8 +11,6 @@ import { showProgress } from 'utils'
 import { Setting, WinRateProgress, CasualtiesProgress } from 'types'
 import Tooltip from 'components/Tooltip'
 
-interface Props { }
-
 type IState = {
   attacker: number
   defender: number
@@ -40,8 +38,20 @@ class WinRate extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
-      attacker: 0, defender: 0, calculating: false, progress: 0, updates: 0, draws: 0, incomplete: 0, battles: 0,
-      avgStrengthA: 0, maxStrengthA: 0, avgStrengthB: 0, maxStrengthB: 0, winRateA: 0, winRateB: 0
+      attacker: 0,
+      defender: 0,
+      calculating: false,
+      progress: 0,
+      updates: 0,
+      draws: 0,
+      incomplete: 0,
+      battles: 0,
+      avgStrengthA: 0,
+      maxStrengthA: 0,
+      avgStrengthB: 0,
+      maxStrengthB: 0,
+      winRateA: 0,
+      winRateB: 0
     }
   }
 
@@ -58,8 +68,17 @@ class WinRate extends Component<IProps, IState> {
 
   render() {
     const {
-      attacker, defender, calculating, progress, updates, draws, incomplete,
-      avgStrengthA, maxStrengthA, avgStrengthB: avgStrengthD, maxStrengthB: maxStrengthD
+      attacker,
+      defender,
+      calculating,
+      progress,
+      updates,
+      draws,
+      incomplete,
+      avgStrengthA,
+      maxStrengthA,
+      avgStrengthB: avgStrengthD,
+      maxStrengthB: maxStrengthD
     } = this.state
     return (
       <Grid>
@@ -70,7 +89,7 @@ class WinRate extends Component<IProps, IState> {
                 primary
                 size='large'
                 style={{ width: '120px' }}
-                onClick={() => calculating ? interrupt() : this.calculate()}
+                onClick={() => (calculating ? interrupt() : this.calculate())}
               >
                 {calculating ? showProgress(toFlooredPercent(progress, 0), updates, DOTS) : 'Analyze'}
               </Button>
@@ -84,9 +103,19 @@ class WinRate extends Component<IProps, IState> {
                     <span>
                       <b>Win rate</b>
                       <br />
-                      <StyledNumber value={this.scale(attacker + draws / 2 + incomplete / 2)} positiveColor={ATTACKER_COLOR} neutralColor={ATTACKER_COLOR} formatter={this.toPercent} />
+                      <StyledNumber
+                        value={this.scale(attacker + draws / 2 + incomplete / 2)}
+                        positiveColor={ATTACKER_COLOR}
+                        neutralColor={ATTACKER_COLOR}
+                        formatter={this.toPercent}
+                      />
                       {' / '}
-                      <StyledNumber value={this.scale(defender + draws / 2 + incomplete / 2)} positiveColor={DEFENDER_COLOR} neutralColor={DEFENDER_COLOR} formatter={this.toPercent} />
+                      <StyledNumber
+                        value={this.scale(defender + draws / 2 + incomplete / 2)}
+                        positiveColor={DEFENDER_COLOR}
+                        neutralColor={DEFENDER_COLOR}
+                        formatter={this.toPercent}
+                      />
                     </span>
                   </Tooltip>
                 </Grid.Column>
@@ -95,9 +124,19 @@ class WinRate extends Component<IProps, IState> {
                     <span>
                       <b>Losses</b>
                       <br />
-                      <StyledNumber value={this.scale(avgStrengthA / maxStrengthA)} positiveColor={ATTACKER_COLOR} neutralColor={ATTACKER_COLOR} formatter={this.toPercent} />
+                      <StyledNumber
+                        value={this.scale(avgStrengthA / maxStrengthA)}
+                        positiveColor={ATTACKER_COLOR}
+                        neutralColor={ATTACKER_COLOR}
+                        formatter={this.toPercent}
+                      />
                       {' / '}
-                      <StyledNumber value={this.scale(avgStrengthD / maxStrengthD)} positiveColor={DEFENDER_COLOR} neutralColor={DEFENDER_COLOR} formatter={this.toPercent} />
+                      <StyledNumber
+                        value={this.scale(avgStrengthD / maxStrengthD)}
+                        positiveColor={DEFENDER_COLOR}
+                        neutralColor={DEFENDER_COLOR}
+                        formatter={this.toPercent}
+                      />
                     </span>
                   </Tooltip>
                 </Grid.Column>
@@ -114,7 +153,10 @@ class WinRate extends Component<IProps, IState> {
       <div>
         <p>The win rate is calculated by doing thousands of battles with different dice rolls.</p>
         <p>Check Analyze page for more stats or to change speed/accuracy of calculations.</p>
-        <p>For larges battles it's recommended to manually reduce combat width from Settings page while reducing amount of units.</p>
+        <p>
+          For larges battles it's recommended to manually reduce combat width from Settings page while reducing amount
+          of units.
+        </p>
       </div>
     )
   }
@@ -125,29 +167,33 @@ class WinRate extends Component<IProps, IState> {
       <div>
         <List>
           <List.Item>
-            Attacker: {<StyledNumber value={this.scale(attacker)} positiveColor={ATTACKER_COLOR} neutralColor={ATTACKER_COLOR} formatter={this.toTooltipPercent} />}
+            Attacker:{' '}
+            {
+              <StyledNumber
+                value={this.scale(attacker)}
+                positiveColor={ATTACKER_COLOR}
+                neutralColor={ATTACKER_COLOR}
+                formatter={this.toTooltipPercent}
+              />
+            }
           </List.Item>
           <List.Item>
-            Defender: {<StyledNumber value={this.scale(defender)} positiveColor={DEFENDER_COLOR} neutralColor={DEFENDER_COLOR} formatter={this.toTooltipPercent} />}
+            Defender:{' '}
+            {
+              <StyledNumber
+                value={this.scale(defender)}
+                positiveColor={DEFENDER_COLOR}
+                neutralColor={DEFENDER_COLOR}
+                formatter={this.toTooltipPercent}
+              />
+            }
           </List.Item>
-          {
-            this.scale(draws) > 0.0005 ?
-              <List.Item>
-                Draws: {this.toTooltipPercent(this.scale(draws))}
-              </List.Item>
-              : null
-          }
-          {
-            this.scale(incomplete) > 0.0005 ?
-              <List.Item>
-                Incomplete: {this.toTooltipPercent(this.scale(incomplete))}
-              </List.Item>
-              : null
-          }
+          {this.scale(draws) > 0.0005 ? <List.Item>Draws: {this.toTooltipPercent(this.scale(draws))}</List.Item> : null}
+          {this.scale(incomplete) > 0.0005 ? (
+            <List.Item>Incomplete: {this.toTooltipPercent(this.scale(incomplete))}</List.Item>
+          ) : null}
         </List>
-        <List.Item>
-          Battles: {battles}
-        </List.Item>
+        <List.Item>Battles: {battles}</List.Item>
       </div>
     )
   }
@@ -159,23 +205,65 @@ class WinRate extends Component<IProps, IState> {
         <List>
           <List.Item>
             Attacker:{' '}
-            {<StyledNumber value={this.scale(avgStrengthA / maxStrengthA)} positiveColor={ATTACKER_COLOR} neutralColor={ATTACKER_COLOR} formatter={this.toTooltipPercent} />}
+            {
+              <StyledNumber
+                value={this.scale(avgStrengthA / maxStrengthA)}
+                positiveColor={ATTACKER_COLOR}
+                neutralColor={ATTACKER_COLOR}
+                formatter={this.toTooltipPercent}
+              />
+            }
             {' ('}
-            {<StyledNumber value={this.scale(avgStrengthA)} positiveColor={ATTACKER_COLOR} neutralColor={ATTACKER_COLOR} formatter={this.toTooltipNumber} />}
+            {
+              <StyledNumber
+                value={this.scale(avgStrengthA)}
+                positiveColor={ATTACKER_COLOR}
+                neutralColor={ATTACKER_COLOR}
+                formatter={this.toTooltipNumber}
+              />
+            }
             {')'}
           </List.Item>
           <List.Item>
             Defender:{' '}
-            {<StyledNumber value={this.scale(avgStrengthB / maxStrengthB)} positiveColor={DEFENDER_COLOR} neutralColor={DEFENDER_COLOR} formatter={this.toTooltipPercent} />}
+            {
+              <StyledNumber
+                value={this.scale(avgStrengthB / maxStrengthB)}
+                positiveColor={DEFENDER_COLOR}
+                neutralColor={DEFENDER_COLOR}
+                formatter={this.toTooltipPercent}
+              />
+            }
             {' ('}
-            {<StyledNumber value={this.scale(avgStrengthB)} positiveColor={DEFENDER_COLOR} neutralColor={DEFENDER_COLOR} formatter={this.toTooltipNumber} />}
+            {
+              <StyledNumber
+                value={this.scale(avgStrengthB)}
+                positiveColor={DEFENDER_COLOR}
+                neutralColor={DEFENDER_COLOR}
+                formatter={this.toTooltipNumber}
+              />
+            }
             {')'}
           </List.Item>
           <List.Item>
             Casualties win rate:{' '}
-            {<StyledNumber value={this.scale(winRateA)} positiveColor={ATTACKER_COLOR} neutralColor={ATTACKER_COLOR} formatter={this.toTooltipPercent} />}
+            {
+              <StyledNumber
+                value={this.scale(winRateA)}
+                positiveColor={ATTACKER_COLOR}
+                neutralColor={ATTACKER_COLOR}
+                formatter={this.toTooltipPercent}
+              />
+            }
             {' / '}
-            {<StyledNumber value={this.scale(winRateB)} positiveColor={DEFENDER_COLOR} neutralColor={DEFENDER_COLOR} formatter={this.toTooltipPercent} />}
+            {
+              <StyledNumber
+                value={this.scale(winRateB)}
+                positiveColor={DEFENDER_COLOR}
+                neutralColor={DEFENDER_COLOR}
+                formatter={this.toTooltipPercent}
+              />
+            }
           </List.Item>
           <List.Item>
             Casualties balance:{' '}
@@ -184,19 +272,23 @@ class WinRate extends Component<IProps, IState> {
             {<StyledNumber reverse value={avgStrengthB / avgStrengthA - 1} formatter={this.toSignedTooltipPercent} />}
           </List.Item>
         </List>
-        <List.Item>
-          Battles: {battles}
-        </List.Item>
+        <List.Item>Battles: {battles}</List.Item>
       </div>
     )
   }
 
   update = (update: WinRateProgress, casualties: CasualtiesProgress) => {
-    if (this.willUnmount)
-      return
+    if (this.willUnmount) return
     const { attacker, defender, progress, calculating, draws, incomplete, battles } = update
     this.setState({
-      attacker, defender, progress, calculating, draws, incomplete, updates: calculating ? (this.state.updates + 1) % DOTS : 0, battles,
+      attacker,
+      defender,
+      progress,
+      calculating,
+      draws,
+      incomplete,
+      updates: calculating ? (this.state.updates + 1) % DOTS : 0,
+      battles,
       ...casualties
     })
   }
@@ -206,11 +298,16 @@ class WinRate extends Component<IProps, IState> {
     // Initialization done here to prevent it happening on every render.
     const environment = getCombatEnvironment(state)
     const [attacker, defender] = convertSides(state)
-    environment.settings = { ...environment.settings, [Setting.CalculateWinChance]: true, [Setting.CalculateCasualties]: true, [Setting.CalculateResourceLosses]: false }
+    environment.settings = {
+      ...environment.settings,
+      [Setting.CalculateWinChance]: true,
+      [Setting.CalculateCasualties]: true,
+      [Setting.CalculateResourceLosses]: false
+    }
     calculateWinRate(this.update, environment, attacker, defender)
   }
 
-  scale = (value: number) => this.state.progress ? value / this.state.progress : 0
+  scale = (value: number) => (this.state.progress ? value / this.state.progress : 0)
 }
 
 const mapStateToProps = (state: AppState) => ({ state })
@@ -219,6 +316,6 @@ const actions = {}
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
-interface IProps extends React.PropsWithChildren<Props>, S, D { }
+interface IProps extends React.PropsWithChildren<S>, D {}
 
 export default connect(mapStateToProps, actions)(WinRate)

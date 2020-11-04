@@ -1,4 +1,16 @@
-import { armyReducer, countriesReducer, unitsReducer, tacticsReducer, terrainsReducer, battleReducer, transferReducer, importReducer, settingsReducer, combatReducer, uiReducer } from 'reducers'
+import {
+  armyReducer,
+  countriesReducer,
+  unitsReducer,
+  tacticsReducer,
+  terrainsReducer,
+  battleReducer,
+  transferReducer,
+  importReducer,
+  settingsReducer,
+  combatReducer,
+  uiReducer
+} from 'reducers'
 import { combine, compose } from 'reducers/utils'
 import { Reducer } from 'react'
 

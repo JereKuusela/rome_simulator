@@ -18,25 +18,22 @@ interface IProps {
  * Shows unit's strength and weakness versus other units.
  */
 export default class VersusList extends Component<IProps> {
-
   render() {
     const { unitTypes, item, images, styled } = this.props
     return (
       <List horizontal>
-        {
-          unitTypes.filter(type => calculateValue(item, type)).map(type => (
+        {unitTypes
+          .filter(type => calculateValue(item, type))
+          .map(type => (
             <List.Item key={type} style={{ marginLeft: 0, width: '50%' }}>
               <Images values={images[type]} />
-              {styled ?
-                <StyledNumber
-                  value={calculateValue(item, type)}
-                  formatter={toSignedPercent}
-                />
-                : toSignedPercent(calculateValue(item, type))
-              }
+              {styled ? (
+                <StyledNumber value={calculateValue(item, type)} formatter={toSignedPercent} />
+              ) : (
+                toSignedPercent(calculateValue(item, type))
+              )}
             </List.Item>
-          ))
-        }
+          ))}
       </List>
     )
   }

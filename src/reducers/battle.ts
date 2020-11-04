@@ -1,4 +1,3 @@
-
 import * as manager from 'managers/battle'
 import { ModeState, Battle } from 'types'
 import { getDefaultBattle } from 'data'

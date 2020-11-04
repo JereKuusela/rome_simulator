@@ -1,13 +1,31 @@
-import { TestState, initState, initExpected, testCombatWithCustomRolls, createCohort, getArmyTest, getSettingsTest, addToReserveTest } from './utils'
-import { UnitType, UnitAttribute, TacticType, CohortDefinition, CombatPhase, Settings, Setting, DisciplineValue, SideType, UnitRole } from 'types'
+import {
+  TestState,
+  initState,
+  initExpected,
+  testCombatWithCustomRolls,
+  createCohort,
+  getArmyTest,
+  getSettingsTest,
+  addToReserveTest
+} from './utils'
+import {
+  UnitType,
+  UnitAttribute,
+  TacticType,
+  CohortDefinition,
+  CombatPhase,
+  Settings,
+  Setting,
+  DisciplineValue,
+  SideType,
+  UnitRole
+} from 'types'
 import { map } from 'utils'
 import { selectTactic } from 'managers/army'
 
-
 if (process.env.REACT_APP_GAME === 'IR') {
-
   describe('mechanics', () => {
-    let unit = null as any as CohortDefinition
+    let unit = (null as any) as CohortDefinition
 
     const type = 'Test' as UnitType
 
@@ -17,37 +35,44 @@ if (process.env.REACT_APP_GAME === 'IR') {
       unit = createCohort(type)
       unit.role = UnitRole.Support
       unit.isLoyal = true
-      unit.baseValues![UnitAttribute.Morale] = { 'key': 3 }
-      unit.baseValues![UnitAttribute.Strength] = { 'key': 1 }
-      unit.baseValues![UnitAttribute.MoraleDamageTaken] = { 'key': 0.25 }
-      unit.baseValues![UnitAttribute.MoraleDamageDone] = { 'key': 0.25 }
-      unit.baseValues![UnitAttribute.StrengthDamageDone] = { 'key': 0.25 }
-      unit.baseValues![UnitAttribute.StrengthDamageTaken] = { 'key': 0.25 }
-      unit.baseValues![UnitAttribute.CombatAbility] = { 'key': 0.3 }
-      unit.baseValues![CombatPhase.Fire] = { 'key': 0.5 }
-      unit.baseValues![UnitAttribute.FireDamageDone] = { 'key': 0.2 }
-      unit.baseValues![UnitAttribute.FireDamageTaken] = { 'key': -0.5 }
-      unit.baseValues![UnitAttribute.Offense] = { 'key': 0.6 }
-      unit.baseValues![UnitAttribute.Defense] = { 'key': 0.5 }
-      unit.baseValues![UnitAttribute.DamageDone] = { 'key': 0.6 }
-      unit.baseValues![UnitAttribute.DamageTaken] = { 'key': 0.5 }
-      unit.baseValues![UnitAttribute.Discipline] = { 'key': 0.75 }
-      unit.baseValues![type] = { 'key': 0.2 }
-      unit.baseValues![UnitAttribute.OffensiveSupport] = { 'key': 0.5 }
+      unit.baseValues![UnitAttribute.Morale] = { key: 3 }
+      unit.baseValues![UnitAttribute.Strength] = { key: 1 }
+      unit.baseValues![UnitAttribute.MoraleDamageTaken] = { key: 0.25 }
+      unit.baseValues![UnitAttribute.MoraleDamageDone] = { key: 0.25 }
+      unit.baseValues![UnitAttribute.StrengthDamageDone] = { key: 0.25 }
+      unit.baseValues![UnitAttribute.StrengthDamageTaken] = { key: 0.25 }
+      unit.baseValues![UnitAttribute.CombatAbility] = { key: 0.3 }
+      unit.baseValues![CombatPhase.Fire] = { key: 0.5 }
+      unit.baseValues![UnitAttribute.FireDamageDone] = { key: 0.2 }
+      unit.baseValues![UnitAttribute.FireDamageTaken] = { key: -0.5 }
+      unit.baseValues![UnitAttribute.Offense] = { key: 0.6 }
+      unit.baseValues![UnitAttribute.Defense] = { key: 0.5 }
+      unit.baseValues![UnitAttribute.DamageDone] = { key: 0.6 }
+      unit.baseValues![UnitAttribute.DamageTaken] = { key: 0.5 }
+      unit.baseValues![UnitAttribute.Discipline] = { key: 0.75 }
+      unit.baseValues![type] = { key: 0.2 }
+      unit.baseValues![UnitAttribute.OffensiveSupport] = { key: 0.5 }
 
-      state.settings.siteSettings = map(state.settings.siteSettings , item => typeof item === 'boolean' ? false : item) as Settings
+      state.settings.siteSettings = map(state.settings.siteSettings, item =>
+        typeof item === 'boolean' ? false : item
+      ) as Settings
       getSettingsTest(state)[Setting.CounteringDamage] = 0
       getSettingsTest(state)[Setting.AttributeDiscipline] = DisciplineValue.Off
       getSettingsTest(state)[Setting.BackRow] = true
 
-      state.tactics[TacticType.Bottleneck].baseValues![type] = { 'key': 0.5 }
+      state.tactics[TacticType.Bottleneck].baseValues![type] = { key: 0.5 }
       selectTactic(getArmyTest(state, SideType.A), TacticType.Bottleneck)
       selectTactic(getArmyTest(state, SideType.B), TacticType.ShockAction)
       addToReserveTest(state, SideType.A, [unit])
       addToReserveTest(state, SideType.B, [unit])
     })
 
-    const test = (damageMultiplierA: number, damageMultiplierD: number, strengthMultiplier: number, moraleMultiplier: number) => {
+    const test = (
+      damageMultiplierA: number,
+      damageMultiplierD: number,
+      strengthMultiplier: number,
+      moraleMultiplier: number
+    ) => {
       const rolls = [[3, 3]]
       const expected = initExpected(1)
 
@@ -62,7 +87,6 @@ if (process.env.REACT_APP_GAME === 'IR') {
       expected[1].B.front = [[unit.type, strengthD, moraleD]]
 
       testCombatWithCustomRolls(state, rolls, expected)
-
     }
 
     it('no mechanics', () => {

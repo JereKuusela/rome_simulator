@@ -8,9 +8,7 @@ interface IProps<T extends string> {
   style?: any
 }
 
-
 export default class Input<T extends string> extends Component<IProps<T>> {
-
   render() {
     const { value, onChange, style } = this.props
     return (

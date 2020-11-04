@@ -1,56 +1,84 @@
-import { UnitPreferences, UnitAttribute, UnitPreferenceType, UnitRole, Setting, Settings, Reserve, Cohorts, Cohort, Side, Environment, Army } from 'types'
+import {
+  UnitPreferences,
+  UnitAttribute,
+  UnitPreferenceType,
+  UnitRole,
+  Setting,
+  Settings,
+  Reserve,
+  Cohorts,
+  Cohort,
+  Side,
+  Environment,
+  Army
+} from 'types'
 import { sortBy, remove, clamp, sum, flatten } from 'lodash'
 import { nextIndex, reserveSize, defeatCohort, isAlive } from './combat_utils'
 import { getLeadingArmy } from 'managers/battle'
 
 const armyFlankCount = (reserve: Reserve) => {
-  return reserve.front.filter(cohort => cohort.properties.role === UnitRole.Flank).length
-    + reserve.flank.filter(cohort => cohort.properties.role === UnitRole.Flank).length
-    + reserve.support.filter(cohort => cohort.properties.role === UnitRole.Flank).length
+  return (
+    reserve.front.filter(cohort => cohort.properties.role === UnitRole.Flank).length +
+    reserve.flank.filter(cohort => cohort.properties.role === UnitRole.Flank).length +
+    reserve.support.filter(cohort => cohort.properties.role === UnitRole.Flank).length
+  )
 }
 
-const deployFront = (cohorts: Cohort[], row: (Cohort | null)[], center: number, flank: number, settings: Settings, preferences?: UnitPreferences) => {
+const deployFront = (
+  cohorts: Cohort[],
+  row: (Cohort | null)[],
+  center: number,
+  flank: number,
+  settings: Settings,
+  preferences?: UnitPreferences
+) => {
   for (let index = center; index !== flank; index = nextIndex(index, center)) {
-    if (row[index])
-      continue
+    if (row[index]) continue
     const cohort = cohorts.pop()
     if (cohort) {
-      if (preferences)
-        applyReinforcementPenalty(cohort, preferences, settings)
+      if (preferences) applyReinforcementPenalty(cohort, preferences, settings)
       row[index] = cohort
-    }
-    else
-      break
+    } else break
   }
 }
 
-const deployFlanks = (cohorts: Cohort[], row: (Cohort | null)[], center: number, flank: number, settings: Settings, preferences?: UnitPreferences) => {
+const deployFlanks = (
+  cohorts: Cohort[],
+  row: (Cohort | null)[],
+  center: number,
+  flank: number,
+  settings: Settings,
+  preferences?: UnitPreferences
+) => {
   for (let index = flank; index >= 0 && index < row.length; index = nextIndex(index, center)) {
-    if (row[index])
-      continue
+    if (row[index]) continue
     const cohort = cohorts.pop()
     if (cohort) {
-      if (preferences)
-        applyReinforcementPenalty(cohort, preferences, settings)
+      if (preferences) applyReinforcementPenalty(cohort, preferences, settings)
       row[index] = cohort
-    }
-    else
-      break
+    } else break
   }
 }
 
-const deployBoth = (cohorts: Cohort[], row: (Cohort | null)[], center: number, limit: number, settings: Settings, preferences?: UnitPreferences) => {
-  for (let index = center, count = 0; index >= 0 && index < row.length && count < limit; index = nextIndex(index, center), count++) {
-    if (row[index])
-      continue
+const deployBoth = (
+  cohorts: Cohort[],
+  row: (Cohort | null)[],
+  center: number,
+  limit: number,
+  settings: Settings,
+  preferences?: UnitPreferences
+) => {
+  for (
+    let index = center, count = 0;
+    index >= 0 && index < row.length && count < limit;
+    index = nextIndex(index, center), count++
+  ) {
+    if (row[index]) continue
     const cohort = cohorts.pop()
     if (cohort) {
-      if (preferences)
-        applyReinforcementPenalty(cohort, preferences, settings)
+      if (preferences) applyReinforcementPenalty(cohort, preferences, settings)
       row[index] = cohort
-    }
-    else
-      break
+    } else break
   }
 }
 
@@ -60,49 +88,61 @@ const applyLateDeploymentPenaltySub = (cohort: Cohort, percent: number) => {
 }
 
 const applyLateDeploymentPenalty = (reserve: Reserve, round: number, settings: Settings) => {
-  if (round < settings[Setting.StackwipeRounds] || !settings[Setting.MoraleHitForLateDeployment])
-    return
+  if (round < settings[Setting.StackwipeRounds] || !settings[Setting.MoraleHitForLateDeployment]) return
   reserve.front.forEach(cohort => applyLateDeploymentPenaltySub(cohort, settings[Setting.MoraleHitForLateDeployment]))
   reserve.flank.forEach(cohort => applyLateDeploymentPenaltySub(cohort, settings[Setting.MoraleHitForLateDeployment]))
   reserve.support.forEach(cohort => applyLateDeploymentPenaltySub(cohort, settings[Setting.MoraleHitForLateDeployment]))
 }
 
 const applyReinforcementPenalty = (cohort: Cohort, preferences: UnitPreferences, settings: Settings) => {
-  if (cohort.properties.type !== preferences[UnitPreferenceType.Secondary] && settings[Setting.MoraleHitForNonSecondaryReinforcement]) {
-    cohort[UnitAttribute.Morale] -= cohort.properties.maxMorale * settings[Setting.MoraleHitForNonSecondaryReinforcement]
+  if (
+    cohort.properties.type !== preferences[UnitPreferenceType.Secondary] &&
+    settings[Setting.MoraleHitForNonSecondaryReinforcement]
+  ) {
+    cohort[UnitAttribute.Morale] -=
+      cohort.properties.maxMorale * settings[Setting.MoraleHitForNonSecondaryReinforcement]
     cohort.properties.reinforcementPenalty += settings[Setting.MoraleHitForNonSecondaryReinforcement]
   }
 }
 
-const deployCohorts = (target: Cohorts, reserve: Reserve, leftFlank: number, rightFlank: number, settings: Settings, preferences?: UnitPreferences) => {
+const deployCohorts = (
+  target: Cohorts,
+  reserve: Reserve,
+  leftFlank: number,
+  rightFlank: number,
+  settings: Settings,
+  preferences?: UnitPreferences
+) => {
   const frontline = target.frontline[0]
   const backline = target.frontline.length > 1 ? target.frontline[1] : null
   const center = Math.floor(frontline.length / 2.0)
   let flankStartingIndex = leftFlank > rightFlank ? leftFlank - 1 : frontline.length - rightFlank
-  if (frontline.length % 2)
-    flankStartingIndex = leftFlank >= rightFlank ? leftFlank - 1 : frontline.length - rightFlank
-  const deploySupport = !settings[Setting.SupportPhase] || (reserve.front.length === 0 && reserve.flank.length === 0 && !frontline.some(cohort => cohort))
+  if (frontline.length % 2) flankStartingIndex = leftFlank >= rightFlank ? leftFlank - 1 : frontline.length - rightFlank
+  const deploySupport =
+    !settings[Setting.SupportPhase] ||
+    (reserve.front.length === 0 && reserve.flank.length === 0 && !frontline.some(cohort => cohort))
   const maxSupportBackline = Math.floor(reserveSize(reserve) / 2)
 
-  if (backline)
-    deployBoth(reserve.support, backline, center, maxSupportBackline, settings, preferences)
+  if (backline) deployBoth(reserve.support, backline, center, maxSupportBackline, settings, preferences)
 
   deployFront(reserve.front, frontline, center, flankStartingIndex, settings, preferences)
   deployFront(reserve.flank, frontline, center, flankStartingIndex, settings, preferences)
-  if (deploySupport)
-    deployFront(reserve.support, frontline, center, flankStartingIndex, settings, preferences)
+  if (deploySupport) deployFront(reserve.support, frontline, center, flankStartingIndex, settings, preferences)
   // Use front units as flank if necessary.
-  deployFlanks(reserve.flank.length ? reserve.flank : reserve.front, frontline, center, flankStartingIndex, settings, preferences)
-  if (backline)
-    deployFront(reserve.front, backline, center, flankStartingIndex, settings, preferences)
+  deployFlanks(
+    reserve.flank.length ? reserve.flank : reserve.front,
+    frontline,
+    center,
+    flankStartingIndex,
+    settings,
+    preferences
+  )
+  if (backline) deployFront(reserve.front, backline, center, flankStartingIndex, settings, preferences)
   deployFlanks(reserve.flank, frontline, center, flankStartingIndex, settings, preferences)
   deployFlanks(reserve.front, frontline, center, flankStartingIndex, settings, preferences)
-  if (deploySupport)
-    deployFlanks(reserve.support, frontline, center, flankStartingIndex, settings, preferences)
-  if (backline)
-    deployFlanks(reserve.flank, backline, center, flankStartingIndex, settings, preferences)
+  if (deploySupport) deployFlanks(reserve.support, frontline, center, flankStartingIndex, settings, preferences)
+  if (backline) deployFlanks(reserve.flank, backline, center, flankStartingIndex, settings, preferences)
 }
-
 
 export const sortReserve = (reserve: Cohort[], unitPreferences: UnitPreferences): Reserve => {
   const frontReserve = reserve.filter(value => isFrontUnit(unitPreferences, value))
@@ -110,10 +150,19 @@ export const sortReserve = (reserve: Cohort[], unitPreferences: UnitPreferences)
   const supportReserve = reserve.filter(value => isSupportUnit(unitPreferences, value))
   // Calculate priorities (mostly based on unit type, ties are resolved with index numbers).
   const front = sortBy(frontReserve, value => {
-    return value.properties.deploymentCost * 100000 + value[UnitAttribute.Strength] * 1000 + (value.properties.type === unitPreferences[UnitPreferenceType.Primary] ? 200000000 : 0) + (value.properties.type === unitPreferences[UnitPreferenceType.Secondary] ? 100000000 : 0)
+    return (
+      value.properties.deploymentCost * 100000 +
+      value[UnitAttribute.Strength] * 1000 +
+      (value.properties.type === unitPreferences[UnitPreferenceType.Primary] ? 200000000 : 0) +
+      (value.properties.type === unitPreferences[UnitPreferenceType.Secondary] ? 100000000 : 0)
+    )
   })
   const flank = sortBy(flankReserve, value => {
-    return value.properties[UnitAttribute.Maneuver] * 100000 + value[UnitAttribute.Strength] * 1000 + (value.properties.type === unitPreferences[UnitPreferenceType.Flank] ? 100000000 : 0)
+    return (
+      value.properties[UnitAttribute.Maneuver] * 100000 +
+      value[UnitAttribute.Strength] * 1000 +
+      (value.properties.type === unitPreferences[UnitPreferenceType.Flank] ? 100000000 : 0)
+    )
   })
   const support = sortBy(supportReserve, value => {
     return value[UnitAttribute.Strength] * 1000
@@ -122,26 +171,32 @@ export const sortReserve = (reserve: Cohort[], unitPreferences: UnitPreferences)
 }
 
 const isFrontUnit = (preferences: UnitPreferences, cohort: Cohort) => {
-  if (cohort.properties.type === preferences[UnitPreferenceType.Primary] || cohort.properties.type === preferences[UnitPreferenceType.Secondary])
+  if (
+    cohort.properties.type === preferences[UnitPreferenceType.Primary] ||
+    cohort.properties.type === preferences[UnitPreferenceType.Secondary]
+  )
     return true
-  if (cohort.properties.type === preferences[UnitPreferenceType.Flank])
-    return false
+  if (cohort.properties.type === preferences[UnitPreferenceType.Flank]) return false
   return cohort.properties.role === UnitRole.Front
 }
 
 const isFlankUnit = (preferences: UnitPreferences, cohort: Cohort) => {
-  if (cohort.properties.type === preferences[UnitPreferenceType.Primary] || cohort.properties.type === preferences[UnitPreferenceType.Secondary])
+  if (
+    cohort.properties.type === preferences[UnitPreferenceType.Primary] ||
+    cohort.properties.type === preferences[UnitPreferenceType.Secondary]
+  )
     return false
-  if (cohort.properties.type === preferences[UnitPreferenceType.Flank])
-    return true
+  if (cohort.properties.type === preferences[UnitPreferenceType.Flank]) return true
   return cohort.properties.role === UnitRole.Flank
 }
 
 const isSupportUnit = (preferences: UnitPreferences, cohort: Cohort) => {
-  if (cohort.properties.type === preferences[UnitPreferenceType.Primary] || cohort.properties.type === preferences[UnitPreferenceType.Secondary])
+  if (
+    cohort.properties.type === preferences[UnitPreferenceType.Primary] ||
+    cohort.properties.type === preferences[UnitPreferenceType.Secondary]
+  )
     return false
-  if (cohort.properties.type === preferences[UnitPreferenceType.Flank])
-    return false
+  if (cohort.properties.type === preferences[UnitPreferenceType.Flank]) return false
   return cohort.properties.role === UnitRole.Support
 }
 
@@ -152,7 +207,11 @@ const isSupportUnit = (preferences: UnitPreferences, cohort: Cohort) => {
  * @param reserve Sorted reserve to get amount of flanking units.
  * @param enemyUnits Enemy units to calculate space on the battlefield.
  */
-const calculateFlankSizes = (combatWidth: number, preferredFlankSize: number, enemyArmySize?: number): [number, number] => {
+const calculateFlankSizes = (
+  combatWidth: number,
+  preferredFlankSize: number,
+  enemyArmySize?: number
+): [number, number] => {
   const free_space = enemyArmySize ? combatWidth - enemyArmySize : 0
   const leftSideFreeSpace = Math.ceil(free_space / 2.0)
   const rightSideFreeSpace = Math.floor(free_space / 2.0)
@@ -165,15 +224,16 @@ const calculateFlankSizes = (combatWidth: number, preferredFlankSize: number, en
 }
 
 const calculatePreferredFlankSize = (settings: Settings, customValue: number, reserve: Reserve) => {
-  return settings[Setting.CustomDeployment] ? customValue : Math.min(armyFlankCount(reserve) / 2, Math.floor(settings[Setting.BaseCombatWidth] / 4))
+  return settings[Setting.CustomDeployment]
+    ? customValue
+    : Math.min(armyFlankCount(reserve) / 2, Math.floor(settings[Setting.BaseCombatWidth] / 4))
 }
 
 const removeDefeatedFromNewArmies = (environment: Environment, side: Side, armies: Army[]) => {
   const removeFromReserve = (part: Cohort[]) => {
     for (let i = 0; i < part.length; i++) {
       const cohort = part[i]
-      if (isAlive(cohort, environment.settings))
-        continue
+      if (isAlive(cohort, environment.settings)) continue
       defeatCohort(environment, cohort)
       side.cohorts.defeated.push(cohort)
       remove(part, value => value === cohort)
@@ -189,8 +249,7 @@ const removeDefeatedFromNewArmies = (environment: Environment, side: Side, armie
 
 export const deploy = (environment: Environment, sideA: Side, sideB: Side) => {
   const { day, settings, round } = environment
-  if (round === 0 && (!canDeploy(day, sideA) || !canDeploy(day, sideB)))
-    return
+  if (round === 0 && (!canDeploy(day, sideA) || !canDeploy(day, sideB))) return
   const armiesA = getDeployingArmies(day, sideA)
   const armiesB = getDeployingArmies(day, sideB)
   removeDefeatedFromNewArmies(environment, sideA, armiesA)
@@ -205,7 +264,8 @@ export const deploy = (environment: Environment, sideA: Side, sideB: Side) => {
   }
 }
 
-const countCohorts = (side: Side) => reserveSize(side.cohorts.reserve) + side.cohorts.frontline[0].filter(unit => unit).length
+const countCohorts = (side: Side) =>
+  reserveSize(side.cohorts.reserve) + side.cohorts.frontline[0].filter(unit => unit).length
 const countReserve = (armies: Army[]) => sum(armies.map(army => reserveSize(army.reserve)))
 
 export const undeploy = (environment: Environment, side: Side) => {
@@ -217,7 +277,10 @@ export const undeploy = (environment: Environment, side: Side) => {
     reserve.push(...side.cohorts.reserve.support)
     reserve.push(...side.cohorts.defeated)
     side.deployed.forEach(army => {
-      army.reserve = sortReserve(reserve.filter(cohort => cohort.properties.participantIndex === army.participantIndex), army.unitPreferences)
+      army.reserve = sortReserve(
+        reserve.filter(cohort => cohort.properties.participantIndex === army.participantIndex),
+        army.unitPreferences
+      )
       applyWinningMoraleBonus(army.reserve, environment.settings)
       side.armies.push(army)
     })
@@ -230,19 +293,20 @@ export const undeploy = (environment: Environment, side: Side) => {
 }
 
 const applyWinningMoraleBonusSub = (cohort: Cohort, percent: number) => {
-  const bonus = Math.min(cohort.properties.maxMorale * percent, cohort.properties.maxMorale - cohort[UnitAttribute.Morale])
+  const bonus = Math.min(
+    cohort.properties.maxMorale * percent,
+    cohort.properties.maxMorale - cohort[UnitAttribute.Morale]
+  )
   cohort[UnitAttribute.Morale] += bonus
   cohort.properties.winningMoraleBonus += bonus
 }
 
 const applyWinningMoraleBonus = (reserve: Reserve, settings: Settings) => {
-  if (!settings[Setting.MoraleGainForWinning])
-    return
+  if (!settings[Setting.MoraleGainForWinning]) return
   reserve.front.forEach(cohort => applyWinningMoraleBonusSub(cohort, settings[Setting.MoraleGainForWinning]))
   reserve.flank.forEach(cohort => applyWinningMoraleBonusSub(cohort, settings[Setting.MoraleGainForWinning]))
   reserve.support.forEach(cohort => applyWinningMoraleBonusSub(cohort, settings[Setting.MoraleGainForWinning]))
 }
-
 
 export const moveDefeatedToRetreated = (cohorts: Cohorts) => {
   cohorts.retreated.push(...cohorts.defeated)
@@ -264,7 +328,11 @@ const getDeployingArmies = (day: number, side: Side) => {
 const deploySub = (side: Side, deploying: Army[], settings: Settings, round: number, enemyArmySize?: number) => {
   const pool: Cohort[] = []
   deploying.forEach(army => {
-    const [leftFlank, rightFlank] = calculateFlankSizes(settings[Setting.BaseCombatWidth], calculatePreferredFlankSize(settings, army.flankSize, army.reserve), enemyArmySize)
+    const [leftFlank, rightFlank] = calculateFlankSizes(
+      settings[Setting.BaseCombatWidth],
+      calculatePreferredFlankSize(settings, army.flankSize, army.reserve),
+      enemyArmySize
+    )
     army.leftFlank = leftFlank
     army.rightFlank = rightFlank
     applyLateDeploymentPenalty(army.reserve, round, settings)
@@ -284,8 +352,7 @@ const deploySub = (side: Side, deploying: Army[], settings: Settings, round: num
 const resortReserve = (side: Side, reserve: Cohort[]) => {
   const general = getLeadingArmy(side)
   // Without general there also won't be any cohorts (so sorting is not needed).
-  if (general)
-    side.cohorts.reserve = sortReserve(reserve, general.unitPreferences)
+  if (general) side.cohorts.reserve = sortReserve(reserve, general.unitPreferences)
   else
     side.cohorts.reserve = {
       flank: [],
@@ -301,8 +368,7 @@ const moveUnits = (cohorts: Cohorts) => {
     const row = frontline[rowIndex]
     const nextRow = frontline[rowIndex - 1]
     for (let unitIndex = 0; unitIndex < row.length; unitIndex++) {
-      if (nextRow[unitIndex])
-        continue
+      if (nextRow[unitIndex]) continue
       nextRow[unitIndex] = row[unitIndex]
       row[unitIndex] = null
     }
@@ -312,8 +378,7 @@ const moveUnits = (cohorts: Cohorts) => {
   // Move units from left to center.
   for (let unitIndex = Math.floor(front.length / 2.0); unitIndex > 0; --unitIndex) {
     const unit = front[unitIndex]
-    if (unit)
-      continue
+    if (unit) continue
     const unitOnLeft = front[unitIndex - 1]
     if (unitOnLeft) {
       front[unitIndex] = unitOnLeft
@@ -323,8 +388,7 @@ const moveUnits = (cohorts: Cohorts) => {
   // Move units from right to center.
   for (let unitIndex = Math.ceil(front.length / 2.0); unitIndex < front.length - 1; ++unitIndex) {
     const unit = front[unitIndex]
-    if (unit)
-      continue
+    if (unit) continue
     const unitOnRight = front[unitIndex + 1]
     if (unitOnRight) {
       front[unitIndex] = unitOnRight
@@ -334,13 +398,20 @@ const moveUnits = (cohorts: Cohorts) => {
 }
 
 /**
-* Reinforces a given army based on reinforcement rules.
-* First priority is to move units from reserve. Then units move towards center.
-*/
+ * Reinforces a given army based on reinforcement rules.
+ * First priority is to move units from reserve. Then units move towards center.
+ */
 export const reinforce = (field: Environment, side: Side) => {
   const { settings } = field
   const general = getLeadingArmy(side)
   if (general && reserveSize(side.cohorts.reserve))
-    deployCohorts(side.cohorts, side.cohorts.reserve, general.leftFlank, general.rightFlank, settings, general.unitPreferences)
+    deployCohorts(
+      side.cohorts,
+      side.cohorts.reserve,
+      general.leftFlank,
+      general.rightFlank,
+      settings,
+      general.unitPreferences
+    )
   moveUnits(side.cohorts)
 }

@@ -1,5 +1,21 @@
 import { Mode } from 'types'
-import { mergeValues, addValues, ValuesType, clearAllValues, clearValues, regenerateValues, calculateValue, calculateValueWithoutLoss, calculateBase, calculateModifier, calculateLoss, explainShort, getValue, DefinitionValues, shrinkValues } from 'definition_values'
+import {
+  mergeValues,
+  addValues,
+  ValuesType,
+  clearAllValues,
+  clearValues,
+  regenerateValues,
+  calculateValue,
+  calculateValueWithoutLoss,
+  calculateBase,
+  calculateModifier,
+  calculateLoss,
+  explainShort,
+  getValue,
+  DefinitionValues,
+  shrinkValues
+} from 'definition_values'
 import EmptyIcon from 'images/empty.png'
 import UnknownIcon from 'images/unknown.png'
 import { size } from 'lodash'
@@ -26,37 +42,43 @@ describe('getImage', () => {
   })
 })
 
-const initValues = (attribute: string, key: string, value: number) => (
-  { [attribute]: { [key]: value } }
-)
+const initValues = (attribute: string, key: string, value: number) => ({ [attribute]: { [key]: value } })
 
 const get = (value1?: number, value2?: number): Values => {
-  if (value1 !== undefined && value2 !== undefined)
-    return { 'attribute': { 'key1': value1, 'key2': value2 } }
-  if (value1 !== undefined)
-    return { 'attribute': { 'key1': value1 } }
-  return { 'attribute': {} }
+  if (value1 !== undefined && value2 !== undefined) return { attribute: { key1: value1, key2: value2 } }
+  if (value1 !== undefined) return { attribute: { key1: value1 } }
+  return { attribute: {} }
 }
 
-const initDefinition = (value1: number | undefined, value2: number | undefined, value3: number | undefined, value4: number | undefined) => (
-  { type: 'test', image: '', baseValues: get(value1), modifierValues: get(value2), lossValues: get(value3), lossModifierValues: get(value4) }
-)
+const initDefinition = (
+  value1: number | undefined,
+  value2: number | undefined,
+  value3: number | undefined,
+  value4: number | undefined
+) => ({
+  type: 'test',
+  image: '',
+  baseValues: get(value1),
+  modifierValues: get(value2),
+  lossValues: get(value3),
+  lossModifierValues: get(value4)
+})
 
-const initBase = (value1: number, value2?: number) => (
-  { type: 'test', image: '', baseValues: get(value1, value2) }
-)
+const initBase = (value1: number, value2?: number) => ({ type: 'test', image: '', baseValues: get(value1, value2) })
 
-const initModifier = (value1: number, value2?: number) => (
-  { type: 'test', image: '', modifierValues: get(value1, value2) }
-)
+const initModifier = (value1: number, value2?: number) => ({
+  type: 'test',
+  image: '',
+  modifierValues: get(value1, value2)
+})
 
-const initLoss = (value1: number, value2?: number) => (
-  { type: 'test', image: '', lossValues: get(value1, value2) }
-)
+const initLoss = (value1: number, value2?: number) => ({ type: 'test', image: '', lossValues: get(value1, value2) })
 
-const initLossModifier = (value1: number, value2?: number) => (
-  { type: 'test', image: '', lossModifierValues: get(value1, value2) }
-)
+const initLossModifier = (value1: number, value2?: number) => ({
+  type: 'test',
+  image: '',
+  lossModifierValues: get(value1, value2)
+})
 
 describe('mergeValues', () => {
   it('returns first when only', () => {
@@ -72,7 +94,14 @@ describe('mergeValues', () => {
     expect(result.type).toEqual('test1')
   })
   it('generates empty values', () => {
-    const definition = { type: 'test', image: '', baseValues: undefined, modifierValues: undefined, lossValues: undefined, lossModifierValues: undefined }
+    const definition = {
+      type: 'test',
+      image: '',
+      baseValues: undefined,
+      modifierValues: undefined,
+      lossValues: undefined,
+      lossModifierValues: undefined
+    }
     const result = mergeValues(definition, undefined) as any
     expect(result.baseValues).toBeTruthy()
     expect(result.modifierValues).toBeTruthy()
@@ -80,8 +109,22 @@ describe('mergeValues', () => {
     expect(result.lossModifierValues).toBeTruthy()
   })
   it('merges different values', () => {
-    const definition = { type: 'test', image: '', baseValues: initValues('test1', 'key1', 0), modifierValues: initValues('test1', 'key2', 0), lossValues: initValues('test1', 'key3', 0), lossModifierValues: initValues('test1', 'key4', 0) }
-    const toMerge = { type: 'test', image: '', baseValues: initValues('test2', 'key1', 0), modifierValues: initValues('test2', 'key2', 0), lossValues: initValues('test2', 'key3', 0), lossModifierValues: initValues('test2', 'key4', 0) }
+    const definition = {
+      type: 'test',
+      image: '',
+      baseValues: initValues('test1', 'key1', 0),
+      modifierValues: initValues('test1', 'key2', 0),
+      lossValues: initValues('test1', 'key3', 0),
+      lossModifierValues: initValues('test1', 'key4', 0)
+    }
+    const toMerge = {
+      type: 'test',
+      image: '',
+      baseValues: initValues('test2', 'key1', 0),
+      modifierValues: initValues('test2', 'key2', 0),
+      lossValues: initValues('test2', 'key3', 0),
+      lossModifierValues: initValues('test2', 'key4', 0)
+    }
     const result = mergeValues(definition, toMerge)
     expect(size(result.baseValues)).toEqual(2)
     expect(size(result.modifierValues)).toEqual(2)
@@ -109,15 +152,35 @@ describe('mergeValues', () => {
 
 describe('shrinkValues', () => {
   it('works with undefined', () => {
-    const result = shrinkValues({ type: 'test', image: '', baseValues: undefined, modifierValues: undefined, lossValues: undefined, lossModifierValues: undefined }, 'key')
-    expect(result.baseValues).toBeFalsy
-    expect(result.modifierValues).toBeFalsy
-    expect(result.lossValues).toBeFalsy
-    expect(result.lossModifierValues).toBeFalsy
+    const result = shrinkValues(
+      {
+        type: 'test',
+        image: '',
+        baseValues: undefined,
+        modifierValues: undefined,
+        lossValues: undefined,
+        lossModifierValues: undefined
+      },
+      'key'
+    )
+    expect(result.baseValues).toBeFalsy()
+    expect(result.modifierValues).toBeFalsy()
+    expect(result.lossValues).toBeFalsy()
+    expect(result.lossModifierValues).toBeFalsy()
   })
 
   it('works', () => {
-    const result = shrinkValues({ type: 'test', image: '', baseValues: get(1, 2), modifierValues: get(3, 4), lossValues: get(5, 6), lossModifierValues: get(7, 8) }, 'key')
+    const result = shrinkValues(
+      {
+        type: 'test',
+        image: '',
+        baseValues: get(1, 2),
+        modifierValues: get(3, 4),
+        lossValues: get(5, 6),
+        lossModifierValues: get(7, 8)
+      },
+      'key'
+    )
     expect(result.baseValues['attribute']['key']).toEqual(3)
     expect(result.modifierValues['attribute']['key']).toEqual(7)
     expect(result.lossValues['attribute']['key']).toEqual(11)
@@ -128,19 +191,24 @@ describe('shrinkValues', () => {
 describe('addValues', () => {
   it('generates empty base values', () => {
     const result = addValues({ type: 'test', image: '', baseValues: undefined }, ValuesType.Base, 'key1', [])
-    expect(result.baseValues).toBeTruthy
+    expect(result.baseValues).toBeTruthy()
   })
   it('generates empty modifier values', () => {
     const result = addValues({ type: 'test', image: '', modifierValues: undefined }, ValuesType.Modifier, 'key1', [])
-    expect(result.modifierValues).toBeTruthy
+    expect(result.modifierValues).toBeTruthy()
   })
   it('generates empty loss values', () => {
     const result = addValues({ type: 'test', image: '', lossValues: undefined }, ValuesType.Loss, 'key1', [])
-    expect(result.lossValues).toBeTruthy
+    expect(result.lossValues).toBeTruthy()
   })
   it('generates empty loss modifier values', () => {
-    const result = addValues({ type: 'test', image: '', lossModifierValues: undefined }, ValuesType.LossModifier, 'key1', [])
-    expect(result.lossModifierValues).toBeTruthy
+    const result = addValues(
+      { type: 'test', image: '', lossModifierValues: undefined },
+      ValuesType.LossModifier,
+      'key1',
+      []
+    )
+    expect(result.lossModifierValues).toBeTruthy()
   })
   it('adds to base values', () => {
     const result = addValues(initBase(0), ValuesType.Base, 'key2', [['attribute', 1]])
@@ -198,11 +266,21 @@ describe('addValues', () => {
 
 describe('clearAllValues', () => {
   it('resets empty values', () => {
-    const result = clearAllValues({ type: 'test', image: '', baseValues: undefined, modifierValues: undefined, lossValues: undefined, lossModifierValues: undefined }, 'key1')
-    expect(result.baseValues).toBeTruthy
-    expect(result.modifierValues).toBeTruthy
-    expect(result.lossValues).toBeTruthy
-    expect(result.lossModifierValues).toBeTruthy
+    const result = clearAllValues(
+      {
+        type: 'test',
+        image: '',
+        baseValues: undefined,
+        modifierValues: undefined,
+        lossValues: undefined,
+        lossModifierValues: undefined
+      },
+      'key1'
+    )
+    expect(result.baseValues).toBeTruthy()
+    expect(result.modifierValues).toBeTruthy()
+    expect(result.lossValues).toBeTruthy()
+    expect(result.lossModifierValues).toBeTruthy()
   })
   it('clears all values', () => {
     const result = clearAllValues(initDefinition(0, 0, 0, 0), 'key1')

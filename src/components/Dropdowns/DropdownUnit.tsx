@@ -11,22 +11,20 @@ type IProps = {
 }
 
 export default class DropdownUnit extends Component<IProps> {
-
-  getContent = (unit: UnitDefinition) => ([
-    <LabelItem item={unit} />
-  ])
+  getContent = (unit: UnitDefinition) => [<LabelItem item={unit} />]
 
   isActive = (item: UnitDefinition) => item.type === this.props.value
 
   getValue = (item: UnitDefinition) => item.type
-
 
   headers = []
 
   render() {
     const { value, values, onSelect, settings } = this.props
     return (
-      <DropdownTable value={value} values={values}
+      <DropdownTable
+        value={value}
+        values={values}
         headers={this.headers}
         getContent={this.getContent}
         isActive={this.isActive}

@@ -12,8 +12,7 @@ const getUnits = (input: Input) => {
   const units: InputUnits = []
   forEach(input, (item, key) => {
     const type = dictionaryUnitType[key]
-    if (!type)
-      return
+    if (!type) return
     units.push(...Array(Number(item)).fill(type))
   })
   return units
@@ -28,17 +27,13 @@ const getUnitPrefences = (input: Input) => [
 const getFlankSize = (input: Input) => Number(input['flank_size'] ?? 0)
 const getGeneral = (input: Input) => Number(input['general'] ?? 0)
 
-
 const setInfoFromInput = (state: TestState, side: SideType, input: Input | Input[]) => {
   if (Array.isArray(input)) {
     input.forEach((input, index) => {
-      if (index !== 0)
-        createArmyTest(state, side)
+      if (index !== 0) createArmyTest(state, side)
       setArmyFromInput(state, side, input, index)
     })
-  }
-  else
-    setArmyFromInput(state, side, input, 0)
+  } else setArmyFromInput(state, side, input, 0)
 }
 
 const setArmyFromInput = (state: TestState, side: SideType, input: Input, index: number) => {
@@ -53,8 +48,8 @@ const setArmyFromInput = (state: TestState, side: SideType, input: Input, index:
 }
 /**
  * Loads a given input data to a given test info.
- * @param state 
- * @param data 
+ * @param state
+ * @param data
  */
 export const loadInput = (data: string, state: TestState) => {
   const parsed = parseFile(data)

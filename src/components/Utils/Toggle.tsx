@@ -9,9 +9,7 @@ interface IProps {
   onChange?: () => void
 }
 
-
 export default class Toggle extends Component<IProps> {
-
   render() {
     const { value, onChange } = this.props
     return (

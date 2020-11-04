@@ -1,12 +1,11 @@
-import { GovermentType, Selections } from "./modifiers"
-import { Armies } from "./armies"
-import { UnitsData, UnitAttribute } from "./units"
-import { DefinitionValues } from "definition_values"
+import { GovermentType, Selections } from './modifiers'
+import { Armies } from './armies'
+import { UnitsData, UnitAttribute } from './units'
+import { DefinitionValues } from 'definition_values'
 
 export type WearinessAttribute = UnitAttribute.Morale | UnitAttribute.Strength
 export type WearinessAttributes = { [key in WearinessAttribute]: MinMax }
-type MinMax = { min: number, max: number }
-
+type MinMax = { min: number; max: number }
 
 export enum CountryName {
   Country1 = 'Country 1',
@@ -41,4 +40,6 @@ export type Country = { [key in CountryAttribute]: number } & {
   weariness: WearinessAttributes
 }
 
-export enum CultureType { Dummy = 'Dummy' }
+export enum CultureType {
+  Dummy = 'Dummy'
+}

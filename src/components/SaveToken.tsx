@@ -10,9 +10,8 @@ type IState = {
 }
 
 /** Helper for generating save file binary tokens. */
-export default class SaveToken extends Component<{}, IState> {
-
-  constructor(props: {}) {
+export default class SaveToken extends Component<unknown, IState> {
+  constructor(props: unknown) {
     super(props)
     this.state = { errors: [] }
   }
@@ -54,33 +53,36 @@ export default class SaveToken extends Component<{}, IState> {
   }
 
   doMapping = () => {
-    if (!this.plain || !this.compressed)
-      return
+    if (!this.plain || !this.compressed) return
     this.plain.text().then(data => {
       const plainFile = parseFile(data)
 
       new JSZip().loadAsync(this.compressed!).then(zip => {
-        zip.file('gamestate')?.async('uint8array').then(buffer => {
-          const compressedFile = parseFile(binaryToPlain(buffer, false)[0])
+        zip
+          .file('gamestate')
+          ?.async('uint8array')
+          .then(buffer => {
+            const compressedFile = parseFile(binaryToPlain(buffer, false)[0])
 
-          const mapping: { [key: string]: string } = tokens
+            const mapping: { [key: string]: string } = tokens
 
-          this.mapper(mapping, compressedFile, plainFile)
-          const sortedMapping: { [key: string]: string } = {}
-          Object.keys(mapping).sort().forEach(key => sortedMapping[key] = mapping[key])
-          const blob = new Blob([JSON.stringify(sortedMapping, undefined, 2)], { type: 'text/plain;charset=utf-8' })
-          saveAs(blob, 'tokens.json');
+            this.mapper(mapping, compressedFile, plainFile)
+            const sortedMapping: { [key: string]: string } = {}
+            Object.keys(mapping)
+              .sort()
+              .forEach(key => (sortedMapping[key] = mapping[key]))
+            const blob = new Blob([JSON.stringify(sortedMapping, undefined, 2)], { type: 'text/plain;charset=utf-8' })
+            saveAs(blob, 'tokens.json')
 
-          this.plain = null
-          this.compressed = null
-        })
+            this.plain = null
+            this.compressed = null
+          })
       })
     })
   }
 
   mapper = (mapping: { [key: string]: string }, compressed: { [key: string]: any }, plain: { [key: string]: any }) => {
-    if (!compressed || !plain)
-      return
+    if (!compressed || !plain) return
     // Ironman key doesn't exist on plain save.
     const keys = Object.keys(compressed).filter(key => key !== 'ironman')
     const correctKeys = Object.keys(plain).filter(key => key !== 'ironman')
@@ -89,16 +91,12 @@ export default class SaveToken extends Component<{}, IState> {
       const correctKey = correctKeys[i]
       const value = compressed[keys[i]]
       const correctValue = plain[correctKeys[i]]
-      if (key !== correctKey)
-        mapping[key.substr(2).padStart(4, '0')] = correctKey
-      if (typeof value === 'object')
-        this.mapper(mapping, value, correctValue)
+      if (key !== correctKey) mapping[key.substr(2).padStart(4, '0')] = correctKey
+      if (typeof value === 'object') this.mapper(mapping, value, correctValue)
       else {
         if (typeof value === 'string' && value.startsWith('x_')) {
-          if (value !== correctValue)
-            mapping[value.substr(2).padStart(4, '0')] = correctValue
-        }
-        else if (value !== correctValue) {
+          if (value !== correctValue) mapping[value.substr(2).padStart(4, '0')] = correctValue
+        } else if (value !== correctValue) {
           console.log(key)
           console.log(value)
           console.log(compressed)

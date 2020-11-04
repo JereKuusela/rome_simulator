@@ -20,7 +20,6 @@ type Props = {
 }
 
 class TableSideInfo extends Component<IProps> {
-
   attributes = [UnitAttribute.Discipline]
 
   render() {
@@ -29,63 +28,36 @@ class TableSideInfo extends Component<IProps> {
       <Table celled unstackable>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>
-              Leader
-            </Table.HeaderCell>
-            {
-              settings[Setting.Martial] &&
-              <Table.HeaderCell>
-                General
-              </Table.HeaderCell>
-            }
-            {
-              settings[Setting.FireAndShock] &&
-              <Table.HeaderCell>
-                General
-              </Table.HeaderCell>
-            }
-            {
-              settings[Setting.Tactics] &&
-              <Table.HeaderCell>
-                Tactic
-              </Table.HeaderCell>
-            }
-            <Table.HeaderCell>
-              Dice roll
-            </Table.HeaderCell>
+            <Table.HeaderCell>Leader</Table.HeaderCell>
+            {settings[Setting.Martial] && <Table.HeaderCell>General</Table.HeaderCell>}
+            {settings[Setting.FireAndShock] && <Table.HeaderCell>General</Table.HeaderCell>}
+            {settings[Setting.Tactics] && <Table.HeaderCell>Tactic</Table.HeaderCell>}
+            <Table.HeaderCell>Dice roll</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
-        <Table.Body>
-          {this.renderSide()}
-        </Table.Body>
-      </Table >
+        <Table.Body>{this.renderSide()}</Table.Body>
+      </Table>
     )
   }
-
 
   renderSide = () => {
     const { settings, side, army, tactic } = this.props
     const participantIndex = army?.participantIndex ?? 0
     return (
       <Table.Row key={side.type}>
-        <Table.Cell>
-          {getParticipantName(side.participants[participantIndex])}
-        </Table.Cell>
+        <Table.Cell>{getParticipantName(side.participants[participantIndex])}</Table.Cell>
         <Table.Cell>
           <AttributeImage attribute={GeneralAttribute.Martial} />
           {army ? army.general[GeneralAttribute.Martial] : 0}
         </Table.Cell>
-        {
-          settings[Setting.Tactics] &&
+        {settings[Setting.Tactics] && (
           <Table.Cell collapsing>
             {army ? <Image src={getImage(army.tactic)} avatar /> : null}
             {tactic ? <StyledNumber value={tactic.damage} formatter={toSignedPercent} /> : null}
           </Table.Cell>
-        }
-        <Table.Cell>
-          {this.renderRoll()}
-        </Table.Cell>
-      </Table.Row >
+        )}
+        <Table.Cell>{this.renderRoll()}</Table.Cell>
+      </Table.Row>
     )
   }
 
@@ -98,27 +70,27 @@ class TableSideInfo extends Component<IProps> {
     return (
       <div key={side.type}>
         <Image src={IconDice} avatar />
-        {isDiceSet ? combat.results.dice : <DelayedNumericInput type='number' value={side.dice} onChange={value => setDice(side.type, value)} />}
+        {isDiceSet ? (
+          combat.results.dice
+        ) : (
+          <DelayedNumericInput type='number' value={side.dice} onChange={value => setDice(side.type, value)} />
+        )}
         <span style={{ paddingLeft: '1em' }}>
           <Button size='mini' icon={'plus'} onClick={() => openModal(ModalType.DiceRolls, { side: side.type })} />
         </span>
-        {
-          generalPips !== 0 ?
-            <span style={{ paddingLeft: '1em' }}>
-              <AttributeImage attribute={getCombatPhase(round, settings)} />
-              <StyledNumber value={generalPips} formatter={addSign} />
-            </span>
-            : null
-        }
-        {
-          terrainPips !== 0 ?
-            <span style={{ paddingLeft: '1em' }}>
-              <Image src={IconTerrain} avatar />
-              <StyledNumber value={terrainPips} formatter={addSign} />
-            </span>
-            : null
-        }
-      </div >
+        {generalPips !== 0 ? (
+          <span style={{ paddingLeft: '1em' }}>
+            <AttributeImage attribute={getCombatPhase(round, settings)} />
+            <StyledNumber value={generalPips} formatter={addSign} />
+          </span>
+        ) : null}
+        {terrainPips !== 0 ? (
+          <span style={{ paddingLeft: '1em' }}>
+            <Image src={IconTerrain} avatar />
+            <StyledNumber value={terrainPips} formatter={addSign} />
+          </span>
+        ) : null}
+      </div>
     )
   }
 }
@@ -142,6 +114,6 @@ const actions = { setDice, openModal }
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
-interface IProps extends React.PropsWithChildren<Props>, S, D { }
+interface IProps extends React.PropsWithChildren<Props>, S, D {}
 
 export default connect(mapStateToProps, actions)(TableSideInfo)

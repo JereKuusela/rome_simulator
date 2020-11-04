@@ -17,7 +17,6 @@ const BACK = '#FFF'
  * Simple range to select a value.
  */
 export default class SimpleRange extends Component<Props> {
-
   render() {
     const { onChange, value, min, max, step } = this.props
     return (

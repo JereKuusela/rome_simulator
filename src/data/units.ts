@@ -1,4 +1,17 @@
-import { ValuesType, UnitType, UnitData, UnitAttribute, UnitValueType, UnitRole, TerrainType, UnitsData, Mode, CultureType, CombatPhase, getTerrainAttributes } from 'types'
+import {
+  ValuesType,
+  UnitType,
+  UnitData,
+  UnitAttribute,
+  UnitValueType,
+  UnitRole,
+  TerrainType,
+  UnitsData,
+  Mode,
+  CultureType,
+  CombatPhase,
+  getTerrainAttributes
+} from 'types'
 import { addValues } from 'definition_values'
 import { toObj, removeUndefined, filter, toArr, values } from 'utils'
 import { uniq } from 'lodash'
@@ -31,7 +44,6 @@ import IconCavalry from 'images/cavalry.png'
 import IconInfantry from 'images/infantry.png'
 import IconEmpty from 'images/empty.png'
 
-
 const unitToIcon: { [key in UnitType]: string } = {
   [UnitType.Archers]: IconArcher,
   [UnitType.CamelCavalry]: IconCamelCavalry,
@@ -63,17 +75,17 @@ const unitToIcon: { [key in UnitType]: string } = {
 
 export const getUnitIcon = (type: UnitType) => unitToIcon[type] || ''
 
-
 const createUnitFromJson = (data: UnitJSON): UnitData => {
-  const handleAttributes = (attributes: any[]) => attributes.filter(type => (data as any)[type]).map(type => [type, (data as any)[type]] as [UnitValueType, number])
+  const handleAttributes = (attributes: any[]) =>
+    attributes.filter(type => (data as any)[type]).map(type => [type, (data as any)[type]] as [UnitValueType, number])
 
   let unit: UnitData = {
     type: data.Type as UnitType,
     mode: data.Mode as Mode | undefined,
     image: unitToIcon[data.Type as UnitType] ?? unitToIcon[data.Parent as UnitType] ?? '',
-    role: data.Role ? data.Role as UnitRole : undefined,
-    parent: data.Parent ? data.Parent as UnitType : undefined,
-    culture: data.Culture ? data.Culture as CultureType : undefined,
+    role: data.Role ? (data.Role as UnitRole) : undefined,
+    parent: data.Parent ? (data.Parent as UnitType) : undefined,
+    culture: data.Culture ? (data.Culture as CultureType) : undefined,
     tech: data.Tech
   }
   removeUndefined(unit)
@@ -88,7 +100,9 @@ const createUnitFromJson = (data: UnitJSON): UnitData => {
   unit = addValues(unit, ValuesType.Base, unit.type, baseValues)
 
   const modifierValues: [UnitValueType, number][] = [
-    ...handleAttributes(getTerrainAttributes(values(TerrainType)).map(attribute => `${attribute} ${ValuesType.Modifier}`))
+    ...handleAttributes(
+      getTerrainAttributes(values(TerrainType)).map(attribute => `${attribute} ${ValuesType.Modifier}`)
+    )
   ]
   unit = addValues(unit, ValuesType.Modifier, unit.type, modifierValues)
   return unit
@@ -99,16 +113,17 @@ const initializeDefaultUnits = (): UnitsData => {
     return toObj(parentsEU4.map(createUnitFromJson).concat(unitsEU4.map(createUnitFromJson)), unit => unit.type)
   else if (process.env.REACT_APP_GAME === 'CK3')
     return toObj(parentsCK3.map(createUnitFromJson).concat(unitsCK3.map(createUnitFromJson)), unit => unit.type)
-  else
-    return toObj(parentsIR.map(createUnitFromJson).concat(unitsIR.map(createUnitFromJson)), unit => unit.type)
+  else return toObj(parentsIR.map(createUnitFromJson).concat(unitsIR.map(createUnitFromJson)), unit => unit.type)
 }
 
 // Should default terrains be used here for loading? CK3 has lots of terrain stuff so otherwise TerrainType must be expanded...
 const defaultUnits = initializeDefaultUnits()
 
-export const getCultures = () => uniq(toArr(defaultUnits, value => value.culture).filter(culture => culture) as CultureType[]).sort()
+export const getCultures = () =>
+  uniq(toArr(defaultUnits, value => value.culture).filter(culture => culture) as CultureType[]).sort()
 
-export const getDefaultUnits = (culture?: CultureType): UnitsData => culture ? filter(defaultUnits, unit => !unit.culture || unit.culture === culture) : defaultUnits
+export const getDefaultUnits = (culture?: CultureType): UnitsData =>
+  culture ? filter(defaultUnits, unit => !unit.culture || unit.culture === culture) : defaultUnits
 export const getDefaultUnit = (type: UnitType): UnitData => defaultUnits[type]
 
 interface UnitJSON {

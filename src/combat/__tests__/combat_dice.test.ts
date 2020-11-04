@@ -1,10 +1,22 @@
-import { TestState, initCleanState, initExpected, getSettingsTest, createCohort, testCombatWithDefaultRolls, addToReserveTest, createArmyTest, setGeneralAttributeTest, getArmyTest, Expected, createDefeatedCohort, createStrongCohort, selectTerrainTest } from './utils'
+import {
+  TestState,
+  initCleanState,
+  initExpected,
+  getSettingsTest,
+  createCohort,
+  testCombatWithDefaultRolls,
+  addToReserveTest,
+  createArmyTest,
+  setGeneralAttributeTest,
+  getArmyTest,
+  Expected,
+  createDefeatedCohort,
+  createStrongCohort,
+  selectTerrainTest
+} from './utils'
 import { UnitType, SideType, Setting, GeneralAttribute, CombatPhase, TerrainType } from 'types'
 
-
-
 if (process.env.REACT_APP_GAME === 'IR') {
-
   describe('dice', () => {
     const cohort = createCohort('Type' as UnitType)
     const weakCohort = createDefeatedCohort('Defeated' as UnitType)
@@ -13,8 +25,8 @@ if (process.env.REACT_APP_GAME === 'IR') {
     let state: TestState
     beforeEach(() => {
       state = initCleanState()
-      cohort.baseValues![CombatPhase.Fire] = { 'key': 1 }
-      weakCohort.baseValues![CombatPhase.Fire] = { 'key': 1 }
+      cohort.baseValues![CombatPhase.Fire] = { key: 1 }
+      weakCohort.baseValues![CombatPhase.Fire] = { key: 1 }
       getSettingsTest(state)[Setting.Martial] = true
       getSettingsTest(state)[Setting.FireAndShock] = true
       expected = initExpected(1)
@@ -41,7 +53,7 @@ if (process.env.REACT_APP_GAME === 'IR') {
       expected[1].B.roll = 2
     })
 
-    it('dice increase from fire and shock pips', () => { 
+    it('dice increase from fire and shock pips', () => {
       setGeneralAttributeTest(state, SideType.A, CombatPhase.Fire, 2, 0)
       setGeneralAttributeTest(state, SideType.B, CombatPhase.Fire, 1, 0)
       // No effect since fire phase.
@@ -52,7 +64,7 @@ if (process.env.REACT_APP_GAME === 'IR') {
       expected[1].A.roll = 3
       expected[1].B.roll = 2
     })
-    
+
     it('dice decrease from terrain', () => {
       selectTerrainTest(state, TerrainType.Forest)
       selectTerrainTest(state, TerrainType.Naval, 1)
@@ -78,7 +90,7 @@ if (process.env.REACT_APP_GAME === 'IR') {
       addToReserveTest(state, SideType.B, [weakCohort])
       addToReserveTest(state, SideType.B, [cohort], 1)
       selectTerrainTest(state, TerrainType.Forest)
-      
+
       expected = initExpected(3)
       expected[3].B.leader = 1
       expected[3].A.roll = 2
@@ -87,7 +99,7 @@ if (process.env.REACT_APP_GAME === 'IR') {
       expected[3].attackerFlipped = true
     })
 
-    it('attacker wo\'t swap if not enabled', () => {
+    it("attacker wo't swap if not enabled", () => {
       getSettingsTest(state)[Setting.AttackerSwapping] = false
 
       createArmyTest(state, SideType.B, 2)
@@ -95,7 +107,7 @@ if (process.env.REACT_APP_GAME === 'IR') {
       addToReserveTest(state, SideType.B, [weakCohort])
       addToReserveTest(state, SideType.B, [cohort], 1)
       selectTerrainTest(state, TerrainType.Forest)
-      
+
       expected = initExpected(3)
       expected[3].B.leader = 1
       expected[3].A.roll = 1

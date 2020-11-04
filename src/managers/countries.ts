@@ -1,4 +1,22 @@
-import { Countries, CountryName, CountryDefinition, GovermentType, CultureType, CountryAttribute, ValuesType, WearinessAttribute, Country, isAttributeEnabled, ModifierWithKey, SiteSettings, ModifierType, SelectionType, Selections, ArmyName, Mode } from 'types'
+import {
+  Countries,
+  CountryName,
+  CountryDefinition,
+  GovermentType,
+  CultureType,
+  CountryAttribute,
+  ValuesType,
+  WearinessAttribute,
+  Country,
+  isAttributeEnabled,
+  ModifierWithKey,
+  SiteSettings,
+  ModifierType,
+  SelectionType,
+  Selections,
+  ArmyName,
+  Mode
+} from 'types'
 import { getDefaultUnits, getDefaultArmies, getDefaultCountry } from 'data'
 import { addValuesWithMutate, clearAllValuesWithMutate, calculateValue, addValue } from 'definition_values'
 import { toObj, values, filter } from 'utils'
@@ -33,8 +51,7 @@ export const selectCulture = (country: CountryDefinition, culture: CultureType, 
 }
 
 export const enableCountrySelection = (country: CountryDefinition, type: SelectionType, key: string) => {
-  if (!country.selections[type])
-    country.selections[type] = {}
+  if (!country.selections[type]) country.selections[type] = {}
   country.selections[type][key] = true
 }
 
@@ -43,17 +60,13 @@ export const enableCountrySelections = (country: CountryDefinition, type: Select
 }
 
 export const clearCountrySelection = (country: CountryDefinition, type: SelectionType, key: string) => {
-  if (country.selections[type])
-    delete country.selections[type][key]
+  if (country.selections[type]) delete country.selections[type][key]
 }
 
 export const clearCountrySelections = (country: CountryDefinition, type?: SelectionType, keys?: string[]) => {
-  if (keys && type)
-    keys.forEach(key => clearCountrySelection(country, type, key))
-  else if (type)
-    delete country.selections[type]
-  else
-    country.selections = {} as Selections
+  if (keys && type) keys.forEach(key => clearCountrySelection(country, type, key))
+  else if (type) delete country.selections[type]
+  else country.selections = {} as Selections
 }
 
 export const changeWeariness = (country: CountryDefinition, type: WearinessAttribute, min: number, max: number) => {
@@ -62,15 +75,21 @@ export const changeWeariness = (country: CountryDefinition, type: WearinessAttri
 }
 
 export const applyCountryModifiers = (country: CountryDefinition, modifiers: ModifierWithKey[]): CountryDefinition => {
-  modifiers.filter(value => value.target === ModifierType.Country).forEach(value => {
-    country = addValue(country, value.type, value.key, value.attribute, value.value)
-  })
+  modifiers
+    .filter(value => value.target === ModifierType.Country)
+    .forEach(value => {
+      country = addValue(country, value.type, value.key, value.attribute, value.value)
+    })
   return country
 }
 
 export const convertCountryDefinition = (country: CountryDefinition, settings: SiteSettings): Country => {
   const attributes = values(CountryAttribute)
-  const calculated = toObj(attributes, attribute => attribute, attribute => isAttributeEnabled(attribute, settings) ? calculateValue(country, attribute) : 0)
+  const calculated = toObj(
+    attributes,
+    attribute => attribute,
+    attribute => (isAttributeEnabled(attribute, settings) ? calculateValue(country, attribute) : 0)
+  )
   return {
     ...calculated,
     selections: country.selections,
@@ -80,7 +99,9 @@ export const convertCountryDefinition = (country: CountryDefinition, settings: S
 }
 
 export const createArmy = (country: CountryDefinition, armyName: ArmyName, mode: Mode, source?: ArmyName) => {
-  country.armies[armyName] = source ? country.armies[source] : getDefaultArmies()[mode === Mode.Land ? ArmyName.Army : ArmyName.Navy]
+  country.armies[armyName] = source
+    ? country.armies[source]
+    : getDefaultArmies()[mode === Mode.Land ? ArmyName.Army : ArmyName.Navy]
 }
 
 export const deleteArmy = (country: CountryDefinition, armyName: ArmyName) => {
@@ -91,4 +112,5 @@ export const changeArmyName = (country: CountryDefinition, oldArmyName: ArmyName
   delete Object.assign(country.armies, { [armyName]: country.armies[oldArmyName] })[oldArmyName]
 }
 
-export const filterArmies = (country: CountryDefinition, mode: Mode) => filter(country.armies, army => army.mode === mode)
+export const filterArmies = (country: CountryDefinition, mode: Mode) =>
+  filter(country.armies, army => army.mode === mode)

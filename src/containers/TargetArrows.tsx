@@ -18,11 +18,9 @@ type Props = {
  * Display component for showing attack targets for both sides.
  */
 class TargetArrows extends Component<IProps> {
-
   render() {
     const { attacker, defender, attackerColor, defenderColor, visible } = this.props
-    if (!visible)
-      return null
+    if (!visible) return null
     return (
       <>
         {attacker.map(row => row.map(unit => this.renderAttacker(unit, attackerColor)))}
@@ -31,16 +29,14 @@ class TargetArrows extends Component<IProps> {
     )
   }
   renderAttacker = (unit: IUnit, color: string) => {
-    if (!unit || !unit.target)
-      return null
+    if (!unit || !unit.target) return null
     const fromStr = unit.id
-    const toStr =  unit.target
+    const toStr = unit.target
     return this.renderArrow(fromStr, toStr, 'bottom', 'top', color)
   }
 
   renderDefender = (unit: IUnit, color: string) => {
-    if (!unit || !unit.target)
-      return null
+    if (!unit || !unit.target) return null
     const fromStr = unit.id
     const toStr = unit.target
     return this.renderArrow(fromStr, toStr, 'top', 'bottom', color)
@@ -65,19 +61,27 @@ type IUnit = {
   target: string | null
 } | null
 
-const convertUnits = (side: SideType, units: (Cohort | null)[][]): IUnit[][] => (
-  units.map(row => row.map(cohort => cohort ? { id: getCohortId(side, cohort.properties), target: cohort.state.target ? getCohortId(getOpponent(side), cohort.state.target.properties) : null } : null))
-)
+const convertUnits = (side: SideType, units: (Cohort | null)[][]): IUnit[][] =>
+  units.map(row =>
+    row.map(cohort =>
+      cohort
+        ? {
+            id: getCohortId(side, cohort.properties),
+            target: cohort.state.target ? getCohortId(getOpponent(side), cohort.state.target.properties) : null
+          }
+        : null
+    )
+  )
 
 const mapStateToProps = (state: AppState, props: Props) => ({
   attacker: convertUnits(SideType.A, getArmyPart(getCohorts(state, SideType.A), props.type)),
-  defender: convertUnits(SideType.B, getArmyPart(getCohorts(state, SideType.B), props.type)),
+  defender: convertUnits(SideType.B, getArmyPart(getCohorts(state, SideType.B), props.type))
 })
 
 const actions = {}
 
 type S = ReturnType<typeof mapStateToProps>
 type D = typeof actions
-interface IProps extends React.PropsWithChildren<Props>, S, D { }
+interface IProps extends React.PropsWithChildren<Props>, S, D {}
 
 export default connect(mapStateToProps, actions)(TargetArrows)

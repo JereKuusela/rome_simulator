@@ -2,7 +2,15 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table, Input } from 'semantic-ui-react'
 
-import { AppState, getUnitPreferences, getFlankSize, getMode, getUnitList, getSiteSettings, getParticipantSafely } from 'state'
+import {
+  AppState,
+  getUnitPreferences,
+  getFlankSize,
+  getMode,
+  getUnitList,
+  getSiteSettings,
+  getParticipantSafely
+} from 'state'
 import { setFlankSize, setUnitPreference } from 'reducers'
 import { getUnitIcon } from 'data'
 import { UnitPreferenceType, SideType, UnitType, UnitDefinition } from 'types'
@@ -15,21 +23,11 @@ export default class PreferredUnitTypes extends Component {
       <Table celled unstackable>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>
-              Preferred unit types
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              {UnitPreferenceType.Primary}
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              {UnitPreferenceType.Secondary}
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              {UnitPreferenceType.Flank}
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              Flank size
-            </Table.HeaderCell>
+            <Table.HeaderCell>Preferred unit types</Table.HeaderCell>
+            <Table.HeaderCell>{UnitPreferenceType.Primary}</Table.HeaderCell>
+            <Table.HeaderCell>{UnitPreferenceType.Secondary}</Table.HeaderCell>
+            <Table.HeaderCell>{UnitPreferenceType.Flank}</Table.HeaderCell>
+            <Table.HeaderCell>Flank size</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -49,14 +47,11 @@ type Props = {
  * Row types and flank size for a side.
  */
 class Row extends Component<IProps> {
-
   render() {
     const { side } = this.props
     return (
       <Table.Row key={side}>
-        <Table.Cell>
-          {side}
-        </Table.Cell>
+        <Table.Cell>{side}</Table.Cell>
         {this.renderCell(UnitPreferenceType.Primary)}
         {this.renderCell(UnitPreferenceType.Secondary)}
         {this.renderCell(UnitPreferenceType.Flank)}
@@ -71,7 +66,9 @@ class Row extends Component<IProps> {
     const empty = { type: UnitType.None, image: getUnitIcon(UnitType.None) } as UnitDefinition
     return (
       <Table.Cell selectable onClick={() => this.setState({ modalType: type })}>
-        <DropdownUnit value={unit ?? UnitType.None} values={[empty].concat(units)}
+        <DropdownUnit
+          value={unit ?? UnitType.None}
+          values={[empty].concat(units)}
           onSelect={unitType => this.setUnitPreference(type, unitType)}
           settings={settings}
         />
@@ -83,7 +80,13 @@ class Row extends Component<IProps> {
     const { flankSize } = this.props
     return (
       <Table.Cell collapsing>
-        <Input size='mini' style={{ width: 100 }} type='number' value={flankSize} onChange={(_, data) => this.setFlankSize(Number(data.value))} />
+        <Input
+          size='mini'
+          style={{ width: 100 }}
+          type='number'
+          value={flankSize}
+          onChange={(_, data) => this.setFlankSize(Number(data.value))}
+        />
       </Table.Cell>
     )
   }
@@ -99,12 +102,11 @@ class Row extends Component<IProps> {
   }
 }
 
-
 const mapStateToProps = (state: AppState, props: Props) => {
   const participant = getParticipantSafely(state, props.side, state.ui.selectedParticipantIndex[props.side])
   const { countryName, armyName } = participant
   return {
-    units: getUnitList(state, true,  countryName, armyName),
+    units: getUnitList(state, true, countryName, armyName),
     countryName,
     armyName,
     flankSize: getFlankSize(state, countryName, armyName),

@@ -11,13 +11,12 @@ interface IProps<T extends string> {
 }
 
 export default class DetailInputRow<T extends string> extends Component<IProps<T>> {
-
   render() {
     const { text, value, onChange, cells, stretch } = this.props
     return (
       <PaddedRow cells={cells} stretch={stretch}>
         {text}
-        <Input value={value} onChange={onChange}/>
+        <Input value={value} onChange={onChange} />
       </PaddedRow>
     )
   }
