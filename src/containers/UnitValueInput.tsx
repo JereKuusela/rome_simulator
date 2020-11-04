@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { useCallback } from 'react'
+import { useDispatch } from 'react-redux'
 
 import { UnitAttribute, UnitDefinition, ValuesType, CountryName, getAttributeValuesType } from 'types'
 import { setUnitValue } from 'reducers'
@@ -18,35 +18,28 @@ type Props = {
 /**
  * Custom numeric input for setting attribute values for a unit.
  */
-class UnitValueInput extends Component<IProps> {
-  render() {
-    const { unit, attribute, percent, type } = this.props
-    const valuesType = type ?? getAttributeValuesType(attribute)
-    let value = 0
-    if (valuesType === ValuesType.Base) value = calculateBase(unit, attribute)
-    else value = calculateModifier(unit, attribute)
-    return <DelayedNumericInput value={value} onChange={this.onChange} percent={percent} />
-  }
+const UnitValueInput = ({ unit, country, attribute, percent, type, identifier }: Props): JSX.Element => {
+  const dispatch = useDispatch()
 
-  getKey = () => this.props.identifier || 'Custom'
+  const key = identifier || 'Custom'
 
-  onChange = (value: number) => {
-    const { unit, attribute, setUnitValue, country, type } = this.props
-    const valuesType = type ?? getAttributeValuesType(attribute)
-    let base = 0
-    if (valuesType === ValuesType.Base)
-      base = calculateBase(unit, attribute) - calculateBase(filterValues(unit, this.getKey()), attribute)
-    else base = calculateModifier(unit, attribute) - calculateModifier(filterValues(unit, this.getKey()), attribute)
-    setUnitValue(country, unit.type, valuesType, this.getKey(), attribute, value - base)
-  }
+  const onChange = useCallback(
+    (value: number) => {
+      const valuesType = type ?? getAttributeValuesType(attribute)
+      let base = 0
+      if (valuesType === ValuesType.Base)
+        base = calculateBase(unit, attribute) - calculateBase(filterValues(unit, key), attribute)
+      else base = calculateModifier(unit, attribute) - calculateModifier(filterValues(unit, key), attribute)
+      dispatch(setUnitValue(country, unit.type, valuesType, key, attribute, value - base))
+    },
+    [dispatch, key, attribute, country, type, unit]
+  )
+
+  const valuesType = type ?? getAttributeValuesType(attribute)
+  let value = 0
+  if (valuesType === ValuesType.Base) value = calculateBase(unit, attribute)
+  else value = calculateModifier(unit, attribute)
+  return <DelayedNumericInput value={value} onChange={onChange} percent={percent} />
 }
 
-const mapStateToProps = () => ({})
-
-const actions = { setUnitValue }
-
-type S = ReturnType<typeof mapStateToProps>
-type D = typeof actions
-interface IProps extends React.PropsWithChildren<Props>, S, D {}
-
-export default connect(mapStateToProps, actions)(UnitValueInput)
+export default UnitValueInput

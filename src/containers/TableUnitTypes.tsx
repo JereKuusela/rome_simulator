@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Image, Table } from 'semantic-ui-react'
 
@@ -22,9 +22,10 @@ import {
   getUnitPreferences,
   getCountry,
   getMode,
-  getOverridenReserveDefinitions,
   getSiteSettings,
-  getUnitDefinitions
+  useArmyData,
+  useWeariness,
+  useUnitDefinitions
 } from 'state'
 import { addToReserve, removeFromReserve, setUnitPreference, selectCulture } from 'reducers'
 import { getArchetypes, getActualUnits, getLatestUnits, getChildUnits, getRootUnit } from 'managers/army'
@@ -43,6 +44,11 @@ type Props = {
   onRowClick: (country: CountryName, army: ArmyName, type: UnitType) => void
 }
 
+interface Name {
+  countryName: CountryName
+  armyName: ArmyName
+}
+
 const getAttributes = (mode: Mode) => {
   if (process.env.REACT_APP_GAME === 'EU4')
     return [UnitAttribute.Discipline, UnitAttribute.Morale, UnitAttribute.CombatAbility]
@@ -53,13 +59,15 @@ const getAttributes = (mode: Mode) => {
   }
 }
 
-const TableUnitTypes = (props: Props): JSX.Element => {
+const TableUnitTypes = (props: Props): JSX.Element | null => {
   const { countryName, armyName, side } = props
   const dispatch = useDispatch()
-  const { units, preferences, tech, mode, settings } = useSelector((state: AppState) => mapStateToProps(state, props))
+  const units = useUnitDefinitions(countryName, armyName)
+  const { preferences, tech, mode, settings } = useSelector((state: AppState) => mapStateToProps(state, props))
 
   const checkPreference = useCallback(
     (role: UnitRole) => {
+      if (!units) return
       const preference = preferences[role]
       const techRequirement = preference && units[preference] && units[preference].tech
       if (techRequirement && techRequirement > tech) {
@@ -74,6 +82,8 @@ const TableUnitTypes = (props: Props): JSX.Element => {
     checkPreference(UnitRole.Flank)
     checkPreference(UnitRole.Support)
   }, [checkPreference])
+
+  if (!units) return null
 
   const unitList = settings[Setting.Tech] ? getArchetypes(units, mode) : getActualUnits(units, mode)
   return (
@@ -134,12 +144,13 @@ const RootUnitRow = (props: { unit: UnitDefinition } & Props) => {
 const RoleRow = (props: { role: UnitRole; archetypes: UnitDefinition[] } & Props) => {
   const { countryName, armyName, onRowClick, archetypes, role } = props
   const dispatch = useDispatch()
-  const { units, preferences, tech, mode, settings } = useSelector((state: AppState) => mapStateToProps(state, props))
+  const units = useUnitDefinitions(countryName, armyName)
+  const { preferences, tech, mode, settings } = useSelector((state: AppState) => mapStateToProps(state, props))
 
   // List of archetypes -> get archetype -> get image
   const archetype = archetypes.find(unit => unit.role === role)
   const preference = preferences[role]
-  if (!archetype || !preference) return null
+  if (!archetype || !preference || !units) return null
   const image = getImage(archetype)
   const latestType = getLatestUnits(units, tech)
   const latest = { ...units[latestType[role] || archetype.type], type: UnitType.Latest }
@@ -190,11 +201,12 @@ const UnitRow = (props: { unit: UnitDefinition } & Props) => {
   )
 }
 
-const CohortCount = (props: { type: UnitType } & Props) => {
+const CohortCount = (props: { type: UnitType } & Name) => {
   const dispatch = useDispatch()
   const { type, countryName, armyName } = props
-  const { reserve, weariness } = useSelector((state: AppState) => mapStateToProps(state, props))
-  const count = reserve.filter(cohort => cohort.type === type).length
+  const reserve = useArmyData(countryName, armyName).reserve
+  const weariness = useWeariness(countryName)
+  const count = useMemo(() => reserve.filter(cohort => cohort.type === type).length, [reserve, type])
 
   const updateReserve = useCallback(
     (amount: number) => {
@@ -218,12 +230,9 @@ const mapStateToProps = (state: AppState, props: Props) => {
   const { countryName, armyName } = props
   return {
     preferences: getUnitPreferences(state, countryName, armyName),
-    reserve: getOverridenReserveDefinitions(state, countryName, armyName, true),
-    units: getUnitDefinitions(state, countryName, armyName),
     culture: getCountry(state, countryName).culture,
     tech: getCountry(state, countryName)[CountryAttribute.TechLevel],
     settings: getSiteSettings(state),
-    weariness: getCountry(state, countryName).weariness,
     mode: getMode(state)
   }
 }

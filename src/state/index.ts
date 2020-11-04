@@ -9,19 +9,21 @@ import {
   importReducer,
   settingsReducer,
   combatReducer,
+  cacheReducer,
   uiReducer
 } from 'reducers'
-import { combine, compose } from 'reducers/utils'
+import { combineRoot, compose } from 'reducers/utils'
 import { Reducer } from 'react'
 
-const combined = combine({
+const combined = combineRoot({
   tactics: tacticsReducer,
   terrains: terrainsReducer,
   battle: battleReducer,
   transfer: transferReducer,
   countries: compose(countriesReducer, armyReducer, unitsReducer),
   settings: settingsReducer,
-  ui: uiReducer
+  ui: uiReducer,
+  cache: cacheReducer
 })
 
 export const rootReducer = compose(combined, combatReducer, importReducer) as Reducer<any, any>

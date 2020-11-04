@@ -1,109 +1,113 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Table } from 'semantic-ui-react'
 
-import {
-  SideType,
-  CountryName,
-  UnitAttribute,
-  CombatPhase,
-  GeneralDefinition,
-  GeneralValueType,
-  Mode,
-  UnitType,
-  ArmyName
-} from 'types'
-import { AppState, getGeneral, getUnitDefinition, getMode, getSiteSettings } from 'state'
+import { SideType, CountryName, UnitAttribute, CombatPhase, GeneralDefinition, GeneralValueType, ArmyName } from 'types'
+import { AppState, getGeneral, useSiteSettings, useUnitDefinition, useMode } from 'state'
 import { setGeneralAttribute } from 'reducers'
 import AttributeImage from 'components/Utils/AttributeImage'
 import StyledNumber from 'components/Utils/StyledNumber'
 import { addSign } from 'formatters'
 import UnitValueInput from './UnitValueInput'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
+import { getRootParent } from 'managers/units'
 
 type Props = {
   side: SideType
-  country: CountryName
-  army: ArmyName
+  countryName: CountryName
+  armyName: ArmyName
 }
 
-class TableDamageAttributes extends Component<IProps> {
-  shouldComponentUpdate(prevProps: IProps) {
-    return prevProps.country !== this.props.country
-  }
+const TableDamageAttributes = ({ side, countryName, armyName }: Props): JSX.Element | null => {
+  const settings = useSiteSettings()
+  const mode = useMode()
+  const unit = useUnitDefinition(countryName, armyName, getRootParent(mode))
+  const general = useSelector((state: AppState) => getGeneral(state, countryName, armyName))
+  if (!unit) return null
+  return (
+    <Table celled unstackable key={side}>
+      <Table.Header>
+        <Table.Row>
+          <Table.HeaderCell>{side}</Table.HeaderCell>
+          <Table.HeaderCell>
+            <AttributeImage attribute={CombatPhase.Fire} settings={settings} />
+          </Table.HeaderCell>
+          <Table.HeaderCell>
+            <AttributeImage attribute={CombatPhase.Shock} settings={settings} />
+          </Table.HeaderCell>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        <Table.Row>
+          <Table.Cell>General</Table.Cell>
+          <Table.Cell>
+            <GeneralAttribute
+              armyName={armyName}
+              countryName={countryName}
+              attribute={CombatPhase.Fire}
+              general={general}
+            />
+          </Table.Cell>
+          <Table.Cell>
+            <GeneralAttribute
+              armyName={armyName}
+              countryName={countryName}
+              attribute={CombatPhase.Shock}
+              general={general}
+            />
+          </Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Damage done</Table.Cell>
+          <Table.Cell>
+            <UnitValueInput unit={unit} attribute={UnitAttribute.FireDamageDone} country={countryName} percent />
+          </Table.Cell>
+          <Table.Cell>
+            <UnitValueInput unit={unit} attribute={UnitAttribute.ShockDamageDone} country={countryName} percent />
+          </Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Damage taken</Table.Cell>
+          <Table.Cell>
+            <UnitValueInput unit={unit} attribute={UnitAttribute.FireDamageTaken} country={countryName} percent />
+          </Table.Cell>
+          <Table.Cell>
+            <UnitValueInput unit={unit} attribute={UnitAttribute.ShockDamageTaken} country={countryName} percent />
+          </Table.Cell>
+        </Table.Row>
+      </Table.Body>
+    </Table>
+  )
+}
 
-  render() {
-    const { side, general, unit, country, settings } = this.props
-    return (
-      <Table celled unstackable key={side}>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>{side}</Table.HeaderCell>
-            <Table.HeaderCell>
-              <AttributeImage attribute={CombatPhase.Fire} settings={settings} />
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <AttributeImage attribute={CombatPhase.Shock} settings={settings} />
-            </Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          <Table.Row>
-            <Table.Cell>General</Table.Cell>
-            <Table.Cell>{this.renderGeneralAttribute(general, CombatPhase.Fire)}</Table.Cell>
-            <Table.Cell>{this.renderGeneralAttribute(general, CombatPhase.Shock)}</Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>Damage done</Table.Cell>
-            <Table.Cell>
-              <UnitValueInput unit={unit} attribute={UnitAttribute.FireDamageDone} country={country} percent />
-            </Table.Cell>
-            <Table.Cell>
-              <UnitValueInput unit={unit} attribute={UnitAttribute.ShockDamageDone} country={country} percent />
-            </Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>Damage taken</Table.Cell>
-            <Table.Cell>
-              <UnitValueInput unit={unit} attribute={UnitAttribute.FireDamageTaken} country={country} percent />
-            </Table.Cell>
-            <Table.Cell>
-              <UnitValueInput unit={unit} attribute={UnitAttribute.ShockDamageTaken} country={country} percent />
-            </Table.Cell>
-          </Table.Row>
-        </Table.Body>
-      </Table>
-    )
-  }
+interface GeneralAttributeProps {
+  countryName: CountryName
+  armyName: ArmyName
+  general: GeneralDefinition
+  attribute: GeneralValueType
+}
 
-  renderGeneralAttribute = (general: GeneralDefinition, attribute: GeneralValueType) => (
+const GeneralAttribute = ({ general, countryName, armyName, attribute }: GeneralAttributeProps) => {
+  const dispatch = useDispatch()
+
+  const handleChange = useCallback(
+    (value: number) => {
+      dispatch(setGeneralAttribute(countryName, armyName, attribute, value))
+    },
+    [dispatch, countryName, armyName, attribute]
+  )
+
+  return (
     <>
       <DelayedNumericInput
         disabled={!general.enabled}
         type='number'
         value={general.baseValues[attribute]}
-        onChange={value => this.setGeneralStat(attribute, Number(value))}
+        onChange={handleChange}
       />{' '}
       <StyledNumber value={general.extraValues[attribute]} formatter={addSign} hideZero />
     </>
   )
-
-  setGeneralStat = (attribute: GeneralValueType, value: number) => {
-    const { country, army, setGeneralAttribute } = this.props
-    setGeneralAttribute(country, army, attribute, value)
-  }
 }
 
-const mapStateToProps = (state: AppState, props: Props) => ({
-  general: getGeneral(state, props.country, props.army),
-  unit: getUnitDefinition(state, getMode(state) === Mode.Naval ? UnitType.Naval : UnitType.Land, props.country),
-  settings: getSiteSettings(state)
-})
-
-const actions = { setGeneralAttribute }
-
-type S = ReturnType<typeof mapStateToProps>
-type D = typeof actions
-interface IProps extends React.PropsWithChildren<Props>, S, D {}
-
-export default connect(mapStateToProps, actions)(TableDamageAttributes)
+export default TableDamageAttributes

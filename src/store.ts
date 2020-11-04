@@ -43,10 +43,10 @@ const SettingsTransform = createTransform(
   { whitelist: ['settings'] }
 )
 
-const DataTransform = createTransform(
+const IgnoreTransform = createTransform(
   () => undefined,
   () => ({}),
-  { whitelist: ['data'] }
+  { whitelist: ['cache', 'data'] }
 )
 
 const migrations = {
@@ -61,10 +61,10 @@ const persistConfig = {
   transforms: [
     TacticsTransform,
     TerrainsTransform,
-    DataTransform,
     BattleTransform,
     CountriesTransform,
-    SettingsTransform
+    SettingsTransform,
+    IgnoreTransform
   ]
 }
 

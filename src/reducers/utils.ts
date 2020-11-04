@@ -32,6 +32,16 @@ export const makeActionReplaceFirst = <T extends any[], K extends string, E>(
   return ret
 }
 
+export const makeAction = <T extends any[]>(
+  func: (...args: T) => any,
+  actionToFunction: { [key: string]: (...args: any) => void | undefined }
+) => {
+  const type = getActionType(func)
+  actionToFunction[type] = func
+  const ret = (...args: T) => ({ type, payload: [...args] } as unknown)
+  return ret
+}
+
 export const makeActionReplaceFirstTwice = <T extends any[], K1 extends string, K2 extends string, E>(
   func: (entity: E, ...args: T) => any,
   actionToFunction: ActionToFunction<E, K1, K2>
@@ -113,7 +123,7 @@ export const compose = <State>(...reducers: ReducerWithParam<State>[]): ReducerW
 
 type ReducerWithParam<State> = (state: State | undefined, action: any, params: ReducerParams) => State
 
-export function combine<S>(reducers: { [K in keyof S]: ReducerWithParam<S[K]> }): Reducer<CombinedState<S>> {
+export function combineRoot<S>(reducers: { [K in keyof S]: ReducerWithParam<S[K]> }): Reducer<CombinedState<S>> {
   const reducerKeys = Object.keys(reducers) as (keyof S)[]
 
   return function combination(state: S = {} as S, action) {
@@ -124,7 +134,8 @@ export function combine<S>(reducers: { [K in keyof S]: ReducerWithParam<S[K]> })
     for (const key of reducerKeys) {
       const reducer = reducers[key] as any
       nextState[key] = reducer(state[key], action, settings)
-      if (action.type && nextState[key] !== state[key] && key !== 'ui' && key !== 'transfer') invalidated = true
+      if (action.type && nextState[key] !== state[key] && key !== 'ui' && key !== 'transfer' && key !== 'cache')
+        invalidated = true
     }
     if (invalidated) {
       nextState = produce(nextState, (draft: any) => {
@@ -133,4 +144,18 @@ export function combine<S>(reducers: { [K in keyof S]: ReducerWithParam<S[K]> })
     }
     return nextState
   }
+}
+
+export function combine<S>(reducers: { [K in keyof S]: ReducerWithParam<S[K]> }): Reducer<CombinedState<S>> {
+  const reducerKeys = Object.keys(reducers) as (keyof S)[]
+
+  return function combination(state: S = {} as S, action, settings: ReducerParams) {
+    const nextState: S = {} as S
+
+    for (const key of reducerKeys) {
+      const reducer = reducers[key] as any
+      nextState[key] = reducer(state[key], action, settings)
+    }
+    return nextState
+  } as Reducer<CombinedState<S>>
 }

@@ -186,15 +186,15 @@ class Battle extends Component<IProps> {
                 <Grid.Column>
                   <TableDamageAttributes
                     side={SideType.A}
-                    country={participantA.countryName}
-                    army={participantA.armyName}
+                    countryName={participantA.countryName}
+                    armyName={participantA.armyName}
                   />
                 </Grid.Column>
                 <Grid.Column>
                   <TableDamageAttributes
                     side={SideType.B}
-                    country={participantB.countryName}
-                    army={participantB.armyName}
+                    countryName={participantB.countryName}
+                    armyName={participantB.armyName}
                   />
                 </Grid.Column>
               </Grid.Row>

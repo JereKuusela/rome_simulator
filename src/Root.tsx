@@ -16,6 +16,7 @@ import SaveTool from 'pages/SaveTool'
 import ExportTool from 'pages/ExportTool'
 import { Container } from 'semantic-ui-react'
 import Modals from 'pages/Modals'
+import UnitCacher from 'containers/UnitCacher'
 
 // Any additional component props go here.
 interface MainProps {
@@ -29,6 +30,7 @@ const Root = ({ store, persistor }: MainProps) => {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <Error>
+          <UnitCacher />
           <BrowserRouter>
             <Container style={{ width: 1280 }}>
               <Modals />

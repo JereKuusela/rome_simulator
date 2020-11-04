@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { toPercent, toNumber } from 'formatters'
-import { Input } from 'semantic-ui-react'
+import { Input, InputOnChangeData } from 'semantic-ui-react'
 
 type IProps = {
   value: number
@@ -12,76 +12,76 @@ type IProps = {
   delay?: number
 }
 
-type IState = {
-  value: string
-  timer: NodeJS.Timeout | null
+const convertValue = (value: number, percent?: boolean) => {
+  return percent ? toPercent(value) : toNumber(value)
 }
 
 /**
  * Custom numeric input which only send an update for numeric value when losing focus or after a delay.
  * This allows entering decimal numbers without the input resetting and also prevents stuttering when the battle doesn't update after every keystroke.
- * */
-export default class DelayedNumericInput extends Component<IProps, IState> {
-  constructor(props: IProps) {
-    super(props)
-    this.state = { value: this.convertValue(props.value), timer: null }
-  }
+ */
+const DelayedNumericInput = ({ disabled, type, value, percent, onChange, delay }: IProps): JSX.Element => {
+  const [currentValue, setCurrentValue] = useState('')
 
-  convertValue = (value: number) => {
-    const { percent } = this.props
-    return percent ? toPercent(value) : toNumber(value)
-  }
+  useEffect(() => {
+    setCurrentValue(convertValue(value, percent))
+  }, [value, percent])
 
-  shouldComponentUpdate(prevProps: IProps, prevState: IState) {
-    return this.state.value !== prevState.value || prevProps.value !== this.props.value
-  }
+  const update = useCallback(
+    (currentValue: string) => {
+      let newValue = Number(percent ? currentValue.replace('%', '') : currentValue)
+      if (percent) newValue /= 100.0
+      // Non-numeric values should just reset the previous value.
+      if (Number.isNaN(newValue)) setCurrentValue(convertValue(value, percent))
+      else {
+        setCurrentValue(convertValue(value, percent))
+        if (value !== newValue) onChange(newValue)
+      }
+    },
+    [onChange, percent, value]
+  )
 
-  componentDidUpdate(prevProps: IProps) {
-    if (prevProps.value !== this.props.value) this.setState({ value: this.convertValue(this.props.value) })
-  }
-
-  render() {
-    const { disabled, type } = this.props
-    const { value } = this.state
-    return (
-      <div onBlur={this.onLostFocus} style={{ display: 'inline-block' }}>
-        <Input
-          size='mini'
-          className='small-input'
-          value={value}
-          type={type}
-          disabled={disabled}
-          onChange={(_, { value }) => this.onChange(value)}
-          onKeyPress={this.onKeyPress}
-          onFocus={(e: React.FocusEvent<HTMLInputElement>) => e.target.select()}
-        />
-      </div>
-    )
-  }
-
-  onKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') this.onLostFocus()
-  }
-
-  onLostFocus = () => {
-    if (this.state.timer) clearTimeout(this.state.timer)
-    this.update()
-  }
-
-  onChange = (value: string) => {
-    if (this.state.timer) clearTimeout(this.state.timer)
-    this.setState({ value, timer: setTimeout(this.update, this.props.delay ?? 2000) })
-  }
-
-  update = () => {
-    const { value, onChange, percent } = this.props
-    let newValue = Number(percent ? this.state.value.replace('%', '') : this.state.value)
-    if (percent) newValue /= 100.0
-    // Non-numeric values should just reset the previous value.
-    if (Number.isNaN(newValue)) this.setState({ value: this.convertValue(value) })
-    else {
-      this.setState({ value: this.convertValue(newValue) })
-      if (value !== newValue) onChange(newValue)
+  useEffect(() => {
+    const timer = setTimeout(() => update(currentValue), delay ?? 2000)
+    return () => {
+      clearTimeout(timer)
     }
-  }
+  }, [currentValue, delay, update])
+
+  const handleBlur = useCallback(() => {
+    update(currentValue)
+  }, [update, currentValue])
+
+  const handleKeyPress = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter') handleBlur()
+    },
+    [handleBlur]
+  )
+
+  const handleChange = useCallback(
+    (_, { value }: InputOnChangeData) => {
+      setCurrentValue(value)
+    },
+    [setCurrentValue]
+  )
+
+  const handleFocus = useCallback((e: React.FocusEvent<HTMLInputElement>) => e.target.select(), [])
+
+  return (
+    <div onBlur={handleBlur} style={{ display: 'inline-block' }}>
+      <Input
+        size='mini'
+        className='small-input'
+        value={currentValue}
+        type={type}
+        disabled={disabled}
+        onChange={handleChange}
+        onKeyPress={handleKeyPress}
+        onFocus={handleFocus}
+      />
+    </div>
+  )
 }
+
+export default DelayedNumericInput

@@ -1,5 +1,6 @@
 export * from './army'
 export * from './battle'
+export * from './cache'
 export * from './combat'
 export * from './countries'
 export * from './settings'

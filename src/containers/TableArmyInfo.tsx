@@ -29,7 +29,7 @@ import {
   getSiteSettings,
   getArmies,
   getSide,
-  getUnitDefinitions
+  getUnitDefinitionsCached
 } from 'state'
 import {
   selectParticipantCountry,
@@ -220,15 +220,16 @@ const mapStateToProps = (state: AppState, props: Props) => {
   const side = getSide(state, props.type)
   const mode = getMode(state)
   return {
-    participants: side.participants.map(participant => ({
-      ...participant,
-      general: getGeneral(state, participant.countryName, participant.armyName),
-      country: getCountry(state, participant.countryName),
-      armies: getArmies(state, participant.countryName),
-      artillery: getArchetypes(getUnitDefinitions(state, participant.countryName, participant.armyName), mode).find(
-        unit => unit.type === UnitType.Artillery
-      )
-    })),
+    participants: side.participants.map(participant => {
+      const definitions = getUnitDefinitionsCached(state, participant.countryName, participant.armyName)
+      return {
+        ...participant,
+        general: getGeneral(state, participant.countryName, participant.armyName),
+        country: getCountry(state, participant.countryName),
+        armies: getArmies(state, participant.countryName),
+        artillery: (definitions ? getArchetypes(definitions, mode) : []).find(unit => unit.type === UnitType.Artillery)
+      }
+    }),
     clearable: side.participants.length > 1,
     countries: getCountries(state),
     settings: getSiteSettings(state),

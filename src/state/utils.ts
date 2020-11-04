@@ -41,7 +41,11 @@ import {
   SideData,
   Side,
   Environment,
-  ArmyDefinition
+  ArmyDefinition,
+  ArmyData,
+  WearinessAttributes,
+  SiteSettings,
+  CountryDefinitions
 } from 'types'
 import {
   getDefaultBattle,
@@ -60,7 +64,23 @@ import { convertArmy, convertSide, getRound, getAttacker, getLeadingArmy } from 
 import { iterateCohorts } from 'combat'
 import { convertTactic } from 'managers/tactics'
 import { calculateValue } from 'definition_values'
+import { useSelector } from 'react-redux'
 
+export const useArmyData = (countryName: CountryName, armyName: ArmyName): ArmyData => {
+  return useSelector((state: AppState) => state.countries[countryName].armies[armyName])
+}
+
+export const useWeariness = (countryName: CountryName): WearinessAttributes => {
+  return useSelector((state: AppState) => state.countries[countryName].weariness)
+}
+
+export const useCountry = (countryName: CountryName): CountryDefinition => {
+  return useSelector((state: AppState) => state.countries[countryName])
+}
+
+export const useCountries = (): CountryDefinitions => useSelector((state: AppState) => state.countries)
+export const useSiteSettings = (): SiteSettings => useSelector((state: AppState) => state.settings.siteSettings)
+export const useMode = (): Mode => useSelector((state: AppState) => state.settings.mode)
 /**
  * Returns settings of the current mode.
  * @param state Application state.
@@ -336,6 +356,26 @@ const getUnitDefinitionsSub = (state: AppState, countryName: CountryName, armyNa
   const secondaryCountryModifiers = getSecondaryCountryModifiers(applyCountryModifiers(country, countryModifiers))
   const generalModifiers = getGeneralModifiers(general)
   return applyUnitModifiers(units, countryModifiers.concat(secondaryCountryModifiers).concat(generalModifiers))
+}
+
+export const useUnitDefinitions = (countryName: CountryName, armyName: ArmyName): UnitDefinitions | undefined => {
+  return useSelector((state: AppState) => state.cache.units?.[countryName][armyName])
+}
+
+export const useUnitDefinition = (
+  countryName: CountryName,
+  armyName: ArmyName,
+  unitType: UnitType
+): UnitDefinition | undefined => {
+  return useSelector((state: AppState) => state.cache.units?.[countryName]?.[armyName][unitType])
+}
+
+export const getUnitDefinitionsCached = (
+  state: AppState,
+  countryName: CountryName,
+  armyName: ArmyName
+): UnitDefinitions | undefined => {
+  return state.cache.units[countryName] ? state.cache.units[countryName][armyName] : undefined
 }
 
 export const getUnitDefinitions = (
