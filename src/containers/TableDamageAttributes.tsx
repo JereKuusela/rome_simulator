@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Table } from 'semantic-ui-react'
 
 import { SideType, CountryName, UnitAttribute, CombatPhase, GeneralDefinition, GeneralValueType, ArmyName } from 'types'
-import { AppState, getGeneral, useSiteSettings, useUnitDefinition, useMode } from 'state'
+import { useSiteSettings, useUnitDefinition, useMode, useGeneral } from 'state'
 import { setGeneralAttribute } from 'reducers'
 import AttributeImage from 'components/Utils/AttributeImage'
 import StyledNumber from 'components/Utils/StyledNumber'
@@ -22,8 +22,8 @@ const TableDamageAttributes = ({ side, countryName, armyName }: Props): JSX.Elem
   const settings = useSiteSettings()
   const mode = useMode()
   const unit = useUnitDefinition(countryName, armyName, getRootParent(mode))
-  const general = useSelector((state: AppState) => getGeneral(state, countryName, armyName))
-  if (!unit) return null
+  const general = useGeneral(countryName, armyName)
+  if (!unit || !general) return null
   return (
     <Table celled unstackable key={side}>
       <Table.Header>

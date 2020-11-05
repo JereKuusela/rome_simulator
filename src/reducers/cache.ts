@@ -1,22 +1,28 @@
-import { ActionToFunction, combine, makeActionRemoveFirst, makeContainerReducer } from './utils'
-import { ArmyName, CountryName, UnitDefinitions } from 'types'
+import { ActionToFunction, makeActionRemoveFirst, makeContainerReducer } from './utils'
+import { ArmyName, CountryName, GeneralDefinition, UnitDefinitions } from 'types'
 
-type Definitions = { [key in CountryName]: { [key in ArmyName]: UnitDefinitions } }
+type Cache = {
+  units: { [key in CountryName]: { [key in ArmyName]: UnitDefinitions } }
+  generals: { [key in CountryName]: { [key in ArmyName]: GeneralDefinition } }
+}
 
-const unitsMapping: ActionToFunction<Definitions, CountryName, ArmyName> = {}
+const mapping: ActionToFunction<Cache, CountryName, ArmyName> = {}
 
-const setUnitsImplementation = (
-  definitions: Definitions,
-  countryName: CountryName,
-  armyName: ArmyName,
-  units: UnitDefinitions
-) => {
+const setUnits = (cache: Cache, countryName: CountryName, armyName: ArmyName, units: UnitDefinitions) => {
+  const definitions = cache.units
   if (!definitions[countryName]) definitions[countryName] = {} as { [key in ArmyName]: UnitDefinitions }
   Object.freeze(units)
   definitions[countryName][armyName] = units
 }
 
-export const setUnits = makeActionRemoveFirst(setUnitsImplementation, unitsMapping)
-const units = makeContainerReducer({} as Definitions, unitsMapping)
+const setGeneral = (cache: Cache, countryName: CountryName, armyName: ArmyName, general: GeneralDefinition) => {
+  const definitions = cache.generals
+  if (!definitions[countryName]) definitions[countryName] = {} as { [key in ArmyName]: GeneralDefinition }
+  Object.freeze(general)
+  definitions[countryName][armyName] = general
+}
 
-export const cacheReducer = combine({ units })
+export const setCacheUnitDefinitions = makeActionRemoveFirst(setUnits, mapping)
+export const setCacheGeneralDefinition = makeActionRemoveFirst(setGeneral, mapping)
+
+export const cacheReducer = makeContainerReducer({ units: {}, generals: {} } as Cache, mapping)

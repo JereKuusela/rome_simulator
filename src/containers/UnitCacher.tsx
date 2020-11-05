@@ -1,12 +1,12 @@
 import { convertUnitDefinitions, filterUnitDefinitions } from 'army_utils'
-import { applyGeneralModifiers } from 'managers/army'
+import { applyGeneralModifiers, convertGeneralDefinition } from 'managers/army'
 import { applyCountryModifiers } from 'managers/countries'
 import { getCountryModifiers, getGeneralModifiers, getSecondaryCountryModifiers } from 'managers/modifiers'
 import { applyUnitModifiers } from 'managers/units'
 import React, { useEffect, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
-import { setUnits } from 'reducers'
-import { useCountries, useCountry, useMode, useSiteSettings } from 'state'
+import { setCacheGeneralDefinition, setCacheUnitDefinitions } from 'reducers'
+import { useCountries, useCountry, useMode, useSiteSettings, useTactics } from 'state'
 import { ArmyData, ArmyName, CountryName, GeneralData } from 'types'
 import { toArr } from 'utils'
 
@@ -51,6 +51,7 @@ const UnitCacherSub = ({ countryName, armyName, army }: CacherProps): null => {
   const settings = useSiteSettings()
   const dispatch = useDispatch()
   const mode = useMode()
+  const tactics = useTactics()
 
   const generalData = useMemo((): GeneralData => {
     const modifiers = getGeneralModifiers(army.general)
@@ -65,14 +66,23 @@ const UnitCacherSub = ({ countryName, armyName, army }: CacherProps): null => {
     return applyUnitModifiers(units, countryModifiers.concat(secondaryCountryModifiers).concat(generalModifiers))
   }, [country, generalData])
 
+  const generalDefinition = useMemo(() => {
+    return convertGeneralDefinition(settings, generalData, tactics)
+  }, [settings, generalData, tactics])
+
   const definitions = useMemo(() => {
     const general = generalData.definitions
     const units = convertUnitDefinitions(settings, subDefinitions, general)
     return filterUnitDefinitions(mode, units)
   }, [settings, subDefinitions, generalData, mode])
+
   useEffect(() => {
-    dispatch(setUnits(countryName, armyName, definitions))
+    dispatch(setCacheUnitDefinitions(countryName, armyName, definitions))
   }, [dispatch, countryName, armyName, definitions])
+
+  useEffect(() => {
+    dispatch(setCacheGeneralDefinition(countryName, armyName, generalDefinition))
+  }, [dispatch, countryName, armyName, generalDefinition])
   return null
 }
 

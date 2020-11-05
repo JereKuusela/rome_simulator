@@ -45,7 +45,10 @@ import {
   ArmyData,
   WearinessAttributes,
   SiteSettings,
-  CountryDefinitions
+  CountryDefinitions,
+  TacticDefinitions,
+  Armies,
+  TerrainDefinitions
 } from 'types'
 import {
   getDefaultBattle,
@@ -65,6 +68,7 @@ import { iterateCohorts } from 'combat'
 import { convertTactic } from 'managers/tactics'
 import { calculateValue } from 'definition_values'
 import { useSelector } from 'react-redux'
+import { useMemo } from 'react'
 
 export const useArmyData = (countryName: CountryName, armyName: ArmyName): ArmyData => {
   return useSelector((state: AppState) => state.countries[countryName].armies[armyName])
@@ -81,6 +85,19 @@ export const useCountry = (countryName: CountryName): CountryDefinition => {
 export const useCountries = (): CountryDefinitions => useSelector((state: AppState) => state.countries)
 export const useSiteSettings = (): SiteSettings => useSelector((state: AppState) => state.settings.siteSettings)
 export const useMode = (): Mode => useSelector((state: AppState) => state.settings.mode)
+export const useTactics = (): TacticDefinitions => useSelector((state: AppState) => state.tactics)
+export const useGeneral = (countryName: CountryName, armyName: ArmyName): GeneralDefinition | undefined => {
+  return useSelector((state: AppState) => state.cache.generals[countryName]?.[armyName])
+}
+
+export const useArmies = (countryName: CountryName): Armies => {
+  return useSelector((state: AppState) => filterArmies(state.countries[countryName], state.settings.mode))
+}
+
+export const useSide = (type: SideType): SideData => {
+  return useSelector((state: AppState) => getBattle(state).sides[type])
+}
+
 /**
  * Returns settings of the current mode.
  * @param state Application state.
@@ -345,6 +362,18 @@ export const getParticipantSafely = (state: AppState, type: SideType, index: num
 
 export const getSide = (state: AppState, type: SideType, mode?: Mode): SideData => getBattle(state, mode).sides[type]
 
+export const useSelectedTerrains = (): Terrain[] => {
+  const selected = useSelector((state: AppState) => getBattle(state).terrains)
+  const terrains = useTerrains()
+  return useMemo(() => selected.map(item => terrains[item]), [selected, terrains])
+}
+
+export const useTerrains = (): TerrainDefinitions => useSelector((state: AppState) => state.terrains)
+export const useTerrainsAtLocation = (location: LocationType): Terrain[] => {
+  const terrains = useTerrains()
+  return useMemo(() => toArr(terrains).filter(item => item.location === location), [terrains, location])
+}
+
 export const getSelectedTerrains = (state: AppState): Terrain[] =>
   getBattle(state).terrains.map(value => state.terrains[value])
 
@@ -360,6 +389,10 @@ const getUnitDefinitionsSub = (state: AppState, countryName: CountryName, armyNa
 
 export const useUnitDefinitions = (countryName: CountryName, armyName: ArmyName): UnitDefinitions | undefined => {
   return useSelector((state: AppState) => state.cache.units?.[countryName][armyName])
+}
+
+export const useAllUnitDefinitions = () => {
+  return useSelector((state: AppState) => state.cache.units)
 }
 
 export const useUnitDefinition = (

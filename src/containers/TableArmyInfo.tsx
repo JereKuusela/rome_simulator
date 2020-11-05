@@ -1,36 +1,22 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Table, Input, Button } from 'semantic-ui-react'
+import React, { useCallback } from 'react'
+import { useDispatch } from 'react-redux'
+import { Table, Input, Button, InputOnChangeData } from 'semantic-ui-react'
 
 import {
   SideType,
   CountryName,
   Setting,
-  GeneralDefinition,
   GeneralAttribute,
   GeneralValueType,
   isAttributeEnabled,
   CountryAttribute,
   ArmyName,
-  Country,
-  Armies,
   Participant,
   UnitType,
-  UnitAttribute,
-  UnitDefinition
+  UnitAttribute
 } from 'types'
 import { keys } from 'utils'
-import {
-  AppState,
-  getCountry,
-  getGeneral,
-  getCountries,
-  getMode,
-  getSiteSettings,
-  getArmies,
-  getSide,
-  getUnitDefinitionsCached
-} from 'state'
+import { useGeneral, useCountries, useMode, useSide, useSiteSettings, useArmies, useUnitDefinition } from 'state'
 import {
   selectParticipantCountry,
   selectParticipantArmy,
@@ -48,7 +34,6 @@ import CountryValueInput from './CountryValueInput'
 import { filterArmies } from 'managers/countries'
 import AttributeImage from 'components/Utils/AttributeImage'
 import UnitValueInput from './UnitValueInput'
-import { getArchetypes } from 'managers/army'
 import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 import { getDefaultArmyName } from 'data'
@@ -57,140 +42,165 @@ type Props = {
   type: SideType
 }
 
-class TableArmyInfo extends Component<IProps> {
-  render() {
-    const { settings, participants, addParticipant, type } = this.props
-    const last = participants[participants.length - 1]
-    return (
-      <Table celled>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>Country</Table.HeaderCell>
-            <Table.HeaderCell>Army</Table.HeaderCell>
-            {settings[Setting.Martial] && <Table.HeaderCell>General</Table.HeaderCell>}
-            {settings[Setting.Tactics] && <Table.HeaderCell>Tactic</Table.HeaderCell>}
-            {settings[Setting.Tech] && <Table.HeaderCell>Tech</Table.HeaderCell>}
-            {isAttributeEnabled(CountryAttribute.FlankRatio, settings) && (
-              <Table.HeaderCell>
-                <AttributeImage attribute={CountryAttribute.FlankRatio} settings={settings} />
-              </Table.HeaderCell>
-            )}
-            {isAttributeEnabled(UnitAttribute.OffensiveSupport, settings) && (
-              <Table.HeaderCell>
-                <AttributeImage attribute={UnitAttribute.OffensiveSupport} settings={settings} />
-              </Table.HeaderCell>
-            )}
-            <Table.HeaderCell>Days</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {participants.map(this.renderArmyInfo)}
-          <Table.Row>
-            <Table.Cell>
-              <Button size='mini' icon={'plus'} onClick={() => addParticipant(type, last.countryName, last.armyName)} />
-            </Table.Cell>
-            <Table.Cell />
-            <Table.Cell />
-            <Table.Cell />
-            <Table.Cell />
-            <Table.Cell />
-          </Table.Row>
-        </Table.Body>
-      </Table>
-    )
-  }
+const TableArmyInfo = ({ type }: Props): JSX.Element => {
+  const settings = useSiteSettings()
+  const dispatch = useDispatch()
+  const participants = useSide(type).participants
 
-  renderArmyInfo = (participant: Entity, index: number) => {
-    const {
-      settings,
-      selectParticipantArmy,
-      selectParticipantCountry,
-      countries,
-      mode,
-      type,
-      deleteParticipant,
-      clearable,
-      createArmy,
-      createCountry
-    } = this.props
-    const { armies, general, countryName, armyName, artillery } = participant
-    return (
-      <Table.Row key={participant.countryName + '_' + participant.armyName + index}>
-        <Table.Cell>
-          <SimpleDropdown
-            values={keys(countries)}
-            value={countryName}
-            onChange={name =>
-              name
-                ? selectParticipantCountry(
-                    type,
-                    index,
-                    name,
-                    countries[name]
-                      ? (Object.keys(filterArmies(countries[name], mode))[0] as ArmyName)
-                      : getDefaultArmyName(mode)
-                  )
-                : deleteParticipant(type, index)
-            }
-            style={{ width: 110 }}
-            onAdd={name => createCountry(name)}
-            clearable={clearable}
-          />
-        </Table.Cell>
-        <Table.Cell>
-          <SimpleDropdown
-            values={keys(armies)}
-            value={armyName}
-            onChange={name => selectParticipantArmy(type, index, name)}
-            onAdd={name => createArmy(countryName, name, mode)}
-            style={{ width: 100 }}
-          />
-        </Table.Cell>
-        {settings[Setting.Martial] &&
-          this.renderGeneralAttribute(countryName, armyName, general, GeneralAttribute.Martial)}
-        {settings[Setting.Tactics] && (
-          <Table.Cell>
-            <TacticSelector side={type} index={index} />
-          </Table.Cell>
-        )}
-        {settings[Setting.Tech] && (
-          <Table.Cell>
-            <CountryValueInput country={countryName} attribute={CountryAttribute.TechLevel} />
-          </Table.Cell>
-        )}
-        {isAttributeEnabled(CountryAttribute.FlankRatio, settings) && (
-          <Table.Cell>
-            <CountryValueInput attribute={CountryAttribute.FlankRatio} country={countryName} percent />
-          </Table.Cell>
-        )}
-        {artillery && isAttributeEnabled(UnitAttribute.OffensiveSupport, settings) && (
-          <Table.Cell>
-            <UnitValueInput
-              unit={artillery}
-              attribute={UnitAttribute.OffensiveSupport}
-              country={participant.countryName}
-              percent
-            />
-          </Table.Cell>
-        )}
-        <Table.Cell>
-          <DelayedNumericInput
-            disabled={index === 0}
-            value={participant.daysUntilBattle}
-            onChange={value => this.setDaysUntilBattle(index, value)}
-            type='number'
-          />
-        </Table.Cell>
-      </Table.Row>
-    )
-  }
+  const last = participants[participants.length - 1]
 
-  renderGeneralAttribute = (
-    country: CountryName,
-    army: ArmyName,
-    general: GeneralDefinition,
-    attribute: GeneralValueType
-  ) => (
+  const handleAddParticipant = useCallback(() => {
+    dispatch(addParticipant(type, last.countryName, last.armyName))
+  }, [dispatch, type, last])
+  return (
+    <Table celled>
+      <Table.Header>
+        <Table.Row>
+          <Table.HeaderCell>Country</Table.HeaderCell>
+          <Table.HeaderCell>Army</Table.HeaderCell>
+          {settings[Setting.Martial] && <Table.HeaderCell>General</Table.HeaderCell>}
+          {settings[Setting.Tactics] && <Table.HeaderCell>Tactic</Table.HeaderCell>}
+          {settings[Setting.Tech] && <Table.HeaderCell>Tech</Table.HeaderCell>}
+          {isAttributeEnabled(CountryAttribute.FlankRatio, settings) && (
+            <Table.HeaderCell>
+              <AttributeImage attribute={CountryAttribute.FlankRatio} settings={settings} />
+            </Table.HeaderCell>
+          )}
+          {isAttributeEnabled(UnitAttribute.OffensiveSupport, settings) && (
+            <Table.HeaderCell>
+              <AttributeImage attribute={UnitAttribute.OffensiveSupport} settings={settings} />
+            </Table.HeaderCell>
+          )}
+          <Table.HeaderCell>Days</Table.HeaderCell>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {participants.map((item, index) => (
+          <ArmyInfo index={index} participant={item} type={type} key={index} />
+        ))}
+        <Table.Row>
+          <Table.Cell>
+            <Button size='mini' icon={'plus'} onClick={handleAddParticipant} />
+          </Table.Cell>
+          <Table.Cell />
+          <Table.Cell />
+          <Table.Cell />
+          <Table.Cell />
+          <Table.Cell />
+        </Table.Row>
+      </Table.Body>
+    </Table>
+  )
+}
+
+interface ArmyInfoProps {
+  type: SideType
+  index: number
+  participant: Participant
+}
+
+const ArmyInfo = ({ type, participant, index }: ArmyInfoProps) => {
+  const { daysUntilBattle, armyName, countryName } = participant
+  const dispatch = useDispatch()
+  const countries = useCountries()
+  const mode = useMode()
+  const side = useSide(type)
+  const settings = useSiteSettings()
+  const armies = useArmies(countryName)
+  const artillery = useUnitDefinition(countryName, armyName, UnitType.Artillery)
+
+  const handleSetDaysUntilBattle = useCallback(
+    (value: number) => {
+      dispatch(setDaysUntilBattle(type, index, value))
+    },
+    [dispatch, index, type]
+  )
+  const clearable = side.participants.length > 1
+
+  return (
+    <Table.Row key={countryName + '_' + armyName + index}>
+      <Table.Cell>
+        <SimpleDropdown
+          values={keys(countries)}
+          value={countryName}
+          onChange={name =>
+            name
+              ? selectParticipantCountry(
+                  type,
+                  index,
+                  name,
+                  countries[name]
+                    ? (Object.keys(filterArmies(countries[name], mode))[0] as ArmyName)
+                    : getDefaultArmyName(mode)
+                )
+              : deleteParticipant(type, index)
+          }
+          style={{ width: 110 }}
+          onAdd={name => createCountry(name)}
+          clearable={clearable}
+        />
+      </Table.Cell>
+      <Table.Cell>
+        <SimpleDropdown
+          values={keys(armies)}
+          value={armyName}
+          onChange={name => selectParticipantArmy(type, index, name)}
+          onAdd={name => createArmy(countryName, name, mode)}
+          style={{ width: 100 }}
+        />
+      </Table.Cell>
+      {settings[Setting.Martial] && (
+        <TableGeneralAttribute attribute={GeneralAttribute.Martial} countryName={countryName} armyName={armyName} />
+      )}
+      {settings[Setting.Tactics] && (
+        <Table.Cell>
+          <TacticSelector side={type} index={index} />
+        </Table.Cell>
+      )}
+      {settings[Setting.Tech] && (
+        <Table.Cell>
+          <CountryValueInput country={countryName} attribute={CountryAttribute.TechLevel} />
+        </Table.Cell>
+      )}
+      {isAttributeEnabled(CountryAttribute.FlankRatio, settings) && (
+        <Table.Cell>
+          <CountryValueInput attribute={CountryAttribute.FlankRatio} country={countryName} percent />
+        </Table.Cell>
+      )}
+      {artillery && isAttributeEnabled(UnitAttribute.OffensiveSupport, settings) && (
+        <Table.Cell>
+          <UnitValueInput unit={artillery} attribute={UnitAttribute.OffensiveSupport} country={countryName} percent />
+        </Table.Cell>
+      )}
+      <Table.Cell>
+        <DelayedNumericInput
+          disabled={index === 0}
+          value={daysUntilBattle}
+          onChange={handleSetDaysUntilBattle}
+          type='number'
+        />
+      </Table.Cell>
+    </Table.Row>
+  )
+}
+
+interface GeneralAttributeProps {
+  countryName: CountryName
+  armyName: ArmyName
+  attribute: GeneralValueType
+}
+
+const TableGeneralAttribute = ({ countryName: country, armyName: army, attribute }: GeneralAttributeProps) => {
+  const dispatch = useDispatch()
+  const general = useGeneral(country, army)
+  const handleSetGeneralAttribute = useCallback(
+    (_, { value }: InputOnChangeData) => {
+      dispatch(setGeneralAttribute(country, army, attribute, Number(value)))
+    },
+    [dispatch, country, army, attribute]
+  )
+  if (!general) return null
+  return (
     <Table.Cell>
       <Input
         disabled={!general.enabled}
@@ -198,58 +208,11 @@ class TableArmyInfo extends Component<IProps> {
         className='small-input'
         type='number'
         value={general.baseValues[attribute]}
-        onChange={(_, { value }) => this.props.setGeneralAttribute(country, army, attribute, Number(value))}
+        onChange={handleSetGeneralAttribute}
       />{' '}
       <StyledNumber value={general.extraValues[attribute]} formatter={addSign} hideZero />
     </Table.Cell>
   )
-
-  setDaysUntilBattle = (index: number, value: number) => {
-    this.props.setDaysUntilBattle(this.props.type, index, value)
-  }
 }
 
-type Entity = Participant & {
-  general: GeneralDefinition
-  country: Country
-  armies: Armies
-  artillery?: UnitDefinition
-}
-
-const mapStateToProps = (state: AppState, props: Props) => {
-  const side = getSide(state, props.type)
-  const mode = getMode(state)
-  return {
-    participants: side.participants.map(participant => {
-      const definitions = getUnitDefinitionsCached(state, participant.countryName, participant.armyName)
-      return {
-        ...participant,
-        general: getGeneral(state, participant.countryName, participant.armyName),
-        country: getCountry(state, participant.countryName),
-        armies: getArmies(state, participant.countryName),
-        artillery: (definitions ? getArchetypes(definitions, mode) : []).find(unit => unit.type === UnitType.Artillery)
-      }
-    }),
-    clearable: side.participants.length > 1,
-    countries: getCountries(state),
-    settings: getSiteSettings(state),
-    mode
-  }
-}
-
-const actions = {
-  selectParticipantCountry,
-  selectParticipantArmy,
-  setGeneralAttribute,
-  deleteParticipant,
-  addParticipant,
-  setDaysUntilBattle,
-  createArmy,
-  createCountry
-}
-
-type S = ReturnType<typeof mapStateToProps>
-type D = typeof actions
-interface IProps extends React.PropsWithChildren<Props>, S, D {}
-
-export default connect(mapStateToProps, actions)(TableArmyInfo)
+export default TableArmyInfo
