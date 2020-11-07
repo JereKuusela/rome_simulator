@@ -82,7 +82,14 @@ const DropdownTable = <T extends string, E>(props: IProps<T, E>): JSX.Element =>
           {headers.length ? <Header headers={headers} settings={settings} /> : null}
           <Table.Body>
             {values.map((item, index) => (
-              <Content searchQuery={searchQuery} onClose={handleClose} index={index} item={item} {...props} />
+              <Content
+                key={index}
+                searchQuery={searchQuery}
+                onClose={handleClose}
+                index={index}
+                item={item}
+                {...props}
+              />
             ))}
           </Table.Body>
         </Table>

@@ -84,6 +84,7 @@ export const useCountry = (countryName: CountryName): CountryDefinition => {
 
 export const useCountries = (): CountryDefinitions => useSelector((state: AppState) => state.countries)
 export const useSiteSettings = (): SiteSettings => useSelector((state: AppState) => state.settings.siteSettings)
+export const useSettings = (): Settings => useSelector((state: AppState) => getSettings(state))
 export const useMode = (): Mode => useSelector((state: AppState) => state.settings.mode)
 export const useTactics = (): TacticDefinitions => useSelector((state: AppState) => state.tactics)
 export const useGeneral = (countryName: CountryName, armyName: ArmyName): GeneralDefinition | undefined => {
@@ -214,6 +215,7 @@ export const getTactics = (state: AppState, side: SideType) => {
  * Returns armies of the current mode.
  * @param state Application state.
  */
+export const useBattle = (): Battle => useSelector((state: AppState) => state.battle[state.settings.mode])
 export const getBattle = (state: AppState, mode?: Mode): Battle => state.battle[mode ?? state.settings.mode]
 
 export const getCountries = (state: AppState): Countries => state.countries
@@ -353,6 +355,14 @@ export const getReserve = (
   const definition = getOverridenReserveDefinitions(state, countryName, armyName, originals)
   const units = getUnitDefinitions(state, countryName, armyName)
   return convertReserveDefinitions(settings, definition as ReserveDefinition, units)
+}
+
+export const useParticipant = (type: SideType): Participant => {
+  return useSelector((state: AppState) => {
+    const index = state.ui.selectedParticipantIndex[SideType.A]
+    const participants = getBattle(state).sides[type].participants
+    return participants.length < index ? participants[index] : participants[0]
+  })
 }
 
 export const getParticipant = (state: AppState, type: SideType, index: number, mode?: Mode): Participant =>

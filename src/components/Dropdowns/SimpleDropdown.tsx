@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Dropdown } from 'semantic-ui-react'
+import React, { useCallback, useMemo } from 'react'
+import { Dropdown, DropdownProps } from 'semantic-ui-react'
 
 interface IProps<T extends string | number> {
   value: T
@@ -7,37 +7,44 @@ interface IProps<T extends string | number> {
   onChange?: (value: T) => void
   clearable?: boolean
   onAdd?: (value: T) => void
-  style?: any
+  style?: unknown
   search?: boolean
   placeholder?: string
 }
 
-export default class SimpleDropdown<T extends string | number> extends Component<IProps<T>> {
-  getOptions = () =>
-    this.props.values.map(item => {
-      if (typeof item === 'object') return { key: item.value, value: item.value, text: item.text }
-      else return { key: item, value: item, text: item }
-    })
+const SimpleDropdown = <T extends string | number>(props: IProps<T>): JSX.Element => {
+  const { value, clearable, onChange, onAdd, search, placeholder, values } = props
+  const style = props.style ?? { minWidth: 170, maxWidth: 170 }
 
-  render() {
-    const { value, clearable, onChange, onAdd, search, placeholder } = this.props
-    const style = this.props.style ?? { minWidth: 170, maxWidth: 170 }
-    return (
-      <Dropdown
-        className='selection'
-        clearable={clearable}
-        value={value}
-        disabled={!onChange}
-        onAddItem={(_, { value }) => onAdd && onAdd(value as T)}
-        onChange={(_, { value }) => onChange && onChange(value as T)}
-        style={style}
-        compact={!!style}
-        search={search || !!onAdd}
-        selection
-        options={this.getOptions()}
-        placeholder={placeholder}
-        allowAdditions={!!onAdd}
-      />
-    )
-  }
+  const handleAddItem = useCallback((_, { value }: DropdownProps) => onAdd && onAdd(value as T), [onAdd])
+  const handleChange = useCallback((_, { value }: DropdownProps) => onChange && onChange(value as T), [onChange])
+
+  const options = useMemo(
+    () =>
+      values.map(item => {
+        if (typeof item === 'object') return { key: item.value, value: item.value, text: item.text }
+        else return { key: item, value: item, text: item }
+      }),
+    [values]
+  )
+
+  return (
+    <Dropdown
+      className='selection'
+      clearable={clearable}
+      value={value}
+      disabled={!onChange}
+      onAddItem={handleAddItem}
+      onChange={handleChange}
+      style={style}
+      compact={!!style}
+      search={search || !!onAdd}
+      selection
+      options={options}
+      placeholder={placeholder}
+      allowAdditions={!!onAdd}
+    />
+  )
 }
+
+export default SimpleDropdown

@@ -115,24 +115,36 @@ const RootUnitRow = (props: { unit: UnitDefinition } & Props) => {
   const { settings, culture, mode } = useSelector((state: AppState) => mapStateToProps(state, props))
   const dispatch = useDispatch()
 
-  const onSelectCulture = (culture: CultureType) => {
-    dispatch(selectCulture(countryName, culture, false))
-  }
+  const handleRowCLick = useCallback(() => onRowClick(countryName, armyName, unit.type), [
+    onRowClick,
+    unit.type,
+    countryName,
+    armyName
+  ])
+
+  const onSelectCulture = useCallback(
+    (culture: CultureType) => {
+      dispatch(selectCulture(countryName, culture, false))
+    },
+    [dispatch, countryName]
+  )
+
+  const attributes = useMemo(() => {
+    return filterAttributes(getAttributes(mode), settings)
+  }, [mode, settings])
+
+  const isCulture = settings[Setting.Culture]
 
   if (!unit) return null
   const image = getImage(unit)
   return (
     <Table.Row key={unit.type}>
-      <Table.Cell onClick={() => onRowClick(countryName, armyName, unit.type)} selectable>
+      <Table.Cell onClick={handleRowCLick} selectable>
         <Image src={image} avatar />
-        {settings[Setting.Culture] ? (
-          <SimpleDropdown values={getCultures()} value={culture} onChange={onSelectCulture} />
-        ) : (
-          'Army'
-        )}
+        {isCulture ? <SimpleDropdown values={getCultures()} value={culture} onChange={onSelectCulture} /> : 'Army'}
       </Table.Cell>
       <Table.Cell />
-      {filterAttributes(getAttributes(mode), settings).map(attribute => (
+      {attributes.map(attribute => (
         <Table.Cell key={attribute}>
           <UnitValueInput unit={unit} attribute={attribute} country={countryName} percent />
         </Table.Cell>
@@ -150,26 +162,44 @@ const RoleRow = (props: { role: UnitRole; archetypes: UnitDefinition[] } & Props
   // List of archetypes -> get archetype -> get image
   const archetype = archetypes.find(unit => unit.role === role)
   const preference = preferences[role]
-  if (!archetype || !preference || !units) return null
+  const children = useMemo(() => {
+    if (!archetype || !units) return null
+    const latestType = getLatestUnits(units, tech)
+    const latest = { ...units[latestType[role] || archetype.type], type: UnitType.Latest }
+    return [latest].concat(...getChildUnits(units, tech, archetype.type))
+  }, [archetype, units, role, tech])
+
+  const handleRowCLick = useCallback(() => onRowClick(countryName, armyName, archetype?.type ?? ('' as UnitType)), [
+    onRowClick,
+    archetype?.type,
+    countryName,
+    armyName
+  ])
+
+  const handleSelect = useCallback(
+    (type: UnitType) => {
+      dispatch(setUnitPreference(countryName, armyName, role, type))
+    },
+    [dispatch, countryName, armyName, role]
+  )
+
+  const attributes = useMemo(() => {
+    return filterAttributes(getAttributes(mode), settings)
+  }, [mode, settings])
+
+  if (!children || !archetype || !preference || !units) return null
   const image = getImage(archetype)
-  const latestType = getLatestUnits(units, tech)
-  const latest = { ...units[latestType[role] || archetype.type], type: UnitType.Latest }
-  const children = [latest].concat(...getChildUnits(units, tech, archetype.type))
+
   return (
     <Table.Row key={role}>
-      <Table.Cell onClick={() => onRowClick(countryName, armyName, archetype.type)} selectable className='padding'>
+      <Table.Cell onClick={handleRowCLick} selectable className='padding'>
         <Image src={image} avatar />
-        <DropdownArchetype
-          value={preference}
-          values={children}
-          onSelect={type => dispatch(setUnitPreference(countryName, armyName, role, type))}
-          settings={settings}
-        />
+        <DropdownArchetype value={preference} values={children} onSelect={handleSelect} settings={settings} />
       </Table.Cell>
       <Table.Cell>
-        <CohortCount type={archetype.type} {...props} />
+        <CohortCount type={archetype.type} armyName={armyName} countryName={countryName} />
       </Table.Cell>
-      {filterAttributes(getAttributes(mode), settings).map(attribute => (
+      {attributes.map(attribute => (
         <Table.Cell key={attribute}>
           <UnitValueInput unit={archetype} attribute={attribute} country={countryName} percent />
         </Table.Cell>
@@ -181,18 +211,29 @@ const RoleRow = (props: { role: UnitRole; archetypes: UnitDefinition[] } & Props
 const UnitRow = (props: { unit: UnitDefinition } & Props) => {
   const { unit, countryName, armyName, onRowClick } = props
   const { mode, settings } = useSelector((state: AppState) => mapStateToProps(state, props))
+
+  const handleRowCLick = useCallback(() => onRowClick(countryName, armyName, unit.type), [
+    onRowClick,
+    countryName,
+    armyName,
+    unit.type
+  ])
+
+  const attributes = useMemo(() => {
+    return filterAttributes(getAttributes(mode), settings)
+  }, [mode, settings])
   if (!unit) return null
   const image = getImage(unit)
   return (
     <Table.Row key={unit.type}>
-      <Table.Cell onClick={() => onRowClick(countryName, armyName, unit.type)} selectable>
+      <Table.Cell onClick={handleRowCLick} selectable>
         <Image src={image} avatar />
         {unit.type}
       </Table.Cell>
       <Table.Cell>
-        <CohortCount type={unit.type} {...props} />
+        <CohortCount type={unit.type} countryName={countryName} armyName={armyName} />
       </Table.Cell>
-      {filterAttributes(getAttributes(mode), settings).map(attribute => (
+      {attributes.map(attribute => (
         <Table.Cell key={attribute}>
           <UnitValueInput unit={unit} attribute={attribute} country={countryName} percent />
         </Table.Cell>

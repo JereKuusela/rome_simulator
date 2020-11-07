@@ -119,8 +119,9 @@ const initializeDefaultUnits = (): UnitsData => {
 // Should default terrains be used here for loading? CK3 has lots of terrain stuff so otherwise TerrainType must be expanded...
 const defaultUnits = initializeDefaultUnits()
 
-export const getCultures = () =>
-  uniq(toArr(defaultUnits, value => value.culture).filter(culture => culture) as CultureType[]).sort()
+const cultures = uniq(toArr(defaultUnits, value => value.culture).filter(culture => culture) as CultureType[]).sort()
+
+export const getCultures = (): CultureType[] => cultures
 
 export const getDefaultUnits = (culture?: CultureType): UnitsData =>
   culture ? filter(defaultUnits, unit => !unit.culture || unit.culture === culture) : defaultUnits

@@ -16,7 +16,7 @@ import { getLeadingArmy, getDay, getParticipantName } from 'managers/battle'
 import { getImage } from 'utils'
 
 type Props = {
-  type: SideType
+  sideType: SideType
 }
 
 class TableSideInfo extends Component<IProps> {
@@ -97,10 +97,10 @@ class TableSideInfo extends Component<IProps> {
 
 const mapStateToProps = (state: AppState, props: Props) => {
   const battle = getBattle(state)
-  const combat = getCombatSide(state, props.type)
+  const combat = getCombatSide(state, props.sideType)
   const army = getLeadingArmy(combat)
   return {
-    side: getSide(state, props.type),
+    side: getSide(state, props.sideType),
     tactic: getTactic(state, combat.type),
     army,
     round: getDay(battle),

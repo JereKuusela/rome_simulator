@@ -3,7 +3,7 @@ import { applyGeneralModifiers, convertGeneralDefinition } from 'managers/army'
 import { applyCountryModifiers } from 'managers/countries'
 import { getCountryModifiers, getGeneralModifiers, getSecondaryCountryModifiers } from 'managers/modifiers'
 import { applyUnitModifiers } from 'managers/units'
-import React, { useEffect, useMemo } from 'react'
+import React, { Fragment, useEffect, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { setCacheGeneralDefinition, setCacheUnitDefinitions } from 'reducers'
 import { useCountries, useCountry, useMode, useSiteSettings, useTactics } from 'state'
@@ -16,12 +16,11 @@ import { toArr } from 'utils'
 const UnitCacher = (): JSX.Element => {
   const countries = useCountries()
   const mode = useMode()
-
   return (
     <>
       {toArr(countries, (country, countryName) => {
         return (
-          <>
+          <Fragment key={countryName}>
             {toArr(country.armies, (army, armyName) => {
               if (army.mode !== mode) return null
               return (
@@ -33,7 +32,7 @@ const UnitCacher = (): JSX.Element => {
                 />
               )
             })}
-          </>
+          </Fragment>
         )
       })}
     </>
