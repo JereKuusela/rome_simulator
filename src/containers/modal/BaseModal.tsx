@@ -1,9 +1,13 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { ModalType } from 'types'
+import { connect, useSelector } from 'react-redux'
+import { Modals, ModalType } from 'types'
 import { AppState } from 'state'
 import { closeModal } from 'reducers'
 import { Modal } from 'semantic-ui-react'
+
+export const useModalData = <T extends ModalType>(type: T): Modals[T] => {
+  return useSelector((state: AppState) => state.ui.modals[type])
+}
 
 type Props = {
   type: ModalType

@@ -117,7 +117,7 @@ class CountriesEU4 extends Component<IProps> {
                 <TableAttributes
                   attributes={filterAttributes(values(CountryAttribute), settings)}
                   customValueKey={CUSTOM_KEY}
-                  definition={countryDefinition}
+                  definition={countryDefinition.modifiers}
                   onChange={this.setCountryValue}
                 />
                 <TableAttributes
@@ -171,15 +171,12 @@ class CountriesEU4 extends Component<IProps> {
   }
 
   /** Executes a given function with currently selected country. */
-  execCountry = <T extends any>(
-    func: (country: CountryName, value: T, ...rest: any[]) => void,
-    value: T,
-    ...rest: any[]
-  ) => func(this.props.selectedCountry, value, ...rest)
-  execArmy = <T extends any>(
-    func: (country: CountryName, army: ArmyName, value: T, ...rest: any[]) => void,
-    value: T,
-    ...rest: any[]
+  execCountry = <T1, T2>(func: (country: CountryName, value: T1, ...rest: T2[]) => void, value: T1, ...rest: T2[]) =>
+    func(this.props.selectedCountry, value, ...rest)
+  execArmy = <T1, T2>(
+    func: (country: CountryName, army: ArmyName, value: T1, ...rest: T2[]) => void,
+    value: T1,
+    ...rest: T2[]
   ) => func(this.props.selectedCountry, this.props.selectedArmy, value, ...rest)
 
   /**

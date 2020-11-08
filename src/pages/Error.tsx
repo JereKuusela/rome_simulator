@@ -31,10 +31,10 @@ class Error extends Component<IProps, State> {
         <br />
         <Segment>
           <Header size='huge'>Something went wrong (probably a new version of the simulator)</Header>
-          <Button primary onClick={() => this.reset()}>
+          <Button primary onClick={this.reset}>
             Click here to reset the simulator
           </Button>
-          <Button primary onClick={() => this.download()}>
+          <Button primary onClick={this.download}>
             Click here to download current data
           </Button>
           <br />

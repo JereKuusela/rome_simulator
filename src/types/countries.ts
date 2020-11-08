@@ -25,10 +25,14 @@ export enum CountryAttribute {
 
 export type CountryDefinitions = { [key in CountryName]: CountryDefinition }
 
-export interface CountryDefinition extends DefinitionValues<CountryAttribute> {
+export interface CountryModifiers extends DefinitionValues<CountryAttribute> {
   selections: Selections
   culture: CultureType
   government: GovermentType
+}
+
+export interface CountryDefinition {
+  modifiers: CountryModifiers
   armies: Armies
   units: UnitsData
   weariness: WearinessAttributes

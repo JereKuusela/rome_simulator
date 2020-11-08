@@ -8,11 +8,11 @@ import {
   UnitAttribute,
   UnitType,
   GeneralData,
-  CountryDefinition,
   GeneralAttribute,
   SelectionType,
   ListDefinitions,
-  DeityDefinitions
+  DeityDefinitions,
+  CountryModifiers
 } from 'types'
 import { getRootParent } from './units'
 import { ObjSet, keys } from 'utils'
@@ -35,10 +35,11 @@ import {
   abilitiesIR,
   policiesEU4
 } from 'data'
+import { applyCountryModifiers } from './countries'
 
 export const TECH_KEY = 'Tech '
 
-export const mapModifiersToUnits = (modifiers: Modifier[]) => {
+export const mapModifiersToUnits = (modifiers: Modifier[]): Modifier[] => {
   const mapped: Modifier[] = []
   modifiers.forEach(modifier => {
     if (modifier.target === ModifierType.Text) return
@@ -56,7 +57,7 @@ export const mapModifiersToUnits = (modifiers: Modifier[]) => {
   return mapped
 }
 
-export const mapModifiersToUnits2 = (modifiers: ModifierWithKey[]) => {
+export const mapModifiersToUnits2 = (modifiers: ModifierWithKey[]): ModifierWithKey[] => {
   const mapped: ModifierWithKey[] = []
   modifiers.forEach(modifier => {
     if (modifier.target === ModifierType.Text) return
@@ -77,7 +78,7 @@ export const mapModifiersToUnits2 = (modifiers: ModifierWithKey[]) => {
 const mapModifiers = (key: string, modifiers: Modifier[]) =>
   modifiers.map(value => ({ key, ...value })) as ModifierWithKey[]
 
-const getTechModifiers = (modifiers: ModifierWithKey[], country: CountryDefinition) => {
+const getTechModifiers = (modifiers: ModifierWithKey[], country: CountryModifiers) => {
   const selections = country.selections[SelectionType.Invention] ?? {}
   const techLevel = calculateValue(country, CountryAttribute.TechLevel)
   if (process.env.REACT_APP_GAME === 'EU4') {
@@ -99,7 +100,7 @@ const getTechModifiers = (modifiers: ModifierWithKey[], country: CountryDefiniti
   return modifiers
 }
 
-const getTraditionModifiers = (modifiers: ModifierWithKey[], country: CountryDefinition) => {
+const getTraditionModifiers = (modifiers: ModifierWithKey[], country: CountryModifiers) => {
   const selections = country.selections[SelectionType.Tradition] ?? {}
   const culture = country.culture
   if (process.env.REACT_APP_GAME === 'IR') {
@@ -145,7 +146,7 @@ const getModifiersSub2 = (modifiers: ModifierWithKey[], selections: ObjSet | und
     if (items[key]) modifiers.push(...mapModifiers(items[key].name, items[key].modifiers))
   })
 }
-const getOfficeModifiers = (modifiers: ModifierWithKey[], country: CountryDefinition) => {
+const getOfficeModifiers = (modifiers: ModifierWithKey[], country: CountryModifiers) => {
   const morale = calculateValue(country, CountryAttribute.OfficeMorale)
   const discipline = calculateValue(country, CountryAttribute.OfficeDiscipline)
   const militaryExperience = calculateValue(country, CountryAttribute.MilitaryExperience)
@@ -178,7 +179,7 @@ const getOfficeModifiers = (modifiers: ModifierWithKey[], country: CountryDefini
   }
 }
 
-export const getCountryModifiers = (country: CountryDefinition): ModifierWithKey[] => {
+const getPrimaryCountryModifiers = (country: CountryModifiers) => {
   const modifiers: ModifierWithKey[] = []
   getTechModifiers(modifiers, country)
   getOfficeModifiers(modifiers, country)
@@ -199,11 +200,17 @@ export const getCountryModifiers = (country: CountryDefinition): ModifierWithKey
   return modifiers
 }
 
+export const getCountryModifiers = (country: CountryModifiers): ModifierWithKey[] => {
+  const primaryModifiers = getPrimaryCountryModifiers(country)
+  const secondaryModifiers = getSecondaryCountryModifiers(applyCountryModifiers(country, primaryModifiers))
+  return primaryModifiers.concat(secondaryModifiers)
+}
+
 /**
  * Modifiers must be acquired in two steps because modifiers can affect each other.
  * For example Omen Power for omens.
  */
-export const getSecondaryCountryModifiers = (country: CountryDefinition): ModifierWithKey[] => {
+export const getSecondaryCountryModifiers = (country: CountryModifiers): ModifierWithKey[] => {
   const modifiers: ModifierWithKey[] = []
   if (process.env.REACT_APP_GAME === 'IR') {
     getDeityModifiers(

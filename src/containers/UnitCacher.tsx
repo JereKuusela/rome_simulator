@@ -1,7 +1,6 @@
 import { convertUnitDefinitions, filterUnitDefinitions } from 'army_utils'
 import { applyGeneralModifiers, convertGeneralDefinition } from 'managers/army'
-import { applyCountryModifiers } from 'managers/countries'
-import { getCountryModifiers, getGeneralModifiers, getSecondaryCountryModifiers } from 'managers/modifiers'
+import { getCountryModifiers, getGeneralModifiers } from 'managers/modifiers'
 import { applyUnitModifiers } from 'managers/units'
 import React, { Fragment, useEffect, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
@@ -57,13 +56,17 @@ const UnitCacherSub = ({ countryName, armyName, army }: CacherProps): null => {
     return applyGeneralModifiers(army.general, modifiers)
   }, [army.general])
 
+  const countryModifiers = useMemo(() => {
+    return getCountryModifiers(country.modifiers)
+  }, [country.modifiers])
+
+  const generalModifiers = useMemo(() => {
+    return getGeneralModifiers(generalData)
+  }, [generalData])
+
   const subDefinitions = useMemo(() => {
-    const units = country.units
-    const countryModifiers = getCountryModifiers(country)
-    const secondaryCountryModifiers = getSecondaryCountryModifiers(applyCountryModifiers(country, countryModifiers))
-    const generalModifiers = getGeneralModifiers(generalData)
-    return applyUnitModifiers(units, countryModifiers.concat(secondaryCountryModifiers).concat(generalModifiers))
-  }, [country, generalData])
+    return applyUnitModifiers(country.units, countryModifiers.concat(generalModifiers))
+  }, [country.units, countryModifiers, generalModifiers])
 
   const generalDefinition = useMemo(() => {
     return convertGeneralDefinition(settings, generalData, tactics)

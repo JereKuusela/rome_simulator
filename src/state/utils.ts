@@ -60,7 +60,7 @@ import {
 } from 'data'
 import { uniq, flatten } from 'lodash'
 import * as manager from 'managers/army'
-import { getCountryModifiers, getGeneralModifiers, getSecondaryCountryModifiers } from 'managers/modifiers'
+import { getCountryModifiers, getGeneralModifiers } from 'managers/modifiers'
 import { convertCountryDefinition, applyCountryModifiers, filterArmies } from 'managers/countries'
 import { applyUnitModifiers } from 'managers/units'
 import { convertArmy, convertSide, getRound, getAttacker, getLeadingArmy } from 'managers/battle'
@@ -84,7 +84,24 @@ export const useCountry = (countryName: CountryName): CountryDefinition => {
 
 export const useCountries = (): CountryDefinitions => useSelector((state: AppState) => state.countries)
 export const useSiteSettings = (): SiteSettings => useSelector((state: AppState) => state.settings.siteSettings)
-export const useSettings = (): Settings => useSelector((state: AppState) => getSettings(state))
+export const useCombatWidth = (): number => {
+  return useSelector((state: AppState) => {
+    const settings = state.settings.siteSettings
+    const attacker = getCountry(state, getParticipant(state, SideType.A, 0).countryName)
+    const defender = getCountry(state, getParticipant(state, SideType.B, 0).countryName)
+    return (
+      settings[Setting.BaseCombatWidth] +
+      Math.max(attacker[CountryAttribute.CombatWidth], defender[CountryAttribute.CombatWidth])
+    )
+  })
+}
+export const useTechLevel = (countryName: CountryName): number => {
+  return useSelector((state: AppState) => {
+    const country = getCountry(state, countryName)
+    return country[CountryAttribute.TechLevel]
+  })
+}
+
 export const useMode = (): Mode => useSelector((state: AppState) => state.settings.mode)
 export const useTactics = (): TacticDefinitions => useSelector((state: AppState) => state.tactics)
 export const useGeneral = (countryName: CountryName, armyName: ArmyName): GeneralDefinition | undefined => {
@@ -216,6 +233,7 @@ export const getTactics = (state: AppState, side: SideType) => {
  * @param state Application state.
  */
 export const useBattle = (): Battle => useSelector((state: AppState) => state.battle[state.settings.mode])
+export const useTimestamp = (): number => useSelector((state: AppState) => state.battle[state.settings.mode].timestamp)
 export const getBattle = (state: AppState, mode?: Mode): Battle => state.battle[mode ?? state.settings.mode]
 
 export const getCountries = (state: AppState): Countries => state.countries
@@ -234,7 +252,7 @@ const getArmy = (state: AppState, countryName: CountryName, armyName: ArmyName):
   const general = getGeneral(state, countryName, armyName)
   const settings = getSiteSettings(state)
   const unitPreferences = settings[Setting.CustomDeployment] ? army.unitPreferences : ({} as UnitPreferences)
-  const flankRatio = calculateValue(state.countries[countryName], CountryAttribute.FlankRatio)
+  const flankRatio = calculateValue(state.countries[countryName].modifiers, CountryAttribute.FlankRatio)
   return { reserve, general, flankSize: army.flankSize, unitPreferences, unitDefinitions, flankRatio }
 }
 
@@ -295,10 +313,9 @@ export const getCountry = (state: AppState, countryName: CountryName): Country =
   return convertCountryDefinition(country, state.settings.siteSettings)
 }
 export const getCountryDefinition = (state: AppState, countryName: CountryName): CountryDefinition => {
-  let country = state.countries[countryName]
-  const modifiers = getCountryModifiers(country)
-  country = applyCountryModifiers(country, modifiers)
-  return applyCountryModifiers(country, getSecondaryCountryModifiers(country))
+  const country = state.countries[countryName]
+  const modifiers = getCountryModifiers(country.modifiers)
+  return { ...country, modifiers: applyCountryModifiers(country.modifiers, modifiers) }
 }
 const getArmyDefinition = (state: AppState, countryName: CountryName, armyName: ArmyName) =>
   state.countries[countryName].armies[armyName]
@@ -391,10 +408,9 @@ const getUnitDefinitionsSub = (state: AppState, countryName: CountryName, armyNa
   const country = state.countries[countryName]
   const units = country.units
   const general = getGeneralDefinition(state, countryName, armyName)
-  const countryModifiers = getCountryModifiers(country)
-  const secondaryCountryModifiers = getSecondaryCountryModifiers(applyCountryModifiers(country, countryModifiers))
+  const countryModifiers = getCountryModifiers(country.modifiers)
   const generalModifiers = getGeneralModifiers(general)
-  return applyUnitModifiers(units, countryModifiers.concat(secondaryCountryModifiers).concat(generalModifiers))
+  return applyUnitModifiers(units, countryModifiers.concat(generalModifiers))
 }
 
 export const useUnitDefinitions = (countryName: CountryName, armyName: ArmyName): UnitDefinitions | undefined => {

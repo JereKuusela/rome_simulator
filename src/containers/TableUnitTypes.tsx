@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Image, Table } from 'semantic-ui-react'
 
 import {
@@ -12,20 +12,18 @@ import {
   Setting,
   UnitDefinition,
   Mode,
-  CountryAttribute,
   ArmyName,
   CultureType
 } from 'types'
 import { getImage, mapRange } from 'utils'
 import {
-  AppState,
-  getUnitPreferences,
-  getCountry,
-  getMode,
-  getSiteSettings,
   useArmyData,
   useWeariness,
-  useUnitDefinitions
+  useUnitDefinitions,
+  useSiteSettings,
+  useMode,
+  useCountry,
+  useTechLevel
 } from 'state'
 import { addToReserve, removeFromReserve, setUnitPreference, selectCulture } from 'reducers'
 import { getArchetypes, getActualUnits, getLatestUnits, getChildUnits, getRootUnit } from 'managers/army'
@@ -63,18 +61,21 @@ const TableUnitTypes = (props: Props): JSX.Element | null => {
   const { countryName, armyName, side } = props
   const dispatch = useDispatch()
   const units = useUnitDefinitions(countryName, armyName)
-  const { preferences, tech, mode, settings } = useSelector((state: AppState) => mapStateToProps(state, props))
+  const settings = useSiteSettings()
+  const mode = useMode()
+  const preferences = useArmyData(countryName, armyName).unitPreferences
+  const techLevel = useTechLevel(countryName)
 
   const checkPreference = useCallback(
     (role: UnitRole) => {
       if (!units) return
       const preference = preferences[role]
       const techRequirement = preference && units[preference] && units[preference].tech
-      if (techRequirement && techRequirement > tech) {
+      if (techRequirement && techRequirement > techLevel) {
         dispatch(setUnitPreference(countryName, armyName, role, null))
       }
     },
-    [dispatch, preferences, countryName, armyName, tech, units]
+    [dispatch, preferences, countryName, armyName, techLevel, units]
   )
 
   useEffect(() => {
@@ -112,7 +113,9 @@ const TableUnitTypes = (props: Props): JSX.Element | null => {
 
 const RootUnitRow = (props: { unit: UnitDefinition } & Props) => {
   const { unit, countryName, armyName, onRowClick } = props
-  const { settings, culture, mode } = useSelector((state: AppState) => mapStateToProps(state, props))
+  const settings = useSiteSettings()
+  const mode = useMode()
+  const culture = useCountry(countryName).modifiers.culture
   const dispatch = useDispatch()
 
   const handleRowCLick = useCallback(() => onRowClick(countryName, armyName, unit.type), [
@@ -157,17 +160,20 @@ const RoleRow = (props: { role: UnitRole; archetypes: UnitDefinition[] } & Props
   const { countryName, armyName, onRowClick, archetypes, role } = props
   const dispatch = useDispatch()
   const units = useUnitDefinitions(countryName, armyName)
-  const { preferences, tech, mode, settings } = useSelector((state: AppState) => mapStateToProps(state, props))
+  const settings = useSiteSettings()
+  const mode = useMode()
+  const preferences = useArmyData(countryName, armyName).unitPreferences
+  const techLevel = useTechLevel(countryName)
 
   // List of archetypes -> get archetype -> get image
   const archetype = archetypes.find(unit => unit.role === role)
   const preference = preferences[role]
   const children = useMemo(() => {
     if (!archetype || !units) return null
-    const latestType = getLatestUnits(units, tech)
+    const latestType = getLatestUnits(units, techLevel)
     const latest = { ...units[latestType[role] || archetype.type], type: UnitType.Latest }
-    return [latest].concat(...getChildUnits(units, tech, archetype.type))
-  }, [archetype, units, role, tech])
+    return [latest].concat(...getChildUnits(units, techLevel, archetype.type))
+  }, [archetype, units, role, techLevel])
 
   const handleRowCLick = useCallback(() => onRowClick(countryName, armyName, archetype?.type ?? ('' as UnitType)), [
     onRowClick,
@@ -210,7 +216,8 @@ const RoleRow = (props: { role: UnitRole; archetypes: UnitDefinition[] } & Props
 
 const UnitRow = (props: { unit: UnitDefinition } & Props) => {
   const { unit, countryName, armyName, onRowClick } = props
-  const { mode, settings } = useSelector((state: AppState) => mapStateToProps(state, props))
+  const settings = useSiteSettings()
+  const mode = useMode()
 
   const handleRowCLick = useCallback(() => onRowClick(countryName, armyName, unit.type), [
     onRowClick,
@@ -265,17 +272,6 @@ const CohortCount = (props: { type: UnitType } & Name) => {
   )
 
   return <DelayedNumericInput value={count} type='number' onChange={updateReserve} />
-}
-
-const mapStateToProps = (state: AppState, props: Props) => {
-  const { countryName, armyName } = props
-  return {
-    preferences: getUnitPreferences(state, countryName, armyName),
-    culture: getCountry(state, countryName).culture,
-    tech: getCountry(state, countryName)[CountryAttribute.TechLevel],
-    settings: getSiteSettings(state),
-    mode: getMode(state)
-  }
 }
 
 export default TableUnitTypes

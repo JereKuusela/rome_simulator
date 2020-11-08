@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { Button, Grid, Header, Checkbox } from 'semantic-ui-react'
+import { Button, Grid, Header, Checkbox, CheckboxProps } from 'semantic-ui-react'
 import { getCombatPhase } from 'combat'
 import PreferredUnitTypes from 'containers/PreferredUnitTypes'
 import TableStats from 'containers/TableStats'
@@ -9,7 +9,7 @@ import TargetArrows from 'containers/TargetArrows'
 import TerrainSelector from 'containers/TerrainSelector'
 import WinRate from 'containers/WinRate'
 import { clearCohorts, changeSiteParameter, refreshBattle, resetState, openModal } from 'reducers'
-import { useParticipant, useSiteSettings, useBattle, useSettings } from 'state'
+import { useParticipant, useSiteSettings, useBattle, useCombatWidth, useTimestamp } from 'state'
 import { ArmyPart, CountryName, Setting, SideType, CombatPhase, UnitType, ModalType, ArmyName } from 'types'
 import TableUnitTypes from 'containers/TableUnitTypes'
 import TableArmyInfo from 'containers/TableArmyInfo'
@@ -29,7 +29,7 @@ const Battle = (): JSX.Element | null => {
     dispatch(refreshBattle())
   }, [dispatch])
 
-  const { timestamp } = useBattle()
+  const timestamp = useTimestamp()
   if (!timestamp) return null
   return (
     <>
@@ -84,9 +84,8 @@ const useOpenCohortModal = () => {
 }
 
 const RenderFrontline = ({ sideType }: { sideType: SideType }) => {
-  const settings = useSettings()
+  const combatWidth = useCombatWidth()
   const handleOpenCohortModal = useOpenCohortModal()
-  const combatWidth = settings[Setting.BaseCombatWidth]
   return (
     <TableArmyPart
       color={sideType === SideType.A ? ATTACKER_COLOR : DEFENDER_COLOR}
@@ -127,6 +126,12 @@ const Frontline = () => {
   const handleUndo = useCallback(() => undo(1), [undo])
   const handleRedoTen = useCallback(() => battle(10), [battle])
   const handleRedo = useCallback(() => battle(1), [battle])
+  const handleChangeAutoRefresh = useCallback(
+    (_, { checked }: CheckboxProps) => {
+      dispatch(changeSiteParameter(Setting.AutoRefresh, !!checked))
+    },
+    [dispatch]
+  )
 
   return (
     <Grid verticalAlign='middle'>
@@ -138,7 +143,7 @@ const Frontline = () => {
           <Checkbox
             label={Setting.AutoRefresh}
             checked={settings[Setting.AutoRefresh]}
-            onChange={(_, { checked }) => changeSiteParameter(Setting.AutoRefresh, !!checked)}
+            onChange={handleChangeAutoRefresh}
           />
         </Grid.Column>
         <Grid.Column width='6'>

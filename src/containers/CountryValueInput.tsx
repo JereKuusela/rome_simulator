@@ -19,12 +19,14 @@ type Props = {
 class CountryValueInput extends Component<IProps> {
   render() {
     const { attribute, percent, definition } = this.props
-    const value = calculateBase(definition, attribute)
+    const value = calculateBase(definition.modifiers, attribute)
     return <DelayedNumericInput value={value} onChange={this.onChange} percent={percent} />
   }
   onChange = (value: number) => {
     const { definition, attribute, setCountryAttribute, country } = this.props
-    const base = calculateBase(definition, attribute) - calculateBase(filterValues(definition, 'Custom'), attribute)
+    const base =
+      calculateBase(definition.modifiers, attribute) -
+      calculateBase(filterValues(definition.modifiers, 'Custom'), attribute)
     setCountryAttribute(country, attribute, value - base)
   }
 }
