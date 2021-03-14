@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import { toPercent, toNumber } from 'formatters'
 import { Input, InputOnChangeData } from 'semantic-ui-react'
@@ -22,6 +22,7 @@ const convertValue = (value: number, percent?: boolean) => {
  */
 const DelayedNumericInput = ({ disabled, type, value, percent, onChange, delay }: IProps): JSX.Element => {
   const [currentValue, setCurrentValue] = useState('')
+  const timer = useRef<NodeJS.Timeout>()
 
   useEffect(() => {
     setCurrentValue(convertValue(value, percent))
@@ -34,21 +35,26 @@ const DelayedNumericInput = ({ disabled, type, value, percent, onChange, delay }
       // Non-numeric values should just reset the previous value.
       if (Number.isNaN(newValue)) setCurrentValue(convertValue(value, percent))
       else {
-        setCurrentValue(convertValue(value, percent))
+        setCurrentValue(convertValue(newValue, percent))
         if (value !== newValue) onChange(newValue)
       }
     },
     [onChange, percent, value]
   )
 
-  useEffect(() => {
-    const timer = setTimeout(() => update(currentValue), delay ?? 2000)
-    return () => {
-      clearTimeout(timer)
-    }
-  }, [currentValue, delay, update])
+  const setValue = useCallback(
+    (newValue: string) => {
+      setCurrentValue(newValue)
+      timer.current = setTimeout(() => update(newValue), delay ?? 2000)
+      return () => {
+        if (timer.current) clearTimeout(timer.current)
+      }
+    },
+    [setCurrentValue, delay, update]
+  )
 
   const handleBlur = useCallback(() => {
+    if (timer.current) clearTimeout(timer.current)
     update(currentValue)
   }, [update, currentValue])
 
@@ -61,9 +67,9 @@ const DelayedNumericInput = ({ disabled, type, value, percent, onChange, delay }
 
   const handleChange = useCallback(
     (_, { value }: InputOnChangeData) => {
-      setCurrentValue(value)
+      setValue(value)
     },
-    [setCurrentValue]
+    [setValue]
   )
 
   const handleFocus = useCallback((e: React.FocusEvent<HTMLInputElement>) => e.target.select(), [])

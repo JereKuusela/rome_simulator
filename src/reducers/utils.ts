@@ -134,8 +134,7 @@ export function combineRoot<S>(reducers: { [K in keyof S]: ReducerWithParam<S[K]
     for (const key of reducerKeys) {
       const reducer = reducers[key] as any
       nextState[key] = reducer(state[key], action, settings)
-      if (action.type && nextState[key] !== state[key] && key !== 'ui' && key !== 'transfer' && key !== 'cache')
-        invalidated = true
+      if (action.type && nextState[key] !== state[key] && key !== 'ui' && key !== 'transfer') invalidated = true
     }
     if (invalidated) {
       nextState = produce(nextState, (draft: any) => {

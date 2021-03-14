@@ -69,6 +69,7 @@ import { convertTactic } from 'managers/tactics'
 import { calculateValue } from 'definition_values'
 import { useSelector } from 'react-redux'
 import { useMemo } from 'react'
+import * as selectors from 'selectors/units'
 
 export const useArmyData = (countryName: CountryName, armyName: ArmyName): ArmyData => {
   return useSelector((state: AppState) => state.countries[countryName].armies[armyName])
@@ -105,7 +106,8 @@ export const useTechLevel = (countryName: CountryName): number => {
 export const useMode = (): Mode => useSelector((state: AppState) => state.settings.mode)
 export const useTactics = (): TacticDefinitions => useSelector((state: AppState) => state.tactics)
 export const useGeneral = (countryName: CountryName, armyName: ArmyName): GeneralDefinition | undefined => {
-  return useSelector((state: AppState) => state.cache.generals[countryName]?.[armyName])
+  const props = { countryName, armyName }
+  return useSelector((state: AppState) => selectors.getGeneralDefinition(state, props))
 }
 
 export const useArmies = (countryName: CountryName): Armies => {
@@ -414,11 +416,8 @@ const getUnitDefinitionsSub = (state: AppState, countryName: CountryName, armyNa
 }
 
 export const useUnitDefinitions = (countryName: CountryName, armyName: ArmyName): UnitDefinitions | undefined => {
-  return useSelector((state: AppState) => state.cache.units?.[countryName][armyName])
-}
-
-export const useAllUnitDefinitions = () => {
-  return useSelector((state: AppState) => state.cache.units)
+  const props = { countryName, armyName }
+  return useSelector((state: AppState) => selectors.getUnitDefinitions(state, props))
 }
 
 export const useUnitDefinition = (
@@ -426,7 +425,8 @@ export const useUnitDefinition = (
   armyName: ArmyName,
   unitType: UnitType
 ): UnitDefinition | undefined => {
-  return useSelector((state: AppState) => state.cache.units?.[countryName]?.[armyName][unitType])
+  const props = { countryName, armyName }
+  return useSelector((state: AppState) => selectors.getUnitDefinitions(state, props)[unitType])
 }
 
 export const getUnitDefinitionsCached = (
@@ -434,7 +434,8 @@ export const getUnitDefinitionsCached = (
   countryName: CountryName,
   armyName: ArmyName
 ): UnitDefinitions | undefined => {
-  return state.cache.units[countryName] ? state.cache.units[countryName][armyName] : undefined
+  const props = { countryName, armyName }
+  return selectors.getUnitDefinitions(state, props)
 }
 
 export const getUnitDefinitions = (

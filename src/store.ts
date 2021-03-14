@@ -46,7 +46,7 @@ const SettingsTransform = createTransform(
 const IgnoreTransform = createTransform(
   () => undefined,
   () => ({}),
-  { whitelist: ['cache', 'data'] }
+  { whitelist: ['data'] }
 )
 
 const migrations = {

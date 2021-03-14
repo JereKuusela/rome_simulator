@@ -8,7 +8,7 @@ import TableArmyPart from 'containers/GridRowArmyPart'
 import TargetArrows from 'containers/TargetArrows'
 import TerrainSelector from 'containers/TerrainSelector'
 import WinRate from 'containers/WinRate'
-import { clearCohorts, changeSiteParameter, refreshBattle, resetState, openModal } from 'reducers'
+import { clearCohorts, changeSiteParameter, refreshBattle, resetState, openModal, battle, undo } from 'reducers'
 import { useParticipant, useSiteSettings, useBattle, useCombatWidth, useTimestamp } from 'state'
 import { ArmyPart, CountryName, Setting, SideType, CombatPhase, UnitType, ModalType, ArmyName } from 'types'
 import TableUnitTypes from 'containers/TableUnitTypes'
@@ -107,25 +107,24 @@ const Frontline = () => {
   const day = getDay(battleState)
   const round = getRound(battleState)
   const isUndoAvailable = day > 0
-  const undo = useCallback(
+  const doUndo = useCallback(
     (rounds: number) => {
       dispatch(undo(rounds))
       if (outdated) dispatch(refreshBattle())
     },
     [dispatch, outdated]
   )
-
-  const battle = useCallback(
+  const doBattle = useCallback(
     (rounds: number) => {
       if (outdated) dispatch(refreshBattle())
       dispatch(battle(rounds))
     },
     [dispatch, outdated]
   )
-  const handleUndoTen = useCallback(() => undo(10), [undo])
-  const handleUndo = useCallback(() => undo(1), [undo])
-  const handleRedoTen = useCallback(() => battle(10), [battle])
-  const handleRedo = useCallback(() => battle(1), [battle])
+  const handleUndoTen = useCallback(() => doUndo(10), [doUndo])
+  const handleUndo = useCallback(() => doUndo(1), [doUndo])
+  const handleRedoTen = useCallback(() => doBattle(10), [doBattle])
+  const handleRedo = useCallback(() => doBattle(1), [doBattle])
   const handleChangeAutoRefresh = useCallback(
     (_, { checked }: CheckboxProps) => {
       dispatch(changeSiteParameter(Setting.AutoRefresh, !!checked))

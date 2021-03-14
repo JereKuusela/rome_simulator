@@ -9,7 +9,6 @@ import {
   importReducer,
   settingsReducer,
   combatReducer,
-  cacheReducer,
   uiReducer
 } from 'reducers'
 import { combineRoot, compose } from 'reducers/utils'
@@ -22,8 +21,7 @@ const combined = combineRoot({
   transfer: transferReducer,
   countries: compose(countriesReducer, armyReducer, unitsReducer),
   settings: settingsReducer,
-  ui: uiReducer,
-  cache: cacheReducer
+  ui: uiReducer
 })
 
 export const rootReducer = compose(combined, combatReducer, importReducer) as Reducer<any, any>
