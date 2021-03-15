@@ -1,94 +1,98 @@
-{
-  "terrain": [
-    {
-      "type": "Desert",
-      "mode": "Land",
-      "location": "Tile",
-      "roll": 0
-    },
-    {
-      "type": "Farmland",
-      "mode": "Land",
-      "location": "Tile",
-      "roll": 0
-    },
-    {
-      "type": "Forest",
-      "mode": "Land",
-      "location": "Tile",
-      "roll": -1
-    },
-    {
-      "type": "Hills",
-      "mode": "Land",
-      "location": "Tile",
-      "roll": -1
-    },
-    {
-      "type": "Jungle",
-      "mode": "Land",
-      "location": "Tile",
-      "roll": 0
-    },
-    {
-      "type": "Marsh",
-      "mode": "Land",
-      "location": "Tile",
-      "roll": 0
-    },
-    {
-      "type": "Mountain",
-      "mode": "Land",
-      "location": "Tile",
-      "roll": -2
-    },
-    {
-      "type": "Naval",
-      "mode": "Land",
-      "location": "Border",
-      "roll": -2
-    },
-    {
-      "type": "None",
-      "mode": "Global",
-      "location": "Border",
-      "roll": 0
-    },
-    { 
-      "type": "Plains",
-      "mode": "Land",
-      "location": "Tile",
-      "roll": 0
-    },
-    {
-      "type": "River",
-      "mode": "Land",
-      "location": "Border",
-      "roll": -1
-    },
-    {
-      "type": "Strait",
-      "mode": "Land",
-      "location": "Border",
-      "roll": -2
-    },
-    {
-      "type": "Ocean",
-      "mode": "Naval",
-      "location": "Tile",
-      "roll": 0
-    },
-    {
-      "type": "Coastal",
-      "mode": "Naval",
-      "location": "Tile",
-      "roll": 0
-    },
-    {
-      "type": "Riverine",
-      "mode": "Naval",
-      "location": "Tile",
-      "roll": 0
-    }
-  ]
-}
+[
+  {
+    "type": "Coastal Sea",
+    "roll": 0,
+    "location": "Tile",
+    "combat_width": 30
+  },
+  {
+    "type": "Crossing river",
+    "location": "Border",
+    "roll": -1,
+    "combat_width": 0
+  },
+  {
+    "type": "Crossing strait",
+    "location": "Border",
+    "roll": -2,
+    "combat_width": 0
+  },
+  {
+    "type": "Desert",
+    "roll": 0,
+    "location": "Tile",
+    "combat_width": 28
+  },
+  {
+    "type": "Duel",
+    "location": "Tile",
+    "roll": 0,
+    "combat_width": 1
+  },
+  {
+    "type": "Farmland",
+    "roll": 0,
+    "location": "Tile",
+    "combat_width": 30
+  },
+  {
+    "type": "Forest",
+    "roll": -1,
+    "location": "Tile",
+    "combat_width": 20
+  },
+  {
+    "type": "Hills",
+    "roll": -1,
+    "location": "Tile",
+    "combat_width": 20
+  },
+  {
+    "type": "Impassable",
+    "roll": 0,
+    "location": "Tile",
+    "combat_width": 10
+  },
+  {
+    "type": "Jungle",
+    "roll": 0,
+    "location": "Tile",
+    "combat_width": 18
+  },
+  {
+    "type": "Marsh",
+    "roll": -1,
+    "location": "Tile",
+    "combat_width": 18
+  },
+  {
+    "type": "Mountains",
+    "roll": -2,
+    "location": "Tile",
+    "combat_width": 16
+  },
+  {
+    "type": "None",
+    "location": "Border",
+    "roll": 0,
+    "combat_width": 0
+  },
+  {
+    "type": "Open Sea",
+    "roll": 0,
+    "location": "Tile",
+    "combat_width": 50
+  },
+  {
+    "type": "Plains",
+    "roll": 0,
+    "location": "Tile",
+    "combat_width": 40
+  },
+  {
+    "type": "River",
+    "roll": -1,
+    "location": "Tile",
+    "combat_width": 10
+  }
+]

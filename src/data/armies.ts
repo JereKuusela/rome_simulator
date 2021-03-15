@@ -8,7 +8,8 @@ import {
   Armies,
   ArmyName,
   UnitRole,
-  Selections
+  Selections,
+  UnitValues
 } from 'types'
 
 const getDefaultTactic = (mode: Mode): TacticType =>
@@ -44,7 +45,7 @@ const initializeDefaultArmy = (mode: Mode): ArmyData => ({
   general: {
     enabled: true,
     selections: {} as Selections,
-    definitions: {} as any,
+    definitions: {} as UnitValues,
     tactic: getDefaultTactic(mode)
   },
   mode

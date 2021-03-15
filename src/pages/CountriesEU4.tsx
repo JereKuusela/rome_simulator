@@ -12,7 +12,6 @@ import {
 import { mapRange, values } from '../utils'
 
 import {
-  CultureType,
   CountryAttribute,
   GeneralAttribute,
   CombatPhase,
@@ -20,7 +19,6 @@ import {
   filterAttributes,
   ListDefinition,
   CountryName,
-  Setting,
   ArmyName,
   SelectionType
 } from 'types'
@@ -65,11 +63,7 @@ class CountriesEU4 extends Component<IProps> {
         <Grid>
           <Grid.Row columns='3'>
             <Grid.Column>
-              <SimpleDropdown
-                values={getCultures()}
-                value={country.culture}
-                onChange={item => this.selectCulture(item)}
-              />
+              <SimpleDropdown values={getCultures()} value={country.selectedTradition} onChange={item => item} />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns='1'>
@@ -179,12 +173,6 @@ class CountriesEU4 extends Component<IProps> {
     ...rest: T2[]
   ) => func(this.props.selectedCountry, this.props.selectedArmy, value, ...rest)
 
-  /**
-   * Selects culture while also re-enabling tradition.
-   */
-  selectCulture = (value: CultureType) => {
-    this.execCountry(this.props.selectCulture, value, !this.props.settings[Setting.Culture])
-  }
   /**
    * Clears tech above a given tech level.
    */

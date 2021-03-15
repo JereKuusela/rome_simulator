@@ -20,76 +20,86 @@ const COUNTRY = 'Country'
 const GENERAL = 'General'
 
 /** @type {Object.<string, string>} */
-const localizations = {
-}
+const localizations = {}
 
 /** @type {Object.<string, number>} */
-const scriptValues = {
-}
+const scriptValues = {}
 
-const generalStats = ['martial', 'zeal', 'finesse', 'charisma', 'character_loyalty', 'monthly_character_wealth', 'health']
+const generalStats = [
+  'martial',
+  'zeal',
+  'finesse',
+  'charisma',
+  'character_loyalty',
+  'monthly_character_wealth',
+  'health'
+]
 
 /** @type {Object.<string, string>} */
 const units = {
-  'archers': 'Archers',
-  'camels': 'Camel Cavalry',
-  'chariots': 'Chariots',
-  'horse_archers': 'Horse Archers',
-  'heavy_infantry': 'Heavy Infantry',
-  'heavy_cavalry': 'Heavy Cavalry',
-  'light_cavalry': 'Light Cavalry',
-  'light_infantry': 'Light Infantry',
-  'supply_train': 'Supply Train',
-  'warelephant': 'War Elephants',
-  'liburnian': 'Liburnian',
-  'trireme': 'Trireme',
-  'tetrere': 'Tetrere',
-  'hexere': 'Hexere',
-  'octere': 'Octere',
-  'mega_galley': 'Mega-Polyreme'
+  archers: 'Archers',
+  camels: 'Camel Cavalry',
+  chariots: 'Chariots',
+  engineer_cohort: 'Engineer',
+  horse_archers: 'Horse Archers',
+  heavy_infantry: 'Heavy Infantry',
+  heavy_cavalry: 'Heavy Cavalry',
+  light_cavalry: 'Light Cavalry',
+  light_infantry: 'Light Infantry',
+  supply_train: 'Supply Train',
+  warelephant: 'War Elephants',
+  liburnian: 'Liburnian',
+  trireme: 'Trireme',
+  tetrere: 'Tetrere',
+  hexere: 'Hexere',
+  octere: 'Octere',
+  mega_galley: 'Mega-Polyreme'
 }
 
 /** @type {Object.<string, string>} */
 const attributes = {
-  'nation_rank_0': 'Migratory',
-  'global_monthly_food_modifier': 'National Food',
-  'create_trade_route_cost_modifier': 'Trade Route Cost',
-  'attrition_weight': ATTRITION,
-  'army': 'Mode',
-  'non_retinue_morale_modifier': MORALE,
-  'category': PARENT,
+  nation_rank_0: 'Migratory',
+  global_monthly_food_modifier: 'National Food',
+  create_trade_route_cost_modifier: 'Trade Route Cost',
+  attrition_weight: ATTRITION,
+  army: 'Mode',
+  non_retinue_morale_modifier: MORALE,
+  category: PARENT,
   ['build' + MOD_COST]: COST,
-  'heavy': 'Heavy Ship',
-  'light': 'Light Ship',
-  'is_flank': 'Role',
-  'support': 'Role',
+  cohort_cost: COST,
+  heavy: 'Heavy Ship',
+  light: 'Light Ship',
+  is_flank: 'Role',
+  support: 'Role',
   ['army' + MOD_MAINTENANCE]: MAINTENANCE,
-  'army_weight_modifier': ATTRITION,
-  'food_consumption': 'Food Consumption',
-  'food_storage': 'Food Storage',
-  'global_cohort_start_experience': EXPERIENCE,
-  'global_ship_start_experience': EXPERIENCE,
-  'global_start_experience': EXPERIENCE,
+  army_weight_modifier: ATTRITION,
+  food_consumption: 'Food Consumption',
+  food_storage: 'Food Storage',
+  fort_limit: 'Fort limit',
+  global_cohort_start_experience: EXPERIENCE,
+  global_ship_start_experience: EXPERIENCE,
+  global_start_experience: EXPERIENCE,
   ['land' + MOD_MORALE]: MORALE,
   ['land' + MOD_MORALE + MOD_MODIFIER]: MORALE,
-  'maintenance_cost': MAINTENANCE,
-  'maneuver': MANEUVER,
-  'medium': 'Medium Ship',
-  'morale': MORALE,
-  'morale_damage_done': 'Morale Damage Done',
-  'morale_damage_taken': 'Morale Damage Taken',
-  'naval_damage_done': 'Damage Done',
-  'naval_damage_taken': 'Damage Taken',
+  levy_size_multiplier: 'Levy Size Multiplier',
+  maintenance_cost: MAINTENANCE,
+  maneuver: MANEUVER,
+  medium: 'Medium Ship',
+  morale: MORALE,
+  morale_damage_done: 'Morale Damage Done',
+  morale_damage_taken: 'Morale Damage Taken',
+  naval_damage_done: 'Damage Done',
+  naval_damage_taken: 'Damage Taken',
   ['naval' + MOD_MORALE]: MORALE,
   ['naval' + MOD_MORALE + MOD_MODIFIER]: MORALE,
   ['navy' + MOD_MAINTENANCE]: MAINTENANCE,
   ['ship' + MOD_COST]: COST,
-  'ship_capture_chance': 'Capture Chance',
-  'ship_repair_at_sea': 'Ship Repair at Sea',
-  'strength_damage_done': 'Strength Damage Done',
-  'strength_damage_taken': 'Strength Damage Taken',
-  'type': PARENT,
-  'character_loyalty': 'Loyalty'
+  ship_capture_chance: 'Capture Chance',
+  ship_repair_at_sea: 'Ship Repair at Sea',
+  strength_damage_done: 'Strength Damage Done',
+  strength_damage_taken: 'Strength Damage Taken',
+  type: PARENT,
+  character_loyalty: 'Loyalty'
 }
 
 Object.keys(units).forEach(key => {
@@ -106,25 +116,26 @@ Object.keys(units).forEach(key => {
 /** @type {Object.<string, string>} */
 const targets = {
   ['army' + MOD_MAINTENANCE]: LAND,
-  'army_weight_modifier': LAND,
-  'non_retinue_morale_modifier': LAND,
-  'discipline': GLOBAL,
-  'global_cohort_start_experience': LAND,
-  'global_ship_start_experience': NAVAL,
-  'global_start_experience': GLOBAL,
+  army_weight_modifier: LAND,
+  non_retinue_morale_modifier: LAND,
+  cohort_cost: LAND,
+  discipline: GLOBAL,
+  global_cohort_start_experience: LAND,
+  global_ship_start_experience: NAVAL,
+  global_start_experience: GLOBAL,
   ['land' + MOD_MORALE]: LAND,
   ['land' + MOD_MORALE + MOD_MODIFIER]: LAND,
-  'maintenance_cost': GLOBAL,
-  'morale': GLOBAL,
-  'naval_damage_done': NAVAL,
-  'naval_damage_taken': NAVAL,
+  maintenance_cost: GLOBAL,
+  morale: GLOBAL,
+  naval_damage_done: NAVAL,
+  naval_damage_taken: NAVAL,
   ['naval' + MOD_MORALE]: NAVAL,
   ['naval' + MOD_MORALE + MOD_MODIFIER]: NAVAL,
   ['navy' + MOD_MAINTENANCE]: NAVAL,
   ['ship' + MOD_COST]: NAVAL,
-  'ship_capture_chance': NAVAL,
-  'martial': GENERAL,
-  'omen_power': COUNTRY
+  ship_capture_chance: NAVAL,
+  martial: GENERAL,
+  omen_power: COUNTRY
 }
 
 Object.keys(units).forEach(key => {
@@ -168,6 +179,7 @@ const negatives = new Set([
   'army' + MOD_MAINTENANCE,
   'army_weight_modifier',
   'experience_decay',
+  'cohort_cost',
   'fort' + MOD_MAINTENANCE,
   'land_unit_attrition',
   'maintenance_cost',
@@ -225,8 +237,8 @@ Object.keys(units).forEach(key => {
 })
 
 /**
- * 
- * @param {string} value 
+ *
+ * @param {string} value
  */
 exports.format = value => {
   let split = value.split('_')
@@ -235,14 +247,12 @@ exports.format = value => {
 }
 
 /**
- * @param {string} key 
- * @param {string} value 
+ * @param {string} key
+ * @param {string} value
  */
 exports.getAttribute = (key, value) => {
-  if (key === 'mercenary_land_maintenance_cost')
-    key = 'modifier_land_mercenary_maintenance_cost'
-  if (key === 'mercenary_naval_maintenance_cost')
-    key = 'modifier_naval_mercenary_maintenance_cost'
+  if (key === 'mercenary_land_maintenance_cost') key = 'modifier_land_mercenary_maintenance_cost'
+  if (key === 'mercenary_naval_maintenance_cost') key = 'modifier_naval_mercenary_maintenance_cost'
   let attribute = attributes[key] || localizations['modifier_' + key] || localizations[key]
   if (attribute && attribute.startsWith('$')) {
     key = attribute.substr(1, attribute.length - 2)
@@ -251,6 +261,7 @@ exports.getAttribute = (key, value) => {
   switch (key) {
     case 'movement_speed':
     case 'build_time':
+    case 'legions':
     case 'outside_of_naval_range_attrition':
       return undefined
     case 'allow_unit_type':
@@ -265,31 +276,30 @@ exports.getAttribute = (key, value) => {
   }
 }
 /**
- * @param {string} key 
+ * @param {string} key
  */
 exports.getTarget = key => targets[key] || TEXT
 /**
- * @param {string} key 
+ * @param {string} key
  */
-exports.getNoPercent = key => noPercents.has(key) ? true : undefined
+exports.getNoPercent = key => (noPercents.has(key) ? true : undefined)
 /**
- * @param {string} key 
- * @param {string} value 
+ * @param {string} key
+ * @param {string} value
  */
-exports.getNegative = (key, value) => typeof value === 'number' && negatives.has(key) === value >= 0 ? true : undefined
+exports.getNegative = (key, value) =>
+  typeof value === 'number' && negatives.has(key) === value >= 0 ? true : undefined
 /**
- * @param {string} key 
+ * @param {string} key
  */
-exports.getType = key => types.has(key) ? MODIFIER : BASE
+exports.getType = key => (types.has(key) ? MODIFIER : BASE)
 /**
- * @param {string} key 
- * @param {string} value 
+ * @param {string} key
+ * @param {string} value
  */
 exports.getValue = (key, value) => {
-  if (Array.isArray(value))
-    value = value[0]
-  if (typeof value === 'string' && scriptValues[value])
-    value = scriptValues[value]
+  if (Array.isArray(value)) value = value[0]
+  if (typeof value === 'string' && scriptValues[value]) value = scriptValues[value]
   switch (key) {
     case 'allow_unit_type':
     case 'enable_ability':
@@ -317,7 +327,6 @@ exports.getValue = (key, value) => {
     case 'supply_train':
     case 'liburnian':
     case 'trireme':
-    case 'liburnian':
     case 'tetrere':
     case 'hexere':
     case 'octere':
@@ -357,53 +366,62 @@ let territories = {}
 exports.getTerritories = () => territories
 
 /**
- * @param {Object<string, string>} localization 
- * @param {string} file 
+ * @param {Object<string, string>} localization
+ * @param {string} file
  */
 exports.loadLocalization = (localization, file) => {
   if (file === 'countries_l_english.yml') {
     Object.keys(localization).forEach(key => {
-      if (key.length > 3)
-        delete localization[key]
+      if (key.length > 3) delete localization[key]
     })
-    Object.keys(localization).sort((a, b) => localization[a].localeCompare(localization[b])).forEach(key => countries[key] = localization[key])
+    Object.keys(localization)
+      .sort((a, b) => localization[a].localeCompare(localization[b]))
+      .forEach(key => (countries[key] = localization[key]))
     return
   }
   if (file === 'cultures_l_english.yml') {
     Object.keys(localization).forEach(key => {
-      if (localization[key].length === 0 || key.endsWith('name'))
-        delete localization[key]
+      if (localization[key].length === 0 || key.endsWith('name')) delete localization[key]
     })
-    Object.keys(localization).sort((a, b) => localization[a].localeCompare(localization[b])).forEach(key => cultures[key] = localization[key])
+    Object.keys(localization)
+      .sort((a, b) => localization[a].localeCompare(localization[b]))
+      .forEach(key => (cultures[key] = localization[key]))
     return
   }
   if (file === 'provincenames_l_english.yml') {
     Object.keys(localization).forEach(key => {
-      if (localization[key].length === 0)
-        delete localization[key]
+      if (localization[key].length === 0) delete localization[key]
       else if (localization[key].startsWith('$'))
         localization[key] = localization[localization[key].substr(1, localization[key].length - 2).toLowerCase()]
     })
-    Object.keys(localization).sort((a, b) => localization[a].localeCompare(localization[b])).forEach(key => territories[key] = localization[key])
+    Object.keys(localization)
+      .sort((a, b) => localization[a].localeCompare(localization[b]))
+      .forEach(key => (territories[key] = localization[key]))
     return
   }
   Object.assign(localizations, localization)
   if (file === 'terrains_l_english.yml') {
-    Object.keys(units).forEach(unit => {
-      Object.keys(localization).filter(terrain => !terrain.endsWith('_desc')).forEach(terrain => {
-        const key = `${unit}_${terrain}_combat_bonus`
+    Object.keys(localization)
+      .filter(terrain => !terrain.endsWith('_desc'))
+      .forEach(terrain => {
+        const key = `${terrain}_combat_bonus`
         attributes[key] = `${localization[terrain]} Damage`
-        targets[key] = units[unit]
+        targets[key] = GLOBAL
         types.add(key)
+        Object.keys(units).forEach(unit => {
+          const key = `${unit}_${terrain}_combat_bonus`
+          attributes[key] = `${localization[terrain]} Damage`
+          targets[key] = units[unit]
+          types.add(key)
+        })
       })
-    })
   }
 }
 
 /**
  * @param {{}} scriptValue
- * @param {string} file 
+ * @param {string} file
  */
-exports.loadScriptValue = (scriptValue) => {
+exports.loadScriptValue = scriptValue => {
   Object.assign(scriptValues, scriptValue)
 }

@@ -91,7 +91,7 @@ const RenderFrontline = ({ sideType }: { sideType: SideType }) => {
       color={sideType === SideType.A ? ATTACKER_COLOR : DEFENDER_COLOR}
       side={sideType}
       onClick={handleOpenCohortModal}
-      rowWidth={Math.max(30, combatWidth)}
+      rowWidth={combatWidth}
       reverse={sideType === SideType.A}
       part={ArmyPart.Frontline}
       markDefeated
@@ -107,30 +107,21 @@ const Frontline = () => {
   const day = getDay(battleState)
   const round = getRound(battleState)
   const isUndoAvailable = day > 0
-  const doUndo = useCallback(
-    (rounds: number) => {
-      dispatch(undo(rounds))
-      if (outdated) dispatch(refreshBattle())
-    },
-    [dispatch, outdated]
-  )
-  const doBattle = useCallback(
-    (rounds: number) => {
-      if (outdated) dispatch(refreshBattle())
-      dispatch(battle(rounds))
-    },
-    [dispatch, outdated]
-  )
-  const handleUndoTen = useCallback(() => doUndo(10), [doUndo])
-  const handleUndo = useCallback(() => doUndo(1), [doUndo])
-  const handleRedoTen = useCallback(() => doBattle(10), [doBattle])
-  const handleRedo = useCallback(() => doBattle(1), [doBattle])
-  const handleChangeAutoRefresh = useCallback(
-    (_, { checked }: CheckboxProps) => {
-      dispatch(changeSiteParameter(Setting.AutoRefresh, !!checked))
-    },
-    [dispatch]
-  )
+  const handleUndo = (rounds: number) => {
+    dispatch(undo(rounds))
+    if (outdated) dispatch(refreshBattle())
+  }
+  const handleBattle = (rounds: number) => {
+    if (outdated) dispatch(refreshBattle())
+    dispatch(battle(rounds))
+  }
+  const handleUndoMany = () => handleUndo(10)
+  const handleUndoSingle = () => handleUndo(1)
+  const handleRedoMany = () => handleBattle(10)
+  const handleRedoSingle = () => handleBattle(1)
+  const handleChangeAutoRefresh = (_: unknown, { checked }: CheckboxProps) => {
+    dispatch(changeSiteParameter(Setting.AutoRefresh, !!checked))
+  }
 
   return (
     <Grid verticalAlign='middle'>
@@ -155,7 +146,7 @@ const Frontline = () => {
             color='black'
             size='huge'
             disabled={!isUndoAvailable}
-            onClick={handleUndoTen}
+            onClick={handleUndoMany}
           />
           <Button
             circular
@@ -163,16 +154,23 @@ const Frontline = () => {
             color='black'
             size='huge'
             disabled={!isUndoAvailable}
-            onClick={handleUndo}
+            onClick={handleUndoSingle}
           />
-          <Button circular icon='angle right' color='black' size='huge' disabled={fightOver} onClick={handleRedo} />
+          <Button
+            circular
+            icon='angle right'
+            color='black'
+            size='huge'
+            disabled={fightOver}
+            onClick={handleRedoSingle}
+          />
           <Button
             circular
             icon='angle double right'
             color='black'
             size='huge'
             disabled={fightOver}
-            onClick={handleRedoTen}
+            onClick={handleRedoMany}
           />
         </Grid.Column>
       </Grid.Row>

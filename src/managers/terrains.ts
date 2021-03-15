@@ -1,4 +1,4 @@
-import { TerrainValueType, ValuesType, Terrain, LocationType, Mode, TerrainDefinitions, TerrainType } from 'types'
+import { TerrainValueType, ValuesType, Terrain, LocationType, TerrainDefinitions, TerrainType } from 'types'
 import { addValuesWithMutate } from 'definition_values'
 
 export const setTerrainValue = (terrain: Terrain, key: string, attribute: TerrainValueType, value: number) => {
@@ -13,16 +13,12 @@ export const setTerrainImage = (terrain: Terrain, image: string) => {
   terrain.image = image
 }
 
-export const setTerrainMode = (terrain: Terrain, mode: Mode) => {
-  terrain.mode = mode
-}
-
 export const deleteTerrain = (terrains: TerrainDefinitions, type: TerrainType) => {
   delete terrains[type]
 }
 
-export const createTerrain = (terrains: TerrainDefinitions, type: TerrainType, mode: Mode) => {
-  terrains[type] = { type, mode, image: '', location: LocationType.Border }
+export const createTerrain = (terrains: TerrainDefinitions, type: TerrainType) => {
+  terrains[type] = { type, image: '', location: LocationType.Border }
 }
 
 export const setTerrainType = (terrains: TerrainDefinitions, oldType: TerrainType, type: TerrainType) => {

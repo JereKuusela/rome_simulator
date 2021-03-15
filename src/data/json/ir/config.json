@@ -23,7 +23,7 @@
   "DiceMaximum": 6,
   "BasePips": 4,
   "MaxPips": 15,
-  "CombatWidth": 30,
+  "CombatWidth": 0,
   "TacticBase": 0,
   "TacticMin": 0,
   "TacticMax": 1,

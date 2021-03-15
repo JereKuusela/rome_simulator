@@ -1,5 +1,5 @@
 import { AppState } from './index'
-import { toArr, toObj, keys } from 'utils'
+import { toArr, toObj, keys, filter } from 'utils'
 import {
   filterUnitDefinitions,
   getArmyPart,
@@ -48,7 +48,8 @@ import {
   CountryDefinitions,
   TacticDefinitions,
   Armies,
-  TerrainDefinitions
+  TerrainDefinitions,
+  TerrainCalc
 } from 'types'
 import {
   getDefaultBattle,
@@ -58,7 +59,7 @@ import {
   getDefaultTacticState,
   getDefaultTerrainState
 } from 'data'
-import { uniq, flatten } from 'lodash'
+import { uniq, flatten, sumBy } from 'lodash'
 import * as manager from 'managers/army'
 import { getCountryModifiers, getGeneralModifiers } from 'managers/modifiers'
 import { convertCountryDefinition, applyCountryModifiers, filterArmies } from 'managers/countries'
@@ -83,19 +84,21 @@ export const useCountry = (countryName: CountryName): CountryDefinition => {
   return useSelector((state: AppState) => state.countries[countryName])
 }
 
+const calculateCombatWidth = (state: AppState) => {
+  const settings = state.settings.siteSettings
+  const attacker = getCountry(state, getParticipant(state, SideType.A, 0).countryName)
+  const defender = getCountry(state, getParticipant(state, SideType.B, 0).countryName)
+  const terrains = sumBy(getSelectedTerrains(state), terrain => calculateValue(terrain, TerrainCalc.CombatWidth))
+  return (
+    settings[Setting.BaseCombatWidth] +
+    terrains +
+    Math.max(attacker[CountryAttribute.CombatWidth], defender[CountryAttribute.CombatWidth])
+  )
+}
+
 export const useCountries = (): CountryDefinitions => useSelector((state: AppState) => state.countries)
 export const useSiteSettings = (): SiteSettings => useSelector((state: AppState) => state.settings.siteSettings)
-export const useCombatWidth = (): number => {
-  return useSelector((state: AppState) => {
-    const settings = state.settings.siteSettings
-    const attacker = getCountry(state, getParticipant(state, SideType.A, 0).countryName)
-    const defender = getCountry(state, getParticipant(state, SideType.B, 0).countryName)
-    return (
-      settings[Setting.BaseCombatWidth] +
-      Math.max(attacker[CountryAttribute.CombatWidth], defender[CountryAttribute.CombatWidth])
-    )
-  })
-}
+export const useCombatWidth = (): number => useSelector(calculateCombatWidth)
 export const useTechLevel = (countryName: CountryName): number => {
   return useSelector((state: AppState) => {
     const country = getCountry(state, countryName)
@@ -124,12 +127,7 @@ export const useSide = (type: SideType): SideData => {
  */
 export const getSettings = (state: AppState, mode?: Mode): Settings => {
   const settings = { ...state.settings.combatSettings[mode || state.settings.mode], ...state.settings.siteSettings }
-  const attacker = getCountry(state, getParticipant(state, SideType.A, 0).countryName)
-  const defender = getCountry(state, getParticipant(state, SideType.B, 0).countryName)
-  settings[Setting.BaseCombatWidth] += Math.max(
-    attacker[CountryAttribute.CombatWidth],
-    defender[CountryAttribute.CombatWidth]
-  )
+  settings[Setting.BaseCombatWidth] = calculateCombatWidth(state)
   settings[Setting.Precision] = Math.pow(10, settings[Setting.Precision])
   return settings
 }
@@ -398,6 +396,7 @@ export const useSelectedTerrains = (): Terrain[] => {
 }
 
 export const useTerrains = (): TerrainDefinitions => useSelector((state: AppState) => state.terrains)
+
 export const useTerrainsAtLocation = (location: LocationType): Terrain[] => {
   const terrains = useTerrains()
   return useMemo(() => toArr(terrains).filter(item => item.location === location), [terrains, location])

@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { readFiles, writeFile, getModifier, sort } = require('./core')
 const path = require('path')
 const { getAttribute } = require('./modifiers')
-
 
 const results = {}
 
@@ -24,22 +24,18 @@ const handler = data => {
       const value = deity.passive_modifier[key]
       if (getAttribute(key)) {
         const modifier = getModifier(key, value)
-        if (modifier.target !== 'Text')
-          passive.modifiers.push(modifier)
+        if (modifier.target !== 'Text') passive.modifiers.push(modifier)
       }
     })
     Object.keys(deity.omen).forEach(key => {
       const value = deity.omen[key]
       if (getAttribute(key)) {
         const modifier = getModifier(key, value)
-        if (modifier.target !== 'Text')
-          active.modifiers.push(modifier)
+        if (modifier.target !== 'Text') active.modifiers.push(modifier)
       }
     })
-    if (passive.modifiers.length)
-      results[passive.key] = passive
-    if (active.modifiers.length)
-      results[active.key] = active
+    if (passive.modifiers.length) results[passive.key] = passive
+    if (active.modifiers.length) results[active.key] = active
   })
 }
 

@@ -9,6 +9,12 @@
         "type": "Base",
         "negative": true,
         "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Build Cost",
+        "type": "Base",
+        "value": -0.15
       }
     ]
   },
@@ -33,6 +39,12 @@
         "attribute": "National Noble Happiness",
         "type": "Base",
         "value": 0.08
+      },
+      {
+        "target": "Text",
+        "attribute": "Build Cost",
+        "type": "Base",
+        "value": -0.15
       }
     ]
   },

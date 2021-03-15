@@ -23,6 +23,7 @@ const TerrainSelector = (): JSX.Element => {
           <Table.HeaderCell>Location</Table.HeaderCell>
           <Table.HeaderCell>Terrain</Table.HeaderCell>
           <Table.HeaderCell>Roll modifier</Table.HeaderCell>
+          <Table.HeaderCell>Combat width</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body>
@@ -46,6 +47,7 @@ const RenderTerrain = ({ terrain, index }: { terrain: Terrain; index: number }) 
     [dispatch, index]
   )
   const roll = useMemo(() => calculateValue(terrain, TerrainCalc.Roll), [terrain])
+  const combatWidth = useMemo(() => calculateValue(terrain, TerrainCalc.CombatWidth), [terrain])
   return (
     <Table.Row key={terrain.location}>
       <Table.Cell>{terrain.location}</Table.Cell>
@@ -55,6 +57,9 @@ const RenderTerrain = ({ terrain, index }: { terrain: Terrain; index: number }) 
       <Table.Cell>
         <Image src={IconDice} avatar />
         <StyledNumber value={roll} formatter={addSign} />
+      </Table.Cell>
+      <Table.Cell>
+        <StyledNumber value={combatWidth} formatter={addSign} />
       </Table.Cell>
     </Table.Row>
   )

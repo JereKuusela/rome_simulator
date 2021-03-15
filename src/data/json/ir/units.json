@@ -1,7 +1,7 @@
 [
   {
     "Type": "Archers",
-    "Maneuver": 1,
+    "Maneuver": 2,
     "Light Infantry": 0.25,
     "Heavy Infantry": 0.1,
     "Heavy Cavalry": -0.1,
@@ -9,8 +9,8 @@
     "Light Cavalry": -0.1,
     "Supply Train": 1,
     "Attrition Weight": -0.1,
-    "Morale Damage Taken": 0.25,
-    "Cost": 6,
+    "Morale Damage Taken": 0.3,
+    "Cost": 8,
     "Food Consumption": 0.1,
     "Food Storage": 2.4,
     "Parent": "Land Unit"
@@ -26,7 +26,7 @@
     "War Elephants": -0.5,
     "Horse Archers": 0.1,
     "Archers": 0.1,
-    "Cost": 13,
+    "Cost": 15,
     "Supply Train": 1,
     "Food Consumption": 0.2,
     "Food Storage": 3.6,
@@ -43,10 +43,29 @@
     "Archers": 0.2,
     "Light Cavalry": 0.1,
     "Camel Cavalry": -0.1,
-    "Cost": 6,
+    "Cost": 8,
     "Supply Train": 1,
     "Food Consumption": 0.2,
     "Food Storage": 2.4,
+    "Parent": "Land Unit"
+  },
+  {
+    "Type": "Engineer",
+    "Role": "Support",
+    "Maneuver": 1,
+    "Light Infantry": -0.9,
+    "Heavy Infantry": -0.9,
+    "Heavy Cavalry": -0.9,
+    "War Elephants": -0.9,
+    "Horse Archers": -0.9,
+    "Archers": -0.9,
+    "Chariots": -0.9,
+    "Camel Cavalry": -0.9,
+    "Light Cavalry": -0.9,
+    "Food Consumption": 0.05,
+    "Food Storage": 5,
+    "Morale Damage Taken": 1,
+    "Cost": 40,
     "Parent": "Land Unit"
   },
   {
@@ -61,7 +80,7 @@
     "Archers": 0.5,
     "Supply Train": 1,
     "Attrition Weight": 1,
-    "Cost": 14,
+    "Cost": 18,
     "Food Consumption": 0.25,
     "Food Storage": 2.4,
     "Parent": "Land Unit"
@@ -78,7 +97,7 @@
     "Supply Train": 1,
     "Attrition Weight": 0.5,
     "Morale Damage Taken": -0.1,
-    "Cost": 14,
+    "Cost": 16,
     "Food Consumption": 0.2,
     "Food Storage": 2.4,
     "Parent": "Land Unit"
@@ -98,7 +117,7 @@
     "Supply Train": 1,
     "Attrition Weight": 0.5,
     "Morale Damage Taken": 0.25,
-    "Cost": 14,
+    "Cost": 16,
     "Food Consumption": 0.25,
     "Food Storage": 3,
     "Parent": "Land Unit"
@@ -116,7 +135,7 @@
     "Archers": 0.25,
     "Supply Train": 1,
     "Attrition Weight": 0.5,
-    "Cost": 7,
+    "Cost": 10,
     "Food Consumption": 0.25,
     "Food Storage": 2.4,
     "Parent": "Land Unit"
@@ -124,9 +143,9 @@
   {
     "Type": "Light Infantry",
     "Maneuver": 1,
-    "Heavy Infantry": -0.25,
+    "Heavy Infantry": -0.2,
     "Heavy Cavalry": -0.25,
-    "War Elephants": -0.25,
+    "War Elephants": -0.2,
     "Horse Archers": -0.5,
     "Archers": -0.1,
     "Chariots": -0.1,
@@ -134,8 +153,8 @@
     "Attrition Weight": -0.5,
     "Food Consumption": 0.1,
     "Food Storage": 2.4,
-    "Morale Damage Taken": -0.25,
-    "Cost": 6,
+    "Morale Damage Taken": -0.3,
+    "Cost": 8,
     "Parent": "Land Unit"
   },
   {
@@ -154,7 +173,7 @@
     "Food Consumption": 0.05,
     "Food Storage": 50,
     "Morale Damage Taken": 1,
-    "Cost": 16,
+    "Cost": 20,
     "Parent": "Land Unit"
   },
   {
@@ -171,7 +190,7 @@
     "Attrition Weight": 2,
     "Strength Damage Taken": -0.5,
     "Morale Damage Taken": 0.2,
-    "Cost": 26,
+    "Cost": 28,
     "Food Consumption": 0.3,
     "Food Storage": 1,
     "Parent": "Land Unit"

@@ -6,8 +6,8 @@
     "Role": "Front",
     "Attrition Weight": 1,
     "Damage": 1,
-    "Maintenance": 0.04166,
-    "Strength": 1,
+    "Maintenance": 0.02083,
+    "Strength": 0.5,
     "Morale": 3
   },
   {
@@ -17,8 +17,8 @@
     "Role": "Front",
     "Attrition Weight": 1,
     "Damage": 1,
-    "Maintenance": 0.02083,
-    "Strength": 1,
+    "Maintenance": 0.01666,
+    "Strength": 0.5,
     "Morale": 3,
     "Capture Chance": 0.06
   },
@@ -27,7 +27,7 @@
     "Parent": "Naval Unit",
     "Capture Chance": 0.1,
     "Capture Resist": 0.1,
-    "Riverine Damage Modifier": 0.25
+    "River Damage Modifier": 0.25
   },
   {
     "Type": "Medium Ship",

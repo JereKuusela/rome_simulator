@@ -5,41 +5,73 @@
       "key": "expense_army_low",
       "modifiers": [
         {
+          "target": "Text",
+          "attribute": "Levy Size Multiplier",
+          "type": "Base",
+          "value": 0.075
+        },
+        {
+          "target": "Text",
+          "attribute": "Integrated Culture Happiness",
+          "type": "Base",
+          "value": 0.05
+        },
+        {
           "target": "Land",
           "attribute": "Morale",
           "type": "Modifier",
           "negative": true,
-          "value": -0.8
+          "value": -0.25
         },
         {
           "target": "Land",
           "attribute": "Maintenance",
           "type": "Modifier",
-          "value": -0.2
+          "value": -0.25
         }
       ]
     },
     {
       "name": "Default",
       "key": "expense_army_default",
-      "modifiers": []
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Levy Size Multiplier",
+          "type": "Base",
+          "value": 0.075
+        }
+      ]
     },
     {
       "name": "Increased Pay",
       "key": "expense_army_high",
       "modifiers": [
         {
+          "target": "Text",
+          "attribute": "Integrated Culture Happiness",
+          "type": "Base",
+          "negative": true,
+          "value": -0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Levy Size Multiplier",
+          "type": "Base",
+          "value": 0.075
+        },
+        {
           "target": "Land",
           "attribute": "Morale",
           "type": "Modifier",
-          "value": 0.05
+          "value": 0.1
         },
         {
           "target": "Land",
           "attribute": "Maintenance",
           "type": "Modifier",
           "negative": true,
-          "value": 0.5
+          "value": 0.25
         }
       ]
     }

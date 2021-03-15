@@ -256,6 +256,32 @@
       }
     ]
   },
+  "attalid_heritage": {
+    "name": "Attalid Heritage",
+    "key": "attalid_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Research Points",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Build Cost",
+        "type": "Base",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Relations",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      }
+    ]
+  },
   "bithynian_heritage": {
     "name": "Bithynian Heritage",
     "key": "bithynian_heritage",
@@ -340,10 +366,9 @@
     "modifiers": [
       {
         "target": "Text",
-        "attribute": "Trade Route Cost",
+        "attribute": "National Noble Happiness",
         "type": "Base",
-        "negative": true,
-        "value": -0.25
+        "value": 0.03
       },
       {
         "target": "Naval",
@@ -357,6 +382,32 @@
         "type": "Modifier",
         "negative": true,
         "value": -0.05
+      }
+    ]
+  },
+  "chrysaoric_heritage": {
+    "name": "Carian Heritage",
+    "key": "chrysaoric_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Citizen Happiness",
+        "type": "Base",
+        "value": 0.08
+      },
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Relations",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Manpower Recovery Speed",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
       }
     ]
   },
@@ -378,10 +429,10 @@
       },
       {
         "target": "Text",
-        "attribute": "Cohort Loyalty Gain Chance",
+        "attribute": "Levy Size Multiplier",
         "type": "Base",
         "negative": true,
-        "value": 0.05
+        "value": -0.025
       }
     ]
   },
@@ -399,7 +450,7 @@
         "target": "Text",
         "attribute": "National Population Growth",
         "type": "Base",
-        "value": 0.05
+        "value": 0.03
       },
       {
         "target": "Text",
@@ -411,7 +462,7 @@
     ]
   },
   "cnidusian_heritage": {
-    "name": "Cnidusian Heritage",
+    "name": "Cnidian Heritage",
     "key": "cnidusian_heritage",
     "modifiers": [
       {
@@ -732,7 +783,7 @@
         "target": "Text",
         "attribute": "National Population Growth",
         "type": "Base",
-        "value": 0.05
+        "value": 0.03
       },
       {
         "target": "Text",
@@ -782,9 +833,9 @@
       },
       {
         "target": "Text",
-        "attribute": "National Freeman Output",
+        "attribute": "Levy Size Multiplier",
         "type": "Base",
-        "value": 0.03
+        "value": 0.025
       },
       {
         "target": "Text",
@@ -866,7 +917,7 @@
         "attribute": "National Population Growth",
         "type": "Base",
         "negative": true,
-        "value": -0.1
+        "value": -0.01
       }
     ]
   },
@@ -934,7 +985,7 @@
         "target": "Text",
         "attribute": "National Population Growth",
         "type": "Base",
-        "value": 0.05
+        "value": 0.03
       },
       {
         "target": "Text",
@@ -1170,6 +1221,32 @@
         "negative": true,
         "noPercent": true,
         "value": -10
+      }
+    ]
+  },
+  "mithridatic_heritage": {
+    "name": "Heritage of Mithridates",
+    "key": "mithridatic_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Manpower",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Build Cost",
+        "type": "Base",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Relations",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
       }
     ]
   },
@@ -1604,6 +1681,45 @@
       }
     ]
   },
+  "mauryan_abandoned_heritage": {
+    "name": "Mauryan Decline",
+    "key": "mauryan_abandoned_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Population Capacity",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Religious Tech Investment",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Wages for Characters",
+        "type": "Base",
+        "negative": true,
+        "value": -0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Threshold for Civil War",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Levy Size Multiplier",
+        "type": "Base",
+        "negative": true,
+        "value": -0.025
+      }
+    ]
+  },
   "megaran_heritage": {
     "name": "Megaran Heritage",
     "key": "megaran_heritage",
@@ -1643,7 +1759,7 @@
         "target": "Text",
         "attribute": "National Population Growth",
         "type": "Base",
-        "value": 0.05
+        "value": 0.03
       },
       {
         "target": "Global",
@@ -1864,9 +1980,9 @@
     "modifiers": [
       {
         "target": "Text",
-        "attribute": "Manpower Recovery Speed",
+        "attribute": "Levy Size Multiplier",
         "type": "Base",
-        "value": 0.05
+        "value": 0.025
       },
       {
         "target": "Text",
@@ -1963,9 +2079,9 @@
     "key": "spartan_heritage",
     "modifiers": [
       {
-        "target": "Land",
-        "attribute": "Morale",
-        "type": "Modifier",
+        "target": "Text",
+        "attribute": "Levy Size Multiplier",
+        "type": "Base",
         "value": 0.025
       },
       {
@@ -2105,6 +2221,31 @@
         "negative": true,
         "noPercent": true,
         "value": -1
+      }
+    ]
+  },
+  "western_nesiotic_heritage": {
+    "name": "Western Nesiotic Heritage",
+    "key": "western_nesiotic_heritage",
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Commerce Income",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Naval",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.1
+      },
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "negative": true,
+        "value": -0.05
       }
     ]
   }

@@ -4,121 +4,141 @@
       "type": "Glacial",
       "mode": "Land",
       "location": "Tile",
-      "roll": -1
+      "roll": -1,
+      "combat_width": 0
     },
     {
       "type": "Farmlands",
       "mode": "Land",
       "location": "Tile",
-      "roll": 0
+      "roll": 0,
+      "combat_width": 0
     },
     {
       "type": "Forest",
       "mode": "Land",
       "location": "Tile",
-      "roll": -1
+      "roll": -1,
+      "combat_width": 0
     },
     {
       "type": "Hills",
       "mode": "Land",
       "location": "Tile",
-      "roll": -1
+      "roll": -1,
+      "combat_width": 0
     },
     {
       "type": "Woods",
       "mode": "Land",
       "location": "Tile",
-      "roll": -1
+      "roll": -1,
+      "combat_width": 0
     },
     {
       "type": "Mountain",
       "mode": "Land",
       "location": "Tile",
-      "roll": -2
+      "roll": -2,
+      "combat_width": 0
     },
     {
       "type": "Grasslands",
       "mode": "Land",
       "location": "Tile",
-      "roll": 0
+      "roll": 0,
+      "combat_width": 0
     },
     {
       "type": "Jungle",
       "mode": "Land",
       "location": "Tile",
-      "roll": -1
+      "roll": -1,
+      "combat_width": 0
     },
     {
       "type": "Marsh",
       "mode": "Land",
       "location": "Tile",
-      "roll": -1
+      "roll": -1,
+      "combat_width": 0
     },
     {
       "type": "Desert",
       "mode": "Land",
       "location": "Tile",
-      "roll": 0
+      "roll": 0,
+      "combat_width": 0
     },
     {
       "type": "Coastal Desert",
       "mode": "Land",
       "location": "Tile",
-      "roll": 0
+      "roll": 0,
+      "combat_width": 0
     },
     {
       "type": "Coastline",
       "mode": "Land",
       "location": "Tile",
-      "roll": 0
+      "roll": 0,
+      "combat_width": 0
     },
     {
       "type": "Drylands",
       "mode": "Land",
       "location": "Tile",
-      "roll": 0
+      "roll": 0,
+      "combat_width": 0
     },
     {
       "type": "Highlands",
       "mode": "Land",
       "location": "Tile",
-      "roll": -1
+      "roll": -1,
+      "combat_width": 0
     },
     {
       "type": "Savannah",
       "mode": "Land",
       "location": "Tile",
-      "roll": 0
+      "roll": 0,
+      "combat_width": 0
     },
     {
       "type": "Steppes",
       "mode": "Land",
       "location": "Tile",
-      "roll": 0
+      "roll": 0,
+      "combat_width": 0
     },
     {
       "type": "None",
       "mode": "Global",
       "location": "Border",
-      "roll": 0
+      "roll": 0,
+      "combat_width": 0
     },
     {
       "type": "River",
       "mode": "Land",
       "location": "Border",
-      "roll": -1
+      "roll": -1,
+      "combat_width": 0
     },
     {
       "type": "Strait",
       "mode": "Land",
       "location": "Border",
-      "roll": -2
+      "roll": -2,
+      "combat_width": 0
     },
     {
       "type": "Landing",
       "mode": "Land",
       "location": "Border",
-      "roll": -2
+      "roll": -2,
+      "combat_width": 0
     }
   ]
 }

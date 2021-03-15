@@ -350,6 +350,33 @@
     ],
     "isOmen": false
   },
+  "deity_castores": {
+    "name": "Castores",
+    "key": "deity_castores",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Experience",
+        "type": "Base",
+        "value": 0.1
+      }
+    ],
+    "isOmen": false
+  },
+  "omen_castores": {
+    "name": "Castores Omen",
+    "key": "omen_castores",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Base",
+        "noPercent": true,
+        "value": 0.05
+      }
+    ],
+    "isOmen": true
+  },
   "deity_cichol": {
     "name": "Cicollus",
     "key": "deity_cichol",
@@ -382,6 +409,32 @@
     "modifiers": [
       {
         "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
+      }
+    ],
+    "isOmen": true
+  },
+  "deity_dioscuri": {
+    "name": "Dioskouroi",
+    "key": "deity_dioscuri",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.025
+      }
+    ],
+    "isOmen": false
+  },
+  "omen_dioscuri": {
+    "name": "Dioskouroi Omen",
+    "key": "omen_dioscuri",
+    "modifiers": [
+      {
+        "target": "Naval",
         "attribute": "Morale",
         "type": "Modifier",
         "value": 0.05
@@ -818,6 +871,19 @@
     ],
     "isOmen": false
   },
+  "deity_pleistoros": {
+    "name": "Pleistoros",
+    "key": "deity_pleistoros",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.025
+      }
+    ],
+    "isOmen": false
+  },
   "omen_pleistoros": {
     "name": "Pleistoros Omen",
     "key": "omen_pleistoros",
@@ -1146,6 +1212,19 @@
   "omen_zadeni": {
     "name": "Zadeni Omen",
     "key": "omen_zadeni",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
+      }
+    ],
+    "isOmen": true
+  },
+  "omen_zeus_belos": {
+    "name": "Zeus Belos Omen",
+    "key": "omen_zeus_belos",
     "modifiers": [
       {
         "target": "Land",

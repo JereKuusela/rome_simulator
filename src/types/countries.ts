@@ -27,6 +27,7 @@ export type CountryDefinitions = { [key in CountryName]: CountryDefinition }
 
 export interface CountryModifiers extends DefinitionValues<CountryAttribute> {
   selections: Selections
+  selectedTradition: string
   culture: CultureType
   government: GovermentType
 }
@@ -40,7 +41,7 @@ export interface CountryDefinition {
 
 export type Country = { [key in CountryAttribute]: number } & {
   selections: Selections
-  culture: CultureType
+  selectedTradition: string
   weariness: WearinessAttributes
 }
 

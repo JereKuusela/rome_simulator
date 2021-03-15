@@ -41,7 +41,6 @@ import { AppState, getUnitDefinitions, getMode } from 'state'
 import {
   getDefaultUnits,
   countriesIR,
-  traditionsIR,
   heritagesIR,
   policiesIR,
   lawsIR,
@@ -118,7 +117,7 @@ class ImportSave extends Component<IProps, IState> {
             <Input
               style={{ display: 'inline' }}
               type='file'
-              onChange={event => this.loadContent(event.target.files![0])}
+              onChange={event => (event.target.files ? this.loadContent(event.target.files[0]) : {})}
             />
           </Grid.Column>
         </Grid.Row>
@@ -190,7 +189,7 @@ class ImportSave extends Component<IProps, IState> {
         </Table.Row>
         <Table.Row>
           <Table.Cell>Culture</Table.Cell>
-          <Table.Cell>{traditionsIR[country.tradition]?.name}</Table.Cell>
+          <Table.Cell>{country.tradition}</Table.Cell>
           <Table.Cell>Heritage</Table.Cell>
           <Table.Cell>{heritagesIR[country.heritage]?.name}</Table.Cell>
         </Table.Row>
@@ -428,13 +427,8 @@ class ImportSave extends Component<IProps, IState> {
       ...traditionsWithBonus.map((value, index) => mapRange(value, value => 'tradition_path_' + index + '_' + value))
     )
     enableCountrySelections(countryName, SelectionType.Tradition, traditions)
-    const invention_list = sortBy(
-      techIR.reduce(
-        (prev, curr) => prev.concat(curr.inventions.filter(invention => invention.index)),
-        [] as Invention[]
-      ),
-      invention => invention.index
-    )
+    // TODO: FIX inventions.
+    const invention_list = [] as any[]
     const inventions = country.inventions
       .map((value, index) => (value && index ? invention_list[index - 1].key : ''))
       .filter(value => value)

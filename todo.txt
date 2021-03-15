@@ -7,10 +7,13 @@ Refactor:
   * IR: Configuration can now be generated from data files (easier maintenance with less errors).
   * Data generator was split to better support EU4 (modifier names got mixed up with IR modifiers).
   * Added support for gaining attributes (opposite of losses), for example morale gain for winning a battle in EU4.
+  * Terrains are no longer split to land and naval modes. There aren't that many terrains to justify increased code complexity.
 
 Combat:
   * IR: Loyalty now also decreases maintenance costs.
   * EU4: Fixed flank ratio to work with multiarmy battle. Ratio is calculated and penalty applied invidiually for each army.
+  * Added combat width attribute to terrains.
+  * IR: Balance changes up to 2.0.2.
 
 Settings:
  * EU4: Added a setting for morale gain when winning a battle.
@@ -22,7 +25,7 @@ UI:
  * Changed settings page from tabs to accordions. This makes changing settings much easier because they all are on screen and can be searched with the browser.
 
 Save import:
-  * Added a tool for exporting a table with territories and their pops.
+ * Added a tool for exporting a table with territories and their pops.
 
 
 Todo: 

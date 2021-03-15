@@ -88,32 +88,22 @@ const getTechModifiers = (modifiers: ModifierWithKey[], country: CountryModifier
     })
   }
   if (process.env.REACT_APP_GAME === 'IR') {
-    techIR.forEach((tech, level) => {
-      if (level > techLevel) return
-      tech.inventions.forEach((invention, index) => {
-        const key = index === 0 ? TECH_KEY + level : invention.key
-        const name = index === 0 ? TECH_KEY + level : invention.name
-        if (index === 0 || selections[key]) modifiers.push(...mapModifiers(name, invention.modifiers))
-      })
-    })
+    getModifiersFromArray(modifiers, selections, techIR)
   }
   return modifiers
 }
 
 const getTraditionModifiers = (modifiers: ModifierWithKey[], country: CountryModifiers) => {
   const selections = country.selections[SelectionType.Tradition] ?? {}
-  const culture = country.culture
   if (process.env.REACT_APP_GAME === 'IR') {
-    const tradition = traditionsIR[culture]
-    if (selections['base']) {
-      modifiers.push(...mapModifiers(tradition.name, tradition.modifiers))
-      tradition.paths.forEach(path => getModifiersSub(modifiers, selections, path.traditions))
-    }
+    Object.values(traditionsIR).forEach(tree => {
+      getModifiersFromArray(modifiers, selections, tree)
+    })
   }
   return modifiers
 }
 
-const getModifiersSub = (
+const getModifiersFromArray = (
   modifiers: ModifierWithKey[],
   selections: ObjSet,
   entities: { name: string; key: string; modifiers: Modifier[] }[]
@@ -140,7 +130,11 @@ const getDeityModifiers = (
   })
 }
 
-const getModifiersSub2 = (modifiers: ModifierWithKey[], selections: ObjSet | undefined, items: ListDefinitions) => {
+const getModifiersFromObject = (
+  modifiers: ModifierWithKey[],
+  selections: ObjSet | undefined,
+  items: ListDefinitions
+) => {
   const selectedKeys = keys(selections ?? {})
   selectedKeys.forEach(key => {
     if (items[key]) modifiers.push(...mapModifiers(items[key].name, items[key].modifiers))
@@ -184,17 +178,17 @@ const getPrimaryCountryModifiers = (country: CountryModifiers) => {
   getTechModifiers(modifiers, country)
   getOfficeModifiers(modifiers, country)
   if (process.env.REACT_APP_GAME === 'EU4') {
-    getModifiersSub2(modifiers, country.selections[SelectionType.Policy], policiesEU4)
+    getModifiersFromObject(modifiers, country.selections[SelectionType.Policy], policiesEU4)
   }
   if (process.env.REACT_APP_GAME === 'IR') {
-    getModifiersSub2(modifiers, country.selections[SelectionType.Heritage], heritagesIR)
-    getModifiersSub2(modifiers, country.selections[SelectionType.Trade], tradesIR)
-    getModifiersSub2(modifiers, country.selections[SelectionType.Idea], ideasIR)
-    getModifiersSub2(modifiers, country.selections[SelectionType.Law], lawsIR)
-    getModifiersSub2(modifiers, country.selections[SelectionType.Religion], religionsIR)
-    getModifiersSub2(modifiers, country.selections[SelectionType.Faction], factionsIR)
-    getModifiersSub2(modifiers, country.selections[SelectionType.Modifier], modifiersIR)
-    policiesIR.forEach(policy => getModifiersSub(modifiers, country.selections[SelectionType.Policy], policy))
+    getModifiersFromObject(modifiers, country.selections[SelectionType.Heritage], heritagesIR)
+    getModifiersFromObject(modifiers, country.selections[SelectionType.Trade], tradesIR)
+    getModifiersFromObject(modifiers, country.selections[SelectionType.Idea], ideasIR)
+    getModifiersFromObject(modifiers, country.selections[SelectionType.Law], lawsIR)
+    getModifiersFromObject(modifiers, country.selections[SelectionType.Religion], religionsIR)
+    getModifiersFromObject(modifiers, country.selections[SelectionType.Faction], factionsIR)
+    getModifiersFromObject(modifiers, country.selections[SelectionType.Modifier], modifiersIR)
+    policiesIR.forEach(policy => getModifiersFromArray(modifiers, country.selections[SelectionType.Policy], policy))
     getTraditionModifiers(modifiers, country)
   }
   return modifiers
@@ -227,8 +221,10 @@ export const getGeneralModifiers = (general: GeneralData): ModifierWithKey[] => 
   const modifiers: ModifierWithKey[] = []
   if (general.enabled) {
     if (process.env.REACT_APP_GAME === 'IR') {
-      getModifiersSub2(modifiers, general.selections[SelectionType.Trait], traitsIR)
-      abilitiesIR.forEach(abilities => getModifiersSub(modifiers, general.selections[SelectionType.Ability], abilities))
+      getModifiersFromObject(modifiers, general.selections[SelectionType.Trait], traitsIR)
+      abilitiesIR.forEach(abilities =>
+        getModifiersFromArray(modifiers, general.selections[SelectionType.Ability], abilities)
+      )
       const martial = calculateValue(general, GeneralAttribute.Martial)
       if (martial) {
         modifiers.push({

@@ -7,7 +7,6 @@ import {
   setTerrainLocation,
   setTerrainImage,
   setTerrainType,
-  setTerrainMode,
   setTerrainValue,
   deleteTerrain,
   closeModal
@@ -30,7 +29,6 @@ class ModalTerrainDetail extends Component<IProps> {
           onTypeChange={this.setType}
           onLocationChange={this.setLocation}
           onImageChange={this.setImage}
-          onModeChange={this.setMode}
         />
       </BaseModal>
     )
@@ -57,10 +55,6 @@ class ModalTerrainDetail extends Component<IProps> {
     const { type, setTerrainImage } = this.props
     setTerrainImage(type, image)
   }
-  setMode = (mode: Mode) => {
-    const { type, setTerrainMode } = this.props
-    setTerrainMode(type, mode)
-  }
 }
 
 const mapStateToProps = (state: AppState) => {
@@ -76,7 +70,6 @@ const actions = {
   setTerrainLocation,
   setTerrainImage,
   setTerrainType,
-  setTerrainMode,
   setTerrainValue,
   deleteTerrain,
   closeModal

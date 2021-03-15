@@ -14,6 +14,7 @@ import { getDefaultUnits } from './units'
 export const getDefaultCountry = (): CountryDefinition => ({
   modifiers: {
     selections: {} as Selections,
+    selectedTradition: 'Italic',
     government: GovermentType.Republic,
     culture: (process.env.REACT_APP_GAME === 'EU4' ? 'Western' : 'latin_philosophy') as CultureType,
     baseValues: {

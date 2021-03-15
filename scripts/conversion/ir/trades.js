@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { readFiles, writeFile, getModifier, sort } = require('./core')
 const path = require('path')
 const { getAttribute } = require('./modifiers')
-
 
 const results = {}
 
@@ -15,12 +15,10 @@ const handleTradeSub = (key, modifiers) => {
     const attribute = modifiers[key]
     if (getAttribute(key)) {
       const modifier = getModifier(key, attribute)
-      if (modifier.target !== 'Text')
-        entity.modifiers.push(modifier)
+      if (modifier.target !== 'Text') entity.modifiers.push(modifier)
     }
   })
-  if (entity.modifiers.length)
-    results[key] = entity
+  if (entity.modifiers.length) results[key] = entity
 }
 
 const handler = data => {

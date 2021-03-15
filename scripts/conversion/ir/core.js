@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path')
 const fs = require('fs')
 const converter = require('../parser')
@@ -6,7 +7,7 @@ const { readFiles, writeFile, sort } = require('./../core')
 const directoryPath = path.join(__dirname, '../../../conversion')
 const resultPath = path.join(__dirname, '../../../src/data/json')
 
-exports.readFiles = (handlers) => readFiles(directoryPath, handlers)
+exports.readFiles = handlers => readFiles(directoryPath, handlers)
 exports.sort = sort
 exports.writeFile = (filename, results) => writeFile(path.join(resultPath, filename), results)
 
@@ -37,6 +38,13 @@ exports.getModifier = (key, value) => ({
 })
 
 /**
+ * Converts modifiers.
+ * @returns {Modifier[]}
+ */
+exports.getModifiers = modifiers =>
+  modifiers ? Object.keys(modifiers).map(key => exports.getModifier(key, modifiers[key])) : []
+
+/**
  * Loads localization files.
  */
 exports.loadLocalizations = () => {
@@ -51,8 +59,7 @@ const loadDirectory = directory => {
       const data = fs.readFileSync(path.join(directory, file)).toString()
       const localization = converter.parseLocalization(data)
       modifiers.loadLocalization(localization, file)
-    }
-    else {
+    } else {
       loadDirectory(path.join(directory, file))
     }
   })

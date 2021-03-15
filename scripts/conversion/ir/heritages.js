@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { readFiles, writeFile, getModifier, sort } = require('./core')
 const path = require('path')
 const { getAttribute } = require('./modifiers')
@@ -15,8 +16,7 @@ const handler = data => {
     }
     Object.keys(heritage.modifier).forEach(key => {
       const attribute = heritage.modifier[key]
-      if (getAttribute(key))
-        entity.modifiers.push(getModifier(key, attribute))
+      if (getAttribute(key)) entity.modifiers.push(getModifier(key, attribute))
     })
     results[key] = entity
   })

@@ -1,15 +1,12 @@
 import { sortBy } from 'lodash'
-import { toObj } from 'utils'
 import {
   OptionDefinition,
-  TechDefinition,
   ListDefinitions,
   DeityDefinitions,
   DictionaryData,
-  InventionData,
   OptionData,
-  TraditionData,
-  Traditions
+  Traditions,
+  ListDefinition
 } from 'types'
 
 import traditionData from './json/ir/traditions.json'
@@ -30,9 +27,8 @@ import factionData from './json/ir/parties.json'
 import modifierData from './json/ir/modifiers.json'
 
 // Bit ugly but these enable tree shaking based on the game.
-const getTraditionDataIR = () =>
-  process.env.REACT_APP_GAME === 'IR' ? Array.from(traditionData) : ([] as TraditionData[])
-const getTechDataIR = () => (process.env.REACT_APP_GAME === 'IR' ? Array.from(techDataIR) : ([] as InventionData[]))
+const getTraditionDataIR = () => (process.env.REACT_APP_GAME === 'IR' ? (traditionData as Traditions) : {})
+const getTechDataIR = () => (process.env.REACT_APP_GAME === 'IR' ? (techDataIR as ListDefinition[]) : [])
 const getPolicyDataIR = () => (process.env.REACT_APP_GAME === 'IR' ? Array.from(policyData) : ([] as OptionData[]))
 const getAbilityDataIR = () =>
   process.env.REACT_APP_GAME === 'IR' ? Array.from(abilityData.abilities) : ([] as OptionData[])
@@ -53,10 +49,7 @@ export const abilitiesIR = sortBy<OptionData>(getAbilityDataIR(), () => 1) as Op
 export const traitsIR = getTraitDefinitionsIR()
 export const heritagesIR = getHeritageDefinitionsIR()
 export const tradesIR = getTradeDefinitionsIR()
-export const traditionsIR = toObj(
-  sortBy<TraditionData>(getTraditionDataIR(), value => value.name),
-  value => value.key
-) as Traditions
+export const traditionsIR = getTraditionDataIR()
 export const ideasIR = getIdeaDefinitionsIR()
 export const lawsIR = getLawDefinitionsIR()
 export const deitiesIR = getDeityDefinitionsIR()
@@ -67,4 +60,4 @@ export const religionsIR = getReligionDefinitionsIR()
 export const factionsIR = getFactionDefinitionsIR()
 export const modifiersIR = getModifierDefinitionsIR()
 export const culturesIR = getCultureNames()
-export const techIR = sortBy<InventionData>(getTechDataIR(), () => 1) as TechDefinition[]
+export const techIR = getTechDataIR()

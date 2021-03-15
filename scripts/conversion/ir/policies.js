@@ -2,7 +2,6 @@ const { readFiles, writeFile, getModifier } = require('./core')
 const path = require('path')
 const { getAttribute } = require('./modifiers')
 
-
 const results = []
 
 const subHandler = (key, data) => {
@@ -22,8 +21,7 @@ const subHandler = (key, data) => {
 
 const handler = data => {
   Object.keys(data).forEach(key => {
-    if (key !== 'expense_army' && key !== 'expense_navy')
-      return
+    if (key !== 'expense_army' && key !== 'expense_navy') return
     const policy = data[key]
     const entity = []
     entity.push(subHandler(key + '_low', policy.low))

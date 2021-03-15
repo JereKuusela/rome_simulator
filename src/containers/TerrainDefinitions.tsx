@@ -15,7 +15,7 @@ import { addSign } from 'formatters'
 // Display component for showing unit definitions for an army.
 class TerrainDefinitions extends Component<IProps> {
   readonly attributes = keys(TerrainCalc).map(k => TerrainCalc[k])
-  readonly headers = ['Terrain', 'Location', 'Roll']
+  readonly headers = ['Terrain', 'Location', 'Attacker roll', 'Combat width']
 
   render() {
     const { terrains } = this.props
@@ -34,7 +34,7 @@ class TerrainDefinitions extends Component<IProps> {
 
   onClick = () =>
     this.props.openModal(ModalType.Value, {
-      onSuccess: type => this.props.createTerrain(type as TerrainType, this.props.mode),
+      onSuccess: type => this.props.createTerrain(type as TerrainType),
       message: 'New terrain type',
       buttonMessage: 'Create',
       initial: ''

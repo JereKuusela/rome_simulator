@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { readFiles, writeFile, getModifier } = require('./core')
 const path = require('path')
 const { getAttribute } = require('./modifiers')
-
 
 const results = {}
 
@@ -9,8 +9,7 @@ const handler = data => {
   Object.keys(data).forEach(key => {
     const name = getAttribute(key)
     const idea = data[key]
-    if (idea.group !== 'military_ideas')
-      return
+    if (idea.group !== 'military_ideas') return
     const entity = {
       name,
       key,
@@ -18,8 +17,7 @@ const handler = data => {
     }
     Object.keys(idea).forEach(key => {
       const attribute = idea[key]
-      if (key === 'trigger' || key === 'group' || key === 'soundeffect')
-        return
+      if (key === 'trigger' || key === 'group' || key === 'soundeffect') return
       if (getAttribute(key)) {
         const modifier = getModifier(key, attribute)
         entity.modifiers.push(modifier)

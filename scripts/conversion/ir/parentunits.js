@@ -1,35 +1,35 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { readFiles, writeFile } = require('./core')
 const path = require('path')
 
-
 const results = {
   'Land Unit': {
-    'Type': 'Land Unit',
-    'Parent': null,
-    'Mode': 'Land',
-    'Role': 'Front',
+    Type: 'Land Unit',
+    Parent: null,
+    Mode: 'Land',
+    Role: 'Front',
     'Attrition Weight': 1.0,
-    'Damage': 1.0
+    Damage: 1.0
   },
   'Naval Unit': {
-    'Type': 'Naval Unit',
-    'Parent': null,
-    'Mode': 'Naval',
-    'Role': 'Front',
+    Type: 'Naval Unit',
+    Parent: null,
+    Mode: 'Naval',
+    Role: 'Front',
     'Attrition Weight': 1.0,
-    'Damage': 1.0
+    Damage: 1.0
   },
   'Light Ship': {
-    'Type': 'Light Ship',
-    'Parent': 'Naval Unit'
+    Type: 'Light Ship',
+    Parent: 'Naval Unit'
   },
   'Medium Ship': {
-    'Type': 'Medium Ship',
-    'Parent': 'Naval Unit'
+    Type: 'Medium Ship',
+    Parent: 'Naval Unit'
   },
   'Heavy Ship': {
-    'Type': 'Heavy Ship',
-    'Parent': 'Naval Unit'
+    Type: 'Heavy Ship',
+    Parent: 'Naval Unit'
   }
 }
 
@@ -45,19 +45,23 @@ const definesHandler = data => {
   results['Light Ship']['Capture Resist'] = Number(data['NCombat']['SHIP_CAPTURE_CATEGORY_IMPACT'])
   results['Medium Ship']['Capture Resist'] = Number(data['NCombat']['SHIP_CAPTURE_CATEGORY_IMPACT']) * 2
   results['Heavy Ship']['Capture Resist'] = cutDecimals(Number(data['NCombat']['SHIP_CAPTURE_CATEGORY_IMPACT']) * 3, 1)
- 
+
   results['Land Unit']['Strength'] = Number(data['NUnit']['COHORT_SIZE']) / 1000.0
   results['Naval Unit']['Strength'] = Number(data['NUnit']['COHORT_SIZE']) / 1000.0
   results['Land Unit']['Morale'] = Number(data['NUnit']['LAND_MORALE'])
   results['Naval Unit']['Morale'] = Number(data['NUnit']['LAND_MORALE'])
-  if (data['NUnit']['LAND_MORALE'] !== data['NUnit']['NAVAL_MORALE'])
-    throw 'Base morale is different per mode!'
+  if (data['NUnit']['LAND_MORALE'] !== data['NUnit']['NAVAL_MORALE']) throw Error('Base morale is different per mode!')
 }
 
 const modifiersHandler = data => {
-  results['Light Ship']['Riverine Damage Modifier'] = Number(data['base_values']['liburnian_riverine_terrain_combat_bonus'])
-  if (data['base_values']['liburnian_riverine_terrain_combat_bonus'] !== data['base_values']['trireme_riverine_terrain_combat_bonus'])
-    throw 'Riverine bonus damage is different for light ships!'
+  results['Light Ship']['River Damage Modifier'] = Number(
+    data['base_values']['liburnian_riverine_terrain_combat_bonus']
+  )
+  if (
+    data['base_values']['liburnian_riverine_terrain_combat_bonus'] !==
+    data['base_values']['trireme_riverine_terrain_combat_bonus']
+  )
+    throw Error('Riverine bonus damage is different for light ships!')
   results['Naval Unit']['Capture Chance'] = cutDecimals(Number(data['base_values']['ship_capture_chance']) + 0.01, 2)
 }
 

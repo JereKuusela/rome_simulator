@@ -2,282 +2,111 @@
   "arabian_pantheon": {
     "name": "Arabic",
     "key": "arabian_pantheon",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "National Tribesman Happiness",
-        "type": "Base",
-        "value": 0.08
-      }
-    ]
+    "modifiers": []
   },
   "caucasian_religion": {
     "name": "Armazic",
     "key": "caucasian_religion",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Fort Defense",
-        "type": "Base",
-        "value": 0.1
-      }
-    ]
+    "modifiers": []
   },
   "bon_religion": {
     "name": "Bon",
     "key": "bon_religion",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Build Cost",
-        "type": "Base",
-        "value": -0.1
-      }
-    ]
+    "modifiers": []
   },
   "buddhism": {
     "name": "Buddhist",
     "key": "buddhism",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Pop Conversion Speed",
-        "type": "Base",
-        "value": 0.3
-      }
-    ]
+    "modifiers": []
   },
   "carthaginian_pantheon": {
     "name": "Canaanite",
     "key": "carthaginian_pantheon",
-    "modifiers": [
-      {
-        "target": "Naval",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "value": -0.1
-      }
-    ]
+    "modifiers": []
   },
   "mesopotamian_religion": {
     "name": "Chaldean",
     "key": "mesopotamian_religion",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Monthly Civilization Change",
-        "type": "Base",
-        "value": 0.01
-      }
-    ]
+    "modifiers": []
   },
   "anatolian_religion": {
     "name": "Cybelene",
     "key": "anatolian_religion",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Unintegrated Culture Happiness",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
+    "modifiers": []
   },
   "druidism": {
     "name": "Druidic",
     "key": "druidism",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "State Religion Happiness",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
+    "modifiers": []
   },
   "roman_pantheon": {
     "name": "Hellenic",
     "key": "roman_pantheon",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "National Citizen Happiness",
-        "type": "Base",
-        "value": 0.08
-      }
-    ]
+    "modifiers": []
   },
   "indo_iranian_religion": {
     "name": "Heptadic",
     "key": "indo_iranian_religion",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Monthly Military Experience",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
+    "modifiers": []
   },
   "hindu": {
     "name": "Hindu",
     "key": "hindu",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Diplomatic Reputation",
-        "type": "Base",
-        "noPercent": true,
-        "value": 1
-      }
-    ]
+    "modifiers": []
   },
   "animism": {
     "name": "Iberic",
     "key": "animism",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Import Value",
-        "type": "Base",
-        "value": 0.1
-      }
-    ]
+    "modifiers": []
   },
   "jainism": {
     "name": "Jain",
     "key": "jainism",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Pop Promotion Speed",
-        "type": "Base",
-        "value": 0.25
-      }
-    ]
+    "modifiers": []
   },
   "judaism": {
     "name": "Jewish",
     "key": "judaism",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Pop Assimilation Speed",
-        "type": "Base",
-        "value": 0.2
-      },
-      {
-        "target": "Text",
-        "attribute": "Omen Duration",
-        "type": "Base",
-        "value": 0.5
-      },
-      {
-        "target": "Country",
-        "attribute": "Omen Power",
-        "type": "Base",
-        "noPercent": true,
-        "value": 15
-      }
-    ]
+    "modifiers": []
   },
   "egyptian_pantheon": {
     "name": "Kemetic",
     "key": "egyptian_pantheon",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Monthly Ruler Popularity Gain",
-        "type": "Base",
-        "noPercent": true,
-        "value": 0.1
-      }
-    ]
+    "modifiers": []
   },
   "armenian_religion": {
     "name": "Khaldic",
     "key": "armenian_religion",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "National Freeman Output",
-        "type": "Base",
-        "value": 0.06
-      }
-    ]
+    "modifiers": []
   },
   "matrist_religion": {
     "name": "Matrist",
     "key": "matrist_religion",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Manpower Recovery Speed",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
+    "modifiers": []
   },
   "berber_religion": {
     "name": "Megalithic",
     "key": "berber_religion",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "State Religion Happiness",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
+    "modifiers": []
   },
   "eastern_animism": {
     "name": "Ritualistic",
     "key": "eastern_animism",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Diplomatic Relations",
-        "type": "Base",
-        "noPercent": true,
-        "value": 1
-      }
-    ]
+    "modifiers": []
   },
   "germanic_religion": {
     "name": "Tuistic",
     "key": "germanic_religion",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "Migration Cost",
-        "type": "Base",
-        "negative": true,
-        "value": -0.1
-      }
-    ]
+    "modifiers": []
   },
   "shamanism": {
     "name": "Zalmoxian",
     "key": "shamanism",
-    "modifiers": [
-      {
-        "target": "Text",
-        "attribute": "National Tribesman Output",
-        "type": "Base",
-        "value": 0.03
-      }
-    ]
+    "modifiers": []
   },
   "zoroaster": {
     "name": "Zoroastrian",
     "key": "zoroaster",
-    "modifiers": [
-      {
-        "target": "Land",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "value": -0.05
-      }
-    ]
+    "modifiers": []
   }
 }

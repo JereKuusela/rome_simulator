@@ -8,7 +8,6 @@ import Input from './Utils/Input'
 import Headers from './Utils/Headers'
 
 import {
-  Mode,
   ValuesType,
   Terrain,
   TerrainType,
@@ -27,27 +26,24 @@ interface IProps {
   onTypeChange: (type: TerrainType) => void
   onLocationChange: (location: LocationType) => void
   onImageChange: (image: string) => void
-  onModeChange: (mode: Mode) => void
 }
 
 // Display component for showing and changing terrain details.
 export default class TerrainDetail extends Component<IProps> {
   readonly attributes = values(TerrainCalc)
   readonly locations = values(LocationType)
-  readonly modes = values(Mode)
   readonly headers = ['Attribute', 'Value', 'Custom value', 'Explained']
 
   readonly CELLS = 4
 
   render() {
-    const { terrain, onTypeChange, onModeChange, onImageChange, onLocationChange } = this.props
-    const { type, mode, image, location } = terrain
+    const { terrain, onTypeChange, onImageChange, onLocationChange } = this.props
+    const { type, image, location } = terrain
     return (
       <Table celled unstackable>
         <Headers values={this.headers} />
         <Table.Body>
           <DetailInputRow text='Name' cells={this.CELLS} value={type} onChange={onTypeChange} />
-          <DetailDropdownRow text='Mode' cells={this.CELLS} value={mode} values={this.modes} onChange={onModeChange} />
           <DetailInputRow text='Image' cells={this.CELLS} value={image} onChange={onImageChange} />
           <DetailDropdownRow
             text='Location'

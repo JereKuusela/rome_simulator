@@ -5,9 +5,9 @@ import {
   makeActionRemoveFirst,
   makeContainerReducer,
   ActionToFunction,
+  compose,
   makeActionReplaceFirst,
-  makeEntityReducer,
-  compose
+  makeEntityReducer
 } from './utils'
 
 const terrainsMapping: ActionToFunction<TerrainDefinitions> = {}
@@ -22,7 +22,6 @@ const terrainMapping: ActionToFunction<Terrain, TerrainType> = {}
 
 export const setTerrainImage = makeActionReplaceFirst(manager.setTerrainImage, terrainMapping)
 export const setTerrainLocation = makeActionReplaceFirst(manager.setTerrainLocation, terrainMapping)
-export const setTerrainMode = makeActionReplaceFirst(manager.setTerrainMode, terrainMapping)
 export const setTerrainValue = makeActionReplaceFirst(manager.setTerrainValue, terrainMapping)
 
 const terrain = makeEntityReducer(getDefaultTerrainState(), terrainMapping)

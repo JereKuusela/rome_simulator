@@ -41,6 +41,18 @@
       }
     ]
   },
+  "ant_3_3_cmod": {
+    "name": "Aegean Mastery",
+    "key": "ant_3_3_cmod",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.1
+      }
+    ]
+  },
   "me_gre_4_15_cmod": {
     "name": "Aggressive Markets",
     "key": "me_gre_4_15_cmod",
@@ -53,6 +65,18 @@
       }
     ]
   },
+  "mac_01_3_umod": {
+    "name": "Agrianian Detachment",
+    "key": "mac_01_3_umod",
+    "modifiers": [
+      {
+        "target": "Light Infantry",
+        "attribute": "Offense",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
   "epirus_2_8_cmod": {
     "name": "An Ionian Fleet",
     "key": "epirus_2_8_cmod",
@@ -61,6 +85,18 @@
         "target": "Naval",
         "attribute": "Morale",
         "type": "Modifier",
+        "value": 0.1
+      }
+    ]
+  },
+  "ant_2_11_umod": {
+    "name": "Antigonid Royalty",
+    "key": "ant_2_11_umod",
+    "modifiers": [
+      {
+        "target": "Heavy Infantry",
+        "attribute": "Discipline",
+        "type": "Base",
         "value": 0.1
       }
     ]
@@ -187,6 +223,45 @@
       }
     ]
   },
+  "priesthood_of_babylon_country_modifier_1": {
+    "name": "Babylonian Support",
+    "key": "priesthood_of_babylon_country_modifier_1",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
+      }
+    ]
+  },
+  "priesthood_of_babylon_country_modifier_2": {
+    "name": "Babylonian Support",
+    "key": "priesthood_of_babylon_country_modifier_2",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 10
+      }
+    ]
+  },
+  "priesthood_of_babylon_country_modifier_3": {
+    "name": "Babylonian Support",
+    "key": "priesthood_of_babylon_country_modifier_3",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 15
+      }
+    ]
+  },
   "ip_mon_68_rel_2_cmod": {
     "name": "Backed Priesthood",
     "key": "ip_mon_68_rel_2_cmod",
@@ -197,6 +272,24 @@
         "type": "Base",
         "noPercent": true,
         "value": 2.5
+      }
+    ]
+  },
+  "me_mac_3_4_cmod": {
+    "name": "Barbarian Corsairs",
+    "key": "me_mac_3_4_cmod",
+    "modifiers": [
+      {
+        "target": "Liburnian",
+        "attribute": "Offense",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Liburnian",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.25
       }
     ]
   },
@@ -369,6 +462,18 @@
       }
     ]
   },
+  "egypt_sidonian_cedars": {
+    "name": "Cedars of Libanon",
+    "key": "egypt_sidonian_cedars",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Cost",
+        "type": "Modifier",
+        "value": -0.1
+      }
+    ]
+  },
   "me_gre_3_19_7_6_cmod": {
     "name": "Chalkidian Colony",
     "key": "me_gre_3_19_7_6_cmod",
@@ -432,6 +537,18 @@
       }
     ]
   },
+  "egy_coastal_dominion_mod": {
+    "name": "Coastal Dominion",
+    "key": "egy_coastal_dominion_mod",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Cost",
+        "type": "Modifier",
+        "value": -0.1
+      }
+    ]
+  },
   "command_restructuring": {
     "name": "Command Restructuring",
     "key": "command_restructuring",
@@ -445,6 +562,30 @@
       }
     ]
   },
+  "me_mac_3_3_cmod": {
+    "name": "Commercial Patrols",
+    "key": "me_mac_3_3_cmod",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.1
+      }
+    ]
+  },
+  "tre_aegean_interests_mod": {
+    "name": "Contesting the Aegean",
+    "key": "tre_aegean_interests_mod",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Cost",
+        "type": "Modifier",
+        "value": -0.15
+      }
+    ]
+  },
   "dhe_carthage_cornered_snake_modifier": {
     "name": "Cornered Serpent",
     "key": "dhe_carthage_cornered_snake_modifier",
@@ -454,6 +595,24 @@
         "attribute": "Morale",
         "type": "Modifier",
         "value": 0.05
+      }
+    ]
+  },
+  "tre_way_of_war_mod": {
+    "name": "Crushed Resistance",
+    "key": "tre_way_of_war_mod",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
+      },
+      {
+        "target": "Global",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.1
       }
     ]
   },
@@ -563,6 +722,30 @@
       }
     ]
   },
+  "mac_01_5_cmod": {
+    "name": "Demetrios' Folly",
+    "key": "mac_01_5_cmod",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
+      }
+    ]
+  },
+  "ant_01_4_cmod": {
+    "name": "Demetrios' Playground",
+    "key": "ant_01_4_cmod",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
+      }
+    ]
+  },
   "demoralized_troops": {
     "name": "Demoralized Troops",
     "key": "demoralized_troops",
@@ -635,6 +818,49 @@
       }
     ]
   },
+  "me_mac_2_8_1_cmod": {
+    "name": "Divine Message",
+    "key": "me_mac_2_8_1_cmod",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
+      },
+      {
+        "target": "Naval",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
+      }
+    ]
+  },
+  "me_mac_2_8_3_cmod": {
+    "name": "Divine Message",
+    "key": "me_mac_2_8_3_cmod",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
+      }
+    ]
+  },
+  "me_ant_02_2_cmod": {
+    "name": "Dominate Epirus",
+    "key": "me_ant_02_2_cmod",
+    "modifiers": [
+      {
+        "target": "Light Infantry",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
   "country_diminishment_druidic_banishment": {
     "name": "Druidic Banishment",
     "key": "country_diminishment_druidic_banishment",
@@ -646,6 +872,37 @@
         "negative": true,
         "noPercent": true,
         "value": -15
+      }
+    ]
+  },
+  "egyptian_fleet": {
+    "name": "Egyptian Fleet",
+    "key": "egyptian_fleet",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.1
+      },
+      {
+        "target": "Naval",
+        "attribute": "Cost",
+        "type": "Modifier",
+        "value": -0.1
+      }
+    ]
+  },
+  "egyptian_autonomy": {
+    "name": "egyptian_autonomy",
+    "key": "egyptian_autonomy",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 15
       }
     ]
   },
@@ -692,6 +949,36 @@
       }
     ]
   },
+  "egypt_elephants_hunt_expedition": {
+    "name": "Elephant Hunting Expedition",
+    "key": "egypt_elephants_hunt_expedition",
+    "modifiers": [
+      {
+        "target": "War Elephants",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "War Elephants",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
+      },
+      {
+        "target": "War Elephants",
+        "attribute": "Cost",
+        "type": "Modifier",
+        "value": -0.15
+      },
+      {
+        "target": "War Elephants",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.15
+      }
+    ]
+  },
   "athenian_mission_09_rites_eleusis_modifier": {
     "name": "Eleusinian Charity",
     "key": "athenian_mission_09_rites_eleusis_modifier",
@@ -721,6 +1008,19 @@
         "type": "Base",
         "noPercent": true,
         "value": 10
+      }
+    ]
+  },
+  "embrace_great_works_religion": {
+    "name": "Embrace Religion",
+    "key": "embrace_great_works_religion",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 20
       }
     ]
   },
@@ -813,7 +1113,7 @@
         "target": "Global",
         "attribute": "Experience",
         "type": "Base",
-        "value": 0.3
+        "value": 0.15
       }
     ]
   },
@@ -831,7 +1131,7 @@
         "target": "Global",
         "attribute": "Experience",
         "type": "Base",
-        "value": 0.2
+        "value": 0.1
       }
     ]
   },
@@ -849,7 +1149,7 @@
         "target": "Global",
         "attribute": "Experience",
         "type": "Base",
-        "value": 0.1
+        "value": 0.05
       }
     ]
   },
@@ -925,6 +1225,31 @@
         "attribute": "Morale",
         "type": "Modifier",
         "value": 0.05
+      }
+    ]
+  },
+  "seleukid_mission_borders_egypt_completed_modifier": {
+    "name": "Great Conqueror",
+    "key": "seleukid_mission_borders_egypt_completed_modifier",
+    "modifiers": [
+      {
+        "target": "Global",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  "egypt_gods_festival_alexander": {
+    "name": "Great Religious Festival",
+    "key": "egypt_gods_festival_alexander",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 30
       }
     ]
   },
@@ -1155,6 +1480,18 @@
       }
     ]
   },
+  "ant_3_4_umod": {
+    "name": "Indomitable",
+    "key": "ant_3_4_umod",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
+      }
+    ]
+  },
   "inferior_tactics": {
     "name": "Inferior Tactics",
     "key": "inferior_tactics",
@@ -1325,6 +1662,18 @@
       }
     ]
   },
+  "me_mac_3_11_cmod": {
+    "name": "Italic Coast",
+    "key": "me_mac_3_11_cmod",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Damage Done",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
   "me_epi_2_6_cmod": {
     "name": "Italic Glory",
     "key": "me_epi_2_6_cmod",
@@ -1441,6 +1790,18 @@
       }
     ]
   },
+  "mac_01_12_cmod": {
+    "name": "Last of the Argeads",
+    "key": "mac_01_12_cmod",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
+      }
+    ]
+  },
   "sparta_mission_peloponnesian_league_navy_modifier": {
     "name": "League Naval Infrastructure",
     "key": "sparta_mission_peloponnesian_league_navy_modifier",
@@ -1481,6 +1842,19 @@
         "type": "Base",
         "noPercent": true,
         "value": 5
+      }
+    ]
+  },
+  "espionage_army_sabotage_modifier": {
+    "name": "Logistical Sabotage",
+    "key": "espionage_army_sabotage_modifier",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "negative": true,
+        "value": -0.1
       }
     ]
   },
@@ -1593,6 +1967,24 @@
       }
     ]
   },
+  "me_ant_2_6_1_cmod": {
+    "name": "Martial Excellence",
+    "key": "me_ant_2_6_1_cmod",
+    "modifiers": [
+      {
+        "target": "Global",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Land",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.1
+      }
+    ]
+  },
   "me_gre_1_17_cmod": {
     "name": "Master the Pirates",
     "key": "me_gre_1_17_cmod",
@@ -1600,6 +1992,18 @@
       {
         "target": "Naval",
         "attribute": "Capture Chance",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  "egypt_mediterranean_periplus_completed": {
+    "name": "Mediterranean Periplus Completed",
+    "key": "egypt_mediterranean_periplus_completed",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Experience",
         "type": "Base",
         "value": 0.1
       }
@@ -1751,6 +2155,18 @@
       }
     ]
   },
+  "small_military_reform": {
+    "name": "Military Reform",
+    "key": "small_military_reform",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.025
+      }
+    ]
+  },
   "marian_reforms_monarchy_modifier": {
     "name": "Military Reforms",
     "key": "marian_reforms_monarchy_modifier",
@@ -1801,6 +2217,30 @@
       }
     ]
   },
+  "seleukid_mission_nabataean_country_modifier": {
+    "name": "Nabataean Mercenaries",
+    "key": "seleukid_mission_nabataean_country_modifier",
+    "modifiers": [
+      {
+        "target": "Camel Cavalry",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.15
+      },
+      {
+        "target": "Camel Cavalry",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Camel Cavalry",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.1
+      }
+    ]
+  },
   "naval_advancements": {
     "name": "Naval Advancements",
     "key": "naval_advancements",
@@ -1844,6 +2284,24 @@
       }
     ]
   },
+  "ant_3_5_cmod": {
+    "name": "Naval Precedents",
+    "key": "ant_3_5_cmod",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.15
+      },
+      {
+        "target": "Naval",
+        "attribute": "Experience",
+        "type": "Base",
+        "value": 0.001
+      }
+    ]
+  },
   "dhe_carthage_roman_threat_modifier": {
     "name": "Naval Preparations",
     "key": "dhe_carthage_roman_threat_modifier",
@@ -1853,6 +2311,19 @@
         "attribute": "Cost",
         "type": "Modifier",
         "value": -0.1
+      }
+    ]
+  },
+  "negative_centralization": {
+    "name": "Negative Centralization",
+    "key": "negative_centralization",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "negative": true,
+        "value": -0.25
       }
     ]
   },
@@ -1934,6 +2405,56 @@
       }
     ]
   },
+  "seleukid_mission_apollo_temple_modifier": {
+    "name": "Oracle of Didyma",
+    "key": "seleukid_mission_apollo_temple_modifier",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 15
+      }
+    ]
+  },
+  "oracle_of_mallos_manpower_country_modifier": {
+    "name": "Oracle of Mallos - Military",
+    "key": "oracle_of_mallos_manpower_country_modifier",
+    "modifiers": [
+      {
+        "target": "Global",
+        "attribute": "Experience",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  "me_mac_2_8_cmod": {
+    "name": "Oracular Supremacy",
+    "key": "me_mac_2_8_cmod",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 10
+      }
+    ]
+  },
+  "me_mac_2_13_cmod": {
+    "name": "Our Aegean",
+    "key": "me_mac_2_13_cmod",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Damage Done",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
   "outside_influences": {
     "name": "Outside Influences",
     "key": "outside_influences",
@@ -1971,6 +2492,90 @@
       }
     ]
   },
+  "ant_01_3_ant_cmod": {
+    "name": "Phoenician Meddling",
+    "key": "ant_01_3_ant_cmod",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Cost",
+        "type": "Modifier",
+        "value": -0.15
+      }
+    ]
+  },
+  "seleukid_mission_new_navy_modifier": {
+    "name": "Phoenician Navy",
+    "key": "seleukid_mission_new_navy_modifier",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.15
+      }
+    ]
+  },
+  "egypt_phoenician_sailors_mod": {
+    "name": "Phoenician Sailors",
+    "key": "egypt_phoenician_sailors_mod",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.05
+      },
+      {
+        "target": "Naval",
+        "attribute": "Damage Taken",
+        "type": "Base",
+        "value": -0.05
+      }
+    ]
+  },
+  "me_ant_01_3_cmod": {
+    "name": "Phoenician Sailors",
+    "key": "me_ant_01_3_cmod",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.15
+      },
+      {
+        "target": "Naval",
+        "attribute": "Damage Done",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  "ant_01_3_egy_cmod": {
+    "name": "Phoenician Shipwrights",
+    "key": "ant_01_3_egy_cmod",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Cost",
+        "type": "Modifier",
+        "value": -0.15
+      }
+    ]
+  },
+  "ant_3_12_cmod": {
+    "name": "Ports of the East",
+    "key": "ant_3_12_cmod",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Damage Done",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
   "gm_1_hardy_navy": {
     "name": "Poseidon's Protection",
     "key": "gm_1_hardy_navy",
@@ -1983,15 +2588,34 @@
       }
     ]
   },
-  "country_improvement_tarentum_war": {
-    "name": "Preparing for War",
-    "key": "country_improvement_tarentum_war",
+  "me_ant_02_13_cmod": {
+    "name": "Poseidon's Throne",
+    "key": "me_ant_02_13_cmod",
     "modifiers": [
       {
-        "target": "Land",
+        "target": "Naval",
+        "attribute": "Damage Done",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Naval",
         "attribute": "Maintenance",
         "type": "Modifier",
         "value": -0.1
+      }
+    ]
+  },
+  "praise_the_animals": {
+    "name": "Praise The Animals",
+    "key": "praise_the_animals",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 30
       }
     ]
   },
@@ -2075,6 +2699,19 @@
       }
     ]
   },
+  "egypt_oneoff_ptolemaia_bonus": {
+    "name": "Recent Great Ptolemaia",
+    "key": "egypt_oneoff_ptolemaia_bonus",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 10
+      }
+    ]
+  },
   "reduced_recruitment_cost": {
     "name": "Reduced Recruitment Cost",
     "key": "reduced_recruitment_cost",
@@ -2084,6 +2721,18 @@
         "attribute": "Cost",
         "type": "Modifier",
         "value": -0.1
+      }
+    ]
+  },
+  "me_mac_3_13_cmod": {
+    "name": "Regional Superiority",
+    "key": "me_mac_3_13_cmod",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.1
       }
     ]
   },
@@ -2122,6 +2771,19 @@
         "attribute": "Morale",
         "type": "Modifier",
         "value": 0.1
+      }
+    ]
+  },
+  "alexandria_rhodian_sculptors_imported": {
+    "name": "Rhodian Sculptors in Alexandria",
+    "key": "alexandria_rhodian_sculptors_imported",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 10
       }
     ]
   },
@@ -2217,6 +2879,55 @@
       }
     ]
   },
+  "rural_police": {
+    "name": "rural_police",
+    "key": "rural_police",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.1
+      }
+    ]
+  },
+  "ant_01_14_cmod": {
+    "name": "Safe Hands",
+    "key": "ant_01_14_cmod",
+    "modifiers": [
+      {
+        "target": "Heavy Cavalry",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  "salt_shortage": {
+    "name": "Salt Shortage",
+    "key": "salt_shortage",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "negative": true,
+        "value": -0.025
+      }
+    ]
+  },
+  "ant_3_6_cmod": {
+    "name": "Satrap of Phrygia",
+    "key": "ant_3_6_cmod",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
+      }
+    ]
+  },
   "dhe_massalia_mil_expedition_2_cmod": {
     "name": "Seafaring Research",
     "key": "dhe_massalia_mil_expedition_2_cmod",
@@ -2283,6 +2994,30 @@
       },
       {
         "target": "Light Infantry",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  "tre_sons_of_ares_mod": {
+    "name": "Sons of Ares",
+    "key": "tre_sons_of_ares_mod",
+    "modifiers": [
+      {
+        "target": "Light Cavalry",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Light Infantry",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Archers",
         "attribute": "Discipline",
         "type": "Base",
         "value": 0.05
@@ -2411,6 +3146,18 @@
       }
     ]
   },
+  "me_ant_1_cmod": {
+    "name": "Strategos of Asia",
+    "key": "me_ant_1_cmod",
+    "modifiers": [
+      {
+        "target": "Global",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
   "me_syr_4_5_1_cmod": {
     "name": "Streamlined Tarentines",
     "key": "me_syr_4_5_1_cmod",
@@ -2439,6 +3186,18 @@
         "type": "Base",
         "noPercent": true,
         "value": 10
+      }
+    ]
+  },
+  "strong_army": {
+    "name": "Strong Army",
+    "key": "strong_army",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
       }
     ]
   },
@@ -2584,6 +3343,18 @@
       }
     ]
   },
+  "alexandria_light_pharos": {
+    "name": "The Lighthouse of Alexandria",
+    "key": "alexandria_light_pharos",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Damage Taken",
+        "type": "Base",
+        "value": -0.1
+      }
+    ]
+  },
   "sparta_mission_thessalian_cavalry": {
     "name": "Thessalian Cavalry",
     "key": "sparta_mission_thessalian_cavalry",
@@ -2638,6 +3409,18 @@
       }
     ]
   },
+  "ant_3_9_cmod": {
+    "name": "To Gaza",
+    "key": "ant_3_9_cmod",
+    "modifiers": [
+      {
+        "target": "Global",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
   "me_epi_2_5_cmod": {
     "name": "To The Last Man",
     "key": "me_epi_2_5_cmod",
@@ -2656,6 +3439,18 @@
       }
     ]
   },
+  "to_the_indus": {
+    "name": "to_the_indus",
+    "key": "to_the_indus",
+    "modifiers": [
+      {
+        "target": "Global",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
   "ip_mon_regent_martial_1_cmod": {
     "name": "Training Scheme",
     "key": "ip_mon_regent_martial_1_cmod",
@@ -2665,6 +3460,18 @@
         "attribute": "Discipline",
         "type": "Base",
         "value": 0.05
+      }
+    ]
+  },
+  "ant_3_2_cmod": {
+    "name": "Treasuries of Asia",
+    "key": "ant_3_2_cmod",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.1
       }
     ]
   },
@@ -2793,6 +3600,43 @@
       }
     ]
   },
+  "weak_army": {
+    "name": "Weak Army",
+    "key": "weak_army",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "negative": true,
+        "value": -0.025
+      }
+    ]
+  },
+  "me_mac_3_5_cmod": {
+    "name": "Western Foothold",
+    "key": "me_mac_3_5_cmod",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
+      },
+      {
+        "target": "Light Infantry",
+        "attribute": "Hills Damage",
+        "type": "Modifier",
+        "value": 0.1
+      },
+      {
+        "target": "Light Infantry",
+        "attribute": "Mountains Damage",
+        "type": "Modifier",
+        "value": 0.1
+      }
+    ]
+  },
   "me_epi_2_11_cmod": {
     "name": "Western Hegemon",
     "key": "me_epi_2_11_cmod",
@@ -2802,6 +3646,18 @@
         "attribute": "Discipline",
         "type": "Base",
         "value": 0.1
+      }
+    ]
+  },
+  "mac_01_10_cmod": {
+    "name": "Western Hegemony",
+    "key": "mac_01_10_cmod",
+    "modifiers": [
+      {
+        "target": "Global",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
       }
     ]
   },

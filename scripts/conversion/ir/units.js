@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { readFiles, writeFile } = require('./core')
 const path = require('path')
 const modifiers = require('./modifiers')
@@ -9,7 +10,7 @@ const handler = data => {
     const type = modifiers.getAttribute(key)
     const values = data[key]
     const unit = {
-      'Type': type
+      Type: type
     }
     Object.keys(values).forEach(key => {
       const value = values[key]
@@ -26,8 +27,7 @@ const transformer = () => {
     unit['Parent'] = unit['Parent'] || (unit['Mode'] === 'Land' ? 'Land Unit' : 'Naval Unit')
     delete unit['Mode']
     Object.keys(unit).forEach(key => {
-      if (!unit[key])
-        delete unit[key]
+      if (!unit[key]) delete unit[key]
     })
   })
   return Object.values(results)

@@ -4,7 +4,7 @@
 
 let i = 0
 
-parseValue = tokens => {
+const parseValue = tokens => {
   for (i = i + 1; i < tokens.length; i++) {
     const token = tokens[i]
     if (token === '{') {
@@ -17,7 +17,7 @@ parseValue = tokens => {
   }
 }
 
-parseObject = tokens => {
+const parseObject = tokens => {
   const result = {}
   let previous = ''
   for (i = i + 1; i < tokens.length; i++) {
@@ -25,25 +25,26 @@ parseObject = tokens => {
     if (token === '=') {
       const value = parseValue(tokens)
       if (result[previous]) {
-        if (!Array.isArray(result[previous]))
-          result[previous] = [result[previous]]
-        result[previous].push(value)
-      }
-      else {
+        // Usually setting a key multiple times indicates an array. But replacing an empty object seems to be an exception.
+        if (typeof result[previous] === 'object' && Object.keys(result[previous]).length === 0) result[previous] = value
+        else {
+          if (!Array.isArray(result[previous])) result[previous] = [result[previous]]
+          result[previous].push(value)
+        }
+      } else {
         result[previous] = value
       }
     }
-    if (token === '}')
-      break
+    if (token === '}') break
     previous = token
   }
   return result
 }
 
 exports.parseFile = data => {
-  const withoutComments = data.replace(/\h*#.*\r?(?:\n|$)/g, '')
-  const forceTokenizeEqualCharacter = withoutComments.replace(/=/g, ' = ')
-  const tokens = forceTokenizeEqualCharacter.split(/[\n\r\s]+/)
+  const withoutComments = data.replace(/h*#.*\r?(?:\n|$)/g, '')
+  const forceTokenizeCharacters = withoutComments.replace(/([={}])/g, ' $1 ')
+  const tokens = forceTokenizeCharacters.split(/[\n\r\s]+/)
   i = -1
   return parseObject(tokens)
 }
@@ -53,7 +54,7 @@ exports.parseFile = data => {
  */
 exports.parseLocalization = data => {
   const withoutDataLinebreaks = data.replace(/\\n/g, '')
-  const withoutComments = withoutDataLinebreaks.replace(/\h*#.*/g, '')
+  const withoutComments = withoutDataLinebreaks.replace(/h*#.*/g, '')
   const withoutSentences = withoutComments.replace(/\./g, '')
   const lines = withoutSentences.split('\n')
   const results = {}
@@ -75,7 +76,7 @@ exports.parseLocalization = data => {
  * @param data {string}
  */
 exports.parseScriptValues = data => {
-  const withoutComments = data.replace(/\h*#.*/g, '')
+  const withoutComments = data.replace(/h*#.*/g, '')
   const lines = withoutComments.split('\n')
   const results = {}
   lines.forEach(line => {

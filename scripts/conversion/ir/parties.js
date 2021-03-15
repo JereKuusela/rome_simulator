@@ -2,7 +2,6 @@ const { readFiles, writeFile, getModifier, sort } = require('./core')
 const path = require('path')
 const { getAttribute } = require('./modifiers')
 
-
 const results = {}
 
 const handler = data => {

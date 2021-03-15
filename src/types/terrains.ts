@@ -9,8 +9,8 @@ export enum TerrainType {
   Naval = 'Naval',
   None = 'None',
   Plains = 'Plains',
-  Riverine = 'Riverine',
-  Ocean = 'Ocean'
+  River = 'River',
+  Ocean = 'Open Sea'
 }
 
 export enum LocationType {
@@ -19,16 +19,16 @@ export enum LocationType {
 }
 
 export enum TerrainCalc {
-  Roll = 'Roll'
+  Roll = 'Roll',
+  CombatWidth = 'CombatWidth'
 }
 
-export type TerrainDefinitions = { [key in TerrainType]: Terrain }
+export type TerrainDefinitions = Record<TerrainType, Terrain>
 
 export type TerrainValueType = TerrainCalc
 
 export interface Terrain extends Definition<TerrainType>, DefinitionValues<TerrainValueType> {
   location: LocationType
-  mode: Mode
 }
 
 export const terrainValueToString = (definition: Terrain, type: TerrainValueType): string => {

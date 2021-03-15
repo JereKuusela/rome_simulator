@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { readFiles, writeFile, getModifier, sort } = require('./core')
 const path = require('path')
 const { getAttribute } = require('./modifiers')
@@ -15,21 +16,17 @@ const handler = data => {
     }
     Object.keys(trait).forEach(key => {
       const attribute = trait[key]
-      if (key === 'type')
-        return
+      if (key === 'type') return
       if (key === 'unit') {
         Object.keys(attribute).forEach(key => {
           const modifier = getModifier(key, attribute[key])
-          if (modifier.target !== 'Text')
-            entity.modifiers.push(modifier)
+          if (modifier.target !== 'Text') entity.modifiers.push(modifier)
         })
         return
       }
       if (getAttribute(key)) {
         const modifier = getModifier(key, attribute)
-        if (modifier.target !== 'Text')
-          entity.modifiers.push(modifier)
-
+        if (modifier.target !== 'Text') entity.modifiers.push(modifier)
       }
     })
     results[key] = entity
