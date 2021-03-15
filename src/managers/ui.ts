@@ -2,7 +2,7 @@ import { UI, ModalType, Modals, SideType } from 'types'
 import { has } from 'lodash'
 
 export const closeModal = (ui: UI) => {
-  for (const key in ui.modals) (ui.modals as any)[key] = undefined
+  for (const key in ui.modals) (ui.modals as Record<string, undefined>)[key] = undefined
 }
 
 export const openModal = <T extends ModalType>(ui: UI, key: T, object: NonNullable<Modals[T]>) => {

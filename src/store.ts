@@ -8,38 +8,39 @@ import {
   stripRounds,
   restoreDefaultSettings
 } from 'state'
-import { persistStore, persistReducer, createTransform, createMigrate, Persistor } from 'redux-persist'
+import { persistStore, persistReducer, createTransform, createMigrate } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import { map } from 'utils'
+import { CountryDefinitions, ModeState, SettingsAndOptions, TacticDefinitions, TerrainDefinitions } from 'types'
 
 const TacticsTransform = createTransform(
   inboundState => inboundState,
-  (outboundState: any) => restoreDefaultTactics(outboundState),
+  (outboundState: TacticDefinitions) => restoreDefaultTactics(outboundState),
   { whitelist: ['tactics'] }
 )
 
 const TerrainsTransform = createTransform(
   inboundState => inboundState,
-  (outboundState: any) => restoreDefaultTerrains(outboundState),
+  (outboundState: TerrainDefinitions) => restoreDefaultTerrains(outboundState),
   { whitelist: ['terrains'] }
 )
 
 const BattleTransform = createTransform(
-  (inboundState: any) => stripRounds(inboundState),
-  (outboundState: any) => outboundState,
+  (inboundState: ModeState) => stripRounds(inboundState),
+  outboundState => outboundState,
   { whitelist: ['battle'] }
 )
 
 const CountriesTransform = createTransform(
-  (inboundState: any) => inboundState,
-  (outboundState: any) =>
-    map(outboundState, (country: any) => ({ ...country, units: restoreDefaultUnits(country.units) })),
+  inboundState => inboundState,
+  (outboundState: CountryDefinitions) =>
+    map(outboundState, country => ({ ...country, units: restoreDefaultUnits(country.units) })),
   { whitelist: ['countries'] }
 )
 
 const SettingsTransform = createTransform(
-  (inboundState: any) => inboundState,
-  (outboundState: any) => restoreDefaultSettings(outboundState),
+  inboundState => inboundState,
+  (outboundState: SettingsAndOptions) => restoreDefaultSettings(outboundState),
   { whitelist: ['settings'] }
 )
 
@@ -50,7 +51,7 @@ const IgnoreTransform = createTransform(
 )
 
 const migrations = {
-  11: () => rootReducer(undefined, { type: 'dummy' }) as any
+  11: () => rootReducer(undefined, { type: 'dummy' }) as never
 }
 
 const persistConfig = {
@@ -70,7 +71,7 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
-export default function configureStore(): { store: any; persistor: Persistor } {
+export default function configureStore() {
   const store = createStore(persistedReducer, devToolsEnhancer({}))
   const persistor = persistStore(store)
   return { store, persistor }

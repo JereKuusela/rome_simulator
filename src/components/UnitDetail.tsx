@@ -38,7 +38,6 @@ interface IProps {
   showStatistics: boolean
   terrainTypes?: TerrainType[]
   unitTypesAsDropdown?: boolean
-  disableBaseValues?: boolean
   onCustomBaseValueChange: (key: string, attribute: UnitValueType, value: number) => void
   onCustomModifierValueChange: (key: string, attribute: UnitValueType, value: number) => void
   onCustomLossModifierValueChange: (key: string, attribute: UnitValueType, value: number) => void
@@ -140,7 +139,6 @@ export default class UnitDetail extends Component<IProps> {
       onCustomBaseValueChange,
       onCustomModifierValueChange,
       onCustomLossModifierValueChange: onCustomLossValueChange,
-      disableBaseValues,
       settings,
       mode,
       showStatistics

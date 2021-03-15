@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import JSZip from 'jszip'
-import { Input, Grid, Header } from 'semantic-ui-react'
+import { Grid, Header } from 'semantic-ui-react'
 import { binaryToPlain } from 'managers/importer'
+import { FileInput } from './Utils/Input'
 
 type IState = {
   errors: string[]
@@ -24,7 +25,7 @@ export default class ConvertSave extends Component<unknown, IState> {
             Playing these saves is not recommended.
           </Grid.Column>
           <Grid.Column>
-            <Input type='file' onChange={event => this.loadSave(event.target.files![0])} />
+            <FileInput onChange={this.loadSave} />
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>

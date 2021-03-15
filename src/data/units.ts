@@ -76,8 +76,9 @@ const unitToIcon: { [key in UnitType]: string } = {
 export const getUnitIcon = (type: UnitType) => unitToIcon[type] || ''
 
 const createUnitFromJson = (data: UnitJSON): UnitData => {
-  const handleAttributes = (attributes: any[]) =>
-    attributes.filter(type => (data as any)[type]).map(type => [type, (data as any)[type]] as [UnitValueType, number])
+  const record = (data as unknown) as Record<string, number>
+  const handleAttributes = (attributes: string[]) =>
+    attributes.filter(type => record[type]).map(type => [type, record[type]] as [UnitValueType, number])
 
   let unit: UnitData = {
     type: data.Type as UnitType,

@@ -3,7 +3,14 @@ import { toPercent } from 'formatters'
 import { SiteSettings, DisciplineValue } from './settings'
 
 export const formatAttribute = (value: number, attribute: string) => {
-  if (attribute === CountryAttribute.CombatWidth || attribute in GeneralAttribute || attribute in CombatPhase)
+  if (
+    attribute === CountryAttribute.CombatWidth ||
+    attribute === CountryAttribute.MilitaryExperience ||
+    attribute === CountryAttribute.MilitaryTech ||
+    attribute === CountryAttribute.OmenPower ||
+    attribute in GeneralAttribute ||
+    attribute in CombatPhase
+  )
     return String(value)
   return toPercent(value)
 }

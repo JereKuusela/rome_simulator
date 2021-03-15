@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import JSZip from 'jszip'
-import { Input, Grid, Header } from 'semantic-ui-react'
+import { Grid, Header } from 'semantic-ui-react'
 import { binaryToPlain, parseFile } from 'managers/importer'
 
 import tokens from 'data/json/ir/binary.json'
+import { FileInput } from './Utils/Input'
 
 type IState = {
   errors: string[]
@@ -25,11 +26,11 @@ export default class SaveToken extends Component<unknown, IState> {
         <Grid.Row columns='2'>
           <Grid.Column>
             Plain
-            <Input type='file' onChange={event => this.loadPlain(event.target.files![0])} />
+            <FileInput onChange={this.loadPlain} />
           </Grid.Column>
           <Grid.Column>
             Compressed
-            <Input type='file' onChange={event => this.loadSave(event.target.files![0])} />
+            <FileInput onChange={this.loadSave} />
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
@@ -56,8 +57,9 @@ export default class SaveToken extends Component<unknown, IState> {
     if (!this.plain || !this.compressed) return
     this.plain.text().then(data => {
       const plainFile = parseFile(data)
+      if (!this.compressed) return
 
-      new JSZip().loadAsync(this.compressed!).then(zip => {
+      new JSZip().loadAsync(this.compressed).then(zip => {
         zip
           .file('gamestate')
           ?.async('uint8array')
@@ -81,7 +83,7 @@ export default class SaveToken extends Component<unknown, IState> {
     })
   }
 
-  mapper = (mapping: { [key: string]: string }, compressed: { [key: string]: any }, plain: { [key: string]: any }) => {
+  mapper = (mapping: Record<string, string>, compressed: Record<string, unknown>, plain: Record<string, unknown>) => {
     if (!compressed || !plain) return
     // Ironman key doesn't exist on plain save.
     const keys = Object.keys(compressed).filter(key => key !== 'ironman')
@@ -92,10 +94,11 @@ export default class SaveToken extends Component<unknown, IState> {
       const value = compressed[keys[i]]
       const correctValue = plain[correctKeys[i]]
       if (key !== correctKey) mapping[key.substr(2).padStart(4, '0')] = correctKey
-      if (typeof value === 'object') this.mapper(mapping, value, correctValue)
+      if (typeof value === 'object' && value)
+        this.mapper(mapping, value as Record<string, unknown>, correctValue as Record<string, unknown>)
       else {
         if (typeof value === 'string' && value.startsWith('x_')) {
-          if (value !== correctValue) mapping[value.substr(2).padStart(4, '0')] = correctValue
+          if (value !== correctValue) mapping[value.substr(2).padStart(4, '0')] = String(correctValue)
         } else if (value !== correctValue) {
           console.log(key)
           console.log(value)

@@ -4,9 +4,6 @@ import {
   Mode,
   ModifierWithKey,
   CountryAttribute,
-  ValuesType,
-  UnitAttribute,
-  UnitType,
   GeneralData,
   GeneralAttribute,
   SelectionType,
@@ -17,10 +14,9 @@ import {
 import { getRootParent } from './units'
 import { ObjSet, keys } from 'utils'
 import { calculateValue } from 'definition_values'
-import { martialToCaptureChance } from './army'
 import {
   techEU4,
-  techIR,
+  inventionsIR,
   traditionsIR,
   heritagesIR,
   tradesIR,
@@ -28,7 +24,7 @@ import {
   lawsIR,
   religionsIR,
   factionsIR,
-  modifiersIR,
+  effectsIR,
   policiesIR,
   deitiesIR,
   traitsIR,
@@ -38,6 +34,17 @@ import {
 import { applyCountryModifiers } from './countries'
 
 export const TECH_KEY = 'Tech '
+
+const getDynamicEffect = (key: string, value: number): ModifierWithKey[] => {
+  const effect = effectsIR[key]
+  return effect.modifiers.map(modifier => ({
+    ...modifier,
+    key: effect.name,
+    value: modifier.value * value
+  }))
+}
+
+const getEffect = (key: string): ModifierWithKey[] => getDynamicEffect(key, 1.0)
 
 export const mapModifiersToUnits = (modifiers: Modifier[]): Modifier[] => {
   const mapped: Modifier[] = []
@@ -80,7 +87,7 @@ const mapModifiers = (key: string, modifiers: Modifier[]) =>
 
 const getTechModifiers = (modifiers: ModifierWithKey[], country: CountryModifiers) => {
   const selections = country.selections[SelectionType.Invention] ?? {}
-  const techLevel = calculateValue(country, CountryAttribute.TechLevel)
+  const techLevel = calculateValue(country, CountryAttribute.MilitaryTech)
   if (process.env.REACT_APP_GAME === 'EU4') {
     techEU4.forEach((tech, level) => {
       if (level > techLevel) return
@@ -88,7 +95,7 @@ const getTechModifiers = (modifiers: ModifierWithKey[], country: CountryModifier
     })
   }
   if (process.env.REACT_APP_GAME === 'IR') {
-    getModifiersFromArray(modifiers, selections, techIR)
+    getModifiersFromArray(modifiers, selections, inventionsIR)
   }
   return modifiers
 }
@@ -140,37 +147,15 @@ const getModifiersFromObject = (
     if (items[key]) modifiers.push(...mapModifiers(items[key].name, items[key].modifiers))
   })
 }
+
+const getCountryAttribute = (country: CountryModifiers, attribute: CountryAttribute, key: string) => {
+  const value = calculateValue(country, attribute)
+  return value ? getDynamicEffect(key, value) : []
+}
+
 const getOfficeModifiers = (modifiers: ModifierWithKey[], country: CountryModifiers) => {
-  const morale = calculateValue(country, CountryAttribute.OfficeMorale)
-  const discipline = calculateValue(country, CountryAttribute.OfficeDiscipline)
-  const militaryExperience = calculateValue(country, CountryAttribute.MilitaryExperience)
-  if (discipline) {
-    modifiers.push({
-      target: ModifierType.Global,
-      type: ValuesType.Base,
-      attribute: UnitAttribute.Discipline,
-      value: discipline / 100.0,
-      key: 'Office job'
-    })
-  }
-  if (morale) {
-    modifiers.push({
-      target: UnitType.Land,
-      type: ValuesType.Modifier,
-      attribute: UnitAttribute.Morale,
-      value: morale / 100.0,
-      key: 'Office job'
-    })
-  }
-  if (militaryExperience) {
-    modifiers.push({
-      target: UnitType.Land,
-      type: ValuesType.Modifier,
-      attribute: UnitAttribute.Morale,
-      value: militaryExperience / 1000.0,
-      key: 'Military experience'
-    })
-  }
+  modifiers.push(...getCountryAttribute(country, CountryAttribute.MilitaryExperience, 'military_experience'))
+  modifiers.push(...getCountryAttribute(country, CountryAttribute.MilitaryTech, 'military_tech'))
 }
 
 const getPrimaryCountryModifiers = (country: CountryModifiers) => {
@@ -187,7 +172,7 @@ const getPrimaryCountryModifiers = (country: CountryModifiers) => {
     getModifiersFromObject(modifiers, country.selections[SelectionType.Law], lawsIR)
     getModifiersFromObject(modifiers, country.selections[SelectionType.Religion], religionsIR)
     getModifiersFromObject(modifiers, country.selections[SelectionType.Faction], factionsIR)
-    getModifiersFromObject(modifiers, country.selections[SelectionType.Modifier], modifiersIR)
+    getModifiersFromObject(modifiers, country.selections[SelectionType.Modifier], effectsIR)
     policiesIR.forEach(policy => getModifiersFromArray(modifiers, country.selections[SelectionType.Policy], policy))
     getTraditionModifiers(modifiers, country)
   }
@@ -226,24 +211,11 @@ export const getGeneralModifiers = (general: GeneralData): ModifierWithKey[] => 
         getModifiersFromArray(modifiers, general.selections[SelectionType.Ability], abilities)
       )
       const martial = calculateValue(general, GeneralAttribute.Martial)
-      if (martial) {
-        modifiers.push({
-          target: UnitType.Naval,
-          type: ValuesType.Base,
-          attribute: UnitAttribute.CaptureChance,
-          value: martialToCaptureChance(martial),
-          key: 'Martial'
-        })
-      }
+      if (martial) modifiers.push(...getDynamicEffect('unit_martial_mod', martial))
     }
   } else {
-    modifiers.push({
-      target: ModifierType.Global,
-      type: ValuesType.Modifier,
-      attribute: UnitAttribute.Morale,
-      value: -0.15,
-      key: 'No general'
-    })
+    modifiers.push(...getEffect('army_leader_less'))
+    modifiers.push(...getEffect('navy_leader_less'))
   }
   return modifiers
 }

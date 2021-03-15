@@ -79,27 +79,27 @@ class ModalUnitDetail extends Component<IProps> {
 
   setValue = (type: ValuesType, key: string, attribute: UnitValueType, value: number) => {
     const { setUnitValue, unitType, country } = this.props
-    setUnitValue(country!, unitType, type, key, attribute, value)
+    setUnitValue(country, unitType, type, key, attribute, value)
   }
 
   changeImage = (image: string) => {
     const { changeUnitImage, unitType, country } = this.props
-    changeUnitImage(country!, unitType, image)
+    changeUnitImage(country, unitType, image)
   }
 
   changeParent = (type: UnitType) => {
     const { changeParent, unitType, country } = this.props
-    changeParent(country!, unitType, type)
+    changeParent(country, unitType, type)
   }
 
   changeDeployment = (deployment: UnitRole) => {
     const { changeUnitDeployment, unitType, country } = this.props
-    changeUnitDeployment(country!, unitType, deployment)
+    changeUnitDeployment(country, unitType, deployment)
   }
 
   toggleIsLoyal = () => {
     const { toggleUnitLoyality, unitType, country } = this.props
-    toggleUnitLoyality(country!, unitType)
+    toggleUnitLoyality(country, unitType)
   }
 }
 

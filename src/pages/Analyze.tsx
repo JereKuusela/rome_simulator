@@ -12,7 +12,8 @@ import {
   CasualtiesProgress,
   ResourceLosses,
   WinRateProgress,
-  ResourceLossesProgress
+  ResourceLossesProgress,
+  SiteSettings
 } from 'types'
 import { toPercent, toNumber, toFlooredPercent } from 'formatters'
 import SimpleRange from 'components/SimpleRange'
@@ -176,7 +177,7 @@ class Analyze extends Component<IProps, IState> {
     )
   }
 
-  changeAnalyzeParameter = (key: any, value: string | number | boolean) => {
+  changeAnalyzeParameter = (key: keyof SiteSettings, value: string | number | boolean) => {
     const { changeSiteParameter } = this.props
     changeSiteParameter(Setting.Performance, SimulationSpeed.Custom)
     changeSiteParameter(key, value)

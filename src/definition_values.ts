@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { toNumber, toPercent } from './formatters'
 import { round, map, filter, forEach, filterKeys } from './utils'
 import { merge, has, size } from 'lodash'

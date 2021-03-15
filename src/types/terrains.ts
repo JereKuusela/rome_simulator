@@ -1,6 +1,5 @@
 import { Definition } from 'types'
 import { DefinitionValues, calculateValue } from 'definition_values'
-import { Mode } from './definition'
 
 // Only listed what are required by code. There is actually a lot more terrains.
 export enum TerrainType {

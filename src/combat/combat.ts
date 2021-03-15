@@ -239,8 +239,8 @@ const calculateFlankRatioPenalty = (armies: Army[], cohorts: Cohorts, ratio: num
 }
 
 const calculateFlankRatios = (cohorts: Cohorts): { [key: string]: number } => {
-  const infantry = <{ [key: string]: number }>{}
-  const flank = <{ [key: string]: number }>{}
+  const infantry = {} as Record<string, number>
+  const flank = {} as Record<string, number>
 
   const addRatio = (cohort: Cohort) => {
     if (infantry[cohort.properties.participantIndex] === undefined) infantry[cohort.properties.participantIndex] = 0
@@ -506,7 +506,7 @@ const calculateStrengthLosses = (
 // Global targeting
 
 const sumArchetypeStrength = (frontline: Frontline) => {
-  const archetypes = <{ [key in UnitType]: number }>{}
+  const archetypes = {} as Record<UnitType, number>
 
   const add = (cohort: Cohort) => {
     const archetype = cohort.properties.parent ?? cohort.properties.type
@@ -526,8 +526,8 @@ const sumArchetypeCounter = (frontline: Frontline, archetypes: UnitType[]) => {
   const add = (cohort: Cohort) => {
     const add2 = (type: UnitType) => {
       archetypeCounters[type] += cohort.properties[type] * cohort[UnitAttribute.Strength]
-      archetypes.forEach(add2)
     }
+    archetypes.forEach(add2)
   }
   iterateFrontline(frontline, add)
   return archetypeCounters
@@ -591,7 +591,7 @@ const calculateKills = (frontline: Frontline, totalKills: number, totalDamage: n
 /**
  * CK3 damage formula. Only uses CK3 stuff.
  */
-const attackGlobalSub = (a: Frontline, b: Frontline, pipsA: number, pipsB: number, settings: Settings) => {
+export const attackGlobalSub = (a: Frontline, b: Frontline, pipsA: number, pipsB: number, settings: Settings) => {
   const archetypesA = sumArchetypeStrength(a)
   const strengthA = sum(toArr(archetypesA))
   const archetypesB = sumArchetypeStrength(b)

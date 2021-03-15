@@ -10,10 +10,7 @@ import {
   CombatNode,
   Side,
   Environment,
-  Frontline,
   Cohort,
-  ArmyName,
-  UnitDefinitions,
   UnitProperties,
   Reserve,
   Army
@@ -285,7 +282,7 @@ const calculateCaptureLoss = (
 ) => {
   const enemyIndex = cohort.state.defeatedBy?.properties.participantIndex ?? cohort.state.stackWipedBy?.participantIndex
   if (enemyIndex === undefined) {
-    throw 'Defeated should always get defeated by something.'
+    throw Error('Defeated should always get defeated by something.')
   }
   const cohortCost = weight * cohort.properties[UnitAttribute.Cost]
   if (cohort.state.isDestroyed) {

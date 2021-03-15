@@ -24,7 +24,7 @@ const combined = combineRoot({
   ui: uiReducer
 })
 
-export const rootReducer = compose(combined, combatReducer, importReducer) as Reducer<any, any>
+export const rootReducer = compose(combined, combatReducer, importReducer) as Reducer<unknown, unknown>
 
 export type AppState = ReturnType<typeof combined>
 export * from './transforms'

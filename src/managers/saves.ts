@@ -1,5 +1,5 @@
 import { countriesIR, laws, traitsIR } from 'data'
-import { sum } from 'lodash'
+import { flatten, sum } from 'lodash'
 import {
   ArmyName,
   Character,
@@ -73,9 +73,7 @@ export const loadCountry = (file: Save, id: number) => {
     traditions: arrayify(data.military_tradition_levels).filter((_, index) => index < 3),
     laws: [],
     surplus: [],
-    ideas: arrayify(data.ideas?.idea).map((idea: any) => idea.idea),
-    officeDiscipline: 0,
-    officeMorale: 0,
+    ideas: flatten(arrayify(data.ideas?.idea).map(idea => idea.idea)),
     id,
     deities: deities ? arrayify(data.pantheon).map((deity: SaveCountryDeity) => deities[deity.deity].deity) : [],
     omen: deities && data.omen ? deities[data.omen].key : '',
@@ -83,7 +81,7 @@ export const loadCountry = (file: Save, id: number) => {
     religion: data.religion ?? '',
     government: '' as GovermentType,
     faction: data.ruler_term?.party ?? '',
-    modifiers: arrayify(data.modifier).map((modifier: any) => modifier.modifier),
+    modifiers: arrayify(data.modifier).map(modifier => modifier.modifier),
     isPlayer: !!arrayify(file.played_country).find(player => player.country === Number(id))
   }
   if (file.game_configuration?.difficulty)
@@ -98,19 +96,6 @@ export const loadCountry = (file: Save, id: number) => {
   if (government.endsWith('republic')) country.government = GovermentType.Republic
   else if (government.endsWith('monarchy')) country.government = GovermentType.Monarch
   else country.government = GovermentType.Tribe
-
-  const jobs = file.jobs?.office_job ?? []
-  const characters = file.character?.character_database ?? {}
-  const disciplineJob = jobs.find(job => job.who === Number(id) && job.office === 'office_tribune_of_the_soldiers')
-  const moraleJob = jobs.find(job => job.who === Number(id) && job.office === 'office_master_of_the_guard')
-  if (disciplineJob) {
-    const character = characters[disciplineJob.character]
-    country.officeDiscipline = Math.floor((getCharacterMartial(character) * character.character_experience) / 100.0) / 2
-  }
-  if (moraleJob) {
-    const character = characters[moraleJob.character]
-    country.officeMorale = Math.floor((getCharacterMartial(character) * character.character_experience) / 100.0)
-  }
   const pops = file.population?.population
   if (data.capital && file.provinces && pops) {
     country.surplus = countSurplus(file, data.capital, pops, country)
@@ -124,7 +109,7 @@ export const loadPopsByTerritory = (file: Save, id: number): Territory[] => {
   if (!file.provinces || !pops) return []
   const territories = toArr(file.provinces, (territory, id) => ({ ...territory, id, pop: arrayify(territory.pop) }))
   const ownTerritories = territories
-    .filter(territory => territory.controller == id)
+    .filter(territory => territory.controller === id)
     .sort((a, b) => b.pop.length - a.pop.length)
   const territoryPops = ownTerritories.map(territory => ({
     id: territory.id,
@@ -214,7 +199,7 @@ export const loadArmy = (file: Save, id: number) => {
     name: getArmyName(data.unit_name) as ArmyName,
     cohorts:
       data.cohort ?? data.ship
-        ? excludeMissing(arrayify(data.cohort ?? data.ship!).map(id => loadCohort(file, id)))
+        ? excludeMissing(arrayify(data.cohort ?? data.ship ?? 0).map(id => loadCohort(file, id)))
         : [],
     flankSize: data.flank_size,
     leader: data.leader ? loadCharacter(file, data.leader) ?? null : null,

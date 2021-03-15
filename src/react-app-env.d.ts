@@ -190,6 +190,7 @@ declare module '*.module.sass' {
 }
 
 declare module 'react-lineto' {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   export default class LineTo extends React.Component<any, any> {}
 }
 

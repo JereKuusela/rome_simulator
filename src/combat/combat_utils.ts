@@ -148,7 +148,8 @@ export const iterateFrontline = (frontline: Frontline, func: (cohort: Cohort) =>
   const length2 = frontline[0].length
   for (; i < length; i++) {
     for (; j < length2; j++) {
-      if (frontline[i][j] && !frontline[i][j]?.state.isDefeated) func(frontline[i][j]!)
+      const unit = frontline[i][j]
+      if (unit && !unit?.state.isDefeated) func(unit)
     }
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as manager from 'managers/combat'
 import { ActionToFunction, makeActionRemoveFirst, makeReducer } from './utils'
 import { AppState } from 'state'

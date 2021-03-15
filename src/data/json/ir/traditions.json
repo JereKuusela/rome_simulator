@@ -68,6 +68,7 @@
           "target": "Text",
           "attribute": "Fort limit",
           "type": "Base",
+          "noPercent": true,
           "value": 1
         }
       ]
@@ -702,6 +703,7 @@
           "target": "Text",
           "attribute": "Fort limit",
           "type": "Base",
+          "noPercent": true,
           "value": 1
         }
       ]
@@ -1005,6 +1007,7 @@
           "target": "Text",
           "attribute": "Fort limit",
           "type": "Base",
+          "noPercent": true,
           "value": 1
         }
       ]
@@ -1231,6 +1234,7 @@
           "target": "Text",
           "attribute": "Fort limit",
           "type": "Base",
+          "noPercent": true,
           "value": 1
         },
         {
@@ -1490,6 +1494,7 @@
           "target": "Text",
           "attribute": "Fort limit",
           "type": "Base",
+          "noPercent": true,
           "value": 1
         }
       ]
@@ -1838,6 +1843,7 @@
           "target": "Text",
           "attribute": "Fort limit",
           "type": "Base",
+          "noPercent": true,
           "value": 1
         }
       ]
@@ -2167,6 +2173,7 @@
           "target": "Text",
           "attribute": "Fort limit",
           "type": "Base",
+          "noPercent": true,
           "value": 1
         }
       ]

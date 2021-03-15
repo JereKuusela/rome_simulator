@@ -13,7 +13,7 @@ import traditionData from './json/ir/traditions.json'
 import tradeData from './json/ir/trades.json'
 import heritageData from './json/ir/heritages.json'
 import cultureData from './json/ir/cultures.json'
-import techDataIR from './json/ir/tech.json'
+import inventionData from './json/ir/inventions.json'
 import traitData from './json/ir/traits.json'
 import lawData from './json/ir/laws.json'
 import policyData from './json/ir/policies.json'
@@ -24,40 +24,25 @@ import territoryData from './json/ir/territories.json'
 import deityData from './json/ir/deities.json'
 import religionData from './json/ir/religions.json'
 import factionData from './json/ir/parties.json'
-import modifierData from './json/ir/modifiers.json'
+import effectData from './json/ir/effects.json'
 
 // Bit ugly but these enable tree shaking based on the game.
-const getTraditionDataIR = () => (process.env.REACT_APP_GAME === 'IR' ? (traditionData as Traditions) : {})
-const getTechDataIR = () => (process.env.REACT_APP_GAME === 'IR' ? (techDataIR as ListDefinition[]) : [])
-const getPolicyDataIR = () => (process.env.REACT_APP_GAME === 'IR' ? Array.from(policyData) : ([] as OptionData[]))
-const getAbilityDataIR = () =>
-  process.env.REACT_APP_GAME === 'IR' ? Array.from(abilityData.abilities) : ([] as OptionData[])
-const getFactionDefinitionsIR = () => (process.env.REACT_APP_GAME === 'IR' ? (factionData as ListDefinitions) : {})
-const getModifierDefinitionsIR = () => (process.env.REACT_APP_GAME === 'IR' ? (modifierData as ListDefinitions) : {})
-const getIdeaDefinitionsIR = () => (process.env.REACT_APP_GAME === 'IR' ? (ideaData as ListDefinitions) : {})
-const getDeityDefinitionsIR = () => (process.env.REACT_APP_GAME === 'IR' ? (deityData as DeityDefinitions) : {})
-const getHeritageDefinitionsIR = () => (process.env.REACT_APP_GAME === 'IR' ? (heritageData as ListDefinitions) : {})
-const getLawDefinitionsIR = () => (process.env.REACT_APP_GAME === 'IR' ? (lawData as ListDefinitions) : {})
-const getReligionDefinitionsIR = () => (process.env.REACT_APP_GAME === 'IR' ? (religionData as ListDefinitions) : {})
-const getTraitDefinitionsIR = () => (process.env.REACT_APP_GAME === 'IR' ? (traitData as ListDefinitions) : {})
-const getTradeDefinitionsIR = () => (process.env.REACT_APP_GAME === 'IR' ? (tradeData as ListDefinitions) : {})
-const getCountryNames = () => (process.env.REACT_APP_GAME === 'IR' ? countryData : ({} as DictionaryData))
-const getTerritoryNames = () => (process.env.REACT_APP_GAME === 'IR' ? territoryData : ({} as DictionaryData))
-const getCultureNames = () => (process.env.REACT_APP_GAME === 'IR' ? cultureData : ({} as DictionaryData))
+const getPolicies = () => (process.env.REACT_APP_GAME === 'IR' ? Array.from(policyData) : ([] as OptionData[]))
+const getAbilities = () => (process.env.REACT_APP_GAME === 'IR' ? Array.from(abilityData) : ([] as OptionData[]))
 
-export const abilitiesIR = sortBy<OptionData>(getAbilityDataIR(), () => 1) as OptionDefinition[]
-export const traitsIR = getTraitDefinitionsIR()
-export const heritagesIR = getHeritageDefinitionsIR()
-export const tradesIR = getTradeDefinitionsIR()
-export const traditionsIR = getTraditionDataIR()
-export const ideasIR = getIdeaDefinitionsIR()
-export const lawsIR = getLawDefinitionsIR()
-export const deitiesIR = getDeityDefinitionsIR()
-export const policiesIR = sortBy<OptionData>(getPolicyDataIR(), () => 1) as OptionDefinition[]
-export const countriesIR = getCountryNames()
-export const territoriesIR = getTerritoryNames()
-export const religionsIR = getReligionDefinitionsIR()
-export const factionsIR = getFactionDefinitionsIR()
-export const modifiersIR = getModifierDefinitionsIR()
-export const culturesIR = getCultureNames()
-export const techIR = getTechDataIR()
+export const abilitiesIR = sortBy<OptionData>(getAbilities(), () => 1) as OptionDefinition[]
+export const traitsIR = process.env.REACT_APP_GAME === 'IR' ? (traitData as ListDefinitions) : {}
+export const heritagesIR = process.env.REACT_APP_GAME === 'IR' ? (heritageData as ListDefinitions) : {}
+export const tradesIR = process.env.REACT_APP_GAME === 'IR' ? (tradeData as ListDefinitions) : {}
+export const traditionsIR = process.env.REACT_APP_GAME === 'IR' ? (traditionData as Traditions) : {}
+export const ideasIR = process.env.REACT_APP_GAME === 'IR' ? (ideaData as ListDefinitions) : {}
+export const lawsIR = process.env.REACT_APP_GAME === 'IR' ? (lawData as ListDefinitions) : {}
+export const deitiesIR = process.env.REACT_APP_GAME === 'IR' ? (deityData as DeityDefinitions) : {}
+export const policiesIR = sortBy<OptionData>(getPolicies(), () => 1) as OptionDefinition[]
+export const countriesIR = process.env.REACT_APP_GAME === 'IR' ? countryData : ({} as DictionaryData)
+export const territoriesIR = process.env.REACT_APP_GAME === 'IR' ? territoryData : ({} as DictionaryData)
+export const religionsIR = process.env.REACT_APP_GAME === 'IR' ? (religionData as ListDefinitions) : {}
+export const factionsIR = process.env.REACT_APP_GAME === 'IR' ? (factionData as ListDefinitions) : {}
+export const effectsIR = process.env.REACT_APP_GAME === 'IR' ? (effectData as ListDefinitions) : {}
+export const culturesIR = process.env.REACT_APP_GAME === 'IR' ? cultureData : ({} as DictionaryData)
+export const inventionsIR = process.env.REACT_APP_GAME === 'IR' ? (inventionData as ListDefinition[]) : []

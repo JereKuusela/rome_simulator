@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { Save } from 'types'
-import { Input, Grid, Header } from 'semantic-ui-react'
+import { Grid, Header } from 'semantic-ui-react'
 import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 import { countriesIR, culturesIR, territoriesIR } from 'data'
 import { forEach, keys, toArr } from 'utils'
 import { parseFile, binaryToPlain } from 'managers/importer'
 import JSZip from 'jszip'
 import { getFirstPlayedCountry, loadPopsByTerritory } from 'managers/saves'
+import { FileInput } from 'components/Utils/Input'
 
 type IState = {
   country: string | number | null
@@ -38,11 +39,7 @@ export default class ExportPops extends Component<unknown, IState> {
         <Grid.Row>
           <Grid.Column verticalAlign='middle'>
             <Header style={{ display: 'inline' }}>Select a save game </Header>
-            <Input
-              style={{ display: 'inline' }}
-              type='file'
-              onChange={event => this.loadContent(event.target.files![0])}
-            />
+            <FileInput style={{ display: 'inline' }} onChange={this.loadContent} />
           </Grid.Column>
         </Grid.Row>
         <Grid.Row columns='4'>

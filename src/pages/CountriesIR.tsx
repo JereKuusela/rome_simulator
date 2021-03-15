@@ -56,12 +56,12 @@ import {
   traitsIR,
   abilitiesIR,
   tradesIR,
-  techIR,
+  inventionsIR,
   deitiesIR,
   lawsIR,
   policiesIR,
   ideasIR,
-  modifiersIR,
+  effectsIR,
   heritagesIR,
   religionsIR,
   factionsIR
@@ -93,14 +93,7 @@ class CountriesIR extends Component<IProps> {
         </CountryManager>
         <Grid>
           <Grid.Row columns='3'>
-            <Grid.Column>
-              <SimpleDropdown
-                values={Object.keys(traditionsIR).map(name => ({ value: name, text: name }))}
-                value={country.selectedTradition}
-                style={{ width: 200 }}
-                onChange={this.selectTradition}
-              />
-            </Grid.Column>
+            <Grid.Column></Grid.Column>
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
@@ -139,9 +132,24 @@ class CountriesIR extends Component<IProps> {
           </Grid.Row>
           <Grid.Row columns='1'>
             <Grid.Column>
-              <AccordionToggle title={'Traditions (' + country.selectedTradition + ')'} identifier='countriesTradition'>
-                Military experience:{' '}
-                <CountryValueInput attribute={CountryAttribute.MilitaryExperience} country={selectedCountry} />
+              <AccordionToggle title='Traditions' identifier='countriesTradition'>
+                <Grid>
+                  <Grid.Row columns='4'>
+                    <Grid.Column>
+                      <SimpleDropdown
+                        values={Object.keys(traditionsIR).map(name => ({ value: name, text: name }))}
+                        value={country.selectedTradition}
+                        style={{ width: 200 }}
+                        onChange={this.selectTradition}
+                      />
+                    </Grid.Column>
+                    <Grid.Column>
+                      {' '}
+                      Military experience:{' '}
+                      <CountryValueInput attribute={CountryAttribute.MilitaryExperience} country={selectedCountry} />
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
                 <TableModifierList
                   selections={country.selections[SelectionType.Tradition]}
                   columns={4}
@@ -170,13 +178,14 @@ class CountriesIR extends Component<IProps> {
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title='Technology & Inventions' identifier='countriesInvention'>
+                Military tech: <CountryValueInput attribute={CountryAttribute.MilitaryTech} country={selectedCountry} />
                 <TableModifierList
                   selections={country.selections[SelectionType.Invention]}
                   columns={4}
                   usePercentPadding
                   type={SelectionType.Invention}
                   onClick={this.onCountryItemClick}
-                  items={techIR}
+                  items={inventionsIR}
                 />
               </AccordionToggle>
             </Grid.Column>
@@ -216,18 +225,6 @@ class CountriesIR extends Component<IProps> {
                     <Grid.Column>{this.renderFactions()}</Grid.Column>
                   </Grid.Row>
                 </Grid>
-                <Grid padded>
-                  <Grid.Row columns='3'>
-                    <Grid.Column>
-                      Republic Discipline (0 - 7.5):{' '}
-                      <CountryValueInput attribute={CountryAttribute.OfficeDiscipline} country={selectedCountry} />
-                    </Grid.Column>
-                    <Grid.Column>
-                      Monarch Land Morale (0 - 15):{' '}
-                      <CountryValueInput attribute={CountryAttribute.OfficeMorale} country={selectedCountry} />
-                    </Grid.Column>
-                  </Grid.Row>
-                </Grid>
                 <TableModifierList
                   selections={country.selections[SelectionType.Law]}
                   columns={3}
@@ -257,7 +254,7 @@ class CountriesIR extends Component<IProps> {
                   usePercentPadding
                   type={SelectionType.Modifier}
                   onClick={this.onCountryItemClick}
-                  items={values(modifiersIR)}
+                  items={values(effectsIR)}
                 />
               </AccordionToggle>
             </Grid.Column>

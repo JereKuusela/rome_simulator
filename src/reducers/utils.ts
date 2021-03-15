@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { produce } from 'immer'
 import { Mode } from 'types'
 import { Reducer, CombinedState } from 'redux'

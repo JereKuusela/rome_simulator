@@ -136,7 +136,10 @@ export default class TableArmyPart extends Component<IProps, IState> {
           this.state.tooltipColumn === column &&
           this.setState({ tooltipRow: null, tooltipColumn: null, tooltipContext: null })
         }
-        onContextMenu={(e: any) => e.preventDefault() || onDeleteCohort(cohort)}
+        onContextMenu={(e: React.FocusEvent) => {
+          e.preventDefault()
+          onDeleteCohort(cohort)
+        }}
       >
         <Cell
           image={cohort?.image || null}

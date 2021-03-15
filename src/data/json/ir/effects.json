@@ -211,6 +211,19 @@
       }
     ]
   },
+  "office_augur": {
+    "name": "Augur",
+    "key": "office_augur",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 3
+      }
+    ]
+  },
   "epirus_2_1_cmod": {
     "name": "Avenge Alexandros",
     "key": "epirus_2_1_cmod",
@@ -290,6 +303,30 @@
         "attribute": "Maintenance",
         "type": "Modifier",
         "value": -0.25
+      }
+    ]
+  },
+  "base_values": {
+    "name": "Base",
+    "key": "base_values",
+    "modifiers": [
+      {
+        "target": "Liburnian",
+        "attribute": "River Damage",
+        "type": "Modifier",
+        "value": 0.25
+      },
+      {
+        "target": "Trireme",
+        "attribute": "River Damage",
+        "type": "Modifier",
+        "value": 0.25
+      },
+      {
+        "target": "Naval",
+        "attribute": "Capture Chance",
+        "type": "Base",
+        "value": 0.05
       }
     ]
   },
@@ -1369,6 +1406,32 @@
       }
     ]
   },
+  "office_high_priest_monarchy": {
+    "name": "High Priest",
+    "key": "office_high_priest_monarchy",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 3
+      }
+    ]
+  },
+  "office_high_priest": {
+    "name": "High Priest",
+    "key": "office_high_priest",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 3
+      }
+    ]
+  },
   "flogged_bare": {
     "name": "Hopeless!",
     "key": "flogged_bare",
@@ -1725,6 +1788,19 @@
       }
     ]
   },
+  "navy_leader_less": {
+    "name": "Lack of Admiral",
+    "key": "navy_leader_less",
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "negative": true,
+        "value": -0.15
+      }
+    ]
+  },
   "lack_of_equipment": {
     "name": "Lack of Equipment",
     "key": "lack_of_equipment",
@@ -1749,6 +1825,19 @@
         "negative": true,
         "noPercent": true,
         "value": -10
+      }
+    ]
+  },
+  "army_leader_less": {
+    "name": "Lack of General",
+    "key": "army_leader_less",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "negative": true,
+        "value": -0.15
       }
     ]
   },
@@ -1967,6 +2056,40 @@
       }
     ]
   },
+  "military_tech": {
+    "name": "Martial Advances",
+    "key": "military_tech",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Base",
+        "noPercent": true,
+        "value": 0.075
+      },
+      {
+        "target": "Naval",
+        "attribute": "Morale",
+        "type": "Base",
+        "noPercent": true,
+        "value": 0.075
+      },
+      {
+        "target": "Land",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "negative": true,
+        "value": 0.025
+      },
+      {
+        "target": "Naval",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "negative": true,
+        "value": 0.025
+      }
+    ]
+  },
   "me_ant_2_6_1_cmod": {
     "name": "Martial Excellence",
     "key": "me_ant_2_6_1_cmod",
@@ -2092,6 +2215,18 @@
         "attribute": "Cost",
         "type": "Modifier",
         "value": -0.2
+      }
+    ]
+  },
+  "military_experience": {
+    "name": "Military Experience",
+    "key": "military_experience",
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.0005
       }
     ]
   },
@@ -2749,6 +2884,19 @@
       }
     ]
   },
+  "religious_tech": {
+    "name": "Religious Advances",
+    "key": "religious_tech",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      }
+    ]
+  },
   "religious_discussion": {
     "name": "Religious Discussion",
     "key": "religious_discussion",
@@ -2759,6 +2907,19 @@
         "type": "Base",
         "noPercent": true,
         "value": 10
+      }
+    ]
+  },
+  "religious_unity": {
+    "name": "Religious Unity",
+    "key": "religious_unity",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 100
       }
     ]
   },

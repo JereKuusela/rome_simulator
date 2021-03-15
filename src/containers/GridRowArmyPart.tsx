@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Grid } from 'semantic-ui-react'
 
 import { UnitAttribute, Cohort } from 'types'
-import { AppState, getCohorts, useBattle, useTimestamp } from 'state'
+import { AppState, getCohorts, useTimestamp } from 'state'
 import { getArmyPart } from 'army_utils'
 import { deleteCohort } from 'reducers'
 import { flatten } from 'lodash'

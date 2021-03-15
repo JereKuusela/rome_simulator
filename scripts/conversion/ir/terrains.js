@@ -30,7 +30,7 @@ const results = [
   }
 ]
 
-const handler = data => {
+const handleTerrains = data => {
   Object.keys(data).forEach(terrainName => {
     const terrain = data[terrainName]
     const name = getAttribute(terrainName)
@@ -45,7 +45,7 @@ const handler = data => {
 }
 
 const handlers = {
-  [path.join('ir', 'terrain_types')]: handler
+  [path.join('ir', 'terrain_types')]: handleTerrains
 }
 
 exports.run = () => {

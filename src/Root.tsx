@@ -16,11 +16,12 @@ import SaveTool from 'pages/SaveTool'
 import ExportTool from 'pages/ExportTool'
 import { Container } from 'semantic-ui-react'
 import Modals from 'pages/Modals'
+import { Persistor } from 'redux-persist'
 
 // Any additional component props go here.
 interface MainProps {
   store: Store<AppState>
-  persistor: any
+  persistor: Persistor
 }
 
 // Create an intersection type of the component props and our Redux props.

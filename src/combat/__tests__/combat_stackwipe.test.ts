@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   TestState,
   initState,
@@ -192,5 +194,3 @@ if (process.env.REACT_APP_GAME === 'IR') {
     })
   })
 }
-
-export default null

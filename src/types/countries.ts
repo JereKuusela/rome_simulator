@@ -18,9 +18,7 @@ export enum CountryAttribute {
   FlankRatio = 'Flank Ratio',
   MilitaryExperience = 'Military Experience',
   OmenPower = 'Omen Power',
-  TechLevel = 'Tech Tevel',
-  OfficeMorale = 'Morale Office',
-  OfficeDiscipline = 'Discipline Office'
+  MilitaryTech = 'Military Tech'
 }
 
 export type CountryDefinitions = { [key in CountryName]: CountryDefinition }

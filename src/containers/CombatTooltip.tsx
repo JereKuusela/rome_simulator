@@ -8,9 +8,7 @@ import {
   SideType,
   ArmyPart,
   UnitAttribute,
-  UnitType,
   Setting,
-  TerrainType,
   CombatPhase,
   Mode,
   CohortProperties,
@@ -57,7 +55,8 @@ class CombatTooltip extends Component<IProps, IState> {
 
   render() {
     const { source, context, isSupport } = this.props
-    return <Popup open={source !== null} context={context!} content={this.getExplanation(isSupport)} inverted />
+    if (!context) return null
+    return <Popup open={source !== null} context={context} content={this.getExplanation(isSupport)} inverted />
   }
 
   BLUE = 'color-blue'

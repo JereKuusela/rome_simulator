@@ -47,7 +47,6 @@ export interface GeneralData extends DefinitionValues<GeneralValueType> {
 }
 
 export type UnitPreferences = { [key in UnitPreferenceType | UnitRole]: UnitType | null }
-
 export type ArmyData = {
   mode: Mode
   unitPreferences: UnitPreferences

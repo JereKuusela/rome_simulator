@@ -8,6 +8,7 @@ Refactor:
   * Data generator was split to better support EU4 (modifier names got mixed up with IR modifiers).
   * Added support for gaining attributes (opposite of losses), for example morale gain for winning a battle in EU4.
   * Terrains are no longer split to land and naval modes. There aren't that many terrains to justify increased code complexity.
+  * Improved overall performance.
 
 Combat:
   * IR: Loyalty now also decreases maintenance costs.

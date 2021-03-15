@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { saveAs } from 'file-saver'
 import { AppState, stripRounds, resetMissing, resetAll } from 'state'
 import { Mode, ExportKey, ExportKeys, TransferState } from 'types'

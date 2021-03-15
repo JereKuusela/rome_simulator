@@ -14,9 +14,9 @@ import { getDefaultUnits } from './units'
 export const getDefaultCountry = (): CountryDefinition => ({
   modifiers: {
     selections: {} as Selections,
-    selectedTradition: 'Italic',
+    selectedTradition: 'Roman',
     government: GovermentType.Republic,
-    culture: (process.env.REACT_APP_GAME === 'EU4' ? 'Western' : 'latin_philosophy') as CultureType,
+    culture: 'Western' as CultureType,
     baseValues: {
       [CountryAttribute.FlankRatio]: {
         Base: 0.5
@@ -24,7 +24,7 @@ export const getDefaultCountry = (): CountryDefinition => ({
       [CountryAttribute.OmenPower]: {
         Base: 100
       },
-      [CountryAttribute.TechLevel]: {
+      [CountryAttribute.MilitaryTech]: {
         Base: process.env.REACT_APP_GAME === 'EU4' ? 3 : 0
       }
     } as never

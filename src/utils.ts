@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import EmptyIcon from './images/empty.png'
 import UnknownIcon from './images/unknown.png'
 
@@ -94,10 +95,7 @@ export const forEach2 = <K extends string, V, R>(
 ): void => forEach(object, (sub, row) => forEach(sub, (item, column) => callback(item, row, column)))
 export const forEach = <K extends string, V, R>(object: { [key in K]: V }, callback: (item: V, key: K) => R): void =>
   entries(object).forEach(([k, v]) => callback(v, k))
-export const every = <K extends string, V, R>(
-  object: { [key in K]: V },
-  callback: (item: V, key: K) => any
-): boolean => {
+export const every = <K extends string, V>(object: { [key in K]: V }, callback: (item: V, key: K) => any): boolean => {
   let ret = true
   entries(object).forEach(([k, v]) => (ret = !!callback(v, k) && ret))
   return ret

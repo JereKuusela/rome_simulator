@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { AppState, getMode } from 'state'
 import TerrainDetail from 'components/TerrainDetail'
-import { Mode, TerrainType, LocationType, TerrainValueType, ModalType } from 'types'
+import { TerrainType, LocationType, TerrainValueType, ModalType } from 'types'
 import {
   setTerrainLocation,
   setTerrainImage,

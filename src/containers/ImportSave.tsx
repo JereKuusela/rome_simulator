@@ -8,12 +8,12 @@ import {
   CountryName,
   CountryAttribute,
   SelectionType,
-  Invention,
   ArmyName,
   CohortData,
   Save,
   SaveArmy,
-  SaveCountry
+  SaveCountry,
+  UnitType
 } from 'types'
 import {
   enableGeneralSelections,
@@ -33,9 +33,9 @@ import {
   setMode,
   enableGeneralSelection
 } from 'reducers'
-import { Input, Button, Grid, Table, Header } from 'semantic-ui-react'
+import { Button, Grid, Table, Header } from 'semantic-ui-react'
 import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
-import { sortBy, uniq, sum, union } from 'lodash'
+import { uniq, sum, union } from 'lodash'
 import LabelItem from 'components/Utils/LabelUnit'
 import { AppState, getUnitDefinitions, getMode } from 'state'
 import {
@@ -47,9 +47,8 @@ import {
   factionsIR,
   religionsIR,
   deitiesIR,
-  modifiersIR,
+  effectsIR,
   traitsIR,
-  techIR,
   tradesIR,
   ideasIR,
   abilitiesIR
@@ -60,6 +59,7 @@ import { calculateValueWithoutLoss } from 'definition_values'
 import { parseFile, binaryToPlain } from 'managers/importer'
 import JSZip from 'jszip'
 import { loadCountry, loadArmy, getFirstPlayedCountry } from 'managers/saves'
+import { FileInput } from 'components/Utils/Input'
 
 type IState = {
   country: SaveCountry | null
@@ -114,11 +114,7 @@ class ImportSave extends Component<IProps, IState> {
         <Grid.Row>
           <Grid.Column verticalAlign='middle'>
             <Header style={{ display: 'inline' }}>Select a save game to import</Header>
-            <Input
-              style={{ display: 'inline' }}
-              type='file'
-              onChange={event => (event.target.files ? this.loadContent(event.target.files[0]) : {})}
-            />
+            <FileInput style={{ display: 'inline' }} onChange={this.loadContent} />
           </Grid.Column>
         </Grid.Row>
         <Grid.Row columns='4'>
@@ -241,8 +237,8 @@ class ImportSave extends Component<IProps, IState> {
               .filter(value => value)
               .join(', ')}
           </Table.Cell>
-          <Table.Cell>Office (Discipline / Morale)</Table.Cell>
-          <Table.Cell>{country.officeMorale || country.officeDiscipline}</Table.Cell>
+          <Table.Cell />
+          <Table.Cell />
         </Table.Row>
         <Table.Row>
           <Table.Cell>Government</Table.Cell>
@@ -271,7 +267,7 @@ class ImportSave extends Component<IProps, IState> {
           <Table.Cell>Modifiers</Table.Cell>
           <Table.Cell colSpan='3'>
             {country.modifiers
-              .map(key => modifiersIR[key]?.name)
+              .map(key => effectsIR[key]?.name)
               .filter(value => value)
               .join(', ')}
           </Table.Cell>
@@ -331,13 +327,13 @@ class ImportSave extends Component<IProps, IState> {
         <Table.Row>
           <Table.Cell>Preferences</Table.Cell>
           <Table.Cell>
-            <LabelItem item={units[army.preferences[UnitPreferenceType.Primary]!]} />
+            <LabelItem item={units[army.preferences[UnitPreferenceType.Primary] ?? UnitType.Archers]} />
           </Table.Cell>
           <Table.Cell>
-            <LabelItem item={units[army.preferences[UnitPreferenceType.Secondary]!]} />
+            <LabelItem item={units[army.preferences[UnitPreferenceType.Secondary] ?? UnitType.Archers]} />
           </Table.Cell>
           <Table.Cell>
-            <LabelItem item={units[army.preferences[UnitPreferenceType.Flank]!]} />
+            <LabelItem item={units[army.preferences[UnitPreferenceType.Flank] ?? UnitType.Archers]} />
           </Table.Cell>
         </Table.Row>
         <Table.Row>
@@ -419,7 +415,7 @@ class ImportSave extends Component<IProps, IState> {
     this.importing = true
     const countryName = country.name
     createCountry(countryName)
-    setCountryAttribute(countryName, CountryAttribute.TechLevel, country.tech)
+    setCountryAttribute(countryName, CountryAttribute.MilitaryTech, country.tech)
     setCountryAttribute(countryName, CountryAttribute.MilitaryExperience, country.militaryExperience)
     selectCulture(countryName, country.tradition, false)
     const traditionsWithBonus = country.traditions.map(value => (value === 7 ? 8 : value))
@@ -444,8 +440,6 @@ class ImportSave extends Component<IProps, IState> {
     enableCountrySelection(countryName, SelectionType.Policy, country.navalMaintenance)
     enableCountrySelection(countryName, SelectionType.Religion, country.religion)
     enableCountrySelection(countryName, SelectionType.Faction, country.faction)
-    setCountryAttribute(countryName, CountryAttribute.OfficeDiscipline, country.officeDiscipline)
-    setCountryAttribute(countryName, CountryAttribute.OfficeMorale, country.officeMorale)
     setCountryAttribute(countryName, CountryAttribute.OmenPower, country.religiousUnity - 100)
     this.importArmy()
   }
@@ -511,7 +505,7 @@ class ImportSave extends Component<IProps, IState> {
         [UnitAttribute.Experience]: {
           Custom: cohort[UnitAttribute.Experience] - experiences[cohort.type]
         }
-      } as any,
+      } as never,
       lossValues: {
         [UnitAttribute.Morale]: {
           Custom: maxMorales[cohort.type] - cohort[UnitAttribute.Morale]
@@ -519,7 +513,7 @@ class ImportSave extends Component<IProps, IState> {
         [UnitAttribute.Strength]: {
           Custom: maxStrengths[cohort.type] - cohort[UnitAttribute.Strength]
         }
-      } as any
+      } as never
     }))
     if (mode !== army.mode) setMode(army.mode)
     addToReserve(countryName, armyName, cohorts)

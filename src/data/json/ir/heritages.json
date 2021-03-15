@@ -429,6 +429,13 @@
       },
       {
         "target": "Text",
+        "attribute": "Mercenary Limit",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
         "attribute": "Levy Size Multiplier",
         "type": "Base",
         "negative": true,

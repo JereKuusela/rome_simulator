@@ -69,5 +69,3 @@ if (process.env.REACT_APP_GAME === 'IR') {
     })
   })
 }
-
-export default null

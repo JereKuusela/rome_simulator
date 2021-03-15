@@ -45,7 +45,6 @@ class ModalCohortDetail extends Component<IProps> {
           onCustomLossModifierValueChange={this.setLossModifierValue}
           onIsLoyalToggle={this.toggleIsLoyal}
           showStatistics={true}
-          disableBaseValues={true}
         />
       </BaseModal>
     )
@@ -90,7 +89,7 @@ const convertCohort = (
 ): CohortDefinition | null => {
   if (!definition) return null
   rounds.forEach((combat, round) => {
-    if (!combat) return
+    if (!combat || !definition) return
     const lossValues: [string, number][] = [
       [UnitAttribute.Morale, combat.state.moraleLoss],
       [UnitAttribute.Strength, combat.state.strengthLoss]
@@ -99,25 +98,25 @@ const convertCohort = (
       [UnitAttribute.MoraleDepleted, combat.state.moraleDealt],
       [UnitAttribute.StrengthDepleted, combat.state.strengthDealt]
     ]
-    definition = addValues(definition!, ValuesType.Loss, 'Round ' + round, lossValues)
-    definition = addValues(definition!, ValuesType.Base, 'Round ' + round, dealtValues)
+    definition = addValues(definition, ValuesType.Loss, 'Round ' + round, lossValues)
+    definition = addValues(definition, ValuesType.Base, 'Round ' + round, dealtValues)
     if (round === rounds.length - 1) {
       definition = addValue(
-        definition!,
+        definition,
         ValuesType.Gain,
         'Winning',
         UnitAttribute.Morale,
         combat.properties.winningMoraleBonus
       )
       definition = addValue(
-        definition!,
+        definition,
         ValuesType.LossModifier,
         'Late deployment',
         UnitAttribute.Morale,
         combat.properties.deploymentPenalty
       )
       definition = addValue(
-        definition!,
+        definition,
         ValuesType.LossModifier,
         'Non-secondary reinforcement',
         UnitAttribute.Morale,

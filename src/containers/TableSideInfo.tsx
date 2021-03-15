@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Image, Table, Button } from 'semantic-ui-react'
 
-import { SideType, Setting, GeneralAttribute, UnitAttribute, ModalType, GeneralDefinition, CombatPhase } from 'types'
+import { SideType, Setting, GeneralAttribute, UnitAttribute, ModalType } from 'types'
 import { AppState, getBattle, getMode, getCombatSide, getSiteSettings, getSide, getTactic } from 'state'
 import { setDice, openModal } from 'reducers'
 import StyledNumber from 'components/Utils/StyledNumber'

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   TestState,
   initCleanState,
@@ -9,8 +10,7 @@ import {
   addToReserveTest,
   selectTacticTest,
   createArmyTest,
-  setGeneralAttributeTest,
-  getArmyTest
+  setGeneralAttributeTest
 } from './utils'
 import { UnitType, TacticType, SideType, Setting, Mode, GeneralAttribute } from 'types'
 
@@ -122,5 +122,3 @@ if (process.env.REACT_APP_GAME === 'IR') {
     })
   })
 }
-
-export default null

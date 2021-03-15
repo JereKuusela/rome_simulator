@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   TestState,
   initExpected,
@@ -195,5 +196,3 @@ describe('targeting', () => {
     testCombatWithDefaultRolls(state, expected)
   })
 })
-
-export default null

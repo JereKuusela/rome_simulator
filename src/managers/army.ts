@@ -38,12 +38,6 @@ import { toObj, toArr, toSet, ObjSet, values } from 'utils'
 import { findLastIndex, sortBy } from 'lodash'
 import { getRootParent } from './units'
 
-/**
- * Returns how much capture chance given martial skill gives.
- * @param martial
- */
-export const martialToCaptureChance = (martial: number) => 0.005 * martial
-
 const BASE_STAT_KEY = 'Custom'
 
 export const convertGeneralDefinition = (

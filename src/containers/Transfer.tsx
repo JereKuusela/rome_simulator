@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Grid, TextArea, Checkbox, List, Header, Button, Input } from 'semantic-ui-react'
+import { Grid, TextArea, Checkbox, List, Header, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import {
   AppState,
@@ -13,6 +13,7 @@ import { values, keys } from 'utils'
 import { ExportKey } from 'types'
 import { exportState, saveToFile } from 'managers/transfer'
 import { setExportKey, setResetMissing, importState } from 'reducers'
+import { FileInput } from 'components/Utils/Input'
 
 interface IState {
   data: string
@@ -55,7 +56,7 @@ class Transfer extends Component<IProps, IState> {
             <Header>Import</Header>
             <List>
               <List.Item>
-                1a. <Input type='file' onChange={event => this.loadContent(event.target.files![0])} />
+                1a. <FileInput onChange={this.loadContent} />
               </List.Item>
               <List.Item>1b. Copy paste the data to the text box</List.Item>
               <List.Item>2. Select how to handle missing data</List.Item>
@@ -112,8 +113,7 @@ class Transfer extends Component<IProps, IState> {
   }
 
   loadContent = (file: File) => {
-    const blob = file as any
-    blob.text().then((data: string) => this.setState({ data }))
+    file.text().then((data: string) => this.setState({ data }))
   }
 }
 
@@ -123,6 +123,7 @@ const mapStateToProps = (state: AppState) => ({
   resetMissing: state.transfer.resetMissing
 })
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatchToProps = (dispatch: any) => ({
   setExportKey: (key: ExportKey, value: boolean) => dispatch(setExportKey(key, value)),
   setResetMissing: (value: boolean) => dispatch(setResetMissing(value)),

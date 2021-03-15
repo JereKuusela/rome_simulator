@@ -47,9 +47,9 @@ const parseValue = (tokens: string[]) => {
 }
 
 const parseObject = (tokens: string[]) => {
-  const result = {} as { [key: string]: any }
+  const result = {} as Record<string, unknown>
   // Object syntax is also used for arrays. Fill both and decide at end which works better.
-  const resultArray = [] as any[]
+  const resultArray = [] as unknown[]
   let previous = ''
   for (i = i + 1; i < tokens.length; i++) {
     const token = tokens[i]
@@ -59,7 +59,8 @@ const parseObject = (tokens: string[]) => {
       const value = parseValue(tokens)
       if (result[previous]) {
         if (!Array.isArray(result[previous])) result[previous] = [result[previous]]
-        result[previous].push(value)
+        const prev = result[previous]
+        if (Array.isArray(prev)) prev.push(value)
       } else {
         result[previous] = value
       }
@@ -79,7 +80,7 @@ export const parseFile = (data: string) => {
   const forceTokenizeEqualCharacter = withoutComments.replace(/=/g, ' = ')
   const tokens = forceTokenizeEqualCharacter.split(/[\n\r\s]+/)
   i = -1
-  return parseObject(tokens)
+  return parseObject(tokens) as Record<string, unknown>
 }
 
 const formatTokens = {
@@ -265,7 +266,7 @@ const isDate = (key: string, parentKey: string, token: string, value: string) =>
 }
 
 const parseBinaryText = (data: Uint8Array) => {
-  const tokens = [''] as any[]
+  const tokens = [''] as unknown[]
   let pad = ''
   let key = ''
   let parentKey = ''

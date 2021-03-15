@@ -159,7 +159,7 @@ const ArmyInfo = ({ type, participant, index }: ArmyInfoProps) => {
       )}
       {settings[Setting.Tech] && (
         <Table.Cell>
-          <CountryValueInput country={countryName} attribute={CountryAttribute.TechLevel} />
+          <CountryValueInput country={countryName} attribute={CountryAttribute.MilitaryTech} />
         </Table.Cell>
       )}
       {isAttributeEnabled(CountryAttribute.FlankRatio, settings) && (

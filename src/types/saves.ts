@@ -30,8 +30,6 @@ export type SaveCountry = {
   laws: string[]
   ideas: string[]
   surplus: TradeGood[]
-  officeDiscipline: number
-  officeMorale: number
   deities: string[]
   modifiers: string[]
   isPlayer: boolean
@@ -158,7 +156,7 @@ type SaveDataArmy = {
 
 type ElementType<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<infer ElementType> ? ElementType : never
 
-type SaveDataCountry = { [key in ElementType<typeof laws>]: string } & {
+type SaveDataCountry = Record<ElementType<typeof laws>, string> & {
   laws?: number[]
   units: number[]
   active_inventions: number[]
@@ -212,36 +210,39 @@ type SaveDataWar = {
   defender: number[]
 }
 
-export type Save = { [key: string]: any } & {
+export type Save = Record<string, unknown> & {
   jobs?: {
     office_job: SaveJob[]
     techoffice_job: SaveJob[]
     province_job: SaveJob[]
   }
   character?: {
-    character_database: { [key: number]: SaveCharacter }
+    character_database: Record<number, SaveCharacter>
   }
-  provinces?: { [key: number]: SaveTerritory }
+  provinces?: Record<number, SaveTerritory>
   trade?: {
     route: SaveRoute[]
   }
   armies?: {
-    subunit_database: { [key: number]: SaveDataCohort }
-    units_database: { [key: number]: SaveDataArmy }
+    subunit_database: Record<number, SaveDataCohort>
+    units_database: Record<number, SaveDataArmy>
   }
   deity_manager?: {
-    deities_database: { [key: number]: { deity: string; key: string } }
+    deities_database: Record<number, { deity: string; key: string }>
   }
   country?: {
-    country_database: { [key: number]: SaveDataCountry }
+    country_database: Record<number, SaveDataCountry>
   }
   played_country?: {
     country: number
   }[]
   diplomacy?: {
-    database: { [key: number]: SaveDataWar }
+    database: Record<number, SaveDataWar>
   }
   population?: {
-    population: { [key: number]: SavePop }
+    population: Record<number, SavePop>
+  }
+  game_configuration?: {
+    difficulty: string
   }
 }

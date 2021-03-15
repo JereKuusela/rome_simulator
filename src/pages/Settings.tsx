@@ -84,11 +84,12 @@ const Settings = () => {
   const { combatSettings, siteSettings } = useSelector((state: AppState) => state.settings)
   const dispatch = useDispatch()
   const onChangeSiteParameter = useCallback(
-    (key: keyof SiteSettings, value: any) => dispatch(changeSiteParameter(key, value)),
+    (key: keyof SiteSettings, value: string | number | boolean) => dispatch(changeSiteParameter(key, value)),
     [dispatch]
   )
   const onChangeCombatParameter = useCallback(
-    (mode: Mode, key: keyof CombatSettings, value: any) => dispatch(changeCombatParameter(mode, key, value)),
+    (mode: Mode, key: keyof CombatSettings, value: string | number | boolean) =>
+      dispatch(changeCombatParameter(mode, key, value)),
     [dispatch]
   )
 

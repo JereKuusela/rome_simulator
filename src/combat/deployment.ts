@@ -320,7 +320,8 @@ const canDeploy = (day: number, side: Side) => {
 const getDeployingArmies = (day: number, side: Side) => {
   const armies = []
   while (side.armies.length && side.armies[side.armies.length - 1].arrival <= day) {
-    armies.push(side.armies.pop()!)
+    const army = side.armies.pop()
+    if (army) armies.push(army)
   }
   return armies
 }

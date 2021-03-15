@@ -1,5 +1,5 @@
 import { AppState } from './index'
-import { toArr, toObj, keys, filter } from 'utils'
+import { toArr, toObj, keys } from 'utils'
 import {
   filterUnitDefinitions,
   getArmyPart,
@@ -102,7 +102,7 @@ export const useCombatWidth = (): number => useSelector(calculateCombatWidth)
 export const useTechLevel = (countryName: CountryName): number => {
   return useSelector((state: AppState) => {
     const country = getCountry(state, countryName)
-    return country[CountryAttribute.TechLevel]
+    return country[CountryAttribute.MilitaryTech]
   })
 }
 
@@ -358,7 +358,7 @@ export const getOverridenReserveDefinitions = (
   if (originals) return army.reserve
   const units = getUnitDefinitions(state, countryName, armyName)
   const country = getCountry(state, countryName)
-  const latest = manager.getLatestUnits(units, country[CountryAttribute.TechLevel])
+  const latest = manager.getLatestUnits(units, country[CountryAttribute.MilitaryTech])
   return manager.overrideRoleWithPreferences(army, units, latest)
 }
 
