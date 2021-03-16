@@ -18,7 +18,19 @@ export enum CountryAttribute {
   FlankRatio = 'Flank Ratio',
   MilitaryExperience = 'Military Experience',
   OmenPower = 'Omen Power',
-  MilitaryTech = 'Military Tech'
+  CivicTech = 'Civic Tech',
+  MartialTech = 'Martial Tech',
+  OratoryTech = 'Oratory Tech',
+  ReligiousTech = 'Religious Tech'
+}
+
+export const countryAttributeToEffect = (attribute: CountryAttribute) => {
+  if (attribute === CountryAttribute.MartialTech) return 'military_tech'
+  if (attribute === CountryAttribute.OratoryTech) return 'oratory_tech'
+  if (attribute === CountryAttribute.CivicTech) return 'civic_tech'
+  if (attribute === CountryAttribute.ReligiousTech) return 'religious_tech'
+  if (attribute === CountryAttribute.MilitaryExperience) return 'military_experience'
+  return ''
 }
 
 export type CountryDefinitions = { [key in CountryName]: CountryDefinition }
@@ -35,12 +47,14 @@ export interface CountryDefinition {
   armies: Armies
   units: UnitsData
   weariness: WearinessAttributes
+  name: CountryName
 }
 
 export type Country = { [key in CountryAttribute]: number } & {
   selections: Selections
   selectedTradition: string
   weariness: WearinessAttributes
+  name: CountryName
 }
 
 export enum CultureType {

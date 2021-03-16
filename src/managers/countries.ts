@@ -24,7 +24,7 @@ import { addValuesWithMutate, clearAllValuesWithMutate, calculateValue, addValue
 import { toObj, values, filter } from 'utils'
 
 export const createCountry = (countries: Countries, country: CountryName, source?: CountryName): void => {
-  countries[country] = source ? countries[source] : getDefaultCountry()
+  countries[country] = source ? countries[source] : getDefaultCountry(country)
 }
 
 export const deleteCountry = (countries: Countries, country: CountryName): void => {
@@ -33,6 +33,7 @@ export const deleteCountry = (countries: Countries, country: CountryName): void 
 
 export const changeCountryName = (countries: Countries, oldCountry: CountryName, country: CountryName): void => {
   delete Object.assign(countries, { [country]: countries[oldCountry] })[oldCountry]
+  countries[country].name = country
 }
 
 export const setCountryAttribute = (country: CountryDefinition, attribute: CountryAttribute, value: number): void => {
@@ -105,7 +106,8 @@ export const convertCountryDefinition = (country: CountryDefinition, settings: S
     ...calculated,
     selections: country.modifiers.selections,
     selectedTradition: country.modifiers.selectedTradition,
-    weariness: country.weariness
+    weariness: country.weariness,
+    name: country.name
   }
 }
 

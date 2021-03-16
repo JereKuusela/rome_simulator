@@ -1,4 +1,4 @@
-import { sortBy } from 'lodash'
+import { groupBy, sortBy } from 'lodash'
 import {
   OptionDefinition,
   ListDefinitions,
@@ -6,7 +6,7 @@ import {
   DictionaryData,
   OptionData,
   Traditions,
-  ListDefinition
+  InventionDefinition
 } from 'types'
 
 import traditionData from './json/ir/traditions.json'
@@ -45,4 +45,5 @@ export const religionsIR = process.env.REACT_APP_GAME === 'IR' ? (religionData a
 export const factionsIR = process.env.REACT_APP_GAME === 'IR' ? (factionData as ListDefinitions) : {}
 export const effectsIR = process.env.REACT_APP_GAME === 'IR' ? (effectData as ListDefinitions) : {}
 export const culturesIR = process.env.REACT_APP_GAME === 'IR' ? cultureData : ({} as DictionaryData)
-export const inventionsIR = process.env.REACT_APP_GAME === 'IR' ? (inventionData as ListDefinition[]) : []
+export const inventionsIR = process.env.REACT_APP_GAME === 'IR' ? (inventionData as InventionDefinition[]) : []
+export const inventionsByCategoryIR = groupBy(inventionsIR, invention => invention.tech)

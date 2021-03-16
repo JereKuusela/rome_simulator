@@ -860,13 +860,7 @@
     "key": "me_mac_2_8_1_cmod",
     "modifiers": [
       {
-        "target": "Land",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "value": 0.05
-      },
-      {
-        "target": "Naval",
+        "target": "Global",
         "attribute": "Morale",
         "type": "Modifier",
         "value": 0.05
@@ -1343,13 +1337,7 @@
     "key": "hard_ai",
     "modifiers": [
       {
-        "target": "Land",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "value": 0.05
-      },
-      {
-        "target": "Naval",
+        "target": "Global",
         "attribute": "Morale",
         "type": "Modifier",
         "value": 0.05
@@ -2061,28 +2049,14 @@
     "key": "military_tech",
     "modifiers": [
       {
-        "target": "Land",
+        "target": "Global",
         "attribute": "Morale",
         "type": "Base",
         "noPercent": true,
         "value": 0.075
       },
       {
-        "target": "Naval",
-        "attribute": "Morale",
-        "type": "Base",
-        "noPercent": true,
-        "value": 0.075
-      },
-      {
-        "target": "Land",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "negative": true,
-        "value": 0.025
-      },
-      {
-        "target": "Naval",
+        "target": "Global",
         "attribute": "Maintenance",
         "type": "Modifier",
         "negative": true,
@@ -3666,14 +3640,7 @@
     "key": "very_easy_ai",
     "modifiers": [
       {
-        "target": "Land",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "negative": true,
-        "value": -0.15
-      },
-      {
-        "target": "Naval",
+        "target": "Global",
         "attribute": "Morale",
         "type": "Modifier",
         "negative": true,
@@ -3686,14 +3653,7 @@
     "key": "very_hard_player",
     "modifiers": [
       {
-        "target": "Land",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "negative": true,
-        "value": -0.1
-      },
-      {
-        "target": "Naval",
+        "target": "Global",
         "attribute": "Morale",
         "type": "Modifier",
         "negative": true,
@@ -3706,13 +3666,7 @@
     "key": "very_hard_ai",
     "modifiers": [
       {
-        "target": "Land",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "value": 0.1
-      },
-      {
-        "target": "Naval",
+        "target": "Global",
         "attribute": "Morale",
         "type": "Modifier",
         "value": 0.1

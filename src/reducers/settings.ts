@@ -10,5 +10,6 @@ export const changeSiteParameter = makeActionRemoveFirst(manager.changeSiteParam
 export const selectCountry = makeActionRemoveFirst(manager.selectCountry, mapping)
 export const selectArmy = makeActionRemoveFirst(manager.selectArmy, mapping)
 export const setMode = makeActionRemoveFirst(manager.setMode, mapping)
+export const toggleFilterNonCombat = makeActionRemoveFirst(manager.toggleFilterNonCombat, mapping)
 
 export const settingsReducer = makeContainerReducer(getDefaultSettings(), mapping)

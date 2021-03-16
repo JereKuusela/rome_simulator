@@ -1,44 +1,51 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { CountryName, CountryAttribute } from 'types'
+import { CountryName, CountryAttribute, countryAttributeToEffect } from 'types'
 import { setCountryAttribute } from 'reducers'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 import { filterValues, calculateBase } from 'definition_values'
 import { AppState, getCountryDefinition } from 'state'
+import ListModifier from 'components/Utils/ListModifier'
+import { getDynamicEffect } from 'managers/modifiers'
 
 type Props = {
   country: CountryName
   attribute: CountryAttribute
   percent?: boolean
+  showEffect?: boolean
+}
+
+const CountryValueEffect = ({ attribute, value }: { attribute: CountryAttribute; value: number }) => {
+  const modifiers = getDynamicEffect(countryAttributeToEffect(attribute), value)
+  return <ListModifier horizontal name='' modifiers={modifiers} showZero />
 }
 
 /**
  * Custom numeric input for setting attribute values for a country.
  */
-class CountryValueInput extends Component<IProps> {
-  render() {
-    const { attribute, percent, definition } = this.props
-    const value = calculateBase(definition.modifiers, attribute)
-    return <DelayedNumericInput value={value} onChange={this.onChange} percent={percent} />
-  }
-  onChange = (value: number) => {
-    const { definition, attribute, setCountryAttribute, country } = this.props
+const CountryValueInput = ({ attribute, percent, country, showEffect }: Props) => {
+  const dispatch = useDispatch()
+  const handleChange = (value: number) => {
     const base =
       calculateBase(definition.modifiers, attribute) -
       calculateBase(filterValues(definition.modifiers, 'Custom'), attribute)
-    setCountryAttribute(country, attribute, value - base)
+    dispatch(setCountryAttribute(country, attribute, value - base))
   }
+
+  const definition = useSelector((state: AppState) => getCountryDefinition(state, country))
+
+  const value = calculateBase(definition.modifiers, attribute)
+  return (
+    <>
+      <DelayedNumericInput value={value} onChange={handleChange} percent={percent} />
+      {showEffect && (
+        <span style={{ marginLeft: '1em' }}>
+          <CountryValueEffect value={value} attribute={attribute} />
+        </span>
+      )}
+    </>
+  )
 }
 
-const mapStateToProps = (state: AppState, props: Props) => ({
-  definition: getCountryDefinition(state, props.country)
-})
-
-const actions = { setCountryAttribute }
-
-type S = ReturnType<typeof mapStateToProps>
-type D = typeof actions
-interface IProps extends React.PropsWithChildren<Props>, S, D {}
-
-export default connect(mapStateToProps, actions)(CountryValueInput)
+export default CountryValueInput

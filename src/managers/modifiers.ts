@@ -35,8 +35,9 @@ import { applyCountryModifiers } from './countries'
 
 export const TECH_KEY = 'Tech '
 
-const getDynamicEffect = (key: string, value: number): ModifierWithKey[] => {
+export const getDynamicEffect = (key: string, value: number): ModifierWithKey[] => {
   const effect = effectsIR[key]
+  if (!effect) return []
   return effect.modifiers.map(modifier => ({
     ...modifier,
     key: effect.name,
@@ -87,7 +88,7 @@ const mapModifiers = (key: string, modifiers: Modifier[]) =>
 
 const getTechModifiers = (modifiers: ModifierWithKey[], country: CountryModifiers) => {
   const selections = country.selections[SelectionType.Invention] ?? {}
-  const techLevel = calculateValue(country, CountryAttribute.MilitaryTech)
+  const techLevel = calculateValue(country, CountryAttribute.MartialTech)
   if (process.env.REACT_APP_GAME === 'EU4') {
     techEU4.forEach((tech, level) => {
       if (level > techLevel) return
@@ -155,7 +156,7 @@ const getCountryAttribute = (country: CountryModifiers, attribute: CountryAttrib
 
 const getOfficeModifiers = (modifiers: ModifierWithKey[], country: CountryModifiers) => {
   modifiers.push(...getCountryAttribute(country, CountryAttribute.MilitaryExperience, 'military_experience'))
-  modifiers.push(...getCountryAttribute(country, CountryAttribute.MilitaryTech, 'military_tech'))
+  modifiers.push(...getCountryAttribute(country, CountryAttribute.MartialTech, 'military_tech'))
 }
 
 const getPrimaryCountryModifiers = (country: CountryModifiers) => {

@@ -377,6 +377,7 @@ export type SettingsAndOptions = {
   combatSettings: { [key in Mode]: CombatSettings }
   siteSettings: SiteSettings
   mode: Mode
+  filterNonCombat: boolean
   country: CountryName
   army: number
 }

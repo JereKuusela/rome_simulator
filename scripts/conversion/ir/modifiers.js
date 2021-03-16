@@ -59,7 +59,6 @@ const units = {
 /** @type {Object.<string, string>} */
 const attributes = {
   nation_rank_0: 'Migratory',
-  global_monthly_food_modifier: 'National Food',
   create_trade_route_cost_modifier: 'Trade Route Cost',
   attrition_weight: ATTRITION,
   army: 'Mode',
@@ -73,6 +72,7 @@ const attributes = {
   support: 'Role',
   ['army' + MOD_MAINTENANCE]: MAINTENANCE,
   army_weight_modifier: ATTRITION,
+  control_range_modifier: 'Control Range Modifier',
   food_consumption: 'Food Consumption',
   food_storage: 'Food Storage',
   fort_limit: 'Fort limit',
@@ -84,7 +84,8 @@ const attributes = {
   levy_size_multiplier: 'Levy Size Multiplier',
   maintenance_cost: MAINTENANCE,
   maneuver: MANEUVER,
-  max_mercenary_stacks: 'Mercenary Limit',
+  max_mercenary_stacks: 'Maximum Mercenary Armies',
+  max_research_efficiency: 'Maximum Research Efficiency',
   medium: 'Medium Ship',
   morale: MORALE,
   morale_damage_done: 'Morale Damage Done',
@@ -99,6 +100,7 @@ const attributes = {
   ship_repair_at_sea: 'Ship Repair at Sea',
   strength_damage_done: 'Strength Damage Done',
   strength_damage_taken: 'Strength Damage Taken',
+  stability_cost_modifier: 'Divine Sacrifice Cost',
   type: PARENT,
   character_loyalty: 'Loyalty'
 }
@@ -150,6 +152,7 @@ Object.keys(units).forEach(key => {
 })
 
 const noPercents = new Set([
+  'agressive_expansion_monthly_change',
   'land' + MOD_MORALE,
   'morale',
   'naval' + MOD_MORALE,
@@ -162,6 +165,8 @@ const noPercents = new Set([
   'retreat_delay',
   'war_exhaustion',
   'global_building_slot',
+  'global_goods_from_slaves',
+  'global_settlement_building_slot',
   'subject_loyalty',
   'diplomatic_reputation',
   'diplomatic_relations',
@@ -179,10 +184,18 @@ generalStats.forEach(key => {
 })
 
 const negatives = new Set([
+  'agressive_expansion_impact',
+  'agressive_expansion_monthly_change',
+  'assassinate_attempt_cost_modifier',
   'army' + MOD_MAINTENANCE,
   'army_weight_modifier',
+  'build_time',
+  'build_expensive_roads_cost_modifier',
   'experience_decay',
   'cohort_cost',
+  'change_diplomatic_stance_cost_modifier',
+  'change_governor_policy_cost_modifier',
+  'deify_ruler_cost_modifier',
   'fort' + MOD_MAINTENANCE,
   'land_unit_attrition',
   'maintenance_cost',
@@ -192,25 +205,36 @@ const negatives = new Set([
   'price_state_investment_military_cost_modifier',
   'price_state_investment_oratory_cost_modifier',
   'price_state_investment_civic_cost_modifier',
+  'price_state_investment_religious_cost_modifier',
   'retreat_delay',
+  'global_goods_from_slaves',
   'ship' + MOD_COST,
   'loyalty_gain_chance',
   'hold_triumph_cost_modifier',
   'war_exhaustion',
   'mercenary_land_maintenance_cost',
   'mercenary_naval_maintenance_cost',
+  'monthly_wage_modifier',
+  'monthly_governor_wage',
+  'monthly_corruption',
   'recruit_mercenary_cost_modifier',
   'loyalty_gain_chance_modifier',
   'price_found_city_cost_modifier',
-  'agressive_expansion_impact',
+  'price_assemble_raiding_party_button_cost_modifier',
   'build_cost',
   'war_score_cost',
+  'recruit_general_cost_modifier',
   'monthly_tyranny',
   'enact_law_cost_modifier',
+  'inspire_disloyalty_cost_modifier',
   'stability_cost_modifier',
+  'endorse_party_cost_modifier',
   'increase_legitimacy_cost_modifier',
+  'price_oaths_of_allegiance_button_cost_modifier',
   'loyalty_to_overlord',
-  'fortress_building_cost'
+  'smear_character_cost_modifier',
+  'fortress_building_cost',
+  'war_no_cb_cost_modifier'
 ])
 
 Object.keys(units).forEach(key => {
@@ -263,7 +287,6 @@ exports.getAttribute = (key, value) => {
   }
   switch (key) {
     case 'movement_speed':
-    case 'build_time':
     case 'legions':
     case 'outside_of_naval_range_attrition':
       return undefined
@@ -423,8 +446,27 @@ exports.loadLocalization = (localization, file) => {
 
 /**
  * @param {{}} scriptValue
- * @param {string} file
  */
 exports.loadScriptValue = scriptValue => {
   Object.assign(scriptValues, scriptValue)
+}
+
+/** Merges land and naval modifiers with the same value to a global modifier.
+ * @param {[]} modifiers
+ */
+exports.mergeModifiers = modifiers => {
+  const landModifiers = modifiers.filter(item => item.target === LAND)
+  const landDict = {}
+  landModifiers.forEach(item => (landDict[item.attribute] = item.value))
+  const navalModifiers = modifiers.filter(item => item.target === NAVAL)
+  const navalDict = {}
+  navalModifiers.forEach(item => (navalDict[item.attribute] = item.value))
+  Object.keys(landDict).forEach(attribute => {
+    if (landDict[attribute] === navalDict[attribute]) {
+      const modifier = modifiers.find(item => item.attribute === attribute && item.target === LAND)
+      modifier.target = GLOBAL
+      const index = modifiers.findIndex(item => item.attribute === attribute && item.target === NAVAL)
+      modifiers.splice(index, 1)
+    }
+  })
 }

@@ -102,7 +102,7 @@ export const useCombatWidth = (): number => useSelector(calculateCombatWidth)
 export const useTechLevel = (countryName: CountryName): number => {
   return useSelector((state: AppState) => {
     const country = getCountry(state, countryName)
-    return country[CountryAttribute.MilitaryTech]
+    return country[CountryAttribute.MartialTech]
   })
 }
 
@@ -358,7 +358,7 @@ export const getOverridenReserveDefinitions = (
   if (originals) return army.reserve
   const units = getUnitDefinitions(state, countryName, armyName)
   const country = getCountry(state, countryName)
-  const latest = manager.getLatestUnits(units, country[CountryAttribute.MilitaryTech])
+  const latest = manager.getLatestUnits(units, country[CountryAttribute.MartialTech])
   return manager.overrideRoleWithPreferences(army, units, latest)
 }
 

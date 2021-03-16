@@ -86,8 +86,8 @@ class CountriesEU4 extends Component<IProps> {
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title='Tech' identifier='countriesTech'>
-                Tech level: <CountryValueInput country={selectedCountry} attribute={CountryAttribute.MilitaryTech} />
-                {this.renderTech(techEU4, country[CountryAttribute.MilitaryTech])}
+                Tech level: <CountryValueInput country={selectedCountry} attribute={CountryAttribute.MartialTech} />
+                {this.renderTech(techEU4, country[CountryAttribute.MartialTech])}
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
@@ -178,14 +178,14 @@ class CountriesEU4 extends Component<IProps> {
    */
   clearTech = (level: number) => {
     level = level || 1
-    this.execCountry(this.props.setCountryAttribute, CountryAttribute.MilitaryTech, level - 1)
+    this.execCountry(this.props.setCountryAttribute, CountryAttribute.MartialTech, level - 1)
   }
 
   /**
    * Enables tech levels to a given level.
    */
   enableTech = (level: number) => {
-    this.execCountry(this.props.setCountryAttribute, CountryAttribute.MilitaryTech, level)
+    this.execCountry(this.props.setCountryAttribute, CountryAttribute.MartialTech, level)
   }
 
   onCountryItemClick = (enabled: boolean) => (enabled ? this.clearCountrySelection : this.enableCountrySelection)

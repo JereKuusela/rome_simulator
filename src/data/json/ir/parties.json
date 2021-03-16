@@ -7,7 +7,6 @@
         "target": "Text",
         "attribute": "Monthly Wages for Characters",
         "type": "Base",
-        "negative": true,
         "value": -0.1
       },
       {

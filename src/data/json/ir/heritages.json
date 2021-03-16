@@ -134,7 +134,7 @@
     "modifiers": [
       {
         "target": "Text",
-        "attribute": "National Food",
+        "attribute": "Global Monthly Food Modifier",
         "type": "Base",
         "value": 0.1
       },
@@ -327,7 +327,7 @@
       },
       {
         "target": "Text",
-        "attribute": "Stability Cost",
+        "attribute": "Divine Sacrifice Cost",
         "type": "Base",
         "negative": true,
         "value": 0.1
@@ -429,7 +429,7 @@
       },
       {
         "target": "Text",
-        "attribute": "Mercenary Limit",
+        "attribute": "Maximum Mercenary Armies",
         "type": "Base",
         "noPercent": true,
         "value": 1
@@ -1708,7 +1708,6 @@
         "target": "Text",
         "attribute": "Monthly Wages for Characters",
         "type": "Base",
-        "negative": true,
         "value": -0.15
       },
       {

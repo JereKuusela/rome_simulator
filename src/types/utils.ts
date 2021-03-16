@@ -6,7 +6,10 @@ export const formatAttribute = (value: number, attribute: string) => {
   if (
     attribute === CountryAttribute.CombatWidth ||
     attribute === CountryAttribute.MilitaryExperience ||
-    attribute === CountryAttribute.MilitaryTech ||
+    attribute === CountryAttribute.CivicTech ||
+    attribute === CountryAttribute.OratoryTech ||
+    attribute === CountryAttribute.ReligiousTech ||
+    attribute === CountryAttribute.MartialTech ||
     attribute === CountryAttribute.OmenPower ||
     attribute in GeneralAttribute ||
     attribute in CombatPhase

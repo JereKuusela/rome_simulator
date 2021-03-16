@@ -17,6 +17,7 @@ export const getDefaultSettings = (): SettingsAndOptions => ({
   siteSettings: getDefaultSiteSettings(),
   mode: Mode.Land,
   army: 0,
+  filterNonCombat: true,
   country: CountryName.Country1
 })
 

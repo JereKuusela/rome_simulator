@@ -1,7 +1,1423 @@
 [
   {
+    "name": "Standardized Measures",
+    "key": "commerce_inv_1",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Import Value",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Logistics Bureau",
+    "key": "capital_trade_inv_2",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Capital Import Routes",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "Property Tax",
+    "key": "global_tax_modifier_inv_1",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Tax",
+        "type": "Base",
+        "value": 0.025
+      }
+    ]
+  },
+  {
+    "name": "Advanced Mechanics",
+    "key": "greek_advanced_mechanics_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Build Cost",
+        "type": "Base",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Build Time",
+        "type": "Base",
+        "value": -0.1
+      }
+    ]
+  },
+  {
+    "name": "Pythagorean Mathematics",
+    "key": "research_points_modifier_inv_1",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Build Cost",
+        "type": "Base",
+        "value": -0.025
+      }
+    ]
+  },
+  {
+    "name": "Opus Caementicium",
+    "key": "build_time_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Build Time",
+        "type": "Base",
+        "value": -0.2
+      }
+    ]
+  },
+  {
+    "name": "Movement of Water",
+    "key": "civic_tech_investment_inv_2",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Civic Provincial Investment Cost",
+        "type": "Base",
+        "value": -0.1
+      }
+    ]
+  },
+  {
+    "name": "The Father of Geometry",
+    "key": "research_points_modifier_inv_4",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Citizen Output",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "State Harbor Fees",
+    "key": "commerce_inv_2",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Commerce Income",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "River Barges",
+    "key": "capital_trade_inv_1",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Capital Import Routes",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Import Value",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Naval Movement Speed",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Eisphora",
+    "key": "global_tax_modifier_inv_2",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Tax",
+        "type": "Base",
+        "value": 0.025
+      }
+    ]
+  },
+  {
+    "name": "Expanded Financial Remit",
+    "key": "monthly_wage_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Wages for Characters",
+        "type": "Base",
+        "value": -0.05
+      }
+    ]
+  },
+  {
+    "name": "Ius Honorarium",
+    "key": "enact_law_cost_modifier_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Enact Law Cost",
+        "type": "Base",
+        "value": -0.15
+      }
+    ]
+  },
+  {
+    "name": "Lighthouses",
+    "key": "commerce_inv_3",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Export Value",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Maritime Patrols",
+    "key": "state_trade_inv_1",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Capital Import Routes",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Population Happiness",
+        "type": "Base",
+        "value": 0.01
+      }
+    ]
+  },
+  {
+    "name": "Liturgies",
+    "key": "global_tax_modifier_inv_3",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Tax",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Pedagoguery",
+    "key": "research_points_modifier_inv_3",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Population Capacity",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "School of Civic Duty",
+    "key": "gw_effect_finesse_education_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": []
+  },
+  {
+    "name": "Gromatici",
+    "key": "civic_roads_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Build Roads Cost",
+        "type": "Base",
+        "value": -0.25
+      }
+    ]
+  },
+  {
+    "name": "Regulated Money Lenders",
+    "key": "commerce_inv_4",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Tax",
+        "type": "Base",
+        "value": 0.025
+      }
+    ]
+  },
+  {
+    "name": "River Outposts",
+    "key": "state_trade_inv_2",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Capital Import Routes",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "Use of State Land",
+    "key": "global_tax_modifier_inv_4",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Tax",
+        "type": "Base",
+        "value": 0.025
+      }
+    ]
+  },
+  {
+    "name": "Limited Governship",
+    "key": "monthly_governor_wage_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Governor Wage",
+        "type": "Base",
+        "value": -0.05
+      }
+    ]
+  },
+  {
+    "name": "Temporary Office",
+    "key": "monthly_wage_inv_2",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Wages for Characters",
+        "type": "Base",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Cohort Loyalty Gain Chance",
+        "type": "Base",
+        "value": -0.025
+      },
+      {
+        "target": "Text",
+        "attribute": "Threshold for Civil War",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Encourage Exploration",
+    "key": "state_trade_inv_3",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Capital Import Routes",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "Mandated Record Keeping",
+    "key": "commerce_inv_5",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Commerce Income",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Prestigious Trade Goods",
+    "key": "create_trade_route_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Export Value",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Import Tax",
+    "key": "global_tax_modifier_inv_5",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Import Value",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Embracing Philosophy",
+    "key": "research_points_modifier_inv_5",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Stance Cost",
+        "type": "Base",
+        "value": -0.2
+      },
+      {
+        "target": "Text",
+        "attribute": "Maximum Research Efficiency",
+        "type": "Base",
+        "value": 0.25
+      }
+    ]
+  },
+  {
+    "name": "Trade Ports",
+    "key": "capital_trade_inv_3",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Capital Import Routes",
+        "type": "Base",
+        "noPercent": true,
+        "value": 2
+      }
+    ]
+  },
+  {
+    "name": "Etruscan Pottery",
+    "key": "italic_etruscan_pottery_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Commerce Income",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Pilum and Scutum",
+    "key": "italic_pilum_scutum_inv",
+    "tech": "Civic",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Heavy Infantry",
+        "attribute": "Offense",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Heavy Infantry",
+        "attribute": "Defense",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Light Infantry",
+        "attribute": "Offense",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Light Infantry",
+        "attribute": "Defense",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Arches",
+    "key": "italic_arches_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Build Time",
+        "type": "Base",
+        "value": -0.05
+      }
+    ]
+  },
+  {
+    "name": "Lituus",
+    "key": "italic_lituus_inv",
+    "tech": "Civic",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Global",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Cursus Publicus",
+    "key": "italic_cursuspublicus_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Tyranny",
+        "type": "Base",
+        "value": -0.01
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Stability Change",
+        "type": "Base",
+        "value": 0.01
+      }
+    ]
+  },
+  {
+    "name": "Julian Calendar",
+    "key": "italic_julian_calendar_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Corruption",
+        "type": "Base",
+        "value": -0.01
+      }
+    ]
+  },
+  {
+    "name": "Insulae",
+    "key": "italic_insulae_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Total Population Capacity",
+        "type": "Base",
+        "value": 0.01
+      }
+    ]
+  },
+  {
+    "name": "Bacon",
+    "key": "italic_bacon_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Global Monthly Food Modifier",
+        "type": "Base",
+        "value": 0.01
+      }
+    ]
+  },
+  {
+    "name": "Lex Frumentaria",
+    "key": "italic_lex_frumentaria_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Slave Happiness",
+        "type": "Base",
+        "value": 0.03
+      },
+      {
+        "target": "Text",
+        "attribute": "National Freeman Happiness",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "Right to be Heard",
+    "key": "global_citizen_output_inv_1",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Citizen Output",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "Rights of Man",
+    "key": "global_slaves_output_inv_1",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Slave Output",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "Tribal Reserve",
+    "key": "global_tribesmen_output_inv_1",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Tribesman Output",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "Code of Rights",
+    "key": "global_freemen_output_inv_1",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Freeman Output",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "Black Polished Ware",
+    "key": "polished_ceramics_invention",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Citizen Output",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "Tallow Soap",
+    "key": "soap_invention",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Global Monthly Food Modifier",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Slave Latifundia",
+    "key": "global_goods_from_slaves_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Slaves needed for Surplus",
+        "type": "Base",
+        "noPercent": true,
+        "value": -1
+      }
+    ]
+  },
+  {
+    "name": "Granted Manumission",
+    "key": "freemen_promotion_cost_modifier_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Pop Promotion Speed",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Devolved Responsibility",
+    "key": "global_tribesmen_output_inv_2",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Tribesman Output",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "Curb the Tax Collectors",
+    "key": "global_freemen_output_inv_2",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Freeman Output",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "Overseers",
+    "key": "global_slaves_output_inv_2",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Slave Output",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "Hypocaust",
+    "key": "global_citizen_output_inv_2",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Citizen Output",
+        "type": "Base",
+        "value": 0.03
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Political Influence",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Coloniae",
+    "key": "move_pop_cost_modifier_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Pop Migration Speed",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Cultural Judiciary",
+    "key": "happiness_for_wrong_culture_modifier_inv_2",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Unintegrated Culture Happiness",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "Advanced Wall Construction",
+    "key": "civic_tech_investment_inv_1",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Civic Provincial Investment Cost",
+        "type": "Base",
+        "value": -0.1
+      }
+    ]
+  },
+  {
+    "name": "Gradated Citizenship",
+    "key": "citizen_promotion_cost_modifier_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Pop Promotion Speed",
+        "type": "Base",
+        "value": 0.2
+      }
+    ]
+  },
+  {
+    "name": "Dominance Through Enlightenment",
+    "key": "gw_effect_culture_expansion_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": []
+  },
+  {
+    "name": "Land Tithe",
+    "key": "global_tribesmen_output_inv_3",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Tribesman Output",
+        "type": "Base",
+        "value": 0.12
+      },
+      {
+        "target": "Text",
+        "attribute": "Pop Migration Speed",
+        "type": "Base",
+        "value": 0.2
+      }
+    ]
+  },
+  {
+    "name": "Petition of Minorities",
+    "key": "happiness_for_wrong_culture_modifier_inv_3",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Unintegrated Culture Happiness",
+        "type": "Base",
+        "value": 0.03
+      },
+      {
+        "target": "Text",
+        "attribute": "Found City Cost Modifier",
+        "type": "Base",
+        "value": -0.25
+      },
+      {
+        "target": "Text",
+        "attribute": "Provincial Loyalty",
+        "type": "Base",
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Peregrini",
+    "key": "happiness_for_wrong_culture_modifier_inv_1",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Unintegrated Culture Happiness",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "Moral Education",
+    "key": "research_points_modifier_inv_2",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Build Cost",
+        "type": "Base",
+        "value": -0.025
+      }
+    ]
+  },
+  {
+    "name": "Urban Planning",
+    "key": "global_building_slot_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Global City Building Slots",
+        "type": "Base",
+        "noPercent": true,
+        "value": 2
+      },
+      {
+        "target": "Text",
+        "attribute": "Population Capacity",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Global Monthly Food Modifier",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Pop Promotion Speed",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Build Cost",
+        "type": "Base",
+        "value": -0.05
+      }
+    ]
+  },
+  {
+    "name": "Rural Planning",
+    "key": "global_settlement_building_slot_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Global Settlement Building Slots",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "De Architectura",
+    "key": "build_cost_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Build Roads Cost",
+        "type": "Base",
+        "value": -0.15
+      }
+    ]
+  },
+  {
+    "name": "Public Slavery",
+    "key": "global_slaves_output_inv_3",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Slave Output",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "A Monument to Efficiency",
+    "key": "gw_effect_slave_work_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": []
+  },
+  {
+    "name": "Waste Disposal Infrastructure",
+    "key": "global_citizen_output_inv_3",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Citizen Output",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "Water Pumps",
+    "key": "global_freemen_output_inv_3",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Freeman Output",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "Religious Assimilation",
+    "key": "convert_pop_cost_modifier_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Pop Conversion Speed",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Cultural Administration",
+    "key": "assimilate_pop_cost_modifier_inv_1",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Pop Assimilation Speed",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Cultural Integration Speed",
+        "type": "Base",
+        "value": 0.25
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Political Influence",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Earned Manumission",
+    "key": "global_slaves_output_inv_4",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Slave Output",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "Tribal Advocates",
+    "key": "global_tribesmen_output_inv_4",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Tribesman Output",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "Clean Water",
+    "key": "global_citizen_output_inv_4",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Citizen Output",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "State Fire Brigade",
+    "key": "global_freemen_output_inv_4",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Freeman Output",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "Crucifixion",
+    "key": "global_slaves_output_inv_5",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Slave Output",
+        "type": "Base",
+        "value": 0.03
+      },
+      {
+        "target": "Text",
+        "attribute": "National Tax",
+        "type": "Base",
+        "value": 0.025
+      }
+    ]
+  },
+  {
+    "name": "Servile Bondage",
+    "key": "global_citizen_output_inv_5",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Citizen Output",
+        "type": "Base",
+        "value": 0.03
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Political Influence",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Triumviri Capitales",
+    "key": "global_freemen_output_inv_5",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Freeman Output",
+        "type": "Base",
+        "value": 0.03
+      },
+      {
+        "target": "Text",
+        "attribute": "National Manpower",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Right to Religious Observance",
+    "key": "global_tribesmen_output_inv_5",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Tribesman Output",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "Mercenary Benefits",
+    "key": "recruit_mercenary_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Recruit Mercenary Cost",
+        "type": "Base",
+        "value": -0.25
+      },
+      {
+        "target": "Text",
+        "attribute": "Manpower Recovery Speed",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Divinely Guided",
+    "key": "loyalty_gain_chance_modifier_inv",
+    "tech": "Civic",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Cohort Loyalty Gain Chance",
+        "type": "Base",
+        "value": -0.05
+      },
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Base",
+        "noPercent": true,
+        "value": 0.25
+      }
+    ]
+  },
+  {
+    "name": "Fire Hose",
+    "key": "greek_fire_hose_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Freeman Happiness",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "Odometer",
+    "key": "greek_odometer_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Commerce Income",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Pyoulkos",
+    "key": "greek_pyoulkos_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Population Growth",
+        "type": "Base",
+        "value": 0.01
+      }
+    ]
+  },
+  {
+    "name": "Cartography",
+    "key": "greek_cartography_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Range",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "National Commerce Income",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Astrolabe",
+    "key": "greek_advanced_astronomy_inv_1",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Commerce Income",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Stoicism",
+    "key": "greek_stoicism_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Research Points",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Integrated Culture Happiness",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Maximum Research Efficiency",
+        "type": "Base",
+        "value": 0.25
+      }
+    ]
+  },
+  {
+    "name": "Advanced Astronomy",
+    "key": "greek_advanced_astronomy_inv_2",
+    "tech": "Civic",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Range",
+        "type": "Base",
+        "value": 0.01
+      },
+      {
+        "target": "Naval",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Epicureanism",
+    "key": "greek_epicureanism_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Corruption",
+        "type": "Base",
+        "value": -0.01
+      },
+      {
+        "target": "Text",
+        "attribute": "Integrated Culture Happiness",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Clock Mechanics",
+    "key": "greek_clock_mechanics_inv",
+    "tech": "Civic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Country Civilization Level",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
+      }
+    ]
+  },
+  {
     "name": "Military Artisans",
     "key": "military_tech_investment_inv_1",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -14,6 +1430,8 @@
   {
     "name": "Learning on the Job",
     "key": "global_start_experience_inv_1",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Global",
@@ -26,6 +1444,8 @@
   {
     "name": "Basic Training",
     "key": "global_start_experience_inv_2",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Global",
@@ -38,6 +1458,8 @@
   {
     "name": "Logistics Division",
     "key": "global_supply_limit_modifier_inv_3",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -50,6 +1472,8 @@
   {
     "name": "Fustuarium",
     "key": "heavy_infantry_discipline_inv",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Heavy Infantry",
@@ -62,6 +1486,8 @@
   {
     "name": "Recruitment Standards",
     "key": "global_start_experience_inv_3",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Global",
@@ -74,6 +1500,8 @@
   {
     "name": "Active Drill",
     "key": "experience_decay_inv_1",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Global",
@@ -86,6 +1514,8 @@
   {
     "name": "Standardized Provisioning",
     "key": "fort_maintenance_cost_inv",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -98,6 +1528,8 @@
   {
     "name": "Supernumerarii",
     "key": "global_supply_limit_modifier_inv_1",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -110,6 +1542,8 @@
   {
     "name": "Military Sponsors",
     "key": "general_loyalty_inv",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -123,6 +1557,8 @@
   {
     "name": "Fighting Season",
     "key": "global_supply_limit_modifier_inv_2",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -135,6 +1571,8 @@
   {
     "name": "Promotion Through Valor",
     "key": "discipline_inv_4",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Global",
@@ -153,6 +1591,8 @@
   {
     "name": "Retirement Opportunities",
     "key": "army_maintenance_cost_inv_2",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Land",
@@ -165,6 +1605,8 @@
   {
     "name": "Enhanced Training Grounds",
     "key": "cohort_reinforcement_speed_inv",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -177,6 +1619,8 @@
   {
     "name": "Professional Training",
     "key": "global_cohort_recruit_speed_inv",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Global",
@@ -195,11 +1639,15 @@
   {
     "name": "Strategic Academy",
     "key": "gw_effect_martial_education_inv",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": []
   },
   {
     "name": "Manipular Legion",
     "key": "discipline_inv_2",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Global",
@@ -212,6 +1660,8 @@
   {
     "name": "Quick March",
     "key": "army_movement_speed_inv",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -224,6 +1674,8 @@
   {
     "name": "Praefectus Fabrum",
     "key": "military_tech_investment_inv_2",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -236,6 +1688,8 @@
   {
     "name": "Delayed Baggage Train",
     "key": "global_supply_limit_modifier_inv_4",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -248,6 +1702,8 @@
   {
     "name": "Veteran Enticements",
     "key": "discipline_inv_3",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -260,6 +1716,8 @@
   {
     "name": "Elite Recruitment Standards",
     "key": "global_start_experience_inv_4",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Global",
@@ -278,6 +1736,8 @@
   {
     "name": "Multi-Discipline Training",
     "key": "global_start_experience_inv_5",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Global",
@@ -290,6 +1750,8 @@
   {
     "name": "Cohorts",
     "key": "discipline_inv_5",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Global",
@@ -302,6 +1764,8 @@
   {
     "name": "Scorched Earth",
     "key": "hostile_attrition_inv",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -315,6 +1779,8 @@
   {
     "name": "Central Reserve",
     "key": "global_supply_limit_modifier_inv_5",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -327,6 +1793,8 @@
   {
     "name": "Paymasters",
     "key": "army_maintenance_cost_inv_1",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Land",
@@ -339,6 +1807,8 @@
   {
     "name": "Veteran Reassignment",
     "key": "experience_decay_inv_2",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -351,6 +1821,8 @@
   {
     "name": "Tactical Withdrawal",
     "key": "retreat_delay_inv",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -364,6 +1836,8 @@
   {
     "name": "Army Surgeons",
     "key": "land_unit_attrition_inv",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -382,6 +1856,8 @@
   {
     "name": "Material Science",
     "key": "buy_military_tradition_inv",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Land",
@@ -394,6 +1870,8 @@
   {
     "name": "Boeotian Helmet",
     "key": "discipline_inv_1",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Global",
@@ -406,6 +1884,8 @@
   {
     "name": "Pentaspastos",
     "key": "global_defensive_inv_1",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -418,6 +1898,8 @@
   {
     "name": "Sapping",
     "key": "siege_engineers_inv_1",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -431,6 +1913,8 @@
   {
     "name": "Scythian Saddles",
     "key": "heavy_cavalry_discipline_inv",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Heavy Cavalry",
@@ -443,6 +1927,8 @@
   {
     "name": "Vault and Dome",
     "key": "global_defensive_inv_2",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -455,6 +1941,8 @@
   {
     "name": "Entrenchment",
     "key": "global_defensive_inv_4",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -479,6 +1967,8 @@
   {
     "name": "Siege Ladders",
     "key": "assault_ability_inv",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -491,6 +1981,8 @@
   {
     "name": "Scorpio",
     "key": "siege_engineers_inv_3",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -503,6 +1995,8 @@
   {
     "name": "Blacksmith Apprentices",
     "key": "heavy_infantry_cost_inv",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Heavy Infantry",
@@ -515,6 +2009,8 @@
   {
     "name": "Fortified Camps",
     "key": "global_defensive_inv_3",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -527,6 +2023,8 @@
   {
     "name": "Investment",
     "key": "siege_speed_inv_3",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -539,6 +2037,8 @@
   {
     "name": "Siege Towers",
     "key": "siege_speed_inv_2",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -551,6 +2051,8 @@
   {
     "name": "Contravallation",
     "key": "siege_speed_inv_4",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -563,6 +2065,8 @@
   {
     "name": "Siege Ramps",
     "key": "siege_engineers_inv_5",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Engineer",
@@ -587,6 +2091,8 @@
   {
     "name": "Ballistae",
     "key": "siege_speed_inv_5",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -599,6 +2105,8 @@
   {
     "name": "Polyspaston",
     "key": "global_defensive_inv_5",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -611,6 +2119,8 @@
   {
     "name": "Tormenta",
     "key": "siege_engineers_inv_4",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -624,6 +2134,8 @@
   {
     "name": "Extraordinary Ordnance",
     "key": "siege_speed_inv_1",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Engineer",
@@ -636,6 +2148,8 @@
   {
     "name": "Mangonel",
     "key": "siege_engineers_inv_6",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Text",
@@ -662,6 +2176,8 @@
   {
     "name": "Oppidum",
     "key": "gallic_oppidum_inv",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -687,6 +2203,8 @@
   {
     "name": "Noric Steel",
     "key": "gallic_noric_steel_inv",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Light Infantry",
@@ -705,6 +2223,8 @@
   {
     "name": "Celtic Calendar",
     "key": "gallic_celtic_calendar_inv",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -717,6 +2237,8 @@
   {
     "name": "Celtic Plough",
     "key": "gallic_celtic_plough_inv",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -735,6 +2257,8 @@
   {
     "name": "Chainmail",
     "key": "gallic_chainmail_inv",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Light Infantry",
@@ -759,6 +2283,8 @@
   {
     "name": "Four-Horned Saddle",
     "key": "gallic_four_horned_saddle_inv",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Light Cavalry",
@@ -783,6 +2309,8 @@
   {
     "name": "Montefortino Helmet",
     "key": "gallic_montefortino_helmet_inv",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Light Infantry",
@@ -801,6 +2329,8 @@
   {
     "name": "Trimarcisia",
     "key": "gallic_trimarcisia_inv",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Light Cavalry",
@@ -825,6 +2355,8 @@
   {
     "name": "Timbered Roads",
     "key": "gallic_timbered_roads_inv",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Land",
@@ -843,6 +2375,8 @@
   {
     "name": "Astral Navigation",
     "key": "pirate_spawn_chance_inv_1",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -855,6 +2389,8 @@
   {
     "name": "Dière Configuration",
     "key": "liburnian_invention_2",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Liburnian",
@@ -867,6 +2403,8 @@
   {
     "name": "Kataphract Decks",
     "key": "katapharct_inv",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Tetrere",
@@ -885,6 +2423,8 @@
   {
     "name": "Archimedes Principle",
     "key": "archimedes_principle",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Naval",
@@ -897,6 +2437,8 @@
   {
     "name": "Kuklos Tactic",
     "key": "naval_tactic_inv_1",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Naval",
@@ -909,6 +2451,8 @@
   {
     "name": "Catapult Platform",
     "key": "naval_weapon_platform_inv_2",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Tetrere",
@@ -921,6 +2465,8 @@
   {
     "name": "Piracy Amnesty",
     "key": "navy_maintenance_cost_inv_1",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Naval",
@@ -933,6 +2479,8 @@
   {
     "name": "Lemboi Scouts",
     "key": "liburnian_invention_1",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Liburnian",
@@ -945,6 +2493,8 @@
   {
     "name": "Wooden Rostra",
     "key": "naval_rostra_inv_1",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Liburnian",
@@ -963,6 +2513,8 @@
   {
     "name": "Centuria",
     "key": "trireme_discipline_inv_2",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Tetrere",
@@ -975,6 +2527,8 @@
   {
     "name": "Tacking",
     "key": "pirate_spawn_chance_inv_2",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -987,6 +2541,8 @@
   {
     "name": "Reinforced Rostra",
     "key": "trireme_discipline_inv_4",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Hexere",
@@ -1017,6 +2573,8 @@
   {
     "name": "Diekplous Tactic",
     "key": "naval_tactic_inv_3",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Naval",
@@ -1029,6 +2587,8 @@
   {
     "name": "Professional Sailors",
     "key": "trireme_discipline_inv_1",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Naval",
@@ -1044,7 +2604,7 @@
       },
       {
         "target": "Text",
-        "attribute": "Mercenary Limit",
+        "attribute": "Maximum Mercenary Armies",
         "type": "Base",
         "noPercent": true,
         "value": 1
@@ -1054,6 +2614,8 @@
   {
     "name": "Squadrons",
     "key": "trireme_discipline_inv_3",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Trireme",
@@ -1066,6 +2628,8 @@
   {
     "name": "Oxybels",
     "key": "naval_weapon_platform_inv_1",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Trireme",
@@ -1078,6 +2642,8 @@
   {
     "name": "Catapult Deck",
     "key": "naval_weapon_platform_inv_3",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Octere",
@@ -1097,6 +2663,8 @@
   {
     "name": "Double Bow",
     "key": "double_bow_and_stern_inv_1",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Tetrere",
@@ -1115,6 +2683,8 @@
   {
     "name": "Lateen Sails",
     "key": "navy_movement_speed_inv",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Liburnian",
@@ -1127,6 +2697,8 @@
   {
     "name": "Rostra Casting",
     "key": "naval_rostra_inv_2",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Naval",
@@ -1139,6 +2711,8 @@
   {
     "name": "Experienced Seafarers",
     "key": "blockade_efficiency_inv",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -1151,6 +2725,8 @@
   {
     "name": "Periplous Tactic",
     "key": "naval_tactic_inv_2",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Liburnian",
@@ -1163,6 +2739,8 @@
   {
     "name": "Naval Supply Lines",
     "key": "siege_engineers_inv_2",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -1176,6 +2754,8 @@
   {
     "name": "Harpax",
     "key": "trireme_discipline_inv_5",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Naval",
@@ -1188,6 +2768,8 @@
   {
     "name": "Counterbalanced Oars",
     "key": "counterbalanced_oars_inv",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -1200,6 +2782,8 @@
   {
     "name": "Honesta Missio",
     "key": "navy_maintenance_cost_inv_2",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Naval",
@@ -1212,6 +2796,8 @@
   {
     "name": "Corvus",
     "key": "corvus_invention",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Naval",
@@ -1224,6 +2810,8 @@
   {
     "name": "Advanced Rostra Design",
     "key": "naval_rostra_inv_3",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Naval",
@@ -1248,6 +2836,8 @@
   {
     "name": "Ship's Surgeon",
     "key": "naval_unit_attrition_inv",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Text",
@@ -1266,6 +2856,8 @@
   {
     "name": "Patterned Construction",
     "key": "global_ship_recruit_speed_inv",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -1278,6 +2870,8 @@
   {
     "name": "Double Stern",
     "key": "double_bow_and_stern_inv_2",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Octere",
@@ -1296,6 +2890,8 @@
   {
     "name": "Catamaran Bow",
     "key": "mega_catamaran_inv",
+    "tech": "Martial",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -1308,6 +2904,8 @@
   {
     "name": "Heavy Rostras",
     "key": "naval_rostra_inv_4",
+    "tech": "Martial",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Octere",
@@ -1320,6 +2918,2491 @@
         "attribute": "Discipline",
         "type": "Base",
         "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Fetiales",
+    "key": "agressive_expansion_impact_inv_1",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Aggressive Expansion Impact",
+        "type": "Base",
+        "value": -0.025
+      }
+    ]
+  },
+  {
+    "name": "Divine Mandate",
+    "key": "agressive_expansion_impact_inv_5",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Aggressive Expansion Impact",
+        "type": "Base",
+        "value": -0.025
+      }
+    ]
+  },
+  {
+    "name": "Equal Integration",
+    "key": "agressive_expansion_monthly_decay_inv_1",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Aggressive Expansion Change",
+        "type": "Base",
+        "noPercent": true,
+        "value": -0.02
+      }
+    ]
+  },
+  {
+    "name": "Triumphal Coins",
+    "key": "hold_triumph_cost_modifier_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Hold Triumph Cost",
+        "type": "Base",
+        "value": -0.2
+      }
+    ]
+  },
+  {
+    "name": "Tributary Administration",
+    "key": "tribute_income_modifier_inv_1",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Tribute Income",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Transferred Citizenship",
+    "key": "subject_opinions_inv_2",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Subject Opinion of Us",
+        "type": "Base",
+        "noPercent": true,
+        "value": 10
+      }
+    ]
+  },
+  {
+    "name": "Defending Liberty",
+    "key": "agressive_expansion_impact_inv_3",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Aggressive Expansion Impact",
+        "type": "Base",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Relations",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "Power Diplomacy",
+    "key": "intervene_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Reduced Intervention Restrictions",
+        "type": "Base",
+        "value": 0
+      }
+    ]
+  },
+  {
+    "name": "Aggressive Protection",
+    "key": "fabricate_claim_cost_modifier_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Claim Fabrication Speed",
+        "type": "Base",
+        "value": 0.25
+      },
+      {
+        "target": "Text",
+        "attribute": "Subject Opinion of Us",
+        "type": "Base",
+        "noPercent": true,
+        "value": 10
+      },
+      {
+        "target": "Text",
+        "attribute": "Tribute Income",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Tributary Concessions",
+    "key": "loosened_tributaries_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Subject Opinion of Us",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
+      }
+    ]
+  },
+  {
+    "name": "Local Embassies",
+    "key": "subject_loyalty_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Relations",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "Proxenoi",
+    "key": "relation_inv_1",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Improve Opinion Maximum",
+        "type": "Base",
+        "value": 0.2
+      }
+    ]
+  },
+  {
+    "name": "Diplomatic Scholasticism",
+    "key": "gw_effect_charisma_education_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": []
+  },
+  {
+    "name": "Book Binding",
+    "key": "book_binding_invention",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Maximum Research Efficiency",
+        "type": "Base",
+        "value": 0.25
+      }
+    ]
+  },
+  {
+    "name": "Acta Diurna",
+    "key": "acta_diurna_invention",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Integrated Culture Happiness",
+        "type": "Base",
+        "value": 0.06
+      }
+    ]
+  },
+  {
+    "name": "Imperial Calendar",
+    "key": "imperial_calendar_invention",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Population Capacity",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Brahmi Script",
+    "key": "brahmi_script_invention",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Integrated Culture Happiness",
+        "type": "Base",
+        "value": 0.025
+      }
+    ]
+  },
+  {
+    "name": "Complex Irrigation Systems",
+    "key": "channeled_irrigation_invention",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Slaves needed for Surplus",
+        "type": "Base",
+        "noPercent": true,
+        "value": -1
+      }
+    ]
+  },
+  {
+    "name": "Casus Belli",
+    "key": "war_score_cost_inv_1",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "War score Cost",
+        "type": "Base",
+        "value": -0.05
+      }
+    ]
+  },
+  {
+    "name": "Gradual Economic Integration",
+    "key": "agressive_expansion_monthly_decay_inv_3",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Aggressive Expansion Change",
+        "type": "Base",
+        "noPercent": true,
+        "value": -0.02
+      }
+    ]
+  },
+  {
+    "name": "Military Ambassadors",
+    "key": "agressive_expansion_impact_inv_4",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Aggressive Expansion Impact",
+        "type": "Base",
+        "value": -0.025
+      }
+    ]
+  },
+  {
+    "name": "War Propaganda",
+    "key": "war_score_cost_inv_2",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "War score Cost",
+        "type": "Base",
+        "value": -0.05
+      }
+    ]
+  },
+  {
+    "name": "Rerum Repetitio",
+    "key": "agressive_expansion_impact_inv_2",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Aggressive Expansion Impact",
+        "type": "Base",
+        "value": -0.025
+      }
+    ]
+  },
+  {
+    "name": "Formalized Dependencies",
+    "key": "subject_opinions_inv_1",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Subject Opinion of Us",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
+      }
+    ]
+  },
+  {
+    "name": "Mercenary Reliance",
+    "key": "mercenary_maintenance_cost_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Mercenary Army Maintenance",
+        "type": "Base",
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Maximum Mercenary Armies",
+        "type": "Base",
+        "noPercent": true,
+        "value": 2
+      },
+      {
+        "target": "Text",
+        "attribute": "National Manpower",
+        "type": "Base",
+        "negative": true,
+        "value": -0.2
+      }
+    ]
+  },
+  {
+    "name": "National Seal",
+    "key": "relation_inv_2",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Improve Opinion Maximum",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Proportional Agreements",
+    "key": "tribute_income_modifier_inv_2",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Tribute Income",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Reputation",
+        "type": "Base",
+        "noPercent": true,
+        "value": 3
+      }
+    ]
+  },
+  {
+    "name": "Permanent Ambassadors",
+    "key": "relation_inv_3",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Improve Opinion Maximum",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Experienced Raiders",
+    "key": "assemble_raiding_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Assemble Raiding Party Cost",
+        "type": "Base",
+        "value": -0.2
+      }
+    ]
+  },
+  {
+    "name": "Command Incentives",
+    "key": "recruit_general_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Woo General Cost",
+        "type": "Base",
+        "value": -0.35
+      },
+      {
+        "target": "Text",
+        "attribute": "Improve Opinion Maximum",
+        "type": "Base",
+        "value": 0.2
+      }
+    ]
+  },
+  {
+    "name": "Mandate Local Governance",
+    "key": "agressive_expansion_monthly_decay_inv_2",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Aggressive Expansion Change",
+        "type": "Base",
+        "noPercent": true,
+        "value": -0.02
+      }
+    ]
+  },
+  {
+    "name": "Lawful Treaties",
+    "key": "relation_inv_5",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "No Casus Belli War Cost",
+        "type": "Base",
+        "value": -0.2
+      }
+    ]
+  },
+  {
+    "name": "Hereditary Ambassadorship",
+    "key": "relation_inv_4",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Improve Opinion Maximum",
+        "type": "Base",
+        "value": 0.2
+      }
+    ]
+  },
+  {
+    "name": "Tributary Legates",
+    "key": "tribute_income_modifier_inv_4",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Tribute Income",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Grand Triumph",
+    "key": "monthly_general_loyalty_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Loyalty of Generals",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
+      }
+    ]
+  },
+  {
+    "name": "Yearly Installments",
+    "key": "tribute_income_modifier_inv_3",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Tribute Income",
+        "type": "Base",
+        "negative": true,
+        "value": -0.75
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty of Subject States",
+        "type": "Base",
+        "noPercent": true,
+        "value": 50
+      }
+    ]
+  },
+  {
+    "name": "Oaths of Fealty",
+    "key": "agressive_expansion_monthly_decay_inv_4",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Aggressive Expansion Change",
+        "type": "Base",
+        "noPercent": true,
+        "value": -0.02
+      }
+    ]
+  },
+  {
+    "name": "Diplomatic Apologetics",
+    "key": "agressive_expansion_monthly_decay_inv_5",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Aggressive Expansion Change",
+        "type": "Base",
+        "noPercent": true,
+        "value": -0.01
+      }
+    ]
+  },
+  {
+    "name": "Satellite Status",
+    "key": "tribute_income_modifier_inv_5",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Tribute Income",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Maximum Mercenary Armies",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "Symbolic Victory",
+    "key": "war_score_cost_inv_3",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "War score Cost",
+        "type": "Base",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Aggressive Expansion Change",
+        "type": "Base",
+        "noPercent": true,
+        "value": -0.04
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Tyranny",
+        "type": "Base",
+        "value": -0.02
+      }
+    ]
+  },
+  {
+    "name": "Allied Representatives",
+    "key": "subject_opinions_inv_3",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Subject Opinion of Us",
+        "type": "Base",
+        "noPercent": true,
+        "value": 15
+      },
+      {
+        "target": "Text",
+        "attribute": "National Freeman Output",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Relations",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Tribute Income",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Winning Land by the Spear",
+    "key": "land_won_by_the_spear",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": []
+  },
+  {
+    "name": "Wootz Steel",
+    "key": "indian_wootz_steel_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Tribesman Output",
+        "type": "Base",
+        "value": 0.01
+      },
+      {
+        "target": "Text",
+        "attribute": "National Population Growth",
+        "type": "Base",
+        "value": 0.01
+      }
+    ]
+  },
+  {
+    "name": "Toe Stirrup",
+    "key": "indian_toe_stirrup_inv",
+    "tech": "Oratory",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Heavy Cavalry",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Light Cavalry",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Horse Archers",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Cataract Surgery",
+    "key": "indian_cataract_surgery_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Population Capacity",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Cashmere Wool",
+    "key": "indian_cashmere_wool_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Integrated Culture Happiness",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Crucible Steel",
+    "key": "indian_crucible_steel_inv",
+    "tech": "Oratory",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Light Infantry",
+        "attribute": "Offense",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Heavy Infantry",
+        "attribute": "Offense",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Hindu Number System",
+    "key": "indian_hindu_number_system_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Research Points",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "National Tax",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Indigo Dye",
+    "key": "indian_indigo_dye_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Commerce Income",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Capital Import Routes",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "Glass Beads",
+    "key": "indian_tube_drawn_technology_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Commerce Income",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Trigonometry",
+    "key": "indian_trigonometric_functions_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Research Points",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Build Time",
+        "type": "Base",
+        "value": -0.05
+      }
+    ]
+  },
+  {
+    "name": "Legal Patronage",
+    "key": "monthly_character_loyalty_inv_1",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "noPercent": true,
+        "value": 2
+      }
+    ]
+  },
+  {
+    "name": "Humane Conduct",
+    "key": "diplomatic_reputation_inv_1",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Reputation",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "Centralized Comites",
+    "key": "change_governor_policy_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Change Governor Policy Cost",
+        "type": "Base",
+        "value": -0.2
+      }
+    ]
+  },
+  {
+    "name": "Official Orators",
+    "key": "tyranny_inv_1",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Tyranny",
+        "type": "Base",
+        "value": -0.01
+      }
+    ]
+  },
+  {
+    "name": "Avatar of Glory",
+    "key": "gw_effect_fantastic_ruler_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": []
+  },
+  {
+    "name": "Shady Connections",
+    "key": "assassinate_attempt_cost_modifier_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Assassinate Cost",
+        "type": "Base",
+        "value": -0.2
+      }
+    ]
+  },
+  {
+    "name": "Rewrite the Constitution",
+    "key": "dictatorship_step_1",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Tyranny",
+        "type": "Base",
+        "negative": true,
+        "value": 0.02
+      },
+      {
+        "target": "Text",
+        "attribute": "Enact Law Cost",
+        "type": "Base",
+        "value": -0.25
+      }
+    ]
+  },
+  {
+    "name": "Ensure National Stability",
+    "key": "dictatorship_step_2",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Stability Change",
+        "type": "Base",
+        "negative": true,
+        "value": -0.03
+      }
+    ]
+  },
+  {
+    "name": "Demand a Line of Succession",
+    "key": "dictatorship_step_3",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Political Influence",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Request Line of Succession",
+    "key": "dictatorship_step_4",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Political Influence",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Census Data",
+    "key": "oratory_tech_investment_inv_1",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Oratory Provincial Investment Cost",
+        "type": "Base",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Population Capacity",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Town Criers",
+    "key": "smear_character_cost_modifier_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Smear Reputation Cost",
+        "type": "Base",
+        "value": -0.25
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Political Influence",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Regular Senate Hours",
+    "key": "endorse_party_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Endorse Party Cost",
+        "type": "Base",
+        "value": -0.2
+      }
+    ]
+  },
+  {
+    "name": "Summitry",
+    "key": "diplomatic_relations_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Relations",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "Open Negotiations",
+    "key": "diplomatic_reputation_inv_2",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Reputation",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "Coding",
+    "key": "diplo_range_inv_1",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Range",
+        "type": "Base",
+        "value": 0.15
+      }
+    ]
+  },
+  {
+    "name": "Extended Diplomacy",
+    "key": "control_range_modifier_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Control Range Modifier",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Steganography",
+    "key": "diplo_range_inv_2",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Range",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Espionage",
+    "key": "inspire_disloyalty_cost_modifier_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Inspire Disloyalty Cost",
+        "type": "Base",
+        "value": -0.25
+      }
+    ]
+  },
+  {
+    "name": "Hierarchy of Responsibility",
+    "key": "tyranny_inv_2",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Tyranny",
+        "type": "Base",
+        "value": -0.02
+      },
+      {
+        "target": "Text",
+        "attribute": "Control Range Modifier",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Range",
+        "type": "Base",
+        "value": 0.15
+      }
+    ]
+  },
+  {
+    "name": "Seeded Acclamation",
+    "key": "tyranny_inv_3",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Tyranny",
+        "type": "Base",
+        "value": -0.01
+      }
+    ]
+  },
+  {
+    "name": "Foreign Network",
+    "key": "diplomatic_relations_inv_2",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Relations",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "Shift Cipher",
+    "key": "diplo_range_inv_3",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Range",
+        "type": "Base",
+        "value": 0.15
+      }
+    ]
+  },
+  {
+    "name": "Diplomatic Immunity",
+    "key": "diplomatic_reputation_inv_3",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Reputation",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "Propraetors and Proconsuls",
+    "key": "monthly_governor_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Loyalty of Governors",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
+      }
+    ]
+  },
+  {
+    "name": "Provincial Census",
+    "key": "oratory_tech_investment_inv_2",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Oratory Provincial Investment Cost",
+        "type": "Base",
+        "value": -0.1
+      }
+    ]
+  },
+  {
+    "name": "Selective Immunity",
+    "key": "bribe_character_cost_modifier_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Corruption",
+        "type": "Base",
+        "value": -0.01
+      }
+    ]
+  },
+  {
+    "name": "Administrative Patronage",
+    "key": "monthly_character_loyalty_inv_3",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Corruption",
+        "type": "Base",
+        "value": -0.01
+      }
+    ]
+  },
+  {
+    "name": "Approved Familia",
+    "key": "monthly_character_loyalty_inv_2",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "noPercent": true,
+        "value": 4
+      }
+    ]
+  },
+  {
+    "name": "Military Patronage",
+    "key": "monthly_character_loyalty_inv_5",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Corruption",
+        "type": "Base",
+        "value": -0.02
+      },
+      {
+        "target": "Text",
+        "attribute": "Cohort Loyalty Gain Chance",
+        "type": "Base",
+        "value": -0.05
+      }
+    ]
+  },
+  {
+    "name": "Adventus",
+    "key": "tyranny_inv_4",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Tyranny",
+        "type": "Base",
+        "value": -0.01
+      }
+    ]
+  },
+  {
+    "name": "Codified Succession",
+    "key": "oaths_of_allegiance_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Oaths of Allegiance Cost",
+        "type": "Base",
+        "value": -0.2
+      }
+    ]
+  },
+  {
+    "name": "Noble Envoys",
+    "key": "diplomatic_reputation_inv_4",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Reputation",
+        "type": "Base",
+        "noPercent": true,
+        "value": 2
+      }
+    ]
+  },
+  {
+    "name": "Scientific Patronage",
+    "key": "scientific_patronage_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Research Points",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Chironomia",
+    "key": "tyranny_inv_5",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Tyranny",
+        "type": "Base",
+        "value": -0.01
+      }
+    ]
+  },
+  {
+    "name": "Career Negotiators",
+    "key": "diplomatic_reputation_inv_5",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Reputation",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      }
+    ]
+  },
+  {
+    "name": "Sponsored Research",
+    "key": "scientific_patronage_2_inv",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Research Points",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Patrocinium",
+    "key": "monthly_character_loyalty_inv_4",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "noPercent": true,
+        "value": 2
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Political Influence",
+        "type": "Base",
+        "value": 0.25
+      }
+    ]
+  },
+  {
+    "name": "Polybius Square",
+    "key": "diplo_range_inv_4",
+    "tech": "Oratory",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Range",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Reputation",
+        "type": "Base",
+        "noPercent": true,
+        "value": 3
+      }
+    ]
+  },
+  {
+    "name": "Due Process",
+    "key": "ruler_popularity_gain_inv_1",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Ruler Popularity Gain",
+        "type": "Base",
+        "noPercent": true,
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Accepted Rites",
+    "key": "happiness_for_wrong_group_modifier_inv_1",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Unintegrated Culture Group Happiness",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "FUG",
+    "key": "global_unrest_inv_1",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Integrated Culture Happiness",
+        "type": "Base",
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Open Religion",
+    "key": "global_unrest_inv_2",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Integrated Culture Happiness",
+        "type": "Base",
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Theological Colleges",
+    "key": "gw_effect_zeal_education_inv",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Maximum Research Efficiency",
+        "type": "Base",
+        "value": 0.25
+      }
+    ]
+  },
+  {
+    "name": "Sponsored Games",
+    "key": "ruler_popularity_gain_inv_2",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Ruler Popularity Gain",
+        "type": "Base",
+        "noPercent": true,
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Reduced Governship",
+    "key": "global_monthly_state_loyalty_inv",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Provincial Loyalty",
+        "type": "Base",
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Herbalism",
+    "key": "technology_cost_inv_1",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Global Monthly Food Modifier",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Hierarchical Haruspication",
+    "key": "omen_power_inv_1",
+    "tech": "Religious",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 2.5
+      }
+    ]
+  },
+  {
+    "name": "Minor Syncretism",
+    "key": "happiness_for_wrong_group_modifier_inv_2",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Unintegrated Culture Group Happiness",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "Disciplined Civilians",
+    "key": "war_exhaustion_inv",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly War Exhaustion",
+        "type": "Base",
+        "noPercent": true,
+        "value": -0.01
+      }
+    ]
+  },
+  {
+    "name": "Libertini",
+    "key": "global_slaves_happyness_inv",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Slave Happiness",
+        "type": "Base",
+        "value": 0.04
+      }
+    ]
+  },
+  {
+    "name": "Grain Rations",
+    "key": "global_population_growth_inv_1",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Population Growth",
+        "type": "Base",
+        "value": 0.01
+      },
+      {
+        "target": "Text",
+        "attribute": "Global Monthly Food Modifier",
+        "type": "Base",
+        "value": 0.025
+      }
+    ]
+  },
+  {
+    "name": "Alumen",
+    "key": "technology_cost_inv_2",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Religious Provincial Investment Cost",
+        "type": "Base",
+        "value": -0.05
+      }
+    ]
+  },
+  {
+    "name": "Contractual Obligation",
+    "key": "stability_inv_1",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Divine Sacrifice Cost",
+        "type": "Base",
+        "value": -0.025
+      }
+    ]
+  },
+  {
+    "name": "Tolerated Cults",
+    "key": "stability_inv_2",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Divine Sacrifice Cost",
+        "type": "Base",
+        "value": -0.025
+      }
+    ]
+  },
+  {
+    "name": "State Burials",
+    "key": "stability_inv_3",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Divine Sacrifice Cost",
+        "type": "Base",
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Religious Provincial Investment Cost",
+        "type": "Base",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Ruler Popularity Gain",
+        "type": "Base",
+        "noPercent": true,
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Reinterpreted Prodigies",
+    "key": "call_omen_cost_modifier_inv",
+    "tech": "Religious",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 2.5
+      }
+    ]
+  },
+  {
+    "name": "Mass Pewter Production",
+    "key": "technology_cost_inv_3",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Integrated Culture Happiness",
+        "type": "Base",
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Tannery Districts",
+    "key": "global_tribesmen_happyness_inv",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Tribesman Happiness",
+        "type": "Base",
+        "value": 0.04
+      }
+    ]
+  },
+  {
+    "name": "Recording Tradition",
+    "key": "religious_tech_investment_inv_1",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Civilization Change",
+        "type": "Base",
+        "value": 0.01
+      }
+    ]
+  },
+  {
+    "name": "Proscribed Canon",
+    "key": "omen_power_inv_4",
+    "tech": "Religious",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 10
+      },
+      {
+        "target": "Text",
+        "attribute": "State Religion Happiness",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "Militant Epicureanism",
+    "key": "god_is_dead",
+    "tech": "Religious",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -90
+      }
+    ]
+  },
+  {
+    "name": "Stoicism",
+    "key": "global_unrest_inv_3",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "State Religion Happiness",
+        "type": "Base",
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Public Works Department",
+    "key": "ruler_popularity_gain_inv_4",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Ruler Popularity Gain",
+        "type": "Base",
+        "noPercent": true,
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Hand Abacus",
+    "key": "global_freemen_happyness_inv",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Freeman Happiness",
+        "type": "Base",
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Obstetrics",
+    "key": "global_population_growth_inv_3",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Population Growth",
+        "type": "Base",
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Grand Temples",
+    "key": "omen_duration_inv_1",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Build Cost",
+        "type": "Base",
+        "value": -0.05
+      }
+    ]
+  },
+  {
+    "name": "Encouragement of Migration",
+    "key": "global_population_growth_inv_4",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Population Growth",
+        "type": "Base",
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Collegiality",
+    "key": "ruler_popularity_gain_inv_3",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Ruler Popularity Gain",
+        "type": "Base",
+        "noPercent": true,
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Bread Stamp",
+    "key": "global_population_growth_inv_2",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Global Monthly Food Modifier",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "National Population Growth",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Shorthand Writing",
+    "key": "technology_cost_inv_4",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "State Religion Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
+      {
+        "target": "Text",
+        "attribute": "National Citizen Happiness",
+        "type": "Base",
+        "value": 0.04
+      }
+    ]
+  },
+  {
+    "name": "Legendary Foundation",
+    "key": "omen_power_inv_2",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Cost to Deify Ruler",
+        "type": "Base",
+        "value": -0.1
+      }
+    ]
+  },
+  {
+    "name": "Private Cults",
+    "key": "omen_duration_inv_2",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Cost to Deify Ruler",
+        "type": "Base",
+        "value": -0.1
+      }
+    ]
+  },
+  {
+    "name": "Expanded Religious Holidays",
+    "key": "omen_power_inv_3",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Cost to Deify Ruler",
+        "type": "Base",
+        "value": -0.1
+      }
+    ]
+  },
+  {
+    "name": "Translated Symbology",
+    "key": "omen_power_inv_5",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Cost to Deify Ruler",
+        "type": "Base",
+        "value": -0.25
+      }
+    ]
+  },
+  {
+    "name": "Oath of Brotherhood",
+    "key": "land_morale_recovery_inv_1",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Army Morale Recovery",
+        "type": "Base",
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Household Gods",
+    "key": "omen_duration_inv_4",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Found City Cost Modifier",
+        "type": "Base",
+        "value": -0.1
+      }
+    ]
+  },
+  {
+    "name": "Constitution",
+    "key": "ruler_popularity_gain_inv_5",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Ruler Popularity Gain",
+        "type": "Base",
+        "noPercent": true,
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Guilt by Association",
+    "key": "monthly_corruption_inv",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Corruption",
+        "type": "Base",
+        "value": -0.01
+      }
+    ]
+  },
+  {
+    "name": "Glass Blowing",
+    "key": "global_citizen_happyness_inv",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Citizen Happiness",
+        "type": "Base",
+        "value": 0.04
+      }
+    ]
+  },
+  {
+    "name": "Regimental Standards",
+    "key": "land_morale_recovery_inv_3",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Army Morale Recovery",
+        "type": "Base",
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Soothsayers",
+    "key": "land_morale_recovery_inv_2",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Army Morale Recovery",
+        "type": "Base",
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Household Priests",
+    "key": "stability_inv_4",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Divine Sacrifice Cost",
+        "type": "Base",
+        "value": -0.05
+      }
+    ]
+  },
+  {
+    "name": "Ban Witchcraft",
+    "key": "omen_duration_inv_3",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Pop Conversion Speed",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Punishment Roster",
+    "key": "naval_morale_recovery_inv_4",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Navy Morale Recovery",
+        "type": "Base",
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Auxiliary Recruitment",
+    "key": "global_manpower_modifier_inv_1",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Manpower",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Maximum Mercenary Armies",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Levy Size Multiplier",
+        "type": "Base",
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Major Syncretism",
+    "key": "happiness_for_wrong_group_modifier_inv_3",
+    "tech": "Religious",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Unintegrated Culture Group Happiness",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 15
+      },
+      {
+        "target": "Text",
+        "attribute": "Pop Conversion Speed",
+        "type": "Base",
+        "negative": true,
+        "value": -0.9
+      }
+    ]
+  },
+  {
+    "name": "Assemblies",
+    "key": "global_unrest_inv_5",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Integrated Culture Happiness",
+        "type": "Base",
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Exported Drama",
+    "key": "global_unrest_inv_4",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Integrated Culture Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Corruption",
+        "type": "Base",
+        "value": -0.03
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Ruler Popularity Gain",
+        "type": "Base",
+        "noPercent": true,
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Medical Auxilia",
+    "key": "global_manpower_modifier_inv_3",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Manpower",
+        "type": "Base",
+        "value": 0.025
+      }
+    ]
+  },
+  {
+    "name": "Military Decorations",
+    "key": "land_morale_recovery_inv_4",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Army Morale Recovery",
+        "type": "Base",
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Scribae",
+    "key": "religious_tech_investment_inv_2",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Civilization Change",
+        "type": "Base",
+        "value": 0.02
+      },
+      {
+        "target": "Text",
+        "attribute": "Maximum Research Efficiency",
+        "type": "Base",
+        "value": 0.25
+      }
+    ]
+  },
+  {
+    "name": "War Dedication",
+    "key": "omen_duration_inv_5",
+    "tech": "Religious",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
+      },
+      {
+        "target": "Text",
+        "attribute": "Woo General Cost",
+        "type": "Base",
+        "value": -0.15
+      },
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Formulaic Worship",
+    "key": "stability_inv_5",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Pop Conversion Speed",
+        "type": "Base",
+        "value": 0.5
+      },
+      {
+        "target": "Text",
+        "attribute": "Pop Conversion Speed",
+        "type": "Base",
+        "value": 0.15
+      }
+    ]
+  },
+  {
+    "name": "Bow Ornamentation",
+    "key": "naval_morale_recovery_inv_5",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Navy Morale Recovery",
+        "type": "Base",
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Water Mill",
+    "key": "global_population_growth_inv_5",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Global Monthly Food Modifier",
+        "type": "Base",
+        "value": 0.15
+      }
+    ]
+  },
+  {
+    "name": "Double Pay",
+    "key": "global_manpower_modifier_inv_2",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Manpower",
+        "type": "Base",
+        "value": 0.025
+      }
+    ]
+  },
+  {
+    "name": "Marine Auxilia",
+    "key": "naval_morale_recovery_inv_1",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Navy Morale Recovery",
+        "type": "Base",
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Fleet Hierarchy",
+    "key": "naval_morale_recovery_inv_3",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Navy Morale Recovery",
+        "type": "Base",
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Expanded Naval Hierarchy",
+    "key": "naval_morale_recovery_inv_2",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Navy Morale Recovery",
+        "type": "Base",
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Severe Strictures",
+    "key": "land_morale_recovery_inv_5",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Army Morale Recovery",
+        "type": "Base",
+        "value": 0.02
+      }
+    ]
+  },
+  {
+    "name": "Religious Board",
+    "key": "global_manpower_modifier_inv_4",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Manpower",
+        "type": "Base",
+        "value": 0.025
+      }
+    ]
+  },
+  {
+    "name": "Service for Life",
+    "key": "global_manpower_modifier_inv_5",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Manpower",
+        "type": "Base",
+        "value": 0.025
+      }
+    ]
+  },
+  {
+    "name": "Zero",
+    "key": "technology_cost_inv_5",
+    "tech": "Religious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "State Religion Happiness",
+        "type": "Base",
+        "value": 0.06
+      },
+      {
+        "target": "Text",
+        "attribute": "National Citizen Output",
+        "type": "Base",
+        "value": 0.06
+      },
+      {
+        "target": "Text",
+        "attribute": "National Manpower",
+        "type": "Base",
+        "value": 0.1
       }
     ]
   }

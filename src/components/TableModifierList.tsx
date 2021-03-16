@@ -26,7 +26,7 @@ export const TableModifierList = ({
   items = items.filter(entity => entity.modifiers.length)
   const rows = Math.ceil(items.length / columns)
   return (
-    <Table celled unstackable fixed>
+    <Table celled unstackable fixed style={{ margin: 0 }}>
       <Table.Body>
         {mapRange(rows, number => number).map(row => (
           <Table.Row key={row}>

@@ -87,6 +87,7 @@ export default class TableArmyPart extends Component<IProps, IState> {
         <Table compact celled definition unstackable>
           <Table.Body>
             {cohorts.map((row, rowIndex) => {
+              let count = 0
               rowIndex = reverse ? cohorts.length - 1 - rowIndex : rowIndex
               return (
                 <Table.Row key={rowIndex} textAlign='center'>
@@ -95,15 +96,34 @@ export default class TableArmyPart extends Component<IProps, IState> {
                   </Table.Cell>
                   {row.map((cohort, columnIndex) => {
                     columnIndex -= indexOffset
+                    count += cohort && !cohort.isDefeated ? 1 : 0
                     if (part === ArmyPart.Frontline) return this.renderCell(rowIndex, columnIndex, cohort, rowIndex > 0)
                     else return this.renderCell(0, rowIndex * rowWidth + columnIndex, cohort, rowIndex > 0)
                   })}
+                  {!fullRows && this.renderCount(count)}
                 </Table.Row>
               )
             })}
           </Table.Body>
         </Table>
       </>
+    )
+  }
+
+  renderCount = (count: number) => {
+    return (
+      <Table.Cell
+        style={{
+          color: this.props.color,
+          fontWeight: 700,
+          backgroundColor: 'rgba(0,0,0,.03)',
+          minWidth: 30,
+          maxWidth: 30,
+          padding: 0
+        }}
+      >
+        {count}
+      </Table.Cell>
     )
   }
 

@@ -63,6 +63,11 @@ export type ListDefinitions = Record<string, ListDefinition>
 export type DeityDefinition = ListDefinition & { isOmen: boolean }
 export type DeityDefinitions = Record<string, DeityDefinition>
 
+export type InventionDefinition = ListDefinition & {
+  relevant: boolean
+  tech: string
+}
+
 export type OptionDefinition = ListDefinition[]
 
 type ListData = {

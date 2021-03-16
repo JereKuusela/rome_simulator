@@ -11,7 +11,8 @@ import {
 import { getDefaultArmies } from 'data'
 import { getDefaultUnits } from './units'
 
-export const getDefaultCountry = (): CountryDefinition => ({
+export const getDefaultCountry = (name: CountryName): CountryDefinition => ({
+  name,
   modifiers: {
     selections: {} as Selections,
     selectedTradition: 'Roman',
@@ -24,7 +25,7 @@ export const getDefaultCountry = (): CountryDefinition => ({
       [CountryAttribute.OmenPower]: {
         Base: 100
       },
-      [CountryAttribute.MilitaryTech]: {
+      [CountryAttribute.MartialTech]: {
         Base: process.env.REACT_APP_GAME === 'EU4' ? 3 : 0
       }
     } as never
@@ -37,6 +38,6 @@ export const getDefaultCountry = (): CountryDefinition => ({
 })
 
 export const getDefaultCountryDefinitions = (): CountryDefinitions => ({
-  [CountryName.Country1]: getDefaultCountry(),
-  [CountryName.Country2]: getDefaultCountry()
+  [CountryName.Country1]: getDefaultCountry(CountryName.Country1),
+  [CountryName.Country2]: getDefaultCountry(CountryName.Country2)
 })

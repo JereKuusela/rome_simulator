@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { readFiles, writeFile, getModifier, sort } = require('./core')
 const path = require('path')
-const { getAttribute } = require('./modifiers')
+const { getAttribute, mergeModifiers } = require('./modifiers')
 
 const results = {}
 
@@ -21,6 +21,7 @@ const handleModifiers = data => {
         if (modifier.target !== 'Text' && modifier.target !== 'General') entity.modifiers.push(modifier)
       }
     })
+    mergeModifiers(entity.modifiers)
     if (entity.modifiers.length) results[key] = entity
   })
 }

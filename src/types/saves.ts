@@ -10,6 +10,7 @@ import {
   UnitType
 } from 'types'
 import { laws } from 'data'
+import { InventionDefinition } from './modifiers'
 
 export type SaveCountry = {
   id: number
@@ -20,9 +21,12 @@ export type SaveCountry = {
   faction: string
   traditions: number[]
   heritage: string
-  tech: number
+  martialTech: number
+  oratoryTech: number
+  civicTech: number
+  religiousTech: number
   armies: number[]
-  inventions: boolean[]
+  inventions: InventionDefinition[]
   militaryExperience: number
   armyMaintenance: string
   navalMaintenance: string
@@ -168,7 +172,16 @@ type SaveDataCountry = Record<ElementType<typeof laws>, string> & {
     name: string
   }
   technology?: {
+    civic_tech?: {
+      level: number
+    }
     military_tech?: {
+      level: number
+    }
+    oratory_tech?: {
+      level: number
+    }
+    religious_tech?: {
       level: number
     }
   }

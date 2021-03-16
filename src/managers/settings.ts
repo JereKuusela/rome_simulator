@@ -33,6 +33,10 @@ export const selectCountry = (settings: SettingsAndOptions, countryName: Country
   settings.army = 0
 }
 
+export const toggleFilterNonCombat = (settings: SettingsAndOptions) => {
+  settings.filterNonCombat = !settings.filterNonCombat
+}
+
 export const selectArmy = (settings: SettingsAndOptions, army: number) => {
   settings.army = army
 }

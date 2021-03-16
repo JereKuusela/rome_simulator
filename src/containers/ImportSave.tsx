@@ -60,6 +60,7 @@ import { parseFile, binaryToPlain } from 'managers/importer'
 import JSZip from 'jszip'
 import { loadCountry, loadArmy, getFirstPlayedCountry } from 'managers/saves'
 import { FileInput } from 'components/Utils/Input'
+import { Tech } from 'types/generated'
 
 type IState = {
   country: SaveCountry | null
@@ -166,6 +167,9 @@ class ImportSave extends Component<IProps, IState> {
     )
   }
 
+  countTech = (country: SaveCountry, tech: Tech) =>
+    country.inventions.filter(invention => invention.tech === tech).length + ' inventions'
+
   renderCountry = () => {
     if (!this.state.country) return null
     const country = this.state.country
@@ -178,10 +182,24 @@ class ImportSave extends Component<IProps, IState> {
           <Table.Cell>{country.isPlayer ? 'Player' : 'AI'}</Table.Cell>
         </Table.Row>
         <Table.Row>
-          <Table.Cell>Military tech</Table.Cell>
-          <Table.Cell>{country.tech}</Table.Cell>
-          <Table.Cell>Military inventions</Table.Cell>
-          <Table.Cell>{country.inventions.filter(invention => invention).length}</Table.Cell>
+          <Table.Cell>Civic tech</Table.Cell>
+          <Table.Cell>
+            Level {country.civicTech} with {this.countTech(country, Tech.Civic)}
+          </Table.Cell>
+          <Table.Cell>Martial tech</Table.Cell>
+          <Table.Cell>
+            Level {country.martialTech} with {this.countTech(country, Tech.Martial)}
+          </Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>Oratory tech</Table.Cell>
+          <Table.Cell>
+            Level {country.oratoryTech} with {this.countTech(country, Tech.Oratory)}
+          </Table.Cell>
+          <Table.Cell>Religious tech</Table.Cell>
+          <Table.Cell>
+            Level {country.religiousTech} with {this.countTech(country, Tech.Religious)}
+          </Table.Cell>
         </Table.Row>
         <Table.Row>
           <Table.Cell>Culture</Table.Cell>
@@ -415,7 +433,10 @@ class ImportSave extends Component<IProps, IState> {
     this.importing = true
     const countryName = country.name
     createCountry(countryName)
-    setCountryAttribute(countryName, CountryAttribute.MilitaryTech, country.tech)
+    setCountryAttribute(countryName, CountryAttribute.CivicTech, country.civicTech)
+    setCountryAttribute(countryName, CountryAttribute.MartialTech, country.martialTech)
+    setCountryAttribute(countryName, CountryAttribute.OratoryTech, country.oratoryTech)
+    setCountryAttribute(countryName, CountryAttribute.ReligiousTech, country.religiousTech)
     setCountryAttribute(countryName, CountryAttribute.MilitaryExperience, country.militaryExperience)
     selectCulture(countryName, country.tradition, false)
     const traditionsWithBonus = country.traditions.map(value => (value === 7 ? 8 : value))
@@ -423,11 +444,7 @@ class ImportSave extends Component<IProps, IState> {
       ...traditionsWithBonus.map((value, index) => mapRange(value, value => 'tradition_path_' + index + '_' + value))
     )
     enableCountrySelections(countryName, SelectionType.Tradition, traditions)
-    // TODO: FIX inventions.
-    const invention_list = [] as any[]
-    const inventions = country.inventions
-      .map((value, index) => (value && index ? invention_list[index - 1].key : ''))
-      .filter(value => value)
+    const inventions = country.inventions.map(item => item.key)
     enableCountrySelections(countryName, SelectionType.Invention, inventions)
     enableCountrySelection(countryName, SelectionType.Heritage, country.heritage)
     enableCountrySelections(countryName, SelectionType.Trade, country.surplus)

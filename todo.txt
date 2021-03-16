@@ -3,29 +3,45 @@ Release 9:
 
 Changelog:
 
-Refactor:
-  * IR: Configuration can now be generated from data files (easier maintenance with less errors).
-  * Data generator was split to better support EU4 (modifier names got mixed up with IR modifiers).
-  * Added support for gaining attributes (opposite of losses), for example morale gain for winning a battle in EU4.
-  * Terrains are no longer split to land and naval modes. There aren't that many terrains to justify increased code complexity.
-  * Improved overall performance.
+"Battle" page:
+ * Improved UI performance by caching army data.
+ * Added support for gaining attributes (opposite of losses), for example morale gain for winning a battle in EU4.
+ * EU4: Fixed flank ratio to work with multiarmy battle. Ratio is calculated and penalty applied invidiually for each army.
+ * Fixed dice extra settings button disappearing when random dice is enabled.
+ * Added a counter to frontline to show amount of units in the battle.
 
-Combat:
-  * IR: Loyalty now also decreases maintenance costs.
-  * EU4: Fixed flank ratio to work with multiarmy battle. Ratio is calculated and penalty applied invidiually for each army.
-  * Added combat width attribute to terrains.
-  * IR: Balance changes up to 2.0.2.
+"Definitions" page:
+ * Updated unit values to match 2.0 changes.
+ * Renamed terrains to match in-game names.
+ * Added Engineer cohort.
+ * Added support for editing terrain combat width.
+ * Added "Duel" terrain with a combat width of 1 (for testing purposes).
+ * Removed land/naval splitting from terrains. There aren't that many terrains to justify increased code complexity.
+ * Loyalty now also decreases maintenance costs.
 
-Settings:
+"Settings" page:
+ * Default values are now generated from game data files.
  * EU4: Added a setting for morale gain when winning a battle.
  * EU4: Defender's advantage is now disabled by default (fixed in the game).
  * Fixed setting import/export not working.
-
-UI:
- * Fixed dice extra settings button disappearing when random dice is enabled.
  * Changed settings page from tabs to accordions. This makes changing settings much easier because they all are on screen and can be searched with the browser.
 
-Save import:
+"Countries" page:
+ * Updated values to match 2.0 changes.
+ * Added a checkbox to toggle whether to hide non-combat related effects (not fully supported yet).
+ * Removed culture selector as it no longer dictates military traditions.
+ * Replaced military tradition tree with a table (no fancy rendering like in game). Removed all requirement-related logic so traditions can be freely picked.
+ * Added a military tree selector to change the displayed tree. Selections from other trees are persisted.
+ * Military experience input now displays the effect on morale.
+ * Replaced tech / invention tree with an invention table (no fancy rendering like in game). Removed all requirement-related logic so inventions can be freely picked.
+ * Added an input for tech levels.
+ * Added all inventions (even non-military ones). These allow inspecting what inventions countries have when importing save files.
+
+"Import from save" page: 
+ * Fixed invention importing to work with 2.0 format.
+ * Added display and import for all tech categories.
+
+"Export from save" page: 
  * Added a tool for exporting a table with territories and their pops.
 
 
@@ -34,6 +50,12 @@ Todo:
 Saves:
  - Add import from battle (involved armies) or war (all participants and all armies)
 
+
+UI:
+ * Add tooltip to frontline unit counter (shows combat width, amount of units with breakdown per type, maybe total morale/strength too?)
+
+Release++:
+
 Countries:
  - Data converter for EU4.
   * Each country has tag / group specific ideas -> Dropdown with tag and group names -> 1 table with 1 x 7 ideas?
@@ -41,8 +63,6 @@ Countries:
    - Can filter ideas groups with no military buffs
   * Completing basic ideas unlock policies -> A big list of options (like with IR Trade)
 
-
-Release++:
 
 Tests:
  * Tests:
@@ -72,11 +92,6 @@ UI:
   * Seems mostly a problem for Western with so many unit types.
   * One heuristic could be: Count offensive and defensive pips of all stats, and then count offensive/defensive for two biggest stats as tiebreaker.
   * When selecting unit store its primary and secondary type as the selection. When upgrading/downgrading use these types to select the unit.
-
-Countries:
- - Inventions to show tag specific (without actually implementing tags).
-  * These inventions are extra. Perhaps a 4th slot for toggle? Or just implement scrolling?
-
 
 Settings:
  - Show on main page current settings set (Imperator, EU4, mixed), tooltip to show individual (or only changed?)

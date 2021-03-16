@@ -1,4 +1,4 @@
-import { countriesIR, laws, traitsIR } from 'data'
+import { countriesIR, inventionsIR, laws, traitsIR } from 'data'
 import { flatten, sum } from 'lodash'
 import {
   ArmyName,
@@ -55,18 +55,21 @@ export const loadCountry = (file: Save, id: number) => {
   const deities = file.deity_manager?.deities_database
   const data = file.country?.country_database[id]
   if (!data) return undefined
+  console.log(data)
   const availableLaws = data.laws?.map(value => !!value)
   const country: SaveCountry = {
     armies: data.units,
-    // Index 9 is Roman special invention, others are military inventions.
-    // Probably need to check what other special inventions do.
     inventions: arrayify(data.active_inventions)
-      .filter((_, index) => index === 9 || (75 < index && index < 138))
-      .map(value => !!value),
+      .map((value, index) => (value ? index : -1))
+      .filter(index => index > -1)
+      .map(index => inventionsIR[index]),
     heritage: data.heritage ?? '',
     militaryExperience: data.currency_data?.military_experience ?? 0,
     name: (countriesIR[data.country_name?.name.toLowerCase() ?? ''] ?? '') as CountryName,
-    tech: data.technology?.military_tech?.level ?? 0,
+    civicTech: data.technology?.civic_tech?.level ?? 0,
+    martialTech: data.technology?.military_tech?.level ?? 0,
+    oratoryTech: data.technology?.oratory_tech?.level ?? 0,
+    religiousTech: data.technology?.religious_tech?.level ?? 0,
     tradition: (data.military_tradition ?? '') as CultureType,
     armyMaintenance: 'expense_army_' + maintenanceToKey(data.economic_policies[4]),
     navalMaintenance: 'expense_navy_' + maintenanceToKey(data.economic_policies[5]),
