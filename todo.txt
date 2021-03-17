@@ -39,7 +39,9 @@ Changelog:
 
 "Import from save" page: 
  * Fixed invention importing to work with 2.0 format.
- * Added display and import for all tech categories.
+ * Added importing for all tech categories.
+ * Removed the button to only improve armies. I don't think this is a useful feature so it only adds clutter to the UI.
+ * Removed army selector as it no longer has any purpose.
 
 "Export from save" page: 
  * Added a tool for exporting a table with territories and their pops.
@@ -49,6 +51,13 @@ Todo:
 
 Saves:
  - Add import from battle (involved armies) or war (all participants and all armies)
+ * Fix tradition import.
+ * Investigate calculating levies.
+  - From culture manager get integrated pops and their count.
+  - Calculate levy multiplier from many places...
+  - Generate levy templates from data.
+  - Multiply pops with multiplier and levy template.
+  - Replace units with support if needed.
 
 
 UI:

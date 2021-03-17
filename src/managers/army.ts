@@ -252,11 +252,11 @@ export const clearGeneralSelections = (army: ArmyData, type?: SelectionType, key
   else army.general.selections = {} as Selections
 }
 
-export const applyGeneralModifiers = (country: GeneralData, modifiers: ModifierWithKey[]): GeneralData => {
+export const applyGeneralModifiers = (general: GeneralData, modifiers: ModifierWithKey[]): GeneralData => {
   modifiers
     .filter(value => value.target === ModifierType.General)
     .forEach(value => {
-      country = addValue(country, value.type, value.key, value.attribute, value.value)
+      general = addValue(general, value.type, value.key, value.attribute, value.value)
     })
-  return country
+  return general
 }

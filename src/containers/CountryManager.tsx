@@ -135,7 +135,7 @@ class CountryManager extends Component<IProps, IState> {
 
   createCountry = (country: CountryName, source?: CountryName) => {
     const { selectCountry, createCountry } = this.props
-    createCountry(country, source)
+    createCountry(country, source && this.props.countries[source])
     selectCountry(country)
   }
 

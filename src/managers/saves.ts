@@ -1,10 +1,9 @@
-import { countriesIR, inventionsIR, laws, traitsIR } from 'data'
+import { countriesIR, inventionsIR, laws, traditionsArrayIR, traitsIR } from 'data'
 import { flatten, sum } from 'lodash'
 import {
   ArmyName,
   Character,
   CountryName,
-  CultureType,
   dictionaryTacticType,
   dictionaryUnitType,
   GeneralAttribute,
@@ -53,12 +52,17 @@ export const getFirstPlayedCountry = (file: Save) => {
 
 export const loadCountry = (file: Save, id: number) => {
   const deities = file.deity_manager?.deities_database
+  const cultures = file.country_culture_manager?.country_culture_database
   const data = file.country?.country_database[id]
   if (!data) return undefined
-  console.log(data)
+  if (cultures) {
+    const popTypes = toArr(cultures).filter(item => item.country === id && item.pop_type)
+    console.log(popTypes)
+  }
   const availableLaws = data.laws?.map(value => !!value)
   const country: SaveCountry = {
     armies: data.units,
+    culture: data.primary_culture,
     inventions: arrayify(data.active_inventions)
       .map((value, index) => (value ? index : -1))
       .filter(index => index > -1)
@@ -70,10 +74,12 @@ export const loadCountry = (file: Save, id: number) => {
     martialTech: data.technology?.military_tech?.level ?? 0,
     oratoryTech: data.technology?.oratory_tech?.level ?? 0,
     religiousTech: data.technology?.religious_tech?.level ?? 0,
-    tradition: (data.military_tradition ?? '') as CultureType,
     armyMaintenance: 'expense_army_' + maintenanceToKey(data.economic_policies[4]),
     navalMaintenance: 'expense_navy_' + maintenanceToKey(data.economic_policies[5]),
-    traditions: arrayify(data.military_tradition_levels).filter((_, index) => index < 3),
+    traditions: arrayify(data.military_bonuses)
+      .map((value, index) => (value ? index : -1))
+      .filter(index => index > -1)
+      .map(index => traditionsArrayIR[index]),
     laws: [],
     surplus: [],
     ideas: flatten(arrayify(data.ideas?.idea).map(idea => idea.idea)),
@@ -226,4 +232,10 @@ const getArmyName = (army: SaveDataUnitName) => {
   if (army.ordinal) name += ' ' + army.ordinal
   if (army.family) name += ' ' + army.family
   return name
+}
+
+export const loadCountryWithArmies = (save: Save, id: string) => {
+  const country = id ? loadCountry(save, Number(id)) : null
+  const armies = country && country.armies ? excludeMissing(country.armies.map(id => loadArmy(save, id))) : []
+  return { country, armies }
 }

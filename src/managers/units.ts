@@ -12,12 +12,14 @@ import {
   ReserveData,
   ModifierWithKey,
   SiteSettings,
-  SideType
+  SideType,
+  GeneralData,
+  CountryDefinition
 } from 'types'
 import { addValuesWithMutate, calculateValue, addValues, addValue } from 'definition_values'
 import { getUnitIcon } from 'data'
 import { toArr, round, randomWithinRange } from 'utils'
-import { mapModifiersToUnits2 } from './modifiers'
+import { getCountryModifiers, getGeneralModifiers, mapModifiersToUnits2 } from './modifiers'
 import { getConfig } from 'data/config'
 
 export const setUnitValue = (
@@ -106,3 +108,9 @@ export const getCohortId = (side: SideType, cohort: { index: number; participant
   side + '-' + cohort.participantIndex + '-' + cohort.index
 export const getCohortName = (cohort: { type: UnitType; index: number; participantIndex: number }) =>
   cohort.type + ' ' + (1000 * cohort.participantIndex + cohort.index)
+
+export const convertUnitsData = (units: UnitsData, country: CountryDefinition, general: GeneralData) => {
+  const countryModifiers = getCountryModifiers(country.modifiers)
+  const generalModifiers = getGeneralModifiers(general)
+  return applyUnitModifiers(units, countryModifiers.concat(generalModifiers))
+}

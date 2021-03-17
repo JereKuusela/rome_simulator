@@ -1,4 +1,4 @@
-import { groupBy, sortBy } from 'lodash'
+import { flatten, groupBy, sortBy } from 'lodash'
 import {
   OptionDefinition,
   ListDefinitions,
@@ -25,6 +25,7 @@ import deityData from './json/ir/deities.json'
 import religionData from './json/ir/religions.json'
 import factionData from './json/ir/parties.json'
 import effectData from './json/ir/effects.json'
+import { toArr } from 'utils'
 
 // Bit ugly but these enable tree shaking based on the game.
 const getPolicies = () => (process.env.REACT_APP_GAME === 'IR' ? Array.from(policyData) : ([] as OptionData[]))
@@ -35,6 +36,7 @@ export const traitsIR = process.env.REACT_APP_GAME === 'IR' ? (traitData as List
 export const heritagesIR = process.env.REACT_APP_GAME === 'IR' ? (heritageData as ListDefinitions) : {}
 export const tradesIR = process.env.REACT_APP_GAME === 'IR' ? (tradeData as ListDefinitions) : {}
 export const traditionsIR = process.env.REACT_APP_GAME === 'IR' ? (traditionData as Traditions) : {}
+export const traditionsArrayIR = flatten(toArr(traditionsIR))
 export const ideasIR = process.env.REACT_APP_GAME === 'IR' ? (ideaData as ListDefinitions) : {}
 export const lawsIR = process.env.REACT_APP_GAME === 'IR' ? (lawData as ListDefinitions) : {}
 export const deitiesIR = process.env.REACT_APP_GAME === 'IR' ? (deityData as DeityDefinitions) : {}

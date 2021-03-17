@@ -23,8 +23,8 @@ import { getDefaultUnits, getDefaultArmies, getDefaultCountry } from 'data'
 import { addValuesWithMutate, clearAllValuesWithMutate, calculateValue, addValue } from 'definition_values'
 import { toObj, values, filter } from 'utils'
 
-export const createCountry = (countries: Countries, country: CountryName, source?: CountryName): void => {
-  countries[country] = source ? countries[source] : getDefaultCountry(country)
+export const createCountry = (countries: Countries, country: CountryName, source?: CountryDefinition): void => {
+  countries[country] = source ?? getDefaultCountry(country)
 }
 
 export const deleteCountry = (countries: Countries, country: CountryName): void => {

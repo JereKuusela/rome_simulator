@@ -1,4 +1,180 @@
 {
+  "Celtic": [
+    {
+      "name": "Strike From Afar",
+      "key": "celtic_gallic_path_1",
+      "modifiers": [
+        {
+          "target": "Archers",
+          "attribute": "Offense",
+          "type": "Base",
+          "value": 0.15
+        }
+      ]
+    },
+    {
+      "name": "Take up Arms",
+      "key": "celtic_britannic_path_7",
+      "modifiers": [
+        {
+          "target": "Archers",
+          "attribute": "Cost",
+          "type": "Modifier",
+          "value": -0.15
+        }
+      ]
+    },
+    {
+      "name": "Hail of Stones",
+      "key": "celtic_germanic_path_7",
+      "modifiers": [
+        {
+          "target": "Archers",
+          "attribute": "Defense",
+          "type": "Base",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Strike and Withdraw",
+      "key": "celtic_germanic_path_1",
+      "modifiers": [
+        {
+          "target": "Light Infantry",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "The Young Must Serve",
+      "key": "celtic_germanic_path_6",
+      "modifiers": [
+        {
+          "target": "Light Infantry",
+          "attribute": "Cost",
+          "type": "Modifier",
+          "value": -0.15
+        }
+      ]
+    },
+    {
+      "name": "Coming of Age",
+      "key": "celtic_britannic_path_2",
+      "modifiers": [
+        {
+          "target": "Light Infantry",
+          "attribute": "Defense",
+          "type": "Base",
+          "value": 0.1
+        },
+        {
+          "target": "Light Infantry",
+          "attribute": "Plains Damage",
+          "type": "Modifier",
+          "value": 0.2
+        }
+      ]
+    },
+    {
+      "name": "Adaptability",
+      "key": "celtic_germanic_path_end_bonus",
+      "modifiers": [
+        {
+          "target": "Light Infantry",
+          "attribute": "Discipline",
+          "type": "Base",
+          "value": 0.1
+        },
+        {
+          "target": "Archers",
+          "attribute": "Discipline",
+          "type": "Base",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Embrace Celto-Italic Influence",
+      "key": "celtic_latin_enable",
+      "modifiers": [
+        {
+          "target": "Heavy Infantry",
+          "attribute": "Offense",
+          "type": "Base",
+          "value": 0.025
+        }
+      ]
+    },
+    {
+      "name": "Ambush",
+      "key": "celtic_germanic_path_3",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Forest Damage",
+          "type": "Modifier",
+          "value": 0.25
+        }
+      ]
+    },
+    {
+      "name": "The Plains Fight With us",
+      "key": "celtic_gallic_path_3",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Plains Damage",
+          "type": "Modifier",
+          "value": 0.15
+        },
+        {
+          "target": "Global",
+          "attribute": "Farmland Damage",
+          "type": "Modifier",
+          "value": 0.15
+        }
+      ]
+    },
+    {
+      "name": "Scale the Walls!",
+      "key": "celtic_gallic_path_7",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Siege Ability",
+          "type": "Base",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Shield Wall",
+      "key": "celtic_germanic_path_5",
+      "modifiers": [
+        {
+          "target": "Heavy Infantry",
+          "attribute": "Defense",
+          "type": "Base",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Strong Arm",
+      "key": "celtic_gallic_path_6",
+      "modifiers": [
+        {
+          "target": "Heavy Infantry",
+          "attribute": "Offense",
+          "type": "Base",
+          "value": 0.1
+        }
+      ]
+    }
+  ],
   "Britannic": [
     {
       "name": "The Glory of the Hunt",
@@ -186,380 +362,6 @@
           "value": 0.06
         }
       ]
-    }
-  ],
-  "Celtic": [
-    {
-      "name": "Strike From Afar",
-      "key": "celtic_gallic_path_1",
-      "modifiers": [
-        {
-          "target": "Archers",
-          "attribute": "Offense",
-          "type": "Base",
-          "value": 0.15
-        }
-      ]
-    },
-    {
-      "name": "Take up Arms",
-      "key": "celtic_britannic_path_7",
-      "modifiers": [
-        {
-          "target": "Archers",
-          "attribute": "Cost",
-          "type": "Modifier",
-          "value": -0.15
-        }
-      ]
-    },
-    {
-      "name": "Hail of Stones",
-      "key": "celtic_germanic_path_7",
-      "modifiers": [
-        {
-          "target": "Archers",
-          "attribute": "Defense",
-          "type": "Base",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Strike and Withdraw",
-      "key": "celtic_germanic_path_1",
-      "modifiers": [
-        {
-          "target": "Light Infantry",
-          "attribute": "Morale",
-          "type": "Modifier",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "The Young Must Serve",
-      "key": "celtic_germanic_path_6",
-      "modifiers": [
-        {
-          "target": "Light Infantry",
-          "attribute": "Cost",
-          "type": "Modifier",
-          "value": -0.15
-        }
-      ]
-    },
-    {
-      "name": "Coming of Age",
-      "key": "celtic_britannic_path_2",
-      "modifiers": [
-        {
-          "target": "Light Infantry",
-          "attribute": "Defense",
-          "type": "Base",
-          "value": 0.1
-        },
-        {
-          "target": "Light Infantry",
-          "attribute": "Plains Damage",
-          "type": "Modifier",
-          "value": 0.2
-        }
-      ]
-    },
-    {
-      "name": "Adaptability",
-      "key": "celtic_germanic_path_end_bonus",
-      "modifiers": [
-        {
-          "target": "Light Infantry",
-          "attribute": "Discipline",
-          "type": "Base",
-          "value": 0.1
-        },
-        {
-          "target": "Archers",
-          "attribute": "Discipline",
-          "type": "Base",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Embrace Celto-Italic Influence",
-      "key": "celtic_latin_enable",
-      "modifiers": [
-        {
-          "target": "Heavy Infantry",
-          "attribute": "Offense",
-          "type": "Base",
-          "value": 0.025
-        }
-      ]
-    },
-    {
-      "name": "Ambush",
-      "key": "celtic_germanic_path_3",
-      "modifiers": [
-        {
-          "target": "Global",
-          "attribute": "Forest Damage",
-          "type": "Modifier",
-          "value": 0.25
-        }
-      ]
-    },
-    {
-      "name": "The Plains Fight With us",
-      "key": "celtic_gallic_path_3",
-      "modifiers": [
-        {
-          "target": "Global",
-          "attribute": "Plains Damage",
-          "type": "Modifier",
-          "value": 0.15
-        },
-        {
-          "target": "Global",
-          "attribute": "Farmland Damage",
-          "type": "Modifier",
-          "value": 0.15
-        }
-      ]
-    },
-    {
-      "name": "Scale the Walls!",
-      "key": "celtic_gallic_path_7",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Siege Ability",
-          "type": "Base",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Shield Wall",
-      "key": "celtic_germanic_path_5",
-      "modifiers": [
-        {
-          "target": "Heavy Infantry",
-          "attribute": "Defense",
-          "type": "Base",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Strong Arm",
-      "key": "celtic_gallic_path_6",
-      "modifiers": [
-        {
-          "target": "Heavy Infantry",
-          "attribute": "Offense",
-          "type": "Base",
-          "value": 0.1
-        }
-      ]
-    }
-  ],
-  "Greek Kingdom": [
-    {
-      "name": "Agema",
-      "key": "greek_seleucid_path_1",
-      "modifiers": [
-        {
-          "target": "Heavy Cavalry",
-          "attribute": "Morale",
-          "type": "Modifier",
-          "value": 0.1
-        },
-        {
-          "target": "Light Infantry",
-          "attribute": "Morale",
-          "type": "Modifier",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Kataphraktoi",
-      "key": "greek_seleucid_path_5",
-      "modifiers": [
-        {
-          "target": "Heavy Cavalry",
-          "attribute": "Offense",
-          "type": "Base",
-          "value": 0.15
-        }
-      ]
-    },
-    {
-      "name": "Embrace Graeco-Persian Influence",
-      "key": "greek_persian_enable",
-      "modifiers": [
-        {
-          "target": "Global",
-          "attribute": "Plains Damage",
-          "type": "Modifier",
-          "value": 0.05
-        }
-      ]
-    },
-    {
-      "name": "Deep Coffers",
-      "key": "greek_seleucid_path_end_bonus",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Mercenary Army Maintenance",
-          "type": "Base",
-          "value": -0.1
-        },
-        {
-          "target": "Heavy Cavalry",
-          "attribute": "Maintenance",
-          "type": "Modifier",
-          "value": -0.15
-        }
-      ]
-    },
-    {
-      "name": "Veterans of the Great Campaign",
-      "key": "greek_antigonid_path_1",
-      "modifiers": [
-        {
-          "target": "Land",
-          "attribute": "Experience",
-          "type": "Base",
-          "value": 0.05
-        },
-        {
-          "target": "Text",
-          "attribute": "Experience Decay",
-          "type": "Base",
-          "value": -0.005
-        }
-      ]
-    },
-    {
-      "name": "The Nobility Ride",
-      "key": "greek_antigonid_path_3",
-      "modifiers": [
-        {
-          "target": "Light Cavalry",
-          "attribute": "Morale",
-          "type": "Modifier",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Military Colonies",
-      "key": "greek_states_path_4",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Found City Cost Modifier",
-          "type": "Base",
-          "value": -0.1
-        }
-      ]
-    },
-    {
-      "name": "Peltasts",
-      "key": "greek_antigonid_path_5",
-      "modifiers": [
-        {
-          "target": "Light Infantry",
-          "attribute": "Discipline",
-          "type": "Base",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Combined Arms",
-      "key": "greek_antigonid_path_end_bonus",
-      "modifiers": [
-        {
-          "target": "Light Infantry",
-          "attribute": "Offense",
-          "type": "Base",
-          "value": 0.15
-        },
-        {
-          "target": "Light Infantry",
-          "attribute": "Defense",
-          "type": "Base",
-          "value": 0.15
-        }
-      ]
-    },
-    {
-      "name": "Siegecraft",
-      "key": "greek_states_path_3",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Siege Ability",
-          "type": "Base",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Phoenician Sailors",
-      "key": "greek_seleucid_path_3",
-      "modifiers": [
-        {
-          "target": "Naval",
-          "attribute": "Damage Done",
-          "type": "Base",
-          "value": 0.05
-        },
-        {
-          "target": "Text",
-          "attribute": "Ship Recruit Speed",
-          "type": "Base",
-          "value": 0.15
-        }
-      ]
-    },
-    {
-      "name": "Forged for War",
-      "key": "greek_antigonid_path_2_octere",
-      "modifiers": []
-    },
-    {
-      "name": "The Sarissa",
-      "key": "greek_states_path_1",
-      "modifiers": [
-        {
-          "target": "Heavy Infantry",
-          "attribute": "Morale",
-          "type": "Modifier",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "The Silver Shields",
-      "key": "greek_states_path_end_bonus",
-      "modifiers": [
-        {
-          "target": "Heavy Infantry",
-          "attribute": "Offense",
-          "type": "Base",
-          "value": 0.15
-        }
-      ]
-    },
-    {
-      "name": "Mine's Bigger Than Yours",
-      "key": "greek_states_path_5",
-      "modifiers": []
     }
   ],
   "Greek Poleis": [
@@ -769,96 +571,31 @@
       ]
     }
   ],
-  "Indian Kingdom": [
+  "Greek Kingdom": [
     {
-      "name": "State Artisans",
-      "key": "mauryan_coastal_path_7",
+      "name": "Agema",
+      "key": "greek_seleucid_path_1",
       "modifiers": [
         {
-          "target": "Chariots",
-          "attribute": "Cost",
+          "target": "Heavy Cavalry",
+          "attribute": "Morale",
           "type": "Modifier",
-          "value": -0.1
+          "value": 0.1
         },
         {
-          "target": "Archers",
-          "attribute": "Cost",
+          "target": "Light Infantry",
+          "attribute": "Morale",
           "type": "Modifier",
-          "value": -0.1
-        }
-      ]
-    },
-    {
-      "name": "Fit for a King",
-      "key": "mauryan_noble_path_1",
-      "modifiers": [
-        {
-          "target": "Chariots",
-          "attribute": "Defense",
-          "type": "Base",
-          "value": 0.15
-        }
-      ]
-    },
-    {
-      "name": "Dedicated Archers",
-      "key": "mauryan_mauryas_path_5",
-      "modifiers": [
-        {
-          "target": "Archers",
-          "attribute": "Discipline",
-          "type": "Base",
           "value": 0.1
         }
       ]
     },
     {
-      "name": "The Vyuha System",
-      "key": "mauryan_coastal_path_2",
+      "name": "Kataphraktoi",
+      "key": "greek_seleucid_path_5",
       "modifiers": [
         {
-          "target": "Heavy Infantry",
-          "attribute": "Defense",
-          "type": "Base",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Padma Vyuha",
-      "key": "mauryan_noble_path_4",
-      "modifiers": []
-    },
-    {
-      "name": "Imported Horses",
-      "key": "mauryan_noble_path_5",
-      "modifiers": [
-        {
-          "target": "Chariots",
-          "attribute": "Discipline",
-          "type": "Base",
-          "value": 0.15
-        }
-      ]
-    },
-    {
-      "name": "Armored Archers",
-      "key": "mauryan_noble_path_3",
-      "modifiers": [
-        {
-          "target": "Archers",
-          "attribute": "Defense",
-          "type": "Base",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Versatile Infantry",
-      "key": "mauryan_mauryas_path_1",
-      "modifiers": [
-        {
-          "target": "Archers",
+          "target": "Heavy Cavalry",
           "attribute": "Offense",
           "type": "Base",
           "value": 0.15
@@ -866,70 +603,8 @@
       ]
     },
     {
-      "name": "The Bureaucracy of War",
-      "key": "mauryan_mauryas_path_end_bonus",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Levy Size Multiplier",
-          "type": "Base",
-          "value": 0.025
-        }
-      ]
-    },
-    {
-      "name": "Warhost of the Empire",
-      "key": "mauryan_mauryas_path_3",
-      "modifiers": [
-        {
-          "target": "Heavy Infantry",
-          "attribute": "Morale",
-          "type": "Modifier",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Flexible Divisions",
-      "key": "mauryan_coastal_path_5",
-      "modifiers": [
-        {
-          "target": "Land",
-          "attribute": "Morale",
-          "type": "Modifier",
-          "value": 0.05
-        }
-      ]
-    },
-    {
-      "name": "Integrating the Tribes",
-      "key": "mauryan_mauryas_path_7",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "National Tribesman Happiness",
-          "type": "Base",
-          "value": 0.12
-        }
-      ]
-    }
-  ],
-  "Indian Tribe": [
-    {
-      "name": "The 'Diplomatic' Fleet",
-      "key": "mauryan_coastal_path_end_bonus",
-      "modifiers": [
-        {
-          "target": "Naval",
-          "attribute": "Damage Done",
-          "type": "Base",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Embrace Indo-Persian Influence",
-      "key": "mauryan_persia_enable",
+      "name": "Embrace Graeco-Persian Influence",
+      "key": "greek_persian_enable",
       "modifiers": [
         {
           "target": "Global",
@@ -940,11 +615,47 @@
       ]
     },
     {
-      "name": "Masters of the Sea",
-      "key": "mauryan_coastal_path_3",
+      "name": "Deep Coffers",
+      "key": "greek_seleucid_path_end_bonus",
       "modifiers": [
         {
-          "target": "Naval",
+          "target": "Text",
+          "attribute": "Mercenary Army Maintenance",
+          "type": "Base",
+          "value": -0.1
+        },
+        {
+          "target": "Heavy Cavalry",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.15
+        }
+      ]
+    },
+    {
+      "name": "Veterans of the Great Campaign",
+      "key": "greek_antigonid_path_1",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Experience",
+          "type": "Base",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Experience Decay",
+          "type": "Base",
+          "value": -0.005
+        }
+      ]
+    },
+    {
+      "name": "The Nobility Ride",
+      "key": "greek_antigonid_path_3",
+      "modifiers": [
+        {
+          "target": "Light Cavalry",
           "attribute": "Morale",
           "type": "Modifier",
           "value": 0.1
@@ -952,11 +663,209 @@
       ]
     },
     {
-      "name": "Natural Harbors",
-      "key": "mauryan_coastal_path_1",
+      "name": "Military Colonies",
+      "key": "greek_states_path_4",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Found City Cost Modifier",
+          "type": "Base",
+          "value": -0.1
+        }
+      ]
+    },
+    {
+      "name": "Peltasts",
+      "key": "greek_antigonid_path_5",
+      "modifiers": [
+        {
+          "target": "Light Infantry",
+          "attribute": "Discipline",
+          "type": "Base",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Combined Arms",
+      "key": "greek_antigonid_path_end_bonus",
+      "modifiers": [
+        {
+          "target": "Light Infantry",
+          "attribute": "Offense",
+          "type": "Base",
+          "value": 0.15
+        },
+        {
+          "target": "Light Infantry",
+          "attribute": "Defense",
+          "type": "Base",
+          "value": 0.15
+        }
+      ]
+    },
+    {
+      "name": "Siegecraft",
+      "key": "greek_states_path_3",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Siege Ability",
+          "type": "Base",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Phoenician Sailors",
+      "key": "greek_seleucid_path_3",
       "modifiers": [
         {
           "target": "Naval",
+          "attribute": "Damage Done",
+          "type": "Base",
+          "value": 0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Ship Recruit Speed",
+          "type": "Base",
+          "value": 0.15
+        }
+      ]
+    },
+    {
+      "name": "Forged for War",
+      "key": "greek_antigonid_path_2_octere",
+      "modifiers": []
+    },
+    {
+      "name": "The Sarissa",
+      "key": "greek_states_path_1",
+      "modifiers": [
+        {
+          "target": "Heavy Infantry",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "The Silver Shields",
+      "key": "greek_states_path_end_bonus",
+      "modifiers": [
+        {
+          "target": "Heavy Infantry",
+          "attribute": "Offense",
+          "type": "Base",
+          "value": 0.15
+        }
+      ]
+    },
+    {
+      "name": "Mine's Bigger Than Yours",
+      "key": "greek_states_path_5",
+      "modifiers": []
+    }
+  ],
+  "Roman": [
+    {
+      "name": "Principes",
+      "key": "latin_roman_path_1",
+      "modifiers": [
+        {
+          "target": "Heavy Infantry",
+          "attribute": "Offense",
+          "type": "Base",
+          "value": 0.15
+        }
+      ]
+    },
+    {
+      "name": "Triplex Acies",
+      "key": "latin_roman_path_2",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Discipline",
+          "type": "Base",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Triarii",
+      "key": "latin_roman_path_3",
+      "modifiers": [
+        {
+          "target": "Heavy Infantry",
+          "attribute": "Discipline",
+          "type": "Base",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Scutum",
+      "key": "latin_support_path_6",
+      "modifiers": [
+        {
+          "target": "Heavy Infantry",
+          "attribute": "Defense",
+          "type": "Base",
+          "value": 0.15
+        }
+      ]
+    },
+    {
+      "name": "The Honor of Service",
+      "key": "latin_roman_path_7",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Levy Size Multiplier",
+          "type": "Base",
+          "value": 0.025
+        },
+        {
+          "target": "Heavy Infantry",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Embrace Italo-Greek Influence",
+      "key": "latin_greek_enable",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Plains Damage",
+          "type": "Modifier",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Logistics of State",
+      "key": "latin_support_path_5",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Cost",
+          "type": "Base",
+          "value": -0.1
+        },
+        {
+          "target": "Supply Train",
+          "attribute": "Cost",
+          "type": "Modifier",
+          "value": -0.15
+        },
+        {
+          "target": "Engineer",
           "attribute": "Cost",
           "type": "Modifier",
           "value": -0.15
@@ -964,48 +873,55 @@
       ]
     },
     {
-      "name": "Plunder!",
-      "key": "mauryan_coastal_path_4",
+      "name": "Professional Soldiers",
+      "key": "latin_roman_path_5",
       "modifiers": [
         {
           "target": "Text",
-          "attribute": "Enslavement Efficiency",
+          "attribute": "Monthly War Exhaustion",
           "type": "Base",
-          "value": 0.1
+          "noPercent": true,
+          "value": -0.01
+        },
+        {
+          "target": "Land",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.1
         }
       ]
     },
     {
-      "name": "Homeland of our Fathers",
-      "key": "mauryan_mauryas_path_6",
+      "name": "Rousing Oratory",
+      "key": "latin_tribal_path_7",
       "modifiers": [
         {
-          "target": "Global",
-          "attribute": "Forest Damage",
-          "type": "Modifier",
+          "target": "Text",
+          "attribute": "Manpower Recovery Speed",
+          "type": "Base",
           "value": 0.05
-        },
-        {
-          "target": "Global",
-          "attribute": "Jungle Damage",
-          "type": "Modifier",
-          "value": 0.15
         }
       ]
     },
     {
-      "name": "City of the World's Desire",
-      "key": "mauryan_coastal_path_6",
+      "name": "Scale the Walls",
+      "key": "latin_support_path_3",
       "modifiers": [
         {
           "target": "Text",
-          "attribute": "Fort Defense",
+          "attribute": "Siege Ability",
           "type": "Base",
           "value": 0.1
-        },
+        }
+      ]
+    },
+    {
+      "name": "The Fabri",
+      "key": "latin_support_path_2",
+      "modifiers": [
         {
           "target": "Text",
-          "attribute": "Fort limit",
+          "attribute": "Siege Engineers",
           "type": "Base",
           "noPercent": true,
           "value": 1
@@ -1013,86 +929,32 @@
       ]
     },
     {
-      "name": "Descendents of Airavata",
-      "key": "mauryan_mauryas_path_2",
-      "modifiers": [
-        {
-          "target": "War Elephants",
-          "attribute": "Defense",
-          "type": "Base",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Exotic Soldiers",
-      "key": "mauryan_noble_path_7",
+      "name": "Roman Roads",
+      "key": "latin_roman_path_4",
       "modifiers": [
         {
           "target": "Text",
-          "attribute": "Mercenary Army Maintenance",
+          "attribute": "Heavy Infantry Movement Speed",
           "type": "Base",
-          "value": -0.1
-        }
-      ]
-    },
-    {
-      "name": "Elephantine Abundance",
-      "key": "mauryan_noble_path_6",
-      "modifiers": [
-        {
-          "target": "War Elephants",
-          "attribute": "Cost",
-          "type": "Modifier",
-          "value": -0.15
-        }
-      ]
-    },
-    {
-      "name": "Natural Pathfinders",
-      "key": "mauryan_mauryas_path_4",
-      "modifiers": [
-        {
-          "target": "War Elephants",
-          "attribute": "Jungle Damage",
-          "type": "Modifier",
-          "value": 0.15
+          "value": 0.1
         },
         {
-          "target": "War Elephants",
-          "attribute": "Forest Damage",
-          "type": "Modifier",
-          "value": 0.15
-        },
-        {
-          "target": "Global",
-          "attribute": "Jungle Damage",
-          "type": "Modifier",
-          "value": 0.05
+          "target": "Text",
+          "attribute": "Light Infantry Movement Speed",
+          "type": "Base",
+          "value": 0.1
         }
       ]
     },
     {
-      "name": "Striding Beside Giants",
-      "key": "mauryan_noble_path_end_bonus",
+      "name": "March of the Eagles",
+      "key": "latin_roman_path_end_bonus",
       "modifiers": [
         {
-          "target": "War Elephants",
+          "target": "Land",
           "attribute": "Morale",
           "type": "Modifier",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Trained to Kill",
-      "key": "mauryan_noble_path_2",
-      "modifiers": [
-        {
-          "target": "War Elephants",
-          "attribute": "Discipline",
-          "type": "Base",
-          "value": 0.1
+          "value": 0.05
         }
       ]
     }
@@ -1694,6 +1556,540 @@
       ]
     }
   ],
+  "Indian Kingdom": [
+    {
+      "name": "State Artisans",
+      "key": "mauryan_coastal_path_7",
+      "modifiers": [
+        {
+          "target": "Chariots",
+          "attribute": "Cost",
+          "type": "Modifier",
+          "value": -0.1
+        },
+        {
+          "target": "Archers",
+          "attribute": "Cost",
+          "type": "Modifier",
+          "value": -0.1
+        }
+      ]
+    },
+    {
+      "name": "Fit for a King",
+      "key": "mauryan_noble_path_1",
+      "modifiers": [
+        {
+          "target": "Chariots",
+          "attribute": "Defense",
+          "type": "Base",
+          "value": 0.15
+        }
+      ]
+    },
+    {
+      "name": "Dedicated Archers",
+      "key": "mauryan_mauryas_path_5",
+      "modifiers": [
+        {
+          "target": "Archers",
+          "attribute": "Discipline",
+          "type": "Base",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "The Vyuha System",
+      "key": "mauryan_coastal_path_2",
+      "modifiers": [
+        {
+          "target": "Heavy Infantry",
+          "attribute": "Defense",
+          "type": "Base",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Padma Vyuha",
+      "key": "mauryan_noble_path_4",
+      "modifiers": []
+    },
+    {
+      "name": "Imported Horses",
+      "key": "mauryan_noble_path_5",
+      "modifiers": [
+        {
+          "target": "Chariots",
+          "attribute": "Discipline",
+          "type": "Base",
+          "value": 0.15
+        }
+      ]
+    },
+    {
+      "name": "Armored Archers",
+      "key": "mauryan_noble_path_3",
+      "modifiers": [
+        {
+          "target": "Archers",
+          "attribute": "Defense",
+          "type": "Base",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Versatile Infantry",
+      "key": "mauryan_mauryas_path_1",
+      "modifiers": [
+        {
+          "target": "Archers",
+          "attribute": "Offense",
+          "type": "Base",
+          "value": 0.15
+        }
+      ]
+    },
+    {
+      "name": "The Bureaucracy of War",
+      "key": "mauryan_mauryas_path_end_bonus",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Levy Size Multiplier",
+          "type": "Base",
+          "value": 0.025
+        }
+      ]
+    },
+    {
+      "name": "Warhost of the Empire",
+      "key": "mauryan_mauryas_path_3",
+      "modifiers": [
+        {
+          "target": "Heavy Infantry",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Flexible Divisions",
+      "key": "mauryan_coastal_path_5",
+      "modifiers": [
+        {
+          "target": "Land",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Integrating the Tribes",
+      "key": "mauryan_mauryas_path_7",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "National Tribesman Happiness",
+          "type": "Base",
+          "value": 0.12
+        }
+      ]
+    }
+  ],
+  "Indian Tribe": [
+    {
+      "name": "The 'Diplomatic' Fleet",
+      "key": "mauryan_coastal_path_end_bonus",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Damage Done",
+          "type": "Base",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Embrace Indo-Persian Influence",
+      "key": "mauryan_persia_enable",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Plains Damage",
+          "type": "Modifier",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Masters of the Sea",
+      "key": "mauryan_coastal_path_3",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Natural Harbors",
+      "key": "mauryan_coastal_path_1",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Cost",
+          "type": "Modifier",
+          "value": -0.15
+        }
+      ]
+    },
+    {
+      "name": "Plunder!",
+      "key": "mauryan_coastal_path_4",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Enslavement Efficiency",
+          "type": "Base",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Homeland of our Fathers",
+      "key": "mauryan_mauryas_path_6",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Forest Damage",
+          "type": "Modifier",
+          "value": 0.05
+        },
+        {
+          "target": "Global",
+          "attribute": "Jungle Damage",
+          "type": "Modifier",
+          "value": 0.15
+        }
+      ]
+    },
+    {
+      "name": "City of the World's Desire",
+      "key": "mauryan_coastal_path_6",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Fort Defense",
+          "type": "Base",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Fort limit",
+          "type": "Base",
+          "noPercent": true,
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "Descendents of Airavata",
+      "key": "mauryan_mauryas_path_2",
+      "modifiers": [
+        {
+          "target": "War Elephants",
+          "attribute": "Defense",
+          "type": "Base",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Exotic Soldiers",
+      "key": "mauryan_noble_path_7",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Mercenary Army Maintenance",
+          "type": "Base",
+          "value": -0.1
+        }
+      ]
+    },
+    {
+      "name": "Elephantine Abundance",
+      "key": "mauryan_noble_path_6",
+      "modifiers": [
+        {
+          "target": "War Elephants",
+          "attribute": "Cost",
+          "type": "Modifier",
+          "value": -0.15
+        }
+      ]
+    },
+    {
+      "name": "Natural Pathfinders",
+      "key": "mauryan_mauryas_path_4",
+      "modifiers": [
+        {
+          "target": "War Elephants",
+          "attribute": "Jungle Damage",
+          "type": "Modifier",
+          "value": 0.15
+        },
+        {
+          "target": "War Elephants",
+          "attribute": "Forest Damage",
+          "type": "Modifier",
+          "value": 0.15
+        },
+        {
+          "target": "Global",
+          "attribute": "Jungle Damage",
+          "type": "Modifier",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Striding Beside Giants",
+      "key": "mauryan_noble_path_end_bonus",
+      "modifiers": [
+        {
+          "target": "War Elephants",
+          "attribute": "Morale",
+          "type": "Modifier",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Trained to Kill",
+      "key": "mauryan_noble_path_2",
+      "modifiers": [
+        {
+          "target": "War Elephants",
+          "attribute": "Discipline",
+          "type": "Base",
+          "value": 0.1
+        }
+      ]
+    }
+  ],
+  "Punic": [
+    {
+      "name": "A Hard Bargain",
+      "key": "north_african_army_path_end_bonus",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Mercenary Army Maintenance",
+          "type": "Base",
+          "value": -0.1
+        }
+      ]
+    },
+    {
+      "name": "Skilled Recruiters",
+      "key": "north_african_army_path_1",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Mercenary Army Maintenance",
+          "type": "Base",
+          "value": -0.05
+        },
+        {
+          "target": "Text",
+          "attribute": "Recruit Mercenary Cost",
+          "type": "Base",
+          "value": -0.25
+        }
+      ]
+    },
+    {
+      "name": "Devastating Charge",
+      "key": "north_african_army_path_7",
+      "modifiers": [
+        {
+          "target": "War Elephants",
+          "attribute": "Offense",
+          "type": "Base",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "The Sacred Band",
+      "key": "north_african_army_path_3",
+      "modifiers": [
+        {
+          "target": "Heavy Infantry",
+          "attribute": "Offense",
+          "type": "Base",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Iberian Draft",
+      "key": "north_african_naval_path_2",
+      "modifiers": [
+        {
+          "target": "Heavy Infantry",
+          "attribute": "Defense",
+          "type": "Base",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "The African Elephant",
+      "key": "north_african_army_path_5",
+      "modifiers": [
+        {
+          "target": "War Elephants",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.15
+        }
+      ]
+    },
+    {
+      "name": "Call to Arms",
+      "key": "north_african_tribal_path_6",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "National Manpower",
+          "type": "Base",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Levy Size Multiplier",
+          "type": "Base",
+          "value": 0.025
+        }
+      ]
+    },
+    {
+      "name": "Phoenician Heritage",
+      "key": "north_african_naval_path_1",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Cost",
+          "type": "Modifier",
+          "value": -0.15
+        }
+      ]
+    },
+    {
+      "name": "Embrace Afro-Levantine Influence",
+      "key": "north_african_levantine_enable",
+      "modifiers": [
+        {
+          "target": "Global",
+          "attribute": "Open Sea Damage",
+          "type": "Modifier",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Professional Marines",
+      "key": "north_african_army_path_2",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Damage Done",
+          "type": "Base",
+          "value": 0.1
+        },
+        {
+          "target": "Global",
+          "attribute": "Coastal Sea Damage",
+          "type": "Modifier",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Putting our People to Work",
+      "key": "north_african_naval_path_7",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Maintenance",
+          "type": "Modifier",
+          "value": -0.1
+        }
+      ]
+    },
+    {
+      "name": "A Life at Sea",
+      "key": "north_african_naval_path_4",
+      "modifiers": [
+        {
+          "target": "Text",
+          "attribute": "Ship Repair at Sea",
+          "type": "Base",
+          "value": 0.05
+        }
+      ]
+    },
+    {
+      "name": "Maneuverability Above All",
+      "key": "north_african_naval_path_end_bonus",
+      "modifiers": [
+        {
+          "target": "Trireme",
+          "attribute": "Offense",
+          "type": "Base",
+          "value": 0.15
+        },
+        {
+          "target": "Liburnian",
+          "attribute": "Offense",
+          "type": "Base",
+          "value": 0.15
+        },
+        {
+          "target": "Text",
+          "attribute": "Trireme Movement Speed",
+          "type": "Base",
+          "value": 0.1
+        },
+        {
+          "target": "Text",
+          "attribute": "Liburnian Movement Speed",
+          "type": "Base",
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "name": "Naval Dominance",
+      "key": "north_african_naval_path_3",
+      "modifiers": [
+        {
+          "target": "Naval",
+          "attribute": "Damage Taken",
+          "type": "Base",
+          "value": -0.2
+        }
+      ]
+    }
+  ],
   "Numidian": [
     {
       "name": "To Each, Their Own",
@@ -2253,402 +2649,6 @@
           "attribute": "Monthly Ruler Popularity Gain",
           "type": "Base",
           "noPercent": true,
-          "value": 0.05
-        }
-      ]
-    }
-  ],
-  "Punic": [
-    {
-      "name": "A Hard Bargain",
-      "key": "north_african_army_path_end_bonus",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Mercenary Army Maintenance",
-          "type": "Base",
-          "value": -0.1
-        }
-      ]
-    },
-    {
-      "name": "Skilled Recruiters",
-      "key": "north_african_army_path_1",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Mercenary Army Maintenance",
-          "type": "Base",
-          "value": -0.05
-        },
-        {
-          "target": "Text",
-          "attribute": "Recruit Mercenary Cost",
-          "type": "Base",
-          "value": -0.25
-        }
-      ]
-    },
-    {
-      "name": "Devastating Charge",
-      "key": "north_african_army_path_7",
-      "modifiers": [
-        {
-          "target": "War Elephants",
-          "attribute": "Offense",
-          "type": "Base",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "The Sacred Band",
-      "key": "north_african_army_path_3",
-      "modifiers": [
-        {
-          "target": "Heavy Infantry",
-          "attribute": "Offense",
-          "type": "Base",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Iberian Draft",
-      "key": "north_african_naval_path_2",
-      "modifiers": [
-        {
-          "target": "Heavy Infantry",
-          "attribute": "Defense",
-          "type": "Base",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "The African Elephant",
-      "key": "north_african_army_path_5",
-      "modifiers": [
-        {
-          "target": "War Elephants",
-          "attribute": "Maintenance",
-          "type": "Modifier",
-          "value": -0.15
-        }
-      ]
-    },
-    {
-      "name": "Call to Arms",
-      "key": "north_african_tribal_path_6",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "National Manpower",
-          "type": "Base",
-          "value": 0.1
-        },
-        {
-          "target": "Text",
-          "attribute": "Levy Size Multiplier",
-          "type": "Base",
-          "value": 0.025
-        }
-      ]
-    },
-    {
-      "name": "Phoenician Heritage",
-      "key": "north_african_naval_path_1",
-      "modifiers": [
-        {
-          "target": "Naval",
-          "attribute": "Cost",
-          "type": "Modifier",
-          "value": -0.15
-        }
-      ]
-    },
-    {
-      "name": "Embrace Afro-Levantine Influence",
-      "key": "north_african_levantine_enable",
-      "modifiers": [
-        {
-          "target": "Global",
-          "attribute": "Open Sea Damage",
-          "type": "Modifier",
-          "value": 0.05
-        }
-      ]
-    },
-    {
-      "name": "Professional Marines",
-      "key": "north_african_army_path_2",
-      "modifiers": [
-        {
-          "target": "Naval",
-          "attribute": "Damage Done",
-          "type": "Base",
-          "value": 0.1
-        },
-        {
-          "target": "Global",
-          "attribute": "Coastal Sea Damage",
-          "type": "Modifier",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Putting our People to Work",
-      "key": "north_african_naval_path_7",
-      "modifiers": [
-        {
-          "target": "Naval",
-          "attribute": "Maintenance",
-          "type": "Modifier",
-          "value": -0.1
-        }
-      ]
-    },
-    {
-      "name": "A Life at Sea",
-      "key": "north_african_naval_path_4",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Ship Repair at Sea",
-          "type": "Base",
-          "value": 0.05
-        }
-      ]
-    },
-    {
-      "name": "Maneuverability Above All",
-      "key": "north_african_naval_path_end_bonus",
-      "modifiers": [
-        {
-          "target": "Trireme",
-          "attribute": "Offense",
-          "type": "Base",
-          "value": 0.15
-        },
-        {
-          "target": "Liburnian",
-          "attribute": "Offense",
-          "type": "Base",
-          "value": 0.15
-        },
-        {
-          "target": "Text",
-          "attribute": "Trireme Movement Speed",
-          "type": "Base",
-          "value": 0.1
-        },
-        {
-          "target": "Text",
-          "attribute": "Liburnian Movement Speed",
-          "type": "Base",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Naval Dominance",
-      "key": "north_african_naval_path_3",
-      "modifiers": [
-        {
-          "target": "Naval",
-          "attribute": "Damage Taken",
-          "type": "Base",
-          "value": -0.2
-        }
-      ]
-    }
-  ],
-  "Roman": [
-    {
-      "name": "Principes",
-      "key": "latin_roman_path_1",
-      "modifiers": [
-        {
-          "target": "Heavy Infantry",
-          "attribute": "Offense",
-          "type": "Base",
-          "value": 0.15
-        }
-      ]
-    },
-    {
-      "name": "Triplex Acies",
-      "key": "latin_roman_path_2",
-      "modifiers": [
-        {
-          "target": "Global",
-          "attribute": "Discipline",
-          "type": "Base",
-          "value": 0.05
-        }
-      ]
-    },
-    {
-      "name": "Triarii",
-      "key": "latin_roman_path_3",
-      "modifiers": [
-        {
-          "target": "Heavy Infantry",
-          "attribute": "Discipline",
-          "type": "Base",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Scutum",
-      "key": "latin_support_path_6",
-      "modifiers": [
-        {
-          "target": "Heavy Infantry",
-          "attribute": "Defense",
-          "type": "Base",
-          "value": 0.15
-        }
-      ]
-    },
-    {
-      "name": "The Honor of Service",
-      "key": "latin_roman_path_7",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Levy Size Multiplier",
-          "type": "Base",
-          "value": 0.025
-        },
-        {
-          "target": "Heavy Infantry",
-          "attribute": "Morale",
-          "type": "Modifier",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "Embrace Italo-Greek Influence",
-      "key": "latin_greek_enable",
-      "modifiers": [
-        {
-          "target": "Global",
-          "attribute": "Plains Damage",
-          "type": "Modifier",
-          "value": 0.05
-        }
-      ]
-    },
-    {
-      "name": "Logistics of State",
-      "key": "latin_support_path_5",
-      "modifiers": [
-        {
-          "target": "Land",
-          "attribute": "Cost",
-          "type": "Base",
-          "value": -0.1
-        },
-        {
-          "target": "Supply Train",
-          "attribute": "Cost",
-          "type": "Modifier",
-          "value": -0.15
-        },
-        {
-          "target": "Engineer",
-          "attribute": "Cost",
-          "type": "Modifier",
-          "value": -0.15
-        }
-      ]
-    },
-    {
-      "name": "Professional Soldiers",
-      "key": "latin_roman_path_5",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Monthly War Exhaustion",
-          "type": "Base",
-          "noPercent": true,
-          "value": -0.01
-        },
-        {
-          "target": "Land",
-          "attribute": "Maintenance",
-          "type": "Modifier",
-          "value": -0.1
-        }
-      ]
-    },
-    {
-      "name": "Rousing Oratory",
-      "key": "latin_tribal_path_7",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Manpower Recovery Speed",
-          "type": "Base",
-          "value": 0.05
-        }
-      ]
-    },
-    {
-      "name": "Scale the Walls",
-      "key": "latin_support_path_3",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Siege Ability",
-          "type": "Base",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "The Fabri",
-      "key": "latin_support_path_2",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Siege Engineers",
-          "type": "Base",
-          "noPercent": true,
-          "value": 1
-        }
-      ]
-    },
-    {
-      "name": "Roman Roads",
-      "key": "latin_roman_path_4",
-      "modifiers": [
-        {
-          "target": "Text",
-          "attribute": "Heavy Infantry Movement Speed",
-          "type": "Base",
-          "value": 0.1
-        },
-        {
-          "target": "Text",
-          "attribute": "Light Infantry Movement Speed",
-          "type": "Base",
-          "value": 0.1
-        }
-      ]
-    },
-    {
-      "name": "March of the Eagles",
-      "key": "latin_roman_path_end_bonus",
-      "modifiers": [
-        {
-          "target": "Land",
-          "attribute": "Morale",
-          "type": "Modifier",
           "value": 0.05
         }
       ]

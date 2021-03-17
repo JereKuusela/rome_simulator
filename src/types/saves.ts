@@ -1,31 +1,21 @@
-import {
-  ArmyName,
-  CountryName,
-  CultureType,
-  GovermentType,
-  Mode,
-  TacticType,
-  UnitAttribute,
-  UnitPreferences,
-  UnitType
-} from 'types'
+import { ArmyName, CountryName, GovermentType, Mode, TacticType, UnitAttribute, UnitPreferences, UnitType } from 'types'
 import { laws } from 'data'
-import { InventionDefinition } from './modifiers'
+import { InventionDefinition, ListDefinition } from './modifiers'
 
 export type SaveCountry = {
   id: number
   name: CountryName
-  tradition: CultureType
   religion: string
   government: GovermentType
   faction: string
-  traditions: number[]
+  traditions: ListDefinition[]
   heritage: string
   martialTech: number
   oratoryTech: number
   civicTech: number
   religiousTech: number
   armies: number[]
+  culture: string
   inventions: InventionDefinition[]
   militaryExperience: number
   armyMaintenance: string
@@ -185,9 +175,9 @@ type SaveDataCountry = Record<ElementType<typeof laws>, string> & {
       level: number
     }
   }
-  military_tradition?: string
+  primary_culture: string
   economic_policies: number[]
-  military_tradition_levels: number[]
+  military_bonuses: number[]
   ideas?: {
     idea: {
       idea: string[]
@@ -221,6 +211,15 @@ type SaveDataWar = {
   }
   attacker: number[]
   defender: number[]
+}
+
+type SaveCulture = {
+  culture: string
+  pop_type: string
+  country: number
+  progress: number
+  pop_count: number
+  integration_status: string
 }
 
 export type Save = Record<string, unknown> & {
@@ -257,5 +256,8 @@ export type Save = Record<string, unknown> & {
   }
   game_configuration?: {
     difficulty: string
+  }
+  country_culture_manager?: {
+    country_culture_database: Record<number, SaveCulture>
   }
 }

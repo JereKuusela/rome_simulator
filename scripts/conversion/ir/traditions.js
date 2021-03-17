@@ -37,11 +37,5 @@ const handlers = {
 
 exports.run = () => {
   readFiles(handlers)
-  const keys = Object.keys(traditionTrees).sort()
-  const sortedTraditionsTrees = {}
-  keys.forEach(key => {
-    sortedTraditionsTrees[key] = traditionTrees[key]
-  })
-
-  writeFile(path.join('ir', 'traditions.json'), sortedTraditionsTrees)
+  writeFile(path.join('ir', 'traditions.json'), traditionTrees)
 }

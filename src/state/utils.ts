@@ -63,7 +63,7 @@ import { uniq, flatten, sumBy } from 'lodash'
 import * as manager from 'managers/army'
 import { getCountryModifiers, getGeneralModifiers } from 'managers/modifiers'
 import { convertCountryDefinition, applyCountryModifiers, filterArmies } from 'managers/countries'
-import { applyUnitModifiers } from 'managers/units'
+import { convertUnitsData } from 'managers/units'
 import { convertArmy, convertSide, getRound, getAttacker, getLeadingArmy } from 'managers/battle'
 import { iterateCohorts } from 'combat'
 import { convertTactic } from 'managers/tactics'
@@ -321,9 +321,9 @@ const getArmyDefinition = (state: AppState, countryName: CountryName, armyName: 
   state.countries[countryName].armies[armyName]
 
 export const getGeneralDefinition = (state: AppState, countryName: CountryName, armyName: ArmyName): GeneralData => {
-  const army = getArmyDefinition(state, countryName, armyName).general
-  const modifiers = getGeneralModifiers(army)
-  return manager.applyGeneralModifiers(army, modifiers)
+  const general = getArmyDefinition(state, countryName, armyName).general
+  const modifiers = getGeneralModifiers(general)
+  return manager.applyGeneralModifiers(general, modifiers)
 }
 export const getGeneral = (state: AppState, countryName: CountryName, armyName: ArmyName): GeneralDefinition =>
   manager.convertGeneralDefinition(
@@ -407,11 +407,8 @@ export const getSelectedTerrains = (state: AppState): Terrain[] =>
 
 const getUnitDefinitionsSub = (state: AppState, countryName: CountryName, armyName: ArmyName) => {
   const country = state.countries[countryName]
-  const units = country.units
   const general = getGeneralDefinition(state, countryName, armyName)
-  const countryModifiers = getCountryModifiers(country.modifiers)
-  const generalModifiers = getGeneralModifiers(general)
-  return applyUnitModifiers(units, countryModifiers.concat(generalModifiers))
+  return convertUnitsData(country.units, country, general)
 }
 
 export const useUnitDefinitions = (countryName: CountryName, armyName: ArmyName): UnitDefinitions | undefined => {
