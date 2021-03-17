@@ -2,6 +2,7 @@ import { toObj, keys } from 'utils'
 import { uniq } from 'lodash'
 
 import stringTokens from 'data/json/ir/binary.json'
+import JSZip from 'jszip'
 
 enum DataType {
   Integer = 'Integer',
@@ -81,6 +82,18 @@ export const parseFile = (data: string) => {
   const tokens = forceTokenizeEqualCharacter.split(/[\n\r\s]+/)
   i = -1
   return parseObject(tokens) as Record<string, unknown>
+}
+
+export const loadFile = async (file: File): Promise<[string, string[]]> => {
+  try {
+    const zipped = await new JSZip().loadAsync(file)
+    const extracted = zipped.file('gamestate')
+    if (!extracted) return ['', ['File is not a save file.']]
+    const buffer = await extracted.async('uint8array')
+    return binaryToPlain(buffer, true)
+  } catch (e) {
+    return [await file.text(), []]
+  }
 }
 
 const formatTokens = {

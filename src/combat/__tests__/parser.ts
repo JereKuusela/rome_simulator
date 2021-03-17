@@ -2,7 +2,7 @@ import { UnitType, dictionaryUnitType, SideType, GeneralAttribute, UnitPreferenc
 import { forEach } from 'utils'
 import { TestState, getArmyTest, addToReserveTest, getUnit, createArmyTest } from './utils'
 import { setFlankSize, setGeneralAttribute, setUnitPreference } from 'managers/army'
-import { parseFile } from 'managers/importer'
+import { parseFile } from 'saves/importer'
 
 type InputUnits = UnitType[]
 

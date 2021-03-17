@@ -1,6 +1,6 @@
 import { ArmyName, CountryName, GovermentType, Mode, TacticType, UnitAttribute, UnitPreferences, UnitType } from 'types'
 import { laws } from 'data'
-import { InventionDefinition, ListDefinition } from './modifiers'
+import { InventionDefinition, ListDefinition } from '../types/modifiers'
 
 export type SaveCountry = {
   id: number

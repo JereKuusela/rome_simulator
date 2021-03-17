@@ -1,29 +1,32 @@
-import { countriesIR, inventionsIR, laws, traditionsArrayIR, traitsIR } from 'data'
+import { countriesIR, culturesIR, inventionsIR, laws, territoriesIR, traditionsArrayIR, traitsIR } from 'data'
 import { flatten, sum } from 'lodash'
 import {
   ArmyName,
-  Character,
   CountryName,
   dictionaryTacticType,
   dictionaryUnitType,
   GeneralAttribute,
   GovermentType,
   Mode,
-  Save,
-  SaveArmy,
-  SaveCharacter,
-  SaveCohort,
-  SaveCountry,
-  SaveCountryDeity,
-  SaveDataUnitName,
-  SavePop,
-  Territory,
-  TradeGood,
   UnitAttribute,
   UnitPreferences,
   UnitPreferenceType
 } from 'types'
+import { Tech } from 'types/generated'
 import { arrayify, excludeMissing, filter, keys, toArr, toObj } from 'utils'
+import {
+  SaveCharacter,
+  Save,
+  SaveCountry,
+  SaveCountryDeity,
+  Territory,
+  SavePop,
+  TradeGood,
+  Character,
+  SaveCohort,
+  SaveArmy,
+  SaveDataUnitName
+} from './types'
 
 const getCharacterMartial = (character: SaveCharacter) =>
   character.attributes.martial +
@@ -234,8 +237,33 @@ const getArmyName = (army: SaveDataUnitName) => {
   return name
 }
 
-export const loadCountryWithArmies = (save: Save, id: string) => {
-  const country = id ? loadCountry(save, Number(id)) : null
+export const loadCountryWithArmies = (save: Save, id: number) => {
+  const country = id ? loadCountry(save, id) : null
   const armies = country && country.armies ? excludeMissing(country.armies.map(id => loadArmy(save, id))) : []
   return { country, armies }
+}
+
+export const countTech = (country: SaveCountry, tech: Tech) =>
+  country.inventions.filter(invention => invention.tech === tech).length + ' inventions'
+
+export const getTagName = (tag: string) =>
+  countriesIR[tag.toLowerCase()] ? countriesIR[tag.toLowerCase()] + ' (' + tag + ')' : tag
+
+export const getTerritoryName = (name: string) =>
+  territoriesIR[name.toLowerCase()] ? territoriesIR[name.toLowerCase()] : name
+
+export const getCategoryName = (name: string) => {
+  const split = name.split(' ')
+  const rawCulture = split[0].toLowerCase()
+  const culture = culturesIR[rawCulture] ?? rawCulture
+  if (split.length > 1) return `${culture} ${split[1]}`
+  return culture
+}
+
+export const loadCountryList = (save: Save) => {
+  const data = save.country?.country_database
+  if (data) {
+    return keys(data).map(key => ({ text: getTagName(data[Number(key)].tag), value: key }))
+  }
+  return []
 }
